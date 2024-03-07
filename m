@@ -1,184 +1,237 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45E5522A
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 01:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DCF4C6C;
+	Thu,  7 Mar 2024 01:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709775310; cv=none; b=ieEvIkkWARJQGoaM/+f+uFgL4PQWn5jUHBd6HWHEvmTxS7BV269NrqtLE4NqSXG4cfdFuGkfhsXtg+OpXqKsvsF+Uq2f7BmqfIq8rMc2p6VubC0N5bQC6UQVrxWBLoL+XbOzNY7DASGCfE3OY+WEcBma2E8Ya2PPf5hByuiomG0=
+	t=1709775388; cv=none; b=CDTcqaqTuiDih3QbFA6F2nEi8w3qRVWQ9ydNRO1GQB6xgsbVIuy9yQ8JSWm6ZuCiclg6WROfe67b4Yj7KUbh9PS8fjRUXUWqkbYVERyNrjJmem5SJGZ3vr9D9TlvwcKpUlAWM5mMsktVwq2NLzEk7Fa3TOs8EtGniyCSzQ9K2go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709775310; c=relaxed/simple;
-	bh=4r4KWlRoqECrwFIL6FhF0v9TG+MhL307VEh/8qYN/kI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XXSw99CB1VtbUBljok9wuRtGajWvp3mfivSECk7hBm2eVH56t/OWeKfmYCq3LyKx0WXiW8slMHlaXs7i+q5bCSVyGT+h9mH4va2LPklIhqFenCf9ayMD5UnQ2cCXeFy2YUTmiEKAcNAFecwcnpgxOiKCh9iE6qZ7mpiJntRAZb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jkv12huo; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1709775388; c=relaxed/simple;
+	bh=DGvZGr1IjTXNmLu/v0BjlBPqV6VOcPWZhaTsHSCk+tQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dA00CP7q8KDf5N8Lv+fmdulCr4nLO/iZNt7TTimaYZ9foIUnuqH20M+ge+DDweexT9vbp4gvPARmtU7qe2nErKpBpgFKXATL6Rcm24G5uYehhSJc/2u6y9E337ub9Kzu5XUb4VwAiDWzl5bfIOKwyhpcOqbwVIGkW+pZO0oDp44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=rrTElCvX; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jkv12huo"
-X-UUID: eacc32fedc2211eeb8927bc1f75efef4-20240307
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qozeXGlq1HPWjhIPE+mUg1AVfOhg2AA2XM+Vk2n0Jm0=;
-	b=jkv12huo17kEpX6Rc/d+5qiGFtpBFFqIKF4HpNvm8bxboSaUpyuKiBwgg/C4UH7Fmb5m2t6A3YBix3C+9IzirQFEBxgUkGqtBdwoqZzUSjZdHKWMKl2Z4Bvfo9Ir51VqMCYUy/86yErK48wr2t8WuJbaKWXRUcPceLhjtK5dyN0=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:c8f51fb7-7739-4635-9570-7d48783a8903,IP:0,U
-	RL:0,TC:0,Content:33,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:33
-X-CID-META: VersionHash:6f543d0,CLOUDID:262399ff-c16b-4159-a099-3b9d0558e447,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:4,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: eacc32fedc2211eeb8927bc1f75efef4-20240307
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1547065403; Thu, 07 Mar 2024 09:35:02 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 7 Mar 2024 09:35:00 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 7 Mar 2024 09:35:00 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v2 3/4] soc: mediatek: mtk-cmdq: Add cmdq_pkt_poll_addr() function
-Date: Thu, 7 Mar 2024 09:34:57 +0800
-Message-ID: <20240307013458.23550-4-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240307013458.23550-1-jason-jh.lin@mediatek.com>
-References: <20240307013458.23550-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rrTElCvX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1709775383;
+	bh=uRHTG0L933W49rR7eLKbmUyiReuzr8JXVYf13P4Er+Q=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rrTElCvXas/WiNo+f1N65FbgNlU7mB11ugnVirlWtEHb3B4xgr5r/O2gPm1/2FzZl
+	 FrzXBlkf38spshsYkA+1L87m0S7rK3Ol68f7phITkwXauziCqkfJrtKdqt8NljcP7u
+	 GDGn7IVpXXQB54yHSzFvW7kh+X4JR+Su4zMl4ubdOwNJWm2Wf9GQrpzWykOIgOuHyu
+	 YqQ4HRmLsl4XyEqIZ62v5iq4E4ulJKUqBk5USreOKLwALUshSwXlK2lV9LBUIuXzyB
+	 v95RNmInFJVRPSWDqE8kdA1T1/w3YcY3mDqTy7nJHGPf6DWiRYm2SyR1o2q2Jbfz1+
+	 BmaWdSgG8d2fg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TqsMp2znkz4wc7;
+	Thu,  7 Mar 2024 12:36:22 +1100 (AEDT)
+Date: Thu, 7 Mar 2024 12:36:19 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
+ <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf
+ <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, "Uladzislau Rezki (Sony)"
+ <urezki@gmail.com>
+Subject: linux-next: manual merge of the bpf-next tree with the mm-stable
+ tree
+Message-ID: <20240307123619.159f1c4c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: multipart/signed; boundary="Sig_/0XTsu3vubCij2IEjsa0+JF6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Add cmdq_pkt_poll_addr function to support CMDQ user making
-an instruction for polling a specific address of hardware rigster
-to check the value with or without mask.
+--Sig_/0XTsu3vubCij2IEjsa0+JF6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-POLL is a legacy operation in GCE, so it does not support SPR and
-CMDQ_CODE_LOGIC. To support polling the register address which doesn't
-have the subsys id, CMDQ users need to make an instruction with GPR and
-CMDQ_CODE_MASK operation to move the register address to be poll into GPR.
-Then users can make an POLL instruction with GPR to poll the register
-address assigned in previous instruction.
+Hi all,
 
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 49 ++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 16 +++++++++
- 2 files changed, 65 insertions(+)
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 111b5b47ac8f..4f69df743505 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -12,6 +12,8 @@
- 
- #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
- #define CMDQ_POLL_ENABLE_MASK	BIT(0)
-+/* dedicate the last GPR_R15 to assign the register address to be poll */
-+#define CMDQ_POLL_ADDR_GPR	(15)
- #define CMDQ_EOC_IRQ_EN		BIT(0)
- #define CMDQ_REG_TYPE		1
- #define CMDQ_JUMP_RELATIVE	1
-@@ -406,6 +408,53 @@ int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
- }
- EXPORT_SYMBOL(cmdq_pkt_poll_mask);
- 
-+int cmdq_pkt_poll_addr(struct cmdq_pkt *pkt, dma_addr_t addr, u32 value, u32 mask)
-+{
-+	struct cmdq_instruction inst = { {0} };
-+	u8 use_mask = 0;
-+	int ret;
-+
-+	/*
-+	 * Append an MASK instruction to set the mask for following POLL instruction
-+	 * which enables use_mask bit.
-+	 */
-+	if (mask != GENMASK(31, 0)) {
-+		inst.op = CMDQ_CODE_MASK;
-+		inst.mask = ~mask;
-+		ret = cmdq_pkt_append_command(pkt, inst);
-+		if (ret < 0)
-+			return ret;
-+		use_mask = CMDQ_POLL_ENABLE_MASK;
-+	}
-+
-+	/*
-+	 * POLL is an legacy operation in GCE and it does not support SPR and CMDQ_CODE_LOGIC,
-+	 * so it can not use cmdq_pkt_assign to keep polling register address to SPR.
-+	 * If user wants to poll a register address which doesn't have a subsys id,
-+	 * user needs to use GPR and CMDQ_CODE_MASK to move polling register address to GPR.
-+	 */
-+	inst.op = CMDQ_CODE_MASK;
-+	inst.dst_t = CMDQ_REG_TYPE;
-+	inst.sop = CMDQ_POLL_ADDR_GPR;
-+	inst.value = addr;
-+	ret = cmdq_pkt_append_command(pkt, inst);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Append POLL instruction to poll the register address assign to GPR previously. */
-+	inst.op = CMDQ_CODE_POLL;
-+	inst.dst_t = CMDQ_REG_TYPE;
-+	inst.sop = CMDQ_POLL_ADDR_GPR;
-+	inst.offset = use_mask;
-+	inst.value = value;
-+	ret = cmdq_pkt_append_command(pkt, inst);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_poll_addr);
-+
- int cmdq_pkt_assign(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
- {
- 	struct cmdq_instruction inst = {};
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index f07c9e2e0855..b0004d097e23 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -255,6 +255,22 @@ int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
- int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
- 		       u16 offset, u32 value, u32 mask);
- 
-+/**
-+ * cmdq_pkt_poll_addr() - Append blocking POLL command to CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @addr:	the hardware register address
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
-+ *
-+ * Appends a polling (POLL) command to the CMDQ packet and asks the GCE
-+ * to execute an instruction that checks for the specified `value` (with
-+ * or without `mask`) to appear in the specified hardware register `addr`.
-+ * All GCE threads will be blocked by this instruction.
-+ *
-+ * Return: 0 for success or negative error code
-+ */
-+int cmdq_pkt_poll_addr(struct cmdq_pkt *pkt, dma_addr_t addr, u32 value, u32 mask);
-+
- /**
-  * cmdq_pkt_assign() - Append logic assign command to the CMDQ packet, ask GCE
-  *		       to execute an instruction that set a constant value into
--- 
-2.18.0
+  mm/vmalloc.c
 
+between commit:
+
+  8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
+
+from the mm-stable tree and commit:
+
+  e6f798225a31 ("mm: Introduce VM_SPARSE kind and vm_area_[un]map_pages().")
+
+from the bpf-next tree.
+
+I fixed it up (I think - see below) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc mm/vmalloc.c
+index 25a8df497255,e5b8c70950bc..000000000000
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@@ -4755,81 -4423,70 +4820,84 @@@ static void show_numa_info(struct seq_f
+ =20
+  static void show_purge_info(struct seq_file *m)
+  {
+ +	struct vmap_node *vn;
+  	struct vmap_area *va;
+ +	int i;
+ =20
+ -	spin_lock(&purge_vmap_area_lock);
+ -	list_for_each_entry(va, &purge_vmap_area_list, list) {
+ -		seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
+ -			(void *)va->va_start, (void *)va->va_end,
+ -			va->va_end - va->va_start);
+ -	}
+ -	spin_unlock(&purge_vmap_area_lock);
+ -}
+ +	for (i =3D 0; i < nr_vmap_nodes; i++) {
+ +		vn =3D &vmap_nodes[i];
+ =20
+ -static int s_show(struct seq_file *m, void *p)
+ -{
+ -	struct vmap_area *va;
+ -	struct vm_struct *v;
+ -
+ -	va =3D list_entry(p, struct vmap_area, list);
+ -
+ -	if (!va->vm) {
+ -		if (va->flags & VMAP_RAM)
+ -			seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+ +		spin_lock(&vn->lazy.lock);
+ +		list_for_each_entry(va, &vn->lazy.head, list) {
+ +			seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
+  				(void *)va->va_start, (void *)va->va_end,
+  				va->va_end - va->va_start);
+ -
+ -		goto final;
+ +		}
+ +		spin_unlock(&vn->lazy.lock);
+  	}
+ +}
+ =20
+ -	v =3D va->vm;
+ +static int vmalloc_info_show(struct seq_file *m, void *p)
+ +{
+ +	struct vmap_node *vn;
+ +	struct vmap_area *va;
+ +	struct vm_struct *v;
+ +	int i;
+ =20
+ -	seq_printf(m, "0x%pK-0x%pK %7ld",
+ -		v->addr, v->addr + v->size, v->size);
+ +	for (i =3D 0; i < nr_vmap_nodes; i++) {
+ +		vn =3D &vmap_nodes[i];
+ =20
+ -	if (v->caller)
+ -		seq_printf(m, " %pS", v->caller);
+ +		spin_lock(&vn->busy.lock);
+ +		list_for_each_entry(va, &vn->busy.head, list) {
+ +			if (!va->vm) {
+ +				if (va->flags & VMAP_RAM)
+ +					seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+ +						(void *)va->va_start, (void *)va->va_end,
+ +						va->va_end - va->va_start);
+ =20
+ -	if (v->nr_pages)
+ -		seq_printf(m, " pages=3D%d", v->nr_pages);
+ +				continue;
+ +			}
+ =20
+ -	if (v->phys_addr)
+ -		seq_printf(m, " phys=3D%pa", &v->phys_addr);
+ +			v =3D va->vm;
+ =20
+ -	if (v->flags & VM_IOREMAP)
+ -		seq_puts(m, " ioremap");
+ +			seq_printf(m, "0x%pK-0x%pK %7ld",
+ +				v->addr, v->addr + v->size, v->size);
+ =20
+ -	if (v->flags & VM_SPARSE)
+ -		seq_puts(m, " sparse");
+ +			if (v->caller)
+ +				seq_printf(m, " %pS", v->caller);
+ =20
+ -	if (v->flags & VM_ALLOC)
+ -		seq_puts(m, " vmalloc");
+ +			if (v->nr_pages)
+ +				seq_printf(m, " pages=3D%d", v->nr_pages);
+ =20
+ -	if (v->flags & VM_MAP)
+ -		seq_puts(m, " vmap");
+ +			if (v->phys_addr)
+ +				seq_printf(m, " phys=3D%pa", &v->phys_addr);
+ =20
+ -	if (v->flags & VM_USERMAP)
+ -		seq_puts(m, " user");
+ +			if (v->flags & VM_IOREMAP)
+ +				seq_puts(m, " ioremap");
+ =20
+ -	if (v->flags & VM_DMA_COHERENT)
+ -		seq_puts(m, " dma-coherent");
+++			if (v->flags & VM_SPARSE)
+++				seq_puts(m, " sparse");
++=20
+ -	if (is_vmalloc_addr(v->pages))
+ -		seq_puts(m, " vpages");
+ +			if (v->flags & VM_ALLOC)
+ +				seq_puts(m, " vmalloc");
+ =20
+ -	show_numa_info(m, v);
+ -	seq_putc(m, '\n');
+ +			if (v->flags & VM_MAP)
+ +				seq_puts(m, " vmap");
+ +
+ +			if (v->flags & VM_USERMAP)
+ +				seq_puts(m, " user");
+ +
+ +			if (v->flags & VM_DMA_COHERENT)
+ +				seq_puts(m, " dma-coherent");
+ +
+ +			if (is_vmalloc_addr(v->pages))
+ +				seq_puts(m, " vpages");
+ +
+ +			show_numa_info(m, v);
+ +			seq_putc(m, '\n');
+ +		}
+ +		spin_unlock(&vn->busy.lock);
+ +	}
+ =20
+  	/*
+  	 * As a final step, dump "unpurged" areas.
+
+--Sig_/0XTsu3vubCij2IEjsa0+JF6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXpGhMACgkQAVBC80lX
+0GyulQf/cE1To1a/iTynPNiIw/MuF/ez+0lLzyXqxJCfduHst/Bz0PRYwaJm85tH
+I2KEy153199aJrR5nbgdaeY7EDYvuijcImpDE3uKT4dIVBr193DRBmul7fQX9uTm
+541NS/iDRJ6x/xOsEUvBaud/LRvOSixTdb1jiypaFL1MBbtOHPDgq9oShgqFOsAB
+o3TgqXV8SyUJiDtwD8aUWTjtbEAfi1IeDekJPvb2oZZf1hSvLu2hKYAgyTcd7f6j
+ctYZMJfzKhYugPT7mdS35q2XmybnP/B7Dk4WXu/4W1dJGk/O9BLbATra+XpwPH58
+K+k/PR7THaX+tNTyMYBYWeTqCcCfJw==
+=U7Ep
+-----END PGP SIGNATURE-----
+
+--Sig_/0XTsu3vubCij2IEjsa0+JF6--
