@@ -1,113 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m17245.xmail.ntesmail.com (mail-m17245.xmail.ntesmail.com [45.195.17.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663931CD2B;
-	Thu,  7 Mar 2024 07:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BF311CBA;
+	Thu,  7 Mar 2024 07:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709795678; cv=none; b=K9bsAhpNCM4tLd7R62/7sDR5ZQ/8hmPBLhRE+hJijAxU7+iJBrm425CZgr+d0j7+zBY9Z/pdQCMGR94BL1RN81GFC83VQHptsA0ifNJGq9HLRMKjlvpQZwNH3LuhYBdBayF936+DBkuMlAIPrssCyAfKFVPsupxT414LxZBkSzo=
+	t=1709795874; cv=none; b=LakwwzfRzb5234Z6+m/ll5nW6gMaTlLgSXaPj9gNBDhZSLIsB064UQKUrh9kMsLVbavNZElsaCsKUzokQhbWe97XgoA9i+AjHR7QF9OKVihstMG1NjtzjFgyMFKMhB67YjuXc1jJHIYEdHkOgWoTvtxe8Iq396yw0EtNzqtZCGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709795678; c=relaxed/simple;
-	bh=XrqHaXGwAuBpilTxp8gnF0TssLrIh3Pzrsw4cPIBHKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=muRn+6GqwL+sCpiDjOZfM4G4bO9zcTZIu8alUtFwoNdo7yZnc69xFIcqS354OQLEB4wQCc3BU385F1brVrDqOsGx7qMOLUWHIsf5Jp2h6god620Y9UDxoqhf51dmF2mWMxgZvrJWm+qrbr0MaUpBa0gdOzduvD7PV0JK87mf3xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XA23YDnO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XA23YDnO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A3AC433C7;
-	Thu,  7 Mar 2024 07:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709795677;
-	bh=XrqHaXGwAuBpilTxp8gnF0TssLrIh3Pzrsw4cPIBHKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XA23YDnORCr6xDhDoeiBEwyhLiTwSpRzvg+c5WYhzs2+2pT6W/GJuGCa1xphBKrH9
-	 RBscEG6PkG8jCCJYSTfYhiyCWqaDVLeUzrV/cfruVHsunC9KqYJoFDZRvCGIH5dD3u
-	 +5I9znWoPTRi1Xzol74q49RBos1teuk6efvsPE3ingU4xbOdNd9FILtA5MRfna79bi
-	 27mz2D5mRd0p+qcLCemAiUSyY0xZo7Fdzo9Uln2wq1INkTCvfh+QBRfczijXG9LVo5
-	 b2rnJYbCdH5HYIDF0XFB9K68Yj5T6xY/AFLTr0QLAgA+dCLF0T11qS9coi06ZzTlxE
-	 R6/G0QNnlkBGw==
-Date: Thu, 7 Mar 2024 09:13:41 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Calvin Owens <jcalvinowens@gmail.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Song Liu <song@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	David S Miller <davem@davemloft.net>,
-	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 0/4] Make bpf_jit and kprobes work with
- CONFIG_MODULES=n
-Message-ID: <ZelpJS4FqDTiwbfW@kernel.org>
-References: <cover.1709676663.git.jcalvinowens@gmail.com>
- <ZejhcP_r5QJZcS6j@bombadil.infradead.org>
- <Zej66vQInnDYgpNy@gmail.com>
+	s=arc-20240116; t=1709795874; c=relaxed/simple;
+	bh=QmoWsKT312NudiuLBdzhVN+EEkH7n+MNgnYRlipqeMw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=U+MPW+F8BcEQjs4xGUChz1xV1NoEDCHaBIlNiZfOQcfdFlR9qWw2fDZU5D8CXcBoMvymeWlNwGsyLU0F2bugv2wvvO8g4av2eJdUtsfVJN9fhT+6DPblvJ/ajFDFidjwDT+lVcffSw4yXd63VFJD1FZpUa3kqAxmn5K5EoEVf8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.195.17.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:4970:b7c4:f23e:200b:4ae6])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 1D0A37E0117;
+	Thu,  7 Mar 2024 11:02:23 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: dmitry.baryshkov@linaro.org
+Cc: amadeus@jmu.edu.cn,
+	andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konrad.dybcio@linaro.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: dts: qcom: ipq6018: add 1.2GHz CPU Frequency
+Date: Thu,  7 Mar 2024 11:02:19 +0800
+Message-Id: <20240307030219.92701-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAA8EJpoghqa5r2vc5XXdfVJy1WDBysXs4LdMybgdgqMTcEPDfA@mail.gmail.com>
+References: <CAA8EJpoghqa5r2vc5XXdfVJy1WDBysXs4LdMybgdgqMTcEPDfA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zej66vQInnDYgpNy@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTUNPVh5IQkJMHh5ISB8fH1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBT0JMS0EZTBhPQR1JSB5BSUtLGUFPGh5NWVdZFhoPEhUdFF
+	lBWU9LSFVKSktDSEhVSktLVUtZBg++
+X-HM-Tid: 0a8e16dca77d03a2kunm1d0a37e0117
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nzo6DRw*DDMTE0IoD0koKQ8u
+	Qz8wFBlVSlVKTEtCTENLTk9IQ0hNVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBT0JMS0EZTBhPQR1JSB5BSUtLGUFPGh5NWVdZCAFZQUpDTEw3Bg++
 
-Hi Calvin,
+Hi, Dmitry
+> I did before writing the comment. You have the only IPQ6000 case, it
+> sets  drv->versions = IPQ6000_VERSION = BIT(2) = 0x4. So, as I said,
+> you are enabling this for all IPQ6000 SoC versions, unless I miss
+> something.
 
-On Wed, Mar 06, 2024 at 03:23:22PM -0800, Calvin Owens wrote:
-> On Wednesday 03/06 at 13:34 -0800, Luis Chamberlain wrote:
-> > On Wed, Mar 06, 2024 at 12:05:07PM -0800, Calvin Owens wrote:
-> > > Hello all,
-> > > 
-> > > This patchset makes it possible to use bpftrace with kprobes on kernels
-> > > built without loadable module support.
-> > 
-> > This is a step in the right direction for another reason: clearly the
-> > module_alloc() is not about modules, and we have special reasons for it
-> > now beyond modules. The effort to share a generalize a huge page for
-> > these things is also another reason for some of this but that is more
-> > long term.
-> > 
-> > I'm all for minor changes here so to avoid regressions but it seems a
-> > rename is in order -- if we're going to all this might as well do it
-> > now. And for that I'd just like to ask you paint the bikeshed with
-> > Song Liu as he's been the one slowly making way to help us get there
-> > with the "module: replace module_layout with module_memory",
-> > and Mike Rapoport as he's had some follow up attempts [0]. As I see it,
-> > the EXECMEM stuff would be what we use instead then. Mike kept the
-> > module_alloc() and the execmem was just a wrapper but your move of the
-> > arch stuff makes sense as well and I think would complement his series
-> > nicely.
+Sorry, I didn't explain it clearly.
+In fact, there are some ipq6000 SoCs whose msm_id is QCOM_ID_IPQ6018.
+But the chip screen printing is ipq6000.
+OEM boot log: `CPU: IPQ6018, SoC Version: 1.0`
+For these SOCs, I tested the frequency is up to 1.5GHz.
 
-Actually I've dropped module_alloc() in favor of execmem_alloc() ;-)
- 
-> I apologize for missing that. I think these are the four most recent
-> versions of the different series referenced from that LWN link:
-> 
->   a) https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org/
->   b) https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org/
->   c) https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
->   d) https://lore.kernel.org/all/20201120202426.18009-1-rick.p.edgecombe@intel.com/
-> 
-> Song and Mike, please correct me if I'm wrong, but I think what I've
-> done here (see [1], sorry for not adding you initially) is compatible
-> with everything both of you have recently proposed above. How do you
-> feel about this as a first step?
+Thanks,
+Chukun
 
-No objections from me.
-
-> For naming, execmem_alloc() seems reasonable to me? I have no strong
-> feelings at all, I'll just use that going forward unless somebody else
-> expresses an opinion.
-
-I like execmem_alloc() and CONFIG_EXECMEM.
- 
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
