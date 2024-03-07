@@ -1,203 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9413712FB2C;
-	Thu,  7 Mar 2024 13:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C7612FF6A
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 13:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818759; cv=none; b=Y4B2cCxdFNDRRjAgeLJkQ4I9zNTXOS8OYxk2YwTfmPi5KetMKXMNLohGB5qm5QHCegu8hfNKzUtPWOGjyt2k4QgREgTbF1lENlnK1CRWQ53LbyiwIjzr8mb98lG6pkudsnwniSTNbeW8L1n2NNcASP+eTL4giSrFGZ9cvy6Bhh4=
+	t=1709818760; cv=none; b=AfqxxkHIGFEF5wdwpBR4JOF2NVPJXBs4MH6YW4rl4ltmNIo3gAMEem6mluFhbGKdKoF31QTfmFiBsV2ValEocaHqG5a/iTiAshLf44Syx3jBPB/FsWP1MytuTSkBY5sDe9kq8vkLr8/btNSwQOBCmCpj6KCxduXXqBvwfgqZf2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818759; c=relaxed/simple;
-	bh=knNLcwVqg8jv1l/rgrHhTRsj59b8/zn3xoeOIeIyJfk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WdR4/f0CEbuAoeKUkeV12HX5cUFlM4Tp/jNeG+akzPvq/rcqijq6s315nftLKuHHjx+14QL8rNRWzjkstTlwpYHgrlaO3MB0ZdRMI0VHRoFMbwPeNd2yheWCGTPwcOzz+gGgfUweFRtrckt0U2ktKMYB3gIqfy/KYl1U/DhA3mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIudKkeo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709818760; c=relaxed/simple;
+	bh=c2OKAMNZCThzabiJmv5Pi+bnNNIpP7Q6TDnNcYxjfmw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hiBqqkdpqsvNjsZ4U4aHBnBYB2X8Ro7tAs19KlPHwBwLeysvAihX/CgQw+njyDAiWrewNV9iqsL4zPFiig7s+/5gY3udHyfWnXUKFy11oR/vdHr2bkWZSEh+CwWmqm5yUOeebh3UuSedrVQe6EntexovicyRX6KmcOIn6ZvRssA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OJ+ITYrC; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIudKkeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6071C43601;
-	Thu,  7 Mar 2024 13:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709818759;
-	bh=knNLcwVqg8jv1l/rgrHhTRsj59b8/zn3xoeOIeIyJfk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GIudKkeoDkMn+BtPXzwCpS6xMMrGuBZ7UV0fROChdqK4tX3gTXq98vHz2Bl/MaCPT
-	 /cAT78VQ9RE3ne+lj4+xlS/m4QvUEk+c37XfyIBPDL6OZ7YHWjfpfLyqmFpmDsop+r
-	 CzVLcXvjeWpVuq6xpe/X+fD+35WvgxTGJgvaQHnNrEXAMOvCQEZMdrT86sQzc/tB6h
-	 npjDzMohXJUalDiYu7oPusTqBamuw8+4a6I2+v9s5ORSv+u2xTk2VgISUoJ6VjZ63r
-	 XJeijMh219Wgf2GjpVlsoO0ZdEqUFyGGdVD4EXSrLQFDvcXwX1CONHaS6ZIxryGQOf
-	 3QaVuZIaZDGhQ==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 07 Mar 2024 14:38:35 +0100
-Subject: [PATCH v8 08/27] drm/connector: hdmi: Add HDMI compute clock
- helper
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJ+ITYrC"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e65140764bso722890b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 05:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709818758; x=1710423558; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=E/SwFKeyu0Cz8CMZ9BY5anwy2e+f+qNiUH5wmPNWioQ=;
+        b=OJ+ITYrCOFdA6CnMme1n85cjbcjsjbzcXLaBVXLjAQVDKPSYch08kbDbxGPbJ1gJcS
+         S5zCtkbGCvzRObQYyC3nGl5MnHE1Ve5itZS6Y/Lp34Ka0gW2SPrwozJFq9FhvlHsc8E0
+         BNq8oRiKBXT9LMq13sjhpzJd5mvpnAxBoCrDJIEBZSBP3PsxgFElIWr3igRSrMZZr9gF
+         l+10LV5U/10MNTZlMWHRJ/teOz8ERBNYMDCMVwIjhFT8KCj8I1ngl9CiRIqDI+ANCspa
+         akOiYKlle7esym9GL/78fBIUo1S48PpZJievYkRnwvlbonKPSNNrmVUsWBd7Kuqeg0sA
+         Y52g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709818758; x=1710423558;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E/SwFKeyu0Cz8CMZ9BY5anwy2e+f+qNiUH5wmPNWioQ=;
+        b=opXYd+o0ZF67B/Aa6ZPvu9vDdBB8JTKV1uhF9BG2Hv5skRTbWag+ZZpmf6yYUsOeqG
+         94a0dBNVcYcnwWrE5nfN5biocP4S95dhCYAVRVgB0qEktmp+S0orQFPZHUqq/lu4/kFo
+         HlOZjOyYV1+4mZzmSKpQPdsQ6s+N9VULAiNIcjmHaR9Nz/MfoqFucZH4UokF9Wq0NwJn
+         ztwRuRzBZdn/IVTSj1EmXU9ZW87FSPlnbEM4Lx6Sait43JmRs/BJTAqMBmpOR2D3ZSsm
+         EkdQjdQ55a+Wy0oAePCz52/uSSQbxHttMxn3B+jVpXXu+OGJkOceznGyuekYZ7Vuq9ta
+         ISCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUP7IErLHwG3EhCKsdT1b3jPMTwE4B1QmgS4WmsToAUv3vn1C22S7zrh0Nl4Xfy6dOm9OHTH6JmnJpu9dBcl0vFKE1byRUvqXV4WYFd
+X-Gm-Message-State: AOJu0YzNCRp/s5+rbYp+a1AMxtGFAhZAGhDWNUYKTEKr10qbaQkrV7Fp
+	vL9UFUMYLEL02VeeC/fAsBU81U2ztuxwI0J96YlVxd3S3y8bV14igS96lpBctdp7uBsIvXLuPnr
+	AuQmCiSlKfInrgSsHHA==
+X-Google-Smtp-Source: AGHT+IHz32782uRcDUcjLPEeb4P9whM7yS0F1jXCrHQfOc8Iv8MUgbMLaj0L1l7I93tNctD9q6p/q1YyXxJnzp/O
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6a00:1796:b0:6e6:4946:93e3 with
+ SMTP id s22-20020a056a00179600b006e6494693e3mr154496pfg.3.1709818758430; Thu,
+ 07 Mar 2024 05:39:18 -0800 (PST)
+Date: Thu,  7 Mar 2024 13:39:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240307-kms-hdmi-connector-state-v8-8-ef6a6f31964b@kernel.org>
-References: <20240307-kms-hdmi-connector-state-v8-0-ef6a6f31964b@kernel.org>
-In-Reply-To: <20240307-kms-hdmi-connector-state-v8-0-ef6a6f31964b@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4451; i=mripard@kernel.org;
- h=from:subject:message-id; bh=knNLcwVqg8jv1l/rgrHhTRsj59b8/zn3xoeOIeIyJfk=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKkvDye8FffR6jZ5UdDre3Ujn+Omhbc/L9T6ee1s1WcPr
- 617Nu6611HKwiDGxSArpsgSI2y+JO7UrNedbHzzYOawMoEMYeDiFICJZE5k+O/gJsh9RN9fcILC
- px9r4m5tPCu7xeeNnuR+C5+CiwUSR/8zMqxlU/9f+vOk/O+/M7sXNgu0q31uso5d6hzooJ6aNPc
- OAzMA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240307133916.3782068-1-yosryahmed@google.com>
+Subject: [RFC PATCH 0/3] x86/mm: LAM fixups and cleanups
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andy Lutomirski <luto@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, x86@kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-A lot of HDMI drivers have some variation of the formula to calculate
-the TMDS character rate from a mode, but few of them actually take all
-parameters into account.
+This series has a few fixups and cleanups for LAM code noticed through
+code inspection. They are marked as RFC because I am not very familiar
+with this code so I may have gotten something (or all of it) wrong.
 
-Let's create a helper to provide that rate taking all parameters into
-account.
+Yosry Ahmed (3):
+  x86/mm: fix LAM cr3 mask inconsistency during context switch
+  x86/mm: make sure LAM is up-to-date during context switching
+  x86/mm: cleanup prctl_enable_tagged_addr() nr_bits error checking
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/drm_connector.c | 71 +++++++++++++++++++++++++++++++++++++++++
- include/drm/drm_connector.h     |  5 +++
- 2 files changed, 76 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index b629c8e990f4..8cc1332f11c2 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -2895,10 +2895,81 @@ void drm_connector_update_privacy_screen(const struct drm_connector_state *conne
- 	/* The hw_state property value may have changed, update it. */
- 	drm_connector_update_privacy_screen_properties(connector, false);
- }
- EXPORT_SYMBOL(drm_connector_update_privacy_screen);
- 
-+/**
-+ * drm_connector_hdmi_compute_mode_clock() - Computes the TMDS Character Rate
-+ * @mode: Display mode to compute the clock for
-+ * @bpc: Bits per character
-+ * @fmt: Output Pixel Format used
-+ *
-+ * Returns the TMDS Character Rate for a given mode, bpc count and output format.
-+ *
-+ * RETURNS:
-+ * The TMDS Character Rate, in Hertz, or 0 on error.
-+ */
-+unsigned long long
-+drm_connector_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+				      unsigned int bpc,
-+				      enum hdmi_colorspace fmt)
-+{
-+	unsigned long long clock = mode->clock * 1000ULL;
-+	unsigned int vic = drm_match_cea_mode(mode);
-+
-+	/*
-+	 * CTA-861-G Spec, section 5.4 - Color Coding and Quantization
-+	 * mandates that VIC 1 always uses 8 bpc.
-+	 */
-+	if (vic == 1 && bpc != 8)
-+		return 0;
-+
-+	/*
-+	 * HDMI 2.0 Spec, section 7.1 - YCbCr 4:2:0 Pixel Encoding
-+	 * specifies that YUV420 encoding is only available for those
-+	 * VICs.
-+	 */
-+	if (fmt == HDMI_COLORSPACE_YUV420 &&
-+	    !(vic == 96 || vic == 97 || vic == 101 ||
-+	      vic == 102 || vic == 106 || vic == 107))
-+		return 0;
-+
-+	if (fmt == HDMI_COLORSPACE_YUV422) {
-+		/*
-+		 * HDMI 1.4b Spec, section 6.2.3 - Pixel Encoding Requirements
-+		 * specifies that YUV422 is 36-bit only.
-+		 */
-+		if (bpc != 12)
-+			return 0;
-+
-+		/*
-+		 * HDMI 1.0 Spec, section 6.5 - Pixel Encoding
-+		 * specifies that YUV422 requires two 12-bits components per
-+		 * pixel clock, which is equivalent in our calculation to three
-+		 * 8-bits components
-+		 */
-+		bpc = 8;
-+	}
-+
-+	/*
-+	 * HDMI 2.0 Spec, Section 7.1 - YCbCr 4:2:0 Pixel Encoding
-+	 * specifies that YUV420 encoding is carried at a TMDS Character Rate
-+	 * equal to half the pixel clock rate.
-+	 */
-+	if (fmt == HDMI_COLORSPACE_YUV420)
-+		clock = clock / 2;
-+
-+	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
-+		clock = clock * 2;
-+
-+	clock = clock * bpc;
-+	do_div(clock, 8);
-+
-+	return clock;
-+}
-+EXPORT_SYMBOL(drm_connector_hdmi_compute_mode_clock);
-+
- int drm_connector_set_obj_prop(struct drm_mode_object *obj,
- 				    struct drm_property *property,
- 				    uint64_t value)
- {
- 	int ret = -EINVAL;
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 29883e6f8e50..a859ad7ee04b 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -36,10 +36,11 @@
- 
- struct drm_connector_helper_funcs;
- struct drm_modeset_acquire_ctx;
- struct drm_device;
- struct drm_crtc;
-+struct drm_display_mode;
- struct drm_encoder;
- struct drm_panel;
- struct drm_property;
- struct drm_property_blob;
- struct drm_printer;
-@@ -2092,10 +2093,14 @@ int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
- void drm_connector_create_privacy_screen_properties(struct drm_connector *conn);
- void drm_connector_attach_privacy_screen_properties(struct drm_connector *conn);
- void drm_connector_attach_privacy_screen_provider(
- 	struct drm_connector *connector, struct drm_privacy_screen *priv);
- void drm_connector_update_privacy_screen(const struct drm_connector_state *connector_state);
-+unsigned long long
-+drm_connector_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+				      unsigned int bpc,
-+				      enum hdmi_colorspace fmt);
- 
- /**
-  * struct drm_tile_group - Tile group metadata
-  * @refcount: reference count
-  * @dev: DRM device
+ arch/x86/include/asm/tlbflush.h | 11 ++++--
+ arch/x86/kernel/process_64.c    | 10 ++---
+ arch/x86/mm/tlb.c               | 67 +++++++++++++++++++--------------
+ 3 files changed, 48 insertions(+), 40 deletions(-)
 
 -- 
-2.43.2
+2.44.0.278.ge034bb2e1d-goog
 
