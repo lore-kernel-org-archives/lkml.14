@@ -1,183 +1,118 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7BB12E1FA
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 14:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4890912EBFC;
+	Thu,  7 Mar 2024 14:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709820180; cv=none; b=MNJxa4TpsEjTf6jnIWa2BuhMvBpzdoIHx3iW7U1t1Du/nEKWyevL68/eZtQN3gBfHw2C6G6Cb1I0UX6fcaMwW5IPGK3ijxs8aA3hevc3j5yzA0K6Dd99lAQev558RuIPHFJyOIXVk3CqPpoEFU5iT/ZDXHgJWhQEqCGHXpfVwBs=
+	t=1709820183; cv=none; b=KqeyhOtR+XtfTesgZaZ/vZdJ1VQUDar3pJAPKQZiseGY+g95NNmRlGFdFY1FPEl/2eBsCDHy4vAQkqw4KY0b5oSBBI1FChdAjZ5MrcAnqBT1Sjsj8JwcKzHoO8qxo8PH9UadzHVaotJtV92IK8e5n5t42+adwCsJi6QoKv11WeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709820180; c=relaxed/simple;
-	bh=d5ZrSPOMf8VZYJPnucyZwra5gETQB13G5oByO6C2mU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/QlCcQmMT/0WLutWxRqS9Tzt8bwKh8247GyD1ZHcOTYnpKXuCg/I1Np9JkpyzX9DwrD0sccA0PMFZrccMktrO/OPOGg4YwnQpY1DurP9RJ9iBY6yWNELd6PiDR03RSVMGcbj8RQDqvQ10NSnWXb9S64h5zFGdoDaRU4sMPM5Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=caoii48l; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709820183; c=relaxed/simple;
+	bh=86pJV1of4eM2VTTxab9EqQyEzctfxjuUT6v9b5ZaRR4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RVksOPDDDYyzy3mZoAXN8S2Kx99AvOpK9ZuvJt9dUgZjx8EkUoPlGZkn2486rFM5qAMks3uIfV+3R5It40yAhyLiU8cYH0O4/OV0YugB4Tzv3e+a0Sz4OmI1O294aXEGYIPvj6isoFFPXxWKG7mWouPrfIB02PgS+r+Q+e3UFx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=AHrVBjk8; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="caoii48l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709820177;
-	bh=d5ZrSPOMf8VZYJPnucyZwra5gETQB13G5oByO6C2mU8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=caoii48lwHcK1xcG+TAPUzL/eS5HeSb/LsgWexTktJAixdiQI16cuK6nevouFsAZ8
-	 pEXTZJAW7btyAXaakdrdUJI2WL/ah3ATANAeGsM/YkG6EdyitYXV1u8jmzWXzNsTac
-	 lpnIIoCajGPywjQDOqbvDiHN8GXUCsgvw80NHYV8tHSg3uLOdG7hqKonus1cHB9Ugn
-	 KEj2XZZBxf6ryRhOSysQDbxypgoaC+PeEzGxXYn9ZY+uD2yyZXAJ8eZwZI8mkeq2Oh
-	 +U918b9ptRJR989V6LeSKmktnIjN5//YsNQS77nY9rR7mZ9JhEy0I68pJf88D4JnSO
-	 q//F4HvUnGNnw==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CBABB3780624;
-	Thu,  7 Mar 2024 14:02:51 +0000 (UTC)
-Message-ID: <5559672d-4f62-4ad1-95b7-94f69b8bb9ac@collabora.com>
-Date: Thu, 7 Mar 2024 11:02:51 -0300
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="AHrVBjk8"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 427A9dg7015304;
+	Thu, 7 Mar 2024 15:02:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=sMzsSSzo2PkJfpYCCdg9znEVD7Q6RBjU2TnjYoyuVdM=; b=AH
+	rVBjk8rM7YTS+jgI8EJcNLY95q+DL53Va4M/AfVEGPrcZgliQNbbgZeEiPfJOXnx
+	QFbqvJTlwvX93fGOqh+ewdbpxFcM2ZBujetMGbMu+sL+2QIBzZIwBGmlvj9LzDmg
+	yqulRMWT1xPJjfTuDk4BVlMesNMGjPS8s1NTDesf0CCTwI69/35F5tUwiJWhTeTK
+	VBRRaqKHfSBfmXKphmk5oGRqeHAa3l9PfA4kyYiT5eS3i5dyLZZ4KqfXqTHFYQv/
+	zQmAofOSlyIcoRGfPu4i3pyblcs/7BnxnHxjbZaWX5pESoB32XU5tWhd2tYnISh+
+	vkkVI3mDGEHfmyMr8a7g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wmej5dxs5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 15:02:24 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7CADC40046;
+	Thu,  7 Mar 2024 15:02:21 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CBE4F27D0FF;
+	Thu,  7 Mar 2024 15:01:11 +0100 (CET)
+Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 7 Mar
+ 2024 15:01:10 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/2] dt-bindings: net: add new property st,ext-phyclk in documentation for stm32
+Date: Thu, 7 Mar 2024 14:59:57 +0100
+Message-ID: <20240307135957.303481-3-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240307135957.303481-1-christophe.roullier@foss.st.com>
+References: <20240307135957.303481-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/11] drm/ci: Add support for GPU and display testing
-Content-Language: en-US
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- emma@anholt.net, robdclark@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com,
- melissa.srw@gmail.com, mairacanal@riseup.net, mcanal@igalia.com,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240306030649.60269-1-vignesh.raman@collabora.com>
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240306030649.60269-1-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
 
+Add property st,ext-phyclk to manage cases when PHY have no cristal/quartz
+This property can be used with RMII phy without cristal 50Mhz and when we
+want to select RCC clock instead of ETH_REF_CLK
+Can be used also with RGMII phy with no cristal and we select RCC clock
+instead of ETH_CLK125
 
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On 06/03/2024 00:06, Vignesh Raman wrote:
-> Some ARM SOCs have a separate display controller and GPU, each with
-> different drivers. For mediatek mt8173, the GPU driver is powervr,
-> and the display driver is mediatek. In the case of mediatek mt8183,
-> the GPU driver is panfrost, and the display driver is mediatek.
-> With rockchip rk3288/rk3399, the GPU driver is panfrost, while the
-> display driver is rockchip. For amlogic meson, the GPU driver is
-> panfrost, and the display driver is meson.
-> 
-> IGT tests run various tests with different xfails and can test both
-> GPU devices and KMS/display devices. Currently, in drm-ci for MediaTek,
-> Rockchip, and Amlogic Meson platforms, only the GPU driver is tested.
-> This leads to incomplete coverage since the display is never tested on
-> these platforms. This commit series adds support in drm-ci to run tests
-> for both GPU and display drivers for MediaTek, Rockchip, and Amlogic
-> Meson platforms.
-> 
-> Uprev mesa and IGT in drm-ci and add amd, v3d, vc4 and vgem specific
-> tests to testlist. Have testlist.txt per driver and include a base
-> testlist so that the driver specific tests will run only on those hardware
-> and add testlists to the MAINTAINERS file.
-> 
-> This series also includes patch to add vkms testing to drm-ci.
-> 
-> Working pipeline link,
-> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1119859
+diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+index 80937b28fa046..529665d4fc911 100644
+--- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+@@ -85,6 +85,13 @@ properties:
+   phy-supply:
+     description: PHY regulator
+ 
++  st,ext-phyclk:
++    description:
++      set this property in RMII mode when you have PHY without crystal 50MHz and want to
++      select RCC clock instead of ETH_REF_CLK. OR in RGMII mode when you want to select
++      RCC clock instead of ETH_CLK125.
++    type: boolean
++
+   st,eth-clk-sel:
+     description:
+       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+-- 
+2.25.1
 
-Hi Vignesh, thanks for this patchset.
-
-Just to confirm, the new convention is:
-
-stages are named per DRIVER_NAME
-
-jobs are named DRIVER_NAME:GPU_VERSION
-
-xfails files and testlist files are named DRIVER_NAME-<xfails-suffix>.txt
-
-Looks good.
-
-I just have some minor comments/questions in the series, please check.
-
-Regards,
-Helen
-
-> 
-> Vignesh Raman (11):
->    drm/ci: arm64.config: Enable CONFIG_DRM_ANALOGIX_ANX7625
->    drm/ci: uprev mesa version
->    drm/ci: uprev IGT and update testlist
->    drm/ci: amdgpu: update xfails
->    drm/ci: mediatek: Refactor existing mediatek jobs
->    drm/ci: mediatek: Add job to test panfrost and powervr GPU driver
->    drm/ci: meson: Refactor existing meson jobs
->    drm/ci: meson: Add job to test panfrost GPU driver
->    drm/ci: rockchip: Refactor existing rockchip jobs
->    drm/ci: rockchip: Add job to test panfrost GPU driver
->    drm/ci: add tests on vkms
-> 
->   MAINTAINERS                                   |  14 ++
->   drivers/gpu/drm/ci/arm64.config               |   1 +
->   drivers/gpu/drm/ci/build.sh                   |   1 -
->   drivers/gpu/drm/ci/container.yml              |   6 +-
->   drivers/gpu/drm/ci/gitlab-ci.yml              |  13 +-
->   drivers/gpu/drm/ci/igt_runner.sh              |  28 ++--
->   drivers/gpu/drm/ci/image-tags.yml             |   5 +-
->   drivers/gpu/drm/ci/test.yml                   | 136 +++++++++++++---
->   drivers/gpu/drm/ci/testlist-amdgpu.txt        | 151 ++++++++++++++++++
->   drivers/gpu/drm/ci/testlist-msm.txt           |  50 ++++++
->   drivers/gpu/drm/ci/testlist-panfrost.txt      |  17 ++
->   drivers/gpu/drm/ci/testlist-v3d.txt           |  73 +++++++++
->   drivers/gpu/drm/ci/testlist-vc4.txt           |  49 ++++++
->   drivers/gpu/drm/ci/testlist.txt               |  84 ++++------
->   drivers/gpu/drm/ci/x86_64.config              |   1 +
->   .../gpu/drm/ci/xfails/amdgpu-stoney-fails.txt |  26 ++-
->   .../drm/ci/xfails/amdgpu-stoney-flakes.txt    |  10 +-
->   .../gpu/drm/ci/xfails/amdgpu-stoney-skips.txt |  17 +-
->   .../drm/ci/xfails/mediatek-mt8173-fails.txt   |  15 --
->   .../drm/ci/xfails/mediatek-mt8173-flakes.txt  |  13 ++
->   .../drm/ci/xfails/mediatek-mt8183-fails.txt   |  21 ++-
->   .../drm/ci/xfails/mediatek-mt8183-flakes.txt  |   8 +
->   .../gpu/drm/ci/xfails/meson-g12b-fails.txt    |   5 -
->   .../gpu/drm/ci/xfails/panfrost-g12b-fails.txt |   1 +
->   .../gpu/drm/ci/xfails/panfrost-g12b-skips.txt |   2 +
->   .../drm/ci/xfails/panfrost-mt8183-fails.txt   |   1 +
->   .../drm/ci/xfails/panfrost-mt8183-skips.txt   |   2 +
->   .../drm/ci/xfails/panfrost-rk3288-fails.txt   |   1 +
->   .../drm/ci/xfails/panfrost-rk3288-skips.txt   |   2 +
->   .../drm/ci/xfails/panfrost-rk3399-fails.txt   |   1 +
->   .../drm/ci/xfails/panfrost-rk3399-skips.txt   |   2 +
->   .../drm/ci/xfails/rockchip-rk3288-fails.txt   |  58 ++-----
->   .../drm/ci/xfails/rockchip-rk3288-flakes.txt  |  20 +++
->   .../drm/ci/xfails/rockchip-rk3288-skips.txt   |  54 +------
->   .../drm/ci/xfails/rockchip-rk3399-fails.txt   |  38 +++--
->   .../drm/ci/xfails/rockchip-rk3399-flakes.txt  |  28 +++-
->   .../drm/ci/xfails/rockchip-rk3399-skips.txt   |   5 +-
->   .../drm/ci/xfails/virtio_gpu-none-fails.txt   |   1 -
->   drivers/gpu/drm/ci/xfails/vkms-none-fails.txt |  33 ++++
->   .../gpu/drm/ci/xfails/vkms-none-flakes.txt    |  20 +++
->   drivers/gpu/drm/ci/xfails/vkms-none-skips.txt |  16 ++
->   41 files changed, 784 insertions(+), 245 deletions(-)
->   create mode 100644 drivers/gpu/drm/ci/testlist-amdgpu.txt
->   create mode 100644 drivers/gpu/drm/ci/testlist-msm.txt
->   create mode 100644 drivers/gpu/drm/ci/testlist-panfrost.txt
->   create mode 100644 drivers/gpu/drm/ci/testlist-v3d.txt
->   create mode 100644 drivers/gpu/drm/ci/testlist-vc4.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8173-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-g12b-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-g12b-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-mt8183-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-mt8183-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3288-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3288-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3399-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/panfrost-rk3399-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-fails.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-flakes.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/vkms-none-skips.txt
-> 
