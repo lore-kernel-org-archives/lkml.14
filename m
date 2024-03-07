@@ -1,192 +1,233 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7906182BB;
-	Thu,  7 Mar 2024 18:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709837574; cv=fail; b=gcXYTEW0a20hGQfdc0lLhz1xoZA0fyndCj0w9GFaH/z4yOaRlUKqQPUgKpvX4XRy71xhWuL2a5lnPh4p3drllSpxcz+NBfWTZfcZvnJ69B3/4AXWtEFGuJYUz6JV2fbkuAvf+R7vZEyGo55Bz70HoWu8aLEXma5tDF5tAjo1xJE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709837574; c=relaxed/simple;
-	bh=ZJnv5yGrKrJ0HXC+EnOJeMG+JZTb7JtRlrCU/7EpitY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=o3sh061V6+8Mcp4A9G60JzQlNRvyIx8KmgQYDuqcJULlCgFsvjn96COqgJ14k+WpB5XkoPbCeuxRcUlvtJKpjnHTegjSskjHUhJNYC3K0MygLWJGLKNNDT60vnYIGg0389DkHv1zCy5/am8ds+Ka1UcLrDWRNrJvctaDQq5enOw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GQCtuXXk; arc=fail smtp.client-ip=40.107.236.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63346136650;
+	Thu,  7 Mar 2024 18:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709837578; cv=none; b=VGdaOckRsWxhhOWL4LFjvOtLNDBg7qEV/AGNmJW6moJqMwJZWJq/PjTHs8ECj/PYEz+MHJrNGFHIOL0Mnqy2rgtn9IpLDr2YivCGzrUj0hDHBuiHpdpHBcY7WGFYNCJmknx8i+L9iTJl58CMZ5eSeT+l920ON59z5HDIuih2Alk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709837578; c=relaxed/simple;
+	bh=n3Kll0juBLOTNi3cn/fisBNxbSwgu3KXTXnol1lKayg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fTNK3cd5utwVIcLBOWOOG/nZ4KgH6JtdpUR0YbREeMfF+GE6Y/k8Zyyq7/FyI0n0i25K9t0PN6qs6hknCM93I/4t/8NzzZQH6oi+CdviFf1mrVHMM9uAQfkv8UeRkEQela2xexYlbRBJS3gxZOLK9MAj1RWWkVsGoBgx0ADUJB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YbEWqatm; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GQCtuXXk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W7/yCux5+bLvWQvIh0Tch8/bo5fC9nEGptKsRRrc/NMjzj3uZNVq/iMpsVQ33oQltQ6GQsKmOQktCKcpwWOJZKVBxxQmnlQs9VteK59rvq/DcB3O9eev5ZWa6JXrn6uA4om3IekIjR3MQcwg0K7Qo0PS/znYU02M02v2NQKaRA6dGZnHrKFqGmkCWFyP+CA/kjfgF1Y+xpmWkpogQanLue+qseFNFaCMJOijAL++J0vFeG7OFtICtS56a82+iLsEjKQKjoRkuO5LHVzQW5J38TXOIUfyA58S8wY3KBVLNFjOJiPrBYJmTLzMSaACik8UNGwhXNRex64EA5NX0W7LuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7+Y7s/RkZuGf10Ovd0Brp4qozHuzny08T2I8Ase4J4I=;
- b=nTclPz7b+z6I4JvN3WvV5DgzDd63XLpCmTg5QlWC+Un42rBErQFFGUhO0X/K0APJzDdxRf0zYKzXSK8ufGXcQjBnUdQTLZ3kGcniEJCgw8tyjgEieshNNE4R6ZNTf1rAPaRO6dzxAcDPeENL4zFprlaHXbBhwhT53CAbF3ri0jdYU2zv0Vopof8C7YpKbLj6eWsrQxJQvf2N6/ZZ9hNVIdNTmlKRscjFLFY2895ILcAQV+2NKLZnPKGBYOyNZFJNsennzISj9yNeWh7sIRUA3M1wjpITSasjDQHdGCf7e+WjW14xq4SMJk5vVjTGgIYYxpDIoSxcfnoIcUsilvGZmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7+Y7s/RkZuGf10Ovd0Brp4qozHuzny08T2I8Ase4J4I=;
- b=GQCtuXXkw/M25UdxXTfTP2RSMpN7dq3GaExCWO5lwzioFU3n9hLjqUQKOzgm4GZ88izEFnizlLut1PaOGALX1f30w0Ihy0tkpsW/IgczH42OO8Uwe49lVu8uytKnm7s0eYvMWIUB7AEvAMtcAgDdG9Klow5XcdFe8Q6qT2EpKLB5a01qSXPVHq/tupHpKPrnGT+FXNb/sViQIx4sHecW6+e+VPdSA4g7i4Wbv/B4uYa5EqSsRzoronYah15g63hvN4K8ut5EHv6mqojCa1ULZHuLiAHuN6x0wtMOO5FeeFS/GhPeqr0gbNa8sugdWrbvH+NpFvWEaxVGvDTiuWN3hA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by PH8PR12MB7279.namprd12.prod.outlook.com (2603:10b6:510:221::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Thu, 7 Mar
- 2024 18:52:49 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
- 18:52:48 +0000
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
- <20240223192658.45893-2-rrameshbabu@nvidia.com>
- <abbff26c-c626-42ce-82a9-4dc983372de3@intel.com>
- <875xyex10q.fsf@nvidia.com>
- <a84df9ec-475d-4ffc-a975-a0911a57901e@intel.com>
- <87il2evhtk.fsf@nvidia.com>
- <ec969f62-a1bb-4287-a4eb-083201134bae@intel.com>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Saeed Mahameed <saeed@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan  Corbet <corbet@lwn.net>, Richard Cochran
- <richardcochran@gmail.com>, Tariq  Toukan <tariqt@nvidia.com>, Gal
- Pressman <gal@nvidia.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, Ahmed  Zaki
- <ahmed.zaki@intel.com>, Alexander Lobakin <aleksander.lobakin@intel.com>,
- Hangbin Liu <liuhangbin@gmail.com>, Paul  Greenwalt
- <paul.greenwalt@intel.com>, Justin Stitt <justinstitt@google.com>, Randy
- Dunlap <rdunlap@infradead.org>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Kory Maincent
- <kory.maincent@bootlin.com>, Wojciech Drewek <wojciech.drewek@intel.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Jiri Pirko <jiri@resnulli.us>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
- <joabreu@synopsys.com>, Dragos  Tatulea <dtatulea@nvidia.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v1 1/6] ethtool: add interface to read Tx
- hardware timestamping statistics
-Date: Thu, 07 Mar 2024 10:47:16 -0800
-In-reply-to: <ec969f62-a1bb-4287-a4eb-083201134bae@intel.com>
-Message-ID: <87le6tvpq8.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR05CA0084.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::25) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbEWqatm"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dbae7b8ff2so10529835ad.3;
+        Thu, 07 Mar 2024 10:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709837577; x=1710442377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AQQbLvgd4v+h8o0thODyrb8/bjQo/5KA5hZsJKz+3js=;
+        b=YbEWqatmSLlW2Iy3FwQxBe14wABgzVkIs13PoDaKWegI63ciesGv9/Il9xmQRqDpPQ
+         6xPH7iGJcHJs3CpifxJmVGXjaXuWoP5EH6V7ZNrwRH2VKNGAe95qD6pSt1tIHBvUvfjB
+         CAWhQlp1vqwmhsQIIZ6nlhyowrHj+/LsWgtfqd9MMzt04lBpOoGmCcagOG+LaeDHmxvc
+         oueUqJRdzsCHOTIFnmHKH8zaV/cqES6P9Yen4egeC31oD3uQ1EtVRDAXzvc708nRcJAF
+         Zos54zmz4+iNjHzJJjDij1+38Ga58gYlHl6mfzc+hmjwBYe8aDPF6xFcE0p8s+9WCqn2
+         DdVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709837577; x=1710442377;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQQbLvgd4v+h8o0thODyrb8/bjQo/5KA5hZsJKz+3js=;
+        b=jWjcH9G/pb9KNRAmyewLNvELRu2uAvh310mL92B4zfKiJ57EsoqEsaCg85ZCrJ18rG
+         bqEd2Feyck8+V2ZfzCANtLYidoE7qa9ZiTUxKMARWo1xBhcqoVIa0Ko6KqdF09S6n3jO
+         yLIq2bao++0B5jXzGDZcQuUfJPJrVuxD9YJLrUIYjKs/J67g3SLno9TUY30ElZ9PhuIo
+         NhFSK+4ToTkaAmCWAHkVdJbQwiOSjhsODwbpGO1A2gaZpUqpfIDbYtSK9DSvHhcehkL/
+         U2YfpGe1j2lbS5WLx7D6xYoF5kLLbmncQsbxaqF3hc3LuBYk8d1o3eHaL0i+fpzUmrUH
+         wooQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyr4G/8hcwpxZD9FdcMruyNtgGTsADtqPnZAvS3Dcx/ZdIMhEC0kyz6kL+64uTxqE3OMuxllFvRWrVIF3aKYxiQA2roHLBKY/dX0zjW0omMn08AfV0EcCxXx8uGItMtLWLogY2yFsrHA==
+X-Gm-Message-State: AOJu0YyxIU3Uo7/imOeeBgv0sFR5OoXqKJx0R0+D7l3CR2Tj+RBKfHgQ
+	IGL6NEwmUQVff4oe61Pp0qglwtKHQBrUPglUeq62T9kLM1dZcOHW
+X-Google-Smtp-Source: AGHT+IHilBvCxdXn41263FwRkBDdMvd1VAR4rFaj12NiHdSFgglCEdzYUDfHPeuKZHjeIbrP8grRZQ==
+X-Received: by 2002:a17:902:db05:b0:1dd:46ca:18a1 with SMTP id m5-20020a170902db0500b001dd46ca18a1mr3650307plx.34.1709837576535;
+        Thu, 07 Mar 2024 10:52:56 -0800 (PST)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id v10-20020a170902f0ca00b001dd635551f1sm385706pla.255.2024.03.07.10.52.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 10:52:56 -0800 (PST)
+Message-ID: <a25d4d76-a49a-4423-8916-5d7d9303b87a@gmail.com>
+Date: Thu, 7 Mar 2024 10:52:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|PH8PR12MB7279:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec3da949-73f7-4900-c215-08dc3ed7c891
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	tIEc4xOZoUKVauaMhN2kHNFFFcN9a/gDP1ZkLUPEdqe+Sph2KB1pBspH1pihS57lPukaqSx2FULi/EfqE9pVR3IOLp97RbRJky35Bkmd8oW2V4bWXpEzLsF7UVIsg4V6qfMXgcy3r7/zMDCiHcJTr8t0PeSl4N+sghPM6J8K5NpbjSgbVbk49/TSdxCz9W5zKOmE/3t6FNFG665h3p/YMRdO3jlIKAxfDZejaOQiiSIUAhUyfQpBIZmfrih3OqNyABnVm+sI8mbB+bI3s1qHEuTYOdNM1R5f7P7gedFccnqnAbmlyH7f6ZNXHsnoPIM8fHm6W/pWp3R5N3qjcwQHkxvZ+gMl7Ax6rOmBvVlyK3vHiOfjpSlNqnEhkfuuoMHs04y5OVFlT+3fYjTOZL9NOHHlNxTfvjEtFsO2bUgutj1q1F87soWHeHVIyipLxzbMMmcRkclcZ7ncbXaZFefMuCF4O1jBNZnlDS/satc3Prw5k7MvRVVWtWKUcjIb3lpPvGn+ssvmn1kcls2p0fF2rjUyn0gkQheNnKaNHkfnURbxAUs3DXbQV9jUNMG5UR6Z5CW69/kqe15csjwCk/wBz/Ga2WeKhnCvkIfqJBUC4RIgQKHSNYE4IoecF2bwbgtAwIcMf/iT5w6XGEKL8yg9GI05tFINkM3/rWqM3TEB6pg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/DEtlcBv7rXzo9oDvLon1KKfI5sMSPsWErjH8h/h6gzirxb15cGb0oPIzbEu?=
- =?us-ascii?Q?hici/iyEiniJ5joweR3M84FDN06bpISuADQse/vuR9Bn5+Z0xs/uefyfmwBP?=
- =?us-ascii?Q?BGM8omCxUBdZmq7TS0gyOVKNGm8ORezaukRY7J+Hg3az2D3F5pNODY8wahck?=
- =?us-ascii?Q?Evwe+6MwPj5DMlwojn2s4fyt6qMGQ/QTj5K+MG4UfJ2VDhvmRP4r5oUCgP31?=
- =?us-ascii?Q?i6Kit3hxyzqb8X6prbdcfgRC7Kz2i3BSv/Xdq55Rdw6JB2lf9FGA5iqJDo4z?=
- =?us-ascii?Q?8tCCUZT79NALMY1J4Z5FfYLIH4JqWYrdwU1t1Aw2csrjU/5pGSqf2VPl1Qo7?=
- =?us-ascii?Q?XDPN59PZ1/APwZirXSEu7QAEXrkQveT55t7KXQ5sSxtqlIDAKtdVwRMOUp+H?=
- =?us-ascii?Q?73LMcPpYz7DAvSuo0apKnG2d06UnInszHMh3/C3w6NYstqqHhi5sIhcxopOS?=
- =?us-ascii?Q?ODTC+dFJw0IGrq9YrmOV4ZQogx2ixf7kaxYUe9rsFgG6Oyic7/CTRkXcDU6E?=
- =?us-ascii?Q?GbBn6UCHcihm3h+rVGS4apmXVO7QG5O5wKMnqETdmEll+E+zQo2NfehVn+Va?=
- =?us-ascii?Q?MqaBL5ca6SWek3x1LMbOtKYDuUWI6rK/lLzy72VAOJt6a7kVwgRoXO/SMkdP?=
- =?us-ascii?Q?s5PfHVp77dGEh9DjMiv7BuK+XUE34bguwS5hn+wRSSj8BwGdh/JZXRQYfc8A?=
- =?us-ascii?Q?FhFnsY7KFIVK4HqLHeIgMcuXi5Wi2TuWYJFOXCGGDJHStRDKBT2eLCKO/xJF?=
- =?us-ascii?Q?wNVxbqJ58QN5QnSOIWvoaNP8FatByhldCtpXK4giWNNaQrJVvOHW9st08YUi?=
- =?us-ascii?Q?/fToNsfj50Hivw8JbRXJOccCY1nKAPLDjL016381KSFD98gDQ+kFxHdJg9Hs?=
- =?us-ascii?Q?v2dpz7icDtfWiDlDPAIC7hgqSMk9F272hlJP4S3TL4i1ERFJjgV7zre4n6w2?=
- =?us-ascii?Q?1EGVFrk0OsGNf+SUrAN3V//ZocAIyj5jctm/0N9dWoz7NZX7W2t/C2fjbCeY?=
- =?us-ascii?Q?REH5rg32frx/WJWeiC6yjEsu2jrvbzCppJRHoMGPsWQJultVFg7C4M1qrfy4?=
- =?us-ascii?Q?lzKHF8fO2D2s1HgT5t5mlib3QEp3eUDhZwIsjjCXuJRFBbkBrfsYGZPAWEVF?=
- =?us-ascii?Q?9kR7XX8PxWjrip4pwzDci8Kgl9RU8vWN2MA8q3k8GJzi0mtRogw7rxBpdDrY?=
- =?us-ascii?Q?tWpRt/2ibOTZ0jn1tcizVazHiQGynfm5xIueDtoYzBEvr3Ty7e07dh6Bi76w?=
- =?us-ascii?Q?BZR9QQ+ROPCwnJbLVVLGlHUbSIeiKXD5oUYTHsLIFlaTnA0bgbQvtqmS6La7?=
- =?us-ascii?Q?V4s1kekwU0eHejflHe766+ta/EtO6ZarKLSzt/BLqOntqEinJYnzcl797IBF?=
- =?us-ascii?Q?ngaQf60NoI8q9KA5Vrr/2QLQ0AMXpUM7lmmIuB7w1at9i4BKbWz6dY2TPdYT?=
- =?us-ascii?Q?ZhIirst1E7TMI8sUDaAd/EMtpaEJWciMsQkxWclXJTRuIjYE5S8Zg/DKngkr?=
- =?us-ascii?Q?loDTv/9bsbeV6TvST4JorbvlH9ByVLXLRpj5Ea9W29ouXX5cJEM1IPvWjlD/?=
- =?us-ascii?Q?2csT+sFmlqcgSfY0eV4BlsEb1RtjocaLowRkdT9Xu+21slEnQIx6WBuJHkcI?=
- =?us-ascii?Q?fw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec3da949-73f7-4900-c215-08dc3ed7c891
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 18:52:48.5344
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JCoLjUrhYQBMdZLnjnS+4sVYS19E+lvP8pPQhlKX+MMdhJvcB2QjqW6tFy4gKleimYjAs4FfSj2B7/0WtkPT9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7279
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 2/2] net: stmmac: dwmac-imx: add support for PHY
+ WOL
+Content-Language: en-US
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "festevam@gmail.com" <festevam@gmail.com>,
+ "xiaoning.wang@nxp.com" <xiaoning.wang@nxp.com>,
+ "linux-imx@nxp.com" <linux-imx@nxp.com>,
+ "alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>,
+ "joabreu@synopsys.com" <joabreu@synopsys.com>,
+ "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-stm32@st-md-mailman.stormreply.com"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+ "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
+References: <20240306172409.878928-1-catalin.popescu@leica-geosystems.com>
+ <20240306172409.878928-2-catalin.popescu@leica-geosystems.com>
+ <bbe3e611-a310-41f5-a037-4b7d5e914b94@gmail.com>
+ <ddd2f984-e5e7-4708-a013-bfd668794466@leica-geosystems.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ HGuUuzv+GKZ6nsysJw==
+In-Reply-To: <ddd2f984-e5e7-4708-a013-bfd668794466@leica-geosystems.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Jacob,
 
-On Mon, 26 Feb, 2024 11:54:49 -0800 Jacob Keller <jacob.e.keller@intel.com> wrote:
-> On 2/23/2024 3:43 PM, Rahul Rameshbabu wrote:
->> 
->> On Fri, 23 Feb, 2024 14:48:51 -0800 Jacob Keller <jacob.e.keller@intel.com>
->> wrote:
->>> On 2/23/2024 2:21 PM, Rahul Rameshbabu wrote:
->>>> Do you have any example of a case of skipping timestamp information that
->>>> is not related to lack of delivery over time? I am wondering if this
->>>> case is more like a hardware error or not. Or is it more like something
->>>> along the lines of being busy/would impact line rate of timestamp
->>>> information must be recorded?
->>>>
+
+On 3/7/2024 1:13 AM, POPESCU Catalin wrote:
+> On 06.03.24 18:41, Florian Fainelli wrote:
+>> [Some people who received this message don't often get email from
+>> f.fainelli@gmail.com. Learn why this is important at
+>> https://aka.ms/LearnAboutSenderIdentification ]
+>>
+>> This email is not from Hexagon’s Office 365 instance. Please be
+>> careful while clicking links, opening attachments, or replying to this
+>> email.
+>>
+>>
+>> On 3/6/24 09:24, Catalin Popescu wrote:
+>>> Add support for PHY WOL capability into dwmac-imx MAC driver.
+>>> This is required to enable WOL feature on a platform where MAC
+>>> WOL capability is not sufficient and WOL capability built into
+>>> the PHY is actually needed.
 >>>
->>> The main example for skipped is the event where all our slots are full
->>> at point of timestamp request.
->> 
->> This is what I was guessing as the main (if not only reason). For this
->> specific reason, I think a general "busy" stats counter makes sense.
->> mlx5 does not need this counter, but I can see a lot of other hw
->> implementations needing this. (The skipped counter name obviously should
->> be left only in the ice driver. Just felt "busy" was easy to understand
->> for generalized counters.)
->
-> Yea, I don't expect this would be required for all hardware but it seems
-> like a common approach if you have limited slots for Tx timestamps
-> available.
->
-Sorry to bump this thread once more, but I had a question regarding the
-Intel driver in regards to this. Instead of having a busy case when all
-the slots are full, would it make sense to stop the netdev queues in
-this case, we actually do this in mlx5 (though keep in mind that we have
-a dedicated queue just for port/phy timestamping that we start/stop).
+>>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+>>
+>> Nope, this is not about how to do this. You use a Device Tree property
+>> as a policy rather than properly describe your systems capabilities.
+> I'm not sure what policy means in that context.
+> BTW, dwmac-mediatek does the same with binding "mediatek,mac-wol" which
+> is a commit from 03/2022.
 
-Maybe in your case, you can have a mix of HW timestamping and non-HW
-timestamping in the same queue, which is why you have a busy case?
+Policy here means you want a certain behavior from the OS that is 
+consuming the Device Tree, and that behavior is encoded via a Device 
+Tree property. This is different from describing how the hardware works 
+which does not make any provisions for getting a behavior out of the OS.
 
-Wanted to inquire about this before sending out a RFC v2.
->> 
->> The reason why I prefer busy is that "skip" to me makes me think someone
->> used SIOCSHWTSTAMP to filter which packets get timestamped which is very
->> different from something like lack of resource availability.
->> 
->
-> Busy is fine with me.
->
+> I understand this way of doing became "unacceptable" since then ??
 
---
-Thanks,
+It was not acceptable then, but there is only a limited reviewer time, 
+and it is easy unfortunately to sneak through reviewers.
 
-Rahul Rameshbabu
+>>
+>> What sort of Wake-on-LAN do you want to be done by the PHY exactly? Does
+>> the PHY have packet matching capabilities, or do you want to wake-up
+>> from a PHY event like link up/down/any interrupt?
+> 
+> PHY is TI dp83826 and has secure magic packet capability. For the wakeup
+> we rely on a external MCU which is signaled through a PHY's GPIO which
+> toggles only on magic packet reception.
+> We want to wakeup _only_ on magic packet reception.
+
+Then you need to represent that wake-up GPIO line in the Device Tree, 
+associate it with the PHY's Device Tree node for starters and add in a 
+'wakeup-source' property in the Device Tree.
+
+Now the PHY driver can know about the existence of a GPIO and it can 
+know the PHY is a system wake-up source, so the driver can call 
+device_set_wakeup_capable().
+
+In user-space you have to configure the network interface with 
+WAKE_MAGICSECURE which needs to propagate to the PHY driver for adequate 
+configuration. Still in user-space you need to make the PHY device 
+wake-up *enabled* by doing:
+
+echo "enable" > /sys/class/net/ethX/attached_phydev/power/wakeup
+
+If both WAKE_MAGICSECURE is enabled and the PHY device in sysfs reports 
+that it is wake-up enabled would you wake-up from the PHY's GPIO. Your 
+PHY driver ought to be modified to check for both
+
+device_wakeup_enabled() and wolopts being non-zero to call 
+enable_irq_wake() on the GPIO interrupt line.
+
+That's how I would go about doing this, yes it's a tad more complicated 
+than adding an ad-hoc Device Tree property, but it's more flexible and 
+it's transposable to other configurations, too. Whether that sort of 
+encoding needs to be in the individual PHY drivers or somewhere in the 
+PHY library can be decided if we have more than one similar 
+configuration to support.
+
+> 
+>>
+>> If the former, then you would need to interrogate the PHY driver via
+>> phy_ethtool_get_wol() to figure out what Wake-on-LAN modes it is capable
+>> of supporting and then make a decision whether to prioritize Wake-on-LAN
+>> from the PHY or the MAC, or maybe only the PHY can actually wake-up the
+>> system in your case.
+>>
+> stmmac already calls phy_ethtool_get_wol/phy_ethtool_set_wol through
+> phylink_ethtool_get_wol/phylink_ethtool_set_wol. But needs flag
+> STMMAC_FLAG_USE_PHY_WOL to be set. Otherwise, it will only work with MAC
+> WOL which we don't want. With the new binding we just allow the MAC
+> driver to call the PHY for the WOL capability. This doesn't force WOL to
+> enabled or disabled, as it is still up to ethtool to configure it.
+>> If the latter, then you need to add support for WAKE_PHY to the stmmac
+>> driver.
+> No, we don't want WAKE_PHY, we want WAKE_MAGIC/WAKE_MAGICSECURE which
+> stmmac driver already supports.
+
+Does not matter, it should be up to user-space to intersect between what 
+the PHY is capable of waking you from, and what the intent is.
+-- 
+Florian
