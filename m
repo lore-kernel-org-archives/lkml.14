@@ -1,215 +1,102 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8CE1292F1
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6A81292F3;
+	Thu,  7 Mar 2024 11:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709812073; cv=none; b=kGRtMrzPnpgzapkG6x1EfJtfS6ZzZuxk8pOIj8jK3hOrkrJZh34SXsDenu8RNErbKskA9gQnJ3uBqYTo7w2mCIXqs3rz/OTYAvS5ZC0c4DuV13bKtX2q856OGSHzQxfXHXq7nigU4Nrq+tLKnXj8HUFDyMY6ePzijw5GonyMTdE=
+	t=1709812099; cv=none; b=LwCgzMd8NjG/KqllJX5hBR/BespSuPRmjnxLJWsBVxcAiHhbUwZz4DcWAEwtHh6FYsaV/LImnM6jSGNkxn+DVIrxoRo/pGrCcDAsJSFfEGJ2OxeOEWD7ASMBGdOw8zDc0NVz7WVFMvsXAC8XfuiuvJTYlLUbRoPJigTU0uALizU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709812073; c=relaxed/simple;
-	bh=Vrv0z7gQFMDUOBWY2rKoK6/7cKBL3W4o2tjUetSS3yw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6zyeGVIbOy9Stx4fUNloV//Suc3JBDMkFSo44By6/f7+h0CjGFbG5fTdWbX5RYUiGyT1pguZSwyCps63J+oHb2rGj8fQNqxseVm9JOI/eqxFLAgTtwm9bCYRHMmFjVz7emiyBvkaVWXFvn/k/IWTUSjosRSbaSJDZdVa12+4rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NYT9CZbD; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709812099; c=relaxed/simple;
+	bh=+NFhUoHsm1k3teppr6MH5QMBv/O4fijuunYR0JJDBeE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ODBxksG+GVElrncZvE4wN7uHCGRaeFRTt+o8VD5Ho4TsI+Egl1JwoObSsy0fekObJH3RMnAkWL5eRDY1X6GB56Xd8z1wLp1fz4n1Vcqnk4EjtD71DgYCP3ZQ70ggzP/2FmOeoWtnzX9Pd2SoVbH61/X6FnM3nGUgv8VquUI28nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=kxpcfwwc; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYT9CZbD"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a456ab934eeso124321966b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:47:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709812069; x=1710416869; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9iTWvvRreThJbr792gSSUgcVGKkhqTvLaTQ6MbUXeg0=;
-        b=NYT9CZbDiJI1bjs4R0H4GhgAZSS5N7xYTdCMidxcwSld1d8/LrelKEn+ABgezg1oB6
-         Kx0QyA8OpbPFl92An2kaqZXXFpImTW2IX2X0w8q1NYO5pOIkw0VY0EDuQ5LMobAJYwVy
-         75oKjsZum8WEXUX5P1D/yTdAmzCJtAxmDKwLXhCjDanNTH+B1YxbjrgpW2qiNCuYh2S/
-         RteKEnNRocXHFkwCGJt6TJMzRuZbGQDTx0BHrjbxZnN3Re3j3tYB0pYsqmntWsuA9LaA
-         CROPwFUtidvAlK/nFzojkb/kSe54XB99oV15vIj1cpXSxMMYMN97Xf/P+ENn0JsP+Rgh
-         PAUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709812069; x=1710416869;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9iTWvvRreThJbr792gSSUgcVGKkhqTvLaTQ6MbUXeg0=;
-        b=ChnDFI401RsE1j5P11fUFkhtmnJSCOkbBGugQyy6JTLZNUZnIB7Rf8SEQ10iCJQe2R
-         +D6TxTjeX+NJJXzdlFTyesFUpfKyGuKvmIycX3TSJk8tGAPMph2DczW8lfaIiRs96gXv
-         UmM39BJSdBFMI9L2/oxFnH7aVBsf2tCWGzGgVwQtu557/dyj5DQLc49vjIAt+ACE8PPi
-         /+bLot6igw2u9/nAqFdXq7FFXkpUW8EVyWbwXUZpX9hBVA3HPqVrvrXLQBKAfA8dDmwi
-         98D5DyFhLayMKj7nnjqh3hlQPSPhYg94aRVeRekYvoDYuY6j0s2J3F0wSno2AuG7Fng1
-         exwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYAmTEP8GTvyS9XmuEZxOsB9ObQmtKsLDAPh8MlxgsjDgBnMWqflKSodzWoMtqa6xwd6EVFjKVFNSlZzS6PqABWDXQz8qAEUAV8ndS
-X-Gm-Message-State: AOJu0YxTbC+CX5e9XRXnNWpof+3g3yS4J9VzH6DU2WX2i2g3rPyF9ref
-	I0hmEeuqLCFyPgBXMpwzL8XP6gy431REVsKeGBMepKTKZyn0FM8ejneK70zSiac=
-X-Google-Smtp-Source: AGHT+IHRG8/2xC0WFEoGCqSGwJHFifqu4sOFzsxZ+jgZOKt7ZpnspuVHncf/NIbMkXl0Im//GVXc+Q==
-X-Received: by 2002:a17:906:c454:b0:a45:432:cacc with SMTP id ck20-20020a170906c45400b00a450432caccmr9577540ejb.61.1709812068821;
-        Thu, 07 Mar 2024 03:47:48 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id s2-20020a1709060d6200b00a45a73e0be9sm2859806ejh.180.2024.03.07.03.47.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 03:47:48 -0800 (PST)
-Message-ID: <4220eff4-4d77-492f-bdcd-a8e44b9c4f81@linaro.org>
-Date: Thu, 7 Mar 2024 12:47:46 +0100
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="kxpcfwwc"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 94974419F6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1709811617; bh=FmaCOdSpzTDO+fx/nlS5kQLhsJEKyzgeV8XwYx9O5Fc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kxpcfwwcWbrdGd+gN6hesYJ00BzxZIN9Ni6iL33tmTfDRi7nforCr+yM4PmygA/Z0
+	 8FppJ530gOgPnBZQN9X57tbfuJVWRLdbDHy6QzGHjzy3FkiKz24s9WgZHug6pgubOW
+	 ncUK9BvvNvoNHp5fE3/fQOMNcqP574GqGuEdj7cYrk7gYtzr8njPrEhdylyVGdgFZy
+	 6rd1AbtBpIzveaq+uNRyVqo4j3FuI9qk+NV5zgKdnU79ru/Rlc2koCDagbJep8kzM+
+	 HFASYKWAjDBgsy5GVu2bK3Rv+tidIEaRL1ZY6ezccAYAyqa9H7gOAM393IEOtyXGdn
+	 bINub1o2LTQ7w==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 94974419F6;
+	Thu,  7 Mar 2024 11:40:16 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
+ =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support
+ for Arch
+In-Reply-To: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
+References: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
+Date: Thu, 07 Mar 2024 04:40:12 -0700
+Message-ID: <87o7bqjmn7.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] i2c: exynos5: Init data before registering interrupt
- handler
-Content-Language: en-US
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Jesper Nilsson <jesper.nilsson@axis.com>, Andi Shyti
- <andi.shyti@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@axis.com
-References: <CGME20240305105548eucas1p110f1ecf1570ff69a618ca86297eeba89@eucas1p1.samsung.com>
- <20240305-i2c_exynos5-v3-1-17a749688806@axis.com>
- <949c82da-f0dc-4824-ac57-bc86ae42d871@samsung.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <949c82da-f0dc-4824-ac57-bc86ae42d871@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 07/03/2024 12:41, Marek Szyprowski wrote:
-> On 05.03.2024 11:50, Jesper Nilsson wrote:
->> devm_request_irq() is called before we initialize the "variant"
->> member variable from of_device_get_match_data(), so if an interrupt
->> is triggered inbetween, we can end up following a NULL pointer
->> in the interrupt handler.
->>
->> This problem was exposed when the I2C controller in question was
->> (mis)configured to be used in both secure world and Linux.
->>
->> That this can happen is also reflected by the existing code that
->> clears any pending interrupts from "u-boot or misc causes".
->>
->> Move the clearing of pending interrupts and the call to
->> devm_request_irq() to the end of probe.
->>
->> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
->> Fixes: 218e1496135e ("i2c: exynos5: add support for HSI2C on Exynos5260 SoC")
->> Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
->> ---
->> Changes in v3:
->> - Avoid multiple assignment
->> - Link to v2: https://lore.kernel.org/r/20240304-i2c_exynos5-v2-1-7b9c312be719@axis.com
->>
->> Changes in v2:
->> - Use dev_err_probe() instead of open coding it
->> - Dropped the return failure if we can't find a match in devicetree
->> - Link to v1: https://lore.kernel.org/r/20240304-i2c_exynos5-v1-1-e91c889d2025@axis.com
->> ---
->>   drivers/i2c/busses/i2c-exynos5.c | 29 +++++++++++++++--------------
->>   1 file changed, 15 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
->> index 385ef9d9e4d4..8458e22313a7 100644
->> --- a/drivers/i2c/busses/i2c-exynos5.c
->> +++ b/drivers/i2c/busses/i2c-exynos5.c
->> @@ -906,23 +906,9 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
->>   	i2c->adap.algo_data = i2c;
->>   	i2c->adap.dev.parent = &pdev->dev;
->>   
->> -	/* Clear pending interrupts from u-boot or misc causes */
->> -	exynos5_i2c_clr_pend_irq(i2c);
->> -
->>   	spin_lock_init(&i2c->lock);
->>   	init_completion(&i2c->msg_complete);
->>   
->> -	i2c->irq = ret = platform_get_irq(pdev, 0);
->> -	if (ret < 0)
->> -		goto err_clk;
->> -
->> -	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
->> -			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
->> -	if (ret != 0) {
->> -		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
->> -		goto err_clk;
->> -	}
->> -
->>   	i2c->variant = of_device_get_match_data(&pdev->dev);
->>   
->>   	ret = exynos5_hsi2c_clock_setup(i2c);
->> @@ -940,6 +926,21 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
->>   	clk_disable(i2c->clk);
->>   	clk_disable(i2c->pclk);
->>   
->> +	/* Clear pending interrupts from u-boot or misc causes */
->> +	exynos5_i2c_clr_pend_irq(i2c);
-> 
-> Just above this call the clocks have been disabled, so any access to the 
-> i2c host registers will result in freeze or external abort (depending on 
-> the soc/cpu).
-> 
-> To make things worse, this patch moved registering the interrupt handler 
-> after the i2c_add_adapter() call. This means that all i2c devices that 
-> will be probbed directly from i2c_add_adapter() won't be able to access 
-> the i2c bus, as the host controller is still not fully functional that 
-> time yet.
-> 
-> This breaks today's linux-next on all Exynos5+ platforms. Has anyone 
-> tested this change?
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-I don't think so. So that's the reason my boards fail on today's
-next/master and next/pending-fixes.
+> Assorted changes for the recently added document.
+>
+> Improvements:
+>
+> * Add instructions for installing required software on Arch Linux.
+>
+> Fixes:
+>
+> * Move a 'git remote add -t master stable [...]' from a totally wrong
+>   to the right place.
+>
+> * Fix two anchors.
+>
+> * Add two required packages to the openSUSE install instructions.
+>
+> Fine tuning:
+>
+> * Improve the reference section about downloading Linux mainline sources
+>   to make it more obvious that those are alternatives.
+>
+> * Include the full instructions for git bundles to ensure the remote
+>   gets the right name; that way the text also works stand alone.
+>
+> * Install ncurses and qt headers for use of menuconfig and xconfig by
+>   default, but tell users that they are free to omit them.
+>
+> * Mention ahead of time which version number are meant as example in
+>   commands used during the step-by-step guide.
+>
+> * Mention that 'kernel-install remove' might do a incomplete job.
+>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+>
+> Lo! A quick note reg "mention ahead of time which version numbers are
+> meant as example in commands used during the step-by-step guide". I did
+> that, as I've seen someone following the guide without replacing the
+> version numbers, so pointing this out with a few words seemed wise. But
+> I'm not sure if the way I did it was the best; if someone has a better
+> idea how to do that, please let me know. Ciao, Thorsten
+> ---
+>  .../verify-bugs-and-bisect-regressions.rst    | 135 +++++++++++-------
+>  1 file changed, 84 insertions(+), 51 deletions(-)
 
-Untested code should not be send as fixes :/
+No better ideas...I've applied this, thanks.
 
-Thanks for reporting Marek (and saving me some bisecting).
-
-
-Best regards,
-Krzysztof
-
+jon
