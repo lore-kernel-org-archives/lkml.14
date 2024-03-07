@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967F1126F39
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E5F5C8E3
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709810146; cv=none; b=Zv6q3UjqSMwbdRku3aeQT/bx8EXI7k3YCZ4cyezqfin9dL/mtG1uM7Fpy1ak3QsI3Zi5alXRMsKZ3mokIctnXVBTIFxuPfVDYdGIZCHqE4yHXRCRzuvR1Lu6z2CNCM+RN+BuW+/Tvmuu8Yw+6nkolEC1oYMIsWmMzImBFfLq3gA=
+	t=1709810253; cv=none; b=pbyMCwsVBo4pJrwtUkPSe07IOvY1zerqyBLPvT+g5kdDRSAXX26qrxc9s5H5vr3Hi73VGFVIIFUZsXwjpUCg7GNLq5nOqZyQ45TzL42hNOqGpK8PO8ri8Rv6V+nG9xy3VV5umN3X3uyz0dNe2Pp/umU6KTvTzHbM2QtxNQAgP8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709810146; c=relaxed/simple;
-	bh=6EvlWT+S0R2V+54Ygt9FEE0KiWIaTf39AZarTMcYy8w=;
+	s=arc-20240116; t=1709810253; c=relaxed/simple;
+	bh=1NXGyxbNxQk420TEoPj3iDHak1ncM07tGudogkhiogI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YREN6rDcy1D6cVFMa5c01t4U+UY6LmMgJLX2xiPstMS/oM35EYIoWCrsNO+k77Sc6xZ/3uLBvVc1aNLcCcaM6iM5v7LWpvtCPJDCm1Kc64Lor/9jzZ6AdpLg7TUCvAJmSIdYvDrvf6eHgFgmcIL8mASnHrVpPib38Wx/khuBWK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U2XOefEo; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=oCU9+ByoHeDZ8x2UPwZORQk679jt8OXTH2K8D94wmddh1gvv0ipfA7U9fK+qMzge8lRkZmS/JD8tQt0udqGWEQ3cFraZeEb7PYhU0PWh3AZsiIjT88R4tQhc7y7kLg3FOtRtS6NOLZWx68xr3aKTzYnm1d04ist46eKPyNC8mJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EfppSXkp; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U2XOefEo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EfppSXkp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709810143;
+	s=mimecast20190719; t=1709810250;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3BsOQTb/Qz/4Q0ul9t6TVhJi7UErvuV0EjOwbLcAigo=;
-	b=U2XOefEoAJN36Maccq3KPYqj3za2iqGD5Jdqh+sqipLVoUX8qDLy0qpYTbCruwvpYauQo0
-	0tljCLjdv7e8VCXJPBcuS+dcqvy9l38T0aB+9gpIHrpbEmdsV/rh89KJiJ6R01CAYjNE4i
-	tYYY/wFSM2OFnT2PvWUyPeQGA0xTWPk=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=zMDuIlWHzlVomQRh4fnQt+2LZeGhJ5tlC00Gm8zTN+8=;
+	b=EfppSXkpulBUIzkvQjcirzmsdi2tOfyHRppAcuIFhlGQ3hUx2Ks2Q4vdNSn8XLdgSLWwp5
+	2bwo4m8u1Zr0MHdyRIBtTL3ZkdAAxKQVGdnaifL5moGLj+iOgHTOje5j6M6yv6VE0JDZQf
+	mhhpa3SQ16FYwPdHX9gdr6xqa4w2FUM=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-636-qOElwi52MY-oBsgqgbcsEA-1; Thu, 07 Mar 2024 06:15:42 -0500
-X-MC-Unique: qOElwi52MY-oBsgqgbcsEA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5132027acc8so596142e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:15:41 -0800 (PST)
+ us-mta-210-8Wrcm1NdMHuPRjiN0BG6nA-1; Thu, 07 Mar 2024 06:17:28 -0500
+X-MC-Unique: 8Wrcm1NdMHuPRjiN0BG6nA-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33e0d943844so295368f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:17:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709810140; x=1710414940;
+        d=1e100.net; s=20230601; t=1709810247; x=1710415047;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3BsOQTb/Qz/4Q0ul9t6TVhJi7UErvuV0EjOwbLcAigo=;
-        b=Y54De9aahJxzPcv0qIDFUkUDxMedk26essjdN/odKz/gUZGyzWE0VrEhVAwlnvNzhj
-         SRf0G7l4qvsiIBocqiAZHazRjuEtKnMJzHkawX3qTvFQUKgFMeE1RVIPSP3Wizki53It
-         fCwaWcz1n4ZBuUXmqqzM0Dlw1N9XpAWwBgDcE7ZhrwrHqQCO8ieFNuXRZfxeytpQPEQk
-         IelwGbLGdp64R1D0YmgnQyM8cdz8T9GjB+O+S3qgaGeQLm4vSClo/aPUom4mtGa+sOD6
-         mnMkndWnz3+5VafE25yIj388K+28/7TZGCS5LX0N1nnjaggqZ+YZjJsuGXGCp3ixuo+1
-         Dvyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkGHdWLtQwk7zsLr+0wctc+04U9GyBHW1T8Yhh2N002WdS9mEgSKeUzJLRQxyf/xQp+5LH6ThwDic0Da0J/goRfshDMa/FTWiCO1mL
-X-Gm-Message-State: AOJu0YzjjArBvhznuBJGoxu7289uHFebrVs/XS8yuwR7sC6qLGolpsZQ
-	8Tu7wIuQeJv0FqoZI4tVC57rzfuhSfMTWgE7ZD6lu2m/OMSf1/EAPkpc3A5r+ZhIfDgWM7EiYko
-	fW1wajbVRCO7REvUbUGxLhVFxp3ndTKtCDvQMecOjdIjvSia8vOeO6bN4/87hYQ==
-X-Received: by 2002:a19:c218:0:b0:513:def:9c8a with SMTP id l24-20020a19c218000000b005130def9c8amr1031569lfc.69.1709810140650;
-        Thu, 07 Mar 2024 03:15:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGWiBMQvQsZXYkZpJ9/0SH18KKFWyY/LrnFAr8l9+dL5bmDLAOBPSjdoNpD0tQxR3Xgz6dK4g==
-X-Received: by 2002:a19:c218:0:b0:513:def:9c8a with SMTP id l24-20020a19c218000000b005130def9c8amr1031548lfc.69.1709810140173;
-        Thu, 07 Mar 2024 03:15:40 -0800 (PST)
+        bh=zMDuIlWHzlVomQRh4fnQt+2LZeGhJ5tlC00Gm8zTN+8=;
+        b=Yug2/LrYPiHdq5VvLmD4bWY8nsucK7tlzJJW0nvWFNQ1tELDFKUl0GHvvkDb1uwKrM
+         fLi1kYVaMIIIw7DTMADPVWep1VmYmREtufFe5+7UaFdgmQnDbqzafe1cC7//zYUj3mhk
+         4jLlqnXtVfiB/n0BCOabsIh91zq9WoP7bY8zqqQwgauDcwdeH4ODQtReMVB2wl+GjByj
+         DQe4Zw7islomGTfTFa2E0CG6rgsgcYD9qCI98qs5yI7kKXJe6yTLgqBMNPBKeR9uYN5v
+         kykr1XMLShS7/3Roh7oLT8IKiTLcgs4zk8dQy/9/3AEaeOEeRnXy0nOHyONcitiGodoY
+         e+jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXD061l3GzGe8OKzh7GWi4qGZMaNCuDnK4mambx1nFdftuMKADgcSGmT32TAv95tHf7iJn7BbjqL63f4Amo2zYZFFJ+iCiZx8DvD1N
+X-Gm-Message-State: AOJu0Yz7c6S0BSAL+txsDgjsoAF/Pb/L8eoQgScaCkTjAJ0QQnA4KbWL
+	ENPM6vU7HqbKfXtEfBo0QhCGZjQVysHQxzvFgoiZ0yIqCzKdi1FcB9Gr1nVOdKToIRyf0aAg4Oj
+	bBewJDlPJQiKW6BDOrKjpTMuUjMoC+3DwhHlyRDN8ACcxtjb0jvSwt/+HhtA3Tw==
+X-Received: by 2002:adf:cc06:0:b0:33d:afbc:6c76 with SMTP id x6-20020adfcc06000000b0033dafbc6c76mr13600692wrh.1.1709810247206;
+        Thu, 07 Mar 2024 03:17:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG5KFDm1PNHk3CnSJ2SENsKSlvmglh8W3Wc6a6bGAM2ZL2kIQkYDe232UljooGC7Q0QavMx8A==
+X-Received: by 2002:adf:cc06:0:b0:33d:afbc:6c76 with SMTP id x6-20020adfcc06000000b0033dafbc6c76mr13600665wrh.1.1709810246743;
+        Thu, 07 Mar 2024 03:17:26 -0800 (PST)
 Received: from ?IPV6:2003:cb:c74d:6400:4867:4ed0:9726:a0c9? (p200300cbc74d640048674ed09726a0c9.dip0.t-ipconnect.de. [2003:cb:c74d:6400:4867:4ed0:9726:a0c9])
-        by smtp.gmail.com with ESMTPSA id v12-20020a05600c470c00b00412b4dca795sm2376146wmo.7.2024.03.07.03.15.39
+        by smtp.gmail.com with ESMTPSA id bx5-20020a5d5b05000000b0033e103eaf5bsm20165497wrb.115.2024.03.07.03.17.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 03:15:39 -0800 (PST)
-Message-ID: <9ebc9faf-0bb0-4409-b93a-5beddfc4929b@redhat.com>
-Date: Thu, 7 Mar 2024 12:15:38 +0100
+        Thu, 07 Mar 2024 03:17:26 -0800 (PST)
+Message-ID: <db46212b-000d-4e8e-87d2-90dbf0a6236a@redhat.com>
+Date: Thu, 7 Mar 2024 12:17:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,23 +68,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] [RFC] pagemap.rst: Document write bit
+Subject: Re: [PATCH v2 1/1] mm/madvise: enhance lazyfreeing with mTHP in
+ madvise_free
 Content-Language: en-US
-To: Richard Weinberger <richard@nod.at>
-Cc: linux-mm <linux-mm@kvack.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- upstream+pagemap@sigma-star.at, adobriyan@gmail.com,
- wangkefeng wang <wangkefeng.wang@huawei.com>,
- ryan roberts <ryan.roberts@arm.com>, hughd@google.com, peterx@redhat.com,
- avagin@google.com, lstoakes@gmail.com, vbabka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- usama anjum <usama.anjum@collabora.com>, Jonathan Corbet <corbet@lwn.net>
-References: <20240306232339.29659-1-richard@nod.at>
- <20240306232339.29659-2-richard@nod.at>
- <db29666a-32b8-4bf6-ab13-7de3b09b0da1@redhat.com>
- <861682210.23281.1709809857201.JavaMail.zimbra@nod.at>
+To: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>
+Cc: Lance Yang <ioworker0@gmail.com>, Vishal Moola <vishal.moola@gmail.com>,
+ akpm@linux-foundation.org, zokeefe@google.com, shy828301@gmail.com,
+ mhocko@suse.com, fengwei.yin@intel.com, xiehuan09@gmail.com,
+ wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com,
+ minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240307061425.21013-1-ioworker0@gmail.com>
+ <CAGsJ_4xcRvZGdpPh1qcFTnTnDUbwz6WreQ=L_UO+oU2iFm9EPg@mail.gmail.com>
+ <CAK1f24k2G_DSEjuqqqPyY0f7+btpYbjfoyMH7btLfP8nkasCTQ@mail.gmail.com>
+ <CAGsJ_4xREM-P1mFqeM-s3-cJ9czb6PXwizb-3hOhwaF6+QM5QA@mail.gmail.com>
+ <03458c20-5544-411b-9b8d-b4600a9b802f@arm.com>
+ <CAGsJ_4zp1MXTjG=4gBO+J3owg7sHDgDJ8Ut51i1RBSnKnK0BfQ@mail.gmail.com>
+ <501c9f77-1459-467a-8619-78e86b46d300@arm.com>
+ <8f84c7d6-982a-4933-a7a7-3f640df64991@redhat.com>
+ <e6bc142e-113d-4034-b92c-746b951a27ed@redhat.com>
+ <d24f8553-33f2-4ae7-a06d-badaf9462d84@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -131,33 +133,176 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <861682210.23281.1709809857201.JavaMail.zimbra@nod.at>
+In-Reply-To: <d24f8553-33f2-4ae7-a06d-badaf9462d84@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 07.03.24 12:10, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
->> Von: "David Hildenbrand" <david@redhat.com>
->> An: "richard" <richard@nod.at>, "linux-mm" <linux-mm@kvack.org>
->>> +   Bit 58 is useful to detect CoW mappings; however, it does not indicate
->>> +   whether the page mapping is writable or not. If an anonymous mapping is
->>> +   writable but the write bit is not set, it means that the next write access
->>> +   will cause a page fault, and copy-on-write will happen.
+On 07.03.24 12:13, Ryan Roberts wrote:
+> On 07/03/2024 10:54, David Hildenbrand wrote:
+>> On 07.03.24 11:54, David Hildenbrand wrote:
+>>> On 07.03.24 11:50, Ryan Roberts wrote:
+>>>> On 07/03/2024 09:33, Barry Song wrote:
+>>>>> On Thu, Mar 7, 2024 at 10:07 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 07/03/2024 08:10, Barry Song wrote:
+>>>>>>> On Thu, Mar 7, 2024 at 9:00 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>>>>>
+>>>>>>>> Hey Barry,
+>>>>>>>>
+>>>>>>>> Thanks for taking time to review!
+>>>>>>>>
+>>>>>>>> On Thu, Mar 7, 2024 at 3:00 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>>>>>
+>>>>>>>>> On Thu, Mar 7, 2024 at 7:15 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>>>>>>>
+>>>>>>>> [...]
+>>>>>>>>>> +static inline bool can_mark_large_folio_lazyfree(unsigned long addr,
+>>>>>>>>>> +                                                struct folio *folio,
+>>>>>>>>>> pte_t *start_pte)
+>>>>>>>>>> +{
+>>>>>>>>>> +       int nr_pages = folio_nr_pages(folio);
+>>>>>>>>>> +       fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>>>>>>>> +
+>>>>>>>>>> +       for (int i = 0; i < nr_pages; i++)
+>>>>>>>>>> +               if (page_mapcount(folio_page(folio, i)) != 1)
+>>>>>>>>>> +                       return false;
+>>>>>>>>>
+>>>>>>>>> we have moved to folio_estimated_sharers though it is not precise, so
+>>>>>>>>> we don't do
+>>>>>>>>> this check with lots of loops and depending on the subpage's mapcount.
+>>>>>>>>
+>>>>>>>> If we don't check the subpage’s mapcount, and there is a cow folio
+>>>>>>>> associated
+>>>>>>>> with this folio and the cow folio has smaller size than this folio,
+>>>>>>>> should we still
+>>>>>>>> mark this folio as lazyfree?
+>>>>>>>
+>>>>>>> I agree, this is true. However, we've somehow accepted the fact that
+>>>>>>> folio_likely_mapped_shared
+>>>>>>> can result in false negatives or false positives to balance the
+>>>>>>> overhead.  So I really don't know :-)
+>>>>>>>
+>>>>>>> Maybe David and Vishal can give some comments here.
+>>>>>>>
+>>>>>>>>
+>>>>>>>>> BTW, do we need to rebase our work against David's changes[1]?
+>>>>>>>>> [1]
+>>>>>>>>> https://lore.kernel.org/linux-mm/20240227201548.857831-1-david@redhat.com/
+>>>>>>>>
+>>>>>>>> Yes, we should rebase our work against David’s changes.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> +
+>>>>>>>>>> +       return nr_pages == folio_pte_batch(folio, addr, start_pte,
+>>>>>>>>>> +                                        ptep_get(start_pte), nr_pages,
+>>>>>>>>>> flags, NULL);
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>     static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>>>>>>>>>>                                    unsigned long end, struct mm_walk *walk)
+>>>>>>>>>>
+>>>>>>>>>> @@ -676,11 +690,45 @@ static int madvise_free_pte_range(pmd_t *pmd,
+>>>>>>>>>> unsigned long addr,
+>>>>>>>>>>                     */
+>>>>>>>>>>                    if (folio_test_large(folio)) {
+>>>>>>>>>>                            int err;
+>>>>>>>>>> +                       unsigned long next_addr, align;
+>>>>>>>>>>
+>>>>>>>>>> -                       if (folio_estimated_sharers(folio) != 1)
+>>>>>>>>>> -                               break;
+>>>>>>>>>> -                       if (!folio_trylock(folio))
+>>>>>>>>>> -                               break;
+>>>>>>>>>> +                       if (folio_estimated_sharers(folio) != 1 ||
+>>>>>>>>>> +                           !folio_trylock(folio))
+>>>>>>>>>> +                               goto skip_large_folio;
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> I don't think we can skip all the PTEs for nr_pages, as some of them
+>>>>>>>>> might be
+>>>>>>>>> pointing to other folios.
+>>>>>>>>>
+>>>>>>>>> for example, for a large folio with 16PTEs, you do MADV_DONTNEED(15-16),
+>>>>>>>>> and write the memory of PTE15 and PTE16, you get page faults, thus PTE15
+>>>>>>>>> and PTE16 will point to two different small folios. We can only skip
+>>>>>>>>> when we
+>>>>>>>>> are sure nr_pages == folio_pte_batch() is sure.
+>>>>>>>>
+>>>>>>>> Agreed. Thanks for pointing that out.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> +
+>>>>>>>>>> +                       align = folio_nr_pages(folio) * PAGE_SIZE;
+>>>>>>>>>> +                       next_addr = ALIGN_DOWN(addr + align, align);
+>>>>>>>>>> +
+>>>>>>>>>> +                       /*
+>>>>>>>>>> +                        * If we mark only the subpages as lazyfree, or
+>>>>>>>>>> +                        * cannot mark the entire large folio as lazyfree,
+>>>>>>>>>> +                        * then just split it.
+>>>>>>>>>> +                        */
+>>>>>>>>>> +                       if (next_addr > end || next_addr - addr !=
+>>>>>>>>>> align ||
+>>>>>>>>>> +                           !can_mark_large_folio_lazyfree(addr, folio,
+>>>>>>>>>> pte))
+>>>>>>>>>> +                               goto split_large_folio;
+>>>>>>>>>> +
+>>>>>>>>>> +                       /*
+>>>>>>>>>> +                        * Avoid unnecessary folio splitting if the large
+>>>>>>>>>> +                        * folio is entirely within the given range.
+>>>>>>>>>> +                        */
+>>>>>>>>>> +                       folio_clear_dirty(folio);
+>>>>>>>>>> +                       folio_unlock(folio);
+>>>>>>>>>> +                       for (; addr != next_addr; pte++, addr +=
+>>>>>>>>>> PAGE_SIZE) {
+>>>>>>>>>> +                               ptent = ptep_get(pte);
+>>>>>>>>>> +                               if (pte_young(ptent) ||
+>>>>>>>>>> pte_dirty(ptent)) {
+>>>>>>>>>> +                                       ptent = ptep_get_and_clear_full(
+>>>>>>>>>> +                                               mm, addr, pte,
+>>>>>>>>>> tlb->fullmm);
+>>>>>>>>>> +                                       ptent = pte_mkold(ptent);
+>>>>>>>>>> +                                       ptent = pte_mkclean(ptent);
+>>>>>>>>>> +                                       set_pte_at(mm, addr, pte, ptent);
+>>>>>>>>>> +                                       tlb_remove_tlb_entry(tlb, pte,
+>>>>>>>>>> addr);
+>>>>>>>>>> +                               }
+>>>>>>>>>
+>>>>>>>>> Can we do this in batches? for a CONT-PTE mapped large folio, you are
+>>>>>>>>> unfolding
+>>>>>>>>> and folding again. It seems quite expensive.
+>>>>>>
+>>>>>> I'm not convinced we should be doing this in batches. We want the initial
+>>>>>> folio_pte_batch() to be as loose as possible regarding permissions so that we
+>>>>>> reduce our chances of splitting folios to the min. (e.g. ignore SW bits like
+>>>>>> soft dirty, etc). I think it might be possible that some PTEs are RO and other
+>>>>>> RW too (e.g. due to cow - although with the current cow impl, probably not.
+>>>>>> But
+>>>>>> its fragile to assume that). Anyway, if we do an initial batch that ignores
+>>>>>> all
+>>>>>
+>>>>> You are correct. I believe this scenario could indeed occur. For instance,
+>>>>> if process A forks process B and then unmaps itself, leaving B as the
+>>>>> sole process owning the large folio.  The current wp_page_reuse() function
+>>>>> will reuse PTE one by one while the specific subpage is written.
+>>>>
+>>>> Hmm - I thought it would only reuse if the total mapcount for the folio was 1.
+>>>> And since it is a large folio with each page mapped once in proc B, I thought
+>>>> every subpage write would cause a copy except the last one? I haven't looked at
+>>>> the code for a while. But I had it in my head that this is an area we need to
+>>>> improve for mTHP.
+>>>
+>>> wp_page_reuse() will currently reuse a PTE part of a large folio only if
+>>> a single PTE remains mapped (refcount == 0).
 >>
->> That is not true.
+>> ^ == 1
 > 
-> Can you please help me correct my obvious misunderstanding?
+> Ahh yes. That's what I meant. I got the behacviour vagulely right though.
+> 
+> Anyway, regardless, I'm not sure we want to batch here. Or if we do, we want to
+> batch function that will only clear access and dirty.
 
-We'll perform a page copy of an anonymous page only if the page is not 
-detected as exclusive to the process.
-
-So a better description could be:
-
-"In an private mapping, having the writable bit clear can indicate that 
-next write access will result in copy-on-write during a page fault. Note 
-that exclusive anonymous pages can be mapped read-only, and they might 
-simply get remapped writable during the next write fault, avoiding a 
-page copy."
+We likely want to detect a folio batch the "usual" way (as relaxed as 
+possible), then do all the checks (#pte == folio_mapcount() under folio 
+lock), and finally batch-update the access and dirty only.
 
 -- 
 Cheers,
