@@ -1,93 +1,152 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93EE85265;
-	Thu,  7 Mar 2024 09:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FB42047
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 09:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709805247; cv=none; b=TW8wB/3b5PkyNkb75M4RDJN4p051MqW0y2VQV3Evh9gT2Xpw1xDqdqMr64vwArvU6o6I/6SF+dNUQ7eqEUB0T9y2CdLEV9skOSVrwTHP6PDVCrEQWmPgxKZt+IdBsKR5JduPgiUQZUdjGNbQVFnZqmA9VH7igthxMKIK1zjCH2c=
+	t=1709805250; cv=none; b=DjV4js2Dr/e7CuPoiDyK9TKdzD+2+D7IBpMQ8yAoZcCJ0VUt3cW/Q4fVvcxm9JOmD0I5wfkcERgIuGYfHFJDkIC9icUbomhZbfDflZKxhWmCwwk1ERkPxqYJYQyB5xq5CnfAlG2u2a9b7soLlFUDXmJC0A+Lbi+MlOAMJSg78Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709805247; c=relaxed/simple;
-	bh=0SnMAXaV9sTSjk/IyJvoJM+DoU/obkmhOdV/QOy3nVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q+CruSCoblOKoX+qk0z8P23RZ/VJJSqTW+t4t22aGewFg56mC6Tn3T1kovkfOLwEOnftJU2x7l5A41/e2UFUCD/Br5VozSbx89hHursYCNTZwlPOv6D0Mbot7aJWy2hGIERTpBj5bLIV9GKnLm8Rj4M2G+rGv4D6vfBdAZhKpgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pAROI+NQ; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1709805250; c=relaxed/simple;
+	bh=MCTAdOE5qQKLVvKWiaFrEiQ/HXb5XPaLK7RVUm9LgIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SVD+oVHfNCBAa9Gbq8A16cXtQrMVQO62ZAcZg4562Q+By/9EMVbdMYcvNsEC7o8dL2aahXVH7nVjuTlk2ZDkOLjMt0Qnlsrq0II3IS0D2FqR6QMjOFnOETIR6QKHB5lqg/+mQ77hScO3Difc3UleqrRZJOUViOFBow4+4pbjp7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dM+7awZx; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pAROI+NQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8Wd64duwC2fsuB7URl1NXnnq7MkV0J65J9GZP0R8Zyg=; b=pAROI+NQ6k0gEPLDCZC9vSq2a2
-	NvhwoJhDMUZzsSH3Z1u3sllij5F1bZoFdp4psANIE+slOl5DQQvlUT3Avzp1OIkzXjP1/nJvlZBhy
-	ipu+8AAk4VbrKOpoLinBncLOrXZ0jpXquDJsN62igLplPPvIacodJ9VrRCcsQylURkD5HvpzDONBC
-	Z8LGF9CvJOtRX685zHd6T3avF2i/cUSHMmFfrp8UK+xC2aKDWjlhxMbTOapsrN+ykuE5fqnxUvDD8
-	6uL+FngsruGxYHV6Ypfhj7FIfIR+BVHaBR+F33R4BE+8mVYCyEwU6/QFTTndvO4pHds+yrwkrzGX1
-	vhKUIq7w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36770)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1riARf-0000tY-09;
-	Thu, 07 Mar 2024 09:53:47 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1riARb-0007AW-U5; Thu, 07 Mar 2024 09:53:43 +0000
-Date: Thu, 7 Mar 2024 09:53:43 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: =?iso-8859-1?Q?K=E9vin_L'h=F4pital?= <kevin.lhopital@savoirfairelinux.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Dan Murphy <dmurphy@ti.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
-Subject: Re: [PATCH] net: phy: fix phy_get_internal_delay accessing an empty
- array
-Message-ID: <ZemOp4MGP/UK31wq@shell.armlinux.org.uk>
-References: <20240307085254.183905-1-kevin.lhopital@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dM+7awZx"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5673b5a356eso744441a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 01:54:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709805247; x=1710410047; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I3DIVgIQtbxBFgHYdrkm8qDZTG2wrsK4cDuPuZWRLf8=;
+        b=dM+7awZx44+0OKPpluuHCa5f2RfPTAqrZRnioUA1llxg8CURJU4vKFtnympygfeUBn
+         tMTrWNIIupC42PcowvpNKnXZ9il1ukFo5Z7TSCRu/67dsk/S1q2g6EeNVOIpNQ3EwYzZ
+         NgN0TGE/t4e0gRwbP0XxSAI7BJ1McM4QG86iw4N7pcjM3YjIhpDQJ+/mLOy5/pKmbsuz
+         2dfDJRdddpAwO5kSG5hwszel+fjfkQieSApgpIM0mZfOzeVSYVLk/ed8nhT+iVEToA8n
+         0w/GzKAFbeEr0Eaem6EuLiebszScUmX2OI2ZLeKPc0dXOX3clHHG06YXy3Wl+lgE2q+K
+         VbzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709805247; x=1710410047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I3DIVgIQtbxBFgHYdrkm8qDZTG2wrsK4cDuPuZWRLf8=;
+        b=WOJJHKv0/X6o72PLPagjkdFDKbnKLSoqvNvfgycoa8nzjlyxRd9Hwbq+8tUUQ6/LxX
+         32F7CbuVUFFYq8lPrhMDcxBsgei0rPSqPnERFBsx68e9EhQ+X8Vb/jkQtyn7+hgIBt85
+         ILkWbg1EjmTtmJyRl+zKgk0xn/yMAgxUckGGXKuJ2+gyXSD7/FPLUgevpysV3VXavSzP
+         HmcESUyHp1oz/1444wBxxy8Uw7ml90YZqbDv7/soFmU/b7uTVOXc5VPWJUgH5RxTNgWa
+         1s4UzE9buhJHQmVY0sqzhta9KZ0PVh5blOvOjrsVOFqoPHYJKk+Z1GVsNHlbyLVJaq0i
+         J3wg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8orklfvI3dCcjLTVFrxCwxXzkP2+fgPz4w0szSgT32UX3FnbOxD44Ul7Fa1pKaMW4z9VNClQLKMrmTfEg149A3KUw0sKdWOFdYE7a
+X-Gm-Message-State: AOJu0YwzfdnzKgiPObbI6vrDZdK9L327mVyQpKbMb46bFLS1EaJS2bMT
+	9R2/wPApq6mnhjRRsrv9GVDThBxloORuI1otnINYqO1uPqt3jXOe
+X-Google-Smtp-Source: AGHT+IFDJOZS/zcttQ6vcsVUUH0Zmr5rEjPzF+lqN6Lwja3v7FlWo2VmnQhf4hz0lp0IoV7IsGnq4w==
+X-Received: by 2002:a05:6402:1d8f:b0:566:ac71:97c5 with SMTP id dk15-20020a0564021d8f00b00566ac7197c5mr10655634edb.18.1709805246915;
+        Thu, 07 Mar 2024 01:54:06 -0800 (PST)
+Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
+        by smtp.googlemail.com with ESMTPSA id d17-20020a056402517100b005671100145dsm5686202ede.55.2024.03.07.01.54.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 01:54:06 -0800 (PST)
+From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+To: rick.wertenbroek@heig-vd.ch
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-phy@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] phy: rockchip: Fix typo in function names
+Date: Thu,  7 Mar 2024 10:53:18 +0100
+Message-Id: <20240307095318.3651498-1-rick.wertenbroek@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240307085254.183905-1-kevin.lhopital@savoirfairelinux.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, Mar 07, 2024 at 09:52:54AM +0100, Kévin L'hôpital wrote:
-> The phy_get_internal_delay function could try to access to an empty
-> array in the case that the driver is calling phy_get_internal_delay
-> without defining delay_values and rx-internal-delay-ps or
-> tx-internal-delay-ps is defined to 0 in the device-tree.
-> This will lead to "unable to handle kernel NULL pointer dereference at
-> virtual address 0". To avoid this kernel oops, the test should be delay
-> >= 0. As there is already delay < 0 test just before, the test could
-> only be size == 0.
-> 
-> Fixes: 92252eec913b ("net: phy: Add a helper to return the index for of the internal delay")
-> Signed-off-by: Kévin L'hôpital <kevin.lhopital@savoirfairelinux.com>
-> Signed-off-by: Enguerrand de Ribaucourt <enguerrand.de-ribaucourt@savoirfairelinux.com>
+Several functions had "rochchip" instead of "rockchip" in their name.
+Replace "rochchip" by "rockchip".
 
-The sign-offs look wrong to me. They indicate the path that the patch is
-taking to be merged into mainline. Who is the author of this patch and
-who is passing it along? If it's co-development, then there is a specific
-tag for that.
+Signed-off-By: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+---
+ drivers/phy/rockchip/phy-rockchip-naneng-combphy.c |  4 ++--
+ drivers/phy/rockchip/phy-rockchip-snps-pcie3.c     | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-For the actual patch itself:
-
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
-Thanks!
-
+diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+index 76b9cf417591..35d5c18661a3 100644
+--- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+@@ -245,7 +245,7 @@ static int rockchip_combphy_exit(struct phy *phy)
+ 	return 0;
+ }
+ 
+-static const struct phy_ops rochchip_combphy_ops = {
++static const struct phy_ops rockchip_combphy_ops = {
+ 	.init = rockchip_combphy_init,
+ 	.exit = rockchip_combphy_exit,
+ 	.owner = THIS_MODULE,
+@@ -352,7 +352,7 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	priv->phy = devm_phy_create(dev, NULL, &rochchip_combphy_ops);
++	priv->phy = devm_phy_create(dev, NULL, &rockchip_combphy_ops);
+ 	if (IS_ERR(priv->phy)) {
+ 		dev_err(dev, "failed to create combphy\n");
+ 		return PTR_ERR(priv->phy);
+diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+index 121e5961ce11..3cdc7625b308 100644
+--- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
++++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+@@ -187,7 +187,7 @@ static const struct rockchip_p3phy_ops rk3588_ops = {
+ 	.phy_init = rockchip_p3phy_rk3588_init,
+ };
+ 
+-static int rochchip_p3phy_init(struct phy *phy)
++static int rockchip_p3phy_init(struct phy *phy)
+ {
+ 	struct rockchip_p3phy_priv *priv = phy_get_drvdata(phy);
+ 	int ret;
+@@ -210,7 +210,7 @@ static int rochchip_p3phy_init(struct phy *phy)
+ 	return ret;
+ }
+ 
+-static int rochchip_p3phy_exit(struct phy *phy)
++static int rockchip_p3phy_exit(struct phy *phy)
+ {
+ 	struct rockchip_p3phy_priv *priv = phy_get_drvdata(phy);
+ 
+@@ -219,9 +219,9 @@ static int rochchip_p3phy_exit(struct phy *phy)
+ 	return 0;
+ }
+ 
+-static const struct phy_ops rochchip_p3phy_ops = {
+-	.init = rochchip_p3phy_init,
+-	.exit = rochchip_p3phy_exit,
++static const struct phy_ops rockchip_p3phy_ops = {
++	.init = rockchip_p3phy_init,
++	.exit = rockchip_p3phy_exit,
+ 	.set_mode = rockchip_p3phy_set_mode,
+ 	.owner = THIS_MODULE,
+ };
+@@ -280,7 +280,7 @@ static int rockchip_p3phy_probe(struct platform_device *pdev)
+ 		return priv->num_lanes;
+ 	}
+ 
+-	priv->phy = devm_phy_create(dev, NULL, &rochchip_p3phy_ops);
++	priv->phy = devm_phy_create(dev, NULL, &rockchip_p3phy_ops);
+ 	if (IS_ERR(priv->phy)) {
+ 		dev_err(dev, "failed to create combphy\n");
+ 		return PTR_ERR(priv->phy);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.25.1
+
