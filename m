@@ -1,129 +1,127 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A203633FB;
-	Thu,  7 Mar 2024 09:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE71823BF;
+	Thu,  7 Mar 2024 09:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709803207; cv=none; b=ArBgPwg77hDMR41fjH08/lcRUXXMoQOtH9fhNpZyIUjG5d7Msc0b3xjK+pA0RumZkHzTbKsTqgkAgWBgdG8NtYoAurr1uUvVZMjMSa1/nsMgK3/FgGBFG8FePQXLl0Wp8eIMY9iI1Gx/0Jd4oeJvExbBupj8WDnsHWTrpWnvygg=
+	t=1709803214; cv=none; b=QPy+mFwhIM+rGDWW3Z3YOr2JHChuMzcJiSJTZq+pYeN6d8R3ZlfQgSXs9qJaguhjt+NU63bxqpfUTD6LZFsqLYuJ4od7yzCjJwizBKyIjbMpCSvUqNg4ibvfe3iFKjzBPDonaaZMVdCZ4XoT0H0hms2RDl1tiGFK12Hqc5AU5QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709803207; c=relaxed/simple;
-	bh=4Gs0ALlJoow9J74owFD4al5jtj3RvYpvgtJMBToY1hY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVpR+xM69WcYGy8Ruq9lPnIuMuWjVJ5hkbJ0VwOLN/bMQZ2WHxUzBKb0SR5nFOLm1x2Y+WMcQdF8nCpRoPT5Mpy4CULkO7QEHQWFpOBcsdaTazdiAKIrkN7IsHgTxLGME/sZxuEN1vBQa7FyVvTwFbDe7NH3qMbb1aCe+KtQIeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kV/mipkr; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1709803214; c=relaxed/simple;
+	bh=JExp8xfZdKco+i9aU2Nf94UpagHKLlLHb9vJ2ivtHCM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pzt3NtnGv6mQZ/Rg1SjNRCVA+xNqOX0K9WIQAs4AJLHWjsMH9tqOE/kd8fAW+we+9ORQw/GB91EQWczfa8iep7EesZcI9gF0xdRmbVeLzEozhD8LpJ2hKfflqjNykQEzApCCWpN04E3f0Coo1QivPzqiiS9Qi8v5f7x+L4Eapy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3Lhb9mF; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kV/mipkr"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51381021af1so376736e87.0;
-        Thu, 07 Mar 2024 01:20:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3Lhb9mF"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33d568fbf62so299889f8f.3;
+        Thu, 07 Mar 2024 01:20:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709803204; x=1710408004; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=80RTQxeG1HoYvnNvzrKo401rks3qN8X2iKrIw4d9yaQ=;
-        b=kV/mipkrJ5hGtmUOqBOilJsp80PTP1Zhbj94lAJVLxiMqJDECww2Ojf9OwJPDODbQm
-         KIZe+hz49wjhUkyF3uORUpvpg+Y+dO0Y9ZiCFP4C3G5Mp+pe7a8yh+bKH5EM9P0OxEi1
-         XJz1VwXfLYfUy97ZpehHjg0fgNZGzbKCUvje1KHgb1HWvhWMOYbTALP2DXnD7eEOC4X/
-         94RwO1gjV64RxPC0igFbk14XJd8OfsF/OOrpU0Qju+3WUM2z+kF66ZK/0A59lS8qiNrA
-         l+GKV5AD7cWx/gbqG0nHqGPkOGyNUipANNjZ18nGJOhaPgjvOuMJ4wTKPaKmuYGbUiGd
-         1lNQ==
+        d=gmail.com; s=20230601; t=1709803211; x=1710408011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YW0Mqn4ceL/DfI+pL4E21JiugQofGYiHeHUz1OXuJoM=;
+        b=E3Lhb9mFfe4ncEejzXKKPhEgcBMgFRVWy+Q3/UVj5hnFxv8P2OPC+/5rt8s6ix4TuW
+         B5751oRAKOCnxwOQS/Yr2aYlcg5sEA4wDYU217XzKZ/ku2MWzJ9BXvy2dhA2O5E/2aHp
+         lHo9wKeY0vrwrm8No+aI9w/LQg9CwCBZhepNiNWiohdvFSODwtbtcYD43bNgoy/c4Ui7
+         AJSQpV/Jfq6UW2y7PJgo+wr6fTiWVlnkh7Ss3PK9mYpvgF9cCAeVAsQlh+EP33i7NNyd
+         ayYaSe0LFTxxV4koo8C+ycrYbc/o+ehdveYQ4U1aRU+Xdnk5aop44pRyL5vIlI6P87CK
+         PWGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709803204; x=1710408004;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=80RTQxeG1HoYvnNvzrKo401rks3qN8X2iKrIw4d9yaQ=;
-        b=pPnnftxM7ywgT41qh+yVjlYAj5FwHl1GBzdODfN5sc56kNruLMVW/f0gN1LP8XABjb
-         cFYmSS63EpWhgHawirx/stC2L74Or0lWWA1GERpal4gIBSkRn0RAPf3sJXzMByzt2EQm
-         l1DY0eZiCZ5OuT3j9RvruCQoPnbDOqpCXC9c2lYJzS+eeWr6qUI3swlEcArxsCPgwGKI
-         umKwENyGQ/yofR2a+j/qUWbJWbaNV3M3EJZLZPqs2lU9++hs+EkEYn106g+SH2QO+8VL
-         KKPsjBPrItl+ZNrAU1eYIRQSA6awLnExNOKRfP4Xbau3lNnanu8HPhAOhJ53vmFiMYJg
-         njPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCb5zDG/qIxMWBNY9DqdR/NW4t3+OIGjvKoEdIc8FX1b1DvOHRAOBZWFq4B7nSjL+FQSwxAH5YDZpcHksvhb6FeFhK4W6v+h2gs3zQZgUYcKPaFW7AGFID3L/G6TbspGoA3ccn4xU+cQ==
-X-Gm-Message-State: AOJu0Yx3STOP4VRn8H0trZf91HvZrBGO+7BQFl1M/l1gfV6mXgMS1H2/
-	NJa/eOScDJD+5x1h7e/4aICHjHblOQq03qn98twiK0vQMluxqSOMyQ4V2EX3bUkDQE2r9Z+CB6x
-	1L49EAroaQ1VrF5CWPGZsSDnIuxA=
-X-Google-Smtp-Source: AGHT+IEe43Gp9xWf88EuXib+ywhG0E+gf0UnlcztjMhnwdiDupBKxPSSYhqii6oCxJLhS0kHoQOREXn5DPA0iSZD7b0=
-X-Received: by 2002:ac2:5f87:0:b0:513:6632:2f62 with SMTP id
- r7-20020ac25f87000000b0051366322f62mr1049502lfe.7.1709803203752; Thu, 07 Mar
- 2024 01:20:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709803211; x=1710408011;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YW0Mqn4ceL/DfI+pL4E21JiugQofGYiHeHUz1OXuJoM=;
+        b=XWVcTyqKnKm7Ax1ApNJ3eX8nk6lmf71P08tp4rvC+4SFgXKSSAObwInAAY5D503dzC
+         8UmfwM0P9siiRWc6a0rcOjsg2WxlS3SVcAw7hCz7p7VTaFIvJXHwQU0oSyiDtY9NEtyF
+         U4Jrfr7yznYGCHpNtq9IeKrvhUb8S0rKvfQzyYjzwjAkPZR15zxD9sWzK4Y6r6ppuYya
+         2creDCFIZw2nFC5QkcmiWlv1bR6/rhUTrleO400s3oxkhskcTWSbYufC6P/zV3mA087C
+         6C5q5+qUBGT1+U+0fAoXVAjk/U5JWj55X8LHMtamyIjgaJ39ipx4WKkjQqLHWjvK8eFj
+         Q09w==
+X-Forwarded-Encrypted: i=1; AJvYcCWQPE3BZVXgoDv0NGpBxZDG5lwUwZyVQ0s7Wl763h0f4j2B//7exvBPu+lmNL83N6HNd7MhXpUc/OTPFiqADmuLqXWO3Ot8ygw1/U5YFfi1oF1jUCTfpUi1IVNKE3x9mUcVpt9ElBsUtbysRA==
+X-Gm-Message-State: AOJu0YxJEH7LHenlCMZIptEtO4AVaDfGjAvvvuTQnH2w/GQivtMB4GvR
+	ZRXgBQi6zazGg3zIcbsXPQq2dwXx1rGY1l6OmWrnCZjYnj409ujj
+X-Google-Smtp-Source: AGHT+IFsxBXURzKqFHcbtOlx9sJQBSH12U2/M37d2BFYrAjIIjZsY3XNHK735iX4oAlq0YZvbc6xew==
+X-Received: by 2002:a05:6000:4026:b0:33e:83a:b4f with SMTP id cp38-20020a056000402600b0033e083a0b4fmr17190412wrb.2.1709803210634;
+        Thu, 07 Mar 2024 01:20:10 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id bk15-20020a0560001d8f00b0033b48190e5esm20290113wrb.67.2024.03.07.01.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 01:20:10 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Wedson Almeida Filho <walmeida@microsoft.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	willy@infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] hfsplus: remove dev_err messages and fix errno values
+Date: Thu,  7 Mar 2024 09:20:09 +0000
+Message-Id: <20240307092009.1975845-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1709780590.git.haibo1.xu@intel.com> <f23da383a8fdbee15acd41fdcd38ef3a89045a43.1709780590.git.haibo1.xu@intel.com>
- <c9e9da9f-ff81-48eb-beec-4f54921cd268@app.fastmail.com>
-In-Reply-To: <c9e9da9f-ff81-48eb-beec-4f54921cd268@app.fastmail.com>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Thu, 7 Mar 2024 17:19:52 +0800
-Message-ID: <CAJve8o=BsR1SG0k_7mb61Jj1fb+9rc4V9Y=MMX004fpAWE4vjg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] ACPI: NUMA: Remove ARCH depends option in
- ACPI_NUMA Kconfig
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Haibo Xu <haibo1.xu@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	"Conor.Dooley" <conor.dooley@microchip.com>, guoren <guoren@kernel.org>, 
-	Zong Li <zong.li@sifive.com>, James Morse <james.morse@arm.com>, 
-	linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Baoquan He <bhe@redhat.com>, acpica-devel@lists.linux.dev, 
-	Robert Moore <robert.moore@intel.com>, linux-acpi@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Greentime Hu <greentime.hu@sifive.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Len Brown <lenb@kernel.org>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Chen Jiahao <chenjiahao16@huawei.com>, 
-	Yuntao Wang <ytcoode@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Anup Patel <apatel@ventanamicro.com>, Tony Luck <tony.luck@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>, Evan Green <evan@rivosinc.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Andrew Jones <ajones@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 7, 2024 at 4:44=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Mar 7, 2024, at 09:47, Haibo Xu wrote:
-> > x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> > would do the same thing, so the dependency is no longer needed
-> > since these are the four architectures that support ACPI.
-> >
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> > ---
-> >  drivers/acpi/numa/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> > index 849c2bd820b9..2bf47ad1ec9b 100644
-> > --- a/drivers/acpi/numa/Kconfig
-> > +++ b/drivers/acpi/numa/Kconfig
-> > @@ -2,7 +2,6 @@
-> >  config ACPI_NUMA
-> >       bool "NUMA support"
-> >       depends on NUMA
-> > -     depends on (X86 || ARM64 || LOONGARCH)
-> >       default y if ARM64
->
-> Can we remove the prompt as well and make this a
-> hidden option? I think this is now always selected
-> when it can be used anyway.
->
-> If we make it
->
->       def_bool NUMA && !X86
->
-> then the select statements except for the X86_64_ACPI_NUMA
-> can also go away.
->
+While exercising hfsplus with stress-ng with xattr tests the kernel
+log was spammed with many error messages. The need to emit these
+messages is not necessary, so remove them. Also fix the errno returns,
+for XATTR_CREATE errors these should be -EEXIST, and for XATTR_REPLACE
+this should be -ENODATA.
 
-Good idea!
-Shall we include the ACPI in the def_bool definition?
+Kudos to Matthew Wilcox for spotting the need for -EEXIST instead of
+-EOPNOTSUPP.
 
->       Arnd
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+
+V2: Also remove "cannot replace xattr" message and fix the errno returns
+
+---
+ fs/hfsplus/xattr.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 9c9ff6b8c6f7..f61a9370a233 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -288,8 +288,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 
+ 	if (!strcmp_xattr_finder_info(name)) {
+ 		if (flags & XATTR_CREATE) {
+-			pr_err("xattr exists yet\n");
+-			err = -EOPNOTSUPP;
++			err = -EEXIST;
+ 			goto end_setxattr;
+ 		}
+ 		hfs_bnode_read(cat_fd.bnode, &entry, cat_fd.entryoffset,
+@@ -335,8 +334,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 
+ 	if (hfsplus_attr_exists(inode, name)) {
+ 		if (flags & XATTR_CREATE) {
+-			pr_err("xattr exists yet\n");
+-			err = -EOPNOTSUPP;
++			err = -EEXIST;
+ 			goto end_setxattr;
+ 		}
+ 		err = hfsplus_delete_attr(inode, name);
+@@ -347,8 +345,7 @@ int __hfsplus_setxattr(struct inode *inode, const char *name,
+ 			goto end_setxattr;
+ 	} else {
+ 		if (flags & XATTR_REPLACE) {
+-			pr_err("cannot replace xattr\n");
+-			err = -EOPNOTSUPP;
++			err = -ENODATA;
+ 			goto end_setxattr;
+ 		}
+ 		err = hfsplus_create_attr(inode, name, value, size);
+-- 
+2.39.2
+
