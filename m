@@ -1,201 +1,154 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F0482D7A;
-	Thu,  7 Mar 2024 08:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A53B657D5
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801917; cv=none; b=DcJj2MoT0Gauz0wrHq2FYry/GEBVO2AAmCP8jpwHF0JGcKGKOpJJXLaohv8fzI0oimbv5Y+k4sAf22nZ9GvRBwyiuZx6wn4xBMCG3sXghaaPgUN2AQTXhsKvnp1ijBMrNMryZtkSObdmWN6dO0n8X9VVE21+l6nHK2AENcbimXM=
+	t=1709801986; cv=none; b=ZyAwPwlbn8nVbQ73b6boaWDdWtchcN3LYhtaCZaaaYik3kkjHQ8vkkocs1CiH4DeMXguYBjoc9UOi4VSWUbapwnJK3uU1D9fITxyvfzd2LfRZ4U/DhPb2p4PEcIfkKd4mr9Pp+wAC0YFL5ow3oZf9gDNNgXzjopdLTAztupVXEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801917; c=relaxed/simple;
-	bh=+oiVEdG9b2XuStWqMFk9KRco76DNKJfWP/ntPUBoLOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sM6FrrkH4yuGlTDM9x51nGY7/fyllhb+cifko+LeYUuNxd93TGv2mSFAqk3eu4UHEU3Bjxrih78I5859BvGQXicrn3Psz6XcYKxOxUzgAuf+G6rcwioUaFlxJzFUaYE9azNTvjD6YEZ+LHmTLpReTCmh70q/YWc02FU0KFvM4YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6098ba9959aso7090867b3.2;
-        Thu, 07 Mar 2024 00:58:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709801913; x=1710406713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jn5dxvQybAgLdJsYDY294tghTuyvSzt1guRy78x0Iu4=;
-        b=GRWN5jDUxW7BdbQfel+krA1hpTHw9ph0QYhSlGLCuWVRq/oNiFQNbRG5GeW0WrX8nF
-         yYUUIWsI+kY/CGimKLvZKsDKwJEZVrNf5YTGn8dANYHMZgUJ2WFFpJqMTzT/UL2/MOfr
-         fcQUZ76af8we8PE2qQD0g3OZU6ixX0XTyLea5YBEOO12rYE4bjIGbIzhyK3p9BYwvgQ0
-         G0zqe3MuFZYHeLTCVjgM/yW84hqRvB7s8eAnQrj+jefvPDwtoyYzOw0uBZtFcUgjbEe2
-         XB0Gjbpi81+n2n+hVwa/9Jcu+YHE/4sxT78WNfbUK5jyXPyGE7XqNInL6rYS5ssL2O1D
-         2aCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWe4y+Lpc4mnJqjoSiMJk9uv1C1hP4E7AkomR+estWnAk43a0yeRm3xPjG3dCfX8Eq26JcbsUYsaACeWHTqy8UvE+l7IkjnY6HEn4gL4u4wJTw40QeBVOjFkuFOEe9dWQm3PG5pj88QAG4iRLh2/84FPSKVb2WgpDKaF4waJ0xJizKYxWC9vECcdpqvnRDrKMOh/frug/Zk9GvR7HElxSDTknajLce8ZIlL
-X-Gm-Message-State: AOJu0YyWfsEmkR5IyDU0jmDBqP3mqZHOYhRSqw4Y5rB5mApZZzWeahjs
-	Twp3rtHpbSz6r1dzwjpVnuH2PcdGuB1z61WPYLk8GP3DLY07/yD5whsr99Ssssk=
-X-Google-Smtp-Source: AGHT+IFzuo4h7857zle3kZbOxTq9bdIy+FRpvbRqlQGkH55w8OCprhGIPZPjt0z4R8AA9K+MZGmwrA==
-X-Received: by 2002:a0d:efc3:0:b0:608:8a6b:b213 with SMTP id y186-20020a0defc3000000b006088a6bb213mr17831923ywe.33.1709801913598;
-        Thu, 07 Mar 2024 00:58:33 -0800 (PST)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id r79-20020a819a52000000b006049c16b843sm4088542ywg.145.2024.03.07.00.58.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 00:58:33 -0800 (PST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-609f060cbafso4614657b3.0;
-        Thu, 07 Mar 2024 00:58:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX5fEMiGF5L+bZpytGdMeJpN8OjhpVP28JE903Xut49PccBB8AuWAqe6sMHOkOn0OeMUplMrasIhytdch6XgczFA2+FuHT7+t/TNvjXbLsixf9Jy8kceORKyOmFmPKbBEjrLu0p6jBbgYpS6KPjpHOO0+5iC1MafdtzeMJVJReFI3faZfr9987HqHt/F+c11NM6Vmg1tk4OkEHrW66j0hMGiWsULgraZGu1
-X-Received: by 2002:a05:690c:398:b0:609:3c37:a624 with SMTP id
- bh24-20020a05690c039800b006093c37a624mr20123653ywb.35.1709801912626; Thu, 07
- Mar 2024 00:58:32 -0800 (PST)
+	s=arc-20240116; t=1709801986; c=relaxed/simple;
+	bh=in9euD7RnynsreKIHDYStuw2jxb4WZnJBqhQrmN9KkY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LbUu4gfXq892bH1WljE5VJ9L7xvd0hT2X7M1Et+EMljzeepdvC68rkZkdKB16hfoBI4ZK7hBmROdpQ9+2XZM/xbKO12O9JxENIivKaQd3J7fcSZHJDObH7hOE35a9+4K1ZyvTYmtw1yiwU2lA+gEGBQAp/lvUKvxujAmLiEMjFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LRRyTt9T; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LRRyTt9T"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4278WoTP008751;
+	Thu, 7 Mar 2024 08:59:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=zCBrT592VUSeAOXLJHm5G5Zx0UY+JL/SwULyKBYSlGs=;
+ b=LRRyTt9Tak2g8wAeZhWfrDV//wJt/6peV10UTj1J+FrfpuSz6ICLT169i0MWly48Ni+B
+ 5RpPY+ElSddSMoL11QNUvxzwvyUaFQNoIp8vPFaY3YsrwQMjiLt7gS+XKEDj8U4AZIug
+ aZ+6wDNrJQ9roMkhQyRhXzUtmgwkOY9EfjQIN4CQ/+dssZKhugfn1RyJu+offFvNGNvy
+ NSqqtIz7pg/nrlRslyao+7dtgWqmxp4fcbqSTtdSsDJFOQPQ6aWMNBd6QR7ffUnxVjVh
+ P6dUkh5rmmlFSeIUAqQ+jUEOj8Mr2eoayO35T6K9S52b37LGXHyZlqoBpWG2pZCIMKP8 iQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5jrdex-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:59:33 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4278WrlK008939;
+	Thu, 7 Mar 2024 08:59:32 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5jrd5c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:59:32 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4277Tc69026212;
+	Thu, 7 Mar 2024 08:57:39 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfep4f5x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:57:39 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4278vXbp13107684
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 7 Mar 2024 08:57:35 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1CBA02004D;
+	Thu,  7 Mar 2024 08:57:33 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 900B92004E;
+	Thu,  7 Mar 2024 08:57:30 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  7 Mar 2024 08:57:30 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
+        pierre.gondois@arm.com, qyousef@layalina.io
+Subject: [PATCH v6 0/3] sched/fair: Limit access to overutilized
+Date: Thu,  7 Mar 2024 14:27:22 +0530
+Message-Id: <20240307085725.444486-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7hG9tuQGJi8A-MAh8fLTr0DfolaqRqpW
+X-Proofpoint-ORIG-GUID: RsuuUOsf0BR_w62_vx4WVXMimh_uYxgz
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306231007.13622-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240306231007.13622-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240306231007.13622-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 7 Mar 2024 09:58:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
-Message-ID: <CAMuHMdVQcyrwTCTukhLFiaawDgbKwZWcWCO7bc1FfFS-t=kcqg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: serial: renesas,scif: Validate
- 'interrupts' and 'interrupt-names'
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_05,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0 adultscore=0
+ mlxscore=0 clxscore=1015 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403070064
 
-Hi Prabhakar,
+When running an ISV workload on a large system (240 Cores, SMT8), it was
+observed from perf profile that newidle_balance and enqueue_task_fair
+were consuming more cycles. Perf annotate showed that most of the time
+was spent on accessing overutilized field of root domain. Similar perf profile
+was simulated by making some changes to stress-ng --wait. Both
+newidle_balance and enqueue_task_fair consume close to 5-7%.
 
-On Thu, Mar 7, 2024 at 12:11=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> This commit adds support to validate the 'interrupts' and 'interrupt-name=
-s'
-> properties for every supported SoC. This ensures proper handling and
-> configuration of interrupt-related properties across supported platforms.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Overutilized was added for EAS(Energy aware scheduler) to decide whether
+to do load balance or not. Simultaneous access to overutilized by
+multiple CPUs lead cache invalidations due to true sharing. Updating
+overutilized is not required for non-EAS platforms. Since overutilized and
+overload are part of the same cacheline, there is false sharing as well.
 
-Thanks for your patch!
+Patch 1/3 - Main patch. It helps in reducing the above said issue.
+Both the functions don't show up in the profile. With patch comparison is in
+changelog. With the patch stated problem in the ISV workload also got
+solved and throughput has improved.
+Patch 2/3 - Code refactoring to use the helper function instead of
+direct access of the field. Keeping this patch so patch 3/3 becomes
+easier to understand. Depends on 1/3.
+Patch 3/3 - Refactoring the code since most of the patterns are observed
+are eas && !overutilzed. Changed the helper function accordingly.
+Depends on 2/3.
 
-> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> @@ -82,38 +82,6 @@ properties:
->    reg:
->      maxItems: 1
->
-> -  interrupts:
-> -    oneOf:
-> -      - items:
-> -          - description: A combined interrupt
-> -      - items:
-> -          - description: Error interrupt
-> -          - description: Receive buffer full interrupt
-> -          - description: Transmit buffer empty interrupt
-> -          - description: Break interrupt
-> -      - items:
-> -          - description: Error interrupt
-> -          - description: Receive buffer full interrupt
-> -          - description: Transmit buffer empty interrupt
-> -          - description: Break interrupt
-> -          - description: Data Ready interrupt
-> -          - description: Transmit End interrupt
+More details can be found in cover letter of v1.
 
-As the above three groups are increasing supersets, you can just use
-a single "items" listing all 6 interrupts, and describe the first one
-as "Error interrupt or single combined interrupt".  After that, the
-SoC-specific logic at the end just needs to specify the appropriate
-minItems/maxItems.
+v5 -> v6:
+- Mades minor changes for !CONFIG_SMP cases as pointed out by Vincent.
+v4 -> v5:
+- Added EAS check inside helper functions instead of sprinkling it
+around. EAS check is static branch at best. So that keeps the code
+simpler.
+- added EAS check inside cpu_overutilized as suggested by Qais.
+- Added patch 3 since most of the code does eas && !overutilized
+pattern as suggested by Vincent.
+v3 -> v4:
+- corrected a mistake where EAS check was missed.
+v2 -> v3:
+- Pierre and Dietmar suggested we could add one more EAS check before
+calling cpu_overutilized. That makes sense since that value is not used
+anyway in Non-EAS case.
+- Refactored the code as dietmar suggested to avoid additional call to
+sched_energy_enabled().
+- Minor edits to change log.
+v1 -> v2:
+Chen Yu pointed out minor issue in code. Corrected that code and updated
+the changelog.
 
-> -
-> -  interrupt-names:
-> -    oneOf:
-> -      - items:
-> -          - const: eri
-> -          - const: rxi
-> -          - const: txi
-> -          - const: bri
-> -      - items:
-> -          - const: eri
-> -          - const: rxi
-> -          - const: txi
-> -          - const: bri
-> -          - const: dri
-> -          - const: tei
+v1: https://lore.kernel.org/lkml/20240223150707.410417-1-sshegde@linux.ibm.com/
+v2: https://lore.kernel.org/lkml/20240228071621.602596-1-sshegde@linux.ibm.com/
+v3: https://lore.kernel.org/lkml/20240229104010.747411-1-sshegde@linux.ibm.com/
+v4: https://lore.kernel.org/lkml/20240301151725.874604-1-sshegde@linux.ibm.com/
+v5: https://lore.kernel.org/lkml/20240306102454.341014-1-sshegde@linux.ibm.com/
 
-Likewise, with "interrupt-names: false" below for the ones that don't
-need it.
+Shrikanth Hegde (3):
+  sched/fair: Add EAS checks before updating overutilized
+  sched/fair: Use helper function to access rd->overutilized
+  sched/fair: Combine EAS check with overutilized access
 
-> -
->    clocks:
->      minItems: 1
->      maxItems: 4
-> @@ -173,6 +141,91 @@ allOf:
->        required:
->          - resets
->
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - renesas,scif-r8a7742
-> +              - renesas,scif-r8a7743
-> +              - renesas,scif-r8a7744
-> +              - renesas,scif-r8a7745
-> +              - renesas,scif-r8a77470
-> +              - renesas,scif-r8a774a1
-> +              - renesas,scif-r8a774b1
-> +              - renesas,scif-r8a774c0
-> +              - renesas,scif-r8a774e1
-> +              - renesas,scif-r8a7778
-> +              - renesas,scif-r8a7779
-> +              - renesas,scif-r8a7790
-> +              - renesas,scif-r8a7791
-> +              - renesas,scif-r8a7792
-> +              - renesas,scif-r8a7793
-> +              - renesas,scif-r8a7794
-> +              - renesas,scif-r8a7795
-> +              - renesas,scif-r8a7796
-> +              - renesas,scif-r8a77961
-> +              - renesas,scif-r8a77965
-> +              - renesas,scif-r8a77970
-> +              - renesas,scif-r8a77980
-> +              - renesas,scif-r8a77990
-> +              - renesas,scif-r8a77995
-> +              - renesas,scif-r8a779a0
-> +              - renesas,scif-r8a779f0
-> +              - renesas,scif-r8a779g0
+ kernel/sched/fair.c | 72 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 27 deletions(-)
 
-Please simplify using family-specific names:
-  - renesas,rcar-gen1-scif
-  - renesas,rcar-gen2-scif
-  - renesas,rcar-gen3-scif
-  - renesas,rcar-gen4-scif
+--
+2.39.3
 
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          items:
-> +            - description: A combined interrupt
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
