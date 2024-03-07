@@ -1,169 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from wflow7-smtp.messagingengine.com (wflow7-smtp.messagingengine.com [64.147.123.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E6F12F36D;
-	Thu,  7 Mar 2024 15:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1635F12F365;
+	Thu,  7 Mar 2024 15:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823785; cv=none; b=noyQ3C+EHRoW6UHalQYSSqPpanjgj3TNKaHOhBytbGHvNn6tuEW81ohO5A8fYUy0meNoPj3Mb2elNce0ei4CQf9c9tuPmhSggkpRGz24IO3Ws3KZ72p53xydC0N5PZUSJtO5wOyMDXMDweixkVq7CWD1OBN+vxgBX/ZUppEwHsM=
+	t=1709823800; cv=none; b=dQx0pGF9Xysa1vhUHDwuWIjkJT9eVeMK6REWA1z3zITFZJ5NuSmRqR9jwbeMdB381uYcZugSxU5GX1bMVYcMMRq3Dm2U5heh3ElVB2qwau2x3Mg0luCIHJ1qvGG3kxx6lyPyzbiaZLcggFBbc/QepKOBdRuFdSwrSgPYZd6tF4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823785; c=relaxed/simple;
-	bh=igdABOawL1h4rO87mXAA8AcyfRv/CCBWSRMMYoBQs2w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fzzi3ddvZgzPNlY1aBK75nojl8q+9nSO7w8lRwaPdyaZNz7R+OwkZgJI9RafxbmqwpirgP9Cmi+rmvkaUzBedi5bhNonV67/50mdJLf5H8DaBtJVg8LAaO8jCzevJpf0XbWXhwckCv2UoqIU/HtDJCjyp0uWHaukXEm4HXaOcvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PzWiJLGH; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709823800; c=relaxed/simple;
+	bh=zrHvih0CRLls3gfTaqe/nco2QOUS/ZrmpGJoEnrrwuI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=uVP4BEtUOuoGCmsCe/iEgqI0/YQftIVcS2h1MX+sJU2JbP9tuckBhkz4Ez/r1bVsbMBR3+csgzB+Lag/GUoNsnTMxvsiIJ9DfXApbOKwI++mpcfxkvrjfk5flIRqydrQs5LQTv3xFK5/Pi1HiURL8NLWrSWcKTX5z+khjyfhoGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=r0tuvbzY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IMAiRVXx; arc=none smtp.client-ip=64.147.123.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PzWiJLGH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709823784; x=1741359784;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=igdABOawL1h4rO87mXAA8AcyfRv/CCBWSRMMYoBQs2w=;
-  b=PzWiJLGHTW4YEQUEv0ZQPGsJZRgQy/esrszRFiyALy2aSl+BRsbU5bzT
-   VjTUPLPA2w3fdIoVLsZxz64vUT6Mgz4D+aWpCdiJU+o/SJG6OhwhkI4iz
-   brmfSpRhJeHagxnJWbCnWDU2gJnJIazbV5KkJEpcIoiW45j8fYo/Nv5nH
-   lLDh7yT4dP960TYuEkliepbrIlGHKF5hDkjw9EC6Kef1HCEcAX6RTJmxM
-   tT2rwKRHULaNVzE8PrAynFaLQGVjcEpDyVgXImbcsIaksMqbZ/Nfz+W8P
-   2ZKowTB9COGJIMgG29GJ6gEyAON7+pj78B0+eXUpsjEv0c6Gl8zWuaVZO
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4351053"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="4351053"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 07:03:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="937046328"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="937046328"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2024 07:02:59 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 30DB15BB; Thu,  7 Mar 2024 17:02:58 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] spi: Introduce SPI_INVALID_CS and is_valid_cs()
-Date: Thu,  7 Mar 2024 17:01:01 +0200
-Message-ID: <20240307150256.3789138-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240307150256.3789138-1-andriy.shevchenko@linux.intel.com>
-References: <20240307150256.3789138-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="r0tuvbzY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IMAiRVXx"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailflow.west.internal (Postfix) with ESMTP id 403272CC00B9;
+	Thu,  7 Mar 2024 10:03:16 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 07 Mar 2024 10:03:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1709823795;
+	 x=1709830995; bh=KIk1du4pHCXSqXMFodBfcBDhm0Cr4cLrqXMscpRsEQg=; b=
+	r0tuvbzYDU2G/VrHHuosGqT9d0Rw3cKHv6Dja3Jxrfr92jUcWA6aBzINFkHmqsc+
+	W0VPxtTJ8B0vC2EEnOjj10f95OpjzDadOL+ys33iJqrTg8dt6h6A0ioD1vUy9eMA
+	rQDiBqRQkSnBZPzAryAgcIPLujfFbbQTaz+hhiYXup1yh83mGte/M+WqrDS75stp
+	2tn2S7bWM4dirwvRqVwurmSpM4mKZ4dA3+y3UwmilVoT8OJZAYdcOgKoABGNvuCQ
+	DseDxJwnKVLzq1eXCX1Zfa1nGfeI+Bygh/lkjPFh+98io7m1+xeCFmZxMh1uq1gJ
+	QEGpyLuNpu6sMRWsDUXowA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1709823795; x=
+	1709830995; bh=KIk1du4pHCXSqXMFodBfcBDhm0Cr4cLrqXMscpRsEQg=; b=I
+	MAiRVXx8U8UQHv+vZM3R4xLoWsqTcVM3UY8wf4FghptGdmRky7R7aKeDRrkxCmlU
+	6PHp7EG14pk2yboSB2QBFOlfKYC7DTi8Gj7hhiqnGmzXgANPCaSGRKEJwpQqQo+G
+	LU5ovHcTsYMe40U3G3h6/XsSKGY9V3rhFgzfEc6G+5QW+c+K/QXyacm+LdwWffUS
+	5KwOiWwOSyWsjja1bb+V07UAuBGmHNSHvCmIlgAKOQ/oIk2V8o7FIkKBBjCB/NQ0
+	2e7ZOdnJ2lulDwQaf9JwqnKNK3OAkH9n6agTMm0DE+GI//rCz1e+A9cMc6rKX2uC
+	QH9+Y3ks/2AkJoHdUqC7g==
+X-ME-Sender: <xms:MtfpZdjIhvvj2w5LIjBaYeBRm68khe7SPUWUIPyz3Qzr4DqMiJH59Q>
+    <xme:MtfpZSCw6-_D15CzMMJ6aMq4FMi2a38HaisIGgcg1cjfGUuDJtjoZKI4NGvsMsMWJ
+    8nh4Z6KFttFTRDe0rk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
+    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:MtfpZdEVd_wK33nQCCOfgC58V_P6HRkYxs0fK98U48nw3QCN6N9QrA>
+    <xmx:MtfpZSR83RszXpjRHFyEGpw4PYmBtg8qqnJj2iwBSZDSGIiLP24o7A>
+    <xmx:MtfpZaz3ScCYYHDe4yULQs_p0ex-0Ng_lJ48VBQtqruta0LNNK4Gmg>
+    <xmx:M9fpZfEH0QTEMK1lJt6knYQSuFAbpSIeOW9pH5A-AO4-PVMsrOqDdxgBn8g8FLuD>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id F1F00B6008D; Thu,  7 Mar 2024 10:03:13 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <f8d42bd5-5a89-49da-8da4-570e26ecc0e3@app.fastmail.com>
+In-Reply-To: 
+ <CAPLW+4mVTvPBW0hd9pV6AsSezxPAhwPByq3WmGpprtseTgy-wg@mail.gmail.com>
+References: 
+ <CA+G9fYtddf2Fd3be+YShHP6CmSDNcn0ptW8qg+stUKW+Cn0rjQ@mail.gmail.com>
+ <d5c07950-6f42-4ac9-b0d8-776d444252ae@app.fastmail.com>
+ <CAPLW+4=T1eGrWQcEJWvOcHgq9tnRhfi=AH_=qj1022k2WHmEhA@mail.gmail.com>
+ <CAPLW+4mVTvPBW0hd9pV6AsSezxPAhwPByq3WmGpprtseTgy-wg@mail.gmail.com>
+Date: Thu, 07 Mar 2024 16:02:22 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Sam Protsenko" <semen.protsenko@linaro.org>
+Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ linux-block <linux-block@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "open list" <linux-kernel@vger.kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
+ "Christoph Hellwig" <hch@lst.de>, "Christian Brauner" <brauner@kernel.org>,
+ "Ulf Hansson" <ulf.hansson@linaro.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "jh80.chung" <jh80.chung@samsung.com>,
+ "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+ "Oleksij Rempel" <linux@rempel-privat.de>,
+ "Manuel Lauss" <manuel.lauss@gmail.com>,
+ "Neil Armstrong" <neil.armstrong@linaro.org>,
+ "Jerome Brunet" <jbrunet@baylibre.com>, yann.gautier@foss.st.com,
+ ludovic.barre@st.com,
+ =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>,
+ "Chen-Yu Tsai" <wens@csie.org>
+Subject: Re: WinLink E850-96: WARNING: at block/blk-settings.c:204 blk_validate_limits
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The SPI core inconsistently uses the marker value for unused chip select
-pin. Define a constant (with appropriate type) and introduce is_valid_cs()
-helper function to avoid spreading this inconsistency in the future.
+On Fri, Mar 1, 2024, at 22:18, Sam Protsenko wrote:
+> On Fri, Mar 1, 2024 at 2:51=E2=80=AFPM Sam Protsenko <semen.protsenko@=
+linaro.org> wrote:
+>> On Thu, Feb 29, 2024 at 8:56=E2=80=AFAM Arnd Bergmann <arnd@arndb.de>=
+ wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/spi/spi.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+>
+> Sorry, just noticed I commented on the wrong line. Here is the change =
+I made:
+>
+> -               mmc->max_seg_size =3D 0x1000;
+> +               mmc->max_seg_size =3D PAGE_SIZE;
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 4ab155f698c8..f18738ae95f8 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -608,6 +608,22 @@ static void spi_dev_set_name(struct spi_device *spi)
- 		     spi_get_chipselect(spi, 0));
- }
- 
-+/*
-+ * Zero(0) is a valid physical CS value and can be located at any
-+ * logical CS in the spi->chip_select[]. If all the physical CS
-+ * are initialized to 0 then It would be difficult to differentiate
-+ * between a valid physical CS 0 & an unused logical CS whose physical
-+ * CS can be 0. As a solution to this issue initialize all the CS to -1.
-+ * Now all the unused logical CS will have -1 physical CS value & can be
-+ * ignored while performing physical CS validity checks.
-+ */
-+#define SPI_INVALID_CS		((s8)-1)
-+
-+static inline bool is_valid_cs(s8 chip_select)
-+{
-+	return chip_select != SPI_INVALID_CS;
-+}
-+
- static inline int spi_dev_check_cs(struct device *dev,
- 				   struct spi_device *spi, u8 idx,
- 				   struct spi_device *new_spi, u8 new_idx)
-@@ -618,7 +634,7 @@ static inline int spi_dev_check_cs(struct device *dev,
- 	cs = spi_get_chipselect(spi, idx);
- 	for (idx_new = new_idx; idx_new < SPI_CS_CNT_MAX; idx_new++) {
- 		cs_new = spi_get_chipselect(new_spi, idx_new);
--		if (cs != 0xFF && cs_new != 0xFF && cs == cs_new) {
-+		if (is_valid_cs(cs) && is_valid_cs(cs_new) && cs == cs_new) {
- 			dev_err(dev, "chipselect %u already in use\n", cs_new);
- 			return -EBUSY;
- 		}
-@@ -658,7 +674,7 @@ static int __spi_add_device(struct spi_device *spi)
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
- 		/* Chipselects are numbered 0..max; validate. */
- 		cs = spi_get_chipselect(spi, idx);
--		if (cs != 0xFF && cs >= ctlr->num_chipselect) {
-+		if (is_valid_cs(cs) && cs >= ctlr->num_chipselect) {
- 			dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, idx),
- 				ctlr->num_chipselect);
- 			return -EINVAL;
-@@ -698,7 +714,7 @@ static int __spi_add_device(struct spi_device *spi)
- 
- 		for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
- 			cs = spi_get_chipselect(spi, idx);
--			if (cs != 0xFF)
-+			if (is_valid_cs(cs))
- 				spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
- 		}
- 	}
-@@ -756,17 +772,8 @@ static void spi_set_all_cs_unused(struct spi_device *spi)
- {
- 	u8 idx;
- 
--	/*
--	 * Zero(0) is a valid physical CS value and can be located at any
--	 * logical CS in the spi->chip_select[]. If all the physical CS
--	 * are initialized to 0 then It would be difficult to differentiate
--	 * between a valid physical CS 0 & an unused logical CS whose physical
--	 * CS can be 0. As a solution to this issue initialize all the CS to 0xFF.
--	 * Now all the unused logical CS will have 0xFF physical CS value & can be
--	 * ignore while performing physical CS validity checks.
--	 */
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		spi_set_chipselect(spi, idx, 0xFF);
-+		spi_set_chipselect(spi, idx, SPI_INVALID_CS);
- }
- 
- /**
-@@ -1050,7 +1057,7 @@ static void spi_set_cs(struct spi_device *spi, bool enable, bool force)
- 
- 	spi->controller->last_cs_index_mask = spi->cs_index_mask;
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		spi->controller->last_cs[idx] = enable ? spi_get_chipselect(spi, 0) : -1;
-+		spi->controller->last_cs[idx] = enable ? spi_get_chipselect(spi, 0) : SPI_INVALID_CS;
- 	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
- 
- 	if (spi->mode & SPI_CS_HIGH)
-@@ -3333,9 +3340,9 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		goto free_bus_id;
- 	}
- 
--	/* Setting last_cs to -1 means no chip selected */
-+	/* Setting last_cs to SPI_INVALID_CS means no chip selected */
- 	for (idx = 0; idx < SPI_CS_CNT_MAX; idx++)
--		ctlr->last_cs[idx] = -1;
-+		ctlr->last_cs[idx] = SPI_INVALID_CS;
- 
- 	status = device_add(&ctlr->dev);
- 	if (status < 0)
--- 
-2.43.0.rc1.1.gbec44491f096
+I went over all MMC drivers to see what else sets a max_seg_size
+smaller than a page and found these:
 
+drivers/mmc/host/alcor.c:       mmc->max_seg_size =3D AU6601_MAX_DMA_BLO=
+CK_SIZE; // 0x1000
+drivers/mmc/host/au1xmmc.c:             mmc->max_seg_size =3D AU1100_MMC=
+_DESCRIPTOR_SIZE; // 64K-1
+drivers/mmc/host/dw_mmc.c:              mmc->max_seg_size =3D 0x1000;
+drivers/mmc/host/meson-gx-mmc.c:        mmc->max_seg_size =3D mmc->max_r=
+eq_size; //  1536 bytes
+drivers/mmc/host/mmci_stm32_sdmmc.c:            host->mmc->max_seg_size =
+=3D host->variant->stm32_idmabsize_mask; //  GENMASK(12, 5),
+drivers/mmc/host/sunxi-mmc.c:   mmc->max_seg_size       =3D (1 << host->=
+cfg->idma_des_size_bits); // 1 << 13, only on arm32
+drivers/mmc/host/wmt-sdmmc.c:   .max_seg_size =3D 65024,=20
+
+I've tried to add the maintainers to Cc here, these likely all
+need attention to work with large page sizes, in case of
+meson-gx-mmc it even seems like the limit is less than a 4KB
+page, so it will stop working entirely.
+
+There are also a couple of drivers that look like they have
+an off-by-one error and pass a segment size of one less than
+a power-off-two number, e.g.:
+
+drivers/mmc/host/davinci_mmc.c: mmc->max_seg_size       =3D MAX_CCNT * r=
+w_threshold;  // (64k-1) * 32
+drivers/mmc/host/atmel-mci.c:           mmc->max_seg_size =3D mmc->max_b=
+lk_size * mmc->max_segs; // 4095*256
+
+I think some of these are intentional, while others are
+probably bugs.
+
+     Arnd
