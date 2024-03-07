@@ -1,79 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79BE86AC5;
-	Thu,  7 Mar 2024 11:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CD612838A;
+	Thu,  7 Mar 2024 11:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709809829; cv=none; b=knDj8PJpBACrAXbmZ2h/K/23DBCWa2p2yCWAVMuN9vMtQ9MGIU5jtnSUfGUdFh+VxYVetf8NSmmurTq/iFXkGtJ2TY1ySqCCVHZFUHB9f1bQkyIUjazcs7ECXerGSeHdnCDcFqqge0OxApnhPgUWMOW3PXMwM/+Qh10DmLAL1/E=
+	t=1709809850; cv=none; b=UdOJxNodctoULMKrtZPZwGynz1W8J5WayrCmVTnR+48O8A8iyCPzXZPF/CLwRDzeKhaAOGG39yyYQMS3tu5AdYzN1ZOL6M9yxjkDm7Z9T14at4oN3IE1cKcbNHFnqrrAlj5AVkVbHrOS7I49ou8MGKl4SsuQ4inukmlBN5z7d80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709809829; c=relaxed/simple;
-	bh=3C9xoeam283PUe/HcVMxnUvsIgDvsXGE4yT2Hi7mErE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=bqe2CyawOHNRGE6Af0N+7O6lLjMRTp+od+QzyrVFYVkCBvciDHN7Otjj9Ory3PvpLnYcg8Xto9ShO/H41snxGj1+IRS+LjJA++bm3SwrzQO0ChkFFi63CRtOtpUzr2JpgikUYxFO2CGtpOrHdbyU73rbIUm2QtUw1TCxo+GsL/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWzhpeWr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWzhpeWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D457C43390;
-	Thu,  7 Mar 2024 11:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709809829;
-	bh=3C9xoeam283PUe/HcVMxnUvsIgDvsXGE4yT2Hi7mErE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JWzhpeWrJ3Oq7K/XOVqrBYc74eaIDnWL9kVQtW2a/R+oT6TGsKCmPTGswCjXwG/Lm
-	 XobEZSKyHjy7iYSDgx25TrgSsw6S7tzLuA9YyhU929n/B7zstXqPYYif9o8hGB5wZO
-	 F08A+sHK586TETtOwgHfCl2Fpu4+l7FwTgxcuq7JscReDd93DuSyg0L9WsqFVlMEBD
-	 xiMHqBuTFOcfn2nU/rHPyn4d8LaupQRwxC1kWMsPlzzIbvXKR2+eX+wDHYcyY0gMyP
-	 j4y/LsuZzCCjtxkfAEA7IuJR9FL05v9mn10I8Yl4ba7mKJHXfwqfIGBpCFvAU8Ax2T
-	 JiQUgf/pFWziw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 447DBD84BD7;
-	Thu,  7 Mar 2024 11:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1709809850; c=relaxed/simple;
+	bh=m8Oa2/VYa0ptS2XoYMqcLZ2FrU8+142wWfYUZUWN320=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=qJxsqUFBCxZa2rpMSAcqATJmnrpaLywNZnKpWw7WfmkSb1UNThOcHcd/oWje4sIavQ4OOWRAn1mE7UHGCNV/7Qgp0xeZ/o/HhuJpcOBXaNp06DusOJd3V+FVzOiG6z+CBqDF51T6tC9bnq0vs2T+YDkzTQ/XDT7br6ZpsXcrKOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id A40EC644CE7E;
+	Thu,  7 Mar 2024 12:10:44 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id bXZLWalnL1O8; Thu,  7 Mar 2024 12:10:44 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 09263644CE8A;
+	Thu,  7 Mar 2024 12:10:44 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id NBLkt6calHPY; Thu,  7 Mar 2024 12:10:43 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id BDCAF644CE7E;
+	Thu,  7 Mar 2024 12:10:43 +0100 (CET)
+Date: Thu, 7 Mar 2024 12:10:43 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm <linux-mm@kvack.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>, 
+	upstream+pagemap@sigma-star.at, adobriyan@gmail.com, 
+	wangkefeng wang <wangkefeng.wang@huawei.com>, 
+	ryan roberts <ryan.roberts@arm.com>, hughd@google.com, 
+	peterx@redhat.com, avagin@google.com, lstoakes@gmail.com, 
+	vbabka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
+	usama anjum <usama.anjum@collabora.com>, 
+	Jonathan Corbet <corbet@lwn.net>
+Message-ID: <1058679077.23275.1709809843605.JavaMail.zimbra@nod.at>
+In-Reply-To: <d673247b-a67b-43e1-a947-18fdae5f0ea1@redhat.com>
+References: <20240306232339.29659-1-richard@nod.at> <d673247b-a67b-43e1-a947-18fdae5f0ea1@redhat.com>
+Subject: Re: [PATCH 1/2] [RFC] proc: pagemap: Expose whether a PTE is
+ writable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net V3] net: pds_core: Fix possible double free in error
- handling path
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170980982927.5477.544521045314815654.git-patchwork-notify@kernel.org>
-Date: Thu, 07 Mar 2024 11:10:29 +0000
-References: <20240306105714.20597-1-hyperlyzcs@gmail.com>
-In-Reply-To: <20240306105714.20597-1-hyperlyzcs@gmail.com>
-To: Yongzhi Liu <hyperlyzcs@gmail.com>
-Cc: pabeni@redhat.com, shannon.nelson@amd.com, brett.creeley@amd.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, jitxie@tencent.com,
- huntazhang@tencent.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: proc: pagemap: Expose whether a PTE is writable
+Thread-Index: XSyjIW0X6vSwMkWWDv+zJYc006jxkw==
 
-Hello:
+----- Urspr=C3=BCngliche Mail -----
+> Von: "David Hildenbrand" <david@redhat.com>
+> But why is that required? What is the target use case? (I did not get
+> the cover letter in my inbox)
+>=20
+> We're running slowly but steadily out of bits, so we better make wise
+> decisions.
+>=20
+> Also, consider: Architectures where the dirty/access bit is not HW
+> managed could indicate "writable" here although we *will* get a page
+> fault to set the page dirty/accessed.
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+I'm currently investigating why a real-time application faces unexpected
+page faults. Page faults are usually fatal for real-time work loads because
+the latency constraints are no longer met.
 
-On Wed,  6 Mar 2024 18:57:14 +0800 you wrote:
-> When auxiliary_device_add() returns error and then calls
-> auxiliary_device_uninit(), Callback function pdsc_auxbus_dev_release
-> calls kfree(padev) to free memory. We shouldn't call kfree(padev)
-> again in the error handling path.
-> 
-> Fix this by cleaning up the redundant kfree() and putting
-> the error handling back to where the errors happened.
-> 
-> [...]
+So, I wrote a small tool to inspect the memory mappings of a process to fin=
+d
+areas which are not correctly pre-faulted. While doing so I noticed that
+there is currently no way to detect CoW mappings.
+Exposing the writable property of a PTE seemed like a good start to me.
 
-Here is the summary with links:
-  - [net,V3] net: pds_core: Fix possible double free in error handling path
-    https://git.kernel.org/netdev/net/c/ba18deddd6d5
+> So best this can universally do is say "this PTE currently has write
+> permissions".
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Ok.
 
-
+Thanks,
+//richard
