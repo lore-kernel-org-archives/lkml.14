@@ -1,191 +1,145 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84C129A62
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 12:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0054C1292DC
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 12:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709813038; cv=none; b=lEqBmZJ8YkYEc8Tw8ucRXn/adaQRO04k+kVu636ST9eP8ysVtejD9WA5/9RAxPWtrLGBrgNUexyhEGd8tuXyul8cIHO4ImyRiZTo8da8SE3NuSiw6OU34U8ozZcNPubWldse7xObtbS9FcLG6ZmvwKEtV25hNJKRB19IcQiMMjo=
+	t=1709813046; cv=none; b=CxloBCrUmvi91KlXwVTueJl7cDqbE7Bp+Ax4a/qrJ56aIBlp9OEcomEW664+H0/XVUVTRxw4YQasOnlD8NfWpoemZIYFkPXwf03veblqCT9nbqah6LEUTHzSKj7bKu/zX1YKl0vLCO5G/iB3qNhWmoi2IQqMDr4z8JoBwkKo5P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709813038; c=relaxed/simple;
-	bh=Dr95l4tJRg/v7QL5vp2bjUXsqiA3L6k1WcytrApJL9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iVmKfEdFeKDq4S+AUW4GYiFI7UuAd8FO2CWMIASfABveVfSUnNkoz7O3o8b9/HKzmi4Loh1kJV6TJx3yHrtdLoAyaeC3vhI5RQ3wn6L6+YFOcPUwuBaY/ajpdO0UjzRGS5767fGEri7hzxw06HmNUuZZ7G/TQP3JNjEwRnIdLWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pJZdZs5m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MRRPsW4I; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pJZdZs5m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MRRPsW4I; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709813046; c=relaxed/simple;
+	bh=AZV5N2AwheCxqRqLM/3q3lQBybrhTfZ5S/lvgujXWzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJB3w16lbY689hxjk1IRlvtBCPKG2RK8Xpmd/69lXWfL2MYX/KSMmj8PpsLFm0q8cn6PtPW8bnTLCwp9FZrcGzLt38gISqcI5CskrjzVDRDLvhOzxv2LUJpfv0bxyxX1w1LRqVQFBcwf5/R3bY1Ju1yeaII/6/lYxTeY3jnAo7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I/qOYGPf; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pJZdZs5m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MRRPsW4I";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pJZdZs5m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MRRPsW4I"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 215BE4EA21;
-	Thu,  7 Mar 2024 11:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709811918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NraZkidZjSzu4zLjXraKkZcpQLzBaYWdH/AQqwmM1E=;
-	b=pJZdZs5mppYWZDxYvbJBqbVKW54gGEMiui9fD8vRC8Y6gFunqdurMgqGC05WxFvHdwXT+F
-	Ndz27Q3Spq+by3JDFgeZjueR5oX1WBVn5Lgp/HFJ0nhAUL1NcZysgJsp5CKmMsNmqvlSKx
-	Miy1NJNb84bPyIqApf3a6RYWZCNHm20=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709811918;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NraZkidZjSzu4zLjXraKkZcpQLzBaYWdH/AQqwmM1E=;
-	b=MRRPsW4IZrPb0pbJiY29wYLGM7/HQKIXKeGkxVFZSmt6vdQZ6vmOYESetACb32/4WmPrqJ
-	JfHl5u7Ees0DtaBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709811918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NraZkidZjSzu4zLjXraKkZcpQLzBaYWdH/AQqwmM1E=;
-	b=pJZdZs5mppYWZDxYvbJBqbVKW54gGEMiui9fD8vRC8Y6gFunqdurMgqGC05WxFvHdwXT+F
-	Ndz27Q3Spq+by3JDFgeZjueR5oX1WBVn5Lgp/HFJ0nhAUL1NcZysgJsp5CKmMsNmqvlSKx
-	Miy1NJNb84bPyIqApf3a6RYWZCNHm20=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709811918;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NraZkidZjSzu4zLjXraKkZcpQLzBaYWdH/AQqwmM1E=;
-	b=MRRPsW4IZrPb0pbJiY29wYLGM7/HQKIXKeGkxVFZSmt6vdQZ6vmOYESetACb32/4WmPrqJ
-	JfHl5u7Ees0DtaBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F32B612FC5;
-	Thu,  7 Mar 2024 11:45:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Nj/gOs2o6WU9PAAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 07 Mar 2024 11:45:17 +0000
-Message-ID: <08f3d804-f94b-4a2f-897b-7fee3411e6fc@suse.de>
-Date: Thu, 7 Mar 2024 12:45:17 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I/qOYGPf"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51336ab1fb7so1005527e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 04:04:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709813043; x=1710417843; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=F2Fyfk0Z5Z7LzM4ubY4N0WUN8/ihkIdQocELKuF3SZk=;
+        b=I/qOYGPfi/EaBf1qUvv9Z63Vls+yD0TsiK7uOWdKXbkg5iTg62w53zxAbYLL0io8FU
+         +SpKxgGPbt7F5EfDR7AOQ6ICiNr3aYgA60G765WBVFdoj6oQXQctywocQdshDaVeECuE
+         hA2LQdJLhxq0fF7S/QnHjFnO9AIQhiKfjRkoncezS1NeZYOVpGwGeEbqZFl5WJQpvrnm
+         AWgmtMCJ4Yn7C/Rdk4AB72QAcXW5kFk+TOdi5CNsGg8PX6q0p/rfspD7gr84IR+VsA2f
+         DL1ifE95laMaiA7LFsliFL8v9j2LiC+xq4APALD+UkdIshhHv33I8lz0fuRUByYz/aZ5
+         woDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709813043; x=1710417843;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F2Fyfk0Z5Z7LzM4ubY4N0WUN8/ihkIdQocELKuF3SZk=;
+        b=aTQqVTDpBjvKPIOJlxUHqTW8/33FYFEhBaDdu+WQ7jKK72fg12NnnKHNVl9RfqOVAG
+         y0jQamxDUoh/LoIreDpa0Fpc7NqH7PARR3nPhiCoTT24sJr4MDTLo+ypGFm0jegQEbmd
+         z7W+cwjD5nbZOAznqyge4bt8rrb1HsbEh0svG1DGsqgP/YsCuzU+ZRJE6p4cOtMb9vP4
+         eArAHPolaWUIo064kKKYOQDc1fYXVWQ0ANNTELGwqhiuRjnhuJydIzxaCtyAcnEkUN88
+         RNQWBPABTJ3dzuoKPi0f57bAmZaGyXamfBpXUGlnGzu7JliWNK4KoPQiLnBG1CYXR/47
+         2Nhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQQdlvw+yDVCxdqddWACNLkLLEOArDfkBZqNmKZoKe5ITzx8EXFH+NOnNVQL1Q9tAInRGooK1UGmSN1m5BjmLHDt02d6D86AWuav+C
+X-Gm-Message-State: AOJu0Yypg/Y4SxIEQiTfj64YJSUeWauXIlEoTYqmsqTRYIdfcP4yiLQZ
+	haf09if995ydZhXZvecNdNbtbzbvlJbP6CeySJ7kjL1rOAia0jA8sA0vGkXIF+o=
+X-Google-Smtp-Source: AGHT+IFnwdhtwPsEP5oZPW0CnfMI15eNBkLQXmofIyA7OiFWrgmhnEk2RBJxkYTJufQTd/r6sVxagw==
+X-Received: by 2002:a19:9155:0:b0:512:ec79:3be5 with SMTP id y21-20020a199155000000b00512ec793be5mr1093760lfj.43.1709813042704;
+        Thu, 07 Mar 2024 04:04:02 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id n20-20020a05600c501400b00412ea92f1b4sm2547606wmr.19.2024.03.07.04.04.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 04:04:02 -0800 (PST)
+Date: Thu, 7 Mar 2024 15:03:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: linux-mtd@lists.infradead.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+	Richard Weinberger <richard@nod.at>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: [PATCH v2] mtd: ubi: fix NVMEM over UBI volumes on 32-bit systems
+Message-ID: <831b4af1-f6a2-4bc2-ac9d-7227c28121d0@moroto.mountain>
+References: <31a20aead3419209991bf01aaeaefe07ab94d23a.1709081052.git.daniel@makrotopia.org>
+ <8ae44e8e-fc3d-28bd-5d1e-e900ce53529f@huawei.com>
+ <27c875fb-9507-4034-8468-c4d46c952754@moroto.mountain>
+ <005448D3-A311-4B2D-B515-C7A9399B48E4@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] nvme-fabrics: short-circuit connect retries
-Content-Language: en-US
-To: Sagi Grimberg <sagi@grimberg.me>, Daniel Wagner <dwagner@suse.de>,
- James Smart <james.smart@broadcom.com>
-Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240305080005.3638-1-dwagner@suse.de>
- <22b01fb4-b543-43b2-949c-1873105dc343@grimberg.me>
- <72c1d3a8-14ad-43e8-a68a-25be903698c4@suse.de>
- <432a39d5-6d08-4d38-a357-7c8d9123189a@grimberg.me>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <432a39d5-6d08-4d38-a357-7c8d9123189a@grimberg.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <005448D3-A311-4B2D-B515-C7A9399B48E4@makrotopia.org>
 
-On 3/7/24 12:30, Sagi Grimberg wrote:
+On Thu, Mar 07, 2024 at 11:42:12AM +0000, Daniel Golle wrote:
 > 
 > 
-> On 07/03/2024 12:37, Hannes Reinecke wrote:
->> On 3/7/24 09:00, Sagi Grimberg wrote:
->>>
->>> On 05/03/2024 10:00, Daniel Wagner wrote:
->>>> I've picked up Hannes' DNR patches. In short the make the transports 
->>>> behave the same way when the DNR bit set on a re-connect attempt. We
->>>> had a discussion this
->>>> topic in the past and if I got this right we all agreed is that the 
->>>> host should honor the DNR bit on a connect attempt [1]
->>> Umm, I don't recall this being conclusive though. The spec ought to 
->>> be clearer here I think.
->>
->> I've asked the NVMexpress fmds group, and the response was pretty 
->> unanimous that the DNR bit on connect should be evaluated.
+> On 7 March 2024 09:17:45 UTC, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >On Wed, Feb 28, 2024 at 09:45:13AM +0800, Zhihao Cheng wrote:
+> >> 在 2024/2/28 8:46, Daniel Golle 写道:
+> >> > A compiler warning related to sizeof(int) != 8 when calling do_div()
+> >> > is triggered when building on 32-bit platforms.
+> >> > Address this by using integer types having a well-defined size.
+> >> > 
+> >> > Fixes: 3ce485803da1 ("mtd: ubi: provide NVMEM layer over UBI volumes")
+> >> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> >> > ---
+> >> > v2: use size_t for 'bytes_left' variable to match parameter type
+> >> > 
+> >> >   drivers/mtd/ubi/nvmem.c | 5 ++++-
+> >> >   1 file changed, 4 insertions(+), 1 deletion(-)
+> >> > 
+> >> > diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
+> >> > index b7a93c495d172..e68b8589c4279 100644
+> >> > --- a/drivers/mtd/ubi/nvmem.c
+> >> > +++ b/drivers/mtd/ubi/nvmem.c
+> >> > @@ -23,9 +23,12 @@ struct ubi_nvmem {
+> >> >   static int ubi_nvmem_reg_read(void *priv, unsigned int from,
+> >> >   			      void *val, size_t bytes)
+> >> >   {
+> >> > -	int err = 0, lnum = from, offs, bytes_left = bytes, to_read;
+> >> >   	struct ubi_nvmem *unv = priv;
+> >> >   	struct ubi_volume_desc *desc;
+> >> > +	size_t bytes_left = bytes;
+> >> > +	uint32_t offs, to_read;
+> >> There still exist a type truncation assignment 'to_read = bytes_left' below,
+> >> although it's safe in logic.
+> >
+> >Yeah.  As you say, from looking at the logic we know it's safe.
+> >
+> >    41                  if (to_read > bytes_left)
+> >    42                          to_read = bytes_left;
+> >
+> >Obviously the new value is smaller than the original, so it must fit
+> >within a u32 range...
 > 
-> OK.
 > 
->>
->>>>
->>>> The nvme/045 test case (authentication tests) in blktests is a good 
->>>> test case for this after extending it slightly. TCP and RDMA try to
->>>> reconnect with an
->>>> invalid key over and over again, while loop and FC stop after the 
->>>> first fail.
->>>
->>> Who says that invalid key is a permanent failure though?
->>>
->> See the response to the other patchset.
->> 'Invalid key' in this context means that the _client_ evaluated the 
->> key as invalid, ie the key is unusable for the client.
->> As the key is passed in via the commandline there is no way the client
->> can ever change the value here, and no amount of retry will change 
->> things here. That's what we try to fix.
+> I've sent v3 of this fix which should be finally be warning free now.
 > 
-> Where is this retried today, I don't see where connect failure is 
-> retried, outside of a periodic reconnect.
-> Maybe I'm missing where what is the actual failure here.
+> https://patchwork.ozlabs.org/project/linux-mtd/patch/ff29447dcee834c17e4e1e99725b9454c90136ca.1709178325.git.daniel@makrotopia.org/
+> 
 
-static void nvme_tcp_reconnect_ctrl_work(struct work_struct *work)
-{
-         struct nvme_tcp_ctrl *tcp_ctrl =
-                         container_of(to_delayed_work(work),
-                         struct nvme_tcp_ctrl, connect_work);
-         struct nvme_ctrl *ctrl = &tcp_ctrl->ctrl;
+Thanks!
 
-         ++ctrl->nr_reconnects;
+> >
+> >This bug has been breaking the build since Dec 19.  
+> 
+> I have a hard time believing that as the offending commit was only applied on Feb 25.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=3ce485803da1b79b2692b6d0c2792829292ad838
+> 
 
-         if (nvme_tcp_setup_ctrl(ctrl, false))
-                 goto requeue;
+Ah...  Okay.  I was looking at the author date.  Not the merge date.  My
+bad.
 
-         dev_info(ctrl->device, "Successfully reconnected (%d attempt)\n",
-                         ctrl->nr_reconnects);
-
-         ctrl->nr_reconnects = 0;
-
-         return;
-
-requeue:
-         dev_info(ctrl->device, "Failed reconnect attempt %d\n",
-
-and nvme_tcp_setup_ctrl() returns either a negative errno or an NVMe 
-status code (which might include the DNR bit).
-
-Cheers,
-
-Hannes
+regards,
+dan carpenter
 
