@@ -1,101 +1,137 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A031332B3;
-	Thu,  7 Mar 2024 19:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABB61EB56;
+	Thu,  7 Mar 2024 19:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841306; cv=none; b=WD9CnEtD+hU3H1xEUxbRbH2QNqMpjqsTUHsOVFR01hBvlYqdZWzkqxnvUEIgVc44RMAqRSyzsVMnRuFMcwVM57jc1E/aBkS8nTjQGvq0BdMH0jw7cgcIyXcil6GA/eIHUW6VWiHGB6wsEDjL+pZ/drzmf068I5rMPlpN7FRYM7o=
+	t=1709841448; cv=none; b=noriz84jGVyGqnNqSnO1eT7vXrodz3GtakqEDGDcHEWLnr7WEZNljtYqEWQJ+i3WFchH9m0PRVeZ5WI4nlfixqe1xhBrmnJz4KHoMj+02meWfNSLT3uzFnO5WcjUzedNVvtaq/rtYVioOAfE5aRJApPHHoUyFOy+X01fHECA1mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841306; c=relaxed/simple;
-	bh=5MEqqGRgQWE/Yasm8wtzZiD02wvptqCi6srcepNdiPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=F0YzIlYCHTcokzU/flkkqaqVQDqxF9s9AyapLX2k6CEQs2WkIyqUainkXxfFxMzJqBNLnW9sk0iLuTCwlp0Ysh3MFZcjP2FF351E8LHBd/RQyirKsn3pLScld8XKxj/rZHhvInPNR5K97qgYmEOU51hgDHwlhe9u4I/OIa/pAeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FAceBK/T; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1709841448; c=relaxed/simple;
+	bh=fOsKn2f9zmPGdpFx8KnXbnRFneCgwvg7ZyYzVHMdDUQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=hf6Dohlh1j7rLg4/5Iz2la45cpFnDAtJv5WV9w6C/GfMnwbZbiS0YyU9AHi+jWYVuanRMPrbBF0xjlvgnJ//bnnoYaZ9cbhNKzNIjMjPT2i1dStrjADsverYBTWyRF9jWuqfcXhSiWHDaDPT/WzXRMU/YcoLLbjP8HyUGujW28I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rgt1cBUs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FAceBK/T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=KdUReECK6yv0klISswefryC4t0TYivcyEoL0v9VbHEU=; b=FAceBK/T3lPG7e+iEGAKxd7y1n
-	f2QMqtkU+L88JedyHGlknWz1uqCutT25vzgUABf8TfbN38V9fnlh50CXWsUDETOSxPuXEd1UxEGUO
-	imV7okghXJkze5eToVih5lELudzQzoeubS5FW9VS+a3NPkPM1xx17KB04OPT5mRGCQS4DMgwvB54h
-	rTgVkkymtvqbZANHMhLJ7YsRIWlzArh0pVZVRHxpW/HT3SjHOhcfDRh7vj2zu8cCtlTgOBca2JDWs
-	NG9xmCY/C394KeENak12lGdv3L1eeuQ131O9D0veP/HIWg034Hlq7lFTjnahm+yMkJjXL7n/aVR5p
-	E3VtKD/A==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1riJpV-00000009r4y-3s3b;
-	Thu, 07 Mar 2024 19:55:01 +0000
-Date: Thu, 7 Mar 2024 19:55:01 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: linux-mm@kvack.org
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: On the optimum size of a batch
-Message-ID: <Zeoble0xJQYEAriE@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rgt1cBUs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4858FC433F1;
+	Thu,  7 Mar 2024 19:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709841448;
+	bh=fOsKn2f9zmPGdpFx8KnXbnRFneCgwvg7ZyYzVHMdDUQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Rgt1cBUsraDPPk+fgftIJwCdAGYpX0MO1sI2vhONF8NqS0poeL5TMd/ZfmmyC48Vu
+	 KCcSkw/FZSRWxbcxLewqonJaQYViDP2xI7+SDf9GuxSJnQydNWCRIWOwGlmAylkWVY
+	 QADULHnRfDANW6HA8eCzAyjhDCmYTRetwPZ0K/TGXv4907WA0b7NXb+xcp5hBh1oPt
+	 vsNfmGjUmNAy558xV2ABlZkTsZqSEBtAcEbH9qF1fF6mkfEKC5BoeGlWq/lZGwZzlv
+	 thYRCZY3VuEuDC4WHb7h7nBWE2BVbL/p1aaVNDlYKHUawdPCXDiTTCb38sRb0GmIDX
+	 ZBkRamVC2ULYg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 07 Mar 2024 21:57:24 +0200
+Message-Id: <CZNS7FO53BHK.6NO93P0C0VY5@kernel.org>
+Subject: Re: [PATCH 2/2] tpm: of: If available Use linux,sml-log to get the
+ log and its size
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, <mpe@ellerman.id.au>,
+ <linux-integrity@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+Cc: <linux-kernel@vger.kernel.org>, <rnsastry@linux.ibm.com>,
+ <peterhuewe@gmx.de>, <viparash@in.ibm.com>
+X-Mailer: aerc 0.17.0
+References: <20240306155511.974517-1-stefanb@linux.ibm.com>
+ <20240306155511.974517-3-stefanb@linux.ibm.com>
+In-Reply-To: <20240306155511.974517-3-stefanb@linux.ibm.com>
 
-I've had a few conversations recently about how many objects should be
-in a batch in some disparate contextx, so I thought I'd write down my
-opinion so I can refer to it in future.  TLDR: Start your batch size
-around 10, adjust the batch size when measurements tell you to change it.
+in short summary: s/Use/use/
 
-In this model, let's look at the cost of allocating N objects from an
-allocator.  Assume there's a fixed cost, say 4 (units are not relevant
-here) for going into the allocator and then there's a 1 unit cost per
-object (eg we're taking a spinlock, pulling N objects out of the data
-structure and releasing the spinlock again).
+On Wed Mar 6, 2024 at 5:55 PM EET, Stefan Berger wrote:
+> If linux,sml-log is available use it to get the TPM log rather than the
+> pointer found in linux,sml-base. This resolves an issue on PowerVM and KV=
+M
+> on Power where after a kexec the memory pointed to by linux,sml-base may
+> have been corrupted. Also, linux,sml-log has replaced linux,sml-base and
+> linux,sml-size on these two platforms.
+>
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 
-Allocating 100 * 1 objects would cost 500 units.  Our best case is that
-we could save 396 units by allocating a batch of 100.  But we probably
-don't know how many objects we're going to need to allocate, so we pull
-objects from the allocator in smaller batches.  Here's a table showing
-the costs for different batch sizes:
+So shouldn't this have a fixed tag, or not?
 
-Batch size      Cost of allocating 100          thousand        million
-1               500 (5 * 100)                   5000            5M
-2               300 (6 * 50)                    3000            3M
-4               200 (8 * 25)                    2000            2M
-8               156 (12 * 13)                   1500            1.5M
-16              140 (20 * 7)                    1260            1.25M
-32              144 (36 * 4)                    1152            1.13M
-64              136 (68 * 2)                    1088            1.06M
-128             132 (132 * 1)                   1056            1.03M
+> ---
+>  drivers/char/tpm/eventlog/of.c | 36 +++++++++++-----------------------
+>  1 file changed, 11 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/o=
+f.c
+> index 930fe43d5daf..e37196e64ef1 100644
+> --- a/drivers/char/tpm/eventlog/of.c
+> +++ b/drivers/char/tpm/eventlog/of.c
+> @@ -54,8 +54,8 @@ int tpm_read_log_of(struct tpm_chip *chip)
+>  	const u32 *sizep;
+>  	const u64 *basep;
+>  	struct tpm_bios_log *log;
+> +	const void *logp;
+>  	u32 size;
+> -	u64 base;
+> =20
+>  	log =3D &chip->log;
+>  	if (chip->dev.parent && chip->dev.parent->of_node)
+> @@ -66,37 +66,23 @@ int tpm_read_log_of(struct tpm_chip *chip)
+>  	if (of_property_read_bool(np, "powered-while-suspended"))
+>  		chip->flags |=3D TPM_CHIP_FLAG_ALWAYS_POWERED;
+> =20
+> -	sizep =3D of_get_property(np, "linux,sml-size", NULL);
+> -	basep =3D of_get_property(np, "linux,sml-base", NULL);
+> -	if (sizep =3D=3D NULL && basep =3D=3D NULL)
+> -		return tpm_read_log_memory_region(chip);
+> -	if (sizep =3D=3D NULL || basep =3D=3D NULL)
+> -		return -EIO;
+> -
+> -	/*
+> -	 * For both vtpm/tpm, firmware has log addr and log size in big
+> -	 * endian format. But in case of vtpm, there is a method called
+> -	 * sml-handover which is run during kernel init even before
+> -	 * device tree is setup. This sml-handover function takes care
+> -	 * of endianness and writes to sml-base and sml-size in little
+> -	 * endian format. For this reason, vtpm doesn't need conversion
+> -	 * but physical tpm needs the conversion.
+> -	 */
+> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+> +	logp =3D of_get_property(np, "linux,sml-log", &size);
+> +	if (logp =3D=3D NULL) {
+> +		sizep =3D of_get_property(np, "linux,sml-size", NULL);
+> +		basep =3D of_get_property(np, "linux,sml-base", NULL);
+> +		if (sizep =3D=3D NULL && basep =3D=3D NULL)
+> +			return tpm_read_log_memory_region(chip);
+> +		if (sizep =3D=3D NULL || basep =3D=3D NULL)
+> +			return -EIO;
+> +		logp =3D __va(be64_to_cpup((__force __be64 *)basep));
+>  		size =3D be32_to_cpup((__force __be32 *)sizep);
+> -		base =3D be64_to_cpup((__force __be64 *)basep);
+> -	} else {
+> -		size =3D *sizep;
+> -		base =3D *basep;
+>  	}
+> -
+>  	if (size =3D=3D 0) {
+>  		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
+>  		return -EIO;
+>  	}
+> =20
+> -	log->bios_event_log =3D devm_kmemdup(&chip->dev, __va(base), size, GFP_=
+KERNEL);
+> +	log->bios_event_log =3D devm_kmemdup(&chip->dev, logp, size, GFP_KERNEL=
+);
+>  	if (!log->bios_event_log)
+>  		return -ENOMEM;
+> =20
 
-You can see the knee of this curve is around 8.  It fluctuates a bit after
-that depending on how many "left over" objects we have after allocating
-the 100 it turned out that we needed.  Even if we think we're going to
-be dealing with a _lot_ of objects (the thousand and million column),
-we've got most of the advantage by the time we get to 8 (eg a reduction
-of 3.5M from a total possible reduction of 4M), and while I wouldn't
-sneeze at getting a few more percentage points of overhead reduction,
-we're scrabbling at the margins now, not getting big wins.
+Looks pretty good other than that.
 
-This is a simple model for only one situation.  If we have a locking
-contention breakdown, the overhead cost might be much higher than 4 units,
-and that would lead us to a larger batch size.
-
-Another consideration is how much of each object we have to touch.
-put_pages_list() is frequently called with batches of 500 pages.  In order
-to free a folio, we have to manipulate its contents, so touching at least
-one cacheline per object.  And we make multiple passes over the batch,
-first decrementing the refcount, removing it from the lru list; second
-uncharging the folios from the memcg (writes to folio->memcg_data);
-third calling free_pages_prepare which, eg, sets ->mapping to NULL;
-fourth putting the folio on the pcp list (writing to the list_head).
-
-With 500 folios on the list, that uses 500 * 64 bytes of cache which
-just barely fits into the L1 cache of a modern laptop CPU (never mind
-whatever else we might want to have in the L1).  Capping the batch size
-at 15 (as my recent patches do) uses only 1kB of L1, which is a much
-more reasonable amount of cache to take up.  We can be pretty sure the
-first one is still in it when the last one has finished being processed.
+BR, Jarkko
