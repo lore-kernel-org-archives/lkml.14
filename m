@@ -1,280 +1,160 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FD6320E;
-	Thu,  7 Mar 2024 01:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3B22F28
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 01:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709775644; cv=none; b=tbRKTqMODgwXQ1ZppvCWDWki86KtVo1Psu/ZImRBBDVa/pKveH51+/XrvEYFPLJTG0KTDoW2/XbVsHf4JdThDgWRfdkL8hcBzIhlOPzxiOYhqZ83R+rP8OW80Wm0MKctIp7SBIHmRISUE/NcXcqi6JY33R41tSrjhKOTqFt3fGY=
+	t=1709775913; cv=none; b=RRPl3PuR7l16igxCsqz9ca+QF+qOP83bAFKqgGXtYUvDWypzZwxCGyUkqn9Bm0xAZoha/zkfsn0pvli4oAKAcgJ0d/9XuhRpEZhyhlBvnCrwbix6QZTC/sYhFNT13A8/r7Gf7iOSkVCwsE+6GzwfvIeCvm6P0C+PYPGrWyBEdxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709775644; c=relaxed/simple;
-	bh=Lo9iz+n9edm3o53h72vU/6OxtqAKFhQ+PPqRU6+UL/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DE0Qc2mm0BuWPK2RljHTqQuvDcFLRzCeGJdzHn4sl7Ie9N8kf/360jpXMDd3801rC0+P06kowe5uhTbeKDsar3xxtAdOv1IUri2I+dpYpOQ2k+o2En7g9F4x6pJ5toufyKono2GP3t0BZunhEDry0WjdsGOtZSGWfAJVa3wkyM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IrSkWBj7; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1709775913; c=relaxed/simple;
+	bh=aWSwUSkgwGQnBYXx/O6wZsg2pJVaxfIK5ZiFu+4pJiM=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=l1VQzacF0BGjidSQLzd3fX+mAYHUMCbqezd6YhKw9oA8wIKQrfq4klWR20RNhBt3SSJVeJwIN5TC+gr2K3CNRbGzlPvBAWgqiuqqgOX92VbTTi0wJW4T7yJ1j3F4hfCbXFm41ZhZMH78sDFph9F5q0bcqCJEpIIxng5ZNrsFwMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=permerror (0-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=WRye+pJL; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IrSkWBj7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1709775641;
-	bh=T/j2tECYmvWyYhRQzO6iM6NxszqMwlNlx0r9oi+lhHA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IrSkWBj7sq6MnNLa1BtDPXvkU7O/2wn8lp1Bj0avzfsosMzV5MhEa1ORbGbYdlWS5
-	 VOxZS9llx7QWnI65QFqxFGdY0ZtIQsTWG9hax2uwNxGdAl3WQ+PQcEmHfqf8DCd14Q
-	 4HZs7/d1qO8y4++WBGfMyHlhh29YVQo0+HN4A/ApBJ8arWDfCsF0xSkSyB4iriSeIt
-	 /xwutvofqnw0AMG7cJG2jffYOwp/Envrvqi1Uligbtoxabo9FME4qHJ4CX6pSO314d
-	 lIsQZQlH7mL9VzeZVKkTsPMjUAdJpR624n8/OtCzEKPqxWhfdobImX4ImAMYs8k5s1
-	 pVvnHyL+LmJrA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TqsSm59d9z4wcK;
-	Thu,  7 Mar 2024 12:40:40 +1100 (AEDT)
-Date: Thu, 7 Mar 2024 12:40:40 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
- <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Eduard
- Zingerman <eddyz87@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20240307124040.1a177b71@canb.auug.org.au>
+	dkim=permerror (0-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="WRye+pJL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1709775904;
+	bh=aWSwUSkgwGQnBYXx/O6wZsg2pJVaxfIK5ZiFu+4pJiM=;
+	h=Date:From:To:cc:Subject:From;
+	b=WRye+pJLR+trpFSDcZ4fJaP+w34FsxMv4jhCYGzeYBguKZj9sMfw4npzfW5R8+vbt
+	 ff+pUuLlIOGn02EhmiXQ/u/sL3lpx97bT45tNjeYLGkTxKv82V2Fi3kqErb/hndxF7
+	 y0tOM0LoYWspgM4XpLviFf82ReGKWy1xgMrmBwo0Zy7BTuYlBCEE1s9lYLQHBu4CnW
+	 6E/qupm8E4VN91Y2UBGfOPzeaNqBECudKuo8XTFINnJoaWInraLbRvhJpxZViYel7V
+	 hc73NxJOs8nsNGoBxUHjubsZl13uOqQk0ncgN3THtki13nDyjrWfsGMGEv6Qmezpy1
+	 sd3LWJ9sjRWYQ==
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 3501440A94; Wed,  6 Mar 2024 17:45:04 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 30B1240789;
+	Wed,  6 Mar 2024 17:45:04 -0800 (PST)
+Date: Wed, 6 Mar 2024 17:45:04 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Mark Rutland <mark.rutland@arm.com>
+cc: catalin.marinas@arm.com, Will Deacon <will@kernel.org>, 
+    Jonathan.Cameron@huawei.com, Matteo.Carlini@arm.com, 
+    Valentin.Schneider@arm.com, akpm@linux-foundation.org, 
+    anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>, 
+    dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org, 
+    linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@armlinux.org.uk, 
+    robin.murphy@arm.com, vanshikonda@os.amperecomputing.com, 
+    yang@os.amperecomputing.com
+Subject: [PATCH v3] ARM64: Dynamically allocate cpumasks and increase supported
+ CPUs to 512
+Message-ID: <37099a57-b655-3b3a-56d0-5f7fbd49d7db@gentwo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/I9j87X6ApN8PS6sC_1mfoKA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
---Sig_/I9j87X6ApN8PS6sC_1mfoKA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Currently defconfig selects NR_CPUS=256, but some vendors (e.g. Ampere
+Computing) are planning to ship systems with 512 CPUs. So that all CPUs on
+these systems can be used with defconfig, we'd like to bump NR_CPUS to 512.
+Therefore this patch increases the default NR_CPUS from 256 to 512.
 
-Hi all,
+As increasing NR_CPUS will increase the size of cpumasks, there's a fear that
+this might have a significant impact on stack usage due to code which places
+cpumasks on the stack. To mitigate that concern, we can select
+CPUMASK_OFFSTACK. As that doesn't seem to be a problem today with
+NR_CPUS=256, we only select this when NR_CPUS > 256.
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+CPUMASK_OFFSTACK configures the cpumasks in the kernel to be
+dynamically allocated. This was used in the X86 architecture in the
+past to enable support for larger CPU configurations up to 8k cpus.
 
-  tools/testing/selftests/bpf/progs/verifier_iterating_callbacks.c
+With that is becomes possible to dynamically size the allocation of
+the cpu bitmaps depending on the quantity of processors detected on
+bootup. Memory used for cpumasks will increase if the kernel is
+run on a machine with more cores.
 
-between commit:
+Further increases may be needed if ARM processor vendors start
+supporting more processors. Given the current inflationary trends
+in core counts from multiple processor manufacturers this may occur.
 
-  5c2bc5e2f81d ("selftests/bpf: test case for callback_depth states pruning=
- logic")
+There are minor regressions for hackbench. The kernel data size
+for 512 cpus is smaller with offstack than with onstack.
 
-from the bpf tree and commit:
+Benchmark results using hackbench average over 10 runs of
 
-  0c8bbf990bdd ("selftests/bpf: Test may_goto")
+ 	hackbench -s 512 -l 2000 -g 15 -f 25 -P
 
-from the bpf-next tree.
+on Altra 80 Core
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Support for 256 CPUs on stack. Baseline
 
---=20
-Cheers,
-Stephen Rothwell
+ 	7.8564 sec
 
-diff --cc tools/testing/selftests/bpf/progs/verifier_iterating_callbacks.c
-index a955a6358206,04cdbce4652f..000000000000
---- a/tools/testing/selftests/bpf/progs/verifier_iterating_callbacks.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_iterating_callbacks.c
-@@@ -239,74 -237,103 +237,173 @@@ int bpf_loop_iter_limit_nested(void *un
-  	return 1000 * a + b + c;
-  }
- =20
- +struct iter_limit_bug_ctx {
- +	__u64 a;
- +	__u64 b;
- +	__u64 c;
- +};
- +
- +static __naked void iter_limit_bug_cb(void)
- +{
- +	/* This is the same as C code below, but written
- +	 * in assembly to control which branches are fall-through.
- +	 *
- +	 *   switch (bpf_get_prandom_u32()) {
- +	 *   case 1:  ctx->a =3D 42; break;
- +	 *   case 2:  ctx->b =3D 42; break;
- +	 *   default: ctx->c =3D 42; break;
- +	 *   }
- +	 */
- +	asm volatile (
- +	"r9 =3D r2;"
- +	"call %[bpf_get_prandom_u32];"
- +	"r1 =3D r0;"
- +	"r2 =3D 42;"
- +	"r0 =3D 0;"
- +	"if r1 =3D=3D 0x1 goto 1f;"
- +	"if r1 =3D=3D 0x2 goto 2f;"
- +	"*(u64 *)(r9 + 16) =3D r2;"
- +	"exit;"
- +	"1: *(u64 *)(r9 + 0) =3D r2;"
- +	"exit;"
- +	"2: *(u64 *)(r9 + 8) =3D r2;"
- +	"exit;"
- +	:
- +	: __imm(bpf_get_prandom_u32)
- +	: __clobber_all
- +	);
- +}
- +
- +SEC("tc")
- +__failure
- +__flag(BPF_F_TEST_STATE_FREQ)
- +int iter_limit_bug(struct __sk_buff *skb)
- +{
- +	struct iter_limit_bug_ctx ctx =3D { 7, 7, 7 };
- +
- +	bpf_loop(2, iter_limit_bug_cb, &ctx, 0);
- +
- +	/* This is the same as C code below,
- +	 * written in assembly to guarantee checks order.
- +	 *
- +	 *   if (ctx.a =3D=3D 42 && ctx.b =3D=3D 42 && ctx.c =3D=3D 7)
- +	 *     asm volatile("r1 /=3D 0;":::"r1");
- +	 */
- +	asm volatile (
- +	"r1 =3D *(u64 *)%[ctx_a];"
- +	"if r1 !=3D 42 goto 1f;"
- +	"r1 =3D *(u64 *)%[ctx_b];"
- +	"if r1 !=3D 42 goto 1f;"
- +	"r1 =3D *(u64 *)%[ctx_c];"
- +	"if r1 !=3D 7 goto 1f;"
- +	"r1 /=3D 0;"
- +	"1:"
- +	:
- +	: [ctx_a]"m"(ctx.a),
- +	  [ctx_b]"m"(ctx.b),
- +	  [ctx_c]"m"(ctx.c)
- +	: "r1"
- +	);
- +	return 0;
- +}
- +
-+ #define ARR_SZ 1000000
-+ int zero;
-+ char arr[ARR_SZ];
-+=20
-+ SEC("socket")
-+ __success __retval(0xd495cdc0)
-+ int cond_break1(const void *ctx)
-+ {
-+ 	unsigned long i;
-+ 	unsigned int sum =3D 0;
-+=20
-+ 	for (i =3D zero; i < ARR_SZ; cond_break, i++)
-+ 		sum +=3D i;
-+ 	for (i =3D zero; i < ARR_SZ; i++) {
-+ 		barrier_var(i);
-+ 		sum +=3D i + arr[i];
-+ 		cond_break;
-+ 	}
-+=20
-+ 	return sum;
-+ }
-+=20
-+ SEC("socket")
-+ __success __retval(999000000)
-+ int cond_break2(const void *ctx)
-+ {
-+ 	int i, j;
-+ 	int sum =3D 0;
-+=20
-+ 	for (i =3D zero; i < 1000; cond_break, i++)
-+ 		for (j =3D zero; j < 1000; j++) {
-+ 			sum +=3D i + j;
-+ 			cond_break;
-+ 		}
-+=20
-+ 	return sum;
-+ }
-+=20
-+ static __noinline int loop(void)
-+ {
-+ 	int i, sum =3D 0;
-+=20
-+ 	for (i =3D zero; i <=3D 1000000; i++, cond_break)
-+ 		sum +=3D i;
-+=20
-+ 	return sum;
-+ }
-+=20
-+ SEC("socket")
-+ __success __retval(0x6a5a2920)
-+ int cond_break3(const void *ctx)
-+ {
-+ 	return loop();
-+ }
-+=20
-+ SEC("socket")
-+ __success __retval(1)
-+ int cond_break4(const void *ctx)
-+ {
-+ 	int cnt =3D zero;
-+=20
-+ 	for (;;) {
-+ 		/* should eventually break out of the loop */
-+ 		cond_break;
-+ 		cnt++;
-+ 	}
-+ 	/* if we looped a bit, it's a success */
-+ 	return cnt > 1 ? 1 : 0;
-+ }
-+=20
-+ static __noinline int static_subprog(void)
-+ {
-+ 	int cnt =3D zero;
-+=20
-+ 	for (;;) {
-+ 		cond_break;
-+ 		cnt++;
-+ 	}
-+=20
-+ 	return cnt;
-+ }
-+=20
-+ SEC("socket")
-+ __success __retval(1)
-+ int cond_break5(const void *ctx)
-+ {
-+ 	int cnt1 =3D zero, cnt2;
-+=20
-+ 	for (;;) {
-+ 		cond_break;
-+ 		cnt1++;
-+ 	}
-+=20
-+ 	cnt2 =3D static_subprog();
-+=20
-+ 	/* main and subprog have to loop a bit */
-+ 	return cnt1 > 1 && cnt2 > 1 ? 1 : 0;
-+ }
-+=20
-  char _license[] SEC("license") =3D "GPL";
+Support for 512 CUs on stack.
 
---Sig_/I9j87X6ApN8PS6sC_1mfoKA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ 	7.8713 sec + 0.18%
 
------BEGIN PGP SIGNATURE-----
+512 CPUS offstack
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXpGxgACgkQAVBC80lX
-0GyK+wf9GeKO29jQCn5GcUD1Y0Q9Ea6t3msOMQzBJh7hfCFniqOSxb08dYLj2uVc
-hLfU2MUZUTh1C5YDcU/DB7LGVfILtTmSev44Pjm1DzPFyKdv4fHSFofPR3xbd/VN
-S5HN7NxADM6vBGdEHOiWvXK5w0YmFthTpf/U3CHXuzhGJ7FZ7IhHIPkTeoEDsv9g
-muxjtMv4pok3Idzi9HJwBpiEYYgRvOO67gj92cJEFHv157swkQ9b9geoMVqqJbmy
-i2u0yY3KRwpu0r5t9GinXbfdtOQk6gVj/a1Pe1uF0pOp4Tlj5yXl1NGJVJa1vZQQ
-7ADXFlIzPTSUoMmV9M1HbwQ4xydJ7g==
-=HtY4
------END PGP SIGNATURE-----
+ 	7.8916 sec + 0.44%
 
---Sig_/I9j87X6ApN8PS6sC_1mfoKA--
+Kernel size comparison:
+
+    text		   data	    filename				Difference to onstack256 baseline
+25755648	9589248	    vmlinuz-6.8.0-rc4-onstack256
+25755648	9607680	    vmlinuz-6.8.0-rc4-onstack512	+0.19%
+25755648	9603584	    vmlinuz-6.8.0-rc4-offstack512	+0.14%
+
+Tested-by: Eric Mackay <eric.mackay@oracle.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Christoph Lameter (Ampere) <cl@linux.com>
+---
+
+
+Original post: https://www.spinics.net/lists/linux-mm/msg369701.html
+V2: https://lkml.org/lkml/2024/2/7/505
+
+
+V1->V2
+
+- Keep quotation marks
+- Remove whiltespace damage
+- Add tested by
+
+V2->V3:
+- Add test results
+- Rework descriptions
+
+
+  arch/arm64/Kconfig | 16 +++++++++++++++-
+  1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index aa7c1d435139..4e767dede47d 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1427,7 +1427,21 @@ config SCHED_SMT
+  config NR_CPUS
+  	int "Maximum number of CPUs (2-4096)"
+  	range 2 4096
+-	default "256"
++	default "512"
++
++#
++# Determines the placement of cpumasks.
++#
++# With CPUMASK_OFFSTACK the cpumasks are dynamically allocated.
++# Useful for machines with lots of core because it avoids increasing
++# the size of many of the data structures in the kernel.
++#
++# If this is off then the cpumasks have a static sizes and are
++# embedded within data structures.
++#
++	config CPUMASK_OFFSTACK
++	def_bool y
++	depends on NR_CPUS > 256
+
+  config HOTPLUG_CPU
+  	bool "Support for hot-pluggable CPUs"
+-- 
+2.39.2
+
