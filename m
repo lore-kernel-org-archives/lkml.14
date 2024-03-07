@@ -1,122 +1,226 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE25682D66;
-	Thu,  7 Mar 2024 08:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3CD219EB
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709801823; cv=none; b=OX2x5cF79Us5Cs/z/c+m5fEJDC/o6ZDl3lGeIVskzXbBdRqvf6GFOZa+hdel8oZC8twsUzDPFz/dNRfEaKRA9EfNhnQxCWvvahQTZ7upLAHzvB4jT+TVbx450nDhSlvU9VyE9giIu4U92w0q/p/sp4IvSYTJRrN10yASudFq7YU=
+	t=1709801879; cv=none; b=Ksw3FsFgR/A3NaEsvf82MV6YCgHTUNEcspnevCYGIrWcHAeNPvX9FzW6Ns8uDOne3j1yTXHiEBmyNeQdxuQFvK11wQai1EcFiYWQy6/NZEduZHRK3wNgy/Db2Yc5tsDTDEONfXI7JIniMxGpwu6UT0ORQVo28BM8PCEbLfv8LL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709801823; c=relaxed/simple;
-	bh=2Why6ASryWefTeocwYtFuP6wrGLxahOJQ9wXxsf8FuQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WgrCwBWwQuvEuszxDSqQ9ZnJMHTyF27EBBdtmLWkW/enmll0SFYEk84dCwN3beVO5CXdZP2ENJ8mqtsbqe0YwrB147gTDsfEeEW9o6Znby/tjSgAsQaYIc07+MtIwrI2RXEnGXGJPy7uJ1oaoJrDPmr+lr6pseCbPl/T5XWTgk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=m6hTmrSX; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709801879; c=relaxed/simple;
+	bh=g8TY4WK2/nVFDY6j8r5pcfDtl8O/RiF29QBXJkyFq48=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SSGRU4ovrZomGNDOr1MXFr5ZH/dNi+NtxxIOsGXfS8Ft08+4MapHV/eJVQqLeXCcwtgdiVe+fEHVjc3tQxTP46Ld5JpbJCF+Jmxt8394fZ4podhZv3zgbeeq/GSG32sKHrkS29jg4t+ikN4cWVeUaad+Uvd2NlEXlj9LARKOT8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C+BTMEMe; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="m6hTmrSX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=pbTln/+BFFiNFZUa3+2kviLssti+B6ZMA9ZszG0nGPY=;
-	t=1709801820; x=1710233820; b=m6hTmrSX0cyxzAph1Wzc54rRygBgdG56ct8DtT9lVDNPTQ1
-	uqVFgJNd/ybAYducxExeiJ2pKJYVQ3Ix5cnDwxBoPbhxyCGVldbV7oVeO2HUhNfDg6JeX5nIzmnAl
-	SRIU31RCOGg1PIPVRHOiSatBY2luu5+xqfb9NUIgIPzdGY/tcGWpefUBTXvoZO0N/7TKO7fP1uK/+
-	HFAy0BQB3MaOUBD/ET/b8Yq/rsPwtapE59YVAYQqUaxUeldN3s31UW+2nZtK6A7hpX0Yil9IiSoqR
-	jaqY5OKbsS8LDN6TmLtgqj8NwlIK5Bgy9AJ0AcpSNLvGeQXzi2T4vLj0DPrVGU9Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ri9YW-0000vH-An; Thu, 07 Mar 2024 09:56:48 +0100
-Message-ID: <feba810d-1391-475e-9b56-fbb6c52912a0@leemhuis.info>
-Date: Thu, 7 Mar 2024 09:56:47 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C+BTMEMe"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4278WDea020667;
+	Thu, 7 Mar 2024 08:57:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=xRQVYuAhYc71xNZhj7RwrVnUw7md5kuJJTPmlEvoIKo=;
+ b=C+BTMEMefmAcGFe7e/OK4utJshkxN5Vjphw3J+BGcYAFgOUr7V7DEp6OhkJOp2jm83qg
+ FTqjS7/m6MeUFZa8K28TGFMZSYL3jKus0rgqE69ytnInNUHrG63YAlE02EbBDCu1FKgJ
+ 4nbDV+F3a1R/WvNe1mcf3biJpT+3ZWX9/NTzKO8FFAampsmmKQ3X0Pa1X73YNqX9/3xd
+ q3eF0If88nMiET2phcKF33Rg4z6H2PCRziPDRUX1LUts9nBJBRPUYTmJvSObIV8AEv5v
+ m7H7pjuOxlUcXUNZhHBpcPfCiT4AXhfHf9Y98KAbJjFXpFwtxfUoO5/waHWliyv3Cznv Zg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgffp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:57:46 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4278gEGh010375;
+	Thu, 7 Mar 2024 08:57:46 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wqa5bgfcx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:57:45 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42789YLZ026251;
+	Thu, 7 Mar 2024 08:57:44 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfep4f64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 08:57:44 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4278vcPx27984432
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 7 Mar 2024 08:57:40 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 27B622004D;
+	Thu,  7 Mar 2024 08:57:38 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 95D872004E;
+	Thu,  7 Mar 2024 08:57:35 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  7 Mar 2024 08:57:35 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, srikar@linux.ibm.com, vschneid@redhat.com,
+        pierre.gondois@arm.com, qyousef@layalina.io
+Subject: [PATCH v6 1/3] sched/fair: Add EAS checks before updating overutilized
+Date: Thu,  7 Mar 2024 14:27:23 +0530
+Message-Id: <20240307085725.444486-2-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240307085725.444486-1-sshegde@linux.ibm.com>
+References: <20240307085725.444486-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support
- for Arch
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
- <petr@tesarici.cz>
-References: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
- <ZehvJv3fDZIPs9Kc@archie.me>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZehvJv3fDZIPs9Kc@archie.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709801820;f34de042;
-X-HE-SMSGID: 1ri9YW-0000vH-An
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ZFsSwxT_9q4jjcCsDrrX5xvMMoDoeUCA
+X-Proofpoint-ORIG-GUID: D2bMZVLn4QUjRopM98yD9jY_0yc6VYhC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_05,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 clxscore=1015 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403070064
 
-On 06.03.24 14:27, Bagas Sanjaya wrote:
-> On Wed, Mar 06, 2024 at 10:21:12AM +0100, Thorsten Leemhuis wrote:
->> diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
->> index 54bde8bac95c67..58211840ac6ffb 100644
->> --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
->> +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
->> @@ -192,8 +192,8 @@ will be considered the 'good' release and used to prepare the .config file.
->>  
->>         sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
->>         sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
->> -       # * Note, if kernel-install is missing, you will have to
->> -       #   manually remove the kernel image and related files.
->> +       # * Note, on some distributions kernel-install is missing
->> +       #   or does only part of the job.
-> 
-> Consult documentation of your distribution for how to manually install/remove
-> the kernel.
+Overutilized field of root domain is only used for EAS(energy aware scheduler)
+to decide whether to do load balance or not. It is not used if EAS
+not possible.
 
-That would sent the wrong message in the TLDR, as the step-by-step guide
-and the reference section would be the first place to look for details,
-which is kinda implicit for a TLDR.
+Currently enqueue_task_fair and task_tick_fair accesses, sometime updates
+this field. In update_sd_lb_stats it is updated often. This causes cache
+contention due to true sharing and burns a lot of cycles. overload and
+overutilized are part of the same cacheline. Updating it often invalidates
+the cacheline. That causes access  to overload to slow down due to
+false sharing. Hence add EAS check before accessing/updating this field.
+EAS check is optimized at compile time or it is a static branch.
+Hence it shouldn't cost much.
 
-That being said: that made me look closer at the install section of the
-guide and the reference section. I think they should mention "consult
-documentation of your distribution" more clearly. I just looked into
-this, but that requires a few bigger changes, so I'll take care of that
-in a later patch I hope to send in the next few days.
+With the patch, both enqueue_task_fair and newidle_balance don't show
+up as hot routines in perf profile.
 
->>  Install build requirements
->>  --------------------------
->> @@ -1076,72 +1078,103 @@ about to build.
->>  Here are a few examples what you typically need on some mainstream
->>  distributions:
->>  
->> +* Arch Linux and derivatives::
->> +
->> +    sudo pacman --needed -S bc binutils bison flex gcc git kmod libelf openssl \
->> +      pahole perl zlib ncurses qt6-base
->> +
->>  * Debian, Ubuntu, and derivatives::
->>  
->> -    sudo apt install bc binutils bison dwarves flex gcc git make openssl \
->> -      pahole perl-base libssl-dev libelf-dev
->> +    sudo apt install bc binutils bison dwarves flex gcc git kmod libelf-dev \
->> +      libssl-dev make openssl pahole perl-base pkg-config zlib1g-dev \
->> +      libncurses-dev qt6-base-dev g++
->>  
->>  * Fedora and derivatives::
->>  
->> -    sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h} \
->> -      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
->> +    sudo dnf install binutils \
->> +      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole,rpmbuild} \
->> +      /usr/include/{libelf.h,openssl/pkcs7.h,zlib.h,ncurses.h,qt6/QtGui/QAction}
-> 
-> IMO qt packages are for people who wish to do xconfig instead of menuconfig
-> or nconfig.
+6.8-rc4:
+7.18%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
+6.78%  s                [kernel.vmlinux]              [k] newidle_balance
++patch:
+0.14%  swapper          [kernel.vmlinux]              [k] enqueue_task_fair
+0.00%  swapper          [kernel.vmlinux]              [k] newidle_balance
 
-Well, yes, that's why the patch also added a few lines to point this out
-and mention that installing the qt dev headers is optional. Guess you
-just missed that.
+Minor change: trace_sched_overutilized_tp expect that second argument to
+be bool. So do a int to bool conversion for that.
 
-Ciao, Thorsten
+Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
+Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ kernel/sched/fair.c | 53 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 6a16129f9a5c..5aa6e918598c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6663,22 +6663,42 @@ static inline void hrtick_update(struct rq *rq)
+ #ifdef CONFIG_SMP
+ static inline bool cpu_overutilized(int cpu)
+ {
+-	unsigned long rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
+-	unsigned long rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
++	unsigned long  rq_util_min, rq_util_max;
++
++	if (!sched_energy_enabled())
++		return false;
++
++	rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
++	rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
+
+ 	/* Return true only if the utilization doesn't fit CPU's capacity */
+ 	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
+ }
+
+-static inline void update_overutilized_status(struct rq *rq)
++static inline void set_rd_overutilized_status(struct root_domain *rd,
++					      unsigned int status)
+ {
+-	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+-		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
+-		trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
+-	}
++	if (!sched_energy_enabled())
++		return;
++
++	WRITE_ONCE(rd->overutilized, status);
++	trace_sched_overutilized_tp(rd, !!status);
++}
++
++static inline void check_update_overutilized_status(struct rq *rq)
++{
++	/*
++	 * overutilized field is used for load balancing decisions only
++	 * if energy aware scheduler is being used
++	 */
++	if (!sched_energy_enabled())
++		return;
++
++	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
++		set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
+ }
+ #else
+-static inline void update_overutilized_status(struct rq *rq) { }
++static inline void check_update_overutilized_status(struct rq *rq) { }
+ #endif
+
+ /* Runqueue only has SCHED_IDLE tasks enqueued */
+@@ -6779,7 +6799,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	 * and the following generally works well enough in practice.
+ 	 */
+ 	if (!task_new)
+-		update_overutilized_status(rq);
++		check_update_overutilized_status(rq);
+
+ enqueue_throttle:
+ 	assert_list_leaf_cfs_rq(rq);
+@@ -10596,19 +10616,14 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+ 		env->fbq_type = fbq_classify_group(&sds->busiest_stat);
+
+ 	if (!env->sd->parent) {
+-		struct root_domain *rd = env->dst_rq->rd;
+-
+ 		/* update overload indicator if we are at root domain */
+-		WRITE_ONCE(rd->overload, sg_status & SG_OVERLOAD);
++		WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
+
+ 		/* Update over-utilization (tipping point, U >= 0) indicator */
+-		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
+-		trace_sched_overutilized_tp(rd, sg_status & SG_OVERUTILIZED);
++		set_rd_overutilized_status(env->dst_rq->rd,
++					   sg_status & SG_OVERUTILIZED);
+ 	} else if (sg_status & SG_OVERUTILIZED) {
+-		struct root_domain *rd = env->dst_rq->rd;
+-
+-		WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
+-		trace_sched_overutilized_tp(rd, SG_OVERUTILIZED);
++		set_rd_overutilized_status(env->dst_rq->rd, SG_OVERUTILIZED);
+ 	}
+
+ 	update_idle_cpu_scan(env, sum_util);
+@@ -12609,7 +12624,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 		task_tick_numa(rq, curr);
+
+ 	update_misfit_status(curr, rq);
+-	update_overutilized_status(task_rq(curr));
++	check_update_overutilized_status(task_rq(curr));
+
+ 	task_tick_core(rq, curr);
+ }
+--
+2.39.3
+
