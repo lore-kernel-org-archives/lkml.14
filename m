@@ -1,174 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7548184FD5;
-	Thu,  7 Mar 2024 13:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3284FD5;
+	Thu,  7 Mar 2024 13:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709817547; cv=none; b=LVQdwHCnTO/nkTBjS65Z4Mh9QwF5PtaTZXmDZ+4wQTx+p7VMpwQOZv84qur0iHrGgFZW5WoUZ0jlREzLQMCHi8KRekFdwuBJE1FM7AtAAVY1oOSKQNnHyfu0bcIgDjNI/7rJ9RQTTh4PzEH1KSE0cOQX0e9Ie/BL3bmPuLcS/Yg=
+	t=1709817601; cv=none; b=P7Df5xrvmytX2CA9hd/wD/4GkYieMRN/c9D+oQ+atwyRqXWo0yZKnIO8jcL/EZfM2ZLOFm52HmI3J4GHwGdQhjy3eW6QmnlgIyuJfsqGPjf1plqPubOx0KtOBJO+9zsk4YQgIcaqQjj9Vef7jZmBw8Kn7JrzANLQOwONytndDZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709817547; c=relaxed/simple;
-	bh=32FNlvr62WRPZ4KinH/QcBoyS2NG2VDQhLVgPhvPXGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xgsl7mHwcatbNk+BbDQe8xpIXZDh4KPy+cY2cFfG7neJf7x4Yj2hAD9EVbQ6IgJ2PYBxnOaJDFlHaDkc/da9pZ4kDz69vvvLIxqXkd+PMOJuMxxku8Ul/ONstzj40ywEpHSB53cqG8g8M4LYmkKFLtwoEO79hK8qXsosl85iWp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E33FC433C7;
-	Thu,  7 Mar 2024 13:19:05 +0000 (UTC)
-Date: Thu, 7 Mar 2024 08:20:59 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linke li <lilinke99@qq.com>,
- joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
- frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- qiang.zhang1211@gmail.com, quic_neeraju@quicinc.com, rcu@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix
- rcu_torture_pipe_update_one()/rcu_torture_writer() data race and
- concurrency bug
-Message-ID: <20240307082059.1dc2582d@gandalf.local.home>
-In-Reply-To: <CAHk-=whs5MdtNjzFkTyaUy=vHi=qwWgPi0JgTe6OYUYMNSRZfg@mail.gmail.com>
-References: <f3624f39-bbb1-451d-8161-8518e4108d8e@joelfernandes.org>
- <tencent_9882B228F292088CDD68F10CF1C228742009@qq.com>
- <20240306103719.1d241b93@gandalf.local.home>
- <27665890-8314-4252-8622-1e019fee27e4@paulmck-laptop>
- <20240306130103.6da71ddf@gandalf.local.home>
- <CAHk-=wgG6Dmt1JTXDbrbXh_6s2yLjL=9pHo7uv0==LHFD+aBtg@mail.gmail.com>
- <20240306135504.2b3872ef@gandalf.local.home>
- <CAHk-=wjbDgMKLgxbV+yK4LKZ+2Qj6zVL_sHeb+L9KDia980Q8Q@mail.gmail.com>
- <CAHk-=whvyzsbqLkw4kwEC-KzAMKFuy5VuMtJFn-mCerSYoRnqw@mail.gmail.com>
- <20240306144713.2e1709ad@gandalf.local.home>
- <CAHk-=whs5MdtNjzFkTyaUy=vHi=qwWgPi0JgTe6OYUYMNSRZfg@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709817601; c=relaxed/simple;
+	bh=XdyRbsIb6pG2jeGtOXK+SlTPRnhDtH1vytwJZq+aHgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ekhNrObNZepMnuSw1LSo06lboi9AbwyFNvN0Ct+FrE1l2Q7NPqp/UCc8+wxCKsmqqUcygLM37hE+4WchAYKhChMvQwvX3ALiBCxW/vauN13BQMw//njshaWkLqGBen6hMa6OKmpmRNvWl2Qrz8/3c5jroKWtfsKizQn/lDMtG8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6094a87c4a7so8554177b3.3;
+        Thu, 07 Mar 2024 05:19:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709817598; x=1710422398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3qMsMQn9F0MZ0xZLxTSXRgknQ2DR10UkoNa/fQj/hno=;
+        b=koh6pa5h2jWksdLJZdozqgPBV7EgBwxT5NSTyM5hIMqIK3XLwbGroRgXbJ1Oz5bVIW
+         A4/MQVET/UtXvHBDHwWtJmRZBZxfih3qQG5zjkhEHnLF4Lo/ZMRTHs+9Osuw3gxaDmMs
+         0Bux8y1j2pzkwfJaWfzXc3T/QkTiaQFL4s4n5+eZiGryIaLkPHj7+xers1yBR++jT9Ky
+         wsLlVYguzt1i7K6SF1ajd47RB5QpliSatfIphbI7Fvco8rRA5UHru8bTEXmSL3vq3myD
+         YwQvmjxtwLwWlJM8FlIeKExwWrLf3toUuzFIthheVZRuayd9kKVn5YG6PHxhXzjVhd2w
+         MYtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzVX2iM4sqEZiH1PjFnYl2LW2qHH3VdnsXfjLz3/COOszYllOvBDXyqYLhWKj7Cl5pM8PnkWVtRsXtnCG6Xzmo5hUE0fnCOzOHosSB6qLl5TEdUhbhYK+IlQ1vYwW6f8z235P4Rg5O1oThzJ8sRqxss+EKYC+f3Q9/oTdCDffuEV+iH46ZPHdK9MRcmlojOdBrAziAkbxKdKwvqAfJnaXyn8onRdQVswMa
+X-Gm-Message-State: AOJu0YyEfewKC6kLMlclL526WkqYyU1Gcgw+4HN9pONUuwcrU2ZixmLA
+	G3StQ4uGf4FEPAnnpT01pDbCOImhavVOjywjaisAXSyNtuuYZtzsI7nxFUlrbyg=
+X-Google-Smtp-Source: AGHT+IEMG0bt+c+X29KGNewoGCkSaXD9GOn7kZtzf0V38QWQr2nXcx4HN85e1KgBtBwxuUfrrjGZKg==
+X-Received: by 2002:a81:4ac2:0:b0:607:850e:7583 with SMTP id x185-20020a814ac2000000b00607850e7583mr16757549ywa.38.1709817598487;
+        Thu, 07 Mar 2024 05:19:58 -0800 (PST)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id s17-20020a819f11000000b006096e718ed2sm4045497ywn.103.2024.03.07.05.19.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 05:19:58 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6094a87c4a7so8553967b3.3;
+        Thu, 07 Mar 2024 05:19:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWSsiXc7POa7quMc0Vvp/ryn8dg+tenS9drFt074NVwlfbjjZrC6v1j4aIwj9ew8cw3fsSWmXxBLpnZy2WUhJ5PF9+/m+L3+CVx/FOwiqx44oN5hGnSSAiQD7CWHlunuvbL5BBggO6vmX0jR9/NIJcfLOCOtkyUg43vLQGA0KlyIw2yq5NTgCzqdWqaTEtIEWZ8ao/M7pGIxt0AThYWl98U3Gq/+6Eh735z
+X-Received: by 2002:a0d:d645:0:b0:607:d285:4d7a with SMTP id
+ y66-20020a0dd645000000b00607d2854d7amr17511039ywd.52.1709817597978; Thu, 07
+ Mar 2024 05:19:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240307114217.34784-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240307114217.34784-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240307114217.34784-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 7 Mar 2024 14:19:46 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVSYzU6E0cBPmqR+RBk-WFEWQBkyj9KjePJZq-EXJ62og@mail.gmail.com>
+Message-ID: <CAMuHMdVSYzU6E0cBPmqR+RBk-WFEWQBkyj9KjePJZq-EXJ62og@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: serial: renesas,scif: Validate
+ 'interrupts' and 'interrupt-names'
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 6 Mar 2024 12:06:00 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Thu, Mar 7, 2024 at 12:43=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This commit adds support to validate the 'interrupts' and 'interrupt-name=
+s'
+> properties for every supported SoC. This ensures proper handling and
+> configuration of interrupt-related properties across supported platforms.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> * Defined the properties in top-level block instead of moving into
+>   if/else block for each SoC.
+> * Used Gen specific callback strings instead of each SoC variant
 
-> On Wed, 6 Mar 2024 at 11:45, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > Here's the back story. I received the following patch:
-> >
-> >   https://lore.kernel.org/all/tencent_BA1473492BC618B473864561EA3AB1418908@qq.com/
-> >
-> > I didn't like it. My reply was:
-> >  
-> >         > -     rbwork->wait_index++;
-> >         > +     WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);  
-> >
-> >         I mean the above is really ugly. If this is the new thing to do, we need
-> >         better macros.
-> >
-> >         If anything, just convert it to an atomic_t.  
-> 
-> The right thing is definitely to convert it to an atomic_t.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Agreed.
+Gr{oetje,eeting}s,
 
-> 
-> The memory barriers can probably also be turned into atomic ordering,
-> although we don't always have all the variates.
-> 
-> But for example, that
-> 
->                 /* Make sure to see the new wait index */
->                 smp_rmb();
->                 if (wait_index != work->wait_index)
->                         break;
-> 
-> looks odd, and should probably do an "atomic_read_acquire()" instead
-> of a rmb and a (non-atomic and non-READ_ONCE thing).
-> 
-> The first READ_ONCE() should probably also be that atomic_read_acquire() op.
-> 
-> On the writing side, my gut feel is that the
-> 
->         rbwork->wait_index++;
->         /* make sure the waiters see the new index */
->         smp_wmb();
-> 
-> should be an "atomic_inc_release(&rbwork->wait_index);" but we don't
-> actually have that operation. We only have the "release" versions for
-> things that return a value.
-> 
-> So it would probably need to be either
-> 
->         atomic_inc(&rbwork->wait_index);
->         /* make sure the waiters see the new index */
->         smp_wmb();
-> 
-> or
-> 
->         atomic_inc_return_release(&rbwork->wait_index);
-> 
-> or we'd need to add the "basic atomics with ordering semantics" (which
-> we aren't going to do unless we end up with a lot more people who want
-> them).
-> 
-> I dunno. I didn't look all *that* closely at the code. The above might
-> be garbage too. Somebody who actually knows the code should think
-> about what ordering they actually were looking for.
-> 
-> (And I note that 'wait_index' is of type 'long' in 'struct
-> rb_irq_work', so I guess it should be "atomic_long_t" instead -  just
-> shows how little attention I paid on the first read-through, which
-> should make everybody go "I need to double-check Linus here")
+                        Geert
 
-It doesn't need to be long. I'm not even sure why I made it long. Probably
-for natural alignment.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-The code isn't that complex. You can have a list of waiters waiting for the
-ring buffer to fill to various watermarks (in most cases, it's just one waiter).
-
-When a write happens, it looks to see if the smallest watermark is hit,
-if so, calls irqwork to wakeup all the waiters.
-
-The waiters will wake up, check to see if a signal is pending or if the
-ring buffer has hit the watermark the waiter was waiting for and exit the
-wait loop.
-
-What the wait_index does, is just a way to force all waiters out of the wait
-loop regardless of the watermark the waiter is waiting for. Before a waiter
-goes into the wait loop, it saves the current wait_index. The waker will
-increment the wait_index and then call the same irq_work to wake up all the
-waiters.
-
-After the wakeup happens, the waiter will test if the new wait_index
-matches what it was before it entered the loop, and if it is different, it
-falls out of the loop. Then the caller of the ring_buffer_wait() can
-re-evaluate if it needs to enter the wait again.
-
-The wait_index loop exit was needed for when the file descriptor of a file
-that uses a ring buffer closes and it needs to wake up all the readers of
-that file descriptor to notify their tasks that the file closed.
-
-So we can switch the:
-
-	rbwork->wait_index++;
-	smp_wmb();
-
-into just a:
-
-	(void)atomic_inc_return_release(&rbwork->wait_index);
-
-and the:
-
-	smp_rmb()
-	if (wait_index != work->wait_index)
-
-into:
-
-	if (wait_index != atomic_read_acquire(&rb->wait_index))
-
-I'll write up a patch.
-
-Hmm, I have the same wait_index logic at the higher level doing basically
-the same thing (at the close of the file). I'll switch that over too.
-
--- Steve
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
