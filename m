@@ -1,157 +1,197 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80431F94C;
-	Thu,  7 Mar 2024 06:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929B2E546;
+	Thu,  7 Mar 2024 06:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709792559; cv=none; b=f8FiAyGxHMTh3ICgC2uN7JT46AHWbu7xy7+hw1LLUcmLAU9fliloJu+jJ+c+BEsFJxSCQL9SLV1c9vIFS5MDZT+vaaKbaE+EymXTo3jQL6BC5Io889gvvHKWyrGjDNCMBBggaFoGFx4vXlEtw7jf1Phhh5gQyrn6QpVUv/rZQGI=
+	t=1709792581; cv=none; b=a8vcs+ISiYRRv1TSnsiV0tmC6AVhRmmfRmgsipZWXiMKswgpJ0uspigbej1PQbrGuJ/9PkdJGgCKBLGYrZYwIVNY3VU/RBo8yZo6Yowf+YEI9arsZxmHxXa77ZwMNT+gWiIVr/xtYqapuBhkR7S7lnvBWpUE0vMRqYMzw0OgbXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709792559; c=relaxed/simple;
-	bh=+0kpsGkeX6uxJ4O5RgdQaq/byz8xHlLjfEe5Mauzd2o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qOw1E0Ia2XtXxpwyG/gHywGtW1xPTKEgrMfVl2ozFJRX8ssf9/b3s5HEln7c62EWz6UvdLQcRQsnC4cjGwfgQvOEqLuWNk2TmAjzhXHwCT2/HcfpSPs7mpcqjNP3C8zQjUBbto04kFUv6YcSKvGV7UdLBqduqfWViw7oleSG1Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HsDo8UPh; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709792581; c=relaxed/simple;
+	bh=UNCTw5D9WsoqL1Hbw+KpFJE6iW6Jly3wtcYbjgHX2cA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DVDoEut6PV+tOOC7pzv/zoAUvZaSUP1+vqLecmCbTYNxAs9N77h1s6/Iy5kh+PLCmBYxpIMMQgEpJziDd2+VGeUjYG6oY535fxm1Xpsz2f9mgVq/3QRcjI/msMota9e74G4pSlNFV3TnYI1Ov8Muw7vXxzQWGkNbFA4XpQffsGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/thGd/P; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HsDo8UPh"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42769xuj024155;
-	Thu, 7 Mar 2024 06:22:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=t/3cHQVkeZtrBKiYoFpyxH5VSjGkCQf9zp1xi+LeNNA=; b=Hs
-	Do8UPhOWzGvt2bDUSiixe3e7B4Cj8orknbgZl3TWzeWRYmp4iYhDyJPlYcFwbdrn
-	r8/h499C5vIOh5dJN6hpDTBZ01OXUHzOOtTo4u1xHuz/OIm3LV+h95jpERDqTi54
-	bOJSktWAOLzsji7PZDW5Mp8LW/9ZVTZdhw3SS2qiPnnGdw2Cm1QCpu92FiPGTwSp
-	t+EXO/WnbuvUgt7kHZ5f+d5OC0BuaXmrIefz7IB9VFQ1qI+Icdy6nKo4dcNDF+9p
-	R++l2KmijSII5Gv0DQy11qeTGXCTH4YfXo6FQYNgmP4BiBBn7NAY//0u8yxjQAaF
-	DF6ky9nRF6ErMKeBPf0A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wq316gj3s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 06:22:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4276M9l1031508
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 7 Mar 2024 06:22:09 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 6 Mar 2024 22:22:04 -0800
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi
-	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
-        Krishna Kurapati
-	<quic_kriskura@quicinc.com>
-Subject: [PATCH v16 9/9] usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
-Date: Thu, 7 Mar 2024 11:50:52 +0530
-Message-ID: <20240307062052.2319851-10-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
-References: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/thGd/P"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-566e869f631so555370a12.0;
+        Wed, 06 Mar 2024 22:22:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709792578; x=1710397378; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8p7oGzm5YEc17mr7Hc2mG+1f/a/Pw8VPdlVKrPJxZGk=;
+        b=N/thGd/P7jXpCrZVAYWeM5jjSL/yr2JuE+kNBgexAto06k6+fT1XvuT4ULb4KnABQX
+         03ku/tEqLZReqX5fx1tNpCGQ+vOIhWMZ/BKFmrBjHNqxqUJgVz9PL8POl9eFo/RVlgKZ
+         vxFJ3opyUeAod03CkI5kzDJmLtK5q4VZt6qeyRRY8DYnfI2fViecW9SspNIlqt0VSQUr
+         MtABxJdOwYp6/ij9tm+/m/dhdgh+oUcImID+b6QcqursuxPqAktut2Tji81PeTdOHm92
+         W1kAZfSsoqIINTqmhWWTzrNgkWpZh1Rx5uvXC0/rFR2sisz7lGrg2wLYBRA1RwrTcbYh
+         IW6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709792578; x=1710397378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8p7oGzm5YEc17mr7Hc2mG+1f/a/Pw8VPdlVKrPJxZGk=;
+        b=X7QpMsf5mF6wj60y5ygQgsRSlrcidPbfWK4Ytgfg/fPauwIT/LlH+8AfmBm1kUb5Ue
+         JL1P4+gRa7O3SyePgJN6wpKa8kpYQWH6qzvc3ZNq9cQC/zOPjP3IeodAJ5M/z20GD2KR
+         5RtAhuJcNA4EWV+JC2XgAO6kY8BFgVbCXiL2uPPkUwpCI7PZmPfyh82d4oRX4A/2mK4Z
+         g+XZsLxW/HNyscfyab+6Hb5CBm8aNKjLB8rumg7gPCdqm9oNasYmB4CrckDAc873lpDa
+         /Hc7b/E6QeGVIArrl8rC4u2znHHBrPOvevJrZzqX/Bkxsp8uhHM/dza7xOwvgVvyGZRd
+         ia4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXvXxTqmT2qqoNAF31YbrWNggzsQ14vQyfiS+xGF/4bwNJW5hXdreLYPoXmljYWPwm7M6wXHxnDWw1aJaYRH9E1tXsjcG2/sb/L6ydT
+X-Gm-Message-State: AOJu0YynblYJ5uD9ljMYMOjXr3UqQbudmQHwrwyWXFVsV31HJ4iLfqrL
+	VB4aRTATchVXZ6ohzEuT10CZOhYUgUHc94rHgfKCnis24Tnz1qXnsXIvZqy4diAUxWhlIE3n8OV
+	YEhp1BwYa02XZu5iNpMp5OzN8G88=
+X-Google-Smtp-Source: AGHT+IHI2SHfXiqWU8/zvPFJBOEEmUOOTpTPSIppyIq62VsLjxVUHfbRijjg+TNUj82mGHJ6ZMsC1RSN12u4r0GRxUU=
+X-Received: by 2002:a05:6402:2315:b0:566:b442:16cf with SMTP id
+ l21-20020a056402231500b00566b44216cfmr12026391eda.13.1709792577601; Wed, 06
+ Mar 2024 22:22:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bPmHffU9aaH-o4IJsfAqPemltRAg1xfy
-X-Proofpoint-ORIG-GUID: bPmHffU9aaH-o4IJsfAqPemltRAg1xfy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_02,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=890 suspectscore=0 adultscore=0
- mlxscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403070045
+References: <20240307022006.3657433-1-aik@amd.com> <32ac2ee6-26b1-4f37-bd88-db1ef2a31267@linux.intel.com>
+ <16120a31-c3d6-48a8-9355-7b063e28d242@amd.com>
+In-Reply-To: <16120a31-c3d6-48a8-9355-7b063e28d242@amd.com>
+From: Sathyanarayanan Kuppuswamy Natarajan <sathyanarayanan.nkuppuswamy@gmail.com>
+Date: Wed, 6 Mar 2024 22:22:46 -0800
+Message-ID: <CAC41dw9x8H2m=YB66+PA-GwiVkpCyT0PobdWvFXLHpAsQOE0ew@mail.gmail.com>
+Subject: Re: [PATCH kernel v3] PCI/DOE: Support discovery version 2
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Power event IRQ is used for wakeup in cases:
-a) where the controller is super speed capable and missing an
-ss_phy interrupt.
-b) where the GIC is not capable of detecting DP/DM hs phy irq's.
+On Wed, Mar 6, 2024 at 10:09=E2=80=AFPM Alexey Kardashevskiy <aik@amd.com> =
+wrote:
+>
+>
+>
+> On 7/3/24 16:06, Kuppuswamy Sathyanarayanan wrote:
+> >
+> > On 3/6/24 6:20 PM, Alexey Kardashevskiy wrote:
+> >> PCIe r6.1, sec 6.30.1.1 defines a "DOE Discovery Version" field in
+> >> the DOE Discovery Request Data Object Contents (3rd DW) as:
+> >>
+> >> 15:8 DOE Discovery Version =E2=80=93 must be 02h if the Capability Ver=
+sion in
+> >> the Data Object Exchange Extended Capability is 02h or greater.
+> >
+> > Does this change fix any functional issue? If yes, please add Fixes:
+> > tag and probably CC stable?
+>
+> The issue is that before this patch the DOE driver was following PCIe
+> r6.0 and it was not working on a device with DOE cap v2 added in r6.1.
+> Is it "fixes"?
+>
 
-Power event IRQ stat register indicates whether high speed phy
-entered and exited L2 successfully during suspend and resume.
-Indicate the same for all ports of multiport.
+Since you are enabling support for the newer spec version, I think it will =
+not
+fall under bug fix. But it might be qualified for the stable branch.
+It depends on
+whether you want to support this device in older(stable) kernels.
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
----
- drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+>
+> >>
+> >> Add support for the version on devices with the DOE v2 capability.
+> >>
+> >> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+> >> ---
+> > Change wise looks fine to me.
+> >
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
+ux.intel.com>
+>
+> Thanks!
+>
+> >> Changes:
+> >> v3:
+> >> * updated subject line
+> >> * dropped "DISCOVER_" from the new field macro
+> >>
+> >> v2:
+> >> * added the section number to the commit log
+> >> ---
+> >>   include/uapi/linux/pci_regs.h |  1 +
+> >>   drivers/pci/doe.c             | 11 ++++++++---
+> >>   2 files changed, 9 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_re=
+gs.h
+> >> index a39193213ff2..fbca743b2b86 100644
+> >> --- a/include/uapi/linux/pci_regs.h
+> >> +++ b/include/uapi/linux/pci_regs.h
+> >> @@ -1144,6 +1144,7 @@
+> >>   #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH                0x0003fff=
+f
+> >>
+> >>   #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX               0x000000f=
+f
+> >> +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER          0x0000ff00
+> >>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID         0x0000ffff
+> >>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL            0x00ff000=
+0
+> >>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX  0xff000000
+> >> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> >> index 61f0531d2b1d..c94c2b0767f3 100644
+> >> --- a/drivers/pci/doe.c
+> >> +++ b/drivers/pci/doe.c
+> >> @@ -381,11 +381,13 @@ static void pci_doe_task_complete(struct pci_doe=
+_task *task)
+> >>      complete(task->private);
+> >>   }
+> >>
+> >> -static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u1=
+6 *vid,
+> >> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8=
+ *index, u16 *vid,
+> >>                           u8 *protocol)
+> >>   {
+> >>      u32 request_pl =3D FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDE=
+X,
+> >> -                                *index);
+> >> +                                *index) |
+> >> +                     FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER,
+> >> +                                (capver >=3D 2) ? 2 : 0);
+> >>      __le32 request_pl_le =3D cpu_to_le32(request_pl);
+> >>      __le32 response_pl_le;
+> >>      u32 response_pl;
+> >> @@ -419,13 +421,16 @@ static int pci_doe_cache_protocols(struct pci_do=
+e_mb *doe_mb)
+> >>   {
+> >>      u8 index =3D 0;
+> >>      u8 xa_idx =3D 0;
+> >> +    u32 hdr =3D 0;
+> >> +
+> >> +    pci_read_config_dword(doe_mb->pdev, doe_mb->cap_offset, &hdr);
+> >>
+> >>      do {
+> >>              int rc;
+> >>              u16 vid;
+> >>              u8 prot;
+> >>
+> >> -            rc =3D pci_doe_discovery(doe_mb, &index, &vid, &prot);
+> >> +            rc =3D pci_doe_discovery(doe_mb, PCI_EXT_CAP_VER(hdr), &i=
+ndex, &vid, &prot);
+> >>              if (rc)
+> >>                      return rc;
+> >>
+> >
+>
+> --
+> Alexey
+>
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index c0a6de50ec09..365f01a6b581 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -52,6 +52,13 @@
- #define APPS_USB_AVG_BW 0
- #define APPS_USB_PEAK_BW MBps_to_icc(40)
- 
-+static const u32 pwr_evnt_irq_stat_reg[DWC3_MAX_PORTS] = {
-+	0x58,
-+	0x1dc,
-+	0x228,
-+	0x238,
-+};
-+
- struct dwc3_qcom_port {
- 	int			qusb2_phy_irq;
- 	int			dp_hs_phy_irq;
-@@ -421,9 +428,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
- 	if (qcom->is_suspended)
- 		return 0;
- 
--	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
--	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
--		dev_err(qcom->dev, "HS-PHY not in L2\n");
-+	for (i = 0; i < qcom->num_ports; i++) {
-+		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg[i]);
-+		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
-+			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
-+	}
- 
- 	for (i = qcom->num_clocks - 1; i >= 0; i--)
- 		clk_disable_unprepare(qcom->clks[i]);
-@@ -471,9 +480,12 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
- 	if (ret)
- 		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
- 
-+	for (i = 0; i < qcom->num_ports; i++) {
- 	/* Clear existing events from PHY related to L2 in/out */
--	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
--			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+		dwc3_qcom_setbits(qcom->qscratch_base,
-+				  pwr_evnt_irq_stat_reg[i],
-+				  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+	}
- 
- 	qcom->is_suspended = false;
- 
--- 
-2.34.1
 
+--=20
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
