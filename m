@@ -1,170 +1,150 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C6F288B0
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 02:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB6428DBF;
+	Fri,  8 Mar 2024 02:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709865879; cv=none; b=O4/D/gPJ8KkNwWJSSRSiugt05e/w/K0e1HE/RWmPJD87fHxqvSMkhjDExnC3jL421K0j37/WhoU1fEVCZ/kLDciYaaHywz+LRmXLAP+8oOMMeLRgQ2P8gD7QhBleCpu2RZm/1OfOsQeC8Cs9uSgckMvoIMnXk66RB6MmYpvZ3FQ=
+	t=1709865901; cv=none; b=pIgpABHboXKij2vOA4gNo7xOyWJK6ncWXcCJj18agw2PgMF72tAInOle8nxXyQnmYbC698v8l6q2kKUpQWqTQYH2VjnFd/OfdiWtxRdU5Oc2tZzmGipdY0pV/Kz0Kr8aLSV4cLx5eUGLvBHSNiL9G1/FnPWvMKdwOwIRs06+CbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709865879; c=relaxed/simple;
-	bh=fSQs6edR7FFIscZnvuVJJSuwUJjidAWISLuv00JfLLM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JQWIQA/9t+RZC7zEKkg4WcdYkc4EKT3h5v7isGud7ulQoimOl6Uhi0cv210SI4k5xSIe2Ttv/B5dVsCb2D+6XwW6z6rEMmy5aZ0aeVNpdROgLA0GGURBMnB3wF2rZ/B0vFknkQm9jb/h7L1YQSmVh+5WW8sOUvy21E689WwfWFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dLdTOEbp; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dLdTOEbp"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6908b540cdbso7248886d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 18:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709865877; x=1710470677; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxG3C1fNlHZOl1qKhga4bIFtxN+IbPgWY3WbkNFh0bI=;
-        b=dLdTOEbp2ObpxZMn65sla/kwZo6SneJwaBY+SudLypUyHvMOSCEeN4xn4YWfHFBd4N
-         yTIlUFeOilOHkSzLYd0Mx/LAuT0UaxY6A3u25gaWYJtiWRt0WyjSGCbPMJv7RmQ3p8kC
-         faLO6wPkQ9o+Vafd/0NPgBdXI1yPEQVFxKEhg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709865877; x=1710470677;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JxG3C1fNlHZOl1qKhga4bIFtxN+IbPgWY3WbkNFh0bI=;
-        b=nRo+8LORPb7ik9nk5DpBYHULWbgYM36DfS4IUDtLmocOQRfZ6olGOMCxreLCC8vh1f
-         /DupFDxoxw9YcvQNG+Hf8oZmsBjnam0LS1C1fvbMXE+o2iEQJvLkdxUpfWIkRWB+19Ns
-         A/NfeYbSnpOwdDCc8ZOjFha4dHbyzpxYxpFy4Y8/UDaCDhk3gMiolP8XSjHMh3OAsHws
-         iCX9O7fA0iSwFaNXDzXW2PhxaQPn6vpFbb+SEwKyTsgL3NRVI/fYbmwcjTo9umAf1TRz
-         JYX/GKs5qJafguPxtHO0J2CE7fngU/jT8iOLqRE/wj8qgJR8t+Qmm6mqCxp/IXJYPfep
-         ysXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAV8XGPbbC0G3oS+YbfMcJAgBTVgBLxFQSRnmkPssJacto3nEMeMtmPP9mgJk2ikldHc0qElHjozBnwrc4ZvVS/5Cr2hVsMGivKai6
-X-Gm-Message-State: AOJu0YyHP3wykeX/96bRu2NDgkUvDZXCE8D52uoPpG5nsO+M4PYaTBjp
-	re1gYcgAl9JQoGaSsFiAkfGg2c0T42YrYAzyAjDRWRlM32MfK1RGDiCVKlsm2bO5BYEXXUl2P33
-	uYW8IB5ELYsAaMID1eAy57h/iBWtVPKQnI1v6
-X-Google-Smtp-Source: AGHT+IHLOplxAthwVDMa5iIYXqMD2Wnv9EgNG65kksgNcwXIp1Hft/8lhsMRr2JKI0egPut76qGLphqo65qwRyxwU6g=
-X-Received: by 2002:a0c:ec47:0:b0:690:aaa8:a019 with SMTP id
- n7-20020a0cec47000000b00690aaa8a019mr2720578qvq.47.1709865876833; Thu, 07 Mar
- 2024 18:44:36 -0800 (PST)
+	s=arc-20240116; t=1709865901; c=relaxed/simple;
+	bh=hewgVoh+8E19PToE5glPa2Raity2MreSYsiIMlWmWdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c5YMOps1kzneVf3WyOim/VEfcR4MFdPa1G96WdbBZqBUw3+imowvxG3LauwArTg6wWZFCxKj9mY7wUlVBjLs7FLweew0HOs7m7JstMc3LYM98RPO4NoByhrKOYNrGkZG7yj75R97cL1hM6rU2tpU4qzByfDcmOqMX0Mki+ruuuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A04B24DA4A;
+	Thu,  7 Mar 2024 16:02:32 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB1F212FC5;
+	Thu,  7 Mar 2024 16:02:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AOlpKhfl6WXtcwAAD6G6ig
+	(envelope-from <lhenriques@suse.de>); Thu, 07 Mar 2024 16:02:31 +0000
+Received: from localhost (brahms.olymp [local])
+	by brahms.olymp (OpenSMTPD) with ESMTPA id 1f0200b0;
+	Thu, 7 Mar 2024 16:02:29 +0000 (UTC)
+From: Luis Henriques <lhenriques@suse.de>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Henriques <lhenriques@suse.de>
+Subject: [PATCH v2 2/3] ext4: fix the parsing of empty string mount parameters
+Date: Thu,  7 Mar 2024 16:02:24 +0000
+Message-ID: <20240307160225.23841-3-lhenriques@suse.de>
+In-Reply-To: <20240307160225.23841-1-lhenriques@suse.de>
+References: <20240307160225.23841-1-lhenriques@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231116172859.393744-1-sjg@chromium.org> <20231208150042.GA1278773-robh@kernel.org>
- <CAPnjgZ2i4gvgiUeHPOfHuOdBooV4e=QQEq6iMo0JbDwOS6dCwA@mail.gmail.com>
- <CAL_Jsq+xMZ8yz4H9D59uCSyX4h5W+4ruGF++=wVA=msXz+Y01A@mail.gmail.com>
- <CAPnjgZ1uW8T6woXSqFUNm301=W3zBYOrADREkrz=DuwSW87qZg@mail.gmail.com>
- <20231214172702.GA617226-robh@kernel.org> <CAPnjgZ2oJSGPO91Y_aLbe+v250WFrND4n3T0mOvhERYidVu=eQ@mail.gmail.com>
- <CAFLszTizRRVbRO6_ygE2X-Lp5dENWSc4uMGL5GPJAFGAbRdCyQ@mail.gmail.com>
- <CAL_Jsq+j7_KZtQ2ENq9+vsw0LOZF=spu293_G=AxOmBM+m_f-g@mail.gmail.com>
- <CAFLszTimaFw9sf=JKvQXG4fS6V_2T=2n+pfvYLCiuG1o+7cHPA@mail.gmail.com>
- <20240205085056.44278f2c@xps-13> <CAFLszTi+8ygXOidnhxj7sdJwc6X5i+++QvnUyfe-kde5eSts_w@mail.gmail.com>
- <20240205131755.3462084f@xps-13>
-In-Reply-To: <20240205131755.3462084f@xps-13>
-From: Simon Glass <sjg@chromium.org>
-Date: Fri, 8 Mar 2024 15:44:25 +1300
-Message-ID: <CAFLszTh3t6wPz8PFhFzazTAGaLVpObkjY9qv7MtSkQ21zZFzKA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: mtd: partitions: Add binman compatible
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, Tom Rini <trini@konsulko.com>, 
-	Michael Walle <mwalle@kernel.org>, U-Boot Mailing List <u-boot@lists.denx.de>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: A04B24DA4A
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Hi Miquel,
+This patch fixes the usage of mount parameters that are defined as strings
+but which can be empty.  Currently, only 'usrjquota' and 'grpjquota'
+parameters are in this situation for ext4.  But since userspace can pass
+them in as 'flag' types (when they don't have a value), the parsing will
+fail because a 'string' type is assumed.
 
-On Tue, 6 Feb 2024 at 01:17, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> Hi Simon,
->
-> > > > > > > > > > > > > +description: |
-> > > > > > > > > > > > > +  The binman node provides a layout for firmware, used when packaging firmware
-> > > > > > > > > > > > > +  from multiple projects. It is based on fixed-partitions, with some
-> > > > > > > > > > > > > +  extensions, but uses 'compatible' to indicate the contents of the node, to
-> > > > > > > > > > > > > +  avoid perturbing or confusing existing installations which use 'label' for a
-> > > > > > > > > > > > > +  particular purpose.
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +  Binman supports properties used as inputs to the firmware-packaging process,
-> > > > > > > > > > > > > +  such as those which control alignment of partitions. This binding addresses
-> > > > > > > > > > > > > +  these 'input' properties. For example, it is common for the 'reg' property
-> > > > > > > > > > > > > +  (an 'output' property) to be set by Binman, based on the alignment requested
-> > > > > > > > > > > > > +  in the input.
-> > > > > > > > > > > > > +
-> > > > > > > > > > > > > +  Once processing is complete, input properties have mostly served their
-> > > > > > > > > > > > > +  purpose, at least until the firmware is repacked later, e.g. due to a
-> > > > > > > > > > > > > +  firmware update. The 'fixed-partitions' binding should provide enough
-> > > > > > > > > > > > > +  information to read the firmware at runtime, including decompression if
-> > > > > > > > > > > > > +  needed.
-> > > > > > > > > > > >
-> > > > > > > > > > > > How is this going to work exactly? binman reads these nodes and then
-> > > > > > > > > > > > writes out 'fixed-partitions' nodes. But then you've lost the binman
-> > > > > > > > > > > > specifc parts needed for repacking.
-> > > > > > > > > > >
-> > > > > > > > > > > No, they are the same node. I do want the extra information to stick
-> > > > > > > > > > > around. So long as it is compatible with fixed-partition as well, this
-> > > > > > > > > > > should work OK.
-> > > > > > > > > >
-> > > > > > > > > > How can it be both? The partitions node compatible can be either
-> > > > > > > > > > 'fixed-partitions' or 'binman'.
-> > > > > > > > >
-> > > > > > > > > Can we not allow it to be both? I have tried to adjust things in
-> > > > > > > > > response to feedback but perhaps the feedback was leading me down the
-> > > > > > > > > wrong path?
-> > > > > > > >
-> > > > > > > > Sure, but then the schema has to and that means extending
-> > > > > > > > fixed-partitions.
-> > > > > > >
-> > > > > > > Can we cross that bridge later? There might be resistance to it. I'm
-> > > > > > > not sure. For now, perhaps just a binman compatible works well enough
-> > > > > > > to make progress.
-> > > > > >
-> > > > > > Is there any way to make progress on this? I would like to have
-> > > > > > software which doesn't understand the binman compatible to at least be
-> > > > > > able to understand the fixed-partition compatible. Is that acceptable?
-> > > > >
-> > > > > There's only 2 ways that it can work. Either binman writes out
-> > > > > fixed-partition nodes dropping/replacing anything only defined for
-> > > > > binman or fixed-partition is extended to include what binman needs.
-> > > >
-> > > > OK, then I suppose the best way is to add a new binman compatible, as
-> > > > is done with this v6 series. People then need to choose it instead of
-> > > > fixed-partition.
-> > >
-> > > I'm sorry this is not at all what Rob suggested, or did I totally
-> > > misunderstand his answer?
-> > >
-> > > In both cases the solution is to generate a "fixed-partition" node. Now
-> > > up to you to decide whether binman should adapt the output to the
-> > > current schema, or if the current schema should be extended to
-> > > understand all binman's output.
-> > >
-> > > At least that is my understanding and also what I kind of agree with.
-> >
-> > I do want to binman schema to include all the features of Binman.
-> >
-> > So are you saying that there should not be a 'binman'  schema, but I
-> > should just add all the binman properties to the fixed-partition
-> > schema?
->
-> This is my current understanding, yes. But acknowledgment from Rob is
-> also welcome.
+This issue is fixed by using the new helper fsparam_string_or_flag() and by
+also taking the parameter type into account.
 
-I am trying again to wade through all the confusion here.
+While there, also remove the now unused fsparam_string_empty() macro and
+change the 'test_dummy_encryption' parameter to also use the new fs_parser
+helper.
 
-There is not actually a 'fixed-partition' node. So are you saying I
-should add one? There is already a 'partitions' node. Won't they
-conflict?
+Suggested-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.de>
+---
+ fs/ext4/super.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-Would it be possible for you to look at my patches and suggest
-something? I think at this point, after so many hours of trying
-different things and trying to understand what is needed, I could
-really use a little help.
-
-Thank you,
-Simon
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 0f931d0c227d..5a2f178f8fe9 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1724,10 +1724,6 @@ static const struct constant_table ext4_param_dax[] = {
+ 	{}
+ };
+ 
+-/* String parameter that allows empty argument */
+-#define fsparam_string_empty(NAME, OPT) \
+-	__fsparam(fs_param_is_string, NAME, OPT, fs_param_can_be_empty, NULL)
+-
+ /*
+  * Mount option specification
+  * We don't use fsparam_flag_no because of the way we set the
+@@ -1768,9 +1764,9 @@ static const struct fs_parameter_spec ext4_param_specs[] = {
+ 	fsparam_enum	("data",		Opt_data, ext4_param_data),
+ 	fsparam_enum	("data_err",		Opt_data_err,
+ 						ext4_param_data_err),
+-	fsparam_string_empty
++	fsparam_string_or_flag
+ 			("usrjquota",		Opt_usrjquota),
+-	fsparam_string_empty
++	fsparam_string_or_flag
+ 			("grpjquota",		Opt_grpjquota),
+ 	fsparam_enum	("jqfmt",		Opt_jqfmt, ext4_param_jqfmt),
+ 	fsparam_flag	("grpquota",		Opt_grpquota),
+@@ -1814,9 +1810,8 @@ static const struct fs_parameter_spec ext4_param_specs[] = {
+ 	fsparam_u32	("fc_debug_max_replay",	Opt_fc_debug_max_replay),
+ #endif
+ 	fsparam_u32	("max_dir_size_kb",	Opt_max_dir_size_kb),
+-	fsparam_flag	("test_dummy_encryption",
+-						Opt_test_dummy_encryption),
+-	fsparam_string	("test_dummy_encryption",
++	fsparam_string_or_flag
++			("test_dummy_encryption",
+ 						Opt_test_dummy_encryption),
+ 	fsparam_flag	("inlinecrypt",		Opt_inlinecrypt),
+ 	fsparam_flag	("nombcache",		Opt_nombcache),
+@@ -2183,15 +2178,15 @@ static int ext4_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 	switch (token) {
+ #ifdef CONFIG_QUOTA
+ 	case Opt_usrjquota:
+-		if (!*param->string)
+-			return unnote_qf_name(fc, USRQUOTA);
+-		else
++		if ((param->type == fs_value_is_string) &&
++		    (*param->string))
+ 			return note_qf_name(fc, USRQUOTA, param);
++		return unnote_qf_name(fc, USRQUOTA);
+ 	case Opt_grpjquota:
+-		if (!*param->string)
+-			return unnote_qf_name(fc, GRPQUOTA);
+-		else
++		if ((param->type == fs_value_is_string) &&
++		    (*param->string))
+ 			return note_qf_name(fc, GRPQUOTA, param);
++		return unnote_qf_name(fc, GRPQUOTA);
+ #endif
+ 	case Opt_sb:
+ 		if (fc->purpose == FS_CONTEXT_FOR_RECONFIGURE) {
