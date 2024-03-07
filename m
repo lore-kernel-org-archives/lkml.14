@@ -1,88 +1,74 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A81864A9F;
-	Thu,  7 Mar 2024 21:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F5A13A256
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 21:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709847937; cv=none; b=iRpgt6TlM06wGB4M9dFksydBIyOgeYwQg2uCIOHKYpiMbjNtYmXnimso+ShRJUos+47u6RFA4ZtjvHUm+19hRh+reourGK0nsj1RNB7cuizEiB09hCbmLKmyzVzIwo6OqqydgMk1NXwve/aDNCFEfUpxKnMBZ9bcd5kdeGgsdIs=
+	t=1709847961; cv=none; b=FZXAW8tNXQkZ2PGdHjAoHSOGJUXn5HAcs+7zBiOxEqZSXAeGb6yCjFZ7k6BhzULgnVNHTiOLQlyLlTkFJYOYzq9hhLVR0Bt04osxUwVIQ/TMeTgJyO/H/fIj68yOKByXWj4YoulzFrbkL7DhrCCb6G1yKEaLLqta35s6VJgWOC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709847937; c=relaxed/simple;
-	bh=XyrV3yZlEAF1mxbGdo1czbAm9N+9F+OQ3GDp0j0njqM=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=oBOrwQy1ywVVlvj6Hqu2CYWRNvcG2FDhO8zu/k8CH+wfyP1Jl+U6lRdYxOXqevj9QhV/jQ1NBx93IleqIXKbwjv9iqxDn4TI8DonbAPIzjTrL7mGn0rf+OpeUATDK3nubsRHQwuFYnlq5I6RKPkmXXoxxXkX8letoQknERmpUIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 86CEE37804B2;
-	Thu,  7 Mar 2024 21:45:33 +0000 (UTC)
-From: "Daniel Almeida" <daniel.almeida@collabora.com>
-In-Reply-To: <c70935815ffc29ae5256b94c0e4880952abad79c.camel@ndufresne.ca>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240227215146.46487-1-daniel.almeida@collabora.com>
-	 <20240307190841.10260-1-daniel.almeida@collabora.com>
-	 <20240307190841.10260-3-daniel.almeida@collabora.com> <c70935815ffc29ae5256b94c0e4880952abad79c.camel@ndufresne.ca>
-Date: Thu, 07 Mar 2024 21:45:33 +0000
-Cc: wedsonaf@gmail.com, ojeda@kernel.org, mchehab@kernel.org, hverkuil@xs4all.nl, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, kernel@collabora.com
-To: "Nicolas Dufresne" <nicolas@ndufresne.ca>
+	s=arc-20240116; t=1709847961; c=relaxed/simple;
+	bh=Q7TIejCnJnHk/kR+IlLj7k3Lb+YR9ALkHoKnXOcCLzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k/9FI0v3Ucw9ywA0l1EWzF2QJLYvXK9b5w0yD0Am+dCxgEQBAf314U7yyjFt4z3hNNhvRdOF8oLtpI/csPekVK1VXcY2AoskHeUBEDCl8eZZDFSV9QGr5K4jR9et8jsXxD8xc+jyWJfguemwEdEds6vWj5f2/PB4SwieevDxHGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tl17FZS5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tl17FZS5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260ACC433C7;
+	Thu,  7 Mar 2024 21:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709847960;
+	bh=Q7TIejCnJnHk/kR+IlLj7k3Lb+YR9ALkHoKnXOcCLzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tl17FZS5IHQ8SXTpVw+96t0csQrPFtjDBJUJnOPVKsKxMpOka/8hkQuLojdr6RlL2
+	 cgx57imeMVRQxh6MKMKK8oq4CaxpCFnicZxp+AVeFBVTx7LrrAPQol/ez/rcdoMba2
+	 4tMqk1rx8pwZq7DivVekqQV6o43n8oyovvIXDuE8=
+Date: Thu, 7 Mar 2024 21:45:58 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH] tty: serial: amba-pl011: Fix removal of the QDF2xxx
+ workarounds
+Message-ID: <2024030741-numbness-unshaved-8c03@gregkh>
+References: <CGME20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84@eucas1p1.samsung.com>
+ <20240131213543.958051-1-m.szyprowski@samsung.com>
+ <CYTPHTGKM7FT.1DRXMURTS246L@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <144b27-65ea3580-f-61876d80@130641868>
-Subject: =?utf-8?q?Re=3A?= [RFC PATCH v2 2/2] =?utf-8?q?media=3A?=
- =?utf-8?q?_rkvdec=3A?= rewrite parts of the driver in Rust
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CYTPHTGKM7FT.1DRXMURTS246L@gmail.com>
 
-Hi Nicolas,
+On Thu, Feb 01, 2024 at 12:29:55PM +0100, Thierry Reding wrote:
+> On Wed Jan 31, 2024 at 10:35 PM CET, Marek Szyprowski wrote:
+> > Commit 196f34af2bf4 ("tty: serial: amba-pl011: Remove QDF2xxx
+> > workarounds") removed some quirks specific to QDF2xxx SoC family.
+> > Unfortunately it removed a bit too much code from the
+> > pl011_console_match() function, what broke console operation on QEMU's
+> > 'virt' ARM/ARM64 machines. Restore the "pl011" related string check as it
+> > was originally introduced in the commit 10879ae5f12e ("serial: pl011: add
+> > console matching function").
+> >
+> > Fixes: 196f34af2bf4 ("tty: serial: amba-pl011: Remove QDF2xxx workarounds")
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >  drivers/tty/serial/amba-pl011.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> 
+> I was about to send out the same patch:
+> 
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-> struct reg123 {
->   val1 :3  // bit 31-29
->   val2 :20 // bit 28-9
->   val3 :9  // bit 8-0
-> };
+Oops, I applied this, but will drop it, as it's already fixed up in my
+tree with a different commit.
 
-What you're describing can be modeled as Ranges in Rust:
+thanks,
 
-```
-use core::ops::Range;
-
-struct Foo {
-    reg1: Range<u32>,
-    reg2: Range<u32>,
-    reg3: Range<u32>
-}
-
-const FOO=5FREGMAP: Foo =3D Foo {
-        reg1: 0..3,
-        reg2: 3..24,
-        reg3: 24..32
-};
-```
-
-It becomes more useful when you pair that with a bit writer. For an exa=
-mple of previous art, see Faith's work: [0]
-
-This has asserts in the right places so that you do not shoot yourself =
-in the foot. IMHO, such a data structure can be shared with the whole R=
-ust code in the kernel.
-
-You can then describe your writes using the ranges, e.g.: [1]=20
-
-But as we've established, instead of writing the ranges down directly, =
-you can simply refer to them as FOO=5FREGMAP.reg1, FOO=5FREGMAP.reg2 an=
-d so on.
-
-I believe this is both more readable and safer.
-
-[0]: https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/nouveau/c=
-ompiler/bitview/lib.rs?ref=5Ftype=3Dheads
-
-[1]: https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/nouveau/c=
-ompiler/nak/encode=5Fsm70.rs?ref=5Ftype=3Dheads#L228
-
+greg k-h
