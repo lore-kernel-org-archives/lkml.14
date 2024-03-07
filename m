@@ -1,35 +1,38 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4266A3D71
-	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 03:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86869E555;
+	Thu,  7 Mar 2024 03:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709781569; cv=none; b=BDl4KefSHzFJnTQdEYzdAQtmmdPXmxgd3UeRCo8hvbrxFfHZL1xjzRstRKzNVPiFhvYnKHh7WnXuSqm7UvMOEkCJy8pUwqigrjxI4haZJD5+R3vLPxymVqgDm6mgg8ToS+KaoPwzuecWTYmRJw4zcKUzeqpMD/qLDx3GDrN0SYY=
+	t=1709781574; cv=none; b=Q/sVWaV6iZkLqPHHgDBiVAfKm1fV7y7DRQ5CIhoKMqhcm52GG0jbUWfHeEhzeuj67UtGZkOCao6j3rAX5Zj3spvZpn1MbT0BwGIOP9//ggOlK7H+TmyC3wnalJlI2Cd9IM9hZYJ6HNbIUNziA1fMGdoL1y4QlieqypY3rQ6HMaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709781569; c=relaxed/simple;
-	bh=ZVqbas+1y6f0zcBPwDjaqRxR+PIBBUBSjcDr4o9cHeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SIoQ1ypxCqQkbKFc0jQRzqYelCfewftfTCk9LjmDEqCJKwdOnr3uK+zrOt/3XxMl4SZpNqos59iAK+tXw6PvHhopBYTCJsp1ETwQP5mCVU0K1SugyCgh5VqzvFyBadxgl3lCMnxZAjg9rDCL3LfaUusk0uf+blPHUdYN1Cq+n1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp72t1709781367toxgkw18
-X-QQ-Originating-IP: KoZh+Po1jLVQC+oHcWtjmGtLtMf0+3W5LeETRJ5+ABg=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 07 Mar 2024 11:16:05 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: Sm8l2YSuDymxf++w3HKzK4EdUwh7ZB6wZT8AOqyrvXP2/q3K7LZGwqh5TzK28
-	SdWIMUsk5pBQ8DHE15nuOhKTFrzUH7gSWmMyxeURquSja7VhPfyqGwYROxzWI4jvIMqr+53
-	qb2OH/2yPWLOVpukbO8ksWFq4eooIN/U4Au+lIUrU67EIQpu8zIyLUWydoota5poApC2Fw3
-	OKx0eytuCw+WJeWZbeqEwY3n9ocN5vKtPQHPeYjPi6VMKEwa2d5dMR2TtJLAjmAq/w1HDMG
-	amK7iofJexg8QIXDTF8yM9cMoFKj78WapSS4ujpx5fwHVfjkkeleOlFeasI3CC6t/txpDjC
-	yUjHKS1dqfn+uLymyQc/DhOPgT6R+BVoTNiP+e32GRw/OGzYZznZqS0wZUbIFg01j8q/hUZ
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 15119548749084099075
-Message-ID: <39E57A3DFB5843A6+f56f2b52-445f-4205-a99f-bd6374985389@shingroup.cn>
-Date: Thu, 7 Mar 2024 11:16:05 +0800
+	s=arc-20240116; t=1709781574; c=relaxed/simple;
+	bh=hJ6fv3HI3NxvYP0IKsPxT4ASej2UnYY1+6Lcvw7UNHM=;
+	h=Content-Type:Message-ID:Date:MIME-Version:From:Subject:To:Cc:
+	 References:In-Reply-To; b=uw1MW/MKWD6s7tQw6yxQ3JMVMpc1HyPHLeG5H69y2O48AGYgqtJX7ZnOYMauM7fEr+tkgK0SNNBw2v4/J+26ZcAwtclUhppeyTq9iODj3cHz3bom1Ulbo2rD0FvHlzWDY1SWcyOiWyFv6BnWrIaSGQ7LMBHVsDElTTq2wOvspiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ychUmlpI; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ychUmlpI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:References:Cc:To:Subject:
+	From:MIME-Version:Date:Message-ID:Content-Type:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K3TldHFnOYBYmyA+ZpDycxvkU6EpB6K91tOzErQkNoI=; b=ychUmlpIQkbhQ0W88gqlbMN+nk
+	N7kxwIp4Izr4S3lPCeFsCe0pWGa05MFzhPp2qPSYgcWyeCT567m7b6xEwRBOrMHS3lZSsqVyoUU4T
+	7y7F6/lnCPMAbpLWNT/KgSkRXbsb+WWVTPkheyVwlC0r9TITjgwaWMg0KgLhrms6g9S/ejbG7FBNm
+	SnHBJTcxh0jjHwmTLQ8nR9IGWHgPGEJJpwnf9Ij4MI5DdZHa+8y8x739teJjHUtKT2eoh77rLEGz6
+	MdP/Ix8fny+Mesi6BjfLkCNZ6bfubnyJsEeeVzha+mbjpED+NoQEjvZnt3DmNMWzWM6Xr/QhSH1JE
+	yw3U0gQw==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ri4Hf-00000002oO9-0yJC;
+	Thu, 07 Mar 2024 03:19:03 +0000
+Content-Type: multipart/mixed; boundary="------------oaFa8uBlfstuVB17zCaypWJR"
+Message-ID: <10a95079-86e4-41bf-8e82-e387936c437d@infradead.org>
+Date: Wed, 6 Mar 2024 19:18:57 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,388 +40,240 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/core: Handle generic events normally instead of
- trying all pmu
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240306151017.2114-1-jialong.yang@shingroup.cn>
- <Zeib-e1RYm2Dlk8c@FVFF77S0Q05N>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 37/37] memprofiling: Documentation
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz,
+ hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
+ dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org,
+ muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
+ pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
+ dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
+ keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com,
+ gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com,
+ penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
+ glider@google.com, elver@google.com, dvyukov@google.com,
+ shakeelb@google.com, songmuchun@bytedance.com, jbaron@akamai.com,
+ aliceryhl@google.com, rientjes@google.com, minchan@google.com,
+ kaleshsingh@google.com, kernel-team@android.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+References: <20240306182440.2003814-1-surenb@google.com>
+ <20240306182440.2003814-38-surenb@google.com>
 Content-Language: en-US
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <Zeib-e1RYm2Dlk8c@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+In-Reply-To: <20240306182440.2003814-38-surenb@google.com>
+
+This is a multi-part message in MIME format.
+--------------oaFa8uBlfstuVB17zCaypWJR
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+This includes some editing suggestions and some doc build fixes.
 
 
-
-在 2024/3/7 0:38, Mark Rutland 写道:
-> On Wed, Mar 06, 2024 at 11:10:15PM +0800, JiaLong.Yang wrote:
->> We have pay more effort on handling generic events. We treat them
->> specially caused us paying more.
+On 3/6/24 10:24, Suren Baghdasaryan wrote:
+> From: Kent Overstreet <kent.overstreet@linux.dev>
 > 
-> Are you seeing an actual problem in practice? ... or is this just intended as a
-> cleanup/improvement? >
-> What problem are you actually trying to solve here?
+> Provide documentation for memory allocation profiling.
 > 
-
-Latter. I write a driver. But I have to do some checks which likes that 
-they should be done in framework. And treating PERF_TYPE_HARDWARE and 
-PERF_TYPE_HW_CACHE specially like introducing PERF_PMU_TYPE_SHIFT is not 
-very beautiful.
-
->> Now time have told us that PMU type between 0 and PERF_TYPE_MAX only
->> corresponds to one PMU.
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  Documentation/mm/allocation-profiling.rst | 91 +++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/mm/allocation-profiling.rst
 > 
-> There can be at most one PMU registered for each type, but several PMUs may
-> need to handle events for that type.
-> 
-> Trivially, there are a number of PMUs which share the PERF_TYPE_SOFTWARE type,
-> e.g.
-> 
-> * perf_swevent, handled by perf_swevent_init()
-> * perf_cpu_clock, handled by cpu_clock_event_init()
-> * perf_task_clock, handled by task_clock_event_init()
-> 
-This is the current code for above example:
-	perf_pmu_register(&perf_swevent, "software", PERF_TYPE_SOFTWARE);
-         perf_pmu_register(&perf_cpu_clock, "cpu_clock", -1);
-         perf_pmu_register(&perf_task_clock, "task_clock", -1);
+> diff --git a/Documentation/mm/allocation-profiling.rst b/Documentation/mm/allocation-profiling.rst
+> new file mode 100644
+> index 000000000000..8a862c7d3aab
+> --- /dev/null
+> +++ b/Documentation/mm/allocation-profiling.rst
+> @@ -0,0 +1,91 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===========================
+> +MEMORY ALLOCATION PROFILING
+> +===========================
+> +
+> +Low overhead (suitable for production) accounting of all memory allocations,
+> +tracked by file and line number.
+> +
+> +Usage:
+> +kconfig options:
+> + - CONFIG_MEM_ALLOC_PROFILING
+> + - CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+> + - CONFIG_MEM_ALLOC_PROFILING_DEBUG
+> +   adds warnings for allocations that weren't accounted because of a
+> +   missing annotation
+> +
+> +Boot parameter:
+> +  sysctl.vm.mem_profiling=0|1|never
+> +
+> +  When set to "never", memory allocation profiling overheads is minimized and it
 
-But what I said still is wrong. At least the type PERF_TYPE_RAW is general.
+                                                      overhead is
 
-PERF_TYPE_TRACEPOINT is also only one.
+> +  cannot be enabled at runtime (sysctl becomes read-only).
+> +  When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y, default value is "1".
+> +  When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n, default value is "never".
+> +
+> +sysctl:
+> +  /proc/sys/vm/mem_profiling
+> +
+> +Runtime info:
+> +  /proc/allocinfo
+> +
+> +Example output:
+> +  root@moria-kvm:~# sort -g /proc/allocinfo|tail|numfmt --to=iec
+> +        2.8M    22648 fs/kernfs/dir.c:615 func:__kernfs_new_node
+> +        3.8M      953 mm/memory.c:4214 func:alloc_anon_folio
+> +        4.0M     1010 drivers/staging/ctagmod/ctagmod.c:20 [ctagmod] func:ctagmod_start
+> +        4.1M        4 net/netfilter/nf_conntrack_core.c:2567 func:nf_ct_alloc_hashtable
+> +        6.0M     1532 mm/filemap.c:1919 func:__filemap_get_folio
+> +        8.8M     2785 kernel/fork.c:307 func:alloc_thread_stack_node
+> +         13M      234 block/blk-mq.c:3421 func:blk_mq_alloc_rqs
+> +         14M     3520 mm/mm_init.c:2530 func:alloc_large_system_hash
+> +         15M     3656 mm/readahead.c:247 func:page_cache_ra_unbounded
+> +         55M     4887 mm/slub.c:2259 func:alloc_slab_page
+> +        122M    31168 mm/page_ext.c:270 func:alloc_page_ext
+> +===================
+> +Theory of operation
+> +===================
+> +
+> +Memory allocation profiling builds off of code tagging, which is a library for
+> +declaring static structs (that typcially describe a file and line number in
 
-> ... which have non-overlapping events in the PERF_TYPE_SOFTWARE event
-> namespace.
-> 
-> On systems with heterogeneous PMUs (e.g. ARM big.LITTLE systems), several PMUs
-> can handle the PERF_TYPE_{HARDWARE,RAW,CACHE} event namespaces, and there's
-> existing software that depends upon that working *without* the extended HW type
-> IDs.
-> 
+                                  typically
 
-The event framework mapping event to pmu is mainly according to type or 
-pmu idr. The type PERF_TYPE_HARDWARE and HW_CACHE only is a feature. For 
-the feature, we trying such events in all PMUs and drivers not handling 
-them should reject it obviously. Now uncore PMU is so many. And core PMU 
-only several.
+> +some way, hence code tagging) and then finding and operating on them at runtime
 
-Whatever, the tools calling perf_event_open should tell framework the 
-PMU idr. Maybe by event->attr.type, or event->attr.config >> 
-PERF_PMU_TYPE_SHIFT. We can save the latter and make idr number 
-special(PERF_TYPE_HARDWARE, HW_CACHE) as a default choice.
+                                                                        at runtime,
 
-Each special type([0, PERF_TYPE_RAW)) is not necessary to correspond 
-more PMUs. Except hardware core PMUs, all other PMUs could be registered 
-as type == -1.
+> +- i.e. iterating over them to print them in debugfs/procfs.
 
-We keeping the special types originally is to do some different logic 
-and maybe also have a fixed idr number. But now in framework code, they 
-are almost no difference. For example PERF_TYPE_TRACEPOINT scenes in 
-core.c(only two):
-static int perf_tp_event_init(struct perf_event *event)
-{
-	if(event->attr.type != PERF_TYPE_TRACEPOINT)
-		return -ENOENT;
+  i.e., iterating
 
-	...
-}
+> +
+> +To add accounting for an allocation call, we replace it with a macro
+> +invocation, alloc_hooks(), that
+> + - declares a code tag
+> + - stashes a pointer to it in task_struct
+> + - calls the real allocation function
+> + - and finally, restores the task_struct alloc tag pointer to its previous value.
+> +
+> +This allows for alloc_hooks() calls to be nested, with the most recent one
+> +taking effect. This is important for allocations internal to the mm/ code that
+> +do not properly belong to the outer allocation context and should be counted
+> +separately: for example, slab object extension vectors, or when the slab
+> +allocates pages from the page allocator.
+> +
+> +Thus, proper usage requires determining which function in an allocation call
+> +stack should be tagged. There are many helper functions that essentially wrap
+> +e.g. kmalloc() and do a little more work, then are called in multiple places;
+> +we'll generally want the accounting to happen in the callers of these helpers,
+> +not in the helpers themselves.
+> +
+> +To fix up a given helper, for example foo(), do the following:
+> + - switch its allocation call to the _noprof() version, e.g. kmalloc_noprof()
+> + - rename it to foo_noprof()
+> + - define a macro version of foo() like so:
+> +   #define foo(...) alloc_hooks(foo_noprof(__VA_ARGS__))
+> +
+> +It's also possible to stash a pointer to an alloc tag in your own data structures.
+> +
+> +Do this when you're implementing a generic data structure that does allocations
+> +"on behalf of" some other code - for example, the rhashtable code. This way,
+> +instead of seeing a large line in /proc/allocinfo for rhashtable.c, we can
+> +break it out by rhashtable type.
+> +
+> +To do so:
+> + - Hook your data structure's init function, like any other allocation function
 
-static inline void perf_tp_register(void)
-{
-         perf_pmu_register(&perf_tracepoint, "tracepoint", 
-PERF_TYPE_TRACEPOINT);
-#ifdef CONFIG_KPROBE_EVENTS
-         perf_pmu_register(&perf_kprobe, "kprobe", -1);
-#endif
-#ifdef CONFIG_UPROBE_EVENTS
-         perf_pmu_register(&perf_uprobe, "uprobe", -1);
-#endif
-}
+maybe end the line above with a '.' like the following line.
 
-Why we need the check(event->attr.type != PERF_TYPE_TRACEPOINT)?
-The trying event init.
+> + - Within your init function, use the convenience macro alloc_tag_record() to
+> +   record alloc tag in your data structure.
+> + - Then, use the following form for your allocations:
+> +   alloc_hooks_tag(ht->your_saved_tag, kmalloc_noprof(...))
 
-And for the heterogeneous PMUs, they are distinguished according to 
-event->attr.config >> PERF_PMU_TYPE_SHIFT. I will have to be compatible 
-with it.
 
-It is funny. Why there is only one PMU registered with each special 
-type. OK, except PERF_TYPE_RAW.
+Finally, there are a number of documentation build warnings in this patch.
+I'm no ReST expert, but the attached patch fixes them for me.
 
->> So we can handle the special when registering PMU not in event opening. And
->> we can know which PMU is used to the generic event.
-> 
-> No we cannot. There may be several PMUs which need to handle a given generic
-> event type.
-> 
->> The added capabilities PERF_PMU_CAP_EVENT_HARDWARE and
->> PERF_PMU_CAP_EVENT_HW_CACHE will alloc idr for PERF_TYPE_HARDWARE and
->> PERF_TYPE_HW_CACHE with same PMU.
-> 
-> When I suggested using capabilities in:
-> 
->    https://lore.kernel.org/lkml/ZecStMBA4YgQaBEZ@FVFF77S0Q05N/
-> 
-> ... I had meant that the core code could check just before calling the
-> pmu::event_init() function, in order to simplify the implementation of the
-> event_init() functions. I did not mean for this to change the way we
-> manipulated the IDR.
+-- 
+#Randy
+--------------oaFa8uBlfstuVB17zCaypWJR
+Content-Type: text/x-patch; charset=UTF-8;
+ name="docum-mm-alloc-profiling-fix403.patch"
+Content-Disposition: attachment;
+ filename="docum-mm-alloc-profiling-fix403.patch"
+Content-Transfer-Encoding: base64
 
-Yes.I get some inspire from you.
-But there is not flag telling me that the pmu is a extended one.
+U2lnbmVkLW9mZi1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+Ci0t
+LQogRG9jdW1lbnRhdGlvbi9tbS9hbGxvY2F0aW9uLXByb2ZpbGluZy5yc3QgfCAgIDI4ICsr
+KysrKysrKystLS0tLS0tLS0tCiBEb2N1bWVudGF0aW9uL21tL2luZGV4LnJzdCAgICAgICAg
+ICAgICAgICB8ICAgIDEgCiAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDEz
+IGRlbGV0aW9ucygtKQoKZGlmZiAtLSBhL0RvY3VtZW50YXRpb24vbW0vYWxsb2NhdGlvbi1w
+cm9maWxpbmcucnN0IGIvRG9jdW1lbnRhdGlvbi9tbS9hbGxvY2F0aW9uLXByb2ZpbGluZy5y
+c3QKLS0tIGEvRG9jdW1lbnRhdGlvbi9tbS9hbGxvY2F0aW9uLXByb2ZpbGluZy5yc3QKKysr
+IGIvRG9jdW1lbnRhdGlvbi9tbS9hbGxvY2F0aW9uLXByb2ZpbGluZy5yc3QKQEAgLTksMTEg
+KzksMTEgQEAgdHJhY2tlZCBieSBmaWxlIGFuZCBsaW5lIG51bWJlci4KIAogVXNhZ2U6CiBr
+Y29uZmlnIG9wdGlvbnM6Ci0gLSBDT05GSUdfTUVNX0FMTE9DX1BST0ZJTElORwotIC0gQ09O
+RklHX01FTV9BTExPQ19QUk9GSUxJTkdfRU5BQkxFRF9CWV9ERUZBVUxUCi0gLSBDT05GSUdf
+TUVNX0FMTE9DX1BST0ZJTElOR19ERUJVRwotICAgYWRkcyB3YXJuaW5ncyBmb3IgYWxsb2Nh
+dGlvbnMgdGhhdCB3ZXJlbid0IGFjY291bnRlZCBiZWNhdXNlIG9mIGEKLSAgIG1pc3Npbmcg
+YW5ub3RhdGlvbgorLSBDT05GSUdfTUVNX0FMTE9DX1BST0ZJTElORworLSBDT05GSUdfTUVN
+X0FMTE9DX1BST0ZJTElOR19FTkFCTEVEX0JZX0RFRkFVTFQKKy0gQ09ORklHX01FTV9BTExP
+Q19QUk9GSUxJTkdfREVCVUcKK2FkZHMgd2FybmluZ3MgZm9yIGFsbG9jYXRpb25zIHRoYXQg
+d2VyZW4ndCBhY2NvdW50ZWQgYmVjYXVzZSBvZiBhCittaXNzaW5nIGFubm90YXRpb24KIAog
+Qm9vdCBwYXJhbWV0ZXI6CiAgIHN5c2N0bC52bS5tZW1fcHJvZmlsaW5nPTB8MXxuZXZlcgpA
+QCAtMjksNyArMjksOCBAQCBzeXNjdGw6CiBSdW50aW1lIGluZm86CiAgIC9wcm9jL2FsbG9j
+aW5mbwogCi1FeGFtcGxlIG91dHB1dDoKK0V4YW1wbGUgb3V0cHV0OjoKKwogICByb290QG1v
+cmlhLWt2bTp+IyBzb3J0IC1nIC9wcm9jL2FsbG9jaW5mb3x0YWlsfG51bWZtdCAtLXRvPWll
+YwogICAgICAgICAyLjhNICAgIDIyNjQ4IGZzL2tlcm5mcy9kaXIuYzo2MTUgZnVuYzpfX2tl
+cm5mc19uZXdfbm9kZQogICAgICAgICAzLjhNICAgICAgOTUzIG1tL21lbW9yeS5jOjQyMTQg
+ZnVuYzphbGxvY19hbm9uX2ZvbGlvCkBAIC00MiwyMSArNDMsMjIgQEAgRXhhbXBsZSBvdXRw
+dXQ6CiAgICAgICAgICAxNU0gICAgIDM2NTYgbW0vcmVhZGFoZWFkLmM6MjQ3IGZ1bmM6cGFn
+ZV9jYWNoZV9yYV91bmJvdW5kZWQKICAgICAgICAgIDU1TSAgICAgNDg4NyBtbS9zbHViLmM6
+MjI1OSBmdW5jOmFsbG9jX3NsYWJfcGFnZQogICAgICAgICAxMjJNICAgIDMxMTY4IG1tL3Bh
+Z2VfZXh0LmM6MjcwIGZ1bmM6YWxsb2NfcGFnZV9leHQKKwogPT09PT09PT09PT09PT09PT09
+PQogVGhlb3J5IG9mIG9wZXJhdGlvbgogPT09PT09PT09PT09PT09PT09PQogCiBNZW1vcnkg
+YWxsb2NhdGlvbiBwcm9maWxpbmcgYnVpbGRzIG9mZiBvZiBjb2RlIHRhZ2dpbmcsIHdoaWNo
+IGlzIGEgbGlicmFyeSBmb3IKIGRlY2xhcmluZyBzdGF0aWMgc3RydWN0cyAodGhhdCB0eXBj
+aWFsbHkgZGVzY3JpYmUgYSBmaWxlIGFuZCBsaW5lIG51bWJlciBpbgotc29tZSB3YXksIGhl
+bmNlIGNvZGUgdGFnZ2luZykgYW5kIHRoZW4gZmluZGluZyBhbmQgb3BlcmF0aW5nIG9uIHRo
+ZW0gYXQgcnVudGltZQotLSBpLmUuIGl0ZXJhdGluZyBvdmVyIHRoZW0gdG8gcHJpbnQgdGhl
+bSBpbiBkZWJ1Z2ZzL3Byb2Nmcy4KK3NvbWUgd2F5LCBoZW5jZSBjb2RlIHRhZ2dpbmcpIGFu
+ZCB0aGVuIGZpbmRpbmcgYW5kIG9wZXJhdGluZyBvbiB0aGVtIGF0IHJ1bnRpbWUsCitpLmUu
+LCBpdGVyYXRpbmcgb3ZlciB0aGVtIHRvIHByaW50IHRoZW0gaW4gZGVidWdmcy9wcm9jZnMu
+CiAKIFRvIGFkZCBhY2NvdW50aW5nIGZvciBhbiBhbGxvY2F0aW9uIGNhbGwsIHdlIHJlcGxh
+Y2UgaXQgd2l0aCBhIG1hY3JvCi1pbnZvY2F0aW9uLCBhbGxvY19ob29rcygpLCB0aGF0Ci0g
+LSBkZWNsYXJlcyBhIGNvZGUgdGFnCi0gLSBzdGFzaGVzIGEgcG9pbnRlciB0byBpdCBpbiB0
+YXNrX3N0cnVjdAotIC0gY2FsbHMgdGhlIHJlYWwgYWxsb2NhdGlvbiBmdW5jdGlvbgotIC0g
+YW5kIGZpbmFsbHksIHJlc3RvcmVzIHRoZSB0YXNrX3N0cnVjdCBhbGxvYyB0YWcgcG9pbnRl
+ciB0byBpdHMgcHJldmlvdXMgdmFsdWUuCitpbnZvY2F0aW9uLCBhbGxvY19ob29rcygpLCB0
+aGF0OgorLSBkZWNsYXJlcyBhIGNvZGUgdGFnCistIHN0YXNoZXMgYSBwb2ludGVyIHRvIGl0
+IGluIHRhc2tfc3RydWN0CistIGNhbGxzIHRoZSByZWFsIGFsbG9jYXRpb24gZnVuY3Rpb24K
+Ky0gYW5kIGZpbmFsbHksIHJlc3RvcmVzIHRoZSB0YXNrX3N0cnVjdCBhbGxvYyB0YWcgcG9p
+bnRlciB0byBpdHMgcHJldmlvdXMgdmFsdWUuCiAKIFRoaXMgYWxsb3dzIGZvciBhbGxvY19o
+b29rcygpIGNhbGxzIHRvIGJlIG5lc3RlZCwgd2l0aCB0aGUgbW9zdCByZWNlbnQgb25lCiB0
+YWtpbmcgZWZmZWN0LiBUaGlzIGlzIGltcG9ydGFudCBmb3IgYWxsb2NhdGlvbnMgaW50ZXJu
+YWwgdG8gdGhlIG1tLyBjb2RlIHRoYXQKZGlmZiAtLSBhL0RvY3VtZW50YXRpb24vbW0vaW5k
+ZXgucnN0IGIvRG9jdW1lbnRhdGlvbi9tbS9pbmRleC5yc3QKLS0tIGEvRG9jdW1lbnRhdGlv
+bi9tbS9pbmRleC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9tbS9pbmRleC5yc3QKQEAgLTI2
+LDYgKzI2LDcgQEAgc2VlIHRoZSA6ZG9jOmBhZG1pbiBndWlkZSA8Li4vYWRtaW4tZ3VpZAog
+ICAgcGFnZV9jYWNoZQogICAgc2htZnMKICAgIG9vbQorICAgYWxsb2NhdGlvbi1wcm9maWxp
+bmcKIAogTGVnYWN5IERvY3VtZW50YXRpb24KID09PT09PT09PT09PT09PT09PT09Cg==
 
-> 
->> We'd better handle uncore-task event before calling pmu->event_init().
-> 
-> This is a nice-to-have, but it's logically separate from the rest of this
-> patch.
-
-If we not use the trying, we can do more checks here. Because we have 
-know more information.
-
-> 
->>
->> The code is compatible with PERF_PMU_TYPE_SHIFT.
->> /*
->>   * attr.config layout for type PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
->>   * PERF_TYPE_HARDWARE:			0xEEEEEEEE000000AA
->>   *					AA: hardware event ID
->>   *					EEEEEEEE: PMU type ID
->>   * PERF_TYPE_HW_CACHE:			0xEEEEEEEE00DDCCBB
->>   *					BB: hardware cache ID
->>   *					CC: hardware cache op ID
->>   *					DD: hardware cache op result ID
->>   *					EEEEEEEE: PMU type ID
->>   * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
->>   */
->>
->> But the drivers have to give the corresponding capabilities obviously.
->>
->> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->> ---
->>   include/linux/perf_event.h |  4 +-
->>   kernel/events/core.c       | 83 +++++++++++++++++++++++---------------
->>   2 files changed, 54 insertions(+), 33 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index d2a15c0c6f8a..edf4365ab7cc 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -290,7 +290,9 @@ struct perf_event_pmu_context;
->>   #define PERF_PMU_CAP_ITRACE			0x0020
->>   #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
->>   #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->> -#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->> +#define PERF_PMU_CAP_EVENT_HARDWARE             0x0100
->> +#define PERF_PMU_CAP_EVENT_HW_CACHE             0x0200
->> +#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0300
->>   
->>   struct perf_output_handle;
->>   
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index f0f0f71213a1..02f14ae09d09 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -11516,6 +11516,7 @@ static struct lock_class_key cpuctx_lock;
->>   int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   {
->>   	int cpu, ret, max = PERF_TYPE_MAX;
->> +	int cap = pmu->capabilities;
->>   
->>   	mutex_lock(&pmus_lock);
->>   	ret = -ENOMEM;
->> @@ -11523,7 +11524,6 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   	if (!pmu->pmu_disable_count)
->>   		goto unlock;
->>   
->> -	pmu->type = -1;
->>   	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
->>   		ret = -EINVAL;
->>   		goto free_pdc;
->> @@ -11538,15 +11538,34 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   	if (ret < 0)
->>   		goto free_pdc;
->>   
->> +	/*
->> +	 * Ensure one type ([0, PERF_TYPE_MAX)) correspond to one PMU.
->> +	 */
->>   	WARN_ON(type >= 0 && ret != type);
->>   
->>   	type = ret;
->>   	pmu->type = type;
->>   
->> +	if ((type != PERF_TYPE_HARDWARE) &&
->> +	    (cap & PERF_PMU_CAP_EVENT_HARDWARE)) {
->> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HARDWARE,
->> +				PERF_TYPE_HARDWARE + 1, GFP_KERNEL);
->> +		if (ret < 0)
->> +			goto free_idr;
->> +	}
-> 
-> This means that if I try to register more than one PMU with
-> PERF_PMU_CAP_EVENT_HARDWARE, the second will fail IDR allocation and fail to
-> register.
-
-We can make the first as default one. The latter will pass through 
-without registering PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE.
-
-> 
-> ... so this is entirely useless for systems with heterogeneous PMUs, where each
-> of those *should* be able to handle plain PERF_TYPE_HARDWARE events for legacy reasons.
-> 
-> I agree that the existing event initialization code is grotty, but that's
-> largely an artifact of maintaining existing ABI. AFAICT this patch breaks that,
-> and makes the code complex in a different way rather than actually simlifying anything.
-> 
-> Therefore, NAK to this patch.
-
-The patch has many problems I known. It just is a thought.
-
-> 
-> As above, I think it does make sense to have the core code own some common
-> checks (e.g. rejecting task-bound uncore events, filting generic events from
-> PMUs that don't support those), so I'm open to patches doing that.
-> 
-
-Fine. It's useful.
-
-> Mark.
-> 
->> +
->> +	if ((type != PERF_TYPE_HW_CACHE) &&
->> +	    (cap & PERF_PMU_CAP_EVENT_HW_CACHE)) {
->> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HW_CACHE,
->> +				PERF_TYPE_HW_CACHE + 1, GFP_KERNEL);
->> +		if (ret < 0)
->> +			goto free_idr_hw;
->> +	}
->> +
->>   	if (pmu_bus_running && !pmu->dev) {
->>   		ret = pmu_dev_alloc(pmu);
->>   		if (ret)
->> -			goto free_idr;
->> +			goto free_idr_hw_cache;
->>   	}
->>   
->>   	ret = -ENOMEM;
->> @@ -11604,6 +11623,14 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   		put_device(pmu->dev);
->>   	}
->>   
->> +free_idr_hw_cache:
->> +	if (cap & PERF_PMU_CAP_EVENT_HW_CACHE)
->> +		idr_remove(&pmu_idr, PERF_TYPE_HW_CACHE);
->> +
->> +free_idr_hw:
->> +	if (cap & PERF_PMU_CAP_EVENT_HARDWARE)
->> +		idr_remove(&pmu_idr, PERF_TYPE_HARDWARE);
->> +
->>   free_idr:
->>   	idr_remove(&pmu_idr, pmu->type);
->>   
->> @@ -11648,6 +11675,7 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   {
->>   	struct perf_event_context *ctx = NULL;
->>   	int ret;
->> +	bool uncore_pmu = false, extded_pmu = false;
->>   
->>   	if (!try_module_get(pmu->module))
->>   		return -ENODEV;
->> @@ -11668,6 +11696,20 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   		BUG_ON(!ctx);
->>   	}
->>   
->> +	if (perf_invalid_context == pmu->task_ctx_nr)
->> +		uncore_pmu = true;
->> +
->> +	if (pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
->> +		extded_pmu = true;
->> +
->> +	/* Disallow uncore-task events. */
->> +	if (uncore_pmu && (event->attach_state & PERF_ATTACH_TASK))
->> +		return -EINVAL;
->> +
->> +	/* Ensure pmu not supporting generic events will not be passed such event. */
->> +	if (!extded_pmu && (event->attr.type & PERF_PMU_CAP_EXTENDED_HW_TYPE))
->> +		return -EINVAL;
->> +
->>   	event->pmu = pmu;
->>   	ret = pmu->event_init(event);
->>   
->> @@ -11695,7 +11737,6 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   
->>   static struct pmu *perf_init_event(struct perf_event *event)
->>   {
->> -	bool extended_type = false;
->>   	int idx, type, ret;
->>   	struct pmu *pmu;
->>   
->> @@ -11720,36 +11761,15 @@ static struct pmu *perf_init_event(struct perf_event *event)
->>   	 * are often aliases for PERF_TYPE_RAW.
->>   	 */
->>   	type = event->attr.type;
->> -	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
->> -		type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
->> -		if (!type) {
->> -			type = PERF_TYPE_RAW;
->> -		} else {
->> -			extended_type = true;
->> -			event->attr.config &= PERF_HW_EVENT_MASK;
->> -		}
->> -	}
->> +	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)
->> +		event->attr.config &= PERF_HW_EVENT_MASK;
->>   
->> -again:
->>   	rcu_read_lock();
->>   	pmu = idr_find(&pmu_idr, type);
->>   	rcu_read_unlock();
->> -	if (pmu) {
->> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
->> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
->> -			goto fail;
->>   
->> -		ret = perf_try_init_event(pmu, event);
->> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
->> -			type = event->attr.type;
->> -			goto again;
->> -		}
->> -
->> -		if (ret)
->> -			pmu = ERR_PTR(ret);
->> -
->> -		goto unlock;
->> -	}
->> +	if (!pmu || perf_try_init_event(pmu, event))
->> +		goto fail;
->>   
->>   	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
->>   		ret = perf_try_init_event(pmu, event);
->> @@ -12026,11 +12046,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->>   	}
->>   
->>   	/*
->> -	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
->> -	 * events (they don't make sense as the cgroup will be different
->> -	 * on other CPUs in the uncore mask).
->> +	 * Disallow uncore-cgroup events (they don't make sense
->> +	 * as the cgroup will be different on other CPUs in the uncore mask).
->>   	 */
->> -	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
->> +	if (task || cgroup_fd != -1) {
->>   		err = -EINVAL;
->>   		goto err_pmu;
->>   	}
->> -- 
->> 2.25.1
->>
-> 
+--------------oaFa8uBlfstuVB17zCaypWJR--
