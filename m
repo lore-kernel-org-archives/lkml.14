@@ -1,132 +1,343 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9011129A62;
-	Thu,  7 Mar 2024 11:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5112AACD
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709809853; cv=none; b=cmKb/zner8kTMc0bw5uuzSGZZMjAVaHTBsC/VuNL9sf5DDE+dHKYS54zdfym7I+7kamM9tCSXrlr1+cbduaM+mKc1yaiKlgY9GUv2ICQgKvLyv1a6C5FQgKUc4mqDfZLbDLM1qC95zm5lehouz85LNS5UDfP3YEqG5+imtiX+KQ=
+	t=1709809858; cv=none; b=O2o3xymjTEImZH+dgCpefWjnIZMEY+TBsReUQq0xDjTV4O9yeetQJD5h7lDIMR/0JJKqVaR5obeMyASntsH0mTJ3Cqym+VpTwPOy9lpQ5jo26VYf1Fzq7ejLeh5Vzs6aYrppFpmz6K1joLBKNyVYdj+cec4eyfLY9Se+ca0MQJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709809853; c=relaxed/simple;
-	bh=hJdvsIf49qX5qYBe3jlnJZHHA33f29octtPbTBvXNM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qasgzkDNkHxPHdstCW0WLMOy2sHdPTpwhLRQYRuWVFRyZTFA2pn4Orn8BhzGM/foOS5SfYMJIRBJdq1dN/KAGWYhipT5yl5v5kDTdtsNfzqvFvmP/3HNDZyBLO0BQq8NK6eRrsSAtk7D0+A23iq0bAcQ/XdoKwv5qBDzN+8pNcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Vpra+LW8; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709809858; c=relaxed/simple;
+	bh=+QUQ7yhNC21YVITWoj5dkN0llltsA5n33KngBbOyW9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=otqosi0QV+tsxfvrxmD0cnoAZQmBd0yx76i1Cg9oy0VeVQ9fIlbmhxC5U7HstLeFNXZhnLi2PSN8u7recD0HhUor8DZ68h5J9nmOgJxLg7aeOGHNXRo/0E1trU6XSVTtQQ4T8aHVWsN+ncszXY9QpPx917z+0qZSNQMP4VuDdLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=O7arwrH+; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Vpra+LW8"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 508D460004;
-	Thu,  7 Mar 2024 11:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709809849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OnOBH7X5Za0alGDnm8qdXNdP8bUSPL0B1vzgu9qjY6M=;
-	b=Vpra+LW8UMKnWODdqEuBvDPXNDNUyvxrf5N2iTXeJ8IN4vJT+iOtUJwcRzodM1ri8oWq1G
-	uQ/nI/+3VVORERnZwRtlq93LJDodjZF0MvqbHg6ODQRp2TKsQ1I+0AfRTHfNkcthzpIIC4
-	DYWZmPk24KCk3Ye1PNOlh7UBUSUHnRGaeiULqbNPegVjFUkWuBbH4Q3R3ezuXRSVwT0n05
-	Zq0U9LxFRchRGFRCqq6a3Yvb9TTthYzfrQJtJdPElklKvNLvfxDQuhc/8oxIyYBFg9Txsq
-	S1TPJ8v/AGGpAK/ens5ycmqUX+5Q/UIZ+IYMbEduXSwWYnqbyM76c2LhR3Bu2g==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Lizhi Hou <lizhi.hou@amd.com>,
-	Max Zhen <max.zhen@amd.com>,
-	Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v5 2/2] of: dynamic: Synchronize of_changeset_destroy() with the devlink removals
-Date: Thu,  7 Mar 2024 12:10:01 +0100
-Message-ID: <20240307111036.225007-3-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240307111036.225007-1-herve.codina@bootlin.com>
-References: <20240307111036.225007-1-herve.codina@bootlin.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O7arwrH+"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc13fb0133so5921995ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:10:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709809856; x=1710414656; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2OrNnr6gHqc42Ky1FeFcCvehza56T+Pa8i2e3OFWYmw=;
+        b=O7arwrH+Ss+8IkBeHcgjhG9aSBMVkfw9MUc7kYTzSWuG9Bk+VknstQsBYatNoXYerl
+         tLb3snJMwldEpZ1DZ6tHluaN+FZNQXhCnahHfnnxgSS5GqRd097aZiBJ6LlRw2ds8+aS
+         A1uMvYNUIpt1YLTiQEAuy62P7WB3CsyCIH6zo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709809856; x=1710414656;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2OrNnr6gHqc42Ky1FeFcCvehza56T+Pa8i2e3OFWYmw=;
+        b=PLGHRdyqArzU03Mz22cG95e3fptans2cPEydh2vSEQlEeNXkzU6+bwv/jX+hO0WuND
+         xOYN/wZPIWd7ftkXCgDDuRNWc+rlozC3G4h2aTC5mZ9YB88nZRfA5stRMmUC1aL4ZO/z
+         uAbBYOCkjSdGrcrSJVe+nrsGHokC9t8w2El4jcjVCowG4BJX/aG4MQ25cepGRZyRRwwd
+         V9wxdM3Jg81sLswuLUV1KQ+6o+iP/bdGWTYTHB4E8Yw19rg+2c//96grIiiAVm+FZGPY
+         7w4i2F5TwGD03zJiAJpyFpWmTvG2FKq/J0FPvit0HOPTxW7GLGPU4Dp0T/YycaaVIBVL
+         M4Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgQOklAsOhctowPbo40V0iDBaxp8TMV4EdtnBxp2pHSyuyxBn1AnUk9PPUcBv6cdZxr6/kl1QyrYuxGkC2pXlEhHkaGX5e7DE6Mnr9
+X-Gm-Message-State: AOJu0YzqW7KrqqYKVb6QYjgPyPchkMnF6NawwsFI5vLbSYuzN+HNuw9i
+	lHSjhC37xpvlvecsjiK4gAnqMx/KPH11SpuP3ClfiG/SuyiBHS/xQOLxfFZ1l12ZDU0w1mtP6na
+	r+EXvQmLnd/gy7rWo5VS/fLqwdISNA2k7YIpS
+X-Google-Smtp-Source: AGHT+IFxA69w3fb5rTaHx0WWeDwNDwE8addr1vYQfdEOYmu/vTHtVI+D/+lM+o+ttEqHQRihTUFAaiYFNtKyeHldlLU=
+X-Received: by 2002:a17:902:e84d:b0:1db:c390:1fdc with SMTP id
+ t13-20020a170902e84d00b001dbc3901fdcmr9601288plg.1.1709809855695; Thu, 07 Mar
+ 2024 03:10:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20240108081834.408403-1-treapking@chromium.org>
+ <CAGXv+5EnBt+7WrNb-QyziEaCihvjhFVf2tpzk=XyAoeELqucaw@mail.gmail.com>
+ <e0e6febf-1045-49f8-a200-8bc095b0fa50@collabora.com> <CAGXv+5F5YFRKjaXu_XbXrUhqKL0NSRyt6tniQYfhRh+fsaxqmg@mail.gmail.com>
+ <cc74422d-962f-4da5-867b-158a71db1a7b@collabora.com> <CAGXv+5EyRROsh_=J1Fg4K+ZgfkERF4dh4R6WoGw9MnTBMNUCgQ@mail.gmail.com>
+ <dfdc6a65-3ccf-463c-95df-093f3c2fefd3@collabora.com>
+In-Reply-To: <dfdc6a65-3ccf-463c-95df-093f3c2fefd3@collabora.com>
+From: Pin-yen Lin <treapking@chromium.org>
+Date: Thu, 7 Mar 2024 19:10:44 +0800
+Message-ID: <CAEXTbpcPfWQr4iuD2U0zgJUi+BF-rLfyF4iDDiQYBrrv9U=6Xg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] clk: mediatek: Introduce need_pm_runtime to mtk_clk_desc
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Weiyi Lu <weiyi.lu@mediatek.com>, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the following sequence:
-  1) of_platform_depopulate()
-  2) of_overlay_remove()
+Hi Angelo and Chen-yu,
 
-During the step 1, devices are destroyed and devlinks are removed.
-During the step 2, OF nodes are destroyed but
-__of_changeset_entry_destroy() can raise warnings related to missing
-of_node_put():
-  ERROR: memory leak, expected refcount 1 instead of 2 ...
+I tried enabling the runtime PM regardless of the .need_pm_runtime
+flag, and my MT8183 device works well with that with no obvious boot
+regression.
 
-Indeed, during the devlink removals performed at step 1, the removal
-itself releasing the device (and the attached of_node) is done by a job
-queued in a workqueue and so, it is done asynchronously with respect to
-function calls.
-When the warning is present, of_node_put() will be called but wrongly
-too late from the workqueue job.
+Should I send out another patch that always enables runtime PM in
+__mtk_clk_simple_probe()? Or is there anything I should test?
 
-In order to be sure that any ongoing devlink removals are done before
-the of_node destruction, synchronize the of_changeset_destroy() with the
-devlink removals.
+Regards,
+Pin-yen
 
-Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-Cc: stable@vger.kernel.org
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Saravana Kannan <saravanak@google.com>
-Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
----
- drivers/of/dynamic.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 3bf27052832f..4d57a4e34105 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -9,6 +9,7 @@
- 
- #define pr_fmt(fmt)	"OF: " fmt
- 
-+#include <linux/device.h>
- #include <linux/of.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-@@ -667,6 +668,17 @@ void of_changeset_destroy(struct of_changeset *ocs)
- {
- 	struct of_changeset_entry *ce, *cen;
- 
-+	/*
-+	 * When a device is deleted, the device links to/from it are also queued
-+	 * for deletion. Until these device links are freed, the devices
-+	 * themselves aren't freed. If the device being deleted is due to an
-+	 * overlay change, this device might be holding a reference to a device
-+	 * node that will be freed. So, wait until all already pending device
-+	 * links are deleted before freeing a device node. This ensures we don't
-+	 * free any device node that has a non-zero reference count.
-+	 */
-+	device_link_wait_removal();
-+
- 	list_for_each_entry_safe_reverse(ce, cen, &ocs->entries, node)
- 		__of_changeset_entry_destroy(ce);
- }
--- 
-2.43.0
-
+On Thu, Feb 29, 2024 at 6:36=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Il 29/02/24 11:34, Chen-Yu Tsai ha scritto:
+> > On Thu, Feb 29, 2024 at 5:45=E2=80=AFPM AngeloGioacchino Del Regno
+> > <angelogioacchino.delregno@collabora.com> wrote:
+> >>
+> >> Il 29/02/24 08:17, Chen-Yu Tsai ha scritto:
+> >>> On Mon, Feb 26, 2024 at 7:16=E2=80=AFPM AngeloGioacchino Del Regno
+> >>> <angelogioacchino.delregno@collabora.com> wrote:
+> >>>>
+> >>>> Il 23/02/24 05:27, Chen-Yu Tsai ha scritto:
+> >>>>> On Mon, Jan 8, 2024 at 4:18=E2=80=AFPM Pin-yen Lin <treapking@chrom=
+ium.org> wrote:
+> >>>>>>
+> >>>>>> Introduce a new need_pm_runtime variable to mtk_clk_desc to indica=
+te
+> >>>>>> this clock controller needs runtime PM for its operations.
+> >>>>>> Also do a runtime PM get on the clock controller during the
+> >>>>>> probing stage to workaround a possible deadlock.
+> >>>>>>
+> >>>>>> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+> >>>>>
+> >>>>> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+> >>>>>
+> >>>>> The patch itself looks fine.
+> >>>>>
+> >>>>> Besides the MT8183 MFG clock issues, we do actually need this for t=
+he
+> >>>>> MT8192 ADSP clock. Its power domain is not enabled by default.
+> >>>>>
+> >>>>
+> >>>> ...but on MT8195 the ADSP clock works - because the ADSP node exists=
+.
+> >>>
+> >>> That's an indirect dependency that should not be relied on. Say the c=
+lock
+> >>> driver probed but the ADSP hasn't, and you try to read out the curren=
+t
+> >>> status. What would happen?
+> >>>
+> >>> - Read out works fine, because the power domain is default on, and ha=
+sn't
+> >>>     been turned off by late cleanup
+> >>> - Read out is bogus (but you can't tell)
+> >>> - Read out hangs.
+> >>>
+> >>> The third is what happens on MT8192. There's still some issues on tha=
+t
+> >>> front, as even after I applied the ADSP power domain patches from Med=
+iaTek,
+> >>> the readout was still hanging.
+> >>>
+> >>
+> >> That MT8192 lockup story is getting crazy in my head... anyway, beside=
+s that,
+> >> I get the point - I was somehow ignoring the fact that kernel modules =
+do exist.
+> >>
+> >> Eh, sorry about that :-)
+> >>
+> >>>> This poses a question: should we make clock controllers depend on po=
+wer domains,
+> >>>> or should we keep everything powered off (hence clocks down - no pow=
+er consumption)
+> >>>> *unless* the user exists?
+> >>>
+> >>> That's a policy discussion separate from actual hardware dependencies=
+.
+> >>> *If* the clock controller needs the power domain to be active for the
+> >>> registers to be accessed, the clock controller *must* have a direct
+> >>> dependency on the power domain.
+> >>>
+> >>
+> >> I admit I should've worded that better.
+> >>
+> >> "should we make clock controllers depend on power domains" was actuall=
+y implying
+> >> "IF those need one" :-)
+> >>
+> >> I really wonder if - at this point - it's simply a better idea to not =
+restrict
+> >> the call to devm_pm_runtime_enable/resume_and_get to `need_runtime_pm =
+=3D=3D true`.
+> >>
+> >> Do we really need to exclude that on other clock controllers that don'=
+t have
+> >> any power domain dependency? Any side effect?
+> >>
+> >> Saying this because if we can avoid yet another per-SoC flag I'm reall=
+y happy,
+> >> as readability is also impacted and besides - if we ever find out that=
+ one of
+> >> those need a power domain in the future, we'll need just one commit an=
+d just
+> >> only in the devicetree, instead of enabling a flag in driver X as well=
+ as that,
+> >> avoiding some (potentially unnecessary) noise... I guess.
+> >>
+> >> P.S.: I just noticed that the return value for the devm_pm_runtime_ena=
+ble() call
+> >>         is not being checked!
+> >>
+> >> .......
+> >>
+> >> In short....
+> >>
+> >> Chen-Yu, at this point, do you have any reason why we wouldn't be able=
+ and/or it
+> >> wouldn't be a good idea to just avoid adding the `need_runtime_pm` fla=
+g (meaning
+> >> that we perform pm_runtime calls for all clock drivers unconditionally=
+)?
+> >>
+> >> If this is about longer boot time, I don't think that it's going to be=
+ more than
+> >> a millisecond or two, so that should be completely ignorable.
+> >
+> > I think it's just more of a "don't enable features you don't need" thin=
+g.
+> > We already ran into a weird deadlock, which is why the devm_pm_runtime_=
+enable()
+> > call has that comment.
+> >
+> > I don't think anyone has actually looked at it. As you said it shouldn'=
+t be
+> > much, at least during boot time. It's one call per clock controller.
+> >
+> >> Can you please do a test for that, or should I?
+> >
+> > The earliest I can work on it would be some time next week. Does that w=
+ork
+> > for you?
+> >
+>
+> The earliest I'd be able to work on this myself would be at the end of ne=
+xt
+> week if not later.. so yes, please take your time, no worries.
+>
+> Thank you!
+>
+> > ChenYu
+> >
+> >> Cheers
+> >> Angelo
+> >>
+> >>>> For the second one, this means that the *device* gets the power doma=
+in (adsp), and
+> >>>> not the clock controller (which clocks are effectively useless if th=
+ere's no user).
+> >>>
+> >>> No. See my previous paragraph.
+> >>>
+> >>> ChenYu
+> >>>
+> >>>> Angelo
+> >>>>
+> >>>>>> ---
+> >>>>>>
+> >>>>>> Changes in v3:
+> >>>>>> - Update the commit message and the comments before runtime PM cal=
+l
+> >>>>>>
+> >>>>>> Changes in v2:
+> >>>>>> - Fix the order of error handling
+> >>>>>> - Update the commit message and add a comment before the runtime P=
+M call
+> >>>>>>
+> >>>>>>     drivers/clk/mediatek/clk-mtk.c | 19 +++++++++++++++++++
+> >>>>>>     drivers/clk/mediatek/clk-mtk.h |  2 ++
+> >>>>>>     2 files changed, 21 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek=
+/clk-mtk.c
+> >>>>>> index 2e55368dc4d8..ba1d1c495bc2 100644
+> >>>>>> --- a/drivers/clk/mediatek/clk-mtk.c
+> >>>>>> +++ b/drivers/clk/mediatek/clk-mtk.c
+> >>>>>> @@ -13,6 +13,7 @@
+> >>>>>>     #include <linux/of.h>
+> >>>>>>     #include <linux/of_address.h>
+> >>>>>>     #include <linux/platform_device.h>
+> >>>>>> +#include <linux/pm_runtime.h>
+> >>>>>>     #include <linux/slab.h>
+> >>>>>>
+> >>>>>>     #include "clk-mtk.h"
+> >>>>>> @@ -494,6 +495,18 @@ static int __mtk_clk_simple_probe(struct plat=
+form_device *pdev,
+> >>>>>>                            return IS_ERR(base) ? PTR_ERR(base) : -=
+ENOMEM;
+> >>>>>>            }
+> >>>>>>
+> >>>>>> +
+> >>>>>> +       if (mcd->need_runtime_pm) {
+> >>>>>> +               devm_pm_runtime_enable(&pdev->dev);
+> >>>>>> +               /*
+> >>>>>> +                * Do a pm_runtime_resume_and_get() to workaround =
+a possible
+> >>>>>> +                * deadlock between clk_register() and the genpd f=
+ramework.
+> >>>>>> +                */
+> >>>>>> +               r =3D pm_runtime_resume_and_get(&pdev->dev);
+> >>>>>> +               if (r)
+> >>>>>> +                       return r;
+> >>>>>> +       }
+> >>>>>> +
+> >>>>>>            /* Calculate how many clk_hw_onecell_data entries to al=
+locate */
+> >>>>>>            num_clks =3D mcd->num_clks + mcd->num_composite_clks;
+> >>>>>>            num_clks +=3D mcd->num_fixed_clks + mcd->num_factor_clk=
+s;
+> >>>>>> @@ -574,6 +587,9 @@ static int __mtk_clk_simple_probe(struct platf=
+orm_device *pdev,
+> >>>>>>                            goto unregister_clks;
+> >>>>>>            }
+> >>>>>>
+> >>>>>> +       if (mcd->need_runtime_pm)
+> >>>>>> +               pm_runtime_put(&pdev->dev);
+> >>>>>> +
+> >>>>>>            return r;
+> >>>>>>
+> >>>>>>     unregister_clks:
+> >>>>>> @@ -604,6 +620,9 @@ static int __mtk_clk_simple_probe(struct platf=
+orm_device *pdev,
+> >>>>>>     free_base:
+> >>>>>>            if (mcd->shared_io && base)
+> >>>>>>                    iounmap(base);
+> >>>>>> +
+> >>>>>> +       if (mcd->need_runtime_pm)
+> >>>>>> +               pm_runtime_put(&pdev->dev);
+> >>>>>>            return r;
+> >>>>>>     }
+> >>>>>>
+> >>>>>> diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek=
+/clk-mtk.h
+> >>>>>> index 22096501a60a..c17fe1c2d732 100644
+> >>>>>> --- a/drivers/clk/mediatek/clk-mtk.h
+> >>>>>> +++ b/drivers/clk/mediatek/clk-mtk.h
+> >>>>>> @@ -237,6 +237,8 @@ struct mtk_clk_desc {
+> >>>>>>
+> >>>>>>            int (*clk_notifier_func)(struct device *dev, struct clk=
+ *clk);
+> >>>>>>            unsigned int mfg_clk_idx;
+> >>>>>> +
+> >>>>>> +       bool need_runtime_pm;
+> >>>>>>     };
+> >>>>>>
+> >>>>>>     int mtk_clk_pdev_probe(struct platform_device *pdev);
+> >>>>>> --
+> >>>>>> 2.43.0.472.g3155946c3a-goog
+> >>>>>>
+> >>>>
+> >>>>
+> >>>>
+> >>
+> >>
+> >>
+>
