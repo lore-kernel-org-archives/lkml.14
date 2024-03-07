@@ -1,158 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9161D6311A;
-	Thu,  7 Mar 2024 08:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E1D63108
+	for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2024 08:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709799487; cv=none; b=IYInMVPi7dlMUFnIYDJZCpEEa0db+pLSyk2eV7qsh+fv1X35is0pwpn3yO7I9L3j0wWlgiC19/MgLTcYncv2JWtf0hy2P9Hevgmg2nUCW3lrrVCknJCXs4RAx0Ml6FHbTEe3vz3A9IaEJVdzF9f6GxmaHqOuww/hYQilGCCi6rU=
+	t=1709799502; cv=none; b=iOJlZk86Op4TkqJ/2MFj8yezFcNOSFQwkOWplgcoCAlFbDoMYhg9D0fG8pWO6HfCsDXF0Lb4R9Cv/QJxSWKBOqBRyYRoh0FO72x7VvWMB43UU+yfZurD0fH6MVwtKxOH5kMXJn2UFtdqIj41JmztnfBLWhqpXqEaDxmNT67oSGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709799487; c=relaxed/simple;
-	bh=0eSjyN2LlC9Wrx63xy7rOACa0dzQKMyCRU8Nm4Mq0Hg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lFpHSMP7iaoobXbup+u1Q4SiMvhq2hROndygCn/U8g0qGTzJ2vmdH55N1GLkEKU3eItucWhW0YAV/4d6yvQyjlkwbH9FnTno0HWc1+c3eZla5Fd4oyynvd0WV4ZC3bZ+KRjkU0i81n8WS2JfNWiBE9RMkFU1IUsTDlmEvEmhD+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5K93M9n; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709799502; c=relaxed/simple;
+	bh=TYqpgTDuSv3SX5G0RXnA4YBOuaNXUw37znpbGnBjBA4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=g0BJ0o2dx8HE9D23JxzWlYcbS2yGMHqQE+rhxb/U+/H4Ff6WFwWjyebdrYkp2ufKDSC+1nEaY/WVSxJDzKWGFCoHk8kojc9UBVrmjabWmgejQMuxdCSV7Au9tBlng70vz/MlS4MNvY6eOVE6KrYYYQ3JWGh7O37nYTUjMkxwC7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=MXkkll7o; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5K93M9n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709799486; x=1741335486;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0eSjyN2LlC9Wrx63xy7rOACa0dzQKMyCRU8Nm4Mq0Hg=;
-  b=c5K93M9nKDECMYkpKu1LDXuY5rRfGdW5j7bjVWsEVoc4Ud/i7jFXRch5
-   QJbuz7qpcuYxDRzl8RpqB9N/NXI7JmjRWgwk7qAHFmQlf/Ibf+3QWnr1V
-   9MNZZ8QiqZaw7/kURl8uTpN1/ODtBAVN0TviGhfUV+v1db5FcQTOM0oj9
-   KHUz0bnaB/pQBYgdMgh9K/1KQOenL3S8OtmrwgRd0MnbX3FGnsbKoxi6U
-   OQvjwy5tgMupSeHVNamDOTzAo6rccbE7NRrowtrxCbyRf9bpL1qBPLIjD
-   c27TOJb/bCftv9rvzIkU4srTBqTS8A9E9zTGiS2+hsm6Edj01LYf/BhbZ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4577437"
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="4577437"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 00:18:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="14598959"
-Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
-  by fmviesa003.fm.intel.com with ESMTP; 07 Mar 2024 00:18:02 -0800
-From: Haibo Xu <haibo1.xu@intel.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org
-Cc: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	ardb@kernel.org,
-	sunilvl@ventanamicro.com,
-	xiaobo55x@gmail.com,
-	Haibo Xu <haibo1.xu@intel.com>
-Subject: [PATCH] riscv: dmi: Add SMBIOS/DMI support
-Date: Thu,  7 Mar 2024 16:31:54 +0800
-Message-Id: <20240307083154.346542-1-haibo1.xu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MXkkll7o"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-567fbbd7658so554114a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 00:18:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google; t=1709799499; x=1710404299; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dSltyiSz6QzizDadpF6t+PXwLaV699fb9KhpCjpuKpM=;
+        b=MXkkll7o5VmeClXkpxfLx8CNFdKDphA9e3mrzRTO20T85DDE03HE5O6ak69lcKmT2K
+         G5tlrrwqMq8iFkrYmzmr6vi1vnBCfbcv6df2WN0wkpZIcLIDFI+Aec+KkVHL7mbpZEo7
+         D59JHo/8pMQ3iL8cXu346+nngF7vLFtl6i5ZA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709799499; x=1710404299;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dSltyiSz6QzizDadpF6t+PXwLaV699fb9KhpCjpuKpM=;
+        b=LPlBHmnwhXysQKvoG18hutiWn4jVfRIS8jAn1oAy2QUd126P/7HanYShGJLc8Z6hyt
+         79NhXj8hcSXGTq2uhtT/y8am/yU+4XLlRPjEvysxzn1hWrhMbG9TogCskD0MgLXz9Nfv
+         V5fygXVz+//PKyBNMVQvrcvu29EYfozR9vCK6PsklC+UEPt58mWgy/FakFfPsxEHVdDf
+         6Z8cAe3SDRsvzOFntVj0/MsheRBm7Hb7PufBQ/Dcl0MUOjOD4baWW0R81t94FNBq/jc/
+         PN1UsOJ+XEZPyvuxme7qN7eYVthq0lPlV7fjjkIN3eYHXZijqdrj+0S0w9L8LrRjdC8g
+         gb5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGYnCALuSw+8j6vmYd/RW5CoZPNGRjmoALerD1DiP8RuLK6DQ536WGCdSJ9NUK/d5Ovy8EuD2C8DwJTpUeBT9gvujdo1lrc/U6Rl0z
+X-Gm-Message-State: AOJu0YwE4O34JhDDwDE2i7Q8UsI6AKM4Op2MqGAVVvRjcYgKnKArtDUD
+	hK5SBmbnQ+GMLBzRnp2kblpdM31CS3xgAIlzvtntVdv1AACjyDbFe7M6cJ+wwBnPJ8hJ2w+ECHz
+	Mm9o=
+X-Google-Smtp-Source: AGHT+IE5+saef5qFZIJd7/AEveuJaiL0S5ePCy1yPoEQhNLpJLEw3L6knMS2MoZ/K3muVYt5lsLMow==
+X-Received: by 2002:a50:9fa7:0:b0:568:14e3:fe75 with SMTP id c36-20020a509fa7000000b0056814e3fe75mr843322edf.5.1709799499152;
+        Thu, 07 Mar 2024 00:18:19 -0800 (PST)
+Received: from [172.16.11.116] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id ig10-20020a056402458a00b005657eefa8e9sm7832112edb.4.2024.03.07.00.18.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Mar 2024 00:18:18 -0800 (PST)
+Message-ID: <40914a69-d4b7-4fdd-bc58-cf9b28271ac3@rasmusvillemoes.dk>
+Date: Thu, 7 Mar 2024 09:18:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bootconfig: do not put quotes on cmdline items unless
+ necessary
+Content-Language: en-US, da
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240306122452.1664709-1-linux@rasmusvillemoes.dk>
+ <20240306124211.b490ea3c2372d89cff8c287c@linux-foundation.org>
+ <e1075345-ea35-4b39-a158-a0d165314a14@rasmusvillemoes.dk>
+In-Reply-To: <e1075345-ea35-4b39-a158-a0d165314a14@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Enable the dmi driver for riscv which would allow access the
-SMBIOS info through some userspace file(/sys/firmware/dmi/*).
+On 07/03/2024 09.10, Rasmus Villemoes wrote:
 
-The change was based on that of arm64 and has been verified
-by dmidecode tool.
+>>> +static int has_space(const char *v)
+>>> +{
+>>> +	for (; *v; v++)
+>>> +		if (isspace(*v))
+>>> +			return 1;
+>>> +	return 0;
+>>> +}
+>>
+>> Do we already have something which does this?
+> 
+> Well, 'value[strcspn(value, " \t\r\n")] ? "\"" : ""' would be a
+> oneliner, but not particularly readable. Also that list of characters
+> doesn't necessarily match isspace(), see below.
 
-Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
----
- arch/riscv/Kconfig                   | 11 +++++++++++
- arch/riscv/include/asm/dmi.h         | 29 ++++++++++++++++++++++++++++
- drivers/firmware/efi/riscv-runtime.c | 13 +++++++++++++
- 3 files changed, 53 insertions(+)
- create mode 100644 arch/riscv/include/asm/dmi.h
+I didn't look close enough. We do have strpbrk(), so strpbrk(value, "
+\t\r\n") ? .. : .. , but that still leaves the question of just what set
+of characters to search for. But there's no harm in just making it "
+\t\n\v\f\r\xa0" except it requires a comment saying "these are precisely
+the isspace() characters in the kernel's ctype".
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 0bfcfec67ed5..a123a3e7e5f3 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -918,6 +918,17 @@ config EFI
- 	  allow the kernel to be booted as an EFI application. This
- 	  is only useful on systems that have UEFI firmware.
- 
-+config DMI
-+	bool "Enable support for SMBIOS (DMI) tables"
-+	depends on EFI
-+	default y
-+	help
-+	  This enables SMBIOS/DMI feature for systems.
-+
-+	  This option is only useful on systems that have UEFI firmware.
-+	  However, even with this option, the resultant kernel should
-+	  continue to boot on existing non-UEFI platforms.
-+
- config CC_HAVE_STACKPROTECTOR_TLS
- 	def_bool $(cc-option,-mstack-protector-guard=tls -mstack-protector-guard-reg=tp -mstack-protector-guard-offset=0)
- 
-diff --git a/arch/riscv/include/asm/dmi.h b/arch/riscv/include/asm/dmi.h
-new file mode 100644
-index 000000000000..a861043f02dc
---- /dev/null
-+++ b/arch/riscv/include/asm/dmi.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2024 Intel Corporation
-+ *
-+ * based on arch/arm64/include/asm/dmi.h
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#ifndef __ASM_DMI_H
-+#define __ASM_DMI_H
-+
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+
-+/*
-+ * According to section 2.3.6 of the UEFI spec, the firmware should not
-+ * request a virtual mapping for configuration tables such as SMBIOS.
-+ * This means we have to map them before use.
-+ */
-+#define dmi_early_remap(x, l)		ioremap_prot(x, l, _PAGE_KERNEL)
-+#define dmi_early_unmap(x, l)		iounmap(x)
-+#define dmi_remap(x, l)			ioremap_prot(x, l, _PAGE_KERNEL)
-+#define dmi_unmap(x)			iounmap(x)
-+#define dmi_alloc(l)			kzalloc(l, GFP_KERNEL)
-+
-+#endif
-diff --git a/drivers/firmware/efi/riscv-runtime.c b/drivers/firmware/efi/riscv-runtime.c
-index 09525fb5c240..c3bfb9e77e02 100644
---- a/drivers/firmware/efi/riscv-runtime.c
-+++ b/drivers/firmware/efi/riscv-runtime.c
-@@ -152,3 +152,16 @@ void arch_efi_call_virt_teardown(void)
- {
- 	efi_virtmap_unload();
- }
-+
-+static int __init riscv_dmi_init(void)
-+{
-+	/*
-+	 * On riscv, DMI depends on UEFI, and dmi_setup() needs to
-+	 * be called early because dmi_id_init(), which is an arch_initcall
-+	 * itself, depends on dmi_scan_machine() having been called already.
-+	 */
-+	dmi_setup();
-+
-+	return 0;
-+}
-+core_initcall(riscv_dmi_init);
--- 
-2.34.1
+Rasmus
 
