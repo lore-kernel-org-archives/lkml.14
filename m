@@ -1,140 +1,107 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869EC28DC0
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 02:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235BA28E2B;
+	Fri,  8 Mar 2024 02:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709865946; cv=none; b=CTfriegOt2MTyh1js46VxXELET2IRTRxYKHbPgeXUCcfVWVJVLj7jpyXWsm1giyS7dt947vu5Pt1B1sdYY6um+arBFqwX+y5pmdoGAfOja0i9Am4SKXBILRMtjrsI3DctiP3rQL/bSEY1L4xTZH1p3ZrDpk9Ygoe7I0zGUdCyl4=
+	t=1709865949; cv=none; b=PkEIYf1LWt5PQF/T9p8dRzN91KWBpTO0bdMnmNGq10t+d80ENzYeFCm4pW/D3ZyTulV/MsTaAzeJlehAV+hB4wBdEdg+QGEVcj34We5swI5jUazxYfliCgdYkvnFwMB4dRojaWbZWLgFZTXCcgOuGXDLuEoreuNJf6XDMp4C2WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709865946; c=relaxed/simple;
-	bh=A9JJZAf4f0qBrIUH970XEhb6Gx3TLdc7GMVQz+Xz/gA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=k49Hl0iay9MXjqiAZ2gYoTQoArLbeP4OmhRvEsKvK46C3JtvmbyFuluQ1gyFK6TQ/J0nOlJF8haVhuSjnutGMzQirSGV8PlyyRSr05+0bRowt8RmpGOEzqY07+3cYgwOAS3Mb/nK53SzKnh7VbgKnzTjmCV4BaG2vaTuZUpEio8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dDbSCWkV; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1709865949; c=relaxed/simple;
+	bh=2SdxiaeGtNw8ZL8rSHb9UwvioaglRELLWCMNjA9ewV8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=spxcsuYgJTU5wzRwOBPuv212w95T8Dxnr7cX3CuFHvOM7KCOSzuBL3YcOlXoT7yQS0kGXJXsxTGmZ/zEycx0hq6dV92p0AHx/6Qcl9MeClKzF2jLuMhYbMbFkDGeJ7ygCB+cPKRbRlQlGdzzXf1USw8LM6Rsf1y7nwz3j3DNuKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cqZbjDY4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dDbSCWkV"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc0e5b223eso2715605ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 18:45:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709865944; x=1710470744; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBTcuM34vazcQ8FUxJ81MwY9Go5tsnqrD1TprkB4i6c=;
-        b=dDbSCWkVLpaQjGRAcqadwYyZtMODURCP43NcFG+ooH+yBz/jDnRmPzvDHpLLxDTYvW
-         L/EVz9fU8V1YY9KGOmqe7fuI8DzCNYu0vcKef13Kqg/QmOm8l92V1BiR9IDY+tsEhyk6
-         S4OvlgU1ElEoUVdL8MR7l63IkZxBHpZQbhDWwcXruIaGPH5Nz4jP9i3ySuova5fKl5so
-         BMO1rzD/6zJqmW2aDuNST4EQGWDrBgWxEjNXmQ7t60eniAU0Su9ObFTeWzclelkLn2mD
-         8Ukfjx6ri9brDTp/NVCgWprgmgOjim1ZWEJGNid5atcmaSzBspUA6PwNVaEU9pgOmo3M
-         4yTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709865944; x=1710470744;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EBTcuM34vazcQ8FUxJ81MwY9Go5tsnqrD1TprkB4i6c=;
-        b=RzX388aukWMitjaDZmqZX1gXxheQxVcSlO1wLbA3mb/kFRiKfAlCFbI/5iam9E0zn3
-         W1QfC3OeL/Hwm7kx0WEDKNXoSm9Fxk9R7cGdKaGDl5dnvcX4hy0KWG7WikJ6WpXY+OjX
-         ASXCjzsSRoGPSO4ec1bXUn2ig3D7F5Gm33WHdUwTmQ70eeAp88440eu/ph0l7IW7NLV6
-         ODni7XoBGsfdYjhFKdRx5pOS1nK0wAaJPwfXcRhVZXFBAnGN1sodn/jvMmNCSFcIYkC+
-         Yg70nURgXxi5ntJTuPOMIuGy8SZHD8SES150ovT15Ya24xNpRXp1LWiRMxYL1e9WX47m
-         DNww==
-X-Forwarded-Encrypted: i=1; AJvYcCVtXJ1QfTKcL3H06cc8b/6I4GV1t+rqkOsFk+8vR8TxaE51GlwwR1C7bidc1bpqczb7W6JixSqRr4qV46FUvoj6M1f31T3sREXpKYNB
-X-Gm-Message-State: AOJu0Yzwlvzcb3+Rcr/x7h6sB+5QeagQ5B7piUS/8rOc1VgNQOvLRVGP
-	n2eBzSVqraphMOmdHX5FS8cF7Ki8C77NCJ+OEnwecB1o9XCB8i9I+D7+6l1dp78=
-X-Google-Smtp-Source: AGHT+IEvIAI8sq/1OcNEGlOk2q3petZc1tRcphID3Cuq03oBgO9LU/5Qyoqw+BszQpjMEbkERqXMzw==
-X-Received: by 2002:a17:902:7847:b0:1dd:6174:c63e with SMTP id e7-20020a170902784700b001dd6174c63emr1880622pln.54.1709865943683;
-        Thu, 07 Mar 2024 18:45:43 -0800 (PST)
-Received: from C02CV19DML87.bytedance.net ([2001:c10:ff04:0:1000:0:1:4])
-        by smtp.gmail.com with ESMTPSA id q9-20020a170902b10900b001d8a93fa5b1sm15244360plr.131.2024.03.07.18.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 18:45:43 -0800 (PST)
-From: Rui Qi <qirui.001@bytedance.com>
-To: bp@alien8.de,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	hpa@zytor.com,
-	jpoimboe@redhat.com,
-	peterz@infradead.org,
-	mbenes@suse.cz,
-	gregkh@linuxfoundation.org,
-	stable@vger.kernel.org,
-	alexandre.chartre@oracle.com
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	yuanzhu@bytedance.com,
-	Rui Qi <qirui.001@bytedance.com>
-Subject: [PATCH v3 0/3] Support intra-function call validation
-Date: Fri,  8 Mar 2024 10:45:15 +0800
-Message-Id: <20240308024518.19294-1-qirui.001@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cqZbjDY4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC47C433F1;
+	Fri,  8 Mar 2024 02:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709865948;
+	bh=2SdxiaeGtNw8ZL8rSHb9UwvioaglRELLWCMNjA9ewV8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cqZbjDY4L7g5r6xj3Eoen0G8x5DbPRSTtonwnjXVjBhS0JesrWx71+ldQQeIEWcH1
+	 9GKZ40B4eFBe0f/O8TpV7mfb+HQ9EhumjAeyxruS40/02cgWENxZ7QpllwtfplaOHD
+	 oNUawLcKb9IIGR+cssMht0PyWcojdHfk2D9yT1qM3Hl8aF79pBAp+zBEjhTYNWRrFY
+	 ij5CZaVVWZBhtZILlajIXVstuhpEPdeseyWJ9PtuhnvhqyLTHvYOHVuHisu486IC/h
+	 aNGjWovVze51DeWNCrT2SR3PIDbrfm/5lNu5IgkX2S+6aewRL1iGrUD1r/p2ep2AIg
+	 vxqePhFkBxH4A==
+Date: Fri, 8 Mar 2024 11:45:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Calvin Owens <jcalvinowens@gmail.com>, Song Liu <song@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Mike Rapoport
+ <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Alexei
+ Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Naveen N Rao
+ <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, David S Miller <davem@davemloft.net>,
+ Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 0/4] Make bpf_jit and kprobes work with
+ CONFIG_MODULES=n
+Message-Id: <20240308114542.6eafe78de8969ba33affd41d@kernel.org>
+In-Reply-To: <ZejhcP_r5QJZcS6j@bombadil.infradead.org>
+References: <cover.1709676663.git.jcalvinowens@gmail.com>
+	<ZejhcP_r5QJZcS6j@bombadil.infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Since kernel version 5.4.217 LTS, there has been an issue with the kernel live patching feature becoming unavailable. 
-When compiling the sample code for kernel live patching, the following message is displayed when enabled:
+Hi,
 
-livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
+On Wed, 6 Mar 2024 13:34:40 -0800
+Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-Reproduction steps:
-1.git checkout v5.4.269 -b v5.4.269
-2.make defconfig
-3. Set CONFIG_LIVEPATCH=y、CONFIG_SAMPLE_LIVEPATCH=m
-4. make -j bzImage
-5. make samples/livepatch/livepatch-sample.ko
-6. qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage -nographic -append "console=ttyS0" -initrd initrd.img -m 1024M
-7. insmod livepatch-sample.ko
+> On Wed, Mar 06, 2024 at 12:05:07PM -0800, Calvin Owens wrote:
+> > Hello all,
+> > 
+> > This patchset makes it possible to use bpftrace with kprobes on kernels
+> > built without loadable module support.
+> 
+> This is a step in the right direction for another reason: clearly the
+> module_alloc() is not about modules, and we have special reasons for it
+> now beyond modules. The effort to share a generalize a huge page for
+> these things is also another reason for some of this but that is more
+> long term.
 
-Kernel live patch cannot complete successfully.
+Indeed. If it works without CONFIG_MODULES, it may be exec_alloc() or
+something like that. Anyway, thanks for great job on this item!
 
-After some debugging, the immediate cause of the patch failure is an error in stack checking. The logs are as follows:
-[ 340.974853] livepatch: klp_check_stack: kworker/u256:0:23486 has an unreliable stack
-[ 340.974858] livepatch: klp_check_stack: kworker/u256:1:23487 has an unreliable stack
-[ 340.974863] livepatch: klp_check_stack: kworker/u256:2:23488 has an unreliable stack
-[ 340.974868] livepatch: klp_check_stack: kworker/u256:5:23489 has an unreliable stack
-[ 340.974872] livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
-......
+> 
+> I'm all for minor changes here so to avoid regressions but it seems a
+> rename is in order -- if we're going to all this might as well do it
+> now. And for that I'd just like to ask you paint the bikeshed with
+> Song Liu as he's been the one slowly making way to help us get there
+> with the "module: replace module_layout with module_memory",
+> and Mike Rapoport as he's had some follow up attempts [0]. As I see it,
+> the EXECMEM stuff would be what we use instead then. Mike kept the
+> module_alloc() and the execmem was just a wrapper but your move of the
+> arch stuff makes sense as well and I think would complement his series
+> nicely.
 
-BTW,if you use the v5.4.217 tag for testing, make sure to set CONFIG_RETPOLINE = y and CONFIG_LIVEPATCH = y, and other steps are consistent with v5.4.269
+yeah, it is better to work with Mike.
 
-After investigation, The problem is strongly related to the commit 8afd1c7da2b0 ("x86/speculation: Change FILL_RETURN_BUFFER to work with objtool"),
-which would cause incorrect ORC entries to be generated, and the v5.4.217 version can undo this commit to make kernel livepatch work normally. 
-It is a back-ported upstream patch with some code adjustments,from the git log, the author also mentioned no intra-function call validation support.
+Thank you,
 
-Based on commit 6e1f54a4985b63bc1b55a09e5e75a974c5d6719b (Linux 5.4.269), This patchset adds stack validation support for intra-function calls, 
-allowing the kernel live patching feature to work correctly.
+> 
+> If you're gonna split code up to move to another place, it'd be nice
+> if you can add copyright headers as was done with the kernel/module.c
+> split into kernel/module/*.c
+> 
+> Can we start with some small basic stuff we can all agree on?
+> 
+> [0] https://lwn.net/Articles/944857/
+> 
+>   Luis
 
-v3 - v2
- - fix the compile error in arch/x86/kvm/svm.c, the error message is../arch/x86/include/asm/nospec-branch.h: 313: Error: no such instruction: 'unwind_hint_empty'
-
-v2 - v1
- - add the tag "Cc: stable@vger.kernel.org" in the sign-off area for patch x86/speculation: Support intra-function call
- - add my own Signed-off to all patches
-
-
-
-Alexandre Chartre (2):
-  objtool: is_fentry_call() crashes if call has no destination
-  objtool: Add support for intra-function calls
-
-Rui Qi (1):
-  x86/speculation: Support intra-function call validation
-
- arch/x86/include/asm/nospec-branch.h          |  7 ++
- arch/x86/include/asm/unwind_hints.h           |  2 +-
- include/linux/frame.h                         | 11 ++++
- .../Documentation/stack-validation.txt        |  8 +++
- tools/objtool/arch/x86/decode.c               |  6 ++
- tools/objtool/check.c                         | 64 +++++++++++++++++--
- 6 files changed, 92 insertions(+), 6 deletions(-)
 
 -- 
-2.20.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
