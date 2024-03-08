@@ -1,149 +1,173 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B395A55E65
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 19:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A2E5A7B6;
+	Fri,  8 Mar 2024 19:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709927446; cv=none; b=b5TK/HW9UHQUXVoh80kvV1/8glgvQO+i1XMJQ2VHH3FVqe28nlYNzc/nFVrovtBZ+sjuZUneybJQT2OaYwAH0ASimqb40uuJZ9hbIcov29f48ka97GpbZQyCsWtKWfwJHAEC8XYCKIvIm1mgs6VBaVwaeo0w6cNKhFpIgI/5pYU=
+	t=1709927448; cv=none; b=lQg9U5aJ3c9vYj067J8Wwf2SkOgNgQEcf9LUSOBlwVsUI/Pkh1myp88IaiAGU27jsWYpTV+sFxxOlaS47Z2PKhiziygPu3QWO8yV2ZpROvbZZ+NBGWh2EXL+HKNwyBebJc/bLS0wQKn/rWvBBIWSV7da7Zy8D8tuarI2QoY1nMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709927446; c=relaxed/simple;
-	bh=F+KDUPH5+mbx7+rMvQIki2u8trXARavLTQ5O4E92Y9o=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=WHQB7ZRONx/pPviYQyQOZzvTzljLh+WCEX5+BK8/Tyu2icxdkGUkeMB9uul14ClxlcN4lYrIdzt9/jd4Xrio+zlhfhr9KC6nLi2oM8zt8E6vThwiShq0ISbuBFWom75qTyqBMWUJhlfLUuoIVnunLOKyMwMmJEBlGvjcEO+h8Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=2tfNfHl4; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1709927448; c=relaxed/simple;
+	bh=GInZ2URda4ZR/awa7AAlXa5X3pT6P2FUwC1sJRaJ+SE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K0xtIpfci2r6NL84Ufbk/WKOv9yq+4350nOgJM5O8uN5i+RLLeH9FYeeSRwbCMoccHmwoQUarTb+5H+hfvZSNTzczfDsnAc9yhNNJtOswLWsZicy/c1vwPVqt1A3iavBiXDXRslwfYe8doMSlix2/HkAPTjEOYpSQGUIMtu3Md8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=uLSVaJlt; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="2tfNfHl4"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412fc5f5152so18057745e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 11:50:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709927443; x=1710532243; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iFx6+m/7JsKqN0XHB4LAwTg+zzCpC/J1O98A2CTIY6I=;
-        b=2tfNfHl4ia5rp15QZ3eWMWbZIkPJ7VZfm0C14Gx6vtOeUDlF0PcGc3JF2DaQ5Yfy0Q
-         Ydlk8dg/ELH80i1DHU60o3GjdAGOSfD5hDDJD4ComkA422UV/1stmFedpBb3XpEtQ+Qr
-         QtrkAssOIuiH/SmcQRLHbRoeUVK1dlal2fBdoeUmXA2WW8QBj09Xa2kFwUBti0rjPw4i
-         R16YFV23wf9KVtfT8wkEoe9docWjXhGPXtxJqAdAXvTJ+hNoTBxqta0hpGAJQE746Lzf
-         n//BRE/GCqTjgVJaGLagjKfKqA99At5YodgTOkuoq9STj7JXgSvUOplhYqANfekvRFT0
-         mwHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709927443; x=1710532243;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iFx6+m/7JsKqN0XHB4LAwTg+zzCpC/J1O98A2CTIY6I=;
-        b=XO1SCDfDhFSmrz4VGkXL+dAVzdm53Up1uDR+OI7mFX8nCfZk4ajzSE0WJLVcx5hnfL
-         O9aymZz42ID2CtzeJlIKpnhS9m24TR8LyPBMcdLt4wjCWNI0dQXtMx06A3zV+qtovQVM
-         HgMOY1Wq+fCSl+Sr/mr2RrZoF4lZyJk/WkOdHuza23UzY7357WhRrS3/H5GOuMEwATQd
-         8jy+8IskdVVaaLnruTwNW5+cWYj0sV6MCIswtvp5HlbD3nJtW06CAAehC0FpdGYPHSWV
-         bGAOdW468nzpsoh/snIEo4OB2S8x1Ek2j3yqCJeAqOJA1mnnqjBZdyAntcwJgEirTZlf
-         rg2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWcDn8QvKgGrfOlNRIq844OAbfB1ikkZl/5a9754+3kJHw5Q8eZ4CSzTeoNGQnTZk8nrkMwq8/NNfBysPgMcyyBmWO/1PPHRYS3rGdt
-X-Gm-Message-State: AOJu0YyjxR6f3b8PjkdqUUKNWj1FratC5PdD/xR4KTJL9S7iOrBVdLpD
-	3LUbwImHrbPHW6yh+HGBJkn9IQLzlGvA3oLSECnNnDWgjya3Z3g9KwybAIKNSiM=
-X-Google-Smtp-Source: AGHT+IFgERx2HCRxe0cuz8WcIaaG2WzVA5aMHqLkgE03tEKhn+oudNWefjc02tmdr5H0XIgT49QUrg==
-X-Received: by 2002:a05:600c:1c13:b0:412:abfd:2c0e with SMTP id j19-20020a05600c1c1300b00412abfd2c0emr215874wms.41.1709927442706;
-        Fri, 08 Mar 2024 11:50:42 -0800 (PST)
-Received: from smtpclient.apple ([2001:a61:10c1:8f01:f133:c671:605a:5e9b])
-        by smtp.gmail.com with ESMTPSA id f15-20020a05600c4e8f00b00412ea52b102sm6999304wmq.34.2024.03.08.11.50.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2024 11:50:42 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uLSVaJlt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709927433; x=1710532233; i=w_armin@gmx.de;
+	bh=GInZ2URda4ZR/awa7AAlXa5X3pT6P2FUwC1sJRaJ+SE=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=uLSVaJltz501mreBO38jIJr0ZvO5+be0rmpFBXzDBAuylMG3y3Uc2J/emV24XK+S
+	 n8Ih3mBGCKbfXlDhta7NBDypoqBRn5jf7NJNESZOx1c0FbYPup7uUb3x95IGR3SzX
+	 rDAGlFOkEQWXzgzRcb6Ba2Mt1BZSKaXwLrI7yMd8Y1ReQBqtOjlfzHHd/ysPOIkb4
+	 srGhkO4Fswb+tTW4KpAvnTr92i2oE17TcONxuV3D3+xLSKOfXg1ru8mclpEyPUSYs
+	 pcFvaFAVWHKg75fUts/cK99L78Ld5ln0ucF+FKE6lnALvnXUs+lebc2IkgemqAuSx
+	 T0AdG3dM5W6Y/nPsVQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MTzay-1rHdD10Xr8-00R123; Fri, 08 Mar 2024 20:50:33 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] platform/x86: wmi: Support reading/writing 16 bit EC values
+Date: Fri,  8 Mar 2024 20:50:26 +0100
+Message-Id: <20240308195027.7640-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [RESEND PATCH v2] x86/apic: Use u32 instead of unsigned long
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <656ade98-c8aa-42df-8926-d0513e105816@intel.com>
-Date: Fri, 8 Mar 2024 20:50:30 +0100
-Cc: "David.Laight@aculab.com" <David.Laight@ACULAB.COM>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org,
- mingo@redhat.com,
- peterz@infradead.org,
- tglx@linutronix.de,
- wei.liu@kernel.org,
- x86@kernel.org
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <6548057B-015C-4A67-8231-0E63224BF74F@toblux.com>
-References: <20240301203901.150465-3-thorsten.blum@toblux.com>
- <20240308124336.41654-2-thorsten.blum@toblux.com>
- <656ade98-c8aa-42df-8926-d0513e105816@intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-X-Mailer: Apple Mail (2.3774.400.31)
+X-Provags-ID: V03:K1:CtZhcD0n0yHdmdum9rwj1NwZDAGDtI2rhCGhj2/joM0d71v5Q1q
+ 7P7pnmGPakEDFu27C5grY+kwmicPhNrqDlMfi2S8TF1lqy3x6pG+w7fWdAQjBic28CXCZuj
+ 9EncNSHFGkiWff6vt8B9PltJbYVuduzyAkw3cw4jLB8cVghPfdwwiPJjTlII0IuCM8R5xHH
+ 0IMQOeexx/QPH6ClZfMdg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7n9CoxRLmQU=;nNIRGz+Uz9smsiJiA1VhCPtFG4W
+ elrxO25Y13f7dAar0c8osfZ++hs20CNEFaUN9k+o3A9j3SD0F3vgNS8Z6+RnTpa1iKqRWCSbw
+ rTty0DFg6shqYKGk9t2u6xOdM2kd9p/Zmk6wNn7Chrk81XHROIMTBwlvAzfdxm+K5FaOmAt1q
+ j2dvrtXRhXhweM/wsccW+vqiZtotGs2ilXASjXeY1SUJWkrzmpYh0TbizI27n8/rZpC/Nidj7
+ b7Jpm/wrZolJEbg8c65rWtrVUAixRvS5W4a8u1e78yancVDyNQOCP1Hc5Pp6/IdpjbRp6lw1w
+ /hcS+u0PDW2LP+0W1cye2h4ysfbEIW85BTgwkG7tb33l07dADwUyNVhS+VAZOJ4Kt/pXj/rby
+ b1tgIBVVtzjbQN7PYQV3JzdVqIuRPLG/ijTBHBXl20k0bPz+odv1pfIb8faDoUSvM3wHlmA/l
+ /m/6Kfb0tr3mDX/Q4abvFP0Umb3h7OmplOEDaMBSUdVbE+ng+3DH7+mVng60feGT6O3r6oBDA
+ c8+lQMu6zLwk6oxBGPVHkH6FvuE1i5KPfABlhDd4dEtKH3BKC9ZBTz0HAXuU8FuRXr524pziM
+ 8z3Vx3SsyC9s3m0ymGY1q0rsXNvEb7rAVThz+aMWetWyyfs9E50nLJTbJzx9kk6pUg4LIinwM
+ 8kQV5r24QchACFohnKBHY93q53sIOrGMzfeNARrWxrIy/rsIBV8S2Z2uOKisomyRz58fo1FvQ
+ HVEL4KdTZc8V9BawRt0gbEDJKd/TjDmHCk3sc7AboYLwseYBsaNm0kZ38HaigL5ZmMX7VXkyE
+ MHD4XPwbW/jFUJbFBFtzcsNHHhqPpLKsiDueW7t16j7HM=
 
-On Mar 8, 2024, at 17:12, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
-> On 3/8/24 04:43, Thorsten Blum wrote:
->> Improve types by using u32 instead of unsigned long. Fixes two
->> Coccinelle/coccicheck warnings reported by do_div.cocci.
->=20
-> This seems simple enough, but the changelog and subject are really
-> lacking in substantive information.
->=20
-> The _patch_ literally does a few s/unsigned long/u32/ operations, and
-> that's just repeated pretty much verbatim in the changelog and =
-subject.
-> So it just tells me two more times what I already know.
->=20
-> Without going and running do_div.cocci I can't tell whether the =
-warnings
-> are good checks or nonsense.  I also don't know _which_ do_div()s the
-> warnings even refer to.
->=20
-> Could we get a _little_ more meat in here, please?
+The ACPI EC address space handler currently only supports
+reading/writing 8 bit values. Some firmware implementations however
+want to access for example 16 bit values, which is prefectly legal
+according to the ACPI spec.
 
-Yes, of course.
+Add support for reading/writing such values.
 
-Coccinelle issues the following two warnings:
+Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
 
-arch/x86/kernel/apic/apic.c:734:1-7: WARNING: do_div() does a 64-by-32
-division, please consider using div64_long instead.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Chnages since v2:
+- fix address overflow check
 
-arch/x86/kernel/apic/apic.c:742:2-8: WARNING: do_div() does a 64-by-32
-division, please consider using div64_long instead.
+Changes since v1:
+- use BITS_PER_BYTE
+- validate that number of bytes to read/write does not overflow the
+  address
+=2D--
+ drivers/platform/x86/wmi.c | 47 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
-These occur because the divisor (deltapm) is of type long and the =
-do_div() macro
-casts the divisor to uint32_t, which could potentially lead to an =
-incorrect
-quotient.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 1920e115da89..e6cab1cf611a 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1153,6 +1153,32 @@ static int parse_wdg(struct device *wmi_bus_dev, st=
+ruct platform_device *pdev)
+ 	return 0;
+ }
 
-Version 1 of my patch replaced both do_div() macro calls with div64_ul()
-function calls, thereby removing the Coccinelle warnings. I used =
-div64_ul()
-instead of div64_long() because I also changed deltapm from long to =
-unsigned
-long, given that deltapm cannot be negative.
++static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	int i, ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_read(address + i, &buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	int i, ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_write(address + i, buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /*
+  * WMI can have EmbeddedControl access regions. In which case, we just wa=
+nt to
+  * hand these off to the EC driver.
+@@ -1162,27 +1188,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physi=
+cal_address address,
+ 			  u32 bits, u64 *value,
+ 			  void *handler_context, void *region_context)
+ {
+-	int result =3D 0;
+-	u8 temp =3D 0;
++	int bytes =3D bits / BITS_PER_BYTE;
++	int ret;
++
++	if (!value)
++		return AE_NULL_ENTRY;
 
-However, David Laight noted that div64_ul() is a 64-by-64 division and=20=
+-	if ((address > 0xFF) || !value)
++	if (!bytes || bytes > sizeof(*value))
+ 		return AE_BAD_PARAMETER;
 
-significantly slower (especially on 32-bit machines).
+-	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
++	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
+ 		return AE_BAD_PARAMETER;
 
-David's feedback led me to trace the source of deltapm, which is
-acpi_pm_read_early() in include/linux/acpi_pmtmr.h. Since =
-acpi_pm_read_early()
-returns a u32 (which is additionally masked to 24 bits), there is no =
-reason for
-deltapm or any of the other intermediate variables (pm, lapic_cal_pm1, =
-and
-lapic_cal_pm2) to be of type long or unsigned long. They can all be u32, =
-which
-more accurately reflects their possible values and which removes both
-Coccinelle warnings.
+-	if (bits !=3D 8)
++	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
+ 		return AE_BAD_PARAMETER;
 
-Maybe I'm missing something, but hopefully this clarifies my changes in =
-v2.
+ 	if (function =3D=3D ACPI_READ) {
+-		result =3D ec_read(address, &temp);
+-		*value =3D temp;
++		ret =3D ec_read_multiple(address, (u8 *)value, bytes);
+ 	} else {
+-		temp =3D 0xff & *value;
+-		result =3D ec_write(address, temp);
++		ret =3D ec_write_multiple(address, (u8 *)value, bytes);
+ 	}
 
-Thanks,
-Thorsten=
+-	switch (result) {
++	switch (ret) {
+ 	case -EINVAL:
+ 		return AE_BAD_PARAMETER;
+ 	case -ENODEV:
+=2D-
+2.39.2
+
