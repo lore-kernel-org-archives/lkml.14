@@ -1,144 +1,86 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD5523750
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 01:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6146A241EC;
+	Fri,  8 Mar 2024 01:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709860348; cv=none; b=tMP0Yrviw8J2Eos9X5jKTdSEuHBEJbDHR3ELcVJ9V4xHaODcDLNyOHm6rNOoNYU7xDjyViI7OkPtHjR8BYK4RqD+9mHCydzjBTBrt3eRgx2B6uGJIlD7BrOSjfW+NstntUWk6m0spxfscTagF0FVH9xAp6KAfOQWTHJUNjZ1NTA=
+	t=1709860375; cv=none; b=m2XqGdY2lfG4hkoqk2doewHXz3m+pazooZ3bzqNtaG9rcUFnMKc2rG2phZ3ZaeU64HZ5l21ZOcMFTXdmVENiFO/0Rb21nH14x54SnZwsNH94gbWsvnyd8//dNp88MawHB7gm9/1S6YoG6TV9kXUDSs8GQbAFJNBc552wB2xjTVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709860348; c=relaxed/simple;
-	bh=sA5YotOtX3AcvjjrYf5fHrYUORIzots7hTq07UQbKVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f3Y4/lvJO+nluz5GD6eSoOHJ7ZNPQHZUIODAAgM9Ydl4z/YwDtECwDetYd2T4iXrjrJ7kPZ9J2v60z6MvS3MGHa18Jjgd7dsLH+L/f7VG4iPGMx8TNrDBCCXO9EleVOcpk5S0V0i7ozvUqAhBUVEn+krQiD0ik46oFa8+3V2mU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PxkS3Y3M; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxkS3Y3M"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33e742ca96bso404483f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 17:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709860345; x=1710465145; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Owx6jt72g5QT/V0uQHGstO9uCqzU46h0v31gh/DzxSw=;
-        b=PxkS3Y3MU+Ds4ZgLtFQCLvB35mWreYDwDKbu+q1SeOQBVjewFykej39z3w8s/bkAZo
-         /gZyqQwUanCxijE6clPgp3HYgkGerqqAMqPrhuoch1MhaamW9wvgBPFUGSaQpDOjhaDd
-         vXCb4PD9+rrZz1Cb74sfpZ9o33HCeArsIvCEhkuIUY1Si6XTi0vrzQn+9JtMkbN/3FNu
-         KgQLptuh6GVKbRhB/Xsme2HjFIcXJPgwGRgjPoJjocCA1gC7YyvWsyDOMcz/FXpTDmeg
-         S2brMlNBSdRWHzjB/m3rqZwrlRMPeeNkcbVNcZF5SbAV4MBRgO6RAiOQefwebiXnwzft
-         WFKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709860345; x=1710465145;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Owx6jt72g5QT/V0uQHGstO9uCqzU46h0v31gh/DzxSw=;
-        b=GvuS+6GJ8hzZDUGN6+6g6rCYdffi+h0AbdhNoMFUAelXew6JO6v5hkSPoJVp3fivyI
-         1oeC0h4bLGH898Oz5fdFFN6tKY2g2W84VgvOTNwPJjNNAtpsAcizYVlvgPqRSwn3aUr8
-         f9XGnLkIcgNz7sxmZCNJrG0Z4Q5o6EdDSFHOJNqwPR9zwoWjs3ZU7AvVQJgKs2TdfBFB
-         QcUakDJQFDWYf6Tal4GTlXd2UPO3aVjsIFHUXd/1jWZfixJALvgNFFU8fbi4m5L3b6KA
-         zVFsdpvXqjCNTY6qq1PCY+TTM1302Dw72vM84iFmTNmsvjJLPCmbIL3qN4lCI6faGGc9
-         3IMw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/CqdC2PqdPS1DPojXrwAmtPvcFyEi+wZD/+YqKBCPe4EKf+F73VO4AqgnvkxtWgxF4O2fHh38fX1y7f7T27Hl41I1sHMdmAnnWzh+
-X-Gm-Message-State: AOJu0YxEIkVrkshix4mk6wA7XW8/MvyLwLpYC2bbNq4iQCFqzwNK+935
-	U2R2fVxPx26vGxh7aQkUTIAE5q5blJNum4SaNVpuBb9iQuaoq09L
-X-Google-Smtp-Source: AGHT+IGyFK85fLcK62sC298qj//c9CgMsC5e3P8Va0z/mRDqMFtCe0XGX8iOSmZnzWnJeMlfMP112A==
-X-Received: by 2002:a5d:554d:0:b0:33e:6760:6def with SMTP id g13-20020a5d554d000000b0033e67606defmr2195331wrw.56.1709860344707;
-        Thu, 07 Mar 2024 17:12:24 -0800 (PST)
-Received: from localhost (ec2-18-169-47-158.eu-west-2.compute.amazonaws.com. [18.169.47.158])
-        by smtp.gmail.com with ESMTPSA id f14-20020a5d50ce000000b0033b66c2d61esm21450770wrt.48.2024.03.07.17.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 17:12:24 -0800 (PST)
-From: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-To: regressions@leemhuis.info
-Cc: 1054514@bugs.debian.org,
-	airlied@redhat.com,
-	carnil@debian.org,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	kraxel@redhat.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	spice-devel@lists.freedesktop.org,
-	timo.lindfors@iki.fi,
-	tzimmermann@suse.de,
-	virtualization@lists.linux-foundation.org,
-	Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-Subject: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
-Date: Fri,  8 Mar 2024 01:08:51 +0000
-Message-Id: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
-References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
- <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
+	s=arc-20240116; t=1709860375; c=relaxed/simple;
+	bh=1mVky2Uh3EgdkppjS1jKSHp4wA7DmzZlK7zrUMGhcrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KSvJPYb0JadhfY1l4ZhUp8j5IXItXps9CKnJMfuHEK08PpYrC2PsSzSc3ITNMGFiEiN0cinblZDCJMEYEMFCuvTzrcWtIuBt6FSTuV9qS02cJ+HdS+7aCqCXS2Q6bmfaDjKbNiYkOMA07VG+lm5Trs3JWKLQIhKniuNP6OA8Z+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TrSny39Ghz4f3nT9;
+	Fri,  8 Mar 2024 09:12:38 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 040E11A016E;
+	Fri,  8 Mar 2024 09:12:46 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgC32w4MZuplPlyWGQ--.3947S3;
+	Fri, 08 Mar 2024 09:12:45 +0800 (CST)
+Message-ID: <1dec5d5d-fb4b-8203-82ca-dc1ee92132bb@huaweicloud.com>
+Date: Fri, 8 Mar 2024 09:12:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v4 0/2] md: fix is_mddev_idle()
+To: linan666@huaweicloud.com, song@kernel.org, axboe@kernel.dk
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
+ houtao1@huawei.com, yangerkun@huawei.com
+References: <20240117031946.2324519-1-linan666@huaweicloud.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <20240117031946.2324519-1-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgC32w4MZuplPlyWGQ--.3947S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvE
+	ncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I
+	8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0E
+	jII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0DUU
+	UUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Fix OOM scenario by doing multiple notifications to the OOM handler through
-a busy wait logic.
-Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
-result in a '[TTM] Buffer eviction failed' exception whenever it reached a
-timeout.
+friendly ping ...
 
-Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
-Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
-Reported-by: Timo Lindfors <timo.lindfors@iki.fi>
-Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054514
-Signed-off-by: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
----
- drivers/gpu/drm/qxl/qxl_release.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+在 2024/1/17 11:19, linan666@huaweicloud.com 写道:
+> From: Li Nan <linan122@huawei.com>
+> 
+> Changes in v4:
+>   - patch 2, add the check of 'init', update last_events even if iostat
+>     is disabled.
+> 
+> Li Nan (2):
+>    md: Fix overflow in is_mddev_idle
+>    md: don't account sync_io if iostats of the disk is disabled
+> 
+>   drivers/md/md.h        |  5 +++--
+>   include/linux/blkdev.h |  2 +-
+>   drivers/md/md.c        | 11 ++++++++---
+>   3 files changed, 12 insertions(+), 6 deletions(-)
+> 
 
-diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
-index 368d26da0d6a..51c22e7f9647 100644
---- a/drivers/gpu/drm/qxl/qxl_release.c
-+++ b/drivers/gpu/drm/qxl/qxl_release.c
-@@ -20,8 +20,6 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
--#include <linux/delay.h>
--
- #include <trace/events/dma_fence.h>
- 
- #include "qxl_drv.h"
-@@ -59,14 +57,24 @@ static long qxl_fence_wait(struct dma_fence *fence, bool intr,
- {
- 	struct qxl_device *qdev;
- 	unsigned long cur, end = jiffies + timeout;
-+	signed long iterations = 1;
-+	signed long timeout_fraction = timeout;
- 
- 	qdev = container_of(fence->lock, struct qxl_device, release_lock);
- 
--	if (!wait_event_timeout(qdev->release_event,
-+	// using HZ as a factor since it is used in ttm_bo_wait_ctx too
-+	if (timeout_fraction > HZ) {
-+		iterations = timeout_fraction / HZ;
-+		timeout_fraction = HZ;
-+	}
-+	for (int i = 0; i < iterations; i++) {
-+		if (wait_event_timeout(
-+				qdev->release_event,
- 				(dma_fence_is_signaled(fence) ||
--				 (qxl_io_notify_oom(qdev), 0)),
--				timeout))
--		return 0;
-+					(qxl_io_notify_oom(qdev), 0)),
-+				timeout_fraction))
-+			break;
-+	}
- 
- 	cur = jiffies;
- 	if (time_after(cur, end))
 -- 
-2.39.2
+Thanks,
+Nan
 
