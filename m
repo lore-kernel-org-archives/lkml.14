@@ -1,65 +1,80 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0942206E
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 03:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D906C2C19A
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 03:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709868164; cv=none; b=MFnZhKvt4t+VlF30ZFI4SMC2EjVQqisc8vo4C7HU5WOdg/3CYIfKBsn6irhByy0g9Z/jEYlr5HFD8uCfnjNpMpWcrARuLUq5GoGt6kORVUCgdHzFFGyZD8Pg1MhG7aquvN+ouRdBjwCqLrTLIuE5BKtL3jnqXbJP5odHfftTCzk=
+	t=1709868361; cv=none; b=fppvzQJ1tKk5aOxydI3LOpniwf/C/8Wv7S4zaTIa7FjC1gyZQIkk7IbE6szY9Nar9+Cst3fV5uXh8gopXoOj0Nl3GozSTlpXEuzBqhYKkL1ByHnO+mHXPijEsUp9T+yZU0qaENOjd8yddhBOAVDu799iKhq+sN0jSuagy9Y3beQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709868164; c=relaxed/simple;
-	bh=N1LcdT9YFlU2zvycug7Dn/0juEHxMXKluboRi+yLDFQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXyphJ4NB+M1LKY4esp/zYya3BKaXwQilgKs9Fwl3jMQaoCysfe7a9LCz2GEbxiKIb7/ZE3ohT4M0JzhX6SSeF2JekUamOjZ/GHJis/lEqOOUpb+HlKvbMrvKVXyFG2UpVoP480WHL8tj0L4f64kvusG5N+DfrlkTjkZDc/QRbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=IWHT8prZ; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1709868361; c=relaxed/simple;
+	bh=YxYsPp2jT0+nsgvCsO0L9tTPd6klWc6+ck0k5NkCspQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OM/8FgYmJOz5VEqrtwCKmlKZGGumSRe2HmkPkwtcj4RGfGAq9ESKsgxSwJmucZtySMozTFX9cNaO6JADqoszBwtw684spojOEiJOC0HgRNobFHVMQVNuoWXaONr/w4oU8AG6ymuOnKlQMyJnFv0fIor7gBFtuv+OX8QnT6OhI2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V8Airerv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="IWHT8prZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1709867851;
-	bh=slXgo+HOlUPrCb1TxJcdKdnvyfK0OpgNKTsBjp23Inc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IWHT8prZjvpzwixelSI4CaSewOFPqhFO3pMoz8034VJonhkt0fLzpO1hB6eYLJ+9+
-	 Rh0MY+yLI68CJ91XbMTxWuiSlan2RPDT4NLGh1jbPhkfsA/f3eYeqzmptqsua4r32D
-	 +HB2DvoTgyJzKvmf0B0pbau1ObqHtS/ZAfft5rDU=
-Received: from localhost ([223.104.61.45])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 2DC1B072; Fri, 08 Mar 2024 11:11:28 +0800
-X-QQ-mid: xmsmtpt1709867488tivk0zmnn
-Message-ID: <tencent_3FCF3AA5E98BC9395F98803764A6B2F7CC07@qq.com>
-X-QQ-XMAILINFO: MIQUMGBCngpGsHw/U5Dd179VQ3iTXPldXhmUVn2fd3NuVpqyQ3w5KjycopU522
-	 v+QSazWVZgjBuhJTsTDEQ89MU1GArIrm5nlGsq3hZecjtWTh44Q7A6JYLhQFYR+3JHsMWYLfJW/c
-	 NbikDas75mvZbDPLSKuzGzy57o4M3DuRu9FJ+HRBb+A1viE9W5HRdjJGWOwIJhLj1YRZArpW/z9i
-	 vzNBQRFiuVrbYZjJAm+JBU1wdoADfnWNZHzQoqHyCSW5+ioMHLN1Aqvgn9kYSdP1YGNhtF9zIkY0
-	 1F4CobcMmXpnTt5dHR4GWanvy5eBGGkru+RkHay4D96G/KQYX4970dkJ18+fa0VVaVS0/eXENcOl
-	 wMFfHaP/vK7qgcUbgfa06C0O0KUiz5GwDyezR0R/Fys7e6y3oZAPmi8w77ItRzonAKDnZi2Ytmi6
-	 +5yMc5pq9AQ9jywLBPE6JzyWOI2EdJ1JLpom6GFyhuRVowd8X0B53lZ9+QVxdWcNzyI4xQgAoORy
-	 YTmj56enXdRoTlnWRvq08V1dH8bOFksLgWBsDsQ2WLbqItaHDXhn5IPhqFNXNAr7wPsygYWK6lVh
-	 083r4a3swOgvaY14eLNA/z+6SWnYL8h2uKwNoJ+23VyKTnqMrwef20xRXbl3I6zTlRmLig4jjz4n
-	 et/b28rGMEvAJFEElwEJ1BvaC1HgYX2+nm6l/9HZpmLVYxVEEWg6W62kFCAM2SZSzfKh+qXNNpjX
-	 uAMM1BdW/bZXQ0pvCFhh3XMhs9i7jhi3rczM+1mbnkKO4goyyaW0Wm5wq8mfc8LOXIlYqc0ZLL5m
-	 mD/LW9P4lKPGJFW+JKbxIT1hDxXR6U2HvUP7d5dDp2VYXGV4VsKDvvQYMW+EOKHumDGAFbZ3Y+Li
-	 Xh2MTIP4GNhSG9TXBTilmk5WStS34bhchbXmvRzL0GbyRtBUS0tuO9U0GmxrH+Wg==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-Sender: kenneth-lee-2012@foxmail.com
-Date: Fri, 8 Mar 2024 11:10:21 +0800
-From: Kenneth-Lee-2012@foxmail.com
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: Question about PB rule of LKMM
-X-OQ-MSGID: <20240308031001.gumudf4xcixxuued@kllt01>
-References: <Zedd18wiAkK68Lzr@andrea>
- <tencent_744E0AF832049C200F96FD6582D5114D7F0A@qq.com>
- <ZeipiSVLR01jmM6b@andrea>
- <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
- <ZejC+lutRuwXQrMz@andrea>
- <Zenip+8BDM3p+MUh@andrea>
- <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
- <ZeoFBkB1BeTdEQsn@andrea>
- <bde188b0-1c5b-4b3b-94de-395a52fc37ce@rowland.harvard.edu>
- <ZeoQvj3l6moF9KdQ@andrea>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8Airerv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709868358;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PybR5AcU1HfTv1X4VNBJgftVTm18j/aD+eRiC/mDwDM=;
+	b=V8AirervOibKZ1F0WKoNUmQMfTROwJyXLONsXecen2OZQML/TFaltqzJS9CmOOIBOhPY3W
+	dXBsayybAUY+l6ahSdZWT4TunR1Iy161EJUfOmhQ1waNr+tK/JH6l6wQgMSv0RtBvFYslF
+	oVSf8hDr7Xjem7T/WqgR3Op+WRHetIY=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-591-JVXOh-4uMpCBCYVtNxBlQw-1; Thu, 07 Mar 2024 22:25:57 -0500
+X-MC-Unique: JVXOh-4uMpCBCYVtNxBlQw-1
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1dbcbffd853so18425235ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 19:25:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709868351; x=1710473151;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PybR5AcU1HfTv1X4VNBJgftVTm18j/aD+eRiC/mDwDM=;
+        b=fhn4oBMFpUSg5wkVLmnr397IHK22WBPFZdvAQWDI082zu5GC329wo5YSvNrRj8T6Ig
+         fs/IsY4KyQ7wNA25tvgrXTBkviFefkdgFX9h17kvpCbifVZPpc9/O7l6gO5PvF1Vn9PG
+         oBWpE95aARFD3VnREpCvQrB6Y2DfQSF/SrT1xttKIjNjznv+an9+qsnTblzW0EqC1eUI
+         X3c4bgoVrf+/wyeKytRhgjDa0pw5yn2E+ZzGAxyajl7WQZU7NBEF1I6ITQoq1A7DR7Le
+         TWYJF771ofrhYpY/Y/uW+bgDpGBGF3QdJHidrx5g7t2TT+ym9OARye0nf/z9wNCpvN1J
+         dB8A==
+X-Gm-Message-State: AOJu0YzKFIvvUTSEQXqSV3n8Z1fW+DF7tQRTbEdz3nz/4MHJdLKZJX+F
+	WBbhu/En2FVWfNXS0Kz8NwcUB6n1xedtkgN5ZZhG83QKLX3zcqhDPaCiJOsAafVLnecPwVZ9R65
+	ykAjRGkNH0aw2630iDlbt8puiArZ9Dltl5e8ljLsnuS3ehDNf7QHmF6OUIXoaRA==
+X-Received: by 2002:a17:902:ea12:b0:1dd:528e:9bd with SMTP id s18-20020a170902ea1200b001dd528e09bdmr4024735plg.34.1709868351025;
+        Thu, 07 Mar 2024 19:25:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHxLZl1+bQFUoT9RAmqGoW5BDWYJ6KqC6bmlwf1NbsnLayaLnh2DK4Bmp+XlKoPDIQgjasuBw==
+X-Received: by 2002:a17:902:ea12:b0:1dd:528e:9bd with SMTP id s18-20020a170902ea1200b001dd528e09bdmr4024717plg.34.1709868350551;
+        Thu, 07 Mar 2024 19:25:50 -0800 (PST)
+Received: from localhost.localdomain ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id x15-20020a170902ec8f00b001dcb654d1a5sm15324100plg.21.2024.03.07.19.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 19:25:50 -0800 (PST)
+Date: Fri, 8 Mar 2024 11:25:41 +0800
+From: Tao Liu <ltao@redhat.com>
+To: Dave Rodgman <dave.rodgman@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Matt Sealey <Matt.Sealey@arm.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+	"markus@oberhumer.com" <markus@oberhumer.com>,
+	"minchan@kernel.org" <minchan@kernel.org>,
+	"nitingupta910@gmail.com" <nitingupta910@gmail.com>,
+	"rpurdie@openedhand.com" <rpurdie@openedhand.com>,
+	"sergey.senozhatsky.work@gmail.com" <sergey.senozhatsky.work@gmail.com>,
+	"sonnyrao@google.com" <sonnyrao@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, nd <nd@arm.com>
+Subject: Re: [PATCH v5 0/3]: lib/lzo: run-length encoding support
+Message-ID: <ZeqFNf6Ay6yNq2kW@localhost.localdomain>
+References: <20190205155944.16007-1-dave.rodgman@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,126 +83,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeoQvj3l6moF9KdQ@andrea>
+In-Reply-To: <20190205155944.16007-1-dave.rodgman@arm.com>
 
-On Thu, Mar 07, 2024 at 08:08:46PM +0100, Andrea Parri wrote:
-> Date: Thu, 7 Mar 2024 20:08:46 +0100
-> From: Andrea Parri <parri.andrea@gmail.com>
-> To: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Kenneth-Lee-2012@foxmail.com, linux-kernel@vger.kernel.org,
->  paulmck@kernel.org
-> Subject: Re: Question about PB rule of LKMM
+Hi Dave,
+
+On Tue, Feb 05, 2019 at 03:59:59PM +0000, Dave Rodgman wrote:
+> Hi,
 > 
-> > > I'd disagree with these premises: certain instructions can and do execute
-> > > at the same time.
-> > 
-> > Can you give an example?
+> Following on from the previous lzo-rle patchset:
 > 
-> I think I'm starting to see where this is going..., but to address the
-> question: really any example where the LKMM doesn't know better, say
+> https://lkml.org/lkml/2018/11/30/972
 > 
-> C test
-> 
-> {}
-> 
-> P0(int *x)
-> {
-> 	*x = 1;
-> }
-> 
-> P1(int *x)
-> {
-> 	*x = 2;
-> }
+> This patchset contains only the RLE patches, and should be applied on top of
+> the non-RLE patches ( https://lkml.org/lkml/2019/2/5/366 ).
 > 
 
-TBH, the concept "execute-before" gave me a lot of trouble when I read
-explanation.txt at the very beginning. The name hints an absolute and
-global timeline over everything. But that makes no sense because no one
-can observe that order at all. So till now, I still need to translate
-the concept to an order by particular observer , such as a CPU or the
-memory system, for further understanding.
+Sorry for the interruption, since it is an old patchset and discussion.
+I have a few questions on lzo-rle support, hope you can give me some
+directions, thanks in advance!
 
-And speaking of example, can I ask another question?: 
+1) Is lzo-rle suitable for userspace library? I've checked the current
+userspace lzo library lzo-2.10, it seems no lzo-rle support (Please
+correct me if I'm wrong). If lzo-rle have better performance in kernel,
+then is it possible to implement one in userspace and gain better
+performance as well?
 
-In the "THE HAPPENS-BEFORE RELATION: hb" section of explanation.txt,
-it uses the following example to explain the prop relation:
+2) Currently Yulong TANG have encountered problem that, crash utility
+cannot decompress a lzo-rle compressed zram since kernel 5.1 [1], since
+there is no lzo-rle support for current lzo library, crash have to
+import the kernel source code directly into crash, which is not good for
+crash utility code maintainance. It will be better if we can update lzo
+library with lzo-rle support. I guess not only crash, but also other
+kernel debugging tools running in userspace such as drgn may also need
+this feature.
 
-	P0()
-	{
-		int r1;
+Do you have any suggestions on for these?
 
-		WRITE_ONCE(x, 1);
-		r1 = READ_ONCE(x);
-	}
+[1]: https://www.mail-archive.com/devel@lists.crash-utility.osci.io/msg00475.html
 
-	P1()
-	{
-		WRITE_ONCE(x, 8);
-	}
+Thanks,
+Tao Liu 
 
-if r1 = 8, we can deduce P0:Wx1 ->coe P1:Wx8 ->rfe P0:Rx, this can be
-explained with the operational model. But according to the definition of
-prop,
-
-  let prop = [Marked] ; (overwrite & ext)? ; cumul-fence* ; [Marked] ; rfe? ; [Marked]
-
-The link should contain a cumul-fence, which doesn't exist in the
-example.
-
-This also makes me confuse on what explanation.txt explains: the
-dependable rule/link deduced from operational model, or the physical
-meaning of the concepts used in the cat definition?
-
-Alan's discussion make feel the answer is former. If it is, my question is
-closed. But I feel it should be latter. In this case, I think we cannot
-just explain "it can be explained in the operational model";)
-
-(CC Alan: I couldn't receive your previous email in this topic, I think
-it is because I'm not a subscriber of lkml. I would be very grateful if
-you could cc me in the follow-up email)
 
 > 
-> > >  FWIW, in the formal model, it is not that difficult to
-> > > provide examples of "(not F ->xb E) and (not E ->xb F)".
-> > 
-> > That's because the xb relation in the formal model does not fully 
-> > capture our intuitive notion of "executes at the same time" in the 
-> > informal operational model.
-> > 
-> > Also, it's important to distinguish between:
-> > 
-> > (1)	Two instructions that are forced (say by a dependency) or known 
-> > 	(say by an rfe link) to execute in a particular order; versus
-> > 
-> > (2)	Two instructions that may execute in either order but do execute
-> > 	in some particular order during a given run of the program.
-> > 
-> > The formal xb relation corresponds more to (1), whereas the informal 
-> > notion corresponds more to (2).
+> Previously, some questions were raised around the RLE patches. I've done some
+> additional benchmarking to answer these questions. In short:
 > 
-> This appears to be the key observation.  For if, in the operational model,
-> (not F ->xb E) implies (E ->xb F) then I'll apologize for the noise.  :-)
+>  - RLE offers significant additional performance (data-dependent)
+>  - I didn't measure any regressions that were clearly outside the noise
 > 
 > 
-> > > > The new text says the same thing as the original, just in a more 
-> > > > condensed way.  It skips the detailed explanation of why E must execute 
-> > > > before W propagates to E's CPU, merely saying that it is because "W is 
-> > > > coherence-later than E".  I'm not sure this is an improvement; the 
-> > > > reader might want to know exactly how this reasoning goes.
-> > > 
-> > > The current text relies on an argument by contradiction.  A contradiction
-> > > is reached by "forcing" (F ->xb E), hence all it can be concluded is that
-> > > (not F ->xb E).  Again, AFAICS, this doesn't match the claim in the text.
-> > 
-> > That's why I suggested adding an extra sentence to the paragraph (which 
-> > you did not quote in your reply).  That sentence gave a direct argument.
+> One concern with this patchset was around performance - specifically, measuring
+> RLE impact separately from Matt Sealey's patches (CTZ & fast copy). I have done
+> some additional benchmarking which I hope clarifies the benefits of each part
+> of the patchset.
 > 
-> Well, I read that sentence but stopped at "These contradictions show that"
-> for the reason I detailed above.
+> Firstly, I've captured some memory via /dev/fmem from a Chromebook with many
+> tabs open which is starting to swap, and then split this into 4178 4k pages.
+> I've excluded the all-zero pages (as zram does), and also the no-zero pages
+> (which won't tell us anything about RLE performance). This should give a
+> realistic test dataset for zram. What I found was that the data is VERY
+> bimodal: 44% of pages in this dataset contain 5% or fewer zeros, and 44%
+> contain over 90% zeros (30% if you include the no-zero pages). This supports
+> the idea of special-casing zeros in zram.
 > 
->   Andrea
-
--- 
-			-Kenneth Lee (Hisilicon)
+> Next, I've benchmarked four variants of lzo on these pages (on 64-bit Arm at
+> max frequency): baseline LZO; baseline + Matt Sealey's patches (aka MS);
+> baseline + RLE only; baseline + MS + RLE. Numbers are for weighted roundtrip
+> throughput (the weighting reflects that zram does more compression than
+> decompression).
+> 
+> https://drive.google.com/file/d/1VLtLjRVxgUNuWFOxaGPwJYhl_hMQXpHe/view?usp=sharing
+> 
+> Matt's patches help in all cases for Arm (and no effect on Intel), as expected.
+> 
+> RLE also behaves as expected: with few zeros present, it makes no difference;
+> above ~75%, it gives a good improvement (50 - 300 MB/s on top of the benefit
+> from Matt's patches).
+> 
+> Best performance is seen with both MS and RLE patches.
+> 
+> Finally, I have benchmarked the same dataset on an x86-64 device. Here, the
+> MS patches make no difference (as expected); RLE helps, similarly as on Arm.
+> There were no definite regressions; allowing for observational error, 0.1%
+> (3/4178) of cases had a regression > 1 standard deviation, of which the largest
+> was 4.6% (1.2 standard deviations). I think this is probably within the noise.
+> 
+> https://drive.google.com/file/d/1xCUVwmiGD0heEMx5gcVEmLBI4eLaageV/view?usp=sharing
+> 
+> One point to note is that the graphs show RLE appears to help very slightly
+> with no zeros present! This is because the extra code causes the clang
+> optimiser to change code layout in a way that happens to have a significant
+> benefit. Taking baseline LZO and adding a do-nothing line like
+> "__builtin_prefetch(out_len);" immediately before the "goto next" has the same
+> effect. So this is a real, but basically spurious effect - it's small enough
+> not to upset the overall findings.
+> 
+> Dave
+> 
+> 
 
