@@ -1,305 +1,129 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A9C32C89
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 04:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9BC2D608;
+	Fri,  8 Mar 2024 04:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709873876; cv=none; b=n+Ba3TxeQqSWqFW59hk4sadfG/zxfT9kfRYRJgcQ7TCFP+cR0LGKRLideummQQNquOszfHR5ifmDzvy+mhb7QX/JI6rPE+k6nGPtevOh2bWOMBbRb1fTeqhFuWDFb2n9RMkMuuVFtfcB59a4+aFC/rELmnTskPkdixsr264T79s=
+	t=1709873918; cv=none; b=eb7B+wQXuLPVh+H7g4ZJvgQaAMVeX0VB7Wg51n+eONPd+pRzx2sntaHQiJxQClLpp9pe7GrZE20ugMQK1aP6EWHV4idIJosGj+fxMQKLLFMDBtpUKNOrOmOz8rWOqj75KsUWWJ5vImSCEjdUkpcS0QPVtrKEnAUzRzNP7rUTaNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709873876; c=relaxed/simple;
-	bh=YHgLhGo9u/GaA4wjmsG1D7h2kk3KAbiuEeepwyKoTyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bYv9KJlkRgspkfFQJ1/DiAFZaXcnLqLK4vuq1dNvmdqNgzMjtXUdUU4TbGbEbRbQA5634EDxxLkWQ4vkjcgPNCjqGmZE8LJTo9YwKqE1zePxe35DJ5fG08GYUSRO6Xe3KyEmyrUFcvd9g4DuQ6qp2BKIDtUBBAT/QsmucX3nw9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=WHOLKf9i; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1709873918; c=relaxed/simple;
+	bh=jy0XW6HpXLjNKng6SUOk46z3P56Zbsjo+182MvNZfNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FdWd+2u2kqlRVjQOMUj6+oOTnKRf9krIAxosZ/PeJ78nfK6yKJmqr4xqcexmxTSxdOsF/Kq2R7IvlmZmD0OmsNGg9FR7kALTryzIwEXBYn3eUQ6zJB7PgNrq25tTdVLwKvza90VfLlI9+YtETwrJfM5Awkyq5DVgpJjzUovZlVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FfgQrOcX; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="WHOLKf9i"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a14d7f0e66so801293eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 20:57:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1709873872; x=1710478672; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hd5eSIOo7us1LbsNzpdstrnvo/0BBPJxonyWDnWYOdI=;
-        b=WHOLKf9iGdgVvKTjQmxXbGWwIT9aW9o9hEq9U+lj49TYZ42wh7OW8mGicrRGPFBWec
-         GQXHXEEy7tPbKwC1FHg8zUZWXZfzhZPY7eTptlAxCYMCrZISnWijtPow38TPk+467WQI
-         C+SLrK5dNJPHk+1cx98faF71o72UvdNKhUddExLhLHqSlNl82akiFzavl0puT4+AmRFJ
-         Ec9bN9cNgCHYY85wXTpFf//96AeQfDdV8fpasYXN1atMrFSxm0GJhpfw8m5MlTIrmThy
-         aDpFbpiasRW10nZIRqfeXavPvZw0dJn5/4Gc7DZtaG5mAlYsF39ActGfINqVsFI27Zds
-         3LKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709873872; x=1710478672;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hd5eSIOo7us1LbsNzpdstrnvo/0BBPJxonyWDnWYOdI=;
-        b=g/Ks23QJrFIbAtDAM0mTP1pO6cv9X4K3Fnnu055jFdSRL3DhSJ/6hG1zMsPCbkKXpx
-         QZyVrDyv+KIEsc4xMPM6EaLGiw+Ufqe96qYMz5FTL7ZSMTRoA6s/7CwBm5sd5vqEixr9
-         84L/cH10lDphBKkJdxQhQxQI4PMKQ8gfW82kyvAc/+rNczwtNBI2l3YFPtcQHrXPYZeP
-         tVvJUqYHr7rm80eeWDIGn7M3cWdgBZNm8N01rxbzU8dyHMJd75tuxBVpduEKB1zxCuaS
-         Pm1bJRDwq0I1lq5J2qwUrcIcEsV4prfj7fww5U2iwsSY5QOVMOB69RliVOdpMpSUYEyw
-         o3Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhbKIvfMC0qSdSrPi42kQ8zk0AG9kYU5RUqGmVRnJiu0Ei8aZCFu96eGV3wsbHTiIokMOhnm53mswjYKI58sikMyggwdcvfxZgjw8D
-X-Gm-Message-State: AOJu0YyAZ6nBHlOR9eHebNsoYLboAZgGR2VhN91PuTxXmTxQmiq+ghzH
-	aXEo7mhD96wKo/VnmUqBJEt8syNXWt0EH79+YIPM89msjh35lDC5G+dNXhSIahA=
-X-Google-Smtp-Source: AGHT+IGD+SMzrtIqxos2BUylU1ihI6jHOpxBRUaDnHcmTxvqFG6hCKlO2aW2yjsKNPG+MnRLXz5+kA==
-X-Received: by 2002:a05:6358:70b:b0:176:40d5:2bd5 with SMTP id e11-20020a056358070b00b0017640d52bd5mr10614876rwj.6.1709873871879;
-        Thu, 07 Mar 2024 20:57:51 -0800 (PST)
-Received: from [192.168.1.24] (71-212-18-124.tukw.qwest.net. [71.212.18.124])
-        by smtp.gmail.com with ESMTPSA id k76-20020a633d4f000000b005dc8702f0a9sm13477127pga.1.2024.03.07.20.57.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 20:57:51 -0800 (PST)
-Message-ID: <15625bac-dfec-4c4e-a828-d11424f7aced@davidwei.uk>
-Date: Thu, 7 Mar 2024 20:57:49 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FfgQrOcX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709873916; x=1741409916;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jy0XW6HpXLjNKng6SUOk46z3P56Zbsjo+182MvNZfNQ=;
+  b=FfgQrOcXxMJKfCJC8EBFf2vjhn/q1GqXnsy6QZ05oGtlpZjPK0XqyB6Q
+   qYWhGwwOzEUQVrycKb7t5NiKIVOb9FJgII9ON1+sfqFznBWK9BNJE1+UX
+   4CIh978wR6+LYW2oKI8MFTqVwLi9gxZNTc9kxsAbBNOSXKL6Hpf1Kuzgu
+   faeGsZb5C3uXtRIHOkjhX5JJ+ju1FvmsWgx9Q+cZk2CmNeGiFvbznu9o9
+   m7KIx9Z7JizbBPHvPjynR3HS0NY+C/uWJaMEVI/bfFyieJFkymuyS9OQ0
+   ONn/HALPK5Ly/u0RRMn8qgrDNXnqc2b1wxCBopCggbSsuaq9ouvFtX1w8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="16013259"
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="16013259"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 20:58:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="15022427"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 07 Mar 2024 20:58:33 -0800
+Date: Fri, 8 Mar 2024 12:54:16 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	Fuad Tabba <tabba@google.com>, David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH 09/16] KVM: x86/mmu: Move private vs. shared check above
+ slot validity checks
+Message-ID: <ZeqZ+BDTN5bIx0rm@yilunxu-OptiPlex-7050>
+References: <20240228024147.41573-1-seanjc@google.com>
+ <20240228024147.41573-10-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Jeroen de Borst <jeroendb@google.com>,
- Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
-Content-Language: en-GB
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20240305020153.2787423-3-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228024147.41573-10-seanjc@google.com>
 
-On 2024-03-04 18:01, Mina Almasry wrote:
-> From: Jakub Kicinski <kuba@kernel.org>
+On Tue, Feb 27, 2024 at 06:41:40PM -0800, Sean Christopherson wrote:
+> Prioritize private vs. shared gfn attribute checks above slot validity
+> checks to ensure a consistent userspace ABI.  E.g. as is, KVM will exit to
+> userspace if there is no memslot, but emulate accesses to the APIC access
+> page even if the attributes mismatch.
 > 
-> The page providers which try to reuse the same pages will
-> need to hold onto the ref, even if page gets released from
-> the pool - as in releasing the page from the pp just transfers
-> the "ownership" reference from pp to the provider, and provider
-> will wait for other references to be gone before feeding this
-> page back into the pool.
-> 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
+> Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
+> Cc: Yu Zhang <yu.c.zhang@linux.intel.com>
+> Cc: Chao Peng <chao.p.peng@linux.intel.com>
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Michael Roth <michael.roth@amd.com>
+> Cc: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
+>  arch/x86/kvm/mmu/mmu.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-> This is implemented by Jakub in his RFC:
-> https://lore.kernel.org/netdev/f8270765-a27b-6ccf-33ea-cda097168d79@redhat.com/T/
-> 
-> I take no credit for the idea or implementation; I only added minor
-> edits to make this workable with device memory TCP, and removed some
-> hacky test code. This is a critical dependency of device memory TCP
-> and thus I'm pulling it into this series to make it revewable and
-> mergeable.
-> 
-> RFC v3 -> v1
-> - Removed unusued mem_provider. (Yunsheng).
-> - Replaced memory_provider & mp_priv with netdev_rx_queue (Jakub).
-> 
-> ---
->  include/net/page_pool/types.h | 12 ++++++++++
->  net/core/page_pool.c          | 43 +++++++++++++++++++++++++++++++----
->  2 files changed, 50 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
-> index 5e43a08d3231..ffe5f31fb0da 100644
-> --- a/include/net/page_pool/types.h
-> +++ b/include/net/page_pool/types.h
-> @@ -52,6 +52,7 @@ struct pp_alloc_cache {
->   * @dev:	device, for DMA pre-mapping purposes
->   * @netdev:	netdev this pool will serve (leave as NULL if none or multiple)
->   * @napi:	NAPI which is the sole consumer of pages, otherwise NULL
-> + * @queue:	struct netdev_rx_queue this page_pool is being created for.
->   * @dma_dir:	DMA mapping direction
->   * @max_len:	max DMA sync memory size for PP_FLAG_DMA_SYNC_DEV
->   * @offset:	DMA sync address offset for PP_FLAG_DMA_SYNC_DEV
-> @@ -64,6 +65,7 @@ struct page_pool_params {
->  		int		nid;
->  		struct device	*dev;
->  		struct napi_struct *napi;
-> +		struct netdev_rx_queue *queue;
->  		enum dma_data_direction dma_dir;
->  		unsigned int	max_len;
->  		unsigned int	offset;
-> @@ -126,6 +128,13 @@ struct page_pool_stats {
->  };
->  #endif
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 9206cfa58feb..58c5ae8be66c 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4365,11 +4365,6 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+>  			return RET_PF_EMULATE;
+>  	}
 >  
-> +struct memory_provider_ops {
-> +	int (*init)(struct page_pool *pool);
-> +	void (*destroy)(struct page_pool *pool);
-> +	struct page *(*alloc_pages)(struct page_pool *pool, gfp_t gfp);
-> +	bool (*release_page)(struct page_pool *pool, struct page *page);
-> +};
-
-Separate question as I try to adapt bnxt to this and your queue
-configuration API.
-
-How does GVE handle the need to allocate kernel pages for headers and
-dmabuf for payloads?
-
-Reading the code, struct gve_rx_ring is the main per-ring object with a
-page pool. gve_queue_page_lists are filled with page pool netmem
-allocations from the page pool in gve_alloc_queue_page_list(). Are these
-strictly used for payloads only?
-
-I found a struct gve_header_buf in both gve_rx_ring and struct
-gve_per_rx_queue_mem_dpo. This is allocated in gve_rx_queue_mem_alloc()
-using dma_alloc_coherent(). Is this where GVE stores headers?
-
-IOW, GVE only uses page pool to allocate memory for QPLs, and QPLs are
-used by the device for split payloads. Is my understanding correct?
-
-> +
->  struct page_pool {
->  	struct page_pool_params_fast p;
->  
-> @@ -176,6 +185,9 @@ struct page_pool {
->  	 */
->  	struct ptr_ring ring;
->  
-> +	void *mp_priv;
-> +	const struct memory_provider_ops *mp_ops;
-> +
->  #ifdef CONFIG_PAGE_POOL_STATS
->  	/* recycle stats are per-cpu to avoid locking */
->  	struct page_pool_recycle_stats __percpu *recycle_stats;
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index d706fe5548df..8776fcad064a 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -25,6 +25,8 @@
->  
->  #include "page_pool_priv.h"
->  
-> +static DEFINE_STATIC_KEY_FALSE(page_pool_mem_providers);
-> +
->  #define DEFER_TIME (msecs_to_jiffies(1000))
->  #define DEFER_WARN_INTERVAL (60 * HZ)
->  
-> @@ -177,6 +179,7 @@ static int page_pool_init(struct page_pool *pool,
->  			  int cpuid)
->  {
->  	unsigned int ring_qsize = 1024; /* Default */
-> +	int err;
->  
->  	memcpy(&pool->p, &params->fast, sizeof(pool->p));
->  	memcpy(&pool->slow, &params->slow, sizeof(pool->slow));
-> @@ -248,10 +251,25 @@ static int page_pool_init(struct page_pool *pool,
->  	/* Driver calling page_pool_create() also call page_pool_destroy() */
->  	refcount_set(&pool->user_cnt, 1);
->  
-> +	if (pool->mp_ops) {
-> +		err = pool->mp_ops->init(pool);
-> +		if (err) {
-> +			pr_warn("%s() mem-provider init failed %d\n",
-> +				__func__, err);
-> +			goto free_ptr_ring;
-> +		}
-> +
-> +		static_branch_inc(&page_pool_mem_providers);
-> +	}
-> +
->  	if (pool->p.flags & PP_FLAG_DMA_MAP)
->  		get_device(pool->p.dev);
->  
->  	return 0;
-> +
-> +free_ptr_ring:
-> +	ptr_ring_cleanup(&pool->ring, NULL);
-> +	return err;
->  }
->  
->  static void page_pool_uninit(struct page_pool *pool)
-> @@ -546,7 +564,10 @@ struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp)
->  		return page;
->  
->  	/* Slow-path: cache empty, do real allocation */
-> -	page = __page_pool_alloc_pages_slow(pool, gfp);
-> +	if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_ops)
-> +		page = pool->mp_ops->alloc_pages(pool, gfp);
-> +	else
-> +		page = __page_pool_alloc_pages_slow(pool, gfp);
->  	return page;
->  }
->  EXPORT_SYMBOL(page_pool_alloc_pages);
-> @@ -603,10 +624,13 @@ void __page_pool_release_page_dma(struct page_pool *pool, struct page *page)
->  void page_pool_return_page(struct page_pool *pool, struct page *page)
->  {
->  	int count;
-> +	bool put;
->  
-> -	__page_pool_release_page_dma(pool, page);
+> -	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+> -		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> -		return -EFAULT;
+> -	}
 > -
-> -	page_pool_clear_pp_info(page);
-> +	put = true;
-> +	if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_ops)
-> +		put = pool->mp_ops->release_page(pool, page);
-> +	else
-> +		__page_pool_release_page_dma(pool, page);
+>  	if (fault->is_private)
+>  		return kvm_faultin_pfn_private(vcpu, fault);
 >  
->  	/* This may be the last page returned, releasing the pool, so
->  	 * it is not safe to reference pool afterwards.
-> @@ -614,7 +638,10 @@ void page_pool_return_page(struct page_pool *pool, struct page *page)
->  	count = atomic_inc_return_relaxed(&pool->pages_state_release_cnt);
->  	trace_page_pool_state_release(pool, page, count);
+> @@ -4410,6 +4405,16 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+>  	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
+>  	smp_rmb();
 >  
-> -	put_page(page);
-> +	if (put) {
-> +		page_pool_clear_pp_info(page);
-> +		put_page(page);
-> +	}
->  	/* An optimization would be to call __free_pages(page, pool->p.order)
->  	 * knowing page is not part of page-cache (thus avoiding a
->  	 * __page_cache_release() call).
-> @@ -884,6 +911,12 @@ static void __page_pool_destroy(struct page_pool *pool)
->  
->  	page_pool_unlist(pool);
->  	page_pool_uninit(pool);
-> +
-> +	if (pool->mp_ops) {
-> +		pool->mp_ops->destroy(pool);
-> +		static_branch_dec(&page_pool_mem_providers);
+> +	/*
+> +	 * Check for a private vs. shared mismatch *after* taking a snapshot of
+> +	 * mmu_invalidate_seq, as changes to gfn attributes are guarded by the
+> +	 * invalidation notifier.
+
+I didn't see how mmu_invalidate_seq influences gfn attribute judgement.
+And there is no synchronization between the below check and
+kvm_vm_set_mem_attributes(), the gfn attribute could still be changing
+after the snapshot.  So why this comment?
+
+Thanks,
+Yilun
+
+> +	 */
+> +	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+> +		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> +		return -EFAULT;
 > +	}
 > +
->  	kfree(pool);
->  }
->  
+>  	/*
+>  	 * Check for a relevant mmu_notifier invalidation event before getting
+>  	 * the pfn from the primary MMU, and before acquiring mmu_lock.
+> -- 
+> 2.44.0.278.ge034bb2e1d-goog
+> 
+> 
