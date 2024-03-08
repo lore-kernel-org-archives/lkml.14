@@ -1,34 +1,38 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30A1535D7;
-	Fri,  8 Mar 2024 10:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF74753392
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709893497; cv=none; b=RNEnJZ02tziD+cgKNO456bOq7oZ5VORXtEpDhZ04FYE9eoqnV44NxaRgRiqYKX9XNKlM7E5bIvkXkubg0ZFoLjxeOv6XcPZiVRs/ACne9DSVYLnuoZD1hJ8XDNNv8AUOR8K+G4dxyxo93a3QXWzmvoQFBq/i3qWixYqPdcLZDHw=
+	t=1709893653; cv=none; b=Zo/XairfDnmYJ0Imv/Lc0zypyvbnEWT2Vvs/iBjI8jE9hSyJbFkAVZxq3tW7tLunmiKYSgUn5f6Mzym1t6Dabq94sxcwJs25oiOhHwj4BzJCWcHnesltGaCOwcpSMqbIIcT23VAq37vZ7R9dRvRZp+9ghmSbDsU8kK3dkPz+mIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709893497; c=relaxed/simple;
-	bh=FHgKrmtpL5qJMcf6wT+EWhuFyHiWEd/Ju4BGzDwllvM=;
+	s=arc-20240116; t=1709893653; c=relaxed/simple;
+	bh=CjGPb9TSDf8MCEbyn75Ea+N8RuJSKz/a0enfxF+tBs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxtWMay3oWs5n8W+GFrXueKng1MW9PJlWrCrZ6qbqMSVXF5Ete+9ZZbM3SoOs9QEgKt1Ht66PvzCk+bGkEH6TlTKBunf2XKyKFJfYKhWRdHJVONy314zSkVo+6Jmj3DkuvzQKOcD/ryS/M2Jtg5vjBgxzuhHzWhOXk4mlr3s1GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1riXPB-004rot-G7; Fri, 08 Mar 2024 18:24:46 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 08 Mar 2024 18:25:01 +0800
-Date: Fri, 8 Mar 2024 18:25:01 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: davem@davemloft.net, chenhuacai@kernel.org, kernel@xen0n.name,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, guanwentao@uniontech.com
-Subject: Re: [PATCH v2] LoongArch/crypto: Clean up useless assignment
- operations
-Message-ID: <ZernfR9PlbJzxhI+@gondor.apana.org.au>
-References: <79D75E042AE5B03F+20240229100449.1001261-1-wangyuli@uniontech.com>
- <ZermFgvsJymZkz4u@gondor.apana.org.au>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCSF6121P8eWknc1yELTCiPGx+LjrHt30DWIg5Y3Yi9VfqqkCh8JLEmOUl6YZl8vtpVLMTKqjeqm2OOEcBWINK4AjOYS3u2E92Gv+szcp0/1jvOh1U6lhaN8QtLTIrE5XHEAzbgIifo1dzen4DJXfsDyKhIFNXKqLxfkOGw4TFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UF7mTJaJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UF7mTJaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D289AC433C7;
+	Fri,  8 Mar 2024 10:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709893653;
+	bh=CjGPb9TSDf8MCEbyn75Ea+N8RuJSKz/a0enfxF+tBs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UF7mTJaJYyPeZPvoKwzzFqCEqSRfMZRU3TQC8/usROCKwknAjkwIcr6WDnLMl/mPg
+	 Cp2Z5WKmS50sDU9lp4JITL/FcESWmlpL00GGbdcabhzmt+K6uUhvYJqKkH69ZFDa0K
+	 Uo9v0glujNoZdmwb0YcpQueFz/e0iDXikgCpY+do=
+Date: Fri, 8 Mar 2024 10:27:30 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	Lee Jones <lee@kernel.org>
+Subject: Re: CVE-2023-52496: mtd: maps: vmu-flash: Fix the (mtd core) switch
+ to ref counters
+Message-ID: <2024030813-subscribe-smasher-aeca@gregkh>
+References: <20240229155245.1571576-37-lee@kernel.org>
+ <Zerjs8hlMJOXt0Sv@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,37 +41,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZermFgvsJymZkz4u@gondor.apana.org.au>
+In-Reply-To: <Zerjs8hlMJOXt0Sv@tiehlicka>
 
-On Fri, Mar 08, 2024 at 06:19:02PM +0800, Herbert Xu wrote:
->
-> > diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
-> > index a49e507af38c..3eebea3a7b47 100644
-> > --- a/arch/loongarch/crypto/crc32-loongarch.c
-> > +++ b/arch/loongarch/crypto/crc32-loongarch.c
-> > @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+On Fri, Mar 08, 2024 at 11:08:51AM +0100, Michal Hocko wrote:
+> On Thu 29-02-24 15:52:56, Lee Jones wrote:
+> > Description
+> > ===========
 > > 
-> >                CRC32(crc, value, w);
-> >                p += sizeof(u32);
-> > -               len -= sizeof(u32);
-> >        }
+> > In the Linux kernel, the following vulnerability has been resolved:
+> > 
+> > mtd: maps: vmu-flash: Fix the (mtd core) switch to ref counters
+> > 
+> > While switching to ref counters for track mtd devices use, the vmu-flash
+> > driver was forgotten. The reason for reading the ref counter seems
+> > debatable, but let's just fix the build for now.
 > 
-> This makes no sense whatsoever.  Please review this patch carefully
-> before you resubmit.
+> Do we really consider build fixes as CVE? 
 
-Nevermind, I see what's going on now.  Your reference to the lack
-of a CRC instruction utterly confused me.
+Nope, good catch!  We reviewed this one wrong, now revoked, thanks for
+the review.
 
-The fact that len -= is unnecessary has nothing to do with whether
-there is a CRC instruction.
-
-Please modify your patch description so that it is not needlessly
-confusing.  You should simply state that len -= is unnecessary
-because you only test whether the relevant bit is set in len for
-the tail case.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+greg k-h
