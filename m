@@ -1,195 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB5563B8;
-	Fri,  8 Mar 2024 13:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4566240849
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709905593; cv=none; b=H/DXXi6W1kTopeo/OxGe0chgLuNk9dqgvLrlQfG2MXdwL1ztygN+Q0POr9Lrcgxz9oaygGcLnXS285T8dZ0geL05m1D7l4H59oSe7/vpoGwdP7zVPnMsvNidBg9HjVptjDYphgxBF367qWt8hnEM+6eakRnrIURlk/DQbj3mGNw=
+	t=1709905600; cv=none; b=bNt9HsTGrg8fsnUZTOhpvXEdmuB/z1g2K26mTMNq24szS/Zv8tyPXe+S4lN8lx8z9DvoM2E3g/TPaM8H2omCNv3cynNOWPWZsgDmpFmcEZLpMR4s533NZXOaNKZmTzkSYMIU77ETZeGwXFTgWGVwoBsxfM5aBnlsg+oEzgQ2voE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709905593; c=relaxed/simple;
-	bh=GBFwFYZ4ubg0U+FlRZQiIvGDvUpfu7Sbide83u/wP3Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=SaTM7Q802kzg1NtMzxOCoorY81LJoRLVvT5GrBwM3tEjOwJke1BB4KENO/xAOIPL8pDreil89LfNoqd4Efv8ilqW50XU1wbPkUh6nFRg8M7RE2ZE44Jgk7mB4lvm0dWPD4RYkPcl7znVrJ4vOjCJ6Q80FE51uWLcTEa2EdDjQJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OR2v33ul; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709905600; c=relaxed/simple;
+	bh=9ToP+XB7jwsKfUSXiOlYXuw0t/iX1kAOHS98K5tYWiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g/BTOatDeGPm5lMgLrPO3qplayWKAp0lNXNvDH6eTcun62ud8UKAwsxYrDdE46VMlYScENkyCJ5d18YpijQr709+HR3TTcGRGji1xFVuxgVngDYQp/v9LptCO2KsPpfGFWsh+OXyDemyIr/0L84SVjfXjJZ7ftJ2MiUwEU0BTHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JABl8yBJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OR2v33ul"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 428DCY5s003316;
-	Fri, 8 Mar 2024 13:45:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=Z9B5en3b/B8IE/ICyxvk/gv4UnKx7MFoXBu5looV+Ug=;
- b=OR2v33ulhloADO1SAtdMFTTD7q/vlaVe6+dY/hXR/u0sBdpvl9ADuzQs8NjKs5nvvZdR
- pIcsQlL+JCY6Z14zdlhX/SLzuTIXT6S+6NJBtkb5/F+OrA1R6RTM+MjYZyq8KZ06uw9l
- 3dxC98FtZQuXsTTFE2k0nctELQZX0Da1WZb04YB+tAYmirWXjuy59twSPDckkASt2uKV
- xvzMEo/HZzoSrenq+tVEKYHTVM51l5Y2dVGJe0YZQSV35FGJ1zZPf/KWiEf8dhEPsMWL
- Ajiv1dAcnI1qzDQqwa4rcIYI+kBpa4Ze5b+YDUk5DOJeqC3GGteqkA+xiHBy98+AiL5j 8A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr3brgjt0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 13:45:48 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 428Djkgk001146;
-	Fri, 8 Mar 2024 13:45:46 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr3brgjhs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 13:45:46 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 428D1emU024185;
-	Fri, 8 Mar 2024 13:41:32 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wpjwsqxrv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 13:41:32 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 428DfUma29819268
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 Mar 2024 13:41:32 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 112E45804B;
-	Fri,  8 Mar 2024 13:41:30 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D33EF58055;
-	Fri,  8 Mar 2024 13:41:27 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.150.204])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  8 Mar 2024 13:41:27 +0000 (GMT)
-Message-ID: <3e855b6c0892a00743758fc04bfb183cae2a42ef.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 3/8] ima: Add digest_cache policy keyword
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
-        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        wufan@linux.microsoft.com, pbrobinson@gmail.com, zbyszek@in.waw.pl,
-        hch@lst.de, mjg59@srcf.ucam.org, pmatilai@redhat.com, jannh@google.com,
-        dhowells@redhat.com, jikos@kernel.org, mkoutny@suse.com,
-        ppavlu@suse.com, petr.vorel@gmail.com, petrtesarik@huaweicloud.com,
-        mzerqung@0pointer.de, kgold@linux.ibm.com,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date: Fri, 08 Mar 2024 08:41:27 -0500
-In-Reply-To: <71c77bbef487ae3279f0c3f85785bd0c03a4ee8c.camel@huaweicloud.com>
-References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
-	 <20240214143525.2205481-4-roberto.sassu@huaweicloud.com>
-	 <031d4ff2bf0c04df5f4094989b94f7ce3e3e73f6.camel@linux.ibm.com>
-	 <71c77bbef487ae3279f0c3f85785bd0c03a4ee8c.camel@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JABl8yBJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709905598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jCsgBkOPvGYOzUcWOIcEMHgJC7KI6Ff1hmh/N+7ZuLo=;
+	b=JABl8yBJ5x1ts/WFkwqiYPh0rUra0hygogk+TZij6t8Yh8rSwnLFvHDVPZUvztTspsbCqB
+	x018tzn3lvGd1hkFKVyo5bxzeZa8rhH0nPtX273zes4yc8JfKr1cLmTxwdX36NYwRntZN0
+	pKF6rg7Dvwb5uBCHccfPX6FzcPn0Bys=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-575-JEDUgzUaMUWQ6HBt6UpYUw-1; Fri, 08 Mar 2024 08:46:36 -0500
+X-MC-Unique: JEDUgzUaMUWQ6HBt6UpYUw-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33dbbe709ffso860133f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 05:46:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709905595; x=1710510395;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jCsgBkOPvGYOzUcWOIcEMHgJC7KI6Ff1hmh/N+7ZuLo=;
+        b=UPd6pE7LmdfwMBDpxa8o3OqvVjs8mcUTOZfRsbUOF+o/A3H7wRfMb9LnXylDQi0Gvl
+         liTxgKpiKYp2hjKS3oG1y6elXDHwPwU0Kzov7IyVVb1RcvettMcDzazilWFwCgMn8pEF
+         FQOek7D09YSg3GNeLt2BMWMgaiXwSmgc7bbkhNM/yYXVa8u42eultDh00VdRLqYjvbFj
+         952LKxtIsXhPrex5/N5FoxdmtP8UMlCXWIvdxdf/FeTXGjamrbX/mBk92nz/ypMQZJ/E
+         GUa5Ffd70yQim0HRSCv0pMQxCTnLbowy6sS3OYrILKda9g1/tigejJfrlMkJ6P2PU8jQ
+         aJpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVjB8pO+kzxZoAUJJ0OjD0O9aa7jEDnl38UU57HIjjZtCUPy1PNxX19jgdrnudDsGpsV+1ahLkLaEdp4zz7MdB52hXH2Cxl2RjOjFv
+X-Gm-Message-State: AOJu0Yy5aTO8K7q9HCH6b6Y8KQkHrbHjNlfZcav/cXOXSbD5NNVY8dwE
+	zWLG1xAsAJlTC9ZDNeX4kAQOn5izBEUS8Zi3lc061bp52xppbMqD5jS0TCUken0L2XDmQFeqL/y
+	BlQxb/3sC1/IcQBm+aP8YrPB+cr4Me26sK8VpEexlC5tUsunM1H72Nc3U62JbaA==
+X-Received: by 2002:a05:6000:1745:b0:33e:7718:f90 with SMTP id m5-20020a056000174500b0033e77180f90mr1350985wrf.41.1709905595603;
+        Fri, 08 Mar 2024 05:46:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH7sQEyg1mvc5Dm+qbQbdxrrDymqfNI9KfSydSANhq/IqGfwRe2jKZETh46gvTjWethTwbvuw==
+X-Received: by 2002:a05:6000:1745:b0:33e:7718:f90 with SMTP id m5-20020a056000174500b0033e77180f90mr1350962wrf.41.1709905595160;
+        Fri, 08 Mar 2024 05:46:35 -0800 (PST)
+Received: from ?IPV6:2003:cb:c707:3500:5cd0:78d9:ca49:21f3? (p200300cbc70735005cd078d9ca4921f3.dip0.t-ipconnect.de. [2003:cb:c707:3500:5cd0:78d9:ca49:21f3])
+        by smtp.gmail.com with ESMTPSA id g5-20020a5d6985000000b0033e7b433498sm100936wru.111.2024.03.08.05.46.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Mar 2024 05:46:34 -0800 (PST)
+Message-ID: <4e0891dd-f5ba-4cff-932b-604288540e59@redhat.com>
+Date: Fri, 8 Mar 2024 14:46:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: prohibit the last subpage from reusing the entire
+ large folio
+Content-Language: en-US
+To: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>,
+ akpm@linux-foundation.org, linux-mm@kvack.org
+Cc: minchan@kernel.org, fengwei.yin@intel.com, linux-kernel@vger.kernel.org,
+ mhocko@suse.com, peterx@redhat.com, shy828301@gmail.com,
+ songmuchun@bytedance.com, wangkefeng.wang@huawei.com, xiehuan09@gmail.com,
+ zokeefe@google.com, chrisl@kernel.org, yuzhao@google.com,
+ Barry Song <v-songbaohua@oppo.com>, Lance Yang <ioworker0@gmail.com>
+References: <20240308092721.144735-1-21cnbao@gmail.com>
+ <519fd6a7-072e-43a2-a9a8-2467ee783524@redhat.com>
+ <cfe7d2b5-eb41-4df0-bf6b-4ed4044e20ea@arm.com>
+ <8e994734-1d3a-4c51-9c0b-4e2ce945f198@redhat.com>
+ <252bac83-bf5e-4c40-a696-ac093da41fa3@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <252bac83-bf5e-4c40-a696-ac093da41fa3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9w5FCygre4tzblgPXK5_lhRgyHoU6pXT
-X-Proofpoint-GUID: RvHVb4juFytOgR1T2UgdrpVSMY45jGJS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403080110
 
-On Fri, 2024-03-08 at 10:05 +0100, Roberto Sassu wrote:
-> On Thu, 2024-03-07 at 14:43 -0500, Mimi Zohar wrote:
-> > On Wed, 2024-02-14 at 15:35 +0100, Roberto Sassu wrote:
-> > > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > > 
-> > > Add the 'digest_cache=' policy keyword, to enable the usage of digest
-> > > caches for specific IMA actions and purposes.
-> > > 
-> > > At the moment, it accepts only 'content' as value, as digest caches can be
-> > > only used only for measurement and appraisal of file content. In the
-> > > future, it might be possible to use them for file metadata too.
-> > 
-> > At least from this patch, it is unclear why 'digest_cache' requires an
-> > option.  
-> > The usage - measure, appraise - is based on 'action'.  From an IMA
-> > perspective,
-> > does the file content make a difference?  And if it did, then file 'data'
-> > would
-> > parallel file 'metadata'.
+On 08.03.24 14:45, Ryan Roberts wrote:
+> On 08/03/2024 13:24, David Hildenbrand wrote:
+>>>>> This patch migrates the last subpage to a small folio and immediately
+>>>>> returns the large folio to the system. It benefits both memory availability
+>>>>> and anti-fragmentation.
+>>>>
+>>>> It might be controversial optimization, and as Ryan said, there, are likely
+>>>> other cases where we'd want to migrate off-of a thp if possible earlier.
+>>>
+>>> Personally, I think there might also be cases where you want to copy/reuse the
+>>> entire large folio. If you're application is using 16K THPs perhaps it's a
+>>> bigger win to just treat it like a base page? I expect the cost/benefit will
+>>> change as the THP size increases?
+>>
+>> Yes, I think for small folios (i.e., 16KiB) it will be rather easy to make a
+>> decision. The larger the folio, the larger the page fault latency due to
+>> scanning, copying, modifying, which can easily turn undesirable.
+>>
+>> At least when it comes to page reuse, I have some simple backup plans for small
+>> folios if I won't be able to make progress with my other approach.
 > 
-> I wanted to express the fact that digest caches, if available, can only
-> be used to appraise file data, if there is no metadata (similarly to
-> module-style appended signatures).
-> 
-> That would prevent for example the scenario where appraisal of file
-> data is successful without having verified current metadata, and EVM
-> attaches to the file a valid HMAC on file close, based on the current
-> xattr value (trust at first use).
+> Do you mean "small large folios" here? i.e. order >= 1? If so, great!
 
-Correct. There's no requirement for 'security.ima' to exist to calculate the EVM
-HMAC.  Before using EVM HMAC, the filesystem needs to be properly labeled by
-walking the filesystem.  The HMAC is calculated based on the existing file
-metadata.  The first use is during a setup stage and subsequently for new files.
+*smaller*, yes :)
 
-> 
-> An IMA rule with 'digest_cache=metadata' would take a different code
-> path. It would make IMA send to evm_verifyxattr() the calculated file
-> digest (since there is no security.ima), and let EVM calculate and
-> search the digest of file metadata in the digest cache.
+-- 
+Cheers,
 
-Ok.  So no 'security.evm' either, but a metadata digest cache.
-
-I understand the need to provide EVM with the file hash in this case, but as
-much as possible, IMA and EVM should be independent of each other.
-
-> 
-> I didn't go that far yet, but this is more or less what I would like to
-> do, also based on my old implementation of the IMA Digest Lists
-> extension (which supports file metadata lookup).
-> 
-> > Without having to pass around "digest_cache_mask" would simplify this patch.
-> 
-> We need to pass it anyway, to let process_measurement() know that it
-> can use digest caches. Or we can make 'flags' in ima_iint_cache a u64,
-> and introduce new flags.
-
-It's bad enough that the function parameters change when there's actual data. 
-Yes, please increase the size of 'flags' and introduce new flags.
-
-thanks,
-
-Mimi
-
-> > > The 'digest_cache=' keyword can be specified for the subset of IMA hooks
-> > > listed in ima_digest_cache_func_allowed().
-> > > 
-> > > POLICY_CHECK has been excluded for measurement, because policy changes
-> > > must
-> > > be visible in the IMA measurement list. For appraisal, instead, it might
-> > > be
-> > > useful to load custom policies in the initial ram disk (no security.ima
-> > > xattr).
-> > > 
-> > > Add the digest_cache_mask member to the ima_rule_entry structure, and set
-> > > the flag IMA_DIGEST_CACHE_MEASURE_CONTENT if 'digest_cache=content' was
-> > > specified for a measure rule, IMA_DIGEST_CACHE_APPRAISE_CONTENT for an
-> > > appraise rule.
-> > > 
-> > > Propagate the mask down to ima_match_policy() and ima_get_action(), so
-> > > that
-> > > process_measurement() can make the final decision on whether or not digest
-> > > caches should be used to measure/appraise the file being evaluated.
-> > > 
-> > > Since using digest caches changes the meaning of the IMA measurement list,
-> > > which will include only digest lists and unknown files, enforce specifying
-> > > 'pcr=' with a non-standard value, when 'digest_cache=content' is specified
-> > > in a measure rule.
-> > > 
-> > > This removes the ambiguity on the meaning of the IMA measurement list.
-> > > 
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > 
+David / dhildenb
 
