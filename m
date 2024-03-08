@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840D2E85A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CE437171;
 	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887185; cv=none; b=c3dUMFJ659a9pMW74cDmqriUKbD8A/h9ZPAiwkfWDe9GegZJ/83bpIZXMbV3Z+JC6wek6qWdjHA0SNJXqTQwnhuzXUSgbyH2DJEMFBw0c9XxDa1j3sPSVAzkHdo9+mQxth7MbZ9SvZsO5CwZYYIKLwmCp5qP4DkTrqJb83XUgPQ=
+	t=1709887185; cv=none; b=f94g8S7lEyg98cGTHFGCNmQx8Jv1CiEpyTP7OOhBeXXG6cn/wNaaKKdSNcacw+ulsBJruHVXxy27sa5SPaMcftSmg61fQLplt4JsPQmTWTAxJvKT7DKd/YFxhOpDaXAmPMvHslE0a3gHghjaOug06wejh1WKCAqReXJWU92stCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709887185; c=relaxed/simple;
-	bh=3nX8fP3l7Bt65toEN0CdGwFHFH0sX3inF2oQP8On+7k=;
+	bh=vu47BKfN+xFcRDfbkn3C1v8zrm2ugq1RBZELrpt63GU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XxDX7dVbMlY/XRRz+8s0gG0fNBCNtdzxmCd69pJZiF9pwhl0jthJXEQiNptxZtnXJ4QC+ZmtwRUMU9qAViMRTF2Pez7t3QXmqFGaNASjiCijBKcj9hEscEsdZq0Nc4uVsDNgVQvxwWNWDuzn1g1jlwlTFigCRLNOdpM/g+Dp4JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUki9uYo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=iXMT+lYsGK1hFgGA8QIKgcs3zWmM+8pArZmhQnN8vMY3aPgfdGWwx1x8cYJCo3tSXrq8gTQuDz7q7wczt1JbMsUn2YJga8QtXJNs93Kohl6FmeDMGY4uWHHH+k8b73ff87ozSxuT82hNuX/1BtzjvUs4Zv1dZKEYXG0IL3+iOkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XowZlo8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUki9uYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2AD90C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XowZlo8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B0E0C433B2;
 	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709887185;
-	bh=3nX8fP3l7Bt65toEN0CdGwFHFH0sX3inF2oQP8On+7k=;
+	bh=vu47BKfN+xFcRDfbkn3C1v8zrm2ugq1RBZELrpt63GU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HUki9uYopQRh44lDvzPwbCwWaV7W5Bhjts6NoR06E1piWc9xSmUWPx9otEsf3PFrB
-	 6JorfR+9A0tYw3TJvKGPfj4e5La5HOCoEWVyGzTtwBRc7+w5c19oi/6+OvR53jPIzR
-	 DcujkmjB/gszLGH8j18Ioof3Le2PPW1fB48YtycEtjDpFxCicqxFtl/rSaLNkIsB7z
-	 EvBmqaPYOCKuSQOgdmKQccDhsbJfWcPTUYEYf7VG8K+stONrj8niCBq2spqJ06sAmT
-	 qCmLhlZysaTv0gCFFzuWf533+WjmtmZTYU/PNcoNSOzCvdTWY81807ETmHThLk2cFp
-	 SwnQ/fdLi2OVg==
+	b=XowZlo8CI5jsvJyhMHHI2i9sR5ERwgD1kwsyf1qwqoZ+EPj0YpUpI5384B2F0yeE2
+	 ryrdtc/SbVlQX3n0yGRt3IkRxSAomFMU58uT+0UySnTK1iz4AQ0MVfTgpHtaJEoaSA
+	 vI4v2iQ7QLnreMgqGfNiOpQgylatMnINY4BD7YfyGsgvX90bJqwCSrv0jVw3yFrWbC
+	 7hEE34ZHm8zcx0reqUrEHCusncfisxNWx/2ahufKIPpt8FtYZ6rEvT8a8FrbSz5b0K
+	 7G0Va8bfxHhEyzQmWK5JEt4J9ojjMNa5I7x/ilLngf/DUR3YwFMd0HUo4Zxkh0pZSu
+	 FBoX1VMaeaorA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F17EC54E5C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A445C5475B;
 	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Fri, 08 Mar 2024 16:39:43 +0800
-Subject: [PATCH net-next v10 1/8] dt-bindings: net: hisilicon-femac-mdio:
- convert to YAML
+Date: Fri, 08 Mar 2024 16:39:45 +0800
+Subject: [PATCH net-next v10 3/8] net: mdio: hisi-femac: remove clock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240308-net-v10-1-3684df40897e@outlook.com>
+Message-Id: <20240308-net-v10-3-3684df40897e@outlook.com>
 References: <20240308-net-v10-0-3684df40897e@outlook.com>
 In-Reply-To: <20240308-net-v10-0-3684df40897e@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -54,14 +53,13 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
  Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709887184; l=2517;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709887184; l=1802;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=stv+a/mRLJaLswc2WeXjirfjJSRDl5txIs38K87wIhs=;
- b=9j+FuIPIRUS4exeZWvRUUqli182hH9albcedJVvHCPLBrHPuQEELwVoMCxNg27Nh5UsQ1ZSNi
- 86J4wuWoK7mAkor+Q9fdQ8yP0dI4RCDC/+lAWl4y4SMOmSgzPllaEUt
+ bh=kdWAr70dNlF5sryokQxZlrJGOk8Z9nw7ekwi0I/9miA=;
+ b=SRw4iDjeFk1T6mGcCf8t/M0b4JZS0PffrYMwlRpgm50Cns3b/2wbnL4UCz3tCKA9UkxqTnSRP
+ DI0hUoez7WzBuINuHlqtzA6orzNVzlY7xGwrlno/BwpW0p3Nl4orl8p
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -71,94 +69,72 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-convert the old text binding to modern YAML based binding. No semantic
-change.
+This integrated MDIO bus does not have a dedicated clock, remove it.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- .../bindings/net/hisilicon,hisi-femac-mdio.yaml    | 44 ++++++++++++++++++++++
- .../bindings/net/hisilicon-femac-mdio.txt          | 22 -----------
- 2 files changed, 44 insertions(+), 22 deletions(-)
+ drivers/net/mdio/mdio-hisi-femac.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml
-new file mode 100644
-index 000000000000..36def9d5eecd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/hisilicon,hisi-femac-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon FEMAC MDIO bus
-+
-+maintainers:
-+  - Yang Xiwen <forbidden405@formail.com>
-+
-+allOf:
-+  - $ref: mdio.yaml#
-+
-+properties:
-+  compatible:
-+    const: hisilicon,hisi-femac-mdio
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    mdio@10091100 {
-+        compatible = "hisilicon,hisi-femac-mdio";
-+        reg = <0x10091100 0x20>;
-+        clocks = <&clk_mdio>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy@1 {
-+            reg = <1>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
-deleted file mode 100644
-index 23a39a309d17..000000000000
---- a/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Hisilicon Fast Ethernet MDIO Controller interface
+diff --git a/drivers/net/mdio/mdio-hisi-femac.c b/drivers/net/mdio/mdio-hisi-femac.c
+index 6703f626ee83..faf4688eb1ab 100644
+--- a/drivers/net/mdio/mdio-hisi-femac.c
++++ b/drivers/net/mdio/mdio-hisi-femac.c
+@@ -5,7 +5,6 @@
+  * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
+  */
+ 
+-#include <linux/clk.h>
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -21,7 +20,6 @@
+ #define BIT_WR_DATA_OFFSET	16
+ 
+ struct hisi_femac_mdio_data {
+-	struct clk *clk;
+ 	void __iomem *membase;
+ };
+ 
+@@ -93,26 +91,14 @@ static int hisi_femac_mdio_probe(struct platform_device *pdev)
+ 		goto err_out_free_mdiobus;
+ 	}
+ 
+-	data->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(data->clk)) {
+-		ret = PTR_ERR(data->clk);
+-		goto err_out_free_mdiobus;
+-	}
 -
--Required properties:
--- compatible: should be "hisilicon,hisi-femac-mdio".
--- reg: address and length of the register set for the device.
--- clocks: A phandle to the reference clock for this device.
+-	ret = clk_prepare_enable(data->clk);
+-	if (ret)
+-		goto err_out_free_mdiobus;
 -
--- PHY subnode: inherits from phy binding [1]
--[1] Documentation/devicetree/bindings/net/phy.txt
--
--Example:
--mdio: mdio@10091100 {
--	compatible = "hisilicon,hisi-femac-mdio";
--	reg = <0x10091100 0x10>;
--	clocks = <&crg HI3516CV300_MDIO_CLK>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	phy0: phy@1 {
--		reg = <1>;
--	};
--};
+ 	ret = of_mdiobus_register(bus, np);
+ 	if (ret)
+-		goto err_out_disable_clk;
++		goto err_out_free_mdiobus;
+ 
+ 	platform_set_drvdata(pdev, bus);
+ 
+ 	return 0;
+ 
+-err_out_disable_clk:
+-	clk_disable_unprepare(data->clk);
+ err_out_free_mdiobus:
+ 	mdiobus_free(bus);
+ 	return ret;
+@@ -121,10 +107,8 @@ static int hisi_femac_mdio_probe(struct platform_device *pdev)
+ static void hisi_femac_mdio_remove(struct platform_device *pdev)
+ {
+ 	struct mii_bus *bus = platform_get_drvdata(pdev);
+-	struct hisi_femac_mdio_data *data = bus->priv;
+ 
+ 	mdiobus_unregister(bus);
+-	clk_disable_unprepare(data->clk);
+ 	mdiobus_free(bus);
+ }
+ 
 
 -- 
 2.43.0
