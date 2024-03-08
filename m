@@ -1,230 +1,271 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4675C52F91
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C695577A;
+	Fri,  8 Mar 2024 10:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709895273; cv=none; b=Q6P/jyLzGH0dcRAsJH4hLp/HH9zvH5Qo/kjawT5CXcWPH1cbcAi+o/gU/W3aJhqWq2fvEzCiqQqkhkTobW9o4OuK0mMG1uxNqewnniZ6m8lSxIZ31lp6XxUkhBxJQ/yUBhVMi6WemmJfUhvc1H/WJOIQYAGVs2qwZUJckaACUVA=
+	t=1709895298; cv=none; b=TzdYEvabWUhewvgEbMcBbUvHk/rVB/8qO/cLNHMDii8Rn0fvPjonmPMaOHT/liwMJNNZPnz1ArnXamHEAEv4m1xBRot08g/c6oBeRysqwVcEBcg5XY8B/+z70vCNo72AXyXLPl2iGAt6rv/W3IvQva+wmEKSSuWzDkEuU6mUV0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709895273; c=relaxed/simple;
-	bh=XYyAbukvO6V6EJGXOTJSyoZD5mAk75e5vecVWiM95Ek=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OSXKQn/terDR7LTHQBP7tphwwT7qnoNkXe5K25lbh6jcZUwsY0GhqHZEzD6O06b52FqesF+UIIBdpZwnH8e9uN1MrF3ojIQC0czREzif1g7swCj3/KhpsPREwRUkn/IgpKauPbaqnFCi/dACE2zy/cExz288SMAF/SzaJOv6XUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1riXl9-0008OM-Oq; Fri, 08 Mar 2024 11:47:27 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1riXl8-0057Ot-97; Fri, 08 Mar 2024 11:47:26 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1riXl8-00AhUu-0h;
-	Fri, 08 Mar 2024 11:47:26 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jiri Pirko <jiri@resnulli.us>,
-	Ivan Vecera <ivecera@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v2 1/1] net: bridge: switchdev: Improve error message clarity for switchdev_port_obj_add/del_deffered operations
-Date: Fri,  8 Mar 2024 11:47:24 +0100
-Message-Id: <20240308104725.2550469-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1709895298; c=relaxed/simple;
+	bh=j1ynKLY5env5mTcwYEWX+LZc3E3rIOPqHmFvLqb/PaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tg08aZobJC46cZpyLnuCGSzo7+/F7t+IRuc3ZNJOiewPxgPr3NNl39QsBeG3VajvLbmyjHbKOB5Qcd7QpvWCowPVJg4VYCDHsAj3ne6YzAQdv8Dof0Cup7qLlwaPafaG7r7UhbzcoFcKEc8K263+Bg0bq3U1zOLzxkh+VD5mqCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ehSVVw7E; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ehSVVw7E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709895296; x=1741431296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=j1ynKLY5env5mTcwYEWX+LZc3E3rIOPqHmFvLqb/PaU=;
+  b=ehSVVw7EHKj0v6ZB3CRzz4WD1UukwsB1kk5VFEEymqOetHqsAemeJ+nt
+   K6fDaaWmM9TB0Dll1n24OsM4oQwU4s3dx3oyizeyyuAvZfJ8OYmymgEY5
+   evl2+k9JDde//sC0CDoE/9Fcq3Wc7OxJNO5kUfOQLW8Hih52RPx/6OIBj
+   J9eO66i2DcSBilEAgJGvPKdYV4nxJX8GX/wqMpZHU/UBNehnTBYmm6yMM
+   uLEGWXtp901UAjU+O5Re/eU53wfy+Jf8six+eOaDDR4CH33BlF3dFMuQt
+   9km+BwqZq8hjXYnfargV05/vBD2ZV0mdjBm/FdM0OiKR1oKaaFb2FfeMn
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4479459"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="4479459"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:54:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="10874781"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 08 Mar 2024 02:54:49 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1riXsD-0006JH-1g;
+	Fri, 08 Mar 2024 10:54:45 +0000
+Date: Fri, 8 Mar 2024 18:54:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, suleiman@google.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Youssef Esmat <youssefesmat@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 5/8] ring-buffer: Add ring_buffer_meta data
+Message-ID: <202403081843.QYKJKYk4-lkp@intel.com>
+References: <20240306020006.100449500@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306020006.100449500@goodmis.org>
 
-Enhance the error reporting mechanism in the switchdev framework to
-provide more informative and user-friendly error messages.
+Hi Steven,
 
-Following feedback from users struggling to understand the implications
-of error messages like "failed (err=-28) to add object (id=2)", this
-update aims to clarify what operation failed and how this might impact
-the system or network.
+kernel test robot noticed the following build errors:
 
-With this change, error messages now include a description of the failed
-operation, the specific object involved, and a brief explanation of the
-potential impact on the system. This approach helps administrators and
-developers better understand the context and severity of errors,
-facilitating quicker and more effective troubleshooting.
+[auto build test ERROR on next-20240305]
+[cannot apply to tip/x86/core akpm-mm/mm-everything linus/master v6.8-rc7 v6.8-rc6 v6.8-rc5 v6.8-rc7]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Example of the improved logging:
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ring-buffer-Allow-mapped-field-to-be-set-without-mapping/20240306-100047
+base:   next-20240305
+patch link:    https://lore.kernel.org/r/20240306020006.100449500%40goodmis.org
+patch subject: [PATCH 5/8] ring-buffer: Add ring_buffer_meta data
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240308/202403081843.QYKJKYk4-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 503c55e17037436dcd45ac69dea8967e67e3f5e8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240308/202403081843.QYKJKYk4-lkp@intel.com/reproduce)
 
-[   70.516446] ksz-switch spi0.0 uplink: Failed to add Port Multicast
-               Database entry (object id=2) with error: -ENOSPC (-28).
-[   70.516446] Failure in updating the port's Multicast Database could
-               lead to multicast forwarding issues.
-[   70.516446] Current HW/SW setup lacks sufficient resources.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403081843.QYKJKYk4-lkp@intel.com/
 
-This comprehensive update includes handling for a range of switchdev
-object IDs, ensuring that most operations within the switchdev framework
-benefit from clearer error reporting.
+All errors (new ones prefixed by >>):
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-changes v2:
-- make all variables const
-- add Reviewed-by: Simon Horman <horms@kernel.org>
+   In file included from kernel/trace/ring_buffer.c:8:
+   In file included from include/linux/trace_events.h:6:
+   In file included from include/linux/ring_buffer.h:5:
+   In file included from include/linux/mm.h:2208:
+   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     509 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     516 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     528 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     537 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   In file included from kernel/trace/ring_buffer.c:8:
+   In file included from include/linux/trace_events.h:10:
+   In file included from include/linux/perf_event.h:62:
+   In file included from include/linux/security.h:35:
+   include/linux/bpf.h:736:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     736 |         ARG_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | ARG_PTR_TO_MAP_VALUE,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:737:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     737 |         ARG_PTR_TO_MEM_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_MEM,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+   include/linux/bpf.h:738:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     738 |         ARG_PTR_TO_CTX_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_CTX,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+   include/linux/bpf.h:739:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     739 |         ARG_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_SOCKET,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:740:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     740 |         ARG_PTR_TO_STACK_OR_NULL        = PTR_MAYBE_NULL | ARG_PTR_TO_STACK,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:741:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     741 |         ARG_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_BTF_ID,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:745:38: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     745 |         ARG_PTR_TO_UNINIT_MEM           = MEM_UNINIT | ARG_PTR_TO_MEM,
+         |                                           ~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+   include/linux/bpf.h:747:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
+     747 |         ARG_PTR_TO_FIXED_SIZE_MEM       = MEM_FIXED_SIZE | ARG_PTR_TO_MEM,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+   include/linux/bpf.h:770:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     770 |         RET_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | RET_PTR_TO_MAP_VALUE,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:771:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     771 |         RET_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:772:47: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     772 |         RET_PTR_TO_TCP_SOCK_OR_NULL     = PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:773:50: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     773 |         RET_PTR_TO_SOCK_COMMON_OR_NULL  = PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMON,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:775:49: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     775 |         RET_PTR_TO_DYNPTR_MEM_OR_NULL   = PTR_MAYBE_NULL | RET_PTR_TO_MEM,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+   include/linux/bpf.h:776:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     776 |         RET_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:777:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
+     777 |         RET_PTR_TO_BTF_ID_TRUSTED       = PTR_TRUSTED    | RET_PTR_TO_BTF_ID,
+         |                                           ~~~~~~~~~~~    ^ ~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:888:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
+     888 |         PTR_TO_MAP_VALUE_OR_NULL        = PTR_MAYBE_NULL | PTR_TO_MAP_VALUE,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:889:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
+     889 |         PTR_TO_SOCKET_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_SOCKET,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
+   include/linux/bpf.h:890:46: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
+     890 |         PTR_TO_SOCK_COMMON_OR_NULL      = PTR_MAYBE_NULL | PTR_TO_SOCK_COMMON,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:891:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
+     891 |         PTR_TO_TCP_SOCK_OR_NULL         = PTR_MAYBE_NULL | PTR_TO_TCP_SOCK,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~
+   include/linux/bpf.h:892:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
+     892 |         PTR_TO_BTF_ID_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_BTF_ID,
+         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
+>> kernel/trace/ring_buffer.c:3224:24: error: incompatible pointer to integer conversion assigning to 'unsigned long' from 'struct buffer_data_page *' [-Wint-conversion]
+    3224 |                         meta->commit_buffer = cpu_buffer->commit_page->page;
+         |                                             ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   25 warnings and 1 error generated.
 
- net/switchdev/switchdev.c | 106 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 102 insertions(+), 4 deletions(-)
 
-diff --git a/net/switchdev/switchdev.c b/net/switchdev/switchdev.c
-index c9189a970eec3..de4a7505ceb4d 100644
---- a/net/switchdev/switchdev.c
-+++ b/net/switchdev/switchdev.c
-@@ -244,6 +244,106 @@ static int switchdev_port_obj_notify(enum switchdev_notifier_type nt,
- 	return 0;
- }
- 
-+static void switchdev_obj_id_to_helpful_msg(struct net_device *dev,
-+					    enum switchdev_obj_id obj_id,
-+					    int err, bool add)
-+{
-+	const char *action = add ? "add" : "del";
-+	const char *reason = "";
-+	const char *problem;
-+	const char *obj_str;
-+
-+	switch (obj_id) {
-+	case SWITCHDEV_OBJ_ID_UNDEFINED:
-+		obj_str = "Undefined object";
-+		problem = "Attempted operation is undefined, indicating a "
-+			  "possible programming error.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_PORT_VLAN:
-+		obj_str = "VLAN entry";
-+		problem = "Failure in VLAN settings on this port might disrupt "
-+		          "network segmentation or traffic isolation, affecting\n"
-+		          "network partitioning.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_PORT_MDB:
-+		obj_str = "Port Multicast Database entry";
-+		problem = "Failure in updating the port's Multicast Database "
-+			  "could lead to multicast forwarding issues.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_HOST_MDB:
-+		obj_str = "Host Multicast Database entry";
-+		problem = "Failure in updating the host's Multicast Database"
-+		          "may impact multicast group memberships or\n"
-+			  "traffic delivery, affecting multicast communication.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_MRP:
-+		obj_str = "Media Redundancy Protocol configuration for port";
-+		problem = "Failure to set MRP ring ID on this port prevents"
-+			  "communication with the specified redundancy ring,\n"
-+			  "resulting in an inability to engage in MRP-based "
-+			  "network operations.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_RING_TEST_MRP:
-+		obj_str = "MRP Test Frame Operations for port";
-+		problem = "Failure to generate/monitor MRP test frames may lead"
-+			  "to inability to assess the ring's operational\n"
-+			  "integrity and fault response, hindering proactive "
-+			  "network management.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_RING_ROLE_MRP:
-+		obj_str = "MRP Ring Role Configuration";
-+		problem = "Improper MRP ring role configuration may create "
-+		          "conflicts in the ring, disrupting communication\n"
-+			  "for all participants, or isolate the local system "
-+			  "from the ring, hindering its ability to communicate "
-+			  "with other participants.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_RING_STATE_MRP:
-+		obj_str = "MRP Ring State Configuration";
-+		problem = "Failure to correctly set the MRP ring state can "
-+		          "result in network loops or leave segments without\n"
-+			  "communication. In a Closed state, it maintains loop "
-+			  "prevention by blocking one MRM port, while an Open\n"
-+			  "state activates in response to failures, changing "
-+			  "port states to preserve network connectivity.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_IN_TEST_MRP:
-+		obj_str = "MRP_InTest Frame Generation Configuration";
-+		problem = "Failure in managing MRP_InTest frame generation can "
-+			  "misjudge the interconnection ring's state, leading\n"
-+			  "to incorrect blocking or unblocking of the I/C port."
-+			  "This misconfiguration might result in unintended\n"
-+			  "network loops or isolate critical network segments, "
-+			  "compromising network integrity and reliability.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_IN_ROLE_MRP:
-+		obj_str = "Interconnection Ring Role Configuration";
-+		problem = "Failure in incorrect assignment of interconnection "
-+			  "ring roles (MIM/MIC) can impair the formation of the\n"
-+			  "interconnection rings.\n";
-+		break;
-+	case SWITCHDEV_OBJ_ID_IN_STATE_MRP:
-+		obj_str = "Interconnection Ring State Configuration";
-+		problem = "Failure in updating the interconnection ring state "
-+			  "can lead in case of Open state to incorrect blocking\n"
-+			  "or unblocking of the I/C port, resulting in unintended"
-+			  "network loops or isolation of critical network\n";
-+		break;
-+	default:
-+		obj_str = "Unknown object";
-+		problem	= "Indicating a possible programming error.\n";
-+	}
-+
-+	switch (err) {
-+	case -ENOSPC:
-+		reason = "Current HW/SW setup lacks sufficient resources.\n";
-+		break;
-+	}
-+
-+	netdev_err(dev, "Failed to %s %s (object id=%d) with error: %pe (%d).\n%s%s\n",
-+		   action, obj_str, obj_id, ERR_PTR(err), err, problem, reason);
-+}
-+
- static void switchdev_port_obj_add_deferred(struct net_device *dev,
- 					    const void *data)
- {
-@@ -254,8 +354,7 @@ static void switchdev_port_obj_add_deferred(struct net_device *dev,
- 	err = switchdev_port_obj_notify(SWITCHDEV_PORT_OBJ_ADD,
- 					dev, obj, NULL);
- 	if (err && err != -EOPNOTSUPP)
--		netdev_err(dev, "failed (err=%d) to add object (id=%d)\n",
--			   err, obj->id);
-+		switchdev_obj_id_to_helpful_msg(dev, obj->id, err, true);
- 	if (obj->complete)
- 		obj->complete(dev, err, obj->complete_priv);
- }
-@@ -304,8 +403,7 @@ static void switchdev_port_obj_del_deferred(struct net_device *dev,
- 
- 	err = switchdev_port_obj_del_now(dev, obj);
- 	if (err && err != -EOPNOTSUPP)
--		netdev_err(dev, "failed (err=%d) to del object (id=%d)\n",
--			   err, obj->id);
-+		switchdev_obj_id_to_helpful_msg(dev, obj->id, err, false);
- 	if (obj->complete)
- 		obj->complete(dev, err, obj->complete_priv);
- }
+vim +3224 kernel/trace/ring_buffer.c
+
+  3192	
+  3193	static __always_inline void
+  3194	rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+  3195	{
+  3196		unsigned long max_count;
+  3197	
+  3198		/*
+  3199		 * We only race with interrupts and NMIs on this CPU.
+  3200		 * If we own the commit event, then we can commit
+  3201		 * all others that interrupted us, since the interruptions
+  3202		 * are in stack format (they finish before they come
+  3203		 * back to us). This allows us to do a simple loop to
+  3204		 * assign the commit to the tail.
+  3205		 */
+  3206	 again:
+  3207		max_count = cpu_buffer->nr_pages * 100;
+  3208	
+  3209		while (cpu_buffer->commit_page != READ_ONCE(cpu_buffer->tail_page)) {
+  3210			if (RB_WARN_ON(cpu_buffer, !(--max_count)))
+  3211				return;
+  3212			if (RB_WARN_ON(cpu_buffer,
+  3213				       rb_is_reader_page(cpu_buffer->tail_page)))
+  3214				return;
+  3215			/*
+  3216			 * No need for a memory barrier here, as the update
+  3217			 * of the tail_page did it for this page.
+  3218			 */
+  3219			local_set(&cpu_buffer->commit_page->page->commit,
+  3220				  rb_page_write(cpu_buffer->commit_page));
+  3221			rb_inc_page(&cpu_buffer->commit_page);
+  3222			if (cpu_buffer->ring_meta) {
+  3223				struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
+> 3224				meta->commit_buffer = cpu_buffer->commit_page->page;
+  3225			}
+  3226			/* add barrier to keep gcc from optimizing too much */
+  3227			barrier();
+  3228		}
+  3229		while (rb_commit_index(cpu_buffer) !=
+  3230		       rb_page_write(cpu_buffer->commit_page)) {
+  3231	
+  3232			/* Make sure the readers see the content of what is committed. */
+  3233			smp_wmb();
+  3234			local_set(&cpu_buffer->commit_page->page->commit,
+  3235				  rb_page_write(cpu_buffer->commit_page));
+  3236			RB_WARN_ON(cpu_buffer,
+  3237				   local_read(&cpu_buffer->commit_page->page->commit) &
+  3238				   ~RB_WRITE_MASK);
+  3239			barrier();
+  3240		}
+  3241	
+  3242		/* again, keep gcc from optimizing */
+  3243		barrier();
+  3244	
+  3245		/*
+  3246		 * If an interrupt came in just after the first while loop
+  3247		 * and pushed the tail page forward, we will be left with
+  3248		 * a dangling commit that will never go forward.
+  3249		 */
+  3250		if (unlikely(cpu_buffer->commit_page != READ_ONCE(cpu_buffer->tail_page)))
+  3251			goto again;
+  3252	}
+  3253	
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
