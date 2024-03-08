@@ -1,177 +1,99 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FBA53E1A
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB68C535BA;
+	Fri,  8 Mar 2024 09:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891762; cv=none; b=Or1hynE4z0EfjcOPc9lTg9jEmCNj7o24dOs4dBxX2umsS0LQX5jJ9vQW1sDg78A+MpkvsMdZmNs3v/Smrx61UwuqOy6PkG8JlRYamjn6yA5lUPe49Y4mkG9naubzjiwOQDD4bO1BEB6AsCxNtaZgei4OItQKttqTSJkz4+bl4k0=
+	t=1709891809; cv=none; b=FCvv4HmZ2IBhR4nx73Nf873Alm7phE4PBlCmm8s9+fizh4zgW6zQA9ZvnbaZ9R1KM40DQSCl+nGhOqLQlbVjFaQyAsCiPJwn2j5KvCSWgmf+Yr+IB7mgOO1zOdjYMIqL711Jt9E33sG8fmylqnaZIkSVtSRgmo5wFPnULO4yVc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891762; c=relaxed/simple;
-	bh=048FL+lWMOSIyoKXUVx1l4I7KcqtMLG1ou1jUMFPos4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZ/VeM7mc7SxPzycWPKoBTpg9Y5bFauB7rutQazim0e7uY99u7Lci2Xd7iSYmeVP1hIPW0QP+CAO4MEfB6uD739cV7ptKnMNeJceE4v1PF0zgMlNyoKKs0mxfZoXpFQgETm4cMACPUA8tyLLfDAaxi/10DXPmRD1H4+v+Aniquc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XuZEmsET; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709891809; c=relaxed/simple;
+	bh=55ZsZsM23dDpjtV/FwUzKlyNeM4KZjQdEa/eD7xqQ1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mr3g8CWSAvcKL2e/wjPRFKpmYdrUftwYtNBY25hW5bBK/baWQWxCRfltsbfH6DvMRABi10EOFuyVX2z5atet0KNYpDED6YyMAjFmcW/K4zX+f1LyAuRGKRSsX2i8/JsCK+kMn6GEv6wCbr4SHbXWhOm1JXcrtEU8EQKHxmRteMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VmIoS585; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XuZEmsET"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so1611200a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:56:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmIoS585"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5683093ffbbso386798a12.1;
+        Fri, 08 Mar 2024 01:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709891760; x=1710496560; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JUK3zdKghpmKi7BAcVW5ImJ4qoLWxSUUxIXqc6+4Iww=;
-        b=XuZEmsETlMxjF0BysDZ3t5MKj1Ufh7KMAu/xSplVht/x+deWgiKV2mbzhRzF+aBee5
-         /Pffifls2UbfptuqrfxQHlt5A2O820WjJpdlGKbNezvOGWCSZApo9B7nUGO5peHoWkEC
-         kw1Fi++xtVpQ5UzGIPtAsIwc4XLAggD/PqP5Xw6wES6mYprx2e9FKECkBmsSQwfiCKZV
-         l+BWTnCPdLnK4/le4yQcVx9tTncPedjlljxIWKJuYH1im7oR/fRtKHXA+geWOk+ctQR9
-         mDyOoZtTE5EjwYW8dQdj0GH5BIpxCKoRqNbpvCCdl0wHEBMbpgyL0Q3oD4/gzpuhxs8K
-         5zeg==
+        d=gmail.com; s=20230601; t=1709891806; x=1710496606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=55ZsZsM23dDpjtV/FwUzKlyNeM4KZjQdEa/eD7xqQ1s=;
+        b=VmIoS5850U2l1YXcE15Bthw0XNfQBCNAlskUSOQ7xJT4/hK94Oo185ol694Tpv/CZH
+         3sMDLpezp4OYjTRG17KAqmoUsPrHF3JbZOlwk+KX7PcSz7nFcGkKSsjxAL/dCEq5GHeW
+         WOaLIvWCo0Dwk1h5njl5MneoVlJ0fNXlpyxEfjY9Q0Keb3ExZV/EBSSnn8Dq+NUDGIQC
+         hpBUxpF/XbeUk20tjJLAGlX6eAI9OxyyFLCkQIZebpDDeOWCSz2e9x+UhuErsDTUenwp
+         wLwqk92e72MF1aU7QT9ICUO1jRQpCt+40qyiNW6TrtvF4vzFqfVSxZ7/86X+YmhPHx1A
+         OTDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709891760; x=1710496560;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JUK3zdKghpmKi7BAcVW5ImJ4qoLWxSUUxIXqc6+4Iww=;
-        b=rwMLEY10NNcUFKPiEWTnwehxafeUEMecqmaYZWTbxj+PylbSGC25WQWs7dNtdqEy3N
-         J9/TO2qLaDR7XXvI38giL/V5QxmGojOm9liM9Xs30ZKzTXkfeIAkXVcEESWCR5DzvzFD
-         ScK2uloMhI9qYLEBsGQ6cvQyBQk1zyY7Pb3bsNnIIX/Mvu1MBIEsV9wXUWdPxk6JBDUV
-         4LO/qTsWzVB5y23mIR961nFTLw1o9iPFz7etiwEtpPPf23gDzBXhN0B/WCU4H++YDoi9
-         BuSrMaa5Vz8ITsgKACYL9akzOentOlhUT8/4Db2NF4jSv68ILmhmMYbaaJz+KIKd3mhA
-         PXcw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0YSLIjxBFgp5Md42FvL4LesqodAa4fC3v0CN6iLHzqACWsPxzE0C77L6XmJ4JWvFL6pzx3eEe+ygsYrvCygKy6SOb0xrLuQGcUsV6
-X-Gm-Message-State: AOJu0Yx0RbFTQdc8DMuarw6iboHkD23z6r4JwWB6Uxl2N7RqX/yGipK5
-	JvCTlpOR9XZ3/WMbxcFpx9j725niEEC1TH1WMZeM4/3OY4xMliYPrsl48LsanQ==
-X-Google-Smtp-Source: AGHT+IGOTlUHapfqElkZxE+j6NSs76sL89OIFPzQbD3+yFMWYqGGsRtHUD1W1wK1/RK2ZY2d13ivWw==
-X-Received: by 2002:a17:90a:a8f:b0:299:7b37:9221 with SMTP id 15-20020a17090a0a8f00b002997b379221mr16693450pjw.12.1709891759544;
-        Fri, 08 Mar 2024 01:55:59 -0800 (PST)
-Received: from thinkpad ([117.217.183.232])
-        by smtp.gmail.com with ESMTPSA id ei16-20020a17090ae55000b0029b73ccf4fesm2806572pjb.30.2024.03.08.01.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 01:55:59 -0800 (PST)
-Date: Fri, 8 Mar 2024 15:25:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Yue Wang <yue.wang@Amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/1] PCI: dwc: Remove unused of_gpio.h
-Message-ID: <20240308095547.GI3789@thinkpad>
-References: <20240307122840.3682287-1-andriy.shevchenko@linux.intel.com>
+        d=1e100.net; s=20230601; t=1709891806; x=1710496606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=55ZsZsM23dDpjtV/FwUzKlyNeM4KZjQdEa/eD7xqQ1s=;
+        b=F/GG0ZIDERyj8F+LcZGRC3FZ+RDCrLT3WpSlNs1p3eKmjYepy8GyVJC5YEwPBuNdmE
+         z0/wBt8eEpLIUBwbXnY8GHtBgdplWr7e2tC1tQmMXh5cPhDpPThVDKJdzQa0oAlxRg7v
+         qnF3gjn9zWjcdx7Y8P5gxR/OivqlFN1l9OtwdzaHwtXcYXu2cpygFolQExEgm36jEej8
+         TRmffNDE3ukXsFlYRyEnwmQRwgPRBjrLOvVz427KzZuQa3Qtqc4q0Ibs7jhHHTWQnj9n
+         xksP6hRubD9ODMzBznA33s+c6TB/UZd1RJBtJ0DOQ2RMURgSriBDJZKpq8/TtWBf07KG
+         4x7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBHzBeCFWMGsHQIl1Ekorb7YwzCwaxhnQjtM/s1FMIU29NNW/pCGW/5eRTnCZcgDJUShcntCGYlkG7qSKTus1VX6OUyKQByTZNfh9i0bCDN8ocst9iMjqUxlwjFCJAH9E64jrB3SEnOOnsn9Q/hkwRFSXvp64wNQZ+WLtznq9INr7bJpI=
+X-Gm-Message-State: AOJu0YzVEJqL1fLncu+uGRW6sys5d5JFIXQXzfVrq2HOIq89NhDMmh38
+	BgbYrwe3vKYTg5OHlR9W0I6kjqkb7xbrUCKQEYHx2wG5a7yDpfWrcd6/+Ioc4Nn64R0odb8Xef8
+	kz+LQ/26ZHcDqv276KRptHmTwg9U=
+X-Google-Smtp-Source: AGHT+IFxrb/Hq8yGxAFksIU8xvoZYxKDmP4t21NJlafgwJOZ5O729ZO1fWabxK/Qr2q+/DyOC/+KljCWh48RD29qoIE=
+X-Received: by 2002:a17:907:8b8b:b0:a45:f5e0:a539 with SMTP id
+ tb11-20020a1709078b8b00b00a45f5e0a539mr250323ejc.25.1709891805926; Fri, 08
+ Mar 2024 01:56:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240307122840.3682287-1-andriy.shevchenko@linux.intel.com>
+References: <20240306235021.976083-1-chris.packham@alliedtelesis.co.nz>
+ <20240306235021.976083-4-chris.packham@alliedtelesis.co.nz> <87edclgoon.fsf@BL-laptop>
+In-Reply-To: <87edclgoon.fsf@BL-laptop>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 8 Mar 2024 11:56:09 +0200
+Message-ID: <CAHp75VfmSWH3FWEHU+bGYDuo-nt1DJhY5Fvs83A-RGrtrsgWTw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: dts: marvell: Add 7-segment LED display on x530
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@kernel.org>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, andy@kernel.org, 
+	geert@linux-m68k.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, 
+	lee@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 07, 2024 at 02:28:40PM +0200, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it, simply remove the unused header.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c    | 1 -
->  drivers/pci/controller/dwc/pci-meson.c     | 1 -
->  drivers/pci/controller/dwc/pcie-qcom.c     | 1 -
->  drivers/pci/controller/dwc/pcie-tegra194.c | 2 --
+On Fri, Mar 8, 2024 at 9:36=E2=80=AFAM Gregory CLEMENT
+<gregory.clement@bootlin.com> wrote:
+>
+> Chris Packham <chris.packham@alliedtelesis.co.nz> writes:
+>
+> > The Allied Telesis x530 products have a 7-segment LED display which is
+> > used for node identification when the devices are stacked. Represent
+> > this as a gpio-7-segment device.
+> >
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>
+> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>
+> Normally, this patch should be taken in mvebu and then merged by
+> arm-soc. However, I haven't seen any other patch touching this file (so
+> no risk of merge conflict) and I think it's too late for me to make a
+> new pull request to arm-soc. So I'm not against it being taken with the
+> rest of the patches. However, I think it would be a good idea to see
+> what Arnd thinks about it.
 
-What about the rest?
+Arnd wasn't Cc'ed, now I added him.
 
-drivers/pci/controller/dwc/pcie-kirin.c
-drivers/pci/controller/dwc/pci-imx6.c
-
-There is also one non-dwc driver:
-
-drivers/pci/controller/pci-aardvark.c
-
-It is better to remove it from all PCI drivers in a single patch.
-
-- Mani
-
->  4 files changed, 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 0e406677060d..f6d2ba42958b 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -17,7 +17,6 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 6477c83262c2..db9482a113e9 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -9,7 +9,6 @@
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/gpio/consumer.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/reset.h>
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 2ce2a3bd932b..0084a3390040 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -20,7 +20,6 @@
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 1f7b662cb8e1..633d8dc50339 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -13,7 +13,6 @@
->  #include <linux/clk.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
-> -#include <linux/gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/interconnect.h>
->  #include <linux/interrupt.h>
-> @@ -21,7 +20,6 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
-> -- 
-> 2.43.0.rc1.1.gbec44491f096
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+--=20
+With Best Regards,
+Andy Shevchenko
