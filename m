@@ -1,136 +1,322 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE033134A9
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD06E134A9;
+	Fri,  8 Mar 2024 12:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709901988; cv=none; b=f2G7B0cJXGbImdV4wp2bYw3L+f8mUoojbqgrWX7V8noG790E6ZA1nBN/ZA2n0OKJ5HWDcnMO+b4ewdfxfJJJbkS6swf0DJkKh6tLh19D3ysoPC4XXmISUt8DzdBsajcs7Dld0ZRJyqMYKcAbYLGckD+/T8qUKkH0qY6ZJWi1hD4=
+	t=1709902034; cv=none; b=L+q2+lwh7qwh01xD3bmMHoWhuXxbnb5Z2xyAmF9bl/w0gXbM9vmLP9/Y6OSLudszB+fFyWt5bGaxLqGxPU3NlFO0F1Jsp/HH/8T2JL8Ad95voibMwqCjMqJiRSTOqRVYDYolA4aLyrwAEdZu/thZHnoa7CEL2KiKXivunLNSeOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709901988; c=relaxed/simple;
-	bh=lC5yQxdaVNiFX1FCkgmTGC04REnu2YrGytPwqQ1LzKg=;
+	s=arc-20240116; t=1709902034; c=relaxed/simple;
+	bh=r0E8P3eS2fPLIZC/WXD3R6+t1g6tiVHRmSxOWR+UqQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nse4px8x0BCrWn/sr+o13Y7r2kPSxXAEdXndBTXGVkyVeozs+RYvM7Tz/yDZX4u0I4K3XZD3AmM7FKO2899lR7lgBleMVen32UUoahWTdFcLAoP8PCesweDSAefh+j+7X9I/A8B0+V6/dSv47OfxwClgOEALc2WHlx0OH0ozSTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=UrhA2Sj6; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	 MIME-Version:Content-Type; b=iWwLmMXFim/DoVIkVqLdd4fA/jA1T0roKAR56uLN4IzoNlItD1/b0ocGTgS/pz6wRAE/idvYtxLjdKQCgpg0o0PKSiCf+2xbV1pjWLaCec3e5WzlIAXl4htqQNMjcL7H3Sb9aO18ZEkZ0KadG9Fbe4fUMVTw9CrwnLkg6kTteu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=FYIJisH5; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="UrhA2Sj6"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412f62ee005so15206455e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 04:46:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FYIJisH5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709901985; x=1710506785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RSC3VchrKSriPFqJb390A7+6m5EVYRKP2rJaLF33dcE=;
-        b=UrhA2Sj6M7mGx/4nITO+wKJLXElxijV/+J9fu2bcmiiGk3ohEOzoMF7sMFO4O7LGZq
-         vCo3EYUe93ltR9i7p1by/MOV+f8mhFTK/fpM0ozyrf5Bjyd4x45p573UyzfuUcDH8olQ
-         uOj6Wq19Msou9Z5MrgIC9IAc45rDr4XpICdWUju90u44/irpOXsuj5iKL+xKuGZLOcxG
-         AcG92510NUELCM+HRErVHKiHUjoAShYC7s3AaLcXnEuCR2/LuE9dcOx0CbGi5nWqJ45z
-         PkXlGuBiXGJDpIkrC0mWYIiDnBWsgBLlIsPdLbLXMXU7xGWFngZI2lx3rA+LNgB0i37N
-         X1Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709901985; x=1710506785;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RSC3VchrKSriPFqJb390A7+6m5EVYRKP2rJaLF33dcE=;
-        b=HyqBIIN7z8pOMJZLikcqVZqcZk34J7nkZGfvJxJ+mxAa9vM1Vshb87pbIhwkXu58HK
-         H7pMPaXLRnJPCIXeDCdiwsRT6P6PKGOQwhXcTEsnbmEUqxY5C0XsE1CJgzRNwkgi13oO
-         kiivbDtFl3DkxCS1dKllXpdEAs/Bf6v9YuDlmu54/z7fEnK+KRfnree/EmTxb3lvYn09
-         5wxN24ulbGYteKpFVr4dpGDzD75CtpcPEcp00Cn8WEyagpG/4qyOiwEPVE80cR1BIK8l
-         nC59PlxFxV3IhanyJqU0i41rIn3Ts8wgjwzc1prjZOpvA9+R7UBCX9TC+OAu3Miyu+ZY
-         DG9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWm473pDGG0lrX+oeALtu2lPJ4OWu8ncrpZPK5ni0qkRCKYL4U43e2oJByKr7xNuDxm4PlxWOiu446QtVsVu0nt7LNCRJltSU+33Ow/
-X-Gm-Message-State: AOJu0Ywn6lsmvsqXNecWDVln8higLOAIRfbpuO+vl4fTA45f/Rn4GO9f
-	J1ZsyIfk9k5F49xerpYv+A94CX4HLQC3IJhC+hcFiFzq905D30vfKBv1I/iDRgs=
-X-Google-Smtp-Source: AGHT+IF66YZUxLnyCYBBwG6/pgIqnrGGOsxmyygjR2zRqyH2HPn4eBpoLCe3akXubj7FR0wBp3/p1g==
-X-Received: by 2002:adf:f94a:0:b0:33d:579e:f462 with SMTP id q10-20020adff94a000000b0033d579ef462mr15362918wrr.36.1709901984855;
-        Fri, 08 Mar 2024 04:46:24 -0800 (PST)
-Received: from fedora.fritz.box (aftr-82-135-80-247.dynamic.mnet-online.de. [82.135.80.247])
-        by smtp.gmail.com with ESMTPSA id bn1-20020a056000060100b0033e17341ebesm3486020wrb.117.2024.03.08.04.46.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 04:46:24 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: thorsten.blum@toblux.com
-Cc: David.Laight@ACULAB.COM,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	x86@kernel.org
-Subject: [RESEND PATCH v2] x86/apic: Use u32 instead of unsigned long
-Date: Fri,  8 Mar 2024 13:43:37 +0100
-Message-ID: <20240308124336.41654-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240301203901.150465-3-thorsten.blum@toblux.com>
-References: <20240301203901.150465-3-thorsten.blum@toblux.com>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1709902031; x=1741438031;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OqWbJSFvT2mL6M2CdG7o1ku+JZOpcSiYXFT30Jidi48=;
+  b=FYIJisH5MAMvOfTvUKo6sGRO1TRwFnLZG1rICIT3dzM0LiSxlZFH2M7g
+   txptwNSKximNB3UsUcFYPJIspWpeTRywCFu0x5Inkfmcy45581cXJvI+A
+   OpXCIBIdyDanwFE6R11DSXsj1+ar95YDW3SScHDwRblClDbf+63O813zL
+   tqNTa2T17rP/cV93QwrqkhGOKMxIlAkcTMYMTVxuKeqefE7c1LQ6Yav8s
+   WdNG0/ADtfnl8OaJ/XiMPYmSlzTN+a+ThbMGGa61HjLcgK/oCwTEB5IvA
+   sGVjqUCkarnINsXVn88IXeO5Juo4rcT8dmqDgissViTMV1MWXjQhlABPL
+   g==;
+X-IronPort-AV: E=Sophos;i="6.07,109,1708383600"; 
+   d="scan'208";a="35809634"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 08 Mar 2024 13:47:07 +0100
+Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id E1DF028007C;
+	Fri,  8 Mar 2024 13:47:06 +0100 (CET)
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, Sandy Huang <hjc@rock-chips.com>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, dri-devel@lists.freedesktop.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Wick <sebastian.wick@redhat.com>, Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v8 20/27] drm/connector: hdmi: Add Infoframes generation
+Date: Fri, 08 Mar 2024 13:47:08 +0100
+Message-ID: <3612623.R56niFO833@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20240307-kms-hdmi-connector-state-v8-20-ef6a6f31964b@kernel.org>
+References: <20240307-kms-hdmi-connector-state-v8-0-ef6a6f31964b@kernel.org> <20240307-kms-hdmi-connector-state-v8-20-ef6a6f31964b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Improve types by using u32 instead of unsigned long. Fixes two
-Coccinelle/coccicheck warnings reported by do_div.cocci.
+Hi Maxime,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Revert changing do_div() to div64_ul() after feedback from David Laight
-- Use u32 instead of unsigned long to fix Coccinelle warnings
-- Update patch title and description
----
- arch/x86/kernel/apic/apic.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Am Donnerstag, 7. M=E4rz 2024, 14:38:47 CET schrieb Maxime Ripard:
+> Infoframes in KMS is usually handled by a bunch of low-level helpers
+> that require quite some boilerplate for drivers. This leads to
+> discrepancies with how drivers generate them, and which are actually
+> sent.
+>=20
+> Now that we have everything needed to generate them in the HDMI
+> connector state, we can generate them in our common logic so that
+> drivers can simply reuse what we precomputed.
+>=20
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/Kconfig                            |   1 +
+>  drivers/gpu/drm/drm_atomic_state_helper.c          | 327 +++++++++++++++=
+++++++
+>  drivers/gpu/drm/drm_connector.c                    |  14 +
+>  .../gpu/drm/tests/drm_atomic_state_helper_test.c   |   1 +
+>  drivers/gpu/drm/tests/drm_connector_test.c         |  12 +
+>  include/drm/drm_atomic_state_helper.h              |   8 +
+>  include/drm/drm_connector.h                        | 133 +++++++++
+>  7 files changed, 496 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 872edb47bb53..ad9c467e20ce 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -97,10 +97,11 @@ config DRM_KUNIT_TEST
+>  	  If in doubt, say "N".
+> =20
+>  config DRM_KMS_HELPER
+>  	tristate
+>  	depends on DRM
+> +	select DRM_DISPLAY_HDMI_HELPER
+>  	help
+>  	  CRTC helpers for KMS drivers.
+> =20
+>  config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
+>          bool "Enable refcount backtrace history in the DP MST helpers"
+> diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/=
+drm_atomic_state_helper.c
+> index e66272c0d006..46d9fd2ea8fa 100644
+> --- a/drivers/gpu/drm/drm_atomic_state_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_state_helper.c
+> [snip]
+> @@ -958,10 +1100,195 @@ int drm_atomic_helper_connector_hdmi_check(struct=
+ drm_connector *connector,
+> =20
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_check);
+> =20
+> +#define HDMI_MAX_INFOFRAME_SIZE		29
+> +
+> +static int clear_device_infoframe(struct drm_connector *connector,
+> +				  enum hdmi_infoframe_type type)
+> +{
+> +	const struct drm_connector_hdmi_funcs *funcs =3D connector->hdmi.funcs;
+> +
+> +	if (!funcs || !funcs->clear_infoframe)
+> +		return 0;
+> +
+> +	return funcs->clear_infoframe(connector, type);
+> +}
+> +
+> +static int clear_infoframe(struct drm_connector *connector,
+> +			   struct drm_connector_hdmi_infoframe *conn_frame,
+> +			   struct drm_connector_hdmi_infoframe *old_frame)
+> +{
+> +	int ret;
+> +
+> +	ret =3D clear_device_infoframe(connector, old_frame->data.any.type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset(old_frame, 0, sizeof(*old_frame));
+> +
+> +	return 0;
+> +}
+> +
+> +static int write_device_infoframe(struct drm_connector *connector,
+> +				  union hdmi_infoframe *frame)
+> +{
+> +	const struct drm_connector_hdmi_funcs *funcs =3D connector->hdmi.funcs;
+> +	u8 buffer[HDMI_MAX_INFOFRAME_SIZE];
+> +	int len;
+> +
+> +	if (!funcs || !funcs->write_infoframe)
+> +		return -ENOSYS;
+> +
+> +	len =3D hdmi_infoframe_pack(frame, buffer, sizeof(buffer));
+> +	if (len < 0)
+> +		return len;
+> +
+> +	return funcs->write_infoframe(connector, frame->any.type, buffer, len);
+> +}
+> +
+> +static int write_infoframe(struct drm_connector *connector,
+> +			   struct drm_connector_hdmi_infoframe *conn_frame,
+> +			   struct drm_connector_hdmi_infoframe *new_frame)
+> +{
+> +	int ret;
+> +
+> +	ret =3D write_device_infoframe(connector, &new_frame->data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (conn_frame)
+> +		memcpy(conn_frame, new_frame, sizeof(*conn_frame));
+> +
+> +	return 0;
+> +}
+> +
+> +static int write_or_clear_infoframe(struct drm_connector *connector,
+> +				    struct drm_connector_hdmi_infoframe *conn_frame,
+> +				    struct drm_connector_hdmi_infoframe *old_frame,
+> +				    struct drm_connector_hdmi_infoframe *new_frame)
+> +{
+> +	if (new_frame->set)
+> +		return write_infoframe(connector, conn_frame, new_frame);
+> +
+> +	if (old_frame->set && !new_frame->set)
+> +		return clear_infoframe(connector, conn_frame, old_frame);
+> +
+> +	return 0;
+> +}
+> +
+> +#define UPDATE_INFOFRAME(c, os, ns, i)				\
+> +	write_or_clear_infoframe(c,				\
+> +				 &(c)->hdmi.infoframes.i,	\
+> +				 &(os)->hdmi.infoframes.i,	\
+> +				 &(ns)->hdmi.infoframes.i)
+> +
+> +/**
+> + * drm_atomic_helper_connector_hdmi_update_infoframes - Update the Infof=
+rames
+> + * @connector: A pointer to the HDMI connector
+> + * @state: The HDMI connector state to generate the infoframe from
+> + *
+> + * This function is meant for HDMI connector drivers to write their
+> + * infoframes. It will typically be used in a
+> + * @drm_connector_helper_funcs.atomic_enable implementation.
+> + *
+> + * Returns:
+> + * Zero on success, error code on failure.
+> + */
+> +int drm_atomic_helper_connector_hdmi_update_infoframes(struct drm_connec=
+tor *connector,
+> +						       struct drm_atomic_state *state)
+> +{
+> +	struct drm_connector_state *old_state =3D
+> +		drm_atomic_get_old_connector_state(state, connector);
+> +	struct drm_connector_state *new_state =3D
+> +		drm_atomic_get_new_connector_state(state, connector);
+> +	struct drm_display_info *info =3D &connector->display_info;
+> +	int ret;
+> +
+> +	if (!info->is_hdmi)
+> +		return 0;
+> +
+> +	if (!info->has_hdmi_infoframe)
+> +		return 0;
+> +
+> +	mutex_lock(&connector->hdmi.infoframes.lock);
+> +
+> +	ret =3D UPDATE_INFOFRAME(connector, old_state, new_state, avi);
+> +	if (ret)
+> +		goto out;
+> +
+> +	if (connector->hdmi.infoframes.audio.set) {
+> +		ret =3D write_infoframe(connector,
+> +				      NULL,
+> +				      &connector->hdmi.infoframes.audio);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	ret =3D UPDATE_INFOFRAME(connector, old_state, new_state, hdr_drm);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret =3D UPDATE_INFOFRAME(connector, old_state, new_state, spd);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret =3D UPDATE_INFOFRAME(connector, old_state, new_state, hdmi);
+> +	if (ret)
+> +		goto out;
+> +
+> +out:
+> +	mutex_unlock(&connector->hdmi.infoframes.lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update_infoframes);
+> +
+> +#undef UPDATE_INFOFRAME
+> +#undef UPDATE_INFOFRAME_TOGGLE
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 4667bc4b00ab..184e1843620d 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -664,7 +664,7 @@ void lapic_update_tsc_freq(void)
- static __initdata int lapic_cal_loops = -1;
- static __initdata long lapic_cal_t1, lapic_cal_t2;
- static __initdata unsigned long long lapic_cal_tsc1, lapic_cal_tsc2;
--static __initdata unsigned long lapic_cal_pm1, lapic_cal_pm2;
-+static __initdata u32 lapic_cal_pm1, lapic_cal_pm2;
- static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
- 
- /*
-@@ -674,7 +674,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
- {
- 	unsigned long long tsc = 0;
- 	long tapic = apic_read(APIC_TMCCT);
--	unsigned long pm = acpi_pm_read_early();
-+	u32 pm = acpi_pm_read_early();
- 
- 	if (boot_cpu_has(X86_FEATURE_TSC))
- 		tsc = rdtsc();
-@@ -699,7 +699,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
- }
- 
- static int __init
--calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
-+calibrate_by_pmtimer(u32 deltapm, long *delta, long *deltatsc)
- {
- 	const long pm_100ms = PMTMR_TICKS_PER_SEC / 10;
- 	const long pm_thresh = pm_100ms / 100;
-@@ -710,7 +710,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 	return -1;
- #endif
- 
--	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %ld\n", deltapm);
-+	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %u\n", deltapm);
- 
- 	/* Check, if the PM timer is available */
- 	if (!deltapm)
--- 
-2.44.0
+UPDATE_INFOFRAME_TOGGLE seems to never be defined.
+
+Best regards,
+Alexadner
+
+> +
+> +/**
+> + * drm_atomic_helper_connector_hdmi_update_audio_infoframe - Update the =
+Audio Infoframe
+> + * @connector: A pointer to the HDMI connector
+> + * @frame: A pointer to the audio infoframe to write
+> + *
+> + * This function is meant for HDMI connector drivers to update their
+> + * audio infoframe. It will typically be used in one of the ALSA hooks
+> + * (most likely prepare).
+> + *
+> + * Returns:
+> + * Zero on success, error code on failure.
+> + */
+> +int
+> +drm_atomic_helper_connector_hdmi_update_audio_infoframe(struct drm_conne=
+ctor *connector,
+> +							struct hdmi_audio_infoframe *frame)
+> +{
+> +	struct drm_connector_hdmi_infoframe infoframe =3D {};
+> +	struct drm_display_info *info =3D &connector->display_info;
+> +	int ret;
+> +
+> +	if (!info->is_hdmi)
+> +		return 0;
+> +
+> +	if (!info->has_hdmi_infoframe)
+> +		return 0;
+> +
+> +	memcpy(&infoframe.data, frame, sizeof(infoframe.data));
+> +	infoframe.set =3D true;
+> +
+> +	mutex_lock(&connector->hdmi.infoframes.lock);
+> +
+> +	ret =3D write_infoframe(connector,
+> +			      &connector->hdmi.infoframes.audio,
+> +			      &infoframe);
+> +
+> +	mutex_unlock(&connector->hdmi.infoframes.lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update_audio_infoframe);
+> +
+>  /**
+>   * __drm_atomic_helper_connector_duplicate_state - copy atomic connector=
+ state
+>   * @connector: connector object
+>   * @state: atomic connector state
+>   *
+> [snip]
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
