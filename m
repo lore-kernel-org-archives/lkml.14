@@ -1,137 +1,207 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E465F54664
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69137535A3;
+	Fri,  8 Mar 2024 09:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891671; cv=none; b=nxmPaI+ovf/HI+gz97UWyPwSVD8mx/ZWZQLoNIDbnrVv/ES9rhnJABtGnCySNZstw3Z398Nc81GFeN2ypCNEGbzf/K8vXbpfluxl8F0QofGmDXfUx6nMbI12E6NX5FF7tkAc0Ye8MMRjLBxRUMEVWqRzDG3bVsE9LyYW7QG1Zws=
+	t=1709891689; cv=none; b=Wvszyko43yUQqi5+rFQ+NYwx4Yr345zUPa8QGxXESvYUS8aB/rSRpXMLq981F/YGUtd5YIcRAb3S6epYFy5Th7tU+nKnFFs3eZnQwHXK3YuMZoFv+sABwNtBGVNIOE1BjmdMPZFFXO6s+9v8g2yvd2OU4QSvboekHXz21d3H27s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891671; c=relaxed/simple;
-	bh=2J7Nzqccs+PocVsE1rrOfFtZ8ba354puPJU+yD5FDSI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bX6f8PEVTMGNp4vtjzoZfXoeckR671QD0zpH0o8rtzqZ5LaD4+kGNfLEKCFfOOcByXPvpjk93ev4aecN6sYSCCvlYdYIJVXgfje/r3mSxl6BvvybqMJD6kbsMMiTdzlZARhfZoGvSUW2rPBw1/w4/r84qr4NmV0SWdV94aDNekM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CPrkyOPK; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com
+	s=arc-20240116; t=1709891689; c=relaxed/simple;
+	bh=9+F2N1xirgPO1B/K5OKBxAdcA6ZxVjinMYU43eppFog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MtvT7YfW4n5PqNcUqyrvsxC5qQzcetkAE1crvukdsnBysTBr2/wxUidlzBbcDPO9ksTcvQ1XFDdqla0nEhXvq2hWwTy22wDcfLia7MpFKtxjJajJTeSOjFwqe+yre6tIEFsHfD9PPA0SxqK1GT2JfJC4R98bdpU/XBNPBef1jC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCh/g4jq; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CPrkyOPK"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a04bc559fso7002207b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:54:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCh/g4jq"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28a6cef709so97677466b.1;
+        Fri, 08 Mar 2024 01:54:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709891669; x=1710496469; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DCte3zDfFDpzFxFJ3x2DLLBJKe5cc/Nrxxv7q0fm6Fk=;
-        b=CPrkyOPKXcMGU/wQ2xTOk2h/isecBNXKy0lsvNRf2Crl6lsU/4ME4S5o3ti9EAUhGA
-         jXkSnr1AKerY6VRw1M0/mZyTsX/QBNJqD2qn5tYF+CowBNar5kSV36FUmi6u0z+da7b2
-         KsDm5m6erH6ffeU7yjqp2rxv/G8gy5vx8Nm+3fVvZwGzADcflwHJw6bReFM0/o1R3lls
-         t4HntlZCIoh8U4nLz2RnPRCq56bh0KM+rYBsZ3X8lHiS7+NNtEvU23K45+e9CY632ETL
-         TJEBEt3zV1nY3gfCXlzanzHY4Y05hQncPT85DPYe3M6oRi8hRNiBjq8aYiHnn+EQEAc5
-         IbFA==
+        d=gmail.com; s=20230601; t=1709891686; x=1710496486; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lx3npHykkw1gOdQqXLW5o/F+B78jLU3tilBWulRgUu0=;
+        b=eCh/g4jqDMU+DIb1Xuo1g8UFa5GVdj/eOurzpE/mpP1FGEPS3sUsGP4obd4q3jv0ot
+         Ynuj/+oUSaGg/8tnJx9tpbMj6k+McA5J9dUiuu8DcNz5hGiltVHHO+ekneafIo2ibRVi
+         n9Lugq8Bl+Ylthl0D0tTCTDiGNd5GsvC0Id2y2i/CK9eEH72RkUoNZ1MMVbqNBUgc/0I
+         bkQhNx8GxFynienzKMMQ6ZoEdzniNdzY4Ib39m8zgfkT5TAZnKcvllhhEQbwSa9oC/D4
+         GTqUICVsz1b2cfLAk2DOpHsp2JhEbLL43/y/VCTNyO3/KQR87q6vzLZzopl3SLsOHqZF
+         M9VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709891669; x=1710496469;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DCte3zDfFDpzFxFJ3x2DLLBJKe5cc/Nrxxv7q0fm6Fk=;
-        b=aejm0cQXQeeZ5vQdhTP/zaMXv6ctqQVARlbmBn0tZC5bsxrSr9lYn4H8uHDH6R0MUA
-         ncND35Tcf1dK8NIrR7rK2/ODXTNCd2bLXPf88Hoi3V9rJTiI95HyEsp0RYneukkYrFFb
-         +d6FLbGkaO5lqZ9HZxSb3L6j6aaUQU4/7W5/6bobxcolgwGFU9SQ2fMdNlt0g66OA2Me
-         wE0xUCfLoEh8J54jcBnIWwNSjjVdZhnyT6mRwfjE31M5lv8yXL+aDz6n4AdNpEwMQ4/b
-         9XTW3uFxHBl/Y5rSDi8jgBeEAipRps0eioHxUg5R9e84clZ/sAQCcpFbZrml1Vj3bgti
-         B20A==
-X-Gm-Message-State: AOJu0YwbwPdqlLp1n5B/K1e7+OTUtr3fX8kr2Lk1WF95kXqg3CK3Gz0V
-	tMBGzXaQQW3Fhb3TpTt97CsiFszD+B9wmZzn5hSevSYTzrOn7kWETMIb/ZDwDsUJZrOYKjl2po+
-	87AZVI8gwnnyOmw==
-X-Google-Smtp-Source: AGHT+IHvpLjAs9VWFhYi5i6yfYYbG4bZhXBRHRVlH/JfJzYRNMcsMntGozCSfEkyWoEyyvObEjmG4PLuMEM4p2U=
-X-Received: from howardyen2.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:16f7])
- (user=howardyen job=sendgmr) by 2002:a05:6902:722:b0:dcd:875:4c40 with SMTP
- id l2-20020a056902072200b00dcd08754c40mr5533087ybt.10.1709891669006; Fri, 08
- Mar 2024 01:54:29 -0800 (PST)
-Date: Fri,  8 Mar 2024 09:53:20 +0000
-In-Reply-To: <20240308095320.1961469-1-howardyen@google.com>
+        d=1e100.net; s=20230601; t=1709891686; x=1710496486;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lx3npHykkw1gOdQqXLW5o/F+B78jLU3tilBWulRgUu0=;
+        b=Bz4UJb4PISRHtTtyfKhH/3uHeNNsZOeYH62EYfphS7QiE6sXOsRaeAr//rDFdi+42B
+         Pg1sSRRaEG1wOFr+juEINd5SFuMmewExqZoeLnMMid2OJndF/+57MVB3/V1IygZnCIZb
+         5k/wa3uCRYms4nVovBs0snaOTORPIlMMZnqYGVq/jswzTpKvIvnhRLS3zKaMo2LB3Lag
+         PQwoCAF6Pz8DfgISSCqzrZr+ylZZh7O3iFPZDMLb0UknBzbxTVEeZNaSeuDy5NuzFCuf
+         OnfV61gARZpVqGHyQgp38IYwJbnyrXBwxtL/ATAiC2MOqHcJxKv50nZdCAVj2QRK2QUM
+         FZtA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOdGh1bgpA2CX7qwRB3VcORWFEU28VUPR4Ikpi1drSPejaOK+90I/g0slGPNjDFAzrURmY9rOpdm47oACZT59A7R7MM+Zms7IbZPIo
+X-Gm-Message-State: AOJu0YzF/ULrOdMRgXUuwm6K+yPGBK7OrjxKRHBnPMdmCrsmei8oIaIw
+	DAupka6vS/JM9FevwAm0c7PqA0EUrL0xAbaqmoqLpGvK4V8b1Lq2
+X-Google-Smtp-Source: AGHT+IF38PLd9vqK/V55Sk1fgDRHT28mC+PYjI17HoOSs0pCHtJdQhnEXF3SzRGotS0o/cQ2MQuZAg==
+X-Received: by 2002:a17:906:f850:b0:a45:bdc0:7f00 with SMTP id ks16-20020a170906f85000b00a45bdc07f00mr4849698ejb.46.1709891685642;
+        Fri, 08 Mar 2024 01:54:45 -0800 (PST)
+Received: from skbuf ([2a02:2f04:d207:f600::b2c])
+        by smtp.gmail.com with ESMTPSA id cm26-20020a170906f59a00b00a3ca56e9bcfsm9199309ejd.187.2024.03.08.01.54.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 01:54:45 -0800 (PST)
+Date: Fri, 8 Mar 2024 11:54:42 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 06/16] net: dsa: vsc73xx: add
+ port_stp_state_set function
+Message-ID: <20240308095442.ug4pmh4entgah5l3@skbuf>
+References: <20240301221641.159542-1-paweldembicki@gmail.com>
+ <20240301221641.159542-1-paweldembicki@gmail.com>
+ <20240301221641.159542-7-paweldembicki@gmail.com>
+ <20240301221641.159542-7-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240308095320.1961469-1-howardyen@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240308095320.1961469-3-howardyen@google.com>
-Subject: [PATCH v4 2/2] usb: host: xhci-plat: add support for multi memory regions
-From: Howard Yen <howardyen@google.com>
-To: gregkh@linuxfoundation.org, rafael@kernel.org, mathias.nyman@intel.com, 
-	hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
-	andriy.shevchenko@linux.intel.com, petr.tesarik.ext@huawei.com, 
-	broonie@kernel.org, james@equiv.tech, james.clark@arm.com, 
-	masahiroy@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	iommu@lists.linux.dev, Howard Yen <howardyen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301221641.159542-7-paweldembicki@gmail.com>
+ <20240301221641.159542-7-paweldembicki@gmail.com>
 
-The reason why it needs multiple regions is that in my system there is
-an always-on subsystem which includes a small size memory, and several
-functions need to run and occupy the memory from the small memory if
-they need to run on the always-on subsystem. These functions must
-allocate the memory from the small memory region, so that they can get
-benefit from the always-on subsystem. So the small memory is split for
-multiple functions which are satisfied with their generic use cases.
-But in specific use cases, like USB3 devices which support the stream
-trasnsfer or multiple devices connect to the host, they required more
-memory than their pre-allocated memory region, so I tried to propose
-this patch to give it the ability to get the memory from the other
-larger memory to solve the issue.
+On Fri, Mar 01, 2024 at 11:16:28PM +0100, Pawel Dembicki wrote:
+> This isn't a fully functional implementation of 802.1D, but
+> port_stp_state_set is required for a future tag8021q operations.
+> 
+> This implementation handles properly all states, but vsc73xx doesn't
+> forward STP packets.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> ---
+> v6:
+>   - fix inconsistent indenting
+> v5:
+>   - remove unneeded 'RECVMASK' operations
+>   - reorganise vsc73xx_refresh_fwd_map function
+> v4:
+>   - fully reworked port_stp_state_set
+> v3:
+>   - use 'VSC73XX_MAX_NUM_PORTS' define
+>   - add 'state == BR_STATE_DISABLED' condition
+>   - fix style issues
+> v2:
+>   - fix kdoc
+> 
+>  drivers/net/dsa/vitesse-vsc73xx-core.c | 99 +++++++++++++++++++++++---
+>  1 file changed, 88 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
+> index 425999d7bf41..d1e84a9a83d1 100644
+> --- a/drivers/net/dsa/vitesse-vsc73xx-core.c
+> +++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+> @@ -1036,6 +1029,89 @@ static void vsc73xx_phylink_get_caps(struct dsa_switch *dsa, int port,
+>  	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 | MAC_1000;
+>  }
+>  
+> +static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
+> +{
+> +	struct dsa_port *other_dp, *dp = dsa_to_port(ds, port);
+> +	struct vsc73xx *vsc = ds->priv;
+> +	u16 mask;
+> +
+> +	if (state != BR_STATE_FORWARDING) {
+> +		/* Ports that aren't in the forwarding state must not
+> +		 * forward packets anywhere.
+> +		 */
+> +		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+> +				    VSC73XX_SRCMASKS + port,
+> +				    VSC73XX_SRCMASKS_PORTS_MASK, 0);
+> +
+> +		dsa_switch_for_each_available_port(other_dp, ds) {
+> +			if (other_dp == dp)
+> +				continue;
+> +			vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+> +					    VSC73XX_SRCMASKS + other_dp->index,
+> +					    BIT(port), 0);
+> +		}
+> +
+> +		return;
+> +	}
+> +
+> +	/* Forwarding ports must forward to the CPU and to other ports
+> +	 * in the same bridge
+> +	 */
+> +	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+> +			    VSC73XX_SRCMASKS + CPU_PORT, BIT(port), BIT(port));
+> +
+> +	mask = BIT(CPU_PORT);
+> +
+> +	if (dp->bridge) {
+> +		dsa_switch_for_each_user_port(other_dp, ds) {
+> +			if (other_dp->bridge == dp->bridge &&
 
-Signed-off-by: Howard Yen <howardyen@google.com>
----
- drivers/usb/host/xhci-plat.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+You could use dsa_port_bridge_same(dp, other_dp) and that could
+eliminate the extra "if (dp->bridge)" condition, because it explicitly
+makes standalone ports isolated from other standalone ports.
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 3d071b875308..79e743aab62e 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -149,7 +149,7 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 	struct xhci_hcd		*xhci;
- 	struct resource         *res;
- 	struct usb_hcd		*hcd, *usb3_hcd;
--	int			ret;
-+	int			i, count, ret;
- 	int			irq;
- 	struct xhci_plat_priv	*priv = NULL;
- 	bool			of_match;
-@@ -194,6 +194,20 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 
- 	xhci->allow_single_roothub = 1;
- 
-+	count = of_property_count_elems_of_size(sysdev->of_node, "memory-region",
-+						sizeof(u32));
-+
-+	for (i = 0; i < count; i++) {
-+		ret = of_reserved_mem_device_init_by_idx(sysdev, sysdev->of_node, i);
-+		if (ret) {
-+			dev_err(sysdev, "Could not get reserved memory\n");
-+			if (i > 0)
-+				of_reserved_mem_device_release(sysdev);
-+
-+			return ret;
-+		}
-+	}
-+
- 	/*
- 	 * Not all platforms have clks so it is not an error if the
- 	 * clock do not exist.
-@@ -431,6 +445,9 @@ void xhci_plat_remove(struct platform_device *dev)
- 	clk_disable_unprepare(clk);
- 	clk_disable_unprepare(reg_clk);
- 	reset_control_assert(xhci->reset);
-+
-+	of_reserved_mem_device_release(hcd->self.sysdev);
-+
- 	usb_put_hcd(hcd);
- 
- 	pm_runtime_disable(&dev->dev);
--- 
-2.44.0.278.ge034bb2e1d-goog
+> +			    other_dp->index != port &&
 
+You could move the "int other_port" definition to dsa_switch_for_each_user_port()
+scope, and thus reuse it here.
+
+> +			    other_dp->stp_state == BR_STATE_FORWARDING) {
+
+You could "continue" on the negated condition, and reduce the
+indentation one level further.
+
+> +				int other_port = other_dp->index;
+> +
+> +				mask |= BIT(other_port);
+> +				vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER,
+> +						    0,
+> +						    VSC73XX_SRCMASKS +
+> +						    other_port,
+> +						    BIT(port), BIT(port));
+> +			}
+> +		}
+> +	}
+
+All in all, I would have written this as:
+
+	dsa_switch_for_each_user_port(other_dp, ds) {
+		int other_port = other_dp->index;
+
+		if (port == other_port || !dsa_port_bridge_same(dp, other_dp) ||
+		    other_dp->stp_state != BR_STATE_FORWARDING)
+			continue;
+
+		mask |= BIT(other_port);
+
+		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+				    VSC73XX_SRCMASKS + other_port,
+				    BIT(port), BIT(port));
+	}
+
+Anyway this does not affect functionality, and it is up to you if you
+integrate these suggestions or not.
+
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+
+> +
+> +	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+> +			    VSC73XX_SRCMASKS + port,
+> +			    VSC73XX_SRCMASKS_PORTS_MASK, mask);
+> +}
