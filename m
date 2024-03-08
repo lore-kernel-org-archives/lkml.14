@@ -1,113 +1,129 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3288C6AC0
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 00:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCCD139E;
+	Fri,  8 Mar 2024 00:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709858894; cv=none; b=rFNiQQLhHBsNcYLJyexiY4vF1Oo4VLJwlZz9cv741D+9aoY6a5KVqLMknrSVotM1ulJeG0im3vv5Fs7Dw/xJLDB3D9q1Y8acBo8nqd+FA/3G8UCbIO3VULukvFFOdF3mwpXpgng/Hi7s7CL41kEsciS9ecWya1XyL9PvUpmfDR4=
+	t=1709859309; cv=none; b=U5M0NJL4E27oE/7h6+0bv6Hq7xLkfPjvTzK/pscUgnPrawxeEKb6O31J6rXk3F6gi+cjAl8CaGZzCf8zJvyAvpUrS7ilUuTx2HkI1az2b4ApvvJMk4oETInaDP7O1Xi+pmgTm5wFhoDLDEb/a5o8UGRahs7UQEZSwCmDMhWdLZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709858894; c=relaxed/simple;
-	bh=x7i795oc4v+t1eVSTstgC0hgt1XNgHMNLBknwKT8gn0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z+84MmYfnIwz9e45JdUNsyg3T/SKGkvv+f3dz+ZJWmohJN3RUPCxv0urLnd4tC3S/qhU8X5jweT6tXtlQ+5+DgOusC+687l8lVSF83uG1zdH+3++NZgL2RAwLapJcGnRUw+V3cBgXh9vcaqqmXmumGnJ1E5IzX6MhUi03Iadu48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=nJEX4FqH; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1709859309; c=relaxed/simple;
+	bh=Kl50z5rZDKN8yW2rlkLfQHge6/CEjtccvWbBjiAdYPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjaMn52xPJdmrykH3bNhskjJyqMNxzlKTSKgFcF/sjVgnOUmUIcmjOS5ckGIpV9Uvfb0/oL4uEx7f6X9uNkJStOpDaUKQ0VpER8SEbj45TP/5QhmhNup2EZZZfXpm/5o7p4KRtvFpqO5wzL5bcImbaqrKaoe7vOAjYjXp0aSx4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChQoYXcP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="nJEX4FqH"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d944e8f367so13139855ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 16:48:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1709858890; x=1710463690; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cRm8D61etT1wEE9ZqTXPR465tYE154OjnBr2zkyvLfY=;
-        b=nJEX4FqHrGjltlxLD73vtmkl0M3EHI+vCIf9xQi9a7zNkf7mMpuncQisYybtaA4M2e
-         liyiPN+1QbaQ5Ujiyd4yhXiRBJZ6sctn9YzG0b53dGGkOqYsyIo3TKdo/SoVzCPAoDCY
-         wQTP5rOeoaPhedpr7HJ3QWNwF2sGtg/tiOD6vuVb50v7KkGX0Oowy6jUcFWfUYikHNVC
-         gjSF6DZD3haaEgGe0gilWykHKhaCI5OmvPG757uas2plUTe+/nUyiiQ7Bt3wTIS8foKj
-         sUP0pHvGWz6pibdG+ABBXzKpn1b9B3+8+XEBoC6/jJD92k8X5kxGWM85dIYJ5el6+XoU
-         ZPAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709858890; x=1710463690;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cRm8D61etT1wEE9ZqTXPR465tYE154OjnBr2zkyvLfY=;
-        b=SjVyYdaXhb1esOa7AWGsFYHKWIIOy2mbM/kX9blvqnrhlbOLYNTnWBgn4yjAOpqdN5
-         ciehOWM4flA4sqXsdS6O/N7PtCU5FJEMWateWN1svuW9/b8l4gpFdJFZKG1bxbgIQ9AG
-         PGjLjdQ+reC/39XNNvcGrK5boVTnCdco9TmbTH0BhprL1ge8oce2nX+O+Sq79mohqVd+
-         3TVoorop2EKHZN0iqTl5h7v8GriWdPjMklLrA/G/IbBsOauMekisQ8I/sG0VpJkrw3L1
-         Jjnu4XhthNoGZ9mPb24QX+B9KFY58hVSHD7Vb+dTsLs2ExJpteTQoLyn7CZtZmleeie+
-         Vl3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXtK6iCkXhD/JLs+EypQDxpd53bXhzFVoHJdICYaDYMEVc3EvALp4Y2+e9A5kZf/lOWZHGTPfZ9/bIkRslqgO61kh089kPxhpFDzNtg
-X-Gm-Message-State: AOJu0YzWA19IwbL3baB+NELG2nToR+OnxI1X+eOmtUlOsTV5LFVKtTod
-	HwFrNZ1fuHxtflTT9KFPyDx9BScrokPy80Zx2UnCiKxgDOyqvOJlwPbSiGPWeeM=
-X-Google-Smtp-Source: AGHT+IENi1OtAYtCq66iswHj76HX1V9umjMChq2vno/A5VuNp8Xeqzs/a0D0DwP3R6xNOwINfRfFcg==
-X-Received: by 2002:a17:902:f705:b0:1dc:a844:a38b with SMTP id h5-20020a170902f70500b001dca844a38bmr10788072plo.67.1709858890503;
-        Thu, 07 Mar 2024 16:48:10 -0800 (PST)
-Received: from xu.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id g12-20020a170902c38c00b001dc819f157dsm15233055plg.251.2024.03.07.16.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 16:48:10 -0800 (PST)
-From: Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>
-To: sam@ravnborg.org,
-	neil.armstrong@linaro.org,
-	daniel@ffwll.ch,
-	dianders@google.com,
-	hsinyi@google.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>,
-	Douglas Anderson <dianders@chromium.org>
-Subject: [V2] drm/panel-edp: Add BOE NT116WHM-N44 and CMN N116BCA-EA1
-Date: Fri,  8 Mar 2024 08:47:57 +0800
-Message-Id: <20240308004757.1048284-1-xuxinxiong@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChQoYXcP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E44BC433F1;
+	Fri,  8 Mar 2024 00:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709859308;
+	bh=Kl50z5rZDKN8yW2rlkLfQHge6/CEjtccvWbBjiAdYPo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=ChQoYXcPHNSJcbPbOm+q5p2knS/G6zVfeycEJtC8Vi7AqGJkfiDYx6Ur82DEPJ05o
+	 cGXi74OjU9LjfVNuZS742VXlzOkImZofiNGypL5eHAkq+1CSNzppcdnwmXXtTvWad0
+	 AH7OmuAkhX2BuNZ3CBv0bCL1ge3T8FNymLEGsbKgCswzjX2q5xfoSvPaQ2ePT26CjB
+	 Zz2Le+qJwzFxHNO5gJwDF7C7vFpEEcvUruZ7BXeIhXqntb+mCkFcwjps6PbUtT4ab+
+	 oLsfXZukF77+3jX27CI38ArI9Q7TKrwmE2xvAo5M6+KfuEDU2SHgRI22bsDlglgkup
+	 pf8stVrg5UCNg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 103F1CE0716; Thu,  7 Mar 2024 16:55:08 -0800 (PST)
+Date: Thu, 7 Mar 2024 16:55:08 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Julia Lawall <julia.lawall@inria.fr>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>, linke li <lilinke99@qq.com>,
+	joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
+	frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
+	linux-kernel@vger.kernel.org, qiang.zhang1211@gmail.com,
+	quic_neeraju@quicinc.com, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcutorture: Fix
+ rcu_torture_pipe_update_one()/rcu_torture_writer() data race and concurrency
+ bug
+Message-ID: <7b11260c-ebed-4440-9d35-d6a788151888@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <83b47424-e5e0-46de-aa63-d413a5aa6cec@paulmck-laptop>
+ <CAHk-=wiX_zF5Mpt8kUm_LFQpYY-mshrXJPOe+wKNwiVhEUcU9g@mail.gmail.com>
+ <851dc594-d2ea-4050-b7c6-e33a1cddf3a1@efficios.com>
+ <72b14322-78c1-4479-9c4e-b0e11c1f0d53@paulmck-laptop>
+ <bebbed4a-ced1-42c5-865c-dc9dc7857b6c@efficios.com>
+ <c1bb35c4-29af-4a84-8ba7-81ba30639a69@paulmck-laptop>
+ <CAHk-=wia769uoyVz3P7yZURhO8NNB7xeOLX07ZM2vWf1nTLYkQ@mail.gmail.com>
+ <65a9665e-22d4-4f21-a1cb-7ef1c82ed078@paulmck-laptop>
+ <alpine.DEB.2.22.394.2403072231130.3161@hadrien>
+ <CAHk-=wjq1g4jOhDvGNyvTiBxwhu97+Ymszf3W4i6MS1jqw5=kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjq1g4jOhDvGNyvTiBxwhu97+Ymszf3W4i6MS1jqw5=kg@mail.gmail.com>
 
-Add support for the following 2 panels:
-1. BOE NT116WHM-N44
-2. CMN N116BCA-EA1
+On Thu, Mar 07, 2024 at 02:09:00PM -0800, Linus Torvalds wrote:
+> On Thu, 7 Mar 2024 at 13:40, Julia Lawall <julia.lawall@inria.fr> wrote:
+> >
+> > I tried the following:
+> >
+> > @@
+> > expression x;
+> > @@
+> >
+> > *WRITE_ONCE(x,<+...READ_ONCE(x)...+>)
+> >
+> > This gave a number of results, shown below.  Let me know if some of them
+> > are undesirable.
+> 
+> Well, all the ones you list do look like garbage.
+> 
+> That said, quite often the garbage does seem to be "we don't actually
+> care about the result". Several of them look like statistics.
 
-Signed-off-by: Xuxin Xiong <xuxinxiong@huaqin.corp-partner.google.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+[ . . . ]
 
----
-Changes in V2:
-  - Updated the subject of commit message.
-link to V1: https://patchwork.freedesktop.org/patch/msgid/20240307094433.3440431-1-xuxinxiong@huaqin.corp-partner.google.com
----
- drivers/gpu/drm/panel/panel-edp.c | 2 ++
- 1 file changed, 2 insertions(+)
+> > diff -u -p /home/julia/linux/kernel/rcu/tree.c /tmp/nothing/kernel/rcu/tree.c
+> > --- /home/julia/linux/kernel/rcu/tree.c
+> > +++ /tmp/nothing/kernel/rcu/tree.c
+> > @@ -1620,8 +1620,6 @@ static void rcu_gp_fqs(bool first_time)
+> >         /* Clear flag to prevent immediate re-entry. */
+> >         if (READ_ONCE(rcu_state.gp_flags) & RCU_GP_FLAG_FQS) {
+> >                 raw_spin_lock_irq_rcu_node(rnp);
+> > -               WRITE_ONCE(rcu_state.gp_flags,
+> > -                          READ_ONCE(rcu_state.gp_flags) & ~RCU_GP_FLAG_FQS);
+> >                 raw_spin_unlock_irq_rcu_node(rnp);
+> 
+> This smells bad to me. The code is holding a lock, but apparently not
+> one that protects gp_flags.
+> 
+> And that READ_ONCE->WRITE_ONCE sequence can corrupt all the other flags.
+> 
+> Maybe it's fine for some reason (that reason being either that the
+> ONCE operations aren't actually needed at all, or because nobody
+> *really* cares about the flags), but it smells.
+> 
+> > @@ -1882,8 +1880,6 @@ static void rcu_report_qs_rsp(unsigned l
+> >  {
+> >         raw_lockdep_assert_held_rcu_node(rcu_get_root());
+> >         WARN_ON_ONCE(!rcu_gp_in_progress());
+> > -       WRITE_ONCE(rcu_state.gp_flags,
+> > -                  READ_ONCE(rcu_state.gp_flags) | RCU_GP_FLAG_FQS);
+> >         raw_spin_unlock_irqrestore_rcu_node(rcu_get_root(), flags);
+> 
+> Same field, same lock held, same odd smelly pattern.
+> 
+> > -       WRITE_ONCE(rcu_state.gp_flags,
+> > -                  READ_ONCE(rcu_state.gp_flags) | RCU_GP_FLAG_FQS);
+> >         raw_spin_unlock_irqrestore_rcu_node(rnp_old, flags);
+> 
+> .. and again.
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index a0b6f69b916f..e21b4bb2bb3c 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1952,6 +1952,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b43, &delay_200_500_e200, "NV140FHM-T09"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b56, &delay_200_500_e80, "NT140FHM-N47"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0c20, &delay_200_500_e80, "NT140FHM-N47"),
-+	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0cb6, &delay_200_500_e200, "NT116WHM-N44"),
- 
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x1132, &delay_200_500_e80_d50, "N116BGE-EA2"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x1138, &innolux_n116bca_ea1.delay, "N116BCA-EA1-RC4"),
-@@ -1963,6 +1964,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x1154, &delay_200_500_e80_d50, "N116BCA-EA2"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x1157, &delay_200_500_e80_d50, "N116BGE-EA2"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x115b, &delay_200_500_e80_d50, "N116BCN-EB1"),
-+	EDP_PANEL_ENTRY('C', 'M', 'N', 0x115e, &delay_200_500_e80_d50, "N116BCA-EA1"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x1247, &delay_200_500_e80_d50, "N120ACA-EA1"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x142b, &delay_200_500_e80_d50, "N140HCA-EAC"),
- 	EDP_PANEL_ENTRY('C', 'M', 'N', 0x144f, &delay_200_500_e80_d50, "N140HGA-EA1"),
--- 
-2.40.1
+In all three cases, the updates are protected by the lock, so the
+READ_ONCE() is unnecessary.  I have queued a commit to remove the
+READ_ONCE()s.
 
+Thanks to both of you (Julia and Linus) for spotting these!
+
+							Thanx, Paul
