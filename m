@@ -1,112 +1,79 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FB41D54D;
-	Fri,  8 Mar 2024 15:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38C31D554;
+	Fri,  8 Mar 2024 15:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709910322; cv=none; b=j6nmN9Py+70iX2lB/u1l0BPnw2ZrV/RuwUyix5DOgA5AL054FOrDlaI0vKVkXsa2T+mCk76Ht1fqX+PFhE71klq3KOck63wwJRFIpyO5fbul26oGjqd2mdg3Riy9JK/jP6ZW6DzNp1lhwpZBzPjqFD9bx6czM2zJtKhFJ8iZ0Uc=
+	t=1709910369; cv=none; b=BVvbKxsrtD+JDZCtJZNFNB5WExQ/Ld8NWkNleCJENF32/w0fXy692ZJkLqNykJ35DjSobUtaRZGHkn9iLfjIMtszJ7Z6tYUXZHUI/48QtMSV71OSGN1y1HN+zUmQxD0vsYpK2j8u1Vbo/r7ZDqqZF0R3ENaIDHiGfTHr6FyuciU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709910322; c=relaxed/simple;
-	bh=22+TL+g0R+mDpEkSxUftfZ3Jch3HXDCSUfWz772B9+Q=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u393/Y8obLnLLIlw9BCgNUU4j2yq/FFImXyG+ax9F/K+NJFeHqJrLEPK6Ccj7qIe7NQVGGKogQX2RCJiLVHdkIg1t91ESXkvbJsPkInEOoTgy5cUsh4BF717Sqnrai3q5WVEBzlFms995GeUrwDyZOgZbzWROwEKVw29jiYxpww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdLo5CVM; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709910369; c=relaxed/simple;
+	bh=K47phgkDZNLRQ1Cerqn/YO0B/e7+sDQNzjKODd9H+eo=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=fG+IhG5/TeKov6a+f10Eg7VosmJDMvDw4xNtB6R9fEeh9Zr/yf7c3eanwLSnv7MPehYGfgiwezqYGbIsih+o584bm3YfipwWRW00XKV3npDo3dOLNH2ViRoHV38CDfrggKvnSkXp3kBwZcopkPSsuPrJdxiiFvnmv5KjzDp1w9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtGcnHti; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdLo5CVM"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d269dc3575so19823781fa.1;
-        Fri, 08 Mar 2024 07:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709910319; x=1710515119; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QZ7RvVvOlckHBQMf9F2I+Mtrwc2yTclL5994XgQW8m4=;
-        b=NdLo5CVM8S7tdi7GyXrwRdegmHwKQ2UUKxBIbFythdiaFIM7LupWG0ZR+uXgQvDHhW
-         gFKVk4CnNCUDdMK5cmV0H768J6//m3RcUJ0jpkeTb9aPdImTIIOJE8NKWI+8lKn/nnr+
-         7AMopPpXYIcuQcx8ozG9jcyl3P0csrTn/MRi5hQgtumbWI7JJJ5f3Ol+q8xpY1B8gDcC
-         Z5Ol/edIKW2ESkBwHzw8hWfEWVNf5o84lfpTmNzFQzw/PEELc/+QDeW1Rpg76mzb503E
-         poV7Ct/uD48+YVTFY3sGkWUCVckQLGkjKXhr1B/WbQ928m9HiEr7Xc5lSpjEDVRhlGNo
-         9LPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709910319; x=1710515119;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QZ7RvVvOlckHBQMf9F2I+Mtrwc2yTclL5994XgQW8m4=;
-        b=RiSh1/qIEA6SDN9o9/yHbO4Hd2db6SeMUvAzYkRZf8JnnigcirDXippie5ZFYRVibb
-         3+/XY/MQ+6OA3DiahBg4qXosKpX3PFYtvtbuKnmZEjkfuBjH5taQfxnMh2u2w8EPCzux
-         gMchIaKwTNRGq4ZoqisGU1BJVH10ixIe5rbh59Rz6jwZ6myIZUwrc/vh11Hj/0ZY31j1
-         Cb1QpYRyyi1KYq1DGIDeHF1AR/UR3H2snQNnk0TTEfCE3BXHSdYQUEhK+S0TmOMkA1hp
-         FexZRafyRvyv+hOxXMLuLuZe/sWVH1V7i4M8xwyHP6I7O0HyT/WqjG1bmfYzL4BXHDST
-         o/iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoQyg1z3aPvnczsqBHONvbagau68yrZaJS7xM55JAYC5ZQ+CVvVp2WfrsmibnRWUIDs8kOjBAWC77VjK6TZIeWADKMbi8KUHscMhRoSjvNpwvfwwyVREvfNlzJ/OX86Nm2
-X-Gm-Message-State: AOJu0Yz2Uqt8nsicRotBR/tXSyMaOOPcBf0Y75eKtvSDhRmNAxvwIDT1
-	oUiywvrHuA3mG36hF5eSrZERbp9HoYuffTPN40emsqAcXnJtUPvn
-X-Google-Smtp-Source: AGHT+IHMGi72wvWIbU4KpdLraJkU3A2q5TOsLVdb7+bEZJEFPiDZS5P2L0xlcOweUxpOy4KMRoDI2w==
-X-Received: by 2002:a2e:9b45:0:b0:2d2:b5cb:cc3f with SMTP id o5-20020a2e9b45000000b002d2b5cbcc3fmr216381ljj.2.1709910318810;
-        Fri, 08 Mar 2024 07:05:18 -0800 (PST)
-Received: from pc636 (host-90-235-19-15.mobileonline.telia.com. [90.235.19.15])
-        by smtp.gmail.com with ESMTPSA id i18-20020a2e8652000000b002d21d8fa04bsm3478248ljj.122.2024.03.08.07.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 07:05:18 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Fri, 8 Mar 2024 16:05:15 +0100
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>, linux-kernel@vger.kernel.org,
-	frederic@kernel.org, boqun.feng@gmail.com, urezki@gmail.com,
-	neeraj.iitr10@gmail.com, rcu@vger.kernel.org, rostedt@goodmis.org,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH] [RFC] rcu/tree: Reduce wake up for synchronize_rcu()
- common case
-Message-ID: <ZespK0CrkVFCu6_p@pc636>
-References: <20240307234852.2132637-1-joel@joelfernandes.org>
- <CAEXW_YQ-TZB-1gpxvf7v+QAZhHtzV5waBA1VemtgEwNktSp=ww@mail.gmail.com>
- <ccbdf4d4-6972-430c-a479-0d20b318213b@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtGcnHti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10628C433F1;
+	Fri,  8 Mar 2024 15:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709910369;
+	bh=K47phgkDZNLRQ1Cerqn/YO0B/e7+sDQNzjKODd9H+eo=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=ZtGcnHti66X/DljK+xp8+Cd7ys/5i3rMLmiURoCflEE3GePKT0Z5XCpcHkEWLs1oG
+	 l2/zXlaH3ynKhWz7s5fN0pXOd/f8v0VjWaXd4ghd+5By67oeb7T6liJreLN0cqlfNS
+	 Abi/LsQnbjVR61DwaUiSINWDmISKRm8znQbuQd1gVGeCEOkrvGDktE/wdt8YQy+CuF
+	 fF8oj5dH+AM6Nr1OQeE7qdpjjUTulsKLAk/RgcksjUep6G+03Ubrf2bEGDPBUx6hoT
+	 S/tBIjkKPN5yxcCks1DvM5QBRqSk+BhtAm+X7EzvGxbQk6urXbWJGn3L4n9tz6G+s0
+	 gpMVGaxjKstaQ==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ccbdf4d4-6972-430c-a479-0d20b318213b@paulmck-laptop>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: ath11k: fix soc_dp_stats debugfs file permission
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: 
+ <20240305-fix-soc_dp_stats-permission-v1-1-2ec10b42f755@quicinc.com>
+References: 
+ <20240305-fix-soc_dp_stats-permission-v1-1-2ec10b42f755@quicinc.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, <ath11k@lists.infradead.org>,
+ <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170991036603.1311983.8197697439450200231.kvalo@kernel.org>
+Date: Fri,  8 Mar 2024 15:06:07 +0000 (UTC)
 
-On Thu, Mar 07, 2024 at 04:06:06PM -0800, Paul E. McKenney wrote:
-> On Thu, Mar 07, 2024 at 06:52:14PM -0500, Joel Fernandes wrote:
-> > On Thu, Mar 7, 2024 at 6:48 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > In the synchronize_rcu() common case, we will have less than
-> > > SR_MAX_USERS_WAKE_FROM_GP number of users per GP. Waking up the kworker
-> > > is pointless just to free the last injected wait head since at that point,
-> > > all the users have already been awakened.
-> > >
-> > > Introduce a new counter to track this and prevent the wakeup in the
-> > > common case.
-> > >
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > 
-> > Forgot to mention, this is based on the latest RCU -dev branch and
-> > passes light rcutorture testing on all configs. Heavier rcutorture
-> > testing (60 minutes) was performed on TREE03.
-> 
-> Very good, thank you!
-> 
-> Uladzislau, could you please pull this into the next series you send?
-> I can then replace your commits in -rcu with the updated series.
-> 
-Absolutely. I will go through it and send out the next version!
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
---
-Uladzislau Rezki
+> Currently the soc_dp_stats debugfs file has the following permissions:
+> 
+> # ls -l /sys/kernel/debug/ath11k/pci-0000:03:00.0/soc_dp_stats
+> -rw------- 1 root root 0 Mar  4 15:04 /sys/kernel/debug/ath11k/pci-0000:03:00.0/soc_dp_stats
+> 
+> However this file does not actually support write operations -- no .write()
+> method is registered. Therefore use the correct permissions when creating
+> the file.
+> 
+> After the change:
+> 
+> # ls -l /sys/kernel/debug/ath11k/pci-0000:03:00.0/soc_dp_stats
+> -r-------- 1 root root 0 Mar  4 15:15 /sys/kernel/debug/ath11k/pci-0000:03:00.0/soc_dp_stats
+> 
+> Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+fa645e663165 wifi: ath11k: fix soc_dp_stats debugfs file permission
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240305-fix-soc_dp_stats-permission-v1-1-2ec10b42f755@quicinc.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
