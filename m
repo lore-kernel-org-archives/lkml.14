@@ -1,212 +1,141 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC5C55E50
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 11:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCA63C24;
+	Fri,  8 Mar 2024 11:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897087; cv=none; b=aQsK36cLl2zKDQEfrpfahpaG/HUxuHan1TMXAutzJ7o7GLtEzIFdRaAjJInRBBSA0Wg+5MmzlH4XPVPdZoQZ1myvrjVjP+kHxo9Dxzptaxz7SNAuuXw7XcggQrnViWORRlcsniQK57aSKa/DMsTpShsKwt2/WsGFmXWIAKz9iMI=
+	t=1709897112; cv=none; b=m1MXiTrcDz+UTh4HP3RvLVchsIdZXWn3ceaBtmoerbXJw38RM0DGSh/FKows3g+xnIiCTTmLWSmD+xWniqqga5zwruKPJ48o8RnZtweQyaRJ4oSchJaO6FzCqVsbUnx1d6nJ+P1OQYR+6h1Xr0HpUV5H1MdyvcAtwEU7oIvw2i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897087; c=relaxed/simple;
-	bh=32OmyjYik9xrpjbPpqrSbFDA5zVyxxWLCeHykPUBaPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SpawMsjcGBbxdxBaAmQEwHoOuBsF3ol9KxMif3kUflizqL7aYDn7rPzQZvAAcysEHloCRc4HT0k2O6h+G1aRhv0plKeW+N6uAFMV2TPXmklTTe7yECKLIqj87O/G3zeOa8kuVSlTLpX7X55S1TsGITaXVtv1h0F1J6VHoQqdqKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Kh3XUnRY; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1709897112; c=relaxed/simple;
+	bh=o2hNrgL13/sLtHdBP4TmsgTiEkFTQ3vVc2NOhew4J4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqVztLJ4wEYHjaTboAXzqDiNFxoXzlXpe1j+uvTzibeLtw7b+K0Yx17z9d4C+GHkCwHw+yYCIsHeNlzg0XbuUNJe/FH2TDsndKZ9+a5VhPQ7FzBC7HDiyZj89wbC1DKcgvEg5+WkL3uUg5joPe1VJJpt/GZdxQayml123376Op8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fjZNPKT7; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Kh3XUnRY"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so943169a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 03:24:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjZNPKT7"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d2ab9c5e83so17952701fa.2;
+        Fri, 08 Mar 2024 03:25:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709897083; x=1710501883; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oAeQj9nX/mCE4SAm/UXcMQjsHuY2Atxy9Nfnai0Y6DQ=;
-        b=Kh3XUnRYgHinumYr+ZDxhYLZdhhPQlzzIqn/+5uEAvivTxTO/clUUHDkBxLJqHlXLq
-         BbZnt+h3Hk9Xo4aoriD8FJhl9yOGLbdkPtzY4yhS9krJT+zVL2eEO+wCsMydMdGCKFHm
-         n28IWEePL5dEyiUO+WlOhSVtAVq3lqooY1jfma95gLmJCY0Pk6xOicW9sG+q+8HSD6o1
-         LtT5sTBVwhl0v1kx/QqRXOCBPkR/pEROFSA9bZ4oAPJJo6syHFlEY6f6BYMAF27zhvuR
-         k6VkmzgT9R+H7QCwHeBX4LJOix/nhLMMqy20I/wkX60OPBkmbWRp4SRKFnlW3ZkDggOh
-         PYxw==
+        d=gmail.com; s=20230601; t=1709897108; x=1710501908; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZEG5PQAxEQMJdi4y7r2f556cfCDtnRfMruM9cmX0as=;
+        b=fjZNPKT7Ps2YmPxxkCl7XBDrBQzcguq6Bq1Ur+hp9z5ymZU3/YVrUiA7OvbYPQZhsx
+         y1gJ6gVuJG7tYtTdM4ylND8BpptPadhpjIIk7BVMnxcwgK52R4+SH/bqxPhFwrH/c/S6
+         sF5bvoDzYFpALvnsmUAQzhLKdllhH7q3/lIV+djqEkk28hREuhOu3fzi27+FZi+Wm1HU
+         1xe+rr+OGIhHR54Esq/3OBRMS3JrfuDcIq1LfrguHWgZo/UjVDURC7DQ8D6OzLWHmRq1
+         uH3GlDuoC+JYOTlgFDZfmzoRgResAHLC62hMVmpel4Gc2CqnU8jfshSMTaDSr1HpyHmL
+         zFXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709897083; x=1710501883;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oAeQj9nX/mCE4SAm/UXcMQjsHuY2Atxy9Nfnai0Y6DQ=;
-        b=NihSzcoN31Mru3EldBtMQs8V3PxitZGleVKJuudjWH9t84d3Uw4dExW0XDy78jW/Xm
-         sVi/9Ew8sgBU4uD9PvX7x0Ocz5mE4rnHHZbhPN35/+RPSaIZwKBqhdQEzlfdR/JBAVwu
-         Fj3TNQHDr5jZi+OOn1slTK/fNW/lXDuY/YC34Ex8UgIB+Tji+AZlakLt2E9QcNqFOdlE
-         9pS3t+5e1zEJBv6UcQoAsJW9ZPc9tq+vvrqU12sb7xeCrrOOFBckQuyDrZUITZGrO1x3
-         4K2A7zIzhdUg/quf2H3We6i989LGO6pfwduWSnc8g/GH8+3zHrPyLwXTs+2fH4eWykbB
-         4Ppw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNEfai7D9rtuWpfQ5YfuutJmTQabQzcLlf2ksT5eJw+vetsG3bqp8IeUWIVqVKQ4s1Fa3lLZZv0JC/LSxH1shbu68a5fW7uQMgEyMr
-X-Gm-Message-State: AOJu0YxqPdDPAICpyH3L4eA9xvpT/VY7NmbAU10Po7gS/M7ze/UsuZaO
-	J2TbRLNfi3fio9YnbvudklZ+cXXfbp+bghz8K9nHGFg5RWK+EduCUg5YIX07wNQ=
-X-Google-Smtp-Source: AGHT+IEvYNFKidP5dUJN9E5a69C7gwcEqHa2YT+x32x0AhHetixroqJyaFVB68JQgbsLBfpod0hk2Q==
-X-Received: by 2002:a17:907:1189:b0:a43:f587:d427 with SMTP id uz9-20020a170907118900b00a43f587d427mr13911312ejb.34.1709897082984;
-        Fri, 08 Mar 2024 03:24:42 -0800 (PST)
-Received: from [192.168.1.70] ([84.102.31.43])
-        by smtp.gmail.com with ESMTPSA id k23-20020a1709063e1700b00a42f6d48c72sm9307224eji.145.2024.03.08.03.24.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 03:24:42 -0800 (PST)
-Message-ID: <44295772-4635-42c2-b7b5-cdc37505715e@baylibre.com>
-Date: Fri, 8 Mar 2024 12:24:40 +0100
+        d=1e100.net; s=20230601; t=1709897108; x=1710501908;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sZEG5PQAxEQMJdi4y7r2f556cfCDtnRfMruM9cmX0as=;
+        b=P8D8C3Qko+lVbZPUTK4bax+YrYDdTVQcVJ90+zoH/VcXjMpTMIBllHaR+xaOiu338x
+         HaWdQrV55froQ0VmDl1RRN5mRilRXwdFqgXXz9IfUW/Mp1C0taJFiwd82EfgVRAAe/7Q
+         EXLazLwv0R46jXQyQb+c/sPc+T1uvUkavf7MKT0H9jABDwp83ynzdOYk58v3TuYKIBmA
+         0xHgSELIQLe0OP/3oEiy6AtF6DcGgwB2JY44VQmQc5lcPgtFM1Ff7XdJm+Jw+j1gp6CP
+         NpWsB9mSXIJPgAOdkcmeyF6qEFYDGPGLyUvwmTkDj/0P+YBpivwQ+b4vRw6gvsWZQOrA
+         19/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXempQs7L/LRqBzZJrO1SwpZ0+lKsC7PDd9rMdRLh80zaxtApIKwmGQ9YICSplIA1f9PFBYXxc7OcZzTIzBe6n0ymdhc0ejZbLRP1z2
+X-Gm-Message-State: AOJu0YxgHwQERKjsWAFSOfIkEEyKf93J6YgiFkdlg1s2/6fEdpv2hmBr
+	MpK9Nx/vMhhnN4Brv3hRrirwGW3J5MIUgy7Fm5AQvmdEJERL0lb+vhuoLUFGlck=
+X-Google-Smtp-Source: AGHT+IEeplHr/QBHhr5GpCgqcEdkoivlC4i/RyyWQPsFh/o5fRlVuchcWc0P9iwLjjrdnMRGr0l85g==
+X-Received: by 2002:a2e:8945:0:b0:2d2:4160:bb73 with SMTP id b5-20020a2e8945000000b002d24160bb73mr3674359ljk.3.1709897107640;
+        Fri, 08 Mar 2024 03:25:07 -0800 (PST)
+Received: from tom-HP-ZBook-Fury-15-G7-Mobile-Workstation (net-188-217-49-82.cust.vodafonedsl.it. [188.217.49.82])
+        by smtp.gmail.com with ESMTPSA id b20-20020a0564021f1400b00567fa27e75fsm2415001edb.32.2024.03.08.03.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 03:25:07 -0800 (PST)
+Date: Fri, 8 Mar 2024 12:25:05 +0100
+From: Tommaso Merciai <tomm.merciai@gmail.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Alexander Shiyan <eagle.alexander923@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v2 6/6] media: imx335: Limit analogue gain value
+Message-ID: <Zer1kQvdA+Nf9KG1@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
+References: <20240308083312.90279-1-umang.jain@ideasonboard.com>
+ <20240308083312.90279-7-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/11] mfd: tps6594: Add register definitions for TI
- TPS65224 PMIC
-Content-Language: en-US
-To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
- lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com,
- vigneshr@ti.com, kristo@kernel.org, eblanc@baylibre.com
-References: <20240308103455.242705-1-bhargav.r@ltts.com>
- <20240308103455.242705-2-bhargav.r@ltts.com>
-From: Julien Panis <jpanis@baylibre.com>
-In-Reply-To: <20240308103455.242705-2-bhargav.r@ltts.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308083312.90279-7-umang.jain@ideasonboard.com>
 
-On 3/8/24 11:34, Bhargav Raviprakash wrote:
-> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
->
-> Extend TPS6594 PMIC register and field definitions to support TPS65224
-> power management IC.
->
-> TPS65224 is software compatible to TPS6594 and can re-use many of the
-> same definitions, new definitions are added to support additional
-> controls available on TPS65224.
->
-> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Hi Umang,
+
+On Fri, Mar 08, 2024 at 02:03:12PM +0530, Umang Jain wrote:
+> The sensor gain (both analog and digital) are controlled by a
+> single gain value where:
+> - 0dB to 30dB correspond to analog gain
+> - 30.3dB to 72dB correspond to digital gain
+>   (with 0.3dB step)
+> 
+> Hence, limit the analogue gain value to 100.
+> For digital gain, support can be added later if needed.
+> 
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 > ---
->   include/linux/mfd/tps6594.h | 354 ++++++++++++++++++++++++++++++++++--
->   1 file changed, 342 insertions(+), 12 deletions(-)
+>  drivers/media/i2c/imx335.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index 85cb53e3d5d4..cc59f446cd09 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -53,7 +53,7 @@
+>  /* Analog gain control */
+>  #define IMX335_REG_AGAIN		CCI_REG8(0x30e8)
+>  #define IMX335_AGAIN_MIN		0
+> -#define IMX335_AGAIN_MAX		240
+> +#define IMX335_AGAIN_MAX		100
+>  #define IMX335_AGAIN_STEP		1
+>  #define IMX335_AGAIN_DEFAULT		0
+>  
+> @@ -1174,6 +1174,14 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  					     IMX335_EXPOSURE_STEP,
+>  					     IMX335_EXPOSURE_DEFAULT);
+>  
+> +	/*
+> +	 * The sensor has an analog gain and a digital gain, both controlled
+> +	 * through a single gain value, expressed in 0.3dB increments. Values
+> +	 * from 0.0dB (0) to 30.0dB (100) apply analog gain only, higher values
+> +	 * up to 72.0dB (240) add further digital gain. Limit the range to
+> +	 * analog gain only, support for digital gain can be added separately
+> +	 * if needed.
+> +	 */
+>  	imx335->again_ctrl = v4l2_ctrl_new_std(ctrl_hdlr,
+>  					       &imx335_ctrl_ops,
+>  					       V4L2_CID_ANALOGUE_GAIN,
+> -- 
+> 2.43.0
+> 
+> 
 
-[...]
+Unfortunately I don't have the datasheet of this sensor but the logic
+behind this patch looks good to me. :)
 
-> +/* IRQs */
-> +enum tps65224_irqs {
-> +	/* INT_BUCK register */
-> +	TPS65224_IRQ_BUCK1_UVOV,
-> +	TPS65224_IRQ_BUCK2_UVOV,
-> +	TPS65224_IRQ_BUCK3_UVOV,
-> +	TPS65224_IRQ_BUCK4_UVOV,
-> +	/* INT_LDO_VMON register */
-> +	TPS65224_IRQ_LDO1_UVOV,
-> +	TPS65224_IRQ_LDO2_UVOV,
-> +	TPS65224_IRQ_LDO3_UVOV,
-> +	TPS65224_IRQ_VCCA_UVOV,
-> +	TPS65224_IRQ_VMON1_UVOV,
-> +	TPS65224_IRQ_VMON2_UVOV,
-> +	/* INT_GPIO register */
-> +	TPS65224_IRQ_GPIO1,
-> +	TPS65224_IRQ_GPIO2,
-> +	TPS65224_IRQ_GPIO3,
-> +	TPS65224_IRQ_GPIO4,
-> +	TPS65224_IRQ_GPIO5,
-> +	TPS65224_IRQ_GPIO6,
-> +	/* INT_STARTUP register */
-> +	TPS65224_IRQ_VSENSE,
-> +	TPS65224_IRQ_ENABLE,
-> +	TPS65224_IRQ_PB_SHORT,
-> +	TPS65224_IRQ_FSD,
-> +	TPS65224_IRQ_SOFT_REBOOT,
-> +	/* INT_MISC register */
-> +	TPS65224_IRQ_BIST_PASS,
-> +	TPS65224_IRQ_EXT_CLK,
-> +	TPS65224_IRQ_REG_UNLOCK,
-> +	TPS65224_IRQ_TWARN,
-> +	TPS65224_IRQ_PB_LONG,
-> +	TPS65224_IRQ_PB_FALL,
-> +	TPS65224_IRQ_PB_RISE,
-> +	TPS65224_IRQ_ADC_CONV_READY,
-> +	/* INT_MODERATE_ERR register */
-> +	TPS65224_IRQ_TSD_ORD,
-> +	TPS65224_IRQ_BIST_FAIL,
-> +	TPS65224_IRQ_REG_CRC_ERR,
-> +	TPS65224_IRQ_RECOV_CNT,
-> +	/* INT_SEVERE_ERR register */
-> +	TPS65224_IRQ_TSD_IMM,
-> +	TPS65224_IRQ_VCCA_OVP,
-> +	TPS65224_IRQ_PFSM_ERR,
-> +	TPS65224_IRQ_BG_XMON,
-> +	/* INT_FSM_ERR register */
-> +	TPS65224_IRQ_IMM_SHUTDOWN,
-> +	TPS65224_IRQ_ORD_SHUTDOWN,
-> +	TPS65224_IRQ_MCU_PWR_ERR,
-> +	TPS65224_IRQ_SOC_PWR_ERR,
-> +	TPS65224_IRQ_COMM_ERR,
-> +	TPS65224_IRQ_I2C2_ERR,
-> +	/* INT_ESM register */
-> +	TPS65224_IRQ_ESM_MCU_PIN,
-> +	TPS65224_IRQ_ESM_MCU_FAIL,
-> +	TPS65224_IRQ_ESM_MCU_RST,
+Btw I check the datasheet of IMX323LQN-C and the gain controll logic
+it's pretty similar except for the values in dB (different sensor).
+Hope this help.
 
-You should remove the 3 lines above for ESM_MCU, since there is none
-linux driver for ESM_MCU.
+Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
 
-> +};
-> +
-> +#define TPS65224_IRQ_NAME_BUCK1_UVOV		"buck1_uvov"
-> +#define TPS65224_IRQ_NAME_BUCK2_UVOV		"buck2_uvov"
-> +#define TPS65224_IRQ_NAME_BUCK3_UVOV		"buck3_uvov"
-> +#define TPS65224_IRQ_NAME_BUCK4_UVOV		"buck4_uvov"
-> +#define TPS65224_IRQ_NAME_LDO1_UVOV		"ldo1_uvov"
-> +#define TPS65224_IRQ_NAME_LDO2_UVOV		"ldo2_uvov"
-> +#define TPS65224_IRQ_NAME_LDO3_UVOV		"ldo3_uvov"
-> +#define TPS65224_IRQ_NAME_VCCA_UVOV		"vcca_uvov"
-> +#define TPS65224_IRQ_NAME_VMON1_UVOV		"vmon1_uvov"
-> +#define TPS65224_IRQ_NAME_VMON2_UVOV		"vmon2_uvov"
-> +#define TPS65224_IRQ_NAME_GPIO1			"gpio1"
-> +#define TPS65224_IRQ_NAME_GPIO2			"gpio2"
-> +#define TPS65224_IRQ_NAME_GPIO3			"gpio3"
-> +#define TPS65224_IRQ_NAME_GPIO4			"gpio4"
-> +#define TPS65224_IRQ_NAME_GPIO5			"gpio5"
-> +#define TPS65224_IRQ_NAME_GPIO6			"gpio6"
-> +#define TPS65224_IRQ_NAME_VSENSE	        "vsense"
-> +#define TPS65224_IRQ_NAME_ENABLE		"enable"
-> +#define TPS65224_IRQ_NAME_PB_SHORT		"pb_short"
-> +#define TPS65224_IRQ_NAME_FSD			"fsd"
-> +#define TPS65224_IRQ_NAME_SOFT_REBOOT		"soft_reboot"
-> +#define TPS65224_IRQ_NAME_BIST_PASS		"bist_pass"
-> +#define TPS65224_IRQ_NAME_EXT_CLK		"ext_clk"
-> +#define TPS65224_IRQ_NAME_REG_UNLOCK		"reg_unlock"
-> +#define TPS65224_IRQ_NAME_TWARN			"twarn"
-> +#define TPS65224_IRQ_NAME_PB_LONG		"pb_long"
-> +#define TPS65224_IRQ_NAME_PB_FALL		"pb_fall"
-> +#define TPS65224_IRQ_NAME_PB_RISE		"pb_rise"
-> +#define TPS65224_IRQ_NAME_ADC_CONV_READY	"adc_conv_ready"
-> +#define TPS65224_IRQ_NAME_TSD_ORD		"tsd_ord"
-> +#define TPS65224_IRQ_NAME_BIST_FAIL		"bist_fail"
-> +#define TPS65224_IRQ_NAME_REG_CRC_ERR		"reg_crc_err"
-> +#define TPS65224_IRQ_NAME_RECOV_CNT		"recov_cnt"
-> +#define TPS65224_IRQ_NAME_TSD_IMM		"tsd_imm"
-> +#define TPS65224_IRQ_NAME_VCCA_OVP		"vcca_ovp"
-> +#define TPS65224_IRQ_NAME_PFSM_ERR		"pfsm_err"
-> +#define TPS65224_IRQ_NAME_BG_XMON		"bg_xmon"
-> +#define TPS65224_IRQ_NAME_IMM_SHUTDOWN		"imm_shutdown"
-> +#define TPS65224_IRQ_NAME_ORD_SHUTDOWN		"ord_shutdown"
-> +#define TPS65224_IRQ_NAME_MCU_PWR_ERR		"mcu_pwr_err"
-> +#define TPS65224_IRQ_NAME_SOC_PWR_ERR		"soc_pwr_err"
-> +#define TPS65224_IRQ_NAME_COMM_ERR		"comm_err"
-> +#define TPS65224_IRQ_NAME_I2C2_ERR		"i2c2_err"
-> +#define TPS65224_IRQ_NAME_ESM_MCU_PIN		"esm_mcu_pin"
-> +#define TPS65224_IRQ_NAME_ESM_MCU_FAIL		"esm_mcu_fail"
-> +#define TPS65224_IRQ_NAME_ESM_MCU_RST		"esm_mcu_rst"
+Thanks & Regards,
+Tommaso
 
-You should remove the 3 lines above for ESM_MCU.
 
-Julien
 
