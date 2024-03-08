@@ -1,92 +1,93 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3480F20314
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 14:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5216625759;
+	Fri,  8 Mar 2024 14:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709909784; cv=none; b=rvZFBeWK1c8wINrSEOAlMM58Y4fBO6nOZuNt61/p8bPOviVqL2hw+jjDAkjgA+ZQUaawRanE+rrDI6pCBJA/KgUxy2vgHQKcE5I+YxYLztzsQQ/5c3GklcF3Q46g4qqe9Ps+/gmcP1ZF7C4PkUPIIZrGMH3Af1OWFm+7hsFckxY=
+	t=1709909792; cv=none; b=Wg+FdqksQBTKXFRkrXQ0Eh6SmJJE7swi2+vJPeyflOeyAR8g8hl/kzP5HUur2ORfVtYVwAsZm3eKZ9q8Ve72P0olC7vGL+qxyD10MDVslV4ZU3RjdukQU0u2B6kyvz/Q7hHYWwWrjA69R0pzFZc4oBFI9SmWz0C22/r7YZSKEjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709909784; c=relaxed/simple;
-	bh=y80heCwbhAQqqtJAfYk/nrQDwtR1qybFYBcIOVhCOMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dhpYWj6F74CzwDUYPS0F4fnBGABBja4JasSRZNj4JdspfSBrT3ImmkRhNZuIODSS9wwoDW0++yBvrA0Y/Uw2KFo7ut6uDeXPu5cv6GYAVlLRa0cl9vIwthH/ueC7hjz42+senFQaxpXmNxfJE21FuTS4557EUTH/TP+61fWhWyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=EzhGPudl; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="EzhGPudl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=yRF44PAwuObJjETXmhstoHPr/yI6S4jcqxgx+14ydL0=; b=EzhGPudlVcIyYE0mO/lcVrqegM
-	F8nFLKO3qO83O6C/zNC/BB2q4TzqXb5kf+kNT+CdO5/fRtyxL6sfEg2XCz21VVJUnquqldXqqiJb9
-	EnXVU12DNjwcv8jlFotFRw+IZLh7RPOW1nKl8ROwBGT4pHtjeRYzcp7UmimWfRD6CIIM1CjgfYiT1
-	4xWSIKCJfKsF3gucCVzoIq6JV8DoO7Jr2+6ww0RGsGJ/qZF3O5TwD/3v+AEZMS9lga4BjM0v5Du/q
-	OUeigFkntJ9NPX82nexlacVgHWbeuldHjWKCI3dIHA750BEtePOAOLdtu/VNjxcCs+SfuKob8eyY0
-	0Kf/oeng==;
-Received: from [152.249.135.210] (helo=steammachine.lan)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1ribdz-007p93-2D; Fri, 08 Mar 2024 15:56:19 +0100
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-dev@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Simon Ser <contact@emersion.fr>,
-	Pekka Paalanen <ppaalanen@gmail.com>,
-	daniel@ffwll.ch,
-	Daniel Stone <daniel@fooishbar.org>,
-	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
-	Dave Airlie <airlied@gmail.com>,
-	ville.syrjala@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Joshua Ashton <joshua@froggi.es>,
-	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [RESEND PATCH v4 3/3] drm/amdgpu: Make it possible to async flip overlay planes
-Date: Fri,  8 Mar 2024 11:55:53 -0300
-Message-ID: <20240308145553.194165-4-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240308145553.194165-1-andrealmeid@igalia.com>
-References: <20240308145553.194165-1-andrealmeid@igalia.com>
+	s=arc-20240116; t=1709909792; c=relaxed/simple;
+	bh=duHRboSBY4Ddw2Uqw5pOeQO8eFmgv5M1iTXUTHLZn3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bh6k2BL3PHZsbbVv5nyoJgmBzVxG9q2NzqUChFvetpUrOsziZP3QrN3A9QEwEb+Lz3QP7wusi12URLWzNjarqVCwOcqDcM+JMx70OyUYJYnyfPUcHlze8Z6eqpvcKJAsruFW6QxdRPLbLEEPjDgv0nsiMzHruH7gNeYZdcxQH0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.96.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1ribdU-0000Wt-1o;
+	Fri, 08 Mar 2024 14:55:48 +0000
+Date: Fri, 8 Mar 2024 14:55:44 +0000
+From: Daniel Golle <daniel@makrotopia.org>
+To: Avri Altman <Avri.Altman@wdc.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
+	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Christian Brauner <brauner@kernel.org>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Min Li <min15.li@samsung.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Christian Loehle <CLoehle@hyperstone.com>,
+	Bean Huo <beanhuo@micron.com>, Yeqi Fu <asuk4.q@gmail.com>,
+	Victor Shih <victor.shih@genesyslogic.com.tw>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	Diping Zhang <diping.zhang@gl-inet.com>,
+	Jianhui Zhao <zhaojh329@gmail.com>,
+	Jieying Zeng <jieying.zeng@gl-inet.com>,
+	Chad Monroe <chad.monroe@adtran.com>,
+	Adam Fox <adam.fox@adtran.com>, John Crispin <john@phrozen.org>
+Subject: Re: [RFC PATCH v2 6/8] mmc: core: set card fwnode_handle
+Message-ID: <Zesm8FhoVrVbvbwe@makrotopia.org>
+References: <cover.1709667858.git.daniel@makrotopia.org>
+ <055787bb6085c32907ee1772522a6bfa49d5d2ef.1709667858.git.daniel@makrotopia.org>
+ <DM6PR04MB6575C0FB6376681697C97DE8FC272@DM6PR04MB6575.namprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR04MB6575C0FB6376681697C97DE8FC272@DM6PR04MB6575.namprd04.prod.outlook.com>
 
-amdgpu can handle async flips on overlay planes, so mark it as true
-during the plane initialization.
+On Fri, Mar 08, 2024 at 08:04:54AM +0000, Avri Altman wrote:
+>  
+> > Set fwnode in case it isn't set yet and of_node is present.
+> > 
+> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> > ---
+> >  drivers/mmc/core/bus.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c index
+> > 0ddaee0eae54f..e1c5fc1b3ce4b 100644
+> > --- a/drivers/mmc/core/bus.c
+> > +++ b/drivers/mmc/core/bus.c
+> > @@ -364,6 +364,8 @@ int mmc_add_card(struct mmc_card *card)
+> > 
+> >         mmc_add_card_debugfs(card);
+> >         card->dev.of_node = mmc_of_find_child_device(card->host, 0);
+> > +       if (card->dev.of_node && !card->dev.fwnode)
+> > +               card->dev.fwnode = &card->dev.of_node->fwnode;
+> Should this be restricted to eMMC only, or is it fine to be called for SD as well?
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-v4: new patch
+It's always odd to have of_node set and fwnode unset. And also SD
+cards can be referenced in device tree, resulting in of_node being set
+but fwnode being unpopulated, which is no more or less weird than for
+an eMMC.
 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-index 8a4c40b4c27e..dc5392c08a87 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-@@ -1708,6 +1708,7 @@ int amdgpu_dm_plane_init(struct amdgpu_display_manager *dm,
- 	} else if (plane->type == DRM_PLANE_TYPE_OVERLAY) {
- 		unsigned int zpos = 1 + drm_plane_index(plane);
- 		drm_plane_create_zpos_property(plane, zpos, 1, 254);
-+		plane->async_flip = true;
- 	} else if (plane->type == DRM_PLANE_TYPE_CURSOR) {
- 		drm_plane_create_zpos_immutable_property(plane, 255);
- 	}
--- 
-2.43.0
-
+So imho it should always be called and shouldn't hurt.
