@@ -1,63 +1,79 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D1955E7B
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 11:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACC955E7E;
+	Fri,  8 Mar 2024 11:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897945; cv=none; b=fXjsurzzTyk8iNKTtPbvS62564eYQ/ZgzGZyOUFSpFZ5tdKoeGm9YOFQYS62KqEByoFRjlLcUK3MhtQCissdkRXPGLtrGlf6NSU0RXKdETZes2NekkkeCdTbCYUjlQpoWXydmUxtlXyIvcHKOMPCjbQ8FXMssP9jnzXId0qcTkg=
+	t=1709898031; cv=none; b=d9l/XBvnVXsaL+EeQ4ZmOGXjc9Om4+QImfxUL8FB7ZJ4nbrugNvaE2JbaZvkFRs16cjPqLSuQbondF+faV38xc+o6BuOqt+Ji2IErISUh2ROSJl1iYV8mfgQezSdpBSb6vuq2dO+bZGA97NWU7RrYkuyW7NihIBUaJkK2tqtfJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897945; c=relaxed/simple;
-	bh=3B/cw9GjdraPUIrj1ZXN1KUh9QGuUVvejLGEF+4qNxE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZJirfqK5vslJkwxTzWlYUoqrTslbrzIxW7wBzRS8/6Nz8Q4uRbPlcuX0m1Q43K7xG3GCTV6y0XOx5d8xJTr3HvisE3zIc9rUDa7kZfyiSry+l3LXz7AX5k0FNqjStaNksmB0gRuBwESk6iWkMjrcf3eQcvcrfwF+kqIXYpFze9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OSUd4IgM; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1709898031; c=relaxed/simple;
+	bh=jqEUhr6X+7mZr8wkiU5E72NI3YPTXVm7kVn+EnH2w5o=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=j4MJLCkNIRB+LhX8hrvIbGHkXyqhmkfECLiOBZYS5qQAV0ffUshWAcS0KNNGeiPwL9QdRsptwkIbKkKN4dc/JRXe729D2e3UNaXV/b4T2vVOVio/r4Ki+0Qi674e7mY7gqCldDde9T7cllsrnoDTHnVenvZM9TSnEsGQYDk1zmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJ7iiB32; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OSUd4IgM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1709897934; x=1710157134;
-	bh=3B/cw9GjdraPUIrj1ZXN1KUh9QGuUVvejLGEF+4qNxE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=OSUd4IgMVKN0oOIVzlTktQB29QCcp/OsDT50e1v6XwHBPfETmr9+citxCjFx9rjJ8
-	 YQoii+NhZER+uRDFOCSbp8Bk/AFd5hauvhxYK/ckOyO12LpzAzubl2RwV8lFxQBwmi
-	 SPAhEWrK44I/KcFIRnublcrH+yV9IvT1Svw0nk7yoUFQQlqiPQzIaG43xRMGFnZwiX
-	 4AccqgPVOY+IUw5Ft2bK7uhczBwwxh7eRrOd6pI025qnE3EA2MIbhQC7/x1tuUe2XH
-	 Hh5293mM3MSdEGZiyWVqRXqwzhbVz0+pEqb0dhQTJQnGsq+TptULbha0wirhSKFxPB
-	 eUrjNchctzd0w==
-Date: Fri, 08 Mar 2024 11:38:49 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: don't select CONSTRUCTORS
-Message-ID: <a217a3d3-b81c-47e1-89a3-a67c57b44379@proton.me>
-In-Reply-To: <20240308-constructors-v1-1-4c811342391c@google.com>
-References: <20240308-constructors-v1-1-4c811342391c@google.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJ7iiB32"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC331C43390;
+	Fri,  8 Mar 2024 11:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709898030;
+	bh=jqEUhr6X+7mZr8wkiU5E72NI3YPTXVm7kVn+EnH2w5o=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PJ7iiB32cnMg7bI7cliCDiF28zyBmnJrogP4tsPVofBTkYIYrez8ew8xtfKVFBpPX
+	 4eI2/nRiChYkOnMjjfmYwPVNtQd7gBCoYyYCLavd+NPoXCtrHwuGAMq33U/nkymbKD
+	 JkBWqZ63M4/73IAsBt+oOPSLj+b9jDys2GReWxMosUMsAffBhBj2woZmMwjmTrQ3pU
+	 a3NlFnGjkj98A/sbvslFPy2vNELufozQIhtaqQeEoAQkAM6b7O05+unNmZxYkK9E5U
+	 KUzFNOiyfj25XfWNstadRbO+ZEdedApzlvOYtJKrCDq9N6vUPYU6Y+h0NNtnodEsQL
+	 NVOCg/o0dbpig==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 91744D84BBF;
+	Fri,  8 Mar 2024 11:40:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] Add Jeff Kirsher to .get_maintainer.ignore
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170989803059.22806.2831505421819574635.git-patchwork-notify@kernel.org>
+Date: Fri, 08 Mar 2024 11:40:30 +0000
+References: <20240306154703.1392919-1-kuba@kernel.org>
+In-Reply-To: <20240306154703.1392919-1-kuba@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
+ pabeni@redhat.com, jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+ linux-kernel@vger.kernel.org
 
-On 3/8/24 10:36, Alice Ryhl wrote:
-> This was originally part of commit 4b9a68f2e59a0 ("rust: add support for
-> static synchronisation primitives") from the old Rust branch, which used
-> module constructors to initialize globals containing various
-> synchronisation primitives with pin-init. That commit has never been
-> upstreamed, but the `select CONSTRUCTORS` statement ended up being
-> included in the patch that initially added Rust support to the Linux
-> Kernel.
->=20
-> We are not using module constructors, so let's remove the select.
->=20
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Hello:
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Wed,  6 Mar 2024 07:47:03 -0800 you wrote:
+> Jeff was retired as the Intel driver maintainer in
+> commit 6667df916fce ("MAINTAINERS: Update MAINTAINERS for
+> Intel ethernet drivers"), and his address bounces.
+> But he has signed-off a lot of patches over the years
+> so get_maintainer insists on CCing him.
+> 
+> We haven't heard from him since he left Intel, so remapping
+> the address via mailmap is also pointless. Add to ignored
+> addresses.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] Add Jeff Kirsher to .get_maintainer.ignore
+    https://git.kernel.org/netdev/net-next/c/7221fbe84f2e
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
