@@ -1,183 +1,212 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808C537E1
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9EE53388
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709890060; cv=none; b=oQMWklJ8sAcHJk+X0llvUYsEH2kTzucOSybmACHwi++48Xky+YB2ZG7JhpoDA5V5GZkAKnRC55T17KOE+27tcGWLZuuJGai1Z27c37OJuzbFf/OeqErVU5VcEHwy6UQO5+M1HjuxXkvBlKpPYjF5V7CZ3jLIrQvm6fimrp/0QBQ=
+	t=1709890187; cv=none; b=L+x/ie56cjFqIl1VtumKOldALqaJphm0jmOgEbMOYhd6lgsodTNsE0a5bnry3Z2vuGhctZaQRlNNI16CIcW09O+VqK0vq/hQ4bZvuzKultRLgZo9/sEN8+LsCZiHBsub0cVRvCNzcIR2eWrPa/Ljd/gkudfluw6TSn+sILASVQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709890060; c=relaxed/simple;
-	bh=48kGOhkbhAoYFgvTIPEDicphWR/Yw55TT4SEVhbfH18=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwP5L0ojWriVT3vFBJXQBDRK0jtC/z/YLv3pPYKrxruwif+/fhonDSXT9D2jNX7abxLHZk3gSDZPjVgLursVF8UhbzWArPBdGhzCB4vTkrlsFUNnDZZp7LFZ2E51FIrwbnGJOhN65rsxzZoJ7iVOYH0rg2zRX7W0QNAujlJX8AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WRYIluMh; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709890187; c=relaxed/simple;
+	bh=/610z7NeZF3AbbrUp5Ct8IK+na88MeCP5euuoex7my0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bgIG8xdev4L7tOUTdTIWvxm6k8ENqsx5u78z2meEE164jTQ/rRFmACtMOG+Jr3xhMwX6OeUIiXZ617dwAk3r4Szx5tweGZM03KzIppgk4YaTrTJs/x+9ldzirNRntiX1qqlSQnKKhlXK9I4XV6N/W6wQjIw/1WMtW4ZfN2PDBAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Hk5w+bKc; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRYIluMh"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dcd6a3da83so12872815ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:27:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Hk5w+bKc"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so794620a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:29:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709890058; x=1710494858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ROBScL3zNq1ROLO+Gfcm3K4UycGbv1h+36uGZvQyywk=;
-        b=WRYIluMhTOa8cGTEWLA+1NFpNa4MYNWZMJk0jxiqZSOg9LmWQeuUwQh8tnsUg1XYLX
-         4epLdh+JY9G3SRUSomqO0OYWUE2j9A4zvMAGZJcW1A9wtwhS5XZAATXzxzdqJF6NJ0so
-         05EnS1xZU4ckG1hb7ZSxIRDSR8KfvD6G6cfG8gDROSqdAzt0gylbRnt1oSzqfARUEQsM
-         g3O5oSZoadVdQxPaA2x2nwoTqk1D7f+sItBPs1mFCIge6VVB3YDVrckkcirHv4JldnhY
-         MU2G6A6p83aafYxfKIxhHJGbjqxHKxM/oUIsmoxTZYXFLWbapJjTEYNFnbsfQc2qupX3
-         FbbQ==
+        d=fairphone.com; s=fair; t=1709890183; x=1710494983; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xTJ56TsgHxx+ey5O16dDKClnhRLxsOWJSpToCms/BRE=;
+        b=Hk5w+bKcsI4DKVXfVrgQUXpGnLBv56bBr9AVwMSQbl3JAhwEOXcIJSCPlGJ+BZtXNH
+         FhoOV3EkGZMBa7SC+0BgrssnMCQprx8E4T/tG5L8+PGvke6uScjxMpb/mcwA6vmeFwlT
+         273vgYYA1isLu/vaCASpIxkBrfv8HHVN7HkifH3jqFCaM6PCzqUSuYshOU9Wk52mEoEq
+         5pWrlyo6aPh51az5yr4vZnmZ1tQjwiW/XkN4I42VmnHx/y+0kbSCPd63tjLTyftpaeja
+         WTdEv/M1Ol8Zo2UA6a7EfqZ0alMRMlh/iVqRqRrH0j16OD0MVZDm5Ibv1lXwuojb5t8A
+         ShNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709890058; x=1710494858;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ROBScL3zNq1ROLO+Gfcm3K4UycGbv1h+36uGZvQyywk=;
-        b=U9sigpqh7ligwDSUxWP3z1uitiVu9ANbS3HefDx8x4BKbgmzwuGIxIhOakR2p5E0ng
-         vNUdlF2OD/1248z2yz2gloOTMqeFGYw7fqB5F8QyNL/gk77LQFtUkicc4ukLnNcofvHE
-         1vTQB4rQfaDhl77kBmsSEI8n4InrA9fkfambA2daQXQ4bqXKz1ip5yJVTuQAVlAPu6EJ
-         Qmp9wAMwshCsdTjaeGEeUQjEQ0tQBTrJQnbfM3tRBFFrcKwbvEUcc/obHZ6hDRj3OnQN
-         /hTkWRmpb9b+VzoQP3CXGP7VjRQ+5kEt2YYzyfyzHOxdOTVc/OizujQ28jHJbuu3g2DE
-         J6rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8woFXDRALTSk7rdDb3msEriJFVQd/tKm8yv7YUvx7aBa9QhEpKZaIdm6mWZ3YcIbQKyZD5G68VRg3ZL2JZp2VBjXEY599hfg6U+i4
-X-Gm-Message-State: AOJu0Yw6A1ADV/SZJ4GVY2D+r+dMHxlVA4aeWhZmlR5gEyN+8dp5+9DE
-	QWGYs9idXAp9x/GfEisSZ3BbaYtEGVwY41dpNHgSsvBweItJoP83
-X-Google-Smtp-Source: AGHT+IGHwvDaRFM6AdGoHqI0EnKeNjpmwOATRfsUIVKV0DDSC98WZUboWqg2XZop7gHcvnNI7NdvbA==
-X-Received: by 2002:a17:903:2309:b0:1dc:cc01:7488 with SMTP id d9-20020a170903230900b001dccc017488mr13902041plh.25.1709890058085;
-        Fri, 08 Mar 2024 01:27:38 -0800 (PST)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id d6-20020a170902654600b001dccff4287csm16129557pln.202.2024.03.08.01.27.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 01:27:37 -0800 (PST)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: minchan@kernel.org,
-	fengwei.yin@intel.com,
-	linux-kernel@vger.kernel.org,
-	mhocko@suse.com,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	songmuchun@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	xiehuan09@gmail.com,
-	zokeefe@google.com,
-	chrisl@kernel.org,
-	yuzhao@google.com,
-	Barry Song <v-songbaohua@oppo.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lance Yang <ioworker0@gmail.com>
-Subject: [PATCH v2] mm: prohibit the last subpage from reusing the entire large folio
-Date: Fri,  8 Mar 2024 22:27:21 +1300
-Message-Id: <20240308092721.144735-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1709890183; x=1710494983;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xTJ56TsgHxx+ey5O16dDKClnhRLxsOWJSpToCms/BRE=;
+        b=iqe9EdGCZFIolSxTKc+PP8UiEdvCEOtuARerFDtUmPc06bZq9WZ901o+SKBHDW5ReG
+         HJ5I8AMz3pRUidP8MF8zE+KE6TcS/bmO+2OwCFfeHaF4U68vLX0OJ7o75w9L7J4qE97Z
+         f8AD+lL8tsbeyNa06WuEKc4FgcQuJw0Bc7FFwX7pCXxwpcJDYA5eMsGL6vVwHt5BdAfN
+         4KuuJLa+ZMtDJULbbBvABxgz2JFIyKFbDKeDvpHegzovpBmIOU1iI3za/gk5FIITgHgQ
+         QDxkbA07psZ8GySh83uy4mZtennto4/PxVW5bOmvFLonLYdhEA2cfsZ46rwE5nYAlSdZ
+         aqWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIzfw89WNtRJ6OpUyDhox9dq0warrzDEzMVcUqd3eHZFlyFrsMyIX0CUgMsinXkrskqCS7CGjl6QU1WE0nSCUL8u6dNkpuhoZklEEQ
+X-Gm-Message-State: AOJu0YxpO3+tN0l42SropHWI7xWkMLsAxPUbgLCRwnAknCvxSO9to+0w
+	CMMk/KhAnm6tXgjgIEM4M/tBOdGs9othq0fvpn35bmH3UOuprOlO9/ElDo8N6Ao=
+X-Google-Smtp-Source: AGHT+IEVEG7pI97UFUoSKdm0T77oCm/IjNnF2X00bMMaoqhxQZtaQiQDnkm1z665OJP8Smo71pGd9A==
+X-Received: by 2002:a17:906:b78c:b0:a44:44e0:868f with SMTP id dt12-20020a170906b78c00b00a4444e0868fmr12636544ejb.11.1709890183560;
+        Fri, 08 Mar 2024 01:29:43 -0800 (PST)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id p5-20020a1709060dc500b00a4537466591sm5611025eji.32.2024.03.08.01.29.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Mar 2024 01:29:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 08 Mar 2024 10:29:42 +0100
+Message-Id: <CZO9HDL1N45S.1JIXM2QUFTQCS@fairphone.com>
+Cc: <neil.armstrong@linaro.org>, "Andrzej Hajda" <andrzej.hajda@intel.com>,
+ "Robert Foss" <rfoss@kernel.org>, "Laurent Pinchart"
+ <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman" <jonas@kwiboo.se>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge: Select DRM_KMS_HELPER for DRM_PANEL_BRIDGE
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>
+X-Mailer: aerc 0.15.2
+References: <20240111-drm-panel-bridge-fixup-v1-1-e06292f6f500@fairphone.com> <b1da07f9-7e15-4d83-bef3-d0ce157654bc@linaro.org> <CYGUWBAM3D62.35CPP5HGEYJ3Y@fairphone.com> <CZHGFD9QYM82.371U2DPG1AEGQ@fairphone.com> <CAA8EJppZRABYGuoDc-6e6VMwtAo3LvEyDpsHdkHFckrR=q+0ig@mail.gmail.com>
+In-Reply-To: <CAA8EJppZRABYGuoDc-6e6VMwtAo3LvEyDpsHdkHFckrR=q+0ig@mail.gmail.com>
 
-From: Barry Song <v-songbaohua@oppo.com>
+On Sun Mar 3, 2024 at 9:37 PM CET, Dmitry Baryshkov wrote:
+> On Thu, 29 Feb 2024 at 11:27, Luca Weiss <luca.weiss@fairphone.com> wrote=
+:
+> >
+> > On Wed Jan 17, 2024 at 9:59 AM CET, Luca Weiss wrote:
+> > > On Mon Jan 15, 2024 at 9:43 AM CET, Neil Armstrong wrote:
+> > > > Hi Luca,
+> > > >
+> > > > On 11/01/2024 13:38, Luca Weiss wrote:
+> > > > > Since the kconfig symbol of DRM_PANEL_BRIDGE is only adding
+> > > > > bridge/panel.o to drm_kms_helper object, we need to select
+> > > > > DRM_KMS_HELPER to make sure the file is actually getting built.
+> > > > >
+> > > > > Otherwise with certain defconfigs e.g. devm_drm_of_get_bridge wil=
+l not
+> > > > > be properly available:
+> > > > >
+> > > > >    aarch64-linux-gnu-ld: drivers/phy/qualcomm/phy-qcom-qmp-combo.=
+o: in function `qmp_combo_bridge_attach':
+> > > > >    drivers/phy/qualcomm/phy-qcom-qmp-combo.c:3204:(.text+0x8f4): =
+undefined reference to `devm_drm_of_get_bridge'
+> > > > >
+> > > > > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> > > > > ---
+> > > > > I can see "depends on DRM_KMS_HELPER" was removed with commit
+> > > > > 3c3384050d68 ("drm: Don't make DRM_PANEL_BRIDGE dependent on DRM_=
+KMS_HELPERS")
+>
+> Could you please make sure that the usecase described in the mentioned
+> commit message doesn't get broken by your change?
 
-In a Copy-on-Write (CoW) scenario, the last subpage will reuse the entire
-large folio, resulting in the waste of (nr_pages - 1) pages. This wasted
-memory remains allocated until it is either unmapped or memory
-reclamation occurs.
+Hi Neil,
 
-The following small program can serve as evidence of this behavior
+The problem fixed in that linked patch (3c3384050d68) is about fixing
+undefined reference errors with specific .config setups - similar to
+this patch.
 
- main()
- {
- #define SIZE 1024 * 1024 * 1024UL
-         void *p = malloc(SIZE);
-         memset(p, 0x11, SIZE);
-         if (fork() == 0)
-                 _exit(0);
-         memset(p, 0x12, SIZE);
-         printf("done\n");
-         while(1);
- }
+Since we're only adding a 'select' and not removing anything I don't see
+how it could cause new errors like that, and it does fix the one I'm
+describing.
 
-For example, using a 1024KiB mTHP by:
- echo always > /sys/kernel/mm/transparent_hugepage/hugepages-1024kB/enabled
+And also I checked again and I don't see any circular dependencies
+(something that was also mentioned in the linked patch), so apart from
+what I mentioned with that I'm not too familiar when 'select' should be
+used and when 'depend' should be used, it's good from my perspective.
 
-(1) w/o the patch, it takes 2GiB,
+Regards
+Luca
 
-Before running the test program,
- / # free -m
-                total        used        free      shared  buff/cache   available
- Mem:            5754          84        5692           0          17        5669
- Swap:              0           0           0
-
- / # /a.out &
- / # done
-
-After running the test program,
- / # free -m
-                 total        used        free      shared  buff/cache   available
- Mem:            5754        2149        3627           0          19        3605
- Swap:              0           0           0
-
-(2) w/ the patch, it takes 1GiB only,
-
-Before running the test program,
- / # free -m
-                 total        used        free      shared  buff/cache   available
- Mem:            5754          89        5687           0          17        5664
- Swap:              0           0           0
-
- / # /a.out &
- / # done
-
-After running the test program,
- / # free -m
-                total        used        free      shared  buff/cache   available
- Mem:            5754        1122        4655           0          17        4632
- Swap:              0           0           0
-
-This patch migrates the last subpage to a small folio and immediately
-returns the large folio to the system. It benefits both memory availability
-and anti-fragmentation.
-
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Lance Yang <ioworker0@gmail.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- -v2:
-  * return at the 1st beginning for a large folio according to David's comment,
-    thanks!
- -v1:
- https://lore.kernel.org/linux-mm/20240308085653.124180-1-21cnbao@gmail.com/
-
- mm/memory.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e17669d4f72f..f2bc6dd15eb8 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3498,6 +3498,16 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf, struct folio *folio)
- static bool wp_can_reuse_anon_folio(struct folio *folio,
- 				    struct vm_area_struct *vma)
- {
-+	/*
-+	 * We could currently only reuse a subpage of a large folio if no
-+	 * other subpages of the large folios are still mapped. However,
-+	 * let's just consistently not reuse subpages even if we could
-+	 * reuse in that scenario, and give back a large folio a bit
-+	 * sooner.
-+	 */
-+	if (folio_test_large(folio))
-+		return false;
-+
- 	/*
- 	 * We have to verify under folio lock: these early checks are
- 	 * just an optimization to avoid locking the folio and freeing
--- 
-2.34.1
+>
+> > > > >
+> > > > > I'm not too familiar with Kconfig but it feels more correct if
+> > > > > PHY_QCOM_QMP_COMBO selects DRM_PANEL_BRIDGE that that's enough; a=
+nd it
+> > > > > doesn't also has to explicitly select DRM_KMS_HELPER because of h=
+ow the
+> > > > > objects are built in the Makefile.
+> > > > >
+> > > > > Alternatively solution to this patch could be adjusting this line=
+ in
+> > > > > include/drm/drm_bridge.h:
+> > > > >
+> > > > >    -#if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL_BRIDGE)
+> > > > >    +#if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL_BRIDGE) &&=
+ defined(CONFIG_DRM_KMS_HELPER)
+> > > > >     struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,=
+ struct device_node *node,
+> > > > >                                              u32 port, u32 endpoi=
+nt);
+> > > > >
+> > > > > .. and then selecting DRM_KMS_HELPER for PHY_QCOM_QMP_COMBO.
+> > > > >
+> > > > > But I think the solution in this patch is better. Let me know wha=
+t you
+> > > > > think.
+> > > >
+> > > > I think this is no more the case after on linux-next:
+> > > > 35921910bbd0 phy: qcom: qmp-combo: switch to DRM_AUX_BRIDGE
+> > > >
+> > > > But could you still check ?
+> > >
+> > > On next-20240117 the error happens in the aux-bridge file instead the=
+n.
+> > >
+> > > aarch64-linux-gnu-ld: drivers/gpu/drm/bridge/aux-bridge.o: in functio=
+n `drm_aux_bridge_probe':
+> > > drivers/gpu/drm/bridge/aux-bridge.c:115:(.text+0xe0): undefined refer=
+ence to `devm_drm_of_get_bridge'
+> > >
+> > > I'm attaching the defconfig with which I can reproduce this but it's
+> > > really just DRM_KMS_HELPER=3Dn and PHY_QCOM_QMP_COMBO=3Dy I believe.
+> >
+> > Hi Neil,
+> >
+> > Ping on this patch
+> >
+> > Regards
+> > Luca
+> >
+> > >
+> > > Regards
+> > > Luca
+> > >
+> > >
+> > > >
+> > > > Neil
+> > > >
+> > > > > ---
+> > > > >   drivers/gpu/drm/bridge/Kconfig | 1 +
+> > > > >   1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bri=
+dge/Kconfig
+> > > > > index ac9ec5073619..ae782b427829 100644
+> > > > > --- a/drivers/gpu/drm/bridge/Kconfig
+> > > > > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > > > > @@ -8,6 +8,7 @@ config DRM_BRIDGE
+> > > > >   config DRM_PANEL_BRIDGE
+> > > > >           def_bool y
+> > > > >           depends on DRM_BRIDGE
+> > > > > + select DRM_KMS_HELPER
+> > > > >           select DRM_PANEL
+> > > > >           help
+> > > > >             DRM bridge wrapper of DRM panels
+> > > > >
+> > > > > ---
+> > > > > base-commit: b9c3a1fa6fb324e691a03cf124b79f4842e65d76
+> > > > > change-id: 20240111-drm-panel-bridge-fixup-5c2977fb969f
+> > > > >
+> > > > > Best regards,
+> >
 
