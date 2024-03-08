@@ -1,92 +1,107 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 3.mo583.mail-out.ovh.net (3.mo583.mail-out.ovh.net [46.105.40.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3598936139;
-	Fri,  8 Mar 2024 22:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A731F93E
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.40.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709938537; cv=none; b=XFXvBbuQEfZe5gk1WyFaEWA1/K3/zBBSEVXS+Y7F6+x9zuWORwl2fTbDG1oGed+rLfilKbfMayrb7l+R1iewOIY8LVPKEXsrRQimvuHYKaWZDKeykmmKgzpYSqWwEPTIkMf8harR0cpjM7vpTl0OXKZbU52Ak/8SgOtS7bsKhkM=
+	t=1709938701; cv=none; b=j3xC94d5agyzOYhsNR4ZFu3sV2XwBhrMxJdgfvVmTydCS9d+i6MfxlGp4bI7rBE9i8Ci+PszZvmetBzoSSM0t/iByrP+K3LWmn090PUBcpe7NfhhWAOLFn2vaBGxDb5IfbM3RR5fN7B4fRvKfl9m29G5FDbBcXNAXZbCHdMk5xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709938537; c=relaxed/simple;
-	bh=pfSg6It/BB7aJ2Ztply1ld0UBZWdSEmCaafMV+dOaHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JjCYgzwHJ8rPayrM2magsSdY5hLAYwhrKU3e2xLZEsJSpI0rpTjbV6ub6zhlJ1FbW+RxYpnsATLHr1s6kwVT8c9XXvnqybOPkJPNtUOTOErndETzO75sCQeFZqgBhYdBQAOqVXQyQQsqgnSPBpQ49oOhpnQxtffIdvm8tfKX1/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUiglckr; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUiglckr"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33d38c9ca5bso1448646f8f.2;
-        Fri, 08 Mar 2024 14:55:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709938534; x=1710543334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NYEGJ3+KsY3Gr5UtdEMMKdOU2b2xTlEcMdWaY9cKiX0=;
-        b=EUiglckrfWJ7v0RsvoRfOu+y5LTjRjq0gVrUda6+gtHHiY4cql9ui1WFFXEew81Lpn
-         hBA0bNDdIpvuQd1HRsc9HOi5aGxPTa+n4h301KUUVR3Tw+6nSyxAGAxQqYa3P2wXXq0u
-         0XslnrILKxVFtmOdBjXVUKRXpOUp/Ce3582OEQLLV770mMqMKmnxnW+GvB6kzHtKjdZs
-         2X45o+hzIqtSCVgdZSoaZX/eP+mqEwSTmIGaw1cMSQpM1aw5QgWTPRzjqbvRnDdvcR9X
-         MiGmsHub1lC61aLkYS2b6SkPAQR+WnnA+MpiIbGX3K1HSLv4bRoyM9Rli/2RdcMLY8yI
-         2G0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709938534; x=1710543334;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NYEGJ3+KsY3Gr5UtdEMMKdOU2b2xTlEcMdWaY9cKiX0=;
-        b=uARq8VsGgRWDUtjkfte8I6H98rCkms5gmXiJGWwEIOGrRYNuTR5jY/FdKW13g9/FcE
-         UIom7qmjOc0pwusrPohH6CENzLFBT4mAqH77uvoxEhwS0top5f1W0+b6L1HxZO3R56KU
-         x2ph4FBpoXHs37wiXjRCXCpWb9fJs6KAIsBJaVMsPnY5S8hqg5sV2uBjK0mSZ9LCER3k
-         1exauWTGRmmiHryxzHzBS/QYt7qz0bHPwwa5dqWipR/invx8F5MF+bqZ3f1QRBwwF/rF
-         NQ0a7MVUIVKwp9owAEbMYkiHZVD0ZuiJA6iFIkk/pvB6jjbAl6EDsmnOeEAziV2hGCCP
-         ToOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVytFiwfVypg7lun199DHYWXixHnmRnNkMeWQUG70HPlv5RoMIJkIjmoWUKSPQPGX2KbO0R4x5VdtCbo265vIhbzztcCQZMsD37OCH9
-X-Gm-Message-State: AOJu0YwgxXzIweg20q0NouQ0GmUY6vrIVhlWtl1y9daFUYaO6FXNTTqR
-	ni1T3/XN+fF93QFLo0w5aDuJwKREzKdpqJCfN5IYmF0ScstCdZQMn7zUVa/2
-X-Google-Smtp-Source: AGHT+IHPETF3Ift0Imjx2qP+woHemr9mwseZ/sG4FNO4Tgl7m0MVLd4Ar45Yui8oflOwdkPKAqxIYg==
-X-Received: by 2002:a05:6000:24f:b0:33d:6ef6:8762 with SMTP id m15-20020a056000024f00b0033d6ef68762mr326282wrz.29.1709938534350;
-        Fri, 08 Mar 2024 14:55:34 -0800 (PST)
-Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
-        by smtp.gmail.com with ESMTPSA id q27-20020a056000137b00b0033e72e104c5sm473743wrz.34.2024.03.08.14.55.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 14:55:32 -0800 (PST)
-From: Ilya Dryomov <idryomov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fix for 6.8-rc8
-Date: Fri,  8 Mar 2024 23:55:14 +0100
-Message-ID: <20240308225519.2098316-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1709938701; c=relaxed/simple;
+	bh=JC/1Hu15t3XDRrwUWjQx6XQH7Jgd9AvFXSl+dsOCvpo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=k6BwjYt2IsZqeeJ3HP1eBGW/IGeawLL57OmF3o5AoHINQw0CcB7WFockFHOAvHEC+ZqxazrRKr+MQQISAkCuDNi+tt+33smrYdUBZ98Ma26vnQXcIGsWhyLucmfsxdVQRD6axo753e6NI0ky8cpAJIKO5PQrXapczPhDgLm8zUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.40.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.108.2.197])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4Ts1dy2LKVz1GF3
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:52:38 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-ntc96 (unknown [10.110.96.185])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 7A5501FDF9;
+	Fri,  8 Mar 2024 22:52:33 +0000 (UTC)
+Received: from etezian.org ([37.59.142.103])
+	by ghost-submission-6684bf9d7b-ntc96 with ESMTPSA
+	id 9KAtF7GW62U7/wgAM1TUiA
+	(envelope-from <andi@etezian.org>); Fri, 08 Mar 2024 22:52:33 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-103G0052d1e97d6-28cc-4232-bc2f-0242f8e7f9a9,
+                    2D11F706EFA52336831762ECFB2C8F5C1953C755) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+Subject: Re: (subset) [PATCH v3 00/11] Add Mobileye EyeQ5 support to the
+ Nomadik I2C controller & use hrtimers for timeouts
+Message-Id: <170993835026.2617902.961311079016126204.b4-ty@kernel.org>
+Date: Fri, 08 Mar 2024 23:52:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 10859586080687524573
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrieeigddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhephfdukeehgfegueeuleehveejueegveeiudejgfegteffvdetjeektdeltdeiueeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfedpmhhouggvpehsmhhtphhouhht
 
-Hi Linus,
+Hi
 
-The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
+On Wed, 06 Mar 2024 18:59:20 +0100, Théo Lebrun wrote:
+> This series adds two tangent features to the Nomadik I2C controller:
+> 
+>  - Add a new compatible to support Mobileye EyeQ5 which uses the same IP
+>    block as Nomadik.
+> 
+>    It has two quirks to be handled:
+>     - The memory bus only supports 32-bit accesses. Avoid readb() and
+>       writeb() calls that might generate byte load/store instructions.
+>     - We must write a value into a shared register region (OLB)
+>       depending on the I2C bus speed.
+> 
+> [...]
 
-  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
+Applied to i2c/i2c-host on
 
-are available in the Git repository at:
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-6.8-rc8
+Thank you,
+Andi
 
-for you to fetch changes up to 321e3c3de53c7530cd518219d01f04e7e32a9d23:
+Patches applied
+===============
+[01/11] dt-bindings: i2c: nomadik: add mobileye,eyeq5-i2c bindings and example
+        commit: 1b9a8e8af0d969ad8f2deece827e691a1b07ba1b
+[02/11] i2c: nomadik: rename private struct pointers from dev to priv
+        commit: ae9977eefc4a1e6e8fda619f5b8734efb6f11b58
+[03/11] i2c: nomadik: simplify IRQ masking logic
+        commit: 43f58f3e4b6678f7138461e17a37eb3aed223bf5
+[04/11] i2c: nomadik: use bitops helpers
+        commit: 9ab4b2a4faf459514f2c84c5302b207b4bb8b1e1
+[05/11] i2c: nomadik: support short xfer timeouts using waitqueue & hrtimer
+        commit: 127b87a5d11571932ea7f4d8115f4effc2f110a8
+[06/11] i2c: nomadik: replace jiffies by ktime for FIFO flushing timeout
+        commit: 0aaab5ad3a615bab4e1d401f545f77889377fffd
+[07/11] i2c: nomadik: fetch i2c-transfer-timeout-us property from devicetree
+        commit: 0148feec0a51445d29a773e55bc8be9aa3b61a8f
+[08/11] i2c: nomadik: support Mobileye EyeQ5 I2C controller
+        commit: 983548d0e62a93146f35185e6c49e568b05fb44d
+[09/11] i2c: nomadik: sort includes
+        commit: e275c0cf70e47304bc63c050c14129237c588123
 
-  libceph: init the cursor when preparing sparse read in msgr2 (2024-03-06 12:43:01 +0100)
-
-----------------------------------------------------------------
-A follow-up for sparse read fixes that went into -rc4 -- msgr2 case was
-missed and is corrected here.
-
-----------------------------------------------------------------
-Xiubo Li (1):
-      libceph: init the cursor when preparing sparse read in msgr2
-
- net/ceph/messenger_v2.c | 3 +++
- 1 file changed, 3 insertions(+)
