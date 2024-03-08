@@ -1,159 +1,139 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EC936132;
-	Fri,  8 Mar 2024 13:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94F63612C;
+	Fri,  8 Mar 2024 13:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709904781; cv=none; b=PZGsISfSOBWUyvaqiy0I+Fej3v4idHF8hAK7G7g/IoX4t8me+fE3rys0wmoUJezwta6E6UTmj6u3i8S21n0SoqvwBTX7e8yD+S+YghbAR70AV1E0tq5fffLfI+8NzYqdEuiYWAU/n/1KSzADMtmSnwSUQf5/bp1Gk8RFqoe0qS4=
+	t=1709904818; cv=none; b=PJ5QAaETipA/i10a+suLeCbcVkZajodf08fujBqsbU/vDQ3YYyxq6iD5y92bTrIUAdQXjRqYD86bE0x+IgG9AD/5WltRyKkvCitCs2zbozqVNahhfcRZFIWK+ltE6/vqJUxR1BIYnlfCOovygVGnR2kcSxC+ZDyVjs4AeWq0C60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709904781; c=relaxed/simple;
-	bh=Vv/Jufa5OVNBfy5C9TR6DMNWeexhQbgcJrBdXPQc34M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxjZ5Ep/ztX2rrIZ5hnauYLkHBNnsvCYd1u/T7VxTi3Gk3iCNxujbpCum2UYZH3Fx4wx/4rpttqPoxwArF32HT9WlFMxOIYcbtgXMg8QV/gg0FQE8tRENUjIDmi18YXfUO4zz0C7S5sBV0ImKG1pnYrVG7EgH8khlS+9kpz6Axs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2PV1xcV7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1709904818; c=relaxed/simple;
+	bh=4ZkVUBLSDeUXcXi2xTKcJ3cUsQWPzbrJXOQ/A/i5e8M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=cC8ad9crVhuwBgjHfS+deqyImaCuwVTtq6TiXZUJgKpkhSSLdNf3QM508Ue9DdcuypqG5+eT77KvtILAg29cnnGdlRz1BGt32S+54EkKqPUOFL5NQfr3CDiOTrNbcpjmaJUiobjzlcrCmL1rl6SZbMMISRlf1Kr8CKSEYSaqoCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n3GgmtTR; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2PV1xcV7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=XLhNZiOAtOVRkJtnzxKeO+RebX+VweC9Qi0gKqLYSug=; b=2P
-	V1xcV7e67+qNS5SLuC5sqbbw9rDlaK2j5FirbwEh1W6qRIWu1x6badEuka4IXZdSywzw2SKUs9+2P
-	DsBNlPo/f9QfW7v7AkNLkJ7q81VaZdsoviLrpbgxojk3QieSoy+8/gUI+xPrG1FPEEuVGClV3wi6r
-	EBff0q/VkXEAGmU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1riaLY-009lXx-Kv; Fri, 08 Mar 2024 14:33:12 +0100
-Date: Fri, 8 Mar 2024 14:33:12 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Parthiban.Veerasooran@microchip.com
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
-	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, corbet@lwn.net,
-	linux-doc@vger.kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
-	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
-	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
-	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
-	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
-	benjamin.bigler@bernformulastudent.ch
-Subject: Re: [PATCH net-next v3 06/12] net: ethernet: oa_tc6: implement
- internal PHY initialization
-Message-ID: <8de7a4bb-a127-4771-97dd-038f08fcce9d@lunn.ch>
-References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
- <20240306085017.21731-7-Parthiban.Veerasooran@microchip.com>
- <8c2b95f4-75a7-4d6d-ab9c-9c3498c040d8@lunn.ch>
- <eeb57938-e21e-406d-a835-93c6fb19b161@microchip.com>
- <7ddbe599-187e-401f-b508-4dc62bca8374@lunn.ch>
- <e9bc573e-61f0-484a-b1fb-b5100eb9ee0a@microchip.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n3GgmtTR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F72D2000E;
+	Fri,  8 Mar 2024 13:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709904812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+tBfmX+8Hgk/BqOXaahZwNbPUrMVY004ZkuW+uwmjpE=;
+	b=n3GgmtTRXmnfqEFds89oU7qvJ81y9dnJTg5OsTvBofsNDrGeSfEkLisSpN84LTsHdIL588
+	OK1JPm8/P/E+EgaiZpA0xtFfS2Nfu5VEFlw8Pum/M3sb+PcwADsGcW6/l/i6jLZjHIG73t
+	UGDe4W6wzxpL2CUnXsqDzhk0JmmN6UCwfhvWMEkhGbfWc5BUtuWZihy41fiLEZH2WBKkcs
+	l+DiD2k4dGfWHt7tF2ZQeRJT6iK3CbFWWi3Ev/EYzjIXgsAFYrSZShBUBI1bg6g/14/psR
+	2hcdmZ45nMUIJF4ep813D4z9sqGS24K/OiNTwW/Nb6jGul/gz38hWXnn5tYrmg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e9bc573e-61f0-484a-b1fb-b5100eb9ee0a@microchip.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 08 Mar 2024 14:33:31 +0100
+Message-Id: <CZOEO2E13Q67.1LQ5HNWPYU647@bootlin.com>
+Subject: Re: [PATCH v3 03/11] i2c: nomadik: simplify IRQ masking logic
+Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mips@vger.kernel.org>, "Gregory Clement"
+ <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Andi Shyti" <andi.shyti@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+ <20240306-mbly-i2c-v3-3-605f866aa4ec@bootlin.com>
+ <422szb2dtgnq56xznfqsqtqs3dai2jipnntrp6yb2og353whs7@g4ia5ynnmqu6>
+ <CZO8SUELNP4R.230VKX59UIHC8@bootlin.com>
+ <3f7zpl4yu5gsojmfhdrbieev3gatfcgag5tnmgmrv3u46y4pny@tamjf6cq5g3v>
+In-Reply-To: <3f7zpl4yu5gsojmfhdrbieev3gatfcgag5tnmgmrv3u46y4pny@tamjf6cq5g3v>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-> Ok, as per the table 6 in the spec, PHY C45 registers are mapped in the 
-> MMS like below,
-> 
-> PHY – PCS Registers (MMD 3)  --->  MMS 2
-> PHY – PMA/PMD Registers (MMD 1)  --->   MMS 3
-> PHY – Vendor Specific and PLCA Registers (MMD 31)  --->  MMS 4
-> PHY – Auto-Negotiation Registers (MMD 7)  --->  MMS 5
-> PHY – Power Unit (MMD 13)  --->  MMS 6
-> 
-> MMD 13 for PHY - Power Unit is not defined in the mdio.h. So in the 
-> below code I have defined it locally (MDIO_MMD_POWER_UNIT). May be 
-> needed to do this in the mdio.h file when coming to this patch.
+Hello,
 
-Yes, please add it to mdio.h
+On Fri Mar 8, 2024 at 1:27 PM CET, Andi Shyti wrote:
+> Hi Theo,
+>
+> On Fri, Mar 08, 2024 at 09:57:39AM +0100, Th=C3=A9o Lebrun wrote:
+> > Hello,
+> >=20
+> > On Fri Mar 8, 2024 at 12:01 AM CET, Andi Shyti wrote:
+> > > Hi Theo,
+> > >
+> > > On Wed, Mar 06, 2024 at 06:59:23PM +0100, Th=C3=A9o Lebrun wrote:
+> > > > IRQ_MASK and I2C_CLEAR_ALL_INTS both mask available interrupts. IRQ=
+_MASK
+> > > > removes top options (bits 29-31). I2C_CLEAR_ALL_INTS removes reserv=
+ed
+> > > > options including top bits. Keep the latter.
+> > > >=20
+> > > > 31  29  27  25  23  21  19  17  15  13  11  09  07  05  03  01
+> > > >   30  28  26  24  22  20  18  16  14  12  10  08  06  04  02  00
+> > > > --- IRQ_MASK: --------------------------------------------------
+> > > >       1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+> > > > 0 0 0
+> > > > --- I2C_CLEAR_ALL_INTS: ----------------------------------------
+> > > >       1     1 1       1 1 1 1 1                   1 1 1 1 1 1 1
+> > > > 0 0 0   0 0     0 0 0           0 0 0 0 0 0 0 0 0
+> > > >=20
+> > > > Notice I2C_CLEAR_ALL_INTS is more restrictive than IRQ_MASK.
+> > > >=20
+> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > >
+> > > You did answer my question in v2, thanks, Theo!
+> >=20
+> > Oops my mailer syntax is telling me that the lines starting with '---'
+> > might cause issue as it might mark the end of commit messages. I'll fix
+> > that in next revision. If it gets applied before that it should be
+> > checked that part of the message doesn't get lost.
+>
+> mmhhh... right! No need to resend, if nothing else is needed from
+> the series, please paste the commit message here and I will fix
+> it.
 
-> /* PHY – Clause 45 registers memory map selector (MMS) as per table 6 in 
-> the OPEN Alliance specification.
->   */
-> #define OA_TC6_PHY_PCS_MMS2                     2       /* MMD 3 */
-> #define OA_TC6_PHY_PMA_PMD_MMS3                 3       /* MMD 1 */
-> #define OA_TC6_PHY_VS_PLCA_MMS4                 4       /* MMD 31 */
-> #define OA_TC6_PHY_AUTO_NEG_MMS5                5       /* MMD 7 */
-> #define OA_TC6_PHY_POWER_UNIT_MMS6              6       /* MMD 13 */
-> 
-> /* MDIO Manageable Device (MMD) for PHY Power Unit */
-> #define MDIO_MMD_POWER_UNIT                     13      /* PHY Power Unit */
-> 
-> static int oa_tc6_mdiobus_read_c45(struct mii_bus *bus, int addr, int 
-> devnum, int regnum)
-> { 
-> 
->          struct oa_tc6 *tc6 = bus->priv; 
-> 
->          u32 regval; 
-> 
->          bool ret; 
-> 
->          u32 mms; 
-> 
->  
-> 
->          if (devnum == MDIO_MMD_PCS) 
-> 
->                  mms = OA_TC6_PHY_PCS_MMS2; 
-> 
->          else if (devnum == MDIO_MMD_PMAPMD) 
-> 
->                  mms = OA_TC6_PHY_PMA_PMD_MMS3; 
-> 
->          else if (devnum == MDIO_MMD_VEND2) 
-> 
->                  mms = OA_TC6_PHY_VS_PLCA_MMS4; 
-> 
->          else if (devnum == MDIO_MMD_AN) 
-> 
->                  mms = OA_TC6_PHY_AUTO_NEG_MMS5; 
-> 
->          else if (devnum == MDIO_MMD_POWER_UNIT) 
-> 
->                  mms = OA_TC6_PHY_POWER_UNIT_MMS6; 
+The message would become the following (tab-indented). Both '---' turned
+into '--' in the bit table. I confirmed `git am` does not truncate this
+updated message.
 
-I would probably use a switch statement.
+	i2c: nomadik: simplify IRQ masking logic
 
-> 
->          else 
-> 
->                  return -ENOTSUPP; 
+	IRQ_MASK and I2C_CLEAR_ALL_INTS both mask available interrupts. IRQ_MASK
+	removes top options (bits 29-31). I2C_CLEAR_ALL_INTS removes reserved
+	options including top bits. Keep the latter.
 
-802.3 says:
+	31  29  27  25  23  21  19  17  15  13  11  09  07  05  03  01
+	  30  28  26  24  22  20  18  16  14  12  10  08  06  04  02  00
+	-- IRQ_MASK: ---------------------------------------------------
+	      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+	0 0 0
+	-- I2C_CLEAR_ALL_INTS: -----------------------------------------
+	      1     1 1       1 1 1 1 1                   1 1 1 1 1 1 1
+	0 0 0   0 0     0 0 0           0 0 0 0 0 0 0 0 0
 
-  If a device supports the MDIO interface it shall respond to all
-  possible register addresses for the device and return a value of
-  zero for undefined and unsupported registers. Writes to undefined
-  registers and read-only registers shall have no effect. The
-  operation of an MMD shall not be affected by writes to reserved and
-  unsupported register bits, and such register bits shall return a
-  value of zero when read.
+	Notice I2C_CLEAR_ALL_INTS is more restrictive than IRQ_MASK.
 
-So maybe return 0. ENOTSUPP is wrong, that is an NFS only error
-code. The generic one is EOPNOTSUPP. I would say -EOPNOTSUPP is also
-O.K.
+	Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+	Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
->          ret = oa_tc6_read_register(tc6, (mms << 16) | regnum, &regval); 
-> 
->          if (ret) 
-> 
->                  return -ENODEV; 
+Thanks for the quick follow-up!
 
-oa_tc6_read_register() should return an error code, so return whatever
-is returns. Don't overwrite error codes. It makes it harder to track
-errors through the call stack.
-
-       Andrew
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
