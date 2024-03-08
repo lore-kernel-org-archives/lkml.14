@@ -1,69 +1,112 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B16535A0;
-	Fri,  8 Mar 2024 09:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6755722F0F
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709890196; cv=none; b=tvH1TyAHsWKReHnnVSaXYzTh/EerCXFyggkr1oB2Yy9BFQ0nOtaXjSVqfw2Xn0GOTDMDEzKVU+mCdxvkMs5xhuLM3RWcaBz8F/fU1bdFZ7/bJQlU7sIL0efLt5y4NRmvQ7k9iAd8lhyTbeOV86h8LcBAHLKfxqe4Tw8lr3qLZVU=
+	t=1709890247; cv=none; b=hVmYI+aYMqy+QvJ0awXzSkGIu5f8umwapzPInJNH85AXOzjUb3pbUoixy2604Hu9TYjGCkRyWATO9Kzb6J6kb4ZPuyht3l4LHQXjxCetqS+0O7cm0b4bvxx6HDY/BJ6ghMjSetOiWFMIYt4L0dUsj0hexVspApMPlYOYt21HxOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709890196; c=relaxed/simple;
-	bh=786vdokxTRB7TIzU3GEVcMj1xNGQkjpS6CAsEOD9jyU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FpRX5/AaBVmvguSzk5H3OnjMDNTMQ0W+y7MT7y0AbZ1uF/LGx4mBy35DJ2u9dIFmpjcYfrjKouWcewVNP87hN7jfdmps8TZ7LXbvsiptxL1kwtziHloCfR0WTZlLpX4PNTG+YKvPYF7o2AEhnXTAgnEDu6v0MTun6RuNntsQwUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a9e.versanet.de ([83.135.90.158] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1riWXu-0006Te-Rf; Fri, 08 Mar 2024 10:29:42 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Iskander Amara <iskander.amara@theobroma-systems.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- vahe.grigoryan@theobroma-systems.com,
- angelogioacchino.delregno@collabora.com, dsimic@manjaro.org,
- alexander.stein@ew.tq-group.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Subject:
- Re: [PATCH 1/2] arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on
- RK3399 Puma
-Date: Fri, 08 Mar 2024 10:29:41 +0100
-Message-ID: <24965019.EfDdHjke4D@diego>
-In-Reply-To: <ffc940bf-b9df-4731-a34d-f725a6d6d7f1@theobroma-systems.com>
-References:
- <20240308085243.69903-1-iskander.amara@theobroma-systems.com>
- <ffc940bf-b9df-4731-a34d-f725a6d6d7f1@theobroma-systems.com>
+	s=arc-20240116; t=1709890247; c=relaxed/simple;
+	bh=tiO0bXgsOr+PuXLGnaMqo6dxWeWjXreRkFH/dObAfKs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AC6fJibJfOj6KOChzSymPo/UWwCtyFttyOj62gipJIsT2MybE77pwAoncQkU4zludHQquIrXHPpvajJpP3L4xB6Qj3OYy8ndEaQnlqVy84w+7e9Z6NB/ymgPYb7zZ6uT4JUsqoQMoxpG/hn3WtaYzp1Bccz7WfIBxDmtGXbopfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=poqyepOR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="poqyepOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1709890241;
+	bh=YrG1vi6s/nTwQkG4YsY+XqFiQyMrqUljBKJEXiaxAlo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=poqyepOR/C++MsETS/6QVuyHg2UIBvlhqaSA6Ce5Go5wIxdCFrubcjS2LSzyhflBx
+	 5Q8AwLdlL2B59MTdND6P3EKY3yJHoSAF5lQwj+e3T5JjlYw/NFKrOAMlt7OKAil0jj
+	 YW14/V32vV7XsCKTeyA889fdfzECaYF2iEYktWeiycbVj5Ac8St5Le2sG+/b3PSqVw
+	 xXOvXyMSA0SUfjBYo24HFVHSMiUygB5X8tWiLkyxMM6aDZHznE3RrumAU5gQIRV9eN
+	 Je+IdqrXNZpGz8tPt0SXHU475HQ0xcw7+qbjPtDVRAgtHtZmA515omGgpXybBDi7Nq
+	 etlkkl91F1cxA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Trgrc6vwJz4wc4;
+	Fri,  8 Mar 2024 20:30:40 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Joel Savitz <jsavitz@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Benjamin Gray <bgray@linux.ibm.com>, Paul Mackerras <paulus@ozlabs.org>,
+ linuxppc-dev@lists.ozlabs.org, Gonzalo Siero <gsierohu@redhat.com>
+Subject: Re: [PATCH] powerpc: align memory_limit to 16MB in early_parse_mem
+In-Reply-To: <CAL1p7m7nHfLM=koNaFZ0MrrcC6Lyj3VWdC9i8rOWGmrijKR3+Q@mail.gmail.com>
+References: <20240301203023.2197451-1-jsavitz@redhat.com>
+ <87cysdfsef.fsf@mail.lhotse>
+ <CAL1p7m7nHfLM=koNaFZ0MrrcC6Lyj3VWdC9i8rOWGmrijKR3+Q@mail.gmail.com>
+Date: Fri, 08 Mar 2024 20:30:39 +1100
+Message-ID: <87zfv9m5og.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
 
-Am Freitag, 8. M=E4rz 2024, 10:25:43 CET schrieb Quentin Schulz:
-> Hi Iskander,
->=20
-> On 3/8/24 09:52, Iskander Amara wrote:
-> > Q7_THRM# pin is connected to a diode on the module which is used
-> > as a level shifter, and the pin have a pull-down enabled by
-> > default. We need to configure it to internal pull-up, other-
-> > wise whenever the pin is configured as INPUT and we try to
-> > control it externally the value will always remain zero.
-> >=20
-> > Signed-off-by: Iskander Amara <iskander.amara@theobroma-systems.com>
->=20
-> For the whole series:
->=20
-> Reviewed-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
->=20
-> @Heiko I think this may match the criteria for stable backports?
+Joel Savitz <jsavitz@redhat.com> writes:
+> On Fri, Mar 1, 2024 at 6:23=E2=80=AFPM Michael Ellerman <mpe@ellerman.id.=
+au> wrote:
+>> Joel Savitz <jsavitz@redhat.com> writes:
+>> > On 64-bit powerpc, usage of a non-16MB-aligned value for the mem=3D ke=
+rnel
+>> > cmdline parameter results in a system hang at boot.
+>>
+>> Can you give us any more details on that? It might be a bug we can fix.
+>
+> The console freezes after the following output:
+>
+>   Booting a command list
+>
+> OF stdout device is: /vdevice/vty@30000000
+> Preparing to boot Linux version 6.8.0-rc6.memNOfix-00120-g87adedeba51a
+> (root@ibm-p9z-26-lp11.virt.pnr.lab.eng.rdu2.redhat.com) (gcc (GCC)
+> 11.4.1 20231218 (Red Hat 11.4.1-3), GNU ld version 2.35.2-43.el9) #3
+> SMP Fri Mar  1 10:45:45 EST 2024
+> Detected machine type: 0000000000000101
+> command line: BOOT_IMAGE=3D(ieee1275//vdevice/v-scsi@30000003/disk@810000=
+0000000000,msdos2)/vmlinuz-6.8.0-rc6.memNOfix-00120-g87adedeba51a
+> root=3D/dev/mapper/rhel_ibm--p9z--26--lp11-root ro
+> crashkernel=3D2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G
+> rd.lvm.lv=3Drhel_ibm-p9z-26-lp11/root
+> rd.lvm.lv=3Drhel_ibm-p9z-26-lp11/swap mem=3D4198400K
+> Max number of cores passed to firmware: 256 (NR_CPUS =3D 2048)
+> Calling ibm,client-architecture-support... done
+> Ignoring mem=3D0000000101000000 >=3D ram_top.
+> memory layout at init:
+>   memory_limit : 0000000000000000 (16 MB aligned)
+>   alloc_bottom : 00000000114f0000
+>   alloc_top    : 0000000020000000
+>   alloc_top_hi : 0000000020000000
+>   rmo_top      : 0000000020000000
+>   ram_top      : 0000000020000000
+> instantiating rtas at 0x000000001ecb0000... done
+> prom_hold_cpus: skipped
+> copying OF device tree...
+> Building dt strings...
+> Building dt structure...
+> Device tree strings 0x0000000011500000 -> 0x00000000115017b7
+> Device tree struct  0x0000000011510000 -> 0x0000000011520000
+> Quiescing Open Firmware ...
+> Booting Linux via __start() @ 0x000000000a6e0000 ...
 
-at least patch1 does ... it definitly should have a Fixes tag though.
+Thanks.
 
+I haven't been able to reproduce this unfortunately, and I don't see the
+bug. As Aneesh pointed out the code should be aligning later anyway.
 
+Can you build a kernel with CONFIG_PPC_EARLY_DEBUG_LPAR=3Dy and boot it
+without the patch? That should hopefully give you some more output.
+
+cheers
