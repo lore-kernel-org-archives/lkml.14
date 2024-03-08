@@ -1,39 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B202219F6
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 01:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63AC020B35;
+	Fri,  8 Mar 2024 01:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709860123; cv=none; b=hVwRY95YPb1Egs8OZN1wBafAIoIzt6qoL6BgUwjRR1dUbH6lSxHdLXdPmb2uNygd+dgiG/Ywn3iwk7ZziYD4oxVFF13UXEi8Dj5WRxqm63+JWSK/5CHaxv2NptB07VpzmB9so1iK/TFsz6Semc+HitbO2oic4G5f+AFE7hus4d4=
+	t=1709860171; cv=none; b=o/9NA9eLcw6CYvle1ytKVz4lgpzRKJr5DfO/g++aKaSepLbmKV3SO4ayfDURMLywTIdymZhMDVitLvrEWQkukl0LRSkL2Tay8Cset1JAsLQAEGPXQSMbcCvd1bF9b002i9ri/UQ1ouOI8jqRz63/9cFxpLeiV43JwhQbYCNteKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709860123; c=relaxed/simple;
-	bh=/5W1ItLMiLDBcxiqWbCKid+EHj6ZdkuzqaV/WRK8wUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rLZqr/TiRQyiRGO5Dua3ICFog8giezbWtnIyPDu5rIGIUW+fCxtBy6HJHmsn8QCPfIdrTE6HkQ/atWDY8aSHx8Zu3QsSLSWeEVQw1EBHhIp3AZUo4YgFRxALhHoN2aE2KIFZJIb7HBY9C4oRP0p3ZjIEjw2bxersdDHbUGeC6TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQxZ1rYG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709860171; c=relaxed/simple;
+	bh=S5oTdDbKKJ9uCz6925DSgCk/EUQPohigcFEx7WR6WHE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tcnVOiPyyue1sfWQPD1Jy2KgFH8mMlwqT4gnwbI6PUP6QrKfK98pIkybuQ8otq5b+hxOgiY2MpTU2ZTRRri85orsqQbsKGliocOw3CS/Dihp+3JtbDSMbITg6PW8wbrWIzSRQMiAL7CWRfMqfxXWjoMcKu0n+eJjvn2graCLnIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=C1ulDhg5; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQxZ1rYG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC6CC433C7;
-	Fri,  8 Mar 2024 01:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709860122;
-	bh=/5W1ItLMiLDBcxiqWbCKid+EHj6ZdkuzqaV/WRK8wUg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UQxZ1rYG46lk1o72JjSJjBgutl5LLwRrw3/HcbSTeyiHTP2qiSXlA47F/hWyk3hBV
-	 hs1p3MhmhXRy33gi3FnbQ/SrcsKBLGdrQQjO+yiHnmsD3vpsHJ0K2c4CfT3AuyeZRU
-	 n2ug3YXHT+Ydq7YhIZGZ/QaEkPP2Nk+p1TeM1OZ3RBoS5rF9J7SeWzMZeA1LpZYE2h
-	 XVA6XXsa0yzA0oYGEj4wS186pWs8YcKmRxHcWi/z0BPYXgDu0YrC1RN5mmrpQMm7Jz
-	 3u01N9b3mzPuawrCPQS1A8FDkCyuGZcdTXZu86f22+8F/0QW2zur4em35VnHqdZvK1
-	 YDD6RQ4B/DlLw==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v2] f2fs: fix to truncate meta inode pages forcely
-Date: Fri,  8 Mar 2024 09:08:34 +0800
-Message-Id: <20240308010834.4023772-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="C1ulDhg5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=1iFaV
+	287Y0eGK7s0IO6GL/mOj5DAK8MslBCFLFMR+hg=; b=C1ulDhg5gNEul61gUji6Q
+	yG4T4Dl+k4lXFXJdCkH6p3MJefz2DZ4RWxQp2WxbmGlp221QddyucrVywW5RHnlw
+	N/UoC6srh1XzJRf8ct5j/Bzseo2RfFVH3oNkjOnp+Ft4ioKJvq9N5Gzpm8YJdSc/
+	1WPi0Qxog0pPRqC9Z6mWi8=
+Received: from ldingyan9LVDQ.vmware.com.com (unknown [114.250.139.10])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wBH76AxZeplz6ePAw--.49439S2;
+	Fri, 08 Mar 2024 09:09:06 +0800 (CST)
+From: Dingyan Li <18500469033@163.com>
+To: stern@rowland.harvard.edu
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] USB: Use EHCI control transfer pid macros instead of constant values.
+Date: Fri,  8 Mar 2024 09:08:59 +0800
+Message-Id: <20240308010859.81987-1-18500469033@163.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <1e7f57d6-a4c1-4a3d-8cff-f966c89a8140@rowland.harvard.edu>
+References: <1e7f57d6-a4c1-4a3d-8cff-f966c89a8140@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,135 +41,166 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBH76AxZeplz6ePAw--.49439S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr43JFyxtr47AF4Uuw1xXwb_yoW7JrWfpF
+	W3WrW7tayUJr4YqwnrGrsYyF1rJw13G34UKFy29397Gr4vyr15GF17KFWftr9rXry8ur1Y
+	qr45Xr98urs7JFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UiJ5wUUUUU=
+X-CM-SenderInfo: jprykiiquwmiitt6il2tof0z/1tbiVBmay2VOByQVUAABsQ
 
-Below race case can cause data corruption:
+Macros with good names offer better readability. Besides, also move
+the definition to ehci.h.
 
-Thread A				GC thread
-					- gc_data_segment
-					 - ra_data_block
-					  - locked meta_inode page
-- f2fs_inplace_write_data
- - invalidate_mapping_pages
- : fail to invalidate meta_inode page
-   due to lock failure or dirty|writeback
-   status
- - f2fs_submit_page_bio
- : write last dirty data to old blkaddr
-					 - move_data_block
-					  - load old data from meta_inode page
-					  - f2fs_submit_page_write
-					  : write old data to new blkaddr
-
-Because invalidate_mapping_pages() will skip invalidating page which
-has unclear status including locked, dirty, writeback and so on, so
-we need to use truncate_inode_pages_range() instead of
-invalidate_mapping_pages() to make sure meta_inode page will be dropped.
-
-Fixes: 6aa58d8ad20a ("f2fs: readahead encrypted block during GC")
-Fixes: e3b49ea36802 ("f2fs: invalidate META_MAPPING before IPU/DIO write")
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Dingyan Li <18500469033@163.com>
 ---
-v2:
-- fix race condition description.
- fs/f2fs/checkpoint.c    |  5 +++--
- fs/f2fs/f2fs.h          | 28 +++++++++++++++++++++++++++-
- fs/f2fs/segment.c       |  5 ++---
- include/linux/f2fs_fs.h |  1 +
- 4 files changed, 33 insertions(+), 6 deletions(-)
+ drivers/usb/host/ehci-dbg.c | 10 +++++-----
+ drivers/usb/host/ehci-q.c   | 20 ++++++++------------
+ drivers/usb/host/ehci.h     |  8 +++++++-
+ 3 files changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index a09a9609e228..55b7d2cf030f 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1598,8 +1598,9 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	 */
- 	if (f2fs_sb_has_encrypt(sbi) || f2fs_sb_has_verity(sbi) ||
- 		f2fs_sb_has_compression(sbi))
--		invalidate_mapping_pages(META_MAPPING(sbi),
--				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
-+		f2fs_bug_on(sbi,
-+			invalidate_inode_pages2_range(META_MAPPING(sbi),
-+				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1));
+diff --git a/drivers/usb/host/ehci-dbg.c b/drivers/usb/host/ehci-dbg.c
+index c063fb042926..435001128221 100644
+--- a/drivers/usb/host/ehci-dbg.c
++++ b/drivers/usb/host/ehci-dbg.c
+@@ -430,13 +430,13 @@ static void qh_lines(struct ehci_hcd *ehci, struct ehci_qh *qh,
+ 				mark = '/';
+ 		}
+ 		switch ((scratch >> 8) & 0x03) {
+-		case 0:
++		case PID_CODE_OUT:
+ 			type = "out";
+ 			break;
+-		case 1:
++		case PID_CODE_IN:
+ 			type = "in";
+ 			break;
+-		case 2:
++		case PID_CODE_SETUP:
+ 			type = "setup";
+ 			break;
+ 		default:
+@@ -602,10 +602,10 @@ static unsigned output_buf_tds_dir(char *buf, struct ehci_hcd *ehci,
+ 	list_for_each_entry(qtd, &qh->qtd_list, qtd_list) {
+ 		temp++;
+ 		switch ((hc32_to_cpu(ehci, qtd->hw_token) >> 8)	& 0x03) {
+-		case 0:
++		case PID_CODE_OUT:
+ 			type = "out";
+ 			continue;
+-		case 1:
++		case PID_CODE_IN:
+ 			type = "in";
+ 			continue;
+ 		}
+diff --git a/drivers/usb/host/ehci-q.c b/drivers/usb/host/ehci-q.c
+index 666f5c4db25a..ba37a9fcab92 100644
+--- a/drivers/usb/host/ehci-q.c
++++ b/drivers/usb/host/ehci-q.c
+@@ -27,10 +27,6 @@
  
- 	f2fs_release_ino_entry(sbi, false);
+ /*-------------------------------------------------------------------------*/
  
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 4836e7cb0efe..9814e5981a6a 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4655,10 +4655,36 @@ static inline bool f2fs_is_readonly(struct f2fs_sb_info *sbi)
- 	return f2fs_sb_has_readonly(sbi) || f2fs_readonly(sbi->sb);
- }
+-/* PID Codes that are used here, from EHCI specification, Table 3-16. */
+-#define PID_CODE_IN    1
+-#define PID_CODE_SETUP 2
+-
+ /* fill a qtd, returning how much of the buffer we were able to queue up */
  
-+static inline void f2fs_truncate_meta_inode_pages(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, unsigned int cnt)
-+{
-+	bool need_submit = false;
-+	int i = 0;
-+
-+	do {
-+		struct page *page;
-+
-+		page = find_get_page(META_MAPPING(sbi), blkaddr + i);
-+		if (page) {
-+			if (PageWriteback(page))
-+				need_submit = true;
-+			f2fs_put_page(page, 0);
-+		}
-+	} while (++i < cnt && !need_submit);
-+
-+	if (need_submit)
-+		f2fs_submit_merged_write_cond(sbi, sbi->meta_inode,
-+							NULL, 0, DATA);
-+
-+	truncate_inode_pages_range(META_MAPPING(sbi),
-+			F2FS_BLK_TO_BYTES((loff_t)blkaddr),
-+			F2FS_BLK_END_BYTES((loff_t)(blkaddr + cnt - 1)));
-+}
-+
- static inline void f2fs_invalidate_internal_cache(struct f2fs_sb_info *sbi,
- 								block_t blkaddr)
- {
--	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr);
-+	f2fs_truncate_meta_inode_pages(sbi, blkaddr, 1);
- 	f2fs_invalidate_compress_page(sbi, blkaddr);
- }
+ static unsigned int
+@@ -230,7 +226,7 @@ static int qtd_copy_status (
+ 			/* fs/ls interrupt xfer missed the complete-split */
+ 			status = -EPROTO;
+ 		} else if (token & QTD_STS_DBE) {
+-			status = (QTD_PID (token) == 1) /* IN ? */
++			status = (QTD_PID(token) == PID_CODE_IN) /* IN ? */
+ 				? -ENOSR  /* hc couldn't read data */
+ 				: -ECOMM; /* hc couldn't write data */
+ 		} else if (token & QTD_STS_XACT) {
+@@ -606,7 +602,7 @@ qh_urb_transaction (
+ 		/* SETUP pid */
+ 		qtd_fill(ehci, qtd, urb->setup_dma,
+ 				sizeof (struct usb_ctrlrequest),
+-				token | (2 /* "setup" */ << 8), 8);
++				token | (PID_CODE_SETUP << 8), 8);
  
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 4ff3b2d14ddf..20af48d7f784 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3741,8 +3741,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ 		/* ... and always at least one more pid */
+ 		token ^= QTD_TOGGLE;
+@@ -620,7 +616,7 @@ qh_urb_transaction (
+ 
+ 		/* for zero length DATA stages, STATUS is always IN */
+ 		if (len == 0)
+-			token |= (1 /* "in" */ << 8);
++			token |= (PID_CODE_IN << 8);
  	}
  
- 	if (fio->post_read)
--		invalidate_mapping_pages(META_MAPPING(sbi),
--				fio->new_blkaddr, fio->new_blkaddr);
-+		f2fs_truncate_meta_inode_pages(sbi, fio->new_blkaddr, 1);
+ 	/*
+@@ -642,7 +638,7 @@ qh_urb_transaction (
+ 	}
  
- 	stat_inc_inplace_blocks(fio->sbi);
+ 	if (is_input)
+-		token |= (1 /* "in" */ << 8);
++		token |= (PID_CODE_IN << 8);
+ 	/* else it's already initted to "out" pid (0 << 8) */
  
-@@ -3932,7 +3931,7 @@ void f2fs_wait_on_block_writeback_range(struct inode *inode, block_t blkaddr,
- 	for (i = 0; i < len; i++)
- 		f2fs_wait_on_block_writeback(inode, blkaddr + i);
+ 	maxpacket = usb_endpoint_maxp(&urb->ep->desc);
+@@ -709,7 +705,7 @@ qh_urb_transaction (
  
--	invalidate_mapping_pages(META_MAPPING(sbi), blkaddr, blkaddr + len - 1);
-+	f2fs_truncate_meta_inode_pages(sbi, blkaddr, len);
- }
+ 		if (usb_pipecontrol (urb->pipe)) {
+ 			one_more = 1;
+-			token ^= 0x0100;	/* "in" <--> "out"  */
++			token ^= (PID_CODE_IN << 8);	/* "in" <--> "out"  */
+ 			token |= QTD_TOGGLE;	/* force DATA1 */
+ 		} else if (usb_pipeout(urb->pipe)
+ 				&& (urb->transfer_flags & URB_ZERO_PACKET)
+@@ -1203,7 +1199,7 @@ static int ehci_submit_single_step_set_feature(
+ 		/* SETUP pid, and interrupt after SETUP completion */
+ 		qtd_fill(ehci, qtd, urb->setup_dma,
+ 				sizeof(struct usb_ctrlrequest),
+-				QTD_IOC | token | (2 /* "setup" */ << 8), 8);
++				QTD_IOC | token | (PID_CODE_SETUP << 8), 8);
  
- static int read_compacted_summaries(struct f2fs_sb_info *sbi)
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 755e9a41b196..a357287eac1e 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -27,6 +27,7 @@
+ 		submit_async(ehci, urb, &qtd_list, GFP_ATOMIC);
+ 		return 0; /*Return now; we shall come back after 15 seconds*/
+@@ -1216,7 +1212,7 @@ static int ehci_submit_single_step_set_feature(
+ 	token ^= QTD_TOGGLE;   /*We need to start IN with DATA-1 Pid-sequence*/
+ 	buf = urb->transfer_dma;
  
- #define F2FS_BYTES_TO_BLK(bytes)	((bytes) >> F2FS_BLKSIZE_BITS)
- #define F2FS_BLK_TO_BYTES(blk)		((blk) << F2FS_BLKSIZE_BITS)
-+#define F2FS_BLK_END_BYTES(blk)		(F2FS_BLK_TO_BYTES(blk + 1) - 1)
+-	token |= (1 /* "in" */ << 8);  /*This is IN stage*/
++	token |= (PID_CODE_IN << 8);  /*This is IN stage*/
  
- /* 0, 1(node nid), 2(meta nid) are reserved node id */
- #define F2FS_RESERVED_NODE_NUM		3
+ 	maxpacket = usb_endpoint_maxp(&urb->ep->desc);
+ 
+@@ -1229,7 +1225,7 @@ static int ehci_submit_single_step_set_feature(
+ 	qtd->hw_alt_next = EHCI_LIST_END(ehci);
+ 
+ 	/* STATUS stage for GetDesc control request */
+-	token ^= 0x0100;        /* "in" <--> "out"  */
++	token ^= (PID_CODE_IN << 8);        /* "in" <--> "out"  */
+ 	token |= QTD_TOGGLE;    /* force DATA1 */
+ 
+ 	qtd_prev = qtd;
+diff --git a/drivers/usb/host/ehci.h b/drivers/usb/host/ehci.h
+index 1441e3400796..d7a3c8d13f6b 100644
+--- a/drivers/usb/host/ehci.h
++++ b/drivers/usb/host/ehci.h
+@@ -321,10 +321,16 @@ struct ehci_qtd {
+ 	size_t			length;			/* length of buffer */
+ } __aligned(32);
+ 
++/* PID Codes that are used here, from EHCI specification, Table 3-16. */
++#define PID_CODE_OUT   0
++#define PID_CODE_IN    1
++#define PID_CODE_SETUP 2
++
+ /* mask NakCnt+T in qh->hw_alt_next */
+ #define QTD_MASK(ehci)	cpu_to_hc32(ehci, ~0x1f)
+ 
+-#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && QTD_PID(token) == 1)
++#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && \
++						QTD_PID(token) == PID_CODE_IN)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
 -- 
-2.40.1
+2.25.1
 
