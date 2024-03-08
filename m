@@ -1,339 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339A465BA9;
-	Fri,  8 Mar 2024 22:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDB35FB89
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709935876; cv=none; b=T0n5+rq1gtE7QaPWxzQRPoUf5uXRHyBBSJBRuF1Dk/pcnBB0If+8tasB786B8VW9hwMbsYY88JYGATogsBlzedp1hebiArIJ0mR/I+ziukaT4PTgm0Oo9QXSmmKgC7l2FHlLiAZR9qts9XawCDGbHVjctk+YSuUppG3gHkqD61M=
+	t=1709936208; cv=none; b=Xl45pgH9QV/skmgGHN4GikTtAH0xp3VZTMSlnWWRDIr4qVil+WvAZuY4hzcbuTS/lP/FH12TDA3dsjb4z1ghVn1vMUmV0OmN0xeXtClUheYweTwxupUlNSK2mHSRmWU+Eo1+3Kd532Q7n/6g0MbKEByJuSN67VEuX5nptM6KmdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709935876; c=relaxed/simple;
-	bh=NDO5GUxYDlFqdD8WdhJZtIxFwcsqQH8196TFTWPwy14=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J3uHKUuWx24kdUBM1wEGAOMUpU9LCRlLfNwuiRfJTBSnFH5oLBUPo8FzOwiaFXlff+qqRtt7NjLZ0dzG5+BVRfin4QX+tEJvD4g+NeRshtDLPh56Z98S6tOuT2pDhLjTcaHO4ma4uoRB26eT73mNmzKpbTX/f7gleECr+2kgu7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+v54EXi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709936208; c=relaxed/simple;
+	bh=3WW0T20esXbPOV4mKyfxQZFN7v0CB7rUWIid/qvBbzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dlnmEayEs44p2ui4nM9ImpplYF7vMAxUJ0uPDoHl7UvehXzsGFRnasw1H5DK8hPaap/4qxeSG6r8E/Kd32Ab4jiqLdp/MXA4p2miIGEK8kdocXRYsc9yuLkz+DOpvxVUxQ6LjF9YE1eFE628dtceeaQEBBSzT7RaTXhm/5RYQzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pEvl+ZDc; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+v54EXi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71849C43394;
-	Fri,  8 Mar 2024 22:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709935875;
-	bh=NDO5GUxYDlFqdD8WdhJZtIxFwcsqQH8196TFTWPwy14=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m+v54EXif8ZlMTJ7Equ3gKVaVQH8X2Zs5jqRsWksfQI2xWOOByZG7DnH++Q3kKSBa
-	 yYldrq1GFieW3gf23iS3yvSlJm8i+TUjsByAstvz6+9CHTdcxj6KMyMD5es5oL+PgW
-	 YGPaiMWn29FVpZ4ehvJGFKWHMx7G2oTigcN3TZ6yRIS/uNZBiALCe8hdU1FZR+tM7s
-	 zkqbfjQASclPbX9ML6sgj0guUAlKCqNC90AsNpJqUwQbSUtKVXrShfcNtoSxSvUL2f
-	 cEFAvs0vwJgYRJMb6jAd4saEcEbY6KhWxcH34HwD2ZJee2ZDpsLA7UuBHb9f/2+nzq
-	 jQNxebGULZVHg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 08 Mar 2024 23:10:22 +0100
-Subject: [PATCH net-next 15/15] selftests: mptcp: use
- KSFT_SKIP/KSFT_PASS/KSFT_FAIL
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pEvl+ZDc"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d288bac3caso16431601fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 14:16:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709936203; x=1710541003; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M6WGaze6LMAlVEXi3gns02EuthFsVIHKV8ef7UH1OcY=;
+        b=pEvl+ZDcfl3XdByzsZ8XmwzPIVGLwyuxM4NTxIyyefgOVfpfyyiavbhExyeaZl4cPt
+         eY8sJSgKKQSg6RXhlS+glClSqouinLjOPx1o8IDqXwMqT63pNYoQUH4iH4JawB5grFfv
+         WQVaRQGGLUi0rKMa7tKZOk1gQXuEmOcMeO7yXoCwnEv4bcMl5DD8DjL3d8VIvBok1m7J
+         L7pK8Un2gpw0/vI4ii4C4nhgc2ol9bwkr/dSvz5dbYmonMPJHImirBXc3zYcZHjxVILb
+         VcUF2CwZVgTlhnB3tVbsoLk6L6WpE4FpqQbbqPCBjisRjB8P0twULjn7wO/FdpjGQd80
+         0TEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709936203; x=1710541003;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M6WGaze6LMAlVEXi3gns02EuthFsVIHKV8ef7UH1OcY=;
+        b=oRQYZx8HD4qRav+y0L4D6v3X/vxwNK/X1yPaTF2KkC4h7Gx/+jy/Ti5nY0aCiUJMEt
+         nu/JwxcKwtKHo5ZGiBhlb7yC1FQ6saZG9cNPp91s6mzj09B2gDBe2/g9cqJu7aV/c7KF
+         oixId6/U8SvHcFhFVvqtA+D+27mZcWBN539oMrlFqFMTJYoEUjkesDRkfXllQMU4T6TP
+         vsjzXcRKs6czwdSWbGdrjjI0w8H3kPAhFxG6ITF1Tfoc6l1hOC6ZZLfbfHkb0yVKXtIN
+         TfjABKtmWa9DOCkp1i0BmQfnu4ytRpvHsTh/k2f4lneL8Hi0X6bT/EevwvnDsW7Ec71L
+         EYWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPdCiBkc8r1ldtlN85b2Kw2QUBgLdlyl5Ewo3JAS4EgMM445RXnKZcFr6QG/xblzixI3Ulmw3b0o+SCTYUbi/pL7SSJBm4BHBnyq51
+X-Gm-Message-State: AOJu0YzQa600FS0QfWs1btCQgNSGxvUeIHEz5tQNP9OP0g42uWoU1lzN
+	2wV9aXctVHlLbRlufiRqR6lOoQ52AXKMkXVVHnx6vFBom2i7wT/NDchH7UJRGtw=
+X-Google-Smtp-Source: AGHT+IG8oIdUaWDUUl+189MyLSxZd0dF1RBIwDfYyW6xHy+HlRtY9C6YLdmMrDpxClx/wBzmhEFyFA==
+X-Received: by 2002:a2e:a383:0:b0:2d4:d50:2358 with SMTP id r3-20020a2ea383000000b002d40d502358mr325274lje.18.1709936203563;
+        Fri, 08 Mar 2024 14:16:43 -0800 (PST)
+Received: from [192.168.16.246] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id a16-20020a2e8610000000b002d2904e959csm73954lji.5.2024.03.08.14.16.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Mar 2024 14:16:43 -0800 (PST)
+Message-ID: <83ab8945-5c57-48a8-9dd3-cc525a92c973@linaro.org>
+Date: Fri, 8 Mar 2024 23:16:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] ARM: dts: qcom: Add support for Samsung Galaxy Tab
+ 4 8.0 Wi-Fi
+Content-Language: en-US
+To: Bryant Mairs <bryant@mai.rs>, Bjorn Andersson <andersson@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, luca@z3ntu.xyz
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Linus Walleij <linus.walleij@linaro.org>
+References: <20240219214643.197116-1-bryant@mai.rs>
+ <20240219214643.197116-3-bryant@mai.rs>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240219214643.197116-3-bryant@mai.rs>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-15-4f42c347b653@kernel.org>
-References: <20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-0-4f42c347b653@kernel.org>
-In-Reply-To: <20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-0-4f42c347b653@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Geliang Tang <tanggeliang@kylinos.cn>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7667; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MFPhv4UY1RWRBU0fNNptB2KkxW4wGTFhXA3Gm+mmJuQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl64zKklzPyBogkU+fFBi02DdhEwZKmZJbLnVKP
- x3ro4RS0sqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeuMygAKCRD2t4JPQmmg
- czttEACQ2l2oM/feheHfkCJteq36rDV31r/McILK38NIK47znYj0oxSrAw5hQ/rD/WBK3utLNSz
- uU51Dk0qGnxzXnp9tWkmZE7nFe/lYd8Q+C9D5dn9swyniriVy3qs6wjLnPHRtXme9yQqvdHDBwI
- 26VgouHTX9yVRSPvg3wieY6bBPQN5xaZCS0e5MADkM7VL52ZohEUBr01ShFBXsEQY/Wz0n0fnbM
- pUoscKHgk0SeVZJTdiBHHf7TeisUxjZIfNWvuBFKu4W/aj7hMlB2pG+IyrAugMzX4RocyXxbEzP
- 7p+KaASPLBz4i5Mth/tFPMJuraQwB4NPfAM1E38ccApqmnNwezp19pHEapTd5Qle42eBWjHlJn0
- 82g/E38JcHUZGtqpY2Zl4OenSeA792E0Ul6rcmw2ezZ9Pqg6wr1VYGOuGIrb1efPHw4/x+aLH58
- Gf5Z2ruVRLESJmy4Ynwuk8s01DiUojzIwxOvpzUFZKwuL6wvl6OXKNVDbyoN3FNF8anzdXVB4Vv
- aPVW6SGPNvP4yzmzudWPiBsqxyhh0HUrRVJ0jh4YcuJ7weTh6B9d1Fxp+QODpu+l+CgJgfFOOkz
- i00MaZ0Ye/QyOWrImpOdDYBI83cJZqRuOuIZ9A37z2kekwrJGqf7ZXlvMRj4iaasfGTm2fUzRre
- zN+3kPT+wVrnwng==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On 19.02.2024 22:43, Bryant Mairs wrote:
+> Add support for this tablet based on the MSM8226 SoC, codenamed
+> "milletwifi".
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Luca Weiss <luca@z3ntu.xyz>
+> Signed-off-by: Bryant Mairs <bryant@mai.rs>
+> ---
 
-This patch uses the public var KSFT_SKIP in mptcp_lib.sh instead of
-ksft_skip, and drop 'ksft_skip=4' in mptcp_join.sh.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Use KSFT_PASS and KSFT_FAIL macros instead of 0 and 1 after 'exit '
-and 'ret=' in all scripts:
-
-        exit 0 -> exit ${KSFT_PASS}
-        exit 1 -> exit ${KSFT_FAIL}
-         ret=0 ->  ret=${KSFT_PASS}
-         ret=1 ->  ret=${KSFT_FAIL}
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 18 +++++++++---------
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 13 ++++++-------
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  4 ++--
- tools/testing/selftests/net/mptcp/pm_netlink.sh    |  8 ++++----
- tools/testing/selftests/net/mptcp/simult_flows.sh  |  4 ++--
- tools/testing/selftests/net/mptcp/userspace_pm.sh  |  4 ++--
- 6 files changed, 25 insertions(+), 26 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index cb1837f2761a..4c4248554826 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -65,14 +65,14 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"d")
- 		if [ $OPTARG -ge 0 ];then
- 			tc_delay="$OPTARG"
- 		else
- 			echo "-d requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"e")
-@@ -96,7 +96,7 @@ while getopts "$optstring" option;do
- 			sndbuf="$OPTARG"
- 		else
- 			echo "-S requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"R")
-@@ -104,7 +104,7 @@ while getopts "$optstring" option;do
- 			rcvbuf="$OPTARG"
- 		else
- 			echo "-R requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"m")
-@@ -121,7 +121,7 @@ while getopts "$optstring" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-@@ -263,7 +263,7 @@ check_mptcp_disabled()
- 	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
- 		mptcp_lib_pr_fail "net.mptcp.enabled sysctl is not 1 by default"
- 		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
-@@ -276,7 +276,7 @@ check_mptcp_disabled()
- 	if [ ${err} -eq 0 ]; then
- 		mptcp_lib_pr_fail "New MPTCP socket cannot be blocked via sysctl"
- 		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 
-@@ -302,7 +302,7 @@ do_ping()
- 
- 	if [ $rc -ne 0 ] ; then
- 		mptcp_lib_pr_fail "$listener_ns -> $connect_addr connectivity"
--		ret=1
-+		ret=${KSFT_FAIL}
- 
- 		return 1
- 	fi
-@@ -821,7 +821,7 @@ log_if_error()
- 		mptcp_lib_pr_fail "${msg}"
- 
- 		final_ret=${ret}
--		ret=0
-+		ret=${KSFT_PASS}
- 
- 		return ${final_ret}
- 	fi
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 728575fd86ea..5e9211e89825 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -25,7 +25,6 @@ err=""
- capout=""
- ns1=""
- ns2=""
--ksft_skip=4
- iptables="iptables"
- ip6tables="ip6tables"
- timeout_poll=30
-@@ -392,15 +391,15 @@ setup_fail_rules()
- 		-p tcp \
- 		-m length --length 150:9999 \
- 		-m statistic --mode nth --packet 1 --every 99999 \
--		-j MARK --set-mark 42 || return ${ksft_skip}
-+		-j MARK --set-mark 42 || return ${KSFT_SKIP}
- 
--	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
-+	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${KSFT_SKIP}
- 	tc -n $ns2 filter add dev ns2eth$i egress \
- 		protocol ip prio 1000 \
- 		handle 42 fw \
- 		action pedit munge offset 148 u8 invert \
- 		pipe csum tcp \
--		index 100 || return ${ksft_skip}
-+		index 100 || return ${KSFT_SKIP}
- }
- 
- reset_with_fail()
-@@ -414,7 +413,7 @@ reset_with_fail()
- 	local rc=0
- 	setup_fail_rules "${@}" || rc=$?
- 
--	if [ ${rc} -eq ${ksft_skip} ]; then
-+	if [ ${rc} -eq ${KSFT_SKIP} ]; then
- 		mark_as_skipped "unable to set the 'fail' rules"
- 		return 1
- 	fi
-@@ -450,7 +449,7 @@ reset_with_tcp_filter()
- # $1: err msg
- fail_test()
- {
--	ret=1
-+	ret=${KSFT_FAIL}
- 
- 	if [ ${#} -gt 0 ]; then
- 		print_fail "${@}"
-@@ -3632,7 +3631,7 @@ usage()
- {
- 	if [ -n "${1}" ]; then
- 		echo "${1}"
--		ret=1
-+		ret=${KSFT_FAIL}
- 	fi
- 
- 	echo "mptcp_join usage:"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 96aa8f71bbb0..e2d70c18786e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -105,7 +105,7 @@ check_mark()
- 		if [ $v -ne 0 ]; then
- 			mptcp_lib_pr_fail "got $tables $values in ns $ns," \
- 					  "not 0 - not all expected packets marked"
--			ret=1
-+			ret=${KSFT_FAIL}
- 			return 1
- 		fi
- 	done
-@@ -178,7 +178,7 @@ do_transfer()
- 
- 		mptcp_lib_result_fail "transfer ${ip}"
- 
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	if ! mptcp_lib_check_transfer $cin $sout "file received by server"; then
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 69ffff8b076b..6ab8c5d36340 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -19,11 +19,11 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-@@ -57,13 +57,13 @@ check()
- 	mptcp_lib_check_output "${err}" "${cmd}" "${expected}" || rc=${?}
- 	if [ ${rc} -eq 2 ]; then
- 		mptcp_lib_result_fail "${msg} # error ${rc}"
--		ret=1
-+		ret=${KSFT_FAIL}
- 	elif [ ${rc} -eq 0 ]; then
- 		mptcp_lib_print_ok "[ OK ]"
- 		mptcp_lib_result_pass "${msg}"
- 	elif [ ${rc} -eq 1 ]; then
- 		mptcp_lib_result_fail "${msg} # different output"
--		ret=1
-+		ret=${KSFT_FAIL}
- 	fi
- }
- 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index e62052c3206d..1b2366220388 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -263,7 +263,7 @@ while getopts "bcdh" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"b")
- 		bail=1
-@@ -276,7 +276,7 @@ while getopts "bcdh" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 72dca742280f..9e2981f2d7f5 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -89,7 +89,7 @@ test_fail()
- 	then
- 		mptcp_lib_pr_fail "${@}"
- 	fi
--	ret=1
-+	ret=${KSFT_FAIL}
- 	mptcp_lib_result_fail "${test_name}"
- }
- 
-@@ -209,7 +209,7 @@ make_connection()
- 	else
- 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
- 		mptcp_lib_result_print_all_tap
--		exit 1
-+		exit ${KSFT_FAIL}
- 	fi
- 
- 	if [ "$is_v6" = "v6" ]
-
--- 
-2.43.0
-
+Konrad
