@@ -1,135 +1,189 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AF52C699;
-	Fri,  8 Mar 2024 19:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10DC41A84;
+	Fri,  8 Mar 2024 19:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709926635; cv=none; b=NsNf6kg3HEUbA9cJAculQEnvVC/tW2Ns90bz6bUd4OE6eJa8MJM8fwCPHbk1iIYelWmTKGR5OlGlUXjCOlK959Nv7J14f7gr+ZljGeFvN9yiAvvWydSWHB2aUtGwh4l+N8zBA/hqhk6K4wjDTxzT85rgZaVU3esHi+jsd2DYss0=
+	t=1709926645; cv=none; b=nHFa80khU8CZkqpcwZ9tTxUXzW9mfkgF1kUDSpZ1xPpPQaFy15jYcSC7E7Vu2V7mOB2afErb/XAoIFSawktaqbdM88A138suEEH6inOxuDfGOoFcPhH50z4yTlAGyHo1R8HcoFHXk7j06TFVyVSt/ZJAPwkxViGShYftNXNy4z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709926635; c=relaxed/simple;
-	bh=AYGxzqtWFZzjVFm4jYl0RBSDkqII6yUctYob3MJlJGo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=r/d1wGfly6JsdJuRyP/XW7cWdLRlmCZfbnuRMMvX5fc8COCUZypOXbBanmLLx3hhAsHLr7yfGqLJtaRG8sIH0EOZ65oCEJ7WVQjUx3vS8ziaPilQRyIaDbgYht/RqRcU1gf3hFaeZGgxQVf6qFu6bDpHlmt1j35arMDmhlH4h2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dVTCME5n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uCH3Nep4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dVTCME5n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uCH3Nep4; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709926645; c=relaxed/simple;
+	bh=oFSRBIrq2UUE+iiFnjcrq4D3inOk7gw6nu7lEhtD4bQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KavobLqBXesvI2jDDWEGs6bEzUoKEVTAHwOgBRPdUJM/kRPCWhci419U4ZVNdG1eFckYYJTGRkpZOtUFjfV24ZOk0/0yFFg0ChuDGMx8oDtoSMAWZxByYLDbhtyvqRsXs4inPzp6LnG2Cm1O3p4SWd02UrN0vOtYEmqhhAJAoNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAdW5Sco; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dVTCME5n";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uCH3Nep4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dVTCME5n";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uCH3Nep4"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 867BC5D4B8;
-	Fri,  8 Mar 2024 19:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709925398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kab6475NNC9w/20248v/V/kqivMNMdqsH2NoWAUHlNA=;
-	b=dVTCME5npzzOIHDurrdqJrMn7ka+G5xyG2QtkbzwJn4Mbj8a7F8qmoIyVjOD3FZFZEHHrC
-	RObd999zwv7Bm9hpq8vl4/Moht2w/YgAw26gH2NtlsNO5BoTtgq0wbGSTWmiinYwC9kV7B
-	Zl8sRIg+pv/BJ6T7aBM9LssSle5rHj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709925398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kab6475NNC9w/20248v/V/kqivMNMdqsH2NoWAUHlNA=;
-	b=uCH3Nep4vF7IQHASNx+5tSLqMV6/MtzHFhRazpLudWfqhmuLnZySbRdMtPAgfULNWv/eqS
-	jSMcXAr6OMtXZRAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709925398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kab6475NNC9w/20248v/V/kqivMNMdqsH2NoWAUHlNA=;
-	b=dVTCME5npzzOIHDurrdqJrMn7ka+G5xyG2QtkbzwJn4Mbj8a7F8qmoIyVjOD3FZFZEHHrC
-	RObd999zwv7Bm9hpq8vl4/Moht2w/YgAw26gH2NtlsNO5BoTtgq0wbGSTWmiinYwC9kV7B
-	Zl8sRIg+pv/BJ6T7aBM9LssSle5rHj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709925398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kab6475NNC9w/20248v/V/kqivMNMdqsH2NoWAUHlNA=;
-	b=uCH3Nep4vF7IQHASNx+5tSLqMV6/MtzHFhRazpLudWfqhmuLnZySbRdMtPAgfULNWv/eqS
-	jSMcXAr6OMtXZRAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E03B13310;
-	Fri,  8 Mar 2024 19:16:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QfALDRZk62VBDQAAD6G6ig
-	(envelope-from <krisman@suse.de>); Fri, 08 Mar 2024 19:16:38 +0000
-From: Gabriel Krisman Bertazi <krisman@suse.de>
-To: linux-fsdevel@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: krisman@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240308183215.1924331-1-ben.dooks@codethink.co.uk>
-References: <20240308183215.1924331-1-ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH] unicode: make utf8 test count static
-Message-Id: <170992539715.13713.18221873605558734700.b4-ty@suse.de>
-Date: Fri, 08 Mar 2024 14:16:37 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAdW5Sco"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B95C433C7;
+	Fri,  8 Mar 2024 19:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709926645;
+	bh=oFSRBIrq2UUE+iiFnjcrq4D3inOk7gw6nu7lEhtD4bQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sAdW5Scoy87RRhU0ozD9NrYVjixqZR8zzatOhGrA04DqZEYEnzFEcPzWXLNZCRwbx
+	 vCCPd8Bfcwycpz8Vlur92S6eXQNZMk0Y02Gjr9GYLWedrh4uJD7xFZpjBr1b3BEtkR
+	 z5Rfcsuy8GWffWoFHrGoBYyYWjN5mL99XW9unJWz71TZm54GgQ5fByYPovBxHMVTRz
+	 Mx8UERl1JfTrpKXlWG1o5pUXM1/ouyy5lT2xAyo6EPsAwWj09mSJas3xBcpi4KtKw6
+	 uX6tuOQA1u/8WKe8TFBWeNVCn3luCb1Wns/0X/3lJfxQXF3Fo/9Ph3qQranew1IJk+
+	 KM1bm6V24KtZw==
+Date: Fri, 8 Mar 2024 16:37:21 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Anne Macedo <retpolanne@posteo.net>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v0] perf lock contention: skip traceiter functions
+Message-ID: <Zeto8ShG406K6cnD@x1>
+References: <20240308120332.372810-1-retpolanne@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.43
-X-Spamd-Result: default: False [-1.43 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-0.13)[67.35%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308120332.372810-1-retpolanne@posteo.net>
 
-
-On Fri, 08 Mar 2024 18:32:15 +0000, Ben Dooks wrote:
-> The variables failed_tests and total_tests are not used outside of the
-> utf8-selftest.c file so make them static to avoid the following warnings:
+On Fri, Mar 08, 2024 at 12:03:31PM +0000, Anne Macedo wrote:
+> The perf lock contention program currently shows the caller of the locks
+> as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
+> from the traceiter itself. Instead, it should show the real callers for
+> the locks.
 > 
-> fs/unicode/utf8-selftest.c:17:14: warning: symbol 'failed_tests' was not declared. Should it be static?
-> fs/unicode/utf8-selftest.c:18:14: warning: symbol 'total_tests' was not declared. Should it be static?
+> When fiddling with the --stack-skip parameter, the actual callers for
+> the locks start to show up. However, just ignore the
+> __traceiter_contention_begin and the __traceiter_contention_end symbols
+> so the actual callers will show up.
 > 
+> Before this patch is applied:
 > 
-> [...]
+> sudo perf lock con -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
+> 
+>          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
+>          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
+>          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
+>          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
+>          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
+>          1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
+>          1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+> 
+> Before this patch is applied - using --stack-skip 5
+> 
+> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
+> 
+>          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
+>          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
+>          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
+>          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
+>          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
+>          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
+>          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
+> 
+> After this patch is applied:
+> 
+> sudo ./perf lock con -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
+> 
+>          6      5.27 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
+>          2      2.99 s       2.99 s       1.50 s      spinlock   do_send_sig_info+0x3c
+>          2      1.77 s       1.77 s     884.39 ms     spinlock   sigprocmask+0x98
+>          2      1.76 s       1.76 s     878.56 ms     rwlock:W   do_exit+0x338
+>          2      1.76 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
+>          5      1.76 s       1.76 s     351.41 ms     rwlock:W   do_exit+0x338
+>          1     48.10 ms     48.10 ms     48.10 ms        mutex   trace_contention_begin+0x84
+>          4    257.80 us    119.34 us     64.45 us     spinlock   get_signal+0x108
+>          1      9.33 us      9.33 us      9.33 us     rwlock:W   do_exit+0x338
 
-Applied, thanks!
+Testing it on the ARM64 board sometimes also show that
+trace_contention_begin+0x84, maybe we need to skip that one as well?
 
-[1/1] unicode: make utf8 test count static
-      commit: 0131c1f3cce7c01b0eb657a9e9e1a5e42c09a68b
+root@roc-rk3399-pc:~# perf lock contention --use-bpf -a sleep 2
+ contended   total wait     max wait     avg wait         type   caller
 
-Best regards,
--- 
-Gabriel Krisman Bertazi <krisman@suse.de>
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
 
+         4      4.07 s       2.47 s       1.02 s      spinlock   cpu_pm_enter+0x34
+         6      3.43 s       3.43 s     572.20 ms     spinlock   __tick_broadcast_oneshot_control+0xc0
+         3    313.19 ms    313.16 ms    104.40 ms     spinlock   tick_do_update_jiffies64+0x44
+         6      6.06 ms      1.97 ms      1.01 ms        mutex   trace_contention_begin+0x84
+         6     89.25 us     19.25 us     14.88 us     spinlock   rcu_core+0xec
+         1     16.04 us     16.04 us     16.04 us     spinlock   sugov_update_shared+0x44
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
+
+         4      2.78 ms      1.09 ms    695.76 us        mutex   trace_contention_begin+0x84
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
+
+         1    389.50 us    389.50 us    389.50 us        mutex   trace_contention_begin+0x84
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
+
+         2      3.82 ms      3.43 ms      1.91 ms        mutex   trace_contention_begin+0x84
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
+
+         3      6.82 ms      2.37 ms      2.27 ms        mutex   trace_contention_begin+0x84
+         2     63.29 us     45.50 us     31.65 us        mutex   trace_contention_begin+0x84
+         1     52.79 us     52.79 us     52.79 us        mutex   trace_contention_begin+0x84
+root@roc-rk3399-pc:~# perf lock contention -b -a find / > /dev/null
+ contended   total wait     max wait     avg wait         type   caller
+
+root@roc-rk3399-pc:~#
+ 
+> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+> ---
+>  tools/perf/util/machine.c | 10 ++++++++++
+>  tools/perf/util/machine.h |  2 +-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 527517db3182..8e729167c1aa 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -3266,6 +3266,12 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+>  
+>  		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
+>  		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
+> +
+> +		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
+> +		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
+> +
+> +		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_end", &kmap);
+> +		machine->traceiter.text_end = map__unmap_ip(kmap, sym->start);
+>  	}
+>  
+>  	/* failed to get kernel symbols */
+> @@ -3280,5 +3286,9 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+>  	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
+>  		return true;
+>  
+> +	/* traceiter functions are in traceiter text section  */
+> +	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
+> +		return true;
+> +
+>  	return false;
+>  }
+> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> index e28c787616fe..ec51e9b080b9 100644
+> --- a/tools/perf/util/machine.h
+> +++ b/tools/perf/util/machine.h
+> @@ -49,7 +49,7 @@ struct machine {
+>  	struct {
+>  		u64	  text_start;
+>  		u64	  text_end;
+> -	} sched, lock;
+> +	} sched, lock, traceiter;
+>  	pid_t		  *current_tid;
+>  	size_t		  current_tid_sz;
+>  	union { /* Tool specific area */
+> -- 
+> 2.39.2
