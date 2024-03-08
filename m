@@ -1,214 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90BE63B8;
-	Fri,  8 Mar 2024 14:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16E83FBAD;
+	Fri,  8 Mar 2024 14:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709906948; cv=none; b=hFTNxw8YdtNe2/WZWvOVdRfyLSocBNeIBE2PfzPNml/+CLQ9xvtw35HHlwGzckNx8WoGkWA0P7bwV6SjCUcWeEL6hrn9cBnlQM6P2ExMS8dYo8DgOHyrDPuPtG7d+NlgiAJDBWfhMgl9xJEnZ7JcF2+gQOyrjIQNyOPDFflt0oE=
+	t=1709907015; cv=none; b=Nu2btqkKXRHzRqiawqp1x2gBKeUk16JbP+xcFAKXkGVzfJN0TI95y3YlRcXMgfQpACogcczQ8+symLAReajep05OpzcjoBKzdb5JbLi1rcLp+WOU0DKce8iH9UMuAZDpfYhmSTncE7ly4FAOKcp2f+aKNNJ71yvn9X+7DG7P0nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709906948; c=relaxed/simple;
-	bh=laXx+w8ApSTKlr0+uxTd3nFWByofVxkALdnTQ9VuY44=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ALp72aOWzdCxx++c+/19t+ik1v+56/nnWoDDOUbiwX/b3qewvWcp9BNzWxr6TlOMxXcx1VTIc/E0+wezRCitrornmP35wU7iuSwEDC9PAyYwx3d+QDlrJPawG3hyBO4qJ4JwRR3QcJ6+CmljTjQG59o7E2gdlF/G7Yo+dW+tXiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NaRSpBCc; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709907015; c=relaxed/simple;
+	bh=XLcTd1jrwQne/noRDe0myK0vDxF9rSMC3JA5FM14s5Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UmQyCi0QmMid/X4o5zjDfiHkf3INyKoWpO5N7tY5hmprYdS3gT2iMet7aAoRhSZchYdEeQWpvqkOaKYiLJgHsuagXy3RBs1DxNNQ0HcjPqRWtJb8NL8uVRELozLNZ3w1qFLVa+7oV9Uxio6kzMWy/+Flfd5JGoVvAttzpkHeLMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OmocXzmt; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NaRSpBCc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709906947; x=1741442947;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=laXx+w8ApSTKlr0+uxTd3nFWByofVxkALdnTQ9VuY44=;
-  b=NaRSpBCcBrV+L5YhlrWbkM8r+krICBM+DWaB/unAe50Vyeclc/S4QYcx
-   WYXrMMCJP1jZbnG8KBs7XCKpIBn19Vv8PuvepAT8G15inKJda4uHjWmTr
-   s3nOBRP90DDVQXCQ9vZa1068A70cxbO2C34Siy76EmZpFzqwEfEOAxrpl
-   O+6yJYhihwXta0mm3z1rOqjg98qvfjoZOkJBdaLXO+F1zLGZHhkLu63yx
-   mtSWtpN6QT09YEfmoLwr25+uHB0v/Deky17uXmMNa/i+eXzX90k8T5atP
-   0IKXEFYAircqAgX+OEjcT4TD7187U1YE1SZ2orz42JcjpAjjbuzWo0cu8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="22080033"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="22080033"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 06:07:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="33609806"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 06:07:10 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 Mar 2024 16:07:05 +0200 (EET)
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-cc: Fenghua Yu <fenghua.yu@intel.com>, 
-    Reinette Chatre <reinette.chatre@intel.com>, Shuah Khan <shuah@kernel.org>, 
-    tony.luck@intel.com, "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/4] selftests/resctrl: SNC support for MBM
-In-Reply-To: <def02de22a4747ed56ddc28f334e55872ba95f13.1709721159.git.maciej.wieczor-retman@intel.com>
-Message-ID: <37bd082c-a187-43de-892b-c5fa32a8b3f2@linux.intel.com>
-References: <cover.1709721159.git.maciej.wieczor-retman@intel.com> <def02de22a4747ed56ddc28f334e55872ba95f13.1709721159.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OmocXzmt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709907012;
+	bh=XLcTd1jrwQne/noRDe0myK0vDxF9rSMC3JA5FM14s5Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OmocXzmtuGKY+YVyMZvclR1jb48vjlwF41USSTEdJsSx9zgIEX3w4MsuPZfGK2TXt
+	 ss5buoUhhjiOm+UBYN0NNkduKGVKxaIeunUgkMqOO3WMm5WjGR6aDisY+KHAnOMh9a
+	 JxMzU53UwYGYuXtNj3fTN7JSlYqzYIi5pGp0fSV5DHPf5BTO14ggmfDLdQyHypUSJG
+	 F6U0kzYP/PLLW3cCHk6OGM4FcfrwvQLl4MotECpr0n9xesTc+FQb9m5KYQd+rjosZM
+	 VwPG/YvKPXCApqTIKBcBP5TxN86SheBcDzPZ2DcTzyZYMfLVk3goKPAZQ5ahcR+DMo
+	 ZMei9xd32G2+w==
+Received: from [192.168.1.13] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A835C37820F1;
+	Fri,  8 Mar 2024 14:10:10 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH 0/2] docs: *-regressions.rst: Tweaks to the commands
+Date: Fri, 08 Mar 2024 09:09:58 -0500
+Message-Id: <20240308-regzbot-fixes-v1-0-577a4fe16e12@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADYc62UC/x3LQQqAIBBA0avIrBPMJKKrRIvM0WZTMUZE4t0bW
+ j4+v0BGJswwqgKMN2U6dkHbKFi3ZU+oKYjBGutMZwbNmF5/XDrSg1m7brFDDM73tgV5TsY/yDL
+ NtX5iGZcqXwAAAA==
+To: Thorsten Leemhuis <linux@leemhuis.info>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, regressions@lists.linux.dev, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ workflows@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-On Wed, 6 Mar 2024, Maciej Wieczor-Retman wrote:
+A couple tweaks to the commands in the regression documentation to make
+them up-to-date and less confusing.
 
-> Memory Bandwidth Monitoring (MBM) measures how much data flows between
-> cache levels. Only the flow for a process specified with a Resource
-> Monitoring ID (RMID) is measured.
-> 
-> Sub-Numa Clustering (SNC) causes MBM selftest to fail because the
-> increased amount of NUMA nodes per socket is not taken into account.
-> That in turn makes the test use incorrect values for the start and end
-> of the measurement by tracking the wrong node.
-> 
-> For the MBM selftest to be NUMA-aware it needs to track the start and end
-> values of a measurement not for a single node but for all nodes on the
-> same socket. Then summing all measured values comes out as the real
-> bandwidth used by the process.
-> 
-> Reported-by: "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>
-> Closes: https://lore.kernel.org/lkml/TYAPR01MB6330A4EB3633B791939EA45E8B39A@TYAPR01MB6330.jpnprd01.prod.outlook.com/
-> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-> ---
->  tools/testing/selftests/resctrl/mba_test.c    |  1 -
->  tools/testing/selftests/resctrl/resctrl_val.c | 37 ++++++++++++-------
->  2 files changed, 23 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-> index 7946e32e85c8..fc31a61dab0c 100644
-> --- a/tools/testing/selftests/resctrl/mba_test.c
-> +++ b/tools/testing/selftests/resctrl/mba_test.c
-> @@ -147,7 +147,6 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
->  	struct resctrl_val_param param = {
->  		.resctrl_val	= MBA_STR,
->  		.ctrlgrp	= "c1",
-> -		.mongrp		= "m1",
->  		.filename	= RESULT_FILE_NAME,
->  		.bw_report	= "reads",
->  		.setup		= mba_setup
-> diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-> index e75e3923ebe2..2fe9f8bb4a45 100644
-> --- a/tools/testing/selftests/resctrl/resctrl_val.c
-> +++ b/tools/testing/selftests/resctrl/resctrl_val.c
-> @@ -595,9 +595,10 @@ static void initialize_llc_occu_resctrl(const char *ctrlgrp, const char *mongrp,
->  
->  static int measure_vals(const struct user_params *uparams,
->  			struct resctrl_val_param *param,
-> -			unsigned long *bw_resc_start)
-> +			unsigned long *bw_resc_start,
-> +			int res_id)
->  {
-> -	unsigned long bw_resc, bw_resc_end;
-> +	unsigned long bw_resc = 0, bw_resc_sum = 0, bw_resc_end;
->  	float bw_imc;
->  	int ret;
->  
-> @@ -612,17 +613,19 @@ static int measure_vals(const struct user_params *uparams,
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = get_mem_bw_resctrl(&bw_resc_end);
-> -	if (ret < 0)
-> -		return ret;
-> +	for (int i = 0 ; i < snc_ways() ; i++) {
-> +		set_mbm_path(param->ctrlgrp, strlen(param->mongrp) > 0 ? param->mongrp : NULL,
-> +			     res_id + i);
-> +		ret = get_mem_bw_resctrl(&bw_resc_end);
-> +		bw_resc = (bw_resc_end - bw_resc_start[i]) / MB;
-> +		bw_resc_sum += bw_resc;
-> +		bw_resc_start[i] = bw_resc_end;
-> +	}
->  
-> -	bw_resc = (bw_resc_end - *bw_resc_start) / MB;
-> -	ret = print_results_bw(param->filename, bm_pid, bw_imc, bw_resc);
-> +	ret = print_results_bw(param->filename, bm_pid, bw_imc, bw_resc_sum);
->  	if (ret)
->  		return ret;
->  
-> -	*bw_resc_start = bw_resc_end;
-> -
->  	return 0;
->  }
->  
-> @@ -697,12 +700,16 @@ int resctrl_val(const struct resctrl_test *test,
->  		struct resctrl_val_param *param)
->  {
->  	char *resctrl_val = param->resctrl_val;
-> -	unsigned long bw_resc_start = 0;
->  	int res_id, ret = 0, pipefd[2];
-> +	unsigned long *bw_resc_start;
->  	struct sigaction sigact;
->  	char pipe_message = 0;
->  	union sigval value;
->  
-> +	bw_resc_start = calloc(snc_ways(), sizeof(unsigned long));
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Nícolas F. R. A. Prado (2):
+      docs: *-regressions.rst: Use collon after regzbot introduced command
+      docs: handling-regressions.rst: Update regzbot command fixed-by to fix
 
-While correct, this seems a bit overkill given is MAX_SNC = 4, not 
-something large or unbounded.
+ Documentation/admin-guide/reporting-regressions.rst |  2 +-
+ Documentation/process/handling-regressions.rst      | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 11afac187274a6177a7ac82997f8691c0f469e41
+change-id: 20240308-regzbot-fixes-43a28fd4b621
 
-This patch would be be much simpler on top of my resctrl_val() cleanup 
-patches because bw_resc_start is only local to the measurement function.
-
+Best regards,
 -- 
- i.
-
-> +	if (!bw_resc_start)
-> +		return -1;
-> +
->  	if (strcmp(param->filename, "") == 0)
->  		sprintf(param->filename, "stdio");
->  
-> @@ -710,7 +717,7 @@ int resctrl_val(const struct resctrl_test *test,
->  	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
->  		ret = validate_bw_report_request(param->bw_report);
->  		if (ret)
-> -			return ret;
-> +			goto out_free;
->  	}
->  
->  	/*
-> @@ -721,7 +728,7 @@ int resctrl_val(const struct resctrl_test *test,
->  
->  	if (pipe(pipefd)) {
->  		ksft_perror("Unable to create pipe");
-> -
-> +		free(bw_resc_start);
->  		return -1;
->  	}
->  
-> @@ -733,7 +740,7 @@ int resctrl_val(const struct resctrl_test *test,
->  	bm_pid = fork();
->  	if (bm_pid == -1) {
->  		ksft_perror("Unable to fork");
-> -
-> +		free(bw_resc_start);
->  		return -1;
->  	}
->  
-> @@ -841,7 +848,7 @@ int resctrl_val(const struct resctrl_test *test,
->  
->  		if (!strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR)) ||
->  		    !strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR))) {
-> -			ret = measure_vals(uparams, param, &bw_resc_start);
-> +			ret = measure_vals(uparams, param, bw_resc_start, res_id);
->  			if (ret)
->  				break;
->  		} else if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR))) {
-> @@ -855,6 +862,8 @@ int resctrl_val(const struct resctrl_test *test,
->  
->  out:
->  	kill(bm_pid, SIGKILL);
-> +out_free:
-> +	free(bw_resc_start);
->  
->  	return ret;
->  }
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
