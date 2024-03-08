@@ -1,151 +1,240 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AA128DA7
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 17:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD4825570;
+	Fri,  8 Mar 2024 17:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709918034; cv=none; b=l+zlHJ9zPVsuUFR2qUuEMM4IWZpS1AnzFpVRZkk/cCwb55gClsBXX2RcClclBgE6BJUWN9ZJa8wMo60OgbNA4lIjsl/6hjQDbzcU8YqBeoJD3uhWWaD4DaI8dmxHoYvlTEgkUVDGo7NeYTuNFnvTUOHNsetsDqpi1bYospsatfw=
+	t=1709918158; cv=none; b=dL07VAHBXsC2CvjHhT0Z9ilo1Syb4KXMfWSmMWKiszWzFAm564ShQPRBlPwLvl1yr+l0Ae7wEkwIwQwHT6XpbopIyNF2O2Dmee0jJ5MxdFBsfMIcnlnLZvYUKl0B+wbUN0UcsnW9wbo+LjldaUwPq8uHLoCxIzLASX0aBxVnpZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709918034; c=relaxed/simple;
-	bh=roMBvLgUN1tKukEBXMcgTKnWog6Eqqm5Kt4rCc4OxnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ehq5OTH4mv8YPYtO2u8XlFq3d9/vxWvmSiUiYROzBhD+yLvtInebfy/YzOOjqVZIkcnawlMSJhJvOsLv8tq2hpnJDrs0+BClnbCEnNf4KkqDOqQFUNY1yF+shUfkB5u3n46HSAgTpNvRmDYIQm7TN/2tLmlsh+CuzFuAp3d1Sd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=awlEQleV; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709918158; c=relaxed/simple;
+	bh=6GuBU2MDif7sF819XGqAwoGuMINRtFdixtdfEd3c6P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Skf7uvgdrzlARbuLN4ietDIy1L9r8zVlMAiiYZ36tkFiC+y4o8aCZ6rH0bk+lso3kgsULAH0HXcO9KB6zJELoa7dTZPGg4PRNLMp/pd0+cIANDDlYfClC1dCFgBQm911VGu7nvC/fo0mI3/tyxgiKy1wkSLHV9Ofl48PVB37Is8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrzyg+dP; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="awlEQleV"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-563bb51c36eso2518447a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 09:13:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrzyg+dP"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78851160a10so72779285a.1;
+        Fri, 08 Mar 2024 09:15:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709918029; x=1710522829; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qK1jns3vULEJfy8OFDSsNxpR6piVHIAeHp2yPIJZNeQ=;
-        b=awlEQleV8xlRsYsb3ldG91uWFd0eXTlfX0sHyivSqKUxFgFy3poY5Q76yPE7kB7yre
-         35d3uksjy4EF+PuVa6UWvij3f2G6Wj6gyBWZOszrqhoXhAXLYh6kwtiRFjHYHV2d50kG
-         ZXwEVPo3Gfwp6vwmpEAV8npFHuyDODxzNbuuJMBaTdZhhi3OLJzgodFdy4H9add5n3IY
-         e71BKAtOWW17gKoxTnC5Hc9OyKhPKo5A1rx/u7j3nBkhLyepjrn/aEZkYTsLFfdgdGaL
-         km9tJUMbA5/Csh/JrogpnbL+REM9bQrE/oP/zK9hkZUPgoUN2WaLY/CfTcqH2HDxUVEv
-         9P8Q==
+        d=gmail.com; s=20230601; t=1709918156; x=1710522956; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=eg/6ZiZ+BqYM2RugqdnytHz98Dd7p5sKblhsba++MaY=;
+        b=lrzyg+dPX9qb7suyqzAgQH6rTDecmA258FQE91g27xXPIXobMD0y904ynoYRfQJ25k
+         eH/yXMogCstQrnXQ6GG1ZaIQi6t0Oxo8k+83vVToSgQUlLAICjLnwLEdGrpxZTQ1Ce82
+         YX99O62OsOd7Pjs3Xa03WnuD83hctENaoSC+PMVwpUalrK3zfXglTml0Dx2Yz+1AZ593
+         A70IW3dSOkzEBZA9z5WDoKo16h6wiS/4d7LmyOLsgWnDGMGDhzhrMn2u+/EukX9+dj7Y
+         lj3r282zu6OQaAmFADhN8FDKEvnLzDhLLLG71KLmrtOZYLtCeigHfWSNhgImqaWWAIju
+         bUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709918029; x=1710522829;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qK1jns3vULEJfy8OFDSsNxpR6piVHIAeHp2yPIJZNeQ=;
-        b=RPjCi6AZXsQj731HrtAtY6EsgKWYG7hftogi46YTSAuydxNIlBYUBeSJmLubiqFPZf
-         57jQWN/IHxL5VPiFCrMzhyRJqZzqgNi0gagKei2yKZB4xwhbx/ufPYfAbhho2qHwYYIS
-         mKT3GDhV+Hgq0crbe0Yi8TjPaqqiiFYAkEGBtv14UnJdT3NR4xYHQ/c40eXCIu7CArvY
-         ENxv0TQYn+AZLVzqWtqnIS5Oi5lz0BSaDQVJlkm6HcTi4tv2IqcTtPdcgkTASBqhmacO
-         j4mi5LoKdMaTsGdThUdq739dLhfjbq6Fq/KrITbeyopNpjUxmJcUTDbZ2/OnvebOYxm2
-         mRIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcgV7ZbJTRMwIoWENuuQvKBpmShh9r6BZbt8T96zE8dLhlxDFR+Ln9w5jLm8REG2cyHmn2pY1mhCBPD7Ove8A+PVtdRdCuEqxdacJa
-X-Gm-Message-State: AOJu0YxK6VhTj2YElitoe9A7IqEgB3u2aXXII3KxQWOZMeAKPg3QwYOm
-	ZZg+VS4ONTrQJZdsQMnHU8XJhxVzKZcjI/wLCyAaBC6aXsoj2J7zwG2PCZAfEBY=
-X-Google-Smtp-Source: AGHT+IHh+jGBt7zZqrF3tzGe26VHugYZd2UpdNjYXqM3HAwtD74nVS84faIgE5NU8u/wZqzcHLtbuw==
-X-Received: by 2002:a50:9505:0:b0:568:1b1b:e221 with SMTP id u5-20020a509505000000b005681b1be221mr2397645eda.25.1709918029169;
-        Fri, 08 Mar 2024 09:13:49 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id c21-20020aa7df15000000b005682dfd9182sm725756edy.61.2024.03.08.09.13.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 09:13:48 -0800 (PST)
-Message-ID: <eec5be72-e27f-4068-ac7a-566605f3256c@linaro.org>
-Date: Fri, 8 Mar 2024 18:13:46 +0100
+        d=1e100.net; s=20230601; t=1709918156; x=1710522956;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eg/6ZiZ+BqYM2RugqdnytHz98Dd7p5sKblhsba++MaY=;
+        b=J2Tu3Dyhl6UMIXbT/Cl1LfPCROC8EiNZnNSH7wm2MVf7PWiHuVlJl1lUyFFNpA+eKT
+         Nymvx8S0WkHrEqAHGe2vJfAEfXZj2bZBkjIQce9FyibQA5CGiOv7PdtN3nF/sJz37YHV
+         Qy7c0WlTyAvHDTDmiK1x+b43eavX7wiOJSYI8r2xBoKgcB5pCRRumZVC2GozNYOO56cV
+         +H/XLtTsVdjoCzwp3MPucec2EsRIsg7MRMfOxexygXqh1bIvNDNAa8RBf647dIjqUIjL
+         Cj/vEc87cPQpNwhIykuIX4QC4D6mIUHBrKuiOeNfKQogbX/9RTpl75blb65dMTbBNAGU
+         oaog==
+X-Forwarded-Encrypted: i=1; AJvYcCWkU0S1E3ey5Sit97ihPAEeXBbheTOq7wsn5kx4+6FXajk3NgfxfL7ugJwMtTOlrNtCEKJfGHCIgV6MXjxuYtsYSo44
+X-Gm-Message-State: AOJu0YwFPTG6aZ0fDM+ZOD59iu+iXATdF/gxKQ06dNOKWtUrIZWjtFsl
+	2BmsaX6/bR+Won6Y0/X23nZj8lt+FS94HhjcwywRnJYZY/OyZUA1
+X-Google-Smtp-Source: AGHT+IG7d3scmZ1pnEvqmtpaYmtauh/0YkxCtyR6tNL/JC9w4GL0YnOeDyI1lZPm05SnEM9ax2e5Ng==
+X-Received: by 2002:a0c:ef05:0:b0:690:9e6d:efe9 with SMTP id t5-20020a0cef05000000b006909e6defe9mr1716089qvr.27.1709918155910;
+        Fri, 08 Mar 2024 09:15:55 -0800 (PST)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id o18-20020a056214181200b00690b43d39f0sm814547qvw.85.2024.03.08.09.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 09:15:55 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 69D231200068;
+	Fri,  8 Mar 2024 12:15:54 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 08 Mar 2024 12:15:54 -0500
+X-ME-Sender: <xms:yUfrZZypfgMBhKTxbtqVNubmCKG6mZXkwfRtUxBSA3jv-_w65Psbdg>
+    <xme:yUfrZZR7FjVIYNZFucMiV8Og04d-1uoSt1ti6rQGU-l7-Eju9gjLyXC3kyk86vz77
+    4PzWvXZyMgtn0AE_g>
+X-ME-Received: <xmr:yUfrZTXuaQkmyYU9Unz8wr60QVKKn7iOs-fn2AgjWj7h-CqEX1xl-Sd-Xw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieehgdelkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkgggtugesthdtredttd
+    dtvdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgr
+    ihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeeltdefueegfefhuedtheefvdelhfefte
+    dvhfdtveelueegtdejjedvieettedugfenucffohhmrghinhepkhgvrhhnvghlrdhorhhg
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgv
+X-ME-Proxy: <xmx:yUfrZbh23QHbWBreZfymiiwQedkjdkLAzq7Iwjf_svVzhR_flbTk8A>
+    <xmx:yUfrZbCg2AFmKnSSAwy4Hj7OAdv1D6e8dh3KaIJURVg-gQSrEMsUBg>
+    <xmx:yUfrZUInwazUw30ZhdFEkbMjO1t1U2NZRKOg-6-Jv-xFmDXK5defuw>
+    <xmx:ykfrZT5Sm4JXaqO1d6DogFrDn7H9dyV_LkMfrNpKjZAm__A8pWqOuOR6TWw>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 8 Mar 2024 12:15:53 -0500 (EST)
+Date: Fri, 8 Mar 2024 09:15:46 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, paulmck@kernel.org,
+	mingo@kernel.org, tglx@linutronix.de, rcu@vger.kernel.org,
+	boqun.feng@gmail.com, joel@joelfernandes.org,
+	neeraj.upadhyay@amd.com, urezki@gmail.com,
+	qiang.zhang1211@gmail.com, frederic@kernel.org,
+	bigeasy@linutronix.de, anna-maria@linutronix.de,
+	chenzhongjin@huawei.com, yangjihong1@huawei.com,
+	rostedt@goodmis.org
+Subject: [GIT PULL] RCU changes for v6.9
+Message-ID: <ZetHwrCb0KXE0xFI@tardis>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] mips: dts: ralink: mt7621: associate uart1_pins
- with serial0
-Content-Language: en-US
-To: Justin Swartz <justin.swartz@risingedge.co.za>,
- =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240308155616.11742-1-justin.swartz@risingedge.co.za>
- <20240308155616.11742-2-justin.swartz@risingedge.co.za>
- <70822db4-d642-4180-9db8-eb0aa5728ef1@arinc9.com>
- <bec06da5c4099898d9e531181d0797ca@risingedge.co.za>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <bec06da5c4099898d9e531181d0797ca@risingedge.co.za>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/03/2024 18:01, Justin Swartz wrote:
-> On 2024-03-08 18:14, Arınç ÜNAL wrote:
->> On 08/03/2024 18:56, Justin Swartz wrote:
->>> Add missing pinctrl-name and pinctrl-0 properties to declare
->>> that the uart1_pins group is associated with serial0.
->>>
->>> Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->>> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
->>
->> Reviewed-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> Please add the trailers from previous patch versions from now on.
-> 
-> What do you mean by trailers?
+Hi Linus,
 
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+Please pull this for the RCU changes of v6.9:
 
-Best regards,
-Krzysztof
+The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
 
+  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux.git tags/rcu.next.v6.9
+
+for you to fetch changes up to 3add00be5fe5810d7aa5ec3af8b6a245ef33144b:
+
+  Merge branches 'rcu-doc.2024.02.14a', 'rcu-nocb.2024.02.14a', 'rcu-exp.2024.02.14a', 'rcu-tasks.2024.02.26a' and 'rcu-misc.2024.02.14a' into rcu.2024.02.26a (2024-02-26 17:37:25 -0800)
+
+
+Two merge conflicts were detected by linux-next:
+
+* https://lore.kernel.org/lkml/20240226135745.12ac854d@canb.auug.org.au/
+* https://lore.kernel.org/lkml/20240227125522.2bdbe6be@canb.auug.org.au/
+
+These conflict resolutions from linux-next look good to me, plus I made
+my own resolutions at branch merge/rcu.2024.02.27a for your reference.
+
+
+Some highlights of the changes:
+
+* Eliminates deadlocks involving do_exit() and RCU tasks, by Paul:
+  Instead of SRCU read side critical sections, now a percpu list is used
+  in do_exit() for scaning yet-to-exit tasks.
+
+* Fixes a deadlock due to the dependency between workqueue and RCU
+  expedited grace period, reported by Anna-Maria Behnsen and Thomas
+  Gleixner and fixed by Frederic: Now RCU expedited always uses its own
+  kthread worker instead of a workqueue.
+
+
+Regards,
+Boqun
+
+
+----------------------------------------------------------------
+RCU pull request for v6.9
+
+This pull request contains the following branches:
+
+rcu-doc.2024.02.14a: Documentation updates.
+
+rcu-nocb.2024.02.14a: RCU NOCB updates, code cleanups, unnecessary
+        barrier removals and minor bug fixes.
+
+rcu-exp.2024.02.14a: RCU exp, fixing a circular dependency between
+        workqueue and RCU expedited callback handling.
+
+rcu-tasks.2024.02.26a: RCU tasks, avoiding deadlocks in do_exit() when
+        calling synchronize_rcu_task() with a mutex hold, maintaining
+	real-time response in rcu_tasks_postscan() and a minor
+        fix for tasks trace quiescence check.
+
+rcu-misc.2024.02.14a: Misc updates, comments and readibility
+	improvement, boot time parameter for lazy RCU and rcutorture
+	improvement.
+
+----------------------------------------------------------------
+Boqun Feng (1):
+      Merge branches 'rcu-doc.2024.02.14a', 'rcu-nocb.2024.02.14a', 'rcu-exp.2024.02.14a', 'rcu-tasks.2024.02.26a' and 'rcu-misc.2024.02.14a' into rcu.2024.02.26a
+
+Frederic Weisbecker (13):
+      rcu/nocb: Remove needless LOAD-ACQUIRE
+      rcu/nocb: Remove needless full barrier after callback advancing
+      rcu/nocb: Make IRQs disablement symmetric
+      rcu/nocb: Re-arrange call_rcu() NOCB specific code
+      rcu/exp: Remove full barrier upon main thread wakeup
+      rcu/exp: Fix RCU expedited parallel grace period kworker allocation failure recovery
+      rcu/exp: Handle RCU expedited grace period kworker allocation failure
+      rcu: s/boost_kthread_mutex/kthread_mutex
+      rcu/exp: Move expedited kthread worker creation functions above rcutree_prepare_cpu()
+      rcu/exp: Make parallel exp gp kworker per rcu node
+      rcu/exp: Handle parallel exp gp kworkers affinity
+      rcu/exp: Remove rcu_par_gp_wq
+      rcu: Rename jiffies_till_flush to jiffies_lazy_flush
+
+Joel Fernandes (Google) (1):
+      srcu: Improve comments about acceleration leak
+
+Onkarnath (1):
+      rcu/sync: remove un-used rcu_sync_enter_start function
+
+Paul E. McKenney (16):
+      doc: Spinlocks are implied RCU readers
+      doc: Make whatisRCU.rst note that spinlocks are RCU readers
+      doc: Make checklist.rst note that spinlocks are implied RCU readers
+      doc: Add CONFIG_RCU_STRICT_GRACE_PERIOD to checklist.rst
+      doc: Add EARLY flag to early-parsed kernel boot parameters
+      context_tracking: Fix kerneldoc headers for __ct_user_{enter,exit}()
+      doc: Clarify use of slab constructors and SLAB_TYPESAFE_BY_RCU
+      doc: Update checklist.rst discussion of callback execution
+      rcutorture: Suppress rtort_pipe_count warnings until after stalls
+      rcu-tasks: Repair RCU Tasks Trace quiescence check
+      rcu-tasks: Add data to eliminate RCU-tasks/do_exit() deadlocks
+      rcu-tasks: Initialize callback lists at rcu_init() time
+      rcu-tasks: Initialize data to eliminate RCU-tasks/do_exit() deadlocks
+      rcu-tasks: Maintain lists to eliminate RCU-tasks/do_exit() deadlocks
+      rcu-tasks: Eliminate deadlocks involving do_exit() and RCU tasks
+      rcu-tasks: Maintain real-time response in rcu_tasks_postscan()
+
+Qais Yousef (1):
+      rcu: Provide a boot time parameter to control lazy RCU
+
+Zqiang (2):
+      rcu/nocb: Fix WARN_ON_ONCE() in the rcu_nocb_bypass_lock()
+      rcu/nocb: Check rdp_gp->nocb_timer in __call_rcu_nocb_wake()
+
+ Documentation/RCU/checklist.rst                 |  32 +-
+ Documentation/RCU/rcu_dereference.rst           |   5 +-
+ Documentation/RCU/whatisRCU.rst                 |  19 +-
+ Documentation/admin-guide/kernel-parameters.rst |   1 +
+ Documentation/admin-guide/kernel-parameters.txt | 489 ++++++++++++------------
+ include/linux/rcu_sync.h                        |   1 -
+ include/linux/rcupdate.h                        |   4 +-
+ include/linux/sched.h                           |   2 +
+ init/init_task.c                                |   1 +
+ kernel/context_tracking.c                       |   4 +
+ kernel/fork.c                                   |   1 +
+ kernel/rcu/Kconfig                              |  13 +
+ kernel/rcu/rcu.h                                |  19 +-
+ kernel/rcu/rcuscale.c                           |   6 +-
+ kernel/rcu/rcutorture.c                         |  13 +-
+ kernel/rcu/srcutree.c                           |  24 +-
+ kernel/rcu/sync.c                               |  16 -
+ kernel/rcu/tasks.h                              | 135 +++++--
+ kernel/rcu/tiny.c                               |   1 +
+ kernel/rcu/tree.c                               | 237 ++++++++----
+ kernel/rcu/tree.h                               |  20 +-
+ kernel/rcu/tree_exp.h                           |  83 +---
+ kernel/rcu/tree_nocb.h                          |  69 ++--
+ kernel/rcu/tree_plugin.h                        |  52 +--
+ 24 files changed, 687 insertions(+), 560 deletions(-)
