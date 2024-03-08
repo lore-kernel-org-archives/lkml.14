@@ -1,457 +1,187 @@
-Received: from esa2.ltts.com (unknown [14.140.155.42])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC0C5A7A1;
-	Fri,  8 Mar 2024 10:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709894135; cv=none; b=khB4zzMOsT6Z8hqjeiR63IChMfahlR4lM7TRWX78zXrS3q2upEBJbU38l0wVUDKJgkWpTXM+lJ2mnRAlCZ4qNJ4L//BPw1bXhU+AiAhn1YGNysu6vQGMleXhxr3mTKTCnBIQ6dQq7nuX+ktJQaKt5CU5P3gMqV1Ur0POzOaTX7I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709894135; c=relaxed/simple;
-	bh=uEjfIuWZblgKggTjNLV1V80nqCphYFh76MPQO5CuBz8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ekz7agqzDbiUC850gZnfZXYFKAtBfQKwY1AL25EvjFJsg7zcR/v9ySYyMZzAY2YMnZBDukwRRMpQ6Id82ueYD033AiODT8UWITGo55Rtz+92InwkOZ8CZvInxPsCitpzNztw/yQYOphxYZrnzocYMR+kNQpkeogFGIFJW21lWRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: xLSbRa+xdxTkvw2rFVH4Z6jOf/cskEDIipc+FgXSQjqJZVF3TYOet7VxxDINQYy84BWrdnW1ij
- XoR9o7lZbgbA==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Mar 2024 16:05:13 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jpanis@baylibre.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	eblanc@baylibre.com,
-	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v3 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-Date: Fri,  8 Mar 2024 16:04:54 +0530
-Message-Id: <20240308103455.242705-11-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240308103455.242705-1-bhargav.r@ltts.com>
-References: <20240308103455.242705-1-bhargav.r@ltts.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C24854665;
+	Fri,  8 Mar 2024 10:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709894213; cv=fail; b=ma9vgPB0xCh7vt+eHHFA3xeI5oFrS9J4Wl/cnCXHbzIEU1WKq7XehK+xezuB4Ib7gxQHE8G+0lAiqtvnqYxmRYFSIQAEE1jgzQeM5Yk41xG6QzRr0oU9bQDYbyFflq2vixdzjoK5os9NyJG5rj1VWg7pj+1RjK7KQyZ8Mth+HVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709894213; c=relaxed/simple;
+	bh=N6ZfsH3CRW7CKnkJKgOHPZTKKwuLDOKUcTqfCJFIizk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AMHqdX9BX0C9tP6Sv9F9KmHqYJ0g5Q/PsM89fEqnqLLldvIxJOCAbXS4O0X0rZoimwlfJuuYFMgtGYGzeDw5oQrpEZNw/hqZdAGXZ0BE1cvJoSfqwmeBzm7kz0sSKVyLfo4PK+osG7tI3ELSKH43azVP29r9FYSC1ialVK1dnrc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kwe61Vyz; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kwe61Vyz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709894212; x=1741430212;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=N6ZfsH3CRW7CKnkJKgOHPZTKKwuLDOKUcTqfCJFIizk=;
+  b=Kwe61VyzS6UgWzqiYYIIpcpwdgeOF5FNHLLAGjNWQo/1FZrsa+CoFMKJ
+   wE0jDubnIHymzbyzWy+bAwjbWKgR+hKtJBWDeNppJHOvvlT8T4RxMG3Uj
+   WkDRmxltBp/Uev5XkglnvmpzuEw7uwCG1hXptCJNHsxXe3KlfKXJtxatG
+   QpJFxbmcSCkW+pzUpWPmy1eJ/yuMh3GA8CdF+vhFBmsPCQ8yqVqH8Lwj3
+   p3kp6+MvpbyLdTHw4A0XmL/0oG/VdeF/qUAENGrqejU517ANz9vMFPQkC
+   1Ijh4v2eAEchUx5NviTJuaF3+nmAZlZskVWJCdAdRTb6AZvgT57Y6L4uR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4477339"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="4477339"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:36:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="15126192"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Mar 2024 02:36:35 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 8 Mar 2024 02:36:34 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 8 Mar 2024 02:36:34 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 8 Mar 2024 02:36:34 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IIuMNU+s3j1Ymj4fHCYgcnOO86Ui8RropSAHcCpcIOAI49wSGF4Dk9psBX0GpU8k/QB9+nfByEppvrjCSM/HEhvklmGaQTADGQHngnmaiHCU+ln4VPP8VkR2lqjZm4SNH6r9oYVk3OhUivQPyfBSGfQ3x7zFjRyWgx4iuBQGDB3fFsaAwETCl4AvwzbcvpSqwhAbySYc/ezHT42II3+W7AsJJhKh3PPmGpCMIwZiPXjh12cij+ARtlp2Lc49f7zJVj4o84nYo6gYrmQngzhCWWVZlkeNNuCVUSl0M7L0mItyh47Jt5Eddxn4N7y7Q4xXcXSa74+zlHqPYGrgqSN30A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N6ZfsH3CRW7CKnkJKgOHPZTKKwuLDOKUcTqfCJFIizk=;
+ b=RHDmDg0ZzHNksP+a2qogsHVvzdDVBPzT8oZi7InAJF/MWCj+qohVbdD6lkqLayw42MSgHaliieGdnP4Gkt8zlXTfkOQ17Vi73rbSTiLYsCve7XrAPm0LMI4qmecPIluBSka8xjzh1UMHPDaIklDAXywXcRwK84QC8w+sMCmcSoDQ9IL40cT6W9C7/pumEkW+JP2OblOqmG2QVmqOrdeY6SYhFQCUtklcl+aOmY/IRpp88wEi3sMbtYbzoRTNco+g5pwY1hrB8FXORu7fPVaH9I5boKJ/5A4sGBREC4OGAt5RBjOOnhDQKwAgy5DJtCH9jrBaLtXmxBICNl9K0L2mPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by IA1PR11MB7677.namprd11.prod.outlook.com (2603:10b6:208:3fd::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Fri, 8 Mar
+ 2024 10:36:29 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7386.009; Fri, 8 Mar 2024
+ 10:36:29 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>
+CC: "Zhang, Tina" <tina.zhang@intel.com>, "seanjc@google.com"
+	<seanjc@google.com>, "Yuan, Hang" <hang.yuan@intel.com>, "Chen, Bo2"
+	<chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>,
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, "Aktas, Erdem"
+	<erdemaktas@google.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v19 001/130] x86/virt/tdx: Rename _offset to _member for
+ TD_SYSINFO_MAP() macro
+Thread-Topic: [PATCH v19 001/130] x86/virt/tdx: Rename _offset to _member for
+ TD_SYSINFO_MAP() macro
+Thread-Index: AQHaaI2sAEJ0wp/9j06fH2hwQKcyvLEtgokAgAA1ToA=
+Date: Fri, 8 Mar 2024 10:36:29 +0000
+Message-ID: <6c3ab761bf404f3b60e589f5f5369c7e229a9753.camel@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+	 <eab766ea1477d87a5985039e8fbe81ec5a45bac9.1708933498.git.isaku.yamahata@intel.com>
+	 <162cd71a-65c1-4782-92c9-e4bfa6a3af69@linux.intel.com>
+In-Reply-To: <162cd71a-65c1-4782-92c9-e4bfa6a3af69@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|IA1PR11MB7677:EE_
+x-ms-office365-filtering-correlation-id: 28349b54-1602-46e2-7369-08dc3f5b9d9b
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NzU3KS3WD4pgXD3pgUSzqrD/7SsJ5spZSP99QwHA+pFTNS8Vmv3ypuYgDdIpiZgIzfeHL8zEcbZOO3z16+vNSJ+25qu/z+Dmp//kwAq+YewqdCcjKVs5DDcpX2amN05BuO+vjjAAyWVzhCYElddi+JW0oPeVo45BWsYeyB5BWa8eOLOBZKPWwRc0eYwCruD5bEVCrMsz5qXCQI/3M+1S0SAy6WowI6bRibF4j7JxF65p5LkkL9GoY0QRZfbYRIusNY8iauZp9xepdo2Nw/jvjEHIBXvs5ppg2MszugK9egH3mR3XtgWz2TQPOmwqPyNR9Z286r+nrH8q0XxHlHyyKuVC/6OCeD6pX1spyorhGBuV0vfnxJHZzgtOGQNUPOTedGEjJBKpKBYlno0v0dxXOz5CW7PQNUGv9e/lSuUYuv84RALO0b2VVm+V/Wj1F+0QC88iVT17G97N3EHuR1cChigx45536ZIWnvXx4Z9Jne9BAsgDv4lSiHA6hSE1I13mfLAqwCr/qucf08eWqbs7fXtqml1edYbm8Uir9LfKmK/viQx1kUI51WkEsRg415f+8IsstQqNyiGKFv+9XVsgjWMXOdfFLH8h84HFQh1R0UGZDpRCmnxTUG/mNWY/knWn0D/5guVv/yAIenl1r6+UxPgeGIgkf/dduZ4TBgSVe9Q=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZmdpNzlTZ0dBMUt6VEU4TG1zNWlxbUxXT0NCLzVKMzc3dEI1bWZuQXNQVHl4?=
+ =?utf-8?B?WGdJdHFJZHJmVUpXMFpQeHppMER2WUN6WjJqMFFOU0U3bDdpL3BQeEgrOGxG?=
+ =?utf-8?B?WWYvY09VZTR6bklWSGhvKy9nUGV6MTdYVnJueGdRVkhyL3ZpSnBtL2NwYzEy?=
+ =?utf-8?B?RWRzZnJCZDd3TFNHSlVJTGhEeTRLYjNUbVpHSG4yZ0N3a09jbnVMRmpaY0tJ?=
+ =?utf-8?B?VktvWGViSE9YeWpiYm5CeGRQV3gveWgxVlJkbndUYm45LzRBbFNTNUNjeUdC?=
+ =?utf-8?B?MVJMc0VzWEFsL3BremRuYTcyRklDeVN5d0tXQUFzbktIRUFSZGllVkNSOS9n?=
+ =?utf-8?B?OW5jdlpkQlNGTGVZZU5pdU96WjF1OE9QaldKeUUyYWloQmlRcXcrNnZEc0ZW?=
+ =?utf-8?B?M21BV2RBUHJoeUE3Nit5ZFIzTy9uYng4cHd6UjJWME81QWZtUVFNbHgvck9r?=
+ =?utf-8?B?bE9vNEJnZ0NjczlQUTFOUFJ5TDA0UDhyQnJ1K1JMSE80QlJPQlMrTC9zWnpt?=
+ =?utf-8?B?a0VBUWIxVlcxRWZQNWx4OEE3MFpnbzU0bnpsRTlUY3h5MHg5OWlITXZSdE5m?=
+ =?utf-8?B?Q201czN3Z3BCWUZqV1pGLzBrVWxZVUxRcWthTmFkR3IzZEtXam5tMnFuL2Vq?=
+ =?utf-8?B?ZENia3d3TldzV1ZhbjhZZ2UwWG9Dbk11ZjJCdlVLZERGODFNS1RvKzlPNDdX?=
+ =?utf-8?B?N3Z3YmE0SW54WmtFYzc0OWI3Y1RXUkNtUEg1WDlFdDFKNTJqd2hjU2liZ3k0?=
+ =?utf-8?B?VjVZSmIvUWR5bmR4UlFxbzVEcEdMSmRJak96NGd5L0IwUm5hMzJ2MjJneDVm?=
+ =?utf-8?B?Y1JtclZTTW1RQWxVeFB0elN2Y2Jkblk0aVNPQXRIcGRNOUZ3M1RzWWtiaGto?=
+ =?utf-8?B?MlVCUTMzRUwwNmhPSHN6bFF5RnhLaXlBUHR1WFdONDRxSGlMYVNzNUlmdjJR?=
+ =?utf-8?B?ZzlNZzhDNWNUQzBBSmF1T2N1M3FPMUF5MDFSUXBMZHhpdTVFU0ZXazd1MUhQ?=
+ =?utf-8?B?WmhpNVJ0SWJPWEJFdnNQbGUreXVlREV1aEQzWThycVR3N0N3b2xpNWZuQVZy?=
+ =?utf-8?B?RHc1MTJLYjN6U3d6dGJIRjNrbzNxbXhTcnl0SkdaQW0ya3U2dWlJSSsybGhD?=
+ =?utf-8?B?YXk2eFQxdkdCTElmN3lOQUxSK0hBMDN0TWw5cytHOXlDQUQ0VzVYRnN5bHVt?=
+ =?utf-8?B?WHVrWkRFbk4rSnRwUUtFVG5nc2pLUVVpbGRkb0hEZlg2cFRWcW5nNytRZmJh?=
+ =?utf-8?B?Ky9vTVkwQmhSMnZNd0xZamhVZytPQTQrU08xNVdWcUpyS1B5L05paFlCOE1S?=
+ =?utf-8?B?bkZhaCtQRXdpVlhhUkdSdjVNcVlyRGE3QlByVGhxTVFseGVHaVpIalhleHZk?=
+ =?utf-8?B?RWFvODJQSWFMM3Bkck5IcUIvaElqV29aQmlnLy8zb3RBMVA4MXM5S1pvU0RQ?=
+ =?utf-8?B?OEJ1RGF3anpNOEFod1dwSCtIRDBzbFFwTU1WcFo3UTNjWEZvTkN0aG52Z3Nw?=
+ =?utf-8?B?eERIZVlSYVZhdFMvamhNbUhCd2UxR2tEL2hWWXNnSFVRWjBlVUN0L0M3V3pO?=
+ =?utf-8?B?d1M4NWh5TlpJWW9EdUVaaC9PM0V4ejR5NWdUdytNY2MrcnM0VUN6Q1IxTThx?=
+ =?utf-8?B?QW9Hd1lINFlNajBHbDc3S1ZGcU9lcXM3MjJsbEIvUHQzMVlMbk16ajBNaEgx?=
+ =?utf-8?B?TFJQVHBRdkJZNlpQbHl6bU1GNG9SdmIwWkxjUUF1eWY0blg0UDhua1drejEr?=
+ =?utf-8?B?SytYSVY5a1QxNVFRUVhjMVUrZTR3NzhWWk9UWWJWemU1NEV5ZkNYQi9tczVL?=
+ =?utf-8?B?R1ZBT0luZk5ZMVlLUTh1YUVpZ3JmWTlscFZGNXZwayt2NndYUjg1ZlQ3NDhM?=
+ =?utf-8?B?b3kzNTRVWWRwdXRBVEQ5M3hKdjNMLzRpRVZwM0JnSXpvNVJOeGdBTUt1dWJ4?=
+ =?utf-8?B?Mks1eHRlcWdWYW10TjdnRCsrcnZaWFJSYW1NdFYzQmF3THlPN0lTZEpmbEM0?=
+ =?utf-8?B?T3poK0JGY2FTeUN4SXE0dzljQUtudWZ2NnNVdUlJSDlJWkVDN3BkVFVWanRo?=
+ =?utf-8?B?VEhpRFpDLzhmQlNUQ0JxeDVDbVJjZ3EvWm9IY3JHNXhRV0dFV29MYTI1MVdr?=
+ =?utf-8?B?bGdOMWMvNXZHRUpZYU1aNVFDdHFMZlZHVnNvSHQ5ZDNaQkpDc0prdlFCQ3Bv?=
+ =?utf-8?B?SXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FB0FB75BCC4B744987FCE6FF377764C1@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28349b54-1602-46e2-7369-08dc3f5b9d9b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2024 10:36:29.8529
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mE6TvgBeZUATnWpJO8ZYxmP+ZuTUUDKNkNlmq8VcWpSqvs6B04lNg/5evbdAh5jVF29dmEtBxBCC3jRPCbXzjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7677
+X-OriginatorOrg: intel.com
 
-From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-
-Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
-significant functional overlap.
-TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-dedicated device functions.
-
-Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-tps6594.c | 287 +++++++++++++++++++++++++-----
- 1 file changed, 246 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
-index 66985e54b..5da21aa14 100644
---- a/drivers/pinctrl/pinctrl-tps6594.c
-+++ b/drivers/pinctrl/pinctrl-tps6594.c
-@@ -14,8 +14,6 @@
- 
- #include <linux/mfd/tps6594.h>
- 
--#define TPS6594_PINCTRL_PINS_NB 11
--
- #define TPS6594_PINCTRL_GPIO_FUNCTION 0
- #define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
- #define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
-@@ -40,17 +38,40 @@
- #define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
- #define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
- 
-+/* TPS65224 pin muxval */
-+#define TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON1_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON2_FUNCTION 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION 1
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION 2
-+#define TPS65224_PINCTRL_NSLEEP1_FUNCTION 2
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION 2
-+#define TPS65224_PINCTRL_NERR_MCU_FUNCTION 2
-+#define TPS65224_PINCTRL_NINT_FUNCTION 3
-+#define TPS65224_PINCTRL_TRIG_WDOG_FUNCTION 3
-+#define TPS65224_PINCTRL_PB_FUNCTION 3
-+#define TPS65224_PINCTRL_ADC_IN_FUNCTION 3
-+
-+/* TPS65224 Special muxval for recalcitrant pins */
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5 4
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5 3
-+
- #define TPS6594_OFFSET_GPIO_SEL 5
- 
--#define FUNCTION(fname, v)									\
-+#define TPS65224_NGPIO_PER_REG 6
-+#define TPS6594_NGPIO_PER_REG  8
-+
-+#define FUNCTION(dev_name, fname, v)							\
- {											\
- 	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
--					tps6594_##fname##_func_group_names,		\
--					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
-+					dev_name##_##fname##_func_group_names,		\
-+					ARRAY_SIZE(dev_name##_##fname##_func_group_names)),\
- 	.muxval = v,									\
- }
- 
--static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
-+static const struct pinctrl_pin_desc tps6594_pins[] = {
- 	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
- 	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
- 	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-@@ -143,30 +164,127 @@ static const char *const tps6594_syncclkin_func_group_names[] = {
- 	"GPIO9",
- };
- 
-+static const struct pinctrl_pin_desc tps65224_pins[] = {
-+	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
-+	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
-+	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-+};
-+
-+static const char *const tps65224_gpio_func_group_names[] = {
-+	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_sda_i2c2_sdo_spi_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_nsleep2_func_group_names[] = {
-+	"GPIO0", "GPIO5",
-+};
-+
-+static const char *const tps65224_nint_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_scl_i2c2_cs_spi_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_nsleep1_func_group_names[] = {
-+	"GPIO1", "GPIO2", "GPIO3",
-+};
-+
-+static const char *const tps65224_trig_wdog_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_vmon1_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_pb_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_vmon2_func_group_names[] = {
-+	"GPIO3",
-+};
-+
-+static const char *const tps65224_adc_in_func_group_names[] = {
-+	"GPIO3", "GPIO4",
-+};
-+
-+static const char *const tps65224_wkup_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_syncclkin_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_nerr_mcu_func_group_names[] = {
-+	"GPIO5",
-+};
-+
- struct tps6594_pinctrl_function {
- 	struct pinfunction pinfunction;
- 	u8 muxval;
- };
- 
-+struct muxval_remap {
-+	unsigned int group;
-+	u8 muxval;
-+	u8 remap;
-+};
-+
-+struct muxval_remap tps65224_muxval_remap[] = {
-+	{5, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_NSLEEP2_FUNCTION, TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5},
-+};
-+
-+struct muxval_remap tps6594_muxval_remap[] = {
-+	{8, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8},
-+	{8, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8},
-+	{9, TPS6594_PINCTRL_CLK32KOUT_FUNCTION, TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9},
-+};
-+
- static const struct tps6594_pinctrl_function pinctrl_functions[] = {
--	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
--	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
--	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
--	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
--	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
--	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
--	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
--	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
--	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
--	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
--	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
--	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
--	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
--	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
--	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
--	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
--	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
--	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps6594, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps6594, nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps6594, nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps6594, wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
-+	FUNCTION(tps6594, wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
-+	FUNCTION(tps6594, scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps6594, nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
-+	FUNCTION(tps6594, trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps6594, sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps6594, clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
-+	FUNCTION(tps6594, nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
-+	FUNCTION(tps6594, sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
-+	FUNCTION(tps6594, sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
-+	FUNCTION(tps6594, nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
-+	FUNCTION(tps6594, syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
-+	FUNCTION(tps6594, disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
-+	FUNCTION(tps6594, pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
-+	FUNCTION(tps6594, syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+};
-+
-+static const struct tps6594_pinctrl_function tps65224_pinctrl_functions[] = {
-+	FUNCTION(tps65224, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps65224, sda_i2c2_sdo_spi, TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep2, TPS65224_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps65224, nint, TPS65224_PINCTRL_NINT_FUNCTION),
-+	FUNCTION(tps65224, scl_i2c2_cs_spi, TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep1, TPS65224_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps65224, trig_wdog, TPS65224_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps65224, vmon1, TPS65224_PINCTRL_VMON1_FUNCTION),
-+	FUNCTION(tps65224, pb, TPS65224_PINCTRL_PB_FUNCTION),
-+	FUNCTION(tps65224, vmon2, TPS65224_PINCTRL_VMON2_FUNCTION),
-+	FUNCTION(tps65224, adc_in, TPS65224_PINCTRL_ADC_IN_FUNCTION),
-+	FUNCTION(tps65224, wkup, TPS65224_PINCTRL_WKUP_FUNCTION),
-+	FUNCTION(tps65224, syncclkin, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps65224, nerr_mcu, TPS65224_PINCTRL_NERR_MCU_FUNCTION),
- };
- 
- struct tps6594_pinctrl {
-@@ -201,7 +319,21 @@ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
- 
- static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(pinctrl_functions);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int func_cnt = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		func_cnt = ARRAY_SIZE(tps65224_pinctrl_functions);
-+		break;
-+	case TPS6594:
-+		func_cnt = ARRAY_SIZE(pinctrl_functions);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return func_cnt;
- }
- 
- static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
-@@ -229,10 +361,26 @@ static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
- 			   u8 muxval)
- {
- 	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
-+	u8 mux_sel_mask = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		mux_sel_mask = TPS65224_MASK_GPIO_SEL;
-+		/* GPIO6 has a different mask in TPS65224*/
-+		if (pin == 5)
-+			mux_sel_mask = TPS65224_MASK_GPIO_SEL_GPIO6;
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	case TPS6594:
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return regmap_update_bits(pinctrl->tps->regmap,
- 				  TPS6594_REG_GPIOX_CONF(pin),
--				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
-+				  mux_sel_mask, mux_sel_val);
- }
- 
- static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
-@@ -240,16 +388,28 @@ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
- {
- 	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
- 	u8 muxval = pinctrl->funcs[function].muxval;
-+	unsigned int remap_cnt = 0;
-+	struct muxval_remap *remap;
- 
- 	/* Some pins don't have the same muxval for the same function... */
--	if (group == 8) {
--		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
--			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
--		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
--	} else if (group == 9) {
--		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		remap = tps65224_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps65224_muxval_remap);
-+		break;
-+	case TPS6594:
-+		remap = tps6594_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps6594_muxval_remap);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	for (unsigned int i = 0; i < remap_cnt; i++) {
-+		if (group == remap[i].group && muxval == remap[i].muxval) {
-+			muxval = remap[i].remap;
-+			break;
-+		}
- 	}
- 
- 	return tps6594_pmx_set(pinctrl, group, muxval);
-@@ -276,7 +436,21 @@ static const struct pinmux_ops tps6594_pmx_ops = {
- 
- static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(tps6594_pins);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int num_pins = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		num_pins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		num_pins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return num_pins;
- }
- 
- static int tps6594_group_pins(struct pinctrl_dev *pctldev,
-@@ -320,8 +494,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	pctrl_desc->name = dev_name(dev);
- 	pctrl_desc->owner = THIS_MODULE;
--	pctrl_desc->pins = tps6594_pins;
--	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+	switch (tps->chip_id) {
-+	case TPS65224:
-+		pctrl_desc->pins = tps65224_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		pctrl_desc->pins = tps6594_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
- 	pctrl_desc->pctlops = &tps6594_pctrl_ops;
- 	pctrl_desc->pmxops = &tps6594_pmx_ops;
- 
-@@ -329,8 +513,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 	if (!pinctrl)
- 		return -ENOMEM;
- 	pinctrl->tps = dev_get_drvdata(dev->parent);
--	pinctrl->funcs = pinctrl_functions;
--	pinctrl->pins = tps6594_pins;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		pinctrl->funcs = tps65224_pinctrl_functions;
-+		pinctrl->pins = tps65224_pins;
-+		break;
-+	case TPS6594:
-+		pinctrl->funcs = pinctrl_functions;
-+		pinctrl->pins = tps6594_pins;
-+		break;
-+	default:
-+		break;
-+	}
- 	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
- 	if (IS_ERR(pinctrl->pctl_dev))
- 		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
-@@ -338,8 +532,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 
- 	config.parent = tps->dev;
- 	config.regmap = tps->regmap;
--	config.ngpio = TPS6594_PINCTRL_PINS_NB;
--	config.ngpio_per_reg = 8;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
-+		break;
-+	case TPS6594:
-+		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
-+		break;
-+	default:
-+		break;
-+	}
- 	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
- 	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
- 	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
-@@ -369,5 +573,6 @@ static struct platform_driver tps6594_pinctrl_driver = {
- module_platform_driver(tps6594_pinctrl_driver);
- 
- MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
-+MODULE_AUTHOR("Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>");
- MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
- MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+T24gRnJpLCAyMDI0LTAzLTA4IGF0IDE1OjI1ICswODAwLCBCaW5iaW4gV3Ugd3JvdGU6DQo+IA0K
+PiBPbiAyLzI2LzIwMjQgNDoyNSBQTSwgaXNha3UueWFtYWhhdGFAaW50ZWwuY29tIHdyb3RlOg0K
+PiA+IEZyb206IEthaSBIdWFuZyA8a2FpLmh1YW5nQGludGVsLmNvbT4NCj4gPiANCj4gPiBURF9T
+WVNJTkZPX01BUCgpIG1hY3JvIGFjdHVhbGx5IHRha2VzIHRoZSBtZW1iZXIgb2YgdGhlICdzdHJ1
+Y3QNCj4gPiB0ZHhfdGRtcl9zeXNpbmZvJyBhcyB0aGUgc2Vjb25kIGFyZ3VtZW50IGFuZCB1c2Vz
+IHRoZSBvZmZzZXRvZigpIHRvDQo+ID4gY2FsY3VsYXRlIHRoZSBvZmZzZXQgZm9yIHRoYXQgbWVt
+YmVyLg0KPiA+IA0KPiA+IFJlbmFtZSB0aGUgbWFjcm8gYXJndW1lbnQgX29mZnNldCB0byBfbWVt
+YmVyIHRvIHJlZmxlY3QgdGhpcy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBLYWkgSHVhbmcg
+PGthaS5odWFuZ0BpbnRlbC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEtpcmlsbCBBLiBTaHV0ZW1v
+diA8a2lyaWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBJ
+c2FrdSBZYW1haGF0YSA8aXNha3UueWFtYWhhdGFAaW50ZWwuY29tPg0KPiANCj4gUmV2aWV3ZWQt
+Ynk6IEJpbmJpbiBXdSA8YmluYmluLnd1QGxpbnV4LmludGVsLmNvbT4NCj4gDQo+IA0KDQpUaGFu
+a3MgZm9yIHJldmlldy4NCg0KSSd2ZSBzZW50IG91dCB0aGUgZmlyc3QgNSBtZXRhZGF0YSByZWFk
+IHBhdGNoZXMgYXMgYSBzdGFuZGFsb25lIHBhdGNoc2V0DQpzZXBhcmF0ZWx5Og0KDQpodHRwczov
+L2xvcmUua2VybmVsLm9yZy9rdm0vY292ZXIuMTcwOTI4ODQzMy5naXQua2FpLmh1YW5nQGludGVs
+LmNvbS8NCg0KSSdsbCBhZGQgeW91ciBSZXZpZXdlZC1ieSBpbiBuZXh0IHZlcnNpb24uDQoNCihm
+b3Igb3RoZXJzIHBsZWFzZSBjb21tZW50IHRoZXJlIGluc3RlYWQsIHRoYW5rcyEpDQo=
