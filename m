@@ -1,278 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEC03BBCE;
-	Fri,  8 Mar 2024 13:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6E33BBC1
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709904319; cv=none; b=lo2gjW7wU1nOvMvXvVG9XsERBB+7NYUxOKGJXIjINPFNAmEPMbHXRcMnPWM91lqbm+PZEKzjnwjZrqbt79Lq4NTkElE+IPtPMt+0NKePq2RYCxNGNHkjGDDS2zdOx3OfOKo3gNwuLLA7ByC5pophS7MhZQQSxWd6K9++3ZqyMXw=
+	t=1709904389; cv=none; b=rT3GbY8AKM9B0D4MyvxY1NLWOaqY7BzDOFMHS7EJsCvxGSt8Yjt4ykjur1Uxguoxz1ciKddzBIhE4lvMV2auaTQsZ4h5s7EdjKDInL0bVJXOqtQ9mbNCpcSFePCOhnx681UsmeLshJ0AeBv3WXNgq5/QariOAvkWfw89sJE8WAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709904319; c=relaxed/simple;
-	bh=Io7HkA6I9G5lj7F8YQ35r2XQOKOHfRyRrh0aXKyvt4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qo+ghpLvDbQ5EsthRJP+FBpna7hiDQkvoj3x2iTrut8xBLCDp5mRrT4MIYZnRsJCDPKDVLl4Pk8tJTLpmzN1Vqas+ylyeRAs5dJgPZ7awOlCzhLb8aLlwBkJcx5ozIJ+CrbEMyB8NTo3piZ2BuNPINVvJ9f6QhfLhUweWV16QWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W7YCD8aV; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709904389; c=relaxed/simple;
+	bh=T4mgYWIxiTfuwZ09Vexg+mUkAPMYEV07jO59q4ZGk9g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A7WfDtICfw/ku3y2dr/n9zcXsdu/Pi1BtsYYp6C/K5QeE05PXuVpPuNsVo5dKB1y44UbHPjqVclBgF0CsyHnfGZZHDKsDB1j5F/huRKMuU9jKQwecSvrGuv1l7K7PoBJlmWlyDq3KnWMyYB2zpukoRrB8GrnGXuOK4EAS/N+EQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qna8pR9R; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W7YCD8aV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709904318; x=1741440318;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Io7HkA6I9G5lj7F8YQ35r2XQOKOHfRyRrh0aXKyvt4c=;
-  b=W7YCD8aVdnbsID+ZCfjT2RQaxa9os+4Uffi+pVZzrH3M1gWSynCybG5B
-   1sfHmVjhj8rRnKztSdNDlPm6T86vCYp8HFCs0Myk2PfO9MMVS7R4SvJUe
-   j9HtxKvYdIBaW93asd0F5J3MQfD2l8akTNX0CvPi4nUiu0+GJisQ3MuFp
-   F0x6tQlUVP6uZjvaCvaSi4JkJbuUQ+kgdshMoGaRlBuYlO57YNDKalYzX
-   4T9wBqYsIo5DOFOy/5n/9D0w1ub65KzAJiNFTuKDpphCp/lU1pAqJ2Xxg
-   ZbLWTP35BR7VmleL21GTZv6PNU8+hfP1lBwqtfbYYKAi6xo6DIWQ7xMzB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="8375271"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="8375271"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 05:25:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="41394749"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 05:25:14 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 13/13] selftests/resctrl: Remove test name comparing from write_bm_pid_to_resctrl()
-Date: Fri,  8 Mar 2024 15:22:55 +0200
-Message-Id: <20240308132255.14442-14-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240308132255.14442-1-ilpo.jarvinen@linux.intel.com>
-References: <20240308132255.14442-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qna8pR9R"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso552235a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 05:26:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709904387; x=1710509187; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SZUX/MJM+g7s3/c5nEwMVnxHOynzt0A7HHdgK/jj9I4=;
+        b=qna8pR9Rxeyg/t+ZpuvWcB3E3EELhCKmg8PR7hzCSuvj0jmMHYwRwuoEAdgcqLUyUY
+         Ggm448aNZZEnMZciTJIudPq/bMj5Is9YjgOErhiyUvpW4Ehn6g84TzV/YpPnUy8Ax+yD
+         t5Pv4/XkOTs0G6X6mCI98Gf/wQpTWZBdf14LaulkSSWh7lye61x2vwdUnRH6lSnhId1c
+         2wlQgWBl7oa2xcWy1Ol3RQTyOm7EQrBEl0PDOFr5+ClCdTigNo6rRaXeEwEtLdpQjmXi
+         kRxWVhUKi05xfWi/TSWiFwoKxHGMEMdV7WsxBF/Y/c56QtDCHJhjnb9hO5hLgTtHh55W
+         GC6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709904387; x=1710509187;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SZUX/MJM+g7s3/c5nEwMVnxHOynzt0A7HHdgK/jj9I4=;
+        b=JxSb0Gvkx6LYH8WvAxG37HQRLAlja9otHNdDIMqyGfK8f2KBOi69tChGpLyRdwqEwm
+         rvyqn2a+2VV/6DYbdLaSbJXoIn2VhFyuobu2Yo8JsxMye4y1fGnFvh4FREYvYGQNZXuE
+         +vv8n5QSZwY6fir2gSSGa2ceHDy+A2IKcnY83Y7F0K2W1KHbg23SWT3j+dUgpPdwxzM7
+         JeIv/H8HMDTyTpTPZ1qnIGlIpFMFeqTrI/Z1m+zCzZ+0u9IE71k5J0oXx4ZSeigfelRe
+         /psVWtV+Im0SaXuBfaPd4liJUaqM3DZO6ZTdTS6dq0GVzAO95h2w6JVxKIjnf11/Lp3p
+         K39w==
+X-Gm-Message-State: AOJu0Yzz4bAyzbvZV4PDjzVF5fwnY4qvUWx0MDqAGhseVdFWtvAhNtI/
+	NQ/mF1+vCv8Ii8ZeXEu2L15bvfbnFrR/ptWo26yiI573ihBBuycgE3YlxNp3XH9GueD83WudNsB
+	MkZFHpb3mDfcN0EUZWFgpDAYpsi5vTpJSPJkDpw==
+X-Google-Smtp-Source: AGHT+IGFMs0YCfp4JUyIvx5B4iy48/FVoDLSrjIhZkglbFujXNqbl+4cjA1ozadZubPbn88RffAj1ozMNmSHIcr7OGc=
+X-Received: by 2002:a17:90b:249:b0:29b:c1af:ffca with SMTP id
+ fz9-20020a17090b024900b0029bc1afffcamr95468pjb.31.1709904387269; Fri, 08 Mar
+ 2024 05:26:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240308105901.1096078-1-mingo@kernel.org> <20240308105901.1096078-3-mingo@kernel.org>
+In-Reply-To: <20240308105901.1096078-3-mingo@kernel.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 8 Mar 2024 14:26:16 +0100
+Message-ID: <CAKfTPtAFQZHxzgju2As6qAmi+VxWk1H_5L44UX+XcbqYHSneCQ@mail.gmail.com>
+Subject: Re: [PATCH 02/10] sched/balancing: Remove reliance on 'enum
+ cpu_idle_type' ordering when iterating [CPU_MAX_IDLE_TYPES] arrays in show_schedstat()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Shrikanth Hegde <sshegde@linux.ibm.com>, Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-write_bm_pid_to_resctrl() uses resctrl_val to check test name which is
-not a good interface generic resctrl FS functions should provide.
+On Fri, 8 Mar 2024 at 11:59, Ingo Molnar <mingo@kernel.org> wrote:
+>
+> From: Shrikanth Hegde <sshegde@linux.ibm.com>
+>
+> show_schedstat() output breaks and doesn't print all entries
+> if the ordering of the definitions in 'enum cpu_idle_type' is changed,
+> because show_schedstat() assumes that 'CPU_IDLE' is 0.
+>
+> Fix it before we change the definition order & values.
+>
+> [ mingo: Added changelog. ]
+>
+> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Valentin Schneider <vschneid@redhat.com>
 
-Only MBM and CMT tests define mongrp so the test name check in
-write_bm_pid_to_resctrl() can be changed to depend simply on mongrp
-being non-NULL.
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-With last user of resctrl_val gone, the parameter and member from the
-struct resctrl_val_param can removed. Test name constants can also be
-removed because they are not used anymore.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- tools/testing/selftests/resctrl/cat_test.c    |  5 +--
- tools/testing/selftests/resctrl/cmt_test.c    |  1 -
- tools/testing/selftests/resctrl/mba_test.c    |  1 -
- tools/testing/selftests/resctrl/mbm_test.c    |  1 -
- tools/testing/selftests/resctrl/resctrl.h     | 10 +-----
- tools/testing/selftests/resctrl/resctrl_val.c |  4 +--
- tools/testing/selftests/resctrl/resctrlfs.c   | 33 ++++++++-----------
- 7 files changed, 17 insertions(+), 38 deletions(-)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 24af8310288a..e35dffa28173 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -158,7 +158,6 @@ static int cat_test(const struct resctrl_test *test,
- 		    struct resctrl_val_param *param,
- 		    size_t span, unsigned long current_mask)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct perf_event_read pe_read;
- 	struct perf_event_attr pea;
- 	cpu_set_t old_affinity;
-@@ -178,8 +177,7 @@ static int cat_test(const struct resctrl_test *test,
- 		return ret;
- 
- 	/* Write benchmark to specified con_mon grp, mon_grp in resctrl FS*/
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto reset_affinity;
- 
-@@ -272,7 +270,6 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 	start_mask = create_bit_mask(start, n);
- 
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CAT_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.num_of_runs	= 0,
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index ae2775ace36e..2109d634d46e 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -144,7 +144,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	}
- 
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CMT_STR,
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index ea024bf8088d..36b4f5303882 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -172,7 +172,6 @@ void mba_test_cleanup(void)
- static int mba_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBA_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.init		= set_mba_path,
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 85740177da41..296b0ce6f0f5 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -140,7 +140,6 @@ void mbm_test_cleanup(void)
- static int mbm_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBM_STR,
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index f6a77139d1c0..a36182340fb8 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -76,7 +76,6 @@ struct resctrl_test {
- 
- /*
-  * resctrl_val_param:	resctrl test parameters
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-  * @filename:		Name of file to which the o/p should be written
-@@ -85,7 +84,6 @@ struct resctrl_test {
-  * @measure:		Callback that performs the measurement (a single test)
-  */
- struct resctrl_val_param {
--	char		*resctrl_val;
- 	const char	*ctrlgrp;
- 	const char	*mongrp;
- 	char		filename[64];
-@@ -108,11 +106,6 @@ struct perf_event_read {
- 	} values[2];
- };
- 
--#define MBM_STR			"mbm"
--#define MBA_STR			"mba"
--#define CMT_STR			"cmt"
--#define CAT_STR			"cat"
--
- /*
-  * Memory location that consumes values compiler must not optimize away.
-  * Volatile ensures writes to this location cannot be optimized away by
-@@ -136,8 +129,7 @@ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
- int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
- int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
- 		   const char *resource);
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val);
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp);
- int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
- 		    int group_fd, unsigned long flags);
- unsigned char *alloc_buffer(size_t buf_size, int memflush);
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index 2f166a5c0c9b..f2101ee665ba 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -632,7 +632,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		const char * const *benchmark_cmd,
- 		struct resctrl_val_param *param)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct sigaction sigact;
- 	int ret = 0, pipefd[2];
- 	char pipe_message = 0;
-@@ -723,8 +722,7 @@ int resctrl_val(const struct resctrl_test *test,
- 		goto out;
- 
- 	/* Write benchmark to specified control&monitoring grp in resctrl FS */
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto out;
- 
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index 597150e4056e..1d363bc8e6f1 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -488,7 +488,6 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  * @bm_pid:		PID that should be written
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  *
-  * If a con_mon grp is requested, create it and write pid to it, otherwise
-  * write pid to root con_mon grp.
-@@ -498,8 +497,7 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  *
-  * Return: 0 on success, < 0 on error.
-  */
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val)
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp)
- {
- 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
- 	char tasks[1024];
-@@ -519,22 +517,19 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
- 	if (ret)
- 		goto out;
- 
--	/* Create mon grp and write pid into it for "mbm" and "cmt" test */
--	if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)) ||
--	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
--		if (mongrp) {
--			sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
--			sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
--			ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
--			if (ret)
--				goto out;
--
--			sprintf(tasks, "%s/mon_groups/%s/tasks",
--				controlgroup, mongrp);
--			ret = write_pid_to_tasks(tasks, bm_pid);
--			if (ret)
--				goto out;
--		}
-+	/* Create monitor group and write pid into if it is used */
-+	if (mongrp) {
-+		sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
-+		sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
-+		ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
-+		if (ret)
-+			goto out;
-+
-+		sprintf(tasks, "%s/mon_groups/%s/tasks",
-+			controlgroup, mongrp);
-+		ret = write_pid_to_tasks(tasks, bm_pid);
-+		if (ret)
-+			goto out;
- 	}
- 
- out:
--- 
-2.39.2
-
+> ---
+>  kernel/sched/stats.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
+> index 857f837f52cb..85277953cc72 100644
+> --- a/kernel/sched/stats.c
+> +++ b/kernel/sched/stats.c
+> @@ -150,8 +150,7 @@ static int show_schedstat(struct seq_file *seq, void *v)
+>
+>                         seq_printf(seq, "domain%d %*pb", dcount++,
+>                                    cpumask_pr_args(sched_domain_span(sd)));
+> -                       for (itype = CPU_IDLE; itype < CPU_MAX_IDLE_TYPES;
+> -                                       itype++) {
+> +                       for (itype = 0; itype < CPU_MAX_IDLE_TYPES; itype++) {
+>                                 seq_printf(seq, " %u %u %u %u %u %u %u %u",
+>                                     sd->lb_count[itype],
+>                                     sd->lb_balanced[itype],
+> --
+> 2.40.1
+>
