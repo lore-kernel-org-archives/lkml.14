@@ -1,254 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C7F55788
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107A242061;
+	Fri,  8 Mar 2024 10:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709894439; cv=none; b=hUo62OS+aQwKXerdtpm99ThKlrHG4DN8sul0t1HYUJqFohAaXUc2JCFGNJPm5veQVTU0KYUJbVsoq6P7eoIFYns9zUDw032kDupingdKn9/Yb/vEHTJ/Kv7aiAblu7clbthwTOD7zPQi+2aToS1JmOiDzpvaRDHYqS2O9mME/GY=
+	t=1709894581; cv=none; b=G/e87pai25nt82558PU5qs+O4C4cwvHsaEK2j3YW5+n/vLrFxUP61T8GqI8aUzRsnwF6U4PjLSrj6GdVSag27s3yjapCSI/EXdGxfeSA9mubAFY43uT6sgsfqcMGw1mAbFVzcROJ3n0cPGNqIKpMMxjQwAt99sB6gQwEPhVKn60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709894439; c=relaxed/simple;
-	bh=sqjtnk2kpZ6tqaZilKg9rp27qpp1KunwI56n7T7xKbU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=evkImrpMMjKNMVVD1CRiYkl1cFsRdbmVfpO5bQ+uUZNZBJQKL/gLWNf0+5iLezCnUsnKHeWCq2IyupqcUGAkDZyZPa9eVlTm8ZjQIIARof9HCWV2etHY4QkxbcvNR9CnKY343X2TPn8G/UtAisF+BufEaadjDaO0rUJrUx0XqkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+tw7vlN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709894581; c=relaxed/simple;
+	bh=Hskuh0jcTrLaj35GMhuvTS9BPTLaCsiZ/Ramp31XeMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fKLb8QxN6u3IpJz0ZPokDiQt/8sT5/u5VJ6y2RGZdNNO7DsH1UpR2KYSRDOyUvHn+7XNM2EnGmQQ1CDhsMwXE+Z45HCTopLCwDD/AJ57QNpDRA+hTY2D8ziZ0/ybonuuwThQRQ6Kyg5p/z2XU+2fNW17petdxheCwXK6Z/Hw36w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCuKD/a7; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+tw7vlN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709894438; x=1741430438;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sqjtnk2kpZ6tqaZilKg9rp27qpp1KunwI56n7T7xKbU=;
-  b=G+tw7vlNThg6THRSAhn9BofMhhoO820mpBHePTqKbBf9QPWjtO3+PIFH
-   cYZia3X+iiPJsYTrQ9FpcQhvsqy5NoXmlGexQygtfZmv6YXsRBB3lDKXq
-   JaMAfuPO4zJtWB23ze2i0L6q62rrEUom/IOiXSrcI0ndC0uSLO9Ic/PW1
-   NQYPEho4amNy4Bk9OLK0M7RmP/eY+ZI50rLpQt9gTcnR20GR3eFvi92R1
-   hW2uIrhknDP63sOAL0urABE1GJ20649J0KM4lmDUwyc1xABYC+O4EKoCh
-   WwSQnmpRurvT5G/PU2/QFRfqjxKI3zHAZpLqQMs8Un7Zt+iE5YEMCtbHF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4468252"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="4468252"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:40:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="10327733"
-Received: from cascade.sh.intel.com ([10.239.48.141])
-  by fmviesa007.fm.intel.com with ESMTP; 08 Mar 2024 02:40:35 -0800
-From: Jingqi Liu <Jingqi.liu@intel.com>
-To: iommu@lists.linux.dev,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Tian Kevin <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	Jingqi Liu <Jingqi.liu@intel.com>
-Subject: [PATCH 2/2] iommu/vt-d: Remove private data use in fault message
-Date: Fri,  8 Mar 2024 18:38:11 +0800
-Message-Id: <20240308103811.76744-3-Jingqi.liu@intel.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20240308103811.76744-1-Jingqi.liu@intel.com>
-References: <20240308103811.76744-1-Jingqi.liu@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCuKD/a7"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a45bb2a9c20so246512966b.0;
+        Fri, 08 Mar 2024 02:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709894578; x=1710499378; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YnXeKNe3Pth18IqLBpLGUfhGrY47izo6nmAUIr2+va0=;
+        b=UCuKD/a7Gz0QlR2l7xXHAtWsRAo00atLD3GGYIancPJeWMjwU3T4/LKdoqztxSe6pp
+         pfKWUg1aNy8MP1hh/hc5MfoD0ZxL9FevQCBMkt+2Y/sWY5ZUKsahAuelQ5/r6GybcBNE
+         RuhSR+tTdQeUdLXfFAyZGC52NSbw4OC+7qxt8TIOsR+VTRNeUHAmcigtfcYNsVC7ELXT
+         IoODx3rWu7iuqmREjMX+XrK2yqCVcGWT1uVuLY7+/382hqvPI3+Eeu/dA7a+lsKlcnu7
+         4ToIh5Xt/V6ZEsGXk0l5PFBnpL4EA48Rjzeqp/yfeeYOu4Kf93MKYFSjY7w2Hb35pb7v
+         0T3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709894578; x=1710499378;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YnXeKNe3Pth18IqLBpLGUfhGrY47izo6nmAUIr2+va0=;
+        b=NL30iFdx1TIPsTaDPPGousZY5ftV+GA9pgORzMXO4E+lpNfMyykFDO5QvDpTDY4gpw
+         aKSnEcpSE8/ntB/G3ovxukT4HDipvsY3dxpLwq8+QoEc8xZAmZZSFyWvzBBTEALkupAc
+         8ltQATfV7mY9dHFPZ2BtwlzO7T23XoTN0b4csMIzfighPxqXX1ZPh9hQaTCI9LJ9QxGk
+         eKU3tB7P8gHwJDCYeDuQRB5aZsughxwc4O8SnmsApj33xr1rsH+KKKaCTucAIP1YgoEg
+         sbU8LNlf+HOVb6oTJlTZcWOQbrfm6+Xl6lpt0Tahr4aDoQqPO4z58rTRX+Ce3e1P365a
+         QLlw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9e1PFZd4AtJZsatnX3cgWNUOHp5EvEUk5XLE3TMDw+B30YembHJITniIPASxikn0szZs/6jg5/VMagnCj0X71BXP9suZ8UZGYW0Q7
+X-Gm-Message-State: AOJu0YyGH0/znOyR2tKyzJD0fqJgzRx6yi9BzmGlbohjq5mOsxwSbMef
+	McqYD7gisC5pON3WWlsT6iRF0RVLFHb5CJUEVq4DEkoVrUFxI1Jk
+X-Google-Smtp-Source: AGHT+IESCUTGqASumIRxK7U41TDylsD3apKm0+G3vyNHYy9bMp467afRiz4QVnpfuoQd7c5oZbjJNw==
+X-Received: by 2002:a17:906:3bd5:b0:a3f:ac54:5aa1 with SMTP id v21-20020a1709063bd500b00a3fac545aa1mr15553263ejf.21.1709894577966;
+        Fri, 08 Mar 2024 02:42:57 -0800 (PST)
+Received: from tom-HP-ZBook-Fury-15-G7-Mobile-Workstation (net-188-217-49-82.cust.vodafonedsl.it. [188.217.49.82])
+        by smtp.gmail.com with ESMTPSA id wk15-20020a170907054f00b00a4519304f8bsm6208907ejb.14.2024.03.08.02.42.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 02:42:57 -0800 (PST)
+Date: Fri, 8 Mar 2024 11:42:55 +0100
+From: Tommaso Merciai <tomm.merciai@gmail.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Alexander Shiyan <eagle.alexander923@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v2 1/6] media: imx335: Support 2 or 4 lane operation modes
+Message-ID: <Zerrr01BhCxIQq1d@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
+References: <20240308083312.90279-1-umang.jain@ideasonboard.com>
+ <20240308083312.90279-2-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308083312.90279-2-umang.jain@ideasonboard.com>
 
-According to Intel VT-d specification revision 4.0, "Private Data"
-field has been removed from Page Request/Response.
+Hi Umang,
 
-Since the private data field is not used in fault message, remove the
-related definitions in page request descriptor and remove the related
-code in page request/response handler, as Intel hasn't shipped any
-products which support private data in the page request message.
+On Fri, Mar 08, 2024 at 02:03:07PM +0530, Umang Jain wrote:
+> From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> 
+> The IMX335 can support both 2 and 4 lane configurations.
+> Extend the driver to configure the lane mode accordingly.
+> Update the pixel rate depending on the number of lanes in use.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> ---
+>  drivers/media/i2c/imx335.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index b47ec71054c3..7162b0a3cef3 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -21,6 +21,11 @@
+>  #define IMX335_MODE_STANDBY	0x01
+>  #define IMX335_MODE_STREAMING	0x00
+>  
+> +/* Data Lanes */
+> +#define IMX335_LANEMODE		0x3a01
+> +#define IMX335_2LANE		1
+> +#define IMX335_4LANE		3
+> +
+>  /* Lines per frame */
+>  #define IMX335_REG_LPFR		0x3030
+>  
+> @@ -145,6 +150,7 @@ struct imx335_mode {
+>   * @exp_ctrl: Pointer to exposure control
+>   * @again_ctrl: Pointer to analog gain control
+>   * @vblank: Vertical blanking in lines
+> + * @lane_mode Mode for number of connected data lanes
+>   * @cur_mode: Pointer to current selected sensor mode
+>   * @mutex: Mutex for serializing sensor controls
+>   * @link_freq_bitmap: Menu bitmap for link_freq_ctrl
+> @@ -169,6 +175,7 @@ struct imx335 {
+>  		struct v4l2_ctrl *again_ctrl;
+>  	};
+>  	u32 vblank;
+> +	u32 lane_mode;
+>  	const struct imx335_mode *cur_mode;
+>  	struct mutex mutex;
+>  	unsigned long link_freq_bitmap;
+> @@ -934,6 +941,11 @@ static int imx335_start_streaming(struct imx335 *imx335)
+>  		return ret;
+>  	}
+>  
+> +	/* Configure lanes */
+> +	ret = imx335_write_reg(imx335, IMX335_LANEMODE, 1, imx335->lane_mode);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Setup handler will write actual exposure and gain */
+>  	ret =  __v4l2_ctrl_handler_setup(imx335->sd.ctrl_handler);
+>  	if (ret) {
+> @@ -1094,7 +1106,14 @@ static int imx335_parse_hw_config(struct imx335 *imx335)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (bus_cfg.bus.mipi_csi2.num_data_lanes != IMX335_NUM_DATA_LANES) {
+> +	switch (bus_cfg.bus.mipi_csi2.num_data_lanes) {
+> +	case 2:
+> +		imx335->lane_mode = IMX335_2LANE;
+> +		break;
+> +	case 4:
+> +		imx335->lane_mode = IMX335_4LANE;
+> +		break;
+> +	default:
+>  		dev_err(imx335->dev,
+>  			"number of CSI2 data lanes %d is not supported\n",
+>  			bus_cfg.bus.mipi_csi2.num_data_lanes);
 
-Signed-off-by: Jingqi Liu <Jingqi.liu@intel.com>
----
- drivers/iommu/intel/iommu.h |  1 -
- drivers/iommu/intel/svm.c   | 75 ++++++++-----------------------------
- include/linux/iommu.h       |  3 +-
- 3 files changed, 16 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index 404d2476a877..9ee326f7bf62 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -455,7 +455,6 @@ enum {
- 
- /* Page group response descriptor QW0 */
- #define QI_PGRP_PASID_P(p)	(((u64)(p)) << 4)
--#define QI_PGRP_PDP(p)		(((u64)(p)) << 5)
- #define QI_PGRP_RESP_CODE(res)	(((u64)(res)) << 12)
- #define QI_PGRP_DID(rid)	(((u64)(rid)) << 16)
- #define QI_PGRP_PASID(pasid)	(((u64)(pasid)) << 32)
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 4b2eeb55489d..699bef9b9197 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -418,8 +418,7 @@ struct page_req_dsc {
- 		struct {
- 			u64 type:8;
- 			u64 pasid_present:1;
--			u64 priv_data_present:1;
--			u64 rsvd:6;
-+			u64 rsvd:7;
- 			u64 rid:16;
- 			u64 pasid:20;
- 			u64 exe_req:1;
-@@ -438,7 +437,8 @@ struct page_req_dsc {
- 		};
- 		u64 qw_1;
- 	};
--	u64 priv_data[2];
-+	u64 qw_2;
-+	u64 qw_3;
- };
- 
- static bool is_canonical_address(u64 addr)
-@@ -572,18 +572,6 @@ static void intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
- 		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
- 		event.fault.prm.flags |= IOMMU_FAULT_PAGE_RESPONSE_NEEDS_PASID;
- 	}
--	if (desc->priv_data_present) {
--		/*
--		 * Set last page in group bit if private data is present,
--		 * page response is required as it does for LPIG.
--		 * iommu_report_device_fault() doesn't understand this vendor
--		 * specific requirement thus we set last_page as a workaround.
--		 */
--		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
--		event.fault.prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
--		event.fault.prm.private_data[0] = desc->priv_data[0];
--		event.fault.prm.private_data[1] = desc->priv_data[1];
--	}
- 
- 	iommu_report_device_fault(dev, &event);
- }
-@@ -591,39 +579,23 @@ static void intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
- static void handle_bad_prq_event(struct intel_iommu *iommu,
- 				 struct page_req_dsc *req, int result)
- {
--	struct qi_desc desc;
-+	struct qi_desc desc = { };
- 
- 	pr_err("%s: Invalid page request: %08llx %08llx\n",
- 	       iommu->name, ((unsigned long long *)req)[0],
- 	       ((unsigned long long *)req)[1]);
- 
--	/*
--	 * Per VT-d spec. v3.0 ch7.7, system software must
--	 * respond with page group response if private data
--	 * is present (PDP) or last page in group (LPIG) bit
--	 * is set. This is an additional VT-d feature beyond
--	 * PCI ATS spec.
--	 */
--	if (!req->lpig && !req->priv_data_present)
-+	if (!req->lpig)
- 		return;
- 
- 	desc.qw0 = QI_PGRP_PASID(req->pasid) |
- 			QI_PGRP_DID(req->rid) |
- 			QI_PGRP_PASID_P(req->pasid_present) |
--			QI_PGRP_PDP(req->priv_data_present) |
- 			QI_PGRP_RESP_CODE(result) |
- 			QI_PGRP_RESP_TYPE;
- 	desc.qw1 = QI_PGRP_IDX(req->prg_index) |
- 			QI_PGRP_LPIG(req->lpig);
- 
--	if (req->priv_data_present) {
--		desc.qw2 = req->priv_data[0];
--		desc.qw3 = req->priv_data[1];
--	} else {
--		desc.qw2 = 0;
--		desc.qw3 = 0;
--	}
--
- 	qi_submit_sync(iommu, &desc, 1, 0);
- }
- 
-@@ -691,7 +663,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 
- 		intel_svm_prq_report(iommu, dev, req);
- 		trace_prq_report(iommu, dev, req->qw_0, req->qw_1,
--				 req->priv_data[0], req->priv_data[1],
-+				 req->qw_2, req->qw_3,
- 				 iommu->prq_seq_number++);
- 		mutex_unlock(&iommu->iopf_lock);
- prq_advance:
-@@ -730,7 +702,7 @@ void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
- 	struct intel_iommu *iommu = info->iommu;
- 	u8 bus = info->bus, devfn = info->devfn;
- 	struct iommu_fault_page_request *prm;
--	bool private_present;
-+	struct qi_desc desc;
- 	bool pasid_present;
- 	bool last_page;
- 	u16 sid;
-@@ -738,34 +710,17 @@ void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
- 	prm = &evt->fault.prm;
- 	sid = PCI_DEVID(bus, devfn);
- 	pasid_present = prm->flags & IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
--	private_present = prm->flags & IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
- 	last_page = prm->flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
- 
--	/*
--	 * Per VT-d spec. v3.0 ch7.7, system software must respond
--	 * with page group response if private data is present (PDP)
--	 * or last page in group (LPIG) bit is set. This is an
--	 * additional VT-d requirement beyond PCI ATS spec.
--	 */
--	if (last_page || private_present) {
--		struct qi_desc desc;
--
--		desc.qw0 = QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid) |
--				QI_PGRP_PASID_P(pasid_present) |
--				QI_PGRP_PDP(private_present) |
--				QI_PGRP_RESP_CODE(msg->code) |
--				QI_PGRP_RESP_TYPE;
--		desc.qw1 = QI_PGRP_IDX(prm->grpid) | QI_PGRP_LPIG(last_page);
--		desc.qw2 = 0;
--		desc.qw3 = 0;
--
--		if (private_present) {
--			desc.qw2 = prm->private_data[0];
--			desc.qw3 = prm->private_data[1];
--		}
-+	desc.qw0 = QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid) |
-+			QI_PGRP_PASID_P(pasid_present) |
-+			QI_PGRP_RESP_CODE(msg->code) |
-+			QI_PGRP_RESP_TYPE;
-+	desc.qw1 = QI_PGRP_IDX(prm->grpid) | QI_PGRP_LPIG(last_page);
-+	desc.qw2 = 0;
-+	desc.qw3 = 0;
- 
--		qi_submit_sync(iommu, &desc, 1, 0);
--	}
-+	qi_submit_sync(iommu, &desc, 1, 0);
- }
- 
- static void intel_svm_domain_free(struct iommu_domain *domain)
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index af6c367ed673..523bcb672efe 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -69,8 +69,7 @@ enum iommu_fault_type {
- struct iommu_fault_page_request {
- #define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
- #define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
--#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
--#define IOMMU_FAULT_PAGE_RESPONSE_NEEDS_PASID	(1 << 3)
-+#define IOMMU_FAULT_PAGE_RESPONSE_NEEDS_PASID	(1 << 2)
- 	u32	flags;
- 	u32	pasid;
- 	u32	grpid;
--- 
-2.21.3
+Looks good to me.
 
+Similar on what we have on imx219 drv:
+ret = imx219_configure_lanes(imx219);
+
+Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
+
+Thanks & Regards,
+Tommaso
+
+> -- 
+> 2.43.0
+> 
+> 
