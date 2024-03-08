@@ -1,143 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882E61F953
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1111236D;
+	Fri,  8 Mar 2024 16:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709916340; cv=none; b=UMP2QH6eYjGhr8nLBuguNro5D9vqXpge+jbL6EqQVXWECT/JidBkK/Z8y45+orB2HzHdvgGXxqGmobCxpFTO4Sp9ViAMyK5DakBanttozrChD+H0fLzAjO6iQ322hVnsUrW5I7cabYpIJgAOSVcFCXuytVD7E/dmsMgaVDmxpPA=
+	t=1709916385; cv=none; b=EY9WJppOM4McWhbFbOeMRjGLbsswRa3QlwSTStxCI8+Fm6aetpEe8OfiUC/p0tXMc7h1YW3pLg7e5jvglQbQBcMhpQZPtqXrFvRj7fXqafKy7M8/99p+eUx/SK7ZV/cMPa0kMRjCOqWKVYodSfpf84FNqiddiw/39u8yNECAdd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709916340; c=relaxed/simple;
-	bh=RjaNT49ljT8g4/bWagEUh7Y92fvPnAxD9ciM0m/L/Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IgxTi02bgV1Zva0PrLme7mGeuKc1rQkPkA6uIfwsLjJmjg2stNZuxp5nbjSo24h7a/z9NOg3UhxDLOE8sb8rFGYjThexeVJI0hhP8643BB2CEFX9ip6Y5FAfTxkNoCQMiadhOGxTW7+XLUeNC4ej0F1N5zan3dzcnSa+Ubvf7SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E6V4gDSU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6V4gDSU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709916337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=534u/67YBq7t7mIqXOVTlZcmBGl/1NW7WJ5BcOAUIpI=;
-	b=E6V4gDSUEDRcPdFI4nvpzfIYRTFGdmXL0gZJvfs7R8AjP4z3ORuC/z6jupS399imSkEnE0
-	Y855IEQ7VSH9djN9IX9QVOdr4iv+tBhQhrxpGAs5jtRUfucWDDzWapRkCcd2gdVRZRVAhn
-	1pLrCNCCSmOMS4gu9UjsmRDuX4Gw7Lk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-NCq3qJnSOtqVgoL_dO40-Q-1; Fri, 08 Mar 2024 11:45:35 -0500
-X-MC-Unique: NCq3qJnSOtqVgoL_dO40-Q-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a45851b0030so107415366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 08:45:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709916334; x=1710521134;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=534u/67YBq7t7mIqXOVTlZcmBGl/1NW7WJ5BcOAUIpI=;
-        b=BQQ6QHh0d3oSQvL2P0PW6BZJO3L32RFuxYbqZPkAT1pIwMWE0pCmwmgZCNbaE3qo6j
-         FRl5LKXH/Ep9hSlxjWAlNmA2tbN3TwhBru1MJlV55HyMoqU3sP/jlspD2NsU/Mz80Z6W
-         B2ss6ld2idzcwRcwSpwR0KN5uZZ2EO8dMQ4l1Z0fRaQt9a7MoYK+KibZ3HrlLMQ0DgcA
-         WpKeXKtRkjn7timJb3j9PGmgkQdLQgkq+5LdR3NJWeeGSi78sv0n4tT7EzASq5zKQ8L1
-         sbUtwbvPR0PVqxqjqMfPeo+CRI6TFE4iZOIEh9PgTCSiuSMwdxRUTQi5+k7YoPF/k6Aj
-         YXfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNHnvdaeUTc7U8HrqnR6dUa2jvSmC5Hll1hwx8L5rUqP/Jh9XwNTy6GTxFYUCJEYpERBNIbiOdFrScDes/CQ4nUmLzxEsIlyz5obRW
-X-Gm-Message-State: AOJu0Yyd5Ttykh60i+rv24XEjgTq8XutTI3MjqR2AuvwL1PmFlVMMTX4
-	A5qORR4HUwuB8VgW3d1Ow1eVrFVa515AcnUbi8UzThxn2t1TvCiCINAn7E6pZY7wGvLwN1d6/6u
-	rK4vSEzQmU926A0mzZfW5htk356+456cxs+JRviHLJR62iWGJwuPAjNhUJNKfWg==
-X-Received: by 2002:a17:907:d301:b0:a45:f4d9:d911 with SMTP id vg1-20020a170907d30100b00a45f4d9d911mr1172172ejc.34.1709916334734;
-        Fri, 08 Mar 2024 08:45:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEn7ZndBGszHKq0H8y6c/T3rs7VSPm+fqpniPAcpA1gNnmrOtVIRBYfNM3Sudcp2tOC29DwLw==
-X-Received: by 2002:a17:907:d301:b0:a45:f4d9:d911 with SMTP id vg1-20020a170907d30100b00a45f4d9d911mr1172156ejc.34.1709916334330;
-        Fri, 08 Mar 2024 08:45:34 -0800 (PST)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id n18-20020a170906119200b00a45e04e3ebdsm1409444eja.83.2024.03.08.08.45.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 08:45:33 -0800 (PST)
-Message-ID: <fc80adaa-3bbc-4331-abd3-3cfbff9b3dcd@redhat.com>
-Date: Fri, 8 Mar 2024 17:45:32 +0100
+	s=arc-20240116; t=1709916385; c=relaxed/simple;
+	bh=Q9JbJgy4s95+FVzuI2yxuPSyR9uhk2IBqK8U1Ci2sa0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UG7JV29LabZK0eJGDGDjnuISBlF2+hMuzw8yZespSIm8ek95jnvyrAtIm/u9DEYHsnxtWyceLXC13qRN/lTlCGdAitAgSMYb+e8pUpUUmxt4jBlKRiQWY6ZCDDVAbOIjBGgBNGJ13Y7hTDIblmsb/dIebSNniRCdYMPfMxZ8OCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Trrm457q1z9yjbF;
+	Sat,  9 Mar 2024 00:12:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 6A32E140590;
+	Sat,  9 Mar 2024 00:27:52 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwDXyxR3POtl6xr2Aw--.9011S2;
+	Fri, 08 Mar 2024 17:27:51 +0100 (CET)
+Message-ID: <523a37b29820fe98151b1d608f77b88cc026a91d.camel@huaweicloud.com>
+Subject: Re: [RFC][PATCH 6/8] ima: Use digest cache for measurement
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, corbet@lwn.net,
+ dmitry.kasatkin@gmail.com,  eric.snowberg@oracle.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ wufan@linux.microsoft.com, pbrobinson@gmail.com, zbyszek@in.waw.pl,
+ hch@lst.de,  mjg59@srcf.ucam.org, pmatilai@redhat.com, jannh@google.com,
+ dhowells@redhat.com,  jikos@kernel.org, mkoutny@suse.com, ppavlu@suse.com,
+ petr.vorel@gmail.com,  petrtesarik@huaweicloud.com, mzerqung@0pointer.de,
+ kgold@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Date: Fri, 08 Mar 2024 17:27:31 +0100
+In-Reply-To: <acfb4159b16b84d8fa1517d6870edaaaadf901c8.camel@linux.ibm.com>
+References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
+	 <20240214143525.2205481-7-roberto.sassu@huaweicloud.com>
+	 <acfb4159b16b84d8fa1517d6870edaaaadf901c8.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] nouveau/dmem: handle kcalloc() allocation failure
-To: Duoming Zhou <duoming@zju.edu.cn>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- daniel@ffwll.ch, airlied@gmail.com, lyude@redhat.com, kherbst@redhat.com,
- timur@kernel.org, jani.nikula@linux.intel.com, nouveau@lists.freedesktop.org
-References: <20240306050104.11259-1-duoming@zju.edu.cn>
-Content-Language: en-US
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240306050104.11259-1-duoming@zju.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:LxC2BwDXyxR3POtl6xr2Aw--.9011S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1kXF48KFy7CFykuF48JFb_yoW7Gr18pa
+	97uF12kFs5Wr1fGF13Aa12vF4xtrWktF47Jws8WF1Yyan8Xrn29w1rtw15ZryfAr48Za17
+	tF4UKrsxZF1qvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUoj
+	jgUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAQBF1jj5ckyQAEsZ
 
-On 3/6/24 06:01, Duoming Zhou wrote:
-> The kcalloc() in nouveau_dmem_evict_chunk() will return null if
-> the physical memory has run out. As a result, if we dereference
-> src_pfns, dst_pfns or dma_addrs, the null pointer dereference bugs
-> will happen.
-> 
-> Moreover, the GPU is going away. If the kcalloc() fails, we could not
-> evict all pages mapping a chunk. So this patch adds a __GFP_NOFAIL
-> flag in kcalloc().
-> 
-> Finally, as there is no need to have physically contiguous memory,
-> this patch switches kcalloc() to kvcalloc() in order to avoid
-> failing allocations.
-> 
-> Fixes: 249881232e14 ("nouveau/dmem: evict device private memory during release")
-> Suggested-by: Danilo Krummrich <dakr@redhat.com>
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+On Fri, 2024-03-08 at 11:08 -0500, Mimi Zohar wrote:
+> Hi Roberto,
+>=20
+> > diff --git a/security/integrity/ima/ima_main.c
+> > b/security/integrity/ima/ima_main.c
+> > index 3fc48214850a..48a09747ae7a 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -222,7 +222,9 @@ static int process_measurement(struct file *file, c=
+onst
+> > struct cred *cred,
+> >  	bool violation_check;
+> >  	enum hash_algo hash_algo;
+> >  	unsigned int allowed_algos =3D 0;
+> > -	u64 verif_mask =3D 0;
+> > +	u64 verif_mask =3D 0, *verif_mask_ptr, policy_mask =3D 0, allow_mask =
+=3D 0;
+> > +	struct digest_cache *digest_cache =3D NULL, *found_cache;
+> > +	digest_cache_found_t found;
+> > =20
+> >  	if (!ima_policy_flag || !S_ISREG(inode->i_mode))
+> >  		return 0;
+> > @@ -233,7 +235,7 @@ static int process_measurement(struct file *file, c=
+onst
+> > struct cred *cred,
+> >  	 */
+> >  	action =3D ima_get_action(file_mnt_idmap(file), inode, cred, secid,
+> >  				mask, func, &pcr, &template_desc, NULL,
+> > -				&allowed_algos, NULL);
+> > +				&allowed_algos, &policy_mask);
+> >  	violation_check =3D ((func =3D=3D FILE_CHECK || func =3D=3D MMAP_CHEC=
+K ||
+> >  			    func =3D=3D MMAP_CHECK_REQPROT) &&
+> >  			   (ima_policy_flag & IMA_MEASURE));
+> > @@ -364,10 +366,34 @@ static int process_measurement(struct file *file,=
+ const
+> > struct cred *cred,
+> >  	if (!pathbuf)	/* ima_rdwr_violation possibly pre-fetched */
+> >  		pathname =3D ima_d_path(&file->f_path, &pathbuf, filename);
+> > =20
+> > +	/*
+> > +	 * For now we don't support nested verification with digest caches.
+>=20
+> I haven't reviewed the digest_cache LSM patch set yet.  What does 'nested=
+' mean
+> in this context?  Why mention it here?
 
-Applied to drm-misc-fixes, thanks!
+This is the reason for the check func !=3D DIGEST_LIST_CHECK. Before I
+had this check in validate_rule(), but then realized that I would have
+to reject rules without 'func=3D'.
 
-> ---
-> Changes in v3:
->    - Switch kcalloc() to kvcalloc().
-> 
->   drivers/gpu/drm/nouveau/nouveau_dmem.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index 12feecf71e7..6fb65b01d77 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -378,9 +378,9 @@ nouveau_dmem_evict_chunk(struct nouveau_dmem_chunk *chunk)
->   	dma_addr_t *dma_addrs;
->   	struct nouveau_fence *fence;
->   
-> -	src_pfns = kcalloc(npages, sizeof(*src_pfns), GFP_KERNEL);
-> -	dst_pfns = kcalloc(npages, sizeof(*dst_pfns), GFP_KERNEL);
-> -	dma_addrs = kcalloc(npages, sizeof(*dma_addrs), GFP_KERNEL);
-> +	src_pfns = kvcalloc(npages, sizeof(*src_pfns), GFP_KERNEL | __GFP_NOFAIL);
-> +	dst_pfns = kvcalloc(npages, sizeof(*dst_pfns), GFP_KERNEL | __GFP_NOFAIL);
-> +	dma_addrs = kvcalloc(npages, sizeof(*dma_addrs), GFP_KERNEL | __GFP_NOFAIL);
->   
->   	migrate_device_range(src_pfns, chunk->pagemap.range.start >> PAGE_SHIFT,
->   			npages);
-> @@ -406,11 +406,11 @@ nouveau_dmem_evict_chunk(struct nouveau_dmem_chunk *chunk)
->   	migrate_device_pages(src_pfns, dst_pfns, npages);
->   	nouveau_dmem_fence_done(&fence);
->   	migrate_device_finalize(src_pfns, dst_pfns, npages);
-> -	kfree(src_pfns);
-> -	kfree(dst_pfns);
-> +	kvfree(src_pfns);
-> +	kvfree(dst_pfns);
->   	for (i = 0; i < npages; i++)
->   		dma_unmap_page(chunk->drm->dev->dev, dma_addrs[i], PAGE_SIZE, DMA_BIDIRECTIONAL);
-> -	kfree(dma_addrs);
-> +	kvfree(dma_addrs);
->   }
->   
->   void
+Not doing this check means that we could use digest caches also for
+verifying digest lists (this is the meaning of nested verification).
+This possibility is actually not remote, we would need this
+functionality to verify Debian-based distributions.
+
+Now, leaving aside the fact that Debian packages still use MD5 for
+checksums (I heard that they would like to switch to SHA256 but didn't
+verify if it happened), this would be the chain of verification:
+
+/bin/cat -> md5sums -> coreutils (DEB pkg) -> Packages.gz -> Release
+
+Release is the only file signed with PGP.
+
+I already tried to verify a chain, it works, but I didn't want to
+include too many functionality at the beginning. DEB format is not yet
+supported, for RPMs chained verification it is not needed.
+
+It would be fantastic if md5sums (or sha256sums) is directly signed
+tough.
+
+> > +	 * Since we allow IMA policy rules without func=3D, we have to enforc=
+e
+> > +	 * this restriction here.
+> > +	 */
+> > +	if (rc =3D=3D 0 && policy_mask && func !=3D DIGEST_LIST_CHECK)
+> > +		digest_cache =3D digest_cache_get(file_dentry(file));
+>=20
+> So whether or not a DIGEST_LIST_CHECK policy rule even exists,
+> digest_cache_get() will be called.  Similarly, even if a digest_cache lis=
+t
+> hasn't been measured or appraised, digest_cache_get() will be called.
+>=20
+> Basically every file in policy will check the digest_cache.
+
+Only if there is 'digest_cache=3Dcontent' in the matching rule.
+
+> > +
+> > +	if (digest_cache) {
+> > +		found =3D digest_cache_lookup(file_dentry(file), digest_cache,
+> > +					    iint->ima_hash->digest,
+> > +					    iint->ima_hash->algo);
+> > +		/* AND what is allowed by the policy, and what IMA verified. */
+> > +		if (found) {
+> > +			found_cache =3D digest_cache_from_found_t(found);
+> > +			verif_mask_ptr =3D digest_cache_verif_get(found_cache,
+> > +								"ima");
+>=20
+> Instead of using "verif_{set,get}' consider using '{set,get}_usage', wher=
+e usage
+> here means measure or appraise.
+
+Usage might make sense for IMA, not sure for any other user.
+
+> > +			if (verif_mask_ptr)
+> > +				allow_mask =3D policy_mask & *verif_mask_ptr;
+> > +		}
+> > +
+> > +		digest_cache_put(digest_cache);
+> > +	}
+> > +
+>=20
+> I'm wondering if it makes sense to create IMA wrappers for each of the
+> digest_cache functions - checking the digest_cache for the hash, setting =
+the
+> digest_cache permitted usage, etc - and put all of them in a separate
+> ima_digest_cache.c file.  The file would only be included in the Makefile=
+ if
+> digest_cache is configured.
+
+It would be fine for me.
+
+> In this file you could define a static local global variable to detect wh=
+ether
+> the digest_cache is ready to be used.  Only after successfully measuring =
+and
+> appraising a digest_cache list, based on policy, set the variable.
+
+Ok, something similar to ima_policy_flag.
+
+> >  	if (action & IMA_MEASURE)
+> >  		ima_store_measurement(iint, file, pathname,
+> >  				      xattr_value, xattr_len, modsig, pcr,
+> > -				      template_desc);
+> > +				      template_desc, allow_mask);
+>=20
+> 'allowed_usage'?
+
+Sure, I started renaming them.
+
+Thanks
+
+Roberto
+
+> >  	if (rc =3D=3D 0 && (action & IMA_APPRAISE_SUBMASK)) {
+> >  		rc =3D ima_check_blacklist(iint, modsig, pcr);
+> >  		if (rc !=3D -EPERM) {
+>=20
+> thanks,
+>=20
+> Mimi
 
