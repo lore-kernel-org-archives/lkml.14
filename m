@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967B53E480
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3AF43170
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709939175; cv=none; b=o9j3RPIy6T2ONL1A1BYu1oH1v9UzQ7FvbGYBbLzvI9wAzWVSnTVndatd/SALX+A6fmwLksJlD7B/52rgxH11mK5uvwHhDRUZqxUCgTgFi+CGzBUePdfwFTc6IZcwFHdoe7572GQ2cdFZNDlyrLgPPVfXukmXXCCLD82xAUA8rsM=
+	t=1709939176; cv=none; b=CWCG/zZTvan82WcepRNIBTN2xzWKU0ImUfQy7VG2lPGwmLQFkhDucbxiCIrbFTF4BDkAjRVtE9kN4XilmI7sE2wUT5FpVMmQ/JJnx9fcAGmBbdDDtIwG1p6Ut5rbs7pwV+HdvbDco3NzlCkkpT73hMicBronPjxUY7ccyA42ZAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709939175; c=relaxed/simple;
-	bh=k+R2VROY6vUH5PdEi8jgrtrsikXwjab0c1hYvgZZfOA=;
+	s=arc-20240116; t=1709939176; c=relaxed/simple;
+	bh=heT93CNz8M4GwBdCOZkIHxkdserSfvqS5SdZ6rnGMbA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yn/dtcPI0sDAXLhK1YI8qVy6xwPQdd6pHd/Zj3kgNY7pPhK9EBLcJWkQc2gXMJO/LfihM6Ben4Qj6gvyDzz8+vCLCCgmTUcPT9AN9cbCbc0HX4nb0mjyoYHRPGjBq89zJxQM3/ai4n2WCzIXygcoJjaZB22MKjX5zGt/8TZdvd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TVTXhvwy; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=sQZX08yOvGqgvZU1El40Jb+Ig4GMwvMDeQHbEuQC14gzcXvTHPBLkpBGq12GKuJdN8zeAKDMYwbp2pObQMp7hDEgaEifJgBHJGeSu1ZwZx/9EnJQMUF3rmrBOR6963Z9eP7apelR2nwt/KOTXap9ZRjEqOqrgqEkmWOTvq3qYuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T0+rmlTR; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVTXhvwy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T0+rmlTR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709939172;
+	s=mimecast20190719; t=1709939174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eXn3Gg6N1f84hEIo4OgYVMjxq/BUaA1ykSSynr+HxW0=;
-	b=TVTXhvwyBdK7MOP3GubiPjihk4R11TTKBhDTY1Fsp3FZEpZOeG6NFFw3o6fCAnfGegPqNV
-	EtR3+CxRyb4DQH6PgJkW1wd9v515uKT/U3sWBg15Yqi3OCVFvB10fN/x3Pq4PritkKCMTf
-	ph3UmvFZUk9U51hd0aeHRG2g0F4fAYY=
+	bh=s1fqiArHyLhCU0d5Vyof/5+mbhO22X+BF7PWrc8qFrE=;
+	b=T0+rmlTRcmjA5xFUJQhkJREr3UBtIbX5/FJk4nusvMHbPGASUVAxVBp5JJ399Ut/x8I//9
+	jzRKtQXsyg3a40iWHhlTuTQoygBUOIDw1UD6TSn21jdJ8PKvJcOBidDzDmT8GTn8mL/M+0
+	0PY62IKjwLrwu8T/aqPoqZumBFiIWME=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-523-BEWV8FfbPm64jqF_xRnC2A-1; Fri, 08 Mar 2024 18:06:09 -0500
-X-MC-Unique: BEWV8FfbPm64jqF_xRnC2A-1
+ us-mta-347-7t25bQA-P66lx1ZIL_U-7g-1; Fri, 08 Mar 2024 18:06:06 -0500
+X-MC-Unique: 7t25bQA-P66lx1ZIL_U-7g-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E230C86D4C1;
-	Fri,  8 Mar 2024 23:06:08 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B9408007A2;
+	Fri,  8 Mar 2024 23:06:06 +0000 (UTC)
 Received: from omen.home.shazbot.org (unknown [10.22.8.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E861547CB;
-	Fri,  8 Mar 2024 23:06:07 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4112A37FD;
+	Fri,  8 Mar 2024 23:06:04 +0000 (UTC)
 From: Alex Williamson <alex.williamson@redhat.com>
 To: alex.williamson@redhat.com
 Cc: kvm@vger.kernel.org,
@@ -47,10 +47,11 @@ Cc: kvm@vger.kernel.org,
 	clg@redhat.com,
 	reinette.chatre@intel.com,
 	linux-kernel@vger.kernel.org,
-	kevin.tian@intel.com
-Subject: [PATCH v2 3/7] vfio: Introduce interface to flush virqfd inject workqueue
-Date: Fri,  8 Mar 2024 16:05:24 -0700
-Message-ID: <20240308230557.805580-4-alex.williamson@redhat.com>
+	kevin.tian@intel.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/7] vfio/pci: Disable auto-enable of exclusive INTx IRQ
+Date: Fri,  8 Mar 2024 16:05:22 -0700
+Message-ID: <20240308230557.805580-2-alex.williamson@redhat.com>
 In-Reply-To: <20240308230557.805580-1-alex.williamson@redhat.com>
 References: <20240308230557.805580-1-alex.williamson@redhat.com>
 Precedence: bulk
@@ -62,84 +63,62 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-In order to synchronize changes that can affect the thread callback,
-introduce an interface to force a flush of the inject workqueue.  The
-irqfd pointer is only valid under spinlock, but the workqueue cannot
-be flushed under spinlock.  Therefore the flush work for the irqfd is
-queued under spinlock.  The vfio_irqfd_cleanup_wq workqueue is re-used
-for queuing this work such that flushing the workqueue is also ordered
-relative to shutdown.
+Currently for devices requiring masking at the irqchip for INTx, ie.
+devices without DisINTx support, the IRQ is enabled in request_irq()
+and subsequently disabled as necessary to align with the masked status
+flag.  This presents a window where the interrupt could fire between
+these events, resulting in the IRQ incrementing the disable depth twice.
+This would be unrecoverable for a user since the masked flag prevents
+nested enables through vfio.
 
+Instead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx
+is never auto-enabled, then unmask as required.
+
+Cc: stable@vger.kernel.org
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/vfio/virqfd.c | 21 +++++++++++++++++++++
- include/linux/vfio.h  |  2 ++
- 2 files changed, 23 insertions(+)
+ drivers/vfio/pci/vfio_pci_intrs.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/vfio/virqfd.c b/drivers/vfio/virqfd.c
-index 29c564b7a6e1..532269133801 100644
---- a/drivers/vfio/virqfd.c
-+++ b/drivers/vfio/virqfd.c
-@@ -101,6 +101,13 @@ static void virqfd_inject(struct work_struct *work)
- 		virqfd->thread(virqfd->opaque, virqfd->data);
- }
+diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+index 237beac83809..136101179fcb 100644
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -296,8 +296,15 @@ static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev, int fd)
  
-+static void virqfd_flush_inject(struct work_struct *work)
-+{
-+	struct virqfd *virqfd = container_of(work, struct virqfd, flush_inject);
-+
-+	flush_work(&virqfd->inject);
-+}
-+
- int vfio_virqfd_enable(void *opaque,
- 		       int (*handler)(void *, void *),
- 		       void (*thread)(void *, void *),
-@@ -124,6 +131,7 @@ int vfio_virqfd_enable(void *opaque,
+ 	ctx->trigger = trigger;
  
- 	INIT_WORK(&virqfd->shutdown, virqfd_shutdown);
- 	INIT_WORK(&virqfd->inject, virqfd_inject);
-+	INIT_WORK(&virqfd->flush_inject, virqfd_flush_inject);
++	/*
++	 * Devices without DisINTx support require an exclusive interrupt,
++	 * IRQ masking is performed at the IRQ chip.  The masked status is
++	 * protected by vdev->irqlock. Setup the IRQ without auto-enable and
++	 * unmask as necessary below under lock.  DisINTx is unmodified by
++	 * the IRQ configuration and may therefore use auto-enable.
++	 */
+ 	if (!vdev->pci_2_3)
+-		irqflags = 0;
++		irqflags = IRQF_NO_AUTOEN;
  
- 	irqfd = fdget(fd);
- 	if (!irqfd.file) {
-@@ -213,3 +221,16 @@ void vfio_virqfd_disable(struct virqfd **pvirqfd)
- 	flush_workqueue(vfio_irqfd_cleanup_wq);
- }
- EXPORT_SYMBOL_GPL(vfio_virqfd_disable);
-+
-+void vfio_virqfd_flush_thread(struct virqfd **pvirqfd)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&virqfd_lock, flags);
-+	if (*pvirqfd && (*pvirqfd)->thread)
-+		queue_work(vfio_irqfd_cleanup_wq, &(*pvirqfd)->flush_inject);
-+	spin_unlock_irqrestore(&virqfd_lock, flags);
-+
-+	flush_workqueue(vfio_irqfd_cleanup_wq);
-+}
-+EXPORT_SYMBOL_GPL(vfio_virqfd_flush_thread);
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 89b265bc6ec3..8b1a29820409 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -356,6 +356,7 @@ struct virqfd {
- 	wait_queue_entry_t		wait;
- 	poll_table		pt;
- 	struct work_struct	shutdown;
-+	struct work_struct	flush_inject;
- 	struct virqfd		**pvirqfd;
- };
+ 	ret = request_irq(pdev->irq, vfio_intx_handler,
+ 			  irqflags, ctx->name, vdev);
+@@ -308,13 +315,9 @@ static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev, int fd)
+ 		return ret;
+ 	}
  
-@@ -363,5 +364,6 @@ int vfio_virqfd_enable(void *opaque, int (*handler)(void *, void *),
- 		       void (*thread)(void *, void *), void *data,
- 		       struct virqfd **pvirqfd, int fd);
- void vfio_virqfd_disable(struct virqfd **pvirqfd);
-+void vfio_virqfd_flush_thread(struct virqfd **pvirqfd);
+-	/*
+-	 * INTx disable will stick across the new irq setup,
+-	 * disable_irq won't.
+-	 */
+ 	spin_lock_irqsave(&vdev->irqlock, flags);
+-	if (!vdev->pci_2_3 && ctx->masked)
+-		disable_irq_nosync(pdev->irq);
++	if (!vdev->pci_2_3 && !ctx->masked)
++		enable_irq(pdev->irq);
+ 	spin_unlock_irqrestore(&vdev->irqlock, flags);
  
- #endif /* VFIO_H */
+ 	return 0;
 -- 
 2.44.0
 
