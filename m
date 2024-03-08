@@ -1,47 +1,47 @@
 Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B999249FA
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 18:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93902DF92;
+	Fri,  8 Mar 2024 18:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709924068; cv=none; b=qr6622oTEu9y/gjkph8cbmvGE3ZOS4qhuQsDwb4cyvpjNwC3/QGZ4wR6KA4Gce6fSUj0ROuyy9GggLQG7BjPK/aQHAoAq4TXXCwSoLOtcWVzLu/eW7Hg8iUJyi2OM7W3/c46g7ZdT8QbA/sQH0W2sKgNUowgfsAoV7s99Am3fgk=
+	t=1709924205; cv=none; b=jSsetAd1grzvmSqS3KBs8/mmKNJkwUlHzfWdOhfr1mbGf4lG+ko3zv6nrEa+f1XKbdcFyTiPVZrLrql0r5tM38c43r+cVmO0BUNTtDyMt1tXesqUb47dSxd/pUY0qXh7Cof4sc1nbzYsYk+SAMr6X6RzZeltthMtfUx7PGW8glc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709924068; c=relaxed/simple;
-	bh=boTAUudgAa/bcCgISeFb5WFztoS0+nbfFlfZhHHnvVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jsR14TgD63RmKmhv2YX6rqRP2wzmLeC2Ol51olLcj9HcSoGbFgkzaJd/z9VY5ebt/wuLxsWRf5/TZhX8hQxDdeRnwbBGq/tZ/uSMZOd3u5Ju9Ndue8/AF5Xl7D8gfsUAS7V9dZqpC/gt5h/cKvEAhoLEkCEGo9Dh3dHO5NVVN/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=NbGBiWOD; arc=none smtp.client-ip=188.40.203.114
+	s=arc-20240116; t=1709924205; c=relaxed/simple;
+	bh=m1gSWDGhOAmMvJJN4zC6tWoZplCX09QlxH0eeqoof+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SsWNxymoXxY/MdICNEUNmji79NJrwW98ogupHh9yKgyHrIg2c25bqRIiY2+urO/hJM2KHqHRqRMSqCx5Ibw+YskMAoLJGioMZJrM2CknZ6WzNFLTjvnKTtTrNYxJvcZ89NA2DvtjrsFlxCLnU6OI+j7E9wIRTBjHvjeO1d1ER3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=Fr3jdjo8; arc=none smtp.client-ip=188.40.203.114
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="NbGBiWOD"
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="Fr3jdjo8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gL6cdh/XNsrNqIVeHU3hrV0kdShNxmskNNYI9x0juTQ=; b=NbGBiWODtWI4lIB+Yk4GF0+nIC
-	PcvCUQ722kHHBy8FzkSRe63+CwaG9FtXxOizwO1QHhM4WRUArQ+NiBKequagSLNmj+UFwhNE0cDAU
-	Wpm96DyNuMrUiCzTK38vp0JiEknTvaRM43H/gXHt5yyRlqduOxgS49bGPa5e2AbTEf6QFXmipIVFP
-	wpsm3j/sdsk+cbQf8j/EW7Sg4utuglQuotRMukG+7OVxB1GHcl/LSEzHfCzdEHzNowsnObljMiFEJ
-	jOLGL0cNWMyl9J8yXAwnFZs20I8RRPajqYkeWLgs08caa82EbcMXApB8zxvvnBgh+G6CcCayApaQx
-	52hm4a/A==;
+	bh=wpcBiUaBaPQQIxzHAFN2Kj+yFFh9wih3axC8gZA47FQ=; b=Fr3jdjo8JbgHm2Ys+D8EYSwPP8
+	yJgTFQ2fvP8c6RuOAaUJJXVwZnz0dGlIkTstiryvFT+N2+tnEVZbtf4hIUvxSCLHGVJE1cLiBfg0r
+	dBFzsMYUn513pPb42XJlonxxVgWKNMjxCB6jLDrOSPcG/dTMPGOHsjwAMGuR+c9+Jo0Eno00eFuRO
+	R44Zn17SKZ2/4vwLVdnGdAW6KUV0yHCmVrKSZaXhoKcMNgHXMhDoqZZ5qhsyiZR/HHFp1Oz8tyyJf
+	2BaSZN7T0unvBoLobhjpOUu8yQDAMv8lw93sgkbc7OzdbFeGGJj279ytu8dmwpOhsvqA76tutU0DT
+	Ui1vRU/g==;
 Received: from [167.98.27.226] (helo=rainbowdash)
 	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1rifML-00CPLJ-F7; Fri, 08 Mar 2024 18:54:21 +0000
+	id 1rif10-00COsw-Vd; Fri, 08 Mar 2024 18:32:19 +0000
 Received: from ben by rainbowdash with local (Exim 4.97)
 	(envelope-from <ben@rainbowdash>)
-	id 1rifML-000000085rt-0Gcl;
-	Fri, 08 Mar 2024 18:54:21 +0000
+	id 1rif10-000000084bp-2CXU;
+	Fri, 08 Mar 2024 18:32:18 +0000
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-To: linux-kernel@vger.kernel.org
-Cc: hsweeten@visionengravers.com,
-	abbotti@mev.co.uk,
+To: linux-fsdevel@vger.kernel.org
+Cc: krisman@kernel.org,
+	linux-kernel@vger.kernel.org,
 	Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH] comedi: don't build module device_ids if built in
-Date: Fri,  8 Mar 2024 18:54:19 +0000
-Message-Id: <20240308185419.1929060-1-ben.dooks@codethink.co.uk>
+Subject: [PATCH] unicode: make utf8 test count static
+Date: Fri,  8 Mar 2024 18:32:15 +0000
+Message-Id: <20240308183215.1924331-1-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.37.2.352.g3c44437643
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,43 +49,35 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: srv_ts003@codethink.com
 
-If not building as a module, then the device_ids[] array is not used
-by the  MODULE_DEVICE_TABLE(pnp, device_ids) so remove the warning
-about it not being used by enclosing it in #ifdef MODULE
+The variables failed_tests and total_tests are not used outside of the
+utf8-selftest.c file so make them static to avoid the following warnings:
 
-Fixes:
-
-drivers/comedi/drivers/ni_atmio.c:209:35: warning: ‘device_ids’ defined but not used [-Wunused-const-variable=]
+fs/unicode/utf8-selftest.c:17:14: warning: symbol 'failed_tests' was not declared. Should it be static?
+fs/unicode/utf8-selftest.c:18:14: warning: symbol 'total_tests' was not declared. Should it be static?
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- drivers/comedi/drivers/ni_atmio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/unicode/utf8-selftest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/comedi/drivers/ni_atmio.c b/drivers/comedi/drivers/ni_atmio.c
-index 8876a1d24c56..f0dbe4c2341a 100644
---- a/drivers/comedi/drivers/ni_atmio.c
-+++ b/drivers/comedi/drivers/ni_atmio.c
-@@ -206,6 +206,7 @@ static const int ni_irqpin[] = {
+diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/utf8-selftest.c
+index eb2bbdd688d7..c928e6007356 100644
+--- a/fs/unicode/utf8-selftest.c
++++ b/fs/unicode/utf8-selftest.c
+@@ -14,8 +14,8 @@
  
- #include "ni_mio_common.c"
+ #include "utf8n.h"
  
-+#ifndef MODULE
- static const struct pnp_device_id device_ids[] = {
- 	{.id = "NIC1900", .driver_data = 0},
- 	{.id = "NIC2400", .driver_data = 0},
-@@ -216,6 +217,7 @@ static const struct pnp_device_id device_ids[] = {
- };
+-unsigned int failed_tests;
+-unsigned int total_tests;
++static unsigned int failed_tests;
++static unsigned int total_tests;
  
- MODULE_DEVICE_TABLE(pnp, device_ids);
-+#endif
- 
- static int ni_isapnp_find_board(struct pnp_dev **dev)
- {
+ /* Tests will be based on this version. */
+ #define UTF8_LATEST	UNICODE_AGE(12, 1, 0)
 -- 
 2.37.2.352.g3c44437643
 
