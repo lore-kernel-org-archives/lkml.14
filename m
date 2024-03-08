@@ -1,243 +1,116 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2088.outbound.protection.outlook.com [40.107.8.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E161DFDE;
-	Fri,  8 Mar 2024 16:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709915167; cv=fail; b=IJaMmfr+xMR79URSG9qASzXrCWJpDs3XCY9WdK1r3S97ykOy4TVgap4znpsw5mQ605xltRV3lM21DGGJdKyGNpGbn9htofu3nINIZhk0sBC99Sn2AU080dP/Ic0AHE/GUnnkkK6+Czv2wrnlBvkGvc4Qx+IBvT9P0rBmIyn59yg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709915167; c=relaxed/simple;
-	bh=hc0vWKzWBYmTQPNA0uhujkmwegxnId+yCijUqEvVwaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kL8sI7mbvyvXOKGVU47NM1MaE5sFTVQOsuGfekwAdjPGdclpdHbHTGSWFDgaCo0zP8bj/Qlf7kK6MfC8uAJ+qDB/F85Zb6fDU0j9iqJ7o2XXyLYC7i6beHsCJqAJxrfJx9FfxkmR1SoeZdMUzcBGYAyCAiXPdJ84l68yp2J158E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=c3Mdx6jt; arc=fail smtp.client-ip=40.107.8.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c3Mdx6jt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nF3pRpBispG98ZcR/36y/5U6Ac0/h6EWXFNt7Np1jtftArAlasMCzYqRhfl39hpnvK5N9/4ZWGfJpkpHpYyUMS4ihXm06djWbp1rPEZG3CFCJLJ4jtZrDUjR8UyqP4TcN2hDoZBorX9snD1iSp7IE+0WosXgNqwUyS74muwvMU1Q8jGvmnxHBfAxw9jfTn3KgKaf7LTp5448qq2XZi5HPWjim3HA4ponpvQ8j7oqJYFPFC3uVIM+bxGZKgxD0jAIgILDo+wOvP5JJk+8IZIQ/7cz9Y4fKJ1NLnVqndNXqoKAk67KaJrahmr70nuvK3fbB8DkA7QN80XZdcSHp1BMHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qV44oIZVXxGjMUN038mXUA0fEvu2yZSoG67eTDt2HkM=;
- b=naW+6/QLvwX4dn6116XICSZRS8rfWN+GlI6qzjai6lvNRJPXU/yJb/kGmnk6A8CqHBxq6DpBKefSpl/OkD0betPWBEglTOkhOGg50W4fE9zuE3cpfK5K8KJ9RKDvf8oU/tp/ExzCvWHTdAo1yjegLO+S9KAMToQ3TriF7Ew9/3PLefJrXvc6y1zXv5QN6tZ4KZI8V33GL/hcE9A3VnubEsMWBIF+urMXC7+RJePHH3zX85JXk1iO7yoOaRRfMXBPRRHlvOeIpApjxd6EGIQaP78PLgOJoXl66QiHIMb5wSL4rTR14xtTTeoUONlNs3lHJBc4nPCSh4pFFthdXq0dpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qV44oIZVXxGjMUN038mXUA0fEvu2yZSoG67eTDt2HkM=;
- b=c3Mdx6jtSTmjFNIiN7wGqE39VdNsRNU3kLrCvQN7cv/B32jISrNw67XSJoYy41UTdpzqcl7b4GOpsDRztlLPmUDGnd6RtVTF5x1m1zsfGEazi8OqRINQmTZn75HHNjFELOM4ZRMnxiA6awF8RO7MEvFWN1aHTCONwmaSsP6ipkg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAWPR04MB9864.eurprd04.prod.outlook.com (2603:10a6:102:390::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Fri, 8 Mar
- 2024 16:26:00 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7362.024; Fri, 8 Mar 2024
- 16:25:59 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: frank.li@nxp.com,
-	alexandre.belloni@bootlin.com
-Cc: conor.culhane@silvaco.com,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	ilpo.jarvinen@linux.intel.com,
-	imx@lists.linux.dev,
-	jirislaby@kernel.org,
-	joe@perches.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	krzysztof.kozlowski@linaro.org,
-	linux-i3c@lists.infradead.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7925E3BBE0;
+	Fri,  8 Mar 2024 16:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709915175; cv=none; b=H85KSAJa/OXBROqrah7rsV9gRj6m1yBMs45J6tW8yTuCCweCalry6AqFMxu5coBT4axfV8AtUQsjCL9dqTcyJvqJCKqBbqADCG9SJo7OIgDMNZ+yj4QMki14ygLQPx9co8aidLKVW/aNFKDw7xZesWDzcq9z6cT52lzf51YbhxQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709915175; c=relaxed/simple;
+	bh=ok5+BLxSyUMuLr8tfGG2vplVrLRe276RtWSLWqYOvUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F+Nj2AwDsgmAckN716mVePVGcMMoqwdUqqjxzR7zT4MCtmEoMtEHcPdWQshw+n+xyIDSpxfmFLp1UyK1cJbDhbWL9uu1oWzdZvC5wB2jk9v6RO2nn02grX9e8fByStZmxLKGemm9SiCMI80I5OdLOgDy6pnbra2oTHq6hV5pctg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso2575827a12.3;
+        Fri, 08 Mar 2024 08:26:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709915171; x=1710519971;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ChQHrGeHJWy8Gflyxs1kBU5l/y5oaijGtHOVZvY1p18=;
+        b=FDUUbX5q1WoPQ0nXFmdzzPASFaRDT5gvHxQGj2H02verVIT7TsE2wDEIaAEixVP1Nd
+         X6j2ZLAxOPBCZDfJqv0XiomVrK+Qgn3dbS5ep3ZAvj4J6xdIHvLcFbq9PqcjIwJPplKH
+         0/KlburneNkn+4OLeA9Q+npuSS7/B5taCTUE6nzI4MBkqZdjMLOI/4hwuFcxFzVyTB95
+         5SZwxoPUpG67IFis9j91JYLtobkofFSyqWTuxDAkSMZ0XMbI42rWxvtzyPUSkIktOoyx
+         E5CfO8fOR7BHllmVaUrSYK/khrwczCJ8f+QrByFQ7/Z2Gputnax7BQtCgiaQ1Ep5soLt
+         HOkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIvP7Ja+A5zZ1j7HbJSMTQq5MrqINrfCiZKMoEUI0YdurpwP8ZMjJg7EzWK0X2vyib+iEcVhecLHjZCGmK3Q9R5EVZb37FjkBpKclo
+X-Gm-Message-State: AOJu0YxO4ZKc0QCGOWUO3bkIf73EpkY/HhhpMwPuqvxmG1aIuXMFd7aS
+	HmVz7jOeHSVXBBx9J5wLNuxxv4fUbPZtnvnGWaOFf1IKVTALvSxq
+X-Google-Smtp-Source: AGHT+IEyZiDNnfZQPy2YwGf3tNh95lYoIFf4NpsdjHMWmDuu7Yb6CP/Duir28KZxKG7jtrS56NQ9Pw==
+X-Received: by 2002:a50:d6de:0:b0:566:f3d:c0b6 with SMTP id l30-20020a50d6de000000b005660f3dc0b6mr2366541edj.8.1709915171401;
+        Fri, 08 Mar 2024 08:26:11 -0800 (PST)
+Received: from localhost (fwdproxy-lla-003.fbsv.net. [2a03:2880:30ff:3::face:b00c])
+        by smtp.gmail.com with ESMTPSA id v17-20020a50d591000000b0056835320f76sm265725edi.8.2024.03.08.08.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 08:26:11 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: Taehee Yoo <ap420073@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	miquel.raynal@bootlin.com,
-	robh@kernel.org,
-	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH v9 0/8] I3C target mode support
-Date: Fri,  8 Mar 2024 11:25:10 -0500
-Message-Id: <20240308162518.1615468-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR13CA0137.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	horms@kernel.org,
+	dsahern@kernel.org
+Subject: [PATCH net-next 1/2] net: amt: Move stats allocation to core
+Date: Fri,  8 Mar 2024 08:26:04 -0800
+Message-ID: <20240308162606.1597287-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAWPR04MB9864:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7024ec46-c412-45e5-a4f7-08dc3f8c7069
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	5DVDi0+9NPQ3oOB3NwATvAVe/XPcemCLCgLMhCX49PMtX4/89enS4YEvhO6luyme1bIkuOQwUVuRr7eR8ul6aOlGT4hlACFsw9KSex0DvEITKcY6kBhY6hK+hjTRmv/hWF78+gupagv7IksKzFgaAOWm21lTrWjezcZekAX+BuJByRsao5C/Gy5ZHY7xP8y0NAbwSXr10ULj3N4SJGqjTWoJAiGDB2PJ6p7ebTQCWxlg3WxXy4/6UcGf/kmIskD7q2vP3tBGEoOxMM5fSgNz/mH18KWmn79MVf7dn0GfXmGKoT/0k/p+jUBlllCveReMr2qFLowMiCjt9J7BU0x9HYDrqj0k9jR3jWYgW6ooBPoh5qYMxMGzlFLhKCOOPBAuHobeYSK9DLqKMEmw3tAZbSD9WhOel+wZE8Cst/T133QWt01ydSUawd0ahTQndZX47xMenhBFMVpd4KRUbuBqF15/vT5ICDZgrvwRnGWUCnyPeNq1f2Jpdj3ngECXEFvq9Fd5GonKe5CeqgwzoHz++i3iAVKXQgoG3L2m3LT7+mBy4PEpM9HB8u+l+EIDAl5YKDVyzDCrAjZbU8js/tZPq4z9frMFVp0lUjm32IpnUUMTQNfabbOqAsHsub6BRvY1C+1kpoMruo8JjLRLQpOWLAcwp9MZXM8+NwVA3GgDdi1wAchSAQG8YWslE3XFpeS27drpxEciDbYj6E+PNGS9Ag==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0htcW9PdEhMMW0rY1lPbEN5ODBtV0dMSzdtY04rLzhDUmpIYk11N0JXaDJU?=
- =?utf-8?B?cmJJOUpzQzZPYmhHM0hvTnZKQjYwMUFva2p2OHZaa1RLcEZGa3B0TXQwM2Nn?=
- =?utf-8?B?clhQUi81eU5KeFRkZEMwZjJ3S3Z3Ujh3TS9oU28zYjlKdXlYMHlISW1qRjVy?=
- =?utf-8?B?MWowV2oreEMxeWlSc2JYcDlIdm1saUg3NitPOVRVdWpSOUo2QzgxNVNtZXZm?=
- =?utf-8?B?UWdNZ3VwSGRDdmU1TW94bjJidGNiSFcxMkZwd2tQSGMzZjJjc1dkL1cxeFFM?=
- =?utf-8?B?VmROUHAwaTdQOGxQY3lFRExXeU1zQkFiRnBkZjkrb2oyNUhiSnZDclJEWnlF?=
- =?utf-8?B?S0lIcm05a1FlUThlU3IrZnVqbU5IOVRCVU5lbkZoK1ZZMWZrTUVZRWVtK2dF?=
- =?utf-8?B?ZG1pejdXVUdHM3pFVDZ6bkhHaEZvM1cxWEdZcFU5cERQNnY2ZVBtUUpCQlZZ?=
- =?utf-8?B?MUlsM1ZGSG5oS21FZEIyUmNQUStnQkJXM1pDbCttTnIyZCsrb2szaHYyVlJG?=
- =?utf-8?B?OHN4Ykw0Vy9vbnVwTlBQcXhHNTlaWldSMGNiWUMrd1lldnhzOXUyK0pkdWw0?=
- =?utf-8?B?cXVYeDdKNGxDQjZDVUhvNTQ5UmlsTkU4Y0c1eTJWUVZURWZyU2NwdnFRN1JJ?=
- =?utf-8?B?a0pDM09KdFhLOWpzTU1UQWtWTklDY0VuaHB5YkNmZlBqSXhmYW1lUmJTYkhm?=
- =?utf-8?B?YWNNUWp5Nlh6OHVaT21lZVBoSWV1K2M1Q3BMZEZNS25zOTEySkFJZ1lZcjBG?=
- =?utf-8?B?eXBYQjhjZGZjaFQ2ek9ScUFSOThESFlLbGlSeDZxWWhjVlNNQmhwUjRPQzlz?=
- =?utf-8?B?NXlLQm5mRnlLMjNxNGJ6TE9NWDVGNnNOMEcyN0MvRWVSZWJ6am1mYkNuRjI5?=
- =?utf-8?B?ZmtES0JkdUJKTXdMcHpLbHFJcVdpdzBmZitvaGVNV3RFYzUxL0ZVS2xkMVcy?=
- =?utf-8?B?WS8zQUsycWpSSXJES3dWWWFxTFFXTGpCZWVSNll0MlIzeHgzUDdXQUt1c1Y4?=
- =?utf-8?B?Ym9lNDFDeC82SWZ0NW14QTZQSmg2R3ZSemlDbVZqSm9QbGJFdWc5blMwNzdO?=
- =?utf-8?B?STVpODUvZVZzTW16cXVXV0lrTVJ3RlJFK2lHZnZFS1FTbHZiOEEwSldhQUta?=
- =?utf-8?B?VmsrdHlVdUZ5U2hyTllDQkk0eGpwOUI4SGR6Q0k0eTU5Wk8vdFN6Y2dXL3V0?=
- =?utf-8?B?eTlvMTlFN3JRL1J6VUhVWlVFZHY4Ti9KQVdIZGh1VXhJeWtObTg2SnZKT1pW?=
- =?utf-8?B?VmwveDhVa1BqVFcwTUdDSjNZWEwvRXFnT1F4Wk5jU1hOSkVZbjRpOUpVcVRH?=
- =?utf-8?B?dGt2MUNsYUNYZVhrdk1ZYStVQjVCZnJYK0pSTzBsYkVYZ1IyTFJFL1dkZU9P?=
- =?utf-8?B?Ty9zQ1ZhTmRzcGVHeFZ3Z3hsbk5IR202Q1Fyemhrd21MVklVd2FXMXBRRVhH?=
- =?utf-8?B?bTI0RTlpVFVVK0t3ZCtZcFh4MWN1K3JDcjlQQ1NUbFI5Lzg2dVIwTTNXY0Mv?=
- =?utf-8?B?ZktQaE9sMVdIejJWQjI1OVBsOVV0TnlZWk9JNXp3OE1Sdmpvc2dGMFovRHc4?=
- =?utf-8?B?REF1UzlFcUlENlFaWGJuOVp3QWM1dGdXM1NCZVYwZnlpcktlMjg2VS9qUmdW?=
- =?utf-8?B?TjdwUEhWRU9YcEdZVkdaNDdDdXJMZDZCYnI4Wi9WbUJZVzV3Q0Iyb21iZzJv?=
- =?utf-8?B?Y1YrSXp3UkZ4QkVMOGMwNVZtenBPNm5NaEVQYWxuM1VqZUwveldDcG9MV1ow?=
- =?utf-8?B?WmxsZVlmelRkMU15TWdTeERiaFIydDM1blBmYTNCR2QyeVBWaDJ5TmtwVS9y?=
- =?utf-8?B?ZDliNGRiZDlBalhiVzFhSDRjZkhhTktNdTlPd2FWQzlDQldlVDJhUGY4N2kz?=
- =?utf-8?B?MWJUWHJyZkFYTEU2YUlOZWdSZVZBSzY1T3lNSUFxb2ZzZVZZTHdGSmYzeFA5?=
- =?utf-8?B?YUJpMDFDUnNxdkNnbGJMK0NjSS80VTVGdEw3VnpOaWxoblk4c1hwaDNCdzBT?=
- =?utf-8?B?QkEvYzdZblRRWFRRWFJoenZpYUR0NFlQZnFzNElxRHZHNnUra2hGZzI3dGxN?=
- =?utf-8?B?Q0ZqSU5HSno5OFRwVHVpRFZMc0lRWUk0QjNLYkwwTHcwRU44clVjRDhGR2Mr?=
- =?utf-8?Q?e5dtZ+aEPXnFmiv+AVH8hBExJ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7024ec46-c412-45e5-a4f7-08dc3f8c7069
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 16:25:59.5030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: snuvm03YAwe29IvpAVkwx8UTdPwDVdPkOjoNx3GmiEzVvxLg6BAMjGAgYMngs3HQLEaGpP0wqYSY+bL594OseQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9864
+Content-Transfer-Encoding: 8bit
 
-This  patch introduces support for I3C target mode, which is referenced
-with a PCIe Endpoint system. It also establishes a configuration framework
-(configfs) for the I3C target controller driver and the I3C target function
-driver
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core instead
+of this driver.
 
-Typic usage as
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
-The user can configure the i3c-target-tty device using configfs entry. In
-order to change the vendorid, the following commands can be used
+Move amt driver to leverage the core allocation.
 
-        # echo 0x011b > functions/tty/func1/vendor_id
-        # echo 0x1000 > functions/tty/func1/part_id
-        # echo 0x6 > functions/tty/t/bcr
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/amt.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Binding i3c-target-tty Device to target Controller
-------------------------------------------------
-
-In order for the target function device to be useful, it has to be bound to
-a I3C target controller driver. Use the configfs to bind the function
-device to one of the controller driver present in the system::
-
-        # ln -s functions/pci_epf_test/func1 controllers/44330000.i3c-target/
-
-Host side:
-        cat /dev/ttyI3C0
-Taret side:
-        echo abc >/dev/ttyI3C0
-
-Notes about header files.
-
-About Ilpo Järvinen's header file comments, it can pass build, some header
-should be included by other header files.
-
-I added some, but I am not sure that is all needs. There may have tools,
-which can help check, but I don't know.
-
-Chagne from v2 to v3
-- using 'mode' distingiush master and target.
-- move svc-i3c-target.c to under master,
-- built together with svc-i3c-master.c
-
-Change from v1 to v2
-- change "slave" to "target"
-- include master side tty patch
-- fixed dtbcheck problem
-- fixed kerne-doc check warning
-
-Some review comment may be lost since it is quite long time since v1. Now
-master side dependent patches already in linux-next. So sent target side
-patches with tty support again.
-
-No sure why an additional "\r\n" appended.
-
-Frank Li (8):
-  i3c: add target mode support
-  dt-bindings: i3c: svc: add proptery mode
-  Documentation: i3c: Add I3C target mode controller and function
-  i3c: svc: Add svc-i3c-main.c and svc-i3c.h
-  i3c: target: add svc target controller support
-  i3c: target: func: add tty driver
-  i3c: add API i3c_dev_gettstatus_format1() to get target device status
-  tty: i3c: add TTY over I3C master support
-
- .../bindings/i3c/silvaco,i3c-master.yaml      |  11 +-
- Documentation/driver-api/i3c/index.rst        |   1 +
- .../driver-api/i3c/target/i3c-target-cfs.rst  | 109 +++
- .../driver-api/i3c/target/i3c-target.rst      | 189 +++++
- .../driver-api/i3c/target/i3c-tty-howto.rst   | 109 +++
- Documentation/driver-api/i3c/target/index.rst |  13 +
- drivers/i3c/Kconfig                           |  31 +-
- drivers/i3c/Makefile                          |   3 +
- drivers/i3c/device.c                          |  24 +
- drivers/i3c/func/Kconfig                      |   9 +
- drivers/i3c/func/Makefile                     |   3 +
- drivers/i3c/func/tty.c                        | 481 +++++++++++
- drivers/i3c/i3c-cfs.c                         | 389 +++++++++
- drivers/i3c/internals.h                       |   1 +
- drivers/i3c/master.c                          |  26 +
- drivers/i3c/master/Makefile                   |   3 +-
- drivers/i3c/master/svc-i3c-main.c             |  80 ++
- drivers/i3c/master/svc-i3c-master.c           |  34 +-
- drivers/i3c/master/svc-i3c-target.c           | 776 ++++++++++++++++++
- drivers/i3c/master/svc-i3c.h                  |  15 +
- drivers/i3c/target.c                          | 453 ++++++++++
- drivers/tty/Kconfig                           |  13 +
- drivers/tty/Makefile                          |   1 +
- drivers/tty/i3c_tty.c                         | 432 ++++++++++
- include/linux/i3c/device.h                    |   1 +
- include/linux/i3c/target.h                    | 548 +++++++++++++
- 26 files changed, 3724 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/driver-api/i3c/target/i3c-target-cfs.rst
- create mode 100644 Documentation/driver-api/i3c/target/i3c-target.rst
- create mode 100644 Documentation/driver-api/i3c/target/i3c-tty-howto.rst
- create mode 100644 Documentation/driver-api/i3c/target/index.rst
- create mode 100644 drivers/i3c/func/Kconfig
- create mode 100644 drivers/i3c/func/Makefile
- create mode 100644 drivers/i3c/func/tty.c
- create mode 100644 drivers/i3c/i3c-cfs.c
- create mode 100644 drivers/i3c/master/svc-i3c-main.c
- create mode 100644 drivers/i3c/master/svc-i3c-target.c
- create mode 100644 drivers/i3c/master/svc-i3c.h
- create mode 100644 drivers/i3c/target.c
- create mode 100644 drivers/tty/i3c_tty.c
- create mode 100644 include/linux/i3c/target.h
-
+diff --git a/drivers/net/amt.c b/drivers/net/amt.c
+index 68e79b1272f6..cb31d1990660 100644
+--- a/drivers/net/amt.c
++++ b/drivers/net/amt.c
+@@ -3063,15 +3063,10 @@ static int amt_dev_init(struct net_device *dev)
+ 	int err;
+ 
+ 	amt->dev = dev;
+-	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+-	if (!dev->tstats)
+-		return -ENOMEM;
+ 
+ 	err = gro_cells_init(&amt->gro_cells, dev);
+-	if (err) {
+-		free_percpu(dev->tstats);
++	if (err)
+ 		return err;
+-	}
+ 
+ 	return 0;
+ }
+@@ -3081,7 +3076,6 @@ static void amt_dev_uninit(struct net_device *dev)
+ 	struct amt_dev *amt = netdev_priv(dev);
+ 
+ 	gro_cells_destroy(&amt->gro_cells);
+-	free_percpu(dev->tstats);
+ }
+ 
+ static const struct net_device_ops amt_netdev_ops = {
+@@ -3111,6 +3105,7 @@ static void amt_link_setup(struct net_device *dev)
+ 	dev->hw_features	|= NETIF_F_SG | NETIF_F_HW_CSUM;
+ 	dev->hw_features	|= NETIF_F_FRAGLIST | NETIF_F_RXCSUM;
+ 	dev->hw_features	|= NETIF_F_GSO_SOFTWARE;
++	dev->pcpu_stat_type	= NETDEV_PCPU_STAT_TSTATS;
+ 	eth_hw_addr_random(dev);
+ 	eth_zero_addr(dev->broadcast);
+ 	ether_setup(dev);
 -- 
-2.34.1
+2.43.0
 
