@@ -1,190 +1,173 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2054.outbound.protection.outlook.com [40.107.243.54])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49C27FF;
-	Fri,  8 Mar 2024 19:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709927709; cv=fail; b=Prr1cAF40JPJhILjUe39vaC+dKYc5FEWTmYg5cnx3G4g3qCj0CcLN8RuUQ3NW+I3eh9pa+yqOGZc9J+Y+VtVpTMqOKMFgxOtw2KwtzQh5c+Bpupb4UOPGVjimd0VvquSLVLMarGoDX/bqWXLfQUr8VHHhidfbZiKqSV/yp/q2T4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709927709; c=relaxed/simple;
-	bh=IAW/F4+ksBlf+kSMb8uanXSufXyq0IQ+a7qMPEVXbaY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=MtMOYHK5dMj71++NTTaog1dwwY8ex2Yg+WQLMhPEBuLSwgVeA5g3b5cwDrhkxYN2SKj3e1W28KeZXGXaQZZpJdASYC6dStomeAM3yHbIN9hqCqn89qWtLxFmf1ZjBZjTwM/b+KHW+wUh3i5MV9PrC0HUy65ZiWVVKjxaKCpSM84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=P3+Ws3i/; arc=fail smtp.client-ip=40.107.243.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BCD2C191;
+	Fri,  8 Mar 2024 19:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709927746; cv=none; b=cdxc72L7nsTymoqEO/SiRQz9+8DDBlPt+t2/FtBCB/a6KG6B+56s5A/k0MDlCmarSkjMfISlPCOJP47OxQzKLTKWE16DVMI8I9fF96kRiZqK8urbvcEyS9C9eWB0rjLQk9KsmCCDbNUbxAEMJrwzFY7IN6JFmRs8RXI4phPQibs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709927746; c=relaxed/simple;
+	bh=tnPTILfzWMATgYslzfwpu4T+3aF7xtrJICkZUDR6nu0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LngjkKAXmLGsjGDys95sOx0ZNVh4loLVQzxVHB37YiacLpZk0I6Iahkw2PUzj1HlqszJ4nmQskdPk+NG6OHIr0RVhhsKm4AW+6BVbXr61Z/NdStZ4mad5AtqZqsvctyS6Tl/f9DB6loJhh3i9q3HSVG/Wz2EJHlOGdoT2QwhBfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d2dVYaLP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="P3+Ws3i/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cRD3j86aQj8188ArWz5ShlFZS1c6/tZqNPIxZL2040IlrLS+QRkhuweqYuhsWmm8FsqLNFgSGGeCq77vKHf+Jj5qactq9Xm2TYx8nR+dIBKIAqMtNk/oaYN03gG4KN4bLGGf4FH+Sp66ito0Dv8ww7pGjYYYO1d2ZTR3RxTUUVxsrTZc93yy94QuibTvD4N+yW/SKcEVKaHpZptukTP2653DY68hd0ocGgl558rPYu2I71fqHU6U/0XexnRwfxw2orfQBkgdA5NM5lSOgzouKh89d51sD7sQzEBygHAfAxRHON5+bWKOlKKV7E0sonuHUnp8PE/6PPV337CY+IGRnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xQhKF1eYw/OKjJb5dVKND974TxYXMdDGfSrregLDhFc=;
- b=TIJ2p6Z2Tnc5fXXAmsdHI/2CDDAMuKxew9Dz1SDEtXcuiAf/VUcXs/QRuYq+Lh8twzWFbgvU2Mdj5Mofg20TkBFPmk9wmFh6VpH8e5wygujKhz2jqlPHnd/lKEJa/c1BnMKdD9Q4oKqsBGQmZK2xplLfdyZdmNgGuKas2Rd5pIZYlspPsij9jRn57hr4HQ2l1kfAOoZ6h1MK07pMLHP6uHT+RSzX/DV0bVoCqpYOp5A/58pg0SrpwxKxCfLxc4mKAKsKRosiWy33Hu9BH8S+1RvNxXHkfAJOmMbPwg/QyZE8N5mtI1pbZLy8iKsUWW0WgKzfGA+y7pZ5Tc4pgB2/QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQhKF1eYw/OKjJb5dVKND974TxYXMdDGfSrregLDhFc=;
- b=P3+Ws3i/ppqTe1MVpiYAsB082nke7/SZ/K7ZuYnb1lgaSWDq3dJN7r6xGMf9ABFbGDbjiLFDey/5HaxsPAyFrXxQxF9CFj0+J3j/qLY8+iPjS+FxEjnhlbVtkZ/QILljKG2/XBvwHoMl9KnX15TuPD3WQSFnhuDK3k3d7AT3Ub8z+cCNI0LDYK7xnC9QOUXUbq0Sb45SKeFn7D4/tg6qNvi4E2QxhWeqBdBOh10MlfO/k2ULqCHmE5rlYJS10+/xjmpN4JZ25Vz1OlwZRriGHi0JEWlPRTfedvUs5rVSWoZoDBfPRlqRSMEi7FOGLd7PN+9GVYAyrUmUhtciwl/9iA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by IA1PR12MB8407.namprd12.prod.outlook.com (2603:10b6:208:3d9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.29; Fri, 8 Mar
- 2024 19:55:04 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7362.024; Fri, 8 Mar 2024
- 19:55:04 +0000
-References: <1709823132-22411-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240307072923.6cc8a2ba@kernel.org>
- <DM6PR21MB14817597567C638DEF020FE3CA202@DM6PR21MB1481.namprd21.prod.outlook.com>
- <20240307090145.2fc7aa2e@kernel.org>
- <CH2PR21MB1480D3ACADFFD2FC3B1BB7ECCA272@CH2PR21MB1480.namprd21.prod.outlook.com>
- <20240308112244.391b3779@kernel.org>
- <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Shradha Gupta
- <shradhagupta@linux.microsoft.com>, Shradha Gupta
- <shradhagupta@microsoft.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
- <linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Ajay Sharma <sharmaajay@microsoft.com>, Leon
- Romanovsky <leon@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Sebastian Andrzej  Siewior <bigeasy@linutronix.de>, KY Srinivasan
- <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Long Li <longli@microsoft.com>, Paul Rosswurm
- <paulros@microsoft.com>, Alireza Dabagh <alid@microsoft.com>, Sharath
- George John <sgeorgejohn@microsoft.com>
-Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
-Date: Fri, 08 Mar 2024 11:52:42 -0800
-In-reply-to: <CH2PR21MB1480D4AE8D329B5F00B184A7CA272@CH2PR21MB1480.namprd21.prod.outlook.com>
-Message-ID: <87bk7oebxk.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0123.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::8) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d2dVYaLP"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 428EaM3a025654;
+	Fri, 8 Mar 2024 19:55:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=HYm7SjumDtT6XU7tM/etg
+	wnCfvR/pgbIRZpy4sQN8C0=; b=d2dVYaLPD8z2QEmEyrny5gf8A91PN+Mvwwi5w
+	ga3YnrmT9a0jjaWOxKC8pT2B27aMlBOg2E9QpAswY5YkRy1jtV1SYQhBRzGUYUSO
+	q2MoQISzH4+5trJUqMbg2tkwQgCRu2dVdem+3Zyzaunqbd8ZqyttEwx30UWxiaYd
+	Y0YZJXwp3nPeUsMEq0jMwrY3H0Addx338SsmsOyf7JVGyj9wLYCBGrU4VrcsFZao
+	AHZppHq1hTGixVbKkr65sNo677UqGnMMUFbdQwMHeI7033JkBkpCN9rokyEezzh0
+	BcubJRrBrPPH2WwrmDTe6qyb+15T5ox8NPMOZcPFkLZP2Ya2w==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wr1wj138e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 19:55:25 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 428JtOEZ001763
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 8 Mar 2024 19:55:24 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 8 Mar 2024 11:55:23 -0800
+Date: Fri, 8 Mar 2024 11:55:23 -0800
+From: Elliot Berman <quic_eberman@quicinc.com>
+To: Quentin Perret <qperret@google.com>
+CC: Christoph Hellwig <hch@infradead.org>, Will Deacon <will@kernel.org>,
+        Chris Goldsworthy <quic_cgoldswo@quicinc.com>,
+        Android KVM
+	<android-kvm@google.com>,
+        Patrick Daly <quic_pdaly@quicinc.com>, Alex Elder
+	<elder@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Murali Nalajal <quic_mnalajal@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>,
+        Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+        Carl van Schaik <quic_cvanscha@quicinc.com>,
+        Philip Derrin
+	<quic_pderrin@quicinc.com>,
+        Prakruthi Deepak Heragu
+	<quic_pheragu@quicinc.com>,
+        Jonathan Corbet <corbet@lwn.net>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Fuad Tabba <tabba@google.com>,
+        "Sean Christopherson" <seanjc@google.com>,
+        Andrew Morton
+	<akpm@linux-foundation.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>
+Subject: Re: Re: Re: Re: Re: [PATCH v17 19/35] arch/mm: Export direct
+ {un,}map functions
+Message-ID: <20240308113215616-0800.eberman@hu-eberman-lv.qualcomm.com>
+Mail-Followup-To: Quentin Perret <qperret@google.com>, 
+	Christoph Hellwig <hch@infradead.org>, Will Deacon <will@kernel.org>, 
+	Chris Goldsworthy <quic_cgoldswo@quicinc.com>, Android KVM <android-kvm@google.com>, 
+	Patrick Daly <quic_pdaly@quicinc.com>, Alex Elder <elder@linaro.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Murali Nalajal <quic_mnalajal@quicinc.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>, 
+	Carl van Schaik <quic_cvanscha@quicinc.com>, Philip Derrin <quic_pderrin@quicinc.com>, 
+	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
+References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
+ <20240222-gunyah-v17-19-1e9da6763d38@quicinc.com>
+ <ZdhEtH7xzbzdhS2j@infradead.org>
+ <20240223071006483-0800.eberman@hu-eberman-lv.qualcomm.com>
+ <ZeXIWBLVWzVycm0r@google.com>
+ <20240304094828133-0800.eberman@hu-eberman-lv.qualcomm.com>
+ <Zec6shyjblcZvTG0@google.com>
+ <20240305093131473-0800.eberman@hu-eberman-lv.qualcomm.com>
+ <ZehcEqvC3Y9YytNi@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|IA1PR12MB8407:EE_
-X-MS-Office365-Filtering-Correlation-Id: b47b1b9d-1acd-41f9-ea71-08dc3fa9a57a
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4/TUrpBXuZBQ/mk3LfaoavvF2LtKVec202u4BiB3LWss6mgHPCMqMWNHEm2pmElF/Xqj7tCOBoPUl1XIpCECN2zCg2cMrCsik0+r7K7c1bM0QgTOM7Ps65h0sjKQ7jIIT9lg4uWALE08x+zs8DQMCoY0a0vgpafXMi6luSSCTIfFqx8IaNr/bnwTQi5u4JyKvfrXAk0JtZsRvyryWwRagbA1nM3HPNmvMu3xHtDEvoekunf/5aG8HlUJJ/0kxZzYd3e6eebSkWm4ylMHs0MgzQDEhR+KJqZLr1GyJX3U/fTCwKko0STfFFrv+wT0zimOxrIXLKc1gn3M+tFRQQg5hDEfJsEDhTce4FDl/MSFPcgCxOl/w/yTZzkPmK1BwZTGfK3fUg8m1/nBjYzUHvfLnl1+RrejycfJd6psWJsp84ND7hYnun6HvX41JCD41sOWJqar83Ps2CE4BietmlN6LlOJm51jDomN6t+HqJyCpGt8W3KdfwNXc/nMXMI+O1ywK6ZvvQoAaDgQ0KXvQejcOC0b/XiqCbU7EPIXnKTCX2vBEIP98y2aUNRux9sk1ehkG05l3DUHX1wwMFaF/Q0a+x8q7wFC/RUjrQMeNT/141KzVcOZqQRpz/Tc0mwpTTlYdCIa9DEFaZ7UPXsGoOYFZ4trijc+jvUgr7E2JoTWSjo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lR3sw8s2Whs4DCEkdzYThy1XpEcT9gKufKAePC7KdNpGyXaOU7WlNzITNDl8?=
- =?us-ascii?Q?VuDsiwwBF+k0mV4iUhJkyeTG/YnWF6kFaVY9yEmFFkkrb4rTS6ItG3hdEakU?=
- =?us-ascii?Q?BdV2f24LflyLAYp+lZ8rZXwdn5ZE9wdLm7X4yyNYC93deyQ7++Yf77pNQ4nL?=
- =?us-ascii?Q?9MQ13giEw7FR2BeZxUHsajiihOhJak0u0ToHUJHepjt+LTu4bjJJSEINJ8gt?=
- =?us-ascii?Q?kk+AqHXO8YWKrP7v9YcmnoD0R4Km3UPnmdzUm8SNbbxdG40kp+IqAvkZ95rR?=
- =?us-ascii?Q?nTXlAIkfHQP+RkMogyi4TansEqdL1LVHspFdIjo4X3JHYwneZkE2biNntWDW?=
- =?us-ascii?Q?+SrZU0nqm5VDNAp8h2n/QBOgQa4LScmW5ZCCFTTygM/0MBeOPoGPY/bOtSP7?=
- =?us-ascii?Q?g8zoSZg/VLIaJx0YrGeUBfGbnK5gqf2spwxaajbSGWWF882JxAzWrcT2kbEa?=
- =?us-ascii?Q?j3oIjB2MZ7hp/iye6bWysmgtJPm8XM5+OAw6QJx67EZbPDCJ2Nu3VuYMNxmf?=
- =?us-ascii?Q?kLUS/8klAf+RkYw8yt/eLUDPFAI4fR5/hdcvFMbtFKicHJ4tNwSBiPI76ILo?=
- =?us-ascii?Q?8sdJ5YOHHt2dOJQDkKhkzJTfx45iwRzoDPCxy/uSr9bVwcPYlAyzB48/sqQt?=
- =?us-ascii?Q?5L4DHpiSv8aUvIfpNXrxcV8E7bC8FACwLm4pbB5D6LjmkzOdF5jXfSfgaGbs?=
- =?us-ascii?Q?UXjek5q/R3j3C/ocTFLJikHjof0bJ3iZYbYUKHONGGEJ6qaX8BMMLQ1nlzGr?=
- =?us-ascii?Q?qeaHIoI9ymY0wIEszgu98cq0O5dd/twedd+RLOf0h4Epl9LMSmfox7syjvdu?=
- =?us-ascii?Q?TveegeOIdo4IALDQFrgc3moRgJprZVwqFpZjJXBgBADoYrDf9ctQBPaO5bSE?=
- =?us-ascii?Q?yqui+/QJENM+rjFqJ629tkFPqKaX+3XOgOmodTs52BsEiVH7M+hvecqj9aV7?=
- =?us-ascii?Q?D2LuxC1OHsbdaXF3zS+SqT9U8oe85YOXWKx5msD/KvByChAbS5QrRdePanOn?=
- =?us-ascii?Q?tbIK9oMiXXikg7WMFF1Ly+r6jXTCkLkSAtnaO/IrioULSt43+BsKs5qClWQt?=
- =?us-ascii?Q?A9aV/PekmPtn5nudqWC8jEofwIQ1lfTuhJEoo+B8NdFfxTl1K9VoLd3jJHb+?=
- =?us-ascii?Q?z1F7iPFLmFOfY57mhzQOvMVzwk5hhhBco+fFns+/XXt1f1L75yrtwIjCHABH?=
- =?us-ascii?Q?PVadLOjqAhl5N2aqgPuZRDPBFPqWgFfQ2CUUqhYg+p2ZNLEarvVdkiPkIbF4?=
- =?us-ascii?Q?i8l+pCHs4MlsYvXPZ5nicaV3WaIeUKTHQPUXMJfR9uYGfLVKN24doVT/tUDm?=
- =?us-ascii?Q?GwUeJ3ufnw8nqG7STw1bfyh0zwys26HpoSsFfsx8NgwOXm/cBhykm1AX0vIj?=
- =?us-ascii?Q?+slJZO6GuaF2fIjnbZchGRGqSeZeC6yqAx77ME4QCJ0bz7tYLsou9nzRMYl7?=
- =?us-ascii?Q?midHsnwwOeo/nD82lGUuZGuQHCTP3PEpls3cxCb1RDl6n4vcCz0k/RERDG+H?=
- =?us-ascii?Q?XNp1LTSncr2gUINwDKNhmjzsqmnRz+PEJ+piybyhUdXSB/xAVaEejD9whm9t?=
- =?us-ascii?Q?G2SzKzq6/PxiqLSHyKViBnWFwaP1xRWPl8MxLRHA+iE0rPWaGY65D86bvT2g?=
- =?us-ascii?Q?OA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b47b1b9d-1acd-41f9-ea71-08dc3fa9a57a
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 19:55:03.9203
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /7IrEigsTSzqZjpm2Cp5kRImpPLPlnd6r4LACK3tnvm5o3rLvTEKoaR/o4QBPxxxvezYVCtIL2jfc/IQi5WOOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8407
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZehcEqvC3Y9YytNi@google.com>
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: CBoYWssXhH8RPoK4yG0CRdOyh2SPhfnf
+X-Proofpoint-GUID: CBoYWssXhH8RPoK4yG0CRdOyh2SPhfnf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ mlxscore=0 priorityscore=1501 mlxlogscore=588 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403080156
 
+On Wed, Mar 06, 2024 at 12:05:38PM +0000, Quentin Perret wrote:
+> On Tuesday 05 Mar 2024 at 12:26:59 (-0800), Elliot Berman wrote:
+> > I still disagree that this is a Gunyah-specific problem. As far as we
+> > can tell, Arm doesn't specify how EL2 can tell EL1 its S2 page tables
+> > couldn't give a validation translation of the IPA from stage 1. IMO,
+> > downstream/Android pKVM is violating spec for ESR_EL1 by using the
+> > S1PTW bit (which is res0 for everyone except EL2 [1]) and this means
+> > that guests need to be pKVM-enlightened.
+> 
+> Not really, in pKVM we have a very clear distinction between host Linux
+> and guests, and only the host needs to be enlightened. But luckily,
+> since pKVM is part of Linux, this is pretty much an internal kernel
+> thing, so we're very flexible and if the S1PTW trick ever conflicts
+> with something else (e.g. NV) we can fairly easily switch to another
+> approach. We can tolerate non-architectural tricks like that between
+> pKVM and host Linux because that is not ABI, but we certainly can't do
+> that for guests.
+> 
+> > If we are adding pKVM
+> > enlightment in the exception handlers, can we add Gunyah enlightment to
+> > handle the same?
+> 
+> If you mean extending the Linux SEA handler so it does what Gunyah
+> wants, then I'm personally not supportive of that idea since the
+> 'contract' between Linux and Gunyah _is_ the architecture.
 
-On Fri, 08 Mar, 2024 19:43:57 +0000 Haiyang Zhang <haiyangz@microsoft.com> wrote:
->> -----Original Message-----
->> From: Jakub Kicinski <kuba@kernel.org>
->> Sent: Friday, March 8, 2024 2:23 PM
->> To: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>; Shradha Gupta
->> <shradhagupta@microsoft.com>; linux-kernel@vger.kernel.org; linux-
->> hyperv@vger.kernel.org; linux-rdma@vger.kernel.org;
->> netdev@vger.kernel.org; Eric Dumazet <edumazet@google.com>; Paolo Abeni
->> <pabeni@redhat.com>; Ajay Sharma <sharmaajay@microsoft.com>; Leon
->> Romanovsky <leon@kernel.org>; Thomas Gleixner <tglx@linutronix.de>;
->> Sebastian Andrzej Siewior <bigeasy@linutronix.de>; KY Srinivasan
->> <kys@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
->> <decui@microsoft.com>; Long Li <longli@microsoft.com>; Michael Kelley
->> <mikelley@microsoft.com>
->> Subject: Re: [PATCH] net :mana : Add per-cpu stats for MANA device
->> 
->> On Fri, 8 Mar 2024 18:51:58 +0000 Haiyang Zhang wrote:
->> > > Dynamic is a bit of an exaggeration, right? On a well-configured
->> system
->> > > each CPU should use a single queue assigned thru XPS. And for manual
->> > > debug bpftrace should serve the purpose quite well.
->> >
->> > Some programs, like irqbalancer can dynamically change the CPU
->> affinity,
->> > so we want to add the per-CPU counters for better understanding of the
->> CPU
->> > usage.
->> 
->> Do you have experimental data showing this making a difference
->> in production?
-> Shradha, could you please add some data before / after enabling irqbalancer 
-> which changes cpu affinity?
->
->> 
->> Seems unlikely, but if it does work we should enable it for all
->> devices, no driver by driver.
-> There are some existing drivers, like mlx, rmnet, netvsc, etc. using percpu 
-> counters. Are you suggesting we add a common API for all drivers?
+Fair enough. We're building out more use cases where we want to allocate
+memory from buddy and donate it to some entity which unmaps it from
+Linux (some entity = Gunyah or Qualcomm firmware). Video DRM is an
+example we're working on. I imagine OP-TEE might eventually have
+use-cases as well since pKVM is doing same. David expressed concerns
+about exporting the direct unmap functions. What kind of
+framework/restrictions do we want to have instead? I don't think making
+drivers like Gunyah a builtin-only module [1] (even a refactored/small
+portion) is the best approach, but maybe that is what we want to do.
 
-Wanted to chime in with regards to mlx. You might be conflating per-cpu
-with per-queue. When we run ethtool -S, we present counters per netdev
-queue rather than per-cpu. The number of queues we instantiate is
-related to CPUs but it not always 1-1.
-
-Jakub just recently supported a proper interface for per-queue stats
-counters that we are interested in supporting.
-
-  https://lore.kernel.org/netdev/20240222223629.158254-1-kuba@kernel.org/
-
---
 Thanks,
+Elliot
 
-Rahul Rameshbabu
+[1]: qcom_scm_assign_mem (d/firmware/qcom/qcom_scm.ko) is an example of
+a module that would have to become builtin as we upstream use cases that
+lend buddy-allocated memory to firmware
+
