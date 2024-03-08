@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8494CDEC
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9BC604C2
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709939179; cv=none; b=F0cXyD0mrHfMYNt25mRLDK+rlaWb0PhO143sBcZMA+bWwFYXnC/ZYYcdptyXvPHim76a1elQh7Z8+Y2dDj4+UtcSMsVJfFvqdO8f4duWGoB8hR24N/PprXklbJn1a63H9wLUx1fuJ6YvOMjm2WYmz0xlkWUgLMAC9TFaOB4pig0=
+	t=1709939182; cv=none; b=uidnKO3T8OgzrmiKShJD5qDlvHa0yq6tEl+cSDam+wM6tUMjv8oOnq/AkIjkdoBCF5cTFoLqHDX17L8xGh3fyYZjcfCYD2egmz6olH6hJJUOmBzQIAjAd3YIa7qIuRT6jpdZIlES8LOFbBq00r3LPF9qtrs9bEAPuOMCzsZ+lVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709939179; c=relaxed/simple;
-	bh=xe/gkZ/Xvg/uXlto0Dtj8eqOvEjluTFaDYjfd6lHxrA=;
+	s=arc-20240116; t=1709939182; c=relaxed/simple;
+	bh=xI6bQYs7D7L/1GayJOzEXbmk72qf1CYrvd8eI1QF5Gs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=owjgkSdM4W3VZegVvT9S4Af7lT50pJsfYgK8ORMu+A6fyewBbW5yi6zT1qJ8Zuys1tUwCUhdj2eMQ9tytsgLuWprMNVjXE6Vl+clgGHUcDhqq29VbE01N4ey56S2TrfHFRujjzx3a1J30+1cYw8pRRzGzbIoaDfVW7qKurOn7Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LDwwbYJl; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ZMShXaX1Ai8cei8mWO9lDm2BB1WUHp4FDxJokUxM9ntkraHwAxUuExNkGHvGL87w12cl9lehkhXNAqJ+h/zuCqYAWWAzkyvDoOb5mbCSm4HJDIuR2XUDaKgCzeXp3DF1wVL7ryJ2+HSl4WkUIPmAci1dRrsiT5ZDG8KKHzbEmcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zgm4DC7h; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LDwwbYJl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zgm4DC7h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709939175;
+	s=mimecast20190719; t=1709939180;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1dEKfErNXa51Ijqh6RZq2oy2pBONTNUJTZpcaMjJ9JU=;
-	b=LDwwbYJl23kPdgPzkwQZx80azGl4pzvjIk2jKMPCxmKsE819Dp85PAbY0YJvbJn9BzyU4d
-	jFU/qVLjJtQHOq7YxwHeMCgDHhpIGDQmLn4Hz/nSBp5sUk2xhbtZTP1ARIe9zIknDHCZSu
-	ANsj9taBiDPEO5CK3ec/vcuI7OPDckI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-AtEUu7PaO76Jg_z-aNWO4g-1; Fri,
- 08 Mar 2024 18:06:12 -0500
-X-MC-Unique: AtEUu7PaO76Jg_z-aNWO4g-1
+	bh=N8jD+utIUIWsnb+QHB/Vd0dznqOHt9b4raUNDQiHScE=;
+	b=Zgm4DC7haT9VDSZJG2i+qe6pEC2w8+lACYHPcAEcfihNjvsM9SFX0taygmOy6z9bGO+3eU
+	KDHw4FWDVAzjMiRjAtCb7PP+C+KwSIUxKghZk+RMRhbFaSzKEMZTPh5CFzAehNGNnM1VUi
+	APGWms+8TfCXyMHNVD5ZGPzwIJS37T8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-475-YgeSMQxMPHK209lCwn6AMQ-1; Fri, 08 Mar 2024 18:06:14 -0500
+X-MC-Unique: YgeSMQxMPHK209lCwn6AMQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A37EB3801F50;
-	Fri,  8 Mar 2024 23:06:11 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 66973185A781;
+	Fri,  8 Mar 2024 23:06:14 +0000 (UTC)
 Received: from omen.home.shazbot.org (unknown [10.22.8.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9B69F47CB;
-	Fri,  8 Mar 2024 23:06:10 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5C8CD47CB;
+	Fri,  8 Mar 2024 23:06:13 +0000 (UTC)
 From: Alex Williamson <alex.williamson@redhat.com>
 To: alex.williamson@redhat.com
 Cc: kvm@vger.kernel.org,
@@ -48,10 +48,11 @@ Cc: kvm@vger.kernel.org,
 	reinette.chatre@intel.com,
 	linux-kernel@vger.kernel.org,
 	kevin.tian@intel.com,
+	diana.craciun@oss.nxp.com,
 	stable@vger.kernel.org
-Subject: [PATCH v2 5/7] vfio/platform: Disable virqfds on cleanup
-Date: Fri,  8 Mar 2024 16:05:26 -0700
-Message-ID: <20240308230557.805580-6-alex.williamson@redhat.com>
+Subject: [PATCH v2 7/7] vfio/fsl-mc: Block calling interrupt handler without trigger
+Date: Fri,  8 Mar 2024 16:05:28 -0700
+Message-ID: <20240308230557.805580-8-alex.williamson@redhat.com>
 In-Reply-To: <20240308230557.805580-1-alex.williamson@redhat.com>
 References: <20240308230557.805580-1-alex.williamson@redhat.com>
 Precedence: bulk
@@ -63,34 +64,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-irqfds for mask and unmask that are not specifically disabled by the
-user are leaked.  Remove any irqfds during cleanup
+The eventfd_ctx trigger pointer of the vfio_fsl_mc_irq object is
+initially NULL and may become NULL if the user sets the trigger
+eventfd to -1.  The interrupt handler itself is guaranteed that
+trigger is always valid between request_irq() and free_irq(), but
+the loopback testing mechanisms to invoke the handler function
+need to test the trigger.  The triggering and setting ioctl paths
+both make use of igate and are therefore mutually exclusive.
 
-Cc: Eric Auger <eric.auger@redhat.com>
+The vfio-fsl-mc driver does not make use of irqfds, nor does it
+support any sort of masking operations, therefore unlike vfio-pci
+and vfio-platform, the flow can remain essentially unchanged.
+
+Cc: Diana Craciun <diana.craciun@oss.nxp.com>
 Cc: stable@vger.kernel.org
-Fixes: a7fa7c77cf15 ("vfio/platform: implement IRQ masking/unmasking via an eventfd")
+Fixes: cc0ee20bd969 ("vfio/fsl-mc: trigger an interrupt via eventfd")
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/vfio/platform/vfio_platform_irq.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vfio/platform/vfio_platform_irq.c b/drivers/vfio/platform/vfio_platform_irq.c
-index 61a1bfb68ac7..e5dcada9e86c 100644
---- a/drivers/vfio/platform/vfio_platform_irq.c
-+++ b/drivers/vfio/platform/vfio_platform_irq.c
-@@ -321,8 +321,11 @@ void vfio_platform_irq_cleanup(struct vfio_platform_device *vdev)
- {
- 	int i;
+diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+index d62fbfff20b8..82b2afa9b7e3 100644
+--- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
++++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+@@ -141,13 +141,14 @@ static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
+ 	irq = &vdev->mc_irqs[index];
  
--	for (i = 0; i < vdev->num_irqs; i++)
-+	for (i = 0; i < vdev->num_irqs; i++) {
-+		vfio_virqfd_disable(&vdev->irqs[i].mask);
-+		vfio_virqfd_disable(&vdev->irqs[i].unmask);
- 		vfio_set_trigger(vdev, i, -1, NULL);
-+	}
+ 	if (flags & VFIO_IRQ_SET_DATA_NONE) {
+-		vfio_fsl_mc_irq_handler(hwirq, irq);
++		if (irq->trigger)
++			eventfd_signal(irq->trigger);
  
- 	vdev->num_irqs = 0;
- 	kfree(vdev->irqs);
+ 	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
+ 		u8 trigger = *(u8 *)data;
+ 
+-		if (trigger)
+-			vfio_fsl_mc_irq_handler(hwirq, irq);
++		if (trigger && irq->trigger)
++			eventfd_signal(irq->trigger);
+ 	}
+ 
+ 	return 0;
 -- 
 2.44.0
 
