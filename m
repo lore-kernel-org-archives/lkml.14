@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AF51E48E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AC114A82;
 	Fri,  8 Mar 2024 10:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709893834; cv=none; b=TuvRCZQICnSHDBnCu1kEgXtWcswyZtTw9srXNSMoVQDKR2/0imhY5q3l5ZlYzJMD90dgqsgnPmS3Xx93+8PaUVvcHiHIq9UjGQwQrAlj7+WQPLMTVzzjDXH06vCH5FWGX4Fjgb555xAHrNCSje1fw5unolA3DvDw6yOB9QXWPjI=
+	t=1709893834; cv=none; b=XlVLDF/REpLPknQ8ge+Eg928CHIcitb08L9zWwXgImeayr6JzHNUxa+pTaGu/SC3+KbycyIGL+5bmwkeSuM3QIpkWJ95BMiKWEV+IilN4IK+gnW/yF3/EFEmpvb0OMh6XtkpVwYrzLmb/FXNlW625X6umJ3wkxLeiZBOksOQjGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709893834; c=relaxed/simple;
-	bh=DBJyvUiFYHBmEE5Rw8Tzk8KpqQceFdTVRr7W62ft2DU=;
+	bh=j5uI7aSimtgzTLs49rbKceY9hxo7Y46tdvilI1JCt08=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=EKpj8YvAs46RrGlMQay+SUmgeFyKkj2BpBgihM/s/pt+XsakjXuwZS4xaLnA7srKk5IP9sykLJ55pUYYythpqo/Hpnd0Q+i1i1H8NCbvLU8iw2Lij3yZyIzO5zuEjuyusAZcvUXDIlzwebIlHiINQd8Wr45V7OQoo7xPZF39shs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qG53Um5m; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=AJZs8ANX/OknsrDYheJUV3CjkpVXlntOY+eozGXrRLVLSpV8c/5JHF764X+KeClTI5+4g7f3pb1yZyF/Fy2u4ZfVB9dm9A8DF19XkzG+Hy2Qq54rI7dOHv1O8KFz1unjHmLYmS2GXAxbJAP4v4MgAeo9SZXIkrXHOv0E/SOsa3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBedlyFj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qG53Um5m"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 363BBC433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBedlyFj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 18824C433C7;
 	Fri,  8 Mar 2024 10:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709893834;
-	bh=DBJyvUiFYHBmEE5Rw8Tzk8KpqQceFdTVRr7W62ft2DU=;
+	bh=j5uI7aSimtgzTLs49rbKceY9hxo7Y46tdvilI1JCt08=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qG53Um5mAWgMveKQoLnosEWx8G31xr4T853Bc+Hxzr0zReHgFufMJInKHrgQZRWGd
-	 y1/g/93stjS7tEs3Ah1LPe3/YgWjnnz7T9uMTxMi9wsWHmAeO/cHdBwUhgbGaR+KYN
-	 9MQT0jnhKGMWTyIufzoeLKCxTzWcntlXOWwMLfzdoBHIupiArRloxzdEiJOvBlPmB6
-	 Ih25sCNLi3PeBBlOr9NVd+3+ryUMJH+LJB1CHc8aWOzJv4CsXe+8le4ILefkCA0aDN
-	 8JcCeNMm6zOEnJcnCXqbY274AWaLgMgYtpJAUJZOOuVMfYLkW5Xf7AvncX4og3mQgg
-	 GCoCgyulNJg1w==
+	b=TBedlyFjbR6LYj82pqMlUgdnZnRR8Z+zPH4lljli9qVPUiQ8QRg/6agPW86sDIx8c
+	 vFhOH6cVaqbLDp1pZuQhO+uws4GN8kwPj2+zqGn6HhEQtBO3W4cJ0K1k80/9JrB2Pd
+	 kbiLLlyKStvGtZszqFwg1EgHy2Q3LCk6qrsy+ZsOmjacEDAXWV5EcJN1Dq7PoRGkFN
+	 tvtuMSKRjDglX4fFPeMaQoVwFF1ZxWZ4BjckhNT7MgDFcs4zDW0svfnd5oiUYjkzBV
+	 dMojfu9Ow3hG9AUSnapGIfrKxfP+xEoDMNUA7Tbl5SHVay6jYdcl8+dM1Eg2agI1qB
+	 BuGwKRbb1cYEA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 12C99D84BDC;
-	Fri,  8 Mar 2024 10:30:34 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7C10D84BBF;
+	Fri,  8 Mar 2024 10:30:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,41 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH] octeontx2-pf: Add TC flower offload support for TCP
- flags
+Subject: Re: [PATCH net-next v3] tcp: Add skb addr and sock addr to arguments of
+ tracepoint tcp_probe.
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170989383407.12583.3109784089553687997.git-patchwork-notify@kernel.org>
-Date: Fri, 08 Mar 2024 10:30:34 +0000
-References: <20240305181606.244208-1-saikrishnag@marvell.com>
-In-Reply-To: <20240305181606.244208-1-saikrishnag@marvell.com>
-To: Sai Krishna Gajula <saikrishnag@marvell.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- sgoutham@marvell.com, gakula@marvell.com, hkelam@marvell.com,
- sbhatta@marvell.com
+ <170989383394.12583.17811930111770070930.git-patchwork-notify@kernel.org>
+Date: Fri, 08 Mar 2024 10:30:33 +0000
+References: <20240305030358.GA13138@didi-ThinkCentre-M920t-N000>
+In-Reply-To: <20240305030358.GA13138@didi-ThinkCentre-M920t-N000>
+To: fuyuanli <fuyuanli@didiglobal.com>
+Cc: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Tue, 5 Mar 2024 23:46:06 +0530 you wrote:
-> This patch adds TC offload support for matching TCP flags
-> from TCP header.
+On Tue, 5 Mar 2024 11:04:17 +0800 you wrote:
+> It is useful to expose skb addr and sock addr to user in tracepoint
+> tcp_probe, so that we can get more information while monitoring
+> receiving of tcp data, by ebpf or other ways.
 > 
-> Example usage:
-> tc qdisc add dev eth0 ingress
-> 
-> TC rule to drop the TCP SYN packets:
-> tc filter add dev eth0 ingress protocol ip flower ip_proto tcp tcp_flags
-> 0x02/0x3f skip_sw action drop
+> For example, we need to identify a packet by seq and end_seq when
+> calculate transmit latency between layer 2 and layer 4 by ebpf, but which is
+> not available in tcp_probe, so we can only use kprobe hooking
+> tcp_rcv_established to get them. But we can use tcp_probe directly if skb
+> addr and sock addr are available, which is more efficient.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] octeontx2-pf: Add TC flower offload support for TCP flags
-    https://git.kernel.org/netdev/net-next/c/3b43f19d065d
+  - [net-next,v3] tcp: Add skb addr and sock addr to arguments of tracepoint tcp_probe.
+    https://git.kernel.org/netdev/net-next/c/caabd859c41b
 
 You are awesome, thank you!
 -- 
