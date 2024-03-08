@@ -1,197 +1,76 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B11BF37;
-	Fri,  8 Mar 2024 15:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867B11D54D
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 15:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709910441; cv=none; b=jRvs7RkaDeJnOQMgpPrEqx1MZLHil2gaCn1h9647M4r/ToAMnmlyQORQed7Ea/Gs2h0kPFHiFdZKK6V0ZIORZr2fuKZrRnS7kZBjD4y489gIxoFGHUl05RYsoFN6jCOFv8FTbZuKDeyoaK3KMz0/uFrZB+BD9YTZc/Kh3UNU3Rw=
+	t=1709910725; cv=none; b=lR4zkt6h9ofqs4/T5PReXaHFUdDF5t50YpDjBlmD7D5NU4MrtxQiCIZm079EjUuNoT3AtsO2xgLL0RYR8heT2kdi5szXP3WteLvIDFAyylueGpH82Z0jLo+R/KQB7cQALiCZQcgVCgjFtTmX/tCToiRGYsPxNbLI01lp01TDFAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709910441; c=relaxed/simple;
-	bh=cVFfc9GiI9uwQvvc+1EtU0M4+VVT4wxEv4PSJ/Z5oE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rk29SGFXUqlDBeYCuw5aB6BildS5YQ9jDvu5o4jn5ydDRcqmaCE9abCeRJiJT5XPlud+szzlb8ZZvcbKtbEA9llv/QV/dSNQYsanOl16R43Lve4q+Bata3No072KSuMuX95rlXEAv+vL7qGIliWCHREVmxrkiI7m/IPTVrwWPz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=lqymgjoO; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lqymgjoO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1709910436;
-	bh=cVFfc9GiI9uwQvvc+1EtU0M4+VVT4wxEv4PSJ/Z5oE0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lqymgjoOEnp19WEbvh+oiQeuNIZ28AMyDXsM9gvrneELn7qlZUi/RuGXwQTifuP7G
-	 e9N/xZGx1tIhmKEYrJSXzuB9aJVlT0zd4B9fzatV477RAobdiv2k5N2ol3gdr6GlME
-	 5H1Xa6PLqoIIcLybAgN96P8frK4d6QRlA+hpoMpq9Gg4gXdCr5B9VYDwgnLtfjRIX6
-	 OYQrDo4Sszh5kBL97lC59+RQmxP5nJvNaBQ4x7FD2NMzsXmnduO5Yoj8SyylvDl3YD
-	 buurQyyO3MsbY+mjMmzYXqVwhuW4fNqOc0QrL/m6GGumY3TwvLKnWkbpFu87aZBVga
-	 klLCcSo65EuDw==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TrqK026JczgCR;
-	Fri,  8 Mar 2024 10:07:16 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"levi . yun" <yeoreum.yun@arm.com>,
-	stable@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Aaron Lu <aaron.lu@intel.com>
-Subject: [PATCH] sched: Add missing memory barrier in switch_mm_cid
-Date: Fri,  8 Mar 2024 10:07:19 -0500
-Message-Id: <20240308150719.676738-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1709910725; c=relaxed/simple;
+	bh=DYAoAYTOqZYFMlCTKHIXEKT7ltBnivpJ4fyeB7NO654=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=lmfOT/r77+14lZ542rABqoIlePvbtQ4Y1Lm3z8D97ramoY65wsODQx+hicubvj3/6koldxW5Z1UwQT6naKjRQqvezVFby6ncnaU4dwS301NdOB+VmKH7Ufo22Pbs4kKJnkRe3tnAqkHSehGk5sYf2fneIBoAGcBme5aU9vFB2hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c495649efdso251081739f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 07:12:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709910724; x=1710515524;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Taovf/w69oNFiPGLpF9FT70ngJrHA3KTAKar3z8sSg0=;
+        b=rjX8ygvRikwquKH0uggGQhX8LkTxW0mdZAKc5zGRZ5iDUT1nIq5/JRtUgktm/zAnpt
+         89ue83NdvMNbMIdjXj99ItqTRa+JcG1E5iaNsdXjNoRAuH7KW9DxxtytwRfGgOQCjdZs
+         lqTG9SHw6kDbuMbyvYKTFvc8JWjkE6DVR51PaYrLYVpTED/lXFOnUDKq2E0ahaNkvz22
+         9qSO6G1uockzph3spD0HMcxjJ5/RTdW1mLAdpO2LUMGl7ZMi5kB7CQUvKtGUPCCeGHa9
+         cjXpvDSA/55bn0CHVniwYRpsOejYGPsrcd2QNqsNsfDanavIFWfjeggrQ9luJqfS7V6l
+         SnDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS4GrI2g0QdrrzJbMKWqrAsYYBWkeJUXHpuRyHX75oo9h7uhgvHVQaYO5evt3kG7z5N0gyEdemH34432Cc/x9Jp29iPsw1NHAxUR7o
+X-Gm-Message-State: AOJu0Yz46+l6YnYyw8++cZ3CuW1MeVsXZ4qJvBM75DRx0b8WUKCFM/Ri
+	TF7mzjTXOuSi9ZLQpln+t1XEfYcl5/dBtRXcxaxQptLfpwPg0TkCMWnIkWnBgh9GZyVP41zsjiF
+	bb/obRaXFU+CF9e6+nMSfevA3/Xp3E8AlMBvcnFphCmBX98C7K0tR5U8=
+X-Google-Smtp-Source: AGHT+IG73ul8oOb0FFH3FS2TkTIFxExRvyqFpcYXqkv30X1WbTe3AL+1s0Ho0RuJAAYn6qomXwemT5tcLG7lhpG7Y627Eu6puH8V
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:15c9:b0:7c8:38af:c0de with SMTP id
+ f9-20020a05660215c900b007c838afc0demr884589iow.2.1709910723885; Fri, 08 Mar
+ 2024 07:12:03 -0800 (PST)
+Date: Fri, 08 Mar 2024 07:12:03 -0800
+In-Reply-To: <0000000000009fea9505f134bf4d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004b90e20613279d9d@google.com>
+Subject: Re: [syzbot] [reiserfs?] general protection fault in direct2indirect
+From: syzbot <syzbot+e69a9406662c63f12e24@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Many architectures' switch_mm() (e.g. arm64) do not have an smp_mb()
-which the core scheduler code has depended upon since commit:
+syzbot suspects this issue was fixed by commit:
 
-    commit 223baf9d17f25 ("sched: Fix performance regression introduced by mm_cid")
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-If switch_mm() doesn't call smp_mb(), sched_mm_cid_remote_clear() can
-unset the actively used cid when it fails to observe active task after it
-sets lazy_put.
+    fs: Block writes to mounted block devices
 
-There *is* a memory barrier between storing to rq->curr and _return to
-userspace_ (as required by membarrier), but the rseq mm_cid has stricter
-requirements: the barrier needs to be issued between store to rq->curr
-and switch_mm_cid(), which happens earlier than:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=103df92e180000
+start commit:   3b517966c561 Merge tag 'dma-mapping-6.6-2023-09-30' of git..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=12da82ece7bf46f9
+dashboard link: https://syzkaller.appspot.com/bug?extid=e69a9406662c63f12e24
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14250026680000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b792d6680000
 
-- spin_unlock(),
-- switch_to().
+If the result looks correct, please mark the issue as fixed by replying with:
 
-So it's fine when the architecture switch_mm happens to have that barrier
-already, but less so when the architecture only provides the full barrier
-in switch_to() or spin_unlock().
+#syz fix: fs: Block writes to mounted block devices
 
-It is a bug in the rseq switch_mm_cid() implementation. All architectures
-that don't have memory barriers in switch_mm(), but rather have the full
-barrier either in finish_lock_switch() or switch_to() have them too late
-for the needs of switch_mm_cid().
-
-Introduce a new smp_mb__after_switch_mm(), defined as smp_mb() in the
-generic barrier.h header, and use it in switch_mm_cid() for scheduler
-transitions where switch_mm() is expected to provide a memory barrier.
-
-Architectures can override smp_mb__after_switch_mm() if their
-switch_mm() implementation provides an implicit memory barrier.
-Override it with a no-op on x86 which implicitly provide this memory
-barrier by writing to CR3.
-
-Link: https://lore.kernel.org/lkml/20240305145335.2696125-1-yeoreum.yun@arm.com/
-Reported-by: levi.yun <yeoreum.yun@arm.com>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
-Cc: <stable@vger.kernel.org> # 6.4.x
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: levi.yun <yeoreum.yun@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Aaron Lu <aaron.lu@intel.com>
----
- arch/x86/include/asm/barrier.h |  3 +++
- include/asm-generic/barrier.h  |  8 ++++++++
- kernel/sched/sched.h           | 20 ++++++++++++++------
- 3 files changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 35389b2af88e..0d5e54201eb2 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -79,6 +79,9 @@ do {									\
- #define __smp_mb__before_atomic()	do { } while (0)
- #define __smp_mb__after_atomic()	do { } while (0)
- 
-+/* Writing to CR3 provides a full memory barrier in switch_mm(). */
-+#define smp_mb__after_switch_mm()	do { } while (0)
-+
- #include <asm-generic/barrier.h>
- 
- /*
-diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
-index 961f4d88f9ef..5a6c94d7a598 100644
---- a/include/asm-generic/barrier.h
-+++ b/include/asm-generic/barrier.h
-@@ -296,5 +296,13 @@ do {									\
- #define io_stop_wc() do { } while (0)
- #endif
- 
-+/*
-+ * Architectures that guarantee an implicit smp_mb() in switch_mm()
-+ * can override smp_mb__after_switch_mm.
-+ */
-+#ifndef smp_mb__after_switch_mm
-+#define smp_mb__after_switch_mm()	smp_mb()
-+#endif
-+
- #endif /* !__ASSEMBLY__ */
- #endif /* __ASM_GENERIC_BARRIER_H */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 2e5a95486a42..044d842c696c 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -79,6 +79,8 @@
- # include <asm/paravirt_api_clock.h>
- #endif
- 
-+#include <asm/barrier.h>
-+
- #include "cpupri.h"
- #include "cpudeadline.h"
- 
-@@ -3481,13 +3483,19 @@ static inline void switch_mm_cid(struct rq *rq,
- 		 * between rq->curr store and load of {prev,next}->mm->pcpu_cid[cpu].
- 		 * Provide it here.
- 		 */
--		if (!prev->mm)                          // from kernel
-+		if (!prev->mm) {                        // from kernel
- 			smp_mb();
--		/*
--		 * user -> user transition guarantees a memory barrier through
--		 * switch_mm() when current->mm changes. If current->mm is
--		 * unchanged, no barrier is needed.
--		 */
-+		} else {				// from user
-+			/*
-+			 * user -> user transition relies on an implicit
-+			 * memory barrier in switch_mm() when
-+			 * current->mm changes. If the architecture
-+			 * switch_mm() does not have an implicit memory
-+			 * barrier, it is emitted here.  If current->mm
-+			 * is unchanged, no barrier is needed.
-+			 */
-+			smp_mb__after_switch_mm();
-+		}
- 	}
- 	if (prev->mm_cid_active) {
- 		mm_cid_snapshot_time(rq, prev->mm);
--- 
-2.39.2
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
