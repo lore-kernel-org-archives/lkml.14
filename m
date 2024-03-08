@@ -1,15 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772DF208AD
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 08:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A4953800
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 08:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887918; cv=none; b=VpGw9XYXCMBGEd9slVPWprLwi+ua4cI1dN1vER+pswF5zjwASNhtc72GKfUzpRsbdGKCTSz9T9bCPhcGpslKahuUpect0KQsi5etiNbNTcNB8WYvUrla0fTo0GnBUewKNd9ihltN+m5kt8DcPYu6oV0KRL4dxVHmf68OABMZ1Ms=
+	t=1709887921; cv=none; b=srr1ZoTt/G8uFvhabUf8wQgWlietqdV01KjXTDiKmyLICB0w3yCBE3v0WbjIShrcw8+k1ft11YFy4oPCJbFyJECCyD6Ccxdo85SVlAcVzpcGSasHD5Vmd+PeA6x4Z1CdKL2YmShYqPM7mm5UdGf+1KJ+0gtB+UIbGt1z6IcirPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887918; c=relaxed/simple;
-	bh=aVN8+EY/uO3cH4FEyS7VfiUXi1DIt1cu/7mR+1Q406s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LjSob8jXUotiVmPydxYC1IXYzsyVpId9xN64z0mtGA7PlyPXLakPuQj6ObNG+kB+mbWRlhVIjc0RbJo4m7mJzazqggslud37yh/wl9Dza9LtrO5s2/xKixv2qRD6UUqpd/YxpwBL2h9sSvd40CPdbW34sGNaBtitfkN+44mrFo8=
+	s=arc-20240116; t=1709887921; c=relaxed/simple;
+	bh=sXsUJ/nA3ljECdr2wQLCY2YJOOmYnvXDCnq7JtNFB5A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VSQC/Jvc29XL21X6TpIJQRtGXhLscQ3LCz+Yc9phv8q5AK9U6nnGlFUTUg6M/A5jfgkOCvSOI7WrZw81ZC2HgXHwtUZAq89h54y/2GYswqpdzXXWh2dj+xHM5phHdvg6s+IahrMVODehK3fzPfbN58d1sXhRW68DQmiJGaDM+Fs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,28 +17,28 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1riVxG-0006wb-Ea; Fri, 08 Mar 2024 09:51:50 +0100
+	id 1riVxF-0006vM-Ef; Fri, 08 Mar 2024 09:51:49 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1riVxG-0056NT-1J; Fri, 08 Mar 2024 09:51:50 +0100
+	id 1riVxE-0056N0-Uz; Fri, 08 Mar 2024 09:51:48 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1riVxF-00245s-35;
-	Fri, 08 Mar 2024 09:51:49 +0100
+	id 1riVxE-00245N-2n;
+	Fri, 08 Mar 2024 09:51:48 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nipun Gupta <nipun.gupta@amd.com>,
+	Abhijit Gangurde <abhijit.gangurde@amd.com>,
+	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
+	Puneet Gupta <puneet.gupta@amd.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH] phy: xilinx: Convert to platform remove callback returning void
-Date: Fri,  8 Mar 2024 09:51:13 +0100
-Message-ID:  <57a3338a1cec683ac84d48e00dbf197e15ee5481.1709886922.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] cdx: Convert to platform remove callback returning void
+Date: Fri,  8 Mar 2024 09:51:05 +0100
+Message-ID:  <5d40f57e978bcce003133306712ec96439e93595.1709886922.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,7 +47,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1882; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=aVN8+EY/uO3cH4FEyS7VfiUXi1DIt1cu/7mR+1Q406s=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtRXF1si/vb/PSe45SCjRmGIw8xerZNOGfblPP3qfFvys zrFV+7qZDRmYWDkYpAVU2Sxb1yTaVUlF9m59t9lmEGsTCBTGLg4BWAiKc7s/8tcY5vkpm0St7Tb s9f2PWug6qxKa5X7KqK9Zza+OT9d1r+68h9vYWX8cZYTPa+uf2C/fU911ep9+gYXZjHWRimkNJx YevbjwnXL7DN5G1bpM83M7WeLiVFw6v94Q8dP5vZ20eaKsCTt+I3hSgv8zj8z5ZNJuslx2Ydzg3 aguh2PgIrh1snVue4BkxY2nXEq3tGkofxz7c7OkvLjnbKzFfe5n0l+l9j5lKfTWmiutZKMlRrb2 TnZAZsMHp4K6DOTXPHeaPlut/dmK+/7HPojLeMYsTF1tXuzSNTXjSwOp89nNas2v+bZKyi8S1Gs MZLjRvPOpb2MctJPr0wUEVnLdW3O3N/rb/64embNjqJ3AA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1957; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=sXsUJ/nA3ljECdr2wQLCY2YJOOmYnvXDCnq7JtNFB5A=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl6tF7S13dCqHL9wkrsa6kktj7ECADySZY+bKUp 4TALkVKpAyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZerRewAKCRCPgPtYfRL+ TvBzB/9oPV4E0q8Tm//+Fza+nF/CrqlKC8BLShGDMZ3abGZKccQEBrS/tE2jPE4dnyBTqOHpCXx ryesufTeoq+H8OazJmrYDhIJrKYIUTzGVogorIuNnW23trctkLNF1lCLy4KgRin2yHXPukHv+cH 1BrVQd6FUKYXy8e6qcCAI2pWf6sKEcP+QYxb46PlrzcKeRih00u4zIZo1WqG+5w68FGMFaQ+pvh 9t+DUk12hXWfYpDymH55UEczL1EzF8sBRiPwLF5gVE19au+rCyYDsdeO76ohwhu6ybogUKRd2BI e9oZ+fwueAOhlTx5QmnQJ1l5oB6VBhNJoblTIz23wb2VgIzM
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -70,39 +70,40 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/phy/xilinx/phy-zynqmp.c | 6 ++----
+ drivers/cdx/controller/cdx_controller.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
-index f72c5257d712..dc8319bda43d 100644
---- a/drivers/phy/xilinx/phy-zynqmp.c
-+++ b/drivers/phy/xilinx/phy-zynqmp.c
-@@ -995,15 +995,13 @@ static int xpsgtr_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/cdx/controller/cdx_controller.c b/drivers/cdx/controller/cdx_controller.c
+index 85fe4b1c4e5e..9e99baf43db1 100644
+--- a/drivers/cdx/controller/cdx_controller.c
++++ b/drivers/cdx/controller/cdx_controller.c
+@@ -198,7 +198,7 @@ static int xlnx_cdx_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int xpsgtr_remove(struct platform_device *pdev)
-+static void xpsgtr_remove(struct platform_device *pdev)
+-static int xlnx_cdx_remove(struct platform_device *pdev)
++static void xlnx_cdx_remove(struct platform_device *pdev)
  {
- 	struct xpsgtr_dev *gtr_dev = platform_get_drvdata(pdev);
+ 	struct cdx_controller *cdx = platform_get_drvdata(pdev);
+ 	struct cdx_mcdi *cdx_mcdi = cdx->priv;
+@@ -209,8 +209,6 @@ static int xlnx_cdx_remove(struct platform_device *pdev)
  
- 	pm_runtime_disable(gtr_dev->dev);
- 	pm_runtime_put_noidle(gtr_dev->dev);
- 	pm_runtime_set_suspended(gtr_dev->dev);
+ 	cdx_mcdi_finish(cdx_mcdi);
+ 	kfree(cdx_mcdi);
 -
 -	return 0;
  }
  
- static const struct of_device_id xpsgtr_of_match[] = {
-@@ -1015,7 +1013,7 @@ MODULE_DEVICE_TABLE(of, xpsgtr_of_match);
+ static const struct of_device_id cdx_match_table[] = {
+@@ -227,7 +225,7 @@ static struct platform_driver cdx_pdriver = {
+ 		   .of_match_table = cdx_match_table,
+ 		   },
+ 	.probe = xlnx_cdx_probe,
+-	.remove = xlnx_cdx_remove,
++	.remove_new = xlnx_cdx_remove,
+ };
  
- static struct platform_driver xpsgtr_driver = {
- 	.probe = xpsgtr_probe,
--	.remove	= xpsgtr_remove,
-+	.remove_new = xpsgtr_remove,
- 	.driver = {
- 		.name = "xilinx-psgtr",
- 		.of_match_table	= xpsgtr_of_match,
+ static int __init cdx_controller_init(void)
 
 base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
 -- 
