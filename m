@@ -1,289 +1,491 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C614D219FC
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 11:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897559; cv=none; b=b/Wclld/pcDfticI7Ryhr/r16ZNTYhucSCmf4y3XNlRfBVFm7UMQKCTi42t7jTOVh2PbK7UkV6YTclgP3IdTHNjTuD84kUF8vyiiYsEEd3OEwMgN8Uh9nIK3+JXTftjox66J8ci93+OUP2zAaVcHZ3m9tsdb6iXZrCPSOGbRRaY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897559; c=relaxed/simple;
-	bh=hQmKsFKDXe3MCWFDk4h1FMOU5wAXmrlOGgSlbm6vpCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t6zfweTRm+HLp7/zxktswxYnIUyw8R22QDR/fWn90oThP2PXqGNchWI0zoJD9CE1HZ6TKnc39iKJYY8UAL74XVMPJUlxt4LL8rWuvJ551bvBfNbHkJwoTCk5BAPagnoPBZ/P2l+jgss4ALSdFtjJbmSXOhC8fR3VbeZD4rSRpb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyiWCp0K; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF1852F82
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 11:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709897790; cv=fail; b=ZX+snb9d+oCFpmB/TT9a5x6ejvN7li39STD4swTqoWdZh7e9Xyxve0F4GjhOSbceVdtaGkWEI1o0ljlTOGW2A9hqwPky0vdmb4rPi9RPXhL4e8oLzJSmbSlK+GDhKcH5pPWzGZWChApDrjUcIcb+1TWG2MJvBQ5Uopf1TyKMu1I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709897790; c=relaxed/simple;
+	bh=7KhzqXLlYVYvBQoEnmTeCLBuukc6jid1kK58VpeiuVA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dCMSL9wYhSDKnokdVbJjqkybOTZ1K6vVcEYccqlgDyScMr9g1Xv8Iz0NKaJA/UdHD5SRPjOkL1pRq7yY482dlrvbkilcZX07spIV8BnFpjYuPBN8exYbKpZXufN6HGHpT5dUJlL1vSsMgO3FEq7QYl7S9x4Qjx+ZMY1rBWcWQw8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=UAut3e9F; arc=fail smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyiWCp0K"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33e6aca1ca9so1180153f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 03:32:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709897556; x=1710502356; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V/U4R8MBg204kG8ugYCLmUhdGr32W8Oze66n2rkC7QY=;
-        b=XyiWCp0K7C0a7NwgZEnsdnlnrYqMX/y+NjObjfE6Wq1UsGKr0p6XnAMGG2F0BEZaWL
-         vHSufAMgmm3z95pVo9sE7ImQoY+gsc7C2BPL35rX/1oIZvgPIhJhHRnxSbW5Y98cghTU
-         dR30O/zd1F1ycZSPzhr+pipaxSVjK7Rr3gInwhwEfiKPXbbKfV+mLhrkwBEG6G8/FhR1
-         tMLOTxPFtdb5OzU6z1INWYymjXTh2x7dhi4R2x+urr66U7tTKHFoQt7MmEtg6GFjF9tN
-         lwCLLOc2v2WMLurvpWokPj5EmEKuiEmXK3alog6VT9hGm1gYPr/F3F+T1fKeP2nTAi10
-         lP5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709897556; x=1710502356;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V/U4R8MBg204kG8ugYCLmUhdGr32W8Oze66n2rkC7QY=;
-        b=TEypq4KmxkFUlVid2D+qereQG/M3TcI0Qw2HCIl6vrX8W4ZgiNPR7NbfGsTZZ2lKKM
-         LpHzpgb7wbUSCih81i8hPuKykdqqMsVY2m7S+pT2fpqMBSOHqBrTRkkMH/qwweRFL+sB
-         CbVTc9BRH1e79YtBqJwqMAQ+opYnHn3FeBBcYXKpSGN7/mx9QrYZxiUSmyXrTivpVpgo
-         iyJgluSeBUWjHeKcup000qIe6qhx+z9Y5Rw4aOlmSTJsDV7OLpFrdBpH7Ic/CLuawNDC
-         appPiggBkUTCzH5E7eOOr7xeJocGKKudTydgsbnoBQHjkPzXsmboKt/BmCOkhzE/w/uD
-         5WuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrlbyZBsTejkv2I5Rzln7Scv9eb3UY2N4SoHS+X6PzJFSEfhchrE39dcXpdv+eOHk1hm32sap7tHkdQBkuiIvjGpUDDpWei8q/LLIF
-X-Gm-Message-State: AOJu0YxtxOGOVhXkoa+1aSBs3RDT/5oqLz7a8zRtQjiUDw+6c2RpmVUo
-	RzOBnO2p2BE9x2WPn5fmGGUe33KUtqhMOFgnHoo+l28dzxgs+ajf
-X-Google-Smtp-Source: AGHT+IEcSif1kuJgvWx4ygkHntU5v9ZhD5o0vNZtjvZgIHMZpgFceu8DSdXPEKon71q2BG0DrNE5jA==
-X-Received: by 2002:a5d:5942:0:b0:33d:af84:2a59 with SMTP id e2-20020a5d5942000000b0033daf842a59mr13886868wri.28.1709897555662;
-        Fri, 08 Mar 2024 03:32:35 -0800 (PST)
-Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id r27-20020adfa15b000000b0033e7938e218sm826032wrr.43.2024.03.08.03.32.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 03:32:35 -0800 (PST)
-Message-ID: <c411dce6-faaf-46c3-8bb6-8c4db871e598@gmail.com>
-Date: Fri, 8 Mar 2024 12:32:33 +0100
+	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="UAut3e9F"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 428AQvKM001407;
+	Fri, 8 Mar 2024 03:36:18 -0800
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2041.outbound.protection.outlook.com [104.47.56.41])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wr0x005h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 03:36:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=haF5f+9Mkopb+DTQG/TE6L35lPMcmp5L2EAHVnOkJKSgoBWouCcQwusvysXdRiNJZMpa7V8+d/n22qfenDnlYoc/h3oGvTKp3mWQupp2/HBoQn1KRXWDTbApwaAtlhWfNrH942JnvSSbFmcpW1AWbwouRbm/IIxlTJz7hMRglVCVDQ6HaQf9MJR+fonRrrCrqEDn2wIuQ5oZuKk/HXFG41C+cR9cI/CTYeLxEWN6U84WmDVwCcy30whl1qDtWBXmCwfFLY3h8/DsBr6gMqgJZ0+boh7G+O9nNfOg7GaQPRTjzYqtZxEiXGRuFEIql4Mn7TcG6KmnZL1Ho0jK5hZHgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2xwfUrqRcz7THRIYf08d+xVzSJuYyrCDW5JI3O58XnM=;
+ b=apE7ku80FZsppomDrQhV4MbtzmR1ERSWM40WT9kgViofo9LPifS8s2+OjSuaD4M1NdsiEyuzvV8bZIagt14i9Ck1GtD81IxwJCmIGKKGLTjf+jRhADLB6U2gT14NQh0RbCqUKuvYkjsG82dNpEaqtP4owB7E0WLKFCIGVNk/7UFt4NP6hz1bdXLuzxZEpJNMhzgTvu6RYQrN3UGqpcbe3vi0o18edGrVnVfEZ2dMtES/v03imdtL2xHiplNNveHIM3fMbOzOg6u828mgqS8/aGhMlSVij4RYkrPrSd4jmkgaPR5R4RE/pxJQiHicsfg9Dt9Oxme+AwuoY/KQgFKY7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2xwfUrqRcz7THRIYf08d+xVzSJuYyrCDW5JI3O58XnM=;
+ b=UAut3e9FJhSLT6mR5yOOHSVUPYztVatTXdhAgslY7iDH2OFsELLswUREpbz8KwJClgPeZKaJZwCKUyMyEBWdh41kuUAlsGpDmcQAi8Qr0FXcG0Y8/deUp6pRBq88ceTB98VuuJH/pisfZBmaegQ2gRTHtRC1jPf2ZYDt9h4XjMI=
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com (2603:10b6:303:1e0::16)
+ by SA0PR18MB3663.namprd18.prod.outlook.com (2603:10b6:806:9a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Fri, 8 Mar
+ 2024 11:36:16 +0000
+Received: from MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::c0e5:b3ee:3e55:c535]) by MW4PR18MB5244.namprd18.prod.outlook.com
+ ([fe80::c0e5:b3ee:3e55:c535%5]) with mapi id 15.20.7339.035; Fri, 8 Mar 2024
+ 11:36:16 +0000
+From: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v3 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Thread-Topic: [EXTERNAL] Re: [PATCH v3 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Thread-Index: AQHaamYT32kjl02Qd0ixpnLGJOmqtrEs346AgADi1BA=
+Date: Fri, 8 Mar 2024 11:36:16 +0000
+Message-ID: 
+ <MW4PR18MB5244191AE625EE04141DAE2BA6272@MW4PR18MB5244.namprd18.prod.outlook.com>
+References: <2024021913-aftermost-footnote-cd6e@gregkh>
+ <20240228162141.1413171-1-vattunuru@marvell.com>
+ <2024030747-stove-helpful-33c1@gregkh>
+In-Reply-To: <2024030747-stove-helpful-33c1@gregkh>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR18MB5244:EE_|SA0PR18MB3663:EE_
+x-ms-office365-filtering-correlation-id: ca456f00-e44d-494c-a897-08dc3f63f73b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ 1h4MSkwiYKkF4vYlHwm8Qv8My0bokNwhq7pjOnuvEW0ZM3q5r6F48YLrXiwKyk7WGobk9lUm8sTx/bFLXwZZDdKQ4w7wls2U5zElrJ0qqVBRktfdN2spze+Ff2d56HQ6hWj+HPkSHUlN8p/kmMwuilVUh6RDOc9qMr/4qaxQVGRx6cvWlbsOx1ZsSvuZtY6fXuxW7mHVPOQXbXdmJ0IU50morZNmE5/PdRVdBPxxwp+4qupyyZ0orno5YL2NRORD0aKtHP53zefSDcMrZPXey2IZjpzgIebqVldEqiIJCGmNB1mybExeTtrsD2f6kr1R2AcxnAFdxxt3NzxSIwK5LdUDV8dIfqehh44BJsfqMfvnNIr1C0oTH0cT+bc+UYsV8Q908x80sjesvEFgA5EGcWq6jMaZObDeHse6Z4S8yAFnj4M8LLixtJQ5XNAxEuBFB95QZXv4O5XYd5t5zk+BTdqKumNbuDmfJt3gGmT5ee2sGP9ybL1to6gWnTJYqZDWzr08skT1Pg9bpWtMgn6RPpPfXdQM70j4309q5OqdlJCB9lokTCNIWw+XwCJotnapVW/uO0pqA8M5GVo8vweC/Tt3j3/L64LCHSrYtejhlNKN8BCHZk14+X5CqPZcmspwzohYAgNBJxTjMUB+zO+hCk1nrr6f0KHJU4UW5FuTr14j+Ze1bQ3oblD3haZ75mFjk6nIuxIktnKFxVi4na8hW4mJ2mrcc1LcWiS9LWuA6W0=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5244.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?AqkAgbAWsxSI7LGG7C+w5NnLfOV4iOuy7f1J1y4WRMRqCwF52ur/AkUNEhkp?=
+ =?us-ascii?Q?Ut2SMndpTGoBp4CSuCFW02IFY+SUetE/ph0UGqVhgG5/Cex04opDZbCEtVkP?=
+ =?us-ascii?Q?VM/gea4H/LBV0uobBlDwbXbq1L9WG8NhjP3XoXq3Id4pJa8EZbJS1eaZEQbT?=
+ =?us-ascii?Q?qgK4ocWNxsfnaI3aEMGORA+MBLOpHCVZJT51nzStP5ycVsf6a8kBSAMZ4f83?=
+ =?us-ascii?Q?EZo1KoHHit8bXp27vFfau8If+/skzLtM05HnU1M63t3WPqj0JW/sPNkGLss1?=
+ =?us-ascii?Q?tWa1nvG83D74qxeP6NV2zvwqXco0kt6NlM5/P9CWExShxIXCT1v4XxJDgHqA?=
+ =?us-ascii?Q?HgsVKPXH0Nt/nvUCptT1JKidMOdrHlO6NK4+Mt9ZrnJBvnI7Yf8GHrhZ5/4o?=
+ =?us-ascii?Q?tn2HEFSZUgI1wz7Iji3CNr3ZafKMU3C9B3oW9Y6PN5O5bg7mob+8t3urgA8y?=
+ =?us-ascii?Q?Whqm3jhZ/FR6T14ne4+EpPhompwJGNxzCI9nVyykfEnSdqkblw4DEAJ44h5l?=
+ =?us-ascii?Q?fJolZMGqq8A/wvHgVzxaMiOParEQUq+mM/yHpJ0buU2CuBGNkAsxOH6BozLP?=
+ =?us-ascii?Q?tH2krEA9+rXjl4nypqAjf4Gio0fhfjYSLLPUOOoV+/1L5MkTrmob6R+CiX2n?=
+ =?us-ascii?Q?3ipw/xqhFI0ILD5N8SLbZe6CCijuwOMFCieS3y5D9yWhltS27PIHJq1eW4u7?=
+ =?us-ascii?Q?8HsGSOkvXBeoUXhTfxzpjPBichuw3dn/Iv19UTjPEsjSm53Y93W9WoYoIJz4?=
+ =?us-ascii?Q?f5mtqJ+sVkmsPDY44pYHIx00tczQZNJmpsXn9qwWBFDBPVe5pea90ZUxgln6?=
+ =?us-ascii?Q?FDh9iYOAHI4Zuya/qKae2xEheHPsCWFQfVbaIoYwcrI4zLy4InsPdkaCy1kM?=
+ =?us-ascii?Q?bC7RgKOLYugC/c2Ya6bSViabRBXMIhCocBL/Q886tiw20mxqsbRqDJzQKBx2?=
+ =?us-ascii?Q?3QuJusSbJIhNTVM0YucunkPzl5OMKFtKKpm1/+/Jcj1X6LK9YmrQgC0IPwj6?=
+ =?us-ascii?Q?4uPZZWYC9zddiNVvZJEn90v8x28EHUOxgBh8UNrliZgMDOHZX4EWUdfhyJy4?=
+ =?us-ascii?Q?1mVEAE5DNgORcfZFR6YgbTT7ZT4bUm2l+8xPx8R7c8jU2L265j7nbTIvhoqe?=
+ =?us-ascii?Q?uAmbGBzUDzZ8kzI8zpuHY8kSkWoWfViAmDYIQ/BhF5O4JX1xKGpORRxsgPqD?=
+ =?us-ascii?Q?b2QNDI/Syph01A9yJb2VpKhudGx8l8MoRdpE0XN7HAOj1eR+a2cRbcbfDWxr?=
+ =?us-ascii?Q?pKIUcNXaYCbgTiFlsCEaII2QzR+wSGpNyG4Ug1LpHJ8l5aJTVwJR/W4pccW3?=
+ =?us-ascii?Q?3ZNnwkxjvDfspvhkmAzNv7MgbleOQeK3ONmSs4PZ3EYddy8wcE5HhAq4tKBX?=
+ =?us-ascii?Q?ODcIoHfGJa3w4o19boMiKDLFTnYT+5ia4mygWuKdx4/xrDiM5Y++O1hbIIHY?=
+ =?us-ascii?Q?wH8vhKuAQJjGHhLsVNnAshpT75/whtJ+VxG74YcOHU8Ze/DkCMqW2zEM28Z+?=
+ =?us-ascii?Q?K2l1o1dnl26T+L+7GqA3YYvneO43y8sMWOVEi425Yp9bCxQEq7E6x/aMRpKY?=
+ =?us-ascii?Q?pqbqW/NqNmqBS//MiRpcgH/dwR2/GhfXVSQInf+h?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amdgpu: fix deadlock while reading mqd from debugfs
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- "Sharma, Shashank" <Shashank.Sharma@amd.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240307221609.7651-1-hannes@cmpxchg.org>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20240307221609.7651-1-hannes@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5244.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca456f00-e44d-494c-a897-08dc3f63f73b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2024 11:36:16.1740
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4dyaQ9xUijoW4KC0FZZxF8OOlP1WuxavFk0CbpZRW4cQjwDpUiIYUkBrB21uyVU7GMUTo71auV78nAMrRNEgnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR18MB3663
+X-Proofpoint-GUID: ajffRUG7DHUBeVlpWQfCkcAd4EJoBZQY
+X-Proofpoint-ORIG-GUID: ajffRUG7DHUBeVlpWQfCkcAd4EJoBZQY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
 
-Good catch, Shashank can you take a closer look?
 
-Thanks,
-Christian.
 
-Am 07.03.24 um 23:07 schrieb Johannes Weiner:
-> An errant disk backup on my desktop got into debugfs and triggered the
-> following deadlock scenario in the amdgpu debugfs files. The machine
-> also hard-resets immediately after those lines are printed (although I
-> wasn't able to reproduce that part when reading by hand):
->
-> [ 1318.016074][ T1082] ======================================================
-> [ 1318.016607][ T1082] WARNING: possible circular locking dependency detected
-> [ 1318.017107][ T1082] 6.8.0-rc7-00015-ge0c8221b72c0 #17 Not tainted
-> [ 1318.017598][ T1082] ------------------------------------------------------
-> [ 1318.018096][ T1082] tar/1082 is trying to acquire lock:
-> [ 1318.018585][ T1082] ffff98c44175d6a0 (&mm->mmap_lock){++++}-{3:3}, at: __might_fault+0x40/0x80
-> [ 1318.019084][ T1082]
-> [ 1318.019084][ T1082] but task is already holding lock:
-> [ 1318.020052][ T1082] ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
-> [ 1318.020607][ T1082]
-> [ 1318.020607][ T1082] which lock already depends on the new lock.
-> [ 1318.020607][ T1082]
-> [ 1318.022081][ T1082]
-> [ 1318.022081][ T1082] the existing dependency chain (in reverse order) is:
-> [ 1318.023083][ T1082]
-> [ 1318.023083][ T1082] -> #2 (reservation_ww_class_mutex){+.+.}-{3:3}:
-> [ 1318.024114][ T1082]        __ww_mutex_lock.constprop.0+0xe0/0x12f0
-> [ 1318.024639][ T1082]        ww_mutex_lock+0x32/0x90
-> [ 1318.025161][ T1082]        dma_resv_lockdep+0x18a/0x330
-> [ 1318.025683][ T1082]        do_one_initcall+0x6a/0x350
-> [ 1318.026210][ T1082]        kernel_init_freeable+0x1a3/0x310
-> [ 1318.026728][ T1082]        kernel_init+0x15/0x1a0
-> [ 1318.027242][ T1082]        ret_from_fork+0x2c/0x40
-> [ 1318.027759][ T1082]        ret_from_fork_asm+0x11/0x20
-> [ 1318.028281][ T1082]
-> [ 1318.028281][ T1082] -> #1 (reservation_ww_class_acquire){+.+.}-{0:0}:
-> [ 1318.029297][ T1082]        dma_resv_lockdep+0x16c/0x330
-> [ 1318.029790][ T1082]        do_one_initcall+0x6a/0x350
-> [ 1318.030263][ T1082]        kernel_init_freeable+0x1a3/0x310
-> [ 1318.030722][ T1082]        kernel_init+0x15/0x1a0
-> [ 1318.031168][ T1082]        ret_from_fork+0x2c/0x40
-> [ 1318.031598][ T1082]        ret_from_fork_asm+0x11/0x20
-> [ 1318.032011][ T1082]
-> [ 1318.032011][ T1082] -> #0 (&mm->mmap_lock){++++}-{3:3}:
-> [ 1318.032778][ T1082]        __lock_acquire+0x14bf/0x2680
-> [ 1318.033141][ T1082]        lock_acquire+0xcd/0x2c0
-> [ 1318.033487][ T1082]        __might_fault+0x58/0x80
-> [ 1318.033814][ T1082]        amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu]
-> [ 1318.034181][ T1082]        full_proxy_read+0x55/0x80
-> [ 1318.034487][ T1082]        vfs_read+0xa7/0x360
-> [ 1318.034788][ T1082]        ksys_read+0x70/0xf0
-> [ 1318.035085][ T1082]        do_syscall_64+0x94/0x180
-> [ 1318.035375][ T1082]        entry_SYSCALL_64_after_hwframe+0x46/0x4e
-> [ 1318.035664][ T1082]
-> [ 1318.035664][ T1082] other info that might help us debug this:
-> [ 1318.035664][ T1082]
-> [ 1318.036487][ T1082] Chain exists of:
-> [ 1318.036487][ T1082]   &mm->mmap_lock --> reservation_ww_class_acquire --> reservation_ww_class_mutex
-> [ 1318.036487][ T1082]
-> [ 1318.037310][ T1082]  Possible unsafe locking scenario:
-> [ 1318.037310][ T1082]
-> [ 1318.037838][ T1082]        CPU0                    CPU1
-> [ 1318.038101][ T1082]        ----                    ----
-> [ 1318.038350][ T1082]   lock(reservation_ww_class_mutex);
-> [ 1318.038590][ T1082]                                lock(reservation_ww_class_acquire);
-> [ 1318.038839][ T1082]                                lock(reservation_ww_class_mutex);
-> [ 1318.039083][ T1082]   rlock(&mm->mmap_lock);
-> [ 1318.039328][ T1082]
-> [ 1318.039328][ T1082]  *** DEADLOCK ***
-> [ 1318.039328][ T1082]
-> [ 1318.040029][ T1082] 1 lock held by tar/1082:
-> [ 1318.040259][ T1082]  #0: ffff98c4c13f55f8 (reservation_ww_class_mutex){+.+.}-{3:3}, at: amdgpu_debugfs_mqd_read+0x6a/0x250 [amdgpu]
-> [ 1318.040560][ T1082]
-> [ 1318.040560][ T1082] stack backtrace:
-> [ 1318.041053][ T1082] CPU: 22 PID: 1082 Comm: tar Not tainted 6.8.0-rc7-00015-ge0c8221b72c0 #17 3316c85d50e282c5643b075d1f01a4f6365e39c2
-> [ 1318.041329][ T1082] Hardware name: Gigabyte Technology Co., Ltd. B650 AORUS PRO AX/B650 AORUS PRO AX, BIOS F20 12/14/2023
-> [ 1318.041614][ T1082] Call Trace:
-> [ 1318.041895][ T1082]  <TASK>
-> [ 1318.042175][ T1082]  dump_stack_lvl+0x4a/0x80
-> [ 1318.042460][ T1082]  check_noncircular+0x145/0x160
-> [ 1318.042743][ T1082]  __lock_acquire+0x14bf/0x2680
-> [ 1318.043022][ T1082]  lock_acquire+0xcd/0x2c0
-> [ 1318.043301][ T1082]  ? __might_fault+0x40/0x80
-> [ 1318.043580][ T1082]  ? __might_fault+0x40/0x80
-> [ 1318.043856][ T1082]  __might_fault+0x58/0x80
-> [ 1318.044131][ T1082]  ? __might_fault+0x40/0x80
-> [ 1318.044408][ T1082]  amdgpu_debugfs_mqd_read+0x103/0x250 [amdgpu 8fe2afaa910cbd7654c8cab23563a94d6caebaab]
-> [ 1318.044749][ T1082]  full_proxy_read+0x55/0x80
-> [ 1318.045042][ T1082]  vfs_read+0xa7/0x360
-> [ 1318.045333][ T1082]  ksys_read+0x70/0xf0
-> [ 1318.045623][ T1082]  do_syscall_64+0x94/0x180
-> [ 1318.045913][ T1082]  ? do_syscall_64+0xa0/0x180
-> [ 1318.046201][ T1082]  ? lockdep_hardirqs_on+0x7d/0x100
-> [ 1318.046487][ T1082]  ? do_syscall_64+0xa0/0x180
-> [ 1318.046773][ T1082]  ? do_syscall_64+0xa0/0x180
-> [ 1318.047057][ T1082]  ? do_syscall_64+0xa0/0x180
-> [ 1318.047337][ T1082]  ? do_syscall_64+0xa0/0x180
-> [ 1318.047611][ T1082]  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-> [ 1318.047887][ T1082] RIP: 0033:0x7f480b70a39d
-> [ 1318.048162][ T1082] Code: 91 ba 0d 00 f7 d8 64 89 02 b8 ff ff ff ff eb b2 e8 18 a3 01 00 0f 1f 84 00 00 00 00 00 80 3d a9 3c 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 53 48 83
-> [ 1318.048769][ T1082] RSP: 002b:00007ffde77f5c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> [ 1318.049083][ T1082] RAX: ffffffffffffffda RBX: 0000000000000800 RCX: 00007f480b70a39d
-> [ 1318.049392][ T1082] RDX: 0000000000000800 RSI: 000055c9f2120c00 RDI: 0000000000000008
-> [ 1318.049703][ T1082] RBP: 0000000000000800 R08: 000055c9f2120a94 R09: 0000000000000007
-> [ 1318.050011][ T1082] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c9f2120c00
-> [ 1318.050324][ T1082] R13: 0000000000000008 R14: 0000000000000008 R15: 0000000000000800
-> [ 1318.050638][ T1082]  </TASK>
->
-> amdgpu_debugfs_mqd_read() holds a reservation when it calls
-> put_user(), which may fault and acquire the mmap_sem. This violates
-> the established locking order.
->
-> Bounce the mqd data through a kernel buffer to get put_user() out of
-> the illegal section.
->
-> Fixes: 445d85e3c1df ("drm/amdgpu: add debugfs interface for reading MQDs")
-> Cc: stable@vger.kernel.org		[v6.5+]
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c | 46 +++++++++++++++---------
->   1 file changed, 29 insertions(+), 17 deletions(-)
->
-> This fixes the lockdep splat for me, and the hexdump of the output
-> looks sane after the patch. However, I'm not at all familiar with this
-> code to say for sure that this is the right solution. The mqd seems
-> small enough that the kmalloc won't get crazy. I'm also assuming that
-> ring->mqd_size is safe to access before the reserve & kmap. Lastly I
-> went with an open loop instead of a memcpy() as I wasn't sure if that
-> memory is safe to address a byte at at time.
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-> index 5505d646f43a..06f0a6534a94 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c
-> @@ -524,46 +524,58 @@ static ssize_t amdgpu_debugfs_mqd_read(struct file *f, char __user *buf,
->   {
->   	struct amdgpu_ring *ring = file_inode(f)->i_private;
->   	volatile u32 *mqd;
-> -	int r;
-> +	u32 *kbuf;
-> +	int r, i;
->   	uint32_t value, result;
->   
->   	if (*pos & 3 || size & 3)
->   		return -EINVAL;
->   
-> -	result = 0;
-> +	kbuf = kmalloc(ring->mqd_size, GFP_KERNEL);
-> +	if (!kbuf)
-> +		return -ENOMEM;
->   
->   	r = amdgpu_bo_reserve(ring->mqd_obj, false);
->   	if (unlikely(r != 0))
-> -		return r;
-> +		goto err_free;
->   
->   	r = amdgpu_bo_kmap(ring->mqd_obj, (void **)&mqd);
-> -	if (r) {
-> -		amdgpu_bo_unreserve(ring->mqd_obj);
-> -		return r;
-> -	}
-> +	if (r)
-> +		goto err_unreserve;
->   
-> +	/*
-> +	 * Copy to local buffer to avoid put_user(), which might fault
-> +	 * and acquire mmap_sem, under reservation_ww_class_mutex.
-> +	 */
-> +	for (i = 0; i < ring->mqd_size/sizeof(u32); i++)
-> +		kbuf[i] = mqd[i];
-> +
-> +	amdgpu_bo_kunmap(ring->mqd_obj);
-> +	amdgpu_bo_unreserve(ring->mqd_obj);
-> +
-> +	result = 0;
->   	while (size) {
->   		if (*pos >= ring->mqd_size)
-> -			goto done;
-> +			break;
->   
-> -		value = mqd[*pos/4];
-> +		value = kbuf[*pos/4];
->   		r = put_user(value, (uint32_t *)buf);
->   		if (r)
-> -			goto done;
-> +			goto err_free;
->   		buf += 4;
->   		result += 4;
->   		size -= 4;
->   		*pos += 4;
->   	}
->   
-> -done:
-> -	amdgpu_bo_kunmap(ring->mqd_obj);
-> -	mqd = NULL;
-> -	amdgpu_bo_unreserve(ring->mqd_obj);
-> -	if (r)
-> -		return r;
-> -
-> +	kfree(kbuf);
->   	return result;
-> +
-> +err_unreserve:
-> +	amdgpu_bo_unreserve(ring->mqd_obj);
-> +err_free:
-> +	kfree(kbuf);
-> +	return r;
->   }
->   
->   static const struct file_operations amdgpu_debugfs_mqd_fops = {
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Friday, March 8, 2024 3:26 AM
+> To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+> Cc: arnd@arndb.de; linux-kernel@vger.kernel.org
+> Subject: [EXTERNAL] Re: [PATCH v3 1/1] misc: mrvl-cn10k-dpi: add Octeon
+> CN10K DPI administrative driver
+>=20
+> Prioritize security for external emails: Confirm sender and content safet=
+y
+> before clicking links or opening attachments
+>=20
+> ----------------------------------------------------------------------
+> On Wed, Feb 28, 2024 at 08:21:41AM -0800, Vamsi Attunuru wrote:
+> > Adds a misc driver for Marvell CN10K DPI(DMA Engine) device's physical
+> > function which initializes DPI DMA hardware's global configuration and
+> > enables hardware mailbox channels between physical function (PF) and
+> > it's virtual functions (VF). VF device drivers (User space drivers)
+> > use this hw mailbox to communicate any required device configuration
+> > on it's respective VF device. Accordingly, this DPI PF driver
+> > provisions the VF device resources.
+> >
+> > At the hardware level, the DPI physical function (PF) acts as a
+> > management interface to setup the VF device resources, VF devices are
+> > only provisioned to handle or control the actual DMA Engine's data tran=
+sfer
+> capabilities.
+> >
+> > Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
+> > ---
+> > Changes V2 -> V3:
+> > - Added ioctl operation to the fops
+> > - Used managed version of kzalloc & request_irq
+> > - Addressed miscellaneous comments
+> >
+> > Changes V1 -> V2:
+> > - Fixed return values and busy-wait loops
+> > - Merged .h file into .c file
+> > - Fixed directory structure
+> > - Removed module params
+> > - Registered the device as misc device
+> >
+> >  MAINTAINERS                   |   5 +
+> >  drivers/misc/Kconfig          |  12 +
+> >  drivers/misc/Makefile         |   1 +
+> >  drivers/misc/mrvl_cn10k_dpi.c | 717
+> > ++++++++++++++++++++++++++++++++++
+> >  4 files changed, 735 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > 960512bec428..ab77232d583e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13104,6 +13104,11 @@ S:	Supported
+> >  F:	Documentation/devicetree/bindings/mmc/marvell,xenon-
+> sdhci.yaml
+> >  F:	drivers/mmc/host/sdhci-xenon*
+> >
+> > +MARVELL OCTEON CN10K DPI DRIVER
+> > +M:	Vamsi Attunuru <vattunuru@marvell.com>
+> > +S:	Maintained
+> > +F:	drivers/misc/mrvl_cn10k_dpi.c
+> > +
+> >  MATROX FRAMEBUFFER DRIVER
+> >  L:	linux-fbdev@vger.kernel.org
+> >  S:	Orphan
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig index
+> > 4fb291f0bf7c..58de5844ecef 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -574,6 +574,18 @@ config NSM
+> >  	  To compile this driver as a module, choose M here.
+> >  	  The module will be called nsm.
+> >
+> > +config MARVELL_CN10K_DPI
+> > +	tristate "Octeon CN10K DPI driver"
+> > +	depends on ARM64 && PCI
+> > +	help
+> > +	  Enables Octeon CN10K DPI driver which intializes DPI PF device's
+> global configuration
+> > +	  and its VFs resource configuration to enable DMA transfers. DPI PF
+> device
+> > +	  does not have any data movement functionality, it only serves VF's
+> resource
+> > +	  configuration requests.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called mrvl_cn10k_dpi.
+> > +
+> >  source "drivers/misc/c2port/Kconfig"
+> >  source "drivers/misc/eeprom/Kconfig"
+> >  source "drivers/misc/cb710/Kconfig"
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile index
+> > ea6ea5bbbc9c..8fa2fbf8670f 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -68,3 +68,4 @@ obj-$(CONFIG_TMR_INJECT)	+=3D xilinx_tmr_inject.o
+> >  obj-$(CONFIG_TPS6594_ESM)	+=3D tps6594-esm.o
+> >  obj-$(CONFIG_TPS6594_PFSM)	+=3D tps6594-pfsm.o
+> >  obj-$(CONFIG_NSM)		+=3D nsm.o
+> > +obj-$(CONFIG_MARVELL_CN10K_DPI)	+=3D mrvl_cn10k_dpi.o
+> > diff --git a/drivers/misc/mrvl_cn10k_dpi.c
+> > b/drivers/misc/mrvl_cn10k_dpi.c new file mode 100644 index
+> > 000000000000..3d33395feaa3
+> > --- /dev/null
+> > +++ b/drivers/misc/mrvl_cn10k_dpi.c
+> > @@ -0,0 +1,717 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Marvell Octeon CN10K DPI driver
+> > + *
+> > + * Copyright (C) 2024 Marvell.
+> > + *
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/miscdevice.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/interrupt.h>
+> > +
+> > +#define DPI_DRV_NAME	"mrvl-cn10k-dpi"
+> > +
+> > +/* PCI device IDs */
+> > +#define PCI_DEVID_MRVL_CN10K_DPI_PF	0xA080
+> > +#define PCI_SUBDEVID_MRVL_CN10K_DPI_PF	0xBA00
+> > +
+> > +/* PCI BAR nos */
+> > +#define PCI_DPI_CFG_BAR	0
+> > +
+> > +/* MSI-X interrupts */
+> > +#define DPI_MAX_REQQ_INT 32
+> > +#define DPI_MAX_CC_INT   64
+> > +
+> > +/* MBOX MSI-X interrupt vector index */ #define
+> > +DPI_MBOX_PF_VF_INT_IDX 0x75
+> > +
+> > +#define DPI_MAX_IRQS (DPI_MBOX_PF_VF_INT_IDX + 1)
+> > +
+> > +#define DPI_MAX_ENGINES 6
+> > +#define DPI_MAX_VFS	32
+> > +
+> > +#define DPI_ENGINE_MASK GENMASK(2, 0)
+> > +
+> > +#define DPI_DMA_IDS_DMA_NPA_PF_FUNC(x)		((u64)((x) &
+> GENMASK(15, 0)) << 16)
+> > +#define DPI_DMA_IDS_INST_STRM(x)		((u64)((x) &
+> GENMASK(7, 0)) << 40)
+> > +#define DPI_DMA_IDS_DMA_STRM(x)			((u64)((x) &
+> GENMASK(7, 0)) << 32)
+> > +#define DPI_DMA_ENG_EN_MOLR(x)			((u64)((x) &
+> GENMASK(9, 0)) << 32)
+> > +#define DPI_EBUS_PORTX_CFG_MPS(x)		((x) & GENMASK(2, 0)
+> << 4)
+> > +#define DPI_DMA_IDS_DMA_SSO_PF_FUNC(x)		((x) &
+> GENMASK(15, 0))
+> > +#define DPI_DMA_IDS2_INST_AURA(x)		((x) & GENMASK(19,
+> 0))
+> > +#define DPI_DMA_IBUFF_CSIZE_CSIZE(x)		((x) & GENMASK(13,
+> 0))
+> > +#define DPI_EBUS_PORTX_CFG_MRRS(x)		((x) & GENMASK(2,
+> 0))
+> > +#define DPI_ENG_BUF_BLKS(x)			((x) & GENMASK(5,
+> 0))
+> > +#define DPI_DMA_CONTROL_DMA_ENB
+> 	GENMASK_ULL(53, 48)
+> > +
+> > +#define DPI_DMA_CONTROL_O_MODE			BIT_ULL(14)
+> > +#define DPI_DMA_CONTROL_LDWB			BIT_ULL(32)
+> > +#define DPI_DMA_CONTROL_WQECSMODE1		BIT_ULL(37)
+> > +#define DPI_DMA_CONTROL_ZBWCSEN			BIT_ULL(39)
+> > +#define DPI_DMA_CONTROL_WQECSOFF(offset)	(((u64)offset) << 40)
+> > +#define DPI_DMA_CONTROL_WQECSDIS		BIT_ULL(47)
+> > +#define DPI_DMA_CONTROL_PKT_EN			BIT_ULL(56)
+> > +#define DPI_DMA_IBUFF_CSIZE_NPA_FREE		BIT(16)
+> > +
+> > +#define DPI_CTL_EN				BIT_ULL(0)
+> > +#define DPI_DMA_CC_INT				BIT_ULL(0)
+> > +#define DPI_DMA_QRST				BIT_ULL(0)
+> > +
+> > +#define DPI_REQQ_INT_INSTRFLT			BIT_ULL(0)
+> > +#define DPI_REQQ_INT_RDFLT			BIT_ULL(1)
+> > +#define DPI_REQQ_INT_WRFLT			BIT_ULL(2)
+> > +#define DPI_REQQ_INT_CSFLT			BIT_ULL(3)
+> > +#define DPI_REQQ_INT_INST_DBO			BIT_ULL(4)
+> > +#define DPI_REQQ_INT_INST_ADDR_NULL		BIT_ULL(5)
+> > +#define DPI_REQQ_INT_INST_FILL_INVAL		BIT_ULL(6)
+> > +#define DPI_REQQ_INT_INSTR_PSN			BIT_ULL(7)
+> > +
+> > +#define DPI_REQQ_INT \
+> > +	(DPI_REQQ_INT_INSTRFLT		| \
+> > +	DPI_REQQ_INT_RDFLT		| \
+> > +	DPI_REQQ_INT_WRFLT		| \
+> > +	DPI_REQQ_INT_CSFLT		| \
+> > +	DPI_REQQ_INT_INST_DBO		| \
+> > +	DPI_REQQ_INT_INST_ADDR_NULL	| \
+> > +	DPI_REQQ_INT_INST_FILL_INVAL	| \
+> > +	DPI_REQQ_INT_INSTR_PSN)
+> > +
+> > +#define DPI_PF_RAS_EBI_DAT_PSN	BIT_ULL(0)
+> > +#define DPI_PF_RAS_NCB_DAT_PSN	BIT_ULL(1)
+> > +#define DPI_PF_RAS_NCB_CMD_PSN	BIT_ULL(2)
+> > +
+> > +#define DPI_PF_RAS_INT \
+> > +	(DPI_PF_RAS_EBI_DAT_PSN  | \
+> > +	 DPI_PF_RAS_NCB_DAT_PSN  | \
+> > +	 DPI_PF_RAS_NCB_CMD_PSN)
+> > +
+> > +#define DPI_DMAX_IBUFF_CSIZE(x)	(0x0ULL | ((x) << 11))
+> > +#define DPI_DMAX_IDS(x)		(0x18ULL | ((x) << 11))
+> > +#define DPI_DMAX_IDS2(x)	(0x20ULL | ((x) << 11))
+> > +#define DPI_DMAX_QRST(x)	(0x30ULL | ((x) << 11))
+> > +
+> > +#define DPI_CTL		0x10010ULL
+> > +#define DPI_DMA_CONTROL 0x10018ULL
+> > +#define DPI_DMA_ENGX_EN(x) (0x10040ULL | ((x) << 3))
+> > +#define DPI_ENGX_BUF(x)	(0x100C0ULL | ((x) << 3))
+> > +
+> > +#define DPI_EBUS_PORTX_CFG(x) (0x10100ULL | ((x) << 3))
+> > +
+> > +#define DPI_PF_RAS 0x10308ULL
+> > +#define DPI_PF_RAS_ENA_W1C 0x10318ULL
+> > +
+> > +#define DPI_DMA_CCX_INT(x) (0x11000ULL | ((x) << 3)) #define
+> > +DPI_DMA_CCX_INT_ENA_W1C(x) (0x11800ULL | ((x) << 3))
+> > +
+> > +#define DPI_REQQX_INT(x) (0x12C00ULL | ((x) << 5)) #define
+> > +DPI_REQQX_INT_ENA_W1C(x) (0x13800ULL | ((x) << 5))
+> > +
+> > +#define DPI_MBOX_PF_VF_DATA0(x) (0x16000ULL | ((x) << 4)) #define
+> > +DPI_MBOX_PF_VF_DATA1(x) (0x16008ULL | ((x) << 4))
+> > +
+> > +#define DPI_MBOX_VF_PF_INT 0x16300ULL #define
+> DPI_MBOX_VF_PF_INT_W1S
+> > +0x16308ULL #define DPI_MBOX_VF_PF_INT_ENA_W1C 0x16310ULL
+> #define
+> > +DPI_MBOX_VF_PF_INT_ENA_W1S 0x16318ULL
+> > +
+> > +#define DPI_WCTL_FIF_THR 0x17008ULL
+> > +
+> > +#define DPI_EBUS_MAX_PORTS 2
+> > +
+> > +#define DPI_EBUS_MRRS_MIN 128
+> > +#define DPI_EBUS_MRRS_MAX 1024
+> > +#define DPI_EBUS_MPS_MIN  128
+> > +#define DPI_EBUS_MPS_MAX  1024
+> > +
+> > +#define DPI_QUEUE_OPEN  0x1
+> > +#define DPI_QUEUE_CLOSE 0x2
+> > +#define DPI_REG_DUMP    0x3
+> > +#define DPI_GET_REG_CFG 0x4
+> > +#define DPI_QUEUE_OPEN_V2 0x5
+> > +
+> > +#define DPI_MAGIC_NUM	0xf
+> > +
+> > +struct dpi_mps_mrrs_cfg {
+> > +	u16 mrrs; /* Max read request size */
+> > +	u16 mps;  /* Max packet size */
+> > +	u8 port;  /* Ebus port */
+> > +};
+> > +
+> > +struct dpi_engine_cfg {
+> > +	u64 fifo_mask; /* FIFO size mask in KBytes */
+> > +	u16 molr[DPI_MAX_ENGINES];
+> > +	u8 update_molr; /* '1' to update engine MOLR */ };
+> > +
+> > +enum dpi_mbox_rsp_type {
+> > +	DPI_MBOX_TYPE_CMD,
+> > +	DPI_MBOX_TYPE_RSP_ACK,
+> > +	DPI_MBOX_TYPE_RSP_NACK,
+> > +};
+> > +
+> > +struct dpivf_config {
+> > +	u16 csize;
+> > +	u32 aura;
+> > +	u16 sso_pf_func;
+> > +	u16 npa_pf_func;
+> > +};
+> > +
+> > +struct dpipf_vf {
+> > +	u8 this_vfid;
+> > +	bool setup_done;
+> > +	struct dpivf_config vf_config;
+> > +};
+> > +
+> > +/* DPI device mailbox */
+> > +struct dpi_mbox {
+> > +	struct work_struct work;
+> > +	/* lock to serialize mbox requests */
+> > +	struct mutex lock;
+> > +	struct dpipf *pf;
+> > +	u8 __iomem *pf_vf_data_reg;
+> > +	u8 __iomem *vf_pf_data_reg;
+> > +};
+> > +
+> > +struct dpipf {
+> > +	struct miscdevice miscdev;
+> > +	void __iomem *reg_base;
+> > +	struct pci_dev *pdev;
+> > +	struct dpipf_vf vf[DPI_MAX_VFS];
+> > +	/* Mailbox to talk to VFs */
+> > +	struct dpi_mbox *mbox[DPI_MAX_VFS];
+> > +};
+> > +
+> > +union dpi_mbox_message_t {
+> > +	u64 u[2];
+> > +	struct dpi_mbox_message_s {
+> > +		/* VF ID to configure */
+> > +		u64 vfid           :8;
+> > +		/* Command code */
+> > +		u64 cmd            :4;
+> > +		/* Command buffer size in 8-byte words */
+> > +		u64 csize          :14;
+> > +		/* aura of the command buffer */
+> > +		u64 aura           :20;
+> > +		/* SSO PF function */
+> > +		u64 sso_pf_func    :16;
+> > +		/* NPA PF function */
+> > +		u64 npa_pf_func    :16;
+> > +		/* Work queue completion status enable */
+> > +		u64 wqecs	:1;
+> > +		/* Work queue completion status byte offset */
+> > +		u64 wqecsoff	:7;
+> > +		/* Reserved */
+> > +		u64 rsvd	:42;
+> > +	} s __packed;
+> > +};
+> > +
+> > +/* Set MPS & MRRS parameters */
+> > +#define DPI_MPS_MRRS_CFG _IOW(DPI_MAGIC_NUM, 0, struct
+> > +dpi_mps_mrrs_cfg)
+> > +
+> > +/* Set Engine FIFO configuration */
+> > +#define DPI_ENGINE_CFG   _IOW(DPI_MAGIC_NUM, 1, struct
+> dpi_engine_cfg)
+>=20
+> How is an ioctl description living in a .c file?  This obviously isn't te=
+sted and will
+> not work :(
+>=20
+Thanks for the comments.
+It did work in my environment that had limited configs enabled. I will move=
+ it to include/uapi/misc/*.h file and correct the ioctls as per documentati=
+on in next version.
 
+> And those structures will also not work properly as an ioctl, please read=
+ the
+> kernel documentation for how to do this correctly.
+>=20
+
+
+
+> thanks,
+>=20
+> greg k-h
