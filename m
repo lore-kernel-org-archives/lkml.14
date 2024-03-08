@@ -1,67 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E55255E73;
-	Fri,  8 Mar 2024 11:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D1955E7B
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 11:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897943; cv=none; b=GlB+NNUJRrl6rydnffPZeokUXlfY8HRSox95w8UA8Bejc4RpdLilYqcXv+aFXUYRzuMZeDg95UBmiY9zaV67T4ozo6fmK8qu3PLCQIQfUZsJWupAxNM8alWkbvn58w0kxDYDO0JyR8LQkdi3D1mXEoR5o1TDNcOn/S7odDsTKds=
+	t=1709897945; cv=none; b=fXjsurzzTyk8iNKTtPbvS62564eYQ/ZgzGZyOUFSpFZ5tdKoeGm9YOFQYS62KqEByoFRjlLcUK3MhtQCissdkRXPGLtrGlf6NSU0RXKdETZes2NekkkeCdTbCYUjlQpoWXydmUxtlXyIvcHKOMPCjbQ8FXMssP9jnzXId0qcTkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897943; c=relaxed/simple;
-	bh=ZQFEhOPVbNc0FGaiWXIG5XMjjDWV7c8lgSMIDHSd9S4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QAUhX3OxxzsQADbH72rZPzE02F7++X7aG/eY5pX49qi809ezhv62JD1Y/BdXA1Za9o7QMisOiOBCKRadqBb+4J3IZmrpMYNcyeKgv4DEFMXsha2VU4FLbii/ZtJCAg1C+Mzn+/aFBueeACSQ1qAtZJr+dxzPVkT9REdy8x3snQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDdDmjFY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709897945; c=relaxed/simple;
+	bh=3B/cw9GjdraPUIrj1ZXN1KUh9QGuUVvejLGEF+4qNxE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZJirfqK5vslJkwxTzWlYUoqrTslbrzIxW7wBzRS8/6Nz8Q4uRbPlcuX0m1Q43K7xG3GCTV6y0XOx5d8xJTr3HvisE3zIc9rUDa7kZfyiSry+l3LXz7AX5k0FNqjStaNksmB0gRuBwESk6iWkMjrcf3eQcvcrfwF+kqIXYpFze9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OSUd4IgM; arc=none smtp.client-ip=185.70.40.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDdDmjFY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE9CC433F1;
-	Fri,  8 Mar 2024 11:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709897942;
-	bh=ZQFEhOPVbNc0FGaiWXIG5XMjjDWV7c8lgSMIDHSd9S4=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=MDdDmjFYt4DiwRLTiE9XWoh5gjqSfoqjHkkscGityvwcOwe8Lxoljnz0w2hPhUkDA
-	 AR/w3dGzhQzSyyocg0SPzfAFKQLbfaeIZNbjk9G6id/sgXK3y+GZh+uDajwFpwvBHA
-	 B95vN/kkretc3xKEQ6BDYpV8pyPdXJjmL8A+XjJmCq7izP/4oG7ySOXIsT3qV6fvcW
-	 iTPy9cBkqtNMvAdwx7izGoAbXNjgH4UIwNV78jreMMrRuoxKicR09MJc5gjgSwSL+7
-	 rmoWHS+0gECNnEP7tI2o0ip1LUaLSLa4QiYwHfZpot5tNfhUE8y3yat+UPDXNyTjr7
-	 1btOSONYvpjSQ==
-Date: Fri, 8 Mar 2024 12:38:58 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [GIT PULL] i2c-host fixes for v6.8
-Message-ID: <efnexv3cfnuuknfjpnsslfxsttbghicxijlmisu5oxgjcqsp66@iqjkp6mazf3n>
-References: <iofmooj4qz7j2rphzx3ahvpdur7pwoaj4jjduraffyto4yd7si@amqj4p4ldgef>
- <Zerb1TLGFq1rCbBw@ninjato>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OSUd4IgM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1709897934; x=1710157134;
+	bh=3B/cw9GjdraPUIrj1ZXN1KUh9QGuUVvejLGEF+4qNxE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=OSUd4IgMVKN0oOIVzlTktQB29QCcp/OsDT50e1v6XwHBPfETmr9+citxCjFx9rjJ8
+	 YQoii+NhZER+uRDFOCSbp8Bk/AFd5hauvhxYK/ckOyO12LpzAzubl2RwV8lFxQBwmi
+	 SPAhEWrK44I/KcFIRnublcrH+yV9IvT1Svw0nk7yoUFQQlqiPQzIaG43xRMGFnZwiX
+	 4AccqgPVOY+IUw5Ft2bK7uhczBwwxh7eRrOd6pI025qnE3EA2MIbhQC7/x1tuUe2XH
+	 Hh5293mM3MSdEGZiyWVqRXqwzhbVz0+pEqb0dhQTJQnGsq+TptULbha0wirhSKFxPB
+	 eUrjNchctzd0w==
+Date: Fri, 08 Mar 2024 11:38:49 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: don't select CONSTRUCTORS
+Message-ID: <a217a3d3-b81c-47e1-89a3-a67c57b44379@proton.me>
+In-Reply-To: <20240308-constructors-v1-1-4c811342391c@google.com>
+References: <20240308-constructors-v1-1-4c811342391c@google.com>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zerb1TLGFq1rCbBw@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Wolfram,
+On 3/8/24 10:36, Alice Ryhl wrote:
+> This was originally part of commit 4b9a68f2e59a0 ("rust: add support for
+> static synchronisation primitives") from the old Rust branch, which used
+> module constructors to initialize globals containing various
+> synchronisation primitives with pin-init. That commit has never been
+> upstreamed, but the `select CONSTRUCTORS` statement ended up being
+> included in the patch that initially added Rust support to the Linux
+> Kernel.
+>=20
+> We are not using module constructors, so let's remove the select.
+>=20
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-> thanks, pulled!
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-thank you!
-
-> > at this stage, four fixes make up a fat pull request, but there
-> > has been some turmoil in the last week. The rush to get things
-> > sent by the merge window might have generated the need for some
-> > fixes.
-> 
-> Don't worry, it is a bit more than usual but not really "fat" in my
-> book. One wish, though: If your fixes branches are upstream, could you
-> rebase the fixes branch to the latest rc? So, that only the unapplied
-> patches are in there?
-
-Sure, will do. From the next cycle I will keep everything rebased
-on top of the latest RC.
-
-Thank you,
-Andi
