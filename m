@@ -1,98 +1,89 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9E1EEFC;
-	Fri,  8 Mar 2024 00:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6536B7FA;
+	Fri,  8 Mar 2024 00:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709857221; cv=none; b=sVLxdsQiOc207UCeoU/+TPlzEX1wCUfvGSaus9L5lbzAi7A3+bj1XSHNcrfwEpVu2XQVNAe1xNT/DX5yRSNGDOxJRZS7wOAW85mP6iYexb9yCs/yqOnA7DBtkJOT6gqFDCFdK5rYlRvMSW5mjiKKIAd2Eu5py9MS5uByA6nf8jY=
+	t=1709857260; cv=none; b=o1uzKrLFlSzmktDglYtex29lnJQyoJpZJ+zTbJSmBlH6DhgrcVMbjP7m3w5Yw00c0EcdzpvOzqclubbh29bIS3R1V9tkLftZLMrFkP+hwZGs7m/N6xACvwrRt0FRGzh6tMbgEXL98JKQKVBs44q4Hiy/5mO3gg/vCvZjTlvzy+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709857221; c=relaxed/simple;
-	bh=rB4lp6/1YlAa413HSPp/WsLKqX4VSp3G7PnOY+g1JAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/3Ipp0qCWMRJRSbk5AAIo+LJvCRtZLQ4k6rJ/mLJlsTSTEuWBVzRbdzpIXqTb4lyIDK7/FMr5m1zkX7ZaYAaPitrgDgrz+iZPRGsnlrBji+LkxNJ/d8ysFEM/oMc/O/Fo7mqzxWasAj0BhNCMH8hNTFc6xNTKuIDqkV7RRoc0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLVzLu54; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709857260; c=relaxed/simple;
+	bh=+DB3tcg7Y6Q7phULhwzq4x6wxv0/xrGVKJN9EcGfwpQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=iN/k/5qU7pIMwlPJpzPRsvoFV4tE4wcgSRxPRxB3ww9GUHqU1EMgMvf/TiBbr2f0GZ1uHjuai3U6ylbXq4X3LOBFRDgdAAO+avhderXjzK7cnmXPS1vV41mVeLsjkTuR2ici0AZUF9PwrGPVAIBtzCOw3T963kP8D5rsxOu03+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Z/u8FdXh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLVzLu54"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d944e8f367so12982995ad.0;
-        Thu, 07 Mar 2024 16:20:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709857219; x=1710462019; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qiadRDhrHYs7pZHF0QSLGBthaeNvMdgIbhDEucBWyKo=;
-        b=aLVzLu549vsIDfUoO8+vvybW0oS1/HolXdBPRYu5QXH8M4BL3LW1Ze1k+yhP+3ZPSr
-         gPca4tLIzi85/6/Gk7NnKrrVojM+u28acVulwH2SVoV4JFaKzpH8rFCgVGYU1s3C7g1Q
-         SXL6XEtH0WTZDKoCYOapuS5QOEhVKEaeoqq281n2rxvETCAuBZxe2AsNsthFwnHVt8KB
-         WEn440YRiOE79bjOxs1MG6p6+G3ZcacOx+6I8fcavUodsrq1xF4+4ZDr/F7p3qKf4vrL
-         pWYXN201afwdeL9hKDoKATnibktQN2Mf1943pIPrgFsQDNIqttxWCBTdCEvBaJYg6z/L
-         iffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709857219; x=1710462019;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qiadRDhrHYs7pZHF0QSLGBthaeNvMdgIbhDEucBWyKo=;
-        b=KMHtNABU0eHh+OalC4TnUsSF2K1yCXkmTLo6+3W2lVLWGvxVFnHmAFHn3pqqgFHt0V
-         4NC1VZ1WQmQLlTGFD5qiYpDGe8J5lGoHLY+IZwGSC50RTTnYtJWYwDDXVKmSyWYsuNKr
-         c74WDMzsJ/gKsE3XmlsNP+8ThKcSZ+31+VMcevRQLdL0Nl18M0YC+UIBcm8eOZrsnHf4
-         +BppixS/ueorVkYVHv/XywFYKqsdkfILQ69o4o9zd9shBUqWllLxgSGUSIEwkSOUWjvl
-         ftPVquVkot9Fw/iTgZSO5bV8TeqQ0eOgZPUVO9puE4st6IPrmdtbwA7oONfVd2JpRZ2g
-         W3fw==
-X-Forwarded-Encrypted: i=1; AJvYcCWavbJygBVWea+sxM+XAI02U/jzJ86ZzcsSvwr+K5Y3CCuF1HnWn8WPhE97sDb7jEnBEN3FuOP9jiijdpirREGdlBrqV/5+5TjMrNLxSrc3rIxnmU6JrkyrqZ5jA6r+46t5ZQ08HV4B824=
-X-Gm-Message-State: AOJu0Yyra9GTKpS/YIm9R5jF+QUwORZqwa9xR7+s4kxFSVFXpClGjyxm
-	vZfLe9+SfgC41M0f8/Vfl7eryfvioTpVAyDpCSm43R/ety2Ai5KZ
-X-Google-Smtp-Source: AGHT+IFBRC9tP0PXluHmsZX9a4ly6ggPtNiYS7cmVXkZrd6NvkNbVxC8pgJs0esQ1Vr/gDH82hjMWA==
-X-Received: by 2002:a17:903:2a86:b0:1dd:3d06:6b7d with SMTP id lv6-20020a1709032a8600b001dd3d066b7dmr6180475plb.58.1709857218685;
-        Thu, 07 Mar 2024 16:20:18 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:13a:f30c:e020:9a13])
-        by smtp.gmail.com with ESMTPSA id q7-20020a17090311c700b001db608b54a9sm15183763plh.23.2024.03.07.16.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 16:20:18 -0800 (PST)
-Date: Thu, 7 Mar 2024 16:20:15 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mathias Krause <minipli@grsecurity.net>
-Cc: Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Nick Dyer <nick@shmanahar.org>,
-	Brad Spengler <spender@grsecurity.net>,
-	Sasha Levin <sashal@kernel.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: synaptics-rmi4 - fix UAF of IRQ domain on driver
- removal
-Message-ID: <ZepZv98s4cHR24E1@google.com>
-References: <20240222142654.856566-1-minipli@grsecurity.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Z/u8FdXh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD70EC433C7;
+	Fri,  8 Mar 2024 00:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1709857259;
+	bh=+DB3tcg7Y6Q7phULhwzq4x6wxv0/xrGVKJN9EcGfwpQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Z/u8FdXhN9aKSGIqwDk49GmtVvQq6jSu1gopB9bJZ6kGBinGn2FAesHXkXOWYcBXv
+	 3xlNUCfnZiU1S/WPugFQRis9oLIhOwS3SJH7S09Zt9RljSX9CNsgI0fRsaDooY1tpI
+	 nc5hqx6hMBSd64ontCuznJbjMvUGKG8xq9fm6Tag=
+Date: Thu, 7 Mar 2024 16:20:59 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ mm-commits@vger.kernel.org
+Subject: [GIT PULL] hotfixes for 6.8
+Message-Id: <20240307162059.88fcc2a013c9ce1f3f72042d@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222142654.856566-1-minipli@grsecurity.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 22, 2024 at 03:26:54PM +0100, Mathias Krause wrote:
-> Calling irq_domain_remove() will lead to freeing the IRQ domain
-> prematurely. The domain is still referenced and will be attempted to get
-> used via rmi_free_function_list() -> rmi_unregister_function() ->
-> irq_dispose_mapping() -> irq_get_irq_data()'s ->domain pointer.
-> 
-> With PaX's MEMORY_SANITIZE this will lead to an access fault when
-> attempting to dereference embedded pointers, as in Torsten's report that
-> was faulting on the 'domain->ops->unmap' test.
-> 
-> Fix this by releasing the IRQ domain only after all related IRQs have
-> been deactivated.
-> 
-> Fixes: 24d28e4f1271 ("Input: synaptics-rmi4 - convert irq distribution to irq_domain")
-> Reported-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
-> Signed-off-by: Mathias Krause <minipli@grsecurity.net>
 
-Applied, thank you.
+Linus, please merge this small batch of hotfixes, thanks.
 
--- 
-Dmitry
+
+The following changes since commit 720da1e593b85a550593b415bf1d79a053133451:
+
+  mm/debug_vm_pgtable: fix BUG_ON with pud advanced test (2024-02-23 17:27:13 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2024-03-07-16-17
+
+for you to fetch changes up to ded79af42f114bb89f8e90c8e7337f5b7bb5f015:
+
+  scripts/gdb/symbols: fix invalid escape sequence warning (2024-03-07 16:14:19 -0800)
+
+----------------------------------------------------------------
+6 hotfixes.  4 are cc:stable and the remainder pertain to post-6.7
+issues or aren't considered to be needed in earlier kernel versions.
+
+----------------------------------------------------------------
+Andrew Ballance (1):
+      scripts/gdb/symbols: fix invalid escape sequence warning
+
+Kees Cook (1):
+      init/Kconfig: lower GCC version check for -Warray-bounds
+
+Niklas Cassel (1):
+      mailmap: fix Kishon's email
+
+Qi Zheng (1):
+      mm: userfaultfd: fix unexpected change to src_folio when UFFDIO_MOVE fails
+
+Vlastimil Babka (2):
+      mm, vmscan: prevent infinite loop for costly GFP_NOIO | __GFP_RETRY_MAYFAIL allocations
+      mm, mmap: fix vma_merge() case 7 with vma_ops->close
+
+ .mailmap                     |  1 +
+ include/linux/gfp.h          |  9 +++++++++
+ init/Kconfig                 |  6 +++---
+ mm/compaction.c              |  7 +------
+ mm/mmap.c                    | 10 +++++++++-
+ mm/page_alloc.c              | 10 ++++++----
+ mm/userfaultfd.c             |  6 +++---
+ mm/vmscan.c                  |  5 ++++-
+ scripts/gdb/linux/symbols.py |  2 +-
+ 9 files changed, 37 insertions(+), 19 deletions(-)
+
