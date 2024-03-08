@@ -1,27 +1,28 @@
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF321429E
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1E11B947
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709902346; cv=none; b=hMz81ajxhy2HOSPimwhUtmjH7TKljGyoMw+kjOLiCRZckJ/8vPJivzJOgxMIh2zM5XQVoBa9IPUHiebw7+YqC029gam4ukGjOLTn8pdokEiu0zi0ZJZj7u0RY/ccEkBDoFMac8BPeqzLrAs/Z6thMbwa/ueLi/jlHCD79wCSCyI=
+	t=1709902347; cv=none; b=ZnziGKHykXJ/4XXjwrhW9PAPqpgR/kOTddv4bUJjIs1aXHOOwfm0Toxncl0MmeDlcAZeCOL8+vV1/drn7cfeZSvjfitDuMpjhVTlK/9LpBhAZfQLWD5mf/e6I0q7kx1AEH+oNAQRdleHSK6BIvLvjGTjnsGlweZgqlFUZfNhj10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709902346; c=relaxed/simple;
-	bh=XlOhwNLXVrKct8OH/oxJVQEEYWtbUzLjg60WCqrTM6k=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=g5UriBdbbaWg8ZZqURCbsJetJtkw0B+Xf14YDkY37ybttMsQ1BvAx7G029ML4LIqILk+tD5AKUHaCFB+HS7xnwK5yMKka/RouZgwGzLm4SdQaSF9Gq8xyn1Rb3L/BY33+2aK7zqi7beYnGMVPs8yHWcPJndU8vqei0LmxuPZUF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.14
+	s=arc-20240116; t=1709902347; c=relaxed/simple;
+	bh=oO4i3HoAXE8oa/LHkMaPbOF10iI4nIvpFAYMuYeeLbM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=onrygE/WqNC4DDWS+TDPVpIvMEgEBHrSUGBHoVMJK4iMFCMWeUlFIlltr4jeqZX2tnLn9yoJ1LQ+iYlKP/HlTWrWsXZxtu/efY1DgkLDQj2wLp6YHVulqYcPxmNMtDlKJAtEMToBLMR0gFTtfMs3eieSC7IEKB0dpsKNEmNGIMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TrmKC4vd3zMqB2L;
-	Fri,  8 Mar 2024 13:52:15 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TrmKB62vyzMpnPl;
-	Fri,  8 Mar 2024 13:52:14 +0100 (CET)
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TrmKF3HfCztpY;
+	Fri,  8 Mar 2024 13:52:17 +0100 (CET)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TrmKD63f6zMppDY;
+	Fri,  8 Mar 2024 13:52:16 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Subject: [PATCH 0/3] rockchip: small DTS fixes for RK3399 Puma
-Date: Fri, 08 Mar 2024 13:52:07 +0100
-Message-Id: <20240308-puma-diode-pu-v1-0-2b38457bcdc0@theobroma-systems.com>
+Date: Fri, 08 Mar 2024 13:52:10 +0100
+Subject: [PATCH 3/3] arm64: dts: rockchip: add regulators for PCIe on
+ RK3399 Puma Haikou
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,9 +31,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPcJ62UC/x2MQQqAIBAAvxJ7TlDTiL4SHaxdaw9ZKEUg/j3pN
- nOYyZAoMiUYmwyRHk58hiqqbWDdXdhIMFYHLbWRnRzEdR9OIJ9IFYVC7Y21aqEeoTZXJM/v/5v
- mUj5PnP/3XwAAAA==
+Message-Id: <20240308-puma-diode-pu-v1-3-2b38457bcdc0@theobroma-systems.com>
+References: <20240308-puma-diode-pu-v1-0-2b38457bcdc0@theobroma-systems.com>
+In-Reply-To: <20240308-puma-diode-pu-v1-0-2b38457bcdc0@theobroma-systems.com>
 To: Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
@@ -44,35 +45,83 @@ Cc: Klaus Goger <klaus.goger@theobroma-systems.com>,
 X-Mailer: b4 0.13.0
 X-Infomaniak-Routing: alpha
 
-There's a pull-up missing on a pin that is used as GPIO input for PCIe
-which will make the diode/level-shifter not let voltage pass and thus
-not allowing the state of the pin to change.
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-Also add the missing regulators for the PCIe PHY+connector though this
-is purely cosmetic.
+The PCIe PHY requires two regulators and are present on the SoM
+directly, while the PCIe connector also exposes 3V3 and 12V power rails
+which are available on the baseboard.
 
-There's also a missing PU on the USB ID pin used as a GPIO input, so
-let's add it for the same reasons as the one used for PCIe listed above.
+Considering that 3/4 regulators are always-on on HW level and that the
+last one depends on a regulator from the PMIC that is specified as
+always on, this commit should be purely cosmetic and no change in
+behavior is expected.
 
-Note there's a light dependency on
-https://lore.kernel.org/linux-rockchip/43d84aa9-ce0f-406e-82ac-2a691264ee23@theobroma-systems.com/T/#ma0499cbc5e5c20f1a4c6b8452baa2d296abe2d0d
-to prevent a git conflict for the maintainer(s).
+Let's add all regulators for PCIe on RK3399 Puma Haikou.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 ---
-Quentin Schulz (3):
-      arm64: dts: rockchip: enable internal pull-up on Q7_USB_ID for RK3399 Puma
-      arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
-      arm64: dts: rockchip: add regulators for PCIe on RK3399 Puma Haikou
-
  .../arm64/boot/dts/rockchip/rk3399-puma-haikou.dts |  2 ++
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      | 33 +++++++++++++++++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
----
-base-commit: 370e52abbf8306f09b0022995ad7ccdff3a834bb
-change-id: 20240308-puma-diode-pu-1d2f4551be6d
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      | 26 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-Best regards,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+index 18a98c4648eae..66ebb148bbc9a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+@@ -194,6 +194,8 @@ &pcie0 {
+ 	num-lanes = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_clkreqn_cpm>;
++	vpcie3v3-supply = <&vcc3v3_baseboard>;
++	vpcie12v-supply = <&dc_12v>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 2484ad2bd86fc..1113f57b09313 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -79,6 +79,26 @@ vcc5v0_sys: vcc5v0-sys {
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
++	vcca0v9: vcca0v9-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcca0v9";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <900000>;
++		vin-supply = <&vcc_1v8>;
++	};
++
++	vcca1v8: vcca1v8-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcca1v8";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc3v3_sys>;
++	};
++
+ 	vdd_log: vdd-log {
+ 		compatible = "pwm-regulator";
+ 		pwms = <&pwm2 0 25000 1>;
+@@ -416,6 +436,12 @@ &io_domains {
+ 	gpio1830-supply = <&vcc_1v8>;
+ };
+ 
++&pcie0 {
++	/* PCIe PHY supplies */
++	vpcie0v9-supply = <&vcca0v9>;
++	vpcie1v8-supply = <&vcca1v8>;
++};
++
+ &pcie_clkreqn_cpm {
+ 	rockchip,pins =
+ 		<2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_up>;
+
 -- 
-Quentin Schulz <quentin.schulz@theobroma-systems.com>
+2.44.0
 
