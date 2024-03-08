@@ -1,242 +1,190 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB3B4085D;
-	Fri,  8 Mar 2024 18:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F9C4879B
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 18:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709921088; cv=none; b=VqtgjT2Taf5+7v5PEqoP0Ptd++EtGg4K9WLURhPew3w6GQlXwQSHdXMB70JHUruo1xjQF+swOvVBfHQzxZB5+mHh5VgOoeXPwQ3ibuBK1ta2mHUR1fHJn1t26pJdKO1LevQlfmBw0o8+mMoTKkx1eiuv4id13GSMbLQUQ61e9q4=
+	t=1709921109; cv=none; b=ZqbaX4DszqnLqpkE/8JxNMVyNkVr0o1p/0Av0JOj4d630VT3NoapVsOH0Y8mnrnDG+rQ750qH/GstiM3snsKUgktIfNGPqVF0j0Bxv0lyGCqT9uX0H1rogfzrpL7n8CkfGE9EAH3qQF+HQmqIWKjVUrP+Jk9pStpPwDWlhOL45E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709921088; c=relaxed/simple;
-	bh=DgRla8Vemcg3N2Xu8hP2gOK08LWRmoXvUIZoE1kt93k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mN0IxMPV/WdTx2d1X6KiyWsc+bpHlaZS9kg1/sHuNaOD/+xlsQynJODwqfGcDl1m/toM5wppSDKElf6vnGnHBoAVT/dJYkdjxoX2T8CDwvd5RxHNqL7YagQkF2Te0PX9qOnIMcCxMoIAJANRdIYep3J9OePrxM5kN8ctQsM/A8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UP5kSPym; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709921109; c=relaxed/simple;
+	bh=/aIrNO8xFlwugwx4fBrTPk+mSw79iBQ4+5XToAQE04Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=liderQhKx7RLksyK7AKVirS/Ia/stOgLvVFgxTOoIx5bxtRhF6Oiy0+u0fJh/vAUZtZBjf+QdVL3hFx1CyrPMd8qnbWHddjdoC0hZlvt0L7+MMVYyiTXRsc2kxbdB4r+CMYUAKBlMPlCSK4ctABQrtXPa3iKw4CixOw5k89n1sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=nH6RN648; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UP5kSPym"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e4eaa4b394so1077536a34.1;
-        Fri, 08 Mar 2024 10:04:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="nH6RN648"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d8b276979aso1726675a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 10:05:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709921086; x=1710525886; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Is7K4+wisW8bZSxpqo0nKy4Z8xog4B5RxdNeDQtbIQY=;
-        b=UP5kSPymdqA6qYlr6C7/84VZNPFvAGAPXJ+AaqEYfUWnWgh6JuM9WaE0ykhcxEzo38
-         DF2rwBukUSYWNMAYit99pdgrXLN36t83x7yqVDUJ9Q6h9ndZ+gnuYggG/92vALRHABZx
-         L86PUQWn5C6yzuVMOe/0MgYpVt13EFQ7Wq2ouumaZ2hUnCxugtypnRaWX2MjDNppMK0k
-         hKHfGMSy6dEngOyQzul/D4NrK74HUBZK5xzRY2LXK0wN4WBsoW2I+M4ZU5BC30KxdM+8
-         /nu9cGL2FYPO7IJCjqOE6fvZVN7PDnVcP31SaW/ZaA2YPKiP9CDQscbePFLaLnEV+GPo
-         f4Bw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709921107; x=1710525907; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xLs3kZ5OblOBLvikyewkAB+57eMxN1fpqXGCrqHaNUI=;
+        b=nH6RN648rqUA/+EvSV0DtjXWXDoT98tYcXX3lxXjTR67qczy5H4Ey2tYY0sERBqtih
+         ovb+pFrcldV1R2EXz+enuwdZNh6APbbX0o4zlrCch1T8sN1e+jeaxCsnQaFPbS7z4TpI
+         vZyAYPYKmDWscKxtYv4UHeYHfqNsRrYrcFMTA9nPiH/28QQpCwf5JZCNJzv633efstM5
+         PbqHpHZyQ5xgcebBjDiSJ1bzFl+fLGMbrgPKWDHqLhBEHJasB76uJgIgBmAwonGc8Kj+
+         4XKUh1sy2CfBJPiKZQ46y3YMRMdryEm3PoxOWJFOpYx6HVBhr+7pd5kzBbao01Um+oRd
+         Xc8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709921086; x=1710525886;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Is7K4+wisW8bZSxpqo0nKy4Z8xog4B5RxdNeDQtbIQY=;
-        b=dunow1ZOMZOj5erGGdFtl4XbEPb/6F+1PDivg3o83eWv3FvIxRWvqQqsimHOB96gXV
-         mpDQFjEVdjrLYrbf6tRJvGxRC7YtCeo5LdULNujzWud75Iftn3pTfmhRbIPfmYu8f987
-         pYs0cbsQBVgWgjMI1e+40p9wp0Lt/Pwm+N0BQ4qyjCp6XvYCZQFrdZCEtw/uMFoOIo6g
-         /ieqFWd1GKv5QNNL/x63XDzKRiRZ3YbieDc+WWGRvaKkNgPcawDaeO38F+uSCDVe7nGq
-         O1Sdc3xVziVqdCgJU90Bb6eY7hU14/590JlqAzxrV7exbqLjOK/6Hrmn3xhuITf3YE+i
-         iydQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8eRXHkPENP7640RTQlkmiyjZZi2JRH5GY9Qv8dkaCp6dMMQYr+S9xezEvuS+ot1PQPDHINoiRWsIA4MHN2y3Ru/Z+0vTjCUnD0y6WodJUM+ybzckcW7Zum+jmPLg9NIL09T4wEudVLXR+Ll+T/nzvkJpIS6f1LWmkU0JnP2rMLc0Vl8fr6NNIQGI4XZEHzCvlSOldYutHMoiAVc2jCxsEk+cna0xk
-X-Gm-Message-State: AOJu0YzeVxq87nGGNOjdP8uGAcBUZFBtjPKmbuC0dZ2HVxLUguWBdidL
-	1xj6WF/h0qKyCErfIsY/OwyFHCndDsmdzodi36Mjb0zd12vPDtjM7+bquWH3yWrjOnHb800wZrf
-	c3OQ5iTNZRo7tBs0izh+oTBP89JtPLcne12Q=
-X-Google-Smtp-Source: AGHT+IGqW7tdNTBPDYxaWB1aenTyJ6JRK/ye4Up6Ni3gBtz31pRs1tUqJe0ojNNBj7nQSkgkXh4tJlPaMz3Utnb2lqo=
-X-Received: by 2002:a9d:7ad6:0:b0:6e4:d6d8:fbaa with SMTP id
- m22-20020a9d7ad6000000b006e4d6d8fbaamr12247845otn.37.1709921086307; Fri, 08
- Mar 2024 10:04:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709921107; x=1710525907;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xLs3kZ5OblOBLvikyewkAB+57eMxN1fpqXGCrqHaNUI=;
+        b=UAfSltqe7ow8Aksv1/lljExOT8X5Kq6bIU3IyLz3tOgqjNVOOEGZslGwAsCKB0KTru
+         a4Q1JTMKwBOfWVz3FPJsjKLLKMCm4EkVuc0kO+6Qac94zxVqPZ44V0ReUcgRydafSOHm
+         6CpDWE6bAFFuuz9qW7jddo2aVPEG9dWgv3CVekaaRHIzZBJdqbZ6BCZE3jvEQ6H7+h6G
+         AuhKTFPzFgn5EEbVlPiQ4nSsUqTRyhPJFGxLJ+p0bjyinf5P5yIqIGBj+IE4LUFYAp1x
+         X+mwA+ZL76QyaPMcsalNVionLocVM0PHdK59c59DA1P114ugiIeGFpEa4AHkcSBUXM6z
+         SNaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyDkcvgRe/cCjhNCZ6b2h0IRyJnxqWXcnIFzEmBB7VKDFDpwfUVZQtIKefRmLWgIlF+I8w/IVZK1v3PILx+rEA5Bt1sLBBfAPQUb6T
+X-Gm-Message-State: AOJu0Yyw5LrB9mGNmY/g1+HiJSde1LehMt/OsVUtlatYPD4LvXbqNeUL
+	823nCdR/HZEhgHwEm2HCK/cKw6zCp6VdhTjIfFb++tEae5CUVQdW/6PGsReUitc=
+X-Google-Smtp-Source: AGHT+IENQYcM6sGyM8j6pDoEai9UQoUvp+q5q0Z2Rg+MMx+kdD4QbDMnrmI/tcug7Njwiwm+KSu6Qg==
+X-Received: by 2002:a17:90b:914:b0:29b:976d:b5b2 with SMTP id bo20-20020a17090b091400b0029b976db5b2mr758045pjb.17.1709921106862;
+        Fri, 08 Mar 2024 10:05:06 -0800 (PST)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id a24-20020a631a18000000b005dc491ccdcesm14313052pga.14.2024.03.08.10.05.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 10:05:06 -0800 (PST)
+Date: Fri, 8 Mar 2024 10:05:02 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>, Evan Green <evan@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	linux-riscv@lists.infradead.org, Charles Lohr <lohr85@gmail.com>
+Subject: Re: [PATCH v8 4/4] riscv: Set unaligned access speed at compile time
+Message-ID: <ZetTThVgR0U29EN4@ghost>
+References: <20240307-disable_misaligned_probe_config-v8-0-55d696cb398b@rivosinc.com>
+ <20240307-disable_misaligned_probe_config-v8-4-55d696cb398b@rivosinc.com>
+ <CAJM55Z9SYA=QMg0Wg-e0Q8nOTP6qSKkc+kxHMGOmmmWrEcVf7w@mail.gmail.com>
+ <20240308-docile-pretense-b44c3a84d8b2@wendy>
+ <CAJM55Z8EX5D0HZ1xKTkaQEL1RF46DrBynUoTSMP5q8kmDGY_=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308172726.225357-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240308172726.225357-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <OSAPR01MB1587CFE774834B31820E7D5486272@OSAPR01MB1587.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSAPR01MB1587CFE774834B31820E7D5486272@OSAPR01MB1587.jpnprd01.prod.outlook.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 8 Mar 2024 18:03:39 +0000
-Message-ID: <CA+V-a8uJO_qz6CaD2zUXC1Kf7tuM+Nzq6W+WHjy09NN2FAn+fA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] i2c: riic: Pass register offsets and chip details as
- OF data
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <Chris.Brandt@renesas.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z8EX5D0HZ1xKTkaQEL1RF46DrBynUoTSMP5q8kmDGY_=w@mail.gmail.com>
 
-Hi Biju,
+On Fri, Mar 08, 2024 at 05:35:03AM -0800, Emil Renner Berthing wrote:
+> Conor Dooley wrote:
+> > On Fri, Mar 08, 2024 at 01:52:24AM -0800, Emil Renner Berthing wrote:
+> > > Charlie Jenkins wrote:
+> >
+> > > >  config RISCV_MISALIGNED
+> > > > -	bool "Support misaligned load/store traps for kernel and userspace"
+> > > > +	bool
+> > > >  	select SYSCTL_ARCH_UNALIGN_ALLOW
+> > > > -	default y
+> > > >  	help
+> > > > -	  Say Y here if you want the kernel to embed support for misaligned
+> > > > -	  load/store for both kernel and userspace. When disable, misaligned
+> > > > -	  accesses will generate SIGBUS in userspace and panic in kernel.
+> > > > +	  Embed support for misaligned load/store for both kernel and userspace.
+> > > > +	  When disabled, misaligned accesses will generate SIGBUS in userspace
+> > > > +	  and panic in the kernel.
+> > >
+> > > Hmm.. this is *may* generate SIGBUS in userspace and panic the kernel. The CPU
+> > > could support unaligned access natively or there might be a handler in M-mode,
+> > > right?
+> >
+> > Correct. The last sentence could become "When disabled, and there is no
+> > support in hardware or firmware, unsigned accesses will...". That said,
+> > this option is no longer user visible, so we could really simplify the
+> > hell out of this option to just mention that it controls building the
+> > in-kernel emulator.
+> >
+> > > > +choice
+> > > > +	prompt "Unaligned Accesses Support"
+> > > > +	default RISCV_PROBE_UNALIGNED_ACCESS
+> > > > +	help
+> > > > +	  This determines the level of support for unaligned accesses. This
+> > > > +	  information is used by the kernel to perform optimizations. It is also
+> > > > +	  exposed to user space via the hwprobe syscall. The hardware will be
+> > > > +	  probed at boot by default.
+> > > > +
+> > > > +config RISCV_PROBE_UNALIGNED_ACCESS
+> > > > +	bool "Probe for hardware unaligned access support"
+> > > > +	select RISCV_MISALIGNED
+> > > > +	help
+> > > > +	  During boot, the kernel will run a series of tests to determine the
+> > > > +	  speed of unaligned accesses. This probing will dynamically determine
+> > > > +	  the speed of unaligned accesses on the underlying system. If unaligned
+> > > > +	  memory accesses trap into the kernel as they are not supported by the
+> > > > +	  system, the kernel will emulate the unaligned accesses to preserve the
+> > > > +	  UABI.
+> > > > +
+> > > > +config RISCV_EMULATED_UNALIGNED_ACCESS
+> > > > +	bool "Emulate unaligned access where system support is missing"
+> > > > +	select RISCV_MISALIGNED
+> > > > +	help
+> > > > +	  If unaligned memory accesses trap into the kernel as they are not
+> > > > +	  supported by the system, the kernel will emulate the unaligned
+> > > > +	  accesses to preserve the UABI. When the underlying system does support
+> > > > +	  unaligned accesses, the unaligned accesses are assumed to be slow.
+> > >
+> > > It's still not quite clear to me when you'd want to choose this over probing
+> > > above. Assuming the probe measures correctly this can only result in a kernel
+> > > that behaves the same or slower than with the option above, right?
+> >
+> > Aye, mostly the same - some people don't want the boot-time overhead
+> > of actually running the profiling code, so this option is for them.
+> > Maybe that's not such a big deal anymore with the improvements to do it
+> > in parallel, but given how bad performance on some of the systems is
+> > when firmware does the emulation, it is definitely still noticeable.
+> > I know we definitely have customers that care about their boot time very
+> > strongly, so I can imagine they'd be turning this off.
+> 
+> Ah, that makes sense. So maybe a help text more along the lines of "Disable
+> probing and optimizations for CPUs with fast unaligned memory access" would be
+> a better description of this choice?
 
-On Fri, Mar 8, 2024 at 5:36=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
-> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the patch.
->
-> > -----Original Message-----
-> > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: Friday, March 8, 2024 5:27 PM
-> > Subject: [PATCH 4/5] i2c: riic: Pass register offsets and chip details =
-as OF data
-> >
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > With an increasing number of SoCs reusing this driver, each with slight=
- variations in the RIIC IP, it
-> > becomes necessary to support passing these details as OF data. This app=
-roach simplifies the extension
-> > of the driver for other SoCs.
-> >
-> > This patch lays the groundwork for adding support for the Renesas RZ/V2=
-H SoC.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > ---
-> >  drivers/i2c/busses/i2c-riic.c | 59 ++++++++++++++++++++++++++---------
-> >  1 file changed, 44 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-rii=
-c.c index
-> > 49a12f1ecdf9..3398d639b754 100644
-> > --- a/drivers/i2c/busses/i2c-riic.c
-> > +++ b/drivers/i2c/busses/i2c-riic.c
-> > @@ -46,18 +46,6 @@
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/reset.h>
-> >
-> > -#define RIIC_ICCR1   0x00
-> > -#define RIIC_ICCR2   0x04
-> > -#define RIIC_ICMR1   0x08
-> > -#define RIIC_ICMR3   0x10
-> > -#define RIIC_ICSER   0x18
-> > -#define RIIC_ICIER   0x1c
-> > -#define RIIC_ICSR2   0x24
-> > -#define RIIC_ICBRL   0x34
-> > -#define RIIC_ICBRH   0x38
-> > -#define RIIC_ICDRT   0x3c
-> > -#define RIIC_ICDRR   0x40
-> > -
-> >  #define ICCR1_ICE    0x80
-> >  #define ICCR1_IICRST 0x40
-> >  #define ICCR1_SOWP   0x10
-> > @@ -87,6 +75,13 @@
-> >
-> >  #define RIIC_INIT_MSG        -1
-> >
-> > +#define RIIC_RZ_A_TYPE       0
->
-> > +
-> > +struct riic_of_data {
-> > +     u8 family;
->
-> Do you need family as compatible have this information?
->
-Yes this is added to future proof it, as the RZ/V2H SoC has some bit
-differences in the slave address register as compared to RZ/A and
-RZ/G2L. Comparing the family outside probe is not always preferred
-hence this is added as part of OF data.
+It does cause probing/optimizations to not be enabled, but it does not
+"disable" them. For maximal optimizations for fast unaligned accesses,
+the user must select RISCV_EFFICIENT_UNALIGNED_ACCESS before and after
+this change. For probing, the user must select
+RISCV_PROBE_UNALIGNED_ACCESS.
 
-Cheers,
-Prabhakar
+- Charlie
 
-> > +     u8 regs[];
-> > +};
-> > +
-> >  struct riic_dev {
-> >       void __iomem *base;
-> >       u8 *buf;
-> > @@ -94,6 +89,7 @@ struct riic_dev {
-> >       int bytes_left;
-> >       int err;
-> >       int is_last;
-> > +     const struct riic_of_data *info;
-> >       struct completion msg_done;
-> >       struct i2c_adapter adapter;
-> >       struct clk *clk;
-> > @@ -105,14 +101,28 @@ struct riic_irq_desc {
-> >       char *name;
-> >  };
+> 
+> > > > +
+> > > > +config RISCV_SLOW_UNALIGNED_ACCESS
+> > > > +	bool "Assume the system supports slow unaligned memory accesses"
+> > > > +	depends on NONPORTABLE
+> > > > +	help
+> > > > +	  Assume that the system supports slow unaligned memory accesses. The
+> > > > +	  kernel and userspace programs may not be able to run at all on systems
+> > > > +	  that do not support unaligned memory accesses.
+> > >
+> > > Again you're just explicitly saying no to the optimizations the kernel might do
+> > > if it detects fast unaligned access, only here you'll also crash if they're not
+> > > handled by the CPU or M-mode. Why would you want that?
+> > >
+> > > I'm probably missing something, but the only reason I can think of is if you
+> > > want build a really small kernel and save the few bytes for the handler and
+> > > probing code.
 > >
-> > +enum riic_reg_list {
-> > +     RIIC_ICCR1 =3D 0,
-> > +     RIIC_ICCR2,
-> > +     RIIC_ICMR1,
-> > +     RIIC_ICMR3,
-> > +     RIIC_ICSER,
-> > +     RIIC_ICIER,
-> > +     RIIC_ICSR2,
-> > +     RIIC_ICBRL,
-> > +     RIIC_ICBRH,
-> > +     RIIC_ICDRT,
-> > +     RIIC_ICDRR,
-> > +};
-> > +
-> >  static inline void riic_writeb_reg(u8 val, struct riic_dev *riic, u8 o=
-ffset)  {
-> > -     writeb(val, riic->base + offset);
-> > +     writeb(val, riic->base + riic->info->regs[offset]);
-> >  }
-> >
-> >  static inline u8 riic_readb_reg(struct riic_dev *riic, u8 offset)  {
-> > -     return readb(riic->base + offset);
-> > +     return readb(riic->base + riic->info->regs[offset]);
-> >  }
-> >
-> >  static inline void riic_clear_set_bit(struct riic_dev *riic, u8 clear,=
- u8 set, u8 reg) @@ -453,6
-> > +463,8 @@ static int riic_i2c_probe(struct platform_device *pdev)
-> >               }
-> >       }
-> >
-> > +     riic->info =3D of_device_get_match_data(&pdev->dev);
-> > +
-> >       adap =3D &riic->adapter;
-> >       i2c_set_adapdata(adap, riic);
-> >       strscpy(adap->name, "Renesas RIIC adapter", sizeof(adap->name)); =
-@@ -497,8 +509,25 @@ static void
-> > riic_i2c_remove(struct platform_device *pdev)
-> >       pm_runtime_disable(&pdev->dev);
-> >  }
-> >
-> > +static const struct riic_of_data riic_rz_a_info =3D {
-> > +     .family =3D RIIC_RZ_A_TYPE,
-> > +     .regs =3D {
-> > +             [RIIC_ICCR1] =3D 0x00,
-> > +             [RIIC_ICCR2] =3D 0x04,
-> > +             [RIIC_ICMR1] =3D 0x08,
-> > +             [RIIC_ICMR3] =3D 0x10,
-> > +             [RIIC_ICSER] =3D 0x18,
-> > +             [RIIC_ICIER] =3D 0x1c,
-> > +             [RIIC_ICSR2] =3D 0x24,
-> > +             [RIIC_ICBRL] =3D 0x34,
-> > +             [RIIC_ICBRH] =3D 0x38,
-> > +             [RIIC_ICDRT] =3D 0x3c,
-> > +             [RIIC_ICDRR] =3D 0x40,
-> > +     },
-> > +};
-> > +
-> >  static const struct of_device_id riic_i2c_dt_ids[] =3D {
-> > -     { .compatible =3D "renesas,riic-rz", },
-> > +     { .compatible =3D "renesas,riic-rz", .data =3D &riic_rz_a_info },
-> >       { /* Sentinel */ },
-> >  };
-> >
-> > --
-> > 2.34.1
-> >
->
+> > Aye, just to allow you to disable the in-kernel emulator. That's
+> > currently a choice that is presented to people, so this option preserves
+> > that. IMO this is by far the least useful option and is locked behind
+> > NONPORTABLE anyway. Maybe we could delete it, and if someone really wants
+> > it, it would not be all that much of a hassle to add back in the future?
+> 
+> Yeah, if noone really needs this less config options is better, but I don't
+> feel strongly about this option either way.
+> 
+> /Emil
