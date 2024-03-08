@@ -1,214 +1,154 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23907535BA
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F9426296
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891182; cv=none; b=amJYOC45OFilG4azt29nLZEK1OAsvEfFuDgQtSw9/iUtT70u6VaxJIui4H8BIBXNCJ+tv6HW98VL1DkdWooDwA8RmYoKAF7c/3lCYe2ksk3nIPSMPz26jFAO2nMQtLYSmJ7cZ72b10EGVhk+x1sZNwf/tXHOLl+ASf4y9xS0xfA=
+	t=1709891343; cv=none; b=ecK7iKSuolpKq6m+e4PRSGIxeoblt0iievoxGAQBHOZSG06G5QT4W2LgA8nVgKr5fHhxD1o/+d+O/NxajmoI3qLuSoRRUFzEq6T38IXbLwuXV6YiV1JYWl4JjAfvpPbgRRrPQksJDc6M/Hzk5LfSLD83r5R0xGBzWcfhR9WowUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891182; c=relaxed/simple;
-	bh=Clqd8haJQgsPibeWAC6UKITH48izdvnBqHGXQt+95+w=;
+	s=arc-20240116; t=1709891343; c=relaxed/simple;
+	bh=8FEYMktuDdPldJdpEQIeybWwsrv+ni5tPS9cjUSHIs0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+O6PgfYvrHGrHsigNamBGHZ9gk9Jx+QEEIWutmfQ+j3rc8HHt+3rhVF68D31by6Xi7ram7BdGCp96h4QVPmm2bVr2vpORpIyc/gmU4+tcAQveDCyp6aW3dAR9nd3LjirvNFlUFJd75PaJlMWTMjF1gS9BqA+HdDk4PTsiJAivU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K1+FQYG1; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fn2haj3R+XPHDBzEdzt0fhIcW+uNmHJgoVpT9cAnh7IpazgBzAtOKzG8ChhBp+tAaSpH+KsrtMYTy69jkYNo5GgSDtJ5ykWwxZHnaEmNGnruINdAtVJRTX+H701TfRiIrFALASMj4oNHVpfifEJtEFKy5TvQQ+WSJFwpbFU+8r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJn4o238; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1+FQYG1"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e649a2548cso594267b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:46:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJn4o238"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d220e39907so26453321fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:49:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709891180; x=1710495980; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kb10RNHzo2wWSlL+Eq4xCbaoA0z2rfpZzBo11/jnm6s=;
-        b=K1+FQYG104NukSoFzZrIyWD9zmVz6yHjKl9boXxFMXquC1P8UJc1PpCuXVmeBAhJ1j
-         jD4X8of89aJwqHpwM1+M4XrCMKfG3y95AvAr0ffctQQJpJPHtepfWLq7/55jZghMZdoX
-         KeFmyCT4SThmdKGuZLhkNqqbzp7MCCwkcx4dg6R47D69yHBnmsZqnqnUtXWPl65/S0cK
-         Y3wGOcH4k7mAIwCw7FozKJKwNIr9eznITx4McSR78HQtqsUey9kLfZoUnUt9MJzPIOs2
-         vrwEBf8s6L9K9uCCgD7YwfB+JiYJNJoP17EGIKgwOIzM/w1dboc2bq1hChjlOgqIijHq
-         EB3Q==
+        d=gmail.com; s=20230601; t=1709891340; x=1710496140; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H9upTxzDiDyuqRqzO8TSC9yrQw1jm3q2ca6hlxSfwnI=;
+        b=YJn4o238413mT+bBc+XfZjJQg9rb20IjpbPVAOG+y2/Ma/QSzLIcsz551SwWT61Wa2
+         H/RYqgLLNNE46AUIttJEDGcB2FkHUK52WO94Iyuuie6Jum50dIoQtapBlsgd106iZiw0
+         I4sh4kBCyLRV79HGk7CwkOF+oDCkEceCSpIqBqX2pKyUZ7N1ct1/vwMkyggRMXjrhUHH
+         bm9xEJ0Tn0wOp1AguD1eqVQPgzJr5SDurfSw/E65NFCCGNQRq9uasiK1iIk7gELlzk59
+         Wl+HmXvkNmS5Ituu49kPglshghjJgYVXgOHcmG8x3LmyL3+P1YflMVjfj6N2V4kNatV1
+         WiBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709891180; x=1710495980;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kb10RNHzo2wWSlL+Eq4xCbaoA0z2rfpZzBo11/jnm6s=;
-        b=dwh0g/wzSXpi/WM1Bm7vuU9qKyDozAnAuaYNDHC7kb9e7AqNpT8N6dqrbVlpuTzGdM
-         21t/1kARJj/cXTHSbVvNb0eY43jn65kHC8T2SgE7454neD1F8WUbw2cxmxRp37MyrIGq
-         pj7r7yGEJTJ5TmKAaRasiaDG5wOySGEZ1sn+481kZQNpxy5VdNqU/ym7BTEJYdoZ8ldk
-         1EfwGRxwcUbtbnivvKEXu3W5Hra2elmjV8BnOt8um2oskxVH9XJgEjuUW8KTtySamLTl
-         P8pXG+wQL0sRrAxE/LJA8vdGKabusXgCaCDeAhorXx/YBRZnkhQfVwfFUpNEI/Nnm6P2
-         wntw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcDfqJgSRzORH5eOR/+ZytZd5M4p69lcHiL5VN6rz4n13OhxU+SpdtVoGVuceG4TE7mQQoqm0AdXn67YrSLDdt/OMqUyq/LgaDGEIi
-X-Gm-Message-State: AOJu0YyEV6ppntiztKszl8fFcaBh1ESUGCQRx1d7b0lCRIwUXFQAxPM4
-	0Y00EQMkwvX3NwWAYJKdEQKba7xcadSt+KhvANDPtXPTvU7PNzF4qj/8Uv40Eg==
-X-Google-Smtp-Source: AGHT+IGXPjNBSO3LeLRdTU/J0WCodruRNnBcnx9KyvKHRlBNLyysXxdMvyc+ZcZRv6FpAgOfc5/pVw==
-X-Received: by 2002:a05:6a00:1301:b0:6e6:2dfd:602d with SMTP id j1-20020a056a00130100b006e62dfd602dmr15455121pfu.25.1709891180143;
-        Fri, 08 Mar 2024 01:46:20 -0800 (PST)
-Received: from thinkpad ([117.217.183.232])
-        by smtp.gmail.com with ESMTPSA id x7-20020a056a00188700b006e64fdc6e69sm717499pfh.147.2024.03.08.01.46.11
+        d=1e100.net; s=20230601; t=1709891340; x=1710496140;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H9upTxzDiDyuqRqzO8TSC9yrQw1jm3q2ca6hlxSfwnI=;
+        b=qgQlb32Sy8kG1PFDNfdv+JK4CRg89rbVbyOedRKnsPWc4/hKQG3x/AIqyLJoR7klyo
+         Ff9VikapmybLEkff7fvv+7vRa/58KiMZkfvJO2/g5ETfkIJ2BrqISnpHw90IigN6b9Xf
+         Apsu+HAlgiVI38cJXv2ZdlCOHgUQPbVTCjZwt46K6246MBG/VWGSoiacgqKshAiiml35
+         Z1hL0LZzOWWRRXRFj3v3nqFSL/KQrXg63STB4WdnbZGKaTRvvDUykb3POb6CnvUj1fEO
+         /5664xyfQMl/PTtPEXg51tIgqxynnomRjFrA18JoylOKH8Vip8gHY/6/qEs1nPPseris
+         JJyA==
+X-Gm-Message-State: AOJu0Yx47FK18Dq1gVia5iIbQmh0hMwwg7husK+ux0MNfcxSzlGnTgN8
+	JlNYD8dhT6HUDGBVT+RI28aPEZiChiP4TZJmXo/TPfsF4fIfFCLI
+X-Google-Smtp-Source: AGHT+IF6tDAC2R07Dc8STCP17sEn5rb81PKVIRLTvWUi6xWulgdc56BYE78KW9AoCKNTZLTA8BjEZw==
+X-Received: by 2002:a2e:8899:0:b0:2d2:8ad9:a667 with SMTP id k25-20020a2e8899000000b002d28ad9a667mr3307511lji.17.1709891339259;
+        Fri, 08 Mar 2024 01:48:59 -0800 (PST)
+Received: from gmail.com (1F2EF3E5.nat.pool.telekom.hu. [31.46.243.229])
+        by smtp.gmail.com with ESMTPSA id k16-20020a05600c1c9000b004130e0906dfsm5233989wms.33.2024.03.08.01.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 01:46:19 -0800 (PST)
-Date: Fri, 8 Mar 2024 15:16:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com
-Subject: Re: [PATCH v9 08/10] PCI: dwc: ep: Add a generic
- dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-Message-ID: <20240308094606.GG3789@thinkpad>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-8-29d433d99cda@linaro.org>
- <Zeo0996FscpDSnjL@ryzen>
- <20240308054152.GD3789@thinkpad>
- <ZerSwdxAnN2mUxf0@ryzen>
+        Fri, 08 Mar 2024 01:48:57 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 8 Mar 2024 10:48:55 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/9] sched/balancing: Switch the
+ 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t
+ sched_balance_running' flag
+Message-ID: <ZerfB+r3XAEKAezy@gmail.com>
+References: <20240304094831.3639338-1-mingo@kernel.org>
+ <20240304094831.3639338-2-mingo@kernel.org>
+ <xhsmhh6hldkau.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZerSwdxAnN2mUxf0@ryzen>
+In-Reply-To: <xhsmhh6hldkau.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On Fri, Mar 08, 2024 at 09:56:33AM +0100, Niklas Cassel wrote:
-> On Fri, Mar 08, 2024 at 11:11:52AM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 07, 2024 at 10:43:19PM +0100, Niklas Cassel wrote:
-> > > On Mon, Mar 04, 2024 at 02:52:20PM +0530, Manivannan Sadhasivam wrote:
-> > > > The PCIe link can go to LINK_DOWN state in one of the following scenarios:
-> > > > 
-> > > > 1. Fundamental (PERST#)/hot/warm reset
-> > > > 2. Link transition from L2/L3 to L0
-> > > > 
-> > > > In those cases, LINK_DOWN causes some non-sticky DWC registers to loose the
-> > > > state (like REBAR, PTM_CAP etc...). So the drivers need to reinitialize
-> > > > them to function properly once the link comes back again.
-> > > > 
-> > > > This is not a problem for drivers supporting PERST# IRQ, since they can
-> > > > reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> > > > not supporting PERST#, there is no way they can reinitialize the registers
-> > > > other than relying on LINK_DOWN IRQ received when the link goes down. So
-> > > > let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> > > > non-sticky registers and also notifies the EPF drivers about link going
-> > > > down.
-> > > > 
-> > > > This API can also be used by the drivers supporting PERST# to handle the
-> > > > scenario (2) mentioned above.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 111 ++++++++++++++----------
-> > > >  drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
-> > > >  2 files changed, 72 insertions(+), 44 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > index 278bdc9b2269..fed4c2936c78 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > @@ -14,14 +14,6 @@
-> > > >  #include <linux/pci-epc.h>
-> > > >  #include <linux/pci-epf.h>
-> > > >  
-> > > > -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > > -{
-> > > > -	struct pci_epc *epc = ep->epc;
-> > > > -
-> > > > -	pci_epc_linkup(epc);
-> > > > -}
-> > > > -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> > > > -
-> > > >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	struct pci_epc *epc = ep->epc;
-> > > > @@ -603,19 +595,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
-> > > > +{
-> > > > +	unsigned int offset, ptm_cap_base;
-> > > > +	unsigned int nbars;
-> > > > +	u32 reg, i;
-> > > > +
-> > > > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > > +	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
-> > > > +
-> > > > +	dw_pcie_dbi_ro_wr_en(pci);
-> > > > +
-> > > > +	if (offset) {
-> > > > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > > > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > > > +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > > > +
-> > > > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > > > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> > > 
-> > > If you look at PCI_REBAR_CAP, you will see that it is sticky,
-> > > but you have to actually read the databook to see that:
-> > > 
-> > > "The RESBAR_CTRL_REG_BAR_SIZE field is automatically updated
-> > > when you write to RESBAR_CAP_REG_0_REG through the DBI."
-> > > 
-> > > So the reason why we need to write this register, even though
-> > > it is sticky, is to update the RESBAR_CTRL_REG_BAR_SIZE register,
-> > > which is not sticky :)
-> > > 
-> > > (Perhaps we should add that as a comment?)
-> > > 
-> > 
-> > Yeah, makes sense.
-> 
-> Note that I add a (unrelated) comment related to REBAR_CAP in this patch:
-> https://lore.kernel.org/linux-pci/20240307111520.3303774-1-cassel@kernel.org/T/#u
-> 
-> But once we move/add code to dw_pcie_ep_init_non_sticky_registers(), I think
-> that it might be a good "rule" to have a small comment for each write in
-> dw_pcie_ep_init_non_sticky_registers() which explains why the code should be
-> in dw_pcie_ep_init_non_sticky_registers() instead of dw_pcie_ep_init_registers(),
-> even if it just a small:
-> 
-> /* Field PCI_XXX_YYY.ZZZ is non-sticky */
-> writel_dbi(pci, offset + PCI_XXX_YYY, 0);
-> 
 
-Why? The function name itself suggests that we are reinitializing non-sticky
-registers. So a comment for each write is overkill.
+* Valentin Schneider <vschneid@redhat.com> wrote:
 
-- Mani
+> On 04/03/24 10:48, Ingo Molnar wrote:
+> > The 'balancing' spinlock added in:
+> >
+> >   08c183f31bdb ("[PATCH] sched: add option to serialize load balancing")
+> >
+> > ... is taken when the SD_SERIALIZE flag is set in a domain, but in reality it
+> > is a glorified global atomic flag serializing the load-balancing of
+> > those domains.
+> >
+> > It doesn't have any explicit locking semantics per se: we just
+> > spin_trylock() it.
+> >
+> > Turn it into a ... global atomic flag. This makes it more
+> > clear what is going on here, and reduces overhead and code
+> > size a bit:
+> >
+> >   # kernel/sched/fair.o: [x86-64 defconfig]
+> >
+> >      text	   data	    bss	    dec	    hex	filename
+> >     60730	   2721	    104	  63555	   f843	fair.o.before
+> >     60718	   2721	    104	  63543	   f837	fair.o.after
+> >
+> > Also document the flag a bit.
+> >
+> > No change in functionality intended.
+> >
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Valentin Schneider <vschneid@redhat.com>
+> 
+> Few comment nits, otherwise:
+> 
+> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks!
+
+> > -static DEFINE_SPINLOCK(balancing);
+> > +/*
+> > + * This flag serializes load-balancing passes over large domains
+> > + * (such as SD_NUMA) - only once load-balancing instance may run
+>                                ^^^^
+>                            s/once/one/
+> 
+> Also, currently the flag is only set for domains above the NODE topology
+> level, sd_init() will reject an architecture that forces SD_SERIALIZE in a
+> topology level's ->sd_flags(), so what about:
+> 
+> s/(such as SD_NUMA)/(above the NODE topology level)
+
+Agreed & done.
+
+> > + * at a time, to reduce overhead on very large systems with lots
+> > + * of CPUs and large NUMA distances.
+> > + *
+> > + * - Note that load-balancing passes triggered while another one
+> > + *   is executing are skipped and not re-tried.
+> > + *
+> > + * - Also note that this does not serialize sched_balance_domains()
+>                                                ^^^^^^^^^^^^^^^^^^^^^
+> Did you mean rebalance_domains()?
+
+Correct, a later rename that unifies the nomenclature of all the 
+rebalancing functions along the sched_balance_*() prefix that I have not 
+posted yet crept back into this comment block, but obviously this patch 
+should refer to the current namespace. Fixed.
+
+Thanks,
+
+	Ingo
