@@ -1,301 +1,216 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2056.outbound.protection.outlook.com [40.107.102.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CB91DDF1;
-	Fri,  8 Mar 2024 15:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507C95234;
+	Fri,  8 Mar 2024 15:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709911636; cv=fail; b=DFjepaBCMoMy+DGsS7oze3vA+grH6X48I7Y5nwQ22rf9g9vevLAWlO7EvP7iIcRCBXlacQmQ1GKe604QnUtn/ErIZiALpFetuhOX8NZ3qRBtrzkkJz0YV63nq+Ql8pbwMrKZ6pve1zhUc3lGVWVSrPxVvcL6EXZVwZyW0u21vSc=
+	t=1709911682; cv=fail; b=hG/XP8C/iOVZTPi62t4zp2uDc2C4jAnaHAUPgxSKLw9l9uYoKqKJsYVVw9Q2ySqgO0rhZ1Rq3nLB3sDVnD6tWrKVgGTuQhFheAH1x9OKSJxYemEdA/1vVuacEEZhPWukO+SojTk81i4K0IFLP8RiyXJ72OGIvvI2T6w3t3HZ2rw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709911636; c=relaxed/simple;
-	bh=jE9D7BNwHzXxRHO2gXFQXmqnR3c2bB+vaqPdi1tRfu4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pjOoKcWyBss/3gTL5Se71zo9W8+rMhOqv0Q2GTAD2ZFGUG9lSAKVOltdpFnIWUXrDmkVOBztVK9QkWaVP+9lfpiF588wQ+7SiM84cuhNu9zrFsHp3OTUzuwxf6cw0hETaK8mNRiUTwqhvFDvc2C2qsnimm0S2urzb2uK2e2GlQk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j1v1LSYV; arc=fail smtp.client-ip=40.107.223.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1709911682; c=relaxed/simple;
+	bh=W9UlGerQOJreUYkvEWEILRwTysZ/61LgI0N1xYqoECk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EeSpqhuwW0BhdM95ucC+tCd+d2UnlE7o6J8xsackvvlHE1U8IvIGPvwEnqjQTm3nlfAVevCyQ64thLsB993hEYL8BushdnFXDT5ycJc+ywuq5tfMQVvtiZDblyFKXBFXXLBm2mnhbyuTWIF5EoZ5+egEvpLTgE/SmC7YsAzugBw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xuWl01Ht; arc=fail smtp.client-ip=40.107.102.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j1v1LSYV"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xuWl01Ht"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KhSlnq2/AU0qRbLgmVpuwTNE4bCHl6dz3zRBct2DTA9CahgV5/u9xGzu0tFfDFtF9TDjPp/GRsHJHs/Z8r5IXo9GcnCff58/ZcCPHEedFpvSI3x0KrOToOBPv7JGXelN6or7dd3MvRhAiRXWqGJNcfoNBQgQmPGCvlTywUwD4ws/zElPJ1I349DOrc7dZpCSLk8/gy89wQsUXDrBKtV2M6FDba7WZ4+ScaKPPnGakp1Vw+8yiD3fD7piU9XL1s13dDNndDGtQu79uAx8BwB/mF7XPl7RRxlDSLLGsPuuqlF/hv2qk/4+iAuE9PBQaqF+y3Yc/ESwRdqJgR5nNCWqPA==
+ b=m5nT7tUpO3d/Bjklni/OfEClzXYlHTcndZ2xWB3Mo7KNVInybeENN/fswGb4uKMfwyvq5FgnaFr0YM3drLxG+aIW2Vl1BIGyPGDq2+x1BnbOMyE7gpi/BVqkUg59IZg+ZmXdljjTZc1pKBv+gXDPmWYwe+bscKMLdqOSqjAn2R7LaP1/stczlNw13eBC2Z6qWeamtzJ0B4zcKPsEFDm6+j4Ydtf6SZBdy8j0JwgLOgWYPZt1D+YHHcY6/fX4a5rlyIgh5MM4eHswxXGyWOlbkaMeqmcJU98y+HRyWMyrcPRTm0gA7+AJaURpC34i3VBIPWEv3iSm6fxnbc4EU8yQ0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xlQjN75NJnLNDn1kMuX+jyxZqdkWN9GsnsMJFzo6Xqk=;
- b=oOe1QhKxbjWstz3Og2HhyJV+FbmSFVhK8/y/tPPpYI1OnP46ZXXAupsWA5TZrK7buNORH8qITJy3KEwYexSnYDuMb4a8rABiXkn/aCKljXE2da4OL4WGpLv7M8dYFYUXkJJwbKcNK6HVc1Zy2edjOdpvB2M6kc8YPCoBRqHSHVJriTw2/3I6huITpRHeo/3BmwcnhFliXUz8c+or/PpmoK5x2tElVFl9VY8l2DRnXIOibvrfn5xh49FRT1yclyrEr575hM3sctoBoVRkW/u61JYoBQDwAwUfWI1PS3RyfHe8OWx7kCWVb35S9UU2vpLmxnM4jkEhkN8I/F/rTOFAVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=zRH07OmJYlbIsueVXSSN2GT9nCqD4mXpWjcjxvrOH64=;
+ b=eakqtIxaLX31/h2vunsrVuYg/gjkXAbsWNx9YMqIwyveqg8+L3PWrzzZgJ+o+TgrTsNQNkoBz7pCNMQ/IyAE8xAyraSMhKctFrneYcqUtJ0GD3a/PGgcT90oM+LMcEZJ1He1iuzXvXO6In41ugfp4xJH+bwcalPDr6qkrHYPWL9+euBfaGYfvt6lILHD9xuCm7yfkFElJuwHufCeK0/6XiTsWq9b5301BFPwgBNbOgo7CYJLBEI4358VYo2f5zZIXlX12S4RunlDjODO57IB9MslZ1zvVmgAcAYQKcALPUNStAPg/48dX4fJymJddrWFSzAl3nKE8oA21mx3s6LSAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xlQjN75NJnLNDn1kMuX+jyxZqdkWN9GsnsMJFzo6Xqk=;
- b=j1v1LSYVO9YDfMFvsvyF1tJsGI2xtzfHnhd1VP0yRWNHildEABXy2Hb3NlaDM7+Woxlz52KFzw4Ar1K3Hf0D0X+QnYx8boXp5E8iNAtdyR2L6cA7M65RIYlI6IVjjjpVvMY0uAbvO8S9qKDKbsmrEdquhXFdSBUxrv7s33V61538nVcM/dCCSML+R5lViNQuZFKxMoSg5GJx9Q0tSt+C6174ZfC6AiyFYMWDVOxj5Q9ZRa3/AdOXpnHs0alFPqmsM1baM0IlEMDQJpY3JlHRJ0KLGhI4CErvXgj3voIsTSSDq3+rnmGsov4Mzzafm+eYngG823E9n1VRAjkgfmpA/Q==
-Received: from CYZPR05CA0043.namprd05.prod.outlook.com (2603:10b6:930:a3::25)
- by DS7PR12MB6360.namprd12.prod.outlook.com (2603:10b6:8:93::13) with
+ bh=zRH07OmJYlbIsueVXSSN2GT9nCqD4mXpWjcjxvrOH64=;
+ b=xuWl01Ht7b2V0pYwKBTLzpAokDzTp8pj6YeQL6F0nX0dS4FsFJaaoMRgTVbZ4EppMsuwT//ubcWyAStag3u69R/yH9xntO4Mo5h/9Gw3h+r4Fk5cNN6ZOTqAih9hitjIg9IApr/bvReNhOipRYpBym1Vjmg9r+1EPzR4OryTEiU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by PH0PR12MB7789.namprd12.prod.outlook.com (2603:10b6:510:283::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Fri, 8 Mar
- 2024 15:27:10 +0000
-Received: from CY4PEPF0000EE32.namprd05.prod.outlook.com
- (2603:10b6:930:a3:cafe::3) by CYZPR05CA0043.outlook.office365.com
- (2603:10b6:930:a3::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.11 via Frontend
- Transport; Fri, 8 Mar 2024 15:27:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000EE32.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.11 via Frontend Transport; Fri, 8 Mar 2024 15:27:09 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 8 Mar 2024
- 07:27:05 -0800
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Fri, 8 Mar 2024 07:27:05 -0800
-Received: from c-237-113-200-209.mtl.labs.mlnx (10.127.8.14) by
- mail.nvidia.com (10.126.190.181) with Microsoft SMTP Server id 15.2.1258.12
- via Frontend Transport; Fri, 8 Mar 2024 07:27:01 -0800
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: <almasrymina@google.com>, Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
-	<davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Jesper Dangaard Brouer <brouer@redhat.com>, Matteo Croce
-	<mcroce@microsoft.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC: <leonro@nvidia.com>, <gal@nvidia.com>, Dragos Tatulea
-	<dtatulea@nvidia.com>, <stable@vger.kernel.org>, "Anatoli N . Chechelnickiy"
-	<Anatoli.Chechelnickiy@m.interpipe.biz>, Ian Kumlien <ian.kumlien@gmail.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH net v3] net: esp: fix bad handling of pages from page_pool
-Date: Fri, 8 Mar 2024 17:26:00 +0200
-Message-ID: <20240308152723.831620-1-dtatulea@nvidia.com>
-X-Mailer: git-send-email 2.42.0
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Fri, 8 Mar
+ 2024 15:27:58 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907%2]) with mapi id 15.20.7362.024; Fri, 8 Mar 2024
+ 15:27:57 +0000
+Message-ID: <6031ff70-d9f8-4e9e-b9be-6d9fa0091b9c@amd.com>
+Date: Fri, 8 Mar 2024 16:27:53 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] spi: xilinx: Add necessary inclusion and forward
+ declaration
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+References: <20240307154510.3795380-1-andriy.shevchenko@linux.intel.com>
+ <20240307154510.3795380-3-andriy.shevchenko@linux.intel.com>
+ <a3aca544-dc6b-4812-b82e-dd1f9cc04871@amd.com>
+ <ZesZKbdIo6z-AfIT@smile.fi.intel.com>
+ <d479cda0-3c3f-4cf7-acee-bcacbb9cc5f5@amd.com>
+ <ZesoAxvS7y8VCxZT@smile.fi.intel.com>
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ 3i3l5DA=
+In-Reply-To: <ZesoAxvS7y8VCxZT@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0119.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::34) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE32:EE_|DS7PR12MB6360:EE_
-X-MS-Office365-Filtering-Correlation-Id: 674f358f-40ac-4aa3-735c-08dc3f8438c1
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|PH0PR12MB7789:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54fb9f40-3aeb-4363-39f0-08dc3f845515
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	k+HS/pbKOZtkIIIdk4XIUpx8qPjei3Xggfm40sAlHyB6EnrC/EKBppUTgMl1+XCKVo7WRFbl1PsFtukVkqDhoi0WLMcsEuRd1WHkQw6ekKKe13Tfi5FbNLzHa8KFG9lhAel5XvzOtAlqtPyn2x8K56gOq8xZNsw05jaAVx2qB3SJJD0l0sL/qifqlKGGkGE659skjMP0fEmEqQDFL6lylNUGWocitQP7tztQJHIm1tke/h/m7laeH7XXYp74BScjwmvTEbNNFdmE1NZifH5Gd3nCfQTCF1kiWESDWw3S2STXU6NT8Eta3PN6t2I2G8j9JDFgg2qR6DpbVwHKI2YDNgBlI31jg/bQeUcORg+B+8ATAUESBx5VWzfkJOeVp8fo1rJ3tVId3CnNObux1vYWnL2gJn1pLpjOv6qWV3ecSb/jVu/VX2dZ3esrfRgrI/0xEjb1utSvjOIOJdFgpclhF7JUhQcvKYLq0SkWQfCiVjqLlX7qv157XXf7ncG9oUcIvlfviSMBbdf7qyQL+MnDFJAeWeh//q60w9amSOmjUE8q6fU7KQEIm8rOrb8a0Do8drXq8p46eNteiua93wdmsi0lIVuPKR/prGNJ7ORea4YZUtJ5Xjg3TF6MJ/iMbhU8tUP3cynHk85Yuac/ZoVXoURRMw5kDQfhfRQTyB33TZFcO6l3R4YsQgAGIiK78YggslfSGPIGojf/DqQsZqRM5zNW5Qv5PFRu41eCN3JO2JttoziWCg9BHN4ot+v8pJUYTtC6EiJohybNx/eO7ga0Ug==
+	2AYkgYsGD5RaIVIeefHt42hIslnwuxGfFmkSznHN30Oog2Aeq/yR77clbfjukDevw218VQ8+fVFqBblS1Tc2Bk30as4r3+iKz0l6N4B8C9NCISDFEe6Hbm6JXJdDoGOkLglAVPeV30JNqyQk2+Klv4COfcB3it+YeVIz3Bzu/HIGhZJ/692DOefrvqGiacp8lq6RDJvkLaXmBFVPza/KEiAqc86Yop8krt8Hk0JDN/vE7eRU/M1GqT5yDJ6u+elDLORIg60zXTeXZh8Viut8Yp7Ixblgj7TahnAT8gojSwcHdKANRbLsPPqaxI9CHrnLf94I5Qlv+uVJvitZjpzZsHsdXQtM/lOS46BdZevwaa9It4aphD29YkdiCyFFUU2s4qVlPsZTsBntOZZo+4mOtIBvPHuxeRwoqbOUARXroyunh8ISnK6zeM1aT8r+/7MZeHq8kBknbJJpqsZDlievlW0owNnbdJH4UXK5/96/7dxJEhAc8rCM4SuT9Xvye5SbLg11UMTEu6wCJIxABHuaD2tekOBUP1KuCFfq/xslbxMi3OSXDbXTZp6LdK11w7oZ0Hw+bdsYEBq/jpeEJdk7aqpYCKOs1h2bDd5/jUh7GGkGTWbjUw3PdOkzlV1r2HXduhAT3kzxhjxqKiq9xhFo5cDzr2NYWS2d/q231lYlXhQ=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(376005)(36860700004)(7416005)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 15:27:09.9230
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OEQyUjJOYXNLTUhYQjhtMEx1eTZtWTQySVN3LzVCVGNneWlaWGViL0RnR0kx?=
+ =?utf-8?B?VzVMRXFQWExCNnY0cWVOdzZLNkxHWmxuZjlRaWovb3pMbnNUMGM0MlRscmpE?=
+ =?utf-8?B?YXgxRCtoRFdUOU51Y1lJUjR2Z3dnSDd0VEpuTkxBOHJWOE5IMGZLbnh1K2I2?=
+ =?utf-8?B?alZNZC95U010RFgxeTZlVmVlM0p2eFZRcU42QmtIZFJtcENlVUFTU1RhTHNM?=
+ =?utf-8?B?d2pva1NVVVpSQVhBdnI1STZLeXIvcGVRVkJFbHdMZllPSk1iWDBJRHJHNDdO?=
+ =?utf-8?B?TUZDaE9yem0zYzhtZWdBandwTlZ5NHFUQUt2WmdXOSs1OGhBcGVuMHRJMlps?=
+ =?utf-8?B?dzVOTk5kcktRdVZsY3FrdlphZUZvK0JZWWJ5UkJJREJhOTNyVTZlV0VHSXUr?=
+ =?utf-8?B?czUyQU5ZSXBORHJuZFlMU21xUjNtd0Q1UDBLUXdzVy8rSEI1czAvRkJQcHM4?=
+ =?utf-8?B?VmJZM0RxVkF3cXFlNkZnblVOS0tzVGJPbHhRSUxHMWRyZjlDdXFHS3JlUHIv?=
+ =?utf-8?B?VCtaYWJaNTZpR3NaZ3VDaXJwRzl3aFljUndaRlJaVGYxZXdLQ1dMUkNLWGYw?=
+ =?utf-8?B?OWlaMFVQVGppNXJEcHUxU1ZYbHNCQW1tNjN1d0NHSzArTG9qTGkxODNkcHRL?=
+ =?utf-8?B?UmJscmU5VnVVYXN4UFhEYmVxOHBNTkZTWUVEblBMYmx5QUFyVzBWUk1Db09T?=
+ =?utf-8?B?bnZXZWRSV2x3aGVxMnhidk0raE1sd2UveDRyMm9wSmR2dXpwQ0wxSnp6ajUx?=
+ =?utf-8?B?UTJDZXdsdUtIbXVrY1VXUVA5U1MwMjd4SXZSMlN5ZmpKMExWM2RzVURQbklU?=
+ =?utf-8?B?M2h6TzRJUWdYV2RmbzVyWU5IUHQ4ZHpBeE9DMmlEMTJsTk9aOFQvOXJFelJj?=
+ =?utf-8?B?L3ArTGU4QmJJWkdnU3ZaSFk4cC8wSlVkQkppSjJNKzVJcjF6dlR1RGw1YzZw?=
+ =?utf-8?B?VmtLc25UNjJZalNxMkpPU01rRTlpOExUMzZCWHNFSFZpSFdVTmdoTEFwcUIv?=
+ =?utf-8?B?MHlYU2JFdHJ0Q1hrNk1Dbm91TE1CTnRRMlZWbThGZVRXYVpOelo5cGdJZHUy?=
+ =?utf-8?B?OHVLMUV0M0pOamtUb3RuaFQ0U0UrUDdQdjdzKzNvUGJMbmRoblIvNVBYc1l6?=
+ =?utf-8?B?T1JMVTl2RVN4VkJmSXhVSE45KzE2YWdhZFY0TjZqQXJ1WTdjUXdldWVIZ0RN?=
+ =?utf-8?B?WGVzMFBPREJhT3prYTVUb29FZUFDbERITHV3eTBHczM1eFI2RTI4b2ZLb0xl?=
+ =?utf-8?B?UFZ6S2RTeWkzZGlzRE5iQnB1OUNtTzg4Q3dNNGZPcXplWC85QkpVQ2lGVHY5?=
+ =?utf-8?B?NDRsUkQwei9jVm14QjV3MXdBdDM2UnFMTTVubnFoUE9Zc3Y1L2JYMWtOb1ll?=
+ =?utf-8?B?MzU1YmZEL1lXSjNjOU4ydTFWOHA1RjAzOGM1WkNDRWtjRGVaTE1nbnNHRU5K?=
+ =?utf-8?B?K3U1WVIrOCtFMXBpVXIzT2hYaWVWVllJUzRwTUZVS1F5M25HUWM2RnVhc0hY?=
+ =?utf-8?B?TERiNU5Fejd4VDRlRHQ2WDcyQ3ViTzRYRDE4K1cvcmt3SzFYdmNzaXhmSFZF?=
+ =?utf-8?B?NlpiUk05dUg1a1Y1UjFTZDdjazFaVURheUtHVTJ4NS9Va2RYVHZ1bmVkdFVJ?=
+ =?utf-8?B?M0ZjR0E3MFNxL2x4WDVid3RDQzhyQVArTW9kME5UaHBCU21DTXVSUXkzV0xm?=
+ =?utf-8?B?UnpUVGpzWmRwb3BxazZhV1p4OXg2aE1sMkhaQlR5d1NRYmRTcXl6MGVqa2hH?=
+ =?utf-8?B?VitIY2pVVjFvbWxGcmRwdjZnL0JVMVI4RUs4UFZscWpycUdSQnhBWGtJS3oz?=
+ =?utf-8?B?NjJMcTNXYkxMVlkzM2hxUmdRbUJ4MXNVZ1R6NmFXbkZpSDVFNVFoYjE4ejNI?=
+ =?utf-8?B?ZndETU1HM2JMaUZXcm1Ta0toY0JrQnNPa3NjUVdHQmdmRWFRRE04SElCVUhs?=
+ =?utf-8?B?bWFaNFhVZGphd1kxeTBEd2dCNXRTM2twWWlVSXpCSm5tdldCamRRVzJvMDNE?=
+ =?utf-8?B?S3RTdmxUeUk0ZndWV2V4ZE1KRFlDTXhyZDJoU2pEUXJLVEJiU3ZZTGZzUkNN?=
+ =?utf-8?B?ZFJRUGJJMGI1QUE4WC8yNzRjNjBsSkh4cS9meXZNT1k2bnNpSlBIZnpOa3gz?=
+ =?utf-8?Q?srqTCUH2HuHwicLlpdQzQj6Yg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54fb9f40-3aeb-4363-39f0-08dc3f845515
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 15:27:57.6423
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 674f358f-40ac-4aa3-735c-08dc3f8438c1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE32.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6360
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I7Ud7h1tdUMMOy9OtcVcYqjOmc+IoVb7AbZLAXTQCW8RZEIsIq3Vt5bjav+So60T
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7789
 
-When the skb is reorganized during esp_output (!esp->inline), the pages
-coming from the original skb fragments are supposed to be released back
-to the system through put_page. But if the skb fragment pages are
-originating from a page_pool, calling put_page on them will trigger a
-page_pool leak which will eventually result in a crash.
 
-This leak can be easily observed when using CONFIG_DEBUG_VM and doing
-ipsec + gre (non offloaded) forwarding:
 
-  BUG: Bad page state in process ksoftirqd/16  pfn:1451b6
-  page:00000000de2b8d32 refcount:0 mapcount:0 mapping:0000000000000000 index:0x1451b6000 pfn:0x1451b6
-  flags: 0x200000000000000(node=0|zone=2)
-  page_type: 0xffffffff()
-  raw: 0200000000000000 dead000000000040 ffff88810d23c000 0000000000000000
-  raw: 00000001451b6000 0000000000000001 00000000ffffffff 0000000000000000
-  page dumped because: page_pool leak
-  Modules linked in: ip_gre gre mlx5_ib mlx5_core xt_conntrack xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat nf_nat xt_addrtype br_netfilter rpcrdma rdma_ucm ib_iser libiscsi scsi_transport_iscsi ib_umad rdma_cm ib_ipoib iw_cm ib_cm ib_uverbs ib_core overlay zram zsmalloc fuse [last unloaded: mlx5_core]
-  CPU: 16 PID: 96 Comm: ksoftirqd/16 Not tainted 6.8.0-rc4+ #22
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x36/0x50
-   bad_page+0x70/0xf0
-   free_unref_page_prepare+0x27a/0x460
-   free_unref_page+0x38/0x120
-   esp_ssg_unref.isra.0+0x15f/0x200
-   esp_output_tail+0x66d/0x780
-   esp_xmit+0x2c5/0x360
-   validate_xmit_xfrm+0x313/0x370
-   ? validate_xmit_skb+0x1d/0x330
-   validate_xmit_skb_list+0x4c/0x70
-   sch_direct_xmit+0x23e/0x350
-   __dev_queue_xmit+0x337/0xba0
-   ? nf_hook_slow+0x3f/0xd0
-   ip_finish_output2+0x25e/0x580
-   iptunnel_xmit+0x19b/0x240
-   ip_tunnel_xmit+0x5fb/0xb60
-   ipgre_xmit+0x14d/0x280 [ip_gre]
-   dev_hard_start_xmit+0xc3/0x1c0
-   __dev_queue_xmit+0x208/0xba0
-   ? nf_hook_slow+0x3f/0xd0
-   ip_finish_output2+0x1ca/0x580
-   ip_sublist_rcv_finish+0x32/0x40
-   ip_sublist_rcv+0x1b2/0x1f0
-   ? ip_rcv_finish_core.constprop.0+0x460/0x460
-   ip_list_rcv+0x103/0x130
-   __netif_receive_skb_list_core+0x181/0x1e0
-   netif_receive_skb_list_internal+0x1b3/0x2c0
-   napi_gro_receive+0xc8/0x200
-   gro_cell_poll+0x52/0x90
-   __napi_poll+0x25/0x1a0
-   net_rx_action+0x28e/0x300
-   __do_softirq+0xc3/0x276
-   ? sort_range+0x20/0x20
-   run_ksoftirqd+0x1e/0x30
-   smpboot_thread_fn+0xa6/0x130
-   kthread+0xcd/0x100
-   ? kthread_complete_and_exit+0x20/0x20
-   ret_from_fork+0x31/0x50
-   ? kthread_complete_and_exit+0x20/0x20
-   ret_from_fork_asm+0x11/0x20
-   </TASK>
+On 3/8/24 16:00, Andy Shevchenko wrote:
+> On Fri, Mar 08, 2024 at 03:02:01PM +0100, Michal Simek wrote:
+>> On 3/8/24 14:56, Andy Shevchenko wrote:
+>>> On Fri, Mar 08, 2024 at 09:21:32AM +0100, Michal Simek wrote:
+>>>> On 3/7/24 16:43, Andy Shevchenko wrote:
+>>>>> xilinx_spi.h is mnissing inclusion and forward declaration, add them.
+> 
+> ...
+> 
+>>>>> diff --git a/include/linux/spi/xilinx_spi.h b/include/linux/spi/xilinx_spi.h
+>>>>>     #define __LINUX_SPI_XILINX_SPI_H
+>>>>> +#include <linux/types.h>
+>>>>> +
+>>>>> +struct spi_board_info;
+>>>>> +
+>>>>>     /**
+>>>>>      * struct xspi_platform_data - Platform data of the Xilinx SPI driver
+>>>>>      * @num_chipselect:	Number of chip select by the IP.
+>>>>
+>>>> Likely correct but forget how to check it with tools.
+>>>
+>>> I'm not sure which tools we have to check this.
+>>>
+>>> The types.h is needed for uXX
+>>> The forward declaration for the pointer to the mentioned type.
+>>>
+>>> All this has been derived from reading the file.
+>>
+>> No issue with it. But I am quite sure there was a tool which was able to
+>> find it out and report it. But forgot which one was it.
+> 
+> You mean iwyu? If so, it needs a lot of tuning before being able to be used
+> in Linux kernel.
+> 
 
-The suggested fix is to introduce a new wrapper (skb_page_unref) that
-covers page refcounting for page_pool pages as well.
+Acked-by; Michal Simek <michal.simek@amd.com>
 
-Cc: stable@vger.kernel.org
-Fixes: 6a5bcd84e886 ("page_pool: Allow drivers to hint on SKB recycling")
-Reported-and-tested-by: Anatoli N.Chechelnickiy <Anatoli.Chechelnickiy@m.interpipe.biz>
-Reported-by: Ian Kumlien <ian.kumlien@gmail.com>
-Link: https://lore.kernel.org/netdev/CAA85sZvvHtrpTQRqdaOx6gd55zPAVsqMYk_Lwh4Md5knTq7AyA@mail.gmail.com
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
----
-Changes in v2:
-- Fixes in tags.
-
-Changes in v3:
-- Rebased to ipsec tree.
----
- include/linux/skbuff.h | 10 ++++++++++
- net/ipv4/esp4.c        |  8 ++++----
- net/ipv6/esp6.c        |  8 ++++----
- 3 files changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 2dde34c29203..d9a1ccfb5708 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3448,6 +3448,16 @@ static inline void skb_frag_ref(struct sk_buff *skb, int f)
- 
- bool napi_pp_put_page(struct page *page, bool napi_safe);
- 
-+static inline void
-+skb_page_unref(const struct sk_buff *skb, struct page *page, bool napi_safe)
-+{
-+#ifdef CONFIG_PAGE_POOL
-+	if (skb->pp_recycle && napi_pp_put_page(page, napi_safe))
-+		return;
-+#endif
-+	put_page(page);
-+}
-+
- static inline void
- napi_frag_unref(skb_frag_t *frag, bool recycle, bool napi_safe)
- {
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 4dd9e5040672..d33d12421814 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -95,7 +95,7 @@ static inline struct scatterlist *esp_req_sg(struct crypto_aead *aead,
- 			     __alignof__(struct scatterlist));
- }
- 
--static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
-+static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- {
- 	struct crypto_aead *aead = x->data;
- 	int extralen = 0;
-@@ -114,7 +114,7 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			put_page(sg_page(sg));
-+			skb_page_unref(skb, sg_page(sg), false);
- }
- 
- #ifdef CONFIG_INET_ESPINTCP
-@@ -260,7 +260,7 @@ static void esp_output_done(void *data, int err)
- 	}
- 
- 	tmp = ESP_SKB_CB(skb)->tmp;
--	esp_ssg_unref(x, tmp);
-+	esp_ssg_unref(x, tmp, skb);
- 	kfree(tmp);
- 
- 	if (xo && (xo->flags & XFRM_DEV_RESUME)) {
-@@ -639,7 +639,7 @@ int esp_output_tail(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
- 	}
- 
- 	if (sg != dsg)
--		esp_ssg_unref(x, tmp);
-+		esp_ssg_unref(x, tmp, skb);
- 
- 	if (!err && x->encap && x->encap->encap_type == TCP_ENCAP_ESPINTCP)
- 		err = esp_output_tail_tcp(x, skb);
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index 6e6efe026cdc..7371886d4f9f 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -112,7 +112,7 @@ static inline struct scatterlist *esp_req_sg(struct crypto_aead *aead,
- 			     __alignof__(struct scatterlist));
- }
- 
--static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
-+static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- {
- 	struct crypto_aead *aead = x->data;
- 	int extralen = 0;
-@@ -131,7 +131,7 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			put_page(sg_page(sg));
-+			skb_page_unref(skb, sg_page(sg), false);
- }
- 
- #ifdef CONFIG_INET6_ESPINTCP
-@@ -294,7 +294,7 @@ static void esp_output_done(void *data, int err)
- 	}
- 
- 	tmp = ESP_SKB_CB(skb)->tmp;
--	esp_ssg_unref(x, tmp);
-+	esp_ssg_unref(x, tmp, skb);
- 	kfree(tmp);
- 
- 	esp_output_encap_csum(skb);
-@@ -677,7 +677,7 @@ int esp6_output_tail(struct xfrm_state *x, struct sk_buff *skb, struct esp_info
- 	}
- 
- 	if (sg != dsg)
--		esp_ssg_unref(x, tmp);
-+		esp_ssg_unref(x, tmp, skb);
- 
- 	if (!err && x->encap && x->encap->encap_type == TCP_ENCAP_ESPINTCP)
- 		err = esp_output_tail_tcp(x, skb);
--- 
-2.42.0
-
+Thanks,
+Michal
