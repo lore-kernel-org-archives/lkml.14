@@ -1,60 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9BC604C2
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F68B3BBF7
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709939182; cv=none; b=uidnKO3T8OgzrmiKShJD5qDlvHa0yq6tEl+cSDam+wM6tUMjv8oOnq/AkIjkdoBCF5cTFoLqHDX17L8xGh3fyYZjcfCYD2egmz6olH6hJJUOmBzQIAjAd3YIa7qIuRT6jpdZIlES8LOFbBq00r3LPF9qtrs9bEAPuOMCzsZ+lVY=
+	t=1709939204; cv=none; b=NTlaQch2s31zOW8zfDB9rO0StjwIpAqmRicYl+gBlIHEmEFqXOwxmbFC0TqcoBrphV8Xr6SRrwGCAZDy0njQA09Qd1kZcUMSw62MaBqjAbpUKUvUhzegYPHe6FSkG4s4kxoX1j8LNOLBjGgIzxAG2RE+DUV9sVeHBMdPLMEJTEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709939182; c=relaxed/simple;
-	bh=xI6bQYs7D7L/1GayJOzEXbmk72qf1CYrvd8eI1QF5Gs=;
+	s=arc-20240116; t=1709939204; c=relaxed/simple;
+	bh=w8kGD73Xz/uZpQJ5ZgCw6GsFXXl9zD5Qm0dcGMbIXpc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZMShXaX1Ai8cei8mWO9lDm2BB1WUHp4FDxJokUxM9ntkraHwAxUuExNkGHvGL87w12cl9lehkhXNAqJ+h/zuCqYAWWAzkyvDoOb5mbCSm4HJDIuR2XUDaKgCzeXp3DF1wVL7ryJ2+HSl4WkUIPmAci1dRrsiT5ZDG8KKHzbEmcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zgm4DC7h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=blFSjdygk7lX6QLGA1iT0IHJ8c2I2hTwgMJyc70b0Cim/m1MoJ9s2U7Psj5MQ3SCq6fPzagfV5sH9fpVsMPMq8UeqDIYBzPfpBO1xf3OsGnQzX4LEST+UPsi0mLaFJVneZd3zAkNGSFtQOA721f1KILmbCTrQ+FwrHSMLUrgiPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=JpGxm/qa; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zgm4DC7h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709939180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N8jD+utIUIWsnb+QHB/Vd0dznqOHt9b4raUNDQiHScE=;
-	b=Zgm4DC7haT9VDSZJG2i+qe6pEC2w8+lACYHPcAEcfihNjvsM9SFX0taygmOy6z9bGO+3eU
-	KDHw4FWDVAzjMiRjAtCb7PP+C+KwSIUxKghZk+RMRhbFaSzKEMZTPh5CFzAehNGNnM1VUi
-	APGWms+8TfCXyMHNVD5ZGPzwIJS37T8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-475-YgeSMQxMPHK209lCwn6AMQ-1; Fri, 08 Mar 2024 18:06:14 -0500
-X-MC-Unique: YgeSMQxMPHK209lCwn6AMQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 66973185A781;
-	Fri,  8 Mar 2024 23:06:14 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.8.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5C8CD47CB;
-	Fri,  8 Mar 2024 23:06:13 +0000 (UTC)
-From: Alex Williamson <alex.williamson@redhat.com>
-To: alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org,
-	eric.auger@redhat.com,
-	clg@redhat.com,
-	reinette.chatre@intel.com,
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="JpGxm/qa"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33d36736d4eso1797585f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 15:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709939201; x=1710544001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G7t60vDpglsBHCmAmlybKd04G36JOxRBGBizt48yxWg=;
+        b=JpGxm/qasJOxvwdYLH7Q5G/i7hCYQHks45aQ9iwQrkoqFSFITj7ozNxRY2ivYM2kg7
+         3cGTzZFzS5vlAk9oSA1THXfT6DQDH+rgZ85Wu2pl2Tzj0GmjbluUiLSJ8L7WwARkQEJr
+         4YVD0ykvxHYFY72lvyc7MCaYXHauvRT+UCN4H6ILSzbPdqZ1Y+lA/EkIC0GDO0s/QoPP
+         7K5T2T34P2I2JV/VawVPxUuzP9sOjpAXz1SsIh8UgwW9KSbWKaFFF91X9NjgG0duNKOx
+         JDQfg3maXB44G1+kpJt6VR6FlokWXP8xk0WJnMWJryXEHsxsZxsorD6Q+27R4td01VLw
+         v1wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709939201; x=1710544001;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7t60vDpglsBHCmAmlybKd04G36JOxRBGBizt48yxWg=;
+        b=fQflNAo/kYVpWDZ1qmQQQuz4GNhRcAhY8sO4GBiu1VyZomx7MyjmIN7N/GV5nlEDut
+         gPmB6riKSMmXYRiT9PUUT7sUUQC3qdVDXRSTYhB9GZsKXK5GS52YTNhze7EN0iTJYbF3
+         LCZhBF/xp9P1cdNsFrUDBbArsIxOkBvr0clNfra/69pYhsYd5Rv3z7VO1vAxZFLJMOFQ
+         9ue1a0DN+H1msFPS4KpNOA+z28x9cxAweSXi350W+mYYAySfgQEB7PbLzR0or8D6iMJ9
+         ZiHsmwyhcTPuKdySrDDxHyzW4UmWiqrS0sqSnn/3GOU5TG5UG08HOgDYPeJ/bKY0SGGs
+         F0RA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOPRc3x4KMQRiySnANzC8PRk6meO5PBiEKaqChgry9w27EhSRZASVMju8zPtAD4JJd6x+u6VvgtCiDo3IZLORUVbzbm/gelRKjgSDi
+X-Gm-Message-State: AOJu0YwbKMDUr5cU6JZwPKp6uKyIhW9ceNjEbtNROsOqYJ6c1M+/xtYE
+	31o9TC1h+R4CyULUUo/sF0jDVqcsYiuBllqwoZw0zMTdCPlIGpanNsr6YphJSHw=
+X-Google-Smtp-Source: AGHT+IGIOrQJr4Nra+hIRyuM+HynD9ddE0mdyHLocDur6Am2eUWZInzyX3blGNeYkc3QCa+PsmCoNQ==
+X-Received: by 2002:adf:f4cb:0:b0:33e:75d9:75cf with SMTP id h11-20020adff4cb000000b0033e75d975cfmr432664wrp.52.1709939198829;
+        Fri, 08 Mar 2024 15:06:38 -0800 (PST)
+Received: from fedora.fritz.box (aftr-82-135-80-247.dynamic.mnet-online.de. [82.135.80.247])
+        by smtp.gmail.com with ESMTPSA id m21-20020a056000175500b0033e052be14fsm473204wrf.98.2024.03.08.15.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 15:06:38 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: thorsten.blum@toblux.com
+Cc: David.Laight@ACULAB.COM,
+	bp@alien8.de,
+	dave.hansen@intel.com,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
 	linux-kernel@vger.kernel.org,
-	kevin.tian@intel.com,
-	diana.craciun@oss.nxp.com,
-	stable@vger.kernel.org
-Subject: [PATCH v2 7/7] vfio/fsl-mc: Block calling interrupt handler without trigger
-Date: Fri,  8 Mar 2024 16:05:28 -0700
-Message-ID: <20240308230557.805580-8-alex.williamson@redhat.com>
-In-Reply-To: <20240308230557.805580-1-alex.williamson@redhat.com>
-References: <20240308230557.805580-1-alex.williamson@redhat.com>
+	mingo@redhat.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	x86@kernel.org
+Subject: [PATCH v3] x86/apic: Improve data types to fix Coccinelle warnings
+Date: Sat,  9 Mar 2024 00:02:29 +0100
+Message-ID: <20240308230228.3161-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <6548057B-015C-4A67-8231-0E63224BF74F@toblux.com>
+References: <6548057B-015C-4A67-8231-0E63224BF74F@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,50 +78,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-The eventfd_ctx trigger pointer of the vfio_fsl_mc_irq object is
-initially NULL and may become NULL if the user sets the trigger
-eventfd to -1.  The interrupt handler itself is guaranteed that
-trigger is always valid between request_irq() and free_irq(), but
-the loopback testing mechanisms to invoke the handler function
-need to test the trigger.  The triggering and setting ioctl paths
-both make use of igate and are therefore mutually exclusive.
+Given that acpi_pm_read_early() returns a u32 (masked to 24 bits), several
+variables that store its return value are improved by adjusting their data
+types from unsigned long to u32. Specifically, change deltapm's type from
+long to u32 because its value fits into 32 bits and it cannot be negative.
 
-The vfio-fsl-mc driver does not make use of irqfds, nor does it
-support any sort of masking operations, therefore unlike vfio-pci
-and vfio-platform, the flow can remain essentially unchanged.
+These data type improvements resolve the following two Coccinelle/
+coccicheck warnings reported by do_div.cocci:
 
-Cc: Diana Craciun <diana.craciun@oss.nxp.com>
-Cc: stable@vger.kernel.org
-Fixes: cc0ee20bd969 ("vfio/fsl-mc: trigger an interrupt via eventfd")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+arch/x86/kernel/apic/apic.c:734:1-7: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
+
+arch/x86/kernel/apic/apic.c:742:2-8: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Changes in v2:
+- Revert changing do_div() to div64_ul() after feedback from David Laight
+- Use u32 instead of unsigned long to fix Coccinelle warnings
+- Update patch title and description
 
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-index d62fbfff20b8..82b2afa9b7e3 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-@@ -141,13 +141,14 @@ static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
- 	irq = &vdev->mc_irqs[index];
+Changes in v3:
+- Adjust patch summary and description after feedback from Dave Hansen
+---
+ arch/x86/kernel/apic/apic.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 4667bc4b00ab..184e1843620d 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -664,7 +664,7 @@ void lapic_update_tsc_freq(void)
+ static __initdata int lapic_cal_loops = -1;
+ static __initdata long lapic_cal_t1, lapic_cal_t2;
+ static __initdata unsigned long long lapic_cal_tsc1, lapic_cal_tsc2;
+-static __initdata unsigned long lapic_cal_pm1, lapic_cal_pm2;
++static __initdata u32 lapic_cal_pm1, lapic_cal_pm2;
+ static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
  
- 	if (flags & VFIO_IRQ_SET_DATA_NONE) {
--		vfio_fsl_mc_irq_handler(hwirq, irq);
-+		if (irq->trigger)
-+			eventfd_signal(irq->trigger);
+ /*
+@@ -674,7 +674,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ {
+ 	unsigned long long tsc = 0;
+ 	long tapic = apic_read(APIC_TMCCT);
+-	unsigned long pm = acpi_pm_read_early();
++	u32 pm = acpi_pm_read_early();
  
- 	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
- 		u8 trigger = *(u8 *)data;
+ 	if (boot_cpu_has(X86_FEATURE_TSC))
+ 		tsc = rdtsc();
+@@ -699,7 +699,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ }
  
--		if (trigger)
--			vfio_fsl_mc_irq_handler(hwirq, irq);
-+		if (trigger && irq->trigger)
-+			eventfd_signal(irq->trigger);
- 	}
+ static int __init
+-calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
++calibrate_by_pmtimer(u32 deltapm, long *delta, long *deltatsc)
+ {
+ 	const long pm_100ms = PMTMR_TICKS_PER_SEC / 10;
+ 	const long pm_thresh = pm_100ms / 100;
+@@ -710,7 +710,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+ 	return -1;
+ #endif
  
- 	return 0;
+-	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %ld\n", deltapm);
++	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %u\n", deltapm);
+ 
+ 	/* Check, if the PM timer is available */
+ 	if (!deltapm)
 -- 
 2.44.0
 
