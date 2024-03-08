@@ -1,89 +1,67 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC293FBBD
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC7A36139;
+	Fri,  8 Mar 2024 22:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709937904; cv=none; b=qgKHJjLiJwkTQIwoXO6dyLjVKAY93MSS+bMP3dHLef2krw6lO5k7ch9YYZ4UM4Yv9Qi+ZAPgqHfh9Quw/Cm0wCsaestWV8Wn2nVM3vLq6Y+Mnkuue9SOPJ8qG8ygj5lZy6w/NgFwB1JmNMWN46L4ogfgZyp1lgMOrdeli20988w=
+	t=1709938459; cv=none; b=k/wrSk3Sc+P6Q/VIwzKfLKo5BCyY4byU3HuPIsIg1kT6AXlVZ4/PXZMvaiExwAgqcTM9QV8FieReMJadthKgUcqFhGbsdYRrcRXV4Tw39yFjijcVqCaiefdN6SOAtqBVHEmtyehvRpKHkKvguS4JADGMHd0CerG1HvTRgqJw/Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709937904; c=relaxed/simple;
-	bh=KZRGbBNF0GTtJzvOMXF5VklG5k9DvU5JzIOJGPDdwQI=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=AUPjD+gN+G/1D/M9ZeC2UZRXerZo27XOCtI25C46fHPXIFNAlPU73yYP7h9j3mcawv+m1F2DMPU3daJoIaordtlr/6hPJGTylqsgG+zqAH91ObW9X49KuMeEqpQWoesAmP7L9yWyY0Q4bYD5u8qj9XtHKhjWqYGbS9x9yRdFCKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RFLV3qf5; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
+	s=arc-20240116; t=1709938459; c=relaxed/simple;
+	bh=Vkly+QNlmDqUblUCvbWVxQbK01ihl2TM0nwd62VhE8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZLndFzVUbs9q+UNh4jX/BBx3TGciRUqWxorje0G/TXnLjbAYsRO0Y0/BADAE7f9zzAMS2Tw1fZi3PzX53k9tCdIZbpTB8TLqT8ICItOWaghV8L/GBxkYblWLWgcwHQGk/YbuifGuyK3F5fOrMTHhHXP5fs8wkXxwIk51727DD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNs7LkTJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFLV3qf5"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a0151f194so25758317b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 14:45:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709937901; x=1710542701; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IiMp4Q84ZRHG2huJ3D03WkrKLgdFSmD9U9ReR7uCK6U=;
-        b=RFLV3qf5sNxacB65Ib0q1PqL8+KAYXKGUgu879ZIcdJ0qVLrQl70VUI0FMxg1c4MdX
-         QEZWlqoBgF5rzKlo0bBXekOUJGCFfDI1yF+x0Agp5HXF+gjIkiC4m0LTPziwaC3FFXfQ
-         bAq0a8ceovtmA8MQv7yNtdzhTukpnLVLitUK24sub4LMQLhOQSTbg/iGfGbq6GD5RD2n
-         l7YrxZc4cWrw1At1W3odrUYEF8jUC0BiLhTmjAdKWSTNYYNUiDgFYWgiy0iv1urSwUAj
-         4yW1QEjk35psTJxtTv2ExH5TDSoHIb6HxDkXe/yt5bBdjEjJCds4yzFgCF3zX+fLtajR
-         EcAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709937901; x=1710542701;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IiMp4Q84ZRHG2huJ3D03WkrKLgdFSmD9U9ReR7uCK6U=;
-        b=joYUlOBKDPVyegB0/XViXWkqvAdt9UUvF9SnyAAG584Bd32+TbbkTn9kzzgx1gbvRp
-         u/G9CqQmX0Fji5TQANMABbr6CmFUsFBCsISfkW9+8Ooipjb+FLFWNI/X16uMuFNhecq2
-         NoeoqHqrliy3YIDEpk01hhxfdgKMzOIKTHFCsZA64UoGBT6AlVbaIbLcOGTnig/x2yzu
-         5INPH8Sy/ZS/rfrZfe99e3+G1SgArNgZfoQZZxmGeDnred+1STP80KTwPXUprKAQKHlI
-         XFvmV6ukPnjEVGYPoCq0HPvSxnlFDz/hU69m5FgrIDs2YOD2qJQBuZisWR1GQTxmR5E5
-         jP9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrA9/byOJjuXvmwvV6Vop4yeJOtGGvMJma+NwikwVu4BKg0hX5+jhHKNMwVM3ScMaO6PBtsS2tsdQ6bWSnHa4TLeZKYL2QzFYRNKeM
-X-Gm-Message-State: AOJu0YxdkW7MQTHEccpw7KV4NNzO1dJsIFm2Y+8SV0c0aCeaN0B0xJrh
-	8P+1e6HqESLTZRE08n8d/h55Q09j6twC4kdAhQpN8z4niST2PaZhpT7iBE8Lj1rDncc/JYLb3mP
-	+DWXE+vnt8rWIvA==
-X-Google-Smtp-Source: AGHT+IG/emX2/VZdtlMuRgEiAhbEydXKKDZZNEwpuRFiPRm8SORpqs38ydYiV9bQtRKmc6lUxN4XqNmkfzHamhE=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:b307:13b8:5743:15a9])
- (user=saravanak job=sendgmr) by 2002:a05:6902:102b:b0:dcc:e1a6:aca9 with SMTP
- id x11-20020a056902102b00b00dcce1a6aca9mr96836ybt.9.1709937900881; Fri, 08
- Mar 2024 14:45:00 -0800 (PST)
-Date: Fri,  8 Mar 2024 14:44:50 -0800
-Message-Id: <20240308224450.2327415-1-saravanak@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNs7LkTJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFCDC433C7;
+	Fri,  8 Mar 2024 22:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709938459;
+	bh=Vkly+QNlmDqUblUCvbWVxQbK01ihl2TM0nwd62VhE8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cNs7LkTJGQyWeQymH9AOr9F5jSqrTMIZVIeP0qR7RHyYnDCjgMRbboFrz/D0oeoIG
+	 b6RTgQ5QkqaXgnn7bUFd+EG30b2Seo+OVreYVKqUGJFV96GcgDLEb0lsfWP17pDjUa
+	 nMyyXXWgO7fpf2VQQQida/YiCRCAkET7owp+46mnt5zCDs8rlPbkvpnHskM0tr1T19
+	 KBHlorv9FYzI1S6eypgZe14YBCjwdVbCuaSWEx99VL9dbw4mr4OTvlLpxZL9NPF1om
+	 IlmhvFkJ7vvyx8YJKslKx//ZVEole8AEh5qysdO5neHo1VJBep+eDeVG9RJ2w4VCK1
+	 cYXKEL6B7nwfQ==
+Date: Fri, 8 Mar 2024 23:54:15 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Gregory Clement <gregory.clement@bootlin.com>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH v3 08/11] i2c: nomadik: support Mobileye EyeQ5 I2C
+ controller
+Message-ID: <yyyhx62wcvro2zrkxmj6g3esg32zh62f4spox7txv4ghc74ewo@lzduga5d4wzi>
+References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
+ <20240306-mbly-i2c-v3-8-605f866aa4ec@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH] Documentation: power: Fix typo in suspend and interrupts doc
-From: Saravana Kannan <saravanak@google.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Saravana Kannan <saravanak@google.com>, kernel-team@android.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240306-mbly-i2c-v3-8-605f866aa4ec@bootlin.com>
 
-Typos are bad. Fix them.
+Hi Theo,
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- Documentation/power/suspend-and-interrupts.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static inline void nmk_i2c_writeb(const struct nmk_i2c_dev *priv, u32 val,
+> +				unsigned long reg)
 
-diff --git a/Documentation/power/suspend-and-interrupts.rst b/Documentation/power/suspend-and-interrupts.rst
-index dfbace2f4600..f588feeecad0 100644
---- a/Documentation/power/suspend-and-interrupts.rst
-+++ b/Documentation/power/suspend-and-interrupts.rst
-@@ -78,7 +78,7 @@ handling the given IRQ as a system wakeup interrupt line and disable_irq_wake()
- turns that logic off.
- 
- Calling enable_irq_wake() causes suspend_device_irqs() to treat the given IRQ
--in a special way.  Namely, the IRQ remains enabled, by on the first interrupt
-+in a special way.  Namely, the IRQ remains enabled, but on the first interrupt
- it will be disabled, marked as pending and "suspended" so that it will be
- re-enabled by resume_device_irqs() during the subsequent system resume.  Also
- the PM core is notified about the event which causes the system suspend in
--- 
-2.44.0.278.ge034bb2e1d-goog
+If you don't mind, I fixed this checkpatch warning while
+applying:
 
+CHECK: Alignment should match open parenthesis
+#103: FILE: drivers/i2c/busses/i2c-nomadik.c:247:
++static inline void nmk_i2c_writeb(const struct nmk_i2c_dev *priv, u32 val,
++                               unsigned long reg)
+
+Andi
