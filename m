@@ -1,122 +1,99 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9395A0E9
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 21:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7247A5EE96;
+	Fri,  8 Mar 2024 21:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709933368; cv=none; b=P+Rp9CHp/eG8CvxDF2JJMQYRSardk/JZXlC+r2fZofPP7d5a97DTIslZoOgER2VQtYIvDEupfJ7FcuieFXkEq/jecVQpq5/6Si1MtV5nhlL1gi3CCskAPZ1gCvx9V8Pse4XY5oobMCsm9se2glHgwycBAhZ3czXHE8Sfv6IjRiA=
+	t=1709933469; cv=none; b=kd0ZqaCQ/HdueZAOLLO0kjlGOvAX6W+P9t+TDEWZDeydw5Q+NET3N2us/hR+7sfNc94O/JtkClDpNcic2hPfQMzsVgJdlw0yUJeVLuxSr5Nq9Qky2e+/RVqg+Spc/cEaH78UpsqAaRMDlz2ICe+VPZFgXVV84T6eZRLlS7SEs6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709933368; c=relaxed/simple;
-	bh=enbOfX48AZcV/R3bohKaaCBNPl2vKkKF1NeVvwrUD2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4fP7GgP4guM8HXbOXb0ZrEv/U6oS61E4d2pogycbL1fNTPxVqL2+Ap+OcqZ5IFclWv25gMHpnK6kJHkUyYkA02rh9kQlcbKdtnmrtm/nTFyuJvzWki4q7LOcDJtTANiVXgprl5xJ5TiqBS5jchmp7Eu3SWNU2jtrRTKCYMK66o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fieBYV4b; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709933469; c=relaxed/simple;
+	bh=BIrlIu35U2rimElEMkh+0WBDV89ooLPXuL5UGm7857c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WqDf+6eDjBhyc77xsJzRG8S60GMdUwk+cR5vS4PxTgu/SNEWgYULthk0Jb/o8iIIhgaiqEBPiPOAPA4NvKdeFfnAL/pKXRsjYLPwp9TiUUcJTmh21PiuO31qXiKybRzjNTlumfonZsZMWIBLFz2+Eq/gMxrgqVw7bW+ORwCZDjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW7YYjfk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fieBYV4b"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a456ab934eeso367988666b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 13:29:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709933365; x=1710538165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxAN82VZIFEPcZxBPzCoGsB8df9KbUJlKh3u8U3jeiA=;
-        b=fieBYV4b2ZzCeiPq2V8XIsoQqSI4jtfHh/+kWqJ3CJlI6cWfehXE7Wq3leCmOHvGzB
-         8PW/3YICVOlBqpZNCdpronwfyLDFTWzJx7UMdP7ituemM2uqqOKFVPY4Mw3Miz930aaI
-         LJqCwt8SRKYs3hoXPc88QgBK6jdk7RRJ9dL6J9oUOFVK56yBNNM1K/YqAFg6hVzdPHBw
-         jRvkTB/TraR0/289FjmosHo2FXdOexvHjxxQ24Usyfmv2/6/H0ZaGYk3pXUPAl+D5vVV
-         zmgkOm6/GYOPk/OtFd/+sqoQgBM6gmFwR1H5cPcYblyLE0aiIYiwDybeNUOuitMbm0zv
-         S1mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709933365; x=1710538165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XxAN82VZIFEPcZxBPzCoGsB8df9KbUJlKh3u8U3jeiA=;
-        b=reBE6b1/ItPZaliaU1Ec81NhmvxNV6PXc4b+w+jNCiOOy5sR77dSYmz96F6y3i1OYM
-         6Fh2U3lYNV4k55BIaC8SjP+QZ2wqxa9Ps9K+GIjLfX3o/2KKaS77Iowpol4Do5ikxVFK
-         3HC/hOGKBdCjvq2k68OeW9UoWa2UYyh/OAkm9sRkBRrc1PmhvYKeeXNIssRoPsX07jiN
-         s5uA/yni1ntbGnPxffuP5uw0gMcPZOGwM8juwFJTmyavMGPOIUk4ButfMZP/ogpAtdVJ
-         Q+mR3u0LjUsNHeCen5UOvoec4TyNOEmwlfGRkaLTZuzTT5m9nCqQmUnV80yGUhcy08of
-         /Jfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWm17jNQBmJSSh/XmBMvWkYqguNroDmqEOfp2MhmUuOc0GidWlG6HLlygr4gbynVHF0g0uOBZD0+i738YLL7FDHk0Qi4DARRe3p1mGx
-X-Gm-Message-State: AOJu0Yxb2wiy15hhiuxifADMVJagPNZl7p7rK9K8Tih7DL3TpPlynnfV
-	91DGA24mnY4Cmku/emaMdCwO40WrTt6Ig0TwGt6d6utGplShBEkCtTGUMaSd
-X-Google-Smtp-Source: AGHT+IHUiMGiGki9uDXvWYbkzmIrC+FesuYkoxkdC4LBV4LlZIWPap6lovHGuB5E2nKmDCZuPsa14w==
-X-Received: by 2002:a17:907:c310:b0:a45:f262:bc2f with SMTP id tl16-20020a170907c31000b00a45f262bc2fmr240724ejc.5.1709933364868;
-        Fri, 08 Mar 2024 13:29:24 -0800 (PST)
-Received: from andrea ([31.189.122.3])
-        by smtp.gmail.com with ESMTPSA id gc3-20020a170906c8c300b00a45deac10fdsm180273ejb.207.2024.03.08.13.29.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 13:29:24 -0800 (PST)
-Date: Fri, 8 Mar 2024 22:29:20 +0100
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Kenneth-Lee-2012@foxmail.com, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: Question about PB rule of LKMM
-Message-ID: <ZeuDMKtVotRefSm3@andrea>
-References: <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
- <ZejC+lutRuwXQrMz@andrea>
- <Zenip+8BDM3p+MUh@andrea>
- <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
- <ZeoFBkB1BeTdEQsn@andrea>
- <bde188b0-1c5b-4b3b-94de-395a52fc37ce@rowland.harvard.edu>
- <ZeoQvj3l6moF9KdQ@andrea>
- <b3137a9b-0776-421f-8b3b-b5ddd6bce96a@rowland.harvard.edu>
- <ZeosQDNK8hN/KgJR@andrea>
- <198f16f6-1d61-4868-b522-1bc5d34bf7af@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW7YYjfk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97843C43394;
+	Fri,  8 Mar 2024 21:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709933468;
+	bh=BIrlIu35U2rimElEMkh+0WBDV89ooLPXuL5UGm7857c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TW7YYjfkc2/7XCq1OsOk4JnkQ2Z4roe/55Aod6b+odn0SZoI1mh5iU4avPdsBAWNJ
+	 vKBopD5GVzT90xHrQM+caKjUTuYrTM7tQ+t8f8Rtpg0do1sXZN4uug2ChAwfwUt8oD
+	 FYO5MDsYtY3VOSDjGJM9RCJyjHti1KtmK4BjwP7C+HHelSf9pmB/FblcRkwN1JJygS
+	 8cvT2c6sCebDAogOn97OZTUAmx5lOItuq5MiswxsqBTwwpFBq4sChVbLa+1RPGMnYF
+	 PnJky00JFyo6T5VFhhxyakNMX6h7kcYchNcS/Xl5ww125XNcuXJ7pVUOeybv5tcaQm
+	 78wmQeAI82sxA==
+Date: Fri, 8 Mar 2024 15:31:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, linux-edac@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, netdev@vger.kernel.org,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>, Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 0/4] PCI: Consolidate TLP Log reading and printing
+Message-ID: <20240308213107.GA700934@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <198f16f6-1d61-4868-b522-1bc5d34bf7af@rowland.harvard.edu>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240206135717.8565-1-ilpo.jarvinen@linux.intel.com>
 
-> I can't tell which aspect of this bothers you more: the fact that the 
-> text uses an argument by contradiction, or the fact that it ignores the 
-> possibility of two instructions executing at the same time.
+On Tue, Feb 06, 2024 at 03:57:13PM +0200, Ilpo Järvinen wrote:
+> This series consolidates AER & DPC TLP Log handling code. Helpers are
+> added for reading and printing the TLP Log and the format is made to
+> include E-E Prefixes in both cases (previously only one DPC RP PIO
+> displayed the E-E Prefixes).
 > 
-> If it's the latter, consider this: Although the text doesn't say so, 
-> the reasoning it gives also covers the case where F executes at the same 
-> time as E.  You can still deduce that W must have propagated to E's 
-> CPU before E executed, because W must propagate to every CPU before F 
-> executes.
-
-Agreed.  I suspect this exchange would have been much shorter if we did
-say/write so, but I'll leave it up to you.
-
-
-> (In fact, that sentence isn't entirely accurate.  It should say "... not 
-> to propagate W (or a co-later store)...".)
+> I'd appreciate if people familiar with ixgbe could check the error
+> handling conversion within the driver is correct.
 > 
-> Let's consider coe instead of fre.  The description of how the 
-> operational model manages the coherence order of stores is found in 
-> section 13 (AN OPERATIONAL MODEL):
-> 
-> 	When CPU C executes a store instruction, it tells the memory 
-> 	subsystem to store a certain value at a certain location.  The 
-> 	memory subsystem propagates the store to all the other CPUs as 
-> 	well as to RAM.  (As a special case, we say that the store 
-> 	propagates to its own CPU at the time it is executed.)  The 
-> 	memory subsystem also determines where the store falls in the 
-> 	location's coherence order.  In particular, it must arrange for 
-> 	the store to be co-later than (i.e., to overwrite) any other 
-> 	store to the same location which has already propagated to CPU 
-> 	C.
-> 
-> So now if E is a store and is co-before W, how do we know that W didn't 
-> propagate to E's CPU before E executed?  It's clear from the last 
-> sentence of the text above: If W had propagated to E's CPU before E 
-> executed then the memory subsystem would have arranged for E to be 
-> co-later than W.  That's an argument by contradiction, and there's no 
-> way to avoid it here.
+> Ilpo Järvinen (4):
+>   PCI/AER: Cleanup register variable
+>   PCI: Generalize TLP Header Log reading
 
-I can live with that.
+I applied these first two to pci/aer for v6.9, thanks, these are all
+nice improvements!
 
-  Andrea
+I postponed the ixgbe part for now because I think we should get an
+ack from those maintainers or just send it to them since it subtly
+changes the error and device removal checking there.
+
+>   PCI: Add TLP Prefix reading into pcie_read_tlp_log()
+>   PCI: Create helper to print TLP Header and Prefix Log
+
+I'll respond to these with some minor comments.
+
+>  drivers/firmware/efi/cper.c                   |  4 +-
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 39 +++------
+>  drivers/pci/ats.c                             |  2 +-
+>  drivers/pci/pci.c                             | 79 +++++++++++++++++++
+>  drivers/pci/pci.h                             |  2 +-
+>  drivers/pci/pcie/aer.c                        | 28 ++-----
+>  drivers/pci/pcie/dpc.c                        | 31 ++++----
+>  drivers/pci/probe.c                           | 14 ++--
+>  include/linux/aer.h                           | 16 ++--
+>  include/linux/pci.h                           |  2 +-
+>  include/ras/ras_event.h                       | 10 +--
+>  include/uapi/linux/pci_regs.h                 |  2 +
+>  12 files changed, 145 insertions(+), 84 deletions(-)
+> 
+> -- 
+> 2.39.2
+> 
