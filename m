@@ -1,99 +1,184 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4C23612C;
-	Fri,  8 Mar 2024 13:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EFA374E9
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709904856; cv=none; b=Fi7Hwd3d2WnFRsdXH8v3c3lVBdgbc9sqNOJQbWMt6uSvBeELdZy3TNApSfmiIQz4yp2bPTMzYlc4C/xVGkD3KWXpBw/iv3DD/Wk3PX0o4jxEZav1cZTeeGdJC6FhQcarTSz+juOaZTK9pVncK/q/zcZ+mXxqfy4ZG429aCRBJlM=
+	t=1709904917; cv=none; b=PJyAwsozCmMdX4G946L3ptit8mN02FiLK4y/mb77Qq4zRSCJ1IDVOGiYLn+yNpsuoFBm/Nhm7f6A9uJ2t2DIqa+k5x3hInsGW5TuMG+cS/vEDN5boiOcGZEuFjpGq7pZgYeTpnMMVRGfXK/J2XMLqlaOyyOEPKDH7AtRJ/ckNrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709904856; c=relaxed/simple;
-	bh=wtzrEfjCpn2S+S3f35TVkH99zb8AiS5TmWJuuoHXmU4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Koj30o6Bdf6W4xBMLpC2+bVSA3xRk1dqTphfhSct3pg9ooWc8t5boQ2ik1F23/26kPuMn1ZRuBzJ6Jr7j2Dd+XkKSPJhW033GFAW3gPLILUVQhV2lInFaLyKFWP9NxTdCpVxMIWn1EgLhuwWU85tmrDXl1LPQRaw9mgO9YbeJ8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pUolcqdL; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1709904917; c=relaxed/simple;
+	bh=l60pAB2x58G03355kGifkeDRz6n4tbmTBdawv9Ulpu8=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vclb7GezWAe81n0XL2qhh3GkqA1Cusm1gTERoQIH+eMSF9DDnUbv6XG3Ae3rmulX2Cfchs9GhMKrK+QqzB2QWD1LDaobYJX4r2hTXGmFRGgTKP6cmBPNJmJZU5W/5Xgg9E5xrxQLcJGXnPNurYQskj4HI9Gruk7G337edREbywY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kLUHAbXN; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pUolcqdL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709904854; x=1741440854;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wtzrEfjCpn2S+S3f35TVkH99zb8AiS5TmWJuuoHXmU4=;
-  b=pUolcqdLC4Cj+xKA2seYYw09dvpiEdJyyX+G5WIjdvgv5YfKK7wubiKP
-   X0MVHL77LOWLvstaQRLdnrfedrMg9IMZSH+kOhUns02uUfgmBg/LLdoVl
-   EuAfhTm16Y8cTcIHGJlAa1X9Fe90gdy8tb4jOq61gVbHNC/B+Qyh1Y8qW
-   gOfpIn2HPdS/6G2Y2rqO//IJfgrKSX5GwF5yUx2b/f53gdS6nUjIZ6wth
-   jQIKAgdz5gxjqG9YULWqJcb98Bp+XfQ1YImbVkwQSwsLw3BVD2wPs8/OP
-   IF2Pz0iZ5/HawbQwuqPi23RxznycAtuq4Oa17tNycmd64raxBUBiD9rl3
-   Q==;
-X-CSE-ConnectionGUID: VD82c0PPRy2Nn/u1qslXzg==
-X-CSE-MsgGUID: o6a2Q6TZS8aGv9j+QzMa4Q==
-X-IronPort-AV: E=Sophos;i="6.07,109,1708412400"; 
-   d="asc'?scan'208";a="184672992"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Mar 2024 06:34:12 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 8 Mar 2024 06:34:06 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 8 Mar 2024 06:34:03 -0700
-Date: Fri, 8 Mar 2024 13:33:19 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <stable@vger.kernel.org>, <patches@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-	<akpm@linux-foundation.org>, <linux@roeck-us.net>, <shuah@kernel.org>,
-	<patches@kernelci.org>, <lkft-triage@lists.linaro.org>, <pavel@denx.de>,
-	<jonathanh@nvidia.com>, <f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>,
-	<srw@sladewatkins.net>, <rwarsow@gmx.de>, <conor@kernel.org>,
-	<allen.lkml@gmail.com>
-Subject: Re: [PATCH 6.1 000/219] 6.1.77-rc1 review
-Message-ID: <20240308-unpaved-greeter-d665418b2e1d@wendy>
-References: <20240203035317.354186483@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kLUHAbXN"
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 1636448A98
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1709904905;
+	bh=KfFTaYyXhA0LmPtbUGAWhlL1dAhtAs2GiC0vdA6Ii4k=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=kLUHAbXN64Ht8OarTKJRlpyeyeN3irXaS7O6tB3bYSO6kAhDP0DRhAdcknG/Kg8j+
+	 nn9KP6bBus4XPJyceGyq8l4Er+Zv/WfkZ2fuISzD5ATzl40roWHlSV7TdXoyHSuoag
+	 x2NH2T3euLHJKCgON/kpUpCpHR5BWIJJYkom3+tc2vGG5X22U9SEVfvTm+BHf7pKhW
+	 rYfVjCfemIYD951ykuzQ5c4PuVGSg+8FUm0if191N+QyMogYi+iV0SVMyHDWo/s8/B
+	 x48WuuR1/y8Bt4O/S4fQSn/ROuzK8QqvRYWZwIvnjx3hyxsiqReETMPRDUnjovjUHC
+	 I6LFY+uL3cKKA==
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-42ef6a1b6b6so8629851cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 05:35:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709904904; x=1710509704;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KfFTaYyXhA0LmPtbUGAWhlL1dAhtAs2GiC0vdA6Ii4k=;
+        b=BqtaYyrvkE5sIO/F2hspUp+3Qc03tNBUitCIxSs+mLAY13HyDePT0emrMDDpZJ8fld
+         CoDe+1sqWovW7AqaIg5/FftFy2DeufdX4CijmJSYGq96MXenhjt3TSYxto3VKvku+DQ2
+         OVAWaOwLkjd79CkSi1uzME/90UZoBCpNFj/9SuZaT+SL2FITrPswGwsN9Ngmk46LMJkG
+         KIizcg0yaV6rJnQt/+8D90F5018qjDxVWCg+RAHRNlX0lpJikhsrvvksC9+6BKAsDwei
+         rdK52+JGecdev9sPeaFcBLuQrtd/7DjVv9qxkrpproVgwdhIpkZ07vHwJqHLazNZPNto
+         e1tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSilQvJ+mWd1TYbJFfbCG1Ln7ru8nq7I4hcpDJZqzlluEWZlYPC7KxQQoN3eoPtPBgh2S6vVm34bbUGB1ReyI3bAIf06IubAvr4rO6
+X-Gm-Message-State: AOJu0YxPf5AnQSEubfKAH1IRiCV2C7td2XmYrb4oCVh/9sbe4s6HzG+g
+	69BAW4DMW+zYi+CRxu0Vte2RFnj30ruKnl8rih1ZZ7/HuFs/RbsLmliWKkwa+9LvzbMr0/DjJUn
+	x4Q2rnm5b3KSl0D/0cOoAwK9FXUyncTYI7G2kUaHLC5F3elX+EeqvlUM1ql9IPhv+VFdL4PBkGe
+	eZl0deMc2gtY1A1kfe6fArM8cwaty2XJJaPOuWc3sKU04Q2v2Mj+Li
+X-Received: by 2002:ac8:5792:0:b0:42e:d641:b17c with SMTP id v18-20020ac85792000000b0042ed641b17cmr12663726qta.62.1709904903808;
+        Fri, 08 Mar 2024 05:35:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGFWPweaTc5T39BhG+37jBadbuOfJ1uLHa+LrhI0fCpfgsFaZBrzlrJv3P3sJsRMiH/4i9DBQ2T5AYcKlGfOrs=
+X-Received: by 2002:ac8:5792:0:b0:42e:d641:b17c with SMTP id
+ v18-20020ac85792000000b0042ed641b17cmr12663713qta.62.1709904903530; Fri, 08
+ Mar 2024 05:35:03 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 8 Mar 2024 05:35:03 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240308-docile-pretense-b44c3a84d8b2@wendy>
+References: <20240307-disable_misaligned_probe_config-v8-0-55d696cb398b@rivosinc.com>
+ <20240307-disable_misaligned_probe_config-v8-4-55d696cb398b@rivosinc.com>
+ <CAJM55Z9SYA=QMg0Wg-e0Q8nOTP6qSKkc+kxHMGOmmmWrEcVf7w@mail.gmail.com> <20240308-docile-pretense-b44c3a84d8b2@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dzUFsazBGNPyODmn"
-Content-Disposition: inline
-In-Reply-To: <20240203035317.354186483@linuxfoundation.org>
+Mime-Version: 1.0
+Date: Fri, 8 Mar 2024 05:35:03 -0800
+Message-ID: <CAJM55Z8EX5D0HZ1xKTkaQEL1RF46DrBynUoTSMP5q8kmDGY_=w@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] riscv: Set unaligned access speed at compile time
+To: Conor Dooley <conor.dooley@microchip.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
+	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>, 
+	Evan Green <evan@rivosinc.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	linux-riscv@lists.infradead.org, Charles Lohr <lohr85@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
---dzUFsazBGNPyODmn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Conor Dooley wrote:
+> On Fri, Mar 08, 2024 at 01:52:24AM -0800, Emil Renner Berthing wrote:
+> > Charlie Jenkins wrote:
+>
+> > >  config RISCV_MISALIGNED
+> > > -	bool "Support misaligned load/store traps for kernel and userspace"
+> > > +	bool
+> > >  	select SYSCTL_ARCH_UNALIGN_ALLOW
+> > > -	default y
+> > >  	help
+> > > -	  Say Y here if you want the kernel to embed support for misaligned
+> > > -	  load/store for both kernel and userspace. When disable, misaligned
+> > > -	  accesses will generate SIGBUS in userspace and panic in kernel.
+> > > +	  Embed support for misaligned load/store for both kernel and userspace.
+> > > +	  When disabled, misaligned accesses will generate SIGBUS in userspace
+> > > +	  and panic in the kernel.
+> >
+> > Hmm.. this is *may* generate SIGBUS in userspace and panic the kernel. The CPU
+> > could support unaligned access natively or there might be a handler in M-mode,
+> > right?
+>
+> Correct. The last sentence could become "When disabled, and there is no
+> support in hardware or firmware, unsigned accesses will...". That said,
+> this option is no longer user visible, so we could really simplify the
+> hell out of this option to just mention that it controls building the
+> in-kernel emulator.
+>
+> > > +choice
+> > > +	prompt "Unaligned Accesses Support"
+> > > +	default RISCV_PROBE_UNALIGNED_ACCESS
+> > > +	help
+> > > +	  This determines the level of support for unaligned accesses. This
+> > > +	  information is used by the kernel to perform optimizations. It is also
+> > > +	  exposed to user space via the hwprobe syscall. The hardware will be
+> > > +	  probed at boot by default.
+> > > +
+> > > +config RISCV_PROBE_UNALIGNED_ACCESS
+> > > +	bool "Probe for hardware unaligned access support"
+> > > +	select RISCV_MISALIGNED
+> > > +	help
+> > > +	  During boot, the kernel will run a series of tests to determine the
+> > > +	  speed of unaligned accesses. This probing will dynamically determine
+> > > +	  the speed of unaligned accesses on the underlying system. If unaligned
+> > > +	  memory accesses trap into the kernel as they are not supported by the
+> > > +	  system, the kernel will emulate the unaligned accesses to preserve the
+> > > +	  UABI.
+> > > +
+> > > +config RISCV_EMULATED_UNALIGNED_ACCESS
+> > > +	bool "Emulate unaligned access where system support is missing"
+> > > +	select RISCV_MISALIGNED
+> > > +	help
+> > > +	  If unaligned memory accesses trap into the kernel as they are not
+> > > +	  supported by the system, the kernel will emulate the unaligned
+> > > +	  accesses to preserve the UABI. When the underlying system does support
+> > > +	  unaligned accesses, the unaligned accesses are assumed to be slow.
+> >
+> > It's still not quite clear to me when you'd want to choose this over probing
+> > above. Assuming the probe measures correctly this can only result in a kernel
+> > that behaves the same or slower than with the option above, right?
+>
+> Aye, mostly the same - some people don't want the boot-time overhead
+> of actually running the profiling code, so this option is for them.
+> Maybe that's not such a big deal anymore with the improvements to do it
+> in parallel, but given how bad performance on some of the systems is
+> when firmware does the emulation, it is definitely still noticeable.
+> I know we definitely have customers that care about their boot time very
+> strongly, so I can imagine they'd be turning this off.
 
-On Fri, Feb 02, 2024 at 08:02:53PM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.77 release.
-> There are 219 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Ah, that makes sense. So maybe a help text more along the lines of "Disable
+probing and optimizations for CPUs with fast unaligned memory access" would be
+a better description of this choice?
 
-Again, I'm super late here but I did test this the other day..
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
+> > > +
+> > > +config RISCV_SLOW_UNALIGNED_ACCESS
+> > > +	bool "Assume the system supports slow unaligned memory accesses"
+> > > +	depends on NONPORTABLE
+> > > +	help
+> > > +	  Assume that the system supports slow unaligned memory accesses. The
+> > > +	  kernel and userspace programs may not be able to run at all on systems
+> > > +	  that do not support unaligned memory accesses.
+> >
+> > Again you're just explicitly saying no to the optimizations the kernel might do
+> > if it detects fast unaligned access, only here you'll also crash if they're not
+> > handled by the CPU or M-mode. Why would you want that?
+> >
+> > I'm probably missing something, but the only reason I can think of is if you
+> > want build a really small kernel and save the few bytes for the handler and
+> > probing code.
+>
+> Aye, just to allow you to disable the in-kernel emulator. That's
+> currently a choice that is presented to people, so this option preserves
+> that. IMO this is by far the least useful option and is locked behind
+> NONPORTABLE anyway. Maybe we could delete it, and if someone really wants
+> it, it would not be all that much of a hassle to add back in the future?
 
-Thanks,
-Conor.
+Yeah, if noone really needs this less config options is better, but I don't
+feel strongly about this option either way.
 
---dzUFsazBGNPyODmn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZesTnwAKCRB4tDGHoIJi
-0rfEAQCNKqC+fC+rw8+CbZLtht2tc29yoTm26p2VIAy31JFFdQD+Ma9jKC5Q3zB9
-YfeKWtS6nxOGy0+KWn/D8m4HyFLESAA=
-=8rQb
------END PGP SIGNATURE-----
-
---dzUFsazBGNPyODmn--
+/Emil
