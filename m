@@ -1,140 +1,99 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5D048CFC
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 18:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4EB2A8C1;
+	Fri,  8 Mar 2024 18:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709921122; cv=none; b=I+1E7Wv2VeDsbBhhh1wq3Wyg0anaGvMqGNY5fmpY5+bkVkhzkp1DaOe+jreffOeDPjtCYDGx7mFWAjvb8SCQz0AZheNI8Ln6hvrFDR0gmB50BlWVMibv2PjMDl1qgDuk/u3wS3T7AfX9Ggx0D4f1x4DN/aqlsAXN8NGtS+b91Rk=
+	t=1709921216; cv=none; b=OoOW9ytSTiFc0FF0598nWCA06OkFDV0YWOhwdrtcxbrMDs6+QfAeMRgELuStsjCxxSCIr7+qlfn5lat3y4huKIHO9Fwl315fGqd6K6nmAfO8h67SpRdW9Hk5b54qL7rcwVB265qIiGsnjhWxUX0OMzLaLpDMi9vI52jtD+yKHOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709921122; c=relaxed/simple;
-	bh=k4qoNEgTAI/NBFOIEmoqhhmmaXxIBENDE2kiy+x+1J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e1iRIipfKRcqGzb7hecMrDVfTNULCxK4jpOgoK62XEDL6fisAZdyLRj3xcOGaDNxQXoP+M5OvRTGsdfzGcKrOgv4L7vttANb7+FRgyamHaLfp8o/QY7qWmCRERFhJlBdD81MMbWRleZ2nX78DHEGXkUAwCPuytG7JL7EI/Hb5H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9YowF0l; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9YowF0l"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so287a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 10:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709921119; x=1710525919; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C+erbz9PPCR1ZEYV82oV8Vbs5yNtZyW1/t5a2qxXOXM=;
-        b=K9YowF0lhwms9+2vwe2OYR1Sh3DP/5QSN50Q89eDfBzMDW38fwh0yD8VvKS2ISWjqA
-         VQNE9d8wgJireGAALVpadhzleHYwchqXk27LVS3QoLerj/WPbyqPr8XjPkJLe7+Ugul9
-         Ra2nFMiU9dvsrwySqnU8e+V4bnJd6Yofr+MaspH58uKHmiy1HwF/pzVr3uVrUXoGHvH0
-         Nxzk2+JnXHZ4zm944WhxhxFmbIGRyYt+JshlzLNo4/euHxH8PxQbd9y7YM9ydoqVp8eF
-         h0HDc3SS1jXXeBU6H0tF2twCLC23eXnCF8u/1eyGFHtBpOIIFo663OUvm9nSYd/5WYwu
-         KR0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709921119; x=1710525919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C+erbz9PPCR1ZEYV82oV8Vbs5yNtZyW1/t5a2qxXOXM=;
-        b=AEAFYqxCMbNhVQ50xC87xyVm6I6/7Og8T5e8IkVdvXBuQ9fnBv6p3bscYP1aNz9zMd
-         DuyWuvGmbjoCp0UPR1YKAkz36JuRf9Cp+QPcMuvEF0v2goIJt8VrmMp3MkYmKRZGFCI/
-         elpRnBwHQ1vSjr6BsIFp2q3d8ew5gBZ1MNFv10SubgFJI2nImXitPHrhdiEYhNpDdsuV
-         YaSrWrkoH7IEhNeKozj1qhnZVNXxxmJDP1sXv07T2Q1CkAwwdGsKnFuTavxgHjm2P7GS
-         EkBahbJ6Jrgdby249Oiw5TzdbF+M/G8Tkbx89p4HK2qb+VDHMgZ876v87dnqN+YWeV2V
-         8NUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmtnoBAECBttbvQAylj33YjFFNG9axz1CCHXC3ZBMIKdHaHafEQfNjqD4NYhjz4l1j+8M4bdeuJ4FkEazj1JuTDskQNRy6j/V5CEz/
-X-Gm-Message-State: AOJu0YzieZFhR3qGylHzRY/S/a3YlRWM85I3/QVCPCM68vI2K3QOy5D0
-	0bZKRjfZVTRbq28wS7JltYzCLnKC+/KFC9y503RFZffEK+LgdRwNyTLJCAQDA4fm5+ePa9SbGDZ
-	r1q9OX/Hj/yYSMLS8E4I+tMfJpEI+spoKQN9F
-X-Google-Smtp-Source: AGHT+IGmkrwNAWPQ65TNLci3z2Qo5DY/oK3TNmr5uwh7kn4VJhIp0suR062ltivW/oexJghPveJmlU3qllXt7eV0lVc=
-X-Received: by 2002:a05:6402:2022:b0:568:271a:8c0f with SMTP id
- ay2-20020a056402202200b00568271a8c0fmr267936edb.7.1709921118696; Fri, 08 Mar
- 2024 10:05:18 -0800 (PST)
+	s=arc-20240116; t=1709921216; c=relaxed/simple;
+	bh=ROE3uYVoQdalc9qxMEBafin0xWxDiJexqDsB2sDZKtI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qbhCIXZZTx3bG0OWsdJUpb294DIDALBCNSRydWf/GM0FGqtFD+4AXTSrSBMthn85rImWpI4BreUS4Ni3nh/Ffj74A3XMwVmI0GPa0MoNP/7bxP7ktDi5vRkHWmx3k6k4WbLw+hCF+c5F5HJ9GiZZifTnwXNwNTtAhnrd3mFxT0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F631C15;
+	Fri,  8 Mar 2024 10:07:28 -0800 (PST)
+Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06CAD3F738;
+	Fri,  8 Mar 2024 10:06:49 -0800 (PST)
+Message-ID: <eacdc287-24bd-4137-85c8-df055cfd78b1@arm.com>
+Date: Fri, 8 Mar 2024 18:06:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223143833.1509961-1-guanyulin@google.com>
- <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com> <CAOuDEK3wP6zhEwgUn5zSedtwTYVFaJeBfeXkSg897EhpGP9=ig@mail.gmail.com>
- <3208c5b9-5286-48d1-81ab-cc3b2bc4303e@gmail.com> <CAOuDEK39Bdru5wAbxW-g2c=POgRxZwdQzPO5uNXP96AfSyA6pw@mail.gmail.com>
- <7292dc5c-dff0-45f0-99b1-f1687451b23f@gmail.com> <CAOuDEK2OtAO7GqPzWkdC=SARkuHYGzqW4iPdFfMx8dyw4Cy+Lg@mail.gmail.com>
- <2024022901-getaway-bacon-b805@gregkh>
-In-Reply-To: <2024022901-getaway-bacon-b805@gregkh>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Sat, 9 Mar 2024 02:04:00 +0800
-Message-ID: <CAOuDEK31NFNErYcGr-h0KA7=RkXQ2d5nV3wT6q6LqdGCY4tcxw@mail.gmail.com>
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, rafael@kernel.org, pavel@ucw.cz, 
-	len.brown@intel.com, andriy.shevchenko@linux.intel.com, rdunlap@infradead.org, 
-	james@equiv.tech, broonie@kernel.org, james.clark@arm.com, 
-	masahiroy@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] selftests/resctrl: Adjust SNC support messages
+Content-Language: en-GB
+To: Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>
+Cc: "Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
+ "Yu, Fenghua" <fenghua.yu@intel.com>, Shuah Khan <shuah@kernel.org>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+References: <cover.1709721159.git.maciej.wieczor-retman@intel.com>
+ <8a158ada92f06b97a4679721e84e787e94b94647.1709721159.git.maciej.wieczor-retman@intel.com>
+ <SJ1PR11MB608310C72D7189C139EA6302FC212@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <o6va7b7rc3q46olsbscav7pla4hxot2g6xhctflhmf64pj5hpx@56vtbg3yyquy>
+ <SJ1PR11MB60830E546B3D575B01D37104FC202@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <159474e6-ef11-4769-a182-86483efcf2a6@intel.com>
+ <SJ1PR11MB60832DAD58E864F99A16FCC4FC202@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <0393c4ce-7e41-4dcc-940a-a6bea9437970@intel.com>
+ <SJ1PR11MB6083AACB10645E41DD3F9639FC202@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <55a55960-8bb1-4ce2-a2c7-68e167da8bcc@intel.com>
+ <ZepK4mtoV_J8-UbE@agluck-desk3>
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <ZepK4mtoV_J8-UbE@agluck-desk3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 1, 2024 at 4:34=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Thu, Feb 29, 2024 at 05:08:00PM +0800, Guan-Yu Lin wrote:
-> > We want to introduce a mechanism that allows the Linux kernel to make
-> > power transitions for the peripheral based on whether the other
-> > operating system kernel is actively using it. To achieve this, we
-> > propose this patch that adds a sysfs attribute, providing the Linux
-> > kernel with the necessary information.
->
-> Don't create random user/kernel apis in sysfs for no good reason just
-> because it is "easy" :(
->
+Hi guys,
 
-We initially considered using sysfs because it could provide a
-universal interface regardless of which operating system kernel shares
-the device with the Linux kernel. This would allow users to modify the
-feature through simple sysfs interactions. However, the current method
-of using information in sysfs doesn't seem to integrate well with the
-existing system power management framework. Could we refine how sysfs
-is used in system power management to enable cross-kernel
-communication? Alternatively, should we avoid exposing the information
-of whether a device is used by multiple operating systems to user
-space?
+On 07/03/2024 23:16, Tony Luck wrote:
+> On Thu, Mar 07, 2024 at 02:39:08PM -0800, Reinette Chatre wrote:
+>> Thank you for the example. I find that significantly easier to
+>> understand than a single number in a generic "nodes_per_l3_cache".
+>> Especially with potential confusion surrounding inconsistent "nodes"
+>> between allocation and monitoring. 
+>>
+>> How about domain_cpu_list and domain_cpu_map ?
 
-> If the "other operating system is actively using it" isn't able to be
-> detected by Linux, then Linux shouldn't be able to change the PM state,
-> so this sounds like you need to fix your Linux driver to properly know
-> this information, just like any other device type (think about a sound
-> device that needs to know if it is being used or not, nothing different
-> here.)
->
+> Like this (my test system doesn't have SNC, so all domains are the same):
+> 
+> $ cd /sys/fs/resctrl/info/
+> $ grep . */domain*
+> L3/domain_cpu_list:0: 0-35,72-107
+> L3/domain_cpu_list:1: 36-71,108-143
+> L3/domain_cpu_map:0: 0000,00000fff,ffffff00,0000000f,ffffffff
+> L3/domain_cpu_map:1: ffff,fffff000,000000ff,fffffff0,00000000
+> L3_MON/domain_cpu_list:0: 0-35,72-107
+> L3_MON/domain_cpu_list:1: 36-71,108-143
+> L3_MON/domain_cpu_map:0: 0000,00000fff,ffffff00,0000000f,ffffffff
+> L3_MON/domain_cpu_map:1: ffff,fffff000,000000ff,fffffff0,00000000
+> MB/domain_cpu_list:0: 0-35,72-107
+> MB/domain_cpu_list:1: 36-71,108-143
+> MB/domain_cpu_map:0: 0000,00000fff,ffffff00,0000000f,ffffffff
+> MB/domain_cpu_map:1: ffff,fffff000,000000ff,fffffff0,00000000
 
-I think the variable `usage_count` in struct `dev_pm_info` records
-whether the device is being used. Could we leverage this information
-in the design? We could modify the device tree to record which devices
-are shared across operating system kernels. Then, we could
-conditionally skip system power management steps for those devices if
-they're actively in use. We'll need to carefully consider potential
-corner cases and assess any impact on runtime power management. If
-this proposal seems worthwhile, I can prepare a more detailed v4 for
-discussion.
+This duplicates the information in /sys/devices/system/cpu/cpuX/cache/indexY ... is this
+really because that information is, er, wrong on SNC systems. Is it possible to fix that?
 
-> So please post your Linux driver and we can see what needs to be done
-> there to get this to work properly, odds are you are just missing
-> something.  Have a pointer to the code anywhere?
->
-> Also, as you know, we can NOT add interfaces to the kernel without any
-> real user, so without a driver for your hardware, none of this is able
-> to go anywhere at all, sorry.
->
+From Tony's earlier description of how SNC changes things, the MB controls remain
+per-socket. To me it feels less invasive to fix the definition of L3 on these platforms to
+describe how it behaves (assuming that is possible), and define a new 'MB' that is NUMA
+scoped.
+This direction of redefining L3 means /sys/fs/resctrl and /sys/devices have different
+views of 'the' cache hierarchy.
 
-The Linux device driver we're using here is the upstream xhci driver.
-We configure only partial interrupts for the controller in the device
-tree. This prevents the Linux kernel from accessing other interrupts
-handled by another operating system kernel. Consequently, the
-controller can function normally even with two operating system
-kernels accessing it, as long as we completely disable system power
-management functionality.
+(I also think that this be over the threshold on 'funny machines look funny' - but I bet
+someone builds an arm machine that looks like this too!)
 
-> thanks,
->
-> greg k-h
+
+Thanks,
+
+James
