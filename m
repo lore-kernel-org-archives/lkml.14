@@ -1,56 +1,56 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07F855E4A
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E6F55E7C
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709895559; cv=none; b=YCgv0EM3m3DqPr1HHJ01zX3Fn6/9D3JM30kJnISNQMkcI1aVzG8gQIA+iLpHMH1M1mw2ndWWOK5UGx/JYn9rEINRnh17/hzxZRc82MSVLBi/b6+yVjVZ3W6wZPkGCHfw/fXAAsGa673Y+YJiDDN5QRB/LKJSvY+adVtwaWARAzs=
+	t=1709895562; cv=none; b=KJmx4EJ51RhhiEfoexwuGwfNSG/+My3wjGlfUZIvAo23U0dZ3h2/XCbaAa9fT3hZ5+DGujB0jeyp88eDuu6RjBMVxH+e30+OG3OCwqq+1AIZX1uGTtJOn0XkPS87WkkfLFJy7S2dLPr3iSjpGZ/W+Ek6oF4zMGJfWwYvONBAG6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709895559; c=relaxed/simple;
-	bh=P89bbgCmoIwRYPsfqIuTxmk7ilKR2Yxvp8a3Scsu+m8=;
+	s=arc-20240116; t=1709895562; c=relaxed/simple;
+	bh=krbxrxofvU3bNtV7aKPXLRF9gzUuYzAL8MX80bNIYPU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EAKUDmxsVmqZSEpKI0xPqcr3ObRi9YxxJmaMwGfjWy5Im5fsFDXBv0sB406G/0cqR1Ataz0eFA9Vq3ww7XiWxSS9VyiL+qyRNgDaqQ7g5Pkw+hxlAPrU5iZGqQPFk8VZeLKP2zoIlcEbsA+S9h08lLhv28p1kdthph1sPg78JsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cPYPwYkW; arc=none smtp.client-ip=209.85.167.47
+	 MIME-Version; b=m0skH0tElI/BTCSQ4VvszHydVfefYemL7gNNTYv9RSJzxxRQ6Xr0zINxDKSDjSYqPyOjKRakCVkKDRgPqIz1UGNK8r8tNH9LCWsphyrLt4PFn8QhS2jsoDGCI72JKwoMXQeYIQe+HlRoQP6b4LxZ8oB4te+1vfrfweXYYW7Tudc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IObQntos; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPYPwYkW"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5132010e5d1so2677991e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 02:59:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IObQntos"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5134d7e16a8so1722436e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 02:59:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709895556; x=1710500356; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709895559; x=1710500359; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=geif82Q8kuw7lCFHvfmZ/kVxJJq75wsWf5PRSM8TZn8=;
-        b=cPYPwYkWJtxuGRak0smxx5lwBKtUuo3oVvPPCS8tWwhMhwwB1xqICEqWRoXoKFkKtg
-         i4NvI2mg7y3jRykCr5ONP5LQhCV5K+MiuWMsLXCsPTba3DQY9c/DBd+KU/7MsFiWCF4M
-         7fcnAejkHKP34MgQhY6BDeNfLNZFdRZJFRmnWixi+7X+w+RFQLx9pKpRfaQMoAQ2NYYf
-         CnOossK7SV7qjFE+2QSJfEFit3J2H4rcbJ6FseO5Hi4DsjxhSQlqc3GuWQ5PiVjuzioU
-         R3BOi8AdKp08CzqbA9kWYkxQLaNuSx6AYYJPrhFmKlb8lCI8oh38Ok71TO5wcZc1QF9O
-         QiGA==
+        bh=C6OlRhqx5GPQQyNuVhSp2D6im2dbAlAubZWjZjVrs0g=;
+        b=IObQntos4zSlSpz33iqmTIo/SexIRY7J9cVs8IILs99GHpBrY5j540Rp3SbIMGK2vg
+         tQ7UnvGyq3dZtzJpGu6H5khFgodrvJybGOyUBV4Q7B4TVBan63I2jasWzd0uacIU4DR1
+         uxO5hlIK3tbH6CxvX7kpJouG59FiblrFc4Lm6d9nRxvl3H2955q/uDMTnNzqyNDmukK/
+         +Wstli6TxJfYQaPAIfS2fANb52gIH5+BlhuErCPMzqGzsyAlTKFPtcCR5vydQ71PU3YR
+         w1H1vb+RLqzSgy7ACYLMkvQ2LE1LYrqFMhGrRQ+XkxzOrD1T01tKDG+rmObqo5Zkzqnp
+         nrTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709895556; x=1710500356;
+        d=1e100.net; s=20230601; t=1709895559; x=1710500359;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=geif82Q8kuw7lCFHvfmZ/kVxJJq75wsWf5PRSM8TZn8=;
-        b=gh/dTB2Bu1IpPWXrRF/z9VqFevcahpgMs0qlczksurFWQP+x0w+Bs62lwplt+STrFr
-         2+rQg6xaRMPoj4JKHSWAIaWLsAy5GH5RiEQvzyfpsVA3ITDK8fdK2KOqZkvrBQ8KCSPE
-         NrE084rDUnAPM2ECX0P48kGE04h/xVc4LA/T3spx+FBjeZV8SXhwQj8NKA/IIuhFY5AI
-         39mPpr7T1d6ZkX3vbIgYmoXaD7qyUcpDxzLcEP/Inhoduy9sOWcMz+yrs+XS9ZF2b+xY
-         vPdbgyDKx5YEX+Sr5hJckVRwt6BoN/fT9pj22+KRMpq9mg9O6yGW8KfLZb8dPJYFHP7J
-         rFhQ==
-X-Gm-Message-State: AOJu0YzM97OCh00vbBI125p/1O2Jie2iMsMyHvjFijuTZApqPUjYtxqM
-	ZP9juVis19YJxrwZR8+538CJXfae0CZVFxiyp5BMqbfbl78LFwzHGhBecgxBntg=
-X-Google-Smtp-Source: AGHT+IHQ+tYPIIVHxAV8VyCd6JmA99ARRA94O1Vw78plqTCfN0Zb8vH25BaOZ/8g6jw/oxzdc2fpyA==
-X-Received: by 2002:a05:6512:e94:b0:512:da6d:23aa with SMTP id bi20-20020a0565120e9400b00512da6d23aamr3716925lfb.67.1709895555429;
-        Fri, 08 Mar 2024 02:59:15 -0800 (PST)
+        bh=C6OlRhqx5GPQQyNuVhSp2D6im2dbAlAubZWjZjVrs0g=;
+        b=MbgJZpxXpF2hMen0DI4nJ8Oy0hg1L0ZeeoMyyeAo2eaOel36WFU5kI8bIbOv1dKybr
+         HVGgpYNmRsZqfo9/L0dIWsblMN3U+uVQG0lAMbrRZcUMCXYTg4gJ76CP4wkj5sRqlzPu
+         BlkQDcLb6VLvH1iTI7a1AoZtuVZ64kljM03KQirTq+ztZolJ8iOigehpQkSOCMXxevPV
+         BbYd32U/WCX202sH5KtPPPRLTAGfnO5uDWl46QQSklJfr1RCETBBV2wfl5Bw2l/wXpuF
+         gqPNvOE4jwbYQ7jIct1UR/hyIoUwAorBdDKt31hwkXWR3OG4OwmU+ZyvTPPflrPGHsfi
+         dtxQ==
+X-Gm-Message-State: AOJu0Yyy6Dfp2EE2gSnd31DxnJQqzep9v1dumubavezay95vBUZnrFOd
+	yAfIHmaVYEBytFiUECXwOO8Z3LQDNtTyvkxKmr5oh/KjrTE4srTM1Stxucj3Qgs=
+X-Google-Smtp-Source: AGHT+IGBAIlaoj7aRO2Usvo2XvWB9spb15J7P0KvkzOFSOxIE2BZ3lhAv5Rwpi7GfZCMX3uow8kflQ==
+X-Received: by 2002:ac2:4d8b:0:b0:513:351e:3204 with SMTP id g11-20020ac24d8b000000b00513351e3204mr3533270lfe.26.1709895558500;
+        Fri, 08 Mar 2024 02:59:18 -0800 (PST)
 Received: from kepler.redhat.com (1F2EF3E5.nat.pool.telekom.hu. [31.46.243.229])
-        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4ed400b00412f679bae1sm5632382wmq.26.2024.03.08.02.59.14
+        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4ed400b00412f679bae1sm5632382wmq.26.2024.03.08.02.59.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 02:59:14 -0800 (PST)
+        Fri, 08 Mar 2024 02:59:17 -0800 (PST)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Shrikanth Hegde <sshegde@linux.ibm.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 01/10] sched/balancing: Switch the 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t sched_balance_running' flag
-Date: Fri,  8 Mar 2024 11:58:52 +0100
-Message-Id: <20240308105901.1096078-2-mingo@kernel.org>
+Subject: [PATCH 04/10] sched/debug: Increase SCHEDSTAT_VERSION to 16
+Date: Fri,  8 Mar 2024 11:58:55 +0100
+Message-Id: <20240308105901.1096078-5-mingo@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240308105901.1096078-1-mingo@kernel.org>
 References: <20240308105901.1096078-1-mingo@kernel.org>
@@ -74,86 +74,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'balancing' spinlock added in:
+We changed the order of definitions within 'enum cpu_idle_type',
+which changed the order of [CPU_MAX_IDLE_TYPES] columns in
+show_schedstat().
 
-  08c183f31bdb ("[PATCH] sched: add option to serialize load balancing")
-
-... is taken when the SD_SERIALIZE flag is set in a domain, but in reality it
-is a glorified global atomic flag serializing the load-balancing of
-those domains.
-
-It doesn't have any explicit locking semantics per se: we just
-spin_trylock() it.
-
-Turn it into a ... global atomic flag. This makes it more
-clear what is going on here, and reduces overhead and code
-size a bit:
-
-  # kernel/sched/fair.o: [x86-64 defconfig]
-
-     text	   data	    bss	    dec	    hex	filename
-    60730	   2721	    104	  63555	   f843	fair.o.before
-    60718	   2721	    104	  63543	   f837	fair.o.after
-
-Also document the flag a bit.
-
-No change in functionality intended.
-
+Suggested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/fair.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ kernel/sched/stats.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6a16129f9a5c..2ef89b36aed1 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -11633,7 +11633,20 @@ static int active_load_balance_cpu_stop(void *data)
- 	return 0;
- }
+diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
+index 85277953cc72..78e48f5426ee 100644
+--- a/kernel/sched/stats.c
++++ b/kernel/sched/stats.c
+@@ -113,7 +113,7 @@ void __update_stats_enqueue_sleeper(struct rq *rq, struct task_struct *p,
+  * Bump this up when changing the output format or the meaning of an existing
+  * format, so that tools can adapt (or abort)
+  */
+-#define SCHEDSTAT_VERSION 15
++#define SCHEDSTAT_VERSION 16
  
--static DEFINE_SPINLOCK(balancing);
-+/*
-+ * This flag serializes load-balancing passes over large domains
-+ * (above the NODE topology level) - only one load-balancing instance
-+ * may run at a time, to reduce overhead on very large systems with
-+ * lots of CPUs and large NUMA distances.
-+ *
-+ * - Note that load-balancing passes triggered while another one
-+ *   is executing are skipped and not re-tried.
-+ *
-+ * - Also note that this does not serialize rebalance_domains()
-+ *   execution, as non-SD_SERIALIZE domains will still be
-+ *   load-balanced in parallel.
-+ */
-+static atomic_t sched_balance_running = ATOMIC_INIT(0);
- 
- /*
-  * Scale the max load_balance interval with the number of CPUs in the system.
-@@ -11711,7 +11724,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 
- 		need_serialize = sd->flags & SD_SERIALIZE;
- 		if (need_serialize) {
--			if (!spin_trylock(&balancing))
-+			if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
- 				goto out;
- 		}
- 
-@@ -11729,7 +11742,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 			interval = get_sd_balance_interval(sd, busy);
- 		}
- 		if (need_serialize)
--			spin_unlock(&balancing);
-+			atomic_set_release(&sched_balance_running, 0);
- out:
- 		if (time_after(next_balance, sd->last_balance + interval)) {
- 			next_balance = sd->last_balance + interval;
+ static int show_schedstat(struct seq_file *seq, void *v)
+ {
 -- 
 2.40.1
 
