@@ -1,301 +1,113 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28E75D8E4
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 20:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709930673; cv=fail; b=NA4ki/XeEIj3cueAS9Aet1ENmR3IA7V5PIwEEamrEfFzU/ny5Oc6Pcoj69qqdUZ1ssBC2OvF+6OF9odPslGQikk1164Dm86Ew9NFk3iwnftmKUnxqVhyKciG3JKE2k3A20WzQspWlmQznLRz/x8r374LYpyy0yAvk5x/nz0gfso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709930673; c=relaxed/simple;
-	bh=nHj2m2opRVNeAobmR6+nNo1715YA8MjKW/NbqLqtVp4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=URhYk3yIt9V9Ai+OQLiKppsoh5/y5aEYdVeQ/le2tpmGrayYAOvoBKWEBxghPlXwTICemfPyE4DFK7xZKJynN/ONev2CWOe2XQuEOF6Got77baoLJ7FScS+pyMoKfIwV254ZucXEBRvc3a8f2JU/Y5yD+WEmNuAIF8X4VrKn/Wo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FvV1qjpw; arc=fail smtp.client-ip=40.107.93.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E20C5E062
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 20:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709930705; cv=none; b=rK4LUT1T2mtywYnlXAZNkRR1g1NCr85YHYcfDu4QWF2UHQFZ2fNet/KLMweGBvIVc34Be+PzrHdZfMlyLmSHxiTtWVSyAZ6OZP1Z67Kj6hRcd5TckvUAy7HgSeQguMvp7D9LEOrhOXct/evGbdP23pzJvP8u02r7OoLlVP9XUvM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709930705; c=relaxed/simple;
+	bh=apgy2KkEW0QvYg021TiAG31Or9OxNDK+m4Ju8mBkQnA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SxZW+eIwrUYpGTPKWR9oIY5ZQyyHQhHyMha346YUJIYhjemkjyf0aUoTojUMWvdy1eWoG6Lz2VZghwH8HgHcfjQExEQoTvSlNwYW8rQCBxf7ZVWM9bIkD6K+jEM3SXxe5uaODc/hGePx7caBBVCb9lPGlvz3r8nIXHb6KVy4JxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PaNwdkEg; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FvV1qjpw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VdWbR566Ok7MrH3hfRg71g1m3LG5UyAvCyQllH6DTD2RDHdi1COz+YyXHLuLxjt4mkpYvnjG5AvyWrwRV2SDHMot1/kliQjCzUjquvUsLHiEzmOv25lW2CGqQVHvVsO1kzCnncH72S2KyvyR5thQvd+qgOQJVgsanOT+lHkZr1uDwU8x+eW4oceM80kwgfv3HMpa6FnioD/O4M0/VlyphKItwrgnYhTk8V7d6WV08Ihqk5gbL/5qBOV4TV2MN8MGpYusqCh0KPpPza8x82AhwnhZIWyg3aIwK4vIPufoGzNjWDgGFsWyqd1st46o+Yqnc2bySKIi8ZKdGS8TRgYvgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q84WiBnVX0m8ssi69zV4e5R2jL64rxMfG4WQOtCVjaE=;
- b=K3hn2jS3yYFykJuG+F9CGOOw4iEuWLr6YPcZHlXteOKNnid1jtPLOycRMDrO0FzqfKzFKvsn64CWUZoJfJxVMqDTpgBy0v1/1y3avTwUdEeqxcoOHRDrOvKDoq9edz56o+cTZHB7J9ow7OrCPkRu0fM4Rc9Lj+yqqO0f5AKbcSSfV5IxVHkbk1t6j5fA8sab7mTYb+1370pFpyEaN+allm2/l9zHlPpBDGjRjh10FsAPW4F/ykbzsz0GSeoXoYdtCha1BWwVOr24TV67PcxAsaCguW2unVHc2VWqkL4JmgvlKyzQ4G30AtIKnm43y8qgPja8UAvR219IQ+wb9poCAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q84WiBnVX0m8ssi69zV4e5R2jL64rxMfG4WQOtCVjaE=;
- b=FvV1qjpwgH5x7bdHhis2us3AUF1U/aqfOY516cpthSdMq0YxGD82lElrAdJx8mU2+i3D1CylnUqOZmPB58JJZNBxgNwAA0W13Npnho88TkoPfOuTPG4pS2mz4mDeSsw3hFNDCP7cIAPQQDn+P5FWUU03R3PPrDMToppfbsd177c=
-Received: from MN2PR20CA0062.namprd20.prod.outlook.com (2603:10b6:208:235::31)
- by SA3PR12MB9157.namprd12.prod.outlook.com (2603:10b6:806:39a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Fri, 8 Mar
- 2024 20:44:29 +0000
-Received: from BL02EPF0001A0FF.namprd03.prod.outlook.com
- (2603:10b6:208:235:cafe::b4) by MN2PR20CA0062.outlook.office365.com
- (2603:10b6:208:235::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.31 via Frontend
- Transport; Fri, 8 Mar 2024 20:44:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A0FF.mail.protection.outlook.com (10.167.242.106) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7386.12 via Frontend Transport; Fri, 8 Mar 2024 20:44:28 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 8 Mar
- 2024 14:44:28 -0600
-Date: Fri, 8 Mar 2024 14:41:51 -0600
-From: Michael Roth <michael.roth@amd.com>
-To: Kevin Loughlin <kevinloughlin@google.com>
-CC: Mike Stunes <mike.stunes@broadcom.com>, <acdunlap@google.com>,
-	<alexander.shishkin@linux.intel.com>, <andrisaar@google.com>,
-	<ardb@kernel.org>, <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, "Brijesh
- Singh" <brijesh.singh@amd.com>, <dave.hansen@linux.intel.com>, "Dionna Amalie
- Glaze" <dionnaglaze@google.com>, <grobler@google.com>, <hpa@zytor.com>,
-	<jacobhxu@google.com>, <jpoimboe@kernel.org>, "Huang, Kai"
-	<kai.huang@intel.com>, <linux-kernel@vger.kernel.org>, <mingo@redhat.com>,
-	<peterz@infradead.org>, Peter Gonda <pgonda@google.com>,
-	<ross.lagerwall@citrix.com>, <sidtelang@google.com>, <tglx@linutronix.de>,
-	Thomas Lendacky <thomas.lendacky@amd.com>, <x86@kernel.org>,
-	<ytcoode@gmail.com>
-Subject: Re: [PATCH v2] x86/kernel: skip ROM range scans and validation for
- SEV-SNP guests
-Message-ID: <20240308204151.jny3hyo6nyjqk6qt@amd.com>
-References: <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
- <20240222202404.36206-1-kevinloughlin@google.com>
- <4463AFB9-58AC-4E65-BB04-EB2C9F2D9301@broadcom.com>
- <CAGdbjmJ+xiqycaDU9XMUEj2z70Adx-+ZCOiAFGXoNCojt_X=qA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PaNwdkEg"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ee22efe5eeso22438407b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 12:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709930702; x=1710535502; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UjFL5L8F3THQHpcIMqv7B8K14lldlTAEFwF+BxbmXAk=;
+        b=PaNwdkEgc+n50IyOvGKRIUaukeIWZBMg1USKb8yv3DiFzaqS4DwC2mzLDpz2LcNCkU
+         SuyHje2mqTQoFIpmlGXeIcubJwKoG0YJ4LrlH41j+1sK3G09zOSsCbGYw4LOFj1FQ/ZK
+         YvoztefoOfftSvpxzQAGLyF9easr5zO1MnrwhCzOFME0OrbjQXOMCx3FkQzNbOsz5Uxs
+         BebKzWCYiln1QJ5RjejCB/bvrIcqNEYtElbm27H+0EXWlP+5PqAAM4N1Id5q627a+ckh
+         HHChj+LOzTWpWYsz/KGTwcvM9wIKDpY6zN2Vh/Pi0UfD6esE6unp+2SZ/L17xgyFOFm1
+         PRiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709930702; x=1710535502;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UjFL5L8F3THQHpcIMqv7B8K14lldlTAEFwF+BxbmXAk=;
+        b=w5dsI9YMKsYttNQfIePdo0lkJmfGCJgR5dUdhOV/u6HV4BceuVkfRIsb8Tj25XjOLP
+         qFfc5Bw/cXQ+U0Sp2MtmwKkuuKXljf0zkfcFvpLrxmK/lzTBb6VGbOqjsQJoMYX3/Ep7
+         KYqTLerxUt1WwD+P4PNWUU+J2OJHScqC00pp9qpLXApRIudC5y9xpDpLLchTf4QwPkXC
+         8751doL+MNV8PTQXH3DmfJm5ZNJ9s15n+QvfM0PABkfHaNsjG1roM0/wJZ0U5lPV4lYD
+         k90Df8LQMdN+jvH9j+b9Ke92VwIzg7F/vXZ+b+EagJQcYZVHticdthAFPoS+lEncNisU
+         DpBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYFLTcY/DWEvOivK5nUghZub8mwG9zKfnNPU8V2ZiLSg08s7fIgXhP93zzVC2aLnj/gCoRFIvIP9SPXziI9fUxgUo7N51gRHuOpACg
+X-Gm-Message-State: AOJu0Yxj27YW/MhRm/N5kzfjKpCL/btmLGZL+KIKeWRN2YMqMQCF4P/I
+	7kfqwiqcliFcJlygTuuLnb0UUU6FnN6KtmLG2JEWGHnHhmY3Uhp/mrfXRbxDfQdaz+U/yjhCJjb
+	h4io0i6CuoO4AjjQQefWMwg==
+X-Google-Smtp-Source: AGHT+IFVU7jzq6E9xu3HneAng3sv1zQVuRlcZXLgPqus9mYRoEd/VYBSS/TAnLDzXeAh0CPebatQ84t6tDzpgKtlQA==
+X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:8bc4:6d20:8bd9:1e9d])
+ (user=almasrymina job=sendgmr) by 2002:a0d:d98c:0:b0:609:371:342b with SMTP
+ id b134-20020a0dd98c000000b006090371342bmr51028ywe.1.1709930702628; Fri, 08
+ Mar 2024 12:45:02 -0800 (PST)
+Date: Fri,  8 Mar 2024 12:44:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGdbjmJ+xiqycaDU9XMUEj2z70Adx-+ZCOiAFGXoNCojt_X=qA@mail.gmail.com>
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FF:EE_|SA3PR12MB9157:EE_
-X-MS-Office365-Filtering-Correlation-Id: baf3f7ea-1873-4445-9e77-08dc3fb08cda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	xAuEeg0HJ6h/T27WaMFOliCRwyx9UntqqnD8i1uLPYVrg266xkEBYAPgrGu3a1Cu+rmHWTXGDMjX/In7IwgPptJQV0M0GioxDuTaeY+fxxtcRNMnzwdMZMP4sWA5QZ7ZhtqJvUc+huh5C3UthRJMiams5kiTt0lqGFuc4CQGg3p4yARY7zYznzVtnonxb10euuEIhrqaQ0xVOiuRqoy9dzn+tG30y7gj3aDdkO7y3XgDAOIIjCRDEUCmeGFwiL5l7wW8pTtmQFQOlFyrqQrzM6REK58dzn9Y0zrMUSYRlSymGiR5rdvr188qspkcHRzznI2wzpVxMoNQzJqTaBS5XZRYwWr0b7lPeLpVnDx/7s88DkjaxjnGva1PUv7e1oUNhg7kIAMdpU5kPVDjY9XqIwIvAlS23CG+YBa8lBmBCl/+6gemU4NZlN37WtWIe/ojXsuliptXUAaWCYbCKj2PPu7doNPECDEe0MPQcxwFyCjLQfPipIj+YrWg2QTh8nBtRRjBMI2aGWNkmS8/x3gpJVLDUUVfrJJR1F7tvnll545dveXbc70VO0mY8PzaePS4m8JZ7mhsBLClfwWPNXWe2Gj0W9M6MBWP3aJVShEOHszTINZBHoSEUeBLY4U0Xetm0vv3PZBK0Gp34MLfBnmu0YQRuEymy9wr3IikSz6zgNKa7hmSq3eXMyNpu2NQYCmeFNLhBgINrSu/t4vsQCIdVQ1ESEHkYyxMps+IdjRUXTYk24jrr++kvDzJBSnRkx2J
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(82310400014)(7416005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 20:44:28.9230
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: baf3f7ea-1873-4445-9e77-08dc3fb08cda
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FF.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9157
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240308204500.1112858-1-almasrymina@google.com>
+Subject: [PATCH net-next v1] net: page_pool: factor out page_pool recycle check
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Yunsheng Lin <linyunsheng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 08, 2024 at 11:10:43AM -0500, Kevin Loughlin wrote:
-> On Mon, Feb 26, 2024 at 2:16 PM Mike Stunes <mike.stunes@broadcom.com> wrote:
-> >
-> > Hi,
-> >
-> > > On Feb 22, 2024, at 12:24 PM, Kevin Loughlin <kevinloughlin@google.com> wrote:
-> > >
-> > > SEV-SNP requires encrypted memory to be validated before access.
-> > > Because the ROM memory range is not part of the e820 table, it is not
-> > > pre-validated by the BIOS. Therefore, if a SEV-SNP guest kernel wishes
-> > > to access this range, the guest must first validate the range.
-> > >
-> > > The current SEV-SNP code does indeed scan the ROM range during early
-> > > boot and thus attempts to validate the ROM range in probe_roms().
-> > > However, this behavior is neither necessary nor sufficient.
-> > >
-> > > With regards to sufficiency, if EFI_CONFIG_TABLES are not enabled and
-> > > CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK is set, the kernel will
-> > > attempt to access the memory at SMBIOS_ENTRY_POINT_SCAN_START (which
-> > > falls in the ROM range) prior to validation. The specific problematic
-> > > call chain occurs during dmi_setup() -> dmi_scan_machine() and results
-> > > in a crash during boot if SEV-SNP is enabled under these conditions.
-> > >
-> > > With regards to necessity, SEV-SNP guests currently read garbage (which
-> > > changes across boots) from the ROM range, meaning these scans are
-> > > unnecessary. The guest reads garbage because the legacy ROM range
-> > > is unencrypted data but is accessed via an encrypted PMD during early
-> > > boot (where the PMD is marked as encrypted due to potentially mapping
-> > > actually-encrypted data in other PMD-contained ranges).
-> > >
-> > > While one solution would be to overhaul the early PMD mapping to treat
-> > > the ROM region of the PMD as unencrypted, SEV-SNP guests do not rely on
-> > > data from the legacy ROM region during early boot (nor can they
-> > > currently, since the data would be garbage that changes across boots).
-> > > As such, this patch opts for the simpler approach of skipping the ROM
-> > > range scans (and the otherwise-necessary range validation) during
-> > > SEV-SNP guest early boot.
-> > >
-> > > Ultimatly, the potential SEV-SNP guest crash due to lack of ROM range
-> > > validation is avoided by simply not accessing the ROM range.
-> > >
-> > > Fixes: 9704c07bf9f7 ("x86/kernel: Validate ROM memory before accessing when SEV-SNP is active")
-> > > Signed-off-by: Kevin Loughlin <kevinloughlin@google.com>
-> > > ---
-> > > arch/x86/include/asm/sev.h   |  2 --
-> > > arch/x86/kernel/mpparse.c    |  7 +++++++
-> > > arch/x86/kernel/probe_roms.c | 11 ++++-------
-> > > arch/x86/kernel/sev.c        | 15 ---------------
-> > > drivers/firmware/dmi_scan.c  |  7 ++++++-
-> > > 5 files changed, 17 insertions(+), 25 deletions(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-> > > index 5b4a1ce3d368..474c24ba0f6f 100644
-> > > --- a/arch/x86/include/asm/sev.h
-> > > +++ b/arch/x86/include/asm/sev.h
-> > > @@ -203,7 +203,6 @@ void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long padd
-> > > unsigned long npages);
-> > > void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-> > > unsigned long npages);
-> > > -void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
-> > > void snp_set_memory_shared(unsigned long vaddr, unsigned long npages);
-> > > void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
-> > > void snp_set_wakeup_secondary_cpu(void);
-> > > @@ -227,7 +226,6 @@ static inline void __init
-> > > early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned long npages) { }
-> > > static inline void __init
-> > > early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned long npages) { }
-> > > -static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op) { }
-> > > static inline void snp_set_memory_shared(unsigned long vaddr, unsigned long npages) { }
-> > > static inline void snp_set_memory_private(unsigned long vaddr, unsigned long npages) { }
-> > > static inline void snp_set_wakeup_secondary_cpu(void) { }
-> > > diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-> > > index b223922248e9..39ea771e2d4c 100644
-> > > --- a/arch/x86/kernel/mpparse.c
-> > > +++ b/arch/x86/kernel/mpparse.c
-> > > @@ -553,6 +553,13 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
-> > >    base, base + length - 1);
-> > > BUILD_BUG_ON(sizeof(*mpf) != 16);
-> > >
-> > > + /*
-> > > + * Skip scan in SEV-SNP guest if it would touch the legacy ROM region,
-> > > + * as this memory is not pre-validated and would thus cause a crash.
-> > > + */
-> > > + if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && base < 0x100000 && base + length >= 0xC0000)
-> > > + return 0;
-> > > +
-> > > while (length > 0) {
-> > > bp = early_memremap(base, length);
-> > > mpf = (struct mpf_intel *)bp;
-> > > diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
-> > > index 319fef37d9dc..84ff4b052fc1 100644
-> > > --- a/arch/x86/kernel/probe_roms.c
-> > > +++ b/arch/x86/kernel/probe_roms.c
-> > > @@ -204,14 +204,11 @@ void __init probe_roms(void)
-> > > int i;
-> > >
-> > > /*
-> > > - * The ROM memory range is not part of the e820 table and is therefore not
-> > > - * pre-validated by BIOS. The kernel page table maps the ROM region as encrypted
-> > > - * memory, and SNP requires encrypted memory to be validated before access.
-> > > - * Do that here.
-> > > + * These probes are skipped in SEV-SNP guests because the ROM range
-> > > + * is not pre-validated, meaning access would cause a crash.
-> > > */
-> > > - snp_prep_memory(video_rom_resource.start,
-> > > - ((system_rom_resource.end + 1) - video_rom_resource.start),
-> > > - SNP_PAGE_STATE_PRIVATE);
-> > > + if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-> > > + return;
-> > >
-> > > /* video rom */
-> > > upper = adapter_rom_resources[0].start;
-> > > diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> > > index c67285824e82..d2362631da91 100644
-> > > --- a/arch/x86/kernel/sev.c
-> > > +++ b/arch/x86/kernel/sev.c
-> > > @@ -774,21 +774,6 @@ void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr
-> > > early_set_pages_state(vaddr, paddr, npages, SNP_PAGE_STATE_SHARED);
-> > > }
-> > >
-> > > -void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op)
-> > > -{
-> > > - unsigned long vaddr, npages;
-> > > -
-> > > - vaddr = (unsigned long)__va(paddr);
-> > > - npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
-> > > -
-> > > - if (op == SNP_PAGE_STATE_PRIVATE)
-> > > - early_snp_set_memory_private(vaddr, paddr, npages);
-> > > - else if (op == SNP_PAGE_STATE_SHARED)
-> > > - early_snp_set_memory_shared(vaddr, paddr, npages);
-> > > - else
-> > > - WARN(1, "invalid memory op %d\n", op);
-> > > -}
-> > > -
-> > > static unsigned long __set_pages_state(struct snp_psc_desc *data, unsigned long vaddr,
-> > >       unsigned long vaddr_end, int op)
-> > > {
-> > > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> > > index 015c95a825d3..22e27087eb5b 100644
-> > > --- a/drivers/firmware/dmi_scan.c
-> > > +++ b/drivers/firmware/dmi_scan.c
-> > > @@ -703,7 +703,12 @@ static void __init dmi_scan_machine(void)
-> > > dmi_available = 1;
-> > > return;
-> > > }
-> > > - } else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
-> > > + } else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK) &&
-> > > + !cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
-> > > + /*
-> > > + * This scan is skipped in SEV-SNP guests because the ROM range
-> > > + * is not pre-validated, meaning access would cause a crash.
-> > > + */
-> > > p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
-> > > if (p == NULL)
-> > > goto error;
-> > > --
-> > > 2.44.0.rc0.258.g7320e95886-goog
-> > >
-> > >
-> >
-> > In addition to these changes, I also had to skip pirq_find_routing_table if SEV-SNP is active.
-> 
-> Thanks. I will update this in v3.
+The check is duplicated in 2 places, factor it out into a common helper.
 
-There's also another access a bit later in boot:
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+ net/core/page_pool.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-  static __init int eisa_bus_probe(void)
-  {
-    ...
-    ioremap(0x0FFFD9, 4);
-  }
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index d706fe5548df..dd364d738c00 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -657,6 +657,11 @@ static bool page_pool_recycle_in_cache(struct page *page,
+ 	return true;
+ }
+ 
++static bool __page_pool_page_can_be_recycled(const struct page *page)
++{
++	return page_ref_count(page) == 1 && !page_is_pfmemalloc(page);
++}
++
+ /* If the page refcnt == 1, this will try to recycle the page.
+  * if PP_FLAG_DMA_SYNC_DEV is set, we'll try to sync the DMA area for
+  * the configured size min(dma_sync_size, pool->max_len).
+@@ -678,7 +683,7 @@ __page_pool_put_page(struct page_pool *pool, struct page *page,
+ 	 * page is NOT reusable when allocated when system is under
+ 	 * some pressure. (page_is_pfmemalloc)
+ 	 */
+-	if (likely(page_ref_count(page) == 1 && !page_is_pfmemalloc(page))) {
++	if (likely(__page_pool_page_can_be_recycled(page))) {
+ 		/* Read barrier done in page_ref_count / READ_ONCE */
+ 
+ 		if (pool->p.flags & PP_FLAG_DMA_SYNC_DEV)
+@@ -793,7 +798,7 @@ static struct page *page_pool_drain_frag(struct page_pool *pool,
+ 	if (likely(page_pool_unref_page(page, drain_count)))
+ 		return NULL;
+ 
+-	if (page_ref_count(page) == 1 && !page_is_pfmemalloc(page)) {
++	if (__page_pool_page_can_be_recycled(page)) {
+ 		if (pool->p.flags & PP_FLAG_DMA_SYNC_DEV)
+ 			page_pool_dma_sync_for_device(pool, page, -1);
+ 
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
-This time it's via ioremap() with the encryption bit *unset*, so it
-won't necessarily cause a crash but it's inconsistent with the early
-page table having that region set as encrypted.
-
-We discussed unsetting the encryption bit in early page table with
-security folks and the general consensus was that *if* any VMM/firmware
-ever came along that does want to make use of legacy region for any reason
-(such as providing DMI/SMBIOS info) it would be safest to require that they
-encrypt the data in the region before handing off to guest kernel, so it
-makes sense to patch away unecrypted accesses to the legacy region so the
-don't cause problems down the road (like causing implicit page state
-change from private->shared and throwing away data in the region later
-in boot).
-
--Mike
