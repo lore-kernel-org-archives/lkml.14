@@ -1,148 +1,88 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from out203-205-251-82.mail.qq.com (out203-205-251-82.mail.qq.com [203.205.251.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E563553E03
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3D54BCB;
+	Fri,  8 Mar 2024 10:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709892449; cv=none; b=D9rRDgF6e2H9iLpWXim4hl0DBytTLzP6vbwakJrma6BPLrM8b2Wqix0hiDRplmJ1lY0p7zD+lnvpJOvF0yFgpxCIf71vPXvkLk5PRIdJLmJWGi3M402o70LuWRXiVxyrHO/6HfDdax4Lxn9bQfaRCosx5PyFdmthuYPENTnMzIA=
+	t=1709892463; cv=none; b=uKUoKeHQRZWdwjbY13nMAEzBhECQAlSDOUOt9U0IH9MvuUx/Q+kkeWwMsn4bBLpBeVDPOIi/ulVN4V38OH8xro5So30ocnuu1InZ1gVRhTAfjYbmCAELfT8/Q0T5gYpIJmSxOpMa3kl8oyBc+FgNByCkNDXZ1b5UrkrSPt21qss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709892449; c=relaxed/simple;
-	bh=NE5YGAo9a2aMpexhYeOPfopmtOkL/3NojeeJNudCn1w=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=sQGNb3X4bRHONtFWZ4Pxmj2AsSWRAmJrzMQvzAjN4CDKsMUKUyobds1qjE20JGoYgb+EyxC5LLGhQ47LO3xTKPBLAmaKzoRH8XqtgGVm+JC89rbelv+OgK+big2J8S75UlhQIG5R2rG6uYy+ZPIkmZ5tpzTc9U1axjZqHe9n7v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NxFcIXg7; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1709892463; c=relaxed/simple;
+	bh=KfBwrEHy4rD3TgkZxTpu4NpzB46Nn8Bk5rUIqZCiyt8=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=bkvmcNG6VKSCmVxkckZpnwuNz3z9kxCGSTpZUlNdhK7VXI01wYdIY33HLYavrfNIS8feOGcZowUXr2vxtMpi7issJpN8a4JC5d5wjIv2RkZWcY7QC9G5hDh46+IwZvizzvWeb8gfsyKuwr6vPZvIdXvC9TEaRJPYV97Kay68dEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=CF4sfV40; arc=none smtp.client-ip=203.205.251.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NxFcIXg7"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240308100724epoutp040eb134470f9de71c349d4a19bed5ce0c~6wh54VOYY2570525705epoutp04V
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:07:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240308100724epoutp040eb134470f9de71c349d4a19bed5ce0c~6wh54VOYY2570525705epoutp04V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1709892444;
-	bh=Pq3v3eHbmP1sbT/9JO4DucB7TQ8gsxuDdAu3MV3sdic=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=NxFcIXg7a06nnDesj7DSfycocFfDIfinIKOtWEZf6WaVQ37SulZzVs09xpvkZqvRD
-	 9VQJgUBtjCou60vaG6/qegpit8+ZQPh78z/hpjEqYky/SsPg3CsXwxCeHhnqRiWPxi
-	 E6fTgKAeDksTSel504UTT9Xla84HyHofe67kpEw4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240308100723epcas2p255d3d088a2e77bd625652d01a7fe56b1~6wh5Pbwou0805708057epcas2p2h;
-	Fri,  8 Mar 2024 10:07:23 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.97]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Trhfz4Zc3z4x9Pr; Fri,  8 Mar
-	2024 10:07:23 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	86.2B.09607.B53EAE56; Fri,  8 Mar 2024 19:07:23 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240308100723epcas2p4c1965c0c4e63780322bf2db8a6d0b508~6wh4rPLvp0863708637epcas2p4w;
-	Fri,  8 Mar 2024 10:07:23 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240308100723epsmtrp2f759477828557936677387475cd746e6~6wh4qmnY53140831408epsmtrp2Z;
-	Fri,  8 Mar 2024 10:07:23 +0000 (GMT)
-X-AuditID: b6c32a48-963ff70000002587-cd-65eae35be42c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EF.81.07368.B53EAE56; Fri,  8 Mar 2024 19:07:23 +0900 (KST)
-Received: from KORCO121695 (unknown [10.229.18.202]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240308100723epsmtip29090d995d1eb216ee6aabdc770d6308b~6wh4hAU1x0857208572epsmtip2J;
-	Fri,  8 Mar 2024 10:07:23 +0000 (GMT)
-From: "bumyong.lee" <bumyong.lee@samsung.com>
-To: "'Linux regressions mailing list'" <regressions@lists.linux.dev>,
-	"'karthikeyan'" <karthikeyan@linumiz.com>, <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<parthiban@linumiz.com>, <saravanan@linumiz.com>
-In-Reply-To: <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
-Subject: RE: dmaengine: CPU stalls while loading bluetooth module
-Date: Fri, 8 Mar 2024 19:07:23 +0900
-Message-ID: <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CF4sfV40"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709892447; bh=DGeQxNXVCp+OKO+A96VQZ6ctFIKvpPbY6cUQov38t7Y=;
+	h=From:To:Cc:Subject:Date;
+	b=CF4sfV40Sty2PWDUMJTIl0AMofSbHMk6SUCFVijNT5xHHhOM14oZJjudvKvqKmx2X
+	 W3dcWD3VrJiR4yqeJgoVXWIbuv6DzI2ukPcoYlgw0ndYinSJG9mZyoQAjL/Dg5Lr7n
+	 KzE6St9hMz3ItxU9irGkukP3fDjK4mxTouA4+YPs=
+Received: from ubuntu.vimicro.com ([121.225.188.5])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 1D886CA2; Fri, 08 Mar 2024 18:07:24 +0800
+X-QQ-mid: xmsmtpt1709892444taknccbx0
+Message-ID: <tencent_002E3C6C67928986481018466EEDF8D05706@qq.com>
+X-QQ-XMAILINFO: MyirvGjpKb1jAqqZEB0xTnlxtJ/DAMLnSoztftAha+rM1A6lJXL7t826AF4tNB
+	 +Agpdv8mAFFZnSzJjGwk8DVSg5QnLBlPYJCfidEBP1k99ZzwI3CxUsnmgcbBdVmKcmPWxCksZudw
+	 XIk5n0CpyYlvDymR6sfWpTiHyBzomgmI9i1iisOyreQcWsmX4EEJlODLJsS3MH51xwOJhR9eWbEL
+	 S4T8lx6Zb24/bqgoimCE0oPq5lmF4ngZR8/K9WkAz41I6iUHxJEBg2vNHWiz+WcFKoAkdJsi2Jx9
+	 T1s4g1ORxGa6jsQxRa8kWLZTi+KdE1BK7aZko+OPztVJ/cy+/riZ+hxgylBQCaSd+2w9TLE887i2
+	 nsGakszuGHi0MlbXwHYaepRfR9gb2T4ycipDaLEC1SqsTpgm6MFNdLxTGny/vkw/6AHMDebpk/Ku
+	 6QUVVZDBHbKSgNgNvWj896JNPxF19keG9Uy6Wa4rBepgyVsZNmJB+l68nUvEixtyU20SA7J70nB2
+	 hTsav1TzSLE7LfsxzAlY9lhA+IUlMD1Rk0Tii10i27pyuKmZhje+EZtiPq2+b+OBFC48Qn6pTAdL
+	 BI7ZBxOWKVjEdi0IJq/J4GQ+wsPAaPIJAyFWbCIGHPXtcgnzQLRdn7ZEphPm6YPfVv6SjNQ8phKN
+	 S1vHE6tnjbBX1hoqLrRrg/k8iUziBFvl3aM2eg8CZcWzo8ziuRnmFq5PMBEreOLyy1fZbbhqWbLp
+	 DXJt4iDT/WdM2N1S+2Od1F8KbUraDi0FQLypN1MsvZJgm9wHLWVPTvUNVS5QRNVhg0etC9OiVBOc
+	 +fDohIRmN/dEtalAM8MK9VxFWJoxYDm+dj/F1HRDisw7swVlofPb6qlC4JJVa6rik8qmVzC9OgRJ
+	 Ju0kqyHusnKCjIPePtwtMnOQr4iHNeYj3ceizG8mtUi5/Sxrp8J8a+r3UDoBoA7yTP4+StRW4PK2
+	 5kEuMrdZt8/OnWZLaMzI7sot8G/tXrYIu2/sLQBm6HnlnmRtkxm2aNeDHcVbuEqDV9d8RXwWnrO1
+	 Rzq5+0mynfPNncMcPU
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: xuhanwu <2433926602@qq.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	xu.hanwu@zxelec.com
+Subject: [PATCH] ASoC: soc-pcm: add the judgment of unsupported commands for the function soc_pcm_trigger
+Date: Fri,  8 Mar 2024 18:07:06 +0800
+X-OQ-MSGID: <20240308100706.20984-1-2433926602@qq.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMwipOl/cAOi38P2p1VCUOGtvzp0QMWgtoHAULg3K4CqzIErK5JRjYw
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmmW7041epBlN2qVisnvqX1WLHak2L
-	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wAS1S2TUZq
-	YkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QfiWFssScUqBQ
-	QGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsbbOZ+Y
-	C2ZyViw/8pa5gfEiexcjJ4eEgIlE95yJjF2MXBxCAjsYJZbdf8MG4XxilGiZ/5MVwvnGKHHi
-	3U82mJY33yZCJfYySiz/9psdwnnJKDH9RAcjSBWbgK7EzJcHWUASIgKtjBJ3NlwF28gsUCzx
-	qOkQWBGngKPEpz37wMYKA9m9kyawgtgsAioSW55+BbN5BSwlbszfwwRhC0qcnPmEBWKOvMT2
-	t3OYIU5SkPj5dBlYvYiAm8S33dtYIWpEJGZ3tjGDHCEh0Mkhsb/9DhNEg4vEw9froJqFJV4d
-	3wINDimJz+/2Qv2ZLzFzzg0WCLtG4uu9f1Bxe4lFZ34C1XMALdCUWL9LH8SUEFCWOHIL6jQ+
-	iY7Df9khwrwSHW1CEKaqRNPNeogZ0hLLzsxgncCoNAvJX7OQ/DULyf2zEFYtYGRZxSiWWlCc
-	m55abFRgAo/s5PzcTYzgpKnlsYNx9tsPeocYmTgYDzFKcDArifCyWLxMFeJNSaysSi3Kjy8q
-	zUktPsRoCgzpicxSosn5wLSdVxJvaGJpYGJmZmhuZGpgriTOe691boqQQHpiSWp2ampBahFM
-	HxMHp1QD06YtObaV19TElV3WzzQ9dv+3k4aijmnG2j+hlTsbvrxalL81YKafst96V85p3me7
-	WEPc131nXxAXlzH/gZI99w1XGa3Yr9c8Tkrc145X+uh5ZmpVz9WStKmy4gdvcL0Jz+Dr3r/H
-	pDSyZ4HiTyamxrN8UvK7y2+sufwzO0+7L5i11S9wyZSFdvq72xYf++B4tWTrhMjgmAe3nk6x
-	Ypq6IvB5qP3pnVxvzCwv3VgVtJLJfZW3Zk/2wkdNHR9bmm1mh52/lK8wdarI4aVb9r9KNcxm
-	b+YQUHzVvtil1/+t4r4/Kb9PBqluqqv4Jp0Z53/H075A82xb5OtzVQePMLA/eGdR+GXz1VkT
-	PuYpfhSxU2Ipzkg01GIuKk4EAJOgypcjBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLLMWRmVeSWpSXmKPExsWy7bCSvG7041epBhPeCFqsnvqX1WLHak2L
-	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wASxSXTUpq
-	TmZZapG+XQJXxts5n5gLZnJWLD/ylrmB8SJ7FyMnh4SAicSbbxNZuxi5OIQEdjNK/Gt8xwyR
-	kJZ40fqNFcIWlrjfcgSq6DmjxKWv38ESbAK6EjNfHmQBSYgItDNKLHhznAUkwSxQLnHtwG0m
-	EFtI4DOjRPOnGhCbU8BR4tOefWwgtjCQ3TtpAtggFgEViS1Pv4LZvAKWEjfm72GCsAUlTs58
-	AjVTW+LpzadQtrzE9rdzoC5VkPj5dBlYr4iAm8S33dtYIWpEJGZ3tjFPYBSehWTULCSjZiEZ
-	NQtJywJGllWMkqkFxbnpucmGBYZ5qeV6xYm5xaV56XrJ+bmbGMExpKWxg/He/H96hxiZOBgP
-	MUpwMCuJ8LJYvEwV4k1JrKxKLcqPLyrNSS0+xCjNwaIkzms4Y3aKkEB6YklqdmpqQWoRTJaJ
-	g1OqgUmpIiVJJ/t88Rvn5kPxuwS1zn3PNmXWZV6p4lF5589MJftG4YyljbJal7xfsn2cbvbR
-	/2NL8DTBKyFmry2q0m20et6s52CW+ZVvPfno13U599f+33OrhE9EYOPmKXsn5TIcUTU+uv7e
-	tthImfZrsrdfHXn9Y9bfnkI2Vn2lrRKnaw/+yZA90GF7Q36d1DSdx6+SJAQmTovtvS9qnSS4
-	7/Ss2X+PH+5NCjV66LrVVUSStTovaemFH59SBDNux249X/jDwfR75ev8lQEHG+M5OBiPFbIu
-	7t1sWfnPaR1nVsq3b99Us3Ydsdt6ssD0TIV9wMNGu79fV68RazKrX/dqVoCWwvTGfxEcL1Sd
-	ZsfOklJiKc5INNRiLipOBABHH9EqEAMAAA==
-X-CMS-MailID: 20240308100723epcas2p4c1965c0c4e63780322bf2db8a6d0b508
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
-	<1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
-	<000001da6ecc$adb25420$0916fc60$@samsung.com>
-	<12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
 
-Hello
+From: xuhanwu <xu.hanwu@zxelec.com>
 
-> Hmmm. 6.8 final is due. Is that something we can live with? Or would it be
-> a good idea to revert above commit for now and reapply it when something
-> better emerged? I doubt that the answer is "yes, let's do that", but I
-> have to ask.
+Function soc_pcm_trigger, if the parameter cmd does not support the need to return an error (-EINVAL).
 
-I couldn't find better way now.
-I think it's better to follow you mentioned
+Signed-off-by: xuhanwu <xu.hanwu@zxelec.com>
+---
+ sound/soc/soc-pcm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://protect2.fireeye.com/v1/url?k=1721f6f7-48bacfe8-17207db8-
-> 000babdfecba-6a9835eff37b0303&q=1&e=f39e15ee-403b-4efb-a56e-
-> f6aba3905bc5&u=https%3A%2F%2Flinux-
-> regtracking.leemhuis.info%2Fabout%2F%23tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> P.S.: To be sure the issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, the Linux kernel regression tracking bot:
-> 
-> #regzbot report /
-> #regzbot introduced 22a9d9585812440211b
-> #regzbot duplicate: https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/
-> #regzbot title dmaengine: CPU stalls while loading bluetooth module
-> #regzbot ignore-activity
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 77ee103b7..eba737729 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1173,6 +1173,9 @@ static int soc_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
+ 			if (r < 0)
+ 				break;
+ 		}
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	/*
+-- 
+2.17.1
 
