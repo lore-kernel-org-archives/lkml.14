@@ -1,112 +1,77 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B912B1D52B
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE75517BDC
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709902236; cv=none; b=it588ONJMMkxy0Z3rIZl3KK8WSNGwY6WGTPuIt+sYyaqvAB1Wywf4cBJM2MEpn7g5n9Q1eBGs0vcRgK364OicZqbp89Yo2fquEG8XbTv7D38lYgxdr9+uFIPkOHwEvc0TWk6uakkWLxwLFVNk9ZRvXb8rb+djD8KFR8Pxlafs2U=
+	t=1709902346; cv=none; b=U0N4xO2Xi7WuGG8mx5ffeb7l2Xv0MOueppUGo6BLDnvhylGo/WcBywazoZdlWtK76xfnaXt+5DSIxxT/kgq0Ey2z98PMS0bqPlWxnhlgJPc88GSWqJ+yIGmIk96JObC03vi9PRqEMSOEhn+Wz8oY4oAQ+UCJAurVki+QOW9t01E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709902236; c=relaxed/simple;
-	bh=X8r0myWAP+ZNabX9jq2ofWmOakXvjG5XDtC/EIB+ZPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F6ap6qiQz7/1neyEbXHyBtRbWm9NLzMwlsWcxlh0NE/7L82JwtX1I48Lxw/knXK3ZfmPIdq29kIqqA5jT3O9Yn6IWYwKSaOa0/GCkdmSmnv7EW/7JQnVZRbYs323NB/cRfZ6TRXaKGi1HNNTT0hf9x1Orv1viqWrACD+OoQ+H0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fDFSmilU; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fDFSmilU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fDFSmilU";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fDFSmilU"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0FF813FAB3;
-	Fri,  8 Mar 2024 09:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709891964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qt3Lk6ghcLdCV0nzg8fVJQXKNWubDuUtSSj7mwILKNs=;
-	b=fDFSmilUwzvR1zEqdhGdTp+tvd+Mu8agF2UbCQIBJPOWJXIztx1BgBaOClbbLIALaaeXQQ
-	w5gC+DQM6Fk5qBfWBsKlIIFyHjTRZNEHEf8zQe3RFUi4a9gUE8pbVrsH0EJNZL2D8nAt3Q
-	MsJavlBCeBjQgMAqywvozHu/nBxak7A=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709891964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qt3Lk6ghcLdCV0nzg8fVJQXKNWubDuUtSSj7mwILKNs=;
-	b=fDFSmilUwzvR1zEqdhGdTp+tvd+Mu8agF2UbCQIBJPOWJXIztx1BgBaOClbbLIALaaeXQQ
-	w5gC+DQM6Fk5qBfWBsKlIIFyHjTRZNEHEf8zQe3RFUi4a9gUE8pbVrsH0EJNZL2D8nAt3Q
-	MsJavlBCeBjQgMAqywvozHu/nBxak7A=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EAC9913310;
-	Fri,  8 Mar 2024 09:59:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rETxNnvh6mU+ZwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Fri, 08 Mar 2024 09:59:23 +0000
-Date: Fri, 8 Mar 2024 10:59:23 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: cve@kernel.org, linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Felix Kuehling <felix.kuehling@amd.com>
-Subject: Re: CVE-2024-26628: drm/amdkfd: Fix lock dependency warning
-Message-ID: <Zerheyn-4rB5kySt@tiehlicka>
-References: <2024030649-CVE-2024-26628-f6ce@gregkh>
+	s=arc-20240116; t=1709902346; c=relaxed/simple;
+	bh=CsxBBBSHXzQ815mZ6jxRjFfX677ayQW2fERBzYakubA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Wq/fK1sWGkq5umc9OfsZopHEcWGDUXTrLtQ9V3Yl0ucS7LJtS44DK8kestZbPKtgaV8o3TmgJKPrBjTC4NKQLJAnvBy7bV1VTt1MEHEMRzcyn25RRMnAML4sD9SDTJoEOu89mOVZvQHMbD0ut/Y5Zn+Ifjs2iDUjQ9/EJPfJ/j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TrmKD1xrYzMq51F;
+	Fri,  8 Mar 2024 13:52:16 +0100 (CET)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TrmKC4mKDzMppDX;
+	Fri,  8 Mar 2024 13:52:15 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 08 Mar 2024 13:52:08 +0100
+Subject: [PATCH 1/3] arm64: dts: rockchip: enable internal pull-up on
+ Q7_USB_ID for RK3399 Puma
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024030649-CVE-2024-26628-f6ce@gregkh>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.40
-X-Spamd-Result: default: False [-1.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.60)[81.72%]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240308-puma-diode-pu-v1-1-2b38457bcdc0@theobroma-systems.com>
+References: <20240308-puma-diode-pu-v1-0-2b38457bcdc0@theobroma-systems.com>
+In-Reply-To: <20240308-puma-diode-pu-v1-0-2b38457bcdc0@theobroma-systems.com>
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Klaus Goger <klaus.goger@theobroma-systems.com>, 
+ Quentin Schulz <foss+kernel@0leil.net>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>
+X-Mailer: b4 0.13.0
+X-Infomaniak-Routing: alpha
 
-On Wed 06-03-24 06:46:11, Greg KH wrote:
-[...]
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(&svms->lock);
->                                lock(&mm->mmap_lock);
->                                lock(&svms->lock);
->   lock((work_completion)(&svm_bo->eviction_work));
-> 
-> I believe this cannot really lead to a deadlock in practice, because
-> svm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO
-> refcount is non-0. That means it's impossible that svm_range_bo_release
-> is running concurrently. However, there is no good way to annotate this.
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-OK, so is this even a bug (not to mention a security/weakness)?
+The Q7_USB_ID has a diode used as a level-shifter, and is used as an
+input pin. The SoC default for this pin is a pull-up, which is correct
+but the pinconf in the introducing commit missed that, so let's fix this
+oversight.
+
+Fixes: ed2c66a95c0c ("arm64: dts: rockchip: fix rk3399-puma-haikou USB OTG mode")
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 214ea62b24a5b..a51ebb8f8b80f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -459,7 +459,7 @@ vcc5v0_host_en: vcc5v0-host-en {
+ 	usb3 {
+ 		usb3_id: usb3-id {
+ 			rockchip,pins =
+-			  <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++			  <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ };
+
 -- 
-Michal Hocko
-SUSE Labs
+2.44.0
+
