@@ -1,178 +1,118 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C256442;
-	Fri,  8 Mar 2024 11:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F10A56456;
+	Fri,  8 Mar 2024 11:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709898188; cv=none; b=kC0tyEMVaaN21/enNfTZxSGXrUARFE/GVgtBRjM74MvyAKgFrBX0MejgCUoxjnxwHVwBlzj6cP2T5/ZcWlueeYEsqI2KTYaUGmA82ljxMcIBpPbOqglhgNJtzxOuTG3CVUhoL+UzTA18UBa/eGuIn2goY3ZpfQ5GR8Adligfuns=
+	t=1709898215; cv=none; b=VeWjlU27QlWYtX0gG6ytCiY9EoElEoDqytIC/i/n7/RFs6rfEtNq1JWPjxwbaEdTzdlFFrXFDQHg7gVT81IS1JsZ8J8yPUEGHebFy/vMvU454cDwqm1CxgU+lNPCq8YYqKKrLzxTDZD1d+CQ1viS3Z8W03ziTXZCqmkvFTYR/wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709898188; c=relaxed/simple;
-	bh=WTPvxiS0Pg6ITS1Vn/YcEGXqyGDADSyjVlPQRD+qkaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n/hBe9M21jQhzI83oBYPUTTFNmWhZqGmaQfxhu/gQQm1n9PAWhBHV8Hy9XmU7qYJFmaeyaVZFYHP+MvdkJjChP0solQqVcISOliHj1dzPir4H44GH+sSpD4UEHXf14vSPt+7QZcVkRYNi2OLGH48NSfOa6JtX8vScbZ6DokZx7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+	s=arc-20240116; t=1709898215; c=relaxed/simple;
+	bh=BLq4lE0ORuBLkjW/aMxstNNMbjhuSScW2T/odBK1an8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=exfK3B6ArnlnQjk3zy84lhFXK1tpWJOFUU8LTy8bjRY5u/343VPoKmJPFpokLu44nzlxo6Rq0ngIpwMKx2CfjyekxIAcgkRvgR7080lARnZcTZqatsd313dAPAPtsa4Zgud5ovU6+j7+2cQ1zJppYP2dEAiCVe62K8n3wZ3IuKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIGjsZ1G; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so307699366b.0;
-        Fri, 08 Mar 2024 03:43:06 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIGjsZ1G"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78810ba2ff1so38570885a.3;
+        Fri, 08 Mar 2024 03:43:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709898212; x=1710503012; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=964gVKcSuC5DAvgCgp/Gwi4YKzK2yMuQXH05ybowodM=;
+        b=PIGjsZ1G3KL/USsCQYH09g7Iw2EFGlH2twvIs8X/qANiXOQHpyoWepXpc/6VifH2DO
+         3nmQdBoHiPR8tzgouFHHw05kW3BBQXGvDFGifhfsJ7jCZfcMISaPkphKpk9M5hFNaS2W
+         5lugZi5Cuq8My/zSE6WCslxbcKCy/hdiNP/9C68193AhrpTHVbjBnyvONtJjlaJH2ZRD
+         0AKdgo2zo73onRVIimpZP83nMyE0fnSGHKtuLx1/QbRWokyQN/tgfzuJER07Qma3gCan
+         NxwHQzdNc14R2gPmTwn3hyhFn5zZHIxozU2hrQLE7r8q1u5c5Kw3bmCcdX3mlz1o1MVW
+         cw3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709898184; x=1710502984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tEeqI5MDotFb9rK23HKrypgCTWc+8alatdFbrADbmRM=;
-        b=AIKvBpcnoHbJ1KfnNfYjGnFEYwUvAEmtiqMEyxvtEWindIiNSnVWQJMoiQ82w+5B2+
-         KnI/V6HSomH7ZR0uicDWwfKXJkZFpazI9KS6aX25K7cbOB9r7J+wHVN8lOf32a8x9RSY
-         UBBB/DfInKLp7YUZNxlczxTbj45V6kGUvo8LvJEkC1u1NvO2cQ04cTza7sZdchpIic1a
-         +QkWx9aSOGEnvJCvyKIuB7lCpj40q1sVXir9u3tFeEVSizjbfbMQBtZiNIWf07VZxk70
-         55dgrEyhr25rq8/20JFluyd5s/vd0gCvhd/DtIZLix8/1mEKrUQ/0LJfug69MYtLp4eY
-         wZIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEn9PSlY4Gzmx69YBZMtnEtdxqk9FfBTaUP9Qq/mCqBJ3ODBHh7kiOkMyk8xygL3uvoqf3wjlsad+5iDXy8WscecB4cgMEgLXbnzMWsmMIuQE4kaLPBdc/+bds5Hh8D5+svKG6Xr2vCaKStjTAxR0hwtKQCpAh60Eb0691Qs93qYuelIbLURyV7Q==
-X-Gm-Message-State: AOJu0YyO4e3ICSKxvo3kBjVIoGhx+ki9F5iISUiryKoiferPM8cD8dGf
-	0WKaTso/q++RlLczPvH53OkWEKOu2fFOAUWtn9HmlxmZrkhP6N+mSqOdmuwDRuHbSA==
-X-Google-Smtp-Source: AGHT+IE3UmlIiSrN6kGt37gheJvIaN9i1n/e1DDihhUotOur3u44x9+yXyxyY24z6Or64iUDH6gLKg==
-X-Received: by 2002:a17:906:cc93:b0:a43:3f37:4d94 with SMTP id oq19-20020a170906cc9300b00a433f374d94mr14075198ejb.16.1709898184428;
-        Fri, 08 Mar 2024 03:43:04 -0800 (PST)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id pv25-20020a170907209900b00a3ee9305b02sm9174088ejb.20.2024.03.08.03.43.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 03:43:04 -0800 (PST)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3122b70439so263165966b.3;
-        Fri, 08 Mar 2024 03:43:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVdymFqckKDeVaAk+9+2ml6OoDpzcbT5z9V7qrC/sSY0GB0s6b/WnWsdnVlP/ajFvk0h57c1TMwL6DfiO/yHzrTkBimmJie8B32BsnWqNGZMo/jC2sff6r5Wvfb4StK28Di6pwLtSID1gbkNbVEDgDSnnHl0Zxj3GrYlHi9KXUN33G4735vcoCwgA==
-X-Received: by 2002:a17:907:a786:b0:a45:f33a:1382 with SMTP id
- vx6-20020a170907a78600b00a45f33a1382mr881603ejc.9.1709898184163; Fri, 08 Mar
- 2024 03:43:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709898212; x=1710503012;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=964gVKcSuC5DAvgCgp/Gwi4YKzK2yMuQXH05ybowodM=;
+        b=nqJ62rG46ZzqbqktDmsolwzviHM44CVyokPjQ4n+7qpMEimMWMYPap8vmULmh/yOAr
+         fxVinLVa5lRrlDcozVXbGabitDegP+y718w8Bt1x9Jc2dzhUijfjD/cnxItU45po2NKJ
+         mgVw86jG8o8Ifi1f99F2gLaxKp/zXO/7r4HTRzLjjANCLVXmBVG8CQllRqD6Rm/HM0lq
+         3KL2ThTnDPNKAG+/dwoK+CupnyEcXOeJkJMyUnC2agB62KUA+xDNh0P2UiGXVoeLzOsX
+         uL5CCehHk0hIxImGpXTC+BaFpoZbmTfN8Fvk78+/ecdia/AuPEWJpC+Ik1PtXCKxDNsJ
+         RJQA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/kXhKRaP4fibk9u15Zfdr4u2lhwH7iO2EByp0IZ6ImOeZJ7Hdrp9fz10tdplEWqK3S6XleMB3ubWU1jFrBZ0Iu17PNmNd8aDZe8uU
+X-Gm-Message-State: AOJu0Yw4OeVAWdrPlCL7VrOAimLxaE6b9ml30Z9+/ffbcraUOOv2YoE4
+	K3kfHwo+v98o0preOn8/4NXD/ZUXc7HYbq28qegj4beow6x15fFX
+X-Google-Smtp-Source: AGHT+IG9tNInw+XrpOoh3PlFf4hk1pHn7wcFWE3peYGy4458jYHEYVeeTreamQQu18vK0HYLrF+Dtg==
+X-Received: by 2002:a05:620a:95a:b0:788:3207:bc3 with SMTP id w26-20020a05620a095a00b0078832070bc3mr11364161qkw.8.1709898212290;
+        Fri, 08 Mar 2024 03:43:32 -0800 (PST)
+Received: from localhost (55.87.194.35.bc.googleusercontent.com. [35.194.87.55])
+        by smtp.gmail.com with ESMTPSA id d4-20020a37c404000000b00788253714cbsm5494285qki.58.2024.03.08.03.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 03:43:31 -0800 (PST)
+Date: Fri, 08 Mar 2024 06:43:31 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Juntong Deng <juntong.deng@outlook.com>, 
+ willemdebruijn.kernel@gmail.com, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Message-ID: <65eaf9e336d07_133b25294db@willemb.c.googlers.com.notmuch>
+In-Reply-To: <AM6PR03MB5848595A20BB5D958C2D9DE299272@AM6PR03MB5848.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5848595A20BB5D958C2D9DE299272@AM6PR03MB5848.eurprd03.prod.outlook.com>
+Subject: Re: [PATCH net-next] net/packet: Add getsockopt support for
+ PACKET_COPY_THRESH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240308022914.196982-1-kent.overstreet@linux.dev>
-In-Reply-To: <20240308022914.196982-1-kent.overstreet@linux.dev>
-From: Neal Gompa <neal@gompa.dev>
-Date: Fri, 8 Mar 2024 06:42:27 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je96OKs_LOXorNVj1a1=e+1f=-gw34v4VWNOmfKXc6PLSQ@mail.gmail.com>
-Message-ID: <CAEg-Je96OKs_LOXorNVj1a1=e+1f=-gw34v4VWNOmfKXc6PLSQ@mail.gmail.com>
-Subject: Re: [PATCH v2] statx: stx_subvol
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 7, 2024 at 9:29=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> Add a new statx field for (sub)volume identifiers, as implemented by
-> btrfs and bcachefs.
->
-> This includes bcachefs support; we'll definitely want btrfs support as
-> well.
->
-> Link: https://lore.kernel.org/linux-fsdevel/2uvhm6gweyl7iyyp2xpfryvcu2g3p=
-adagaeqcbiavjyiis6prl@yjm725bizncq/
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: Miklos Szeredi <mszeredi@redhat.com>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+Juntong Deng wrote:
+> Currently getsockopt does not support PACKET_COPY_THRESH,
+> and we are unable to get the value of PACKET_COPY_THRESH
+> socket option through getsockopt.
+> 
+> This patch adds getsockopt support for PACKET_COPY_THRESH.
+> 
+> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
 > ---
->  fs/bcachefs/fs.c          | 3 +++
->  fs/stat.c                 | 1 +
->  include/linux/stat.h      | 1 +
->  include/uapi/linux/stat.h | 4 +++-
->  4 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-> index 3f073845bbd7..6a542ed43e2c 100644
-> --- a/fs/bcachefs/fs.c
-> +++ b/fs/bcachefs/fs.c
-> @@ -840,6 +840,9 @@ static int bch2_getattr(struct mnt_idmap *idmap,
->         stat->blksize   =3D block_bytes(c);
->         stat->blocks    =3D inode->v.i_blocks;
->
-> +       stat->subvol    =3D inode->ei_subvol;
-> +       stat->result_mask |=3D STATX_SUBVOL;
-> +
->         if (request_mask & STATX_BTIME) {
->                 stat->result_mask |=3D STATX_BTIME;
->                 stat->btime =3D bch2_time_to_timespec(c, inode->ei_inode.=
-bi_otime);
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 77cdc69eb422..70bd3e888cfa 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -658,6 +658,7 @@ cp_statx(const struct kstat *stat, struct statx __use=
-r *buffer)
->         tmp.stx_mnt_id =3D stat->mnt_id;
->         tmp.stx_dio_mem_align =3D stat->dio_mem_align;
->         tmp.stx_dio_offset_align =3D stat->dio_offset_align;
-> +       tmp.stx_subvol =3D stat->subvol;
->
->         return copy_to_user(buffer, &tmp, sizeof(tmp)) ? -EFAULT : 0;
->  }
-> diff --git a/include/linux/stat.h b/include/linux/stat.h
-> index 52150570d37a..bf92441dbad2 100644
-> --- a/include/linux/stat.h
-> +++ b/include/linux/stat.h
-> @@ -53,6 +53,7 @@ struct kstat {
->         u32             dio_mem_align;
->         u32             dio_offset_align;
->         u64             change_cookie;
-> +       u64             subvol;
->  };
->
->  /* These definitions are internal to the kernel for now. Mainly used by =
-nfsd. */
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index 2f2ee82d5517..67626d535316 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -126,8 +126,9 @@ struct statx {
->         __u64   stx_mnt_id;
->         __u32   stx_dio_mem_align;      /* Memory buffer alignment for di=
-rect I/O */
->         __u32   stx_dio_offset_align;   /* File offset alignment for dire=
-ct I/O */
-> +       __u64   stx_subvol;     /* Subvolume identifier */
->         /* 0xa0 */
-> -       __u64   __spare3[12];   /* Spare space for future expansion */
-> +       __u64   __spare3[11];   /* Spare space for future expansion */
->         /* 0x100 */
->  };
->
-> @@ -155,6 +156,7 @@ struct statx {
->  #define STATX_MNT_ID           0x00001000U     /* Got stx_mnt_id */
->  #define STATX_DIOALIGN         0x00002000U     /* Want/got direct I/O al=
-ignment info */
->  #define STATX_MNT_ID_UNIQUE    0x00004000U     /* Want/got extended stx_=
-mount_id */
-> +#define STATX_SUBVOL           0x00008000U     /* Want/got stx_subvol */
->
->  #define STATX__RESERVED                0x80000000U     /* Reserved for f=
-uture struct statx expansion */
->
-> --
-> 2.43.0
->
->
+>  net/packet/af_packet.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> index 0db31ca4982d..65042edd1a97 100644
+> --- a/net/packet/af_packet.c
+> +++ b/net/packet/af_packet.c
+> @@ -4090,6 +4090,9 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
+>  	case PACKET_VNET_HDR_SZ:
+>  		val = READ_ONCE(po->vnet_hdr_sz);
+>  		break;
+> +	case PACKET_COPY_THRESH:
+> +		val = pkt_sk(sk)->copy_thresh;
+> +		break;
 
-I think it's generally expected that patches that touch different
-layers are split up. That is, we should have a patch that adds the
-capability and a separate patch that enables it in bcachefs. This also
-helps make it clearer to others how a new feature should be plumbed
-into a filesystem.
+This is probably a good opportunity to use READ_ONCE/WRITE_ONCE for
+this variable that can be modified and read concurrently.
 
-I would prefer it to be split up in this manner for this reason.
+Alternatively I can fix up all three locations in a follow-on patch.
+
+No concerns with adding the getsockopt itself.
+
+>  	case PACKET_VERSION:
+>  		val = po->tp_version;
+>  		break;
+> -- 
+> 2.39.2
+> 
 
 
-
---
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
