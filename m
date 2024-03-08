@@ -1,254 +1,186 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1247B25626;
-	Fri,  8 Mar 2024 00:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61839219F0;
+	Fri,  8 Mar 2024 00:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709859480; cv=none; b=kmuC24sd3vo+nb9qzB7gkzkSztDjOuiFVmHG5W9+VuBHNdBqOADYvg8pS/QHumBXfusiclX9W6KKnasPyLFTw9OMHLTfjNIdct6DQ58QPXWhPcvC21UjKSp6cq/J5aCuRW6I36jChBzBMxb9nlbvrrKMvzY6eORXaMPs6cQwiAo=
+	t=1709859531; cv=none; b=WjCX87rSzCx12UdP5Y/kvU2PbsmgUB7d7t9CInGVa5/c12INMN/LKCj65V6/xB5aTXM3+3HtTIO1OmK8g1+tp4CY6t5/RJ7/zZxe52T5J2Xyu3xy6ZvPEV/3j7mPlYXkzKVhRshacyw10yastFNOnwozMW7Gzb9vYYGSi0NTcIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709859480; c=relaxed/simple;
-	bh=bKR8gr0VhgU9ziFEGGnF6q1dlSQS1xPWrIYsKkxj8zY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uEZtauFwsRnlXcFJU3AMVWYa0ny2ykZ6KZ1qzYqpyrRcRfmGx7k+PoAqyXdLszMQp0KQACj877Z7I7clDNTDuOspOcqaIfZimUY72fY/Qtpkul/zRYimTBr7En+lkUxrkk6zy6jUFctr+IVUwfVNJPNRAKKUkciMUPn+0MqDymw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aug+cr0L; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709859531; c=relaxed/simple;
+	bh=ZPyNgw50IlMj3ZZ9BFxPHhxLNMbM6ym6HoTafz/JF0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oGWubKew99022mTMS2qqNk84+L+R7ATCUbgdKJaPnhimX2cDNdOsb2+KBK2L+V3DjLJM6LAftOMdxImELLh7riLHkc1CBsDBznZ6TUFLfaybj/80LySazH5ZO3PMRLOn2vQrkwov6ZfwF8jqbzYS73nRwMBXc0pqGduR3cf7jDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiwTGHVO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aug+cr0L"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4280vkPx069442;
-	Thu, 7 Mar 2024 18:57:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709859466;
-	bh=WTfn342mC3gAfKxYRNJ+eItseUz/rdHDe4G0Gh0iqsk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=aug+cr0LAueGnJOwAC6OSRAceYJDZW+nEUIyEsuFF5aKXqqIJq0ry6qY4HVkZe3+P
-	 M2KvqjyEKPq/fclezeM9Ycz9QW3Z2c/XhdCUS5mq5qcFPCoHbR/tMvv+yDkpVooVpS
-	 H0U3b+9sx3P+ttJZ2lRG+X1t1TfGNB5am5qqMo+A=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4280vkjv031449
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 7 Mar 2024 18:57:46 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 7
- Mar 2024 18:57:46 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 7 Mar 2024 18:57:46 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4280vkjS055151;
-	Thu, 7 Mar 2024 18:57:46 -0600
-From: Judith Mendez <jm@ti.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: Andrew Davis <afd@ti.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/7] mmc: sdhci_am654: Add tuning algorithm for delay chain
-Date: Thu, 7 Mar 2024 18:57:40 -0600
-Message-ID: <20240308005746.1059813-2-jm@ti.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240308005746.1059813-1-jm@ti.com>
-References: <20240308005746.1059813-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiwTGHVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65F8C433F1;
+	Fri,  8 Mar 2024 00:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709859530;
+	bh=ZPyNgw50IlMj3ZZ9BFxPHhxLNMbM6ym6HoTafz/JF0c=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JiwTGHVOguV9FSNQ3ANzjq1D6UTnKbnaJQNIOVCH/xER5PeTG+JaUxQABsm2Mwx42
+	 PPxUQuNiZv6HWLrOzIj5/6V/ShiiB4Mhd1Ehlh7zLvprQLRiIPkzOjj/T4LfxxVY8V
+	 NM35WC+MxQRvwyS7aGtc1jeeMgtLOSIdQen6xcIOESgHunqq9mE2OLGkWJsOSETous
+	 pk8CVatOWHLjZDzSouDyikl8lCNRyLGEGGiePtKV7URo5KvRWjb/fotsoH+qw07maA
+	 wuD62nRBDbnstHtgTSwblP9Am2fbYo7BeZWu2om1PwmxKiZMx8LoZrclg5EdmDG+qC
+	 Lg63C/OnC+RDA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 6D32ACE0716; Thu,  7 Mar 2024 16:58:50 -0800 (PST)
+Date: Thu, 7 Mar 2024 16:58:50 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linke li <lilinke99@qq.com>,
+	joel@joelfernandes.org, boqun.feng@gmail.com, dave@stgolabs.net,
+	frederic@kernel.org, jiangshanlai@gmail.com, josh@joshtriplett.org,
+	linux-kernel@vger.kernel.org, qiang.zhang1211@gmail.com,
+	quic_neeraju@quicinc.com, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcutorture: Fix
+ rcu_torture_pipe_update_one()/rcu_torture_writer() data race and concurrency
+ bug
+Message-ID: <c3b94335-cf11-456d-bec7-4e4262235868@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <CAHk-=wjbDgMKLgxbV+yK4LKZ+2Qj6zVL_sHeb+L9KDia980Q8Q@mail.gmail.com>
+ <20240306142738.7b66a716@rorschach.local.home>
+ <CAHk-=wgPAZ4KnCQergqAOUypwinYh=gZ0q4EQbwvuUcJ_8UK+Q@mail.gmail.com>
+ <83b47424-e5e0-46de-aa63-d413a5aa6cec@paulmck-laptop>
+ <CAHk-=wiX_zF5Mpt8kUm_LFQpYY-mshrXJPOe+wKNwiVhEUcU9g@mail.gmail.com>
+ <851dc594-d2ea-4050-b7c6-e33a1cddf3a1@efficios.com>
+ <72b14322-78c1-4479-9c4e-b0e11c1f0d53@paulmck-laptop>
+ <bebbed4a-ced1-42c5-865c-dc9dc7857b6c@efficios.com>
+ <c1bb35c4-29af-4a84-8ba7-81ba30639a69@paulmck-laptop>
+ <2721d70f-67a8-428f-903b-1c7c6c6da7f9@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2721d70f-67a8-428f-903b-1c7c6c6da7f9@efficios.com>
 
-Currently the sdhci_am654 driver only supports one tuning
-algorithm which should be used only when DLL is enabled. The
-ITAPDLY is selected from the largest passing window and the
-buffer is viewed as a circular buffer.
+On Thu, Mar 07, 2024 at 02:53:43PM -0500, Mathieu Desnoyers wrote:
+> On 2024-03-07 14:47, Paul E. McKenney wrote:
+> > On Thu, Mar 07, 2024 at 08:53:05AM -0500, Mathieu Desnoyers wrote:
+> > > On 2024-03-06 22:37, Paul E. McKenney wrote:
+> > > > On Wed, Mar 06, 2024 at 10:06:21PM -0500, Mathieu Desnoyers wrote:
+> > > [...]
+> > > > 
+> > > > > As far as the WRITE_ONCE(x, READ_ONCE(x) + 1) pattern
+> > > > > is concerned, the only valid use-case I can think of is
+> > > > > split counters or RCU implementations where there is a
+> > > > > single updater doing the increment, and one or more
+> > > > > concurrent reader threads that need to snapshot a
+> > > > > consistent value with READ_ONCE().
+> > > > 
+> > > [...]
+> > > > 
+> > > > So what would you use that pattern for?
+> > > > 
+> > > > One possibility is a per-CPU statistical counter in userspace on a
+> > > > fastpath, in cases where losing the occasional count is OK.  Then learning
+> > > > your CPU (and possibly being immediately migrated to some other CPU),
+> > > > READ_ONCE() of the count, increment, and WRITE_ONCE() might (or might not)
+> > > > make sense.
+> > > > 
+> > > > I suppose the same in the kernel if there was a fastpath so extreme you
+> > > > could not afford to disable preemption.
+> > > > 
+> > > > At best, very niche.
+> > > > 
+> > > > Or am I suffering a failure of imagination yet again?  ;-)
+> > > 
+> > > The (niche) use-cases I have in mind are split-counters and RCU
+> > > grace period tracking, where precise counters totals are needed
+> > > (no lost count).
+> > > 
+> > > In the kernel, this could be:
+> > 
+> > Thank you for looking into this!
+> > 
+> > > - A per-cpu counter, each counter incremented from thread context with
+> > >    preemption disabled (single updater per counter), read concurrently by
+> > >    other threads. WRITE_ONCE/READ_ONCE is useful to make sure there
+> > >    is no store/load tearing there. Atomics on the update would be stronger
+> > >    than necessary on the increment fast-path.
+> > 
+> > But if preemption is disabled, the updater can read the value without
+> > READ_ONCE() without risk of concurrent update.  Or are you concerned about
+> > interrupt handlers?  This would have to be a read from the interrupt
+> > handler, given that an updated from the interrupt handler could result
+> > in a lost count.
+> 
+> You are correct that the updater don't need READ_ONCE there. It would
+> however require a WRITE_ONCE() to match READ_ONCE() from concurrent
+> reader threads.
+> 
+> > 
+> > > - A per-thread counter (e.g. within task_struct), only incremented by the
+> > >    single thread, read by various threads concurrently.
+> > 
+> > Ditto.
+> 
+> Right, only WRITE_ONCE() on the single updater, READ_ONCE() on readers.
+> 
+> > 
+> > > - A counter which increment happens to be already protected by a lock, read
+> > >    by various threads without taking the lock. (technically doable, but
+> > >    I'm not sure I see a relevant use-case for it)
+> > 
+> > In that case, the lock would exclude concurrent updates, so the lock
+> > holder would not need READ_ONCE(), correct?
+> 
+> Correct.
+> 
+> > 
+> > > In user-space:
+> > > 
+> > > - The "per-cpu" counter would have to use rseq for increments to prevent
+> > >    inopportune migrations, which needs to be implemented in assembler anyway.
+> > >    The counter reads would have to use READ_ONCE().
+> > 
+> > Fair enough!
+> > 
+> > > - The per-thread counter (Thread-Local Storage) incremented by a single
+> > >    thread, read by various threads concurrently, is a good target
+> > >    for WRITE_ONCE()/READ_ONCE() pairing. This is actually what we do in
+> > >    various liburcu implementations which track read-side critical sections
+> > >    per-thread.
+> > 
+> > Agreed, but do any of these use WRITE_ONCE(x, READ_ONCE(x) + 1) or
+> > similar?
+> 
+> Not quite, I recall it's more like WRITE_ONCE(x, READ_ONCE(y)) or such,
+> so we can grab the value of the current gp counter and store it into a
+> TLS variable.
 
-The new algorithm should be used when the delay chain
-is enabled. The ITAPDLY is selected from the largest passing
-window and the buffer is not viewed as a circular buffer.
+Good point, you could use that pattern to grab a shared snapshot.
 
-This implementation is based off of the following paper: [1].
+Still sounds niche, but you never know!  ;-)
 
-Also add support for multiple failing windows.
+							Thanx, Paul
 
-[1] https://www.ti.com/lit/an/spract9/spract9.pdf
-
-Fixes: 13ebeae68ac9 ("mmc: sdhci_am654: Add support for software tuning")
-Signed-off-by: Judith Mendez <jm@ti.com>
----
-Changelog:
-v2->v3:
-- Fix return for tuning algorithm
-- Fix ITAPDLY_LAST_INDEX
-- Use reverse fir tree order for variable declarations
-- Remove unnecessary parenthesis
----
- drivers/mmc/host/sdhci_am654.c | 112 +++++++++++++++++++++++++++------
- 1 file changed, 92 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index d659c59422e1..d11b0d769e6c 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -149,10 +149,17 @@ struct sdhci_am654_data {
- 	int strb_sel;
- 	u32 flags;
- 	u32 quirks;
-+	bool dll_enable;
- 
- #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
- };
- 
-+struct window {
-+	u8 start;
-+	u8 end;
-+	u8 length;
-+};
-+
- struct sdhci_am654_driver_data {
- 	const struct sdhci_pltfm_data *pdata;
- 	u32 flags;
-@@ -290,10 +297,12 @@ static void sdhci_am654_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask, val);
- 
--	if (timing > MMC_TIMING_UHS_SDR25 && clock >= CLOCK_TOO_SLOW_HZ)
-+	if (timing > MMC_TIMING_UHS_SDR25 && clock >= CLOCK_TOO_SLOW_HZ) {
- 		sdhci_am654_setup_dll(host, clock);
--	else
-+		sdhci_am654->dll_enable = true;
-+	} else {
- 		sdhci_am654_setup_delay_chain(sdhci_am654, timing);
-+	}
- 
- 	regmap_update_bits(sdhci_am654->base, PHY_CTRL5, CLKBUFSEL_MASK,
- 			   sdhci_am654->clkbuf_sel);
-@@ -408,39 +417,102 @@ static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
- 	return 0;
- }
- 
--#define ITAP_MAX	32
-+#define ITAPDLY_LENGTH 32
-+#define ITAPDLY_LAST_INDEX (ITAPDLY_LENGTH - 1)
-+
-+static u32 sdhci_am654_calculate_itap(struct sdhci_host *host, struct window
-+			  *fail_window, u8 num_fails, bool circular_buffer)
-+{
-+	u8 itap = 0, start_fail = 0, end_fail = 0, pass_length = 0;
-+	u8 first_fail_start = 0, last_fail_end = 0;
-+	struct device *dev = mmc_dev(host->mmc);
-+	struct window pass_window = {0, 0, 0};
-+	int prev_fail_end = -1;
-+
-+	u8 i;
-+
-+	if (!num_fails)
-+		return ITAPDLY_LAST_INDEX >> 1;
-+
-+	if (fail_window->length == ITAPDLY_LENGTH) {
-+		dev_err(dev, "No passing ITAPDLY, return 0\n");
-+		return 0;
-+	}
-+
-+	first_fail_start = fail_window->start;
-+	last_fail_end = fail_window[num_fails - 1].end;
-+
-+	for (i = 0; i < num_fails; i++) {
-+		start_fail = fail_window[i].start;
-+		end_fail = fail_window[i].end;
-+		pass_length = start_fail - (prev_fail_end + 1);
-+
-+		if (pass_length > pass_window.length) {
-+			pass_window.start = prev_fail_end + 1;
-+			pass_window.length = pass_length;
-+		}
-+		prev_fail_end = end_fail;
-+	}
-+
-+	if (!circular_buffer)
-+		pass_length = ITAPDLY_LAST_INDEX - last_fail_end;
-+	else
-+		pass_length = ITAPDLY_LAST_INDEX - last_fail_end + first_fail_start;
-+
-+	if (pass_length > pass_window.length) {
-+		pass_window.start = last_fail_end + 1;
-+		pass_window.length = pass_length;
-+	}
-+
-+	if (!circular_buffer)
-+		itap = pass_window.start + (pass_window.length >> 1);
-+	else
-+		itap = (pass_window.start + (pass_window.length >> 1)) % ITAPDLY_LENGTH;
-+
-+	return (itap > ITAPDLY_LAST_INDEX) ? ITAPDLY_LAST_INDEX >> 1 : itap;
-+}
-+
- static int sdhci_am654_platform_execute_tuning(struct sdhci_host *host,
- 					       u32 opcode)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
--	int cur_val, prev_val = 1, fail_len = 0, pass_window = 0, pass_len;
--	u32 itap;
-+	struct window fail_window[ITAPDLY_LENGTH];
-+	u8 curr_pass, itap;
-+	u8 fail_index = 0;
-+	u8 prev_pass = 1;
-+
-+	memset(fail_window, 0, sizeof(fail_window));
- 
- 	/* Enable ITAPDLY */
- 	regmap_update_bits(sdhci_am654->base, PHY_CTRL4, ITAPDLYENA_MASK,
- 			   1 << ITAPDLYENA_SHIFT);
- 
--	for (itap = 0; itap < ITAP_MAX; itap++) {
-+	for (itap = 0; itap < ITAPDLY_LENGTH; itap++) {
- 		sdhci_am654_write_itapdly(sdhci_am654, itap);
- 
--		cur_val = !mmc_send_tuning(host->mmc, opcode, NULL);
--		if (cur_val && !prev_val)
--			pass_window = itap;
-+		curr_pass = !mmc_send_tuning(host->mmc, opcode, NULL);
- 
--		if (!cur_val)
--			fail_len++;
-+		if (!curr_pass && prev_pass)
-+			fail_window[fail_index].start = itap;
- 
--		prev_val = cur_val;
-+		if (!curr_pass) {
-+			fail_window[fail_index].end = itap;
-+			fail_window[fail_index].length++;
-+		}
-+
-+		if (curr_pass && !prev_pass)
-+			fail_index++;
-+
-+		prev_pass = curr_pass;
- 	}
--	/*
--	 * Having determined the length of the failing window and start of
--	 * the passing window calculate the length of the passing window and
--	 * set the final value halfway through it considering the range as a
--	 * circular buffer
--	 */
--	pass_len = ITAP_MAX - fail_len;
--	itap = (pass_window + (pass_len >> 1)) % ITAP_MAX;
-+
-+	if (fail_window[fail_index].length != 0)
-+		fail_index++;
-+
-+	itap = sdhci_am654_calculate_itap(host, fail_window, fail_index,
-+					  sdhci_am654->dll_enable);
-+
- 	sdhci_am654_write_itapdly(sdhci_am654, itap);
- 
- 	return 0;
--- 
-2.43.2
-
+> > > - Same as for the kernel, a counter increment protected by a lock which
+> > >    needs to be read from various threads concurrently without taking
+> > >    the lock could be a valid use-case, though I fail to see how it is
+> > >    useful due to lack of imagination on my part. ;-)
+> > 
+> > In RCU, we have "WRITE_ONCE(*sp, *sp + 1)" for this use case, though
+> > here we have the WRITE_ONCE() but not the READ_ONCE() because we hold
+> > the lock excluding any other updates.
+> 
+> You are right, the READ_ONCE() is not needed in this case for the
+> updater, only for the concurrent readers.
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
+> 
