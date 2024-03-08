@@ -1,124 +1,103 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3B3219FD;
-	Fri,  8 Mar 2024 01:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51420219FC
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 01:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709860222; cv=none; b=cQ68fT0da4xeSw5H3Zk9WnCFL8ZELpvQeu21KqBXsjBwR7VJq6dHIwgRPBYRDdPT7gtTzQaKfYhdvKnU53ba82hNBfRj8Q5wo0lbgN3iTc13AgCj8TUzepy5L9RDIHv6T4JH6aHwAj+Di/stvq+i+FJA6nXWz/oq7tVnlXUTiXY=
+	t=1709860316; cv=none; b=pyls3b4dAmW6SPoge/jGj2GstbTL4Hf7PXz0l4d61J3AfZWZQgE/zH1m8ImWCeIwyJpeb8yw89M9zkFhK4B9X5L4hGLSesM6QdBrQwm29kn2+1NeCfAxlVAoYPrjoGx4n794m+1M3X0BrPjJc8wl0rWl+UEpRX4F7O8s8A+XJK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709860222; c=relaxed/simple;
-	bh=gsq1qaqDZuKtkZEjmhFcNJ0Oz98c/gwFuViMAOndml0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mMrbCnMbABD1sMJV8y4sJvmnol5VTAitZ4RcH9p7HBjIVcphz9ia9H41Nx2PaEvZzQkD8+BTWcyGWKFV7lrr0B4wp9qNFgKWkzT3w9F10+8evM2ih+dSTM7iZI0QuVZ0eLpPYRHYvEeavm5rSJInATOkrzhChZ6ovbGT1FKYLuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PKb8h0YU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709860316; c=relaxed/simple;
+	bh=UH2NMaQQbXycY8nTN3zcaCTvKnRM7PFycZeWYzrJJa4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UWcMaNf2k/OEkrF3BX249J8FcAZzRakHy2xGrjtJ1Dz5zSeMIwg8oH6JH2elI9AQJs/ZOOuDoZZDEmOsANnVh59nQbJpX7ssTYJTri6C4Vsgo2usX6ZcONTCYxF5W9zkmfsZoTF1T/wkf0N1OEPLl5q3b1d+jiLonjUFwLQqec4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQ0Dce4D; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PKb8h0YU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4280iOKF018041;
-	Fri, 8 Mar 2024 01:10:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=1FOBliT
-	XVZjNoR4w147dMcGdIAtKZY7dRZ/ierdbGAI=; b=PKb8h0YU/XHmVnTLthmIxcK
-	gns1wRl0DQHBboluNSOmW71kMYpUF8onH6cAeV9CUGI0dKlrJqueRsiMWwTMXaNF
-	Fizb8n8S+JCj6y8U5hrDrgPaLG3G5MWHzk69wbfs8SWtz8GSEJt9fm48aFlOGNYN
-	w1L29pYyRoQ73qIYOOWV9OPB6BJuquYr+u8d1ZYKFzv8oDPIwNiZ6KHmoAoMbb6v
-	AsGlgEwoFuLCEPy6UoRlsdP8fL4n/j2mh82ICjrcNc39sPPO/oAj/VhyFty1FpXO
-	EQc528JzF/cOOG6eX2tra80UZQ/oA2wvq/r/FCm4c2kgzN0IH9sohIPf4cfn9Yg=
-	=
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wqn8qgd4u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 01:10:08 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4281A7qV000484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 8 Mar 2024 01:10:07 GMT
-Received: from maow2-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 7 Mar 2024 17:10:05 -0800
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH] workqueue: add function in event of workqueue_activate_work
-Date: Fri, 8 Mar 2024 09:09:29 +0800
-Message-ID: <20240308010929.1955339-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQ0Dce4D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709860315; x=1741396315;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UH2NMaQQbXycY8nTN3zcaCTvKnRM7PFycZeWYzrJJa4=;
+  b=IQ0Dce4DcbkByzQtH9AOmGphzkkF89eyjckSGpgfFyFKyzwNWlo5YwrJ
+   1eW35oF0vxyooNdXJc2L5RcNNwGQXA4gh4/fEyQfdkOY168j35xekTdvo
+   8KTy5useIpyJlP67MdbhI35TlJeLoP/wC6iEb5H8XBqN5vnVu8ZNWFPgY
+   pTz1ptYw/qEbo5ZoU6J2kyGF7p5v0XSLJ8AMWKwexbi5DFM7AXQ9/03Pz
+   /RvNlal+jGZvmgcBeTQyHCPrFM5AE70hjx0jEJ3c+GqOZpAOyWC/Y+1wm
+   G2tqGmCcUfOHUAgHzg6g1Dq0HkPFKMWBgKTYMHfKXG4GTPtLYME951DGW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="22019261"
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="22019261"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 17:11:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
+   d="scan'208";a="14861453"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa003.fm.intel.com with ESMTP; 07 Mar 2024 17:11:49 -0800
+Message-ID: <1b1acbb7-409f-4263-928d-bb73d6c328ab@linux.intel.com>
+Date: Fri, 8 Mar 2024 09:05:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bLgoSJfrZTGi0izl7Ov7QcWYirb5-T75
-X-Proofpoint-ORIG-GUID: bLgoSJfrZTGi0izl7Ov7QcWYirb5-T75
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_18,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 clxscore=1011 suspectscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403080007
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@elte.hu>,
+ Suresh Siddha <suresh.b.siddha@intel.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Ethan Zhao <haifeng.zhao@linux.intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu: always select INTEL_IOMMU for IRQ_REMAP
+Content-Language: en-US
+To: Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@kernel.org>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+References: <20240307140547.2201713-1-arnd@kernel.org>
+ <95554e96-d8b9-4325-aa73-e698b1873a79@arm.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <95554e96-d8b9-4325-aa73-e698b1873a79@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The trace event "workqueue_activate_work" only print work struct.
-However, function is the region of interest in a full sequence of work.
-Current workqueue_activate_work trace event output:
+On 3/7/24 11:48 PM, Robin Murphy wrote:
+> On 07/03/2024 2:05 pm, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> CONFIG_INTR_REMAP was originally split out of the intel iommu code to be
+>> shared by IRQ_REMAP. This recently broke again because the IRQ_REMAP
+>> code calls the global device_rbtree_find() function that is unavailable
+>> for builds without INTEL_IOMMU:
+>>
+>> x86_64-linux-ld: vmlinux.o: in function `qi_submit_sync':
+>> (.text+0x10771e0): undefined reference to `device_rbtree_find'
+>>
+>> It seems that the intel iommu code now contains a lot of generic helper
+>> functions that are not specific to intel, such as alloc_pgtable_page(),
+>> iommu_flush_write_buffer(), domain_attach_iommu() etc, so presumably
+>> it is not x86 specific any more.
+> 
+> No, it's still all very much Intel-specific, which in fact means it is 
+> just recently now x86-specific since IA-64 has departed.
+> 
+> Historically it's always been the case that building IRQ remapping 
+> support on its own without IOMMU_API was supported, and for a while we 
+> even had the awkward iommu_device_set_ops() wrapper and various other 
+> indirections and stubs in the core API solely to make it work. IMO the 
+> underlying issue here is that there have never been very clear lines of 
+> separation between the ACPI DMAR code, the IOMMU API driver, and the IRQ 
+> remapping driver, so unless the whole design could be improved to make 
+> it harder to break, it probably is time to start asking the question of 
+> whether anyone actually cares about this config combination any more.
 
-    workqueue_activate_work: work struct ffffff88b4a0f450
+IOMMU in passthrough mode + interrupt remapping might be a reasonable
+alternative to no IOMMU API + interrupt remapping.
 
-With this change, workqueue_activate_work will print the function name,
-align with workqueue_queue_work/execute_start/execute_end event.
-
-checkpatch.pl will report below error for the space:
-
-	ERROR: space prohibited after that open parenthesis '('
-	#28: FILE: include/trace/events/workqueue.h:67:
-	+               __field( void *,        function)
-
-	total: 1 errors, 0 warnings, 16 lines checked
-
-fix this error.
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
----
- include/trace/events/workqueue.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
-index 262d52021c23..a42c1a293459 100644
---- a/include/trace/events/workqueue.h
-+++ b/include/trace/events/workqueue.h
-@@ -63,14 +63,16 @@ TRACE_EVENT(workqueue_activate_work,
- 	TP_ARGS(work),
- 
- 	TP_STRUCT__entry(
--		__field( void *,	work	)
-+		__field(void *,	work)
-+		__field(void *,	function)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->work		= work;
-+		__entry->function	= work->func;
- 	),
- 
--	TP_printk("work struct %p", __entry->work)
-+	TP_printk("work struct %p function=%ps ", __entry->work, __entry->function)
- );
- 
- /**
--- 
-2.25.1
-
+Best regards,
+baolu
