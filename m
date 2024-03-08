@@ -1,69 +1,32 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCA63C24;
-	Fri,  8 Mar 2024 11:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BC056745;
+	Fri,  8 Mar 2024 11:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897112; cv=none; b=m1MXiTrcDz+UTh4HP3RvLVchsIdZXWn3ceaBtmoerbXJw38RM0DGSh/FKows3g+xnIiCTTmLWSmD+xWniqqga5zwruKPJ48o8RnZtweQyaRJ4oSchJaO6FzCqVsbUnx1d6nJ+P1OQYR+6h1Xr0HpUV5H1MdyvcAtwEU7oIvw2i4=
+	t=1709897119; cv=none; b=NoGu+wVU/b+kZN0UJo405VgjkbEmHpj1bEJD4Qn2gwiWYC8xdAmMJD123cteTmzaW9vVPnBVgLXoW1XyMyad7ndwBtP9bXmlt6QGSq0j5vHqr+x0ZYP5uEWlqZeTr8xghYmaNHQmPhZMU2Hc19gNmfK+Dfnghi0TIMRqc6w18N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897112; c=relaxed/simple;
-	bh=o2hNrgL13/sLtHdBP4TmsgTiEkFTQ3vVc2NOhew4J4k=;
+	s=arc-20240116; t=1709897119; c=relaxed/simple;
+	bh=Dc0Oz+8kdc0d502VQiwtcwUjZNXgV3uxWsH1cAVngtY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqVztLJ4wEYHjaTboAXzqDiNFxoXzlXpe1j+uvTzibeLtw7b+K0Yx17z9d4C+GHkCwHw+yYCIsHeNlzg0XbuUNJe/FH2TDsndKZ9+a5VhPQ7FzBC7HDiyZj89wbC1DKcgvEg5+WkL3uUg5joPe1VJJpt/GZdxQayml123376Op8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fjZNPKT7; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjZNPKT7"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d2ab9c5e83so17952701fa.2;
-        Fri, 08 Mar 2024 03:25:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709897108; x=1710501908; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZEG5PQAxEQMJdi4y7r2f556cfCDtnRfMruM9cmX0as=;
-        b=fjZNPKT7Ps2YmPxxkCl7XBDrBQzcguq6Bq1Ur+hp9z5ymZU3/YVrUiA7OvbYPQZhsx
-         y1gJ6gVuJG7tYtTdM4ylND8BpptPadhpjIIk7BVMnxcwgK52R4+SH/bqxPhFwrH/c/S6
-         sF5bvoDzYFpALvnsmUAQzhLKdllhH7q3/lIV+djqEkk28hREuhOu3fzi27+FZi+Wm1HU
-         1xe+rr+OGIhHR54Esq/3OBRMS3JrfuDcIq1LfrguHWgZo/UjVDURC7DQ8D6OzLWHmRq1
-         uH3GlDuoC+JYOTlgFDZfmzoRgResAHLC62hMVmpel4Gc2CqnU8jfshSMTaDSr1HpyHmL
-         zFXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709897108; x=1710501908;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sZEG5PQAxEQMJdi4y7r2f556cfCDtnRfMruM9cmX0as=;
-        b=P8D8C3Qko+lVbZPUTK4bax+YrYDdTVQcVJ90+zoH/VcXjMpTMIBllHaR+xaOiu338x
-         HaWdQrV55froQ0VmDl1RRN5mRilRXwdFqgXXz9IfUW/Mp1C0taJFiwd82EfgVRAAe/7Q
-         EXLazLwv0R46jXQyQb+c/sPc+T1uvUkavf7MKT0H9jABDwp83ynzdOYk58v3TuYKIBmA
-         0xHgSELIQLe0OP/3oEiy6AtF6DcGgwB2JY44VQmQc5lcPgtFM1Ff7XdJm+Jw+j1gp6CP
-         NpWsB9mSXIJPgAOdkcmeyF6qEFYDGPGLyUvwmTkDj/0P+YBpivwQ+b4vRw6gvsWZQOrA
-         19/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXempQs7L/LRqBzZJrO1SwpZ0+lKsC7PDd9rMdRLh80zaxtApIKwmGQ9YICSplIA1f9PFBYXxc7OcZzTIzBe6n0ymdhc0ejZbLRP1z2
-X-Gm-Message-State: AOJu0YxgHwQERKjsWAFSOfIkEEyKf93J6YgiFkdlg1s2/6fEdpv2hmBr
-	MpK9Nx/vMhhnN4Brv3hRrirwGW3J5MIUgy7Fm5AQvmdEJERL0lb+vhuoLUFGlck=
-X-Google-Smtp-Source: AGHT+IEeplHr/QBHhr5GpCgqcEdkoivlC4i/RyyWQPsFh/o5fRlVuchcWc0P9iwLjjrdnMRGr0l85g==
-X-Received: by 2002:a2e:8945:0:b0:2d2:4160:bb73 with SMTP id b5-20020a2e8945000000b002d24160bb73mr3674359ljk.3.1709897107640;
-        Fri, 08 Mar 2024 03:25:07 -0800 (PST)
-Received: from tom-HP-ZBook-Fury-15-G7-Mobile-Workstation (net-188-217-49-82.cust.vodafonedsl.it. [188.217.49.82])
-        by smtp.gmail.com with ESMTPSA id b20-20020a0564021f1400b00567fa27e75fsm2415001edb.32.2024.03.08.03.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 03:25:07 -0800 (PST)
-Date: Fri, 8 Mar 2024 12:25:05 +0100
-From: Tommaso Merciai <tomm.merciai@gmail.com>
-To: Umang Jain <umang.jain@ideasonboard.com>
-Cc: linux-media@vger.kernel.org,
-	Alexander Shiyan <eagle.alexander923@gmail.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v2 6/6] media: imx335: Limit analogue gain value
-Message-ID: <Zer1kQvdA+Nf9KG1@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
-References: <20240308083312.90279-1-umang.jain@ideasonboard.com>
- <20240308083312.90279-7-umang.jain@ideasonboard.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MHBmjIDL5EvL6imiNFT7JYOxNpTu6d2eS0MxYxRQONwtYce5iWEo1HGcc0kFeqOH5uPBI+HtQ+7Kfp8Z8VuaPjaH7fp21AwCkmuyXkU/V+ZafeShJ+bFxFt9gcTaCWHFzq2y2dId0l0JPcAfXkimNsy0kwBlS+NHkTMMJmDx6j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1riYLf-004tK3-Vp; Fri, 08 Mar 2024 19:25:13 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 08 Mar 2024 19:25:27 +0800
+Date: Fri, 8 Mar 2024 19:25:27 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Barry Song <21cnbao@gmail.com>
+Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH v2 0/2] [PATCH v2 0/2] crypto: fix missing
+ CRYPTO_ALG_ASYNC for async drivers
+Message-ID: <Zer1p043jRiDQzNY@gondor.apana.org.au>
+References: <20240229101449.227921-1-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,70 +35,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240308083312.90279-7-umang.jain@ideasonboard.com>
+In-Reply-To: <20240229101449.227921-1-21cnbao@gmail.com>
 
-Hi Umang,
-
-On Fri, Mar 08, 2024 at 02:03:12PM +0530, Umang Jain wrote:
-> The sensor gain (both analog and digital) are controlled by a
-> single gain value where:
-> - 0dB to 30dB correspond to analog gain
-> - 30.3dB to 72dB correspond to digital gain
->   (with 0.3dB step)
+On Thu, Feb 29, 2024 at 11:14:47PM +1300, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
 > 
-> Hence, limit the analogue gain value to 100.
-> For digital gain, support can be added later if needed.
+> Fix missing CRYPTO_ALG_ASYNC cra_flags for hisilicon and intel iaa
+> drivers.
 > 
-> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> ---
->  drivers/media/i2c/imx335.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+> -V2:
+>  * collect Acked-by of Tom and Yang, thanks for reviewing!
 > 
-> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> index 85cb53e3d5d4..cc59f446cd09 100644
-> --- a/drivers/media/i2c/imx335.c
-> +++ b/drivers/media/i2c/imx335.c
-> @@ -53,7 +53,7 @@
->  /* Analog gain control */
->  #define IMX335_REG_AGAIN		CCI_REG8(0x30e8)
->  #define IMX335_AGAIN_MIN		0
-> -#define IMX335_AGAIN_MAX		240
-> +#define IMX335_AGAIN_MAX		100
->  #define IMX335_AGAIN_STEP		1
->  #define IMX335_AGAIN_DEFAULT		0
->  
-> @@ -1174,6 +1174,14 @@ static int imx335_init_controls(struct imx335 *imx335)
->  					     IMX335_EXPOSURE_STEP,
->  					     IMX335_EXPOSURE_DEFAULT);
->  
-> +	/*
-> +	 * The sensor has an analog gain and a digital gain, both controlled
-> +	 * through a single gain value, expressed in 0.3dB increments. Values
-> +	 * from 0.0dB (0) to 30.0dB (100) apply analog gain only, higher values
-> +	 * up to 72.0dB (240) add further digital gain. Limit the range to
-> +	 * analog gain only, support for digital gain can be added separately
-> +	 * if needed.
-> +	 */
->  	imx335->again_ctrl = v4l2_ctrl_new_std(ctrl_hdlr,
->  					       &imx335_ctrl_ops,
->  					       V4L2_CID_ANALOGUE_GAIN,
+> Barry Song (2):
+>   crypto: hisilicon/zip - fix the missing CRYPTO_ALG_ASYNC in cra_flags
+>   crypto: iaa - fix the missing CRYPTO_ALG_ASYNC in cra_flags
+> 
+>  drivers/crypto/hisilicon/zip/zip_crypto.c  | 1 +
+>  drivers/crypto/intel/iaa/iaa_crypto_main.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
 > -- 
-> 2.43.0
-> 
-> 
+> 2.34.1
 
-Unfortunately I don't have the datasheet of this sensor but the logic
-behind this patch looks good to me. :)
-
-Btw I check the datasheet of IMX323LQN-C and the gain controll logic
-it's pretty similar except for the values in dB (different sensor).
-Hope this help.
-
-Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
-
-Thanks & Regards,
-Tommaso
-
-
-
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
