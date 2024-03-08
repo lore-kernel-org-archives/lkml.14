@@ -1,86 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234AA3611E
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 06:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D882332C9C
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 06:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709878840; cv=none; b=A6jrQ2y96eVEF+XLTpblc3Ss3lxHDD5x7Gy66QIE8P/MEdzC8HlMNpLqIPL5SUXk5ATr7ooyvr+IEOL1Q07ihnBQd60D+tqfp2I6IJBl12dAjM2m/r88TY1CrmCR+0dbVcYqCllaKvTj3DTbJ/C1Sl6XqWoT3pQr5Bg3ZdDT6/c=
+	t=1709879137; cv=none; b=ZQEcuz2oKeV0BmuLh8DBoBFL2suBUSHLcC76h1Yj120ZBLdv3cGEfdmBdJW74fcWBMiWapfmZyyrn15vuA0IcdYWfBZvdQHC5dm6d0qhvRy/I88S68rPK+7j+uY0EnSmmhPR/sw5wl4R+IUn5/X5YGnZ3rtUCnpY9/PgZ1Sm2v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709878840; c=relaxed/simple;
-	bh=APt9nw3iUKosH6rfvav1qdlGVyqi/IlhhjgYZZfNE5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cfEAGto82BNWtbd3LC0LUHHaEGjHWejrCrczyLKJP/rlBqUYgUYMjVnqKo0qYfxOXb45YpY01u+rnVCE6teSWgC+6my7pRIX489rJYDO3hOYsM3qh286Gi1bkysg46WW68s1+rqCOuXD8uFZX5Yw9BV0JjfKRTOzLlFBRvffxyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhMvwzu7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709879137; c=relaxed/simple;
+	bh=HdmJvMNipVtYmqeHFV8SOPcO1UFYrEYdggZq6jEDSSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=soWEt75NB9piHVfBdr9Jqi3OS4Dz0yymkcY3m3sgwH/e5SgYFNkDxuYSnxKdTQlhUeP9ASRHfK3RNGI/sqk6CW5Es/WORK55Pzfd7bF51ISih6MVYgLRjRVQuFU7Y+sj6HPoysvXRdPi87Jy6GnrF7zeIWuer/nFe3nq91fCmwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Q1bVL8fK; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhMvwzu7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078C5C433F1;
-	Fri,  8 Mar 2024 06:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709878840;
-	bh=APt9nw3iUKosH6rfvav1qdlGVyqi/IlhhjgYZZfNE5Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JhMvwzu75vexwGA5XzB+R6ylBhI0lqs3sN6u5DHe4KGwhWryea2zpbIOkCRuA+fdf
-	 8Jl8D84Xu89gZnrgRknzV04h9xQnYte2lwok+dlxQLz0Jl/I3R4HcXec1hxPCayIL6
-	 Lh8LaS8te3qQf7HyGxLQf28rQCDs02vp70RDKpZl1KyPFC+7HZ+QG6RLyXcuxer2LA
-	 NfHhvBiGLeEFg2u1kp2zyRqNi5Xv+BSZqIGInmNGDbWPds1pbDtfONc+8pmJrC5trI
-	 kX0r5YbOdo02x6u/9qxjf4fYWEj6+F2rOqGVPpY51XS+i9TfbODVfiij6WndZD3MpY
-	 K+dvnxu0H3O6A==
-Message-ID: <73296ac6-8b00-4131-ab78-a127cdbff4b9@kernel.org>
-Date: Fri, 8 Mar 2024 14:20:33 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Q1bVL8fK"
+Date: Fri, 8 Mar 2024 06:25:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1709879131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6LcPWhV0VRE4SqZP3qLifpoxs/6/2oiG1JC/g6I/8Tk=;
+	b=Q1bVL8fKKMQE7M/8Q29/GHWu9+df9LDbyCkPz6OgqUdLJ2rgcqrwROD/l4tXrE0vLOFBfy
+	iPnEd4Uf7P8ZXBGMTW64Ix3KlIMXYqid6qkkkkUtthRTPx4b6CGY/j8tuGQj1kBWJuh6IX
+	4c+QW8Jw1in6s+wXz/8JEkbnydEUPRA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: linux-next: manual merge of the kvm-arm tree with the arm64 tree
+Message-ID: <ZeqvVtdca_I6ooYe@linux.dev>
+References: <20240308125433.134c0dbe@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
-Content-Language: en-US
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20200618063625.110273-1-yuchao0@huawei.com>
- <20200618235932.GA227771@google.com>
- <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
- <20200619054922.GC227771@google.com>
- <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
- <20200619224755.GA60059@google.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20200619224755.GA60059@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308125433.134c0dbe@canb.auug.org.au>
+X-Migadu-Flow: FLOW_OUT
 
-On 2020/6/20 6:47, Jaegeuk Kim wrote:
->>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>>>> index 3268f8dd59bb..1862073b96d2 100644
->>>>>> --- a/fs/f2fs/file.c
->>>>>> +++ b/fs/f2fs/file.c
->>>>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
->>>>>>   				f2fs_put_page(psrc, 1);
->>>>>>   				return PTR_ERR(pdst);
->>>>>>   			}
->>>>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
+On Fri, Mar 08, 2024 at 12:54:33PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Do you mean pdst can be under writeback?
+> Today's linux-next merge of the kvm-arm tree got a conflict in:
+> 
+>   arch/arm64/kernel/cpufeature.c
+> 
+> between commits:
+> 
+>   203f2b95a882 ("arm64/fpsimd: Support FEAT_FPMR")
+>   9cce9c6c2c3b ("arm64: mm: Handle LVA support as a CPU feature")
+>   352b0395b505 ("arm64: Enable 52-bit virtual addressing for 4k and 16k granule configs")
+>   2aea7b77aabc ("arm64: Use Signed/Unsigned enums for TGRAN{4,16,64} and VARange")
+> 
+> from the arm64 tree and commit:
+> 
+>   da9af5071b25 ("arm64: cpufeature: Detect HCR_EL2.NV1 being RES0")
+> 
+> from the kvm-arm tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary.
 
-Jaegeuk,
+Thanks for reporting these Stephen. Fix looks good to me.
 
-Look back this again, is it possible that pdst is writebacking
-in below race condition? or am I missing something?
+Catalin -- I think the conflicts are pretty simple here, but if we
+wanted to do something it'd probably be easiest if you pulled my
+kvm-arm64/feat_e2h0 branch. Looks like changes are coming from multiple
+topic branches in your tree.
 
-Thread A				GC Thread
-- f2fs_move_file_range
-  - filemap_write_and_wait_range(dst)
-					- gc_data_segment
-					 - f2fs_down_write(dst)
-					 - move_data_page
-					  - set_page_writeback(dst_page)
-					  - f2fs_submit_page_write
-					 - f2fs_up_write(dst)
-  - f2fs_down_write(dst)
-  - __exchange_data_block
-   - __clone_blkaddrs
-    - f2fs_get_new_data_page
-    - memcpy_page
+No strong opinions either way, but I plan on sending the kvmarm PR
+tomorrow.
 
+[*] https://git.kernel.org/pub/scm/linux/kernel/git/oupton/linux.git/log/?h=kvm-arm64/feat_e2h0
+
+-- 
 Thanks,
+Oliver
