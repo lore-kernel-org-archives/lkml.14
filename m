@@ -1,107 +1,79 @@
-Received: from 3.mo583.mail-out.ovh.net (3.mo583.mail-out.ovh.net [46.105.40.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A731F93E
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.40.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF281DA52;
+	Fri,  8 Mar 2024 23:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709938701; cv=none; b=j3xC94d5agyzOYhsNR4ZFu3sV2XwBhrMxJdgfvVmTydCS9d+i6MfxlGp4bI7rBE9i8Ci+PszZvmetBzoSSM0t/iByrP+K3LWmn090PUBcpe7NfhhWAOLFn2vaBGxDb5IfbM3RR5fN7B4fRvKfl9m29G5FDbBcXNAXZbCHdMk5xw=
+	t=1709938832; cv=none; b=deBS3RscFdQyp+nloHBA0McMx+6fgBAlBbS2EaRpSE0/SPK/AZQ8btxNroG7N1KyL+KuFh/YjFLipB+c5fGPN4SfvFviIEbDPMNgJ+nfxxSy0hqxpk8Bkeztcx5ENxa7gxGqL77+CqCKHB2Ubf6qoLrGdzlUER6H93z2L9kJVps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709938701; c=relaxed/simple;
-	bh=JC/1Hu15t3XDRrwUWjQx6XQH7Jgd9AvFXSl+dsOCvpo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=k6BwjYt2IsZqeeJ3HP1eBGW/IGeawLL57OmF3o5AoHINQw0CcB7WFockFHOAvHEC+ZqxazrRKr+MQQISAkCuDNi+tt+33smrYdUBZ98Ma26vnQXcIGsWhyLucmfsxdVQRD6axo753e6NI0ky8cpAJIKO5PQrXapczPhDgLm8zUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.40.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director10.ghost.mail-out.ovh.net (unknown [10.108.2.197])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4Ts1dy2LKVz1GF3
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:52:38 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-ntc96 (unknown [10.110.96.185])
-	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 7A5501FDF9;
-	Fri,  8 Mar 2024 22:52:33 +0000 (UTC)
-Received: from etezian.org ([37.59.142.103])
-	by ghost-submission-6684bf9d7b-ntc96 with ESMTPSA
-	id 9KAtF7GW62U7/wgAM1TUiA
-	(envelope-from <andi@etezian.org>); Fri, 08 Mar 2024 22:52:33 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-103G0052d1e97d6-28cc-4232-bc2f-0242f8e7f9a9,
-                    2D11F706EFA52336831762ECFB2C8F5C1953C755) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
-References: <20240306-mbly-i2c-v3-0-605f866aa4ec@bootlin.com>
-Subject: Re: (subset) [PATCH v3 00/11] Add Mobileye EyeQ5 support to the
- Nomadik I2C controller & use hrtimers for timeouts
-Message-Id: <170993835026.2617902.961311079016126204.b4-ty@kernel.org>
-Date: Fri, 08 Mar 2024 23:52:30 +0100
+	s=arc-20240116; t=1709938832; c=relaxed/simple;
+	bh=hgauyfs0CuOwwpnTgH32w9+9nxlVw5ECI9wjU6LA1Bc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=R3G+6xJThoUQLiNsYQiXp1k8I6J4Vkahd1ffMwZGPHL8dZNHlub1uRPRCUOCs3ctXiyuydy5QHOvdVx6roCB4lHLCIbD56nU6NJ/bX/WJpCdcBPBdErRLMYgpz789Rxzr7UI6OzoRrGvE3dNBK89UwPyJUsWm1AgjpOT4MA3ajg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clS7HO8Q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clS7HO8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 089B9C43390;
+	Fri,  8 Mar 2024 23:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709938832;
+	bh=hgauyfs0CuOwwpnTgH32w9+9nxlVw5ECI9wjU6LA1Bc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=clS7HO8QJuegGS/mU0gJ222MnoXamq8PSidpDEPLycBMlYYNyGOhAoniT96KB4z0k
+	 +bTdaFQ4KV4h0K2dnX2XhgcDBf+gkXlUspbZOgS4oW/Ta3UukAVfQI198R+whvcC+k
+	 a2mINw/UwFEOdekVv/bUpDO2RpgmF4FvFY0q6+0q8+rcr4dH2KN3xgxJSfcxZ8tKH7
+	 XVDXlJNyxnOQteDhzESy1Il4J7SZrcJNBwT3UKxYsi8IBZrB/0Q6kMrsad7w094tHy
+	 EP8C5PGkpRx8M+Obl/iHctjex7ARTN80oBsWffdG3ToIlLmuFd9GdY6VoRopspVMt5
+	 VGJDW+YdoNX/A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DB028C59A4C;
+	Fri,  8 Mar 2024 23:00:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 10859586080687524573
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrieeigddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhephfdukeehgfegueeuleehveejueegveeiudejgfegteffvdetjeektdeltdeiueeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfedpmhhouggvpehsmhhtphhouhht
+Subject: Re: [PATCH bpf-next] arm64,
+ bpf: Use bpf_prog_pack for arm64 bpf trampoline
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170993883189.21366.2723021380774066449.git-patchwork-notify@kernel.org>
+Date: Fri, 08 Mar 2024 23:00:31 +0000
+References: <20240304202803.31400-1-puranjay12@gmail.com>
+In-Reply-To: <20240304202803.31400-1-puranjay12@gmail.com>
+To: Puranjay Mohan <puranjay12@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, song@kernel.org, catalin.marinas@arm.com,
+ mark.rutland@arm.com, bpf@vger.kernel.org, kpsingh@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ xukuohai@huaweicloud.com
 
-Hi
+Hello:
 
-On Wed, 06 Mar 2024 18:59:20 +0100, Théo Lebrun wrote:
-> This series adds two tangent features to the Nomadik I2C controller:
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Mon,  4 Mar 2024 20:28:03 +0000 you wrote:
+> We used bpf_prog_pack to aggregate bpf programs into huge page to
+> relieve the iTLB pressure on the system. This was merged for ARM64[1]
+> We can apply it to bpf trampoline as well. This would increase the
+> preformance of fentry and struct_ops programs.
 > 
->  - Add a new compatible to support Mobileye EyeQ5 which uses the same IP
->    block as Nomadik.
-> 
->    It has two quirks to be handled:
->     - The memory bus only supports 32-bit accesses. Avoid readb() and
->       writeb() calls that might generate byte load/store instructions.
->     - We must write a value into a shared register region (OLB)
->       depending on the I2C bus speed.
+> [1] https://lore.kernel.org/bpf/20240228141824.119877-1-puranjay12@gmail.com/
 > 
 > [...]
 
-Applied to i2c/i2c-host on
+Here is the summary with links:
+  - [bpf-next] arm64, bpf: Use bpf_prog_pack for arm64 bpf trampoline
+    https://git.kernel.org/bpf/bpf-next/c/d6f98243392f
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[01/11] dt-bindings: i2c: nomadik: add mobileye,eyeq5-i2c bindings and example
-        commit: 1b9a8e8af0d969ad8f2deece827e691a1b07ba1b
-[02/11] i2c: nomadik: rename private struct pointers from dev to priv
-        commit: ae9977eefc4a1e6e8fda619f5b8734efb6f11b58
-[03/11] i2c: nomadik: simplify IRQ masking logic
-        commit: 43f58f3e4b6678f7138461e17a37eb3aed223bf5
-[04/11] i2c: nomadik: use bitops helpers
-        commit: 9ab4b2a4faf459514f2c84c5302b207b4bb8b1e1
-[05/11] i2c: nomadik: support short xfer timeouts using waitqueue & hrtimer
-        commit: 127b87a5d11571932ea7f4d8115f4effc2f110a8
-[06/11] i2c: nomadik: replace jiffies by ktime for FIFO flushing timeout
-        commit: 0aaab5ad3a615bab4e1d401f545f77889377fffd
-[07/11] i2c: nomadik: fetch i2c-transfer-timeout-us property from devicetree
-        commit: 0148feec0a51445d29a773e55bc8be9aa3b61a8f
-[08/11] i2c: nomadik: support Mobileye EyeQ5 I2C controller
-        commit: 983548d0e62a93146f35185e6c49e568b05fb44d
-[09/11] i2c: nomadik: sort includes
-        commit: e275c0cf70e47304bc63c050c14129237c588123
 
