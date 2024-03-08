@@ -1,97 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8928F1CFB2;
-	Fri,  8 Mar 2024 07:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16834E1DC;
+	Fri,  8 Mar 2024 07:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709881335; cv=none; b=I5sRy2WcfkEHIGjlJEWu6bdyQg1ubOMpbYZVbwQSqbcP9lMFvB0b1xOV3csTdAoMG1TcOB1k4Y25osLphIIK908/V/DxdRJqawvIu1ionXUsOAepKoGVPSmFjXCAHVPS1WElI5i42RguZoMGoBXp+MQ7efIVbUA6gJqWwCIQvsg=
+	t=1709881373; cv=none; b=l4bbQfDVB3u2wHPaamYgsDavSnKH9FCB4DN+y3fspFX9EGAKYTiN+WH8r4qSR2y6qad9OJCzkHINe0Y7CMtpgHfAlMFgMuKE1GNCDPybBZ2b6oTaCa4Y/IU3fXwdZ6zKmk2cH881TuWC0MfFqs16Y9STziBLMK/scm4Hxtgf0MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709881335; c=relaxed/simple;
-	bh=iTLENVg3/Y3YtimadfoWFR5x7fj4yBYLoTVs3XljBhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ALoE/Iw8pytXOg+HXR7W44NPzlij5U2O1bhVSm7cf+5OvJLDEk7d4sp2rkAyxIiMSJGbPXZfWnSMnXiT8F00yOZtF6cCD/g4O7aWnBlMoqZ64PO6aIosrUQRT6g2+kQrlA7VqNID2DSVsBoje6SK6VuvqM7ISI7dnkkwOg+voHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5r/nxFN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709881373; c=relaxed/simple;
+	bh=PAoomouKbOdQvIndHg/4IvzufyezdIjPnsSPwvJBt1c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QtW2E5lhxLtlWKQcQu8rp7ZVBQPIn8P3JT2OmPa+74UQMFYiFmhbz5ged8Tv5y1BMMsvXt8A/GbSQGlv8rSM78RfHzX4GFrhHHGDcSb4Q6DLA9i/ujuqazZKUpKhZ2MkEKsTfyBWUNDc8YuAGTtaUBR/4ogJr5h8KVsFHgXY1ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XPXwAzt4; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5r/nxFN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 277D1C433C7;
-	Fri,  8 Mar 2024 07:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709881335;
-	bh=iTLENVg3/Y3YtimadfoWFR5x7fj4yBYLoTVs3XljBhI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a5r/nxFNoA9OaeVntqzq6Bwqr+WsxPU8YQ5VdWAWOqe+ho4kZqxjAJ8MjNg3RKi/R
-	 1Rmm9U+vJ/3t4Brwv6zdRu7qB4A7KcMX1Lm+cW6MQ8uK9fsyrH3aS6fFcQJOGE5+4Y
-	 6T6thBj7FXIUv15Iz3Et6XaMyvdUz+VLldnA0rbtNtloK3iPI9iEmiqcBmdO0NV2wa
-	 0z+zGkwEqtUK/wXIgK9LLqPnQ3RhPyqJriRnj+fRsgGx9pJUgOkQJdnH/6jy5XnXiN
-	 CD/x5p7mwLsUqatUBIGfAngpRuZWTgQUSarpPl7K5WFeL9EgHA/pfQLkvxbKNEe8Pg
-	 KYqjQz5zM/aHg==
-Date: Fri, 8 Mar 2024 08:02:10 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
-	wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Message-ID: <yocn3rjxn37c7qniv2kkawgg2k7ghdwvrxcf77tdlpujnul3du@6oqvt5v4ykno>
-References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
- <cmtru4nvoab6g5emp2yrxnvfpvtrcsuna6dqsyewpagg3qmkau@r2zoj6vgslet>
- <9dbe987a-fdd1-4bec-b350-5936abf69b1b@quicinc.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XPXwAzt4"
+X-UUID: dc880b94dd1911eeb8927bc1f75efef4-20240308
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=3eAw1MxLJ/Z1C/F1OCuVuEQ3bEvjcOElWxZRU5ARRak=;
+	b=XPXwAzt4pz0BM4rqsG0CkBudjsPIJeagw03r4YscMRSxx/haN5Vb3JThuJmJi1eDD0DXAmVVOni+lWKhOkh9ra8isgSFj/NWTCfWcsq95jIf94HnRpauI35L8G7oUVvbULDXTFLpVQfnvAvOgrN/XZsNbeL9a1J21t+IIJyI5VY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:53a474fa-9a44-49d8-8091-d614da0a7632,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6f543d0,CLOUDID:ec99a8ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: dc880b94dd1911eeb8927bc1f75efef4-20240308
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <poshao.chen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1202741839; Fri, 08 Mar 2024 15:02:43 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 8 Mar 2024 15:02:42 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 8 Mar 2024 15:02:42 +0800
+From: PoShao Chen <poshao.chen@mediatek.com>
+To: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+CC: <lukasz.luba@arm.com>, <dietmar.eggemann@arm.com>, <rafael@kernel.org>,
+	<mingo@kernel.org>, <rafael.j.wysocki@intel.com>, <rui.zhang@intel.com>,
+	<vincent.guittot@linaro.org>, <daniel.lezcano@linaro.org>,
+	<viresh.kumar@linaro.org>, <amit.kachhap@gmail.com>,
+	<clive.lin@mediatek.com>, <ccj.yeh@mediatek.com>,
+	<ching-hao.hsu@mediatek.com>, <poshao.chen@mediatek.com>
+Subject: [PATCH 1/2] PM: EM: Add macro em_is_microwatts()
+Date: Fri, 8 Mar 2024 14:59:21 +0800
+Message-ID: <20240308065922.10329-1-poshao.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dbe987a-fdd1-4bec-b350-5936abf69b1b@quicinc.com>
+Content-Type: text/plain
 
-Hi Mukesh,
+This patch adds a new macro, em_is_microwatts(), which checks if
+the EM_PERF_DOMAIN_MICROWATTS flag is set for a given Energy Model.
+This macro enables other parts of the kernel, such as cooling
+devices, to easily determine the unit of power used by the Energy
+Model and to perform the necessary conversions if the values
+are provided in microwatts.
 
-...
+Signed-off-by: PoShao Chen <poshao.chen@mediatek.com>
+---
+ include/linux/energy_model.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > Fixes: d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
-> > 
-> > I still don't understand what's the fix here. You are making a
-> > generic DMA error to be more specific... where is the bug? What
-> > exactly is broken now?
-> > 
-> This is about being particular while reporting specific error.
-> Like i mentioned, instead of generic DMA transfer error, it should be
-> particular error 1) NACK 2) BUT_PROTO 3)ARB_LOST.
-> Ofcourse when data transfer via DMA fails, it can be considered as
-> DMA Txfer fail.
-> In summary so far driver was considering all failure as txfer failure,
-> but i2c has errors which are kind of response/condition on the bus.
+diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
+index 770755df852f..68145b4368d1 100644
+--- a/include/linux/energy_model.h
++++ b/include/linux/energy_model.h
+@@ -92,6 +92,7 @@ struct em_perf_domain {
+ 
+ #define em_span_cpus(em) (to_cpumask((em)->cpus))
+ #define em_is_artificial(em) ((em)->flags & EM_PERF_DOMAIN_ARTIFICIAL)
++#define em_is_microwatts(em) ((em)->flags & EM_PERF_DOMAIN_MICROWATTS)
+ 
+ #ifdef CONFIG_ENERGY_MODEL
+ /*
+-- 
+2.18.0
 
-I understand that, but what I need to know is: does the system
-crash? does the system act in unexpected way?
-
-Moving from "you received an error" to "you received a nack" is
-not a fix, it's an improvement and it should not have the Fixes
-tag.
-
-Having the Fixes tag decides which path this patch will take to
-to reach upstream. It's important because after it gets to
-upstream other people will take your patch and backport it older
-kernels.
-
-I want to avoid this extra work when not necessary.
-
-> Sorry if it confusing still, but please let me know if anything required to
-> be updated in  commit log which can bring clarity.
-> 
-> > Besides, keep in mind, that commits with fixes tags get
-> > backported to older kernels (this one dates back to 5.18) and you
-> > should also Cc the stable mailing list:
-> > 
-> > Cc: <stable@vger.kernel.org> # v5.18+
-> 
-> Sure, will add into CC. was waiting for reviewed-by tag.
-
-No need to resend.
-
-Thanks,
-Andi
