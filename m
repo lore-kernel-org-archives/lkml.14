@@ -1,63 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F052E5D746
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 21:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0858367
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 21:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709933623; cv=none; b=luWZ+JMWTwcHOJwZOIwm/NTFj9o5HmyXrfyWeREvWxbr+RjL1DgXTCSENTb5OOWcG8SDq2YJoLk/vqrzXgNOgyPfacknaSiOjnF/n87A01S2VGx8PjD4Bevn+anjnYY55Ag7Rve3ycLiOJiWGLIdeEo4uhrgi/NDjzj8GjiMMBM=
+	t=1709933895; cv=none; b=WyMXKeqzdsiHgrNLAaOzvGSyXLCpwLfGVf2UOQoUCXthMQE1fWd+74prD6vGA+fro5SSbBghrzpEspldYi/F9GmQZHuW1y/tl74cdZD5whTKz7+p51O2lCDqoKAQOQk8mSMUR1gPw+glZd+OCSWYbHDPY0BkKdTLslhdra9iyL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709933623; c=relaxed/simple;
-	bh=TrUDOIKI0EoErh/PVlIhLyDoy9WwS7OqVA/bQxYZfk8=;
+	s=arc-20240116; t=1709933895; c=relaxed/simple;
+	bh=WwpLATMHSHcGIYdzotaP25I/LYMac7JZ2C3/OiMToDI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnSJxBtpBL6zb6bVQBE9op+S9QUnF6Aq0Dbg9oH0JJMsiJHzelLl/59gs8V7Ae4CCsn5F+NjXL+HIOWMPUnufR6iuA/b/L8QkQLPnJTk16o+2ouXuPv690y0sLpK2YLIILEf98qd5Cqm8icANhKLwiM+Qc/GniPPJDYoUOrsK64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGBRpk9g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jEJjmH5r/MBBa5GB255kLGCjMN0xTKU7EDjWrYczycoOFebahuHPGU/ytpZs3W+f2xXm36Dn3BCWicDz89dyhlZx9kvJjQgR4pweyI2bpAv14ic5nrPJwMR/R8xGlM7pXyLe8fVMnWhq122H5+FFSiR2PLsvVUOCltUfQMb04X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FpS2LeFy; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGBRpk9g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83363C433C7;
-	Fri,  8 Mar 2024 21:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709933622;
-	bh=TrUDOIKI0EoErh/PVlIhLyDoy9WwS7OqVA/bQxYZfk8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=BGBRpk9g4l+0/PqTqwX6oqhl3R2D/Ma3pXT/yloNlV8OyMPw0u+CT6Dr+0msrK9bl
-	 Pct1f0AJVD2YXJzAy582dnRcs8b3XAVsD5eNpr5b0gkNGSwrJRJwxbaqkmncD8NJZj
-	 yXKElwoOm84I+YURpjH30sRcqj9FwGwqlZPY7BVmiSkcyu1Ol+mugX+heTjxUM1uQg
-	 rprwcwHM+nh68owX5JIURGKrVwDLauzhFq9iCyxoNOVUBapuO7AZQwsutH4uG1i27L
-	 EHkIG508QBGDx0pFJI8tvsU00dJ/bj1iTO/YCp9/HxVy0tVzRB0Qo4vr1w9Yem0TDj
-	 e4JymeF2DBm6Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 1CE89CE0548; Fri,  8 Mar 2024 13:33:42 -0800 (PST)
-Date: Fri, 8 Mar 2024 13:33:42 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, peterz@infradead.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
-	jpoimboe@kernel.org, mark.rutland@arm.com, jgross@suse.com,
-	andrew.cooper3@citrix.com, bristot@kernel.org,
-	mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
-	glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
-	mattst88@gmail.com, krypton@ulrich-teichert.org,
-	rostedt@goodmis.org, David.Laight@aculab.com, richard@nod.at,
-	mjguzik@gmail.com, jon.grimm@amd.com, bharata@amd.com,
-	raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH 26/30] sched: handle preempt=voluntary under PREEMPT_AUTO
-Message-ID: <e36b84bc-09c4-4b2e-bad0-f72530a9b15e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
- <20240213055554.1802415-27-ankur.a.arora@oracle.com>
- <65e3cd87.050a0220.bc052.7a29@mx.google.com>
- <87frx514jz.fsf@oracle.com>
- <12a20651-5429-43df-88d7-9d01ff6212c6@joelfernandes.org>
- <63380f0a-329c-43df-8e6c-4818de5eb371@paulmck-laptop>
- <d956c2e9-492d-4559-b9f9-400f37f523bf@joelfernandes.org>
- <6054a8e0-eb95-45a3-9901-fe2a31b6fe4e@paulmck-laptop>
- <87plw5pd2x.fsf@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpS2LeFy"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-564fd9eea75so3518606a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 13:38:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709933892; x=1710538692; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C5vHRjCeO4bwXd9VgTdyqvaIa5JQzoplykKkt0qJuAw=;
+        b=FpS2LeFyGCvALf9AO/LYkDiSwq3u5Klh4VGrNl9IMyksJXiwn1IAI2Ez7+EdxLXRh8
+         /oePCFzXT/jVPRThpR4f8M3JKvMBXzUoKeBxsaBaJ6zTwpyTurjBzAyVfYkgYSUUKsCk
+         9mprnhJsvz+VP9YO5yY5J4ziurbMSvMhbqXC9oSZwEhi6EdFMuLxI7LifSOgMsu6r57q
+         fpSjDagIZixAPDiKdJmmcoOLU4PmsY8ryiRzjdZWlhZy0LYLpU8nWfLTZPP5TNgoNXgZ
+         cVBEvY5DNooFX+MDym+v4hvLuBMlJDSc41cnrWn+fA9FC4xYr1uCHJi7SdtK2md63DCg
+         Jzjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709933892; x=1710538692;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C5vHRjCeO4bwXd9VgTdyqvaIa5JQzoplykKkt0qJuAw=;
+        b=L4WfHZcRZG5J5PsemVkfbII4lam90NEl52b67LY0csRrlQoDtkqgfRD3U43n1zCChR
+         Vwj6Qs4OnQMWkkJuKrf+cSlRhD94EaArT/i8KQVeIwwTPFdWowbS2PPASbUBuZPb8BS8
+         E8JeL21OSNkQbzwbjuGeMgCsZDUFJhaPkthgNdfKlYvkcNkD2bKRk6TeOemtRuxHnKq5
+         TKTIXP4nJ0D6Eee4yvYYz7eWKRDoqgB4KQzEnAq1qm+4fzu63aX7/rXm3mGIAHFxK5zS
+         Id5VJqiixgi9ZCxzVcm0sC4v2hMhsyueCDytl+POXTCpi4H2lSTjs+7Y9LqBv6PQ7L+b
+         RiWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyqVANDVBT4Lxwuend7rDF80D3AA63cUgbj0cF8ljlzHbOW380Q5v8VVTJow8j6sbYJ/PH0Jaq7tpCc0tRFYLNoXyFAav7xa3iLyV0
+X-Gm-Message-State: AOJu0YzdVjMl6lymglpquL3hY0poKeMgbU8UXueXSXEAlutZiSxN6Y47
+	N8uTyeT3tJtmgtireJmH1aY8H0lO1NfcQPTGDRaSzhisGF8DPIGTUm0cBHBB
+X-Google-Smtp-Source: AGHT+IFTFjNnoCdcMcUnL9iB5Dv1T1XNqt9/pyHkPbDxRK6LvjdBTLlprpUQwwXkrHl599u7h7JCdg==
+X-Received: by 2002:a50:d541:0:b0:566:f5d6:4b4 with SMTP id f1-20020a50d541000000b00566f5d604b4mr266667edj.12.1709933891881;
+        Fri, 08 Mar 2024 13:38:11 -0800 (PST)
+Received: from andrea ([31.189.122.3])
+        by smtp.gmail.com with ESMTPSA id fg3-20020a056402548300b005656bbb5b3fsm158817edb.63.2024.03.08.13.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 13:38:11 -0800 (PST)
+Date: Fri, 8 Mar 2024 22:38:09 +0100
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Kenneth-Lee-2012@foxmail.com
+Cc: Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
+	paulmck@kernel.org
+Subject: Re: Question about PB rule of LKMM
+Message-ID: <ZeuFQdk/zcjkILbC@andrea>
+References: <tencent_744E0AF832049C200F96FD6582D5114D7F0A@qq.com>
+ <ZeipiSVLR01jmM6b@andrea>
+ <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
+ <ZejC+lutRuwXQrMz@andrea>
+ <Zenip+8BDM3p+MUh@andrea>
+ <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
+ <ZeoFBkB1BeTdEQsn@andrea>
+ <bde188b0-1c5b-4b3b-94de-395a52fc37ce@rowland.harvard.edu>
+ <ZeoQvj3l6moF9KdQ@andrea>
+ <tencent_3FCF3AA5E98BC9395F98803764A6B2F7CC07@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,91 +76,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87plw5pd2x.fsf@oracle.com>
+In-Reply-To: <tencent_3FCF3AA5E98BC9395F98803764A6B2F7CC07@qq.com>
 
-On Thu, Mar 07, 2024 at 08:22:30PM -0800, Ankur Arora wrote:
+> In the "THE HAPPENS-BEFORE RELATION: hb" section of explanation.txt,
+> it uses the following example to explain the prop relation:
 > 
-> Paul E. McKenney <paulmck@kernel.org> writes:
+> 	P0()
+> 	{
+> 		int r1;
 > 
-> > On Thu, Mar 07, 2024 at 07:15:35PM -0500, Joel Fernandes wrote:
-> >>
-> >>
-> >> On 3/7/2024 2:01 PM, Paul E. McKenney wrote:
-> >> > On Wed, Mar 06, 2024 at 03:42:10PM -0500, Joel Fernandes wrote:
-> >> >> Hi Ankur,
-> >> >>
-> >> >> On 3/5/2024 3:11 AM, Ankur Arora wrote:
-> >> >>>
-> >> >>> Joel Fernandes <joel@joelfernandes.org> writes:
-> >> >>>
-> >> >> [..]
-> >> >>>> IMO, just kill 'voluntary' if PREEMPT_AUTO is enabled. There is no
-> >> >>>> 'voluntary' business because
-> >> >>>> 1. The behavior vs =none is to allow higher scheduling class to preempt, it
-> >> >>>> is not about the old voluntary.
-> >> >>>
-> >> >>> What do you think about folding the higher scheduling class preemption logic
-> >> >>> into preempt=none? As Juri pointed out, prioritization of at least the leftmost
-> >> >>> deadline task needs to be done for correctness.
-> >> >>>
-> >> >>> (That'll get rid of the current preempt=voluntary model, at least until
-> >> >>> there's a separate use for it.)
-> >> >>
-> >> >> Yes I am all in support for that. Its less confusing for the user as well, and
-> >> >> scheduling higher priority class at the next tick for preempt=none sounds good
-> >> >> to me. That is still an improvement for folks using SCHED_DEADLINE for whatever
-> >> >> reason, with a vanilla CONFIG_PREEMPT_NONE=y kernel. :-P. If we want a new mode
-> >> >> that is more aggressive, it could be added in the future.
-> >> >
-> >> > This would be something that happens only after removing cond_resched()
-> >> > might_sleep() functionality from might_sleep(), correct?
-> >>
-> >> Firstly, Maybe I misunderstood Ankur completely. Re-reading his comments above,
-> >> he seems to be suggesting preempting instantly for higher scheduling CLASSES
-> >> even for preempt=none mode, without having to wait till the next
-> >> scheduling-clock interrupt. Not sure if that makes sense to me, I was asking not
-> >> to treat "higher class" any differently than "higher priority" for preempt=none.
-> >>
-> >> And if SCHED_DEADLINE has a problem with that, then it already happens so with
-> >> CONFIG_PREEMPT_NONE=y kernels, so no need special treatment for higher class any
-> >> more than the treatment given to higher priority within same class. Ankur/Juri?
-> >>
-> >> Re: cond_resched(), I did not follow you Paul, why does removing the proposed
-> >> preempt=voluntary mode (i.e. dropping this patch) have to happen only after
-> >> cond_resched()/might_sleep() modifications?
-> >
-> > Because right now, one large difference between CONFIG_PREEMPT_NONE
-> > an CONFIG_PREEMPT_VOLUNTARY is that for the latter might_sleep() is a
-> > preemption point, but not for the former.
+> 		WRITE_ONCE(x, 1);
+> 		r1 = READ_ONCE(x);
+> 	}
 > 
-> True. But, there is no difference between either of those with
-> PREEMPT_AUTO=y (at least right now).
+> 	P1()
+> 	{
+> 		WRITE_ONCE(x, 8);
+> 	}
 > 
-> For (PREEMPT_AUTO=y, PREEMPT_VOLUNTARY=y, DEBUG_ATOMIC_SLEEP=y),
-> might_sleep() is:
+> if r1 = 8, we can deduce P0:Wx1 ->coe P1:Wx8 ->rfe P0:Rx, this can be
+> explained with the operational model. But according to the definition of
+> prop,
 > 
-> # define might_resched() do { } while (0)
-> # define might_sleep() \
->         do { __might_sleep(__FILE__, __LINE__); might_resched(); } while (0)
+>   let prop = [Marked] ; (overwrite & ext)? ; cumul-fence* ; [Marked] ; rfe? ; [Marked]
 > 
-> And, cond_resched() for (PREEMPT_AUTO=y, PREEMPT_VOLUNTARY=y,
-> DEBUG_ATOMIC_SLEEP=y):
-> 
-> static inline int _cond_resched(void)
-> {
->         klp_sched_try_switch();
->         return 0;
-> }
-> #define cond_resched() ({                       \
->         __might_resched(__FILE__, __LINE__, 0); \
->         _cond_resched();                        \
-> })
-> 
-> And, no change for (PREEMPT_AUTO=y, PREEMPT_NONE=y, DEBUG_ATOMIC_SLEEP=y).
+> The link should contain a cumul-fence, which doesn't exist in the
+> example.
 
-As long as it is easy to restore the prior cond_resched() functionality
-for testing in the meantime, I should be OK.  For example, it would
-be great to have the commit removing the old functionality from
-cond_resched() at the end of the series,
+Remark that, in the CAT language, the identity relation ({(e, e) : each event e})
+is a subset of R* (the _reflexive_-transitive closure of R) for any relation R.
 
-							Thanx, Paul
+The link at stake, (P0:Wx1, P0:Rx), is the result of the following composition:
+
+  [Marked]         ; (overwrite & ext)? ; cumul-fence*     ; [Marked]          ; rfe?            ; [Marked]
+  (P0:Wx1, P0:Wx1)   (P0:Wx1, P1:Wx8)     (P1:Wx8, P1:Wx8)   (P1:Wx8, P1:Wx8))   (P1:Wx8, P0:Rx)   (P0:Rx, P0:Rx)
+
+  Andrea
