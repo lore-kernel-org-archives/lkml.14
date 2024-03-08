@@ -1,195 +1,157 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474C055E57;
-	Fri,  8 Mar 2024 12:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553E855E57
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709899978; cv=none; b=PsXoYMOthFQhtml6VBnuCdKu3ZMYEbsJg/9VZuo8kdZwqHn+CL43aZViejFdtOk3V3JFLqwSFlyiuy5r2wAWzbWxokyABIFOw1tIkeqBp4NkVOzNAOMtmCEYnBiYKoU5zzwEJ7minqv9kIA+zQF/n/kJl0XICqAfGyGGARmNufw=
+	t=1709900015; cv=none; b=NBFxoRl8WO7YeQiTRpAJqk+WitD12H+EB1EGNznGIA0mH5fkkgLfqgYmouofGOUnBeRtLGU74N+uRsgtMtd9Ekvk65BpebcPo6kzxVpR4Pi5NcW/ECtzjCaIZrtSLmCtKrslBmao+K6CzpEUrMsFUGZaVJNkQTj0i0WadW60Sb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709899978; c=relaxed/simple;
-	bh=K2sCIAlU6dXk5ratr4Vv5OEgr6af+7vpwMRF89XMaYU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PF3a6vdqR9P1G20Pp/1D+SMR4s4rd7rPsUY4nOOeVjo3+nXOaCQL0gSn9WBqXBU4w6BNrSSlcPCImSc7tUd6w72p8K2QVs4WQ38zgZXP6OcrpQn+4ONaww3kKjGd223fKO/uMxXyin3rDYQnPSghlBHyskQC6wnZe0r5LOHKktE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=J64+HuIP; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709900015; c=relaxed/simple;
+	bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X1cJXgz7E7hOTgrwlpoQ08TwHWPI0nLWHr3+eK2BGISGy6KPMFGnQd/vC7Ch3JJt2YqAsuLIHBrYax7OwI++rVV7RlwxKc37AoKLwPZb2s1iJd9Nu2EpGDjPgGN4pe2Y7f9jPENw6W31e8ZoEqTmnZ2B+AliQq67b1QElXkMc4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XW/ufEFY; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="J64+HuIP"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e655a12c81so1621944b3a.1;
-        Fri, 08 Mar 2024 04:12:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709899975; x=1710504775;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6o7+NY2dQ7MkSysTTxlBFTXs4hpEZRChFXdmrSC3bNU=;
-        b=XGTDS6gKtqutu9iV5T3Ql5VzlrWjb7Arrk1nHLRidcxEgtcCtG5EL2mrYSHbLzu8on
-         Chcl6a02N0mUtFD02kqfFUVho9d7h5k6IQD0/thzLrpNdPiT+SLm1+GlskJBPXLqFzA1
-         l5fasZoOidp0wviv1WKjR+lr5t68ycnYSSYOEO30u76/Nd8buncXQowZyibMVWADZSgX
-         hymryPowxhi9kiqnJEE2Yxg/1Th9dmyMVlV19NjC/j43KrpxR/OYGIKa4KxtyMtYV4N7
-         OYelkwyNfrz7cJ0lC6a22PKA32jfUL+YV4JFQDpLwAaj1nXLtQEBiRklxJnwKcx9VB8I
-         LAEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGUbSjmDvrZJ3ju6HwkzD4pFWqzuKKlh20FgJX7S1uJYrz5Cqe+4deUR47fbO06Wig3XuEkzL2MaPmq/mp0FHUF6JKPn7/ZQ6ZoudL
-X-Gm-Message-State: AOJu0YxnbVfXT62XAI3BhJ/vSysDeXjuQN4SkUuzilYPmzUBgjRmNiAZ
-	P/Wr94CUooIKR7KfSjg2SdoZld09CwXTRhFcnff4nvvQazpmAd1I
-X-Google-Smtp-Source: AGHT+IFBEJu0m/gXsSid5i1KOm+ANI8Pj+R4gkyVkj9EKHng9vTBwDLzP/m+KMVXIVH1efJ0nwkY5g==
-X-Received: by 2002:a17:902:e5c9:b0:1dc:c8b3:9376 with SMTP id u9-20020a170902e5c900b001dcc8b39376mr76845plf.7.1709899975314;
-        Fri, 08 Mar 2024 04:12:55 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id y7-20020a17090322c700b001d9d4375149sm16094710plg.215.2024.03.08.04.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 04:12:54 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1709899973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6o7+NY2dQ7MkSysTTxlBFTXs4hpEZRChFXdmrSC3bNU=;
-	b=J64+HuIPw1LXPn6yF1yJq5QwpYBGqgFFLdjInSVhKkoyn1Qe43pyQ+AVT/G3MBhSKjW5LK
-	HOKpjaC8t4Hg/PBgS8EM0EGYDtzbYkVfjazuRBQizEI55Z1+w7q3ZCt3RGz5eLHoL8EJuX
-	ZfVCcxHnMDbx/d/MBdHf9kqe++cMWMiFSdhRhkKQjqwKsEOxdse5qBjTqpg/1AWBWsPO+D
-	KMuWJl9wXeT4N8k4LaGYidXFMhN8mW34c4Vzy5xIj3JR0+kbn0YIzY2hb5wAgy3eNu9yg7
-	Ush6EFdY/QlXc99/XD8weFvMHTZESYsH+m5cxsa62q6TkNEUuKckD7bM1WNZdA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Fri, 08 Mar 2024 09:12:47 -0300
-Subject: [PATCH v2] bcachefs: chardev: make bch_chardev_class constant
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XW/ufEFY"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id C6D4D240103
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:04:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1709899492; bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
+	 Content-Transfer-Encoding:From;
+	b=XW/ufEFYmNghRO9/dJpnthQiWG7F4dM+r84VMWzKXpuhutstXjOfZcZVwq8eD5q01
+	 t4A8Ln8tyESKKT1F6ZDp2vvod4+GJ7xKCv/k3vNStrYVmHZGYm+8mPempnvYqOJvsy
+	 IO9XVYJdX5DGKgBSmWI1didokQ4Zwy6/Yw8gwX+WhVYHBIzKqvPi6WSiMymB3u5izt
+	 Yf8NnyPMgTePJtbcEKA4zif/FT+3mHfKD72jAPe46dZ/iqkTenldUYejPs87ZQKjMS
+	 l5nLQnXLx/7SfOCKQZl+LRa93RQa0mTE6wLfu1jmAoiwZ5HB6zR5xp54LSrOd1Qs5a
+	 PYDPrkir/LokA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4TrlGQ6hCkz6tm4;
+	Fri,  8 Mar 2024 13:04:46 +0100 (CET)
+From: Anne Macedo <retpolanne@posteo.net>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Anne Macedo <retpolanne@posteo.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v0] perf lock contention: skip traceiter functions
+Date: Fri,  8 Mar 2024 12:03:31 +0000
+Message-Id: <20240308120332.372810-1-retpolanne@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240308-bcachefs-v2-1-3e84c845055e@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAL4A62UC/23MQQ7CIBCF4as0sxYDlLbiynuYLgAHmUSpgYZoG
- u4udu3yf3n5NsiYCDOcuw0SFsq0xBby0IELJt6R0a01SC4V7/nArDMuoM9MTkZZe7LaKw/t/kr
- o6b1T17l1oLwu6bPLRfzWP0gRTDDVj0KPKIdJ6svTpAdhwmPEFeZa6xf0xh6jowAAAA==
-To: Kent Overstreet <kent.overstreet@linux.dev>, 
- Brian Foster <bfoster@redhat.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Hongbo Li <lihongbo22@huawei.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3348; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=K2sCIAlU6dXk5ratr4Vv5OEgr6af+7vpwMRF89XMaYU=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl6wDBHcpFMUWrsbq8OZSINLnfyVLs1ZsmFSIOt
- X0eqOY8jkyJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZesAwQAKCRDJC4p8Y4ZY
- poZcEACrCm1DrTpffhSMz45nWyULhbZuxUB44yhj+rBzxvuC1bdxtZTZJZJs+PvI0oPDgX9Gqee
- 1AiHIlbk2zjKT4gZAUT+qNGBEOe8kpI/z1IZ7fgdXjMnU1bQnQZfkczQxkw+BMcLsEnd6e9b+1x
- o6EG02mGj+tjMcKTw40lUdzC7PPs5JH3Ai4nMRsXAZ+Mshbz4Ao4flVqEstTC4+OaRjN8P4LXOC
- 11Em7aSmlmKn05SktoRXdePNktwV3tzzFveOLBalpSF/mmzuCy7twRCBMVXZUKD7CAHNfkZQEyL
- iX1yKITREn3GeCdm8s9qK4diTskAFq0OCJJFughPaRn+wlYNb7BTMJFrE9X1m4GdM3PxtqH/15X
- G3biqC3KUINOtG4oE76Xuear3hlZyLyUt+30Z764J6X0ziJQFTb+2cnjDGFv8Ti7OwpkcaHzWcc
- PONZGw68NH/APdE+f7+abOJckuYCuoHFCmETs7ud4qxx2VAoub6yu0Gl+otbGUi9w8Td01mRKXp
- HPL201nmB7J5b9O96EhUJwr6qP0IltpLBUpqqH6VjF8t3WnCZltADX01mRu6Ye3gfD1iLNkk7Ne
- jeksoBsn2+RsvF+pf0pzXsKitEtMYrG/n+BBZtFirXw54Pwgi/7XZIfNUjd5n4bA7yzVQ+xLPgI
- NVX5XIxEP/Ri8VQ==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Transfer-Encoding: 8bit
 
-Since commit 43a7206b0963 ("driver core: class: make class_register() take
-a const *"), the driver core allows for struct class to be in read-only
-memory, so move the bch_chardev_class structure to be declared at build
-time placing it into read-only memory, instead of having to be dynamically
-allocated at boot time. Also, correctly clean up after failing paths in
-bch2_chardev_init().
+The perf lock contention program currently shows the caller of the locks
+as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
+from the traceiter itself. Instead, it should show the real callers for
+the locks.
 
-Cc: Hongbo Li <lihongbo22@huawei.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+When fiddling with the --stack-skip parameter, the actual callers for
+the locks start to show up. However, just ignore the
+__traceiter_contention_begin and the __traceiter_contention_end symbols
+so the actual callers will show up.
+
+Before this patch is applied:
+
+sudo perf lock con -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
+         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
+         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
+         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
+         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
+         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
+         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+
+Before this patch is applied - using --stack-skip 5
+
+sudo perf lock con --stack-skip 5 -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
+         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
+         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
+         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
+         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
+         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
+         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
+
+After this patch is applied:
+
+sudo ./perf lock con -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         6      5.27 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
+         2      2.99 s       2.99 s       1.50 s      spinlock   do_send_sig_info+0x3c
+         2      1.77 s       1.77 s     884.39 ms     spinlock   sigprocmask+0x98
+         2      1.76 s       1.76 s     878.56 ms     rwlock:W   do_exit+0x338
+         2      1.76 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
+         5      1.76 s       1.76 s     351.41 ms     rwlock:W   do_exit+0x338
+         1     48.10 ms     48.10 ms     48.10 ms        mutex   trace_contention_begin+0x84
+         4    257.80 us    119.34 us     64.45 us     spinlock   get_signal+0x108
+         1      9.33 us      9.33 us      9.33 us     rwlock:W   do_exit+0x338
+
+Signed-off-by: Anne Macedo <retpolanne@posteo.net>
 ---
-Changes in v2:
-- Used "free the last thing" pattern in bch2_chardev_init().
-- Link to v1: https://lore.kernel.org/r/20240305-bcachefs-v1-1-436196e25729@marliere.net
----
- fs/bcachefs/chardev.c | 35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ tools/perf/util/machine.c | 10 ++++++++++
+ tools/perf/util/machine.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
-index 226b39c17667..dc09f547dae6 100644
---- a/fs/bcachefs/chardev.c
-+++ b/fs/bcachefs/chardev.c
-@@ -940,7 +940,9 @@ static const struct file_operations bch_chardev_fops = {
- };
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 527517db3182..8e729167c1aa 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3266,6 +3266,12 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
  
- static int bch_chardev_major;
--static struct class *bch_chardev_class;
-+static const struct class bch_chardev_class = {
-+	.name = "bcachefs",
-+};
- static struct device *bch_chardev;
- 
- void bch2_fs_chardev_exit(struct bch_fs *c)
-@@ -957,7 +959,7 @@ int bch2_fs_chardev_init(struct bch_fs *c)
- 	if (c->minor < 0)
- 		return c->minor;
- 
--	c->chardev = device_create(bch_chardev_class, NULL,
-+	c->chardev = device_create(&bch_chardev_class, NULL,
- 				   MKDEV(bch_chardev_major, c->minor), c,
- 				   "bcachefs%u-ctl", c->minor);
- 	if (IS_ERR(c->chardev))
-@@ -968,32 +970,39 @@ int bch2_fs_chardev_init(struct bch_fs *c)
- 
- void bch2_chardev_exit(void)
- {
--	if (!IS_ERR_OR_NULL(bch_chardev_class))
--		device_destroy(bch_chardev_class,
--			       MKDEV(bch_chardev_major, U8_MAX));
--	if (!IS_ERR_OR_NULL(bch_chardev_class))
--		class_destroy(bch_chardev_class);
-+	device_destroy(&bch_chardev_class, MKDEV(bch_chardev_major, U8_MAX));
-+	class_unregister(&bch_chardev_class);
- 	if (bch_chardev_major > 0)
- 		unregister_chrdev(bch_chardev_major, "bcachefs");
- }
- 
- int __init bch2_chardev_init(void)
- {
-+	int ret;
+ 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
+ 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
 +
- 	bch_chardev_major = register_chrdev(0, "bcachefs-ctl", &bch_chardev_fops);
- 	if (bch_chardev_major < 0)
- 		return bch_chardev_major;
- 
--	bch_chardev_class = class_create("bcachefs");
--	if (IS_ERR(bch_chardev_class))
--		return PTR_ERR(bch_chardev_class);
-+	ret = class_register(&bch_chardev_class);
-+	if (ret)
-+		goto major_out;
- 
--	bch_chardev = device_create(bch_chardev_class, NULL,
-+	bch_chardev = device_create(&bch_chardev_class, NULL,
- 				    MKDEV(bch_chardev_major, U8_MAX),
- 				    NULL, "bcachefs-ctl");
--	if (IS_ERR(bch_chardev))
--		return PTR_ERR(bch_chardev);
-+	if (IS_ERR(bch_chardev)) {
-+		ret = PTR_ERR(bch_chardev);
-+		goto class_out;
-+	}
- 
- 	return 0;
++		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
++		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
 +
-+class_out:
-+	class_unregister(&bch_chardev_class);
-+major_out:
-+	unregister_chrdev(bch_chardev_major, "bcachefs-ctl");
-+	return ret;
- }
++		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_end", &kmap);
++		machine->traceiter.text_end = map__unmap_ip(kmap, sym->start);
+ 	}
  
- #endif /* NO_BCACHEFS_CHARDEV */
-
----
-base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-change-id: 20240305-bcachefs-27a4bb8b9f4f
-
-Best regards,
+ 	/* failed to get kernel symbols */
+@@ -3280,5 +3286,9 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+ 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
+ 		return true;
+ 
++	/* traceiter functions are in traceiter text section  */
++	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
++		return true;
++
+ 	return false;
+ }
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index e28c787616fe..ec51e9b080b9 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -49,7 +49,7 @@ struct machine {
+ 	struct {
+ 		u64	  text_start;
+ 		u64	  text_end;
+-	} sched, lock;
++	} sched, lock, traceiter;
+ 	pid_t		  *current_tid;
+ 	size_t		  current_tid_sz;
+ 	union { /* Tool specific area */
 -- 
-Ricardo B. Marliere <ricardo@marliere.net>
+2.39.2
 
