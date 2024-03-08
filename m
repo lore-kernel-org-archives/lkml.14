@@ -1,170 +1,113 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing1.flk.host-h.net (outgoing1.flk.host-h.net [188.40.0.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2175C24A06;
-	Fri,  8 Mar 2024 17:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F272421E;
+	Fri,  8 Mar 2024 17:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709917319; cv=none; b=BI+YJRueqfPlmNSS93v3ZTKbpkIp6Manyi8+VmoOYwe7NOdI8oNBOpevnUDYtxp9LZZN0PsIxiKFaXxP5PMoyJysSxmRQgTH6G25E/lets9KMFI+RZwnkq0sAbNWlgKhR3wl/mGwnySQmXrKs3hD41ziY+aZ/YuiLCwulza3nhg=
+	t=1709917322; cv=none; b=HOT31gJDPvLicnd0N5YJTmbFR/pNn6N2IcmNYNts8If+L9XdLQtAedV+09wde98yOh1dmrmgev9k/to+I5Dtu97Upgr+buvVMLdXWr2gp7NQiPxhFLYZ2u4vajOZAwSiWGE8SZ6WnRl7cgU86xL5DtY/mgtUNZe4fcD2nEhEPus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709917319; c=relaxed/simple;
-	bh=v8F5DoNlHt0mR7veIGDJ45cx2qJsTw433pwoyOQmQcg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pCdQBq0oUDyULOfsMf4Zo1tKq4/cCuRXT1+VRCRbJ4pY3wQnEU1dE6OpfBWzgOugFhnd9g0Gbnn+jHlZVkHyKR4GTvNvbJNEZ2wU/V2VIr1S9vWGTf9NIus7S6ylcnzXgQXBlvWjPfkIdFMHogiQHydS3JpzzKnQFn6HAAWPkeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=asYXEOeO; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1709917322; c=relaxed/simple;
+	bh=AccsSPF0jDJvCAdd9RMQg1UL432jF4z2EPF1mFPu/4U=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=ENiQfir4XRXRFLLVwYv3RU7O+br5UcFDYWjKaAnjZTUbh/S82nmvOKizlTX2BPhNYiZ1ftCqvgtoc1Yib7QEjrepBihHxzl3YZYneaZN1opVN2Ax7YlNJzEJMuabhZGbwF1PwXYFSZIWlgpNFepeiGpd0BRowvX4DlTut6OUNXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=s3msyLbE; arc=none smtp.client-ip=188.40.0.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="asYXEOeO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1709917272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=diVnTKGYmGTXMK2fWu9xl+JrtOVoNzvMtMZ/RN8kb8E=;
-	b=asYXEOeOdL6jGQoMvpH6GdoOvPbLs6Oe+mVG5gFHm6wp7SdIe+qgLPa7N8kq8+/JPpjQSC
-	RwuF9qGk9yGOLcB1IWwOu8VanOIdG9KqFHrdKB4cgTNHmV1FDPEjWK30Q1OMmz6SCHzGsg
-	GX4hHQky6fk+lU7IUyv/oWuXmJjHRLA=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Nuno Sa <nuno.sa@analog.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v8 5/6] iio: buffer-dmaengine: Support new DMABUF based userspace API
-Date: Fri,  8 Mar 2024 18:00:45 +0100
-Message-ID: <20240308170046.92899-6-paul@crapouillou.net>
-In-Reply-To: <20240308170046.92899-1-paul@crapouillou.net>
-References: <20240308170046.92899-1-paul@crapouillou.net>
+	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="s3msyLbE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=risingedge.co.za; s=xneelo; h=Message-ID:References:In-Reply-To:Subject:Cc:
+	To:From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:reply-to:
+	sender:bcc; bh=sRjl7XYl/PGRpGuJTyM07HHols00JQDh+d7SIJ99lF4=; b=s3msyLbEuJDiD1
+	EvIiS5TeOy8LnDzzJMrgZgRlGKJcKbYV2AgR2Y/bu1JpOUYQ++L5Z08crYWeXefo5mALmVz1Lh56p
+	I/cnm3vaL6qCuU9wmTEajKS+/UezYTYsCmAPozFvMhO6E4AvXQhMupgvWykQRI6WdM8oMgi0PHvU7
+	BEptilxZhFeJg1Wtlz21ZnK8vRks+0805gFAxv8/dQ9JaDNZ7JpC+BeaCOl/fl/EPuAh1O2era/+S
+	MMiPzkjZO1ovOdgkrDlQD+tS4Qisrny0YECCPKW6bCrVqzTIbMtxqKmOawvmt26tXoyBM+pguUihr
+	B0+QRQx8JB9pCiEorWSw==;
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+	by antispam3-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1ridbU-006Zrv-Gq; Fri, 08 Mar 2024 19:01:54 +0200
+Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
+	by www31.flk1.host-h.net with esmtpa (Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1ridbT-0003Fr-KO; Fri, 08 Mar 2024 19:01:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date: Fri, 08 Mar 2024 19:01:51 +0200
+From: Justin Swartz <justin.swartz@risingedge.co.za>
+To: =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, linux-mips@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 1/3] mips: dts: ralink: mt7621: associate uart1_pins
+ with serial0
+In-Reply-To: <70822db4-d642-4180-9db8-eb0aa5728ef1@arinc9.com>
+References: <20240308155616.11742-1-justin.swartz@risingedge.co.za>
+ <20240308155616.11742-2-justin.swartz@risingedge.co.za>
+ <70822db4-d642-4180-9db8-eb0aa5728ef1@arinc9.com>
+Message-ID: <bec06da5c4099898d9e531181d0797ca@risingedge.co.za>
+X-Sender: justin.swartz@risingedge.co.za
+User-Agent: Roundcube Webmail/1.3.17
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+Ii1571bF7nYhcAwAFtCT5PUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
+ WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
+ 3T+KSG//gbuP7hnUK8NQdLwsVWKIFDZRrTGv3rxiw9tFrqFSCFNiLZt/QXQnOBRD+jq1HsKsDh/6
+ Srgk2K3gr1VBfJbChkYH6fbrypLNrde+UooQVNLReLErukdelEOHUIpaBbp5GdnsN8+UvimwMinK
+ 0+Txhz2u9qvrL2PODYgMZQApJXOjDLkqunZ9NcY2bHZn7CfFscMZZf3sCkN20I5vMh4akiObI7Kj
+ vK7X04QEin24qbfMFd8eGjnYW8aSH5qj4ujh/13psIvqSqJFa1CcANErDW/w69saM9prk3jNnHtn
+ nuEt/J9wDZeQfiNOYsLDFBdwYt2XtlLzy7G7T4kla0JNnAWQx3FS11bhwUa9HCIwKB+TroNcRY33
+ oNmH4nRQzHQazgY7lmveanvOdQzf6IMJ3345q/s6ySNrGnXycmhg3NT7e1QHD5IMWQJA50ktgR2o
+ naNQbqJUPRwZtKOTN8gOLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
+ ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz30+tdk6yIuh9K7v+Nq0Cm3JVhle6
+ F/kpBdN+oWjoATjEFDwcaiz0R34rhTN+GTbl4uS+pZovX9cex7Ac4fawcerGI7TrGXpM/B/M0BZd
+ PfIU1BX7pZc1sE3vsz58auH/srM2fgZ9JmgLbj7sqoEiwv7LCxIiAE5ODMnmwjvj2589zjbyZCiM
+ WpBpW8YvoIIqmZcWhL/r/eFjMjJnMHeiAPOVAT1rE1/vP68Bb4z3v3h3gCdXrv2+9GnNX30LKqXb
+ fwFKgm/rnYBl+Mj5KqOl6Jzub/f3QhLRbOgisvi5VU9eNBtgo6zjiatjNO/pnMCjuIvXs/AyV/Ns
+ URB/R+FlEHyAzksgfaRvdgw0WK34QWnzHHMcN6qoXPjenLhIOF1oeRYbjF1Hp647mOWoQlc3hL3c
+ dBMSQgQtiTUcJp5roVy0aRtSNV8PU3+FWuyIQnbx8eB4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
+ F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV2Jt
+ unc/A+T40yFOxOeH+1yxtZHZOXSNzt6etGjYKTk8Ibtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
+ Lhk4HCeZR7ymlGVRtthBJ2y8A5arx6JItKpFaUNPGMMlvbMX0nyK1NiAJ0y2Qvvn6ds6mor35w4f
+ SfHzQbABJfgy21HclcZkPRq7NhoxyMwqi8Q23Rgadfh5T5n5D4OHHpbEIgsllZKWnzc5M5WlNtVJ
+ qo05MS+4ayUpOtEhdxekWDmK9g==
+X-Report-Abuse-To: spam@antispamquarantine.host-h.net
 
-Use the functions provided by the buffer-dma core to implement the
-DMABUF userspace API in the buffer-dmaengine IIO buffer implementation.
+On 2024-03-08 18:14, Arınç ÜNAL wrote:
+> On 08/03/2024 18:56, Justin Swartz wrote:
+>> Add missing pinctrl-name and pinctrl-0 properties to declare
+>> that the uart1_pins group is associated with serial0.
+>> 
+>> Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> 
+> Reviewed-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> Please add the trailers from previous patch versions from now on.
 
-Since we want to be able to transfer an arbitrary number of bytes and
-not necesarily the full DMABUF, the associated scatterlist is converted
-to an array of DMA addresses + lengths, which is then passed to
-dmaengine_prep_slave_dma_array().
+What do you mean by trailers?
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-
----
-v3: Use the new dmaengine_prep_slave_dma_array(), and adapt the code to
-    work with the new functions introduced in industrialio-buffer-dma.c.
-
-v5: - Use the new dmaengine_prep_slave_dma_vec().
-    - Restrict to input buffers, since output buffers are not yet
-      supported by IIO buffers.
-
-v6: - Populate .lock_queue / .unlock_queue callbacks
-    - Switch to atomic memory allocations in .submit_queue, because of
-      the dma_fence critical section
-    - Make sure that the size of the scatterlist is enough
-
-v7: Adapted patch for the changes made in patch 1.
----
- .../buffer/industrialio-buffer-dmaengine.c    | 59 +++++++++++++++++--
- 1 file changed, 53 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index a18c1da292af..3b7b649f0a89 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -64,15 +64,55 @@ static int iio_dmaengine_buffer_submit_block(struct iio_dma_buffer_queue *queue,
- 	struct dmaengine_buffer *dmaengine_buffer =
- 		iio_buffer_to_dmaengine_buffer(&queue->buffer);
- 	struct dma_async_tx_descriptor *desc;
-+	struct scatterlist *sgl;
-+	struct dma_vec *vecs;
- 	dma_cookie_t cookie;
-+	size_t len_total;
-+	size_t max_size;
-+	unsigned int i;
-+	int nents;
- 
--	block->bytes_used = min(block->size, dmaengine_buffer->max_size);
--	block->bytes_used = round_down(block->bytes_used,
--			dmaengine_buffer->align);
-+	if (queue->buffer.direction != IIO_BUFFER_DIRECTION_IN) {
-+		/* We do not yet support output buffers. */
-+		return -EINVAL;
-+	}
- 
--	desc = dmaengine_prep_slave_single(dmaengine_buffer->chan,
--		block->phys_addr, block->bytes_used, DMA_DEV_TO_MEM,
--		DMA_PREP_INTERRUPT);
-+	if (block->sg_table) {
-+		sgl = block->sg_table->sgl;
-+		nents = sg_nents_for_len(sgl, block->bytes_used);
-+		if (nents < 0)
-+			return nents;
-+
-+		vecs = kmalloc_array(nents, sizeof(*vecs), GFP_ATOMIC);
-+		if (!vecs)
-+			return -ENOMEM;
-+
-+		len_total = block->bytes_used;
-+
-+		for (i = 0; i < nents; i++) {
-+			vecs[i].addr = sg_dma_address(sgl);
-+			vecs[i].len = min(sg_dma_len(sgl), len_total);
-+			len_total -= vecs[i].len;
-+
-+			sgl = sg_next(sgl);
-+		}
-+
-+		desc = dmaengine_prep_peripheral_dma_vec(dmaengine_buffer->chan,
-+							 vecs, nents,
-+							 DMA_DEV_TO_MEM,
-+							 DMA_PREP_INTERRUPT, 0);
-+		kfree(vecs);
-+	} else {
-+		max_size = min(block->size, dmaengine_buffer->max_size);
-+		max_size = round_down(max_size, dmaengine_buffer->align);
-+		block->bytes_used = max_size;
-+
-+		desc = dmaengine_prep_slave_single(dmaengine_buffer->chan,
-+						   block->phys_addr,
-+						   block->bytes_used,
-+						   DMA_DEV_TO_MEM,
-+						   DMA_PREP_INTERRUPT);
-+	}
- 	if (!desc)
- 		return -ENOMEM;
- 
-@@ -120,6 +160,13 @@ static const struct iio_buffer_access_funcs iio_dmaengine_buffer_ops = {
- 	.data_available = iio_dma_buffer_data_available,
- 	.release = iio_dmaengine_buffer_release,
- 
-+	.enqueue_dmabuf = iio_dma_buffer_enqueue_dmabuf,
-+	.attach_dmabuf = iio_dma_buffer_attach_dmabuf,
-+	.detach_dmabuf = iio_dma_buffer_detach_dmabuf,
-+
-+	.lock_queue = iio_dma_buffer_lock_queue,
-+	.unlock_queue = iio_dma_buffer_unlock_queue,
-+
- 	.modes = INDIO_BUFFER_HARDWARE,
- 	.flags = INDIO_BUFFER_FLAG_FIXED_WATERMARK,
- };
--- 
-2.43.0
-
+Regards
+Justin
