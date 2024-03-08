@@ -1,440 +1,171 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987205BAE3;
-	Fri,  8 Mar 2024 19:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10D8833
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 19:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709925223; cv=none; b=EfgMIG4P3wFkKxVCFty4Cug+EzSA5FFknMDlRQJ7PS1g3QaFig9eKRmWXC1WzJ/8O47wHg8sEMar3x4XwGRer0OJ7r6K63A/J0EmPeECZcgavL8d3WyGswgD8nCZjgrWBCjwoGJB4R5UKxzHrlQKoWNNKlQbTPI+prGHGofHgGQ=
+	t=1709925550; cv=none; b=ViZOYZBKT8MMknIt7NOdyi9D63RN9fmtjjBMENNtZualfmugmFWLWv0HIyu3m5eX18ZLGk7JweK5blUJnABPF9KWaK/PWbaylQZv1y/dhN7Uiyn+dKsGfRVNkS1A2g30PFgiS+BA3QPDOEswl1ypGX+1t9+1aZCpUUoqZ5j7e8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709925223; c=relaxed/simple;
-	bh=4ItTlbapKw6ETlwOQk9dwCUItreERbi/LvAuxJwwa5I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qHNufzaj5UWO6v5tlHiDwoKkddvPmmw0E1LZcOemfE8oN0TIViB1W2niwDWD1U26TKcNKXAHpj70VlBa75Dw9GSy284gLM0CPD+umgBKETghnaB6nR3OoPVX29Hq/MGoWLMwtwV3yCdA4PLyzcs/1700OBDT6u8LnDSTRTdIHGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z98hbQ1/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709925550; c=relaxed/simple;
+	bh=AI/VQSRaeCsmw+yYPLV6oidtLSNkXOOIzRWcNKusNqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qhKRB5Po7NmJt9dtTDlKmHmrL0jRDoYMJDXFoKDkbGGeE0sJ8O9AcsNP2AwGeFXAN8R4Fs3qk1xtfAQ7O6jpqWMKcIJlRV2Wgb0rXEbN8SiuXd+abWGe4hSTKhA8XuXdJ0FccqyMo54SDqlGViGszc7NSJ+N/9mzuC6qFrWqN2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MuEJ1PD2; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z98hbQ1/"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 428IYsQm012705;
-	Fri, 8 Mar 2024 19:12:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=jsv4CZiqFBsQFM+GpwqULUHCWDpnf6Ip/p9k0VmyT0k=; b=Z9
-	8hbQ1/AICrz4TFyhkvD6ugUi9gHOCBpnm8r5ArIAXD7oNx4XBwUPSQ1eOJt8mTKn
-	Fi3mpV/sBxqf0ylpJhrzQbbhWYnZRlAAAQ94kOm89P6fd6D6oQ/rGJ1lMDKx6ZQS
-	tJ7SpVWl1OQxyBavo2wiQsbGLCqcS2pcw+fZiZl6QhFuogkrmWto6GXLqw1BTIf0
-	q+MD9Zz5wcYgpR5oIHi9ZUUzn6csBs7gRxQfHF9tO4/PpkdOr78jrnk2TVdTN7LW
-	2M1mdTRzgC1cUe0QfIAWfVUZX4rIRus9B3KZ3EaJDvefQZm3o3lxJbNcozznRM4d
-	ByFji2iJYkO5fKZpGckw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wr82x02xa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 19:12:31 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 428JCUVq023071
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 8 Mar 2024 19:12:30 GMT
-Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 8 Mar 2024 11:12:26 -0800
-From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
-        <olof@lixom.net>, <soc@kernel.org>, <guoren@kernel.org>,
-        <monstr@monstr.eu>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <dinguyen@kernel.org>, <chenhuacai@kernel.org>,
-        <tsbogend@alpha.franken.de>, <jonas@southpole.se>,
-        <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
-        <mpe@ellerman.id.au>, <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
-        <anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
-        <chris@zankel.net>, <jcmvbkbc@gmail.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH v4 3/4] of: reserved_mem: Use the unflatten_devicetree APIs to scan reserved mem. nodes
-Date: Fri, 8 Mar 2024 11:12:03 -0800
-Message-ID: <20240308191204.819487-4-quic_obabatun@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240308191204.819487-1-quic_obabatun@quicinc.com>
-References: <20240308191204.819487-1-quic_obabatun@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MuEJ1PD2"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33e686d60eeso985459f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 11:19:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709925547; x=1710530347; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UVPdnhePflx6M0Y1VqPM0q+L6FmThcZFrCpB9y8TiBA=;
+        b=MuEJ1PD2n49TouZ57wuNHEu1X6wcJMT8Np3lWYPNE3gIy/Ti3Ui7rigk5MnaEw6D2J
+         17iwIdg0Fw8emlmZSYStUQ9uKM2+y8PCgjlNiH7qtxap2vREb+dVesEDFXr0CCOp244w
+         t2C3Sf2Zl+DVZZSTyTi7yB37AHDUtNoTsyQW2IZ3Y6oBuJxPJL28zye4t8xMZT3EnFi8
+         e1wZvo0hbuh/RPD8wfzH25mukujJncymj3DS/Rpwj2o4eUD/TrneGG6pHs3vquogQpnH
+         r0Jzk2/joh+zfdWSkhcmknBkRw/yXTxpuD+WfwK7fpqIHEnGakv7ZX1DKB4eGVo7GuIM
+         TH5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709925547; x=1710530347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UVPdnhePflx6M0Y1VqPM0q+L6FmThcZFrCpB9y8TiBA=;
+        b=oEi0Q947BGIa23Ct1FwHd5J3qfakS7lTvdQb8cnx9M1JDQ2GP8nChzCrYQW8q9YT7O
+         SD7hRC9uYyhkuyEAKwtb+gkT0S0m11beRygb/+uFcjQHn3KXNEnBTXj3g4YjsLqFD+iT
+         29GQMuzjkVlhlQkzzn0sFKf8apzpXp8t0IwfbxWhUo4ZhHYk+ujtX+mRJwdqsUCXRVSk
+         2iCLE01eEH1GDJkTCv4OWy+xXCS8dt+03FGWtc6XeLobFdumKHTBQWKyT7ubqCGIeTmo
+         8H33dQrEM9wLx/vDC3KKrYa5lO2z2wNw21jNNND+KuNGcLJgNZmjKQCrTf11RM9i4bUf
+         aW7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzekZH91dHbyDaCFRyYc6/z3cC57JS7Or/MBWIPoBEML3BwqghVZiOHyzXnKIih/i1Fe2md2OrjtO4SiTfu6Sqrvgqrbs44UPMxZID
+X-Gm-Message-State: AOJu0YzKWpOOUfCbmDtxcZG45nTMkn+Mk2bYM8i0edZIWxECJUkS7PNR
+	8SVUGBTromqV687uvTwIT6+KSocufLHqzvrfo9lhIb53vF9KhYTziXLNdC+DHEffpJFz3JKiy9a
+	6L1LZGLQYK1yMx0R/8jq9jJijPeSydChi4GJ6
+X-Google-Smtp-Source: AGHT+IFdGFOuBjADdIEbMGndT4cXpVw7kecKfUL2+HPEl9NNfe2ePqIdDjMJZlqSnkKRRD4FdpkvD+coDIp1GVneajE=
+X-Received: by 2002:adf:fd89:0:b0:33d:aaba:aa66 with SMTP id
+ d9-20020adffd89000000b0033daabaaa66mr58532wrr.65.1709925547287; Fri, 08 Mar
+ 2024 11:19:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Bepm6DlQTpRFt33C9fflNh6-PTASB2s-
-X-Proofpoint-GUID: Bepm6DlQTpRFt33C9fflNh6-PTASB2s-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 phishscore=0 adultscore=0 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=944 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403080152
+References: <ZcWOh9u3uqZjNFMa@chrisdown.name> <20240229235134.2447718-1-axelrasmussen@google.com>
+ <ZeEhvV15IWllPKvM@chrisdown.name>
+In-Reply-To: <ZeEhvV15IWllPKvM@chrisdown.name>
+From: Axel Rasmussen <axelrasmussen@google.com>
+Date: Fri, 8 Mar 2024 11:18:28 -0800
+Message-ID: <CAJHvVch2qVUDTJjNeSMqLBx0yoEm4zzb=ZXmABbd_5dWGQTpNg@mail.gmail.com>
+Subject: Re: MGLRU premature memcg OOM on slow writes
+To: Chris Down <chris@chrisdown.name>
+Cc: cgroups@vger.kernel.org, hannes@cmpxchg.org, kernel-team@fb.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The unflatten_devicetree APIs have been setup and are available to be
-used by the time the fdt_init_reserved_mem() function is called.
-Since the unflatten_devicetree APIs are a more efficient way of scanning
-through the DT nodes, switch to using these APIs to facilitate the rest
-of the reserved memory processing.
+On Thu, Feb 29, 2024 at 4:30=E2=80=AFPM Chris Down <chris@chrisdown.name> w=
+rote:
+>
+> Axel Rasmussen writes:
+> >A couple of dumb questions. In your test, do you have any of the followi=
+ng
+> >configured / enabled?
+> >
+> >/proc/sys/vm/laptop_mode
+> >memory.low
+> >memory.min
+>
+> None of these are enabled. The issue is trivially reproducible by writing=
+ to
+> any slow device with memory.max enabled, but from the code it looks like =
+MGLRU
+> is also susceptible to this on global reclaim (although it's less likely =
+due to
+> page diversity).
+>
+> >Besides that, it looks like the place non-MGLRU reclaim wakes up the
+> >flushers is in shrink_inactive_list() (which calls wakeup_flusher_thread=
+s()).
+> >Since MGLRU calls shrink_folio_list() directly (from evict_folios()), I =
+agree it
+> >looks like it simply will not do this.
+> >
+> >Yosry pointed out [1], where MGLRU used to call this but stopped doing t=
+hat. It
+> >makes sense to me at least that doing writeback every time we age is too
+> >aggressive, but doing it in evict_folios() makes some sense to me, basic=
+ally to
+> >copy the behavior the non-MGLRU path (shrink_inactive_list()) has.
+>
+> Thanks! We may also need reclaim_throttle(), depending on how you impleme=
+nt it.
+> Current non-MGLRU behaviour on slow storage is also highly suspect in ter=
+ms of
+> (lack of) throttling after moving away from VMSCAN_THROTTLE_WRITEBACK, bu=
+t one
+> thing at a time :-)
 
-Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
----
- drivers/of/fdt.c                | 56 -----------------------
- drivers/of/of_private.h         |  4 +-
- drivers/of/of_reserved_mem.c    | 81 ++++++++++++++++++++++++++-------
- include/linux/of_fdt.h          |  1 -
- include/linux/of_reserved_mem.h |  2 +-
- kernel/dma/coherent.c           |  8 ++--
- kernel/dma/contiguous.c         |  8 ++--
- kernel/dma/swiotlb.c            | 10 ++--
- 8 files changed, 81 insertions(+), 89 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 2468360d6053..11630eba965c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -558,62 +558,6 @@ static int __init __reserved_mem_check_root(unsigned long node)
- 	return 0;
- }
- 
--/**
-- * fdt_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
-- * reserved memory regions.
-- *
-- * This function is used to scan through the DT and store the
-- * information for the reserved memory regions that are defined using
-- * the "reg" property. The region node number, name, base address, and
-- * size are all stored in the reserved_mem array by calling the
-- * fdt_reserved_mem_save_node() function.
-- */
--void __init fdt_scan_reserved_mem_reg_nodes(void)
--
--{
--	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
--	const void *fdt = initial_boot_params;
--	phys_addr_t base, size;
--	const __be32 *prop;
--	int node, child;
--	int len;
--
--	node = fdt_path_offset(fdt, "/reserved-memory");
--	if (node < 0) {
--		pr_err("Reserved memory: Did not find reserved-memory node\n");
--		return;
--	}
--
--	if (__reserved_mem_check_root(node)) {
--		pr_err("Reserved memory: unsupported node format, ignoring\n");
--		return;
--	}
--
--	fdt_for_each_subnode(child, fdt, node) {
--		const char *uname;
--
--		prop = of_get_flat_dt_prop(child, "reg", &len);
--		if (!prop)
--			continue;
--
--		if (!of_fdt_device_is_available(fdt, child))
--			continue;
--
--		uname = fdt_get_name(fdt, child, NULL);
--		if (len && len % t_len != 0) {
--			pr_err("Reserved memory: invalid reg property in '%s', skipping node.\n",
--			       uname);
--			continue;
--		}
--
--		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
--		size = dt_mem_next_cell(dt_root_size_cells, &prop);
--
--		if (size)
--			fdt_reserved_mem_save_node(child, uname, base, size);
--	}
--}
--
- int total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
- 
- /*
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 447b63413b39..aa8844318257 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -177,7 +177,7 @@ static inline struct device_node *__of_get_dma_parent(const struct device_node *
- }
- #endif
- 
--void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
--			       phys_addr_t base, phys_addr_t size);
-+void fdt_reserved_mem_save_node(struct device_node *node, const char *uname,
-+				phys_addr_t base, phys_addr_t size);
- 
- #endif /* _LINUX_OF_PRIVATE_H */
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 3c4373b021be..8d50a5178440 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -97,11 +97,65 @@ static int __init alloc_reserved_mem_array(void)
- 	return -1;
- }
- 
-+/**
-+ * dt_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
-+ * reserved memory regions.
-+ *
-+ * This function is used to scan through the DT and store the
-+ * information for the reserved memory regions that are defined using
-+ * the "reg" property. The region node number, name, base address, and
-+ * size are all stored in the reserved_mem array by calling the
-+ * fdt_reserved_mem_save_node() function.
-+ */
-+static void __init dt_scan_reserved_mem_reg_nodes(void)
-+{
-+	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
-+	struct device_node *node, *child;
-+	phys_addr_t base, size;
-+	const __be32 *prop;
-+	int len;
-+
-+	node = of_find_node_by_path("/reserved-memory");
-+	if (!node) {
-+		pr_err("Reserved memory: Did not find reserved-memory node\n");
-+		return;
-+	}
-+
-+	for_each_child_of_node(node, child) {
-+		const char *uname;
-+		struct reserved_mem *rmem;
-+
-+		if (!of_device_is_available(child))
-+			continue;
-+
-+		prop = of_get_property(child, "reg", &len);
-+		if (!prop) {
-+			rmem = of_reserved_mem_lookup(child);
-+			if (rmem)
-+				rmem->dev_node = child;
-+			continue;
-+		}
-+
-+		uname = of_node_full_name(child);
-+		if (len && len % t_len != 0) {
-+			pr_err("Reserved memory: invalid reg property in '%s', skipping node.\n",
-+			       uname);
-+			continue;
-+		}
-+
-+		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-+		size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+
-+		if (size)
-+			fdt_reserved_mem_save_node(child, uname, base, size);
-+	}
-+}
-+
- /*
-  * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
-  */
--void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
--				      phys_addr_t base, phys_addr_t size)
-+void __init fdt_reserved_mem_save_node(struct device_node *node, const char *uname,
-+				       phys_addr_t base, phys_addr_t size)
- {
- 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
- 
-@@ -110,7 +164,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 		return;
- 	}
- 
--	rmem->fdt_node = node;
-+	rmem->dev_node = node;
- 	rmem->name = uname;
- 	rmem->base = base;
- 	rmem->size = size;
-@@ -253,7 +307,7 @@ int __init __reserved_mem_alloc_size(unsigned long node, const char *uname)
- 		       uname, (unsigned long)(size / SZ_1M));
- 		return -ENOMEM;
- 	}
--	fdt_reserved_mem_save_node(node, uname, base, size);
-+	fdt_reserved_mem_save_node(NULL, uname, base, size);
- 	return 0;
- }
- 
-@@ -273,7 +327,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
- 		reservedmem_of_init_fn initfn = i->data;
- 		const char *compat = i->compatible;
- 
--		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
-+		if (!of_device_is_compatible(rmem->dev_node, compat))
- 			continue;
- 
- 		ret = initfn(rmem);
-@@ -306,11 +360,6 @@ static int __init __rmem_cmp(const void *a, const void *b)
- 	if (ra->size > rb->size)
- 		return 1;
- 
--	if (ra->fdt_node < rb->fdt_node)
--		return -1;
--	if (ra->fdt_node > rb->fdt_node)
--		return 1;
--
- 	return 0;
- }
- 
-@@ -352,23 +401,23 @@ void __init fdt_init_reserved_mem(void)
- 	if (ret)
- 		pr_err("Failed to allocate memory for reserved_mem array with err: %d", ret);
- 
--	fdt_scan_reserved_mem_reg_nodes();
-+	dt_scan_reserved_mem_reg_nodes();
- 
- 	/* check for overlapping reserved regions */
- 	__rmem_check_for_overlap();
- 
- 	for (i = 0; i < reserved_mem_count; i++) {
- 		struct reserved_mem *rmem = &reserved_mem[i];
--		unsigned long node = rmem->fdt_node;
-+		struct device_node *node = rmem->dev_node;
- 		int len;
- 		const __be32 *prop;
- 		int err = 0;
- 		bool nomap;
- 
--		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
--		prop = of_get_flat_dt_prop(node, "phandle", &len);
-+		nomap = of_get_property(node, "no-map", NULL) != NULL;
-+		prop = of_get_property(node, "phandle", &len);
- 		if (!prop)
--			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
-+			prop = of_get_property(node, "linux,phandle", &len);
- 		if (prop)
- 			rmem->phandle = of_read_number(prop, len/4);
- 
-@@ -384,7 +433,7 @@ void __init fdt_init_reserved_mem(void)
- 		} else {
- 			phys_addr_t end = rmem->base + rmem->size - 1;
- 			bool reusable =
--				(of_get_flat_dt_prop(node, "reusable", NULL)) != NULL;
-+				(of_get_property(node, "reusable", NULL)) != NULL;
- 
- 			pr_info("%pa..%pa (%lu KiB) %s %s %s\n",
- 				&rmem->base, &end, (unsigned long)(rmem->size / SZ_1K),
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 7b2a5d93d719..d69ad5bb1eb1 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -73,7 +73,6 @@ extern int early_init_dt_scan_root(void);
- extern bool early_init_dt_scan(void *params);
- extern bool early_init_dt_verify(void *params);
- extern void early_init_dt_scan_nodes(void);
--extern void fdt_scan_reserved_mem_reg_nodes(void);
- 
- extern const char *of_flat_dt_get_machine_name(void);
- extern const void *of_flat_dt_match_machine(const void *default_match,
-diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-index 2a3178920bae..e92babd669c2 100644
---- a/include/linux/of_reserved_mem.h
-+++ b/include/linux/of_reserved_mem.h
-@@ -10,7 +10,7 @@ struct reserved_mem_ops;
- 
- struct reserved_mem {
- 	const char			*name;
--	unsigned long			fdt_node;
-+	struct device_node		*dev_node;
- 	unsigned long			phandle;
- 	const struct reserved_mem_ops	*ops;
- 	phys_addr_t			base;
-diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-index ff5683a57f77..0db0aae83102 100644
---- a/kernel/dma/coherent.c
-+++ b/kernel/dma/coherent.c
-@@ -362,20 +362,20 @@ static const struct reserved_mem_ops rmem_dma_ops = {
- 
- static int __init rmem_dma_setup(struct reserved_mem *rmem)
- {
--	unsigned long node = rmem->fdt_node;
-+	struct device_node *node = rmem->dev_node;
- 
--	if (of_get_flat_dt_prop(node, "reusable", NULL))
-+	if (of_get_property(node, "reusable", NULL))
- 		return -EINVAL;
- 
- #ifdef CONFIG_ARM
--	if (!of_get_flat_dt_prop(node, "no-map", NULL)) {
-+	if (!of_get_property(node, "no-map", NULL)) {
- 		pr_err("Reserved memory: regions without no-map are not yet supported\n");
- 		return -EINVAL;
- 	}
- #endif
- 
- #ifdef CONFIG_DMA_GLOBAL_POOL
--	if (of_get_flat_dt_prop(node, "linux,dma-default", NULL)) {
-+	if (of_get_property(node, "linux,dma-default", NULL)) {
- 		WARN(dma_reserved_default_memory,
- 		     "Reserved memory: region for default DMA coherent area is redefined\n");
- 		dma_reserved_default_memory = rmem;
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index f005c66f378c..b54cf128a9d9 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -462,8 +462,8 @@ static const struct reserved_mem_ops rmem_cma_ops = {
- 
- static int __init rmem_cma_setup(struct reserved_mem *rmem)
- {
--	unsigned long node = rmem->fdt_node;
--	bool default_cma = of_get_flat_dt_prop(node, "linux,cma-default", NULL);
-+	struct device_node *node = rmem->dev_node;
-+	bool default_cma = of_get_property(node, "linux,cma-default", NULL);
- 	struct cma *cma;
- 	int err;
- 
-@@ -473,8 +473,8 @@ static int __init rmem_cma_setup(struct reserved_mem *rmem)
- 		return -EBUSY;
- 	}
- 
--	if (!of_get_flat_dt_prop(node, "reusable", NULL) ||
--	    of_get_flat_dt_prop(node, "no-map", NULL))
-+	if (!of_get_property(node, "reusable", NULL) ||
-+	    of_get_property(node, "no-map", NULL))
- 		return -EINVAL;
- 
- 	if (!IS_ALIGNED(rmem->base | rmem->size, CMA_MIN_ALIGNMENT_BYTES)) {
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index b079a9a8e087..ea1f734c8c35 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1732,12 +1732,12 @@ static const struct reserved_mem_ops rmem_swiotlb_ops = {
- 
- static int __init rmem_swiotlb_setup(struct reserved_mem *rmem)
- {
--	unsigned long node = rmem->fdt_node;
-+	struct device_node *node = rmem->dev_node;
- 
--	if (of_get_flat_dt_prop(node, "reusable", NULL) ||
--	    of_get_flat_dt_prop(node, "linux,cma-default", NULL) ||
--	    of_get_flat_dt_prop(node, "linux,dma-default", NULL) ||
--	    of_get_flat_dt_prop(node, "no-map", NULL))
-+	if (of_get_property(node, "reusable", NULL) ||
-+	    of_get_property(node, "linux,cma-default", NULL) ||
-+	    of_get_property(node, "linux,dma-default", NULL) ||
-+	    of_get_property(node, "no-map", NULL))
- 		return -EINVAL;
- 
- 	rmem->ops = &rmem_swiotlb_ops;
--- 
-2.34.1
+Hmm, so I have a patch which I think will help with this situation,
+but I'm having some trouble reproducing the problem on 6.8-rc7 (so
+then I can verify the patch fixes it).
 
+If I understand the issue right, all we should need to do is get a
+slow filesystem, and then generate a bunch of dirty file pages on it,
+while running in a tightly constrained memcg. To that end, I tried the
+following script. But, in reality I seem to get little or no
+accumulation of dirty file pages.
+
+I thought maybe fio does something different than rsync which you said
+you originally tried, so I also tried rsync (copying /usr/bin into
+this loop mount) and didn't run into an OOM situation either.
+
+Maybe some dirty ratio settings need tweaking or something to get the
+behavior you see? Or maybe my test has a dumb mistake in it. :)
+
+
+
+#!/usr/bin/env bash
+
+echo 0 > /proc/sys/vm/laptop_mode || exit 1
+echo y > /sys/kernel/mm/lru_gen/enabled || exit 1
+
+echo "Allocate disk image"
+IMAGE_SIZE_MIB=3D1024
+IMAGE_PATH=3D/tmp/slow.img
+dd if=3D/dev/zero of=3D$IMAGE_PATH bs=3D1024k count=3D$IMAGE_SIZE_MIB || ex=
+it 1
+
+echo "Setup loop device"
+LOOP_DEV=3D$(losetup --show --find $IMAGE_PATH) || exit 1
+LOOP_BLOCKS=3D$(blockdev --getsize $LOOP_DEV) || exit 1
+
+echo "Create dm-slow"
+DM_NAME=3Ddm-slow
+DM_DEV=3D/dev/mapper/$DM_NAME
+echo "0 $LOOP_BLOCKS delay $LOOP_DEV 0 100" | dmsetup create $DM_NAME || ex=
+it 1
+
+echo "Create fs"
+mkfs.ext4 "$DM_DEV" || exit 1
+
+echo "Mount fs"
+MOUNT_PATH=3D"/tmp/$DM_NAME"
+mkdir -p "$MOUNT_PATH" || exit 1
+mount -t ext4 "$DM_DEV" "$MOUNT_PATH" || exit 1
+
+echo "Generate dirty file pages"
+systemd-run --wait --pipe --collect -p MemoryMax=3D32M \
+        fio -name=3Dwrites -directory=3D$MOUNT_PATH -readwrite=3Drandwrite =
+\
+        -numjobs=3D10 -nrfiles=3D90 -filesize=3D1048576 \
+        -fallocate=3Dposix \
+        -blocksize=3D4k -ioengine=3Dmmap \
+        -direct=3D0 -buffered=3D1 -fsync=3D0 -fdatasync=3D0 -sync=3D0 \
+        -runtime=3D300 -time_based
