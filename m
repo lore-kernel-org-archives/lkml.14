@@ -1,128 +1,97 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3326DDDD7
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAF72107
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709916077; cv=none; b=QGVJ6N2L+fjMhhE9nv7f7qEhoM83r/D0RmYQuf/oHu2bIKKG+0Tzxw8mZiS5zmklTyVW24UVq+5OAr69D7uDQdA+i+kslr8x8la90CR+C87H0+aCc6s+ZGW+Gi47bo39rZn/IyIA8wHZG4I02gv8/U8ghttVtWl2+PeIeqTAS7s=
+	t=1709916204; cv=none; b=MIgcvqdS50+cBAQ55voyPj9AUtDc0P30p1qN0pgRrX9Nl+F5CcFB+BgGKllHV0HYSzd3MmAVcvCTS2/o2JKSnUIPA7Fpbbxh4h+5+iUu932WLKFZrw9kX43Yjk+t+oG6JVH97Ocet7R4+6e5yF3i1bus1LSADaMReKOxzEnHMz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709916077; c=relaxed/simple;
-	bh=E7xjUr7XFDIgxAuAR5skBYnGfcngAPHjHTPg0v/bj90=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A7mmg+qBWH9+4L+yiYwTMcoKqygT2Kj8LtZLZC0Zkll3dX2hu+csn8bE5SouGlSw4VPn2GcnMgU5c0gISQ8X3PegO5q7fR2SnafmKPSJQum2EAicS9CQ5aECm/HLe9TIGD0F5KCNPW/7aVUWnmBpgvZK/+cLShXSsMRQrLlbrYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=X8APzAw4; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709916204; c=relaxed/simple;
+	bh=r0ks+X+TrbMq/iO/OYuxGWhhqU2jbzwN9Ibe0O/43vI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BwhU9KzaJ1o5kR2L8O0ZPXeZzryKGuFO5o7thBzgc/7s2wwP/WUnfjuyWErsOro9AsTWEll2eVedyf+x+fvrymB3P5TAKjb2tOrFuaTZSGR+ypI/jGaBsckjAZR4P6ax3EWEY7kyKHX0janXO+wBd/69W86w7j7OxB4hBiJYGyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILvJamj0; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="X8APzAw4"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 2658B1CD4D4;
-	Fri,  8 Mar 2024 17:38:17 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709915897; bh=wYkGaMnNecZ484j/sTojyqfZAtdlr73D93VzoZo94XQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=X8APzAw4QGRrwmr7uU8EBQQaxdnUXixKcfd9Vy2bIaRqtOf5kFsoTuZNJJRCBwH76
-	 Y5OT/bsLx439Bwnr1nMTq85VUAx4SnXhTHkdwUrxfK88Z31Brx7MY9S3FaE5zt6r6+
-	 AOGk+0T7l3E6rahfyR3sNlMs/wdv+TiAY60PxgF8U8gRgPfHia7QiKS6CrAgtVabyP
-	 tCdn12xxZfn3/X/R9vQ8GMkbSRpgaimKOppaQQ71aNKjD1GK55ZrbJ2fRF13BNgHqs
-	 y6WrvJZxu57KnchJ5ah5QANXRSwEN0nHF2HGs0v50/yiEUaeuw2VDN7g+BQMy9D8rK
-	 JJGs1fkc6A0Iw==
-Date: Fri, 8 Mar 2024 17:38:16 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
- kernel-team@android.com, iommu@lists.linux.dev, Christoph Hellwig
- <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>, Dexuan Cui <decui@microsoft.com>,
- Nicolin Chen <nicolinc@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v6 6/6] swiotlb: Reinstate page-alignment for mappings
- >= PAGE_SIZE
-Message-ID: <20240308173816.5351ea58@meshulam.tesarici.cz>
-In-Reply-To: <5c7c7407-5356-4e12-a648-ae695fe0d1cb@arm.com>
-References: <20240308152829.25754-1-will@kernel.org>
-	<20240308152829.25754-7-will@kernel.org>
-	<5c7c7407-5356-4e12-a648-ae695fe0d1cb@arm.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILvJamj0"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56781070f38so5871555a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 08:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709916201; x=1710521001; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wyLxpmRa9vDZTdfVvWg2aO7vI6t1684BUA4BOk13UCE=;
+        b=ILvJamj0UlJSU9HjJJdSKT0C4/QfKmPOUuDvVu7Ztg3sfNcIPAScPPwO7UVS5XHhGz
+         Ee4hAgoi91Dn2ycb4q84Xqx6MuDlC7hNZ50E/a8ROg++IxfXmBkamaeRWQvEF8cDuG8X
+         nJbVZzeOCF/GeXZXqV+Lpde6lZuSG6Q816X1+Kc9YBoVtwqcqLD6r4LOWvL/cH74EHtH
+         TAhhMaRJdKugC9n2SwhlIhXR0q4s+nMCBvhQa+7YK+9KF39VR2WBLrQk9SFtL/lI9r9e
+         KCssxtGw2Qq2JUOzbcHCfnaWKGGY1CYAoGUjijiNkFUe2/oeG7NRPcxG+GTzUvcHvC3R
+         FNBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709916201; x=1710521001;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wyLxpmRa9vDZTdfVvWg2aO7vI6t1684BUA4BOk13UCE=;
+        b=CHMlm1ZUQPwUFnDekihntfJjJywMQ2TRbPVsY6ax2D1I3Vifo4hi8+64w2wIJnyGln
+         /koRVVWc7NxlSxyjQ/XIHDQX/g0V+TUOpwkUBkINtYLqfLvTRS2+k/nFqcQfDChsIBkM
+         qH4sG5NjczC3aduraZNb38UEPdF4vHdNG2wON2Wbc/0EXkw3OdcbDrvCzx7+IoY6NT+7
+         cF3IVmk4l79WXxasMlg3UfjK7GcbdWFlhM4Eedlg4Fr9Gd2CVnEFB3iVAJlLKXs/KFG9
+         1rj5a+daMdrIVTCwXzT9E/YjyH3KSYwj8fWp4NBv0p3iRZPrsxockd/4xHpLx73qOPtL
+         Vhig==
+X-Forwarded-Encrypted: i=1; AJvYcCXcOda1h0jTFVObbAI6UIdmbY+z8h/bDRP4PqCeoSjQDb5we5MXXteCMw1CFucOdF20XalABDPkelC0Y1V6wrlC/gBHKLsvUXAP1XTQ
+X-Gm-Message-State: AOJu0YwIO0P0oYp1/T5iccZmz+F7lnDsTNo9nkan0l6S6//D+f8JaxNO
+	2Bc9VKnf0Kn8Tmi1X42CD29lq7UOJU/UzXTtiYg5Il4CQuo1lNVLnb6kdrEVYOTg0pRWONmj17S
+	+0rC773xtHVJTyHXabRdWK/X2kFU=
+X-Google-Smtp-Source: AGHT+IEfeIZXRSqypmb9U/23WbS9AVqjeSavKZ/LF+/nDtBRuH3PxWvbMYSILot6HKmpEAjJZMAW26NHGxMVPhHoPl4=
+X-Received: by 2002:a17:907:2495:b0:a45:d7fb:8423 with SMTP id
+ zg21-20020a170907249500b00a45d7fb8423mr707357ejb.9.1709916201065; Fri, 08 Mar
+ 2024 08:43:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240308015435.100968-1-brookxu.cn@gmail.com> <20240308144208.GA9194@lst.de>
+ <CADtkEefTzbYN4qEAgAXDTB-+HMxfENw2m+xcoxzy83YW-bGEhA@mail.gmail.com> <20240308163100.GA17078@lst.de>
+In-Reply-To: <20240308163100.GA17078@lst.de>
+From: =?UTF-8?B?6K645pil5YWJ?= <brookxu.cn@gmail.com>
+Date: Sat, 9 Mar 2024 00:43:12 +0800
+Message-ID: <CADtkEecyqONmjRorKOWzToH9y1SVXf3GXXvg_BHcFZ506mPWkA@mail.gmail.com>
+Subject: Re: [PATCH v3] nvme: fix reconnection fail due to reserved tag allocation
+To: Christoph Hellwig <hch@lst.de>
+Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me, 
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 8 Mar 2024 16:08:01 +0000
-Robin Murphy <robin.murphy@arm.com> wrote:
+Christoph Hellwig <hch@lst.de> =E4=BA=8E2024=E5=B9=B43=E6=9C=889=E6=97=A5=
+=E5=91=A8=E5=85=AD 00:31=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sat, Mar 09, 2024 at 12:29:27AM +0800, =E8=AE=B8=E6=98=A5=E5=85=89 wro=
+te:
+> > This works now, but I donot know whether
+> > nvme_alloc_admin_tag_set()/nvme_alloc_io_tag_set()
+> > will be suitable for all driver in future, such as driver for apple
+> > device not use these two funcs
+> > to init tagset (anyway it not use these two macros too), so maybe new
+> > driver would use these
+> > value in other position.
+>
+> nvme-apply should realy be converted to use the generic helpers,
+> I just need some help from the maintainers.  I'll ping them.
+noted, that sounds great.
 
-> On 2024-03-08 3:28 pm, Will Deacon wrote:
-> > For swiotlb allocations >= PAGE_SIZE, the slab search historically
-> > adjusted the stride to avoid checking unaligned slots. This had the
-> > side-effect of aligning large mapping requests to PAGE_SIZE, but that
-> > was broken by 0eee5ae10256 ("swiotlb: fix slot alignment checks").
-> > 
-> > Since this alignment could be relied upon drivers, reinstate PAGE_SIZE
-> > alignment for swiotlb mappings >= PAGE_SIZE.  
-> 
-> This seems clear enough to keep me happy now, thanks! And apologies that 
-> I managed to confuse even myself in the previous thread...
-> 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> But I'm fine with just taking this bug fix as-is and clean this up
+> later.
 
-I thought we agreed that this stricter alignment is unnecessary:
-
-  https://lore.kernel.org/linux-iommu/20240305140833.GC3659@lst.de/
-
-But if everybody else wants to have it...
-
-Petr T
-
-> > Reported-by: Michael Kelley <mhklinux@outlook.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >   kernel/dma/swiotlb.c | 18 +++++++++++-------
-> >   1 file changed, 11 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> > index c381a7ed718f..c5851034523f 100644
-> > --- a/kernel/dma/swiotlb.c
-> > +++ b/kernel/dma/swiotlb.c
-> > @@ -992,6 +992,17 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
-> >   	BUG_ON(!nslots);
-> >   	BUG_ON(area_index >= pool->nareas);
-> >   
-> > +	/*
-> > +	 * Historically, swiotlb allocations >= PAGE_SIZE were guaranteed to be
-> > +	 * page-aligned in the absence of any other alignment requirements.
-> > +	 * 'alloc_align_mask' was later introduced to specify the alignment
-> > +	 * explicitly, however this is passed as zero for streaming mappings
-> > +	 * and so we preserve the old behaviour there in case any drivers are
-> > +	 * relying on it.
-> > +	 */
-> > +	if (!alloc_align_mask && !iotlb_align_mask && alloc_size >= PAGE_SIZE)
-> > +		alloc_align_mask = PAGE_SIZE - 1;
-> > +
-> >   	/*
-> >   	 * Ensure that the allocation is at least slot-aligned and update
-> >   	 * 'iotlb_align_mask' to ignore bits that will be preserved when
-> > @@ -1006,13 +1017,6 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
-> >   	 */
-> >   	stride = get_max_slots(max(alloc_align_mask, iotlb_align_mask));
-> >   
-> > -	/*
-> > -	 * For allocations of PAGE_SIZE or larger only look for page aligned
-> > -	 * allocations.
-> > -	 */
-> > -	if (alloc_size >= PAGE_SIZE)
-> > -		stride = umax(stride, PAGE_SHIFT - IO_TLB_SHIFT + 1);
-> > -
-> >   	spin_lock_irqsave(&area->lock, flags);
-> >   	if (unlikely(nslots > pool->area_nslabs - area->used))
-> >   		goto not_found;  
-> 
-
+Sorry for delay to reply, I found the patch have applied just about 10
+minutes ago.
+According what you plan to do, I think as-is maybe fine, But anyway if
+need, I will
+send another patch to cleanup, thanks.
