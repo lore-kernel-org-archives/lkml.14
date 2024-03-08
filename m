@@ -1,150 +1,140 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB6428DBF;
-	Fri,  8 Mar 2024 02:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869EC28DC0
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 02:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709865901; cv=none; b=pIgpABHboXKij2vOA4gNo7xOyWJK6ncWXcCJj18agw2PgMF72tAInOle8nxXyQnmYbC698v8l6q2kKUpQWqTQYH2VjnFd/OfdiWtxRdU5Oc2tZzmGipdY0pV/Kz0Kr8aLSV4cLx5eUGLvBHSNiL9G1/FnPWvMKdwOwIRs06+CbM=
+	t=1709865946; cv=none; b=CTfriegOt2MTyh1js46VxXELET2IRTRxYKHbPgeXUCcfVWVJVLj7jpyXWsm1giyS7dt947vu5Pt1B1sdYY6um+arBFqwX+y5pmdoGAfOja0i9Am4SKXBILRMtjrsI3DctiP3rQL/bSEY1L4xTZH1p3ZrDpk9Ygoe7I0zGUdCyl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709865901; c=relaxed/simple;
-	bh=hewgVoh+8E19PToE5glPa2Raity2MreSYsiIMlWmWdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c5YMOps1kzneVf3WyOim/VEfcR4MFdPa1G96WdbBZqBUw3+imowvxG3LauwArTg6wWZFCxKj9mY7wUlVBjLs7FLweew0HOs7m7JstMc3LYM98RPO4NoByhrKOYNrGkZG7yj75R97cL1hM6rU2tpU4qzByfDcmOqMX0Mki+ruuuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A04B24DA4A;
-	Thu,  7 Mar 2024 16:02:32 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB1F212FC5;
-	Thu,  7 Mar 2024 16:02:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AOlpKhfl6WXtcwAAD6G6ig
-	(envelope-from <lhenriques@suse.de>); Thu, 07 Mar 2024 16:02:31 +0000
-Received: from localhost (brahms.olymp [local])
-	by brahms.olymp (OpenSMTPD) with ESMTPA id 1f0200b0;
-	Thu, 7 Mar 2024 16:02:29 +0000 (UTC)
-From: Luis Henriques <lhenriques@suse.de>
-To: Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>
-Cc: linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
+	s=arc-20240116; t=1709865946; c=relaxed/simple;
+	bh=A9JJZAf4f0qBrIUH970XEhb6Gx3TLdc7GMVQz+Xz/gA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=k49Hl0iay9MXjqiAZ2gYoTQoArLbeP4OmhRvEsKvK46C3JtvmbyFuluQ1gyFK6TQ/J0nOlJF8haVhuSjnutGMzQirSGV8PlyyRSr05+0bRowt8RmpGOEzqY07+3cYgwOAS3Mb/nK53SzKnh7VbgKnzTjmCV4BaG2vaTuZUpEio8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dDbSCWkV; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dDbSCWkV"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc0e5b223eso2715605ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 18:45:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1709865944; x=1710470744; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EBTcuM34vazcQ8FUxJ81MwY9Go5tsnqrD1TprkB4i6c=;
+        b=dDbSCWkVLpaQjGRAcqadwYyZtMODURCP43NcFG+ooH+yBz/jDnRmPzvDHpLLxDTYvW
+         L/EVz9fU8V1YY9KGOmqe7fuI8DzCNYu0vcKef13Kqg/QmOm8l92V1BiR9IDY+tsEhyk6
+         S4OvlgU1ElEoUVdL8MR7l63IkZxBHpZQbhDWwcXruIaGPH5Nz4jP9i3ySuova5fKl5so
+         BMO1rzD/6zJqmW2aDuNST4EQGWDrBgWxEjNXmQ7t60eniAU0Su9ObFTeWzclelkLn2mD
+         8Ukfjx6ri9brDTp/NVCgWprgmgOjim1ZWEJGNid5atcmaSzBspUA6PwNVaEU9pgOmo3M
+         4yTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709865944; x=1710470744;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EBTcuM34vazcQ8FUxJ81MwY9Go5tsnqrD1TprkB4i6c=;
+        b=RzX388aukWMitjaDZmqZX1gXxheQxVcSlO1wLbA3mb/kFRiKfAlCFbI/5iam9E0zn3
+         W1QfC3OeL/Hwm7kx0WEDKNXoSm9Fxk9R7cGdKaGDl5dnvcX4hy0KWG7WikJ6WpXY+OjX
+         ASXCjzsSRoGPSO4ec1bXUn2ig3D7F5Gm33WHdUwTmQ70eeAp88440eu/ph0l7IW7NLV6
+         ODni7XoBGsfdYjhFKdRx5pOS1nK0wAaJPwfXcRhVZXFBAnGN1sodn/jvMmNCSFcIYkC+
+         Yg70nURgXxi5ntJTuPOMIuGy8SZHD8SES150ovT15Ya24xNpRXp1LWiRMxYL1e9WX47m
+         DNww==
+X-Forwarded-Encrypted: i=1; AJvYcCVtXJ1QfTKcL3H06cc8b/6I4GV1t+rqkOsFk+8vR8TxaE51GlwwR1C7bidc1bpqczb7W6JixSqRr4qV46FUvoj6M1f31T3sREXpKYNB
+X-Gm-Message-State: AOJu0Yzwlvzcb3+Rcr/x7h6sB+5QeagQ5B7piUS/8rOc1VgNQOvLRVGP
+	n2eBzSVqraphMOmdHX5FS8cF7Ki8C77NCJ+OEnwecB1o9XCB8i9I+D7+6l1dp78=
+X-Google-Smtp-Source: AGHT+IEvIAI8sq/1OcNEGlOk2q3petZc1tRcphID3Cuq03oBgO9LU/5Qyoqw+BszQpjMEbkERqXMzw==
+X-Received: by 2002:a17:902:7847:b0:1dd:6174:c63e with SMTP id e7-20020a170902784700b001dd6174c63emr1880622pln.54.1709865943683;
+        Thu, 07 Mar 2024 18:45:43 -0800 (PST)
+Received: from C02CV19DML87.bytedance.net ([2001:c10:ff04:0:1000:0:1:4])
+        by smtp.gmail.com with ESMTPSA id q9-20020a170902b10900b001d8a93fa5b1sm15244360plr.131.2024.03.07.18.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 18:45:43 -0800 (PST)
+From: Rui Qi <qirui.001@bytedance.com>
+To: bp@alien8.de,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	hpa@zytor.com,
+	jpoimboe@redhat.com,
+	peterz@infradead.org,
+	mbenes@suse.cz,
+	gregkh@linuxfoundation.org,
+	stable@vger.kernel.org,
+	alexandre.chartre@oracle.com
+Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Luis Henriques <lhenriques@suse.de>
-Subject: [PATCH v2 2/3] ext4: fix the parsing of empty string mount parameters
-Date: Thu,  7 Mar 2024 16:02:24 +0000
-Message-ID: <20240307160225.23841-3-lhenriques@suse.de>
-In-Reply-To: <20240307160225.23841-1-lhenriques@suse.de>
-References: <20240307160225.23841-1-lhenriques@suse.de>
+	yuanzhu@bytedance.com,
+	Rui Qi <qirui.001@bytedance.com>
+Subject: [PATCH v3 0/3] Support intra-function call validation
+Date: Fri,  8 Mar 2024 10:45:15 +0800
+Message-Id: <20240308024518.19294-1-qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: A04B24DA4A
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-This patch fixes the usage of mount parameters that are defined as strings
-but which can be empty.  Currently, only 'usrjquota' and 'grpjquota'
-parameters are in this situation for ext4.  But since userspace can pass
-them in as 'flag' types (when they don't have a value), the parsing will
-fail because a 'string' type is assumed.
+Since kernel version 5.4.217 LTS, there has been an issue with the kernel live patching feature becoming unavailable. 
+When compiling the sample code for kernel live patching, the following message is displayed when enabled:
 
-This issue is fixed by using the new helper fsparam_string_or_flag() and by
-also taking the parameter type into account.
+livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
 
-While there, also remove the now unused fsparam_string_empty() macro and
-change the 'test_dummy_encryption' parameter to also use the new fs_parser
-helper.
+Reproduction steps:
+1.git checkout v5.4.269 -b v5.4.269
+2.make defconfig
+3. Set CONFIG_LIVEPATCH=y、CONFIG_SAMPLE_LIVEPATCH=m
+4. make -j bzImage
+5. make samples/livepatch/livepatch-sample.ko
+6. qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage -nographic -append "console=ttyS0" -initrd initrd.img -m 1024M
+7. insmod livepatch-sample.ko
 
-Suggested-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Luis Henriques <lhenriques@suse.de>
----
- fs/ext4/super.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+Kernel live patch cannot complete successfully.
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 0f931d0c227d..5a2f178f8fe9 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1724,10 +1724,6 @@ static const struct constant_table ext4_param_dax[] = {
- 	{}
- };
- 
--/* String parameter that allows empty argument */
--#define fsparam_string_empty(NAME, OPT) \
--	__fsparam(fs_param_is_string, NAME, OPT, fs_param_can_be_empty, NULL)
--
- /*
-  * Mount option specification
-  * We don't use fsparam_flag_no because of the way we set the
-@@ -1768,9 +1764,9 @@ static const struct fs_parameter_spec ext4_param_specs[] = {
- 	fsparam_enum	("data",		Opt_data, ext4_param_data),
- 	fsparam_enum	("data_err",		Opt_data_err,
- 						ext4_param_data_err),
--	fsparam_string_empty
-+	fsparam_string_or_flag
- 			("usrjquota",		Opt_usrjquota),
--	fsparam_string_empty
-+	fsparam_string_or_flag
- 			("grpjquota",		Opt_grpjquota),
- 	fsparam_enum	("jqfmt",		Opt_jqfmt, ext4_param_jqfmt),
- 	fsparam_flag	("grpquota",		Opt_grpquota),
-@@ -1814,9 +1810,8 @@ static const struct fs_parameter_spec ext4_param_specs[] = {
- 	fsparam_u32	("fc_debug_max_replay",	Opt_fc_debug_max_replay),
- #endif
- 	fsparam_u32	("max_dir_size_kb",	Opt_max_dir_size_kb),
--	fsparam_flag	("test_dummy_encryption",
--						Opt_test_dummy_encryption),
--	fsparam_string	("test_dummy_encryption",
-+	fsparam_string_or_flag
-+			("test_dummy_encryption",
- 						Opt_test_dummy_encryption),
- 	fsparam_flag	("inlinecrypt",		Opt_inlinecrypt),
- 	fsparam_flag	("nombcache",		Opt_nombcache),
-@@ -2183,15 +2178,15 @@ static int ext4_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 	switch (token) {
- #ifdef CONFIG_QUOTA
- 	case Opt_usrjquota:
--		if (!*param->string)
--			return unnote_qf_name(fc, USRQUOTA);
--		else
-+		if ((param->type == fs_value_is_string) &&
-+		    (*param->string))
- 			return note_qf_name(fc, USRQUOTA, param);
-+		return unnote_qf_name(fc, USRQUOTA);
- 	case Opt_grpjquota:
--		if (!*param->string)
--			return unnote_qf_name(fc, GRPQUOTA);
--		else
-+		if ((param->type == fs_value_is_string) &&
-+		    (*param->string))
- 			return note_qf_name(fc, GRPQUOTA, param);
-+		return unnote_qf_name(fc, GRPQUOTA);
- #endif
- 	case Opt_sb:
- 		if (fc->purpose == FS_CONTEXT_FOR_RECONFIGURE) {
+After some debugging, the immediate cause of the patch failure is an error in stack checking. The logs are as follows:
+[ 340.974853] livepatch: klp_check_stack: kworker/u256:0:23486 has an unreliable stack
+[ 340.974858] livepatch: klp_check_stack: kworker/u256:1:23487 has an unreliable stack
+[ 340.974863] livepatch: klp_check_stack: kworker/u256:2:23488 has an unreliable stack
+[ 340.974868] livepatch: klp_check_stack: kworker/u256:5:23489 has an unreliable stack
+[ 340.974872] livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
+......
+
+BTW,if you use the v5.4.217 tag for testing, make sure to set CONFIG_RETPOLINE = y and CONFIG_LIVEPATCH = y, and other steps are consistent with v5.4.269
+
+After investigation, The problem is strongly related to the commit 8afd1c7da2b0 ("x86/speculation: Change FILL_RETURN_BUFFER to work with objtool"),
+which would cause incorrect ORC entries to be generated, and the v5.4.217 version can undo this commit to make kernel livepatch work normally. 
+It is a back-ported upstream patch with some code adjustments,from the git log, the author also mentioned no intra-function call validation support.
+
+Based on commit 6e1f54a4985b63bc1b55a09e5e75a974c5d6719b (Linux 5.4.269), This patchset adds stack validation support for intra-function calls, 
+allowing the kernel live patching feature to work correctly.
+
+v3 - v2
+ - fix the compile error in arch/x86/kvm/svm.c, the error message is../arch/x86/include/asm/nospec-branch.h: 313: Error: no such instruction: 'unwind_hint_empty'
+
+v2 - v1
+ - add the tag "Cc: stable@vger.kernel.org" in the sign-off area for patch x86/speculation: Support intra-function call
+ - add my own Signed-off to all patches
+
+
+
+Alexandre Chartre (2):
+  objtool: is_fentry_call() crashes if call has no destination
+  objtool: Add support for intra-function calls
+
+Rui Qi (1):
+  x86/speculation: Support intra-function call validation
+
+ arch/x86/include/asm/nospec-branch.h          |  7 ++
+ arch/x86/include/asm/unwind_hints.h           |  2 +-
+ include/linux/frame.h                         | 11 ++++
+ .../Documentation/stack-validation.txt        |  8 +++
+ tools/objtool/arch/x86/decode.c               |  6 ++
+ tools/objtool/check.c                         | 64 +++++++++++++++++--
+ 6 files changed, 92 insertions(+), 6 deletions(-)
+
+-- 
+2.20.1
+
