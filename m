@@ -1,151 +1,232 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2126.outbound.protection.outlook.com [40.107.93.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529421106;
-	Fri,  8 Mar 2024 08:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887185; cv=fail; b=oTuxgJ1p94PYJ9leMl3l6w/JbYhh5x3mNtHM1PvpoqGD1Ya+cIM/IgXTgWYsrqXyyJXBeU7IWAfyBl1e0ib6p05k0oBiho5VukJYsxGXb1BItJeMSDnjCZ1YyxxTwNLYThsftev+HSzVnpdMOxtkplO2je7Cnd/pgWY3xya3KtY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA634E1D3;
+	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709887185; cv=none; b=iBlotf4JwxO0Ra/tEi3HIXq1QmNEyXJ6QppMDEcyvAnfYbMZ55FhYDkQQOhhEwfW/TGCH9aJUswyxv2ewUri+25A3fAZN7lMBXd9O9UPdnKcoyA1FYF7SYGKQgO3CEj27WsyacprMjCZTKuhJBz2NDqFTUegnxBioGz0FZPOXN8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709887185; c=relaxed/simple;
-	bh=xrH/G/X2xoA+CVqzGUSWlmyWB10z9q02kkViEUUegWo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BBSj9+kAStdN81b0FdxmGIwzynnLsQmteBxps86sRf5kLca5Y+oWmzJNfCeCIW/04HMKfdNqpBGfliCfco5op4RX0uJUSZ4ngP+lZcUv3xPG30zZZLSjb3t9UEuC6Ia5HTsC1C/GmHeOXdGVjynbh/28An6xd/fR2UzuXQ8LQJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=corigine.com; spf=pass smtp.mailfrom=corigine.com; dkim=pass (1024-bit key) header.d=corigine.onmicrosoft.com header.i=@corigine.onmicrosoft.com header.b=vG3YcsPc; arc=fail smtp.client-ip=40.107.93.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=corigine.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=corigine.com
+	bh=e0q0yGSRFFLkhf3KJ0mtgBe9DUGdlUyvkBBfylc5F/Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hkdqOF0BO0Ru4J4asHM8CW+lNbxmeYPLdyMNouFXoJvBfIVVdZXvNa2XbM9q6BDQAiFkJCb75FgE4v3xekBND4Jk3IWlAU0STfro2u40VtPafFXQVQJOxheF5B7tKN560HgZ3gOi5Nc5zjYwjjRj5JBWFgnS0bnokrYAajltr5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3PKh2Su; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=corigine.onmicrosoft.com header.i=@corigine.onmicrosoft.com header.b="vG3YcsPc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YK4Msqvk/Zj24wHi3D8KxXGEl9+QOtIq/BXCTHbt2HCW31efmP1wHUrk/WuX9JZ8VK9dHKp8AZGBJKhkRlSNDGD7iuKwQHPWZoxB3xyjMZjlaZs491e5q6fHtvWlAVpejlVM4Es8lHoPmB19tjVZgWYyUiOy3xD7uzfvGJ0V1ApX12TyuQY6OiS1IBDnHogPQLwG5dRD31nPz8SrBzHYXKZxyZMsR3lLWYUqvVWTFSfofzcSg2D5hiONLjjHVsx2Jv4cDGgCilXinDrf1AmG4yhLhn53jD2fJAImaxRbiMqYqGW7Fy2sAN3KPm81bRjCXh3wYfk/pYrusyllpRVNoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U6UMG7UZq6QYt5lmK0MKkMbvguaD9Wn/wRo5Zg2/bpw=;
- b=HyMJ/eYWjBWcKmyL+5ABcdW8v9MMvESMlSwRQ1grrIRoaEs2oDRkCxCFewmTIOM5Zopb8Z6BuFt8GeSJefty+uHmCU/aklXUoN/yMc+yMeyVzrTAFyUDIwU4HqSGH8Yisb9bjmDEUA//LlgiIHf/XzHn1kw6pfFmH+okMZInd5DH61auxKtVYm52ePceT+SaD2knvlwcToem1fnwk4tkaXwyQ++0nGE9kuB+8xG5BHwt2hRiLwTqRFzolHOFZTGZlLVAOIBc9hCfjXjHA3jCoH0hChtCWZYOabyl6msUyefp5weivTfP6OL3DFBViZIpNHp1Zas+aFHqAMSSnfIzaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U6UMG7UZq6QYt5lmK0MKkMbvguaD9Wn/wRo5Zg2/bpw=;
- b=vG3YcsPcdZwUQOrOph3Z4RQCEgYX5ILExlj+4ZRoqyaQR5YNNYqr3r3RM6MREZAk5KTYUd/Y88yN+ys+TlkP7ZOH+Ta5X7m0t3viJOpSGZ5yvlyXb0rIWHYtBZbobM1E5KNq6aOEOjorQOOYX5G3adiDLfMK/Yi5CzPgN68BM78=
-Received: from DM6PR13MB3705.namprd13.prod.outlook.com (2603:10b6:5:24c::16)
- by LV3PR13MB6384.namprd13.prod.outlook.com (2603:10b6:408:1a3::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Fri, 8 Mar
- 2024 08:39:38 +0000
-Received: from DM6PR13MB3705.namprd13.prod.outlook.com
- ([fe80::59bd:c652:6485:aa42]) by DM6PR13MB3705.namprd13.prod.outlook.com
- ([fe80::59bd:c652:6485:aa42%3]) with mapi id 15.20.7362.024; Fri, 8 Mar 2024
- 08:39:38 +0000
-From: Yinjun Zhang <yinjun.zhang@corigine.com>
-To: Duoming Zhou <duoming@zju.edu.cn>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, oss-drivers
-	<oss-drivers@corigine.com>, "christophe.jaillet@wanadoo.fr"
-	<christophe.jaillet@wanadoo.fr>, "horms@kernel.org" <horms@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "edumazet@google.com"
-	<edumazet@google.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	"kuba@kernel.org" <kuba@kernel.org>, Louis Peens <louis.peens@corigine.com>
-Subject: RE: [PATCH] nfp: flower: handle acti_netdevs allocation failure
-Thread-Topic: [PATCH] nfp: flower: handle acti_netdevs allocation failure
-Thread-Index: AQHacJbnGqenCY0PeEmlsd7MLWD/0bEthN5w
-Date: Fri, 8 Mar 2024 08:39:37 +0000
-Message-ID:
- <DM6PR13MB3705982C783811A22D1692F1FC272@DM6PR13MB3705.namprd13.prod.outlook.com>
-References: <20240307135335.19306-1-duoming@zju.edu.cn>
-In-Reply-To: <20240307135335.19306-1-duoming@zju.edu.cn>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR13MB3705:EE_|LV3PR13MB6384:EE_
-x-ms-office365-filtering-correlation-id: 244d81de-6d99-41d0-72ec-08dc3f4b4a2e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Cv60qNLc4OfgB3biyrBug1Q/rQpASy7vNsz+NLiwBiQqWI9crHWvqGeEe4j9gEuB9hKKC0rXV16KDW69gWYma44RUGwAJ1aM+7/5IPagIfdKCeR6bOVHauts/QTZq02qQFUBGW6e1g5g+bzFzieTg57qiPmS2vFApwmfOsouVYfAi3YG5ZTNzUxUz7dOtKfqpC6DLEz6QhuZcdalikIrfYJJ7YuXnEJcF47sWqTzUlJtjazWd+++vnwzblf069MHTgWJoZrozCRRpi5E8Jp7BIexFIOriEHbF6Yr3BeF3Us9c1cQIPnPPWtq889n24SnjNR/f20rn2vQ8WEzPKfh9SAN/UuaqDyRKei+x94p0MDTxh2IuYFOcSvw0QS3i3ZxakTlSkZFefNK27NY1BiO8WsvV8ThVuY5PMC8JnwZEq+yyOaB+qlCCy+sAAVL6lYS5DjOaRRQpHKswlXYfGmpZvuR6EMtunmsj+Q5CT9gHorIayk3y1/XaLHsz5T1KQgR+7o/U2skRoEd5+tbD1SQPWqf8zBZR2fdm0fJNV8gcyMVi4w9Vmdjw5omhLC+NmVQZkYpa2jl63/edTFBnq+ZJQLVyn9SvAB2gjN2tb5Dfwy9h+REBodntjXLhF5WpxiB0WmbgVdYFW0h5OdYvQUDoqF+V9fLLTNl7dv9RmS4EvQ=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR13MB3705.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?wDkWNABCWpReQ2pBan8hwaRvJTFxvkRsaxfnjlmqq/y4Rh72mM2DYlDv20EZ?=
- =?us-ascii?Q?N8K79eBtQKrKLk5njEM92+cnwVYtQWqBtd1IUjtaoqcQEcSp+XpjccFuC7EU?=
- =?us-ascii?Q?7MqzN2UX5eP77Fwr/2TrB5lltJpV/cLJeSCWnjwlc2NdJOABaDFQcLfRYlom?=
- =?us-ascii?Q?HPWYcuWyXXIoQW5HX1y++/G+0vFLSyd+D8qSuMSrddX6NTKq0P2LAMBFUn+E?=
- =?us-ascii?Q?txBDFBuzAwF8i5iT3GOOjioSs4ZO7txhBZBG+R05T35h/KC9NYToCGa/A+Ve?=
- =?us-ascii?Q?p5Nfny5vrKsA4+qLlEXA9cTGTSeZY7M4strch+X52IqkIgX1k6EIfvrVhgtm?=
- =?us-ascii?Q?0c5qAKxbmgbH2WbqLC8b5CYBOl4m4xKaHnBshkOFtuBnKWZjEXYfiRgZjkUt?=
- =?us-ascii?Q?l7RRnO/rjMpmlFF0Q7ZrngVrEPKlsiLmAHfWuV1/u1rF61vZQbDA/SGdLMW+?=
- =?us-ascii?Q?5f60kDDHSq+zXAycQmgopXXsC2UMHZr7qwK4Oq46D/NwX0XpBtezpQtRxdIf?=
- =?us-ascii?Q?ItJhXMT+a1OEp0Xy8McFkE0S5lAemIx8fxinsKfA0dRfWOUS7ixKha+1j9GG?=
- =?us-ascii?Q?WoB4551NyjTBCEHW3ZYYap8NUsHG4XcmSWvtJVi3uhIee4E4HM3BuaWFXKWT?=
- =?us-ascii?Q?OMI79iPeHsbRvBOG81GLLf64/N+/WQcZKSFpeXPN955/EL5gNIgjuU854czr?=
- =?us-ascii?Q?hrY/kbfjjUb7aoma4fet88mp3C8vWHvNjVHa+q5QE5kz/OAXkIuJpBWbvDpQ?=
- =?us-ascii?Q?O6tBhUC+RfePZUDxxBqhBNe54eJXCXWUAqtXvhOKob+KEGTtwi4BKUrj5sIx?=
- =?us-ascii?Q?/fDz5m/qdCwjuO/zZ2vbnigbSo+2YlTHmGZs6YMpcbs9kzVQYhRa2DT18TsQ?=
- =?us-ascii?Q?UajFNRNBGbMEsz1M8KGaX2cIkBQ6FCFP9n8f53OaJjpG1A88BqGvuHlLrpd4?=
- =?us-ascii?Q?pb8+09lXOVeYt0P2cZW1QmXIPR3mPq00Hqus9PvhX5l15R3r0+AsLSsKXnlb?=
- =?us-ascii?Q?wEHEqZAnjQ32I7b6y2aop4RDVjI4jit98KwC/+rdBdVpwzQvPYJV4WHrIojU?=
- =?us-ascii?Q?AIZhF29CiQC5dut4HrbF9BAGqND68mLQGcBpSgU5HvfRuZooH7yYzobu2c7u?=
- =?us-ascii?Q?dovUzO1bqdZCAejNbqNzgEmt60zGiOQWojE2Xiym4r12hirCgXT7kpCo0ExQ?=
- =?us-ascii?Q?lURC4LIKW5WLdSQQBmz/BmR5cJ3q+fK6WTf/W7/OVMHbhTWhMVG0cwVTWRKI?=
- =?us-ascii?Q?mkhLcgFahFknwT1L7UMpdYuGebrVrx3QTWNmcS8BYflxJ7SgU+Jk94ZbTvTx?=
- =?us-ascii?Q?r02HYGGD9eJvtSa1Vk+KgyuSmDQUq81Mnz1Sseu7bMK2qDLdyzsrrobAHz4O?=
- =?us-ascii?Q?T3T+7HcxyZRfCiLLMpVeGHwEiz54BEEcCGcqj4fVnfTP9ScIkP4BN/FtH3i2?=
- =?us-ascii?Q?C2N7KPuRbUblTxSSFkKfyY7fRGUwJzh/OmZRgEdY6wTUtw18a6E7w4Aksz7w?=
- =?us-ascii?Q?ExRH07Kd/tSy6Lhx/Mr+ga11vKtXGDc/xnQoCH1r9zF3tl8ahsMEALKp1w0H?=
- =?us-ascii?Q?C/BxnogOZAiX0tUCI2ICwa8pjoEobg2dve+KWLMt?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3PKh2Su"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 584F4C4166A;
+	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709887185;
+	bh=e0q0yGSRFFLkhf3KJ0mtgBe9DUGdlUyvkBBfylc5F/Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=m3PKh2SuMUgfeINY87Lk+FX5XFzJq4k8CB6zY9XP7nslu+AJc8HhkI+HNzkA7OIsQ
+	 vdvtj2kFUOeuqwKoSX2wDVF5l/qPpdnk1zmWuUxzEMq1KvqRj9Z3wiWCSoPJet8pwB
+	 iDDFPIejcw6DbHg8iI9MaBmbPJGh/D3cjN7uXKTwpsQVytYWMEYIgGxU4VxBBd9NMY
+	 HB7MijvIFJjxn5b6ffxWGxp6ddA3iYAt9kK5y5ARP7diMmgdQRU36o5qNX3EjDzhP/
+	 o7NdW+U2u/MDQJ3gIPKSfs+kglZc+XGy6zj0Xukv5DY7vGHw6UjtUdZumZoAx74Udz
+	 zvdtqvGSEMEOA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D7C54E5E;
+	Fri,  8 Mar 2024 08:39:45 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Fri, 08 Mar 2024 16:39:46 +0800
+Subject: [PATCH net-next v10 4/8] dt-bindings: net: convert hisi-femac.txt
+ to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR13MB3705.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 244d81de-6d99-41d0-72ec-08dc3f4b4a2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2024 08:39:37.8847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QO8qzthJNOM5gVXA7TglStqQyW5nD3ct0GiBXKuslpI8RZAwuFNnrDjoOQxlEklAuQvOSUqMUr4WF0+C6g/ZrX1bcyuqTggx2rg7IhB/oBY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR13MB6384
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240308-net-v10-4-3684df40897e@outlook.com>
+References: <20240308-net-v10-0-3684df40897e@outlook.com>
+In-Reply-To: <20240308-net-v10-0-3684df40897e@outlook.com>
+To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
+ Salil Mehta <salil.mehta@huawei.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709887184; l=5287;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=FclGbNt5IHnTCzv0cmPEOdaR/+V9vDaeVaHJ31VX4FE=;
+ b=moIxCVwEUa1k56XZm/W9khqMARqkBRiwQHp6N8QuB41dBuATd4MdjXxqrmc2ERjWFRvaT7Fws
+ 6fJzpGejOvJCCoVBgzmm4yl+PXg140GThnPcJHy56pifeNhc52A923A
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-On Thursday, March 7, 2024 9:54 PM, Duoming Zhou wrote:
-<...>
->=20
->                 acti_netdevs =3D kmalloc_array(entry->slave_cnt,
->                                              sizeof(*acti_netdevs), GFP_K=
-ERNEL);
-> +               if (!acti_netdevs) {
-> +                       nfp_flower_cmsg_warn(priv->app,
-> +                                            "memory allocate failed\n");
-> +                       schedule_delayed_work(&lag->work,
-> +                                             NFP_FL_LAG_DELAY);
-> +                       continue;
-> +               }
+From: Yang Xiwen <forbidden405@outlook.com>
 
-It reminds me that this issue was reported and tried to fix in
-https://lore.kernel.org/netdev/ZVsFBACC05VrrCfw@LouisNoVo/T/#t
-However there's no followed v2 to address the review comments.
-Based on that discussion, we don't need warn "allocate failed" locally.
+Convert the old text binding to new YAML.
 
->=20
->                 /* Include sanity check in the loop. It may be that a bon=
-d has
->                  * changed between processing the last notification and t=
-he
-> --
-> 2.17.1
+While at it, make some changes to the binding:
+- The version numbers are not documented publicly. The version also does
+not change programming interface. Remove it until it's really needed.
+- A few clocks are missing in old binding file. Add them to match the real
+hardware.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+---
+ .../bindings/net/hisilicon,hisi-femac.yaml         | 87 ++++++++++++++++++++++
+ .../devicetree/bindings/net/hisilicon-femac.txt    | 41 ----------
+ 2 files changed, 87 insertions(+), 41 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+new file mode 100644
+index 000000000000..3344d3bfefb8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/hisilicon,hisi-femac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Hisilicon Fast Ethernet MAC controller
++
++maintainers:
++  - Yang Xiwen <forbidden405@foxmail.com>
++
++allOf:
++  - $ref: ethernet-controller.yaml
++
++properties:
++  compatible:
++    enum:
++      - hisilicon,hi3516cv300-femac
++
++  reg:
++    items:
++      - description: The first region is the MAC core register base and size.
++      - description: The second region is the global MAC control register.
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: MAC main clock
++      - description: MAC bus interface clock
++      - description: PHY clock
++
++  clock-names:
++    items:
++      - const: mac
++      - const: macif
++      - const: phy
++
++  resets:
++    items:
++      - description: MAC reset signal
++      - description: PHY reset signal
++
++  reset-names:
++    items:
++      - const: mac
++      - const: phy
++
++  hisilicon,phy-reset-delays-us:
++    description: PHY reset timing requirement (in micro seconds).
++      The integrated PHY usually have a special reset timing sequence and must
++      interact with MAC controller to accomplish the entire reset procedure. So
++      these properties belong to MAC controller, not PHY.
++    items:
++      - description: pre-reset delay for PHY
++      - description: reset pulse for PHY
++      - description: post-reset delay for PHY
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - resets
++  - reset-names
++  - phy-mode
++  - phy-handle
++  - hisilicon,phy-reset-delays-us
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    ethernet@10090000 {
++        compatible = "hisilicon,hi3516cv300-femac";
++        reg = <0x10090000 0x1000>, <0x10091300 0x200>;
++        interrupts = <12>;
++        clocks = <&clk_femac>, <&clk_femacif>, <&clk_fephy>;
++        clock-names = "mac", "macif", "phy";
++        resets = <&crg 0xec 0>, <&crg 0xec 3>;
++        reset-names = "mac", "phy";
++        mac-address = [00 00 00 00 00 00];
++        phy-mode = "mii";
++        phy-handle = <&fephy>;
++        hisilicon,phy-reset-delays-us = <10000 20000 20000>;
++    };
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac.txt b/Documentation/devicetree/bindings/net/hisilicon-femac.txt
+deleted file mode 100644
+index 5f96976f3cea..000000000000
+--- a/Documentation/devicetree/bindings/net/hisilicon-femac.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Hisilicon Fast Ethernet MAC controller
+-
+-Required properties:
+-- compatible: should contain one of the following version strings:
+-	* "hisilicon,hisi-femac-v1"
+-	* "hisilicon,hisi-femac-v2"
+-	and the soc string "hisilicon,hi3516cv300-femac".
+-- reg: specifies base physical address(s) and size of the device registers.
+-  The first region is the MAC core register base and size.
+-  The second region is the global MAC control register.
+-- interrupts: should contain the MAC interrupt.
+-- clocks: A phandle to the MAC main clock.
+-- resets: should contain the phandle to the MAC reset signal(required) and
+-	the PHY reset signal(optional).
+-- reset-names: should contain the reset signal name "mac"(required)
+-	and "phy"(optional).
+-- phy-mode: see ethernet.txt [1].
+-- phy-handle: see ethernet.txt [1].
+-- hisilicon,phy-reset-delays-us: triplet of delays if PHY reset signal given.
+-	The 1st cell is reset pre-delay in micro seconds.
+-	The 2nd cell is reset pulse in micro seconds.
+-	The 3rd cell is reset post-delay in micro seconds.
+-
+-The MAC address will be determined using the optional properties
+-defined in ethernet.txt[1].
+-
+-[1] Documentation/devicetree/bindings/net/ethernet.txt
+-
+-Example:
+-	hisi_femac: ethernet@10090000 {
+-		compatible = "hisilicon,hi3516cv300-femac","hisilicon,hisi-femac-v2";
+-		reg = <0x10090000 0x1000>,<0x10091300 0x200>;
+-		interrupts = <12>;
+-		clocks = <&crg HI3518EV200_ETH_CLK>;
+-		resets = <&crg 0xec 0>,<&crg 0xec 3>;
+-		reset-names = "mac","phy";
+-		mac-address = [00 00 00 00 00 00];
+-		phy-mode = "mii";
+-		phy-handle = <&phy0>;
+-		hisilicon,phy-reset-delays-us = <10000 20000 20000>;
+-	};
+
+-- 
+2.43.0
 
