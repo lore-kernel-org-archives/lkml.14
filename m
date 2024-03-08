@@ -1,134 +1,100 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FEE1EF1E;
-	Fri,  8 Mar 2024 20:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D308A1EF1E
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 20:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709931066; cv=none; b=aGJ7RRXzbO7qzJV0GKepJqi+3kNkfdq/DAtVuEvTBFWfr9dpPQSK2aTB8XJBZHIwUcUxksJcSsnZZ2Yh2ZB9o+Pfwef8yhFT4w2jJzawmOefjtowTz832Wfe73OiN0+tVxxJpH4dO5UfdDDROxaU0Tl4f5TW4bDUnAQDgeXGvjw=
+	t=1709931148; cv=none; b=JG6zkXcC/fjk8jBp1oRBy5wRJuORnAmbXP3DCk0hac839vUT/pJStAccM+SaCa8LyygNvyDczdfVHcoOjK/DplPq+5C8r6O6ksc3Wkpa20yaeeAmqs5RsoTnKf8eBI0YdD2qSrQbC8ugJdKoYWCQv6X6jtaAQxeGkbjenp2gg2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709931066; c=relaxed/simple;
-	bh=vtY+SJLzuQ886tO3RilWGHvnlozVn7rpCpvs+8G8tZo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ei30OAGwEJM2hLQGv93q2gYNHe9MLBJ0HdkUdo62Z0+kOgh6eM7O4daZQrWYP0TTrvbwmwQB94/K1m/8j9ohq5Rb9EOmCUtBP0gUsyQ6Fl+pOM0NSMPtK1vP5v741hFHaX7LRzTpctv2hua6mIk3zRc/FDYxMFgVPORXdGzqOEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Cyqj3pH0; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1709931148; c=relaxed/simple;
+	bh=j2rwAOJRo4LYcXeDY/WUYHfb4+0+9qA2Hm/60uUoEdY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lmob9FBwwQWdEVbPeuNO62a61YSTvtJ/XWGvztTXduYVb2m4rTmMQi2GSvAiiNNGy9fsrhqXaivCcD6j3XUArdjLcgdLlUSI6Xxip7maRTh/Jp5kOvBjUeRsllLqxmrXjNlsjK69g9MxeDkYKvAKH89GoE7gMKWx7xyQL6a4RkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z9zkNYND; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Cyqj3pH0"
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 428ImR43014453;
-	Fri, 8 Mar 2024 20:50:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
- bh=oG87MoMYaG+G4FieFFonOB5EHz7PptoAErze3BHJIwE=;
- b=Cyqj3pH0xopbdBtnBxuleSm5v1P3nMRbRxRoXCPi9w0+pwqy3OZ6n5IAa+isiwXrTKHw
- vJHnNR6l2yQ1Ve0Qoe7P8H2xJdtgpp1vgBa81e8KNIivKQWKMSVNkuoPmlpU7jM/H15Z
- T132xponLHLcW1rjRowyLL/oomAgzPuHDmMYgcVPdRJna4wy3nPJjvLETYuRhPKCXNvO
- zJ7SLVObz/KPFF5trvKWNGueXeSmp2Vl1OOzeooahYtSKppmY5jQy4ovi4fAznLACtPv
- yum6QOTnfbClFZIGGUd3AoelHWOwJnMwU21mBU/O3PEurz20px4OQQ9r87lfiJwb5gjS 4g== 
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wr5jktc6h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 20:50:46 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 83EEC8059CB;
-	Fri,  8 Mar 2024 20:50:45 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 290768014DB;
-	Fri,  8 Mar 2024 20:50:45 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 605001)
-	id A352330000A0D; Fri,  8 Mar 2024 14:50:44 -0600 (CST)
-From: Justin Ernst <justin.ernst@hpe.com>
-To: Len Brown <lenb@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Justin Ernst <justin.ernst@hpe.com>
-Subject: [PATCH] tools/power/turbostat: Fix uncore frequency file string
-Date: Fri,  8 Mar 2024 14:49:57 -0600
-Message-Id: <20240308204957.2007212-1-justin.ernst@hpe.com>
-X-Mailer: git-send-email 2.26.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z9zkNYND"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7db1a21e83fso714295241.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 12:52:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709931146; x=1710535946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JIbSa45F0sbbEQNxZfvGwr7gnFgJqOFTDI+EfPdvz1M=;
+        b=z9zkNYND9UIpwbtaasfHE+K+7uEVHpNP2bEtbgLp0XgH0zlCLAukbH9tMVxwChpMsv
+         8CcI/mSGOQVxijIxE+b2+b010oXE244oO248T7KgIv3A8yCCAt8EVgV15QGN6EQ9V6S7
+         WwKbApT+FhGmYjbZIj7DdJV1vjOchZYZOxhgbSxOGPlPq8Vi4zgH/w86VnXP24QQNmxm
+         GhhZc+fr5Gf/dBJH2b3yRUv+NoMnoZd20X7NVuf/1ltnzh5Ebdctjk4Ggigd7wXwgFGm
+         VXyo2hbK7iYebb8U2XrsuOQr5k942LRWmr6X0/XCazRRwWbKfivFyV8VMln+COxhwEib
+         IUAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709931146; x=1710535946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JIbSa45F0sbbEQNxZfvGwr7gnFgJqOFTDI+EfPdvz1M=;
+        b=ViP6QpKrbl9hoeccQ9QjO43UzAbPrh5quzf5IFKj9DLKHvx1xwcplGcX01bKQnaxEZ
+         aPIyWHYFmk5mDa5msBrSaAzHocX0JyxuD8zOfBN+jdz8I0nz41kAvbicVElNl3vlNFqD
+         e3feZynow7tz73fytjJtyivIRZu+L8BY8qgGApgOQP97Ou+hqbgXEr9VUx0LerCe8j7D
+         4HaacjFU4QJzXlGeaLf/5GgXqA8QB2AG+1pQ7RKiJOc+3ZiqrBVQ6JzvWDuWmbqvf1r7
+         hFoT2snj4AIszc6OuoKwQb0Q6qLCLteNaly1Fr2wNWY/7Wgbx+q17drMx9oRp+KdVOqv
+         6pgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmRmGPeCOVUcrJMCy/0N5aWCCxU5FUPlinGwWDj81U67GFp88sI3CXqgQ4ySGfJufv1ecYHFQP/jPPm9/Hw1rroPYosAKt96adOe+b
+X-Gm-Message-State: AOJu0YwJjQF0mJrDey1mUWJMt+aA1TnQ48FitYxT3H6vZkDz2FHia1J8
+	NP2riyY7IxB0m++2uAAJQvuursd66AFPlI1uTEcot+PIkUBhhAacSPxS0NUnrNZk9gN40KsY8L0
+	mXmf+G8hJvol9tfh+0SghDlHx799mZ1AKf9WN
+X-Google-Smtp-Source: AGHT+IHi7Oud5ysHq9CgQrZBqlgkk+ZUvKe1KS7qoSHtq5TTT8mP5c7o9KkShcg8eu23GC0V/keL51QjkCc9dUbzAC0=
+X-Received: by 2002:a05:6102:1886:b0:472:eb81:ef29 with SMTP id
+ ji6-20020a056102188600b00472eb81ef29mr138917vsb.23.1709931145717; Fri, 08 Mar
+ 2024 12:52:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: FLfWcM5C0A-_FpItH3KrMNt39-CpGJJu
-X-Proofpoint-ORIG-GUID: FLfWcM5C0A-_FpItH3KrMNt39-CpGJJu
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403080164
+References: <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
+ <20240222202404.36206-1-kevinloughlin@google.com> <CAMj1kXFsX1HZ3=x1cjN0-7i5EV9LXkSrAW22dc1wERUaTdAMaA@mail.gmail.com>
+ <20240308110043.GEZerv21Qj10Q7-8p5@fat_crate.local>
+In-Reply-To: <20240308110043.GEZerv21Qj10Q7-8p5@fat_crate.local>
+From: Kevin Loughlin <kevinloughlin@google.com>
+Date: Fri, 8 Mar 2024 15:52:14 -0500
+Message-ID: <CAGdbjm+RMy6M=_PRg_L70g+EZ1FXi0BVub60KT4-GHuv6wLa2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kernel: skip ROM range scans and validation for
+ SEV-SNP guests
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, acdunlap@google.com, 
+	alexander.shishkin@linux.intel.com, andrisaar@google.com, bhe@redhat.com, 
+	brijesh.singh@amd.com, dave.hansen@linux.intel.com, dionnaglaze@google.com, 
+	grobler@google.com, hpa@zytor.com, jacobhxu@google.com, jpoimboe@kernel.org, 
+	kai.huang@intel.com, linux-kernel@vger.kernel.org, michael.roth@amd.com, 
+	mingo@redhat.com, peterz@infradead.org, pgonda@google.com, 
+	ross.lagerwall@citrix.com, sidtelang@google.com, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, x86@kernel.org, ytcoode@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Running turbostat on a 16 socket HPE Scale-up Compute 3200 (SapphireRapids) fails with:
-turbostat: /sys/devices/system/cpu/intel_uncore_frequency/package_010_die_00/current_freq_khz: open failed: No such file or directory
+On Fri, Mar 8, 2024 at 6:01=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrote=
+:
+>
+> On Fri, Mar 08, 2024 at 11:30:50AM +0100, Ard Biesheuvel wrote:
+> > Agree with the analysis and the conclusion. However, this will need to
+> > be split into generic and x86 specific changes, given that the DMI
+> > code is shared between all architectures, and explicitly checking for
+> > SEV-SNP support in generic code is not appropriate.
+> >
+> > So what we will need is:
+>
+> I was actually thinking of:
+>
+>         x86_init.resources.probe_roms =3D snp_probe_roms;
+>
+> and snp_probe_roms() is an empty stub.
+>
+> Problem solved without ugly sprinkling of checks everywhere.
 
-We observe the sysfs uncore frequency directories named:
-...
-package_09_die_00/
-package_10_die_00/
-package_11_die_00/
-...
-package_15_die_00/
-
-The culprit is an incorrect sprintf format string "package_0%d_die_0%d" used
-with each instance of reading uncore frequency files. uncore-frequency-common.c
-creates the sysfs directory with the format "package_%02d_die_%02d". Once the
-package value reaches double digits, the formats diverge.
-
-Change each instance of "package_0%d_die_0%d" to "package_%02d_die_%02d".
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
----
- tools/power/x86/turbostat/turbostat.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 7a334377f92b..2a15a23cb726 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -2599,7 +2599,7 @@ unsigned long long get_uncore_mhz(int package, int die)
- {
- 	char path[128];
- 
--	sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/current_freq_khz", package,
-+	sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/current_freq_khz", package,
- 		die);
- 
- 	return (snapshot_sysfs_counter(path) / 1000);
-@@ -4589,20 +4589,20 @@ static void probe_intel_uncore_frequency(void)
- 		for (j = 0; j < topo.num_die; ++j) {
- 			int k, l;
- 
--			sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/min_freq_khz",
-+			sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/min_freq_khz",
- 				i, j);
- 			k = read_sysfs_int(path);
--			sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/max_freq_khz",
-+			sprintf(path, "/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/max_freq_khz",
- 				i, j);
- 			l = read_sysfs_int(path);
- 			fprintf(outf, "Uncore Frequency pkg%d die%d: %d - %d MHz ", i, j, k / 1000, l / 1000);
- 
- 			sprintf(path,
--				"/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/initial_min_freq_khz",
-+				"/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/initial_min_freq_khz",
- 				i, j);
- 			k = read_sysfs_int(path);
- 			sprintf(path,
--				"/sys/devices/system/cpu/intel_uncore_frequency/package_0%d_die_0%d/initial_max_freq_khz",
-+				"/sys/devices/system/cpu/intel_uncore_frequency/package_%02d_die_%02d/initial_max_freq_khz",
- 				i, j);
- 			l = read_sysfs_int(path);
- 			fprintf(outf, "(%d - %d MHz)\n", k / 1000, l / 1000);
--- 
-2.26.2
-
+Agreed, this is nicer; we can just add dmi_setup to x86_init as well
+to implement the same concept for all checks we need.
