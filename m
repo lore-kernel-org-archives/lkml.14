@@ -1,74 +1,97 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B71351C5C;
-	Fri,  8 Mar 2024 08:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706C31CAB2;
+	Fri,  8 Mar 2024 08:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887245; cv=none; b=bWpwg1fbJg8pMUajpdFEofAjDT5Zn+aNlx5nlxwWaAdL8mtMjtSKl5sw3Ulv1jWFCNMxCvHlSJZYhlkrQbjScplg9qhv7cKLtxzaCj+xcBpYOfpe8jhOPJOf9XSH2xpHmVwispKsfg0H9V83B9peNuefUQc11nkZxngB4BZmJWk=
+	t=1709887300; cv=none; b=Cll5/NEGRlJphLGO0h0MdZGdvmBWdmap3KBN4DOKmYmq9tXdqBd4GkPGQ070R9LV5MxFqVu4K3UiyiiqeYAKdz4goOLK/SFZOACA5lJhm3WIjX7IM0SZK39RF4oSJuK0FKDieREO0Xw767+DvPjSqZc21jWf+SSPfSBY88eP10w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887245; c=relaxed/simple;
-	bh=wpah1BRPoth5v+GfqPF7IPIPtr3RuwlZdH6pWroKFH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEYOr/FfOwnDPdGRbFiUOhUgZsCZneRb+hP9NAfPUMRK4DlIfKZkZgmZOtQhBNtmqfRptK3hIgTj3iu9kAPUrBzFUt89F3VTy+sdRHo7MfXDsbTBe1I2VRgSdRxDriwFJp8Vz9SNUE/BVHaAXJWHLd7E5URlix1bFV9mOdJeoBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=REZmszDW; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1709887300; c=relaxed/simple;
+	bh=kNO+vJ8sYUNufRYtszG1eobTNUFc3K/W3CZuPG5GR5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o0QXiTRlvtPSF4Arbfz2W8+5yY32cS8QAqCIdD69nqdtBqwPGdvPCE8NZDQL0gqpN1LTWWR/CBXI35tUjNTeESaF3PX5EFexrQouM/X0UBX+qKe0Xd4jv8ryPixxPeXjo54xkuga5gb3UTiSjvdgl3mbv8Pjhr1TvqI9zWcc9lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GYeAJgDR; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="REZmszDW"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id AEFC16042D;
-	Fri,  8 Mar 2024 08:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1709887242;
-	bh=wpah1BRPoth5v+GfqPF7IPIPtr3RuwlZdH6pWroKFH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=REZmszDWTvKT3lidocsf8OEGV1gZqMg3JFWg8YtDu7y1r5CBWQW3tOVT40RmE4b3b
-	 YePLWtD4jQkdWkq5sEqYBHRLDQ19FC+AY8v6nRBdOMFfUsWOq2KODnA076fO4sRyDh
-	 aVW3DWFaXAnrlMCugWxKXoKPEqjO1uFLoPDNEDlP4VLHZQLOOIiyF6xM791j7YUTDf
-	 lx1ba9yyCls15dtwMOFe5GHhnQVGuOV0LTID+cEbF0dINp6nxBV0DlDufkgUlXF4VU
-	 dRbJyxTNe/d/fLrFVPW/nuBrIvsj//vrjsqIXidb7LfQ9Js1kMNRTL580aZid11iSf
-	 1XI2Un6qVopOg==
-Date: Fri, 8 Mar 2024 10:39:40 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move
- suspend()/resume() callbacks to noirq
-Message-ID: <20240308083940.GJ52537@atomide.com>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
- <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GYeAJgDR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709887296;
+	bh=kNO+vJ8sYUNufRYtszG1eobTNUFc3K/W3CZuPG5GR5A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GYeAJgDRUl+YAm1bhqIwpML9GBTQZTluXVJd7rNZYWOFdBla8icE64WRxxIBtLv+d
+	 VSAPhz2EojjofWKw15JrQhXR3gEEkrefHtzdEEEGOjWh38+ER4sQUnO+ZkpliqyzJy
+	 Pe/4cXKdprikEYT2Gmqy+H0aNqrmOg/MxU/q3O02UDRlWlgtHzfj/9BwQNifM7PJj9
+	 /rkrGozn6AMoa3RZdjL9fm/Z663mkHvvS6Nr/hY6Bcv4IyLhHPbVtWh//c6ye1Ckec
+	 dGEaLAZ1RDyQd0rBeCj8GeaBrxAT7UPNunKeGtfysl3L18zGz4PbEGA761kdzK6brg
+	 MRjPq+l3KRrlg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C2EF937813CA;
+	Fri,  8 Mar 2024 08:41:35 +0000 (UTC)
+Message-ID: <ff708cd5-efe1-47e0-8112-ac7a2658cd8d@collabora.com>
+Date: Fri, 8 Mar 2024 09:41:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] mips: dts: ralink: mt7621: associate uart1_pins
+ with serial0
+Content-Language: en-US
+To: Justin Swartz <justin.swartz@risingedge.co.za>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
+ <20240307190408.23443-1-justin.swartz@risingedge.co.za>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240307190408.23443-1-justin.swartz@risingedge.co.za>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-* Thomas Richard <thomas.richard@bootlin.com> [240304 15:36]:
-> The goal is to extend the active period of pinctrl.
-> Some devices may need active pinctrl after suspend() and/or before
-> resume().
+Il 07/03/24 20:04, Justin Swartz ha scritto:
+> Add missing pinctrl-name and pinctrl-0 properties to declare
+> that the uart1_pins group is associated with serial0.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> ---
+>   arch/mips/boot/dts/ralink/mt7621.dtsi | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
+> index 35a10258f..dca415fdd 100644
+> --- a/arch/mips/boot/dts/ralink/mt7621.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
+> @@ -123,6 +123,9 @@ serial0: serial@c00 {
+>   			reg-shift = <2>;
+>   			reg-io-width = <4>;
+>   			no-loopback-test;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&uart1_pins>;
+>   		};
+>   
+>   		spi0: spi@b00 {
 
-Reviewed-by: Tony Lindgren <tony@atomide.com>
+The pins are muxed and can be either UART, or some other function that
+is supported by the mux: this means that the pinctrl-xxx properties shall
+*not* go into the SoC dtsi file, but in board dts files instead.
+
+Said differently: the usage of the UART pins is board-specific, not SoC-wide.
+
+Regards,
+Angelo
