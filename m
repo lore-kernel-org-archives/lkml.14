@@ -1,81 +1,113 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EC5535BA
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0021C535D3
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891614; cv=none; b=qNcvA7HoH6SIbCIU8oNDEYyXOg0JMhFWUYcGTDpbbWAN5C1JX4demdf4/n8PUJTplgOr5zMCVOnI0XGQg1w1YmEcz6bnwi8xsVKLzOqRIuo+8GGfg9LHDhE1mgUmGxxasHO614U650GU5R7PN2auDx9/FINiltTbpvjTeBlrYuc=
+	t=1709891656; cv=none; b=VK96tYv+92+G37qmC4wZeCkGA/03mcbGyzt8PjT3OKnzqdl7N/3Ym1T2B0H6QibWY5WebnzzkcC2I0zEPnSmkRGh+nnAb0XCT6EeTCPiIqLw1uKWeAtf9szv+cvFhek8+khHBoZSbt6YPUGiwc8H8AeQhckLnhsNb1YbTSH+aQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891614; c=relaxed/simple;
-	bh=ndHO+dbK771sCXkhMw7b5U4+3upvw4nenUdZ5aegvaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V72pLDo0be/F/fvE9VGxI30ha6n6ZslERC7q8Y5ah44xONZJn6nMkTUiCQoSSpeG44hy0yseAJeBqc6WsezR1C2h6qPUxJyW0ST2MP/wJ9hBKLmXpQWooFaoF8HPJcnjxzhLoT2SXzOKRvjIaFF4ZVnNXbJCXwR4tJ9QEK2lpBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QG1dOEGP; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1709891656; c=relaxed/simple;
+	bh=PSSmdFEKXbQoDoLCkYh9gWPYZ30jQDOHJ1WglWyUdcI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Gz7FyUZJ+Ek+r/kno5tqMwJLWfm5uh52/B7LyqC3qdc7EfxWXoGjL6GZg28t0sbifXN07sm+TZDhTeQSMwpBcuJRYO8JBXunXvyRv15pe4bAQ1YUkVQILtLW0Yv3wuhbRqUp8R3/Qku0MmuBa4k/bi6rd0kSiq3vX6AUQ+jMV00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ytV3gF8E; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QG1dOEGP"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709891607; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=SVLuV58Wf88RJz4QCYei0USy2gOFJ7vIuBSJPd4JPzE=;
-	b=QG1dOEGP0AM81HMX5YvQCdCLyiEfSIxFCOGgYXWZnkKltwDbaa3JfLfHHD88tmogsG1XKHfSRPu4cZFaAW42zAgKHPI4zjLbg+B6SR40LPpJ3pzp4slmolU6d80+7oaXGohOy4L/ObBkHpwuFywgB7we0XyFtYML6WQweKujs5s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W22PPMk_1709891605;
-Received: from 30.97.48.168(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W22PPMk_1709891605)
-          by smtp.aliyun-inc.com;
-          Fri, 08 Mar 2024 17:53:27 +0800
-Message-ID: <54e39ceb-834a-4f37-9dc3-7db84fa59927@linux.alibaba.com>
-Date: Fri, 8 Mar 2024 17:53:25 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ytV3gF8E"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1dd129acd2aso18372115ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:54:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709891654; x=1710496454; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kd9b+xnVrsV0VnvP5BBobh+7armz3SPZmewGeAELg2w=;
+        b=ytV3gF8EP34hyIMMZ2QJseL3LPVTrc2NDBdolJoM4xGO7CB8WcamB2r4NoVeAzmEYx
+         Qz5UfThOrbqpQitYDhQ5VtwVcaDZFcIhShDnTgrBFxvvqzyf+LGvd8XsA3dEut77EOi4
+         ZX3iVd0yYLeHSk1kigdvZfQYJ3ImxU1bH6aK1yqaU/17kosDWPtgIQd4filUi4zIzVrr
+         ixVjafFgRONl5mrgwtIg47RlX9g3waUeFMZGMQ76NFY2tUuCIImG6JHCYrk5JGrn57qD
+         SR8mm9LB7PqRfjWmBbS4trJ9PMNhmcrQOnOA4QtTU8sHQW0JPR+XA+fuuZvHwSC5Wtwj
+         EFww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709891654; x=1710496454;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kd9b+xnVrsV0VnvP5BBobh+7armz3SPZmewGeAELg2w=;
+        b=GwzOQscCJS2aQNSnee4tT2EcI21D3UfCCnuisuw+ADuKCPvbNwhSWmvVfxFW46fuBg
+         bWMELkQyMUlUaBIUgoLT4+Yhw52vGgPcFQSfy4D24kvWFcX6mBjHhgRfOnxyyMIhdSkF
+         0FrmqKEpGxdiYnEg8oa0agfRbn7wKvpO8eQXIDDdFsSH6y+ezi6Zs152qhJn3ghgKt2+
+         anl1eSwwFR3g40f3FcINTVHDCN6/kk5w+EQlHn1cIYItD2J8A73f4wfgjSBDKNaQZxAJ
+         jgul9C+mLFJffHralFmId4Zr2X7Vl9HuWk21L+C3LSoxlwDvNvZGXDc/df72pTmcXGDX
+         7iNg==
+X-Gm-Message-State: AOJu0YyXtusk1/0a8SeKOF0v67xa8mquIgLpQ1Q87sIp3gfiY3DUAQh8
+	ZMHhfmQvoOPOFFp0+Wim5xMTlun+Qq/mfDhY0Qn12L3iovQPK5jo2VR149A6IU9H4A3BgCOu+4F
+	bTusPwm4pfooPBw==
+X-Google-Smtp-Source: AGHT+IG7o+dh/76ogl6dMQx3yfx+ZlS2Tc2RH7CYeArGIpPrqv+Lt8uzvSvNDTz8wBfiHvp5wM9In7J0dxXtBnY=
+X-Received: from howardyen2.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:16f7])
+ (user=howardyen job=sendgmr) by 2002:a17:903:22ce:b0:1db:f7e5:afd2 with SMTP
+ id y14-20020a17090322ce00b001dbf7e5afd2mr717431plg.12.1709891654099; Fri, 08
+ Mar 2024 01:54:14 -0800 (PST)
+Date: Fri,  8 Mar 2024 09:53:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs: make iov_iter describe target buffers over
- fscache
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-References: <20240308094159.40547-1-jefflexu@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240308094159.40547-1-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240308095320.1961469-1-howardyen@google.com>
+Subject: [PATCH v4 0/2] Add support for multiple coherent memory regions
+From: Howard Yen <howardyen@google.com>
+To: gregkh@linuxfoundation.org, rafael@kernel.org, mathias.nyman@intel.com, 
+	hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
+	andriy.shevchenko@linux.intel.com, petr.tesarik.ext@huawei.com, 
+	broonie@kernel.org, james@equiv.tech, james.clark@arm.com, 
+	masahiroy@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	iommu@lists.linux.dev, Howard Yen <howardyen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+In the system I'm working on, there is an always-on subsystem which
+includes a small size memory, and several functions need to run and
+occupy the memory from the small memory if they need to run on the
+always-on subsystem. These functions must allocate the memory from the
+small memory region, so that they can get benefit from the always-on
+subsystem. So the small memory is split for multiple functions which are
+satisfied with their generic use cases. But in specific use cases, like
+USB3 devices which support the stream trasnsfer or multiple devices
+connect to the host, they required more memory than their pre-allocated
+memory region. I tried to implement it in a generic way and propose this
+patch to give it the ability to get the memory from the other larger
+memory to solve the issue.
 
 
+Changelog
+--------------------------------------------
+Changes in v4:
+- Add the driver where uses the multiple coherent memory regions
 
-On 2024/3/8 17:41, Jingbo Xu wrote:
-> So far the fscache mode supports uncompressed data only, and the data
-> read from fscache is put directly into the target page cache.  As the
-> support for compressed data in fscache mode is going to be introduced,
-> rework the fscache internals so that the following compressed part
-> could make the raw data read from fscache be directed to the target
-> buffer it wants, decompress the raw data, and finally fill the page
-> cache with the decompressed data.
-> 
-> As the first step, a new structure, i.e. erofs_fscache_io (io), is
-> introduced to describe a generic read request from the fscache, while
-> the caller can specify the target buffer it wants in the iov_iter
-> structure (io->iter).  Besides, the caller can also specify its
-> completion callback and private data through erofs_fscache_io, which
-> will be called to make further handling, e.g. unlocking the page cache
-> for uncompressed data or decompressing the read raw data, when the read
-> request from the fscache completes.  Now erofs_fscache_read_io_async()
-> serves as a generic interface for reading raw data from fscache for both
-> compressed and uncompressed data.
-> 
-> The erofs_fscache_rq structure is kept to describe a request to fill the
-> page cache in the specified range.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Changes in v3:
+- Re-org the members of struct dma_coherent_mem to avoid additional
+  pointer arithmetics and the holes inside the structure.
+- Use consistent naming of return value.
+- Re-write the dev checking statement to be more clear.
 
-As we discussed offline, for the whole series:
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Changes in v2:
+- Replace the pointer(dma_mem) to a list_head(dma_mems) in the device
+  structure and initialize the list_head in device_initialize().
+- Modify the required changes in coherent.c.
 
-Thanks for the work!
 
-Thanks,
-Gao Xiang
+Howard Yen (2):
+  dma-coherent: add support for multi coherent rmems per dev
+  usb: host: xhci-plat: add support for multi memory regions
+
+ drivers/base/core.c          |  3 ++
+ drivers/usb/host/xhci-plat.c | 19 +++++++-
+ include/linux/device.h       |  5 +-
+ kernel/dma/coherent.c        | 92 +++++++++++++++++++++++-------------
+ 4 files changed, 82 insertions(+), 37 deletions(-)
+
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
