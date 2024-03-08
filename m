@@ -1,223 +1,114 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+Received: from smtpweb146.aruba.it (smtpweb146.aruba.it [62.149.158.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2741C524C3
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 08:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BC3CA78
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709888378; cv=none; b=uvC3P4XIm7xG0Qc3WHvtDHS4S52AhHyV1ybx8dtjoVGFQrCfonaQAPWmJ+tvi9FCgxho96HZbLy1/YbPPDOoXNgHUvqsZZTJylLsXhnztYlWdAcI8uDLJJBJHoYXNAthVLRbivthpHO9ilJMhz2eJn1fDbGkS9N48PlhsmyS0xM=
+	t=1709888443; cv=none; b=dx8BYxRTelf4bOYocvmijWf8Ti8+GrCqKjdb3pZ0ka9Kfo3hrd/Re6NRMS4XPlpFdO+jI7aom0++uxDhxLTG+eTXbXSmUXEP3bj9dWkf5QXPsQfMCC0oRzonm3DxPFPWOiUc1GCoYZvh7F2/tMzgJhk6jRe6evnsrG2YA4UiQRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709888378; c=relaxed/simple;
-	bh=m/Qd/jNyLRwRhfzNfiKmPzkZGpGSFMRbERjzfYUVHBw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uSKSFQ2lmfOy4GkriDyISTqC7D4vMBX7PejmuyV2QPeGvJftUG91702tHPdtA+TQl+u9CzoHL9RAYeE2nFs/fXx87yxens4HwxoTl4p95BwDT0bX1QxlrPukls0B7bDjlWNC7f3xndRfj7xYkQx8iGjmhYRmycaPYi8lBe1tEyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=CcYXZQ4A reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
+	s=arc-20240116; t=1709888443; c=relaxed/simple;
+	bh=HPrU0Wyhp98Idg6SSCatKl3na2JRMkwQ26OormfXCTI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rPFJNnUKiOSH8VKfPLbK0WljMpGAAaDqy5TeXikj5ph9WtjFtm5DS+f9q2aNB4sAa5R/VkkSAkS1VDqlZ/E5YqzIEICNKWbYne3sxlVrcrM0l62FuVH9k8YqpqOJm2yE/9WU4rc1l+lvxZmvaztTiAqwDVaVrCchDL+WuMtinIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=Qq2Q+I3z; arc=none smtp.client-ip=62.149.158.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="CcYXZQ4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=m/Qd/jNyLRwRhfzNfiKmPzkZGpGSFMRbERjzfYUVHBw=;
-  b=CcYXZQ4A2D+IXBtVR4MuGx3QtpI63yGmKRacY1iaCks3afjThGIzAdhY
-   7yPPxUHm2zi0DBvRcRo4UxCv3pgmwfBl9U1c7eloZs10spQRyvh1PsNRZ
-   KJd1Qud6lRD9SB/AFrPqYlAnUgYBU1w/WM9ni66an+yMRQNxuwnIM0ZVM
-   lPo6J3Smib3WqW+0LOT7j7x605hE0bGs+4ilponyjZY7suEwmY9lcQdmQ
-   nfrTbH72feo11Bx70W31qFLVWZ5uA5VvEl9x45GUzZpS7RNKoaCrOuSu2
-   GkjMm9Bm5sytGrS6DfZaWrQgtuimoI90ky8ygi/RZcyPJoigF+ZH8YfhY
-   A==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 08 Mar 2024 16:59:34 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL2.internal.ite.com.tw [192.168.65.41])
-	by mse.ite.com.tw with ESMTP id 4288xV7t083761;
-	Fri, 8 Mar 2024 16:59:31 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from CSBMAIL1.internal.ite.com.tw (192.168.65.58) by
- CSBMAIL2.internal.ite.com.tw (192.168.65.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 8 Mar 2024 16:59:30 +0800
-Received: from CSBMAIL1.internal.ite.com.tw ([fe80::c9da:6689:2b22:a2d6]) by
- CSBMAIL1.internal.ite.com.tw ([fe80::c9da:6689:2b22:a2d6%3]) with mapi id
- 15.01.2507.035; Fri, 8 Mar 2024 16:59:30 +0800
-From: <kuro.chung@ite.com.tw>
-To: <treapking@chromium.org>
-CC: <allen.chen@ite.com.tw>, <Kenneth.Hung@ite.com.tw>,
-        <allen.chen@ite.corp-partner.google.com>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-        <daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 1/1] UPSTREAM: drm/bridge: it6505: fix hibernate to
- resume no display issue
-Thread-Topic: [PATCH v3 1/1] UPSTREAM: drm/bridge: it6505: fix hibernate to
- resume no display issue
-Thread-Index: AQHacGI5enQsNeEpPEi+my2OeMnhv7Eti/+Q
-Date: Fri, 8 Mar 2024 08:59:30 +0000
-Message-ID: <e74654f515ac47f18163d5ad6364239b@ite.com.tw>
-References: <20240306022003.259245-1-kuro.chung@ite.com.tw>
- <20240306022003.259245-2-kuro.chung@ite.com.tw>
- <CAEXTbpccS64sb9_Ocjby1UxDWfkEPU6-JYRP4dWCKqGRe3Ux0A@mail.gmail.com>
-In-Reply-To: <CAEXTbpccS64sb9_Ocjby1UxDWfkEPU6-JYRP4dWCKqGRe3Ux0A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-snts-smtp: E29482C4A663611D01ECBFE1967ABA62BCEE8334DCC858AF7825E8BD0B5A3EAE2002:8
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="Qq2Q+I3z"
+Received: from [192.168.1.59] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id iW2jrRVXfIrdViW2jrlbmd; Fri, 08 Mar 2024 09:57:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1709888250; bh=HPrU0Wyhp98Idg6SSCatKl3na2JRMkwQ26OormfXCTI=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=Qq2Q+I3z/JcHh73/vXv5Wem6JQC76uRqjD0UKt0CUGmTnnrcM+YDRltHYhKYaL7LR
+	 3j73XPxXu/7XBTdSC6rgZcKgh4fZhwxI7iuDaEu2qID/jXlBr4YOUpVDwdAxfSpbD4
+	 /GtgoWzteOuTfoP3M7wCDljMs3mFifb5XpTMAMaED5jHkNXb6bpjeQU3tMTTMzmMbk
+	 CMbNhmb26SHlyTg+y+owCvvjTCS5o5CevxoaSEn6Xyq0omJD1g+emHGehkwGbVGtj4
+	 OrJ78T14Iyi5E8DS0DnpgIsG9P4JEGI/hF3sftd2+jY4PhPgjQgP8GFEYaFKIGGb4M
+	 732aA6MJraWwA==
+Message-ID: <6d73b0a4-34e6-44ce-8757-4f4931c3da85@enneenne.com>
+Date: Fri, 8 Mar 2024 09:57:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MAIL:mse.ite.com.tw 4288xV7t083761
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pps: clients: gpio: Convert to platform remove callback
+ returning void
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <f4b9402af72e5f285c8b0f068076a76418f653f5.1709886922.git.u.kleine-koenig@pengutronix.de>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <f4b9402af72e5f285c8b0f068076a76418f653f5.1709886922.git.u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfDN1goyN/Wfs4tz/HSwwvTn0Euf8tOoOPrB9EijwWLBOQwxZsuwfmkxCL2PC6iCEn+kYMnXjZFyu1csMHtuAZlWfrJLEf3QD71BkKdTBj3v7JEpyNbu9
+ XrlsQzxaNi8wQw6+lMl8C8cpzemXpMVg84QJ4179Af9Q0EAAuOZ4SU8NTWebhrIz6EwyX7scK7z9tRCbPGaamDUvxMgfEOl0IZtjuaswgJbZrqWgtGVIm2Cz
+ phdQmVqPk8Yxwqm3Oblsnr59IFwwie+ZKWTN4BTPu/w=
 
-SGkgUGluLVllbiwNCg0KCVBsZWFzZSByZWFkIG15IGNvbW1lbnQgYXMgYmxvdywgdGhhbmsgeW91
-IHZlcnkgbXVjaC4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IFBpbi15ZW4g
-TGluIDx0cmVhcGtpbmdAY2hyb21pdW0ub3JnPiANClNlbnQ6IFRodXJzZGF5LCBNYXJjaCA3LCAy
-MDI0IDM6MzcgUE0NClRvOiBLdXJvIENodW5nICjpkJjku5Xlu7cpIDxrdXJvLmNodW5nQGl0ZS5j
-b20udHc+DQpDYzogQWxsZW4gQ2hlbiA8YWxsZW4uY2hlbkBpdGUuY29tLnR3PjsgS2VubmV0aCBI
-dW5nICjmtKrlrrblgKspIDxLZW5uZXRoLkh1bmdAaXRlLmNvbS50dz47IEFsbGVuIENoZW4gPGFs
-bGVuLmNoZW5AaXRlLmNvcnAtcGFydG5lci5nb29nbGUuY29tPjsgQW5kcnplaiBIYWpkYSA8YW5k
-cnplai5oYWpkYUBpbnRlbC5jb20+OyBOZWlsIEFybXN0cm9uZyA8bmVpbC5hcm1zdHJvbmdAbGlu
-YXJvLm9yZz47IFJvYmVydCBGb3NzIDxyZm9zc0BrZXJuZWwub3JnPjsgTGF1cmVudCBQaW5jaGFy
-dCA8TGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPjsgSm9uYXMgS2FybG1hbiA8am9u
-YXNAa3dpYm9vLnNlPjsgSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQGdtYWlsLmNvbT47
-IE1hYXJ0ZW4gTGFua2hvcnN0IDxtYWFydGVuLmxhbmtob3JzdEBsaW51eC5pbnRlbC5jb20+OyBN
-YXhpbWUgUmlwYXJkIDxtcmlwYXJkQGtlcm5lbC5vcmc+OyBUaG9tYXMgWmltbWVybWFubiA8dHpp
-bW1lcm1hbm5Ac3VzZS5kZT47IERhdmlkIEFpcmxpZSA8YWlybGllZEBnbWFpbC5jb20+OyBEYW5p
-ZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+OyBvcGVuIGxpc3Q6RFJNIERSSVZFUlMgPGRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+OyBvcGVuIGxpc3QgPGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc+DQpTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMV0gVVBTVFJFQU06IGRybS9i
-cmlkZ2U6IGl0NjUwNTogZml4IGhpYmVybmF0ZSB0byByZXN1bWUgbm8gZGlzcGxheSBpc3N1ZQ0K
-DQpIaSBLdXJvLA0KDQpGb2xsb3dpbmcgdXAgbXkgY29tbWVudHMgZnJvbSB2MiBbMV06DQoNCk9u
-IFdlZCwgTWFyIDYsIDIwMjQgYXQgMTA6MDnigK9BTSBrdXJvIDxrdXJvLmNodW5nQGl0ZS5jb20u
-dHc+IHdyb3RlOg0KPg0KPiBGcm9tOiBrdXJvIGNodW5nIDxrdXJvLmNodW5nQGl0ZS5jb20udHc+
-DQo+DQo+IElURSBhZGRlZCBhIEZJRk8gcmVzZXQgYml0IGZvciBpbnB1dCB2aWRlby4gV2hlbiBz
-eXN0ZW0gcG93ZXIgcmVzdW1lLCANCj4gdGhlIFRUTCBpbnB1dCBvZiBpdDY1MDUgbWF5IGdldCBz
-b21lIG5vaXNlIGJlZm9yZSB2aWRlbyBzaWduYWwgc3RhYmxlIA0KPiBhbmQgdGhlIGhhcmR3YXJl
-IGZ1bmN0aW9uIHJlc2V0IGlzIHJlcXVpcmVkLg0KPiBCdXQgdGhlIGlucHV0IEZJRk8gcmVzZXQg
-d2lsbCBhbHNvIHRyaWdnZXIgZXJyb3IgaW50ZXJydXB0cyBvZiBvdXRwdXQgbW9kdWxlIHJpc2lu
-Zy4NCj4gVGh1cywgaXQ2NTA1IGhhdmUgdG8gd2FpdCBhIHBlcmlvZCBjYW4gY2xlYXIgdGhvc2Ug
-ZXhwZWN0ZWQgZXJyb3IgDQo+IGludGVycnVwdHMgY2F1c2VkIGJ5IG1hbnVhbCBoYXJkd2FyZSBy
-ZXNldCBpbiBvbmUgaW50ZXJydXB0IGhhbmRsZXIgY2FsbGluZyB0byBhdm9pZCBpbnRlcnJ1cHQg
-bG9vcGluZy4NCj4NCj4gU2lnbmVkLW9mZi1ieTogQWxsZW4gQ2hlbiA8YWxsZW4uY2hlbkBpdGUu
-Y29ycC1wYXJ0bmVyLmdvb2dsZS5jb20+DQoNCklJVUMgeW91IG5lZWQgdG8gc2lnbiB0aGlzIG9m
-ZiB3aXRoIHlvdXIgbmFtZSBhcyB3ZWxsLiBTZWUgWzJdIGZvciBtb3JlIGRldGFpbHMuDQotPiBJ
-IHVwZGF0ZSBpbiB0aGUgbGFzdCBwYXRjaCB2NCANCg0KDQoNCg0KDQo+IC0tLQ0KPiAgZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9pdGUtaXQ2NTA1LmMgfCA1NCANCj4gKysrKysrKysrKysrKysrKysr
-KysrKysrLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspLCA5IGRlbGV0
-aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9pdGUtaXQ2
-NTA1LmMgDQo+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9pdGUtaXQ2NTA1LmMNCj4gaW5kZXgg
-YjUzZGE5YmI2NWExNi4uZTU5MmUxNGE0ODU3OCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9pdGUtaXQ2NTA1LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9p
-dGUtaXQ2NTA1LmMNCj4gQEAgLTEzMTgsNiArMTMxOCw4IEBAIHN0YXRpYyB2b2lkIGl0NjUwNV92
-aWRlb19yZXNldChzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUpDQo+ICAgICAgICAgaXQ2NTA1X3NldF9i
-aXRzKGl0NjUwNSwgUkVHX0RBVEFfTVVURV9DVFJMLCBFTl9WSURfTVVURSwgRU5fVklEX01VVEUp
-Ow0KPiAgICAgICAgIGl0NjUwNV9zZXRfYml0cyhpdDY1MDUsIFJFR19JTkZPRlJBTUVfQ1RSTCwg
-RU5fVklEX0NUUkxfUEtULCAweDAwKTsNCj4gICAgICAgICBpdDY1MDVfc2V0X2JpdHMoaXQ2NTA1
-LCBSRUdfUkVTRVRfQ1RSTCwgVklERU9fUkVTRVQsIA0KPiBWSURFT19SRVNFVCk7DQo+ICsgICAg
-ICAgaXQ2NTA1X3NldF9iaXRzKGl0NjUwNSwgUkVHX1ZJRF9CVVNfQ1RSTDEsIFRYX0ZJRk9fUkVT
-RVQsIDB4MDIpOw0KPiArICAgICAgIGl0NjUwNV9zZXRfYml0cyhpdDY1MDUsIFJFR19WSURfQlVT
-X0NUUkwxLCBUWF9GSUZPX1JFU0VULCANCj4gKyAweDAwKTsNCj4gICAgICAgICBpdDY1MDVfc2V0
-X2JpdHMoaXQ2NTA1LCBSRUdfNTAxX0ZJRk9fQ1RSTCwgUlNUXzUwMV9GSUZPLCBSU1RfNTAxX0ZJ
-Rk8pOw0KPiAgICAgICAgIGl0NjUwNV9zZXRfYml0cyhpdDY1MDUsIFJFR181MDFfRklGT19DVFJM
-LCBSU1RfNTAxX0ZJRk8sIDB4MDApOw0KPiAgICAgICAgIGl0NjUwNV9zZXRfYml0cyhpdDY1MDUs
-IFJFR19SRVNFVF9DVFJMLCBWSURFT19SRVNFVCwgMHgwMCk7IEBAIA0KPiAtMjQ4MCwxMCArMjQ4
-Miw2IEBAIHN0YXRpYyB2b2lkIGl0NjUwNV9pcnFfdmlkZW9fZmlmb19lcnJvcihzdHJ1Y3QgaXQ2
-NTA1ICppdDY1MDUpDQo+ICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJml0NjUwNS0+Y2xp
-ZW50LT5kZXY7DQo+DQo+ICAgICAgICAgRFJNX0RFVl9ERUJVR19EUklWRVIoZGV2LCAidmlkZW8g
-ZmlmbyBvdmVyZmxvdyBpbnRlcnJ1cHQiKTsNCj4gLSAgICAgICBpdDY1MDUtPmF1dG9fdHJhaW5f
-cmV0cnkgPSBBVVRPX1RSQUlOX1JFVFJZOw0KPiAtICAgICAgIGZsdXNoX3dvcmsoJml0NjUwNS0+
-bGlua193b3Jrcyk7DQo+IC0gICAgICAgaXQ2NTA1X3N0b3BfaGRjcChpdDY1MDUpOw0KPiAtICAg
-ICAgIGl0NjUwNV92aWRlb19yZXNldChpdDY1MDUpOw0KPiAgfQ0KPg0KPiAgc3RhdGljIHZvaWQg
-aXQ2NTA1X2lycV9pb19sYXRjaF9maWZvX292ZXJmbG93KHN0cnVjdCBpdDY1MDUgKml0NjUwNSkg
-DQo+IEBAIC0yNDkxLDEwICsyNDg5LDYgQEAgc3RhdGljIHZvaWQgaXQ2NTA1X2lycV9pb19sYXRj
-aF9maWZvX292ZXJmbG93KHN0cnVjdCBpdDY1MDUgKml0NjUwNSkNCj4gICAgICAgICBzdHJ1Y3Qg
-ZGV2aWNlICpkZXYgPSAmaXQ2NTA1LT5jbGllbnQtPmRldjsNCj4NCj4gICAgICAgICBEUk1fREVW
-X0RFQlVHX0RSSVZFUihkZXYsICJJTyBsYXRjaCBmaWZvIG92ZXJmbG93IGludGVycnVwdCIpOw0K
-PiAtICAgICAgIGl0NjUwNS0+YXV0b190cmFpbl9yZXRyeSA9IEFVVE9fVFJBSU5fUkVUUlk7DQo+
-IC0gICAgICAgZmx1c2hfd29yaygmaXQ2NTA1LT5saW5rX3dvcmtzKTsNCj4gLSAgICAgICBpdDY1
-MDVfc3RvcF9oZGNwKGl0NjUwNSk7DQo+IC0gICAgICAgaXQ2NTA1X3ZpZGVvX3Jlc2V0KGl0NjUw
-NSk7DQo+ICB9DQoNCkkgZG9uJ3QgcmVhbGx5IGxpa2UgZnVuY3Rpb25zIHRoYXQgb25seSBwcmlu
-dCBvbmUgbGluZSBvZiBkZWJ1ZyBsb2csIGJ1dCBJJ20gbm90IHN1cmUgd2hhdCBvdGhlciByZXZp
-ZXdlcnMgdGhpbmsgYWJvdXQgdGhpcy4NCi0+IEkgdG90YWxseSByZW1vdmUgdGhvc2UgdHdvIGZ1
-bmN0aW9uIGluIHRoZSBuZXcgcGF0Y2ggdjQuDQoNCg0KDQoNCg0KDQoNCj4NCj4gIHN0YXRpYyBi
-b29sIGl0NjUwNV90ZXN0X2JpdCh1bnNpZ25lZCBpbnQgYml0LCBjb25zdCB1bnNpZ25lZCBpbnQg
-DQo+ICphZGRyKSBAQCAtMjUwMiw2ICsyNDk2LDQ2IEBAIHN0YXRpYyBib29sIGl0NjUwNV90ZXN0
-X2JpdCh1bnNpZ25lZCBpbnQgYml0LCBjb25zdCB1bnNpZ25lZCBpbnQgKmFkZHIpDQo+ICAgICAg
-ICAgcmV0dXJuIDEgJiAoYWRkcltiaXQgLyBCSVRTX1BFUl9CWVRFXSA+PiAoYml0ICUgDQo+IEJJ
-VFNfUEVSX0JZVEUpKTsgIH0NCj4NCj4gK3N0YXRpYyBib29sIGl0NjUwNV9pc192aWRlb19lcnJv
-cl9pbnQoY29uc3QgaW50ICppbnRfc3RhdHVzKSB7DQo+ICsgICAgICAgaWYgKChpdDY1MDVfdGVz
-dF9iaXQoQklUX0lOVF9WSURfRklGT19FUlJPUiwgKHVuc2lnbmVkIGludCAqKWludF9zdGF0dXMp
-KSB8fCAoaXQ2NTA1X3Rlc3RfYml0KEJJVF9JTlRfSU9fRklGT19PVkVSRkxPVywgKHVuc2lnbmVk
-IGludCAqKWludF9zdGF0dXMpKSkNCj4gKyAgICAgICAgICAgICAgIHJldHVybiAxOw0KPiArICAg
-ICAgIHJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBpdDY1MDVfaXJxX3ZpZGVv
-X2Vycm9yX2hhbmRsZXIoc3RydWN0IGl0NjUwNSAqaXQ2NTA1KSB7DQo+ICsgICAgICAgc3RydWN0
-IGRldmljZSAqZGV2ID0gJml0NjUwNS0+Y2xpZW50LT5kZXY7DQo+ICsgICAgICAgaW50IGludF9z
-dGF0dXNbM10gPSB7MH07DQo+ICsgICAgICAgaW50IHJlZ18wZDsNCj4gKyAgICAgICBpbnQgaTsN
-Cj4gKw0KPiArICAgICAgIGl0NjUwNS0+YXV0b190cmFpbl9yZXRyeSA9IEFVVE9fVFJBSU5fUkVU
-Ulk7DQo+ICsgICAgICAgZmx1c2hfd29yaygmaXQ2NTA1LT5saW5rX3dvcmtzKTsNCj4gKyAgICAg
-ICBpdDY1MDVfc3RvcF9oZGNwKGl0NjUwNSk7DQo+ICsgICAgICAgaXQ2NTA1X3ZpZGVvX3Jlc2V0
-KGl0NjUwNSk7DQo+ICsNCj4gKyAgICAgICBEUk1fREVWX0RFQlVHX0RSSVZFUihkZXYsICJWaWRl
-byBFcnJvciByZXNldCB3YWl0IHZpZGVvLi4uIik7DQo+ICsNCj4gKyAgICAgICBmb3IgKGkgPSAw
-OyBpIDwgMTA7IGkrKykgew0KPiArICAgICAgICAgICAgICAgdXNsZWVwX3JhbmdlKDEwMDAwLCAx
-MTAwMCk7DQo+ICsgICAgICAgICAgICAgICBpbnRfc3RhdHVzWzJdID0gaXQ2NTA1X3JlYWQoaXQ2
-NTA1LCBJTlRfU1RBVFVTXzAzKTsNCj4gKyAgICAgICAgICAgICAgIHJlZ18wZCA9IGl0NjUwNV9y
-ZWFkKGl0NjUwNSwgUkVHX1NZU1RFTV9TVFMpOw0KPiArICAgICAgICAgICAgICAgaXQ2NTA1X3dy
-aXRlKGl0NjUwNSwgSU5UX1NUQVRVU18wMywgaW50X3N0YXR1c1syXSk7DQo+ICsNCj4gKyAgICAg
-ICAgICAgICAgIERSTV9ERVZfREVCVUdfRFJJVkVSKGRldiwgInJlZzA4ID0gMHglMDJ4IiwgaW50
-X3N0YXR1c1syXSk7DQo+ICsgICAgICAgICAgICAgICBEUk1fREVWX0RFQlVHX0RSSVZFUihkZXYs
-ICJyZWcwRCA9IDB4JTAyeCIsIHJlZ18wZCk7DQo+ICsNCj4gKyAgICAgICAgICAgICAgIGlmICgo
-cmVnXzBkICYgVklERU9fU1RCKSAmJiAocmVnXzBkID49IDApKQ0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICBicmVhazsNCj4gKw0KPiArICAgICAgICAgICAgICAgaWYgKGl0NjUwNV9pc192aWRl
-b19lcnJvcl9pbnQoaW50X3N0YXR1cykpIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgaXQ2
-NTA1X3ZpZGVvX3Jlc2V0KGl0NjUwNSk7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIERSTV9E
-RVZfREVCVUdfRFJJVkVSKGRldiwgIlZpZGVvIEVycm9yIHJlc2V0IHdhaXQgdmlkZW8gKCVkKSIs
-IGkpOw0KPiArICAgICAgICAgICAgICAgfQ0KPiArICAgICAgIH0NCg0KQWdhaW4sIEkgdGhpbmsg
-d2UgbmVlZCBzb21lIGNvZGUgY29tbWVudHMgZm9yIHRoaXMgc2VjdGlvbiwgYW5kIHNvbWUgb2Yg
-eW91ciByZXBsaWVzIHNob3VsZCBiZSBpbmNsdWRlZCB0aGVyZS4NCg0KQW5kIGNhbiB5b3UgZWxh
-Ym9yYXRlIG1vcmUgYWJvdXQgaG93IHRoaXMgc3BlZWRzIHVwIHRoZSB2aWRlbyBzdGFiaWxpemF0
-aW9uPyBXaGF0IHdvdWxkIGhhcHBlbiBpZiB3ZSBvbmx5IGNsZWFyIHRoZSBpbnRlcnJ1cHRzIG9u
-Y2UgaW5zdGVhZCBvZiBkb2luZyBhIGxvb3A/DQoNCi0+IA0KVGhlIG9yaWdpbmFsIGRlc2lnbiBp
-cyBlYWNoIElOVCBiaXQgaGFuZGxlciBieSBmdW5jdGlvbiBpdDY1MDVfaXJxX3ZpZGVvX2ZpZm9f
-ZXJyb3IgYW5kIGl0NjUwNV9pcnFfaW9fbGF0Y2hfZmlmb19vdmVyZmxvdy4gDQpCdXQgdGhlIGhh
-bmRsZXIgZmxvdyBpcyBpbmZsdWVuY2UgZWFjaCBvdGhlci4oSXQgbWF5IG9jY3VyIHJlY3Vyc2l2
-ZWx5IHJzdC0+SU5ULT5yc3QpIA0KQWZ0ZXIgY29uc2lkZXJhdGlvbiBJVEUgaGF2ZSBkZWNpZGVk
-IHRvIGhhbmRsZSB0aG9zZSB0d28gYml0IGluIHRoaXMgc2VjdGlvbi4NCg0KVGhlIHZpZGVvIGZp
-Zm8gcmVzZXQgd2lsbCBjYXVzZSBTQ0RUIGxvc3MgYW5kIHRyaWdnZXIgU0NEVCBJTlQNClNDRFQg
-Y2hhbmdlIGludGVycnVwdCBhbHNvIGhhbmRsaW5nIHRoZSBsaW5rIHRyYWluaW5nIGhhbmRsZXIu
-IFdlIG5lZWQgdG8gYXZvaWQgU0NEVCBjaGFuZ2UgcmVjdXJzaXZlbHkgaWYgY3JlYXRlIG5ldyB2
-aWRlbyBoYW5kbGVyLg0KDQpJZiB0aGUgRklGTyBlcnJvciBpcyB0cmlnZ2VyIGJ5IEZJRk8gcmVz
-dCAsIGl0IHdpbGwgaGFwcGVuIHdpdGhpbiAxMG1zLg0KVG8gc3BlZWQgdXAgdmlkZW8gc3RhYmxl
-IHRvIGxpbmsgdHJhaW5pbmcsIGRvIDEwIHRpbWUgY2hlY2sgaW4gaW50ZXJydXB0Lg0KSWYgdGhl
-IHZpZGVvIGNhbid0IHN0YWJsZSBpbiAxMDBtcyg2IGZyYW1lIGluIDYwaHopLCB0aGUgdmlkZW8g
-c2lnbmFsIGZyb20gSU8gYnVzIG1heSBub3Qgc3RhYmxlLg0KDQoNCg0KDQoNCj4gK30NCj4gKw0K
-PiAgc3RhdGljIGlycXJldHVybl90IGl0NjUwNV9pbnRfdGhyZWFkZWRfaGFuZGxlcihpbnQgdW51
-c2VkLCB2b2lkIA0KPiAqZGF0YSkgIHsNCj4gICAgICAgICBzdHJ1Y3QgaXQ2NTA1ICppdDY1MDUg
-PSBkYXRhOw0KPiBAQCAtMjUyMiw3ICsyNTU2LDcgQEAgc3RhdGljIGlycXJldHVybl90IGl0NjUw
-NV9pbnRfdGhyZWFkZWRfaGFuZGxlcihpbnQgdW51c2VkLCB2b2lkICpkYXRhKQ0KPiAgICAgICAg
-ICAgICAgICAgeyBCSVRfSU5UX1ZJRF9GSUZPX0VSUk9SLCBpdDY1MDVfaXJxX3ZpZGVvX2ZpZm9f
-ZXJyb3IgfSwNCj4gICAgICAgICAgICAgICAgIHsgQklUX0lOVF9JT19GSUZPX09WRVJGTE9XLCBp
-dDY1MDVfaXJxX2lvX2xhdGNoX2ZpZm9fb3ZlcmZsb3cgfSwNCj4gICAgICAgICB9Ow0KPiAtICAg
-ICAgIGludCBpbnRfc3RhdHVzWzNdLCBpOw0KPiArICAgICAgIGludCBpbnRfc3RhdHVzWzNdLCBp
-LCByZWdfMGQ7DQo+DQo+ICAgICAgICAgaWYgKGl0NjUwNS0+ZW5hYmxlX2Rydl9ob2xkIHx8ICFp
-dDY1MDUtPnBvd2VyZWQpDQo+ICAgICAgICAgICAgICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+
-IEBAIC0yNTUwLDYgKzI1ODQsOCBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgaXQ2NTA1X2ludF90aHJl
-YWRlZF9oYW5kbGVyKGludCB1bnVzZWQsIHZvaWQgKmRhdGEpDQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIGlmIChpdDY1MDVfdGVzdF9iaXQoaXJxX3ZlY1tpXS5iaXQsICh1bnNpZ25lZCBpbnQg
-KilpbnRfc3RhdHVzKSkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcnFfdmVj
-W2ldLmhhbmRsZXIoaXQ2NTA1KTsNCj4gICAgICAgICAgICAgICAgIH0NCj4gKyAgICAgICAgICAg
-ICAgIGlmIChpdDY1MDVfaXNfdmlkZW9fZXJyb3JfaW50KGludF9zdGF0dXMpKQ0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICBpdDY1MDVfaXJxX3ZpZGVvX2Vycm9yX2hhbmRsZXIoaXQ2NTA1KTsN
-Cj4gICAgICAgICB9DQo+DQo+ICAgICAgICAgcG1fcnVudGltZV9wdXRfc3luYyhkZXYpOw0KPiAt
-LQ0KPiAyLjI1LjENCj4NCg0KWzFdOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvQ0FFWFRi
-cGM2MDg0cmNtaEZBQnc1MVNpYlU3RlZ5VFdvPXRlUXNFVHE1dkN1akdLV25nQG1haWwuZ21haWwu
-Y29tLw0KWzJdOiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNz
-L3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sI3NpZ24teW91ci13b3JrLXRoZS1kZXZlbG9wZXItcy1j
-ZXJ0aWZpY2F0ZS1vZi1vcmlnaW4NCg0KUmVnYXJkcywNClBpbi15ZW4NCg==
+On 08/03/24 09:51, Uwe Kleine-König wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
+> 
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
+> 
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+
+> ---
+>   drivers/pps/clients/pps-gpio.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+> index 2f4b11b4dfcd..791fdc9326dd 100644
+> --- a/drivers/pps/clients/pps-gpio.c
+> +++ b/drivers/pps/clients/pps-gpio.c
+> @@ -220,7 +220,7 @@ static int pps_gpio_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -static int pps_gpio_remove(struct platform_device *pdev)
+> +static void pps_gpio_remove(struct platform_device *pdev)
+>   {
+>   	struct pps_gpio_device_data *data = platform_get_drvdata(pdev);
+>   
+> @@ -229,7 +229,6 @@ static int pps_gpio_remove(struct platform_device *pdev)
+>   	/* reset echo pin in any case */
+>   	gpiod_set_value(data->echo_pin, 0);
+>   	dev_info(&pdev->dev, "removed IRQ %d as PPS source\n", data->irq);
+> -	return 0;
+>   }
+>   
+>   static const struct of_device_id pps_gpio_dt_ids[] = {
+> @@ -240,7 +239,7 @@ MODULE_DEVICE_TABLE(of, pps_gpio_dt_ids);
+>   
+>   static struct platform_driver pps_gpio_driver = {
+>   	.probe		= pps_gpio_probe,
+> -	.remove		= pps_gpio_remove,
+> +	.remove_new	= pps_gpio_remove,
+>   	.driver		= {
+>   		.name	= PPS_GPIO_NAME,
+>   		.of_match_table	= pps_gpio_dt_ids,
+> 
+> base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
+
