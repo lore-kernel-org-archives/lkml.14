@@ -1,126 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087F31CA8E;
-	Fri,  8 Mar 2024 16:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3326DDDD7
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709916043; cv=none; b=J7lTrnBHA/Lz6VZSlU6lpRFMCu10egCEt11CJCHauP03xFd1d+SCW0jxhFoz2C5Msmh64Y1QZldDuOsIpDGPfe4JhUEdY74UModw0cQFOqGkCffdvn5/Gy8GttFhUbWP1FV65rrow34fw1cg68f0qWaprGfmdkv2ltmuBsp5PvU=
+	t=1709916077; cv=none; b=QGVJ6N2L+fjMhhE9nv7f7qEhoM83r/D0RmYQuf/oHu2bIKKG+0Tzxw8mZiS5zmklTyVW24UVq+5OAr69D7uDQdA+i+kslr8x8la90CR+C87H0+aCc6s+ZGW+Gi47bo39rZn/IyIA8wHZG4I02gv8/U8ghttVtWl2+PeIeqTAS7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709916043; c=relaxed/simple;
-	bh=ivspc6KyS5C5s0+lppQbNKthOBmzM+WjLyrCDyM1dTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=D6/zKY6Jk3Tq80MdILmFjKo2gRPj25DxmhatgpaL5H5ntnCProekqx1y8Ky1lZdL9Wt3bQjgZt1EHycb9E+fQLsaM9NvlRP+a0AQ41o2+UZ+iQXV2GMg1B3+qiLEjWdhK4ikmSRkgz/Z9Gw5pNHgY/a6B99EKSPTqryFRRfClS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8P2CCKN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709916077; c=relaxed/simple;
+	bh=E7xjUr7XFDIgxAuAR5skBYnGfcngAPHjHTPg0v/bj90=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A7mmg+qBWH9+4L+yiYwTMcoKqygT2Kj8LtZLZC0Zkll3dX2hu+csn8bE5SouGlSw4VPn2GcnMgU5c0gISQ8X3PegO5q7fR2SnafmKPSJQum2EAicS9CQ5aECm/HLe9TIGD0F5KCNPW/7aVUWnmBpgvZK/+cLShXSsMRQrLlbrYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=X8APzAw4; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8P2CCKN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6479EC433C7;
-	Fri,  8 Mar 2024 16:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709916042;
-	bh=ivspc6KyS5C5s0+lppQbNKthOBmzM+WjLyrCDyM1dTs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Y8P2CCKNotEK8bIPwpQaSJNAUOzJkpkjGk1h4jqzyEoYEel48uJPzIeSsND50VvqB
-	 1sNPZNAk1dJnTIAPjE3YRQ01yrbEavHZjiuxx3fm4yk3XoHAmbz22gJZ7L4HK4kZO5
-	 +klRU1+rlY7EmtVjnZkxAOfjbsJRN59WKIS2cax4VgRwjenyftUJx1lnf1WJhzCI+N
-	 bqwklRn+5FbIkhnxjNsTmRpbdGg+gVave4Nrnervp4+T8dy+ma9GfpD6nvrW3S2hua
-	 q4qMF3+x0HpiSLjxH6J690K+LembhWfzlv1zZqyTT0ImivUm3k6CssfUpMNNtY42ux
-	 ZEsWgXWjlz/3w==
-Date: Fri, 8 Mar 2024 10:40:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Michael Schaller <michael@5challer.de>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, macro@orcam.me.uk,
-	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	gregkh@linuxfoundation.org, hkallweit1@gmail.com,
-	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-Message-ID: <20240308164040.GA683683@bhelgaas>
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="X8APzAw4"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 2658B1CD4D4;
+	Fri,  8 Mar 2024 17:38:17 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1709915897; bh=wYkGaMnNecZ484j/sTojyqfZAtdlr73D93VzoZo94XQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X8APzAw4QGRrwmr7uU8EBQQaxdnUXixKcfd9Vy2bIaRqtOf5kFsoTuZNJJRCBwH76
+	 Y5OT/bsLx439Bwnr1nMTq85VUAx4SnXhTHkdwUrxfK88Z31Brx7MY9S3FaE5zt6r6+
+	 AOGk+0T7l3E6rahfyR3sNlMs/wdv+TiAY60PxgF8U8gRgPfHia7QiKS6CrAgtVabyP
+	 tCdn12xxZfn3/X/R9vQ8GMkbSRpgaimKOppaQQ71aNKjD1GK55ZrbJ2fRF13BNgHqs
+	 y6WrvJZxu57KnchJ5ah5QANXRSwEN0nHF2HGs0v50/yiEUaeuw2VDN7g+BQMy9D8rK
+	 JJGs1fkc6A0Iw==
+Date: Fri, 8 Mar 2024 17:38:16 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+ kernel-team@android.com, iommu@lists.linux.dev, Christoph Hellwig
+ <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Petr Tesarik
+ <petr.tesarik1@huawei-partners.com>, Dexuan Cui <decui@microsoft.com>,
+ Nicolin Chen <nicolinc@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v6 6/6] swiotlb: Reinstate page-alignment for mappings
+ >= PAGE_SIZE
+Message-ID: <20240308173816.5351ea58@meshulam.tesarici.cz>
+In-Reply-To: <5c7c7407-5356-4e12-a648-ae695fe0d1cb@arm.com>
+References: <20240308152829.25754-1-will@kernel.org>
+	<20240308152829.25754-7-will@kernel.org>
+	<5c7c7407-5356-4e12-a648-ae695fe0d1cb@arm.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p6GEPJe3rNNrUAah5PdLXspKh5Gz9tFstR6SFCREs+9=Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 07, 2024 at 02:51:05PM +0800, Kai-Heng Feng wrote:
-> On Wed, Jan 10, 2024 at 8:40 PM Michael Schaller <michael@5challer.de> wrote:
-> > On 10.01.24 04:43, Kai-Heng Feng wrote:
-> > > On Fri, Jan 5, 2024 at 11:51 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
-> > >>> On 05.01.24 04:25, Kai-Heng Feng wrote:
-> > >>>> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
-> > >>>
-> > >>> Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result in a
-> > >>> working resume. I've tested this on kernel 6.6.9 (which still has commit
-> > >>> 08d0cc5f3426). I've also attached the relevant dmesg output of the
-> > >>> suspend/resume cycle in case this helps.
-> > >>
-> > >> Thanks for testing that!
-> > >>
-> > >>> Furthermore does this mean that commit 08d0cc5f3426 isn't at fault but
-> > >>> rather that we are dealing with a timing issue?
-> > >>
-> > >> PCI does have a few software timing requirements, mostly related to
-> > >> reset and power state (D0/D3cold).  ASPM has some timing parameters,
-> > >> too, but I think they're all requirements on the hardware, not on
-> > >> software.
-> > >>
-> > >> Adding an arbitrary delay anywhere shouldn't break anything, and other
-> > >> than those few required situations, it shouldn't fix anything either.
-> > >
-> > > At least it means 8d0cc5f3426 isn't the culprit?
-> > >
-> > > Michael, does the issue happen when iwlwifi module is not loaded? It
-> > > can be related to iwlwifi firmware.
-> > >
-> > The issue still happens if the iwlwifi module has been blacklisted and
-> > after a reboot. This was again with vanilla kernel 6.6.9 and I've
-> > confirmed via dmesg that iwlwifi wasn't loaded.
+On Fri, 8 Mar 2024 16:08:01 +0000
+Robin Murphy <robin.murphy@arm.com> wrote:
+
+> On 2024-03-08 3:28 pm, Will Deacon wrote:
+> > For swiotlb allocations >= PAGE_SIZE, the slab search historically
+> > adjusted the stride to avoid checking unaligned slots. This had the
+> > side-effect of aligning large mapping requests to PAGE_SIZE, but that
+> > was broken by 0eee5ae10256 ("swiotlb: fix slot alignment checks").
+> > 
+> > Since this alignment could be relied upon drivers, reinstate PAGE_SIZE
+> > alignment for swiotlb mappings >= PAGE_SIZE.  
 > 
-> Can you please give latest mainline kernel a try? With commit
-> f93e71aea6c60ebff8adbd8941e678302d377869 (Revert "PCI/ASPM: Remove
-> pcie_aspm_pm_state_change()") reverted.
+> This seems clear enough to keep me happy now, thanks! And apologies that 
+> I managed to confuse even myself in the previous thread...
 > 
-> Also do you have efi-pstore enabled? Is there anything logged in
-> /var/lib/systemd/pstore (assuming systemd is used)?
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-It seems possible that some recent ASPM fixes could help this issue.
-These fixes are not upstream yet, but should appear in v6.9-rc1.
+I thought we agreed that this stricter alignment is unnecessary:
 
-Your (Michael's) bisection identified 08d0cc5f3426 ("PCI/ASPM: Remove
-pcie_aspm_pm_state_change()"), which appeared in v6.0.  This was
-intended to solve the problem of ASPM config changes made via sysfs
-getting lost.
+  https://lore.kernel.org/linux-iommu/20240305140833.GC3659@lst.de/
 
-We removed 08d0cc5f3426 in v6.7 with f93e71aea6c6 ("Revert "PCI/ASPM:
-Remove pcie_aspm_pm_state_change()"") to address the reboot after
-resume problem that you reported.
+But if everybody else wants to have it...
 
-e4dbf699467e ("PCI/ASPM: Update save_state when configuration
-changes") is planned for v6.9-rc1 and should solve the same problem
-08d0cc5f3426 tried to solve, but in a different way.
+Petr T
 
-390fd84739c5 ("PCI/ASPM: Save L1 PM Substates Capability for
-suspend/resume") is also planned for v6.9-rc1 and fixes some problems
-with restoring L1 Substates config during resume.  These substates are
-enabled for your 03:00.0 device, so this commit may also be related.
+> > Reported-by: Michael Kelley <mhklinux@outlook.com>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> >   kernel/dma/swiotlb.c | 18 +++++++++++-------
+> >   1 file changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> > index c381a7ed718f..c5851034523f 100644
+> > --- a/kernel/dma/swiotlb.c
+> > +++ b/kernel/dma/swiotlb.c
+> > @@ -992,6 +992,17 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
+> >   	BUG_ON(!nslots);
+> >   	BUG_ON(area_index >= pool->nareas);
+> >   
+> > +	/*
+> > +	 * Historically, swiotlb allocations >= PAGE_SIZE were guaranteed to be
+> > +	 * page-aligned in the absence of any other alignment requirements.
+> > +	 * 'alloc_align_mask' was later introduced to specify the alignment
+> > +	 * explicitly, however this is passed as zero for streaming mappings
+> > +	 * and so we preserve the old behaviour there in case any drivers are
+> > +	 * relying on it.
+> > +	 */
+> > +	if (!alloc_align_mask && !iotlb_align_mask && alloc_size >= PAGE_SIZE)
+> > +		alloc_align_mask = PAGE_SIZE - 1;
+> > +
+> >   	/*
+> >   	 * Ensure that the allocation is at least slot-aligned and update
+> >   	 * 'iotlb_align_mask' to ignore bits that will be preserved when
+> > @@ -1006,13 +1017,6 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
+> >   	 */
+> >   	stride = get_max_slots(max(alloc_align_mask, iotlb_align_mask));
+> >   
+> > -	/*
+> > -	 * For allocations of PAGE_SIZE or larger only look for page aligned
+> > -	 * allocations.
+> > -	 */
+> > -	if (alloc_size >= PAGE_SIZE)
+> > -		stride = umax(stride, PAGE_SHIFT - IO_TLB_SHIFT + 1);
+> > -
+> >   	spin_lock_irqsave(&area->lock, flags);
+> >   	if (unlikely(nslots > pool->area_nslabs - area->used))
+> >   		goto not_found;  
+> 
 
-That's all a long way to say that I think testing v6.9-rc1 or later
-(or linux-next as of Mar 7 or later) would be very interesting.
-
-> > I've also checked if there is a newer firmware but Ubuntu 23.10 is
-> > already using the newest firmware available from
-> > https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/log/iwlwifi-8265-36.ucode
-> > (version 36.ca7b901d.0 according to dmesg).
-> >
-> > Michael
-> >
-> > >>
-> > >> Bjorn
