@@ -1,157 +1,128 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553E855E57
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB04455E57;
+	Fri,  8 Mar 2024 12:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709900015; cv=none; b=NBFxoRl8WO7YeQiTRpAJqk+WitD12H+EB1EGNznGIA0mH5fkkgLfqgYmouofGOUnBeRtLGU74N+uRsgtMtd9Ekvk65BpebcPo6kzxVpR4Pi5NcW/ECtzjCaIZrtSLmCtKrslBmao+K6CzpEUrMsFUGZaVJNkQTj0i0WadW60Sb8=
+	t=1709900024; cv=none; b=S4fGH//ksB4f39e/aFAT+jOB5wZfV3ztfwsIek15tlY5PVm/ni7xHgKfr5OMQfSrCBZzNSmS3XomqLTv6B3tRkjWNx8tBn9eazWmyI2WfkYTxdvIsYg2Z+t1RhBeWk9hCbhMXxaU5NqSiGu9KZVtM6xZBCEdZHkNcKx1TQMZiFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709900015; c=relaxed/simple;
-	bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X1cJXgz7E7hOTgrwlpoQ08TwHWPI0nLWHr3+eK2BGISGy6KPMFGnQd/vC7Ch3JJt2YqAsuLIHBrYax7OwI++rVV7RlwxKc37AoKLwPZb2s1iJd9Nu2EpGDjPgGN4pe2Y7f9jPENw6W31e8ZoEqTmnZ2B+AliQq67b1QElXkMc4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XW/ufEFY; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1709900024; c=relaxed/simple;
+	bh=xRQYQNukZYRtKTnk/JrS0VuezsXQVEgHR6HcqlV1dQg=;
+	h=From:To:Subject:Date:Message-Id; b=MtBccxGz81/witF9oaU87U5CUYiPo94qBWB4RMTevCq7TJijexu2BU46RADu7ExacS0Qlt7+BVbWTne9cs2CgPsRD2/+SBtWT/LgjBMfvheBHPB/6lK0/l0V3cwgyYbEbOsknhlUIR0jACpVz5t8QEaPvEiau6p+DxQARr54Nl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8aAkqSr; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XW/ufEFY"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id C6D4D240103
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 13:04:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1709899492; bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=XW/ufEFYmNghRO9/dJpnthQiWG7F4dM+r84VMWzKXpuhutstXjOfZcZVwq8eD5q01
-	 t4A8Ln8tyESKKT1F6ZDp2vvod4+GJ7xKCv/k3vNStrYVmHZGYm+8mPempnvYqOJvsy
-	 IO9XVYJdX5DGKgBSmWI1didokQ4Zwy6/Yw8gwX+WhVYHBIzKqvPi6WSiMymB3u5izt
-	 Yf8NnyPMgTePJtbcEKA4zif/FT+3mHfKD72jAPe46dZ/iqkTenldUYejPs87ZQKjMS
-	 l5nLQnXLx/7SfOCKQZl+LRa93RQa0mTE6wLfu1jmAoiwZ5HB6zR5xp54LSrOd1Qs5a
-	 PYDPrkir/LokA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TrlGQ6hCkz6tm4;
-	Fri,  8 Mar 2024 13:04:46 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Anne Macedo <retpolanne@posteo.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8aAkqSr"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e6277f72d8so1548886b3a.1;
+        Fri, 08 Mar 2024 04:13:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709900022; x=1710504822; darn=vger.kernel.org;
+        h=message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHu3cl6dyYT2DX3fZ/mA0MeLZ4iLVn+iFMGJOWHCrvs=;
+        b=G8aAkqSrx62rmRhUWck7zfzv1bFZptoKsDyAEs8VH51620k/mQ0U0gKCR7/Tnz+Wch
+         6so0tUyY9LkG/QZgH2qBlt9LaLe9dT6YN64wfGDCZUaAWwYrb9QJfzGojwB7bWpqn9KP
+         jwzvOuxQnYdSCa2Cy1IWLCS4fHL3uV+ht3aEY7QQ5fSOr8JfuNAaxppcVxWMsnWaDHqD
+         XKTnpT9wV1Ahy+nyKScnGwrIqCktN2wgmojVypu59gU25+j05k+IRKFSDVL7rYsw99bo
+         5bFJnOuG41IbXH+RLRSHkOvu9oqFtFcrOOFEwPyC8jCL47xFrN8go14DZlGkLMyuQ0cc
+         q4IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709900022; x=1710504822;
+        h=message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fHu3cl6dyYT2DX3fZ/mA0MeLZ4iLVn+iFMGJOWHCrvs=;
+        b=RB+selI4JEEero2jMxNKJ36hA9EpPiA41JhSc7/bhgD7E1tlb8Lwx2pM2YWDJQuzt4
+         n9h8JD0AF5xw0nMgk/cIjLj1QBMjieqU7yY04anD1fxhCsJkISq+hFYrItOvD1Gpp9Z4
+         uoS/LfqzrOxxHMJuPgFqQ4t2TZ4asVD3f4FRN/FJWmG6pseddDB6GgS7Q3ezRmajiNpi
+         aRDE9G6vzp4VTRTw3pUGvju31QzgVrLRjI/YcKidBdoed9bIFgBPO2SV+Jy3ul+krRNx
+         4eB+LK++dUpTfpiYtJYurJhP3PFhdMddnZ7SrNGhBHmMtvyWyBlXpnVXKVWnF//MA3a5
+         R53w==
+X-Forwarded-Encrypted: i=1; AJvYcCWlNVJb45pRXNivVowsXC3lms94OEADJXB4K2wEC2KXtZi+0Y0x8WyZJ678zDrHvfI8EbebZzzYt8m9d5tP7cv/6xjMDyclG0W9XcyK/R+937IIxuZN1jGiB9ejjPoVz0mgnlOCtc1HZmg=
+X-Gm-Message-State: AOJu0YwfUrZ+PDG1eQZ0ScuB/KotRN1ayIqpYxNGDFUg8w5znddPbNAK
+	xBbFsmfnbxy9igkSDaQ/iMiRL8g2hiP3Gj43yXbga9wr7cs132x07WU4zlZVcmo=
+X-Google-Smtp-Source: AGHT+IElGT4rz74XXvDr719f0KTqYMEHe4oW9AzjSD5viBxTtCCHLMVLJhmnTj4Huxlx+5Ev8/f3Mg==
+X-Received: by 2002:a05:6a20:da87:b0:1a1:484d:ef09 with SMTP id iy7-20020a056a20da8700b001a1484def09mr11655179pzb.4.1709900022014;
+        Fri, 08 Mar 2024 04:13:42 -0800 (PST)
+Received: from goorm.ap-northeast-2.compute.internal (ec2-52-78-100-77.ap-northeast-2.compute.amazonaws.com. [52.78.100.77])
+        by smtp.gmail.com with ESMTPSA id o16-20020a056a001b5000b006e555d40951sm13980843pfv.188.2024.03.08.04.13.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 04:13:41 -0800 (PST)
+From: yongsuyoo0215@gmail.com
+To: mchehab@kernel.org,
+	yongsuyoo0215@gmail.com,
+	v4bel@theori.io,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v0] perf lock contention: skip traceiter functions
-Date: Fri,  8 Mar 2024 12:03:31 +0000
-Message-Id: <20240308120332.372810-1-retpolanne@posteo.net>
+Subject: [PATCH] media: dvb_ca_en50221: Add a returing EBUSY logic into CA_RESET
+Date: Fri,  8 Mar 2024 12:13:38 +0000
+Message-Id: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The perf lock contention program currently shows the caller of the locks
-as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
-from the traceiter itself. Instead, it should show the real callers for
-the locks.
+From: Yongsu yoo <yongsuyoo0215@gmail.com>
 
-When fiddling with the --stack-skip parameter, the actual callers for
-the locks start to show up. However, just ignore the
-__traceiter_contention_begin and the __traceiter_contention_end symbols
-so the actual callers will show up.
+Signed-off-by:Yongsu Yoo <yongsuyoo0215@gmail.com>
 
-Before this patch is applied:
-
-sudo perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
-         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
-         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
-         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
-         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
-         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
-         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
-
-Before this patch is applied - using --stack-skip 5
-
-sudo perf lock con --stack-skip 5 -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
-         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
-         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
-         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
-         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
-         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
-         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
-
-After this patch is applied:
-
-sudo ./perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         6      5.27 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
-         2      2.99 s       2.99 s       1.50 s      spinlock   do_send_sig_info+0x3c
-         2      1.77 s       1.77 s     884.39 ms     spinlock   sigprocmask+0x98
-         2      1.76 s       1.76 s     878.56 ms     rwlock:W   do_exit+0x338
-         2      1.76 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
-         5      1.76 s       1.76 s     351.41 ms     rwlock:W   do_exit+0x338
-         1     48.10 ms     48.10 ms     48.10 ms        mutex   trace_contention_begin+0x84
-         4    257.80 us    119.34 us     64.45 us     spinlock   get_signal+0x108
-         1      9.33 us      9.33 us      9.33 us     rwlock:W   do_exit+0x338
-
-Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+In source/drivers/media/dvb-core/dvb_ca_en50221.c, if the CA_RESET ioctl
+is called, in a normal case, the state of the thread of the
+dvb_ca_en50221_thread_state_machine will transit like below order.
+DVB_CA_SLOTSTATE_NONE -> DVB_CA_SLOTSTATE_UNINITIALISED ->
+DVB_CA_SLOTSTATE_WAITREADY -> DVB_CA_SLOTSTATE_VALIDATE ->
+DVB_CA_SLOTSTATE_WAITFR -> DVB_CA_SLOTSTATE_LINKINIT ->
+DVB_CA_SLOTSTATE_RUNNING
+But in some problem cases, the state will become DVB_CA_SLOTSTATE_INVALID.
+Among the above mentioned states, the DVB_CA_SLOTSTATE_NONE and
+the DVB_CA_SLOTSTATE_INVALID are "already stablized" states,
+whereas other states are "transiting" states.
+The "already stablized" states mean no matter how long time we wait,
+the state will not be changed.
+The "transiting" states mean the states whose final state is not yet
+determined. The state keeps to be changed. Only after some time passes,
+we get to know whether the final state will be DVB_CA_SLOTSTATE_RUNNING
+or DVB_CA_SLOTSTATE_INVALID.
+During the "transiting" states, we do not yet know whether the
+CA_RESET operation, which triggered the "transiting" states, will
+succeed or fail. For this reason, during the "transiting" states, if
+another CA_RESET ioctl is called and if this new CA_RESET ioctl
+operation begins again, it will be meaningless and waste time.
+For preventing this problem from happening, we make CA_RESET ioctl do
+nothing and only return EBUSY if the ioctl is called during the
+"transiting" states.
 ---
- tools/perf/util/machine.c | 10 ++++++++++
- tools/perf/util/machine.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/media/dvb-core/dvb_ca_en50221.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 527517db3182..8e729167c1aa 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3266,6 +3266,12 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+diff --git a/drivers/media/dvb-core/dvb_ca_en50221.c b/drivers/media/dvb-core/dvb_ca_en50221.c
+index baf64540dc00..2e8aec354b7c 100644
+--- a/drivers/media/dvb-core/dvb_ca_en50221.c
++++ b/drivers/media/dvb-core/dvb_ca_en50221.c
+@@ -1362,13 +1362,19 @@ static int dvb_ca_en50221_io_do_ioctl(struct file *file,
+ 			struct dvb_ca_slot *sl = &ca->slot_info[slot];
  
- 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
- 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
-+		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_end", &kmap);
-+		machine->traceiter.text_end = map__unmap_ip(kmap, sym->start);
- 	}
- 
- 	/* failed to get kernel symbols */
-@@ -3280,5 +3286,9 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
- 		return true;
- 
-+	/* traceiter functions are in traceiter text section  */
-+	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
-+		return true;
-+
- 	return false;
- }
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index e28c787616fe..ec51e9b080b9 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -49,7 +49,7 @@ struct machine {
- 	struct {
- 		u64	  text_start;
- 		u64	  text_end;
--	} sched, lock;
-+	} sched, lock, traceiter;
- 	pid_t		  *current_tid;
- 	size_t		  current_tid_sz;
- 	union { /* Tool specific area */
+ 			mutex_lock(&sl->slot_lock);
+-			if (sl->slot_state != DVB_CA_SLOTSTATE_NONE) {
++			if ((sl->slot_state == DVB_CA_SLOTSTATE_RUNNING) ||      
++			    (sl->slot_state == DVB_CA_SLOTSTATE_INVALID)) { 
+ 				dvb_ca_en50221_slot_shutdown(ca, slot);
+ 				if (ca->flags & DVB_CA_EN50221_FLAG_IRQ_CAMCHANGE)
+ 					dvb_ca_en50221_camchange_irq(ca->pub,
+ 								     slot,
+ 								     DVB_CA_EN50221_CAMCHANGE_INSERTED);
+ 			}
++			else {
++				if (sl->slot_state != DVB_CA_SLOTSTATE_NONE) {
++					err = -EBUSY;
++				}
++			}
+ 			mutex_unlock(&sl->slot_lock);
+ 		}
+ 		ca->next_read_slot = 0;
 -- 
-2.39.2
+2.17.1
 
