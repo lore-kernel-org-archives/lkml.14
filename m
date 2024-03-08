@@ -1,156 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1A71170F;
-	Fri,  8 Mar 2024 17:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D4240873;
+	Fri,  8 Mar 2024 17:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709918889; cv=none; b=pQOSqnswB+gOIoGcc35fLzTzc7XATqSN1HH2q354C1uRwowMj/bhg0tEloXqo4LoSJ5Xc+11UFzwutlG6eXjUlFoLcZfhq6T89SdJMKfOWAYxoogiwzM3H27S1OBoyPHvF4OUlupJvCjjtlaHSIMIBS9AMeJfIFSLzPE/j3RUpI=
+	t=1709918893; cv=none; b=PxuwlhqlyEIxpE32MLi0bVtBbcQaLdbCaVxmpc+PSBnHbJ4t5KYm99eS2IejvpZRrMrjN+SKMBU8UzRg0Z3qoM5fDzTINhm4s84PpGJi+zENb7Bov8OVRptJXpHo0GkacduzUnXVrkJISl0tQVDV/s2WP+CAdxJUwCdErGCgv3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709918889; c=relaxed/simple;
-	bh=jSd7IIXQ7VLOmg5dOyp3aWtcasoACFv/Wzn1lQdNPGQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZFVlPtExfnBMtfkOdxSaZAUg1Lcy3ziZ91i3jvNaWKnI4NYhCUcbBctQPeptTqte6tdP6Si9lr+xvlwtgfjJSXE20LmiPTK8gANfY8i5x0sXBxxEGIq6jrQmrRi86JPZ7m+4+8R3twACfA7YdBKh9aF70Wiyn4WxPV5FbDSRdIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3v8WJFx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JabkKrle; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3v8WJFx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JabkKrle; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709918893; c=relaxed/simple;
+	bh=4hHUnGXuaiO8AHvEDB9MWiIozPnZ+g3QRXMnBCM2jKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oAJGda1Szp4QiN0joP4g9yg2xAum3VOL0FcpUHjRd0dy10AZ0y1JdG48mwG7AgaGGBxRje2CkspyYsAfEZ4bGhMHuIWYwZ4wdhwX4pfRYA0c5sIMWSNmZNG8zxduMFQtpLUxsOpJzzLK0NDiNcdAJhtjgQjIkqt+5zDNs2ZRemc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpfUZI2l; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3v8WJFx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JabkKrle";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3v8WJFx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JabkKrle"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 32C7F38984;
-	Fri,  8 Mar 2024 17:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709917300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JplA17DpVz2NSdYvWMuTpMBcFjE3T30ebSwmXrG1t4E=;
-	b=Q3v8WJFx7o2fsPQpSOC/SLdlrPBcMqqbM6FKV/IVhO/MwGfFJJj26pmz4LyhP1E1Bp8rlY
-	pldcsGR/3ihuclHzqHasc4eqEx87v58Iq+umN6WBJ3G5ZmWQGzBISyzBrKQbT/959FidAs
-	U2rTWXmsUjBo/XeO+r1UtYvIs2xmU3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709917300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JplA17DpVz2NSdYvWMuTpMBcFjE3T30ebSwmXrG1t4E=;
-	b=JabkKrleE3jFzGoB6O82N27VgsmfyaAH0LcGEa2IiIIVG+usEXnMxjUP9EFgUgriAlTnsX
-	YoOL9JKpQtqZkoDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709917300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JplA17DpVz2NSdYvWMuTpMBcFjE3T30ebSwmXrG1t4E=;
-	b=Q3v8WJFx7o2fsPQpSOC/SLdlrPBcMqqbM6FKV/IVhO/MwGfFJJj26pmz4LyhP1E1Bp8rlY
-	pldcsGR/3ihuclHzqHasc4eqEx87v58Iq+umN6WBJ3G5ZmWQGzBISyzBrKQbT/959FidAs
-	U2rTWXmsUjBo/XeO+r1UtYvIs2xmU3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709917300;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JplA17DpVz2NSdYvWMuTpMBcFjE3T30ebSwmXrG1t4E=;
-	b=JabkKrleE3jFzGoB6O82N27VgsmfyaAH0LcGEa2IiIIVG+usEXnMxjUP9EFgUgriAlTnsX
-	YoOL9JKpQtqZkoDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CDB0A133DC;
-	Fri,  8 Mar 2024 17:01:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PvNnMHNE62XTYgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 08 Mar 2024 17:01:39 +0000
-Date: Fri, 08 Mar 2024 18:01:38 +0100
-Message-ID: <87bk7od5e5.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: <broonie@kernel.org>,
-	<tiwai@suse.com>,
-	<hdegoede@redhat.com>,
-	<lenb@kernel.org>,
-	<rafael@kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<patches@opensource.cirrus.com>,
-	<platform-driver-x86@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 0/3] ALSA: Add support for Cirrus Logic CS35L54 and CS35L57
-In-Reply-To: <20240308135900.603192-1-rf@opensource.cirrus.com>
-References: <20240308135900.603192-1-rf@opensource.cirrus.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpfUZI2l"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4131804e695so5515325e9.0;
+        Fri, 08 Mar 2024 09:28:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709918890; x=1710523690; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oSvcLp54V6bd+QfJj8hs/Ha+wibZoBQb6WsMRZIVEYc=;
+        b=bpfUZI2lM1Dzi1wIPbCIvAHq0h3qwACSowIqFkANm7hvdKDC5qbK8ZQh5YYGaPlRVM
+         YRlPq2jyRdNA9QACKyF91J1DLjZyU89SWoA1YOCEIm2LDEtSsXlFsCJwHPi8fOOYglcm
+         FZE1sg5MZyzOccY71HNdg6N+XkpMxW2ucdlqkYL8eOYT5j43C9JctJGjYDwRHbuQWOJz
+         kAHWh7VdXtf8D/HPWSzK2ElRM77TjYj/LYSQ/RYc1+VAXkIC4s5PjpwpZvA97QXRptU1
+         0MuHsbR7wKGcdajojA6NRLY7l9D+/nfCoIabUwPuqEWg6s75uvo5uBiRlGMQVdgrJmUt
+         yUDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709918890; x=1710523690;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oSvcLp54V6bd+QfJj8hs/Ha+wibZoBQb6WsMRZIVEYc=;
+        b=TrHCjAq8b6C/ZUKHpjqNqdEaM8Lb9VG1OhizLFy6epdhVxSLrNl5lqcE9UW0KX0OkE
+         QZAuzfYRXCtUsdeyK/8S4XvkPSmqDclZBOSibhD8np8jmqS/4FQe/KbOaAYtoNaM37K9
+         MEoX82SvralEeBvaZsxC0sXA9yvsVJFKhNkSbRIoYx+jlNadFWWGHMvcsOTNc/S1YUDA
+         A5gHWN6wOSZ/N9orzJGvTes8u6EfEQR8SqO9FSBpMjRpRhOJYkHWEXo+JkrOPHRBl+ns
+         FMGcNS9kZkNqTQkzgT6mRdDYIGzUPdRxvn5YTkI8e6UTjrqpZFqKIk1LdeAOnsA5Onl3
+         tpDg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5GH/QJVeogbkGPkCev7py4Nixnkr1OVn+j9DDJrYRvl5G1pZi7YO3sAMR8aO55+poEZeNGRT/oQMdGhiUCmUrLrvxYjSMKMTGHL5fuFEU4Z9SGF8a3qOjYBoDXSOfjRgvLKFGUHZ/yr5XwnHIzglY+zPia2e577sSHMFRRMiSMsJyqA==
+X-Gm-Message-State: AOJu0Yz+6G1zlpbLHmu/qgMKV21JNgLYY1LIsrDE4JAVO2FzC7NVzYe4
+	DwIT4xevX6++dB13AwVnxlbtK6lqSfCDlrq5jd6gwA+QCRbZvdRQ
+X-Google-Smtp-Source: AGHT+IFSNu17CNBwJ6aaJDmlYNJicTkFkbIrk0c+zyw0kVHx0fxpdINlt8niAZByIg6naBZlyoe/LQ==
+X-Received: by 2002:a05:600c:1d23:b0:413:74e:a417 with SMTP id l35-20020a05600c1d2300b00413074ea417mr792791wms.17.1709918889894;
+        Fri, 08 Mar 2024 09:28:09 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2500:a01:3c2e:cd45:f50f:f083])
+        by smtp.gmail.com with ESMTPSA id jh3-20020a05600ca08300b0041304100fa9sm6445317wmb.45.2024.03.08.09.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 09:28:09 -0800 (PST)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/5] Add RIIC support for Renesas RZ/V2H SoC
+Date: Fri,  8 Mar 2024 17:27:21 +0000
+Message-Id: <20240308172726.225357-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Q3v8WJFx;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JabkKrle
-X-Spamd-Result: default: False [-2.82 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 URIBL_BLOCKED(0.00)[suse.de:dkim];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.51)[91.76%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -2.82
-X-Rspamd-Queue-Id: 32C7F38984
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 08 Mar 2024 14:58:57 +0100,
-Richard Fitzgerald wrote:
-> 
-> The CS35L54 and CS35L57 are Boosted Smart Amplifiers. The CS35L54 has
-> I2C/SPI control and I2S/TDM audio. The CS35L57 also has SoundWire
-> control and audio.
->     
-> The hardware differences between L54, L56 and L57 do not affect the
-> driver control interface so they can all be handled by the same driver.
-> 
-> The HDA patch has build dependencies on the ASoC patch.
-> 
-> The final patch updates serial-multi-instantiate and scan.c to trap
-> the ACPI HID for HDA systems that declare multiple amps all under one
-> Device() node. This patch does not have any build dependency on the
-> first two patches so can be taken separately.
-> 
-> Simon Trimmer (3):
->   ASoC: cs35l56: Add support for CS35L54 and CS35L57
->   ALSA: hda: cs35l56: Add support for CS35L54 and CS35L57
->   platform/x86: serial-multi-instantiate: Add support for CS35L54 and
->     CS35L57
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Applied all three patches to for-next branch now.
+Hi all,
 
+This patch series aims to add RIIC support for Renesas RZ/V2H SoC.
 
-thanks,
+Cheers,
+Prabhakar
 
-Takashi
+Lad Prabhakar (5):
+  dt-bindings: i2c: renesas,riic: Update comment for fallback string
+  dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+  i2c: riic: Introduce helper functions for I2C read/write operations
+  i2c: riic: Pass register offsets and chip details as OF data
+  i2c: riic: Add support for R9A09G057 SoC
+
+ .../devicetree/bindings/i2c/renesas,riic.yaml |  21 +--
+ drivers/i2c/busses/i2c-riic.c                 | 132 +++++++++++++-----
+ 2 files changed, 109 insertions(+), 44 deletions(-)
+
+-- 
+2.34.1
+
