@@ -1,163 +1,139 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2067.outbound.protection.outlook.com [40.92.91.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B138219FC;
-	Fri,  8 Mar 2024 11:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709897832; cv=none; b=De9NcZqd2jBKswcwyscgiNa8rVQDhI1lxApz754ka9EXmj64Jrc45klM8qUuncvdF4opwEbcvO8yIS0mdqBdC9hbTCoAD9qx9WgQXqMJZezkud02SnxqpSeCWIAKQXBkNdo0cH1oPLJnowHj+TePvByL5N8IPpSZqsy672oHKLk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709897832; c=relaxed/simple;
-	bh=r3tglKe59vIyvT8ZyDzVlphGXnogsROYsYbXIF2U/lA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=odBIEeC2HhuKy5Bi+Q1fcqK6ExOk4JFw4Hi3NGxS5xXnzqY/zMeVriV5FbcEjkrUlnB9rxkcpll+JGlCz2xBOiiRJoDitQuu82+h9et3LVK6Bwpjm1xGvCXDJCRahDykqcvjuL4KBonIIL1w7zcQVDJIzlpHWvm9HYWl3145YEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W6P/M8HP; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93015578A;
+	Fri,  8 Mar 2024 11:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709897847; cv=fail; b=H6Sz7dHEf5046NIMdM7y3T8BJJGXeVPtVCpDX4UNMgideYcqIR2DtA7N8X6Y6WKT/82t8/pQAlrotuFOd8SpANIP59VTymIdxKBQzvWCWLNsmr44I3GXp8OkIX3Fq7JU8QkuRRc5b/2JASOBfGBrxS6mWtWKTjXBnDXzT6EWqhk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709897847; c=relaxed/simple;
+	bh=5W8OQsTkb8zlsQtLe8dbiSIO5acTornZARWuIWrGn08=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Ddi6pTeCHmTzYbvWGA4Mgl4B5Ef5PLksszA20nSBaGY6f5fImlBXGD5J4lCTAmlbjFAVjNeemv+ObK805GGeqqk0si0M2uESH4/tVF2zz2IEOk5M8TuqJButTdOCR+DXCbnRYHTAvjNsi6JemyT2gdbyP2Kgc86duKvJ/WMz7Dw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Vv2UMVph; arc=fail smtp.client-ip=40.92.91.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6P/M8HP"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d26227d508so24384351fa.2;
-        Fri, 08 Mar 2024 03:37:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709897828; x=1710502628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1zs62TPjSNd+kIv+reGSsUWDqoWMkgwQ7Wh+0LVnbj0=;
-        b=W6P/M8HPH5gomcM8e6gzJZ3Op0ES4z70iVmKWCZmEiRjdSdXYgcCE4ssa66+lhw0LZ
-         UqT5oBqVuVBxGzKR3uaaUwrvEE+SC1YhHpKqXA5gZqVtOBiIBwIwwYL2Ns9k12CJ+abf
-         kaziyBkGnMDBYkE3Lex4JRSu7VWSlNjaZwPy3h82AR0jSI75WRqBQAXK+oUg9XI77fpA
-         jhRHP2UN/PzbhtHxSqA6Xa+fSum80aq219HIH3zFEpTP61/3S7LTHsXGfY/UrMj3LCDj
-         csACAh/nTSUiTzNxqLIOjQexa6l8J2XEIeOPl/UXHiuwNa0m4sWSCuOh5WgKLsMLIS3t
-         YH9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709897828; x=1710502628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1zs62TPjSNd+kIv+reGSsUWDqoWMkgwQ7Wh+0LVnbj0=;
-        b=EWAV9KQrXaa6126vzK/SWVGz5esDHZhzvAORm6dj5v4DNfrGCqAGWh9ki89t1ZciQu
-         YlHM5zQHr/Kv8a4NQ72bAfP6wZ4EWbQ+aOoH79Yb1ayw11qGSLq0iNBkZBGGvUmKyj/O
-         OKfapeZ+evyemVPFINKcUdLDXGL/RI/478j48e1K3Kjug50vrZEdQZ21z6qgPtnZPwd3
-         5oPS/neUykmm27ory9oLotiuPJQ0hsIXInlSeh2BC75PvyZ2SPfMCCJuryekTredANmh
-         5fIgCjUEzWNjV4BVbWG0zS7q0plXsXq+3ZC741KV0WtqlsGtbrd829PPvQtTly70VL75
-         Io5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVU86BpXhHxfGmvLDiYcvt0F6AHI+BdmLHW98NJc3xs2xNx1pAjzd1XhdElJfqXCgrF1LUqvUduHMCcQVqWlwXJVFqwJU7wEUNc1GZDQdSGU6d5KVDvZmPnFJja8lTULnloS4XwelUFUPoZhSw=
-X-Gm-Message-State: AOJu0YwTyf66v0VVCb3ONw0ZIxfelFJKDVurT10Hgm1H9h/WJCPnVi2i
-	JJMU0cX2Pk/eAJ3Wx72MKD2L5oIJpTrb7So8GJjs+EwVKZQsoxstci6B6jUbVB3q14OGK3aip0y
-	68FUDp66lOWaWw5ZHy1jMzzJ8hSM=
-X-Google-Smtp-Source: AGHT+IFzVYyHRpoSiZ8DyfDoy9aXmmsxZKChagv90jBF0wl/SOHe/5QpuXp7grfKpr6h5EBztybPYeQ4PO0z+AWcJK4=
-X-Received: by 2002:a2e:2d01:0:b0:2d2:a56c:84ca with SMTP id
- t1-20020a2e2d01000000b002d2a56c84camr3376023ljt.9.1709897828245; Fri, 08 Mar
- 2024 03:37:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Vv2UMVph"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jiSX6wHNlh/tEJEIztC7Tsan90A6Vg6W/wtAeF2ZoKKmLa37UgGm19Q4kD2S9cTAQd8npYoXwW+lahl9jm8boBUxh8v6wuPeiTl659P5hSztsgnIBWwNemYiYgJ9brWSTL+zt/JgrmDsaNsocxKvL0QOzymrK04ktro5bXMXscM2ngMmSvaVWI9aTlvnhwuzi0ZUNajtDPXTtSr0e44Yr25AlnB4MgTTPGAnOusGIEF4X+BpM6ZRF4YAzIeVltNFQQ+qlN+TZEj4LUF6kVrW+eJqiHR2XPqMjxe5TimGt1ii3Q9eS5QZUlYoJx6SXND1kjdM/nqAcgvIByJAGccl+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oZPjAIqUphboDKkP5eYqFo5/dKb7IepaomOF1h29P14=;
+ b=AVcTwUpUOKCje3fR9Qh/pDCO/nY7JaBlnZOJQZJTlXasGd9vPES4S0sd0ij45UcGFj0pF9ynXmyYn9EZL3F2RfSqlv0dwTwufeTMTN8+rn3nDA8YJa43aIS5tJhtC2zN1IMrlhEjWb7KH6FWxRAsg9NqGOYnv4NUmxO8Ha5qxLLmHxl5blcx+CM5d2WFjmbHgog683eMqsHD1PpSj+ZuRX3cT8/YJdlhgAyHpCRkCf+u9gBlRQ62X+TmX8kTCVjCMw61A0lA2hESxSa6rbI8d3a9FSu6v4NuvKmyjOhereeEOmBfIBOk9UzNDD+qRRPOTzp2ABUqn1mCNbyDxfxS7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZPjAIqUphboDKkP5eYqFo5/dKb7IepaomOF1h29P14=;
+ b=Vv2UMVphRPmn/zyUN0aSRdc9NQfqZzaf++W8b6fKCN7QEDQPkxQ59Xib8qnTARizdUiwFrQrAWl9iwv9TVE+A7SCiVNMfcrg3l/aGvHanx+7jJrT234xsPhjdL828LpSHRl51oYHrfW/Lms+6T1Cx3TCglUCuoMBoHFGqHiOcD5KBMNXl4WQP6TkptkPAIzRZfwp4o8N5pBZuAiSI0Bq6yWkI+kFkG+3ShH/OL3+C4wV7go0yoz0rmcLi3LSaoBpswUIyQrtq4+GXYLFhO5pJNHI5Lx44uM1b2B2Tqtwou1MsBYX1xVRJcUTDV4JyjzR4lYQUokHCAQ1gD/H3G+8AQ==
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
+ by AM7PR03MB6309.eurprd03.prod.outlook.com (2603:10a6:20b:131::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Fri, 8 Mar
+ 2024 11:37:23 +0000
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::58d5:77b7:b985:3a18]) by AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::58d5:77b7:b985:3a18%7]) with mapi id 15.20.7362.028; Fri, 8 Mar 2024
+ 11:37:23 +0000
+From: Juntong Deng <juntong.deng@outlook.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	Liam.Howlett@oracle.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net/netlink: Add getsockopt support for NETLINK_LISTEN_ALL_NSID
+Date: Fri,  8 Mar 2024 11:33:04 +0000
+Message-ID:
+ <AM6PR03MB58482322B7B335308DA56FE599272@AM6PR03MB5848.eurprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.39.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [JA9sT5KNrvqKZHaox87B830FOKZqk6E/]
+X-ClientProxiedBy: LO4P123CA0111.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:192::8) To AM6PR03MB5848.eurprd03.prod.outlook.com
+ (2603:10a6:20b:e4::10)
+X-Microsoft-Original-Message-ID:
+ <20240308113304.12061-1-juntong.deng@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307223849.13d5b58b@barney> <20240307232927.171197-1-rand.sec96@gmail.com>
- <20240308060943.2410ef2e@barney>
-In-Reply-To: <20240308060943.2410ef2e@barney>
-From: Rand Deeb <rand.sec96@gmail.com>
-Date: Fri, 8 Mar 2024 14:36:56 +0300
-Message-ID: <CAN8dotkp7tQ6znKM5=1iM08hLvjLK-VbQm9LuqcGBf0e3ok=kg@mail.gmail.com>
-Subject: Re: [PATCH v3] ssb: Fix potential NULL pointer dereference in ssb_device_uevent
-To: =?UTF-8?Q?Michael_B=C3=BCsch?= <m@bues.ch>
-Cc: deeb.rand@confident.ru, jonas.gorski@gmail.com, khoroshilov@ispras.ru, 
-	kvalo@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, lvc-project@linuxtesting.org, 
-	voskresenski.stanislav@confident.ru, james.dutton@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|AM7PR03MB6309:EE_
+X-MS-Office365-Filtering-Correlation-Id: 264ea03d-b2f2-4bc8-6a50-08dc3f641f1b
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	nhzAW36gHmOkEbNg2oKhDSFeQZ/i/bXWKLdToFjxkxuyoWI32soe9Lm03dBBFzwpgNjwddG7Gq/LsXTsJr6OOwUl0qufcEDS4cAKM2kZNfqgdOP54agrXrGea7YSo2hv4dv28IF4FK35pi5d56h2pdlyBaiE0OEP4GbKsFnXqxZvFJgPl72dnqEZxMPFIKPjcBM+a+dALOfuQrCngkbs2Yx/MBPUE+u5oeMPIDfDqXyRN8eVlv47utw8nRgZD3fn2ja2rlgYKFn+kpN3EcAW8XAu+716AFkmRZN//oO8/SPveXKM+KIh9yj/jBhfXsi2iH7tGeDbh1PmVbXQVNHzjlr0JZTXklVJS5789yTaHpIdtt04bcnrA6AzbTJZ3tjU7mjtqvKd3DUUybQBoOC3lSfka7J5Y9aQnfu0d2uXdLkU16LgapVEaVgZAZz6STRtNSpTZx6h2K8f29xF1vGWYo0SptwHZyjDr5t02jsW1gVb/hWXSsHCTenLVWgamXALkNLDEQgPo7sve+EWYLijD0V8U6G0GbsifNdELw/ji4U132bMYQxJvw9BkCrDi0SY
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?912d1s8w57kiceH+niu2NFreFRPUKtBnfThF111yNW4cSbVubR9khLC5hNWf?=
+ =?us-ascii?Q?mWiquniLovu1apxzIvGGAJ2S/bcCbchw0SNl6eTRMmfdRvsfSI7oBmHWvF/+?=
+ =?us-ascii?Q?k/A0OwIXd9t+rZakai9AA33oDXidBlZpvwpEpwuDgHPz6lNKWX7xU/8xhBsh?=
+ =?us-ascii?Q?WormD6ch+kk/Fs+WT5ajiTohNufRfN7Xk05EC19ol6o21rXy4RjSonNe3fm0?=
+ =?us-ascii?Q?Ddis78Tn+gJcPJD5MCksl4MlM8/ccs20z4Y+d3XtA/2bnqqS2OEia/Q7Mx/M?=
+ =?us-ascii?Q?oZXjsUyFvs9S8KSLRuEQHfXsjLAybA63wnvWWPeCubIkE4Cn6NA4A7DQiRWs?=
+ =?us-ascii?Q?1wG4ipGWXlPkodHfgzMEPEe/edNU55GtmroYtf8hP5Qf7MDAZOA6RPS/QIoF?=
+ =?us-ascii?Q?fzh7uji3Elxhk2A/d3HUfETihKZ9TB0JNQqMomgr/QYzob+MOspvwi8ihyoJ?=
+ =?us-ascii?Q?dTAJqLm0Ap6uHKHadL+Vnp5MlRV6EzvuQn6dGkfEIlurad1CMV1B0LTvzJ5o?=
+ =?us-ascii?Q?7kww2DSwaS2gILYiu8SF7svrs2CV40gC+hQkklcVjkrZLvfSYuJKWLBTcOtW?=
+ =?us-ascii?Q?HR6rT6JrlEWkJ0cA2p5kahlRw/58yHhD64RIz6ac1s+wdvi09vVvHVsjiM2q?=
+ =?us-ascii?Q?KhApkJ7A7kbYbZ+hEas+hyv+H8NEiwT9ZtelvlmJalWfgbqKu0LIZ2A6d0Ss?=
+ =?us-ascii?Q?wIP1QKuVu1HrgZf+dRp0UO6DfelVjVJVxR3Ec9t7J7ABQ7/RH+RbAJ8p0ZAL?=
+ =?us-ascii?Q?cCf+IlOoRnsHkjVGNgwa55WQaoaYk5YwUPvap5xsZo6VhZa/5pvqp8fyXNpK?=
+ =?us-ascii?Q?KdBQaOZdV9nf13jtheVhKFjPKar/ZofR8k4lVxlwi+Eqbg/1m3SzvGpyJ5D6?=
+ =?us-ascii?Q?cYClokB+VR8r1toL1iRia2QphwINZQv/cjEX7IkjKqrqem7UCUKu/KCH6Cdr?=
+ =?us-ascii?Q?uC8gVsqTLpyYYZ4EIWkl4RfjWMEHpxb7D4UJEfMmuhvbCC0y4ZRLmSaB+vW9?=
+ =?us-ascii?Q?hQaPGhPDTPk39i+7x0ZOiwTDwNwXb+J4Y7GZueWsrGE33/5oa/eH++Uj/euJ?=
+ =?us-ascii?Q?/IhOcb7v2cmfnrBpor5O3SGCYZv9uWo35OW31BTH/iKI9HdGuC2ujEcIALnM?=
+ =?us-ascii?Q?BgV5M+lcclmeKwC371p/eMOM5rtZPZNczkGdXV/ul4iXU/ZIVs7dKBvoEZmL?=
+ =?us-ascii?Q?l+VDrIKxDrsHq4n7U0fJ7Rx11VMM8cibnyETMEJT4jaJ7+iUhZNeUvVOGe1Z?=
+ =?us-ascii?Q?C1YaNNKfZgwKrVMLBDJ2?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 264ea03d-b2f2-4bc8-6a50-08dc3f641f1b
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 11:37:23.3006
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6309
 
-On Fri, Mar 8, 2024 at 8:11=E2=80=AFAM Michael B=C3=BCsch <m@bues.ch> wrote=
-:
->
-> On Fri,  8 Mar 2024 02:29:27 +0300
-> Rand Deeb <rand.sec96@gmail.com> wrote:
->
-> > On Fri, Mar 8, 2024 at 12:39=E2=80=AFAM Michael B=C3=BCsch <m@bues.ch> =
-wrote:
-> >
-> > > The point is that leaving them in is defensive programming against fu=
-ture changes
-> > > or against possible misunderstandings of the situation.
-> >
-> > Dear Michael, I understand your point. It's essential to consider defen=
-sive
-> > programming principles to anticipate and mitigate potential issues in t=
-he
-> > future. However, it's also crucial to strike a balance and not overburd=
-en
-> > every function with excessive checks. It's about adopting a mindset of
-> > anticipating potential problems while also maintaining code clarity and
-> > efficiency.
->
-> Removing NULL checks is the opposite of maintainability and code clarity.
-> Efficiency doesn't matter here. (And besides that, NULL checks do not alw=
-ays mean less efficiency.)
+Currently getsockopt does not support NETLINK_LISTEN_ALL_NSID,
+and we are unable to get the value of NETLINK_LISTEN_ALL_NSID
+socket option through getsockopt.
 
-I respect your opinion, but it seems we are stuck in a while(1) loop
-without a break. Again, I don't agree with this. Adding a redundant null
-check goes against code clarity instead of enhancing it. Just because the
-condition checks for null does not justify its presence if it's redundant.
-I could insert this check every two lines.
-You advocate for this approach based on the potential occurrence in the
-future. However, this is one of the reasons why there are reviewers like
-yourself are responsible and authorized to approve or reject patches and
-verify their integrity before acceptance.
+This patch adds getsockopt support for NETLINK_LISTEN_ALL_NSID.
 
-> > > A NULL pointer dereference is Undefined Behavior.
-> > > It can't get much worse in C.
-> >
-> > Again, If we adopt this approach, we'll find ourselves adding a null ch=
-eck
-> > to every function we write, assuming that such changes may occur in the
-> > future.
->
-> This would be a good thing.
-> Let the compiler remove redundant checks or let them stay there in the re=
-sulting
-> program, if the compiler can't fiure it out.
-> Checks are a good thing.
+Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+---
+ net/netlink/af_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Our discussion isn't about what the compiler will do; I know that. The
-discussion revolves around the code itself. Alright, let's add a null
-check for the 'env' parameter as well. Perhaps we could even automate this
-process and add null checks for each function in the file.
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index da846212fb9b..7554803218a2 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1773,6 +1773,9 @@ static int netlink_getsockopt(struct socket *sock, int level, int optname,
+ 		netlink_unlock_table();
+ 		return err;
+ 	}
++	case NETLINK_LISTEN_ALL_NSID:
++		flag = NETLINK_F_LISTEN_ALL_NSID;
++		break;
+ 	case NETLINK_CAP_ACK:
+ 		flag = NETLINK_F_CAP_ACK;
+ 		break;
+-- 
+2.39.2
 
-> > > Your suggestion was about REMOVING a null pointer check.
-> > > Not about adding one.
-> > > I NAK-ed the REMOVAL of a null pointer check. Not the addition.
-> >
-> > My suggestion was to remove a (REDUNDANT) null pointer check, and not a
-> > null pointer check, there is a big difference.
->
-> No. There is no difference.
-
-Yes there is !
-The check is literally redundant. Whether we keep it or remove it, the
-outcome remains the same. In this case maybe it's not a big deal, but
-adopting this approach could lead to an accumulation of redundant
-statements throughout the codebase
-
-> > However, if the reviewer encounters this check, they
-> > might mistakenly assume that 'dev' could indeed be NULL before the func=
-tion
-> > call.
->
-> So? Nothing would happen.
-
-add completely unnecessary confusion?
-
-> I will not ack a patch that reduces code quality.
-> Removing NULL checks almost always reduces the quality of the code.
-Even at this point there is a misunderstanding. The whole discussion is not
-about the ack because you've already given it to the first version.
-The discussion is because i'm interested in knowing different points of
-views.
-I think this discussion took more than its time.
-This represents your personal point of view, with which I disagree.
-Thank you again, and you can do whatever you want, continue with the first
-or third version of the patch.
