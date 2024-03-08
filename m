@@ -1,247 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383ED1865
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 15:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A091865;
+	Fri,  8 Mar 2024 15:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709912265; cv=none; b=KdE+3dyqEmdyVXBI6idSUd5HlPs39ifBubeL232JLcxvoP+/1br3dMCfQXMnVtrgsIfhL0TUEd5b4qhPQ6DrqjIF7CxAsV+w2XBP/jFTtYqmk2Mczod6HlxPBNnKNhedn3rpipN/con/cuR8YVtKSJyeaVXtKWWIK1UCgKOLKyU=
+	t=1709912373; cv=none; b=Sskr6vry2UZuGgsPAi1TffeAWITztrpI5KMfdAmzbtvxbLNrABFVEEiE4quFNxRxyOMY1ks/yLFpUu8W0YCNO7PwA+AUK7SbbZPSbuDXx6RRTtSr9cey5DCmX83l73yoWvnJxh9/OzcuqELzBdeRLdQPTvWRcBX6e6Odk/SPImI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709912265; c=relaxed/simple;
-	bh=sdYpZP4YQbhCjgtJa85RLqgo9N8Ggjf5Cog+46o+OfE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b6jxnXii9vYBHcAPwpmm4IapNJRSnWR7xhrvDDrR4Xd5/hDAhqGxulD2+NeVzidva90Ab912ereANUiWKSGilX4HOoHyZwcQX+KYgBbnpAfjSPaaVprCX7kAjLpcHMakokypLHzSEM/3zcknpqVhQZR/cuxi9aMaXKFrov/ioGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6d4bgcp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709912373; c=relaxed/simple;
+	bh=9h4zpabX33FnuG9PKHlSlWYTN5xYzT8IUzo10FfqYyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=M3PCttQCuOmmXmSyhkQtkgGThfofbrUrcSs0xxqyH9kQ/ibSt8+hHWNQwtfHQ1AOVfyBP7QkLP+B29zfeb2xc+90AOai6l1727yT+nT3qGWXTLW/EJru5bEuQMHjdbJFuhYbLXUpTRYJLlOzNrlot3wFzRZIFwLx77Nj+/M4SDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0C9+I+w; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6d4bgcp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C394EC433F1
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 15:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709912264;
-	bh=sdYpZP4YQbhCjgtJa85RLqgo9N8Ggjf5Cog+46o+OfE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b6d4bgcpBkFrtiWD78E4JynlmN3la5FqHYSQegJwAJJdqAuoSPNP05tdANziEWqEU
-	 MByCxsMnN4wuDpkwKHfFf0542KmJYUnqwPQSyNcai28r4V2wT5f4C0lwyK30BiKVez
-	 V0e1mOXFMTwE1PkCjYZKQqV5xqVPsBpOzBZRla4UaFSvCEVCV6bKjp7jqzK5PgiY3d
-	 TGAtr3N5wh/zvSAP06+TUp+M9VasmuxmKjH+bTRlKzQlN936yINN5QzFDgB1DSJjG6
-	 5vgNObgcXIHgtYRpLZibTIHLU2MNV8wzUqCd+AOYbXCoX0TcW+t3YUXs7Bve6brpca
-	 Rgw6gaqH2Uzrw==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d422b6253cso6071571fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 07:37:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVkH9Gsykp0HXeS5eGYeJ3e+a5a/+aBzVY5xsKgdcXtv+fg5czSBQv1BZUKCymP4tFeHRWtrmYJw9zp+Z2o/pVuNkXp215MeabNjx3b
-X-Gm-Message-State: AOJu0Yw3jfZi56XcySds3ib0n9iQRifVOvH9MUO14DMnd3dYaHC1wuJj
-	B80I7vzDJD3gYXvsJK2YbzSa0XoKY6cKb+6ccxcdFQPsvL7BXecKyHsrbyogaQQEdERzTu3WgCD
-	00WnVciPeW7OMsSbq1QKYdlAb0KY=
-X-Google-Smtp-Source: AGHT+IEGfGdqyVn9nPR9Hl0800SX85FmdD9ppLNM1SyFR6zljYJAsujlH7iqroy3Kt9KyNe8XVXw62IrwG6DNdR1Urs=
-X-Received: by 2002:a05:651c:220c:b0:2d3:a1fd:4ad2 with SMTP id
- y12-20020a05651c220c00b002d3a1fd4ad2mr4077110ljq.37.1709912262952; Fri, 08
- Mar 2024 07:37:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0C9+I+w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709912372; x=1741448372;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=9h4zpabX33FnuG9PKHlSlWYTN5xYzT8IUzo10FfqYyk=;
+  b=K0C9+I+w7qdQZ8nfP8VucQes+Ievyqbw+yrRcw8G7MwzkTm9b4b0pvIQ
+   VdjEh+KJQiE+M9iNzykDFzEN1LCOhxt6g+egKkbz/4xIsuTuideCPUisr
+   TRHWDoVGNCzZ4KcpOIuVi4kwC8VOiqMm8gWoVbPKOfam+IGlK9N20uv4/
+   4gqQOCfehrSt/V+bIQD0d9XiUhFkDjQzXrlax0gJ8Ds69P6r16SJCyqGX
+   0Mm/38PCzN5C1+Sy4iR3mL2zkkRqBEOper+i4qaMukqrKw7x7hdn+966U
+   LQkZeqM6rtZg94B5YeBenGSFapwdBWpCgEIeyT5JGOgVrQ4zhq+dTaj/2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4773475"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="4773475"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 07:39:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="41465976"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 07:39:30 -0800
+Received: from [10.212.124.40] (kliang2-mobl1.ccr.corp.intel.com [10.212.124.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 3B445580DDD;
+	Fri,  8 Mar 2024 07:39:28 -0800 (PST)
+Message-ID: <89249fc5-6102-45d4-9345-5dd80d06e001@linux.intel.com>
+Date: Fri, 8 Mar 2024 10:39:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307151231.654025-1-liuyuntao12@huawei.com>
- <58cc1053-7208-4b22-99cb-210fdf700569@app.fastmail.com> <CAMj1kXFEdRZsy8FovGrfWotoaws1KoKbFv5q+7yKL=pRV8zkZw@mail.gmail.com>
-In-Reply-To: <CAMj1kXFEdRZsy8FovGrfWotoaws1KoKbFv5q+7yKL=pRV8zkZw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 8 Mar 2024 16:37:31 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXF7fOO6gyvTJNOKp1_PVtAUi08ezz6k1g7jHNfUXAzXUw@mail.gmail.com>
-Message-ID: <CAMj1kXF7fOO6gyvTJNOKp1_PVtAUi08ezz6k1g7jHNfUXAzXUw@mail.gmail.com>
-Subject: Re: [PATCH-next v2] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Yuntao Liu <liuyuntao12@huawei.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Fangrui Song <maskray@google.com>, 
-	Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Jonathan Corbet <corbet@lwn.net>, 
-	Mike Rapoport <rppt@kernel.org>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] Extra verbose/perf-list details
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Yang Jihong <yangjihong1@huawei.com>, James Clark <james.clark@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240308001915.4060155-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240308001915.4060155-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 8 Mar 2024 at 15:27, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Fri, 8 Mar 2024 at 14:16, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Thu, Mar 7, 2024, at 16:12, Yuntao Liu wrote:
-> > > The current arm32 architecture does not yet support the
-> > > HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
-> > > embedded scenarios, and enabling this feature would be beneficial for
-> > > reducing the size of the kernel image.
-> > >
-> > > In order to make this work, we keep the necessary tables by annotating
-> > > them with KEEP, also it requires further changes to linker script to KEEP
-> > > some tables and wildcard compiler generated sections into the right place.
-> > >
-> > > It boots normally with defconfig, vexpress_defconfig and tinyconfig.
-> > >
-> > > The size comparison of zImage is as follows:
-> > > defconfig       vexpress_defconfig      tinyconfig
-> > > 5137712         5138024                 424192          no dce
-> > > 5032560         4997824                 298384          dce
-> > > 2.0%            2.7%                    29.7%           shrink
-> > >
-> > > When using smaller config file, there is a significant reduction in the
-> > > size of the zImage.
-> > >
-> > > We also tested this patch on a commercially available single-board
-> > > computer, and the comparison is as follows:
-> > > a15eb_config
-> > > 2161384         no dce
-> > > 2092240         dce
-> > > 3.2%            shrink
-> > >
-> > > The zImage size has been reduced by approximately 3.2%, which is 70KB on
-> > > 2.1M.
-> > >
-> > > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
-> >
-> > I've retested with both gcc-13 and clang-18, and so no
-> > more build issues. Your previous version already worked
-> > fine for me.
-> >
-> > I did some tests combining this with CONFIG_TRIM_UNUSED_KSYMS,
-> > which showed a significant improvement as expected. I also
-> > tried combining it with an experimental CONFIG_LTO_CLANG
-> > patch, but that did not show any further improvements.
-> >
-> > Tested-by: Arnd Bergmann <arnd@arndb.de>
-> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Adding Ard Biesheuvel and Fangrui Song to Cc, so they can comment
-> > on the ARM_VECTORS_TEXT workaround. I don't understand enough of
-> > the details of what is going on here.
-> >
->
-> Thanks for the cc
->
-> > Full quote of the patch below so they can see the whole thing.
-> >
-> > If they are also happy with the patch, I think you can send it
-> > into Russell's patch tracker at
-> > https://www.armlinux.org.uk/developer/patches/info.php
-> >
->
-> No, not happy at all :-)
->
-> The resulting kernel does not boot (built with GCC or Clang). And the
-> patch is buggy (see below)
->
-> > > ---
-> > > v2:
-> > >    - Support config XIP_KERNEL.
-> > >    - Support LLVM compilation.
-> > >
-> > > v1: https://lore.kernel.org/all/20240220081527.23408-1-liuyuntao12@huawei.com/
-> > > ---
-> > >  arch/arm/Kconfig                       |  1 +
-> > >  arch/arm/boot/compressed/vmlinux.lds.S |  4 ++--
-> > >  arch/arm/include/asm/vmlinux.lds.h     | 18 +++++++++++++++++-
-> > >  arch/arm/kernel/vmlinux-xip.lds.S      |  8 ++++++--
-> > >  arch/arm/kernel/vmlinux.lds.S          | 10 +++++++---
-> > >  5 files changed, 33 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > index 0af6709570d1..de78ceb821df 100644
-> > > --- a/arch/arm/Kconfig
-> > > +++ b/arch/arm/Kconfig
-> > > @@ -113,6 +113,7 @@ config ARM
-> > >       select HAVE_KERNEL_XZ
-> > >       select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
-> > >       select HAVE_KRETPROBES if HAVE_KPROBES
-> > > +     select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-> > >       select HAVE_MOD_ARCH_SPECIFIC
-> > >       select HAVE_NMI
-> > >       select HAVE_OPTPROBES if !THUMB2_KERNEL
-> > > diff --git a/arch/arm/boot/compressed/vmlinux.lds.S
-> > > b/arch/arm/boot/compressed/vmlinux.lds.S
-> > > index 3fcb3e62dc56..da21244aa892 100644
-> > > --- a/arch/arm/boot/compressed/vmlinux.lds.S
-> > > +++ b/arch/arm/boot/compressed/vmlinux.lds.S
-> > > @@ -89,7 +89,7 @@ SECTIONS
-> > >       * The EFI stub always executes from RAM, and runs strictly before
-> > > the
-> > >       * decompressor, so we can make an exception for its r/w data, and
-> > > keep it
-> > >       */
-> > > -    *(.data.efistub .bss.efistub)
-> > > +    *(.data.* .bss.*)
->
-> Why is this necessary? There is a reason we don't allow .data in the
-> decompressor.
->
-> > >      __pecoff_data_end = .;
-> > >
-> > >      /*
-> > > @@ -125,7 +125,7 @@ SECTIONS
-> > >
-> > >    . = BSS_START;
-> > >    __bss_start = .;
-> > > -  .bss                       : { *(.bss) }
-> > > +  .bss                       : { *(.bss .bss.*) }
-> > >    _end = .;
-> > >
-> > >    . = ALIGN(8);              /* the stack must be 64-bit aligned */
-> > > diff --git a/arch/arm/include/asm/vmlinux.lds.h
-> > > b/arch/arm/include/asm/vmlinux.lds.h
-> > > index 4c8632d5c432..dfe2b6ad6b51 100644
-> > > --- a/arch/arm/include/asm/vmlinux.lds.h
-> > > +++ b/arch/arm/include/asm/vmlinux.lds.h
-> > > @@ -42,7 +42,7 @@
-> > >  #define PROC_INFO                                                    \
-> > >               . = ALIGN(4);                                           \
-> > >               __proc_info_begin = .;                                  \
-> > > -             *(.proc.info.init)                                      \
-> > > +             KEEP(*(.proc.info.init))                                \
-> > >               __proc_info_end = .;
-> > >
-> > >  #define IDMAP_TEXT                                                   \
-> > > @@ -87,6 +87,22 @@
-> > >               *(.vfp11_veneer)                                        \
-> > >               *(.v4_bx)
-> > >
-> > > +/*
-> > > +When CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is enabled, it is important
-> > > to
-> > > +annotate .vectors sections with KEEP. While linking with ld, it is
-> > > +acceptable to directly use KEEP with .vectors sections in ARM_VECTORS.
-> > > +However, when using ld.lld for linking, KEEP is not recognized within
-> > > the
-> > > +OVERLAY command; it is treated as a regular string. Hence, it is
-> > > advisable
-> > > +to define a distinct section here that explicitly retains the .vectors
-> > > +sections when CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is turned on.
-> > > +*/
-> > > +#define ARM_VECTORS_TEXT                                             \
-> > > +     .vectors.text : {                                               \
-> > > +             KEEP(*(.vectors))                                       \
-> > > +             KEEP(*(.vectors.bhb.loop8))                             \
-> > > +             KEEP(*(.vectors.bhb.bpiall))                            \
-> > > +       }
-> > > +
->
-> This looks fishy to me. How is this supposed to work? You cannot emit
-> these sections into some random other place in the binary.
->
-> And also, ARM_VECTORS_TEXT is never used (by accident, see below)
->
 
-The below appears to work for me:
 
---- a/arch/arm/kernel/entry-armv.S
-+++ b/arch/arm/kernel/entry-armv.S
-@@ -1076,7 +1076,12 @@
-        W(b)    vector_irq
-        W(b)    vector_fiq
+On 2024-03-07 7:19 p.m., Ian Rogers wrote:
+> Add more encoding detail and raw event details in perf list. Add PMU
+> name and reverse lookup from config to event name to
+> perf_event_attr_fprintf. This makes the verbose output easier to read,
+> and the perf list information more specific.
+> 
+> v3. Fix to reverse lookup to ensure or aliases are loaded and if
+>     getting the config value fails for an event/alias just continue to
+>     the next one.
+> v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
+>     becomes "Raw event descriptor" add assert to keep term numbers in
+>     sync, fix a commit message.
+> 
+> Ian Rogers (6):
+>   perf list: Add tracepoint encoding to detailed output
+>   perf pmu: Drop "default_core" from alias names
+>   perf list: Allow wordwrap to wrap on commas
+>   perf list: Give more details about raw event encodings
+>   perf tools: Use pmus to describe type from attribute
+>   perf tools: Add/use PMU reverse lookup from config to name
 
-+       .text
-+       .reloc  ., R_ARM_NONE, .vectors
- #ifdef CONFIG_HARDEN_BRANCH_HISTORY
-+       .reloc  ., R_ARM_NONE, .vectors.bhb.loop8
-+       .reloc  ., R_ARM_NONE, .vectors.bhb.bpiall
-+
-        .section .vectors.bhb.loop8, "ax", %progbits
-        W(b)    vector_rst
-        W(b)    vector_bhb_loop8_und
+The patch series look good to me.
+I verified it on a hybrid machine. The new format is the same as the
+advertise.
+
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> 
+>  tools/perf/builtin-list.c                 | 21 ++++-
+>  tools/perf/util/perf_event_attr_fprintf.c | 26 +++++--
+>  tools/perf/util/pmu.c                     | 82 +++++++++++++++++++-
+>  tools/perf/util/pmu.h                     |  4 +
+>  tools/perf/util/pmus.c                    | 94 +++++++++++++++++++++++
+>  tools/perf/util/pmus.h                    |  1 +
+>  tools/perf/util/print-events.c            | 55 +++++++------
+>  7 files changed, 242 insertions(+), 41 deletions(-)
+> 
