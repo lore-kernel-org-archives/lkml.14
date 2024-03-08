@@ -1,69 +1,47 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243D04F1FB
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 07:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E64C51C4B
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 07:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709883974; cv=none; b=DSFhU2hg1wYqRZ6ugL/zD//aOnacFTGDdZ6ww+af3sdMxsr2214r1tsZ1LPvdb1u1Hie2qR9eyakrLD+Py8PSdQJnr2gELvXwZITbrzSMu/nX6dUiJA3gl3YEYxCrOcBg5EwbtTn8VyfYVOhYjIc91VUkXAvknjuo5ScD0Q1EwM=
+	t=1709883987; cv=none; b=VbVYcBMpdcNdqIFKawXFTdrpAGdldI9NTI9UJ3/iZq3j6olAUBj4amoro1DAH+3lj3AqFLtSKsJdOLwhX4eLFqYqlrF0hP8xmf8ATpyvSekFoOR6ufpNpp2yhhz1fznL+dvxu3Pe4xMcVLyVV34dsOHoJtAHVbn4r1VZoj47KME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709883974; c=relaxed/simple;
-	bh=qYxU7vhVFFHlVFqvJ2Oik7p3vX515hPOju269hebVfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bvofBmFJgOrjp6/Sl/8+KsjuS5f/SiW8ZM84jSASPrb3Ov4EI0LuCZlpYz0Our/HJGFSIo1KkEOOVYTntv9nkT2ntI1+n0Gq7MUELytaRVDmkubz+3N9zP73RMqFpI77Dm1N+P/BESDgti7yg4XELiIrOmtWL5jteTgam1hhfAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=WFpgjz8y; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1709883987; c=relaxed/simple;
+	bh=apa7drqXC+sUspJkxMBeLhvktxd4lLh4aXftu3PNjRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IBfTDpjJbihOANKiQ/5foWOyhaBcbGwJKhnn2jgLeOkL6S7+Q2DhjIDFY54n2rXp0SElYQhabW6OiF8/s5Sh/1EPXg5ssy744A6SAK8jmVDee/QklvibDROPUCXxZ6rHXSq+YgnIRpEAH1itVd/tZNv1F9n3GR2pGwH25ih4+H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Nc8xtVoV; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="WFpgjz8y"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a449c5411e1so230581366b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2024 23:46:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1709883969; x=1710488769; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
-        b=WFpgjz8ySfrpVIe48XcbICjX1O0k9GAcgbtyqEo0e7j5DxA3zTxFRm7tuT7QyOZHR+
-         0ORRhfF8kjdKpS3xRG+xw+RTgOrO5HZUpjwLNVlOpWOkHsj3h+TALRth1tknrF7n4sOv
-         6sqdai8CJTYIEr6G93LBC5QqsF07WpNGxyiMJbiFoQdNzhe0oybd3pbdOuuv3WqtF8p3
-         OpeJaD0tV+SL0ABLRlVxiY/ON3blKOlR44bqtYyVjf9t+CU2r4PanQDIwLTnD3nBJhDi
-         GyEFAUXOhAPqsg+0/CJr6upIlO41ckHQ3eB6ABuUWWs5JzBn4fUzp4wqjX9YSAGIWnOK
-         7zuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709883969; x=1710488769;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=40cCzbisoVSkufWvb0+W2WVn4MdIoueSCxQxubT81k8=;
-        b=r7MDCitl4gfwZPDmEmhSaBzkrrbIkiyep+PIxlxoUHZSUdS0WayFOFdpshlZ7WyOhG
-         9qoieBtU10K2QXVujD1icgCmzTtVhzJ6m382ITeGgQitw3SxROdnhC5M7K3OSDY/9hVD
-         p2tW4tX/rSoyLckl4y71DuVSsJA/tEYGpaibPQrBzjrhXWmptnHttqdDMcobG5QKC0nb
-         G/HIHH77SW1qd8Ypmhnr7OJ8iZ/YqkNCuTIfY8rim/gulUifLO9ake4YXaureHe/7iOz
-         926Qp+4AtM+AHPjd8EuEvCswnF5lqKN/3IDZymCZyQZAFf1qxM6o8I4iDeTteAsK04JJ
-         2mZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdIfAG6AbldxfgvutjUPvD/nUFzsym2iHrQ/5AP9epQ3ziFOCidux0b5dyMYMqME6Kz8qJ+uV+47moxGJDZNws/7+Kq9BDyQqXRQo8
-X-Gm-Message-State: AOJu0YwF/D5mh19q2HrVpo0xzP+OnHGlIkvFeJuQ7Paq185lvC4K1Z38
-	XNN6Yf7j5AQlD6khSMDKcByyG4ll4UbePgPMakxseXCvz/0wEEYNj37I4dj3i10=
-X-Google-Smtp-Source: AGHT+IFxqxzhFl5fls7nuPQ3N6O0+2LnS2lPOt/oJpZRwzM4JKXx8cqtXXb20+EoKTDV9oeuAPfRTQ==
-X-Received: by 2002:a17:906:2b52:b0:a45:bdbd:5a1b with SMTP id b18-20020a1709062b5200b00a45bdbd5a1bmr4570721ejg.42.1709883969480;
-        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
-Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id zh14-20020a170906880e00b00a456573f9c5sm4915505ejb.0.2024.03.07.23.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 23:46:09 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	lienze@kylinos.cn,
-	yangtiezhu@loongson.cn,
-	tglx@linutronix.de,
-	arnd@arndb.de,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] loongarch/pgtable.h: move {dmw,tlb}_virt_to_page() to page.h
-Date: Fri,  8 Mar 2024 08:46:00 +0100
-Message-Id: <20240308074600.3294338-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Nc8xtVoV"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 02CDA40004;
+	Fri,  8 Mar 2024 07:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709883977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rh/TMFw6/2TpSgFOITs518M418uS/FqGdKrbo+fGdeI=;
+	b=Nc8xtVoVpS8MI7y8AubYuIQRHEo70NEsK0ci1FASAXmfJIaqYhzeni0fPfZeupKoo2WKTz
+	GuAK4gcvX9oLICtDx3/QFK4ohzMFpTNjibclgWx61urSH8hoAcQXeM5cUpaBWpivaGXkw1
+	Wtxmz5LwjAbHx5MNtEkHx5qFE66QR+3hkk30ERZ1vtNAnoQnqAv5AWhX5UHRAwVMbg01xG
+	/jepdawxKCv/qU+4SxsJbDY4ljMLb868ya2RaI5OGwMYQy91G6b7jUHibzBMTg0UBiiwfh
+	dOil7lSAcLdgWAPBeHUT/bmBvBYXL34iypOal/nYJqMLyDKGrORvpFP1rhvjIA==
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herver.codina@bootlin.com,
+	christophercordahi@nanometrics.ca,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>
+Subject: [PATCH 1/1] mtd: rawnand: davinci: Add dummy read after sending command
+Date: Fri,  8 Mar 2024 08:46:09 +0100
+Message-ID: <20240308074609.9056-1-bastien.curutchet@bootlin.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,54 +49,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-These functions are implemented in pgtable.c, and they are needed only
-by the virt_to_pfn() macro in page.h.  Having the prototypes in
-pgtable.h causes a circular dependency between page.h and pgtable.h,
-because page.h's virt_to_pfn() needs pgtable.h for these two
-functions, and pgtable.h needs various definitions from page.h
-(e.g. pte_t and pgt_t).
+Sometimes, writes fail because the tWB_max is not correctly observed
+after sending PAGEPROG. It leads to the R/B pin to be read as in
+the "ready" state right after sending the command, thus preventing the
+normal tPROG delay to be actually observed. This happens because the
+ndelay() that waits for tWB_max starts before the command reaches the
+NAND chip.
 
-I suggest avoiding this circular dependency by moving the function
-prototypes to page.h, even though that is slightly incorrect, because
-they are not implemented in page.c but pgtable.c, but it's the
-simplest possible solution to this problem and the functions not used
-anywhere else.
+Add a dummy read when a delay is requested at the end of the executed
+instruction to make sure that the sent command is received by the NAND
+before starting the short ndelay() (<1us but rounded up to 1us in
+practice). This read is done on the control register area because
+doing it on the Async Data area would change the NAND's RE pin state.
+This is not perfect as the two areas are behind two different
+devm_ioremap_resource() and could possibly be located on different
+interconnects (I did not find more details). This means either the
+additional latency due to the load operation is enough impacting, or it
+has the expected behavior of ensuring the write has been received.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+This has been tested on two platforms designed off of the
+DAVINCI/OMAP-L138. The first uses a Toshiba NAND Flash (TC58NYG2S3EBAI5),
+the other a Macronix one (MX30UF4G18AC).
+
+Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 ---
- arch/loongarch/include/asm/page.h    | 3 +++
- arch/loongarch/include/asm/pgtable.h | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+nandtest utility sometimes fails because of write failures. It is likely
+that these failures are due to a non respect of the tPROG delay
+after sending PAGEPROG. I could not manage to fully prove this because
+adding debugging to the code makes the failure disappear. As these
+timings are really tiny, I can't measure them precisely.
 
-diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index afb6fa16b826..44027060c54a 100644
---- a/arch/loongarch/include/asm/page.h
-+++ b/arch/loongarch/include/asm/page.h
-@@ -75,6 +75,9 @@ typedef struct { unsigned long pgprot; } pgprot_t;
- #define pfn_to_kaddr(pfn)	__va((pfn) << PAGE_SHIFT)
- #define sym_to_pfn(x)		__phys_to_pfn(__pa_symbol(x))
+ drivers/mtd/nand/raw/davinci_nand.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/davinci_nand.c b/drivers/mtd/nand/raw/davinci_nand.c
+index e75d81cf8c21..051deea768db 100644
+--- a/drivers/mtd/nand/raw/davinci_nand.c
++++ b/drivers/mtd/nand/raw/davinci_nand.c
+@@ -671,8 +671,11 @@ static int davinci_nand_exec_instr(struct davinci_nand_info *info,
+ 		break;
+ 	}
  
-+struct page *dmw_virt_to_page(unsigned long kaddr);
-+struct page *tlb_virt_to_page(unsigned long kaddr);
-+
- #define virt_to_pfn(kaddr)	PFN_DOWN(PHYSADDR(kaddr))
+-	if (instr->delay_ns)
++	if (instr->delay_ns) {
++		/* Dummy read to be sure that command is sent before ndelay starts */
++		davinci_nand_readl(info, 0);
+ 		ndelay(instr->delay_ns);
++	}
  
- #define virt_to_page(kaddr)								\
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 8b5df1bbf9e9..af3acdf3481a 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -363,9 +363,6 @@ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *pt
- extern pgd_t swapper_pg_dir[];
- extern pgd_t invalid_pg_dir[];
- 
--struct page *dmw_virt_to_page(unsigned long kaddr);
--struct page *tlb_virt_to_page(unsigned long kaddr);
--
- /*
-  * The following only work if pte_present() is true.
-  * Undefined behaviour if not..
+ 	return 0;
+ }
 -- 
-2.39.2
+2.43.2
 
