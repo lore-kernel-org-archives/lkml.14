@@ -1,197 +1,143 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75851171A4;
-	Fri,  8 Mar 2024 16:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882E61F953
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709916329; cv=none; b=qjGRiCMVkMGzdQaG2NzPKJTtFaZxcFeq9yXm/Ss//Uoo9EIFNwUrx522xW4CUN3W2PLEG/wFfKkn9vy7lsltkLmxXP0oGrnnaGATJgAsfOycgNgd2ygFm6f2Kfv8sWcHAkCn0MEpbQYdET01X6lz8zXNqUJM7NqCVFCVZ5X4G8k=
+	t=1709916340; cv=none; b=UMP2QH6eYjGhr8nLBuguNro5D9vqXpge+jbL6EqQVXWECT/JidBkK/Z8y45+orB2HzHdvgGXxqGmobCxpFTO4Sp9ViAMyK5DakBanttozrChD+H0fLzAjO6iQ322hVnsUrW5I7cabYpIJgAOSVcFCXuytVD7E/dmsMgaVDmxpPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709916329; c=relaxed/simple;
-	bh=8U5qdKB0DMpmg3gUpkvAO98Vy1vsWobCQuZf+O8qEEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rocen+Bf6yvmbzgNoiqhe17E//vdpGaW+ld8uhbTCIOzBtkLT2xn714fSkj7vGGQXFKe2i8ztdFLtPm+phVLQUf6mZW31m6kodPtPSMfEa4YNc31nA3TNnWKEXUKrlq4eoBf0/PnnA+9gBfDUxfcCWbRl4mA7hRcXzlyEdmb7rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a4467d570cdso126409266b.3;
-        Fri, 08 Mar 2024 08:45:27 -0800 (PST)
+	s=arc-20240116; t=1709916340; c=relaxed/simple;
+	bh=RjaNT49ljT8g4/bWagEUh7Y92fvPnAxD9ciM0m/L/Ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgxTi02bgV1Zva0PrLme7mGeuKc1rQkPkA6uIfwsLjJmjg2stNZuxp5nbjSo24h7a/z9NOg3UhxDLOE8sb8rFGYjThexeVJI0hhP8643BB2CEFX9ip6Y5FAfTxkNoCQMiadhOGxTW7+XLUeNC4ej0F1N5zan3dzcnSa+Ubvf7SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E6V4gDSU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6V4gDSU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709916337;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=534u/67YBq7t7mIqXOVTlZcmBGl/1NW7WJ5BcOAUIpI=;
+	b=E6V4gDSUEDRcPdFI4nvpzfIYRTFGdmXL0gZJvfs7R8AjP4z3ORuC/z6jupS399imSkEnE0
+	Y855IEQ7VSH9djN9IX9QVOdr4iv+tBhQhrxpGAs5jtRUfucWDDzWapRkCcd2gdVRZRVAhn
+	1pLrCNCCSmOMS4gu9UjsmRDuX4Gw7Lk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-NCq3qJnSOtqVgoL_dO40-Q-1; Fri, 08 Mar 2024 11:45:35 -0500
+X-MC-Unique: NCq3qJnSOtqVgoL_dO40-Q-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a45851b0030so107415366b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 08:45:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709916326; x=1710521126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YhkgjgkXj1OWZTfq9UV7UD5/nprSvz13YTx6ty0+ulw=;
-        b=xAno1HEMi+gjucxFEAjZdCU4oWDLxg1Q2mrSKS0Y6KKdTKVW7yIOL6Z0MFW54XZxTH
-         WpwVra4emztjltpwYtFDqi2ULYafFl6WpGKOcpF74t6tXy3r2ZoFgy9Ubk8tjwrKpyzf
-         r4Oge/kxApiXWHQKQ7oVP7CnFWaEIxIPuYkIJduvOCmxTSafh1I+V1u54XUxeB9mzvJ5
-         BEPQnjRcZSvdiisX9UhPK8SCL98jSNb9XXqSvWhr8N/9+H+w55XzOkjLyzQOojc0yGir
-         Pynre9cezwunVMy33TOm5N03E+IrN+B0DbbFE4FpbbppE5VJfFD5NO2n4slLZb55YLRB
-         CB5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXCuQyCPdURjfzvUmDr66lWs9P+bQnv6mgEBQVy6ke1SdS8hInYu9WCzzjWvFhGSQauiIN/dOwTX+0jWZxKRKL8nM91e3dO+cc5Nh6w0AI3zp9PAwmlF8gLDScw7ooql4nDOas5Q+/21yM2a2auodl3j9DOePyEAGkPzThNxECD2mBlNlNVs5MIhw==
-X-Gm-Message-State: AOJu0YzMf8i5Vrog/OQaGuM2DD9f7uCnjlVz3LN0h30wh03JPGjbitII
-	3rjJL0DIbzpO7SLjgblyEmJW7OVa33HfwluOGCFCB6OwrS4FsY0xXJsRs/NSx3o5Lw==
-X-Google-Smtp-Source: AGHT+IHC9EI2cqzk5Ho0bywx2cZfLMGRgh8ZLqN+WqW56+lV7Y+zxgsbVz82D2FxojiEklqKe09+Tw==
-X-Received: by 2002:a17:906:c348:b0:a45:b631:1045 with SMTP id ci8-20020a170906c34800b00a45b6311045mr6159284ejb.21.1709916325392;
-        Fri, 08 Mar 2024 08:45:25 -0800 (PST)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id fw11-20020a170906c94b00b00a45a8c4edb4sm4020089ejb.48.2024.03.08.08.45.25
+        d=1e100.net; s=20230601; t=1709916334; x=1710521134;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=534u/67YBq7t7mIqXOVTlZcmBGl/1NW7WJ5BcOAUIpI=;
+        b=BQQ6QHh0d3oSQvL2P0PW6BZJO3L32RFuxYbqZPkAT1pIwMWE0pCmwmgZCNbaE3qo6j
+         FRl5LKXH/Ep9hSlxjWAlNmA2tbN3TwhBru1MJlV55HyMoqU3sP/jlspD2NsU/Mz80Z6W
+         B2ss6ld2idzcwRcwSpwR0KN5uZZ2EO8dMQ4l1Z0fRaQt9a7MoYK+KibZ3HrlLMQ0DgcA
+         WpKeXKtRkjn7timJb3j9PGmgkQdLQgkq+5LdR3NJWeeGSi78sv0n4tT7EzASq5zKQ8L1
+         sbUtwbvPR0PVqxqjqMfPeo+CRI6TFE4iZOIEh9PgTCSiuSMwdxRUTQi5+k7YoPF/k6Aj
+         YXfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNHnvdaeUTc7U8HrqnR6dUa2jvSmC5Hll1hwx8L5rUqP/Jh9XwNTy6GTxFYUCJEYpERBNIbiOdFrScDes/CQ4nUmLzxEsIlyz5obRW
+X-Gm-Message-State: AOJu0Yyd5Ttykh60i+rv24XEjgTq8XutTI3MjqR2AuvwL1PmFlVMMTX4
+	A5qORR4HUwuB8VgW3d1Ow1eVrFVa515AcnUbi8UzThxn2t1TvCiCINAn7E6pZY7wGvLwN1d6/6u
+	rK4vSEzQmU926A0mzZfW5htk356+456cxs+JRviHLJR62iWGJwuPAjNhUJNKfWg==
+X-Received: by 2002:a17:907:d301:b0:a45:f4d9:d911 with SMTP id vg1-20020a170907d30100b00a45f4d9d911mr1172172ejc.34.1709916334734;
+        Fri, 08 Mar 2024 08:45:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEn7ZndBGszHKq0H8y6c/T3rs7VSPm+fqpniPAcpA1gNnmrOtVIRBYfNM3Sudcp2tOC29DwLw==
+X-Received: by 2002:a17:907:d301:b0:a45:f4d9:d911 with SMTP id vg1-20020a170907d30100b00a45f4d9d911mr1172156ejc.34.1709916334330;
+        Fri, 08 Mar 2024 08:45:34 -0800 (PST)
+Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id n18-20020a170906119200b00a45e04e3ebdsm1409444eja.83.2024.03.08.08.45.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 08:45:25 -0800 (PST)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4429c556efso142414366b.0;
-        Fri, 08 Mar 2024 08:45:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWaZqd3o8IESgHTAB2g1KrJq91h4JlmdYJRO13JQ6VisoA7MdePLMFBWhw4OBNWufRNUOBtXNT9hLrLGWGq+D3GYEKz6Etwx9VF45Yob8URFA+caEzNGzjHbTBqaAut8sxDdOlgMUV9w8vbiHb0lkVeg/z7pWRJ4EZM/nvK56Pw4MWswyJZdxqPJQ==
-X-Received: by 2002:a17:906:cf88:b0:a45:373:cff with SMTP id
- um8-20020a170906cf8800b00a4503730cffmr12031257ejb.68.1709916325086; Fri, 08
- Mar 2024 08:45:25 -0800 (PST)
+        Fri, 08 Mar 2024 08:45:33 -0800 (PST)
+Message-ID: <fc80adaa-3bbc-4331-abd3-3cfbff9b3dcd@redhat.com>
+Date: Fri, 8 Mar 2024 17:45:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308022914.196982-1-kent.overstreet@linux.dev>
- <CAEg-Je96OKs_LOXorNVj1a1=e+1f=-gw34v4VWNOmfKXc6PLSQ@mail.gmail.com> <i2oeask3rxxd5w4k7ikky6zddnr2qgflrmu52i7ah6n4e7va26@2qmghvmb732p>
-In-Reply-To: <i2oeask3rxxd5w4k7ikky6zddnr2qgflrmu52i7ah6n4e7va26@2qmghvmb732p>
-From: Neal Gompa <neal@gompa.dev>
-Date: Fri, 8 Mar 2024 11:44:48 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je_URgYd6VJL5Pd=YDGQM=0T5tspfnTvgVTMG-Ec1fTt6g@mail.gmail.com>
-Message-ID: <CAEg-Je_URgYd6VJL5Pd=YDGQM=0T5tspfnTvgVTMG-Ec1fTt6g@mail.gmail.com>
-Subject: Re: [PATCH v2] statx: stx_subvol
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] nouveau/dmem: handle kcalloc() allocation failure
+To: Duoming Zhou <duoming@zju.edu.cn>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ daniel@ffwll.ch, airlied@gmail.com, lyude@redhat.com, kherbst@redhat.com,
+ timur@kernel.org, jani.nikula@linux.intel.com, nouveau@lists.freedesktop.org
+References: <20240306050104.11259-1-duoming@zju.edu.cn>
+Content-Language: en-US
+From: Danilo Krummrich <dakr@redhat.com>
+Organization: RedHat
+In-Reply-To: <20240306050104.11259-1-duoming@zju.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 8, 2024 at 11:34=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Fri, Mar 08, 2024 at 06:42:27AM -0500, Neal Gompa wrote:
-> > On Thu, Mar 7, 2024 at 9:29=E2=80=AFPM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > Add a new statx field for (sub)volume identifiers, as implemented by
-> > > btrfs and bcachefs.
-> > >
-> > > This includes bcachefs support; we'll definitely want btrfs support a=
-s
-> > > well.
-> > >
-> > > Link: https://lore.kernel.org/linux-fsdevel/2uvhm6gweyl7iyyp2xpfryvcu=
-2g3padagaeqcbiavjyiis6prl@yjm725bizncq/
-> > > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > > Cc: Josef Bacik <josef@toxicpanda.com>
-> > > Cc: Miklos Szeredi <mszeredi@redhat.com>
-> > > Cc: Christian Brauner <brauner@kernel.org>
-> > > Cc: David Howells <dhowells@redhat.com>
-> > > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > > ---
-> > >  fs/bcachefs/fs.c          | 3 +++
-> > >  fs/stat.c                 | 1 +
-> > >  include/linux/stat.h      | 1 +
-> > >  include/uapi/linux/stat.h | 4 +++-
-> > >  4 files changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-> > > index 3f073845bbd7..6a542ed43e2c 100644
-> > > --- a/fs/bcachefs/fs.c
-> > > +++ b/fs/bcachefs/fs.c
-> > > @@ -840,6 +840,9 @@ static int bch2_getattr(struct mnt_idmap *idmap,
-> > >         stat->blksize   =3D block_bytes(c);
-> > >         stat->blocks    =3D inode->v.i_blocks;
-> > >
-> > > +       stat->subvol    =3D inode->ei_subvol;
-> > > +       stat->result_mask |=3D STATX_SUBVOL;
-> > > +
-> > >         if (request_mask & STATX_BTIME) {
-> > >                 stat->result_mask |=3D STATX_BTIME;
-> > >                 stat->btime =3D bch2_time_to_timespec(c, inode->ei_in=
-ode.bi_otime);
-> > > diff --git a/fs/stat.c b/fs/stat.c
-> > > index 77cdc69eb422..70bd3e888cfa 100644
-> > > --- a/fs/stat.c
-> > > +++ b/fs/stat.c
-> > > @@ -658,6 +658,7 @@ cp_statx(const struct kstat *stat, struct statx _=
-_user *buffer)
-> > >         tmp.stx_mnt_id =3D stat->mnt_id;
-> > >         tmp.stx_dio_mem_align =3D stat->dio_mem_align;
-> > >         tmp.stx_dio_offset_align =3D stat->dio_offset_align;
-> > > +       tmp.stx_subvol =3D stat->subvol;
-> > >
-> > >         return copy_to_user(buffer, &tmp, sizeof(tmp)) ? -EFAULT : 0;
-> > >  }
-> > > diff --git a/include/linux/stat.h b/include/linux/stat.h
-> > > index 52150570d37a..bf92441dbad2 100644
-> > > --- a/include/linux/stat.h
-> > > +++ b/include/linux/stat.h
-> > > @@ -53,6 +53,7 @@ struct kstat {
-> > >         u32             dio_mem_align;
-> > >         u32             dio_offset_align;
-> > >         u64             change_cookie;
-> > > +       u64             subvol;
-> > >  };
-> > >
-> > >  /* These definitions are internal to the kernel for now. Mainly used=
- by nfsd. */
-> > > diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> > > index 2f2ee82d5517..67626d535316 100644
-> > > --- a/include/uapi/linux/stat.h
-> > > +++ b/include/uapi/linux/stat.h
-> > > @@ -126,8 +126,9 @@ struct statx {
-> > >         __u64   stx_mnt_id;
-> > >         __u32   stx_dio_mem_align;      /* Memory buffer alignment fo=
-r direct I/O */
-> > >         __u32   stx_dio_offset_align;   /* File offset alignment for =
-direct I/O */
-> > > +       __u64   stx_subvol;     /* Subvolume identifier */
-> > >         /* 0xa0 */
-> > > -       __u64   __spare3[12];   /* Spare space for future expansion *=
-/
-> > > +       __u64   __spare3[11];   /* Spare space for future expansion *=
-/
-> > >         /* 0x100 */
-> > >  };
-> > >
-> > > @@ -155,6 +156,7 @@ struct statx {
-> > >  #define STATX_MNT_ID           0x00001000U     /* Got stx_mnt_id */
-> > >  #define STATX_DIOALIGN         0x00002000U     /* Want/got direct I/=
-O alignment info */
-> > >  #define STATX_MNT_ID_UNIQUE    0x00004000U     /* Want/got extended =
-stx_mount_id */
-> > > +#define STATX_SUBVOL           0x00008000U     /* Want/got stx_subvo=
-l */
-> > >
-> > >  #define STATX__RESERVED                0x80000000U     /* Reserved f=
-or future struct statx expansion */
-> > >
-> > > --
-> > > 2.43.0
-> > >
-> > >
-> >
-> > I think it's generally expected that patches that touch different
-> > layers are split up. That is, we should have a patch that adds the
-> > capability and a separate patch that enables it in bcachefs. This also
-> > helps make it clearer to others how a new feature should be plumbed
-> > into a filesystem.
-> >
-> > I would prefer it to be split up in this manner for this reason.
->
-> I'll do it that way if the patch is big enough that it ought to be
-> split up. For something this small, seeing how it's used is relevant
-> context for both reviewers and people looking at it afterwards.
->
+On 3/6/24 06:01, Duoming Zhou wrote:
+> The kcalloc() in nouveau_dmem_evict_chunk() will return null if
+> the physical memory has run out. As a result, if we dereference
+> src_pfns, dst_pfns or dma_addrs, the null pointer dereference bugs
+> will happen.
+> 
+> Moreover, the GPU is going away. If the kcalloc() fails, we could not
+> evict all pages mapping a chunk. So this patch adds a __GFP_NOFAIL
+> flag in kcalloc().
+> 
+> Finally, as there is no need to have physically contiguous memory,
+> this patch switches kcalloc() to kvcalloc() in order to avoid
+> failing allocations.
+> 
+> Fixes: 249881232e14 ("nouveau/dmem: evict device private memory during release")
+> Suggested-by: Danilo Krummrich <dakr@redhat.com>
+> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
 
-It needs to also be split up because fs/ and fs/bcachefs are
-maintained differently. And while right now bcachefs is the only
-consumer of the API, btrfs will add it right after it's committed, and
-for people who are cherry-picking/backporting accordingly, having to
-chop out part of a patch would be unpleasant.
+Applied to drm-misc-fixes, thanks!
 
+> ---
+> Changes in v3:
+>    - Switch kcalloc() to kvcalloc().
+> 
+>   drivers/gpu/drm/nouveau/nouveau_dmem.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> index 12feecf71e7..6fb65b01d77 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> @@ -378,9 +378,9 @@ nouveau_dmem_evict_chunk(struct nouveau_dmem_chunk *chunk)
+>   	dma_addr_t *dma_addrs;
+>   	struct nouveau_fence *fence;
+>   
+> -	src_pfns = kcalloc(npages, sizeof(*src_pfns), GFP_KERNEL);
+> -	dst_pfns = kcalloc(npages, sizeof(*dst_pfns), GFP_KERNEL);
+> -	dma_addrs = kcalloc(npages, sizeof(*dma_addrs), GFP_KERNEL);
+> +	src_pfns = kvcalloc(npages, sizeof(*src_pfns), GFP_KERNEL | __GFP_NOFAIL);
+> +	dst_pfns = kvcalloc(npages, sizeof(*dst_pfns), GFP_KERNEL | __GFP_NOFAIL);
+> +	dma_addrs = kvcalloc(npages, sizeof(*dma_addrs), GFP_KERNEL | __GFP_NOFAIL);
+>   
+>   	migrate_device_range(src_pfns, chunk->pagemap.range.start >> PAGE_SHIFT,
+>   			npages);
+> @@ -406,11 +406,11 @@ nouveau_dmem_evict_chunk(struct nouveau_dmem_chunk *chunk)
+>   	migrate_device_pages(src_pfns, dst_pfns, npages);
+>   	nouveau_dmem_fence_done(&fence);
+>   	migrate_device_finalize(src_pfns, dst_pfns, npages);
+> -	kfree(src_pfns);
+> -	kfree(dst_pfns);
+> +	kvfree(src_pfns);
+> +	kvfree(dst_pfns);
+>   	for (i = 0; i < npages; i++)
+>   		dma_unmap_page(chunk->drm->dev->dev, dma_addrs[i], PAGE_SIZE, DMA_BIDIRECTIONAL);
+> -	kfree(dma_addrs);
+> +	kvfree(dma_addrs);
+>   }
+>   
+>   void
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
