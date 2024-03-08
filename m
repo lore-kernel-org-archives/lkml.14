@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB9E604AE;
-	Fri,  8 Mar 2024 22:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A2160B8D
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 22:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709936901; cv=none; b=K5LUHGP4CBSEW4uWcTSvuQ4uXMM2s8/RnJBS4Ltlw5P9z8mC9U1CIfjgOQAEqJsxbWF2WIkAppQjdQ4I/Hvat0d9XY81rXfPs1iXZSGoSUmZv2jbTu/KZF0YrFWPQA1IxUtQIYE4oqvLc/xMaAAUMRMNocIT98hkeEQfV5piVtI=
+	t=1709936905; cv=none; b=YyY9n96mRuOxIpxaidAaAQyqJecn+VZqcXJUhUbt3PlbaHBDFc4KKZ+1o6rJHN/FE6Ov4KQJ+nOMoX08tI+gfEnowuJmGRbjPnlyNbzAktmnTujBC6EF7oM6NF7pONIAg9vgL9YDV1luTg9gM//0BKi8VflaByv1tCehGmGJJLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709936901; c=relaxed/simple;
-	bh=f+aA1pXh0Fecuf0nO1G0I+WuUBCGnya/AIRsrq2HsvY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SHGBLHOwuh+w+zYoZ4aj/B3GU/HlOo/aeoaaxIZUxMKexn64aMWsUArrtsHqoVgGVF9WbV8QkaKbxkHpgTZFavG23IG60h3bvnWHwSFt+YaJ5jXSvQ9OEQDoGE2t4/ZziDHZimY5QTZuWJHrLRVKkP+KTZPxkdfYylkDTGnt4Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M04k5eqF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709936905; c=relaxed/simple;
+	bh=r0RlwkZIdYJdCpEvDjJq8InKgNTycgDnFZkRru/ubwQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RFrQR96ZfQRHAG6reiDkzIDgMB+7IJmKmGeptLs4zqdSvRt7HjKbGClkjTbE3zZUYCAIekRK7oH70WsmMNMq0Uo4mmPKHrL1MzLZSwZp/8Iz8cHCvKAgzekS61611Z8uU0cODguzscwoVGyQjpCFd6SRXtOw2LW7qS6y9LiJ/FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5i0hI8R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M04k5eqF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C65CFC433F1;
-	Fri,  8 Mar 2024 22:28:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5i0hI8R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B10BCC433F1;
+	Fri,  8 Mar 2024 22:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709936900;
-	bh=f+aA1pXh0Fecuf0nO1G0I+WuUBCGnya/AIRsrq2HsvY=;
+	s=k20201202; t=1709936905;
+	bh=r0RlwkZIdYJdCpEvDjJq8InKgNTycgDnFZkRru/ubwQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=M04k5eqFCdbc4nGsAz17gkp+c4I76Xr4+hR8aeLkEzDDmDk4qROdvfJhnoVw4xtAq
-	 Y+qyPgLaWKodoCjeV1BwdPW1y/7sYcghNfKJmkPcCz32uO/j7eaThKOifC3t5299kR
-	 c387p8HYcrNvq+2DemyjnE30TtKHk6ezGWT0/8X6IHebZWplrOg1f2BxGpYfH7gA8I
-	 bCXIWu7abeJ7xvZ8LoiKC4ZiOgEgu41oyIF3cUisTrCxgcLNlz2aiiXdwHL9RN7MsP
-	 gmpqbAFFcp/tYJZsChYC0+1ithbl8rGluVq+lHg1HL4KEELq8aPNqbwpdV5Jv/T9z7
-	 MqA6xikk6E3Hg==
+	b=G5i0hI8RjEDR/oh1ZOK+lwd5pgV+KzQ0kYTDbCcwUfIvOoHnuItUY2SNSeI37kakH
+	 3LVMUwJV/K/ODQHylzoaHV4jcdOHBLnai0apUu3G2RsiLiwnoWgys+Bd1ItniKX6BO
+	 c+lQFno2YlCFfR/Y2yTgyoOjzF6R695eNl+9CzBrVEAPLfr3QGNUTx6LtiKcK6G/ZO
+	 IpIo4eHhrIDBAuNweGefUn82fDueXEpkmb/7x/0YG16egk0AGrCPdpNwFLlSjemzVz
+	 6OaM3JflvvnAErszEzawHIyiZ+nvTGk03o2DmVxGkwqLbGQnM5S4ZdBb4jqi5SXS5f
+	 p/4A2NpFu58uA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B16B7C59A4C;
-	Fri,  8 Mar 2024 22:28:20 +0000 (UTC)
-Subject: Re: [GIT PULL] USB/Thunderbolt driver fixes for 6.8-rc8
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D9E5C59A4C;
+	Fri,  8 Mar 2024 22:28:25 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.8 final
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZetLB2-_00QyZZJs@kroah.com>
-References: <ZetLB2-_00QyZZJs@kroah.com>
-X-PR-Tracked-List-Id: <linux-usb.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZetLB2-_00QyZZJs@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.8-rc8
-X-PR-Tracked-Commit-Id: b234c70fefa7532d34ebee104de64cc16f1b21e4
+In-Reply-To: <CAPM=9tzTeAgY3rUR_KC8=q5MybJ5PDAyzXJyh0RUigR6_ccyZA@mail.gmail.com>
+References: <CAPM=9tzTeAgY3rUR_KC8=q5MybJ5PDAyzXJyh0RUigR6_ccyZA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9tzTeAgY3rUR_KC8=q5MybJ5PDAyzXJyh0RUigR6_ccyZA@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2024-03-08
+X-PR-Tracked-Commit-Id: b7cc4ff787a572edf2c55caeffaa88cd801eb135
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e536e0d44c44f8854a6c527195c70ce9dd1e0c0b
-Message-Id: <170993690072.2485.16888337815076439293.pr-tracker-bot@kernel.org>
-Date: Fri, 08 Mar 2024 22:28:20 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+X-PR-Merge-Commit-Id: e6fac3c1f3287735faf1b68e0068f64e6966618d
+Message-Id: <170993690564.2485.2022006535317820472.pr-tracker-bot@kernel.org>
+Date: Fri, 08 Mar 2024 22:28:25 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 8 Mar 2024 17:29:43 +0000:
+The pull request you sent on Fri, 8 Mar 2024 13:52:40 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.8-rc8
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2024-03-08
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e536e0d44c44f8854a6c527195c70ce9dd1e0c0b
+https://git.kernel.org/torvalds/c/e6fac3c1f3287735faf1b68e0068f64e6966618d
 
 Thank you!
 
