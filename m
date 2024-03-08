@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E5F2E62E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEA12E85A;
 	Fri,  8 Mar 2024 05:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709874037; cv=none; b=GMyftP6HchxK3hHxkugUkEg2PyftzPKZWk3imo8dXAITpXRCwLBvXA9dbAVpNEKZyP47CvLV8Y4BfinNw6lAEoZ8xUl5wT2/vBA2aNT0CsVLvzaPPQPmsMxi08TKGCZSbpdTaVqFswlJf52JlIL8XCgNtiNcCTECVph+XcRHL0I=
+	t=1709874038; cv=none; b=m0Z9Nazr9EqF973vn060Z4pNOtOIYgy8rPUzVZi9H6T39wWlQFsJMnt5gYeIFTgw6Oog2TeUhAImig2inmZ8RR9o4GLqHD3t0ZDe1/F7aiSgKqp0K3R36Z291TCzJBSDidPka0bhomO0nrr+3amIaYdCPMGwz83IJ/OwcMRxymI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709874037; c=relaxed/simple;
-	bh=WA0EbcjTQ2kZ9bSX3gzTKKJ6hu/IcpExjVbEu2Ldmj4=;
+	s=arc-20240116; t=1709874038; c=relaxed/simple;
+	bh=5C1CPdakz9h1M2QOj502KAmjWGdW2B9uCUojD3Ao9+Y=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LTj6KDtGts3EWwHTsB84Rb3cNis+tenBuoNjTaZn6jn6iLemrMYNpcDxqlcRebflrdpGT/esNn/oUBFlD2rqcNe0ELDyra3CHdZYbohPCEVHU6G78NP5HHr4Qhrhk5twp9nIeAugMxSxhuGDdCJnAUBFE7PUFbMy2DZJbiu3+A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQ4UHALW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=E8Vu0uzyYln1VTmuzjMh20NLX5xlADxGgeFVxGnwwjHp8QhBqCWfmp18/K5xKPUBlno0QJkElsreyNvw/F4mCx95awBoFUzqQcAwoibpIqN8XGPeHhX4YAaxFIoNVovVzdrZRomnlr6NZhwdP72mKbsW4ZBm1Iqs5AzfCDwezcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXo6oWW2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQ4UHALW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D601C43330;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXo6oWW2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6ACBC41679;
 	Fri,  8 Mar 2024 05:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709874037;
-	bh=WA0EbcjTQ2kZ9bSX3gzTKKJ6hu/IcpExjVbEu2Ldmj4=;
+	bh=5C1CPdakz9h1M2QOj502KAmjWGdW2B9uCUojD3Ao9+Y=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LQ4UHALWKMjrBhP3brHe5JoAEMdg/0aGbgHgTWfhchv+leR8oMCwX9ng6GaxUDItx
-	 ffxcbmxzKE1TaqdB9RSUEj2XlF2Y0cJKI5PcXhVJZ/DRJm7xM+NVeTRbwxS2bEv20o
-	 SURMKNRYNwOoQpHQ2u74NGRad8OG13PeuZpQ4/rXwEQlyc7kZ1Yl2nhisBj2HyjxtQ
-	 YM6wK+KFliIfV4gw2CaWcE+5tO6CJmq/c4YYqq3XYMvZbiCSlxKzQI8OB/EQckTHOo
-	 rLkjA4jh0f6gdDNisQllFvTBPHMH5hyXN7j7UFYffXqNe9kpFTJ/2D7rDLbECqcAOq
-	 XQkT8ZEOr7CaQ==
+	b=TXo6oWW2vAR9lVW8YGthY+5zGlfYYyXeLgw6zuhy0hYkm++pynxyA494DbjAwzOCL
+	 ERtCkdjHSNEj3dISDN3sk5ie/KiAOtYztve1G6dDeHZvbgfstcFU8P6Yoyf+sbNbd3
+	 ijpuxV72NkstXBd+Wvs6/g1wJYbBnCpOikbOcFnAm5PFHf4yB2Oav/h8+yaHvd4Vyh
+	 uJ8d5wKTmdiy5LIL2apS/A25ML2HgM8VgSC/FQ1dBMS43cvULYw+ECtbJMKV/vaDQs
+	 koxwj/TfP8jFUZoH1R8wWSxWu1GdQH/xgllf2H1AwFtNfI4BWe8I1z/pRvpaEQ9tmS
+	 lpCyV5XBt7KUg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6ACC2D84BDB;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 92B9DD84BD9;
 	Fri,  8 Mar 2024 05:00:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,40 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 1/2] net: usbnet: Leverage core stats allocator
+Subject: Re: [PATCH 0/2] isdn: constify struct class usage
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170987403743.8362.3592086830203514705.git-patchwork-notify@kernel.org>
+ <170987403759.8362.17894165442379063106.git-patchwork-notify@kernel.org>
 Date: Fri, 08 Mar 2024 05:00:37 +0000
-References: <20240306142643.2429409-1-leitao@debian.org>
-In-Reply-To: <20240306142643.2429409-1-leitao@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: oneukum@suse.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, horms@kernel.org, dsahern@kernel.org,
- linux-usb@vger.kernel.org
+References: <20240305-class_cleanup-isdn-v1-0-6f0edca75b61@marliere.net>
+In-Reply-To: <20240305-class_cleanup-isdn-v1-0-6f0edca75b61@marliere.net>
+To: Ricardo B. Marliere <ricardo@marliere.net>
+Cc: isdn@linux-pingi.de, gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed,  6 Mar 2024 06:26:41 -0800 you wrote:
-> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
-> convert veth & vrf"), stats allocation could be done on net core
-> instead of in this driver.
+On Tue, 05 Mar 2024 17:04:46 -0300 you wrote:
+> This is a simple and straight forward cleanup series that aims to make the
+> class structures in isdn constant. This has been possible since 2023 [1].
 > 
-> With this new approach, the driver doesn't have to bother with error
-> handling (allocation failure checking, making sure free happens in the
-> right spot, etc). This is core responsibility now.
+> [1]: https://lore.kernel.org/all/2023040248-customary-release-4aec@gregkh/
+> 
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/2] net: usbnet: Leverage core stats allocator
-    https://git.kernel.org/netdev/net-next/c/352f5b328262
-  - [net-next,2/2] net: usbnet: Remove generic .ndo_get_stats64
-    https://git.kernel.org/netdev/net-next/c/9cb3d523c153
+  - [1/2] isdn: mISDN: make elements_class constant
+    https://git.kernel.org/netdev/net-next/c/479b4bc867b9
+  - [2/2] isdn: capi: make capi_class constant
+    https://git.kernel.org/netdev/net-next/c/12fbd67ea3f4
 
 You are awesome, thank you!
 -- 
