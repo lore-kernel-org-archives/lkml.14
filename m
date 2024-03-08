@@ -1,168 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83519535C8;
-	Fri,  8 Mar 2024 08:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5615535C8;
+	Fri,  8 Mar 2024 08:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887491; cv=none; b=oaZLhLvpVmYYD95cX3di8KtFfXq3WePwq7vXNibl21u7NODIWMcb4ogdCtEus6FieqN+KOwmocv7gAKXQUko2Y3yMm6vmybVEmyQgkeRedXAu1Q75xOq/4LFEJcNqwLpBSLJ3aj8a8sxcyAA8KwS9kU9eYYa+F6Y4lWHP9FlGGA=
+	t=1709887503; cv=none; b=VQjRosF8Ep15CLno0MpfLKwtLn6OdqkgmxK61wPEc7WAaXX2t4edzGyW6M7GnCWGySirRkZdIhfc7pqwXgHRNtgP51T3kH4AQwIfRvQv/h26ISzMKuj5UVbVjISvgWP8Y6psOCcrT58H9BLf1pJYFpP2PkfMhrDUTNYA2i5iNIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887491; c=relaxed/simple;
-	bh=MqTFq+pTP6o+klH+NTFFyqhWNYws6ibOnKBQpzbhvN8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i9lmVeuSROqm0Eux1GWan81ogPhrsilLAyWiZeX5632xVpbNy1SbaheGPxJjk+GEKkKqcZGgNAFIMHA0nGdLlKIU7bkJd4SmQHch6AmaFTaKzHUJDwgautLq8OYT4rC5Cd4HpwxSS/4GvZLzpdWP8RlTlQr/ti558m+rWuDLD/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyBmVid6; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709887503; c=relaxed/simple;
+	bh=WIfKrII/q5Cy4fnBaoGorSTt/WCJneNDItG3lsR+aqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=R4IpfzlDjlH8/x0q4qtzIA/CHVZV3Ou2lsBvYHGWAIl3jPQW+YF0XULz8FzoCLFlj8TcdwJxeGJyoEm//SrU8l7byTLJzJ6jqaKUlF4LObknJpCc3YRrSkOaoIgk3QSWG5UR1VQjzbINx0qgZFBExvQMyUH0pkA0WWWrdEB3YCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WmPwPTqp; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyBmVid6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709887488; x=1741423488;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MqTFq+pTP6o+klH+NTFFyqhWNYws6ibOnKBQpzbhvN8=;
-  b=WyBmVid6ochK6u4gGi0aDoUSU2pPd+zVJbR1bZnfWuTBax7yr+NQ5dqQ
-   KHuwqLaXkonYTdsdyrYCtRTvZDL9pGtrh1V5QQmME5LsmRxFT+0GDunrH
-   Tlufc3wspNDqJtw/aQB+UnnE6xDQTvVzPGjIsKjiOuKPOMgmNZBA9rTxf
-   uOeMfSGsUKUbaLQxR7DgFBu8LJheZtgAorFbE8UfUpQRFAAJXf3qFllsA
-   OEyc9ZMfS1VaooSdA4IY2RfMD1cmSYMGxx+PP4GCr9y0PkU3ljPemIhOy
-   RPk3TaM+RWipW+be2cH8Tka5TE+ofbA9H1SwHGZUkJI3SQCxjjJ6ufPnK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="16005609"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="16005609"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:44:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="10810386"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:44:46 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 Mar 2024 10:44:41 +0200 (EET)
-To: Ai Chao <aichao@kylinos.cn>
-cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5] platform/x86: add lenovo wmi camera button driver
-In-Reply-To: <20240307085939.668881-1-aichao@kylinos.cn>
-Message-ID: <13940666-caab-8bde-d76e-231de9ee4f5c@linux.intel.com>
-References: <20240307085939.668881-1-aichao@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmPwPTqp"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33e742ca96bso714365f8f.3;
+        Fri, 08 Mar 2024 00:45:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709887500; x=1710492300; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hHn/aiaeEqq5HNrZZ6UGDx6LpcyY5jbRWNKamKPcfsY=;
+        b=WmPwPTqp8VCTqReQ0Bf9LWAnjsQvXtEuoe2AVTkr6FRcWQO+qvufNOx7TCQZ9CE7EN
+         xLDYzvseEETs9/S5ftdm+YUD89bTE3B+76XUuVyCFV0xPi5BkM41lwVIwNNaoXQm4NcV
+         qABMjXk8B6NKhLD96Dd2eDsBNhbI2XkX1z1cgI1KQMt4TdU6pngBjlEQmhl+ZMRvgcfk
+         N1aFMIY7OhyePj52IvtMkkNFrP69MmTFfa+JzqM4YHR6t77AqHJHV6NGzYBBHX5BVC2x
+         xel6n2Vtm6wcnGQIV5zIVOq/3TN+5gUABOr/UYA8pWhm77RbpW4PX+Puvf4fVAb24yRg
+         tIMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709887500; x=1710492300;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hHn/aiaeEqq5HNrZZ6UGDx6LpcyY5jbRWNKamKPcfsY=;
+        b=onzByKv5ncHKEKB9mBiqgtNJYrzYFxMJJ40h3GoxrBWqFgRo4qXIpFAl6AVXf0gbaq
+         Hh1u/qLXiuI3Srn6adHJNI5hP9qPU6Dul7Cu2LUwa3MgEOARhUnMIT9PoUl/NPHzjSG6
+         NQHqlXoPdPnT1bruS2GvvjNnv9psih5Ic8ujKchFCbSN09TsKx6YV9s22RUDbKNCYXGi
+         oBkBkrFCk+NFPX8O4/HXw+qZ8AKSriVmnLT16Ap4l3w6Dtfkc4YaEOskmJ+etOuLVYYQ
+         hoYj1AX09DOxyGEYGKh/QOVzllYe3xewMRtebDP5AbuchXGlOcXMDnT3Ur9mH9m7vScD
+         5i+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUWP09oX875VT5JEsc95uKtS+2o0tEvXZzzqroNv56AAGWUE6uKpTvPoWx4Vuqid0uQdhO0+8rfEs/tyHIO2jHlEANQtpKku1GDzkC3eTvf4V5QtF785IH75YabLtKMzyEZV9xF
+X-Gm-Message-State: AOJu0Ywh8hnc1WkaGvlx37j0Up+NucKlJaPqjrU4sla+p7ufM7NYXhaf
+	b5pCxW3yr0INleKf11YDr77/LZb84O+LuqQ29l5oyYXtEBjpl1Ht
+X-Google-Smtp-Source: AGHT+IEaPCezIBMexsJ1m8k8liW6LsShUPZYXPBXqhksit7ulmPugMafosBC+eD0gvo63Jc4wBZFvg==
+X-Received: by 2002:a5d:4645:0:b0:33e:754e:7f75 with SMTP id j5-20020a5d4645000000b0033e754e7f75mr1108804wrs.16.1709887500073;
+        Fri, 08 Mar 2024 00:45:00 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id y1-20020adff6c1000000b0033e699fc6b4sm3089078wrp.69.2024.03.08.00.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 00:44:59 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+	netdev@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] tools: ynl: Fix spelling mistake "Constructred" -> "Constructed"
+Date: Fri,  8 Mar 2024 08:44:58 +0000
+Message-Id: <20240308084458.2045266-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 7 Mar 2024, Ai Chao wrote:
+There is a spelling mistake in an error message. Fix it.
 
-> Add lenovo generic wmi driver to support camera button.
-> The Camera button is a GPIO device. This driver receives ACPI notifyi
-> when the camera button is switched on/off. This driver is used in
-> Lenovo A70, it is a Computer integrated machine.
-> 
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
-> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-> v3: Remove lenovo_wmi_remove function.
-> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
-> 
->  drivers/platform/x86/Kconfig             | 12 ++++
->  drivers/platform/x86/Makefile            |  1 +
->  drivers/platform/x86/lenovo-wmi-camera.c | 89 ++++++++++++++++++++++++
->  3 files changed, 102 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..9506a455b547 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->  	To compile this driver as a module, choose M here: the module
->  	will be called inspur-platform-profile.
->  
-> +config LENOVO_WMI_CAMERA
-> +	tristate "Lenovo WMI Camera Button driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	  This driver provides support for Lenovo camera button. The Camera
-> +	  button is a GPIO device. This driver receives ACPI notify when the
-> +	  camera button is switched on/off.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called lenovo-wmi-camera.
-> +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
->  
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861e..217e94d7c877 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
->  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-> new file mode 100644
-> index 000000000000..571d67ade8ac
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Lenovo WMI Camera Button Driver
-> + *
-> + * Author: Ai Chao <aichao@kylinos.cn>
-> + * Copyright (C) 2024 KylinSoft Corporation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +	struct device *dev;
-> +};
-> +
-> +enum {
-> +	SW_CAMERA_OFF	= 0,
-> +	SW_CAMERA_ON	= 1,
-> +};
-> +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	if (obj->type == ACPI_TYPE_BUFFER &&
-> +	    obj->buffer.pointer[0] <= SW_CAMERA_ON) {
-> +		/* obj->buffer.pointer[0] is camera mode:
-> +		 *      0 camera close
-> +		 *      1 camera open
-> +		 */
-> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
-> +				    obj->buffer.pointer[0]);
-> +		input_sync(priv->idev);
-> +	} else {
-> +		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/net/ynl/lib/ynl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This message seems to assume camera mode is on the valid range. Wouldn't 
-it be useful from debugging point of view to show also the camera mode 
-value?
-
+diff --git a/tools/net/ynl/lib/ynl.c b/tools/net/ynl/lib/ynl.c
+index b9e77af5af5f..4b9c091fc86b 100644
+--- a/tools/net/ynl/lib/ynl.c
++++ b/tools/net/ynl/lib/ynl.c
+@@ -423,7 +423,7 @@ static int ynl_msg_end(struct ynl_sock *ys, struct nlmsghdr *nlh)
+ 	}
+ 	if (nlh->nlmsg_pid == YNL_MSG_OVERFLOW) {
+ 		yerr(ys, YNL_ERROR_INPUT_TOO_BIG,
+-		     "Constructred message longer than internal buffer");
++		     "Constructed message longer than internal buffer");
+ 		return -EMSGSIZE;
+ 	}
+ 
 -- 
- i.
+2.39.2
 
