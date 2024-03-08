@@ -1,104 +1,76 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A311F5338C
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 08:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439935103F;
+	Fri,  8 Mar 2024 08:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709888271; cv=none; b=Qz06lSzvlZ5b5B9jT+Dlx+BegQYdtK069rCYFx4RjrED8oC0kq8IL7cepzQfGXWcBDtQMemCAgZ1ay+kGvLuRFkQ7f/t3SKcj84FAQUVQMu1ZHZtcy9Kr8saxQUo08U4LU+iSkxJCkJziTeGcI7zkW+swB9NvzPqsd7PdG2d8bk=
+	t=1709888359; cv=none; b=hha/vUgFN0SxzdzuSwLb6/AuuDj53FTsSPg4aV51U1LMQtMl5MUaXO+LI914/FH/hVqCEgNPb+/7nffQIxmCYNTZFdV9QmV2YT1Jq460R8IFmqbMtAm1fDi8gSS28B0x38DXEO/4iwiifGBedp92mxSi8tuNOAcJLAZeMneQ7ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709888271; c=relaxed/simple;
-	bh=jajimP3j5lC4XyZuV2Qeuj7jzP25wkYstevIdyZy0es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IYjwu19ranpIO1KVPa11DwJCggN5MDYkJ3aDsy/rEJLaPeFwl69XM9N4qIIcP+YKEc8ob39EA5HoNsnSsmwYSe7A4h6a2DpRINiECf0NQTqpkks3AFxL0QCHRd6GZlNUQGfA4h1MjRExHBDU5+2Ki9IdoMeNyq97R9VJnMm9GdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BlZ0xaQi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709888359; c=relaxed/simple;
+	bh=9nk/LM8qbXxqqrGQTnt5jKWaF87oDn2J91q3tvQdGAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kB0lJfT7YVSp5Zqqc051xJSF9sdMtkOwdpYbTEUDKt0vhD7jltvACkQTiCVrguWaPPPBO2EGZ333N4RNy+9TaAHJbCCWimKHZXxUY/kLZVwt1iQeuPAGE5HOPU/sLS3bGFJxQjzcRgsIhci/4ZdrJ7CVQktVnbRbQbWmbeCLql8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bdSRG0xm; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BlZ0xaQi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4DE6D40E01F7;
-	Fri,  8 Mar 2024 08:57:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WC3h695uH_Jp; Fri,  8 Mar 2024 08:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709888263; bh=whg7S48qxi62u64g7hpTKEWyyjWtaN8l7RWfYvb+8FQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BlZ0xaQiyEun3ErVrAtwl9gVpdVjHxpsFrG/4uDRZxzR8omzuP2Pa3WonsQfaWQO+
-	 dNDyP8/RfVERsPn8RKjzZBqnFD8i43Izf0qHJGGv/XEG5WL0psrbKLys2jJzewiRcw
-	 uoSG/OxexnXSS742Ruwv23BLV2fttqaGqlIwiA7FpJEYXw1J6GgrotIYL4obNWz0lX
-	 T7nqIFNkKlPj0typlf2hnP2T4F46aWk6GRBk+yQqKVBhxUZvjVaVxJPsBGqOvSS1zp
-	 97cQ7ZaMtAGMleJo6aCIVkue4gi9Kr+G2xc8wtja6SF7BTRFIPlRjG22VQ00wn7bGr
-	 Y/k+dCe9hCAUGYEDwTwGe7Nb22tFAyhxV7iET+I0j3vh6e5OoV2RN5Ry7AsQ0yw6A+
-	 wrVGaZ+CscJEo7dk0BW1IkoLiI82tiyiSUlFNFSutbCFH9GpgrmjvEciV7a2ymIRBO
-	 qW0F0UeQViiSf9b+AxIWJ/lnif3ian4pwzKl50iw4K1YWmnSnBij+pi26MFTvOPuwH
-	 qpV7ni0l4rjPqPii4jzbq1CP8rvB7NxBzdcht0X6f6Ssfl2NUU//cjSTVXfwnMsdNn
-	 FYIssrwoB2JrvK/TPa9k+eazxL364wAsEFbEPpygIQrib8t4MYCpwMI1s3lpTgUgT/
-	 fBr5bytrnBMMPUEi8f5YZa1c=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4431F40E016B;
-	Fri,  8 Mar 2024 08:57:37 +0000 (UTC)
-Date: Fri, 8 Mar 2024 09:57:36 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-	pbonzini@redhat.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: [RFC][PATCH 03/34] x86/pci: Assume that clflush size is always
- provided
-Message-ID: <20240308085736.GCZerTAHhN5-PEmVfB@fat_crate.local>
-References: <20240222183926.517AFCD2@davehans-spike.ostc.intel.com>
- <20240222183930.18D74E8B@davehans-spike.ostc.intel.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bdSRG0xm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=9nk/LM8qbXxqqrGQTnt5jKWaF87oDn2J91q3tvQdGAc=; t=1709888357;
+	x=1710320357; b=bdSRG0xmeLMlyH1q4zHZRFOQZ96DPNKdWGyVdBaPjbdgD+cyotvxft8Pp2eT/
+	YcXx2DlQlwhSHI32OlTD0s8i1ydk2n+dTkmlNvQZvT84ui5MzQfPTwTBwTetKwWWN+rxm9FnnBzjC
+	wfIiLRJ6ct9u1RosnHKNHmn9D7VB/IY3H5B0WvLc/huDV1IN/eMICIbT4SspgsgSs8eU5QAyFEHNg
+	30Jfq9zl0u9wP7QhZpGmvdIz4I5utKPup2aNkQ6+dtfzcQ3r+pW36ZoCq+J8GqJUlHiP7W/WgwOdc
+	iiU17RskOH0mhca0IzS5NMTYU3gnM1XgL2m+IUMERlTPSZuMkw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1riW4D-0001ul-M1; Fri, 08 Mar 2024 09:59:01 +0100
+Message-ID: <7c7e363b-ec9b-4b46-a0bf-7ae062d734d1@leemhuis.info>
+Date: Fri, 8 Mar 2024 09:58:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240222183930.18D74E8B@davehans-spike.ostc.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
+Content-Language: en-US, de-DE
+To: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
+Cc: 1054514@bugs.debian.org, airlied@redhat.com, carnil@debian.org,
+ daniel@ffwll.ch, dri-devel@lists.freedesktop.org, kraxel@redhat.com,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi,
+ tzimmermann@suse.de, virtualization@lists.linux-foundation.org
+References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+ <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
+ <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709888357;95bd5470;
+X-HE-SMSGID: 1riW4D-0001ul-M1
 
-On Thu, Feb 22, 2024 at 10:39:30AM -0800, Dave Hansen wrote:
-> 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> The early boot code always sets _some_ clflush size.  Use that fact
+On 08.03.24 02:08, Alex Constantino wrote:
+> Fix OOM scenario by doing multiple notifications to the OOM handler through
+> a busy wait logic.
+> Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
+> result in a '[TTM] Buffer eviction failed' exception whenever it reached a
+> timeout.
 
-s/clflush/CLFLUSH/g
+Thx for working on this.
 
-as it is an insn mnemonic.
+> Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
+> Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
 
-> to avoid handling the case where it is not set.
-> 
-> There may have been a time when the Xen PV call in here way too
-> early.  But it calls get_cpu_address_sizes() before calling here
-> now.  It should also be safe.
-> 
-> Note: This series will eventually return sane defaults even very
-> early in boot.  I believe this is safe now, but it becomes *really*
-> safe later on.
+Nitpicking: that ideally should be pointing to
+https://lore.kernel.org/regressions/ZTgydqRlK6WX_b29@eldamar.lan/ , as
+that the report and not just a reply to prod things.
 
-This should probably be ...
-
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
-
-<--- ... here as when applied, "this series" means nothing.
-
-With that:
-
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Ciao, Thorsten
