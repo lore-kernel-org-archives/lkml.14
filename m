@@ -1,318 +1,278 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C15200C1;
-	Fri,  8 Mar 2024 14:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E8315D0
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 14:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709909392; cv=none; b=EiGRPzsCALXav1UuCeL4OrBejYjFcjSmWrBEK6l2aKmcihwZnCgIkx3yKwEcyfLOE3j12J0Km96qW9/3i+kQbzlO2J5nI4dbL+Tbw4UaDRkKzl/oqC+sOAHdsSfwDYvf/gysBni1KDXTJDC8/U6JPkaQF8Z8X07F/0xu9LqRahs=
+	t=1709909492; cv=none; b=E1ox18D0ax0N7O0ET0rGnyz5TnbvJGFYIWX3cjHFrenOb3TWFEUXSSORAB+uE5ExVG4OT5tVfTn5SghnltO4xaN36OrohtmVp4VMcfhN/2vqU9+wv2Zaz/fobxGwqUB38V45m8EmYZ6A6boH6+sYma+mAujh87XG8Sem1i6m8ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709909392; c=relaxed/simple;
-	bh=WY/qS/ckGhQLvKky6SlRpqOjuzNXZYS0fZnkGAFszI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u4J1q1cWoJdEODfchvBfvd7zQzON0r3Xd3zg+KAyvj6jSXwL6+ccDMv/NcIUf9UNz4/pUT16hNOydoHp2GrWl8RR9GCl9kTNKq2Su9tzhW08otvLUcZu2hN0DuoJC2Zg/Iz3HVpzKB8vWY2d8PWPBiVfrSYM/Xln4xOK05XtHJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wULQIMkC; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709909492; c=relaxed/simple;
+	bh=o5R28wo1j5yA4yxUQwa0nYdZ/B/7PlrJWZdj4kQ/lyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gYJMp6+6mmNKqsL811bxqf/cSkgXX5+po/rQMuEZyeyRZkfNiLrmE5PLsm+NfJlpMgfoIGyU5oRESru+EEnixjvUAEXNIocP/Bhhn4n9jwoAmnZE2UYpHmc73WeJhRebndPAswb4T+GTZ/tHpC4XUOJoRua3gvkpb1oNAWHD0pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ipMkZbK6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wULQIMkC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709909389;
-	bh=WY/qS/ckGhQLvKky6SlRpqOjuzNXZYS0fZnkGAFszI0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=wULQIMkCxXx4EE5m3lJFejVUnirWj/2tNP5kGhXXhKYnP2NAe3v/zVr2ixIxRu79m
-	 opjUYf4gVvC84wdh1Gz/MImANci1fObGdhWJL8m7UjTVhrgaCCg8Cm+KwEjQFCEdWU
-	 JjcNUK7u57x8/TSrsnXHz7DsVxoKk6ajslWyOpBZx8jcEBtmMDXOxAyvECgq2fG2SF
-	 V52ppxHKFUcg+kfuDKoArsdU02zJrUPw0GnDapG2qc/4ZJusX4WzJXX0AAs7N4qswp
-	 eXu1bWzbJ9aWg6o3ra61WKtlvQht6EcYSc0idHRtMobjRkENC9FNGW0IcpVvnbh1r+
-	 0AOHTS4J4W3mQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0599337820F1;
-	Fri,  8 Mar 2024 14:49:47 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: rafael@kernel.org,
-	lenb@kernel.org,
-	shuah@kernel.org
-Cc: dan.carpenter@linaro.org,
-	broonie@kernel.org,
-	groeck@chromium.org,
-	kernel@collabora.com,
-	kernelci@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	robh+dt@kernel.org,
-	saravanak@google.com,
-	davidgow@google.com,
-	Tim.Bird@sony.com,
-	dianders@chromium.org,
-	Laura Nao <laura.nao@collabora.com>
-Subject: [RFC PATCH v2 2/2] kselftest: Add test to detect unprobed devices on ACPI platforms
-Date: Fri,  8 Mar 2024 15:49:33 +0100
-Message-Id: <20240308144933.337107-3-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240308144933.337107-1-laura.nao@collabora.com>
-References: <20240308144933.337107-1-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ipMkZbK6"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 428DwAUS016158;
+	Fri, 8 Mar 2024 14:51:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=mNKr1aY4tr6ItgDy271C6SAxOqLBFZSiO32Am6yndb4=;
+ b=ipMkZbK6SriI1GneiHJ6BsegQnuiCY7iEDb5HRRGM5fmwnkvjestm1bXPdDlFx6s4QsR
+ 8ACYNaW/3G03KMTB2LF+9yg5jbKv/+WLwePbk2yssec7H4cD/Ig/YwWkZW++sdsXEu3j
+ s+Kfgy6zMOfQtWWn+gof+iY3T3YZoHlHZeCbULVZIB/8w32iwgASFmRGlVXgdEswnFCQ
+ LM39wKoVKPb0aAXtVN1hprRJ5mXYoHQL+cfEEJc5gq6RXAZxcGBrj0EX8Vzwdf/xSgVW
+ +hPuYvzuSrE6uaB+aBHTzuvmn2vDirphbiRu8WjR3bld/k3vJUupifA5E8XT2HR2J9pP Cg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr414s08r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 14:51:16 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 428EpFa6013051;
+	Fri, 8 Mar 2024 14:51:15 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr414s06f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 14:51:15 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 428DkgGE010913;
+	Fri, 8 Mar 2024 14:48:24 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52vhak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 14:48:24 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 428EmLsM46137848
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 8 Mar 2024 14:48:23 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F177158059;
+	Fri,  8 Mar 2024 14:48:20 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 75D4658043;
+	Fri,  8 Mar 2024 14:48:18 +0000 (GMT)
+Received: from [9.43.68.167] (unknown [9.43.68.167])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  8 Mar 2024 14:48:18 +0000 (GMT)
+Message-ID: <41e11090-a100-48a7-a0dd-c989772822d7@linux.ibm.com>
+Date: Fri, 8 Mar 2024 20:18:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] sched/balancing: Switch the
+ 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t
+ sched_balance_running' flag
+Content-Language: en-US
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Valentin Schneider <vschneid@redhat.com>
+References: <20240304094831.3639338-1-mingo@kernel.org>
+ <20240304094831.3639338-2-mingo@kernel.org>
+ <bf612672-f7c3-4585-ac31-e02a1ebf614c@linux.ibm.com>
+ <Zer1Hkxh/UMxs3xs@gmail.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+In-Reply-To: <Zer1Hkxh/UMxs3xs@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: OrO-E_HYdWmR55ah_cR2SGMeWJGZmd_S
+X-Proofpoint-ORIG-GUID: i7ZagJP1pphcK0XFWn907U_imEKtXy24
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403080119
 
-Add new kselftest that tests whether devices declared in the ACPI
-namespace and supported by the kernel are correctly bound
-to a driver.
 
-The test traverses the ACPI sysfs tree to get a list of all the devices
-defined in the ACPI namespace and verifies whether the physical devices
-linked to each ACPI object are bound to a driver.
-The test relies on two lists to skip devices not expected to be bound
-to a driver:
-- List generated by the acpi-extract-ids script: includes the ACPI IDs
-  matched by a driver
-- Manual list of ignored IDs: includes the ID of devices that may be
-  discovered only via the platform firmware and that don't require a
-  driver or cannot be represented as platform devices
 
-The test also examines the sysfs attributes of the target device objects
-linked by physical_node* to exclude other devices that should not be
-bound to a driver. This includes:
-- Devices not assigned to any subsystem
-- Devices that are linked to other devices
-- Class devices
-- Specific PCI bridges that do not require a driver
+On 3/8/24 4:53 PM, Ingo Molnar wrote:
+> 
+> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+> 
+>> system is at 75% load		<-- 	25.6% contention
+>> 113K probe:rebalance_domains_L37
+>> 84K probe:rebalance_domains_L55
+>>
+>> 87
+>> system is at 100% load		<--	87.5% contention.
+>> 64K probe:rebalance_domains_L37
+>> 8K probe:rebalance_domains_L55
+>>
+>>
+>> A few reasons for contentions could be: 
+>>
+>> 1. idle load balance is running and some other cpu is becoming idle, and 
+>>    tries newidle_balance.
+>>
+>> 2. when system is busy, every CPU would do busy balancing, it would 
+>>    contend for the lock. It will not do balance as should_we_balance says 
+>>    this CPU need not balance. It bails out and release the lock.
+> 
+> Thanks, these measurements are really useful!
+> 
+> Would it be possible to disambiguate these two cases?
 
-Signed-off-by: Laura Nao <laura.nao@collabora.com>
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/acpi/.gitignore       |   1 +
- tools/testing/selftests/acpi/Makefile         |  21 +++
- tools/testing/selftests/acpi/id_ignore_list   |   3 +
- .../selftests/acpi/test_unprobed_devices.sh   | 138 ++++++++++++++++++
- 6 files changed, 165 insertions(+)
- create mode 100644 tools/testing/selftests/acpi/.gitignore
- create mode 100644 tools/testing/selftests/acpi/Makefile
- create mode 100644 tools/testing/selftests/acpi/id_ignore_list
- create mode 100755 tools/testing/selftests/acpi/test_unprobed_devices.sh
+I think its not case 1, since newidle_balance doesnt even take that lock. So 
+likely its case 2. 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8333ead448c4..1f58949c9e51 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -294,6 +294,7 @@ F:	include/linux/fwnode.h
- F:	include/linux/fw_table.h
- F:	lib/fw_table.c
- F:	scripts/acpi/acpi-extract-ids
-+F:	tools/testing/selftests/acpi/
- F:	tools/power/acpi/
- 
- ACPI APEI
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index e1504833654d..3107301ea4f3 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+TARGETS += acpi
- TARGETS += alsa
- TARGETS += amd-pstate
- TARGETS += arm64
-diff --git a/tools/testing/selftests/acpi/.gitignore b/tools/testing/selftests/acpi/.gitignore
-new file mode 100644
-index 000000000000..3c520e8a1962
---- /dev/null
-+++ b/tools/testing/selftests/acpi/.gitignore
-@@ -0,0 +1 @@
-+id_list
-diff --git a/tools/testing/selftests/acpi/Makefile b/tools/testing/selftests/acpi/Makefile
-new file mode 100644
-index 000000000000..b80d4fb797ac
---- /dev/null
-+++ b/tools/testing/selftests/acpi/Makefile
-@@ -0,0 +1,21 @@
-+PY3 = $(shell which python3 2>/dev/null)
+> 
+> I think we should probably do something about this contention on this large 
+> system: especially if #2 'no work to be done' bailout is the common case.
+> 
+
+
+I have been thinking would it be right to move this balancing trylock/atomic after 
+should_we_balance(swb). This does reduce the number of times this checked/updated 
+significantly. Contention is still present. That's possible at higher utilization 
+when there are multiple NUMA domains. one CPU in each NUMA domain can contend if their invocation
+is aligned. 
+
+That makes sense since, Right now a CPU takes lock, checks if it can balance, do balance if yes and
+ then releases the lock. If the lock is taken after swb then also, CPU checks if it can balance, 
+tries to take the lock and releases the lock if it did. If lock is contended, it bails out of 
+load_balance. That is the current behaviour as well, or I am completely wrong. 
+
+Not sure in which scenarios that would hurt. we could do this after this series. 
+This may need wider functional testing to make sure we don't regress badly in some cases. 
+This is only an *idea* as of now. 
+
+Perf probes at spin_trylock and spin_unlock codepoints on the same 224CPU, 6 NUMA node system. 
+6.8-rc6                                                                         
+-----------------------------------------                                       
+idle system:                                                                    
+449 probe:rebalance_domains_L37                                                 
+377 probe:rebalance_domains_L55                                                 
+stress-ng --cpu=$(nproc) -l 51     << 51% load                                               
+88K probe:rebalance_domains_L37                                                 
+77K probe:rebalance_domains_L55                                                 
+stress-ng --cpu=$(nproc) -l 100    << 100% load                                             
+41K probe:rebalance_domains_L37                                                 
+10K probe:rebalance_domains_L55                                                 
+                                                                                
++below patch                                                                          
+----------------------------------------                                        
+idle system:                                                                    
+462 probe:load_balance_L35                                                      
+394 probe:load_balance_L274                                                     
+stress-ng --cpu=$(nproc) -l 51      << 51% load                                            
+5K probe:load_balance_L35                       	<<-- almost 15x less                                
+4K probe:load_balance_L274                                                      
+stress-ng --cpu=$(nproc) -l 100     << 100% load                                            
+8K probe:load_balance_L35                                                       
+3K probe:load_balance_L274 				<<-- almost 4x less
+
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 62f247bdec86..3a8de7454377 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -11272,6 +11272,7 @@ static int should_we_balance(struct lb_env *env)
+ 	return group_balance_cpu(sg) == env->dst_cpu;
+ }
+
++static DEFINE_SPINLOCK(balancing);
+ /*
+  * Check this_cpu to ensure it is balanced within domain. Attempt to move
+  * tasks if there is an imbalance.
+@@ -11286,6 +11287,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 	struct rq *busiest;
+ 	struct rq_flags rf;
+ 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
++	int need_serialize;
+ 	struct lb_env env = {
+ 		.sd		= sd,
+ 		.dst_cpu	= this_cpu,
+@@ -11308,6 +11310,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 		goto out_balanced;
+ 	}
+
++	need_serialize = sd->flags & SD_SERIALIZE;
++	if (need_serialize) {
++		if (!spin_trylock(&balancing))
++			goto lockout;
++	}
 +
-+ifneq ($(PY3),)
+ 	group = find_busiest_group(&env);
+ 	if (!group) {
+ 		schedstat_inc(sd->lb_nobusyg[idle]);
+@@ -11434,6 +11442,8 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 			if (!cpumask_subset(cpus, env.dst_grpmask)) {
+ 				env.loop = 0;
+ 				env.loop_break = SCHED_NR_MIGRATE_BREAK;
++				if (need_serialize)
++					spin_unlock(&balancing);
+ 				goto redo;
+ 			}
+ 			goto out_all_pinned;
+@@ -11540,7 +11550,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 	     sd->balance_interval < MAX_PINNED_INTERVAL) ||
+ 	    sd->balance_interval < sd->max_interval)
+ 		sd->balance_interval *= 2;
 +
-+TEST_PROGS := test_unprobed_devices.sh
-+TEST_GEN_FILES := id_list
-+TEST_FILES := id_ignore_list
+ out:
++	if (need_serialize)
++		spin_unlock(&balancing);
 +
-+include ../lib.mk
++lockout:
+ 	return ld_moved;
+ }
+
+@@ -11665,7 +11680,6 @@ static int active_load_balance_cpu_stop(void *data)
+ 	return 0;
+ }
+
+-static DEFINE_SPINLOCK(balancing);
+
+ /*
+  * Scale the max load_balance interval with the number of CPUs in the system.
+@@ -11716,7 +11730,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 	/* Earliest time when we have to do rebalance again */
+ 	unsigned long next_balance = jiffies + 60*HZ;
+ 	int update_next_balance = 0;
+-	int need_serialize, need_decay = 0;
++	int need_decay = 0;
+ 	u64 max_cost = 0;
+
+ 	rcu_read_lock();
+@@ -11741,12 +11755,6 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+
+ 		interval = get_sd_balance_interval(sd, busy);
+
+-		need_serialize = sd->flags & SD_SERIALIZE;
+-		if (need_serialize) {
+-			if (!spin_trylock(&balancing))
+-				goto out;
+-		}
+-
+ 		if (time_after_eq(jiffies, sd->last_balance + interval)) {
+ 			if (load_balance(cpu, rq, sd, idle, &continue_balancing)) {
+ 				/*
+@@ -11760,9 +11768,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 			sd->last_balance = jiffies;
+ 			interval = get_sd_balance_interval(sd, busy);
+ 		}
+-		if (need_serialize)
+-			spin_unlock(&balancing);
+-out:
 +
-+$(OUTPUT)/id_list:
-+	$(top_srcdir)/scripts/acpi/acpi-extract-ids -d $(top_srcdir) > $@
-+
-+else
-+
-+all: no_py3_warning
-+
-+no_py3_warning:
-+	@echo "Missing python3. This test will be skipped."
-+
-+endif
-\ No newline at end of file
-diff --git a/tools/testing/selftests/acpi/id_ignore_list b/tools/testing/selftests/acpi/id_ignore_list
-new file mode 100644
-index 000000000000..86ddf4b0a55a
---- /dev/null
-+++ b/tools/testing/selftests/acpi/id_ignore_list
-@@ -0,0 +1,3 @@
-+PNP0A05
-+PNP0A06
-+ACPI0004
-\ No newline at end of file
-diff --git a/tools/testing/selftests/acpi/test_unprobed_devices.sh b/tools/testing/selftests/acpi/test_unprobed_devices.sh
-new file mode 100755
-index 000000000000..23e52833c475
---- /dev/null
-+++ b/tools/testing/selftests/acpi/test_unprobed_devices.sh
-@@ -0,0 +1,138 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (c) 2023 Collabora Ltd
-+#
-+# Inspired by the tools/testing/selftests/dt/test_unprobed_devices.sh
-+# script, adapted for the ACPI use case.
-+#
-+# This script checks whether devices declared in the ACPI namespace and
-+# supported by the kernel are correctly bound to a driver.
-+#
-+# To do this, two lists are used:
-+# * a list of ACPI IDs matched by existing drivers
-+# * a list of IDs that should be ignored
-+#
-+
-+DIR="$(dirname "$(readlink -f "$0")")"
-+
-+KTAP_HELPERS="${DIR}/../kselftest/ktap_helpers.sh"
-+if ! source "$KTAP_HELPERS"; then
-+	exit 4
-+fi
-+
-+ACPI_SYSTEM_DIR="/sys/devices/LNXSYSTM:00"
-+ID_IGNORE_LIST="${DIR}"/id_ignore_list
-+ID_LIST="${DIR}"/id_list
-+
-+PCI_CLASS_BRIDGE_HOST="0x0600"
-+PCI_CLASS_BRIDGE_ISA="0x0601"
-+
-+ktap_print_header
-+
-+if [[ ! -d "${ACPI_SYSTEM_DIR}" ]]; then
-+	ktap_skip_all "${ACPI_SYSTEM_DIR} doesn't exist."
-+	exit "${KSFT_SKIP}"
-+fi
-+
-+# The ACPI specification mandates that ACPI objects representing devices on
-+# non-enumerable and enumerable busses contain a _HID or an _ADR
-+# identification object respectively. Get a list of devices of both types,
-+# by searching the ACPI sysfs subtree for directories containing a hid or
-+# adr attribute.
-+supp_dev_paths=$(while IFS=$'\n' read -r dev_path; do
-+	if [ ! -f "${dev_path}"/hid ] && [ ! -f "${dev_path}"/adr ]; then
-+		continue
-+	fi
-+
-+	# Check if the device is present, enabled, and functioning properly
-+	status="${dev_path}/status"
-+	if [ -f "${status}" ]; then
-+		status_hex=$(($(cat "${status}")))
-+
-+		if [ $((status_hex & 1)) -eq 0 ] ||
-+			[ $((status_hex >> 1 & 1)) -eq 0 ] ||
-+			[ $((status_hex >> 3 & 1)) -eq 0 ]; then
-+			continue
-+		fi
-+	fi
-+
-+	if [ -n "$(find -L "${dev_path}" -maxdepth 1 -name "physical_node*" -print -quit)" ]; then
-+		for node in "${dev_path}"/physical_node*; do
-+			# Ignore devices without a subsystem, devices that link to
-+			# other devices, and class devices
-+			if [ ! -d "${node}/subsystem" ] ||
-+				[ -d "${node}/device" ] ||
-+				[[ "$(readlink -f "${node}/subsystem")" == /sys/class/* ]]; then
-+				continue
-+			fi
-+
-+			echo "${node}"
-+		done
-+	fi
-+done < <(find ${ACPI_SYSTEM_DIR} -name uevent -exec dirname {} \;))
-+
-+supp_dev_paths_num=$(echo "${supp_dev_paths}" | wc -w)
-+ktap_set_plan "${supp_dev_paths_num}"
-+
-+# Iterate over ACPI devices
-+for dev_path in ${supp_dev_paths}; do
-+	if [ -f "${dev_path}/firmware_node/path" ]; then
-+		acpi_path="$(<"${dev_path}"/firmware_node/path)"
-+	fi
-+
-+	dev_link=$(readlink -f "${dev_path}")
-+	desc="${acpi_path}-${dev_link#/sys/devices/}"
-+
-+	if [ -f "${dev_path}/firmware_node/hid" ]; then
-+		hid="$(<"${dev_path}"/firmware_node/hid)"
-+
-+		if [ -f "${dev_path}/firmware_node/modalias" ]; then
-+			modalias=$(<"${dev_path}/firmware_node/modalias")
-+			cid=$(echo "${modalias}" | cut -d':' -f3)
-+
-+			# Skip devices with ignored HID/CID
-+			if ignored_id=$(grep -i "${hid}" "${ID_IGNORE_LIST}" ||
-+				{ [ -n "${cid}" ] && grep -i "${cid}" "${ID_IGNORE_LIST}"; }); then
-+				ktap_print_msg "ID ${ignored_id} ignored [SKIP]"
-+				ktap_test_skip "${desc}"
-+				continue
-+			fi
-+			# Skip devices with unsupported HID/CID
-+			if [[ "${hid}" != LNX* ]] && ! grep -x -q -i "${hid}" "${ID_LIST}"; then
-+				if [ -z "${cid}" ] || ! grep -x -q -i "${cid}" "${ID_LIST}"; then
-+					ktap_print_msg "no match for ${hid}${cid:+:${cid}} found \
-+						in the supported IDs list [SKIP]"
-+					ktap_test_skip "${desc}"
-+					continue
-+				fi
-+			fi
-+		fi
-+	fi
-+
-+	# Skip bridges that don't require a driver
-+	if [ -f "${dev_path}/class" ]; then
-+		class=$(<"${dev_path}"/class)
-+		if [[ ${class} == ${PCI_CLASS_BRIDGE_HOST}* ]] ||
-+			[[ ${class} == ${PCI_CLASS_BRIDGE_ISA}* ]]; then
-+			ktap_print_msg "device linked to ${desc} does not require a driver [SKIP]"
-+			ktap_test_skip "${desc}"
-+			continue
-+		fi
-+	fi
-+
-+	# Search for the driver in both the device folder and the companion's folder
-+	if [ -d "${dev_path}/driver" ] || [ -d "${dev_path}/firmware_node/driver" ]; then
-+		ktap_test_pass "${desc}"
-+	# Skip char devices
-+	elif [ -f "${dev_path}/dev" ]; then
-+		ktap_print_msg "${desc} is a char device [SKIP]"
-+		ktap_test_skip "${desc}"
-+		continue
-+	else
-+		ktap_test_fail "${desc}"
-+	fi
-+
-+done
-+
-+ktap_finished
--- 
-2.30.2
+ 		if (time_after(next_balance, sd->last_balance + interval)) {
+ 			next_balance = sd->last_balance + interval;
+ 			update_next_balance = 1;
+
+
 
