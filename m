@@ -1,40 +1,25 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8785922EF8;
-	Fri,  8 Mar 2024 08:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B39452F6B;
+	Fri,  8 Mar 2024 08:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887471; cv=none; b=Wcqz5kHsF7iDOB61fahyM2AMUgoQdBpOUyE1U/Ib3hBhqBAneYygGgpT2nCMVfxFyAnpd+sofr4H8VaSQ7ExcQQllIMu3CQMf/6HejCnGEpfD1nlCpf8S/4V8ZDx/84R5oMTbu2whIeht3ikSWwdats18yXMpdbIZZQliJm448Q=
+	t=1709887481; cv=none; b=ltgqxfdBVxHy5xkPk3a5kJRp7BHMh5erof3NxpIptz5FAfkghb1uTGRZY5aeAqM9dQRm2JTFUBNiR6r00IlYucUfXGs3sCLAI6kIpU3p0un8IScFNg52Ps7dYAecIMgqlf8+d6u5nucmhnpTnXoR1DwkQl+YWnfoWKecFv9HN7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887471; c=relaxed/simple;
-	bh=B7LQlsTP8n7h7BoltSXzPKTfWSgRJiLpFX0/sEPwOfA=;
+	s=arc-20240116; t=1709887481; c=relaxed/simple;
+	bh=14VPe0pUD24RgR8UUeJpMDtadw2Rx3IIZ/obF0bI/aU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pQzVwrBTp+7m+bl0tYkKSxVHWFkWv9RhukheVNe56xH/Jw+BZ2Q9R1xraUm1FQmKYjBMagwAKxgLw8FYXTknjj0LMYPd8afOqMRKH+1BVujMIHvXn0jJXVAXbQkCqxlyBRXcqpMXBNjx6S6XH0JYl3ftivPz4Iq486NfOrliinY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Jc+M824n; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Jc+M824n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709887467;
-	bh=B7LQlsTP8n7h7BoltSXzPKTfWSgRJiLpFX0/sEPwOfA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jc+M824nUahP8KaBVrM5zRu5925hP6lIzzPi9RvYdAN4ZFGx9IuYsUdbEWnHfhNs4
-	 y9hSpl1tXJtpmYJpU9NT5yp73X/ME3on1IV3XeTm6B/nFHVU693lXJI4u46UFfAj6/
-	 Kpuc5/jlSQx9D5CdTXBHyqdBFDgbzRCBd9sVbvb7Z5QeSZPx0RC3GO49TLhZ4Xe6Ks
-	 FZmsTzSz90xrSazCH46Xhmb9Hu7Ttutt3LpgrNt7Q6La+/SWMSVOoGjqkftFjEjLYV
-	 giFDm+rC8kokq1qLuBsaX9jZ+XMpoUzqI7OK/8nMqrqpl0MDiAEV+WldQ/P4u0V5u+
-	 Ih0a6OXos1bHg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DC7A437813CA;
-	Fri,  8 Mar 2024 08:44:26 +0000 (UTC)
-Message-ID: <221bb898-a98f-4a2d-9301-84a3baefbbc7@collabora.com>
-Date: Fri, 8 Mar 2024 09:44:26 +0100
+	 In-Reply-To:Content-Type; b=ejnkSnFfjBc13XHcdJAm/tOjRRmoR0ydlxCJjBXD/khwFAe/KiJ/I3lMjTgxxJmuBjm7er8M7MBiPHDhUPs7gaJ99AqUm0fOXOdfTlA6QxcBlw6bZmmBAr1CAInFR9cOWx0EyDaZVeIZRFn677LNuD8fXqDIY7a6JnF7niuVd+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D274C15;
+	Fri,  8 Mar 2024 00:45:10 -0800 (PST)
+Received: from [10.57.10.181] (unknown [10.57.10.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79A893F762;
+	Fri,  8 Mar 2024 00:44:30 -0800 (PST)
+Message-ID: <3a11f361-4bb5-4a17-b07d-aac549264cc8@arm.com>
+Date: Fri, 8 Mar 2024 08:44:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,62 +27,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] mips: dts: ralink: mt7621: add serial1 and serial2
- nodes
+Subject: Re: [PATCH 2/2] thermal: cooling: Fix unneeded conversions in
+ cpufreq_cooling and devfreq_cooling
 Content-Language: en-US
-To: Justin Swartz <justin.swartz@risingedge.co.za>,
- =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
- <20240307190408.23443-1-justin.swartz@risingedge.co.za>
- <20240307190408.23443-3-justin.swartz@risingedge.co.za>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240307190408.23443-3-justin.swartz@risingedge.co.za>
+To: PoShao Chen <poshao.chen@mediatek.com>
+Cc: dietmar.eggemann@arm.com, rafael@kernel.org, mingo@kernel.org,
+ rafael.j.wysocki@intel.com, rui.zhang@intel.com, vincent.guittot@linaro.org,
+ daniel.lezcano@linaro.org, viresh.kumar@linaro.org, amit.kachhap@gmail.com,
+ clive.lin@mediatek.com, ccj.yeh@mediatek.com, ching-hao.hsu@mediatek.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20240308065922.10329-1-poshao.chen@mediatek.com>
+ <20240308065922.10329-2-poshao.chen@mediatek.com>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240308065922.10329-2-poshao.chen@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Il 07/03/24 20:04, Justin Swartz ha scritto:
-> Add serial1 and serial2 nodes to define the existence of
-> the MT7621's second and third UARTs.
+Hi PoShao,
+
+On 3/8/24 06:59, PoShao Chen wrote:
+> Fix the incorrect division of power values by MICROWATT_PER_MILLIWATT for
+> non-microwatt units in the Energy Model (EM) by adding an
+> em_is_microwatts() check. This ensures that power values are only converted
+> when the EM specifies microwatts, allowing for accurate interpretation of
+> power according to the unit defined by the EM.
 > 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> Signed-off-by: PoShao Chen <poshao.chen@mediatek.com>
 > ---
->   arch/mips/boot/dts/ralink/mt7621.dtsi | 28 +++++++++++++++++++++++++++
->   1 file changed, 28 insertions(+)
+>   drivers/thermal/cpufreq_cooling.c |  6 ++++--
+>   drivers/thermal/devfreq_cooling.c | 12 ++++++++----
+>   2 files changed, 12 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
-> index 3ad4e2343..5a89f0b8c 100644
-> --- a/arch/mips/boot/dts/ralink/mt7621.dtsi
-> +++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
-> @@ -124,6 +124,34 @@ serial0: serial@c00 {
->   			pinctrl-0 = <&uart1_pins>;
->   		};
+> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> index 9d1b1459700d..5324b9766843 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -120,7 +120,8 @@ static u32 cpu_freq_to_power(struct cpufreq_cooling_device *cpufreq_cdev,
+>   	}
 >   
-> +		serial1: serial@d00 {
-> +			compatible = "ns16550a";
-> +			reg = <0xd00 0x100>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			clocks = <&sysc MT7621_CLK_UART2>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>;
-> +			no-loopback-test;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart2_pins>;
+>   	power_mw = table[i + 1].power;
+> -	power_mw /= MICROWATT_PER_MILLIWATT;
+> +	if (em_is_microwatts(cpufreq_cdev->em))
+> +		power_mw /= MICROWATT_PER_MILLIWATT;
+>   	rcu_read_unlock();
+>   
+>   	return power_mw;
+> @@ -139,7 +140,8 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+>   	for (i = cpufreq_cdev->max_level; i > 0; i--) {
+>   		/* Convert EM power to milli-Watts to make safe comparison */
+>   		em_power_mw = table[i].power;
+> -		em_power_mw /= MICROWATT_PER_MILLIWATT;
+> +		if (em_is_microwatts(cpufreq_cdev->em))
+> +			em_power_mw /= MICROWATT_PER_MILLIWATT;
+>   		if (power >= em_power_mw)
+>   			break;
+>   	}
+> diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+> index 50dec24e967a..c28e0c4a63d6 100644
+> --- a/drivers/thermal/devfreq_cooling.c
+> +++ b/drivers/thermal/devfreq_cooling.c
+> @@ -222,7 +222,8 @@ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cd
+>   			dfc->res_util = table[state].power;
+>   			rcu_read_unlock();
+>   
+> -			dfc->res_util /= MICROWATT_PER_MILLIWATT;
+> +			if (em_is_microwatts(dfc->em_pd))
+> +				dfc->res_util /= MICROWATT_PER_MILLIWATT;
+>   
+>   			dfc->res_util *= SCALE_ERROR_MITIGATION;
+>   
+> @@ -247,7 +248,8 @@ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cd
+>   		*power = table[perf_idx].power;
+>   		rcu_read_unlock();
+>   
+> -		*power /= MICROWATT_PER_MILLIWATT;
+> +		if (em_is_microwatts(dfc->em_pd))
+> +			*power /= MICROWATT_PER_MILLIWATT;
+>   		/* Scale power for utilization */
+>   		*power *= status.busy_time;
+>   		*power >>= 10;
+> @@ -279,7 +281,8 @@ static int devfreq_cooling_state2power(struct thermal_cooling_device *cdev,
+>   	*power = table[perf_idx].power;
+>   	rcu_read_unlock();
+>   
+> -	*power /= MICROWATT_PER_MILLIWATT;
+> +	if (em_is_microwatts(dfc->em_pd))
+> +		*power /= MICROWATT_PER_MILLIWATT;
+>   
+>   	return 0;
+>   }
+> @@ -321,7 +324,8 @@ static int devfreq_cooling_power2state(struct thermal_cooling_device *cdev,
+>   	for (i = dfc->max_state; i > 0; i--) {
+>   		/* Convert EM power to milli-Watts to make safe comparison */
+>   		em_power_mw = table[i].power;
+> -		em_power_mw /= MICROWATT_PER_MILLIWATT;
+> +		if (em_is_microwatts(dfc->em_pd))
+> +			em_power_mw /= MICROWATT_PER_MILLIWATT;
+>   		if (est_power >= em_power_mw)
+>   			break;
+>   	}
 
-As already commented on patch [1/3], pin muxing is board specific. Please remove.
+Thanks for the patches and reporting this!
 
-Also, is there any reason why you can't simply use the `interrupts-extended`
-property instead of interrupt-parent and interrupts?
+I have checked the commit which introduced the micro-Watts.
+All the drivers where aligned to register the new uW values, also
+your mediatek-cpufreq-hw.c
+ae6ccaa650380d243
+
+I have also check current upstream and all drivers there provide
+the uW to the em_dev_register_perf_domain().
+
+Is it some out-of-tree kernel driver, which shows this issue?
+
+I would need to check all places and force actually to provide the
+uW to the EM registration function. It's pointless to try to support
+mW just because the flag in the registration wasn't set by some
+downstream driver.
+
+Let me re-write that bit in the EM...
 
 Regards,
-Angelo
-
+Lukasz
