@@ -1,231 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235F21CD09;
-	Fri,  8 Mar 2024 07:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF44F61C
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 07:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709884519; cv=none; b=eY5I9wLhmFjrCl7J/TP2NZDoM91ta30TabbhuSKvl4C9uO8v7ygZTEKwKNaYfYyAodceBMPRna0ZzOefXCKMC4IkAGgQuewwwhJnm+s3XOvjF2tiFzlH2LC0zG0vE7gVUEv06RpvADGhGso9+A7kXDReBgM2+kkxzM7NV7ZHU/s=
+	t=1709884588; cv=none; b=YMWhsD89WfT01cDkQoOv/5FIN0MsxQtW2AhAcH+87SySjnrffg3F29aGLQfetjRV4pN/ZUHnMFXTas8xjBHdsQXAR9gFl6iO+PD+ccNTnEJyp/6pxAk6PGdbRIg0Y1rqyV0jrRo+LtajViJq51MwndmO/bNxKnAtNQdli03chq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709884519; c=relaxed/simple;
-	bh=LdHdlTz00/xGuGZrRMcWu5Guyy6/rT9KdfA6ao/pU6c=;
+	s=arc-20240116; t=1709884588; c=relaxed/simple;
+	bh=2+BbuL8rUlPJeNCPQtLsGDwZHHZX44F9NZJvGA4Digk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1tcFvwf/g6EDYjHY67KZHLjoRYm1owJnRriteNRtP9vCTid58NiaGrDpdwLOPRBvKwPfPea4q9cOLaGMbAbnp5U9b6/16mt41KyGI3g4MjFJc465z6ELMKvovxR13fowR7EiPGSibZ6fcQdF5rBHyzogNDqjHcD0OATt7hEJlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yyK/+/8z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yyK/+/8z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B843C433C7;
-	Fri,  8 Mar 2024 07:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709884518;
-	bh=LdHdlTz00/xGuGZrRMcWu5Guyy6/rT9KdfA6ao/pU6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yyK/+/8zqyTe2hKRyMhT3GgGH/Kh+i/kPwiF1jso98anyRttX/LPN+RmyKZol0Vfi
-	 cBZ0vACiHC4yhXYuXLAZvsJ1hwGKwj/IO01FS6I/IrWNiSfNZnrn77XIW9CWZvd7OK
-	 SO2rFAyLfhP9yxa+m1lI6wIdTUZ9i4dWFeXFvUSk=
-Date: Fri, 8 Mar 2024 07:55:16 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dingyan Li <18500469033@163.com>
-Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] USB: Use EHCI control transfer pid macros instead of
- constant values.
-Message-ID: <2024030802-huntsman-undertake-a38a@gregkh>
-References: <1e7f57d6-a4c1-4a3d-8cff-f966c89a8140@rowland.harvard.edu>
- <20240308010859.81987-1-18500469033@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aoGVT6ZmvO/Upd9rl/OK4/qrRlVaoAylf2nanL9bKIoFoE8f5Ebi7j0iz4+AEKOjMM3mSZQequbSiTRocpwkSDOSbaWs/LNkd9SIm5bByy5UgbJyhIjbd8CGczAVMFXpg9JOtEo4o36dm4tBAQ7ivpVOpAIH5akJF5PbYvJTkp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riV5Z-00040m-MZ; Fri, 08 Mar 2024 08:56:21 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riV5Y-0055tI-L2; Fri, 08 Mar 2024 08:56:20 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1riV5Y-0021Vz-1p;
+	Fri, 08 Mar 2024 08:56:20 +0100
+Date: Fri, 8 Mar 2024 08:56:20 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v1 0/5] w1: gpio: A set of cleanups
+Message-ID: <spc5otfv7s2wtunhbxdorm5bh5snvfbggoaqghowrxm2osbeoz@b2dsqa3amvtg>
+References: <20240307143644.3787260-1-andriy.shevchenko@linux.intel.com>
+ <vsaqquulifmpk5fanl4i67nzag5huyibzy5lfr2jdsgk2dv7t3@5i4opts7npsj>
+ <ZenuzMtybS4CzwHv@smile.fi.intel.com>
+ <46qzdowo2om2bbuokiksah27x4qok7hffiefwsj4bihz2xg62y@hxrag6h55zw7>
+ <Zen_7fDQghq6GJ_s@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="djpsrzmcypk6c5jq"
 Content-Disposition: inline
-In-Reply-To: <20240308010859.81987-1-18500469033@163.com>
+In-Reply-To: <Zen_7fDQghq6GJ_s@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2024 at 09:08:59AM +0800, Dingyan Li wrote:
-> Macros with good names offer better readability. Besides, also move
-> the definition to ehci.h.
-> 
-> Signed-off-by: Dingyan Li <18500469033@163.com>
-> ---
->  drivers/usb/host/ehci-dbg.c | 10 +++++-----
->  drivers/usb/host/ehci-q.c   | 20 ++++++++------------
->  drivers/usb/host/ehci.h     |  8 +++++++-
->  3 files changed, 20 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-dbg.c b/drivers/usb/host/ehci-dbg.c
-> index c063fb042926..435001128221 100644
-> --- a/drivers/usb/host/ehci-dbg.c
-> +++ b/drivers/usb/host/ehci-dbg.c
-> @@ -430,13 +430,13 @@ static void qh_lines(struct ehci_hcd *ehci, struct ehci_qh *qh,
->  				mark = '/';
->  		}
->  		switch ((scratch >> 8) & 0x03) {
-> -		case 0:
-> +		case PID_CODE_OUT:
->  			type = "out";
->  			break;
-> -		case 1:
-> +		case PID_CODE_IN:
->  			type = "in";
->  			break;
-> -		case 2:
-> +		case PID_CODE_SETUP:
->  			type = "setup";
->  			break;
->  		default:
-> @@ -602,10 +602,10 @@ static unsigned output_buf_tds_dir(char *buf, struct ehci_hcd *ehci,
->  	list_for_each_entry(qtd, &qh->qtd_list, qtd_list) {
->  		temp++;
->  		switch ((hc32_to_cpu(ehci, qtd->hw_token) >> 8)	& 0x03) {
-> -		case 0:
-> +		case PID_CODE_OUT:
->  			type = "out";
->  			continue;
-> -		case 1:
-> +		case PID_CODE_IN:
->  			type = "in";
->  			continue;
->  		}
-> diff --git a/drivers/usb/host/ehci-q.c b/drivers/usb/host/ehci-q.c
-> index 666f5c4db25a..ba37a9fcab92 100644
-> --- a/drivers/usb/host/ehci-q.c
-> +++ b/drivers/usb/host/ehci-q.c
-> @@ -27,10 +27,6 @@
->  
->  /*-------------------------------------------------------------------------*/
->  
-> -/* PID Codes that are used here, from EHCI specification, Table 3-16. */
-> -#define PID_CODE_IN    1
-> -#define PID_CODE_SETUP 2
-> -
->  /* fill a qtd, returning how much of the buffer we were able to queue up */
->  
->  static unsigned int
-> @@ -230,7 +226,7 @@ static int qtd_copy_status (
->  			/* fs/ls interrupt xfer missed the complete-split */
->  			status = -EPROTO;
->  		} else if (token & QTD_STS_DBE) {
-> -			status = (QTD_PID (token) == 1) /* IN ? */
-> +			status = (QTD_PID(token) == PID_CODE_IN) /* IN ? */
->  				? -ENOSR  /* hc couldn't read data */
->  				: -ECOMM; /* hc couldn't write data */
->  		} else if (token & QTD_STS_XACT) {
-> @@ -606,7 +602,7 @@ qh_urb_transaction (
->  		/* SETUP pid */
->  		qtd_fill(ehci, qtd, urb->setup_dma,
->  				sizeof (struct usb_ctrlrequest),
-> -				token | (2 /* "setup" */ << 8), 8);
-> +				token | (PID_CODE_SETUP << 8), 8);
->  
->  		/* ... and always at least one more pid */
->  		token ^= QTD_TOGGLE;
-> @@ -620,7 +616,7 @@ qh_urb_transaction (
->  
->  		/* for zero length DATA stages, STATUS is always IN */
->  		if (len == 0)
-> -			token |= (1 /* "in" */ << 8);
-> +			token |= (PID_CODE_IN << 8);
->  	}
->  
->  	/*
-> @@ -642,7 +638,7 @@ qh_urb_transaction (
->  	}
->  
->  	if (is_input)
-> -		token |= (1 /* "in" */ << 8);
-> +		token |= (PID_CODE_IN << 8);
->  	/* else it's already initted to "out" pid (0 << 8) */
->  
->  	maxpacket = usb_endpoint_maxp(&urb->ep->desc);
-> @@ -709,7 +705,7 @@ qh_urb_transaction (
->  
->  		if (usb_pipecontrol (urb->pipe)) {
->  			one_more = 1;
-> -			token ^= 0x0100;	/* "in" <--> "out"  */
-> +			token ^= (PID_CODE_IN << 8);	/* "in" <--> "out"  */
->  			token |= QTD_TOGGLE;	/* force DATA1 */
->  		} else if (usb_pipeout(urb->pipe)
->  				&& (urb->transfer_flags & URB_ZERO_PACKET)
-> @@ -1203,7 +1199,7 @@ static int ehci_submit_single_step_set_feature(
->  		/* SETUP pid, and interrupt after SETUP completion */
->  		qtd_fill(ehci, qtd, urb->setup_dma,
->  				sizeof(struct usb_ctrlrequest),
-> -				QTD_IOC | token | (2 /* "setup" */ << 8), 8);
-> +				QTD_IOC | token | (PID_CODE_SETUP << 8), 8);
->  
->  		submit_async(ehci, urb, &qtd_list, GFP_ATOMIC);
->  		return 0; /*Return now; we shall come back after 15 seconds*/
-> @@ -1216,7 +1212,7 @@ static int ehci_submit_single_step_set_feature(
->  	token ^= QTD_TOGGLE;   /*We need to start IN with DATA-1 Pid-sequence*/
->  	buf = urb->transfer_dma;
->  
-> -	token |= (1 /* "in" */ << 8);  /*This is IN stage*/
-> +	token |= (PID_CODE_IN << 8);  /*This is IN stage*/
->  
->  	maxpacket = usb_endpoint_maxp(&urb->ep->desc);
->  
-> @@ -1229,7 +1225,7 @@ static int ehci_submit_single_step_set_feature(
->  	qtd->hw_alt_next = EHCI_LIST_END(ehci);
->  
->  	/* STATUS stage for GetDesc control request */
-> -	token ^= 0x0100;        /* "in" <--> "out"  */
-> +	token ^= (PID_CODE_IN << 8);        /* "in" <--> "out"  */
->  	token |= QTD_TOGGLE;    /* force DATA1 */
->  
->  	qtd_prev = qtd;
-> diff --git a/drivers/usb/host/ehci.h b/drivers/usb/host/ehci.h
-> index 1441e3400796..d7a3c8d13f6b 100644
-> --- a/drivers/usb/host/ehci.h
-> +++ b/drivers/usb/host/ehci.h
-> @@ -321,10 +321,16 @@ struct ehci_qtd {
->  	size_t			length;			/* length of buffer */
->  } __aligned(32);
->  
-> +/* PID Codes that are used here, from EHCI specification, Table 3-16. */
-> +#define PID_CODE_OUT   0
-> +#define PID_CODE_IN    1
-> +#define PID_CODE_SETUP 2
-> +
->  /* mask NakCnt+T in qh->hw_alt_next */
->  #define QTD_MASK(ehci)	cpu_to_hc32(ehci, ~0x1f)
->  
-> -#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && QTD_PID(token) == 1)
-> +#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && \
-> +						QTD_PID(token) == PID_CODE_IN)
->  
->  /*-------------------------------------------------------------------------*/
->  
-> -- 
-> 2.25.1
-> 
-> 
 
-Hi,
+--djpsrzmcypk6c5jq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Hello Andy,
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+On Thu, Mar 07, 2024 at 07:57:01PM +0200, Andy Shevchenko wrote:
+> On Thu, Mar 07, 2024 at 06:12:46PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Mar 07, 2024 at 06:43:56PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Mar 07, 2024 at 05:38:54PM +0100, Uwe Kleine-K=F6nig wrote:
+>=20
+> ...
+>=20
+> > > > I wonder about your choice of recipients. I would have added Krzysz=
+tof
+> > > > to To and me at most to Cc:.
+> > >=20
+> > > It's automatically generated using get_maintainers.pl.
+> > > See details in the source of the script [1] I'm using.
+> > >=20
+> > > [1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maint=
+ainer.sh
+> >=20
+> > Getting something wrong automatically isn't an excuse for getting it
+> > wrong :-)
+>=20
+> I'm not sure why you think it's wrong. You worked on the code lately and =
+Git
+> heuristics considered that over threshold of 67%.
 
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
+When I send a patch I send it "to" the maintainers, because it's them
+who I want an action from. This also matches the semantic of M: in
+MAINTAINERS which requests to use these contaces in "To:".
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+> > That scripts has:
+> >=20
+> > to=3D$(git show -$count "$COMMIT" | scripts/get_maintainer.pl $OPTS --n=
+o-m --no-r)
+> > cc=3D$(git show -$count "$COMMIT" | scripts/get_maintainer.pl $OPTS --n=
+o-l)
+> >=20
+> > I recommend to swap the values for to and cc here to make sure you have
+> > the maintainer in $to and the relevant lists in $cc.
 
-thanks,
+Thinking again, this is wrong. I'd recommend:
 
-greg k-h's patch email bot
+	to=3D$(git show -$count "$COMMIT" | scripts/get_maintainer.pl $OPTS --no-r=
+ --no-l)
+	cc=3D$(git show -$count "$COMMIT" | scripts/get_maintainer.pl $OPTS --no-m)
+
+> Btw, you are the first one for the entire life cycle of that script (3 ye=
+ars?)
+> who complains about such details... So, patches are welcome! :-)
+
+I won't do more than the above hint here.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--djpsrzmcypk6c5jq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXqxKMACgkQj4D7WH0S
+/k74SggAsufoZoLLydlPozRRoUjVIvHER/jsy1iw/q11jz+zCHg3t7LfeMLXO9UJ
+CYJcjY8MFO01BldAV0qEhOa9SLZmjpDmUmryAgnAkw390rpeEgWYbVMbcdmUBZXZ
+2FZ3vi9JMKcqvNsb+rxeYJONixMvUg22nBcPZbzkrfpJlqfJZQH+Dt+mJwbXQbHh
+FOUhmWxVLkJQJYwjrEoN1NNe6IRYQO0hGT6pof53a9v8NbRILtRLovGQ+U+fT1BX
+MdsYl2vZHRfYn5EC8+5dVGgfZrL/VtVaOT/gz0jXDQlgSpW+wLZCUaB4j/JA3WH/
+kqeA3tCln6zzKZnyMK3rVuu0EclBIg==
+=s+ms
+-----END PGP SIGNATURE-----
+
+--djpsrzmcypk6c5jq--
