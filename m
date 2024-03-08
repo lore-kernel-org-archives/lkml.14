@@ -1,333 +1,146 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F402F17745;
-	Fri,  8 Mar 2024 18:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6B854792;
+	Fri,  8 Mar 2024 18:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709921760; cv=none; b=Ub450gDwQo1SRATnapAvmxSG0UasIsCaEiUTumXVdffbYMcovqCxZcxvRJdYdFxlRwgMZ6D0QoQ/f1atHG3RhCVhzCF8gPw3AHV0PhbogBB910DD2vmKV8u2tzp5r3AYe8FujV0Im188VI+MNtZya5JP29YBxyKqzEjo8OhCc9M=
+	t=1709921799; cv=none; b=dkPWO5vN4j3lP/8dM+XClq2z8znycOVDZ1wsWYWj30LgD7Hd6x+SXb5Na7xMdymcLix+u9vvpbpo+1KqS2n7oYXdztDZuR7ByoZd7SHPdYiAYmOg4ao2G6ODuNpJtnEAhCWeQPB3INEj9JoNl16NNttt3q0LBtZAzov250Va+Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709921760; c=relaxed/simple;
-	bh=wxRD1ZTYNzvztdW5CptHw+5R78yFujNF+v6DS4NwlGk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jkF9ArG9ykcR5v+m8uyxNIRCbgxwSoOsoGvm2yRdDex4kv3DayJcTQw+mR8mh/FysBgu/OVytzqZJNjDRYmVT+4dp+1zROE6ootkVsDi2d9CSYXLpK2Gg/gXPFNPq/aCBs3cF6pA0FJArc8ot2ZsR80XUns/LL2PtANa+0mH1yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=VAHkuw4h; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1709921799; c=relaxed/simple;
+	bh=ynk0RIbZahLH1X6UDA5NrHZBUAFBMJsppWEzwh0UKN0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oXu3EG3abuo/p1Hg46yhx9X6Yptxt4w7Do44wgNoAgClFjFOLmjwRWtPYA0po5qa+/lxLfJ7h4kBaFbpgTijaDAGsylPaQxA0K9FLtaBDd+r7bq4lsQ7eAs7VGHKJTtxOXwYLbfTyvecvBC6/CF7gHLqSG4kCLHI8ETusfnxR7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dl9s1mpW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VAHkuw4h"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 428GdXHQ015669;
-	Fri, 8 Mar 2024 10:15:52 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=pfpt0220; bh=SnUBZ7x6
-	ixGGP9j5iu8zqYX1t+21E4VeEcMOUAJbdW4=; b=VAHkuw4hOza6n81HGHKIg1LO
-	XjAW6jbbgGMAJey2+v7JS2ZTAfOeRSacqAsxESeX4tgDyMfyqjWlfgGWCtCIZAte
-	D0FddGAt1Cu1kaUiEJYZdZWMQGiE2OY1iW6fSDItu4blg0LtIgBd1e6zvFErLndq
-	EYYfmnsebtADKDo3hIlK05bI0HlQmzwtyXA7iqfwm+au2dauFc1//nwOHm+K+ads
-	O3FyUA0zpYF3CQK5KV+1lRlt6oYlfki5h5qAQtDwpgdEKzj/sYP1ztREfRTQK0X5
-	MzpKtEDz5meR0bszPmJdJTOS3lSpc6u4DjxcaTBBCJxA/9GoNoLb5um9SLmvlA==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wr5r2ghur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 10:15:51 -0800 (PST)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Fri, 8 Mar 2024 10:15:50 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Fri, 8 Mar 2024 10:15:50 -0800
-Received: from hyd1425.marvell.com (unknown [10.29.37.83])
-	by maili.marvell.com (Postfix) with ESMTP id E105B5B6929;
-	Fri,  8 Mar 2024 10:15:46 -0800 (PST)
-From: Sai Krishna <saikrishnag@marvell.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
-        <gakula@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>
-CC: Sai Krishna <saikrishnag@marvell.com>
-Subject: [net-next PATCH v3] octeontx2-pf: Reset MAC stats during probe
-Date: Fri, 8 Mar 2024 23:45:44 +0530
-Message-ID: <20240308181544.806928-1-saikrishnag@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dl9s1mpW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59A90C43390;
+	Fri,  8 Mar 2024 18:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709921798;
+	bh=ynk0RIbZahLH1X6UDA5NrHZBUAFBMJsppWEzwh0UKN0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dl9s1mpW426zxPvzH0bYAUpeNtQhHMOGok6BU/+bIsZxXRWFEXvkh6+kg+MO7TCiH
+	 g+gQvNmxQSTY4YjuBb11OPdTKNJGKwJqG7limqyZUfESWNh9sJ6P1Zrz6vygucIxew
+	 sxReij1QNXX3wJ1ub9zyOs+U3xCCh7iePT2JIL/SiUoGX6k/TI6gK/hM14qXwOcs/F
+	 nDb2GSO07QThe9YPZ9VY20/lrnaSqprmoDkvYUGn4ub7ZDm+E8N5fgYQQclzwuqN3Y
+	 7pvhI2EvMZ5SkY3YNYhLVgr+l1/OqqmXu2SZzQKUsI6tNVmHpLWGtlY4UFmc48nz1k
+	 UrBnqMzPAbmxA==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512f3e75391so2127222e87.2;
+        Fri, 08 Mar 2024 10:16:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWNZ3p5dgZpjXczSqr+BzBIla8ZekriENkjltoTh78w1TlIP7dGo/O1lZkeLm5b/ZoDUD4GVOwMuqaIdfOiTw4XcE9cW8xNWqaH/EXbHsi1tve5kibe+ML4WfTiYZ3AEBoZrFJDqDZ2rQ==
+X-Gm-Message-State: AOJu0YzS7rsymj5wOTNUzVe2G6xtufthipxiho+yHKrhxjhmruARNzLz
+	EoH5bqByo1vE7Lwb9EbjfpY1Cra0fAXgVHxDyZFRbCIn+E3wIIHR8uNqXKWWJDc8wTtm9GvsBXp
+	AGQ/p2dFTgJtdWwlJp+Lt13h0GEo=
+X-Google-Smtp-Source: AGHT+IHvTxzzSEHaEFqgLKeFyKdBKoqbHPYUR1IXdoRrbvIZmqCRO4Vvt5vUrwtAQceainIpVlYXsPea3RYzTgwULj8=
+X-Received: by 2002:a05:6512:159d:b0:513:4705:a4f3 with SMTP id
+ bp29-20020a056512159d00b005134705a4f3mr4767791lfb.65.1709921796512; Fri, 08
+ Mar 2024 10:16:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: JUYINUEk74dAp2Pg1dQGPkAzIgUY3h81
-X-Proofpoint-ORIG-GUID: JUYINUEk74dAp2Pg1dQGPkAzIgUY3h81
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
+References: <20240308093726.1047420-1-yukuai1@huaweicloud.com> <lch3c5p36igfup7vzsagjfxwr3otefv4igr2qahxwc2fpsntrd@qoeo67iwxzvr>
+In-Reply-To: <lch3c5p36igfup7vzsagjfxwr3otefv4igr2qahxwc2fpsntrd@qoeo67iwxzvr>
+From: Song Liu <song@kernel.org>
+Date: Fri, 8 Mar 2024 10:16:25 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7mK3J6st9PG2tu6EjTmPK7cUqXX1JMRyvhKo8ehFWi+Q@mail.gmail.com>
+Message-ID: <CAPhsuW7mK3J6st9PG2tu6EjTmPK7cUqXX1JMRyvhKo8ehFWi+Q@mail.gmail.com>
+Subject: Re: [PATCH] raid1: fix use-after-free for original bio in raid1_write_request()
+To: Coly Li <colyli@suse.de>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, yukuai3@huawei.com, xueshi.hu@smartx.com, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reset CGX/RPM MAC HW statistics at the time of driver probe()
+On Fri, Mar 8, 2024 at 6:29=E2=80=AFAM Coly Li <colyli@suse.de> wrote:
+>
+> On Fri, Mar 08, 2024 at 05:37:26PM +0800, Yu Kuai wrote:
+> > From: Yu Kuai <yukuai3@huawei.com>
+> >
+> > r1_bio->bios[] is used to record new bios that will be issued to
+> > underlying disks, however, in raid1_write_request(), r1_bio->bios[]
+> > will set to the original bio temporarily. Meanwhile, if blocked rdev
+> > is set, free_r1bio() will be called causing that all r1_bio->bios[]
+> > to be freed:
+> >
+> > raid1_write_request()
+> >  r1_bio =3D alloc_r1bio(mddev, bio); -> r1_bio->bios[] is NULL
+> >  for (i =3D 0;  i < disks; i++) -> for each rdev in conf
+> >   // first rdev is normal
+> >   r1_bio->bios[0] =3D bio; -> set to original bio
+> >   // second rdev is blocked
+> >   if (test_bit(Blocked, &rdev->flags))
+> >    break
+> >
+> >  if (blocked_rdev)
+> >   free_r1bio()
+> >    put_all_bios()
+> >     bio_put(r1_bio->bios[0]) -> original bio is freed
+> >
+> > Test scripts:
+> >
+> > mdadm -CR /dev/md0 -l1 -n4 /dev/sd[abcd] --assume-clean
+> > fio -filename=3D/dev/md0 -ioengine=3Dlibaio -rw=3Dwrite -bs=3D4k -numjo=
+bs=3D1 \
+> >     -iodepth=3D128 -name=3Dtest -direct=3D1
+> > echo blocked > /sys/block/md0/md/rd2/state
+> >
+> > Test result:
+> >
+> > BUG bio-264 (Not tainted): Object already free
+> > -----------------------------------------------------------------------=
+------
+> >
+> > Allocated in mempool_alloc_slab+0x24/0x50 age=3D1 cpu=3D1 pid=3D869
+> >  kmem_cache_alloc+0x324/0x480
+> >  mempool_alloc_slab+0x24/0x50
+> >  mempool_alloc+0x6e/0x220
+> >  bio_alloc_bioset+0x1af/0x4d0
+> >  blkdev_direct_IO+0x164/0x8a0
+> >  blkdev_write_iter+0x309/0x440
+> >  aio_write+0x139/0x2f0
+> >  io_submit_one+0x5ca/0xb70
+> >  __do_sys_io_submit+0x86/0x270
+> >  __x64_sys_io_submit+0x22/0x30
+> >  do_syscall_64+0xb1/0x210
+> >  entry_SYSCALL_64_after_hwframe+0x6c/0x74
+> > Freed in mempool_free_slab+0x1f/0x30 age=3D1 cpu=3D1 pid=3D869
+> >  kmem_cache_free+0x28c/0x550
+> >  mempool_free_slab+0x1f/0x30
+> >  mempool_free+0x40/0x100
+> >  bio_free+0x59/0x80
+> >  bio_put+0xf0/0x220
+> >  free_r1bio+0x74/0xb0
+> >  raid1_make_request+0xadf/0x1150
+> >  md_handle_request+0xc7/0x3b0
+> >  md_submit_bio+0x76/0x130
+> >  __submit_bio+0xd8/0x1d0
+> >  submit_bio_noacct_nocheck+0x1eb/0x5c0
+> >  submit_bio_noacct+0x169/0xd40
+> >  submit_bio+0xee/0x1d0
+> >  blkdev_direct_IO+0x322/0x8a0
+> >  blkdev_write_iter+0x309/0x440
+> >  aio_write+0x139/0x2f0
+> >
+> > Since that bios for underlying disks are not allocated yet, fix this
+> > problem by using mempool_free() directly to free the r1_bio.
+> >
+>
+> Yes, the panic doesn't show up anymore with this patch.
+>
+> Thanks for the fixup.
+>
+>
+> > Fixes: 992db13a4aee ("md/raid1: free the r1bio before waiting for block=
+ed rdev")
+> > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>
+> Reported-and-tested-by: Coly Li <colyli@suse.de>
 
-Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
----
-v3:
-    - Addressed review comments given by Jakub Kicinski
-        1. Removed un-necessary EXPORT_SYMBOL 
-v2:
-    - Addressed review comments given by Jakub Kicinski
-	1. Removed devlink option to reset MAC stats, 
-           will implement stats reset with debugfs in later patches.
+Applied to md-6.9. Thanks!
 
- .../net/ethernet/marvell/octeontx2/af/cgx.c   | 27 +++++++++++++++++
- .../net/ethernet/marvell/octeontx2/af/cgx.h   |  1 +
- .../marvell/octeontx2/af/lmac_common.h        |  1 +
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |  1 +
- .../net/ethernet/marvell/octeontx2/af/rpm.c   | 17 +++++++++++
- .../net/ethernet/marvell/octeontx2/af/rpm.h   |  3 ++
- .../ethernet/marvell/octeontx2/af/rvu_cgx.c   | 29 +++++++++++++++++++
- .../marvell/octeontx2/nic/otx2_common.h       |  1 +
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 20 +++++++++++++
- 9 files changed, 100 insertions(+)
-
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-index 6c70c8498690..c117489f5caf 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-@@ -24,6 +24,8 @@
- #define DRV_NAME	"Marvell-CGX/RPM"
- #define DRV_STRING      "Marvell CGX/RPM Driver"
- 
-+#define CGX_RX_STAT_GLOBAL_INDEX	9
-+
- static LIST_HEAD(cgx_list);
- 
- /* Convert firmware speed encoding to user format(Mbps) */
-@@ -701,6 +703,30 @@ u64 cgx_features_get(void *cgxd)
- 	return ((struct cgx *)cgxd)->hw_features;
- }
- 
-+int cgx_stats_reset(void *cgxd, int lmac_id)
-+{
-+	struct cgx *cgx = cgxd;
-+	int stat_id;
-+
-+	if (!is_lmac_valid(cgx, lmac_id))
-+		return -ENODEV;
-+
-+	for (stat_id = 0 ; stat_id < CGX_RX_STATS_COUNT; stat_id++) {
-+		if (stat_id >= CGX_RX_STAT_GLOBAL_INDEX)
-+		/* pass lmac as 0 for CGX_CMR_RX_STAT9-12 */
-+			cgx_write(cgx, 0,
-+				  (CGXX_CMRX_RX_STAT0 + (stat_id * 8)), 0);
-+		else
-+			cgx_write(cgx, lmac_id,
-+				  (CGXX_CMRX_RX_STAT0 + (stat_id * 8)), 0);
-+	}
-+
-+	for (stat_id = 0 ; stat_id < CGX_TX_STATS_COUNT; stat_id++)
-+		cgx_write(cgx, lmac_id, CGXX_CMRX_TX_STAT0 + (stat_id * 8), 0);
-+
-+	return 0;
-+}
-+
- static int cgx_set_fec_stats_count(struct cgx_link_user_info *linfo)
- {
- 	if (!linfo->fec)
-@@ -1783,6 +1809,7 @@ static struct mac_ops	cgx_mac_ops    = {
- 	.pfc_config =                   cgx_lmac_pfc_config,
- 	.mac_get_pfc_frm_cfg   =        cgx_lmac_get_pfc_frm_cfg,
- 	.mac_reset   =			cgx_lmac_reset,
-+	.mac_stats_reset       =	cgx_stats_reset,
- };
- 
- static int cgx_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.h b/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
-index 6f7d1dee5830..dc9ace30554a 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
-@@ -141,6 +141,7 @@ int cgx_lmac_evh_register(struct cgx_event_cb *cb, void *cgxd, int lmac_id);
- int cgx_lmac_evh_unregister(void *cgxd, int lmac_id);
- int cgx_get_tx_stats(void *cgxd, int lmac_id, int idx, u64 *tx_stat);
- int cgx_get_rx_stats(void *cgxd, int lmac_id, int idx, u64 *rx_stat);
-+int cgx_stats_reset(void *cgxd, int lmac_id);
- int cgx_lmac_rx_tx_enable(void *cgxd, int lmac_id, bool enable);
- int cgx_lmac_tx_enable(void *cgxd, int lmac_id, bool enable);
- int cgx_lmac_addr_set(u8 cgx_id, u8 lmac_id, u8 *mac_addr);
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/lmac_common.h b/drivers/net/ethernet/marvell/octeontx2/af/lmac_common.h
-index 0b4cba03f2e8..9ffc6790c513 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/lmac_common.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/lmac_common.h
-@@ -132,6 +132,7 @@ struct mac_ops {
- 	/* FEC stats */
- 	int			(*get_fec_stats)(void *cgxd, int lmac_id,
- 						 struct cgx_fec_stats_rsp *rsp);
-+	int			(*mac_stats_reset)(void *cgxd, int lmac_id);
- };
- 
- struct cgx {
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-index 61ab7f66f053..cfe8a8327e1b 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-@@ -168,6 +168,7 @@ M(CGX_FEC_STATS,	0x217, cgx_fec_stats, msg_req, cgx_fec_stats_rsp) \
- M(CGX_SET_LINK_MODE,	0x218, cgx_set_link_mode, cgx_set_link_mode_req,\
- 			       cgx_set_link_mode_rsp)	\
- M(CGX_GET_PHY_FEC_STATS, 0x219, cgx_get_phy_fec_stats, msg_req, msg_rsp) \
-+M(CGX_STATS_RST,	0x21A, cgx_stats_rst, msg_req, msg_rsp)		\
- M(CGX_FEATURES_GET,	0x21B, cgx_features_get, msg_req,		\
- 			       cgx_features_info_msg)			\
- M(RPM_STATS,		0x21C, rpm_stats, msg_req, rpm_stats_rsp)	\
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rpm.c b/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-index 76218f1cb459..1b34cf9c9703 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-@@ -38,6 +38,7 @@ static struct mac_ops		rpm_mac_ops   = {
- 	.pfc_config =                   rpm_lmac_pfc_config,
- 	.mac_get_pfc_frm_cfg   =        rpm_lmac_get_pfc_frm_cfg,
- 	.mac_reset   =			rpm_lmac_reset,
-+	.mac_stats_reset		 =	  rpm_stats_reset,
- };
- 
- static struct mac_ops		rpm2_mac_ops   = {
-@@ -70,6 +71,7 @@ static struct mac_ops		rpm2_mac_ops   = {
- 	.pfc_config =                   rpm_lmac_pfc_config,
- 	.mac_get_pfc_frm_cfg   =        rpm_lmac_get_pfc_frm_cfg,
- 	.mac_reset   =			rpm_lmac_reset,
-+	.mac_stats_reset	    =	rpm_stats_reset,
- };
- 
- bool is_dev_rpm2(void *rpmd)
-@@ -443,6 +445,21 @@ int rpm_get_tx_stats(void *rpmd, int lmac_id, int idx, u64 *tx_stat)
- 	return 0;
- }
- 
-+int rpm_stats_reset(void *rpmd, int lmac_id)
-+{
-+	rpm_t *rpm = rpmd;
-+	u64 cfg;
-+
-+	if (!is_lmac_valid(rpm, lmac_id))
-+		return -ENODEV;
-+
-+	cfg = rpm_read(rpm, 0, RPMX_MTI_STAT_STATN_CONTROL);
-+	cfg |= RPMX_CMD_CLEAR_TX | RPMX_CMD_CLEAR_RX | BIT_ULL(lmac_id);
-+	rpm_write(rpm, 0, RPMX_MTI_STAT_STATN_CONTROL, cfg);
-+
-+	return 0;
-+}
-+
- u8 rpm_get_lmac_type(void *rpmd, int lmac_id)
- {
- 	rpm_t *rpm = rpmd;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rpm.h b/drivers/net/ethernet/marvell/octeontx2/af/rpm.h
-index b79cfbc6f877..34b11deb0f3c 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rpm.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rpm.h
-@@ -85,6 +85,8 @@
- #define RPMX_MTI_STAT_STATN_CONTROL			0x10018
- #define RPMX_MTI_STAT_DATA_HI_CDC			0x10038
- #define RPMX_RSFEC_RX_CAPTURE				BIT_ULL(27)
-+#define RPMX_CMD_CLEAR_RX				BIT_ULL(30)
-+#define RPMX_CMD_CLEAR_TX				BIT_ULL(31)
- #define RPMX_MTI_RSFEC_STAT_COUNTER_CAPTURE_2		0x40050
- #define RPMX_MTI_RSFEC_STAT_COUNTER_CAPTURE_3		0x40058
- #define RPMX_MTI_FCFECX_VL0_CCW_LO			0x38618
-@@ -134,4 +136,5 @@ int rpm2_get_nr_lmacs(void *rpmd);
- bool is_dev_rpm2(void *rpmd);
- int rpm_get_fec_stats(void *cgxd, int lmac_id, struct cgx_fec_stats_rsp *rsp);
- int rpm_lmac_reset(void *rpmd, int lmac_id, u8 pf_req_flr);
-+int rpm_stats_reset(void *rpmd, int lmac_id);
- #endif /* RPM_H */
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-index 38acdc7a73bb..9ea9a06af8ef 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-@@ -596,6 +596,35 @@ int rvu_mbox_handler_rpm_stats(struct rvu *rvu, struct msg_req *req,
- 	return rvu_lmac_get_stats(rvu, req, (void *)rsp);
- }
- 
-+int rvu_mbox_handler_cgx_stats_rst(struct rvu *rvu, struct msg_req *req,
-+				   struct msg_rsp *rsp)
-+{
-+	int pf = rvu_get_pf(req->hdr.pcifunc);
-+	struct rvu_pfvf	*parent_pf;
-+	struct mac_ops *mac_ops;
-+	u8 cgx_idx, lmac;
-+	void *cgxd;
-+
-+	if (!is_cgx_config_permitted(rvu, req->hdr.pcifunc))
-+		return LMAC_AF_ERR_PERM_DENIED;
-+
-+	parent_pf = &rvu->pf[pf];
-+	/* To ensure reset cgx stats won't affect VF stats,
-+	 *  check if it used by only PF interface.
-+	 *  If not, return
-+	 */
-+	if (parent_pf->cgx_users > 1) {
-+		dev_info(rvu->dev, "CGX busy, could not reset statistics\n");
-+		return 0;
-+	}
-+
-+	rvu_get_cgx_lmac_id(rvu->pf2cgxlmac_map[pf], &cgx_idx, &lmac);
-+	cgxd = rvu_cgx_pdata(cgx_idx, rvu);
-+	mac_ops = get_mac_ops(cgxd);
-+
-+	return mac_ops->mac_stats_reset(cgxd, lmac);
-+}
-+
- int rvu_mbox_handler_cgx_fec_stats(struct rvu *rvu,
- 				   struct msg_req *req,
- 				   struct cgx_fec_stats_rsp *rsp)
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-index 06910307085e..a60eff335cd4 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
-@@ -961,6 +961,7 @@ void otx2_get_mac_from_af(struct net_device *netdev);
- void otx2_config_irq_coalescing(struct otx2_nic *pfvf, int qidx);
- int otx2_config_pause_frm(struct otx2_nic *pfvf);
- void otx2_setup_segmentation(struct otx2_nic *pfvf);
-+int otx2_reset_mac_stats(struct otx2_nic *pfvf);
- 
- /* RVU block related APIs */
- int otx2_attach_npa_nix(struct otx2_nic *pfvf);
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index e5fe67e73865..8728122d465a 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -1124,6 +1124,23 @@ static int otx2_cgx_config_linkevents(struct otx2_nic *pf, bool enable)
- 	return err;
- }
- 
-+int otx2_reset_mac_stats(struct otx2_nic *pfvf)
-+{
-+	struct msg_req *req;
-+	int err;
-+
-+	mutex_lock(&pfvf->mbox.lock);
-+	req = otx2_mbox_alloc_msg_cgx_stats_rst(&pfvf->mbox);
-+	if (!req) {
-+		mutex_unlock(&pfvf->mbox.lock);
-+		return -ENOMEM;
-+	}
-+
-+	err = otx2_sync_mbox_msg(&pfvf->mbox);
-+	mutex_unlock(&pfvf->mbox.lock);
-+	return err;
-+}
-+
- static int otx2_cgx_config_loopback(struct otx2_nic *pf, bool enable)
- {
- 	struct msg_req *msg;
-@@ -3048,6 +3065,9 @@ static int otx2_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	otx2_qos_init(pf, qos_txqs);
- 
-+	/* reset CGX/RPM MAC stats */
-+	otx2_reset_mac_stats(pf);
-+
- 	return 0;
- 
- err_pf_sriov_init:
--- 
-2.25.1
-
+Song
