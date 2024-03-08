@@ -1,101 +1,153 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FD526296;
-	Fri,  8 Mar 2024 09:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C203BBDE;
+	Fri,  8 Mar 2024 09:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709890967; cv=none; b=SB07GdZ8GgxblaHUS7roqTk7KJSNkxJLU1GVcmCiquWeS81lpeKrakpOde0XxGDijJOMRuSk9pjO4akZa9f5bRhlXyl/+Dk8HFib6fhAT43NQORRnNazw3ockr9S57M6+Fuy514OXtmbJLVLcnsxb27l/m5qx05uspQlljhAbY8=
+	t=1709891046; cv=none; b=rF7pHIhCdk1n8+8aG8awGqs33WqFRufSvosA2H4MPPX4qjAOwlqWAINHmwmdYUfUdBI3q9Vvvxgah3v9NDdP2qzhrOjONx6xpH9CT8q39VUBaPfv0qDyrxSk2nc6iQBJvxmTivGu/uVtqkrWUlb8OITWZC4MZoVslxdR65itpq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709890967; c=relaxed/simple;
-	bh=2XguDX+eb+E30OJtbj6YkSePzXzPfNL6xC0lRsdkrPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCgXGk1nUgYQwPSGkr0Syi9No9HWRsmaiWa9Om54cbnduXPGbrFEfQcUYAYWqhr33tqKVWn1gfsWMm04t8jmJGntMoK0OoRdsJuNDSwifKEW3IEhTaAgP/i3TBZNMZkfWDfDP7WjP3ATuASc0h17/CnORppuVz+amFrOMZWg0QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LTTumhS5; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTTumhS5"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56657bcd555so2234006a12.3;
-        Fri, 08 Mar 2024 01:42:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709890964; x=1710495764; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9SPiC0VKHbOOYDIw53rfq3rdbB1slUM7uRNpzQd19Q=;
-        b=LTTumhS5fMjkdQyV5GfLmnnF0TaBLwU0WnrKuJ97FSXKvighwAj8EVaciInmUkru3a
-         Z7xBMQzGupdWiKrCzqK33Ii7L3MMJkLZXUsb7kWNqzQgDTmiinRSOPIxueRpWMEfRq6M
-         kRhUaoc4TELgQyAiu2myofHd4reDUlrKVrJF/tqBL8tJ+y7htrS8HUBNOSOZzeY9+tSb
-         u3f53rBU7mnAdGzSe0cNZm3ZHT20+Jq51FwwqA0Ecw/VGB1B+8N24VNvhfzMYGS8/FmW
-         WO/on7Udc4LvE9YdnhRaVMM9d2XW0u23ZIcSdOB3FbGrQNqa49POa1X1JjtoUsk6+oQz
-         PxrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709890964; x=1710495764;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W9SPiC0VKHbOOYDIw53rfq3rdbB1slUM7uRNpzQd19Q=;
-        b=r8+W4TM0xlavUnoGeoKQfygK6Qe+noHpklSgB+1d21qveuLTwWWgbg7vpiLUl/CQj8
-         5q/grS43GkEiT7Dqre9sLMFLpfPbMHj2XoRbqFiZ7zby6Ca1AaAuFeu4w1+BOVxRxryx
-         3Lb6vZ696AEjajcoyBhKYdlVQE9sek2FfFzW1mX1fXK1TU1N95mzeJDdZeN4kdbg2Rlv
-         VantXuIAKeKU+naPs84Uccucoz7GKBdXIlEUojkx78KWeX4inEu+M3vuW2Uy9dZBRFIv
-         YDHpObBByvX6YXP+tLL70GA9vb3p51SwJkRN4AOsg2WpU6kUoH30yyIfbQ/l+ky/lxtm
-         IFIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaKhJTMlf5+NFFMqQdJvOy43OrKfJ8f9qffg4cVcnmlxKM0GvMci9zIgcQimyAxsMAUhYxaOvY50qIxQDlXNqXlwB1I/WvjZ4tTbfX
-X-Gm-Message-State: AOJu0Yycyb24S1cra2zelbGsx92302IA0MeSAJCwqKjXnicQbXeIRiUe
-	ARWrGPcEnuS6caqa3HEAqlZUMBljXtCARYzlYjec3gaOxyRWZOZXAdBPFGRFeXM=
-X-Google-Smtp-Source: AGHT+IGqmQtiUOVbCzz6Ijy9EOu1jg+tri2C4oDCVMGUviDKy3RMOoO3jD+njEvnhPRCg1S0Lsusbg==
-X-Received: by 2002:a50:870b:0:b0:567:a37a:4c95 with SMTP id i11-20020a50870b000000b00567a37a4c95mr1291318edb.42.1709890964331;
-        Fri, 08 Mar 2024 01:42:44 -0800 (PST)
-Received: from skbuf ([2a02:2f04:d207:f600::b2c])
-        by smtp.gmail.com with ESMTPSA id q20-20020a056402041400b00567f6310010sm2462069edv.59.2024.03.08.01.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 01:42:43 -0800 (PST)
-Date: Fri, 8 Mar 2024 11:42:41 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 16/16] net: dsa: vsc73xx: start treating the
- BR_LEARNING flag
-Message-ID: <20240308094241.iobnxcesoadzuo7w@skbuf>
-References: <20240301221641.159542-1-paweldembicki@gmail.com>
- <20240301221641.159542-1-paweldembicki@gmail.com>
- <20240301221641.159542-17-paweldembicki@gmail.com>
- <20240301221641.159542-17-paweldembicki@gmail.com>
+	s=arc-20240116; t=1709891046; c=relaxed/simple;
+	bh=wUDaBbMe+qyuXdIMTgJAUGuLMP9R+SH2tOiALF1plRU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mMQyrDzESuA+dulp1DIOvP0KSA+piaGIKWL2/Ah5ZzXbRGCF+A0J+a9r/g564vz9T6oUp6QZQTS+aAgJTk4PaqcXYs+0ZDN/BBFVCuIcPLE2qnbtTa/xhjc6GKMT1JSTo7fOv/p2JjT73r49UGYKkR594NYoMCXFDlUk1Fv8VNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Trh7k6QCGz4f3n6k;
+	Fri,  8 Mar 2024 17:43:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7801B1A0283;
+	Fri,  8 Mar 2024 17:43:54 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7Y3eplFg09GQ--.12118S4;
+	Fri, 08 Mar 2024 17:43:54 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	xueshi.hu@smartx.com
+Cc: colyli@suse.de,
+	linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] raid1: fix use-after-free for original bio in raid1_write_request()
+Date: Fri,  8 Mar 2024 17:37:26 +0800
+Message-Id: <20240308093726.1047420-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240301221641.159542-17-paweldembicki@gmail.com>
- <20240301221641.159542-17-paweldembicki@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g7Y3eplFg09GQ--.12118S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr4kXrWfuryDJw1fGF4fuFg_yoW5AFyfpw
+	4fKa4SvrWDWr1fAa1DtF1UCF1rAan0vFy7CrWxur4xXFnIv34DG3WUXrWrWryjkFWrG3yU
+	JFn5C398Zr1DJa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Fri, Mar 01, 2024 at 11:16:38PM +0100, Pawel Dembicki wrote:
-> This patch implements .port_pre_bridge_flags() and .port_bridge_flags(),
-> which are required for properly treating the BR_LEARNING flag. Also,
-> .port_stp_state_set() is tweaked and now disables learning for standalone
-> ports.
-> 
-> Disabling learning for standalone ports is required to avoid situations
-> where one port sees traffic originating from another, which could cause
-> invalid operations.
+From: Yu Kuai <yukuai3@huawei.com>
 
-"invalid operations" -> packet drops
+r1_bio->bios[] is used to record new bios that will be issued to
+underlying disks, however, in raid1_write_request(), r1_bio->bios[]
+will set to the original bio temporarily. Meanwhile, if blocked rdev
+is set, free_r1bio() will be called causing that all r1_bio->bios[]
+to be freed:
 
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
+raid1_write_request()
+ r1_bio = alloc_r1bio(mddev, bio); -> r1_bio->bios[] is NULL
+ for (i = 0;  i < disks; i++) -> for each rdev in conf
+  // first rdev is normal
+  r1_bio->bios[0] = bio; -> set to original bio
+  // second rdev is blocked
+  if (test_bit(Blocked, &rdev->flags))
+   break
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+ if (blocked_rdev)
+  free_r1bio()
+   put_all_bios()
+    bio_put(r1_bio->bios[0]) -> original bio is freed
+
+Test scripts:
+
+mdadm -CR /dev/md0 -l1 -n4 /dev/sd[abcd] --assume-clean
+fio -filename=/dev/md0 -ioengine=libaio -rw=write -bs=4k -numjobs=1 \
+    -iodepth=128 -name=test -direct=1
+echo blocked > /sys/block/md0/md/rd2/state
+
+Test result:
+
+BUG bio-264 (Not tainted): Object already free
+-----------------------------------------------------------------------------
+
+Allocated in mempool_alloc_slab+0x24/0x50 age=1 cpu=1 pid=869
+ kmem_cache_alloc+0x324/0x480
+ mempool_alloc_slab+0x24/0x50
+ mempool_alloc+0x6e/0x220
+ bio_alloc_bioset+0x1af/0x4d0
+ blkdev_direct_IO+0x164/0x8a0
+ blkdev_write_iter+0x309/0x440
+ aio_write+0x139/0x2f0
+ io_submit_one+0x5ca/0xb70
+ __do_sys_io_submit+0x86/0x270
+ __x64_sys_io_submit+0x22/0x30
+ do_syscall_64+0xb1/0x210
+ entry_SYSCALL_64_after_hwframe+0x6c/0x74
+Freed in mempool_free_slab+0x1f/0x30 age=1 cpu=1 pid=869
+ kmem_cache_free+0x28c/0x550
+ mempool_free_slab+0x1f/0x30
+ mempool_free+0x40/0x100
+ bio_free+0x59/0x80
+ bio_put+0xf0/0x220
+ free_r1bio+0x74/0xb0
+ raid1_make_request+0xadf/0x1150
+ md_handle_request+0xc7/0x3b0
+ md_submit_bio+0x76/0x130
+ __submit_bio+0xd8/0x1d0
+ submit_bio_noacct_nocheck+0x1eb/0x5c0
+ submit_bio_noacct+0x169/0xd40
+ submit_bio+0xee/0x1d0
+ blkdev_direct_IO+0x322/0x8a0
+ blkdev_write_iter+0x309/0x440
+ aio_write+0x139/0x2f0
+
+Since that bios for underlying disks are not allocated yet, fix this
+problem by using mempool_free() directly to free the r1_bio.
+
+Fixes: 992db13a4aee ("md/raid1: free the r1bio before waiting for blocked rdev")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/raid1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index afca975ec7f3..fde8434c33df 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1565,7 +1565,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		for (j = 0; j < i; j++)
+ 			if (r1_bio->bios[j])
+ 				rdev_dec_pending(conf->mirrors[j].rdev, mddev);
+-		free_r1bio(r1_bio);
++		mempool_free(r1_bio, &conf->r1bio_pool);
+ 		allow_barrier(conf, bio->bi_iter.bi_sector);
+ 
+ 		if (bio->bi_opf & REQ_NOWAIT) {
+-- 
+2.39.2
+
