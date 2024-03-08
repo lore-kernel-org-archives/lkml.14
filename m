@@ -1,145 +1,122 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7594124B29;
-	Fri,  8 Mar 2024 13:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C63C58123;
+	Fri,  8 Mar 2024 13:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709904289; cv=none; b=ararNmcX3f3svlkljInuBwrvPngFHPlohISeN21x5cIwuV+5+rDKn4TD77gfj/x167X1NFj4sMhCu/dxlT99n48ubo0ehCMxvmjUWTlx0/tE/clh5ox04EeQR7nTK/8zKMj0mHBXzw2NYgD+TXupHbT8sBKwoXOgBvPodS0XAe8=
+	t=1709904293; cv=none; b=WsNumqtBPqih+gmHs0RujTT2r3PaxXq4KrEfVjrUizB4jDnYWZmMuSIPhAfDoqjpfXFuQ8AIUbXj0peKtadXPEiiAE0UOeLL0U2WeT9mLt2G4aO3xHNb2wNlrzckJtW2/U3G9F9QsWXCs151fXmmU0M/6JcgMrFFXNEpkJvHap0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709904289; c=relaxed/simple;
-	bh=EO6N1bw92GyHIduYd0hZjLOILhTNDv0lTE7ZSpHhRJA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S1C095zZhLOKl7HnQXRoOI9Cw0uDDadaQflJdBdfHNDEneGtdJLS+l+JgtAmDJjnnJpYxJYf8iHi5mIPMghMMMO+5wuaUPyCo0WODt+fotnlOXhO3YGc/AO1JmWbNUnlfBXNyc/gUW1YI5I4E8NW17BswvDTy2Si7SRnSXX14bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=opr5oXJB; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1709904293; c=relaxed/simple;
+	bh=kRaWpTPVGxvl7VpYPhXiNMknGjdLtg0cy6JGu5e0yZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sGA8nitM/8j+3GVi+npjdywMbkQobzR2qdSiAyz+fp2IUk20O0DHRddET3oWVJXhcy2GL6+M8dn8Xf6sgABSUfQYoxlpEw+C3bl6MAm/FRZsw8qD25zmeY8qkIBsSft5MeQVG6ajfSl5SOLkb55Lt+HmkLN2vnS0VLqXmiv3RFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LQIGKiJF; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="opr5oXJB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F7811C0007;
-	Fri,  8 Mar 2024 13:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1709904279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E4h7ZiQXl6RCyjokpJIQcZhTaIjok855YoEQWGnJoYg=;
-	b=opr5oXJBfybVfKVKwrzmnp0nnEJpggoJJi0wgSdWcFgu5j+KPI3rcFVERj0wB3R1yN9tOZ
-	+RZugGTlp4hQ3iPKqqnhSxm0LKsdxbJQuWWh4mHjcQ2iiyNE+4hoRylXbhuRyAg6OAzpBz
-	V5pcc9lD/oXssVovG/oK/obsnqmEPmZ3NeJUK8sE0PSiowG/N2eLA3MAORqyEDXwkMMgfo
-	3BECecOJbTi0jTWV7N8fiMnv2p61p9dApLlp8bWggpIicwOrWwdmVyFMHlANg2jCgCfTJ2
-	ptCKtIOgWlpUFOTkNCbF1nv5NEKjkfRG1ZXVcaO3Yn37vVuJffpZ/uzdQ0/H/w==
-Message-ID: <cbbbe5f8-6505-4f0f-80ce-77759e03235b@arinc9.com>
-Date: Fri, 8 Mar 2024 16:24:28 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LQIGKiJF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709904292; x=1741440292;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kRaWpTPVGxvl7VpYPhXiNMknGjdLtg0cy6JGu5e0yZw=;
+  b=LQIGKiJFo0DZ/6uO2VWhargPBYIRekx8FXPzFyIUsDscS0vQa4l3SIc+
+   6w9rOJs5klSskxvWLfXSquQ/8h8i1xGLvTnsLSjPkVtHLIrlwmqTXIs+z
+   WtSNLznI0MtdeWVFvpyioZbQzxWdtcsqWfNacYPa8QAts3tgb1+3f4InL
+   IdMC0u6IJqeYFOSLKUEAQuQjE5napJxysjxV+C8+FIIL6M+e9p8H5K6fM
+   J6WyJNXBD9R4nEzett/SlGnDqd9QoQmlg5O+UUo3wfyowai1ZtEwvKVjT
+   NLQPH5KsEZQdWF47N+/TRVDHNNfx8uQbqH2mQrenpTG3a88W7/BmbIQbl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15269520"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="15269520"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 05:24:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="10863404"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 05:24:48 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 10/13] selftests/resctrl: Make some strings passed to resctrlfs functions const
+Date: Fri,  8 Mar 2024 15:22:52 +0200
+Message-Id: <20240308132255.14442-11-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240308132255.14442-1-ilpo.jarvinen@linux.intel.com>
+References: <20240308132255.14442-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] mips: dts: ralink: mt7621: associate uart1_pins
- with serial0
-Content-Language: en-US
-To: Justin Swartz <justin.swartz@risingedge.co.za>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Matthias Brugger <matthias.bgg@gmail.com>, linux-mips@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <CAMhs-H_eUKm7C40oCzuKwwEMZAcOJ-g4MghAfkGAmxRM0AXPUw@mail.gmail.com>
- <20240307190408.23443-1-justin.swartz@risingedge.co.za>
- <ff708cd5-efe1-47e0-8112-ac7a2658cd8d@collabora.com>
- <9634b4fe726e711bd6bec7e487caab76@risingedge.co.za>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <9634b4fe726e711bd6bec7e487caab76@risingedge.co.za>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
 
-On 8.03.2024 15:40, Justin Swartz wrote:
-> Hi Angelo
-> 
-> On 2024-03-08 10:41, AngeloGioacchino Del Regno wrote:
->> Il 07/03/24 20:04, Justin Swartz ha scritto:
->>> Add missing pinctrl-name and pinctrl-0 properties to declare
->>> that the uart1_pins group is associated with serial0.
->>>
->>> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
->>> ---
->>>   arch/mips/boot/dts/ralink/mt7621.dtsi | 3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
->>> index 35a10258f..dca415fdd 100644
->>> --- a/arch/mips/boot/dts/ralink/mt7621.dtsi
->>> +++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
->>> @@ -123,6 +123,9 @@ serial0: serial@c00 {
->>>               reg-shift = <2>;
->>>               reg-io-width = <4>;
->>>               no-loopback-test;
->>> +
->>> +            pinctrl-names = "default";
->>> +            pinctrl-0 = <&uart1_pins>;
->>>           };
->>>             spi0: spi@b00 {
->>
->> The pins are muxed and can be either UART, or some other function that
->> is supported by the mux: this means that the pinctrl-xxx properties shall
->> *not* go into the SoC dtsi file, but in board dts files instead.
->>
->> Said differently: the usage of the UART pins is board-specific, not SoC-wide.
-> 
-> Thanks for the explanation. I agree that the pinctrl properties
-> would make more sense in a serial node extension in a board's dts,
-> but my reason for including them in the SoC's dtsi is due to the
-> precedent set with these existing nodes:
-> 
->    i2c
->    spi0
->    mmc
->    ethernet
->    pcie
-> 
-> There is also a default function declared for each of the pin
-> groups defined under the pinctrl node. These functions co-incide
-> with what is intended for each of those device nodes to function
-> correctly, rather than in the alternative GPIO-mode.
-> 
-> So I thought that sticking with that existing pattern would get
-> the least resistance from the community.
-> 
-> I can imagine how moving the pinctrl node to the board dts, and
-> then moving all of the pinctrl properties associated with device
-> nodes to their board dts references could be a better separation
-> logically.
-> 
-> What do you recommend?
+Control group, monitor group and resctrl_val are not mutated and
+should not be mutated within resctrlfs.c functions.
 
-As a maintainer, this is the logic I follow on the MT7621 device tree
-source files regarding the description of pin groups:
+Mark this by using const char * for the arguments.
 
-- Claim the relevant pin group with the default function (pinctrl-names &
-   pinctrl-0) on the node that describes a component of the SoC.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ tools/testing/selftests/resctrl/resctrl.h   | 7 ++++---
+ tools/testing/selftests/resctrl/resctrlfs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-- Keep the node disabled and leave it to the board DTS file to enable it.
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 9a1a3d0399ce..3ccca8556aa7 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -134,9 +134,10 @@ bool test_resource_feature_check(const struct resctrl_test *test);
+ char *fgrep(FILE *inf, const char *str);
+ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+ int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource);
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val);
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource);
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val);
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+ 		    int group_fd, unsigned long flags);
+ unsigned char *alloc_buffer(size_t buf_size, int memflush);
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 95a6be52d866..e01044194ddd 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -498,8 +498,8 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val)
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val)
+ {
+ 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
+ 	char tasks[1024];
+@@ -557,7 +557,8 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource)
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource)
+ {
+ 	char controlgroup[1024], reason[128], schema[1024] = {};
+ 	int domain_id, fd, schema_len, ret = 0;
+-- 
+2.39.2
 
-I don't disable serial@c00 as we can expect every board to use it. Same
-goes for ethernet@1e100000. Some boards use the pins on the rgmii2 pin
-group as GPIO, so the pinctrl-0 property on ethernet@1e100000 is
-overwritten on the board DTS file without rgmii2_pins listed.
-
-So I'm fine with this patch as is.
-
-Reviewed-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-
-Arınç
