@@ -1,88 +1,115 @@
-Received: from out203-205-251-82.mail.qq.com (out203-205-251-82.mail.qq.com [203.205.251.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3D54BCB;
-	Fri,  8 Mar 2024 10:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B6B535DA
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 10:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709892463; cv=none; b=uKUoKeHQRZWdwjbY13nMAEzBhECQAlSDOUOt9U0IH9MvuUx/Q+kkeWwMsn4bBLpBeVDPOIi/ulVN4V38OH8xro5So30ocnuu1InZ1gVRhTAfjYbmCAELfT8/Q0T5gYpIJmSxOpMa3kl8oyBc+FgNByCkNDXZ1b5UrkrSPt21qss=
+	t=1709892545; cv=none; b=Tr2Tmz27QnAr8hYqiX710JLTiWgGq6x5u9et9yBVyNFvGLX260Lc2pe7uGlTFYpq6IyEpXSGOMAPkP0NTeYHdRXk6rVOwISluZTt4E8oVaxreomISsBYtZo00FGdOtoS52B+OWyhGMGuC5bb6WL9Y7h91Us1WxMQwJHa77kgajY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709892463; c=relaxed/simple;
-	bh=KfBwrEHy4rD3TgkZxTpu4NpzB46Nn8Bk5rUIqZCiyt8=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=bkvmcNG6VKSCmVxkckZpnwuNz3z9kxCGSTpZUlNdhK7VXI01wYdIY33HLYavrfNIS8feOGcZowUXr2vxtMpi7issJpN8a4JC5d5wjIv2RkZWcY7QC9G5hDh46+IwZvizzvWeb8gfsyKuwr6vPZvIdXvC9TEaRJPYV97Kay68dEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=CF4sfV40; arc=none smtp.client-ip=203.205.251.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709892545; c=relaxed/simple;
+	bh=yhXabpfzkpzb+7zRheAauF8VQZNgOnhOBEVfF2RG96Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lq77vb4fdWMcAeja5D+qsarLOR1ubafHMV+9bh0bR1bPq4/LBMTq/tRBOVP1zLNzKATOa5KL3BdJYCJZN5b4UOeaA/nu1Sbkrdhf0/2e4zuUMRCiNLAyEcI1TIYDwSufZOywWOa4Sssp0AYG02Z++S+wDaBZYfaJ1rScX9dyIbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nLMJVFnG; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nLMJVFnG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CF4sfV40"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709892447; bh=DGeQxNXVCp+OKO+A96VQZ6ctFIKvpPbY6cUQov38t7Y=;
-	h=From:To:Cc:Subject:Date;
-	b=CF4sfV40Sty2PWDUMJTIl0AMofSbHMk6SUCFVijNT5xHHhOM14oZJjudvKvqKmx2X
-	 W3dcWD3VrJiR4yqeJgoVXWIbuv6DzI2ukPcoYlgw0ndYinSJG9mZyoQAjL/Dg5Lr7n
-	 KzE6St9hMz3ItxU9irGkukP3fDjK4mxTouA4+YPs=
-Received: from ubuntu.vimicro.com ([121.225.188.5])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 1D886CA2; Fri, 08 Mar 2024 18:07:24 +0800
-X-QQ-mid: xmsmtpt1709892444taknccbx0
-Message-ID: <tencent_002E3C6C67928986481018466EEDF8D05706@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1jAqqZEB0xTnlxtJ/DAMLnSoztftAha+rM1A6lJXL7t826AF4tNB
-	 +Agpdv8mAFFZnSzJjGwk8DVSg5QnLBlPYJCfidEBP1k99ZzwI3CxUsnmgcbBdVmKcmPWxCksZudw
-	 XIk5n0CpyYlvDymR6sfWpTiHyBzomgmI9i1iisOyreQcWsmX4EEJlODLJsS3MH51xwOJhR9eWbEL
-	 S4T8lx6Zb24/bqgoimCE0oPq5lmF4ngZR8/K9WkAz41I6iUHxJEBg2vNHWiz+WcFKoAkdJsi2Jx9
-	 T1s4g1ORxGa6jsQxRa8kWLZTi+KdE1BK7aZko+OPztVJ/cy+/riZ+hxgylBQCaSd+2w9TLE887i2
-	 nsGakszuGHi0MlbXwHYaepRfR9gb2T4ycipDaLEC1SqsTpgm6MFNdLxTGny/vkw/6AHMDebpk/Ku
-	 6QUVVZDBHbKSgNgNvWj896JNPxF19keG9Uy6Wa4rBepgyVsZNmJB+l68nUvEixtyU20SA7J70nB2
-	 hTsav1TzSLE7LfsxzAlY9lhA+IUlMD1Rk0Tii10i27pyuKmZhje+EZtiPq2+b+OBFC48Qn6pTAdL
-	 BI7ZBxOWKVjEdi0IJq/J4GQ+wsPAaPIJAyFWbCIGHPXtcgnzQLRdn7ZEphPm6YPfVv6SjNQ8phKN
-	 S1vHE6tnjbBX1hoqLrRrg/k8iUziBFvl3aM2eg8CZcWzo8ziuRnmFq5PMBEreOLyy1fZbbhqWbLp
-	 DXJt4iDT/WdM2N1S+2Od1F8KbUraDi0FQLypN1MsvZJgm9wHLWVPTvUNVS5QRNVhg0etC9OiVBOc
-	 +fDohIRmN/dEtalAM8MK9VxFWJoxYDm+dj/F1HRDisw7swVlofPb6qlC4JJVa6rik8qmVzC9OgRJ
-	 Ju0kqyHusnKCjIPePtwtMnOQr4iHNeYj3ceizG8mtUi5/Sxrp8J8a+r3UDoBoA7yTP4+StRW4PK2
-	 5kEuMrdZt8/OnWZLaMzI7sot8G/tXrYIu2/sLQBm6HnlnmRtkxm2aNeDHcVbuEqDV9d8RXwWnrO1
-	 Rzq5+0mynfPNncMcPU
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: xuhanwu <2433926602@qq.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xu.hanwu@zxelec.com
-Subject: [PATCH] ASoC: soc-pcm: add the judgment of unsupported commands for the function soc_pcm_trigger
-Date: Fri,  8 Mar 2024 18:07:06 +0800
-X-OQ-MSGID: <20240308100706.20984-1-2433926602@qq.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nLMJVFnG";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nLMJVFnG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 01E311F8AB;
+	Fri,  8 Mar 2024 10:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709892532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=55Z06PGrUc9i/TKwm9cfnCBs3ohsbfk4EWQ5k05PE8o=;
+	b=nLMJVFnGlmc93Id7CuLOscQoyGwuGD4BV/jh81gYsf01i+0xe8H2mCqtKM3r0a6cgLiQwH
+	8J236MJdQSlhDSUDDhy5Ye45f4krAHvsdrhVHUTjGVjTkV66Ke+tkFCLPlgua2P0sjaj5H
+	Y/aM4LsxzNwqOdX83FN+yGeGca6aibg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709892532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=55Z06PGrUc9i/TKwm9cfnCBs3ohsbfk4EWQ5k05PE8o=;
+	b=nLMJVFnGlmc93Id7CuLOscQoyGwuGD4BV/jh81gYsf01i+0xe8H2mCqtKM3r0a6cgLiQwH
+	8J236MJdQSlhDSUDDhy5Ye45f4krAHvsdrhVHUTjGVjTkV66Ke+tkFCLPlgua2P0sjaj5H
+	Y/aM4LsxzNwqOdX83FN+yGeGca6aibg=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D717A13310;
+	Fri,  8 Mar 2024 10:08:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fqnZMrPj6mW4aQAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Fri, 08 Mar 2024 10:08:51 +0000
+Date: Fri, 8 Mar 2024 11:08:51 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>
+Subject: Re: CVE-2023-52496: mtd: maps: vmu-flash: Fix the (mtd core) switch
+ to ref counters
+Message-ID: <Zerjs8hlMJOXt0Sv@tiehlicka>
+References: <20240229155245.1571576-37-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229155245.1571576-37-lee@kernel.org>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=nLMJVFnG
+X-Spamd-Result: default: False [-4.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[99.99%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: -4.81
+X-Rspamd-Queue-Id: 01E311F8AB
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-From: xuhanwu <xu.hanwu@zxelec.com>
+On Thu 29-02-24 15:52:56, Lee Jones wrote:
+> Description
+> ===========
+> 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> mtd: maps: vmu-flash: Fix the (mtd core) switch to ref counters
+> 
+> While switching to ref counters for track mtd devices use, the vmu-flash
+> driver was forgotten. The reason for reading the ref counter seems
+> debatable, but let's just fix the build for now.
 
-Function soc_pcm_trigger, if the parameter cmd does not support the need to return an error (-EINVAL).
-
-Signed-off-by: xuhanwu <xu.hanwu@zxelec.com>
----
- sound/soc/soc-pcm.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 77ee103b7..eba737729 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1173,6 +1173,9 @@ static int soc_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
- 			if (r < 0)
- 				break;
- 		}
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 
- 	/*
+Do we really consider build fixes as CVE? 
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
