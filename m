@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103E9225D4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324742DF7D;
 	Fri,  8 Mar 2024 18:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709923090; cv=none; b=WXIvZCmkaTE3ZP740lcQSNclkNs0POReCsRs14WYOukrgz3a0dcLoSd1rDalJAj9cfMjRkmQ0q2ZkOY98g1AikqepFowDOiKaAOC4Hi3IPBM1rTnlaQFtEUho6qUSJEbjZjuXUShcWMS+KWFOiuQepRfTZhDs6M8mTRIqSQoshI=
+	t=1709923090; cv=none; b=K6D8ZVH/D4j9OTQLDEmWXxaeFm81ZaCyuFfhWMxU4mmSp6YKvcY81m01pHuX/xO4PB0DdvJH6AlXVKWzaPsP/LGBy3fz4sHYEq5xZSnQQ70WFO2aKa86bB88syT/5+xn175PRgbPdQ5cmQ0Xn6ZejZZeXTSto0XIExADh1iz6ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709923090; c=relaxed/simple;
-	bh=0BNfpTXX9N86xJR/rFsc1xD8kIz44mPSZdUvAUpmk9Q=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=J2uSJIq27A4icVw3hDTHDXU/yXWYSEv0bMpWI1rbWhB29m7z+ytHleTiJdSUeE8zni3LIvG4DqF/q//2okxQMWExf3QIIasbSlD8gg8fRuYlQsmJyfXaR4kql/VODuStmab0Wv6DIafUmKbrAd6hdbKSDZT2HCJMBbqWdOcW4hA=
+	bh=WlJxuaLbEgyrwoXX2qT0epUEFu6umRv3bWcrjuPguEw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=U3xruzvpcwKvvSpoCbfOD/hWC9WkdY83tAFMaPD8LicaIFVOKDZ6C4NLKAz/I7gDLo+pYWrIUc7FgDx6jc32hU5Q6JVHciI9k5Tah1PaNTQZ6RtcPrZy6wGM+4sXiGtL6I6K11chDXzA/tx6eBQcAoRdljh9n8s5T4pMPSAwPhg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84D4C433F1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39C0C433A6;
 	Fri,  8 Mar 2024 18:38:09 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rif8Z-00000000xVk-1FCG;
+	id 1rif8Z-00000000xWk-2cnE;
 	Fri, 08 Mar 2024 13:40:07 -0500
-Message-ID: <20240308183816.676883229@goodmis.org>
+Message-ID: <20240308184007.485732758@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 08 Mar 2024 13:38:16 -0500
+Date: Fri, 08 Mar 2024 13:38:18 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,73 +31,115 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  joel@joelfernandes.org,
  linke li <lilinke99@qq.com>,
- Rabin Vincent <rabin@rab.in>
-Subject: [PATCH 0/6] tracing/ring-buffer: Fix wakeup of ring buffer waiters
+ Rabin Vincent <rabin@rab.in>,
+ stable@vger.kerenl.org
+Subject: [PATCH 2/6] ring-buffer: Fix resetting of shortest_full
+References: <20240308183816.676883229@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+The "shortest_full" variable is used to keep track of the waiter that is
+waiting for the smallest amount on the ring buffer before being woken up.
+When a tasks waits on the ring buffer, it passes in a "full" value that is
+a percentage. 0 means wake up on any data. 1-100 means wake up from 1% to
+100% full buffer.
+
+As all waiters are on the same wait queue, the wake up happens for the
+waiter with the smallest percentage.
+
+The problem is that the smallest_full on the cpu_buffer that stores the
+smallest amount doesn't get reset when all the waiters are woken up. It
+does get reset when the ring buffer is reset (echo > /sys/kernel/tracing/trace).
+
+This means that tasks may be woken up more often then when they want to
+be. Instead, have the shortest_full field get reset just before waking up
+all the tasks. If the tasks wait again, they will update the shortest_full
+before sleeping.
+
+Also add locking around setting of shortest_full in the poll logic, and
+change "work" to "rbwork" to match the variable name for rb_irq_work
+structures that are used in other places.
+
+Cc: stable@vger.kerenl.org
+Fixes: 2c2b0a78b3739 ("ring-buffer: Add percentage of ring buffer full to wake up reader")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 3400f11286e3..aa332ace108b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -755,8 +755,19 @@ static void rb_wake_up_waiters(struct irq_work *work)
+ 
+ 	wake_up_all(&rbwork->waiters);
+ 	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
++		/* Only cpu_buffer sets the above flags */
++		struct ring_buffer_per_cpu *cpu_buffer =
++			container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
++
++		/* Called from interrupt context */
++		raw_spin_lock(&cpu_buffer->reader_lock);
+ 		rbwork->wakeup_full = false;
+ 		rbwork->full_waiters_pending = false;
++
++		/* Waking up all waiters, they will reset the shortest full */
++		cpu_buffer->shortest_full = 0;
++		raw_spin_unlock(&cpu_buffer->reader_lock);
++
+ 		wake_up_all(&rbwork->full_waiters);
+ 	}
+ }
+@@ -934,28 +945,33 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+ 			  struct file *filp, poll_table *poll_table, int full)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct rb_irq_work *work;
++	struct rb_irq_work *rbwork;
+ 
+ 	if (cpu == RING_BUFFER_ALL_CPUS) {
+-		work = &buffer->irq_work;
++		rbwork = &buffer->irq_work;
+ 		full = 0;
+ 	} else {
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			return EPOLLERR;
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+-		work = &cpu_buffer->irq_work;
++		rbwork = &cpu_buffer->irq_work;
+ 	}
+ 
+ 	if (full) {
+-		poll_wait(filp, &work->full_waiters, poll_table);
+-		work->full_waiters_pending = true;
++		unsigned long flags;
++
++		poll_wait(filp, &rbwork->full_waiters, poll_table);
++
++		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++		rbwork->full_waiters_pending = true;
+ 		if (!cpu_buffer->shortest_full ||
+ 		    cpu_buffer->shortest_full > full)
+ 			cpu_buffer->shortest_full = full;
++		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	} else {
+-		poll_wait(filp, &work->waiters, poll_table);
+-		work->waiters_pending = true;
++		poll_wait(filp, &rbwork->waiters, poll_table);
++		rbwork->waiters_pending = true;
+ 	}
+ 
+ 	/*
+-- 
+2.43.0
 
 
-A patch was sent to "fix" the wait_index variable that is used to help with
-waking of waiters on the ring buffer. The patch was rejected, but I started
-looking at associated code. Discussing it on IRC with Mathieu Desnoyers
-we discovered a design flaw.
-
-The waiter reads "wait_index" then enters a "wait loop". After adding
-itself to the wait queue, if the buffer is filled or a signal is pending
-it will exit out. If wait_index is different, it will also exit out.
-(Note, I noticed that the check for wait_index was after the schedule()
-call and should have been before it, but that's besides the point).
-
-The race is what happens if the waker updates the wait_index,
-a new waiter comes in and reads the updated wait_index before it adds
-itself to the queue, it will miss the update!
-
-This is a series of changes to fix the design, and other bugs found
-along the way.
-
-1) Remove the wait loop in the ring_buffer_wait() code. It doesn't
-   have enough context to know if it should continue to wait.
-
-2) Fix "shortest_full" accounting. When zero, it gets set to the
-   smallest percentage requested of the buffer before the writers need to
-   start waking up waiters. But after waiters are all woken up,
-   it never gets reset, so the smallest value will always be the
-   smallest value until the buffer itself is reset.
-
-3) The wake up of readers on close was incorrectly added to the
-   .release() callback and not the .flush(). That is, waiters
-   in the .read() call, will never be woken up because .release()
-   isn't called until all .read()s have finished. Move the wakeup
-   to .flush() which is called immediately by close().
-
-4) Add a "waking" field to the trace iterator that gets set when a
-   waker wants to wake up the readers. For the .flush() callback,
-   it is set and never cleared to make sure new readers do not block.
-
-5/6) Break up ring_buffer_wait() into three functions:
-
-  ring_buffer_prepare_to_wait()
-  ring_buffer_wait()
-  ring_buffer_finish_wait()
-
-    This allows the caller to add itself to the wait queue, check
-    if its own condition has been set (in this case: iter->waking)
-    and then sleep. Follows the same semantics as any other wait logic.
-
-Steven Rostedt (Google) (6):
-      ring-buffer: Fix waking up ring buffer readers
-      ring-buffer: Fix resetting of shortest_full
-      tracing: Use .flush() call to wake up readers
-      tracing: Fix waking up tracing readers
-      ring-buffer: Restructure ring_buffer_wait() to prepare for updates
-      tracing/ring-buffer: Fix wait_on_pipe() race
-
-----
- include/linux/ring_buffer.h  |   4 +
- include/linux/trace_events.h |   3 +-
- kernel/trace/ring_buffer.c   | 251 +++++++++++++++++++++++++++----------------
- kernel/trace/trace.c         | 128 ++++++++++++++++++----
- 4 files changed, 269 insertions(+), 117 deletions(-)
