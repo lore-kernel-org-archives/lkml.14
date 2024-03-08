@@ -1,163 +1,189 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3B67484
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D68D1C295
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 16:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709916281; cv=none; b=mt7c0AxJjZAK+FCgkB1VMW40n8bQlxTgu7h6pV3J9Rod/Jj33mtu1AtyJ/ZEUBeF1f30cMXdZtXhxUuVJ6cHERCuNMzlnMPe5rNUmw1GClOPZ0nm49/Sb6fJ8EMfclwuyrEeTfI9/yIozxENBY8iqJnH2TB0Tc0h5t1m84jzSak=
+	t=1709916307; cv=none; b=VgnZdFswptUNYsTNWCQQ+2PJjs5tNkVCzFcD4qyJIMSalV/acivJHAApYzEXR56kQ3B8LplC9W8ZwCWM3Cd5tSY+DSilAXLLKnypFleGMVQDPXN/gYJL5gg9gXoeJmSy8bwnUFIrPaJNoJax+XuSKSNnwom3JbedB1zgYKa3Q04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709916281; c=relaxed/simple;
-	bh=UrEBxQszULiVbIBPuPmBCRY25FgHIkpOHvzckOGcYBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u0MS29kT7CqEF3j6/x0mMDHpM77NvmhQVnt/YpeidSikZyj5MB/90MWoGXgRGgiN0oIU32TYS+rkq2INFbjoPcQ5Fooyb1FKfBdz+Oq5eA8HA0J/p7qRt28FyEYsZ8xVU4QYYAig/gsy7zAR36EoE0OvIKp0h7fBjd0oPsG9wAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jl7rqKZQ; arc=none smtp.client-ip=209.85.167.45
+	s=arc-20240116; t=1709916307; c=relaxed/simple;
+	bh=fi3ky6CakyRATJgwalhj+CRfdC0TixsmDr1F1MYsyaA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IiZa+Ypup2RolzrGFce1M3yb1MaGZQgOHKzmupwNlLsBnfdh33e0inFK7eg3s/rO5DProSdxKl+SOUu0y4jPG88yNGBqMNopsgW8+erVmYhzn3410uIePBg/REXz11hH9qP7ak7ScRAhV3coS41D2o+CCjSrSFe2Qb7d6Vp78ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kfnoxOqN; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jl7rqKZQ"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5133d26632fso1366088e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 08:44:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kfnoxOqN"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5683089d4bbso898779a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 08:45:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709916278; x=1710521078; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3pb+tQdggieSesTRk+wpBTn9tTjLUrGvHa4LzSreo9I=;
-        b=Jl7rqKZQUbNsEN2TjWILnxe/pkkpYbGnT0rtG+ApWGvXpMkTLvke6WoQ05k3Ey+a70
-         Dv7Txoe8sfQccoo7hvFHwlc07nqTvuWSJCPOKnWHktuC6gC2oqWwWJB8kgMWceN4W/I8
-         0ciSTnee+VUPKpxwNyuiU74Qkz3aRJjlw+wjMtSJaOq7hpJfyD105+ddBAQB74kbMlA+
-         afVFkcSOlhVxYP+zLkUPsQJR6u2L4zpWXhZ5/N6KUHDgRsEDjsmndCZmh33txekWjtQO
-         yFjEmzI9jyUhSns6YNk3PH9akKvBc5wnePEvpDlRo+bdA+rFrOa6xI09tv++WyoMVPXT
-         Sj+w==
+        d=linaro.org; s=google; t=1709916305; x=1710521105; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=moh66olstaqC8k5HVpIpRheeNiWvToG+jcGIMhhKvEQ=;
+        b=kfnoxOqNoQH3fwp3bYUWX/91KveiPB9vwf3/uuTQ2sFu3kyN268zVlB/rjp8+MKqvj
+         e5K+P56aLJEqMZee8pvyQm2CFhWTrqSjUAVroMwIl6+S+q16PLmJYFPuqftFY0eID24c
+         cfad34xKWWSXL40A7KmQk978MVhaD+Ne7014SOLzO0pzIzJaVGvW74mFdABneJJ4KqfT
+         NrV0hCmSKVXLfBEx/IZGbX3dsUYlbV+Lq2O1WpYRb6wD7h2C9srujz9bTwJM+UnbY5hB
+         2Ecwl3jKHkEBbm8TB34Dgdaw8psfiWXhI5GQuFRFNI4xzkH2LUKnqFhn5BokjnK6yXwx
+         ohJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709916278; x=1710521078;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3pb+tQdggieSesTRk+wpBTn9tTjLUrGvHa4LzSreo9I=;
-        b=mgp5Pf24d9+0DqDDhMg2enaCzJS1cGNnzdPZYWw+Kuf4LHM3l4eScT6JIE4tqa5gbH
-         695RS4T5oBRWkM/VpmejhKNtokaSVcQteAiq5yF/zYnY/u9JirWtpuwExKn2eikoKG+e
-         MQNk0hJ4f1rStUpOF3IndZigzz0OShSANeb2QYlFOyeYj474x4NGEKMs8XPmD680Wgzh
-         tJZzMVLD4l9h7fB0IpUgKha3ze6m+aV9vpfnWvIFRN8+7DliK5mhyw8grchFQZUIOfIY
-         uVOlRxXYmWsrdHEqrXsLN2KMWw+JDclIPWSOcL24mgMleHPUrMf/23qBcGz1d2/DXT+w
-         Ik9w==
-X-Forwarded-Encrypted: i=1; AJvYcCV0n7k9DIiyJrXjxKsUOElG7ChfQY9ot6ASLbkF58YM2xWKfs8A4PxCX6Rn9STGxbaLtoW5yyE2iJ7hyEY5jubcR2lUMb5uRVnjkaYU
-X-Gm-Message-State: AOJu0YxLyWLOm06EVl0acYYCkgbrzhEqRtmdJncoLA5A6XrGyftA3LpJ
-	dDVFCjZAn+7iujvzE60kNvebzr/JAQii3rJ5gVkk6tIpnj/n4GBc8rLioStR5t6Re/jBfjACIn6
-	u4q5ue9H6d5UR4mGNlO610C58bwhfgw1/tbE2lA==
-X-Google-Smtp-Source: AGHT+IGSEiadE1M7hzpNQ204ASdBT/8qGfuylY/6QNi4hO5JxEG2URQ276EsCZjORAMhtcwTRiKYB5Z6qnoZK/RfDLE=
-X-Received: by 2002:a2e:a9a2:0:b0:2d3:93dd:c54b with SMTP id
- x34-20020a2ea9a2000000b002d393ddc54bmr4587311ljq.25.1709916277656; Fri, 08
- Mar 2024 08:44:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709916305; x=1710521105;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=moh66olstaqC8k5HVpIpRheeNiWvToG+jcGIMhhKvEQ=;
+        b=JPuKsv+NEK1k5EjDImzyKhR/zirrYSy8rtgHRkdETb19IzNl6rsQm5j+4dwVRoL0+o
+         J6gaiBADMZnhql3J5m95lHkcQ3oGWpOhdLPf1Sso2hZDHdEm3TkgnjKp/j0/7JzdYWOB
+         4LqBCNJzlNPGdHDHVFBtTiz255LCs1pWVXAxIlCmhOYupSfXyYRnZ7VvD5odn6SCe9Xb
+         aXof6j2IzE9vsx9vguQ8e+O1F/I/rWDOCXDBt6GFOWc5cWg6MVDGqkMa2ucJ9CXETo6+
+         7eDfBnF07cuj1a3Lb3WZ97k5xWeBHv0QI8+qINqZUSyUDgpr3w/eLWIXnRbMAYmyxyTv
+         YNCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrdnU+4+XuOSv+QKrXHaEet7jj+afQOKQKCVzOsCc2YC6Op/vgpUCJl3tf3tELaZ93ofGa6jsFYe/O9yuZnut1tF/yIT9TYXz3JgWf
+X-Gm-Message-State: AOJu0YzSmEZy8KeBNv8oOUqa80U/KTND9R2aTiPTCc7LusJeAtFlDvVD
+	YjWKZg7bZt4OW0BCXE2THp47PlwdLgXsEkVApganF5a0E/uAYfvpbwhTHhEv0uc=
+X-Google-Smtp-Source: AGHT+IGgOJa5fGQAYguh/4UFR66rws120+N7SzDoxZcxxrmB2tQoaSRdoEbnXKojUbpsWK7Cb159UA==
+X-Received: by 2002:a50:d704:0:b0:568:1b9f:d6b3 with SMTP id t4-20020a50d704000000b005681b9fd6b3mr2074156edi.40.1709916304658;
+        Fri, 08 Mar 2024 08:45:04 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id j29-20020a508a9d000000b0056636a98652sm9702141edj.82.2024.03.08.08.45.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Mar 2024 08:45:04 -0800 (PST)
+Message-ID: <073e5ef5-2a2e-4300-93d6-e25552276e13@linaro.org>
+Date: Fri, 8 Mar 2024 17:45:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301164227.339208-1-abdellatif.elkhlifi@arm.com>
- <20240301164227.339208-2-abdellatif.elkhlifi@arm.com> <ZeYWKVpeFm1+4mlT@p14s> <20240307194026.GA355455@e130802.arm.com>
-In-Reply-To: <20240307194026.GA355455@e130802.arm.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Fri, 8 Mar 2024 09:44:26 -0700
-Message-ID: <CANLsYkzA20rQdTM6AOvFK=3o28GvcoRbckL=ri8RegHqyHaiCw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] remoteproc: Add Arm remoteproc driver
-To: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Drew.Reed@arm.com, Adam.Johnston@arm.com, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: exynos: gs101: define all PERIC USI nodes
+Content-Language: en-US
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, peter.griffin@linaro.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: alim.akhtar@samsung.com, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, andre.draszik@linaro.org,
+ willmcvicker@google.com, kernel-team@android.com
+References: <20240307135912.163996-1-tudor.ambarus@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240307135912.163996-1-tudor.ambarus@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 7 Mar 2024 at 12:40, Abdellatif El Khlifi
-<abdellatif.elkhlifi@arm.com> wrote:
->
-> Hi Mathieu,
->
-> > > +   do {
-> > > +           state_reg = readl(priv->reset_cfg.state_reg);
-> > > +           *rst_ack = EXTSYS_RST_ST_RST_ACK(state_reg);
-> > > +
-> > > +           if (*rst_ack == EXTSYS_RST_ACK_RESERVED) {
-> > > +                   dev_err(dev, "unexpected RST_ACK value: 0x%x\n",
-> > > +                           *rst_ack);
-> > > +                   return -EINVAL;
-> > > +           }
-> > > +
-> > > +           /* expected ACK value read */
-> > > +           if ((*rst_ack & exp_ack) || (*rst_ack == exp_ack))
-> >
-> > I'm not sure why the second condition in this if() statement is needed.  As far
-> > as I can tell the first condition will trigger and the second one won't be
-> > reached.
->
-> The second condition takes care of the following: exp_ack and  *rst_ack are both 0.
-> This case happens when RST_REQ bit is cleared (meaning: No reset requested) and
-> we expect the RST_ACK to be 00 afterwards.
->
+On 07/03/2024 14:59, Tudor Ambarus wrote:
+> Universal Serial Interface (USI) supports three types of serial
+> interface such as UART, SPI and I2C. Each protocol works independently.
+> USI can be configured to work as one of these protocols. Define all the
+> USI nodes from the PERIC blocks (USI0-14), in all their possible
+> configurations. These blocks have the TX/RX FIFO depth of 64 bytes.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+> Please note that:
+> - google,gs101-spi compatible was queued through the SPI tree:
+>   https://lore.kernel.org/linux-arm-kernel/170742731537.2266792.3851016361229293846.b4-ty@kernel.org/
+> - SPI dma properties were marked as not requiered. Queued through the
+>   SPI tree:
+>   https://lore.kernel.org/linux-spi/170967132774.228925.1759895846287455970.b4-ty@kernel.org/
+> 
+>  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 782 +++++++++++++++++++
+>  1 file changed, 782 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> index ee65ed9d2cfc..d7ecfbc7e440 100644
+> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> @@ -373,6 +373,398 @@ pinctrl_peric0: pinctrl@10840000 {
+>  			interrupts = <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH 0>;
+>  		};
+>  
+> +		usi1: usi@109000c0 {
+> +			compatible = "google,gs101-usi",
+> +				     "samsung,exynos850-usi";
 
-This is the kind of conditions that definitely deserve documentation.
-Please split the conditions in two different if() statements and add a
-comment to explain what is going on.
+This should fit within 81 characters, which is pretty close to 80, so if
+there is going to be any resend/new version, please join the lines.
 
-> > > +/**
-> > > + * arm_rproc_load() - Load firmware to memory function for rproc_ops
-> > > + * @rproc: pointer to the remote processor object
-> > > + * @fw: pointer to the firmware
-> > > + *
-> > > + * Does nothing currently.
-> > > + *
-> > > + * Return:
-> > > + *
-> > > + * 0 for success.
-> > > + */
-> > > +static int arm_rproc_load(struct rproc *rproc, const struct firmware *fw)
-> > > +{
-> >
-> > What is the point of doing rproc_of_parse_firmware() if the firmware image is
-> > not loaded to memory?  Does the remote processor have some kind of default ROM
-> > image to run if it doesn't find anything in memory?
->
-> Yes, the remote processor has a default FW image already loaded by default.
->
+> +			reg = <0x109000c0 0x20>;
+> +			ranges;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_PCLK_0>,
+> +				 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_0>;
+> +			clock-names = "pclk", "ipclk";
+> +			samsung,sysreg = <&sysreg_peric0 0x1000>;
+> +			status = "disabled";
+> +
+> +			hsi2c_1: i2c@10900000 {
+> +				compatible = "google,gs101-hsi2c",
+> +					     "samsung,exynosautov9-hsi2c";
+> +				reg = <0x10900000 0xc0>;
+> +				interrupts = <GIC_SPI 635 IRQ_TYPE_LEVEL_HIGH 0>;
 
-That too would have mandated a comment - otherwise people looking at
-the code are left wondering, as I did.
+I wonder why we use four cells in GIC...
 
-> rproc_boot() [1] and _request_firmware() [2] fail if there is no FW file in the filesystem or a filename
-> provided.
->
-> Please correct me if I'm wrong.
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&hsi2c1_bus>;
 
-You are correct, the remoteproc subsystem expects a firmware image to
-be provided _and_ loaded into memory.  Providing a dummy image just to
-get the remote processor booted is a hack, but simply because the
-subsystem isn't tailored to handle this use case.  So I am left
-wondering what the plans are for this driver, i.e is this a real
-scenario that needs to be addressed or just an initial patchset to get
-a foundation for the driver.
+Please reverse two lines, first pinctrl-0 then pinctrl-names. I know we
+did not follow this convention till now, but at least new code can be
+correct. Also clocks should be before pinctrl, so we keep some sort of
+alphabetical order.
 
-In the former case we need to start talking about refactoring the
-subsystem so that it properly handles remote processors that don't
-need a firmware image.  In the latter case I'd rather see a patchset
-where the firmware image is loaded into RAM.
+It is anyway too late in the cycle for me to pick it up, so no need to
+hurry with resend.
 
->
-> [1]: https://elixir.bootlin.com/linux/v6.8-rc7/source/drivers/remoteproc/remoteproc_core.c#L1947
-> [2]: https://elixir.bootlin.com/linux/v6.8-rc7/source/drivers/base/firmware_loader/main.c#L863
->
-> > > +module_platform_driver(arm_rproc_driver);
-> > > +
-> >
-> > I am echoing Krzysztof view about how generic this driver name is.  This has to
-> > be related to a family of processors or be made less generic in some way.  Have
-> > a look at what TI did for their K3 lineup [1] - I would like to see the same
-> > thing done here.
->
-> Thank you, I'll take care of that and of all the other comments made.
->
-> Cheers,
-> Abdellatif
+Best regards,
+Krzysztof
+
