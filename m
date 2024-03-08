@@ -1,90 +1,77 @@
-Received: from bues.ch (bues.ch [80.190.117.144])
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF4E1F934;
-	Fri,  8 Mar 2024 15:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.190.117.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AE01DFE8
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 15:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709912713; cv=none; b=r7ZgaVFPbmIVOxzL21mz1MuyWN0Drg42Jr+Bi8sqife118/sM3nEllrUMkoBzLahXp3D5YYA3KD6sa4L98asIKVnCS88ZHhwYfhtReoDsnr8JaK5JWk6g+UV4g9BmzR39Eu1RM4bJ2Cp72NKgE+8IroGuivEQh8md/1TUMLKMfQ=
+	t=1709912790; cv=none; b=hoZmbGdY0zY7kKnLRUv6NJVWJev8N5O5UNbfROh83q8b9/AlaiHTgeW0wGPvfk1BG6EciY6iCDNM+1edDzT+c+okkWjwKHZI5dGpNYe4x5hK+PU++ETKBzT9DhW/vTR8Bm9Mn5GKN/BYRiOuzIXRTDEx6TgK4N8UTsXLfp0hS1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709912713; c=relaxed/simple;
-	bh=XkJffO4Kahb1zkXZvM3TCnNZLMJJAGLAGtJUiIL1pic=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iIfUW7f9EXzufV76Evwt5CLB+3HiG66lYy3O7yh4HjZaIHcfdvyZ8Imb7CpmGfoOlhAfcOSGSVxy/jQw0yrMzrjQMCPti35eUV9QS6/lyFDhqp5v1zOqwM60oUYiH5upSupoOuxd4B0DId1hMeOGThcQtleLHmxRQAzgGnBgXn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; arc=none smtp.client-ip=80.190.117.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
-Received: by bues.ch with esmtpsa (Exim 4.96)
-	(envelope-from <m@bues.ch>)
-	id 1ricP9-000nrO-2u;
-	Fri, 08 Mar 2024 16:45:03 +0100
-Date: Fri, 8 Mar 2024 16:44:29 +0100
-From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
-To: Rand Deeb <rand.sec96@gmail.com>
-Cc: deeb.rand@confident.ru, jonas.gorski@gmail.com, khoroshilov@ispras.ru,
- kvalo@kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, lvc-project@linuxtesting.org,
- voskresenski.stanislav@confident.ru, james.dutton@gmail.com
-Subject: Re: [PATCH v3] ssb: Fix potential NULL pointer dereference in
- ssb_device_uevent
-Message-ID: <20240308164429.0a01fc41@barney>
-In-Reply-To: <CAN8dotkp7tQ6znKM5=1iM08hLvjLK-VbQm9LuqcGBf0e3ok=kg@mail.gmail.com>
-References: <20240307223849.13d5b58b@barney>
- <20240307232927.171197-1-rand.sec96@gmail.com>
- <20240308060943.2410ef2e@barney>
- <CAN8dotkp7tQ6znKM5=1iM08hLvjLK-VbQm9LuqcGBf0e3ok=kg@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709912790; c=relaxed/simple;
+	bh=CsxBBBSHXzQ815mZ6jxRjFfX677ayQW2fERBzYakubA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NObbA7Pbp1EudFSFDMC5zpG+dnw6EpLBGzS89oDGbMtmPQgiDHg3YYVKy0JhQ4IoY/0cCKK8KF49IUzylIVpoYQm2XxK+78IbxO40f0RDGg7lEi7QbVTovurmrsSsndw0HNo0AaQ7goSr187feC19wsKsf6o95ZZln3qpbBPJiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TrrB90RFXzMpvmL;
+	Fri,  8 Mar 2024 16:46:25 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TrrB83sMlz3g;
+	Fri,  8 Mar 2024 16:46:24 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 08 Mar 2024 16:46:07 +0100
+Subject: [PATCH v2 1/3] arm64: dts: rockchip: enable internal pull-up on
+ Q7_USB_ID for RK3399 Puma
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UBAVpEGvFW.8SZN79fr457G";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240308-puma-diode-pu-v2-1-309f83da110a@theobroma-systems.com>
+References: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
+In-Reply-To: <20240308-puma-diode-pu-v2-0-309f83da110a@theobroma-systems.com>
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Klaus Goger <klaus.goger@theobroma-systems.com>, 
+ Quentin Schulz <foss+kernel@0leil.net>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>
+X-Mailer: b4 0.13.0
+X-Infomaniak-Routing: alpha
 
---Sig_/UBAVpEGvFW.8SZN79fr457G
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-On Fri, 8 Mar 2024 14:36:56 +0300
-Rand Deeb <rand.sec96@gmail.com> wrote:
-> Adding a redundant null
-> check goes against code clarity instead of enhancing it.
+The Q7_USB_ID has a diode used as a level-shifter, and is used as an
+input pin. The SoC default for this pin is a pull-up, which is correct
+but the pinconf in the introducing commit missed that, so let's fix this
+oversight.
 
-You keep on moving goal posts.
-The check is already there. Therefore, this is about removal of this NULL c=
-heck.
-Which is not acceptable.
+Fixes: ed2c66a95c0c ("arm64: dts: rockchip: fix rk3399-puma-haikou USB OTG mode")
+Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I respect your opinion, but it seems we are stuck in a while(1) loop
-> without a break.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 214ea62b24a5b..a51ebb8f8b80f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -459,7 +459,7 @@ vcc5v0_host_en: vcc5v0-host-en {
+ 	usb3 {
+ 		usb3_id: usb3-id {
+ 			rockchip,pins =
+-			  <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++			  <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ };
 
-Don't worry. I'll ignore this thread from now on.
+-- 
+2.44.0
 
---=20
-Michael B=C3=BCsch
-https://bues.ch/
-
---Sig_/UBAVpEGvFW.8SZN79fr457G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmXrMl0ACgkQ9TK+HZCN
-iw6djg//cErRxyXC6LYNIJ79g3Zqn0XiRGBUoxnpKZvv+kUJ+2qe14ne/H9CIEqT
-m+KyOI++0XWwWkrMEPvO01psTr3ra6WHeGFwYmVngj+hSmJ3mODWl+w+WCLeL6hU
-hhXabKrwaXs+2ZGAYDA8dyE6ihMSLsPpNElsUY1x6Y1id9NkkrSMkPXh/jCpa4lO
-Vzy5qXISAyQ4NIZajqH6e4oUjwuixr9oghFOkSe/FW7UI8aZ+Cci9F/YI2sJL9SD
-ThWiVfhEK9iiUtGulfW7gsknP0uEO9bj9oZj5KSd5Wvg4zhep59es/TzBJCYFLyF
-QShqke8zkRpRX1FaZLqhrSj2m9bnTSi5OmuwENBsuOELjDwbIPOx8+DHU4q6VMgq
-F+FZkHdzCNiAWHwWfc9Fi8brFdguVFN84FrvRaHkze76y0zh10uBDAHVeeY5ADDB
-rp/Kr0fPQxq/YoWqbbqZggE6CdoxrWQG6JypC+OwFeEGkLL5rFAnMwmC4nAbJAov
-+UE1Qd5OcgGsH7p/7BbVDlf6IWBYhqxBsFAMKzjPF/MeqBzhYYi8rwVxP4VOpgjL
-kJmgb5n+MtuLD5lCvdY+P+Rbn7M2JeAIaoDnA/QdgGB6Fs52+4SeHuPIDf9WXFDW
-q3kjTBJNfmDk7SykJn9jAt6Tv8Bl+IuTIB2XigrFy4PETaX2CNE=
-=6clV
------END PGP SIGNATURE-----
-
---Sig_/UBAVpEGvFW.8SZN79fr457G--
