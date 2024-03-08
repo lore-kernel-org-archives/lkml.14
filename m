@@ -1,278 +1,175 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E8315D0
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 14:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721C11DFC5;
+	Fri,  8 Mar 2024 14:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709909492; cv=none; b=E1ox18D0ax0N7O0ET0rGnyz5TnbvJGFYIWX3cjHFrenOb3TWFEUXSSORAB+uE5ExVG4OT5tVfTn5SghnltO4xaN36OrohtmVp4VMcfhN/2vqU9+wv2Zaz/fobxGwqUB38V45m8EmYZ6A6boH6+sYma+mAujh87XG8Sem1i6m8ek=
+	t=1709909511; cv=none; b=eUEBnIkLev569OYZ34FGTDDA7msvax4ID983LQRsWdcXY74uuzE22clbm0EH5VPd+d2ng8XYRWuDQnlPfeATObz9vIr9q3R2VkISMCh5A6LFKmJEs+iX2Hdn7d5V3DvD1au0+vH+tpfn2N/T1zD8BEgiAdB04la/tvchr16mTCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709909492; c=relaxed/simple;
-	bh=o5R28wo1j5yA4yxUQwa0nYdZ/B/7PlrJWZdj4kQ/lyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gYJMp6+6mmNKqsL811bxqf/cSkgXX5+po/rQMuEZyeyRZkfNiLrmE5PLsm+NfJlpMgfoIGyU5oRESru+EEnixjvUAEXNIocP/Bhhn4n9jwoAmnZE2UYpHmc73WeJhRebndPAswb4T+GTZ/tHpC4XUOJoRua3gvkpb1oNAWHD0pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ipMkZbK6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ipMkZbK6"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 428DwAUS016158;
-	Fri, 8 Mar 2024 14:51:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=mNKr1aY4tr6ItgDy271C6SAxOqLBFZSiO32Am6yndb4=;
- b=ipMkZbK6SriI1GneiHJ6BsegQnuiCY7iEDb5HRRGM5fmwnkvjestm1bXPdDlFx6s4QsR
- 8ACYNaW/3G03KMTB2LF+9yg5jbKv/+WLwePbk2yssec7H4cD/Ig/YwWkZW++sdsXEu3j
- s+Kfgy6zMOfQtWWn+gof+iY3T3YZoHlHZeCbULVZIB/8w32iwgASFmRGlVXgdEswnFCQ
- LM39wKoVKPb0aAXtVN1hprRJ5mXYoHQL+cfEEJc5gq6RXAZxcGBrj0EX8Vzwdf/xSgVW
- +hPuYvzuSrE6uaB+aBHTzuvmn2vDirphbiRu8WjR3bld/k3vJUupifA5E8XT2HR2J9pP Cg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr414s08r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 14:51:16 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 428EpFa6013051;
-	Fri, 8 Mar 2024 14:51:15 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wr414s06f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 14:51:15 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 428DkgGE010913;
-	Fri, 8 Mar 2024 14:48:24 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wmh52vhak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 14:48:24 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 428EmLsM46137848
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 Mar 2024 14:48:23 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F177158059;
-	Fri,  8 Mar 2024 14:48:20 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75D4658043;
-	Fri,  8 Mar 2024 14:48:18 +0000 (GMT)
-Received: from [9.43.68.167] (unknown [9.43.68.167])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  8 Mar 2024 14:48:18 +0000 (GMT)
-Message-ID: <41e11090-a100-48a7-a0dd-c989772822d7@linux.ibm.com>
-Date: Fri, 8 Mar 2024 20:18:17 +0530
+	s=arc-20240116; t=1709909511; c=relaxed/simple;
+	bh=Tz6KwaY4wnYO1nF9pvINazsOvVULoLiR0sNzUkZKMvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GXFSHxBK+q0UX4RQVGNHlWSd/g0oaMJ5hVSs+AU3IPyhLip2aBbTFozGoFiLzR2UyBI2tQ3rpgFXH+O06EpvVnmqwZuKgYwHorhQb/pplgFAM2eb58xf6FinMHvHYVX8X6VXyZjYtV2fwab7ppAvW/36RIcy4womAHFbFHedHyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0DDC433F1;
+	Fri,  8 Mar 2024 14:51:46 +0000 (UTC)
+Date: Fri, 8 Mar 2024 14:51:44 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Will Deacon <will@kernel.org>,
+	Jonathan.Cameron@huawei.com, Matteo.Carlini@arm.com,
+	Valentin.Schneider@arm.com, akpm@linux-foundation.org,
+	anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>,
+	dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux@armlinux.org.uk, robin.murphy@arm.com,
+	vanshikonda@os.amperecomputing.com, yang@os.amperecomputing.com,
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3] ARM64: Dynamically allocate cpumasks and increase
+ supported CPUs to 512
+Message-ID: <ZesmAO1jJfEjTwxd@arm.com>
+References: <37099a57-b655-3b3a-56d0-5f7fbd49d7db@gentwo.org>
+ <CGME20240308140130eucas1p1259c805a0b6491ce2f69c6fca0264b1f@eucas1p1.samsung.com>
+ <c1f2902d-cefc-4122-9b86-d1d32911f590@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] sched/balancing: Switch the
- 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t
- sched_balance_running' flag
-Content-Language: en-US
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Valentin Schneider <vschneid@redhat.com>
-References: <20240304094831.3639338-1-mingo@kernel.org>
- <20240304094831.3639338-2-mingo@kernel.org>
- <bf612672-f7c3-4585-ac31-e02a1ebf614c@linux.ibm.com>
- <Zer1Hkxh/UMxs3xs@gmail.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <Zer1Hkxh/UMxs3xs@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: OrO-E_HYdWmR55ah_cR2SGMeWJGZmd_S
-X-Proofpoint-ORIG-GUID: i7ZagJP1pphcK0XFWn907U_imEKtXy24
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403080119
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c1f2902d-cefc-4122-9b86-d1d32911f590@samsung.com>
 
-
-
-On 3/8/24 4:53 PM, Ingo Molnar wrote:
+On Fri, Mar 08, 2024 at 03:01:28PM +0100, Marek Szyprowski wrote:
+> This patch landed in today's linux-next as commit 0499a78369ad ("ARM64: 
+> Dynamically allocate cpumasks and increase supported CPUs to 512"). 
+> Unfortunately it triggers the following warning during boot on most of 
+> my ARM64-based test boards. Here is an example from Odroid-N2 board:
 > 
-> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+>   ------------[ cut here ]------------
+>   WARNING: CPU: 4 PID: 63 at drivers/opp/core.c:2554 
+> dev_pm_opp_set_config+0x390/0x710
+>   Modules linked in: dw_hdmi_i2s_audio meson_gxl smsc onboard_usb_hub(+) 
+> rtc_pcf8563 panfrost snd_soc_meson_axg_sound_card drm_shmem_helper 
+> crct10dif_ce dwmac_generic snd_soc_meson_card_utils gpu_sched 
+> snd_soc_meson_g12a_toacodec snd_soc_meson_g12a_tohdmitx rc_odroid 
+> snd_soc_meson_codec_glue pwm_meson ao_cec_g12a meson_gxbb_wdt meson_ir 
+> snd_soc_meson_axg_frddr snd_soc_meson_axg_toddr snd_soc_meson_axg_tdmin 
+> meson_vdec(C) v4l2_mem2mem videobuf2_dma_contig snd_soc_meson_axg_tdmout 
+> videobuf2_memops axg_audio videobuf2_v4l2 sclk_div videodev 
+> reset_meson_audio_arb snd_soc_meson_axg_fifo clk_phase dwmac_meson8b 
+> stmmac_platform videobuf2_common mdio_mux_meson_g12a meson_drm 
+> meson_dw_hdmi rtc_meson_vrtc stmmac meson_ddr_pmu_g12 mc dw_hdmi 
+> drm_display_helper pcs_xpcs snd_soc_meson_t9015 meson_canvas gpio_fan 
+> display_connector snd_soc_meson_axg_tdm_interface 
+> snd_soc_simple_amplifier snd_soc_meson_axg_tdm_formatter nvmem_meson_efuse
+>   hub 1-1:1.0: USB hub found
+>   CPU: 4 PID: 63 Comm: kworker/u12:5 Tainted: G         C 6.8.0-rc3+ #14677
+>   Hardware name: Hardkernel ODROID-N2 (DT)
+>   Workqueue: events_unbound deferred_probe_work_func
+>   pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>   pc : dev_pm_opp_set_config+0x390/0x710
+>   lr : dev_pm_opp_set_config+0x5c/0x710
+>   ...
+>   Call trace:
+>    dev_pm_opp_set_config+0x390/0x710
+>    dt_cpufreq_probe+0x268/0x480
+>    platform_probe+0x68/0xd8
+>    really_probe+0x148/0x2b4
+>    __driver_probe_device+0x78/0x12c
+>    driver_probe_device+0xdc/0x164
+>    __device_attach_driver+0xb8/0x138
+>    bus_for_each_drv+0x84/0xe0
+>    __device_attach+0xa8/0x1b0
+>    device_initial_probe+0x14/0x20
+>    bus_probe_device+0xb0/0xb4
+>    deferred_probe_work_func+0x8c/0xc8
+>    process_one_work+0x1ec/0x53c
+>    worker_thread+0x298/0x408
+>    kthread+0x124/0x128
+>    ret_from_fork+0x10/0x20
+>   irq event stamp: 317178
+>   hardirqs last  enabled at (317177): [<ffff8000801788d4>] 
+> ktime_get_coarse_real_ts64+0x10c/0x110
+>   hardirqs last disabled at (317178): [<ffff800081222030>] el1_dbg+0x24/0x8c
+>   softirqs last  enabled at (315802): [<ffff800080010a60>] 
+> __do_softirq+0x4a0/0x4e8
+>   softirqs last disabled at (315793): [<ffff8000800169b0>] 
+> ____do_softirq+0x10/0x1c
+>   ---[ end trace 0000000000000000 ]---
+>   cpu cpu2: error -EBUSY: failed to set regulators
+>   cpufreq-dt: probe of cpufreq-dt failed with error -16
 > 
->> system is at 75% load		<-- 	25.6% contention
->> 113K probe:rebalance_domains_L37
->> 84K probe:rebalance_domains_L55
->>
->> 87
->> system is at 100% load		<--	87.5% contention.
->> 64K probe:rebalance_domains_L37
->> 8K probe:rebalance_domains_L55
->>
->>
->> A few reasons for contentions could be: 
->>
->> 1. idle load balance is running and some other cpu is becoming idle, and 
->>    tries newidle_balance.
->>
->> 2. when system is busy, every CPU would do busy balancing, it would 
->>    contend for the lock. It will not do balance as should_we_balance says 
->>    this CPU need not balance. It bails out and release the lock.
-> 
-> Thanks, these measurements are really useful!
-> 
-> Would it be possible to disambiguate these two cases?
+> It looks that cpufreq-dt and/or opp drivers needs some adjustments 
+> related with this change.
 
-I think its not case 1, since newidle_balance doesnt even take that lock. So 
-likely its case 2. 
+That's strange. Is this with defconfig? I wonder whether NR_CPUS being
+larger caused the issue with this specific code. Otherwise
+CPUMASK_OFFSTACK may not work that well on arm64.
 
 > 
-> I think we should probably do something about this contention on this large 
-> system: especially if #2 'no work to be done' bailout is the common case.
+> 
+> > ---
+> >
+> >
+> > Original post: https://www.spinics.net/lists/linux-mm/msg369701.html
+> > V2: https://lkml.org/lkml/2024/2/7/505
+> >
+> >
+> > V1->V2
+> >
+> > - Keep quotation marks
+> > - Remove whiltespace damage
+> > - Add tested by
+> >
+> > V2->V3:
+> > - Add test results
+> > - Rework descriptions
+> >
+> >
+> >  arch/arm64/Kconfig | 16 +++++++++++++++-
+> >  1 file changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index aa7c1d435139..4e767dede47d 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -1427,7 +1427,21 @@ config SCHED_SMT
+> >  config NR_CPUS
+> >      int "Maximum number of CPUs (2-4096)"
+> >      range 2 4096
+> > -    default "256"
+> > +    default "512"
+> > +
+> > +#
+> > +# Determines the placement of cpumasks.
+> > +#
+> > +# With CPUMASK_OFFSTACK the cpumasks are dynamically allocated.
+> > +# Useful for machines with lots of core because it avoids increasing
+> > +# the size of many of the data structures in the kernel.
+> > +#
+> > +# If this is off then the cpumasks have a static sizes and are
+> > +# embedded within data structures.
+> > +#
+> > +    config CPUMASK_OFFSTACK
+> > +    def_bool y
+> > +    depends on NR_CPUS > 256
+> >
+> >  config HOTPLUG_CPU
+> >      bool "Support for hot-pluggable CPUs"
+> 
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
 > 
 
-
-I have been thinking would it be right to move this balancing trylock/atomic after 
-should_we_balance(swb). This does reduce the number of times this checked/updated 
-significantly. Contention is still present. That's possible at higher utilization 
-when there are multiple NUMA domains. one CPU in each NUMA domain can contend if their invocation
-is aligned. 
-
-That makes sense since, Right now a CPU takes lock, checks if it can balance, do balance if yes and
- then releases the lock. If the lock is taken after swb then also, CPU checks if it can balance, 
-tries to take the lock and releases the lock if it did. If lock is contended, it bails out of 
-load_balance. That is the current behaviour as well, or I am completely wrong. 
-
-Not sure in which scenarios that would hurt. we could do this after this series. 
-This may need wider functional testing to make sure we don't regress badly in some cases. 
-This is only an *idea* as of now. 
-
-Perf probes at spin_trylock and spin_unlock codepoints on the same 224CPU, 6 NUMA node system. 
-6.8-rc6                                                                         
------------------------------------------                                       
-idle system:                                                                    
-449 probe:rebalance_domains_L37                                                 
-377 probe:rebalance_domains_L55                                                 
-stress-ng --cpu=$(nproc) -l 51     << 51% load                                               
-88K probe:rebalance_domains_L37                                                 
-77K probe:rebalance_domains_L55                                                 
-stress-ng --cpu=$(nproc) -l 100    << 100% load                                             
-41K probe:rebalance_domains_L37                                                 
-10K probe:rebalance_domains_L55                                                 
-                                                                                
-+below patch                                                                          
-----------------------------------------                                        
-idle system:                                                                    
-462 probe:load_balance_L35                                                      
-394 probe:load_balance_L274                                                     
-stress-ng --cpu=$(nproc) -l 51      << 51% load                                            
-5K probe:load_balance_L35                       	<<-- almost 15x less                                
-4K probe:load_balance_L274                                                      
-stress-ng --cpu=$(nproc) -l 100     << 100% load                                            
-8K probe:load_balance_L35                                                       
-3K probe:load_balance_L274 				<<-- almost 4x less
-
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 62f247bdec86..3a8de7454377 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -11272,6 +11272,7 @@ static int should_we_balance(struct lb_env *env)
- 	return group_balance_cpu(sg) == env->dst_cpu;
- }
-
-+static DEFINE_SPINLOCK(balancing);
- /*
-  * Check this_cpu to ensure it is balanced within domain. Attempt to move
-  * tasks if there is an imbalance.
-@@ -11286,6 +11287,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	struct rq *busiest;
- 	struct rq_flags rf;
- 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
-+	int need_serialize;
- 	struct lb_env env = {
- 		.sd		= sd,
- 		.dst_cpu	= this_cpu,
-@@ -11308,6 +11310,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 		goto out_balanced;
- 	}
-
-+	need_serialize = sd->flags & SD_SERIALIZE;
-+	if (need_serialize) {
-+		if (!spin_trylock(&balancing))
-+			goto lockout;
-+	}
-+
- 	group = find_busiest_group(&env);
- 	if (!group) {
- 		schedstat_inc(sd->lb_nobusyg[idle]);
-@@ -11434,6 +11442,8 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 			if (!cpumask_subset(cpus, env.dst_grpmask)) {
- 				env.loop = 0;
- 				env.loop_break = SCHED_NR_MIGRATE_BREAK;
-+				if (need_serialize)
-+					spin_unlock(&balancing);
- 				goto redo;
- 			}
- 			goto out_all_pinned;
-@@ -11540,7 +11550,12 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	     sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 	    sd->balance_interval < sd->max_interval)
- 		sd->balance_interval *= 2;
-+
- out:
-+	if (need_serialize)
-+		spin_unlock(&balancing);
-+
-+lockout:
- 	return ld_moved;
- }
-
-@@ -11665,7 +11680,6 @@ static int active_load_balance_cpu_stop(void *data)
- 	return 0;
- }
-
--static DEFINE_SPINLOCK(balancing);
-
- /*
-  * Scale the max load_balance interval with the number of CPUs in the system.
-@@ -11716,7 +11730,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 	/* Earliest time when we have to do rebalance again */
- 	unsigned long next_balance = jiffies + 60*HZ;
- 	int update_next_balance = 0;
--	int need_serialize, need_decay = 0;
-+	int need_decay = 0;
- 	u64 max_cost = 0;
-
- 	rcu_read_lock();
-@@ -11741,12 +11755,6 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
-
- 		interval = get_sd_balance_interval(sd, busy);
-
--		need_serialize = sd->flags & SD_SERIALIZE;
--		if (need_serialize) {
--			if (!spin_trylock(&balancing))
--				goto out;
--		}
--
- 		if (time_after_eq(jiffies, sd->last_balance + interval)) {
- 			if (load_balance(cpu, rq, sd, idle, &continue_balancing)) {
- 				/*
-@@ -11760,9 +11768,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
- 			sd->last_balance = jiffies;
- 			interval = get_sd_balance_interval(sd, busy);
- 		}
--		if (need_serialize)
--			spin_unlock(&balancing);
--out:
-+
- 		if (time_after(next_balance, sd->last_balance + interval)) {
- 			next_balance = sd->last_balance + interval;
- 			update_next_balance = 1;
-
-
-
+-- 
+Catalin
