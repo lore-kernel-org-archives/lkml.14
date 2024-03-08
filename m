@@ -1,140 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D663D817
-	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B912B1D52B
+	for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2024 12:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709902216; cv=none; b=bC43Ehat/S73F6UHQRvAlPKCUBjSu6qN/Ymagcj5mzAVpWrI98sLRzEse3ppwZTZK8RKb3WDeoDnJZVo/uJcph3J8GtSqWvn8feIyG6PLcRtkH9f2zSfqr+JF0qFOONu44/FHS6LDj3HzntiXM4fDLsyXeg7AX5jNfBEDg5s+s4=
+	t=1709902236; cv=none; b=it588ONJMMkxy0Z3rIZl3KK8WSNGwY6WGTPuIt+sYyaqvAB1Wywf4cBJM2MEpn7g5n9Q1eBGs0vcRgK364OicZqbp89Yo2fquEG8XbTv7D38lYgxdr9+uFIPkOHwEvc0TWk6uakkWLxwLFVNk9ZRvXb8rb+djD8KFR8Pxlafs2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709902216; c=relaxed/simple;
-	bh=IRVg5M/t+oiJAaIajfBT88nkhX8EpPR6h54xRcayDGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJ4udp7awe7/YUHRfC3RJt1zLfFAoZR2mQ/iRHVw0sZgqWBICg2jjlfuNl4c+TIQZ8v+FRdWx7TnHWAD3XTCpHowJMi76BDivoZg1MqZnLaEfgtwhh82tt1L8KrlADYsS7wRYKdlldwp4AqxEmt6cy77jCkeY83MoZZ1stuMuvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87D40C15;
-	Fri,  8 Mar 2024 04:50:50 -0800 (PST)
-Received: from [10.57.70.163] (unknown [10.57.70.163])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 953CD3F762;
-	Fri,  8 Mar 2024 04:50:10 -0800 (PST)
-Message-ID: <cfe7d2b5-eb41-4df0-bf6b-4ed4044e20ea@arm.com>
-Date: Fri, 8 Mar 2024 12:50:08 +0000
+	s=arc-20240116; t=1709902236; c=relaxed/simple;
+	bh=X8r0myWAP+ZNabX9jq2ofWmOakXvjG5XDtC/EIB+ZPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6ap6qiQz7/1neyEbXHyBtRbWm9NLzMwlsWcxlh0NE/7L82JwtX1I48Lxw/knXK3ZfmPIdq29kIqqA5jT3O9Yn6IWYwKSaOa0/GCkdmSmnv7EW/7JQnVZRbYs323NB/cRfZ6TRXaKGi1HNNTT0hf9x1Orv1viqWrACD+OoQ+H0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fDFSmilU; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fDFSmilU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fDFSmilU";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fDFSmilU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0FF813FAB3;
+	Fri,  8 Mar 2024 09:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709891964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qt3Lk6ghcLdCV0nzg8fVJQXKNWubDuUtSSj7mwILKNs=;
+	b=fDFSmilUwzvR1zEqdhGdTp+tvd+Mu8agF2UbCQIBJPOWJXIztx1BgBaOClbbLIALaaeXQQ
+	w5gC+DQM6Fk5qBfWBsKlIIFyHjTRZNEHEf8zQe3RFUi4a9gUE8pbVrsH0EJNZL2D8nAt3Q
+	MsJavlBCeBjQgMAqywvozHu/nBxak7A=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709891964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qt3Lk6ghcLdCV0nzg8fVJQXKNWubDuUtSSj7mwILKNs=;
+	b=fDFSmilUwzvR1zEqdhGdTp+tvd+Mu8agF2UbCQIBJPOWJXIztx1BgBaOClbbLIALaaeXQQ
+	w5gC+DQM6Fk5qBfWBsKlIIFyHjTRZNEHEf8zQe3RFUi4a9gUE8pbVrsH0EJNZL2D8nAt3Q
+	MsJavlBCeBjQgMAqywvozHu/nBxak7A=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EAC9913310;
+	Fri,  8 Mar 2024 09:59:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rETxNnvh6mU+ZwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Fri, 08 Mar 2024 09:59:23 +0000
+Date: Fri, 8 Mar 2024 10:59:23 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Felix Kuehling <felix.kuehling@amd.com>
+Subject: Re: CVE-2024-26628: drm/amdkfd: Fix lock dependency warning
+Message-ID: <Zerheyn-4rB5kySt@tiehlicka>
+References: <2024030649-CVE-2024-26628-f6ce@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: prohibit the last subpage from reusing the entire
- large folio
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>,
- akpm@linux-foundation.org, linux-mm@kvack.org
-Cc: minchan@kernel.org, fengwei.yin@intel.com, linux-kernel@vger.kernel.org,
- mhocko@suse.com, peterx@redhat.com, shy828301@gmail.com,
- songmuchun@bytedance.com, wangkefeng.wang@huawei.com, xiehuan09@gmail.com,
- zokeefe@google.com, chrisl@kernel.org, yuzhao@google.com,
- Barry Song <v-songbaohua@oppo.com>, Lance Yang <ioworker0@gmail.com>
-References: <20240308092721.144735-1-21cnbao@gmail.com>
- <519fd6a7-072e-43a2-a9a8-2467ee783524@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <519fd6a7-072e-43a2-a9a8-2467ee783524@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024030649-CVE-2024-26628-f6ce@gregkh>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.40
+X-Spamd-Result: default: False [-1.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.60)[81.72%]
+X-Spam-Flag: NO
 
-On 08/03/2024 09:34, David Hildenbrand wrote:
-> On 08.03.24 10:27, Barry Song wrote:
->> From: Barry Song <v-songbaohua@oppo.com>
->>
->> In a Copy-on-Write (CoW) scenario, the last subpage will reuse the entire
->> large folio, resulting in the waste of (nr_pages - 1) pages. This wasted
->> memory remains allocated until it is either unmapped or memory
->> reclamation occurs.
->>
->> The following small program can serve as evidence of this behavior
->>
->>   main()
->>   {
->>   #define SIZE 1024 * 1024 * 1024UL
->>           void *p = malloc(SIZE);
->>           memset(p, 0x11, SIZE);
->>           if (fork() == 0)
->>                   _exit(0);
->>           memset(p, 0x12, SIZE);
->>           printf("done\n");
->>           while(1);
->>   }
->>
->> For example, using a 1024KiB mTHP by:
->>   echo always > /sys/kernel/mm/transparent_hugepage/hugepages-1024kB/enabled
->>
->> (1) w/o the patch, it takes 2GiB,
->>
->> Before running the test program,
->>   / # free -m
->>                  total        used        free      shared  buff/cache  
->> available
->>   Mem:            5754          84        5692           0          17       
->> 5669
->>   Swap:              0           0           0
->>
->>   / # /a.out &
->>   / # done
->>
->> After running the test program,
->>   / # free -m
->>                   total        used        free      shared  buff/cache  
->> available
->>   Mem:            5754        2149        3627           0          19       
->> 3605
->>   Swap:              0           0           0
->>
->> (2) w/ the patch, it takes 1GiB only,
->>
->> Before running the test program,
->>   / # free -m
->>                   total        used        free      shared  buff/cache  
->> available
->>   Mem:            5754          89        5687           0          17       
->> 5664
->>   Swap:              0           0           0
->>
->>   / # /a.out &
->>   / # done
->>
->> After running the test program,
->>   / # free -m
->>                  total        used        free      shared  buff/cache  
->> available
->>   Mem:            5754        1122        4655           0          17       
->> 4632
->>   Swap:              0           0           0
->>
->> This patch migrates the last subpage to a small folio and immediately
->> returns the large folio to the system. It benefits both memory availability
->> and anti-fragmentation.
+On Wed 06-03-24 06:46:11, Greg KH wrote:
+[...]
+>  Possible unsafe locking scenario:
 > 
-> It might be controversial optimization, and as Ryan said, there, are likely
-> other cases where we'd want to migrate off-of a thp if possible earlier.
-
-Personally, I think there might also be cases where you want to copy/reuse the
-entire large folio. If you're application is using 16K THPs perhaps it's a
-bigger win to just treat it like a base page? I expect the cost/benefit will
-change as the THP size increases?
-
-I know we have previously talked about using a khugepaged-like mechanism to
-re-collapse after CoW, but for the smaller sizes maybe that's just a lot more
-effort?
-
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&svms->lock);
+>                                lock(&mm->mmap_lock);
+>                                lock(&svms->lock);
+>   lock((work_completion)(&svm_bo->eviction_work));
 > 
-> But I like that it just handles large folios now in a consistent way for the
-> time being.
+> I believe this cannot really lead to a deadlock in practice, because
+> svm_range_evict_svm_bo_worker only takes the mmap_read_lock if the BO
+> refcount is non-0. That means it's impossible that svm_range_bo_release
+> is running concurrently. However, there is no good way to annotate this.
 
-Yes agreed.
-
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> 
-
+OK, so is this even a bug (not to mention a security/weakness)?
+-- 
+Michal Hocko
+SUSE Labs
