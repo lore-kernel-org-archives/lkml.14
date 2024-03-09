@@ -1,79 +1,102 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACD537707
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 09:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8729523DB
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709978345; cv=none; b=AyjcERl7pIuAIvI8fkonCLoB06qAMOt6XY9v8kYjf6xASZXioe0cB2BcX0GRyANK72OuBG6+fIALvdCg+4HEGU3ny7qw4AAr/9x8wXJUMgg6UsQacg9f6k/kAKDIIS4SxmHTC06YYBvmfwlyMwGBsOL1e2ZNlFThleK92IGlItY=
+	t=1709978624; cv=none; b=Q+oHz3OdwCs/Dj9E3/Q4qYCv1mS5A8ojO9zZHxNGgkdD1JBOuV+6kxWnSCWtN3KDs3aRLuUgHolNlujQ6M0VqiNuSMMWT0Uq06IBLrmoJePQUlSeA0X5eRuVMnvvEOszeG/sU9JoaKnBs8B8uJwI6G77qMk0u3IjWas9k2z467w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709978345; c=relaxed/simple;
-	bh=asn96ezzDe7z4cS9Xr9t03l6ZD3ftiEfDmD7qxHPWR4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=MIAV9+MfGDgYjXWsQh4Rt3rLslDZU3rdcNSRKZs8+u2CNyCJaL3ZX8EU7RxVAsjrChd4Aa84ucTtsagRXrvHE2jzwRo24UGZqLiy3m/ggg6wwia/jBMbRLOw7lVNCxdY08/NgLbapepplBLaJUfDvfctm2FZuDaOXmCL4GkLNOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3657abf644fso28621005ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 01:59:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709978343; x=1710583143;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVYUoCeuZ1fyxODvD3L6XZXHBvcIymgYiHpvfaB7YME=;
-        b=O4r7mAhXzYmJdD7mOd64VbgS/dTUi7rmoQmWbUat12j2s8MihVcCfwGKyvM0rB/IM4
-         h7OK3wxv5vcwYXFs9BBtANiFEX61l3qB9XbHPthhrr87Lr4P9dQY3ZvbXbArgoKUiGX+
-         IBHvOMVS+UFgB8beG85x0zeqvKL3DXVFJbJqE92T/1Mv3L+ywRcWV9SccHre1pSNlhoA
-         mw4/3RwulZkaPrPbfjYev77jmDsmnhCsL8bknBLGWNWw6d+FeXEOhYWZXulxkpERut+I
-         RIE5ch5qMJZAEfEdzJMVRdJ7RSdGq1lJSpO1eG4nTAIx7xngM6VjIQxo4ZK+YBwNss8i
-         Qnaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlAD/to0tSKnWCzhaT2wykNWQgV1jdqgj3xazxtgPK3AL/bML+DWPbXKwwzGyfr7P/LF4c+n1pNS0OPI4v1f0s8xm6FbZMquN+00RJ
-X-Gm-Message-State: AOJu0YyW5VwWhurIxcfd9m9tEvnfhga11F38rZw5UUCeo9ANPYi5c1Og
-	yuzTdfV/F/ZAk2qmQDXuBIH3WM2imw5ihxVoqRu2uHeL3zN8R/lbL6K2yRYbsIIQyIinrs+b3KH
-	OU1BG2WxUuzCs/3qxGip1gB0ct/dA/UeqmLJNdVmVNcrVd5B2MYfgnOU=
-X-Google-Smtp-Source: AGHT+IE1qe21EYraqy1mF2HjTY4C7GyobmyXlxUrrhxJTThu1W+Kf+RgPU89aqiaYRwYdp0pyncoVYWN7fk62Y1+CPuhsAXE2nyz
+	s=arc-20240116; t=1709978624; c=relaxed/simple;
+	bh=htyoWLfhwhN0ImakCKy1p5CskoMqkspgyGQqqaQNWVI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YyM2xcmZaO15vQ2o5uZODt52cOQQRXv3at41XbrgP0pqCjxRS1tX6/rjlV+TQXZzK9hscfzcSpupHUT6qxnhZ43ixAmVaMGIFoYYWnPy1zrYjLiBrKaDVGB+4rZD3KnCZNK1JaJlTqjI+T6tpHHlezgJF9EX0eaILZgiRsa657c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ou7BNd17; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ou7BNd17"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14934C433C7;
+	Sat,  9 Mar 2024 10:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709978624;
+	bh=htyoWLfhwhN0ImakCKy1p5CskoMqkspgyGQqqaQNWVI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ou7BNd17agypewrByHMKdoYH7+ugEbj/JsFmswEZUSdl9Ynd8zhZADd/PVoOENse6
+	 azUkNj5ohKboU8dIYhWFOsHW7jsjY5I9Si/gm+xvUtifnx2VizpZpVWXAfANekXFtI
+	 28SiZGO7Km6kpYMvmGB+kZLVkeVQadrp52se6m/nlyQZ4LJ3XuoF1w3bgycxX5WidY
+	 2ipK5+4ufi38TN2EMzqEonoohFF8v1jOQ//LPtnq2n5f55uIEo5aByc3fBNlSln07c
+	 rR5n6ejaeQ2Qk3i7CoWBqtiEVxEqvlAmaKHi7rKMsiJYQE7lBktJYkQ2SJ2WE63Lod
+	 mjX0YFBL2AhFg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1ritYL-00AxfT-Kh;
+	Sat, 09 Mar 2024 10:03:41 +0000
+Date: Sat, 09 Mar 2024 10:03:40 +0000
+Message-ID: <874jdfrabn.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sebastian Fricke <sebastian.fricke@collabora.com>
+Cc: linux-kernel@vger.kernel.org,
+	tglx@linutronix.de,
+	bartosz.golaszewski@linaro.org
+Subject: Re: RFC: fake IRQchip
+In-Reply-To: <20240308143755.jey6kr3ftlzxt6lg@basti-XPS-13-9310>
+References: <20240308143755.jey6kr3ftlzxt6lg@basti-XPS-13-9310>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:214c:b0:365:147b:fb44 with SMTP id
- d12-20020a056e02214c00b00365147bfb44mr62585ilv.0.1709978343080; Sat, 09 Mar
- 2024 01:59:03 -0800 (PST)
-Date: Sat, 09 Mar 2024 01:59:03 -0800
-In-Reply-To: <000000000000cfe6f305ee84ff1f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b6989a0613375b88@google.com>
-Subject: Re: [syzbot] [reiserfs?] possible deadlock in reiserfs_dirty_inode
-From: syzbot <syzbot+c319bb5b1014113a92cf@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, hdanton@sina.com, jack@suse.cz, 
-	jeffm@suse.com, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
-	reiserfs-devel@vger.kernel.org, roberto.sassu@huawei.com, 
-	roberto.sassu@huaweicloud.com, syzkaller-bugs@googlegroups.com, 
-	syzkaller@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sebastian.fricke@collabora.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, bartosz.golaszewski@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-syzbot suspects this issue was fixed by commit:
+Hi Sebastian,
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+On Fri, 08 Mar 2024 14:37:55 +0000,
+Sebastian Fricke <sebastian.fricke@collabora.com> wrote:
+> 
+> Hey,
+> 
+> I am one of the maintainers of the media subsystem and we are currently
+> reviewing a patch [1], where the author has developed a polling
+> mechanism for a driver, while the hardware (Wave5 Codec) actually always
+> expects an interrupt line to be present and the only reason why this
+> isn't uphold is because the SoC has a defect, causing the interrupt line
+> to be disabled.
+> As I am a bit reluctant to litter a driver with workarounds for defective
+> hardware, I suggested to the author, that he could implement fake
+> IRQchip, which does polling in the background. This could first be
+> implemented in the driver directory and then later possibly upstreamed
+> to /drivers/irqchip.
+> So, far I've got a few approving comments for that idea, but I would
+> really like to know what the irqchip folks think about this.
+> 
+> Now my question is basically, what do you think about such a solution? Would
+> you accept such a fake irqchip driver, that can be used by
+> hardware without an interrupt line to fake one? Do you think there is a
+> better solution or do you think that my suggestion has hidden traps?
 
-    fs: Block writes to mounted block devices
+The problem with this approach is that it cannot be a generic irqchip,
+because it needs to know about the endpoint device to find out when
+the interrupt has been cleared. This is specially true for level
+signalling. If the device was only doing edge signalling, I could see
+a vague path forward, but that's not the case here (as evidenced by
+the DT bindings).
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11750da6180000
-start commit:   90b0c2b2edd1 Merge tag 'pinctrl-v6.7-1' of git://git.kerne..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=93ac5233c138249e
-dashboard link: https://syzkaller.appspot.com/bug?extid=c319bb5b1014113a92cf
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113f3717680000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154985ef680000
+My view on this is that given that the workaround has to know quite a
+few things about the generating device, it is better kept close to the
+driver code.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Thanks,
 
-#syz fix: fs: Block writes to mounted block devices
+	M.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Without deviation from the norm, progress is not possible.
