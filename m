@@ -1,64 +1,68 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BB5A29
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 01:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32BE16FF5E
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 01:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709946576; cv=none; b=cqw9paI2Rt59fuGm4oCwv9k6CNZaeJp8zohsOe18qaWzCGSMP7gxgkX6nk434gJAU6E5veEFPeDeUTIN90PNohNOS3N94cytICxE6+FqDAQ8J21pbYFiqkm1h96jhWicDhS6fQYwC3WhDZA1l5l5VRsHjVuIovoJWV1WpHWBlFE=
+	t=1709946584; cv=none; b=MRp/1NogShvHydZjM19lxFAkeFW6jh7Ss3tTpbywsj30DbKqTwWRlEEIP3za8P5ihecBzGWYUb/4SlPokUkWQ8BNLGH6OzREvo+P2FnWFEBRNwAsAiqN3628mLEktBiT/0Yg8f/bHzblK0dx+8sp1AYG719HMyNyia5hmn2iy1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709946576; c=relaxed/simple;
-	bh=o/dHrg4W/2Qu7LhXHcnBR4PyxF3Ttwy46Ocol2kgU+w=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZmARX1M1MamcKVUtTNvVuInvM4tKdhG7N9npzvXGRm/G+gsEJrMITWFgR9YnGdo4YR6vSEbG4Z3BSD4yRIkIGOoKtiSrQhKgReg45JqHEjynJDT/vmzKVL4qozdk4A4HtA6EjMXmnE14nbbjeRA5V4V6ywNXys8etLuY0pGULdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qwJhfx5Z; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1709946584; c=relaxed/simple;
+	bh=56l3qV2E5YVzJsQoDii+3QTD/H2MArANKbGDDmYY5so=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NhktvjQcoCZQe26ZYZTDlTWtSXCVkosI4amFEbq2o+voYK67qiwtxzqpPoUzYq5VT/UfY7XI8vIkla30ziIOl/eKzk6J4xoOCqwSrk4IBihtgFIjbNGQcEYXFvPC6SUlxneT6kXc7I4TOpCNwE3THvyi8iMxegF/fCcwG6wedqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oafOSacE; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwJhfx5Z"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5d8bdadc79cso1096039a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 17:09:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oafOSacE"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1dcfb65e143so27368195ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2024 17:09:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709946574; x=1710551374; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/DWrZ/Y6O9dtVdJ6fn791rDIK6aHa8oXbKQewTP1zRw=;
-        b=qwJhfx5ZH2VDMhdp6veR4n8SnPSYw+A10yfBjPkKl8gnpu+uXtrxox1G+WcT2fJgCy
-         HFeAg3GjlQS8uy+d/gF+tYLm8FPHlmYk+opRK5tRtHOV6XhuIJS6fMTJksw2pep1Kt0d
-         7xa0wWuBq6Oux0DeaJHlc2j2QV2aLFgJGOAmlhLE3MEiKsfQecLy5xhQGr8kkPDQFapE
-         Svo0rncoqbW5rzkLpPJEjenaiaZNT2bxuOySOK9CCvClJB1aI5QqccfENNpgcbLGgcuv
-         iCXFVcSl9yDcL56Ak0SbXw7MQV3t4r93F63QIfHq7WqUvSYzOOwRQ6eRg02PnN3/quRv
-         Tiew==
+        d=google.com; s=20230601; t=1709946582; x=1710551382; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=GtHnwYnueCwfZNon9qMZcoozTyyxAoukw9Anit3u7vs=;
+        b=oafOSacEr89Bk3J5cq5t8nmdq41sepaBeNz8HU5f5vzRDN8BBvq4l/eaSDWpShrH5r
+         OdvotphgRMvgz9qyqEspKdusQ0VPw74L0YH28DLOGSaaLOj5CJM/1sPk/lZ9ooGJCw9h
+         IJ2pany68EbuPaO6bysK6e02QYsvuV0iLRxwBWe4Srf+K4AWuhSUbn2G/7kyYMvu5hN9
+         pMIIp+kdWjINVBf107hWv/xjKMTKCDvz8sMSu04LOUb+9UsC4FPWTA2hQC2VNpNFSWEq
+         1Ld0U9w1kv4WsYmxWs8NqKNRxR1uidiuqEq3rRXVo0ELYGWJX38zh9ZSHXiBM1yvk+f2
+         0sLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709946574; x=1710551374;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/DWrZ/Y6O9dtVdJ6fn791rDIK6aHa8oXbKQewTP1zRw=;
-        b=UsVzbQzjyVgV1eWTPaFK8VwI5u/SedqWWsgseM13l/EvpAGGAMqMbyonEAO5Ninhoo
-         KIYWVyWgoFkQro5npAjjbsuxtOGLMfYjapQpsTZfiA4obvWDZ02X9hNJ/1MvGwjrI8XZ
-         A8GG+Rha859xTjuie06Tu5m7rf5IzzP9XlBQC/bliHiKhQSLMQUojQo5D7QtR4DuIfVe
-         eEwFlY7mi4V7tV6r0SeRVNHuhz/f4Lv5MA2/Ppco/IfuMju7jVHXH0qkuyQXTMEWyNAW
-         gOaOaJRKYMWTsEs419ALvV45Y/7UV9Ux2HUCaqx2izW/hMqBYoDEoxtRlY5ETOS7VhMk
-         R5Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGqaGfM/PDmOV2s4h9NGZvM4z8E2gIHlHnnLkgPXoV5IB1c4ZBBHNOJtpkw5RXWF49163BGUNeD6ipCwpPDuPTRiJnoNAZwE48KKDg
-X-Gm-Message-State: AOJu0YzPjk/yR13EOX4oRVW2ZG70H/ve40rq63vxu4gHMjgSIGl3cpwk
-	u3eVV5u1BZcwxZm0IGc7cK9mFIm3M15Nma/4ZejGdBLD+GLv4MM+tUXzXNecc51/4r8TkwJi25r
-	Ung==
-X-Google-Smtp-Source: AGHT+IEj3pG5ofKXZEqws9DjqT4BkVYkLBXjhj3PglQMYC5OQznB5l3CPPuqHtoMiPRbHPynuQY+Asfi0aA=
+        d=1e100.net; s=20230601; t=1709946582; x=1710551382;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GtHnwYnueCwfZNon9qMZcoozTyyxAoukw9Anit3u7vs=;
+        b=A2OKR1S7B7hCCTC6R2ayPSDwtiH8R7TJEZamK6Y6XySFCJjJnugY9di3g5TrvomND2
+         pFIkrxHtLyV/mbjqB3PQgUq5XgY7ZqG4vF+j346p02xKG68fpdS4lgueVuvoBa4EQwzj
+         rKdUpTbePpDt2PeYCdG9AAAv7kbLoiBZ5MB74aHDBBisPoFAIfEa9TXrkqp8gijo96yF
+         OAKham5P7icb5G5YXDqI1cJ0/kqIvVSm9p4ZMRP3RminP0WwclWLlqmH8yGrCJuL7EwR
+         kPn8pBNvkxJtJV4sscvtvnu+sZ1R83EfNaUnrJFDPUDvsl5jqOJc85jgp/hOJWWoPluC
+         B0KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVemNWKtxf2rdP1xFQPO4AMnspqBz76H17Yqy3aX5IXtBE/y9nbO84LV7j2/zLJtZK1slQB6a3mNxNP7aH2MZPxjsaEVNkSutKBt9D2
+X-Gm-Message-State: AOJu0YxLe8t+ohHBczf/bELEiSQOwFB5P467ynLUUd7+dlEh3Ca64fg6
+	j6mCpWoPS9NA8Xf2F1+H1MzQOsk75e+I+Dxq05V+aL3T7+SS7zrtJby/goGmugDwyp/8z9Q9Cr7
+	RRQ==
+X-Google-Smtp-Source: AGHT+IFcax0jBBlFuP0Y7Y0xcnqeeeJ7WiLfIus4V6pgH0oz7sMxr9KM4LErcwOoG2CptIvrKKjnya25r1o=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:5347:0:b0:5d5:e46f:d39c with SMTP id
- t7-20020a635347000000b005d5e46fd39cmr1463pgl.12.1709946574438; Fri, 08 Mar
- 2024 17:09:34 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a17:902:d4d0:b0:1dc:8da7:9d0b with SMTP id
+ o16-20020a170902d4d000b001dc8da79d0bmr5416plg.9.1709946581833; Fri, 08 Mar
+ 2024 17:09:41 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  8 Mar 2024 17:09:24 -0800
+Date: Fri,  8 Mar 2024 17:09:26 -0800
+In-Reply-To: <20240309010929.1403984-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240309010929.1403984-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <20240309010929.1403984-1-seanjc@google.com>
-Subject: [PATCH 0/5] KVM: VMX: Drop MTRR virtualization, honor guest PAT
+Message-ID: <20240309010929.1403984-3-seanjc@google.com>
+Subject: [PATCH 2/5] KVM: VMX: Drop support for forcing UC memory when guest CR0.CD=1
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
 	Lai Jiangshan <jiangshanlai@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
@@ -68,52 +72,112 @@ Cc: kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Yiwei Zhang <zzyiwei@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-First, rip out KVM's support for virtualizing guest MTRRs on VMX.  The
-code is costly to main, a drag on guest boot performance, imperfect, and
-not required for functional correctness with modern guest kernels.  Many
-details in patch 1's changelog.
+Drop KVM's emulation of CR0.CD=1 on Intel CPUs now that KVM no longer
+honors guest MTRR memtypes, as forcing UC memory for VMs with
+non-coherent DMA only makes sense if the guest is using something other
+than PAT to configure the memtype for the DMA region.
 
-With MTRR virtualization gone, always honor guest PAT on Intel CPUs that
-support self-snoop, as such CPUs are guaranteed to maintain coherency
-even if the guest is aliasing memtypes, e.g. if the host is using WB but
-the guest is using WC.  Honoring guest PAT is desirable for use cases
-where the guest must use WC when accessing memory that is DMA'd from a
-non-coherent device that does NOT bounce through VFIO, e.g. for mediated
-virtual GPUs.
+Furthermore, KVM has forced WB memory for CR0.CD=1 since commit
+fb279950ba02 ("KVM: vmx: obey KVM_QUIRK_CD_NW_CLEARED"), and no known
+VMM in existence disables KVM_X86_QUIRK_CD_NW_CLEARED, let alone does
+so with non-coherent DMA.
 
-The SRCU patch adds an API that is effectively documentation for the
-memory barrier in srcu_read_lock().  Intel CPUs with self-snoop require
-a memory barrier after VM-Exit to ensure coherency, and KVM always does
-a srcu_read_lock() before reading guest memory after VM-Exit.  Relying
-on SRCU to provide the barrier allows KVM to avoid emitting a redundant
-barrier of its own.
+Lastly, commit fb279950ba02 ("KVM: vmx: obey KVM_QUIRK_CD_NW_CLEARED") was
+from the same author as commit b18d5431acc7 ("KVM: x86: fix CR0.CD
+virtualization"), and followed by a mere month.  I.e. forcing UC memory
+was likely the result of code inspection or perhaps misdiagnosed failures,
+and not the necessitate by a concrete use case.
 
-This series needs a _lot_ more testing; I arguably should have tagged it
-RFC, but I'm feeling lucky.
+Update KVM's documentation to note that KVM_X86_QUIRK_CD_NW_CLEARED is now
+AMD-only, and to take an erratum for lack of CR0.CD virtualization on
+Intel.
 
-Sean Christopherson (3):
-  KVM: x86: Remove VMX support for virtualizing guest MTRR memtypes
-  KVM: VMX: Drop support for forcing UC memory when guest CR0.CD=1
-  KVM: VMX: Always honor guest PAT on CPUs that support self-snoop
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ Documentation/virt/kvm/api.rst        |  6 +++++-
+ Documentation/virt/kvm/x86/errata.rst | 19 +++++++++++++++----
+ arch/x86/kvm/vmx/vmx.c                |  4 ----
+ arch/x86/kvm/x86.c                    |  6 ------
+ 4 files changed, 20 insertions(+), 15 deletions(-)
 
-Yan Zhao (2):
-  srcu: Add an API for a memory barrier after SRCU read lock
-  KVM: x86: Ensure a full memory barrier is emitted in the VM-Exit path
-
- Documentation/virt/kvm/api.rst        |   6 +-
- Documentation/virt/kvm/x86/errata.rst |  18 +
- arch/x86/include/asm/kvm_host.h       |  15 +-
- arch/x86/kvm/mmu.h                    |   7 +-
- arch/x86/kvm/mmu/mmu.c                |  35 +-
- arch/x86/kvm/mtrr.c                   | 644 ++------------------------
- arch/x86/kvm/vmx/vmx.c                |  40 +-
- arch/x86/kvm/x86.c                    |  24 +-
- arch/x86/kvm/x86.h                    |   4 -
- include/linux/srcu.h                  |  14 +
- 10 files changed, 105 insertions(+), 702 deletions(-)
-
-
-base-commit: 964d0c614c7f71917305a5afdca9178fe8231434
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 0b5a33ee71ee..e85edd26ea5a 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7946,7 +7946,11 @@ The valid bits in cap.args[0] are:
+                                     When this quirk is disabled, the reset value
+                                     is 0x10000 (APIC_LVT_MASKED).
+ 
+- KVM_X86_QUIRK_CD_NW_CLEARED        By default, KVM clears CR0.CD and CR0.NW.
++ KVM_X86_QUIRK_CD_NW_CLEARED        By default, KVM clears CR0.CD and CR0.NW on
++                                    AMD CPUs to workaround buggy guest firmware
++                                    that runs in perpetuity with CR0.CD, i.e.
++                                    with caches in "no fill" mode.
++
+                                     When this quirk is disabled, KVM does not
+                                     change the value of CR0.CD and CR0.NW.
+ 
+diff --git a/Documentation/virt/kvm/x86/errata.rst b/Documentation/virt/kvm/x86/errata.rst
+index 1b70bad7325e..4116045a8744 100644
+--- a/Documentation/virt/kvm/x86/errata.rst
++++ b/Documentation/virt/kvm/x86/errata.rst
+@@ -51,7 +51,18 @@ matching the target APIC ID receive the interrupt).
+ 
+ MTRRs
+ -----
+-KVM does not virtualization guest MTRR memory types.  KVM emulates accesses to
+-MTRR MSRs, i.e. {RD,WR}MSR in the guest will behave as expected, but KVM does
+-not honor guest MTRRs when determining the effective memory type, and instead
+-treats all of guest memory as having Writeback (WB) MTRRs.
+\ No newline at end of file
++KVM does not virtualize guest MTRR memory types.  KVM emulates accesses to MTRR
++MSRs, i.e. {RD,WR}MSR in the guest will behave as expected, but KVM does not
++honor guest MTRRs when determining the effective memory type, and instead
++treats all of guest memory as having Writeback (WB) MTRRs.
++
++CR0.CD
++------
++KVM does not virtualize CR0.CD on Intel CPUs.  Similar to MTRR MSRs, KVM
++emulates CR0.CD accesses so that loads and stores from/to CR0 behave as
++expected, but setting CR0.CD=1 has no impact on the cachaeability of guest
++memory.
++
++Note, this erratum does not affect AMD CPUs, which fully virtualize CR0.CD in
++hardware, i.e. put the CPU caches into "no fill" mode when CR0.CD=1, even when
++running in the guest.
+\ No newline at end of file
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 66bf79decdad..17a8e4fdf9c4 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7612,10 +7612,6 @@ static u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
+ 	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
+ 		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
+ 
+-	if (kvm_read_cr0_bits(vcpu, X86_CR0_CD) &&
+-	    !kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_CD_NW_CLEARED))
+-		return (MTRR_TYPE_UNCACHABLE << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
+-
+ 	return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT);
+ }
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2a38b4c26d35..276ae56dd888 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -960,12 +960,6 @@ void kvm_post_set_cr0(struct kvm_vcpu *vcpu, unsigned long old_cr0, unsigned lon
+ 
+ 	if ((cr0 ^ old_cr0) & KVM_MMU_CR0_ROLE_BITS)
+ 		kvm_mmu_reset_context(vcpu);
+-
+-	if (((cr0 ^ old_cr0) & X86_CR0_CD) &&
+-	    kvm_mmu_may_ignore_guest_pat() &&
+-	    kvm_arch_has_noncoherent_dma(vcpu->kvm) &&
+-	    !kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_CD_NW_CLEARED))
+-		kvm_zap_gfn_range(vcpu->kvm, 0, ~0ULL);
+ }
+ EXPORT_SYMBOL_GPL(kvm_post_set_cr0);
+ 
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
