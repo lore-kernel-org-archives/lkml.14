@@ -1,50 +1,49 @@
-Received: from out203-205-251-60.mail.qq.com (out203-205-251-60.mail.qq.com [203.205.251.60])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EE6381DD
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D581383A3
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709980364; cv=none; b=DSilv6dqHoMiCXhCLhEuuSiwi8GmGX6F5pGDC34ADqmaYdZyktkWO28e3m1dGya8cqxKKHiUrw2mJQX8sdYYeJypN6+30PZU7Qw0mGuswiaZlz7cV/BAARYJHGzwciHKDFBA88NCHnAdtOyn45HCLlpIRsvMewP6ArfUj4j1tFI=
+	t=1709980365; cv=none; b=t3ujrCchhjDJiV4Cm1JlNMTo1DH6Esg34YNeVtE82I/c6c+G2a00d4xcRSxSGXeb0jR348ihQCvfv05mNIwoHjnY04VCMg71BRASZTw53tIVdK9FDLMWFCAoLFpTDg4HFCQdSNQG0ftThukiPRONpO1pH1drWzRv1FLuxJwBK7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709980364; c=relaxed/simple;
-	bh=4Q8Y0s/DZIIeCtVh1+2DKNHiVdkiYLAYibyrXczYUCg=;
+	s=arc-20240116; t=1709980365; c=relaxed/simple;
+	bh=DwJjdzLWTdy7zHQSUizyTlpqFQDQGh0V02APNGDv+k4=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=eIC+REDTPg4IeBqJiYHPH+6nGfzy2HP0srzNqWHKPlZUtzVv7PC7pzqM0fm6HIdnfHWESFLtuzHNZG0l1nor/AHFkf7syPmDVx/cWPVJla7SJFi4E8kaEFCw7t1zUFA/mcPvdSp+/vM9HhuaJW1Tquu5eHn+jfZGZrZAcddXByk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=NlC1BB4n; arc=none smtp.client-ip=203.205.251.60
+	 MIME-Version; b=Xe5nuehKpLvsSAQ/SON4oVYTe+r9018fIiBQlolZFDEkzuYO8/Pg1piTHisnSnnJ+XMr4GrdeGrpumAfBppjRAWxvDgTc+sl+nuIpRQNuPRTMkXSV0Zz17d2EWIk9lLlsGQXfVEt6B9CTsJlI7p2oMmxnjE99xJJJcV6xygwe7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=EZNVLxyi; arc=none smtp.client-ip=203.205.221.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="NlC1BB4n"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="EZNVLxyi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1709980355;
-	bh=hluYQ3X6fPxKYVqiVUP3UTXquwXzlkOf6HmiAExCtQo=;
+	s=s201512; t=1709980361;
+	bh=SV0D+oK1MX6meAdGdKYTlAQjz3oU6hTNix963jYalS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NlC1BB4ndYwETnE4X4e4RAcJntT9b4ifI0WV05Nm2WWyEtDguW3nvKOW+W2tNxjT4
-	 cPITc8vs+kMDpuJ0i5k5xvqmxLrI79PdGJzjYwFYrav6r5myFMnRs6TXcQR6YUPcZc
-	 dGQxtxlbQWWi44a/iIJqCihexUl3c0VBVuGpEzz4=
+	b=EZNVLxyiSpcGQHjxsadY0v93IBOjUlMJLCvys7vTLY8ax0Q7kSQu1OpdQaJ4Q+9pN
+	 gD6b1BkmL97ULuAGidULGlHtAYKGlJVADPBAp6A5yvGZdT8EG/c3AEZAof03ITkILI
+	 7thf/CWPUT+rjCqXTY+g2+LBAdnXI34zCON7tz+8=
 Received: from localhost.localdomain ([2409:8961:2a0b:4ad8:c972:9bc3:984f:98a9])
 	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
 	id 7EF8DC9A; Sat, 09 Mar 2024 18:31:47 +0800
-X-QQ-mid: xmsmtpt1709980331tv2e6m911
-Message-ID: <tencent_8A661504B57950D1A4423A387393DFD63306@qq.com>
-X-QQ-XMAILINFO: OEwe1wxmQPEpANXkgHi6haVwpa29YLB4RBR/9RtiThrN9AG84nUF6jTkijhv6K
-	 l7APvLnM2VmhgUrFRJh3XLcOatM5wx0WRl25km5Njc29ZvcIbGGx00w1i0hSXDNcFU/NZ7Nhr2Hv
-	 R2EzjL4jJCkcPlwl829RrtdTNriQYF8dqtrTSXCEetLEJZXm617CSY3dKFu7lqwUmgmNY6jUitfL
-	 hjAba+wowNY1T5BHXQX5Pe8JvznlyhcPOgKC0ppsevOOXJhodPNUSkKd+1MdPDiLZ1MXkvNcEAWx
-	 Dv5Nyz4qI63oxufqFUvoe/2ZhQ7wth/Oaaeg2c7v2kEt0BZdlNYqGpR8lczU2ptR8x909jGrCZ4n
-	 bS2Nt6c9OXfbsaNx6aoliSqv3OjmauLyXqfSFhtCHa50I6RhUfo3D6a4Hma2ZbAjrhm1B3O4R0LO
-	 Xf7jBpu4RoU1UZYgvncAnzNmwDThqQpXxzcwqcwaUQgtYIEZ2bqfGYk08FiWmSezgrR2jclmXLWZ
-	 yqHHCiLPo2BsplMlz6nVlgIgqKcd+nYk4ZUpW0Bj1DIIQ6Z0pFyktrDklwR5vAai+veVMPQC7Zz9
-	 yqwRBwFJ2eHjG2ZMOXzKrSk/UZ+JE1OmiQL5hPtufggapHyJ7vkq/V1/lG6NgGIY2oVxkMg16lBT
-	 JwOjzK7f0qAMS62llqBlBh9cosqNt0pb4jIjnhw84QhKezYEFMgo7ya40SHRZe1XnW6OIP3wKdfx
-	 b7YIAitKJ1I8gd0wsx6f4BvXPeFF4ud5mzBj4NnSGu/e34eSPbShD2OxMiakSmqgBVMSa8zWEugb
-	 EmlUin5pwkNZXiKrWOWxoIF/0GNx0oOWz6m6Q9hERyEIzVMX7ZWEVgcN8b2VxjeWfY3+vzBUt8Hq
-	 uiWQDOLCduWEwwY6X9yf/DEBYdrmXjJf66vK3M73e7m7MW9hKrv1osD+NTn/VoQEI0X2WtDDAIQW
-	 UnRh6axH13SDn4kZeGRzB6mrYtIR0D3eIJqnWiVxCP93+LE25iKe3Mouq4S0UMeHbLw64ABykp9o
-	 FBzMFhClAxtUVGLIDEhy7MYWh2AlMhDPKQvKf8GCMR0ktNJeQ2NlPomsfSKMjdSlF2F/lNwUf/om
-	 QpgVL0At32CkJjmMYzFxjtrtK02fHuU5VfhLYVLO66ar3ePxQ=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-mid: xmsmtpt1709980337tsi0ibzpo
+Message-ID: <tencent_45CCE47EB1CFC75550D4E541199388E96D08@qq.com>
+X-QQ-XMAILINFO: NYWR1JZzYCQ4xv4uZjKN0JLdmSyQedCCtV75m7IwjVFZHKvk3wxoPzFnNT93se
+	 cQG9cPNP+CR0Hui9RCMWhr3hfaiQKEGLgO2h+Zz9DSz/Vrp4r0r418S2SpskcGsyG2/BTDDaddKv
+	 e0bXMvB4GiAbpEF+emF9mrko/mOIrAnNVzPErkvNqCb9rnsEr9sgf4LskiUYlpnm+9NDxet/UXYs
+	 H+WhD3M+B+/l/jjMmV43LqQTz/kMLtqICRlM/7/r4p9HnE1KmX8LpwgnYg0RVBYMlKmEaTIQQlhh
+	 AYKuKxbY9qicr9V2eU08bOcjdPOFfjtbIkazUMZWAWVBre9DlG5PHpyBCfbjifxo78fRug3ySe2E
+	 kamS/0JMqj0lOY64ZIyS6Abhmllg8Q/mdPGWh6I3BPpg73/MbNzt1XM2nhQG/s3tQQ/E/PMUJfJS
+	 Oawr+T80C6vpukgxDRDHLJ6TuN0zhuXyy56RosXRC4VdCKvGRV1+kq+fYniFAh3H01VpkX3DoOoy
+	 iBkuICoJqVgZm4jCYkGLsop75fwg1YxcdUtEecslbM9knYmGN8VqEzoPipqONm1NyRS9cEuCzKte
+	 DWhdojbOB7u20kwacMPkSriygOyVhYrh6XXDELOtR2uGz2ggwo8jEkam3lT3L/KtrVfxDr1XHfKu
+	 HBDiCtve9i6Bd2bWyZvJEgOhCnVhoPd+h7p8UxI1a287+HYu9P8pkp1QW+QGxfhd1wlgMIkub/3b
+	 8qcMO0mzCEHE328TZkGwKGkfxk+D6YjiogfwAWoT23THTcws5LPWqxYisgHxVfGGbmC3jj0cghek
+	 63weIPV52Abwb+cUkk0v8/Arkp8Mj3s8TqlkgtHlVSKKkZ+/Ihhd1FggkAFStZUGBz1O1XMwv5Ks
+	 56r/UmRqlu6ZtmgbkjVCrMlQPcIzoRuoS0z1YCrkLGgdRrnXb7fesY7BPYq/K7hnQTztLWfGVaMo
+	 k2s6Prkaz++sLepqKg4mOnZ8vsd63sAzPF84rzvQIfaK4xDn6S6eIdEF2fYCj2dk/HPGdripKMK9
+	 wNrYiTqOiPvpnVnBFPrZ823srLa5C+3jtpRC41Z+mr8xnJyP4h/oOxSGyOkR3iYD4td5fm4w==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
 From: wenyang.linux@foxmail.com
 To: "Eric W . Biederman" <ebiederm@xmission.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
@@ -52,12 +51,11 @@ To: "Eric W . Biederman" <ebiederm@xmission.com>,
 	Joel Granados <j.granados@samsung.com>,
 	Christian Brauner <brauner@kernel.org>
 Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Jan Kara <jack@suse.cz>,
-	"Darrick J. Wong" <djwong@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/9] epoll: delete these unnecessary static variables long_zero and long_max
-Date: Sat,  9 Mar 2024 18:31:24 +0800
-X-OQ-MSGID: <946ba0c1970cfc96ebf9ce732d7bb67f237ebfa2.1709978655.git.wenyang.linux@foxmail.com>
+Subject: [PATCH v2 9/9] ucounts: delete these unnecessary static variables ue_zero and ue_int_max
+Date: Sat,  9 Mar 2024 18:31:26 +0800
+X-OQ-MSGID: <6a8977d8eded041a822d7255ddb90e7b2863d549.1709978655.git.wenyang.linux@foxmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1709978655.git.wenyang.linux@foxmail.com>
 References: <cover.1709978655.git.wenyang.linux@foxmail.com>
@@ -71,7 +69,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wenyang.linux@foxmail.com>
 
-Delete unnecessary static variables (long_zero and long_max)
+Delete unnecessary static variables (ue_zero and ue_int_max)
 and encode them directly in the table entry.
 
 Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
@@ -80,44 +78,37 @@ Cc: Luis Chamberlain <mcgrof@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Joel Granados <j.granados@samsung.com>
 Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ kernel/ucount.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 3534d36a1474..7cfc4fb0ca3c 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -309,19 +309,14 @@ static void unlist_file(struct epitems_head *head)
- 
- #include <linux/sysctl.h>
- 
--static long long_zero;
--static long long_max = LONG_MAX;
--
- static struct ctl_table epoll_table[] = {
--	{
--		.procname	= "max_user_watches",
--		.data		= &max_user_watches,
--		.maxlen		= sizeof(max_user_watches),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &long_zero,
--		.extra2		= &long_max,
--	},
-+	CTL_TABLE_ENTRY_MINMAX("max_user_watches",
-+				&max_user_watches,
-+				sizeof(max_user_watches),
-+				0644,
-+				proc_doulongvec_minmax,
-+				SYSCTL_NUMERIC_ZERO,
-+				SYSCTL_NUMERIC_LONG_MAX),
+diff --git a/kernel/ucount.c b/kernel/ucount.c
+index e188c25ed2b3..53d96cb27309 100644
+--- a/kernel/ucount.c
++++ b/kernel/ucount.c
+@@ -58,17 +58,15 @@ static struct ctl_table_root set_root = {
+ 	.permissions = set_permissions,
  };
  
- static void __init epoll_sysctls_init(void)
+-static long ue_zero = 0;
+-static long ue_int_max = INT_MAX;
+-
+ #define UCOUNT_ENTRY(name)					\
+ 	{							\
+ 		.procname	= name,				\
+ 		.maxlen		= sizeof(long),			\
+ 		.mode		= 0644,				\
+ 		.proc_handler	= proc_doulongvec_minmax,	\
+-		.extra1		= &ue_zero,			\
+-		.extra2		= &ue_int_max,			\
++		.min		= SYSCTL_NUMERIC_ZERO,		\
++		.max		= SYSCTL_NUMERIC_INT_MAX,	\
++		.extra_flags	= SYSCTL_TABLE_EXTRA_LONG_INIT_MINMAX \
+ 	}
+ static struct ctl_table user_table[] = {
+ 	UCOUNT_ENTRY("max_user_namespaces"),
 -- 
 2.25.1
 
