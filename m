@@ -1,152 +1,265 @@
-Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0968138F97
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFB926AC5;
+	Sat,  9 Mar 2024 10:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709980368; cv=none; b=kUbpKqIqRQQjj7/RSe7vuGijtc+VOqAclWXuj8uBXMxfpQy6CY1+SJfCjq0bXndC4hEf4tlEEwNxbajZ2CpXl3ykcFw/dtkTdk9yDpf2ixi+hvEwH5fq5iWk2RBOw7iKT+VEjNwi6fVVcK0oQs9M46NSoOEl47VdRRFrFsUeReE=
+	t=1709980408; cv=none; b=Cv4ciaMJzh2LUq/zIsgIjrXyr57erUG7fH7eLC+vxFTGUpYf8+cRY2KAiQkOwYtmBL8YXdG5/CB0UvzwxFuudBNsWcU5YRdpB76XSsX5+OgRchDp6Ksb3femRt+hbdMOQZivg4NcC4wA9g6L21d9+ZWVMNUO/J6GDGUMuaBOt9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709980368; c=relaxed/simple;
-	bh=NJKqmOHNR07G45d4NVjLLw9EdzmYl7F7Ce1i+WlWE7s=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=TtWgC7K2b0ZnhK9WseLZpYZKmMXRmUuykewnRmRpAYGLh5GO51idVO+r6tHF0/7terkijrK/UUnLojVVGcM7weWhlJDsI++32CpjgHk7pxkEWX8HniyLaY4o2znfheWaBMb7H5dB8dq2EubZWpwoLm1BbMP4wBb2X1ocpLHLJVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=EsTq3fiY; arc=none smtp.client-ip=203.205.251.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1709980408; c=relaxed/simple;
+	bh=ep80T4R3DsChFlCxVs40oKoocVSvRg0xEN7d7U/tIbo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NHycoTwNQogjPm7AjfcYl34QiVJTdbFgoy6jCweAZjTFAQFsE2l8Vgnmsd62GjMcNYaA9gSyddKOWX8s+J8/MJ15WOeqAa+p87VAISs3ae1VOrcTtBvEL49tBBrRwQQAwANQlQXEP2K+nc52YAi5BZNZDF446VanwYzAQK3wjI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrmXG+T1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="EsTq3fiY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1709980358;
-	bh=SSRgMEacKlRgTzt0buSQ6sVgqkbUDUraShL6rUZA97w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EsTq3fiYUUdB3E6GBmvLkkX06DKgHdkDfm9UHKdXotIYPg0JHDHYWqZGQUh7SAJh4
-	 cYPNacjSTC1Yu5TpO+JJBE5RjbfeQ3exOb/DjcmFhOvFEKFCHjq2dGej1rg3rexBzr
-	 0WCCaCFe9LxNHmELdI0/ndKKnCI/xsgas+uWEzE0=
-Received: from localhost.localdomain ([2409:8961:2a0b:4ad8:c972:9bc3:984f:98a9])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 7EF8DC9A; Sat, 09 Mar 2024 18:31:47 +0800
-X-QQ-mid: xmsmtpt1709980334t1sqlvol2
-Message-ID: <tencent_08629E71ABB6A973832226A1D3D999DFFC09@qq.com>
-X-QQ-XMAILINFO: MB5+LsFw85No5ibEFZnXtcXauqggPA/99tpCySGtWw0DWp2iq6fMwdi+qOmNZ0
-	 peu5GmZWfSllRYVpW8LkBdNJh2Q4XGO7wmOdECpCjpCm9XR+n+0YmiokJlRGs9x6zZRFw8lPt9oF
-	 m9VOdyap7zti44H3JfYpXrfyWeKD4lFT7Iy7i+Q+/wZ1stoDpwWEzMI6wuGmFZYh/6jet6Q6twVi
-	 ZwO/BW0fch4c1z3Ldb2/g053+tfNWYh+Qzqz/BPPGugH+vE45qRHwzU64AtHNdSiNVarbQxOWtKi
-	 srSFD4Z+GSi0ecZG5fTgjafCbWND0cnoqVM/Q42IOhSYBX6K+VH+uLOn44y4p/8s/pT0Gbj33PZw
-	 oZIGabI7uL45sknYbKTmauFBGz7IN443knkQr5VuXTHcDYLpkUhDQn77d7SwCnxtnCmlASqE/Ap6
-	 DSP8lzAIh1Tsj2SCchJ9cmTecnJJDTe9CYKnDYsPkk4WVs7t/3RbNNkRkZkSazZVY3bKa6A1Gp6V
-	 H793wGhGJz78Mnjik08IaQUYAMR4u/Y62+BiiL6ROEMqnUaCFc840kmwlh6phVpDfBupGZXNwJwn
-	 FQQdH551Va+To7x8uBstP1jtEeiVskjoVxWMS6BhMpb6rjPCuDe1OassjiQcoAU9Tt84eQtykybc
-	 mcy2VnYfV8OnMGEcco731zmR5x2O4g8PkLO+xE2V+wP6I8EMgTi6sdSHO7XJvCvQhykjeWWC9RH0
-	 Eko7FXZRwB4V0y2P6dHqtSxdJRt6t1SjmskiSFq+l3hgpZAqndUeC5T2wYyyk3rjULkO3zdVzscC
-	 RlRtq36QHVWlaU4QH54tWoxhXcOSX0TKjfPktDHsqHzOU1qFyZ787FBmYkRkezv87hCx99TVbme1
-	 rZiZ8fjUTzOZvOER2cFZjfMuY9TQ1KIm/+ES3NK+FGg06qoB+XtBehiQEQ06v+z7WhEzqBPwCMUf
-	 HHdpGwtBX7c5Kr6y5R65OvZ4ZHSoFI2wkQAJ3zuIgaU5X9FMrEeEdPIqVQr+kUDTSHjdgnxL5pjH
-	 FGcZN3vRHFUG5b26ttb6TkbPLh/GGAH1qsL6/yHEC/ScZW/apv2Sy4li9UsFzCzxbHXB2ZTw==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: wenyang.linux@foxmail.com
-To: "Eric W . Biederman" <ebiederm@xmission.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Jan Kara <jack@suse.cz>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/9] fs: inotify: delete these unnecessary static variables it_zero and it_int_max
-Date: Sat,  9 Mar 2024 18:31:25 +0800
-X-OQ-MSGID: <ba4f1a1a2f4341994f4e91cecf1df3686428c013.1709978655.git.wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1709978655.git.wenyang.linux@foxmail.com>
-References: <cover.1709978655.git.wenyang.linux@foxmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrmXG+T1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1CCC433C7;
+	Sat,  9 Mar 2024 10:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709980407;
+	bh=ep80T4R3DsChFlCxVs40oKoocVSvRg0xEN7d7U/tIbo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KrmXG+T15xq3cHjLexInxaHKvv7nQHc4nVfoQeFwC9C5CIKv3SG9hwz1HCKO4e8zZ
+	 y4dH4ErV1XuGC0zjuIdaXbPzooGVe6DIV4fN6WoT2A60aNMeBtQHdglR3VI0ipu3oV
+	 vXRQFRFJs8Lu+lZWG4/KbydkKnOPnwLnvuo2J3WMfqjqNJKp6tWHrZpPucsj1yL1S4
+	 TdW7zjJxwTjv799dA9v7LwjE5OaEdc17Weq9gbG/aRuu/FMJUd4uPdXvK+B6FJmfLg
+	 ban7vmFsKfrm02sEGCibboTqgd4Ouvg6RpX8hJQEIdo+VGl+ATCFnC8rHiILYtqOOv
+	 w2OxHiQaa6siw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1riu17-00Ay3W-63;
+	Sat, 09 Mar 2024 10:33:25 +0000
+Date: Sat, 09 Mar 2024 10:33:18 +0000
+Message-ID: <8734szr8y9.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	lpieralisi@kernel.org,
+	guohanjun@huawei.com,
+	sudeep.holla@arm.com,
+	xueshuai@linux.alibaba.com,
+	baolin.wang@linux.alibaba.com,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Tyler Baicar <baicar@os.amperecomputing.com>
+Subject: Re: [PATCH 1/2] ACPI/AEST: Initial AEST driver
+In-Reply-To: <aaad88c3-333d-4714-a9ca-3b66c8a5d9c8@linux.alibaba.com>
+References: <20240304111517.33001-1-tianruidong@linux.alibaba.com>
+	<20240304111517.33001-2-tianruidong@linux.alibaba.com>
+	<86wmqi19pg.wl-maz@kernel.org>
+	<aaad88c3-333d-4714-a9ca-3b66c8a5d9c8@linux.alibaba.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tianruidong@linux.alibaba.com, catalin.marinas@arm.com, will@kernel.org, lpieralisi@kernel.org, guohanjun@huawei.com, sudeep.holla@arm.com, xueshuai@linux.alibaba.com, baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, baicar@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+On Fri, 08 Mar 2024 03:43:30 +0000,
+Ruidong Tian <tianruidong@linux.alibaba.com> wrote:
+>=20
+> =E5=9C=A8 2024/3/4 20:07, Marc Zyngier =E5=86=99=E9=81=93:
+> > On Mon, 04 Mar 2024 11:15:16 +0000,
+> > Ruidong Tian<tianruidong@linux.alibaba.com>  wrote:
+> >> diff --git a/arch/arm64/include/asm/ras.h b/arch/arm64/include/asm/ras=
+.h
+> >> new file mode 100644
+> >> index 000000000000..2fb0d9741567
+> >> --- /dev/null
+> >> +++ b/arch/arm64/include/asm/ras.h
+> >> @@ -0,0 +1,38 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +#ifndef __ASM_RAS_H
+> >> +#define __ASM_RAS_H
+> >> +
+> >> +#include <linux/types.h>
+> >> +#include <linux/bits.h>
+> >> +
+> >> +#define ERR_STATUS_AV		BIT(31)
+> >> +#define ERR_STATUS_V		BIT(30)
+> >> +#define ERR_STATUS_UE		BIT(29)
+> >> +#define ERR_STATUS_ER		BIT(28)
+> >> +#define ERR_STATUS_OF		BIT(27)
+> >> +#define ERR_STATUS_MV		BIT(26)
+> >> +#define ERR_STATUS_CE		(BIT(25) | BIT(24))
+> >> +#define ERR_STATUS_DE		BIT(23)
+> >> +#define ERR_STATUS_PN		BIT(22)
+> >> +#define ERR_STATUS_UET		(BIT(21) | BIT(20))
+> >> +#define ERR_STATUS_CI		BIT(19)
+> >> +#define ERR_STATUS_IERR 	GENMASK_ULL(15, 8)
+> >> +#define ERR_STATUS_SERR 	GENMASK_ULL(7, 0)
+> > All these bits need to be defined in arch/arm64/tools/sysreg as
+> > ERXSTATUS_EL1 fields.
+>=20
+> This file only describes the system register, but RAS MMIO registers
+> use these bits too. Would it be appropriate to define them in
+> arch/arm64/tools/sysreg?
 
-Delete unnecessary static variables (it_zero and it_int_max)
-and encode them directly in the table entry.
+You are using them for system registers, they need to be defined
+there. The fact that they are also used to MMIO is anecdotal.
 
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Granados <j.granados@samsung.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- fs/notify/inotify/inotify_user.c | 49 +++++++++++++-------------------
- 1 file changed, 20 insertions(+), 29 deletions(-)
+[...]
 
-diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-index 85d8fdd55329..b346d61179ea 100644
---- a/fs/notify/inotify/inotify_user.c
-+++ b/fs/notify/inotify/inotify_user.c
-@@ -55,36 +55,27 @@ struct kmem_cache *inotify_inode_mark_cachep __ro_after_init;
- 
- #include <linux/sysctl.h>
- 
--static long it_zero = 0;
--static long it_int_max = INT_MAX;
--
- static struct ctl_table inotify_table[] = {
--	{
--		.procname	= "max_user_instances",
--		.data		= &init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES],
--		.maxlen		= sizeof(long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &it_zero,
--		.extra2		= &it_int_max,
--	},
--	{
--		.procname	= "max_user_watches",
--		.data		= &init_user_ns.ucount_max[UCOUNT_INOTIFY_WATCHES],
--		.maxlen		= sizeof(long),
--		.mode		= 0644,
--		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &it_zero,
--		.extra2		= &it_int_max,
--	},
--	{
--		.procname	= "max_queued_events",
--		.data		= &inotify_max_queued_events,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO
--	},
-+	CTL_TABLE_ENTRY_MINMAX("max_user_instances",
-+			       &init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES],
-+			       sizeof(long),
-+			       0644,
-+			       proc_doulongvec_minmax,
-+			       SYSCTL_NUMERIC_ZERO,
-+			       SYSCTL_NUMERIC_INT_MAX),
-+	CTL_TABLE_ENTRY_MINMAX("max_user_watches",
-+			       &init_user_ns.ucount_max[UCOUNT_INOTIFY_WATCHES],
-+			       sizeof(long),
-+			       0644,
-+			       proc_doulongvec_minmax,
-+			       SYSCTL_NUMERIC_ZERO,
-+			       SYSCTL_NUMERIC_INT_MAX),
-+	CTL_TABLE_ENTRY_MIN("max_queued_events",
-+			    &inotify_max_queued_events,
-+			    sizeof(int),
-+			    0644,
-+			    proc_dointvec_minmax,
-+			    SYSCTL_NUMERIC_ZERO),
- };
- 
- static void __init inotify_sysctls_init(void)
--- 
-2.25.1
+> >> +#define CASE_READ_CLEAR(x, clear)					\
+> >> +	case (x): {							\
+> >> +		res =3D read_sysreg_s(SYS_##x##_EL1);			\
+> >> +		if (clear)						\
+> >> +			write_sysreg_s(0, SYS_##x##_EL1);		\
+> >> +		break;							\
+> >> +	}
+> > Please don't use macros with side effects. This is horrible to debug.
+> > Instead, *return* the value from the macro, or pass the variable you
+> > want to affect as a parameter.
+>=20
+> OK, I will pass **res** as a parameter like this:
+>=20
+>   #define CASE_READ_CLEAR(res, x, clear)			\
+> 	  case (x): {						\
+> 		  res =3D read_sysreg_s(SYS_##x##_EL1);		\
+> 		  if (clear)					\
+> 			  write_sysreg_s(0, SYS_##x##_EL1);	\
+> 		  break;					\
+> 	  }
+>=20
+> >=20
+> > Also, what ensures the synchronisation of this write? How is the W1TC
+> > aspect enforced?
+>=20
+> aest_proc is just call in irq context, one ras error is just routed to
+> one core, so it is thread safe. And this is a Write-After-Read (WAR)
+> Hazards with dependence=EF=BC=8Ccan i assume that pipeline would guarantee
+> the order of writing and reading?
 
+You are missing the point. WAR hazarding doesn't mean that the write
+has taken effect, and can be delayed for as long as the CPU decides
+to, until the nest context synchronisation event.
+
+The W1TC question still stands.
+
+[...]
+
+> >> +static u64 aest_iomem_read_clear(u64 base, u32 offset, bool clear)
+> >> +{
+> >> +	u64 res;
+> >> +
+> >> +	res =3D readq((void *)(base + offset));
+> >> +	if (clear)
+> >> +		writeq(0, (void *)(base + offset));
+> > Do you need the explicit synchronisation? What ordering are you trying
+> > to guarantee?
+>=20
+> This read and write use the same address, pipeline would guarantee
+> the order of writing and reading.
+
+You are missing the point again. Non-relaxed accessors come with a DMB
+that enforces ordering with younger reads and older writes. Why do you
+need those?
+
+[...]
+
+> >> +static int __init aest_register_gsi(u32 gsi, int trigger, void *data,
+> >> +					irq_handler_t aest_irq_func)
+> >> +{
+> >> +	int cpu, irq;
+> >> +
+> >> +	irq =3D acpi_register_gsi(NULL, gsi, trigger, ACPI_ACTIVE_HIGH);
+> >> +
+> >> +	if (irq =3D=3D -EINVAL) {
+> >> +		pr_err("failed to map AEST GSI %d\n", gsi);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	if (gsi < 16) {
+> >> +		pr_err("invalid GSI %d\n", gsi);
+> >> +		return -EINVAL;
+> >> +	} else if (gsi < 32) {
+> >> +		if (ppi_idx >=3D AEST_MAX_PPI) {
+> >> +			pr_err("Unable to register PPI %d\n", gsi);
+> >> +			return -EINVAL;
+> >> +		}
+> >> +		ppi_irqs[ppi_idx] =3D irq;
+> >> +		enable_percpu_irq(irq, IRQ_TYPE_NONE);
+> > Enabling the PPI before requesting it? Looks... great. And how does
+> > this work on a system that supports EPPIs, which are in the
+> > [1119:1056] range?
+>=20
+> It is better to enable it after request it, i will fix it next version.
+> My machine do not use EPPI as RAS interrupt, i can not test it now. Can
+> we support EPPI in later patch?
+
+No, because you shouldn't even have to care. Can you see a single
+driver in the tree that do this?
+
+>=20
+> >=20
+> > Also, if you get a trigger as a parameter, why the IRQ_TYPE_NONE?
+> >=20
+> Sorry=EF=BC=8CI do not really understand this comment, should I use
+> (IRQ_LEVEL | IRQ_PER_CPU)?
+
+You tell me. Either the trigger is relevant, or it isn't. But I assume
+it is passed as a parameter to the function for a good reason.
+
+>=20
+> >> +		for_each_possible_cpu(cpu) {
+> >> +			memcpy(per_cpu_ptr(ppi_data[ppi_idx], cpu), data,
+> >> +			       sizeof(struct aest_node));
+> >> +		}
+> >> +		if (request_percpu_irq(irq, aest_irq_func, "AEST",
+> >> +				       ppi_data[ppi_idx++])) {
+> >> +			pr_err("failed to register AEST IRQ %d\n", irq);
+> >> +			return -EINVAL;
+> >> +		}
+> >> +	} else if (gsi < 1020) {
+> >> +		if (request_irq(irq, aest_irq_func, IRQF_SHARED, "AEST",
+> >> +				data)) {
+> > Why SHARED? Who would share a RAS interrupt?????
+>=20
+> Multi AEST nodes may use the same interrupt, for example, one DDRC with
+> a RAS interrupt has two sub channels, these two sub channel is described
+> as two AEST node in AEST table, so they share the same one. In another
+> case, SMMU has two RAS node, TCU and TBU, they may also share the same
+> interrupt.
+
+I still find it odd, but hey, if that's the way people want to handle
+RAS, they might as well OR all of them and wire it to the RESET pin.
+
+>
+> >=20
+> >> +			pr_err("failed to register AEST IRQ %d\n", irq);
+> >> +			return -EINVAL;
+> > Same question about extended SPIs.
+> >=20
+> > All in all, this whole logic is totally useless. It isn't the driver's
+> > job to classify the GIC INTIDs...
+>=20
+> AEST use both PPI and SPI, it seems that AEST driver must recognize
+> INTID in order to request irq number with different function, do you
+> have better solution here?
+
+Again, you should have to look at the INTID, ever. That's none of your
+business, and you don't even know what interrupt controller the system
+is presenting you anyway. The way to identify a per-CPU interrupt is
+to use the irq_is_percpu_devid() helper, and not to mess with
+pointless heuristics.
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
