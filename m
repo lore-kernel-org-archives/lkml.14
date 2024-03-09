@@ -1,281 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3C33B19C;
-	Sat,  9 Mar 2024 12:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596F9383B5;
+	Sat,  9 Mar 2024 12:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709987185; cv=none; b=RfwIcjy/shU6rghGJiu7/K9d3U6Bxr2dNgF/ogSswvMFVa3l3VLMULNGsRQ0hvOPY3edyyscCkSCpM5r4zouvyycoTEJc4LpBwO5J0tvZ2erig29d9v8o8vg9PCFjgKMAYHq3vP1o/Q/3fxKoaC3PWUdaWDotcfyw92f0eOok7w=
+	t=1709987274; cv=none; b=Ngv1T/lRWTNy3CoGC6f1Y0iTzN1L2AGTD9K/g1jUAn2rzxbQg7R502zWlu6M3LfPBABtY00tSnwpLaw50XoTsuxHK1aq9SO+ved2LRJTjmN6qrHJzDRvxTbzZUWwwej/hxPON5IxhIaEPwFg1Qd8w8f2PLuHT1fLrT0kw6YyEjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709987185; c=relaxed/simple;
-	bh=AqAfgJ6EUxDmQBRGx5L1+oOWyE/tweeVqLto7Qz/y4E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DnzKmD2WWnN9+lCTNO8f6FWFXjzmL3luzIQHAAwlSePyaqbXuj4ZFyJAa3yf3WacMe7MQpUjwHdykagdd71dplStv4fcLvnpEIif2NPhtDa1U9jIVPBCZINK3yhpy0G0VBzsKrZEaLswVaThl+GH/bahaF/M99BnskHWHtwhuCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ollMaeFy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709987274; c=relaxed/simple;
+	bh=yyHJI+i8YTw2Aotpj/dejaVqSVyw4wQdRc2NjI1BysY=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=NGYL2WXALSxQ8H7oSqSq4QHXIumhcSOAmd56+Ug9Ku5zL+Dz7aVinzMg9kv2FPiErQ9KZoIvolqkMrigFPvQTNij6lo3WZUmu1mPcQkKOGXOYLwQddhmIBWGW2lPlR+GWbrY2+8CN7nntURX0PsfmmK9+AX2NvpktLQ0ukGE20I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Hg6Y2d6t; arc=none smtp.client-ip=203.205.251.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ollMaeFy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A2294C3277F;
-	Sat,  9 Mar 2024 12:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709987184;
-	bh=AqAfgJ6EUxDmQBRGx5L1+oOWyE/tweeVqLto7Qz/y4E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ollMaeFyKT8AAc7tDIW+uIxXfM9rDiAFO+UyDOn+0LT77MqUR0Xm1Ol4fG97W+xke
-	 JTu/40N6NZUpth02PjJ9DRIV6RcDMmiKEE/zrOmX9Ng2LUlTIyIp3oX+mtqjSu1c3z
-	 3pokergAVTGVED4wbGoMQyq0ri833Dur0PYGteF5iXrgwG+HKiTJiVyQ79fs1gu33x
-	 imH+cLIOivvevoaceh2KnqTvhfjh+N5DdbGjYNKBtVgBhwN/kUD8NVRbRPF/NTLs44
-	 ItLg/M3ELxmyKue4OpH7wlUafBKN9z3yzNjI4zzjvWSj8FefYeW6d1NVBPF4noG9Hi
-	 vvSxZkEq1nXXQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F02DC54798;
-	Sat,  9 Mar 2024 12:26:24 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sat, 09 Mar 2024 20:26:30 +0800
-Subject: [PATCH net-next v11 8/9] net: hisi_femac: add support for
- hisi_femac core on Hi3798MV200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Hg6Y2d6t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709987258; bh=XEGyaJ+kCmmZhZFVWlD1MMdKR2X8OhuRS+vIOPo518c=;
+	h=From:To:Cc:Subject:Date;
+	b=Hg6Y2d6tTpKXk51dBycFCehLr9RpYTOLkpALRSlUcu69losoh/YqtPTyoiAamGDZV
+	 kMXJhVIlZFZDG8zgiQR1tiuD0dDiJv+rjv6ofM7X3GlCRE5nnqhcWN++bNksfE5aEi
+	 sx5nGerzAadhHBF3qB8r6BCAnENNqqaLsqgPqprE=
+Received: from localhost.localdomain ([58.213.8.163])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 6E4874DF; Sat, 09 Mar 2024 20:27:36 +0800
+X-QQ-mid: xmsmtpt1709987256tzodkmkla
+Message-ID: <tencent_32C3AEB0599DF0A0010A862439636CDA2707@qq.com>
+X-QQ-XMAILINFO: MmPNY57tR1XnXVRJMLsi2St93kTXMHZDv9XOtN6QXUCt17MhWfoztaSxFUWTti
+	 NGvIQO/0OK+86B+DaF94LQqsTOQTyeDowjon/yqBcs7fVBZ8Tiaf5RPqRzLtJ7CQK/wIanfFqKiD
+	 oZc47qHOQEEtTbpi6nyR5uMziAJJPjYrwhR9YbaEoXwUcvHieGse+IFlvinsw12hTFtL5Sq6ZxUc
+	 aRNH1lIEO6KKQoZ7xnIY+i1gwqD62/SFUFRzLWgt+rmSnQ0qUWSKtj1UQPDW4goRts/hABqws1Us
+	 ZdZ+oWk9RSl9cs7n40nGMELoz/+H0awRebUJT05j5hQE/WzZSW+JlqRHgh3S6aLNKtUTWC5OML9u
+	 CpI8TjizY3U0btH6WACG4I5GGHtvqRt96+AOzRdhQksXNdpAp/dNHPGzsqTLmSwljMEe2hljE6Ro
+	 9dWr+4KUXIVBXg5ZSgGus//CxhXykO25w7fWMNBQSBrflOb5fCmo2SIRi4wSEDoBXQvDa9Uz7/7J
+	 P7ZvM5mzOggv08Xr7QX4P2uVHLgW4W9b/PK+hijvVvUFbIYbK5f/6Da2aHgguk2oEEMo5v/+9Rcg
+	 NJn+Q4qPQbmDNxffzt1eWfBk7N71qY2yWvczxaw+wGq+X9bLr+KplQZaKuD/tTXk+45OZGjBTh0d
+	 pPzZwXUz9bi1AkXClQcohAQSWg+sJX+sLvso7epWO0IjiVILPmaAUCRt/038hs6X5MNHQP/9T1M7
+	 GCYHt8pqNkitiL7ave3mLZWUUS7afJrurhtz6Hwv7+gZUEMC7pFjKOjAq4+MqSoBvq4axQNDQhQi
+	 NzI7fnXlFAcBUapiuMao3Dt71hau7LlPNpqbvhTVe2a1C74rw0iurPuJIBAbhn7AD0u0q4F+aJG8
+	 H5HJE4C3Pkzxe93HGvrMHT352G5m31xd+DTMv3M5FjQVka6guH1/8CyOQ6124U6yjdLmiLT2wnVI
+	 rz54xqcXRjRL3v9WvtRYA+/Fcmp5x0X2SvjVvVfgh2qcpQsoQ6xqOW/LPbLv4xQFaQGqWlqf3Fa7
+	 4YToBChTCecAk2TSnO9hSId6HVLS30t/nhVqGfpxnW6QuVQNjPpsoVJ84DTZwnlAYZLKFBHQ==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/siw: Reuse value read using READ_ONCE instead of re-reading it
+Date: Sat,  9 Mar 2024 20:27:16 +0800
+X-OQ-MSGID: <20240309122717.54920-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-net-v11-8-eb99b76e4a21@outlook.com>
-References: <20240309-net-v11-0-eb99b76e4a21@outlook.com>
-In-Reply-To: <20240309-net-v11-0-eb99b76e4a21@outlook.com>
-To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
- Salil Mehta <salil.mehta@huawei.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709987182; l=6571;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=Xjv8gzL6GSUrM4to0ifxUGjtBEHMNbtOR85LYYa8BQw=;
- b=9czE6UmwhxRd7txod+z/bHyHJdM/QWSKRiG7qVoubBs/b+0xK4yIVbj2jTGXiGt6Kw09RH1im
- JPiTHXrKt3IAizOrG8JTHld1r6mvbeSE/U3aL15xcILIrob88dRDhAy
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received:
- by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: <forbidden405@outlook.com>
+Content-Transfer-Encoding: 8bit
 
-From: Yang Xiwen <forbidden405@outlook.com>
+In siw_orqe_start_rx, the orqe's flag in the if condition is read using
+READ_ONCE, checked, and then re-read, voiding all guarantees of the
+checks. Reuse the value that was read by READ_ONCE to ensure the
+consistency of the flags throughout the function.
 
-Register the sub MDIO bus if it is found. Also implement the internal
-PHY reset procedure as needed.
-
-Note it's unable to put the MDIO bus node outside of MAC controller
-(i.e. at the same level in the parent bus node). Because we need to
-control all clocks and resets in FEMAC driver due to the phy reset
-procedure. So the clocks can't be assigned to MDIO bus device, which is
-an essential resource for the MDIO bus to work.
-
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+Signed-off-by: linke li <lilinke99@qq.com>
 ---
- drivers/net/ethernet/hisilicon/hisi_femac.c | 73 +++++++++++++++++++++++------
- 1 file changed, 59 insertions(+), 14 deletions(-)
+ drivers/infiniband/sw/siw/siw_qp_rx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index 9bf4beba7987..e873a4140a62 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -10,8 +10,10 @@
- #include <linux/etherdevice.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- 
-@@ -97,6 +99,13 @@ enum phy_reset_delays {
- 	DELAYS_NUM,
- };
- 
-+enum clk_type {
-+	CLK_MAC,
-+	CLK_MACIF,
-+	CLK_PHY,
-+	CLK_NUM,
-+};
-+
- struct hisi_femac_queue {
- 	struct sk_buff **skb;
- 	dma_addr_t *dma_phys;
-@@ -108,7 +117,7 @@ struct hisi_femac_queue {
- struct hisi_femac_priv {
- 	void __iomem *port_base;
- 	void __iomem *glb_base;
--	struct clk *clk;
-+	struct clk_bulk_data *clks;
- 	struct reset_control *mac_rst;
- 	struct reset_control *phy_rst;
- 	u32 phy_reset_delays[DELAYS_NUM];
-@@ -116,6 +125,7 @@ struct hisi_femac_priv {
- 
- 	struct device *dev;
- 	struct net_device *ndev;
-+	struct platform_device *mdio_pdev;
- 
- 	struct hisi_femac_queue txq;
- 	struct hisi_femac_queue rxq;
-@@ -693,6 +703,7 @@ static const struct net_device_ops hisi_femac_netdev_ops = {
- static void hisi_femac_core_reset(struct hisi_femac_priv *priv)
+diff --git a/drivers/infiniband/sw/siw/siw_qp_rx.c b/drivers/infiniband/sw/siw/siw_qp_rx.c
+index ed4fc39718b4..f5f69de56882 100644
+--- a/drivers/infiniband/sw/siw/siw_qp_rx.c
++++ b/drivers/infiniband/sw/siw/siw_qp_rx.c
+@@ -740,6 +740,7 @@ static int siw_orqe_start_rx(struct siw_qp *qp)
  {
- 	reset_control_assert(priv->mac_rst);
-+	usleep_range(200, 300);
- 	reset_control_deassert(priv->mac_rst);
- }
+ 	struct siw_sqe *orqe;
+ 	struct siw_wqe *wqe = NULL;
++	u16 orqe_flags;
  
-@@ -712,6 +723,10 @@ static void hisi_femac_sleep_us(u32 time_us)
+ 	if (unlikely(!qp->attrs.orq_size))
+ 		return -EPROTO;
+@@ -748,7 +749,8 @@ static int siw_orqe_start_rx(struct siw_qp *qp)
+ 	smp_mb();
  
- static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- {
-+	/* MAC clock must be disabled before PHY reset
-+	 */
-+	clk_disable(priv->clks[CLK_MAC].clk);
-+	clk_disable(priv->clks[CLK_MACIF].clk);
- 	/* To make sure PHY hardware reset success,
- 	 * we must keep PHY in deassert state first and
- 	 * then complete the hardware reset operation
-@@ -727,6 +742,9 @@ static void hisi_femac_phy_reset(struct hisi_femac_priv *priv)
- 	reset_control_deassert(priv->phy_rst);
- 	/* delay some time to ensure later MDIO access */
- 	hisi_femac_sleep_us(priv->phy_reset_delays[POST_DELAY]);
-+
-+	clk_enable(priv->clks[CLK_MAC].clk);
-+	clk_enable(priv->clks[CLK_MACIF].clk);
- }
- 
- static void hisi_femac_port_init(struct hisi_femac_priv *priv)
-@@ -768,11 +786,12 @@ static void hisi_femac_port_init(struct hisi_femac_priv *priv)
- static int hisi_femac_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *node = dev->of_node;
-+	struct device_node *node = dev->of_node, *mdio_np;
- 	struct net_device *ndev;
- 	struct hisi_femac_priv *priv;
- 	struct phy_device *phy;
- 	int ret;
-+	bool mdio_registered = false;
- 
- 	ndev = alloc_etherdev(sizeof(*priv));
- 	if (!ndev)
-@@ -797,17 +816,16 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		goto out_free_netdev;
- 	}
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(dev, "failed to get clk\n");
--		ret = -ENODEV;
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &priv->clks);
-+	if (ret < 0 || ret != CLK_NUM) {
-+		dev_err(dev, "failed to get clk bulk: %d\n", ret);
- 		goto out_free_netdev;
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
- 	if (ret) {
--		dev_err(dev, "failed to enable clk %d\n", ret);
--		goto out_free_netdev;
-+		dev_err(dev, "failed to enable clk bulk: %d\n", ret);
-+		goto out_disable_clk;
- 	}
- 
- 	priv->mac_rst = devm_reset_control_get(dev, "mac");
-@@ -830,11 +848,29 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 		hisi_femac_phy_reset(priv);
- 	}
- 
-+	// Register the optional MDIO bus
-+	for_each_available_child_of_node(node, mdio_np) {
-+		if (of_node_name_prefix(mdio_np, "mdio")) {
-+			priv->mdio_pdev = of_platform_device_create(mdio_np, NULL, dev);
-+			of_node_put(mdio_np);
-+			if (!priv->mdio_pdev) {
-+				dev_err(dev, "failed to register MDIO bus device\n");
-+				ret = -ENODEV;
-+				goto out_disable_clk;
-+			}
-+			mdio_registered = true;
-+			break;
-+		}
-+	}
-+
-+	if (!mdio_registered)
-+		dev_warn(dev, "MDIO subnode not found. This is usually a bug.\n");
-+
- 	phy = of_phy_get_and_connect(ndev, node, hisi_femac_adjust_link);
- 	if (!phy) {
- 		dev_err(dev, "connect to PHY failed!\n");
- 		ret = -ENODEV;
--		goto out_disable_clk;
-+		goto out_unregister_mdio_bus;
- 	}
- 
- 	phy_attached_print(phy, "phy_id=0x%.8lx, phy_mode=%s\n",
-@@ -885,8 +921,10 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- out_disconnect_phy:
- 	netif_napi_del(&priv->napi);
- 	phy_disconnect(phy);
-+out_unregister_mdio_bus:
-+	platform_device_unregister(priv->mdio_pdev);
- out_disable_clk:
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- out_free_netdev:
- 	free_netdev(ndev);
- 
-@@ -902,7 +940,8 @@ static void hisi_femac_drv_remove(struct platform_device *pdev)
- 	unregister_netdev(ndev);
- 
- 	phy_disconnect(ndev->phydev);
--	clk_disable_unprepare(priv->clk);
-+	platform_device_unregister(priv->mdio_pdev);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 	free_netdev(ndev);
- }
- 
-@@ -919,7 +958,7 @@ static int hisi_femac_drv_suspend(struct platform_device *pdev,
- 		netif_device_detach(ndev);
- 	}
- 
--	clk_disable_unprepare(priv->clk);
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- 
- 	return 0;
- }
-@@ -928,8 +967,14 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- {
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct hisi_femac_priv *priv = netdev_priv(ndev);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable clk bulk: %d\n", ret);
-+		return ret;
-+	}
- 
--	clk_prepare_enable(priv->clk);
- 	if (priv->phy_rst)
- 		hisi_femac_phy_reset(priv);
- 
-
+ 	orqe = orq_get_current(qp);
+-	if (READ_ONCE(orqe->flags) & SIW_WQE_VALID) {
++	orqe_flags = READ_ONCE(orqe->flags);
++	if (orqe_flags & SIW_WQE_VALID) {
+ 		/* RRESP is a TAGGED RDMAP operation */
+ 		wqe = rx_wqe(&qp->rx_tagged);
+ 		wqe->sqe.id = orqe->id;
+@@ -756,7 +758,7 @@ static int siw_orqe_start_rx(struct siw_qp *qp)
+ 		wqe->sqe.sge[0].laddr = orqe->sge[0].laddr;
+ 		wqe->sqe.sge[0].lkey = orqe->sge[0].lkey;
+ 		wqe->sqe.sge[0].length = orqe->sge[0].length;
+-		wqe->sqe.flags = orqe->flags;
++		wqe->sqe.flags = orqe_flags;
+ 		wqe->sqe.num_sge = 1;
+ 		wqe->bytes = orqe->sge[0].length;
+ 		wqe->processed = 0;
 -- 
-2.43.0
+2.39.3 (Apple Git-146)
+
 
