@@ -1,46 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF394F894
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 21:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028651021
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 21:02:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710018170; cv=none; b=nAugUe2KIeJCiq/GuHdWzoWA/99SVAIrCGmgG7GnyBul2Uwe4KiCE5v7ohwpc5IuZaEujk7hLYB9D2kbQrk7a0oKq8PYoiSTt3dInsRnkEkUvq62r2EZap01q3WfWDg5XT+C/3gZLH76qmtwozUydb0ckhdaxVv9B8/TBbovs5k=
+	t=1710018171; cv=none; b=ZhCpIECpOTeg5FVb7/sGWndUsIS+WkHsoB8mHifxcuZnQ33zeACuGaV/oiowMER8BMBb3GZBRhZHB4JAgk0z7ruxPd2S2SpDtpoKSY4CmZDFsBfAMekBwYZFlX2hn9aAdkCy1sNUugqE7pPxLtuw/DbxY1cTswpDiy4+lxQfCaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710018170; c=relaxed/simple;
-	bh=uJpLDwjkc8LDuvivXlw+JgOZ/QjkKCgt3QbWl797as4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWy78IdOv45wZqBOaSgg1Lf8Sc42Uui8rVdJFptvihUH+jBkH8IQqPPNH2FRvxzCroDrqrAjXkLCeKjm3TEWTxfRfFUGHzzv2qB+tDjKkyEKPkecDXhqSRs/kl0kfTpXkDAXXFzZPSuQHDHvPU2VqXW8TzDpE8HqP6zsYuEnZ9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZkJHojhO; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1710018171; c=relaxed/simple;
+	bh=l1JZHNfw4NSUSsC+y2v9OCYY6Ndd0+Cz/FPtWPxp0a4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BHlGQ6XvxnRkeqh6cvA/uM8UnHoLUiGfauK8Vw3HkRpIby5edKeP+84inQbCT0k3IhZgWeE04mDrMuAsqNKkOc1bDGJ/R1Xs51DWTXkpmHnB01ObdYtTM8VeJmkAH1hbVPlb0FgzsbuQygJ+K5hO9QMax4GTkhRNcF6lKAb20hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q8nwSujk; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZkJHojhO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q8nwSujk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710018169; x=1741554169;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uJpLDwjkc8LDuvivXlw+JgOZ/QjkKCgt3QbWl797as4=;
-  b=ZkJHojhOS6jmHqzXvCejshW/uRSh92c7v7QJ1RjKFypr8k8xuLG7uXzA
-   Gz6+5lBaeyVqhsV0/QOLFQz4uHKkFhKqc6H4lk8x5qz/1YQko+cbbiWLI
-   Ce5n79Kk3atm7fhZGlhhvaQhwTt2zeyAkGLM3wL713Mvr05uE0JpJAFSs
-   zuGunppsj4yBFoldgj7oX82Z/uQr9Cpsxm6fo8Pj4VpHCvHg7n7fmMsib
-   T0JO/LWqD6nxKKjD0/FSNuyoF2V2MSkBzbXiqofZxVHius2j0ogwxf5et
-   YTe6t3Ytd1T4At8TXNWD0++WAmSs3RZy1ZgWXfeg8711Uq3hwNDjf1EIc
+  t=1710018170; x=1741554170;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=l1JZHNfw4NSUSsC+y2v9OCYY6Ndd0+Cz/FPtWPxp0a4=;
+  b=Q8nwSujkO18uW3ickIbrqqgoycyV614yNkdxSB0H0py42jFedVQIuN4/
+   n5lttgOuqCe+qxxCj+XuzqNlFiyDwFsxCJtTYTy/q5rvo0swYthoYmw3x
+   AP1YwnSOaoxj+Jg3mcpKOvNzj2PyeMMroSOY3hojFSbg7QNVB/FoDKWz0
+   9Ka5BOHaKAjOrFeR5R0V9uh2e5EsIlngVqwJjrWPDPIv/RZ0UKS5Y5M38
+   mBFzN5sv23h07xXDCXmMcHmiSIxLlrQiUjCvS3TQuPHgBxQEPOLKR1+fi
+   IE5T6Xi+DR1+8TewqLgUwRddFILFNmUkbgeRzOHufRLfftrWtzZMiynO2
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4861568"
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4861582"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="4861568"
+   d="scan'208";a="4861582"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 13:02:46 -0800
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 13:02:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="937048391"
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="937048395"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="937048391"
+   d="scan'208";a="937048395"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2024 13:02:43 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 2D0FD193; Sat,  9 Mar 2024 23:02:42 +0200 (EET)
+	id 48B5536D; Sat,  9 Mar 2024 23:02:42 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -54,10 +55,12 @@ Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 0/4] Adjust TD settings on boot
-Date: Sat,  9 Mar 2024 23:02:26 +0200
-Message-ID: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 2/4] x86/tdx: Rename tdx_parse_tdinfo() to tdx_setup()
+Date: Sat,  9 Mar 2024 23:02:28 +0200
+Message-ID: <20240309210230.239045-3-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
+References: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,24 +69,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adjust TD setting on boot:
+Rename tdx_parse_tdinfo() to tdx_setup() and move setting NOTIFY_ENABLES
+there.
 
-  - Disable EPT violation #VE on private memory if TD can
-    control it;
+The function will be extended to adjust TD configuration.
 
-  - Enable virtualization of topology-related CPUID leafs
-    X2APIC_APICID MSR;
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/coco/tdx/tdx.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Kirill A. Shutemov (4):
-  x86/tdx: Introduce tdg_vm_wr()
-  x86/tdx: Rename tdx_parse_tdinfo() to tdx_setup()
-  x86/tdx: Handle PENDING_EPT_VIOLATION_V2
-  x86/tdx: Enable ENUM_TOPOLOGY
-
- arch/x86/coco/tdx/tdx.c           | 117 ++++++++++++++++++++++++++----
- arch/x86/include/asm/shared/tdx.h |  21 +++++-
- 2 files changed, 123 insertions(+), 15 deletions(-)
-
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 5ffe5ef99536..afdaf46cabb9 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -181,7 +181,7 @@ static void __noreturn tdx_panic(const char *msg)
+ 		__tdx_hypercall(&args);
+ }
+ 
+-static void tdx_parse_tdinfo(u64 *cc_mask)
++static void tdx_setup(u64 *cc_mask)
+ {
+ 	struct tdx_module_args args = {};
+ 	unsigned int gpa_width;
+@@ -206,6 +206,9 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
+ 	gpa_width = args.rcx & GENMASK(5, 0);
+ 	*cc_mask = BIT_ULL(gpa_width - 1);
+ 
++	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
++	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
++
+ 	/*
+ 	 * The kernel can not handle #VE's when accessing normal kernel
+ 	 * memory.  Ensure that no #VE will be delivered for accesses to
+@@ -930,11 +933,11 @@ void __init tdx_early_init(void)
+ 	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+ 
+ 	cc_vendor = CC_VENDOR_INTEL;
+-	tdx_parse_tdinfo(&cc_mask);
+-	cc_set_mask(cc_mask);
+ 
+-	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
+-	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
++	/* Configure the TD */
++	tdx_setup(&cc_mask);
++
++	cc_set_mask(cc_mask);
+ 
+ 	/*
+ 	 * All bits above GPA width are reserved and kernel treats shared bit
 -- 
 2.43.0
 
