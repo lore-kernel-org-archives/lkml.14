@@ -1,76 +1,78 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-251-66.mail.qq.com (out203-205-251-66.mail.qq.com [203.205.251.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52431BDF4
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 14:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30F71BDF4;
+	Sat,  9 Mar 2024 14:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709993346; cv=none; b=OsWBgRvzmKet/UoarWUYWSfkExhf0zPP0ii028g+NCZj231WxvD73hUB+JW5r0SJNIDkmE40+Pd5INlGlbcCQCN3UxbzHsnosisxqaSfyDD4Nwc/J/eq/K+dYps6e/SafY9LeVuJ4mzLNUXPDfPcAyQQAhmvteSS2L3W1SaO7nM=
+	t=1709993445; cv=none; b=mjQD+QxRmCFXWqVKmn+YTXs5YtggaW0ZLQP21EK4rdxzamcUBcicbbYdNL2SCskIpNtK9eys86XeKd4ik/9/Ygj5tOKPICbLeDA1bwy3KFOjlG4rVA6qoZypa1d+dLVS5dKD1ZxNs60FLP4Meok+hNAdPbNoIYtURcdxr2kvuOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709993346; c=relaxed/simple;
-	bh=2+frEfNY9kCZ1DL3xeqyryfAD6b5yyHATCqZqM5CrB8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=SNFKfUCcJYdi1nJ8kZCS7BNHpiwmJMpLm61F4mfvIuccgzbF7Ws//zjKoEiFjDQgX9Q2spsl7JFrskIaMzK76Z9Oql+PltA5/oG06lM8tKOvuG1oqQeMLgR/MbIufbjE5+Pb9bk0CptsR82BkTNttsBuWGDGL1efWgPAqp1/A+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c84b3570cfso299467639f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 06:09:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709993344; x=1710598144;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2LGzq8t2cO0APm/rv1jJdipgtRW0jr2Ew9T+G34Z8Vk=;
-        b=tWUHI/rMi4ZxS5jV+Y8hd6J99l9Dnk2VM97wt2QQCIQ3rMP2lbQRslzZAbyeAPBtG6
-         FMRgf4rZR2x8dSpabiAHaVwKhtA26rkKLrYLSVbyEzV1RKDzDY04JQNlrvUvyaJlJVgs
-         5dDJ7U+mXAZ/j2HUKUWqV8gTPF2L3HbqU+cnSiCLcIa/GbFYi5t2X1CCpwSq4khpG5bg
-         UQ64EaVKRO4SPzZjMez3wbOjMDtEBvcI/4vWvbyweL39ev2CY2k5KZwdLp11TFyozGe4
-         GcAbN8Fdzl8eaAa000RHD8fueBmFECqFw3Q+pEEv2b0cJm10khVK89g1PQED9YSsu1lM
-         tFJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKW3s8pAqSbJcWFvmDb7PJEZbYppIACXvv6MJCmhwpdVjFrN+1BGkfRZrAYg52gdKSHPKIAVTZraHhpkBk3q+e8xKE4kTqBCtAFv2K
-X-Gm-Message-State: AOJu0YxkNRlH2dYcnK0hwLUd7heo019iVkDDD4nZZVEcCV78aDIV1y6n
-	5pP8Moo+//TRM/GVhEUPZuz0Wt/mxYgUdO9ASSUoJZY4VTcV6/yUKmldla9t+SeHjbzXEgYOECo
-	G+CTKOF5LUppyl2Y9fnTS8iUiNWpBBcBbBC5UUN6/jAxG3sOyThjRzc0=
-X-Google-Smtp-Source: AGHT+IEwvoaxIjpkkmAaqdrdf8pyKru+spENnqat1cc0Qzw8RLRm6Fge27YlG5LX18apnrqnwtvO3b/C7CB8oBa7ib0ryoatqXZ2
+	s=arc-20240116; t=1709993445; c=relaxed/simple;
+	bh=maIUddBIRkixT08jMamIHlx6Ic+Z9RInYiboQrgEs6s=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=M5ZW5IQu8fLVq4khRcqyTeIIg2DJH5OUnhIBzMAr28EjKv7SvJTw8LWh8EEjYqtvKkSZhfTfT5VEhQzCoKDjIN3C6ZoQUdx/9N7V6WNvF4EVo86ym7mwUj21OCNlohjt81TrD1tzflf1Jbhn6Y00wT8mHQL7MnQO4fHZvARA+ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=JVzGrDL2; arc=none smtp.client-ip=203.205.251.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JVzGrDL2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709993133; bh=maIUddBIRkixT08jMamIHlx6Ic+Z9RInYiboQrgEs6s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JVzGrDL29LVUN/yydIMy2NGYJM2EyEidTzZUQ0gLqzXXou8Q5yqxWOrqNPBKdRg88
+	 B2FT+CGmxVvktX5dmAjqqDZrq8rN12bQix1RdgxW5tmLqNFN25WH9/BkxZOJ5r+dxU
+	 2aLqKL4x/K9n+t0bmYsmRg4MRzILDT5IcBPkqYes=
+Received: from localhost.localdomain ([58.213.8.163])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id EC3A729C; Sat, 09 Mar 2024 21:59:03 +0800
+X-QQ-mid: xmsmtpt1709992743tsey328q4
+Message-ID: <tencent_4E77E34FDA2F438430621DF220620A882407@qq.com>
+X-QQ-XMAILINFO: NiAdzfE16ND4bolk1M35OWX6STXNtKuQPLdhDd/JkFmdm5wIJTCi649pCSKM8M
+	 5uyPE9F9cX+lpf9GA+o4h+QfDkgnSsXsQrWD3WmXxTno2qDQAyxX4p4c4PqbM5ZIj6FIqwwrzNYx
+	 XrwPrsCxHmZa5dPWRvDQnXlg0XYblyTTjeI0SzPbd7K/okRDzEDS93pLksKWsnewPRINUck8iTyz
+	 ps7efNFJGutn7vybZyaXRmdpX73/ltUA4j2RFeEygGbobECdsB/13h78gf5vYe5eWXhx4GBp36y4
+	 9DeBui7+MRVQDqjV31MykaWxSJ/8gelC4nOws1ga9zJrhVwCc9SdpiIBmJxKd16PCFyFpgOP+0j2
+	 6NVlqeB9PKmR0pSFc7h0JaLZsqHgZU7Ry5IRuw49uP/qmejY5tWusbBSconD+h9bydyupHyQVAd/
+	 AUzNG3JwUc0v3kLet5PfGlw+xxpAws20DHk9kcWZh0XD99UgzrbE4RNkPJmgtG7BSMs+4iw8SDoM
+	 3hod25UGk+B2SqahuPz3QYj/XDBEGUc4dmZVYoA6hYLkZQNZlZfeFdAUTyIckoTNqzXuAzn8vJjC
+	 uAnsrM/EX6tHqaes5olJtXuAm7kmh4KN766ygYLQN4vkrI+Vg96gUM4VJnFMznPEZaovwok8/h0N
+	 tJnt6/GsVuCYTarATR3e7b2EQpaMWFGAI5bPTiEXgjA5zFVf209u3qHqpRr0xuLi64yyV9APzRQs
+	 r5Cl8HH9Gm+J//3AmzfdF73DvjTgdvef/GD+SyBCTqfE52aR3tvBTayPfMKLeC85gqOUf/4x6FAL
+	 6qVI3l4Tm88xGAYaZ4bk1z4f1Sl54r2AcpaZ73N5Wb3gyFSInWIx0vcqR03keRitC1NW4hHK9BWQ
+	 lskAKk4rzevAtuqkugS2GsJYyA92BvHJdOz12Qi2iFZTv8tirxaLHI7WOwUw4tz7avx8GlpTBtDJ
+	 eaGuVmFgbfLgkZ3guPoCh7sZjMuT0aiERUF6bm4JpQfYhBaJfNK8FDoqViI0qeA2RNQQ478e1FPQ
+	 fPFZ06eg==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: linke li <lilinke99@qq.com>
+To: edumazet@google.com
+Cc: alexander@mihalicyn.com,
+	davem@davemloft.net,
+	dhowells@redhat.com,
+	kuba@kernel.org,
+	kuniyu@amazon.com,
+	leitao@debian.org,
+	lilinke99@qq.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	willemb@google.com,
+	wuyun.abel@bytedance.com
+Subject: Re: [PATCH] net: mark racy access on sk->sk_rcvbuf
+Date: Sat,  9 Mar 2024 21:59:02 +0800
+X-OQ-MSGID: <20240309135902.57126-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <CANn89iJRXjYTojFyHN6s1Qu9Vkkk6RwxPF=bAKPjOg9zT-GupA@mail.gmail.com>
+References: <CANn89iJRXjYTojFyHN6s1Qu9Vkkk6RwxPF=bAKPjOg9zT-GupA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1654:b0:476:d5dc:b729 with SMTP id
- a20-20020a056638165400b00476d5dcb729mr79848jat.4.1709993344002; Sat, 09 Mar
- 2024 06:09:04 -0800 (PST)
-Date: Sat, 09 Mar 2024 06:09:03 -0800
-In-Reply-To: <000000000000f250a605ec981d41@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d682ec06133ad9d2@google.com>
-Subject: Re: [syzbot] [reiserfs?] possible deadlock in mnt_want_write_file
-From: syzbot <syzbot+1047e42179f502f2b0a2@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, hdanton@sina.com, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+> OK, but what about __sock_queue_rcv_skb() in the same file ?
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+I notice that, but I am not very sure whether there is a data race. If it
+is a similar situation, then the same patch should be applied too.
 
-    fs: Block writes to mounted block devices
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164f208e180000
-start commit:   ac865f00af29 Merge tag 'pci-v6.7-fixes-2' of git://git.ker..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=655f8abe9fe69b3b
-dashboard link: https://syzkaller.appspot.com/bug?extid=1047e42179f502f2b0a2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116d8055e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15687d81e80000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
