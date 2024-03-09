@@ -1,226 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841250A93
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 21:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAE64AEE8;
+	Sat,  9 Mar 2024 21:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710018171; cv=none; b=riBcCCodN6eU4ZTgmDeNwBMqGMJrmDC3TlofCuzupmWje/CW43L4yVc2tG8lkBcF/meWEhpnPF+dPBPfnhWWDJl8TiuMwj+jaeJGrLy1BIbzjlTtpoktWaUfEDe6UiHJ7EWseQo6TGw1kWwaGE8c1Xv/sSE8CpitTC/bWTSGD14=
+	t=1710018652; cv=none; b=ZGtzZK+Lxo7qPSQ2ge/TEDGVyTp1s2rhc0L3bQ5XOo8F1w+IVUu6Eku6L8gVq6FRx0DC8JNUowFCglaEUkx8MRTpWbCjmKBM22QhembCP1pCHFazOJrveuuq8qxWS2aoGsRZezr3N7RJK6MUp1UcA46MwkrWxMxg3q7xDOy3iJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710018171; c=relaxed/simple;
-	bh=3UzLr7/RRaafFrtH5Z2p+MKstcMcwEJZRIwJsFMEBdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lgxTlMf4dda4wIHU/5MtdeYEtd237WwH7EzUKC9Hekpv4PAjYnnA6KKZcKOxrzaUro0lGWv+396VeL9tjTcMMPSqwlbXU/hCH6WPfgfpqHnLGWfqd/TZ+L9dgpBR1Cfg4D+o5bbgq0EoRaikwsG0Ar5/RI1SuBq5bbt7iT3L3MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=atKwgKfz; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1710018652; c=relaxed/simple;
+	bh=Rl7tD8xxzur5fGawhrLhrE5uAeLD7c995cPg+u795XM=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=afADBVGLXI+7tPYxqGtfGg3HYyANeooXO/rXLRmc+gfiCM+Zy1eK06ZwdSFksZdfhFurM5tIrVwCLGm2sSrWVXYGmPvKzVrGZJfO18j9p3eg/G4baJJ8ZUc6E0Rv4dmRqc/WM1eihdeRik2iWBVA39g2HPQ5sWxzt6Sxcl5SjkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EB+VOcDl; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="atKwgKfz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EB+VOcDl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710018170; x=1741554170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3UzLr7/RRaafFrtH5Z2p+MKstcMcwEJZRIwJsFMEBdg=;
-  b=atKwgKfzB/DGy3HBRN3aiGZvUSq9nxqDVPsIP/XgfPHbvm1S3Ct2yXzL
-   j7sW0rjjS/tCaAPRln9VInOFTofplPg0iWcxBpEvgsveBuYWW4OKcv1IB
-   Dw8eLbAAq1+ey+om3eYl12rua3zfvG6D6NGgrkuh9aSzv8eYiBDyVUUmp
-   Amn8PBmCOcefTErR4K/hCvfzVpy4t0NHUrpCCYp9QkZTZmelvHcVCGIYi
-   3iis03+heq/viv0tD+0Ay6ygphuOJeiQRE3A+98wsDkOkfqstRR7dnicK
-   PmlcBidPUnvoNltTvtdyrieitzxWfw65DVhSALrCCe/XGNNgxa+qilknV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4861575"
+  t=1710018651; x=1741554651;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=Rl7tD8xxzur5fGawhrLhrE5uAeLD7c995cPg+u795XM=;
+  b=EB+VOcDldo4hFjbBn4xV1XdKU3Rzn+84+B6jXe91Y/DOUKBPij4HHrVn
+   9XgUZaeJWrxQymzScqfxsgA/v4K9LLyn23vS5Gsu7pNOtCpGUuy1EpRNo
+   U1ILElCOHG7pnQ/n2HEJgeemmO3q/tmtMQlAr9TV8PSQcbBFHZWQWbXM0
+   GAqFxzkVmQifgmtxM2O9F8A7LzFAV91Ji9SCq0gKihpo1m17uzYdIGPrM
+   gAYnUTtcYLZ6NivK9MwthUO/XfoDU/ObbonzRXhoSm6oey0mk9vKFcr54
+   mthR1hLSY1aZ7S1hL9XkiG4qbiAd4I6aZNM09IuuMjWSw1pvy3x6GJmjh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4900907"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="4861575"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 13:02:47 -0800
+   d="scan'208";a="4900907"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 13:10:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="937048393"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="937048393"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2024 13:02:43 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 56733377; Sat,  9 Mar 2024 23:02:42 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@intel.com
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
-	hpa@zytor.com,
-	seanjc@google.com,
-	ele.reshetova@intel.com,
-	rick.p.edgecombe@intel.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 3/4] x86/tdx: Handle PENDING_EPT_VIOLATION_V2
-Date: Sat,  9 Mar 2024 23:02:29 +0200
-Message-ID: <20240309210230.239045-4-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
-References: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
+   d="scan'208";a="11215621"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 09 Mar 2024 13:10:47 -0800
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: =?iso-8859-15?Q?Michal_Koutn=FD?= <mkoutny@suse.com>, "Haitao Huang"
+ <haitao.huang@linux.intel.com>
+Cc: jarkko@kernel.org, dave.hansen@linux.intel.com, tj@kernel.org,
+ linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org,
+ cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ hpa@zytor.com, sohil.mehta@intel.com, tim.c.chen@linux.intel.com,
+ zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
+ zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
+ yangjie@microsoft.com, chrisyan@microsoft.com
+Subject: Re: [PATCH v9 04/15] x86/sgx: Implement basic EPC misc cgroup
+ functionality
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-5-haitao.huang@linux.intel.com>
+ <7u3intene6yvlkuks5bix3tx27wog3da6ki5w2l5flaod5mjrq@flgmfdd4fbei>
+ <op.2jtkxougwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+Date: Sat, 09 Mar 2024 15:10:44 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: Quoted-Printable
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2kdw36otwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <op.2jtkxougwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-PENDING_EPT_VIOLATION_V2 allows TD to control whether access to
-a pending page triggers #VE.
+On Tue, 27 Feb 2024 15:35:38 -0600, Haitao Huang  =
 
-Kernel doesn't want to see any #VEs on accesses to private memory:
-disable such #VEs.
+<haitao.huang@linux.intel.com> wrote:
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/coco/tdx/tdx.c           | 66 ++++++++++++++++++++++++++++---
- arch/x86/include/asm/shared/tdx.h | 18 ++++++++-
- 2 files changed, 78 insertions(+), 6 deletions(-)
+> On Mon, 26 Feb 2024 12:25:58 -0600, Michal Koutn=FD <mkoutny@suse.com>=
+  =
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index afdaf46cabb9..d9ea82f8772d 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -77,6 +77,17 @@ static inline void tdcall(u64 fn, struct tdx_module_args *args)
- 		panic("TDCALL %lld failed (Buggy TDX module!)\n", fn);
- }
- 
-+static inline u64 tdg_vm_rd(u64 field)
-+{
-+	struct tdx_module_args args = {
-+		.rdx = field,
-+	};
-+
-+	tdcall(TDG_VM_RD, &args);
-+
-+	return args.r8;
-+}
-+
- static inline u64 tdg_vm_wr(u64 field, u64 value, u64 mask)
- {
- 	struct tdx_module_args args = {
-@@ -91,6 +102,17 @@ static inline u64 tdg_vm_wr(u64 field, u64 value, u64 mask)
- 	return args.r8;
- }
- 
-+static inline u64 tdg_sys_rd(u64 field)
-+{
-+	struct tdx_module_args args = {
-+		.rdx = field,
-+	};
-+
-+	tdcall(TDG_SYS_RD, &args);
-+
-+	return args.r8;
-+}
-+
- /**
-  * tdx_mcall_get_report0() - Wrapper to get TDREPORT0 (a.k.a. TDREPORT
-  *                           subtype 0) using TDG.MR.REPORT TDCALL.
-@@ -185,7 +207,8 @@ static void tdx_setup(u64 *cc_mask)
- {
- 	struct tdx_module_args args = {};
- 	unsigned int gpa_width;
--	u64 td_attr;
-+	u64 td_attr, features;
-+	bool sept_ve_disabled;
- 
- 	/*
- 	 * TDINFO TDX module call is used to get the TD execution environment
-@@ -206,19 +229,52 @@ static void tdx_setup(u64 *cc_mask)
- 	gpa_width = args.rcx & GENMASK(5, 0);
- 	*cc_mask = BIT_ULL(gpa_width - 1);
- 
-+	td_attr = args.rdx;
-+
- 	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
- 	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
- 
-+	features = tdg_sys_rd(TDCS_TDX_FEATURES0);
-+
- 	/*
- 	 * The kernel can not handle #VE's when accessing normal kernel
- 	 * memory.  Ensure that no #VE will be delivered for accesses to
- 	 * TD-private memory.  Only VMM-shared memory (MMIO) will #VE.
-+	 *
-+	 * Check if the TD is created with SEPT #VE disabled.
- 	 */
--	td_attr = args.rdx;
--	if (!(td_attr & ATTR_SEPT_VE_DISABLE)) {
--		const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
-+	sept_ve_disabled = td_attr & ATTR_SEPT_VE_DISABLE;
- 
--		/* Relax SEPT_VE_DISABLE check for debug TD. */
-+	/*
-+	 * Check if flexible control of SEPT #VE is supported.
-+	 *
-+	 * The check consists of verifying if the feature is supported by the
-+	 * TDX module (the TDX_FEATURES0 check) and if the feature is enabled
-+	 * for this TD (CONFIG_FLAGS check).
-+	 *
-+	 * If flexible control is supported, disable SEPT #VE.
-+	 *
-+	 * Disable SEPT #VE regardless of ATTR_SEPT_VE_DISABLE status as
-+	 * flexible control allows software running before the kernel to
-+	 * enable it.
-+	 *
-+	 * Skip SEPT disabling for debug TD. SEPT #VE is unsafe but can be
-+	 * useful for debugging to produce a stack trace. Known to be useful
-+	 * for debugging unaccepted memory problems.
-+	 */
-+	if (features & TDX_FEATURES0_PENDING_EPT_VIOLATION_V2 &&
-+	    (tdg_vm_rd(TDCS_CONFIG_FLAGS) & TDCS_CONFIG_FLEXIBLE_PENDING_VE) &&
-+	    !(td_attr & ATTR_DEBUG)) {
-+		tdg_vm_wr(TDCS_TD_CTLS,
-+			  TD_CTLS_PENDING_VE_DISABLE,
-+			  TD_CTLS_PENDING_VE_DISABLE);
-+		sept_ve_disabled = true;
-+	}
-+
-+	if (!sept_ve_disabled) {
-+		const char *msg = "TD misconfiguration: SEPT #VE has to be disabled";
-+
-+		/* Relax SEPT #VE disable check for debug TD. */
- 		if (td_attr & ATTR_DEBUG)
- 			pr_warn("%s\n", msg);
- 		else
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index fdfd41511b02..29a61c72e4dd 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -16,11 +16,27 @@
- #define TDG_VP_VEINFO_GET		3
- #define TDG_MR_REPORT			4
- #define TDG_MEM_PAGE_ACCEPT		6
-+#define TDG_VM_RD			7
- #define TDG_VM_WR			8
-+#define TDG_SYS_RD			11
- 
--/* TDCS fields. To be used by TDG.VM.WR and TDG.VM.RD module calls */
-+/* TDX Global Metadata. To be used by TDG.SYS.RD */
-+#define TDCS_TDX_FEATURES0		0x0A00000300000008
-+
-+/* TDX TD-Scope Metadata. To be used by TDG.VM.WR and TDG.VM.RD */
-+#define TDCS_CONFIG_FLAGS		0x1110000300000016
-+#define TDCS_TD_CTLS			0x1110000300000017
- #define TDCS_NOTIFY_ENABLES		0x9100000000000010
- 
-+/* TDCS_TDX_FEATURES0 bits */
-+#define TDX_FEATURES0_PENDING_EPT_VIOLATION_V2	BIT_ULL(16)
-+
-+/* TDCS_CONFIG_FLAGS bits */
-+#define TDCS_CONFIG_FLEXIBLE_PENDING_VE	BIT_ULL(1)
-+
-+/* TDCS_TD_CTLS bits */
-+#define TD_CTLS_PENDING_VE_DISABLE	BIT_ULL(0)
-+
- /* TDX hypercall Leaf IDs */
- #define TDVMCALL_MAP_GPA		0x10001
- #define TDVMCALL_GET_QUOTE		0x10002
--- 
-2.43.0
+> wrote:
+>
+>> On Mon, Feb 05, 2024 at 01:06:27PM -0800, Haitao Huang  =
 
+>> <haitao.huang@linux.intel.com> wrote:
+>>> +static int sgx_epc_cgroup_alloc(struct misc_cg *cg);
+>>> +
+>>> +const struct misc_res_ops sgx_epc_cgroup_ops =3D {
+>>> +	.alloc =3D sgx_epc_cgroup_alloc,
+>>> +	.free =3D sgx_epc_cgroup_free,
+>>> +};
+>>> +
+>>> +static void sgx_epc_misc_init(struct misc_cg *cg, struct  =
+
+>>> sgx_epc_cgroup *epc_cg)
+>>> +{
+>>> +	cg->res[MISC_CG_RES_SGX_EPC].priv =3D epc_cg;
+>>> +	epc_cg->cg =3D cg;
+>>> +}
+>>
+>> This is a possibly a nit pick but I share it here for consideration.
+>>
+>> Would it be more prudent to have the signature like
+>>   alloc(struct misc_res *res, struct misc_cg *cg)
+>> so that implementations are free of the assumption of how cg and res =
+are
+>> stored?
+>>
+>>
+>> Thanks,
+>> Michal
+>
+> Will do.
+>
+> Thanks
+> Haitao
+>
+Actually, because the root node is initialized in sgx_cgroup_init(), whi=
+ch  =
+
+only has access to misc_cg_root() so we can't pass a misc_res struct  =
+
+without knowing cg->res relationship. We could hide it with a getter, bu=
+t  =
+
+I think it's a little overkill at the moment. I can sign up for adding  =
+
+this improvement if we feel it needed in future.
+
+Thanks
+Haitao
