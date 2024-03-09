@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89C9482F2;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6366C4D9F0;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008149; cv=none; b=PCq0W9cWwkREvTODWj651lrymdGAZvYWRM9yCcyiWTj6tqY8GEbZfgB7Iq20Qu3NTVtPs4DGDaBVsh6URFGgyQcuxsLiOgxm8bYl6+8ePOZ29XkK+4Y7QIM35G8fA+ZUN6udaWA8QjNkbLyISbCl+qIr+k7/fhmzAUy71ipf1ZE=
+	t=1710008150; cv=none; b=hgmr0zmInLQTCi/vcskcIKGPJJSz+h6pGnJ1kC5ub+3R0heVZtbctaTIX+EzgiL/i3qX2wC0QpTyZw5Fyx51cNAyi8ESOAmSlpY4tjsOS2bepIKXvUsjA31001j6JZH/Vp09PXbUzzIHEZ4Yj3rAFCDeMMaYqLaX0bK1NhUTFtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710008149; c=relaxed/simple;
-	bh=ccnZgOwY1jkyca6OhwzD6VymL5dCHHkW+dD8YxfUWbw=;
+	s=arc-20240116; t=1710008150; c=relaxed/simple;
+	bh=oteOorL3FqzdofvOQQ1VXiLXazZ8X7yRtPyx+uh5rEU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I2YhS1g+BrEaDP1t5/tHiZ6W8k1JGcv6kGz9QIsn3SbBbMTA04cv1vwMOm5SODDUMku8S9Hj17dhpHPxiciyuVkrERq9RqqxqbU0xxb/XAS98ldxzh3hEYlr+M4I4fTnFxlL/m12jZgOoLSooVh8DfyKfCX3sxr+LchNF+SDhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gi1tlyhZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=luhQ2stbMJTnjvO1RKnENTm34Hk+rdb8hMEMM9q74VJ9hrC6X92Wbjk1ouFbVBM7O2ZEpe8XAi7FV76MBMR1KArBSM1aXwcuLHOx6kaa5NQFVJ9s2zpjcy1i/Hy34gRbDb6jhkDnUcsgViw2DBPKVATEl38GgMektmR7JYlBKH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Whi9m4oH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gi1tlyhZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 99BE2C32786;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Whi9m4oH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C782C4AF4F;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710008149;
-	bh=ccnZgOwY1jkyca6OhwzD6VymL5dCHHkW+dD8YxfUWbw=;
+	s=k20201202; t=1710008150;
+	bh=oteOorL3FqzdofvOQQ1VXiLXazZ8X7yRtPyx+uh5rEU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gi1tlyhZ1isfM+haYAjTR5aLVqgxM4B2YwaM5GTikHCYwoeFNAx8aH7U7qwONASi+
-	 Vk9eSWWbOXO9bvNjljbdFelKyIBjF+4oe+Jg24/jS7x48KeC5rUsnKAuDDwY2vvYZs
-	 3QOqTw/s3eZ3qKReCt77wsAispEiLEhAgbZYtGR2UIVDN2XZnuwQEMxYkcXEDCJdft
-	 FbZ1OQ8WUENKN2vKafsFT7WCT7Gn1/oKhmPPbandxnc0Ou1LFNDqybn5vt+Of35kKu
-	 /0F7Owpb1LcTpICi9YQU2bGiQR2byc/i1BVHspFxcnx+Ttp0ZU75kIVd9L/YJER0Mw
-	 b/j0FCwAKtKJA==
+	b=Whi9m4oHq9aoMjaQ2vkvVB7pn6w8IyzvFIFmFc6+iGNxgFrPM6i0AHMkJWDU2QMj9
+	 fpjn8g5Elb7NC1VTqSYkvdyWVXSjUF53nX0R8x/x6okTi1s1F7ysDbaoL+wN1/bRmZ
+	 lsCBGuNRz6VedTKSbAOF67M3OLn9nm+06mNXB9NIPAMeVp5FnmB7isYB9jnp4pJDLU
+	 Znwet0NDo/cMVmwDKqm1VeSOpQ4WWbXMaJJ1N3PVXURx3YzvWQQwzr5yIyFVI9TlRb
+	 XVgTI4WyIhsk+ztGerjNFLtaVcdUEiQ5iz23TH/oj8VEtHFOCe4lti0mXy3PIyjQ50
+	 Wzo+6xJYYrcEQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB71C54E60;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B482C54E67;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:37 +0100
-Subject: [PATCH v2 16/28] sparc32: Drop use of sparc_config
+Date: Sat, 09 Mar 2024 19:15:46 +0100
+Subject: [PATCH v2 25/28] sparc32: Drop config SPARC_LEON
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-16-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-25-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=12323;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=4537;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=3BhApwMXzvQRblfivTnthdg/BJ1WNfDQm/+oYxhgcG0=; =?utf-8?q?b=3DCEYh6Q/CTzTZ?=
- =?utf-8?q?GWrQj3PHlVCYJwCgY7l1w8JGUcNed3SAKDXH8lwkjZcJN65IIkwFFKU7Q9wOafhR?=
- ZTV8XR6MDLJ59obPswBz3G8vckWlT8wAPjtBbN9ldMuSRP9+H479
+ bh=x6fXD2u/meCzQH4Fww92bNdCJhGF0eHHgImzcjy0qVw=; =?utf-8?q?b=3D4WBva/PWjmdJ?=
+ =?utf-8?q?st11SBptKR3dL87dHQCXr0uhIFn93aC/c/9NlqVcAA9f+FQYRUNpDOqO68S8h/uq?=
+ npyYFl9UDrfM2at7pFHFk0WL6vGFOsZyIwzjfMahgGKRmYKyh4PM
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,374 +70,149 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-sparc_config were used to handle the differences between the machines.
-With only LEON supported sparc_config is no longer required.
-
-Refactor the time code a litte as some parts are obsolete and other
-parts are only used when SMP is not enabled.
+The only supported sparc32 CPU is LEON, so there is no need for a
+config option to select it.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Arnd Bergmann <arnd@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> #For the USB stuff
+Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
 ---
- arch/sparc/include/asm/timer_32.h |  1 +
- arch/sparc/kernel/irq.h           | 37 +++-------------------
- arch/sparc/kernel/irq_32.c        |  3 --
- arch/sparc/kernel/leon_kernel.c   | 27 +++--------------
- arch/sparc/kernel/of_device_32.c  |  4 +--
- arch/sparc/kernel/time_32.c       | 64 +++++++++++++--------------------------
- 6 files changed, 33 insertions(+), 103 deletions(-)
+ arch/sparc/Kconfig                   | 27 +++++++++------------------
+ arch/sparc/configs/sparc32_defconfig |  1 -
+ drivers/usb/host/Kconfig             |  2 +-
+ drivers/usb/host/ehci-hcd.c          |  4 ++--
+ drivers/usb/host/uhci-hcd.c          |  2 +-
+ 5 files changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/arch/sparc/include/asm/timer_32.h b/arch/sparc/include/asm/timer_32.h
-index eecd2696922d..1cd89a99966f 100644
---- a/arch/sparc/include/asm/timer_32.h
-+++ b/arch/sparc/include/asm/timer_32.h
-@@ -17,6 +17,7 @@
- #include <asm/cpu_type.h>  /* For SUN4M_NCPUS */
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 19ee7bc0b2ea..e4e2548c1f1f 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -9,6 +9,10 @@ config 64BIT
  
- #define SBUS_CLOCK_RATE   2000000 /* 2MHz */
-+#define LEON_CLOCK_RATE   1000000
- #define TIMER_VALUE_SHIFT 9
- #define TIMER_VALUE_MASK  0x3fffff
- #define TIMER_LIMIT_BIT   (1 << 31)  /* Bit 31 in Counter-Timer register */
-diff --git a/arch/sparc/kernel/irq.h b/arch/sparc/kernel/irq.h
-index 0d9b740725b4..8a0b314c8299 100644
---- a/arch/sparc/kernel/irq.h
-+++ b/arch/sparc/kernel/irq.h
-@@ -44,38 +44,6 @@ struct sun4m_irq_global {
- extern struct sun4m_irq_percpu __iomem *sun4m_irq_percpu[SUN4M_NCPUS];
- extern struct sun4m_irq_global __iomem *sun4m_irq_global;
+ 	  Say yes to build a 64-bit kernel - formerly known as sparc64
+ 	  Say no to build a 32-bit kernel - formerly known as sparc
++	  The 32-bit kernel target the synthesizable LEON SPARC processor.
++	  LEON is a part of the GRLIB collection of IP cores that are
++	  distributed under GPL. GRLIB can be downloaded from www.gaisler.com.
++	  You can download a sparc-linux cross-compilation toolchain at www.gaisler.com.
  
--/* The following definitions describe the individual platform features: */
--#define FEAT_L10_CLOCKSOURCE (1 << 0) /* L10 timer is used as a clocksource */
--#define FEAT_L10_CLOCKEVENT  (1 << 1) /* L10 timer is used as a clockevent */
--#define FEAT_L14_ONESHOT     (1 << 2) /* L14 timer clockevent can oneshot */
--
--/*
-- * Platform specific configuration
-- * The individual platforms assign their platform
-- * specifics in their init functions.
-- */
--struct sparc_config {
--	void (*init_timers)(void);
--	unsigned int (*build_device_irq)(struct platform_device *op,
--	                                 unsigned int real_irq);
--
--	/* generic clockevent features - see FEAT_* above */
--	int features;
--
--	/* clock rate used for clock event timer */
--	int clock_rate;
--
--	/* one period for clock source timer */
--	unsigned int cs_period;
--
--	/* function to obtain offsett for cs period */
--	unsigned int (*get_cycles_offset)(void);
--
--	void (*clear_clock_irq)(void);
--	void (*load_profile_irq)(int cpu, unsigned int limit);
--};
--extern struct sparc_config sparc_config;
--
- unsigned int irq_alloc(unsigned int real_irq, unsigned int pil);
- void irq_link(unsigned int irq);
- void irq_unlink(unsigned int irq);
-@@ -89,6 +57,11 @@ void sun4m_nmi(struct pt_regs *regs);
- /* sun4d_irq.c */
- void sun4d_handler_irq(unsigned int pil, struct pt_regs *regs);
+ config SPARC
+ 	bool
+@@ -62,6 +66,10 @@ config SPARC32
+ 	select HAVE_UID16
+ 	select LOCK_MM_AND_FIND_VMA
+ 	select OLD_SIGACTION
++	select USB_EHCI_BIG_ENDIAN_MMIO
++	select USB_EHCI_BIG_ENDIAN_DESC
++	select USB_UHCI_BIG_ENDIAN_MMIO
++	select USB_UHCI_BIG_ENDIAN_DESC
+ 	select ZONE_DMA
  
-+/* leon_kernel.c */
-+void leon_clear_clock_irq(void);
-+void leon_load_profile_irq(int cpu, unsigned int limit);
-+u32 leon_cycles_offset(void);
-+
- #ifdef CONFIG_SMP
+ config SPARC64
+@@ -344,22 +352,6 @@ config SERIAL_CONSOLE
  
- /* All SUN4D IPIs are sent on this IRQ, may be shared with hard IRQs */
-diff --git a/arch/sparc/kernel/irq_32.c b/arch/sparc/kernel/irq_32.c
-index a6af08fce796..f76f57073323 100644
---- a/arch/sparc/kernel/irq_32.c
-+++ b/arch/sparc/kernel/irq_32.c
-@@ -24,9 +24,6 @@
- #include "kernel.h"
- #include "irq.h"
+ 	  If unsure, say N.
  
--/* platform specific irq setup */
--struct sparc_config sparc_config;
+-config SPARC_LEON
+-	bool "Sparc Leon processor family"
+-	depends on SPARC32
+-	select USB_EHCI_BIG_ENDIAN_MMIO
+-	select USB_EHCI_BIG_ENDIAN_DESC
+-	select USB_UHCI_BIG_ENDIAN_MMIO
+-	select USB_UHCI_BIG_ENDIAN_DESC
+-	help
+-	  If you say Y here if you are running on a SPARC-LEON processor.
+-	  The LEON processor is a synthesizable VHDL model of the
+-	  SPARC-v8 standard. LEON is  part of the GRLIB collection of
+-	  IP cores that are distributed under GPL. GRLIB can be downloaded
+-	  from www.gaisler.com. You can download a sparc-linux cross-compilation
+-	  toolchain at www.gaisler.com.
 -
- unsigned long arch_local_irq_save(void)
- {
- 	unsigned long retval;
-diff --git a/arch/sparc/kernel/leon_kernel.c b/arch/sparc/kernel/leon_kernel.c
-index ea04bad6a118..fa9cdaffdc6b 100644
---- a/arch/sparc/kernel/leon_kernel.c
-+++ b/arch/sparc/kernel/leon_kernel.c
-@@ -237,12 +237,6 @@ unsigned int leon_build_device_irq(unsigned int real_irq,
- 	return irq;
- }
+-if SPARC_LEON
+ menu "U-Boot options"
  
--static unsigned int _leon_build_device_irq(struct platform_device *op,
--					   unsigned int real_irq)
--{
--	return leon_build_device_irq(real_irq, handle_simple_irq, "edge", 0);
--}
--
- void leon_update_virq_handling(unsigned int virq,
- 			      irq_flow_handler_t flow_handler,
- 			      const char *name, int do_ack)
-@@ -258,7 +252,7 @@ void leon_update_virq_handling(unsigned int virq,
- 	irq_set_chip_data(virq, (void *)mask);
- }
+ config UBOOT_LOAD_ADDR
+@@ -390,7 +382,6 @@ config UBOOT_ENTRY_ADDR
+ 	 Kernel.
  
--static u32 leon_cycles_offset(void)
-+u32 leon_cycles_offset(void)
- {
- 	u32 rld, val, ctrl, off;
+ endmenu
+-endif
  
-@@ -312,14 +306,6 @@ void __init leon_init_timers(void)
- 	u32 config;
- 	u32 ctrl;
+ endmenu
  
--	sparc_config.get_cycles_offset = leon_cycles_offset;
--	sparc_config.cs_period = 1000000 / HZ;
--	sparc_config.features |= FEAT_L10_CLOCKSOURCE;
--
--#ifndef CONFIG_SMP
--	sparc_config.features |= FEAT_L10_CLOCKEVENT;
--#endif
--
- 	leondebug_irq_disable = 0;
- 	leon_debug_irqout = 0;
- 	master_l10_counter = (u32 __iomem *)&dummy_master_l10_counter;
-@@ -434,7 +420,7 @@ void __init leon_init_timers(void)
- 	err = request_irq(irq, leon_percpu_timer_ce_interrupt,
- 			  IRQF_PERCPU | IRQF_TIMER, "timer", NULL);
- #else
--	irq = _leon_build_device_irq(NULL, leon3_gptimer_irq);
-+	irq = leon_build_device_irq(leon3_gptimer_irq, handle_simple_irq, "edge", 0);
- 	err = request_irq(irq, timer_interrupt, IRQF_TIMER, "timer", NULL);
+@@ -412,7 +403,7 @@ config SUN_LDOMS
+ 
+ config LEON_PCI
+ 	bool
+-	depends on PCI && SPARC_LEON
++	depends on PCI && SPARC32
+ 	default y
+ 
+ config SPARC_GRPCI1
+diff --git a/arch/sparc/configs/sparc32_defconfig b/arch/sparc/configs/sparc32_defconfig
+index 71273fc578bf..dfd326f20876 100644
+--- a/arch/sparc/configs/sparc32_defconfig
++++ b/arch/sparc/configs/sparc32_defconfig
+@@ -10,7 +10,6 @@ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_RD_ZSTD is not set
+ CONFIG_SMP=y
+ CONFIG_HZ_100=y
+-CONFIG_SPARC_LEON=y
+ CONFIG_SUN_OPENPROMFS=y
+ CONFIG_SUN_OPENPROMIO=y
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 4448d0ab06f0..c5f94c70482f 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -595,7 +595,7 @@ config USB_UHCI_HCD
+ 
+ config USB_UHCI_SUPPORT_NON_PCI_HC
+ 	bool
+-	default y if (SPARC_LEON || USB_UHCI_PLATFORM)
++	default y if (SPARC32 || USB_UHCI_PLATFORM)
+ 
+ config USB_UHCI_PLATFORM
+ 	bool
+diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+index 802bfafb1012..5011bc8348bb 100644
+--- a/drivers/usb/host/ehci-hcd.c
++++ b/drivers/usb/host/ehci-hcd.c
+@@ -1329,7 +1329,7 @@ MODULE_LICENSE ("GPL");
+ #include "ehci-xilinx-of.c"
  #endif
- 	if (err) {
-@@ -453,7 +439,7 @@ void __init leon_init_timers(void)
- 	return;
- }
  
--static void leon_clear_clock_irq(void)
-+void leon_clear_clock_irq(void)
- {
- 	u32 ctrl;
- 
-@@ -462,7 +448,7 @@ static void leon_clear_clock_irq(void)
- 			      ctrl & leon3_gptimer_ackmask);
- }
- 
--static void leon_load_profile_irq(int cpu, unsigned int limit)
-+void leon_load_profile_irq(int cpu, unsigned int limit)
- {
- }
- 
-@@ -485,9 +471,4 @@ void leon_enable_irq_cpu(unsigned int irq_nr, unsigned int cpu)
- 
- void __init leon_init_IRQ(void)
- {
--	sparc_config.init_timers      = leon_init_timers;
--	sparc_config.build_device_irq = _leon_build_device_irq;
--	sparc_config.clock_rate       = 1000000;
--	sparc_config.clear_clock_irq  = leon_clear_clock_irq;
--	sparc_config.load_profile_irq = leon_load_profile_irq;
- }
-diff --git a/arch/sparc/kernel/of_device_32.c b/arch/sparc/kernel/of_device_32.c
-index 06012e68bdca..ddb3b197d5e4 100644
---- a/arch/sparc/kernel/of_device_32.c
-+++ b/arch/sparc/kernel/of_device_32.c
-@@ -358,7 +358,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
- 		op->archdata.num_irqs = len / sizeof(struct linux_prom_irqs);
- 		for (i = 0; i < op->archdata.num_irqs; i++)
- 			op->archdata.irqs[i] =
--			    sparc_config.build_device_irq(op, intr[i].pri);
-+			    leon_build_device_irq(intr[i].pri, handle_simple_irq, "edge", 0);
- 	} else {
- 		const unsigned int *irq =
- 			of_get_property(dp, "interrupts", &len);
-@@ -367,7 +367,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
- 			op->archdata.num_irqs = len / sizeof(unsigned int);
- 			for (i = 0; i < op->archdata.num_irqs; i++)
- 				op->archdata.irqs[i] =
--				    sparc_config.build_device_irq(op, irq[i]);
-+				    leon_build_device_irq(irq[i], handle_simple_irq, "edge", 0);
- 		} else {
- 			op->archdata.num_irqs = 0;
- 		}
-diff --git a/arch/sparc/kernel/time_32.c b/arch/sparc/kernel/time_32.c
-index 848404610b86..e6a2cb444777 100644
---- a/arch/sparc/kernel/time_32.c
-+++ b/arch/sparc/kernel/time_32.c
-@@ -44,6 +44,7 @@
- #include <asm/idprom.h>
- #include <asm/page.h>
- #include <asm/irq_regs.h>
-+#include <asm/leon.h>
- #include <asm/setup.h>
- 
- #include "kernel.h"
-@@ -88,10 +89,10 @@ irqreturn_t notrace timer_interrupt(int dummy, void *dev_id)
- 	if (timer_cs_enabled) {
- 		write_seqlock(&timer_cs_lock);
- 		timer_cs_internal_counter++;
--		sparc_config.clear_clock_irq();
-+		leon_clear_clock_irq();
- 		write_sequnlock(&timer_cs_lock);
- 	} else {
--		sparc_config.clear_clock_irq();
-+		leon_clear_clock_irq();
- 	}
- 
- 	if (timer_ce_enabled)
-@@ -100,6 +101,7 @@ irqreturn_t notrace timer_interrupt(int dummy, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+#ifndef CONFIG_SMP
- static int timer_ce_shutdown(struct clock_event_device *evt)
- {
- 	timer_ce_enabled = 0;
-@@ -128,24 +130,10 @@ static __init void setup_timer_ce(void)
- 	ce->tick_resume = timer_ce_set_periodic;
- 	ce->cpumask  = cpu_possible_mask;
- 	ce->shift    = 32;
--	ce->mult     = div_sc(sparc_config.clock_rate, NSEC_PER_SEC,
--	                      ce->shift);
-+	ce->mult     = div_sc(LEON_CLOCK_RATE, NSEC_PER_SEC, ce->shift);
- 	clockevents_register_device(ce);
- }
--
--static unsigned int sbus_cycles_offset(void)
--{
--	u32 val, offset;
--
--	val = sbus_readl(master_l10_counter);
--	offset = (val >> TIMER_VALUE_SHIFT) & TIMER_VALUE_MASK;
--
--	/* Limit hit? */
--	if (val & TIMER_LIMIT_BIT)
--		offset += sparc_config.cs_period;
--
--	return offset;
--}
-+#endif
- 
- static u64 timer_cs_read(struct clocksource *cs)
- {
-@@ -156,11 +144,11 @@ static u64 timer_cs_read(struct clocksource *cs)
- 		seq = read_seqbegin(&timer_cs_lock);
- 
- 		cycles = timer_cs_internal_counter;
--		offset = sparc_config.get_cycles_offset();
-+		offset = leon_cycles_offset();
- 	} while (read_seqretry(&timer_cs_lock, seq));
- 
- 	/* Count absolute cycles */
--	cycles *= sparc_config.cs_period;
-+	cycles *= LEON_CLOCK_RATE / HZ;
- 	cycles += offset;
- 
- 	return cycles;
-@@ -177,7 +165,7 @@ static struct clocksource timer_cs = {
- static __init int setup_timer_cs(void)
- {
- 	timer_cs_enabled = 1;
--	return clocksource_register_hz(&timer_cs, sparc_config.clock_rate);
-+	return clocksource_register_hz(&timer_cs, LEON_CLOCK_RATE);
- }
- 
- #ifdef CONFIG_SMP
-@@ -185,7 +173,7 @@ static int percpu_ce_shutdown(struct clock_event_device *evt)
- {
- 	int cpu = cpumask_first(evt->cpumask);
- 
--	sparc_config.load_profile_irq(cpu, 0);
-+	leon_load_profile_irq(cpu, 0);
- 	return 0;
- }
- 
-@@ -193,7 +181,7 @@ static int percpu_ce_set_periodic(struct clock_event_device *evt)
- {
- 	int cpu = cpumask_first(evt->cpumask);
- 
--	sparc_config.load_profile_irq(cpu, SBUS_CLOCK_RATE / HZ);
-+	leon_load_profile_irq(cpu, SBUS_CLOCK_RATE / HZ);
- 	return 0;
- }
- 
-@@ -203,7 +191,7 @@ static int percpu_ce_set_next_event(unsigned long delta,
- 	int cpu = cpumask_first(evt->cpumask);
- 	unsigned int next = (unsigned int)delta;
- 
--	sparc_config.load_profile_irq(cpu, next);
-+	leon_load_profile_irq(cpu, next);
- 	return 0;
- }
- 
-@@ -212,9 +200,6 @@ void register_percpu_ce(int cpu)
- 	struct clock_event_device *ce = &per_cpu(sparc32_clockevent, cpu);
- 	unsigned int features = CLOCK_EVT_FEAT_PERIODIC;
- 
--	if (sparc_config.features & FEAT_L14_ONESHOT)
--		features |= CLOCK_EVT_FEAT_ONESHOT;
--
- 	ce->name           = "percpu_ce";
- 	ce->rating         = 200;
- 	ce->features       = features;
-@@ -224,10 +209,9 @@ void register_percpu_ce(int cpu)
- 	ce->set_next_event = percpu_ce_set_next_event;
- 	ce->cpumask        = cpumask_of(cpu);
- 	ce->shift          = 32;
--	ce->mult           = div_sc(sparc_config.clock_rate, NSEC_PER_SEC,
--	                            ce->shift);
--	ce->max_delta_ns   = clockevent_delta2ns(sparc_config.clock_rate, ce);
--	ce->max_delta_ticks = (unsigned long)sparc_config.clock_rate;
-+	ce->mult           = div_sc(LEON_CLOCK_RATE, NSEC_PER_SEC, ce->shift);
-+	ce->max_delta_ns   = clockevent_delta2ns(LEON_CLOCK_RATE, ce);
-+	ce->max_delta_ticks = (unsigned long)LEON_CLOCK_RATE;
- 	ce->min_delta_ns   = clockevent_delta2ns(100, ce);
- 	ce->min_delta_ticks = 100;
- 
-@@ -326,26 +310,20 @@ fs_initcall(clock_init);
- 
- static void __init sparc32_late_time_init(void)
- {
--	if (sparc_config.features & FEAT_L10_CLOCKEVENT)
--		setup_timer_ce();
--	if (sparc_config.features & FEAT_L10_CLOCKSOURCE)
--		setup_timer_cs();
-+#ifndef CONFIG_SMP
-+	setup_timer_ce();
-+#endif
-+	setup_timer_cs();
-+
- #ifdef CONFIG_SMP
- 	register_percpu_ce(smp_processor_id());
+-#ifdef CONFIG_SPARC_LEON
++#ifdef CONFIG_SPARC32
+ #include "ehci-grlib.c"
  #endif
- }
  
--static void __init sbus_time_init(void)
--{
--	sparc_config.get_cycles_offset = sbus_cycles_offset;
--	sparc_config.init_timers();
--}
--
- void __init time_init(void)
- {
--	sparc_config.features = 0;
- 	late_time_init = sparc32_late_time_init;
+@@ -1343,7 +1343,7 @@ static struct platform_driver * const platform_drivers[] = {
+ #ifdef CONFIG_XPS_USB_HCD_XILINX
+ 	&ehci_hcd_xilinx_of_driver,
+ #endif
+-#ifdef CONFIG_SPARC_LEON
++#ifdef CONFIG_SPARC32
+ 	&ehci_grlib_driver,
+ #endif
+ };
+diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
+index fd2408b553cf..7cb820963988 100644
+--- a/drivers/usb/host/uhci-hcd.c
++++ b/drivers/usb/host/uhci-hcd.c
+@@ -846,7 +846,7 @@ static const char hcd_name[] = "uhci_hcd";
+ #define	PCI_DRIVER		uhci_pci_driver
+ #endif
  
--	sbus_time_init();
-+	leon_init_timers();
- }
- 
+-#ifdef CONFIG_SPARC_LEON
++#ifdef CONFIG_SPARC32
+ #include "uhci-grlib.c"
+ #define PLATFORM_DRIVER		uhci_grlib_driver
+ #endif
 
 -- 
 2.34.1
