@@ -1,73 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B3C10A34;
-	Sat,  9 Mar 2024 04:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8D11EB39;
+	Sat,  9 Mar 2024 04:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709959373; cv=none; b=kp5iJy+E5FyRlZ774gnOKNJRrEAqZSLGmJhFKQY/QedM5qn47LZVl/aE2ik+VjLlEuiyQdlOgJtvxkEVNg+VO0I72D9TlAgQSUJs4mqUrXfbvj8fC01NvXVnDg5YoHJKG6O3w4HQp9paXJOgAVB6YuQiVX36abxR9Cped1PJkBI=
+	t=1709960030; cv=none; b=evzhjcx5zGq396HpEb+Och2A5/EEk/wrEfq2DbhLI4KbaHD4tlM3WM8dZ4FuXCVM+SI9uFUsc8dz/1WzkPo491+5TK5zG6ZGS1mBuufwDqm3auWsOs45V7gBRvPhyS3dZTay75kIqqFO4uU+4qbm2LHho+1TI8S2S0ZGLAeu7Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709959373; c=relaxed/simple;
-	bh=MhaUZkR+zHT+hBRKhEA6jXqVicUXERiCJ4v3T85N63k=;
-	h=Date:From:To:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Of2/JO5ZSLkVf2Fe8ZJEir+1JxnHor+nElJRSB5mnFPiFg6NL3GEo9/gaYLIEbjxF8TLDXvEg8V9WhtixwLZ1+M+PdH87axcXoor8dS99oE/zb1vGbc+udJn9nYFVTvTBPfWYT3e9xXFyfgUCSM4bPReL/WqPo35JklJO4Myvnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kQaZep7D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709960030; c=relaxed/simple;
+	bh=44jm/FoNGX3BH3KZJFA1CcHK0gJFNnX7Fjx+HPcXGRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u8/hD3V7ikXWK6+L6XIFZcc9ZM7ZCkEnThizyujf8CIP2dEjsfCJyW8zp1I6e5yIH7EoguRMR5x8am6O5Hv6BkTG4OMZRzr9ONcnsRTv0PmKkxGMNv1ZbtB9629/ObWr6n2OznI64bd/xbjEJ0dOh6YTcnqobyID092Zr8Pa2R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/eamJyD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kQaZep7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C07A0C433C7;
-	Sat,  9 Mar 2024 04:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1709959373;
-	bh=MhaUZkR+zHT+hBRKhEA6jXqVicUXERiCJ4v3T85N63k=;
-	h=Date:From:To:Subject:In-Reply-To:References:From;
-	b=kQaZep7DufDlD4TcCEwxPHIQAMTa96bO79yptDpP3N5v3iWWZkxor+tfKJuIWEekj
-	 MqtI70ZJA8OPobCIyL9ihOxfANdsavmfcDv2heioEqCnMReivT2VVU8Yhex+QxGJj4
-	 yXXitd/67pxge9M4JKqsp62/DnEX2x86iUVcIdRQ=
-Date: Fri, 8 Mar 2024 20:42:51 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Barry Song <21cnbao@gmail.com>, herbert@gondor.apana.org.au,
- chriscli@google.com, chrisl@kernel.org, ddstreet@ieee.org,
- linux-kernel@vger.kernel.org, sjenning@redhat.com,
- vitaly.wool@konsulko.com, Barry Song <v-songbaohua@oppo.com>,
- davem@davemloft.net, hannes@cmpxchg.org, linux-crypto@vger.kernel.org,
- linux-mm@kvack.org, zhouchengming@bytedance.com, nphamcs@gmail.com,
- yosryahmed@google.com
-Subject: Re: [PATCH v6 0/2] zswap: remove the memcpy if acomp is not
- sleepable
-Message-Id: <20240308204251.43d7e518ba95fb4ce22f8d4d@linux-foundation.org>
-In-Reply-To: <20240308203641.7fbe7e939b3483bd83b9769d@linux-foundation.org>
-References: <20240222081135.173040-1-21cnbao@gmail.com>
-	<CAGsJ_4wMGNDcgc3pqSUicYoH7Z_miczkT=uwZU+yhDF0fd57Rg@mail.gmail.com>
-	<20240308192334.845b27504a663ec8af4f2aad@linux-foundation.org>
-	<CAGsJ_4xSwNZmHN5GvipS-1kELX2NBwHxoGE=aG4sekm1LcYVPw@mail.gmail.com>
-	<20240308203641.7fbe7e939b3483bd83b9769d@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/eamJyD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48D4C433F1;
+	Sat,  9 Mar 2024 04:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709960029;
+	bh=44jm/FoNGX3BH3KZJFA1CcHK0gJFNnX7Fjx+HPcXGRA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u/eamJyDquIwExxXeNVq1f0H5ZdM/cTKeg7qv8fJX5j5FRtEd91RMf6FBG9iElrbJ
+	 4WRXaxEPMG1omabv5EQ/oLDB91zckAIhkcz6JSKvxWwCbSb1qgqgBj4l9oAkgkaTBE
+	 p+MWviN5NsJcElSlchtrQ11C5sjdgF0g54qPcx25D8fe1TSVp46iJZql8JYK/B294/
+	 AMm5t3NM/pVyynYVdbUtS0RnWxe5kPWA99tY1zhHbwZQum6dP2wma6KR3UukWjgLqj
+	 T6r7/vRaTH+LidyCqawZJ2GRb7iVAgxqTAkUcQsEyVnLmLHI+ij7rPKTRq6cBvvzpl
+	 DFLoJ7xSRC3eQ==
+Message-ID: <9ce73c04-ee8f-4aa5-ab15-c31dbe409401@kernel.org>
+Date: Fri, 8 Mar 2024 21:53:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/4] net: route: improve route hinting
+Content-Language: en-US
+To: Leone Fernando <leone4fernando@gmail.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, willemb@google.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240307171202.232684-1-leone4fernando@gmail.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20240307171202.232684-1-leone4fernando@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 8 Mar 2024 20:36:41 -0800 Andrew Morton <akpm@linux-foundation.org> wrote:
-
-> > Okay, I understand. Since this patch improves zswap's performance, I wanted
-> > it to be integrated sooner to contribute. However, I'm perfectly willing to
-> > respect your concerns and adhere to the community's best practices.
-> > 
+On 3/7/24 10:11 AM, Leone Fernando wrote:
+> In 2017, Paolo Abeni introduced the hinting mechanism [1] to the routing
+> sub-system. The hinting optimization improves performance by reusing
+> previously found dsts instead of looking them up for each skb.
 > 
-> OK.  I very much doubt if anyone is running those drivers on mm.git, so
-> adding it now isn't likely to hurt.
+> This patch series introduces a generalized version of the hinting mechanism that
+> can "remember" a larger number of dsts. This reduces the number of dst
+> lookups for frequently encountered daddrs.
 > 
-> So I'll merge it now and shall aim to get it upstream very late in the
-> next merge window.
+> Before diving into the code and the benchmarking results, it's important
+> to address the deletion of the old route cache [2] and why
+> this solution is different. The original cache was complicated,
+> vulnerable to DOS attacks and had unstable performance.
+> 
+> The new input dst_cache is much simpler thanks to its lazy approach,
+> improving performance without the overhead of the removed cache
+> implementation. Instead of using timers and GC, the deletion of invalid
+> entries is performed lazily during their lookups.
+> The dsts are stored in a simple, lightweight, static hash table. This
+> keeps the lookup times fast yet stable, preventing DOS upon cache misses.
+> The new input dst_cache implementation is built over the existing
+> dst_cache code which supplies a fast lockless percpu behavior.
+> 
+> I tested this patch using udp floods with different number of daddrs.
+> The benchmarking setup is comprised of 3 machines: a sender,
+> a forwarder and a receiver. I measured the PPS received by the receiver
+> as the forwarder was running either the mainline kernel or the patched
+> kernel, comparing the results. The dst_cache I tested in this benchmark
+> used a total of 512 hash table entries, split into buckets of 4
+> entries each.
+> 
+> These are the results:
+>   UDP             mainline              patched                   delta
+> conns pcpu         Kpps                  Kpps                       %
+>    1              274.0255              269.2205                  -1.75
+>    2              257.3748              268.0947                   4.17
+>   15              241.3513              258.8016                   7.23
+>  100              238.3419              258.4939                   8.46
+>  500              238.5390              252.6425                   5.91
+> 1000              238.7570              242.1820                   1.43
+> 2000              238.7780              236.2640                  -1.05
+> 4000              239.0440              233.5320                  -2.31
+> 8000              239.3248              232.5680                  -2.82
+> 
 
-Nope.  mm.git won't build without acomp_is_async().
-
-We can merge the zswap patch via the crypto tree.  Acked-by: me.
-
-Or please just resend the zswap change after 6.9-rc1 is released.
-
+I have looked at all of the sets sent. I can not convince myself this is
+a good idea, but at the same time I do not have constructive feedback on
+why it is not acceptable. The gains are modest at best.
 
