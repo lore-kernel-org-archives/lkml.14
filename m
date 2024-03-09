@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C794AEE9;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F914D107;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008150; cv=none; b=fZexB/Pk3CYg2f+JD5x4lDSG1cp05ZGHmRzTeMsDibW8MffAJy+vh2EHv5+60ByXHWq7QqWUy7DSkSYsbxtgpCKbh+LTTvXupoaHWGF0//s7r2EiewYh06yBtPsbtdrxXhfc9IEPOxK7AdE01l5d6QEzLBUyvslH4dwNRvao0lg=
+	t=1710008150; cv=none; b=nY6euu9Sfj7tTXPpr4zTxxn7nq1axktH8dE5tUtcw9zYdmccObE23rbLiVX780MdwtwGUd+fHX0uMrFmAQ+x6l1pE/oRdCfeglZbt/gzhW4t4DgWkY/iesiHJqBKIzGhdAauA57gf3xfLRCwwphNlzLz7y0mpBoz10p+uust93I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710008150; c=relaxed/simple;
-	bh=0VCXBiwzC90YjKNdUsX8kETQWPy1wB26/Mhwc19cjOA=;
+	bh=BvNju1OE+6FRwqV0DvIwNu34CFP55H0cXiwTnL0gzPI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WB+sGjronmR0zb0Vdi7hiPjmqtmf3sYD5QjrRXCNFrYCE/IKHwk1jE5VG5AQYrvqbbAhBcwmRwhK+wwoMHqgANzB8XldcjHpIi0PCkcbXaN+sdHt0mYc2Y/cOv1RE4XlweH0ev4smfuQ//ZiWp0RoW7uK2sG04sS/Iwghw26ZNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scyjuXY+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=e906XtCEREeVz76sXeli7TYqsBBdCsFIft701szryaTNYbY70WFiJ2bN/yNRPzFCubXZ+7RWpT3fS4mifVIpYcnlYx6KbffvShU/oG7SUdBgDi8fDTN+Lp0FyjHO6XhGaKKHBtNALFNVeqzCveh1k9wZMaraDqNL2ppVvIaHOmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeYY+RLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scyjuXY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D17B6C3278C;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeYY+RLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2160FC32799;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710008149;
-	bh=0VCXBiwzC90YjKNdUsX8kETQWPy1wB26/Mhwc19cjOA=;
+	s=k20201202; t=1710008150;
+	bh=BvNju1OE+6FRwqV0DvIwNu34CFP55H0cXiwTnL0gzPI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=scyjuXY+5+jdF3Ia8fPLEUCfN1VGsiKB+WAtUJ5My7vSkXAeEXaxY5ljr2bzof/LC
-	 a1I23bKcTnihbCbv5w+vcBjacwoMaOstiV6jA/8Pey0RtIN08ufv4ujdZNafRhSNao
-	 4rjvIeun6rnfj17Z11a7wj7EaB5NezlY+hwYJzI3+231SDRhll5Cj5FP8xz1azobIH
-	 3x5uTvaTgR5aF8Bo47sexumDMjF0HIRmlMlYB/BZmD82E1fdJCJgdzZpla3KA835Ye
-	 sn5SbgvjPjJfm0d1tO4hXd7py9YX2RN4ViufUuWmtohYLmA7XsNg4pq+XHl6P78gUI
-	 zFCS4X4OdwYLQ==
+	b=CeYY+RLKXXhNaA5ylQP3vWJh16aNHZbaHlUFeevsleY6Rf5jk74zI2oHXb19fjYS+
+	 UcEpOAxPlEAF2+mwHHNnOPuIrr6P2GHjcUhzKhO3NTaunLheEQ0SZX1ngveMI5o/s8
+	 fCAwzoS3zomrA6ux2xcmQWH95G+xpxnz7OgkQYqPs18KsVfj6FTM9PCKvNMg/XTJWw
+	 AmsUhi94g2HGoZer19onbcwpI+zRwgXuSMfvkSKQEbzfdvDYbSjzMTc5lvTijRAXg1
+	 Q8Nn7v409lM8KC5kRNZ8xc15mnvCMo883P4TFtEQbPLMwJ3lE4CR9s9w1ReBEYPZ26
+	 hOjoRWINmmn6A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FBC54E60;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1101DC54E63;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:40 +0100
-Subject: [PATCH v2 19/28] sparc32: Drop support for 7 register windows
+Date: Sat, 09 Mar 2024 19:15:44 +0100
+Subject: [PATCH v2 23/28] sparc32: Drop sun4m irq support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-19-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-23-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=15096;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=15242;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=i+m0W45prBw8L2Lt1MhAhMvAPieQsxfCpMmkDdh8Aro=; =?utf-8?q?b=3DijX07UaRDJ0B?=
- =?utf-8?q?6eVBid6NVDVJpiQmhzDDF77r3ESA7t9jpp60yWcOfc2fCMULYe2riEvoHKMFKZs5?=
- 3QZLHlDDC3PDfoLW9qV1Ct9n110CJVTM7lodk8iUUfdbsFDZck6m
+ bh=BJMQw/MAvj9DxR21k0BmhN7WQrsXoDNS9yIBTvOpOLw=; =?utf-8?q?b=3DzbueUpdpk7II?=
+ =?utf-8?q?GE4nKCDbs915Pu04tm5/+LXEuBay72vWBJWv5oPO/0G277XFExnMAjk6ss4mlgWb?=
+ bhIQXR3MC/BEzBX/RMVJ1Phip+W81YttceIOb0PHBqt7HfbMwCJf
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,473 +70,474 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-Some older SPARC CPUs had support for only 7 register windows.
-To support this run-time patching was used.
-
-LEON demand 8 register windows for use with Linux so
-there is no need to support the 7 window configuration.
-
-The complexity of the assembler code is reduced
-when dropping the run-time patching, thus increasing
-the maintainability.
+Drop all code used to support sun4m irqs.
+Update entry.S to call the leon_nmi function.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Arnd Bergmann <arnd@kernel.org>
 Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
 ---
- arch/sparc/include/asm/switch_to_32.h |  1 -
- arch/sparc/kernel/entry.S             | 28 ++++-----------
- arch/sparc/kernel/etrap_32.S          | 35 +++++--------------
- arch/sparc/kernel/head_32.S           | 65 -----------------------------------
- arch/sparc/kernel/rtrap_32.S          | 55 +++++++++++++----------------
- arch/sparc/kernel/wof.S               | 43 ++++++++---------------
- arch/sparc/kernel/wuf.S               | 20 +++--------
- 7 files changed, 57 insertions(+), 190 deletions(-)
+ arch/sparc/kernel/Makefile      |   1 -
+ arch/sparc/kernel/entry.S       |  29 ++---
+ arch/sparc/kernel/irq.h         |  46 +-------
+ arch/sparc/kernel/irq_32.c      |   6 +-
+ arch/sparc/kernel/kernel.h      |   4 -
+ arch/sparc/kernel/leon_kernel.c |  10 +-
+ arch/sparc/kernel/sun4m_irq.c   | 238 ----------------------------------------
+ 7 files changed, 23 insertions(+), 311 deletions(-)
 
-diff --git a/arch/sparc/include/asm/switch_to_32.h b/arch/sparc/include/asm/switch_to_32.h
-index 42eeafcb8a41..7aaaf31c09b4 100644
---- a/arch/sparc/include/asm/switch_to_32.h
-+++ b/arch/sparc/include/asm/switch_to_32.h
-@@ -37,7 +37,6 @@ extern struct thread_info *current_set[NR_CPUS];
+diff --git a/arch/sparc/kernel/Makefile b/arch/sparc/kernel/Makefile
+index 50d696c8a9d2..fd3d1ebfb1ea 100644
+--- a/arch/sparc/kernel/Makefile
++++ b/arch/sparc/kernel/Makefile
+@@ -28,7 +28,6 @@ obj-y                   += traps_$(BITS).o
  
- #define prepare_arch_switch(next) do { \
- 	__asm__ __volatile__( \
--	".globl\tflush_patch_switch\nflush_patch_switch:\n\t" \
- 	"save %sp, -0x40, %sp; save %sp, -0x40, %sp; save %sp, -0x40, %sp\n\t" \
- 	"save %sp, -0x40, %sp; save %sp, -0x40, %sp; save %sp, -0x40, %sp\n\t" \
- 	"save %sp, -0x40, %sp\n\t" \
+ # IRQ
+ obj-y                   += irq_$(BITS).o
+-obj-$(CONFIG_SPARC32)   += sun4m_irq.o
+ 
+ obj-y                   += process_$(BITS).o
+ obj-y                   += process.o
 diff --git a/arch/sparc/kernel/entry.S b/arch/sparc/kernel/entry.S
-index 18c67b4fb017..ea51a17ac3fc 100644
+index bbbf30c60f1c..3de018a44915 100644
 --- a/arch/sparc/kernel/entry.S
 +++ b/arch/sparc/kernel/entry.S
-@@ -384,11 +384,8 @@ do_flush_windows:
+@@ -427,36 +427,21 @@ setcc_trap_handler:
+ 	jmp	%l2		! advance over trap instruction
+ 	rett	%l2 + 0x4	! like this...
  
- 	RESTORE_ALL
- 
--	.globl	flush_patch_one
--
- 	/* We get these for debugging routines using __builtin_return_address() */
- dfw_kernel:
--flush_patch_one:
- 	FLUSH_ALL_KERNEL_WINDOWS
- 
- 	/* Advance over the trap instruction. */
-@@ -558,10 +555,9 @@ sys_rt_sigreturn:
- 	 * XXX code just like on sparc64... -DaveM
- 	 */
- 	.align	4
--	.globl	sys_fork, flush_patch_two
-+	.globl	sys_fork
- sys_fork:
- 	mov	%o7, %l5
--flush_patch_two:
- 	FLUSH_ALL_KERNEL_WINDOWS;
- 	ld	[%curptr + TI_TASK], %o4
- 	rd	%psr, %g4
-@@ -574,10 +570,9 @@ flush_patch_two:
- 	 mov	%l5, %o7
- 
- 	/* Whee, kernel threads! */
--	.globl	sys_clone, flush_patch_three
-+	.globl	sys_clone
- sys_clone:
- 	mov	%o7, %l5
--flush_patch_three:
- 	FLUSH_ALL_KERNEL_WINDOWS;
- 	ld	[%curptr + TI_TASK], %o4
- 	rd	%psr, %g4
-@@ -590,9 +585,8 @@ flush_patch_three:
- 	 mov	%l5, %o7
- 
- 	/* Whee, real vfork! */
--	.globl	sys_vfork, flush_patch_four
-+	.globl	sys_vfork
- sys_vfork:
--flush_patch_four:
- 	FLUSH_ALL_KERNEL_WINDOWS;
- 	ld	[%curptr + TI_TASK], %o4
- 	rd	%psr, %g4
-@@ -909,17 +903,7 @@ breakpoint_trap:
- #endif
- 
- 	.align	4
--	.globl	flush_patch_exception
--flush_patch_exception:
--	FLUSH_ALL_KERNEL_WINDOWS;
--	ldd	[%o0], %o6
--	jmpl	%o7 + 0xc, %g0			! see asm-sparc/processor.h
--	 mov	1, %g1				! signal EFAULT condition
--
--	.align	4
--	.globl	kill_user_windows, kuw_patch1_7win
--	.globl	kuw_patch1
--kuw_patch1_7win:	sll	%o3, 6, %o3
-+	.globl	kill_user_windows
- 
- 	/* No matter how much overhead this routine has in the worst
- 	 * case scenario, it is several times better than taking the
-@@ -939,11 +923,11 @@ kill_user_windows:
- 	be	4f				! yep, we are done
- 	 rd	%wim, %o3			! get current wim
- 	srl	%o3, 1, %o4			! simulate a save
--kuw_patch1:
-+kuw_next:
- 	sll	%o3, 7, %o3			! compute next wim
- 	or	%o4, %o3, %o3			! result
- 	andncc	%o0, %o3, %o0			! clean this bit in umask
--	bne	kuw_patch1			! not done yet
-+	bne	kuw_next			! not done yet
- 	 srl	%o3, 1, %o4			! begin another save simulation
- 	wr	%o3, 0x0, %wim			! set the new wim
- 	st	%g0, [%g6 + TI_UWINMASK]	! clear uwinmask
-diff --git a/arch/sparc/kernel/etrap_32.S b/arch/sparc/kernel/etrap_32.S
-index bb222459f097..95dfdea1f36c 100644
---- a/arch/sparc/kernel/etrap_32.S
-+++ b/arch/sparc/kernel/etrap_32.S
-@@ -30,18 +30,6 @@
- 	.text
- 	.align 4
- 
--	/* SEVEN WINDOW PATCH INSTRUCTIONS */
--	.globl	tsetup_7win_patch1, tsetup_7win_patch2
--	.globl	tsetup_7win_patch3, tsetup_7win_patch4
--	.globl	tsetup_7win_patch5, tsetup_7win_patch6
--tsetup_7win_patch1:	sll	%t_wim, 0x6, %t_wim
--tsetup_7win_patch2:	and	%g2, 0x7f, %g2
--tsetup_7win_patch3:	and	%g2, 0x7f, %g2
--tsetup_7win_patch4:	and	%g1, 0x7f, %g1
--tsetup_7win_patch5:	sll	%t_wim, 0x6, %t_wim
--tsetup_7win_patch6:	and	%g2, 0x7f, %g2
--	/* END OF PATCH INSTRUCTIONS */
--
- 	/* At trap time, interrupts and all generic traps do the
- 	 * following:
- 	 *
-@@ -72,9 +60,7 @@ tsetup_7win_patch6:	and	%g2, 0x7f, %g2
- 	 * trap pc and npc, and %l3 contains the trap time %wim.
- 	 */
- 
--	.globl	trap_setup, tsetup_patch1, tsetup_patch2
--	.globl	tsetup_patch3, tsetup_patch4
--	.globl	tsetup_patch5, tsetup_patch6
-+	.globl	trap_setup
- trap_setup:
- 	/* Calculate mask of trap window.  See if from user
- 	 * or kernel and branch conditionally.
-@@ -109,11 +95,10 @@ trap_setup_kernel_spill:
- 	 * %wim and go.
- 	 */
- 	 srl	%t_wim, 0x1, %g2	! begin computation of new %wim
--tsetup_patch1:
--	sll	%t_wim, 0x7, %t_wim	! patched on 7 window Sparcs
-+
-+	sll	%t_wim, 0x7, %t_wim
- 	or	%t_wim, %g2, %g2
--tsetup_patch2:
--	and	%g2, 0xff, %g2		! patched on 7 window Sparcs
-+	and	%g2, 0xff, %g2
- 
- 	save	%g0, %g0, %g0
- 
-@@ -185,8 +170,7 @@ trap_setup_from_user:
- 	 sub	%g2, 0x1, %g2
- 1:
- 	andn	%g2, %t_twinmask, %g2
--tsetup_patch3:
--	and	%g2, 0xff, %g2			! patched on 7win Sparcs
-+	and	%g2, 0xff, %g2
- 	st	%g2, [%curptr + TI_UWINMASK]	! store new umask
- 
- 	jmpl	%t_retpc + 0x8, %g0		! return to caller
-@@ -199,14 +183,11 @@ trap_setup_user_spill:
- 	 * is in %g1 upon entry to here.
- 	 */
- 
--tsetup_patch4:
--	and	%g1, 0xff, %g1		! patched on 7win Sparcs, mask
-+	and	%g1, 0xff, %g1
- 	srl	%t_wim, 0x1, %g2	! compute new %wim
--tsetup_patch5:
--	sll	%t_wim, 0x7, %t_wim	! patched on 7win Sparcs
-+	sll	%t_wim, 0x7, %t_wim
- 	or	%t_wim, %g2, %g2	! %g2 is new %wim
--tsetup_patch6:
--	and	%g2, 0xff, %g2		! patched on 7win Sparcs
-+	and	%g2, 0xff, %g2
- 	andn	%g1, %g2, %g1		! clear this bit in %g1
- 	st	%g1, [%curptr + TI_UWINMASK]
- 
-diff --git a/arch/sparc/kernel/head_32.S b/arch/sparc/kernel/head_32.S
-index 03dc232dd235..908c77cb456e 100644
---- a/arch/sparc/kernel/head_32.S
-+++ b/arch/sparc/kernel/head_32.S
-@@ -404,71 +404,6 @@ leon_init:
- 		wr	%g1, 0x0, %wim			! make window 1 invalid
- 		WRITE_PAUSE
- 
--		cmp	%g3, 0x7
--		bne	2f
--		 nop
--
--		/* Adjust our window handling routines to
--		 * do things correctly on 7 window Sparcs.
--		 */
--
--#define		PATCH_INSN(src, dest) \
--		set	src, %g5; \
--		set	dest, %g2; \
--		ld	[%g5], %g4; \
--		st	%g4, [%g2];
--
--		/* Patch for window spills... */
--		PATCH_INSN(spnwin_patch1_7win, spnwin_patch1)
--		PATCH_INSN(spnwin_patch2_7win, spnwin_patch2)
--		PATCH_INSN(spnwin_patch3_7win, spnwin_patch3)
--
--		/* Patch for window fills... */
--		PATCH_INSN(fnwin_patch1_7win, fnwin_patch1)
--		PATCH_INSN(fnwin_patch2_7win, fnwin_patch2)
--
--		/* Patch for trap entry setup... */
--		PATCH_INSN(tsetup_7win_patch1, tsetup_patch1)
--		PATCH_INSN(tsetup_7win_patch2, tsetup_patch2)
--		PATCH_INSN(tsetup_7win_patch3, tsetup_patch3)
--		PATCH_INSN(tsetup_7win_patch4, tsetup_patch4)
--		PATCH_INSN(tsetup_7win_patch5, tsetup_patch5)
--		PATCH_INSN(tsetup_7win_patch6, tsetup_patch6)
--
--		/* Patch for returning from traps... */
--		PATCH_INSN(rtrap_7win_patch1, rtrap_patch1)
--		PATCH_INSN(rtrap_7win_patch2, rtrap_patch2)
--		PATCH_INSN(rtrap_7win_patch3, rtrap_patch3)
--		PATCH_INSN(rtrap_7win_patch4, rtrap_patch4)
--		PATCH_INSN(rtrap_7win_patch5, rtrap_patch5)
--
--		/* Patch for killing user windows from the register file. */
--		PATCH_INSN(kuw_patch1_7win, kuw_patch1)
--
--		/* Now patch the kernel window flush sequences.
--		 * This saves 2 traps on every switch and fork.
--		 */
--		set	0x01000000, %g4
--		set	flush_patch_one, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--		set	flush_patch_two, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--		set	flush_patch_three, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--		set	flush_patch_four, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--		set	flush_patch_exception, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--		set	flush_patch_switch, %g5
--		st	%g4, [%g5 + 0x18]
--		st	%g4, [%g5 + 0x1c]
--
--2:
- 		sethi	%hi(nwindows), %g4
- 		st	%g3, [%g4 + %lo(nwindows)]	! store final value
- 		sub	%g3, 0x1, %g3
-diff --git a/arch/sparc/kernel/rtrap_32.S b/arch/sparc/kernel/rtrap_32.S
-index a232b367c219..8383048c3b5e 100644
---- a/arch/sparc/kernel/rtrap_32.S
-+++ b/arch/sparc/kernel/rtrap_32.S
-@@ -23,15 +23,6 @@
- #define glob_tmp  g4
- #define curptr    g6
- 
--	/* 7 WINDOW SPARC PATCH INSTRUCTIONS */
--	.globl	rtrap_7win_patch1, rtrap_7win_patch2, rtrap_7win_patch3
--	.globl	rtrap_7win_patch4, rtrap_7win_patch5
--rtrap_7win_patch1:	srl	%t_wim, 0x6, %glob_tmp
--rtrap_7win_patch2:	and	%glob_tmp, 0x7f, %glob_tmp
--rtrap_7win_patch3:	srl	%g1, 7, %g2
--rtrap_7win_patch4:	srl	%g2, 6, %g2
--rtrap_7win_patch5:	and	%g1, 0x7f, %g1
--	/* END OF PATCH INSTRUCTIONS */
- 
- 	/* We need to check for a few things which are:
- 	 * 1) The need to call schedule() because this
-@@ -117,17 +108,17 @@ ret_trap_nobufwins:
- 	bne	ret_trap_userwins_ok
+-sun4m_nmi_error:
++nmi_error:
+ 	/* NMI async memory error handling. */
+-	sethi	%hi(0x80000000), %l4
+-	sethi	%hi(sun4m_irq_global), %o5
+-	ld	[%o5 + %lo(sun4m_irq_global)], %l5
+-	st	%l4, [%l5 + 0x0c]	! sun4m_irq_global->mask_set=0x80000000
+-	WRITE_PAUSE
+-	ld	[%l5 + 0x00], %g0	! sun4m_irq_global->pending
+-	WRITE_PAUSE
++#ifndef CONFIG_SMP
++	.align	4
++	.globl	linux_trap_ipi15_leon
++linux_trap_ipi15_leon:
++	SAVE_ALL
+ 	or	%l0, PSR_PIL, %l4
+ 	wr	%l4, 0x0, %psr
+ 	WRITE_PAUSE
+ 	wr	%l4, PSR_ET, %psr
+ 	WRITE_PAUSE
+-	call	sun4m_nmi
++	call	leon_nmi
  	 nop
- 
--		/* Calculate new %wim, we have to pull a register
--		 * window from the users stack.
--		 */
-+	/* Calculate new %wim, we have to pull a register
-+	 * window from the users stack.
-+	 */
- ret_trap_pull_one_window:
--		rd	%wim, %t_wim
--		sll	%t_wim, 0x1, %twin_tmp1
--rtrap_patch1:	srl	%t_wim, 0x7, %glob_tmp
--		or	%glob_tmp, %twin_tmp1, %glob_tmp
--rtrap_patch2:	and	%glob_tmp, 0xff, %glob_tmp
-+	rd	%wim, %t_wim
-+	sll	%t_wim, 0x1, %twin_tmp1
-+	srl	%t_wim, 0x7, %glob_tmp
-+	or	%glob_tmp, %twin_tmp1, %glob_tmp
-+	and	%glob_tmp, 0xff, %glob_tmp
- 
--		wr	%glob_tmp, 0x0, %wim
-+	wr	%glob_tmp, 0x0, %wim
- 
- 	/* Here comes the architecture specific
- 	 * branch to the user stack checking routine
-@@ -174,20 +165,20 @@ ret_trap_unaligned_pc:
- 	 ld	[%curptr + TI_FLAGS], %g2
- 
- ret_trap_kernel:
--		/* Will the rett land us in the invalid window? */
--		mov	2, %g1
--		sll	%g1, %t_psr, %g1
--rtrap_patch3:	srl	%g1, 8, %g2
--		or	%g1, %g2, %g1
--		rd	%wim, %g2
--		andcc	%g2, %g1, %g0
--		be	1f		! Nope, just return from the trap
--		 sll	%g2, 0x1, %g1
+-	st	%l4, [%l5 + 0x08]	! sun4m_irq_global->mask_clear=0x80000000
+-	WRITE_PAUSE
+-	ld	[%l5 + 0x00], %g0	! sun4m_irq_global->pending
+-	WRITE_PAUSE
+ 	RESTORE_ALL
 -
--		/* We have to grab a window before returning. */
--rtrap_patch4:	srl	%g2, 7,  %g2
--		or	%g1, %g2, %g1
--rtrap_patch5:	and	%g1, 0xff, %g1
-+	/* Will the rett land us in the invalid window? */
-+	mov	2, %g1
-+	sll	%g1, %t_psr, %g1
-+	srl	%g1, 8, %g2
-+	or	%g1, %g2, %g1
-+	rd	%wim, %g2
-+	andcc	%g2, %g1, %g0
-+	be	1f		! Nope, just return from the trap
-+	 sll	%g2, 0x1, %g1
-+
-+	/* We have to grab a window before returning. */
-+	srl	%g2, 7,  %g2
-+	or	%g1, %g2, %g1
-+	and	%g1, 0xff, %g1
- 
- 	wr	%g1, 0x0, %wim
- 
-diff --git a/arch/sparc/kernel/wof.S b/arch/sparc/kernel/wof.S
-index fe4cfd4abcd2..30c5ebdd035c 100644
---- a/arch/sparc/kernel/wof.S
-+++ b/arch/sparc/kernel/wof.S
-@@ -43,18 +43,6 @@
- #define twin_tmp    l4 /* Temp reg, only usable in trap window  T */
- #define glob_tmp    g5 /* Global temporary reg, usable anywhere G */
- 
--	.text
+-#ifndef CONFIG_SMP
 -	.align	4
--	/* BEGINNING OF PATCH INSTRUCTIONS */
--	/* On a 7-window Sparc the boot code patches spnwin_*
--	 * instructions with the following ones.
--	 */
--	.globl	spnwin_patch1_7win, spnwin_patch2_7win, spnwin_patch3_7win
--spnwin_patch1_7win:	sll	%t_wim, 6, %glob_tmp
--spnwin_patch2_7win:	and	%glob_tmp, 0x7f, %glob_tmp
--spnwin_patch3_7win:	and	%twin_tmp, 0x7f, %twin_tmp
--	/* END OF PATCH INSTRUCTIONS */
+-	.globl	linux_trap_ipi15_leon
+-linux_trap_ipi15_leon:
+-	SAVE_ALL
 -
- 	/* The trap entry point has done the following:
- 	 *
- 	 * rd    %psr, %l0
-@@ -69,7 +57,6 @@ spnwin_patch3_7win:	and	%twin_tmp, 0x7f, %twin_tmp
- 	 * will be all zeroes.
- 	 */
- 	.globl	spill_window_entry 
--	.globl	spnwin_patch1, spnwin_patch2, spnwin_patch3
- spill_window_entry:
- 	/* LOCATION: Trap Window */
+-	ba      sun4m_nmi_error
+-	 nop
+ #endif /* CONFIG_SMP */
  
-@@ -81,10 +68,10 @@ spill_window_entry:
- 	 *
- 	 * newwim = ((%wim>>1) | (%wim<<(nwindows - 1)));
- 	 */
--		srl	%t_wim, 0x1, %twin_tmp
--spnwin_patch1:	sll	%t_wim, 7, %glob_tmp
--		or	%glob_tmp, %twin_tmp, %glob_tmp
--spnwin_patch2:	and	%glob_tmp, 0xff, %glob_tmp
-+	srl	%t_wim, 0x1, %twin_tmp
-+	sll	%t_wim, 7, %glob_tmp
-+	or	%glob_tmp, %twin_tmp, %glob_tmp
-+	and	%glob_tmp, 0xff, %glob_tmp
+ 	.align	4
+diff --git a/arch/sparc/kernel/irq.h b/arch/sparc/kernel/irq.h
+index 8a0b314c8299..f0aacc5c9ea6 100644
+--- a/arch/sparc/kernel/irq.h
++++ b/arch/sparc/kernel/irq.h
+@@ -10,39 +10,14 @@ struct irq_bucket {
+         unsigned int pil;
+ };
  
- 	/* The trap entry point has set the condition codes
- 	 * up for us to see if this is from user or kernel.
-@@ -222,17 +209,17 @@ spwin_user_stack_is_bolixed:
- 	mov	1, %twin_tmp
- 	st	%twin_tmp, [%curptr + TI_W_SAVED]
- 
--		/* Compute new user window mask.  What we are basically
--		 * doing is taking two windows, the invalid one at trap
--		 * time and the one we attempted to throw onto the users
--		 * stack, and saying that everything else is an ok user
--		 * window.  umask = ((~(%t_wim | %wim)) & valid_wim_bits)
--		 */
--		rd	%wim, %twin_tmp
--		or	%twin_tmp, %t_wim, %twin_tmp
--		not	%twin_tmp
--spnwin_patch3:	and	%twin_tmp, 0xff, %twin_tmp	! patched on 7win Sparcs
--		st	%twin_tmp, [%curptr + TI_UWINMASK]
-+	/* Compute new user window mask.  What we are basically
-+	 * doing is taking two windows, the invalid one at trap
-+	 * time and the one we attempted to throw onto the users
-+	 * stack, and saying that everything else is an ok user
-+	 * window.  umask = ((~(%t_wim | %wim)) & valid_wim_bits)
-+	 */
-+	rd	%wim, %twin_tmp
-+	or	%twin_tmp, %t_wim, %twin_tmp
-+	not	%twin_tmp
-+	and	%twin_tmp, 0xff, %twin_tmp
-+	st	%twin_tmp, [%curptr + TI_UWINMASK]
- 
- #define STACK_OFFSET (THREAD_SIZE - TRACEREG_SZ - STACKFRAME_SZ)
- 
-diff --git a/arch/sparc/kernel/wuf.S b/arch/sparc/kernel/wuf.S
-index 4c52b69d4b7a..dd2a539f92ff 100644
---- a/arch/sparc/kernel/wuf.S
-+++ b/arch/sparc/kernel/wuf.S
-@@ -68,27 +68,17 @@
- 	 *           are done and return from trap if successful
- 	 */
- 
--	/* BEGINNING OF PATCH INSTRUCTIONS */
+-#define SUN4M_HARD_INT(x)       (0x000000001 << (x))
+-#define SUN4M_SOFT_INT(x)       (0x000010000 << (x))
 -
--	/* On 7-window Sparc the boot code patches fnwin_patch1
--	 * with the following instruction.
--	 */
--	.globl	fnwin_patch1_7win, fnwin_patch2_7win
--fnwin_patch1_7win:	srl	%t_wim, 6, %twin_tmp2
--fnwin_patch2_7win:	and	%twin_tmp1, 0x7f, %twin_tmp1
--	/* END OF PATCH INSTRUCTIONS */
+-#define SUN4D_MAX_BOARD 10
+-#define SUN4D_MAX_IRQ ((SUN4D_MAX_BOARD + 2) << 5)
++#define MAX_BOARD 10
++#define MAX_IRQ ((MAX_BOARD + 2) << 5)
+ 
+ /* Map between the irq identifier used in hw to the
+  * irq_bucket. The map is sufficient large to hold
+  * the sun4d hw identifiers.
+  */
+-extern struct irq_bucket *irq_map[SUN4D_MAX_IRQ];
 -
--	.globl	fill_window_entry, fnwin_patch1, fnwin_patch2
-+	.globl	fill_window_entry
- fill_window_entry:
- 	/* LOCATION: Window 'T' */
+-
+-/* sun4m specific type definitions */
+-
+-/* This maps direct to CPU specific interrupt registers */
+-struct sun4m_irq_percpu {
+-	u32	pending;
+-	u32	clear;
+-	u32	set;
+-};
+-
+-/* This maps direct to global interrupt registers */
+-struct sun4m_irq_global {
+-	u32	pending;
+-	u32	mask;
+-	u32	mask_clear;
+-	u32	mask_set;
+-	u32	interrupt_target;
+-};
+-
+-extern struct sun4m_irq_percpu __iomem *sun4m_irq_percpu[SUN4M_NCPUS];
+-extern struct sun4m_irq_global __iomem *sun4m_irq_global;
++extern struct irq_bucket *irq_map[MAX_IRQ];
  
- 	/* Compute what the new %wim is going to be if we retrieve
- 	 * the proper window off of the stack.
- 	 */
--		sll	%t_wim, 1, %twin_tmp1
--fnwin_patch1:	srl	%t_wim, 7, %twin_tmp2
--		or	%twin_tmp1, %twin_tmp2, %twin_tmp1
--fnwin_patch2:	and	%twin_tmp1, 0xff, %twin_tmp1
-+	sll	%t_wim, 1, %twin_tmp1
-+	srl	%t_wim, 7, %twin_tmp2
-+	or	%twin_tmp1, %twin_tmp2, %twin_tmp1
-+	and	%twin_tmp1, 0xff, %twin_tmp1
+ unsigned int irq_alloc(unsigned int real_irq, unsigned int pil);
+ void irq_link(unsigned int irq);
+@@ -51,22 +26,9 @@ void handler_irq(unsigned int pil, struct pt_regs *regs);
  
- 	wr	%twin_tmp1, 0x0, %wim	/* Make window 'I' invalid */
+ unsigned long leon_get_irqmask(unsigned int irq);
  
+-/* sun4m_irq.c */
+-void sun4m_nmi(struct pt_regs *regs);
+-
+-/* sun4d_irq.c */
+-void sun4d_handler_irq(unsigned int pil, struct pt_regs *regs);
+-
+ /* leon_kernel.c */
+ void leon_clear_clock_irq(void);
+ void leon_load_profile_irq(int cpu, unsigned int limit);
+ u32 leon_cycles_offset(void);
+ 
+-#ifdef CONFIG_SMP
+-
+-/* All SUN4D IPIs are sent on this IRQ, may be shared with hard IRQs */
+-#define SUN4D_IPI_IRQ 13
+-
+-void sun4d_ipi_interrupt(void);
+-
+-#endif
++void leon_nmi(struct pt_regs *regs);
+diff --git a/arch/sparc/kernel/irq_32.c b/arch/sparc/kernel/irq_32.c
+index f76f57073323..5bd64828e8a0 100644
+--- a/arch/sparc/kernel/irq_32.c
++++ b/arch/sparc/kernel/irq_32.c
+@@ -111,7 +111,7 @@ static struct irq_bucket irq_table[NR_IRQS];
+ static DEFINE_SPINLOCK(irq_table_lock);
+ 
+ /* Map between the irq identifier used in hw to the irq_bucket. */
+-struct irq_bucket *irq_map[SUN4D_MAX_IRQ];
++struct irq_bucket *irq_map[MAX_IRQ];
+ /* Protect access to irq_map */
+ static DEFINE_SPINLOCK(irq_map_lock);
+ 
+@@ -162,7 +162,7 @@ void irq_link(unsigned int irq)
+ 
+ 	p = &irq_table[irq];
+ 	pil = p->pil;
+-	BUG_ON(pil >= SUN4D_MAX_IRQ);
++	BUG_ON(pil >= MAX_IRQ);
+ 	p->next = irq_map[pil];
+ 	irq_map[pil] = p;
+ 
+@@ -179,7 +179,7 @@ void irq_unlink(unsigned int irq)
+ 	spin_lock_irqsave(&irq_map_lock, flags);
+ 
+ 	p = &irq_table[irq];
+-	BUG_ON(p->pil >= SUN4D_MAX_IRQ);
++	BUG_ON(p->pil >= MAX_IRQ);
+ 	pnext = &irq_map[p->pil];
+ 	while (*pnext != p)
+ 		pnext = &(*pnext)->next;
+diff --git a/arch/sparc/kernel/kernel.h b/arch/sparc/kernel/kernel.h
+index 4fcd782f16a7..c2aaddedf097 100644
+--- a/arch/sparc/kernel/kernel.h
++++ b/arch/sparc/kernel/kernel.h
+@@ -92,10 +92,6 @@ extern spinlock_t irq_action_lock;
+ 
+ void unexpected_irq(int irq, void *dev_id, struct pt_regs * regs);
+ 
+-/* sun4m_irq.c */
+-void sun4m_unmask_profile_irq(void);
+-void sun4m_clear_profile_irq(int cpu);
+-
+ /* leon_smp.c */
+ void leon_cpu_pre_starting(void *arg);
+ void leon_cpu_pre_online(void *arg);
+diff --git a/arch/sparc/kernel/leon_kernel.c b/arch/sparc/kernel/leon_kernel.c
+index fa9cdaffdc6b..1bdf08db3037 100644
+--- a/arch/sparc/kernel/leon_kernel.c
++++ b/arch/sparc/kernel/leon_kernel.c
+@@ -9,6 +9,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/interrupt.h>
++#include <linux/sched/debug.h>
+ #include <linux/clocksource.h>
+ #include <linux/clockchips.h>
+ 
+@@ -269,8 +270,15 @@ u32 leon_cycles_offset(void)
+ 	return off;
+ }
+ 
+-#ifdef CONFIG_SMP
++/* NMI interrupt (15) */
++void leon_nmi(struct pt_regs *regs)
++{
++	printk(KERN_ERR "Aieee: NMI received!\n");
++	show_regs(regs);
++	prom_halt();
++}
+ 
++#ifdef CONFIG_SMP
+ /* smp clockevent irq */
+ static irqreturn_t leon_percpu_timer_ce_interrupt(int irq, void *unused)
+ {
+diff --git a/arch/sparc/kernel/sun4m_irq.c b/arch/sparc/kernel/sun4m_irq.c
+deleted file mode 100644
+index 1a220a2b9ac3..000000000000
+--- a/arch/sparc/kernel/sun4m_irq.c
++++ /dev/null
+@@ -1,238 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * sun4m irq support
+- *
+- *  djhr: Hacked out of irq.c into a CPU dependent version.
+- *
+- *  Copyright (C) 1995 David S. Miller (davem@caip.rutgers.edu)
+- *  Copyright (C) 1995 Miguel de Icaza (miguel@nuclecu.unam.mx)
+- *  Copyright (C) 1995 Pete A. Zaitcev (zaitcev@yahoo.com)
+- *  Copyright (C) 1996 Dave Redman (djhr@tadpole.co.uk)
+- */
+-
+-#include <linux/slab.h>
+-#include <linux/sched/debug.h>
+-#include <linux/pgtable.h>
+-
+-#include <asm/timer.h>
+-#include <asm/traps.h>
+-#include <asm/irq.h>
+-#include <asm/io.h>
+-#include <asm/cacheflush.h>
+-
+-#include "irq.h"
+-#include "kernel.h"
+-
+-/* Sample sun4m IRQ layout:
+- *
+- * 0x22 - Power
+- * 0x24 - ESP SCSI
+- * 0x26 - Lance ethernet
+- * 0x2b - Floppy
+- * 0x2c - Zilog uart
+- * 0x32 - SBUS level 0
+- * 0x33 - Parallel port, SBUS level 1
+- * 0x35 - SBUS level 2
+- * 0x37 - SBUS level 3
+- * 0x39 - Audio, Graphics card, SBUS level 4
+- * 0x3b - SBUS level 5
+- * 0x3d - SBUS level 6
+- *
+- * Each interrupt source has a mask bit in the interrupt registers.
+- * When the mask bit is set, this blocks interrupt deliver.  So you
+- * clear the bit to enable the interrupt.
+- *
+- * Interrupts numbered less than 0x10 are software triggered interrupts
+- * and unused by Linux.
+- *
+- * Interrupt level assignment on sun4m:
+- *
+- *	level		source
+- * ------------------------------------------------------------
+- *	  1		softint-1
+- *	  2		softint-2, VME/SBUS level 1
+- *	  3		softint-3, VME/SBUS level 2
+- *	  4		softint-4, onboard SCSI
+- *	  5		softint-5, VME/SBUS level 3
+- *	  6		softint-6, onboard ETHERNET
+- *	  7		softint-7, VME/SBUS level 4
+- *	  8		softint-8, onboard VIDEO
+- *	  9		softint-9, VME/SBUS level 5, Module Interrupt
+- *	 10		softint-10, system counter/timer
+- *	 11		softint-11, VME/SBUS level 6, Floppy
+- *	 12		softint-12, Keyboard/Mouse, Serial
+- *	 13		softint-13, VME/SBUS level 7, ISDN Audio
+- *	 14		softint-14, per-processor counter/timer
+- *	 15		softint-15, Asynchronous Errors (broadcast)
+- *
+- * Each interrupt source is masked distinctly in the sun4m interrupt
+- * registers.  The PIL level alone is therefore ambiguous, since multiple
+- * interrupt sources map to a single PIL.
+- *
+- * This ambiguity is resolved in the 'intr' property for device nodes
+- * in the OF device tree.  Each 'intr' property entry is composed of
+- * two 32-bit words.  The first word is the IRQ priority value, which
+- * is what we're intersted in.  The second word is the IRQ vector, which
+- * is unused.
+- *
+- * The low 4 bits of the IRQ priority indicate the PIL, and the upper
+- * 4 bits indicate onboard vs. SBUS leveled vs. VME leveled.  0x20
+- * means onboard, 0x30 means SBUS leveled, and 0x40 means VME leveled.
+- *
+- * For example, an 'intr' IRQ priority value of 0x24 is onboard SCSI
+- * whereas a value of 0x33 is SBUS level 2.  Here are some sample
+- * 'intr' property IRQ priority values from ss4, ss5, ss10, ss20, and
+- * Tadpole S3 GX systems.
+- *
+- * esp:		0x24	onboard ESP SCSI
+- * le:		0x26	onboard Lance ETHERNET
+- * p9100:	0x32	SBUS level 1 P9100 video
+- * bpp:		0x33	SBUS level 2 BPP parallel port device
+- * DBRI:	0x39	SBUS level 5 DBRI ISDN audio
+- * SUNW,leo:	0x39	SBUS level 5 LEO video
+- * pcmcia:	0x3b	SBUS level 6 PCMCIA controller
+- * uctrl:	0x3b	SBUS level 6 UCTRL device
+- * modem:	0x3d	SBUS level 7 MODEM
+- * zs:		0x2c	onboard keyboard/mouse/serial
+- * floppy:	0x2b	onboard Floppy
+- * power:	0x22	onboard power device (XXX unknown mask bit XXX)
+- */
+-
+-
+-/* Code in entry.S needs to get at these register mappings.  */
+-struct sun4m_irq_percpu __iomem *sun4m_irq_percpu[SUN4M_NCPUS];
+-struct sun4m_irq_global __iomem *sun4m_irq_global;
+-
+-struct sun4m_handler_data {
+-	bool    percpu;
+-	long    mask;
+-};
+-
+-/* Dave Redman (djhr@tadpole.co.uk)
+- * The sun4m interrupt registers.
+- */
+-#define SUN4M_INT_ENABLE	0x80000000
+-#define SUN4M_INT_E14		0x00000080
+-#define SUN4M_INT_E10		0x00080000
+-
+-#define	SUN4M_INT_MASKALL	0x80000000	  /* mask all interrupts */
+-#define	SUN4M_INT_MODULE_ERR	0x40000000	  /* module error */
+-#define	SUN4M_INT_M2S_WRITE_ERR	0x20000000	  /* write buffer error */
+-#define	SUN4M_INT_ECC_ERR	0x10000000	  /* ecc memory error */
+-#define	SUN4M_INT_VME_ERR	0x08000000	  /* vme async error */
+-#define	SUN4M_INT_FLOPPY	0x00400000	  /* floppy disk */
+-#define	SUN4M_INT_MODULE	0x00200000	  /* module interrupt */
+-#define	SUN4M_INT_VIDEO		0x00100000	  /* onboard video */
+-#define	SUN4M_INT_REALTIME	0x00080000	  /* system timer */
+-#define	SUN4M_INT_SCSI		0x00040000	  /* onboard scsi */
+-#define	SUN4M_INT_AUDIO		0x00020000	  /* audio/isdn */
+-#define	SUN4M_INT_ETHERNET	0x00010000	  /* onboard ethernet */
+-#define	SUN4M_INT_SERIAL	0x00008000	  /* serial ports */
+-#define	SUN4M_INT_KBDMS		0x00004000	  /* keyboard/mouse */
+-#define	SUN4M_INT_SBUSBITS	0x00003F80	  /* sbus int bits */
+-#define	SUN4M_INT_VMEBITS	0x0000007F	  /* vme int bits */
+-
+-#define	SUN4M_INT_ERROR		(SUN4M_INT_MODULE_ERR |    \
+-				 SUN4M_INT_M2S_WRITE_ERR | \
+-				 SUN4M_INT_ECC_ERR |       \
+-				 SUN4M_INT_VME_ERR)
+-
+-#define SUN4M_INT_SBUS(x)	(1 << (x+7))
+-#define SUN4M_INT_VME(x)	(1 << (x))
+-
+-/* Interrupt levels used by OBP */
+-#define	OBP_INT_LEVEL_SOFT	0x10
+-#define	OBP_INT_LEVEL_ONBOARD	0x20
+-#define	OBP_INT_LEVEL_SBUS	0x30
+-#define	OBP_INT_LEVEL_VME	0x40
+-
+-#define SUN4M_TIMER_IRQ         (OBP_INT_LEVEL_ONBOARD | 10)
+-#define SUN4M_PROFILE_IRQ       (OBP_INT_LEVEL_ONBOARD | 14)
+-
+-static unsigned long sun4m_imask[0x50] = {
+-	/* 0x00 - SMP */
+-	0,  SUN4M_SOFT_INT(1),
+-	SUN4M_SOFT_INT(2),  SUN4M_SOFT_INT(3),
+-	SUN4M_SOFT_INT(4),  SUN4M_SOFT_INT(5),
+-	SUN4M_SOFT_INT(6),  SUN4M_SOFT_INT(7),
+-	SUN4M_SOFT_INT(8),  SUN4M_SOFT_INT(9),
+-	SUN4M_SOFT_INT(10), SUN4M_SOFT_INT(11),
+-	SUN4M_SOFT_INT(12), SUN4M_SOFT_INT(13),
+-	SUN4M_SOFT_INT(14), SUN4M_SOFT_INT(15),
+-	/* 0x10 - soft */
+-	0,  SUN4M_SOFT_INT(1),
+-	SUN4M_SOFT_INT(2),  SUN4M_SOFT_INT(3),
+-	SUN4M_SOFT_INT(4),  SUN4M_SOFT_INT(5),
+-	SUN4M_SOFT_INT(6),  SUN4M_SOFT_INT(7),
+-	SUN4M_SOFT_INT(8),  SUN4M_SOFT_INT(9),
+-	SUN4M_SOFT_INT(10), SUN4M_SOFT_INT(11),
+-	SUN4M_SOFT_INT(12), SUN4M_SOFT_INT(13),
+-	SUN4M_SOFT_INT(14), SUN4M_SOFT_INT(15),
+-	/* 0x20 - onboard */
+-	0, 0, 0, 0,
+-	SUN4M_INT_SCSI,  0, SUN4M_INT_ETHERNET, 0,
+-	SUN4M_INT_VIDEO, SUN4M_INT_MODULE,
+-	SUN4M_INT_REALTIME, SUN4M_INT_FLOPPY,
+-	(SUN4M_INT_SERIAL | SUN4M_INT_KBDMS),
+-	SUN4M_INT_AUDIO, SUN4M_INT_E14, SUN4M_INT_MODULE_ERR,
+-	/* 0x30 - sbus */
+-	0, 0, SUN4M_INT_SBUS(0), SUN4M_INT_SBUS(1),
+-	0, SUN4M_INT_SBUS(2), 0, SUN4M_INT_SBUS(3),
+-	0, SUN4M_INT_SBUS(4), 0, SUN4M_INT_SBUS(5),
+-	0, SUN4M_INT_SBUS(6), 0, 0,
+-	/* 0x40 - vme */
+-	0, 0, SUN4M_INT_VME(0), SUN4M_INT_VME(1),
+-	0, SUN4M_INT_VME(2), 0, SUN4M_INT_VME(3),
+-	0, SUN4M_INT_VME(4), 0, SUN4M_INT_VME(5),
+-	0, SUN4M_INT_VME(6), 0, 0
+-};
+-
+-struct sun4m_timer_percpu {
+-	u32		l14_limit;
+-	u32		l14_count;
+-	u32		l14_limit_noclear;
+-	u32		user_timer_start_stop;
+-};
+-
+-static struct sun4m_timer_percpu __iomem *timers_percpu[SUN4M_NCPUS];
+-
+-void sun4m_nmi(struct pt_regs *regs)
+-{
+-	unsigned long afsr, afar, si;
+-
+-	printk(KERN_ERR "Aieee: sun4m NMI received!\n");
+-	/* XXX HyperSparc hack XXX */
+-	__asm__ __volatile__("mov 0x500, %%g1\n\t"
+-			     "lda [%%g1] 0x4, %0\n\t"
+-			     "mov 0x600, %%g1\n\t"
+-			     "lda [%%g1] 0x4, %1\n\t" :
+-			     "=r" (afsr), "=r" (afar));
+-	printk(KERN_ERR "afsr=%08lx afar=%08lx\n", afsr, afar);
+-	si = sbus_readl(&sun4m_irq_global->pending);
+-	printk(KERN_ERR "si=%08lx\n", si);
+-	if (si & SUN4M_INT_MODULE_ERR)
+-		printk(KERN_ERR "Module async error\n");
+-	if (si & SUN4M_INT_M2S_WRITE_ERR)
+-		printk(KERN_ERR "MBus/SBus async error\n");
+-	if (si & SUN4M_INT_ECC_ERR)
+-		printk(KERN_ERR "ECC memory error\n");
+-	if (si & SUN4M_INT_VME_ERR)
+-		printk(KERN_ERR "VME async error\n");
+-	printk(KERN_ERR "you lose buddy boy...\n");
+-	show_regs(regs);
+-	prom_halt();
+-}
+-
+-void sun4m_unmask_profile_irq(void)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	sbus_writel(sun4m_imask[SUN4M_PROFILE_IRQ], &sun4m_irq_global->mask_clear);
+-	local_irq_restore(flags);
+-}
+-
+-void sun4m_clear_profile_irq(int cpu)
+-{
+-	sbus_readl(&timers_percpu[cpu]->l14_limit);
+-}
 
 -- 
 2.34.1
