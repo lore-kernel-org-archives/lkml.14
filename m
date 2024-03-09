@@ -1,42 +1,42 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mail114-240.sinamail.sina.com.cn (mail114-240.sinamail.sina.com.cn [218.30.114.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233153CF6E;
-	Sat,  9 Mar 2024 10:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829BA381DA
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709978730; cv=none; b=OYRZzyen9zhAR2ZbsBcMvhygVh4qZDVbilCJotVmBmfPyGnIe2SzT5N4ORDucCNEPEqqxotyJgPyiy8p399E1rhV9opWKcQqFXIb1OV7i1j3Qd4FLMxX46oXREOpUmaU65T9DDDcIOq3JSlwBZVrddnBWDtq/WyhbejLnODsfPs=
+	t=1709979597; cv=none; b=dsN9FbrDx+y5j++66RzQe1MvlLdV2dOVptJnXOA/LkoA7HIMyZIoH8zWJKQ3yU81w/VzY92fhxKqaGKZWnJnYTfeZwr6wz4CIff6PpLkwk3gvYuP9k4sgqoojA95VrkleuFu5dUBXRrnyGAd37JtvvwwI/7FiB+TZvm9Lr8q5Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709978730; c=relaxed/simple;
-	bh=R4W5YmrHVivfJcRO2JXT/iOwDMyAoZiqacNioSjnOmw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VJNN8cFD8sZ4Q1989lJ/VR1iadZ16NW/GKuHmg8kn1WeyjZLtqGLe/Kh973lT0a2KqgJTOOnxydCz4GocUpC9PiFCYjjmvfcKpuAPRKXtG4w3jxg+wjADJDHRGc8cnHCpQ38z2TEmGSXDASaZJu7vwHtxO/tszabZEVA3PvyENA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TsJYC47BGz3F0Ch;
-	Sat,  9 Mar 2024 18:04:31 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1384B1400CF;
-	Sat,  9 Mar 2024 18:05:13 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sat, 9 Mar 2024 18:05:12 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <jiri@resnulli.us>
-CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V5 net-next 3/4] net: hns3: dump more reg info based on ras mod
-Date: Sat, 9 Mar 2024 18:00:43 +0800
-Message-ID: <20240309100044.2351166-4-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240309100044.2351166-1-shaojijie@huawei.com>
-References: <20240309100044.2351166-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1709979597; c=relaxed/simple;
+	bh=mr9CJOYnpBJJHiZbZawfFNTHJ3JgVS0pvIujUF/snrs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cLG9kPp6btL1jXhCmjNWOk/85QSmXrrTuVI+J8gZaThMJMuijZdkJIb4Vb4GbM/lcSq3Pu32oclFevOGbWCsZHfAVpZszXhhgpHsNWjjZt+J4gZAwr8mPYF2J43mSM37t+zYy1YHLARtxAL3huLcy7zyAVfmJjn7SDvfLgzRrsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.49.120])
+	by sina.com (172.16.235.24) with ESMTP
+	id 65EC37B900003ACC; Sat, 9 Mar 2024 18:19:39 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 65107045089305
+X-SMAIL-UIID: 7263A743163644BFB93521B979DD4484-20240309-181939-1
+From: Hillf Danton <hdanton@sina.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzbot <syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com>,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in ip_skb_dst_mtu
+Date: Sat,  9 Mar 2024 18:19:26 +0800
+Message-Id: <20240309101926.1994-1-hdanton@sina.com>
+In-Reply-To: <0000000000002e5b66061336b7df@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,666 +44,263 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600007.china.huawei.com (7.193.23.208)
 
-From: Peiyang Wang <wangpeiyang1@huawei.com>
+On Sat, 09 Mar 2024 01:13:02 -0800
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> INFO: task hung in switchdev_deferred_process_work
 
-Dump more reg info base on ras mod before reset, which is useful to
-analyze the ras error.
+Task hung [0] again with Frederic's fix [1] applied [2].
 
-Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h   |   4 +
- .../hns3/hns3_common/hclge_comm_cmd.c         |   1 +
- .../hns3/hns3_common/hclge_comm_cmd.h         |   2 +
- .../hisilicon/hns3/hns3pf/hclge_debugfs.c     |   6 +-
- .../hisilicon/hns3/hns3pf/hclge_debugfs.h     |   3 +
- .../hisilicon/hns3/hns3pf/hclge_err.c         | 434 +++++++++++++++++-
- .../hisilicon/hns3/hns3pf/hclge_err.h         |  36 ++
- 7 files changed, 478 insertions(+), 8 deletions(-)
+	kworker/1:2:783		kworker/u4:5/146
+	---			---
+				lock rtnl_mutex
+	lock rtnl_mutex		synchronize_rcu_expedited()
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index f19f1e1d1f9f..e9266c65b331 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -104,6 +104,7 @@ enum HNAE3_DEV_CAP_BITS {
- 	HNAE3_DEV_SUPPORT_WOL_B,
- 	HNAE3_DEV_SUPPORT_TM_FLUSH_B,
- 	HNAE3_DEV_SUPPORT_VF_FAULT_B,
-+	HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B,
- };
- 
- #define hnae3_ae_dev_fd_supported(ae_dev) \
-@@ -181,6 +182,9 @@ enum HNAE3_DEV_CAP_BITS {
- #define hnae3_ae_dev_vf_fault_supported(ae_dev) \
- 	test_bit(HNAE3_DEV_SUPPORT_VF_FAULT_B, (ae_dev)->caps)
- 
-+#define hnae3_ae_dev_gen_reg_dfx_supported(hdev) \
-+	test_bit(HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B, (hdev)->ae_dev->caps)
-+
- enum HNAE3_PF_CAP_BITS {
- 	HNAE3_PF_SUPPORT_VLAN_FLTR_MDF_B = 0,
- };
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-index 11df6fbd641d..ea40b594dbac 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-@@ -158,6 +158,7 @@ static const struct hclge_comm_caps_bit_map hclge_pf_cmd_caps[] = {
- 	{HCLGE_COMM_CAP_WOL_B, HNAE3_DEV_SUPPORT_WOL_B},
- 	{HCLGE_COMM_CAP_TM_FLUSH_B, HNAE3_DEV_SUPPORT_TM_FLUSH_B},
- 	{HCLGE_COMM_CAP_VF_FAULT_B, HNAE3_DEV_SUPPORT_VF_FAULT_B},
-+	{HCLGE_COMM_CAP_ERR_MOD_GEN_REG_B, HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B},
- };
- 
- static const struct hclge_comm_caps_bit_map hclge_vf_cmd_caps[] = {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-index e6a087576df6..a2bc5a9adaa3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-@@ -91,6 +91,7 @@ enum hclge_opcode_type {
- 	HCLGE_OPC_DFX_RCB_REG		= 0x004D,
- 	HCLGE_OPC_DFX_TQP_REG		= 0x004E,
- 	HCLGE_OPC_DFX_SSU_REG_2		= 0x004F,
-+	HCLGE_OPC_DFX_GEN_REG		= 0x7038,
- 
- 	HCLGE_OPC_QUERY_DEV_SPECS	= 0x0050,
- 	HCLGE_OPC_GET_QUEUE_ERR_VF      = 0x0067,
-@@ -353,6 +354,7 @@ enum HCLGE_COMM_CAP_BITS {
- 	HCLGE_COMM_CAP_LANE_NUM_B = 27,
- 	HCLGE_COMM_CAP_WOL_B = 28,
- 	HCLGE_COMM_CAP_TM_FLUSH_B = 31,
-+	HCLGE_COMM_CAP_ERR_MOD_GEN_REG_B = 32,
- };
- 
- enum HCLGE_COMM_API_CAP_BITS {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 243be19a7557..debf143e9940 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -801,10 +801,8 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset,
- 	return 0;
- }
- 
--static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
--			      struct hclge_desc *desc_src,
--			      int index, int bd_num,
--			      enum hclge_opcode_type cmd)
-+int hclge_dbg_cmd_send(struct hclge_dev *hdev, struct hclge_desc *desc_src,
-+		       int index, int bd_num, enum hclge_opcode_type cmd)
- {
- 	struct hclge_desc *desc = desc_src;
- 	int ret, i;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-index 31a775fb032b..2b998cbed826 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-@@ -131,4 +131,7 @@ struct hclge_dbg_vlan_cfg {
- 	u8 pri_only2;
- };
- 
-+int hclge_dbg_cmd_send(struct hclge_dev *hdev, struct hclge_desc *desc_src,
-+		       int index, int bd_num, enum hclge_opcode_type cmd);
-+
- #endif
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index d63e114f93d0..468372b7253d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1198,6 +1198,426 @@ static const struct hclge_hw_error hclge_rocee_qmm_ovf_err_int[] = {
- 	}
- };
- 
-+static const struct hclge_mod_reg_info hclge_ssu_reg_0_info[] = {
-+	{
-+		.reg_name = "SSU_BP_STATUS_0~5",
-+		.reg_offset_group = { 5, 6, 7, 8, 9, 10},
-+		.group_size = 6
-+	}, {
-+		.reg_name = "LO_PRI_UNICAST_CUR_CNT",
-+		.reg_offset_group = {54},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "HI/LO_PRI_MULTICAST_CUR_CNT",
-+		.reg_offset_group = {55, 56},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "SSU_MB_RD_RLT_DROP_CNT",
-+		.reg_offset_group = {29},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "SSU_PPP_MAC_KEY_NUM",
-+		.reg_offset_group = {31, 30},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "SSU_PPP_HOST_KEY_NUM",
-+		.reg_offset_group = {33, 32},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "PPP_SSU_MAC/HOST_RLT_NUM",
-+		.reg_offset_group = {35, 34, 37, 36},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "FULL/PART_DROP_NUM",
-+		.reg_offset_group = {18, 19},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "PPP_KEY/RLT_DROP_NUM",
-+		.reg_offset_group = {20, 21},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "NIC/ROC_L2_ERR_DROP_PKT_CNT",
-+		.reg_offset_group = {48, 49},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "NIC/ROC_L2_ERR_DROP_PKT_CNT_RX",
-+		.reg_offset_group = {50, 51},
-+		.group_size = 2
-+	},
-+};
-+
-+static const struct hclge_mod_reg_info hclge_ssu_reg_1_info[] = {
-+	{
-+		.reg_name = "RX_PACKET_IN/OUT_CNT",
-+		.reg_offset_group = {13, 12, 15, 14},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_IN/OUT_CNT",
-+		.reg_offset_group = {17, 16, 19, 18},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC0_IN/OUT_CNT",
-+		.reg_offset_group = {25, 24, 41, 40},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC1_IN/OUT_CNT",
-+		.reg_offset_group = {27, 26, 43, 42},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC2_IN/OUT_CNT",
-+		.reg_offset_group = {29, 28, 45, 44},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC3_IN/OUT_CNT",
-+		.reg_offset_group = {31, 30, 47, 46},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC4_IN/OUT_CNT",
-+		.reg_offset_group = {33, 32, 49, 48},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC5_IN/OUT_CNT",
-+		.reg_offset_group = {35, 34, 51, 50},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC6_IN/OUT_CNT",
-+		.reg_offset_group = {37, 36, 53, 52},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "RX_PACKET_TC7_IN/OUT_CNT",
-+		.reg_offset_group = {39, 38, 55, 54},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC0_IN/OUT_CNT",
-+		.reg_offset_group = {57, 56, 73, 72},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC1_IN/OUT_CNT",
-+		.reg_offset_group = {59, 58, 75, 74},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC2_IN/OUT_CNT",
-+		.reg_offset_group = {61, 60, 77, 76},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC3_IN/OUT_CNT",
-+		.reg_offset_group = {63, 62, 79, 78},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC4_IN/OUT_CNT",
-+		.reg_offset_group = {65, 64, 81, 80},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC5_IN/OUT_CNT",
-+		.reg_offset_group = {67, 66, 83, 82},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC6_IN/OUT_CNT",
-+		.reg_offset_group = {69, 68, 85, 84},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PACKET_TC7_IN/OUT_CNT",
-+		.reg_offset_group = {71, 70, 87, 86},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "PACKET_TC0~3_CURR_BUFFER_CNT",
-+		.reg_offset_group = {1, 2, 3, 4},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "PACKET_TC4~7_CURR_BUFFER_CNT",
-+		.reg_offset_group = {5, 6, 7, 8},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "ROC_RX_PACKET_IN_CNT",
-+		.reg_offset_group = {21, 20},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "ROC_TX_PACKET_OUT_CNT",
-+		.reg_offset_group = {23, 22},
-+		.group_size = 2
-+	}
-+};
-+
-+static const struct hclge_mod_reg_info hclge_rpu_reg_0_info[] = {
-+	{
-+		.reg_name = "RPU_FSM_DFX_ST0/ST1_TNL",
-+		.has_suffix = true,
-+		.reg_offset_group = {1, 2},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "RPU_RX_PKT_DROP_CNT_TNL",
-+		.has_suffix = true,
-+		.reg_offset_group = {3},
-+		.group_size = 1
-+	}
-+};
-+
-+static const struct hclge_mod_reg_info hclge_rpu_reg_1_info[] = {
-+	{
-+		.reg_name = "FIFO_DFX_ST0_1_2_4",
-+		.reg_offset_group = {1, 2, 3, 5},
-+		.group_size = 4
-+	}
-+};
-+
-+static const struct hclge_mod_reg_info hclge_igu_egu_reg_info[] = {
-+	{
-+		.reg_name = "IGU_RX_ERR_PKT",
-+		.reg_offset_group = {1},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "IGU_RX_OUT_ALL_PKT",
-+		.reg_offset_group = {29, 28},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "EGU_TX_OUT_ALL_PKT",
-+		.reg_offset_group = {39, 38},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "EGU_TX_ERR_PKT",
-+		.reg_offset_group = {5},
-+		.group_size = 1
-+	}
-+};
-+
-+static const struct hclge_mod_reg_info hclge_gen_reg_info_tnl[] = {
-+	{
-+		.reg_name = "SSU2RPU_TNL_WR_PKT_CNT_TNL",
-+		.has_suffix = true,
-+		.reg_offset_group = {1},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "RPU2HST_TNL_WR_PKT_CNT_TNL",
-+		.has_suffix = true,
-+		.reg_offset_group = {12},
-+		.group_size = 1
-+	}
-+};
-+
-+static const struct hclge_mod_reg_info hclge_gen_reg_info[] = {
-+	{
-+		.reg_name = "SSU_OVERSIZE_DROP_CNT",
-+		.reg_offset_group = {12},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "ROCE_RX_BYPASS_5NS_DROP_NUM",
-+		.reg_offset_group = {13},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "RX_PKT_IN/OUT_ERR_CNT",
-+		.reg_offset_group = {15, 14, 19, 18},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "TX_PKT_IN/OUT_ERR_CNT",
-+		.reg_offset_group = {17, 16, 21, 20},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "ETS_TC_READY",
-+		.reg_offset_group = {22},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "MIB_TX/RX_BAD_PKTS",
-+		.reg_offset_group = {19, 18, 29, 28},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "MIB_TX/RX_GOOD_PKTS",
-+		.reg_offset_group = {21, 20, 31, 30},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "MIB_TX/RX_TOTAL_PKTS",
-+		.reg_offset_group = {23, 22, 33, 32},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "MIB_TX/RX_PAUSE_PKTS",
-+		.reg_offset_group = {25, 24, 35, 34},
-+		.group_size = 4
-+	}, {
-+		.reg_name = "MIB_TX_ERR_ALL_PKTS",
-+		.reg_offset_group = {27, 26},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "MIB_RX_FCS_ERR_PKTS",
-+		.reg_offset_group = {37, 36},
-+		.group_size = 2
-+	}, {
-+		.reg_name = "IGU_EGU_AUTO_GATE_EN",
-+		.reg_offset_group = {42},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "IGU_EGU_INT_SRC",
-+		.reg_offset_group = {43},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "EGU_READY_NUM_CFG",
-+		.reg_offset_group = {44},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "IGU_EGU_TNL_DFX",
-+		.reg_offset_group = {45},
-+		.group_size = 1
-+	}, {
-+		.reg_name = "TX_TNL_NOTE_PKT",
-+		.reg_offset_group = {46},
-+		.group_size = 1
-+	}
-+};
-+
-+static const struct hclge_mod_reg_common_msg hclge_ssu_reg_common_msg[] = {
-+	{
-+		.cmd = HCLGE_OPC_DFX_SSU_REG_0,
-+		.result_regs = hclge_ssu_reg_0_info,
-+		.bd_num = HCLGE_BD_NUM_SSU_REG_0,
-+		.result_regs_size = ARRAY_SIZE(hclge_ssu_reg_0_info)
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_SSU_REG_1,
-+		.result_regs = hclge_ssu_reg_1_info,
-+		.bd_num = HCLGE_BD_NUM_SSU_REG_1,
-+		.result_regs_size = ARRAY_SIZE(hclge_ssu_reg_1_info)
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_RPU_REG_0,
-+		.result_regs = hclge_rpu_reg_0_info,
-+		.bd_num = HCLGE_BD_NUM_RPU_REG_0,
-+		.result_regs_size = ARRAY_SIZE(hclge_rpu_reg_0_info),
-+		.need_para = true
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_RPU_REG_1,
-+		.result_regs = hclge_rpu_reg_1_info,
-+		.bd_num = HCLGE_BD_NUM_RPU_REG_1,
-+		.result_regs_size = ARRAY_SIZE(hclge_rpu_reg_1_info)
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_IGU_EGU_REG,
-+		.result_regs = hclge_igu_egu_reg_info,
-+		.bd_num = HCLGE_BD_NUM_IGU_EGU_REG,
-+		.result_regs_size = ARRAY_SIZE(hclge_igu_egu_reg_info)
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_GEN_REG,
-+		.result_regs = hclge_gen_reg_info_tnl,
-+		.bd_num = HCLGE_BD_NUM_GEN_REG,
-+		.result_regs_size = ARRAY_SIZE(hclge_gen_reg_info_tnl),
-+		.need_para = true
-+	}, {
-+		.cmd = HCLGE_OPC_DFX_GEN_REG,
-+		.result_regs = hclge_gen_reg_info,
-+		.bd_num = HCLGE_BD_NUM_GEN_REG,
-+		.result_regs_size = ARRAY_SIZE(hclge_gen_reg_info)
-+	}
-+};
-+
-+static int
-+hclge_print_mod_reg_info(struct device *dev, struct hclge_desc *desc,
-+			 const struct hclge_mod_reg_info *reg_info, int size)
-+{
-+	int i, j, pos, actual_len;
-+	u8 offset, bd_idx, index;
-+	char *buf;
-+
-+	buf = kzalloc(HCLGE_MOD_REG_INFO_LEN_MAX, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < size; i++) {
-+		actual_len = strlen(reg_info[i].reg_name) +
-+			     HCLGE_MOD_REG_EXTRA_LEN +
-+			     HCLGE_MOD_REG_VALUE_LEN * reg_info[i].group_size;
-+		if (actual_len > HCLGE_MOD_REG_INFO_LEN_MAX) {
-+			dev_info(dev, "length of reg(%s) is invalid, len=%d\n",
-+				 reg_info[i].reg_name, actual_len);
-+			continue;
-+		}
-+
-+		pos = scnprintf(buf, HCLGE_MOD_REG_INFO_LEN_MAX, "%s",
-+				reg_info[i].reg_name);
-+		if (reg_info[i].has_suffix)
-+			pos += scnprintf(buf + pos,
-+					 HCLGE_MOD_REG_INFO_LEN_MAX - pos, "%u",
-+					 le32_to_cpu(desc->data[0]));
-+		pos += scnprintf(buf + pos,
-+				 HCLGE_MOD_REG_INFO_LEN_MAX - pos,
-+				 ":");
-+		for (j = 0; j < reg_info[i].group_size; j++) {
-+			offset = reg_info[i].reg_offset_group[j];
-+			index = offset % HCLGE_DESC_DATA_LEN;
-+			bd_idx = offset / HCLGE_DESC_DATA_LEN;
-+			pos += scnprintf(buf + pos,
-+					 HCLGE_MOD_REG_INFO_LEN_MAX - pos,
-+					 " %08x",
-+					 le32_to_cpu(desc[bd_idx].data[index]));
-+		}
-+		buf[pos] = '\0';
-+		dev_info(dev, "%s\n", buf);
-+	}
-+
-+	kfree(buf);
-+	return 0;
-+}
-+
-+static bool hclge_err_mod_check_support_cmd(enum hclge_opcode_type opcode,
-+					    struct hclge_dev *hdev)
-+{
-+	if (opcode == HCLGE_OPC_DFX_GEN_REG &&
-+	    !hnae3_ae_dev_gen_reg_dfx_supported(hdev))
-+		return false;
-+	return true;
-+}
-+
-+/* For each common msg, send cmdq to IMP and print result reg info.
-+ * If there is a parameter, loop it and request.
-+ */
-+static void
-+hclge_query_reg_info(struct hclge_dev *hdev,
-+		     struct hclge_mod_reg_common_msg *msg, u32 loop_time,
-+		     u32 *loop_para)
-+{
-+	int desc_len, i, ret;
-+
-+	desc_len = msg->bd_num * sizeof(struct hclge_desc);
-+	msg->desc = kzalloc(desc_len, GFP_KERNEL);
-+	if (!msg->desc) {
-+		dev_err(&hdev->pdev->dev, "failed to query reg info, ret=%d",
-+			-ENOMEM);
-+		return;
-+	}
-+
-+	for (i = 0; i < loop_time; i++) {
-+		ret = hclge_dbg_cmd_send(hdev, msg->desc, *loop_para,
-+					 msg->bd_num, msg->cmd);
-+		loop_para++;
-+		if (ret)
-+			continue;
-+		ret = hclge_print_mod_reg_info(&hdev->pdev->dev, msg->desc,
-+					       msg->result_regs,
-+					       msg->result_regs_size);
-+		if (ret)
-+			dev_err(&hdev->pdev->dev, "failed to print mod reg info, ret=%d\n",
-+				ret);
-+	}
-+
-+	kfree(msg->desc);
-+}
-+
-+static void hclge_query_reg_info_of_ssu(struct hclge_dev *hdev)
-+{
-+	u32 loop_para[HCLGE_MOD_MSG_PARA_ARRAY_MAX_SIZE] = {0};
-+	struct hclge_mod_reg_common_msg msg;
-+	u8 i, j, num;
-+	u32 loop_time;
-+
-+	num = ARRAY_SIZE(hclge_ssu_reg_common_msg);
-+	for (i = 0; i < num; i++) {
-+		msg = hclge_ssu_reg_common_msg[i];
-+		if (!hclge_err_mod_check_support_cmd(msg.cmd, hdev))
-+			continue;
-+		loop_time = 1;
-+		loop_para[0] = 0;
-+		if (msg.need_para) {
-+			loop_time = hdev->ae_dev->dev_specs.tnl_num;
-+			for (j = 0; j < loop_time; j++)
-+				loop_para[j] = j + 1;
-+		}
-+		hclge_query_reg_info(hdev, &msg, loop_time, loop_para);
-+	}
-+}
-+
- static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
- 	{
- 		.module_id = MODULE_NONE,
-@@ -1210,7 +1630,8 @@ static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
- 		.msg = "MODULE_GE"
- 	}, {
- 		.module_id = MODULE_IGU_EGU,
--		.msg = "MODULE_IGU_EGU"
-+		.msg = "MODULE_IGU_EGU",
-+		.query_reg_info = hclge_query_reg_info_of_ssu
- 	}, {
- 		.module_id = MODULE_LGE,
- 		.msg = "MODULE_LGE"
-@@ -1231,7 +1652,8 @@ static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
- 		.msg = "MODULE_RTC"
- 	}, {
- 		.module_id = MODULE_SSU,
--		.msg = "MODULE_SSU"
-+		.msg = "MODULE_SSU",
-+		.query_reg_info = hclge_query_reg_info_of_ssu
- 	}, {
- 		.module_id = MODULE_TM,
- 		.msg = "MODULE_TM"
-@@ -2762,7 +3184,7 @@ void hclge_handle_occurred_error(struct hclge_dev *hdev)
- }
- 
- static bool
--hclge_handle_error_type_reg_log(struct device *dev,
-+hclge_handle_error_type_reg_log(struct hclge_dev *hdev,
- 				struct hclge_mod_err_info *mod_info,
- 				struct hclge_type_reg_err_info *type_reg_info)
- {
-@@ -2770,6 +3192,7 @@ hclge_handle_error_type_reg_log(struct device *dev,
- #define HCLGE_ERR_TYPE_IS_RAS_OFFSET 7
- 
- 	u8 mod_id, total_module, type_id, total_type, i, is_ras;
-+	struct device *dev = &hdev->pdev->dev;
- 	u8 index_module = MODULE_NONE;
- 	u8 index_type = NONE_ERROR;
- 	bool cause_by_vf = false;
-@@ -2810,6 +3233,9 @@ hclge_handle_error_type_reg_log(struct device *dev,
- 	for (i = 0; i < type_reg_info->reg_num; i++)
- 		dev_err(dev, "0x%08x\n", type_reg_info->hclge_reg[i]);
- 
-+	if (hclge_hw_module_id_st[index_module].query_reg_info)
-+		hclge_hw_module_id_st[index_module].query_reg_info(hdev);
-+
- 	return cause_by_vf;
- }
- 
-@@ -2850,7 +3276,7 @@ static void hclge_handle_error_module_log(struct hnae3_ae_dev *ae_dev,
- 
- 			type_reg_info = (struct hclge_type_reg_err_info *)
- 					    &buf[offset++];
--			if (hclge_handle_error_type_reg_log(dev, mod_info,
-+			if (hclge_handle_error_type_reg_log(hdev, mod_info,
- 							    type_reg_info))
- 				cause_by_vf = true;
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 68b738affa66..45a783a50643 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -5,6 +5,7 @@
- #define __HCLGE_ERR_H
- 
- #include "hclge_main.h"
-+#include "hclge_debugfs.h"
- #include "hnae3.h"
- 
- #define HCLGE_MPF_RAS_INT_MIN_BD_NUM	10
-@@ -115,6 +116,18 @@
- #define HCLGE_REG_NUM_MAX			256
- #define HCLGE_DESC_NO_DATA_LEN			8
- 
-+#define HCLGE_BD_NUM_SSU_REG_0		10
-+#define HCLGE_BD_NUM_SSU_REG_1		15
-+#define HCLGE_BD_NUM_RPU_REG_0		1
-+#define HCLGE_BD_NUM_RPU_REG_1		2
-+#define HCLGE_BD_NUM_IGU_EGU_REG	9
-+#define HCLGE_BD_NUM_GEN_REG		8
-+#define HCLGE_MOD_REG_INFO_LEN_MAX	256
-+#define HCLGE_MOD_REG_EXTRA_LEN		11
-+#define HCLGE_MOD_REG_VALUE_LEN		9
-+#define HCLGE_MOD_REG_GROUP_MAX_SIZE	6
-+#define HCLGE_MOD_MSG_PARA_ARRAY_MAX_SIZE	8
-+
- enum hclge_err_int_type {
- 	HCLGE_ERR_INT_MSIX = 0,
- 	HCLGE_ERR_INT_RAS_CE = 1,
-@@ -191,6 +204,7 @@ struct hclge_hw_error {
- struct hclge_hw_module_id {
- 	enum hclge_mod_name_list module_id;
- 	const char *msg;
-+	void (*query_reg_info)(struct hclge_dev *hdev);
- };
- 
- struct hclge_hw_type_id {
-@@ -218,6 +232,28 @@ struct hclge_type_reg_err_info {
- 	u32 hclge_reg[HCLGE_REG_NUM_MAX];
- };
- 
-+struct hclge_mod_reg_info {
-+	const char *reg_name;
-+	bool has_suffix; /* add suffix for register name */
-+	/* the positions of reg values in hclge_desc.data */
-+	u8 reg_offset_group[HCLGE_MOD_REG_GROUP_MAX_SIZE];
-+	u8 group_size;
-+};
-+
-+/* This structure defines cmdq used to query the hardware module debug
-+ * regisgers.
-+ */
-+struct hclge_mod_reg_common_msg {
-+	enum hclge_opcode_type cmd;
-+	struct hclge_desc *desc;
-+	u8 bd_num; /* the bd number of hclge_desc used */
-+	bool need_para; /* whether this cmdq needs to add para */
-+
-+	/* the regs need to print */
-+	const struct hclge_mod_reg_info *result_regs;
-+	u16 result_regs_size;
-+};
-+
- int hclge_config_mac_tnl_int(struct hclge_dev *hdev, bool en);
- int hclge_config_nic_hw_error(struct hclge_dev *hdev, bool state);
- int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en);
--- 
-2.30.0
+[0] Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
+https://lore.kernel.org/lkml/Zbnq5o_HJOMIIK-c@Boquns-Mac-mini.home/
 
+[1] Subject: [PATCH 8/8] rcu/exp: Remove rcu_par_gp_wq
+https://lore.kernel.org/lkml/20240129232349.3170819-9-boqun.feng@gmail.com/
+
+[2] https://github.com/fbq/linux.git rcu-exp.2024.01.29b
+> 
+> INFO: task kworker/1:2:783 blocked for more than 143 seconds.
+>       Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:kworker/1:2     state:D stack:21872 pid:783   tgid:783   ppid:2      flags:0x00004000
+> Workqueue: events switchdev_deferred_process_work
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5400 [inline]
+>  __schedule+0x17d1/0x49f0 kernel/sched/core.c:6727
+>  __schedule_loop kernel/sched/core.c:6802 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6817
+>  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6874
+>  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+>  __mutex_lock+0x6a3/0xd70 kernel/locking/mutex.c:752
+>  switchdev_deferred_process_work+0xe/0x20 net/switchdev/switchdev.c:75
+>  process_one_work kernel/workqueue.c:2633 [inline]
+>  process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
+>  worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
+>  kthread+0x2ef/0x390 kernel/kthread.c:388
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> INFO: task dhcpcd:4739 blocked for more than 143 seconds.
+>       Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:dhcpcd          state:D stack:20952 pid:4739  tgid:4739  ppid:4738   flags:0x00004002
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5400 [inline]
+>  __schedule+0x17d1/0x49f0 kernel/sched/core.c:6727
+>  __schedule_loop kernel/sched/core.c:6802 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6817
+>  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6874
+>  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+>  __mutex_lock+0x6a3/0xd70 kernel/locking/mutex.c:752
+>  rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+>  netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
+>  netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
+>  netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
+>  sock_sendmsg_nosec net/socket.c:730 [inline]
+>  __sock_sendmsg+0x221/0x270 net/socket.c:745
+>  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
+>  ___sys_sendmsg net/socket.c:2638 [inline]
+>  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
+>  do_syscall_64+0xf9/0x240
+>  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+> RIP: 0033:0x7f85a0637a4b
+> RSP: 002b:00007ffebbd31e68 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007f85a055f6c0 RCX: 00007f85a0637a4b
+> RDX: 0000000000000000 RSI: 00007ffebbd46018 RDI: 000000000000000f
+> RBP: 000000000000000f R08: 0000000000000000 R09: 00007ffebbd46018
+> R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+> R13: 00007ffebbd46018 R14: 0000000000000030 R15: 0000000000000001
+>  </TASK>
+> INFO: task kworker/0:3:5086 blocked for more than 143 seconds.
+>       Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:kworker/0:3     state:D stack:21872 pid:5086  tgid:5086  ppid:2      flags:0x00004000
+> Workqueue: events linkwatch_event
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5400 [inline]
+>  __schedule+0x17d1/0x49f0 kernel/sched/core.c:6727
+>  __schedule_loop kernel/sched/core.c:6802 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6817
+>  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6874
+>  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+>  __mutex_lock+0x6a3/0xd70 kernel/locking/mutex.c:752
+>  linkwatch_event+0xe/0x60 net/core/link_watch.c:281
+>  process_one_work kernel/workqueue.c:2633 [inline]
+>  process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
+>  worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
+>  kthread+0x2ef/0x390 kernel/kthread.c:388
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> INFO: task syz-executor.0:14954 blocked for more than 144 seconds.
+>       Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz-executor.0  state:D stack:19888 pid:14954 tgid:14954 ppid:1      flags:0x00004006
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5400 [inline]
+>  __schedule+0x17d1/0x49f0 kernel/sched/core.c:6727
+>  __schedule_loop kernel/sched/core.c:6802 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6817
+>  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6874
+>  __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+>  __mutex_lock+0x6a3/0xd70 kernel/locking/mutex.c:752
+>  rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+>  netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
+>  netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
+>  netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
+>  sock_sendmsg_nosec net/socket.c:730 [inline]
+>  __sock_sendmsg+0x221/0x270 net/socket.c:745
+>  __sys_sendto+0x3a4/0x4f0 net/socket.c:2191
+>  __do_sys_sendto net/socket.c:2203 [inline]
+>  __se_sys_sendto net/socket.c:2199 [inline]
+>  __x64_sys_sendto+0xde/0x100 net/socket.c:2199
+>  do_syscall_64+0xf9/0x240
+>  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+> RIP: 0033:0x7f2a1c07fa9c
+> RSP: 002b:00007ffc5dd132a0 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
+> RAX: ffffffffffffffda RBX: 00007f2a1ccd4620 RCX: 00007f2a1c07fa9c
+> RDX: 0000000000000028 RSI: 00007f2a1ccd4670 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 00007ffc5dd132f4 R09: 000000000000000c
+> R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000003
+> R13: 0000000000000000 R14: 00007f2a1ccd4670 R15: 0000000000000000
+>  </TASK>
+> 
+> Showing all locks held in the system:
+> 3 locks held by kworker/0:1/8:
+>  #0: ffff88802ae89d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #0: ffff88802ae89d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #1: ffffc900000d7d20 ((work_completion)(&(&net->ipv6.addr_chk_work)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #1: ffffc900000d7d20 ((work_completion)(&(&net->ipv6.addr_chk_work)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #2: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: addrconf_verify_work+0x19/0x30 net/ipv6/addrconf.c:4671
+> 1 lock held by khungtaskd/29:
+>  #0: ffffffff8e1308e0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+>  #0: ffffffff8e1308e0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
+>  #0: ffffffff8e1308e0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+> 5 locks held by kworker/u4:5/146:
+>  #0: ffff8880162f0938 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #0: ffff8880162f0938 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #1: ffffc90002e6fd20 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #1: ffffc90002e6fd20 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #2: ffffffff8f3673d0 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0xf5/0xb90 net/core/net_namespace.c:580
+>  #3: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: default_device_exit_batch+0xdb/0x650 net/core/dev.c:11596
+>  #4: ffffffff8e136278 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
+>  #4: ffffffff8e136278 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x39a/0x820 kernel/rcu/tree_exp.h:939
+> 3 locks held by kworker/1:2/783:
+>  #0: ffff888014c8cd38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #0: ffff888014c8cd38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #1: ffffc9000408fd20 (deferred_process_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #1: ffffc9000408fd20 (deferred_process_work){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #2: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: switchdev_deferred_process_work+0xe/0x20 net/switchdev/switchdev.c:75
+> 1 lock held by dhcpcd/4739:
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+> 2 locks held by getty/4822:
+>  #0: ffff88802b64a0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+>  #1: ffffc90002f162f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b4/0x1e10 drivers/tty/n_tty.c:2201
+> 3 locks held by kworker/1:4/5083:
+>  #0: ffff88802ae89d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #0: ffff88802ae89d38 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #1: ffffc90003f6fd20 ((work_completion)(&(&net->ipv6.addr_chk_work)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #1: ffffc90003f6fd20 ((work_completion)(&(&net->ipv6.addr_chk_work)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #2: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: addrconf_verify_work+0x19/0x30 net/ipv6/addrconf.c:4671
+> 3 locks held by kworker/0:3/5086:
+>  #0: ffff888014c8cd38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #0: ffff888014c8cd38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #1: ffffc90003fafd20 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2608 [inline]
+>  #1: ffffc90003fafd20 ((linkwatch_work).work){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2706
+>  #2: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: linkwatch_event+0xe/0x60 net/core/link_watch.c:281
+> 1 lock held by syz-executor.0/14954:
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+> 1 lock held by syz-executor.0/14991:
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+> 1 lock held by syz-executor.0/14998:
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+>  #0: ffffffff8f373948 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6612
+> 
+> =============================================
+> 
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 29 Comm: khungtaskd Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+>  nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+>  nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+>  trigger_all_cpu_backtrace include/linux/nmi.h:160 [inline]
+>  check_hung_uninterruptible_tasks kernel/hung_task.c:222 [inline]
+>  watchdog+0xfaf/0xff0 kernel/hung_task.c:379
+>  kthread+0x2ef/0x390 kernel/kthread.c:388
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> Sending NMI from CPU 0 to CPUs 1:
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 14994 Comm: kworker/u4:1 Not tainted 6.8.0-rc1-syzkaller-00009-gdd85149da01f-dirty #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+> Workqueue: events_unbound toggle_allocation_gate
+> RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
+> RIP: 0010:check_preemption_disabled+0x20/0x120 lib/smp_processor_id.c:16
+> Code: 90 90 90 90 90 90 90 90 90 90 41 57 41 56 41 54 53 48 83 ec 10 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 65 8b 1d 7c 23 9e 74 <65> 8b 05 71 23 9e 74 a9 ff ff ff 7f 74 26 65 48 8b 04 25 28 00 00
+> RSP: 0018:ffffc9000a8ef668 EFLAGS: 00000082
+> RAX: 7e9a76b27b63e200 RBX: 0000000000000001 RCX: 0000000000000000
+> RDX: dffffc0000000000 RSI: ffffffff8bfe5f40 RDI: ffffffff8bfe5f00
+> RBP: ffffc9000a8ef770 R08: ffff888014c80627 R09: 1ffff110029900c4
+> R10: dffffc0000000000 R11: ffffed10029900c5 R12: 0000000000000001
+> R13: 00000000000327bf R14: ffff8880b953c0c0 R15: 000000000000000c
+> FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000561393482ff8 CR3: 000000000df32000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <NMI>
+>  </NMI>
+>  <TASK>
+>  get_flush_tlb_info arch/x86/mm/tlb.c:987 [inline]
+>  flush_tlb_mm_range+0x23f/0x5c0 arch/x86/mm/tlb.c:1021
+>  __text_poke+0x95b/0xd30 arch/x86/kernel/alternative.c:1949
+>  text_poke arch/x86/kernel/alternative.c:1986 [inline]
+>  text_poke_bp_batch+0x8cd/0xb30 arch/x86/kernel/alternative.c:2375
+>  text_poke_flush arch/x86/kernel/alternative.c:2488 [inline]
+>  text_poke_finish+0x30/0x50 arch/x86/kernel/alternative.c:2495
+>  arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
+>  static_key_enable_cpuslocked+0x136/0x260 kernel/jump_label.c:205
+>  static_key_enable+0x1a/0x20 kernel/jump_label.c:218
+>  toggle_allocation_gate+0xb5/0x250 mm/kfence/core.c:826
+>  process_one_work kernel/workqueue.c:2633 [inline]
+>  process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
+>  worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
+>  kthread+0x2ef/0x390 kernel/kthread.c:388
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> 
+> 
+> Tested on:
+> 
+> commit:         dd85149d rcu/exp: Remove rcu_par_gp_wq
+> git tree:       https://github.com/fbq/linux.git rcu-exp.2024.01.29b
+> console output: https://syzkaller.appspot.com/x/log.txt?x=174332fa180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4151600db6ca0ae1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e5167d7144a62715044c
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=103a2c1a180000
