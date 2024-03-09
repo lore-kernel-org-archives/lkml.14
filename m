@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE215495CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6225481D3;
 	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008149; cv=none; b=B/420UwsdcWlqGo6ih1UcP7E/78uemuZPMKMTJ/gW2stREeDlLVmUwDhOEKKQnQq0ITwxBDHt1WIfpkXBJimtIS8ANwmm4xtpVAAp8X8wVLh7Pn0yXO0knuD0vpf2p7rpWAidHqijlzwkhcnuHDonm4AsH4eToarLnbzw4ZyQxQ=
+	t=1710008149; cv=none; b=aWi3kxEZrARvVG+/0eAJ7pqq2XdoyVgSQ66oUuZIoC5rZG81w/Drq90RoCko2hQwcJEuIsl72U+CLauhitwplGUJRRZ+773cfvGPQZsyba/eiN3ifoLT+1aL93ePgZ8GwtkXBwjkAqi+XKyDOwBLA0GDmc0mOdvrLFES/CWfCDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710008149; c=relaxed/simple;
-	bh=gN/Ux84r26F4SIDmLoJJKxRQzomkv5eOdwj3wuiudB0=;
+	bh=qynEqvo3qkPlnNSVVTQDQ11rLnDwkRSu974fAc9LoQU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SRSLNlzqn53c1HxDpFxgdclsA4GtIShrq6zP0zVvDSMPa7BvpeSfgL3rgRgJjH+ztKJsBlE51C6KYy2vJVKhNR5FWnWiX1RZM7j8yw2ETliP8DQ+VKk0eaaS4rvVXUqderu5aOk/W7d5Bg2Ty/itE8mAYxDC3Vkmq8y+FI0n3nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohxGrzV8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=HJ4QtRn8IkZAMhhQSF+qxCpGHfeHtkCKRTwXsGSjziz5KATMBFdUpD7d6c3ePAWzz5qAax3PpOYSFC5KMpa/RTHS0D3PaMKSso50IuQJHS58JnlTgzLKzLSMDpegsj4AojdQU1wHX8MRULntmlTrklcfhmWuGJfpIpetOUsO7ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjNUirNx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohxGrzV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A9CBEC41613;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjNUirNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 851EFC433A6;
 	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710008149;
-	bh=gN/Ux84r26F4SIDmLoJJKxRQzomkv5eOdwj3wuiudB0=;
+	bh=qynEqvo3qkPlnNSVVTQDQ11rLnDwkRSu974fAc9LoQU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ohxGrzV8A8ttDa+X45jbG6/LLg3B/15gZawQKrWsWsKw6ZYTUtDVzxd7yRquRrroT
-	 FTImCR63ODZ/19tcyby6EEwbIkqAhB9Vo/+K8klH+KMEM7bjE/DcYU4A1f+b2lzdsH
-	 lY+/bjJmCRQdoJDwsDA4Gy38sz4WoBxLdrnK9CRzefjd8aqmNYBvAmIQSZHPX73WZ0
-	 Ck5jSytkASf/qmZ0NlyHNBCsaAEYcbGD3OgOClfY10TReQAYPBzd9jj5iUgf32AhC5
-	 iLB6SvUCETWm5ydZiW4NsMbbmWJ/rE3G10RvVq79jOPUxmlxiA11ItKWDlax9mIyke
-	 jyrRUCmMQjgmw==
+	b=rjNUirNx2IQSAQ0drXNASFMNcadniZ627DsuPp4Y76m8OjEhdYM+sP+iJZdZNZ3Ga
+	 eU5EoHpw1i46K3+jcxPyp3oVSPPs7fzBf5Jyr4xkU7A5flfDvvcFQNoDEbwzO6g9cO
+	 w+eEdxsVLuWkA9KC9IgepOzIB1U23KFCKrUlDselQIDvJgJuUGjvn6M+cpPVn99Is0
+	 kQuWOAJ4Ro91hrQ37SwcjUfxAuYYiV7SHUa3O7MDHTHCqfYXp+jbsH3fPzeEfraYn+
+	 m2b/DoVbVM/SjG1dj5KlC4x2VuiWO8569DgB0bcAzWHEXnmIZXfg+h0m8tzfzEm5x/
+	 hwacS4XZk0iAA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983DDC54E64;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C6C54E63;
 	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:38 +0100
-Subject: [PATCH v2 17/28] sparc32: Drop run-time cpuid patching
+Date: Sat, 09 Mar 2024 19:15:36 +0100
+Subject: [PATCH v2 15/28] sparc32: Drop check for sparc_model
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-17-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-15-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=3320;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=7187;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=WR8i3LCeKk7owTDWXkof95pLgCJqOcU2bM6i301Ih2U=; =?utf-8?q?b=3DVjlQ98TX1IGm?=
- =?utf-8?q?687O50jMVaij7sN1LUtJUqv1Eywc/sYeED2dOJcakgTZ+E+KOnHFZ2Rko3l1qDQN?=
- PQqmaoJ9BDRqL2xIwfwVqMl5df8diD7bJ7hbGduAjzZw7rQ64ZMH
+ bh=tllW43d1GW3WMngOVgWZ0ETwL5h7tz5yA1bpgQStwuk=; =?utf-8?q?b=3DFkfobzEGKy4q?=
+ =?utf-8?q?7bXDQj7rSjW0qUzm17XSu/fr1lm8y+XuLLvpxqyAgAIKZRQl6b/XWGLR53mkW0nU?=
+ mOqt7GgiALWMxV6hRk9BO7kCfc88oPOgZ97Cf6mgZMl0nY0uBXVu
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,121 +70,266 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-The CPU is always leon, so the run-time cpuid patching is no longer
-required.
+sparc32 is always LEON, so no need to check for the model.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reported-by: Andreas Larsson <andreas@gaisler.com>
+Acked-by: Arnd Bergmann <arnd@kernel.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
 ---
- arch/sparc/include/asm/winmacro.h | 12 ------------
- arch/sparc/kernel/entry.S         | 13 -------------
- arch/sparc/kernel/setup_32.c      | 31 -------------------------------
- 3 files changed, 56 deletions(-)
+ arch/sparc/include/asm/cpu_type.h | 18 ---------
+ arch/sparc/include/asm/io_32.h    |  4 +-
+ arch/sparc/kernel/devices.c       |  7 +---
+ arch/sparc/kernel/ioport.c        |  4 +-
+ arch/sparc/kernel/leon_pmc.c      | 16 ++++----
+ arch/sparc/kernel/setup_32.c      | 79 +--------------------------------------
+ 6 files changed, 12 insertions(+), 116 deletions(-)
 
-diff --git a/arch/sparc/include/asm/winmacro.h b/arch/sparc/include/asm/winmacro.h
-index b6e911f5d93c..16144900bd6c 100644
---- a/arch/sparc/include/asm/winmacro.h
-+++ b/arch/sparc/include/asm/winmacro.h
-@@ -105,21 +105,9 @@
+diff --git a/arch/sparc/include/asm/cpu_type.h b/arch/sparc/include/asm/cpu_type.h
+index 2b59799859d1..3e0154c3f41d 100644
+--- a/arch/sparc/include/asm/cpu_type.h
++++ b/arch/sparc/include/asm/cpu_type.h
+@@ -2,28 +2,10 @@
+ #ifndef __ASM_CPU_TYPE_H
+ #define __ASM_CPU_TYPE_H
  
- #ifdef CONFIG_SMP
- #define LOAD_CURRENT(dest_reg, idreg) 			\
--661:	rd	%tbr, %idreg;				\
--	srl	%idreg, 10, %idreg;			\
--	and	%idreg, 0xc, %idreg;			\
--	.section	.cpuid_patch, "ax";		\
--	/* Instruction location. */			\
--	.word		661b;				\
--	/* SUN4D implementation. */			\
--	lda	 [%g0] ASI_M_VIKING_TMP1, %idreg;	\
--	sll	 %idreg, 2, %idreg;			\
--	nop;						\
--	/* LEON implementation. */			\
- 	rd 	%asr17, %idreg;				\
- 	srl	%idreg, 0x1c, %idreg;			\
- 	sll	%idreg, 0x02, %idreg;			\
--	.previous;					\
- 	sethi    %hi(current_set), %dest_reg; 		\
- 	or       %dest_reg, %lo(current_set), %dest_reg;\
- 	ld       [%idreg + %dest_reg], %dest_reg;
-diff --git a/arch/sparc/kernel/entry.S b/arch/sparc/kernel/entry.S
-index 0f2417ee3f95..f158cbca3e62 100644
---- a/arch/sparc/kernel/entry.S
-+++ b/arch/sparc/kernel/entry.S
-@@ -984,21 +984,8 @@ flushw_all:
+-/*
+- * Sparc (general) CPU types
+- */
+-enum sparc_cpu {
+-  sun4m       = 0x00,
+-  sun4d       = 0x01,
+-  sun4e       = 0x02,
+-  sun4u       = 0x03, /* V8 ploos ploos */
+-  sun_unknown = 0x04,
+-  ap1000      = 0x05, /* almost a sun4m */
+-  sparc_leon  = 0x06, /* Leon SoC */
+-};
+-
+ #ifdef CONFIG_SPARC32
+-extern enum sparc_cpu sparc_cpu_model;
  
- #ifdef CONFIG_SMP
- ENTRY(hard_smp_processor_id)
--661:	rd		%tbr, %g1
--	srl		%g1, 12, %o0
--	and		%o0, 3, %o0
--	.section	.cpuid_patch, "ax"
--	/* Instruction location. */
--	.word		661b
--	/* SUN4D implementation. */
--	lda		[%g0] ASI_M_VIKING_TMP1, %o0
--	nop
--	nop
--	/* LEON implementation. */
- 	rd		%asr17, %o0
- 	srl		%o0, 0x1c, %o0
--	nop
--	.previous
- 	retl
- 	 nop
- ENDPROC(hard_smp_processor_id)
+ #define SUN4M_NCPUS            4              /* Architectural limit of sun4m. */
+ 
+-#else
+-
+-#define sparc_cpu_model sun4u
+-
+ #endif
+ 
+ #endif /* __ASM_CPU_TYPE_H */
+diff --git a/arch/sparc/include/asm/io_32.h b/arch/sparc/include/asm/io_32.h
+index 549f0a72280d..83abe709d120 100644
+--- a/arch/sparc/include/asm/io_32.h
++++ b/arch/sparc/include/asm/io_32.h
+@@ -138,11 +138,11 @@ void pci_iounmap(struct pci_dev *dev, void __iomem *);
+ 
+ static inline int sbus_can_dma_64bit(void)
+ {
+-	return 0; /* actually, sparc_cpu_model==sun4d */
++	return 0;
+ }
+ static inline int sbus_can_burst64(void)
+ {
+-	return 0; /* actually, sparc_cpu_model==sun4d */
++	return 0;
+ }
+ struct device;
+ void sbus_set_sbus64(struct device *, int);
+diff --git a/arch/sparc/kernel/devices.c b/arch/sparc/kernel/devices.c
+index b3c2d51b22c4..2963e89611a3 100644
+--- a/arch/sparc/kernel/devices.c
++++ b/arch/sparc/kernel/devices.c
+@@ -26,8 +26,6 @@
+ 
+ static char *cpu_mid_prop(void)
+ {
+-	if (sparc_cpu_model == sun4d)
+-		return "cpu-id";
+ 	return "mid";
+ }
+ 
+@@ -40,8 +38,6 @@ static int check_cpu_node(phandle nd, int *cur_inst,
+ 			*prom_node = nd;
+ 		if (mid) {
+ 			*mid = prom_getintdefault(nd, cpu_mid_prop(), 0);
+-			if (sparc_cpu_model == sun4m)
+-				*mid &= 3;
+ 		}
+ 		return 0;
+ 	}
+@@ -92,8 +88,7 @@ static int cpu_mid_compare(phandle nd, int instance, void *_arg)
+ 	int this_mid;
+ 
+ 	this_mid = prom_getintdefault(nd, cpu_mid_prop(), 0);
+-	if (this_mid == desired_mid
+-	    || (sparc_cpu_model == sun4m && (this_mid & 3) == desired_mid))
++	if (this_mid == desired_mid)
+ 		return 0;
+ 	return -ENODEV;
+ }
+diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
+index 5ebca5c7af1e..cf0ace29704a 100644
+--- a/arch/sparc/kernel/ioport.c
++++ b/arch/sparc/kernel/ioport.c
+@@ -309,9 +309,7 @@ arch_initcall(sparc_register_ioport);
+ void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir)
+ {
+-	if (dir != DMA_TO_DEVICE &&
+-	    sparc_cpu_model == sparc_leon &&
+-	    !sparc_leon3_snooping_enabled())
++	if (dir != DMA_TO_DEVICE && !sparc_leon3_snooping_enabled())
+ 		leon_flush_dcache_all();
+ }
+ 
+diff --git a/arch/sparc/kernel/leon_pmc.c b/arch/sparc/kernel/leon_pmc.c
+index 6c00cbad7fb5..d4a2d49f941c 100644
+--- a/arch/sparc/kernel/leon_pmc.c
++++ b/arch/sparc/kernel/leon_pmc.c
+@@ -79,15 +79,13 @@ static void pmc_leon_idle(void)
+ /* Install LEON Power Down function */
+ static int __init leon_pmc_install(void)
+ {
+-	if (sparc_cpu_model == sparc_leon) {
+-		/* Assign power management IDLE handler */
+-		if (pmc_leon_need_fixup())
+-			sparc_idle = pmc_leon_idle_fixup;
+-		else
+-			sparc_idle = pmc_leon_idle;
+-
+-		printk(KERN_INFO "leon: power management initialized\n");
+-	}
++	/* Assign power management IDLE handler */
++	if (pmc_leon_need_fixup())
++		sparc_idle = pmc_leon_idle_fixup;
++	else
++		sparc_idle = pmc_leon_idle;
++
++	printk(KERN_INFO "leon: power management initialized\n");
+ 
+ 	return 0;
+ }
 diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-index 0f38d72aae2d..af5f143ed882 100644
+index 3c6c16fde8c3..0f38d72aae2d 100644
 --- a/arch/sparc/kernel/setup_32.c
 +++ b/arch/sparc/kernel/setup_32.c
-@@ -178,34 +178,6 @@ extern int root_mountflags;
+@@ -189,30 +189,12 @@ static void __init per_cpu_patch(void)
+ {
+ 	struct cpuid_patch_entry *p;
  
- char reboot_command[COMMAND_LINE_SIZE];
- 
--struct cpuid_patch_entry {
--	unsigned int	addr;
--	unsigned int	sun4d[3];
--	unsigned int	leon[3];
--};
--extern struct cpuid_patch_entry __cpuid_patch, __cpuid_patch_end;
--
--static void __init per_cpu_patch(void)
--{
--	struct cpuid_patch_entry *p;
--
--	p = &__cpuid_patch;
--	while (p < &__cpuid_patch_end) {
--		unsigned long addr = p->addr;
--		unsigned int *insns;
--
--		insns = &p->leon[0];
--		*(unsigned int *) (addr + 0) = insns[0];
--		flushi(addr + 0);
--		*(unsigned int *) (addr + 4) = insns[1];
--		flushi(addr + 4);
--		*(unsigned int *) (addr + 8) = insns[2];
--		flushi(addr + 8);
--
--		p++;
+-	if (sparc_cpu_model == sun4m) {
+-		/* Nothing to do, this is what the unpatched code
+-		 * targets.
+-		 */
+-		return;
 -	}
--}
+-
+ 	p = &__cpuid_patch;
+ 	while (p < &__cpuid_patch_end) {
+ 		unsigned long addr = p->addr;
+ 		unsigned int *insns;
+ 
+-		switch (sparc_cpu_model) {
+-		case sun4d:
+-			insns = &p->sun4d[0];
+-			break;
+-
+-		case sparc_leon:
+-			insns = &p->leon[0];
+-			break;
+-		default:
+-			prom_printf("Unknown cpu type, halting.\n");
+-			prom_halt();
+-		}
++		insns = &p->leon[0];
+ 		*(unsigned int *) (addr + 0) = insns[0];
+ 		flushi(addr + 0);
+ 		*(unsigned int *) (addr + 4) = insns[1];
+@@ -224,31 +206,9 @@ static void __init per_cpu_patch(void)
+ 	}
+ }
+ 
+-struct leon_1insn_patch_entry {
+-	unsigned int addr;
+-	unsigned int insn;
+-};
+-
+-enum sparc_cpu sparc_cpu_model;
+-EXPORT_SYMBOL(sparc_cpu_model);
 -
  static __init void leon_patch(void)
  {
- 	/* Default instruction is leon - no patching */
-@@ -271,9 +243,6 @@ void __init setup_arch(char **cmdline_p)
- 		(*(linux_dbvec->teach_debugger))();
- 	}
- 
--	/* Run-time patch instructions to match the cpu model */
--	per_cpu_patch();
+-	struct leon_1insn_patch_entry *start = (void *)__leon_1insn_patch;
+-	struct leon_1insn_patch_entry *end = (void *)__leon_1insn_patch_end;
 -
- 	paging_init();
+ 	/* Default instruction is leon - no patching */
+-	if (sparc_cpu_model == sparc_leon)
+-		return;
+-
+-	while (start < end) {
+-		unsigned long addr = start->addr;
+-
+-		*(unsigned int *)(addr) = start->insn;
+-		flushi(addr);
+-
+-		start++;
+-	}
+ }
  
- 	smp_setup_cpu_possible_map();
+ struct tt_entry *sparc_ttable;
+@@ -259,22 +219,6 @@ struct tt_entry *sparc_ttable;
+ void __init sparc32_start_kernel(struct linux_romvec *rp)
+ {
+ 	prom_init(rp);
+-
+-	/* Set sparc_cpu_model */
+-	sparc_cpu_model = sun_unknown;
+-	if (!strcmp(&cputypval[0], "sun4m"))
+-		sparc_cpu_model = sun4m;
+-	if (!strcmp(&cputypval[0], "sun4s"))
+-		sparc_cpu_model = sun4m; /* CP-1200 with PROM 2.30 -E */
+-	if (!strcmp(&cputypval[0], "sun4d"))
+-		sparc_cpu_model = sun4d;
+-	if (!strcmp(&cputypval[0], "sun4e"))
+-		sparc_cpu_model = sun4e;
+-	if (!strcmp(&cputypval[0], "sun4u"))
+-		sparc_cpu_model = sun4u;
+-	if (!strncmp(&cputypval[0], "leon" , 4))
+-		sparc_cpu_model = sparc_leon;
+-
+ 	leon_patch();
+ 	start_kernel();
+ }
+@@ -295,27 +239,6 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	register_console(&prom_early_console);
+ 
+-	switch(sparc_cpu_model) {
+-	case sun4m:
+-		pr_info("ARCH: SUN4M\n");
+-		break;
+-	case sun4d:
+-		pr_info("ARCH: SUN4D\n");
+-		break;
+-	case sun4e:
+-		pr_info("ARCH: SUN4E\n");
+-		break;
+-	case sun4u:
+-		pr_info("ARCH: SUN4U\n");
+-		break;
+-	case sparc_leon:
+-		pr_info("ARCH: LEON\n");
+-		break;
+-	default:
+-		pr_info("ARCH: UNKNOWN!\n");
+-		break;
+-	}
+-
+ 	idprom_init();
+ 	load_mmu();
+ 
 
 -- 
 2.34.1
