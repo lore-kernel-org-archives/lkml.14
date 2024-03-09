@@ -1,113 +1,115 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A755753E27;
-	Sat,  9 Mar 2024 20:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3056416FF30
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 20:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710015220; cv=none; b=RLQPHpdrqzpX7pGs2cR6/E5jKLtesb8MhQLoLDLtSH7+NXuFJjcPX4SLUoCdnOjHEKFPipvBQnhefZxkiD59n2HYNHxmTDFsjiCsKEa+BnmYH8SRF54W68vo3cuSsPxPq6zdzNSSjFyznMjhTIzWfs0hH5lkuQeXSIpEo7AJz+I=
+	t=1710015893; cv=none; b=vEcGxsPMQpwHMcZsoF9+By9mQ/hEPbzHDBEMNjKB5L5UyeO3/XFvvMujeDUMmfETSd/28yG0NAuaSw7qdp1FsEVRv7ZgfRIZJccW+GktBz/OtlFbx1RIQD0gjL0UkkZyVMguRMsah13kH0wfv02UcB5xsgneqgsSZszJ6NBH3wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710015220; c=relaxed/simple;
-	bh=ahUYjYw8kA/+Bjg2ABTW2gzExb4Nrutf13nNb+pttWs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=otgYrAhO4+74i/BHADajgnWZuyGPpB5ZIakaJmbfWGyEC54CmT8ySEWJe2sQIbOnUKNb8sjECf1Nt75VmXVDYOe/kuQNATZ32X3bhwqLQO5g+Lvet1YbmGIzzDPIZTFNtyXGZVdOKNlPNJYfb1NB/bFpBtyDjRgNQYKQ9yLi2Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fiU1ZcuW; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1710015893; c=relaxed/simple;
+	bh=K9RoT73X71QnB+uU8sWtSEx1Mtsrf1E5zhfyiv3p1ZE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DTvy3KzbtTw5fJ7mraJIwpaPZSgK32ikbhcTotQb1vzuzoVzpYLq/hnmO0ECCT0gvbaN8uH2rAu6cC1BEgkE2FXvQVWLdkP16ztjgVQ0TK8Q2imDkQeCcf/hl7QZO4xH/23wcWBhsMgwkKKb6VOvDMmqTWl4RLzamv3MaYFMkFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YX3h28jB; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fiU1ZcuW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1710015213; x=1710620013; i=w_armin@gmx.de;
-	bh=ahUYjYw8kA/+Bjg2ABTW2gzExb4Nrutf13nNb+pttWs=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=fiU1ZcuWSgJQiDpNOxws8xnYWx5vZLga5v+tmHcajhBqhS0eCoiH6dRwXGg3r0kB
-	 kMcEI4r5EbKbwgBNoIuT0MnDfUsNFFGt9sVFm9QCl/JKGKGR1Fhcxv2RzbPphxd5u
-	 QeraAwCE20iYT0CqNv00KyfEdoKS0mj/y6XCoLVKuSAukdLGoTuPBpE9LlixctZlc
-	 x+PKY5HgMiBbB6TU0z3OLZborhTYlIhqgBqBHhtlJM1wu25z+R3o1rKkA73Qes7kT
-	 5f/6vq9c/pwqY/+ylzhmiMY+RF4ulDNFkkyk6tHUBpOaHQoABfJxUC68kSQ//lQFQ
-	 QFlMSdbJEfl/eSJQZg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MuUnK-1qsaoI3TUY-00rZzg; Sat, 09 Mar 2024 21:13:32 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YX3h28jB"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dd10ae77d8so26162875ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710015891; x=1710620691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pzdoSSC7M3Gn4nXch6enCVEFVBAir+v+I5+bn35uJJU=;
+        b=YX3h28jB4WRGi8wJ7maxuIUdu3IA/SyxGwsGyKSysTuUxqt4RdCWISSRKrBb73+omm
+         8LrXJU8Q152eXWTVi2ap6yN+wg1jxk38dZHEfU/1xDUPkdqEwEyCqBHFVAoO1FrqnZbv
+         ccDXNWMXlkJiG1ACdvW+Ay71rFBL8lSPTFkr8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710015891; x=1710620691;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pzdoSSC7M3Gn4nXch6enCVEFVBAir+v+I5+bn35uJJU=;
+        b=HCUT6KTpknH73hzc/ie3XORFRtTXs4Es8mYYl+FXNXRW2iD72ReJq2tnZCaSlDw8Jd
+         4hS3ZIfyD1jpQFwws+jG5b5jKFyOWgCvvSiNa+LABAvXiV/rfBwSA6vqmtfuDq7QZ7KQ
+         ySjHjEJzRX3F9hwh4Ec99241ijOR4G/7Zl3UUR3hbVCOrOcTy7stny7RKZEl6zalt6Mz
+         kyq0DDoIaMsFf7l4O+Ef26Rv90EuI1bUHExoC3eAbv1sfqbIwSLxwC/NTnU4yP5Zs52C
+         4CNzV8JCvV5Pu4YXoWq615QC3nldREcUUJPpo4SOLK45Ve8ezaFcjHAl42IoEQC0jpsM
+         2HRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkJh9PyktQN+e99MTalg5ECOYVt3KkeB1hNOWcTUcbD5aw+0d6qOilAidiBGEglYa9mrjEnw8vCJ/ncs2+S70mpTjQweKCCvOmhNfO
+X-Gm-Message-State: AOJu0YymHyVOqNPVdw/T5IyG6h7hPDinsQU8Cis+jSPIaa78cgjetaPp
+	IIZghkW1Ealq4jn4DGRVruQ/XdYaiHdf3xBZASJl6G6ahNlbjETQ1XIqvaKjag==
+X-Google-Smtp-Source: AGHT+IHS3V/gDLEjjvi9Itvln/GKgAbneox6bx5epnt2P+RSO7WF1SQOAKdmHYGasuxFgTMM+KSrxg==
+X-Received: by 2002:a17:902:ee51:b0:1dc:abf0:14ee with SMTP id 17-20020a170902ee5100b001dcabf014eemr1783343plo.22.1710015891485;
+        Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kv13-20020a17090328cd00b001dc91b4081dsm1689004plb.271.2024.03.09.12.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] ACPI: bus: Indicate support for IRQ ResourceSource thru _OSC
-Date: Sat,  9 Mar 2024 21:13:10 +0100
-Message-Id: <20240309201310.7548-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240309201310.7548-1-W_Armin@gmx.de>
-References: <20240309201310.7548-1-W_Armin@gmx.de>
+Subject: [PATCH] randomize_kstack: Improve entropy diffusion
+Date: Sat,  9 Mar 2024 12:24:48 -0800
+Message-Id: <20240309202445.work.165-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ajxKF2sRDtuGSq8Evx8/nuKPIB5CoSQT3HMEoEAQCWoVsfKVSy7
- 3YvlNHTq6SHsoesZVzLEVXU5qVskul9g4jiKm5jlWxm0TTYDptHKrFWkf97dZZf0LQjCBo+
- eoT/Giaoq0UhJNBoCg4hFo1hRQAtk+7kUN44eT7pxGQ5b2D54f9LSk8Z8Tc5XqyoFB8DQIi
- gef8genRqLdtuIRTxU/LQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HCs6odhmgeA=;jlEKTmUZ4Hc0aXpEVkEpL4andRq
- hfCxjwGzEj4ezmK4WbIQjlswmlFyE1SQIltDLDL3RZy0wGjOCdG/D6SFiVd/WllhUkZpKXVx5
- D1lRBLY7tDwBh1bWSxZV53UFtZqDQtAVt0x/MRTzu/M4+5o/FQyddHAB9ZcjAvCNNY7nJV+GF
- OtBfENeereB/4jIa77hxpgE6SgLuItmH0qEjbbJ+Vh65XnwEeBT6LsgRI1w5mc7opdYlmsaCE
- DizL5iCvsJfY7K5mqcMvvWWCyWtyxVuhda+K8lqSW5iS4WriaIzXAN6GYyezsiUHJBnm2qnvY
- ouB+FNZok2DsNN085Vry6lvA7kdRmIwNSTOIRRa7szbMT+ZxH06PLs7CTlxgCde6BKepORpLw
- nvaAaVx+yyjXeV/P+TjARKl5kFN+BdBq49U+FjfkSkaMUzptKaFuuknpT0sKKzN5obRkGd49C
- CeGBHl6Z1g6ne3FO/KNNjwBNQBxcJ5SRNZRjmkziwIC4JhokFHoAYYSlEwZEtpU5ykhe6uhIx
- 3c7mPQfSV5XpfYnu+b9ezH9f7RXyFBQNvGX2X49W9zkTxOOUiYmx1jXfgV1kObQQ972gLDiNo
- C/cVrmvNdAuN7O+TTfkA8ud3AiXm8e89pZHcVZracTZhPnH32eCLa5+YpcAq4YFDk+EXq87ez
- 8yInDCxU4kMohes4udtIj2T/Mj63I1dx1+AYqPSGVOA2nMtqQZPinTBnwUJ2JuNJKysSZVqNr
- 2R/i1eyASfw8aXGnbXczHFl2p4ABzdow0DaGEBxAna1//J5su01pLZJrNU6q+rOhT5MjBQrdf
- Kcbv4JD8pYw9f2v6dcX2/LoVLhs3yIpqxzBItbu7RpuBI=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=K9RoT73X71QnB+uU8sWtSEx1Mtsrf1E5zhfyiv3p1ZE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl7MWQSFajPauij2zI2NqidKesJzjt4bPzfLCaH
+ yknBCinsCGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZezFkAAKCRCJcvTf3G3A
+ Jmw7D/9F0pyXIKqu9kZmrjuYv8/kfrd8EBz4K3EsSJ877q3bmqlQxMfJwm/KOL/Wt6HVE0a/P8a
+ dHAS5wUM14FBGvPkoEmUPu2kuxeegqRC2FCKCuvx2JiiXFVoQ/YF3RHw6XNosQUi465oFMZHf7i
+ wArtIwAloVlVK5fvYEvDoYP/fmZ+cgUxuraqrTDQZRQq637paFp+HGthtvdQd81bV4mrwDoKrpm
+ FFPbq5uvAKued3ymyZ4XFRYy7ryBz8reIgIyxACSnBX8PG5ZY/JX9eFX5Dgglyd+epZ+wkeOV3Q
+ y8mk8G+7vK/3CInx+EXsjU2biIIRKgHSYaCa2G79XRL6YiJH5y4HgONJVCZ5EgG2F91yhGuCYsi
+ zyNVm77/4EQ1EFjhP0qSritGVorn3HavQlWvSnk//b2z+VcZVQ5168aImJCyhI5IbTdKyjjxfGC
+ WnPMAnkqPIkPvhM2o9C8I7fP5FLY09G/hcZNW7pz+3G7tbOd5eEe4NqaUKqchu4KT+/3gnuWYE6
+ pmEruvww9YJn5ZcMteecUkWWHrUDMOwLu/lROpmnh00fUcs0zfg58ynqC1v0UPacrXxZH31MYzW
+ YnRnu++vJJEhejWU18Lxkc8JugyphNk95dSlnqhKjCnXnvU5qgxbV4ieXmq4OWM6J3uhbLHAZEr
+ aXbZzcE j2hbFSUQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-The ACPI IRQ mapping code supports parsing of ResourceSource,
-but this is not reported thru _OSC.
+The kstack_offset variable was really only ever using the low bits for
+kernel stack offset entropy. Add a ror32() to increase bit diffusion.
 
-Fix this by setting bit 13 ("Interrupt ResourceSource support")
-when evaluating _OSC.
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 39218ff4c625 ("stack: Optionally randomize kernel stack offset each syscall")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Jeremy Linton <jeremy.linton@arm.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/randomize_kstack.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fixes: d44fa3d46079 ("ACPI: Add support for ResourceSource/IRQ domain mapp=
-ing")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/acpi/bus.c   | 1 +
- include/linux/acpi.h | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 0c48b603098a..a87b10eef77d 100644
-=2D-- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -323,6 +323,7 @@ static void acpi_bus_osc_negotiate_platform_control(vo=
-id)
- 	capbuf[OSC_SUPPORT_DWORD] |=3D OSC_SB_PCLPI_SUPPORT;
- 	capbuf[OSC_SUPPORT_DWORD] |=3D OSC_SB_OVER_16_PSTATES_SUPPORT;
- 	capbuf[OSC_SUPPORT_DWORD] |=3D OSC_SB_GED_SUPPORT;
-+	capbuf[OSC_SUPPORT_DWORD] |=3D OSC_SB_IRQ_RESOURCE_SOURCE_SUPPORT;
- 	if (IS_ENABLED(CONFIG_ACPI_PRMT))
- 		capbuf[OSC_SUPPORT_DWORD] |=3D OSC_SB_PRM_SUPPORT;
- 	if (IS_ENABLED(CONFIG_ACPI_FFH))
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b99c83968a9d..d62be29cf7a6 100644
-=2D-- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -577,6 +577,7 @@ acpi_status acpi_run_osc(acpi_handle handle, struct ac=
-pi_osc_context *context);
- #define OSC_SB_OVER_16_PSTATES_SUPPORT		0x00000400
- #define OSC_SB_GED_SUPPORT			0x00000800
- #define OSC_SB_CPC_DIVERSE_HIGH_SUPPORT		0x00001000
-+#define OSC_SB_IRQ_RESOURCE_SOURCE_SUPPORT	0x00002000
- #define OSC_SB_CPC_FLEXIBLE_ADR_SPACE		0x00004000
- #define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00020000
- #define OSC_SB_NATIVE_USB4_SUPPORT		0x00040000
-=2D-
-2.39.2
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 5d868505a94e..6d92b68efbf6 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
+ 	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+ 				&randomize_kstack_offset)) {		\
+ 		u32 offset = raw_cpu_read(kstack_offset);		\
+-		offset ^= (rand);					\
++		offset = ror32(offset, 5) ^ (rand);			\
+ 		raw_cpu_write(kstack_offset, offset);			\
+ 	}								\
+ } while (0)
+-- 
+2.34.1
 
