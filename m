@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AF84F1FE;
-	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE67481B1;
+	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008150; cv=none; b=bzCfLnhZtr2e3r65c03rWdNr8OVoumG5Ce4T3GmLfMEsjKi/n5nxxvbo95rFSsZjGWxXeELtIADdjhi+K+xPfUazltlbwQW+b4gT94A5PXQx+xfanxjQqhZjTm/wOZuQi303GoKkjZH2z9IN2wByH93ropVIY1xitbRmKxJcg3E=
+	t=1710008149; cv=none; b=K7oAFeWjaYokbtl2xOiCBoKzajBy86eBCUIm0z1D8sq4bcgiAJpAedArqgfqL9qKNnsX1D9oqF9VPdy1yohGLVoVWZi9Wiay1HKZrzJrCehwSj3/ARZzWWybNddMavlfvYXSVlosw3/7jJ2njIGRx4l4HKkP6+8zj2+gydmehBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710008150; c=relaxed/simple;
-	bh=1zDubb7fShRJBiBaKdlYGNzDQd6hiWmYqKOaKXx77j0=;
+	s=arc-20240116; t=1710008149; c=relaxed/simple;
+	bh=xwGHJdiU+5rpNpoMuivxmKWxjS8qrzD13Vu4JHbBJy4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tLfLSgvek7aqYVje79mJ1KN92IYtOBkmtuDv1vsqreS62qI/TQ4/OOR6n/lruCaPqSabw6hlaIhxfw7LpwCjqZ9hNqWAkaGx3Fkbk1k81NqOz01rlbzK8DkxDZMtFebiWUo7gkQZu5liqSea+6Ryo3GBcceqbqcVaAhKhAMOmAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3JvjdEy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=A3FlzBUVhpyFbMvDPOt5Ammyo1kxorDAUzuh4GiW1m3sDodmDZ43q5zMJj4eNoGVWi3mAOd42XvPksLQTWhgCJaVor+uvrTxd6vj5rBYdnrq8QK2V6ugwXp6rqoqQkEAEMSlQ05ss2L02/WgLEmJx80a8X/9UMoJ+fBhe30GhvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ly0U2UnI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3JvjdEy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 64DD9C41674;
-	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ly0U2UnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 37B47C43394;
+	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710008150;
-	bh=1zDubb7fShRJBiBaKdlYGNzDQd6hiWmYqKOaKXx77j0=;
+	s=k20201202; t=1710008149;
+	bh=xwGHJdiU+5rpNpoMuivxmKWxjS8qrzD13Vu4JHbBJy4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=q3JvjdEy0D21NTJRBbWuLQdAEBUMBWcbXUu86njjmzxdrihmMqXQVnYa5Xtc5ezTU
-	 elEz5Q8yliCB0C7HBdGNqTq4n8PKMKFJ4y3Td/D6/nBH1d91rA5CGFyVX/1LpMfGBR
-	 DzjRPZZbVTFoBJyDz7cqnG5biWLhiytv1OkrATS0g7fUZnWuh3OMsK6TIVgJ2shCYf
-	 riToZj7FfdEC3zXnpNTvI9EXW5o+f55UkhtoYQnE1l5SLaRbUGTVLn7I6+TE3l8Si9
-	 fW18D7f1e3BEbw7OI9jMz1pVdjgFf1Qus//o65qAZp3Qxn7s+gwCXcsi5retnZceVk
-	 ADAXRQAhhvXRQ==
+	b=Ly0U2UnIqxPNU5ijGloqwygMmhVUYS6gjcaRaikjPKyRKfyWitUYi37Vo4XanHHib
+	 Ciu1pUuc4VlTHIfki9mt3snP5U7/lNjFL/4ZLeoWlKYy5Bj1PvFX+qxk5HQNigHcIs
+	 nx9LE+918sabzgvsDrpM8YSiuDJv17pM4BW/xWKOZ7Ze1p+Gblk5EvxZ92AQn4UEc+
+	 4euitDg9LD0bMwqo05/0CqIGOfWJmmENhUyhYWoPA2oXNomLA0u+/45zZt9PCh179S
+	 07ycuLPE5whFrtguLQHuxiQYQ7qu4Oknygbe1xN8FlKR3qyCUZIAb39YS8QosaxTLs
+	 4D7T0YSNZH/kg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E6BC54E68;
-	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234E5C54E60;
+	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:49 +0100
-Subject: [PATCH v2 28/28] fbdev/p9100: Drop now unused driver p9100
+Date: Sat, 09 Mar 2024 19:15:32 +0100
+Subject: [PATCH v2 11/28] sparc32: Drop pcic support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-28-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-11-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=11809;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=34306;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=zU7UOlIirX6Na7ABZQupyEUhXhyFQITuEXmxSg8oIfg=; =?utf-8?q?b=3Dbb8+ErWe3vyw?=
- =?utf-8?q?RZMUnLHFCa2oNrzNeKH25cVmbn8J0JyRNmw/4XAmkJZZSk5LRewEt74Is0oDhh0p?=
- XQiiReOZDIMu7/eS84yKamFCazsLK+/PjraMU3AnDMD9pFSDzm27
+ bh=DGZ2wxuXZ7nYM5BEE2klNGM387YzyWeERBacPj+W/yI=; =?utf-8?q?b=3D+pAmp6tuSlnL?=
+ =?utf-8?q?dvytdk4FDhH2HZWFXkhJp+1gGHtwI+sP9MgoWSi+tsjBRB/898IrsQoKBBGTkr8I?=
+ 0qAj/YNNBgovoYA2ocIhNxl7ellDNFjeZd1oVG29/lKPBgnUvwvC
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,431 +70,1132 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-The p9100 driver is only relevant for the Sparcbook 3 machine,
-and with sun4m support removed this driver is no longer relevant.
+pcic is only used by MicroSPARC-IIep and not relevant for LEON.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Arnd Bergmann <arnd@kernel.org>
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
-Cc: Helge Deller <deller@gmx.de>
 ---
- drivers/video/fbdev/Kconfig  |   8 -
- drivers/video/fbdev/Makefile |   1 -
- drivers/video/fbdev/p9100.c  | 372 -------------------------------------------
- 3 files changed, 381 deletions(-)
+ arch/sparc/Kconfig            |   5 -
+ arch/sparc/include/asm/pcic.h | 130 -------
+ arch/sparc/kernel/Makefile    |   1 -
+ arch/sparc/kernel/entry.S     |  48 ---
+ arch/sparc/kernel/irq_32.c    |   1 -
+ arch/sparc/kernel/kernel.h    |   4 -
+ arch/sparc/kernel/pcic.c      | 829 ------------------------------------------
+ arch/sparc/kernel/time_32.c   |   6 +-
+ 8 files changed, 1 insertion(+), 1023 deletions(-)
 
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index a74f7fd3ba0c..9f1d365ed040 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -550,14 +550,6 @@ config FB_CG14
- 	  This is the frame buffer device driver for the CGfourteen frame
- 	  buffer on Desktop SPARCsystems with the SX graphics option.
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 23cdf1959991..19ee7bc0b2ea 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -410,11 +410,6 @@ config SUN_LDOMS
+ 	  Say Y here is you want to support virtual devices via
+ 	  Logical Domains.
  
--config FB_P9100
--	bool "P9100 (Sparcbook 3 only) support"
--	depends on FB_SBUS
--	select FB_SBUS_HELPERS
--	help
--	  This is the frame buffer device driver for the P9100 card
--	  supported on Sparcbook 3 machines.
+-config PCIC_PCI
+-	bool
+-	depends on PCI && SPARC32 && !SPARC_LEON
+-	default y
 -
- config FB_LEO
- 	bool "Leo (ZX) support"
- 	depends on FB_SBUS
-diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
-index 3eecd51267fa..3f4ac048d355 100644
---- a/drivers/video/fbdev/Makefile
-+++ b/drivers/video/fbdev/Makefile
-@@ -50,7 +50,6 @@ obj-$(CONFIG_FB_CG6)              += cg6.o
- obj-$(CONFIG_FB_CG3)              += cg3.o
- obj-$(CONFIG_FB_BW2)              += bw2.o
- obj-$(CONFIG_FB_CG14)             += cg14.o
--obj-$(CONFIG_FB_P9100)            += p9100.o
- obj-$(CONFIG_FB_TCX)              += tcx.o
- obj-$(CONFIG_FB_LEO)              += leo.o
- obj-$(CONFIG_FB_ACORN)            += acornfb.o
-diff --git a/drivers/video/fbdev/p9100.c b/drivers/video/fbdev/p9100.c
+ config LEON_PCI
+ 	bool
+ 	depends on PCI && SPARC_LEON
+diff --git a/arch/sparc/include/asm/pcic.h b/arch/sparc/include/asm/pcic.h
 deleted file mode 100644
-index e1356f8a866e..000000000000
---- a/drivers/video/fbdev/p9100.c
+index 238376b1ffcc..000000000000
+--- a/arch/sparc/include/asm/pcic.h
 +++ /dev/null
-@@ -1,372 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/* p9100.c: P9100 frame buffer driver
+@@ -1,130 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * pcic.h: JavaEngine 1 specific PCI definitions.
 - *
-- * Copyright (C) 2003, 2006 David S. Miller (davem@davemloft.net)
-- * Copyright 1999 Derrick J Brashear (shadow@dementia.org)
-- *
-- * Driver layout based loosely on tgafb.c, see that file for credits.
+- * Copyright (C) 1998 V. Roganov and G. Raiko
 - */
 -
--#include <linux/module.h>
+-#ifndef __SPARC_PCIC_H
+-#define __SPARC_PCIC_H
+-
+-#ifndef __ASSEMBLY__
+-
+-#include <linux/types.h>
+-#include <linux/smp.h>
+-#include <linux/pci.h>
+-#include <linux/ioport.h>
+-#include <asm/pbm.h>
+-
+-struct linux_pcic {
+-        void __iomem            *pcic_regs;
+-        unsigned long           pcic_io;
+-        void __iomem            *pcic_config_space_addr;
+-        void __iomem            *pcic_config_space_data;
+-	struct resource		pcic_res_regs;
+-	struct resource		pcic_res_io;
+-	struct resource		pcic_res_cfg_addr;
+-	struct resource		pcic_res_cfg_data;
+-        struct linux_pbm_info   pbm;
+-	struct pcic_ca2irq	*pcic_imap;
+-	int			pcic_imdim;
+-};
+-
+-#ifdef CONFIG_PCIC_PCI
+-int pcic_present(void);
+-int pcic_probe(void);
+-void pci_time_init(void);
+-void sun4m_pci_init_IRQ(void);
+-#else
+-static inline int pcic_present(void) { return 0; }
+-static inline int pcic_probe(void) { return 0; }
+-static inline void pci_time_init(void) {}
+-static inline void sun4m_pci_init_IRQ(void) {}
+-#endif
+-#endif
+-
+-/* Size of PCI I/O space which we relocate. */
+-#define PCI_SPACE_SIZE                  0x1000000       /* 16 MB */
+-
+-/* PCIC Register Set. */
+-#define PCI_DIAGNOSTIC_0                0x40    /* 32 bits */
+-#define PCI_SIZE_0                      0x44    /* 32 bits */
+-#define PCI_SIZE_1                      0x48    /* 32 bits */
+-#define PCI_SIZE_2                      0x4c    /* 32 bits */
+-#define PCI_SIZE_3                      0x50    /* 32 bits */
+-#define PCI_SIZE_4                      0x54    /* 32 bits */
+-#define PCI_SIZE_5                      0x58    /* 32 bits */
+-#define PCI_PIO_CONTROL                 0x60    /* 8  bits */
+-#define PCI_DVMA_CONTROL                0x62    /* 8  bits */
+-#define  PCI_DVMA_CONTROL_INACTIVITY_REQ        (1<<0)
+-#define  PCI_DVMA_CONTROL_IOTLB_ENABLE          (1<<0)
+-#define  PCI_DVMA_CONTROL_IOTLB_DISABLE         0
+-#define  PCI_DVMA_CONTROL_INACTIVITY_ACK        (1<<4)
+-#define PCI_INTERRUPT_CONTROL           0x63    /* 8  bits */
+-#define PCI_CPU_INTERRUPT_PENDING       0x64    /* 32 bits */
+-#define PCI_DIAGNOSTIC_1                0x68    /* 16 bits */
+-#define PCI_SOFTWARE_INT_CLEAR          0x6a    /* 16 bits */
+-#define PCI_SOFTWARE_INT_SET            0x6e    /* 16 bits */
+-#define PCI_SYS_INT_PENDING             0x70    /* 32 bits */
+-#define  PCI_SYS_INT_PENDING_PIO		0x40000000
+-#define  PCI_SYS_INT_PENDING_DMA		0x20000000
+-#define  PCI_SYS_INT_PENDING_PCI		0x10000000
+-#define  PCI_SYS_INT_PENDING_APSR		0x08000000
+-#define PCI_SYS_INT_TARGET_MASK         0x74    /* 32 bits */
+-#define PCI_SYS_INT_TARGET_MASK_CLEAR   0x78    /* 32 bits */
+-#define PCI_SYS_INT_TARGET_MASK_SET     0x7c    /* 32 bits */
+-#define PCI_SYS_INT_PENDING_CLEAR       0x83    /* 8  bits */
+-#define  PCI_SYS_INT_PENDING_CLEAR_ALL		0x80
+-#define  PCI_SYS_INT_PENDING_CLEAR_PIO		0x40
+-#define  PCI_SYS_INT_PENDING_CLEAR_DMA		0x20
+-#define  PCI_SYS_INT_PENDING_CLEAR_PCI		0x10
+-#define PCI_IOTLB_CONTROL               0x84    /* 8  bits */
+-#define PCI_INT_SELECT_LO               0x88    /* 16 bits */
+-#define PCI_ARBITRATION_SELECT          0x8a    /* 16 bits */
+-#define PCI_INT_SELECT_HI               0x8c    /* 16 bits */
+-#define PCI_HW_INT_OUTPUT               0x8e    /* 16 bits */
+-#define PCI_IOTLB_RAM_INPUT             0x90    /* 32 bits */
+-#define PCI_IOTLB_CAM_INPUT             0x94    /* 32 bits */
+-#define PCI_IOTLB_RAM_OUTPUT            0x98    /* 32 bits */
+-#define PCI_IOTLB_CAM_OUTPUT            0x9c    /* 32 bits */
+-#define PCI_SMBAR0                      0xa0    /* 8  bits */
+-#define PCI_MSIZE0                      0xa1    /* 8  bits */
+-#define PCI_PMBAR0                      0xa2    /* 8  bits */
+-#define PCI_SMBAR1                      0xa4    /* 8  bits */
+-#define PCI_MSIZE1                      0xa5    /* 8  bits */
+-#define PCI_PMBAR1                      0xa6    /* 8  bits */
+-#define PCI_SIBAR                       0xa8    /* 8  bits */
+-#define   PCI_SIBAR_ADDRESS_MASK        0xf
+-#define PCI_ISIZE                       0xa9    /* 8  bits */
+-#define   PCI_ISIZE_16M                 0xf
+-#define   PCI_ISIZE_32M                 0xe
+-#define   PCI_ISIZE_64M                 0xc
+-#define   PCI_ISIZE_128M                0x8
+-#define   PCI_ISIZE_256M                0x0
+-#define PCI_PIBAR                       0xaa    /* 8  bits */
+-#define PCI_CPU_COUNTER_LIMIT_HI        0xac    /* 32 bits */
+-#define PCI_CPU_COUNTER_LIMIT_LO        0xb0    /* 32 bits */
+-#define PCI_CPU_COUNTER_LIMIT           0xb4    /* 32 bits */
+-#define PCI_SYS_LIMIT                   0xb8    /* 32 bits */
+-#define PCI_SYS_COUNTER                 0xbc    /* 32 bits */
+-#define   PCI_SYS_COUNTER_OVERFLOW      (1<<31) /* Limit reached */
+-#define PCI_SYS_LIMIT_PSEUDO            0xc0    /* 32 bits */
+-#define PCI_USER_TIMER_CONTROL          0xc4    /* 8  bits */
+-#define PCI_USER_TIMER_CONFIG           0xc5    /* 8  bits */
+-#define PCI_COUNTER_IRQ                 0xc6    /* 8  bits */
+-#define  PCI_COUNTER_IRQ_SET(sys_irq, cpu_irq)  ((((sys_irq) & 0xf) << 4) | \
+-                                                  ((cpu_irq) & 0xf))
+-#define  PCI_COUNTER_IRQ_SYS(v)                 (((v) >> 4) & 0xf)
+-#define  PCI_COUNTER_IRQ_CPU(v)                 ((v) & 0xf)
+-#define PCI_PIO_ERROR_COMMAND           0xc7    /* 8  bits */
+-#define PCI_PIO_ERROR_ADDRESS           0xc8    /* 32 bits */
+-#define PCI_IOTLB_ERROR_ADDRESS         0xcc    /* 32 bits */
+-#define PCI_SYS_STATUS                  0xd0    /* 8  bits */
+-#define   PCI_SYS_STATUS_RESET_ENABLE           (1<<0)
+-#define   PCI_SYS_STATUS_RESET                  (1<<1)
+-#define   PCI_SYS_STATUS_WATCHDOG_RESET         (1<<4)
+-#define   PCI_SYS_STATUS_PCI_RESET              (1<<5)
+-#define   PCI_SYS_STATUS_PCI_RESET_ENABLE       (1<<6)
+-#define   PCI_SYS_STATUS_PCI_SATTELITE_MODE     (1<<7)
+-
+-#endif /* !(__SPARC_PCIC_H) */
+diff --git a/arch/sparc/kernel/Makefile b/arch/sparc/kernel/Makefile
+index bd31bdd0b13e..50d696c8a9d2 100644
+--- a/arch/sparc/kernel/Makefile
++++ b/arch/sparc/kernel/Makefile
+@@ -73,7 +73,6 @@ obj-$(CONFIG_SPARC64)	+= pcr.o
+ obj-$(CONFIG_SPARC64)	+= nmi.o
+ obj-$(CONFIG_SPARC64_SMP) += cpumap.o
+ 
+-obj-$(CONFIG_PCIC_PCI)    += pcic.o
+ obj-$(CONFIG_LEON_PCI)    += leon_pci.o
+ obj-$(CONFIG_SPARC_GRPCI2)+= leon_pci_grpci2.o
+ obj-$(CONFIG_SPARC_GRPCI1)+= leon_pci_grpci1.o
+diff --git a/arch/sparc/kernel/entry.S b/arch/sparc/kernel/entry.S
+index 9bd3813b872d..13011969e7eb 100644
+--- a/arch/sparc/kernel/entry.S
++++ b/arch/sparc/kernel/entry.S
+@@ -965,54 +965,6 @@ restore_current:
+ 	retl
+ 	 nop
+ 
+-#ifdef CONFIG_PCIC_PCI
+-#include <asm/pcic.h>
+-
+-	.align	4
+-	.globl	linux_trap_ipi15_pcic
+-linux_trap_ipi15_pcic:
+-	rd	%wim, %l3
+-	SAVE_ALL
+-
+-	/*
+-	 * First deactivate NMI
+-	 * or we cannot drop ET, cannot get window spill traps.
+-	 * The busy loop is necessary because the PIO error
+-	 * sometimes does not go away quickly and we trap again.
+-	 */
+-	sethi	%hi(pcic_regs), %o1
+-	ld	[%o1 + %lo(pcic_regs)], %o2
+-
+-	! Get pending status for printouts later.
+-	ld	[%o2 + PCI_SYS_INT_PENDING], %o0
+-
+-	mov	PCI_SYS_INT_PENDING_CLEAR_ALL, %o1
+-	stb	%o1, [%o2 + PCI_SYS_INT_PENDING_CLEAR]
+-1:
+-	ld	[%o2 + PCI_SYS_INT_PENDING], %o1
+-	andcc	%o1, ((PCI_SYS_INT_PENDING_PIO|PCI_SYS_INT_PENDING_PCI)>>24), %g0
+-	bne	1b
+-	 nop
+-
+-	or	%l0, PSR_PIL, %l4
+-	wr	%l4, 0x0, %psr
+-	WRITE_PAUSE
+-	wr	%l4, PSR_ET, %psr
+-	WRITE_PAUSE
+-
+-	call	pcic_nmi
+-	 add	%sp, STACKFRAME_SZ, %o1	! struct pt_regs *regs
+-	RESTORE_ALL
+-
+-	.globl	pcic_nmi_trap_patch
+-pcic_nmi_trap_patch:
+-	sethi	%hi(linux_trap_ipi15_pcic), %l3
+-	jmpl	%l3 + %lo(linux_trap_ipi15_pcic), %g0
+-	 rd	%psr, %l0
+-	.word	0
+-
+-#endif /* CONFIG_PCIC_PCI */
+-
+ 	.globl	flushw_all
+ flushw_all:
+ 	save	%sp, -0x40, %sp
+diff --git a/arch/sparc/kernel/irq_32.c b/arch/sparc/kernel/irq_32.c
+index 135170f362c1..a6af08fce796 100644
+--- a/arch/sparc/kernel/irq_32.c
++++ b/arch/sparc/kernel/irq_32.c
+@@ -19,7 +19,6 @@
+ #include <asm/cacheflush.h>
+ #include <asm/cpudata.h>
+ #include <asm/setup.h>
+-#include <asm/pcic.h>
+ #include <asm/leon.h>
+ 
+ #include "kernel.h"
+diff --git a/arch/sparc/kernel/kernel.h b/arch/sparc/kernel/kernel.h
+index 621fb7b6ec64..4fcd782f16a7 100644
+--- a/arch/sparc/kernel/kernel.h
++++ b/arch/sparc/kernel/kernel.h
+@@ -138,10 +138,6 @@ asmlinkage void user_unaligned_trap(struct pt_regs *regs, unsigned int insn);
+ /* windows.c */
+ void try_to_clear_window_buffer(struct pt_regs *regs, int who);
+ 
+-/* pcic.c */
+-extern void __iomem *pcic_regs;
+-void pcic_nmi(unsigned int pend, struct pt_regs *regs);
+-
+ /* time_32.c */
+ void __init time_init(void);
+ 
+diff --git a/arch/sparc/kernel/pcic.c b/arch/sparc/kernel/pcic.c
+deleted file mode 100644
+index d952bcbbc395..000000000000
+--- a/arch/sparc/kernel/pcic.c
++++ /dev/null
+@@ -1,829 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * pcic.c: MicroSPARC-IIep PCI controller support
+- *
+- * Copyright (C) 1998 V. Roganov and G. Raiko
+- *
+- * Code is derived from Ultra/PCI PSYCHO controller support, see that
+- * for author info.
+- *
+- * Support for diverse IIep based platforms by Pete Zaitcev.
+- * CP-1200 by Eric Brower.
+- */
+-
 -#include <linux/kernel.h>
--#include <linux/errno.h>
--#include <linux/string.h>
--#include <linux/delay.h>
+-#include <linux/types.h>
 -#include <linux/init.h>
--#include <linux/fb.h>
 -#include <linux/mm.h>
--#include <linux/of.h>
--#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-#include <linux/jiffies.h>
 -
+-#include <asm/swift.h> /* for cache flushing. */
 -#include <asm/io.h>
--#include <asm/fbio.h>
 -
--#include "sbuslib.h"
+-#include <linux/ctype.h>
+-#include <linux/pci.h>
+-#include <linux/time.h>
+-#include <linux/timex.h>
+-#include <linux/interrupt.h>
+-#include <linux/export.h>
+-
+-#include <asm/irq.h>
+-#include <asm/oplib.h>
+-#include <asm/prom.h>
+-#include <asm/pcic.h>
+-#include <asm/timex.h>
+-#include <asm/timer.h>
+-#include <linux/uaccess.h>
+-#include <asm/irq_regs.h>
+-
+-#include "kernel.h"
+-#include "irq.h"
 -
 -/*
-- * Local functions.
+- * I studied different documents and many live PROMs both from 2.30
+- * family and 3.xx versions. I came to the amazing conclusion: there is
+- * absolutely no way to route interrupts in IIep systems relying on
+- * information which PROM presents. We must hardcode interrupt routing
+- * schematics. And this actually sucks.   -- zaitcev 1999/05/12
+- *
+- * To find irq for a device we determine which routing map
+- * is in effect or, in other words, on which machine we are running.
+- * We use PROM name for this although other techniques may be used
+- * in special cases (Gleb reports a PROMless IIep based system).
+- * Once we know the map we take device configuration address and
+- * find PCIC pin number where INT line goes. Then we may either program
+- * preferred irq into the PCIC or supply the preexisting irq to the device.
 - */
+-struct pcic_ca2irq {
+-	unsigned char busno;		/* PCI bus number */
+-	unsigned char devfn;		/* Configuration address */
+-	unsigned char pin;		/* PCIC external interrupt pin */
+-	unsigned char irq;		/* Preferred IRQ (mappable in PCIC) */
+-	unsigned int force;		/* Enforce preferred IRQ */
+-};
 -
--static int p9100_setcolreg(unsigned, unsigned, unsigned, unsigned,
--			   unsigned, struct fb_info *);
--static int p9100_blank(int, struct fb_info *);
--
--static int p9100_sbusfb_mmap(struct fb_info *info, struct vm_area_struct *vma);
--static int p9100_sbusfb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg);
+-struct pcic_sn2list {
+-	char *sysname;
+-	struct pcic_ca2irq *intmap;
+-	int mapdim;
+-};
 -
 -/*
-- *  Frame buffer operations
+- * JavaEngine-1 apparently has different versions.
+- *
+- * According to communications with Sun folks, for P2 build 501-4628-03:
+- * pin 0 - parallel, audio;
+- * pin 1 - Ethernet;
+- * pin 2 - su;
+- * pin 3 - PS/2 kbd and mouse.
+- *
+- * OEM manual (805-1486):
+- * pin 0: Ethernet
+- * pin 1: All EBus
+- * pin 2: IGA (unused)
+- * pin 3: Not connected
+- * OEM manual says that 501-4628 & 501-4811 are the same thing,
+- * only the latter has NAND flash in place.
+- *
+- * So far unofficial Sun wins over the OEM manual. Poor OEMs...
 - */
--
--static const struct fb_ops p9100_ops = {
--	.owner			= THIS_MODULE,
--	FB_DEFAULT_SBUS_OPS(p9100),
--	.fb_setcolreg		= p9100_setcolreg,
--	.fb_blank		= p9100_blank,
+-static struct pcic_ca2irq pcic_i_je1a[] = {	/* 501-4811-03 */
+-	{ 0, 0x00, 2, 12, 0 },		/* EBus: hogs all */
+-	{ 0, 0x01, 1,  6, 1 },		/* Happy Meal */
+-	{ 0, 0x80, 0,  7, 0 },		/* IGA (unused) */
 -};
 -
--/* P9100 control registers */
--#define P9100_SYSCTL_OFF	0x0UL
--#define P9100_VIDEOCTL_OFF	0x100UL
--#define P9100_VRAMCTL_OFF 	0x180UL
--#define P9100_RAMDAC_OFF 	0x200UL
--#define P9100_VIDEOCOPROC_OFF 	0x400UL
--
--/* P9100 command registers */
--#define P9100_CMD_OFF 0x0UL
--
--/* P9100 framebuffer memory */
--#define P9100_FB_OFF 0x0UL
--
--/* 3 bits: 2=8bpp 3=16bpp 5=32bpp 7=24bpp */
--#define SYS_CONFIG_PIXELSIZE_SHIFT 26
--
--#define SCREENPAINT_TIMECTL1_ENABLE_VIDEO 0x20 /* 0 = off, 1 = on */
--
--struct p9100_regs {
--	/* Registers for the system control */
--	u32 sys_base;
--	u32 sys_config;
--	u32 sys_intr;
--	u32 sys_int_ena;
--	u32 sys_alt_rd;
--	u32 sys_alt_wr;
--	u32 sys_xxx[58];
--
--	/* Registers for the video control */
--	u32 vid_base;
--	u32 vid_hcnt;
--	u32 vid_htotal;
--	u32 vid_hsync_rise;
--	u32 vid_hblank_rise;
--	u32 vid_hblank_fall;
--	u32 vid_hcnt_preload;
--	u32 vid_vcnt;
--	u32 vid_vlen;
--	u32 vid_vsync_rise;
--	u32 vid_vblank_rise;
--	u32 vid_vblank_fall;
--	u32 vid_vcnt_preload;
--	u32 vid_screenpaint_addr;
--	u32 vid_screenpaint_timectl1;
--	u32 vid_screenpaint_qsfcnt;
--	u32 vid_screenpaint_timectl2;
--	u32 vid_xxx[15];
--
--	/* Registers for the video control */
--	u32 vram_base;
--	u32 vram_memcfg;
--	u32 vram_refresh_pd;
--	u32 vram_refresh_cnt;
--	u32 vram_raslo_max;
--	u32 vram_raslo_cur;
--	u32 pwrup_cfg;
--	u32 vram_xxx[25];
--
--	/* Registers for IBM RGB528 Palette */
--	u32 ramdac_cmap_wridx;
--	u32 ramdac_palette_data;
--	u32 ramdac_pixel_mask;
--	u32 ramdac_palette_rdaddr;
--	u32 ramdac_idx_lo;
--	u32 ramdac_idx_hi;
--	u32 ramdac_idx_data;
--	u32 ramdac_idx_ctl;
--	u32 ramdac_xxx[1784];
+-/* XXX JS-E entry is incomplete - PCI Slot 2 address (pin 7)? */
+-static struct pcic_ca2irq pcic_i_jse[] = {
+-	{ 0, 0x00, 0, 13, 0 },		/* Ebus - serial and keyboard */
+-	{ 0, 0x01, 1,  6, 0 },		/* hme */
+-	{ 0, 0x08, 2,  9, 0 },		/* VGA - we hope not used :) */
+-	{ 0, 0x10, 6,  8, 0 },		/* PCI INTA# in Slot 1 */
+-	{ 0, 0x18, 7, 12, 0 },		/* PCI INTA# in Slot 2, shared w. RTC */
+-	{ 0, 0x38, 4,  9, 0 },		/* All ISA devices. Read 8259. */
+-	{ 0, 0x80, 5, 11, 0 },		/* EIDE */
+-	/* {0,0x88, 0,0,0} - unknown device... PMU? Probably no interrupt. */
+-	{ 0, 0xA0, 4,  9, 0 },		/* USB */
+-	/*
+-	 * Some pins belong to non-PCI devices, we hardcode them in drivers.
+-	 * sun4m timers - irq 10, 14
+-	 * PC style RTC - pin 7, irq 4 ?
+-	 * Smart card, Parallel - pin 4 shared with USB, ISA
+-	 * audio - pin 3, irq 5 ?
+-	 */
 -};
 -
--struct p9100_cmd_parameng {
--	u32 parameng_status;
--	u32 parameng_bltcmd;
--	u32 parameng_quadcmd;
--};
--
--struct p9100_par {
--	spinlock_t		lock;
--	struct p9100_regs	__iomem *regs;
--
--	u32			flags;
--#define P9100_FLAG_BLANKED	0x00000001
--
--	unsigned long		which_io;
--};
--
--/**
-- *      p9100_setcolreg - Optional function. Sets a color register.
-- *      @regno: boolean, 0 copy local, 1 get_user() function
-- *      @red: frame buffer colormap structure
-- *      @green: The green value which can be up to 16 bits wide
-- *      @blue:  The blue value which can be up to 16 bits wide.
-- *      @transp: If supported the alpha value which can be up to 16 bits wide.
-- *      @info: frame buffer info structure
+-/* SPARCengine-6 was the original release name of CP1200.
+- * The documentation differs between the two versions
 - */
--static int p9100_setcolreg(unsigned regno,
--			   unsigned red, unsigned green, unsigned blue,
--			   unsigned transp, struct fb_info *info)
+-static struct pcic_ca2irq pcic_i_se6[] = {
+-	{ 0, 0x08, 0,  2, 0 },		/* SCSI	*/
+-	{ 0, 0x01, 1,  6, 0 },		/* HME	*/
+-	{ 0, 0x00, 3, 13, 0 },		/* EBus	*/
+-};
+-
+-/*
+- * Krups (courtesy of Varol Kaptan)
+- * No documentation available, but it was easy to guess
+- * because it was very similar to Espresso.
+- *  
+- * pin 0 - kbd, mouse, serial;
+- * pin 1 - Ethernet;
+- * pin 2 - igs (we do not use it);
+- * pin 3 - audio;
+- * pin 4,5,6 - unused;
+- * pin 7 - RTC (from P2 onwards as David B. says).
+- */
+-static struct pcic_ca2irq pcic_i_jk[] = {
+-	{ 0, 0x00, 0, 13, 0 },		/* Ebus - serial and keyboard */
+-	{ 0, 0x01, 1,  6, 0 },		/* hme */
+-};
+-
+-/*
+- * Several entries in this list may point to the same routing map
+- * as several PROMs may be installed on the same physical board.
+- */
+-#define SN2L_INIT(name, map)	\
+-  { name, map, ARRAY_SIZE(map) }
+-
+-static struct pcic_sn2list pcic_known_sysnames[] = {
+-	SN2L_INIT("SUNW,JavaEngine1", pcic_i_je1a),	/* JE1, PROM 2.32 */
+-	SN2L_INIT("SUNW,JS-E", pcic_i_jse),	/* PROLL JavaStation-E */
+-	SN2L_INIT("SUNW,SPARCengine-6", pcic_i_se6), /* SPARCengine-6/CP-1200 */
+-	SN2L_INIT("SUNW,JS-NC", pcic_i_jk),	/* PROLL JavaStation-NC */
+-	SN2L_INIT("SUNW,JSIIep", pcic_i_jk),	/* OBP JavaStation-NC */
+-	{ NULL, NULL, 0 }
+-};
+-
+-/*
+- * Only one PCIC per IIep,
+- * and since we have no SMP IIep, only one per system.
+- */
+-static int pcic0_up;
+-static struct linux_pcic pcic0;
+-
+-void __iomem *pcic_regs;
+-static volatile int pcic_speculative;
+-static volatile int pcic_trapped;
+-
+-/* forward */
+-unsigned int pcic_build_device_irq(struct platform_device *op,
+-                                   unsigned int real_irq);
+-
+-#define CONFIG_CMD(bus, device_fn, where) (0x80000000 | (((unsigned int)bus) << 16) | (((unsigned int)device_fn) << 8) | (where & ~3))
+-
+-static int pcic_read_config_dword(unsigned int busno, unsigned int devfn,
+-    int where, u32 *value)
 -{
--	struct p9100_par *par = (struct p9100_par *) info->par;
--	struct p9100_regs __iomem *regs = par->regs;
+-	struct linux_pcic *pcic;
 -	unsigned long flags;
 -
--	if (regno >= 256)
--		return 1;
+-	pcic = &pcic0;
 -
--	red >>= 8;
--	green >>= 8;
--	blue >>= 8;
--
--	spin_lock_irqsave(&par->lock, flags);
--
--	sbus_writel((regno << 16), &regs->ramdac_cmap_wridx);
--	sbus_writel((red << 16), &regs->ramdac_palette_data);
--	sbus_writel((green << 16), &regs->ramdac_palette_data);
--	sbus_writel((blue << 16), &regs->ramdac_palette_data);
--
--	spin_unlock_irqrestore(&par->lock, flags);
--
+-	local_irq_save(flags);
+-#if 0 /* does not fail here */
+-	pcic_speculative = 1;
+-	pcic_trapped = 0;
+-#endif
+-	writel(CONFIG_CMD(busno, devfn, where), pcic->pcic_config_space_addr);
+-#if 0 /* does not fail here */
+-	nop();
+-	if (pcic_trapped) {
+-		local_irq_restore(flags);
+-		*value = ~0;
+-		return 0;
+-	}
+-#endif
+-	pcic_speculative = 2;
+-	pcic_trapped = 0;
+-	*value = readl(pcic->pcic_config_space_data + (where&4));
+-	nop();
+-	if (pcic_trapped) {
+-		pcic_speculative = 0;
+-		local_irq_restore(flags);
+-		*value = ~0;
+-		return 0;
+-	}
+-	pcic_speculative = 0;
+-	local_irq_restore(flags);
 -	return 0;
 -}
 -
--/**
-- *      p9100_blank - Optional function.  Blanks the display.
-- *      @blank: the blank mode we want.
-- *      @info: frame buffer structure that represents a single frame buffer
-- */
--static int
--p9100_blank(int blank, struct fb_info *info)
+-static int pcic_read_config(struct pci_bus *bus, unsigned int devfn,
+-   int where, int size, u32 *val)
 -{
--	struct p9100_par *par = (struct p9100_par *) info->par;
--	struct p9100_regs __iomem *regs = par->regs;
+-	unsigned int v;
+-
+-	if (bus->number != 0) return -EINVAL;
+-	switch (size) {
+-	case 1:
+-		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
+-		*val = 0xff & (v >> (8*(where & 3)));
+-		return 0;
+-	case 2:
+-		if (where&1) return -EINVAL;
+-		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
+-		*val = 0xffff & (v >> (8*(where & 3)));
+-		return 0;
+-	case 4:
+-		if (where&3) return -EINVAL;
+-		pcic_read_config_dword(bus->number, devfn, where&~3, val);
+-		return 0;
+-	}
+-	return -EINVAL;
+-}
+-
+-static int pcic_write_config_dword(unsigned int busno, unsigned int devfn,
+-    int where, u32 value)
+-{
+-	struct linux_pcic *pcic;
 -	unsigned long flags;
--	u32 val;
 -
--	spin_lock_irqsave(&par->lock, flags);
+-	pcic = &pcic0;
 -
--	switch (blank) {
--	case FB_BLANK_UNBLANK: /* Unblanking */
--		val = sbus_readl(&regs->vid_screenpaint_timectl1);
--		val |= SCREENPAINT_TIMECTL1_ENABLE_VIDEO;
--		sbus_writel(val, &regs->vid_screenpaint_timectl1);
--		par->flags &= ~P9100_FLAG_BLANKED;
--		break;
+-	local_irq_save(flags);
+-	writel(CONFIG_CMD(busno, devfn, where), pcic->pcic_config_space_addr);
+-	writel(value, pcic->pcic_config_space_data + (where&4));
+-	local_irq_restore(flags);
+-	return 0;
+-}
 -
--	case FB_BLANK_NORMAL: /* Normal blanking */
--	case FB_BLANK_VSYNC_SUSPEND: /* VESA blank (vsync off) */
--	case FB_BLANK_HSYNC_SUSPEND: /* VESA blank (hsync off) */
--	case FB_BLANK_POWERDOWN: /* Poweroff */
--		val = sbus_readl(&regs->vid_screenpaint_timectl1);
--		val &= ~SCREENPAINT_TIMECTL1_ENABLE_VIDEO;
--		sbus_writel(val, &regs->vid_screenpaint_timectl1);
--		par->flags |= P9100_FLAG_BLANKED;
--		break;
+-static int pcic_write_config(struct pci_bus *bus, unsigned int devfn,
+-   int where, int size, u32 val)
+-{
+-	unsigned int v;
+-
+-	if (bus->number != 0) return -EINVAL;
+-	switch (size) {
+-	case 1:
+-		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
+-		v = (v & ~(0xff << (8*(where&3)))) |
+-		    ((0xff&val) << (8*(where&3)));
+-		return pcic_write_config_dword(bus->number, devfn, where&~3, v);
+-	case 2:
+-		if (where&1) return -EINVAL;
+-		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
+-		v = (v & ~(0xffff << (8*(where&3)))) |
+-		    ((0xffff&val) << (8*(where&3)));
+-		return pcic_write_config_dword(bus->number, devfn, where&~3, v);
+-	case 4:
+-		if (where&3) return -EINVAL;
+-		return pcic_write_config_dword(bus->number, devfn, where, val);
+-	}
+-	return -EINVAL;
+-}
+-
+-static struct pci_ops pcic_ops = {
+-	.read =		pcic_read_config,
+-	.write =	pcic_write_config,
+-};
+-
+-/*
+- * On sparc64 pcibios_init() calls pci_controller_probe().
+- * We want PCIC probed little ahead so that interrupt controller
+- * would be operational.
+- */
+-int __init pcic_probe(void)
+-{
+-	struct linux_pcic *pcic;
+-	struct linux_prom_registers regs[PROMREG_MAX];
+-	struct linux_pbm_info* pbm;
+-	char namebuf[64];
+-	phandle node;
+-	int err;
+-
+-	if (pcic0_up) {
+-		prom_printf("PCIC: called twice!\n");
+-		prom_halt();
+-	}
+-	pcic = &pcic0;
+-
+-	node = prom_getchild (prom_root_node);
+-	node = prom_searchsiblings (node, "pci");
+-	if (node == 0)
+-		return -ENODEV;
+-	/*
+-	 * Map in PCIC register set, config space, and IO base
+-	 */
+-	err = prom_getproperty(node, "reg", (char*)regs, sizeof(regs));
+-	if (err == 0 || err == -1) {
+-		prom_printf("PCIC: Error, cannot get PCIC registers "
+-			    "from PROM.\n");
+-		prom_halt();
 -	}
 -
--	spin_unlock_irqrestore(&par->lock, flags);
+-	pcic0_up = 1;
+-
+-	pcic->pcic_res_regs.name = "pcic_registers";
+-	pcic->pcic_regs = ioremap(regs[0].phys_addr, regs[0].reg_size);
+-	if (!pcic->pcic_regs) {
+-		prom_printf("PCIC: Error, cannot map PCIC registers.\n");
+-		prom_halt();
+-	}
+-
+-	pcic->pcic_res_io.name = "pcic_io";
+-	if ((pcic->pcic_io = (unsigned long)
+-	    ioremap(regs[1].phys_addr, 0x10000)) == 0) {
+-		prom_printf("PCIC: Error, cannot map PCIC IO Base.\n");
+-		prom_halt();
+-	}
+-
+-	pcic->pcic_res_cfg_addr.name = "pcic_cfg_addr";
+-	if ((pcic->pcic_config_space_addr =
+-	    ioremap(regs[2].phys_addr, regs[2].reg_size * 2)) == NULL) {
+-		prom_printf("PCIC: Error, cannot map "
+-			    "PCI Configuration Space Address.\n");
+-		prom_halt();
+-	}
+-
+-	/*
+-	 * Docs say three least significant bits in address and data
+-	 * must be the same. Thus, we need adjust size of data.
+-	 */
+-	pcic->pcic_res_cfg_data.name = "pcic_cfg_data";
+-	if ((pcic->pcic_config_space_data =
+-	    ioremap(regs[3].phys_addr, regs[3].reg_size * 2)) == NULL) {
+-		prom_printf("PCIC: Error, cannot map "
+-			    "PCI Configuration Space Data.\n");
+-		prom_halt();
+-	}
+-
+-	pbm = &pcic->pbm;
+-	pbm->prom_node = node;
+-	prom_getstring(node, "name", namebuf, 63);  namebuf[63] = 0;
+-	strcpy(pbm->prom_name, namebuf);
+-
+-	prom_getstring(prom_root_node, "name", namebuf, 63);  namebuf[63] = 0;
+-	{
+-		struct pcic_sn2list *p;
+-
+-		for (p = pcic_known_sysnames; p->sysname != NULL; p++) {
+-			if (strcmp(namebuf, p->sysname) == 0)
+-				break;
+-		}
+-		pcic->pcic_imap = p->intmap;
+-		pcic->pcic_imdim = p->mapdim;
+-	}
+-	if (pcic->pcic_imap == NULL) {
+-		/*
+-		 * We do not panic here for the sake of embedded systems.
+-		 */
+-		printk("PCIC: System %s is unknown, cannot route interrupts\n",
+-		    namebuf);
+-	}
 -
 -	return 0;
 -}
 -
--static struct sbus_mmap_map p9100_mmap_map[] = {
--	{ CG3_MMAP_OFFSET,	0,		SBUS_MMAP_FBSIZE(1) },
--	{ 0,			0,		0		    }
--};
--
--static int p9100_sbusfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
+-static void __init pcic_pbm_scan_bus(struct linux_pcic *pcic)
 -{
--	struct p9100_par *par = (struct p9100_par *)info->par;
+-	struct linux_pbm_info *pbm = &pcic->pbm;
 -
--	return sbusfb_mmap_helper(p9100_mmap_map,
--				  info->fix.smem_start, info->fix.smem_len,
--				  par->which_io, vma);
--}
+-	pbm->pci_bus = pci_scan_bus(pbm->pci_first_busno, &pcic_ops, pbm);
+-	if (!pbm->pci_bus)
+-		return;
 -
--static int p9100_sbusfb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg)
--{
--	/* Make it look like a cg3. */
--	return sbusfb_ioctl_helper(cmd, arg, info,
--				   FBTYPE_SUN3COLOR, 8, info->fix.smem_len);
+-#if 0 /* deadwood transplanted from sparc64 */
+-	pci_fill_in_pbm_cookies(pbm->pci_bus, pbm, pbm->prom_node);
+-	pci_record_assignments(pbm, pbm->pci_bus);
+-	pci_assign_unassigned(pbm, pbm->pci_bus);
+-	pci_fixup_irq(pbm, pbm->pci_bus);
+-#endif
+-	pci_bus_add_devices(pbm->pci_bus);
 -}
 -
 -/*
-- *  Initialisation
+- * Main entry point from the PCI subsystem.
 - */
--
--static void p9100_init_fix(struct fb_info *info, int linebytes, struct device_node *dp)
+-static int __init pcic_init(void)
 -{
--	snprintf(info->fix.id, sizeof(info->fix.id), "%pOFn", dp);
+-	struct linux_pcic *pcic;
 -
--	info->fix.type = FB_TYPE_PACKED_PIXELS;
--	info->fix.visual = FB_VISUAL_PSEUDOCOLOR;
+-	/*
+-	 * PCIC should be initialized at start of the timer.
+-	 * So, here we report the presence of PCIC and do some magic passes.
+-	 */
+-	if(!pcic0_up)
+-		return 0;
+-	pcic = &pcic0;
 -
--	info->fix.line_length = linebytes;
+-	/*
+-	 *      Switch off IOTLB translation.
+-	 */
+-	writeb(PCI_DVMA_CONTROL_IOTLB_DISABLE, 
+-	       pcic->pcic_regs+PCI_DVMA_CONTROL);
 -
--	info->fix.accel = FB_ACCEL_SUN_CGTHREE;
--}
+-	/*
+-	 *      Increase mapped size for PCI memory space (DMA access).
+-	 *      Should be done in that order (size first, address second).
+-	 *      Why we couldn't set up 4GB and forget about it? XXX
+-	 */
+-	writel(0xF0000000UL, pcic->pcic_regs+PCI_SIZE_0);
+-	writel(0+PCI_BASE_ADDRESS_SPACE_MEMORY, 
+-	       pcic->pcic_regs+PCI_BASE_ADDRESS_0);
 -
--static int p9100_probe(struct platform_device *op)
--{
--	struct device_node *dp = op->dev.of_node;
--	struct fb_info *info;
--	struct p9100_par *par;
--	int linebytes, err;
--
--	info = framebuffer_alloc(sizeof(struct p9100_par), &op->dev);
--
--	err = -ENOMEM;
--	if (!info)
--		goto out_err;
--	par = info->par;
--
--	spin_lock_init(&par->lock);
--
--	/* This is the framebuffer and the only resource apps can mmap.  */
--	info->fix.smem_start = op->resource[2].start;
--	par->which_io = op->resource[2].flags & IORESOURCE_BITS;
--
--	sbusfb_fill_var(&info->var, dp, 8);
--	info->var.red.length = 8;
--	info->var.green.length = 8;
--	info->var.blue.length = 8;
--
--	linebytes = of_getintprop_default(dp, "linebytes", info->var.xres);
--	info->fix.smem_len = PAGE_ALIGN(linebytes * info->var.yres);
--
--	par->regs = of_ioremap(&op->resource[0], 0,
--			       sizeof(struct p9100_regs), "p9100 regs");
--	if (!par->regs)
--		goto out_release_fb;
--
--	info->fbops = &p9100_ops;
--	info->screen_base = of_ioremap(&op->resource[2], 0,
--				       info->fix.smem_len, "p9100 ram");
--	if (!info->screen_base)
--		goto out_unmap_regs;
--
--	p9100_blank(FB_BLANK_UNBLANK, info);
--
--	if (fb_alloc_cmap(&info->cmap, 256, 0))
--		goto out_unmap_screen;
--
--	p9100_init_fix(info, linebytes, dp);
--
--	err = register_framebuffer(info);
--	if (err < 0)
--		goto out_dealloc_cmap;
--
--	fb_set_cmap(&info->cmap, info);
--
--	dev_set_drvdata(&op->dev, info);
--
--	printk(KERN_INFO "%pOF: p9100 at %lx:%lx\n",
--	       dp,
--	       par->which_io, info->fix.smem_start);
+-	pcic_pbm_scan_bus(pcic);
 -
 -	return 0;
--
--out_dealloc_cmap:
--	fb_dealloc_cmap(&info->cmap);
--
--out_unmap_screen:
--	of_iounmap(&op->resource[2], info->screen_base, info->fix.smem_len);
--
--out_unmap_regs:
--	of_iounmap(&op->resource[0], par->regs, sizeof(struct p9100_regs));
--
--out_release_fb:
--	framebuffer_release(info);
--
--out_err:
--	return err;
 -}
 -
--static void p9100_remove(struct platform_device *op)
+-int pcic_present(void)
 -{
--	struct fb_info *info = dev_get_drvdata(&op->dev);
--	struct p9100_par *par = info->par;
--
--	unregister_framebuffer(info);
--	fb_dealloc_cmap(&info->cmap);
--
--	of_iounmap(&op->resource[0], par->regs, sizeof(struct p9100_regs));
--	of_iounmap(&op->resource[2], info->screen_base, info->fix.smem_len);
--
--	framebuffer_release(info);
+-	return pcic0_up;
 -}
 -
--static const struct of_device_id p9100_match[] = {
--	{
--		.name = "p9100",
--	},
--	{},
+-static int pdev_to_pnode(struct linux_pbm_info *pbm, struct pci_dev *pdev)
+-{
+-	struct linux_prom_pci_registers regs[PROMREG_MAX];
+-	int err;
+-	phandle node = prom_getchild(pbm->prom_node);
+-
+-	while(node) {
+-		err = prom_getproperty(node, "reg", 
+-				       (char *)&regs[0], sizeof(regs));
+-		if(err != 0 && err != -1) {
+-			unsigned long devfn = (regs[0].which_io >> 8) & 0xff;
+-			if(devfn == pdev->devfn)
+-				return node;
+-		}
+-		node = prom_getsibling(node);
+-	}
+-	return 0;
+-}
+-
+-static inline struct pcidev_cookie *pci_devcookie_alloc(void)
+-{
+-	return kmalloc(sizeof(struct pcidev_cookie), GFP_ATOMIC);
+-}
+-
+-static void pcic_map_pci_device(struct linux_pcic *pcic,
+-    struct pci_dev *dev, int node)
+-{
+-	char namebuf[64];
+-	unsigned long address;
+-	unsigned long flags;
+-	int j;
+-
+-	if (node == 0 || node == -1) {
+-		strcpy(namebuf, "???");
+-	} else {
+-		prom_getstring(node, "name", namebuf, 63); namebuf[63] = 0;
+-	}
+-
+-	for (j = 0; j < 6; j++) {
+-		address = dev->resource[j].start;
+-		if (address == 0) break;	/* are sequential */
+-		flags = dev->resource[j].flags;
+-		if ((flags & IORESOURCE_IO) != 0) {
+-			if (address < 0x10000) {
+-				/*
+-				 * A device responds to I/O cycles on PCI.
+-				 * We generate these cycles with memory
+-				 * access into the fixed map (phys 0x30000000).
+-				 *
+-				 * Since a device driver does not want to
+-				 * do ioremap() before accessing PC-style I/O,
+-				 * we supply virtual, ready to access address.
+-				 *
+-				 * Note that request_region()
+-				 * works for these devices.
+-				 *
+-				 * XXX Neat trick, but it's a *bad* idea
+-				 * to shit into regions like that.
+-				 * What if we want to allocate one more
+-				 * PCI base address...
+-				 */
+-				dev->resource[j].start =
+-				    pcic->pcic_io + address;
+-				dev->resource[j].end = 1;  /* XXX */
+-				dev->resource[j].flags =
+-				    (flags & ~IORESOURCE_IO) | IORESOURCE_MEM;
+-			} else {
+-				/*
+-				 * OOPS... PCI Spec allows this. Sun does
+-				 * not have any devices getting above 64K
+-				 * so it must be user with a weird I/O
+-				 * board in a PCI slot. We must remap it
+-				 * under 64K but it is not done yet. XXX
+-				 */
+-				pci_info(dev, "PCIC: Skipping I/O space at "
+-					 "0x%lx, this will Oops if a driver "
+-					 "attaches device '%s'\n", address,
+-					 namebuf);
+-			}
+-		}
+-	}
+-}
+-
+-static void
+-pcic_fill_irq(struct linux_pcic *pcic, struct pci_dev *dev, int node)
+-{
+-	struct pcic_ca2irq *p;
+-	unsigned int real_irq;
+-	int i, ivec;
+-	char namebuf[64];
+-
+-	if (node == 0 || node == -1) {
+-		strcpy(namebuf, "???");
+-	} else {
+-		prom_getstring(node, "name", namebuf, sizeof(namebuf));
+-	}
+-
+-	if ((p = pcic->pcic_imap) == NULL) {
+-		dev->irq = 0;
+-		return;
+-	}
+-	for (i = 0; i < pcic->pcic_imdim; i++) {
+-		if (p->busno == dev->bus->number && p->devfn == dev->devfn)
+-			break;
+-		p++;
+-	}
+-	if (i >= pcic->pcic_imdim) {
+-		pci_info(dev, "PCIC: device %s not found in %d\n", namebuf,
+-			 pcic->pcic_imdim);
+-		dev->irq = 0;
+-		return;
+-	}
+-
+-	i = p->pin;
+-	if (i >= 0 && i < 4) {
+-		ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_LO);
+-		real_irq = ivec >> (i << 2) & 0xF;
+-	} else if (i >= 4 && i < 8) {
+-		ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_HI);
+-		real_irq = ivec >> ((i-4) << 2) & 0xF;
+-	} else {					/* Corrupted map */
+-		pci_info(dev, "PCIC: BAD PIN %d\n", i); for (;;) {}
+-	}
+-/* P3 */ /* printk("PCIC: device %s pin %d ivec 0x%x irq %x\n", namebuf, i, ivec, dev->irq); */
+-
+-	/* real_irq means PROM did not bother to program the upper
+-	 * half of PCIC. This happens on JS-E with PROM 3.11, for instance.
+-	 */
+-	if (real_irq == 0 || p->force) {
+-		if (p->irq == 0 || p->irq >= 15) {	/* Corrupted map */
+-			pci_info(dev, "PCIC: BAD IRQ %d\n", p->irq); for (;;) {}
+-		}
+-		pci_info(dev, "PCIC: setting irq %d at pin %d\n", p->irq,
+-			 p->pin);
+-		real_irq = p->irq;
+-
+-		i = p->pin;
+-		if (i >= 4) {
+-			ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_HI);
+-			ivec &= ~(0xF << ((i - 4) << 2));
+-			ivec |= p->irq << ((i - 4) << 2);
+-			writew(ivec, pcic->pcic_regs+PCI_INT_SELECT_HI);
+-		} else {
+-			ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_LO);
+-			ivec &= ~(0xF << (i << 2));
+-			ivec |= p->irq << (i << 2);
+-			writew(ivec, pcic->pcic_regs+PCI_INT_SELECT_LO);
+-		}
+-	}
+-	dev->irq = pcic_build_device_irq(NULL, real_irq);
+-}
+-
+-/*
+- * Normally called from {do_}pci_scan_bus...
+- */
+-void pcibios_fixup_bus(struct pci_bus *bus)
+-{
+-	struct pci_dev *dev;
+-	struct linux_pcic *pcic;
+-	/* struct linux_pbm_info* pbm = &pcic->pbm; */
+-	int node;
+-	struct pcidev_cookie *pcp;
+-
+-	if (!pcic0_up) {
+-		pci_info(bus, "pcibios_fixup_bus: no PCIC\n");
+-		return;
+-	}
+-	pcic = &pcic0;
+-
+-	/*
+-	 * Next crud is an equivalent of pbm = pcic_bus_to_pbm(bus);
+-	 */
+-	if (bus->number != 0) {
+-		pci_info(bus, "pcibios_fixup_bus: nonzero bus 0x%x\n",
+-			 bus->number);
+-		return;
+-	}
+-
+-	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		node = pdev_to_pnode(&pcic->pbm, dev);
+-		if(node == 0)
+-			node = -1;
+-
+-		/* cookies */
+-		pcp = pci_devcookie_alloc();
+-		pcp->pbm = &pcic->pbm;
+-		pcp->prom_node = of_find_node_by_phandle(node);
+-		dev->sysdata = pcp;
+-
+-		/* fixing I/O to look like memory */
+-		if ((dev->class>>16) != PCI_BASE_CLASS_BRIDGE)
+-			pcic_map_pci_device(pcic, dev, node);
+-
+-		pcic_fill_irq(pcic, dev, node);
+-	}
+-}
+-
+-int pcibios_enable_device(struct pci_dev *dev, int mask)
+-{
+-	struct resource *res;
+-	u16 cmd, oldcmd;
+-	int i;
+-
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	oldcmd = cmd;
+-
+-	pci_dev_for_each_resource(dev, res, i) {
+-		/* Only set up the requested stuff */
+-		if (!(mask & (1<<i)))
+-			continue;
+-
+-		if (res->flags & IORESOURCE_IO)
+-			cmd |= PCI_COMMAND_IO;
+-		if (res->flags & IORESOURCE_MEM)
+-			cmd |= PCI_COMMAND_MEMORY;
+-	}
+-
+-	if (cmd != oldcmd) {
+-		pci_info(dev, "enabling device (%04x -> %04x)\n", oldcmd, cmd);
+-		pci_write_config_word(dev, PCI_COMMAND, cmd);
+-	}
+-	return 0;
+-}
+-
+-/* Makes compiler happy */
+-static volatile int pcic_timer_dummy;
+-
+-static void pcic_clear_clock_irq(void)
+-{
+-	pcic_timer_dummy = readl(pcic0.pcic_regs+PCI_SYS_LIMIT);
+-}
+-
+-/* CPU frequency is 100 MHz, timer increments every 4 CPU clocks */
+-#define USECS_PER_JIFFY  (1000000 / HZ)
+-#define TICK_TIMER_LIMIT ((100 * 1000000 / 4) / HZ)
+-
+-static unsigned int pcic_cycles_offset(void)
+-{
+-	u32 value, count;
+-
+-	value = readl(pcic0.pcic_regs + PCI_SYS_COUNTER);
+-	count = value & ~PCI_SYS_COUNTER_OVERFLOW;
+-
+-	if (value & PCI_SYS_COUNTER_OVERFLOW)
+-		count += TICK_TIMER_LIMIT;
+-	/*
+-	 * We divide all by HZ
+-	 * to have microsecond resolution and to avoid overflow
+-	 */
+-	count = ((count / HZ) * USECS_PER_JIFFY) / (TICK_TIMER_LIMIT / HZ);
+-
+-	/* Coordinate with the sparc_config.clock_rate setting */
+-	return count * 2;
+-}
+-
+-void __init pci_time_init(void)
+-{
+-	struct linux_pcic *pcic = &pcic0;
+-	unsigned long v;
+-	int timer_irq, irq;
+-	int err;
+-
+-#ifndef CONFIG_SMP
+-	/*
+-	 * The clock_rate is in SBUS dimension.
+-	 * We take into account this in pcic_cycles_offset()
+-	 */
+-	sparc_config.clock_rate = SBUS_CLOCK_RATE / HZ;
+-	sparc_config.features |= FEAT_L10_CLOCKEVENT;
+-#endif
+-	sparc_config.features |= FEAT_L10_CLOCKSOURCE;
+-	sparc_config.get_cycles_offset = pcic_cycles_offset;
+-
+-	writel (TICK_TIMER_LIMIT, pcic->pcic_regs+PCI_SYS_LIMIT);
+-	/* PROM should set appropriate irq */
+-	v = readb(pcic->pcic_regs+PCI_COUNTER_IRQ);
+-	timer_irq = PCI_COUNTER_IRQ_SYS(v);
+-	writel (PCI_COUNTER_IRQ_SET(timer_irq, 0),
+-		pcic->pcic_regs+PCI_COUNTER_IRQ);
+-	irq = pcic_build_device_irq(NULL, timer_irq);
+-	err = request_irq(irq, timer_interrupt,
+-			  IRQF_TIMER, "timer", NULL);
+-	if (err) {
+-		prom_printf("time_init: unable to attach IRQ%d\n", timer_irq);
+-		prom_halt();
+-	}
+-	local_irq_enable();
+-}
+-
+-
+-#if 0
+-static void watchdog_reset() {
+-	writeb(0, pcic->pcic_regs+PCI_SYS_STATUS);
+-}
+-#endif
+-
+-/*
+- * NMI
+- */
+-void pcic_nmi(unsigned int pend, struct pt_regs *regs)
+-{
+-	pend = swab32(pend);
+-
+-	if (!pcic_speculative || (pend & PCI_SYS_INT_PENDING_PIO) == 0) {
+-		/*
+-		 * XXX On CP-1200 PCI #SERR may happen, we do not know
+-		 * what to do about it yet.
+-		 */
+-		printk("Aiee, NMI pend 0x%x pc 0x%x spec %d, hanging\n",
+-		    pend, (int)regs->pc, pcic_speculative);
+-		for (;;) { }
+-	}
+-	pcic_speculative = 0;
+-	pcic_trapped = 1;
+-	regs->pc = regs->npc;
+-	regs->npc += 4;
+-}
+-
+-static inline unsigned long get_irqmask(int irq_nr)
+-{
+-	return 1 << irq_nr;
+-}
+-
+-static void pcic_mask_irq(struct irq_data *data)
+-{
+-	unsigned long mask, flags;
+-
+-	mask = (unsigned long)data->chip_data;
+-	local_irq_save(flags);
+-	writel(mask, pcic0.pcic_regs+PCI_SYS_INT_TARGET_MASK_SET);
+-	local_irq_restore(flags);
+-}
+-
+-static void pcic_unmask_irq(struct irq_data *data)
+-{
+-	unsigned long mask, flags;
+-
+-	mask = (unsigned long)data->chip_data;
+-	local_irq_save(flags);
+-	writel(mask, pcic0.pcic_regs+PCI_SYS_INT_TARGET_MASK_CLEAR);
+-	local_irq_restore(flags);
+-}
+-
+-static unsigned int pcic_startup_irq(struct irq_data *data)
+-{
+-	irq_link(data->irq);
+-	pcic_unmask_irq(data);
+-	return 0;
+-}
+-
+-static struct irq_chip pcic_irq = {
+-	.name		= "pcic",
+-	.irq_startup	= pcic_startup_irq,
+-	.irq_mask	= pcic_mask_irq,
+-	.irq_unmask	= pcic_unmask_irq,
 -};
--MODULE_DEVICE_TABLE(of, p9100_match);
 -
--static struct platform_driver p9100_driver = {
--	.driver = {
--		.name = "p9100",
--		.of_match_table = p9100_match,
--	},
--	.probe		= p9100_probe,
--	.remove_new	= p9100_remove,
--};
--
--static int __init p9100_init(void)
+-unsigned int pcic_build_device_irq(struct platform_device *op,
+-                                   unsigned int real_irq)
 -{
--	if (fb_get_options("p9100fb", NULL))
--		return -ENODEV;
+-	unsigned int irq;
+-	unsigned long mask;
 -
--	return platform_driver_register(&p9100_driver);
+-	irq = 0;
+-	mask = get_irqmask(real_irq);
+-	if (mask == 0)
+-		goto out;
+-
+-	irq = irq_alloc(real_irq, real_irq);
+-	if (irq == 0)
+-		goto out;
+-
+-	irq_set_chip_and_handler_name(irq, &pcic_irq,
+-	                              handle_level_irq, "PCIC");
+-	irq_set_chip_data(irq, (void *)mask);
+-
+-out:
+-	return irq;
 -}
 -
--static void __exit p9100_exit(void)
+-
+-static void pcic_load_profile_irq(int cpu, unsigned int limit)
 -{
--	platform_driver_unregister(&p9100_driver);
+-	printk("PCIC: unimplemented code: FILE=%s LINE=%d", __FILE__, __LINE__);
 -}
 -
--module_init(p9100_init);
--module_exit(p9100_exit);
+-void __init sun4m_pci_init_IRQ(void)
+-{
+-	sparc_config.build_device_irq = pcic_build_device_irq;
+-	sparc_config.clear_clock_irq  = pcic_clear_clock_irq;
+-	sparc_config.load_profile_irq = pcic_load_profile_irq;
+-}
 -
--MODULE_DESCRIPTION("framebuffer driver for P9100 chipsets");
--MODULE_AUTHOR("David S. Miller <davem@davemloft.net>");
--MODULE_VERSION("2.0");
--MODULE_LICENSE("GPL");
+-subsys_initcall(pcic_init);
+diff --git a/arch/sparc/kernel/time_32.c b/arch/sparc/kernel/time_32.c
+index 08bbdc458596..848404610b86 100644
+--- a/arch/sparc/kernel/time_32.c
++++ b/arch/sparc/kernel/time_32.c
+@@ -43,7 +43,6 @@
+ #include <asm/io.h>
+ #include <asm/idprom.h>
+ #include <asm/page.h>
+-#include <asm/pcic.h>
+ #include <asm/irq_regs.h>
+ #include <asm/setup.h>
+ 
+@@ -347,9 +346,6 @@ void __init time_init(void)
+ 	sparc_config.features = 0;
+ 	late_time_init = sparc32_late_time_init;
+ 
+-	if (pcic_present())
+-		pci_time_init();
+-	else
+-		sbus_time_init();
++	sbus_time_init();
+ }
+ 
 
 -- 
 2.34.1
