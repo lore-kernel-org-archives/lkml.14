@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA64FD29E
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 21:02:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC6B4F200
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 21:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710018168; cv=none; b=GwNaQ1U0AY9GZ6eEevA9NB55yedmtOeUk7tuIo9/RAnvYsPPl146rCoBMoKg6BLkgs8fDkFOHhadyQVd759/G8HvZeMCxUZUrm0lCR2o2/8lRaI6QcorBG5FsjwIxxU0h/jJTtQ4hVFTv+MxiHDafeGDqXvchwX73Gc2F0g7Jg8=
+	t=1710018170; cv=none; b=d0Er4zXf2EECZoTtst/nujoG8p7es3Dh0lvQ9cnav+AsQ9bye7uQXMt5xTpBby7aC1Nw792bVJTvzE2lZrNVPdHFb/0qbLbykJB6EYqgdMnsHJlOYcYRO2qlEUDNY3Wnu9ydEMP/zslLBUaTeji6GLY8wIU/PDouc25ycpC/rws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710018168; c=relaxed/simple;
-	bh=7PF0+D1IOCR6YLRa244+vy+ff5vcASshR/asOF7cdrk=;
+	s=arc-20240116; t=1710018170; c=relaxed/simple;
+	bh=Jk5tt+gSzYYhQIlktRhIlr+6QKg9CrR+h9qHi82xD1w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1o+7keuq2QBR8OJL5d1zh5rgKOg0SsaVRX5RunTISYDZ3dtDBfY8H35EMY4WqUbKrBUk/XoRo6wvRsHlSIK1D/oWTMjM7J9bwxQ6yR7UeferOvzVFOfOi3hBOCTRDiFIqso8E0GOKksXcRqAu0jacEgSH6VW9cjRouC2e0lnm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Igd8khMh; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=peCJ4klOpCwqtiUCpQ+pTaKH39kUA4ujM1ofYYkCz3UghGIZxHkAUVeY273GPact8sdSTHf+UA5TP38zifrpGW3ZryQItlm/CIOHddsNQDqbgvtxpPD8bzYm5noNNSH6Y+VpLdVBjlkyX4EOXRuUZGMH5o9B9xvI+v/tHRc/hXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/CYXRBT; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Igd8khMh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/CYXRBT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710018167; x=1741554167;
+  t=1710018169; x=1741554169;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7PF0+D1IOCR6YLRa244+vy+ff5vcASshR/asOF7cdrk=;
-  b=Igd8khMhBv4cDaT8IEOY6ODkWLieBt8qRz1FO4dmR2xMQsbZFqA3wvzu
-   KMu5zNeypIN/bFVLr/tL/iuAc0sda6oWcV5CI810QP0aEm3ts28eTTkQR
-   Drxfm9qi4KSbRswycHoGm8ZjMFcYV4wWLXCZGSg/2j+P0MEQEP7wjyxqm
-   Nv+nZSUZicF/XLnCcjraWWeJ0dQ7IZEBzkBkVe840NdRUnwBQMHDsEKQo
-   UGKgHpziJHrA6beoWSxdfpZEDse94E0mX8Or7RVcMNUhgORCdiEMAUgxA
-   iXT+lZeXDjozxVbYf86nna5SbE5T0zJue1ZTv+nsbgUkAwtwooepoBXIM
+  bh=Jk5tt+gSzYYhQIlktRhIlr+6QKg9CrR+h9qHi82xD1w=;
+  b=B/CYXRBTq1CO3EIP5Bf+ynumSwyEWPIJGWLeCiNd2m74alrDz1BcWVux
+   H0k1oI8ph34TXas9b/dJoKMcSALlFjEU4YipIeGxGlg3U+GpYp19T10SR
+   mQFQoqyLsxk6q4pjBSlKHvCC0oXUJ7OxO84z/lPZkicHmxJ6ozXVtOycm
+   xaocAc9bDOI4qXsLzKcgaL5VDq5snXVX9/EQJVMA8diAm+l5SRLYMu9qj
+   /Bk+toN/eQ1VaBe4scpCzbk7hYd/EjP539wYaw1X0E02/X9KCImuu8fWe
+   IOiFx+K9hVooD/rXrQxmzi8RabhEiI0BEexq4lUE8o2xX7jB+jK6iEvwk
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4861554"
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4861561"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="4861554"
+   d="scan'208";a="4861561"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 13:02:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="937048387"
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="937048389"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="937048387"
+   d="scan'208";a="937048389"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2024 13:02:43 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3AD1E169; Sat,  9 Mar 2024 23:02:42 +0200 (EET)
+	id 6402B385; Sat,  9 Mar 2024 23:02:42 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -55,9 +55,9 @@ Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 1/4] x86/tdx: Introduce tdg_vm_wr()
-Date: Sat,  9 Mar 2024 23:02:27 +0200
-Message-ID: <20240309210230.239045-2-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 4/4] x86/tdx: Enable ENUM_TOPOLOGY
+Date: Sat,  9 Mar 2024 23:02:30 +0200
+Message-ID: <20240309210230.239045-5-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
 References: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
@@ -69,59 +69,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a helper to write to a TD-scope metadata field and use it to set
-NOTIFY_ENABLES.
+TDX 1.0 generates a #VE when accessing topology-related CPUID leafs
+(0xB and 0x1F) and the X2APIC_APICID MSR. The kernel returns all
+zeros on CPUID #VEs. In practice, this means that the kernel can only
+boot with a plain topology. Any complications will cause problems.
+
+The ENUM_TOPOLOGY feature allows the VMM to provide topology
+information to the guest in a safe manner. Enabling the feature
+eliminates topology-related #VEs: the TDX module virtualizes
+accesses to the CPUID leafs and the MSR.
+
+Enable ENUM_TOPOLOGY if it is available.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/coco/tdx/tdx.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ arch/x86/coco/tdx/tdx.c           | 20 ++++++++++++++++++++
+ arch/x86/include/asm/shared/tdx.h |  3 +++
+ 2 files changed, 23 insertions(+)
 
 diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index cc67f7380055..5ffe5ef99536 100644
+index d9ea82f8772d..291e45db8d54 100644
 --- a/arch/x86/coco/tdx/tdx.c
 +++ b/arch/x86/coco/tdx/tdx.c
-@@ -77,6 +77,20 @@ static inline void tdcall(u64 fn, struct tdx_module_args *args)
- 		panic("TDCALL %lld failed (Buggy TDX module!)\n", fn);
+@@ -280,6 +280,26 @@ static void tdx_setup(u64 *cc_mask)
+ 		else
+ 			tdx_panic(msg);
+ 	}
++
++	/*
++	 * TDX 1.0 generates a #VE when accessing topology-related CPUID leafs
++	 * (0xB and 0x1F) and the X2APIC_APICID MSR. The kernel returns all
++	 * zeros on CPUID #VEs. In practice, this means that the kernel can only
++	 * boot with a plain topology. Any complications will cause problems.
++	 *
++	 * The ENUM_TOPOLOGY feature allows the VMM to provide topology
++	 * information to the guest in a safe manner. Enabling the feature
++	 * eliminates topology-related #VEs: the TDX module virtualizes
++	 * accesses to the CPUID leafs and the MSR.
++	 *
++	 * Enable ENUM_TOPOLOGY if it is available.
++	 */
++	if ((features & TDX_FEATURES0_ENUM_TOPOLOGY) &&
++	    tdg_vm_rd(TDCS_TOPOLOGY_ENUM_CONFIGURED)) {
++		tdg_vm_wr(TDCS_TD_CTLS,
++			  TD_CTLS_ENUM_TOPOLOGY,
++			  TD_CTLS_ENUM_TOPOLOGY);
++	}
  }
  
-+static inline u64 tdg_vm_wr(u64 field, u64 value, u64 mask)
-+{
-+	struct tdx_module_args args = {
-+		.rdx = field,
-+		.r8 = value,
-+		.r9 = mask,
-+	};
-+
-+	tdcall(TDG_VM_WR, &args);
-+
-+	/* Old value */
-+	return args.r8;
-+}
-+
- /**
-  * tdx_mcall_get_report0() - Wrapper to get TDREPORT0 (a.k.a. TDREPORT
-  *                           subtype 0) using TDG.MR.REPORT TDCALL.
-@@ -902,10 +916,6 @@ static void tdx_kexec_unshare_mem(void)
+ /*
+diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
+index 29a61c72e4dd..2964c506b241 100644
+--- a/arch/x86/include/asm/shared/tdx.h
++++ b/arch/x86/include/asm/shared/tdx.h
+@@ -27,15 +27,18 @@
+ #define TDCS_CONFIG_FLAGS		0x1110000300000016
+ #define TDCS_TD_CTLS			0x1110000300000017
+ #define TDCS_NOTIFY_ENABLES		0x9100000000000010
++#define TDCS_TOPOLOGY_ENUM_CONFIGURED	0x9100000000000019
  
- void __init tdx_early_init(void)
- {
--	struct tdx_module_args args = {
--		.rdx = TDCS_NOTIFY_ENABLES,
--		.r9 = -1ULL,
--	};
- 	u64 cc_mask;
- 	u32 eax, sig[3];
+ /* TDCS_TDX_FEATURES0 bits */
+ #define TDX_FEATURES0_PENDING_EPT_VIOLATION_V2	BIT_ULL(16)
++#define TDX_FEATURES0_ENUM_TOPOLOGY		BIT_ULL(20)
  
-@@ -924,7 +934,7 @@ void __init tdx_early_init(void)
- 	cc_set_mask(cc_mask);
+ /* TDCS_CONFIG_FLAGS bits */
+ #define TDCS_CONFIG_FLEXIBLE_PENDING_VE	BIT_ULL(1)
  
- 	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
--	tdcall(TDG_VM_WR, &args);
-+	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
+ /* TDCS_TD_CTLS bits */
+ #define TD_CTLS_PENDING_VE_DISABLE	BIT_ULL(0)
++#define TD_CTLS_ENUM_TOPOLOGY		BIT_ULL(1)
  
- 	/*
- 	 * All bits above GPA width are reserved and kernel treats shared bit
+ /* TDX hypercall Leaf IDs */
+ #define TDVMCALL_MAP_GPA		0x10001
 -- 
 2.43.0
 
