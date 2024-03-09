@@ -1,138 +1,98 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F0A3D3AC
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 13:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023501BDF4;
+	Sat,  9 Mar 2024 13:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709991105; cv=none; b=YIR4F2JZ/BWbdWzyBw0bCj2/lIdudjSAyY8OgYDSnHRGNgnUQorosOO2eTgGsrFHfvRoV0/NjOPAHaMdfhm1hpCTtUdDWE4kCF1wkArbAlPiNYwq9yJDnbhFtoahHFUmVra+JMZwoBLZm3kvY8s88WdJ97chzyd+CFuWpXaFWYk=
+	t=1709991334; cv=none; b=nPmU6VE+XGbCSt3gbV7GORH5FgKJEaLOS/1kBqc+PUtaxBFifNKZYVUN+HZLx5cR6Pu/2RnwKdiIzY64KuUVajjAbZ+OfaAkMd7vpYMKzuz8SV9ENZdnlOKBj671AbtGAhH8VLavWsMP7cSYo8mKbQFFKGUc7pS58gkzytQDpDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709991105; c=relaxed/simple;
-	bh=ddTyXD0L1FluRMgAEy4AyF61rMcBg/kryptIgklrmCk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uNaSnzOmXM4A5Rc+YK3yTnqoOQe6qg21SrM2cPtBU3WXUyRJv79koBy1WfBzya6Cm8r+HRS/S9kNIJKjW4E47EeI4aHK7xWMpG7a2BrJ4Bf+07wWF0zm7a6Xmmv1PiVG/1ulHpJBmkdtiRZQXljZy2w8aONb5bQ842PrxV2cr3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDVenmvL; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709991334; c=relaxed/simple;
+	bh=i4kQuAnoQeqypHuwMZ5OqixyBUFX6jZIIa7F8n2+mkU=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=oRUBI+EmY1k3wV3/LlCTYAK1CcT6rLp99UL1d6Wdh/LDSW/HMioMISnW/kWp/DtL+sB0Z6fCwxZCT5HWMsSH3JP9C9EXLO9MBje+/06ObgdRr/LZHSiuyp1EKDCaMc7LJBZAsy/lf6wn4rcABxbHztYf6ZY6K4fqBQ7fwlw27Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=AITJw5sn; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDVenmvL"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d3fae963a8so27716941fa.1
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 05:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709991102; x=1710595902; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HhZUYlRhQA4TRIHl3TIBSQxZHd0u1mWSXp3lOhorupc=;
-        b=tDVenmvLBxpMXEaCcZHKc36SL49ayUiTMZz4m3LVeKVWvLvZFX6k132NLspbxGtdyB
-         FcYZJmuQrSrtj68Jmv8oMhM0Xut2rIiIpeIh8MQ5437q2xWz5GDNtvPemyUVfT4aww0+
-         rkJzy9db+qOjT2wANlgAcpC/T2DUpICPbIRW9aR/Zi5TQeTC+RKjTlNBtXwlxQ8gEdd3
-         AIWc/X0C0Wsg4e0ri9lLwLBuW4SKHT+AKaJ5TP3RzD5Wauv1CmxChSMe5Fk2Sx3A5IKV
-         OXp/T4dgCcHchKThBx4pH7xJNNcYp6HmLox3F7UZcEJmmHjqWS8bR+/PdPMF71CkidX3
-         hsZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709991102; x=1710595902;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HhZUYlRhQA4TRIHl3TIBSQxZHd0u1mWSXp3lOhorupc=;
-        b=dfewjnWmWEQghWXHZzDtNW75x4F3rIOxm988sKDq/j9sAMh1alr39iAvY6Q7aSnjxJ
-         YaNTjmofCFIYNz4ei8LdNkU/n7h+f5+pbfm+Htiu38uS3KuH8Y6RdrSLADubMgmtFdEy
-         ighZSP94qMfooD7eyizJsk8NQFEAYyXgR8FBhremDJmrl8GE4Yqh8CENG07kXb/oD0IG
-         GEETwXs7PUW2zIl7u/ZdzeZK08YNIjHcKztUgvUpIl/iMTSWCXgsKheUvRQNeuo2OeBj
-         auYXjcgukbLs4mw/GFtF6coLsInt2Rb0oF1FjBJ6BeXSAq6InglbiHsmhoNEPD0r7Njy
-         eN4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUvmY/3KgHiqFj1JawkY8LFqZOycyOsfSim9S84jubP/mckvP/rvg68kd7HEv4qaIqYoBDLpKdD/VtUMgmDXR5RLus46OstxShwpOEC
-X-Gm-Message-State: AOJu0YxsYw96ERz3AjGlkyR/6QGkOb1MlWT8g3wbemc9xz2e1EhIi04g
-	YD7LAqGy8A6lva+P9yedkbu4DwlZsmP7y6kx4GjRr3k6v1xIvjH9vkS/x76HGrnJvC/DWGBvPio
-	6kAU=
-X-Google-Smtp-Source: AGHT+IGqsmrKp7W/U4LiUYplVhsAtxRfWaDh47ahuBH3QgrHH81CJ7JaRO1xF0JhNUs6ZxhrFtJyQQ==
-X-Received: by 2002:a2e:8610:0:b0:2d4:251f:c151 with SMTP id a16-20020a2e8610000000b002d4251fc151mr1150344lji.46.1709991102106;
-        Sat, 09 Mar 2024 05:31:42 -0800 (PST)
-Received: from [10.167.154.1] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id t27-20020a2e8e7b000000b002d08f3640b5sm298524ljk.11.2024.03.09.05.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 05:31:41 -0800 (PST)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Sat, 09 Mar 2024 14:31:10 +0100
-Subject: [PATCH v2 2/2] arm64: dts: qcom: sc8280xp: Describe the PCIe
- SMMUv3
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="AITJw5sn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709991319; bh=JMJZZGhWptagNBPaY3ce0VzBpB5bhSnhY8q1A69wfqY=;
+	h=From:To:Cc:Subject:Date;
+	b=AITJw5snACaYV5znEiAektOXX8O4Da0g2VuVbaVAfnc0fKDRrNH8pjqupHsR7jcn8
+	 Y4laKQM+MFE3acqtFwlOmv+m+YsKVAvrWcmu6+i7qcZaLfmWEzNlZoGp5ntcp5driS
+	 /tAZaXNTMEkcyoZdo4DFMelSp44xpnQfWkFCTM+I=
+Received: from localhost.localdomain ([58.213.8.163])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 8CF87847; Sat, 09 Mar 2024 21:35:15 +0800
+X-QQ-mid: xmsmtpt1709991315t3dwksqcz
+Message-ID: <tencent_DC4901C65DB41D86CD613F3ACC41EA143808@qq.com>
+X-QQ-XMAILINFO: NvH2zBBgt3uT+kfoe/499o2G21ybEH6CIxd21cVVkXPbT/F/r+w8/YH+9VZgrL
+	 MqsAtBLT0sFgV0dUTf8JJ932HwN45u0yIjh1k0VPIduK4hFIZaukEFYWuRd8FxzOUJZOhDUMbkgJ
+	 qhZ/TGPRrryANjn9fIUIgq9ucdOL1pLT7QwM5w1UZE6TUiXucuX9JWK/giiHD2oU3DKXlFsLN/tI
+	 5Nn5Yc91wl/mStke/F3i5QDaD1SJ/UK6vT7hRY8gUUdCBAkbA5TajnTi6FSRJRG2DqYznfja7hqY
+	 ZXY/aEWlxzBjUbKiqDOFXxSd8v0zoTKcaVU2D83y0HDxWVO/nKVkWaJMTENfpiUKF/6c8VdaP1zP
+	 A8ix2sqYYy3oTzUK4c49e8uo7A0xTfx/AL7K/JHSB2hFiE/cfqeGk3R9ALd+4mHmevCfjQrbzNCX
+	 DZttcjGb8kI//vx8XqIAOldipwg2VMMfcbIbwrw5i5FfiHEFcE5q1LMxLtZq3mERSkoSqE5JiWwt
+	 0MJJLj89XfHq/4TonNctw+XXJCqQ7F8z8J3D3hxPueK5gas8gaXeSQQ2mJojRwN7YjHnTXqDbpCq
+	 wCTyoxNHaaDRRuNS7VRfrLeRbAZ2KUM17CieqwXftpHYeAHIZdVAZoGNuSMKRpds4vKsrPvEGv36
+	 rFniflqNSXzUcFwqQB0cPm+01FTetN4UEJuCqaT2yVO4nfSmVhUPLmd2vKrD5w4pwYwbM1bmTJyB
+	 PNpwlDvvwX2VJTII4v50D0Nrf303ZUkwBpdv9Xpds4yyTe/x+mQzxxqixzGJMxtEoH1VSMdKX//6
+	 eTYU+g9NVVmPZ0UukOVZNkqSJZt7jbrL66Es3ukLpu2SJH3gmpxLtBiyTTD2RtscBPsCidYN/cY0
+	 tLdAIt2HtMkFPQhINIBOg0FgyNhRh8wRdDqDloYcNx8HGJ4gX3QTjWduSE+PmKwIHnepCZyZy5dl
+	 hb21oXZeZOUQMeQrM5d6PECYjQjQbtI+aJsxjOnYiaBFo6PUESJ8m2vWrYDsSoy1X2ogTerg4QLj
+	 8u+31VZrkEdOLcSgkwkrRUCUA2K+d5t00v2byNtKDYAS/jl0ZdITFH0M/3Img=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Breno Leitao <leitao@debian.org>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	David Howells <dhowells@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: mark racy access on sk->sk_rcvbuf
+Date: Sat,  9 Mar 2024 21:34:40 +0800
+X-OQ-MSGID: <20240309133444.56863-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231219-topic-8280_smmuv3-v2-2-c67bd3226687@linaro.org>
-References: <20231219-topic-8280_smmuv3-v2-0-c67bd3226687@linaro.org>
-In-Reply-To: <20231219-topic-8280_smmuv3-v2-0-c67bd3226687@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
- Rob Herring <robh@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- iommu@lists.linux.dev, Johan Hovold <johan+linaro@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709991097; l=1664;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=ddTyXD0L1FluRMgAEy4AyF61rMcBg/kryptIgklrmCk=;
- b=MnzEy58ojuKm7m/odlIGtrimc8a/DArIDyAiRUYU5/UBseU0wxX+NzrDP2hK/VAMJBFrgm0ii
- LP4n5g2+g6QB1tQLGFiAgVbGGdJNibptSFC5O+QIpYSck6J0euKhxTV
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
 
-SC8280XP actually has a third SMMU, which can be seen in e.g. the IORT
-ACPI table and is used for the PCIe hosts.
+sk->sk_rcvbuf can be changed by other threads. Mark this as benign using
+READ_ONCE. 
 
-Unfortunately though, the secure firmware seems to be configured in a
-way such that Linux can't touch it, not even read back the ID registers.
-It also seems like the SMMU is configured to run in some sort of bypass
-mode, completely opaque to the OS.
+This patch is aimed at reducing the number of benign races reported by
+KCSAN in order to focus future debugging effort on harmful races.
 
-Describe it so that one can configure it when running Linux as a
-hypervisor (e.g with [1]) and for hardware description completeness.
-
-[1] https://github.com/TravMurav/slbounce
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: linke li <lilinke99@qq.com>
 ---
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ net/core/sock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index a5b194813079..28edd30a9c04 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -4648,6 +4648,22 @@ cci3_i2c1_sleep: cci3-i2c1-sleep-pins {
- 			};
- 		};
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 5e78798456fd..4c5524e70534 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -551,7 +551,7 @@ int __sk_receive_skb(struct sock *sk, struct sk_buff *skb,
  
-+		pcie_smmu: iommu@14f80000 {
-+			compatible = "qcom,sc8280xp-smmu-v3", "arm,smmu-v3";
-+			reg = <0 0x14f80000 0 0x80000>;
-+			interrupts = <GIC_SPI 951 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 955 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 953 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "eventq",
-+					  "gerror",
-+					  "cmdq-sync";
-+			#iommu-cells = <1>;
-+			dma-coherent;
-+
-+			/* The hypervisor prevents register access from Linux */
-+			status = "reserved";
-+		};
-+
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sc8280xp-smmu-500", "arm,mmu-500";
- 			reg = <0 0x15000000 0 0x100000>;
-
+ 	skb->dev = NULL;
+ 
+-	if (sk_rcvqueues_full(sk, sk->sk_rcvbuf)) {
++	if (sk_rcvqueues_full(sk, READ_ONCE(sk->sk_rcvbuf))) {
+ 		atomic_inc(&sk->sk_drops);
+ 		goto discard_and_relse;
+ 	}
 -- 
-2.44.0
+2.39.3 (Apple Git-146)
 
