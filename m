@@ -1,70 +1,80 @@
-Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C7941C6A
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 20:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.166.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186F820B22;
+	Sat,  9 Mar 2024 20:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710017161; cv=none; b=T3iNMhmVRdCxuGDxSMNMdLBIL5hsU1gp7rvKCZK2iXw7yPuSToE2ToHhlV2QwXw5CIQKif2BZSqMHekCQB9drFDT4Ectd5LV/P+mWP31VxJK6ZkzPvTJxQeO+N9/dTSq4+zut1uVi0/lI3luKfI8eoYHKSR6PAKSZ78g3dg4xPU=
+	t=1710017772; cv=none; b=NteMNwpw6kLUOjML1GPxyf/lfG8OsmkBAv1+ScqvQ3OAf/r2RQRJujJTc9urqSn77yMlTlF9NF+i9SEd6haZkJjiStr+lAbmB6zBMXHIOOdiFT7n/Ni/f06NNNMHwTZhpG90d5gIggoJoIYRWVU04iJRa9IadsYW6pGNa50FKj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710017161; c=relaxed/simple;
-	bh=ZPLcAC1idEQsrEeiIpSoNAiCCJvbQ4JoAxAN+zaBGQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gvvvRt6AecxcreZnDxxFmGBKLib79rBFfo4nvzSizsMUHMsTIAzTiHjGhmfYppSzx1W54R7mnEES7WaMih9IVNR3iiLMUqgI0ESblKzKNoQWcBKU/xuEX/7cjComi0nt/Jkzm21AmE/9LvfM/73AePcCxqfjNB+SmuTppBpw5tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org; arc=none smtp.client-ip=140.77.166.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org
-Received: from localhost (localhost [127.0.0.1])
-	by sonata.ens-lyon.org (Postfix) with ESMTP id A00C7A02B9;
-	Sat,  9 Mar 2024 21:35:50 +0100 (CET)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-	by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id eP4BFBAT6w_l; Sat,  9 Mar 2024 21:35:50 +0100 (CET)
-Received: from begin (aamiens-653-1-111-57.w83-192.abo.wanadoo.fr [83.192.234.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by sonata.ens-lyon.org (Postfix) with ESMTPSA id 3C28CA02B8;
-	Sat,  9 Mar 2024 21:35:50 +0100 (CET)
-Received: from samy by begin with local (Exim 4.97)
-	(envelope-from <samuel.thibault@ens-lyon.org>)
-	id 1rj3Q5-00000001EM3-3UMS;
-	Sat, 09 Mar 2024 21:35:49 +0100
-Date: Sat, 9 Mar 2024 21:35:49 +0100
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, speakup@linux-speakup.org
-Subject: [PATCH] speakup: Fix warning for label at end of compound statement
-Message-ID: <20240309203549.jj2l6epnznyjsrje@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	speakup@linux-speakup.org
+	s=arc-20240116; t=1710017772; c=relaxed/simple;
+	bh=Ge91vCXg12ja9uivjnl8xwkuCY8wS7ldRFzB9lJWMrs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J2m+iDGC6mczWjzERLoLDrWk2gBX323gbrm8iqIMA4790gL6PSpAu/Wg01cRTOxlyaN/EEY4cpo4wrnoCX/x5vi0WcAo51w/wy23D3+gKyeRS+GRKyewoaHaQomXe9lzSPozwfNe40ih4TTNScbLe/mSW+wMy7jBgATLo2hp5Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgdnfULV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgdnfULV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07364C433F1;
+	Sat,  9 Mar 2024 20:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710017771;
+	bh=Ge91vCXg12ja9uivjnl8xwkuCY8wS7ldRFzB9lJWMrs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dgdnfULVyGoT895Kfcmba2oOsvElcvvqQq+o1bOw6wZNV1B8VNPwT3K4nNjc5WBPE
+	 DBb8LQ/6i/2k7ppcE1uhp6sVvVHXIILelpBbVno+rYv2qMnuqVOgBCx//Ja0As8YTX
+	 uCV52rfcIM/Fk0THtk/D+CxK6gNyab7UPBVMrmQohkeeGBAhvT1dkTwlznmXNG9H9n
+	 xeoGkDJJ6U973XOXTtiljEled/qLu3QGtSY3IzRuAaF0/1hHPuUjMlZjDbJ0nRTwbn
+	 u+7SPhpdbcjaW+B2qbUjSLtxdQCC/6D0y84+12FzVwj2OW6/X4LfMixrmF3+mFTXr2
+	 j7YQa6Pfc1W8w==
+Message-ID: <0b17a2f1-76aa-488f-a94a-b9d07f0459f9@kernel.org>
+Date: Sat, 9 Mar 2024 13:56:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170609 (1.8.3)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] kernel BUG in __nla_validate_parse
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>
+Cc: syzbot <syzbot+65bb09a7208ce3d4a633@syzkaller.appspotmail.com>,
+ Petr Machata <petrm@nvidia.com>, davem@davemloft.net,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com
+References: <00000000000088981b06133bc07b@google.com>
+ <CANn89iKLAOJ+HG_y7M27-tx+9HSLUyDaf_NtrJMjs2bZ52KZbA@mail.gmail.com>
+ <20240309104054.5f058be3@kernel.org>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20240309104054.5f058be3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Label at end of compound statements is a C2x extension, so add an empty instruction.
+On 3/9/24 11:40 AM, Jakub Kicinski wrote:
+> On Sat, 9 Mar 2024 16:25:18 +0100 Eric Dumazet wrote:
+>> On Sat, Mar 9, 2024 at 4:13 PM syzbot
+>>> ..
+>> Petr, can you take a look ?
+>>
+>> Thanks !
+>>
+>>
+>> commit 2118f9390d83cf942de8b34faf3d35b54f9f4eee
+>> Author: Petr Machata <petrm@nvidia.com>
+>> Date:   Wed Mar 6 13:49:15 2024 +0100
+>>
+>>     net: nexthop: Adjust netlink policy parsing for a new attribute
+> 
+> Yeah
+> 
+> +static const struct nla_policy rtm_nh_policy_del[] = {
+> +       [NHA_ID]                = { .type = NLA_U32 },
+> +};
+> 
+> +       err = nlmsg_parse(nlh, sizeof(struct nhmsg), tb, NHA_MAX,
+> +                         rtm_nh_policy_del, extack);
+> 
+> The policy size must be >= max_attr (NHA_MAX).
 
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 807977260ae4 ("speakup: Add /dev/synthu device")
-Closes: https://lore.kernel.org/oe-kbuild-all/202403090122.cpUNsozM-lkp@intel.com/
-
-Index: linux-6.4/drivers/accessibility/speakup/devsynth.c
-===================================================================
---- linux-6.4.orig/drivers/accessibility/speakup/devsynth.c
-+++ linux-6.4/drivers/accessibility/speakup/devsynth.c
-@@ -108,6 +108,7 @@ static ssize_t speakup_file_writeu(struc
- 				break;
- 			}
- drop:
-+			;
- 		}
- 
- 		count -= bytes;
+ARRAY_SIZE is sufficient for both tb and parse. That is what the rest of
+the file uses.
