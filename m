@@ -1,221 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A923B18E
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EDF3D970;
+	Sat,  9 Mar 2024 10:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709978725; cv=none; b=uUY+RfFK95lRImRE9z70sc9gRjVf0DMP3u/AdS8fk8mPnwucnQTnrwObhG20CluyfMo8YxeUAUB5uTSInr54w4CAtDcZpmCbVxpDNKrV8WAIG4ei7ULJIdGNbiuGitF1OEQBo6ytwYw1LtL7og1RW2o1UmxxaSnukR4FcDAUJE4=
+	t=1709978732; cv=none; b=KoadVjyIwcASE5jg4aWlMMO20+fmL9cDENr1C0J1mgXgPDvxkhiPXfQkcFWdUInBr65bGnrtesc1jsnSbvvQiFNFv+7MynqRxN/xWyDp2ZA+5KsTGXChRgYAciQBG92nMUMQA4JcIdon+l4IyTV/sb958y5C+57aFmPW3dxtBr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709978725; c=relaxed/simple;
-	bh=AOmDjkgaTnfmYN2Kn8fCeWy3pgDIkj6xlUckL0Fjf1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=QytctV+NcDtMsskS/fcWuN2HlLjBOTVy1XukRuWg73f4H1JL/InGifzIgBlFpHORM4oC03DvBJUtRZQtDSwASN9ahiSlTOYL2LkaUyY6AYXGtfNTOoI876fjWJDKRokHtRNkSZZr5P0yNxsXI2lOwl85yfNI9SRE7v+rEmKmWW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aODuvv+j; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aODuvv+j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709978723; x=1741514723;
-  h=date:from:to:cc:subject:message-id;
-  bh=AOmDjkgaTnfmYN2Kn8fCeWy3pgDIkj6xlUckL0Fjf1Y=;
-  b=aODuvv+jNexYRaqvBeYY5p1BDFnd1ZRWirQEb8hqZADc5yAfKkViTXnu
-   7SsEYEW5mqnBij1DZjyQowxyn1aJLEDKWxuVzDILfvugDG9RSucaasrYz
-   YYa0BzlH0burnmcr/MVxHozaY2PB1pUcE0CP9wBCwcdFWUEpQ1BXSf8D0
-   AAcznFl1dmAgm1Euwi11ygG0upGreTiA5Ir4/nhPM8h/APdQKQyROL9FZ
-   bMqQPScgVosbKO6Swjg5g0FTxsG6BCNu1oLsNy+xxEzeIKRZwQKeHPXCE
-   DwY2l3x5SZPvpS9d11oPDmGqHBOZIZrSzC7qXZcOxryeCIMZD9vu2yv7L
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11007"; a="22224239"
-X-IronPort-AV: E=Sophos;i="6.07,112,1708416000"; 
-   d="scan'208";a="22224239"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 02:05:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,112,1708416000"; 
-   d="scan'208";a="11100815"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 09 Mar 2024 02:05:21 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ritZv-0007Db-0R;
-	Sat, 09 Mar 2024 10:05:19 +0000
-Date: Sat, 09 Mar 2024 18:05:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2024.03.04a] BUILD SUCCESS
- 4baac1c5fca33f370c9aa02f9d18ac6941e743cb
-Message-ID: <202403091810.IvcpbwRY-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1709978732; c=relaxed/simple;
+	bh=+iWHO6GcgleJjy5o5wNtL3f5KainhCIUvXYCx/6tCOA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mUB+bB+QxFcEzDaiJ0tl3RZogXoA5zbpScd2a3TVIl+cg2bqg/v9vD8kuJUo92ESER3w/yZ9CbWjI70bieXFfQPa1I9T5KZScQmzPPUEMXzWdbGn+Q0oE32PreEdlklCMaxFMCxn8syR+EEDIyU75Dfk7c/sPc5BRNw26ru7YH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TsJX23gYTz1xqVy;
+	Sat,  9 Mar 2024 18:03:30 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6EB581400CF;
+	Sat,  9 Mar 2024 18:05:11 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sat, 9 Mar 2024 18:05:10 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <jiri@resnulli.us>
+CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
+	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH V5 net-next 0/4] Support some features for the HNS3 ethernet driver
+Date: Sat, 9 Mar 2024 18:00:40 +0800
+Message-ID: <20240309100044.2351166-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.03.04a
-branch HEAD: 4baac1c5fca33f370c9aa02f9d18ac6941e743cb  rcu: Inform KCSAN of one-byte cmpxchg() in rcu_trc_cmpxchg_need_qs()
+Currently, the hns3 driver does not have the trace
+of the command queue. As a result, it is difficult to
+locate the communication between the driver and firmware.
+Therefore, the trace function of the command queue is
+added in this patch set to facilitate the locating of
+communication problems between the driver and firmware.
 
-elapsed time: 725m
+If a RAS occurs, the driver will automatically reset to attempt
+to recover the RAS. Therefore, to locate the cause of the RAS,
+it is necessary to save the values of some RAS-related dfx
+registers before the reset. So we added a patch in
+this patch set to print these information.
 
-configs tested: 148
-configs skipped: 3
+---
+changeLog:
+v4 -> v5:
+  - Delete a patch about dump pfc frame statistics in tx timeout log by dmesg,
+    suggested by Jiri Pirko
+  - Rewrite the log message of patch about command queue trace, suggested by Jiri Pirko
+  - Add a new patch about querying scc version by devlink info
+  v4: https://lore.kernel.org/all/20240105010119.2619873-1-shaojijie@huawei.com/
+v3 -> v4:
+  - Adjuste the patches sequence in this patch set, suggested by Simon Horman
+  v3: https://lore.kernel.org/all/20231216070018.222798-1-shaojijie@huawei.com/
+v2 -> v3:
+  - Fix the incorrect use of byte order in patch
+    "net: hns3: add command queue trace for hns3" suggested by Simon Horman
+  - Add a new patch to move constants from hclge_debugfs.h
+    to hclge_debugfs.c suggested by Simon Horman
+  v2: https://lore.kernel.org/all/20231214141135.613485-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Delete a patch for ethtool -S to dump page pool statistics, suggested by Jakub Kicinski
+  - Delete two patches about CMIS transceiver modules because
+    ethtool get_module_eeprom_by_page op is not implemented, suggested by Jakub Kicinski
+  v1: https://lore.kernel.org/all/20231211020816.69434-1-shaojijie@huawei.com/
+---
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hao Chen (1):
+  net: hns3: add support to query scc version by devlink info
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240309   gcc  
-arc                   randconfig-002-20240309   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   clang
-arm                                 defconfig   clang
-arm                   milbeaut_m10v_defconfig   clang
-arm                            mps2_defconfig   clang
-arm                   randconfig-001-20240309   clang
-arm                   randconfig-002-20240309   gcc  
-arm                   randconfig-003-20240309   clang
-arm                   randconfig-004-20240309   gcc  
-arm                        spear6xx_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240309   gcc  
-arm64                 randconfig-002-20240309   clang
-arm64                 randconfig-003-20240309   clang
-arm64                 randconfig-004-20240309   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240309   gcc  
-csky                  randconfig-002-20240309   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240309   clang
-hexagon               randconfig-002-20240309   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240309   clang
-i386         buildonly-randconfig-002-20240309   clang
-i386         buildonly-randconfig-003-20240309   gcc  
-i386         buildonly-randconfig-004-20240309   gcc  
-i386         buildonly-randconfig-005-20240309   gcc  
-i386         buildonly-randconfig-006-20240309   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240309   gcc  
-i386                  randconfig-002-20240309   gcc  
-i386                  randconfig-003-20240309   clang
-i386                  randconfig-004-20240309   clang
-i386                  randconfig-005-20240309   clang
-i386                  randconfig-006-20240309   gcc  
-i386                  randconfig-011-20240309   gcc  
-i386                  randconfig-012-20240309   gcc  
-i386                  randconfig-013-20240309   clang
-i386                  randconfig-014-20240309   clang
-i386                  randconfig-015-20240309   clang
-i386                  randconfig-016-20240309   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240309   gcc  
-loongarch             randconfig-002-20240309   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      maltaaprp_defconfig   clang
-mips                          rb532_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240309   gcc  
-nios2                 randconfig-002-20240309   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240309   gcc  
-parisc                randconfig-002-20240309   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      makalu_defconfig   clang
-powerpc                  mpc866_ads_defconfig   clang
-powerpc                      ppc40x_defconfig   clang
-powerpc               randconfig-001-20240309   gcc  
-powerpc               randconfig-002-20240309   clang
-powerpc               randconfig-003-20240309   clang
-powerpc64             randconfig-001-20240309   gcc  
-powerpc64             randconfig-002-20240309   gcc  
-powerpc64             randconfig-003-20240309   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240309   gcc  
-riscv                 randconfig-002-20240309   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240309   clang
-s390                  randconfig-002-20240309   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240309   gcc  
-sh                    randconfig-002-20240309   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240309   gcc  
-sparc64               randconfig-002-20240309   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240309   clang
-um                    randconfig-002-20240309   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-002-20240309   gcc  
+Hao Lan (1):
+  net: hns3: add command queue trace for hns3
+
+Jijie Shao (1):
+  net: hns3: move constants from hclge_debugfs.h to hclge_debugfs.c
+
+Peiyang Wang (1):
+  net: hns3: dump more reg info based on ras mod
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h   |  13 +
+ .../hns3/hns3_common/hclge_comm_cmd.c         |  19 +
+ .../hns3/hns3_common/hclge_comm_cmd.h         |  24 +-
+ .../hisilicon/hns3/hns3pf/hclge_debugfs.c     | 646 +++++++++++++++++-
+ .../hisilicon/hns3/hns3pf/hclge_debugfs.h     | 643 +----------------
+ .../hisilicon/hns3/hns3pf/hclge_devlink.c     |  44 +-
+ .../hisilicon/hns3/hns3pf/hclge_devlink.h     |   2 +
+ .../hisilicon/hns3/hns3pf/hclge_err.c         | 434 +++++++++++-
+ .../hisilicon/hns3/hns3pf/hclge_err.h         |  36 +
+ .../hisilicon/hns3/hns3pf/hclge_main.c        |  63 ++
+ .../hisilicon/hns3/hns3pf/hclge_main.h        |   1 +
+ .../hisilicon/hns3/hns3pf/hclge_trace.h       |  94 +++
+ .../hisilicon/hns3/hns3vf/hclgevf_main.c      |  40 ++
+ .../hisilicon/hns3/hns3vf/hclgevf_trace.h     |  50 ++
+ 14 files changed, 1457 insertions(+), 652 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.30.0
+
