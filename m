@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F80D4AEF5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AF84F1FE;
 	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008150; cv=none; b=QNfLUJ16TjNQWe8svNtzRerIHq9srysU1lM4jhc7SLLxYXCbXePPA1YMWEmKentiUsRzHkb+vcjkrJHGXF5tMkcEyOVX1rgjHVzIiFLcMMsZ24ld9NAuMCsvqRnsLGqaKOO/l08v6Ip6fjc/29vLSGp1JKCHDTKDkIKAryKa8qY=
+	t=1710008150; cv=none; b=bzCfLnhZtr2e3r65c03rWdNr8OVoumG5Ce4T3GmLfMEsjKi/n5nxxvbo95rFSsZjGWxXeELtIADdjhi+K+xPfUazltlbwQW+b4gT94A5PXQx+xfanxjQqhZjTm/wOZuQi303GoKkjZH2z9IN2wByH93ropVIY1xitbRmKxJcg3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710008150; c=relaxed/simple;
-	bh=CYtbB8QNv2fD9TVERZeuSlQSsnv5NCX8q/wk3gYWMdk=;
+	bh=1zDubb7fShRJBiBaKdlYGNzDQd6hiWmYqKOaKXx77j0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d5vdEvv2ylE2lHi9IZILrORCsJjW8MsXzccjvd54xJ0zBjDLMLOiFR50z3gTFNyIVEXM22BGRilFfm3VpjO7SJy2Zead6VK/dkpUarPiySa4PxLOVxaPrhRuutzbAvcsIssUAD8JVBd2HH7IcfV8VHeI32cgBzcyVDJpYwV4Av8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sf87tOEG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tLfLSgvek7aqYVje79mJ1KN92IYtOBkmtuDv1vsqreS62qI/TQ4/OOR6n/lruCaPqSabw6hlaIhxfw7LpwCjqZ9hNqWAkaGx3Fkbk1k81NqOz01rlbzK8DkxDZMtFebiWUo7gkQZu5liqSea+6Ryo3GBcceqbqcVaAhKhAMOmAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3JvjdEy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sf87tOEG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E3B7FC32790;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3JvjdEy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 64DD9C41674;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710008149;
-	bh=CYtbB8QNv2fD9TVERZeuSlQSsnv5NCX8q/wk3gYWMdk=;
+	s=k20201202; t=1710008150;
+	bh=1zDubb7fShRJBiBaKdlYGNzDQd6hiWmYqKOaKXx77j0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Sf87tOEGWWB0ZOkLdxwni8LIVGb+wLmcmzL0WRReYAqBubnwyFhYzzNqSbBW2B36/
-	 E+yb+Ef0URrqiCGmG4t+wcDRhjty0ITcqJnErBLg1voCPQ/kQyMh+9GgjAoN0PRQKU
-	 EpPqJ4wFRxZsHDM3nkPxm7SkfpkJECqFv0gR2TY4Av2be4Bwl+Ge8WIcJtmegGQWJs
-	 Wk0TpCrMCyk+5jPHB4vi59nzgds/EiA5tegpmSPQ87MylSb5H1sTmpYlPx0wDP8R8I
-	 r2zqOh82VKBQQzGTwEii+pfe4oyz32MZsIPT3nEAXChqVg9ESUYhp4+qIOjWUDrgY4
-	 XBiEms+Iunw9g==
+	b=q3JvjdEy0D21NTJRBbWuLQdAEBUMBWcbXUu86njjmzxdrihmMqXQVnYa5Xtc5ezTU
+	 elEz5Q8yliCB0C7HBdGNqTq4n8PKMKFJ4y3Td/D6/nBH1d91rA5CGFyVX/1LpMfGBR
+	 DzjRPZZbVTFoBJyDz7cqnG5biWLhiytv1OkrATS0g7fUZnWuh3OMsK6TIVgJ2shCYf
+	 riToZj7FfdEC3zXnpNTvI9EXW5o+f55UkhtoYQnE1l5SLaRbUGTVLn7I6+TE3l8Si9
+	 fW18D7f1e3BEbw7OI9jMz1pVdjgFf1Qus//o65qAZp3Qxn7s+gwCXcsi5retnZceVk
+	 ADAXRQAhhvXRQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF157C54E63;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E6BC54E68;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:41 +0100
-Subject: [PATCH v2 20/28] sparc32: Drop additional sun4d bits
+Date: Sat, 09 Mar 2024 19:15:49 +0100
+Subject: [PATCH v2 28/28] fbdev/p9100: Drop now unused driver p9100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-20-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-28-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=24609;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=11809;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=h8bCoCOyPu1yClJDMdDllo5sVUY9lL79f7y+gBKQcDY=; =?utf-8?q?b=3DQ4/B22lQhB+R?=
- =?utf-8?q?oAjCwIkD7uUiYX/FN6NqPunLP4fmhu+eLz/qqa9kWcSyMwqTnRarPMAn5OSQcadc?=
- 0qk+Ixn6AANJySvcNpAH6FCeP1ffuiHVvpsodHIY/C2a4hPg9Unz
+ bh=zU7UOlIirX6Na7ABZQupyEUhXhyFQITuEXmxSg8oIfg=; =?utf-8?q?b=3Dbb8+ErWe3vyw?=
+ =?utf-8?q?RZMUnLHFCa2oNrzNeKH25cVmbn8J0JyRNmw/4XAmkJZZSk5LRewEt74Is0oDhh0p?=
+ XQiiReOZDIMu7/eS84yKamFCazsLK+/PjraMU3AnDMD9pFSDzm27
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,781 +70,431 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-Drop sun4d specific support. Not used by LEON.
+The p9100 driver is only relevant for the Sparcbook 3 machine,
+and with sun4m support removed this driver is no longer relevant.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Arnd Bergmann <arnd@kernel.org>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: Helge Deller <deller@gmx.de>
 ---
- arch/sparc/include/asm/io-unit.h |  59 --------
- arch/sparc/include/asm/obio.h    | 226 -------------------------------
- arch/sparc/include/asm/sbi.h     | 116 ----------------
- arch/sparc/kernel/entry.S        |   1 -
- arch/sparc/kernel/ioport.c       |   1 -
- arch/sparc/mm/Makefile           |   2 +-
- arch/sparc/mm/io-unit.c          | 283 ---------------------------------------
- arch/sparc/mm/srmmu.c            |   1 -
- 8 files changed, 1 insertion(+), 688 deletions(-)
+ drivers/video/fbdev/Kconfig  |   8 -
+ drivers/video/fbdev/Makefile |   1 -
+ drivers/video/fbdev/p9100.c  | 372 -------------------------------------------
+ 3 files changed, 381 deletions(-)
 
-diff --git a/arch/sparc/include/asm/io-unit.h b/arch/sparc/include/asm/io-unit.h
-deleted file mode 100644
-index 8c38f5b9f927..000000000000
---- a/arch/sparc/include/asm/io-unit.h
-+++ /dev/null
-@@ -1,59 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/* io-unit.h: Definitions for the sun4d IO-UNIT.
-- *
-- * Copyright (C) 1997,1998 Jakub Jelinek (jj@sunsite.mff.cuni.cz)
-- */
--#ifndef _SPARC_IO_UNIT_H
--#define _SPARC_IO_UNIT_H
--
--#include <linux/spinlock.h>
--#include <linux/pgtable.h>
--#include <asm/page.h>
--
--/* The io-unit handles all virtual to physical address translations
-- * that occur between the SBUS and physical memory.  Access by
-- * the cpu to IO registers and similar go over the xdbus so are
-- * translated by the on chip SRMMU.  The io-unit and the srmmu do
-- * not need to have the same translations at all, in fact most
-- * of the time the translations they handle are a disjunct set.
-- * Basically the io-unit handles all dvma sbus activity.
-- */
-- 
--/* AIEEE, unlike the nice sun4m, these monsters have 
--   fixed DMA range 64M */
-- 
--#define IOUNIT_DMA_BASE	    0xfc000000 /* TOP - 64M */
--#define IOUNIT_DMA_SIZE	    0x04000000 /* 64M */
--/* We use last 1M for sparc_dvma_malloc */
--#define IOUNIT_DVMA_SIZE    0x00100000 /* 1M */
--
--/* The format of an iopte in the external page tables */
--#define IOUPTE_PAGE          0xffffff00 /* Physical page number (PA[35:12])	*/
--#define IOUPTE_CACHE         0x00000080 /* Cached (in Viking/MXCC)		*/
--/* XXX Jakub, find out how to program SBUS streaming cache on XDBUS/sun4d.
-- * XXX Actually, all you should need to do is find out where the registers
-- * XXX are and copy over the sparc64 implementation I wrote.  There may be
-- * XXX some horrible hwbugs though, so be careful.  -DaveM
-- */
--#define IOUPTE_STREAM        0x00000040 /* Translation can use streaming cache	*/
--#define IOUPTE_INTRA	     0x00000008 /* SBUS direct slot->slot transfer	*/
--#define IOUPTE_WRITE         0x00000004 /* Writeable				*/
--#define IOUPTE_VALID         0x00000002 /* IOPTE is valid			*/
--#define IOUPTE_PARITY        0x00000001 /* Parity is checked during DVMA	*/
--
--struct iounit_struct {
--	unsigned long		bmap[(IOUNIT_DMA_SIZE >> (PAGE_SHIFT + 3)) / sizeof(unsigned long)];
--	spinlock_t		lock;
--	iopte_t __iomem		*page_table;
--	unsigned long		rotor[3];
--	unsigned long		limit[4];
--};
--
--#define IOUNIT_BMAP1_START	0x00000000
--#define IOUNIT_BMAP1_END	(IOUNIT_DMA_SIZE >> (PAGE_SHIFT + 1))
--#define IOUNIT_BMAP2_START	IOUNIT_BMAP1_END
--#define IOUNIT_BMAP2_END	IOUNIT_BMAP2_START + (IOUNIT_DMA_SIZE >> (PAGE_SHIFT + 2))
--#define IOUNIT_BMAPM_START	IOUNIT_BMAP2_END
--#define IOUNIT_BMAPM_END	((IOUNIT_DMA_SIZE - IOUNIT_DVMA_SIZE) >> PAGE_SHIFT)
--
--#endif /* !(_SPARC_IO_UNIT_H) */
-diff --git a/arch/sparc/include/asm/obio.h b/arch/sparc/include/asm/obio.h
-deleted file mode 100644
-index 1b151f738b00..000000000000
---- a/arch/sparc/include/asm/obio.h
-+++ /dev/null
-@@ -1,226 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * obio.h:  Some useful locations in 0xFXXXXXXXX PA obio space on sun4d.
-- *
-- * Copyright (C) 1997 Jakub Jelinek <jj@sunsite.mff.cuni.cz>
-- */
--
--#ifndef _SPARC_OBIO_H
--#define _SPARC_OBIO_H
--
--#include <asm/asi.h>
--
--/* This weird monster likes to use the very upper parts of
--   36bit PA for these things :) */
--   
--/* CSR space (for each XDBUS)
-- *  ------------------------------------------------------------------------
-- *  |   0xFE  |   DEVID    |                | XDBUS ID |                   |
-- *  ------------------------------------------------------------------------
-- *  35      28 27        20 19            10 9        8 7                 0
-- */
--   
--#define CSR_BASE_ADDR		0xe0000000
--#define CSR_CPU_SHIFT		(32 - 4 - 5)
--#define CSR_XDBUS_SHIFT		8
--
--#define CSR_BASE(cpu) (((CSR_BASE_ADDR >> CSR_CPU_SHIFT) + cpu) << CSR_CPU_SHIFT)
--
--/* ECSR space (not for each XDBUS)
-- *  ------------------------------------------------------------------------
-- *  |   0xF  | DEVID[7:1] |                			           |
-- *  ------------------------------------------------------------------------
-- *  35     32 31        25 24                 				  0
-- */
--   
--#define ECSR_BASE_ADDR		0x00000000
--#define ECSR_CPU_SHIFT		(32 - 5)
--#define ECSR_DEV_SHIFT		(32 - 8)
--
--#define ECSR_BASE(cpu) ((cpu) << ECSR_CPU_SHIFT)
--#define ECSR_DEV_BASE(devid) ((devid) << ECSR_DEV_SHIFT) 
--
--/* Bus Watcher */
--#define BW_LOCAL_BASE		0xfff00000
--
--#define BW_CID			0x00000000
--#define BW_DBUS_CTRL		0x00000008
--#define BW_DBUS_DATA		0x00000010
--#define BW_CTRL			0x00001000
--#define BW_INTR_TABLE		0x00001040
--#define BW_INTR_TABLE_CLEAR	0x00001080
--#define BW_PRESCALER		0x000010c0
--#define BW_PTIMER_LIMIT		0x00002000
--#define BW_PTIMER_COUNTER2	0x00002004
--#define BW_PTIMER_NDLIMIT	0x00002008
--#define BW_PTIMER_CTRL		0x0000200c
--#define BW_PTIMER_COUNTER	0x00002010
--#define BW_TIMER_LIMIT		0x00003000
--#define BW_TIMER_COUNTER2	0x00003004
--#define BW_TIMER_NDLIMIT	0x00003008
--#define BW_TIMER_CTRL		0x0000300c
--#define BW_TIMER_COUNTER	0x00003010
--
--/* BW Control */
--#define BW_CTRL_USER_TIMER	0x00000004	/* Is User Timer Free run enabled */
--
--/* Boot Bus */
--#define BB_LOCAL_BASE		0xf0000000
--
--#define BB_STAT1		0x00100000
--#define BB_STAT2		0x00120000
--#define BB_STAT3		0x00140000
--#define BB_LEDS			0x002e0000
--
--/* Bits in BB_STAT2 */
--#define BB_STAT2_AC_INTR	0x04	/* Aiee! 5ms and power is gone... */
--#define BB_STAT2_TMP_INTR	0x10	/* My Penguins are burning. Are you able to smell it? */
--#define BB_STAT2_FAN_INTR	0x20	/* My fan refuses to work */
--#define BB_STAT2_PWR_INTR	0x40	/* On SC2000, one of the two ACs died. Ok, we go on... */
--#define BB_STAT2_MASK		(BB_STAT2_AC_INTR|BB_STAT2_TMP_INTR|BB_STAT2_FAN_INTR|BB_STAT2_PWR_INTR)
--
--/* Cache Controller */
--#define CC_BASE		0x1F00000
--#define CC_DATSTREAM	0x1F00000  /* Data stream register */
--#define CC_DATSIZE	0x1F0003F  /* Size */
--#define CC_SRCSTREAM	0x1F00100  /* Source stream register */
--#define CC_DESSTREAM	0x1F00200  /* Destination stream register */
--#define CC_RMCOUNT	0x1F00300  /* Count of references and misses */
--#define CC_IPEN		0x1F00406  /* Pending Interrupts */
--#define CC_IMSK		0x1F00506  /* Interrupt Mask */
--#define CC_ICLR		0x1F00606  /* Clear pending Interrupts */
--#define CC_IGEN		0x1F00704  /* Generate Interrupt register */
--#define CC_STEST	0x1F00804  /* Internal self-test */
--#define CC_CREG		0x1F00A04  /* Control register */
--#define CC_SREG		0x1F00B00  /* Status register */
--#define CC_RREG		0x1F00C04  /* Reset register */
--#define CC_EREG		0x1F00E00  /* Error code register */
--#define CC_CID		0x1F00F04  /* Component ID */
--
--#ifndef __ASSEMBLY__
--
--static inline int bw_get_intr_mask(int sbus_level)
--{
--	int mask;
--	
--	__asm__ __volatile__ ("lduha [%1] %2, %0" :
--			      "=r" (mask) :
--			      "r" (BW_LOCAL_BASE + BW_INTR_TABLE + (sbus_level << 3)),
--			      "i" (ASI_M_CTL));
--	return mask;
--}
--
--static inline void bw_clear_intr_mask(int sbus_level, int mask)
--{
--	__asm__ __volatile__ ("stha %0, [%1] %2" : :
--			      "r" (mask),
--			      "r" (BW_LOCAL_BASE + BW_INTR_TABLE_CLEAR + (sbus_level << 3)),
--			      "i" (ASI_M_CTL));
--}
--
--static inline unsigned int bw_get_prof_limit(int cpu)
--{
--	unsigned int limit;
--	
--	__asm__ __volatile__ ("lda [%1] %2, %0" :
--			      "=r" (limit) :
--			      "r" (CSR_BASE(cpu) + BW_PTIMER_LIMIT),
--			      "i" (ASI_M_CTL));
--	return limit;
--}
--
--static inline void bw_set_prof_limit(int cpu, unsigned int limit)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (limit),
--			      "r" (CSR_BASE(cpu) + BW_PTIMER_LIMIT),
--			      "i" (ASI_M_CTL));
--}
--
--static inline unsigned int bw_get_ctrl(int cpu)
--{
--	unsigned int ctrl;
--	
--	__asm__ __volatile__ ("lda [%1] %2, %0" :
--			      "=r" (ctrl) :
--			      "r" (CSR_BASE(cpu) + BW_CTRL),
--			      "i" (ASI_M_CTL));
--	return ctrl;
--}
--
--static inline void bw_set_ctrl(int cpu, unsigned int ctrl)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (ctrl),
--			      "r" (CSR_BASE(cpu) + BW_CTRL),
--			      "i" (ASI_M_CTL));
--}
--
--static inline unsigned int cc_get_ipen(void)
--{
--	unsigned int pending;
--	
--	__asm__ __volatile__ ("lduha [%1] %2, %0" :
--			      "=r" (pending) :
--			      "r" (CC_IPEN),
--			      "i" (ASI_M_MXCC));
--	return pending;
--}
--
--static inline void cc_set_iclr(unsigned int clear)
--{
--	__asm__ __volatile__ ("stha %0, [%1] %2" : :
--			      "r" (clear),
--			      "r" (CC_ICLR),
--			      "i" (ASI_M_MXCC));
--}
--
--static inline unsigned int cc_get_imsk(void)
--{
--	unsigned int mask;
--	
--	__asm__ __volatile__ ("lduha [%1] %2, %0" :
--			      "=r" (mask) :
--			      "r" (CC_IMSK),
--			      "i" (ASI_M_MXCC));
--	return mask;
--}
--
--static inline void cc_set_imsk(unsigned int mask)
--{
--	__asm__ __volatile__ ("stha %0, [%1] %2" : :
--			      "r" (mask),
--			      "r" (CC_IMSK),
--			      "i" (ASI_M_MXCC));
--}
--
--static inline unsigned int cc_get_imsk_other(int cpuid)
--{
--	unsigned int mask;
--	
--	__asm__ __volatile__ ("lduha [%1] %2, %0" :
--			      "=r" (mask) :
--			      "r" (ECSR_BASE(cpuid) | CC_IMSK),
--			      "i" (ASI_M_CTL));
--	return mask;
--}
--
--static inline void cc_set_imsk_other(int cpuid, unsigned int mask)
--{
--	__asm__ __volatile__ ("stha %0, [%1] %2" : :
--			      "r" (mask),
--			      "r" (ECSR_BASE(cpuid) | CC_IMSK),
--			      "i" (ASI_M_CTL));
--}
--
--static inline void cc_set_igen(unsigned int gen)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (gen),
--			      "r" (CC_IGEN),
--			      "i" (ASI_M_MXCC));
--}
--
--#endif /* !__ASSEMBLY__ */
--
--#endif /* !(_SPARC_OBIO_H) */
-diff --git a/arch/sparc/include/asm/sbi.h b/arch/sparc/include/asm/sbi.h
-deleted file mode 100644
-index 4d6026c1e446..000000000000
---- a/arch/sparc/include/asm/sbi.h
-+++ /dev/null
-@@ -1,116 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * sbi.h:  SBI (Sbus Interface on sun4d) definitions
-- *
-- * Copyright (C) 1997 Jakub Jelinek <jj@sunsite.mff.cuni.cz>
-- */
--
--#ifndef _SPARC_SBI_H
--#define _SPARC_SBI_H
--
--#include <asm/obio.h>
--
--/* SBI */
--struct sbi_regs {
--/* 0x0000 */	u32		cid;		/* Component ID */
--/* 0x0004 */	u32		ctl;		/* Control */
--/* 0x0008 */	u32		status;		/* Status */
--		u32		_unused1;
--		
--/* 0x0010 */	u32		cfg0;		/* Slot0 config reg */
--/* 0x0014 */	u32		cfg1;		/* Slot1 config reg */
--/* 0x0018 */	u32		cfg2;		/* Slot2 config reg */
--/* 0x001c */	u32		cfg3;		/* Slot3 config reg */
--
--/* 0x0020 */	u32		stb0;		/* Streaming buf control for slot 0 */
--/* 0x0024 */	u32		stb1;		/* Streaming buf control for slot 1 */
--/* 0x0028 */	u32		stb2;		/* Streaming buf control for slot 2 */
--/* 0x002c */	u32		stb3;		/* Streaming buf control for slot 3 */
--
--/* 0x0030 */	u32		intr_state;	/* Interrupt state */
--/* 0x0034 */	u32		intr_tid;	/* Interrupt target ID */
--/* 0x0038 */	u32		intr_diag;	/* Interrupt diagnostics */
--};
--
--#define SBI_CID			0x02800000
--#define SBI_CTL			0x02800004
--#define SBI_STATUS		0x02800008
--#define SBI_CFG0		0x02800010
--#define SBI_CFG1		0x02800014
--#define SBI_CFG2		0x02800018
--#define SBI_CFG3		0x0280001c
--#define SBI_STB0		0x02800020
--#define SBI_STB1		0x02800024
--#define SBI_STB2		0x02800028
--#define SBI_STB3		0x0280002c
--#define SBI_INTR_STATE		0x02800030
--#define SBI_INTR_TID		0x02800034
--#define SBI_INTR_DIAG		0x02800038
--
--/* Burst bits for 8, 16, 32, 64 are in cfgX registers at bits 2, 3, 4, 5 respectively */
--#define SBI_CFG_BURST_MASK	0x0000001e
--
--/* How to make devid from sbi no */
--#define SBI2DEVID(sbino) ((sbino<<4)|2)
--
--/* intr_state has 4 bits for slots 0 .. 3 and these bits are repeated for each sbus irq level
-- *
-- *		   +-------+-------+-------+-------+-------+-------+-------+-------+
-- *  SBUS IRQ LEVEL |   7   |   6   |   5   |   4   |   3   |   2   |   1   |       |
-- *		   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Reser |
-- *  SLOT #         |3|2|1|0|3|2|1|0|3|2|1|0|3|2|1|0|3|2|1|0|3|2|1|0|3|2|1|0|  ved  |
-- *                 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-------+
-- *  Bits           31      27      23      19      15      11      7       3      0
-- */
--
--
--#ifndef __ASSEMBLY__
--
--static inline int acquire_sbi(int devid, int mask)
--{
--	__asm__ __volatile__ ("swapa [%2] %3, %0" :
--			      "=r" (mask) :
--			      "0" (mask),
--			      "r" (ECSR_DEV_BASE(devid) | SBI_INTR_STATE),
--			      "i" (ASI_M_CTL));
--	return mask;
--}
--
--static inline void release_sbi(int devid, int mask)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (mask),
--			      "r" (ECSR_DEV_BASE(devid) | SBI_INTR_STATE),
--			      "i" (ASI_M_CTL));
--}
--
--static inline void set_sbi_tid(int devid, int targetid)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (targetid),
--			      "r" (ECSR_DEV_BASE(devid) | SBI_INTR_TID),
--			      "i" (ASI_M_CTL));
--}
--
--static inline int get_sbi_ctl(int devid, int cfgno)
--{
--	int cfg;
--	
--	__asm__ __volatile__ ("lda [%1] %2, %0" :
--			      "=r" (cfg) :
--			      "r" ((ECSR_DEV_BASE(devid) | SBI_CFG0) + (cfgno<<2)),
--			      "i" (ASI_M_CTL));
--	return cfg;
--}
--
--static inline void set_sbi_ctl(int devid, int cfgno, int cfg)
--{
--	__asm__ __volatile__ ("sta %0, [%1] %2" : :
--			      "r" (cfg),
--			      "r" ((ECSR_DEV_BASE(devid) | SBI_CFG0) + (cfgno<<2)),
--			      "i" (ASI_M_CTL));
--}
--
--#endif /* !__ASSEMBLY__ */
--
--#endif /* !(_SPARC_SBI_H) */
-diff --git a/arch/sparc/kernel/entry.S b/arch/sparc/kernel/entry.S
-index ea51a17ac3fc..bbbf30c60f1c 100644
---- a/arch/sparc/kernel/entry.S
-+++ b/arch/sparc/kernel/entry.S
-@@ -24,7 +24,6 @@
- #include <asm/page.h>
- #include <asm/winmacro.h>
- #include <asm/signal.h>
--#include <asm/obio.h>
- #include <asm/thread_info.h>
- #include <asm/param.h>
- #include <asm/unistd.h>
-diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
-index cf0ace29704a..745579a40785 100644
---- a/arch/sparc/kernel/ioport.c
-+++ b/arch/sparc/kernel/ioport.c
-@@ -49,7 +49,6 @@
- #include <asm/pgalloc.h>
- #include <asm/dma.h>
- #include <asm/iommu.h>
--#include <asm/io-unit.h>
- #include <asm/leon.h>
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index a74f7fd3ba0c..9f1d365ed040 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -550,14 +550,6 @@ config FB_CG14
+ 	  This is the frame buffer device driver for the CGfourteen frame
+ 	  buffer on Desktop SPARCsystems with the SX graphics option.
  
- static void __iomem *_sparc_ioremap(struct resource *res, u32 bus, u32 pa, int sz);
-diff --git a/arch/sparc/mm/Makefile b/arch/sparc/mm/Makefile
-index f0560eea2958..f8a897e24438 100644
---- a/arch/sparc/mm/Makefile
-+++ b/arch/sparc/mm/Makefile
-@@ -7,7 +7,7 @@ asflags-y := -ansi
- obj-$(CONFIG_SPARC64)   += ultra.o tlb.o tsb.o
- obj-y                   += fault_$(BITS).o
- obj-y                   += init_$(BITS).o
--obj-$(CONFIG_SPARC32)   += srmmu.o iommu.o io-unit.o
-+obj-$(CONFIG_SPARC32)   += srmmu.o iommu.o
- obj-$(CONFIG_SPARC32)   += leon_mm.o
- 
- # Only used by sparc64
-diff --git a/arch/sparc/mm/io-unit.c b/arch/sparc/mm/io-unit.c
+-config FB_P9100
+-	bool "P9100 (Sparcbook 3 only) support"
+-	depends on FB_SBUS
+-	select FB_SBUS_HELPERS
+-	help
+-	  This is the frame buffer device driver for the P9100 card
+-	  supported on Sparcbook 3 machines.
+-
+ config FB_LEO
+ 	bool "Leo (ZX) support"
+ 	depends on FB_SBUS
+diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
+index 3eecd51267fa..3f4ac048d355 100644
+--- a/drivers/video/fbdev/Makefile
++++ b/drivers/video/fbdev/Makefile
+@@ -50,7 +50,6 @@ obj-$(CONFIG_FB_CG6)              += cg6.o
+ obj-$(CONFIG_FB_CG3)              += cg3.o
+ obj-$(CONFIG_FB_BW2)              += bw2.o
+ obj-$(CONFIG_FB_CG14)             += cg14.o
+-obj-$(CONFIG_FB_P9100)            += p9100.o
+ obj-$(CONFIG_FB_TCX)              += tcx.o
+ obj-$(CONFIG_FB_LEO)              += leo.o
+ obj-$(CONFIG_FB_ACORN)            += acornfb.o
+diff --git a/drivers/video/fbdev/p9100.c b/drivers/video/fbdev/p9100.c
 deleted file mode 100644
-index a2cfa8757795..000000000000
---- a/arch/sparc/mm/io-unit.c
+index e1356f8a866e..000000000000
+--- a/drivers/video/fbdev/p9100.c
 +++ /dev/null
-@@ -1,283 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * io-unit.c:  IO-UNIT specific routines for memory management.
+@@ -1,372 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/* p9100.c: P9100 frame buffer driver
 - *
-- * Copyright (C) 1997,1998 Jakub Jelinek    (jj@sunsite.mff.cuni.cz)
+- * Copyright (C) 2003, 2006 David S. Miller (davem@davemloft.net)
+- * Copyright 1999 Derrick J Brashear (shadow@dementia.org)
+- *
+- * Driver layout based loosely on tgafb.c, see that file for credits.
 - */
-- 
+-
+-#include <linux/module.h>
 -#include <linux/kernel.h>
+-#include <linux/errno.h>
+-#include <linux/string.h>
+-#include <linux/delay.h>
 -#include <linux/init.h>
--#include <linux/slab.h>
--#include <linux/spinlock.h>
+-#include <linux/fb.h>
 -#include <linux/mm.h>
--#include <linux/bitops.h>
--#include <linux/dma-map-ops.h>
 -#include <linux/of.h>
--#include <linux/of_platform.h>
 -#include <linux/platform_device.h>
 -
 -#include <asm/io.h>
--#include <asm/io-unit.h>
--#include <asm/cacheflush.h>
--#include <asm/tlbflush.h>
--#include <asm/dma.h>
--#include <asm/oplib.h>
+-#include <asm/fbio.h>
 -
--#include "mm_32.h"
+-#include "sbuslib.h"
 -
--/* #define IOUNIT_DEBUG */
--#ifdef IOUNIT_DEBUG
--#define IOD(x) printk(x)
--#else
--#define IOD(x) do { } while (0)
--#endif
+-/*
+- * Local functions.
+- */
 -
--#define IOPERM        (IOUPTE_CACHE | IOUPTE_WRITE | IOUPTE_VALID)
--#define MKIOPTE(phys) __iopte((((phys)>>4) & IOUPTE_PAGE) | IOPERM)
+-static int p9100_setcolreg(unsigned, unsigned, unsigned, unsigned,
+-			   unsigned, struct fb_info *);
+-static int p9100_blank(int, struct fb_info *);
 -
--static const struct dma_map_ops iounit_dma_ops;
+-static int p9100_sbusfb_mmap(struct fb_info *info, struct vm_area_struct *vma);
+-static int p9100_sbusfb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg);
 -
--static void __init iounit_iommu_init(struct platform_device *op)
+-/*
+- *  Frame buffer operations
+- */
+-
+-static const struct fb_ops p9100_ops = {
+-	.owner			= THIS_MODULE,
+-	FB_DEFAULT_SBUS_OPS(p9100),
+-	.fb_setcolreg		= p9100_setcolreg,
+-	.fb_blank		= p9100_blank,
+-};
+-
+-/* P9100 control registers */
+-#define P9100_SYSCTL_OFF	0x0UL
+-#define P9100_VIDEOCTL_OFF	0x100UL
+-#define P9100_VRAMCTL_OFF 	0x180UL
+-#define P9100_RAMDAC_OFF 	0x200UL
+-#define P9100_VIDEOCOPROC_OFF 	0x400UL
+-
+-/* P9100 command registers */
+-#define P9100_CMD_OFF 0x0UL
+-
+-/* P9100 framebuffer memory */
+-#define P9100_FB_OFF 0x0UL
+-
+-/* 3 bits: 2=8bpp 3=16bpp 5=32bpp 7=24bpp */
+-#define SYS_CONFIG_PIXELSIZE_SHIFT 26
+-
+-#define SCREENPAINT_TIMECTL1_ENABLE_VIDEO 0x20 /* 0 = off, 1 = on */
+-
+-struct p9100_regs {
+-	/* Registers for the system control */
+-	u32 sys_base;
+-	u32 sys_config;
+-	u32 sys_intr;
+-	u32 sys_int_ena;
+-	u32 sys_alt_rd;
+-	u32 sys_alt_wr;
+-	u32 sys_xxx[58];
+-
+-	/* Registers for the video control */
+-	u32 vid_base;
+-	u32 vid_hcnt;
+-	u32 vid_htotal;
+-	u32 vid_hsync_rise;
+-	u32 vid_hblank_rise;
+-	u32 vid_hblank_fall;
+-	u32 vid_hcnt_preload;
+-	u32 vid_vcnt;
+-	u32 vid_vlen;
+-	u32 vid_vsync_rise;
+-	u32 vid_vblank_rise;
+-	u32 vid_vblank_fall;
+-	u32 vid_vcnt_preload;
+-	u32 vid_screenpaint_addr;
+-	u32 vid_screenpaint_timectl1;
+-	u32 vid_screenpaint_qsfcnt;
+-	u32 vid_screenpaint_timectl2;
+-	u32 vid_xxx[15];
+-
+-	/* Registers for the video control */
+-	u32 vram_base;
+-	u32 vram_memcfg;
+-	u32 vram_refresh_pd;
+-	u32 vram_refresh_cnt;
+-	u32 vram_raslo_max;
+-	u32 vram_raslo_cur;
+-	u32 pwrup_cfg;
+-	u32 vram_xxx[25];
+-
+-	/* Registers for IBM RGB528 Palette */
+-	u32 ramdac_cmap_wridx;
+-	u32 ramdac_palette_data;
+-	u32 ramdac_pixel_mask;
+-	u32 ramdac_palette_rdaddr;
+-	u32 ramdac_idx_lo;
+-	u32 ramdac_idx_hi;
+-	u32 ramdac_idx_data;
+-	u32 ramdac_idx_ctl;
+-	u32 ramdac_xxx[1784];
+-};
+-
+-struct p9100_cmd_parameng {
+-	u32 parameng_status;
+-	u32 parameng_bltcmd;
+-	u32 parameng_quadcmd;
+-};
+-
+-struct p9100_par {
+-	spinlock_t		lock;
+-	struct p9100_regs	__iomem *regs;
+-
+-	u32			flags;
+-#define P9100_FLAG_BLANKED	0x00000001
+-
+-	unsigned long		which_io;
+-};
+-
+-/**
+- *      p9100_setcolreg - Optional function. Sets a color register.
+- *      @regno: boolean, 0 copy local, 1 get_user() function
+- *      @red: frame buffer colormap structure
+- *      @green: The green value which can be up to 16 bits wide
+- *      @blue:  The blue value which can be up to 16 bits wide.
+- *      @transp: If supported the alpha value which can be up to 16 bits wide.
+- *      @info: frame buffer info structure
+- */
+-static int p9100_setcolreg(unsigned regno,
+-			   unsigned red, unsigned green, unsigned blue,
+-			   unsigned transp, struct fb_info *info)
 -{
--	struct iounit_struct *iounit;
--	iopte_t __iomem *xpt;
--	iopte_t __iomem *xptend;
+-	struct p9100_par *par = (struct p9100_par *) info->par;
+-	struct p9100_regs __iomem *regs = par->regs;
+-	unsigned long flags;
 -
--	iounit = kzalloc(sizeof(struct iounit_struct), GFP_ATOMIC);
--	if (!iounit) {
--		prom_printf("SUN4D: Cannot alloc iounit, halting.\n");
--		prom_halt();
--	}
+-	if (regno >= 256)
+-		return 1;
 -
--	iounit->limit[0] = IOUNIT_BMAP1_START;
--	iounit->limit[1] = IOUNIT_BMAP2_START;
--	iounit->limit[2] = IOUNIT_BMAPM_START;
--	iounit->limit[3] = IOUNIT_BMAPM_END;
--	iounit->rotor[1] = IOUNIT_BMAP2_START;
--	iounit->rotor[2] = IOUNIT_BMAPM_START;
+-	red >>= 8;
+-	green >>= 8;
+-	blue >>= 8;
 -
--	xpt = of_ioremap(&op->resource[2], 0, PAGE_SIZE * 16, "XPT");
--	if (!xpt) {
--		prom_printf("SUN4D: Cannot map External Page Table.");
--		prom_halt();
--	}
--	
--	op->dev.archdata.iommu = iounit;
--	iounit->page_table = xpt;
--	spin_lock_init(&iounit->lock);
+-	spin_lock_irqsave(&par->lock, flags);
 -
--	xptend = iounit->page_table + (16 * PAGE_SIZE) / sizeof(iopte_t);
--	for (; xpt < xptend; xpt++)
--		sbus_writel(0, xpt);
+-	sbus_writel((regno << 16), &regs->ramdac_cmap_wridx);
+-	sbus_writel((red << 16), &regs->ramdac_palette_data);
+-	sbus_writel((green << 16), &regs->ramdac_palette_data);
+-	sbus_writel((blue << 16), &regs->ramdac_palette_data);
 -
--	op->dev.dma_ops = &iounit_dma_ops;
--}
--
--static int __init iounit_init(void)
--{
--	extern void sun4d_init_sbi_irq(void);
--	struct device_node *dp;
--
--	for_each_node_by_name(dp, "sbi") {
--		struct platform_device *op = of_find_device_by_node(dp);
--
--		iounit_iommu_init(op);
--		of_propagate_archdata(op);
--	}
+-	spin_unlock_irqrestore(&par->lock, flags);
 -
 -	return 0;
 -}
 -
--subsys_initcall(iounit_init);
--
--/* One has to hold iounit->lock to call this */
--static unsigned long iounit_get_area(struct iounit_struct *iounit, unsigned long vaddr, int size)
+-/**
+- *      p9100_blank - Optional function.  Blanks the display.
+- *      @blank: the blank mode we want.
+- *      @info: frame buffer structure that represents a single frame buffer
+- */
+-static int
+-p9100_blank(int blank, struct fb_info *info)
 -{
--	int i, j, k, npages;
--	unsigned long rotor, scan, limit;
--	iopte_t iopte;
--
--        npages = ((vaddr & ~PAGE_MASK) + size + (PAGE_SIZE-1)) >> PAGE_SHIFT;
--
--	/* A tiny bit of magic ingredience :) */
--	switch (npages) {
--	case 1: i = 0x0231; break;
--	case 2: i = 0x0132; break;
--	default: i = 0x0213; break;
--	}
--	
--	IOD(("iounit_get_area(%08lx,%d[%d])=", vaddr, size, npages));
--	
--next:	j = (i & 15);
--	rotor = iounit->rotor[j - 1];
--	limit = iounit->limit[j];
--	scan = rotor;
--nexti:	scan = find_next_zero_bit(iounit->bmap, limit, scan);
--	if (scan + npages > limit) {
--		if (limit != rotor) {
--			limit = rotor;
--			scan = iounit->limit[j - 1];
--			goto nexti;
--		}
--		i >>= 4;
--		if (!(i & 15))
--			panic("iounit_get_area: Couldn't find free iopte slots for (%08lx,%d)\n", vaddr, size);
--		goto next;
--	}
--	for (k = 1, scan++; k < npages; k++)
--		if (test_bit(scan++, iounit->bmap))
--			goto nexti;
--	iounit->rotor[j - 1] = (scan < limit) ? scan : iounit->limit[j - 1];
--	scan -= npages;
--	iopte = MKIOPTE(__pa(vaddr & PAGE_MASK));
--	vaddr = IOUNIT_DMA_BASE + (scan << PAGE_SHIFT) + (vaddr & ~PAGE_MASK);
--	for (k = 0; k < npages; k++, iopte = __iopte(iopte_val(iopte) + 0x100), scan++) {
--		set_bit(scan, iounit->bmap);
--		sbus_writel(iopte_val(iopte), &iounit->page_table[scan]);
--	}
--	IOD(("%08lx\n", vaddr));
--	return vaddr;
--}
--
--static dma_addr_t iounit_map_page(struct device *dev, struct page *page,
--		unsigned long offset, size_t len, enum dma_data_direction dir,
--		unsigned long attrs)
--{
--	void *vaddr = page_address(page) + offset;
--	struct iounit_struct *iounit = dev->archdata.iommu;
--	unsigned long ret, flags;
--	
--	/* XXX So what is maxphys for us and how do drivers know it? */
--	if (!len || len > 256 * 1024)
--		return DMA_MAPPING_ERROR;
--
--	spin_lock_irqsave(&iounit->lock, flags);
--	ret = iounit_get_area(iounit, (unsigned long)vaddr, len);
--	spin_unlock_irqrestore(&iounit->lock, flags);
--	return ret;
--}
--
--static int iounit_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
--		enum dma_data_direction dir, unsigned long attrs)
--{
--	struct iounit_struct *iounit = dev->archdata.iommu;
--	struct scatterlist *sg;
+-	struct p9100_par *par = (struct p9100_par *) info->par;
+-	struct p9100_regs __iomem *regs = par->regs;
 -	unsigned long flags;
--	int i;
+-	u32 val;
 -
--	/* FIXME: Cache some resolved pages - often several sg entries are to the same page */
--	spin_lock_irqsave(&iounit->lock, flags);
--	for_each_sg(sgl, sg, nents, i) {
--		sg->dma_address = iounit_get_area(iounit, (unsigned long) sg_virt(sg), sg->length);
--		sg->dma_length = sg->length;
+-	spin_lock_irqsave(&par->lock, flags);
+-
+-	switch (blank) {
+-	case FB_BLANK_UNBLANK: /* Unblanking */
+-		val = sbus_readl(&regs->vid_screenpaint_timectl1);
+-		val |= SCREENPAINT_TIMECTL1_ENABLE_VIDEO;
+-		sbus_writel(val, &regs->vid_screenpaint_timectl1);
+-		par->flags &= ~P9100_FLAG_BLANKED;
+-		break;
+-
+-	case FB_BLANK_NORMAL: /* Normal blanking */
+-	case FB_BLANK_VSYNC_SUSPEND: /* VESA blank (vsync off) */
+-	case FB_BLANK_HSYNC_SUSPEND: /* VESA blank (hsync off) */
+-	case FB_BLANK_POWERDOWN: /* Poweroff */
+-		val = sbus_readl(&regs->vid_screenpaint_timectl1);
+-		val &= ~SCREENPAINT_TIMECTL1_ENABLE_VIDEO;
+-		sbus_writel(val, &regs->vid_screenpaint_timectl1);
+-		par->flags |= P9100_FLAG_BLANKED;
+-		break;
 -	}
--	spin_unlock_irqrestore(&iounit->lock, flags);
--	return nents;
+-
+-	spin_unlock_irqrestore(&par->lock, flags);
+-
+-	return 0;
 -}
 -
--static void iounit_unmap_page(struct device *dev, dma_addr_t vaddr, size_t len,
--		enum dma_data_direction dir, unsigned long attrs)
--{
--	struct iounit_struct *iounit = dev->archdata.iommu;
--	unsigned long flags;
--	
--	spin_lock_irqsave(&iounit->lock, flags);
--	len = ((vaddr & ~PAGE_MASK) + len + (PAGE_SIZE-1)) >> PAGE_SHIFT;
--	vaddr = (vaddr - IOUNIT_DMA_BASE) >> PAGE_SHIFT;
--	IOD(("iounit_release %08lx-%08lx\n", (long)vaddr, (long)len+vaddr));
--	for (len += vaddr; vaddr < len; vaddr++)
--		clear_bit(vaddr, iounit->bmap);
--	spin_unlock_irqrestore(&iounit->lock, flags);
--}
--
--static void iounit_unmap_sg(struct device *dev, struct scatterlist *sgl,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
--{
--	struct iounit_struct *iounit = dev->archdata.iommu;
--	unsigned long flags, vaddr, len;
--	struct scatterlist *sg;
--	int i;
--
--	spin_lock_irqsave(&iounit->lock, flags);
--	for_each_sg(sgl, sg, nents, i) {
--		len = ((sg->dma_address & ~PAGE_MASK) + sg->length + (PAGE_SIZE-1)) >> PAGE_SHIFT;
--		vaddr = (sg->dma_address - IOUNIT_DMA_BASE) >> PAGE_SHIFT;
--		IOD(("iounit_release %08lx-%08lx\n", (long)vaddr, (long)len+vaddr));
--		for (len += vaddr; vaddr < len; vaddr++)
--			clear_bit(vaddr, iounit->bmap);
--	}
--	spin_unlock_irqrestore(&iounit->lock, flags);
--}
--
--#ifdef CONFIG_SBUS
--static void *iounit_alloc(struct device *dev, size_t len,
--		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
--{
--	struct iounit_struct *iounit = dev->archdata.iommu;
--	unsigned long va, addr, page, end, ret;
--	pgprot_t dvma_prot;
--	iopte_t __iomem *iopte;
--
--	/* XXX So what is maxphys for us and how do drivers know it? */
--	if (!len || len > 256 * 1024)
--		return NULL;
--
--	len = PAGE_ALIGN(len);
--	va = __get_free_pages(gfp | __GFP_ZERO, get_order(len));
--	if (!va)
--		return NULL;
--
--	addr = ret = sparc_dma_alloc_resource(dev, len);
--	if (!addr)
--		goto out_free_pages;
--	*dma_handle = addr;
--
--	dvma_prot = __pgprot(SRMMU_CACHE | SRMMU_ET_PTE | SRMMU_PRIV);
--	end = PAGE_ALIGN((addr + len));
--	while(addr < end) {
--		page = va;
--		{
--			pmd_t *pmdp;
--			pte_t *ptep;
--			long i;
--
--			pmdp = pmd_off_k(addr);
--			ptep = pte_offset_kernel(pmdp, addr);
--
--			set_pte(ptep, mk_pte(virt_to_page(page), dvma_prot));
--
--			i = ((addr - IOUNIT_DMA_BASE) >> PAGE_SHIFT);
--
--			iopte = iounit->page_table + i;
--			sbus_writel(iopte_val(MKIOPTE(__pa(page))), iopte);
--		}
--		addr += PAGE_SIZE;
--		va += PAGE_SIZE;
--	}
--	flush_cache_all();
--	flush_tlb_all();
--
--	return (void *)ret;
--
--out_free_pages:
--	free_pages(va, get_order(len));
--	return NULL;
--}
--
--static void iounit_free(struct device *dev, size_t size, void *cpu_addr,
--		dma_addr_t dma_addr, unsigned long attrs)
--{
--	/* XXX Somebody please fill this in */
--}
--#endif
--
--static const struct dma_map_ops iounit_dma_ops = {
--#ifdef CONFIG_SBUS
--	.alloc			= iounit_alloc,
--	.free			= iounit_free,
--#endif
--	.map_page		= iounit_map_page,
--	.unmap_page		= iounit_unmap_page,
--	.map_sg			= iounit_map_sg,
--	.unmap_sg		= iounit_unmap_sg,
+-static struct sbus_mmap_map p9100_mmap_map[] = {
+-	{ CG3_MMAP_OFFSET,	0,		SBUS_MMAP_FBSIZE(1) },
+-	{ 0,			0,		0		    }
 -};
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 4a3778549c6f..949247a6896b 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -26,7 +26,6 @@
- #include <asm/mmu_context.h>
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
--#include <asm/io-unit.h>
- #include <asm/pgalloc.h>
- #include <asm/pgtable.h>
- #include <asm/bitext.h>
+-
+-static int p9100_sbusfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
+-{
+-	struct p9100_par *par = (struct p9100_par *)info->par;
+-
+-	return sbusfb_mmap_helper(p9100_mmap_map,
+-				  info->fix.smem_start, info->fix.smem_len,
+-				  par->which_io, vma);
+-}
+-
+-static int p9100_sbusfb_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg)
+-{
+-	/* Make it look like a cg3. */
+-	return sbusfb_ioctl_helper(cmd, arg, info,
+-				   FBTYPE_SUN3COLOR, 8, info->fix.smem_len);
+-}
+-
+-/*
+- *  Initialisation
+- */
+-
+-static void p9100_init_fix(struct fb_info *info, int linebytes, struct device_node *dp)
+-{
+-	snprintf(info->fix.id, sizeof(info->fix.id), "%pOFn", dp);
+-
+-	info->fix.type = FB_TYPE_PACKED_PIXELS;
+-	info->fix.visual = FB_VISUAL_PSEUDOCOLOR;
+-
+-	info->fix.line_length = linebytes;
+-
+-	info->fix.accel = FB_ACCEL_SUN_CGTHREE;
+-}
+-
+-static int p9100_probe(struct platform_device *op)
+-{
+-	struct device_node *dp = op->dev.of_node;
+-	struct fb_info *info;
+-	struct p9100_par *par;
+-	int linebytes, err;
+-
+-	info = framebuffer_alloc(sizeof(struct p9100_par), &op->dev);
+-
+-	err = -ENOMEM;
+-	if (!info)
+-		goto out_err;
+-	par = info->par;
+-
+-	spin_lock_init(&par->lock);
+-
+-	/* This is the framebuffer and the only resource apps can mmap.  */
+-	info->fix.smem_start = op->resource[2].start;
+-	par->which_io = op->resource[2].flags & IORESOURCE_BITS;
+-
+-	sbusfb_fill_var(&info->var, dp, 8);
+-	info->var.red.length = 8;
+-	info->var.green.length = 8;
+-	info->var.blue.length = 8;
+-
+-	linebytes = of_getintprop_default(dp, "linebytes", info->var.xres);
+-	info->fix.smem_len = PAGE_ALIGN(linebytes * info->var.yres);
+-
+-	par->regs = of_ioremap(&op->resource[0], 0,
+-			       sizeof(struct p9100_regs), "p9100 regs");
+-	if (!par->regs)
+-		goto out_release_fb;
+-
+-	info->fbops = &p9100_ops;
+-	info->screen_base = of_ioremap(&op->resource[2], 0,
+-				       info->fix.smem_len, "p9100 ram");
+-	if (!info->screen_base)
+-		goto out_unmap_regs;
+-
+-	p9100_blank(FB_BLANK_UNBLANK, info);
+-
+-	if (fb_alloc_cmap(&info->cmap, 256, 0))
+-		goto out_unmap_screen;
+-
+-	p9100_init_fix(info, linebytes, dp);
+-
+-	err = register_framebuffer(info);
+-	if (err < 0)
+-		goto out_dealloc_cmap;
+-
+-	fb_set_cmap(&info->cmap, info);
+-
+-	dev_set_drvdata(&op->dev, info);
+-
+-	printk(KERN_INFO "%pOF: p9100 at %lx:%lx\n",
+-	       dp,
+-	       par->which_io, info->fix.smem_start);
+-
+-	return 0;
+-
+-out_dealloc_cmap:
+-	fb_dealloc_cmap(&info->cmap);
+-
+-out_unmap_screen:
+-	of_iounmap(&op->resource[2], info->screen_base, info->fix.smem_len);
+-
+-out_unmap_regs:
+-	of_iounmap(&op->resource[0], par->regs, sizeof(struct p9100_regs));
+-
+-out_release_fb:
+-	framebuffer_release(info);
+-
+-out_err:
+-	return err;
+-}
+-
+-static void p9100_remove(struct platform_device *op)
+-{
+-	struct fb_info *info = dev_get_drvdata(&op->dev);
+-	struct p9100_par *par = info->par;
+-
+-	unregister_framebuffer(info);
+-	fb_dealloc_cmap(&info->cmap);
+-
+-	of_iounmap(&op->resource[0], par->regs, sizeof(struct p9100_regs));
+-	of_iounmap(&op->resource[2], info->screen_base, info->fix.smem_len);
+-
+-	framebuffer_release(info);
+-}
+-
+-static const struct of_device_id p9100_match[] = {
+-	{
+-		.name = "p9100",
+-	},
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, p9100_match);
+-
+-static struct platform_driver p9100_driver = {
+-	.driver = {
+-		.name = "p9100",
+-		.of_match_table = p9100_match,
+-	},
+-	.probe		= p9100_probe,
+-	.remove_new	= p9100_remove,
+-};
+-
+-static int __init p9100_init(void)
+-{
+-	if (fb_get_options("p9100fb", NULL))
+-		return -ENODEV;
+-
+-	return platform_driver_register(&p9100_driver);
+-}
+-
+-static void __exit p9100_exit(void)
+-{
+-	platform_driver_unregister(&p9100_driver);
+-}
+-
+-module_init(p9100_init);
+-module_exit(p9100_exit);
+-
+-MODULE_DESCRIPTION("framebuffer driver for P9100 chipsets");
+-MODULE_AUTHOR("David S. Miller <davem@davemloft.net>");
+-MODULE_VERSION("2.0");
+-MODULE_LICENSE("GPL");
 
 -- 
 2.34.1
