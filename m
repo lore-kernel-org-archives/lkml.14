@@ -1,78 +1,217 @@
-Received: from out203-205-251-66.mail.qq.com (out203-205-251-66.mail.qq.com [203.205.251.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30F71BDF4;
-	Sat,  9 Mar 2024 14:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D92C3C08E;
+	Sat,  9 Mar 2024 14:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709993445; cv=none; b=mjQD+QxRmCFXWqVKmn+YTXs5YtggaW0ZLQP21EK4rdxzamcUBcicbbYdNL2SCskIpNtK9eys86XeKd4ik/9/Ygj5tOKPICbLeDA1bwy3KFOjlG4rVA6qoZypa1d+dLVS5dKD1ZxNs60FLP4Meok+hNAdPbNoIYtURcdxr2kvuOM=
+	t=1709994307; cv=none; b=bVbyh16fn+bgtk5R/PeDCQgwpqLfNhNTRW6CMPp9S43lQVyqX0qEEejoau4N7i6jtOaJMQEgOJNTg85aFHJlNJYkLp2m8FTLz9Q9VrYM5y2wp+UFIhOEEGQubJILVG2596/3uteIif4WH2N3qJnp9Uaqqn/wu0N6kC/00s/ujKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709993445; c=relaxed/simple;
-	bh=maIUddBIRkixT08jMamIHlx6Ic+Z9RInYiboQrgEs6s=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=M5ZW5IQu8fLVq4khRcqyTeIIg2DJH5OUnhIBzMAr28EjKv7SvJTw8LWh8EEjYqtvKkSZhfTfT5VEhQzCoKDjIN3C6ZoQUdx/9N7V6WNvF4EVo86ym7mwUj21OCNlohjt81TrD1tzflf1Jbhn6Y00wT8mHQL7MnQO4fHZvARA+ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=JVzGrDL2; arc=none smtp.client-ip=203.205.251.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709994307; c=relaxed/simple;
+	bh=aNVgWD8ilbHhgD7lp+ZEhfwJD+ID/RdcVUU+nXM53v8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SCsbsK62NCZFqmMN066wM765T5WmoghCGWyGh5QvLvgFsqIoyIgi6gtU2nNkd0t9n8yP9tSyjJ2vhl77AnZgOY1aig29VT6SYt0490JloL91p9xVsLfuFA+k0vF9zD1j0fVQsJ7Ls1CFePdXazIV+wt/bbI9+nb2H9A9r/WeLGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/8AKRg3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JVzGrDL2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709993133; bh=maIUddBIRkixT08jMamIHlx6Ic+Z9RInYiboQrgEs6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JVzGrDL29LVUN/yydIMy2NGYJM2EyEidTzZUQ0gLqzXXou8Q5yqxWOrqNPBKdRg88
-	 B2FT+CGmxVvktX5dmAjqqDZrq8rN12bQix1RdgxW5tmLqNFN25WH9/BkxZOJ5r+dxU
-	 2aLqKL4x/K9n+t0bmYsmRg4MRzILDT5IcBPkqYes=
-Received: from localhost.localdomain ([58.213.8.163])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id EC3A729C; Sat, 09 Mar 2024 21:59:03 +0800
-X-QQ-mid: xmsmtpt1709992743tsey328q4
-Message-ID: <tencent_4E77E34FDA2F438430621DF220620A882407@qq.com>
-X-QQ-XMAILINFO: NiAdzfE16ND4bolk1M35OWX6STXNtKuQPLdhDd/JkFmdm5wIJTCi649pCSKM8M
-	 5uyPE9F9cX+lpf9GA+o4h+QfDkgnSsXsQrWD3WmXxTno2qDQAyxX4p4c4PqbM5ZIj6FIqwwrzNYx
-	 XrwPrsCxHmZa5dPWRvDQnXlg0XYblyTTjeI0SzPbd7K/okRDzEDS93pLksKWsnewPRINUck8iTyz
-	 ps7efNFJGutn7vybZyaXRmdpX73/ltUA4j2RFeEygGbobECdsB/13h78gf5vYe5eWXhx4GBp36y4
-	 9DeBui7+MRVQDqjV31MykaWxSJ/8gelC4nOws1ga9zJrhVwCc9SdpiIBmJxKd16PCFyFpgOP+0j2
-	 6NVlqeB9PKmR0pSFc7h0JaLZsqHgZU7Ry5IRuw49uP/qmejY5tWusbBSconD+h9bydyupHyQVAd/
-	 AUzNG3JwUc0v3kLet5PfGlw+xxpAws20DHk9kcWZh0XD99UgzrbE4RNkPJmgtG7BSMs+4iw8SDoM
-	 3hod25UGk+B2SqahuPz3QYj/XDBEGUc4dmZVYoA6hYLkZQNZlZfeFdAUTyIckoTNqzXuAzn8vJjC
-	 uAnsrM/EX6tHqaes5olJtXuAm7kmh4KN766ygYLQN4vkrI+Vg96gUM4VJnFMznPEZaovwok8/h0N
-	 tJnt6/GsVuCYTarATR3e7b2EQpaMWFGAI5bPTiEXgjA5zFVf209u3qHqpRr0xuLi64yyV9APzRQs
-	 r5Cl8HH9Gm+J//3AmzfdF73DvjTgdvef/GD+SyBCTqfE52aR3tvBTayPfMKLeC85gqOUf/4x6FAL
-	 6qVI3l4Tm88xGAYaZ4bk1z4f1Sl54r2AcpaZ73N5Wb3gyFSInWIx0vcqR03keRitC1NW4hHK9BWQ
-	 lskAKk4rzevAtuqkugS2GsJYyA92BvHJdOz12Qi2iFZTv8tirxaLHI7WOwUw4tz7avx8GlpTBtDJ
-	 eaGuVmFgbfLgkZ3guPoCh7sZjMuT0aiERUF6bm4JpQfYhBaJfNK8FDoqViI0qeA2RNQQ478e1FPQ
-	 fPFZ06eg==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: linke li <lilinke99@qq.com>
-To: edumazet@google.com
-Cc: alexander@mihalicyn.com,
-	davem@davemloft.net,
-	dhowells@redhat.com,
-	kuba@kernel.org,
-	kuniyu@amazon.com,
-	leitao@debian.org,
-	lilinke99@qq.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	willemb@google.com,
-	wuyun.abel@bytedance.com
-Subject: Re: [PATCH] net: mark racy access on sk->sk_rcvbuf
-Date: Sat,  9 Mar 2024 21:59:02 +0800
-X-OQ-MSGID: <20240309135902.57126-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <CANn89iJRXjYTojFyHN6s1Qu9Vkkk6RwxPF=bAKPjOg9zT-GupA@mail.gmail.com>
-References: <CANn89iJRXjYTojFyHN6s1Qu9Vkkk6RwxPF=bAKPjOg9zT-GupA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/8AKRg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134A1C433F1;
+	Sat,  9 Mar 2024 14:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709994307;
+	bh=aNVgWD8ilbHhgD7lp+ZEhfwJD+ID/RdcVUU+nXM53v8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X/8AKRg3FJlZyozYdI+Qp4tehKkeBDHvC7nEbT7tt+dNqUCNGJGnrbg5QnK8Wzmzd
+	 8Q/aCvZozAAwButDuLgnqk54qhrFkPlGv74d85EO2SY2YXWNxRSTF8D3URqvJoEZVb
+	 X7lRYqTfW3Fh2+WAq/4kqhuYF/Wk+D/z2XN3AopI/RBJSb8x7yXfoDFySzDkB5k3YO
+	 j5mihan9DZq8EkTrrXrIjvkWnWsTPwxpm21BLEEE9fhRaJRnLzulx6D2QcS9ueHGCS
+	 QBx87ntrjgJeaONHr6IRnLEcqLGiVJM2sqbcajer792a0TIiiYo/4kpVyYz7uPhVJL
+	 LaVMWLGmH4Mxw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5135ab96dcbso3253491e87.1;
+        Sat, 09 Mar 2024 06:25:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU6ZtpoEqiEbCl5cIaV4Gq6AOs6h7o6ZJThUZUTX4F/VqdkG+t3idaMsHBmDPp/yY9cPdYYKCZRZYOX7PJBIXTo3zBXeq1uIq79kb7ZKW0V72MDXSM3vw27GWdwK3MFB/jl4F5UdwQGm8JP
+X-Gm-Message-State: AOJu0YxoyeiT7pJa40qtbuK+57C96k0ZQ5YTDHKhtMC3BntMxTRbgHB/
+	wJNmyzmxYnbY0y4FuqMBRwKt/UwLJo8dDCX2vnrihpHRRVJoI5HZSVqkkkZWBWEP1TpE3ThtVoa
+	34GYGNoIZk8y7puGa1sCW6t+BjBs=
+X-Google-Smtp-Source: AGHT+IGv0Ycu6AT5vUmNTCfmv5w8PuFh6nXpl0xiTZtF7HgfclsOa+bV+utpZPu8MhIKbyM6Lxgkmsr2Qg91dYfWH8c=
+X-Received: by 2002:ac2:4d8e:0:b0:513:3b3e:c361 with SMTP id
+ g14-20020ac24d8e000000b005133b3ec361mr1136256lfe.2.1709994305575; Sat, 09 Mar
+ 2024 06:25:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240305110915.184868-1-jtornosm@redhat.com>
+In-Reply-To: <20240305110915.184868-1-jtornosm@redhat.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 9 Mar 2024 23:24:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ6_kr0Q1RB0dELiGUObFJ4HEEu3XTErGf6FaNntKMnTg@mail.gmail.com>
+Message-ID: <CAK7LNAQ6_kr0Q1RB0dELiGUObFJ4HEEu3XTErGf6FaNntKMnTg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: rpm-pkg: add dtb files in kernel rpm
+To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Cc: nathan@kernel.org, nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> OK, but what about __sock_queue_rcv_skb() in the same file ?
+On Tue, Mar 5, 2024 at 8:09=E2=80=AFPM Jose Ignacio Tornos Martinez
+<jtornosm@redhat.com> wrote:
+>
+> Some architectures, like aarch64 ones, need a dtb file to configure the
+> hardware. The default dtb file can be preloaded from u-boot, but the fina=
+l
+> and/or more complete dtb file needs to be able to be loaded later from
+> rootfs.
+>
+> Add the possible dtb files to the kernel rpm and mimic Fedora shipping
+> process, storing the dtb files in the module directory. These dtb files
+> will be copied to /boot directory by the install scripts, but add fallbac=
+k
+> just in case, checking if the content in /boot directory is correct.
+>
+> Mark the files installed to /boot as %ghost to make sure they will be
+> removed when the package is uninstalled.
+>
+> Tested with Fedora Rawhide (x86_64 and aarch64) with dnf and rpm tools.
+> In addition, fallback was also tested after modifying the install scripts=
+.
+>
+> Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+> ---
+>  scripts/package/kernel.spec | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+> index c256b73cca3e..5c4c1ffcba6c 100644
+> --- a/scripts/package/kernel.spec
+> +++ b/scripts/package/kernel.spec
+> @@ -61,6 +61,9 @@ cp $(%{make} %{makeflags} -s image_name) %{buildroot}/l=
+ib/modules/%{KERNELRELEAS
+>  %{make} %{makeflags} INSTALL_HDR_PATH=3D%{buildroot}/usr headers_install
+>  cp System.map %{buildroot}/lib/modules/%{KERNELRELEASE}
+>  cp .config %{buildroot}/lib/modules/%{KERNELRELEASE}/config
+> +if [ -d "${srctree}/arch/${SRCARCH}/boot/dts" ];then
 
-I notice that, but I am not very sure whether there is a data race. If it
-is a similar situation, then the same patch should be applied too.
 
+
+${srctree} and ${SRCARCH} are not always defined in kernel.spec.
+
+
+They are not defined if you directly run 'rpmbuild -rb <SRPM>'.
+
+
+The following will correctly check the presence of
+${srctree}/arch/${SRCARCH}/boot/dts.
+
+
+if %{make} %{makeflags} run-command KBUILD_RUN_COMMAND=3D'test -d
+${srctree}/arch/${SRCARCH}/boot/dts'; then
+
+
+
+
+
+
+
+
+> +       %{make} %{makeflags} INSTALL_DTBS_PATH=3D%{buildroot}/lib/modules=
+/%{KERNELRELEASE}/dtb dtbs_install
+> +fi
+>  ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KER=
+NELRELEASE}/build
+>  %if %{with_devel}
+>  %{make} %{makeflags} run-command KBUILD_RUN_COMMAND=3D'${srctree}/script=
+s/package/install-extmod-build %{buildroot}/usr/src/kernels/%{KERNELRELEASE=
+}'
+> @@ -81,6 +84,14 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}=
+/lib/modules/%{KERNELRELEA
+>                 echo "%ghost /boot/${x}-%{KERNELRELEASE}"
+>         done
+>
+> +       if [ -d "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" ];then
+> +               echo "/lib/modules/%{KERNELRELEASE}/dtb"
+> +               for x in $(find "%{buildroot}/lib/modules/%{KERNELRELEASE=
+}/dtb" -name "*" \
+> +                               -exec realpath --relative-to "%{buildroot=
+}/lib/modules/%{KERNELRELEASE}/dtb" {} \;); do
+> +                       echo "%ghost /boot/dtb-%{KERNELRELEASE}/${x}"
+> +               done
+
+
+Instead of the for-loop, you can write it in one command:
+
+
+  find "%{buildroot}/lib/modules/%{KERNELRELEASE}/dtb" -printf
+"%%%ghost /boot/dtb-%{KERNELRELEASE}/%%P\n"
+
+
+Is the escaping % complex?
+
+
+
+
+
+
+
+
+
+
+
+
+
+> +       fi
+> +
+>         echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
+>  } > %{buildroot}/kernel.list
+>
+> @@ -96,6 +107,12 @@ for file in vmlinuz System.map config; do
+>                 cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}=
+-%{KERNELRELEASE}"
+>         fi
+>  done
+> +if [ -d "/lib/modules/%{KERNELRELEASE}/dtb" ]; then
+> +       if ! diff -rq "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KE=
+RNELRELEASE}" &>/dev/null; then
+
+
+I do not recommend the bash'ism "&>/dev/null".
+
+The scriptlet is executed by /bin/sh, which
+may not be bash, although on most RPM-based
+distro, it is a symlink to bash.
+
+
+You can squash the nested if-conditionals:
+
+
+if [ -d "/lib/modules/%{KERNELRELEASE}/dtb" ] && \
+   ! diff -rq "/lib/modules/%{KERNELRELEASE}/dtb"
+"/boot/dtb-%{KERNELRELEASE}" >/dev/null 2>&1; then
+        ...
+fi
+
+
+
+
+
+> +               rm -rf "/boot/dtb-%{KERNELRELEASE}"
+> +               cp -r "/lib/modules/%{KERNELRELEASE}/dtb" "/boot/dtb-%{KE=
+RNELRELEASE}"
+> +       fi
+> +fi
+>  if [ ! -e "/lib/modules/%{KERNELRELEASE}/modules.dep" ]; then
+>         /usr/sbin/depmod %{KERNELRELEASE}
+>  fi
+> --
+> 2.43.2
+>
+>
+
+
+--
+Best Regards
+
+
+
+Masahiro Yamada
