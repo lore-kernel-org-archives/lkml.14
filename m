@@ -1,166 +1,292 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2073.outbound.protection.outlook.com [40.92.99.73])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465B44C90;
-	Sat,  9 Mar 2024 10:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709979888; cv=fail; b=cOP1ebV4dcX3SX0/SAtltErnFqZqhAQti5E8KvIva40gKpgwfqsSRb0+ZRO4VgWSxNuiqzTKf1V66jMu9nQ65d1yFkHphev9douoQUVMPQuJXtL8MYQO3mOtm1a9Vdz9qbG0pvs8ETtGDdvGutt34oBYy6dFbT7cZ20vD6d7pAo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709979888; c=relaxed/simple;
-	bh=O0RQAFbKHonigJv17Mi5J4NfG89cllJQofZW5X8XKXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=D8QkRPfF0/TX5YVglH6v5ZTtXdZR6/ZM+M65nXhD4rKnsTkbJD9+vp1+3NSTxVTSJRyOP738Jyu9/1b5mIXPZ5AxNzsBoMwXOT9phQS7FPnXw3HG2GXQhxHMguQgIohfNDY+JLBSx6MrRznt/5Mc/+iPxN1s7RrJD/+pwLU49JQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lAEI3SJD; arc=fail smtp.client-ip=40.92.99.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A64125DC
+	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709980327; cv=none; b=jpbS489U8WWdDOS3wNdrWO3MY6tK9GzYxfQT3AC6AsjJfry2XsIz0X/ZyrV5mkdDsd+kPVF8/NUE3wOuSAsMET90VpommvfOTSBnnzYVcW/7MnlRhTSXbHolz0jIPSlXsHlyqKa8hLXOlzz4x+VEOjD3nYV6U3AAAtCixLRPvAk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709980327; c=relaxed/simple;
+	bh=9Gz2RXz51oHRw8OR/4Cz4VUaTiWu8pStV9bUPdYwH/A=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=JLuIDNRgcPRnWozYvksC9Rxkk5SYmwX/coLOcZNCoNvSDqIFkuCj/WVyNBfmJ4Z/8Okf73NAFjaXkWD1XT++IJjRQkpMXdKxzCeszOWT8sHGwXWCqSkZbk9aifnwtPBi8TSzjJ8OUGCgNlA93GhMrcFQhckWnPZV+CFHCP0GfOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=DHCXEYDV; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lAEI3SJD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a3d5GZtpDbLY9yj3VsC7Hc6U+pwugwjTVhabtVyZ7kgoJhV+DXpOBukmTkvdAc6hCRQa2jR1E68ovfpOgyooTSK9xyks8lD5u7PUgXDFAcEVzgBJZs7H20v4yBDz4Tr0je57iWq6nld/W/2XoR6Il9hh4aaJsphzffEj5PrlTQoJIZRU80FZuadmJYhi/fAGBaQMMfJhfBn8wdzQmPmvVEM81H3Pnyle7Fzyy8bnbF0xaiIqY7i54nue4+9c5VvoaY4VGE6PiLmIOGT+vbo1jDtiHOl9k+UTJrtY1hI1UlVMo/UkhbMO5q1kladCe6/5yRyud47IpQDJjSmr8WTh1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pNhCd+CMIb3+/agr2Y29GjSyjRtgQslucuFWFClCjNQ=;
- b=mgUIiMVyJO9ryB47wAlmRina2hjJ9RVnEXLBzJRNen1OZfB8p4KLFr/xwHaOqqQxqckHglzvLvApKCMAF7u5jog5QQyo3tYP3mG50xnDJB37z+RePsbWDE+qw5uWr3n6X78TsbO1bfLf9Jwo7vCowoTRHu8MPhKp/Pig0a4hPjGRnpJ2lqEZkkAys9PQzz0zI8eqMEbFkqMUJ3J8GCQpUpQActs6z7PyNFzyTYFtBOxRsQaMWQ3xATkuCfmQXXRWiA3meBoO79IUSLTCZaJhMZUfaBzaBChWmd6lKSl8BFeynklx4DuKDQGxzER0vpoKXzNo66m3qZ7mJ0tqbQMI+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pNhCd+CMIb3+/agr2Y29GjSyjRtgQslucuFWFClCjNQ=;
- b=lAEI3SJDJCatQmydfzrx/seNqWri6XdG1KBrczo5r1LiMspBjWDesO2i9RedYeFI0xZe8+EiyRiKRAJLWmD5FJOxzlUZzCoKOa1V0e4X0Qhb7NURdK7SCdOgTLK4RUpJYv8qJjAQVj5uN4j6HhGfSf/eUQDblWTEz5b6aVMhHX80M6e1PKpFJO87sbkNYrdClh0YGnomO7YX5Y3yTVjXIgNSp2EAZ0Edhce9XTZit+dcwjqVlySbsJGz3X++bjjP11LREdB0kkkTYscK845PRUSQcn3NwBfcXrXOLNRdl3TQTpWhjS8/ogm3ihpe/CfRgI2pwMJ4qLjuSUf3IAPyHg==
-Received: from TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3b6::10)
- by OS3P286MB1879.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:171::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.32; Sat, 9 Mar
- 2024 10:24:43 +0000
-Received: from TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM
- ([fe80::e959:a431:1b57:faf6]) by TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM
- ([fe80::e959:a431:1b57:faf6%7]) with mapi id 15.20.7362.031; Sat, 9 Mar 2024
- 10:24:43 +0000
-From: Dawei Li <set_pte_at@outlook.com>
-To: jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com
-Cc: linux-openrisc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <set_pte_at@outlook.com>
-Subject: [PATCH] openrisc: Use asm-generic's version of fix_to_virt() & virt_to_fix()
-Date: Sat,  9 Mar 2024 18:24:07 +0800
-Message-ID:
- <TY3P286MB35670C95140EEC4DD181AEE4CA262@TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="DHCXEYDV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1709980322;
+	bh=pzUshAmwIhfns0JHddsR8oSXiooWQ8z0An7EKzxYuC0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=DHCXEYDV4Tv6o7ZSU0ajiGHqpTOrg8n+C1rt7I9DaDztLppGL5VykMwede96gikRG
+	 H7uDSTr22RM+BcAu/DK2ZV0j4fEh4UjTZjRyWrbAVj9DV6T+5Pehgw6KeaD7+KNVMx
+	 Bklj3PL7M46G4TS/ItcvLEXaejCvxY/KenqumACE=
+Received: from localhost.localdomain ([2409:8961:2a0b:4ad8:c972:9bc3:984f:98a9])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 7EF8DC9A; Sat, 09 Mar 2024 18:31:47 +0800
+X-QQ-mid: xmsmtpt1709980317tc1clnse3
+Message-ID: <tencent_C7DFF5F3429508354390FDA4487A15F3A506@qq.com>
+X-QQ-XMAILINFO: MOwr6TNsEdeBaFuGYQn6N6N5DE6victwVjx6SYJUhQk2/KEqC1f9KqP1J1vVNh
+	 9E4tl4A4o58EWyvfGqQmxbBQAUD8sspF9haa4ySYaYaT/Wtn/FZamP6S1GVz1nxwtxH+7zVnhfNT
+	 b10igqksu6avnjW+OQZcjRjsBIHGb/Dd8CGTSd0DuvHHfmi7ugA5Cp69SOQMGGP+jNqE271FQrXN
+	 RhZJ2z46DUu+I0zLp0/zHt2Ld5ZTGELPNr2qZF3VWKoKAFQXDtCvwD7gCM26yz0tqpsX40wzB/zJ
+	 1PaosVn/Ce/zwF6XVyXyL2DXBiShDshvD26dXPMrcVX6qS9GnJ7kSBX8rCi5nycnH9FILvwGRu8c
+	 afGCyP4c9TpOGy9J173kAICuP03KBgI2FTP9td2U47NeIaYCNxWXJVlZiMJPQcmHwrym7aJB+Z2x
+	 nAm8FjV9ABjhbnwVwXSLUf/MFjjn4s6EjqmQ3gyJer95GDXhyOl2oaNbwHm+96Wf4m5Vl8l/sIJ4
+	 BaHVzyTLO9zitqrQlMo6Dw2dpKN++07hmefXTBOu/2AR0VPKNGX7SepvlCt97t3GSfQ21j4oSF9G
+	 IyWqclpqjShpQAZcpxkomzJvm/4XnEM6xRJAKScC+0GY+OWCwmF9I4PjIUsmKDc8lUq2SjovngEB
+	 GO/H5Nr16vw+wr51ScYg0aorxPN6gFOfXPhBVFMHUNCGn66aFT+GR2nM1uZ6PEXDqJUKOQgT07do
+	 q9rQ/Fk3du/kRV5CLFAYZesfv47lCf93lpllZPMjxnDNoKB0zwUF/l7GQoRbGEwQxx8Xtnx3JaT7
+	 5qKFy1DnBaS+Lna4nPm70lulZ51ixMZD5o/VAbkd7MVQ8EtC9bqpXuiCEPYVIe9C2qoA+wjMnNCw
+	 6OszVBLi7Rk7bQOuxNNnhy8uPqa1F3YRK7XjdyL1zeZXRbMeV857lC652QmubnK11IMcIcNh672z
+	 hJY4e+GnM0n2svGP/AKvsoKKwzU889TFhbjllBwrXM0stztFXRU/EjM5Cdw7XASrGUknZwQzfM2E
+	 G6pCggPCADxgcJekK7HHB223gvW6bg80kJO4slRWVoRX6GdKt91CAKbfBnTN78RBPMcFfugQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: wenyang.linux@foxmail.com
+To: "Eric W . Biederman" <ebiederm@xmission.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/9] rxrpc: delete these unnecessary static variables n_65535, four, max_500, etc
+Date: Sat,  9 Mar 2024 18:31:20 +0800
+X-OQ-MSGID: <c46b595b880e655e52db427bb0ba2a130595c2d8.1709978655.git.wenyang.linux@foxmail.com>
 X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [iI73yfNiUJuEzeCTMstO/fBx9TWNLoSO]
-X-ClientProxiedBy: SI2PR04CA0002.apcprd04.prod.outlook.com
- (2603:1096:4:197::17) To TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3b6::10)
-X-Microsoft-Original-Message-ID:
- <20240309102407.403962-1-set_pte_at@outlook.com>
+In-Reply-To: <cover.1709978655.git.wenyang.linux@foxmail.com>
+References: <cover.1709978655.git.wenyang.linux@foxmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY3P286MB3567:EE_|OS3P286MB1879:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07ed8ed3-5d6b-446a-5012-08dc40232284
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	YkZVZ+duttPNG3arx27rHDpGYl4uNXklkkZB8+lr038OVzS1EQS5ZJhoLjk+SZ2hDRlWm7kFKqXo9WHUCmslXuhyJfy9+LouIpvbxXuUFUwCVos6xT/HgosT0RanmcCibV7E4mk387wRzvnfEez4uB3gW5v91RiV2d2P0CJn2lLKU7ay9gqQgG2NB2nZNFkDqzXiQ1upJfjP8e549hmJl/BMWbzwEwD7k/HL+rxl8C6kPD5rvKjhjQTNsuIVnjQZHhps7LwHTsmrTGZwt8FOvOnHbdNUZJS/RrUf9I0Yh6pv3U1CX3zBBj+ZgG+DgGJKaTn8vIORaENB222QWX7kcnH36Pb6EvXPozxyR2jLORKZT1pCcI7JNQf/tLDLDWG3iDwdTel/3tuj1lwzeSFNnRTuitnRGhyvfJxSrebLbsWprSu9pHGWtU75DM3JdPAW8OjfFX0lRhhWyBs5YzfBsn2YxYHGI/oRlCiC+qJ2V6ysSm1+mou7PAy8/h+vemC9h8gEcpjXr8qYpxwci/ylHDxkzEMUgV5WW/s/oZyrwFVcOWFmdHKERa/jnFkGTeRPJ/M0wV0xDzyzqeoicckgR84DKPftRzGnURNCGtH6CTWT2HQxC07t0j1OjmkLJHkg
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?t8iiS5erEejrwhrtJEmRjwBDI7Va5ZH8o6FSXoyiWlTezWktVKjJZmRyVZuu?=
- =?us-ascii?Q?guMAf0s4+X7JVEF4X6fd9sFyhc8UT0fdMONA5aALwuHjkzpbP00iFA8ILUY5?=
- =?us-ascii?Q?zjQpmr3WoTz4PklseR1Gq+orvDR5vNyJP1wLBHs2jT7M2nDvsx/jcr5ilEX1?=
- =?us-ascii?Q?YDueWpCeJGNR2VgDkqKXgspcwky7sXG5QgwX162RFFAU7jIPxFk8IbsS8CEW?=
- =?us-ascii?Q?2SQH3fO/498/YkLb7JRKWnuSqBUWBlUuhOhkCrhAB+VmgdSLXiUZy0SmAp+u?=
- =?us-ascii?Q?qhxrO/b232SSjXUGgBSO2SBW5zIfhr0jjk5wC0q5OxLUqxfPC6BxLJZQPW+s?=
- =?us-ascii?Q?ITIdvEeSUryeZ/U/L9wqFBEWRgk0SMIgtZflxy9uHHhSPuMU5J/ukPm+7VzS?=
- =?us-ascii?Q?4WWyvIFetW4NkCosGDwZYwZ9KQk8IxIiLrAmVlKcxjt6iVK3AkdSNoigoNbo?=
- =?us-ascii?Q?GZ+ii3FiaHwLCGPxewNfhco/IVVhzvvLtE9pHRqpCtmm6y3dPPtbfR8Tv1z9?=
- =?us-ascii?Q?vb9bE+5YpkDylZtkq1V+7S1i1bzn/Uqn+HIgsoK+RqSP/2sSRJ1FzzmgLzd7?=
- =?us-ascii?Q?HnkcKzyBTJ8eIQSE7Xt89ZFuqh876K22sO8yPM7+qsM/HTlNzGHfwtOtbYbZ?=
- =?us-ascii?Q?FFEI6T/Tamg36q4+RVpx6h1jYdyzVEazXHjfkPO9q/HpOIM6JmD0nFjJO0lE?=
- =?us-ascii?Q?BtLm711ItUW5wwbJ+d9DLl9ewtcJ43e3DKORrZeXO2cHOr0t+yFquDmCqukT?=
- =?us-ascii?Q?sQSLVE+AP6ZLN5lUa+3yaV7b+2CM8GENqTgrRzggqmdLfxIoQZbibr1jbZQ2?=
- =?us-ascii?Q?juMIDmIFJRCdMedcBh93sPTDmCDaUINsVkyQ1XKRW4syMX+sqQb5qTyAmrvz?=
- =?us-ascii?Q?UqsStSSbZJZqpCHqbfGyh1S81QBJtoeRnSN8fY3FZitdm+tuc1HTTZiBQB3f?=
- =?us-ascii?Q?layKZLNg0mr1sR5+GIczry6TdfaTZD3JwVuEseewsjC4QaDfDeUvn2YwUS+r?=
- =?us-ascii?Q?4pRiMwR1wYqjYoojbgWmqcSz05dMe5LKLXh21SalK1WmYLvMIoH27APFVAFF?=
- =?us-ascii?Q?Y+aRUXd39t5wkhBo4quglZTgoF3f9ag3fTmarCGouL918wm1c764ZBu7R25C?=
- =?us-ascii?Q?mdCDBtl5yOzBRlR6sq9BX+Esw1bvklZm39gBP4m32xMuSnlnUWgEzpHukvnK?=
- =?us-ascii?Q?T9XB3w3K3d3LVGY/rg2Ebrp4ZBRoh8s8cAxPDDaB4HUSLUUu0T0M6pUwdas?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07ed8ed3-5d6b-446a-5012-08dc40232284
-X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB3567.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2024 10:24:43.3425
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB1879
+Content-Transfer-Encoding: 8bit
 
-Openrisc's implementation of fix_to_virt() & virt_to_fix() share same
-functionality with ones of asm generic.
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-Plus, generic version of fix_to_virt() can trap invalid index at compile
-time.
+Delete unnecessary static variables(n_65535, four, max_500, etc.)
+and encode them directly in the table entry.
 
-Thus, Replace the arch-specific implementations with asm generic's ones.
-
-Signed-off-by: Dawei Li <set_pte_at@outlook.com>
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Marc Dionne <marc.dionne@auristor.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/openrisc/include/asm/fixmap.h | 31 +-----------------------------
- 1 file changed, 1 insertion(+), 30 deletions(-)
+ net/rxrpc/sysctl.c | 169 +++++++++++++++++++--------------------------
+ 1 file changed, 70 insertions(+), 99 deletions(-)
 
-diff --git a/arch/openrisc/include/asm/fixmap.h b/arch/openrisc/include/asm/fixmap.h
-index ad78e50b7ba3..ecdb98a5839f 100644
---- a/arch/openrisc/include/asm/fixmap.h
-+++ b/arch/openrisc/include/asm/fixmap.h
-@@ -50,35 +50,6 @@ enum fixed_addresses {
- /* FIXADDR_BOTTOM might be a better name here... */
- #define FIXADDR_START		(FIXADDR_TOP - FIXADDR_SIZE)
+diff --git a/net/rxrpc/sysctl.c b/net/rxrpc/sysctl.c
+index ecaeb4ecfb58..26ec6eff8402 100644
+--- a/net/rxrpc/sysctl.c
++++ b/net/rxrpc/sysctl.c
+@@ -11,15 +11,6 @@
+ #include "ar-internal.h"
  
--#define __fix_to_virt(x)	(FIXADDR_TOP - ((x) << PAGE_SHIFT))
--#define __virt_to_fix(x)	((FIXADDR_TOP - ((x)&PAGE_MASK)) >> PAGE_SHIFT)
--
--/*
-- * 'index to address' translation. If anyone tries to use the idx
-- * directly without tranlation, we catch the bug with a NULL-deference
-- * kernel oops. Illegal ranges of incoming indices are caught too.
-- */
--static __always_inline unsigned long fix_to_virt(const unsigned int idx)
--{
--	/*
--	 * this branch gets completely eliminated after inlining,
--	 * except when someone tries to use fixaddr indices in an
--	 * illegal way. (such as mixing up address types or using
--	 * out-of-range indices).
--	 *
--	 * If it doesn't get removed, the linker will complain
--	 * loudly with a reasonably clear error message..
--	 */
--	if (idx >= __end_of_fixed_addresses)
--		BUG();
--
--	return __fix_to_virt(idx);
--}
--
--static inline unsigned long virt_to_fix(const unsigned long vaddr)
--{
--	BUG_ON(vaddr >= FIXADDR_TOP || vaddr < FIXADDR_START);
--	return __virt_to_fix(vaddr);
--}
-+#include <asm-generic/fixmap.h>
+ static struct ctl_table_header *rxrpc_sysctl_reg_table;
+-static const unsigned int four = 4;
+-static const unsigned int max_backlog = RXRPC_BACKLOG_MAX - 1;
+-static const unsigned int n_65535 = 65535;
+-static const unsigned int n_max_acks = 255;
+-static const unsigned long one_jiffy = 1;
+-static const unsigned long max_jiffies = MAX_JIFFY_OFFSET;
+-#ifdef CONFIG_AF_RXRPC_INJECT_RX_DELAY
+-static const unsigned long max_500 = 500;
+-#endif
  
+ /*
+  * RxRPC operating parameters.
+@@ -29,102 +20,82 @@ static const unsigned long max_500 = 500;
+  */
+ static struct ctl_table rxrpc_sysctl_table[] = {
+ 	/* Values measured in milliseconds but used in jiffies */
+-	{
+-		.procname	= "soft_ack_delay",
+-		.data		= &rxrpc_soft_ack_delay,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
+-		.extra1		= (void *)&one_jiffy,
+-		.extra2		= (void *)&max_jiffies,
+-	},
+-	{
+-		.procname	= "idle_ack_delay",
+-		.data		= &rxrpc_idle_ack_delay,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
+-		.extra1		= (void *)&one_jiffy,
+-		.extra2		= (void *)&max_jiffies,
+-	},
+-	{
+-		.procname	= "idle_conn_expiry",
+-		.data		= &rxrpc_conn_idle_client_expiry,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
+-		.extra1		= (void *)&one_jiffy,
+-		.extra2		= (void *)&max_jiffies,
+-	},
+-	{
+-		.procname	= "idle_conn_fast_expiry",
+-		.data		= &rxrpc_conn_idle_client_fast_expiry,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_ms_jiffies_minmax,
+-		.extra1		= (void *)&one_jiffy,
+-		.extra2		= (void *)&max_jiffies,
+-	},
++	CTL_TABLE_ENTRY_MINMAX("soft_ack_delay",
++			       &rxrpc_soft_ack_delay,
++			       sizeof(unsigned long),
++			       0644,
++			       proc_doulongvec_ms_jiffies_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       MAX_JIFFY_OFFSET),
++	CTL_TABLE_ENTRY_MINMAX("idle_ack_delay",
++			       &rxrpc_idle_ack_delay,
++			       sizeof(unsigned long),
++			       0644,
++			       proc_doulongvec_ms_jiffies_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       MAX_JIFFY_OFFSET),
++	CTL_TABLE_ENTRY_MINMAX("idle_conn_expiry",
++			       &rxrpc_conn_idle_client_expiry,
++			       sizeof(unsigned long),
++			       0644,
++			       proc_doulongvec_ms_jiffies_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       MAX_JIFFY_OFFSET),
++	CTL_TABLE_ENTRY_MINMAX("idle_conn_fast_expiry",
++			       &rxrpc_conn_idle_client_fast_expiry,
++			       sizeof(unsigned long),
++			       0644,
++			       proc_doulongvec_ms_jiffies_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       MAX_JIFFY_OFFSET),
+ 
+ 	/* Values used in milliseconds */
+ #ifdef CONFIG_AF_RXRPC_INJECT_RX_DELAY
+-	{
+-		.procname	= "inject_rx_delay",
+-		.data		= &rxrpc_inject_rx_delay,
+-		.maxlen		= sizeof(unsigned long),
+-		.mode		= 0644,
+-		.proc_handler	= proc_doulongvec_minmax,
+-		.extra1		= (void *)SYSCTL_LONG_ZERO,
+-		.extra2		= (void *)&max_500,
+-	},
++	CTL_TABLE_ENTRY_MINMAX("inject_rx_delay",
++			       &rxrpc_inject_rx_delay,
++			       sizeof(unsigned long),
++			       0644,
++			       proc_doulongvec_minmax,
++			       SYSCTL_NUMERIC_ZERO,
++			       SYSCTL_NUMERIC_FIVE_HUNDRED),
  #endif
+ 
+ 	/* Non-time values */
+-	{
+-		.procname	= "reap_client_conns",
+-		.data		= &rxrpc_reap_client_connections,
+-		.maxlen		= sizeof(unsigned int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)SYSCTL_ONE,
+-		.extra2		= (void *)&n_65535,
+-	},
+-	{
+-		.procname	= "max_backlog",
+-		.data		= &rxrpc_max_backlog,
+-		.maxlen		= sizeof(unsigned int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)&four,
+-		.extra2		= (void *)&max_backlog,
+-	},
+-	{
+-		.procname	= "rx_window_size",
+-		.data		= &rxrpc_rx_window_size,
+-		.maxlen		= sizeof(unsigned int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)SYSCTL_ONE,
+-		.extra2		= (void *)&n_max_acks,
+-	},
+-	{
+-		.procname	= "rx_mtu",
+-		.data		= &rxrpc_rx_mtu,
+-		.maxlen		= sizeof(unsigned int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)SYSCTL_ONE,
+-		.extra2		= (void *)&n_65535,
+-	},
+-	{
+-		.procname	= "rx_jumbo_max",
+-		.data		= &rxrpc_rx_jumbo_max,
+-		.maxlen		= sizeof(unsigned int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= (void *)SYSCTL_ONE,
+-		.extra2		= (void *)&four,
+-	},
++	CTL_TABLE_ENTRY_MINMAX("reap_client_conns",
++			       &rxrpc_reap_client_connections,
++			       sizeof(unsigned int),
++			       0644,
++			       proc_dointvec_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       SYSCTL_NUMERIC_U16_MAX),
++	CTL_TABLE_ENTRY_MINMAX("max_backlog",
++			       &rxrpc_max_backlog,
++			       sizeof(unsigned int),
++			       0644,
++			       proc_dointvec_minmax,
++			       SYSCTL_NUMERIC_FOUR,
++			       RXRPC_BACKLOG_MAX - 1),
++	CTL_TABLE_ENTRY_MINMAX("rx_window_size",
++			       &rxrpc_rx_window_size,
++			       sizeof(unsigned int),
++			       0644,
++			       proc_dointvec_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       SYSCTL_NUMERIC_U8_MAX),
++	CTL_TABLE_ENTRY_MINMAX("rx_mtu",
++			       &rxrpc_rx_mtu,
++			       sizeof(unsigned int),
++			       0644,
++			       proc_dointvec_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       SYSCTL_NUMERIC_U16_MAX),
++	CTL_TABLE_ENTRY_MINMAX("rx_jumbo_max",
++			       &rxrpc_rx_jumbo_max,
++			       sizeof(unsigned int),
++			       0644,
++			       proc_dointvec_minmax,
++			       SYSCTL_NUMERIC_ONE,
++			       SYSCTL_NUMERIC_FOUR),
+ 	{ }
+ };
+ 
 -- 
 2.25.1
 
