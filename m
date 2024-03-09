@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE67481B1;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FF34DA10;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710008149; cv=none; b=K7oAFeWjaYokbtl2xOiCBoKzajBy86eBCUIm0z1D8sq4bcgiAJpAedArqgfqL9qKNnsX1D9oqF9VPdy1yohGLVoVWZi9Wiay1HKZrzJrCehwSj3/ARZzWWybNddMavlfvYXSVlosw3/7jJ2njIGRx4l4HKkP6+8zj2+gydmehBU=
+	t=1710008150; cv=none; b=aG+0Os/bYRByirf6XBwSdzPp9yPo34CqxcanL97S2fIiQqSJaqLZqHPXC+R4TmVubOvmnpvSdMOt6+4morP1NqkntEyOS3vAYmybZ9AegMeBqkM+3HJ0RXMYbZsXT8FagdrXpiuX/BCGfFSKONVRVox8uIxm0N+URMgV55cWL/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710008149; c=relaxed/simple;
-	bh=xwGHJdiU+5rpNpoMuivxmKWxjS8qrzD13Vu4JHbBJy4=;
+	s=arc-20240116; t=1710008150; c=relaxed/simple;
+	bh=/OEWegVp8T8Wg/HYYKFg+xZOR3U2ORAzWPNg1C+CcQg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A3FlzBUVhpyFbMvDPOt5Ammyo1kxorDAUzuh4GiW1m3sDodmDZ43q5zMJj4eNoGVWi3mAOd42XvPksLQTWhgCJaVor+uvrTxd6vj5rBYdnrq8QK2V6ugwXp6rqoqQkEAEMSlQ05ss2L02/WgLEmJx80a8X/9UMoJ+fBhe30GhvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ly0U2UnI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Z7yksM10O8Q48HO5vdlDTTQ+di3pWDoywUqRrAV7wV39iXTNuxp1y4TpfY9EpoTzhLUvPnIiSFaLUdxyMTdbv3o++CYLg7eHfqx04y99CyYBxe+eTcXoM7vyb9kCTzAADpofA3NRN0FiDrAIcfg4ZMIjDf4NRWeJNhgmSntfgxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfQXgR0t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ly0U2UnI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 37B47C43394;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfQXgR0t"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 544DEC3279E;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710008149;
-	bh=xwGHJdiU+5rpNpoMuivxmKWxjS8qrzD13Vu4JHbBJy4=;
+	s=k20201202; t=1710008150;
+	bh=/OEWegVp8T8Wg/HYYKFg+xZOR3U2ORAzWPNg1C+CcQg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Ly0U2UnIqxPNU5ijGloqwygMmhVUYS6gjcaRaikjPKyRKfyWitUYi37Vo4XanHHib
-	 Ciu1pUuc4VlTHIfki9mt3snP5U7/lNjFL/4ZLeoWlKYy5Bj1PvFX+qxk5HQNigHcIs
-	 nx9LE+918sabzgvsDrpM8YSiuDJv17pM4BW/xWKOZ7Ze1p+Gblk5EvxZ92AQn4UEc+
-	 4euitDg9LD0bMwqo05/0CqIGOfWJmmENhUyhYWoPA2oXNomLA0u+/45zZt9PCh179S
-	 07ycuLPE5whFrtguLQHuxiQYQ7qu4Oknygbe1xN8FlKR3qyCUZIAb39YS8QosaxTLs
-	 4D7T0YSNZH/kg==
+	b=CfQXgR0taf8LoZWWkD1YTKCheZ6oOYWTmpuVia/dZF1m3UXeZDk6zV6HJ9dNkilqk
+	 2sY2QZNBX3FW3N0olIjKhEZ4j7YOajwgjgafh5+7rSMQF/WfRGSEeKn3zAnJLKqUgq
+	 USBwMDpR+1TL+G9y+OJYT8v3boLZW2ODIa7lnk/FfKIIhRRV7L+DMBwgS192wMdl8M
+	 bdYf/HyNDytAKkdUldYFRan+/oSmsOP4ZYdDkGCr5Uy+0roWjg61u8NP9HuFFbxCT+
+	 Fpkhp3qFiNwJPNpDRkkUCVnBzTMAQsWUagJq/9duBTSlo3TylMvgBgMm8b3tSqj/rn
+	 9UmCvdkhi8Bhw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234E5C54E60;
-	Sat,  9 Mar 2024 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44117C54E66;
+	Sat,  9 Mar 2024 18:15:50 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 09 Mar 2024 19:15:32 +0100
-Subject: [PATCH v2 11/28] sparc32: Drop pcic support
+Date: Sat, 09 Mar 2024 19:15:48 +0100
+Subject: [PATCH v2 27/28] sbus: char: Drop now unused uctrl driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240309-sunset-v2-11-f09912574d2c@ravnborg.org>
+Message-Id: <20240309-sunset-v2-27-f09912574d2c@ravnborg.org>
 References: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 In-Reply-To: <20240309-sunset-v2-0-f09912574d2c@ravnborg.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -57,11 +57,11 @@ Cc: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>,
  linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-sound@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=34306;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710008145; l=13756;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=DGZ2wxuXZ7nYM5BEE2klNGM387YzyWeERBacPj+W/yI=; =?utf-8?q?b=3D+pAmp6tuSlnL?=
- =?utf-8?q?dvytdk4FDhH2HZWFXkhJp+1gGHtwI+sP9MgoWSi+tsjBRB/898IrsQoKBBGTkr8I?=
- 0qAj/YNNBgovoYA2ocIhNxl7ellDNFjeZd1oVG29/lKPBgnUvwvC
+ bh=uwD8vg7mKAWcOJ2QhOZ8J8eLhUOXYMyJcPOIg6kybXg=; =?utf-8?q?b=3D5hpzTUbuT6e2?=
+ =?utf-8?q?BFS8OYMAkdi5XU3E/gUjtKon7OFXY01U5eU7MOAHiNIhAL/qQ8ejJtr6hfi4WB5S?=
+ uTAAKDDsCzlG5u+TyFob5ufLwz/6kvQZhvkRKolN4qUg2RKIpAWi
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with auth_id=22
@@ -70,7 +70,8 @@ Reply-To: <sam@ravnborg.org>
 
 From: Sam Ravnborg <sam@ravnborg.org>
 
-pcic is only used by MicroSPARC-IIep and not relevant for LEON.
+The uctrl driver is only relevant for the Sparcbook 3 machine,
+and with sun4m support removed this driver is no logner relevant.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Arnd Bergmann <arnd@kernel.org>
@@ -78,1124 +79,481 @@ Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@kernel.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
 ---
- arch/sparc/Kconfig            |   5 -
- arch/sparc/include/asm/pcic.h | 130 -------
- arch/sparc/kernel/Makefile    |   1 -
- arch/sparc/kernel/entry.S     |  48 ---
- arch/sparc/kernel/irq_32.c    |   1 -
- arch/sparc/kernel/kernel.h    |   4 -
- arch/sparc/kernel/pcic.c      | 829 ------------------------------------------
- arch/sparc/kernel/time_32.c   |   6 +-
- 8 files changed, 1 insertion(+), 1023 deletions(-)
+ drivers/sbus/char/Kconfig  |   8 -
+ drivers/sbus/char/Makefile |   1 -
+ drivers/sbus/char/uctrl.c  | 434 ---------------------------------------------
+ 3 files changed, 443 deletions(-)
 
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index 23cdf1959991..19ee7bc0b2ea 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -410,11 +410,6 @@ config SUN_LDOMS
- 	  Say Y here is you want to support virtual devices via
- 	  Logical Domains.
+diff --git a/drivers/sbus/char/Kconfig b/drivers/sbus/char/Kconfig
+index 7c0a308e4959..8b80abc554ed 100644
+--- a/drivers/sbus/char/Kconfig
++++ b/drivers/sbus/char/Kconfig
+@@ -21,14 +21,6 @@ config OBP_FLASH
+ 	  The OpenBoot PROM on Ultra systems is flashable. If you want to be
+ 	  able to upgrade the OBP firmware, say Y here.
  
--config PCIC_PCI
--	bool
--	depends on PCI && SPARC32 && !SPARC_LEON
--	default y
+-config TADPOLE_TS102_UCTRL
+-	tristate "Tadpole TS102 Microcontroller support"
+-	help
+-	  Say Y here to directly support the TS102 Microcontroller interface
+-	  on the Tadpole Sparcbook 3.  This device handles power-management
+-	  events, and can also notice the attachment/detachment of external
+-	  monitors and mice.
 -
- config LEON_PCI
- 	bool
- 	depends on PCI && SPARC_LEON
-diff --git a/arch/sparc/include/asm/pcic.h b/arch/sparc/include/asm/pcic.h
+ config BBC_I2C
+ 	tristate "UltraSPARC-III bootbus i2c controller driver"
+ 	depends on PCI && SPARC64
+diff --git a/drivers/sbus/char/Makefile b/drivers/sbus/char/Makefile
+index 44347c918f6b..9db2faabfae8 100644
+--- a/drivers/sbus/char/Makefile
++++ b/drivers/sbus/char/Makefile
+@@ -14,6 +14,5 @@ obj-$(CONFIG_ENVCTRL)			+= envctrl.o
+ obj-$(CONFIG_DISPLAY7SEG)		+= display7seg.o
+ obj-$(CONFIG_OBP_FLASH)			+= flash.o
+ obj-$(CONFIG_SUN_OPENPROMIO)		+= openprom.o
+-obj-$(CONFIG_TADPOLE_TS102_UCTRL)	+= uctrl.o
+ obj-$(CONFIG_BBC_I2C)			+= bbc.o
+ obj-$(CONFIG_ORACLE_DAX) 		+= oradax.o
+diff --git a/drivers/sbus/char/uctrl.c b/drivers/sbus/char/uctrl.c
 deleted file mode 100644
-index 238376b1ffcc..000000000000
---- a/arch/sparc/include/asm/pcic.h
+index cf15a4186d03..000000000000
+--- a/drivers/sbus/char/uctrl.c
 +++ /dev/null
-@@ -1,130 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * pcic.h: JavaEngine 1 specific PCI definitions.
+@@ -1,434 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/* uctrl.c: TS102 Microcontroller interface on Tadpole Sparcbook 3
 - *
-- * Copyright (C) 1998 V. Roganov and G. Raiko
+- * Copyright 1999 Derrick J Brashear (shadow@dementia.org)
+- * Copyright 2008 David S. Miller (davem@davemloft.net)
 - */
 -
--#ifndef __SPARC_PCIC_H
--#define __SPARC_PCIC_H
--
--#ifndef __ASSEMBLY__
--
--#include <linux/types.h>
--#include <linux/smp.h>
--#include <linux/pci.h>
--#include <linux/ioport.h>
--#include <asm/pbm.h>
--
--struct linux_pcic {
--        void __iomem            *pcic_regs;
--        unsigned long           pcic_io;
--        void __iomem            *pcic_config_space_addr;
--        void __iomem            *pcic_config_space_data;
--	struct resource		pcic_res_regs;
--	struct resource		pcic_res_io;
--	struct resource		pcic_res_cfg_addr;
--	struct resource		pcic_res_cfg_data;
--        struct linux_pbm_info   pbm;
--	struct pcic_ca2irq	*pcic_imap;
--	int			pcic_imdim;
--};
--
--#ifdef CONFIG_PCIC_PCI
--int pcic_present(void);
--int pcic_probe(void);
--void pci_time_init(void);
--void sun4m_pci_init_IRQ(void);
--#else
--static inline int pcic_present(void) { return 0; }
--static inline int pcic_probe(void) { return 0; }
--static inline void pci_time_init(void) {}
--static inline void sun4m_pci_init_IRQ(void) {}
--#endif
--#endif
--
--/* Size of PCI I/O space which we relocate. */
--#define PCI_SPACE_SIZE                  0x1000000       /* 16 MB */
--
--/* PCIC Register Set. */
--#define PCI_DIAGNOSTIC_0                0x40    /* 32 bits */
--#define PCI_SIZE_0                      0x44    /* 32 bits */
--#define PCI_SIZE_1                      0x48    /* 32 bits */
--#define PCI_SIZE_2                      0x4c    /* 32 bits */
--#define PCI_SIZE_3                      0x50    /* 32 bits */
--#define PCI_SIZE_4                      0x54    /* 32 bits */
--#define PCI_SIZE_5                      0x58    /* 32 bits */
--#define PCI_PIO_CONTROL                 0x60    /* 8  bits */
--#define PCI_DVMA_CONTROL                0x62    /* 8  bits */
--#define  PCI_DVMA_CONTROL_INACTIVITY_REQ        (1<<0)
--#define  PCI_DVMA_CONTROL_IOTLB_ENABLE          (1<<0)
--#define  PCI_DVMA_CONTROL_IOTLB_DISABLE         0
--#define  PCI_DVMA_CONTROL_INACTIVITY_ACK        (1<<4)
--#define PCI_INTERRUPT_CONTROL           0x63    /* 8  bits */
--#define PCI_CPU_INTERRUPT_PENDING       0x64    /* 32 bits */
--#define PCI_DIAGNOSTIC_1                0x68    /* 16 bits */
--#define PCI_SOFTWARE_INT_CLEAR          0x6a    /* 16 bits */
--#define PCI_SOFTWARE_INT_SET            0x6e    /* 16 bits */
--#define PCI_SYS_INT_PENDING             0x70    /* 32 bits */
--#define  PCI_SYS_INT_PENDING_PIO		0x40000000
--#define  PCI_SYS_INT_PENDING_DMA		0x20000000
--#define  PCI_SYS_INT_PENDING_PCI		0x10000000
--#define  PCI_SYS_INT_PENDING_APSR		0x08000000
--#define PCI_SYS_INT_TARGET_MASK         0x74    /* 32 bits */
--#define PCI_SYS_INT_TARGET_MASK_CLEAR   0x78    /* 32 bits */
--#define PCI_SYS_INT_TARGET_MASK_SET     0x7c    /* 32 bits */
--#define PCI_SYS_INT_PENDING_CLEAR       0x83    /* 8  bits */
--#define  PCI_SYS_INT_PENDING_CLEAR_ALL		0x80
--#define  PCI_SYS_INT_PENDING_CLEAR_PIO		0x40
--#define  PCI_SYS_INT_PENDING_CLEAR_DMA		0x20
--#define  PCI_SYS_INT_PENDING_CLEAR_PCI		0x10
--#define PCI_IOTLB_CONTROL               0x84    /* 8  bits */
--#define PCI_INT_SELECT_LO               0x88    /* 16 bits */
--#define PCI_ARBITRATION_SELECT          0x8a    /* 16 bits */
--#define PCI_INT_SELECT_HI               0x8c    /* 16 bits */
--#define PCI_HW_INT_OUTPUT               0x8e    /* 16 bits */
--#define PCI_IOTLB_RAM_INPUT             0x90    /* 32 bits */
--#define PCI_IOTLB_CAM_INPUT             0x94    /* 32 bits */
--#define PCI_IOTLB_RAM_OUTPUT            0x98    /* 32 bits */
--#define PCI_IOTLB_CAM_OUTPUT            0x9c    /* 32 bits */
--#define PCI_SMBAR0                      0xa0    /* 8  bits */
--#define PCI_MSIZE0                      0xa1    /* 8  bits */
--#define PCI_PMBAR0                      0xa2    /* 8  bits */
--#define PCI_SMBAR1                      0xa4    /* 8  bits */
--#define PCI_MSIZE1                      0xa5    /* 8  bits */
--#define PCI_PMBAR1                      0xa6    /* 8  bits */
--#define PCI_SIBAR                       0xa8    /* 8  bits */
--#define   PCI_SIBAR_ADDRESS_MASK        0xf
--#define PCI_ISIZE                       0xa9    /* 8  bits */
--#define   PCI_ISIZE_16M                 0xf
--#define   PCI_ISIZE_32M                 0xe
--#define   PCI_ISIZE_64M                 0xc
--#define   PCI_ISIZE_128M                0x8
--#define   PCI_ISIZE_256M                0x0
--#define PCI_PIBAR                       0xaa    /* 8  bits */
--#define PCI_CPU_COUNTER_LIMIT_HI        0xac    /* 32 bits */
--#define PCI_CPU_COUNTER_LIMIT_LO        0xb0    /* 32 bits */
--#define PCI_CPU_COUNTER_LIMIT           0xb4    /* 32 bits */
--#define PCI_SYS_LIMIT                   0xb8    /* 32 bits */
--#define PCI_SYS_COUNTER                 0xbc    /* 32 bits */
--#define   PCI_SYS_COUNTER_OVERFLOW      (1<<31) /* Limit reached */
--#define PCI_SYS_LIMIT_PSEUDO            0xc0    /* 32 bits */
--#define PCI_USER_TIMER_CONTROL          0xc4    /* 8  bits */
--#define PCI_USER_TIMER_CONFIG           0xc5    /* 8  bits */
--#define PCI_COUNTER_IRQ                 0xc6    /* 8  bits */
--#define  PCI_COUNTER_IRQ_SET(sys_irq, cpu_irq)  ((((sys_irq) & 0xf) << 4) | \
--                                                  ((cpu_irq) & 0xf))
--#define  PCI_COUNTER_IRQ_SYS(v)                 (((v) >> 4) & 0xf)
--#define  PCI_COUNTER_IRQ_CPU(v)                 ((v) & 0xf)
--#define PCI_PIO_ERROR_COMMAND           0xc7    /* 8  bits */
--#define PCI_PIO_ERROR_ADDRESS           0xc8    /* 32 bits */
--#define PCI_IOTLB_ERROR_ADDRESS         0xcc    /* 32 bits */
--#define PCI_SYS_STATUS                  0xd0    /* 8  bits */
--#define   PCI_SYS_STATUS_RESET_ENABLE           (1<<0)
--#define   PCI_SYS_STATUS_RESET                  (1<<1)
--#define   PCI_SYS_STATUS_WATCHDOG_RESET         (1<<4)
--#define   PCI_SYS_STATUS_PCI_RESET              (1<<5)
--#define   PCI_SYS_STATUS_PCI_RESET_ENABLE       (1<<6)
--#define   PCI_SYS_STATUS_PCI_SATTELITE_MODE     (1<<7)
--
--#endif /* !(__SPARC_PCIC_H) */
-diff --git a/arch/sparc/kernel/Makefile b/arch/sparc/kernel/Makefile
-index bd31bdd0b13e..50d696c8a9d2 100644
---- a/arch/sparc/kernel/Makefile
-+++ b/arch/sparc/kernel/Makefile
-@@ -73,7 +73,6 @@ obj-$(CONFIG_SPARC64)	+= pcr.o
- obj-$(CONFIG_SPARC64)	+= nmi.o
- obj-$(CONFIG_SPARC64_SMP) += cpumap.o
- 
--obj-$(CONFIG_PCIC_PCI)    += pcic.o
- obj-$(CONFIG_LEON_PCI)    += leon_pci.o
- obj-$(CONFIG_SPARC_GRPCI2)+= leon_pci_grpci2.o
- obj-$(CONFIG_SPARC_GRPCI1)+= leon_pci_grpci1.o
-diff --git a/arch/sparc/kernel/entry.S b/arch/sparc/kernel/entry.S
-index 9bd3813b872d..13011969e7eb 100644
---- a/arch/sparc/kernel/entry.S
-+++ b/arch/sparc/kernel/entry.S
-@@ -965,54 +965,6 @@ restore_current:
- 	retl
- 	 nop
- 
--#ifdef CONFIG_PCIC_PCI
--#include <asm/pcic.h>
--
--	.align	4
--	.globl	linux_trap_ipi15_pcic
--linux_trap_ipi15_pcic:
--	rd	%wim, %l3
--	SAVE_ALL
--
--	/*
--	 * First deactivate NMI
--	 * or we cannot drop ET, cannot get window spill traps.
--	 * The busy loop is necessary because the PIO error
--	 * sometimes does not go away quickly and we trap again.
--	 */
--	sethi	%hi(pcic_regs), %o1
--	ld	[%o1 + %lo(pcic_regs)], %o2
--
--	! Get pending status for printouts later.
--	ld	[%o2 + PCI_SYS_INT_PENDING], %o0
--
--	mov	PCI_SYS_INT_PENDING_CLEAR_ALL, %o1
--	stb	%o1, [%o2 + PCI_SYS_INT_PENDING_CLEAR]
--1:
--	ld	[%o2 + PCI_SYS_INT_PENDING], %o1
--	andcc	%o1, ((PCI_SYS_INT_PENDING_PIO|PCI_SYS_INT_PENDING_PCI)>>24), %g0
--	bne	1b
--	 nop
--
--	or	%l0, PSR_PIL, %l4
--	wr	%l4, 0x0, %psr
--	WRITE_PAUSE
--	wr	%l4, PSR_ET, %psr
--	WRITE_PAUSE
--
--	call	pcic_nmi
--	 add	%sp, STACKFRAME_SZ, %o1	! struct pt_regs *regs
--	RESTORE_ALL
--
--	.globl	pcic_nmi_trap_patch
--pcic_nmi_trap_patch:
--	sethi	%hi(linux_trap_ipi15_pcic), %l3
--	jmpl	%l3 + %lo(linux_trap_ipi15_pcic), %g0
--	 rd	%psr, %l0
--	.word	0
--
--#endif /* CONFIG_PCIC_PCI */
--
- 	.globl	flushw_all
- flushw_all:
- 	save	%sp, -0x40, %sp
-diff --git a/arch/sparc/kernel/irq_32.c b/arch/sparc/kernel/irq_32.c
-index 135170f362c1..a6af08fce796 100644
---- a/arch/sparc/kernel/irq_32.c
-+++ b/arch/sparc/kernel/irq_32.c
-@@ -19,7 +19,6 @@
- #include <asm/cacheflush.h>
- #include <asm/cpudata.h>
- #include <asm/setup.h>
--#include <asm/pcic.h>
- #include <asm/leon.h>
- 
- #include "kernel.h"
-diff --git a/arch/sparc/kernel/kernel.h b/arch/sparc/kernel/kernel.h
-index 621fb7b6ec64..4fcd782f16a7 100644
---- a/arch/sparc/kernel/kernel.h
-+++ b/arch/sparc/kernel/kernel.h
-@@ -138,10 +138,6 @@ asmlinkage void user_unaligned_trap(struct pt_regs *regs, unsigned int insn);
- /* windows.c */
- void try_to_clear_window_buffer(struct pt_regs *regs, int who);
- 
--/* pcic.c */
--extern void __iomem *pcic_regs;
--void pcic_nmi(unsigned int pend, struct pt_regs *regs);
--
- /* time_32.c */
- void __init time_init(void);
- 
-diff --git a/arch/sparc/kernel/pcic.c b/arch/sparc/kernel/pcic.c
-deleted file mode 100644
-index d952bcbbc395..000000000000
---- a/arch/sparc/kernel/pcic.c
-+++ /dev/null
-@@ -1,829 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * pcic.c: MicroSPARC-IIep PCI controller support
-- *
-- * Copyright (C) 1998 V. Roganov and G. Raiko
-- *
-- * Code is derived from Ultra/PCI PSYCHO controller support, see that
-- * for author info.
-- *
-- * Support for diverse IIep based platforms by Pete Zaitcev.
-- * CP-1200 by Eric Brower.
-- */
--
--#include <linux/kernel.h>
--#include <linux/types.h>
--#include <linux/init.h>
--#include <linux/mm.h>
+-#include <linux/module.h>
+-#include <linux/errno.h>
+-#include <linux/delay.h>
+-#include <linux/interrupt.h>
 -#include <linux/slab.h>
--#include <linux/jiffies.h>
+-#include <linux/mutex.h>
+-#include <linux/ioport.h>
+-#include <linux/miscdevice.h>
+-#include <linux/mm.h>
+-#include <linux/of.h>
+-#include <linux/platform_device.h>
 -
--#include <asm/swift.h> /* for cache flushing. */
+-#include <asm/openprom.h>
+-#include <asm/oplib.h>
+-#include <asm/irq.h>
 -#include <asm/io.h>
 -
--#include <linux/ctype.h>
--#include <linux/pci.h>
--#include <linux/time.h>
--#include <linux/timex.h>
--#include <linux/interrupt.h>
--#include <linux/export.h>
--
--#include <asm/irq.h>
--#include <asm/oplib.h>
--#include <asm/prom.h>
--#include <asm/pcic.h>
--#include <asm/timex.h>
--#include <asm/timer.h>
--#include <linux/uaccess.h>
--#include <asm/irq_regs.h>
--
--#include "kernel.h"
--#include "irq.h"
--
--/*
-- * I studied different documents and many live PROMs both from 2.30
-- * family and 3.xx versions. I came to the amazing conclusion: there is
-- * absolutely no way to route interrupts in IIep systems relying on
-- * information which PROM presents. We must hardcode interrupt routing
-- * schematics. And this actually sucks.   -- zaitcev 1999/05/12
-- *
-- * To find irq for a device we determine which routing map
-- * is in effect or, in other words, on which machine we are running.
-- * We use PROM name for this although other techniques may be used
-- * in special cases (Gleb reports a PROMless IIep based system).
-- * Once we know the map we take device configuration address and
-- * find PCIC pin number where INT line goes. Then we may either program
-- * preferred irq into the PCIC or supply the preexisting irq to the device.
-- */
--struct pcic_ca2irq {
--	unsigned char busno;		/* PCI bus number */
--	unsigned char devfn;		/* Configuration address */
--	unsigned char pin;		/* PCIC external interrupt pin */
--	unsigned char irq;		/* Preferred IRQ (mappable in PCIC) */
--	unsigned int force;		/* Enforce preferred IRQ */
--};
--
--struct pcic_sn2list {
--	char *sysname;
--	struct pcic_ca2irq *intmap;
--	int mapdim;
--};
--
--/*
-- * JavaEngine-1 apparently has different versions.
-- *
-- * According to communications with Sun folks, for P2 build 501-4628-03:
-- * pin 0 - parallel, audio;
-- * pin 1 - Ethernet;
-- * pin 2 - su;
-- * pin 3 - PS/2 kbd and mouse.
-- *
-- * OEM manual (805-1486):
-- * pin 0: Ethernet
-- * pin 1: All EBus
-- * pin 2: IGA (unused)
-- * pin 3: Not connected
-- * OEM manual says that 501-4628 & 501-4811 are the same thing,
-- * only the latter has NAND flash in place.
-- *
-- * So far unofficial Sun wins over the OEM manual. Poor OEMs...
-- */
--static struct pcic_ca2irq pcic_i_je1a[] = {	/* 501-4811-03 */
--	{ 0, 0x00, 2, 12, 0 },		/* EBus: hogs all */
--	{ 0, 0x01, 1,  6, 1 },		/* Happy Meal */
--	{ 0, 0x80, 0,  7, 0 },		/* IGA (unused) */
--};
--
--/* XXX JS-E entry is incomplete - PCI Slot 2 address (pin 7)? */
--static struct pcic_ca2irq pcic_i_jse[] = {
--	{ 0, 0x00, 0, 13, 0 },		/* Ebus - serial and keyboard */
--	{ 0, 0x01, 1,  6, 0 },		/* hme */
--	{ 0, 0x08, 2,  9, 0 },		/* VGA - we hope not used :) */
--	{ 0, 0x10, 6,  8, 0 },		/* PCI INTA# in Slot 1 */
--	{ 0, 0x18, 7, 12, 0 },		/* PCI INTA# in Slot 2, shared w. RTC */
--	{ 0, 0x38, 4,  9, 0 },		/* All ISA devices. Read 8259. */
--	{ 0, 0x80, 5, 11, 0 },		/* EIDE */
--	/* {0,0x88, 0,0,0} - unknown device... PMU? Probably no interrupt. */
--	{ 0, 0xA0, 4,  9, 0 },		/* USB */
--	/*
--	 * Some pins belong to non-PCI devices, we hardcode them in drivers.
--	 * sun4m timers - irq 10, 14
--	 * PC style RTC - pin 7, irq 4 ?
--	 * Smart card, Parallel - pin 4 shared with USB, ISA
--	 * audio - pin 3, irq 5 ?
--	 */
--};
--
--/* SPARCengine-6 was the original release name of CP1200.
-- * The documentation differs between the two versions
-- */
--static struct pcic_ca2irq pcic_i_se6[] = {
--	{ 0, 0x08, 0,  2, 0 },		/* SCSI	*/
--	{ 0, 0x01, 1,  6, 0 },		/* HME	*/
--	{ 0, 0x00, 3, 13, 0 },		/* EBus	*/
--};
--
--/*
-- * Krups (courtesy of Varol Kaptan)
-- * No documentation available, but it was easy to guess
-- * because it was very similar to Espresso.
-- *  
-- * pin 0 - kbd, mouse, serial;
-- * pin 1 - Ethernet;
-- * pin 2 - igs (we do not use it);
-- * pin 3 - audio;
-- * pin 4,5,6 - unused;
-- * pin 7 - RTC (from P2 onwards as David B. says).
-- */
--static struct pcic_ca2irq pcic_i_jk[] = {
--	{ 0, 0x00, 0, 13, 0 },		/* Ebus - serial and keyboard */
--	{ 0, 0x01, 1,  6, 0 },		/* hme */
--};
--
--/*
-- * Several entries in this list may point to the same routing map
-- * as several PROMs may be installed on the same physical board.
-- */
--#define SN2L_INIT(name, map)	\
--  { name, map, ARRAY_SIZE(map) }
--
--static struct pcic_sn2list pcic_known_sysnames[] = {
--	SN2L_INIT("SUNW,JavaEngine1", pcic_i_je1a),	/* JE1, PROM 2.32 */
--	SN2L_INIT("SUNW,JS-E", pcic_i_jse),	/* PROLL JavaStation-E */
--	SN2L_INIT("SUNW,SPARCengine-6", pcic_i_se6), /* SPARCengine-6/CP-1200 */
--	SN2L_INIT("SUNW,JS-NC", pcic_i_jk),	/* PROLL JavaStation-NC */
--	SN2L_INIT("SUNW,JSIIep", pcic_i_jk),	/* OBP JavaStation-NC */
--	{ NULL, NULL, 0 }
--};
--
--/*
-- * Only one PCIC per IIep,
-- * and since we have no SMP IIep, only one per system.
-- */
--static int pcic0_up;
--static struct linux_pcic pcic0;
--
--void __iomem *pcic_regs;
--static volatile int pcic_speculative;
--static volatile int pcic_trapped;
--
--/* forward */
--unsigned int pcic_build_device_irq(struct platform_device *op,
--                                   unsigned int real_irq);
--
--#define CONFIG_CMD(bus, device_fn, where) (0x80000000 | (((unsigned int)bus) << 16) | (((unsigned int)device_fn) << 8) | (where & ~3))
--
--static int pcic_read_config_dword(unsigned int busno, unsigned int devfn,
--    int where, u32 *value)
--{
--	struct linux_pcic *pcic;
--	unsigned long flags;
--
--	pcic = &pcic0;
--
--	local_irq_save(flags);
--#if 0 /* does not fail here */
--	pcic_speculative = 1;
--	pcic_trapped = 0;
+-#define DEBUG 1
+-#ifdef DEBUG
+-#define dprintk(x) printk x
+-#else
+-#define dprintk(x)
 -#endif
--	writel(CONFIG_CMD(busno, devfn, where), pcic->pcic_config_space_addr);
--#if 0 /* does not fail here */
--	nop();
--	if (pcic_trapped) {
--		local_irq_restore(flags);
--		*value = ~0;
--		return 0;
--	}
--#endif
--	pcic_speculative = 2;
--	pcic_trapped = 0;
--	*value = readl(pcic->pcic_config_space_data + (where&4));
--	nop();
--	if (pcic_trapped) {
--		pcic_speculative = 0;
--		local_irq_restore(flags);
--		*value = ~0;
--		return 0;
--	}
--	pcic_speculative = 0;
--	local_irq_restore(flags);
--	return 0;
--}
 -
--static int pcic_read_config(struct pci_bus *bus, unsigned int devfn,
--   int where, int size, u32 *val)
--{
--	unsigned int v;
--
--	if (bus->number != 0) return -EINVAL;
--	switch (size) {
--	case 1:
--		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
--		*val = 0xff & (v >> (8*(where & 3)));
--		return 0;
--	case 2:
--		if (where&1) return -EINVAL;
--		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
--		*val = 0xffff & (v >> (8*(where & 3)));
--		return 0;
--	case 4:
--		if (where&3) return -EINVAL;
--		pcic_read_config_dword(bus->number, devfn, where&~3, val);
--		return 0;
--	}
--	return -EINVAL;
--}
--
--static int pcic_write_config_dword(unsigned int busno, unsigned int devfn,
--    int where, u32 value)
--{
--	struct linux_pcic *pcic;
--	unsigned long flags;
--
--	pcic = &pcic0;
--
--	local_irq_save(flags);
--	writel(CONFIG_CMD(busno, devfn, where), pcic->pcic_config_space_addr);
--	writel(value, pcic->pcic_config_space_data + (where&4));
--	local_irq_restore(flags);
--	return 0;
--}
--
--static int pcic_write_config(struct pci_bus *bus, unsigned int devfn,
--   int where, int size, u32 val)
--{
--	unsigned int v;
--
--	if (bus->number != 0) return -EINVAL;
--	switch (size) {
--	case 1:
--		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
--		v = (v & ~(0xff << (8*(where&3)))) |
--		    ((0xff&val) << (8*(where&3)));
--		return pcic_write_config_dword(bus->number, devfn, where&~3, v);
--	case 2:
--		if (where&1) return -EINVAL;
--		pcic_read_config_dword(bus->number, devfn, where&~3, &v);
--		v = (v & ~(0xffff << (8*(where&3)))) |
--		    ((0xffff&val) << (8*(where&3)));
--		return pcic_write_config_dword(bus->number, devfn, where&~3, v);
--	case 4:
--		if (where&3) return -EINVAL;
--		return pcic_write_config_dword(bus->number, devfn, where, val);
--	}
--	return -EINVAL;
--}
--
--static struct pci_ops pcic_ops = {
--	.read =		pcic_read_config,
--	.write =	pcic_write_config,
+-struct uctrl_regs {
+-	u32 uctrl_intr;
+-	u32 uctrl_data;
+-	u32 uctrl_stat;
+-	u32 uctrl_xxx[5];
 -};
 -
--/*
-- * On sparc64 pcibios_init() calls pci_controller_probe().
-- * We want PCIC probed little ahead so that interrupt controller
-- * would be operational.
-- */
--int __init pcic_probe(void)
+-struct ts102_regs {
+-	u32 card_a_intr;
+-	u32 card_a_stat;
+-	u32 card_a_ctrl;
+-	u32 card_a_xxx;
+-	u32 card_b_intr;
+-	u32 card_b_stat;
+-	u32 card_b_ctrl;
+-	u32 card_b_xxx;
+-	u32 uctrl_intr;
+-	u32 uctrl_data;
+-	u32 uctrl_stat;
+-	u32 uctrl_xxx;
+-	u32 ts102_xxx[4];
+-};
+-
+-/* Bits for uctrl_intr register */
+-#define UCTRL_INTR_TXE_REQ         0x01    /* transmit FIFO empty int req */
+-#define UCTRL_INTR_TXNF_REQ        0x02    /* transmit FIFO not full int req */
+-#define UCTRL_INTR_RXNE_REQ        0x04    /* receive FIFO not empty int req */
+-#define UCTRL_INTR_RXO_REQ         0x08    /* receive FIFO overflow int req */
+-#define UCTRL_INTR_TXE_MSK         0x10    /* transmit FIFO empty mask */
+-#define UCTRL_INTR_TXNF_MSK        0x20    /* transmit FIFO not full mask */
+-#define UCTRL_INTR_RXNE_MSK        0x40    /* receive FIFO not empty mask */
+-#define UCTRL_INTR_RXO_MSK         0x80    /* receive FIFO overflow mask */
+-
+-/* Bits for uctrl_stat register */
+-#define UCTRL_STAT_TXE_STA         0x01    /* transmit FIFO empty status */
+-#define UCTRL_STAT_TXNF_STA        0x02    /* transmit FIFO not full status */
+-#define UCTRL_STAT_RXNE_STA        0x04    /* receive FIFO not empty status */
+-#define UCTRL_STAT_RXO_STA         0x08    /* receive FIFO overflow status */
+-
+-static DEFINE_MUTEX(uctrl_mutex);
+-static const char *uctrl_extstatus[16] = {
+-        "main power available",
+-        "internal battery attached",
+-        "external battery attached",
+-        "external VGA attached",
+-        "external keyboard attached",
+-        "external mouse attached",
+-        "lid down",
+-        "internal battery currently charging",
+-        "external battery currently charging",
+-        "internal battery currently discharging",
+-        "external battery currently discharging",
+-};
+-
+-/* Everything required for one transaction with the uctrl */
+-struct uctrl_txn {
+-	u8 opcode;
+-	u8 inbits;
+-	u8 outbits;
+-	u8 *inbuf;
+-	u8 *outbuf;
+-};
+-
+-struct uctrl_status {
+-	u8 current_temp; /* 0x07 */
+-	u8 reset_status; /* 0x0b */
+-	u16 event_status; /* 0x0c */
+-	u16 error_status; /* 0x10 */
+-	u16 external_status; /* 0x11, 0x1b */
+-	u8 internal_charge; /* 0x18 */
+-	u8 external_charge; /* 0x19 */
+-	u16 control_lcd; /* 0x20 */
+-	u8 control_bitport; /* 0x21 */
+-	u8 speaker_volume; /* 0x23 */
+-	u8 control_tft_brightness; /* 0x24 */
+-	u8 control_kbd_repeat_delay; /* 0x28 */
+-	u8 control_kbd_repeat_period; /* 0x29 */
+-	u8 control_screen_contrast; /* 0x2F */
+-};
+-
+-enum uctrl_opcode {
+-  READ_SERIAL_NUMBER=0x1,
+-  READ_ETHERNET_ADDRESS=0x2,
+-  READ_HARDWARE_VERSION=0x3,
+-  READ_MICROCONTROLLER_VERSION=0x4,
+-  READ_MAX_TEMPERATURE=0x5,
+-  READ_MIN_TEMPERATURE=0x6,
+-  READ_CURRENT_TEMPERATURE=0x7,
+-  READ_SYSTEM_VARIANT=0x8,
+-  READ_POWERON_CYCLES=0x9,
+-  READ_POWERON_SECONDS=0xA,
+-  READ_RESET_STATUS=0xB,
+-  READ_EVENT_STATUS=0xC,
+-  READ_REAL_TIME_CLOCK=0xD,
+-  READ_EXTERNAL_VGA_PORT=0xE,
+-  READ_MICROCONTROLLER_ROM_CHECKSUM=0xF,
+-  READ_ERROR_STATUS=0x10,
+-  READ_EXTERNAL_STATUS=0x11,
+-  READ_USER_CONFIGURATION_AREA=0x12,
+-  READ_MICROCONTROLLER_VOLTAGE=0x13,
+-  READ_INTERNAL_BATTERY_VOLTAGE=0x14,
+-  READ_DCIN_VOLTAGE=0x15,
+-  READ_HORIZONTAL_POINTER_VOLTAGE=0x16,
+-  READ_VERTICAL_POINTER_VOLTAGE=0x17,
+-  READ_INTERNAL_BATTERY_CHARGE_LEVEL=0x18,
+-  READ_EXTERNAL_BATTERY_CHARGE_LEVEL=0x19,
+-  READ_REAL_TIME_CLOCK_ALARM=0x1A,
+-  READ_EVENT_STATUS_NO_RESET=0x1B,
+-  READ_INTERNAL_KEYBOARD_LAYOUT=0x1C,
+-  READ_EXTERNAL_KEYBOARD_LAYOUT=0x1D,
+-  READ_EEPROM_STATUS=0x1E,
+-  CONTROL_LCD=0x20,
+-  CONTROL_BITPORT=0x21,
+-  SPEAKER_VOLUME=0x23,
+-  CONTROL_TFT_BRIGHTNESS=0x24,
+-  CONTROL_WATCHDOG=0x25,
+-  CONTROL_FACTORY_EEPROM_AREA=0x26,
+-  CONTROL_KBD_TIME_UNTIL_REPEAT=0x28,
+-  CONTROL_KBD_TIME_BETWEEN_REPEATS=0x29,
+-  CONTROL_TIMEZONE=0x2A,
+-  CONTROL_MARK_SPACE_RATIO=0x2B,
+-  CONTROL_DIAGNOSTIC_MODE=0x2E,
+-  CONTROL_SCREEN_CONTRAST=0x2F,
+-  RING_BELL=0x30,
+-  SET_DIAGNOSTIC_STATUS=0x32,
+-  CLEAR_KEY_COMBINATION_TABLE=0x33,
+-  PERFORM_SOFTWARE_RESET=0x34,
+-  SET_REAL_TIME_CLOCK=0x35,
+-  RECALIBRATE_POINTING_STICK=0x36,
+-  SET_BELL_FREQUENCY=0x37,
+-  SET_INTERNAL_BATTERY_CHARGE_RATE=0x39,
+-  SET_EXTERNAL_BATTERY_CHARGE_RATE=0x3A,
+-  SET_REAL_TIME_CLOCK_ALARM=0x3B,
+-  READ_EEPROM=0x40,
+-  WRITE_EEPROM=0x41,
+-  WRITE_TO_STATUS_DISPLAY=0x42,
+-  DEFINE_SPECIAL_CHARACTER=0x43,
+-  DEFINE_KEY_COMBINATION_ENTRY=0x50,
+-  DEFINE_STRING_TABLE_ENTRY=0x51,
+-  DEFINE_STATUS_SCREEN_DISPLAY=0x52,
+-  PERFORM_EMU_COMMANDS=0x64,
+-  READ_EMU_REGISTER=0x65,
+-  WRITE_EMU_REGISTER=0x66,
+-  READ_EMU_RAM=0x67,
+-  WRITE_EMU_RAM=0x68,
+-  READ_BQ_REGISTER=0x69,
+-  WRITE_BQ_REGISTER=0x6A,
+-  SET_USER_PASSWORD=0x70,
+-  VERIFY_USER_PASSWORD=0x71,
+-  GET_SYSTEM_PASSWORD_KEY=0x72,
+-  VERIFY_SYSTEM_PASSWORD=0x73,
+-  POWER_OFF=0x82,
+-  POWER_RESTART=0x83,
+-};
+-
+-static struct uctrl_driver {
+-	struct uctrl_regs __iomem *regs;
+-	int irq;
+-	int pending;
+-	struct uctrl_status status;
+-} *global_driver;
+-
+-static void uctrl_get_event_status(struct uctrl_driver *);
+-static void uctrl_get_external_status(struct uctrl_driver *);
+-
+-static long
+-uctrl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 -{
--	struct linux_pcic *pcic;
--	struct linux_prom_registers regs[PROMREG_MAX];
--	struct linux_pbm_info* pbm;
--	char namebuf[64];
--	phandle node;
--	int err;
--
--	if (pcic0_up) {
--		prom_printf("PCIC: called twice!\n");
--		prom_halt();
--	}
--	pcic = &pcic0;
--
--	node = prom_getchild (prom_root_node);
--	node = prom_searchsiblings (node, "pci");
--	if (node == 0)
--		return -ENODEV;
--	/*
--	 * Map in PCIC register set, config space, and IO base
--	 */
--	err = prom_getproperty(node, "reg", (char*)regs, sizeof(regs));
--	if (err == 0 || err == -1) {
--		prom_printf("PCIC: Error, cannot get PCIC registers "
--			    "from PROM.\n");
--		prom_halt();
--	}
--
--	pcic0_up = 1;
--
--	pcic->pcic_res_regs.name = "pcic_registers";
--	pcic->pcic_regs = ioremap(regs[0].phys_addr, regs[0].reg_size);
--	if (!pcic->pcic_regs) {
--		prom_printf("PCIC: Error, cannot map PCIC registers.\n");
--		prom_halt();
--	}
--
--	pcic->pcic_res_io.name = "pcic_io";
--	if ((pcic->pcic_io = (unsigned long)
--	    ioremap(regs[1].phys_addr, 0x10000)) == 0) {
--		prom_printf("PCIC: Error, cannot map PCIC IO Base.\n");
--		prom_halt();
--	}
--
--	pcic->pcic_res_cfg_addr.name = "pcic_cfg_addr";
--	if ((pcic->pcic_config_space_addr =
--	    ioremap(regs[2].phys_addr, regs[2].reg_size * 2)) == NULL) {
--		prom_printf("PCIC: Error, cannot map "
--			    "PCI Configuration Space Address.\n");
--		prom_halt();
--	}
--
--	/*
--	 * Docs say three least significant bits in address and data
--	 * must be the same. Thus, we need adjust size of data.
--	 */
--	pcic->pcic_res_cfg_data.name = "pcic_cfg_data";
--	if ((pcic->pcic_config_space_data =
--	    ioremap(regs[3].phys_addr, regs[3].reg_size * 2)) == NULL) {
--		prom_printf("PCIC: Error, cannot map "
--			    "PCI Configuration Space Data.\n");
--		prom_halt();
--	}
--
--	pbm = &pcic->pbm;
--	pbm->prom_node = node;
--	prom_getstring(node, "name", namebuf, 63);  namebuf[63] = 0;
--	strcpy(pbm->prom_name, namebuf);
--
--	prom_getstring(prom_root_node, "name", namebuf, 63);  namebuf[63] = 0;
--	{
--		struct pcic_sn2list *p;
--
--		for (p = pcic_known_sysnames; p->sysname != NULL; p++) {
--			if (strcmp(namebuf, p->sysname) == 0)
--				break;
--		}
--		pcic->pcic_imap = p->intmap;
--		pcic->pcic_imdim = p->mapdim;
--	}
--	if (pcic->pcic_imap == NULL) {
--		/*
--		 * We do not panic here for the sake of embedded systems.
--		 */
--		printk("PCIC: System %s is unknown, cannot route interrupts\n",
--		    namebuf);
--	}
--
--	return 0;
--}
--
--static void __init pcic_pbm_scan_bus(struct linux_pcic *pcic)
--{
--	struct linux_pbm_info *pbm = &pcic->pbm;
--
--	pbm->pci_bus = pci_scan_bus(pbm->pci_first_busno, &pcic_ops, pbm);
--	if (!pbm->pci_bus)
--		return;
--
--#if 0 /* deadwood transplanted from sparc64 */
--	pci_fill_in_pbm_cookies(pbm->pci_bus, pbm, pbm->prom_node);
--	pci_record_assignments(pbm, pbm->pci_bus);
--	pci_assign_unassigned(pbm, pbm->pci_bus);
--	pci_fixup_irq(pbm, pbm->pci_bus);
--#endif
--	pci_bus_add_devices(pbm->pci_bus);
--}
--
--/*
-- * Main entry point from the PCI subsystem.
-- */
--static int __init pcic_init(void)
--{
--	struct linux_pcic *pcic;
--
--	/*
--	 * PCIC should be initialized at start of the timer.
--	 * So, here we report the presence of PCIC and do some magic passes.
--	 */
--	if(!pcic0_up)
--		return 0;
--	pcic = &pcic0;
--
--	/*
--	 *      Switch off IOTLB translation.
--	 */
--	writeb(PCI_DVMA_CONTROL_IOTLB_DISABLE, 
--	       pcic->pcic_regs+PCI_DVMA_CONTROL);
--
--	/*
--	 *      Increase mapped size for PCI memory space (DMA access).
--	 *      Should be done in that order (size first, address second).
--	 *      Why we couldn't set up 4GB and forget about it? XXX
--	 */
--	writel(0xF0000000UL, pcic->pcic_regs+PCI_SIZE_0);
--	writel(0+PCI_BASE_ADDRESS_SPACE_MEMORY, 
--	       pcic->pcic_regs+PCI_BASE_ADDRESS_0);
--
--	pcic_pbm_scan_bus(pcic);
--
--	return 0;
--}
--
--int pcic_present(void)
--{
--	return pcic0_up;
--}
--
--static int pdev_to_pnode(struct linux_pbm_info *pbm, struct pci_dev *pdev)
--{
--	struct linux_prom_pci_registers regs[PROMREG_MAX];
--	int err;
--	phandle node = prom_getchild(pbm->prom_node);
--
--	while(node) {
--		err = prom_getproperty(node, "reg", 
--				       (char *)&regs[0], sizeof(regs));
--		if(err != 0 && err != -1) {
--			unsigned long devfn = (regs[0].which_io >> 8) & 0xff;
--			if(devfn == pdev->devfn)
--				return node;
--		}
--		node = prom_getsibling(node);
+-	switch (cmd) {
+-		default:
+-			return -EINVAL;
 -	}
 -	return 0;
 -}
 -
--static inline struct pcidev_cookie *pci_devcookie_alloc(void)
+-static int
+-uctrl_open(struct inode *inode, struct file *file)
 -{
--	return kmalloc(sizeof(struct pcidev_cookie), GFP_ATOMIC);
--}
--
--static void pcic_map_pci_device(struct linux_pcic *pcic,
--    struct pci_dev *dev, int node)
--{
--	char namebuf[64];
--	unsigned long address;
--	unsigned long flags;
--	int j;
--
--	if (node == 0 || node == -1) {
--		strcpy(namebuf, "???");
--	} else {
--		prom_getstring(node, "name", namebuf, 63); namebuf[63] = 0;
--	}
--
--	for (j = 0; j < 6; j++) {
--		address = dev->resource[j].start;
--		if (address == 0) break;	/* are sequential */
--		flags = dev->resource[j].flags;
--		if ((flags & IORESOURCE_IO) != 0) {
--			if (address < 0x10000) {
--				/*
--				 * A device responds to I/O cycles on PCI.
--				 * We generate these cycles with memory
--				 * access into the fixed map (phys 0x30000000).
--				 *
--				 * Since a device driver does not want to
--				 * do ioremap() before accessing PC-style I/O,
--				 * we supply virtual, ready to access address.
--				 *
--				 * Note that request_region()
--				 * works for these devices.
--				 *
--				 * XXX Neat trick, but it's a *bad* idea
--				 * to shit into regions like that.
--				 * What if we want to allocate one more
--				 * PCI base address...
--				 */
--				dev->resource[j].start =
--				    pcic->pcic_io + address;
--				dev->resource[j].end = 1;  /* XXX */
--				dev->resource[j].flags =
--				    (flags & ~IORESOURCE_IO) | IORESOURCE_MEM;
--			} else {
--				/*
--				 * OOPS... PCI Spec allows this. Sun does
--				 * not have any devices getting above 64K
--				 * so it must be user with a weird I/O
--				 * board in a PCI slot. We must remap it
--				 * under 64K but it is not done yet. XXX
--				 */
--				pci_info(dev, "PCIC: Skipping I/O space at "
--					 "0x%lx, this will Oops if a driver "
--					 "attaches device '%s'\n", address,
--					 namebuf);
--			}
--		}
--	}
--}
--
--static void
--pcic_fill_irq(struct linux_pcic *pcic, struct pci_dev *dev, int node)
--{
--	struct pcic_ca2irq *p;
--	unsigned int real_irq;
--	int i, ivec;
--	char namebuf[64];
--
--	if (node == 0 || node == -1) {
--		strcpy(namebuf, "???");
--	} else {
--		prom_getstring(node, "name", namebuf, sizeof(namebuf));
--	}
--
--	if ((p = pcic->pcic_imap) == NULL) {
--		dev->irq = 0;
--		return;
--	}
--	for (i = 0; i < pcic->pcic_imdim; i++) {
--		if (p->busno == dev->bus->number && p->devfn == dev->devfn)
--			break;
--		p++;
--	}
--	if (i >= pcic->pcic_imdim) {
--		pci_info(dev, "PCIC: device %s not found in %d\n", namebuf,
--			 pcic->pcic_imdim);
--		dev->irq = 0;
--		return;
--	}
--
--	i = p->pin;
--	if (i >= 0 && i < 4) {
--		ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_LO);
--		real_irq = ivec >> (i << 2) & 0xF;
--	} else if (i >= 4 && i < 8) {
--		ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_HI);
--		real_irq = ivec >> ((i-4) << 2) & 0xF;
--	} else {					/* Corrupted map */
--		pci_info(dev, "PCIC: BAD PIN %d\n", i); for (;;) {}
--	}
--/* P3 */ /* printk("PCIC: device %s pin %d ivec 0x%x irq %x\n", namebuf, i, ivec, dev->irq); */
--
--	/* real_irq means PROM did not bother to program the upper
--	 * half of PCIC. This happens on JS-E with PROM 3.11, for instance.
--	 */
--	if (real_irq == 0 || p->force) {
--		if (p->irq == 0 || p->irq >= 15) {	/* Corrupted map */
--			pci_info(dev, "PCIC: BAD IRQ %d\n", p->irq); for (;;) {}
--		}
--		pci_info(dev, "PCIC: setting irq %d at pin %d\n", p->irq,
--			 p->pin);
--		real_irq = p->irq;
--
--		i = p->pin;
--		if (i >= 4) {
--			ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_HI);
--			ivec &= ~(0xF << ((i - 4) << 2));
--			ivec |= p->irq << ((i - 4) << 2);
--			writew(ivec, pcic->pcic_regs+PCI_INT_SELECT_HI);
--		} else {
--			ivec = readw(pcic->pcic_regs+PCI_INT_SELECT_LO);
--			ivec &= ~(0xF << (i << 2));
--			ivec |= p->irq << (i << 2);
--			writew(ivec, pcic->pcic_regs+PCI_INT_SELECT_LO);
--		}
--	}
--	dev->irq = pcic_build_device_irq(NULL, real_irq);
--}
--
--/*
-- * Normally called from {do_}pci_scan_bus...
-- */
--void pcibios_fixup_bus(struct pci_bus *bus)
--{
--	struct pci_dev *dev;
--	struct linux_pcic *pcic;
--	/* struct linux_pbm_info* pbm = &pcic->pbm; */
--	int node;
--	struct pcidev_cookie *pcp;
--
--	if (!pcic0_up) {
--		pci_info(bus, "pcibios_fixup_bus: no PCIC\n");
--		return;
--	}
--	pcic = &pcic0;
--
--	/*
--	 * Next crud is an equivalent of pbm = pcic_bus_to_pbm(bus);
--	 */
--	if (bus->number != 0) {
--		pci_info(bus, "pcibios_fixup_bus: nonzero bus 0x%x\n",
--			 bus->number);
--		return;
--	}
--
--	list_for_each_entry(dev, &bus->devices, bus_list) {
--		node = pdev_to_pnode(&pcic->pbm, dev);
--		if(node == 0)
--			node = -1;
--
--		/* cookies */
--		pcp = pci_devcookie_alloc();
--		pcp->pbm = &pcic->pbm;
--		pcp->prom_node = of_find_node_by_phandle(node);
--		dev->sysdata = pcp;
--
--		/* fixing I/O to look like memory */
--		if ((dev->class>>16) != PCI_BASE_CLASS_BRIDGE)
--			pcic_map_pci_device(pcic, dev, node);
--
--		pcic_fill_irq(pcic, dev, node);
--	}
--}
--
--int pcibios_enable_device(struct pci_dev *dev, int mask)
--{
--	struct resource *res;
--	u16 cmd, oldcmd;
--	int i;
--
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	oldcmd = cmd;
--
--	pci_dev_for_each_resource(dev, res, i) {
--		/* Only set up the requested stuff */
--		if (!(mask & (1<<i)))
--			continue;
--
--		if (res->flags & IORESOURCE_IO)
--			cmd |= PCI_COMMAND_IO;
--		if (res->flags & IORESOURCE_MEM)
--			cmd |= PCI_COMMAND_MEMORY;
--	}
--
--	if (cmd != oldcmd) {
--		pci_info(dev, "enabling device (%04x -> %04x)\n", oldcmd, cmd);
--		pci_write_config_word(dev, PCI_COMMAND, cmd);
--	}
+-	mutex_lock(&uctrl_mutex);
+-	uctrl_get_event_status(global_driver);
+-	uctrl_get_external_status(global_driver);
+-	mutex_unlock(&uctrl_mutex);
 -	return 0;
 -}
 -
--/* Makes compiler happy */
--static volatile int pcic_timer_dummy;
--
--static void pcic_clear_clock_irq(void)
+-static irqreturn_t uctrl_interrupt(int irq, void *dev_id)
 -{
--	pcic_timer_dummy = readl(pcic0.pcic_regs+PCI_SYS_LIMIT);
+-	return IRQ_HANDLED;
 -}
 -
--/* CPU frequency is 100 MHz, timer increments every 4 CPU clocks */
--#define USECS_PER_JIFFY  (1000000 / HZ)
--#define TICK_TIMER_LIMIT ((100 * 1000000 / 4) / HZ)
+-static const struct file_operations uctrl_fops = {
+-	.owner =	THIS_MODULE,
+-	.llseek =	no_llseek,
+-	.unlocked_ioctl =	uctrl_ioctl,
+-	.open =		uctrl_open,
+-};
 -
--static unsigned int pcic_cycles_offset(void)
--{
--	u32 value, count;
+-static struct miscdevice uctrl_dev = {
+-	UCTRL_MINOR,
+-	"uctrl",
+-	&uctrl_fops
+-};
 -
--	value = readl(pcic0.pcic_regs + PCI_SYS_COUNTER);
--	count = value & ~PCI_SYS_COUNTER_OVERFLOW;
--
--	if (value & PCI_SYS_COUNTER_OVERFLOW)
--		count += TICK_TIMER_LIMIT;
--	/*
--	 * We divide all by HZ
--	 * to have microsecond resolution and to avoid overflow
--	 */
--	count = ((count / HZ) * USECS_PER_JIFFY) / (TICK_TIMER_LIMIT / HZ);
--
--	/* Coordinate with the sparc_config.clock_rate setting */
--	return count * 2;
+-/* Wait for space to write, then write to it */
+-#define WRITEUCTLDATA(value) \
+-{ \
+-  unsigned int i; \
+-  for (i = 0; i < 10000; i++) { \
+-      if (UCTRL_STAT_TXNF_STA & sbus_readl(&driver->regs->uctrl_stat)) \
+-      break; \
+-  } \
+-  dprintk(("write data 0x%02x\n", value)); \
+-  sbus_writel(value, &driver->regs->uctrl_data); \
 -}
 -
--void __init pci_time_init(void)
+-/* Wait for something to read, read it, then clear the bit */
+-#define READUCTLDATA(value) \
+-{ \
+-  unsigned int i; \
+-  value = 0; \
+-  for (i = 0; i < 10000; i++) { \
+-      if ((UCTRL_STAT_RXNE_STA & sbus_readl(&driver->regs->uctrl_stat)) == 0) \
+-      break; \
+-    udelay(1); \
+-  } \
+-  value = sbus_readl(&driver->regs->uctrl_data); \
+-  dprintk(("read data 0x%02x\n", value)); \
+-  sbus_writel(UCTRL_STAT_RXNE_STA, &driver->regs->uctrl_stat); \
+-}
+-
+-static void uctrl_do_txn(struct uctrl_driver *driver, struct uctrl_txn *txn)
 -{
--	struct linux_pcic *pcic = &pcic0;
--	unsigned long v;
--	int timer_irq, irq;
--	int err;
+-	int stat, incnt, outcnt, bytecnt, intr;
+-	u32 byte;
 -
--#ifndef CONFIG_SMP
--	/*
--	 * The clock_rate is in SBUS dimension.
--	 * We take into account this in pcic_cycles_offset()
--	 */
--	sparc_config.clock_rate = SBUS_CLOCK_RATE / HZ;
--	sparc_config.features |= FEAT_L10_CLOCKEVENT;
--#endif
--	sparc_config.features |= FEAT_L10_CLOCKSOURCE;
--	sparc_config.get_cycles_offset = pcic_cycles_offset;
+-	stat = sbus_readl(&driver->regs->uctrl_stat);
+-	intr = sbus_readl(&driver->regs->uctrl_intr);
+-	sbus_writel(stat, &driver->regs->uctrl_stat);
 -
--	writel (TICK_TIMER_LIMIT, pcic->pcic_regs+PCI_SYS_LIMIT);
--	/* PROM should set appropriate irq */
--	v = readb(pcic->pcic_regs+PCI_COUNTER_IRQ);
--	timer_irq = PCI_COUNTER_IRQ_SYS(v);
--	writel (PCI_COUNTER_IRQ_SET(timer_irq, 0),
--		pcic->pcic_regs+PCI_COUNTER_IRQ);
--	irq = pcic_build_device_irq(NULL, timer_irq);
--	err = request_irq(irq, timer_interrupt,
--			  IRQF_TIMER, "timer", NULL);
+-	dprintk(("interrupt stat 0x%x int 0x%x\n", stat, intr));
+-
+-	incnt = txn->inbits;
+-	outcnt = txn->outbits;
+-	byte = (txn->opcode << 8);
+-	WRITEUCTLDATA(byte);
+-
+-	bytecnt = 0;
+-	while (incnt > 0) {
+-		byte = (txn->inbuf[bytecnt] << 8);
+-		WRITEUCTLDATA(byte);
+-		incnt--;
+-		bytecnt++;
+-	}
+-
+-	/* Get the ack */
+-	READUCTLDATA(byte);
+-	dprintk(("ack was %x\n", (byte >> 8)));
+-
+-	bytecnt = 0;
+-	while (outcnt > 0) {
+-		READUCTLDATA(byte);
+-		txn->outbuf[bytecnt] = (byte >> 8);
+-		dprintk(("set byte to %02x\n", byte));
+-		outcnt--;
+-		bytecnt++;
+-	}
+-}
+-
+-static void uctrl_get_event_status(struct uctrl_driver *driver)
+-{
+-	struct uctrl_txn txn;
+-	u8 outbits[2];
+-
+-	txn.opcode = READ_EVENT_STATUS;
+-	txn.inbits = 0;
+-	txn.outbits = 2;
+-	txn.inbuf = NULL;
+-	txn.outbuf = outbits;
+-
+-	uctrl_do_txn(driver, &txn);
+-
+-	dprintk(("bytes %x %x\n", (outbits[0] & 0xff), (outbits[1] & 0xff)));
+-	driver->status.event_status = 
+-		((outbits[0] & 0xff) << 8) | (outbits[1] & 0xff);
+-	dprintk(("ev is %x\n", driver->status.event_status));
+-}
+-
+-static void uctrl_get_external_status(struct uctrl_driver *driver)
+-{
+-	struct uctrl_txn txn;
+-	u8 outbits[2];
+-	int i, v;
+-
+-	txn.opcode = READ_EXTERNAL_STATUS;
+-	txn.inbits = 0;
+-	txn.outbits = 2;
+-	txn.inbuf = NULL;
+-	txn.outbuf = outbits;
+-
+-	uctrl_do_txn(driver, &txn);
+-
+-	dprintk(("bytes %x %x\n", (outbits[0] & 0xff), (outbits[1] & 0xff)));
+-	driver->status.external_status = 
+-		((outbits[0] * 256) + (outbits[1]));
+-	dprintk(("ex is %x\n", driver->status.external_status));
+-	v = driver->status.external_status;
+-	for (i = 0; v != 0; i++, v >>= 1) {
+-		if (v & 1) {
+-			dprintk(("%s%s", " ", uctrl_extstatus[i]));
+-		}
+-	}
+-	dprintk(("\n"));
+-	
+-}
+-
+-static int uctrl_probe(struct platform_device *op)
+-{
+-	struct uctrl_driver *p;
+-	int err = -ENOMEM;
+-
+-	p = kzalloc(sizeof(*p), GFP_KERNEL);
+-	if (!p) {
+-		printk(KERN_ERR "uctrl: Unable to allocate device struct.\n");
+-		goto out;
+-	}
+-
+-	p->regs = of_ioremap(&op->resource[0], 0,
+-			     resource_size(&op->resource[0]),
+-			     "uctrl");
+-	if (!p->regs) {
+-		printk(KERN_ERR "uctrl: Unable to map registers.\n");
+-		goto out_free;
+-	}
+-
+-	p->irq = op->archdata.irqs[0];
+-	err = request_irq(p->irq, uctrl_interrupt, 0, "uctrl", p);
 -	if (err) {
--		prom_printf("time_init: unable to attach IRQ%d\n", timer_irq);
--		prom_halt();
+-		printk(KERN_ERR "uctrl: Unable to register irq.\n");
+-		goto out_iounmap;
 -	}
--	local_irq_enable();
--}
 -
--
--#if 0
--static void watchdog_reset() {
--	writeb(0, pcic->pcic_regs+PCI_SYS_STATUS);
--}
--#endif
--
--/*
-- * NMI
-- */
--void pcic_nmi(unsigned int pend, struct pt_regs *regs)
--{
--	pend = swab32(pend);
--
--	if (!pcic_speculative || (pend & PCI_SYS_INT_PENDING_PIO) == 0) {
--		/*
--		 * XXX On CP-1200 PCI #SERR may happen, we do not know
--		 * what to do about it yet.
--		 */
--		printk("Aiee, NMI pend 0x%x pc 0x%x spec %d, hanging\n",
--		    pend, (int)regs->pc, pcic_speculative);
--		for (;;) { }
+-	err = misc_register(&uctrl_dev);
+-	if (err) {
+-		printk(KERN_ERR "uctrl: Unable to register misc device.\n");
+-		goto out_free_irq;
 -	}
--	pcic_speculative = 0;
--	pcic_trapped = 1;
--	regs->pc = regs->npc;
--	regs->npc += 4;
--}
 -
--static inline unsigned long get_irqmask(int irq_nr)
--{
--	return 1 << irq_nr;
--}
+-	sbus_writel(UCTRL_INTR_RXNE_REQ|UCTRL_INTR_RXNE_MSK, &p->regs->uctrl_intr);
+-	printk(KERN_INFO "%pOF: uctrl regs[0x%p] (irq %d)\n",
+-	       op->dev.of_node, p->regs, p->irq);
+-	uctrl_get_event_status(p);
+-	uctrl_get_external_status(p);
 -
--static void pcic_mask_irq(struct irq_data *data)
--{
--	unsigned long mask, flags;
--
--	mask = (unsigned long)data->chip_data;
--	local_irq_save(flags);
--	writel(mask, pcic0.pcic_regs+PCI_SYS_INT_TARGET_MASK_SET);
--	local_irq_restore(flags);
--}
--
--static void pcic_unmask_irq(struct irq_data *data)
--{
--	unsigned long mask, flags;
--
--	mask = (unsigned long)data->chip_data;
--	local_irq_save(flags);
--	writel(mask, pcic0.pcic_regs+PCI_SYS_INT_TARGET_MASK_CLEAR);
--	local_irq_restore(flags);
--}
--
--static unsigned int pcic_startup_irq(struct irq_data *data)
--{
--	irq_link(data->irq);
--	pcic_unmask_irq(data);
--	return 0;
--}
--
--static struct irq_chip pcic_irq = {
--	.name		= "pcic",
--	.irq_startup	= pcic_startup_irq,
--	.irq_mask	= pcic_mask_irq,
--	.irq_unmask	= pcic_unmask_irq,
--};
--
--unsigned int pcic_build_device_irq(struct platform_device *op,
--                                   unsigned int real_irq)
--{
--	unsigned int irq;
--	unsigned long mask;
--
--	irq = 0;
--	mask = get_irqmask(real_irq);
--	if (mask == 0)
--		goto out;
--
--	irq = irq_alloc(real_irq, real_irq);
--	if (irq == 0)
--		goto out;
--
--	irq_set_chip_and_handler_name(irq, &pcic_irq,
--	                              handle_level_irq, "PCIC");
--	irq_set_chip_data(irq, (void *)mask);
+-	dev_set_drvdata(&op->dev, p);
+-	global_driver = p;
 -
 -out:
--	return irq;
+-	return err;
+-
+-out_free_irq:
+-	free_irq(p->irq, p);
+-
+-out_iounmap:
+-	of_iounmap(&op->resource[0], p->regs, resource_size(&op->resource[0]));
+-
+-out_free:
+-	kfree(p);
+-	goto out;
 -}
 -
--
--static void pcic_load_profile_irq(int cpu, unsigned int limit)
+-static void uctrl_remove(struct platform_device *op)
 -{
--	printk("PCIC: unimplemented code: FILE=%s LINE=%d", __FILE__, __LINE__);
+-	struct uctrl_driver *p = dev_get_drvdata(&op->dev);
+-
+-	if (p) {
+-		misc_deregister(&uctrl_dev);
+-		free_irq(p->irq, p);
+-		of_iounmap(&op->resource[0], p->regs, resource_size(&op->resource[0]));
+-		kfree(p);
+-	}
 -}
 -
--void __init sun4m_pci_init_IRQ(void)
--{
--	sparc_config.build_device_irq = pcic_build_device_irq;
--	sparc_config.clear_clock_irq  = pcic_clear_clock_irq;
--	sparc_config.load_profile_irq = pcic_load_profile_irq;
--}
+-static const struct of_device_id uctrl_match[] = {
+-	{
+-		.name = "uctrl",
+-	},
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, uctrl_match);
 -
--subsys_initcall(pcic_init);
-diff --git a/arch/sparc/kernel/time_32.c b/arch/sparc/kernel/time_32.c
-index 08bbdc458596..848404610b86 100644
---- a/arch/sparc/kernel/time_32.c
-+++ b/arch/sparc/kernel/time_32.c
-@@ -43,7 +43,6 @@
- #include <asm/io.h>
- #include <asm/idprom.h>
- #include <asm/page.h>
--#include <asm/pcic.h>
- #include <asm/irq_regs.h>
- #include <asm/setup.h>
- 
-@@ -347,9 +346,6 @@ void __init time_init(void)
- 	sparc_config.features = 0;
- 	late_time_init = sparc32_late_time_init;
- 
--	if (pcic_present())
--		pci_time_init();
--	else
--		sbus_time_init();
-+	sbus_time_init();
- }
- 
+-static struct platform_driver uctrl_driver = {
+-	.driver = {
+-		.name = "uctrl",
+-		.of_match_table = uctrl_match,
+-	},
+-	.probe		= uctrl_probe,
+-	.remove_new	= uctrl_remove,
+-};
+-
+-
+-module_platform_driver(uctrl_driver);
+-
+-MODULE_LICENSE("GPL");
 
 -- 
 2.34.1
