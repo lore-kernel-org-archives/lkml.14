@@ -1,92 +1,245 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BF422F07
-	for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2024 20:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5108837169;
+	Sat,  9 Mar 2024 20:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710016437; cv=none; b=tvVcXyuByOcVk+hLb1Fe3p3zEAyEgjUUbDk4tEdR9X1nty+jW7iU5zUsogmTxjqm7oFlXFp6dK5pn9Qf3gpuKY1jF028n34ngf2RMIFg0oAsgTsuLDynBIvjWuRcb9pan1dJ6qJNyOTNGUHvXkkivs9wyszvYBx+SmQNzse9q+o=
+	t=1710016745; cv=none; b=OJm0PS6/ZVvzCbcnxm9l8rJo6JCOqkBwXgYT/RkK3N/YjNUSWNvIpGNnQVejOyVDyMP/gYkAHA5+H2NDtWTeKk1uzsiioX58mF2R52nV/mz6Qgt4TtK1MWOBLgBZEiF0ugQpWj9ngT6RDSi58RFD4MjpDwsmDZ35fslopt34Kx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710016437; c=relaxed/simple;
-	bh=EcVIXfIICY3Ok2eDXhdHjNP9eppBGwoPoBbQbWCdGQs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GvjWiv58EEASa3l6nsLTGphskyQki1SEfivj1xH/yO3+UxWjXWb3Grye8O7L+6jI3Z6QAdusmrTqrcdKMlWai1sPswllFd0zOqfEA1tfUQ1uIUAmJInilOA859oVx5UQknSOW7NygnhDOSzVbJrSlOZyi6L50eW6cZFgVREE1C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0VGmGZX; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710016745; c=relaxed/simple;
+	bh=08Kf6wLUralnLwdcMzfktgfwRNCnuyqHwA/xZ33ICdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GehoxrjvXB3xRIIMxV8ZgolEjjtstYsWqm1u9ePyqrvtbeWgHsg/UMyZVoF6lJiV5BkQDQtXaGcP6FPT3Q6oPJTMaAwhN8UOdZ0l04NVRP9k1yhEe88LBOp3VWl6ircGyjbpTJ/6giSlFFwDr2SWJjnCAO4d3M3T+QPM+0lXsy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gt5Wr7UU; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0VGmGZX"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so2722507a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 12:33:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gt5Wr7UU"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d269b2ff48so49453141fa.3;
+        Sat, 09 Mar 2024 12:39:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710016435; x=1710621235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1710016741; x=1710621541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wsLvds74XFvPRZt+5SLhXxXFTA14aJAZhNEVhjPIrvk=;
-        b=H0VGmGZXyUF+OV3/clYF/ovjxWbHc2nKovGKsUKXgr4m0F4BoSTLxopfmw7MHCxtJS
-         Qf384rAFnF8rjq+UkIiawNKdPbYQytf8KSQAl8XnilBaIEKmxR84O4F8DTBPjC9KoslF
-         3L0f/k9BPEJqOdpVWpBiJaTXmfgwoZieyRfVE=
+        bh=JDiTA26ys4mFafvA8yF6JgwyplvVYoLA/SIyv4h4Hm8=;
+        b=gt5Wr7UUxtRMhBBW4QtwhN+5pu0rcGxXwcpRI6m0AA0+/aSPx/kat28NmjCO9DRW6O
+         5UIf5I+4Gk69YYVxApBOLKP5EVe/2ffk8w2B+v6ZHQSC711eX5cn0mGb1rRcZ7QM3l41
+         eVFwaxRseIsQHLjYjGD+wFTIh8FZY8twT7+epGWExaBPPuYZHhpUAxVsbvKSCUkSZqgq
+         kX7KAArGtcC9PHLAEIEZn6B7h2av7ZHUuB5HgzoP+i3Q6fjvNabCSTP0TOKn2wx8U1lt
+         bpmMIDfF/7dvmpDGnVDiIs82X9RI5VQQ81oU9Ln73YKKvtcLgEpOTH2+cIk3iyYFNSDA
+         Q7Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710016435; x=1710621235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710016741; x=1710621541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wsLvds74XFvPRZt+5SLhXxXFTA14aJAZhNEVhjPIrvk=;
-        b=IHRnbzq0kBfnUfGlo/LpDPk/13AGvNlssc5u3t4rKpjQ90fLiJZxE3oizdgqFSxegJ
-         wX4739MUr3PSL5r6OaSuqioaYXYpyi+0gZeTADTuUjnYN0eaIoXZgRyrBCodkurj+Dir
-         tna4Ukr7YIjHIn5Zi4t5Fcj2QbEHtc89j4f5ztij26U6FWaBGUf8ee0To2avpvhuqSGD
-         YR7ADA7cONrpfrFF1AC6UmH2FSOrGslYb1SH5bcpnjkVZsZOv2liKGzZzcDPDZujxwis
-         UnA0tPePjMuYv7sYrFiy1nmNvemda7U1BrWDf76IvmWY3TT4q1pPAC0SeoFq/bf1hA5e
-         af0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWLyjwmkGLKjrcXZNAtwATwojWyQOLx9R8CWYZRi5H8P/dGJGwjA+Y5aqQX/Xd0Q5wKnhd2fXUvgCK9lSAkszOiOO4felNDIo4fJajv
-X-Gm-Message-State: AOJu0Yz/8hjIlMxs2w6L1/wmz1Hd6AsoMMWImYo7PJIhFenOO3b2ALOW
-	55SOXv6M0HJ6GXxXL64WDrYHNSVIhOtTWdck/Ns6eQs1gbnJ7zn2Q9rur1igzw==
-X-Google-Smtp-Source: AGHT+IGs8pUXb5mDGS8kHPviqknzo+hzJ7Te+hq+G7yo5xcEkhGPpfVIqG3exWqTnYNB4l5GZuju7w==
-X-Received: by 2002:a05:6a20:72a6:b0:1a3:11b7:a0de with SMTP id o38-20020a056a2072a600b001a311b7a0demr317316pzk.15.1710016434950;
-        Sat, 09 Mar 2024 12:33:54 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a18-20020a637f12000000b005e49bf50ff9sm1644000pgd.0.2024.03.09.12.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 12:33:54 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] pstore/zone: Don't clear memory twice
-Date: Sat,  9 Mar 2024 12:33:51 -0800
-Message-Id: <171001642971.4101342.15404186717889149238.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <fa2597400051c18c6ca11187b0e4b906729991b2.1709972649.git.christophe.jaillet@wanadoo.fr>
-References: <fa2597400051c18c6ca11187b0e4b906729991b2.1709972649.git.christophe.jaillet@wanadoo.fr>
+        bh=JDiTA26ys4mFafvA8yF6JgwyplvVYoLA/SIyv4h4Hm8=;
+        b=dQ1L9BZLXE8StCuBZQuYcR7A3iAsHLiAjINRQOB57bPrdIVqdGcFg3PMEfclK21y+o
+         RLgAwnVbSXGG5nzjJrRe3SmiZO+15r1BWhcegWBQKNxteusrMLIO46NsF8o0I+CG5g9x
+         4rj7fgZjfVsGpn3SetuDce3QGb/HoNgGuK/r43+JmOUA3zw6m5IeMcamnGOyofYl2QnH
+         k1ulVtEDrOgkC6GJVvdSr7SGNQp+So/y2QOHj6sgi4TgrqsRUF4Zp7qC3fUte3PKdpQb
+         NEMZCT37t9KUZ+meIsJDeYCJ+0qNdIROn+4Mi59o4lB7mSS0C6U220ED4hOC1cGBppOF
+         kUHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcWLoXEXQWlZ8cWF5sy++NdCwYW+VOTyvnb5098U+xGnb/nYlB645klfl02rj6U/nmWcDjDzYwgOtuMQGi3b2P5ppjeANHDgHcs6CJTTyYaJrnTW7XdpbefNI7XHmmHTQtu5UEhUfioPM=
+X-Gm-Message-State: AOJu0Yw/LMIXrXbYNkXgNKIPXadS9k/pRC291IgDCjLV5d09iXVIgNEu
+	ZqGDLnaib3UZnVf1Tro6arIlczH8BQy6FEFnImpdHpeeMiROK3aeC+B26o6CAhp/9KtkNuiRkZz
+	SX4PGgaLUvK74tdhymh05Cl7omoY=
+X-Google-Smtp-Source: AGHT+IERdTqVKoEUSiKVsznN2p28O7YPJAQLGRcEucrnAT2z/cFJQ/aJKo0t7/J70EHiCTkANMK5kbyYF9wJmGkOoy0=
+X-Received: by 2002:a2e:8ec5:0:b0:2d4:21d6:b05e with SMTP id
+ e5-20020a2e8ec5000000b002d421d6b05emr1605477ljl.52.1710016741237; Sat, 09 Mar
+ 2024 12:39:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <CAOCpoWc_HQy4UJzTi9pqtJdO740Wx5Yd702O-mwXBE6RVBX1Eg@mail.gmail.com>
+ <CAOCpoWf3TSQkUUo-qsj0LVEOm-kY0hXdmttLE82Ytc0hjpTSPw@mail.gmail.com>
+ <CAOCpoWeNYsMfzh8TSnFqwAG1BhAYnNt_J+AcUNqRLF7zmJGEFA@mail.gmail.com>
+ <672e88f2-8ac3-45fe-a2e9-730800017f53@libero.it> <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
+ <a1e30dab-dfde-418e-a0dd-3e294838e839@inwind.it> <CAOCpoWeB=2j+n+5K5ytj2maZxdrV80cxJcM5CL=z1bZKgpXPWQ@mail.gmail.com>
+ <a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it> <ZedaKUge-EBo4CuT@redhat.com>
+ <ZeiS/bjJaRcrerWW@fedora>
+In-Reply-To: <ZeiS/bjJaRcrerWW@fedora>
+From: Patrick Plenefisch <simonpatp@gmail.com>
+Date: Sat, 9 Mar 2024 15:39:02 -0500
+Message-ID: <CAOCpoWeoQMh_-MxzxGBnK2Kf5EhvTLs=GrGwJ5XcfGVRTp73Eg@mail.gmail.com>
+Subject: Re: LVM-on-LVM: error while submitting device barriers
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>, Goffredo Baroncelli <kreijack@inwind.it>, linux-kernel@vger.kernel.org, 
+	Alasdair Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, regressions@lists.linux.dev, 
+	dm-devel@lists.linux.dev, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 09 Mar 2024 09:24:27 +0100, Christophe JAILLET wrote:
-> There is no need to call memset(..., 0, ...) on memory allocated by
-> kcalloc(). It is already zeroed.
-> 
-> Remove the redundant call.
-> 
-> 
+On Wed, Mar 6, 2024 at 11:00=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
+e:
+>
+> On Tue, Mar 05, 2024 at 12:45:13PM -0500, Mike Snitzer wrote:
+> > On Thu, Feb 29 2024 at  5:05P -0500,
+> > Goffredo Baroncelli <kreijack@inwind.it> wrote:
+> >
+> > > On 29/02/2024 21.22, Patrick Plenefisch wrote:
+> > > > On Thu, Feb 29, 2024 at 2:56=E2=80=AFPM Goffredo Baroncelli <kreija=
+ck@inwind.it> wrote:
+> > > > >
+> > > > > > Your understanding is correct. The only thing that comes to my =
+mind to
+> > > > > > cause the problem is asymmetry of the SATA devices. I have one =
+8TB
+> > > > > > device, plus a 1.5TB, 3TB, and 3TB drives. Doing math on the ac=
+tual
+> > > > > > extents, lowerVG/single spans (3TB+3TB), and
+> > > > > > lowerVG/lvmPool/lvm/brokenDisk spans (3TB+1.5TB). Both obviousl=
+y have
+> > > > > > the other leg of raid1 on the 8TB drive, but my thought was tha=
+t the
+> > > > > > jump across the 1.5+3TB drive gap was at least "interesting"
+> > > > >
+> > > > >
+> > > > > what about lowerVG/works ?
+> > > > >
+> > > >
+> > > > That one is only on two disks, it doesn't span any gaps
+> > >
+> > > Sorry, but re-reading the original email I found something that I mis=
+sed before:
+> > >
+> > > > BTRFS error (device dm-75): bdev /dev/mapper/lvm-brokenDisk errs: w=
+r
+> > > > 0, rd 0, flush 1, corrupt 0, gen 0
+> > > > BTRFS warning (device dm-75): chunk 13631488 missing 1 devices, max
+> > >                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > tolerance is 0 for writable mount
+> > > > BTRFS: error (device dm-75) in write_all_supers:4379: errno=3D-5 IO
+> > > > failure (errors while submitting device barriers.)
+> > >
+> > > Looking at the code, it seems that if a FLUSH commands fails, btrfs
+> > > considers that the disk is missing. The it cannot mount RW the device=
+.
+> > >
+> > > I would investigate with the LVM developers, if it properly passes
+> > > the flush/barrier command through all the layers, when we have an
+> > > lvm over lvm (raid1). The fact that the lvm is a raid1, is important =
+because
+> > > a flush command to be honored has to be honored by all the
+> > > devices involved.
+>
+> Hello Patrick & Goffredo,
+>
+> I can trigger this kind of btrfs complaint by simulating one FLUSH failur=
+e.
+>
+> If you can reproduce this issue easily, please collect log by the
+> following bpftrace script, which may show where the flush failure is,
+> and maybe it can help to narrow down the issue in the whole stack.
+>
+>
+> #!/usr/bin/bpftrace
+>
+> #ifndef BPFTRACE_HAVE_BTF
+> #include <linux/blkdev.h>
+> #endif
+>
+> kprobe:submit_bio_noacct,
+> kprobe:submit_bio
+> / (((struct bio *)arg0)->bi_opf & (1 << __REQ_PREFLUSH)) !=3D 0 /
+> {
+>         $bio =3D (struct bio *)arg0;
+>         @submit_stack[arg0] =3D kstack;
+>         @tracked[arg0] =3D 1;
+> }
+>
+> kprobe:bio_endio
+> /@tracked[arg0] !=3D 0/
+> {
+>         $bio =3D (struct bio *)arg0;
+>
+>         if (($bio->bi_flags & (1 << BIO_CHAIN)) && $bio->__bi_remaining.c=
+ounter > 1) {
+>                 return;
+>         }
+>
+>         if ($bio->bi_status !=3D 0) {
+>                 printf("dev %s bio failed %d, submitter %s completion %s\=
+n",
+>                         $bio->bi_bdev->bd_disk->disk_name,
+>                         $bio->bi_status, @submit_stack[arg0], kstack);
+>         }
+>         delete(@submit_stack[arg0]);
+>         delete(@tracked[arg0]);
+> }
+>
+> END {
+>         clear(@submit_stack);
+>         clear(@tracked);
+> }
+>
 
-Applied to for-next/pstore, thanks!
+Attaching 4 probes...
+dev dm-77 bio failed 10, submitter
+       submit_bio_noacct+5
+       __send_duplicate_bios+358
+       __send_empty_flush+179
+       dm_submit_bio+857
+       __submit_bio+132
+       submit_bio_noacct_nocheck+345
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
+completion
+       bio_endio+5
+       dm_submit_bio+955
+       __submit_bio+132
+       submit_bio_noacct_nocheck+345
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
 
-[1/1] pstore/zone: Don't clear memory twice
-      https://git.kernel.org/kees/c/c8d25d696f52
+dev dm-86 bio failed 10, submitter
+       submit_bio_noacct+5
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
+completion
+       bio_endio+5
+       clone_endio+295
+       clone_endio+295
+       process_one_work+369
+       worker_thread+635
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
 
-Take care,
 
--- 
-Kees Cook
+For context, dm-86 is /dev/lvm/brokenDisk and dm-77 is /dev/lowerVG/lvmPool
 
+
+>
+>
+> Thanks,
+> Ming
+>
+
+And to answer Mike's question:
+>
+> Also, I didn't see any kernel logs that show DM-specific errors.  I
+> doubt you'd have left any DM-specific errors out in your report.  So
+> is btrfs the canary here?  To be clear: You're only seeing btrfs
+> errors in the kernel log?
+
+Correct, that's why I initially thought it was a btrfs issue. No DM
+errors in dmesg, btrfs is just the canary
