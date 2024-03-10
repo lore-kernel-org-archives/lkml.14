@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711C93A1AA
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A203A8C0
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036363; cv=none; b=qrZoYyTKoyxCwHPVKraqowcq4rn7lb6IPOh9+8rKJKXoeDo9TP+GUzwHWy8A/HgpMImGe+dtGUCL/0gThSM2cPKNc+ZN7VJYslFGJT8motijd5qSs5AcW2henefBvExNjqS2N+8SR3DLXSQPce/BDNI25lgyj8XRJefqA4u1hgM=
+	t=1710036368; cv=none; b=DAG57cyZ0Q3vQv1Jz2f34wnNKa5y2jEslhLTrSCsZEE5hZQ7KkNzKaUIrswy87BS/3I3AGwtvyXwl97TIbZcvWciBbE7TTvUqrVrOIq/QuDNPc8OF3a2iGl1t+EAPVaMkyPECdAD/LFkbRUmx7mq4AgrQPEqEo8+UopATer8e4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036363; c=relaxed/simple;
-	bh=5SZh2mNEl5n+h2lF7KiTxzvDIwYjug3hRJqLAmoNhNQ=;
+	s=arc-20240116; t=1710036368; c=relaxed/simple;
+	bh=qvu80I2tuIwczv3ewDN5Kf8bkfHfC9IP72lON4Zzmek=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=EMvDNGZ4/kye+swt0HLbsAZqvZo60Lau9E5JiuCoVCuviRu9kpXFvXKJR5kfTaevGfBE5ICZzl/Uf1t3c2fMg6xkxvbFxwAUDOPr23IOYP7MND9+KAJ3XZb2Twf/XuKmF7w8mV6ei36MOuM41xXlUXERJomyWsHjG8NItYLZkCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Di6pDk6N; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=cTJtAJUokLnlVSnb+DDBhyLuyO3ZC5IBuD/j7cXva6tpFKTg7PdVOwz4ByZo4UUlSGgeKaI0/A2bXQ1v9Jx9AhuTf4Q8wgE1prlBfqHS261JkKdrMvzPMx1g70PQSBcI+eJcHpUjxMaL+ZGJbArabHV3oTe5497JP7nPjir6fxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hV39oof8; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Di6pDk6N"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a08eb0956so24609507b3.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:06:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hV39oof8"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so5346747276.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:06:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036359; x=1710641159; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Hl1/umpZGVsczLzrKS1GZCeAFysDY04buU8ZoM+JBKw=;
-        b=Di6pDk6NePavMF2yALztmcFiJt+x7tbKH41g7V7tmKXpI1KI8Xp6mAzitCxmfo9DcO
-         6raBeb+eQk7G9fIGxVMs/sYQblO2BRyfy90v+WkYhzFg1GGiizQv742FDU8EK+ZFwRwU
-         vfGTaQ7N0pXROHAxr6tk9DokTsKmKfe1AQ8N86r+BqVYtjAC2Gtzli84MJerVNK2z188
-         EBaQWSa+L2Dp9j/wtYynGlH/igpaNvLsz7UviGOx9PDXXU3IblAnGvrUmlr7IYjXhR9O
-         P91Fwx4+QnSkrZeNQIXzDa/cwZaDOYB/XdM/pdVfwu8y36kr+LbfT0iQGnEcKivrpxaw
-         odaQ==
+        d=google.com; s=20230601; t=1710036365; x=1710641165; darn=vger.kernel.org;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z2TI3BR52BOETJMkXQVYiCvqxjFYb61EnnuV6r2EGgU=;
+        b=hV39oof8n6gQYhpoRdQBNKXrF9luve4Gjjy1Iibfj18oWaFulJIcW/K0a+36t6prcz
+         c2TirRz8836CT+nuHJYaKfcP8O3elPqWrHmJdhPhrYbIebqJVgH2tC4zE2I3VeLdlg23
+         ihbhVIuMkt4Fo+motqOpBgLeIqMlgh6bVwkPGzIwr78rsxBOM839rKLVNIweb/bB37oC
+         bee/hJw0Psd6q4+giekuPYhNzCCyOGVouxE66vuCTKa3h+WcMmDafItdyLDBzhIC+mvw
+         yus2gBGtfrawoxBl/bS0bvetjFoluac4zdUvlbymAVId8gCuS3ZZ+LOeQ0GGcBYxc1wG
+         mt4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036359; x=1710641159;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hl1/umpZGVsczLzrKS1GZCeAFysDY04buU8ZoM+JBKw=;
-        b=Yzrx4wymAB8U34jtINLs1AaSJmXw+BrwNBo8GklqqJbFHtIAXlCW9RjY/NkRoGfX02
-         4v3tkEwVM/aiKySD4HVzY/30+/Z/uk8YxhFwZNf2Jh+soh5d2CC/MXEdCc2D4KEXnzsl
-         Rk0Hm4qnQWaXrSUtvqpSndwVikx10cynYCr3/GNRZRFecZ9Si61PYN9RL+mrTYr1bkiy
-         xELW+N4MYiE+hnddZL8MYflbAvHbuZleh5JIXNFoqxcylJQC4PJyresmv8waGBnnVQWe
-         wO0iy0hAaTEmOvx6nOdB0VicPEUgtJiJzjwGmv6IQb+pC7GqpbV+hrWUv++urkvX/p8s
-         l5Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2pMBOBRwxQ815oWyYpO0yKi8Fey/w51QbbPvEmcPSm0GgwkuVkJ/BnBAtfFJqtMTD1JXgO2uga+L0/t2+0kgskvj9bKfDUwMgY8vq
-X-Gm-Message-State: AOJu0Yw3eTMgYPiSnj5Wy6f5GS8lFDnfHyzhVEbg5evn3B4EhKwXwWG0
-	UtmhjOyHDzDvruyPJAzztr90B/E6DE6h3E6mC+3/tIvOPWEpDYVukF4ZtZMvNi51dSGaUJ+8E0D
-	+AFAgTQ==
-X-Google-Smtp-Source: AGHT+IFPbWB3/192KGdZtIg9F9X7CoqlPRJZXE+414zWtjFld4XzM0pldNt12CDgHpD/F24xaEQHAI0MEqre
+        d=1e100.net; s=20230601; t=1710036365; x=1710641165;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z2TI3BR52BOETJMkXQVYiCvqxjFYb61EnnuV6r2EGgU=;
+        b=VZdn24Qs0/T6pnVYJFVi4789+RFIK9/gXbH/OM5zxJQ3T/9pQGxOZhNk9c8qh7mAxz
+         Ctphm/G/X+LDU5jAAbXU5Yee1xiX6WZfO7/9Q/mKKdB8J3sc77twOut4fyale679rRHS
+         OQXqMf4wuPDvTUnmlzhiEjoBeDmzt3QC7uGp1wwfZcoOdEFAPofg45nNCUJ9RJs7xUtX
+         6rpPT9n/hvvfsFOFCObTrWmWt15TKn8/QQnyoOXnaUQ7MakrCmocMCfkUyPk4kjN4f/F
+         zWCVVB74EfkMgL9rLcJE/RblKVKXgN5HLZy/i9ELVQA6bmLfQhoGnyoW9ubtIe+YTI1m
+         xUoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/N94kuR1fTVZDbfJYtsiQr1Zub+JVZp9E/1W/z1TAjTBRMYiiJn61t9tudCLH/ZR/BGncVBMUa/3CGvO2Sof3+dPqiOs9d2WqsBZb
+X-Gm-Message-State: AOJu0YzQgQjAi1gNLLZZRqqh9ipyZ9cjhDRXt54dG2apiAR9QIbqyYdd
+	cvGNXLQu52UjDnc71t7kvFKX0VWjy8V0VS+1A0zcaMqWMzM1Fw6nmF1nBlHGCHr68iwRvdCW8/6
+	XcPWvmA==
+X-Google-Smtp-Source: AGHT+IHg84e8jFIAgnoZrRiN8Pu+L19uE2B6rig+tSx4eREFwobOlwuHge4FvzAmOSQKYE9pLZGbcXyYmOgE
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a05:6902:1820:b0:dc2:5456:d9ac with SMTP
- id cf32-20020a056902182000b00dc25456d9acmr147760ybb.5.1710036359574; Sat, 09
- Mar 2024 18:05:59 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:05:06 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:18c9:b0:dc6:fec4:1c26 with SMTP
+ id ck9-20020a05690218c900b00dc6fec41c26mr897542ybb.1.1710036365375; Sat, 09
+ Mar 2024 18:06:05 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:05:08 -0800
 In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-12-irogers@google.com>
+Message-Id: <20240310020509.647319-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240310020509.647319-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 11/13] tools headers: Sync linux/overflow.h
+Subject: [PATCH v1 13/13] tools headers: Rename noinline to __noinline
 From: Ian Rogers <irogers@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -91,436 +91,229 @@ To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	llvm@lists.linux.dev
+Cc: Christopher Di Bella <cjdb@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Bring in the changes:
+An issue was reported with clang and llvm libc where the noinline
+attribute [1] was being expanded due to the #define in
+linux/compiler.h (now in compiler_attributes.h). The expansion caused
+the __attribute__ to appear twice and break the build. To avoid this
+conflict, rename noinline to __noinline which is more consistent with
+other compiler attributes.
 
-26dd68d293fd overflow: add DEFINE_FLEX() for on-stack allocs
-d67790ddf021 overflow: Add struct_size_t() helper
-4b21d25bf519 overflow: Introduce overflows_type() and castable_to_type()
-31970608a6d3 overflow: Fix kern-doc markup for functions
-d219d2a9a92e overflow: Allow mixed type arguments
-92d23c6e9415 overflow, tracing: Define the is_signed_type() macro once
-230f6fa2c1db overflow: Provide constant expression struct_size
-e1be43d9b5d0 overflow: Implement size_t saturating arithmetic helpers
-
-Add file to check-headers.sh, so there is a warning if the tools
-version of the file drifts from the kernel's version.
+[1] https://clang.llvm.org/docs/AttributeReference.html#noinline
+Reported-by: Christopher Di Bella <cjdb@google.com>
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/include/linux/overflow.h | 331 ++++++++++++++++++++++++++-------
- tools/perf/check-headers.sh    |   1 +
- 2 files changed, 268 insertions(+), 64 deletions(-)
+ tools/include/linux/compiler_attributes.h |  4 ++--
+ tools/perf/arch/x86/tests/bp-modify.c     |  4 ++--
+ tools/perf/bench/find-bit-bench.c         |  2 +-
+ tools/perf/tests/bp_account.c             |  2 +-
+ tools/perf/tests/bp_signal.c              |  2 +-
+ tools/perf/tests/bp_signal_overflow.c     |  2 +-
+ tools/perf/tests/dwarf-unwind.c           | 12 ++++++------
+ tools/perf/tests/workloads/leafloop.c     |  8 ++++----
+ tools/perf/tests/workloads/thloop.c       |  4 ++--
+ 9 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/tools/include/linux/overflow.h b/tools/include/linux/overflow.h
-index dcb0c1bf6866..7b5cf4a5cd19 100644
---- a/tools/include/linux/overflow.h
-+++ b/tools/include/linux/overflow.h
-@@ -3,6 +3,8 @@
- #define __LINUX_OVERFLOW_H
- 
- #include <linux/compiler.h>
-+#include <linux/limits.h>
-+#include <linux/const.h>
+diff --git a/tools/include/linux/compiler_attributes.h b/tools/include/linux/compiler_attributes.h
+index 9bfaec783e48..1ff3d85f5af3 100644
+--- a/tools/include/linux/compiler_attributes.h
++++ b/tools/include/linux/compiler_attributes.h
+@@ -267,12 +267,12 @@
+ # define __flatten			__attribute__((flatten))
  
  /*
-  * We need to compute the minimum and maximum values representable in a given
-@@ -28,117 +30,318 @@
-  * https://mail-index.netbsd.org/tech-misc/2007/02/05/0000.html -
-  * credit to Christian Biere.
+- * Note the missing underscores.
++ * Note, the kernel version is missing the underscores.
+  *
+  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-noinline-function-attribute
+  * clang: mentioned
   */
--#define is_signed_type(type)       (((type)(-1)) < (type)1)
- #define __type_half_max(type) ((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
- #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
- #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+-#define   noinline                      __attribute__((__noinline__))
++#define   __noinline                      __attribute__((__noinline__))
  
  /*
-- * For simplicity and code hygiene, the fallback code below insists on
-- * a, b and *d having the same type (similar to the min() and max()
-- * macros), whereas gcc's type-generic overflow checkers accept
-- * different types. Hence we don't just make check_add_overflow an
-- * alias for __builtin_add_overflow, but add type checks similar to
-- * below.
-- */
--#define check_add_overflow(a, b, d) ({		\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_add_overflow(__a, __b, __d);	\
--})
-+ * Avoids triggering -Wtype-limits compilation warning,
-+ * while using unsigned data types to check a < 0.
-+ */
-+#define is_non_negative(a) ((a) > 0 || (a) == 0)
-+#define is_negative(a) (!(is_non_negative(a)))
+  * Optional: only supported since gcc >= 8
+diff --git a/tools/perf/arch/x86/tests/bp-modify.c b/tools/perf/arch/x86/tests/bp-modify.c
+index 0924ccd9e36d..65493ff7a76f 100644
+--- a/tools/perf/arch/x86/tests/bp-modify.c
++++ b/tools/perf/arch/x86/tests/bp-modify.c
+@@ -15,13 +15,13 @@
+ #include "tests/tests.h"
+ #include "arch-tests.h"
  
--#define check_sub_overflow(a, b, d) ({		\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_sub_overflow(__a, __b, __d);	\
--})
-+/*
-+ * Allows for effectively applying __must_check to a macro so we can have
-+ * both the type-agnostic benefits of the macros while also being able to
-+ * enforce that the return value is, in fact, checked.
-+ */
-+static inline bool __must_check __must_check_overflow(bool overflow)
-+{
-+	return unlikely(overflow);
-+}
-+
-+/**
-+ * check_add_overflow() - Calculate addition with overflow checking
-+ * @a: first addend
-+ * @b: second addend
-+ * @d: pointer to store sum
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted addition, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * sum has overflowed or been truncated.
-+ */
-+#define check_add_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_add_overflow(a, b, d))
-+
-+/**
-+ * check_sub_overflow() - Calculate subtraction with overflow checking
-+ * @a: minuend; value to subtract from
-+ * @b: subtrahend; value to subtract from @a
-+ * @d: pointer to store difference
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted subtraction, but is not considered
-+ * "safe for use" on a non-zero return value, which indicates that the
-+ * difference has underflowed or been truncated.
-+ */
-+#define check_sub_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_sub_overflow(a, b, d))
-+
-+/**
-+ * check_mul_overflow() - Calculate multiplication with overflow checking
-+ * @a: first factor
-+ * @b: second factor
-+ * @d: pointer to store product
-+ *
-+ * Returns 0 on success.
-+ *
-+ * *@d holds the results of the attempted multiplication, but is not
-+ * considered "safe for use" on a non-zero return value, which indicates
-+ * that the product has overflowed or been truncated.
-+ */
-+#define check_mul_overflow(a, b, d)	\
-+	__must_check_overflow(__builtin_mul_overflow(a, b, d))
-+
-+/**
-+ * check_shl_overflow() - Calculate a left-shifted value and check overflow
-+ * @a: Value to be shifted
-+ * @s: How many bits left to shift
-+ * @d: Pointer to where to store the result
-+ *
-+ * Computes *@d = (@a << @s)
-+ *
-+ * Returns true if '*@d' cannot hold the result or when '@a << @s' doesn't
-+ * make sense. Example conditions:
-+ *
-+ * - '@a << @s' causes bits to be lost when stored in *@d.
-+ * - '@s' is garbage (e.g. negative) or so large that the result of
-+ *   '@a << @s' is guaranteed to be 0.
-+ * - '@a' is negative.
-+ * - '@a << @s' sets the sign bit, if any, in '*@d'.
-+ *
-+ * '*@d' will hold the results of the attempted shift, but is not
-+ * considered "safe for use" if true is returned.
-+ */
-+#define check_shl_overflow(a, s, d) __must_check_overflow(({		\
-+	typeof(a) _a = a;						\
-+	typeof(s) _s = s;						\
-+	typeof(d) _d = d;						\
-+	u64 _a_full = _a;						\
-+	unsigned int _to_shift =					\
-+		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
-+	*_d = (_a_full << _to_shift);					\
-+	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
-+	(*_d >> _to_shift) != _a);					\
-+}))
- 
--#define check_mul_overflow(a, b, d) ({		\
--	typeof(a) __a = (a);			\
--	typeof(b) __b = (b);			\
--	typeof(d) __d = (d);			\
--	(void) (&__a == &__b);			\
--	(void) (&__a == __d);			\
--	__builtin_mul_overflow(__a, __b, __d);	\
-+#define __overflows_type_constexpr(x, T) (			\
-+	is_unsigned_type(typeof(x)) ?				\
-+		(x) > type_max(typeof(T)) :			\
-+	is_unsigned_type(typeof(T)) ?				\
-+		(x) < 0 || (x) > type_max(typeof(T)) :		\
-+	(x) < type_min(typeof(T)) || (x) > type_max(typeof(T)))
-+
-+#define __overflows_type(x, T)		({	\
-+	typeof(T) v = 0;			\
-+	check_add_overflow((x), v, &v);		\
- })
- 
- /**
-- * array_size() - Calculate size of 2-dimensional array.
-+ * overflows_type - helper for checking the overflows between value, variables,
-+ *		    or data type
-  *
-- * @a: dimension one
-- * @b: dimension two
-+ * @n: source constant value or variable to be checked
-+ * @T: destination variable or data type proposed to store @x
-  *
-- * Calculates size of 2-dimensional array: @a * @b.
-+ * Compares the @x expression for whether or not it can safely fit in
-+ * the storage of the type in @T. @x and @T can have different types.
-+ * If @x is a constant expression, this will also resolve to a constant
-+ * expression.
-  *
-- * Returns: number of bytes needed to represent the array or SIZE_MAX on
-- * overflow.
-+ * Returns: true if overflow can occur, false otherwise.
-+ */
-+#define overflows_type(n, T)					\
-+	__builtin_choose_expr(__is_constexpr(n),		\
-+			      __overflows_type_constexpr(n, T),	\
-+			      __overflows_type(n, T))
-+
-+/**
-+ * castable_to_type - like __same_type(), but also allows for casted literals
-+ *
-+ * @n: variable or constant value
-+ * @T: variable or data type
-+ *
-+ * Unlike the __same_type() macro, this allows a constant value as the
-+ * first argument. If this value would not overflow into an assignment
-+ * of the second argument's type, it returns true. Otherwise, this falls
-+ * back to __same_type().
-  */
--static inline __must_check size_t array_size(size_t a, size_t b)
-+#define castable_to_type(n, T)						\
-+	__builtin_choose_expr(__is_constexpr(n),			\
-+			      !__overflows_type_constexpr(n, T),	\
-+			      __same_type(n, T))
-+
-+/**
-+ * size_mul() - Calculate size_t multiplication with saturation at SIZE_MAX
-+ * @factor1: first factor
-+ * @factor2: second factor
-+ *
-+ * Returns: calculate @factor1 * @factor2, both promoted to size_t,
-+ * with any overflow causing the return value to be SIZE_MAX. The
-+ * lvalue must be size_t to avoid implicit type conversion.
-+ */
-+static inline size_t __must_check size_mul(size_t factor1, size_t factor2)
+-static noinline int bp_1(void)
++static __noinline int bp_1(void)
  {
- 	size_t bytes;
- 
--	if (check_mul_overflow(a, b, &bytes))
-+	if (check_mul_overflow(factor1, factor2, &bytes))
- 		return SIZE_MAX;
- 
- 	return bytes;
+ 	pr_debug("in %s\n", __func__);
+ 	return 0;
  }
  
- /**
-- * array3_size() - Calculate size of 3-dimensional array.
-+ * size_add() - Calculate size_t addition with saturation at SIZE_MAX
-+ * @addend1: first addend
-+ * @addend2: second addend
-  *
-- * @a: dimension one
-- * @b: dimension two
-- * @c: dimension three
-- *
-- * Calculates size of 3-dimensional array: @a * @b * @c.
-- *
-- * Returns: number of bytes needed to represent the array or SIZE_MAX on
-- * overflow.
-+ * Returns: calculate @addend1 + @addend2, both promoted to size_t,
-+ * with any overflow causing the return value to be SIZE_MAX. The
-+ * lvalue must be size_t to avoid implicit type conversion.
-  */
--static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
-+static inline size_t __must_check size_add(size_t addend1, size_t addend2)
+-static noinline int bp_2(void)
++static __noinline int bp_2(void)
  {
- 	size_t bytes;
+ 	pr_debug("in %s\n", __func__);
+ 	return 0;
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 7e25b0e413f6..dd97a51649bc 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -31,7 +31,7 @@ static const char *const bench_usage[] = {
+ static unsigned int accumulator;
+ static unsigned int use_of_val;
  
--	if (check_mul_overflow(a, b, &bytes))
--		return SIZE_MAX;
--	if (check_mul_overflow(bytes, c, &bytes))
-+	if (check_add_overflow(addend1, addend2, &bytes))
- 		return SIZE_MAX;
+-static noinline void workload(int val)
++static __noinline void workload(int val)
+ {
+ 	use_of_val += val;
+ 	accumulator++;
+diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+index 6f921db33cf9..459f61752a71 100644
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -34,7 +34,7 @@
  
- 	return bytes;
+ static volatile long the_var;
+ 
+-static noinline int test_function(void)
++static __noinline int test_function(void)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 1f2908f02389..484a7e7f96ee 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -59,7 +59,7 @@ static void __test_function(volatile long *ptr)
+ }
+ #endif
+ 
+-static noinline int test_function(void)
++static __noinline int test_function(void)
+ {
+ 	__test_function(&the_var);
+ 	the_var++;
+diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
+index 4e897c2cf26b..9436bf2973f8 100644
+--- a/tools/perf/tests/bp_signal_overflow.c
++++ b/tools/perf/tests/bp_signal_overflow.c
+@@ -30,7 +30,7 @@
+ 
+ static int overflows;
+ 
+-static noinline int test_function(void)
++static __noinline int test_function(void)
+ {
+ 	return time(NULL);
+ }
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index d01aa931fe81..a669c69a9242 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
+@@ -109,7 +109,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
+ 	return strcmp((const char *) symbol, funcs[idx]);
  }
  
--static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
-+/**
-+ * size_sub() - Calculate size_t subtraction with saturation at SIZE_MAX
-+ * @minuend: value to subtract from
-+ * @subtrahend: value to subtract from @minuend
-+ *
-+ * Returns: calculate @minuend - @subtrahend, both promoted to size_t,
-+ * with any overflow causing the return value to be SIZE_MAX. For
-+ * composition with the size_add() and size_mul() helpers, neither
-+ * argument may be SIZE_MAX (or the result with be forced to SIZE_MAX).
-+ * The lvalue must be size_t to avoid implicit type conversion.
-+ */
-+static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+-NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__thread(struct thread *thread)
++NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__thread(struct thread *thread)
  {
- 	size_t bytes;
+ 	struct perf_sample sample;
+ 	unsigned long cnt = 0;
+@@ -140,7 +140,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__thread(struct thread *thr
  
--	if (check_mul_overflow(n, size, &bytes))
--		return SIZE_MAX;
--	if (check_add_overflow(bytes, c, &bytes))
-+	if (minuend == SIZE_MAX || subtrahend == SIZE_MAX ||
-+	    check_sub_overflow(minuend, subtrahend, &bytes))
- 		return SIZE_MAX;
+ static int global_unwind_retval = -INT_MAX;
  
- 	return bytes;
+-NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__compare(void *p1, void *p2)
++NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__compare(void *p1, void *p2)
+ {
+ 	/* Any possible value should be 'thread' */
+ 	struct thread *thread = *(struct thread **)p1;
+@@ -159,7 +159,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__compare(void *p1, void *p
+ 	return p1 - p2;
  }
  
- /**
-- * struct_size() - Calculate size of structure with trailing array.
-+ * array_size() - Calculate size of 2-dimensional array.
-+ * @a: dimension one
-+ * @b: dimension two
-+ *
-+ * Calculates size of 2-dimensional array: @a * @b.
-+ *
-+ * Returns: number of bytes needed to represent the array or SIZE_MAX on
-+ * overflow.
-+ */
-+#define array_size(a, b)	size_mul(a, b)
-+
-+/**
-+ * array3_size() - Calculate size of 3-dimensional array.
-+ * @a: dimension one
-+ * @b: dimension two
-+ * @c: dimension three
-+ *
-+ * Calculates size of 3-dimensional array: @a * @b * @c.
-+ *
-+ * Returns: number of bytes needed to represent the array or SIZE_MAX on
-+ * overflow.
-+ */
-+#define array3_size(a, b, c)	size_mul(size_mul(a, b), c)
-+
-+/**
-+ * flex_array_size() - Calculate size of a flexible array member
-+ *                     within an enclosing structure.
-  * @p: Pointer to the structure.
-+ * @member: Name of the flexible array member.
-+ * @count: Number of elements in the array.
-+ *
-+ * Calculates size of a flexible array of @count number of @member
-+ * elements, at the end of structure @p.
-+ *
-+ * Return: number of bytes needed or SIZE_MAX on overflow.
-+ */
-+#define flex_array_size(p, member, count)				\
-+	__builtin_choose_expr(__is_constexpr(count),			\
-+		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
-+		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
-+
-+/**
-+ * struct_size() - Calculate size of structure with trailing flexible array.
-+ * @p: Pointer to the structure.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array.
-+ *
-+ * Calculates size of memory needed for structure of @p followed by an
-+ * array of @count number of @member elements.
-+ *
-+ * Return: number of bytes needed or SIZE_MAX on overflow.
-+ */
-+#define struct_size(p, member, count)					\
-+	__builtin_choose_expr(__is_constexpr(count),			\
-+		sizeof(*(p)) + flex_array_size(p, member, count),	\
-+		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
-+
-+/**
-+ * struct_size_t() - Calculate size of structure with trailing flexible array
-+ * @type: structure type name.
-  * @member: Name of the array member.
-- * @n: Number of elements in the array.
-+ * @count: Number of elements in the array.
-  *
-- * Calculates size of memory needed for structure @p followed by an
-- * array of @n @member elements.
-+ * Calculates size of memory needed for structure @type followed by an
-+ * array of @count number of @member elements. Prefer using struct_size()
-+ * when possible instead, to keep calculations associated with a specific
-+ * instance variable of type @type.
-  *
-  * Return: number of bytes needed or SIZE_MAX on overflow.
-  */
--#define struct_size(p, member, n)					\
--	__ab_c_size(n,							\
--		    sizeof(*(p)->member) + __must_be_array((p)->member),\
--		    sizeof(*(p)))
-+#define struct_size_t(type, member, count)					\
-+	struct_size((type *)NULL, member, count)
-+
-+/**
-+ * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
-+ * Enables caller macro to pass (different) initializer.
-+ *
-+ * @type: structure type name, including "struct" keyword.
-+ * @name: Name for a variable to define.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ * @initializer: initializer expression (could be empty for no init).
-+ */
-+#define _DEFINE_FLEX(type, name, member, count, initializer)			\
-+	_Static_assert(__builtin_constant_p(count),				\
-+		       "onstack flex array members require compile-time const count"); \
-+	union {									\
-+		u8 bytes[struct_size_t(type, member, count)];			\
-+		type obj;							\
-+	} name##_u initializer;							\
-+	type *name = (type *)&name##_u
-+
-+/**
-+ * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
-+ * flexible array member.
-+ *
-+ * @type: structure type name, including "struct" keyword.
-+ * @name: Name for a variable to define.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ *
-+ * Define a zeroed, on-stack, instance of @type structure with a trailing
-+ * flexible array member.
-+ * Use __struct_size(@name) to get compile-time size of it afterwards.
-+ */
-+#define DEFINE_FLEX(type, name, member, count)			\
-+	_DEFINE_FLEX(type, name, member, count, = {})
+-NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_3(struct thread *thread)
++NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_3(struct thread *thread)
+ {
+ 	struct thread *array[2] = {thread, thread};
+ 	void *fp = &bsearch;
+@@ -178,7 +178,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_3(struct thread *th
+ 	return global_unwind_retval;
+ }
  
- #endif /* __LINUX_OVERFLOW_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 64dbf199dff9..272a37d8e1c4 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -35,6 +35,7 @@ FILES=(
-   "include/vdso/const.h"
-   "include/linux/hash.h"
-   "include/linux/list-sort.h"
-+  "include/linux/overflow.h"
-   "include/uapi/linux/hw_breakpoint.h"
-   "arch/x86/include/asm/disabled-features.h"
-   "arch/x86/include/asm/required-features.h"
+-NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_2(struct thread *thread)
++NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_2(struct thread *thread)
+ {
+ 	int ret;
+ 
+@@ -187,7 +187,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_2(struct thread *th
+ 	return ret;
+ }
+ 
+-NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *thread)
++NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_1(struct thread *thread)
+ {
+ 	int ret;
+ 
+@@ -196,7 +196,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *th
+ 	return ret;
+ }
+ 
+-noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
++__noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
+ 				int subtest __maybe_unused)
+ {
+ 	struct machine *machine;
+diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
+index 1bf5cc97649b..89d2cec2f461 100644
+--- a/tools/perf/tests/workloads/leafloop.c
++++ b/tools/perf/tests/workloads/leafloop.c
+@@ -4,18 +4,18 @@
+ #include "../tests.h"
+ 
+ /* We want to check these symbols in perf script */
+-noinline void leaf(volatile int b);
+-noinline void parent(volatile int b);
++__noinline void leaf(volatile int b);
++__noinline void parent(volatile int b);
+ 
+ static volatile int a;
+ 
+-noinline void leaf(volatile int b)
++__noinline void leaf(volatile int b)
+ {
+ 	for (;;)
+ 		a += b;
+ }
+ 
+-noinline void parent(volatile int b)
++__noinline void parent(volatile int b)
+ {
+ 	leaf(b);
+ }
+diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
+index 457b29f91c3e..e252efb76203 100644
+--- a/tools/perf/tests/workloads/thloop.c
++++ b/tools/perf/tests/workloads/thloop.c
+@@ -9,14 +9,14 @@
+ static volatile sig_atomic_t done;
+ 
+ /* We want to check this symbol in perf report */
+-noinline void test_loop(void);
++__noinline void test_loop(void);
+ 
+ static void sighandler(int sig __maybe_unused)
+ {
+ 	done = 1;
+ }
+ 
+-noinline void test_loop(void)
++__noinline void test_loop(void)
+ {
+ 	while (!done);
+ }
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
