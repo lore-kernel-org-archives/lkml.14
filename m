@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB7F2C68F
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56F437719
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036354; cv=none; b=T8Fqc7VvsSi2vM84ZvyjZfEtJyT29kOYG0I63rDAwb0T0sKdUSHb7bI4wgcVej2hAlgNdDjGP9nXSIUx/BAiRbZ9hfO3uhuW7CCecaqeT9buYaM8UsgZwLODPAfNDNwkO3+Lp9v2GKCR/nAX73GGXujCft9+y5WgWKbg1gdPxr8=
+	t=1710036359; cv=none; b=IMsW/ttoKMpnnomQeoxNu8bUtiytSt2/hg5VeEKj+hb0LezHA1RaMipQ6uWlxYCu/bmduAYISmnJEYSqnYGT7d+qStxrF0QA8KndK5uJ1FfUn1wqe73y6xtCPZis9mV7/2dv0G2CPbHwM3JL8Y6Lz3+jEc+FFGJlTlTkbeL0+S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036354; c=relaxed/simple;
-	bh=nyI9dgaoU2HMw/TgIDnIDYrLQif8D0L3I6qaHvxp6Ug=;
+	s=arc-20240116; t=1710036359; c=relaxed/simple;
+	bh=ZWL6CpbSDkoHT9bHTSvzN2HvMNxtU4EmDh1g2wTW1tQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=s5T2jCP5y4z3koDbB3DpKXqkfXuh2Bcx0kJAVSbXq65v5xULlilq1GE/7vL8WFJW1bbKjK9Iq6Lut11LIxrNmTUh3vH3Ti/xvkFTxjL5rcNyCH08W8SAkS8MYZ2jdJInWgu+iV+vTWl8vXHNvnv2HWAO3Iv4OG/vQf+gEQbtqYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wez/FaFs; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=o0MBg5+JCornX/0G1bJsrC3TR1HFZpkLrHd5VC7h520sPJdNNOpjhLwGWqBPGHw1QR1VhQJOS5QbDsYlJT1qDR1JuNaZizJ4qWff0KbGxatkoExj4yV0efaab3+WtiyopIVDRFG0/5e7KdQWuX8FK35woH09c0z24Z7+emaMnmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LlVbaPzg; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wez/FaFs"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-609ff3206c3so40643887b3.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LlVbaPzg"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc05887ee9so2813660276.1
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036351; x=1710641151; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710036357; x=1710641157; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/s3J+Sp6Nwm5vYKq4/rEI+V8C3zBszpK/wcDil3Uhsk=;
-        b=wez/FaFsRjHRkv0PxDcesvwFad++DgjbL5QV9cfERctSQJoTj2UXGQ9UA0SVyrBMS1
-         MmWpxfWDlUlmdFQZzAEfEc9cequA/fJUA24J4wmP1XJuT86NqcIMF3zamj22F9LCMRB2
-         2ZcKcGrrMeu8Ya8Icq9g9DKOhaG/tIwJ17Qjsw46RzsTNDBEkfF//4FHu1n0YJxEgIbx
-         41qP3ACy74XDqDuHmaSaQOMGeDw20pQSVKcAD4QAAalvxoCkw4TvMsv/sgdx2Hl3rQYa
-         UX70j7T0A8KWX512RuVd3u3LTJvu/rcq5dYIpQYApfjWtnlGgWDhMvKiMDR08SBCjXeC
-         U2Wg==
+        bh=YcbTXn+GZg98Vv/BPAp4vRUPCLHW4NXMPZPsnrVHKvg=;
+        b=LlVbaPzg3SZLzeFq+0upg5FmL3naDuQtNeVRRATjaVIr2Ao293gZStjMay0I88luJb
+         REZWEdtqNVjNwvVaG85n0qI61sVPKbW71X5dQN4+gbn7LnuOkPQsUhzejb/2OF2y6b13
+         G7KKYmjBXkkujaU+hIErFoa0+02M3n4FD+uhgeaOZtQVLT4NjD4xAK1VcIR7DWWwdFP6
+         tOqhUI//yL8wD8dNPA6Q9gXmA5Xkc+LXyrE2mrZ+3M9kQm0LEN8W70xqqiVI/uaArFXI
+         h5jGKEiwZOhtgM4DmUMMXktvWALZTepJakcPvqdRTTHbDTMQ1+lUtXQXtOkyznvsVOIl
+         07/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036351; x=1710641151;
+        d=1e100.net; s=20230601; t=1710036357; x=1710641157;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/s3J+Sp6Nwm5vYKq4/rEI+V8C3zBszpK/wcDil3Uhsk=;
-        b=A+t14y6bdmkRzuCfnjR3LtDk1sGQSh3r1odFT3STAFc2O8q5H12mkdQZEutnqxqfK3
-         s7oRVrds5PY31U+I5WCtG3eRHdP+cUHl4mBNVyk7LMTtdNLf2c0y41+bziYmaaEMbZLA
-         o1pCl5qJCV0oSSdHKiSzsx41m7hmxaK6e1mgOZz+HrOrAE46P7d9YFAI3J6P7y+QKhfG
-         UqMDGxtFfaC07KSBb0p7rEfJO6Q1K2kU9w+IxCkLMkuxRtu5Y8SAN6YbeDj3Ogk3LRV8
-         EIppos9Z5UcQ6tVeXhuEiZBdiSJFx0ZP+0hzvRF4TNPWP78qbWg+pIy5td19uZjVJCfm
-         yo6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBI4fIQz1n90FKF2Ju/KNUtOAeHd+mvqpn3sR5KWT7tOG1OZcMxuXqovLGAGGDGFN5aXDKsdUN70Hqqq3ITy1XB/VGV7hyfyh95gnB
-X-Gm-Message-State: AOJu0YyMiiZu+VIcIiu6rkWGSw/4hxeJqxOIw4AftT1UDUDHEOLFNcs/
-	TXIugWaYvNykVc+uAiroDR6qkVI6onz7VLmcDuOlDWoQnECWQr63VuQDIjEt5FikD12VxxRHFLN
-	ia9Jnrg==
-X-Google-Smtp-Source: AGHT+IHPD3AdhB6c0T/TfiXMF4uI00y32OTKxm5DEXBOiPnGnfJTzAmtckpif5kyd4Qr/BOAcbdh5KWG2LgR
+        bh=YcbTXn+GZg98Vv/BPAp4vRUPCLHW4NXMPZPsnrVHKvg=;
+        b=maV1RSdj+YYDbiITWJMVKWBsy/yPywO+YSfrHTnxoTXJtZ5j0XV2i/9gzqH6FfSgyt
+         XCI0GxrzCtj4TQ5C/dEzFnBr30sX9+MZSn9NLC2QUxzI/e3Wag31PES60ydXWVsTmuxG
+         m5ygLWroMnAFAeiX73LTTkxxG1PXA5hRFc0Anrob0xn+qHos+jAjv+lffd3OkfsvnbVy
+         EMYfcw9ASgo79yA+/mK0I18/H8bkkB2JfBKmrQ7/lQqoNjlhMYL1ZRAMb+uZ2/OWpFml
+         8rNmmJ2qYHNhISMohCLQjKj2BOWb4nsw9J9fhvX6Bdx494Bj7gc8gLmGuxnsWq9nNxRw
+         yfng==
+X-Forwarded-Encrypted: i=1; AJvYcCVsykt+1XJJdkjVJWA9EL9rZDr83xGl9qbpWh1vu9b2gboouL8r4jS8ZvgTHLWKBsnnnh1N5Z9WrrLJVu+2GhIg1ozClMpHaKlPCDLV
+X-Gm-Message-State: AOJu0YwZL5L5/BnyU9M5oXxfiXJZo56wTcflhedbKuYvi2OXfYHMwDgQ
+	/pD1U7rVhKjkkBPqWgODMyEzzpciwyDu5EEahiqrrXILuVOhMpuGyvoFHZtBNKzb4N8KJaeoBJG
+	ckRex7g==
+X-Google-Smtp-Source: AGHT+IFh+Pg/vPJRzp3HY0EtlqFR8c7TCYxcMdD2zR5o/IcNrp2JWb8OldTiph3/7rY2TpwrRD4D5cJe7AWq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a0d:dd04:0:b0:60a:25ce:c165 with SMTP id
- g4-20020a0ddd04000000b0060a25cec165mr362319ywe.6.1710036351589; Sat, 09 Mar
- 2024 18:05:51 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:05:03 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:b06:b0:dc6:b982:cfa2 with SMTP id
+ ch6-20020a0569020b0600b00dc6b982cfa2mr183760ybb.8.1710036356770; Sat, 09 Mar
+ 2024 18:05:56 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:05:05 -0800
 In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-9-irogers@google.com>
+Message-Id: <20240310020509.647319-11-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240310020509.647319-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 08/13] perf arm-spe: Add missing linux/types.h include
+Subject: [PATCH v1 10/13] asm-generic: Avoid transitive dependency for unaligned.h
 From: Ian Rogers <irogers@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -93,70 +93,43 @@ To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-u64 is used for various structs in arm-spe-decoder.h, while uint64_t
-is used in arm-spe-pkt-decoder.h. Avoid transitive dependencies
-bringing in linux/types.h and directly depend upon it in
-arm-spe-decoder.h. Fix arm-spe-decoder.c to use uint64_t, as the
-header file does.
+unaligned.h uses types from linux/types.h such as u64, but doesn't
+directly import linux/types.h. This can cause breakages when the
+declarations of the types is reliant on a transitive dependency and
+the dependencies change. Add the missing header file to avoid this.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h     | 1 +
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 8 ++++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ include/asm-generic/unaligned.h       | 2 ++
+ tools/include/asm-generic/unaligned.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 1443c28545a9..da5c5816c948 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -10,6 +10,7 @@
- #include <stdbool.h>
- #include <stddef.h>
- #include <stdint.h>
+diff --git a/include/asm-generic/unaligned.h b/include/asm-generic/unaligned.h
+index a84c64e5f11e..0cbe118e25db 100644
+--- a/include/asm-generic/unaligned.h
++++ b/include/asm-generic/unaligned.h
+@@ -2,6 +2,8 @@
+ #ifndef __ASM_GENERIC_UNALIGNED_H
+ #define __ASM_GENERIC_UNALIGNED_H
+ 
 +#include <linux/types.h>
++
+ /*
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
+diff --git a/tools/include/asm-generic/unaligned.h b/tools/include/asm-generic/unaligned.h
+index cdd2fd078027..768cafe6702e 100644
+--- a/tools/include/asm-generic/unaligned.h
++++ b/tools/include/asm-generic/unaligned.h
+@@ -2,6 +2,8 @@
+ #ifndef __ASM_GENERIC_UNALIGNED_H
+ #define __ASM_GENERIC_UNALIGNED_H
  
- #include "arm-spe-pkt-decoder.h"
- 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index a454c6737563..e035f49f28ad 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -292,7 +292,7 @@ static int arm_spe_pkt_out_string(int *err, char **buf_p, size_t *blen,
- static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
- 				  char *buf, size_t buf_len)
- {
--	u64 payload = packet->payload;
-+	uint64_t payload = packet->payload;
- 	int err = 0;
- 
- 	arm_spe_pkt_out_string(&err, &buf, &buf_len, "EV");
-@@ -332,7 +332,7 @@ static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
- static int arm_spe_pkt_desc_op_type(const struct arm_spe_pkt *packet,
- 				    char *buf, size_t buf_len)
- {
--	u64 payload = packet->payload;
-+	uint64_t payload = packet->payload;
- 	int err = 0;
- 
- 	switch (packet->index) {
-@@ -429,7 +429,7 @@ static int arm_spe_pkt_desc_addr(const struct arm_spe_pkt *packet,
- {
- 	int ns, el, idx = packet->index;
- 	int ch, pat;
--	u64 payload = packet->payload;
-+	uint64_t payload = packet->payload;
- 	int err = 0;
- 	static const char *idx_name[] = {"PC", "TGT", "VA", "PA", "PBT"};
- 
-@@ -469,7 +469,7 @@ static int arm_spe_pkt_desc_addr(const struct arm_spe_pkt *packet,
- static int arm_spe_pkt_desc_counter(const struct arm_spe_pkt *packet,
- 				    char *buf, size_t buf_len)
- {
--	u64 payload = packet->payload;
-+	uint64_t payload = packet->payload;
- 	const char *name = arm_spe_pkt_name(packet->type);
- 	int err = 0;
- 
++#include <linux/types.h>
++
+ /*
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
