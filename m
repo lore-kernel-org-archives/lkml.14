@@ -1,192 +1,139 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401D11D6BD;
-	Sun, 10 Mar 2024 17:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7D621115
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 18:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710093191; cv=none; b=Vc93tiArdlXlAoRR/bSXADTH3vqh6OAsH1LMsaqXUbP8In8LcOoXm/XI9ah8TEOv/M9Wmbf5h1P8KlcdjPQFoC1ZXrqejaW6Lgg7J6KvPlT1v5eTvHbfkwBOt+O2Zqad/44Qu1auMMNeLXMgOIPh0k/mw1PruUKyKnCoQyVWpfE=
+	t=1710093683; cv=none; b=QwyKm8+A+BQC1pJCx40NUzaDzGRiRr1E5U0dOs9HfpTKdYuRcVELvGosLUiPQf7rw6lpcYpKwfS6LPje4NGeMVDAsUUtGM8lZIE5gcwBONKWCqEbO3GvDfOV/6yNny/w/AV3fApczHQUSwbhhMSj1qjOHVV7Kfwy5PYONDyIixc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710093191; c=relaxed/simple;
-	bh=PAEPg+/maxDYsnqqpjNNlC7+pfvlYT8sZpuckOLX2Pk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEfEmE3348Xyk3+qvvn9AmtiVjpAgE3o60A/SfYxOxdXvbdtURQr/DC9hvzRba7WUIRH0BChPPreznmVvdurOGgMqDnSW2MWifz3SpQAHJ24TYYStjcqGY7AO9YjaUqE2gpdf8uyTMDU1qaZ4v/BPR8rsSRmAA+EoYyQUr/FVO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeO3Gz6E; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710093683; c=relaxed/simple;
+	bh=1xvw7/qydc2EwjTNZthGu+QQS/Oq6RNHp0V4PWtVLrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eT4amUSWpIYEUgcQIBWfHOwqlT/WtShnj8uhMeA9c7TcetIaFtnaKO5CJRhRRJI3ee/pfcof5jvDDV3LEFVi0DDvsnYsm61CiJQC8HnNdSHcZrlPLAHTW9EbtbUKbKTjBY62lHIbfJK8qZaUjGUhkuOiCqOw5Ax+HwE5UlDztnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lv6dAmwQ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeO3Gz6E"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dd10a37d68so30672575ad.2;
-        Sun, 10 Mar 2024 10:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710093189; x=1710697989; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tS9N1ruJVI0BmOAihQAk3F4D+Z/MUY8XwkjThKFRoCU=;
-        b=jeO3Gz6EqrCgTL2c9vylGkQXfCGgm4u3RKIxiG8UwmOS9ziJvXL31VA5htIn2msOpa
-         u64Q1GV5Emc+GYmmiwbxBbQNPZCIZUGN71PGLttvhwQ9z/kbPbuxWO7F4HTh0HyjsUck
-         dDMEAnG2hl8K9HD2rqPPUcLmL+vAWgIg1qSJc+j4r37kAgpd8tbyk63kOiOX+qups4bB
-         Wr6iek/OufdSCNgEfM81Vxz4AccJGZy8OszHBsF5FgSTW7H1XGMd7tgsjlvj9sKa2hAX
-         t7DcJcUZDLRJ5UDGvkHTjeuCR1bp4LQnVoRcwFMeIZeyqn5CJr09bcLh88VBpaq29BBI
-         d6dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710093189; x=1710697989;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tS9N1ruJVI0BmOAihQAk3F4D+Z/MUY8XwkjThKFRoCU=;
-        b=r/SQTXli/126AWR+R92U8cdXT9/zwFQGRIvN3/kkyXzb5zPib7DDbIUZ/SDSta6QJJ
-         g/yWQRhRw/RH6ax6Ee+Uj+VWjgskEsvwEa43QeV5aDh18Q0Y727XeoVK/oxkb59U6btS
-         YAej2ZL7J9vJWm7bK4TX62GBEw+WzLxuuv7kxWtqrX+gXPTDky4RTDoy/ZMHQEIkVhbA
-         2kJw+FVF8/YYj7AnhqeDRtrVrEducbMlObYsqfUvl1kR75N1PMpsXwSS5eowreNRidyk
-         ZX2TIiJdjH6fO9eVQWgPRhXZlQNxXMZAEiqbpuNuEp87+Un1K6GlYB20X3Qw5ABZex/D
-         5s2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXLk5uCDEpSjqHT2ft14OPHTgtPFfSqkF0J1pzSl+wWh1gZxPZdQaqC6nvXLYqrjQAUB06b/b7AJnoYYRT2+fauRcXnySLhnxS2/2vob2ThwTBuDngfDrlWSU63pnqTZQ3Yazze4mpMkqYSBVX+tiT8VS9Wb/3ryoeZYSvDXbL+XhUh3A==
-X-Gm-Message-State: AOJu0YyXSmoMkLYhKk4kP0682PdvlfWmEXr+nFi+EFGkwoBIrWIjRAmZ
-	hW8nYnG4kEiAOEooxsiyVKZnVev0RE2N9L0dJUvzcEdScF1N0UyB
-X-Google-Smtp-Source: AGHT+IHHarjmbSJAfp4+wX7aP9GbwqCXzb3OwiyyKq/kCEzWGSJ0ZTZGva24e7VBNgg2V0JnOm1v0w==
-X-Received: by 2002:a17:903:22c5:b0:1d8:f072:ec9f with SMTP id y5-20020a17090322c500b001d8f072ec9fmr5859755plg.28.1710093189412;
-        Sun, 10 Mar 2024 10:53:09 -0700 (PDT)
-Received: from fedora.. ([2409:40f4:12:62d1:ef0e:a60d:25ad:394c])
-        by smtp.gmail.com with ESMTPSA id g22-20020a1709029f9600b001dd61965137sm2902050plq.304.2024.03.10.10.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 10:53:09 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6] dt-bindings: imx-pata: Convert to dtschema
-Date: Sun, 10 Mar 2024 23:22:13 +0530
-Message-ID: <20240310175217.20981-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lv6dAmwQ"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42AHAmh5020105;
+	Sun, 10 Mar 2024 17:30:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=9bQuV0086rWA9FniicQT1Mk0pnODcZNniX4vLVWE8cE=; b=lv
+	6dAmwQRJJ+hvNZv4J9EYNXwgXG0M/yGKTK5CNPcr2hO7UvySkvihwrGvZu2nz54Z
+	yP2woP8sH9Z5iyPMT+sefm/O/2EgNfnUJ69xRX9xqUBP1mvCwTDiJNtF4fdas8qC
+	T130vGG/1FUsHP0Scy/laTxcaH8J/v5gmk+/ozGqTNqGz3pkHa9Ke07Azi0z+FpW
+	hm4UWtuWiyMPen0W2JCBMGpVa+lZrwr6yasbXVl3k5o2lly6fCyt1wAbrO0lcJm6
+	gaYwldLN+AO5OAxWizfzQyefU6Y+kEHCiKjKUlo7y6Z1Q9c7/0/jQY4WJVkVYYsf
+	4L5Mw2gVQ+T/cj1NE2LQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wrg5b20sq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 10 Mar 2024 17:30:01 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42AHU0Eb015354
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 10 Mar 2024 17:30:00 GMT
+Received: from [10.216.43.112] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 10 Mar
+ 2024 10:29:58 -0700
+Message-ID: <b61f5f4a-7931-411d-9519-bbff1b7fd6f9@quicinc.com>
+Date: Sun, 10 Mar 2024 22:59:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] i3c: master: Enable runtime PM for master controller
+Content-Language: en-US
+To: <alexandre.belloni@bootlin.com>, <linux-i3c@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <andersson@kernel.org>, <vkoul@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>
+References: <20240228093407.4038399-1-quic_msavaliy@quicinc.com>
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20240228093407.4038399-1-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OiANyFU4EYU4vSyFG7NRVzCPdKteTxgz
+X-Proofpoint-ORIG-GUID: OiANyFU4EYU4vSyFG7NRVzCPdKteTxgz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-10_10,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ mlxscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2403100141
 
-This patchset converts imx-pata bindings to DT schema.
-file name is changed to fsl,imx-pata to follow vendor,device scheme
-imx31-pata and imx51-pata are added in compatible to ensure this node compiles to
-imx31-pata.dtsi or imx51-pata.dtsi
-oneOf is also added to allow the usage of imx27 alone.
-Cleanups are done in patch 6
+A Gentle reminder ! As i was not part of the linux-i3c group before 
+raising this gerrit, might not went into right folder.
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-
----
-Changes in v6:
-- removed items before const due to single element.
-
-Changes in v5:
-- added oneOf in compatible property to allow the usage of imx27 alone.
-
-Changes in v4:
-- added fsl,imx31-pata in compatible property as enum
-- imx31-pata was not listed in compatible in original txt binding
-- adding imx31-pata in enum ensures the node compiles to imx31.dtsi
-
-Changes in v3:
-- added fsl,imx51-pata in compatible property as enum
-- imx51-pata was not listed in compatible in original txt binding
-- adding imx51-pata in enum ensures the node compiles to imx31.dtsi
-- fsl,imx27-pata is added as a const to ensure it is present always
-
-Changes in v2:
-- fixed style issues
-- compatible property now matches the examples
-- fixed yamllint warnings/errors
----
- .../devicetree/bindings/ata/fsl,imx-pata.yaml | 43 +++++++++++++++++++
- .../devicetree/bindings/ata/imx-pata.txt      | 16 -------
- 2 files changed, 43 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/fsl,imx-pata.yaml
- delete mode 100644 Documentation/devicetree/bindings/ata/imx-pata.txt
-
-diff --git a/Documentation/devicetree/bindings/ata/fsl,imx-pata.yaml b/Documentation/devicetree/bindings/ata/fsl,imx-pata.yaml
-new file mode 100644
-index 000000000000..c108a4b6636a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/fsl,imx-pata.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/fsl,imx-pata.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX PATA Controller
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx31-pata
-+              - fsl,imx51-pata
-+          - const: fsl,imx27-pata
-+      - const: fsl,imx27-pata
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: PATA Controller interrupts
-+
-+  clocks:
-+    items:
-+      - description: PATA Controller clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pata: pata@83fe0000 {
-+        compatible = "fsl,imx51-pata","fsl,imx27-pata";
-+        reg = <0x83fe0000 0x4000>;
-+        interrupts = <70>;
-+        clocks = <&clks 161>;
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/ata/imx-pata.txt b/Documentation/devicetree/bindings/ata/imx-pata.txt
-deleted file mode 100644
-index f1172f00188a..000000000000
---- a/Documentation/devicetree/bindings/ata/imx-pata.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--* Freescale i.MX PATA Controller
--
--Required properties:
--- compatible: "fsl,imx27-pata"
--- reg: Address range of the PATA Controller
--- interrupts: The interrupt of the PATA Controller
--- clocks: the clocks for the PATA Controller
--
--Example:
--
--	pata: pata@83fe0000 {
--		compatible = "fsl,imx51-pata", "fsl,imx27-pata";
--		reg = <0x83fe0000 0x4000>;
--		interrupts = <70>;
--		clocks = <&clks 161>;
--	};
--- 
-2.44.0
-
+On 2/28/2024 3:04 PM, Mukesh Kumar Savaliya wrote:
+> Enable runtime PM for i3c master node during master registration time.
+> 
+> Sometimes i3c client device driver may want to control the PM of the
+> parent (master) to perform the transactions and save the power in an
+> efficient way by controlling the session. Hence device can call PM
+> APIs by passing the parent node.
+> 
+> Here, I3C target device when calls pm_runtime_get_sync(dev->parent)
+> couldn't invoke master drivers runtime PM callback registered by
+> the master driver because parent's PM status was disabled in the
+> Master node.
+> 
+> Also call pm_runtime_no_callbacks() and pm_suspend_ignore_children()
+> for the master node to not have any callback addition and ignore the
+> children to have runtime PM work just locally in the driver. This
+> should be generic and common change for all i3c devices and should
+> not have any other impact.
+> 
+> With these changes, I3C client device works and able to invoke
+> master driver registered runtime PM callbacks.
+> 
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
+>   drivers/i3c/master.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 3afa530c5e32..a3dc88974f92 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/list.h>
+>   #include <linux/of.h>
+> +#include <linux/pm_runtime.h>
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/workqueue.h>
+> @@ -2812,6 +2813,10 @@ int i3c_master_register(struct i3c_master_controller *master,
+>   
+>   	i3c_bus_notify(i3cbus, I3C_NOTIFY_BUS_ADD);
+>   
+> +	pm_runtime_no_callbacks(&master->dev);
+> +	pm_suspend_ignore_children(&master->dev, true);
+> +	pm_runtime_enable(&master->dev);
+> +
+>   	/*
+>   	 * We're done initializing the bus and the controller, we can now
+>   	 * register I3C devices discovered during the initial DAA.
+> @@ -2849,6 +2854,7 @@ void i3c_master_unregister(struct i3c_master_controller *master)
+>   	i3c_master_i2c_adapter_cleanup(master);
+>   	i3c_master_unregister_i3c_devs(master);
+>   	i3c_master_bus_cleanup(master);
+> +	pm_runtime_disable(&master->dev);
+>   	device_unregister(&master->dev);
+>   }
+>   EXPORT_SYMBOL_GPL(i3c_master_unregister);
