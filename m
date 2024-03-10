@@ -1,214 +1,134 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800A7EC5;
-	Sun, 10 Mar 2024 02:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A41CEC5
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710037240; cv=none; b=VqOAPm3TZ436IWPgjoOmrL/Tuw5O8vg+yUxbpfsEtAlKnbMAQRnO030y0G+5YEhzfITUGNihL9qJ1raKIrVJGjm5XuEdHnm1sTdqZiaT+wmB471YBnLT0IwGjaET28ZfTb217sfSnBjSJSI/sSvYmO+8CLNp0s3oMMPed3HEiug=
+	t=1710037653; cv=none; b=HVgDyEbKEgtwjUXQCP9AWIErLQnFCSscnMIWsPmw5qdErOQMsZwFu5ewUcMUWZOnbASMGDRDtf9Mi6aRb1pcmozabmV1+V0twvsUuSfdZfTp830+22fvOuU6RG+LzTMG9tQlcfay10IdR3PxIPWApGU6P1ac/wOZxWkok0Gt4Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710037240; c=relaxed/simple;
-	bh=lU2FEXjQf5ULWlJGjC6beHT2szn5igv6p/kvrR7y6o4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nvxq3hQ+qk7ywRJejjxWah4CJ+2LTnzhxsPx6wNA2yvNHP7Rr+oR2g/fm3uGckaKy7FiU39b/hmn3IyqLvGNI0hU1ssspb0rpa7Qo6+6kP2EK614j769fXoCDWEEibPj9RTp09qot2+7LhwNVHBEOu8sDVblCySDkZ6iQ9nBUNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=j8wV+0Xi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LpSfTKK5; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1710037653; c=relaxed/simple;
+	bh=z/Ae57RHxWxRm7fOcWED5pQ9hfFioiYvDwVI6LW6oOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tVIX4PpzLQlaL2EcqxhK/ZclukN1VkG5lti48Cwg74tVyqkwx80jGkZXHSba66zR7n5Faij/LXNamyoizSmtod2rt3WAakAqsAoMEWMGSDlr9cw6AJkeZwpnBCx6gWnuLwwR8Q3jLC08eI8Zs33FRIvSHzhR6FbjY2ankgPK+HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FI3GFeSy; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="j8wV+0Xi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LpSfTKK5"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 2392D1800086;
-	Sat,  9 Mar 2024 21:20:36 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sat, 09 Mar 2024 21:20:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1710037235; x=1710123635; bh=t1ZldjZTYg9N6JKMzIXtm
-	D68rf620xDzEz43/gNhjtM=; b=j8wV+0Xibu+aH5VIqFA29L94vIkvxB84BshcS
-	pEq6LOYuOp5ftyEtpPhUroG1zhkCy5SRqfLGjwTtB1xzsqem7Dh/w2nMuqQWIzlu
-	FGQSJwpBIVDv+Li1H+5ppEyfXZ9m+SQw0jGiUEoeBifHQiEmZffXcogBvkRnvkvE
-	RqLL2BBBSv0lkT7Ck85Gjyx1bL2XipDvkbGCmVywSkZBEexXXlfbFbsBdf83c9gf
-	On/DDe42YJ/VKT6FB0Ss7NqbcraBvTCgQGG/yZKa/muNBe0IRh0pI4BGhpD42Exu
-	5x0iAyIgpRI4AAkBhbKvFTn/9VIGjc4tJkqFRJCO6JFLXucaA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1710037235; x=1710123635; bh=t1ZldjZTYg9N6JKMzIXtmD68rf62
-	0xDzEz43/gNhjtM=; b=LpSfTKK5xXlFJnukAgZhUAYI0uywdQOnFxOeOfYarZee
-	8DaOjcyosOONFVYU/EEe+oPS0XtCb+H3lgTQ/hG6Phz0Hw2Ov2W/Xogo0iiB9RBZ
-	icqmXIz9M9OvSUo8KZw4dmr0HkehdClD33h7OydC86I4DBVdF2UGEZdDfEjfdrvk
-	O31PmXgR4Aeut1z2qvSiF/99sJsLWjzHCt1LPAOMfJH1PWZ8Fb/8429rt1sMi0E/
-	dy3yiyQbuFwNmDiggaEPdjnMvFE2BGytKJaugvSTZVG7Q9XvZFb8uDXDy3XcdtQh
-	27l77JKHh49bq/yDLm7eyN2xwcKQYxkEMMxSWq7yrg==
-X-ME-Sender: <xms:8xjtZerybfPyvJFLiPuM_yDiY9-uEqPOI_qYPvJtGZAJZtEkvLEhpw>
-    <xme:8xjtZcrFvJFCa_YYTbdTKBSMMaBYgnrTe5ec7bCqqnxaRiALKP2PKLHZ1mWJNSV3U
-    a31rmPNIk-h8vHjKNk>
-X-ME-Received: <xmr:8xjtZTMLrCCKSW8SkvgcXCjMowwTaOZ8J0YM-JEiMjivF0Q4h0Yg1Gt8k8Iq>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieekgdeggecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
-    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
-    vghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftddtvd
-    fhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:8xjtZd4COE0jJgUkZ_JE_SCJvRakf-feQfRYVVnIFTGS7Pd4FNU7IQ>
-    <xmx:8xjtZd5wWJg4vYR1lpNcD1PrHSj-ie1qshMq13D49blzz4pR1GRGtw>
-    <xmx:8xjtZdgenmSxDj_cbR5XlMX0XL1xdvCaVkJxsE_iCztqnuhP9OfL0A>
-    <xmx:8xjtZQ0EMn31ZK17Cg-Xb5JGl31zRFT9rh6qPFgv5JA7Cv9Ib0WwByUP8oA>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 9 Mar 2024 21:20:32 -0500 (EST)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH] platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
-Date: Sun, 10 Mar 2024 15:20:26 +1300
-Message-ID: <20240310022026.69841-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FI3GFeSy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso3954673a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710037650; x=1710642450; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UyIMcx7YI42naqlnpwMXGZAB29gG6v/fxoHkDHcKrMI=;
+        b=FI3GFeSycA6I+N+Of9pwNxYjc9HQRvkkkODWL5qvujW9rMVnn0gxHZ+Dn3/9QDWmFw
+         O4dcpcfE+m9/SScIOqnVmXVOvU+8RJ3wojPeQ4Yyx4lPlfepICTIEdVwF9/dT/ZxrtAU
+         etQwoyuUGcfRKpVE5z3d2l4tYzmC3Qzu4hFdRtXfAAuTJ1/ILFH9qalWtoS2KJuDg7Vy
+         GAM5IZnOz+SkUXUA6IHDY7Q/c5JbxitS3ZlJ2rK0De/EHRjOqVbv6XwykOLI+WWCQbax
+         MxuZPHBo4I9bD3qTJc90cEGBhv5jcm1HZUmuNd5rAD0vUj00E88G36rY45FxJj/C+vzX
+         YaxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710037650; x=1710642450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UyIMcx7YI42naqlnpwMXGZAB29gG6v/fxoHkDHcKrMI=;
+        b=mbMXE1B5vQ4FW0eSqPzN4DtdDxIGBYiAWQhIVwEisFZqMkYm6U3rthUgmF5THHC4ss
+         D7c+pmuEMS/zmdD1MpE7kFvzX6f0oXV0XsiBZriK04JFDqoiFeHzEpfbbGdIa0cOBObh
+         ogewD9qOH8ioIYFYqRMYBlRWMGuCyJJFk/Y7GxqRs7uCtiMxsV2VExZa65I5cbwBIdxQ
+         1BWDLzonWeasatZntzl2wP4P0QbLumcZqQ+c69efBs1p8K5/WuJqtZNjh232kUF8I2Kx
+         alaAIIFMbkfq7OoHSysVdIL2fEhjCo0sZ5Szb8X84s8qHVh/na7zT3ok0/EL3KXimn+k
+         NM1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVPhUflZl/jYZz2o+9NTh1ISaB1LyHMVryskS0BGkHQTlt1P9GbJ2wfkvqJBeA1E9t/zSFFPcH6alwOuBX+gSY5xED1ZsEqNqzMEZNb
+X-Gm-Message-State: AOJu0YwPchopMN9u9F9KzyIJZa2iriC2Jb0hW3UWXNsBKDkGl1Y6Tvt1
+	eAYjx4GByOo7rLZSwh64Ra+FjzAinGLiHSF7MjwRDLAReZH1uv9WTZfFh6NB
+X-Google-Smtp-Source: AGHT+IE3ieeEcK8ealprtxmznMKb1f67Bx1kVR7dXHKRFQjHyEmXV3jr67k9sfuxgKuFmqcrZ+e8lA==
+X-Received: by 2002:a50:c90d:0:b0:565:edd9:1acb with SMTP id o13-20020a50c90d000000b00565edd91acbmr2188878edh.23.1710037649712;
+        Sat, 09 Mar 2024 18:27:29 -0800 (PST)
+Received: from andrea ([31.189.122.3])
+        by smtp.gmail.com with ESMTPSA id i40-20020a0564020f2800b005684b7c7cbcsm643588eda.78.2024.03.09.18.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Mar 2024 18:27:29 -0800 (PST)
+Date: Sun, 10 Mar 2024 03:27:10 +0100
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Kenneth-Lee-2012@foxmail.com
+Cc: Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
+	paulmck@kernel.org
+Subject: Re: Question about PB rule of LKMM
+Message-ID: <Ze0afrfXMe4oJ4ez@andrea>
+References: <e05fa6a9-c810-46cb-b033-b91ae7a5c382@rowland.harvard.edu>
+ <ZejC+lutRuwXQrMz@andrea>
+ <Zenip+8BDM3p+MUh@andrea>
+ <eb8f2a21-d388-424d-8504-ccd7bdb53a93@rowland.harvard.edu>
+ <ZeoFBkB1BeTdEQsn@andrea>
+ <bde188b0-1c5b-4b3b-94de-395a52fc37ce@rowland.harvard.edu>
+ <ZeoQvj3l6moF9KdQ@andrea>
+ <tencent_3FCF3AA5E98BC9395F98803764A6B2F7CC07@qq.com>
+ <ZeuFQdk/zcjkILbC@andrea>
+ <tencent_454C12FBD6076C20C3955565E6D6354E4F0A@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_454C12FBD6076C20C3955565E6D6354E4F0A@qq.com>
 
-Support the 2024 mini-led backlight and adjust the related functions
-to select the relevant dev-id. Also add `available_mini_led_mode` to the
-platform sysfs since the available mini-led levels can be different.
+> > Remark that, in the CAT language, the identity relation ({(e, e) : each event e})
+> > is a subset of R* (the _reflexive_-transitive closure of R) for any relation R.
+> > 
+> > The link at stake, (P0:Wx1, P0:Rx), is the result of the following composition:
+> > 
+> >   [Marked]         ; (overwrite & ext)? ; cumul-fence*     ; [Marked]          ; rfe?            ; [Marked]
+> >   (P0:Wx1, P0:Wx1)   (P0:Wx1, P1:Wx8)     (P1:Wx8, P1:Wx8)   (P1:Wx8, P1:Wx8))   (P1:Wx8, P0:Rx)   (P0:Rx, P0:Rx)
+> > 
+> 
+> So the cumul-fence relation includes the same Store? This is hard to
+> understand, because it is defined as:
+> 
+>   let cumul-fence = [Marked] ; (A-cumul(strong-fence | po-rel) | wmb |
+> 	po-unlock-lock-po) ; [Marked] ; rmw-sequence
+> 
+> There is at lease a rmw-sequence in the relation link.
+> 
+> I doubt we have different understanding on the effect of
+> reflexive operator. Let's discuss this with an example. Say we have two
+> relation r1 and r2. r1 have (e1, e2) while r2 have (e2, e3). Then we got
+> (e1, e3) for (r1;r2). The (;) operator joins r1's range to r2's domain.
+> 
+> If we upgrade (r1;r2) to  (r1?;r2), (r1?) become {(m1, m1), (m1, m2), (m2,
+> m2)}, it is r1 plus all identity of all elements used in r1's relations.
+> 
+> So (r1?;r2) is {(m1, m3), (m2, m3)}. If we consider this link:
+> 
+>   e1 ->r1 ->e2 ->r2 e3
+> 
+> A question mark on r1 means both (e1, e3) and (e2, e3) are included in
+> the final definition. The r1 is ignore-able in the definition. The event
+> before or behind the ignore-able relation both belong to the definition.
+> 
+> But this doesn't means r1 is optional. If r1 is empty, (r1?;r2) will
+> become empty, because there is no event element in r1's relations.
+> 
+> So I think the reflexive-transitive operation on cumul-fence cannot make
+> this relation optional. You should first have such link in the code.
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- .../ABI/testing/sysfs-platform-asus-wmi       |  8 ++++
- drivers/platform/x86/asus-wmi.c               | 37 +++++++++++++++++--
- include/linux/platform_data/x86/asus-wmi.h    |  1 +
- 3 files changed, 42 insertions(+), 4 deletions(-)
+In Cat, r1? is better described by (following your own wording) "r1 plus
+all identity of all elements (i.e. not necessarily in r1)".
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 8a7e25bde085..e32b4f0ae15f 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -126,6 +126,14 @@ Description:
- 		Change the mini-LED mode:
- 			* 0 - Single-zone,
- 			* 1 - Multi-zone
-+			* 2 - Multi-zone strong (available on newer generation mini-led)
-+
-+What:		/sys/devices/platform/<platform>/avilable_mini_led_mode
-+Date:		Jun 2023
-+KernelVersion:	6.9
-+Contact:	"Luke Jones" <luke@ljones.dev>
-+Description:
-+		List the available mini-led modes.
- 
- What:		/sys/devices/platform/<platform>/ppt_pl1_spl
- Date:		Jun 2023
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 18be35fdb381..94cc589607b3 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -297,6 +297,7 @@ struct asus_wmi {
- 
- 	bool panel_overdrive_available;
- 	bool mini_led_mode_available;
-+	u32 mini_led_dev_id;
- 
- 	struct hotplug_slot hotplug_slot;
- 	struct mutex hotplug_lock;
-@@ -2109,7 +2110,7 @@ static ssize_t mini_led_mode_show(struct device *dev,
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result;
- 
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
-+	result = asus_wmi_get_devstate_simple(asus, asus->mini_led_dev_id);
- 	if (result < 0)
- 		return result;
- 
-@@ -2129,10 +2130,15 @@ static ssize_t mini_led_mode_store(struct device *dev,
- 	if (result)
- 		return result;
- 
--	if (mode > 1)
-+	if (mode > 1 && asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE)
- 		return -EINVAL;
-+	if (mode > 2 && asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2)
-+		return -EINVAL;
-+	// Remap the mode values to match previous generation mini-led
-+	if (asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2)
-+		mode = mode == 2 ? 1 : mode == 0 ? 2 : 0;
- 
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MINI_LED_MODE, mode, &result);
-+	err = asus_wmi_set_devstate(asus->mini_led_dev_id, mode, &result);
- 
- 	if (err) {
- 		pr_warn("Failed to set mini-LED: %d\n", err);
-@@ -2150,6 +2156,21 @@ static ssize_t mini_led_mode_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(mini_led_mode);
- 
-+static ssize_t available_mini_led_mode_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	if (asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE)
-+		return sysfs_emit(buf, "0 1\n");
-+	if (asus->mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2)
-+		return sysfs_emit(buf, "0 1 2\n");
-+
-+	return sysfs_emit(buf, "0\n");
-+}
-+
-+static DEVICE_ATTR_RO(available_mini_led_mode);
-+
- /* Quirks *********************************************************************/
- 
- static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
-@@ -4174,6 +4195,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_nv_temp_target.attr,
- 	&dev_attr_panel_od.attr,
- 	&dev_attr_mini_led_mode.attr,
-+	&dev_attr_available_mini_led_mode.attr,
- 	NULL
- };
- 
-@@ -4496,10 +4518,17 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
- 	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
- 	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
--	asus->mini_led_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
- 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
- 						&& dmi_match(DMI_BOARD_NAME, "RC71L");
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE)) {
-+		asus->mini_led_mode_available = true;
-+		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-+	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE2)) {
-+		asus->mini_led_mode_available = true;
-+		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
-+	}
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index ab1c7deff118..9cadce10ad9a 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -71,6 +71,7 @@
- #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
- #define ASUS_WMI_DEVID_LID_FLIP_ROG	0x00060077
- #define ASUS_WMI_DEVID_MINI_LED_MODE	0x0005001E
-+#define ASUS_WMI_DEVID_MINI_LED_MODE2	0x0005002E
- 
- /* Storage */
- #define ASUS_WMI_DEVID_CARDREADER	0x00080013
--- 
-2.44.0
+As an example, in the scenario at stake, cumul-fence is empty while both
+cumul-fence? and cumul-fence* match the identity relation on all events.
 
+Here is a (relatively old, but still accurate AFAICR) article describing
+these and other notions as used in Herd:  (cf. table at the bottom)
+
+  https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/LWNLinuxMM/herd.html
+
+Said this, I do think the best way to familiarize with these notions and
+check one's understanding is to spend time using the herd tool itself.
+
+  Andrea
