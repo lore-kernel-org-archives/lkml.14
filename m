@@ -1,110 +1,78 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0845310E9;
-	Sun, 10 Mar 2024 01:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F3B15C4
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710034766; cv=none; b=K3Hf0JWoppiR0vJ1vDOehpqCHCI3+B5k4F5/YyLMVEs+dIcAr/IpG9FzqGah9A36T/NqWCNaZWRLW26SzMq4HJcan4bfzIGyGSf6Qh8+8D/lcU08jMU+DNC9lL9Ejp/F+XK0WnHnjrddlFqv97t+w0BZ/n29USn6j3PLmZO2yOs=
+	t=1710036306; cv=none; b=ptTfsPmzvQjU9WC+olX3SKBdFLxPZG3IXAbuFt67+i8pOAE/2/u1mhBk6/pGbiYwW4ZdPFa4wQEWeSvityGLRhKL2nK3lDappEVaU6zu/YLCwnzJaSfNlXBeABokxej9awwtu6EvfIsfJ6XZHM9BGSpuTbvMDpJEYjhkZB2+B0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710034766; c=relaxed/simple;
-	bh=Hbv5dKqaLqBrgXClL9twOnok0X7YsUM8U4SrM79+aEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HAEo4k7b9BL8h61zPICfMhyMZgfO2Rch/81OtEiVl05gtUIZDexN3fwhu95i/tVsyD/WZ4CPvpM3NBUKeekCNHT2RJyXx78p3T8miSIF9UK13S9qZn1O0PqUtytTOLfadNxxaulihNyQ1XTmkJRd/uVtDYKqGrJonxx4JTiPzO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CKXm00mK; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKXm00mK"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a1cba5d46fso950513eaf.0;
-        Sat, 09 Mar 2024 17:39:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710034764; x=1710639564; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=89dICWtcTgU7rYBclVDfmBzPExpeafeUhsNwlxxomUo=;
-        b=CKXm00mKDeW2qxdbGXESAIJMau/mZmTF9uVBQkuv7OnXpn4BBnStryaFYhZZpBh0T7
-         0Kbtn7YO0aTWaX37EphV69dx93j/+/EinVXicPkkMlv9bZduv6EJq5OeKj3HlTkATRtD
-         K2pCif5RWvAiQ718xk5reP0ohZjMbjqQwlLmowUSL5B0OZOgCkl8/9VXm7KusiutSG0J
-         yhEc1VNOsBF0A2WH+ifHCotAg64OjTyXqbNzyxLsVQMecs1p9fQr5Ip04GGcVUMRvssY
-         UIieBo6SnB5qWr5eGB+FieMkzdgMhHHDxDE41gwKV0rb7LBtOssT0AdM0g4GH+ZR/PJY
-         Q1NQ==
+	s=arc-20240116; t=1710036306; c=relaxed/simple;
+	bh=AB9oIgX15HDPukZy2QrbAYWK+ICd94A+UY4Tldqk2xs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=qSR/vJwHZmWrMger+0iDsGEPT5iRUaMahm4nMWM0BxWQfKfiCKPjC5y+qcM1lDbATQkGyhcAgdE838Hz+AnCz6pq6D72u/Pmp/PNHaO7/4kxGhRJrEe0J4YD7xOnmHiqIvveUA8p49Q4xXsUF8ExTMj9fXeTEPhHriB5ur9t6V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c86ecb5b37so339556939f.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710034764; x=1710639564;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1710036304; x=1710641104;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=89dICWtcTgU7rYBclVDfmBzPExpeafeUhsNwlxxomUo=;
-        b=X6YsyTnI3Ejky+9BBnAUPNRFIowhGs+jNluZXYOJ/lXeETq7rxrVYqe3HXr4rHIzRU
-         QRkirElW4kP7yyDjvyTW9/ugctJPllu+Jw/4ES+SUVt9e7qSwy3y4Lpiqy5CTbRtlXeF
-         UWIZxQSZbq5LKBf47ZE+eOAYGj5ggjce24aHR3Ti4VdaEbxNravO5BRfjVJy6S4Xh9oX
-         F3RJjkTsj5EA3yFiFEd+MQ91472DKm+iIlBoYsT2IEM/BG1x5+DsRyojDz8inmfMvlgP
-         cdVt/lcOrq1WApVwxzGi7i/4MQf/YaP3nT9SHeP7PW6jDXfLm96k3Rtft3e6TYb3TIuO
-         ojow==
-X-Forwarded-Encrypted: i=1; AJvYcCUq6O7KLfJtTf4ZB8S22CNAM3elolxq+89wJZi7YdLRT1F+aV+NKwGs6yY4F5imRRBFep8CZwKvvH8oW1kueJ6MdKSPbnTbkLGqJ6+U67HlYhZEyqYM46w5iMcxtmib9S16Hj4C69Mxu5spB9Ndz2KdPAhzYHjz5dz6JqAP37Amy6RHm016pqD+VVfLe0Pv
-X-Gm-Message-State: AOJu0Yz+eASjh6Z7mUyjkKSWZiInmuIxBEk0C7Gnaa6qw4nbzvia6YGH
-	NguVnVW8KbTQlCUvyFcpyabyj/oWjZlHh0IvvwohliLhLuVboC1dMJgWRVI/
-X-Google-Smtp-Source: AGHT+IGa8LWghdsW4lGPMtbGDh64RIJVuU6q8Za08bnTmcCJbvG41L+9ZGzUXxOEHKCRwucHSW9QvA==
-X-Received: by 2002:a05:6808:3994:b0:3c1:b335:12bc with SMTP id gq20-20020a056808399400b003c1b33512bcmr5386225oib.5.1710034763803;
-        Sat, 09 Mar 2024 17:39:23 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:5296:fec3:1fa8:a601])
-        by smtp.gmail.com with ESMTPSA id w33-20020a17090a6ba400b0029bb5dc7c77sm1990101pjj.23.2024.03.09.17.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 17:39:23 -0800 (PST)
-Date: Sat, 9 Mar 2024 17:39:21 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>,
-	Philipp Jungkamp <p.jungkamp@gmx.net>, Gergo Koteles <soyer@irl.hu>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: Re: [PATCH 0/2] map Fn + R key on newer Yogas and Legions
-Message-ID: <Ze0PSaOQSJMxL_Ln@google.com>
-References: <cover.1708399689.git.soyer@irl.hu>
- <170895405312.2243.4199399921923370447.b4-ty@linux.intel.com>
+        bh=eAtcZ0jcmff76E8g+uUmd6ptddX0gjsk2MQCSo48DN0=;
+        b=lqRGgJOpLRi+v1nzlXlpvRRXfKgCSOH9ZS0ioAJTaJVJEdDqGFQBOFoeCNFQPKhq7J
+         MZ7dCNtQfD4pAHSaHteuUw7y8htCQA3ZdBQfET0o+3+xFhpJDbSweJf5rNzj+/OG/2ob
+         iTgj2i0RWDMfTAzx46UKdP+oFtPk6is+uxRWdiiwGdLmNfUrO2x0NBGLrCkRmCAdLxg2
+         gxsuEmlvmcfAmWthXrn2Ad/E+Kyr89/IhDJIDvfYSKXz58dVmNBXsZisn6Ic8Povhrj8
+         Bazfq30SNvdziqjl2ayuZxuLwNNnNiw7WaydmOiTrDcW8PYJ7ZQvEuwIiO8u7vLJ6EBs
+         qbMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8FR6G5QetI9dOBKmxv8B2sK4fhgDYR5L3+w8Dx5fEvq9ZB+ob0+VE/t9Htl3IUHNagIqmyc8V4a4NENXrXrjGb1dORoHCc7bcnWIL
+X-Gm-Message-State: AOJu0Yyo5gbNCHFX4kGWzgbszz18U6seHJNuSc90nU5EK1stzy8ZA8vE
+	pFfaG5qIbhMJ3Z4KTP+9g53VEQV7Bu2A0S3MyYtwUXnSXmVjigkLVkE0c7vl92aE+6FicG518qr
+	ZICKv7Tlb5wsu533OW9LcjSS5UOKdcuBmhPz3YkMrnqC0FQ9ebV/iDQg=
+X-Google-Smtp-Source: AGHT+IE6e/IIewGxQAV4bqB6X0atmmjTjDjRrTeEujE/9OhtcHQe4bLNbPc1G6ogefC3EoR0pjUbedvrrFrSIyeg1cQ727HyyOZJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <170895405312.2243.4199399921923370447.b4-ty@linux.intel.com>
+X-Received: by 2002:a05:6602:2dc5:b0:7c8:b219:4547 with SMTP id
+ l5-20020a0566022dc500b007c8b2194547mr3316iow.2.1710036304535; Sat, 09 Mar
+ 2024 18:05:04 -0800 (PST)
+Date: Sat, 09 Mar 2024 18:05:04 -0800
+In-Reply-To: <0000000000002a6cba05eb5c7fbd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c3484061344da08@google.com>
+Subject: Re: [syzbot] [ntfs3?] possible deadlock in map_mft_record
+From: syzbot <syzbot+cb1fdea540b46f0ce394@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
+	axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 26, 2024 at 03:27:33PM +0200, Ilpo Järvinen wrote:
-> On Tue, 20 Feb 2024 04:39:34 +0100, Gergo Koteles wrote:
-> 
-> > This patch series adds a new KEY_FN_R input event code and map the
-> > Fn + R key to it in the ideapad-laptop driver.
-> > 
-> > It affects two WMI keycodes and I couldn't try the 0x0a, but I couldn't
-> > find any indication that the refresh rate toggle should not be Fn + R.
-> > 
-> > Regards,
-> > Gergo
-> > 
-> > [...]
-> 
-> 
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo branch only once I've pushed my
-> local branch there, which might take a while.
-> 
-> The list of commits applied:
-> [1/2] Input: allocate keycode for Fn + R
->       commit: 4e45fa464aeef4e803412b5dcce73aad48c94b0e
+syzbot suspects this issue was fixed by commit:
 
-I am sorry for the delay, but instead of defining a generic name we should define
-a proper keycode for concrete action even if nothing is printed on a
-particular key on a particular device.
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-Please drop this patch.
+    fs: Block writes to mounted block devices
 
-Thanks.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b28b99180000
+start commit:   e4cf7c25bae5 Merge tag 'kbuild-fixes-v6.2' of git://git.ke..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=68e0be42c8ee4bb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb1fdea540b46f0ce394
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151db82a480000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f0e670480000
 
--- 
-Dmitry
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
