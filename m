@@ -1,43 +1,43 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23D729411;
-	Sun, 10 Mar 2024 13:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5CB34CD5;
+	Sun, 10 Mar 2024 13:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710076951; cv=none; b=pW6UJHIQzDbOsGc+nPNIo5/51WiVPQMS6EXg6A5MbNFDrL1a30TuFxMwVoe54GjwrmDM75NqQ052iqxw3vbTvoTc22msN0GsmEOG/GIxYZlk8C8DgFpXgbvRGzfUYjjA0N71hjK+urqG3Bt3wzhg3W4vA2XIkwLXmBUuCy+ZFVY=
+	t=1710076954; cv=none; b=dpuJWGwx5fnXVMQqg0FB51JafFw0c+s0/vOFsj6Up2VBmARB0fvdHarAKpf3O4VkuTBojnITx7Kj269rK4uY+skHvQcHQPPIXhIB3bTJYs34aRhda1cDsveLqrUfwng5Iig+1QekabVfkzKQY2/Qfarks69uXaHpDaoy6XjJuhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710076951; c=relaxed/simple;
-	bh=cWJvD4kuynMAtMT5uLtxnwY8oLH1NsilC8b3ZEB8+cU=;
+	s=arc-20240116; t=1710076954; c=relaxed/simple;
+	bh=ZV5lBxre/6M2MuCOOKXnH1cRS8cfBKGM9w8C16rRn4M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZL+nhGUL0IeQqVgMGlN+LCRizgY48/yk7NBO3Jz7V/j7lNxeOx2tWkaGeEhA3sgeJJQd/F+DpnvYRKxvKGVKhMXycbYBg9VpkR9URP/MGVN5YHODJBI8xi/atKaVdLZFcjOX57zDvgzf0Pnrpo4J9jlE+zLAn5y+jThMEc4KJUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=PtV2RTRT; arc=none smtp.client-ip=80.241.56.172
+	 In-Reply-To:To:Cc; b=mnt4jxNsAND5AMKdP5L8JYcra6gPY8ZtJaDVNa4JUDo5QL5UeUCVrH03YeWLcHIxHS7r4TnnDvzRwbqLd8gW/wVlyqlZF7DrPa712gMhnFNaCL2h7L8PngtnrdWyHbZozbJH+DjVCqbJqRB/9BDIbc+bXxCT15lMAlM8o9VsQCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=X+LJ+PCX; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="PtV2RTRT"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="X+LJ+PCX"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Tt0v0060fz9sb6;
-	Sun, 10 Mar 2024 14:22:20 +0100 (CET)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Tt0v91JvGz9sqF;
+	Sun, 10 Mar 2024 14:22:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1710076940;
+	s=MBO0001; t=1710076949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tUAFtRbxGvc8iX6JY0PD4/Rc4PD2SEcW1+r17X7Ljv4=;
-	b=PtV2RTRTPN8N2u0CbqIk/J2x29QlvCvhfSqZ9jvdnx5h1KlTJUgOsv9FPD36tVuGM8Ll7r
-	ufXYBil6l95z/DoPr6cQX09Bk6e8YxJWcxXlTMkw3Sef8rEFkym5vtzKN7bz+70XohTV0q
-	SaFw21g+kDqtvvXdP52avUU4Z72gbVev9WNLLj03M2Rig9ucpwGOt7rnk3Xu7ZdGDwENDJ
-	SLCCZ4aTADDyJRNxowwriiA3lIUcNsJ9jDIB/IFa2Nm7c/nmc1GGq545htNocfQEpikZoF
-	NOZ+c+akJRL5myjHnxqyErHyC2TjrTVAgX2e0CecgRNieiADS3BAAvoLrWcm1Q==
+	bh=mSwEbrk7HLbiVNg/S8Upg2syVPjC3LO4YtPCBym8jns=;
+	b=X+LJ+PCXGwxG9G4WS/TRRQQWedm3WrIvjNGcf3IyPuDYlUdkiR8+aKGzow9mcas8qKnQRc
+	YGAWtICRa3gwaSG28TKplt4sqEY+4NUQmZ0zL+6hYrWsIWUtn91n5bqKyqg2Wjd1mQXvBL
+	adkL/gXYJtM6gtLySg6aq4Ut0PxfzncW71dPvTN5I8wlyeutdRULyOCh6mRDQZJAXyeCni
+	4GFFGLolP9o/Ouaog8EbHezhjNKSdGhE0vDOe+xPOOfrSr2GrUqJfB3tyy7cmzKo4fjzwG
+	NiwFP9RBa/Et2VvysOvVi9wnvUOaU3baDGHcIoqF2ihzLO2IaBWLZDMIXpSV5Q==
 From: Frank Oltmanns <frank@oltmanns.dev>
-Date: Sun, 10 Mar 2024 14:21:12 +0100
-Subject: [PATCH v4 2/5] clk: sunxi-ng: a64: Set minimum and maximum rate
- for PLL-MIPI
+Date: Sun, 10 Mar 2024 14:21:14 +0100
+Subject: [PATCH v4 4/5] clk: sunxi-ng: a64: Add constraints on PLL-MIPI's
+ n/m ratio and parent rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240310-pinephone-pll-fixes-v4-2-46fc80c83637@oltmanns.dev>
+Message-Id: <20240310-pinephone-pll-fixes-v4-4-46fc80c83637@oltmanns.dev>
 References: <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
 In-Reply-To: <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -66,59 +66,58 @@ To: Michael Turquette <mturquette@baylibre.com>,
 Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
  dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- Frank Oltmanns <frank@oltmanns.dev>, Diego Roversi <diegor@tiscali.it>, 
- stable@vger.kernel.org
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1520; i=frank@oltmanns.dev;
- h=from:subject:message-id; bh=cWJvD4kuynMAtMT5uLtxnwY8oLH1NsilC8b3ZEB8+cU=;
- b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBl7bP53Lez98R5l+BpPUkN4t68Hnq58iOfjCT0n
- da5fIrwczOJAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZe2z+QAKCRCaaaIIlErT
- x5S3C/0ZYTeWiGBr+WsKmwU0bXaq4u1nkNKkN86DZhDhY7+qYYBhUS1VUprNX6a539W+8/J60UM
- X4E3yj8ku48Mr7w1+9dZC9H7bnzZEf6YMrdGrL2tg883LIKMgsvSyn+JgapZrTE+vG6USzZMDzc
- ptH9ALrIIN2f9Ih8D9drPECcKXhRzEweBhUpWoff18M5C25xew2/rJWqNebefGMwSoVEm/28h0i
- ECegQwZDItrOLlTeeYvmrXnURm71z2cIPB3QdUMYkB8z3CSZNvgSFuHykY4aJGJvZUsnR4/TNzy
- jhGXSXTF7dRShqnvO1C4xK5ZnRkya1xgOOe04U/k2sLekzL5y7VChTCnYZjiITZ79tb24Go/NDa
- LkTYoZIr0glgk8Zk8p4Pvp2lfs7xlxBR5Dr69ZnVvr62LNhKFGTy2gJy3w7MSn3bwwlTh9j7VTb
- ORbor/d01S4sFolpZHe7vMfLPIpsRxlh3KDWrfdMrxij9YdnKi1S/nrzhBTGfftAJPNos=
+ Frank Oltmanns <frank@oltmanns.dev>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1259; i=frank@oltmanns.dev;
+ h=from:subject:message-id; bh=ZV5lBxre/6M2MuCOOKXnH1cRS8cfBKGM9w8C16rRn4M=;
+ b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBl7bP5PzKfaGxOhYTmRIANrgQLfc29z0qkcLMY5
+ hLBpAPDsGyJAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZe2z+QAKCRCaaaIIlErT
+ x4qGC/9nHquFxNJvKofeUqKDlB8/fyTNUMkYgkr2J09KVCyCOfKhKLCLPq1RbvhQHYMFO+KkUVi
+ y09BPXCYu7AzXNqEIRKtZukM9fWHve4cd4fn87D+lG71JxXN00HbEXZm1dgoL0g7PPhI1rtkpkh
+ cEQk4PpdAm5ES+3EA0gIisbpVs2dDJiBke4aib93cTm0KUGdaLdePvgGbiqRI5oW0h85QSEDYCZ
+ bN5UgmdeX2wdyPM9YAgVh0eK7uzfFYC0lXvOBN+Tf2gWOYWTQTcerLgSAzSyAvt7YSBwFd8rmxC
+ mbBedFXmxAD1HzkgRCB+raRJF2V6Gx8Itmz78c15p0/X5+Ci0BURgx74ArMWF3d+o96FD30kvh9
+ MURe4DjLkNSjQ1wlKtBIerPYzvzllO/ffiZYcBxhFF0qy6WFQ4BDY6xBsayaq5T2Kxb8N13aMp/
+ S77ODkYZ1lsCkQhkMtZ/6r4PLF3vDI+AiEsk02A0igrDst6vqtx9CCYEGZxXgJEMDgCH0=
 X-Developer-Key: i=frank@oltmanns.dev; a=openpgp;
  fpr=02FD257B7F90E6B9A5444F969A69A208944AD3C7
+X-Rspamd-Queue-Id: 4Tt0v91JvGz9sqF
 
-When the Allwinner A64's TCON0 searches the ideal rate for the connected
-panel, it may happen that it requests a rate from its parent PLL-MIPI
-which PLL-MIPI does not support.
+The Allwinner A64 manual lists the following constraints for the
+PLL-MIPI clock:
+ - M/N <= 3
+ - (PLL_VIDEO0)/M >= 24MHz
 
-This happens for example on the Olimex TERES-I laptop where TCON0
-requests PLL-MIPI to change to a rate of several GHz which causes the
-panel to stay blank. It also happens on the pinephone where a rate of
-less than 500 MHz is requested which causes instabilities on some
-phones.
+Use these constraints.
 
-Set the minimum and maximum rate of Allwinner A64's PLL-MIPI according
-to the Allwinner User Manual.
-
-Fixes: ca1170b69968 ("clk: sunxi-ng: a64: force select PLL_MIPI in TCON0 mux")
-Reported-by: Diego Roversi <diegor@tiscali.it>
-Closes: https://groups.google.com/g/linux-sunxi/c/Rh-Uqqa66bw
-Tested-by: Diego Roversi <diegor@tiscali.it>
-Cc: stable@vger.kernel.org
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 8951ffc14ff5..6a4b2b9ef30a 100644
+index 6a4b2b9ef30a..07796c79a23e 100644
 --- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
 +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -182,6 +182,8 @@ static struct ccu_nkm pll_mipi_clk = {
- 					      &ccu_nkm_ops,
- 					      CLK_SET_RATE_UNGATE | CLK_SET_RATE_PARENT),
- 		.features	= CCU_FEATURE_CLOSEST_RATE,
-+		.min_rate	= 500000000,
-+		.max_rate	= 1400000000,
- 	},
- };
- 
+@@ -171,11 +171,13 @@ static struct ccu_nkm pll_mipi_clk = {
+ 	 * user manual, and by experiments the PLL doesn't work without
+ 	 * these bits toggled.
+ 	 */
+-	.enable		= BIT(31) | BIT(23) | BIT(22),
+-	.lock		= BIT(28),
+-	.n		= _SUNXI_CCU_MULT(8, 4),
+-	.k		= _SUNXI_CCU_MULT_MIN(4, 2, 2),
+-	.m		= _SUNXI_CCU_DIV(0, 4),
++	.enable			= BIT(31) | BIT(23) | BIT(22),
++	.lock			= BIT(28),
++	.n			= _SUNXI_CCU_MULT(8, 4),
++	.k			= _SUNXI_CCU_MULT_MIN(4, 2, 2),
++	.m			= _SUNXI_CCU_DIV(0, 4),
++	.max_m_n_ratio		= 3,
++	.min_parent_m_ratio	= 24000000,
+ 	.common		= {
+ 		.reg		= 0x040,
+ 		.hw.init	= CLK_HW_INIT("pll-mipi", "pll-video0",
 
 -- 
 2.44.0
