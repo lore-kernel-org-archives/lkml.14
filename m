@@ -1,128 +1,163 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24877470;
-	Sun, 10 Mar 2024 04:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E0525601;
+	Sun, 10 Mar 2024 04:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710046346; cv=none; b=W4XofIEjMjQQyEPAw+Dyh45/oHF74LgPmbe6//GJqh+Q9x7UG/H4853AsjcWav3EzBmcZ+n5IvTFq352aPG8PlUvXNN07rUcA5e98cz5ow79vdUQI/ktfC4grf/Hrv832Zc1em7B5L217u0+w1rNfvIoRQiUVF91/5X+nP8o3T8=
+	t=1710046348; cv=none; b=gQwlq0Y9tiTMZg4yYzXSLLHm8am1MBu7CBViMPsQRpZa9aqBCmtcPPpRNacWLMLlLjUg1LhWqgYQ7ZVLLPAjsKso9TcAjyz77CmZtAJQdILxKouFWHQEf+r41P7WraCdnK8Wtfbej/O0TD8255BJz0es+Lz18lh/bpWX9LvEcAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710046346; c=relaxed/simple;
-	bh=7f/5d43WPVEjlJpJuyxvmDK6WGVzj/6ZalhsBvLwlco=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sczYN6hCwt+Dmda0/1asEXxro9sj1qJdPy5FJkPxnzo/49z/fkG0C8r53yacahQSc00R5F7jXXeqdE7dsjPueKJUBKWQfjalZzkMKaP0RC4YOM5jKz1ub8l6ZNS9JOyx2wZ0/1UzZntDUWNANGpTHdCQ0MMnv3Z3hyjzN2bpRFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A3Bp7kMW; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1710046348; c=relaxed/simple;
+	bh=Sn6sR3bYWe6Nd/XuPwoEl1cdtJZl2cYMod8tFFFbuSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rwbLHyuGfgZrIkD0QHgu4em30BjAAKnyC2NmT8jHBPEdKGVmV/Gt3YPADrEyiKEdt4oGBlYtq7CpkOJ7M922JBkMcDpFw68hLKdbnBuCUpEnwrmpDuSLgfeGvMj5oaE7/VYUBXns7iGtTVZHk8fQQDBc7Dfu9ur8MjgsJ3Cy39s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AusT9Wk4; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3Bp7kMW"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e655a12c81so2477989b3a.1;
-        Sat, 09 Mar 2024 20:52:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AusT9Wk4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dd5df90170so22082635ad.0;
+        Sat, 09 Mar 2024 20:52:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710046344; x=1710651144; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lfntijmQgp1O3WIpkJBpEgwRwttiIgBYxL9mf5xJS3A=;
-        b=A3Bp7kMWlDRZG4SSAkuREufrIIO420Z6tFrJUHcOYzmXHArSS+WcT06Q1gynr8VfLP
-         +OFytZDr5Ltqhe2G21RbupfJOdEfWiZmQgPHohghbKwPiM2kMrc/D9bhc2oWgs2unK+R
-         I12XpXV7X70f5vwlWKO83itHLTKCujNY8BjH/D9B+bg6nFuC0QhynFVb9khE4IKmNra+
-         FDeALZUMEicIEas/OPMql0nRvxVPZnaO55tRAnCfgW0SReH2AIJpBjQo0ogrsgnqj7vT
-         E4t0SrbMQyC8laNNC0Y8zWx4AK8pWfP4azbQHI2MzyEH8Z5SB+NiZKrGPyPu+q55vfzD
-         C0KA==
+        d=gmail.com; s=20230601; t=1710046346; x=1710651146; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aHIvcn7AWPBiXWsyJb6YwJ3JRVnwhyEpRx+UlxGbkis=;
+        b=AusT9Wk4GrSKeW7uxwXn9hvvuWIxhyZpjkNBErHcqm2PxCdhRiNI+D8KNCNrsyJL2F
+         Lrw80KEvA086kXY3JxaPflYQAPeVKY2hr4YIfIkw/vGih0R1h9xkKk7cXCo3nTVb9yO9
+         1W55tKoesyqgS/PNnlkzF0ckhyxHMiB03IOHo5LCxvRlDm9jLKCnXV/371ydlrRCqZ24
+         fAUPV/is//sLOwA14DiS6ZrhIUzXNdkE2s0ga0uD8YW+NrfqqnGMiGPBugUePOXAiJme
+         GHUHgbEhZKXR547UCPhGj8/wLvQE1Q0VY21w58Y1ZStiOWOBTZz1jvGNVIb7zYFcw1TP
+         jSlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710046344; x=1710651144;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lfntijmQgp1O3WIpkJBpEgwRwttiIgBYxL9mf5xJS3A=;
-        b=NNoxSgn6Os4Uym6YGDM3j0Znl+lGuxZUdaKd3g6khHXmhdJcmChmWpxaZy0mTFQsU1
-         19zV+R0+/Wv5dL6YQgzDCHP8UXgIk0L/Iv7b2sVOAabZLdiFSbNv3Wr8a71qBLNC1RhD
-         bCMzserGAbABnteuHYU8BvPeqTXJh115zDfK3Wt9nLixbVGE75qcwzhNowcrdQpAsyvk
-         98lxzJ5Jj9Gc/8CybokdpNUAniNkv7G0S0CexKmWBk+qNFW9BPt/6heRRaBbveS+Dv2H
-         qHmQMkmN0YuW+fM8v8yrP8bM8OXcjAxd6ZHutzHUVc7C2ZxO64Kpc1YhJYurSAiaR0dx
-         grwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQaBqvcEJ/GvkJ+oW2g+QqDeIch9TpDpKJOWBWJTPEctS92Dc1D/Pa/NJIdmWn0KRW+pE/wC8YnVDZmGrxa5qRLIsYieQX4qN6PI5P
-X-Gm-Message-State: AOJu0Yyl2wagZ9uNACZyS6WpG6UCWuCN9UizaAnx21UYPR2XnkXzmGAI
-	qDr3IMjuCEMMtdxBF4+EhklxlwHMI71eWHYaQ8ox+ha0gKiUKj2z
-X-Google-Smtp-Source: AGHT+IGlO5NG5Z6lacAc90S8PbqOJsioRUsqZHEizpzjZ7cuHLUqCa1+RBoaiYIQchK/SsCkmnEb3Q==
-X-Received: by 2002:a05:6a21:328b:b0:1a1:89e3:9550 with SMTP id yt11-20020a056a21328b00b001a189e39550mr3875264pzb.10.1710046344325;
-        Sat, 09 Mar 2024 20:52:24 -0800 (PST)
-Received: from tresc054937.tre-sc.gov.br ([2804:3b0:4104:200:2be:43ff:febc:c2fb])
-        by smtp.gmail.com with ESMTPSA id e11-20020a63e00b000000b005dc48e56191sm1984659pgh.11.2024.03.09.20.52.20
+        d=1e100.net; s=20230601; t=1710046346; x=1710651146;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aHIvcn7AWPBiXWsyJb6YwJ3JRVnwhyEpRx+UlxGbkis=;
+        b=JOdKlPTf6FqCJrzp29/qexggjvxuiTc9L24eVn2Pp9SVZyw3IcODzNGVqXc2CHeqwO
+         MfrXbUvLVOf6aRmmUqnathfgC1sgOWXS83J6diOoHzHKRktHCjZtBqL2wh1WIbcR0KRy
+         hA2U7j7Fcj39a5ELt36ByNQREEQpje1CKfs9geMoQcL1+qubdsIZPdeLI34iub7XjShO
+         nwISkjY/gcucoLK/g8+hx7fOMetmGKTFILXs1xJ4/66StbWhAWGoclaxKfz627Q/Az9F
+         Dq7nmjuhGeVIfpXmvr5jrzfRmsQ7hUW5SbeK6d7RuAZWCvJDunlJvBzM6QeHKciltf6N
+         zqfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFRymvhO5ugBPMpBeDHzHr9v47hrdNviHRO+EfWIIJNk3y3IodSsTT183FudR+0+lCHrVxCTPRSgyK8ZP2Xytv0FiMf4/hJfR+agALe7ZRniwPHLmBOgC2N3v1u9yfvzG8PqSZuF9ip4YXEhvb3jAYRIhjMhl/y8Dkt3S9ujVrz0Ti6RB5cl/Nk54yiRNJ
+X-Gm-Message-State: AOJu0Yzf/uXtL9dshPVGx1g+92VyNmOms12EdEHhhmdmSD5nMEa4SRfP
+	FD4Qlfc9fvW+S2YCz5qQI7x+0mJdL2nwbdaiXi7y5OIOQbcOHX3p
+X-Google-Smtp-Source: AGHT+IHPmIUFExhU5+iMgA2v1/ZxLA9FJn0c+62vsv8uXlWeSO5qOHy3iiJHLoSbarcfOZGEE7qfwQ==
+X-Received: by 2002:a17:902:c94f:b0:1dd:66e6:ec81 with SMTP id i15-20020a170902c94f00b001dd66e6ec81mr4534285pla.18.1710046346342;
+        Sat, 09 Mar 2024 20:52:26 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:5296:fec3:1fa8:a601])
+        by smtp.gmail.com with ESMTPSA id q21-20020a170902c75500b001dc96b19616sm2077531plq.66.2024.03.09.20.52.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 20:52:23 -0800 (PST)
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Sun, 10 Mar 2024 01:52:00 -0300
-Subject: [PATCH net-next 3/4] net: dsa: realtek: do not assert reset on
- remove
+        Sat, 09 Mar 2024 20:52:25 -0800 (PST)
+Date: Sat, 9 Mar 2024 20:52:23 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: =?utf-8?B?6Im+6LaF?= <aichao@kylinos.cn>,
+	hdegoede <hdegoede@redhat.com>,
+	"ilpo.jarvinen" <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
+	linux-input@vger.kernel.org
+Subject: Re: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+Message-ID: <Ze08hwqt9fNMFQa8@google.com>
+References: <1vk29ojvhrf-1vk4tk6plf0@nsmail7.0.0--kylin--1>
+ <c07dedf3-175c-4748-b6d3-e1effe9cad41@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240310-realtek-led-v1-3-4d9813ce938e@gmail.com>
-References: <20240310-realtek-led-v1-0-4d9813ce938e@gmail.com>
-In-Reply-To: <20240310-realtek-led-v1-0-4d9813ce938e@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luiz Angelo Daros de Luca <luizluca@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1590; i=luizluca@gmail.com;
- h=from:subject:message-id; bh=7f/5d43WPVEjlJpJuyxvmDK6WGVzj/6ZalhsBvLwlco=;
- b=owGbwMvMwMG4W/D2rovs1mGMp9WSGFLf2pQt+X0jyVh9Bes/wcD0V7un5v0tlV/gymlkcTI1/
- ZardOCsTkZjFgZGDgZZMUUWQXYN99az0VZCv/R/wAxiZQKZwsDFKQATiVvF/j+mTPf0T5c0r+R/
- lV/O865d9tsv5sW6WQ83GG6VY9tRmJBrtSugv9Jzoud8hV5+jZo6lvxat1Tex/enJ+xqEN764Of
- EYMVrtVPDZ6QbxaQ2sKYqXZrbJcv4zerUJ5mi5wZLZ2dVffM0cDfeKlwVvCjwf1RTxM7Pvunsqx
- MZTkhr3Ha1MCj4w3dI/+iEhdxJr1j0fXRnWAi2cf0Le//xd/z1yCv11YK/ig8IfF2bYRDdf1+/N
- eb9AT62Z0q9uwW4/87M3nHVQOLs4lxjEQ6eCWHTGoSebVDNkE7WmSohNruGWeuDe23fin3X3vQ9
- FFdbofavSsM36xcP5wWOrq039K/e2Xx77WG1CbXyHn4NAA==
-X-Developer-Key: i=luizluca@gmail.com; a=openpgp;
- fpr=1107284785CD5B3A12FA2FF8BB11DBBAD1073B56
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c07dedf3-175c-4748-b6d3-e1effe9cad41@gmx.de>
 
-The necessity of asserting the reset on removal was previously questioned, as DSA's own cleanup methods should suffice to prevent traffic leakage[1].
+On Fri, Mar 08, 2024 at 05:15:48PM +0100, Armin Wolf wrote:
+> Am 08.03.24 um 09:40 schrieb 艾超:
+> 
+> > Hi
+> > 
+> >     thanks for your help.
+> > 
+> > > Is there a way to determine the current state of the camera switch
+> > without having
+> > > to wait for an WMI event?
+> > 
+> > There is no other way to detemine the current state of the camera
+> > switch without
+> > 
+> > a WMI event.
+> > 
+> > 
+> > > If its not possible to determine the current state of the camera
+> > switch, then your
+> > > driver has to defer the initialization of the input device until it
+> > knows the current
+> > > state of the camera switch. Otherwise the initial switch state
+> > reported by the
+> > > input device might be wrong.
+> > 
+> > > In this case, that means your driver must initialize the input
+> > device when receiving
+> > > a valid WMI event for the first time.
+> > 
+> > > Basically when your driver receives a WMI event, it has to check if
+> > the input device
+> > > is already initialized. If this is not the case, then the input
+> > device is initialized.
+> > > Please protect this check and the input device initialization with a
+> > mutex, since WMI
+> > > event handling is multithreaded.
+> > 
+> > 
+> > This Camera is a UVC device, and the Carema device is already
+> > initialized before the WMI
+> > 
+> > event .  Whether the camera switch is on or off, we can used lsusb to
+> > check the Camera.
 
-When a driver has subdrivers controlled by devres, they will be unregistered after the main driver's .remove is executed. If it asserts a reset, the subdrivers will be unable to communicate with the hardware during their cleanup. For LEDs, this means that they will fail to turn off, resulting in a timeout error.
+It depends on which drivers are built-in and which are modules. The fact
+that on one distribution WMI happens to enumerate after PCI/USB is just
+a stroke of luck.
 
-[1] https://lore.kernel.org/r/20240123215606.26716-9-luizluca@gmail.com/
+> > 
+> > This wmi-camera driver only need to report the current state of the
+> > camera switch.
+> > 
+> > 
+> > Thanks.
+> > 
+> >     Ai Chao
+> > 
+> I see, so userspace will notice when the camera is disabled. Since the camera disappears from
+> the USB bus when the switch is activated, i wonder if SW_CAMERA_LENS_COVER is the right thing
+> to use in this case after all.
+> 
+> I CCed the maintainer of the input subsystem so that he can maybe provide some advise.
+> I for example would, taking the above information above the UVC device into account, say that
+> KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE is more suitable. Then userspace has to
+> keep track of the camera state (through lsusb for example).
 
-Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
----
- drivers/net/dsa/realtek/rtl83xx.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE is supposed to affect
+all cameras connected to the system (HUTRR72: "The proposal is to add a
+set of new Usage IDs to the Consumer Page (0x0C) to control programmatic
+access to *all* camera devices connected to a computer." - emphasis
+mine).
 
-diff --git a/drivers/net/dsa/realtek/rtl83xx.c b/drivers/net/dsa/realtek/rtl83xx.c
-index d2e876805393..a9c1702431ef 100644
---- a/drivers/net/dsa/realtek/rtl83xx.c
-+++ b/drivers/net/dsa/realtek/rtl83xx.c
-@@ -290,16 +290,13 @@ EXPORT_SYMBOL_NS_GPL(rtl83xx_shutdown, REALTEK_DSA);
-  * rtl83xx_remove() - Cleanup a realtek switch driver
-  * @priv: realtek_priv pointer
-  *
-- * If a method is provided, this function asserts the hard reset of the switch
-- * in order to avoid leaking traffic when the driver is gone.
-+ * Placehold for common cleanup procedures.
-  *
-- * Context: Might sleep if priv->gdev->chip->can_sleep.
-+ * Context: Any
-  * Return: nothing
-  */
- void rtl83xx_remove(struct realtek_priv *priv)
- {
--	/* leave the device reset asserted */
--	rtl83xx_reset_assert(priv);
- }
- EXPORT_SYMBOL_NS_GPL(rtl83xx_remove, REALTEK_DSA);
- 
+SW_CAMERA_LENS_COVER is useful when camera is always present but may be
+covered.
+
+If I understand this correctly the camera disappears from the bus and
+reappears again when enabled. In this case why do you need the key event
+at all? Are you planning on having a "stub" for the camera so that
+userspace believes that the camera is always present but may be not
+operational?
+
+Thanks.
 
 -- 
-2.44.0
-
+Dmitry
