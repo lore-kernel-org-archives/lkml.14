@@ -1,417 +1,147 @@
-Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FAC1E51E;
-	Sun, 10 Mar 2024 23:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799323BB50
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 23:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710113856; cv=none; b=Yl6VPgWDFfpryzHrnMAxh8qS611JIRxDJDCHxGFlFdY8l0aQWNwjm3hnk4jSlx+Zb/W/FTi+y1WEzXGOAgaGjx33t9RKB6jBsX2P9eeWwstyPGoCR6p5aixdMRQs0SVMhsAOf5LKyXMmcXLRqB6yqaF6rPXFC8+cIIYf09y1vno=
+	t=1710113944; cv=none; b=BjA1/VK38A/KuLhi3G9fdBBhUeSwagOQ0dSWEeT7QE34k+4Tv/eslXrPX9UiHChrPCVgPGCqxnkec6py6lhRwAB8qvoe0oKOVD8uOy4TbI5iL3OVoON/GZOTxxl1RUWBmSIZCyYX02NwGeiunR7KKxZKLrONJNxzChy8wfWPTD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710113856; c=relaxed/simple;
-	bh=6BFpYmAbSJFTzloFuLEsrFt816vbVb/XhUp9+tos5Po=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oXYBYTXpisnKv1awGlvyesiUcNoiLbMTIhvN5ocrNy4wenmX3tlMaRpNk/nw3gzZ/+hMcgLTilsPZpOekRv3giT3sQkBB7whGf8uU1MFYd4CI4/SaSczORNH0OsbeCnWWPkpTQX1HTmFFFKPPtlKeiI4n1V9c0lIWfIOza8VBR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=BcdrCg40; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c8TDp037; arc=none smtp.client-ip=64.147.123.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1710113944; c=relaxed/simple;
+	bh=dksMPSA6fQwPrhCCoHt+8EG7ISWtFNyr6ZJrEHu7cTA=;
+	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
+	 MIME-Version:Date; b=j0oaCcOObDFWfmnazNWAKVEzRiyzCuwwbgHW7ZFjAOefVap6gYIT2xWptMYooAKZpmO5wDLle9gLVpi8KVssr8mSjfwKzDSpvX69pzIJZyB+PeDmmjfAnRLOR2C9ZK8OSm3x2j3FKUP4iuF6gvNXaHL8/2ixp1UgakOu0n+wa9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j6Sdvm5f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rrRlU9jN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="BcdrCg40";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c8TDp037"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.west.internal (Postfix) with ESMTP id C38771C00088;
-	Sun, 10 Mar 2024 19:37:31 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sun, 10 Mar 2024 19:37:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1710113851; x=1710200251; bh=MsX57JNWXWXgy5MXZkAs7
-	hcdsrp6bnwtQX2LmRVdZMI=; b=BcdrCg40nAR5G8tjRzj1nAUazVGlHI9aTc1Zs
-	EZCqhAHS8TNpf+Fc+o+8tj5zVSGBVheedFvKW3SV+Jv7tPTTDNoMKQEQc8TPktcA
-	dcS832Jvn0NEQ3gchDTTPHiaxo/51HRzdp55zW7hFdwzsqxsT+plZzHY053nEksy
-	JwRQhoZkoq+gRB8PeEzy7zyq0Pg2GJH6g8Q6GSsnY9TtBdTkP9KgfT4SwuiZ+WdO
-	eI0XSBDQILAL4+bi6q2lWyCFbdhM0iScx+46OesM+6dZYZdNKnvxvq2t1pLjRNwy
-	7pAgD0s/lp4bURnCSESuwI3E6AlFAjuLy+vb7tFfZMSvXLd8A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1710113851; x=1710200251; bh=MsX57JNWXWXgy5MXZkAs7hcdsrp6
-	bnwtQX2LmRVdZMI=; b=c8TDp0371iDMNhwk/TaMsSkdica3RottXvn5N2o7DPWK
-	WENAbP6zQx9ojhG6RoUG79hJsgeYpi7UZjW6DyDlI5W1hhVvHKJtpW+l4Yyz2Zrh
-	Yg1doxLTY9PnYHNGfthk8BKlhxFQwc4cS+/6brAYIlObl/V07lGlzqfsG4W7cqss
-	6HPY/2a4LlEs9EmPxWvkP+bvXI18AP3JhnTOfMoiY1UpjDrEjaYC9oPeqC8YmInC
-	ssN1zXux0Kq0NYCXRHP6tNCsvvTj6JxX3OfyZWyD7zKCrosCfHpNVwQhEEcxUwA2
-	knWacveDn8jqeOZhfLK0YwCiuEo8lR5cUjDGsXWclA==
-X-ME-Sender: <xms:OkTuZUN8J27-Lrymk9uzNJm4wfXMCGpwIaAtB14xDkcGyvClCiq1BQ>
-    <xme:OkTuZa82LlB8rfmKD_D6FnbqqumfRaON3OfPOA4labPuliZjdHw4sLsP8ERdpSBz7
-    0wuXPDp2VOOrlk3b24>
-X-ME-Received: <xmr:OkTuZbTagsu_anY2G-cGoA5BlVfxbEsySmNDzyF3UoXidgYi5NSKVu7rOhZS>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjedtgddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
-    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
-    vghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftddtvd
-    fhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:OkTuZctCCDIusakzXXgbcpUJygE5R_0pcAed22ezgLOor9HO-1O8-A>
-    <xmx:OkTuZceW7pJol2G8--af554rJSnWHCLG2xjPbjgyqMF0Ey60xGbFTQ>
-    <xmx:OkTuZQ2ZZ_2c0FUba0RBYpomeaV7bGqycbi94jLlMI3wxLItC_UF8g>
-    <xmx:O0TuZb6LIFX7yVS2kAsUPllLfsaQoIh5mBX4pz00xIgKnUthN5iphcJJFlI>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 10 Mar 2024 19:37:27 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH] platform/x86: asus-wmi: store a min default for ppt options
-Date: Mon, 11 Mar 2024 12:37:22 +1300
-Message-ID: <20240310233722.30884-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j6Sdvm5f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rrRlU9jN"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710113934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=Sqibis0bCat6hwboMFP8Lc/aKxubSBlukudl48GwluM=;
+	b=j6Sdvm5fw/XibGgB7VYn4IXoc/MF+RnELtpa8xQ6Y4pTZwpdAWTdEls6y4k3esuHRFEPqb
+	Mu2wlrf5Nr0hg6egVZcK3Nv0rDrkfQvZ+rKjYaRfD655gnxT9qlw55dMqNFgJXlz3+6l9y
+	JGlK6fMVLrnPNOVhaT/ZEzlzHoTQbwlTQwbZh6bg3jcdBVC630eg20oz4aBCOtz2jbT+ol
+	BgEGcRN0hW7/hb2zd11GCfiTPVACv/TJRfCfCFu/0/jawWFU7uEkWmyuGxZZ97W/gziXTt
+	jfzijjykyq6+6yEBTq1g/d6RykiZ/wCf2efuZ5vthg1D3HH/ZL44ZwgF6HAIEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710113934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=Sqibis0bCat6hwboMFP8Lc/aKxubSBlukudl48GwluM=;
+	b=rrRlU9jNHBxVAjMAuyDK7YiXQnc9T0EcKK1YfpDo3WkCTi/MysYO9Gw4VZ7EcM6y/2/Nuj
+	8g4f13PA8u3eLvAg==
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] smp/core for v6.9-rc1
+References: <171011361246.2468526.10740060923051583953.tglx@xen13>
+Message-ID: <171011361564.2468526.10150004610808473613.tglx@xen13>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Mon, 11 Mar 2024 00:38:54 +0100 (CET)
 
-Laptops with any of the ppt or nv tunables default to the minimum setting
-on boot so we can safely assume a stored value is correct.
+Linus,
 
-This patch adds storing of those values in the local struct, and enables
-reading of those values back.
+please pull the latest smp/core branch from:
 
-Secondary to the above it renames some internal variables to be more
-consistent (which makes code grepping show all related parts)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-core-2024-03=
+-10
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c | 141 +++++++++++++++++++++++++-------
- 1 file changed, 111 insertions(+), 30 deletions(-)
+up to:  266e95786452: cpu: Remove stray semicolon
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e4341abb71e0..482e23b55e1e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -272,12 +272,19 @@ struct asus_wmi {
- 
- 	/* Tunables provided by ASUS for gaming laptops */
- 	bool ppt_pl2_sppt_available;
-+	u32 ppt_pl2_sppt;
- 	bool ppt_pl1_spl_available;
-+	u32 ppt_pl1_spl;
- 	bool ppt_apu_sppt_available;
--	bool ppt_plat_sppt_available;
-+	u32 ppt_apu_sppt;
-+	bool ppt_platform_sppt_available;
-+	u32 ppt_platform_sppt;
- 	bool ppt_fppt_available;
--	bool nv_dyn_boost_available;
--	bool nv_temp_tgt_available;
-+	u32 ppt_fppt;
-+	bool nv_dynamic_boost_available;
-+	u32 nv_dynamic_boost;
-+	bool nv_temp_target_available;
-+	u32 nv_temp_target;
- 
- 	bool kbd_rgb_mode_available;
- 	u32 kbd_rgb_dev;
-@@ -999,11 +1006,10 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1022,22 +1028,31 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_pl2_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
- 
- 	return count;
+A small boring set of cleanups for the SMP and CPU hotplug code.
+
+Thanks,
+
+	tglx
+
+------------------>
+Alexey Dobriyan (2):
+      cpu: Mark cpu_possible_mask as __ro_after_init
+      smp: Make __smp_processor_id() 0-argument macro
+
+Li Zhijian (1):
+      kernel/cpu: Convert snprintf() to sysfs_emit()
+
+Max Kellermann (1):
+      cpu: Remove stray semicolon
+
+Randy Dunlap (1):
+      cpu/hotplug: Delete an extraneous kernel-doc description
+
+
+ include/linux/smp.h | 2 +-
+ kernel/cpu.c        | 9 ++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index e87520dc2959..cc517002c599 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -261,7 +261,7 @@ static inline int get_boot_cpu_id(void)
+  * regular asm read for the stable.
+  */
+ #ifndef __smp_processor_id
+-#define __smp_processor_id(x) raw_smp_processor_id(x)
++#define __smp_processor_id() raw_smp_processor_id()
+ #endif
+=20
+ #ifdef CONFIG_DEBUG_PREEMPT
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e6ec3ba4950b..cc4a8068747c 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -54,7 +54,6 @@
+  * @rollback:	Perform a rollback
+  * @single:	Single callback invocation
+  * @bringup:	Single callback bringup or teardown selector
+- * @cpu:	CPU number
+  * @node:	Remote CPU node; for multi-instance, do a
+  *		single entry callback for install/remove
+  * @last:	For multi-instance rollback, remember how far we got
+@@ -3005,7 +3004,7 @@ static ssize_t control_show(struct device *dev,
+ 		return sysfs_emit(buf, "%d\n", cpu_smt_num_threads);
+ #endif
+=20
+-	return snprintf(buf, PAGE_SIZE - 2, "%s\n", state);
++	return sysfs_emit(buf, "%s\n", state);
  }
--static DEVICE_ATTR_WO(ppt_pl2_sppt);
-+
-+static ssize_t ppt_pl2_sppt_show(struct device *dev,
-+				       struct device_attribute *attr,
-+				       char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_pl2_sppt);
- 
- /* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
- static ssize_t ppt_pl1_spl_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
+=20
+ static ssize_t control_store(struct device *dev, struct device_attribute *at=
+tr,
+@@ -3018,7 +3017,7 @@ static DEVICE_ATTR_RW(control);
+ static ssize_t active_show(struct device *dev,
+ 			   struct device_attribute *attr, char *buf)
  {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1056,22 +1071,30 @@ static ssize_t ppt_pl1_spl_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_pl1_spl = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl1_spl");
- 
- 	return count;
+-	return snprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
++	return sysfs_emit(buf, "%d\n", sched_smt_active());
  }
--static DEVICE_ATTR_WO(ppt_pl1_spl);
-+static ssize_t ppt_pl1_spl_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_pl1_spl);
-+}
-+static DEVICE_ATTR_RW(ppt_pl1_spl);
- 
- /* Tunable: PPT APU FPPT ******************************************************/
- static ssize_t ppt_fppt_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1090,22 +1113,31 @@ static ssize_t ppt_fppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_fppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_fpu_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_fppt);
-+
-+static ssize_t ppt_fppt_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_fppt);
-+}
-+static DEVICE_ATTR_RW(ppt_fppt);
- 
- /* Tunable: PPT APU SPPT *****************************************************/
- static ssize_t ppt_apu_sppt_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1124,22 +1156,31 @@ static ssize_t ppt_apu_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_apu_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_apu_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_apu_sppt);
-+
-+static ssize_t ppt_apu_sppt_show(struct device *dev,
-+			     struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_apu_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_apu_sppt);
- 
- /* Tunable: PPT platform SPPT ************************************************/
- static ssize_t ppt_platform_sppt_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1158,22 +1199,31 @@ static ssize_t ppt_platform_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_platform_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_platform_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_platform_sppt);
-+
-+static ssize_t ppt_platform_sppt_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_platform_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_platform_sppt);
- 
- /* Tunable: NVIDIA dynamic boost *********************************************/
- static ssize_t nv_dynamic_boost_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1192,22 +1242,31 @@ static ssize_t nv_dynamic_boost_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->nv_dynamic_boost = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_dynamic_boost");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(nv_dynamic_boost);
-+
-+static ssize_t nv_dynamic_boost_show(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->nv_dynamic_boost);
-+}
-+static DEVICE_ATTR_RW(nv_dynamic_boost);
- 
- /* Tunable: NVIDIA temperature target ****************************************/
- static ssize_t nv_temp_target_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result, err;
- 	u32 value;
- 
--	struct asus_wmi *asus = dev_get_drvdata(dev);
--
- 	result = kstrtou32(buf, 10, &value);
- 	if (result)
- 		return result;
-@@ -1226,11 +1285,21 @@ static ssize_t nv_temp_target_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->nv_temp_target = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_temp_target");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(nv_temp_target);
-+
-+static ssize_t nv_temp_target_show(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->nv_temp_target);
-+}
-+static DEVICE_ATTR_RW(nv_temp_target);
- 
- /* Battery ********************************************************************/
- 
-@@ -4301,11 +4370,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_ppt_apu_sppt.attr)
- 		ok = asus->ppt_apu_sppt_available;
- 	else if (attr == &dev_attr_ppt_platform_sppt.attr)
--		ok = asus->ppt_plat_sppt_available;
-+		ok = asus->ppt_platform_sppt_available;
- 	else if (attr == &dev_attr_nv_dynamic_boost.attr)
--		ok = asus->nv_dyn_boost_available;
-+		ok = asus->nv_dynamic_boost_available;
- 	else if (attr == &dev_attr_nv_temp_target.attr)
--		ok = asus->nv_temp_tgt_available;
-+		ok = asus->nv_temp_target_available;
- 	else if (attr == &dev_attr_boot_sound.attr)
- 		ok = asus->boot_sound_available;
- 	else if (attr == &dev_attr_panel_od.attr)
-@@ -4566,6 +4635,15 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_platform;
- 
-+	/* ensure defaults for tunables */
-+	asus->ppt_pl2_sppt = 5;
-+	asus->ppt_pl1_spl = 5;
-+	asus->ppt_apu_sppt = 5;
-+	asus->ppt_platform_sppt = 5;
-+	asus->ppt_fppt = 5;
-+	asus->nv_dynamic_boost = 5;
-+	asus->nv_temp_target = 75;
-+
- 	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
-@@ -4576,9 +4654,12 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
- 	asus->ppt_fppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_FPPT);
- 	asus->ppt_apu_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_APU_SPPT);
--	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
--	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
--	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
-+	asus->ppt_platform_sppt_available = asus_wmi_dev_is_present(asus,
-+								    ASUS_WMI_DEVID_PPT_PLAT_SPPT);
-+	asus->nv_dynamic_boost_available = asus_wmi_dev_is_present(asus,
-+								   ASUS_WMI_DEVID_NV_DYN_BOOST);
-+	asus->nv_temp_target_available = asus_wmi_dev_is_present(asus,
-+								 ASUS_WMI_DEVID_NV_THERM_TARGET);
- 	asus->boot_sound_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_BOOT_SOUND);
- 	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
- 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
--- 
-2.44.0
+ static DEVICE_ATTR_RO(active);
+=20
+@@ -3107,10 +3106,10 @@ const DECLARE_BITMAP(cpu_all_bits, NR_CPUS) =3D CPU_B=
+ITS_ALL;
+ EXPORT_SYMBOL(cpu_all_bits);
+=20
+ #ifdef CONFIG_INIT_ALL_POSSIBLE
+-struct cpumask __cpu_possible_mask __read_mostly
++struct cpumask __cpu_possible_mask __ro_after_init
+ 	=3D {CPU_BITS_ALL};
+ #else
+-struct cpumask __cpu_possible_mask __read_mostly;
++struct cpumask __cpu_possible_mask __ro_after_init;
+ #endif
+ EXPORT_SYMBOL(__cpu_possible_mask);
+=20
 
