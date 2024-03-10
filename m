@@ -1,100 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD25F18AE4;
-	Sun, 10 Mar 2024 13:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB3029411;
+	Sun, 10 Mar 2024 13:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710077369; cv=none; b=MfXbvzhPmi9Q9PSmzGjnLZE2x2FeyJmhooPeINanj/exVPlK2eRIrPwUZEs17tNcE5cKSDKyVWDBo5Cp1pKpHTYvp8hOkKMjbvCaKiC1XBdDIEdQsWnK+oPch+FL4TPITrOMGEAACWRcHrFQHKAQM1FeoFqxxTsqc40704C5Pxw=
+	t=1710077423; cv=none; b=So8/TOZZCluEbsSqM6CLk8TByiC35U/N0DEPb35nilbu/SVuH6CPCeqP5rRb49Y2HlJ1FE3Fp69AbZbsinLDFGLWvFZks+UsznVl95OsV6mXaeHRGuuFUBeVUAEaaq2isWdgazaFCf4zq/ZUKPQXpRzrnNIkgzKN/WXYc8I44kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710077369; c=relaxed/simple;
-	bh=gfkP8LYRyawwp9+kWHGhd2GZEQ3SoFQ4y8eKVamILuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hjtri1jG5NBc4nMXxw3LscoHxUKg+zjOnGwMHa206Snz6LQFxyORijoqa7Cl0/D8XuD8GzqASHIz0Hq3vOG7rRGUm2C3hgtrLjvCYDS09QbK9yVmqHGYtt1Vn+pzmZve6cm1e6SwMelbbcS28/4UMOETBuNTYIcdYZMGfBhdKaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqfW/h3S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710077423; c=relaxed/simple;
+	bh=CqzJhF4o2XVhzVlKqVuKVOUwZQAnduWDJhne+0nY6oQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TtMU9DDx5bmofJ1i+4P+p2X2Q5lMIwRn+zgZPd0lMAx4mRmZ7mpjkm+tKzFdc58fqzv3v+euVhwYPDod43ytJKflAhmCUW+4Txl69G03buSd8gwulzT6poqAv4a9iCDRpoYPUSp4fLVIsjbXERYpqZoQDMaabYpf8lrwlbyJlIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=jL1TKCmJ; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqfW/h3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD694C433F1;
-	Sun, 10 Mar 2024 13:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710077368;
-	bh=gfkP8LYRyawwp9+kWHGhd2GZEQ3SoFQ4y8eKVamILuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RqfW/h3S87jj7+W0+B9RcHkHeLPMG/GXlWRzgASmC2b8EWoY7lueJu1mlC+YIbp3H
-	 fdtydgo6WXrq37R2CEaQMUhqH/yH2E3zP8RbNWRVgYkybKx5d1ztSLMM6nr6pzYOPT
-	 +eCV80EPFkgM35jQ+KctNZ6YUI6GBHW6Rva3JsOmSaQGx4obn2rtHl4c54iT/b78CA
-	 n+UPO0swXukzZ2bmFJPHQqdDq8bfZyuD/f2v0dtDGFG7l7EKX9Uf+T3ito+2AADnKc
-	 Fx4o6ls2xSbKE6YG3b779HPh+rgb4L9Jl61IIB4VeY9L/D/eLdqUh9y3mtvuAq9Q8a
-	 Vz/xvIwAtBPRA==
-Date: Sun, 10 Mar 2024 18:59:15 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Praveenkumar I <quic_ipkumar@quicinc.com>
-Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-	mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	vkoul@kernel.org, kishon@kernel.org, mani@kernel.org,
-	quic_nsekar@quicinc.com, quic_srichara@quicinc.com,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	quic_varada@quicinc.com, quic_devipriy@quicinc.com,
-	quic_kathirav@quicinc.com, quic_anusha@quicinc.com
-Subject: Re: [PATCH 00/10] Add PCIe support for Qualcomm IPQ5332
-Message-ID: <20240310132915.GE3390@thinkpad>
-References: <20231214062847.2215542-1-quic_ipkumar@quicinc.com>
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="jL1TKCmJ"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Tt0tt2fVBz9sp0;
+	Sun, 10 Mar 2024 14:22:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1710076934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iuVCUppc+ddFR8UUDWGyNuWRGBDXVACD/i0UBw2FfT0=;
+	b=jL1TKCmJxkYKSofV18GqqZidtQ6dBS0RSdbNryORV2eglYdk8CpD9Nl6NSPIuMKvcba6gL
+	VczhR8HuAoPuf57nciEQdJX7aGSHGaq0o4vzG1E4gd2EcTGF7kdpeyfIxpD1EB7ogSFbL3
+	BbmtwgkbdDBOJQYXEmncAWexysEWh4SwpbhG1+QD0sMWZQSys4mMHxmkJZ653zRJivGHqW
+	D9p4WWXPNh5uShxkZT1GxlQSZ/BP8hIZpiCm+Bn6K3EuYd9CA6NGdJh80SUt548YDQi7+b
+	2a6GKhWXuOriRWixcOXSmJ45B0LDxVKC50YcSNotAN4hKJHSktMB1QZPJxKfbw==
+From: Frank Oltmanns <frank@oltmanns.dev>
+Date: Sun, 10 Mar 2024 14:21:11 +0100
+Subject: [PATCH v4 1/5] clk: sunxi-ng: common: Support minimum and maximum
+ rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231214062847.2215542-1-quic_ipkumar@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240310-pinephone-pll-fixes-v4-1-46fc80c83637@oltmanns.dev>
+References: <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
+In-Reply-To: <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
+ Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ Frank Oltmanns <frank@oltmanns.dev>, stable@vger.kernel.org
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2480; i=frank@oltmanns.dev;
+ h=from:subject:message-id; bh=CqzJhF4o2XVhzVlKqVuKVOUwZQAnduWDJhne+0nY6oQ=;
+ b=owEB7QES/pANAwAIAZppogiUStPHAcsmYgBl7bP5kCr8X0Jr9HHd3T424gfP8km/HgWZfPQml
+ DbUiRGKwIqJAbMEAAEIAB0WIQQC/SV7f5DmuaVET5aaaaIIlErTxwUCZe2z+QAKCRCaaaIIlErT
+ x06dDACAZf8e15F20tsk2AJ2y+vPgbtV7PitDHlG2/P3dLpBvPQ4GJAHi7ReDu+fsWJn/0bmkxO
+ 8u0uLux/EGhhpuxCa0o5NP0w9tzUvTo+1XYDZ9cAhXXbDkraBMnYff7BXutewjjbj8HjDXV6Z2p
+ CrYYT/22bbb00DY0KVjqTHRWq5dDzyO8ymWvdkfG28vBpEeHYOoG/Zyp45EG6p2zf1Gqp0ew9Bz
+ pPDqdYka3MQovp53e7GHFeOD8/0sVBvAXJGripG1awS/rVsT7Hq0GY6XKTVZNEY69+dR4u4mYgv
+ qc/x+lx9MhMDvTfwv9MH72Y/yCIs1xJ1ulmUPS8rpdrO71f3lYJe7zBFYgLzsG0dyiFRBwNPIP0
+ /EBfNGpeLQkenimONtJE9B/BrWWCs7C8OM22CNYbQVGKsIiH+JWW9xHU0WUJivrSr1nV4bqYE6A
+ IyeFmD0oXLGrt/liRNxEWvMYOoM/xskY+oKeMve6o0RhihHV5ljc2jEHSb+6dxd5AreAE=
+X-Developer-Key: i=frank@oltmanns.dev; a=openpgp;
+ fpr=02FD257B7F90E6B9A5444F969A69A208944AD3C7
 
-On Thu, Dec 14, 2023 at 11:58:37AM +0530, Praveenkumar I wrote:
-> Patch series adds support for enabling the PCIe controller and
-> UNIPHY found on Qualcomm IPQ5332 platform. PCIe0 is Gen3 X1 and
-> PCIe1 is Gen3 X2 are added.
-> 
-> UNIPHY changes depends on
-> https://lore.kernel.org/all/20231003120846.28626-1-quic_nsekar@quicinc.com/
-> PCIe driver change depends on
-> https://lore.kernel.org/all/20230519090219.15925-1-quic_devipriy@quicinc.com/
-> 
+The Allwinner SoC's typically have an upper and lower limit for their
+clocks' rates. Up until now, support for that has been implemented
+separately for each clock type.
 
-Any plan on this series and the dependencies?
+Implement that functionality in the sunxi-ng's common part making use of
+the CCF rate liming capabilities, so that it is available for all clock
+types.
 
-- Mani
+Suggested-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+Cc: stable@vger.kernel.org
+---
+ drivers/clk/sunxi-ng/ccu_common.c | 19 +++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_common.h |  3 +++
+ 2 files changed, 22 insertions(+)
 
-> Praveenkumar I (10):
->   dt-bindings: clock: Add separate clocks for PCIe and USB for Combo PHY
->   clk: qcom: ipq5332: Add separate clocks for PCIe and USB for Combo PHY
->   arm64: dts: qcom: ipq5332: Add separate entry for USB pipe clock
->   phy: qcom: Add support for Pipe clock rate from device data
->   dt-bindings: phy: qcom,uniphy-pcie: Add ipq5332 bindings
->   phy: qcom: ipq5332: Add support for g3x1 and g3x2 PCIe PHYs
->   dt-bindings: PCI: qcom: Add IPQ5332 SoC
->   pci: qcom: Add support for IPQ5332
->   arm64: dts: qcom: ipq5332: Add PCIe related nodes
->   arm64: dts: qcom: ipq5332: Enable PCIe phys and controllers
-> 
->  .../bindings/clock/qcom,ipq5332-gcc.yaml      |   6 +-
->  .../devicetree/bindings/pci/qcom,pcie.yaml    |  36 ++++
->  .../bindings/phy/qcom,uniphy-pcie-28lp.yaml   |  65 +++++-
->  arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts   |  74 +++++++
->  arch/arm64/boot/dts/qcom/ipq5332.dtsi         | 188 +++++++++++++++++-
->  drivers/clk/qcom/gcc-ipq5332.c                |   7 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
->  .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  |  49 ++++-
->  8 files changed, 412 insertions(+), 14 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
-> 
+diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu_common.c
+index 8babce55302f..ac0091b4ce24 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.c
++++ b/drivers/clk/sunxi-ng/ccu_common.c
+@@ -44,6 +44,16 @@ bool ccu_is_better_rate(struct ccu_common *common,
+ 			unsigned long current_rate,
+ 			unsigned long best_rate)
+ {
++	unsigned long min_rate, max_rate;
++
++	clk_hw_get_rate_range(&common->hw, &min_rate, &max_rate);
++
++	if (current_rate > max_rate)
++		return false;
++
++	if (current_rate < min_rate)
++		return false;
++
+ 	if (common->features & CCU_FEATURE_CLOSEST_RATE)
+ 		return abs(current_rate - target_rate) < abs(best_rate - target_rate);
+ 
+@@ -122,6 +132,7 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, struct device *dev,
+ 
+ 	for (i = 0; i < desc->hw_clks->num ; i++) {
+ 		struct clk_hw *hw = desc->hw_clks->hws[i];
++		struct ccu_common *common = hw_to_ccu_common(hw);
+ 		const char *name;
+ 
+ 		if (!hw)
+@@ -136,6 +147,14 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, struct device *dev,
+ 			pr_err("Couldn't register clock %d - %s\n", i, name);
+ 			goto err_clk_unreg;
+ 		}
++
++		if (common->max_rate)
++			clk_hw_set_rate_range(hw, common->min_rate,
++					      common->max_rate);
++		else
++			WARN(common->min_rate,
++			     "No max_rate, ignoring min_rate of clock %d - %s\n",
++			     i, name);
+ 	}
+ 
+ 	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
+diff --git a/drivers/clk/sunxi-ng/ccu_common.h b/drivers/clk/sunxi-ng/ccu_common.h
+index 942a72c09437..329734f8cf42 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.h
++++ b/drivers/clk/sunxi-ng/ccu_common.h
+@@ -31,6 +31,9 @@ struct ccu_common {
+ 	u16		lock_reg;
+ 	u32		prediv;
+ 
++	unsigned long	min_rate;
++	unsigned long	max_rate;
++
+ 	unsigned long	features;
+ 	spinlock_t	*lock;
+ 	struct clk_hw	hw;
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.44.0
+
