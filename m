@@ -1,155 +1,63 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4A9376E4
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 16:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD32D1D6BD;
+	Sun, 10 Mar 2024 16:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710087661; cv=none; b=QMBFwIpA+ZEjsCTD5R97XEGVJjfSODiWjU7Wj426iYL19bpjbn1yNprf7K6nqzDMMfSXZi/ox9S+WCt8E9H3wTXS6VioQgKtcpI0LKt1V9SpNFFrTEq9fANAWBuLMhmzBPMw5Bq3ea3IShbOURZr2dL5lXFMlrZ8Z0ep03QhcbQ=
+	t=1710088439; cv=none; b=o3tz5IqRvdJao3G1/FrT7UPtCpx8mXIHVT03Z1gQ50usmqMSHCT5hqcU512K1OIPo5QUvIscpbVD7cE9HPQEqGJwkKZOgsG3jAXW5kLhBjSqwe4/Tu6UBAqY5JuhhB/xhTGaBl3JatXntplftEDB840DCbi4/JzFt2KMf7NZEf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710087661; c=relaxed/simple;
-	bh=H/ERMdxRZgif1YJjlln1siCzO3C4zNY/tYb9SV+i2iA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hu7UsWAf/SOwX1LyqbwLWoQYSYcQ5+XLgsQQ2uQ+eorsUQqtxkJzzUMan7vGZe5OFTosw28wC4ns/sR36tOjVn6wYAf3rPZdJAZOuDQcLzEF3l94kDGZSAZuFYswYzZsamgIkuulgA10Gx4tVUcrZXqUJyZtmY/lkptjcDJIh4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=qficNoLl; arc=none smtp.client-ip=80.12.242.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1710088439; c=relaxed/simple;
+	bh=Z8jOyUxP/iAvH2vnccw1mUuAZX3CM9L4UUvgDWTGcpI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fu0bGOQVEFc2t0vgozlBqxjd8koR7TaZFf3gjiXNnFWVVmALMc30B/qdCg/J8QLB3jFLLCrQFaH4DUHP8hCNBQm9SUwthSEIaFBNthusg/dTcOLFitIkMIJelzbqTkLsxLgwNyx/4zSCABwiOeaEo56xHSJyoxMKUP3yNfPqdgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcZozizj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="qficNoLl"
-Received: from fedora.home ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id jLttrAANWxtdHjLttr6yeJ; Sun, 10 Mar 2024 17:19:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1710087590;
-	bh=rXUTIQg24bJuU6dk3QojcqSr+hAPwOurGASti1sp4RU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=qficNoLlTmRbC98KhpXz+06bJl9S27dmuS7XfY7h1metUQ4MceNL+uNpnNZWcG9qh
-	 q/rHPjrRbOHfy/ncsfrwXdbslrSt3OJfUrHrMQMmlibMRiDQO55/L4k4tum5G5/iCw
-	 zWWi72iaKXlA3pR1PCROofbT5RGAI0k9T8YJmD6s1a6q+Pgo9MiiL/yGwlxA1VKsLM
-	 nuk+Q8lBlSGrAmftbRp45/n0z340Bszj73CfPpmrafbQ8+DR9ejt0jvu/TlQ2hw31e
-	 CkwjU/Vt/1Il8+mA66GMTU5TMysUOYV/7BBag1AKh/hH+ULrUzGVWKh9bn251XXjRA
-	 /mPgFgWV+vm3g==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 10 Mar 2024 17:19:50 +0100
-X-ME-IP: 92.140.202.140
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Minas Harutyunyan <hminas@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-usb@vger.kernel.org
-Subject: [PATCH] usb: dwc2: Remove cat_printf()
-Date: Sun, 10 Mar 2024 17:19:44 +0100
-Message-ID: <abf3d0361ea291468d121062207a766b0c3228f2.1710087556.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcZozizj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AD143C433C7;
+	Sun, 10 Mar 2024 16:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710088439;
+	bh=Z8jOyUxP/iAvH2vnccw1mUuAZX3CM9L4UUvgDWTGcpI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=tcZozizj0gpmc74mAZq1hJ712xBpcCzJdyBwZ1G0048BLAqBiW3SL7RVITI1lwELC
+	 vKL8akKRV7F5DFOw1azQhoQEoTXrJMyOb83THTBQxHKwiFAY6Q9hfCRwEMolBzHLjG
+	 /TpkOWoB7tr/PTic1/ziz8D2HtP6G43rYd9Sfyq9IVlF6h8eSYUmaStaLoArvvf6E4
+	 gIfKtyl/rf9bxEY8K+0M/DOilmberEjOxCURPmhjurq8SfrMQI3gR3KvHLIUU43Mxe
+	 h9JsRDVGlPcS+6mly78wbHM1VJy6aD0LM+l5eNKa9rInK1+zCyUOxeyD8KHwZcEcoJ
+	 frBQp6GaRhDeQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9B76BC04D3F;
+	Sun, 10 Mar 2024 16:33:59 +0000 (UTC)
+Subject: Re: [GIT PULL] Final set of KVM fixes for Linux 6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240310093556.653127-1-pbonzini@redhat.com>
+References: <20240310093556.653127-1-pbonzini@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240310093556.653127-1-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+X-PR-Tracked-Commit-Id: 5abf6dceb066f2b02b225fd561440c98a8062681
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 137e0ec05aeb657472d2f84dbb3081016160334b
+Message-Id: <171008843962.6744.15399494588773965243.pr-tracker-bot@kernel.org>
+Date: Sun, 10 Mar 2024 16:33:59 +0000
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-cat_printf() implements the newly introduced seq_buf API.
-Use the latter to save some line of code.
+The pull request you sent on Sun, 10 Mar 2024 10:35:56 +0100:
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only, with DWC2_PRINT_SCHEDULE defined.
----
- drivers/usb/dwc2/hcd_queue.c | 52 ++++++------------------------------
- 1 file changed, 8 insertions(+), 44 deletions(-)
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-diff --git a/drivers/usb/dwc2/hcd_queue.c b/drivers/usb/dwc2/hcd_queue.c
-index 0d4495c6b9f7..238c6fd50e75 100644
---- a/drivers/usb/dwc2/hcd_queue.c
-+++ b/drivers/usb/dwc2/hcd_queue.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
-+#include <linux/seq_buf.h>
- #include <linux/slab.h>
- #include <linux/usb.h>
- 
-@@ -359,41 +360,6 @@ static unsigned long *dwc2_get_ls_map(struct dwc2_hsotg *hsotg,
- }
- 
- #ifdef DWC2_PRINT_SCHEDULE
--/*
-- * cat_printf() - A printf() + strcat() helper
-- *
-- * This is useful for concatenating a bunch of strings where each string is
-- * constructed using printf.
-- *
-- * @buf:   The destination buffer; will be updated to point after the printed
-- *         data.
-- * @size:  The number of bytes in the buffer (includes space for '\0').
-- * @fmt:   The format for printf.
-- * @...:   The args for printf.
-- */
--static __printf(3, 4)
--void cat_printf(char **buf, size_t *size, const char *fmt, ...)
--{
--	va_list args;
--	int i;
--
--	if (*size == 0)
--		return;
--
--	va_start(args, fmt);
--	i = vsnprintf(*buf, *size, fmt, args);
--	va_end(args);
--
--	if (i >= *size) {
--		(*buf)[*size - 1] = '\0';
--		*buf += *size;
--		*size = 0;
--	} else {
--		*buf += i;
--		*size -= i;
--	}
--}
--
- /*
-  * pmap_print() - Print the given periodic map
-  *
-@@ -416,9 +382,7 @@ static void pmap_print(unsigned long *map, int bits_per_period,
- 	int period;
- 
- 	for (period = 0; period < periods_in_map; period++) {
--		char tmp[64];
--		char *buf = tmp;
--		size_t buf_size = sizeof(tmp);
-+		DECLARE_SEQ_BUF(buf, 64);
- 		int period_start = period * bits_per_period;
- 		int period_end = period_start + bits_per_period;
- 		int start = 0;
-@@ -442,19 +406,19 @@ static void pmap_print(unsigned long *map, int bits_per_period,
- 				continue;
- 
- 			if (!printed)
--				cat_printf(&buf, &buf_size, "%s %d: ",
--					   period_name, period);
-+				seq_buf_printf(&buf, "%s %d: ",
-+					       period_name, period);
- 			else
--				cat_printf(&buf, &buf_size, ", ");
-+				seq_buf_puts(&buf, ", ");
- 			printed = true;
- 
--			cat_printf(&buf, &buf_size, "%d %s -%3d %s", start,
--				   units, start + count - 1, units);
-+			seq_buf_printf(&buf, "%d %s -%3d %s", start,
-+				       units, start + count - 1, units);
- 			count = 0;
- 		}
- 
- 		if (printed)
--			print_fn(tmp, print_data);
-+			print_fn(seq_buf_str(&buf), print_data);
- 	}
- }
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/137e0ec05aeb657472d2f84dbb3081016160334b
+
+Thank you!
+
 -- 
-2.44.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
