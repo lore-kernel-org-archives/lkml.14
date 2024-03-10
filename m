@@ -1,78 +1,159 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F3B15C4
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87D23C32
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036306; cv=none; b=ptTfsPmzvQjU9WC+olX3SKBdFLxPZG3IXAbuFt67+i8pOAE/2/u1mhBk6/pGbiYwW4ZdPFa4wQEWeSvityGLRhKL2nK3lDappEVaU6zu/YLCwnzJaSfNlXBeABokxej9awwtu6EvfIsfJ6XZHM9BGSpuTbvMDpJEYjhkZB2+B0o=
+	t=1710036333; cv=none; b=gP+iMpHwmAEZzQNT6bU1bAUJkzNwP12NdBDE1Ze2k3U7YcbRqo7kbe6BVUq2653Me/zRgQylmTif24G9q03HjVVss2VfxOdCBRPUDW83Sa10EEeGcyAsRBmO8wrIGNEeMCZcor7CiotCeQCWDTuuCg3i2Pni1HzTWU4sgBDX6SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036306; c=relaxed/simple;
-	bh=AB9oIgX15HDPukZy2QrbAYWK+ICd94A+UY4Tldqk2xs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=qSR/vJwHZmWrMger+0iDsGEPT5iRUaMahm4nMWM0BxWQfKfiCKPjC5y+qcM1lDbATQkGyhcAgdE838Hz+AnCz6pq6D72u/Pmp/PNHaO7/4kxGhRJrEe0J4YD7xOnmHiqIvveUA8p49Q4xXsUF8ExTMj9fXeTEPhHriB5ur9t6V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c86ecb5b37so339556939f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:05 -0800 (PST)
+	s=arc-20240116; t=1710036333; c=relaxed/simple;
+	bh=as7KSNoSZZw9qpo+zjIfLwBqz9yg94llh3SNLLkBgkY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=bDqpBQd+XFQVRjQT1AYmreL694xN4+W+mXyzV4RiBHzHWiRMIZQZSYsE74To5mbPNPztmF80wQcaZAjWD3P8sZFfWadUnFVMl90fly8ek31ml0lWfatMfIiB+svWRUMBXAeKEqZW2XS+63ZWEz1nx6XkJpCo2Qv9iIHETE3UrdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=thYILaaq; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thYILaaq"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-29a5bae5b3fso3080718a91.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710036331; x=1710641131; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eHEIYqeti5loGAbMg5pT9rTzLm2kPQlk4+PZDUbNnbs=;
+        b=thYILaaq0N8hztWo1a6G6Gna5tcUK7A8Pr9P0KTYl8eXkQzu4f5M4gJuRJSyTWIsCG
+         I4+QDYfzsbg9YxV+Pjyu8vHBAZ5FXW7QkIz/FGBv1PaWK7/Hwc7GlhTPmH8gruT+4uL/
+         t7bcVG7ZWNg4aqJH0Ercooi2T+Np4zQcIj4qfRsp7ZEMxNrXdDwL6uvnTYvKRiqUW+VF
+         fwnluvnGaF2iqIWxm85sua6JPALE5wQSdzUuT5inUmSxZpQLR8kKYdMKiZ7xkjpm3Q1F
+         WmIWPij3/Zcwd3sXtc2oWy1QtJWi4K1YxwfWZE9jznqUNPwflSNeHC/DhsrRKQK9ipoE
+         kUew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036304; x=1710641104;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eAtcZ0jcmff76E8g+uUmd6ptddX0gjsk2MQCSo48DN0=;
-        b=lqRGgJOpLRi+v1nzlXlpvRRXfKgCSOH9ZS0ioAJTaJVJEdDqGFQBOFoeCNFQPKhq7J
-         MZ7dCNtQfD4pAHSaHteuUw7y8htCQA3ZdBQfET0o+3+xFhpJDbSweJf5rNzj+/OG/2ob
-         iTgj2i0RWDMfTAzx46UKdP+oFtPk6is+uxRWdiiwGdLmNfUrO2x0NBGLrCkRmCAdLxg2
-         gxsuEmlvmcfAmWthXrn2Ad/E+Kyr89/IhDJIDvfYSKXz58dVmNBXsZisn6Ic8Povhrj8
-         Bazfq30SNvdziqjl2ayuZxuLwNNnNiw7WaydmOiTrDcW8PYJ7ZQvEuwIiO8u7vLJ6EBs
-         qbMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8FR6G5QetI9dOBKmxv8B2sK4fhgDYR5L3+w8Dx5fEvq9ZB+ob0+VE/t9Htl3IUHNagIqmyc8V4a4NENXrXrjGb1dORoHCc7bcnWIL
-X-Gm-Message-State: AOJu0Yyo5gbNCHFX4kGWzgbszz18U6seHJNuSc90nU5EK1stzy8ZA8vE
-	pFfaG5qIbhMJ3Z4KTP+9g53VEQV7Bu2A0S3MyYtwUXnSXmVjigkLVkE0c7vl92aE+6FicG518qr
-	ZICKv7Tlb5wsu533OW9LcjSS5UOKdcuBmhPz3YkMrnqC0FQ9ebV/iDQg=
-X-Google-Smtp-Source: AGHT+IE6e/IIewGxQAV4bqB6X0atmmjTjDjRrTeEujE/9OhtcHQe4bLNbPc1G6ogefC3EoR0pjUbedvrrFrSIyeg1cQ727HyyOZJ
+        d=1e100.net; s=20230601; t=1710036331; x=1710641131;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eHEIYqeti5loGAbMg5pT9rTzLm2kPQlk4+PZDUbNnbs=;
+        b=lYm6XKATsixmMuznlB5LZlNbIez4ajY9pg3rJoaXpJveZl+UVIdHlIQwyVtMtv0tFO
+         lUDSrEAPFBdC/uaiv75IwDT9Qn+/AvEJ6CJ/30qDRzkVZyH5Ss9gOgzhgfR1/CuhAsFc
+         tU8D0I4lQAMaCbmDkxMhqdJrxFAoSvqhfQX3TxfGAJXlQvOp1iUP+g2JlQpNftPO2yfB
+         nb/9pldF4L+qoqCqyQeya91bbo2UTui2JkEUjdPy+iAUVGCbrO/ZkS7eW5z5HcrxyvD0
+         eBNdqGpsNTzttlycxVTbCe7MUA0psJKow3izmnFhlY5ve5mhjZC7uO6GOT23uIs0U1pL
+         TZZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr0K8tXWSiOOKDHdLxVAy0fLHRwjkt7YH3M5q7NkIakNSWIZ3xgynfRgVlBCC8AeEtotXy5xWo9Pz0rWpB3UEomCQpRkXzDHyCsqa4
+X-Gm-Message-State: AOJu0YxH2J/GiJEds4x7UkexqJ2nFSErM/GpzkdF87TMfh8MWtWUj+y+
+	6+db3myERf3dbCDvIFPzFoYtZ3O9sc01VZkMSwUh/raBAoM6B24preyAenuoSyGX2STsxqsJVw+
+	NfUfdeA==
+X-Google-Smtp-Source: AGHT+IFFeRmPXH/DhdnrjLnsP7WPRqqtOIbezxRAyR/jnJBja3zK8/JuocE9C3SHGAEjuI8M5e1xF7iOTDOC
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
+ (user=irogers job=sendgmr) by 2002:a17:90b:3804:b0:29b:b854:54ad with SMTP id
+ mq4-20020a17090b380400b0029bb85454admr192655pjb.0.1710036330740; Sat, 09 Mar
+ 2024 18:05:30 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:04:55 -0800
+Message-Id: <20240310020509.647319-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2dc5:b0:7c8:b219:4547 with SMTP id
- l5-20020a0566022dc500b007c8b2194547mr3316iow.2.1710036304535; Sat, 09 Mar
- 2024 18:05:04 -0800 (PST)
-Date: Sat, 09 Mar 2024 18:05:04 -0800
-In-Reply-To: <0000000000002a6cba05eb5c7fbd@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c3484061344da08@google.com>
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in map_mft_record
-From: syzbot <syzbot+cb1fdea540b46f0ce394@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
-	axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v1 00/13] tools header compiler.h update
+From: Ian Rogers <irogers@google.com>
+To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	David Laight <David.Laight@ACULAB.COM>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
+	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
+	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
+	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
+	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot suspects this issue was fixed by commit:
+Update tools/include/linux/compiler.h so that the definition of
+noinline can be updated to avoid an LLVM libc breakage. Fix build
+issues and try to synchronize other pieces on the way. For atomic.h,
+don't try to synchronize and just punt to stdatomic.h that we can
+assume is present since the move to C11.
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+Ian Rogers (13):
+  tools bpf: Synchronize bpf.h with kernel uapi version
+  libbpf: Make __printf define conditional
+  libperf xyarray: Use correct stddef.h include
+  perf expr: Add missing stdbool.h include
+  perf expr: Tidy up header guard
+  perf debug: Add missing linux/types.h include
+  perf cacheline: Add missing linux/types.h include
+  perf arm-spe: Add missing linux/types.h include
+  tools headers: Rewrite linux/atomic.h using C11's stdatomic.h
+  asm-generic: Avoid transitive dependency for unaligned.h
+  tools headers: Sync linux/overflow.h
+  tools headers: Sync compiler.h headers
+  tools headers: Rename noinline to __noinline
 
-    fs: Block writes to mounted block devices
+ include/asm-generic/unaligned.h               |   2 +
+ tools/arch/x86/include/asm/atomic.h           |  84 ----
+ tools/include/asm-generic/atomic-gcc.h        |  95 ----
+ tools/include/asm-generic/bitops/non-atomic.h |   1 +
+ tools/include/asm-generic/unaligned.h         |   2 +
+ tools/include/asm/atomic.h                    |  11 -
+ tools/include/asm/rwonce.h                    |  63 +++
+ tools/include/linux/atomic.h                  | 107 ++++-
+ tools/include/linux/compiler-clang.h          | 124 +++++
+ tools/include/linux/compiler-gcc.h            | 145 +++++-
+ tools/include/linux/compiler.h                | 221 ++-------
+ tools/include/linux/compiler_attributes.h     | 449 ++++++++++++++++++
+ tools/include/linux/compiler_types.h          | 171 ++++++-
+ tools/include/linux/overflow.h                | 331 ++++++++++---
+ tools/include/linux/rbtree.h                  |   1 +
+ tools/include/linux/string.h                  |   1 +
+ tools/include/linux/types.h                   |  17 +-
+ tools/include/uapi/linux/bpf.h                |   1 +
+ tools/lib/bpf/libbpf.c                        |   4 +-
+ tools/lib/perf/include/internal/xyarray.h     |   2 +-
+ tools/perf/arch/x86/tests/bp-modify.c         |   4 +-
+ tools/perf/bench/find-bit-bench.c             |   2 +-
+ tools/perf/check-headers.sh                   |   4 +
+ tools/perf/tests/bp_account.c                 |   2 +-
+ tools/perf/tests/bp_signal.c                  |   2 +-
+ tools/perf/tests/bp_signal_overflow.c         |   2 +-
+ tools/perf/tests/dwarf-unwind.c               |  12 +-
+ tools/perf/tests/workloads/leafloop.c         |   8 +-
+ tools/perf/tests/workloads/thloop.c           |   4 +-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |   8 +-
+ tools/perf/util/cacheline.h                   |   1 +
+ tools/perf/util/debug.h                       |   1 +
+ tools/perf/util/expr.h                        |   8 +-
+ .../selftests/kvm/include/kvm_util_base.h     |   3 +-
+ 35 files changed, 1388 insertions(+), 506 deletions(-)
+ delete mode 100644 tools/arch/x86/include/asm/atomic.h
+ delete mode 100644 tools/include/asm-generic/atomic-gcc.h
+ delete mode 100644 tools/include/asm/atomic.h
+ create mode 100644 tools/include/asm/rwonce.h
+ create mode 100644 tools/include/linux/compiler-clang.h
+ create mode 100644 tools/include/linux/compiler_attributes.h
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b28b99180000
-start commit:   e4cf7c25bae5 Merge tag 'kbuild-fixes-v6.2' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=68e0be42c8ee4bb4
-dashboard link: https://syzkaller.appspot.com/bug?extid=cb1fdea540b46f0ce394
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151db82a480000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f0e670480000
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
