@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E95D3BBE8
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 23:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC313BBF7
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 23:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710113952; cv=none; b=P8lQz+g3Hz19XyaI7SrNbA3vnyKvZcGIBFCfn3mJWoNhXJrD0nY/WF4RpOvOLaoiu6MMbBXvI7CPBQ4SB8v1qb1nepjsws6X1k8DrzWbVUEUIvUf073WxJ9xpLPWH9FRKlp/xA/gesaSbAQIqdhSsAEvFBgYPre9ZHKeHJmBIEc=
+	t=1710113953; cv=none; b=S2EgnhCwMIrO/fJdd2vozPQenv0n7NIQ9t6pBx3RG+aiAw95JApILk5lNRhHQp89ss1XKMhBbYf6GxH3jSUdQQZ5F/whlJ80S8NfpsKCdJIeZVtJaJLBuqmYRfy42paWdiHYTLyY2TDHsjZ389Ugu3IYWqojCy5DVEZ/mtC8NGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710113952; c=relaxed/simple;
-	bh=GirV3PRst5bhTPG+/UqIW7iCT0p4Yp25eGVn8PxjJ3k=;
+	s=arc-20240116; t=1710113953; c=relaxed/simple;
+	bh=nYW1enJ5tO6u6psuklfPcxrlNwH5jNR8cqEam79YAqo=;
 	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
-	 MIME-Version:Date; b=G6nd/zCg9QeasJ5zBLGUvejE1+2+Qcy0XW0v/b/5rsM2Xift5FJ3w3CYi+v1xndiCT3z2qrhNzYC5RgjlUHQ8cDBDTo4sfNhfjvU3stCixG3NglMNPHwnhQS50oJoAxqAEb1teJc92G3z4yfIMLC1pbpTOpvHWJCWxqGTCuCu8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wXWX+DgZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fNmCYEHT; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Date; b=L1TTz0qosvBeIgS8Q6hF57ItKWysNDu3Fqmjaxkd1skhIyL0JztwNigpuKCSX9LvdQ8X5tc880ryezTur6mIBThlxau5dUupNSGZM2NoHoMWpZgDfOgO+bvZdumHv0Jx8wRbAiXMR8Xw4BrDujFpGYed0okzRI73kokoSBqiLnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cBNKMDlF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qLqvzbxx; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wXWX+DgZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fNmCYEHT"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cBNKMDlF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qLqvzbxx"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710113939;
+	s=2020; t=1710113936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=LuJB2sHcBrMZV5yjsfkUE8118rPpMDi8e3014hY1wYU=;
-	b=wXWX+DgZuOpyF7fp5aWphGiQWj2BchB4E8TWA8LwK2D+DGSYOfXnwNpIhBdLCu5dvGxG7O
-	8gWGeSST0zJ+6R1WoNDOS3xwTgEMlPlg9Z7CxMZCebfZpb7/vVqf9g3RxURT6wiKgHnmay
-	zf+qjsUJcBgEeC+GuYGNr/RJDUNduLQKminDmYfYZov89Cd65qfl6Y5TlI2IY9dQLeDkVm
-	K1dcBoRWSUndkG+Qqd03hxqjOkT4lA22e51vDA3ZK5dDOY5ugMc4tWcw7EY5x5lA8NOd6f
-	OzLOdSuV6ZbNfZn342Ud0/sBpVOh3P/lXX9YNF9MigagzL0VHR/Pg2DUPM8gcQ==
+	bh=BK1btW5YTOApOdiTT9w3M1DvjgroOhk4IFRpYsb3S/Q=;
+	b=cBNKMDlFrm2+hudIcw2DN7RNM8T9S51yhmZn7qWXgDsxbd8ujPhOWOhxdKAX9xZvj/HrFK
+	8/5PdY8XFlSF9kgXQSSB6v+o2rkSkKPTAubVTkBKct0twa3c7PcM3j977jPrl6MV4cU950
+	PVJisk0/26I1qlrVx3Llk6KFLVVlEe1BAy+U9SnG8//RI6waNAIQ2sCBm/GMNOnd2FSd3q
+	ZlH/1VWxikvQt3Kh9/uCZmIuWBISg2iDX5AR9+d5S0ncoXNjFCvUa6wiabB2TtS8rBJlgX
+	DXVyYogVw2AOkjviirwTuAkyTCwBXPMEtQVisY7O2ikC70QMDHe51YOHbzNmyA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710113939;
+	s=2020e; t=1710113936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:  references:references;
-	bh=LuJB2sHcBrMZV5yjsfkUE8118rPpMDi8e3014hY1wYU=;
-	b=fNmCYEHT8sukFKI8/O4X1yp1UB1Qaw2lcPSVrSkrjYYOTq1ZOpwcgqCRqbtHEJRpoDeqDH
-	VQ7lsAobnc9U2sDw==
+	bh=BK1btW5YTOApOdiTT9w3M1DvjgroOhk4IFRpYsb3S/Q=;
+	b=qLqvzbxxoLYEyL69XkdjBLBV/cdwiK5f1oStPvk7Cn4y+/NJwxHXNVCrfT+arWGHujxzmc
+	EpE2LB8WZ0/v+1Aw==
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/apic for v6.9-rc1
+Subject: [GIT pull] timers/core for v6.9-rc1
 References: <171011361246.2468526.10740060923051583953.tglx@xen13>
-Message-ID: <171011362048.2468526.2240218025431476865.tglx@xen13>
+Message-ID: <171011361729.2468526.2426064486971501672.tglx@xen13>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -50,5612 +50,5449 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 11 Mar 2024 00:38:59 +0100 (CET)
+Date: Mon, 11 Mar 2024 00:38:55 +0100 (CET)
 
 Linus,
 
-please pull the latest x86/apic branch from:
+please pull the latest timers/core branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-2024-03=
--10
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2024=
+-03-10
 
-up to:  f0551af02130: x86/topology: Ignore non-present APIC IDs in a present =
-package
+up to:  8ca1836769d7: timer/migration: Fix quick check reporting late expiry
 
+A large set of updates and features for timers and timekeeping:
 
-Rework of APIC enumeration and topology evaluation:
+  - The hierarchical timer pull model
 
-The current implementation has a couple of shortcomings:
+    When timer wheel timers are armed they are placed into the timer wheel
+    of a CPU which is likely to be busy at the time of expiry. This is done
+    to avoid wakeups on potentially idle CPUs.
 
-  - It fails to handle hybrid systems correctly.
+    This is wrong in several aspects:
 
-  - The APIC registration code which handles CPU number assignents is in
-    the middle of the APIC code and detached from the topology evaluation.
+     1) The heuristics to select the target CPU are wrong by
+        definition as the chance to get the prediction right is close
+        to zero.
 
-  - The various mechanisms which enumerate APICs, ACPI, MPPARSE and guest
-    specific ones, tweak global variables as they see fit or in case of
-    XENPV just hack around the generic mechanisms completely.
+     2) Due to #1 it is possible that timers are accumulated on a
+        single target CPU
 
-  - The CPUID topology evaluation code is sprinkled all over the vendor
-    code and reevaluates global variables on every hotplug operation.
+     3) The required computation in the enqueue path is just overhead for
+     	dubious value especially under the consideration that the vast
+     	majority of timer wheel timers are either canceled or rearmed
+     	before they expire.
 
-  - There is no way to analyze topology on the boot CPU before bringing up
-    the APs. This causes problems for infrastructure like PERF which needs
-    to size certain aspects upfront or could be simplified if that would be
-    possible.
+    The timer pull model avoids the above by removing the target
+    computation on enqueue and queueing timers always on the CPU on which
+    they get armed.
 
-  - The APIC admission and CPU number association logic is incomprehensible
-    and overly complex and needs to be kept around after boot instead of
-    completing this right after the APIC enumeration.
+    This is achieved by having separate wheels for CPU pinned timers and
+    global timers which do not care about where they expire.
 
-This update addresses these shortcomings with the following changes:
+    As long as a CPU is busy it handles both the pinned and the global
+    timers which are queued on the CPU local timer wheels.
 
-  - Rework the CPUID evaluation code so it is common for all vendors and
-    provides information about the APIC ID segments in a uniform way
-    independent of the number of segments (Thread, Core, Module, ..., Die,
-    Package) so that this information can be computed instead of rewriting
-    global variables of dubious value over and over.
+    When a CPU goes idle it evaluates its own timer wheels:
 
-  - A few cleanups and simplifcations of the APIC, IO/APIC and related
-    interfaces to prepare for the topology evaluation changes.
+      - If the first expiring timer is a pinned timer, then the global
+      	timers can be ignored as the CPU will wake up before they expire.
 
-  - Seperation of the parser stages so the early evaluation which tries to
-    find the APIC address can be seperately overridden from the late
-    evaluation which enumerates and registers the local APIC as further
-    preparation for sanitizing the topology evaluation.
+      - If the first expiring timer is a global timer, then the expiry time
+        is propagated into the timer pull hierarchy and the CPU makes sure
+        to wake up for the first pinned timer.
 
-  - A new registration and admission logic which
+    The timer pull hierarchy organizes CPUs in groups of eight at the
+    lowest level and at the next levels groups of eight groups up to the
+    point where no further aggregation of groups is required, i.e. the
+    number of levels is log8(NR_CPUS). The magic number of eight has been
+    established by experimention, but can be adjusted if needed.
 
-     - encapsulates the inner workings so that parsers and guest logic
-       cannot longer fiddle in it
+    In each group one busy CPU acts as the migrator. It's only one CPU to
+    avoid lock contention on remote timer wheels.
 
-     - uses the APIC ID segments to build topology bitmaps at registration
-       time
+    The migrator CPU checks in its own timer wheel handling whether there
+    are other CPUs in the group which have gone idle and have global timers
+    to expire. If there are global timers to expire, the migrator locks the
+    remote CPU timer wheel and handles the expiry.
 
-     - provides a sane admission logic
+    Depending on the group level in the hierarchy this handling can require
+    to walk the hierarchy downwards to the CPU level.
 
-     - allows to detect the crash kernel case, where CPU0 does not run on
-       the real BSP, automatically. This is required to prevent sending
-       INIT/SIPI sequences to the real BSP which would reset the whole
-       machine. This was so far handled by a tedious command line
-       parameter, which does not even work in nested crash scenarios.
+    Special care is taken when the last CPU goes idle. At this point the
+    CPU is the systemwide migrator at the top of the hierarchy and it
+    therefore cannot delegate to the hierarchy. It needs to arm its own
+    timer device to expire either at the first expiring timer in the
+    hierarchy or at the first CPU local timer, which ever expires first.
 
-     - Associates CPU number after the enumeration completed and prevents
-       the late registration of APICs, which was somehow tolerated before.
+    This completely removes the overhead from the enqueue path, which is
+    e.g. for networking a true hotpath and trades it for a slightly more
+    complex idle path.
 
-  - Converting all parsers and guest enumeration mechanisms over to the
-    new interfaces.
+    This has been in development for a couple of years and the final series
+    has been extensively tested by various teams from silicon vendors and
+    ran through extensive CI.
 
-    This allows to get rid of all global variable tweaking from the parsers
-    and enumeration mechanisms and sanitizes the XEN[PV] handling so it can
-    use CPUID evaluation for the first time.
+    There have been slight performance improvements observed on network
+    centric workloads and an Intel team confirmed that this allows them to
+    power down a die completely on a mult-die socket for the first time in
+    a mostly idle scenario.
 
-  - Mopping up existing sins by taking the information from the APIC ID
-    segment bitmaps.
+    There is only one outstanding ~1.5% regression on a specific overloaded
+    netperf test which is currently investigated, but the rest is either
+    positive or neutral performance wise and positive on the power
+    management side.
 
-    This evaluates hybrid systems correctly on the boot CPU and allows for
-    cleanups and fixes in the related drivers, e.g. PERF.
+  - Fixes for the timekeeping interpolation code for cross-timestamps:
 
-The series has been extensively tested and the minimal late fallout due to
-a broken ACPI/MADT table has been addressed by tightening the admission
-logic further.
+    cross-timestamps are used for PTP to get snapshots from hardware timers
+    and interpolated them back to clock MONOTONIC. The changes address a
+    few corner cases in the interpolation code which got the math and logic
+    wrong.
+
+  - Simplifcation of the clocksource watchdog retry logic to automatically
+    adjust to handle larger systems correctly instead of having more
+    incomprehensible command line parameters.
+
+  - Treewide consolidation of the VDSO data structures.
+
+  - The usual small improvements and cleanups all over the place.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Ingo Molnar (3):
-      smp: Avoid 'setup_max_cpus' namespace collision/shadowing
-      smp: Provide 'setup_max_cpus' definition on UP too
-      x86/apic: Build the x86 topology enumeration functions on UP APIC build=
-s too
+Anna-Maria Behnsen (34):
+      hrtimers: Move hrtimer base related definitions into hrtimer_defs.h
+      hrtimers: Update formatting of documentation
+      tick/sched: Add function description for tick_nohz_next_event()
+      timers: Add struct member description for timer_base
+      jiffies: Transform comment about time_* functions into DOC block
+      vdso/helpers: Fix grammar in comments
+      s390/vdso/data: Drop unnecessary header include
+      csky/vdso: Remove superfluous ifdeffery
+      vdso/ARM: Make union vdso_data_store available for all architectures
+      arm64: vdso: Use generic union vdso_data_store
+      riscv: vdso: Use generic union vdso_data_store
+      s390/vdso: Use generic union vdso_data_store
+      LoongArch: vdso: Use generic union vdso_data_store
+      MIPS: vdso: Use generic union vdso_data_store
+      csky/vdso: Use generic union vdso_data_store
+      timers: Restructure get_next_timer_interrupt()
+      timers: Split out get next timer interrupt
+      timers: Move marking timer bases idle into tick_nohz_stop_tick()
+      timers: Optimization for timer_base_try_to_set_idle()
+      timers: Introduce add_timer() variants which modify timer flags
+      workqueue: Use global variant for add_timer()
+      timers: Make sure TIMER_PINNED flag is set in add_timer_on()
+      timers: Simplify code in run_local_timers()
+      timers: Split next timer interrupt logic
+      timers: Keep the pinned timers separate from the others
+      timers: Retrieve next expiry of pinned/non-pinned timers separately
+      timers: Split out "get next timer interrupt" functionality
+      timers: Add get next timer interrupt functionality for remote CPUs
+      timers: Check if timers base is handled already
+      timers: Introduce function to check timer base is_idle flag
+      timers: Implement the hierarchical pull model
+      timer_migration: Add tracepoints
+      timers: Always queue timers on the local CPU
+      vdso/datapage: Quick fix - use asm/page-def.h for ARM64
 
-Pawan Gupta (1):
-      x86/bugs: Use fixed addressing for VERW operand
+Arnd Bergmann (1):
+      tick/sched: Fix build failure for CONFIG_NO_HZ_COMMON=3Dn
 
-Thomas Gleixner (72):
-      x86/cpu: Provide cpuid_read() et al.
-      x86/cpu: Provide cpu_init/parse_topology()
-      x86/cpu: Add legacy topology parser
-      x86/cpu: Use common topology code for Centaur and Zhaoxin
-      x86/cpu: Move __max_die_per_package to common.c
-      x86/cpu: Provide a sane leaf 0xb/0x1f parser
-      x86/cpu: Use common topology code for Intel
-      x86/cpu/amd: Provide a separate accessor for Node ID
-      x86/cpu: Provide an AMD/HYGON specific topology parser
-      x86/smpboot: Teach it about topo.amd_node_id
-      x86/cpu: Use common topology code for AMD
-      x86/cpu: Use common topology code for HYGON
-      x86/mm/numa: Use core domain size on AMD
-      x86/cpu: Make topology_amd_node_id() use the actual node info
-      x86/cpu: Remove topology.c
-      x86/cpu: Remove x86_coreid_bits
-      x86/apic: Remove unused phys_pkg_id() callback
-      x86/xen/smp_pv: Remove cpudata fiddling
-      x86/apic/uv: Remove the private leaf 0xb parser
-      x86/cpu/topology: Make the APIC mismatch warnings complete
-      x86/platform/ce4100: Dont override x86_init.mpparse.setup_ioapic_ids
-      x86/ioapic: Replace some more set bit nonsense
-      x86/apic: Get rid of get_physical_broadcast()
-      x86/ioapic: Make io_apic_get_unique_id() simpler
-      x86/ioapic: Simplify setup_ioapic_ids_from_mpc_nocheck()
-      x86/apic: Remove check_apicid_used() and ioapic_phys_id_map()
-      x86/mpparse: Rename default_find_smp_config()
-      x86/mpparse: Provide separate early/late callbacks
-      x86/mpparse: Prepare for callback separation
-      x86/dtb: Rename x86_dtb_init()
-      x86/platform/ce4100: Prepare for separate mpparse callbacks
-      x86/platform/intel-mid: Prepare for separate mpparse callbacks
-      x86/jailhouse: Prepare for separate mpparse callbacks
-      x86/xen/smp_pv: Prepare for separate mpparse callbacks
-      x86/hyperv/vtl: Prepare for separate mpparse callbacks
-      x86/mpparse: Switch to new init callbacks
-      x86/mm/numa: Move early mptable evaluation into common code
-      x86/mpparse: Remove the physid_t bitmap wrapper
-      x86/apic: Remove the pointless writeback of boot_cpu_physical_apicid
-      x86/apic: Remove yet another dubious callback
-      x86/apic: Use a proper define for invalid ACPI CPU ID
-      x86/cpu/topology: Move registration out of APIC code
-      x86/cpu/topology: Provide separate APIC registration functions
-      x86/acpi: Use new APIC registration functions
-      x86/jailhouse: Use new APIC registration function
-      x86/of: Use new APIC registration functions
-      x86/mpparse: Use new APIC registration function
-      x86/acpi: Dont invoke topology_register_apic() for XEN PV
-      x86/xen/smp_pv: Register fake APICs
-      x86/cpu/topology: Confine topology information
-      x86/cpu/topology: Simplify APIC registration
-      x86/cpu/topology: Use a data structure for topology info
-      x86/smpboot: Make error message actually useful
-      x86/cpu/topology: Sanitize the APIC admission logic
-      x86/cpu/topology: Rework possible CPU management
-      x86/cpu: Detect real BSP on crash kernels
-      x86/topology: Add a mechanism to track topology via APIC IDs
-      x86/cpu/topology: Reject unknown APIC IDs on ACPI hotplug
-      x86/cpu/topology: Assign hotpluggable CPUIDs during init
-      x86/xen/smp_pv: Count number of vCPUs early
-      x86/cpu/topology: Let XEN/PV use topology from CPUID/MADT
-      x86/cpu/topology: Use topology bitmaps for sizing
-      x86/cpu/topology: Mop up primary thread mask handling
-      x86/cpu/topology: Simplify cpu_mark_primary_thread()
-      x86/cpu/topology: Provide logical pkg/die mapping
-      x86/cpu/topology: Use topology logical mapping mechanism
-      x86/cpu/topology: Retrieve cores per package from topology bitmaps
-      x86/cpu/topology: Rename smp_num_siblings
-      x86/cpu/topology: Rename topology_max_die_per_package()
-      x86/cpu/topology: Provide __num_[cores|threads]_per_package
-      x86/cpu/topology: Get rid of cpuinfo::x86_max_cores
-      x86/topology: Ignore non-present APIC IDs in a present package
+Costa Shulyupin (1):
+      hrtimer: Select housekeeping CPU during migration
+
+David Gow (1):
+      time/kunit: Use correct format specifier
+
+Feng Tang (1):
+      clocksource: Scale the watchdog read retries automatically
+
+Frederic Weisbecker (15):
+      tick/sched: Remove useless oneshot ifdeffery
+      tick: Use IS_ENABLED() whenever possible
+      tick/sched: Rename tick_nohz_stop_sched_tick() to tick_nohz_full_stop_t=
+ick()
+      tick/sched: Don't clear ts::next_tick again in can_stop_idle_tick()
+      tick: Start centralizing tick related CPU hotplug operations
+      tick: Move tick cancellation up to CPUHP_AP_TICK_DYING
+      tick: Move broadcast cancellation up to CPUHP_AP_TICK_DYING
+      tick: Assume the tick can't be stopped in NOHZ_MODE_INACTIVE mode
+      tick: Move got_idle_tick away from common flags
+      tick: Move individual bit features to debuggable mask accesses
+      tick: Split nohz and highres features from nohz_mode
+      tick: Shut down low-res tick from dying CPU
+      tick: Assume timekeeping is correctly handed over upon last offline idl=
+e call
+      timers: Assert no next dyntick timer look-up while CPU is offline
+      timer/migration: Fix quick check reporting late expiry
+
+Peng Liu (2):
+      tick/nohz: Remove duplicate between tick_nohz_switch_to_nohz() and tick=
+_setup_sched_timer()
+      tick/nohz: Remove duplicate between lowres and highres handlers
+
+Peter Hilber (3):
+      timekeeping: Fix cross-timestamp interpolation on counter wrap
+      timekeeping: Fix cross-timestamp interpolation corner case decision
+      timekeeping: Fix cross-timestamp interpolation for non-x86
+
+Ricardo B. Marliere (2):
+      clocksource: Make clocksource_subsys const
+      clockevents: Make clockevents_subsys const
+
+Richard Cochran (linutronix GmbH) (2):
+      timers: Restructure internal locking
+      tick/sched: Split out jiffies update helper function
 
 
- Documentation/admin-guide/kdump/kdump.rst          |   7 +-
- Documentation/admin-guide/kernel-parameters.txt    |   9 -
- Documentation/arch/x86/topology.rst                |  24 +-
- arch/x86/events/amd/core.c                         |   2 +-
- arch/x86/events/intel/cstate.c                     |   2 +-
- arch/x86/events/intel/uncore.c                     |   2 +-
- arch/x86/events/intel/uncore_nhmex.c               |   4 +-
- arch/x86/events/intel/uncore_snb.c                 |   8 +-
- arch/x86/events/intel/uncore_snbep.c               |  18 +-
- arch/x86/events/rapl.c                             |   2 +-
- arch/x86/hyperv/hv_vtl.c                           |   5 +-
- arch/x86/include/asm/apic.h                        |  22 +-
- arch/x86/include/asm/cpu.h                         |  10 +-
- arch/x86/include/asm/cpuid.h                       |  36 ++
- arch/x86/include/asm/io_apic.h                     |   1 -
- arch/x86/include/asm/mpspec.h                      |  66 +--
- arch/x86/include/asm/nospec-branch.h               |   2 +-
- arch/x86/include/asm/perf_event_p4.h               |   4 +-
- arch/x86/include/asm/processor.h                   |   9 +-
- arch/x86/include/asm/prom.h                        |   4 +-
- arch/x86/include/asm/smp.h                         |   6 -
- arch/x86/include/asm/topology.h                    |  90 +++-
- arch/x86/include/asm/x86_init.h                    |  10 +-
- arch/x86/kernel/acpi/boot.c                        |  59 +--
- arch/x86/kernel/amd_nb.c                           |   4 +-
- arch/x86/kernel/apic/apic.c                        | 207 +-------
- arch/x86/kernel/apic/apic_common.c                 |  15 -
- arch/x86/kernel/apic/apic_flat_64.c                |  16 -
- arch/x86/kernel/apic/apic_noop.c                   |   5 -
- arch/x86/kernel/apic/apic_numachip.c               |  19 -
- arch/x86/kernel/apic/bigsmp_32.c                   |  20 -
- arch/x86/kernel/apic/io_apic.c                     |  92 ++--
- arch/x86/kernel/apic/local.h                       |   5 -
- arch/x86/kernel/apic/probe_32.c                    |   9 -
- arch/x86/kernel/apic/x2apic_cluster.c              |   4 -
- arch/x86/kernel/apic/x2apic_phys.c                 |  12 -
- arch/x86/kernel/apic/x2apic_uv_x.c                 |  69 +--
- arch/x86/kernel/cpu/Makefile                       |  15 +-
- arch/x86/kernel/cpu/amd.c                          | 146 ------
- arch/x86/kernel/cpu/cacheinfo.c                    |   8 +-
- arch/x86/kernel/cpu/centaur.c                      |   4 -
- arch/x86/kernel/cpu/common.c                       | 131 +----
- arch/x86/kernel/cpu/cpu.h                          |  13 +-
- arch/x86/kernel/cpu/debugfs.c                      |  47 +-
- arch/x86/kernel/cpu/hygon.c                        | 129 -----
- arch/x86/kernel/cpu/intel.c                        |  25 -
- arch/x86/kernel/cpu/mce/amd.c                      |   4 +-
- arch/x86/kernel/cpu/mce/inject.c                   |   8 +-
- arch/x86/kernel/cpu/microcode/intel.c              |   2 +-
- arch/x86/kernel/cpu/topology.c                     | 573 ++++++++++++++++---=
---
- arch/x86/kernel/cpu/topology.h                     |  67 +++
- arch/x86/kernel/cpu/topology_amd.c                 | 183 +++++++
- arch/x86/kernel/cpu/topology_common.c              | 218 ++++++++
- arch/x86/kernel/cpu/topology_ext.c                 | 130 +++++
- arch/x86/kernel/cpu/zhaoxin.c                      |   4 -
- arch/x86/kernel/devicetree.c                       |   4 +-
- arch/x86/kernel/jailhouse.c                        |  30 +-
- arch/x86/kernel/mpparse.c                          |  31 +-
- arch/x86/kernel/process.c                          |   2 +-
- arch/x86/kernel/setup.c                            |  27 +-
- arch/x86/kernel/smpboot.c                          | 233 +--------
- arch/x86/kernel/vsmp_64.c                          |  13 -
- arch/x86/kernel/x86_init.c                         |   5 +-
- arch/x86/mm/amdtopology.c                          |  34 +-
- arch/x86/platform/ce4100/ce4100.c                  |  14 +-
- arch/x86/platform/intel-mid/intel-mid.c            |   5 +-
- arch/x86/xen/apic.c                                |  27 +-
- arch/x86/xen/enlighten_hvm.c                       |   2 +-
- arch/x86/xen/enlighten_pv.c                        |   3 +
- arch/x86/xen/smp.c                                 |   2 -
- arch/x86/xen/smp.h                                 |   2 +
- arch/x86/xen/smp_pv.c                              |  69 ++-
- drivers/edac/amd64_edac.c                          |   4 +-
- drivers/edac/mce_amd.c                             |   4 +-
- drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c   |   2 +-
- drivers/hwmon/coretemp.c                           |   2 +-
- drivers/hwmon/fam15h_power.c                       |   2 +-
- .../x86/intel/uncore-frequency/uncore-frequency.c  |   2 +-
- drivers/powercap/intel_rapl_common.c               |   2 +-
- drivers/thermal/intel/intel_hfi.c                  |   2 +-
- drivers/thermal/intel/intel_powerclamp.c           |   2 +-
- drivers/thermal/intel/x86_pkg_temp_thermal.c       |   2 +-
- include/linux/cpu.h                                |   2 +-
- include/linux/smp.h                                |   2 +
- init/main.c                                        |   1 -
- kernel/cpu.c                                       |   6 +-
- 86 files changed, 1555 insertions(+), 1569 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/topology.h
- create mode 100644 arch/x86/kernel/cpu/topology_amd.c
- create mode 100644 arch/x86/kernel/cpu/topology_common.c
- create mode 100644 arch/x86/kernel/cpu/topology_ext.c
+ Documentation/admin-guide/kernel-parameters.txt   |    6 -
+ MAINTAINERS                                       |    1 +
+ arch/arm/include/asm/elf.h                        |    1 -
+ arch/arm/include/asm/vdso_datapage.h              |   26 -
+ arch/arm/kernel/asm-offsets.c                     |    4 +-
+ arch/arm/kernel/vdso.c                            |    4 -
+ arch/arm64/kernel/vdso.c                          |    5 +-
+ arch/csky/include/asm/vdso.h                      |    5 -
+ arch/csky/kernel/vdso.c                           |   14 +-
+ arch/loongarch/kernel/vdso.c                      |    6 +-
+ arch/mips/include/asm/vdso.h                      |    5 -
+ arch/mips/kernel/vdso.c                           |    2 +-
+ arch/riscv/kernel/vdso.c                          |   10 +-
+ arch/s390/include/asm/vdso/data.h                 |    1 -
+ arch/s390/kernel/vdso.c                           |    5 +-
+ include/linux/clocksource.h                       |   14 +-
+ include/linux/cpuhotplug.h                        |    2 +
+ include/linux/hrtimer.h                           |  119 +-
+ include/linux/hrtimer_defs.h                      |  104 ++
+ include/linux/jiffies.h                           |   15 +-
+ include/linux/tick.h                              |   16 +-
+ include/linux/timer.h                             |   16 +-
+ include/trace/events/timer_migration.h            |  298 ++++
+ include/vdso/datapage.h                           |   14 +
+ include/vdso/helpers.h                            |    8 +-
+ kernel/cpu.c                                      |   11 +-
+ kernel/sched/idle.c                               |    1 -
+ kernel/time/Makefile                              |    3 +
+ kernel/time/clockevents.c                         |    2 +-
+ kernel/time/clocksource-wdtest.c                  |   13 +-
+ kernel/time/clocksource.c                         |   12 +-
+ kernel/time/hrtimer.c                             |   25 +-
+ kernel/time/tick-common.c                         |   31 +-
+ kernel/time/tick-internal.h                       |   16 +
+ kernel/time/tick-sched.c                          |  361 +++--
+ kernel/time/tick-sched.h                          |   42 +-
+ kernel/time/time_test.c                           |    2 +-
+ kernel/time/timekeeping.c                         |   24 +-
+ kernel/time/timer.c                               |  571 +++++--
+ kernel/time/timer_list.c                          |   10 +-
+ kernel/time/timer_migration.c                     | 1793 +++++++++++++++++++=
+++
+ kernel/time/timer_migration.h                     |  140 ++
+ kernel/workqueue.c                                |    2 +-
+ tools/testing/selftests/rcutorture/bin/torture.sh |    2 +-
+ 44 files changed, 3199 insertions(+), 563 deletions(-)
+ delete mode 100644 arch/arm/include/asm/vdso_datapage.h
+ create mode 100644 include/trace/events/timer_migration.h
+ create mode 100644 kernel/time/timer_migration.c
+ create mode 100644 kernel/time/timer_migration.h
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-=
-guide/kdump/kdump.rst
-index 5762e7477a0c..0302a93b1d40 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -191,9 +191,7 @@ Dump-capture kernel config options (Arch Dependent, i386 =
-and x86_64)
-    CPU is enough for kdump kernel to dump vmcore on most of systems.
-=20
-    However, you can also specify nr_cpus=3DX to enable multiple processors
--   in kdump kernel. In this case, "disable_cpu_apicid=3D" is needed to
--   tell kdump kernel which cpu is 1st kernel's BSP. Please refer to
--   admin-guide/kernel-parameters.txt for more details.
-+   in kdump kernel.
-=20
-    With CONFIG_SMP=3Dn, the above things are not related.
-=20
-@@ -454,8 +452,7 @@ Notes on loading the dump-capture kernel:
-   to use multi-thread programs with it, such as parallel dump feature of
-   makedumpfile. Otherwise, the multi-thread program may have a great
-   performance degradation. To enable multi-cpu support, you should bring up =
-an
--  SMP dump-capture kernel and specify maxcpus/nr_cpus, disable_cpu_apicid=3D=
-[X]
--  options while loading it.
-+  SMP dump-capture kernel and specify maxcpus/nr_cpus options while loading =
-it.
-=20
- * For s390x there are two kdump modes: If a ELF header is specified with
-   the elfcorehdr=3D kernel parameter, it is used by the kdump kernel as it
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/=
 admin-guide/kernel-parameters.txt
-index 31b3a25680d0..4b9b4d662e31 100644
+index 31b3a25680d0..763e96dcf8b1 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1100,15 +1100,6 @@
- 			Disable TLBIE instruction. Currently does not work
- 			with KVM, with HASH MMU, or with coherent accelerators.
+@@ -679,12 +679,6 @@
+ 			loops can be debugged more effectively on production
+ 			systems.
 =20
--	disable_cpu_apicid=3D [X86,APIC,SMP]
--			Format: <int>
--			The number of initial APIC ID for the
--			corresponding CPU to be disabled at boot,
--			mostly used for the kdump 2nd kernel to
--			disable BSP to wake up multiple CPUs without
--			causing system reset or hang due to sending
--			INIT from AP to BSP.
+-	clocksource.max_cswd_read_retries=3D [KNL]
+-			Number of clocksource_watchdog() retries due to
+-			external delays before the clock will be marked
+-			unstable.  Defaults to two retries, that is,
+-			three attempts to read the clock under test.
 -
- 	disable_ddw	[PPC/PSERIES]
- 			Disable Dynamic DMA Window support. Use this
- 			to workaround buggy firmware.
-diff --git a/Documentation/arch/x86/topology.rst b/Documentation/arch/x86/top=
-ology.rst
-index 08ebf9edbfc1..7352ab89a55a 100644
---- a/Documentation/arch/x86/topology.rst
-+++ b/Documentation/arch/x86/topology.rst
-@@ -47,17 +47,21 @@ AMD nomenclature for package is 'Node'.
+ 	clocksource.verify_n_cpus=3D [KNL]
+ 			Limit the number of CPUs checked for clocksources
+ 			marked with CLOCK_SOURCE_VERIFY_PERCPU that
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9ed4d3868539..70c07ae6e584 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17499,6 +17499,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/=
+tip/tip.git timers/core
+ F:	fs/timerfd.c
+ F:	include/linux/time_namespace.h
+ F:	include/linux/timer*
++F:	include/trace/events/timer*
+ F:	kernel/time/*timer*
+ F:	kernel/time/namespace.c
 =20
- Package-related topology information in the kernel:
+diff --git a/arch/arm/include/asm/elf.h b/arch/arm/include/asm/elf.h
+index d68101655b74..9f21e170320f 100644
+--- a/arch/arm/include/asm/elf.h
++++ b/arch/arm/include/asm/elf.h
+@@ -4,7 +4,6 @@
 =20
--  - cpuinfo_x86.x86_max_cores:
-+  - topology_num_threads_per_package()
+ #include <asm/auxvec.h>
+ #include <asm/hwcap.h>
+-#include <asm/vdso_datapage.h>
 =20
--    The number of cores in a package. This information is retrieved via CPUI=
-D.
-+    The number of threads in a package.
-=20
--  - cpuinfo_x86.x86_max_dies:
-+  - topology_num_cores_per_package()
-=20
--    The number of dies in a package. This information is retrieved via CPUID.
-+    The number of cores in a package.
-+
-+  - topology_max_dies_per_package()
-+
-+    The maximum number of dies in a package.
-=20
-   - cpuinfo_x86.topo.die_id:
-=20
--    The physical ID of the die. This information is retrieved via CPUID.
-+    The physical ID of the die.
-=20
-   - cpuinfo_x86.topo.pkg_id:
-=20
-@@ -96,16 +100,6 @@ are SMT- or CMT-type threads.
- AMDs nomenclature for a CMT core is "Compute Unit". The kernel always uses
- "core".
-=20
--Core-related topology information in the kernel:
+ /*
+  * ELF register definitions..
+diff --git a/arch/arm/include/asm/vdso_datapage.h b/arch/arm/include/asm/vdso=
+_datapage.h
+deleted file mode 100644
+index bef68f59928d..000000000000
+--- a/arch/arm/include/asm/vdso_datapage.h
++++ /dev/null
+@@ -1,26 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Adapted from arm64 version.
+- *
+- * Copyright (C) 2012 ARM Limited
+- */
+-#ifndef __ASM_VDSO_DATAPAGE_H
+-#define __ASM_VDSO_DATAPAGE_H
 -
--  - smp_num_siblings:
+-#ifdef __KERNEL__
 -
--    The number of threads in a core. The number of threads in a package can =
-be
--    calculated by::
+-#ifndef __ASSEMBLY__
 -
--	threads_per_package =3D cpuinfo_x86.x86_max_cores * smp_num_siblings
+-#include <vdso/datapage.h>
+-#include <asm/page.h>
 -
--
- Threads
- =3D=3D=3D=3D=3D=3D=3D
- A thread is a single scheduling unit. It's the equivalent to a logical Linux
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 81f6d8275b6b..69a3b02e50bb 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -579,7 +579,7 @@ static void amd_pmu_cpu_starting(int cpu)
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
-=20
--	nb_id =3D topology_die_id(cpu);
-+	nb_id =3D topology_amd_node_id(cpu);
- 	WARN_ON_ONCE(nb_id =3D=3D BAD_APICID);
-=20
- 	for_each_online_cpu(i) {
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 4b50a3a9818a..326c8cd5aa2d 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -834,7 +834,7 @@ static int __init cstate_init(void)
- 	}
-=20
- 	if (has_cstate_pkg) {
--		if (topology_max_die_per_package() > 1) {
-+		if (topology_max_dies_per_package() > 1) {
- 			err =3D perf_pmu_register(&cstate_pkg_pmu,
- 						"cstate_die", -1);
- 		} else {
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 7927c0b832fa..258e2cdf28fa 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1893,7 +1893,7 @@ static int __init intel_uncore_init(void)
- 		return -ENODEV;
-=20
- 	__uncore_max_dies =3D
--		topology_max_packages() * topology_max_die_per_package();
-+		topology_max_packages() * topology_max_dies_per_package();
-=20
- 	id =3D x86_match_cpu(intel_uncore_match);
- 	if (!id) {
-diff --git a/arch/x86/events/intel/uncore_nhmex.c b/arch/x86/events/intel/unc=
-ore_nhmex.c
-index 56eea2c66cfb..92da8aaa5966 100644
---- a/arch/x86/events/intel/uncore_nhmex.c
-+++ b/arch/x86/events/intel/uncore_nhmex.c
-@@ -1221,8 +1221,8 @@ void nhmex_uncore_cpu_init(void)
- 		uncore_nhmex =3D true;
- 	else
- 		nhmex_uncore_mbox.event_descs =3D wsmex_uncore_mbox_events;
--	if (nhmex_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		nhmex_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (nhmex_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		nhmex_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- 	uncore_msr_uncores =3D nhmex_msr_uncores;
- }
- /* end of Nehalem-EX uncore support */
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncor=
-e_snb.c
-index 7fd4334e12a1..9462fd9f3b7a 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -364,8 +364,8 @@ static struct intel_uncore_type *snb_msr_uncores[] =3D {
- void snb_uncore_cpu_init(void)
- {
- 	uncore_msr_uncores =3D snb_msr_uncores;
--	if (snb_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		snb_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (snb_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		snb_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- }
-=20
- static void skl_uncore_msr_init_box(struct intel_uncore_box *box)
-@@ -428,8 +428,8 @@ static struct intel_uncore_type *skl_msr_uncores[] =3D {
- void skl_uncore_cpu_init(void)
- {
- 	uncore_msr_uncores =3D skl_msr_uncores;
--	if (skl_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		skl_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (skl_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		skl_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- 	snb_uncore_arb.ops =3D &skl_uncore_msr_ops;
- }
-=20
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/unc=
-ore_snbep.c
-index a96496bef678..2eaf0f339849 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -1172,8 +1172,8 @@ static struct intel_uncore_type *snbep_msr_uncores[] =
-=3D {
-=20
- void snbep_uncore_cpu_init(void)
- {
--	if (snbep_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		snbep_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (snbep_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		snbep_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- 	uncore_msr_uncores =3D snbep_msr_uncores;
- }
-=20
-@@ -1406,7 +1406,7 @@ static int topology_gidnid_map(int nodeid, u32 gidnid)
- 	 */
- 	for (i =3D 0; i < 8; i++) {
- 		if (nodeid =3D=3D GIDNIDMAP(gidnid, i)) {
--			if (topology_max_die_per_package() > 1)
-+			if (topology_max_dies_per_package() > 1)
- 				die_id =3D i;
- 			else
- 				die_id =3D topology_phys_to_logical_pkg(i);
-@@ -1845,8 +1845,8 @@ static struct intel_uncore_type *ivbep_msr_uncores[] =
-=3D {
-=20
- void ivbep_uncore_cpu_init(void)
- {
--	if (ivbep_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		ivbep_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (ivbep_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		ivbep_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- 	uncore_msr_uncores =3D ivbep_msr_uncores;
- }
-=20
-@@ -2917,8 +2917,8 @@ static bool hswep_has_limit_sbox(unsigned int device)
-=20
- void hswep_uncore_cpu_init(void)
- {
--	if (hswep_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		hswep_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (hswep_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		hswep_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
-=20
- 	/* Detect 6-8 core systems with only two SBOXes */
- 	if (hswep_has_limit_sbox(HSWEP_PCU_DID))
-@@ -3280,8 +3280,8 @@ static struct event_constraint bdx_uncore_pcu_constrain=
-ts[] =3D {
-=20
- void bdx_uncore_cpu_init(void)
- {
--	if (bdx_uncore_cbox.num_boxes > boot_cpu_data.x86_max_cores)
--		bdx_uncore_cbox.num_boxes =3D boot_cpu_data.x86_max_cores;
-+	if (bdx_uncore_cbox.num_boxes > topology_num_cores_per_package())
-+		bdx_uncore_cbox.num_boxes =3D topology_num_cores_per_package();
- 	uncore_msr_uncores =3D bdx_msr_uncores;
-=20
- 	/* Detect systems with no SBOXes */
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 8d98d468b976..fb2b1961e5a3 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -674,7 +674,7 @@ static const struct attribute_group *rapl_attr_update[] =
-=3D {
-=20
- static int __init init_rapl_pmus(void)
- {
--	int maxdie =3D topology_max_packages() * topology_max_die_per_package();
-+	int maxdie =3D topology_max_packages() * topology_max_dies_per_package();
- 	size_t size;
-=20
- 	size =3D sizeof(*rapl_pmus) + maxdie * sizeof(struct rapl_pmu *);
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 96e6c51515f5..804b629ea49d 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -26,8 +26,9 @@ void __init hv_vtl_init_platform(void)
- 	x86_init.timers.timer_init =3D x86_init_noop;
-=20
- 	/* Avoid searching for BIOS MP tables */
--	x86_init.mpparse.find_smp_config =3D x86_init_noop;
--	x86_init.mpparse.get_smp_config =3D x86_init_uint_noop;
-+	x86_init.mpparse.find_mptable =3D x86_init_noop;
-+	x86_init.mpparse.early_parse_smp_cfg =3D x86_init_noop;
-+	x86_init.mpparse.parse_smp_cfg =3D x86_init_noop;
-=20
- 	x86_platform.get_wallclock =3D get_rtc_noop;
- 	x86_platform.set_wallclock =3D set_rtc_noop;
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 9d159b771dc8..94ce0f7c9d3a 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -46,6 +46,10 @@ extern void x86_32_probe_apic(void);
- static inline void x86_32_probe_apic(void) { }
- #endif
-=20
-+extern u32 cpuid_to_apicid[];
-+
-+#define CPU_ACPIID_INVALID	U32_MAX
-+
- #ifdef CONFIG_X86_LOCAL_APIC
-=20
- extern int apic_verbosity;
-@@ -54,8 +58,6 @@ extern int local_apic_timer_c2_ok;
- extern bool apic_is_disabled;
- extern unsigned int lapic_timer_period;
-=20
--extern u32 cpuid_to_apicid[];
--
- extern enum apic_intr_mode_id apic_intr_mode;
- enum apic_intr_mode_id {
- 	APIC_PIC,
-@@ -169,6 +171,14 @@ extern bool apic_needs_pit(void);
-=20
- extern void apic_send_IPI_allbutself(unsigned int vector);
-=20
-+extern void topology_register_apic(u32 apic_id, u32 acpi_id, bool present);
-+extern void topology_register_boot_apic(u32 apic_id);
-+extern int topology_hotplug_apic(u32 apic_id, u32 acpi_id);
-+extern void topology_hotunplug_apic(unsigned int cpu);
-+extern void topology_apply_cmdline_limits_early(void);
-+extern void topology_init_possible_cpus(void);
-+extern void topology_reset_possible_cpus_up(void);
-+
- #else /* !CONFIG_X86_LOCAL_APIC */
- static inline void lapic_shutdown(void) { }
- #define local_apic_timer_c2_ok		1
-@@ -183,6 +193,8 @@ static inline void apic_intr_mode_init(void) { }
- static inline void lapic_assign_system_vectors(void) { }
- static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
- static inline bool apic_needs_pit(void) { return true; }
-+static inline void topology_apply_cmdline_limits_early(void) { }
-+static inline void topology_init_possible_cpus(void) { }
- #endif /* !CONFIG_X86_LOCAL_APIC */
-=20
- #ifdef CONFIG_X86_X2APIC
-@@ -289,16 +301,11 @@ struct apic {
- 	/* Probe, setup and smpboot functions */
- 	int	(*probe)(void);
- 	int	(*acpi_madt_oem_check)(char *oem_id, char *oem_table_id);
--	bool	(*apic_id_registered)(void);
-=20
--	bool	(*check_apicid_used)(physid_mask_t *map, u32 apicid);
- 	void	(*init_apic_ldr)(void);
--	void	(*ioapic_phys_id_map)(physid_mask_t *phys_map, physid_mask_t *retmap);
- 	u32	(*cpu_present_to_apicid)(int mps_cpu);
--	u32	(*phys_pkg_id)(u32 cpuid_apic, int index_msb);
-=20
- 	u32	(*get_apic_id)(u32 id);
--	u32	(*set_apic_id)(u32 apicid);
-=20
- 	/* wakeup_secondary_cpu */
- 	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
-@@ -527,7 +534,6 @@ extern int default_apic_id_valid(u32 apicid);
- extern u32 apic_default_calc_apicid(unsigned int cpu);
- extern u32 apic_flat_calc_apicid(unsigned int cpu);
-=20
--extern void default_ioapic_phys_id_map(physid_mask_t *phys_map, physid_mask_=
-t *retmap);
- extern u32 default_cpu_present_to_apicid(int mps_cpu);
-=20
- void apic_send_nmi_to_offline_cpu(unsigned int cpu);
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index f8f9a9b79395..aa30fd8cad7f 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -9,18 +9,10 @@
- #include <linux/percpu.h>
- #include <asm/ibt.h>
-=20
--#ifdef CONFIG_SMP
--
--extern void prefill_possible_map(void);
--
--#else /* CONFIG_SMP */
--
--static inline void prefill_possible_map(void) {}
--
-+#ifndef CONFIG_SMP
- #define cpu_physical_id(cpu)			boot_cpu_physical_apicid
- #define cpu_acpi_id(cpu)			0
- #define safe_smp_processor_id()			0
--
- #endif /* CONFIG_SMP */
-=20
- #ifdef CONFIG_HOTPLUG_CPU
-diff --git a/arch/x86/include/asm/cpuid.h b/arch/x86/include/asm/cpuid.h
-index 9bee3e7bf973..6b122a31da06 100644
---- a/arch/x86/include/asm/cpuid.h
-+++ b/arch/x86/include/asm/cpuid.h
-@@ -127,6 +127,42 @@ static inline unsigned int cpuid_edx(unsigned int op)
- 	return edx;
- }
-=20
-+static inline void __cpuid_read(unsigned int leaf, unsigned int subleaf, u32=
- *regs)
-+{
-+	regs[CPUID_EAX] =3D leaf;
-+	regs[CPUID_ECX] =3D subleaf;
-+	__cpuid(regs + CPUID_EAX, regs + CPUID_EBX, regs + CPUID_ECX, regs + CPUID_=
-EDX);
-+}
-+
-+#define cpuid_subleaf(leaf, subleaf, regs) {		\
-+	static_assert(sizeof(*(regs)) =3D=3D 16);		\
-+	__cpuid_read(leaf, subleaf, (u32 *)(regs));	\
-+}
-+
-+#define cpuid_leaf(leaf, regs) {			\
-+	static_assert(sizeof(*(regs)) =3D=3D 16);		\
-+	__cpuid_read(leaf, 0, (u32 *)(regs));		\
-+}
-+
-+static inline void __cpuid_read_reg(unsigned int leaf, unsigned int subleaf,
-+				    enum cpuid_regs_idx regidx, u32 *reg)
-+{
-+	u32 regs[4];
-+
-+	__cpuid_read(leaf, subleaf, regs);
-+	*reg =3D regs[regidx];
-+}
-+
-+#define cpuid_subleaf_reg(leaf, subleaf, regidx, reg) {		\
-+	static_assert(sizeof(*(reg)) =3D=3D 4);			\
-+	__cpuid_read_reg(leaf, subleaf, regidx, (u32 *)(reg));	\
-+}
-+
-+#define cpuid_leaf_reg(leaf, regidx, reg) {			\
-+	static_assert(sizeof(*(reg)) =3D=3D 4);			\
-+	__cpuid_read_reg(leaf, 0, regidx, (u32 *)(reg));	\
-+}
-+
- static __always_inline bool cpuid_function_is_indexed(u32 function)
- {
- 	switch (function) {
-diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io_apic.h
-index 51c782600e02..0d806513c4b3 100644
---- a/arch/x86/include/asm/io_apic.h
-+++ b/arch/x86/include/asm/io_apic.h
-@@ -140,7 +140,6 @@ extern void mask_ioapic_entries(void);
- extern int restore_ioapic_entries(void);
-=20
- extern void setup_ioapic_ids_from_mpc(void);
--extern void setup_ioapic_ids_from_mpc_nocheck(void);
-=20
- extern int mp_find_ioapic(u32 gsi);
- extern int mp_find_ioapic_pin(int ioapic, u32 gsi);
-diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
-index 4b0f98a8d338..c72c7ff78fcd 100644
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_X86_MPSPEC_H
- #define _ASM_X86_MPSPEC_H
-=20
-+#include <linux/types.h>
-=20
- #include <asm/mpspec_def.h>
- #include <asm/x86_init.h>
-@@ -46,70 +47,31 @@ extern int smp_found_config;
- # define smp_found_config 0
- #endif
-=20
--static inline void get_smp_config(void)
--{
--	x86_init.mpparse.get_smp_config(0);
--}
--
--static inline void early_get_smp_config(void)
--{
--	x86_init.mpparse.get_smp_config(1);
--}
--
--static inline void find_smp_config(void)
--{
--	x86_init.mpparse.find_smp_config();
--}
--
- #ifdef CONFIG_X86_MPPARSE
- extern void e820__memblock_alloc_reserved_mpc_new(void);
- extern int enable_update_mptable;
--extern void default_find_smp_config(void);
--extern void default_get_smp_config(unsigned int early);
-+extern void mpparse_find_mptable(void);
-+extern void mpparse_parse_early_smp_config(void);
-+extern void mpparse_parse_smp_config(void);
- #else
- static inline void e820__memblock_alloc_reserved_mpc_new(void) { }
--#define enable_update_mptable 0
--#define default_find_smp_config x86_init_noop
--#define default_get_smp_config x86_init_uint_noop
-+#define enable_update_mptable		0
-+#define mpparse_find_mptable		x86_init_noop
-+#define mpparse_parse_early_smp_config	x86_init_noop
-+#define mpparse_parse_smp_config	x86_init_noop
- #endif
-=20
--int generic_processor_info(int apicid);
-+extern DECLARE_BITMAP(phys_cpu_present_map, MAX_LOCAL_APIC);
-=20
--#define PHYSID_ARRAY_SIZE	BITS_TO_LONGS(MAX_LOCAL_APIC)
--
--struct physid_mask {
--	unsigned long mask[PHYSID_ARRAY_SIZE];
+-union vdso_data_store {
+-	struct vdso_data	data[CS_BASES];
+-	u8			page[PAGE_SIZE];
 -};
 -
--typedef struct physid_mask physid_mask_t;
+-#endif /* !__ASSEMBLY__ */
 -
--#define physid_set(physid, map)			set_bit(physid, (map).mask)
--#define physid_isset(physid, map)		test_bit(physid, (map).mask)
+-#endif /* __KERNEL__ */
 -
--#define physids_or(dst, src1, src2)					\
--	bitmap_or((dst).mask, (src1).mask, (src2).mask, MAX_LOCAL_APIC)
--
--#define physids_clear(map)					\
--	bitmap_zero((map).mask, MAX_LOCAL_APIC)
--
--#define physids_empty(map)					\
--	bitmap_empty((map).mask, MAX_LOCAL_APIC)
--
--static inline void physids_promote(unsigned long physids, physid_mask_t *map)
-+static inline void reset_phys_cpu_present_map(u32 apicid)
- {
--	physids_clear(*map);
--	map->mask[0] =3D physids;
-+	bitmap_zero(phys_cpu_present_map, MAX_LOCAL_APIC);
-+	set_bit(apicid, phys_cpu_present_map);
- }
-=20
--static inline void physid_set_mask_of_physid(int physid, physid_mask_t *map)
-+static inline void copy_phys_cpu_present_map(unsigned long *dst)
- {
--	physids_clear(*map);
--	physid_set(physid, *map);
-+	bitmap_copy(dst, phys_cpu_present_map, MAX_LOCAL_APIC);
- }
-=20
--#define PHYSID_MASK_ALL		{ {[0 ... PHYSID_ARRAY_SIZE-1] =3D ~0UL} }
--#define PHYSID_MASK_NONE	{ {[0 ... PHYSID_ARRAY_SIZE-1] =3D 0UL} }
--
--extern physid_mask_t phys_cpu_present_map;
--
- #endif /* _ASM_X86_MPSPEC_H */
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nosp=
-ec-branch.h
-index 2aa52cab1e46..ab19c7f1167b 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -323,7 +323,7 @@
-  * Note: Only the memory operand variant of VERW clears the CPU buffers.
-  */
- .macro CLEAR_CPU_BUFFERS
--	ALTERNATIVE "", __stringify(verw _ASM_RIP(mds_verw_sel)), X86_FEATURE_CLEAR=
-_CPU_BUF
-+	ALTERNATIVE "", __stringify(verw mds_verw_sel), X86_FEATURE_CLEAR_CPU_BUF
- .endm
-=20
- #else /* __ASSEMBLY__ */
-diff --git a/arch/x86/include/asm/perf_event_p4.h b/arch/x86/include/asm/perf=
-_event_p4.h
-index 94de1a05aeba..d65e338b6a5f 100644
---- a/arch/x86/include/asm/perf_event_p4.h
-+++ b/arch/x86/include/asm/perf_event_p4.h
-@@ -181,7 +181,7 @@ static inline u64 p4_clear_ht_bit(u64 config)
- static inline int p4_ht_active(void)
- {
- #ifdef CONFIG_SMP
--	return smp_num_siblings > 1;
-+	return __max_threads_per_core > 1;
- #endif
- 	return 0;
- }
-@@ -189,7 +189,7 @@ static inline int p4_ht_active(void)
- static inline int p4_ht_thread(int cpu)
- {
- #ifdef CONFIG_SMP
--	if (smp_num_siblings =3D=3D 2)
-+	if (__max_threads_per_core =3D=3D 2)
- 		return cpu !=3D cpumask_first(this_cpu_cpumask_var_ptr(cpu_sibling_map));
- #endif
- 	return 0;
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processo=
-r.h
-index 26620d7642a9..326581df4846 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -100,6 +100,9 @@ struct cpuinfo_topology {
- 	u32			logical_pkg_id;
- 	u32			logical_die_id;
-=20
-+	// AMD Node ID and Nodes per Package info
-+	u32			amd_node_id;
+-#endif /* __ASM_VDSO_DATAPAGE_H */
+diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+index 219cbc7e5d13..4915662842ff 100644
+--- a/arch/arm/kernel/asm-offsets.c
++++ b/arch/arm/kernel/asm-offsets.c
+@@ -21,10 +21,12 @@
+ #include <asm/mpu.h>
+ #include <asm/procinfo.h>
+ #include <asm/suspend.h>
+-#include <asm/vdso_datapage.h>
+ #include <asm/hardware/cache-l2x0.h>
+ #include <linux/kbuild.h>
+ #include <linux/arm-smccc.h>
 +
- 	// Cache level topology IDs
- 	u32			llc_id;
- 	u32			l2c_id;
-@@ -119,8 +122,6 @@ struct cpuinfo_x86 {
- #endif
- 	__u8			x86_virt_bits;
- 	__u8			x86_phys_bits;
--	/* CPUID returned core id bits: */
--	__u8			x86_coreid_bits;
- 	/* Max extended CPUID function supported: */
- 	__u32			extended_cpuid_level;
- 	/* Maximum supported CPUID level, -1=3Dno CPUID: */
-@@ -148,8 +149,6 @@ struct cpuinfo_x86 {
- 	unsigned long		loops_per_jiffy;
- 	/* protected processor identification number */
- 	u64			ppin;
--	/* cpuid returned max cores value: */
--	u16			x86_max_cores;
- 	u16			x86_clflush_size;
- 	/* number of cores as seen by the OS: */
- 	u16			booted_cores;
-@@ -704,12 +703,10 @@ static inline u32 per_cpu_l2c_id(unsigned int cpu)
- }
-=20
- #ifdef CONFIG_CPU_SUP_AMD
--extern u32 amd_get_nodes_per_socket(void);
- extern u32 amd_get_highest_perf(void);
- extern void amd_clear_divider(void);
- extern void amd_check_microcode(void);
- #else
--static inline u32 amd_get_nodes_per_socket(void)	{ return 0; }
- static inline u32 amd_get_highest_perf(void)		{ return 0; }
- static inline void amd_clear_divider(void)		{ }
- static inline void amd_check_microcode(void)		{ }
-diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
-index 65dee2420624..043758a2e627 100644
---- a/arch/x86/include/asm/prom.h
-+++ b/arch/x86/include/asm/prom.h
-@@ -23,11 +23,11 @@ extern int of_ioapic;
- extern u64 initial_dtb;
- extern void add_dtb(u64 data);
- void x86_of_pci_init(void);
--void x86_dtb_init(void);
-+void x86_dtb_parse_smp_config(void);
- #else
- static inline void add_dtb(u64 data) { }
- static inline void x86_of_pci_init(void) { }
--static inline void x86_dtb_init(void) { }
-+static inline void x86_dtb_parse_smp_config(void) { }
- #define of_ioapic 0
- #endif
-=20
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index 4fab2ed454f3..54d6d71e0eca 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -8,9 +8,6 @@
- #include <asm/current.h>
- #include <asm/thread_info.h>
-=20
--extern int smp_num_siblings;
--extern unsigned int num_processors;
--
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_die_map);
-@@ -110,7 +107,6 @@ void cpu_disable_common(void);
- void native_smp_prepare_boot_cpu(void);
- void smp_prepare_cpus_common(void);
- void native_smp_prepare_cpus(unsigned int max_cpus);
--void calculate_max_logical_packages(void);
- void native_smp_cpus_done(unsigned int max_cpus);
- int common_cpu_up(unsigned int cpunum, struct task_struct *tidle);
- int native_kick_ap(unsigned int cpu, struct task_struct *tidle);
-@@ -174,8 +170,6 @@ static inline struct cpumask *cpu_llc_shared_mask(int cpu)
- }
- #endif /* CONFIG_SMP */
-=20
--extern unsigned disabled_cpus;
--
- #ifdef CONFIG_DEBUG_NMI_SELFTEST
- extern void nmi_selftest(void);
- #else
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 5f87f6b9b09e..76b1d87f1531 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -102,6 +102,35 @@ static inline void setup_node_to_cpumask_map(void) { }
-=20
- #include <asm-generic/topology.h>
-=20
-+/* Topology information */
-+enum x86_topology_domains {
-+	TOPO_SMT_DOMAIN,
-+	TOPO_CORE_DOMAIN,
-+	TOPO_MODULE_DOMAIN,
-+	TOPO_TILE_DOMAIN,
-+	TOPO_DIE_DOMAIN,
-+	TOPO_DIEGRP_DOMAIN,
-+	TOPO_PKG_DOMAIN,
-+	TOPO_MAX_DOMAIN,
-+};
++#include <vdso/datapage.h>
 +
-+struct x86_topology_system {
-+	unsigned int	dom_shifts[TOPO_MAX_DOMAIN];
-+	unsigned int	dom_size[TOPO_MAX_DOMAIN];
-+};
-+
-+extern struct x86_topology_system x86_topo_system;
-+
-+static inline unsigned int topology_get_domain_size(enum x86_topology_domain=
-s dom)
-+{
-+	return x86_topo_system.dom_size[dom];
-+}
-+
-+static inline unsigned int topology_get_domain_shift(enum x86_topology_domai=
-ns dom)
-+{
-+	return dom =3D=3D TOPO_SMT_DOMAIN ? 0 : x86_topo_system.dom_shifts[dom - 1];
-+}
-+
- extern const struct cpumask *cpu_coregroup_mask(int cpu);
- extern const struct cpumask *cpu_clustergroup_mask(int cpu);
+ #include "signal.h"
 =20
-@@ -112,7 +141,42 @@ extern const struct cpumask *cpu_clustergroup_mask(int c=
-pu);
- #define topology_core_id(cpu)			(cpu_data(cpu).topo.core_id)
- #define topology_ppin(cpu)			(cpu_data(cpu).ppin)
-=20
--extern unsigned int __max_die_per_package;
-+#define topology_amd_node_id(cpu)		(cpu_data(cpu).topo.amd_node_id)
-+
-+extern unsigned int __max_dies_per_package;
-+extern unsigned int __max_logical_packages;
-+extern unsigned int __max_threads_per_core;
-+extern unsigned int __num_threads_per_package;
-+extern unsigned int __num_cores_per_package;
-+
-+static inline unsigned int topology_max_packages(void)
-+{
-+	return __max_logical_packages;
-+}
-+
-+static inline unsigned int topology_max_dies_per_package(void)
-+{
-+	return __max_dies_per_package;
-+}
-+
-+static inline unsigned int topology_num_cores_per_package(void)
-+{
-+	return __num_cores_per_package;
-+}
-+
-+static inline unsigned int topology_num_threads_per_package(void)
-+{
-+	return __num_threads_per_package;
-+}
-+
-+#ifdef CONFIG_X86_LOCAL_APIC
-+int topology_get_logical_id(u32 apicid, enum x86_topology_domains at_level);
-+#else
-+static inline int topology_get_logical_id(u32 apicid, enum x86_topology_doma=
-ins at_level)
-+{
-+	return 0;
-+}
-+#endif
-=20
- #ifdef CONFIG_SMP
- #define topology_cluster_id(cpu)		(cpu_data(cpu).topo.l2c_id)
-@@ -121,12 +185,11 @@ extern unsigned int __max_die_per_package;
- #define topology_core_cpumask(cpu)		(per_cpu(cpu_core_map, cpu))
- #define topology_sibling_cpumask(cpu)		(per_cpu(cpu_sibling_map, cpu))
-=20
--extern unsigned int __max_logical_packages;
--#define topology_max_packages()			(__max_logical_packages)
-=20
--static inline int topology_max_die_per_package(void)
-+static inline int topology_phys_to_logical_pkg(unsigned int pkg)
- {
--	return __max_die_per_package;
-+	return topology_get_logical_id(pkg << x86_topo_system.dom_shifts[TOPO_PKG_D=
-OMAIN],
-+				       TOPO_PKG_DOMAIN);
- }
-=20
- extern int __max_smt_threads;
-@@ -138,9 +201,12 @@ static inline int topology_max_smt_threads(void)
-=20
- #include <linux/cpu_smt.h>
-=20
--int topology_update_package_map(unsigned int apicid, unsigned int cpu);
--int topology_update_die_map(unsigned int dieid, unsigned int cpu);
--int topology_phys_to_logical_pkg(unsigned int pkg);
-+extern unsigned int __amd_nodes_per_pkg;
-+
-+static inline unsigned int topology_amd_nodes_per_pkg(void)
-+{
-+	return __amd_nodes_per_pkg;
-+}
-=20
- extern struct cpumask __cpu_primary_thread_mask;
- #define cpu_primary_thread_mask ((const struct cpumask *)&__cpu_primary_thre=
-ad_mask)
-@@ -153,16 +219,12 @@ static inline bool topology_is_primary_thread(unsigned =
-int cpu)
- {
- 	return cpumask_test_cpu(cpu, cpu_primary_thread_mask);
- }
-+
- #else /* CONFIG_SMP */
--#define topology_max_packages()			(1)
--static inline int
--topology_update_package_map(unsigned int apicid, unsigned int cpu) { return =
-0; }
--static inline int
--topology_update_die_map(unsigned int dieid, unsigned int cpu) { return 0; }
- static inline int topology_phys_to_logical_pkg(unsigned int pkg) { return 0;=
- }
--static inline int topology_max_die_per_package(void) { return 1; }
- static inline int topology_max_smt_threads(void) { return 1; }
- static inline bool topology_is_primary_thread(unsigned int cpu) { return tru=
-e; }
-+static inline unsigned int topology_amd_nodes_per_pkg(void) { return 0; };
- #endif /* !CONFIG_SMP */
-=20
- static inline void arch_fix_phys_package_id(int num, u32 slot)
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c878616a18b8..9ca624749176 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -15,13 +15,15 @@ struct irq_domain;
- /**
-  * struct x86_init_mpparse - platform specific mpparse ops
-  * @setup_ioapic_ids:		platform specific ioapic id override
-- * @find_smp_config:		find the smp configuration
-- * @get_smp_config:		get the smp configuration
-+ * @find_mptable:		Find MPTABLE early to reserve the memory region
-+ * @early_parse_smp_cfg:	Parse the SMP configuration data early before initm=
-em_init()
-+ * @parse_smp_cfg:		Parse the SMP configuration data
-  */
- struct x86_init_mpparse {
- 	void (*setup_ioapic_ids)(void);
--	void (*find_smp_config)(void);
--	void (*get_smp_config)(unsigned int early);
-+	void (*find_mptable)(void);
-+	void (*early_parse_smp_cfg)(void);
-+	void (*parse_smp_cfg)(void);
- };
-=20
- /**
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 85a3ce2a3666..4bf82dbd2a6b 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -164,35 +164,6 @@ static int __init acpi_parse_madt(struct acpi_table_head=
-er *table)
- 	return 0;
- }
-=20
--/**
-- * acpi_register_lapic - register a local apic and generates a logic cpu num=
-ber
-- * @id: local apic id to register
-- * @acpiid: ACPI id to register
-- * @enabled: this cpu is enabled or not
-- *
-- * Returns the logic cpu number which maps to the local apic
-- */
--static int acpi_register_lapic(int id, u32 acpiid, u8 enabled)
--{
--	int cpu;
--
--	if (id >=3D MAX_LOCAL_APIC) {
--		pr_info("skipped apicid that is too big\n");
--		return -EINVAL;
--	}
--
--	if (!enabled) {
--		++disabled_cpus;
--		return -EINVAL;
--	}
--
--	cpu =3D generic_processor_info(id);
--	if (cpu >=3D 0)
--		early_per_cpu(x86_cpu_to_acpiid, cpu) =3D acpiid;
--
--	return cpu;
--}
--
- static bool __init acpi_is_processor_usable(u32 lapic_flags)
- {
- 	if (lapic_flags & ACPI_MADT_ENABLED)
-@@ -254,7 +225,7 @@ acpi_parse_x2apic(union acpi_subtable_headers *header, co=
-nst unsigned long end)
- 		return 0;
- 	}
-=20
--	acpi_register_lapic(apic_id, processor->uid, enabled);
-+	topology_register_apic(apic_id, processor->uid, enabled);
- #else
- 	pr_warn("x2apic entry ignored\n");
- #endif
-@@ -289,9 +260,9 @@ acpi_parse_lapic(union acpi_subtable_headers * header, co=
-nst unsigned long end)
- 	 * to not preallocating memory for all NR_CPUS
- 	 * when we use CPU hotplug.
- 	 */
--	acpi_register_lapic(processor->id,	/* APIC ID */
--			    processor->processor_id, /* ACPI ID */
--			    processor->lapic_flags & ACPI_MADT_ENABLED);
-+	topology_register_apic(processor->id,	/* APIC ID */
-+			       processor->processor_id, /* ACPI ID */
-+			       processor->lapic_flags & ACPI_MADT_ENABLED);
-=20
- 	has_lapic_cpus =3D true;
- 	return 0;
-@@ -309,9 +280,9 @@ acpi_parse_sapic(union acpi_subtable_headers *header, con=
-st unsigned long end)
-=20
- 	acpi_table_print_madt_entry(&header->common);
-=20
--	acpi_register_lapic((processor->id << 8) | processor->eid,/* APIC ID */
--			    processor->processor_id, /* ACPI ID */
--			    processor->lapic_flags & ACPI_MADT_ENABLED);
-+	topology_register_apic((processor->id << 8) | processor->eid,/* APIC ID */
-+			       processor->processor_id, /* ACPI ID */
-+			       processor->lapic_flags & ACPI_MADT_ENABLED);
-=20
- 	return 0;
- }
-@@ -844,12 +815,10 @@ static int acpi_map_cpu2node(acpi_handle handle, int cp=
-u, int physid)
- 	return 0;
- }
-=20
--int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
--		 int *pcpu)
-+int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *=
-pcpu)
- {
--	int cpu;
-+	int cpu =3D topology_hotplug_apic(physid, acpi_id);
-=20
--	cpu =3D acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
- 	if (cpu < 0) {
- 		pr_info("Unable to map lapic to logical cpu number\n");
- 		return cpu;
-@@ -868,15 +837,11 @@ int acpi_unmap_cpu(int cpu)
- #ifdef CONFIG_ACPI_NUMA
- 	set_apicid_to_node(per_cpu(x86_cpu_to_apicid, cpu), NUMA_NO_NODE);
- #endif
--
--	per_cpu(x86_cpu_to_apicid, cpu) =3D BAD_APICID;
--	set_cpu_present(cpu, false);
--	num_processors--;
--
--	return (0);
-+	topology_hotunplug_apic(cpu);
-+	return 0;
- }
- EXPORT_SYMBOL(acpi_unmap_cpu);
--#endif				/* CONFIG_ACPI_HOTPLUG_CPU */
-+#endif	/* CONFIG_ACPI_HOTPLUG_CPU */
-=20
- int acpi_register_ioapic(acpi_handle handle, u64 phys_addr, u32 gsi_base)
- {
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 053f6dcc6b2c..5bf5f9fc5753 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -386,7 +386,7 @@ struct resource *amd_get_mmconfig_range(struct resource *=
-res)
-=20
- int amd_get_subcaches(int cpu)
- {
--	struct pci_dev *link =3D node_to_amd_nb(topology_die_id(cpu))->link;
-+	struct pci_dev *link =3D node_to_amd_nb(topology_amd_node_id(cpu))->link;
- 	unsigned int mask;
-=20
- 	if (!amd_nb_has_feature(AMD_NB_L3_PARTITIONING))
-@@ -400,7 +400,7 @@ int amd_get_subcaches(int cpu)
- int amd_set_subcaches(int cpu, unsigned long mask)
- {
- 	static unsigned int reset, ban;
--	struct amd_northbridge *nb =3D node_to_amd_nb(topology_die_id(cpu));
-+	struct amd_northbridge *nb =3D node_to_amd_nb(topology_amd_node_id(cpu));
- 	unsigned int reg;
- 	int cuid;
-=20
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 4667bc4b00ab..a42d8a6f7149 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -19,6 +19,7 @@
- #include <linux/kernel_stat.h>
- #include <linux/mc146818rtc.h>
- #include <linux/acpi_pmtmr.h>
-+#include <linux/bitmap.h>
- #include <linux/clockchips.h>
- #include <linux/interrupt.h>
- #include <linux/memblock.h>
-@@ -67,28 +68,12 @@
-=20
- #include "local.h"
-=20
--unsigned int num_processors;
--
--unsigned disabled_cpus;
--
- /* Processor that is doing the boot up */
- u32 boot_cpu_physical_apicid __ro_after_init =3D BAD_APICID;
- EXPORT_SYMBOL_GPL(boot_cpu_physical_apicid);
-=20
- u8 boot_cpu_apic_version __ro_after_init;
-=20
--/*
-- * Bitmask of physically existing CPUs:
-- */
--physid_mask_t phys_cpu_present_map;
--
--/*
-- * Processor to be disabled specified by kernel parameter
-- * disable_cpu_apicid=3D<int>, mostly used for the kdump 2nd kernel to
-- * avoid undefined behaviour caused by sending INIT from AP to BSP.
-- */
--static u32 disabled_cpu_apicid __ro_after_init =3D BAD_APICID;
--
  /*
-  * This variable controls which CPUs receive external NMIs.  By default,
-  * external NMIs are delivered only to the BSP.
-@@ -108,14 +93,6 @@ static inline bool apic_accessible(void)
- 	return x2apic_mode || apic_mmio_base;
- }
+diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
+index f297d66a8a76..d499ad461b00 100644
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -21,7 +21,6 @@
+ #include <asm/cacheflush.h>
+ #include <asm/page.h>
+ #include <asm/vdso.h>
+-#include <asm/vdso_datapage.h>
+ #include <clocksource/arm_arch_timer.h>
+ #include <vdso/helpers.h>
+ #include <vdso/vsyscall.h>
+@@ -35,9 +34,6 @@ extern char vdso_start[], vdso_end[];
+ /* Total number of pages needed for the data and text portions of the VDSO. =
+*/
+ unsigned int vdso_total_pages __ro_after_init;
 =20
 -/*
-- * Map cpu index to physical APIC ID
+- * The VDSO data page.
 - */
--DEFINE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_apicid, BAD_APICID);
--DEFINE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid, U32_MAX);
--EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_apicid);
--EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_acpiid);
--
- #ifdef CONFIG_X86_32
- /* Local APIC was disabled by the BIOS and enabled by the kernel */
- static int enabled_via_apicbase __ro_after_init;
-@@ -261,16 +238,6 @@ u64 native_apic_icr_read(void)
- 	return icr1 | ((u64)icr2 << 32);
- }
+ static union vdso_data_store vdso_data_store __page_aligned_data;
+ struct vdso_data *vdso_data =3D vdso_data_store.data;
 =20
--#ifdef CONFIG_X86_32
--/**
-- * get_physical_broadcast - Get number of physical broadcast IDs
-- */
--int get_physical_broadcast(void)
--{
--	return modern_apic() ? 0xff : 0xf;
--}
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 5562daf38a22..89b6e7840002 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -69,10 +69,7 @@ static struct vdso_abi_info vdso_info[] __ro_after_init =
+=3D {
+ /*
+  * The vDSO data page.
+  */
+-static union {
+-	struct vdso_data	data[CS_BASES];
+-	u8			page[PAGE_SIZE];
+-} vdso_data_store __page_aligned_data;
++static union vdso_data_store vdso_data_store __page_aligned_data;
+ struct vdso_data *vdso_data =3D vdso_data_store.data;
+=20
+ static int vdso_mremap(const struct vm_special_mapping *sm,
+diff --git a/arch/csky/include/asm/vdso.h b/arch/csky/include/asm/vdso.h
+index bdce581b5fcb..181a15edafe8 100644
+--- a/arch/csky/include/asm/vdso.h
++++ b/arch/csky/include/asm/vdso.h
+@@ -5,11 +5,6 @@
+=20
+ #include <linux/types.h>
+=20
+-#ifndef GENERIC_TIME_VSYSCALL
+-struct vdso_data {
+-};
 -#endif
 -
- /**
-  * lapic_get_maxlvt - get the maximum number of local vector table entries
-  */
-@@ -1549,9 +1516,6 @@ static void setup_local_APIC(void)
- 		apic_write(APIC_ESR, 0);
- 	}
- #endif
--	/* Validate that the APIC is registered if required */
--	BUG_ON(apic->apic_id_registered && !apic->apic_id_registered());
--
- 	/*
- 	 * Intel recommends to set DFR, LDR and TPR before enabling
- 	 * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-@@ -1690,8 +1654,6 @@ void apic_ap_setup(void)
- 	end_local_APIC_setup();
- }
+ /*
+  * The VDSO symbols are mapped into Linux so we can just use regular symbol
+  * addressing to get their offsets in userspace.  The symbols are mapped at =
+an
+diff --git a/arch/csky/kernel/vdso.c b/arch/csky/kernel/vdso.c
+index 16c20d64d165..2ca886e4a458 100644
+--- a/arch/csky/kernel/vdso.c
++++ b/arch/csky/kernel/vdso.c
+@@ -8,25 +8,15 @@
+ #include <linux/slab.h>
 =20
--static __init void cpu_set_boot_apic(void);
--
- static __init void apic_read_boot_cpu_id(bool x2apic)
- {
- 	/*
-@@ -1706,7 +1668,8 @@ static __init void apic_read_boot_cpu_id(bool x2apic)
- 		boot_cpu_physical_apicid =3D read_apic_id();
- 		boot_cpu_apic_version =3D GET_APIC_VERSION(apic_read(APIC_LVR));
- 	}
--	cpu_set_boot_apic();
-+	topology_register_boot_apic(boot_cpu_physical_apicid);
-+	x86_32_probe_bigsmp_early();
- }
-=20
- #ifdef CONFIG_X86_X2APIC
-@@ -2091,7 +2054,6 @@ void __init init_apic_mappings(void)
- 			pr_info("APIC: disable apic facility\n");
- 			apic_disable();
- 		}
--		num_processors =3D 1;
- 	}
- }
-=20
-@@ -2305,155 +2267,6 @@ void disconnect_bsp_APIC(int virt_wire_setup)
- 	apic_write(APIC_LVT1, value);
- }
-=20
--/*
-- * The number of allocated logical CPU IDs. Since logical CPU IDs are alloca=
-ted
-- * contiguously, it equals to current allocated max logical CPU ID plus 1.
-- * All allocated CPU IDs should be in the [0, nr_logical_cpuids) range,
-- * so the maximum of nr_logical_cpuids is nr_cpu_ids.
-- *
-- * NOTE: Reserve 0 for BSP.
-- */
--static int nr_logical_cpuids =3D 1;
--
--/*
-- * Used to store mapping between logical CPU IDs and APIC IDs.
-- */
--u32 cpuid_to_apicid[] =3D { [0 ... NR_CPUS - 1] =3D BAD_APICID, };
--
--bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
--{
--	return phys_id =3D=3D (u64)cpuid_to_apicid[cpu];
--}
--
--#ifdef CONFIG_SMP
--static void cpu_mark_primary_thread(unsigned int cpu, unsigned int apicid)
--{
--	/* Isolate the SMT bit(s) in the APICID and check for 0 */
--	u32 mask =3D (1U << (fls(smp_num_siblings) - 1)) - 1;
--
--	if (smp_num_siblings =3D=3D 1 || !(apicid & mask))
--		cpumask_set_cpu(cpu, &__cpu_primary_thread_mask);
--}
--
--/*
-- * Due to the utter mess of CPUID evaluation smp_num_siblings is not valid
-- * during early boot. Initialize the primary thread mask before SMP
-- * bringup.
-- */
--static int __init smp_init_primary_thread_mask(void)
--{
--	unsigned int cpu;
--
--	/*
--	 * XEN/PV provides either none or useless topology information.
--	 * Pretend that all vCPUs are primary threads.
--	 */
--	if (xen_pv_domain()) {
--		cpumask_copy(&__cpu_primary_thread_mask, cpu_possible_mask);
--		return 0;
--	}
--
--	for (cpu =3D 0; cpu < nr_logical_cpuids; cpu++)
--		cpu_mark_primary_thread(cpu, cpuid_to_apicid[cpu]);
--	return 0;
--}
--early_initcall(smp_init_primary_thread_mask);
+ #include <asm/page.h>
+-#ifdef GENERIC_TIME_VSYSCALL
+ #include <vdso/datapage.h>
 -#else
--static inline void cpu_mark_primary_thread(unsigned int cpu, unsigned int ap=
-icid) { }
+-#include <asm/vdso.h>
 -#endif
--
+=20
+ extern char vdso_start[], vdso_end[];
+=20
+ static unsigned int vdso_pages;
+ static struct page **vdso_pagelist;
+=20
 -/*
-- * Should use this API to allocate logical CPU IDs to keep nr_logical_cpuids
-- * and cpuid_to_apicid[] synchronized.
+- * The vDSO data page.
 - */
--static int allocate_logical_cpuid(int apicid)
--{
--	int i;
--
--	/*
--	 * cpuid <-> apicid mapping is persistent, so when a cpu is up,
--	 * check if the kernel has allocated a cpuid for it.
--	 */
--	for (i =3D 0; i < nr_logical_cpuids; i++) {
--		if (cpuid_to_apicid[i] =3D=3D apicid)
--			return i;
--	}
--
--	/* Allocate a new cpuid. */
--	if (nr_logical_cpuids >=3D nr_cpu_ids) {
--		WARN_ONCE(1, "APIC: NR_CPUS/possible_cpus limit of %u reached. "
--			     "Processor %d/0x%x and the rest are ignored.\n",
--			     nr_cpu_ids, nr_logical_cpuids, apicid);
--		return -EINVAL;
--	}
--
--	cpuid_to_apicid[nr_logical_cpuids] =3D apicid;
--	return nr_logical_cpuids++;
--}
--
--static void cpu_update_apic(int cpu, u32 apicid)
--{
--#if defined(CONFIG_SMP) || defined(CONFIG_X86_64)
--	early_per_cpu(x86_cpu_to_apicid, cpu) =3D apicid;
--#endif
--	set_cpu_possible(cpu, true);
--	physid_set(apicid, phys_cpu_present_map);
--	set_cpu_present(cpu, true);
--	num_processors++;
--
--	if (system_state !=3D SYSTEM_BOOTING)
--		cpu_mark_primary_thread(cpu, apicid);
--}
--
--static __init void cpu_set_boot_apic(void)
--{
--	cpuid_to_apicid[0] =3D boot_cpu_physical_apicid;
--	cpu_update_apic(0, boot_cpu_physical_apicid);
--	x86_32_probe_bigsmp_early();
--}
--
--int generic_processor_info(int apicid)
--{
--	int cpu, max =3D nr_cpu_ids;
--
--	/* The boot CPU must be set before MADT/MPTABLE parsing happens */
--	if (cpuid_to_apicid[0] =3D=3D BAD_APICID)
--		panic("Boot CPU APIC not registered yet\n");
--
--	if (apicid =3D=3D boot_cpu_physical_apicid)
--		return 0;
--
--	if (disabled_cpu_apicid =3D=3D apicid) {
--		int thiscpu =3D num_processors + disabled_cpus;
--
--		pr_warn("APIC: Disabling requested cpu. Processor %d/0x%x ignored.\n",
--			thiscpu, apicid);
--
--		disabled_cpus++;
--		return -ENODEV;
--	}
--
--	if (num_processors >=3D nr_cpu_ids) {
--		int thiscpu =3D max + disabled_cpus;
--
--		pr_warn("APIC: NR_CPUS/possible_cpus limit of %i reached. "
--			"Processor %d/0x%x ignored.\n", max, thiscpu, apicid);
--
--		disabled_cpus++;
--		return -EINVAL;
--	}
--
--	cpu =3D allocate_logical_cpuid(apicid);
--	if (cpu < 0) {
--		disabled_cpus++;
--		return -EINVAL;
--	}
--
--	cpu_update_apic(cpu, apicid);
--	return cpu;
--}
--
--
- void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg,
- 			   bool dmar)
+-static union {
+-	struct vdso_data	data;
+-	u8			page[PAGE_SIZE];
+-} vdso_data_store __page_aligned_data;
+-struct vdso_data *vdso_data =3D &vdso_data_store.data;
++static union vdso_data_store vdso_data_store __page_aligned_data;
++struct vdso_data *vdso_data =3D vdso_data_store.data;
+=20
+ static int __init vdso_init(void)
  {
-@@ -2496,10 +2309,7 @@ EXPORT_SYMBOL_GPL(x86_msi_msg_get_destid);
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 14941e4be66d..90dfccb41c14 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -21,15 +21,13 @@
+ #include <asm/vdso.h>
+ #include <vdso/helpers.h>
+ #include <vdso/vsyscall.h>
++#include <vdso/datapage.h>
+ #include <generated/vdso-offsets.h>
 =20
- static void __init apic_bsp_up_setup(void)
- {
--#ifdef CONFIG_X86_64
--	apic_write(APIC_ID, apic->set_apic_id(boot_cpu_physical_apicid));
--#endif
--	physid_set_mask_of_physid(boot_cpu_physical_apicid, &phys_cpu_present_map);
-+	reset_phys_cpu_present_map(boot_cpu_physical_apicid);
- }
+ extern char vdso_start[], vdso_end[];
 =20
- /**
-@@ -2845,15 +2655,6 @@ static int __init lapic_insert_resource(void)
-  */
- late_initcall(lapic_insert_resource);
+ /* Kernel-provided data used by the VDSO. */
+-static union {
+-	u8 page[PAGE_SIZE];
+-	struct vdso_data data[CS_BASES];
+-} generic_vdso_data __page_aligned_data;
++static union vdso_data_store generic_vdso_data __page_aligned_data;
 =20
--static int __init apic_set_disabled_cpu_apicid(char *arg)
--{
--	if (!arg || !get_option(&arg, &disabled_cpu_apicid))
--		return -EINVAL;
+ static union {
+ 	u8 page[LOONGARCH_VDSO_DATA_SIZE];
+diff --git a/arch/mips/include/asm/vdso.h b/arch/mips/include/asm/vdso.h
+index cc7b516129a8..afb03d45bcd0 100644
+--- a/arch/mips/include/asm/vdso.h
++++ b/arch/mips/include/asm/vdso.h
+@@ -50,9 +50,4 @@ extern struct mips_vdso_image vdso_image_o32;
+ extern struct mips_vdso_image vdso_image_n32;
+ #endif
+=20
+-union mips_vdso_data {
+-	struct vdso_data data[CS_BASES];
+-	u8 page[PAGE_SIZE];
+-};
 -
--	return 0;
--}
--early_param("disable_cpu_apicid", apic_set_disabled_cpu_apicid);
--
- static int __init apic_set_extnmi(char *arg)
- {
- 	if (!arg)
-diff --git a/arch/x86/kernel/apic/apic_common.c b/arch/x86/kernel/apic/apic_c=
-ommon.c
-index 8a00141073ea..9ef3be866832 100644
---- a/arch/x86/kernel/apic/apic_common.c
-+++ b/arch/x86/kernel/apic/apic_common.c
-@@ -18,16 +18,6 @@ u32 apic_flat_calc_apicid(unsigned int cpu)
- 	return 1U << cpu;
- }
+ #endif /* __ASM_VDSO_H */
+diff --git a/arch/mips/kernel/vdso.c b/arch/mips/kernel/vdso.c
+index f6d40e43f108..dda36fa26307 100644
+--- a/arch/mips/kernel/vdso.c
++++ b/arch/mips/kernel/vdso.c
+@@ -24,7 +24,7 @@
+ #include <vdso/vsyscall.h>
 =20
--bool default_check_apicid_used(physid_mask_t *map, u32 apicid)
--{
--	return physid_isset(apicid, *map);
--}
--
--void default_ioapic_phys_id_map(physid_mask_t *phys_map, physid_mask_t *retm=
-ap)
--{
--	*retmap =3D *phys_map;
--}
--
- u32 default_cpu_present_to_apicid(int mps_cpu)
- {
- 	if (mps_cpu < nr_cpu_ids && cpu_present(mps_cpu))
-@@ -37,11 +27,6 @@ u32 default_cpu_present_to_apicid(int mps_cpu)
- }
- EXPORT_SYMBOL_GPL(default_cpu_present_to_apicid);
+ /* Kernel-provided data used by the VDSO. */
+-static union mips_vdso_data mips_vdso_data __page_aligned_data;
++static union vdso_data_store mips_vdso_data __page_aligned_data;
+ struct vdso_data *vdso_data =3D mips_vdso_data.data;
 =20
--bool default_apic_id_registered(void)
--{
--	return physid_isset(read_apic_id(), phys_cpu_present_map);
--}
+ /*
+diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+index 2cf76218a5bd..98315b98256d 100644
+--- a/arch/riscv/kernel/vdso.c
++++ b/arch/riscv/kernel/vdso.c
+@@ -30,14 +30,8 @@ enum rv_vdso_map {
+=20
+ #define VVAR_SIZE  (VVAR_NR_PAGES << PAGE_SHIFT)
+=20
+-/*
+- * The vDSO data page.
+- */
+-static union {
+-	struct vdso_data	data;
+-	u8			page[PAGE_SIZE];
+-} vdso_data_store __page_aligned_data;
+-struct vdso_data *vdso_data =3D &vdso_data_store.data;
++static union vdso_data_store vdso_data_store __page_aligned_data;
++struct vdso_data *vdso_data =3D vdso_data_store.data;
+=20
+ struct __vdso_info {
+ 	const char *name;
+diff --git a/arch/s390/include/asm/vdso/data.h b/arch/s390/include/asm/vdso/d=
+ata.h
+index 73ee89142666..0e2b40ef69b0 100644
+--- a/arch/s390/include/asm/vdso/data.h
++++ b/arch/s390/include/asm/vdso/data.h
+@@ -3,7 +3,6 @@
+ #define __S390_ASM_VDSO_DATA_H
+=20
+ #include <linux/types.h>
+-#include <vdso/datapage.h>
+=20
+ struct arch_vdso_data {
+ 	__s64 tod_steering_delta;
+diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+index bbaefd84f15e..a45b3a4c91db 100644
+--- a/arch/s390/kernel/vdso.c
++++ b/arch/s390/kernel/vdso.c
+@@ -25,10 +25,7 @@ extern char vdso32_start[], vdso32_end[];
+=20
+ static struct vm_special_mapping vvar_mapping;
+=20
+-static union {
+-	struct vdso_data	data[CS_BASES];
+-	u8			page[PAGE_SIZE];
+-} vdso_data_store __page_aligned_data;
++static union vdso_data_store vdso_data_store __page_aligned_data;
+=20
+ struct vdso_data *vdso_data =3D vdso_data_store.data;
+=20
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 1d42d4b17327..0ad8b550bb4b 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -291,7 +291,19 @@ static inline void timer_probe(void) {}
+ #define TIMER_ACPI_DECLARE(name, table_id, fn)		\
+ 	ACPI_DECLARE_PROBE_ENTRY(timer, name, table_id, 0, NULL, 0, fn)
+=20
+-extern ulong max_cswd_read_retries;
++static inline unsigned int clocksource_get_max_watchdog_retry(void)
++{
++	/*
++	 * When system is in the boot phase or under heavy workload, there
++	 * can be random big latencies during the clocksource/watchdog
++	 * read, so allow retries to filter the noise latency. As the
++	 * latency's frequency and maximum value goes up with the number of
++	 * CPUs, scale the number of retries with the number of online
++	 * CPUs.
++	 */
++	return (ilog2(num_online_cpus()) / 2) + 1;
++}
++
+ void clocksource_verify_percpu(struct clocksource *cs);
+=20
+ #endif /* _LINUX_CLOCKSOURCE_H */
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 172d0a743e5d..35e78ddb2b37 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -184,6 +184,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_ARM64_ISNDEP_STARTING,
+ 	CPUHP_AP_SMPCFD_DYING,
+ 	CPUHP_AP_HRTIMERS_DYING,
++	CPUHP_AP_TICK_DYING,
+ 	CPUHP_AP_X86_TBOOT_DYING,
+ 	CPUHP_AP_ARM_CACHE_B15_RAC_DYING,
+ 	CPUHP_AP_ONLINE,
+@@ -231,6 +232,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_PERF_POWERPC_HV_24x7_ONLINE,
+ 	CPUHP_AP_PERF_POWERPC_HV_GPCI_ONLINE,
+ 	CPUHP_AP_PERF_CSKY_ONLINE,
++	CPUHP_AP_TMIGR_ONLINE,
+ 	CPUHP_AP_WATCHDOG_ONLINE,
+ 	CPUHP_AP_WORKQUEUE_ONLINE,
+ 	CPUHP_AP_RANDOM_ONLINE,
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 641c4567cfa7..aa1e65ccb615 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -18,12 +18,8 @@
+ #include <linux/list.h>
+ #include <linux/percpu-defs.h>
+ #include <linux/rbtree.h>
+-#include <linux/seqlock.h>
+ #include <linux/timer.h>
+=20
+-struct hrtimer_clock_base;
+-struct hrtimer_cpu_base;
 -
  /*
-  * Set up the logical destination ID when the APIC operates in logical
-  * destination mode.
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_=
-flat_64.c
-index b295a056a4fc..f37ad3392fec 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -61,16 +61,6 @@ static u32 flat_get_apic_id(u32 x)
- 	return (x >> 24) & 0xFF;
- }
-=20
--static u32 set_apic_id(u32 id)
--{
--	return (id & 0xFF) << 24;
--}
--
--static u32 flat_phys_pkg_id(u32 initial_apic_id, int index_msb)
--{
--	return initial_apic_id >> index_msb;
--}
--
- static int flat_probe(void)
- {
- 	return 1;
-@@ -80,7 +70,6 @@ static struct apic apic_flat __ro_after_init =3D {
- 	.name				=3D "flat",
- 	.probe				=3D flat_probe,
- 	.acpi_madt_oem_check		=3D flat_acpi_madt_oem_check,
--	.apic_id_registered		=3D default_apic_id_registered,
-=20
- 	.dest_mode_logical		=3D true,
-=20
-@@ -88,11 +77,9 @@ static struct apic apic_flat __ro_after_init =3D {
-=20
- 	.init_apic_ldr			=3D default_init_apic_ldr,
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D flat_phys_pkg_id,
-=20
- 	.max_apic_id			=3D 0xFE,
- 	.get_apic_id			=3D flat_get_apic_id,
--	.set_apic_id			=3D set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_flat_calc_apicid,
-=20
-@@ -151,18 +138,15 @@ static struct apic apic_physflat __ro_after_init =3D {
- 	.name				=3D "physical flat",
- 	.probe				=3D physflat_probe,
- 	.acpi_madt_oem_check		=3D physflat_acpi_madt_oem_check,
--	.apic_id_registered		=3D default_apic_id_registered,
-=20
- 	.dest_mode_logical		=3D false,
-=20
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D flat_phys_pkg_id,
-=20
- 	.max_apic_id			=3D 0xFE,
- 	.get_apic_id			=3D flat_get_apic_id,
--	.set_apic_id			=3D set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noo=
-p.c
-index 9f1d553eb48f..b5bb7a2e8340 100644
---- a/arch/x86/kernel/apic/apic_noop.c
-+++ b/arch/x86/kernel/apic/apic_noop.c
-@@ -29,7 +29,6 @@ static void noop_send_IPI_self(int vector) { }
- static void noop_apic_icr_write(u32 low, u32 id) { }
- static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { =
-return -1; }
- static u64 noop_apic_icr_read(void) { return 0; }
--static u32 noop_phys_pkg_id(u32 cpuid_apic, int index_msb) { return 0; }
- static u32 noop_get_apic_id(u32 apicid) { return 0; }
- static void noop_apic_eoi(void) { }
-=20
-@@ -51,12 +50,8 @@ struct apic apic_noop __ro_after_init =3D {
-=20
- 	.disable_esr			=3D 0,
-=20
--	.check_apicid_used		=3D default_check_apicid_used,
--	.ioapic_phys_id_map		=3D default_ioapic_phys_id_map,
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
-=20
--	.phys_pkg_id			=3D noop_phys_pkg_id,
--
- 	.max_apic_id			=3D 0xFE,
- 	.get_apic_id			=3D noop_get_apic_id,
-=20
-diff --git a/arch/x86/kernel/apic/apic_numachip.c b/arch/x86/kernel/apic/apic=
-_numachip.c
-index 7d0c51b9d3bc..16410f087b7a 100644
---- a/arch/x86/kernel/apic/apic_numachip.c
-+++ b/arch/x86/kernel/apic/apic_numachip.c
-@@ -38,11 +38,6 @@ static u32 numachip1_get_apic_id(u32 x)
- 	return id;
- }
-=20
--static u32 numachip1_set_apic_id(u32 id)
--{
--	return (id & 0xff) << 24;
--}
--
- static u32 numachip2_get_apic_id(u32 x)
- {
- 	u64 mcfg;
-@@ -51,16 +46,6 @@ static u32 numachip2_get_apic_id(u32 x)
- 	return ((mcfg >> (28 - 8)) & 0xfff00) | (x >> 24);
- }
-=20
--static u32 numachip2_set_apic_id(u32 id)
--{
--	return id << 24;
--}
--
--static u32 numachip_phys_pkg_id(u32 initial_apic_id, int index_msb)
--{
--	return initial_apic_id >> index_msb;
--}
--
- static void numachip1_apic_icr_write(int apicid, unsigned int val)
- {
- 	write_lcsr(CSR_G3_EXT_IRQ_GEN, (apicid << 16) | val);
-@@ -227,11 +212,9 @@ static const struct apic apic_numachip1 __refconst =3D {
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D numachip_phys_pkg_id,
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.get_apic_id			=3D numachip1_get_apic_id,
--	.set_apic_id			=3D numachip1_set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-@@ -263,11 +246,9 @@ static const struct apic apic_numachip2 __refconst =3D {
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D numachip_phys_pkg_id,
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.get_apic_id			=3D numachip2_get_apic_id,
--	.set_apic_id			=3D numachip2_set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/apic/bigsmp_32.c b/arch/x86/kernel/apic/bigsmp_3=
-2.c
-index 5a0d60b38e6b..9285d500d5b4 100644
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -18,22 +18,6 @@ static u32 bigsmp_get_apic_id(u32 x)
- 	return (x >> 24) & 0xFF;
- }
-=20
--static bool bigsmp_check_apicid_used(physid_mask_t *map, u32 apicid)
--{
--	return false;
--}
--
--static void bigsmp_ioapic_phys_id_map(physid_mask_t *phys_map, physid_mask_t=
- *retmap)
--{
--	/* For clustered we don't have a good way to do this yet - hack */
--	physids_promote(0xFFL, retmap);
--}
--
--static u32 bigsmp_phys_pkg_id(u32 cpuid_apic, int index_msb)
--{
--	return cpuid_apic >> index_msb;
--}
--
- static void bigsmp_send_IPI_allbutself(int vector)
- {
- 	default_send_IPI_mask_allbutself_phys(cpu_online_mask, vector);
-@@ -84,14 +68,10 @@ static struct apic apic_bigsmp __ro_after_init =3D {
-=20
- 	.disable_esr			=3D 1,
-=20
--	.check_apicid_used		=3D bigsmp_check_apicid_used,
--	.ioapic_phys_id_map		=3D bigsmp_ioapic_phys_id_map,
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D bigsmp_phys_pkg_id,
-=20
- 	.max_apic_id			=3D 0xFE,
- 	.get_apic_id			=3D bigsmp_get_apic_id,
--	.set_apic_id			=3D NULL,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 40c7cf180c20..9f4fb3f2ddc4 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1458,20 +1458,20 @@ void restore_boot_irq_mode(void)
+  * Mode arguments of xxx_hrtimer functions:
   *
-  * by Matt Domsch <Matt_Domsch@dell.com>  Tue Dec 21 12:25:05 CST 1999
-  */
--void __init setup_ioapic_ids_from_mpc_nocheck(void)
-+static void __init setup_ioapic_ids_from_mpc_nocheck(void)
- {
-+	DECLARE_BITMAP(phys_id_present_map, MAX_LOCAL_APIC);
-+	const u32 broadcast_id =3D 0xF;
- 	union IO_APIC_reg_00 reg_00;
--	physid_mask_t phys_id_present_map;
--	int ioapic_idx;
--	int i;
- 	unsigned char old_id;
- 	unsigned long flags;
-+	int ioapic_idx, i;
-=20
- 	/*
- 	 * This is broken; anything with a real cpu count has to
- 	 * circumvent this idiocy regardless.
- 	 */
--	apic->ioapic_phys_id_map(&phys_cpu_present_map, &phys_id_present_map);
-+	copy_phys_cpu_present_map(phys_id_present_map);
-=20
- 	/*
- 	 * Set the IOAPIC ID to the value stored in the MPC table.
-@@ -1484,11 +1484,10 @@ void __init setup_ioapic_ids_from_mpc_nocheck(void)
-=20
- 		old_id =3D mpc_ioapic_id(ioapic_idx);
-=20
--		if (mpc_ioapic_id(ioapic_idx) >=3D get_physical_broadcast()) {
--			printk(KERN_ERR "BIOS bug, IO-APIC#%d ID is %d in the MPC table!...\n",
--				ioapic_idx, mpc_ioapic_id(ioapic_idx));
--			printk(KERN_ERR "... fixing up to %d. (tell your hw vendor)\n",
--				reg_00.bits.ID);
-+		if (mpc_ioapic_id(ioapic_idx) >=3D broadcast_id) {
-+			pr_err(FW_BUG "IO-APIC#%d ID is %d in the MPC table!...\n",
-+			       ioapic_idx, mpc_ioapic_id(ioapic_idx));
-+			pr_err("... fixing up to %d. (tell your hw vendor)\n", reg_00.bits.ID);
- 			ioapics[ioapic_idx].mp_config.apicid =3D reg_00.bits.ID;
- 		}
-=20
-@@ -1497,23 +1496,21 @@ void __init setup_ioapic_ids_from_mpc_nocheck(void)
- 		 * system must have a unique ID or we get lots of nice
- 		 * 'stuck on smp_invalidate_needed IPI wait' messages.
- 		 */
--		if (apic->check_apicid_used(&phys_id_present_map,
--					    mpc_ioapic_id(ioapic_idx))) {
--			printk(KERN_ERR "BIOS bug, IO-APIC#%d ID %d is already used!...\n",
--				ioapic_idx, mpc_ioapic_id(ioapic_idx));
--			for (i =3D 0; i < get_physical_broadcast(); i++)
--				if (!physid_isset(i, phys_id_present_map))
-+		if (test_bit(mpc_ioapic_id(ioapic_idx), phys_id_present_map)) {
-+			pr_err(FW_BUG "IO-APIC#%d ID %d is already used!...\n",
-+			       ioapic_idx, mpc_ioapic_id(ioapic_idx));
-+			for (i =3D 0; i < broadcast_id; i++)
-+				if (!test_bit(i, phys_id_present_map))
- 					break;
--			if (i >=3D get_physical_broadcast())
-+			if (i >=3D broadcast_id)
- 				panic("Max APIC ID exceeded!\n");
--			printk(KERN_ERR "... fixing up to %d. (tell your hw vendor)\n",
--				i);
--			physid_set(i, phys_id_present_map);
-+			pr_err("... fixing up to %d. (tell your hw vendor)\n", i);
-+			set_bit(i, phys_id_present_map);
- 			ioapics[ioapic_idx].mp_config.apicid =3D i;
- 		} else {
- 			apic_printk(APIC_VERBOSE, "Setting %d in the phys_id_present_map\n",
- 				    mpc_ioapic_id(ioapic_idx));
--			physid_set(mpc_ioapic_id(ioapic_idx), phys_id_present_map);
-+			set_bit(mpc_ioapic_id(ioapic_idx), phys_id_present_map);
- 		}
-=20
- 		/*
-@@ -2209,7 +2206,7 @@ static inline void __init check_timer(void)
- 	 * 8259A.
- 	 */
- 	if (pin1 =3D=3D -1) {
--		panic_if_irq_remap("BIOS bug: timer not connected to IO-APIC");
-+		panic_if_irq_remap(FW_BUG "Timer not connected to IO-APIC");
- 		pin1 =3D pin2;
- 		apic1 =3D apic2;
- 		no_pin1 =3D 1;
-@@ -2494,56 +2491,41 @@ unsigned int arch_dynirq_lower_bound(unsigned int fro=
-m)
- #ifdef CONFIG_X86_32
- static int io_apic_get_unique_id(int ioapic, int apic_id)
- {
-+	static DECLARE_BITMAP(apic_id_map, MAX_LOCAL_APIC);
-+	const u32 broadcast_id =3D 0xF;
- 	union IO_APIC_reg_00 reg_00;
--	static physid_mask_t apic_id_map =3D PHYSID_MASK_NONE;
--	physid_mask_t tmp;
- 	unsigned long flags;
- 	int i =3D 0;
-=20
--	/*
--	 * The P4 platform supports up to 256 APIC IDs on two separate APIC
--	 * buses (one for LAPICs, one for IOAPICs), where predecessors only
--	 * supports up to 16 on one shared APIC bus.
--	 *
--	 * TBD: Expand LAPIC/IOAPIC support on P4-class systems to take full
--	 *      advantage of new APIC bus architecture.
--	 */
--
--	if (physids_empty(apic_id_map))
--		apic->ioapic_phys_id_map(&phys_cpu_present_map, &apic_id_map);
-+	/* Initialize the ID map */
-+	if (bitmap_empty(apic_id_map, MAX_LOCAL_APIC))
-+		copy_phys_cpu_present_map(apic_id_map);
-=20
- 	raw_spin_lock_irqsave(&ioapic_lock, flags);
- 	reg_00.raw =3D io_apic_read(ioapic, 0);
- 	raw_spin_unlock_irqrestore(&ioapic_lock, flags);
-=20
--	if (apic_id >=3D get_physical_broadcast()) {
--		printk(KERN_WARNING "IOAPIC[%d]: Invalid apic_id %d, trying "
--			"%d\n", ioapic, apic_id, reg_00.bits.ID);
-+	if (apic_id >=3D broadcast_id) {
-+		pr_warn("IOAPIC[%d]: Invalid apic_id %d, trying %d\n",
-+			ioapic, apic_id, reg_00.bits.ID);
- 		apic_id =3D reg_00.bits.ID;
- 	}
-=20
--	/*
--	 * Every APIC in a system must have a unique ID or we get lots of nice
--	 * 'stuck on smp_invalidate_needed IPI wait' messages.
--	 */
--	if (apic->check_apicid_used(&apic_id_map, apic_id)) {
--
--		for (i =3D 0; i < get_physical_broadcast(); i++) {
--			if (!apic->check_apicid_used(&apic_id_map, i))
-+	/* Every APIC in a system must have a unique ID */
-+	if (test_bit(apic_id, apic_id_map)) {
-+		for (i =3D 0; i < broadcast_id; i++) {
-+			if (!test_bit(i, apic_id_map))
- 				break;
- 		}
-=20
--		if (i =3D=3D get_physical_broadcast())
-+		if (i =3D=3D broadcast_id)
- 			panic("Max apic_id exceeded!\n");
-=20
--		printk(KERN_WARNING "IOAPIC[%d]: apic_id %d already used, "
--			"trying %d\n", ioapic, apic_id, i);
--
-+		pr_warn("IOAPIC[%d]: apic_id %d already used, trying %d\n", ioapic, apic_i=
-d, i);
- 		apic_id =3D i;
- 	}
-=20
--	physid_set_mask_of_physid(apic_id, &tmp);
--	physids_or(apic_id_map, apic_id_map, tmp);
-+	set_bit(apic_id, apic_id_map);
-=20
- 	if (reg_00.bits.ID !=3D apic_id) {
- 		reg_00.bits.ID =3D apic_id;
-@@ -2569,11 +2551,9 @@ static int io_apic_get_unique_id(int ioapic, int apic_=
-id)
-=20
- static u8 io_apic_unique_id(int idx, u8 id)
- {
--	if ((boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL) &&
--	    !APIC_XAPIC(boot_cpu_apic_version))
-+	if ((boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL) && !APIC_XAPIC(boot_=
-cpu_apic_version))
- 		return io_apic_get_unique_id(idx, id);
--	else
--		return id;
-+	return id;
- }
- #else
- static u8 io_apic_unique_id(int idx, u8 id)
-diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-index 9ea6186ea88c..842fe28496be 100644
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -16,8 +16,6 @@
- /* X2APIC */
- void __x2apic_send_IPI_dest(unsigned int apicid, int vector, unsigned int de=
-st);
- u32 x2apic_get_apic_id(u32 id);
--u32 x2apic_set_apic_id(u32 id);
--u32 x2apic_phys_pkg_id(u32 initial_apicid, int index_msb);
-=20
- void x2apic_send_IPI_all(int vector);
- void x2apic_send_IPI_allbutself(int vector);
-@@ -63,9 +61,6 @@ void default_send_IPI_allbutself(int vector);
- void default_send_IPI_all(int vector);
- void default_send_IPI_self(int vector);
-=20
--bool default_apic_id_registered(void);
--bool default_check_apicid_used(physid_mask_t *map, u32 apicid);
--
- #ifdef CONFIG_X86_32
- void default_send_IPI_mask_sequence_logical(const struct cpumask *mask, int =
-vector);
- void default_send_IPI_mask_allbutself_logical(const struct cpumask *mask, in=
-t vector);
-diff --git a/arch/x86/kernel/apic/probe_32.c b/arch/x86/kernel/apic/probe_32.c
-index c0f78059f06a..f75ee345c02d 100644
---- a/arch/x86/kernel/apic/probe_32.c
-+++ b/arch/x86/kernel/apic/probe_32.c
-@@ -18,11 +18,6 @@
-=20
- #include "local.h"
-=20
--static u32 default_phys_pkg_id(u32 cpuid_apic, int index_msb)
--{
--	return cpuid_apic >> index_msb;
--}
--
- static u32 default_get_apic_id(u32 x)
- {
- 	unsigned int ver =3D GET_APIC_VERSION(apic_read(APIC_LVR));
-@@ -43,17 +38,13 @@ static struct apic apic_default __ro_after_init =3D {
-=20
- 	.name				=3D "default",
- 	.probe				=3D probe_default,
--	.apic_id_registered		=3D default_apic_id_registered,
-=20
- 	.dest_mode_logical		=3D true,
-=20
- 	.disable_esr			=3D 0,
-=20
--	.check_apicid_used		=3D default_check_apicid_used,
- 	.init_apic_ldr			=3D default_init_apic_ldr,
--	.ioapic_phys_id_map		=3D default_ioapic_phys_id_map,
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D default_phys_pkg_id,
-=20
- 	.max_apic_id			=3D 0xFE,
- 	.get_apic_id			=3D default_get_apic_id,
-diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2a=
-pic_cluster.c
-index 28a7d3f2312d..567dbd2fe4b6 100644
---- a/arch/x86/kernel/apic/x2apic_cluster.c
-+++ b/arch/x86/kernel/apic/x2apic_cluster.c
-@@ -231,16 +231,12 @@ static struct apic apic_x2apic_cluster __ro_after_init =
-=3D {
-=20
- 	.disable_esr			=3D 0,
-=20
--	.check_apicid_used		=3D NULL,
- 	.init_apic_ldr			=3D init_x2apic_ldr,
--	.ioapic_phys_id_map		=3D NULL,
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D x2apic_phys_pkg_id,
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.x2apic_set_max_apicid		=3D true,
- 	.get_apic_id			=3D x2apic_get_apic_id,
--	.set_apic_id			=3D x2apic_set_apic_id,
-=20
- 	.calc_dest_apicid		=3D x2apic_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/apic/x2apic_phys.c b/arch/x86/kernel/apic/x2apic=
-_phys.c
-index 409815a40668..12d4c35547a6 100644
---- a/arch/x86/kernel/apic/x2apic_phys.c
-+++ b/arch/x86/kernel/apic/x2apic_phys.c
-@@ -129,16 +129,6 @@ u32 x2apic_get_apic_id(u32 id)
- 	return id;
- }
-=20
--u32 x2apic_set_apic_id(u32 id)
--{
--	return id;
--}
--
--u32 x2apic_phys_pkg_id(u32 initial_apicid, int index_msb)
--{
--	return initial_apicid >> index_msb;
--}
--
- static struct apic apic_x2apic_phys __ro_after_init =3D {
-=20
- 	.name				=3D "physical x2apic",
-@@ -150,12 +140,10 @@ static struct apic apic_x2apic_phys __ro_after_init =3D=
- {
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D x2apic_phys_pkg_id,
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.x2apic_set_max_apicid		=3D true,
- 	.get_apic_id			=3D x2apic_get_apic_id,
--	.set_apic_id			=3D x2apic_set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic=
-_uv_x.c
-index f1766b18dcd0..7fef504ca508 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -241,54 +241,20 @@ static void __init uv_tsc_check_sync(void)
- 	is_uv(UV3) ? sname.s3.field :		\
- 	undef)
-=20
--/* [Copied from arch/x86/kernel/cpu/topology.c:detect_extended_topology()] */
--
--#define SMT_LEVEL			0	/* Leaf 0xb SMT level */
--#define INVALID_TYPE			0	/* Leaf 0xb sub-leaf types */
--#define SMT_TYPE			1
--#define CORE_TYPE			2
--#define LEAFB_SUBTYPE(ecx)		(((ecx) >> 8) & 0xff)
--#define BITS_SHIFT_NEXT_LEVEL(eax)	((eax) & 0x1f)
--
--static void set_x2apic_bits(void)
--{
--	unsigned int eax, ebx, ecx, edx, sub_index;
--	unsigned int sid_shift;
--
--	cpuid(0, &eax, &ebx, &ecx, &edx);
--	if (eax < 0xb) {
--		pr_info("UV: CPU does not have CPUID.11\n");
--		return;
--	}
--
--	cpuid_count(0xb, SMT_LEVEL, &eax, &ebx, &ecx, &edx);
--	if (ebx =3D=3D 0 || (LEAFB_SUBTYPE(ecx) !=3D SMT_TYPE)) {
--		pr_info("UV: CPUID.11 not implemented\n");
--		return;
--	}
--
--	sid_shift =3D BITS_SHIFT_NEXT_LEVEL(eax);
--	sub_index =3D 1;
--	do {
--		cpuid_count(0xb, sub_index, &eax, &ebx, &ecx, &edx);
--		if (LEAFB_SUBTYPE(ecx) =3D=3D CORE_TYPE) {
--			sid_shift =3D BITS_SHIFT_NEXT_LEVEL(eax);
--			break;
--		}
--		sub_index++;
--	} while (LEAFB_SUBTYPE(ecx) !=3D INVALID_TYPE);
--
--	uv_cpuid.apicid_shift	=3D 0;
--	uv_cpuid.apicid_mask	=3D (~(-1 << sid_shift));
--	uv_cpuid.socketid_shift =3D sid_shift;
--}
--
- static void __init early_get_apic_socketid_shift(void)
- {
-+	unsigned int sid_shift =3D topology_get_domain_shift(TOPO_PKG_DOMAIN);
-+
- 	if (is_uv2_hub() || is_uv3_hub())
- 		uvh_apicid.v =3D uv_early_read_mmr(UVH_APICID);
-=20
--	set_x2apic_bits();
-+	if (sid_shift) {
-+		uv_cpuid.apicid_shift	=3D 0;
-+		uv_cpuid.apicid_mask	=3D (~(-1 << sid_shift));
-+		uv_cpuid.socketid_shift =3D sid_shift;
-+	} else {
-+		pr_info("UV: CPU does not have valid CPUID.11\n");
-+	}
-=20
- 	pr_info("UV: apicid_shift:%d apicid_mask:0x%x\n", uv_cpuid.apicid_shift, uv=
-_cpuid.apicid_mask);
- 	pr_info("UV: socketid_shift:%d pnode_mask:0x%x\n", uv_cpuid.socketid_shift,=
- uv_cpuid.pnode_mask);
-@@ -779,21 +745,6 @@ static void uv_send_IPI_all(int vector)
- 	uv_send_IPI_mask(cpu_online_mask, vector);
- }
-=20
--static u32 set_apic_id(u32 id)
--{
--	return id;
--}
--
--static unsigned int uv_read_apic_id(void)
--{
--	return x2apic_get_apic_id(apic_read(APIC_ID));
--}
--
--static u32 uv_phys_pkg_id(u32 initial_apicid, int index_msb)
--{
--	return uv_read_apic_id() >> index_msb;
--}
--
- static int uv_probe(void)
- {
- 	return apic =3D=3D &apic_x2apic_uv_x;
-@@ -810,11 +761,9 @@ static struct apic apic_x2apic_uv_x __ro_after_init =3D {
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D default_cpu_present_to_apicid,
--	.phys_pkg_id			=3D uv_phys_pkg_id,
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.get_apic_id			=3D x2apic_get_apic_id,
--	.set_apic_id			=3D set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_default_calc_apicid,
-=20
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index 93eabf544031..eb4dbcdf41f1 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -17,7 +17,8 @@ KMSAN_SANITIZE_common.o :=3D n
- # As above, instrumenting secondary CPU boot code causes boot hangs.
- KCSAN_SANITIZE_common.o :=3D n
-=20
--obj-y			:=3D cacheinfo.o scattered.o topology.o
-+obj-y			:=3D cacheinfo.o scattered.o
-+obj-y			+=3D topology_common.o topology_ext.o topology_amd.o
- obj-y			+=3D common.o
- obj-y			+=3D rdrand.o
- obj-y			+=3D match.o
-@@ -25,14 +26,16 @@ obj-y			+=3D bugs.o
- obj-y			+=3D aperfmperf.o
- obj-y			+=3D cpuid-deps.o
- obj-y			+=3D umwait.o
-+obj-y 			+=3D capflags.o powerflags.o
-=20
--obj-$(CONFIG_PROC_FS)	+=3D proc.o
--obj-y +=3D capflags.o powerflags.o
-+obj-$(CONFIG_X86_LOCAL_APIC)		+=3D topology.o
-=20
--obj-$(CONFIG_IA32_FEAT_CTL) +=3D feat_ctl.o
-+obj-$(CONFIG_PROC_FS)			+=3D proc.o
-+
-+obj-$(CONFIG_IA32_FEAT_CTL)		+=3D feat_ctl.o
- ifdef CONFIG_CPU_SUP_INTEL
--obj-y			+=3D intel.o intel_pconfig.o tsx.o
--obj-$(CONFIG_PM)	+=3D intel_epb.o
-+obj-y					+=3D intel.o intel_pconfig.o tsx.o
-+obj-$(CONFIG_PM)			+=3D intel_epb.o
- endif
- obj-$(CONFIG_CPU_SUP_AMD)		+=3D amd.o
- obj-$(CONFIG_CPU_SUP_HYGON)		+=3D hygon.o
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index f3abca334199..c82069e5f341 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -27,13 +27,6 @@
-=20
- #include "cpu.h"
-=20
--/*
-- * nodes_per_socket: Stores the number of nodes per socket.
-- * Refer to Fam15h Models 00-0fh BKDG - CPUID Fn8000_001E_ECX
-- * Node Identifiers[10:8]
-- */
--static u32 nodes_per_socket =3D 1;
--
- static inline int rdmsrl_amd_safe(unsigned msr, unsigned long long *p)
- {
- 	u32 gprs[8] =3D { 0 };
-@@ -300,97 +293,6 @@ static int nearby_node(int apicid)
- }
- #endif
-=20
--/*
-- * Fix up topo::core_id for pre-F17h systems to be in the
-- * [0 .. cores_per_node - 1] range. Not really needed but
-- * kept so as not to break existing setups.
-- */
--static void legacy_fixup_core_id(struct cpuinfo_x86 *c)
--{
--	u32 cus_per_node;
--
--	if (c->x86 >=3D 0x17)
--		return;
--
--	cus_per_node =3D c->x86_max_cores / nodes_per_socket;
--	c->topo.core_id %=3D cus_per_node;
--}
--
--/*
-- * Fixup core topology information for
-- * (1) AMD multi-node processors
-- *     Assumption: Number of cores in each internal node is the same.
-- * (2) AMD processors supporting compute units
-- */
--static void amd_get_topology(struct cpuinfo_x86 *c)
--{
--	/* get information required for multi-node processors */
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
--		int err;
--		u32 eax, ebx, ecx, edx;
--
--		cpuid(0x8000001e, &eax, &ebx, &ecx, &edx);
--
--		c->topo.die_id  =3D ecx & 0xff;
--
--		if (c->x86 =3D=3D 0x15)
--			c->topo.cu_id =3D ebx & 0xff;
--
--		if (c->x86 >=3D 0x17) {
--			c->topo.core_id =3D ebx & 0xff;
--
--			if (smp_num_siblings > 1)
--				c->x86_max_cores /=3D smp_num_siblings;
--		}
--
--		/*
--		 * In case leaf B is available, use it to derive
--		 * topology information.
--		 */
--		err =3D detect_extended_topology(c);
--		if (!err)
--			c->x86_coreid_bits =3D get_count_order(c->x86_max_cores);
--
--		cacheinfo_amd_init_llc_id(c);
--
--	} else if (cpu_has(c, X86_FEATURE_NODEID_MSR)) {
--		u64 value;
--
--		rdmsrl(MSR_FAM10H_NODE_ID, value);
--		c->topo.die_id =3D value & 7;
--		c->topo.llc_id =3D c->topo.die_id;
--	} else
--		return;
--
--	if (nodes_per_socket > 1) {
--		set_cpu_cap(c, X86_FEATURE_AMD_DCM);
--		legacy_fixup_core_id(c);
--	}
--}
--
--/*
-- * On a AMD dual core setup the lower bits of the APIC id distinguish the co=
-res.
-- * Assumes number of cores is a power of two.
-- */
--static void amd_detect_cmp(struct cpuinfo_x86 *c)
--{
--	unsigned bits;
--
--	bits =3D c->x86_coreid_bits;
--	/* Low order bits define the core id (index of core in socket) */
--	c->topo.core_id =3D c->topo.initial_apicid & ((1 << bits)-1);
--	/* Convert the initial APIC ID into the socket ID */
--	c->topo.pkg_id =3D c->topo.initial_apicid >> bits;
--	/* use socket ID also for last level cache */
--	c->topo.llc_id =3D c->topo.die_id =3D c->topo.pkg_id;
--}
--
--u32 amd_get_nodes_per_socket(void)
--{
--	return nodes_per_socket;
--}
--EXPORT_SYMBOL_GPL(amd_get_nodes_per_socket);
--
- static void srat_detect_node(struct cpuinfo_x86 *c)
- {
- #ifdef CONFIG_NUMA
-@@ -442,32 +344,6 @@ static void srat_detect_node(struct cpuinfo_x86 *c)
- #endif
- }
-=20
--static void early_init_amd_mc(struct cpuinfo_x86 *c)
--{
--#ifdef CONFIG_SMP
--	unsigned bits, ecx;
--
--	/* Multi core CPU? */
--	if (c->extended_cpuid_level < 0x80000008)
--		return;
--
--	ecx =3D cpuid_ecx(0x80000008);
--
--	c->x86_max_cores =3D (ecx & 0xff) + 1;
--
--	/* CPU telling us the core id bits shift? */
--	bits =3D (ecx >> 12) & 0xF;
--
--	/* Otherwise recompute */
--	if (bits =3D=3D 0) {
--		while ((1 << bits) < c->x86_max_cores)
--			bits++;
--	}
--
--	c->x86_coreid_bits =3D bits;
--#endif
--}
--
- static void bsp_init_amd(struct cpuinfo_x86 *c)
- {
- 	if (cpu_has(c, X86_FEATURE_CONSTANT_TSC)) {
-@@ -500,18 +376,6 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_MWAITX))
- 		use_mwaitx_delay();
-=20
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
--		u32 ecx;
--
--		ecx =3D cpuid_ecx(0x8000001e);
--		__max_die_per_package =3D nodes_per_socket =3D ((ecx >> 8) & 7) + 1;
--	} else if (boot_cpu_has(X86_FEATURE_NODEID_MSR)) {
--		u64 value;
--
--		rdmsrl(MSR_FAM10H_NODE_ID, value);
--		__max_die_per_package =3D nodes_per_socket =3D ((value >> 3) & 7) + 1;
--	}
--
- 	if (!boot_cpu_has(X86_FEATURE_AMD_SSBD) &&
- 	    !boot_cpu_has(X86_FEATURE_VIRT_SSBD) &&
- 	    c->x86 >=3D 0x15 && c->x86 <=3D 0x17) {
-@@ -649,8 +513,6 @@ static void early_init_amd(struct cpuinfo_x86 *c)
- 	u64 value;
- 	u32 dummy;
-=20
--	early_init_amd_mc(c);
--
- 	if (c->x86 >=3D 0xf)
- 		set_cpu_cap(c, X86_FEATURE_K8);
-=20
-@@ -730,9 +592,6 @@ static void early_init_amd(struct cpuinfo_x86 *c)
- 		}
- 	}
-=20
--	if (cpu_has(c, X86_FEATURE_TOPOEXT))
--		smp_num_siblings =3D ((cpuid_ebx(0x8000001e) >> 8) & 0xff) + 1;
--
- 	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_IBPB_BRT=
-YPE)) {
- 		if (c->x86 =3D=3D 0x17 && boot_cpu_has(X86_FEATURE_AMD_IBPB))
- 			setup_force_cpu_cap(X86_FEATURE_IBPB_BRTYPE);
-@@ -1076,9 +935,6 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_FSRM))
- 		set_cpu_cap(c, X86_FEATURE_FSRS);
-=20
--	/* get apicid instead of initial apic id from cpuid */
--	c->topo.apicid =3D read_apic_id();
--
- 	/* K6s reports MCEs but don't actually have all the MSRs */
- 	if (c->x86 < 6)
- 		clear_cpu_cap(c, X86_FEATURE_MCE);
-@@ -1114,8 +970,6 @@ static void init_amd(struct cpuinfo_x86 *c)
-=20
- 	cpu_detect_cache_sizes(c);
-=20
--	amd_detect_cmp(c);
--	amd_get_topology(c);
- 	srat_detect_node(c);
-=20
- 	init_amd_cacheinfo(c);
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index c131c412db89..f2241e7e96fd 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -301,7 +301,7 @@ amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
- 	eax->split.type =3D types[leaf];
- 	eax->split.level =3D levels[leaf];
- 	eax->split.num_threads_sharing =3D 0;
--	eax->split.num_cores_on_die =3D __this_cpu_read(cpu_info.x86_max_cores) - 1;
-+	eax->split.num_cores_on_die =3D topology_num_cores_per_package();
-=20
-=20
- 	if (assoc =3D=3D 0xffff)
-@@ -595,7 +595,7 @@ static void amd_init_l3_cache(struct _cpuid4_info_regs *t=
-his_leaf, int index)
- 	if (index < 3)
- 		return;
-=20
--	node =3D topology_die_id(smp_processor_id());
-+	node =3D topology_amd_node_id(smp_processor_id());
- 	this_leaf->nb =3D node_to_amd_nb(node);
- 	if (this_leaf->nb && !this_leaf->nb->l3_cache.indices)
- 		amd_calc_l3_indices(this_leaf->nb);
-@@ -661,7 +661,7 @@ static int find_num_cache_leaves(struct cpuinfo_x86 *c)
- 	return i;
- }
-=20
--void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c)
-+void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
- {
- 	/*
- 	 * We may have multiple LLCs if L3 caches exist, so check if we
-@@ -672,7 +672,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c)
-=20
- 	if (c->x86 < 0x17) {
- 		/* LLC is at the node level. */
--		c->topo.llc_id =3D c->topo.die_id;
-+		c->topo.llc_id =3D die_id;
- 	} else if (c->x86 =3D=3D 0x17 && c->x86_model <=3D 0x1F) {
- 		/*
- 		 * LLC is at the core complex level.
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index 345f7d905db6..a3b55db35c96 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -128,10 +128,6 @@ static void init_centaur(struct cpuinfo_x86 *c)
- #endif
- 	early_init_centaur(c);
- 	init_intel_cacheinfo(c);
--	detect_num_cpu_cores(c);
--#ifdef CONFIG_X86_32
--	detect_ht(c);
--#endif
-=20
- 	if (c->cpuid_level > 9) {
- 		unsigned int eax =3D cpuid_eax(10);
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index fbc4e60d027c..087d21734286 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -73,8 +73,20 @@
- u32 elf_hwcap2 __read_mostly;
-=20
- /* Number of siblings per CPU package */
--int smp_num_siblings =3D 1;
--EXPORT_SYMBOL(smp_num_siblings);
-+unsigned int __max_threads_per_core __ro_after_init =3D 1;
-+EXPORT_SYMBOL(__max_threads_per_core);
-+
-+unsigned int __max_dies_per_package __ro_after_init =3D 1;
-+EXPORT_SYMBOL(__max_dies_per_package);
-+
-+unsigned int __max_logical_packages __ro_after_init =3D 1;
-+EXPORT_SYMBOL(__max_logical_packages);
-+
-+unsigned int __num_cores_per_package __ro_after_init =3D 1;
-+EXPORT_SYMBOL(__num_cores_per_package);
-+
-+unsigned int __num_threads_per_package __ro_after_init =3D 1;
-+EXPORT_SYMBOL(__num_threads_per_package);
-=20
- static struct ppin_info {
- 	int	feature;
-@@ -790,19 +802,6 @@ static void get_model_name(struct cpuinfo_x86 *c)
- 	*(s + 1) =3D '\0';
- }
-=20
--void detect_num_cpu_cores(struct cpuinfo_x86 *c)
--{
--	unsigned int eax, ebx, ecx, edx;
--
--	c->x86_max_cores =3D 1;
--	if (!IS_ENABLED(CONFIG_SMP) || c->cpuid_level < 4)
--		return;
--
--	cpuid_count(4, 0, &eax, &ebx, &ecx, &edx);
--	if (eax & 0x1f)
--		c->x86_max_cores =3D (eax >> 26) + 1;
--}
--
- void cpu_detect_cache_sizes(struct cpuinfo_x86 *c)
- {
- 	unsigned int n, dummy, ebx, ecx, edx, l2size;
-@@ -864,51 +863,6 @@ static void cpu_detect_tlb(struct cpuinfo_x86 *c)
- 		tlb_lld_4m[ENTRIES], tlb_lld_1g[ENTRIES]);
- }
-=20
--int detect_ht_early(struct cpuinfo_x86 *c)
--{
--#ifdef CONFIG_SMP
--	u32 eax, ebx, ecx, edx;
--
--	if (!cpu_has(c, X86_FEATURE_HT))
--		return -1;
--
--	if (cpu_has(c, X86_FEATURE_CMP_LEGACY))
--		return -1;
--
--	if (cpu_has(c, X86_FEATURE_XTOPOLOGY))
--		return -1;
--
--	cpuid(1, &eax, &ebx, &ecx, &edx);
--
--	smp_num_siblings =3D (ebx & 0xff0000) >> 16;
--	if (smp_num_siblings =3D=3D 1)
--		pr_info_once("CPU0: Hyper-Threading is disabled\n");
--#endif
--	return 0;
--}
--
--void detect_ht(struct cpuinfo_x86 *c)
--{
--#ifdef CONFIG_SMP
--	int index_msb, core_bits;
--
--	if (detect_ht_early(c) < 0)
--		return;
--
--	index_msb =3D get_count_order(smp_num_siblings);
--	c->topo.pkg_id =3D apic->phys_pkg_id(c->topo.initial_apicid, index_msb);
--
--	smp_num_siblings =3D smp_num_siblings / c->x86_max_cores;
--
--	index_msb =3D get_count_order(smp_num_siblings);
--
--	core_bits =3D get_count_order(c->x86_max_cores);
--
--	c->topo.core_id =3D apic->phys_pkg_id(c->topo.initial_apicid, index_msb) &
--		((1 << core_bits) - 1);
--#endif
--}
--
- static void get_cpu_vendor(struct cpuinfo_x86 *c)
- {
- 	char *v =3D c->x86_vendor_id;
-@@ -1592,6 +1546,8 @@ static void __init early_identify_cpu(struct cpuinfo_x8=
-6 *c)
- 		get_cpu_address_sizes(c);
- 		cpu_parse_early_param();
-=20
-+		cpu_init_topology(c);
-+
- 		if (this_cpu->c_early_init)
- 			this_cpu->c_early_init(c);
-=20
-@@ -1603,6 +1559,7 @@ static void __init early_identify_cpu(struct cpuinfo_x8=
-6 *c)
- 	} else {
- 		setup_clear_cpu_cap(X86_FEATURE_CPUID);
- 		get_cpu_address_sizes(c);
-+		cpu_init_topology(c);
- 	}
-=20
- 	setup_force_cpu_cap(X86_FEATURE_ALWAYS);
-@@ -1748,18 +1705,6 @@ static void generic_identify(struct cpuinfo_x86 *c)
-=20
- 	get_cpu_address_sizes(c);
-=20
--	if (c->cpuid_level >=3D 0x00000001) {
--		c->topo.initial_apicid =3D (cpuid_ebx(1) >> 24) & 0xFF;
--#ifdef CONFIG_X86_32
--# ifdef CONFIG_SMP
--		c->topo.apicid =3D apic->phys_pkg_id(c->topo.initial_apicid, 0);
--# else
--		c->topo.apicid =3D c->topo.initial_apicid;
--# endif
--#endif
--		c->topo.pkg_id =3D c->topo.initial_apicid;
--	}
--
- 	get_model_name(c); /* Default name */
-=20
- 	/*
-@@ -1780,29 +1725,6 @@ static void generic_identify(struct cpuinfo_x86 *c)
- #endif
- }
-=20
--/*
-- * Validate that ACPI/mptables have the same information about the
-- * effective APIC id and update the package map.
-- */
--static void validate_apic_and_package_id(struct cpuinfo_x86 *c)
--{
--#ifdef CONFIG_SMP
--	unsigned int cpu =3D smp_processor_id();
--	u32 apicid;
--
--	apicid =3D apic->cpu_present_to_apicid(cpu);
--
--	if (apicid !=3D c->topo.apicid) {
--		pr_err(FW_BUG "CPU%u: APIC id mismatch. Firmware: %x APIC: %x\n",
--		       cpu, apicid, c->topo.initial_apicid);
--	}
--	BUG_ON(topology_update_package_map(c->topo.pkg_id, cpu));
--	BUG_ON(topology_update_die_map(c->topo.die_id, cpu));
--#else
--	c->topo.logical_pkg_id =3D 0;
--#endif
--}
--
- /*
-  * This does the hard work of actually picking apart the CPU stuff...
-  */
-@@ -1816,11 +1738,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	c->x86_model =3D c->x86_stepping =3D 0;	/* So far unknown... */
- 	c->x86_vendor_id[0] =3D '\0'; /* Unset */
- 	c->x86_model_id[0] =3D '\0';  /* Unset */
--	c->x86_max_cores =3D 1;
--	c->x86_coreid_bits =3D 0;
--	c->topo.cu_id =3D 0xff;
--	c->topo.llc_id =3D BAD_APICID;
--	c->topo.l2c_id =3D BAD_APICID;
- #ifdef CONFIG_X86_64
- 	c->x86_clflush_size =3D 64;
- 	c->x86_phys_bits =3D 36;
-@@ -1839,17 +1756,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
-=20
- 	generic_identify(c);
-=20
-+	cpu_parse_topology(c);
-+
- 	if (this_cpu->c_identify)
- 		this_cpu->c_identify(c);
-=20
- 	/* Clear/Set all flags overridden by options, after probe */
- 	apply_forced_caps(c);
-=20
--#ifdef CONFIG_X86_64
--	c->topo.apicid =3D apic->phys_pkg_id(c->topo.initial_apicid, 0);
--#endif
--
--
- 	/*
- 	 * Set default APIC and TSC_DEADLINE MSR fencing flag. AMD and
- 	 * Hygon will clear it in ->c_init() below.
-@@ -1903,10 +1817,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 				c->x86, c->x86_model);
- 	}
-=20
--#ifdef CONFIG_X86_64
--	detect_ht(c);
--#endif
--
- 	x86_init_rdrand(c);
- 	setup_pku(c);
- 	setup_cet(c);
-@@ -1998,7 +1908,6 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
- #ifdef CONFIG_X86_32
- 	enable_sep_cpu();
- #endif
--	validate_apic_and_package_id(c);
- 	x86_spec_ctrl_setup_ap();
- 	update_srbds_msr();
- 	if (boot_cpu_has_bug(X86_BUG_GDS))
-@@ -2347,7 +2256,7 @@ void __init arch_cpu_finalize_init(void)
- 	 * identify_boot_cpu() initialized SMT support information, let the
- 	 * core code know.
- 	 */
--	cpu_smt_set_num_threads(smp_num_siblings, smp_num_siblings);
-+	cpu_smt_set_num_threads(__max_threads_per_core, __max_threads_per_core);
-=20
- 	if (!IS_ENABLED(CONFIG_SMP)) {
- 		pr_info("CPU: ");
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index 885281ae79a5..ea9e07d57c8d 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -2,6 +2,11 @@
- #ifndef ARCH_X86_CPU_H
- #define ARCH_X86_CPU_H
-=20
-+#include <asm/cpu.h>
-+#include <asm/topology.h>
-+
-+#include "topology.h"
-+
- /* attempt to consolidate cpu attributes */
- struct cpu_dev {
- 	const char	*c_vendor;
-@@ -71,14 +76,9 @@ extern void init_intel_cacheinfo(struct cpuinfo_x86 *c);
- extern void init_amd_cacheinfo(struct cpuinfo_x86 *c);
- extern void init_hygon_cacheinfo(struct cpuinfo_x86 *c);
-=20
--extern void detect_num_cpu_cores(struct cpuinfo_x86 *c);
--extern int detect_extended_topology_early(struct cpuinfo_x86 *c);
--extern int detect_extended_topology(struct cpuinfo_x86 *c);
--extern int detect_ht_early(struct cpuinfo_x86 *c);
--extern void detect_ht(struct cpuinfo_x86 *c);
- extern void check_null_seg_clears_base(struct cpuinfo_x86 *c);
-=20
--void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c);
-+void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id);
- void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c);
-=20
- unsigned int aperfmperf_get_khz(int cpu);
-@@ -96,4 +96,5 @@ static inline bool spectre_v2_in_eibrs_mode(enum spectre_v2=
-_mitigation mode)
- 	       mode =3D=3D SPECTRE_V2_EIBRS_RETPOLINE ||
- 	       mode =3D=3D SPECTRE_V2_EIBRS_LFENCE;
- }
-+
- #endif /* ARCH_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/debugfs.c b/arch/x86/kernel/cpu/debugfs.c
-index 0c179d684b3b..3baf3e435834 100644
---- a/arch/x86/kernel/cpu/debugfs.c
-+++ b/arch/x86/kernel/cpu/debugfs.c
-@@ -5,6 +5,8 @@
- #include <asm/apic.h>
- #include <asm/processor.h>
-=20
-+#include "cpu.h"
-+
- static int cpu_debug_show(struct seq_file *m, void *p)
- {
- 	unsigned long cpu =3D (unsigned long)m->private;
-@@ -24,9 +26,12 @@ static int cpu_debug_show(struct seq_file *m, void *p)
- 	seq_printf(m, "logical_die_id:      %u\n", c->topo.logical_die_id);
- 	seq_printf(m, "llc_id:              %u\n", c->topo.llc_id);
- 	seq_printf(m, "l2c_id:              %u\n", c->topo.l2c_id);
--	seq_printf(m, "max_cores:           %u\n", c->x86_max_cores);
--	seq_printf(m, "max_die_per_pkg:     %u\n", __max_die_per_package);
--	seq_printf(m, "smp_num_siblings:    %u\n", smp_num_siblings);
-+	seq_printf(m, "amd_node_id:         %u\n", c->topo.amd_node_id);
-+	seq_printf(m, "amd_nodes_per_pkg:   %u\n", topology_amd_nodes_per_pkg());
-+	seq_printf(m, "num_threads:         %u\n", __num_threads_per_package);
-+	seq_printf(m, "num_cores:           %u\n", __num_cores_per_package);
-+	seq_printf(m, "max_dies_per_pkg:    %u\n", __max_dies_per_package);
-+	seq_printf(m, "max_threads_per_core:%u\n", __max_threads_per_core);
- 	return 0;
- }
-=20
-@@ -42,12 +47,48 @@ static const struct file_operations dfs_cpu_ops =3D {
- 	.release	=3D single_release,
+@@ -98,107 +94,6 @@ struct hrtimer_sleeper {
+ 	struct task_struct *task;
  };
 =20
-+static int dom_debug_show(struct seq_file *m, void *p)
-+{
-+	static const char *domain_names[TOPO_MAX_DOMAIN] =3D {
-+		[TOPO_SMT_DOMAIN]	=3D "Thread",
-+		[TOPO_CORE_DOMAIN]	=3D "Core",
-+		[TOPO_MODULE_DOMAIN]	=3D "Module",
-+		[TOPO_TILE_DOMAIN]	=3D "Tile",
-+		[TOPO_DIE_DOMAIN]	=3D "Die",
-+		[TOPO_DIEGRP_DOMAIN]	=3D "DieGrp",
-+		[TOPO_PKG_DOMAIN]	=3D "Package",
-+	};
-+	unsigned int dom, nthreads =3D 1;
-+
-+	for (dom =3D 0; dom < TOPO_MAX_DOMAIN; dom++) {
-+		nthreads *=3D x86_topo_system.dom_size[dom];
-+		seq_printf(m, "domain: %-10s shift: %u dom_size: %5u max_threads: %5u\n",
-+			   domain_names[dom], x86_topo_system.dom_shifts[dom],
-+			   x86_topo_system.dom_size[dom], nthreads);
-+	}
-+	return 0;
-+}
-+
-+static int dom_debug_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, dom_debug_show, inode->i_private);
-+}
-+
-+static const struct file_operations dfs_dom_ops =3D {
-+	.open		=3D dom_debug_open,
-+	.read		=3D seq_read,
-+	.llseek		=3D seq_lseek,
-+	.release	=3D single_release,
-+};
-+
- static __init int cpu_init_debugfs(void)
- {
- 	struct dentry *dir, *base =3D debugfs_create_dir("topo", arch_debugfs_dir);
- 	unsigned long id;
- 	char name[24];
-=20
-+	debugfs_create_file("domains", 0444, base, NULL, &dfs_dom_ops);
-+
- 	dir =3D debugfs_create_dir("cpus", base);
- 	for_each_possible_cpu(id) {
- 		sprintf(name, "%lu", id);
-diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
-index f0cd95502faa..c5191b06f9f2 100644
---- a/arch/x86/kernel/cpu/hygon.c
-+++ b/arch/x86/kernel/cpu/hygon.c
-@@ -18,14 +18,6 @@
-=20
- #include "cpu.h"
-=20
--#define APICID_SOCKET_ID_BIT 6
--
--/*
-- * nodes_per_socket: Stores the number of nodes per socket.
-- * Refer to CPUID Fn8000_001E_ECX Node Identifiers[10:8]
-- */
--static u32 nodes_per_socket =3D 1;
--
- #ifdef CONFIG_NUMA
- /*
-  * To workaround broken NUMA config.  Read the comment in
-@@ -49,80 +41,6 @@ static int nearby_node(int apicid)
- }
- #endif
-=20
--static void hygon_get_topology_early(struct cpuinfo_x86 *c)
--{
--	if (cpu_has(c, X86_FEATURE_TOPOEXT))
--		smp_num_siblings =3D ((cpuid_ebx(0x8000001e) >> 8) & 0xff) + 1;
--}
--
--/*
-- * Fixup core topology information for
-- * (1) Hygon multi-node processors
-- *     Assumption: Number of cores in each internal node is the same.
-- * (2) Hygon processors supporting compute units
-- */
--static void hygon_get_topology(struct cpuinfo_x86 *c)
--{
--	/* get information required for multi-node processors */
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
--		int err;
--		u32 eax, ebx, ecx, edx;
--
--		cpuid(0x8000001e, &eax, &ebx, &ecx, &edx);
--
--		c->topo.die_id  =3D ecx & 0xff;
--
--		c->topo.core_id =3D ebx & 0xff;
--
--		if (smp_num_siblings > 1)
--			c->x86_max_cores /=3D smp_num_siblings;
--
--		/*
--		 * In case leaf B is available, use it to derive
--		 * topology information.
--		 */
--		err =3D detect_extended_topology(c);
--		if (!err)
--			c->x86_coreid_bits =3D get_count_order(c->x86_max_cores);
--
--		/*
--		 * Socket ID is ApicId[6] for the processors with model <=3D 0x3
--		 * when running on host.
--		 */
--		if (!boot_cpu_has(X86_FEATURE_HYPERVISOR) && c->x86_model <=3D 0x3)
--			c->topo.pkg_id =3D c->topo.apicid >> APICID_SOCKET_ID_BIT;
--
--		cacheinfo_hygon_init_llc_id(c);
--	} else if (cpu_has(c, X86_FEATURE_NODEID_MSR)) {
--		u64 value;
--
--		rdmsrl(MSR_FAM10H_NODE_ID, value);
--		c->topo.die_id =3D value & 7;
--		c->topo.llc_id =3D c->topo.die_id;
--	} else
--		return;
--
--	if (nodes_per_socket > 1)
--		set_cpu_cap(c, X86_FEATURE_AMD_DCM);
--}
--
--/*
-- * On Hygon setup the lower bits of the APIC id distinguish the cores.
-- * Assumes number of cores is a power of two.
-- */
--static void hygon_detect_cmp(struct cpuinfo_x86 *c)
--{
--	unsigned int bits;
--
--	bits =3D c->x86_coreid_bits;
--	/* Low order bits define the core id (index of core in socket) */
--	c->topo.core_id =3D c->topo.initial_apicid & ((1 << bits)-1);
--	/* Convert the initial APIC ID into the socket ID */
--	c->topo.pkg_id =3D c->topo.initial_apicid >> bits;
--	/* Use package ID also for last level cache */
--	c->topo.llc_id =3D c->topo.die_id =3D c->topo.pkg_id;
--}
--
- static void srat_detect_node(struct cpuinfo_x86 *c)
- {
- #ifdef CONFIG_NUMA
-@@ -173,32 +91,6 @@ static void srat_detect_node(struct cpuinfo_x86 *c)
- #endif
- }
-=20
--static void early_init_hygon_mc(struct cpuinfo_x86 *c)
--{
--#ifdef CONFIG_SMP
--	unsigned int bits, ecx;
--
--	/* Multi core CPU? */
--	if (c->extended_cpuid_level < 0x80000008)
--		return;
--
--	ecx =3D cpuid_ecx(0x80000008);
--
--	c->x86_max_cores =3D (ecx & 0xff) + 1;
--
--	/* CPU telling us the core id bits shift? */
--	bits =3D (ecx >> 12) & 0xF;
--
--	/* Otherwise recompute */
--	if (bits =3D=3D 0) {
--		while ((1 << bits) < c->x86_max_cores)
--			bits++;
--	}
--
--	c->x86_coreid_bits =3D bits;
--#endif
--}
--
- static void bsp_init_hygon(struct cpuinfo_x86 *c)
- {
- 	if (cpu_has(c, X86_FEATURE_CONSTANT_TSC)) {
-@@ -212,18 +104,6 @@ static void bsp_init_hygon(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_MWAITX))
- 		use_mwaitx_delay();
-=20
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
--		u32 ecx;
--
--		ecx =3D cpuid_ecx(0x8000001e);
--		__max_die_per_package =3D nodes_per_socket =3D ((ecx >> 8) & 7) + 1;
--	} else if (boot_cpu_has(X86_FEATURE_NODEID_MSR)) {
--		u64 value;
--
--		rdmsrl(MSR_FAM10H_NODE_ID, value);
--		__max_die_per_package =3D nodes_per_socket =3D ((value >> 3) & 7) + 1;
--	}
--
- 	if (!boot_cpu_has(X86_FEATURE_AMD_SSBD) &&
- 	    !boot_cpu_has(X86_FEATURE_VIRT_SSBD)) {
- 		/*
-@@ -242,8 +122,6 @@ static void early_init_hygon(struct cpuinfo_x86 *c)
- {
- 	u32 dummy;
-=20
--	early_init_hygon_mc(c);
--
- 	set_cpu_cap(c, X86_FEATURE_K8);
-=20
- 	rdmsr_safe(MSR_AMD64_PATCH_LEVEL, &c->microcode, &dummy);
-@@ -284,8 +162,6 @@ static void early_init_hygon(struct cpuinfo_x86 *c)
- 	 * we can set it unconditionally.
- 	 */
- 	set_cpu_cap(c, X86_FEATURE_VMMCALL);
--
--	hygon_get_topology_early(c);
- }
-=20
- static void init_hygon(struct cpuinfo_x86 *c)
-@@ -302,9 +178,6 @@ static void init_hygon(struct cpuinfo_x86 *c)
-=20
- 	set_cpu_cap(c, X86_FEATURE_REP_GOOD);
-=20
--	/* get apicid instead of initial apic id from cpuid */
--	c->topo.apicid =3D read_apic_id();
--
- 	/*
- 	 * XXX someone from Hygon needs to confirm this DTRT
- 	 *
-@@ -316,8 +189,6 @@ static void init_hygon(struct cpuinfo_x86 *c)
-=20
- 	cpu_detect_cache_sizes(c);
-=20
--	hygon_detect_cmp(c);
--	hygon_get_topology(c);
- 	srat_detect_node(c);
-=20
- 	init_hygon_cacheinfo(c);
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 40dec9b56f87..be30d7fa2e66 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -400,13 +400,6 @@ static void early_init_intel(struct cpuinfo_x86 *c)
-=20
- 	check_memory_type_self_snoop_errata(c);
-=20
--	/*
--	 * Get the number of SMT siblings early from the extended topology
--	 * leaf, if available. Otherwise try the legacy SMT detection.
--	 */
--	if (detect_extended_topology_early(c) < 0)
--		detect_ht_early(c);
--
- 	/*
- 	 * Adjust the number of physical bits early because it affects the
- 	 * valid bits of the MTRR mask registers.
-@@ -610,24 +603,6 @@ static void init_intel(struct cpuinfo_x86 *c)
-=20
- 	intel_workarounds(c);
-=20
--	/*
--	 * Detect the extended topology information if available. This
--	 * will reinitialise the initial_apicid which will be used
--	 * in init_intel_cacheinfo()
--	 */
--	detect_extended_topology(c);
--
--	if (!cpu_has(c, X86_FEATURE_XTOPOLOGY)) {
--		/*
--		 * let's use the legacy cpuid vector 0x1 and 0x4 for topology
--		 * detection.
--		 */
--		detect_num_cpu_cores(c);
--#ifdef CONFIG_X86_32
--		detect_ht(c);
--#endif
--	}
--
- 	init_intel_cacheinfo(c);
-=20
- 	if (c->cpuid_level > 9) {
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 2b46eb0fdf3a..9a0133ef7e20 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -1231,7 +1231,7 @@ static int threshold_create_bank(struct threshold_bank =
-**bp, unsigned int cpu,
- 		return -ENODEV;
-=20
- 	if (is_shared_bank(bank)) {
--		nb =3D node_to_amd_nb(topology_die_id(cpu));
-+		nb =3D node_to_amd_nb(topology_amd_node_id(cpu));
-=20
- 		/* threshold descriptor already initialized on this node? */
- 		if (nb && nb->bank4) {
-@@ -1335,7 +1335,7 @@ static void threshold_remove_bank(struct threshold_bank=
- *bank)
- 		 * The last CPU on this node using the shared bank is going
- 		 * away, remove that bank now.
- 		 */
--		nb =3D node_to_amd_nb(topology_die_id(smp_processor_id()));
-+		nb =3D node_to_amd_nb(topology_amd_node_id(smp_processor_id()));
- 		nb->bank4 =3D NULL;
- 	}
-=20
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/injec=
-t.c
-index 72f0695c3dc1..94953d749475 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -430,11 +430,9 @@ static void trigger_thr_int(void *info)
-=20
- static u32 get_nbc_for_node(int node_id)
- {
--	struct cpuinfo_x86 *c =3D &boot_cpu_data;
- 	u32 cores_per_node;
-=20
--	cores_per_node =3D (c->x86_max_cores * smp_num_siblings) / amd_get_nodes_pe=
-r_socket();
--
-+	cores_per_node =3D topology_num_threads_per_package() / topology_amd_nodes_=
-per_pkg();
- 	return cores_per_node * node_id;
- }
-=20
-@@ -543,8 +541,8 @@ static void do_inject(void)
- 	if (boot_cpu_has(X86_FEATURE_AMD_DCM) &&
- 	    b =3D=3D 4 &&
- 	    boot_cpu_data.x86 < 0x17) {
--		toggle_nb_mca_mst_cpu(topology_die_id(cpu));
--		cpu =3D get_nbc_for_node(topology_die_id(cpu));
-+		toggle_nb_mca_mst_cpu(topology_amd_node_id(cpu));
-+		cpu =3D get_nbc_for_node(topology_amd_node_id(cpu));
- 	}
-=20
- 	cpus_read_lock();
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/micr=
-ocode/intel.c
-index 857e608af641..5f0414452b67 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -641,7 +641,7 @@ static __init void calc_llc_size_per_core(struct cpuinfo_=
-x86 *c)
- {
- 	u64 llc_size =3D c->x86_cache_size * 1024ULL;
-=20
--	do_div(llc_size, c->x86_max_cores);
-+	do_div(llc_size, topology_num_cores_per_package());
- 	llc_size_per_core =3D (unsigned int)llc_size;
- }
-=20
-diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
-index dc136703566f..3259b1d4fefe 100644
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -1,167 +1,510 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Check for extended topology enumeration cpuid leaf 0xb and if it
-- * exists, use it for populating initial_apicid and cpu topology
-- * detection.
-+ * CPU/APIC topology
-+ *
-+ * The APIC IDs describe the system topology in multiple domain levels.
-+ * The CPUID topology parser provides the information which part of the
-+ * APIC ID is associated to the individual levels:
-+ *
-+ * [PACKAGE][DIEGRP][DIE][TILE][MODULE][CORE][THREAD]
-+ *
-+ * The root space contains the package (socket) IDs.
-+ *
-+ * Not enumerated levels consume 0 bits space, but conceptually they are
-+ * always represented. If e.g. only CORE and THREAD levels are enumerated
-+ * then the DIE, MODULE and TILE have the same physical ID as the PACKAGE.
-+ *
-+ * If SMT is not supported, then the THREAD domain is still used. It then
-+ * has the same physical ID as the CORE domain and is the only child of
-+ * the core domain.
-+ *
-+ * This allows a unified view on the system independent of the enumerated
-+ * domain levels without requiring any conditionals in the code.
-  */
--
-+#define pr_fmt(fmt) "CPU topo: " fmt
- #include <linux/cpu.h>
-+
-+#include <xen/xen.h>
-+
- #include <asm/apic.h>
--#include <asm/memtype.h>
--#include <asm/processor.h>
-+#include <asm/hypervisor.h>
-+#include <asm/io_apic.h>
-+#include <asm/mpspec.h>
-+#include <asm/smp.h>
-=20
- #include "cpu.h"
-=20
--/* leaf 0xb SMT level */
--#define SMT_LEVEL	0
-+/*
-+ * Map cpu index to physical APIC ID
-+ */
-+DEFINE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_apicid, BAD_APICID);
-+DEFINE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid, CPU_ACPIID_INVALID);
-+EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_apicid);
-+EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_acpiid);
-=20
--/* extended topology sub-leaf types */
--#define INVALID_TYPE	0
--#define SMT_TYPE	1
--#define CORE_TYPE	2
--#define DIE_TYPE	5
-+/* Bitmap of physically present CPUs. */
-+DECLARE_BITMAP(phys_cpu_present_map, MAX_LOCAL_APIC) __read_mostly;
-=20
--#define LEAFB_SUBTYPE(ecx)		(((ecx) >> 8) & 0xff)
--#define BITS_SHIFT_NEXT_LEVEL(eax)	((eax) & 0x1f)
--#define LEVEL_MAX_SIBLINGS(ebx)		((ebx) & 0xffff)
-+/* Used for CPU number allocation and parallel CPU bringup */
-+u32 cpuid_to_apicid[] __ro_after_init =3D { [0 ... NR_CPUS - 1] =3D BAD_APIC=
-ID, };
-+
-+/* Bitmaps to mark registered APICs at each topology domain */
-+static struct { DECLARE_BITMAP(map, MAX_LOCAL_APIC); } apic_maps[TOPO_MAX_DO=
-MAIN] __ro_after_init;
-+
-+/*
-+ * Keep track of assigned, disabled and rejected CPUs. Present assigned
-+ * with 1 as CPU #0 is reserved for the boot CPU.
-+ */
-+static struct {
-+	unsigned int		nr_assigned_cpus;
-+	unsigned int		nr_disabled_cpus;
-+	unsigned int		nr_rejected_cpus;
-+	u32			boot_cpu_apic_id;
-+	u32			real_bsp_apic_id;
-+} topo_info __ro_after_init =3D {
-+	.nr_assigned_cpus	=3D 1,
-+	.boot_cpu_apic_id	=3D BAD_APICID,
-+	.real_bsp_apic_id	=3D BAD_APICID,
-+};
-=20
--unsigned int __max_die_per_package __read_mostly =3D 1;
--EXPORT_SYMBOL(__max_die_per_package);
-+#define domain_weight(_dom)	bitmap_weight(apic_maps[_dom].map, MAX_LOCAL_API=
-C)
-+
-+bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
-+{
-+	return phys_id =3D=3D (u64)cpuid_to_apicid[cpu];
-+}
-=20
- #ifdef CONFIG_SMP
-+static void cpu_mark_primary_thread(unsigned int cpu, unsigned int apicid)
-+{
-+	if (!(apicid & (__max_threads_per_core - 1)))
-+		cpumask_set_cpu(cpu, &__cpu_primary_thread_mask);
-+}
-+#else
-+static inline void cpu_mark_primary_thread(unsigned int cpu, unsigned int ap=
-icid) { }
-+#endif
-+
- /*
-- * Check if given CPUID extended topology "leaf" is implemented
-+ * Convert the APIC ID to a domain level ID by masking out the low bits
-+ * below the domain level @dom.
-  */
--static int check_extended_topology_leaf(int leaf)
-+static inline u32 topo_apicid(u32 apicid, enum x86_topology_domains dom)
-+{
-+	if (dom =3D=3D TOPO_SMT_DOMAIN)
-+		return apicid;
-+	return apicid & (UINT_MAX << x86_topo_system.dom_shifts[dom - 1]);
-+}
-+
-+static int topo_lookup_cpuid(u32 apic_id)
- {
--	unsigned int eax, ebx, ecx, edx;
-+	int i;
-=20
--	cpuid_count(leaf, SMT_LEVEL, &eax, &ebx, &ecx, &edx);
-+	/* CPU# to APICID mapping is persistent once it is established */
-+	for (i =3D 0; i < topo_info.nr_assigned_cpus; i++) {
-+		if (cpuid_to_apicid[i] =3D=3D apic_id)
-+			return i;
-+	}
-+	return -ENODEV;
-+}
-=20
--	if (ebx =3D=3D 0 || (LEAFB_SUBTYPE(ecx) !=3D SMT_TYPE))
--		return -1;
-+static __init int topo_get_cpunr(u32 apic_id)
-+{
-+	int cpu =3D topo_lookup_cpuid(apic_id);
-=20
--	return 0;
-+	if (cpu >=3D 0)
-+		return cpu;
-+
-+	return topo_info.nr_assigned_cpus++;
- }
--/*
-- * Return best CPUID Extended Topology Leaf supported
-+
-+static void topo_set_cpuids(unsigned int cpu, u32 apic_id, u32 acpi_id)
-+{
-+#if defined(CONFIG_SMP) || defined(CONFIG_X86_64)
-+	early_per_cpu(x86_cpu_to_apicid, cpu) =3D apic_id;
-+	early_per_cpu(x86_cpu_to_acpiid, cpu) =3D acpi_id;
-+#endif
-+	set_cpu_possible(cpu, true);
-+	set_cpu_present(cpu, true);
-+}
-+
-+static __init bool check_for_real_bsp(u32 apic_id)
-+{
-+	/*
-+	 * There is no real good way to detect whether this a kdump()
-+	 * kernel, but except on the Voyager SMP monstrosity which is not
-+	 * longer supported, the real BSP APIC ID is the first one which is
-+	 * enumerated by firmware. That allows to detect whether the boot
-+	 * CPU is the real BSP. If it is not, then do not register the APIC
-+	 * because sending INIT to the real BSP would reset the whole
-+	 * system.
-+	 *
-+	 * The first APIC ID which is enumerated by firmware is detectable
-+	 * because the boot CPU APIC ID is registered before that without
-+	 * invoking this code.
-+	 */
-+	if (topo_info.real_bsp_apic_id !=3D BAD_APICID)
-+		return false;
-+
-+	if (apic_id =3D=3D topo_info.boot_cpu_apic_id) {
-+		topo_info.real_bsp_apic_id =3D apic_id;
-+		return false;
-+	}
-+
-+	pr_warn("Boot CPU APIC ID not the first enumerated APIC ID: %x > %x\n",
-+		topo_info.boot_cpu_apic_id, apic_id);
-+	pr_warn("Crash kernel detected. Disabling real BSP to prevent machine INIT\=
-n");
-+
-+	topo_info.real_bsp_apic_id =3D apic_id;
-+	return true;
-+}
-+
-+static unsigned int topo_unit_count(u32 lvlid, enum x86_topology_domains at_=
-level,
-+				    unsigned long *map)
-+{
-+	unsigned int id, end, cnt =3D 0;
-+
-+	/* Calculate the exclusive end */
-+	end =3D lvlid + (1U << x86_topo_system.dom_shifts[at_level]);
-+
-+	/* Unfortunately there is no bitmap_weight_range() */
-+	for (id =3D find_next_bit(map, end, lvlid); id < end; id =3D find_next_bit(=
-map, end, ++id))
-+		cnt++;
-+	return cnt;
-+}
-+
-+static __init void topo_register_apic(u32 apic_id, u32 acpi_id, bool present)
-+{
-+	int cpu, dom;
-+
-+	if (present) {
-+		set_bit(apic_id, phys_cpu_present_map);
-+
-+		/*
-+		 * Double registration is valid in case of the boot CPU
-+		 * APIC because that is registered before the enumeration
-+		 * of the APICs via firmware parsers or VM guest
-+		 * mechanisms.
-+		 */
-+		if (apic_id =3D=3D topo_info.boot_cpu_apic_id)
-+			cpu =3D 0;
-+		else
-+			cpu =3D topo_get_cpunr(apic_id);
-+
-+		cpuid_to_apicid[cpu] =3D apic_id;
-+		topo_set_cpuids(cpu, apic_id, acpi_id);
-+	} else {
-+		u32 pkgid =3D topo_apicid(apic_id, TOPO_PKG_DOMAIN);
-+
-+		/*
-+		 * Check for present APICs in the same package when running
-+		 * on bare metal. Allow the bogosity in a guest.
-+		 */
-+		if (hypervisor_is_type(X86_HYPER_NATIVE) &&
-+		    topo_unit_count(pkgid, TOPO_PKG_DOMAIN, phys_cpu_present_map)) {
-+			pr_info_once("Ignoring hot-pluggable APIC ID %x in present package.\n",
-+				     apic_id);
-+			topo_info.nr_rejected_cpus++;
-+			return;
-+		}
-+
-+		topo_info.nr_disabled_cpus++;
-+	}
-+
-+	/* Register present and possible CPUs in the domain maps */
-+	for (dom =3D TOPO_SMT_DOMAIN; dom < TOPO_MAX_DOMAIN; dom++)
-+		set_bit(topo_apicid(apic_id, dom), apic_maps[dom].map);
-+}
-+
-+/**
-+ * topology_register_apic - Register an APIC in early topology maps
-+ * @apic_id:	The APIC ID to set up
-+ * @acpi_id:	The ACPI ID associated to the APIC
-+ * @present:	True if the corresponding CPU is present
-  */
--static int detect_extended_topology_leaf(struct cpuinfo_x86 *c)
-+void __init topology_register_apic(u32 apic_id, u32 acpi_id, bool present)
- {
--	if (c->cpuid_level >=3D 0x1f) {
--		if (check_extended_topology_leaf(0x1f) =3D=3D 0)
--			return 0x1f;
-+	if (apic_id >=3D MAX_LOCAL_APIC) {
-+		pr_err_once("APIC ID %x exceeds kernel limit of: %x\n", apic_id, MAX_LOCAL=
-_APIC - 1);
-+		topo_info.nr_rejected_cpus++;
-+		return;
-+	}
-+
-+	if (check_for_real_bsp(apic_id)) {
-+		topo_info.nr_rejected_cpus++;
-+		return;
- 	}
-=20
--	if (c->cpuid_level >=3D 0xb) {
--		if (check_extended_topology_leaf(0xb) =3D=3D 0)
--			return 0xb;
-+	/* CPU numbers exhausted? */
-+	if (apic_id !=3D topo_info.boot_cpu_apic_id && topo_info.nr_assigned_cpus >=
-=3D nr_cpu_ids) {
-+		pr_warn_once("CPU limit of %d reached. Ignoring further CPUs\n", nr_cpu_id=
-s);
-+		topo_info.nr_rejected_cpus++;
-+		return;
- 	}
-=20
--	return -1;
-+	topo_register_apic(apic_id, acpi_id, present);
-+}
-+
-+/**
-+ * topology_register_boot_apic - Register the boot CPU APIC
-+ * @apic_id:	The APIC ID to set up
-+ *
-+ * Separate so CPU #0 can be assigned
-+ */
-+void __init topology_register_boot_apic(u32 apic_id)
-+{
-+	WARN_ON_ONCE(topo_info.boot_cpu_apic_id !=3D BAD_APICID);
-+
-+	topo_info.boot_cpu_apic_id =3D apic_id;
-+	topo_register_apic(apic_id, CPU_ACPIID_INVALID, true);
-+}
-+
-+/**
-+ * topology_get_logical_id - Retrieve the logical ID at a given topology dom=
-ain level
-+ * @apicid:		The APIC ID for which to lookup the logical ID
-+ * @at_level:		The topology domain level to use
-+ *
-+ * @apicid must be a full APIC ID, not the normalized variant. It's valid to=
- have
-+ * all bits below the domain level specified by @at_level to be clear. So bo=
-th
-+ * real APIC IDs and backshifted normalized APIC IDs work correctly.
-+ *
-+ * Returns:
-+ *  - >=3D 0:	The requested logical ID
-+ *  - -ERANGE:	@apicid is out of range
-+ *  - -ENODEV:	@apicid is not registered
-+ */
-+int topology_get_logical_id(u32 apicid, enum x86_topology_domains at_level)
-+{
-+	/* Remove the bits below @at_level to get the proper level ID of @apicid */
-+	unsigned int lvlid =3D topo_apicid(apicid, at_level);
-+
-+	if (lvlid >=3D MAX_LOCAL_APIC)
-+		return -ERANGE;
-+	if (!test_bit(lvlid, apic_maps[at_level].map))
-+		return -ENODEV;
-+	/* Get the number of set bits before @lvlid. */
-+	return bitmap_weight(apic_maps[at_level].map, lvlid);
-+}
-+EXPORT_SYMBOL_GPL(topology_get_logical_id);
-+
-+/**
-+ * topology_unit_count - Retrieve the count of specified units at a given to=
-pology domain level
-+ * @apicid:		The APIC ID which specifies the search range
-+ * @which_units:	The domain level specifying the units to count
-+ * @at_level:		The domain level at which @which_units have to be counted
-+ *
-+ * This returns the number of possible units according to the enumerated
-+ * information.
-+ *
-+ * E.g. topology_count_units(apicid, TOPO_CORE_DOMAIN, TOPO_PKG_DOMAIN)
-+ * counts the number of possible cores in the package to which @apicid
-+ * belongs.
-+ *
-+ * @at_level must obviously be greater than @which_level to produce useful
-+ * results.  If @at_level is equal to @which_units the result is
-+ * unsurprisingly 1. If @at_level is less than @which_units the results
-+ * is by definition undefined and the function returns 0.
-+ */
-+unsigned int topology_unit_count(u32 apicid, enum x86_topology_domains which=
-_units,
-+				 enum x86_topology_domains at_level)
-+{
-+	/* Remove the bits below @at_level to get the proper level ID of @apicid */
-+	unsigned int lvlid =3D topo_apicid(apicid, at_level);
-+
-+	if (lvlid >=3D MAX_LOCAL_APIC)
-+		return 0;
-+	if (!test_bit(lvlid, apic_maps[at_level].map))
-+		return 0;
-+	if (which_units > at_level)
-+		return 0;
-+	if (which_units =3D=3D at_level)
-+		return 1;
-+	return topo_unit_count(lvlid, at_level, apic_maps[which_units].map);
-+}
-+
-+#ifdef CONFIG_ACPI_HOTPLUG_CPU
-+/**
-+ * topology_hotplug_apic - Handle a physical hotplugged APIC after boot
-+ * @apic_id:	The APIC ID to set up
-+ * @acpi_id:	The ACPI ID associated to the APIC
-+ */
-+int topology_hotplug_apic(u32 apic_id, u32 acpi_id)
-+{
-+	int cpu;
-+
-+	if (apic_id >=3D MAX_LOCAL_APIC)
-+		return -EINVAL;
-+
-+	/* Reject if the APIC ID was not registered during enumeration. */
-+	if (!test_bit(apic_id, apic_maps[TOPO_SMT_DOMAIN].map))
-+		return -ENODEV;
-+
-+	cpu =3D topo_lookup_cpuid(apic_id);
-+	if (cpu < 0)
-+		return -ENOSPC;
-+
-+	set_bit(apic_id, phys_cpu_present_map);
-+	topo_set_cpuids(cpu, apic_id, acpi_id);
-+	cpu_mark_primary_thread(cpu, apic_id);
-+	return cpu;
-+}
-+
-+/**
-+ * topology_hotunplug_apic - Remove a physical hotplugged APIC after boot
-+ * @cpu:	The CPU number for which the APIC ID is removed
-+ */
-+void topology_hotunplug_apic(unsigned int cpu)
-+{
-+	u32 apic_id =3D cpuid_to_apicid[cpu];
-+
-+	if (apic_id =3D=3D BAD_APICID)
-+		return;
-+
-+	per_cpu(x86_cpu_to_apicid, cpu) =3D BAD_APICID;
-+	clear_bit(apic_id, phys_cpu_present_map);
-+	set_cpu_present(cpu, false);
- }
- #endif
-=20
--int detect_extended_topology_early(struct cpuinfo_x86 *c)
-+#ifdef CONFIG_X86_LOCAL_APIC
-+static unsigned int max_possible_cpus __initdata =3D NR_CPUS;
-+
-+/**
-+ * topology_apply_cmdline_limits_early - Apply topology command line limits =
-early
-+ *
-+ * Ensure that command line limits are in effect before firmware parsing
-+ * takes place.
-+ */
-+void __init topology_apply_cmdline_limits_early(void)
- {
--#ifdef CONFIG_SMP
--	unsigned int eax, ebx, ecx, edx;
--	int leaf;
-+	unsigned int possible =3D nr_cpu_ids;
-=20
--	leaf =3D detect_extended_topology_leaf(c);
--	if (leaf < 0)
--		return -1;
-+	/* 'maxcpus=3D0' 'nosmp' 'nolapic' 'disableapic' 'noapic' */
-+	if (!setup_max_cpus || ioapic_is_disabled || apic_is_disabled)
-+		possible =3D 1;
-=20
--	set_cpu_cap(c, X86_FEATURE_XTOPOLOGY);
-+	/* 'possible_cpus=3DN' */
-+	possible =3D min_t(unsigned int, max_possible_cpus, possible);
-+
-+	if (possible < nr_cpu_ids) {
-+		pr_info("Limiting to %u possible CPUs\n", possible);
-+		set_nr_cpu_ids(possible);
-+	}
-+}
-=20
--	cpuid_count(leaf, SMT_LEVEL, &eax, &ebx, &ecx, &edx);
-+static __init bool restrict_to_up(void)
-+{
-+	if (!smp_found_config || ioapic_is_disabled)
-+		return true;
- 	/*
--	 * initial apic id, which also represents 32-bit extended x2apic id.
-+	 * XEN PV is special as it does not advertise the local APIC
-+	 * properly, but provides a fake topology for it so that the
-+	 * infrastructure works. So don't apply the restrictions vs. APIC
-+	 * here.
- 	 */
--	c->topo.initial_apicid =3D edx;
--	smp_num_siblings =3D max_t(int, smp_num_siblings, LEVEL_MAX_SIBLINGS(ebx));
--#endif
--	return 0;
-+	if (xen_pv_domain())
-+		return false;
-+
-+	return apic_is_disabled;
- }
-=20
--/*
-- * Check for extended topology enumeration cpuid leaf, and if it
-- * exists, use it for populating initial_apicid and cpu topology
-- * detection.
-- */
--int detect_extended_topology(struct cpuinfo_x86 *c)
-+void __init topology_init_possible_cpus(void)
- {
--#ifdef CONFIG_SMP
--	unsigned int eax, ebx, ecx, edx, sub_index;
--	unsigned int ht_mask_width, core_plus_mask_width, die_plus_mask_width;
--	unsigned int core_select_mask, core_level_siblings;
--	unsigned int die_select_mask, die_level_siblings;
--	unsigned int pkg_mask_width;
--	bool die_level_present =3D false;
--	int leaf;
--
--	leaf =3D detect_extended_topology_leaf(c);
--	if (leaf < 0)
--		return -1;
-+	unsigned int assigned =3D topo_info.nr_assigned_cpus;
-+	unsigned int disabled =3D topo_info.nr_disabled_cpus;
-+	unsigned int cnta, cntb, cpu, allowed =3D 1;
-+	unsigned int total =3D assigned + disabled;
-+	u32 apicid, firstid;
-+
-+	if (!restrict_to_up()) {
-+		if (WARN_ON_ONCE(assigned > nr_cpu_ids)) {
-+			disabled +=3D assigned - nr_cpu_ids;
-+			assigned =3D nr_cpu_ids;
-+		}
-+		allowed =3D min_t(unsigned int, total, nr_cpu_ids);
-+	}
-+
-+	if (total > allowed)
-+		pr_warn("%u possible CPUs exceed the limit of %u\n", total, allowed);
-+
-+	assigned =3D min_t(unsigned int, allowed, assigned);
-+	disabled =3D allowed - assigned;
-=20
-+	topo_info.nr_assigned_cpus =3D assigned;
-+	topo_info.nr_disabled_cpus =3D disabled;
-+
-+	total_cpus =3D allowed;
-+	set_nr_cpu_ids(allowed);
-+
-+	cnta =3D domain_weight(TOPO_PKG_DOMAIN);
-+	cntb =3D domain_weight(TOPO_DIE_DOMAIN);
-+	__max_logical_packages =3D cnta;
-+	__max_dies_per_package =3D 1U << (get_count_order(cntb) - get_count_order(c=
-nta));
-+
-+	pr_info("Max. logical packages: %3u\n", cnta);
-+	pr_info("Max. logical dies:     %3u\n", cntb);
-+	pr_info("Max. dies per package: %3u\n", __max_dies_per_package);
-+
-+	cnta =3D domain_weight(TOPO_CORE_DOMAIN);
-+	cntb =3D domain_weight(TOPO_SMT_DOMAIN);
- 	/*
--	 * Populate HT related information from sub-leaf level 0.
-+	 * Can't use order delta here as order(cnta) can be equal
-+	 * order(cntb) even if cnta !=3D cntb.
- 	 */
--	cpuid_count(leaf, SMT_LEVEL, &eax, &ebx, &ecx, &edx);
--	c->topo.initial_apicid =3D edx;
--	core_level_siblings =3D LEVEL_MAX_SIBLINGS(ebx);
--	smp_num_siblings =3D max_t(int, smp_num_siblings, LEVEL_MAX_SIBLINGS(ebx));
--	core_plus_mask_width =3D ht_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--	die_level_siblings =3D LEVEL_MAX_SIBLINGS(ebx);
--	pkg_mask_width =3D die_plus_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--
--	sub_index =3D 1;
--	while (true) {
--		cpuid_count(leaf, sub_index, &eax, &ebx, &ecx, &edx);
-+	__max_threads_per_core =3D DIV_ROUND_UP(cntb, cnta);
-+	pr_info("Max. threads per core: %3u\n", __max_threads_per_core);
-=20
--		/*
--		 * Check for the Core type in the implemented sub leaves.
--		 */
--		if (LEAFB_SUBTYPE(ecx) =3D=3D CORE_TYPE) {
--			core_level_siblings =3D LEVEL_MAX_SIBLINGS(ebx);
--			core_plus_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--			die_level_siblings =3D core_level_siblings;
--			die_plus_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--		}
--		if (LEAFB_SUBTYPE(ecx) =3D=3D DIE_TYPE) {
--			die_level_present =3D true;
--			die_level_siblings =3D LEVEL_MAX_SIBLINGS(ebx);
--			die_plus_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--		}
-+	firstid =3D find_first_bit(apic_maps[TOPO_SMT_DOMAIN].map, MAX_LOCAL_APIC);
-+	__num_cores_per_package =3D topology_unit_count(firstid, TOPO_CORE_DOMAIN, =
-TOPO_PKG_DOMAIN);
-+	pr_info("Num. cores per package:   %3u\n", __num_cores_per_package);
-+	__num_threads_per_package =3D topology_unit_count(firstid, TOPO_SMT_DOMAIN,=
- TOPO_PKG_DOMAIN);
-+	pr_info("Num. threads per package: %3u\n", __num_threads_per_package);
-=20
--		if (LEAFB_SUBTYPE(ecx) !=3D INVALID_TYPE)
--			pkg_mask_width =3D BITS_SHIFT_NEXT_LEVEL(eax);
--		else
--			break;
-+	pr_info("Allowing %u present CPUs plus %u hotplug CPUs\n", assigned, disabl=
-ed);
-+	if (topo_info.nr_rejected_cpus)
-+		pr_info("Rejected CPUs %u\n", topo_info.nr_rejected_cpus);
-=20
--		sub_index++;
-+	init_cpu_present(cpumask_of(0));
-+	init_cpu_possible(cpumask_of(0));
-+
-+	/* Assign CPU numbers to non-present CPUs */
-+	for (apicid =3D 0; disabled; disabled--, apicid++) {
-+		apicid =3D find_next_andnot_bit(apic_maps[TOPO_SMT_DOMAIN].map, phys_cpu_p=
-resent_map,
-+					      MAX_LOCAL_APIC, apicid);
-+		if (apicid >=3D MAX_LOCAL_APIC)
-+			break;
-+		cpuid_to_apicid[topo_info.nr_assigned_cpus++] =3D apicid;
- 	}
-=20
--	core_select_mask =3D (~(-1 << pkg_mask_width)) >> ht_mask_width;
--	die_select_mask =3D (~(-1 << die_plus_mask_width)) >>
--				core_plus_mask_width;
-+	for (cpu =3D 0; cpu < allowed; cpu++) {
-+		apicid =3D cpuid_to_apicid[cpu];
-=20
--	c->topo.core_id =3D apic->phys_pkg_id(c->topo.initial_apicid,
--				ht_mask_width) & core_select_mask;
-+		set_cpu_possible(cpu, true);
-=20
--	if (die_level_present) {
--		c->topo.die_id =3D apic->phys_pkg_id(c->topo.initial_apicid,
--					core_plus_mask_width) & die_select_mask;
-+		if (apicid =3D=3D BAD_APICID)
-+			continue;
-+
-+		cpu_mark_primary_thread(cpu, apicid);
-+		set_cpu_present(cpu, test_bit(apicid, phys_cpu_present_map));
- 	}
-+}
-=20
--	c->topo.pkg_id =3D apic->phys_pkg_id(c->topo.initial_apicid, pkg_mask_width=
-);
--	/*
--	 * Reinit the apicid, now that we have extended initial_apicid.
--	 */
--	c->topo.apicid =3D apic->phys_pkg_id(c->topo.initial_apicid, 0);
-+/*
-+ * Late SMP disable after sizing CPU masks when APIC/IOAPIC setup failed.
-+ */
-+void __init topology_reset_possible_cpus_up(void)
-+{
-+	init_cpu_present(cpumask_of(0));
-+	init_cpu_possible(cpumask_of(0));
-=20
--	c->x86_max_cores =3D (core_level_siblings / smp_num_siblings);
--	__max_die_per_package =3D (die_level_siblings / core_level_siblings);
--#endif
-+	bitmap_zero(phys_cpu_present_map, MAX_LOCAL_APIC);
-+	if (topo_info.boot_cpu_apic_id !=3D BAD_APICID)
-+		set_bit(topo_info.boot_cpu_apic_id, phys_cpu_present_map);
-+}
-+
-+static int __init setup_possible_cpus(char *str)
-+{
-+	get_option(&str, &max_possible_cpus);
- 	return 0;
- }
-+early_param("possible_cpus", setup_possible_cpus);
-+#endif
-diff --git a/arch/x86/kernel/cpu/topology.h b/arch/x86/kernel/cpu/topology.h
-new file mode 100644
-index 000000000000..37326297f80c
---- /dev/null
-+++ b/arch/x86/kernel/cpu/topology.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ARCH_X86_TOPOLOGY_H
-+#define ARCH_X86_TOPOLOGY_H
-+
-+struct topo_scan {
-+	struct cpuinfo_x86	*c;
-+	unsigned int		dom_shifts[TOPO_MAX_DOMAIN];
-+	unsigned int		dom_ncpus[TOPO_MAX_DOMAIN];
-+
-+	/* Legacy CPUID[1]:EBX[23:16] number of logical processors */
-+	unsigned int		ebx1_nproc_shift;
-+
-+	/* AMD specific node ID which cannot be mapped into APIC space. */
-+	u16			amd_nodes_per_pkg;
-+	u16			amd_node_id;
-+};
-+
-+void cpu_init_topology(struct cpuinfo_x86 *c);
-+void cpu_parse_topology(struct cpuinfo_x86 *c);
-+void topology_set_dom(struct topo_scan *tscan, enum x86_topology_domains dom,
-+		      unsigned int shift, unsigned int ncpus);
-+bool cpu_parse_topology_ext(struct topo_scan *tscan);
-+void cpu_parse_topology_amd(struct topo_scan *tscan);
-+void cpu_topology_fixup_amd(struct topo_scan *tscan);
-+
-+static inline u32 topo_shift_apicid(u32 apicid, enum x86_topology_domains do=
-m)
-+{
-+	if (dom =3D=3D TOPO_SMT_DOMAIN)
-+		return apicid;
-+	return apicid >> x86_topo_system.dom_shifts[dom - 1];
-+}
-+
-+static inline u32 topo_relative_domain_id(u32 apicid, enum x86_topology_doma=
-ins dom)
-+{
-+	if (dom !=3D TOPO_SMT_DOMAIN)
-+		apicid >>=3D x86_topo_system.dom_shifts[dom - 1];
-+	return apicid & (x86_topo_system.dom_size[dom] - 1);
-+}
-+
-+static inline u32 topo_domain_mask(enum x86_topology_domains dom)
-+{
-+	return (1U << x86_topo_system.dom_shifts[dom]) - 1;
-+}
-+
-+/*
-+ * Update a domain level after the fact without propagating. Used to fixup
-+ * broken CPUID enumerations.
-+ */
-+static inline void topology_update_dom(struct topo_scan *tscan, enum x86_top=
-ology_domains dom,
-+				       unsigned int shift, unsigned int ncpus)
-+{
-+	tscan->dom_shifts[dom] =3D shift;
-+	tscan->dom_ncpus[dom] =3D ncpus;
-+}
-+
-+#ifdef CONFIG_X86_LOCAL_APIC
-+unsigned int topology_unit_count(u32 apicid, enum x86_topology_domains which=
-_units,
-+				 enum x86_topology_domains at_level);
-+#else
-+static inline unsigned int topology_unit_count(u32 apicid, enum x86_topology=
-_domains which_units,
-+					       enum x86_topology_domains at_level)
-+{
-+	return 1;
-+}
-+#endif
-+
-+#endif /* ARCH_X86_TOPOLOGY_H */
-diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topolog=
-y_amd.c
-new file mode 100644
-index 000000000000..1a8b3ad493af
---- /dev/null
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/cpu.h>
-+
-+#include <asm/apic.h>
-+#include <asm/memtype.h>
-+#include <asm/processor.h>
-+
-+#include "cpu.h"
-+
-+static bool parse_8000_0008(struct topo_scan *tscan)
-+{
-+	struct {
-+		// ecx
-+		u32	cpu_nthreads		:  8, // Number of physical threads - 1
-+						:  4, // Reserved
-+			apicid_coreid_len	:  4, // Number of thread core ID bits (shift) in APIC =
-ID
-+			perf_tsc_len		:  2, // Performance time-stamp counter size
-+						: 14; // Reserved
-+	} ecx;
-+	unsigned int sft;
-+
-+	if (tscan->c->extended_cpuid_level < 0x80000008)
-+		return false;
-+
-+	cpuid_leaf_reg(0x80000008, CPUID_ECX, &ecx);
-+
-+	/* If the thread bits are 0, then get the shift value from ecx.cpu_nthreads=
- */
-+	sft =3D ecx.apicid_coreid_len;
-+	if (!sft)
-+		sft =3D get_count_order(ecx.cpu_nthreads + 1);
-+
-+	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
-+	return true;
-+}
-+
-+static void store_node(struct topo_scan *tscan, unsigned int nr_nodes, u16 n=
-ode_id)
-+{
-+	/*
-+	 * Starting with Fam 17h the DIE domain could probably be used to
-+	 * retrieve the node info on AMD/HYGON. Analysis of CPUID dumps
-+	 * suggests it's the topmost bit(s) of the CPU cores area, but
-+	 * that's guess work and neither enumerated nor documented.
-+	 *
-+	 * Up to Fam 16h this does not work at all and the legacy node ID
-+	 * has to be used.
-+	 */
-+	tscan->amd_nodes_per_pkg =3D nr_nodes;
-+	tscan->amd_node_id =3D node_id;
-+}
-+
-+static bool parse_8000_001e(struct topo_scan *tscan, bool has_0xb)
-+{
-+	struct {
-+		// eax
-+		u32	ext_apic_id		: 32; // Extended APIC ID
-+		// ebx
-+		u32	core_id			:  8, // Unique per-socket logical core unit ID
-+			core_nthreads		:  8, // #Threads per core (zero-based)
-+						: 16; // Reserved
-+		// ecx
-+		u32	node_id			:  8, // Node (die) ID of invoking logical CPU
-+			nnodes_per_socket	:  3, // #nodes in invoking logical CPU's package/socket
-+						: 21; // Reserved
-+		// edx
-+		u32				: 32; // Reserved
-+	} leaf;
-+
-+	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-+		return false;
-+
-+	cpuid_leaf(0x8000001e, &leaf);
-+
-+	tscan->c->topo.initial_apicid =3D leaf.ext_apic_id;
-+
-+	/*
-+	 * If leaf 0xb is available, then SMT shift is set already. If not
-+	 * take it from ecx.threads_per_core and use topo_update_dom() -
-+	 * topology_set_dom() would propagate and overwrite the already
-+	 * propagated CORE level.
-+	 */
-+	if (!has_0xb) {
-+		unsigned int nthreads =3D leaf.core_nthreads + 1;
-+
-+		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nth=
-reads);
-+	}
-+
-+	store_node(tscan, leaf.nnodes_per_socket + 1, leaf.node_id);
-+
-+	if (tscan->c->x86_vendor =3D=3D X86_VENDOR_AMD) {
-+		if (tscan->c->x86 =3D=3D 0x15)
-+			tscan->c->topo.cu_id =3D leaf.core_id;
-+
-+		cacheinfo_amd_init_llc_id(tscan->c, leaf.node_id);
-+	} else {
-+		/*
-+		 * Package ID is ApicId[6..] on certain Hygon CPUs. See
-+		 * commit e0ceeae708ce for explanation. The topology info
-+		 * is screwed up: The package shift is always 6 and the
-+		 * node ID is bit [4:5].
-+		 */
-+		if (!boot_cpu_has(X86_FEATURE_HYPERVISOR) && tscan->c->x86_model <=3D 0x3)=
- {
-+			topology_set_dom(tscan, TOPO_CORE_DOMAIN, 6,
-+					 tscan->dom_ncpus[TOPO_CORE_DOMAIN]);
-+		}
-+		cacheinfo_hygon_init_llc_id(tscan->c);
-+	}
-+	return true;
-+}
-+
-+static bool parse_fam10h_node_id(struct topo_scan *tscan)
-+{
-+	struct {
-+		union {
-+			u64	node_id		:  3,
-+				nodes_per_pkg	:  3,
-+				unused		: 58;
-+			u64	msr;
-+		};
-+	} nid;
-+
-+	if (!boot_cpu_has(X86_FEATURE_NODEID_MSR))
-+		return false;
-+
-+	rdmsrl(MSR_FAM10H_NODE_ID, nid.msr);
-+	store_node(tscan, nid.nodes_per_pkg + 1, nid.node_id);
-+	tscan->c->topo.llc_id =3D nid.node_id;
-+	return true;
-+}
-+
-+static void legacy_set_llc(struct topo_scan *tscan)
-+{
-+	unsigned int apicid =3D tscan->c->topo.initial_apicid;
-+
-+	/* parse_8000_0008() set everything up except llc_id */
-+	tscan->c->topo.llc_id =3D apicid >> tscan->dom_shifts[TOPO_CORE_DOMAIN];
-+}
-+
-+static void parse_topology_amd(struct topo_scan *tscan)
-+{
-+	bool has_0xb =3D false;
-+
-+	/*
-+	 * If the extended topology leaf 0x8000_001e is available
-+	 * try to get SMT and CORE shift from leaf 0xb first, then
-+	 * try to get the CORE shift from leaf 0x8000_0008.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
-+		has_0xb =3D cpu_parse_topology_ext(tscan);
-+
-+	if (!has_0xb && !parse_8000_0008(tscan))
-+		return;
-+
-+	/* Prefer leaf 0x8000001e if available */
-+	if (parse_8000_001e(tscan, has_0xb))
-+		return;
-+
-+	/* Try the NODEID MSR */
-+	if (parse_fam10h_node_id(tscan))
-+		return;
-+
-+	legacy_set_llc(tscan);
-+}
-+
-+void cpu_parse_topology_amd(struct topo_scan *tscan)
-+{
-+	tscan->amd_nodes_per_pkg =3D 1;
-+	parse_topology_amd(tscan);
-+
-+	if (tscan->amd_nodes_per_pkg > 1)
-+		set_cpu_cap(tscan->c, X86_FEATURE_AMD_DCM);
-+}
-+
-+void cpu_topology_fixup_amd(struct topo_scan *tscan)
-+{
-+	struct cpuinfo_x86 *c =3D tscan->c;
-+
-+	/*
-+	 * Adjust the core_id relative to the node when there is more than
-+	 * one node.
-+	 */
-+	if (tscan->c->x86 < 0x17 && tscan->amd_nodes_per_pkg > 1)
-+		c->topo.core_id %=3D tscan->dom_ncpus[TOPO_CORE_DOMAIN] / tscan->amd_nodes=
-_per_pkg;
-+}
-diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topo=
-logy_common.c
-new file mode 100644
-index 000000000000..a50ae8d63d1c
---- /dev/null
-+++ b/arch/x86/kernel/cpu/topology_common.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/cpu.h>
-+
-+#include <xen/xen.h>
-+
-+#include <asm/apic.h>
-+#include <asm/processor.h>
-+#include <asm/smp.h>
-+
-+#include "cpu.h"
-+
-+struct x86_topology_system x86_topo_system __ro_after_init;
-+EXPORT_SYMBOL_GPL(x86_topo_system);
-+
-+unsigned int __amd_nodes_per_pkg __ro_after_init;
-+EXPORT_SYMBOL_GPL(__amd_nodes_per_pkg);
-+
-+void topology_set_dom(struct topo_scan *tscan, enum x86_topology_domains dom,
-+		      unsigned int shift, unsigned int ncpus)
-+{
-+	topology_update_dom(tscan, dom, shift, ncpus);
-+
-+	/* Propagate to the upper levels */
-+	for (dom++; dom < TOPO_MAX_DOMAIN; dom++) {
-+		tscan->dom_shifts[dom] =3D tscan->dom_shifts[dom - 1];
-+		tscan->dom_ncpus[dom] =3D tscan->dom_ncpus[dom - 1];
-+	}
-+}
-+
-+static unsigned int __maybe_unused parse_num_cores_legacy(struct cpuinfo_x86=
- *c)
-+{
-+	struct {
-+		u32	cache_type	:  5,
-+			unused		: 21,
-+			ncores		:  6;
-+	} eax;
-+
-+	if (c->cpuid_level < 4)
-+		return 1;
-+
-+	cpuid_subleaf_reg(4, 0, CPUID_EAX, &eax);
-+	if (!eax.cache_type)
-+		return 1;
-+
-+	return eax.ncores + 1;
-+}
-+
-+static void parse_legacy(struct topo_scan *tscan)
-+{
-+	unsigned int cores, core_shift, smt_shift =3D 0;
-+	struct cpuinfo_x86 *c =3D tscan->c;
-+
-+	cores =3D parse_num_cores_legacy(c);
-+	core_shift =3D get_count_order(cores);
-+
-+	if (cpu_has(c, X86_FEATURE_HT)) {
-+		if (!WARN_ON_ONCE(tscan->ebx1_nproc_shift < core_shift))
-+			smt_shift =3D tscan->ebx1_nproc_shift - core_shift;
-+		/*
-+		 * The parser expects leaf 0xb/0x1f format, which means
-+		 * the number of logical processors at core level is
-+		 * counting threads.
-+		 */
-+		core_shift +=3D smt_shift;
-+		cores <<=3D smt_shift;
-+	}
-+
-+	topology_set_dom(tscan, TOPO_SMT_DOMAIN, smt_shift, 1U << smt_shift);
-+	topology_set_dom(tscan, TOPO_CORE_DOMAIN, core_shift, cores);
-+}
-+
-+static bool fake_topology(struct topo_scan *tscan)
-+{
-+	/*
-+	 * Preset the CORE level shift for CPUID less systems and XEN_PV,
-+	 * which has useless CPUID information.
-+	 */
-+	topology_set_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
-+	topology_set_dom(tscan, TOPO_CORE_DOMAIN, 0, 1);
-+
-+	return tscan->c->cpuid_level < 1;
-+}
-+
-+static void parse_topology(struct topo_scan *tscan, bool early)
-+{
-+	const struct cpuinfo_topology topo_defaults =3D {
-+		.cu_id			=3D 0xff,
-+		.llc_id			=3D BAD_APICID,
-+		.l2c_id			=3D BAD_APICID,
-+	};
-+	struct cpuinfo_x86 *c =3D tscan->c;
-+	struct {
-+		u32	unused0		: 16,
-+			nproc		:  8,
-+			apicid		:  8;
-+	} ebx;
-+
-+	c->topo =3D topo_defaults;
-+
-+	if (fake_topology(tscan))
-+		return;
-+
-+	/* Preset Initial APIC ID from CPUID leaf 1 */
-+	cpuid_leaf_reg(1, CPUID_EBX, &ebx);
-+	c->topo.initial_apicid =3D ebx.apicid;
-+
-+	/*
-+	 * The initial invocation from early_identify_cpu() happens before
-+	 * the APIC is mapped or X2APIC enabled. For establishing the
-+	 * topology, that's not required. Use the initial APIC ID.
-+	 */
-+	if (early)
-+		c->topo.apicid =3D c->topo.initial_apicid;
-+	else
-+		c->topo.apicid =3D read_apic_id();
-+
-+	/* The above is sufficient for UP */
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		return;
-+
-+	tscan->ebx1_nproc_shift =3D get_count_order(ebx.nproc);
-+
-+	switch (c->x86_vendor) {
-+	case X86_VENDOR_AMD:
-+		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
-+			cpu_parse_topology_amd(tscan);
-+		break;
-+	case X86_VENDOR_CENTAUR:
-+	case X86_VENDOR_ZHAOXIN:
-+		parse_legacy(tscan);
-+		break;
-+	case X86_VENDOR_INTEL:
-+		if (!IS_ENABLED(CONFIG_CPU_SUP_INTEL) || !cpu_parse_topology_ext(tscan))
-+			parse_legacy(tscan);
-+		break;
-+	case X86_VENDOR_HYGON:
-+		if (IS_ENABLED(CONFIG_CPU_SUP_HYGON))
-+			cpu_parse_topology_amd(tscan);
-+		break;
-+	}
-+}
-+
-+static void topo_set_ids(struct topo_scan *tscan)
-+{
-+	struct cpuinfo_x86 *c =3D tscan->c;
-+	u32 apicid =3D c->topo.apicid;
-+
-+	c->topo.pkg_id =3D topo_shift_apicid(apicid, TOPO_PKG_DOMAIN);
-+	c->topo.die_id =3D topo_shift_apicid(apicid, TOPO_DIE_DOMAIN);
-+
-+	c->topo.logical_pkg_id =3D topology_get_logical_id(apicid, TOPO_PKG_DOMAIN);
-+	c->topo.logical_die_id =3D topology_get_logical_id(apicid, TOPO_DIE_DOMAIN);
-+
-+	/* Package relative core ID */
-+	c->topo.core_id =3D (apicid & topo_domain_mask(TOPO_PKG_DOMAIN)) >>
-+		x86_topo_system.dom_shifts[TOPO_SMT_DOMAIN];
-+
-+	c->topo.amd_node_id =3D tscan->amd_node_id;
-+
-+	if (c->x86_vendor =3D=3D X86_VENDOR_AMD)
-+		cpu_topology_fixup_amd(tscan);
-+}
-+
-+void cpu_parse_topology(struct cpuinfo_x86 *c)
-+{
-+	unsigned int dom, cpu =3D smp_processor_id();
-+	struct topo_scan tscan =3D { .c =3D c, };
-+
-+	parse_topology(&tscan, false);
-+
-+	if (IS_ENABLED(CONFIG_X86_LOCAL_APIC)) {
-+		if (c->topo.initial_apicid !=3D c->topo.apicid) {
-+			pr_err(FW_BUG "CPU%4u: APIC ID mismatch. CPUID: 0x%04x APIC: 0x%04x\n",
-+			       cpu, c->topo.initial_apicid, c->topo.apicid);
-+		}
-+
-+		if (c->topo.apicid !=3D cpuid_to_apicid[cpu]) {
-+			pr_err(FW_BUG "CPU%4u: APIC ID mismatch. Firmware: 0x%04x APIC: 0x%04x\n",
-+			       cpu, cpuid_to_apicid[cpu], c->topo.apicid);
-+		}
-+	}
-+
-+	for (dom =3D TOPO_SMT_DOMAIN; dom < TOPO_MAX_DOMAIN; dom++) {
-+		if (tscan.dom_shifts[dom] =3D=3D x86_topo_system.dom_shifts[dom])
-+			continue;
-+		pr_err(FW_BUG "CPU%d: Topology domain %u shift %u !=3D %u\n", cpu, dom,
-+		       tscan.dom_shifts[dom], x86_topo_system.dom_shifts[dom]);
-+	}
-+
-+	topo_set_ids(&tscan);
-+}
-+
-+void __init cpu_init_topology(struct cpuinfo_x86 *c)
-+{
-+	struct topo_scan tscan =3D { .c =3D c, };
-+	unsigned int dom, sft;
-+
-+	parse_topology(&tscan, true);
-+
-+	/* Copy the shift values and calculate the unit sizes. */
-+	memcpy(x86_topo_system.dom_shifts, tscan.dom_shifts, sizeof(x86_topo_system=
-.dom_shifts));
-+
-+	dom =3D TOPO_SMT_DOMAIN;
-+	x86_topo_system.dom_size[dom] =3D 1U << x86_topo_system.dom_shifts[dom];
-+
-+	for (dom++; dom < TOPO_MAX_DOMAIN; dom++) {
-+		sft =3D x86_topo_system.dom_shifts[dom] - x86_topo_system.dom_shifts[dom -=
- 1];
-+		x86_topo_system.dom_size[dom] =3D 1U << sft;
-+	}
-+
-+	topo_set_ids(&tscan);
-+
-+	/*
-+	 * AMD systems have Nodes per package which cannot be mapped to
-+	 * APIC ID.
-+	 */
-+	__amd_nodes_per_pkg =3D tscan.amd_nodes_per_pkg;
-+}
-diff --git a/arch/x86/kernel/cpu/topology_ext.c b/arch/x86/kernel/cpu/topolog=
-y_ext.c
-new file mode 100644
-index 000000000000..e477228cd5b2
---- /dev/null
-+++ b/arch/x86/kernel/cpu/topology_ext.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/cpu.h>
-+
-+#include <asm/apic.h>
-+#include <asm/memtype.h>
-+#include <asm/processor.h>
-+
-+#include "cpu.h"
-+
-+enum topo_types {
-+	INVALID_TYPE		=3D 0,
-+	SMT_TYPE		=3D 1,
-+	CORE_TYPE		=3D 2,
-+	MAX_TYPE_0B		=3D 3,
-+	MODULE_TYPE		=3D 3,
-+	TILE_TYPE		=3D 4,
-+	DIE_TYPE		=3D 5,
-+	DIEGRP_TYPE		=3D 6,
-+	MAX_TYPE_1F		=3D 7,
-+};
-+
-+/*
-+ * Use a lookup table for the case that there are future types > 6 which
-+ * describe an intermediate domain level which does not exist today.
-+ */
-+static const unsigned int topo_domain_map_0b_1f[MAX_TYPE_1F] =3D {
-+	[SMT_TYPE]	=3D TOPO_SMT_DOMAIN,
-+	[CORE_TYPE]	=3D TOPO_CORE_DOMAIN,
-+	[MODULE_TYPE]	=3D TOPO_MODULE_DOMAIN,
-+	[TILE_TYPE]	=3D TOPO_TILE_DOMAIN,
-+	[DIE_TYPE]	=3D TOPO_DIE_DOMAIN,
-+	[DIEGRP_TYPE]	=3D TOPO_DIEGRP_DOMAIN,
-+};
-+
-+static inline bool topo_subleaf(struct topo_scan *tscan, u32 leaf, u32 suble=
-af,
-+				unsigned int *last_dom)
-+{
-+	unsigned int dom, maxtype;
-+	const unsigned int *map;
-+	struct {
-+		// eax
-+		u32	x2apic_shift	:  5, // Number of bits to shift APIC ID right
-+					      // for the topology ID at the next level
-+					: 27; // Reserved
-+		// ebx
-+		u32	num_processors	: 16, // Number of processors at current level
-+					: 16; // Reserved
-+		// ecx
-+		u32	level		:  8, // Current topology level. Same as sub leaf number
-+			type		:  8, // Level type. If 0, invalid
-+					: 16; // Reserved
-+		// edx
-+		u32	x2apic_id	: 32; // X2APIC ID of the current logical processor
-+	} sl;
-+
-+	switch (leaf) {
-+	case 0x0b: maxtype =3D MAX_TYPE_0B; map =3D topo_domain_map_0b_1f; break;
-+	case 0x1f: maxtype =3D MAX_TYPE_1F; map =3D topo_domain_map_0b_1f; break;
-+	default: return false;
-+	}
-+
-+	cpuid_subleaf(leaf, subleaf, &sl);
-+
-+	if (!sl.num_processors || sl.type =3D=3D INVALID_TYPE)
-+		return false;
-+
-+	if (sl.type >=3D maxtype) {
-+		pr_err_once("Topology: leaf 0x%x:%d Unknown domain type %u\n",
-+			    leaf, subleaf, sl.type);
-+		/*
-+		 * It really would have been too obvious to make the domain
-+		 * type space sparse and leave a few reserved types between
-+		 * the points which might change instead of following the
-+		 * usual "this can be fixed in software" principle.
-+		 */
-+		dom =3D *last_dom + 1;
-+	} else {
-+		dom =3D map[sl.type];
-+		*last_dom =3D dom;
-+	}
-+
-+	if (!dom) {
-+		tscan->c->topo.initial_apicid =3D sl.x2apic_id;
-+	} else if (tscan->c->topo.initial_apicid !=3D sl.x2apic_id) {
-+		pr_warn_once(FW_BUG "CPUID leaf 0x%x subleaf %d APIC ID mismatch %x !=3D %=
-x\n",
-+			     leaf, subleaf, tscan->c->topo.initial_apicid, sl.x2apic_id);
-+	}
-+
-+	topology_set_dom(tscan, dom, sl.x2apic_shift, sl.num_processors);
-+	return true;
-+}
-+
-+static bool parse_topology_leaf(struct topo_scan *tscan, u32 leaf)
-+{
-+	unsigned int last_dom;
-+	u32 subleaf;
-+
-+	/* Read all available subleafs and populate the levels */
-+	for (subleaf =3D 0, last_dom =3D 0; topo_subleaf(tscan, leaf, subleaf, &las=
-t_dom); subleaf++);
-+
-+	/* If subleaf 0 failed to parse, give up */
-+	if (!subleaf)
-+		return false;
-+
-+	/*
-+	 * There are machines in the wild which have shift 0 in the subleaf
-+	 * 0, but advertise 2 logical processors at that level. They are
-+	 * truly SMT.
-+	 */
-+	if (!tscan->dom_shifts[TOPO_SMT_DOMAIN] && tscan->dom_ncpus[TOPO_SMT_DOMAIN=
-] > 1) {
-+		unsigned int sft =3D get_count_order(tscan->dom_ncpus[TOPO_SMT_DOMAIN]);
-+
-+		pr_warn_once(FW_BUG "CPUID leaf 0x%x subleaf 0 has shift level 0 but %u CP=
-Us. Fixing it up.\n",
-+			     leaf, tscan->dom_ncpus[TOPO_SMT_DOMAIN]);
-+		topology_update_dom(tscan, TOPO_SMT_DOMAIN, sft, tscan->dom_ncpus[TOPO_SMT=
-_DOMAIN]);
-+	}
-+
-+	set_cpu_cap(tscan->c, X86_FEATURE_XTOPOLOGY);
-+	return true;
-+}
-+
-+bool cpu_parse_topology_ext(struct topo_scan *tscan)
-+{
-+	/* Intel: Try leaf 0x1F first. */
-+	if (tscan->c->cpuid_level >=3D 0x1f && parse_topology_leaf(tscan, 0x1f))
-+		return true;
-+
-+	/* Intel/AMD: Fall back to leaf 0xB if available */
-+	return tscan->c->cpuid_level >=3D 0x0b && parse_topology_leaf(tscan, 0x0b);
-+}
-diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-index 415564a6523b..90eba7eb5335 100644
---- a/arch/x86/kernel/cpu/zhaoxin.c
-+++ b/arch/x86/kernel/cpu/zhaoxin.c
-@@ -71,10 +71,6 @@ static void init_zhaoxin(struct cpuinfo_x86 *c)
- {
- 	early_init_zhaoxin(c);
- 	init_intel_cacheinfo(c);
--	detect_num_cpu_cores(c);
--#ifdef CONFIG_X86_32
--	detect_ht(c);
--#endif
-=20
- 	if (c->cpuid_level > 9) {
- 		unsigned int eax =3D cpuid_eax(10);
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index afd09924094e..4aeafe63521b 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -136,7 +136,7 @@ static void __init dtb_cpu_setup(void)
- 			pr_warn("%pOF: missing local APIC ID\n", dn);
- 			continue;
- 		}
--		generic_processor_info(apic_id);
-+		topology_register_apic(apic_id, CPU_ACPIID_INVALID, true);
- 	}
- }
-=20
-@@ -302,7 +302,7 @@ void __init x86_flattree_get_config(void)
- }
- #endif
-=20
--void __init x86_dtb_init(void)
-+void __init x86_dtb_parse_smp_config(void)
- {
- 	if (!of_have_populated_dt())
- 		return;
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index 578d16fc040f..df337860612d 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -89,7 +89,7 @@ static void __init jailhouse_x2apic_init(void)
- #endif
- }
-=20
--static void __init jailhouse_get_smp_config(unsigned int early)
-+static void __init jailhouse_parse_smp_config(void)
- {
- 	struct ioapic_domain_cfg ioapic_cfg =3D {
- 		.type =3D IOAPIC_DOMAIN_STRICT,
-@@ -102,7 +102,7 @@ static void __init jailhouse_get_smp_config(unsigned int =
-early)
- 	register_lapic_address(0xfee00000);
-=20
- 	for (cpu =3D 0; cpu < setup_data.v1.num_cpus; cpu++)
--		generic_processor_info(setup_data.v1.cpu_ids[cpu]);
-+		topology_register_apic(setup_data.v1.cpu_ids[cpu], CPU_ACPIID_INVALID, tru=
-e);
-=20
- 	smp_found_config =3D 1;
-=20
-@@ -201,21 +201,23 @@ static void __init jailhouse_init_platform(void)
- 	struct setup_data header;
- 	void *mapping;
-=20
--	x86_init.irqs.pre_vector_init	=3D x86_init_noop;
--	x86_init.timers.timer_init	=3D jailhouse_timer_init;
--	x86_init.mpparse.get_smp_config	=3D jailhouse_get_smp_config;
--	x86_init.pci.arch_init		=3D jailhouse_pci_arch_init;
-+	x86_init.irqs.pre_vector_init		=3D x86_init_noop;
-+	x86_init.timers.timer_init		=3D jailhouse_timer_init;
-+	x86_init.mpparse.find_mptable		=3D x86_init_noop;
-+	x86_init.mpparse.early_parse_smp_cfg	=3D x86_init_noop;
-+	x86_init.mpparse.parse_smp_cfg		=3D jailhouse_parse_smp_config;
-+	x86_init.pci.arch_init			=3D jailhouse_pci_arch_init;
-=20
--	x86_platform.calibrate_cpu	=3D jailhouse_get_tsc;
--	x86_platform.calibrate_tsc	=3D jailhouse_get_tsc;
--	x86_platform.get_wallclock	=3D jailhouse_get_wallclock;
--	x86_platform.legacy.rtc		=3D 0;
--	x86_platform.legacy.warm_reset	=3D 0;
--	x86_platform.legacy.i8042	=3D X86_LEGACY_I8042_PLATFORM_ABSENT;
-+	x86_platform.calibrate_cpu		=3D jailhouse_get_tsc;
-+	x86_platform.calibrate_tsc		=3D jailhouse_get_tsc;
-+	x86_platform.get_wallclock		=3D jailhouse_get_wallclock;
-+	x86_platform.legacy.rtc			=3D 0;
-+	x86_platform.legacy.warm_reset		=3D 0;
-+	x86_platform.legacy.i8042		=3D X86_LEGACY_I8042_PLATFORM_ABSENT;
-=20
--	legacy_pic			=3D &null_legacy_pic;
-+	legacy_pic				=3D &null_legacy_pic;
-=20
--	machine_ops.emergency_restart	=3D jailhouse_no_restart;
-+	machine_ops.emergency_restart		=3D jailhouse_no_restart;
-=20
- 	while (pa_data) {
- 		mapping =3D early_memremap(pa_data, sizeof(header));
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index b223922248e9..1ccd30c8246f 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -36,6 +36,8 @@
-  * Checksum an MP configuration block.
-  */
-=20
-+static unsigned int num_procs __initdata;
-+
- static int __init mpf_checksum(unsigned char *mp, int len)
- {
- 	int sum =3D 0;
-@@ -50,16 +52,15 @@ static void __init MP_processor_info(struct mpc_cpu *m)
- {
- 	char *bootup_cpu =3D "";
-=20
--	if (!(m->cpuflag & CPU_ENABLED)) {
--		disabled_cpus++;
-+	topology_register_apic(m->apicid, CPU_ACPIID_INVALID, m->cpuflag & CPU_ENAB=
-LED);
-+	if (!(m->cpuflag & CPU_ENABLED))
- 		return;
--	}
-=20
- 	if (m->cpuflag & CPU_BOOTPROCESSOR)
- 		bootup_cpu =3D " (Bootup-CPU)";
-=20
- 	pr_info("Processor #%d%s\n", m->apicid, bootup_cpu);
--	generic_processor_info(m->apicid);
-+	num_procs++;
- }
-=20
- #ifdef CONFIG_X86_IO_APIC
-@@ -236,9 +237,9 @@ static int __init smp_read_mpc(struct mpc_table *mpc, uns=
-igned early)
- 		}
- 	}
-=20
--	if (!num_processors)
-+	if (!num_procs && !acpi_lapic)
- 		pr_err("MPTABLE: no processors registered!\n");
--	return num_processors;
-+	return num_procs || acpi_lapic;
- }
-=20
- #ifdef CONFIG_X86_IO_APIC
-@@ -473,7 +474,7 @@ static int __init check_physptr(struct mpf_intel *mpf, un=
-signed int early)
- /*
-  * Scan the memory blocks for an SMP configuration block.
-  */
--void __init default_get_smp_config(unsigned int early)
-+static __init void mpparse_get_smp_config(unsigned int early)
- {
- 	struct mpf_intel *mpf;
-=20
-@@ -529,8 +530,8 @@ void __init default_get_smp_config(unsigned int early)
- 	} else
- 		BUG();
-=20
--	if (!early)
--		pr_info("Processors: %d\n", num_processors);
-+	if (!early && !acpi_lapic)
-+		pr_info("Processors: %d\n", num_procs);
- 	/*
- 	 * Only use the first configuration found.
- 	 */
-@@ -538,6 +539,16 @@ void __init default_get_smp_config(unsigned int early)
- 	early_memunmap(mpf, sizeof(*mpf));
- }
-=20
-+void __init mpparse_parse_early_smp_config(void)
-+{
-+	mpparse_get_smp_config(true);
-+}
-+
-+void __init mpparse_parse_smp_config(void)
-+{
-+	mpparse_get_smp_config(false);
-+}
-+
- static void __init smp_reserve_memory(struct mpf_intel *mpf)
- {
- 	memblock_reserve(mpf->physptr, get_mpc_size(mpf->physptr));
-@@ -587,7 +598,7 @@ static int __init smp_scan_config(unsigned long base, uns=
-igned long length)
- 	return ret;
- }
-=20
--void __init default_find_smp_config(void)
-+void __init mpparse_find_mptable(void)
- {
- 	unsigned int address;
-=20
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index ab49ade31b0d..6121c2b42ecf 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -936,7 +936,7 @@ static __cpuidle void mwait_idle(void)
- void select_idle_routine(const struct cpuinfo_x86 *c)
- {
- #ifdef CONFIG_SMP
--	if (boot_option_idle_override =3D=3D IDLE_POLL && smp_num_siblings > 1)
-+	if (boot_option_idle_override =3D=3D IDLE_POLL && __max_threads_per_core > =
-1)
- 		pr_warn_once("WARNING: polling idle and HT enabled, performance may degrad=
-e\n");
- #endif
- 	if (x86_idle_set() || boot_option_idle_override =3D=3D IDLE_POLL)
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 84201071dfac..4e320d4d3898 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -970,10 +970,8 @@ void __init setup_arch(char **cmdline_p)
- 	high_memory =3D (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
- #endif
-=20
--	/*
--	 * Find and reserve possible boot-time SMP configuration:
--	 */
--	find_smp_config();
-+	/* Find and reserve MPTABLE area */
-+	x86_init.mpparse.find_mptable();
-=20
- 	early_alloc_pgt_buf();
-=20
-@@ -1090,7 +1088,9 @@ void __init setup_arch(char **cmdline_p)
-=20
- 	early_platform_quirks();
-=20
-+	/* Some platforms need the APIC registered for NUMA configuration */
- 	early_acpi_boot_init();
-+	x86_init.mpparse.early_parse_smp_cfg();
-=20
- 	x86_flattree_get_config();
-=20
-@@ -1131,24 +1131,19 @@ void __init setup_arch(char **cmdline_p)
-=20
- 	early_quirks();
-=20
--	/*
--	 * Read APIC and some other early information from ACPI tables.
--	 */
--	acpi_boot_init();
--	x86_dtb_init();
-+	topology_apply_cmdline_limits_early();
-=20
- 	/*
--	 * get boot-time SMP configuration:
-+	 * Parse SMP configuration. Try ACPI first and then the platform
-+	 * specific parser.
- 	 */
--	get_smp_config();
-+	acpi_boot_init();
-+	x86_init.mpparse.parse_smp_cfg();
-=20
--	/*
--	 * Systems w/o ACPI and mptables might not have it mapped the local
--	 * APIC yet, but prefill_possible_map() might need to access it.
--	 */
-+	/* Last opportunity to detect and map the local APIC */
- 	init_apic_mappings();
-=20
--	prefill_possible_map();
-+	topology_init_possible_cpus();
-=20
- 	init_cpu_to_node();
- 	init_gi_nodes();
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 3f57ce68a3f1..9c1e1219c28f 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -125,25 +125,6 @@ struct mwait_cpu_dead {
-  */
- static DEFINE_PER_CPU_ALIGNED(struct mwait_cpu_dead, mwait_cpu_dead);
-=20
--/* Logical package management. */
--struct logical_maps {
--	u32	phys_pkg_id;
--	u32	phys_die_id;
--	u32	logical_pkg_id;
--	u32	logical_die_id;
--};
--
--/* Temporary workaround until the full topology mechanics is in place */
--static DEFINE_PER_CPU_READ_MOSTLY(struct logical_maps, logical_maps) =3D {
--	.phys_pkg_id	=3D U32_MAX,
--	.phys_die_id	=3D U32_MAX,
--};
--
--unsigned int __max_logical_packages __read_mostly;
--EXPORT_SYMBOL(__max_logical_packages);
--static unsigned int logical_packages __read_mostly;
--static unsigned int logical_die __read_mostly;
--
- /* Maximum number of SMT threads on any online core */
- int __read_mostly __max_smt_threads =3D 1;
-=20
-@@ -336,103 +317,11 @@ static void notrace start_secondary(void *unused)
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
- }
-=20
--/**
-- * topology_phys_to_logical_pkg - Map a physical package id to a logical
-- * @phys_pkg:	The physical package id to map
-- *
-- * Returns logical package id or -1 if not found
-- */
--int topology_phys_to_logical_pkg(unsigned int phys_pkg)
--{
--	int cpu;
--
--	for_each_possible_cpu(cpu) {
--		if (per_cpu(logical_maps.phys_pkg_id, cpu) =3D=3D phys_pkg)
--			return per_cpu(logical_maps.logical_pkg_id, cpu);
--	}
--	return -1;
--}
--EXPORT_SYMBOL(topology_phys_to_logical_pkg);
--
--/**
-- * topology_phys_to_logical_die - Map a physical die id to logical
-- * @die_id:	The physical die id to map
-- * @cur_cpu:	The CPU for which the mapping is done
-- *
-- * Returns logical die id or -1 if not found
-- */
--static int topology_phys_to_logical_die(unsigned int die_id, unsigned int cu=
-r_cpu)
--{
--	int cpu, proc_id =3D cpu_data(cur_cpu).topo.pkg_id;
--
--	for_each_possible_cpu(cpu) {
--		if (per_cpu(logical_maps.phys_pkg_id, cpu) =3D=3D proc_id &&
--		    per_cpu(logical_maps.phys_die_id, cpu) =3D=3D die_id)
--			return per_cpu(logical_maps.logical_die_id, cpu);
--	}
--	return -1;
--}
--
--/**
-- * topology_update_package_map - Update the physical to logical package map
-- * @pkg:	The physical package id as retrieved via CPUID
-- * @cpu:	The cpu for which this is updated
-- */
--int topology_update_package_map(unsigned int pkg, unsigned int cpu)
--{
--	int new;
--
--	/* Already available somewhere? */
--	new =3D topology_phys_to_logical_pkg(pkg);
--	if (new >=3D 0)
--		goto found;
--
--	new =3D logical_packages++;
--	if (new !=3D pkg) {
--		pr_info("CPU %u Converting physical %u to logical package %u\n",
--			cpu, pkg, new);
--	}
--found:
--	per_cpu(logical_maps.phys_pkg_id, cpu) =3D pkg;
--	per_cpu(logical_maps.logical_pkg_id, cpu) =3D new;
--	cpu_data(cpu).topo.logical_pkg_id =3D new;
--	return 0;
--}
--/**
-- * topology_update_die_map - Update the physical to logical die map
-- * @die:	The die id as retrieved via CPUID
-- * @cpu:	The cpu for which this is updated
-- */
--int topology_update_die_map(unsigned int die, unsigned int cpu)
--{
--	int new;
--
--	/* Already available somewhere? */
--	new =3D topology_phys_to_logical_die(die, cpu);
--	if (new >=3D 0)
--		goto found;
--
--	new =3D logical_die++;
--	if (new !=3D die) {
--		pr_info("CPU %u Converting physical %u to logical die %u\n",
--			cpu, die, new);
--	}
--found:
--	per_cpu(logical_maps.phys_die_id, cpu) =3D die;
--	per_cpu(logical_maps.logical_die_id, cpu) =3D new;
--	cpu_data(cpu).topo.logical_die_id =3D new;
--	return 0;
--}
--
- static void __init smp_store_boot_cpu_info(void)
- {
--	int id =3D 0; /* CPU 0 */
--	struct cpuinfo_x86 *c =3D &cpu_data(id);
-+	struct cpuinfo_x86 *c =3D &cpu_data(0);
-=20
- 	*c =3D boot_cpu_data;
--	c->cpu_index =3D id;
--	topology_update_package_map(c->topo.pkg_id, id);
--	topology_update_die_map(c->topo.die_id, id);
- 	c->initialized =3D true;
- }
-=20
-@@ -488,6 +377,7 @@ static bool match_smt(struct cpuinfo_x86 *c, struct cpuin=
-fo_x86 *o)
-=20
- 		if (c->topo.pkg_id =3D=3D o->topo.pkg_id &&
- 		    c->topo.die_id =3D=3D o->topo.die_id &&
-+		    c->topo.amd_node_id =3D=3D o->topo.amd_node_id &&
- 		    per_cpu_llc_id(cpu1) =3D=3D per_cpu_llc_id(cpu2)) {
- 			if (c->topo.core_id =3D=3D o->topo.core_id)
- 				return topology_sane(c, o, "smt");
-@@ -509,10 +399,13 @@ static bool match_smt(struct cpuinfo_x86 *c, struct cpu=
-info_x86 *o)
-=20
- static bool match_die(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
- {
--	if (c->topo.pkg_id =3D=3D o->topo.pkg_id &&
--	    c->topo.die_id =3D=3D o->topo.die_id)
--		return true;
--	return false;
-+	if (c->topo.pkg_id !=3D o->topo.pkg_id || c->topo.die_id !=3D o->topo.die_i=
-d)
-+		return false;
-+
-+	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT) && topology_amd_nodes_per_pkg(=
-) > 1)
-+		return c->topo.amd_node_id =3D=3D o->topo.amd_node_id;
-+
-+	return true;
- }
-=20
- static bool match_l2c(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
-@@ -670,8 +563,8 @@ static void __init build_sched_topology(void)
-=20
- void set_cpu_sibling_map(int cpu)
- {
--	bool has_smt =3D smp_num_siblings > 1;
--	bool has_mp =3D has_smt || boot_cpu_data.x86_max_cores > 1;
-+	bool has_smt =3D __max_threads_per_core > 1;
-+	bool has_mp =3D has_smt || topology_num_cores_per_package() > 1;
- 	struct cpuinfo_x86 *c =3D &cpu_data(cpu);
- 	struct cpuinfo_x86 *o;
- 	int i, threads;
-@@ -1068,9 +961,13 @@ int native_kick_ap(unsigned int cpu, struct task_struct=
- *tidle)
-=20
- 	pr_debug("++++++++++++++++++++=3D_---CPU UP  %u\n", cpu);
-=20
--	if (apicid =3D=3D BAD_APICID || !physid_isset(apicid, phys_cpu_present_map)=
- ||
--	    !apic_id_valid(apicid)) {
--		pr_err("%s: bad cpu %d\n", __func__, cpu);
-+	if (apicid =3D=3D BAD_APICID || !apic_id_valid(apicid)) {
-+		pr_err("CPU %u has invalid APIC ID %x. Aborting bringup\n", cpu, apicid);
-+		return -EINVAL;
-+	}
-+
-+	if (!test_bit(apicid, phys_cpu_present_map)) {
-+		pr_err("CPU %u APIC ID %x is not present. Aborting bringup\n", cpu, apicid=
-);
- 		return -EINVAL;
- 	}
-=20
-@@ -1139,14 +1036,8 @@ static __init void disable_smp(void)
- 	pr_info("SMP disabled\n");
-=20
- 	disable_ioapic_support();
-+	topology_reset_possible_cpus_up();
-=20
--	init_cpu_present(cpumask_of(0));
--	init_cpu_possible(cpumask_of(0));
--
--	if (smp_found_config)
--		physid_set_mask_of_physid(boot_cpu_physical_apicid, &phys_cpu_present_map);
--	else
--		physid_set_mask_of_physid(0, &phys_cpu_present_map);
- 	cpumask_set_cpu(0, topology_sibling_cpumask(0));
- 	cpumask_set_cpu(0, topology_core_cpumask(0));
- 	cpumask_set_cpu(0, topology_die_cpumask(0));
-@@ -1265,102 +1156,16 @@ void __init native_smp_prepare_boot_cpu(void)
- 	native_pv_lock_init();
- }
-=20
--void __init calculate_max_logical_packages(void)
--{
--	int ncpus;
--
--	/*
--	 * Today neither Intel nor AMD support heterogeneous systems so
--	 * extrapolate the boot cpu's data to all packages.
--	 */
--	ncpus =3D cpu_data(0).booted_cores * topology_max_smt_threads();
--	__max_logical_packages =3D DIV_ROUND_UP(total_cpus, ncpus);
--	pr_info("Max logical packages: %u\n", __max_logical_packages);
--}
--
- void __init native_smp_cpus_done(unsigned int max_cpus)
- {
- 	pr_debug("Boot done\n");
-=20
--	calculate_max_logical_packages();
- 	build_sched_topology();
- 	nmi_selftest();
- 	impress_friends();
- 	cache_aps_init();
- }
-=20
--static int __initdata setup_possible_cpus =3D -1;
--static int __init _setup_possible_cpus(char *str)
--{
--	get_option(&str, &setup_possible_cpus);
--	return 0;
--}
--early_param("possible_cpus", _setup_possible_cpus);
--
--
--/*
-- * cpu_possible_mask should be static, it cannot change as cpu's
-- * are onlined, or offlined. The reason is per-cpu data-structures
-- * are allocated by some modules at init time, and don't expect to
-- * do this dynamically on cpu arrival/departure.
-- * cpu_present_mask on the other hand can change dynamically.
-- * In case when cpu_hotplug is not compiled, then we resort to current
-- * behaviour, which is cpu_possible =3D=3D cpu_present.
-- * - Ashok Raj
-- *
-- * Three ways to find out the number of additional hotplug CPUs:
-- * - If the BIOS specified disabled CPUs in ACPI/mptables use that.
-- * - The user can overwrite it with possible_cpus=3DNUM
-- * - Otherwise don't reserve additional CPUs.
-- * We do this because additional CPUs waste a lot of memory.
-- * -AK
-- */
--__init void prefill_possible_map(void)
--{
--	int i, possible;
--
--	i =3D setup_max_cpus ?: 1;
--	if (setup_possible_cpus =3D=3D -1) {
--		possible =3D num_processors;
--#ifdef CONFIG_HOTPLUG_CPU
--		if (setup_max_cpus)
--			possible +=3D disabled_cpus;
+-#ifdef CONFIG_64BIT
+-# define __hrtimer_clock_base_align	____cacheline_aligned
 -#else
--		if (possible > i)
--			possible =3D i;
+-# define __hrtimer_clock_base_align
 -#endif
--	} else
--		possible =3D setup_possible_cpus;
 -
--	total_cpus =3D max_t(int, possible, num_processors + disabled_cpus);
+-/**
+- * struct hrtimer_clock_base - the timer base for a specific clock
+- * @cpu_base:		per cpu clock base
+- * @index:		clock type index for per_cpu support when moving a
+- *			timer to a base on another cpu.
+- * @clockid:		clock id for per_cpu support
+- * @seq:		seqcount around __run_hrtimer
+- * @running:		pointer to the currently running hrtimer
+- * @active:		red black tree root node for the active timers
+- * @get_time:		function to retrieve the current time of the clock
+- * @offset:		offset of this clock to the monotonic base
+- */
+-struct hrtimer_clock_base {
+-	struct hrtimer_cpu_base	*cpu_base;
+-	unsigned int		index;
+-	clockid_t		clockid;
+-	seqcount_raw_spinlock_t	seq;
+-	struct hrtimer		*running;
+-	struct timerqueue_head	active;
+-	ktime_t			(*get_time)(void);
+-	ktime_t			offset;
+-} __hrtimer_clock_base_align;
 -
--	/* nr_cpu_ids could be reduced via nr_cpus=3D */
--	if (possible > nr_cpu_ids) {
--		pr_warn("%d Processors exceeds NR_CPUS limit of %u\n",
--			possible, nr_cpu_ids);
--		possible =3D nr_cpu_ids;
--	}
+-enum  hrtimer_base_type {
+-	HRTIMER_BASE_MONOTONIC,
+-	HRTIMER_BASE_REALTIME,
+-	HRTIMER_BASE_BOOTTIME,
+-	HRTIMER_BASE_TAI,
+-	HRTIMER_BASE_MONOTONIC_SOFT,
+-	HRTIMER_BASE_REALTIME_SOFT,
+-	HRTIMER_BASE_BOOTTIME_SOFT,
+-	HRTIMER_BASE_TAI_SOFT,
+-	HRTIMER_MAX_CLOCK_BASES,
+-};
 -
--#ifdef CONFIG_HOTPLUG_CPU
--	if (!setup_max_cpus)
+-/**
+- * struct hrtimer_cpu_base - the per cpu clock bases
+- * @lock:		lock protecting the base and associated clock bases
+- *			and timers
+- * @cpu:		cpu number
+- * @active_bases:	Bitfield to mark bases with active timers
+- * @clock_was_set_seq:	Sequence counter of clock was set events
+- * @hres_active:	State of high resolution mode
+- * @in_hrtirq:		hrtimer_interrupt() is currently executing
+- * @hang_detected:	The last hrtimer interrupt detected a hang
+- * @softirq_activated:	displays, if the softirq is raised - update of softirq
+- *			related settings is not required then.
+- * @nr_events:		Total number of hrtimer interrupt events
+- * @nr_retries:		Total number of hrtimer interrupt retries
+- * @nr_hangs:		Total number of hrtimer interrupt hangs
+- * @max_hang_time:	Maximum time spent in hrtimer_interrupt
+- * @softirq_expiry_lock: Lock which is taken while softirq based hrtimer are
+- *			 expired
+- * @online:		CPU is online from an hrtimers point of view
+- * @timer_waiters:	A hrtimer_cancel() invocation waits for the timer
+- *			callback to finish.
+- * @expires_next:	absolute time of the next event, is required for remote
+- *			hrtimer enqueue; it is the total first expiry time (hard
+- *			and soft hrtimer are taken into account)
+- * @next_timer:		Pointer to the first expiring timer
+- * @softirq_expires_next: Time to check, if soft queues needs also to be exp=
+ired
+- * @softirq_next_timer: Pointer to the first expiring softirq based timer
+- * @clock_base:		array of clock bases for this cpu
+- *
+- * Note: next_timer is just an optimization for __remove_hrtimer().
+- *	 Do not dereference the pointer because it is not reliable on
+- *	 cross cpu removals.
+- */
+-struct hrtimer_cpu_base {
+-	raw_spinlock_t			lock;
+-	unsigned int			cpu;
+-	unsigned int			active_bases;
+-	unsigned int			clock_was_set_seq;
+-	unsigned int			hres_active		: 1,
+-					in_hrtirq		: 1,
+-					hang_detected		: 1,
+-					softirq_activated       : 1,
+-					online			: 1;
+-#ifdef CONFIG_HIGH_RES_TIMERS
+-	unsigned int			nr_events;
+-	unsigned short			nr_retries;
+-	unsigned short			nr_hangs;
+-	unsigned int			max_hang_time;
 -#endif
--	if (possible > i) {
--		pr_warn("%d Processors exceeds max_cpus limit of %u\n",
--			possible, setup_max_cpus);
--		possible =3D i;
--	}
+-#ifdef CONFIG_PREEMPT_RT
+-	spinlock_t			softirq_expiry_lock;
+-	atomic_t			timer_waiters;
+-#endif
+-	ktime_t				expires_next;
+-	struct hrtimer			*next_timer;
+-	ktime_t				softirq_expires_next;
+-	struct hrtimer			*softirq_next_timer;
+-	struct hrtimer_clock_base	clock_base[HRTIMER_MAX_CLOCK_BASES];
+-} ____cacheline_aligned;
 -
--	set_nr_cpu_ids(possible);
--
--	pr_info("Allowing %d CPUs, %d hotplug CPUs\n",
--		possible, max_t(int, possible - num_processors, 0));
--
--	reset_cpu_possible_mask();
--
--	for (i =3D 0; i < possible; i++)
--		set_cpu_possible(i, true);
--}
--
- /* correctly size the local cpu masks */
- void __init setup_cpu_local_masks(void)
+ static inline void hrtimer_set_expires(struct hrtimer *timer, ktime_t time)
  {
-diff --git a/arch/x86/kernel/vsmp_64.c b/arch/x86/kernel/vsmp_64.c
-index d3fc01770558..73511332bb67 100644
---- a/arch/x86/kernel/vsmp_64.c
-+++ b/arch/x86/kernel/vsmp_64.c
-@@ -127,25 +127,12 @@ static void __init vsmp_cap_cpus(void)
- #endif
- }
+ 	timer->node.expires =3D time;
+@@ -447,20 +342,12 @@ extern u64
+ hrtimer_forward(struct hrtimer *timer, ktime_t now, ktime_t interval);
 =20
--static u32 apicid_phys_pkg_id(u32 initial_apic_id, int index_msb)
--{
--	return read_apic_id() >> index_msb;
--}
--
--static void vsmp_apic_post_init(void)
--{
--	/* need to update phys_pkg_id */
--	apic->phys_pkg_id =3D apicid_phys_pkg_id;
--}
--
- void __init vsmp_init(void)
- {
- 	detect_vsmp_box();
- 	if (!is_vsmp_box())
- 		return;
-=20
--	x86_platform.apic_post_init =3D vsmp_apic_post_init;
--
- 	vsmp_cap_cpus();
-=20
- 	set_vsmp_ctl();
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index a37ebd3b4773..a42830dc151b 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -70,8 +70,9 @@ struct x86_init_ops x86_init __initdata =3D {
-=20
- 	.mpparse =3D {
- 		.setup_ioapic_ids	=3D x86_init_noop,
--		.find_smp_config	=3D default_find_smp_config,
--		.get_smp_config		=3D default_get_smp_config,
-+		.find_mptable		=3D mpparse_find_mptable,
-+		.early_parse_smp_cfg	=3D mpparse_parse_early_smp_config,
-+		.parse_smp_cfg		=3D mpparse_parse_smp_config,
- 	},
-=20
- 	.irqs =3D {
-diff --git a/arch/x86/mm/amdtopology.c b/arch/x86/mm/amdtopology.c
-index b3ca7d23e4b0..9332b36a1091 100644
---- a/arch/x86/mm/amdtopology.c
-+++ b/arch/x86/mm/amdtopology.c
-@@ -54,13 +54,11 @@ static __init int find_northbridge(void)
-=20
- int __init amd_numa_init(void)
- {
--	u64 start =3D PFN_PHYS(0);
-+	unsigned int numnodes, cores, apicid;
-+	u64 prevbase, start =3D PFN_PHYS(0);
- 	u64 end =3D PFN_PHYS(max_pfn);
--	unsigned numnodes;
--	u64 prevbase;
--	int i, j, nb;
- 	u32 nodeid, reg;
--	unsigned int bits, cores, apicid_base;
-+	int i, j, nb;
-=20
- 	if (!early_pci_allowed())
- 		return -EINVAL;
-@@ -158,26 +156,18 @@ int __init amd_numa_init(void)
- 		return -ENOENT;
-=20
- 	/*
--	 * We seem to have valid NUMA configuration.  Map apicids to nodes
--	 * using the coreid bits from early_identify_cpu.
-+	 * We seem to have valid NUMA configuration. Map apicids to nodes
-+	 * using the size of the core domain in the APIC space.
- 	 */
--	bits =3D boot_cpu_data.x86_coreid_bits;
--	cores =3D 1 << bits;
--	apicid_base =3D 0;
-+	cores =3D topology_get_domain_size(TOPO_CORE_DOMAIN);
-=20
--	/*
--	 * get boot-time SMP configuration:
--	 */
--	early_get_smp_config();
-+	apicid =3D boot_cpu_physical_apicid;
-+	if (apicid > 0)
-+		pr_info("BSP APIC ID: %02x\n", apicid);
-=20
--	if (boot_cpu_physical_apicid > 0) {
--		pr_info("BSP APIC ID: %02x\n", boot_cpu_physical_apicid);
--		apicid_base =3D boot_cpu_physical_apicid;
-+	for_each_node_mask(i, numa_nodes_parsed) {
-+		for (j =3D 0; j < cores; j++, apicid++)
-+			set_apicid_to_node(apicid, i);
- 	}
--
--	for_each_node_mask(i, numa_nodes_parsed)
--		for (j =3D apicid_base; j < cores + apicid_base; j++)
--			set_apicid_to_node((i << bits) + j, i);
--
- 	return 0;
- }
-diff --git a/arch/x86/platform/ce4100/ce4100.c b/arch/x86/platform/ce4100/ce4=
-100.c
-index 40745664d92f..f32451bdcfdd 100644
---- a/arch/x86/platform/ce4100/ce4100.c
-+++ b/arch/x86/platform/ce4100/ce4100.c
-@@ -135,13 +135,13 @@ static void sdv_pci_init(void)
+ /**
+- * hrtimer_forward_now - forward the timer expiry so it expires after now
++ * hrtimer_forward_now() - forward the timer expiry so it expires after now
+  * @timer:	hrtimer to forward
+  * @interval:	the interval to forward
+  *
+- * Forward the timer expiry so it will expire after the current time
+- * of the hrtimer clock base. Returns the number of overruns.
+- *
+- * Can be safely called from the callback function of @timer. If
+- * called from other contexts @timer must neither be enqueued nor
+- * running the callback and the caller needs to take care of
+- * serialization.
+- *
+- * Note: This only updates the timer expiry value and does not requeue
+- * the timer.
++ * It is a variant of hrtimer_forward(). The timer will expire after the cur=
+rent
++ * time of the hrtimer clock base. See hrtimer_forward() for details.
   */
- void __init x86_ce4100_early_setup(void)
- {
--	x86_init.oem.arch_setup =3D sdv_arch_setup;
--	x86_init.resources.probe_roms =3D x86_init_noop;
--	x86_init.mpparse.get_smp_config =3D x86_init_uint_noop;
--	x86_init.mpparse.find_smp_config =3D x86_init_noop;
--	x86_init.mpparse.setup_ioapic_ids =3D setup_ioapic_ids_from_mpc_nocheck;
--	x86_init.pci.init =3D ce4100_pci_init;
--	x86_init.pci.init_irq =3D sdv_pci_init;
-+	x86_init.oem.arch_setup			=3D sdv_arch_setup;
-+	x86_init.resources.probe_roms		=3D x86_init_noop;
-+	x86_init.mpparse.find_mptable		=3D x86_init_noop;
-+	x86_init.mpparse.early_parse_smp_cfg	=3D x86_init_noop;
-+	x86_init.mpparse.parse_smp_cfg		=3D x86_dtb_parse_smp_config;
-+	x86_init.pci.init			=3D ce4100_pci_init;
-+	x86_init.pci.init_irq			=3D sdv_pci_init;
+ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
+ 				      ktime_t interval)
+diff --git a/include/linux/hrtimer_defs.h b/include/linux/hrtimer_defs.h
+index 2d3e3c5fb946..c3b4b7ed7c16 100644
+--- a/include/linux/hrtimer_defs.h
++++ b/include/linux/hrtimer_defs.h
+@@ -3,6 +3,8 @@
+ #define _LINUX_HRTIMER_DEFS_H
 =20
- 	/*
- 	 * By default, the reboot method is ACPI which is supported by the
-diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/inte=
-l-mid/intel-mid.c
-index f4592dc7a1c1..7be71c2cdc83 100644
---- a/arch/x86/platform/intel-mid/intel-mid.c
-+++ b/arch/x86/platform/intel-mid/intel-mid.c
-@@ -118,7 +118,8 @@ void __init x86_intel_mid_early_setup(void)
- 	machine_ops.emergency_restart  =3D intel_mid_reboot;
+ #include <linux/ktime.h>
++#include <linux/timerqueue.h>
++#include <linux/seqlock.h>
 =20
- 	/* Avoid searching for BIOS MP tables */
--	x86_init.mpparse.find_smp_config =3D x86_init_noop;
--	x86_init.mpparse.get_smp_config =3D x86_init_uint_noop;
-+	x86_init.mpparse.find_mptable		=3D x86_init_noop;
-+	x86_init.mpparse.early_parse_smp_cfg	=3D x86_init_noop;
-+	x86_init.mpparse.parse_smp_cfg		=3D x86_init_noop;
- 	set_bit(MP_BUS_ISA, mp_bus_not_pci);
- }
-diff --git a/arch/x86/xen/apic.c b/arch/x86/xen/apic.c
-index 9dd5490b3318..8b045dd25196 100644
---- a/arch/x86/xen/apic.c
-+++ b/arch/x86/xen/apic.c
-@@ -33,12 +33,6 @@ static unsigned int xen_io_apic_read(unsigned apic, unsign=
-ed reg)
- 	return 0xfd;
- }
+ #ifdef CONFIG_HIGH_RES_TIMERS
 =20
--static u32 xen_set_apic_id(u32 x)
--{
--	WARN_ON(1);
--	return x;
--}
--
- static u32 xen_get_apic_id(u32 x)
- {
- 	return ((x)>>24) & 0xFFu;
-@@ -49,20 +43,20 @@ static u32 xen_apic_read(u32 reg)
- 	struct xen_platform_op op =3D {
- 		.cmd =3D XENPF_get_cpuinfo,
- 		.interface_version =3D XENPF_INTERFACE_VERSION,
--		.u.pcpu_info.xen_cpuid =3D 0,
- 	};
--	int ret;
--
--	/* Shouldn't need this as APIC is turned off for PV, and we only
--	 * get called on the bootup processor. But just in case. */
--	if (!xen_initial_domain() || smp_processor_id())
--		return 0;
-+	int ret, cpu;
-=20
- 	if (reg =3D=3D APIC_LVR)
- 		return 0x14;
- 	if (reg !=3D APIC_ID)
- 		return 0;
-=20
-+	cpu =3D smp_processor_id();
-+	if (!xen_initial_domain())
-+		return cpu ? cpuid_to_apicid[cpu] << 24 : 0;
-+
-+	op.u.pcpu_info.xen_cpuid =3D cpu;
-+
- 	ret =3D HYPERVISOR_platform_op(&op);
- 	if (ret)
- 		op.u.pcpu_info.apic_id =3D BAD_APICID;
-@@ -110,11 +104,6 @@ static int xen_madt_oem_check(char *oem_id, char *oem_ta=
-ble_id)
- 	return xen_pv_domain();
- }
-=20
--static u32 xen_phys_pkg_id(u32 initial_apic_id, int index_msb)
--{
--	return initial_apic_id >> index_msb;
--}
--
- static u32 xen_cpu_present_to_apicid(int cpu)
- {
- 	if (cpu_present(cpu))
-@@ -133,11 +122,9 @@ static struct apic xen_pv_apic __ro_after_init =3D {
- 	.disable_esr			=3D 0,
-=20
- 	.cpu_present_to_apicid		=3D xen_cpu_present_to_apicid,
--	.phys_pkg_id			=3D xen_phys_pkg_id, /* detect_ht */
-=20
- 	.max_apic_id			=3D UINT_MAX,
- 	.get_apic_id			=3D xen_get_apic_id,
--	.set_apic_id			=3D xen_set_apic_id,
-=20
- 	.calc_dest_apicid		=3D apic_flat_calc_apicid,
-=20
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index 3f8c34707c50..99a68fa71dbe 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -168,7 +168,7 @@ static int xen_cpu_up_prepare_hvm(unsigned int cpu)
- 	 */
- 	xen_uninit_lock_cpu(cpu);
-=20
--	if (cpu_acpi_id(cpu) !=3D U32_MAX)
-+	if (cpu_acpi_id(cpu) !=3D CPU_ACPIID_INVALID)
- 		per_cpu(xen_vcpu_id, cpu) =3D cpu_acpi_id(cpu);
- 	else
- 		per_cpu(xen_vcpu_id, cpu) =3D cpu;
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index aeb33e0a3f76..ace2eb054053 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -200,6 +200,9 @@ static void __init xen_pv_init_platform(void)
- 		xen_set_mtrr_data();
- 	else
- 		mtrr_overwrite_state(NULL, 0, MTRR_TYPE_WRBACK);
-+
-+	/* Adjust nr_cpu_ids before "enumeration" happens */
-+	xen_smp_count_cpus();
- }
-=20
- static void __init xen_pv_guest_late_init(void)
-diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
-index 1fb9a1644d94..935771726f9c 100644
---- a/arch/x86/xen/smp.c
-+++ b/arch/x86/xen/smp.c
-@@ -135,8 +135,6 @@ void __init xen_smp_cpus_done(unsigned int max_cpus)
- {
- 	if (xen_hvm_domain())
- 		native_smp_cpus_done(max_cpus);
--	else
--		calculate_max_logical_packages();
- }
-=20
- void xen_smp_send_reschedule(int cpu)
-diff --git a/arch/x86/xen/smp.h b/arch/x86/xen/smp.h
-index c20cbb14c82b..b8efdbc693f7 100644
---- a/arch/x86/xen/smp.h
-+++ b/arch/x86/xen/smp.h
-@@ -19,6 +19,7 @@ extern void xen_smp_intr_free(unsigned int cpu);
- int xen_smp_intr_init_pv(unsigned int cpu);
- void xen_smp_intr_free_pv(unsigned int cpu);
-=20
-+void xen_smp_count_cpus(void);
- void xen_smp_cpus_done(unsigned int max_cpus);
-=20
- void xen_smp_send_reschedule(int cpu);
-@@ -44,6 +45,7 @@ static inline int xen_smp_intr_init_pv(unsigned int cpu)
- 	return 0;
- }
- static inline void xen_smp_intr_free_pv(unsigned int cpu) {}
-+static inline void xen_smp_count_cpus(void) { }
- #endif /* CONFIG_SMP */
+@@ -24,4 +26,106 @@
 =20
  #endif
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index a0f07bbfcd6e..27d1a5b7f571 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -29,6 +29,7 @@
- #include <asm/idtentry.h>
- #include <asm/desc.h>
- #include <asm/cpu.h>
-+#include <asm/apic.h>
- #include <asm/io_apic.h>
 =20
- #include <xen/interface/xen.h>
-@@ -73,7 +74,6 @@ static void cpu_bringup(void)
- 	}
- 	cpu =3D smp_processor_id();
- 	smp_store_cpu_info(cpu);
--	cpu_data(cpu).x86_max_cores =3D 1;
- 	set_cpu_sibling_map(cpu);
-=20
- 	speculative_store_bypass_ht_init();
-@@ -149,39 +149,16 @@ int xen_smp_intr_init_pv(unsigned int cpu)
- 	return rc;
++#ifdef CONFIG_64BIT
++# define __hrtimer_clock_base_align	____cacheline_aligned
++#else
++# define __hrtimer_clock_base_align
++#endif
++
++/**
++ * struct hrtimer_clock_base - the timer base for a specific clock
++ * @cpu_base:		per cpu clock base
++ * @index:		clock type index for per_cpu support when moving a
++ *			timer to a base on another cpu.
++ * @clockid:		clock id for per_cpu support
++ * @seq:		seqcount around __run_hrtimer
++ * @running:		pointer to the currently running hrtimer
++ * @active:		red black tree root node for the active timers
++ * @get_time:		function to retrieve the current time of the clock
++ * @offset:		offset of this clock to the monotonic base
++ */
++struct hrtimer_clock_base {
++	struct hrtimer_cpu_base	*cpu_base;
++	unsigned int		index;
++	clockid_t		clockid;
++	seqcount_raw_spinlock_t	seq;
++	struct hrtimer		*running;
++	struct timerqueue_head	active;
++	ktime_t			(*get_time)(void);
++	ktime_t			offset;
++} __hrtimer_clock_base_align;
++
++enum  hrtimer_base_type {
++	HRTIMER_BASE_MONOTONIC,
++	HRTIMER_BASE_REALTIME,
++	HRTIMER_BASE_BOOTTIME,
++	HRTIMER_BASE_TAI,
++	HRTIMER_BASE_MONOTONIC_SOFT,
++	HRTIMER_BASE_REALTIME_SOFT,
++	HRTIMER_BASE_BOOTTIME_SOFT,
++	HRTIMER_BASE_TAI_SOFT,
++	HRTIMER_MAX_CLOCK_BASES,
++};
++
++/**
++ * struct hrtimer_cpu_base - the per cpu clock bases
++ * @lock:		lock protecting the base and associated clock bases
++ *			and timers
++ * @cpu:		cpu number
++ * @active_bases:	Bitfield to mark bases with active timers
++ * @clock_was_set_seq:	Sequence counter of clock was set events
++ * @hres_active:	State of high resolution mode
++ * @in_hrtirq:		hrtimer_interrupt() is currently executing
++ * @hang_detected:	The last hrtimer interrupt detected a hang
++ * @softirq_activated:	displays, if the softirq is raised - update of softirq
++ *			related settings is not required then.
++ * @nr_events:		Total number of hrtimer interrupt events
++ * @nr_retries:		Total number of hrtimer interrupt retries
++ * @nr_hangs:		Total number of hrtimer interrupt hangs
++ * @max_hang_time:	Maximum time spent in hrtimer_interrupt
++ * @softirq_expiry_lock: Lock which is taken while softirq based hrtimer are
++ *			 expired
++ * @online:		CPU is online from an hrtimers point of view
++ * @timer_waiters:	A hrtimer_cancel() invocation waits for the timer
++ *			callback to finish.
++ * @expires_next:	absolute time of the next event, is required for remote
++ *			hrtimer enqueue; it is the total first expiry time (hard
++ *			and soft hrtimer are taken into account)
++ * @next_timer:		Pointer to the first expiring timer
++ * @softirq_expires_next: Time to check, if soft queues needs also to be exp=
+ired
++ * @softirq_next_timer: Pointer to the first expiring softirq based timer
++ * @clock_base:		array of clock bases for this cpu
++ *
++ * Note: next_timer is just an optimization for __remove_hrtimer().
++ *	 Do not dereference the pointer because it is not reliable on
++ *	 cross cpu removals.
++ */
++struct hrtimer_cpu_base {
++	raw_spinlock_t			lock;
++	unsigned int			cpu;
++	unsigned int			active_bases;
++	unsigned int			clock_was_set_seq;
++	unsigned int			hres_active		: 1,
++					in_hrtirq		: 1,
++					hang_detected		: 1,
++					softirq_activated       : 1,
++					online			: 1;
++#ifdef CONFIG_HIGH_RES_TIMERS
++	unsigned int			nr_events;
++	unsigned short			nr_retries;
++	unsigned short			nr_hangs;
++	unsigned int			max_hang_time;
++#endif
++#ifdef CONFIG_PREEMPT_RT
++	spinlock_t			softirq_expiry_lock;
++	atomic_t			timer_waiters;
++#endif
++	ktime_t				expires_next;
++	struct hrtimer			*next_timer;
++	ktime_t				softirq_expires_next;
++	struct hrtimer			*softirq_next_timer;
++	struct hrtimer_clock_base	clock_base[HRTIMER_MAX_CLOCK_BASES];
++} ____cacheline_aligned;
++
++
+ #endif
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index e0ae2a43e0eb..d9f1435a5a13 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -102,12 +102,15 @@ static inline u64 get_jiffies_64(void)
  }
+ #endif
 =20
--static void __init _get_smp_config(unsigned int early)
-+static void __init xen_pv_smp_config(void)
- {
--	int i, rc;
--	unsigned int subtract =3D 0;
--
--	if (early)
--		return;
--
--	num_processors =3D 0;
--	disabled_cpus =3D 0;
--	for (i =3D 0; i < nr_cpu_ids; i++) {
--		rc =3D HYPERVISOR_vcpu_op(VCPUOP_is_up, i, NULL);
--		if (rc >=3D 0) {
--			num_processors++;
--			set_cpu_possible(i, true);
--		} else {
--			set_cpu_possible(i, false);
--			set_cpu_present(i, false);
--			subtract++;
--		}
--	}
--#ifdef CONFIG_HOTPLUG_CPU
--	/* This is akin to using 'nr_cpus' on the Linux command line.
--	 * Which is OK as when we use 'dom0_max_vcpus=3DX' we can only
--	 * have up to X, while nr_cpu_ids is greater than X. This
--	 * normally is not a problem, except when CPU hotplugging
--	 * is involved and then there might be more than X CPUs
--	 * in the guest - which will not work as there is no
--	 * hypercall to expand the max number of VCPUs an already
--	 * running guest has. So cap it up to X. */
--	if (subtract)
--		set_nr_cpu_ids(nr_cpu_ids - subtract);
+-/*
+- *	These inlines deal with timer wrapping correctly. You are
+- *	strongly encouraged to use them:
+- *	1. Because people otherwise forget
+- *	2. Because if the timer wrap changes in future you won't have to
+- *	   alter your driver code.
++/**
++ * DOC: General information about time_* inlines
++ *
++ * These inlines deal with timer wrapping correctly. You are strongly encour=
+aged
++ * to use them:
++ *
++ * #. Because people otherwise forget
++ * #. Because if the timer wrap changes in future you won't have to alter yo=
+ur
++ *    driver code.
+  */
+=20
+ /**
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index 716d17f31c45..44fddfa93e18 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -19,16 +19,22 @@ extern void __init tick_init(void);
+ extern void tick_suspend_local(void);
+ /* Should be core only, but XEN resume magic and ARM BL switcher require it =
+*/
+ extern void tick_resume_local(void);
+-extern void tick_handover_do_timer(void);
+ extern void tick_cleanup_dead_cpu(int cpu);
+ #else /* CONFIG_GENERIC_CLOCKEVENTS */
+ static inline void tick_init(void) { }
+ static inline void tick_suspend_local(void) { }
+ static inline void tick_resume_local(void) { }
+-static inline void tick_handover_do_timer(void) { }
+ static inline void tick_cleanup_dead_cpu(int cpu) { }
+ #endif /* !CONFIG_GENERIC_CLOCKEVENTS */
+=20
++#if defined(CONFIG_GENERIC_CLOCKEVENTS) && defined(CONFIG_HOTPLUG_CPU)
++extern int tick_cpu_dying(unsigned int cpu);
++extern void tick_assert_timekeeping_handover(void);
++#else
++#define tick_cpu_dying	NULL
++static inline void tick_assert_timekeeping_handover(void) { }
++#endif
++
+ #if defined(CONFIG_GENERIC_CLOCKEVENTS) && defined(CONFIG_SUSPEND)
+ extern void tick_freeze(void);
+ extern void tick_unfreeze(void);
+@@ -69,12 +75,6 @@ extern void tick_broadcast_control(enum tick_broadcast_mod=
+e mode);
+ static inline void tick_broadcast_control(enum tick_broadcast_mode mode) { }
+ #endif /* BROADCAST */
+=20
+-#if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_=
+CPU)
+-extern void tick_offline_cpu(unsigned int cpu);
+-#else
+-static inline void tick_offline_cpu(unsigned int cpu) { }
 -#endif
-+	u32 apicid =3D 0;
-+	int i;
-+
-+	topology_register_boot_apic(apicid++);
-+
-+	for (i =3D 1; i < nr_cpu_ids; i++)
-+		topology_register_apic(apicid++, CPU_ACPIID_INVALID, true);
-+
- 	/* Pretend to be a proper enumerated system */
- 	smp_found_config =3D 1;
- }
-@@ -224,8 +201,6 @@ static void __init xen_pv_smp_prepare_cpus(unsigned int m=
-ax_cpus)
-=20
- 	smp_prepare_cpus_common();
-=20
--	cpu_data(0).x86_max_cores =3D 1;
 -
- 	speculative_store_bypass_ht_init();
-=20
- 	xen_pmu_init(0);
-@@ -434,6 +409,20 @@ static irqreturn_t xen_irq_work_interrupt(int irq, void =
-*dev_id)
- 	return IRQ_HANDLED;
- }
-=20
-+void __init xen_smp_count_cpus(void)
-+{
-+	unsigned int cpus;
-+
-+	for (cpus =3D 0; cpus < nr_cpu_ids; cpus++) {
-+		if (HYPERVISOR_vcpu_op(VCPUOP_is_up, cpus, NULL) < 0)
-+			break;
-+	}
-+
-+	pr_info("Xen PV: Detected %u vCPUS\n", cpus);
-+	if (cpus < nr_cpu_ids)
-+		set_nr_cpu_ids(cpus);
-+}
-+
- static const struct smp_ops xen_smp_ops __initconst =3D {
- 	.smp_prepare_boot_cpu =3D xen_pv_smp_prepare_boot_cpu,
- 	.smp_prepare_cpus =3D xen_pv_smp_prepare_cpus,
-@@ -458,6 +447,12 @@ void __init xen_smp_init(void)
- 	smp_ops =3D xen_smp_ops;
-=20
- 	/* Avoid searching for BIOS MP tables */
--	x86_init.mpparse.find_smp_config =3D x86_init_noop;
--	x86_init.mpparse.get_smp_config =3D _get_smp_config;
-+	x86_init.mpparse.find_mptable		=3D x86_init_noop;
-+	x86_init.mpparse.early_parse_smp_cfg	=3D x86_init_noop;
-+
-+	/* XEN/PV Dom0 has halfways sane topology information via CPUID/MADT */
-+	if (xen_initial_domain())
-+		x86_init.mpparse.parse_smp_cfg	=3D x86_init_noop;
-+	else
-+		x86_init.mpparse.parse_smp_cfg	=3D xen_pv_smp_config;
- }
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 537b9987a431..2b8c20bb926a 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -1915,7 +1915,7 @@ static void dct_determine_memory_type(struct amd64_pvt =
-*pvt)
- /* On F10h and later ErrAddr is MC4_ADDR[47:1] */
- static u64 get_error_address(struct amd64_pvt *pvt, struct mce *m)
- {
--	u16 mce_nid =3D topology_die_id(m->extcpu);
-+	u16 mce_nid =3D topology_amd_node_id(m->extcpu);
- 	struct mem_ctl_info *mci;
- 	u8 start_bit =3D 1;
- 	u8 end_bit   =3D 47;
-@@ -3446,7 +3446,7 @@ static void get_cpus_on_this_dct_cpumask(struct cpumask=
- *mask, u16 nid)
- 	int cpu;
-=20
- 	for_each_online_cpu(cpu)
--		if (topology_die_id(cpu) =3D=3D nid)
-+		if (topology_amd_node_id(cpu) =3D=3D nid)
- 			cpumask_set_cpu(cpu, mask);
- }
-=20
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index ec8b6c9fedfd..8130c3dc64da 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -584,7 +584,7 @@ static void decode_mc3_mce(struct mce *m)
- static void decode_mc4_mce(struct mce *m)
- {
- 	unsigned int fam =3D x86_family(m->cpuid);
--	int node_id =3D topology_die_id(m->extcpu);
-+	int node_id =3D topology_amd_node_id(m->extcpu);
- 	u16 ec =3D EC(m->status);
- 	u8 xec =3D XEC(m->status, 0x1f);
- 	u8 offset =3D 0;
-@@ -746,7 +746,7 @@ static void decode_smca_error(struct mce *m)
-=20
- 	if ((bank_type =3D=3D SMCA_UMC || bank_type =3D=3D SMCA_UMC_V2) &&
- 	    xec =3D=3D 0 && decode_dram_ecc)
--		decode_dram_ecc(topology_die_id(m->extcpu), m);
-+		decode_dram_ecc(topology_amd_node_id(m->extcpu), m);
- }
-=20
- static inline void amd_decode_err_code(u16 ec)
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c b/drivers/gpu/d=
-rm/amd/pm/swsmu/smu11/vangogh_ppt.c
-index 2ff6deedef95..da1f43999d09 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c
-@@ -451,7 +451,7 @@ static int vangogh_init_smc_tables(struct smu_context *sm=
-u)
-=20
- #ifdef CONFIG_X86
- 	/* AMD x86 APU only */
--	smu->cpu_core_num =3D boot_cpu_data.x86_max_cores;
-+	smu->cpu_core_num =3D topology_num_cores_per_package();
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+ extern int tick_broadcast_oneshot_control(enum tick_broadcast_state state);
  #else
- 	smu->cpu_core_num =3D 4;
- #endif
-diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
-index b8fc8d1ef20d..b0991dde2e59 100644
---- a/drivers/hwmon/coretemp.c
-+++ b/drivers/hwmon/coretemp.c
-@@ -782,7 +782,7 @@ static int __init coretemp_init(void)
- 	if (!x86_match_cpu(coretemp_ids))
- 		return -ENODEV;
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index f18a2f1eb79e..14a633ba61d6 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -36,16 +36,10 @@
+  * workqueue locking issues. It's not meant for executing random crap
+  * with interrupts disabled. Abuse is monitored!
+  *
+- * @TIMER_PINNED: A pinned timer will not be affected by any timer
+- * placement heuristics (like, NOHZ) and will always expire on the CPU
+- * on which the timer was enqueued.
+- *
+- * Note: Because enqueuing of timers can migrate the timer from one
+- * CPU to another, pinned timers are not guaranteed to stay on the
+- * initialy selected CPU.  They move to the CPU on which the enqueue
+- * function is invoked via mod_timer() or add_timer().  If the timer
+- * should be placed on a particular CPU, then add_timer_on() has to be
+- * used.
++ * @TIMER_PINNED: A pinned timer will always expire on the CPU on which the
++ * timer was enqueued. When a particular CPU is required, add_timer_on()
++ * has to be used. Enqueue via mod_timer() and add_timer() is always done
++ * on the local CPU.
+  */
+ #define TIMER_CPUMASK		0x0003FFFF
+ #define TIMER_MIGRATING		0x00040000
+@@ -165,6 +159,8 @@ extern int timer_reduce(struct timer_list *timer, unsigne=
+d long expires);
+ #define NEXT_TIMER_MAX_DELTA	((1UL << 30) - 1)
 =20
--	max_zones =3D topology_max_packages() * topology_max_die_per_package();
-+	max_zones =3D topology_max_packages() * topology_max_dies_per_package();
- 	zone_devices =3D kcalloc(max_zones, sizeof(struct platform_device *),
- 			      GFP_KERNEL);
- 	if (!zone_devices)
-diff --git a/drivers/hwmon/fam15h_power.c b/drivers/hwmon/fam15h_power.c
-index 6307112c2c0c..9ed2c4b6734e 100644
---- a/drivers/hwmon/fam15h_power.c
-+++ b/drivers/hwmon/fam15h_power.c
-@@ -209,7 +209,7 @@ static ssize_t power1_average_show(struct device *dev,
- 	 * With the new x86 topology modelling, x86_max_cores is the
- 	 * compute unit number.
- 	 */
--	cu_num =3D boot_cpu_data.x86_max_cores;
-+	cu_num =3D topology_num_cores_per_package();
+ extern void add_timer(struct timer_list *timer);
++extern void add_timer_local(struct timer_list *timer);
++extern void add_timer_global(struct timer_list *timer);
 =20
- 	ret =3D read_registers(data);
- 	if (ret)
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b=
-/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index a5e0f5c22179..b89c0dda9e5d 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -242,7 +242,7 @@ static int __init intel_uncore_init(void)
- 		return -ENODEV;
-=20
- 	uncore_max_entries =3D topology_max_packages() *
--					topology_max_die_per_package();
-+					topology_max_dies_per_package();
- 	uncore_instances =3D kcalloc(uncore_max_entries,
- 				   sizeof(*uncore_instances), GFP_KERNEL);
- 	if (!uncore_instances)
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_ra=
-pl_common.c
-index 2feed036c1cd..00c861899a47 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -1564,7 +1564,7 @@ struct rapl_package *rapl_add_package(int id, struct ra=
-pl_if_priv *priv, bool id
- 	if (id_is_cpu) {
- 		rp->id =3D topology_logical_die_id(id);
- 		rp->lead_cpu =3D id;
--		if (topology_max_die_per_package() > 1)
-+		if (topology_max_dies_per_package() > 1)
- 			snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH, "package-%d-die-%d",
- 				 topology_physical_package_id(id), topology_die_id(id));
- 		else
-diff --git a/drivers/thermal/intel/intel_hfi.c b/drivers/thermal/intel/intel_=
-hfi.c
-index 3b04c6ec4fca..40d664a66cdc 100644
---- a/drivers/thermal/intel/intel_hfi.c
-+++ b/drivers/thermal/intel/intel_hfi.c
-@@ -607,7 +607,7 @@ void __init intel_hfi_init(void)
-=20
- 	/* There is one HFI instance per die/package. */
- 	max_hfi_instances =3D topology_max_packages() *
--			    topology_max_die_per_package();
-+			    topology_max_dies_per_package();
-=20
- 	/*
- 	 * This allocation may fail. CPU hotplug callbacks must check
-diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel=
-/intel_powerclamp.c
-index bc6eb0dd66a4..4ba649370aa1 100644
---- a/drivers/thermal/intel/intel_powerclamp.c
-+++ b/drivers/thermal/intel/intel_powerclamp.c
-@@ -587,7 +587,7 @@ static int powerclamp_idle_injection_register(void)
- 	poll_pkg_cstate_enable =3D false;
- 	if (cpumask_equal(cpu_present_mask, idle_injection_cpu_mask)) {
- 		ii_dev =3D idle_inject_register_full(idle_injection_cpu_mask, idle_inject_=
-update);
--		if (topology_max_packages() =3D=3D 1 && topology_max_die_per_package() =3D=
-=3D 1)
-+		if (topology_max_packages() =3D=3D 1 && topology_max_dies_per_package() =
-=3D=3D 1)
- 			poll_pkg_cstate_enable =3D true;
- 	} else {
- 		ii_dev =3D idle_inject_register(idle_injection_cpu_mask);
-diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/i=
-ntel/x86_pkg_temp_thermal.c
-index 11a7f8108bbb..f6c2e5964b8f 100644
---- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
-+++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
-@@ -494,7 +494,7 @@ static int __init pkg_temp_thermal_init(void)
- 	if (!x86_match_cpu(pkg_temp_thermal_ids))
- 		return -ENODEV;
-=20
--	max_id =3D topology_max_packages() * topology_max_die_per_package();
-+	max_id =3D topology_max_packages() * topology_max_dies_per_package();
- 	zones =3D kcalloc(max_id, sizeof(struct zone_device *),
- 			   GFP_KERNEL);
- 	if (!zones)
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index dcb89c987164..61a0ddf2bef6 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -112,7 +112,7 @@ void notify_cpu_starting(unsigned int cpu);
- extern void cpu_maps_update_begin(void);
- extern void cpu_maps_update_done(void);
- int bringup_hibernate_cpu(unsigned int sleep_cpu);
--void bringup_nonboot_cpus(unsigned int setup_max_cpus);
-+void bringup_nonboot_cpus(unsigned int max_cpus);
-=20
- #else	/* CONFIG_SMP */
- #define cpuhp_tasks_frozen	0
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index e87520dc2959..7a83fd2fccbe 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -218,6 +218,8 @@ smp_call_function_any(const struct cpumask *mask, smp_cal=
-l_func_t func,
- static inline void kick_all_cpus_sync(void) {  }
- static inline void wake_up_all_idle_cpus(void) {  }
-=20
-+#define setup_max_cpus 0
+ extern int try_to_del_timer_sync(struct timer_list *timer);
+ extern int timer_delete_sync(struct timer_list *timer);
+diff --git a/include/trace/events/timer_migration.h b/include/trace/events/ti=
+mer_migration.h
+new file mode 100644
+index 000000000000..79f19e76a80b
+--- /dev/null
++++ b/include/trace/events/timer_migration.h
+@@ -0,0 +1,298 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +
- #ifdef CONFIG_UP_LATE_INIT
- extern void __init up_late_init(void);
- static inline void smp_init(void) { up_late_init(); }
-diff --git a/init/main.c b/init/main.c
-index e24b0780fdff..5644bb133fb4 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -603,7 +603,6 @@ static int __init rdinit_setup(char *str)
- __setup("rdinit=3D", rdinit_setup);
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM timer_migration
++
++#if !defined(_TRACE_TIMER_MIGRATION_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_TIMER_MIGRATION_H
++
++#include <linux/tracepoint.h>
++
++/* Group events */
++TRACE_EVENT(tmigr_group_set,
++
++	TP_PROTO(struct tmigr_group *group),
++
++	TP_ARGS(group),
++
++	TP_STRUCT__entry(
++		__field( void *,	group		)
++		__field( unsigned int,	lvl		)
++		__field( unsigned int,	numa_node	)
++	),
++
++	TP_fast_assign(
++		__entry->group		=3D group;
++		__entry->lvl		=3D group->level;
++		__entry->numa_node	=3D group->numa_node;
++	),
++
++	TP_printk("group=3D%p lvl=3D%d numa=3D%d",
++		  __entry->group, __entry->lvl, __entry->numa_node)
++);
++
++TRACE_EVENT(tmigr_connect_child_parent,
++
++	TP_PROTO(struct tmigr_group *child),
++
++	TP_ARGS(child),
++
++	TP_STRUCT__entry(
++		__field( void *,	child		)
++		__field( void *,	parent		)
++		__field( unsigned int,	lvl		)
++		__field( unsigned int,	numa_node	)
++		__field( unsigned int,	num_children	)
++		__field( u32,		childmask	)
++	),
++
++	TP_fast_assign(
++		__entry->child		=3D child;
++		__entry->parent		=3D child->parent;
++		__entry->lvl		=3D child->parent->level;
++		__entry->numa_node	=3D child->parent->numa_node;
++		__entry->num_children	=3D child->parent->num_children;
++		__entry->childmask	=3D child->childmask;
++	),
++
++	TP_printk("group=3D%p childmask=3D%0x parent=3D%p lvl=3D%d numa=3D%d num_ch=
+ildren=3D%d",
++		  __entry->child,  __entry->childmask, __entry->parent,
++		  __entry->lvl, __entry->numa_node, __entry->num_children)
++);
++
++TRACE_EVENT(tmigr_connect_cpu_parent,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc),
++
++	TP_STRUCT__entry(
++		__field( void *,	parent		)
++		__field( unsigned int,	cpu		)
++		__field( unsigned int,	lvl		)
++		__field( unsigned int,	numa_node	)
++		__field( unsigned int,	num_children	)
++		__field( u32,		childmask	)
++	),
++
++	TP_fast_assign(
++		__entry->parent		=3D tmc->tmgroup;
++		__entry->cpu		=3D tmc->cpuevt.cpu;
++		__entry->lvl		=3D tmc->tmgroup->level;
++		__entry->numa_node	=3D tmc->tmgroup->numa_node;
++		__entry->num_children	=3D tmc->tmgroup->num_children;
++		__entry->childmask	=3D tmc->childmask;
++	),
++
++	TP_printk("cpu=3D%d childmask=3D%0x parent=3D%p lvl=3D%d numa=3D%d num_chil=
+dren=3D%d",
++		  __entry->cpu,	 __entry->childmask, __entry->parent,
++		  __entry->lvl, __entry->numa_node, __entry->num_children)
++);
++
++DECLARE_EVENT_CLASS(tmigr_group_and_cpu,
++
++	TP_PROTO(struct tmigr_group *group, union tmigr_state state, u32 childmask),
++
++	TP_ARGS(group, state, childmask),
++
++	TP_STRUCT__entry(
++		__field( void *,	group		)
++		__field( void *,	parent		)
++		__field( unsigned int,	lvl		)
++		__field( unsigned int,	numa_node	)
++		__field( u32,		childmask	)
++		__field( u8,		active		)
++		__field( u8,		migrator	)
++	),
++
++	TP_fast_assign(
++		__entry->group		=3D group;
++		__entry->parent		=3D group->parent;
++		__entry->lvl		=3D group->level;
++		__entry->numa_node	=3D group->numa_node;
++		__entry->childmask	=3D childmask;
++		__entry->active		=3D state.active;
++		__entry->migrator	=3D state.migrator;
++	),
++
++	TP_printk("group=3D%p lvl=3D%d numa=3D%d active=3D%0x migrator=3D%0x "
++		  "parent=3D%p childmask=3D%0x",
++		  __entry->group, __entry->lvl, __entry->numa_node,
++		  __entry->active, __entry->migrator,
++		  __entry->parent, __entry->childmask)
++);
++
++DEFINE_EVENT(tmigr_group_and_cpu, tmigr_group_set_cpu_inactive,
++
++	TP_PROTO(struct tmigr_group *group, union tmigr_state state, u32 childmask),
++
++	TP_ARGS(group, state, childmask)
++);
++
++DEFINE_EVENT(tmigr_group_and_cpu, tmigr_group_set_cpu_active,
++
++	TP_PROTO(struct tmigr_group *group, union tmigr_state state, u32 childmask),
++
++	TP_ARGS(group, state, childmask)
++);
++
++/* CPU events*/
++DECLARE_EVENT_CLASS(tmigr_cpugroup,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc),
++
++	TP_STRUCT__entry(
++		__field( u64,		wakeup	)
++		__field( void *,	parent	)
++		__field( unsigned int,	cpu	)
++
++	),
++
++	TP_fast_assign(
++		__entry->wakeup		=3D tmc->wakeup;
++		__entry->parent		=3D tmc->tmgroup;
++		__entry->cpu		=3D tmc->cpuevt.cpu;
++	),
++
++	TP_printk("cpu=3D%d parent=3D%p wakeup=3D%llu", __entry->cpu, __entry->pare=
+nt, __entry->wakeup)
++);
++
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_new_timer,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc)
++);
++
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_active,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc)
++);
++
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_online,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc)
++);
++
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_offline,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc)
++);
++
++DEFINE_EVENT(tmigr_cpugroup, tmigr_handle_remote_cpu,
++
++	TP_PROTO(struct tmigr_cpu *tmc),
++
++	TP_ARGS(tmc)
++);
++
++DECLARE_EVENT_CLASS(tmigr_idle,
++
++	TP_PROTO(struct tmigr_cpu *tmc, u64 nextevt),
++
++	TP_ARGS(tmc, nextevt),
++
++	TP_STRUCT__entry(
++		__field( u64,		nextevt)
++		__field( u64,		wakeup)
++		__field( void *,	parent)
++		__field( unsigned int,	cpu)
++	),
++
++	TP_fast_assign(
++		__entry->nextevt	=3D nextevt;
++		__entry->wakeup		=3D tmc->wakeup;
++		__entry->parent		=3D tmc->tmgroup;
++		__entry->cpu		=3D tmc->cpuevt.cpu;
++	),
++
++	TP_printk("cpu=3D%d parent=3D%p nextevt=3D%llu wakeup=3D%llu",
++		  __entry->cpu, __entry->parent, __entry->nextevt, __entry->wakeup)
++);
++
++DEFINE_EVENT(tmigr_idle, tmigr_cpu_idle,
++
++	TP_PROTO(struct tmigr_cpu *tmc, u64 nextevt),
++
++	TP_ARGS(tmc, nextevt)
++);
++
++DEFINE_EVENT(tmigr_idle, tmigr_cpu_new_timer_idle,
++
++	TP_PROTO(struct tmigr_cpu *tmc, u64 nextevt),
++
++	TP_ARGS(tmc, nextevt)
++);
++
++TRACE_EVENT(tmigr_update_events,
++
++	TP_PROTO(struct tmigr_group *child, struct tmigr_group *group,
++		 union tmigr_state childstate,	union tmigr_state groupstate,
++		 u64 nextevt),
++
++	TP_ARGS(child, group, childstate, groupstate, nextevt),
++
++	TP_STRUCT__entry(
++		__field( void *,	child			)
++		__field( void *,	group			)
++		__field( u64,		nextevt			)
++		__field( u64,		group_next_expiry	)
++		__field( u64,		child_evt_expiry	)
++		__field( unsigned int,	group_lvl		)
++		__field( unsigned int,	child_evtcpu		)
++		__field( u8,		child_active		)
++		__field( u8,		group_active		)
++	),
++
++	TP_fast_assign(
++		__entry->child			=3D child;
++		__entry->group			=3D group;
++		__entry->nextevt		=3D nextevt;
++		__entry->group_next_expiry	=3D group->next_expiry;
++		__entry->child_evt_expiry	=3D child ? child->groupevt.nextevt.expires : 0;
++		__entry->group_lvl		=3D group->level;
++		__entry->child_evtcpu		=3D child ? child->groupevt.cpu : 0;
++		__entry->child_active		=3D childstate.active;
++		__entry->group_active		=3D groupstate.active;
++	),
++
++	TP_printk("child=3D%p group=3D%p group_lvl=3D%d child_active=3D%0x group_ac=
+tive=3D%0x "
++		  "nextevt=3D%llu next_expiry=3D%llu child_evt_expiry=3D%llu child_evtcpu=
+=3D%d",
++		  __entry->child, __entry->group, __entry->group_lvl, __entry->child_activ=
+e,
++		  __entry->group_active,
++		  __entry->nextevt, __entry->group_next_expiry, __entry->child_evt_expiry,
++		  __entry->child_evtcpu)
++);
++
++TRACE_EVENT(tmigr_handle_remote,
++
++	TP_PROTO(struct tmigr_group *group),
++
++	TP_ARGS(group),
++
++	TP_STRUCT__entry(
++		__field( void * ,	group	)
++		__field( unsigned int ,	lvl	)
++	),
++
++	TP_fast_assign(
++		__entry->group		=3D group;
++		__entry->lvl		=3D group->level;
++	),
++
++	TP_printk("group=3D%p lvl=3D%d",
++		   __entry->group, __entry->lvl)
++);
++
++#endif /*  _TRACE_TIMER_MIGRATION_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index 73eb622e7663..5d5c0b8efff2 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -19,6 +19,12 @@
+ #include <vdso/time32.h>
+ #include <vdso/time64.h>
 =20
- #ifndef CONFIG_SMP
--static const unsigned int setup_max_cpus =3D NR_CPUS;
- static inline void setup_nr_cpu_ids(void) { }
- static inline void smp_prepare_cpus(unsigned int maxcpus) { }
- #endif
++#ifdef CONFIG_ARM64
++#include <asm/page-def.h>
++#else
++#include <asm/page.h>
++#endif
++
+ #ifdef CONFIG_ARCH_HAS_VDSO_DATA
+ #include <asm/vdso/data.h>
+ #else
+@@ -121,6 +127,14 @@ struct vdso_data {
+ extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidd=
+en")));
+ extern struct vdso_data _timens_data[CS_BASES] __attribute__((visibility("hi=
+dden")));
+=20
++/**
++ * union vdso_data_store - Generic vDSO data page
++ */
++union vdso_data_store {
++	struct vdso_data	data[CS_BASES];
++	u8			page[PAGE_SIZE];
++};
++
+ /*
+  * The generic vDSO implementation requires that gettimeofday.h
+  * provides:
+diff --git a/include/vdso/helpers.h b/include/vdso/helpers.h
+index 9a2af9fca45e..73501149439d 100644
+--- a/include/vdso/helpers.h
++++ b/include/vdso/helpers.h
+@@ -30,9 +30,9 @@ static __always_inline u32 vdso_read_retry(const struct vds=
+o_data *vd,
+ static __always_inline void vdso_write_begin(struct vdso_data *vd)
+ {
+ 	/*
+-	 * WRITE_ONCE it is required otherwise the compiler can validly tear
++	 * WRITE_ONCE() is required otherwise the compiler can validly tear
+ 	 * updates to vd[x].seq and it is possible that the value seen by the
+-	 * reader it is inconsistent.
++	 * reader is inconsistent.
+ 	 */
+ 	WRITE_ONCE(vd[CS_HRES_COARSE].seq, vd[CS_HRES_COARSE].seq + 1);
+ 	WRITE_ONCE(vd[CS_RAW].seq, vd[CS_RAW].seq + 1);
+@@ -43,9 +43,9 @@ static __always_inline void vdso_write_end(struct vdso_data=
+ *vd)
+ {
+ 	smp_wmb();
+ 	/*
+-	 * WRITE_ONCE it is required otherwise the compiler can validly tear
++	 * WRITE_ONCE() is required otherwise the compiler can validly tear
+ 	 * updates to vd[x].seq and it is possible that the value seen by the
+-	 * reader it is inconsistent.
++	 * reader is inconsistent.
+ 	 */
+ 	WRITE_ONCE(vd[CS_HRES_COARSE].seq, vd[CS_HRES_COARSE].seq + 1);
+ 	WRITE_ONCE(vd[CS_RAW].seq, vd[CS_RAW].seq + 1);
 diff --git a/kernel/cpu.c b/kernel/cpu.c
-index e6ec3ba4950b..023ddf8d625a 100644
+index e6ec3ba4950b..7e84a7b0675e 100644
 --- a/kernel/cpu.c
 +++ b/kernel/cpu.c
-@@ -1909,14 +1909,14 @@ static bool __init cpuhp_bringup_cpus_parallel(unsign=
-ed int ncpus)
- static inline bool cpuhp_bringup_cpus_parallel(unsigned int ncpus) { return =
-false; }
- #endif /* CONFIG_HOTPLUG_PARALLEL */
+@@ -1324,10 +1324,6 @@ static int take_cpu_down(void *_param)
+ 	 */
+ 	cpuhp_invoke_callback_range_nofail(false, cpu, st, target);
 =20
--void __init bringup_nonboot_cpus(unsigned int setup_max_cpus)
-+void __init bringup_nonboot_cpus(unsigned int max_cpus)
+-	/* Give up timekeeping duties */
+-	tick_handover_do_timer();
+-	/* Remove CPU from timer broadcasting */
+-	tick_offline_cpu(cpu);
+ 	/* Park the stopper thread */
+ 	stop_machine_park(cpu);
+ 	return 0;
+@@ -1403,6 +1399,7 @@ void cpuhp_report_idle_dead(void)
+ 	struct cpuhp_cpu_state *st =3D this_cpu_ptr(&cpuhp_state);
+=20
+ 	BUG_ON(st->state !=3D CPUHP_AP_OFFLINE);
++	tick_assert_timekeeping_handover();
+ 	rcutree_report_cpu_dead();
+ 	st->state =3D CPUHP_AP_IDLE_DEAD;
+ 	/*
+@@ -2205,7 +2202,11 @@ static struct cpuhp_step cpuhp_hp_states[] =3D {
+ 		.startup.single		=3D NULL,
+ 		.teardown.single	=3D hrtimers_cpu_dying,
+ 	},
+-
++	[CPUHP_AP_TICK_DYING] =3D {
++		.name			=3D "tick:dying",
++		.startup.single		=3D NULL,
++		.teardown.single	=3D tick_cpu_dying,
++	},
+ 	/* Entry state on starting. Interrupts enabled from here on. Transient
+ 	 * state for synchronsization */
+ 	[CPUHP_AP_ONLINE] =3D {
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 31231925f1ec..b15d40cad7ea 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -291,7 +291,6 @@ static void do_idle(void)
+ 		local_irq_disable();
+=20
+ 		if (cpu_is_offline(cpu)) {
+-			tick_nohz_idle_stop_tick();
+ 			cpuhp_report_idle_dead();
+ 			arch_cpu_idle_dead();
+ 		}
+diff --git a/kernel/time/Makefile b/kernel/time/Makefile
+index 7e875e63ff3b..4af2a264a160 100644
+--- a/kernel/time/Makefile
++++ b/kernel/time/Makefile
+@@ -17,6 +17,9 @@ endif
+ obj-$(CONFIG_GENERIC_SCHED_CLOCK)		+=3D sched_clock.o
+ obj-$(CONFIG_TICK_ONESHOT)			+=3D tick-oneshot.o tick-sched.o
+ obj-$(CONFIG_LEGACY_TIMER_TICK)			+=3D tick-legacy.o
++ifeq ($(CONFIG_SMP),y)
++ obj-$(CONFIG_NO_HZ_COMMON)			+=3D timer_migration.o
++endif
+ obj-$(CONFIG_HAVE_GENERIC_VDSO)			+=3D vsyscall.o
+ obj-$(CONFIG_DEBUG_FS)				+=3D timekeeping_debug.o
+ obj-$(CONFIG_TEST_UDELAY)			+=3D test_udelay.o
+diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
+index 960143b183cd..a7ca458cdd9c 100644
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -659,7 +659,7 @@ void tick_cleanup_dead_cpu(int cpu)
+ #endif
+=20
+ #ifdef CONFIG_SYSFS
+-static struct bus_type clockevents_subsys =3D {
++static const struct bus_type clockevents_subsys =3D {
+ 	.name		=3D "clockevents",
+ 	.dev_name       =3D "clockevent",
+ };
+diff --git a/kernel/time/clocksource-wdtest.c b/kernel/time/clocksource-wdtes=
+t.c
+index df922f49d171..d06185e054ea 100644
+--- a/kernel/time/clocksource-wdtest.c
++++ b/kernel/time/clocksource-wdtest.c
+@@ -104,8 +104,8 @@ static void wdtest_ktime_clocksource_reset(void)
+ static int wdtest_func(void *arg)
  {
- 	/* Try parallel bringup optimization if enabled */
--	if (cpuhp_bringup_cpus_parallel(setup_max_cpus))
-+	if (cpuhp_bringup_cpus_parallel(max_cpus))
- 		return;
+ 	unsigned long j1, j2;
++	int i, max_retries;
+ 	char *s;
+-	int i;
 =20
- 	/* Full per CPU serialized bringup */
--	cpuhp_bringup_mask(cpu_present_mask, setup_max_cpus, CPUHP_ONLINE);
-+	cpuhp_bringup_mask(cpu_present_mask, max_cpus, CPUHP_ONLINE);
+ 	schedule_timeout_uninterruptible(holdoff * HZ);
+=20
+@@ -139,18 +139,19 @@ static int wdtest_func(void *arg)
+ 	WARN_ON_ONCE(time_before(j2, j1 + NSEC_PER_USEC));
+=20
+ 	/* Verify tsc-like stability with various numbers of errors injected. */
+-	for (i =3D 0; i <=3D max_cswd_read_retries + 1; i++) {
+-		if (i <=3D 1 && i < max_cswd_read_retries)
++	max_retries =3D clocksource_get_max_watchdog_retry();
++	for (i =3D 0; i <=3D max_retries + 1; i++) {
++		if (i <=3D 1 && i < max_retries)
+ 			s =3D "";
+-		else if (i <=3D max_cswd_read_retries)
++		else if (i <=3D max_retries)
+ 			s =3D ", expect message";
+ 		else
+ 			s =3D ", expect clock skew";
+-		pr_info("--- Watchdog with %dx error injection, %lu retries%s.\n", i, max_=
+cswd_read_retries, s);
++		pr_info("--- Watchdog with %dx error injection, %d retries%s.\n", i, max_r=
+etries, s);
+ 		WRITE_ONCE(wdtest_ktime_read_ndelays, i);
+ 		schedule_timeout_uninterruptible(2 * HZ);
+ 		WARN_ON_ONCE(READ_ONCE(wdtest_ktime_read_ndelays));
+-		WARN_ON_ONCE((i <=3D max_cswd_read_retries) !=3D
++		WARN_ON_ONCE((i <=3D max_retries) !=3D
+ 			     !(clocksource_wdtest_ktime.flags & CLOCK_SOURCE_UNSTABLE));
+ 		wdtest_ktime_clocksource_reset();
+ 	}
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 3052b1f1168e..e5b260aa0e02 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -210,9 +210,6 @@ void clocksource_mark_unstable(struct clocksource *cs)
+ 	spin_unlock_irqrestore(&watchdog_lock, flags);
  }
 =20
- #ifdef CONFIG_PM_SLEEP_SMP
+-ulong max_cswd_read_retries =3D 2;
+-module_param(max_cswd_read_retries, ulong, 0644);
+-EXPORT_SYMBOL_GPL(max_cswd_read_retries);
+ static int verify_n_cpus =3D 8;
+ module_param(verify_n_cpus, int, 0644);
+=20
+@@ -224,11 +221,12 @@ enum wd_read_status {
+=20
+ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csn=
+ow, u64 *wdnow)
+ {
+-	unsigned int nretries;
++	unsigned int nretries, max_retries;
+ 	u64 wd_end, wd_end2, wd_delta;
+ 	int64_t wd_delay, wd_seq_delay;
+=20
+-	for (nretries =3D 0; nretries <=3D max_cswd_read_retries; nretries++) {
++	max_retries =3D clocksource_get_max_watchdog_retry();
++	for (nretries =3D 0; nretries <=3D max_retries; nretries++) {
+ 		local_irq_disable();
+ 		*wdnow =3D watchdog->read(watchdog);
+ 		*csnow =3D cs->read(cs);
+@@ -240,7 +238,7 @@ static enum wd_read_status cs_watchdog_read(struct clocks=
+ource *cs, u64 *csnow,
+ 		wd_delay =3D clocksource_cyc2ns(wd_delta, watchdog->mult,
+ 					      watchdog->shift);
+ 		if (wd_delay <=3D WATCHDOG_MAX_SKEW) {
+-			if (nretries > 1 || nretries >=3D max_cswd_read_retries) {
++			if (nretries > 1 || nretries >=3D max_retries) {
+ 				pr_warn("timekeeping watchdog on CPU%d: %s retried %d times before succe=
+ss\n",
+ 					smp_processor_id(), watchdog->name, nretries);
+ 			}
+@@ -1468,7 +1466,7 @@ static struct attribute *clocksource_attrs[] =3D {
+ };
+ ATTRIBUTE_GROUPS(clocksource);
+=20
+-static struct bus_type clocksource_subsys =3D {
++static const struct bus_type clocksource_subsys =3D {
+ 	.name =3D "clocksource",
+ 	.dev_name =3D "clocksource",
+ };
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index edb0f821dcea..70625dff62ce 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -38,6 +38,7 @@
+ #include <linux/sched/deadline.h>
+ #include <linux/sched/nohz.h>
+ #include <linux/sched/debug.h>
++#include <linux/sched/isolation.h>
+ #include <linux/timer.h>
+ #include <linux/freezer.h>
+ #include <linux/compat.h>
+@@ -746,7 +747,7 @@ static void hrtimer_switch_to_hres(void)
+ 	base->hres_active =3D 1;
+ 	hrtimer_resolution =3D HIGH_RES_NSEC;
+=20
+-	tick_setup_sched_timer();
++	tick_setup_sched_timer(true);
+ 	/* "Retrigger" the interrupt to get things going */
+ 	retrigger_next_event(NULL);
+ }
+@@ -1021,21 +1022,23 @@ void unlock_hrtimer_base(const struct hrtimer *timer,=
+ unsigned long *flags)
+ }
+=20
+ /**
+- * hrtimer_forward - forward the timer expiry
++ * hrtimer_forward() - forward the timer expiry
+  * @timer:	hrtimer to forward
+  * @now:	forward past this time
+  * @interval:	the interval to forward
+  *
+  * Forward the timer expiry so it will expire in the future.
+- * Returns the number of overruns.
+  *
+- * Can be safely called from the callback function of @timer. If
+- * called from other contexts @timer must neither be enqueued nor
+- * running the callback and the caller needs to take care of
+- * serialization.
++ * .. note::
++ *  This only updates the timer expiry value and does not requeue the timer.
+  *
+- * Note: This only updates the timer expiry value and does not requeue
+- * the timer.
++ * There is also a variant of the function hrtimer_forward_now().
++ *
++ * Context: Can be safely called from the callback function of @timer. If ca=
+lled
++ *          from other contexts @timer must neither be enqueued nor running =
+the
++ *          callback and the caller needs to take care of serialization.
++ *
++ * Return: The number of overruns are returned.
+  */
+ u64 hrtimer_forward(struct hrtimer *timer, ktime_t now, ktime_t interval)
+ {
+@@ -2223,10 +2226,8 @@ static void migrate_hrtimer_list(struct hrtimer_clock_=
+base *old_base,
+=20
+ int hrtimers_cpu_dying(unsigned int dying_cpu)
+ {
++	int i, ncpu =3D cpumask_any_and(cpu_active_mask, housekeeping_cpumask(HK_TY=
+PE_TIMER));
+ 	struct hrtimer_cpu_base *old_base, *new_base;
+-	int i, ncpu =3D cpumask_first(cpu_active_mask);
+-
+-	tick_cancel_sched_timer(dying_cpu);
+=20
+ 	old_base =3D this_cpu_ptr(&hrtimer_bases);
+ 	new_base =3D &per_cpu(hrtimer_bases, ncpu);
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index e9138cd7a0f5..fb0fdec8719a 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -111,15 +111,13 @@ void tick_handle_periodic(struct clock_event_device *de=
+v)
+=20
+ 	tick_periodic(cpu);
+=20
+-#if defined(CONFIG_HIGH_RES_TIMERS) || defined(CONFIG_NO_HZ_COMMON)
+ 	/*
+ 	 * The cpu might have transitioned to HIGHRES or NOHZ mode via
+ 	 * update_process_times() -> run_local_timers() ->
+ 	 * hrtimer_run_queues().
+ 	 */
+-	if (dev->event_handler !=3D tick_handle_periodic)
++	if (IS_ENABLED(CONFIG_TICK_ONESHOT) && dev->event_handler !=3D tick_handle_=
+periodic)
+ 		return;
+-#endif
+=20
+ 	if (!clockevent_state_oneshot(dev))
+ 		return;
+@@ -398,16 +396,31 @@ int tick_broadcast_oneshot_control(enum tick_broadcast_=
+state state)
+ EXPORT_SYMBOL_GPL(tick_broadcast_oneshot_control);
+=20
+ #ifdef CONFIG_HOTPLUG_CPU
++void tick_assert_timekeeping_handover(void)
++{
++	WARN_ON_ONCE(tick_do_timer_cpu =3D=3D smp_processor_id());
++}
+ /*
+- * Transfer the do_timer job away from a dying cpu.
+- *
+- * Called with interrupts disabled. No locking required. If
+- * tick_do_timer_cpu is owned by this cpu, nothing can change it.
++ * Stop the tick and transfer the timekeeping job away from a dying cpu.
+  */
+-void tick_handover_do_timer(void)
++int tick_cpu_dying(unsigned int dying_cpu)
+ {
+-	if (tick_do_timer_cpu =3D=3D smp_processor_id())
++	/*
++	 * If the current CPU is the timekeeper, it's the only one that
++	 * can safely hand over its duty. Also all online CPUs are in
++	 * stop machine, guaranteed not to be idle, therefore it's safe
++	 * to pick any online successor.
++	 */
++	if (tick_do_timer_cpu =3D=3D dying_cpu)
+ 		tick_do_timer_cpu =3D cpumask_first(cpu_online_mask);
++
++	/* Make sure the CPU won't try to retake the timekeeping duty */
++	tick_sched_timer_dying(dying_cpu);
++
++	/* Remove CPU from timer broadcasting */
++	tick_offline_cpu(dying_cpu);
++
++	return 0;
+ }
+=20
+ /*
+diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
+index 481b7ab65e2c..5f2105e637bd 100644
+--- a/kernel/time/tick-internal.h
++++ b/kernel/time/tick-internal.h
+@@ -8,6 +8,11 @@
+ #include "timekeeping.h"
+ #include "tick-sched.h"
+=20
++struct timer_events {
++	u64	local;
++	u64	global;
++};
++
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+=20
+ # define TICK_DO_TIMER_NONE	-1
+@@ -137,8 +142,10 @@ static inline bool tick_broadcast_oneshot_available(void=
+) { return tick_oneshot_
+ #endif /* !(BROADCAST && ONESHOT) */
+=20
+ #if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_=
+CPU)
++extern void tick_offline_cpu(unsigned int cpu);
+ extern void tick_broadcast_offline(unsigned int cpu);
+ #else
++static inline void tick_offline_cpu(unsigned int cpu) { }
+ static inline void tick_broadcast_offline(unsigned int cpu) { }
+ #endif
+=20
+@@ -152,8 +159,16 @@ static inline void tick_nohz_init(void) { }
+ #ifdef CONFIG_NO_HZ_COMMON
+ extern unsigned long tick_nohz_active;
+ extern void timers_update_nohz(void);
++extern u64 get_jiffies_update(unsigned long *basej);
+ # ifdef CONFIG_SMP
+ extern struct static_key_false timers_migration_enabled;
++extern void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
++					      struct timer_events *tevt,
++					      unsigned int cpu);
++extern void timer_lock_remote_bases(unsigned int cpu);
++extern void timer_unlock_remote_bases(unsigned int cpu);
++extern bool timer_base_is_idle(void);
++extern void timer_expire_remote(unsigned int cpu);
+ # endif
+ #else /* CONFIG_NO_HZ_COMMON */
+ static inline void timers_update_nohz(void) { }
+@@ -163,6 +178,7 @@ static inline void timers_update_nohz(void) { }
+ DECLARE_PER_CPU(struct hrtimer_cpu_base, hrtimer_bases);
+=20
+ extern u64 get_next_timer_interrupt(unsigned long basej, u64 basem);
++u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle);
+ void timer_clear_idle(void);
+=20
+ #define CLOCK_SET_WALL							\
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 01fb50c1b17e..269e21590df5 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -43,7 +43,6 @@ struct tick_sched *tick_get_tick_sched(int cpu)
+ 	return &per_cpu(tick_cpu_sched, cpu);
+ }
+=20
+-#if defined(CONFIG_NO_HZ_COMMON) || defined(CONFIG_HIGH_RES_TIMERS)
+ /*
+  * The time when the last jiffy update happened. Write access must hold
+  * jiffies_lock and jiffies_seq. tick_nohz_next_event() needs to get a
+@@ -181,13 +180,32 @@ static ktime_t tick_init_jiffy_update(void)
+ 	return period;
+ }
+=20
++static inline int tick_sched_flag_test(struct tick_sched *ts,
++				       unsigned long flag)
++{
++	return !!(ts->flags & flag);
++}
++
++static inline void tick_sched_flag_set(struct tick_sched *ts,
++				       unsigned long flag)
++{
++	lockdep_assert_irqs_disabled();
++	ts->flags |=3D flag;
++}
++
++static inline void tick_sched_flag_clear(struct tick_sched *ts,
++					 unsigned long flag)
++{
++	lockdep_assert_irqs_disabled();
++	ts->flags &=3D ~flag;
++}
++
+ #define MAX_STALLED_JIFFIES 5
+=20
+ static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
+ {
+ 	int cpu =3D smp_processor_id();
+=20
+-#ifdef CONFIG_NO_HZ_COMMON
+ 	/*
+ 	 * Check if the do_timer duty was dropped. We don't care about
+ 	 * concurrency: This happens only when the CPU in charge went
+@@ -198,13 +216,13 @@ static void tick_sched_do_timer(struct tick_sched *ts, =
+ktime_t now)
+ 	 * If nohz_full is enabled, this should not happen because the
+ 	 * 'tick_do_timer_cpu' CPU never relinquishes.
+ 	 */
+-	if (unlikely(tick_do_timer_cpu =3D=3D TICK_DO_TIMER_NONE)) {
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) &&
++	    unlikely(tick_do_timer_cpu =3D=3D TICK_DO_TIMER_NONE)) {
+ #ifdef CONFIG_NO_HZ_FULL
+ 		WARN_ON_ONCE(tick_nohz_full_running);
+ #endif
+ 		tick_do_timer_cpu =3D cpu;
+ 	}
+-#endif
+=20
+ 	/* Check if jiffies need an update */
+ 	if (tick_do_timer_cpu =3D=3D cpu)
+@@ -225,13 +243,12 @@ static void tick_sched_do_timer(struct tick_sched *ts, =
+ktime_t now)
+ 		}
+ 	}
+=20
+-	if (ts->inidle)
++	if (tick_sched_flag_test(ts, TS_FLAG_INIDLE))
+ 		ts->got_idle_tick =3D 1;
+ }
+=20
+ static void tick_sched_handle(struct tick_sched *ts, struct pt_regs *regs)
+ {
+-#ifdef CONFIG_NO_HZ_COMMON
+ 	/*
+ 	 * When we are idle and the tick is stopped, we have to touch
+ 	 * the watchdog as we might not schedule for a really long
+@@ -240,7 +257,8 @@ static void tick_sched_handle(struct tick_sched *ts, stru=
+ct pt_regs *regs)
+ 	 * idle" jiffy stamp so the idle accounting adjustment we do
+ 	 * when we go busy again does not account too many ticks.
+ 	 */
+-	if (ts->tick_stopped) {
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) &&
++	    tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 		touch_softlockup_watchdog_sched();
+ 		if (is_idle_task(current))
+ 			ts->idle_jiffies++;
+@@ -251,11 +269,52 @@ static void tick_sched_handle(struct tick_sched *ts, st=
+ruct pt_regs *regs)
+ 		 */
+ 		ts->next_tick =3D 0;
+ 	}
+-#endif
++
+ 	update_process_times(user_mode(regs));
+ 	profile_tick(CPU_PROFILING);
+ }
+-#endif
++
++/*
++ * We rearm the timer until we get disabled by the idle code.
++ * Called with interrupts disabled.
++ */
++static enum hrtimer_restart tick_nohz_handler(struct hrtimer *timer)
++{
++	struct tick_sched *ts =3D	container_of(timer, struct tick_sched, sched_time=
+r);
++	struct pt_regs *regs =3D get_irq_regs();
++	ktime_t now =3D ktime_get();
++
++	tick_sched_do_timer(ts, now);
++
++	/*
++	 * Do not call when we are not in IRQ context and have
++	 * no valid 'regs' pointer
++	 */
++	if (regs)
++		tick_sched_handle(ts, regs);
++	else
++		ts->next_tick =3D 0;
++
++	/*
++	 * In dynticks mode, tick reprogram is deferred:
++	 * - to the idle task if in dynticks-idle
++	 * - to IRQ exit if in full-dynticks.
++	 */
++	if (unlikely(tick_sched_flag_test(ts, TS_FLAG_STOPPED)))
++		return HRTIMER_NORESTART;
++
++	hrtimer_forward(timer, now, TICK_NSEC);
++
++	return HRTIMER_RESTART;
++}
++
++static void tick_sched_timer_cancel(struct tick_sched *ts)
++{
++	if (tick_sched_flag_test(ts, TS_FLAG_HIGHRES))
++		hrtimer_cancel(&ts->sched_timer);
++	else if (tick_sched_flag_test(ts, TS_FLAG_NOHZ))
++		tick_program_event(KTIME_MAX, 1);
++}
+=20
+ #ifdef CONFIG_NO_HZ_FULL
+ cpumask_var_t tick_nohz_full_mask;
+@@ -529,7 +588,7 @@ void __tick_nohz_task_switch(void)
+=20
+ 	ts =3D this_cpu_ptr(&tick_cpu_sched);
+=20
+-	if (ts->tick_stopped) {
++	if (tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 		if (atomic_read(&current->tick_dep_mask) ||
+ 		    atomic_read(&current->signal->tick_dep_mask))
+ 			tick_nohz_full_kick();
+@@ -601,7 +660,7 @@ void __init tick_nohz_init(void)
+ 	pr_info("NO_HZ: Full dynticks CPUs: %*pbl.\n",
+ 		cpumask_pr_args(tick_nohz_full_mask));
+ }
+-#endif
++#endif /* #ifdef CONFIG_NO_HZ_FULL */
+=20
+ /*
+  * NOHZ - aka dynamic tick functionality
+@@ -626,14 +685,14 @@ bool tick_nohz_tick_stopped(void)
+ {
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+=20
+-	return ts->tick_stopped;
++	return tick_sched_flag_test(ts, TS_FLAG_STOPPED);
+ }
+=20
+ bool tick_nohz_tick_stopped_cpu(int cpu)
+ {
+ 	struct tick_sched *ts =3D per_cpu_ptr(&tick_cpu_sched, cpu);
+=20
+-	return ts->tick_stopped;
++	return tick_sched_flag_test(ts, TS_FLAG_STOPPED);
+ }
+=20
+ /**
+@@ -663,7 +722,7 @@ static void tick_nohz_stop_idle(struct tick_sched *ts, kt=
+ime_t now)
+ {
+ 	ktime_t delta;
+=20
+-	if (WARN_ON_ONCE(!ts->idle_active))
++	if (WARN_ON_ONCE(!tick_sched_flag_test(ts, TS_FLAG_IDLE_ACTIVE)))
+ 		return;
+=20
+ 	delta =3D ktime_sub(now, ts->idle_entrytime);
+@@ -675,7 +734,7 @@ static void tick_nohz_stop_idle(struct tick_sched *ts, kt=
+ime_t now)
+ 		ts->idle_sleeptime =3D ktime_add(ts->idle_sleeptime, delta);
+=20
+ 	ts->idle_entrytime =3D now;
+-	ts->idle_active =3D 0;
++	tick_sched_flag_clear(ts, TS_FLAG_IDLE_ACTIVE);
+ 	write_seqcount_end(&ts->idle_sleeptime_seq);
+=20
+ 	sched_clock_idle_wakeup_event();
+@@ -685,7 +744,7 @@ static void tick_nohz_start_idle(struct tick_sched *ts)
+ {
+ 	write_seqcount_begin(&ts->idle_sleeptime_seq);
+ 	ts->idle_entrytime =3D ktime_get();
+-	ts->idle_active =3D 1;
++	tick_sched_flag_set(ts, TS_FLAG_IDLE_ACTIVE);
+ 	write_seqcount_end(&ts->idle_sleeptime_seq);
+=20
+ 	sched_clock_idle_sleep_event();
+@@ -707,7 +766,7 @@ static u64 get_cpu_sleep_time_us(struct tick_sched *ts, k=
+time_t *sleeptime,
+ 	do {
+ 		seq =3D read_seqcount_begin(&ts->idle_sleeptime_seq);
+=20
+-		if (ts->idle_active && compute_delta) {
++		if (tick_sched_flag_test(ts, TS_FLAG_IDLE_ACTIVE) && compute_delta) {
+ 			ktime_t delta =3D ktime_sub(now, ts->idle_entrytime);
+=20
+ 			idle =3D ktime_add(*sleeptime, delta);
+@@ -780,7 +839,7 @@ static void tick_nohz_restart(struct tick_sched *ts, ktim=
+e_t now)
+ 	/* Forward the time to expire in the future */
+ 	hrtimer_forward(&ts->sched_timer, now, TICK_NSEC);
+=20
+-	if (ts->nohz_mode =3D=3D NOHZ_MODE_HIGHRES) {
++	if (tick_sched_flag_test(ts, TS_FLAG_HIGHRES)) {
+ 		hrtimer_start_expires(&ts->sched_timer,
+ 				      HRTIMER_MODE_ABS_PINNED_HARD);
+ 	} else {
+@@ -799,18 +858,40 @@ static inline bool local_timer_softirq_pending(void)
+ 	return local_softirq_pending() & BIT(TIMER_SOFTIRQ);
+ }
+=20
+-static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
++/*
++ * Read jiffies and the time when jiffies were updated last
++ */
++u64 get_jiffies_update(unsigned long *basej)
+ {
+-	u64 basemono, next_tick, delta, expires;
+ 	unsigned long basejiff;
+ 	unsigned int seq;
++	u64 basemono;
+=20
+-	/* Read jiffies and the time when jiffies were updated last */
+ 	do {
+ 		seq =3D read_seqcount_begin(&jiffies_seq);
+ 		basemono =3D last_jiffies_update;
+ 		basejiff =3D jiffies;
+ 	} while (read_seqcount_retry(&jiffies_seq, seq));
++	*basej =3D basejiff;
++	return basemono;
++}
++
++/**
++ * tick_nohz_next_event() - return the clock monotonic based next event
++ * @ts:		pointer to tick_sched struct
++ * @cpu:	CPU number
++ *
++ * Return:
++ * *%0		- When the next event is a maximum of TICK_NSEC in the future
++ *		  and the tick is not stopped yet
++ * *%next_event	- Next event based on clock monotonic
++ */
++static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
++{
++	u64 basemono, next_tick, delta, expires;
++	unsigned long basejiff;
++
++	basemono =3D get_jiffies_update(&basejiff);
+ 	ts->last_jiffies =3D basejiff;
+ 	ts->timer_expires_base =3D basemono;
+=20
+@@ -849,16 +930,11 @@ static ktime_t tick_nohz_next_event(struct tick_sched *=
+ts, int cpu)
+ 	 */
+ 	delta =3D next_tick - basemono;
+ 	if (delta <=3D (u64)TICK_NSEC) {
+-		/*
+-		 * Tell the timer code that the base is not idle, i.e. undo
+-		 * the effect of get_next_timer_interrupt():
+-		 */
+-		timer_clear_idle();
+ 		/*
+ 		 * We've not stopped the tick yet, and there's a timer in the
+ 		 * next period, so no point in stopping it either, bail.
+ 		 */
+-		if (!ts->tick_stopped) {
++		if (!tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 			ts->timer_expires =3D 0;
+ 			goto out;
+ 		}
+@@ -871,7 +947,8 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts=
+, int cpu)
+ 	 */
+ 	delta =3D timekeeping_max_deferment();
+ 	if (cpu !=3D tick_do_timer_cpu &&
+-	    (tick_do_timer_cpu !=3D TICK_DO_TIMER_NONE || !ts->do_timer_last))
++	    (tick_do_timer_cpu !=3D TICK_DO_TIMER_NONE ||
++	     !tick_sched_flag_test(ts, TS_FLAG_DO_TIMER_LAST)))
+ 		delta =3D KTIME_MAX;
+=20
+ 	/* Calculate the next expiry time */
+@@ -889,12 +966,38 @@ static ktime_t tick_nohz_next_event(struct tick_sched *=
+ts, int cpu)
+ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+ {
+ 	struct clock_event_device *dev =3D __this_cpu_read(tick_cpu_device.evtdev);
++	unsigned long basejiff =3D ts->last_jiffies;
+ 	u64 basemono =3D ts->timer_expires_base;
+-	u64 expires =3D ts->timer_expires;
++	bool timer_idle =3D tick_sched_flag_test(ts, TS_FLAG_STOPPED);
++	u64 expires;
+=20
+ 	/* Make sure we won't be trying to stop it twice in a row. */
+ 	ts->timer_expires_base =3D 0;
+=20
++	/*
++	 * Now the tick should be stopped definitely - so the timer base needs
++	 * to be marked idle as well to not miss a newly queued timer.
++	 */
++	expires =3D timer_base_try_to_set_idle(basejiff, basemono, &timer_idle);
++	if (expires > ts->timer_expires) {
++		/*
++		 * This path could only happen when the first timer was removed
++		 * between calculating the possible sleep length and now (when
++		 * high resolution mode is not active, timer could also be a
++		 * hrtimer).
++		 *
++		 * We have to stick to the original calculated expiry value to
++		 * not stop the tick for too long with a shallow C-state (which
++		 * was programmed by cpuidle because of an early next expiration
++		 * value).
++		 */
++		expires =3D ts->timer_expires;
++	}
++
++	/* If the timer base is not idle, retain the not yet stopped tick. */
++	if (!timer_idle)
++		return;
++
+ 	/*
+ 	 * If this CPU is the one which updates jiffies, then give up
+ 	 * the assignment and let it be taken by the CPU which runs
+@@ -905,13 +1008,13 @@ static void tick_nohz_stop_tick(struct tick_sched *ts,=
+ int cpu)
+ 	 */
+ 	if (cpu =3D=3D tick_do_timer_cpu) {
+ 		tick_do_timer_cpu =3D TICK_DO_TIMER_NONE;
+-		ts->do_timer_last =3D 1;
++		tick_sched_flag_set(ts, TS_FLAG_DO_TIMER_LAST);
+ 	} else if (tick_do_timer_cpu !=3D TICK_DO_TIMER_NONE) {
+-		ts->do_timer_last =3D 0;
++		tick_sched_flag_clear(ts, TS_FLAG_DO_TIMER_LAST);
+ 	}
+=20
+ 	/* Skip reprogram of event if it's not changed */
+-	if (ts->tick_stopped && (expires =3D=3D ts->next_tick)) {
++	if (tick_sched_flag_test(ts, TS_FLAG_STOPPED) && (expires =3D=3D ts->next_t=
+ick)) {
+ 		/* Sanity check: make sure clockevent is actually programmed */
+ 		if (expires =3D=3D KTIME_MAX || ts->next_tick =3D=3D hrtimer_get_expires(&=
+ts->sched_timer))
+ 			return;
+@@ -929,12 +1032,12 @@ static void tick_nohz_stop_tick(struct tick_sched *ts,=
+ int cpu)
+ 	 * call we save the current tick time, so we can restart the
+ 	 * scheduler tick in tick_nohz_restart_sched_tick().
+ 	 */
+-	if (!ts->tick_stopped) {
++	if (!tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 		calc_load_nohz_start();
+ 		quiet_vmstat();
+=20
+ 		ts->last_tick =3D hrtimer_get_expires(&ts->sched_timer);
+-		ts->tick_stopped =3D 1;
++		tick_sched_flag_set(ts, TS_FLAG_STOPPED);
+ 		trace_tick_stop(1, TICK_DEP_MASK_NONE);
+ 	}
+=20
+@@ -945,14 +1048,11 @@ static void tick_nohz_stop_tick(struct tick_sched *ts,=
+ int cpu)
+ 	 * the tick timer.
+ 	 */
+ 	if (unlikely(expires =3D=3D KTIME_MAX)) {
+-		if (ts->nohz_mode =3D=3D NOHZ_MODE_HIGHRES)
+-			hrtimer_cancel(&ts->sched_timer);
+-		else
+-			tick_program_event(KTIME_MAX, 1);
++		tick_sched_timer_cancel(ts);
+ 		return;
+ 	}
+=20
+-	if (ts->nohz_mode =3D=3D NOHZ_MODE_HIGHRES) {
++	if (tick_sched_flag_test(ts, TS_FLAG_HIGHRES)) {
+ 		hrtimer_start(&ts->sched_timer, expires,
+ 			      HRTIMER_MODE_ABS_PINNED_HARD);
+ 	} else {
+@@ -967,7 +1067,7 @@ static void tick_nohz_retain_tick(struct tick_sched *ts)
+ }
+=20
+ #ifdef CONFIG_NO_HZ_FULL
+-static void tick_nohz_stop_sched_tick(struct tick_sched *ts, int cpu)
++static void tick_nohz_full_stop_tick(struct tick_sched *ts, int cpu)
+ {
+ 	if (tick_nohz_next_event(ts, cpu))
+ 		tick_nohz_stop_tick(ts, cpu);
+@@ -991,7 +1091,7 @@ static void tick_nohz_restart_sched_tick(struct tick_sch=
+ed *ts, ktime_t now)
+ 	touch_softlockup_watchdog_sched();
+=20
+ 	/* Cancel the scheduled timer and restore the tick: */
+-	ts->tick_stopped  =3D 0;
++	tick_sched_flag_clear(ts, TS_FLAG_STOPPED);
+ 	tick_nohz_restart(ts, now);
+ }
+=20
+@@ -1002,8 +1102,8 @@ static void __tick_nohz_full_update_tick(struct tick_sc=
+hed *ts,
+ 	int cpu =3D smp_processor_id();
+=20
+ 	if (can_stop_full_tick(cpu, ts))
+-		tick_nohz_stop_sched_tick(ts, cpu);
+-	else if (ts->tick_stopped)
++		tick_nohz_full_stop_tick(ts, cpu);
++	else if (tick_sched_flag_test(ts, TS_FLAG_STOPPED))
+ 		tick_nohz_restart_sched_tick(ts, now);
+ #endif
+ }
+@@ -1013,7 +1113,7 @@ static void tick_nohz_full_update_tick(struct tick_sche=
+d *ts)
+ 	if (!tick_nohz_full_cpu(smp_processor_id()))
+ 		return;
+=20
+-	if (!ts->tick_stopped && ts->nohz_mode =3D=3D NOHZ_MODE_INACTIVE)
++	if (!tick_sched_flag_test(ts, TS_FLAG_NOHZ))
+ 		return;
+=20
+ 	__tick_nohz_full_update_tick(ts, ktime_get());
+@@ -1060,25 +1160,9 @@ static bool report_idle_softirq(void)
+=20
+ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+ {
+-	/*
+-	 * If this CPU is offline and it is the one which updates
+-	 * jiffies, then give up the assignment and let it be taken by
+-	 * the CPU which runs the tick timer next. If we don't drop
+-	 * this here, the jiffies might be stale and do_timer() never
+-	 * gets invoked.
+-	 */
+-	if (unlikely(!cpu_online(cpu))) {
+-		if (cpu =3D=3D tick_do_timer_cpu)
+-			tick_do_timer_cpu =3D TICK_DO_TIMER_NONE;
+-		/*
+-		 * Make sure the CPU doesn't get fooled by obsolete tick
+-		 * deadline if it comes back online later.
+-		 */
+-		ts->next_tick =3D 0;
+-		return false;
+-	}
++	WARN_ON_ONCE(cpu_is_offline(cpu));
+=20
+-	if (unlikely(ts->nohz_mode =3D=3D NOHZ_MODE_INACTIVE))
++	if (unlikely(!tick_sched_flag_test(ts, TS_FLAG_NOHZ)))
+ 		return false;
+=20
+ 	if (need_resched())
+@@ -1128,14 +1212,14 @@ void tick_nohz_idle_stop_tick(void)
+ 	ts->idle_calls++;
+=20
+ 	if (expires > 0LL) {
+-		int was_stopped =3D ts->tick_stopped;
++		int was_stopped =3D tick_sched_flag_test(ts, TS_FLAG_STOPPED);
+=20
+ 		tick_nohz_stop_tick(ts, cpu);
+=20
+ 		ts->idle_sleeps++;
+ 		ts->idle_expires =3D expires;
+=20
+-		if (!was_stopped && ts->tick_stopped) {
++		if (!was_stopped && tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 			ts->idle_jiffies =3D ts->last_jiffies;
+ 			nohz_balance_enter_idle(cpu);
+ 		}
+@@ -1147,11 +1231,6 @@ void tick_nohz_idle_stop_tick(void)
+ void tick_nohz_idle_retain_tick(void)
+ {
+ 	tick_nohz_retain_tick(this_cpu_ptr(&tick_cpu_sched));
+-	/*
+-	 * Undo the effect of get_next_timer_interrupt() called from
+-	 * tick_nohz_next_event().
+-	 */
+-	timer_clear_idle();
+ }
+=20
+ /**
+@@ -1171,7 +1250,7 @@ void tick_nohz_idle_enter(void)
+=20
+ 	WARN_ON_ONCE(ts->timer_expires_base);
+=20
+-	ts->inidle =3D 1;
++	tick_sched_flag_set(ts, TS_FLAG_INIDLE);
+ 	tick_nohz_start_idle(ts);
+=20
+ 	local_irq_enable();
+@@ -1200,7 +1279,7 @@ void tick_nohz_irq_exit(void)
+ {
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+=20
+-	if (ts->inidle)
++	if (tick_sched_flag_test(ts, TS_FLAG_INIDLE))
+ 		tick_nohz_start_idle(ts);
+ 	else
+ 		tick_nohz_full_update_tick(ts);
+@@ -1254,7 +1333,7 @@ ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
+ 	ktime_t now =3D ts->idle_entrytime;
+ 	ktime_t next_event;
+=20
+-	WARN_ON_ONCE(!ts->inidle);
++	WARN_ON_ONCE(!tick_sched_flag_test(ts, TS_FLAG_INIDLE));
+=20
+ 	*delta_next =3D ktime_sub(dev->next_event, now);
+=20
+@@ -1326,7 +1405,7 @@ void tick_nohz_idle_restart_tick(void)
+ {
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+=20
+-	if (ts->tick_stopped) {
++	if (tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 		ktime_t now =3D ktime_get();
+ 		tick_nohz_restart_sched_tick(ts, now);
+ 		tick_nohz_account_idle_time(ts, now);
+@@ -1367,12 +1446,12 @@ void tick_nohz_idle_exit(void)
+=20
+ 	local_irq_disable();
+=20
+-	WARN_ON_ONCE(!ts->inidle);
++	WARN_ON_ONCE(!tick_sched_flag_test(ts, TS_FLAG_INIDLE));
+ 	WARN_ON_ONCE(ts->timer_expires_base);
+=20
+-	ts->inidle =3D 0;
+-	idle_active =3D ts->idle_active;
+-	tick_stopped =3D ts->tick_stopped;
++	tick_sched_flag_clear(ts, TS_FLAG_INIDLE);
++	idle_active =3D tick_sched_flag_test(ts, TS_FLAG_IDLE_ACTIVE);
++	tick_stopped =3D tick_sched_flag_test(ts, TS_FLAG_STOPPED);
+=20
+ 	if (idle_active || tick_stopped)
+ 		now =3D ktime_get();
+@@ -1391,38 +1470,22 @@ void tick_nohz_idle_exit(void)
+  * at the clockevent level. hrtimer can't be used instead, because its
+  * infrastructure actually relies on the tick itself as a backend in
+  * low-resolution mode (see hrtimer_run_queues()).
+- *
+- * This low-resolution handler still makes use of some hrtimer APIs meanwhile
+- * for convenience with expiration calculation and forwarding.
+  */
+ static void tick_nohz_lowres_handler(struct clock_event_device *dev)
+ {
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+-	struct pt_regs *regs =3D get_irq_regs();
+-	ktime_t now =3D ktime_get();
+=20
+ 	dev->next_event =3D KTIME_MAX;
+=20
+-	tick_sched_do_timer(ts, now);
+-	tick_sched_handle(ts, regs);
+-
+-	/*
+-	 * In dynticks mode, tick reprogram is deferred:
+-	 * - to the idle task if in dynticks-idle
+-	 * - to IRQ exit if in full-dynticks.
+-	 */
+-	if (likely(!ts->tick_stopped)) {
+-		hrtimer_forward(&ts->sched_timer, now, TICK_NSEC);
++	if (likely(tick_nohz_handler(&ts->sched_timer) =3D=3D HRTIMER_RESTART))
+ 		tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
+-	}
+-
+ }
+=20
+-static inline void tick_nohz_activate(struct tick_sched *ts, int mode)
++static inline void tick_nohz_activate(struct tick_sched *ts)
+ {
+ 	if (!tick_nohz_enabled)
+ 		return;
+-	ts->nohz_mode =3D mode;
++	tick_sched_flag_set(ts, TS_FLAG_NOHZ);
+ 	/* One update is enough */
+ 	if (!test_and_set_bit(0, &tick_nohz_active))
+ 		timers_update_nohz();
+@@ -1433,9 +1496,6 @@ static inline void tick_nohz_activate(struct tick_sched=
+ *ts, int mode)
+  */
+ static void tick_nohz_switch_to_nohz(void)
+ {
+-	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+-	ktime_t next;
+-
+ 	if (!tick_nohz_enabled)
+ 		return;
+=20
+@@ -1444,16 +1504,9 @@ static void tick_nohz_switch_to_nohz(void)
+=20
+ 	/*
+ 	 * Recycle the hrtimer in 'ts', so we can share the
+-	 * hrtimer_forward_now() function with the highres code.
++	 * highres code.
+ 	 */
+-	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
+-	/* Get the next period */
+-	next =3D tick_init_jiffy_update();
+-
+-	hrtimer_set_expires(&ts->sched_timer, next);
+-	hrtimer_forward_now(&ts->sched_timer, TICK_NSEC);
+-	tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
+-	tick_nohz_activate(ts, NOHZ_MODE_LOWRES);
++	tick_setup_sched_timer(false);
+ }
+=20
+ static inline void tick_nohz_irq_enter(void)
+@@ -1461,10 +1514,10 @@ static inline void tick_nohz_irq_enter(void)
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+ 	ktime_t now;
+=20
+-	if (!ts->idle_active && !ts->tick_stopped)
++	if (!tick_sched_flag_test(ts, TS_FLAG_STOPPED | TS_FLAG_IDLE_ACTIVE))
+ 		return;
+ 	now =3D ktime_get();
+-	if (ts->idle_active)
++	if (tick_sched_flag_test(ts, TS_FLAG_IDLE_ACTIVE))
+ 		tick_nohz_stop_idle(ts, now);
+ 	/*
+ 	 * If all CPUs are idle we may need to update a stale jiffies value.
+@@ -1473,7 +1526,7 @@ static inline void tick_nohz_irq_enter(void)
+ 	 * rare case (typically stop machine). So we must make sure we have a
+ 	 * last resort.
+ 	 */
+-	if (ts->tick_stopped)
++	if (tick_sched_flag_test(ts, TS_FLAG_STOPPED))
+ 		tick_nohz_update_jiffies(now);
+ }
+=20
+@@ -1481,7 +1534,7 @@ static inline void tick_nohz_irq_enter(void)
+=20
+ static inline void tick_nohz_switch_to_nohz(void) { }
+ static inline void tick_nohz_irq_enter(void) { }
+-static inline void tick_nohz_activate(struct tick_sched *ts, int mode) { }
++static inline void tick_nohz_activate(struct tick_sched *ts) { }
+=20
+ #endif /* CONFIG_NO_HZ_COMMON */
+=20
+@@ -1494,45 +1547,6 @@ void tick_irq_enter(void)
+ 	tick_nohz_irq_enter();
+ }
+=20
+-/*
+- * High resolution timer specific code
+- */
+-#ifdef CONFIG_HIGH_RES_TIMERS
+-/*
+- * We rearm the timer until we get disabled by the idle code.
+- * Called with interrupts disabled.
+- */
+-static enum hrtimer_restart tick_nohz_highres_handler(struct hrtimer *timer)
+-{
+-	struct tick_sched *ts =3D
+-		container_of(timer, struct tick_sched, sched_timer);
+-	struct pt_regs *regs =3D get_irq_regs();
+-	ktime_t now =3D ktime_get();
+-
+-	tick_sched_do_timer(ts, now);
+-
+-	/*
+-	 * Do not call when we are not in IRQ context and have
+-	 * no valid 'regs' pointer
+-	 */
+-	if (regs)
+-		tick_sched_handle(ts, regs);
+-	else
+-		ts->next_tick =3D 0;
+-
+-	/*
+-	 * In dynticks mode, tick reprogram is deferred:
+-	 * - to the idle task if in dynticks-idle
+-	 * - to IRQ exit if in full-dynticks.
+-	 */
+-	if (unlikely(ts->tick_stopped))
+-		return HRTIMER_NORESTART;
+-
+-	hrtimer_forward(timer, now, TICK_NSEC);
+-
+-	return HRTIMER_RESTART;
+-}
+-
+ static int sched_skew_tick;
+=20
+ static int __init skew_tick(char *str)
+@@ -1545,15 +1559,19 @@ early_param("skew_tick", skew_tick);
+=20
+ /**
+  * tick_setup_sched_timer - setup the tick emulation timer
++ * @mode: tick_nohz_mode to setup for
+  */
+-void tick_setup_sched_timer(void)
++void tick_setup_sched_timer(bool hrtimer)
+ {
+ 	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
+-	ktime_t now =3D ktime_get();
+=20
+ 	/* Emulate tick processing via per-CPU hrtimers: */
+ 	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
+-	ts->sched_timer.function =3D tick_nohz_highres_handler;
++
++	if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && hrtimer) {
++		tick_sched_flag_set(ts, TS_FLAG_HIGHRES);
++		ts->sched_timer.function =3D tick_nohz_handler;
++	}
+=20
+ 	/* Get the next period (per-CPU) */
+ 	hrtimer_set_expires(&ts->sched_timer, tick_init_jiffy_update());
+@@ -1566,23 +1584,35 @@ void tick_setup_sched_timer(void)
+ 		hrtimer_add_expires_ns(&ts->sched_timer, offset);
+ 	}
+=20
+-	hrtimer_forward(&ts->sched_timer, now, TICK_NSEC);
+-	hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED_HARD);
+-	tick_nohz_activate(ts, NOHZ_MODE_HIGHRES);
++	hrtimer_forward_now(&ts->sched_timer, TICK_NSEC);
++	if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && hrtimer)
++		hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED_HARD);
++	else
++		tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
++	tick_nohz_activate(ts);
+ }
+-#endif /* HIGH_RES_TIMERS */
+=20
+-#if defined CONFIG_NO_HZ_COMMON || defined CONFIG_HIGH_RES_TIMERS
+-void tick_cancel_sched_timer(int cpu)
++/*
++ * Shut down the tick and make sure the CPU won't try to retake the timekeep=
+ing
++ * duty before disabling IRQs in idle for the last time.
++ */
++void tick_sched_timer_dying(int cpu)
+ {
++	struct tick_device *td =3D &per_cpu(tick_cpu_device, cpu);
+ 	struct tick_sched *ts =3D &per_cpu(tick_cpu_sched, cpu);
++	struct clock_event_device *dev =3D td->evtdev;
+ 	ktime_t idle_sleeptime, iowait_sleeptime;
+ 	unsigned long idle_calls, idle_sleeps;
+=20
+-# ifdef CONFIG_HIGH_RES_TIMERS
+-	if (ts->sched_timer.base)
+-		hrtimer_cancel(&ts->sched_timer);
+-# endif
++	/* This must happen before hrtimers are migrated! */
++	tick_sched_timer_cancel(ts);
++
++	/*
++	 * If the clockevents doesn't support CLOCK_EVT_STATE_ONESHOT_STOPPED,
++	 * make sure not to call low-res tick handler.
++	 */
++	if (tick_sched_flag_test(ts, TS_FLAG_NOHZ))
++		dev->event_handler =3D clockevents_handle_noop;
+=20
+ 	idle_sleeptime =3D ts->idle_sleeptime;
+ 	iowait_sleeptime =3D ts->iowait_sleeptime;
+@@ -1594,7 +1624,6 @@ void tick_cancel_sched_timer(int cpu)
+ 	ts->idle_calls =3D idle_calls;
+ 	ts->idle_sleeps =3D idle_sleeps;
+ }
+-#endif
+=20
+ /*
+  * Async notification about clocksource changes
+@@ -1632,7 +1661,7 @@ int tick_check_oneshot_change(int allow_nohz)
+ 	if (!test_and_clear_bit(0, &ts->check_clocks))
+ 		return 0;
+=20
+-	if (ts->nohz_mode !=3D NOHZ_MODE_INACTIVE)
++	if (tick_sched_flag_test(ts, TS_FLAG_NOHZ))
+ 		return 0;
+=20
+ 	if (!timekeeping_valid_for_hres() || !tick_is_oneshot_available())
+diff --git a/kernel/time/tick-sched.h b/kernel/time/tick-sched.h
+index 5ed5a9d41d5a..e11c4dc65bcb 100644
+--- a/kernel/time/tick-sched.h
++++ b/kernel/time/tick-sched.h
+@@ -14,20 +14,26 @@ struct tick_device {
+ 	enum tick_device_mode mode;
+ };
+=20
+-enum tick_nohz_mode {
+-	NOHZ_MODE_INACTIVE,
+-	NOHZ_MODE_LOWRES,
+-	NOHZ_MODE_HIGHRES,
+-};
++/* The CPU is in the tick idle mode */
++#define TS_FLAG_INIDLE		BIT(0)
++/* The idle tick has been stopped */
++#define TS_FLAG_STOPPED		BIT(1)
++/*
++ * Indicator that the CPU is actively in the tick idle mode;
++ * it is reset during irq handling phases.
++ */
++#define TS_FLAG_IDLE_ACTIVE	BIT(2)
++/* CPU was the last one doing do_timer before going idle */
++#define TS_FLAG_DO_TIMER_LAST	BIT(3)
++/* NO_HZ is enabled */
++#define TS_FLAG_NOHZ		BIT(4)
++/* High resolution tick mode */
++#define TS_FLAG_HIGHRES		BIT(5)
+=20
+ /**
+  * struct tick_sched - sched tick emulation and no idle tick control/stats
+  *
+- * @inidle:		Indicator that the CPU is in the tick idle mode
+- * @tick_stopped:	Indicator that the idle tick has been stopped
+- * @idle_active:	Indicator that the CPU is actively in the tick idle mode;
+- *			it is reset during irq handling phases.
+- * @do_timer_last:	CPU was the last one doing do_timer before going idle
++ * @flags:		State flags gathering the TS_FLAG_* features
+  * @got_idle_tick:	Tick timer function has run with @inidle set
+  * @stalled_jiffies:	Number of stalled jiffies detected across ticks
+  * @last_tick_jiffies:	Value of jiffies seen on last tick
+@@ -57,11 +63,7 @@ enum tick_nohz_mode {
+  */
+ struct tick_sched {
+ 	/* Common flags */
+-	unsigned int			inidle		: 1;
+-	unsigned int			tick_stopped	: 1;
+-	unsigned int			idle_active	: 1;
+-	unsigned int			do_timer_last	: 1;
+-	unsigned int			got_idle_tick	: 1;
++	unsigned long			flags;
+=20
+ 	/* Tick handling: jiffies stall check */
+ 	unsigned int			stalled_jiffies;
+@@ -73,13 +75,13 @@ struct tick_sched {
+ 	ktime_t				next_tick;
+ 	unsigned long			idle_jiffies;
+ 	ktime_t				idle_waketime;
++	unsigned int			got_idle_tick;
+=20
+ 	/* Idle entry */
+ 	seqcount_t			idle_sleeptime_seq;
+ 	ktime_t				idle_entrytime;
+=20
+ 	/* Tick stop */
+-	enum tick_nohz_mode		nohz_mode;
+ 	unsigned long			last_jiffies;
+ 	u64				timer_expires_base;
+ 	u64				timer_expires;
+@@ -102,11 +104,11 @@ struct tick_sched {
+=20
+ extern struct tick_sched *tick_get_tick_sched(int cpu);
+=20
+-extern void tick_setup_sched_timer(void);
+-#if defined CONFIG_NO_HZ_COMMON || defined CONFIG_HIGH_RES_TIMERS
+-extern void tick_cancel_sched_timer(int cpu);
++extern void tick_setup_sched_timer(bool hrtimer);
++#if defined CONFIG_TICK_ONESHOT
++extern void tick_sched_timer_dying(int cpu);
+ #else
+-static inline void tick_cancel_sched_timer(int cpu) { }
++static inline void tick_sched_timer_dying(int cpu) { }
+ #endif
+=20
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+diff --git a/kernel/time/time_test.c b/kernel/time/time_test.c
+index ca058c8af6ba..3e5d422dd15c 100644
+--- a/kernel/time/time_test.c
++++ b/kernel/time/time_test.c
+@@ -73,7 +73,7 @@ static void time64_to_tm_test_date_range(struct kunit *test)
+=20
+ 		days =3D div_s64(secs, 86400);
+=20
+-		#define FAIL_MSG "%05ld/%02d/%02d (%2d) : %ld", \
++		#define FAIL_MSG "%05ld/%02d/%02d (%2d) : %lld", \
+ 			year, month, mdday, yday, days
+=20
+ 		KUNIT_ASSERT_EQ_MSG(test, year - 1900, result.tm_year, FAIL_MSG);
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 266d02809dbb..8aab7ed41490 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1180,13 +1180,15 @@ static int adjust_historical_crosststamp(struct syste=
+m_time_snapshot *history,
+ }
+=20
+ /*
+- * cycle_between - true if test occurs chronologically between before and af=
+ter
++ * timestamp_in_interval - true if ts is chronologically in [start, end]
++ *
++ * True if ts occurs chronologically at or after start, and before or at end.
+  */
+-static bool cycle_between(u64 before, u64 test, u64 after)
++static bool timestamp_in_interval(u64 start, u64 end, u64 ts)
+ {
+-	if (test > before && test < after)
++	if (ts >=3D start && ts <=3D end)
+ 		return true;
+-	if (test < before && before > after)
++	if (start > end && (ts >=3D start || ts <=3D end))
+ 		return true;
+ 	return false;
+ }
+@@ -1246,7 +1248,7 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 		 */
+ 		now =3D tk_clock_read(&tk->tkr_mono);
+ 		interval_start =3D tk->tkr_mono.cycle_last;
+-		if (!cycle_between(interval_start, cycles, now)) {
++		if (!timestamp_in_interval(interval_start, now, cycles)) {
+ 			clock_was_set_seq =3D tk->clock_was_set_seq;
+ 			cs_was_changed_seq =3D tk->cs_was_changed_seq;
+ 			cycles =3D interval_start;
+@@ -1259,10 +1261,8 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 				      tk_core.timekeeper.offs_real);
+ 		base_raw =3D tk->tkr_raw.base;
+=20
+-		nsec_real =3D timekeeping_cycles_to_ns(&tk->tkr_mono,
+-						     system_counterval.cycles);
+-		nsec_raw =3D timekeeping_cycles_to_ns(&tk->tkr_raw,
+-						    system_counterval.cycles);
++		nsec_real =3D timekeeping_cycles_to_ns(&tk->tkr_mono, cycles);
++		nsec_raw =3D timekeeping_cycles_to_ns(&tk->tkr_raw, cycles);
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+=20
+ 	xtstamp->sys_realtime =3D ktime_add_ns(base_real, nsec_real);
+@@ -1277,13 +1277,13 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ 		bool discontinuity;
+=20
+ 		/*
+-		 * Check that the counter value occurs after the provided
++		 * Check that the counter value is not before the provided
+ 		 * history reference and that the history doesn't cross a
+ 		 * clocksource change
+ 		 */
+ 		if (!history_begin ||
+-		    !cycle_between(history_begin->cycles,
+-				   system_counterval.cycles, cycles) ||
++		    !timestamp_in_interval(history_begin->cycles,
++					   cycles, system_counterval.cycles) ||
+ 		    history_begin->cs_was_changed_seq !=3D cs_was_changed_seq)
+ 			return -EINVAL;
+ 		partial_history_cycles =3D cycles - system_counterval.cycles;
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 352b161113cd..e69e75d3858c 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -53,6 +53,7 @@
+ #include <asm/io.h>
+=20
+ #include "tick-internal.h"
++#include "timer_migration.h"
+=20
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/timer.h>
+@@ -187,15 +188,66 @@ EXPORT_SYMBOL(jiffies_64);
+ #define WHEEL_SIZE	(LVL_SIZE * LVL_DEPTH)
+=20
+ #ifdef CONFIG_NO_HZ_COMMON
+-# define NR_BASES	2
+-# define BASE_STD	0
+-# define BASE_DEF	1
++/*
++ * If multiple bases need to be locked, use the base ordering for lock
++ * nesting, i.e. lowest number first.
++ */
++# define NR_BASES	3
++# define BASE_LOCAL	0
++# define BASE_GLOBAL	1
++# define BASE_DEF	2
+ #else
+ # define NR_BASES	1
+-# define BASE_STD	0
++# define BASE_LOCAL	0
++# define BASE_GLOBAL	0
+ # define BASE_DEF	0
+ #endif
+=20
++/**
++ * struct timer_base - Per CPU timer base (number of base depends on config)
++ * @lock:		Lock protecting the timer_base
++ * @running_timer:	When expiring timers, the lock is dropped. To make
++ *			sure not to race agains deleting/modifying a
++ *			currently running timer, the pointer is set to the
++ *			timer, which expires at the moment. If no timer is
++ *			running, the pointer is NULL.
++ * @expiry_lock:	PREEMPT_RT only: Lock is taken in softirq around
++ *			timer expiry callback execution and when trying to
++ *			delete a running timer and it wasn't successful in
++ *			the first glance. It prevents priority inversion
++ *			when callback was preempted on a remote CPU and a
++ *			caller tries to delete the running timer. It also
++ *			prevents a life lock, when the task which tries to
++ *			delete a timer preempted the softirq thread which
++ *			is running the timer callback function.
++ * @timer_waiters:	PREEMPT_RT only: Tells, if there is a waiter
++ *			waiting for the end of the timer callback function
++ *			execution.
++ * @clk:		clock of the timer base; is updated before enqueue
++ *			of a timer; during expiry, it is 1 offset ahead of
++ *			jiffies to avoid endless requeuing to current
++ *			jiffies
++ * @next_expiry:	expiry value of the first timer; it is updated when
++ *			finding the next timer and during enqueue; the
++ *			value is not valid, when next_expiry_recalc is set
++ * @cpu:		Number of CPU the timer base belongs to
++ * @next_expiry_recalc: States, whether a recalculation of next_expiry is
++ *			required. Value is set true, when a timer was
++ *			deleted.
++ * @is_idle:		Is set, when timer_base is idle. It is triggered by NOHZ
++ *			code. This state is only used in standard
++ *			base. Deferrable timers, which are enqueued remotely
++ *			never wake up an idle CPU. So no matter of supporting it
++ *			for this base.
++ * @timers_pending:	Is set, when a timer is pending in the base. It is only
++ *			reliable when next_expiry_recalc is not set.
++ * @pending_map:	bitmap of the timer wheel; each bit reflects a
++ *			bucket of the wheel. When a bit is set, at least a
++ *			single timer is enqueued in the related bucket.
++ * @vectors:		Array of lists; Each array member reflects a bucket
++ *			of the timer wheel. The list contains all timers
++ *			which are enqueued into a specific bucket.
++ */
+ struct timer_base {
+ 	raw_spinlock_t		lock;
+ 	struct timer_list	*running_timer;
+@@ -583,11 +635,16 @@ trigger_dyntick_cpu(struct timer_base *base, struct tim=
+er_list *timer)
+=20
+ 	/*
+ 	 * We might have to IPI the remote CPU if the base is idle and the
+-	 * timer is not deferrable. If the other CPU is on the way to idle
+-	 * then it can't set base->is_idle as we hold the base lock:
++	 * timer is pinned. If it is a non pinned timer, it is only queued
++	 * on the remote CPU, when timer was running during queueing. Then
++	 * everything is handled by remote CPU anyway. If the other CPU is
++	 * on the way to idle then it can't set base->is_idle as we hold
++	 * the base lock:
+ 	 */
+-	if (base->is_idle)
++	if (base->is_idle) {
++		WARN_ON_ONCE(!(timer->flags & TIMER_PINNED));
+ 		wake_up_nohz_cpu(base->cpu);
++	}
+ }
+=20
+ /*
+@@ -899,7 +956,10 @@ static int detach_if_pending(struct timer_list *timer, s=
+truct timer_base *base,
+=20
+ static inline struct timer_base *get_timer_cpu_base(u32 tflags, u32 cpu)
+ {
+-	struct timer_base *base =3D per_cpu_ptr(&timer_bases[BASE_STD], cpu);
++	int index =3D tflags & TIMER_PINNED ? BASE_LOCAL : BASE_GLOBAL;
++	struct timer_base *base;
++
++	base =3D per_cpu_ptr(&timer_bases[index], cpu);
+=20
+ 	/*
+ 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+@@ -912,7 +972,10 @@ static inline struct timer_base *get_timer_cpu_base(u32 =
+tflags, u32 cpu)
+=20
+ static inline struct timer_base *get_timer_this_cpu_base(u32 tflags)
+ {
+-	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_STD]);
++	int index =3D tflags & TIMER_PINNED ? BASE_LOCAL : BASE_GLOBAL;
++	struct timer_base *base;
++
++	base =3D this_cpu_ptr(&timer_bases[index]);
+=20
+ 	/*
+ 	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+@@ -928,17 +991,6 @@ static inline struct timer_base *get_timer_base(u32 tfla=
+gs)
+ 	return get_timer_cpu_base(tflags, tflags & TIMER_CPUMASK);
+ }
+=20
+-static inline struct timer_base *
+-get_target_base(struct timer_base *base, unsigned tflags)
+-{
+-#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+-	if (static_branch_likely(&timers_migration_enabled) &&
+-	    !(tflags & TIMER_PINNED))
+-		return get_timer_cpu_base(tflags, get_nohz_timer_target());
+-#endif
+-	return get_timer_this_cpu_base(tflags);
+-}
+-
+ static inline void __forward_timer_base(struct timer_base *base,
+ 					unsigned long basej)
+ {
+@@ -1093,7 +1145,7 @@ __mod_timer(struct timer_list *timer, unsigned long exp=
+ires, unsigned int option
+ 	if (!ret && (options & MOD_TIMER_PENDING_ONLY))
+ 		goto out_unlock;
+=20
+-	new_base =3D get_target_base(base, timer->flags);
++	new_base =3D get_timer_this_cpu_base(timer->flags);
+=20
+ 	if (base !=3D new_base) {
+ 		/*
+@@ -1245,12 +1297,49 @@ void add_timer(struct timer_list *timer)
+ }
+ EXPORT_SYMBOL(add_timer);
+=20
++/**
++ * add_timer_local() - Start a timer on the local CPU
++ * @timer:	The timer to be started
++ *
++ * Same as add_timer() except that the timer flag TIMER_PINNED is set.
++ *
++ * See add_timer() for further details.
++ */
++void add_timer_local(struct timer_list *timer)
++{
++	if (WARN_ON_ONCE(timer_pending(timer)))
++		return;
++	timer->flags |=3D TIMER_PINNED;
++	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
++}
++EXPORT_SYMBOL(add_timer_local);
++
++/**
++ * add_timer_global() - Start a timer without TIMER_PINNED flag set
++ * @timer:	The timer to be started
++ *
++ * Same as add_timer() except that the timer flag TIMER_PINNED is unset.
++ *
++ * See add_timer() for further details.
++ */
++void add_timer_global(struct timer_list *timer)
++{
++	if (WARN_ON_ONCE(timer_pending(timer)))
++		return;
++	timer->flags &=3D ~TIMER_PINNED;
++	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
++}
++EXPORT_SYMBOL(add_timer_global);
++
+ /**
+  * add_timer_on - Start a timer on a particular CPU
+  * @timer:	The timer to be started
+  * @cpu:	The CPU to start it on
+  *
+- * Same as add_timer() except that it starts the timer on the given CPU.
++ * Same as add_timer() except that it starts the timer on the given CPU and
++ * the TIMER_PINNED flag is set. When timer shouldn't be a pinned timer in
++ * the next round, add_timer_global() should be used instead as it unsets
++ * the TIMER_PINNED flag.
+  *
+  * See add_timer() for further details.
+  */
+@@ -1264,6 +1353,9 @@ void add_timer_on(struct timer_list *timer, int cpu)
+ 	if (WARN_ON_ONCE(timer_pending(timer)))
+ 		return;
+=20
++	/* Make sure timer flags have TIMER_PINNED flag set */
++	timer->flags |=3D TIMER_PINNED;
++
+ 	new_base =3D get_timer_cpu_base(timer->flags, cpu);
+=20
+ 	/*
+@@ -1911,71 +2003,350 @@ static u64 cmp_next_hrtimer_event(u64 basem, u64 exp=
+ires)
+ 	return DIV_ROUND_UP_ULL(nextevt, TICK_NSEC) * TICK_NSEC;
+ }
+=20
++static unsigned long next_timer_interrupt(struct timer_base *base,
++					  unsigned long basej)
++{
++	if (base->next_expiry_recalc)
++		next_expiry_recalc(base);
++
++	/*
++	 * Move next_expiry for the empty base into the future to prevent an
++	 * unnecessary raise of the timer softirq when the next_expiry value
++	 * will be reached even if there is no timer pending.
++	 *
++	 * This update is also required to make timer_base::next_expiry values
++	 * easy comparable to find out which base holds the first pending timer.
++	 */
++	if (!base->timers_pending)
++		base->next_expiry =3D basej + NEXT_TIMER_MAX_DELTA;
++
++	return base->next_expiry;
++}
++
++static unsigned long fetch_next_timer_interrupt(unsigned long basej, u64 bas=
+em,
++						struct timer_base *base_local,
++						struct timer_base *base_global,
++						struct timer_events *tevt)
++{
++	unsigned long nextevt, nextevt_local, nextevt_global;
++	bool local_first;
++
++	nextevt_local =3D next_timer_interrupt(base_local, basej);
++	nextevt_global =3D next_timer_interrupt(base_global, basej);
++
++	local_first =3D time_before_eq(nextevt_local, nextevt_global);
++
++	nextevt =3D local_first ? nextevt_local : nextevt_global;
++
++	/*
++	 * If the @nextevt is at max. one tick away, use @nextevt and store
++	 * it in the local expiry value. The next global event is irrelevant in
++	 * this case and can be left as KTIME_MAX.
++	 */
++	if (time_before_eq(nextevt, basej + 1)) {
++		/* If we missed a tick already, force 0 delta */
++		if (time_before(nextevt, basej))
++			nextevt =3D basej;
++		tevt->local =3D basem + (u64)(nextevt - basej) * TICK_NSEC;
++
++		/*
++		 * This is required for the remote check only but it doesn't
++		 * hurt, when it is done for both call sites:
++		 *
++		 * * The remote callers will only take care of the global timers
++		 *   as local timers will be handled by CPU itself. When not
++		 *   updating tevt->global with the already missed first global
++		 *   timer, it is possible that it will be missed completely.
++		 *
++		 * * The local callers will ignore the tevt->global anyway, when
++		 *   nextevt is max. one tick away.
++		 */
++		if (!local_first)
++			tevt->global =3D tevt->local;
++		return nextevt;
++	}
++
++	/*
++	 * Update tevt.* values:
++	 *
++	 * If the local queue expires first, then the global event can be
++	 * ignored. If the global queue is empty, nothing to do either.
++	 */
++	if (!local_first && base_global->timers_pending)
++		tevt->global =3D basem + (u64)(nextevt_global - basej) * TICK_NSEC;
++
++	if (base_local->timers_pending)
++		tevt->local =3D basem + (u64)(nextevt_local - basej) * TICK_NSEC;
++
++	return nextevt;
++}
++
++# ifdef CONFIG_SMP
+ /**
+- * get_next_timer_interrupt - return the time (clock mono) of the next timer
++ * fetch_next_timer_interrupt_remote() - Store next timers into @tevt
+  * @basej:	base time jiffies
+  * @basem:	base time clock monotonic
++ * @tevt:	Pointer to the storage for the expiry values
++ * @cpu:	Remote CPU
++ *
++ * Stores the next pending local and global timer expiry values in the
++ * struct pointed to by @tevt. If a queue is empty the corresponding
++ * field is set to KTIME_MAX. If local event expires before global
++ * event, global event is set to KTIME_MAX as well.
+  *
+- * Returns the tick aligned clock monotonic time of the next pending
+- * timer or KTIME_MAX if no timer is pending.
++ * Caller needs to make sure timer base locks are held (use
++ * timer_lock_remote_bases() for this purpose).
+  */
+-u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
++void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
++				       struct timer_events *tevt,
++				       unsigned int cpu)
++{
++	struct timer_base *base_local, *base_global;
++
++	/* Preset local / global events */
++	tevt->local =3D tevt->global =3D KTIME_MAX;
++
++	base_local =3D per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global =3D per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	lockdep_assert_held(&base_local->lock);
++	lockdep_assert_held(&base_global->lock);
++
++	fetch_next_timer_interrupt(basej, basem, base_local, base_global, tevt);
++}
++
++/**
++ * timer_unlock_remote_bases - unlock timer bases of cpu
++ * @cpu:	Remote CPU
++ *
++ * Unlocks the remote timer bases.
++ */
++void timer_unlock_remote_bases(unsigned int cpu)
++	__releases(timer_bases[BASE_LOCAL]->lock)
++	__releases(timer_bases[BASE_GLOBAL]->lock)
++{
++	struct timer_base *base_local, *base_global;
++
++	base_local =3D per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global =3D per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	raw_spin_unlock(&base_global->lock);
++	raw_spin_unlock(&base_local->lock);
++}
++
++/**
++ * timer_lock_remote_bases - lock timer bases of cpu
++ * @cpu:	Remote CPU
++ *
++ * Locks the remote timer bases.
++ */
++void timer_lock_remote_bases(unsigned int cpu)
++	__acquires(timer_bases[BASE_LOCAL]->lock)
++	__acquires(timer_bases[BASE_GLOBAL]->lock)
++{
++	struct timer_base *base_local, *base_global;
++
++	base_local =3D per_cpu_ptr(&timer_bases[BASE_LOCAL], cpu);
++	base_global =3D per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	lockdep_assert_irqs_disabled();
++
++	raw_spin_lock(&base_local->lock);
++	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
++}
++
++/**
++ * timer_base_is_idle() - Return whether timer base is set idle
++ *
++ * Returns value of local timer base is_idle value.
++ */
++bool timer_base_is_idle(void)
++{
++	return __this_cpu_read(timer_bases[BASE_LOCAL].is_idle);
++}
++
++static void __run_timer_base(struct timer_base *base);
++
++/**
++ * timer_expire_remote() - expire global timers of cpu
++ * @cpu:	Remote CPU
++ *
++ * Expire timers of global base of remote CPU.
++ */
++void timer_expire_remote(unsigned int cpu)
++{
++	struct timer_base *base =3D per_cpu_ptr(&timer_bases[BASE_GLOBAL], cpu);
++
++	__run_timer_base(base);
++}
++
++static void timer_use_tmigr(unsigned long basej, u64 basem,
++			    unsigned long *nextevt, bool *tick_stop_path,
++			    bool timer_base_idle, struct timer_events *tevt)
+ {
+-	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_STD]);
+-	unsigned long nextevt =3D basej + NEXT_TIMER_MAX_DELTA;
+-	u64 expires =3D KTIME_MAX;
+-	bool was_idle;
++	u64 next_tmigr;
++
++	if (timer_base_idle)
++		next_tmigr =3D tmigr_cpu_new_timer(tevt->global);
++	else if (tick_stop_path)
++		next_tmigr =3D tmigr_cpu_deactivate(tevt->global);
++	else
++		next_tmigr =3D tmigr_quick_check(tevt->global);
+=20
+ 	/*
+-	 * Pretend that there is no timer pending if the cpu is offline.
+-	 * Possible pending timers will be migrated later to an active cpu.
++	 * If the CPU is the last going idle in timer migration hierarchy, make
++	 * sure the CPU will wake up in time to handle remote timers.
++	 * next_tmigr =3D=3D KTIME_MAX if other CPUs are still active.
+ 	 */
+-	if (cpu_is_offline(smp_processor_id()))
+-		return expires;
++	if (next_tmigr < tevt->local) {
++		u64 tmp;
+=20
+-	raw_spin_lock(&base->lock);
+-	if (base->next_expiry_recalc)
+-		next_expiry_recalc(base);
++		/* If we missed a tick already, force 0 delta */
++		if (next_tmigr < basem)
++			next_tmigr =3D basem;
++
++		tmp =3D div_u64(next_tmigr - basem, TICK_NSEC);
++
++		*nextevt =3D basej + (unsigned long)tmp;
++		tevt->local =3D next_tmigr;
++	}
++}
++# else
++static void timer_use_tmigr(unsigned long basej, u64 basem,
++			    unsigned long *nextevt, bool *tick_stop_path,
++			    bool timer_base_idle, struct timer_events *tevt)
++{
++	/*
++	 * Make sure first event is written into tevt->local to not miss a
++	 * timer on !SMP systems.
++	 */
++	tevt->local =3D min_t(u64, tevt->local, tevt->global);
++}
++# endif /* CONFIG_SMP */
++
++static inline u64 __get_next_timer_interrupt(unsigned long basej, u64 basem,
++					     bool *idle)
++{
++	struct timer_events tevt =3D { .local =3D KTIME_MAX, .global =3D KTIME_MAX =
+};
++	struct timer_base *base_local, *base_global;
++	unsigned long nextevt;
++	bool idle_is_possible;
++
++	/*
++	 * When the CPU is offline, the tick is cancelled and nothing is supposed
++	 * to try to stop it.
++	 */
++	if (WARN_ON_ONCE(cpu_is_offline(smp_processor_id()))) {
++		if (idle)
++			*idle =3D true;
++		return tevt.local;
++	}
++
++	base_local =3D this_cpu_ptr(&timer_bases[BASE_LOCAL]);
++	base_global =3D this_cpu_ptr(&timer_bases[BASE_GLOBAL]);
++
++	raw_spin_lock(&base_local->lock);
++	raw_spin_lock_nested(&base_global->lock, SINGLE_DEPTH_NESTING);
++
++	nextevt =3D fetch_next_timer_interrupt(basej, basem, base_local,
++					     base_global, &tevt);
++
++	/*
++	 * If the next event is only one jiffie ahead there is no need to call
++	 * timer migration hierarchy related functions. The value for the next
++	 * global timer in @tevt struct equals then KTIME_MAX. This is also
++	 * true, when the timer base is idle.
++	 *
++	 * The proper timer migration hierarchy function depends on the callsite
++	 * and whether timer base is idle or not. @nextevt will be updated when
++	 * this CPU needs to handle the first timer migration hierarchy
++	 * event. See timer_use_tmigr() for detailed information.
++	 */
++	idle_is_possible =3D time_after(nextevt, basej + 1);
++	if (idle_is_possible)
++		timer_use_tmigr(basej, basem, &nextevt, idle,
++				base_local->is_idle, &tevt);
+=20
+ 	/*
+ 	 * We have a fresh next event. Check whether we can forward the
+ 	 * base.
+ 	 */
+-	__forward_timer_base(base, basej);
++	__forward_timer_base(base_local, basej);
++	__forward_timer_base(base_global, basej);
+=20
+-	if (base->timers_pending) {
+-		nextevt =3D base->next_expiry;
++	/*
++	 * Set base->is_idle only when caller is timer_base_try_to_set_idle()
++	 */
++	if (idle) {
++		/*
++		 * Bases are idle if the next event is more than a tick
++		 * away. Caution: @nextevt could have changed by enqueueing a
++		 * global timer into timer migration hierarchy. Therefore a new
++		 * check is required here.
++		 *
++		 * If the base is marked idle then any timer add operation must
++		 * forward the base clk itself to keep granularity small. This
++		 * idle logic is only maintained for the BASE_LOCAL and
++		 * BASE_GLOBAL base, deferrable timers may still see large
++		 * granularity skew (by design).
++		 */
++		if (!base_local->is_idle && time_after(nextevt, basej + 1)) {
++			base_local->is_idle =3D true;
++			trace_timer_base_idle(true, base_local->cpu);
++		}
++		*idle =3D base_local->is_idle;
+=20
+-		/* If we missed a tick already, force 0 delta */
+-		if (time_before(nextevt, basej))
+-			nextevt =3D basej;
+-		expires =3D basem + (u64)(nextevt - basej) * TICK_NSEC;
+-	} else {
+ 		/*
+-		 * Move next_expiry for the empty base into the future to
+-		 * prevent a unnecessary raise of the timer softirq when the
+-		 * next_expiry value will be reached even if there is no timer
+-		 * pending.
++		 * When timer base is not set idle, undo the effect of
++		 * tmigr_cpu_deactivate() to prevent inconsitent states - active
++		 * timer base but inactive timer migration hierarchy.
++		 *
++		 * When timer base was already marked idle, nothing will be
++		 * changed here.
+ 		 */
+-		base->next_expiry =3D nextevt;
++		if (!base_local->is_idle && idle_is_possible)
++			tmigr_cpu_activate();
+ 	}
+=20
+-	/*
+-	 * Base is idle if the next event is more than a tick away.
+-	 *
+-	 * If the base is marked idle then any timer add operation must forward
+-	 * the base clk itself to keep granularity small. This idle logic is
+-	 * only maintained for the BASE_STD base, deferrable timers may still
+-	 * see large granularity skew (by design).
+-	 */
+-	was_idle =3D base->is_idle;
+-	base->is_idle =3D time_after(nextevt, basej + 1);
+-	if (was_idle !=3D base->is_idle)
+-		trace_timer_base_idle(base->is_idle, base->cpu);
++	raw_spin_unlock(&base_global->lock);
++	raw_spin_unlock(&base_local->lock);
+=20
+-	raw_spin_unlock(&base->lock);
++	return cmp_next_hrtimer_event(basem, tevt.local);
++}
+=20
+-	return cmp_next_hrtimer_event(basem, expires);
++/**
++ * get_next_timer_interrupt() - return the time (clock mono) of the next tim=
+er
++ * @basej:	base time jiffies
++ * @basem:	base time clock monotonic
++ *
++ * Returns the tick aligned clock monotonic time of the next pending timer or
++ * KTIME_MAX if no timer is pending. If timer of global base was queued into
++ * timer migration hierarchy, first global timer is not taken into account. =
+If
++ * it was the last CPU of timer migration hierarchy going idle, first global
++ * event is taken into account.
++ */
++u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
++{
++	return __get_next_timer_interrupt(basej, basem, NULL);
++}
++
++/**
++ * timer_base_try_to_set_idle() - Try to set the idle state of the timer bas=
+es
++ * @basej:	base time jiffies
++ * @basem:	base time clock monotonic
++ * @idle:	pointer to store the value of timer_base->is_idle on return;
++ *		*idle contains the information whether tick was already stopped
++ *
++ * Returns the tick aligned clock monotonic time of the next pending timer or
++ * KTIME_MAX if no timer is pending. When tick was already stopped KTIME_MAX=
+ is
++ * returned as well.
++ */
++u64 timer_base_try_to_set_idle(unsigned long basej, u64 basem, bool *idle)
++{
++	if (*idle)
++		return KTIME_MAX;
++
++	return __get_next_timer_interrupt(basej, basem, idle);
+ }
+=20
+ /**
+@@ -1985,18 +2356,18 @@ u64 get_next_timer_interrupt(unsigned long basej, u64=
+ basem)
+  */
+ void timer_clear_idle(void)
+ {
+-	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_STD]);
+-
+ 	/*
+-	 * We do this unlocked. The worst outcome is a remote enqueue sending
+-	 * a pointless IPI, but taking the lock would just make the window for
+-	 * sending the IPI a few instructions smaller for the cost of taking
+-	 * the lock in the exit from idle path.
++	 * We do this unlocked. The worst outcome is a remote pinned timer
++	 * enqueue sending a pointless IPI, but taking the lock would just
++	 * make the window for sending the IPI a few instructions smaller
++	 * for the cost of taking the lock in the exit from idle
++	 * path. Required for BASE_LOCAL only.
+ 	 */
+-	if (base->is_idle) {
+-		base->is_idle =3D false;
+-		trace_timer_base_idle(false, smp_processor_id());
+-	}
++	__this_cpu_write(timer_bases[BASE_LOCAL].is_idle, false);
++	trace_timer_base_idle(false, smp_processor_id());
++
++	/* Activate without holding the timer_base->lock */
++	tmigr_cpu_activate();
+ }
+ #endif
+=20
+@@ -2009,11 +2380,10 @@ static inline void __run_timers(struct timer_base *ba=
+se)
+ 	struct hlist_head heads[LVL_DEPTH];
+ 	int levels;
+=20
+-	if (time_before(jiffies, base->next_expiry))
+-		return;
++	lockdep_assert_held(&base->lock);
+=20
+-	timer_base_lock_expiry(base);
+-	raw_spin_lock_irq(&base->lock);
++	if (base->running_timer)
++		return;
+=20
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+@@ -2037,20 +2407,40 @@ static inline void __run_timers(struct timer_base *ba=
+se)
+ 		while (levels--)
+ 			expire_timers(base, heads + levels);
+ 	}
++}
++
++static void __run_timer_base(struct timer_base *base)
++{
++	if (time_before(jiffies, base->next_expiry))
++		return;
++
++	timer_base_lock_expiry(base);
++	raw_spin_lock_irq(&base->lock);
++	__run_timers(base);
+ 	raw_spin_unlock_irq(&base->lock);
+ 	timer_base_unlock_expiry(base);
+ }
+=20
++static void run_timer_base(int index)
++{
++	struct timer_base *base =3D this_cpu_ptr(&timer_bases[index]);
++
++	__run_timer_base(base);
++}
++
+ /*
+  * This function runs timers and the timer-tq in bottom half context.
+  */
+ static __latent_entropy void run_timer_softirq(struct softirq_action *h)
+ {
+-	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_STD]);
++	run_timer_base(BASE_LOCAL);
++	if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
++		run_timer_base(BASE_GLOBAL);
++		run_timer_base(BASE_DEF);
+=20
+-	__run_timers(base);
+-	if (IS_ENABLED(CONFIG_NO_HZ_COMMON))
+-		__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
++		if (is_timers_nohz_active())
++			tmigr_handle_remote();
++	}
+ }
+=20
+ /*
+@@ -2058,19 +2448,18 @@ static __latent_entropy void run_timer_softirq(struct=
+ softirq_action *h)
+  */
+ static void run_local_timers(void)
+ {
+-	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_STD]);
++	struct timer_base *base =3D this_cpu_ptr(&timer_bases[BASE_LOCAL]);
+=20
+ 	hrtimer_run_queues();
+-	/* Raise the softirq only if required. */
+-	if (time_before(jiffies, base->next_expiry)) {
+-		if (!IS_ENABLED(CONFIG_NO_HZ_COMMON))
+-			return;
+-		/* CPU is awake, so check the deferrable base. */
+-		base++;
+-		if (time_before(jiffies, base->next_expiry))
++
++	for (int i =3D 0; i < NR_BASES; i++, base++) {
++		/* Raise the softirq only if required. */
++		if (time_after_eq(jiffies, base->next_expiry) ||
++		    (i =3D=3D BASE_DEF && tmigr_requires_handle_remote())) {
++			raise_softirq(TIMER_SOFTIRQ);
+ 			return;
++		}
+ 	}
+-	raise_softirq(TIMER_SOFTIRQ);
+ }
+=20
+ /*
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index ed7d6ad694fb..1c311c46da50 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -147,11 +147,15 @@ static void print_cpu(struct seq_file *m, int cpu, u64 =
+now)
+ # define P_ns(x) \
+ 	SEQ_printf(m, "  .%-15s: %Lu nsecs\n", #x, \
+ 		   (unsigned long long)(ktime_to_ns(ts->x)))
++# define P_flag(x, f)			    \
++	SEQ_printf(m, "  .%-15s: %d\n", #x, !!(ts->flags & (f)))
++
+ 	{
+ 		struct tick_sched *ts =3D tick_get_tick_sched(cpu);
+-		P(nohz_mode);
++		P_flag(nohz, TS_FLAG_NOHZ);
++		P_flag(highres, TS_FLAG_HIGHRES);
+ 		P_ns(last_tick);
+-		P(tick_stopped);
++		P_flag(tick_stopped, TS_FLAG_STOPPED);
+ 		P(idle_jiffies);
+ 		P(idle_calls);
+ 		P(idle_sleeps);
+@@ -256,7 +260,7 @@ static void timer_list_show_tickdevices_header(struct seq=
+_file *m)
+=20
+ static inline void timer_list_header(struct seq_file *m, u64 now)
+ {
+-	SEQ_printf(m, "Timer List Version: v0.9\n");
++	SEQ_printf(m, "Timer List Version: v0.10\n");
+ 	SEQ_printf(m, "HRTIMER_MAX_CLOCK_BASES: %d\n", HRTIMER_MAX_CLOCK_BASES);
+ 	SEQ_printf(m, "now at %Ld nsecs\n", (unsigned long long)now);
+ 	SEQ_printf(m, "\n");
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+new file mode 100644
+index 000000000000..8f49b6b96dfd
+--- /dev/null
++++ b/kernel/time/timer_migration.c
+@@ -0,0 +1,1793 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Infrastructure for migratable timers
++ *
++ * Copyright(C) 2022 linutronix GmbH
++ */
++#include <linux/cpuhotplug.h>
++#include <linux/slab.h>
++#include <linux/smp.h>
++#include <linux/spinlock.h>
++#include <linux/timerqueue.h>
++#include <trace/events/ipi.h>
++
++#include "timer_migration.h"
++#include "tick-internal.h"
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/timer_migration.h>
++
++/*
++ * The timer migration mechanism is built on a hierarchy of groups. The
++ * lowest level group contains CPUs, the next level groups of CPU groups
++ * and so forth. The CPU groups are kept per node so for the normal case
++ * lock contention won't happen across nodes. Depending on the number of
++ * CPUs per node even the next level might be kept as groups of CPU groups
++ * per node and only the levels above cross the node topology.
++ *
++ * Example topology for a two node system with 24 CPUs each.
++ *
++ * LVL 2                           [GRP2:0]
++ *                              GRP1:0 =3D GRP1:M
++ *
++ * LVL 1            [GRP1:0]                      [GRP1:1]
++ *               GRP0:0 - GRP0:2               GRP0:3 - GRP0:5
++ *
++ * LVL 0  [GRP0:0]  [GRP0:1]  [GRP0:2]  [GRP0:3]  [GRP0:4]  [GRP0:5]
++ * CPUS     0-7       8-15      16-23     24-31     32-39     40-47
++ *
++ * The groups hold a timer queue of events sorted by expiry time. These
++ * queues are updated when CPUs go in idle. When they come out of idle
++ * ignore flag of events is set.
++ *
++ * Each group has a designated migrator CPU/group as long as a CPU/group is
++ * active in the group. This designated role is necessary to avoid that all
++ * active CPUs in a group try to migrate expired timers from other CPUs,
++ * which would result in massive lock bouncing.
++ *
++ * When a CPU is awake, it checks in it's own timer tick the group
++ * hierarchy up to the point where it is assigned the migrator role or if
++ * no CPU is active, it also checks the groups where no migrator is set
++ * (TMIGR_NONE).
++ *
++ * If it finds expired timers in one of the group queues it pulls them over
++ * from the idle CPU and runs the timer function. After that it updates the
++ * group and the parent groups if required.
++ *
++ * CPUs which go idle arm their CPU local timer hardware for the next local
++ * (pinned) timer event. If the next migratable timer expires after the
++ * next local timer or the CPU has no migratable timer pending then the
++ * CPU does not queue an event in the LVL0 group. If the next migratable
++ * timer expires before the next local timer then the CPU queues that timer
++ * in the LVL0 group. In both cases the CPU marks itself idle in the LVL0
++ * group.
++ *
++ * When CPU comes out of idle and when a group has at least a single active
++ * child, the ignore flag of the tmigr_event is set. This indicates, that
++ * the event is ignored even if it is still enqueued in the parent groups
++ * timer queue. It will be removed when touching the timer queue the next
++ * time. This spares locking in active path as the lock protects (after
++ * setup) only event information. For more information about locking,
++ * please read the section "Locking rules".
++ *
++ * If the CPU is the migrator of the group then it delegates that role to
++ * the next active CPU in the group or sets migrator to TMIGR_NONE when
++ * there is no active CPU in the group. This delegation needs to be
++ * propagated up the hierarchy so hand over from other leaves can happen at
++ * all hierarchy levels w/o doing a search.
++ *
++ * When the last CPU in the system goes idle, then it drops all migrator
++ * duties up to the top level of the hierarchy (LVL2 in the example). It
++ * then has to make sure, that it arms it's own local hardware timer for
++ * the earliest event in the system.
++ *
++ *
++ * Lifetime rules:
++ * ---------------
++ *
++ * The groups are built up at init time or when CPUs come online. They are
++ * not destroyed when a group becomes empty due to offlining. The group
++ * just won't participate in the hierarchy management anymore. Destroying
++ * groups would result in interesting race conditions which would just make
++ * the whole mechanism slow and complex.
++ *
++ *
++ * Locking rules:
++ * --------------
++ *
++ * For setting up new groups and handling events it's required to lock both
++ * child and parent group. The lock ordering is always bottom up. This also
++ * includes the per CPU locks in struct tmigr_cpu. For updating the migrator=
+ and
++ * active CPU/group information atomic_try_cmpxchg() is used instead and only
++ * the per CPU tmigr_cpu->lock is held.
++ *
++ * During the setup of groups tmigr_level_list is required. It is protected =
+by
++ * @tmigr_mutex.
++ *
++ * When @timer_base->lock as well as tmigr related locks are required, the l=
+ock
++ * ordering is: first @timer_base->lock, afterwards tmigr related locks.
++ *
++ *
++ * Protection of the tmigr group state information:
++ * ------------------------------------------------
++ *
++ * The state information with the list of active children and migrator needs=
+ to
++ * be protected by a sequence counter. It prevents a race when updates in ch=
+ild
++ * groups are propagated in changed order. The state update is performed
++ * lockless and group wise. The following scenario describes what happens
++ * without updating the sequence counter:
++ *
++ * Therefore, let's take three groups and four CPUs (CPU2 and CPU3 as well
++ * as GRP0:1 will not change during the scenario):
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:0, GRP0:1
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D CPU0           migrator =3D CPU2
++ *           active   =3D CPU0           active   =3D CPU2
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             active      idle           active      idle
++ *
++ *
++ * 1. CPU0 goes idle. As the update is performed group wise, in the first st=
+ep
++ *    only GRP0:0 is updated. The update of GRP1:0 is pending as CPU0 has to
++ *    walk the hierarchy.
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:0, GRP0:1
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *       --> migrator =3D TMIGR_NONE     migrator =3D CPU2
++ *       --> active   =3D                active   =3D CPU2
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *         --> idle        idle           active      idle
++ *
++ * 2. While CPU0 goes idle and continues to update the state, CPU1 comes out=
+ of
++ *    idle. CPU1 updates GRP0:0. The update for GRP1:0 is pending as CPU1 al=
+so
++ *    has to walk the hierarchy. Both CPUs (CPU0 and CPU1) now walk the
++ *    hierarchy to perform the needed update from their point of view. The
++ *    currently visible state looks the following:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:0, GRP0:1
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *       --> migrator =3D CPU1           migrator =3D CPU2
++ *       --> active   =3D CPU1           active   =3D CPU2
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle    --> active         active      idle
++ *
++ * 3. Here is the race condition: CPU1 managed to propagate its changes (from
++ *    step 2) through the hierarchy to GRP1:0 before CPU0 (step 1) did. The
++ *    active members of GRP1:0 remain unchanged after the update since it is
++ *    still valid from CPU1 current point of view:
++ *
++ *    LVL 1            [GRP1:0]
++ *                 --> migrator =3D GRP0:1
++ *                 --> active   =3D GRP0:0, GRP0:1
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D CPU1           migrator =3D CPU2
++ *           active   =3D CPU1           active   =3D CPU2
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        active         active      idle
++ *
++ * 4. Now CPU0 finally propagates its changes (from step 1) to GRP1:0.
++ *
++ *    LVL 1            [GRP1:0]
++ *                 --> migrator =3D GRP0:1
++ *                 --> active   =3D GRP0:1
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D CPU1           migrator =3D CPU2
++ *           active   =3D CPU1           active   =3D CPU2
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        active         active      idle
++ *
++ *
++ * The race of CPU0 vs. CPU1 led to an inconsistent state in GRP1:0. CPU1 is
++ * active and is correctly listed as active in GRP0:0. However GRP1:0 does n=
+ot
++ * have GRP0:0 listed as active, which is wrong. The sequence counter has be=
+en
++ * added to avoid inconsistent states during updates. The state is updated
++ * atomically only if all members, including the sequence counter, match the
++ * expected value (compare-and-exchange).
++ *
++ * Looking back at the previous example with the addition of the sequence
++ * counter: The update as performed by CPU0 in step 4 will fail. CPU1 changed
++ * the sequence number during the update in step 3 so the expected old value=
+ (as
++ * seen by CPU0 before starting the walk) does not match.
++ *
++ * Prevent race between new event and last CPU going inactive
++ * ----------------------------------------------------------
++ *
++ * When the last CPU is going idle and there is a concurrent update of a new
++ * first global timer of an idle CPU, the group and child states have to be =
+read
++ * while holding the lock in tmigr_update_events(). The following scenario s=
+hows
++ * what happens, when this is not done.
++ *
++ * 1. Only CPU2 is active:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:1
++ *                     next_expiry =3D KTIME_MAX
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D CPU2
++ *           active   =3D                active   =3D CPU2
++ *           next_expiry =3D KTIME_MAX   next_expiry =3D KTIME_MAX
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           active      idle
++ *
++ * 2. Now CPU 2 goes idle (and has no global timer, that has to be handled) =
+and
++ *    propagates that to GRP0:1:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:1
++ *                     next_expiry =3D KTIME_MAX
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE --> migrator =3D TMIGR_NONE
++ *           active   =3D            --> active   =3D
++ *           next_expiry =3D KTIME_MAX   next_expiry =3D KTIME_MAX
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle       --> idle        idle
++ *
++ * 3. Now the idle state is propagated up to GRP1:0. As this is now the last
++ *    child going idle in top level group, the expiry of the next group event
++ *    has to be handed back to make sure no event is lost. As there is no ev=
+ent
++ *    enqueued, KTIME_MAX is handed back to CPU2.
++ *
++ *    LVL 1            [GRP1:0]
++ *                 --> migrator =3D TMIGR_NONE
++ *                 --> active   =3D
++ *                     next_expiry =3D KTIME_MAX
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D TMIGR_NONE
++ *           active   =3D                active   =3D
++ *           next_expiry =3D KTIME_MAX   next_expiry =3D KTIME_MAX
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle       --> idle        idle
++ *
++ * 4. CPU 0 has a new timer queued from idle and it expires at TIMER0. CPU0
++ *    propagates that to GRP0:0:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D TMIGR_NONE
++ *                     active   =3D
++ *                     next_expiry =3D KTIME_MAX
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D TMIGR_NONE
++ *           active   =3D                active   =3D
++ *       --> next_expiry =3D TIMER0      next_expiry  =3D KTIME_MAX
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           idle        idle
++ *
++ * 5. GRP0:0 is not active, so the new timer has to be propagated to
++ *    GRP1:0. Therefore the GRP1:0 state has to be read. When the stalled va=
+lue
++ *    (from step 2) is read, the timer is enqueued into GRP1:0, but nothing =
+is
++ *    handed back to CPU0, as it seems that there is still an active child in
++ *    top level group.
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D TMIGR_NONE
++ *                     active   =3D
++ *                 --> next_expiry =3D TIMER0
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D TMIGR_NONE
++ *           active   =3D                active   =3D
++ *           next_expiry =3D TIMER0      next_expiry  =3D KTIME_MAX
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           idle        idle
++ *
++ * This is prevented by reading the state when holding the lock (when a new
++ * timer has to be propagated from idle path)::
++ *
++ *   CPU2 (tmigr_inactive_up())          CPU0 (tmigr_new_timer_up())
++ *   --------------------------          ---------------------------
++ *   // step 3:
++ *   cmpxchg(&GRP1:0->state);
++ *   tmigr_update_events() {
++ *       spin_lock(&GRP1:0->lock);
++ *       // ... update events ...
++ *       // hand back first expiry when GRP1:0 is idle
++ *       spin_unlock(&GRP1:0->lock);
++ *       // ^^^ release state modification
++ *   }
++ *                                       tmigr_update_events() {
++ *                                           spin_lock(&GRP1:0->lock)
++ *                                           // ^^^ acquire state modificati=
+on
++ *                                           group_state =3D atomic_read(&GR=
+P1:0->state)
++ *                                           // .... update events ...
++ *                                           // hand back first expiry when =
+GRP1:0 is idle
++ *                                           spin_unlock(&GRP1:0->lock) <3>
++ *                                           // ^^^ makes state visible for =
+other
++ *                                           // callers of tmigr_new_timer_u=
+p()
++ *                                       }
++ *
++ * When CPU0 grabs the lock directly after cmpxchg, the first timer is repor=
+ted
++ * back to CPU0 and also later on to CPU2. So no timer is missed. A concurre=
+nt
++ * update of the group state from active path is no problem, as the upcoming=
+ CPU
++ * will take care of the group events.
++ *
++ * Required event and timerqueue update after a remote expiry:
++ * -----------------------------------------------------------
++ *
++ * After expiring timers of a remote CPU, a walk through the hierarchy and
++ * update of events and timerqueues is required. It is obviously needed if t=
+here
++ * is a 'new' global timer but also if there is no new global timer but the
++ * remote CPU is still idle.
++ *
++ * 1. CPU0 and CPU1 are idle and have both a global timer expiring at the sa=
+me
++ *    time. So both have an event enqueued in the timerqueue of GRP0:0. CPU3=
+ is
++ *    also idle and has no global timer pending. CPU2 is the only active CPU=
+ and
++ *    thus also the migrator:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:1
++ *                 --> timerqueue =3D evt-GRP0:0
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D CPU2
++ *           active   =3D                active   =3D CPU2
++ *           groupevt.ignore =3D false   groupevt.ignore =3D true
++ *           groupevt.cpu =3D CPU0       groupevt.cpu =3D
++ *           timerqueue =3D evt-CPU0,    timerqueue =3D
++ *                        evt-CPU1
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           active      idle
++ *
++ * 2. CPU2 starts to expire remote timers. It starts with LVL0 group
++ *    GRP0:1. There is no event queued in the timerqueue, so CPU2 continues =
+with
++ *    the parent of GRP0:1: GRP1:0. In GRP1:0 it dequeues the first event. It
++ *    looks at tmigr_event::cpu struct member and expires the pending timer(=
+s)
++ *    of CPU0.
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:1
++ *                 --> timerqueue =3D
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D CPU2
++ *           active   =3D                active   =3D CPU2
++ *           groupevt.ignore =3D false   groupevt.ignore =3D true
++ *       --> groupevt.cpu =3D CPU0       groupevt.cpu =3D
++ *           timerqueue =3D evt-CPU0,    timerqueue =3D
++ *                        evt-CPU1
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           active      idle
++ *
++ * 3. Some work has to be done after expiring the timers of CPU0. If we stop
++ *    here, then CPU1's pending global timer(s) will not expire in time and =
+the
++ *    timerqueue of GRP0:0 has still an event for CPU0 enqueued which has ju=
+st
++ *    been processed. So it is required to walk the hierarchy from CPU0's po=
+int
++ *    of view and update it accordingly. CPU0's event will be removed from t=
+he
++ *    timerqueue because it has no pending timer. If CPU0 would have a timer
++ *    pending then it has to expire after CPU1's first timer because all tim=
+ers
++ *    from this period were just expired. Either way CPU1's event will be fi=
+rst
++ *    in GRP0:0's timerqueue and therefore set in the CPU field of the group
++ *    event which is then enqueued in GRP1:0's timerqueue as GRP0:0 is still=
+ not
++ *    active:
++ *
++ *    LVL 1            [GRP1:0]
++ *                     migrator =3D GRP0:1
++ *                     active   =3D GRP0:1
++ *                 --> timerqueue =3D evt-GRP0:0
++ *                   /                \
++ *    LVL 0  [GRP0:0]                  [GRP0:1]
++ *           migrator =3D TMIGR_NONE     migrator =3D CPU2
++ *           active   =3D                active   =3D CPU2
++ *           groupevt.ignore =3D false   groupevt.ignore =3D true
++ *       --> groupevt.cpu =3D CPU1       groupevt.cpu =3D
++ *       --> timerqueue =3D evt-CPU1     timerqueue =3D
++ *              /         \                /         \
++ *    CPUs     0           1              2           3
++ *             idle        idle           active      idle
++ *
++ * Now CPU2 (migrator) will continue step 2 at GRP1:0 and will expire the
++ * timer(s) of CPU1.
++ *
++ * The hierarchy walk in step 3 can be skipped if the migrator notices that a
++ * CPU of GRP0:0 is active again. The CPU will mark GRP0:0 active and take c=
+are
++ * of the group as migrator and any needed updates within the hierarchy.
++ */
++
++static DEFINE_MUTEX(tmigr_mutex);
++static struct list_head *tmigr_level_list __read_mostly;
++
++static unsigned int tmigr_hierarchy_levels __read_mostly;
++static unsigned int tmigr_crossnode_level __read_mostly;
++
++static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
++
++#define TMIGR_NONE	0xFF
++#define BIT_CNT		8
++
++static inline bool tmigr_is_not_available(struct tmigr_cpu *tmc)
++{
++	return !(tmc->tmgroup && tmc->online);
++}
++
++/*
++ * Returns true, when @childmask corresponds to the group migrator or when t=
+he
++ * group is not active - so no migrator is set.
++ */
++static bool tmigr_check_migrator(struct tmigr_group *group, u8 childmask)
++{
++	union tmigr_state s;
++
++	s.state =3D atomic_read(&group->migr_state);
++
++	if ((s.migrator =3D=3D childmask) || (s.migrator =3D=3D TMIGR_NONE))
++		return true;
++
++	return false;
++}
++
++static bool tmigr_check_migrator_and_lonely(struct tmigr_group *group, u8 ch=
+ildmask)
++{
++	bool lonely, migrator =3D false;
++	unsigned long active;
++	union tmigr_state s;
++
++	s.state =3D atomic_read(&group->migr_state);
++
++	if ((s.migrator =3D=3D childmask) || (s.migrator =3D=3D TMIGR_NONE))
++		migrator =3D true;
++
++	active =3D s.active;
++	lonely =3D bitmap_weight(&active, BIT_CNT) <=3D 1;
++
++	return (migrator && lonely);
++}
++
++static bool tmigr_check_lonely(struct tmigr_group *group)
++{
++	unsigned long active;
++	union tmigr_state s;
++
++	s.state =3D atomic_read(&group->migr_state);
++
++	active =3D s.active;
++
++	return bitmap_weight(&active, BIT_CNT) <=3D 1;
++}
++
++typedef bool (*up_f)(struct tmigr_group *, struct tmigr_group *, void *);
++
++static void __walk_groups(up_f up, void *data,
++			  struct tmigr_cpu *tmc)
++{
++	struct tmigr_group *child =3D NULL, *group =3D tmc->tmgroup;
++
++	do {
++		WARN_ON_ONCE(group->level >=3D tmigr_hierarchy_levels);
++
++		if (up(group, child, data))
++			break;
++
++		child =3D group;
++		group =3D group->parent;
++	} while (group);
++}
++
++static void walk_groups(up_f up, void *data, struct tmigr_cpu *tmc)
++{
++	lockdep_assert_held(&tmc->lock);
++
++	__walk_groups(up, data, tmc);
++}
++
++/**
++ * struct tmigr_walk - data required for walking the hierarchy
++ * @nextexp:		Next CPU event expiry information which is handed into
++ *			the timer migration code by the timer code
++ *			(get_next_timer_interrupt())
++ * @firstexp:		Contains the first event expiry information when last
++ *			active CPU of hierarchy is on the way to idle to make
++ *			sure CPU will be back in time.
++ * @evt:		Pointer to tmigr_event which needs to be queued (of idle
++ *			child group)
++ * @childmask:		childmask of child group
++ * @remote:		Is set, when the new timer path is executed in
++ *			tmigr_handle_remote_cpu()
++ */
++struct tmigr_walk {
++	u64			nextexp;
++	u64			firstexp;
++	struct tmigr_event	*evt;
++	u8			childmask;
++	bool			remote;
++};
++
++/**
++ * struct tmigr_remote_data - data required for remote expiry hierarchy walk
++ * @basej:		timer base in jiffies
++ * @now:		timer base monotonic
++ * @firstexp:		returns expiry of the first timer in the idle timer
++ *			migration hierarchy to make sure the timer is handled in
++ *			time; it is stored in the per CPU tmigr_cpu struct of
++ *			CPU which expires remote timers
++ * @childmask:		childmask of child group
++ * @check:		is set if there is the need to handle remote timers;
++ *			required in tmigr_requires_handle_remote() only
++ * @tmc_active:		this flag indicates, whether the CPU which triggers
++ *			the hierarchy walk is !idle in the timer migration
++ *			hierarchy. When the CPU is idle and the whole hierarchy is
++ *			idle, only the first event of the top level has to be
++ *			considered.
++ */
++struct tmigr_remote_data {
++	unsigned long	basej;
++	u64		now;
++	u64		firstexp;
++	u8		childmask;
++	bool		check;
++	bool		tmc_active;
++};
++
++/*
++ * Returns the next event of the timerqueue @group->events
++ *
++ * Removes timers with ignore flag and update next_expiry of the group. Valu=
+es
++ * of the group event are updated in tmigr_update_events() only.
++ */
++static struct tmigr_event *tmigr_next_groupevt(struct tmigr_group *group)
++{
++	struct timerqueue_node *node =3D NULL;
++	struct tmigr_event *evt =3D NULL;
++
++	lockdep_assert_held(&group->lock);
++
++	WRITE_ONCE(group->next_expiry, KTIME_MAX);
++
++	while ((node =3D timerqueue_getnext(&group->events))) {
++		evt =3D container_of(node, struct tmigr_event, nextevt);
++
++		if (!evt->ignore) {
++			WRITE_ONCE(group->next_expiry, evt->nextevt.expires);
++			return evt;
++		}
++
++		/*
++		 * Remove next timers with ignore flag, because the group lock
++		 * is held anyway
++		 */
++		if (!timerqueue_del(&group->events, node))
++			break;
++	}
++
++	return NULL;
++}
++
++/*
++ * Return the next event (with the expiry equal or before @now)
++ *
++ * Event, which is returned, is also removed from the queue.
++ */
++static struct tmigr_event *tmigr_next_expired_groupevt(struct tmigr_group *g=
+roup,
++						       u64 now)
++{
++	struct tmigr_event *evt =3D tmigr_next_groupevt(group);
++
++	if (!evt || now < evt->nextevt.expires)
++		return NULL;
++
++	/*
++	 * The event is ready to expire. Remove it and update next group event.
++	 */
++	timerqueue_del(&group->events, &evt->nextevt);
++	tmigr_next_groupevt(group);
++
++	return evt;
++}
++
++static u64 tmigr_next_groupevt_expires(struct tmigr_group *group)
++{
++	struct tmigr_event *evt;
++
++	evt =3D tmigr_next_groupevt(group);
++
++	if (!evt)
++		return KTIME_MAX;
++	else
++		return evt->nextevt.expires;
++}
++
++static bool tmigr_active_up(struct tmigr_group *group,
++			    struct tmigr_group *child,
++			    void *ptr)
++{
++	union tmigr_state curstate, newstate;
++	struct tmigr_walk *data =3D ptr;
++	bool walk_done;
++	u8 childmask;
++
++	childmask =3D data->childmask;
++	/*
++	 * No memory barrier is required here in contrast to
++	 * tmigr_inactive_up(), as the group state change does not depend on the
++	 * child state.
++	 */
++	curstate.state =3D atomic_read(&group->migr_state);
++
++	do {
++		newstate =3D curstate;
++		walk_done =3D true;
++
++		if (newstate.migrator =3D=3D TMIGR_NONE) {
++			newstate.migrator =3D childmask;
++
++			/* Changes need to be propagated */
++			walk_done =3D false;
++		}
++
++		newstate.active |=3D childmask;
++		newstate.seq++;
++
++	} while (!atomic_try_cmpxchg(&group->migr_state, &curstate.state, newstate.=
+state));
++
++	if ((walk_done =3D=3D false) && group->parent)
++		data->childmask =3D group->childmask;
++
++	/*
++	 * The group is active (again). The group event might be still queued
++	 * into the parent group's timerqueue but can now be handled by the
++	 * migrator of this group. Therefore the ignore flag for the group event
++	 * is updated to reflect this.
++	 *
++	 * The update of the ignore flag in the active path is done lockless. In
++	 * worst case the migrator of the parent group observes the change too
++	 * late and expires remotely all events belonging to this group. The
++	 * lock is held while updating the ignore flag in idle path. So this
++	 * state change will not be lost.
++	 */
++	group->groupevt.ignore =3D true;
++
++	trace_tmigr_group_set_cpu_active(group, newstate, childmask);
++
++	return walk_done;
++}
++
++static void __tmigr_cpu_activate(struct tmigr_cpu *tmc)
++{
++	struct tmigr_walk data;
++
++	data.childmask =3D tmc->childmask;
++
++	trace_tmigr_cpu_active(tmc);
++
++	tmc->cpuevt.ignore =3D true;
++	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
++
++	walk_groups(&tmigr_active_up, &data, tmc);
++}
++
++/**
++ * tmigr_cpu_activate() - set this CPU active in timer migration hierarchy
++ *
++ * Call site timer_clear_idle() is called with interrupts disabled.
++ */
++void tmigr_cpu_activate(void)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++
++	if (tmigr_is_not_available(tmc))
++		return;
++
++	if (WARN_ON_ONCE(!tmc->idle))
++		return;
++
++	raw_spin_lock(&tmc->lock);
++	tmc->idle =3D false;
++	__tmigr_cpu_activate(tmc);
++	raw_spin_unlock(&tmc->lock);
++}
++
++/*
++ * Returns true, if there is nothing to be propagated to the next level
++ *
++ * @data->firstexp is set to expiry of first gobal event of the (top level of
++ * the) hierarchy, but only when hierarchy is completely idle.
++ *
++ * The child and group states need to be read under the lock, to prevent a r=
+ace
++ * against a concurrent tmigr_inactive_up() run when the last CPU goes idle.=
+ See
++ * also section "Prevent race between new event and last CPU going inactive"=
+ in
++ * the documentation at the top.
++ *
++ * This is the only place where the group event expiry value is set.
++ */
++static
++bool tmigr_update_events(struct tmigr_group *group, struct tmigr_group *chil=
+d,
++			 struct tmigr_walk *data)
++{
++	struct tmigr_event *evt, *first_childevt;
++	union tmigr_state childstate, groupstate;
++	bool remote =3D data->remote;
++	bool walk_done =3D false;
++	u64 nextexp;
++
++	if (child) {
++		raw_spin_lock(&child->lock);
++		raw_spin_lock_nested(&group->lock, SINGLE_DEPTH_NESTING);
++
++		childstate.state =3D atomic_read(&child->migr_state);
++		groupstate.state =3D atomic_read(&group->migr_state);
++
++		if (childstate.active) {
++			walk_done =3D true;
++			goto unlock;
++		}
++
++		first_childevt =3D tmigr_next_groupevt(child);
++		nextexp =3D child->next_expiry;
++		evt =3D &child->groupevt;
++
++		evt->ignore =3D (nextexp =3D=3D KTIME_MAX) ? true : false;
++	} else {
++		nextexp =3D data->nextexp;
++
++		first_childevt =3D evt =3D data->evt;
++
++		/*
++		 * Walking the hierarchy is required in any case when a
++		 * remote expiry was done before. This ensures to not lose
++		 * already queued events in non active groups (see section
++		 * "Required event and timerqueue update after a remote
++		 * expiry" in the documentation at the top).
++		 *
++		 * The two call sites which are executed without a remote expiry
++		 * before, are not prevented from propagating changes through
++		 * the hierarchy by the return:
++		 *  - When entering this path by tmigr_new_timer(), @evt->ignore
++		 *    is never set.
++		 *  - tmigr_inactive_up() takes care of the propagation by
++		 *    itself and ignores the return value. But an immediate
++		 *    return is required because nothing has to be done in this
++		 *    level as the event could be ignored.
++		 */
++		if (evt->ignore && !remote)
++			return true;
++
++		raw_spin_lock(&group->lock);
++
++		childstate.state =3D 0;
++		groupstate.state =3D atomic_read(&group->migr_state);
++	}
++
++	/*
++	 * If the child event is already queued in the group, remove it from the
++	 * queue when the expiry time changed only or when it could be ignored.
++	 */
++	if (timerqueue_node_queued(&evt->nextevt)) {
++		if ((evt->nextevt.expires =3D=3D nextexp) && !evt->ignore)
++			goto check_toplvl;
++
++		if (!timerqueue_del(&group->events, &evt->nextevt))
++			WRITE_ONCE(group->next_expiry, KTIME_MAX);
++	}
++
++	if (evt->ignore) {
++		/*
++		 * When the next child event could be ignored (nextexp is
++		 * KTIME_MAX) and there was no remote timer handling before or
++		 * the group is already active, there is no need to walk the
++		 * hierarchy even if there is a parent group.
++		 *
++		 * The other way round: even if the event could be ignored, but
++		 * if a remote timer handling was executed before and the group
++		 * is not active, walking the hierarchy is required to not miss
++		 * an enqueued timer in the non active group. The enqueued timer
++		 * of the group needs to be propagated to a higher level to
++		 * ensure it is handled.
++		 */
++		if (!remote || groupstate.active)
++			walk_done =3D true;
++	} else {
++		evt->nextevt.expires =3D nextexp;
++		evt->cpu =3D first_childevt->cpu;
++
++		if (timerqueue_add(&group->events, &evt->nextevt))
++			WRITE_ONCE(group->next_expiry, nextexp);
++	}
++
++check_toplvl:
++	if (!group->parent && (groupstate.migrator =3D=3D TMIGR_NONE)) {
++		walk_done =3D true;
++
++		/*
++		 * Nothing to do when update was done during remote timer
++		 * handling. First timer in top level group which needs to be
++		 * handled when top level group is not active, is calculated
++		 * directly in tmigr_handle_remote_up().
++		 */
++		if (remote)
++			goto unlock;
++
++		/*
++		 * The top level group is idle and it has to be ensured the
++		 * global timers are handled in time. (This could be optimized
++		 * by keeping track of the last global scheduled event and only
++		 * arming it on the CPU if the new event is earlier. Not sure if
++		 * its worth the complexity.)
++		 */
++		data->firstexp =3D tmigr_next_groupevt_expires(group);
++	}
++
++	trace_tmigr_update_events(child, group, childstate, groupstate,
++				  nextexp);
++
++unlock:
++	raw_spin_unlock(&group->lock);
++
++	if (child)
++		raw_spin_unlock(&child->lock);
++
++	return walk_done;
++}
++
++static bool tmigr_new_timer_up(struct tmigr_group *group,
++			       struct tmigr_group *child,
++			       void *ptr)
++{
++	struct tmigr_walk *data =3D ptr;
++
++	return tmigr_update_events(group, child, data);
++}
++
++/*
++ * Returns the expiry of the next timer that needs to be handled. KTIME_MAX =
+is
++ * returned, if an active CPU will handle all the timer migration hierarchy
++ * timers.
++ */
++static u64 tmigr_new_timer(struct tmigr_cpu *tmc, u64 nextexp)
++{
++	struct tmigr_walk data =3D { .nextexp =3D nextexp,
++				   .firstexp =3D KTIME_MAX,
++				   .evt =3D &tmc->cpuevt };
++
++	lockdep_assert_held(&tmc->lock);
++
++	if (tmc->remote)
++		return KTIME_MAX;
++
++	trace_tmigr_cpu_new_timer(tmc);
++
++	tmc->cpuevt.ignore =3D false;
++	data.remote =3D false;
++
++	walk_groups(&tmigr_new_timer_up, &data, tmc);
++
++	/* If there is a new first global event, make sure it is handled */
++	return data.firstexp;
++}
++
++static void tmigr_handle_remote_cpu(unsigned int cpu, u64 now,
++				    unsigned long jif)
++{
++	struct timer_events tevt;
++	struct tmigr_walk data;
++	struct tmigr_cpu *tmc;
++
++	tmc =3D per_cpu_ptr(&tmigr_cpu, cpu);
++
++	raw_spin_lock_irq(&tmc->lock);
++
++	/*
++	 * If the remote CPU is offline then the timers have been migrated to
++	 * another CPU.
++	 *
++	 * If tmigr_cpu::remote is set, at the moment another CPU already
++	 * expires the timers of the remote CPU.
++	 *
++	 * If tmigr_event::ignore is set, then the CPU returns from idle and
++	 * takes care of its timers.
++	 *
++	 * If the next event expires in the future, then the event has been
++	 * updated and there are no timers to expire right now. The CPU which
++	 * updated the event takes care when hierarchy is completely
++	 * idle. Otherwise the migrator does it as the event is enqueued.
++	 */
++	if (!tmc->online || tmc->remote || tmc->cpuevt.ignore ||
++	    now < tmc->cpuevt.nextevt.expires) {
++		raw_spin_unlock_irq(&tmc->lock);
++		return;
++	}
++
++	trace_tmigr_handle_remote_cpu(tmc);
++
++	tmc->remote =3D true;
++	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
++
++	/* Drop the lock to allow the remote CPU to exit idle */
++	raw_spin_unlock_irq(&tmc->lock);
++
++	if (cpu !=3D smp_processor_id())
++		timer_expire_remote(cpu);
++
++	/*
++	 * Lock ordering needs to be preserved - timer_base locks before tmigr
++	 * related locks (see section "Locking rules" in the documentation at
++	 * the top). During fetching the next timer interrupt, also tmc->lock
++	 * needs to be held. Otherwise there is a possible race window against
++	 * the CPU itself when it comes out of idle, updates the first timer in
++	 * the hierarchy and goes back to idle.
++	 *
++	 * timer base locks are dropped as fast as possible: After checking
++	 * whether the remote CPU went offline in the meantime and after
++	 * fetching the next remote timer interrupt. Dropping the locks as fast
++	 * as possible keeps the locking region small and prevents holding
++	 * several (unnecessary) locks during walking the hierarchy for updating
++	 * the timerqueue and group events.
++	 */
++	local_irq_disable();
++	timer_lock_remote_bases(cpu);
++	raw_spin_lock(&tmc->lock);
++
++	/*
++	 * When the CPU went offline in the meantime, no hierarchy walk has to
++	 * be done for updating the queued events, because the walk was
++	 * already done during marking the CPU offline in the hierarchy.
++	 *
++	 * When the CPU is no longer idle, the CPU takes care of the timers and
++	 * also of the timers in the hierarchy.
++	 *
++	 * (See also section "Required event and timerqueue update after a
++	 * remote expiry" in the documentation at the top)
++	 */
++	if (!tmc->online || !tmc->idle) {
++		timer_unlock_remote_bases(cpu);
++		goto unlock;
++	}
++
++	/* next	event of CPU */
++	fetch_next_timer_interrupt_remote(jif, now, &tevt, cpu);
++	timer_unlock_remote_bases(cpu);
++
++	data.nextexp =3D tevt.global;
++	data.firstexp =3D KTIME_MAX;
++	data.evt =3D &tmc->cpuevt;
++	data.remote =3D true;
++
++	/*
++	 * The update is done even when there is no 'new' global timer pending
++	 * on the remote CPU (see section "Required event and timerqueue update
++	 * after a remote expiry" in the documentation at the top)
++	 */
++	walk_groups(&tmigr_new_timer_up, &data, tmc);
++
++unlock:
++	tmc->remote =3D false;
++	raw_spin_unlock_irq(&tmc->lock);
++}
++
++static bool tmigr_handle_remote_up(struct tmigr_group *group,
++				   struct tmigr_group *child,
++				   void *ptr)
++{
++	struct tmigr_remote_data *data =3D ptr;
++	struct tmigr_event *evt;
++	unsigned long jif;
++	u8 childmask;
++	u64 now;
++
++	jif =3D data->basej;
++	now =3D data->now;
++
++	childmask =3D data->childmask;
++
++	trace_tmigr_handle_remote(group);
++again:
++	/*
++	 * Handle the group only if @childmask is the migrator or if the
++	 * group has no migrator. Otherwise the group is active and is
++	 * handled by its own migrator.
++	 */
++	if (!tmigr_check_migrator(group, childmask))
++		return true;
++
++	raw_spin_lock_irq(&group->lock);
++
++	evt =3D tmigr_next_expired_groupevt(group, now);
++
++	if (evt) {
++		unsigned int remote_cpu =3D evt->cpu;
++
++		raw_spin_unlock_irq(&group->lock);
++
++		tmigr_handle_remote_cpu(remote_cpu, now, jif);
++
++		/* check if there is another event, that needs to be handled */
++		goto again;
++	}
++
++	/*
++	 * Update of childmask for the next level and keep track of the expiry
++	 * of the first event that needs to be handled (group->next_expiry was
++	 * updated by tmigr_next_expired_groupevt(), next was set by
++	 * tmigr_handle_remote_cpu()).
++	 */
++	data->childmask =3D group->childmask;
++	data->firstexp =3D group->next_expiry;
++
++	raw_spin_unlock_irq(&group->lock);
++
++	return false;
++}
++
++/**
++ * tmigr_handle_remote() - Handle global timers of remote idle CPUs
++ *
++ * Called from the timer soft interrupt with interrupts enabled.
++ */
++void tmigr_handle_remote(void)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	struct tmigr_remote_data data;
++
++	if (tmigr_is_not_available(tmc))
++		return;
++
++	data.childmask =3D tmc->childmask;
++	data.firstexp =3D KTIME_MAX;
++
++	/*
++	 * NOTE: This is a doubled check because the migrator test will be done
++	 * in tmigr_handle_remote_up() anyway. Keep this check to speed up the
++	 * return when nothing has to be done.
++	 */
++	if (!tmigr_check_migrator(tmc->tmgroup, tmc->childmask))
++		return;
++
++	data.now =3D get_jiffies_update(&data.basej);
++
++	/*
++	 * Update @tmc->wakeup only at the end and do not reset @tmc->wakeup to
++	 * KTIME_MAX. Even if tmc->lock is not held during the whole remote
++	 * handling, tmc->wakeup is fine to be stale as it is called in
++	 * interrupt context and tick_nohz_next_event() is executed in interrupt
++	 * exit path only after processing the last pending interrupt.
++	 */
++
++	__walk_groups(&tmigr_handle_remote_up, &data, tmc);
++
++	raw_spin_lock_irq(&tmc->lock);
++	WRITE_ONCE(tmc->wakeup, data.firstexp);
++	raw_spin_unlock_irq(&tmc->lock);
++}
++
++static bool tmigr_requires_handle_remote_up(struct tmigr_group *group,
++					    struct tmigr_group *child,
++					    void *ptr)
++{
++	struct tmigr_remote_data *data =3D ptr;
++	u8 childmask;
++
++	childmask =3D data->childmask;
++
++	/*
++	 * Handle the group only if the child is the migrator or if the group
++	 * has no migrator. Otherwise the group is active and is handled by its
++	 * own migrator.
++	 */
++	if (!tmigr_check_migrator(group, childmask))
++		return true;
++
++	/*
++	 * When there is a parent group and the CPU which triggered the
++	 * hierarchy walk is not active, proceed the walk to reach the top level
++	 * group before reading the next_expiry value.
++	 */
++	if (group->parent && !data->tmc_active)
++		goto out;
++
++	/*
++	 * The lock is required on 32bit architectures to read the variable
++	 * consistently with a concurrent writer. On 64bit the lock is not
++	 * required because the read operation is not split and so it is always
++	 * consistent.
++	 */
++	if (IS_ENABLED(CONFIG_64BIT)) {
++		data->firstexp =3D READ_ONCE(group->next_expiry);
++		if (data->now >=3D data->firstexp) {
++			data->check =3D true;
++			return true;
++		}
++	} else {
++		raw_spin_lock(&group->lock);
++		data->firstexp =3D group->next_expiry;
++		if (data->now >=3D group->next_expiry) {
++			data->check =3D true;
++			raw_spin_unlock(&group->lock);
++			return true;
++		}
++		raw_spin_unlock(&group->lock);
++	}
++
++out:
++	/* Update of childmask for the next level */
++	data->childmask =3D group->childmask;
++	return false;
++}
++
++/**
++ * tmigr_requires_handle_remote() - Check the need of remote timer handling
++ *
++ * Must be called with interrupts disabled.
++ */
++bool tmigr_requires_handle_remote(void)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	struct tmigr_remote_data data;
++	unsigned long jif;
++	bool ret =3D false;
++
++	if (tmigr_is_not_available(tmc))
++		return ret;
++
++	data.now =3D get_jiffies_update(&jif);
++	data.childmask =3D tmc->childmask;
++	data.firstexp =3D KTIME_MAX;
++	data.tmc_active =3D !tmc->idle;
++	data.check =3D false;
++
++	/*
++	 * If the CPU is active, walk the hierarchy to check whether a remote
++	 * expiry is required.
++	 *
++	 * Check is done lockless as interrupts are disabled and @tmc->idle is
++	 * set only by the local CPU.
++	 */
++	if (!tmc->idle) {
++		__walk_groups(&tmigr_requires_handle_remote_up, &data, tmc);
++
++		return data.check;
++	}
++
++	/*
++	 * When the CPU is idle, compare @tmc->wakeup with @data.now. The lock
++	 * is required on 32bit architectures to read the variable consistently
++	 * with a concurrent writer. On 64bit the lock is not required because
++	 * the read operation is not split and so it is always consistent.
++	 */
++	if (IS_ENABLED(CONFIG_64BIT)) {
++		if (data.now >=3D READ_ONCE(tmc->wakeup))
++			return true;
++	} else {
++		raw_spin_lock(&tmc->lock);
++		if (data.now >=3D tmc->wakeup)
++			ret =3D true;
++		raw_spin_unlock(&tmc->lock);
++	}
++
++	return ret;
++}
++
++/**
++ * tmigr_cpu_new_timer() - enqueue next global timer into hierarchy (idle tm=
+c)
++ * @nextexp:	Next expiry of global timer (or KTIME_MAX if not)
++ *
++ * The CPU is already deactivated in the timer migration
++ * hierarchy. tick_nohz_get_sleep_length() calls tick_nohz_next_event()
++ * and thereby the timer idle path is executed once more. @tmc->wakeup
++ * holds the first timer, when the timer migration hierarchy is
++ * completely idle.
++ *
++ * Returns the first timer that needs to be handled by this CPU or KTIME_MAX=
+ if
++ * nothing needs to be done.
++ */
++u64 tmigr_cpu_new_timer(u64 nextexp)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	u64 ret;
++
++	if (tmigr_is_not_available(tmc))
++		return nextexp;
++
++	raw_spin_lock(&tmc->lock);
++
++	ret =3D READ_ONCE(tmc->wakeup);
++	if (nextexp !=3D KTIME_MAX) {
++		if (nextexp !=3D tmc->cpuevt.nextevt.expires ||
++		    tmc->cpuevt.ignore) {
++			ret =3D tmigr_new_timer(tmc, nextexp);
++		}
++	}
++	/*
++	 * Make sure the reevaluation of timers in idle path will not miss an
++	 * event.
++	 */
++	WRITE_ONCE(tmc->wakeup, ret);
++
++	trace_tmigr_cpu_new_timer_idle(tmc, nextexp);
++	raw_spin_unlock(&tmc->lock);
++	return ret;
++}
++
++static bool tmigr_inactive_up(struct tmigr_group *group,
++			      struct tmigr_group *child,
++			      void *ptr)
++{
++	union tmigr_state curstate, newstate, childstate;
++	struct tmigr_walk *data =3D ptr;
++	bool walk_done;
++	u8 childmask;
++
++	childmask =3D data->childmask;
++	childstate.state =3D 0;
++
++	/*
++	 * The memory barrier is paired with the cmpxchg() in tmigr_active_up()
++	 * to make sure the updates of child and group states are ordered. The
++	 * ordering is mandatory, as the group state change depends on the child
++	 * state.
++	 */
++	curstate.state =3D atomic_read_acquire(&group->migr_state);
++
++	for (;;) {
++		if (child)
++			childstate.state =3D atomic_read(&child->migr_state);
++
++		newstate =3D curstate;
++		walk_done =3D true;
++
++		/* Reset active bit when the child is no longer active */
++		if (!childstate.active)
++			newstate.active &=3D ~childmask;
++
++		if (newstate.migrator =3D=3D childmask) {
++			/*
++			 * Find a new migrator for the group, because the child
++			 * group is idle!
++			 */
++			if (!childstate.active) {
++				unsigned long new_migr_bit, active =3D newstate.active;
++
++				new_migr_bit =3D find_first_bit(&active, BIT_CNT);
++
++				if (new_migr_bit !=3D BIT_CNT) {
++					newstate.migrator =3D BIT(new_migr_bit);
++				} else {
++					newstate.migrator =3D TMIGR_NONE;
++
++					/* Changes need to be propagated */
++					walk_done =3D false;
++				}
++			}
++		}
++
++		newstate.seq++;
++
++		WARN_ON_ONCE((newstate.migrator !=3D TMIGR_NONE) && !(newstate.active));
++
++		if (atomic_try_cmpxchg(&group->migr_state, &curstate.state,
++				       newstate.state))
++			break;
++
++		/*
++		 * The memory barrier is paired with the cmpxchg() in
++		 * tmigr_active_up() to make sure the updates of child and group
++		 * states are ordered. It is required only when the above
++		 * try_cmpxchg() fails.
++		 */
++		smp_mb__after_atomic();
++	}
++
++	data->remote =3D false;
++
++	/* Event Handling */
++	tmigr_update_events(group, child, data);
++
++	if (group->parent && (walk_done =3D=3D false))
++		data->childmask =3D group->childmask;
++
++	/*
++	 * data->firstexp was set by tmigr_update_events() and contains the
++	 * expiry of the first global event which needs to be handled. It
++	 * differs from KTIME_MAX if:
++	 * - group is the top level group and
++	 * - group is idle (which means CPU was the last active CPU in the
++	 *   hierarchy) and
++	 * - there is a pending event in the hierarchy
++	 */
++	WARN_ON_ONCE(data->firstexp !=3D KTIME_MAX && group->parent);
++
++	trace_tmigr_group_set_cpu_inactive(group, newstate, childmask);
++
++	return walk_done;
++}
++
++static u64 __tmigr_cpu_deactivate(struct tmigr_cpu *tmc, u64 nextexp)
++{
++	struct tmigr_walk data =3D { .nextexp =3D nextexp,
++				   .firstexp =3D KTIME_MAX,
++				   .evt =3D &tmc->cpuevt,
++				   .childmask =3D tmc->childmask };
++
++	/*
++	 * If nextexp is KTIME_MAX, the CPU event will be ignored because the
++	 * local timer expires before the global timer, no global timer is set
++	 * or CPU goes offline.
++	 */
++	if (nextexp !=3D KTIME_MAX)
++		tmc->cpuevt.ignore =3D false;
++
++	walk_groups(&tmigr_inactive_up, &data, tmc);
++	return data.firstexp;
++}
++
++/**
++ * tmigr_cpu_deactivate() - Put current CPU into inactive state
++ * @nextexp:	The next global timer expiry of the current CPU
++ *
++ * Must be called with interrupts disabled.
++ *
++ * Return: the next event expiry of the current CPU or the next event expiry
++ * from the hierarchy if this CPU is the top level migrator or the hierarchy=
+ is
++ * completely idle.
++ */
++u64 tmigr_cpu_deactivate(u64 nextexp)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	u64 ret;
++
++	if (tmigr_is_not_available(tmc))
++		return nextexp;
++
++	raw_spin_lock(&tmc->lock);
++
++	ret =3D __tmigr_cpu_deactivate(tmc, nextexp);
++
++	tmc->idle =3D true;
++
++	/*
++	 * Make sure the reevaluation of timers in idle path will not miss an
++	 * event.
++	 */
++	WRITE_ONCE(tmc->wakeup, ret);
++
++	trace_tmigr_cpu_idle(tmc, nextexp);
++	raw_spin_unlock(&tmc->lock);
++	return ret;
++}
++
++/**
++ * tmigr_quick_check() - Quick forecast of next tmigr event when CPU wants to
++ *			 go idle
++ * @nextevt:	The next global timer expiry of the current CPU
++ *
++ * Return:
++ * * KTIME_MAX		- when it is probable that nothing has to be done (not
++ *			  the only one in the level 0 group; and if it is the
++ *			  only one in level 0 group, but there are more than a
++ *			  single group active on the way to top level)
++ * * nextevt		- when CPU is offline and has to handle timer on his own
++ *			  or when on the way to top in every group only a single
++ *			  child is active but @nextevt is before the lowest
++ *			  next_expiry encountered while walking up to top level.
++ * * next_expiry	- value of lowest expiry encountered while walking groups
++ *			  if only a single child is active on each and @nextevt
++ *			  is after this lowest expiry.
++ */
++u64 tmigr_quick_check(u64 nextevt)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	struct tmigr_group *group =3D tmc->tmgroup;
++
++	if (tmigr_is_not_available(tmc))
++		return nextevt;
++
++	if (WARN_ON_ONCE(tmc->idle))
++		return nextevt;
++
++	if (!tmigr_check_migrator_and_lonely(tmc->tmgroup, tmc->childmask))
++		return KTIME_MAX;
++
++	do {
++		if (!tmigr_check_lonely(group)) {
++			return KTIME_MAX;
++		} else {
++			/*
++			 * Since current CPU is active, events may not be sorted
++			 * from bottom to the top because the CPU's event is ignored
++			 * up to the top and its sibling's events not propagated upwards.
++			 * Thus keep track of the lowest observed expiry.
++			 */
++			nextevt =3D min_t(u64, nextevt, READ_ONCE(group->next_expiry));
++			if (!group->parent)
++				return nextevt;
++		}
++		group =3D group->parent;
++	} while (group);
++
++	return KTIME_MAX;
++}
++
++static void tmigr_init_group(struct tmigr_group *group, unsigned int lvl,
++			     int node)
++{
++	union tmigr_state s;
++
++	raw_spin_lock_init(&group->lock);
++
++	group->level =3D lvl;
++	group->numa_node =3D lvl < tmigr_crossnode_level ? node : NUMA_NO_NODE;
++
++	group->num_children =3D 0;
++
++	s.migrator =3D TMIGR_NONE;
++	s.active =3D 0;
++	s.seq =3D 0;
++	atomic_set(&group->migr_state, s.state);
++
++	timerqueue_init_head(&group->events);
++	timerqueue_init(&group->groupevt.nextevt);
++	group->groupevt.nextevt.expires =3D KTIME_MAX;
++	WRITE_ONCE(group->next_expiry, KTIME_MAX);
++	group->groupevt.ignore =3D true;
++}
++
++static struct tmigr_group *tmigr_get_group(unsigned int cpu, int node,
++					   unsigned int lvl)
++{
++	struct tmigr_group *tmp, *group =3D NULL;
++
++	lockdep_assert_held(&tmigr_mutex);
++
++	/* Try to attach to an existing group first */
++	list_for_each_entry(tmp, &tmigr_level_list[lvl], list) {
++		/*
++		 * If @lvl is below the cross NUMA node level, check whether
++		 * this group belongs to the same NUMA node.
++		 */
++		if (lvl < tmigr_crossnode_level && tmp->numa_node !=3D node)
++			continue;
++
++		/* Capacity left? */
++		if (tmp->num_children >=3D TMIGR_CHILDREN_PER_GROUP)
++			continue;
++
++		/*
++		 * TODO: A possible further improvement: Make sure that all CPU
++		 * siblings end up in the same group of the lowest level of the
++		 * hierarchy. Rely on the topology sibling mask would be a
++		 * reasonable solution.
++		 */
++
++		group =3D tmp;
++		break;
++	}
++
++	if (group)
++		return group;
++
++	/* Allocate and	set up a new group */
++	group =3D kzalloc_node(sizeof(*group), GFP_KERNEL, node);
++	if (!group)
++		return ERR_PTR(-ENOMEM);
++
++	tmigr_init_group(group, lvl, node);
++
++	/* Setup successful. Add it to the hierarchy */
++	list_add(&group->list, &tmigr_level_list[lvl]);
++	trace_tmigr_group_set(group);
++	return group;
++}
++
++static void tmigr_connect_child_parent(struct tmigr_group *child,
++				       struct tmigr_group *parent)
++{
++	union tmigr_state childstate;
++
++	raw_spin_lock_irq(&child->lock);
++	raw_spin_lock_nested(&parent->lock, SINGLE_DEPTH_NESTING);
++
++	child->parent =3D parent;
++	child->childmask =3D BIT(parent->num_children++);
++
++	raw_spin_unlock(&parent->lock);
++	raw_spin_unlock_irq(&child->lock);
++
++	trace_tmigr_connect_child_parent(child);
++
++	/*
++	 * To prevent inconsistent states, active children need to be active in
++	 * the new parent as well. Inactive children are already marked inactive
++	 * in the parent group:
++	 *
++	 * * When new groups were created by tmigr_setup_groups() starting from
++	 *   the lowest level (and not higher then one level below the current
++	 *   top level), then they are not active. They will be set active when
++	 *   the new online CPU comes active.
++	 *
++	 * * But if a new group above the current top level is required, it is
++	 *   mandatory to propagate the active state of the already existing
++	 *   child to the new parent. So tmigr_connect_child_parent() is
++	 *   executed with the formerly top level group (child) and the newly
++	 *   created group (parent).
++	 */
++	childstate.state =3D atomic_read(&child->migr_state);
++	if (childstate.migrator !=3D TMIGR_NONE) {
++		struct tmigr_walk data;
++
++		data.childmask =3D child->childmask;
++
++		/*
++		 * There is only one new level per time. When connecting the
++		 * child and the parent and set the child active when the parent
++		 * is inactive, the parent needs to be the uppermost
++		 * level. Otherwise there went something wrong!
++		 */
++		WARN_ON(!tmigr_active_up(parent, child, &data) && parent->parent);
++	}
++}
++
++static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
++{
++	struct tmigr_group *group, *child, **stack;
++	int top =3D 0, err =3D 0, i =3D 0;
++	struct list_head *lvllist;
++
++	stack =3D kcalloc(tmigr_hierarchy_levels, sizeof(*stack), GFP_KERNEL);
++	if (!stack)
++		return -ENOMEM;
++
++	do {
++		group =3D tmigr_get_group(cpu, node, i);
++		if (IS_ERR(group)) {
++			err =3D PTR_ERR(group);
++			break;
++		}
++
++		top =3D i;
++		stack[i++] =3D group;
++
++		/*
++		 * When booting only less CPUs of a system than CPUs are
++		 * available, not all calculated hierarchy levels are required.
++		 *
++		 * The loop is aborted as soon as the highest level, which might
++		 * be different from tmigr_hierarchy_levels, contains only a
++		 * single group.
++		 */
++		if (group->parent || i =3D=3D tmigr_hierarchy_levels ||
++		    (list_empty(&tmigr_level_list[i]) &&
++		     list_is_singular(&tmigr_level_list[i - 1])))
++			break;
++
++	} while (i < tmigr_hierarchy_levels);
++
++	do {
++		group =3D stack[--i];
++
++		if (err < 0) {
++			list_del(&group->list);
++			kfree(group);
++			continue;
++		}
++
++		WARN_ON_ONCE(i !=3D group->level);
++
++		/*
++		 * Update tmc -> group / child -> group connection
++		 */
++		if (i =3D=3D 0) {
++			struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++
++			raw_spin_lock_irq(&group->lock);
++
++			tmc->tmgroup =3D group;
++			tmc->childmask =3D BIT(group->num_children++);
++
++			raw_spin_unlock_irq(&group->lock);
++
++			trace_tmigr_connect_cpu_parent(tmc);
++
++			/* There are no children that need to be connected */
++			continue;
++		} else {
++			child =3D stack[i - 1];
++			tmigr_connect_child_parent(child, group);
++		}
++
++		/* check if uppermost level was newly created */
++		if (top !=3D i)
++			continue;
++
++		WARN_ON_ONCE(top =3D=3D 0);
++
++		lvllist =3D &tmigr_level_list[top];
++		if (group->num_children =3D=3D 1 && list_is_singular(lvllist)) {
++			lvllist =3D &tmigr_level_list[top - 1];
++			list_for_each_entry(child, lvllist, list) {
++				if (child->parent)
++					continue;
++
++				tmigr_connect_child_parent(child, group);
++			}
++		}
++	} while (i > 0);
++
++	kfree(stack);
++
++	return err;
++}
++
++static int tmigr_add_cpu(unsigned int cpu)
++{
++	int node =3D cpu_to_node(cpu);
++	int ret;
++
++	mutex_lock(&tmigr_mutex);
++	ret =3D tmigr_setup_groups(cpu, node);
++	mutex_unlock(&tmigr_mutex);
++
++	return ret;
++}
++
++static int tmigr_cpu_online(unsigned int cpu)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	int ret;
++
++	/* First online attempt? Initialize CPU data */
++	if (!tmc->tmgroup) {
++		raw_spin_lock_init(&tmc->lock);
++
++		ret =3D tmigr_add_cpu(cpu);
++		if (ret < 0)
++			return ret;
++
++		if (tmc->childmask =3D=3D 0)
++			return -EINVAL;
++
++		timerqueue_init(&tmc->cpuevt.nextevt);
++		tmc->cpuevt.nextevt.expires =3D KTIME_MAX;
++		tmc->cpuevt.ignore =3D true;
++		tmc->cpuevt.cpu =3D cpu;
++
++		tmc->remote =3D false;
++		WRITE_ONCE(tmc->wakeup, KTIME_MAX);
++	}
++	raw_spin_lock_irq(&tmc->lock);
++	trace_tmigr_cpu_online(tmc);
++	tmc->idle =3D timer_base_is_idle();
++	if (!tmc->idle)
++		__tmigr_cpu_activate(tmc);
++	tmc->online =3D true;
++	raw_spin_unlock_irq(&tmc->lock);
++	return 0;
++}
++
++/*
++ * tmigr_trigger_active() - trigger a CPU to become active again
++ *
++ * This function is executed on a CPU which is part of cpu_online_mask, when=
+ the
++ * last active CPU in the hierarchy is offlining. With this, it is ensured t=
+hat
++ * the other CPU is active and takes over the migrator duty.
++ */
++static long tmigr_trigger_active(void *unused)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++
++	WARN_ON_ONCE(!tmc->online || tmc->idle);
++
++	return 0;
++}
++
++static int tmigr_cpu_offline(unsigned int cpu)
++{
++	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
++	int migrator;
++	u64 firstexp;
++
++	raw_spin_lock_irq(&tmc->lock);
++	tmc->online =3D false;
++	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
++
++	/*
++	 * CPU has to handle the local events on his own, when on the way to
++	 * offline; Therefore nextevt value is set to KTIME_MAX
++	 */
++	firstexp =3D __tmigr_cpu_deactivate(tmc, KTIME_MAX);
++	trace_tmigr_cpu_offline(tmc);
++	raw_spin_unlock_irq(&tmc->lock);
++
++	if (firstexp !=3D KTIME_MAX) {
++		migrator =3D cpumask_any_but(cpu_online_mask, cpu);
++		work_on_cpu(migrator, tmigr_trigger_active, NULL);
++	}
++
++	return 0;
++}
++
++static int __init tmigr_init(void)
++{
++	unsigned int cpulvl, nodelvl, cpus_per_node, i;
++	unsigned int nnodes =3D num_possible_nodes();
++	unsigned int ncpus =3D num_possible_cpus();
++	int ret =3D -ENOMEM;
++
++	BUILD_BUG_ON_NOT_POWER_OF_2(TMIGR_CHILDREN_PER_GROUP);
++
++	/* Nothing to do if running on UP */
++	if (ncpus =3D=3D 1)
++		return 0;
++
++	/*
++	 * Calculate the required hierarchy levels. Unfortunately there is no
++	 * reliable information available, unless all possible CPUs have been
++	 * brought up and all NUMA nodes are populated.
++	 *
++	 * Estimate the number of levels with the number of possible nodes and
++	 * the number of possible CPUs. Assume CPUs are spread evenly across
++	 * nodes. We cannot rely on cpumask_of_node() because it only works for
++	 * online CPUs.
++	 */
++	cpus_per_node =3D DIV_ROUND_UP(ncpus, nnodes);
++
++	/* Calc the hierarchy levels required to hold the CPUs of a node */
++	cpulvl =3D DIV_ROUND_UP(order_base_2(cpus_per_node),
++			      ilog2(TMIGR_CHILDREN_PER_GROUP));
++
++	/* Calculate the extra levels to connect all nodes */
++	nodelvl =3D DIV_ROUND_UP(order_base_2(nnodes),
++			       ilog2(TMIGR_CHILDREN_PER_GROUP));
++
++	tmigr_hierarchy_levels =3D cpulvl + nodelvl;
++
++	/*
++	 * If a NUMA node spawns more than one CPU level group then the next
++	 * level(s) of the hierarchy contains groups which handle all CPU groups
++	 * of the same NUMA node. The level above goes across NUMA nodes. Store
++	 * this information for the setup code to decide in which level node
++	 * matching is no longer required.
++	 */
++	tmigr_crossnode_level =3D cpulvl;
++
++	tmigr_level_list =3D kcalloc(tmigr_hierarchy_levels, sizeof(struct list_hea=
+d), GFP_KERNEL);
++	if (!tmigr_level_list)
++		goto err;
++
++	for (i =3D 0; i < tmigr_hierarchy_levels; i++)
++		INIT_LIST_HEAD(&tmigr_level_list[i]);
++
++	pr_info("Timer migration: %d hierarchy levels; %d children per group;"
++		" %d crossnode level\n",
++		tmigr_hierarchy_levels, TMIGR_CHILDREN_PER_GROUP,
++		tmigr_crossnode_level);
++
++	ret =3D cpuhp_setup_state(CPUHP_AP_TMIGR_ONLINE, "tmigr:online",
++				tmigr_cpu_online, tmigr_cpu_offline);
++	if (ret)
++		goto err;
++
++	return 0;
++
++err:
++	pr_err("Timer migration setup failed\n");
++	return ret;
++}
++late_initcall(tmigr_init);
+diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
+new file mode 100644
+index 000000000000..6c37d94a37d9
+--- /dev/null
++++ b/kernel/time/timer_migration.h
+@@ -0,0 +1,140 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _KERNEL_TIME_MIGRATION_H
++#define _KERNEL_TIME_MIGRATION_H
++
++/* Per group capacity. Must be a power of 2! */
++#define TMIGR_CHILDREN_PER_GROUP 8
++
++/**
++ * struct tmigr_event - a timer event associated to a CPU
++ * @nextevt:	The node to enqueue an event in the parent group queue
++ * @cpu:	The CPU to which this event belongs
++ * @ignore:	Hint whether the event could be ignored; it is set when
++ *		CPU or group is active;
++ */
++struct tmigr_event {
++	struct timerqueue_node	nextevt;
++	unsigned int		cpu;
++	bool			ignore;
++};
++
++/**
++ * struct tmigr_group - timer migration hierarchy group
++ * @lock:		Lock protecting the event information and group hierarchy
++ *			information during setup
++ * @parent:		Pointer to the parent group
++ * @groupevt:		Next event of the group which is only used when the
++ *			group is !active. The group event is then queued into
++ *			the parent timer queue.
++ *			Ignore bit of @groupevt is set when the group is active.
++ * @next_expiry:	Base monotonic expiry time of the next event of the
++ *			group; It is used for the racy lockless check whether a
++ *			remote expiry is required; it is always reliable
++ * @events:		Timer queue for child events queued in the group
++ * @migr_state:		State of the group (see union tmigr_state)
++ * @level:		Hierarchy level of the group; Required during setup
++ * @numa_node:		Required for setup only to make sure CPU and low level
++ *			group information is NUMA local. It is set to NUMA node
++ *			as long as the group level is per NUMA node (level <
++ *			tmigr_crossnode_level); otherwise it is set to
++ *			NUMA_NO_NODE
++ * @num_children:	Counter of group children to make sure the group is only
++ *			filled with TMIGR_CHILDREN_PER_GROUP; Required for setup
++ *			only
++ * @childmask:		childmask of the group in the parent group; is set
++ *			during setup and will never change; can be read
++ *			lockless
++ * @list:		List head that is added to the per level
++ *			tmigr_level_list; is required during setup when a
++ *			new group needs to be connected to the existing
++ *			hierarchy groups
++ */
++struct tmigr_group {
++	raw_spinlock_t		lock;
++	struct tmigr_group	*parent;
++	struct tmigr_event	groupevt;
++	u64			next_expiry;
++	struct timerqueue_head	events;
++	atomic_t		migr_state;
++	unsigned int		level;
++	int			numa_node;
++	unsigned int		num_children;
++	u8			childmask;
++	struct list_head	list;
++};
++
++/**
++ * struct tmigr_cpu - timer migration per CPU group
++ * @lock:		Lock protecting the tmigr_cpu group information
++ * @online:		Indicates whether the CPU is online; In deactivate path
++ *			it is required to know whether the migrator in the top
++ *			level group is to be set offline, while a timer is
++ *			pending. Then another online CPU needs to be notified to
++ *			take over the migrator role. Furthermore the information
++ *			is required in CPU hotplug path as the CPU is able to go
++ *			idle before the timer migration hierarchy hotplug AP is
++ *			reached. During this phase, the CPU has to handle the
++ *			global timers on its own and must not act as a migrator.
++ * @idle:		Indicates whether the CPU is idle in the timer migration
++ *			hierarchy
++ * @remote:		Is set when timers of the CPU are expired remotely
++ * @tmgroup:		Pointer to the parent group
++ * @childmask:		childmask of tmigr_cpu in the parent group
++ * @wakeup:		Stores the first timer when the timer migration
++ *			hierarchy is completely idle and remote expiry was done;
++ *			is returned to timer code in the idle path and is only
++ *			used in idle path.
++ * @cpuevt:		CPU event which could be enqueued into the parent group
++ */
++struct tmigr_cpu {
++	raw_spinlock_t		lock;
++	bool			online;
++	bool			idle;
++	bool			remote;
++	struct tmigr_group	*tmgroup;
++	u8			childmask;
++	u64			wakeup;
++	struct tmigr_event	cpuevt;
++};
++
++/**
++ * union tmigr_state - state of tmigr_group
++ * @state:	Combined version of the state - only used for atomic
++ *		read/cmpxchg function
++ * @struct:	Split version of the state - only use the struct members to
++ *		update information to stay independent of endianness
++ */
++union tmigr_state {
++	u32 state;
++	/**
++	 * struct - split state of tmigr_group
++	 * @active:	Contains each childmask bit of the active children
++	 * @migrator:	Contains childmask of the child which is migrator
++	 * @seq:	Sequence counter needs to be increased when an update
++	 *		to the tmigr_state is done. It prevents a race when
++	 *		updates in the child groups are propagated in changed
++	 *		order. Detailed information about the scenario is
++	 *		given in the documentation at the begin of
++	 *		timer_migration.c.
++	 */
++	struct {
++		u8	active;
++		u8	migrator;
++		u16	seq;
++	} __packed;
++};
++
++#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
++extern void tmigr_handle_remote(void);
++extern bool tmigr_requires_handle_remote(void);
++extern void tmigr_cpu_activate(void);
++extern u64 tmigr_cpu_deactivate(u64 nextevt);
++extern u64 tmigr_cpu_new_timer(u64 nextevt);
++extern u64 tmigr_quick_check(u64 nextevt);
++#else
++static inline void tmigr_handle_remote(void) { }
++static inline bool tmigr_requires_handle_remote(void) { return false; }
++static inline void tmigr_cpu_activate(void) { }
++#endif
++
++#endif
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 7b482a26d741..78eaea2e5d72 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1961,7 +1961,7 @@ static void __queue_delayed_work(int cpu, struct workqu=
+eue_struct *wq,
+ 	if (unlikely(cpu !=3D WORK_CPU_UNBOUND))
+ 		add_timer_on(timer, cpu);
+ 	else
+-		add_timer(timer);
++		add_timer_global(timer);
+ }
+=20
+ /**
+diff --git a/tools/testing/selftests/rcutorture/bin/torture.sh b/tools/testin=
+g/selftests/rcutorture/bin/torture.sh
+index d5a0d8a33c27..bbac5f4b03d0 100755
+--- a/tools/testing/selftests/rcutorture/bin/torture.sh
++++ b/tools/testing/selftests/rcutorture/bin/torture.sh
+@@ -567,7 +567,7 @@ then
+ 	torture_bootargs=3D"rcupdate.rcu_cpu_stall_suppress_at_boot=3D1 torture.dis=
+able_onoff_at_boot rcupdate.rcu_task_stall_timeout=3D30000 tsc=3Dwatchdog"
+ 	torture_set "clocksourcewd-1" tools/testing/selftests/rcutorture/bin/kvm.sh=
+ --allcpus --duration 45s --configs TREE03 --kconfig "CONFIG_TEST_CLOCKSOURCE=
+_WATCHDOG=3Dy" --trust-make
+=20
+-	torture_bootargs=3D"rcupdate.rcu_cpu_stall_suppress_at_boot=3D1 torture.dis=
+able_onoff_at_boot rcupdate.rcu_task_stall_timeout=3D30000 clocksource.max_cs=
+wd_read_retries=3D1 tsc=3Dwatchdog"
++	torture_bootargs=3D"rcupdate.rcu_cpu_stall_suppress_at_boot=3D1 torture.dis=
+able_onoff_at_boot rcupdate.rcu_task_stall_timeout=3D30000 tsc=3Dwatchdog"
+ 	torture_set "clocksourcewd-2" tools/testing/selftests/rcutorture/bin/kvm.sh=
+ --allcpus --duration 45s --configs TREE03 --kconfig "CONFIG_TEST_CLOCKSOURCE=
+_WATCHDOG=3Dy" --trust-make
+=20
+ 	# In case our work is already done...
 
