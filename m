@@ -1,124 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0E08480
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA306F503;
+	Sun, 10 Mar 2024 02:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710038989; cv=none; b=Mp6ntNFNEk5FEaZvZMEMw3Tcx9zHyFhu4v5gXfhoIXW7QRAr6oekssxMXn5gQiMyIaIOKMoRnIDQLsMftOzw5yQuZ8Dy6d30owfKBJkBC7quw2BkB0Lo0l5O8NpQ857MBHK0wzslkTgoMqzvi2dqFfihAd97rP83C5MKFQfpmyU=
+	t=1710039591; cv=none; b=j+xdQ4heKaNKY2ZSyDzKVra+VJE4EqlK4pKrrMSoHCdo5HRh6IJx1IxyqDHZ/8FvDxf/h78k8xNNN3hArrMwGHl1ESNJzUXY6sooGd9x6Ygl9T6rnul3FKe2NCLXufPGLLnwvx2r07e3emPBNPmhaqdhF+/mcPDU1RLPkwOyB5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710038989; c=relaxed/simple;
-	bh=WgLB+opCEDzMviIFJRketQCowWRnc73bSza5E3/T0ec=;
+	s=arc-20240116; t=1710039591; c=relaxed/simple;
+	bh=GfXW4C6GlijK82l5vOoVk6CS8xy/zjIX2B+QiJxYiv4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P4x0JJ380RfIOpfkemYLw3Z9eaWpakHT6kG0Y+0JDi1TXALQKmjkypvFHtxL7TPsKWKdwBbYG7NSq/nN7Y8s2qXZc4LKGv44F2OkRxPjRruSJuQkOjr5pE5ek6EAoJq/XWb8H5XPhFlOchUtHGxnKXbB90sJCt/Ws2V3UCcr6AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaS+EMht; arc=none smtp.client-ip=198.175.65.15
+	 In-Reply-To:Content-Type; b=DIx7thEx9dJ9wyAJfJK+Hcl5oDsB1eWqUioR1aubbJyis/MPJk68knxkhTcBkLJBweA8Q/0CEUSE4o40/g5NuFvxBKX4tzbyec0TKVckHPo8GSHzkj5LKyfA25JFKYs7tmvp5sI80di3++pAGEhwBHrVada+m3uLXzp5qGQ5hV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hevEjtdC; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaS+EMht"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hevEjtdC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710038987; x=1741574987;
+  t=1710039589; x=1741575589;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=WgLB+opCEDzMviIFJRketQCowWRnc73bSza5E3/T0ec=;
-  b=gaS+EMhtqdffzGngvDG5J5KPZqz0x3MERCE3xtnYWEb1SLd33sYBFcxl
-   G1tRZelxVHjd4XR2ZQx2EvK+ArDLpvhr5nMe+rKHGxImt/HY1B/nfwR2T
-   /joJjfEvKxzt0ptNohVMbV1jyY86hHfaN5fWEPuzlzOW68g0TXe6reH54
-   6IKWT+9+zXWCvhUlXQBjmTjanoq8cZ6o0nP2pqbWRuLrOPycrYspuuC0a
-   Zu859/ifntFSm3QR67IdIiis01iR5HlAv/36K05+Fo83q+K4tvLY0pE38
-   Ffp5iD91MB9Y0phmF54ZfMN8L6UqccPm+iHaDoENkx4DLy0RP4wkcI6bc
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="8549010"
+  bh=GfXW4C6GlijK82l5vOoVk6CS8xy/zjIX2B+QiJxYiv4=;
+  b=hevEjtdCJBvIuveH/5x50LH5PrXLfOFhU9x4PDE9yAJYYHYNXoBdfU3T
+   PUD2m4hQki75dSpKLK8AMWHUIoPNLVcvQ0YckOkceS6dTKxrE6p8CVD5l
+   M/CSitwOtaSM65sHxzb3HyKWYA61Q7h5RjtldcFaAiVYu3qO4pz3Jb7oc
+   VHUL7p6Y2zY4a45LgEKbHDvRFOti/lx3IvmrzUv7h1XnGkkZb63uqMMxC
+   dNjO9tApfS+Dgb01+ia9/lAQDGIj7UAn3Ac9/zd599MAfhBEFTaO5U89P
+   gqtB3Je3D4B4kXq6h6m1Q7NXo0s19SZcv05NkQn1tJ+I3wkgC0jq9A3A6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="4652779"
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="8549010"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 18:49:46 -0800
+   d="scan'208";a="4652779"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 18:59:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
-   d="scan'208";a="15432216"
-Received: from chengyin-mobl.amr.corp.intel.com (HELO [10.209.27.224]) ([10.209.27.224])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 18:49:46 -0800
-Message-ID: <7c8e8216-cb49-4b5a-a547-5e807fa96214@linux.intel.com>
-Date: Sat, 9 Mar 2024 18:49:45 -0800
+   d="scan'208";a="10922168"
+Received: from leihuan1-mobl.amr.corp.intel.com (HELO [10.0.2.15]) ([10.124.0.187])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 18:59:48 -0800
+Message-ID: <0fcdb6bc-68e6-639b-4710-7aaadda62ae1@linux.intel.com>
+Date: Sat, 9 Mar 2024 21:59:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] x86/tdx: Rename tdx_parse_tdinfo() to tdx_setup()
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@intel.com
-Cc: hpa@zytor.com, seanjc@google.com, ele.reshetova@intel.com,
- rick.p.edgecombe@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20240309210230.239045-1-kirill.shutemov@linux.intel.com>
- <20240309210230.239045-3-kirill.shutemov@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1] fs/fuse: Fix missing FOLL_PIN for direct-io
+To: Miklos Szeredi <miklos@szeredi.hu>,
+ Bernd Schubert <bernd.schubert@fastmail.fm>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <1693334193-7733-1-git-send-email-lei.huang@linux.intel.com>
+ <CAJfpegtX_XAHhHS4XN1-=cOHy0ZUSxuA_OQO5tdujLVJdE1EdQ@mail.gmail.com>
+ <a77853da-31e3-4a7c-9e1c-580a8136c3bf@fastmail.fm>
+ <CAJfpeguuRXO01hdmEr5ffMUNDyp5VPTYToOENjacYNAd1nu6Rw@mail.gmail.com>
 Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240309210230.239045-3-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Lei Huang <lei.huang@linux.intel.com>
+In-Reply-To: <CAJfpeguuRXO01hdmEr5ffMUNDyp5VPTYToOENjacYNAd1nu6Rw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Thank you very much, Miklos!
 
-On 3/9/24 1:02 PM, Kirill A. Shutemov wrote:
-> Rename tdx_parse_tdinfo() to tdx_setup() and move setting NOTIFY_ENABLES
-> there.
->
-> The function will be extended to adjust TD configuration.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
+Yes. It is not easy to reproduce the issues in real applications. We 
+only observed the issue in our own testing tool which runs multiple 
+tests concurrently. We have not been able reproduce it with simple code yet.
 
-Looks good to me.
+-lei
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  arch/x86/coco/tdx/tdx.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> index 5ffe5ef99536..afdaf46cabb9 100644
-> --- a/arch/x86/coco/tdx/tdx.c
-> +++ b/arch/x86/coco/tdx/tdx.c
-> @@ -181,7 +181,7 @@ static void __noreturn tdx_panic(const char *msg)
->  		__tdx_hypercall(&args);
->  }
->  
-> -static void tdx_parse_tdinfo(u64 *cc_mask)
-> +static void tdx_setup(u64 *cc_mask)
->  {
->  	struct tdx_module_args args = {};
->  	unsigned int gpa_width;
-> @@ -206,6 +206,9 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
->  	gpa_width = args.rcx & GENMASK(5, 0);
->  	*cc_mask = BIT_ULL(gpa_width - 1);
->  
-> +	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
-> +	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
-> +
->  	/*
->  	 * The kernel can not handle #VE's when accessing normal kernel
->  	 * memory.  Ensure that no #VE will be delivered for accesses to
-> @@ -930,11 +933,11 @@ void __init tdx_early_init(void)
->  	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
->  
->  	cc_vendor = CC_VENDOR_INTEL;
-> -	tdx_parse_tdinfo(&cc_mask);
-> -	cc_set_mask(cc_mask);
->  
-> -	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
-> -	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
-> +	/* Configure the TD */
-> +	tdx_setup(&cc_mask);
-> +
-> +	cc_set_mask(cc_mask);
->  
->  	/*
->  	 * All bits above GPA width are reserved and kernel treats shared bit
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+On 3/6/24 07:05, Miklos Szeredi wrote:
+> On Wed, 6 Mar 2024 at 12:16, Bernd Schubert <bernd.schubert@fastmail.fm> wrote:
+>>
+>>
+>>
+>> On 3/6/24 11:01, Miklos Szeredi wrote:
+>>> On Tue, 29 Aug 2023 at 20:37, Lei Huang <lei.huang@linux.intel.com> wrote:
+>>>>
+>>>> Our user space filesystem relies on fuse to provide POSIX interface.
+>>>> In our test, a known string is written into a file and the content
+>>>> is read back later to verify correct data returned. We observed wrong
+>>>> data returned in read buffer in rare cases although correct data are
+>>>> stored in our filesystem.
+>>>>
+>>>> Fuse kernel module calls iov_iter_get_pages2() to get the physical
+>>>> pages of the user-space read buffer passed in read(). The pages are
+>>>> not pinned to avoid page migration. When page migration occurs, the
+>>>> consequence are two-folds.
+>>>>
+>>>> 1) Applications do not receive correct data in read buffer.
+>>>> 2) fuse kernel writes data into a wrong place.
+>>>>
+>>>> Using iov_iter_extract_pages() to pin pages fixes the issue in our
+>>>> test.
+>>>>
+>>>> An auxiliary variable "struct page **pt_pages" is used in the patch
+>>>> to prepare the 2nd parameter for iov_iter_extract_pages() since
+>>>> iov_iter_get_pages2() uses a different type for the 2nd parameter.
+>>>>
+>>>> Signed-off-by: Lei Huang <lei.huang@linux.intel.com>
+>>>
+>>> Applied, with a modification to only unpin if
+>>> iov_iter_extract_will_pin() returns true.
+>>
+>> Hi Miklos,
+>>
+>> do you have an idea if this needs to be back ported and to which kernel
+>> version?
+>> I had tried to reproduce data corruption with 4.18 - Lei wrote that he
+>> could see issues with older kernels as well, but I never managed to
+>> trigger anything on 4.18-RHEL. Typically I use ql-fstest
+>> (https://github.com/bsbernd/ql-fstest) and even added random DIO as an
+>> option - nothing report with weeks of run time. I could try again with
+>> more recent kernels that have folios.
+> 
+> I don't think that corruption will happen in real life.  So I'm not
+> sure we need to bother with backporting, and definitely not before
+> when the infrastructure was introduced.
+> 
+> Thanks,
+> Miklos
