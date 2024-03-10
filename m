@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C027381C2
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711C93A1AA
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 02:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036357; cv=none; b=F6WteHlYrIEanFVP7awZUTm5MZio2HmB3x5WBPWMQYAln1xNp0K8IHiUSoCDk3MbHsbGk/V2Q+YnXCVeflDP9IoLT+EUlCPM/CLOe/nVf3MCZR/XaF/2bB4/UniYupnBKBtTwT2RKy/N+Ptw97XvrjP8WgAwZxh+MQBiCsYZFdo=
+	t=1710036363; cv=none; b=qrZoYyTKoyxCwHPVKraqowcq4rn7lb6IPOh9+8rKJKXoeDo9TP+GUzwHWy8A/HgpMImGe+dtGUCL/0gThSM2cPKNc+ZN7VJYslFGJT8motijd5qSs5AcW2henefBvExNjqS2N+8SR3DLXSQPce/BDNI25lgyj8XRJefqA4u1hgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036357; c=relaxed/simple;
-	bh=Fq4lcFad9HT9JmjkJEm98VVUDFCHd+jm9iRP80ik0Qk=;
+	s=arc-20240116; t=1710036363; c=relaxed/simple;
+	bh=5SZh2mNEl5n+h2lF7KiTxzvDIwYjug3hRJqLAmoNhNQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=aa3NnH4BSyhXl02hSxtq7kBuiTk1hBAz+wWV30exSLDlb7H3Xm1gopirwyJ0oOOguti1tFcSXGJU82ZDanJkzP/qqFOlF0adu+Z9GLozIJhgNc/illTGr28wCtekfUScVUPxAO7Bq17LC8oex8XTVDXtRZVe937fRA53FnamVwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Et8oLd0U; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=EMvDNGZ4/kye+swt0HLbsAZqvZo60Lau9E5JiuCoVCuviRu9kpXFvXKJR5kfTaevGfBE5ICZzl/Uf1t3c2fMg6xkxvbFxwAUDOPr23IOYP7MND9+KAJ3XZb2Twf/XuKmF7w8mV6ei36MOuM41xXlUXERJomyWsHjG8NItYLZkCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Di6pDk6N; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Et8oLd0U"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b5d1899eso5900393276.0
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:05:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Di6pDk6N"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a08eb0956so24609507b3.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2024 18:06:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036354; x=1710641154; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710036359; x=1710641159; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EfWQCgRQvC61dW45rBVZGuz4IKfn5r36xpIYwQ99OM0=;
-        b=Et8oLd0Uuwwe4+7kI3T6ViWYA6cGKXI7GR4TrQvRkiTDQYe/9R5M+ZfD2kWjDZvRbh
-         X9CZYfs9El9ORL0q4RbfIWLW0QB4VriOmBvSW5cm9KsvKdimt3+rxA+ILZyat14alDI+
-         kdBPW1hPBca7cHrzJeFFsZ47zB3LuwqJjoGY+xMp1SFZIACbxh+P9x4u6vGiqqs2UKnn
-         Tm2EscMTADk8ui3t0JiF0wxcs0P9EvfiH/VoRFLrT4dm6T4pbP+WZf+FPL0m/lZe0Utc
-         JT6jgNebAvTjy9xU8z4MQmxi5+4xZ4dh461NZ30LZ76+3AXvAOpZcEsV6kOiWkuUhk4Z
-         1dvQ==
+        bh=Hl1/umpZGVsczLzrKS1GZCeAFysDY04buU8ZoM+JBKw=;
+        b=Di6pDk6NePavMF2yALztmcFiJt+x7tbKH41g7V7tmKXpI1KI8Xp6mAzitCxmfo9DcO
+         6raBeb+eQk7G9fIGxVMs/sYQblO2BRyfy90v+WkYhzFg1GGiizQv742FDU8EK+ZFwRwU
+         vfGTaQ7N0pXROHAxr6tk9DokTsKmKfe1AQ8N86r+BqVYtjAC2Gtzli84MJerVNK2z188
+         EBaQWSa+L2Dp9j/wtYynGlH/igpaNvLsz7UviGOx9PDXXU3IblAnGvrUmlr7IYjXhR9O
+         P91Fwx4+QnSkrZeNQIXzDa/cwZaDOYB/XdM/pdVfwu8y36kr+LbfT0iQGnEcKivrpxaw
+         odaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036354; x=1710641154;
+        d=1e100.net; s=20230601; t=1710036359; x=1710641159;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EfWQCgRQvC61dW45rBVZGuz4IKfn5r36xpIYwQ99OM0=;
-        b=O2VvH77a/WQQf/v1yYKkHMiieEy783yDIfBpTb2XljsAfVEr+5vjDgobDBhNNM5p0V
-         S+M7VkkI5YjKl0Ro/vSRcOhkFbVbBR7s8NyvM/QriNtmvl2j4frFw6XHaXbndFNoFdOd
-         xop3NdY2vYGOfwiilqG5pfuWUy9RPgQIHPEtUYKMOLLQhofvxbtoWDJkyksH7FgIJWcv
-         l7xTBN/OvzBFisA5nycQjqWUn9I+45/wB1D7Bm7nCTXxrymaV3+qYxqeIhBR69U8/JcF
-         qG2Y/sKxQoDPBS2u85P7Y2Q24a8sWi4mOcmcoQpsr1Po1eJn/JKSdaJwF38cGN5k8yf8
-         qBWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHLod15+Gp2cCjCMBhdCQw6Q2ethE2DqGj4uPgiFv6+mGBw3h8gNUmrib6kWv4rzCOdcv7UJ8dn4aEPmJ2Xkcl5x5un6IN0e3kf0HE
-X-Gm-Message-State: AOJu0YyyarzW31LKb/WSFRPibCxZIBFq05W/nS6O7wLoLTEWKrymcyCQ
-	mpd9n929Gm4P/kkghmwuOzXXOe3L/U5gJdDb17d6SpnOGCgHCU/J7UarpERR/T/Zob6cDuAsKZz
-	hQa03Eg==
-X-Google-Smtp-Source: AGHT+IEbgF9/L10MqEQsfT/YgldjotiYAys6nVxOfaOObgpu5qrtCsaN68T0Sw/VHfW+vmC7K4OzTmNsXC8h
+        bh=Hl1/umpZGVsczLzrKS1GZCeAFysDY04buU8ZoM+JBKw=;
+        b=Yzrx4wymAB8U34jtINLs1AaSJmXw+BrwNBo8GklqqJbFHtIAXlCW9RjY/NkRoGfX02
+         4v3tkEwVM/aiKySD4HVzY/30+/Z/uk8YxhFwZNf2Jh+soh5d2CC/MXEdCc2D4KEXnzsl
+         Rk0Hm4qnQWaXrSUtvqpSndwVikx10cynYCr3/GNRZRFecZ9Si61PYN9RL+mrTYr1bkiy
+         xELW+N4MYiE+hnddZL8MYflbAvHbuZleh5JIXNFoqxcylJQC4PJyresmv8waGBnnVQWe
+         wO0iy0hAaTEmOvx6nOdB0VicPEUgtJiJzjwGmv6IQb+pC7GqpbV+hrWUv++urkvX/p8s
+         l5Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2pMBOBRwxQ815oWyYpO0yKi8Fey/w51QbbPvEmcPSm0GgwkuVkJ/BnBAtfFJqtMTD1JXgO2uga+L0/t2+0kgskvj9bKfDUwMgY8vq
+X-Gm-Message-State: AOJu0Yw3eTMgYPiSnj5Wy6f5GS8lFDnfHyzhVEbg5evn3B4EhKwXwWG0
+	UtmhjOyHDzDvruyPJAzztr90B/E6DE6h3E6mC+3/tIvOPWEpDYVukF4ZtZMvNi51dSGaUJ+8E0D
+	+AFAgTQ==
+X-Google-Smtp-Source: AGHT+IFPbWB3/192KGdZtIg9F9X7CoqlPRJZXE+414zWtjFld4XzM0pldNt12CDgHpD/F24xaEQHAI0MEqre
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a05:6902:10c2:b0:dbd:b4e8:1565 with SMTP
- id w2-20020a05690210c200b00dbdb4e81565mr1091906ybu.4.1710036354130; Sat, 09
- Mar 2024 18:05:54 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:05:04 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1820:b0:dc2:5456:d9ac with SMTP
+ id cf32-20020a056902182000b00dc25456d9acmr147760ybb.5.1710036359574; Sat, 09
+ Mar 2024 18:05:59 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:05:06 -0800
 In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-10-irogers@google.com>
+Message-Id: <20240310020509.647319-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240310020509.647319-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 09/13] tools headers: Rewrite linux/atomic.h using C11's stdatomic.h
+Subject: [PATCH v1 11/13] tools headers: Sync linux/overflow.h
 From: Ian Rogers <irogers@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -93,402 +93,434 @@ To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Code in tools tries to follow the patterns of the kernel, so the
-atomic functions names match. However, having include/linux/atomic.h
-in tools complicates building code in tools as assembly and other
-functions are necessary - these are often configured in the kernel
-using CONFIG options. As tools C code is compiled with the -std=gnu11
-flag, it is possible to use stdatomic.h and move the build and other
-complications to the compiler/libc.
+Bring in the changes:
+
+26dd68d293fd overflow: add DEFINE_FLEX() for on-stack allocs
+d67790ddf021 overflow: Add struct_size_t() helper
+4b21d25bf519 overflow: Introduce overflows_type() and castable_to_type()
+31970608a6d3 overflow: Fix kern-doc markup for functions
+d219d2a9a92e overflow: Allow mixed type arguments
+92d23c6e9415 overflow, tracing: Define the is_signed_type() macro once
+230f6fa2c1db overflow: Provide constant expression struct_size
+e1be43d9b5d0 overflow: Implement size_t saturating arithmetic helpers
+
+Add file to check-headers.sh, so there is a warning if the tools
+version of the file drifts from the kernel's version.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/arch/x86/include/asm/atomic.h           |  84 --------------
- tools/include/asm-generic/atomic-gcc.h        |  95 ----------------
- tools/include/asm/atomic.h                    |  11 --
- tools/include/linux/atomic.h                  | 107 ++++++++++++++++--
- tools/include/linux/types.h                   |  15 ++-
- .../selftests/kvm/include/kvm_util_base.h     |   3 +-
- 6 files changed, 110 insertions(+), 205 deletions(-)
- delete mode 100644 tools/arch/x86/include/asm/atomic.h
- delete mode 100644 tools/include/asm-generic/atomic-gcc.h
- delete mode 100644 tools/include/asm/atomic.h
+ tools/include/linux/overflow.h | 331 ++++++++++++++++++++++++++-------
+ tools/perf/check-headers.sh    |   1 +
+ 2 files changed, 268 insertions(+), 64 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/atomic.h b/tools/arch/x86/include/asm/atomic.h
-deleted file mode 100644
-index 365cf182df12..000000000000
---- a/tools/arch/x86/include/asm/atomic.h
-+++ /dev/null
-@@ -1,84 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _TOOLS_LINUX_ASM_X86_ATOMIC_H
--#define _TOOLS_LINUX_ASM_X86_ATOMIC_H
--
--#include <linux/compiler.h>
--#include <linux/types.h>
--#include "rmwcc.h"
--
--#define LOCK_PREFIX "\n\tlock; "
--
--#include <asm/asm.h>
--#include <asm/cmpxchg.h>
--
--/*
-- * Atomic operations that C can't guarantee us.  Useful for
-- * resource counting etc..
-- */
--
--#define ATOMIC_INIT(i)	{ (i) }
--
--/**
-- * atomic_read - read atomic variable
-- * @v: pointer of type atomic_t
-- *
-- * Atomically reads the value of @v.
-- */
--static inline int atomic_read(const atomic_t *v)
--{
--	return READ_ONCE((v)->counter);
--}
--
--/**
-- * atomic_set - set atomic variable
-- * @v: pointer of type atomic_t
-- * @i: required value
-- *
-- * Atomically sets the value of @v to @i.
-- */
--static inline void atomic_set(atomic_t *v, int i)
--{
--	v->counter = i;
--}
--
--/**
-- * atomic_inc - increment atomic variable
-- * @v: pointer of type atomic_t
-- *
-- * Atomically increments @v by 1.
-- */
--static inline void atomic_inc(atomic_t *v)
--{
--	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
--}
--
--/**
-- * atomic_dec_and_test - decrement and test
-- * @v: pointer of type atomic_t
-- *
-- * Atomically decrements @v by 1 and
-- * returns true if the result is 0, or false for all other
-- * cases.
-- */
--static inline int atomic_dec_and_test(atomic_t *v)
--{
--	GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, "%0", "e");
--}
--
--static __always_inline int atomic_cmpxchg(atomic_t *v, int old, int new)
--{
--	return cmpxchg(&v->counter, old, new);
--}
--
--static inline int test_and_set_bit(long nr, unsigned long *addr)
--{
--	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, "Ir", nr, "%0", "c");
--}
--
--static inline int test_and_clear_bit(long nr, unsigned long *addr)
--{
--	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, "Ir", nr, "%0", "c");
--}
--
--#endif /* _TOOLS_LINUX_ASM_X86_ATOMIC_H */
-diff --git a/tools/include/asm-generic/atomic-gcc.h b/tools/include/asm-generic/atomic-gcc.h
-deleted file mode 100644
-index 9b3c528bab92..000000000000
---- a/tools/include/asm-generic/atomic-gcc.h
-+++ /dev/null
-@@ -1,95 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __TOOLS_ASM_GENERIC_ATOMIC_H
--#define __TOOLS_ASM_GENERIC_ATOMIC_H
--
--#include <linux/compiler.h>
--#include <linux/types.h>
--#include <linux/bitops.h>
--
--/*
-- * Atomic operations that C can't guarantee us.  Useful for
-- * resource counting etc..
-- *
-- * Excerpts obtained from the Linux kernel sources.
-- */
--
--#define ATOMIC_INIT(i)	{ (i) }
--
--/**
-- * atomic_read - read atomic variable
-- * @v: pointer of type atomic_t
-- *
-- * Atomically reads the value of @v.
-- */
--static inline int atomic_read(const atomic_t *v)
--{
--	return READ_ONCE((v)->counter);
--}
--
--/**
-- * atomic_set - set atomic variable
-- * @v: pointer of type atomic_t
-- * @i: required value
-- *
-- * Atomically sets the value of @v to @i.
-- */
--static inline void atomic_set(atomic_t *v, int i)
--{
--        v->counter = i;
--}
--
--/**
-- * atomic_inc - increment atomic variable
-- * @v: pointer of type atomic_t
-- *
-- * Atomically increments @v by 1.
-- */
--static inline void atomic_inc(atomic_t *v)
--{
--	__sync_add_and_fetch(&v->counter, 1);
--}
--
--/**
-- * atomic_dec_and_test - decrement and test
-- * @v: pointer of type atomic_t
-- *
-- * Atomically decrements @v by 1 and
-- * returns true if the result is 0, or false for all other
-- * cases.
-- */
--static inline int atomic_dec_and_test(atomic_t *v)
--{
--	return __sync_sub_and_fetch(&v->counter, 1) == 0;
--}
--
--#define cmpxchg(ptr, oldval, newval) \
--	__sync_val_compare_and_swap(ptr, oldval, newval)
--
--static inline int atomic_cmpxchg(atomic_t *v, int oldval, int newval)
--{
--	return cmpxchg(&(v)->counter, oldval, newval);
--}
--
--static inline int test_and_set_bit(long nr, unsigned long *addr)
--{
--	unsigned long mask = BIT_MASK(nr);
--	long old;
--
--	addr += BIT_WORD(nr);
--
--	old = __sync_fetch_and_or(addr, mask);
--	return !!(old & mask);
--}
--
--static inline int test_and_clear_bit(long nr, unsigned long *addr)
--{
--	unsigned long mask = BIT_MASK(nr);
--	long old;
--
--	addr += BIT_WORD(nr);
--
--	old = __sync_fetch_and_and(addr, ~mask);
--	return !!(old & mask);
--}
--
--#endif /* __TOOLS_ASM_GENERIC_ATOMIC_H */
-diff --git a/tools/include/asm/atomic.h b/tools/include/asm/atomic.h
-deleted file mode 100644
-index 8c9bfffd4191..000000000000
---- a/tools/include/asm/atomic.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __TOOLS_LINUX_ASM_ATOMIC_H
--#define __TOOLS_LINUX_ASM_ATOMIC_H
--
--#if defined(__i386__) || defined(__x86_64__)
--#include "../../arch/x86/include/asm/atomic.h"
--#else
--#include <asm-generic/atomic-gcc.h>
--#endif
--
--#endif /* __TOOLS_LINUX_ASM_ATOMIC_H */
-diff --git a/tools/include/linux/atomic.h b/tools/include/linux/atomic.h
-index 01907b33537e..2cf4791ddd5d 100644
---- a/tools/include/linux/atomic.h
-+++ b/tools/include/linux/atomic.h
-@@ -2,14 +2,107 @@
- #ifndef __TOOLS_LINUX_ATOMIC_H
- #define __TOOLS_LINUX_ATOMIC_H
+diff --git a/tools/include/linux/overflow.h b/tools/include/linux/overflow.h
+index dcb0c1bf6866..7b5cf4a5cd19 100644
+--- a/tools/include/linux/overflow.h
++++ b/tools/include/linux/overflow.h
+@@ -3,6 +3,8 @@
+ #define __LINUX_OVERFLOW_H
  
--#include <asm/atomic.h>
-+#include <stdatomic.h>
-+#include <linux/types.h>  // For atomic_t
- 
--void atomic_long_set(atomic_long_t *v, long i);
-+/*
-+ * Reimplementation of the kernel's atomic.h using C11's stdatomic.h to avoid
-+ * build logic around compilers, inline assembler, etc.
-+ */
- 
--/* atomic_cmpxchg_relaxed */
--#ifndef atomic_cmpxchg_relaxed
--#define  atomic_cmpxchg_relaxed		atomic_cmpxchg
--#define  atomic_cmpxchg_release         atomic_cmpxchg
--#endif /* atomic_cmpxchg_relaxed */
-+#define ATOMIC_OP(op, c_op)						\
-+static inline void generic_atomic_##op(int i, atomic_t *v)		\
-+{									\
-+	atomic_fetch_##op(v, i);				\
-+}
-+
-+#define ATOMIC_OP_RETURN(op, c_op)					\
-+static inline int generic_atomic_##op##_return(int i, atomic_t *v)	\
-+{									\
-+	int c =	atomic_fetch_##op(v, i);			\
-+									\
-+	return c c_op i;						\
-+}
-+
-+#define ATOMIC_FETCH_OP(op, c_op)					\
-+static inline int generic_atomic_fetch_##op(int i, atomic_t *v)		\
-+{									\
-+	return atomic_fetch_##op(v, i);			\
-+}
-+
-+static inline int generic_atomic_read(const atomic_t *v)
-+{
-+	return atomic_load(v);
-+}
-+
-+static inline void generic_atomic_set(atomic_t *v, int i)
-+{
-+	atomic_store(v, i);
-+}
-+
-+static inline int generic_atomic_cmpxchg_relaxed(atomic_t *v, int old, int new)
-+{
-+	int expected = old;
-+
-+	atomic_compare_exchange_weak_explicit(v, &expected, new,
-+					memory_order_relaxed, memory_order_relaxed);
-+	return expected;
-+}
-+
-+static inline int generic_atomic_cmpxchg_release(atomic_t *v, int old, int new)
-+{
-+	int expected = old;
-+
-+	/*
-+	 * Note, the stricter memory_order_seq_cst is used as
-+	 * memory_order_release fails with an invalid-memory-model error.
-+	 */
-+	atomic_compare_exchange_weak_explicit(v, &expected, new,
-+					memory_order_seq_cst, memory_order_seq_cst);
-+	return expected;
-+}
-+
-+ATOMIC_OP_RETURN(add, +)
-+ATOMIC_OP_RETURN(sub, -)
-+
-+ATOMIC_FETCH_OP(add, +)
-+ATOMIC_FETCH_OP(sub, -)
-+ATOMIC_FETCH_OP(and, &)
-+ATOMIC_FETCH_OP(or, |)
-+ATOMIC_FETCH_OP(xor, ^)
-+
-+ATOMIC_OP(add, +)
-+ATOMIC_OP(sub, -)
-+ATOMIC_OP(and, &)
-+ATOMIC_OP(or, |)
-+ATOMIC_OP(xor, ^)
-+
-+#undef ATOMIC_FETCH_OP
-+#undef ATOMIC_OP_RETURN
-+#undef ATOMIC_OP
-+
-+#define arch_atomic_add_return			generic_atomic_add_return
-+#define arch_atomic_sub_return			generic_atomic_sub_return
-+
-+#define arch_atomic_fetch_add			generic_atomic_fetch_add
-+#define arch_atomic_fetch_sub			generic_atomic_fetch_sub
-+#define arch_atomic_fetch_and			generic_atomic_fetch_and
-+#define arch_atomic_fetch_or			generic_atomic_fetch_or
-+#define arch_atomic_fetch_xor			generic_atomic_fetch_xor
-+
-+#define arch_atomic_add				generic_atomic_add
-+#define arch_atomic_sub				generic_atomic_sub
-+#define arch_atomic_and				generic_atomic_and
-+#define arch_atomic_or				generic_atomic_or
-+#define arch_atomic_xor				generic_atomic_xor
-+
-+#define arch_atomic_read(v)			generic_atomic_read(v)
-+#define arch_atomic_set(v, i)			generic_atomic_set(v, i)
-+#define atomic_set(v, i)			generic_atomic_set(v, i)
-+#define atomic_read(v)				generic_atomic_read(v)
-+#define atomic_cmpxchg_relaxed(v, o, n)		generic_atomic_cmpxchg_relaxed(v, o, n)
-+#define atomic_cmpxchg_release(v, o, n)		generic_atomic_cmpxchg_release(v, o, n)
-+#define atomic_inc(v)				generic_atomic_add(1, v)
-+#define atomic_dec(v)				generic_atomic_sub(1, v)
- 
- #endif /* __TOOLS_LINUX_ATOMIC_H */
-diff --git a/tools/include/linux/types.h b/tools/include/linux/types.h
-index 8519386acd23..cb1f44f1ed5e 100644
---- a/tools/include/linux/types.h
-+++ b/tools/include/linux/types.h
-@@ -74,13 +74,16 @@ typedef u64 phys_addr_t;
- typedef u32 phys_addr_t;
- #endif
- 
--typedef struct {
--	int counter;
--} atomic_t;
-+#ifndef __cplusplus
-+/* C++17 doesn't support stdatomic.h but C++23 does. */
-+#include <stdatomic.h>
- 
--typedef struct {
--	long counter;
--} atomic_long_t;
-+typedef atomic_int atomic_t;
-+
-+#define ATOMIC_INIT(i) (i)
-+
-+typedef atomic_long atomic_long_t;
-+#endif
- 
- #ifndef __aligned_u64
- # define __aligned_u64 __u64 __attribute__((aligned(8)))
-diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-index 9e5afc472c14..7c81da425abc 100644
---- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-@@ -9,6 +9,7 @@
- 
- #include "test_util.h"
- 
-+#include <linux/atomic.h>
  #include <linux/compiler.h>
- #include "linux/hashtable.h"
- #include "linux/list.h"
-@@ -17,8 +18,6 @@
- #include "linux/rbtree.h"
- #include <linux/types.h>
++#include <linux/limits.h>
++#include <linux/const.h>
  
--#include <asm/atomic.h>
--
- #include <sys/ioctl.h>
+ /*
+  * We need to compute the minimum and maximum values representable in a given
+@@ -28,117 +30,318 @@
+  * https://mail-index.netbsd.org/tech-misc/2007/02/05/0000.html -
+  * credit to Christian Biere.
+  */
+-#define is_signed_type(type)       (((type)(-1)) < (type)1)
+ #define __type_half_max(type) ((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
+ #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
+ #define type_min(T) ((T)((T)-type_max(T)-(T)1))
  
- #include "sparsebit.h"
+ /*
+- * For simplicity and code hygiene, the fallback code below insists on
+- * a, b and *d having the same type (similar to the min() and max()
+- * macros), whereas gcc's type-generic overflow checkers accept
+- * different types. Hence we don't just make check_add_overflow an
+- * alias for __builtin_add_overflow, but add type checks similar to
+- * below.
+- */
+-#define check_add_overflow(a, b, d) ({		\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_add_overflow(__a, __b, __d);	\
+-})
++ * Avoids triggering -Wtype-limits compilation warning,
++ * while using unsigned data types to check a < 0.
++ */
++#define is_non_negative(a) ((a) > 0 || (a) == 0)
++#define is_negative(a) (!(is_non_negative(a)))
+ 
+-#define check_sub_overflow(a, b, d) ({		\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_sub_overflow(__a, __b, __d);	\
+-})
++/*
++ * Allows for effectively applying __must_check to a macro so we can have
++ * both the type-agnostic benefits of the macros while also being able to
++ * enforce that the return value is, in fact, checked.
++ */
++static inline bool __must_check __must_check_overflow(bool overflow)
++{
++	return unlikely(overflow);
++}
++
++/**
++ * check_add_overflow() - Calculate addition with overflow checking
++ * @a: first addend
++ * @b: second addend
++ * @d: pointer to store sum
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted addition, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * sum has overflowed or been truncated.
++ */
++#define check_add_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_add_overflow(a, b, d))
++
++/**
++ * check_sub_overflow() - Calculate subtraction with overflow checking
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @d: pointer to store difference
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted subtraction, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * difference has underflowed or been truncated.
++ */
++#define check_sub_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_sub_overflow(a, b, d))
++
++/**
++ * check_mul_overflow() - Calculate multiplication with overflow checking
++ * @a: first factor
++ * @b: second factor
++ * @d: pointer to store product
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted multiplication, but is not
++ * considered "safe for use" on a non-zero return value, which indicates
++ * that the product has overflowed or been truncated.
++ */
++#define check_mul_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_mul_overflow(a, b, d))
++
++/**
++ * check_shl_overflow() - Calculate a left-shifted value and check overflow
++ * @a: Value to be shifted
++ * @s: How many bits left to shift
++ * @d: Pointer to where to store the result
++ *
++ * Computes *@d = (@a << @s)
++ *
++ * Returns true if '*@d' cannot hold the result or when '@a << @s' doesn't
++ * make sense. Example conditions:
++ *
++ * - '@a << @s' causes bits to be lost when stored in *@d.
++ * - '@s' is garbage (e.g. negative) or so large that the result of
++ *   '@a << @s' is guaranteed to be 0.
++ * - '@a' is negative.
++ * - '@a << @s' sets the sign bit, if any, in '*@d'.
++ *
++ * '*@d' will hold the results of the attempted shift, but is not
++ * considered "safe for use" if true is returned.
++ */
++#define check_shl_overflow(a, s, d) __must_check_overflow(({		\
++	typeof(a) _a = a;						\
++	typeof(s) _s = s;						\
++	typeof(d) _d = d;						\
++	u64 _a_full = _a;						\
++	unsigned int _to_shift =					\
++		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
++	*_d = (_a_full << _to_shift);					\
++	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
++	(*_d >> _to_shift) != _a);					\
++}))
+ 
+-#define check_mul_overflow(a, b, d) ({		\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_mul_overflow(__a, __b, __d);	\
++#define __overflows_type_constexpr(x, T) (			\
++	is_unsigned_type(typeof(x)) ?				\
++		(x) > type_max(typeof(T)) :			\
++	is_unsigned_type(typeof(T)) ?				\
++		(x) < 0 || (x) > type_max(typeof(T)) :		\
++	(x) < type_min(typeof(T)) || (x) > type_max(typeof(T)))
++
++#define __overflows_type(x, T)		({	\
++	typeof(T) v = 0;			\
++	check_add_overflow((x), v, &v);		\
+ })
+ 
+ /**
+- * array_size() - Calculate size of 2-dimensional array.
++ * overflows_type - helper for checking the overflows between value, variables,
++ *		    or data type
+  *
+- * @a: dimension one
+- * @b: dimension two
++ * @n: source constant value or variable to be checked
++ * @T: destination variable or data type proposed to store @x
+  *
+- * Calculates size of 2-dimensional array: @a * @b.
++ * Compares the @x expression for whether or not it can safely fit in
++ * the storage of the type in @T. @x and @T can have different types.
++ * If @x is a constant expression, this will also resolve to a constant
++ * expression.
+  *
+- * Returns: number of bytes needed to represent the array or SIZE_MAX on
+- * overflow.
++ * Returns: true if overflow can occur, false otherwise.
++ */
++#define overflows_type(n, T)					\
++	__builtin_choose_expr(__is_constexpr(n),		\
++			      __overflows_type_constexpr(n, T),	\
++			      __overflows_type(n, T))
++
++/**
++ * castable_to_type - like __same_type(), but also allows for casted literals
++ *
++ * @n: variable or constant value
++ * @T: variable or data type
++ *
++ * Unlike the __same_type() macro, this allows a constant value as the
++ * first argument. If this value would not overflow into an assignment
++ * of the second argument's type, it returns true. Otherwise, this falls
++ * back to __same_type().
+  */
+-static inline __must_check size_t array_size(size_t a, size_t b)
++#define castable_to_type(n, T)						\
++	__builtin_choose_expr(__is_constexpr(n),			\
++			      !__overflows_type_constexpr(n, T),	\
++			      __same_type(n, T))
++
++/**
++ * size_mul() - Calculate size_t multiplication with saturation at SIZE_MAX
++ * @factor1: first factor
++ * @factor2: second factor
++ *
++ * Returns: calculate @factor1 * @factor2, both promoted to size_t,
++ * with any overflow causing the return value to be SIZE_MAX. The
++ * lvalue must be size_t to avoid implicit type conversion.
++ */
++static inline size_t __must_check size_mul(size_t factor1, size_t factor2)
+ {
+ 	size_t bytes;
+ 
+-	if (check_mul_overflow(a, b, &bytes))
++	if (check_mul_overflow(factor1, factor2, &bytes))
+ 		return SIZE_MAX;
+ 
+ 	return bytes;
+ }
+ 
+ /**
+- * array3_size() - Calculate size of 3-dimensional array.
++ * size_add() - Calculate size_t addition with saturation at SIZE_MAX
++ * @addend1: first addend
++ * @addend2: second addend
+  *
+- * @a: dimension one
+- * @b: dimension two
+- * @c: dimension three
+- *
+- * Calculates size of 3-dimensional array: @a * @b * @c.
+- *
+- * Returns: number of bytes needed to represent the array or SIZE_MAX on
+- * overflow.
++ * Returns: calculate @addend1 + @addend2, both promoted to size_t,
++ * with any overflow causing the return value to be SIZE_MAX. The
++ * lvalue must be size_t to avoid implicit type conversion.
+  */
+-static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
++static inline size_t __must_check size_add(size_t addend1, size_t addend2)
+ {
+ 	size_t bytes;
+ 
+-	if (check_mul_overflow(a, b, &bytes))
+-		return SIZE_MAX;
+-	if (check_mul_overflow(bytes, c, &bytes))
++	if (check_add_overflow(addend1, addend2, &bytes))
+ 		return SIZE_MAX;
+ 
+ 	return bytes;
+ }
+ 
+-static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
++/**
++ * size_sub() - Calculate size_t subtraction with saturation at SIZE_MAX
++ * @minuend: value to subtract from
++ * @subtrahend: value to subtract from @minuend
++ *
++ * Returns: calculate @minuend - @subtrahend, both promoted to size_t,
++ * with any overflow causing the return value to be SIZE_MAX. For
++ * composition with the size_add() and size_mul() helpers, neither
++ * argument may be SIZE_MAX (or the result with be forced to SIZE_MAX).
++ * The lvalue must be size_t to avoid implicit type conversion.
++ */
++static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+ {
+ 	size_t bytes;
+ 
+-	if (check_mul_overflow(n, size, &bytes))
+-		return SIZE_MAX;
+-	if (check_add_overflow(bytes, c, &bytes))
++	if (minuend == SIZE_MAX || subtrahend == SIZE_MAX ||
++	    check_sub_overflow(minuend, subtrahend, &bytes))
+ 		return SIZE_MAX;
+ 
+ 	return bytes;
+ }
+ 
+ /**
+- * struct_size() - Calculate size of structure with trailing array.
++ * array_size() - Calculate size of 2-dimensional array.
++ * @a: dimension one
++ * @b: dimension two
++ *
++ * Calculates size of 2-dimensional array: @a * @b.
++ *
++ * Returns: number of bytes needed to represent the array or SIZE_MAX on
++ * overflow.
++ */
++#define array_size(a, b)	size_mul(a, b)
++
++/**
++ * array3_size() - Calculate size of 3-dimensional array.
++ * @a: dimension one
++ * @b: dimension two
++ * @c: dimension three
++ *
++ * Calculates size of 3-dimensional array: @a * @b * @c.
++ *
++ * Returns: number of bytes needed to represent the array or SIZE_MAX on
++ * overflow.
++ */
++#define array3_size(a, b, c)	size_mul(size_mul(a, b), c)
++
++/**
++ * flex_array_size() - Calculate size of a flexible array member
++ *                     within an enclosing structure.
+  * @p: Pointer to the structure.
++ * @member: Name of the flexible array member.
++ * @count: Number of elements in the array.
++ *
++ * Calculates size of a flexible array of @count number of @member
++ * elements, at the end of structure @p.
++ *
++ * Return: number of bytes needed or SIZE_MAX on overflow.
++ */
++#define flex_array_size(p, member, count)				\
++	__builtin_choose_expr(__is_constexpr(count),			\
++		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
++		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
++
++/**
++ * struct_size() - Calculate size of structure with trailing flexible array.
++ * @p: Pointer to the structure.
++ * @member: Name of the array member.
++ * @count: Number of elements in the array.
++ *
++ * Calculates size of memory needed for structure of @p followed by an
++ * array of @count number of @member elements.
++ *
++ * Return: number of bytes needed or SIZE_MAX on overflow.
++ */
++#define struct_size(p, member, count)					\
++	__builtin_choose_expr(__is_constexpr(count),			\
++		sizeof(*(p)) + flex_array_size(p, member, count),	\
++		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
++
++/**
++ * struct_size_t() - Calculate size of structure with trailing flexible array
++ * @type: structure type name.
+  * @member: Name of the array member.
+- * @n: Number of elements in the array.
++ * @count: Number of elements in the array.
+  *
+- * Calculates size of memory needed for structure @p followed by an
+- * array of @n @member elements.
++ * Calculates size of memory needed for structure @type followed by an
++ * array of @count number of @member elements. Prefer using struct_size()
++ * when possible instead, to keep calculations associated with a specific
++ * instance variable of type @type.
+  *
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+-#define struct_size(p, member, n)					\
+-	__ab_c_size(n,							\
+-		    sizeof(*(p)->member) + __must_be_array((p)->member),\
+-		    sizeof(*(p)))
++#define struct_size_t(type, member, count)					\
++	struct_size((type *)NULL, member, count)
++
++/**
++ * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
++ * Enables caller macro to pass (different) initializer.
++ *
++ * @type: structure type name, including "struct" keyword.
++ * @name: Name for a variable to define.
++ * @member: Name of the array member.
++ * @count: Number of elements in the array; must be compile-time const.
++ * @initializer: initializer expression (could be empty for no init).
++ */
++#define _DEFINE_FLEX(type, name, member, count, initializer)			\
++	_Static_assert(__builtin_constant_p(count),				\
++		       "onstack flex array members require compile-time const count"); \
++	union {									\
++		u8 bytes[struct_size_t(type, member, count)];			\
++		type obj;							\
++	} name##_u initializer;							\
++	type *name = (type *)&name##_u
++
++/**
++ * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
++ * flexible array member.
++ *
++ * @type: structure type name, including "struct" keyword.
++ * @name: Name for a variable to define.
++ * @member: Name of the array member.
++ * @count: Number of elements in the array; must be compile-time const.
++ *
++ * Define a zeroed, on-stack, instance of @type structure with a trailing
++ * flexible array member.
++ * Use __struct_size(@name) to get compile-time size of it afterwards.
++ */
++#define DEFINE_FLEX(type, name, member, count)			\
++	_DEFINE_FLEX(type, name, member, count, = {})
+ 
+ #endif /* __LINUX_OVERFLOW_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 64dbf199dff9..272a37d8e1c4 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -35,6 +35,7 @@ FILES=(
+   "include/vdso/const.h"
+   "include/linux/hash.h"
+   "include/linux/list-sort.h"
++  "include/linux/overflow.h"
+   "include/uapi/linux/hw_breakpoint.h"
+   "arch/x86/include/asm/disabled-features.h"
+   "arch/x86/include/asm/required-features.h"
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
