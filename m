@@ -1,61 +1,46 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6833985A
-	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 16:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4A9376E4
+	for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 16:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710087593; cv=none; b=RG041atkeb44atw4OuGfa6bExUyOJpYeP2DpNUt/fX1oLdFLzYkszVy25Xh1E5HvzhJmxcvLjNHjVle1iS4EiXQ+IOPNksKleUwkb+Lrn4H9VOzmtR0BcZjjB5sYsWlhMvJ3RBlrGqN2Hd7mTm8ZrI01QbvgfGILfaGkvBV+MJc=
+	t=1710087661; cv=none; b=QMBFwIpA+ZEjsCTD5R97XEGVJjfSODiWjU7Wj426iYL19bpjbn1yNprf7K6nqzDMMfSXZi/ox9S+WCt8E9H3wTXS6VioQgKtcpI0LKt1V9SpNFFrTEq9fANAWBuLMhmzBPMw5Bq3ea3IShbOURZr2dL5lXFMlrZ8Z0ep03QhcbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710087593; c=relaxed/simple;
-	bh=J5acmMsD54oYTnHuEQfnt9oSFMxN+SahVQsAnU4lXF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T/YA4DeVg4YuYPRu7xfja+SGgTroLrO/8iW+dYYUqTXCDvs+RXnbd56BicYnDdJPO0oWQp5MlwUrz34hxrtkitxCv+reGkr0E4JTlSOVLce1VPTGsn1t91e2IPLuQAamGN+r0Bwc+FsXo6qeywlqIiT1LBOJdAmusjmbtgdVHo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5Rugcrt; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710087661; c=relaxed/simple;
+	bh=H/ERMdxRZgif1YJjlln1siCzO3C4zNY/tYb9SV+i2iA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hu7UsWAf/SOwX1LyqbwLWoQYSYcQ5+XLgsQQ2uQ+eorsUQqtxkJzzUMan7vGZe5OFTosw28wC4ns/sR36tOjVn6wYAf3rPZdJAZOuDQcLzEF3l94kDGZSAZuFYswYzZsamgIkuulgA10Gx4tVUcrZXqUJyZtmY/lkptjcDJIh4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=qficNoLl; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5Rugcrt"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd6d4832dcso2707305ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 09:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710087590; x=1710692390; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=851j3vfRHp84OK606+bgekYXQPhzWJ9JsgIZlL8TxvE=;
-        b=Q5RugcrtbOVDJmf/L2996JNadfLPq7h74l4xMOkjeoRvW70SJFbWiKzLW0oa9a85Cn
-         XZToiBSDYWZLkYCX3StgpOwFk9Kcn4CwYO6CVwlwKKqS9rLffyDujOVh1rWDU8MOqoUC
-         872jQz7rRR2PKWkHG2en/8BU6VvjMSOvkqYCQaaUamng/coxrpHs3m3N8PsmEdGz37jU
-         xIfPuoYNqeputotkXioqG+NJ4/26pgPKIXbPiUxybP/YGc1pk+IIfrOkyX1u0CTbtWqg
-         VD5FhsEbDaAouVNbiq3mBfY4LYG0N345IH+UlUNG7SVG/oiS2SqgribNspZiqakBKhcS
-         NfGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710087590; x=1710692390;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=851j3vfRHp84OK606+bgekYXQPhzWJ9JsgIZlL8TxvE=;
-        b=nozJ+dRLxFTne3EfaGuD54XuNxhFpH294eFyrufzVFWSR1GXBijcDYi5WHR+Bw0Bh8
-         Y733mTcIuT/D0x+2iCXNGtdsEjp9YgBhOr7E6TaDWkbj5cKelZ5edfQOf7jRHkeobion
-         kSbbBBjmV4QxyjuYGKVfwKKqoXsB7U4hQkp2T14Y/VNY0VegEfNDHqUxFZezHnngt7HT
-         WDYBlpwh3x7CAabIpOcYfFm8GVM+v/OGMEZfeHTo1yrXbSn6ubORNPgfvb4x5BFTVEw/
-         E9PLccONPr6Jq+C/u0W/n4RvtViTHv7+M2QL0JZwzW5jx2/tYzI7MJ0tpjXVE4plI92k
-         zwFQ==
-X-Gm-Message-State: AOJu0YwgGSxNrONcvlPvOTsu6o0DA5yHmgj9NJzj17QDpvy0+kO0Jk/H
-	QMFbWgHvxnwJaQeipq80Ghfy2F9TKQDBqHvDj/c4JCp4RS+WGMC6MfRE1EdIqyA=
-X-Google-Smtp-Source: AGHT+IFztDrUp3uO/wqSJz3ILSXojHNKoB/jEAqCMqRTtRX+qnxA6EtO7N8xZ/2ETfOXO695G2yTbg==
-X-Received: by 2002:a05:6a20:d90b:b0:1a1:44f9:feeb with SMTP id jd11-20020a056a20d90b00b001a144f9feebmr5717742pzb.3.1710087590454;
-        Sun, 10 Mar 2024 09:19:50 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:b932:8fbf:e860:5e2b])
-        by smtp.gmail.com with ESMTPSA id cv8-20020a17090afd0800b0029bcf62e296sm2165608pjb.42.2024.03.10.09.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 09:19:49 -0700 (PDT)
-From: I-HSIN CHENG <richard120310@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: I-HSIN CHENG <richard120310@gmail.com>
-Subject: [PATCH] <linux/list.h>: Correct comments for list_del()
-Date: Mon, 11 Mar 2024 00:19:30 +0800
-Message-Id: <20240310161930.226784-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="qficNoLl"
+Received: from fedora.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id jLttrAANWxtdHjLttr6yeJ; Sun, 10 Mar 2024 17:19:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1710087590;
+	bh=rXUTIQg24bJuU6dk3QojcqSr+hAPwOurGASti1sp4RU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=qficNoLlTmRbC98KhpXz+06bJl9S27dmuS7XfY7h1metUQ4MceNL+uNpnNZWcG9qh
+	 q/rHPjrRbOHfy/ncsfrwXdbslrSt3OJfUrHrMQMmlibMRiDQO55/L4k4tum5G5/iCw
+	 zWWi72iaKXlA3pR1PCROofbT5RGAI0k9T8YJmD6s1a6q+Pgo9MiiL/yGwlxA1VKsLM
+	 nuk+Q8lBlSGrAmftbRp45/n0z340Bszj73CfPpmrafbQ8+DR9ejt0jvu/TlQ2hw31e
+	 CkwjU/Vt/1Il8+mA66GMTU5TMysUOYV/7BBag1AKh/hH+ULrUzGVWKh9bn251XXjRA
+	 /mPgFgWV+vm3g==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 10 Mar 2024 17:19:50 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Minas Harutyunyan <hminas@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-usb@vger.kernel.org
+Subject: [PATCH] usb: dwc2: Remove cat_printf()
+Date: Sun, 10 Mar 2024 17:19:44 +0100
+Message-ID: <abf3d0361ea291468d121062207a766b0c3228f2.1710087556.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,116 +49,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Orginal comments for the function list_del() and other related
-functions all described the entry to be removed from the list as
-"delete", such as __list_del() , list_del_init() and so on.
+cat_printf() implements the newly introduced seq_buf API.
+Use the latter to save some line of code.
 
-However the usage of "delete" in the comments of those functions is
-misleading. "Delete" means erase, while "remove" means take away and set
-aside. We do not perform any operations to erase the memory location or
-any content in the entry in those functions mentioned above, we simply
-"removes" the entry from the list, that is why "remove" is a correct
-and more preferred word for the description in the comments for the
-function list_del() and its related functions.
-
-Signed-off-by: I-HSIN CHENG <richard120310@gmail.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- include/linux/list.h | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Compile tested only, with DWC2_PRINT_SCHEDULE defined.
+---
+ drivers/usb/dwc2/hcd_queue.c | 52 ++++++------------------------------
+ 1 file changed, 8 insertions(+), 44 deletions(-)
 
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 164b4d0e9..aefd111a6 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -184,7 +184,7 @@ static inline void list_add_tail(struct list_head *new, struct list_head *head)
+diff --git a/drivers/usb/dwc2/hcd_queue.c b/drivers/usb/dwc2/hcd_queue.c
+index 0d4495c6b9f7..238c6fd50e75 100644
+--- a/drivers/usb/dwc2/hcd_queue.c
++++ b/drivers/usb/dwc2/hcd_queue.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/io.h>
++#include <linux/seq_buf.h>
+ #include <linux/slab.h>
+ #include <linux/usb.h>
+ 
+@@ -359,41 +360,6 @@ static unsigned long *dwc2_get_ls_map(struct dwc2_hsotg *hsotg,
  }
  
+ #ifdef DWC2_PRINT_SCHEDULE
+-/*
+- * cat_printf() - A printf() + strcat() helper
+- *
+- * This is useful for concatenating a bunch of strings where each string is
+- * constructed using printf.
+- *
+- * @buf:   The destination buffer; will be updated to point after the printed
+- *         data.
+- * @size:  The number of bytes in the buffer (includes space for '\0').
+- * @fmt:   The format for printf.
+- * @...:   The args for printf.
+- */
+-static __printf(3, 4)
+-void cat_printf(char **buf, size_t *size, const char *fmt, ...)
+-{
+-	va_list args;
+-	int i;
+-
+-	if (*size == 0)
+-		return;
+-
+-	va_start(args, fmt);
+-	i = vsnprintf(*buf, *size, fmt, args);
+-	va_end(args);
+-
+-	if (i >= *size) {
+-		(*buf)[*size - 1] = '\0';
+-		*buf += *size;
+-		*size = 0;
+-	} else {
+-		*buf += i;
+-		*size -= i;
+-	}
+-}
+-
  /*
-- * Delete a list entry by making the prev/next entries
-+ * Remove a list entry by making the prev/next entries
-  * point to each other.
+  * pmap_print() - Print the given periodic map
   *
-  * This is only for internal list manipulation where we know
-@@ -197,7 +197,7 @@ static inline void __list_del(struct list_head * prev, struct list_head * next)
+@@ -416,9 +382,7 @@ static void pmap_print(unsigned long *map, int bits_per_period,
+ 	int period;
+ 
+ 	for (period = 0; period < periods_in_map; period++) {
+-		char tmp[64];
+-		char *buf = tmp;
+-		size_t buf_size = sizeof(tmp);
++		DECLARE_SEQ_BUF(buf, 64);
+ 		int period_start = period * bits_per_period;
+ 		int period_end = period_start + bits_per_period;
+ 		int start = 0;
+@@ -442,19 +406,19 @@ static void pmap_print(unsigned long *map, int bits_per_period,
+ 				continue;
+ 
+ 			if (!printed)
+-				cat_printf(&buf, &buf_size, "%s %d: ",
+-					   period_name, period);
++				seq_buf_printf(&buf, "%s %d: ",
++					       period_name, period);
+ 			else
+-				cat_printf(&buf, &buf_size, ", ");
++				seq_buf_puts(&buf, ", ");
+ 			printed = true;
+ 
+-			cat_printf(&buf, &buf_size, "%d %s -%3d %s", start,
+-				   units, start + count - 1, units);
++			seq_buf_printf(&buf, "%d %s -%3d %s", start,
++				       units, start + count - 1, units);
+ 			count = 0;
+ 		}
+ 
+ 		if (printed)
+-			print_fn(tmp, print_data);
++			print_fn(seq_buf_str(&buf), print_data);
+ 	}
  }
  
- /*
-- * Delete a list entry and clear the 'prev' pointer.
-+ * Remove a list entry and clear the 'prev' pointer.
-  *
-  * This is a special-purpose list clearing method used in the networking code
-  * for lists allocated as per-cpu, where we don't want to incur the extra
-@@ -219,8 +219,8 @@ static inline void __list_del_entry(struct list_head *entry)
- }
- 
- /**
-- * list_del - deletes entry from list.
-- * @entry: the element to delete from the list.
-+ * list_del - removes entry from list.
-+ * @entry: the element to remove from the list.
-  * Note: list_empty() on entry does not return true after this, the entry is
-  * in an undefined state.
-  */
-@@ -279,8 +279,8 @@ static inline void list_swap(struct list_head *entry1,
- }
- 
- /**
-- * list_del_init - deletes entry from list and reinitialize it.
-- * @entry: the element to delete from the list.
-+ * list_del_init - removes entry from list and reinitialize it.
-+ * @entry: the element to remove from the list.
-  */
- static inline void list_del_init(struct list_head *entry)
- {
-@@ -289,7 +289,7 @@ static inline void list_del_init(struct list_head *entry)
- }
- 
- /**
-- * list_move - delete from one list and add as another's head
-+ * list_move - remove from one list and add as another's head
-  * @list: the entry to move
-  * @head: the head that will precede our entry
-  */
-@@ -300,7 +300,7 @@ static inline void list_move(struct list_head *list, struct list_head *head)
- }
- 
- /**
-- * list_move_tail - delete from one list and add as another's tail
-+ * list_move_tail - remove from one list and add as another's tail
-  * @list: the entry to move
-  * @head: the head that will follow our entry
-  */
-@@ -374,7 +374,7 @@ static inline int list_empty(const struct list_head *head)
- }
- 
- /**
-- * list_del_init_careful - deletes entry from list and reinitialize it.
-+ * list_del_init_careful - removes entry from list and reinitialize it.
-  * @entry: the element to delete from the list.
-  *
-  * This is the same as list_del_init(), except designed to be used
-@@ -983,8 +983,8 @@ static inline void __hlist_del(struct hlist_node *n)
- }
- 
- /**
-- * hlist_del - Delete the specified hlist_node from its list
-- * @n: Node to delete.
-+ * hlist_del - Remove the specified hlist_node from its list
-+ * @n: Node to remove.
-  *
-  * Note that this function leaves the node in hashed state.  Use
-  * hlist_del_init() or similar instead to unhash @n.
-@@ -997,8 +997,8 @@ static inline void hlist_del(struct hlist_node *n)
- }
- 
- /**
-- * hlist_del_init - Delete the specified hlist_node from its list and initialize
-- * @n: Node to delete.
-+ * hlist_del_init - Remove the specified hlist_node from its list and initialize
-+ * @n: Node to remove.
-  *
-  * Note that this function leaves the node in unhashed state.
-  */
 -- 
-2.34.1
+2.44.0
 
