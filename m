@@ -1,79 +1,107 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DF41364
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA7B22064;
+	Mon, 11 Mar 2024 12:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710161385; cv=none; b=G3Q7rNm430RkefaXIYDU0Ccdi2ewC47YyyACdqY1VURsZyu5xjymkbZeCPAsMK0tt/1h1nR64Dc50tWM/wCkjhKgVwkbndh2x1ExDfXMmz9OSXf4x4JMJlvmBeG8uA1NTsrjml44akbP7rB2PC6fztvrzzRIpVASm49QnPAZZGM=
+	t=1710161795; cv=none; b=CLYmfL7+YqX8LNxQJTfiNJ8JPedlrttOBKlFp/tWW64Ea7raQap+DNgxlR5WUiW128rdu2afSY1MDZn0HLzdR97E2f4vKcoGm8+MYiwl8NKkpcdZcDq2EtTIHXXMQLflzchfNC3nXeeHSyjwsBqhrhPYSXIbRmBi/jQLGTQkbJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710161385; c=relaxed/simple;
-	bh=jhiwJhcKVBRZIdqpk4E2dgcKQXEmHWRcfgca5ia865s=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ZBYfJ6gaMK5jc0ToAFX+UPs9fLsbadgzwLHrs08pkqMj3MdVDahb8K/vv0Rdy5CBSJ/55ECMDcfeZ+Yd3cplfaPDcNwtBZZ3ykPmQgibvqtUg289miuiy/1IRbE0SDSDSOthav1oEpxa6RcmhsDDlwefIuuwiR8HaTbOSamRtus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UPRH5TTH; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UPRH5TTH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1710161076; bh=tLb6KWZBoxGV0fA+3X/ShT89VgoRxqI6W6b+OTUce/M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UPRH5TTHAA5W4ke8bDBV2RPbnylBiihGIrHsEpyLVUgUtdMaHqwSSWpF5Z4G7kblc
-	 DlCtwI6PsiqAP5KKbL1sCvAyO7WIKh7Ba+DjmQc90vlkIMFJZroWa1yMUnp0pRdM3O
-	 3pR3at1YTWPL7DMuObUv0oX3TpDZxfAtkP7ve2NY=
-Received: from pek-lxu-l1.wrs.com ([2408:8409:ce0:38d1:a032:4bf1:303d:acae])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id B22A8861; Mon, 11 Mar 2024 20:44:34 +0800
-X-QQ-mid: xmsmtpt1710161074tbdinx252
-Message-ID: <tencent_7B6E46C35367636DE97C83A16448F7623705@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2NvXWLetB1rP6VE8ZT9+4Wd73MXKvJUzIVsyC7VsmFgHvcGDX7S
-	 TTpB5EB7ZNVKqhq3Prsg+NkX2kKxedsz+Y952Q0Hqy/TwzlRgHCGASy9M5lfJvo+DTEoUd1wJuG4
-	 gb9LvUt7veo11P/U99QDsfP+RltGO897ybEzWrWWH1ZgleL5U4yNDdqOs1T0AR3hcDmJDtf5EoPs
-	 o/2W/fENO+Nu6Dib/UIJIYBFsB5XV9KC9o4M0LcSWvubXogHIFEbF25lP6a926qc7efejgZyClKm
-	 JC5FY3DWxmylw+gUA0VHWpSB/Z13BzUQmOK0EF+8FNtNU3EDN8zEcq04Kc2sbkJmg1EZpLkURq10
-	 QTNE3hXjNIPVOl3v6ACQvwf/vf+TFE4Js9est3xuG08wA4epizmpoMfCTRaEcWXifBvHe+i+IceO
-	 7SaxxA5IrJ3hm8/PfuuXaOtOlfiUscuCAQrU4crJqqvIJ0rezX+GkP97ZMj3PaaNmu6Qz+fcwOHk
-	 vxFnkwgtDIgsGemfvBENV7E26tdKIlpCSc9QdJh0ZH5cCEW/Okv0zvnLnQJrSX4Xc5v402GHSfFN
-	 3se7N1BCFw4O4N74d9BL31PyJhnvkMtgdIX8/QcyQrJfmKcllPenjNEtKOdqsVPNtY4orhf+N8cG
-	 Fe4y/3obPDAOCm34YmBLrdp05FYvLoRA7+E2xRrghfI+szpn6UHXH2tzPXzQlM03ArwMyt6cYNtp
-	 OEr633lp+drsI63HVoRN4M5o6jg5dT1can7Tvj7AEAlBXp5LL6XDKlFZxpbwcqVzKzLeaNHUOh/U
-	 hczA8KFOZOm2aS4k4yXKH6LghpW++ZsFQF/jJCopYV50M0HNHkTZUjWvIY3/NSppF0CZG23iAhFO
-	 LdbALPcJWy10KXYyJrkV0E7sKlYNFQh7iiKfA8/1eMVoRngsTvpMJDOVlQ+DpK9w==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+cc32304f6487ebff9b70@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bpf?] KASAN: slab-out-of-bounds Read in btf_datasec_check_meta
-Date: Mon, 11 Mar 2024 20:44:30 +0800
-X-OQ-MSGID: <20240311124429.125440-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000081fb0d06135eb3ca@google.com>
-References: <00000000000081fb0d06135eb3ca@google.com>
+	s=arc-20240116; t=1710161795; c=relaxed/simple;
+	bh=YOWPvJ1PovYucPG7scHldyK0kJUpjkmbzRBUpiky0aA=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=ea4MaOVx2Z/bXUy9nJIr2Jumxsm9GWX4HYjU82fSu+mKn8+3/UVHkd05C/DYUTPaPsInDqUMdoYtZSKxwFBM1OJB+j479WPC8ChYCkrygG6JnLy7rQoebE5cZXf61nvlYNeuFF33yofMwP8CKfRnxt+Sw1RCKefZIetWrMUoBeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id CEA126450941;
+	Mon, 11 Mar 2024 13:56:28 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id PXZWRRISZQ8B; Mon, 11 Mar 2024 13:56:28 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 1F4376450948;
+	Mon, 11 Mar 2024 13:56:28 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aRa4meSvKNMG; Mon, 11 Mar 2024 13:56:28 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id EB0836450941;
+	Mon, 11 Mar 2024 13:56:27 +0100 (CET)
+Date: Mon, 11 Mar 2024 13:56:27 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: Christian Heusel <christian@heusel.eu>
+Cc: David Woodhouse <dwmw2@infradead.org>, 
+	linux-mtd <linux-mtd@lists.infradead.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	kernel-janitors <kernel-janitors@vger.kernel.org>
+Message-ID: <1349276201.40757.1710161787719.JavaMail.zimbra@nod.at>
+In-Reply-To: <b4oa6jak7f4hiaqcqpmasclaylqdhdzgne75a6nol6z33d4o7z@3soexkn4smz4>
+References: <20240211003907.167891-1-christian@heusel.eu> <b4oa6jak7f4hiaqcqpmasclaylqdhdzgne75a6nol6z33d4o7z@3soexkn4smz4>
+Subject: Re: [PATCH] jffs2: print symbolic error name instead of error code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: jffs2: print symbolic error name instead of error code
+Thread-Index: W9U2fKy9ORNwIjN+anjPvwswt4VI2w==
 
-please test oob in btf_datasec_check_meta
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Christian Heusel" <christian@heusel.eu>
+> An: "David Woodhouse" <dwmw2@infradead.org>, "richard" <richard@nod.at>, =
+"linux-mtd" <linux-mtd@lists.infradead.org>,
+> "linux-kernel" <linux-kernel@vger.kernel.org>
+> CC: "kernel-janitors" <kernel-janitors@vger.kernel.org>
+> Gesendet: Montag, 11. M=C3=A4rz 2024 13:47:40
+> Betreff: Re: [PATCH] jffs2: print symbolic error name instead of error co=
+de
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+> On 24/02/11 01:39AM, Christian Heusel wrote:
+>> Utilize the %pe print specifier to get the symbolic error name as a
+>> string (i.e "-ENOMEM") in the log message instead of the error code to
+>> increase its readablility.
+>>=20
+>> This change was suggested in
+>> https://lore.kernel.org/all/92972476-0b1f-4d0a-9951-af3fc8bc6e65@suswa.m=
+ountain/
+>>=20
+>> Signed-off-by: Christian Heusel <christian@heusel.eu>
+>> ---
+>>  fs/jffs2/background.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/fs/jffs2/background.c b/fs/jffs2/background.c
+>> index 6da92ecaf66d..bb0ee1a59e71 100644
+>> --- a/fs/jffs2/background.c
+>> +++ b/fs/jffs2/background.c
+>> @@ -44,8 +44,8 @@ int jffs2_start_garbage_collect_thread(struct jffs2_sb=
+_info
+>> *c)
+>>=20
+>>  =09tsk =3D kthread_run(jffs2_garbage_collect_thread, c, "jffs2_gcd_mtd%=
+d",
+>>  =09c->mtd->index);
+>>  =09if (IS_ERR(tsk)) {
+>> -=09=09pr_warn("fork failed for JFFS2 garbage collect thread: %ld\n",
+>> -=09=09=09-PTR_ERR(tsk));
+>> +=09=09pr_warn("fork failed for JFFS2 garbage collect thread: %pe\n",
+>> +=09=09=09tsk);
+>>  =09=09complete(&c->gc_thread_exit);
+>>  =09=09ret =3D PTR_ERR(tsk);
+>>  =09} else {
+>> --
+>> 2.43.1
+>=20
+> Friendly ping on the above patch, since it's now a month after sending
+> it :)
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 170d017e8e4a..dda0aa0d7175 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -816,6 +816,8 @@ static bool btf_name_valid_section(const struct btf *btf, u32 offset)
- 	const char *src = btf_str_by_offset(btf, offset);
- 	const char *src_limit;
- 
-+	if (!isprint(*src))
-+		return false;
- 	/* set a limit on identifier length */
- 	src_limit = src + KSYM_NAME_LEN;
- 	src++;
+Thanks for the ping. Your patch looks good. I'll queue it.
 
+Thanks,
+//richard
