@@ -1,75 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D24256B7A;
-	Mon, 11 Mar 2024 21:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43DB54FA9;
+	Mon, 11 Mar 2024 21:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710191432; cv=none; b=VzERU7E1DCewuPHmgVzIwIQNqIItt8KFjzdzHK8JnWGyBToExlHyDqhcbml7y+tNGZoDXnrcpIXfgEhXS3C22hzbi9cOUirdINh8O4bKOiD6IIYUJwWvuR5LBYAjUpeYcBqixn5YBHJZerC/t7IzprhxzHSHy/tLMqxGi6ZHGek=
+	t=1710191511; cv=none; b=J/T82UW0ad2ucphizP+y1wWpYYqf/dAFO3KnccP+segHXZNE/EoiYONPx6HSCsZvYJJXlO8xu3pMsoSaz4MaEBe5Zlw+rdxurgRXYgZnqgRCnhxh7FJsQ05E+L0OXwYh/OyWu4eYXFuYQT1OD8hV2rrArWeVgdp1gGfrz27wup4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710191432; c=relaxed/simple;
-	bh=1ulrTx8AoxjxfOW0BLwJHz0vuazP+X6KMFMxH95+55U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UgJxgBayv+Sj1/MhCsrIlJXFazvffBfaC3trZ6ZPsu0lTWxw4MFBvKRu1CaId3aVTBnITbKtvlW4XZMvU8N2pGtd7vlbewtEiQHN7HeTzDw1KFwHQUatBtZDSCOY+kktmHFFzDpNTFtOOYXhuEhvfCoELBR6NI9JlR5c+93lL+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dk2zFwEp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710191511; c=relaxed/simple;
+	bh=5KYeLP/Z7vfTMDvVH57E3WBbpcqd5Ed7Gv0l/gsgDTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=civ0Eg7cNlV2M58YaLcr2WESLrGw34vmlvdh6yoJbPoNeXF22b2IDlsZSVY96EIxii2KTMW/3nUxuZYBWa9jt/HY4wDEOb0+V3NZpnYlV03FO4Kz6YokRx+AasKaeNS2u92gxsU+c9gZLTKMW6bx5WWOirEOPkzDmHDggBVWTGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rP8rqt9Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dk2zFwEp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2908C43141;
-	Mon, 11 Mar 2024 21:10:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rP8rqt9Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D47C433F1;
+	Mon, 11 Mar 2024 21:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710191431;
-	bh=1ulrTx8AoxjxfOW0BLwJHz0vuazP+X6KMFMxH95+55U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Dk2zFwEpgDw+KCrKtN5um461olspF/q0xKZ//JoF7R2W4w/PZkEN0Oe/XwINFbwe6
-	 Ema8DJXg824946OSjwBFgkqJyDtm2hsxsc6mFBDlDFNWxjUxs5g+XExhAJYssh9QfK
-	 SBQcHB1KLv1SPrpC1zBDNTLdMJp544hvZmz8pz+N0pBkTWHNYntiayUnubiiBBmIzT
-	 b+uDPjVWapmr12aw+YbtM5RF+Z1UD1Z/rbHpT0tYv2MFqJtuYeIH5wPS8XlVEZCrra
-	 2lFNYIM48KYkni2AX2hQllAJZPV4P5HH4ggahQVgplIZIR6euc6oNb5byA8ej39ART
-	 1ob+nlrzzDpAQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CB0E4D95055;
-	Mon, 11 Mar 2024 21:10:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1710191511;
+	bh=5KYeLP/Z7vfTMDvVH57E3WBbpcqd5Ed7Gv0l/gsgDTs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rP8rqt9ZaRKGisJCWcWgf4QTpH4FzeNOquAoSwpsM7HHH3LYm03hV9RhPhsNnG2tu
+	 4cabvk9Ov2bxHHDzbp02RMzFMJHD+EH1Y0ulcQWG3VJlfQ2Zx0MMfAxIoxml7UbcQQ
+	 43ghmZsFIqYvz/9gztBeeWfWMjK5HVvhrvU5Yy6n5/r6etTVqCwY0Vlq4kxZvEYa6f
+	 dqIRKMXaZuC80pCqEvlsutSQtdy/DvI0bSwfi5cTtRruVb6usghq3xMLzPCcLsfrff
+	 3YDaxB8KJok6zU6REckYq55AjwoZAnoux/OGr3Hea2S0Es5TaK6nIR0vjsdzAhaE0Q
+	 S7oy89IkwYTuw==
+Date: Mon, 11 Mar 2024 14:11:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Yury Norov <yury.norov@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Andrew Lunn
+ <andrew@lunn.ch>, Mark Brown <broonie@kernel.org>, Ratheesh Kannoth
+ <rkannoth@marvell.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 0/5] Add support for QMC HDLC
+Message-ID: <20240311141150.4ebde44b@kernel.org>
+In-Reply-To: <20240307113909.227375-1-herve.codina@bootlin.com>
+References: <20240307113909.227375-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 1/1] net: mdio_bus: Remove unused of_gpio.h
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171019143182.14853.4303336142923556303.git-patchwork-notify@kernel.org>
-Date: Mon, 11 Mar 2024 21:10:31 +0000
-References: <20240307122231.3677241-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240307122231.3677241-1-andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch,
- hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu,  7 Mar 2024 14:22:31 +0200 you wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it, simply remove the unused header.
+On Thu,  7 Mar 2024 12:39:03 +0100 Herve Codina wrote:
+> This series introduces the QMC HDLC support.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/net/phy/mdio_bus.c | 2 --
->  1 file changed, 2 deletions(-)
+> Patches were previously sent as part of a full feature series and were
+> previously reviewed in that context:
+> "Add support for QMC HDLC, framer infrastructure and PEF2256 framer" [1]
+> 
+> In order to ease the merge, the full feature series has been split and
+> needed parts were merged in v6.8-rc1:
+>  - "Prepare the PowerQUICC QMC and TSA for the HDLC QMC driver" [2]
+>  - "Add support for framer infrastructure and PEF2256 framer" [3]
+> 
+> This series contains patches related to the QMC HDLC part (QMC HDLC
+> driver):
+>  - Introduce the QMC HDLC driver (patches 1 and 2)
+>  - Add timeslots change support in QMC HDLC (patch 3)
+>  - Add framer support as a framer consumer in QMC HDLC (patch 4)
+> 
+> Compare to the original full feature series, a modification was done on
+> patch 3 in order to use a coherent prefix in the commit title.
+> 
+> I kept the patches unsquashed as they were previously sent and reviewed.
+> Of course, I can squash them if needed.
 
-Here is the summary with links:
-  - [net-next,v1,1/1] net: mdio_bus: Remove unused of_gpio.h
-    https://git.kernel.org/netdev/net-next/c/86a7abbb2210
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Applied, thank you!
