@@ -1,185 +1,378 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEEB4DA1A;
-	Mon, 11 Mar 2024 16:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFAF4CB2B;
+	Mon, 11 Mar 2024 16:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710172920; cv=none; b=S/h65tHWa+7fx5LQVIQgma62kXKqvwxKaNcCOeDlEgiJ6n53d1DIDC4kmtJrIYoS+7573Y/M8CagCZFdG7MMLr8homp7f0KEB35A0zQGcg83u5stDpBt9sgDRQBQVINcASK7HG1o9/aBWW3ZirULH8CnH8g5/Ir4IJzlkj9E/H0=
+	t=1710172919; cv=none; b=aM10hzXuNohtM+pS6WpOKr3bsuIiKMBl8s1v3h/O1UPdEXCOs4J4YOkdc58LN0X6McOHOvm7FvmgQc45b8sUWm0EmxQfpHNcBr1PyjmTTtfrcy0+5ydLLxxKV5M63ld2azduO7BC+O2zhLwxOJyTYm6p5+/kQhjGqtxC7hah9GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710172920; c=relaxed/simple;
-	bh=X3GdXd5MdElqZ7SH6kkZIYIIS49/wbQOMBJNyVWcWws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aw56kK/j1oo9KDsf5cb/KlIsW/NaogSb8ym/BEGR1jv6J0FrnjBVwkJ9HQpREGZmEI51XKWRSB7AW6wYlAZHjju4OBdyp0AFecJhnTE5lNnKonQLGwb29cUCoDjLFZVHoFdOFATudqCmQiU+sAZ3WNQAfQ5rg67X4zia0OKhxHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1710172919; c=relaxed/simple;
+	bh=OC6W03HD5w5XzvIUse7kOpoUdYLAdyN2h9g5MsyIFf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WOB3I3JzSbed3zDSwuTU96gsvNqje5V7iCDF+zWVN9FC2jcHvlZromuk0hbSqze/pkSHQx1En6ntUqYAozlGpeWpBZCWqV7NVtf6VYZIDW9SHVZ9oCSaTxr8RUgyZWP+JKQdMoxziFVfnqAgi1S6rdJAq75Sgkrlxrog5hpoKGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=amxbtUyL; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="amxbtUyL"
+Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 179A25C7EB;
-	Mon, 11 Mar 2024 16:01:51 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id AE56E284712;
+	Mon, 11 Mar 2024 17:01:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
+	s=gen1; t=1710172913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DL6xFHGXFNPD+ftT31HPFoLwwjNBtmulha/FNOeYtwI=;
+	b=amxbtUyLKj3cfPpHtGbG2w7Z3T41tpCqqfbiuxkWfy1eRzy2l66T4RvwC+oLUn4tLqAoGH
+	rgGlTZm4wiyAu5HoNwPpV8oWNlFgTCApSuwx2quDxEeUEwkEn0dz4Ith0NbPA1axzxMiPo
+	OfEqLz6VGg48rYe8+rgD4xBsoIPGHmU=
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C1DB1395F;
-	Mon, 11 Mar 2024 16:01:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LA3xAu8q72XkDQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 11 Mar 2024 16:01:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id ACDCDA0807; Mon, 11 Mar 2024 17:01:50 +0100 (CET)
-Date: Mon, 11 Mar 2024 17:01:50 +0100
-From: Jan Kara <jack@suse.cz>
-To: Luis Henriques <lhenriques@suse.de>
-Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>, linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] fs_parser: handle parameters that can be empty and
- don't have a value
-Message-ID: <20240311160150.kzlfbdrmgiynuteu@quack3>
-References: <20240229163011.16248-1-lhenriques@suse.de>
- <20240229163011.16248-2-lhenriques@suse.de>
- <20240301-gegossen-seestern-683681ea75d1@brauner>
- <87il269crs.fsf@suse.de>
- <20240307151356.ishrtxrsge2i5mjn@quack3>
- <20240308-fahrdienst-torten-eae8f3eed3b4@brauner>
- <87a5n9t4le.fsf@suse.de>
- <20240308230911.r5a4xn6f5vp24hil@quack3>
- <87r0gh6p4y.fsf@suse.de>
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: karelb)
+	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 8AEAD45665F;
+	Mon, 11 Mar 2024 17:01:53 +0100 (CET)
+From: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
+To: Karel Balej <balejk@matfyz.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org
+Subject: [RFC PATCH v4 2/5] mfd: add driver for Marvell 88PM886 PMIC
+Date: Mon, 11 Mar 2024 16:51:54 +0100
+Message-ID: <20240311160110.32185-3-karelb@gimli.ms.mff.cuni.cz>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240311160110.32185-1-karelb@gimli.ms.mff.cuni.cz>
+References: <20240311160110.32185-1-karelb@gimli.ms.mff.cuni.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r0gh6p4y.fsf@suse.de>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 179A25C7EB
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
 
-On Mon 11-03-24 10:26:05, Luis Henriques wrote:
-> Jan Kara <jack@suse.cz> writes:
-> > On Fri 08-03-24 10:12:13, Luis Henriques wrote:
-> >> Christian Brauner <brauner@kernel.org> writes:
-> >> 
-> >> > On Thu, Mar 07, 2024 at 04:13:56PM +0100, Jan Kara wrote:
-> >> >> On Fri 01-03-24 15:45:27, Luis Henriques wrote:
-> >> >> > Christian Brauner <brauner@kernel.org> writes:
-> >> >> > 
-> >> >> > > On Thu, Feb 29, 2024 at 04:30:08PM +0000, Luis Henriques wrote:
-> >> >> > >> Currently, only parameters that have the fs_parameter_spec 'type' set to
-> >> >> > >> NULL are handled as 'flag' types.  However, parameters that have the
-> >> >> > >> 'fs_param_can_be_empty' flag set and their value is NULL should also be
-> >> >> > >> handled as 'flag' type, as their type is set to 'fs_value_is_flag'.
-> >> >> > >> 
-> >> >> > >> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> >> >> > >> ---
-> >> >> > >>  fs/fs_parser.c | 3 ++-
-> >> >> > >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >> >> > >> 
-> >> >> > >> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-> >> >> > >> index edb3712dcfa5..53f6cb98a3e0 100644
-> >> >> > >> --- a/fs/fs_parser.c
-> >> >> > >> +++ b/fs/fs_parser.c
-> >> >> > >> @@ -119,7 +119,8 @@ int __fs_parse(struct p_log *log,
-> >> >> > >>  	/* Try to turn the type we were given into the type desired by the
-> >> >> > >>  	 * parameter and give an error if we can't.
-> >> >> > >>  	 */
-> >> >> > >> -	if (is_flag(p)) {
-> >> >> > >> +	if (is_flag(p) ||
-> >> >> > >> +	    (!param->string && (p->flags & fs_param_can_be_empty))) {
-> >> >> > >>  		if (param->type != fs_value_is_flag)
-> >> >> > >>  			return inval_plog(log, "Unexpected value for '%s'",
-> >> >> > >>  				      param->key);
-> >> >> > >
-> >> >> > > If the parameter was derived from FSCONFIG_SET_STRING in fsconfig() then
-> >> >> > > param->string is guaranteed to not be NULL. So really this is only
-> >> >> > > about:
-> >> >> > >
-> >> >> > > FSCONFIG_SET_FD
-> >> >> > > FSCONFIG_SET_BINARY
-> >> >> > > FSCONFIG_SET_PATH
-> >> >> > > FSCONFIG_SET_PATH_EMPTY
-> >> >> > >
-> >> >> > > and those values being used without a value. What filesystem does this?
-> >> >> > > I don't see any.
-> >> >> > >
-> >> >> > > The tempting thing to do here is to to just remove fs_param_can_be_empty
-> >> >> > > from every helper that isn't fs_param_is_string() until we actually have
-> >> >> > > a filesystem that wants to use any of the above as flags. Will lose a
-> >> >> > > lot of code that isn't currently used.
-> >> >> > 
-> >> >> > Right, I find it quite confusing and I may be fixing the issue in the
-> >> >> > wrong place.  What I'm seeing with ext4 when I mount a filesystem using
-> >> >> > the option '-o usrjquota' is that fs_parse() will get:
-> >> >> > 
-> >> >> >  * p->type is set to fs_param_is_string
-> >> >> >    ('p' is a struct fs_parameter_spec, ->type is a function)
-> >> >> >  * param->type is set to fs_value_is_flag
-> >> >> >    ('param' is a struct fs_parameter, ->type is an enum)
-> >> >> > 
-> >> >> > This is because ext4 will use the __fsparam macro to set define a
-> >> >> > fs_param_spec as a fs_param_is_string but will also set the
-> >> >> > fs_param_can_be_empty; and the fsconfig() syscall will get that parameter
-> >> >> > as a flag.  That's why param->string will be NULL in this case.
-> >> >> 
-> >> >> So I'm a bit confused here. Valid variants of these quota options are like
-> >> >> "usrjquota=<filename>" (to set quota file name) or "usrjquota=" (to clear
-> >> >> quota file name). The variant "usrjquota" should ideally be rejected
-> >> >> because it doesn't make a good sense and only adds to confusion. Now as far
-> >> >> as I'm reading fs/ext4/super.c: parse_options() (and as far as my testing
-> >> >> shows) this is what is happening so what is exactly the problem you're
-> >> >> trying to fix?
-> >> >
-> >> > mount(8) has no way of easily knowing that for something like
-> >> > mount -o usrjquota /dev/sda1 /mnt that "usrjquota" is supposed to be
-> >> > set as an empty string via FSCONFIG_SET_STRING. For mount(8) it is
-> >> > indistinguishable from a flag because it's specified without an
-> >> > argument. So mount(8) passes FSCONFIG_SET_FLAG and it seems strange that
-> >> > we should require mount(8) to know what mount options are strings or no.
-> >> > I've ran into this issue before myself when using the mount api
-> >> > programatically.
-> >> 
-> >> Right.  A simple usecase is to try to do:
-> >> 
-> >>   mount -t ext4 -o usrjquota= /dev/sda1 /mnt/
-> >> 
-> >> It will fail, and this has been broken for a while.
-> >
-> > I see. But you have to have new enough mount that is using fsconfig, don't
-> > you? Because for me in my test VM this works just fine...
-> 
-> Oh, interesting.  FTR I'm using mount from util-linux 2.39.3, but I
-> haven't tried this with older versions.
+From: Karel Balej <balejk@matfyz.cz>
 
-I'm using util-linux 2.37.2 and checking the changelogs indeed 2.39 started
-to use the new mount API from the kernel. Checking strace of the new mount
-I can indeed see mount(8) does:
+Marvell 88PM886 is a PMIC which provides various functions such as
+onkey, battery, charger and regulators. It is found for instance in the
+samsung,coreprimevelte smartphone with which this was tested. Implement
+basic support to allow for the use of regulators and onkey.
 
-fsconfig(3, FSCONFIG_SET_FLAG, "usrjquota", NULL, 0) = -1 EINVAL (Invalid argument)
+Signed-off-by: Karel Balej <balejk@matfyz.cz>
+---
 
-So it is actually util-linux, not the kernel parser, that IMHO incorrectly
-parses the mount options and uses FSCONFIG_SET_FLAG instead of
-FSCONFIG_SET_STRING with an empty string.
+Notes:
+    RFC v4:
+    - Use MFD_CELL_* macros.
+    - Address Lee's feedback:
+      - Do not define regmap_config.val_bits and .reg_bits.
+      - Drop everything regulator related except mfd_cell (regmap
+        initialization, IDs enum etc.). Drop pm886_initialize_subregmaps.
+      - Do not store regmap pointers as an array as there is now only one
+        regmap. Also drop the corresponding enum.
+      - Move regmap_config to the header as it is needed in the regulators
+        driver.
+      - pm886_chip.whoami -> chip_id
+      - Reword chip ID mismatch error message and print the ID as
+        hexadecimal.
+      - Fix includes in include/linux/88pm886.h.
+      - Drop the pm886_irq_number enum and define the (for the moment) only
+        IRQ explicitly.
+    - Have only one MFD cell for all regulators as they are now registered
+      all at once in the regulators driver.
+    - Reword commit message.
+    - Make device table static and remove comma after the sentinel to signal
+      that nothing should come after it.
+    RFC v3:
+    - Drop onkey cell .of_compatible.
+    - Rename LDO page offset and regmap to REGULATORS.
+    RFC v2:
+    - Remove some abstraction.
+    - Sort includes alphabetically and add linux/of.h.
+    - Depend on OF, remove of_match_ptr and add MODULE_DEVICE_TABLE.
+    - Use more temporaries and break long lines.
+    - Do not initialize ret in probe.
+    - Use the wakeup-source DT property.
+    - Rename ret to err.
+    - Address Lee's comments:
+      - Drop patched in presets for base regmap and related defines.
+      - Use full sentences in comments.
+      - Remove IRQ comment.
+      - Define regmap_config member values.
+      - Rename data to sys_off_data.
+      - Add _PMIC suffix to Kconfig.
+      - Use dev_err_probe.
+      - Do not store irq_data.
+      - s/WHOAMI/CHIP_ID
+      - Drop LINUX part of include guard name.
+      - Merge in the regulator series modifications in order to have more
+        devices and modify the commit message accordingly. Changes with
+        respect to the original regulator series patches:
+        - ret -> err
+        - Add temporary for dev in pm88x_initialize_subregmaps.
+        - Drop of_compatible for the regulators.
+        - Do not duplicate LDO regmap for bucks.
+    - Rewrite commit message.
 
-								Honza
+ drivers/mfd/88pm886.c       | 149 ++++++++++++++++++++++++++++++++++++
+ drivers/mfd/Kconfig         |  12 +++
+ drivers/mfd/Makefile        |   1 +
+ include/linux/mfd/88pm886.h |  38 +++++++++
+ 4 files changed, 200 insertions(+)
+ create mode 100644 drivers/mfd/88pm886.c
+ create mode 100644 include/linux/mfd/88pm886.h
+
+diff --git a/drivers/mfd/88pm886.c b/drivers/mfd/88pm886.c
+new file mode 100644
+index 000000000000..88f21f813ec1
+--- /dev/null
++++ b/drivers/mfd/88pm886.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/i2c.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/notifier.h>
++#include <linux/of.h>
++#include <linux/reboot.h>
++#include <linux/regmap.h>
++
++#include <linux/mfd/88pm886.h>
++
++#define PM886_REG_INT_STATUS1			0x05
++
++#define PM886_REG_INT_ENA_1			0x0a
++#define PM886_INT_ENA1_ONKEY			BIT(0)
++
++#define PM886_IRQ_ONKEY				0
++
++static struct regmap_irq pm886_regmap_irqs[] = {
++	REGMAP_IRQ_REG(PM886_IRQ_ONKEY, 0, PM886_INT_ENA1_ONKEY),
++};
++
++static struct regmap_irq_chip pm886_regmap_irq_chip = {
++	.name = "88pm886",
++	.irqs = pm886_regmap_irqs,
++	.num_irqs = ARRAY_SIZE(pm886_regmap_irqs),
++	.num_regs = 4,
++	.status_base = PM886_REG_INT_STATUS1,
++	.ack_base = PM886_REG_INT_STATUS1,
++	.unmask_base = PM886_REG_INT_ENA_1,
++};
++
++static struct resource pm886_onkey_resources[] = {
++	DEFINE_RES_IRQ_NAMED(PM886_IRQ_ONKEY, "88pm886-onkey"),
++};
++
++static struct mfd_cell pm886_devs[] = {
++	MFD_CELL_RES("88pm886-onkey", pm886_onkey_resources),
++	MFD_CELL_NAME("88pm886-regulator"),
++};
++
++static int pm886_power_off_handler(struct sys_off_data *sys_off_data)
++{
++	struct pm886_chip *chip = sys_off_data->cb_data;
++	struct regmap *regmap = chip->regmap;
++	struct device *dev = &chip->client->dev;
++	int err;
++
++	err = regmap_update_bits(regmap, PM886_REG_MISC_CONFIG1, PM886_SW_PDOWN,
++				PM886_SW_PDOWN);
++	if (err) {
++		dev_err(dev, "Failed to power off the device: %d\n", err);
++		return NOTIFY_BAD;
++	}
++	return NOTIFY_DONE;
++}
++
++static int pm886_setup_irq(struct pm886_chip *chip,
++		struct regmap_irq_chip_data **irq_data)
++{
++	struct regmap *regmap = chip->regmap;
++	struct device *dev = &chip->client->dev;
++	int err;
++
++	/* Set interrupt clearing mode to clear on write. */
++	err = regmap_update_bits(regmap, PM886_REG_MISC_CONFIG2,
++			PM886_INT_INV | PM886_INT_CLEAR | PM886_INT_MASK_MODE,
++			PM886_INT_WC);
++	if (err) {
++		dev_err(dev, "Failed to set interrupt clearing mode: %d\n", err);
++		return err;
++	}
++
++	err = devm_regmap_add_irq_chip(dev, regmap, chip->client->irq,
++					IRQF_ONESHOT, -1, &pm886_regmap_irq_chip,
++					irq_data);
++	if (err) {
++		dev_err(dev, "Failed to request IRQ: %d\n", err);
++		return err;
++	}
++
++	return 0;
++}
++
++static int pm886_probe(struct i2c_client *client)
++{
++	struct regmap_irq_chip_data *irq_data;
++	struct device *dev = &client->dev;
++	struct pm886_chip *chip;
++	struct regmap *regmap;
++	unsigned int chip_id;
++	int err;
++
++	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->client = client;
++	chip->chip_id = (uintptr_t)device_get_match_data(dev);
++	i2c_set_clientdata(client, chip);
++
++	regmap = devm_regmap_init_i2c(client, &pm886_i2c_regmap);
++	if (IS_ERR(regmap))
++		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialize regmap\n");
++	chip->regmap = regmap;
++
++	err = regmap_read(regmap, PM886_REG_ID, &chip_id);
++	if (err)
++		return dev_err_probe(dev, err, "Failed to read chip ID\n");
++
++	if (chip->chip_id != chip_id)
++		return dev_err_probe(dev, -EINVAL, "Unsupported chip: 0x%x\n", chip_id);
++
++	err = pm886_setup_irq(chip, &irq_data);
++	if (err)
++		return err;
++
++	err = devm_mfd_add_devices(dev, 0, pm886_devs, ARRAY_SIZE(pm886_devs),
++				NULL, 0, regmap_irq_get_domain(irq_data));
++	if (err)
++		return dev_err_probe(dev, err, "Failed to add devices\n");
++
++	err = devm_register_power_off_handler(dev, pm886_power_off_handler, chip);
++	if (err)
++		return dev_err_probe(dev, err, "Failed to register power off handler\n");
++
++	device_init_wakeup(dev, device_property_read_bool(dev, "wakeup-source"));
++
++	return 0;
++}
++
++static const struct of_device_id pm886_of_match[] = {
++	{ .compatible = "marvell,88pm886-a1", .data = (void *)PM886_A1_CHIP_ID },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pm886_of_match);
++
++static struct i2c_driver pm886_i2c_driver = {
++	.driver = {
++		.name = "88pm886",
++		.of_match_table = pm886_of_match,
++	},
++	.probe = pm886_probe,
++};
++module_i2c_driver(pm886_i2c_driver);
++
++MODULE_DESCRIPTION("Marvell 88PM886 PMIC driver");
++MODULE_AUTHOR("Karel Balej <balejk@matfyz.cz>");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index e7a6e45b9fac..9ef921c59f30 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -794,6 +794,18 @@ config MFD_88PM860X
+ 	  select individual components like voltage regulators, RTC and
+ 	  battery-charger under the corresponding menus.
+ 
++config MFD_88PM886_PMIC
++	bool "Marvell 88PM886 PMIC"
++	depends on I2C=y
++	depends on OF
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	select MFD_CORE
++	help
++	  This enables support for Marvell 88PM886 Power Management IC.
++	  This includes the I2C driver and the core APIs _only_, you have to
++	  select individual components like onkey under the corresponding menus.
++
+ config MFD_MAX14577
+ 	tristate "Maxim Semiconductor MAX14577/77836 MUIC + Charger Support"
+ 	depends on I2C
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index c66f07edcd0e..d016b7fed354 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -7,6 +7,7 @@
+ obj-$(CONFIG_MFD_88PM860X)	+= 88pm860x.o
+ obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
+ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
++obj-$(CONFIG_MFD_88PM886_PMIC)	+= 88pm886.o
+ obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
+ obj-$(CONFIG_MFD_SM501)		+= sm501.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
+diff --git a/include/linux/mfd/88pm886.h b/include/linux/mfd/88pm886.h
+new file mode 100644
+index 000000000000..a5e6524bb19d
+--- /dev/null
++++ b/include/linux/mfd/88pm886.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __MFD_88PM886_H
++#define __MFD_88PM886_H
++
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++
++#define PM886_A1_CHIP_ID		0xa1
++
++#define PM886_REGMAP_CONF_MAX_REG	0xfe
++
++#define PM886_REG_ID			0x00
++
++#define PM886_REG_STATUS1		0x01
++#define PM886_ONKEY_STS1		BIT(0)
++
++#define PM886_REG_MISC_CONFIG1		0x14
++#define PM886_SW_PDOWN			BIT(5)
++
++#define PM886_REG_MISC_CONFIG2		0x15
++#define PM886_INT_INV			BIT(0)
++#define PM886_INT_CLEAR			BIT(1)
++#define PM886_INT_RC			0x00
++#define PM886_INT_WC			BIT(1)
++#define PM886_INT_MASK_MODE		BIT(2)
++
++struct pm886_chip {
++	struct i2c_client *client;
++	unsigned int chip_id;
++	struct regmap *regmap;
++};
++
++static const struct regmap_config pm886_i2c_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = PM886_REGMAP_CONF_MAX_REG,
++};
++#endif /* __MFD_88PM886_H */
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.44.0
+
