@@ -1,239 +1,125 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42C71E884
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A865E53E27
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710185809; cv=none; b=WLZ490iXvhL3RxwskKv2+ZjwykV/ku1ckE4vJh+WeQWHLfLEKY0QGN5SJLfRhYhp9KpIiHkVzhyWFoEb1R+sa3bvujTC8pOdXKCEKEpXTbJwBuLm0/vhhcZ8+zd9szlZ0+Jt5oSPAyluf2rwomi4I1bQaH8OJTrWHI5QmFuLZA4=
+	t=1710185873; cv=none; b=PZiTtv+swVr6CR1iVeDfM6pOyZF3Jr2pAiXnKBNTraMUPVY+BwtVMNLuH5aa7KfPWe9rMhBs0qh4TbLctqFr5Q5rlyxYas2ieBOJq5eLKp6q1JJuml+oEM+FmUHNwSZPy/8Oq8xroLPdcy10ayPWwEaMXIgZKwkc4eIEMgOcq3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710185809; c=relaxed/simple;
-	bh=oA81BqaKSjba3CwENuBFCYqFjtfgxiRczieDtv4LSF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V7ceb5bMpRMZ1csyS3h1jNV606N20GwYA4tMNi550Fpa9GYsiNBx2ZgyhgpvkLJsyy0nHFVNyblfdf2nlO3w0uwttpsSQQ+KQv1xCQCZcLhG86L9LLFx0PpjFgg15aEytLw+BMaSrX4BVnTGWtiPghaA5QaczldcyWc0G1KO3OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=o6K2G/DJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g++Kpc02; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
+	s=arc-20240116; t=1710185873; c=relaxed/simple;
+	bh=o05NxM7WZ81q6wAbtVKGEmLaegB5tbOJPwes8Lf1e94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oM4Yv4ZBHz2dsgj+V4sE7T9PT8MW32Z9bPZPhlXuSghDVBkQJ8ZdFnpHNet/nNT07CqfIsJM552UG45WHg8FcyfAa6a0Oia6sDhT6Al18TlHGSci7/TlnQJciyzOHPgeSvWVXMiQz0LyyPxoE9IkBPOjMMobPZM6yMaZNbt5WpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MnpeOfjR; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MnpeOfjR; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="o6K2G/DJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g++Kpc02"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.nyi.internal (Postfix) with ESMTP id B846113800D1;
-	Mon, 11 Mar 2024 15:36:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 11 Mar 2024 15:36:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm1; t=1710185805; x=
-	1710272205; bh=dGukwC2LyuCQ/OI2VLjd+cSQB2fydh8T1EPdNGlVsRE=; b=o
-	6K2G/DJ5LagUkehXa5ADJ7WTPVdfVXlGzW2zy+eGBuGT6QI2MrSS0DmIJn69D7Cw
-	+U/fWwj6XXBsxVjME6kwoaYXXUc3yXOWNFGnWl+URrl0jFzHr2rbIBsFgeTFZMpb
-	g2GSHEQ8SGOXEmeB8lvEeGD2x4+R/EFfeFIdQFqh7cYrbNKHib5guFDk/M1OE8Oh
-	IdYyhOLDCzt2LatWJYDas/wIP79UMrU84p5wx9xUR6L+HpI65mGIFJ56Pw5CSyp+
-	40AovbgNjugSsAj9YyiAcBvjBBddy7GPgN6IO3m/eJt/LmVPgTu8hTJ0gZ26Xd4f
-	UynonsCZwZNFoQz19mPBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1710185805; x=1710272205; bh=d
-	GukwC2LyuCQ/OI2VLjd+cSQB2fydh8T1EPdNGlVsRE=; b=g++Kpc02SIO1PTbw1
-	vrCWbW/5SB1UYIaHipoExzoYFFHrfFpVPVxC2zEca0hKPnjp1c3TzL0Tptxk0+bd
-	TYlGQoRNGFTpC9pUMdgr4iWUv3oWK2DtzlfZYzSL1eE0tG3NbytjUzIuoQaowXEQ
-	AHrZJttHIIdLc0cANlxUvpjQCtYOWi/jXT2DiAdUoh7LD01tIMFrU1w8sTvn7pbj
-	ANE8VfsXm2YOKmIGgGppdkSNoCHL4oDxNHO21tkLMqpfvrPdrZKje+DgjvdSdY7X
-	wiSNqIWES8cdOhKNS5BiUT5ULqxIu4izmtUEYZqf2BjsdvgHLctAWl5wuM5wcLWA
-	arRTg==
-X-ME-Sender: <xms:TF3vZc9fgCd95c_ooxAQmQiodwPWX9Z-dmApGjQLzRuadEuQuYEujA>
-    <xme:TF3vZUvhhkTAkzYcFWGAVz2rMBHI0cP9HzXpAOrHSw6kN8YWlBtRyj0CXzGz_7ikT
-    lJ2DfWHnuXbj5pNGg>
-X-ME-Received: <xmr:TF3vZSCnWw4k7Pf7-k6hVbIPPeBpPSQG5V2ncJ45pw7m-woyaiLqqXvLc1giJR3LiLyOiGSzxCauRXSHW-dpLaKkqbAqnRI2u89hHIFaP0tJPjLoIsmWiz-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjedugdduvdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofhrgggtgfesthekredtredtjeenucfhrhhomhepkghiucgj
-    rghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepteduve
-    ehteehheeiteeihfejveejledtgfdvieeuiedutefftdevtdfhteevtdffnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:TF3vZcdUkIt5dCsduemOcSAmJQyyHYXP6Ly4uW4Oz-RuptfeS8b-bA>
-    <xmx:TF3vZROnVg5CQb8AmUaBUDKrH2lUD6HGpr-NCLmFkEsq7WzMB653Ng>
-    <xmx:TF3vZWnRavW-TLq2F_WzvTPjQ0_i1c1aeY7Nmnytv6qxSXY4OTpjRQ>
-    <xmx:TV3vZUo1kLehLivRLFh4XerLjzuqDRU2CpSL_9-UufH9FvCK2c88yg>
-Feedback-ID: iccd040f4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 11 Mar 2024 15:36:44 -0400 (EDT)
-From: Zi Yan <zi.yan@sent.com>
-To: linux-mm@kvack.org
-Cc: Zi Yan <ziy@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Yang Shi <shy828301@gmail.com>,
-	Huang Ying <ying.huang@intel.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MnpeOfjR";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MnpeOfjR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A25A35CACF;
+	Mon, 11 Mar 2024 19:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1710185868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=909brDHSnvKCvnxGbfXG4mQWSVR9gVM6+h3f/kHoAjc=;
+	b=MnpeOfjRKbz6alYo3GrzstTggZToHeZ/cQfKy7xgIKBto382sVKk7BSfzMK3ZEjrpS3Ia3
+	VlrSAVixDz5J6GkDqXVPM+o/VQ+D9fO98uUG520m7H1KihpHSxOWRIR/Cj4bkBuiBh9LWf
+	fOHFl2ylLHjJRKqiZstafChk0VixHN8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1710185868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=909brDHSnvKCvnxGbfXG4mQWSVR9gVM6+h3f/kHoAjc=;
+	b=MnpeOfjRKbz6alYo3GrzstTggZToHeZ/cQfKy7xgIKBto382sVKk7BSfzMK3ZEjrpS3Ia3
+	VlrSAVixDz5J6GkDqXVPM+o/VQ+D9fO98uUG520m7H1KihpHSxOWRIR/Cj4bkBuiBh9LWf
+	fOHFl2ylLHjJRKqiZstafChk0VixHN8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9BA1A13695;
+	Mon, 11 Mar 2024 19:37:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VbL8JYxd72VkUAAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Mon, 11 Mar 2024 19:37:48 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/migrate: put dest folio on deferred split list if source was there.
-Date: Mon, 11 Mar 2024 15:36:41 -0400
-Message-ID: <20240311193641.133981-1-zi.yan@sent.com>
-X-Mailer: git-send-email 2.43.0
-Reply-To: Zi Yan <ziy@nvidia.com>
+Subject: [GIT PULL] AFFS update for 6.9
+Date: Mon, 11 Mar 2024 20:30:38 +0100
+Message-ID: <cover.1710185320.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.42.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=MnpeOfjR
+X-Spamd-Result: default: False [2.65 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 URIBL_BLOCKED(0.00)[suse.com:dkim];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 DWL_DNSWL_LOW(-1.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.04)[87.59%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: 2.65
+X-Spam-Level: **
+X-Rspamd-Queue-Id: A25A35CACF
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-From: Zi Yan <ziy@nvidia.com>
+Hi,
 
-Commit 616b8371539a6 ("mm: thp: enable thp migration in generic path")
-did not check if a THP is on deferred split list before migration, thus,
-the destination THP is never put on deferred split list even if the source
-THP might be. The opportunity of reclaiming free pages in a partially
-mapped THP during deferred list scanning is lost, but no other harmful
-consequence is present[1]. Checking source folio deferred split list
-status before page unmapped and add destination folio to the list if
-source was after migration.
+please pull one change to AFFS that removes use of SLAB_MEM_SPREAD,
+which is going to be removed from MM code. Thanks.
 
-[1]: https://lore.kernel.org/linux-mm/03CE3A00-917C-48CC-8E1C-6A98713C817C@nvidia.com/
+----------------------------------------------------------------
+The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba329b:
 
-Fixes: 616b8371539a ("mm: thp: enable thp migration in generic path")
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- mm/huge_memory.c | 22 ----------------------
- mm/internal.h    | 23 +++++++++++++++++++++++
- mm/migrate.c     | 26 +++++++++++++++++++++++++-
- 3 files changed, 48 insertions(+), 23 deletions(-)
+  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9859aa4f7553..c6d4d0cdf4b3 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -766,28 +766,6 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
- 	return pmd;
- }
- 
--#ifdef CONFIG_MEMCG
--static inline
--struct deferred_split *get_deferred_split_queue(struct folio *folio)
--{
--	struct mem_cgroup *memcg = folio_memcg(folio);
--	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
--
--	if (memcg)
--		return &memcg->deferred_split_queue;
--	else
--		return &pgdat->deferred_split_queue;
--}
--#else
--static inline
--struct deferred_split *get_deferred_split_queue(struct folio *folio)
--{
--	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
--
--	return &pgdat->deferred_split_queue;
--}
--#endif
--
- void folio_prep_large_rmappable(struct folio *folio)
- {
- 	if (!folio || !folio_test_large(folio))
-diff --git a/mm/internal.h b/mm/internal.h
-index d1c69119b24f..8fa36e84463a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1107,6 +1107,29 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 				   unsigned long addr, pmd_t *pmd,
- 				   unsigned int flags);
- 
-+#ifdef CONFIG_MEMCG
-+static inline
-+struct deferred_split *get_deferred_split_queue(struct folio *folio)
-+{
-+	struct mem_cgroup *memcg = folio_memcg(folio);
-+	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
-+
-+	if (memcg)
-+		return &memcg->deferred_split_queue;
-+	else
-+		return &pgdat->deferred_split_queue;
-+}
-+#else
-+static inline
-+struct deferred_split *get_deferred_split_queue(struct folio *folio)
-+{
-+	struct pglist_data *pgdat = NODE_DATA(folio_nid(folio));
-+
-+	return &pgdat->deferred_split_queue;
-+}
-+#endif
-+
-+
- /*
-  * mm/mmap.c
-  */
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 73a052a382f1..84ba1c65d20d 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -20,6 +20,7 @@
- #include <linux/pagemap.h>
- #include <linux/buffer_head.h>
- #include <linux/mm_inline.h>
-+#include <linux/mmzone.h>
- #include <linux/nsproxy.h>
- #include <linux/ksm.h>
- #include <linux/rmap.h>
-@@ -1037,7 +1038,10 @@ static int move_to_new_folio(struct folio *dst, struct folio *src,
- enum {
- 	PAGE_WAS_MAPPED = BIT(0),
- 	PAGE_WAS_MLOCKED = BIT(1),
--	PAGE_OLD_STATES = PAGE_WAS_MAPPED | PAGE_WAS_MLOCKED,
-+	PAGE_WAS_ON_DEFERRED_LIST = BIT(2),
-+	PAGE_OLD_STATES = PAGE_WAS_MAPPED |
-+			  PAGE_WAS_MLOCKED |
-+			  PAGE_WAS_ON_DEFERRED_LIST,
- };
- 
- static void __migrate_folio_record(struct folio *dst,
-@@ -1168,6 +1172,17 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
- 		folio_lock(src);
- 	}
- 	locked = true;
-+	if (folio_test_large_rmappable(src) &&
-+		!list_empty(&src->_deferred_list)) {
-+		struct deferred_split *ds_queue = get_deferred_split_queue(src);
-+
-+		spin_lock(&ds_queue->split_queue_lock);
-+		ds_queue->split_queue_len--;
-+		list_del_init(&src->_deferred_list);
-+		spin_unlock(&ds_queue->split_queue_lock);
-+		old_page_state |= PAGE_WAS_ON_DEFERRED_LIST;
-+	}
-+
- 	if (folio_test_mlocked(src))
- 		old_page_state |= PAGE_WAS_MLOCKED;
- 
-@@ -1307,6 +1322,15 @@ static int migrate_folio_move(free_folio_t put_new_folio, unsigned long private,
- 	if (old_page_state & PAGE_WAS_MAPPED)
- 		remove_migration_ptes(src, dst, false);
- 
-+	if (old_page_state & PAGE_WAS_ON_DEFERRED_LIST) {
-+		struct deferred_split *ds_queue = get_deferred_split_queue(src);
-+
-+		spin_lock(&ds_queue->split_queue_lock);
-+		ds_queue->split_queue_len++;
-+		list_add(&dst->_deferred_list, &ds_queue->split_queue);
-+		spin_unlock(&ds_queue->split_queue_lock);
-+	}
-+
- out_unlock_both:
- 	folio_unlock(dst);
- 	set_page_owner_migrate_reason(&dst->page, reason);
--- 
-2.43.0
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/affs-for-6.9
+
+for you to fetch changes up to f7c79a40b575f2b6c156c8bee9a652401bf715b6:
+
+  affs: remove SLAB_MEM_SPREAD flag usage (2024-02-26 11:36:28 +0100)
+
+----------------------------------------------------------------
+affs-for-6.9
+
+----------------------------------------------------------------
+Chengming Zhou (1):
+      affs: remove SLAB_MEM_SPREAD flag usage
+
+ fs/affs/super.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
