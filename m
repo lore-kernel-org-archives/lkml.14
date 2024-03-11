@@ -1,109 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8219617561;
-	Mon, 11 Mar 2024 09:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1177214298;
+	Mon, 11 Mar 2024 09:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710150729; cv=none; b=X4t25kHsqTbFW6Z70qzkJ7FznUCcIJfQB95mOT37/1XJ/DjEsKamQN2q6XfI9KOZMGYEK6o3FrhF4uyD8FeX6JcWAFuMIglBwK3mY+/dmkURjERTONLgAIXIIs/uHXdbERZsHqoF/QjMci3eLpjw2hjuY0w8EYQs2Xw8lBvrGQ8=
+	t=1710150943; cv=none; b=Qe5MENJPU2cPEi7L2x6yh5IB2cohRRwKru2EbpZ2zuyLV1FU9zMh8k65or682PzVCK6oNxG1zk+dUnsSTRcXWimOIO/6LNz1sBf93kiT2dhtiPiXanZUKi3/diZ+mxGZzxpi3YW3WW3e/VRoZOlRyhDz3ax+JhlQG+bTCyv0LK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710150729; c=relaxed/simple;
-	bh=kHqGNEG12eLe3S/obPhPqU/Qc/8vK1W84077+sxQovU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lTlWQYnur3YpzO8mnQeBbL4dc26mEGAWgguao2pfqbEgVevN4nHVLxcZQQNiOHbRHtYJOlPGNtH0MjoOE9iL+aXkV1OUzlMONTH8m4o3F6AB9l4Kh4osVjsNqSo47ZESBCJZq0jMPL/lpQlNFXob6nno8Q2j5jTYMOLkeZMVLwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bF5k4Zi7; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bF5k4Zi7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710150728; x=1741686728;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kHqGNEG12eLe3S/obPhPqU/Qc/8vK1W84077+sxQovU=;
-  b=bF5k4Zi7MyLC0sjzcpebHrvt13p7mYKzLvEYv/FxH2lF2VF2Wd+7eARK
-   fYdLTisO24exmDrXsSwDlUlXP+XdWUFKffrOpjlpyvrI3akpcIRA+LXII
-   FX7J8KLwzwqymNRvFHWmQqwHO2uJ5R9ZilWTD4maAKLwhrkZIi8/fBg93
-   8/RJyJ8U5DiHo06kqGyJKEYh/8ylWLv6eLFTGRN2enxUFOe0rnG7isV79
-   SjDdIo8JhCCEo91ZROoCHqJzLh5IzaveuKdke8UtOO4Fb0rC/kcdaNsFa
-   x0kZW9GcpebXvAtmRkQvxfEFqoJnsu+MkyIic3gI0PDBByB6vV6tFQ0xk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="8619483"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="8619483"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 02:52:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="914354296"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="914354296"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 02:52:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rjcK8-0000000BaI1-2XGg;
-	Mon, 11 Mar 2024 11:52:00 +0200
-Date: Mon, 11 Mar 2024 11:52:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Matt Ranostay <matt@ranostay.sg>,
-	Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/5] Support for Avago APDS9306 Ambient Light Sensor
-Message-ID: <Ze7UQAD4V3n-MKDJ@smile.fi.intel.com>
-References: <20240309105031.10313-1-subhajit.ghosh@tweaklogic.com>
+	s=arc-20240116; t=1710150943; c=relaxed/simple;
+	bh=/G1pRxVpybCCgbzIYw/qaSFDYYkjvbz6HGEWdab+gl8=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QSBjK9ny9drztieMgz/pTV5sF+HRkTGkkT8Yr+Vm9Z/iv40rvT+4MbRkjlOzJWu5ehGa0EQdBvvKZa+wtNebQCsWCDvzZS57QcEsbu+sY4HjFENE4M607uSMfU2iDwoXCEPdbAlOYOO+rJhhktV0pmP7Hz+62HiIsCdT/p1K/jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TtXFl63Hvz24j5C;
+	Mon, 11 Mar 2024 17:55:23 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52B56140155;
+	Mon, 11 Mar 2024 17:55:37 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 11 Mar 2024 17:55:36 +0800
+Message-ID: <d9d10da3-5b13-4a48-9236-d29fdf48220e@huawei.com>
+Date: Mon, 11 Mar 2024 17:55:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240309105031.10313-1-subhajit.ghosh@tweaklogic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <yisen.zhuang@huawei.com>,
+	<salil.mehta@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <jiri@resnulli.us>,
+	<shenjian15@huawei.com>, <wangjie125@huawei.com>, <liuyonglong@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V5 net-next 4/4] net: hns3: add support to query scc
+ version by devlink info
+To: Simon Horman <horms@kernel.org>
+References: <20240309100044.2351166-1-shaojijie@huawei.com>
+ <20240309100044.2351166-5-shaojijie@huawei.com>
+ <20240311091904.GA24043@kernel.org>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20240311091904.GA24043@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-On Sat, Mar 09, 2024 at 09:20:26PM +1030, Subhajit Ghosh wrote:
-> Support for Avago APDS9306 Ambient Light Sensor.
-> 
-> Driver support for Avago (Broadcom) APDS9306 Ambient Light Sensor.
-> It has two channels - ALS and CLEAR. The ALS (Ambient Light Sensor)
-> channel approximates the response of the human-eye providing direct
-> read out where the output count is proportional to ambient light levels.
-> It is internally temperature compensated and rejects 50Hz and 60Hz flicker
-> caused by artificial light sources. Hardware interrupt configuration is
-> optional. It is a low power device with 20 bit resolution and has 
-> configurable adaptive interrupt mode and interrupt persistence mode.
-> The device also features inbuilt hardware gain, multiple integration time
-> selection options and sampling frequency selection options.
-> 
-> This driver also uses the IIO GTS (Gain Time Scale) Helpers Namespace for 
-> Scales, Gains and Integration time implementation.
-> 
-> Link: https://docs.broadcom.com/doc/AV02-4755EN
 
-...
+on 2024/3/11 17:19, Simon Horman wrote:
+>> +#define HNAE3_SCC_VERSION_BYTE1_SHIFT	8
+>> +#define HNAE3_SCC_VERSION_BYTE1_MASK	GENMASK(15, 8)
+>> +#define HNAE3_SCC_VERSION_BYTE0_SHIFT	0
+>> +#define HNAE3_SCC_VERSION_BYTE0_MASK	GENMASK(7, 0)
+> Not strictly related to this patch, but FWIIW, I suspect that
+> hnae3_set_field() and hnae3_get_field() could be reworked to use / replaced
+> by use of FIELD_PREP and FIELD_GET.  In which case I suspect that the
+> *_SHIFT #defines would no longer be needed.
 
->  - Removed 'ret' from iio_gts_find_new_gain_by_old_gain_time()
->    as it is not used. The current implementaion of the above
->    function passes all my tests of changing integration times,
->    scales and gains from userspace.
-
-This is weird. I believe we have to fix the API first before adding / dropping
-the return value from it. This odd API which makes everybody confused.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Yes, using FIELD_PREP and FIELD_GET is a better option.
+But I'm not going to modify this patch.
+If it's necessary, I will send a cleanup patch later to
+replace all hnae3_set_field/hnae3_get_field in driver.
 
