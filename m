@@ -1,38 +1,38 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5119646425
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B33A4776A
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710170704; cv=none; b=QCBhpAd9V5+mLZ3LWCohDlS99ftH8n3WljjQFMfgfSiR2oPyem2vRya/42uRCgp1nWdTKK2uUa3sF/h5TUJ1nq+WwtHIddO+ynwRSgsEiBFHVep5WunvK35OBPLL/ATT+kltIc6RyRWLHQt7YxbaaRhYwkcQuC8eAql+yERgoyM=
+	t=1710170704; cv=none; b=QTKTZzCiCfV3TLxFpnFi5dzVPWBnSPsHwYP5cBHbAtoqA2EKMIJPQh4kJr+HiuPMGIi2AIxaYLQMb84cibZaCn+Pez39LvFHjGa9oRD/UqhClgoEtXkeI153mwosgEbePufKtg/dM6LUbH7o6Xd16cmkJMIcmrHwKgwakkoisOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710170704; c=relaxed/simple;
-	bh=ov9FoPuE92p/IJ9p6mBetZFJarkOBkrT0lUf5tjuOKU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To; b=PBlFTK0ic94/RiBVDjJ+rOnWuHz18cjhuhzaUh/n47n+dsDKBJAAbQRwCBBdELPLY8d5k1+89DfeE6ypUePltSBi2By/N0+wEt5Nq6jyAaqRj39MDMqX0H5e75w5vdHgbsER8kGnQj56QYJJmBLr8Hh15i/qLlwmHap6DuQG9cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XMRHjkKD; arc=none smtp.client-ip=217.70.183.200
+	bh=ymon1yWwqDlaJM8D70vqVA6CJA9akSWJQ9LrnxPlsu4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To; b=nFk/FkHYxXTcKT3RHwbV4upL/hWSGN1mQqH6znaLZepWRO7MIFidgFSpfxuZjfmmYM3wXoYKJPruEUooig/YmFqEiBdKSwF7QBsywPO+RAAK/tOpwOtmPqICmmh5QET/TuCGJrfEy/zXvzOtPlJp7mzoTi/J4dM8qSA0EpGAha4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RJaOLTQ2; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XMRHjkKD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 155D820009;
-	Mon, 11 Mar 2024 15:24:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RJaOLTQ2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 792F42000F;
+	Mon, 11 Mar 2024 15:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710170699;
+	t=1710170701;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zpuJBvyBodbNFlOONGuik3kvuhMsN2cNPJ4hQPAYmXA=;
-	b=XMRHjkKDyGW4z+k/XugToqCSkq0EIszgTqN0KQrbYtXX8UL4UZtlHfiXyQ/SKXi3hVcMx7
-	LnMUfDSjQzxhZIVdsYmTu1xO23/SUxGJPJfm48G1nd9gM2H4kl0jZo+8V3k8fSGDPr+eeK
-	MTCQjr5+VfPSV0ouXNDuTtBHgdnpQJ3Gap2IoTYeGePv448bizOSlhryxryV5n/hFm/G3n
-	2zm7g8MJ4jKQqWtt8wme+pkhpGnaVU8HmeaQ5bno7hcjzKuMKa29fXDg7XqRJdvxVFA8lJ
-	3TET2+vLZ5rx0bjutLbD1sjObBpYW3eiMXbOQKbcfQbArlCS2Ap9po4Ljo3wlg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=843mOsM8xt7PPp6LR0HKYOK9c5hdfvsD2Mx0jZBABLA=;
+	b=RJaOLTQ2KLsSgdVeR6Oku1thjhwDnN8FThYbo5Bf2ydCfwXqMqpSti10OneeKpav9pFgpK
+	hloZD73tdqIOkdk7OrwdQZJJNLhP8RjpoT2BBlBI/Nzp2WE6SApi29B/l/TIdOjrL++FOV
+	PSbQS3TBddXj805rqZHPZC9w1VxjnWOMmljwXvkUCeNjXFPsHh1kLgRm9v7I0FW6HJj/Rx
+	RROv0Frokx4KmKkGq9LOIQ+Swk+bxMuUh6+VB/jNjykLRZr5H6D/j/xoa5DTU5TeGXiiLi
+	HULGW+BY6QWNhd8zizCIn0pSFaLuGNz1UzdJ6rzlnbRJ6m1CypfKsUW49nlc2g==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: [PATCH 0/3] scripts/decode_stacktrace.sh: improve error reporting
- and usability
-Date: Mon, 11 Mar 2024 16:24:53 +0100
-Message-Id: <20240311-decode_stacktrace-find_module-improvements-v1-0-8bea42b421aa@bootlin.com>
+Date: Mon, 11 Mar 2024 16:24:55 +0100
+Subject: [PATCH 2/3] scripts/decode_stacktrace.sh: clarify command line
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEUi72UC/x2NwQrCMBAFf6Xs2UASPYi/IlLW5EUXTVI2sQil/
- 27wODDMbNSggkaXaSPFKk1qGeAOE4UnlweMxMHkrT/Zo3MmItSIuXUOr64cYJKUOOcaP+8h50X
- riozSm2HrGfDndOdEI7goknz/s+tt33/XFMZffAAAAA==
+Message-Id: <20240311-decode_stacktrace-find_module-improvements-v1-2-8bea42b421aa@bootlin.com>
+References: <20240311-decode_stacktrace-find_module-improvements-v1-0-8bea42b421aa@bootlin.com>
+In-Reply-To: <20240311-decode_stacktrace-find_module-improvements-v1-0-8bea42b421aa@bootlin.com>
 To: Konstantin Khlebnikov <koct9i@gmail.com>, 
  Stephen Boyd <swboyd@chromium.org>, Sasha Levin <sashal@kernel.org>, 
  =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, 
@@ -52,24 +52,39 @@ To: Konstantin Khlebnikov <koct9i@gmail.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This small series improves usability of scripts/decode_stacktrace.sh by
-improving the usage text and correctly reporting when modules are built
-without debugging symbols.
+The syntax as expressed by usage() is not entirely correct: "<modules
+path>" cannot be passed without "<base path>|auto". Additionally human
+reading of this syntax can be subject to misunderstanding due the mixture
+of '|' and '[]'.
+
+Improve readability in various ways:
+ * rewrite using two lines for the two allowed usages
+ * add square brackets around "<vmlinux>" as it is optional when using
+   debuginfod-find
+ * move "<modules path>" to inside the square brackets of the 2nd
+   positional parameter
+ * use underscores instead of spaces in <...> strings
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
-Luca Ceresoli (3):
-      scripts/decode_stacktrace.sh: remove find_module recursion and improve error reporting
-      scripts/decode_stacktrace.sh: clarify command line
-      scripts/decode_stacktrace.sh: add '-h' flag
+ scripts/decode_stacktrace.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- scripts/decode_stacktrace.sh | 49 ++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
----
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
-change-id: 20240311-decode_stacktrace-find_module-improvements-a02aee28fbaf
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 7f3fb5e82707..b56e79060e9f 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -5,7 +5,8 @@
+ 
+ usage() {
+ 	echo "Usage:"
+-	echo "	$0 -r <release> | <vmlinux> [<base path>|auto] [<modules path>]"
++	echo "	$0 -r <release>"
++	echo "	$0 [<vmlinux> [<base_path>|auto [<modules_path>]]]"
+ }
+ 
+ # Try to find a Rust demangler
 
-Best regards,
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+2.34.1
 
