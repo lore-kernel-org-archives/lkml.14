@@ -1,128 +1,150 @@
-Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFDC3BBCC
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 11:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B2F3B78E;
+	Mon, 11 Mar 2024 11:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710157384; cv=none; b=d8mGuHGu0R1ujEu3I3z2D+THi9bp8yhKV9XHTjXfj95hR0aT21XRLJ5czNMrCpw2rbcOqbN1pMr40zGH6zHEs9Oh4l82+Pr537l+gJ/roZQ87Ok2dvl4Pl4PyhYe2SE3UyoK+FJJo14v0e2CltPhQyoXJaeqccBJsjBoQXzGec4=
+	t=1710157490; cv=none; b=tYRuGduxdOhOjKJvpXaF61aFpgOHpeB081hz+ePoA0zxxhanSXWOjWUZtmqD7cZPy4EcUEWD6MFgmJ/grqz0X/Wy1kqPfDtWJqKOqkK7I/PXDFma3b5Pnxj77FtC+cJjSCCCeombj4fP8VzQSuS45SBXzXsJFZMFg1T9lW/kvtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710157384; c=relaxed/simple;
-	bh=dUSSVd4bpD7Wuj2qhYTInbXUYg3ivnsEF0eKLdqsxz4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=LRvseevqvLB3euzMA5MiFWFIF07+pYjb1qdG1y1yj8bglRgjY7c/QkgKWLzReS4mT+USi9Z+RaxKpOpEoXO8Ha0k13khijnN8UAoKuT+qsR4OwixwUJ5BiF8NuzT9vN3S1XVvjrOMJ8potX0I87oqNO2LFit+cSjAt+XijspTeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=lYvI4ilx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CBmUmFXC; arc=none smtp.client-ip=64.147.123.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="lYvI4ilx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CBmUmFXC"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 0E0C11C00098;
-	Mon, 11 Mar 2024 07:42:59 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 11 Mar 2024 07:43:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1710157379;
-	 x=1710243779; bh=ek5xhz1iNDGVCreLe4BeP1Rp355S8inPd2lUjGag3sQ=; b=
-	lYvI4ilxMDHu3f8uLA/epJDnCCDPz+/FsOwHvgEzR7DpDP3TJhuuT+KR0I1GWUFa
-	HU+PinzyoxuHns8sMbIWnUSJbnWuybz6tpb3ibWECvzIWuQLK8XN4FmMBBpS0bLB
-	xVMuotpKB6MCCQobK1MmMO3Wg/UyOHSPzIp+8oGbZ3beJta/ZJyn9xw7by/MY7HA
-	u/Vj1nCv1T+qIeig5QA9WivYEB5yndDSrgGxdK2ZtGNcMX+0F0lHhk7e8bTUbw3Z
-	trsfVTwHn4M6qRFxsFi1pZ/HSjiLxJV36r7q8FP2BwSKyQp7UWtIs9/4fDfVhutG
-	5kwxeld6pJvCvpO/flVdYA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710157379; x=
-	1710243779; bh=ek5xhz1iNDGVCreLe4BeP1Rp355S8inPd2lUjGag3sQ=; b=C
-	BmUmFXCIcSfZoH0CldL2Jyba7Zkzdxo7VH3a3m1+2XCwcyLmUL1AQfDUwDW8u0uQ
-	20HhBSDAg0muWHYU8c6Z7AbU5jS7ifk/egO8fFl0LKlObAyYNfJRN6U4bRZwTclI
-	tbtyzkaNGXoGejASOTW56O4ay2WR6SegjBgRHCaouGYI9cUQv99m8U1tyzAruFNU
-	9POAoOXPlQMfwhnhP4WKLpvw21J5n0NwA4qJAeZ8RPv8SxLmqkuM5uax5WquaDhM
-	qNO2vx8NJjJW5ViPdKcqar/okRyMKr69vtxb8jbXGBO475S2sgBXJRc9D8rtXOFw
-	QHVRnSQxhCiK99WD7ok5Q==
-X-ME-Sender: <xms:Qu7uZSTdHjnpaOh7DchdMURwDJXvGQfMCAkgP4kkqZVyMTJmglixhw>
-    <xme:Qu7uZXyc-Gm0qgx0JGQKQFuHn_P53o9eW-7TGxzAEg0XeRUKdYzLo3rg4aL015G4I
-    ixzeOhBXkM50vFLWnU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjedugdefudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgfekueelgeeigefhudduledtkeefffejueelheelfedutedttdfgveeufeef
-    ieegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:Qu7uZf1gIj2FJDuy544F3jtBsu_Qth4W_Jh_-ipEphFZz6JUjNVujg>
-    <xmx:Qu7uZeAF5v4tX6wVWgpehmnjRN1Jk0pFZtTYtAyE0AK4leCNKXr8mA>
-    <xmx:Qu7uZbiE-xc7Y821oNFfr4Ze0eLlg6Q4ZHwpBZS4rOUOqHjcL2uNxg>
-    <xmx:Q-7uZaSgF_RydoV_4eSDB8Uh_zb76rDYUZ9Zck3FU5oSl46PDAr3KC9sxe8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id BDFDBB6008D; Mon, 11 Mar 2024 07:42:58 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	s=arc-20240116; t=1710157490; c=relaxed/simple;
+	bh=ScauDxIHPpzPMivn0k7nmNQRb13dHQ5538K1RuMQE+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ul+9LMWgFjaKHli813CeFiL/hAOPGa7e5o0V/Q9tcF/gOhRliDEhFrmXyeX3ZKrCtIFpHF8MROyxKdK7iZIWTJk4Aes2lRW4dB+K92PP3/J3aQt4TKB2NUW/7/dN8Z6cpFsDNz0iuE5DYqWPBZuzDucnL+fsb5svUUVyi6T5wSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C30691007;
+	Mon, 11 Mar 2024 04:45:23 -0700 (PDT)
+Received: from e130802.arm.com (unknown [10.57.15.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D00DA3F64C;
+	Mon, 11 Mar 2024 04:44:43 -0700 (PDT)
+Date: Mon, 11 Mar 2024 11:44:42 +0000
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Drew.Reed@arm.com,
+	Adam.Johnston@arm.com, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Subject: Re: [PATCH 1/3] remoteproc: Add Arm remoteproc driver
+Message-ID: <20240311114442.GA82865@e130802.arm.com>
+References: <20240301164227.339208-1-abdellatif.elkhlifi@arm.com>
+ <20240301164227.339208-2-abdellatif.elkhlifi@arm.com>
+ <ZeYWKVpeFm1+4mlT@p14s>
+ <20240307194026.GA355455@e130802.arm.com>
+ <CANLsYkzA20rQdTM6AOvFK=3o28GvcoRbckL=ri8RegHqyHaiCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d3a7a06c-e82f-4e5e-9ceb-6c659a228bbe@app.fastmail.com>
-In-Reply-To: 
- <CAMuHMdXKk9S9voKVPvO+xvn1zFW3FnKyVHQGDkC7b9Ynkcnvmw@mail.gmail.com>
-References: <20240307151231.654025-1-liuyuntao12@huawei.com>
- <58cc1053-7208-4b22-99cb-210fdf700569@app.fastmail.com>
- <42892794-7668-4eb0-8d2f-c78ca0daf370@huawei.com>
- <2a90581c-f1df-4d6b-8f0b-8e7cbf150ed9@app.fastmail.com>
- <346e15e5-49e9-4a7f-b163-c3316225baab@huawei.com>
- <CAMuHMdXKk9S9voKVPvO+xvn1zFW3FnKyVHQGDkC7b9Ynkcnvmw@mail.gmail.com>
-Date: Mon, 11 Mar 2024 12:41:48 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Yuntao Liu" <liuyuntao12@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Ard Biesheuvel" <ardb@kernel.org>, "Fangrui Song" <maskray@google.com>,
- "Russell King" <linux@armlinux.org.uk>, "Andrew Davis" <afd@ti.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Jonathan Corbet" <corbet@lwn.net>, "Mike Rapoport" <rppt@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- "Linus Walleij" <linus.walleij@linaro.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH-next v2] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANLsYkzA20rQdTM6AOvFK=3o28GvcoRbckL=ri8RegHqyHaiCw@mail.gmail.com>
 
-On Mon, Mar 11, 2024, at 10:14, Geert Uytterhoeven wrote:
-> On Sat, Mar 9, 2024 at 2:24=E2=80=AFPM liuyuntao (F) <liuyuntao12@huaw=
-ei.com> wrote:
->> On 2024/3/9 16:20, Arnd Bergmann wrote:
->>
->> I tested this patch, the size improvement was only about one
->> ten-thousandth, and the compilation time had increased by about a qua=
-rter,
->> and the kernel did not boot.
->>
->> Strangely, LTO has actually increased the compilation time
->> significantly, which seems contrary to its purpose.
->
-> The purpose of LTO is to reduce code size. Doing so requires more
-> processing, hence the total build time increases.
+Hi Mathieu,
 
-I think llvm treats it purely as a performance optimization of
-the resulting binary, allowing cross-unit inlining and constant
-folding, but I don't think it actually tries or succeeds to make
-the output smaller. I do remember seeing size improvements with
-LTO using gcc in the past, but this never made it into the
-mainline kernel. The last time someone tried to add it was 2022[1],
-not sure why there was no follow-up.
+On Fri, Mar 08, 2024 at 09:44:26AM -0700, Mathieu Poirier wrote:
+> On Thu, 7 Mar 2024 at 12:40, Abdellatif El Khlifi
+> <abdellatif.elkhlifi@arm.com> wrote:
+> >
+> > Hi Mathieu,
+> >
+> > > > +   do {
+> > > > +           state_reg = readl(priv->reset_cfg.state_reg);
+> > > > +           *rst_ack = EXTSYS_RST_ST_RST_ACK(state_reg);
+> > > > +
+> > > > +           if (*rst_ack == EXTSYS_RST_ACK_RESERVED) {
+> > > > +                   dev_err(dev, "unexpected RST_ACK value: 0x%x\n",
+> > > > +                           *rst_ack);
+> > > > +                   return -EINVAL;
+> > > > +           }
+> > > > +
+> > > > +           /* expected ACK value read */
+> > > > +           if ((*rst_ack & exp_ack) || (*rst_ack == exp_ack))
+> > >
+> > > I'm not sure why the second condition in this if() statement is needed.  As far
+> > > as I can tell the first condition will trigger and the second one won't be
+> > > reached.
+> >
+> > The second condition takes care of the following: exp_ack and  *rst_ack are both 0.
+> > This case happens when RST_REQ bit is cleared (meaning: No reset requested) and
+> > we expect the RST_ACK to be 00 afterwards.
+> >
+> 
+> This is the kind of conditions that definitely deserve documentation.
+> Please split the conditions in two different if() statements and add a
+> comment to explain what is going on.
 
-     Arnd
+Thanks, I'll address that.
 
-[1] https://lore.kernel.org/lkml/20221114114344.18650-1-jirislaby@kernel=
-.org/
+> 
+> > > > +/**
+> > > > + * arm_rproc_load() - Load firmware to memory function for rproc_ops
+> > > > + * @rproc: pointer to the remote processor object
+> > > > + * @fw: pointer to the firmware
+> > > > + *
+> > > > + * Does nothing currently.
+> > > > + *
+> > > > + * Return:
+> > > > + *
+> > > > + * 0 for success.
+> > > > + */
+> > > > +static int arm_rproc_load(struct rproc *rproc, const struct firmware *fw)
+> > > > +{
+> > >
+> > > What is the point of doing rproc_of_parse_firmware() if the firmware image is
+> > > not loaded to memory?  Does the remote processor have some kind of default ROM
+> > > image to run if it doesn't find anything in memory?
+> >
+> > Yes, the remote processor has a default FW image already loaded by default.
+> >
+> 
+> That too would have mandated a comment - otherwise people looking at
+> the code are left wondering, as I did.
+> 
+> > rproc_boot() [1] and _request_firmware() [2] fail if there is no FW file in the filesystem or a filename
+> > provided.
+> >
+> > Please correct me if I'm wrong.
+> 
+> You are correct, the remoteproc subsystem expects a firmware image to
+> be provided _and_ loaded into memory.  Providing a dummy image just to
+> get the remote processor booted is a hack, but simply because the
+> subsystem isn't tailored to handle this use case.  So I am left
+> wondering what the plans are for this driver, i.e is this a real
+> scenario that needs to be addressed or just an initial patchset to get
+> a foundation for the driver.
+> 
+> In the former case we need to start talking about refactoring the
+> subsystem so that it properly handles remote processors that don't
+> need a firmware image.  In the latter case I'd rather see a patchset
+> where the firmware image is loaded into RAM.
+
+This is an initial patchset for allowing to turn on and off the remote processor.
+The FW is already loaded before the Corstone-1000 SoC is powered on and this
+is done through the FPGA board bootloader in case of the FPGA target. Or by the Corstone-1000 FVP model
+(emulator).
+
+The plan for the driver is as follows:
+
+Step 1: provide a foundation driver capable of turning the core on/off
+
+Step 2: provide mailbox support for comms
+
+Step 3: provide FW reload capability
+
+Steps 2 & 3 are waiting for a HW update so the Cortex-A35 (running Linux) can share memory with
+the remote core.
+
+I'm happy to provide more explanation in the commit log to reflect this status.
+
+Is it OK that we go with step 1 as a foundation please ?
+
+Cheers
+Abdellatif
