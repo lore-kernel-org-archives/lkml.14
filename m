@@ -1,85 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4E23C068;
-	Mon, 11 Mar 2024 12:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19BB3BB20;
+	Mon, 11 Mar 2024 12:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710158468; cv=none; b=fqaRT4CXbdVDqTy3weJ9a0XSrpz4US7f+yMAvSgQkYtzFzjfPwAys5ZkIpa+22/vTe5WzKoD904oslypY3Ipo6wZNrZfVGj5SvVVPVhKWomkp0mzlzgYhx9MKdUVDJ9xovNQMs5KS4ld/snXkIC7eHzXUIltU5+gSPkxplWYPW8=
+	t=1710158601; cv=none; b=qZPQZP310WUhPLbeLyWFOJwaBXcR4tITppR6kCCnqCdAcYsGAiXcm0FOgQW3ayRMjS2+Kvks0+L8fWcIpjvzuDMKUl68rJmNJSrmxaKG/CisCf4iuLgEmnRo3YDb3H5Xp1rdfeIeAv+OKOnAMV4dAl8l7qFAzNluHxprWdCcQXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710158468; c=relaxed/simple;
-	bh=lliEJ0rTAJo2Gw0pexcruBzN2lkhcVuR43ot9jWsI2E=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jk9HPvnqubvnb4IF89xBjAFWmLeexl6dgcGCZmOgyxkIdizXH5Scc8QDWChLDakBDsKLopl+GufpGpo+DMrdRM6Ifn6erWPKYVCxbjxq/k75l9RD59Ive4vSJimPCEQqjJiGp2hHpyCVAZPQUf6RQPCTkR3jQ3WGHO5baAZX2oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BvZp9KN5; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710158601; c=relaxed/simple;
+	bh=FVoyIz0vprAziJk1M+feK4Zx8CNk1PI7Dhy95jNed4Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FVvjzs+GIXh1tv4Yjkm7y1nxq0xTDyPGbUvbecY9ZIDipv8Edb2HLpQlg9HDzdzKKFsupNVWHkQ+eNFNsRUerTBALjuer8/d2DtJyS4ipQlvXyEgHNN5WjGWyL2SomEz07pJOkZHXyTsinKZ5oxJD+GRdUXvRSLzLhCCUJIvkT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dqBkXuhk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BvZp9KN5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710158467; x=1741694467;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=lliEJ0rTAJo2Gw0pexcruBzN2lkhcVuR43ot9jWsI2E=;
-  b=BvZp9KN5l0Hcf22/ZKtjZVBLWieE7T9QH9xeo40kGWTSMnV5LeUUcXQe
-   t+Vgwdq72jZ347mGCmln12vnaEosRnSZNnTGpVhC/TYN7aUo3U+hjBGxa
-   ij53XtkfGDceXJLSGHW3rj7ImGzqnhzZj7V8R04vmz1VbImXMjJ6LKGwH
-   oQS8fd7mvD5P+jVD0vNNmUsXjj4MhrjAmk5DdwyXHKzp6n7PLII9Unq8+
-   DpS0jgmtWOz6AqYeISYDVz8I4qZcRoJzP3i1tRdilkUOfFS3/zihpDb7Z
-   +YbiE8J/VAGhM430+yLJcOyETsSOZGESyQUT2sycasElwf15h3MaSWKPU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15377175"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15377175"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:01:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="11032094"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:01:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- david.e.box@intel.com, kane.chen@intel.corp-partner.google.com, 
- Kane Chen <kane.chen@intel.com>
-In-Reply-To: <20240308033127.1013053-1-kane.chen@intel.com>
-References: <20240308033127.1013053-1-kane.chen@intel.com>
-Subject: Re: [PATCH v2 1/1] platform/x86/intel/pmc: Improve PKGC residency
- counters debug
-Message-Id: <171015845757.2407.106134476792192282.b4-ty@linux.intel.com>
-Date: Mon, 11 Mar 2024 14:00:57 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dqBkXuhk"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B8krgu007819;
+	Mon, 11 Mar 2024 12:03:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=q+bmEQRp5IbCTaKaUhtR2pT260+U94KEks0biEEfj1s=; b=dq
+	BkXuhkPLwC5RbwqR4+t/NdhU1BXl2Bl64Uenn9YUK4tSsdX3mUeWeEyOfh+mwoVC
+	khVIM1r1ibOCT8onAduQKVoFrRW3f/0/8+87QmrbjMDTDFLS/riMxenA/cKxjPRq
+	z+mcG8po/pfLD5QnqWJkvUfJlaSKZ2P433Rs0pqcdvxwmaH/pAKQP5dOAfVO9hrR
+	fZ/xR4AzR+vcOmbr0zc6uKBxFYPNxVRyXMrd7auX2dSJmeTdEV3FI4gITd6p09Ma
+	wKRm1jroPeTMZl7ldeCHYjOt6w3aVjGCEabUrf34SMHKK/DRvwG9ve2vUr8yZ1ND
+	aexabBEkUvrWXmI0JAvA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wsxr1rgw5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 12:03:07 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42BC37i7009067
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 12:03:07 GMT
+Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 11 Mar 2024 05:03:02 -0700
+From: Komal Bajaj <quic_kbajaj@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon Vijay
+ Abraham I" <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, Komal Bajaj <quic_kbajaj@quicinc.com>
+Subject: [PATCH 1/4] dt-bindings: phy: qcom,usb-snps-femto-v2: Add bindings for QDU1000
+Date: Mon, 11 Mar 2024 17:32:12 +0530
+Message-ID: <20240311120215.16845-2-quic_kbajaj@quicinc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240311120215.16845-1-quic_kbajaj@quicinc.com>
+References: <20240311120215.16845-1-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: h7EMP2cfUyFPl9kFwl3ybukxgabAdfM5
+X-Proofpoint-ORIG-GUID: h7EMP2cfUyFPl9kFwl3ybukxgabAdfM5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=920 bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2403110091
 
-On Fri, 08 Mar 2024 11:31:27 +0800, Kane Chen wrote:
+Document the compatible string for USB phy found in Qualcomm
+QDU/QRU1000 SoC.
 
-> The current code only prints PKGC-10 residency when the PKGC-10
-> is not reached in previous 'freeze' attempt. To debug PKGC-10 issues, we
-> also need to know other PKGC residency counters to better triage issues.
-> Ex:
-> 1. When system is stuck in PC2, it can be caused short LTR from device.
-> 2. When system is stuck in PC8, it can be caused by display engine.
-> 
-> [...]
+Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+---
+ .../devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml          | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86/intel/pmc: Improve PKGC residency counters debug
-      commit: f117a06ccaf48c8e2637bc3fa35d038c0c92c43d
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+index 0f200e3f97a9..48afcf6ed9df 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+@@ -25,6 +25,7 @@ properties:
+           - const: qcom,usb-snps-hs-5nm-phy
+       - items:
+           - enum:
++              - qcom,qdu1000-usb-hs-phy
+               - qcom,sc7280-usb-hs-phy
+               - qcom,sdx55-usb-hs-phy
+               - qcom,sdx65-usb-hs-phy
 --
- i.
+2.42.0
 
