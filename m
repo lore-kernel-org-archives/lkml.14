@@ -1,59 +1,67 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832C517578;
-	Mon, 11 Mar 2024 09:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059962E3F9
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710148515; cv=none; b=Da5nInxzfpBrRh/8Hvnje1hycxCCrjZRn3i3EfthvbttTw5RvN33UdxFeH3gVDIqHlYJcC+Wu8uPETHkjjEeAp2FXAw8YXlLT9NdLfBqcARYqPhMjnozITKaTNB6JtEmGW24chsXWj7o0x6BYUsYkJKbzHQt2675a8a83qJYlJ8=
+	t=1710148537; cv=none; b=j35D37Dl6sTmjY2da3IlPBhKkBt1HJrMZ3U36Q4Esi90s8VGExQ9eCLW+MUufUCfyAizL0fLoDaA8+sIYspxPKs908+K7QmCBvHh8InOiDAkgEmAtK/CeBf+WGlSg8EeRjz1Dev5wUIy0bZP1PgNg/nJAtReo1JGABsLUWxRVFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710148515; c=relaxed/simple;
-	bh=rguz1TbWj7waSq9k6cTHsDuJxtVExG1UCcqMJ6lcxCU=;
+	s=arc-20240116; t=1710148537; c=relaxed/simple;
+	bh=OljCXpTTC9xEaAZuuMjFKsBZIOGdHba4C+7wKVG9xqY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hxtrD+I5W1RjPzjLCXUUsOZ9ZwkdLc4SaJg6wwy4F0eGchDhRh+a9+GQL4gX/CyERPgDpFFBVhpDqvI1aVNqH4y3ab0jy5Vs3+OUBO+/gPowKg/hePfWnZiHZCtGi7SSrgnzLcVCCbiMrAQFJwgY0jgXgAdgUMCW9LdAwv53UIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6Y0QbU0; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=fgcTowdnph3U85aRl0vZiu92VNDNYffkcJQTLskf4SNOmrKNZHjayAu42Gsnmyn59gQrnNdIs0AOPmzOuXEJ3I6/tVo+DHM2VjKMSUT6fdJ00W4nyWQl3iJ1RbRzdwjNPZAP5OJi9+UOSAROf/zXOLQ8yahH+JPnVyyeBC5GsY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Apg67rbE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6Y0QbU0"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-512e39226efso3957574e87.0;
-        Mon, 11 Mar 2024 02:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710148511; x=1710753311; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hVfC7dWRDVEdwYmburdeFeTuR7MqSLqjlM27oJ2hlUQ=;
-        b=D6Y0QbU07E7yCmqG/5e4yuhGGdCeIhaqry0dpFsxkGlVbRiaZegx21awdUYiFSU9Xd
-         gB/+GGERM0h8h5E86l1A22QhnKGfuBzaD1LTiAZshZXzqrQ8VAyz7oP2FH//4MiESRPj
-         jlernuh/bdNR8yCx+wpeE9QUuLdr650gN7PtuzfTM2E4HmPe8mGHFi8TD8tsk28ZwCQj
-         23nqMjzwzxq73nsqWNIC2s2POdtM41/ZqItIBs/HyFTs04d0Cpn3t8ykUaRnyMBitNeJ
-         4fSjEgXPvKTzxey8UrqoAnxspwgzRDi+9B9h2tRNSaSGcGJ5hde4gceY7LHXz68zMM2N
-         RGuQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Apg67rbE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710148532;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rq057kQqGxIYfRwHYU+lAiC5V15R+aNnjhBGpM/TJFk=;
+	b=Apg67rbE735Dt5sXeG5ppPfL7xAOSrjE7i1ELdmnoo0qE8Mm53q45V/t+GgAOKldqAxDoB
+	WWrHwa1okRsP3V16+0wvAWKG5V1dW63PbxyqJJLFUpGASPA2hp2ve8HK90mazlHz4xiB54
+	Wb3F8SAKS+PL/iG0YjDRyGLitEk+9x8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-118-w_OFd-ygMSOn3yULty8fRA-1; Mon, 11 Mar 2024 05:15:31 -0400
+X-MC-Unique: w_OFd-ygMSOn3yULty8fRA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-412edc9d70aso25714665e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 02:15:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710148511; x=1710753311;
+        d=1e100.net; s=20230601; t=1710148530; x=1710753330;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hVfC7dWRDVEdwYmburdeFeTuR7MqSLqjlM27oJ2hlUQ=;
-        b=R0VGTKolPZkvUCD0m534ugPE+cOotARblIWqPkBZLng7QHG/8Fp4024rATvoo3Eqsb
-         ZNKS9QDsvUrV4yODgkKXlVcp2qA69fmKSPxnZk9EHfBjw6/qtiW1OA2KEjHceivKKnBf
-         JwtEyHbIcFuTF9tKr4ZW4V71qnar8aUxevCBgMB3iJfJCkk3ovAvu3l4cmML9q+42EZJ
-         Npjm3FTiBOdj3HbPk8UFjC5u09qGhT8EIL17pEMdfA5lNNPuPpjfpg71nNYIDfmYWJdx
-         O7DpR23mdF5k4HnUVxIYFMlzcn5cz0FdhW6a/VQPU8d+i3ZKKGHjqeG5ldSxhTYTu4wN
-         UwCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRj0fzJZ+/bDqaUneWKatjeSMpHPunxY4lvll+lUGYqxgKBShs8qtOzSChEFeYOfY/RmvbAMbOSRwTjNJrkQBM3lrraOfNOt7HgX4xzpq9ttHOsvezZjUgHw8yEMirD1hVfMsLT1Kq8j65Gab+p9B1CvyPlRejUhKcqPnmVVxYnUc7jw==
-X-Gm-Message-State: AOJu0YzG/4Lqzo+k8E9XUSebth62ox+jOYhEfYtidPkXUKPKmI0K0mpH
-	MX30hiQbI/nZttGNfeT42ZwUD3NKyWw48aMv9mXcP7z6SjQG8Lji
-X-Google-Smtp-Source: AGHT+IF9BcQoQLLpHtF0e37ZBQTx1DJ5KD7KbcJ7irjGDUuJqjlydGfnwUtZ+Q152Mw6uXTpfNY+2w==
-X-Received: by 2002:ac2:484a:0:b0:513:3741:7357 with SMTP id 10-20020ac2484a000000b0051337417357mr3957581lfy.56.1710148511259;
-        Mon, 11 Mar 2024 02:15:11 -0700 (PDT)
-Received: from [172.16.183.82] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id h4-20020a056512350400b005139c3c584bsm951164lfs.241.2024.03.11.02.15.10
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rq057kQqGxIYfRwHYU+lAiC5V15R+aNnjhBGpM/TJFk=;
+        b=dFN6aDY/mVGhvVNs3Ue+d/Sun9fcpebNex0SjZ2FAVYQmSIA/X5RHM0YVi+bnhaoY4
+         bcxjy1cw4Uts2c8Zkce1KAS3UFjwofb2WVh6BaVWAkOkBK0Eesj0AEDLIJKPD1F7lesn
+         gArd+HYdvFZX7+QehnujUvEDmXPrawORCyLWWpMtBQjm/Rt9qFgjo+gI5Ek+Mf1YQ0yU
+         bvE+1BZ3aPY71HKGa8uNQrBjhhw6l0vJNG6yCoRwt1dB12Jb0/Exw8fM5F7qjUeifqxe
+         GkXIaoL2fGj70mD7WAKjdiLy3HTKgArIb+JCN2YJ7m7oQ+GhDUt5R6lhHm7xUPGVunqA
+         wQZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvRlM8ssrEcUt5+zVoyu1cpTzx+90C5JSjy3Cps2Qltk/zx1r//CWe+ac6V3q5ogLMG5DqmpvK/jT/4HvuHzpTMEHXdll3boQtB6bE
+X-Gm-Message-State: AOJu0YwfbMO2KrzKYvWFIKx+Oz+k7jxUFu2odQ++r/aV3d2Xl9kjLxHk
+	KPzOOtSoo9XxjogJohwbrbZPDf7TZptIFrywRqa1yZkmokwch1BHaRMNFOjXyPt2XFoSRdUQxHe
+	d+g3brbSeGm5Gu+4WFUvRMSBrzE6cH6XliAo3GMfxCL/4KPKoauTU/u1aEaBNpQ==
+X-Received: by 2002:a05:600c:1e17:b0:413:2f3b:1d42 with SMTP id ay23-20020a05600c1e1700b004132f3b1d42mr159630wmb.18.1710148530150;
+        Mon, 11 Mar 2024 02:15:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECTj7+qhQBRTz6RPuyxVPemGxXBcSMWnmrmKwsBP1VHKV5OyEHl4RI88jsU4vFl5t0vOWYFg==
+X-Received: by 2002:a05:600c:1e17:b0:413:2f3b:1d42 with SMTP id ay23-20020a05600c1e1700b004132f3b1d42mr159608wmb.18.1710148529725;
+        Mon, 11 Mar 2024 02:15:29 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id n4-20020a05600c4f8400b00412ff941abasm14934328wmq.21.2024.03.11.02.15.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Mar 2024 02:15:11 -0700 (PDT)
-Message-ID: <02e2210d-9164-431e-8fe2-226cb1aa2d48@gmail.com>
-Date: Mon, 11 Mar 2024 11:15:10 +0200
+        Mon, 11 Mar 2024 02:15:29 -0700 (PDT)
+Message-ID: <39b0ed62-58e0-4e71-ac22-6426d9ded2e7@redhat.com>
+Date: Mon, 11 Mar 2024 10:15:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,125 +69,279 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/5] Support ROHM BU27034 ALS sensor
-Content-Language: en-US, en-GB
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- linux-iio@vger.kernel.org, Shreeya Patel <shreeya.patel@collabora.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Paul Gazzillo <paul@pgazz.com>, Rob Herring <robh+dt@kernel.org>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- linux-kernel@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <cover.1680263956.git.mazziesaccount@gmail.com>
- <ff8d6d14-6b48-4347-8525-e05eeb9721ff@gmail.com>
- <20240309175056.3862630f@jic23-huawei>
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20240309175056.3862630f@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH v2 4/7] vfio/pci: Create persistent INTx handler
+Content-Language: en-US
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, clg@redhat.com, reinette.chatre@intel.com,
+ linux-kernel@vger.kernel.org, kevin.tian@intel.com, stable@vger.kernel.org
+References: <20240308230557.805580-1-alex.williamson@redhat.com>
+ <20240308230557.805580-5-alex.williamson@redhat.com>
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <20240308230557.805580-5-alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/9/24 19:50, Jonathan Cameron wrote:
-> On Mon, 4 Mar 2024 14:38:38 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
->> I just found out that the BU27034 sensor which was developed when I
->> wrote this driver had some "manufacturing issues"... The full model
->> number was BU27034NUC. The has been cancelled, and, as far as I know, no
->> significant number of those were manufactured.
-> 
-> ouch. We all have some cancelled products in our history!
-> When that happens I usually go eat cake and moan at anyone standing
-> near by.
 
-I like that approach :) Luckily, this was just a sensor. It was much 
-more painful back in the Nokia when some of the BTS variants were 
-cancelled. It flushed 'man years' of work instead of 'man months' :)
+On 3/9/24 00:05, Alex Williamson wrote:
+> A vulnerability exists where the eventfd for INTx signaling can be
+> deconfigured, which unregisters the IRQ handler but still allows
+> eventfds to be signaled with a NULL context through the SET_IRQS ioctl
+> or through unmask irqfd if the device interrupt is pending.
+>
+> Ideally this could be solved with some additional locking; the igate
+> mutex serializes the ioctl and config space accesses, and the interrupt
+> handler is unregistered relative to the trigger, but the irqfd path
+> runs asynchronous to those.  The igate mutex cannot be acquired from the
+> atomic context of the eventfd wake function.  Disabling the irqfd
+> relative to the eventfd registration is potentially incompatible with
+> existing userspace.
+>
+> As a result, the solution implemented here moves configuration of the
+> INTx interrupt handler to track the lifetime of the INTx context object
+> and irq_type configuration, rather than registration of a particular
+> trigger eventfd.  Synchronization is added between the ioctl path and
+> eventfd_signal() wrapper such that the eventfd trigger can be
+> dynamically updated relative to in-flight interrupts or irqfd callbacks.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+> Reported-by: Reinette Chatre <reinette.chatre@intel.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-> At least this seems like there will be some direct use of
-> the work done (sometimes you just have to list the things learnt along
-> the way).
-
-Yes! It wasn't all wasted effort!
-
->> One thing that has _not_ changed though is the part-id :rolleyes:
-> 
-> *sigh* Not even a version number?
-
-No.
-
-> Even unreleased / prototype parts should have
-> different IDs if anything in the interface changed.
-
-...tell me about it... Well, I tried to send feedback - but I am not 
-convinced this is not happening again. I think I could fill a book with 
-feedback which has had not been listened in the past - but who knows, 
-occasionally feedback also works. So, we can keep trying. :)
-
->> My preferred approach would be to convert the in-tree bu27034 driver to
->> support this new variant. I think it makes sense because:
->> - (I expect) the amount of code to review will be much smaller this way
->>     than it would be if current driver was completely removed, and new one
->>     submitted.
->> - This change will not break existing users as there should not be such
->>     (judging the statement that the original BU27034NUC was cancelled
->>     before it was sold "en masse").
->>
->> It sure is possible to drop the existing driver and submit a new one
->> too, but I think it will be quite a bit more work with no strong benefits.
-> 
-> Agreed, modify the existing driver. Just needs a clear statement in
-> patch descriptions that the original part is not expected to be in the wild.
-
-ack.
-
->> I expect the rest of the information to be shared to me during the next
->> couple of days, and I hope I can start testing the driver immediately
->> when I get the HW.
->>
->> My question is, do you prefer the changes to be sent as one "support
->> BU27034ANUC patch, of would you rather see changes splitted to pieces
->> like: "adapt lux calculation to support BU27034ANUC", "remove obsolete
->> DATA2 channel", "remove unsupported gains"...? Furthermore, the DT
->> compatible was just rohm,bu27034 and did not include the ending "nuc".
-> 
-> Separate patches preferred for each feature / type of change. Mostly
-> they'll hopefully be trivial to review.
-
-I've drafted most of the changes and it seems they are more or less 
-trivial. I've not yet received the hardware so the changes are 100% 
-untested though.
-
->> Should that compatible be removed and a new one with "anuc"-suffix be
->> added to denote the new sensor?
-> 
-> Yes. The binding patch in particular will need a really clear statement
-> that we believe there are none in products in the wild.
-
-ack.
-
->> I am truly sorry for all the unnecessary reviewing and maintenance work
->> you guys did. I can assure you I didn't go through it for fun either -
->> even if the coding was fun :) I guess even the "upstream early" process
->> has it's weaknesses...
-> 
-> True enough. It's always 'interesting' to not know if / when a product
-> you've upstreamed code for will launch.
-
-Indeed. Almost as interesting as having patches for a new product in 
-your "to be sent" - folder for 3 years waiting for the product to launch 
-to get permission to send the patches... Don't we all love maintaining 
-off-tree patches when we have that creeping feeling the patches will 
-never be allowed to be sent...? Asking for a friend :rolleyes:
-
-Yours,
-	-- Matti
-
--- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
+Eric
+> ---
+>  drivers/vfio/pci/vfio_pci_intrs.c | 145 ++++++++++++++++--------------
+>  1 file changed, 78 insertions(+), 67 deletions(-)
+>
+> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+> index 75c85eec21b3..fb5392b749ff 100644
+> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+> @@ -90,11 +90,15 @@ static void vfio_send_intx_eventfd(void *opaque, void *unused)
+>  
+>  	if (likely(is_intx(vdev) && !vdev->virq_disabled)) {
+>  		struct vfio_pci_irq_ctx *ctx;
+> +		struct eventfd_ctx *trigger;
+>  
+>  		ctx = vfio_irq_ctx_get(vdev, 0);
+>  		if (WARN_ON_ONCE(!ctx))
+>  			return;
+> -		eventfd_signal(ctx->trigger);
+> +
+> +		trigger = READ_ONCE(ctx->trigger);
+> +		if (likely(trigger))
+> +			eventfd_signal(trigger);
+>  	}
+>  }
+>  
+> @@ -253,100 +257,100 @@ static irqreturn_t vfio_intx_handler(int irq, void *dev_id)
+>  	return ret;
+>  }
+>  
+> -static int vfio_intx_enable(struct vfio_pci_core_device *vdev)
+> +static int vfio_intx_enable(struct vfio_pci_core_device *vdev,
+> +			    struct eventfd_ctx *trigger)
+>  {
+> +	struct pci_dev *pdev = vdev->pdev;
+>  	struct vfio_pci_irq_ctx *ctx;
+> +	unsigned long irqflags;
+> +	char *name;
+> +	int ret;
+>  
+>  	if (!is_irq_none(vdev))
+>  		return -EINVAL;
+>  
+> -	if (!vdev->pdev->irq)
+> +	if (!pdev->irq)
+>  		return -ENODEV;
+>  
+> +	name = kasprintf(GFP_KERNEL_ACCOUNT, "vfio-intx(%s)", pci_name(pdev));
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+>  	ctx = vfio_irq_ctx_alloc(vdev, 0);
+>  	if (!ctx)
+>  		return -ENOMEM;
+>  
+> +	ctx->name = name;
+> +	ctx->trigger = trigger;
+> +
+>  	/*
+> -	 * If the virtual interrupt is masked, restore it.  Devices
+> -	 * supporting DisINTx can be masked at the hardware level
+> -	 * here, non-PCI-2.3 devices will have to wait until the
+> -	 * interrupt is enabled.
+> +	 * Fill the initial masked state based on virq_disabled.  After
+> +	 * enable, changing the DisINTx bit in vconfig directly changes INTx
+> +	 * masking.  igate prevents races during setup, once running masked
+> +	 * is protected via irqlock.
+> +	 *
+> +	 * Devices supporting DisINTx also reflect the current mask state in
+> +	 * the physical DisINTx bit, which is not affected during IRQ setup.
+> +	 *
+> +	 * Devices without DisINTx support require an exclusive interrupt.
+> +	 * IRQ masking is performed at the IRQ chip.  Again, igate protects
+> +	 * against races during setup and IRQ handlers and irqfds are not
+> +	 * yet active, therefore masked is stable and can be used to
+> +	 * conditionally auto-enable the IRQ.
+> +	 *
+> +	 * irq_type must be stable while the IRQ handler is registered,
+> +	 * therefore it must be set before request_irq().
+>  	 */
+>  	ctx->masked = vdev->virq_disabled;
+> -	if (vdev->pci_2_3)
+> -		pci_intx(vdev->pdev, !ctx->masked);
+> +	if (vdev->pci_2_3) {
+> +		pci_intx(pdev, !ctx->masked);
+> +		irqflags = IRQF_SHARED;
+> +	} else {
+> +		irqflags = ctx->masked ? IRQF_NO_AUTOEN : 0;
+> +	}
+>  
+>  	vdev->irq_type = VFIO_PCI_INTX_IRQ_INDEX;
+>  
+> +	ret = request_irq(pdev->irq, vfio_intx_handler,
+> +			  irqflags, ctx->name, vdev);
+> +	if (ret) {
+> +		vdev->irq_type = VFIO_PCI_NUM_IRQS;
+> +		kfree(name);
+> +		vfio_irq_ctx_free(vdev, ctx, 0);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> -static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev, int fd)
+> +static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev,
+> +				struct eventfd_ctx *trigger)
+>  {
+>  	struct pci_dev *pdev = vdev->pdev;
+> -	unsigned long irqflags = IRQF_SHARED;
+>  	struct vfio_pci_irq_ctx *ctx;
+> -	struct eventfd_ctx *trigger;
+> -	unsigned long flags;
+> -	int ret;
+> +	struct eventfd_ctx *old;
+>  
+>  	ctx = vfio_irq_ctx_get(vdev, 0);
+>  	if (WARN_ON_ONCE(!ctx))
+>  		return -EINVAL;
+>  
+> -	if (ctx->trigger) {
+> -		free_irq(pdev->irq, vdev);
+> -		kfree(ctx->name);
+> -		eventfd_ctx_put(ctx->trigger);
+> -		ctx->trigger = NULL;
+> -	}
+> -
+> -	if (fd < 0) /* Disable only */
+> -		return 0;
+> -
+> -	ctx->name = kasprintf(GFP_KERNEL_ACCOUNT, "vfio-intx(%s)",
+> -			      pci_name(pdev));
+> -	if (!ctx->name)
+> -		return -ENOMEM;
+> -
+> -	trigger = eventfd_ctx_fdget(fd);
+> -	if (IS_ERR(trigger)) {
+> -		kfree(ctx->name);
+> -		return PTR_ERR(trigger);
+> -	}
+> +	old = ctx->trigger;
+>  
+> -	ctx->trigger = trigger;
+> +	WRITE_ONCE(ctx->trigger, trigger);
+>  
+> -	/*
+> -	 * Devices without DisINTx support require an exclusive interrupt,
+> -	 * IRQ masking is performed at the IRQ chip.  The masked status is
+> -	 * protected by vdev->irqlock. Setup the IRQ without auto-enable and
+> -	 * unmask as necessary below under lock.  DisINTx is unmodified by
+> -	 * the IRQ configuration and may therefore use auto-enable.
+> -	 */
+> -	if (!vdev->pci_2_3)
+> -		irqflags = IRQF_NO_AUTOEN;
+> -
+> -	ret = request_irq(pdev->irq, vfio_intx_handler,
+> -			  irqflags, ctx->name, vdev);
+> -	if (ret) {
+> -		ctx->trigger = NULL;
+> -		kfree(ctx->name);
+> -		eventfd_ctx_put(trigger);
+> -		return ret;
+> +	/* Releasing an old ctx requires synchronizing in-flight users */
+> +	if (old) {
+> +		synchronize_irq(pdev->irq);
+> +		vfio_virqfd_flush_thread(&ctx->unmask);
+> +		eventfd_ctx_put(old);
+>  	}
+>  
+> -	spin_lock_irqsave(&vdev->irqlock, flags);
+> -	if (!vdev->pci_2_3 && !ctx->masked)
+> -		enable_irq(pdev->irq);
+> -	spin_unlock_irqrestore(&vdev->irqlock, flags);
+> -
+>  	return 0;
+>  }
+>  
+>  static void vfio_intx_disable(struct vfio_pci_core_device *vdev)
+>  {
+> +	struct pci_dev *pdev = vdev->pdev;
+>  	struct vfio_pci_irq_ctx *ctx;
+>  
+>  	ctx = vfio_irq_ctx_get(vdev, 0);
+> @@ -354,10 +358,13 @@ static void vfio_intx_disable(struct vfio_pci_core_device *vdev)
+>  	if (ctx) {
+>  		vfio_virqfd_disable(&ctx->unmask);
+>  		vfio_virqfd_disable(&ctx->mask);
+> +		free_irq(pdev->irq, vdev);
+> +		if (ctx->trigger)
+> +			eventfd_ctx_put(ctx->trigger);
+> +		kfree(ctx->name);
+> +		vfio_irq_ctx_free(vdev, ctx, 0);
+>  	}
+> -	vfio_intx_set_signal(vdev, -1);
+>  	vdev->irq_type = VFIO_PCI_NUM_IRQS;
+> -	vfio_irq_ctx_free(vdev, ctx, 0);
+>  }
+>  
+>  /*
+> @@ -641,19 +648,23 @@ static int vfio_pci_set_intx_trigger(struct vfio_pci_core_device *vdev,
+>  		return -EINVAL;
+>  
+>  	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
+> +		struct eventfd_ctx *trigger = NULL;
+>  		int32_t fd = *(int32_t *)data;
+>  		int ret;
+>  
+> -		if (is_intx(vdev))
+> -			return vfio_intx_set_signal(vdev, fd);
+> +		if (fd >= 0) {
+> +			trigger = eventfd_ctx_fdget(fd);
+> +			if (IS_ERR(trigger))
+> +				return PTR_ERR(trigger);
+> +		}
+>  
+> -		ret = vfio_intx_enable(vdev);
+> -		if (ret)
+> -			return ret;
+> +		if (is_intx(vdev))
+> +			ret = vfio_intx_set_signal(vdev, trigger);
+> +		else
+> +			ret = vfio_intx_enable(vdev, trigger);
+>  
+> -		ret = vfio_intx_set_signal(vdev, fd);
+> -		if (ret)
+> -			vfio_intx_disable(vdev);
+> +		if (ret && trigger)
+> +			eventfd_ctx_put(trigger);
+>  
+>  		return ret;
+>  	}
 
