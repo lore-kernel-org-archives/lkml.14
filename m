@@ -1,134 +1,269 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EDC010A12
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 06:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB0B847B;
+	Mon, 11 Mar 2024 06:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710139443; cv=none; b=mL758/bVwFXq4hWfLcsmUF/UHIB3icziAoqY2ZdqvGAlCUT30aCG5h7yi09hWVhizAel8W1EV0Wde9uoFa6mlGEgnwPNghZ/u/1CWcY6iuaZmHegA6/NpvHYbqt2QWhNjw540QYPfRSuIcVUIgUe04xhmFPPBIYiD1WSG3OhlAc=
+	t=1710139553; cv=none; b=uR3aCPTDu9HrqDDMZr5Asa5rbx/52yMMrBC3YkCjrgAWWUqOHmvBXcR6vzjdeCxgXAc9HqdLV6IVN2eghXI4M0igC6h8Nidj+j/zopm5bf1mZjoNTuiymOTM1BBvHNxpW7Q/Pq2hCD3Eg2UfsPQ0vQLKBGD+By/wLbxN+C8Eiek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710139443; c=relaxed/simple;
-	bh=VC9B5GL1Fmhhu/UKn79agt96hAl0Zx/L2WrNYkyr6wE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=upbiddhzPLTiTRihN9UBO/AYc0G1qfm/72pji8QI8IcxSD6lNZt/W1ParXWmBAJGVg64vS9MGUnEEtvyw3l9wWltsf+9LPfuQe549QK7AAWMm6PLHk/4KTOxdqxiCBb3s7vKHNHd5/X0FOFo0Y5o2KV1G8tLigveGTYGKpMnKiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=VbsbjUjH; arc=none smtp.client-ip=220.197.31.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="VbsbjUjH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=yExOc+EMUi+z+5D1CQBKSzXFMQrae+6bdw58/Lsf4QE=;
-	b=VbsbjUjHSKVbbDWyUGlbk6DYfI/YlOGLuYHGSclgvmMasy8f4zZjgGH1uhXTGz
-	2Ux1GD+4NTcHX7+p/q2tBOSdASwYYYk/SyUQIZgZ/hak3TlulUEPF5Uvty+fCQgn
-	z3CE2tYYU+kXvl2rW8csyCDnfgsvaSm87GSOzF8gW66nw=
-Received: from [172.24.140.12] (unknown [111.204.182.99])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDXfxbvp+5l4NOKAA--.58650S2;
-	Mon, 11 Mar 2024 14:42:57 +0800 (CST)
-Message-ID: <f5687abb-cab7-497d-a997-572358d3807b@126.com>
-Date: Mon, 11 Mar 2024 14:42:55 +0800
+	s=arc-20240116; t=1710139553; c=relaxed/simple;
+	bh=qwUigW6kMoBBuAgnR9zbfhElpFowdlZsrFb+xFIqyEg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N7GiOaW8q7i86OTlk1XUVDcuDVq7SPINqwxArtmrOsoJa5vF0QGaISqB7EVaHNI6iG2HDGapayRYbFfv/pQ2oaQ0n0SRJRbNe1lkTKWZvWltFhEoWYEblFZ+GHs5CdWb3bQW+/PV3lg6/KB7icS1Xe4mhoaSXoLWp0kNyxv+2R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TtS0706VZzwPPW;
+	Mon, 11 Mar 2024 14:43:19 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id BA421141376;
+	Mon, 11 Mar 2024 14:45:41 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
+ (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 11 Mar
+ 2024 14:45:41 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <tytso@mit.edu>, <adilger.kernel@dilger.ca>
+CC: <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chengzhihao1@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH RFC] ext4: Validate inode pa before using preallocation blocks
+Date: Mon, 11 Mar 2024 14:38:43 +0800
+Message-ID: <20240311063843.2431708-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/13] sched/balancing: Rename update_blocked_averages()
- => sched_balance_update_blocked_averages()
-To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Shrikanth Hegde <sshegde@linux.ibm.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20240308111819.1101550-1-mingo@kernel.org>
- <20240308111819.1101550-10-mingo@kernel.org>
-Content-Language: en-US
-From: Honglei Wang <jameshongleiwang@126.com>
-In-Reply-To: <20240308111819.1101550-10-mingo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDXfxbvp+5l4NOKAA--.58650S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJFWrJF4kCr48Ary7Xw48tFb_yoW5Xr4Dpr
-	WqkF10yw4Dt34rXas2ya18urW3Ww17J34a9FnrJF95Ars8tas3trn2gr1fWr40vr1rCr4a
-	vF1jvrW7Aa1Iqr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbiYBKerWV20GqJhQAAsk
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
+In ext4 continue & no-journal mode, physical blocks could be allocated
+more than once (caused by writing extent entries failed & reclaiming
+extent cache) in preallocation process, which could trigger a BUG_ON
+(pa->pa_free < len) in ext4_mb_use_inode_pa().
 
+ kernel BUG at fs/ext4/mballoc.c:4681!
+ invalid opcode: 0000 [#1] PREEMPT SMP
+ CPU: 3 PID: 97 Comm: kworker/u8:3 Not tainted 6.8.0-rc7
+ RIP: 0010:ext4_mb_use_inode_pa+0x1b6/0x1e0
+ Call Trace:
+  ext4_mb_use_preallocated.constprop.0+0x19e/0x540
+  ext4_mb_new_blocks+0x220/0x1f30
+  ext4_ext_map_blocks+0xf3c/0x2900
+  ext4_map_blocks+0x264/0xa40
+  ext4_do_writepages+0xb15/0x1400
+  do_writepages+0x8c/0x260
+  writeback_sb_inodes+0x224/0x720
+  wb_writeback+0xd8/0x580
+  wb_workfn+0x148/0x820
 
-On 2024/3/8 19:18, Ingo Molnar wrote:
-> Standardize scheduler load-balancing function names on the
-> sched_balance_() prefix.
-> 
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->   kernel/sched/fair.c | 8 ++++----
->   kernel/sched/pelt.c | 2 +-
->   2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 96a81b2fa281..95f7092043f3 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9411,7 +9411,7 @@ static unsigned long task_h_load(struct task_struct *p)
->   }
->   #endif
->   
-> -static void update_blocked_averages(int cpu)
-> +static void sched_balance_update_blocked_averages(int cpu)
->   {
->   	bool decayed = false, done = true;
->   	struct rq *rq = cpu_rq(cpu);
-> @@ -12079,7 +12079,7 @@ static bool update_nohz_stats(struct rq *rq)
->   	if (!time_after(jiffies, READ_ONCE(rq->last_blocked_load_update_tick)))
->   		return true;
->   
-> -	update_blocked_averages(cpu);
-> +	sched_balance_update_blocked_averages(cpu);
->   
->   	return rq->has_blocked_load;
->   }
-> @@ -12339,7 +12339,7 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
->   	raw_spin_rq_unlock(this_rq);
->   
->   	t0 = sched_clock_cpu(this_cpu);
-> -	update_blocked_averages(this_cpu);
-> +	sched_balance_update_blocked_averages(this_cpu);
->   
->   	rcu_read_lock();
->   	for_each_domain(this_cpu, sd) {
-> @@ -12431,7 +12431,7 @@ static __latent_entropy void sched_balance_softirq(struct softirq_action *h)
->   		return;
->   
->   	/* normal load balance */
-> -	update_blocked_averages(this_rq->cpu);
-> +	sched_balance_update_blocked_averages(this_rq->cpu);
->   	sched_balance_domains(this_rq, idle);
->   }
->   
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index 63b6cf898220..f80955ecdce6 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -209,7 +209,7 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
->   	 * This means that weight will be 0 but not running for a sched_entity
->   	 * but also for a cfs_rq if the latter becomes idle. As an example,
->   	 * this happens during idle_balance() which calls
+Details are shown as following:
 
-Could we also fix this ghost idle_balance() in this serial (maybe in 
-patch 10)?
+0. Given a file with i_size=4096 with one mapped block
+1. Write block no 1, blocks 1~3 are preallocated.
+   ext4_ext_map_blocks
+    ext4_mb_normalize_request
+     size = 16 * 1024
+     size = end - start // Allocate 3 blocks (bs = 4096)
+    ext4_mb_regular_allocator
+     ext4_mb_regular_allocator
+     ext4_mb_regular_allocator
+     ext4_mb_use_inode_pa
+      pa->pa_free -= len // 3 - 1 = 2
+2. Extent buffer head is written failed, es cache and buffer head are
+   reclaimed.
+3. Write blocks 1~3
+   ext4_ext_map_blocks
+    newex.ee_len = 3
+    ext4_ext_check_overlap // Find nothing, there should have been block 1
+    allocated = map->m_len  // 3
+    ext4_mb_new_blocks
+     ext4_mb_use_preallocated
+      ext4_mb_use_inode_pa
+       BUG_ON(pa->pa_free < len) // 2 < 3!
 
-Honglei
-> -	 * update_blocked_averages().
-> +	 * sched_balance_update_blocked_averages().
->   	 *
->   	 * Also see the comment in accumulate_sum().
->   	 */
+Fix it by adding validation checking for inode pa. If invalid pa is
+detected, stop using inode preallocation, drop invalid pa to avoid it
+being used again, mark group block bitmap as corrupted to avoid allocating
+from the erroneous group.
+
+Fetch a reproducer in Link.
+
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218576
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/ext4/mballoc.c | 128 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 98 insertions(+), 30 deletions(-)
+
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index e4f7cf9d89c4..baedbc604b89 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -423,6 +423,9 @@ static void ext4_mb_new_preallocation(struct ext4_allocation_context *ac);
+ static bool ext4_mb_good_group(struct ext4_allocation_context *ac,
+ 			       ext4_group_t group, enum criteria cr);
+ 
++static void ext4_mb_put_pa(struct ext4_allocation_context *ac,
++			struct super_block *sb, struct ext4_prealloc_space *pa);
++
+ static int ext4_try_to_trim_range(struct super_block *sb,
+ 		struct ext4_buddy *e4b, ext4_grpblk_t start,
+ 		ext4_grpblk_t max, ext4_grpblk_t minblocks);
+@@ -4768,6 +4771,79 @@ ext4_mb_pa_goal_check(struct ext4_allocation_context *ac,
+ 	return true;
+ }
+ 
++/*
++ * check if found pa is valid
++ */
++static bool ext4_mb_pa_is_valid(struct ext4_allocation_context *ac,
++				struct ext4_prealloc_space *pa)
++{
++	struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
++	ext4_fsblk_t start;
++	ext4_fsblk_t end;
++	int len;
++
++	if (unlikely(pa->pa_free == 0)) {
++		/*
++		 * We found a valid overlapping pa but couldn't use it because
++		 * it had no free blocks. This should ideally never happen
++		 * because:
++		 *
++		 * 1. When a new inode pa is added to rbtree it must have
++		 *    pa_free > 0 since otherwise we won't actually need
++		 *    preallocation.
++		 *
++		 * 2. An inode pa that is in the rbtree can only have it's
++		 *    pa_free become zero when another thread calls:
++		 *      ext4_mb_new_blocks
++		 *       ext4_mb_use_preallocated
++		 *        ext4_mb_use_inode_pa
++		 *
++		 * 3. Further, after the above calls make pa_free == 0, we will
++		 *    immediately remove it from the rbtree in:
++		 *      ext4_mb_new_blocks
++		 *       ext4_mb_release_context
++		 *        ext4_mb_put_pa
++		 *
++		 * 4. Since the pa_free becoming 0 and pa_free getting removed
++		 * from tree both happen in ext4_mb_new_blocks, which is always
++		 * called with i_data_sem held for data allocations, we can be
++		 * sure that another process will never see a pa in rbtree with
++		 * pa_free == 0.
++		 */
++		ext4_msg(ac->ac_sb, KERN_ERR, "invalid pa, free is 0");
++		return false;
++	}
++
++	start = pa->pa_pstart + (ac->ac_o_ex.fe_logical - pa->pa_lstart);
++	end = min(pa->pa_pstart + EXT4_C2B(sbi, pa->pa_len),
++		  start + EXT4_C2B(sbi, ac->ac_o_ex.fe_len));
++	len = EXT4_NUM_B2C(sbi, end - start);
++
++	if (unlikely(start < pa->pa_pstart)) {
++		ext4_msg(ac->ac_sb, KERN_ERR,
++			 "invalid pa, start(%llu) < pa_pstart(%llu)",
++			 start, pa->pa_pstart);
++		return false;
++	}
++	if (unlikely(end > pa->pa_pstart + EXT4_C2B(sbi, pa->pa_len))) {
++		ext4_msg(ac->ac_sb, KERN_ERR,
++			 "invalid pa, end(%llu) > pa_pstart(%llu) + pa_len(%d)",
++			 end, pa->pa_pstart, EXT4_C2B(sbi, pa->pa_len));
++		return false;
++	}
++	if (unlikely(pa->pa_free < len)) {
++		ext4_msg(ac->ac_sb, KERN_ERR,
++			 "invalid pa, pa_free(%d) < len(%d)", pa->pa_free, len);
++		return false;
++	}
++	if (unlikely(len <= 0)) {
++		ext4_msg(ac->ac_sb, KERN_ERR, "invalid pa, len(%d) <= 0", len);
++		return false;
++	}
++
++	return true;
++}
++
+ /*
+  * search goal blocks in preallocated space
+  */
+@@ -4891,45 +4967,37 @@ ext4_mb_use_preallocated(struct ext4_allocation_context *ac)
+ 		goto try_group_pa;
+ 	}
+ 
+-	if (tmp_pa->pa_free && likely(ext4_mb_pa_goal_check(ac, tmp_pa))) {
++	if (unlikely(!ext4_mb_pa_is_valid(ac, tmp_pa))) {
++		ext4_group_t group;
++
++		tmp_pa->pa_free = 0;
++		atomic_inc(&tmp_pa->pa_count);
++		spin_unlock(&tmp_pa->pa_lock);
++		read_unlock(&ei->i_prealloc_lock);
++
++		ext4_mb_put_pa(ac, ac->ac_sb, tmp_pa);
++		group = ext4_get_group_number(ac->ac_sb, tmp_pa->pa_pstart);
++		ext4_lock_group(ac->ac_sb, group);
++		ext4_mark_group_bitmap_corrupted(ac->ac_sb, group,
++						 EXT4_GROUP_INFO_BBITMAP_CORRUPT);
++		ext4_unlock_group(ac->ac_sb, group);
++		ext4_error(ac->ac_sb, "drop pa and mark group %u block bitmap corrupted",
++			   group);
++		WARN_ON_ONCE(1);
++		goto try_group_pa_unlocked;
++	}
++
++	if (likely(ext4_mb_pa_goal_check(ac, tmp_pa))) {
+ 		atomic_inc(&tmp_pa->pa_count);
+ 		ext4_mb_use_inode_pa(ac, tmp_pa);
+ 		spin_unlock(&tmp_pa->pa_lock);
+ 		read_unlock(&ei->i_prealloc_lock);
+ 		return true;
+-	} else {
+-		/*
+-		 * We found a valid overlapping pa but couldn't use it because
+-		 * it had no free blocks. This should ideally never happen
+-		 * because:
+-		 *
+-		 * 1. When a new inode pa is added to rbtree it must have
+-		 *    pa_free > 0 since otherwise we won't actually need
+-		 *    preallocation.
+-		 *
+-		 * 2. An inode pa that is in the rbtree can only have it's
+-		 *    pa_free become zero when another thread calls:
+-		 *      ext4_mb_new_blocks
+-		 *       ext4_mb_use_preallocated
+-		 *        ext4_mb_use_inode_pa
+-		 *
+-		 * 3. Further, after the above calls make pa_free == 0, we will
+-		 *    immediately remove it from the rbtree in:
+-		 *      ext4_mb_new_blocks
+-		 *       ext4_mb_release_context
+-		 *        ext4_mb_put_pa
+-		 *
+-		 * 4. Since the pa_free becoming 0 and pa_free getting removed
+-		 * from tree both happen in ext4_mb_new_blocks, which is always
+-		 * called with i_data_sem held for data allocations, we can be
+-		 * sure that another process will never see a pa in rbtree with
+-		 * pa_free == 0.
+-		 */
+-		WARN_ON_ONCE(tmp_pa->pa_free == 0);
+ 	}
+ 	spin_unlock(&tmp_pa->pa_lock);
+ try_group_pa:
+ 	read_unlock(&ei->i_prealloc_lock);
++try_group_pa_unlocked:
+ 
+ 	/* can we use group allocation? */
+ 	if (!(ac->ac_flags & EXT4_MB_HINT_GROUP_ALLOC))
+-- 
+2.39.2
 
