@@ -1,81 +1,109 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6843FBAA;
-	Mon, 11 Mar 2024 13:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24314085E;
+	Mon, 11 Mar 2024 13:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710164037; cv=none; b=MC3lopgx619PKr2uYtRK/eSwp3FoJQHrU5olB3HktZfk65LREBOcGRbinbDpnNxblDzAbCzQhiBywwxVQrxxIRsXHuDGhvgtIEu+nUJDcTmjPPj0pcH2EOEUAzhN2cbJpR1Ym64wo9u5rItCgL3WmhFOm/K8l4IGN42RX/alGsg=
+	t=1710164044; cv=none; b=DCGsLmqlXRZuxpSA+O/cV+e/ll6Syl2DrE0WyBwL3tWZENe5UW2g934NYZ8cvDkuLUnraqQMnRt/h3ePuLai7pmO2wlAJYiV2hIOAqCeI0+7RTgxYXfsTKZHIRh7rZA8iahhUTr33dBrN6EfgbKrH/VNwqVXUpt3qn76iON5LVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710164037; c=relaxed/simple;
-	bh=jbChsX0Vv02KbcvaxVwtHitTmsAunq+PkpTTsi6JQXA=;
+	s=arc-20240116; t=1710164044; c=relaxed/simple;
+	bh=fpFQr843KOifIG2LaYlm2F7Z5q9uRlkCVtNhgQnuXjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0wjtSNpvQjbyfb66qZz9WezDtBVy6O/NVri0+M14a5iCilqhUVouUkxeekZDEvxssG19JrfY+rvcIu6W0inC3VuKhsfRtnxFbtjUl4diWvzsaGkC/ZX1dfFs7apMEkZKk9wKajenkAgA7AssQTYgGY0zZ6CCZ6zOREBzaOvcDU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=BKcJEe9AYGlM2//6btrc+YVpw6GsR3iKMScPgmoFIr6XEAcn2NqL/43pxWHxkesFXmsJoMdsDBMC/5gjJRaUWlAYfVeXduVkJSCV/R1reWf6AX9Oz/7BE53qAf7ANnxR66BFPIiSGfFru5Z3jISlz8ylXmBe7SpAk7f/VTC7e1M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rjfO1-0001bc-00; Mon, 11 Mar 2024 14:08:13 +0100
+	id 1rjfO2-0001bi-00; Mon, 11 Mar 2024 14:08:14 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id AF265C0267; Mon, 11 Mar 2024 14:04:22 +0100 (CET)
-Date: Mon, 11 Mar 2024 14:04:22 +0100
+	id E1C83C069B; Mon, 11 Mar 2024 14:05:37 +0100 (CET)
+Date: Mon, 11 Mar 2024 14:05:37 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	John Crispin <john@phrozen.org>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] MIPS: ralink: Don't use "proxy" headers
-Message-ID: <Ze8BVniIPeFNzmRA@alpha.franken.de>
-References: <20240311094559.547083-1-andriy.shevchenko@linux.intel.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] MIPS: Fix missing proto and passing arg warnings
+Message-ID: <Ze8BoUxUZ3CL0yG4@alpha.franken.de>
+References: <20240226105427.7191-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240311094559.547083-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240226105427.7191-1-fancer.lancer@gmail.com>
 
-On Mon, Mar 11, 2024 at 11:45:58AM +0200, Andy Shevchenko wrote:
-> Update header inclusions to follow IWYU (Include What You Use)
-> principle.
+On Mon, Feb 26, 2024 at 01:54:20PM +0300, Serge Semin wrote:
+> After getting my local tree rebased onto the kernel 6.8-rc3 the MIPS32
+> kernel build procedure produced a couple of warnings which I suggest to
+> fix in the framework of this series.
 > 
-> Fixes: 5804be061848 ("MIPS: ralink: Remove unused of_gpio.h")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403090727.nLhljNp6-lkp@intel.com/
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/mips/ralink/timer.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+> A first warning is of the "no previous prototype for `<func>`" type. In
+> particular my arch-specific code has the mips_cm_l2sync_phys_base() method
+> re-defined, but even though the function is global it' prototype isn't
+> declared anywhere. Fix that by moving the __mips_cm_l2sync_phys_base()
+> body to a weak implementation of mips_cm_l2sync_phys_base() and adding the
+> method prototype declaration to the mips/include/asm/mips-cm.h header
+> file. For the sake of unification a similar solution was provided for the
+> mips_cm_phys_base()/__mips_cm_phys_base() couple.
 > 
-> diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
-> index 8b485cbe854e..54094f6e033e 100644
-> --- a/arch/mips/ralink/timer.c
-> +++ b/arch/mips/ralink/timer.c
-> @@ -6,10 +6,16 @@
->   * Copyright (C) 2013 John Crispin <john@phrozen.org>
->  */
->  
-> -#include <linux/platform_device.h>
-> -#include <linux/interrupt.h>
-> -#include <linux/timer.h>
-> +#include <linux/bits.h>
->  #include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/timer.h>
-> +#include <linux/types.h>
->  
->  #include <asm/mach-ralink/ralink_regs.h>
->  
+> The following text describes the patches which have already merged in at
+> v1 stage of the patchset (see changelog v2).
+> 
+> One more case of the denoted earlier warning I spotted in the
+> self-extracting kernel (so called zboot) with the debug printouts enabled.
+> In particular there are several putc() method re-definitions available in:
+> arch/mips/boot/compressed/uart-prom.c
+> arch/mips/boot/compressed/uart-16550.c
+> arch/mips/boot/compressed/uart-alchemy.c
+> All of these files lacked the prototype declaration what caused having the
+> "no previous prototype for ‘putc’" printed on my build with the next
+> configs enabled:
+> CONFIG_SYS_SUPPORTS_ZBOOT=y
+> CONFIG_SYS_SUPPORTS_ZBOOT_UART_PROM=y
+> CONFIG_ZBOOT_LOAD_ADDRESS=0x85100000
+> CONFIG_DEBUG_ZBOOT=y
+> 
+> The second warning is of the "passing argument <x> of ‘<func>’ from
+> incompatible pointer type" type which I discovered in the
+> drivers/tty/mips_ejtag_fdc.c driver. The problem most likely happened due
+> to the commit ce7cbd9a6c81 ("tty: mips_ejtag_fdc: use u8 for character
+> pointers").
+> 
+> That's it for today.) Thanks for review in advance. Any tests are very
+> welcome.
+> 
+> Link: https://lore.kernel.org/linux-mips/20240215171740.14550-1-fancer.lancer@gmail.com
+> Changelog v2:
+> - Drop aleady applied pateches:
+>   [PATCH 3/4] mips: zboot: Fix "no previous prototype" build warning
+>   [PATCH 4/4] tty: mips_ejtag_fdc: Fix passing incompatible pointer type warning
+> - Drop Linux serial mailing list and the respective maintainers from the
+>   Cc-list.
+> - Covert the underscored versions of the CM2/L2-sync base address
+>   getters to being the body of the weakly defined original methods.
+> 
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (2):
+>   mips: cm: Convert __mips_cm_l2sync_phys_base() to weak function
+>   mips: cm: Convert __mips_cm_phys_base() to weak function
+> 
+>  arch/mips/include/asm/mips-cm.h | 20 ++++++++++++++++----
+>  arch/mips/kernel/mips-cm.c      | 10 ++--------
+>  2 files changed, 18 insertions(+), 12 deletions(-)
+> 
 > -- 
-> 2.43.0.rc1.1.gbec44491f096
+> 2.43.0
 
-applied to mips-next.
+series applied to mips-next.
 
 Thomas.
 
