@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B21D4AEC9;
-	Mon, 11 Mar 2024 17:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A944AEC5;
+	Mon, 11 Mar 2024 17:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710176994; cv=none; b=aZukGRYcP2oronUnKBOwLpMMgac+O793u+rGPyQsMICyvN/FPQ0FHGmJfNc6guo/kvlS2HJHwhCd+AtPfpre0fQmQZHW+166vQPaWJ89ys996MNpg9Hkt/ABeBjQrwn3lQfXp4SvWqWnUbjwb2O4Lrd2mRtucXXMlF9TLBHrHKc=
+	t=1710177066; cv=none; b=U5gvDZ4Odk6emqiyMJFEqiSfdSW9oaRqbEsD8BJ87NjoeShL4ctLSp7w3Hco22CCzrekm9C7bFpXhGu5Ssr3ziNHrpM4X5FSd6zgB5WTud4FPrCTZ4RJ3B487tzsG/1EjAXzp7k3xSa76dsHp2pRCn87UAEp5egvO//DrCwcT1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710176994; c=relaxed/simple;
-	bh=yy7nLIc9ARnpjfGsqcuqP0zQZXEMX49eVq06dLU0h04=;
+	s=arc-20240116; t=1710177066; c=relaxed/simple;
+	bh=+lBe23s/WG6muqa4DBbIpUBMBeF/WOWUU+ZtlFupPx8=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=L6eOIrEswQOSjh38JSVCrLy6HNa8K3UFEh+3KZwlG4rbBEJicWT2x52yg9xc5Tlwmd6BC1HbBRNus80Jnw4vjoA1UrsNStZ800EvPAReSUVxa1IyLVf6sgMtYsG4mQZZlvOiDYZTCiho957IWzchKIsY223FB8KWgKtPULrgEFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OOEYxatM; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=mjBJW9M5isj6Nh+ftFoMt/GD/1hVZaWA2AU63Z6RePY/wU3IpvPrw+L5Y31zMewZfp+Hmo97HWGINMZOGb6s6A+GWMetx4SDfwMIk1Dc+zPei8g/wcGPTasD6Ug3nzUE0VlEHstMv+EVt4Den1hkWT5OEsy4V+Ke6YCY/Xf2Q4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KH/wP4q0; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OOEYxatM"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KH/wP4q0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710176991;
-	bh=yy7nLIc9ARnpjfGsqcuqP0zQZXEMX49eVq06dLU0h04=;
+	s=mail; t=1710177063;
+	bh=+lBe23s/WG6muqa4DBbIpUBMBeF/WOWUU+ZtlFupPx8=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=OOEYxatMo5uTX/liE3V8JTujD6RVwmqScXEq20wkVnKvQCPQp6BdkOCR+qurJbIqt
-	 FVsNOJFGhfW3CH1wX91vAwkkF0+pgDXGkiFeCCuQ85xmp+4NNmqi1bn34jXKxq88Qb
-	 I2Fw4fNQpf/5eXabYSKq90AICCvAgp28ejqIXKbWwczWdd6clPCCgOLB5s+PyNN2OL
-	 fL2AmIiW0UBpUg24faQPjJ1RaPIrqjNja4G5VCwqR+SuOMSt+RJUxQSmDrcWS/1s30
-	 nIblG1ZKfqRVEwqIVTu19PoD24K/0rQDNJ5fkFnsza8emwbkJAPjb0tkCk+mu/r5vv
-	 Ql4koz6WqoJ1A==
+	b=KH/wP4q03T8xPtqjrF1mQDBjJ7uFFF0tAoSP37d4ex4ee2AYE6fmE2A3EBPxWr5uH
+	 i2ESweQDRMRO7DXqpnEwoNkQKnwkkbB8MwCg8bnYvuZoZMw5A3x6q00ykvCW37WrE2
+	 L5zl/kHumRmGSP8qJlieiffr/Y27P4cI8gEZjIKf6R9dNsWQplboZpeNShG719gheL
+	 ptCfxdmTPN572sl8mGhosZXLIwhFUL6RwudnHWPr4JBx97YrAonrRYl3TCyyNTulXz
+	 vC9Z9LRHZTspNnyMVjLUICm+veAY/4sTCedd3Xr1guQ6G8u5yoERpzwkC2WE6Ea5zE
+	 yWxz3+vwzWByg==
 Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DA073378200D;
-	Mon, 11 Mar 2024 17:09:47 +0000 (UTC)
-Message-ID: <f877ce53-a5ee-4447-a57c-339a1e9701f4@collabora.com>
-Date: Mon, 11 Mar 2024 22:10:21 +0500
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5A4C9378200D;
+	Mon, 11 Mar 2024 17:10:59 +0000 (UTC)
+Message-ID: <865fc24b-ae27-4084-893b-c5c389480a09@collabora.com>
+Date: Mon, 11 Mar 2024 22:11:33 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,83 +43,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- kernel-janitors@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 1/3] selftests/exec: Add the overall result line
- accourding to TAP
+ kernel-janitors@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: spi-nor: core: correct type of i
 Content-Language: en-US
-To: Shuah Khan <shuah@kernel.org>, Eric Biederman <ebiederm@xmission.com>
-References: <20240304155928.1818928-1-usama.anjum@collabora.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+References: <20240304090103.818092-1-usama.anjum@collabora.com>
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240304155928.1818928-1-usama.anjum@collabora.com>
+In-Reply-To: <20240304090103.818092-1-usama.anjum@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Soft reminder!
+Soft reminder
 
-On 3/4/24 8:59 PM, Muhammad Usama Anjum wrote:
-> The following line is missing from the test's execution. Add it to make
-> it fully TAP conformant:
->   # Totals: pass:27 fail:0 xfail:0 xpass:0 skip:0 error:0
+On 3/4/24 2:01 PM, Muhammad Usama Anjum wrote:
+> The i should be signed to find out the end of the loop. Otherwise,
+> i >= 0 is always true and loop becomes infinite. Make its type to be
+> int.
 > 
+> Fixes: 6a9eda34418f ("mtd: spi-nor: core: set mtd->eraseregions for non-uniform erase map")
 > Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > ---
->  tools/testing/selftests/exec/binfmt_script.py | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+> Changes since v1:
+> - Make i int instead of u8
+> ---
+>  drivers/mtd/spi-nor/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/exec/binfmt_script.py b/tools/testing/selftests/exec/binfmt_script.py
-> index 05f94a741c7aa..2c575a2c0eab4 100755
-> --- a/tools/testing/selftests/exec/binfmt_script.py
-> +++ b/tools/testing/selftests/exec/binfmt_script.py
-> @@ -16,6 +16,8 @@ SIZE=256
->  NAME_MAX=int(subprocess.check_output(["getconf", "NAME_MAX", "."]))
+> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> index 65b32ea59afc6..3e1f1913536bf 100644
+> --- a/drivers/mtd/spi-nor/core.c
+> +++ b/drivers/mtd/spi-nor/core.c
+> @@ -3373,7 +3373,7 @@ static u32
+>  spi_nor_get_region_erasesize(const struct spi_nor_erase_region *region,
+>  			     const struct spi_nor_erase_type *erase_type)
+>  {
+> -	u8 i;
+> +	int i;
 >  
->  test_num=0
-> +pass_num=0
-> +fail_num=0
->  
->  code='''#!/usr/bin/perl
->  print "Executed interpreter! Args:\n";
-> @@ -42,7 +44,7 @@ foreach my $a (@ARGV) {
->  # ...
->  def test(name, size, good=True, leading="", root="./", target="/perl",
->                       fill="A", arg="", newline="\n", hashbang="#!"):
-> -    global test_num, tests, NAME_MAX
-> +    global test_num, pass_num, fail_num, tests, NAME_MAX
->      test_num += 1
->      if test_num > tests:
->          raise ValueError("more binfmt_script tests than expected! (want %d, expected %d)"
-> @@ -80,16 +82,20 @@ def test(name, size, good=True, leading="", root="./", target="/perl",
->          if good:
->              print("ok %d - binfmt_script %s (successful good exec)"
->                    % (test_num, name))
-> +            pass_num += 1
->          else:
->              print("not ok %d - binfmt_script %s succeeded when it should have failed"
->                    % (test_num, name))
-> +            fail_num = 1
->      else:
->          if good:
->              print("not ok %d - binfmt_script %s failed when it should have succeeded (rc:%d)"
->                    % (test_num, name, proc.returncode))
-> +            fail_num = 1
->          else:
->              print("ok %d - binfmt_script %s (correctly failed bad exec)"
->                    % (test_num, name))
-> +            pass_num += 1
->  
->      # Clean up crazy binaries
->      os.unlink(script)
-> @@ -166,6 +172,8 @@ test(name="two-under-trunc-arg", size=int(SIZE/2), arg=" ")
->  test(name="two-under-leading",   size=int(SIZE/2), leading=" ")
->  test(name="two-under-lead-trunc-arg", size=int(SIZE/2), leading=" ", arg=" ")
->  
-> +print("# Totals: pass:%d fail:%d xfail:0 xpass:0 skip:0 error:0" % (pass_num, fail_num))
-> +
->  if test_num != tests:
->      raise ValueError("fewer binfmt_script tests than expected! (ran %d, expected %d"
->                       % (test_num, tests))
+>  	if (region->overlaid)
+>  		return region->size;
 
 -- 
 BR,
