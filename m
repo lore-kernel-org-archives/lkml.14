@@ -1,180 +1,88 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9332F40866;
-	Mon, 11 Mar 2024 12:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A295940BEA;
+	Mon, 11 Mar 2024 12:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710158615; cv=none; b=Ovow/AS7HeYXAT26HwDbZWbsayNP3StXrrNhQBEHVzQNZqx5zWhkE5KJTMB4OdfLH3bfuy8ZChpqg/reNqcrgU9912qeJ5BQmNLnejJQOtl9/jg0fHNNpbJ5twyiTlRULbaEJT0jJfeDSMHz7ub/3Wl+TuhOVScaqkEPW8c8Qyo=
+	t=1710158619; cv=none; b=YOhmEvc3g6VW8jYWlYSst1NaZNEgxa+T9CWkBI9Y5QXqwAxhwPUwY3jATVxp6SdAE4iF1+ezZHRY/y24KUXQ6HPsjt10Nk/8Grr41TaSeJn9Kiq1IAbyOH96/nj9IyPrfClDZLSt7y8cpAGwJLVAJrtf60g467JtNeAWGG6Kg7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710158615; c=relaxed/simple;
-	bh=k2NdMsKIALfGOxx0yqMJZDw7ld1Mtu/LUzghBezCTWY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TeG05h1aj9rsLADHVrscPPJb4K/6r5t3eUz9ub3Ai9OeAFGVgrXBb+U58FUxvIsu09D4YWGKm37dZ35BMbG+2JPzANGVLU/f+HmahYswPivUwEhaKo3T/7VNmsKxlPXv0PUSBlOk7LgPGSenEBbabURryMV1E0+U4ktJ3OPFCyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BpcD1Sp8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710158619; c=relaxed/simple;
+	bh=xzuWtYjO7QQ/BKZn354pNWlFTPOxB7wmzxvNgOJ6Hn8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Zoo9GoAmWiM8sASolSsL5TuaXB3QeMIcObfnR46GzD1KPtaDjbpxl4HskY3UgbRbXi3b77klpIw9WhaHvYy7LoN+ON1Z6EnckcHBRBkbN/g980Y6Zf3yaDiqqEG8XfLP9oQ5S9bEA5wHPa5EVBGAqyFL7fyreA3E19VWGDyRFTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UgQOAaIG; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BpcD1Sp8"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B7dfg0029395;
-	Mon, 11 Mar 2024 12:03:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=qN2LYBqNqYo/WOmJkpszc7fUOLXRVicK9CAnnbqJPlA=; b=Bp
-	cD1Sp8mCNg8Vzec07gViFnRRFaX4Ml1nSIxklnHQjZdtYw48WtJ7eyGpT61FyC3e
-	OUlfqJXuJrvzVLD6mZoWkvEFyIauq3YYwcRwYlvIkIX1tgd9qizCI6qixx3u2epg
-	GsyQdeAsAgaDwgNtXSJgQ53nehgRAN0nQ3lNZWiVrSQjuYbeXzMsiLSqyfARt/i9
-	C1aXY0FqJ8LB49Og0/aO/IrYBLURdY8Frp7mGP6/s3/cT0Jae2bldDGA6MEJsdJD
-	FZ9wcke9G/RtOPQxybe6I3BOpd+8Ci7ETQWSxFXQOBtmtxUzwvnuQX1IcJgYR2IJ
-	7yBA09tIYBE/bEsS+MFQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wswrsrnm4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 12:03:26 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42BC3Pd0015165
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 12:03:25 GMT
-Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 11 Mar 2024 05:03:20 -0700
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kishon Vijay
- Abraham I" <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Komal Bajaj <quic_kbajaj@quicinc.com>,
-        "Amrit
- Anand" <quic_amrianan@quicinc.com>
-Subject: [PATCH 4/4] phy: qcpm-qmp-usb: Add support for QDU1000/QRU1000
-Date: Mon, 11 Mar 2024 17:32:15 +0530
-Message-ID: <20240311120215.16845-5-quic_kbajaj@quicinc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240311120215.16845-1-quic_kbajaj@quicinc.com>
-References: <20240311120215.16845-1-quic_kbajaj@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UgQOAaIG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710158618; x=1741694618;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xzuWtYjO7QQ/BKZn354pNWlFTPOxB7wmzxvNgOJ6Hn8=;
+  b=UgQOAaIGeISePn7fmkNetpBapNbq3hZhGf6/6wxxk+EzAv9PIlvUfKVK
+   gb6lzoKzAK8Tewr4LkLpd3N1Xleqa0vM9LL1JPWbi6tQwqnqb8fTpNFjs
+   9OM5SaGNAfxnQue0RYvUM0R1hhKM++xLw9L+a2igo5xfsGV7HBBKJk9Db
+   cObzmaTdDettqYssGV7w0ZfCiPx+6vvBJS/ORA+M5NVtVGtDyA8EZLrJm
+   SyGOgBXrzrXFPMY0iMUcHp2R20qPQtN6XDvpUvX9Oe77gILVADx8ScI6J
+   sVtaqTh/Y3eXqoP3yYDfAdw5c9FQGCuRLtc1lgpbotPX5QUApkSPNm+DN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4981225"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="4981225"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:03:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="15789751"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:03:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 11 Mar 2024 14:03:29 +0200 (EET)
+To: Kate Hsuan <hpa@redhat.com>
+cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+    linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Andr=E9_Apitzsch?= <git@apitzsch.eu>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] leds: rgb: leds-ktd202x: Get device properties
+ through fwnode to support ACPI
+In-Reply-To: <20240306025801.8814-3-hpa@redhat.com>
+Message-ID: <b6e19702-8ec1-38cb-8c43-a3067ebb2017@linux.intel.com>
+References: <20240306025801.8814-1-hpa@redhat.com> <20240306025801.8814-3-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KzL1r2zOWVE7VhhNreMFTeSvmJH8VY2K
-X-Proofpoint-ORIG-GUID: KzL1r2zOWVE7VhhNreMFTeSvmJH8VY2K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403110091
+Content-Type: multipart/mixed; boundary="8323328-1343213729-1710158609=:1071"
 
-Add QDU1000/QRU1000 specific register layout and table configs.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Co-developed-by: Amrit Anand <quic_amrianan@quicinc.com>
-Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
-Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
----
- drivers/phy/qualcomm/phy-qcom-qmp-usb.c | 52 +++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+--8323328-1343213729-1710158609=:1071
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-usb.c b/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-index 5c003988c35d..e067574bea7a 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-@@ -1441,6 +1441,32 @@ static const struct qmp_phy_init_tbl x1e80100_usb3_uniphy_pcs_usb_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V7_PCS_USB3_RCVR_DTCT_DLY_U3_H, 0x00),
- };
+On Wed, 6 Mar 2024, Kate Hsuan wrote:
 
-+
-+static const struct qmp_phy_init_tbl qdu1000_usb3_uniphy_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG1, 0xc4),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG2, 0x89),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG3, 0x20),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG6, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RX_SIGDET_LVL, 0xaa),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_PCS_TX_RX_CONFIG, 0x0c),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_CDR_RESET_TIME, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG1, 0x88),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG2, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG1, 0x4b),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG5, 0x10),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_REFGEN_REQ_CONFIG1, 0x21),
-+};
-+
-+static const struct qmp_phy_init_tbl qdu1000_usb3_uniphy_pcs_usb_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2, 0x07),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL, 0xf8),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1, 0x6f),
-+};
-+
-+
-+
- struct qmp_usb_offsets {
- 	u16 serdes;
- 	u16 pcs;
-@@ -1693,6 +1719,29 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
- 	.regs			= qmp_v2_usb3phy_regs_layout,
- };
+> This LED controller also installed on a Xiaomi pad2 and it is a x86
+> platform. The original driver is based on device tree and can't be
+> used for this ACPI based system. This patch migrated the driver to
+> use fwnode to access the properties. Moreover, the fwnode API
+> supports device tree so this work won't effect the original
+> implementations.
+>=20
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 
-+static const struct qmp_phy_cfg qdu1000_usb3_uniphy_cfg = {
-+	.lanes			= 1,
-+
-+	.offsets		= &qmp_usb_offsets_v5,
-+
-+	.serdes_tbl		= sm8150_usb3_uniphy_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_serdes_tbl),
-+	.tx_tbl			= sm8350_usb3_uniphy_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8350_usb3_uniphy_tx_tbl),
-+	.rx_tbl			= sm8350_usb3_uniphy_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8350_usb3_uniphy_rx_tbl),
-+	.pcs_tbl		= qdu1000_usb3_uniphy_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(qdu1000_usb3_uniphy_pcs_tbl),
-+	.pcs_usb_tbl		= qdu1000_usb3_uniphy_pcs_usb_tbl,
-+	.pcs_usb_tbl_num	= ARRAY_SIZE(qdu1000_usb3_uniphy_pcs_usb_tbl),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= qmp_v4_usb3phy_regs_layout,
-+	.pcs_usb_offset		= 0x1000,
-+
-+	.has_pwrdn_delay	= true,
-+};
-+
- static const struct qmp_phy_cfg sa8775p_usb3_uniphy_cfg = {
- 	.lanes			= 1,
+FWIW,
 
-@@ -2620,6 +2669,9 @@ static const struct of_device_id qmp_usb_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,sdx65-qmp-usb3-uni-phy",
- 		.data = &sdx65_usb3_uniphy_cfg,
-+	}, {
-+		.compatible = "qcom,qdu1000-qmp-usb3-uni-phy",
-+		.data = &qdu1000_usb3_uniphy_cfg,
- 	}, {
- 		.compatible = "qcom,sdx75-qmp-usb3-uni-phy",
- 		.data = &sdx75_usb3_uniphy_cfg,
---
-2.42.0
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
+--=20
+ i.
+
+--8323328-1343213729-1710158609=:1071--
