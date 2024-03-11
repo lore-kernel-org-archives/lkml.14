@@ -1,75 +1,129 @@
-Received: from chinatelecom.cn (smtpnm6-01.21cn.com [182.42.159.233])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DDF810FA
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 07:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.159.233
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C59F9D3;
+	Mon, 11 Mar 2024 07:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710142062; cv=none; b=lg4BD/iFiuUCLBvXOwv4MmW1hXyw1HKZlPFLKI8QD2NwG5JhHY9WMolr9Dn3jVF9per7xpLjgb5MZ2UdkX6/4sF1XyQirXimLx/Asavr6MgzODDdEsNo81TeLGbZyOpQeZjXYSzo89ojIkduoGe8i3MRlY5wTUfouRcfsIReTBs=
+	t=1710142300; cv=none; b=B5VTk+bjGW+BQXt7JbB9O7LnawEALAP8XPM2c/NXwxije+9dIYDCtA097dw3af54YWblpSTs7pAV6/OWi1GnF/ys+gol2wGo9ngK5QXmFcMF89489aBeovN+Xds4bIfambQ82SWWArxFRCfv9kE3iUqhJNBRNpLLhbPpSXbiT6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710142062; c=relaxed/simple;
-	bh=J6HmO0J6s+zLrlibuEwc/AwNYn0n0tulm6hqS9PockI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KEjpzJVdczEkKNN0VaQPL0r9Z2/ZdfQdzRfUmtK3E04b91zsInw9ZF/fzBPWjCA3XZGGG7hhYjU+FhcZoRdxlsHoz20vFSst8hK9HiUhe6maSKnfcabxZ+n5kov4Et+v+Vg6nK2Y+cmMgwIHcmd6Cn7v88+pjKjejN1R2Y7+CSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.159.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
-HMM_SOURCE_IP:192.168.139.44:29798.1556610506
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-124.127.58.150 (unknown [192.168.139.44])
-	by chinatelecom.cn (HERMES) with SMTP id E743B100112C5;
-	Mon, 11 Mar 2024 15:20:15 +0800 (CST)
-X-189-SAVE-TO-SEND: +sibs@chinatelecom.cn
-Received: from  ([124.127.58.150])
-	by gateway-ssl-dep-77bc75f6c8-x5lfc with ESMTP id b8ee26f0b9ed4be19d3822e012ad2032 for tglx@linutronix.de;
-	Mon, 11 Mar 2024 15:20:21 CST
-X-Transaction-ID: b8ee26f0b9ed4be19d3822e012ad2032
-X-Real-From: sibs@chinatelecom.cn
-X-Receive-IP: 124.127.58.150
-X-MEDUSA-Status: 0
-Sender: sibs@chinatelecom.cn
-From: Bingsong Si <sibs@chinatelecom.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Bingsong Si <sibs@chinatelecom.cn>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/cpu: Clear TME feature flag if TME is not enabled by BIOS
-Date: Mon, 11 Mar 2024 15:19:37 +0800
-Message-Id: <20240311071938.13247-1-sibs@chinatelecom.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240308122752.3342-1-sibs@chinatelecom.cn>
-References: <20240308122752.3342-1-sibs@chinatelecom.cn>
+	s=arc-20240116; t=1710142300; c=relaxed/simple;
+	bh=4vkHIMU5sLhEQ25bNI/O3AvT4oBOKoIMinDU+cLJS8Y=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=T/CdEizTt6tR6R16PKFgDZcTzq/al6I8vloUo6a5n6rGeYDBB2Xcu2Vf8oFCKPkeRazwnOkBUsM0zzENx9Ith4H3TPnfiFj7pBoH75bv+NXaOzjHhC3srq6ek/ceq9nWgKYlFn9/QD/vQ92I2DqTm3J3EXzOKV1MP3dy0WlOeZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TtT103btZz2Bfqg;
+	Mon, 11 Mar 2024 15:29:08 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id DB6641A0178;
+	Mon, 11 Mar 2024 15:31:33 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 11 Mar 2024 15:31:33 +0800
+Subject: Re: [PATCH RFC] ext4: Validate inode pa before using preallocation
+ blocks
+To: <tytso@mit.edu>, <adilger.kernel@dilger.ca>
+CC: <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>
+References: <20240311063843.2431708-1-chengzhihao1@huawei.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <24740a61-d379-b9b5-2e08-07f7a4597fa2@huawei.com>
+Date: Mon, 11 Mar 2024 15:31:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20240311063843.2431708-1-chengzhihao1@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-When TME is disabled by BIOS, dmesg output is "x86/mktme: enabled by
-BIOS" but the TME feature is still shown in the output of/proc/cpuinfo.
+ÔÚ 2024/3/11 14:38, Zhihao Cheng Ð´µÀ:
+> In ext4 continue & no-journal mode, physical blocks could be allocated
+> more than once (caused by writing extent entries failed & reclaiming
+> extent cache) in preallocation process, which could trigger a BUG_ON
+> (pa->pa_free < len) in ext4_mb_use_inode_pa().
+> 
+>   kernel BUG at fs/ext4/mballoc.c:4681!
+>   invalid opcode: 0000 [#1] PREEMPT SMP
+>   CPU: 3 PID: 97 Comm: kworker/u8:3 Not tainted 6.8.0-rc7
+>   RIP: 0010:ext4_mb_use_inode_pa+0x1b6/0x1e0
+>   Call Trace:
+>    ext4_mb_use_preallocated.constprop.0+0x19e/0x540
+>    ext4_mb_new_blocks+0x220/0x1f30
+>    ext4_ext_map_blocks+0xf3c/0x2900
+>    ext4_map_blocks+0x264/0xa40
+>    ext4_do_writepages+0xb15/0x1400
+>    do_writepages+0x8c/0x260
+>    writeback_sb_inodes+0x224/0x720
+>    wb_writeback+0xd8/0x580
+>    wb_workfn+0x148/0x820
+> 
+> Details are shown as following:
+> 
+> 0. Given a file with i_size=4096 with one mapped block
+> 1. Write block no 1, blocks 1~3 are preallocated.
+>     ext4_ext_map_blocks
+>      ext4_mb_normalize_request
+>       size = 16 * 1024
+>       size = end - start // Allocate 3 blocks (bs = 4096)
+>      ext4_mb_regular_allocator
+>       ext4_mb_regular_allocator
+>       ext4_mb_regular_allocator
+>       ext4_mb_use_inode_pa
+>        pa->pa_free -= len // 3 - 1 = 2
+> 2. Extent buffer head is written failed, es cache and buffer head are
+>     reclaimed.
+> 3. Write blocks 1~3
+>     ext4_ext_map_blocks
+>      newex.ee_len = 3
+>      ext4_ext_check_overlap // Find nothing, there should have been block 1
+>      allocated = map->m_len  // 3
+>      ext4_mb_new_blocks
+>       ext4_mb_use_preallocated
+>        ext4_mb_use_inode_pa
+>         BUG_ON(pa->pa_free < len) // 2 < 3!
+> 
+> Fix it by adding validation checking for inode pa. If invalid pa is
+> detected, stop using inode preallocation, drop invalid pa to avoid it
+> being used again, mark group block bitmap as corrupted to avoid allocating
+> from the erroneous group.
 
-Signed-off-by: Bingsong Si <sibs@chinatelecom.cn>
----
- arch/x86/kernel/cpu/intel.c | 1 +
- 1 file changed, 1 insertion(+)
+After marking group block bitmap corrupted, mpage_map_and_submit_extent 
+returns -EFSCORRUPTED from ext4_map_blocks -> ext4_ext_map_blocks -> 
+ext4_mb_new_blocks -> ext4_mb_regular_allocator -> ext4_mb_find_by_goal 
+-> ext4_mb_load_buddy -> ext4_mb_init_cache -> ext4_wait_block_bitmap -> 
+  ext4_validate_block_bitmap-> EXT4_MB_GRP_BBITMAP_CORRUPT(grp).
+I think the checking 'EXT4_MB_GRP_BBITMAP_CORRUPT(e4b->bd_info)' is not 
+needed in ext4_mb_load_buddy, because all callers have checked it before 
+using e4b. In this case(ext4_mb_regular_allocator), goal group could be 
+skipped if it is corrupted, so ext4_mb_find_by_goal should load 
+buddy(ext4_mb_load_buddy) without checking corrupted and then check 
+corrupted with returning 0. But we can't delete the 
+checking(EXT4_MB_GRP_BBITMAP_CORRUPT(grp)) directly from 
+ext4_validate_block_bitmap, because some ext4_wait_block_bitmap callers 
+may still need it. IOW, there are some logic pathes need the checking, 
+but some don't need.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index a927a8fc9624..22f0c829784d 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -526,6 +526,7 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 	if (!TME_ACTIVATE_LOCKED(tme_activate) || !TME_ACTIVATE_ENABLED(tme_activate)) {
- 		pr_info_once("x86/tme: not enabled by BIOS\n");
- 		mktme_status = MKTME_DISABLED;
-+		clear_cpu_cap(c, X86_FEATURE_TME);
- 		return;
- 	}
- 
--- 
-2.34.1
-
+Above problem is independent with the problem solved by this patch, so I 
+send out the patch.
+> 
+> Fetch a reproducer in Link.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218576
+> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> ---
+>   fs/ext4/mballoc.c | 128 +++++++++++++++++++++++++++++++++++-----------
+>   1 file changed, 98 insertions(+), 30 deletions(-)
+> 
