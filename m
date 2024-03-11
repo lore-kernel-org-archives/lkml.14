@@ -1,108 +1,122 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4BE4176D
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 13:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919894436C;
+	Mon, 11 Mar 2024 13:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710165256; cv=none; b=FJ+LKRvUbVFuj8N4JkTvXtvWlth8rs00ovF6k6fZEIrOaJkChYWYJDxgkJPPctzTwou8Kb5QntB5ecjp2ZlEjU52JYhFO3WnU5E9sCnn7qVvOExyXqSRWgpoVAFtXX4Zkd30R7gFH1JOZqwSF3Xsxt1yqHE1BLb/eSegnWWJa6g=
+	t=1710165261; cv=none; b=tPJTgJObL3pBNEOflA+JtND6CFY8nlznzusnUmbAQg6Zoe5l0cGyzILXUBgVj1QE0wbDX5DG0sJMeIZdJMWDPuu1wYg5ZBH01vGxJPyaCuA6Fg1m5g2oNV0dhnP741EsfQDAdeKDZl+zz6xdSDfY+Uhb12rDaPYEzJuL1kmTzxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710165256; c=relaxed/simple;
-	bh=teFg2HfjlhBa/0gCJJYb2mjJeW6F9dWs3JYVo56bMdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQWS2sftyQpcqfeDYHWMQx1DZ71osTRRzGDqZeACfEFzpQRGX21yWtakT2SHahVKYsNWqtJxktcOckZkMbT0rhc2eGp+Nyt8PqL9lMrdNWehhCPk4pp7yjoAXa74aa0BugAYJ88PYL0tSKaRZM1MdG9N4PKAUNEV2CuOQPPg+dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4vIxYE71; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710165261; c=relaxed/simple;
+	bh=RD6s2NfuqJBUw+NQzViVKLI2kjqtbfHgFrQbviPmH1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bdhfNOxhz5G5kieDRP596iEKsOTcUbaFQDzzgNIACps56j0V4zL61oEsMtti9cqKLuyA/MxZ7soKh1Pqf2ThlFIs3k99PfAaV5yUjQgZWLHRqiRncmUayOq/0PPSdY85EN4/IpV9xsVxOe3OwBf84Mb9lWI7k4Gob57KD3kAm4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NYeXj3QF; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4vIxYE71"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710165253;
-	bh=teFg2HfjlhBa/0gCJJYb2mjJeW6F9dWs3JYVo56bMdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=4vIxYE71aIbuFjJXlBEpf8zMCx63GovGRmWPLlpJ+Qkbxq1qfEIBmPpppIEZ/uu0s
-	 Ro3LgG8cHIZKx5mZ3RXZN13qHECNIMbdrZq66uCbMD8oFJ8AgIdT3G4STcUfiV1nKz
-	 uaZfVoxoYLHGLfN3IkT2Uh0uE3stt8jMtvEVJR98+U9/7nxD06fNyYVl0H9GgAD151
-	 5IyApVlO597zycgi19NsoIlfBZTkaVBI8vQ9Ghxj1ywGk4kiOmxWp7yIlZWJ6Zj9Z2
-	 9wUeDCCRxCYxPHwUQn+2UH9YMfZe3DHsHQ4lVceaT0C8CSuVzekxK44ZvrdK7xJGlx
-	 3Rq+lZn7gSTjw==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 16E453780894;
-	Mon, 11 Mar 2024 13:54:11 +0000 (UTC)
-Date: Mon, 11 Mar 2024 09:54:09 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Chen-Yu Tsai <wenst@chromium.org>, regressions@lists.linux.dev,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: Probe regression of efuse@11f10000 on
- mt8183-kukui-jacuzzi-juniper-sku16 running next-20240202
-Message-ID: <82c0c04c-ccea-4839-80dc-16bcf6794bf3@notapiano>
-References: <47cdeac1-121d-4b1a-a3ac-e2affc7a2fc3@notapiano>
- <c4416256-eedc-4c9b-b968-3a02490c4c09@notapiano>
- <b888cbe2-6071-4445-91cd-8ce7cc9cc8f4@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NYeXj3QF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710165259; x=1741701259;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RD6s2NfuqJBUw+NQzViVKLI2kjqtbfHgFrQbviPmH1g=;
+  b=NYeXj3QFNsANjf45r1TMYTYMHYTcCgwKGAvtjoqnFRrrQoecpfsOxO/X
+   m59B0Gc5Dj5o+JyelrDA7IMcL3xosqAaEg1+CmSnGhaInAMMuH8gGi9IX
+   mW7yjDJyT/8yz0Cn2MqTGS9rn8C/ugLYT4aIHjC6ADA4EdYTkcMUr711z
+   6q8bjlI34l5xMxSFGMFfMV5IpF/JLwi7q5t0tp4kz3LVCnATujfz2Zave
+   /RaH82s+p7zIMUypyYvQO+hfn1Metixl0r44TM/7M0bFeNsfKyrMYWjFQ
+   gLy/CjxJKT6eRBEf2M5joEKxvMvdqgx6B3kPAWScqHKTzi5Q+wU3vuSO4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15388895"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="15388895"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 06:54:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="15814568"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 06:54:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 10/13] selftests/resctrl: Make some strings passed to resctrlfs functions const
+Date: Mon, 11 Mar 2024 15:52:27 +0200
+Message-Id: <20240311135230.7007-11-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240311135230.7007-1-ilpo.jarvinen@linux.intel.com>
+References: <20240311135230.7007-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b888cbe2-6071-4445-91cd-8ce7cc9cc8f4@leemhuis.info>
 
-On Sat, Mar 09, 2024 at 03:06:38PM +0100, Thorsten Leemhuis wrote:
-> On 08.03.24 15:31, Nícolas F. R. A. Prado wrote:
-> > On Tue, Feb 06, 2024 at 11:11:00AM -0500, Nícolas F. R. A. Prado wrote:
-> >>
-> >> KernelCI has identified a regression [1] on the
-> >> mt8183-kukui-jacuzzi-juniper-sku16 machine running on next-20240202 compared to
-> >> next-20240118:
-> >>
-> >> #regzbot introduced next-20240118..next-20240202
-> > 
-> > Not sure why this got filed by regzbot under the mainline tab rather than next.
-> > Maybe it was the missing collon? 
-> 
-> No, I guess that is a bug in regzbot: the support for -next is there,
-> but not much tested. Will need to take a closer look, will do so in the
-> next few days.
+Control group, monitor group and resctrl_val are not mutated and
+should not be mutated within resctrlfs.c functions.
 
-Ah ok, that's good to know.
+Mark this by using const char * for the arguments.
 
-> 
-> > In any case, the fix has already made it to linux-next, so this should close the
-> > regression:
-> >
-> > #regzbot fix: nvmem: mtk-efuse: Drop NVMEM device name
-> 
-> Out of interest: Is involving regzbot worth it in case the fix is
-> already in -next? Or is that primarily to keep track of "we found a
-> regression and a fix was already available in next". I don't mind if
-> it's the latter, just curious.
+Signed-off-by: Ilpo JÃ¤rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ tools/testing/selftests/resctrl/resctrl.h   | 7 ++++---
+ tools/testing/selftests/resctrl/resctrlfs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-When the fix has already landed in next, no, I guess it wouldn't make sense to
-involve regzbot, as that would be like creating a regression ticket that is
-closed from the start. (And basically it would mean we're testing an outdated
-kernel release, which is not very helpful)
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 0931c5c09c4f..52769b075233 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -139,9 +139,10 @@ bool test_resource_feature_check(const struct resctrl_test *test);
+ char *fgrep(FILE *inf, const char *str);
+ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+ int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource);
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val);
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource);
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val);
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+ 		    int group_fd, unsigned long flags);
+ unsigned char *alloc_buffer(size_t buf_size, int memflush);
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 5f113b813253..79cf1c593106 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -534,8 +534,8 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val)
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val)
+ {
+ 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
+ 	char tasks[1024];
+@@ -593,7 +593,8 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource)
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource)
+ {
+ 	char controlgroup[1024], reason[128], schema[1024] = {};
+ 	int domain_id, fd, schema_len, ret = 0;
+-- 
+2.39.2
 
-In this case when I sent the regression report the regression was still there on
-the latest next. The fix had been sent, but not yet merged into next. In that
-case it's very much helpful to involve regzbot so we can track the fix and make
-sure it gets applied. Also, as was for this case, and probably many others, the
-fix patch didn't have that much information on the symptoms and circumstances of
-the issue, while the regression report I sent did, so the regression report
-should be easier to find for people encountering the regression, and then they
-can easily see the status of the regression through regzbot.
-
-Thanks,
-Nícolas
