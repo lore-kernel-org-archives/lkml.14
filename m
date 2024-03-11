@@ -1,87 +1,163 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EBC56B62;
-	Mon, 11 Mar 2024 19:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE9D548E8;
+	Mon, 11 Mar 2024 19:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710184460; cv=none; b=fq5szcaIYCkOxdbiAtM6AbVGnh77JJAW/AI0bVHLgOj7++AY59lEkpJFzDzIhJMyCe2osJXTuJZGy1x7Kw5Q9v+2GTml5zw6ppZxtvqEzTyBN2KO60SEz7r/jWCf3dj2kqd85Nlj9CkC3LTVyT3ohzPdsK9hocaD28X2ur+Qc6Y=
+	t=1710184599; cv=none; b=jUtklG5/AoW5bp7cepa7zCQ5Tp76PSoQE98WEPdu0ZW4XBf9Vf4ByNIS0XC5F+8Mh1qs1rqzmYrjWu95+3xKM+kuNJ5lwIETCn2zZzzq8afKJgElekMTT1NV7L3p5FBdefX/QJSmUXPlvHUupKbdnyOg0EiiTF/XzknGeBJFoI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710184460; c=relaxed/simple;
-	bh=JuZL7oM7lKhmmzj290jDyn9KcxNQoNasVDvwUuItmEo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pzeONZvU/OSPaDCJvA6MXEeaiKK1LChNWx0oGlaaA5DObnZRohw/r5fUhpzaJ4WaYL2PoHhgDZipIMrsptneKCAonx73Kgv211stOt6C4BjclYG53Y1nos3dQ5tdKbKFRMTBZZtDYVdkFvn97+BpR5lY4VYceq3LLBuvt/vf4EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=g0t3iAwX; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	s=arc-20240116; t=1710184599; c=relaxed/simple;
+	bh=kHNcU/A8IStZaoPe8vAtp85g+y8rB2nN2+64t8in89A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Gy61XF3CSuQepVvbWvZEfjVeo+da569nyEb5EViZQGJ4ldZLrwk1DSLsugX7AsMKwkpyivhLXZ0pCxKNftQ1MEDREqwg7yVhn3+xQPkQmO7+ewf+sbRveiqp7nSu6+eB66Xz+iorMeblXLgwYuHRRFBo4zTKcvo7zBg7G0WbEEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5vFsQrT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="g0t3iAwX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=FGf/tNhnC4YEzI6MSBG52sbqC4xqonb3q4yeuMw8Xfk=; b=g0t3iAwXXc+OmGjPUCKpaYYxEY
-	4e1HCDEJMWgdxdzxOzZscPKhQp6IelAcdS5lyKRoNlSGeNe7jNhCjBUrOq1epQ52eqUd4PdxP3jlv
-	0O3BSrwPC7rO9cdIrDh15mVdJOxXnJFotqy1g0XHugt5Z4VMAqYwOZk6ZKbXr72mlSTJ+TxhvTcWj
-	rXIIfVlpiXyBXyKp1BrzMhddv8jQdMi83CIZ4A6FHIMIwaNZuIH0cShfzQLoVfpP+fSmVpUgAEANf
-	EFjNG4jsJvWOP8zIkvc063waQdkX4PVR0olGY3pypVzFX7MIBJsQNJxWLz4mneduNbb6qYdjtBiqx
-	xnlhk1+w==;
-Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1rjkqo-003cD8-2X;
-	Mon, 11 Mar 2024 13:58:18 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- wine-devel@winehq.org,
- =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
- Wolfram Sang <wsa@kernel.org>, Arkadiusz Hiler <ahiler@codeweavers.com>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 04/31] ntsync: Introduce NTSYNC_IOC_WAIT_ANY.
-Date: Mon, 11 Mar 2024 13:58:18 -0500
-Message-ID: <4875514.GXAFRqVoOG@camazotz>
-In-Reply-To: <20240219223833.95710-5-zfigura@codeweavers.com>
-References:
- <20240219223833.95710-1-zfigura@codeweavers.com>
- <20240219223833.95710-5-zfigura@codeweavers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5vFsQrT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113D7C433F1;
+	Mon, 11 Mar 2024 19:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710184598;
+	bh=kHNcU/A8IStZaoPe8vAtp85g+y8rB2nN2+64t8in89A=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=l5vFsQrTqjh4SfjpBId+PeI4ofS5IFdGN1d/VsuWjkXswLxM/Qzbris9WuT9u3NA8
+	 T0TUHWDIyYKjL8Ck97AT20dCFLj6QLK5pjdt0ImoxEi1iCWxP34zpLrSrWSOedjapr
+	 4ZPNQJHJfbvX6cJP0ydLWwKelcu38pWoiVgodlWZvmQ/RruSrCmm0syda/qxH0ng8P
+	 MXOG9g9ZRXikle6izCj/0sUNBedg7Wp+Qh+Wd/oTn+wI/xWKTNxZK7umV6Y/Uj293J
+	 d+Zn37LQp5yTAYTwgV5WMGENAnN+OYc2TP/Hboidu09nwI7YLzfkEXthL2AlZoSoKy
+	 sG3pa612/QKmg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 11 Mar 2024 21:16:31 +0200
+Message-Id: <CZR5UBHJL9RC.1NA7Q0F10XSJF@kernel.org>
+Cc: <dhowells@redhat.com>, <dwmw2@infradead.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <ardb@kernel.org>,
+ <paul@paul-moore.com>, <jmorris@namei.org>, <serge@hallyn.com>,
+ <zohar@linux.ibm.com>, <roberto.sassu@huawei.com>,
+ <dmitry.kasatkin@gmail.com>, <mic@digikod.net>, <casey@schaufler-ca.com>,
+ <stefanb@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <linux-efi@vger.kernel.org>, <linux-integrity@vger.kernel.org>
+Subject: Re: [PATCH RFC 1/8] certs: Introduce ability to link to a system
+ key
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Eric Snowberg" <eric.snowberg@oracle.com>,
+ <linux-security-module@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240311161111.3268190-1-eric.snowberg@oracle.com>
+ <20240311161111.3268190-2-eric.snowberg@oracle.com>
+In-Reply-To: <20240311161111.3268190-2-eric.snowberg@oracle.com>
 
-On Monday, 19 February 2024 16:38:06 CDT Elizabeth Figura wrote:
-> +static struct ntsync_obj *get_obj(struct ntsync_device *dev, int fd)
+On Mon Mar 11, 2024 at 6:11 PM EET, Eric Snowberg wrote:
+> Introduce a new function to allow a keyring to link to a key contained
+> within one of the system keyrings (builtin, secondary, or platform).
+> Depending on how the kernel is built, if the machine keyring is
+> available, it will be checked as well, since it is linked to the secondar=
+y
+> keyring. If the asymmetric key id matches a key within one of these
+> system keyrings, the matching key is linked into the passed in
+> keyring.
+>
+> Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+> ---
+>  certs/system_keyring.c        | 29 +++++++++++++++++++++++++++++
+>  include/keys/system_keyring.h |  7 ++++++-
+>  2 files changed, 35 insertions(+), 1 deletion(-)
+>
+> diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+> index 9de610bf1f4b..b647be49f6e0 100644
+> --- a/certs/system_keyring.c
+> +++ b/certs/system_keyring.c
+> @@ -426,3 +426,32 @@ void __init set_platform_trusted_keys(struct key *ke=
+yring)
+>  	platform_trusted_keys =3D keyring;
+>  }
+>  #endif
+> +
+> +/**
+> + * system_key_link - Link to a system key
+> + * @keyring: The keyring to link into
+> + * @id: The asymmetric key id to look for in the system keyring
+> + */
+> +int system_key_link(struct key *keyring, struct asymmetric_key_id *id)
 > +{
-> +	struct file *file = fget(fd);
-> +	struct ntsync_obj *obj;
-> +
-> +	if (file->f_op != &ntsync_obj_fops) {
-> +		fput(file);
-> +		return NULL;
-> +	}
+> +	struct key *tkey;
 
-I just noticed during self-review that this fails to check the result of 
-fget() for NULL :-/
-
-I'll fix this next revision.
+I'd suggest to replace this with just 'tkey'. Single obscure character
+does not bring any readability value.
 
 > +
-> +	obj = file->private_data;
-> +	if (obj->dev != dev) {
-> +		fput(file);
-> +		return NULL;
-> +	}
+> +#ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
+> +	tkey =3D find_asymmetric_key(secondary_trusted_keys, id, NULL, NULL, fa=
+lse);
+> +#else
+> +	tkey =3D find_asymmetric_key(builtin_trusted_keys, id, NULL, NULL, fals=
+e);
+> +#endif
+
+I'd have just single call site here and inside ifdef-shenanigans i'd
+just set helper "keyring" to point to the appropriate keyring.
+
+> +	if (!IS_ERR(tkey))
+> +		goto found;
 > +
-> +	return obj;
+> +	tkey =3D find_asymmetric_key(platform_trusted_keys, id, NULL, NULL, fal=
+se);
+> +
+
+Please remove this empty line as the check below is associated with it.
+
+> +	if (!IS_ERR(tkey))
+> +		goto found;
+> +
+> +	return -1;
+> +
+> +found:
+> +	key_link(keyring, tkey);
+> +	return 0;
 > +}
+> diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.=
+h
+> index 8365adf842ef..b47ac8e2001a 100644
+> --- a/include/keys/system_keyring.h
+> +++ b/include/keys/system_keyring.h
+> @@ -9,6 +9,7 @@
+>  #define _KEYS_SYSTEM_KEYRING_H
+> =20
+>  #include <linux/key.h>
+> +struct asymmetric_key_id;
+> =20
+>  enum blacklist_hash_type {
+>  	/* TBSCertificate hash */
+> @@ -28,7 +29,7 @@ int restrict_link_by_digsig_builtin(struct key *dest_ke=
+yring,
+>  				    const union key_payload *payload,
+>  				    struct key *restriction_key);
+>  extern __init int load_module_cert(struct key *keyring);
+> -
+> +extern int system_key_link(struct key *keyring, struct asymmetric_key_id=
+ *id);
+>  #else
+>  #define restrict_link_by_builtin_trusted restrict_link_reject
+>  #define restrict_link_by_digsig_builtin restrict_link_reject
+> @@ -38,6 +39,10 @@ static inline __init int load_module_cert(struct key *=
+keyring)
+>  	return 0;
+>  }
+> =20
+> +static inline int system_key_link(struct key *keyring, struct asymmetric=
+_key_id *id)
+> +{
+> +	return 0;
+> +}
+>  #endif
+> =20
+>  #ifdef CONFIG_SECONDARY_TRUSTED_KEYRING
 
-
-
+BR, Jarkko
