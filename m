@@ -1,160 +1,333 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC57A2C698
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 08:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514F0381AA
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 08:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710147532; cv=none; b=fscVPxSdPIvXXKpbANnRUcFQamgFhD/T40gY3UnN8AZQ25umTwlRJMxLiLP5JRGd8wbMLi4oVutmqgzEvccmAslhPnzXEEsNKbhE/ZeI27R0f0CYecxYSlYgrQnYTLvzMPeOiuq85NzYyygO1T/DRy/rDlYKdVq86Pq83OhOwOs=
+	t=1710147546; cv=none; b=hcqU+4RQ+pA9eZd8ku1apO2F1wHk+v5C34IiaQJKobka2DA4MHWPEQl2Tv2x5FnES70cVQ09DoOMCC2C/Pl5gl6VDBdDF0tHf1ZaLtpdt/ml0wbZz3PXHusWJWI0WgtVqMeqsXRSv4DijT98ExcdtJ5+udWBL9nBClo9ZtJQySU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710147532; c=relaxed/simple;
-	bh=uIYem1WXZzLeY24d0KPKig4Iq9ugwXSAUFZYuajJkic=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MS4S4Ez7DVWNmGvg7/FxqzyGr3vXPrga77niMwqHDuXzgSVbHuTadgp5MfkDIpOk0Tl7/WJ4+mtiFYKKtY1iXEI+Cnl3XGEoXxlhLb0Qg4qmQIqpe+82L/yZ7JG9HqJISJRZ200RdAfzpxaRi9luWiyAGgwIWp02nj/QSdWLH78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H5W5gdBz; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710147546; c=relaxed/simple;
+	bh=+Q+fZIf/3tpaLdCAvKpIPWxPOj8fd2CONGt5XGoTfV4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z1OVf6FY8sR5f6oadwPQ9mvidkUHtXHe6oAznfsXYmGUT/0bYnD7eFKO/s6NqYnNBwOAIFrZj47be7VaoLQ+9lfLgj9OuEGS9Dp9sB+WhzDJl0DJqlcOc0C+tlacQ8+e0w9JyvkfLOqf0XXaL/A1mR0eBQi+mxpdJRkAAmFm274=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KmGulzZO; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H5W5gdBz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710147529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4b98mQ6/x2oKxbObSJohHOWilmFrNjMixYwuxRZhnBI=;
-	b=H5W5gdBzclG7JRWEXS3Qd7t87sa1RvPbJpMA4lC5CaIbf4KeVaTIEaqi1lI+z7RUwzM4CH
-	sZkJ/4Z6PWcCGgsMCrE/ePEGWLRyzO1LOMXRDVRPLU5Kog9VZyNK0pNFXY9RkE20n5myrJ
-	haXbdXiLI0HtZ9DTuSWbQKAUrxQjkaA=
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Phong LE <ple@baylibre.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [PATCH v3 5/5] drm-bridge: sii902x: Use fwnode API to acquire device properties
-Date: Mon, 11 Mar 2024 16:56:59 +0800
-Message-Id: <20240311085659.244043-6-sui.jingfeng@linux.dev>
-In-Reply-To: <20240311085659.244043-1-sui.jingfeng@linux.dev>
-References: <20240311085659.244043-1-sui.jingfeng@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KmGulzZO"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513a06ef9b6so1858926e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 01:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710147542; x=1710752342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6quCqTERuQXSWVpIHU/UfMAkW79KK4YYk+htmPUgKvQ=;
+        b=KmGulzZOwxWrjjRZ5kfLWHTOBc/0i8syTchxXuTGJVyWpw2zuWCTrjvzAIho2BgZvN
+         0pnUrxcMdG4cdScd+I2Mzkpnkozvau6lr6aUFuf+Pl0HUtZXFu6uN6AReTxwVqwjmQgF
+         J0ly0XiPyz6xlnBu4ECIkHsFpexeKN34xPPUKf83Rv4ZWu7XMs6IXrGa4MR2m2UmnQh1
+         BFTAWjd5j15Uwsn/BPv/8IymCvUhyWGgGqSISiO4IxwgFsuO+cgRl9yEGtsQC9+8Dl7C
+         qn/CffrRVLZa123Vhaye5W1Im9QCAaUnQQLMfdjg6dJFxD62rGXISUPLsOHBzTpigocc
+         swnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710147542; x=1710752342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6quCqTERuQXSWVpIHU/UfMAkW79KK4YYk+htmPUgKvQ=;
+        b=Lk9ZyhsqGvdj868cBb8VLW6A248JXnf9L9HYQNt7wByc/H9IrmdZ0h7IkjBRJXJ2vG
+         7A4XorgjC4dDmFY2j0vzp6E8Tw9VdLSWrNEdmt6Oa3XddU/Wk41dgXnyObdIgbjHlgja
+         qCRuHrxA27oqfV0c54sSVVdi7CUozBAMDrjGexBBPbYs3MM57eOTeqLxm2+x01hdCHyU
+         bFR3al9vz4HAPB0GonvYLB0GZS0iqv3Sy3589pJfHFKuD5zTFTNIZkN+ukVpiDzfFVgb
+         vqKauI/viRrxhY4LY+cN7yPAv+6xVq2OTl70jgnmJKZfXy3aqmLdFTRlNvQ09iYTHb4/
+         d9Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCXM1/JXxu/jZvw43ZyJQJB3zkkQ/1OBYiDLV6ke5KCKz/mwEciVMCSvuzW/A2mk6+CU+Sdk/0dK5BigCxbhbzAMEBKc0bJQRQXfi/T1
+X-Gm-Message-State: AOJu0YyYnqAN87qY5l23C+nDiPmxLLVB4WY15Fwh+kl7EhlhGDA6DMQ2
+	wBOLXU8Y3yez1E0UetA+3QJcbaeO3WbEUgBtiJPco2SpC628/D2erw7ztfxLazO4SMFMRYmWkEh
+	57mGSIl9qNpqhx1TjWC31ccw03SdafYb8tlpQ/w==
+X-Google-Smtp-Source: AGHT+IFlkp3e4CtgfZVZ28SL5BFEktrP86Rzjen4+ZM9NYBNVmupVzUpaE4EocAABRs/fT2Qa39ZpMmx84njJT6mxAg=
+X-Received: by 2002:ac2:5e91:0:b0:513:9f3e:7a69 with SMTP id
+ b17-20020ac25e91000000b005139f3e7a69mr3350212lfq.21.1710147542312; Mon, 11
+ Mar 2024 01:59:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240308152723.831620-1-dtatulea@nvidia.com> <CAC_iWjJyDUbK+2+u=Uqeo7r7-Hy5aZQ=12eTEKaBnm8qYnR_8Q@mail.gmail.com>
+ <23514ae26df83dbc700474d74466734680657cd2.camel@nvidia.com>
+In-Reply-To: <23514ae26df83dbc700474d74466734680657cd2.camel@nvidia.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Mon, 11 Mar 2024 10:58:26 +0200
+Message-ID: <CAC_iWjKtQ7O+CQOmjtm55Qhs1GN8mYu1o=etvhtMRLC6Re46ew@mail.gmail.com>
+Subject: Re: [PATCH net v3] net: esp: fix bad handling of pages from page_pool
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edumazet@google.com" <edumazet@google.com>, 
+	"pabeni@redhat.com" <pabeni@redhat.com>, Leon Romanovsky <leonro@nvidia.com>, 
+	"Anatoli.Chechelnickiy@m.interpipe.biz" <Anatoli.Chechelnickiy@m.interpipe.biz>, 
+	"brouer@redhat.com" <brouer@redhat.com>, "almasrymina@google.com" <almasrymina@google.com>, 
+	"kuba@kernel.org" <kuba@kernel.org>, "dsahern@kernel.org" <dsahern@kernel.org>, 
+	"mcroce@microsoft.com" <mcroce@microsoft.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"steffen.klassert@secunet.com" <steffen.klassert@secunet.com>, Gal Pressman <gal@nvidia.com>, 
+	"ian.kumlien@gmail.com" <ian.kumlien@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make this driver less DT-dependent by calling the freshly created helpers
-and other manually improve. Should be no functional changes for DT based
-systems, but do helps to reduce boilerplate.
+Hi Dragos
 
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
----
- drivers/gpu/drm/bridge/sii902x.c | 43 +++++++++++---------------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
+On Mon, 11 Mar 2024 at 10:51, Dragos Tatulea <dtatulea@nvidia.com> wrote:
+>
+> Hi Ilias,
+>
+> On Mon, 2024-03-11 at 10:43 +0200, Ilias Apalodimas wrote:
+> > Hi Dragos,
+> >
+> > On Fri, 8 Mar 2024 at 17:27, Dragos Tatulea <dtatulea@nvidia.com> wrote=
+:
+> > >
+> > > When the skb is reorganized during esp_output (!esp->inline), the pag=
+es
+> > > coming from the original skb fragments are supposed to be released ba=
+ck
+> > > to the system through put_page.
+> > >  But if the skb fragment pages are
+> > > originating from a page_pool, calling put_page on them will trigger a
+> > > page_pool leak which will eventually result in a crash.
+> > >
+> >
+> > Indeed if you call put_page, you will leak a page. But won't that skb
+> > eventually be freed by skb_free_head()?
+> >
+> I don't think it will: if you look at esp_output_tail (!esp->inplace case=
+), the
+> skb frags are put on the sg list and then the skb is cut off to have a si=
+ngle
+> frag (with a "regular" page from x->xfrag). So if the pages from the old
+> fragments are not freed here they will leak altogether.
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 8f84e98249c7..04436f318c7f 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -827,20 +827,19 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
- 		.spdif = 0,
- 		.max_i2s_channels = 0,
- 	};
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
- 	u8 lanes[4];
- 	int num_lanes, i;
- 
--	if (!of_property_read_bool(dev->of_node, "#sound-dai-cells")) {
-+	if (!fwnode_property_present(fwnode, "#sound-dai-cells")) {
- 		dev_dbg(dev, "%s: No \"#sound-dai-cells\", no audio\n",
- 			__func__);
- 		return 0;
- 	}
- 
--	num_lanes = of_property_read_variable_u8_array(dev->of_node,
--						       "sil,i2s-data-lanes",
--						       lanes, 1,
--						       ARRAY_SIZE(lanes));
--
-+	num_lanes = fwnode_property_read_u8_array(fwnode,
-+						  "sil,i2s-data-lanes",
-+						  lanes, ARRAY_SIZE(lanes));
- 	if (num_lanes == -EINVAL) {
- 		dev_dbg(dev,
- 			"%s: No \"sil,i2s-data-lanes\", use default <0>\n",
-@@ -1097,13 +1096,13 @@ static int sii902x_init(struct sii902x *sii902x)
- 		goto err_unreg_audio;
- 
- 	sii902x->bridge.funcs = &sii902x_bridge_funcs;
--	sii902x->bridge.of_node = dev->of_node;
- 	sii902x->bridge.timings = &default_sii902x_timings;
- 	sii902x->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID;
- 
- 	if (sii902x->i2c->irq > 0)
- 		sii902x->bridge.ops |= DRM_BRIDGE_OP_HPD;
- 
-+	drm_bridge_set_node(&sii902x->bridge, dev_fwnode(dev));
- 	drm_bridge_add(&sii902x->bridge);
- 
- 	return 0;
-@@ -1118,7 +1117,6 @@ static int sii902x_init(struct sii902x *sii902x)
- static int sii902x_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
--	struct device_node *endpoint;
- 	struct sii902x *sii902x;
- 	static const char * const supplies[] = {"iovcc", "cvcc12"};
- 	int ret;
-@@ -1147,27 +1145,14 @@ static int sii902x_probe(struct i2c_client *client)
- 		return PTR_ERR(sii902x->reset_gpio);
- 	}
- 
--	endpoint = of_graph_get_endpoint_by_regs(dev->of_node, 1, -1);
--	if (endpoint) {
--		struct device_node *remote = of_graph_get_remote_port_parent(endpoint);
--
--		of_node_put(endpoint);
--		if (!remote) {
--			dev_err(dev, "Endpoint in port@1 unconnected\n");
--			return -ENODEV;
--		}
--
--		if (!of_device_is_available(remote)) {
--			dev_err(dev, "port@1 remote device is disabled\n");
--			of_node_put(remote);
--			return -ENODEV;
--		}
--
--		sii902x->next_bridge = of_drm_find_bridge(remote);
--		of_node_put(remote);
--		if (!sii902x->next_bridge)
--			return dev_err_probe(dev, -EPROBE_DEFER,
--					     "Failed to find remote bridge\n");
-+	sii902x->next_bridge = drm_bridge_find_next_bridge_by_fwnode(dev_fwnode(dev), 1);
-+	if (!sii902x->next_bridge) {
-+		return dev_err_probe(dev, -EPROBE_DEFER,
-+				     "Failed to find the next bridge\n");
-+	} else if (IS_ERR(sii902x->next_bridge)) {
-+		ret = PTR_ERR(sii902x->next_bridge);
-+		dev_err(dev, "Error on find the next bridge: %d\n", ret);
-+		return ret;
- 	}
- 
- 	mutex_init(&sii902x->mutex);
--- 
-2.34.1
+Ok, if they won't reach that function -- which calls napi_pp_put_page
+itself, then this looks sane
 
+Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+
+>
+> Thanks,
+> Dragos
+>
+> > Thanks
+> > /Ilias
+> >
+> > > This leak can be easily observed when using CONFIG_DEBUG_VM and doing
+> > > ipsec + gre (non offloaded) forwarding:
+> > >
+> > >   BUG: Bad page state in process ksoftirqd/16  pfn:1451b6
+> > >   page:00000000de2b8d32 refcount:0 mapcount:0 mapping:000000000000000=
+0 index:0x1451b6000 pfn:0x1451b6
+> > >   flags: 0x200000000000000(node=3D0|zone=3D2)
+> > >   page_type: 0xffffffff()
+> > >   raw: 0200000000000000 dead000000000040 ffff88810d23c000 00000000000=
+00000
+> > >   raw: 00000001451b6000 0000000000000001 00000000ffffffff 00000000000=
+00000
+> > >   page dumped because: page_pool leak
+> > >   Modules linked in: ip_gre gre mlx5_ib mlx5_core xt_conntrack xt_MAS=
+QUERADE nf_conntrack_netlink nfnetlink iptable_nat nf_nat xt_addrtype br_ne=
+tfilter rpcrdma rdma_ucm ib_iser libiscsi scsi_transport_iscsi ib_umad rdma=
+_cm ib_ipoib iw_cm ib_cm ib_uverbs ib_core overlay zram zsmalloc fuse [last=
+ unloaded: mlx5_core]
+> > >   CPU: 16 PID: 96 Comm: ksoftirqd/16 Not tainted 6.8.0-rc4+ #22
+> > >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0=
+-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> > >   Call Trace:
+> > >    <TASK>
+> > >    dump_stack_lvl+0x36/0x50
+> > >    bad_page+0x70/0xf0
+> > >    free_unref_page_prepare+0x27a/0x460
+> > >    free_unref_page+0x38/0x120
+> > >    esp_ssg_unref.isra.0+0x15f/0x200
+> > >    esp_output_tail+0x66d/0x780
+> > >    esp_xmit+0x2c5/0x360
+> > >    validate_xmit_xfrm+0x313/0x370
+> > >    ? validate_xmit_skb+0x1d/0x330
+> > >    validate_xmit_skb_list+0x4c/0x70
+> > >    sch_direct_xmit+0x23e/0x350
+> > >    __dev_queue_xmit+0x337/0xba0
+> > >    ? nf_hook_slow+0x3f/0xd0
+> > >    ip_finish_output2+0x25e/0x580
+> > >    iptunnel_xmit+0x19b/0x240
+> > >    ip_tunnel_xmit+0x5fb/0xb60
+> > >    ipgre_xmit+0x14d/0x280 [ip_gre]
+> > >    dev_hard_start_xmit+0xc3/0x1c0
+> > >    __dev_queue_xmit+0x208/0xba0
+> > >    ? nf_hook_slow+0x3f/0xd0
+> > >    ip_finish_output2+0x1ca/0x580
+> > >    ip_sublist_rcv_finish+0x32/0x40
+> > >    ip_sublist_rcv+0x1b2/0x1f0
+> > >    ? ip_rcv_finish_core.constprop.0+0x460/0x460
+> > >    ip_list_rcv+0x103/0x130
+> > >    __netif_receive_skb_list_core+0x181/0x1e0
+> > >    netif_receive_skb_list_internal+0x1b3/0x2c0
+> > >    napi_gro_receive+0xc8/0x200
+> > >    gro_cell_poll+0x52/0x90
+> > >    __napi_poll+0x25/0x1a0
+> > >    net_rx_action+0x28e/0x300
+> > >    __do_softirq+0xc3/0x276
+> > >    ? sort_range+0x20/0x20
+> > >    run_ksoftirqd+0x1e/0x30
+> > >    smpboot_thread_fn+0xa6/0x130
+> > >    kthread+0xcd/0x100
+> > >    ? kthread_complete_and_exit+0x20/0x20
+> > >    ret_from_fork+0x31/0x50
+> > >    ? kthread_complete_and_exit+0x20/0x20
+> > >    ret_from_fork_asm+0x11/0x20
+> > >    </TASK>
+> > >
+> > > The suggested fix is to introduce a new wrapper (skb_page_unref) that
+> > > covers page refcounting for page_pool pages as well.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 6a5bcd84e886 ("page_pool: Allow drivers to hint on SKB recycli=
+ng")
+> > > Reported-and-tested-by: Anatoli N.Chechelnickiy <Anatoli.Chechelnicki=
+y@m.interpipe.biz>
+> > > Reported-by: Ian Kumlien <ian.kumlien@gmail.com>
+> > > Link: https://lore.kernel.org/netdev/CAA85sZvvHtrpTQRqdaOx6gd55zPAVsq=
+MYk_Lwh4Md5knTq7AyA@mail.gmail.com
+> > > Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
+> > > Reviewed-by: Mina Almasry <almasrymina@google.com>
+> > > Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+> > > ---
+> > > Changes in v2:
+> > > - Fixes in tags.
+> > >
+> > > Changes in v3:
+> > > - Rebased to ipsec tree.
+> > > ---
+> > >  include/linux/skbuff.h | 10 ++++++++++
+> > >  net/ipv4/esp4.c        |  8 ++++----
+> > >  net/ipv6/esp6.c        |  8 ++++----
+> > >  3 files changed, 18 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> > > index 2dde34c29203..d9a1ccfb5708 100644
+> > > --- a/include/linux/skbuff.h
+> > > +++ b/include/linux/skbuff.h
+> > > @@ -3448,6 +3448,16 @@ static inline void skb_frag_ref(struct sk_buff=
+ *skb, int f)
+> > >
+> > >  bool napi_pp_put_page(struct page *page, bool napi_safe);
+> > >
+> > > +static inline void
+> > > +skb_page_unref(const struct sk_buff *skb, struct page *page, bool na=
+pi_safe)
+> > > +{
+> > > +#ifdef CONFIG_PAGE_POOL
+> > > +       if (skb->pp_recycle && napi_pp_put_page(page, napi_safe))
+> > > +               return;
+> > > +#endif
+> > > +       put_page(page);
+> > > +}
+> > > +
+> > >  static inline void
+> > >  napi_frag_unref(skb_frag_t *frag, bool recycle, bool napi_safe)
+> > >  {
+> > > diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
+> > > index 4dd9e5040672..d33d12421814 100644
+> > > --- a/net/ipv4/esp4.c
+> > > +++ b/net/ipv4/esp4.c
+> > > @@ -95,7 +95,7 @@ static inline struct scatterlist *esp_req_sg(struct=
+ crypto_aead *aead,
+> > >                              __alignof__(struct scatterlist));
+> > >  }
+> > >
+> > > -static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
+> > > +static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk=
+_buff *skb)
+> > >  {
+> > >         struct crypto_aead *aead =3D x->data;
+> > >         int extralen =3D 0;
+> > > @@ -114,7 +114,7 @@ static void esp_ssg_unref(struct xfrm_state *x, v=
+oid *tmp)
+> > >          */
+> > >         if (req->src !=3D req->dst)
+> > >                 for (sg =3D sg_next(req->src); sg; sg =3D sg_next(sg)=
+)
+> > > -                       put_page(sg_page(sg));
+> > > +                       skb_page_unref(skb, sg_page(sg), false);
+> > >  }
+> > >
+> > >  #ifdef CONFIG_INET_ESPINTCP
+> > > @@ -260,7 +260,7 @@ static void esp_output_done(void *data, int err)
+> > >         }
+> > >
+> > >         tmp =3D ESP_SKB_CB(skb)->tmp;
+> > > -       esp_ssg_unref(x, tmp);
+> > > +       esp_ssg_unref(x, tmp, skb);
+> > >         kfree(tmp);
+> > >
+> > >         if (xo && (xo->flags & XFRM_DEV_RESUME)) {
+> > > @@ -639,7 +639,7 @@ int esp_output_tail(struct xfrm_state *x, struct =
+sk_buff *skb, struct esp_info *
+> > >         }
+> > >
+> > >         if (sg !=3D dsg)
+> > > -               esp_ssg_unref(x, tmp);
+> > > +               esp_ssg_unref(x, tmp, skb);
+> > >
+> > >         if (!err && x->encap && x->encap->encap_type =3D=3D TCP_ENCAP=
+_ESPINTCP)
+> > >                 err =3D esp_output_tail_tcp(x, skb);
+> > > diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
+> > > index 6e6efe026cdc..7371886d4f9f 100644
+> > > --- a/net/ipv6/esp6.c
+> > > +++ b/net/ipv6/esp6.c
+> > > @@ -112,7 +112,7 @@ static inline struct scatterlist *esp_req_sg(stru=
+ct crypto_aead *aead,
+> > >                              __alignof__(struct scatterlist));
+> > >  }
+> > >
+> > > -static void esp_ssg_unref(struct xfrm_state *x, void *tmp)
+> > > +static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk=
+_buff *skb)
+> > >  {
+> > >         struct crypto_aead *aead =3D x->data;
+> > >         int extralen =3D 0;
+> > > @@ -131,7 +131,7 @@ static void esp_ssg_unref(struct xfrm_state *x, v=
+oid *tmp)
+> > >          */
+> > >         if (req->src !=3D req->dst)
+> > >                 for (sg =3D sg_next(req->src); sg; sg =3D sg_next(sg)=
+)
+> > > -                       put_page(sg_page(sg));
+> > > +                       skb_page_unref(skb, sg_page(sg), false);
+> > >  }
+> > >
+> > >  #ifdef CONFIG_INET6_ESPINTCP
+> > > @@ -294,7 +294,7 @@ static void esp_output_done(void *data, int err)
+> > >         }
+> > >
+> > >         tmp =3D ESP_SKB_CB(skb)->tmp;
+> > > -       esp_ssg_unref(x, tmp);
+> > > +       esp_ssg_unref(x, tmp, skb);
+> > >         kfree(tmp);
+> > >
+> > >         esp_output_encap_csum(skb);
+> > > @@ -677,7 +677,7 @@ int esp6_output_tail(struct xfrm_state *x, struct=
+ sk_buff *skb, struct esp_info
+> > >         }
+> > >
+> > >         if (sg !=3D dsg)
+> > > -               esp_ssg_unref(x, tmp);
+> > > +               esp_ssg_unref(x, tmp, skb);
+> > >
+> > >         if (!err && x->encap && x->encap->encap_type =3D=3D TCP_ENCAP=
+_ESPINTCP)
+> > >                 err =3D esp_output_tail_tcp(x, skb);
+> > > --
+> > > 2.42.0
+> > >
+>
