@@ -1,178 +1,132 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CD91173F;
-	Mon, 11 Mar 2024 08:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4840210A12;
+	Mon, 11 Mar 2024 08:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710146578; cv=none; b=rZKzAuDpn/WJLnk3TaVE8FYG/eWhb8YNLw3/nJT65TDtQrmHyinmLSgy+6f1QXshYIWN78IG/XG4Cv33c5iBAelOUN6iQJmXpoAIwhk04eMSCaFeKTdgTbF/SvfvJMP+GkUMD1F9VRur9nHUWeNFK7yFFL3cnM/x7/PwR9OeEA4=
+	t=1710146637; cv=none; b=d8SVhVpSa0oDdv0sEdl/yB0z/p1fJVtNzrHoYOGQTb4nnQ5JqoQr5X1rWLIeOU29tIp5kK/lDeSl9aArpdKQciz8p1k/SAGAWdUvzUivCVmQXwwpiE4UrxNgpXuZuCeYU4Znjf1dhnlGIr64IFI72mpIpaLB0a2vm7egYr7naDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710146578; c=relaxed/simple;
-	bh=nFtFkNNeWFq1qGq8aKTKJOBUm95N5gYay+CiAaz/Bqg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=d4rlNAL/nVWbEdPiqW07sDfQ/ddXHaOyHMsAQ7i83UrFONHRJmBDzTQDP3mN5yfBkxkKtSBOsAuRVrWg8Jxcv0tDnFN1OC0+0gKH+z09VkBDJUcmOjLzVQtkcK4wRF9kvHDczV37rUItyv7Siw/LrAj4lM5FjiFl7eEXp7GXNGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WKNg6Bgb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710146637; c=relaxed/simple;
+	bh=DMSj5cmuBsoKykw6uGUbaLkFBI1jgIF1SZ9SEDJ21W8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cnh+/HH6RulqX3ER8f7uOE2X2vmopTlxbniBtJVKVhjQF3X3fEAmWOnu0D9xnezVNNBqoqSBAXn5jYT5NlDju8If/ZONzbfPtf5HjB8ni81MyH+3UTp64v6UueytxhTiy4egvhbdP+HlTMiRnOBKhyNWrd/p9wj2V9ybFQE1QLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UfsGcWzt; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WKNg6Bgb"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B4Yabx026682;
-	Mon, 11 Mar 2024 08:42:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:from:subject:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=rbBiPLaD7aT3pY+ebUIPfAuhH4QRqD2CZRFmflsXf9M=; b=WK
-	Ng6BgbP0xIueqP9GSkcMWYNp7L+m/wHtET7b9bXiO0yDS7mNCCOmQP52fCYzqwXg
-	PvF5CMTTmyVl0Wu3nd/U7efHMIsmewKVYHpT64uhGOLjxwtQE4TsYQ5cME6+qGHD
-	IUTVpXeoBvEIQRgQb0wHYNSUuKy7U6yzUwq2NzecS8mjonOw41nO1YItxspbCMDE
-	5wiFyW7l7z8L5IVTwBhvexoGyS7Lo9oZWC8dBIq6NjsoXk+2axp10JTYPU/5epNu
-	HFOPt3q4K0rsHc49vjYyxJMLkLP1f6Ba1/QZWYtS8M7zN9EjuYMA2ReSes8vJLv3
-	d5gmYGs5kUuTAm8qvHAg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wssgv8hd7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 08:42:21 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42B8gLgo012316
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 08:42:21 GMT
-Received: from [10.214.66.253] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 11 Mar
- 2024 01:42:14 -0700
-Message-ID: <2b0d8c5b-7e79-41ff-bc57-003d1b947c16@quicinc.com>
-Date: Mon, 11 Mar 2024 14:12:06 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfsGcWzt"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a461e09ddddso97639766b.2;
+        Mon, 11 Mar 2024 01:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710146634; x=1710751434; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dj5dpR54wcm5Sr4YbGN4BuKlmyJ25gDgOaHgZt2KJyQ=;
+        b=UfsGcWztyuzkBedEXNK8RhmqWdipZIu8w9RDiN5XBsT08QPBAaYAZJ4iXcYxBM3kER
+         kJRPduofgXzHepxs5yznfKkz5QSiWrD3AeSWh4vQpVo2xvsDihoFo0TNVCGhNgWP/wKQ
+         qEPNrkRC4JrcLenUOn9XRHMYrtjHUNU6kmO/le7b8W5E4Us2AAP/GwoYWX4m0ZDPM986
+         rRoWpPWtbnymBRXdOcxm9bk7TfHvRsHKgPoZO7GDtRuM0AUfngmvb/aWmLh+IRc4sgM6
+         ng+EpmzT7NitMr0GLUFumSxAUBXFMGBFk3Ghl4sbujtCauTSi5RNvNgvfigX1KuPhtm0
+         F/nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710146634; x=1710751434;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dj5dpR54wcm5Sr4YbGN4BuKlmyJ25gDgOaHgZt2KJyQ=;
+        b=TjSQkEWeEQjTj7h7C2Aoknv0fGNaIrRg6bODlWJh17NSOoD6OuchRaj5Sf1fl4UoiM
+         XzOaQzTwk1VZJt+epPCKUYUquovHNXTtwuoN1uBxAV/TCr5s5j6B0WHXv3E/ymlt/h8y
+         N9/Sb4H8XfF324S5q2eab35Vn0wdRADmY/Hvp9NrzPhOjqXj6NgcV+a97riYdDLhWF7m
+         Dc9lTPeDn82jsuXNoBrOoZ9lfgFMBKjULiHmPCsYhWlXlX3swwvuTGZJmO2XPBdlAL/b
+         Iq5mhD+opXfmWoz1pKdl0odMBuhMHd0rvpH5Cc4mVMhS4a95LZdPdpsGDa22YUXWAz+W
+         obdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxtHZtLviDJhQ/LAZjdH6IZyBx2s9liVIiF/Hp/+P7LZaoAFQpT9GcxLr/hDt7EZ9kNX6hXpLecW/FlgeX37bGeOlOI3M2ALJ8JRoRZUpzDfXAHDSpy9H13FXV+4Zgd6hf
+X-Gm-Message-State: AOJu0YzvVvWVoCooixsFK3CUdKlVKZLY1eg5T6MXCMAcFLR2U600LUBD
+	WgYi1bKd3jIPphIFRv/y067RAz4ZT+nfuL+0HIpuOXPmlZxehCP97iIBJW3h0WU=
+X-Google-Smtp-Source: AGHT+IGD0DwBnS5yBvanRv04hkOi2OU4yWio6L2mkhYQ8klNqN8cchsvZzI6ow2yjst+nfoYCZa0pw==
+X-Received: by 2002:a17:906:3b88:b0:a3f:9f38:ded with SMTP id u8-20020a1709063b8800b00a3f9f380dedmr3231779ejf.69.1710146634360;
+        Mon, 11 Mar 2024 01:43:54 -0700 (PDT)
+Received: from pc636 (host-87-9-234-71.retail.telecomitalia.it. [87.9.234.71])
+        by smtp.gmail.com with ESMTPSA id qx1-20020a170906fcc100b00a4597bbe213sm2638750ejb.164.2024.03.11.01.43.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 01:43:53 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 11 Mar 2024 09:43:51 +0100
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v6 0/6] Reduce synchronize_rcu() latency(v6)
+Message-ID: <Ze7ER232fPpvGssC@pc636>
+References: <20240308173409.335345-1-urezki@gmail.com>
+ <63e54cb9-fd08-43c3-9f42-3627198634e8@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-Subject: Re: [PATCH v9 4/5] iommu/arm-smmu: add ACTLR data and support for
- SM8550
-To: Will Deacon <will@kernel.org>
-CC: <robin.murphy@arm.com>, <joro@8bytes.org>, <dmitry.baryshkov@linaro.org>,
-        <konrad.dybcio@linaro.org>, <jsnitsel@redhat.com>,
-        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
-        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
-        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
-        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
-        <quic_molvera@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <saravanak@google.com>
-References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
- <20240123144543.9405-5-quic_bibekkum@quicinc.com>
- <20240213134714.GC28926@willie-the-truck>
- <201fef09-50ab-436b-af63-4535c7510d15@quicinc.com>
- <20240221132101.GB7273@willie-the-truck>
-Content-Language: en-US
-In-Reply-To: <20240221132101.GB7273@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: D7s9_4USJISRv-v30YVnG93YgSELK_Bw
-X-Proofpoint-ORIG-GUID: D7s9_4USJISRv-v30YVnG93YgSELK_Bw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_04,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- clxscore=1011 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
- impostorscore=0 mlxscore=0 spamscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403110064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63e54cb9-fd08-43c3-9f42-3627198634e8@paulmck-laptop>
 
-
-
-On 2/21/2024 6:51 PM, Will Deacon wrote:
-> On Wed, Feb 21, 2024 at 02:25:26PM +0530, Bibek Kumar Patro wrote:
->> On 2/13/2024 7:17 PM, Will Deacon wrote:
->>> On Tue, Jan 23, 2024 at 08:15:42PM +0530, Bibek Kumar Patro wrote:
->>>> Add ACTLR data table for SM8550 along with support for
->>>> same including SM8550 specific implementation operations.
->>>>
->>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
->>>> ---
->>>>    drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 90 ++++++++++++++++++++++
->>>>    1 file changed, 90 insertions(+)
->>>>
->>>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->>>> index 6004c6d9a7b2..db15b1eade97 100644
->>>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->>>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->>>> @@ -23,6 +23,86 @@
->>>>
->>>>    #define CPRE			(1 << 1)
->>>>    #define CMTLB			(1 << 0)
->>>> +#define PREFETCH_SHIFT		8
->>>> +#define PREFETCH_DEFAULT	0
->>>> +#define PREFETCH_SHALLOW	(1 << PREFETCH_SHIFT)
->>>> +#define PREFETCH_MODERATE	(2 << PREFETCH_SHIFT)
->>>> +#define PREFETCH_DEEP		(3 << PREFETCH_SHIFT)
->>>> +#define PREFETCH_SWITCH_GFX	(5 << 3)
->>>> +
->>>> +static const struct actlr_config sm8550_apps_actlr_cfg[] = {
->>>> +	{ 0x18a0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
->>>> +	{ 0x18e0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
->>>> +	{ 0x0800, 0x0020, PREFETCH_DEFAULT | CMTLB },
->>>> +	{ 0x1800, 0x00c0, PREFETCH_DEFAULT | CMTLB },
->>>> +	{ 0x1820, 0x0000, PREFETCH_DEFAULT | CMTLB },
->>>> +	{ 0x1860, 0x0000, PREFETCH_DEFAULT | CMTLB },
->>>> +	{ 0x0c01, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>> +	{ 0x0c02, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>> +	{ 0x0c03, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>> +	{ 0x0c04, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>> +	{ 0x0c05, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>> +	{ 0x0c06, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
->>>
->>> [...]
->>>
->>> Isn't this effectively hard-coding the topology of the SoC in the driver?
->>> Wouldn't it better describing higher-level prefetch properties in the DT
->>> nodes corresponding to the upstream devices?
->>
->> Since prefetch data stored in this table represent settings for the
->> ACTLR register, and doesn't exactly define the hardware (So in this
->> manner prefetch data won't exactly be a part of soc topology ?).
+On Fri, Mar 08, 2024 at 01:51:29PM -0800, Paul E. McKenney wrote:
+> On Fri, Mar 08, 2024 at 06:34:03PM +0100, Uladzislau Rezki (Sony) wrote:
+> > This is v6. It is based on the Paul's "dev" branch:
+> > 
+> > HEAD: f1bfe538c7970283040a7188a291aca9f18f0c42
+> > 
+> > please note, that patches should be applied from scratch,
+> > i.e. the v5 has to be dropped from the "dev".
+> > 
+> > v5 -> v6:
+> >  - Fix a race due to realising a wait-head from the gp-kthread;
+> >  - Use our own private workqueue with WQ_MEM_RECLAIM to have
+> >    at least one execution context.
+> > 
+> > v5: https://lore.kernel.org/lkml/20240220183115.74124-1-urezki@gmail.com/
+> > v4: https://lore.kernel.org/lkml/ZZ2bi5iPwXLgjB-f@google.com/T/
+> > v3: https://lore.kernel.org/lkml/cd45b0b5-f86b-43fb-a5f3-47d340cd4f9f@paulmck-laptop/T/
+> > v2: https://lore.kernel.org/all/20231030131254.488186-1-urezki@gmail.com/T/
+> > v1: https://lore.kernel.org/lkml/20231025140915.590390-1-urezki@gmail.com/T/
 > 
-> The first two columns of the table are StreamID/Mask pairs, no? How is that
-> _not_ the SoC topology? I really think it would be better to define some
-> high-level prefetch properties in the DT binding which can be put on the
-> master nodes.
+> Queued in place of your earlier series, thank you!
 > 
->> So it seemed apt not to use the device tree for storing the prefetch
->> property. Hence we reverted from the DT approach (initial proposal in
->> RFC to piggyback on iommus property to store prefetch settings) back to use
->> driver for storing this data.
->>
->> Some drivers use the same approach for storing their platform specific
->> data. Examples being
->> drivers/phy/qualcomm/phy-qcom-qmp-combo.c
->> drivers/soc/qcom/llcc-qcom.c
->> These drivers were taken as reference for storing platform specific ACTLR
->> data.
-> 
-> I don't know anything about those drivers, but on the SMMU side we already
-> have ways to describe the topology in the DT and the driver is using them,
-> so I'm struggling to see the need to add these tables as well.
-> 
-> But as I said before, if Robin and the DT folks prefer this approach,
-> then I won't get in the way.
-> 
+Thank you!
 
-With the driver approach at the current state of patches, it has been 
-ACKed by DT folks and it seems there has been no concern/objection from 
-Robin till now.
-So can this patch go ahead Will?
-Let us know Robin of your opinion as well please.
+>
+> Not urgent, but which rcutorture scenario should be pressed into service
+> testing this?
+> 
+I tested with setting '5*TREE01 5*TREE02 5*TREE03 5*TREE04' apart of that
+i used some private test cases. The rcutree.rcu_normal_wake_from_gp=1 has
+to be passed also.
 
-Thanks & regards,
-Bibek
+Also, "rcuscale" can be used to stress the "cur_ops->sync()" path:
 
-> Will
+<snip>
+#! /usr/bin/env bash
+
+LOOPS=1
+
+for (( i=0; i<$LOOPS; i++ )); do
+        tools/testing/selftests/rcutorture/bin/kvm.sh --memory 10G --torture rcuscale \
+    --allcpus \
+      --kconfig CONFIG_NR_CPUS=64 \
+      --kconfig CONFIG_RCU_NOCB_CPU=y \
+      --kconfig CONFIG_RCU_NOCB_CPU_DEFAULT_ALL=y \
+      --kconfig CONFIG_RCU_LAZY=n \
+      --bootargs "rcuscale.nwriters=200 rcuscale.nreaders=220 rcuscale.minruntime=50000 \
+                         torture.disable_onoff_at_boot rcutree.rcu_normal_wake_from_gp=1" --trust-make
+        echo "Done $i"
+done
+<snip>
+
+--
+Uladzislau Rezki
