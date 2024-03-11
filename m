@@ -1,223 +1,166 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D161401E;
-	Mon, 11 Mar 2024 09:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E337214271;
+	Mon, 11 Mar 2024 09:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710148305; cv=none; b=GJySmhTIoFc9zSbFQcGDb8AXbkIfDG3nXZ44EhkV9BqiPoxIefcABvu8a3phlVzbkrOmwJOxO9j9LeOtN6Oxhei6rbKdKbzrqsWIOazWCFEx6DpNDpWBYUy7ydbsJEXfUsCdGWNdy/CJR0ZdvhBo2HYgLjaqzUeVU7RG3C47dyk=
+	t=1710148357; cv=none; b=LqK2bGfPxqqJX+xmAFF2zhb1j/Q2CqwPAkiJlZbbJUtpZ9GClZEylLrzKGhjOauqV5MvzQadVPWgrWCN3MGqt4/4GPBk8hPZuJ78NOmI5Ney5buHw9mJLT5iaO2AxmZ1/tOcLq0OBM15YeRrKFZMKkL4PUEazQEAZMGSML7ydFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710148305; c=relaxed/simple;
-	bh=bQycjD3Nt7s486XLfov6DBezJbQVxS3qMWOSqeVVRFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AkKR2EK7VnOiCOrlhUdSZBO+ZuJo0TpeTtwegarzfocO1EC1Byd9UEKXVnGIGdBzs5mNAqgXkUXSbYX63NYXApbBx+MlFac4sC8NiF3S1RunT+ZeygE7bHC4jMSUn9BS0+hlgXny6suL2L6OeFc4ZNMcMPni61Z39pgnn/xGSm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ju28+9JR; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju28+9JR"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7cedcea89a0so2728973241.1;
-        Mon, 11 Mar 2024 02:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710148303; x=1710753103; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4qvSkoWG3hG+H8BATALROwaa3X2nvmLzNfY2hVRikCs=;
-        b=Ju28+9JRSFBYJdKkowGB1F8BLGRWwxS2DsFMFaEYZMDQM/czaDsCUrdn6ykl4LXoWs
-         ixYic1jVTk3DKFNv2HYgcD26+XE2kl81vv++yX1BgCim9MIbQoRorfLotawVdZccaswt
-         2X0/7SMd76YOX1iRxvuwxgzrWR28thg8i9QMa5Gkf+h1db92fNJQpkits0KPDrgnI66O
-         j6GWGCpACHtgUvG7Qcg7MfckYwlupJEkjPU8nWSTA7EbxbtIQ3n0RauTiZNZAFcRkLzU
-         MOzeC/Q0NClU0lAtfwAq7iUFMF70/OEhRGnihKMv8EqPZ8g7YEqOmWZTHSgYNJCdGS5h
-         W/kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710148303; x=1710753103;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4qvSkoWG3hG+H8BATALROwaa3X2nvmLzNfY2hVRikCs=;
-        b=RIuiiaBeaqRypjVSHweHaU9hJI6DslRjHC+kBVYoaZy65JuBV/wSj0XzWpP53qM4rd
-         9n7wKeTiru04xklqR0skQkjYhlg3xF0QsgykL7CYZKZZM0IHh+c2YKZ9BOq5b9/Bskag
-         pChskKChmWcWvTQBFd9RdmS5srF7nybhw9UzUmhlT9Rli330Sm2zCNsU7oHdM6jnh7As
-         ruwa/M3HN4/cxqOHUO1kcqh6oiZOGEWQZ30O1XxPAlYInbyJ9kApBV6BLM1Ax5TqgovP
-         +J4+dbfziyABgUGvUMrmxblMW+sO7N+2c7bDdje/5us5wFbKvT7T8ZL2YN4wFCUPC2Kz
-         sHbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0tMif3x7OLyFqeHaw5oy1re2kaPhPR/EjFDT97iWarvhXDHAgiJrX6w+es65kEFV/ibivNVrq36II1bbgFrtHjQOVRA7JyQ6GMhSsarG8fjP+hLp10OemHSo0DM8cAYvDdE4qdQ==
-X-Gm-Message-State: AOJu0Yx0qwcZrsnfr7EWFfpHv/tg+20HLrXCwKZgpBciaDMJqBxUkOT8
-	dSxkpvemnANiF50lZvvSKAkmoCujYkd51ZkFlHdZX3ppFj6FvzIjhpe/nfLLE+rV/oks9rdmYZR
-	88nCvoGhxPobyKrfrZ4s3Vg7YnLaF9XT6iF2Jq7qdZsY=
-X-Google-Smtp-Source: AGHT+IGhj+x8PbYBec92s0jPkmQjnzq8HzpZbtjL6JMxo4ac2s/kS8iToRyYZSqvmkrMguR+LbUdOyKos2a5RyaKjr8=
-X-Received: by 2002:a05:6102:1814:b0:473:df7:1084 with SMTP id
- jg20-20020a056102181400b004730df71084mr3630428vsb.29.1710148303200; Mon, 11
- Mar 2024 02:11:43 -0700 (PDT)
+	s=arc-20240116; t=1710148357; c=relaxed/simple;
+	bh=mwhr+GeZD2Fwv7OWp5evIy1WT7xupje/d5vp5keqrbc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MQ+TKucdRx86OLfFAqu3D2IKhm/CJ8Lh/AaD39If6WvSanNQA6Q9luK+47VC9ikyLBZW9KvsjdT7qmY85BN+0B85tUZyn5nT7BY2iT3WB/kB1SOGZazQDTwvBxp3Z/VCG9cr8dzvqBzetaCjzXDueKZWwj+6C/kbRyRwv2e8VnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TtVy01X1Vz9y0kN;
+	Mon, 11 Mar 2024 16:56:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 1EEF5140ED8;
+	Mon, 11 Mar 2024 17:12:15 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwCHcibeyu5l0rgXBA--.16486S2;
+	Mon, 11 Mar 2024 10:12:14 +0100 (CET)
+Message-ID: <4bac45ced03f82c2f3775684368e22db5dafea11.camel@huaweicloud.com>
+Subject: Re: [RFC][PATCH 8/8] ima: Detect if digest cache changed since last
+ measurement/appraisal
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, corbet@lwn.net,
+ dmitry.kasatkin@gmail.com,  eric.snowberg@oracle.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ wufan@linux.microsoft.com, pbrobinson@gmail.com, zbyszek@in.waw.pl,
+ hch@lst.de,  mjg59@srcf.ucam.org, pmatilai@redhat.com, jannh@google.com,
+ dhowells@redhat.com,  jikos@kernel.org, mkoutny@suse.com, ppavlu@suse.com,
+ petr.vorel@gmail.com,  petrtesarik@huaweicloud.com, mzerqung@0pointer.de,
+ kgold@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Date: Mon, 11 Mar 2024 10:11:54 +0100
+In-Reply-To: <ddb1c28356fb8a4dcca9bff6dc206802d7981bb8.camel@linux.ibm.com>
+References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
+	 <20240214143525.2205481-9-roberto.sassu@huaweicloud.com>
+	 <ddb1c28356fb8a4dcca9bff6dc206802d7981bb8.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZcWOh9u3uqZjNFMa@chrisdown.name> <20240229235134.2447718-1-axelrasmussen@google.com>
- <ZeEhvV15IWllPKvM@chrisdown.name> <CAJHvVch2qVUDTJjNeSMqLBx0yoEm4zzb=ZXmABbd_5dWGQTpNg@mail.gmail.com>
-In-Reply-To: <CAJHvVch2qVUDTJjNeSMqLBx0yoEm4zzb=ZXmABbd_5dWGQTpNg@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 11 Mar 2024 17:11:06 +0800
-Message-ID: <CALOAHbBupMYBMWEzMK2xdhnqwR1C1+mJSrrZC1L0CKE2BMSC+g@mail.gmail.com>
-Subject: Re: MGLRU premature memcg OOM on slow writes
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: Chris Down <chris@chrisdown.name>, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	kernel-team@fb.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:GxC2BwCHcibeyu5l0rgXBA--.16486S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF15ury7ArW3WF1rGw43GFg_yoW5XFW7pa
+	93CF1UKF4rZrW3G3W7Aa12vF18trZaqF4xua1Ygw1fArs5Xr9Yyw4rAw1UWry8Cr4UZanF
+	qw4Ygrs8Z3WDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ73D
+	UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQATBF1jj5szTAABsC
 
-On Sat, Mar 9, 2024 at 3:19=E2=80=AFAM Axel Rasmussen <axelrasmussen@google=
-.com> wrote:
->
-> On Thu, Feb 29, 2024 at 4:30=E2=80=AFPM Chris Down <chris@chrisdown.name>=
- wrote:
-> >
-> > Axel Rasmussen writes:
-> > >A couple of dumb questions. In your test, do you have any of the follo=
-wing
-> > >configured / enabled?
-> > >
-> > >/proc/sys/vm/laptop_mode
-> > >memory.low
-> > >memory.min
-> >
-> > None of these are enabled. The issue is trivially reproducible by writi=
-ng to
-> > any slow device with memory.max enabled, but from the code it looks lik=
-e MGLRU
-> > is also susceptible to this on global reclaim (although it's less likel=
-y due to
-> > page diversity).
-> >
-> > >Besides that, it looks like the place non-MGLRU reclaim wakes up the
-> > >flushers is in shrink_inactive_list() (which calls wakeup_flusher_thre=
-ads()).
-> > >Since MGLRU calls shrink_folio_list() directly (from evict_folios()), =
-I agree it
-> > >looks like it simply will not do this.
-> > >
-> > >Yosry pointed out [1], where MGLRU used to call this but stopped doing=
- that. It
-> > >makes sense to me at least that doing writeback every time we age is t=
-oo
-> > >aggressive, but doing it in evict_folios() makes some sense to me, bas=
-ically to
-> > >copy the behavior the non-MGLRU path (shrink_inactive_list()) has.
-> >
-> > Thanks! We may also need reclaim_throttle(), depending on how you imple=
-ment it.
-> > Current non-MGLRU behaviour on slow storage is also highly suspect in t=
-erms of
-> > (lack of) throttling after moving away from VMSCAN_THROTTLE_WRITEBACK, =
-but one
-> > thing at a time :-)
->
->
-> Hmm, so I have a patch which I think will help with this situation,
-> but I'm having some trouble reproducing the problem on 6.8-rc7 (so
-> then I can verify the patch fixes it).
+On Fri, 2024-03-08 at 12:35 -0500, Mimi Zohar wrote:
+> Hi Roberto,
+>=20
+> > b/security/integrity/ima/ima_main.c
+> > index a66522a22cbc..e1b2f5737753 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -301,6 +301,15 @@ static int process_measurement(struct file *file, =
+const
+> > struct cred *cred,
+> >  		}
+> >  	}
+> > =20
+> > +	/* Check if digest cache changed since last measurement/appraisal. */
+> > +	if (iint->digest_cache &&
+> > +	    digest_cache_changed(inode, iint->digest_cache)) {
+> > +		iint->flags &=3D ~IMA_DONE_MASK;
+> > +		iint->measured_pcrs =3D 0;
+> > +		digest_cache_put(iint->digest_cache);
+> > +		iint->digest_cache =3D NULL;
+> > +	}
+> > +
+> >  	/* Determine if already appraised/measured based on bitmask
+> >  	 * (IMA_MEASURE, IMA_MEASURED, IMA_XXXX_APPRAISE, IMA_XXXX_APPRAISED,
+> >  	 *  IMA_AUDIT, IMA_AUDITED)
+> > @@ -371,8 +380,15 @@ static int process_measurement(struct file *file, =
+const
+> > struct cred *cred,
+> >  	 * Since we allow IMA policy rules without func=3D, we have to enforc=
+e
+> >  	 * this restriction here.
+> >  	 */
+> > -	if (rc =3D=3D 0 && policy_mask && func !=3D DIGEST_LIST_CHECK)
+> > -		digest_cache =3D digest_cache_get(file_dentry(file));
+> > +	if (rc =3D=3D 0 && policy_mask && func !=3D DIGEST_LIST_CHECK) {
+> > +		if (!iint->digest_cache) {
+> > +			/* Released by ima_iint_free(). */
+> > +			digest_cache =3D digest_cache_get(file_dentry(file));
+> > +			iint->digest_cache =3D digest_cache;
+> > +		} else {
+> > +			digest_cache =3D iint->digest_cache;
+> > +		}
+>=20
+> Simple cleanup:
+> 		if (!iint->digest_cache)
+> 			iint->digest_cache =3Ddigest_cache_get(file_dentry(file));
+>=20
+> 		digest_cache =3D iint->digest_cache;
 
-We encountered the same premature OOM issue caused by numerous dirty pages.
-The issue disappears after we revert the commit 14aa8b2d5c2e
-"mm/mglru: don't sync disk for each aging cycle"
+Thanks.
 
-To aid in replicating the issue, we've developed a straightforward
-script, which consistently reproduces it, even on the latest kernel.
-You can find the script provided below:
+> > +	}
+> > =20
+> >  	if (digest_cache) {
+> >  		found =3D digest_cache_lookup(file_dentry(file), digest_cache,
+> > @@ -386,8 +402,6 @@ static int process_measurement(struct file *file, c=
+onst
+> > struct cred *cred,
+> >  			if (verif_mask_ptr)
+> >  				allow_mask =3D policy_mask & *verif_mask_ptr;
+> >  		}
+> > -
+> > -		digest_cache_put(digest_cache);
+>=20
+> Keeping a reference to the digest_cache list for each file in the iint ca=
+che
+> until the file is re-accessed, might take a while to free.
 
-```
-#!/bin/bash
+Yes, that is the drawback...
 
-MEMCG=3D"/sys/fs/cgroup/memory/mglru"
-ENABLE=3D$1
+> I'm wondering if it necessary to keep a reference to the digest_cache.  O=
+r is it
+> possible to just compare the existing iint->digest_cache pointer with the
+> current digest_cache pointer?
 
-# Avoid waking up the flusher
-sysctl -w vm.dirty_background_bytes=3D$((1024 * 1024 * 1024 *4))
-sysctl -w vm.dirty_bytes=3D$((1024 * 1024 * 1024 *4))
+If the pointer value is the same, it does not guarantee that it is the
+same digest cache used for the previous verification. It might have
+been freed and reallocated.
 
-if [ ! -d ${MEMCG} ]; then
-        mkdir -p ${MEMCG}
-fi
+Maybe, if the digest_cache LSM is able to notify to IMA that the digest
+cache changed, so that IMA resets its flags in the integrity metadata,
+we would not need to pin it.
 
-echo $$ > ${MEMCG}/cgroup.procs
-echo 1g > ${MEMCG}/memory.limit_in_bytes
+Roberto
 
-if [ $ENABLE -eq 0 ]; then
-        echo 0 > /sys/kernel/mm/lru_gen/enabled
-else
-        echo 0x7 > /sys/kernel/mm/lru_gen/enabled
-fi
+> thanks,
+>=20
+> Mimi
+>=20
+> >  	}
+> > =20
+> >  	if (action & IMA_MEASURE)
+>=20
 
-dd if=3D/dev/zero of=3D/data0/mglru.test bs=3D1M count=3D1023
-rm -rf /data0/mglru.test
-```
-
-This issue disappears as well after we disable the mglru.
-
-We hope this script proves helpful in identifying and addressing the
-root cause. We eagerly await your insights and proposed fixes.
-
->
-> If I understand the issue right, all we should need to do is get a
-> slow filesystem, and then generate a bunch of dirty file pages on it,
-> while running in a tightly constrained memcg. To that end, I tried the
-> following script. But, in reality I seem to get little or no
-> accumulation of dirty file pages.
->
-> I thought maybe fio does something different than rsync which you said
-> you originally tried, so I also tried rsync (copying /usr/bin into
-> this loop mount) and didn't run into an OOM situation either.
->
-> Maybe some dirty ratio settings need tweaking or something to get the
-> behavior you see? Or maybe my test has a dumb mistake in it. :)
->
->
->
-> #!/usr/bin/env bash
->
-> echo 0 > /proc/sys/vm/laptop_mode || exit 1
-> echo y > /sys/kernel/mm/lru_gen/enabled || exit 1
->
-> echo "Allocate disk image"
-> IMAGE_SIZE_MIB=3D1024
-> IMAGE_PATH=3D/tmp/slow.img
-> dd if=3D/dev/zero of=3D$IMAGE_PATH bs=3D1024k count=3D$IMAGE_SIZE_MIB || =
-exit 1
->
-> echo "Setup loop device"
-> LOOP_DEV=3D$(losetup --show --find $IMAGE_PATH) || exit 1
-> LOOP_BLOCKS=3D$(blockdev --getsize $LOOP_DEV) || exit 1
->
-> echo "Create dm-slow"
-> DM_NAME=3Ddm-slow
-> DM_DEV=3D/dev/mapper/$DM_NAME
-> echo "0 $LOOP_BLOCKS delay $LOOP_DEV 0 100" | dmsetup create $DM_NAME || =
-exit 1
->
-> echo "Create fs"
-> mkfs.ext4 "$DM_DEV" || exit 1
->
-> echo "Mount fs"
-> MOUNT_PATH=3D"/tmp/$DM_NAME"
-> mkdir -p "$MOUNT_PATH" || exit 1
-> mount -t ext4 "$DM_DEV" "$MOUNT_PATH" || exit 1
->
-> echo "Generate dirty file pages"
-> systemd-run --wait --pipe --collect -p MemoryMax=3D32M \
->         fio -name=3Dwrites -directory=3D$MOUNT_PATH -readwrite=3Drandwrit=
-e \
->         -numjobs=3D10 -nrfiles=3D90 -filesize=3D1048576 \
->         -fallocate=3Dposix \
->         -blocksize=3D4k -ioengine=3Dmmap \
->         -direct=3D0 -buffered=3D1 -fsync=3D0 -fdatasync=3D0 -sync=3D0 \
->         -runtime=3D300 -time_based
->
-
-
---=20
-Regards
-Yafang
