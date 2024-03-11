@@ -1,140 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D041057315;
-	Mon, 11 Mar 2024 21:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B75356B79;
+	Mon, 11 Mar 2024 21:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710194080; cv=none; b=G8p1Ocv66i7eHkkYs5+7N4MJ2kZAW9g7j82s0dhVlbhmxKyWQVVWvJcV4xoLmqmhUslJrqjssp+YFlbYQg4zgkV0Qp+EzbqJPZ7r3xBbHY2J/FOJ6fpK2owClAypTXMG/ghsoofL1Y943qChWU23u1y3iJRbsDrwGzK0fg57gQU=
+	t=1710194184; cv=none; b=WO9dEzmiCSZtHKm8+hh/IL7VEAXg0BNpfWeC+7psjaDRInFCxDnGUUj/cjQBZiwHNsdvqFZX0l7xna7Ff4u22QDG23+3i0KitwXLyUvzbMhZbdDFECjV/esbepC2RzG9bIFpsiHCLbBAYRrfe6frDSyxg1dpWFbK43l+RHZJKPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710194080; c=relaxed/simple;
-	bh=RWD53XQN8UsgouYUBF/rTClQBGz527mrHnHW07+LEvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rT/Ols7KRl1QUjpP3IxUjd+K8KwB8BEvoNQJoLttUKWFGVf880ZVfjSqfM6iB1cHF1CdjvDgDthQ8KfRZaAornNLZnHwT9ZLQDQawEhjUHEaqbn+q2aHKlHM+a6Ne/JntKSj4rwTcAk9p1g4ICxvNM8ZWlsBLEdJUh62GbzBFHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eome4s09; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710194184; c=relaxed/simple;
+	bh=UIGkaKDh66bPE6UOPBSZSX0hDeAoqr1FyXz1/fGioIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b3naa0u1/zHtVeVBynvdo+KSIXfvRAV2Pd0DL/BJAaiUnr2DHkXAdzzlTwSnQ9P9bMZCYZDxUabR3PR4rwnVVOsYBnJKVNhQoop/4uY+sVheLGwBBfSymP4MoYrdXXItVpJHt+GB7UJq9OU5rKsj3tA5CUqiIx1W+BkMGA6Xt5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CMuMW/8N; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eome4s09"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4BBC433C7;
-	Mon, 11 Mar 2024 21:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710194079;
-	bh=RWD53XQN8UsgouYUBF/rTClQBGz527mrHnHW07+LEvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Eome4s09U0yv2YUiX7PkctOicSMRH/yZOh6gnNHwqz8AI3Od+MdGJEeamS0f7e/Rg
-	 EKv3GFwpTGiOOLiVWTZpMtwJHx1nzexz6euFNxlYZWJ+mz5wMTgZY+s7k5ZCuLXjlU
-	 Q+epQAXw6XXRuSGu4tO+RzCdoobL9znOdQ45I3dz+B6EpKd4zxdEjk7P6Oh4eNWsAc
-	 Lp4NPa4szCmQyVI2rLifPe+RyPkuYYJ5VxV5Y+UMqeicTFacCyxISQMAHTlc0bDHNG
-	 GFLAPM9kqVH055Ixhp4hp6Z+B+3XyEurelGgsFQYR8csLnIKr6fF0qQTyfN2WKjaGL
-	 QI56/3wgaZNXA==
-Date: Mon, 11 Mar 2024 22:54:28 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v9 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
-Message-ID: <Ze99lLhe2GqIqMgl@ryzen>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
- <ZesRk5Dg4KEASD3U@ryzen>
- <20240311144559.GA2504@thinkpad>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CMuMW/8N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1710194179;
+	bh=Wz8Ujw3rI9QMgBW9lKvOkkitX0MszA4zxm71kT6Iva4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CMuMW/8NLz+kwdmtnD8Wv9y36hf+JEQuaJfLunM1P/N6Xwdo2xnIsTqbPtxZTKi1N
+	 0DqPnRnGRhKBmHyH/U3kuOv6684HFweRHUmjLaekWtqnIL5gWCja0k31kdoJEo1P5d
+	 UqoJ36ciyKfXjBTN0YDI+MSYxfOafJZevgT346vvV1pVx+oQcBUdqAknUuAnyzn1tu
+	 7TH2LIFBNYMXNTjWKNaqAAEAmqxLHQuYSqh8Af8RmX0yL0UHzBXJBEteiu1AB6Z6g6
+	 wTztiEKeVRGevD0QxKgZMbSKdF1YS5yHMfFjLv1Xr1tqOthezVnszp7hHaCnBR9F23
+	 ux1FaYDAqUWwA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TtrFb2jHHz4wcT;
+	Tue, 12 Mar 2024 08:56:19 +1100 (AEDT)
+Date: Tue, 12 Mar 2024 08:56:18 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the vfs-brauner tree with the mm
+ tree
+Message-ID: <20240312085618.55544252@canb.auug.org.au>
+In-Reply-To: <20240221103200.165d8cd5@canb.auug.org.au>
+References: <20240221103200.165d8cd5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311144559.GA2504@thinkpad>
+Content-Type: multipart/signed; boundary="Sig_/B_1GS=2eiTXdUHjwl6ZQeVC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, Mar 11, 2024 at 08:15:59PM +0530, Manivannan Sadhasivam wrote:
-> > 
-> > I would say that it is the following change that breaks things:
-> > 
-> > > -	if (!core_init_notifier) {
-> > > -		ret = pci_epf_test_core_init(epf);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -	}
-> > > -
-> > 
-> > Since without this code, pci_epf_test_core_init() will no longer be called,
-> > as there is currently no one that calls epf->core_init() for a EPF driver
-> > after it has been bound. (For drivers that call dw_pcie_ep_init_notify() in
-> > .probe())
-> > 
-> 
-> Thanks a lot for testing, Niklas!
-> 
-> > I guess one way to solve this would be for the EPC core to keep track of
-> > the current EPC "core state" (up/down). If the core is "up" at EPF .bind()
-> > time, notify the EPF driver directly after .bind()?
-> > 
-> 
-> Yeah, that's a good solution. But I think it would be better if the EPC caches
-> all events if the EPF drivers are not available and dispatch them once the bind
-> happens for each EPF driver. Even though INIT_COMPLETE is the only event that is
-> getting generated before bind() now, IMO it is better to add provision to catch
-> other events also.
-> 
-> Wdyt?
+--Sig_/B_1GS=2eiTXdUHjwl6ZQeVC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm not sure.
-What if the EPF goes up/down/up, it seems a bit silly to send all those
-events to the EPF driver that will alloc+free+alloc.
+Hi all,
 
-Do we know for sure that we will want to store + replay events other than
-INIT_COMPLETE?
+On Wed, 21 Feb 2024 10:32:00 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the vfs-brauner tree got a conflict in:
+>=20
+>   init/main.c
+>=20
+> between commit:
+>=20
+>   4728b74d1992 ("arm64, powerpc, riscv, s390, x86: ptdump: refactor CONFI=
+G_DEBUG_WX")
+>=20
+> from the mm-unstable branch of the mm tree and commit:
+>=20
+>   193d98b1d3aa ("pidfd: add pidfs")
+>=20
+> from the vfs-brauner tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc init/main.c
+> index bc3b6b49b3d8,2fbf6a3114d5..000000000000
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@@ -100,7 -99,7 +100,8 @@@
+>   #include <linux/init_syscalls.h>
+>   #include <linux/stackdepot.h>
+>   #include <linux/randomize_kstack.h>
+>  +#include <linux/ptdump.h>
+> + #include <linux/pidfs.h>
+>   #include <net/net_namespace.h>
+>  =20
+>   #include <asm/io.h>
 
-And how many events should we store?
+This is now a conflict between the mm-stable tree and Linus' tree.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-Until we can think of a good reason which events other than UP/DOWN we
-can to store, I think that just storing the state as an integer in
-struct pci_epc seems simpler.
+--Sig_/B_1GS=2eiTXdUHjwl6ZQeVC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-Or I guess we could continue with a flag in struct pci_epc_features,
-like has_perst_notifier, which would then require the EPC driver to
-call both epc_notify_core_up() and epc_notify_core_down() when receiving
-the PERST deassert/assert.
-For a driver without the flag set, the EPC core would call
-.epc_notify_core_up() after bind. (And .epc_notify_core_down() would never
-be called, or it could call it before unbind().)
-That way an EPF driver itself would not need any different handling
-(all callbacks would always come, either triggered by an EPC driver that
-has PERST GPIO irq, or triggered by the EPC core for a driver that lacks
-a PERST GPIO).
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXvfgIACgkQAVBC80lX
+0GyaYAf/QB2Z1fTgVzq/mbxy9xqw8P4aJdg6qsFQPD/p9jEyc+lFP2SrZRoA7KRl
+oUrTFuCAdr2Dio9dK2Kfv+hgHcO7HicLsANPVLdzxL3cQ+c49/62WCxEYONF49F9
+8KEq2/J5w8ZruAT1aH0578QPG8d2Jf69e1ViuviCcLBNoHtD34uSPiPEz82hEdv5
+KNwZm5pFwSMoozwLJjqIf/i8N43tQ5S6LoqbjQt13Zob51K6Qh6Fs4XHMegwght/
+h8/bd+w4qgq2Oh3eaq4VKSwn9VhfSsWbHXHVk3mHUFnkkz5QTBCxZ4fjpuNTMqJ2
+PVLOM6vguG0PYHAOy0JIzxxB2wc2Jw==
+=noqE
+-----END PGP SIGNATURE-----
 
-
-Kind regards,
-Niklas
+--Sig_/B_1GS=2eiTXdUHjwl6ZQeVC--
