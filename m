@@ -1,57 +1,57 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E0654FA2
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2755676F
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710175615; cv=none; b=bxoA8lqi8AU4NaMffJL237HyFuaKpEajNVQ5pq4wmLbMfk+Cnf9KjUWxYvwX14Wt9BblSECMGooWXybPtsEuFOw3reuyNpDn/LDNZUdKKaHvXLvChjHB45Maz8VaXcsxTHCWU73JJaSV45mhswUzi/OvpE8Y8UDWN84UEMamqlI=
+	t=1710175617; cv=none; b=rDWISzrQCfC4aUZVUbwaN1Hb62LfmW8HGTGsWo8Z9csNbszwWXyxp8t4+dxnMew4ovd6GZtuslEwxnoFqnKx7TKmjW4sCG/T+HRaHMUw2Ts1NezjX1p7YsoNFPpKqKiMcc+PrnzFYHS6+NS2VJJtFBY85d+ugLmAjKWEBT2lejc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710175615; c=relaxed/simple;
-	bh=J5REF2bzCzAX7O0LOHW14nTnyl8YGMv3zounUf7qQr4=;
+	s=arc-20240116; t=1710175617; c=relaxed/simple;
+	bh=SjdSy7wze8iqdobtOSWXvuZy+HC33whE98lynSJVzCI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rrr3D6t5kuX9VikkA7oYAw55Mk0Z/VFpJ+EJfKBvzyOABDyINM/cl8n9oO7LAWDWCxBZ8maxfMh6FsNj6lNNYBQo+6qRHP1vEukDn3A+zmN9U9lJW5jyD8KFbtPAiAk10R3j/szE1oScfyC04C/gjsL1HYOvx3oaG2grMKSSnJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=SUzPNr44; arc=none smtp.client-ip=209.85.222.178
+	 MIME-Version; b=omZfznI2ehvlr+NcxDdul+hwJdYhPNqNKk3sq31YJLa2+lSMt90P+Q1trfP5wQgwcuyWoBnXqyKOEOVIlqEOgon3uithKunnXRR9SxKUQRCVCT2frTdUwpu8ZmKoFoB8eqSWhUnwydRMl/hmPlhZbAHWzHA66l7dJmvrRn57kEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ARTcAiqf; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="SUzPNr44"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78850ab4075so120664885a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:46:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ARTcAiqf"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-783045e88a6so277630385a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710175612; x=1710780412; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710175614; x=1710780414; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UUTioQgK+VFwu4bHGNUstSWJvzqUc2xbAOy5DzulCE4=;
-        b=SUzPNr44BG72fCi5CjWAI1V5z26hOG3O70z6dpgZmoI0Hie9Bb5RZ/y/i+WpfZcpDc
-         zqn15CuFqqma3nQj2QF2/9bV/iowcKNpwOgPKZ9n4u/UP6q2Yk9n/akcXS4zbhIT9uGe
-         nFAgmY57GPDejAT3ytqEbDRKNcfbZ3ii+D9kTwSrZlva/a02KZRvG1F9yQCU3ywJv20s
-         j7IRWwDmDep/P6Gw7ikDRoVbq/KuauaZw+MvlY3WQS4w+RMM2omI38z2Jnsj2SKOiqL8
-         pVEggM2qsy1yrmgr/yOanBVLaasw0ZT6gjEEqvkK1GVbRO88DxHb1XQknFcU9g3YawRG
-         Gq9Q==
+        bh=NGLgnjdxSReHw9wlD+FW1YibHNtCAjZjXR36RT3BbYQ=;
+        b=ARTcAiqfV/nHTM50ECHtkfKwZoR4w7P0StEgR2k4YbupLc+QL+Qvhr06tCGrCwkljM
+         9eNKpMpIbW860mYyIsyVagCnvWZBKDrKEik72y6JrjNvATLdwr+r/Mpv9TB6NCRh9UVC
+         52KypElvcNowwDatOwJboNtQ9aXFLKJNcLsaowiP2m/0+CkesFqxbFhK69sLSwU+lsKd
+         mbl/y923RY5IMwAi07Jq0wDjnPWGk9h+WaLov6ZlmbuJmNiUbCmwD4LvoKywV1S42IK8
+         MADIv/W1v9ppHBrzqP9SXBFCdy3r35mG2g82lQbMVQ/eRDSMv7QrxHtJYjGqiakwv5PA
+         nncg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710175612; x=1710780412;
+        d=1e100.net; s=20230601; t=1710175614; x=1710780414;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UUTioQgK+VFwu4bHGNUstSWJvzqUc2xbAOy5DzulCE4=;
-        b=UVdzOxkA9jPXIgkTAZ571SIhTm+4JpBEu+GnB2mzCNerWr5oxy1/QHIh/ekg6/Wo4u
-         lakMk0sMIY06T7ldzMkj5iF42yKH9DPBxkp/dZoaxD/ra+EByw52tnld/K5ZmUlY3S4c
-         sHzWyn3BsxxcPIGuqEujQcwsm0NDH79Wmj5SvEfyCCSRn0cIbWQ+n3MDILZCqcLH7Hkc
-         pmjvId48GuCGTGo3J4JF7pLtnFOb5QmAjExSvwFIpgBULCOonKZ9kPseO5WTupTrfIph
-         gMoAaWXXIm558ktBYyhpbJzz84oTGRtE1iEpZ8mtZKwZ0d/WsVQuLcgu55+Fz1DFuI3n
-         MZqg==
-X-Gm-Message-State: AOJu0YxFB249T7CnbwaD3MXFWWTn2wzvYaqIU4itBsMkDFCAfrx2q11S
-	D7oAqsltxi7kD/L2AHC3JxaC6/XHdLrsrnR8N7eDZvoen0Hbqhr8L9grIDb1QbepwBPcoA+FHjY
-	irJE=
-X-Google-Smtp-Source: AGHT+IF4clsrNYnhAmKVCQ5b1CkyUTVuvR4XaNSojXhA81ENz+LMIfO1rJKaTKEeTeVkpkuetWxx/w==
-X-Received: by 2002:a05:620a:5d9a:b0:788:5909:8ce5 with SMTP id xx26-20020a05620a5d9a00b0078859098ce5mr1085134qkn.34.1710175612342;
-        Mon, 11 Mar 2024 09:46:52 -0700 (PDT)
+        bh=NGLgnjdxSReHw9wlD+FW1YibHNtCAjZjXR36RT3BbYQ=;
+        b=rZC6YWFU1xAA7u6x/Z8Yvjt08zPejEd+iPyZfIIpBC39TXfiKld4gAGVBRUMzB6Z1B
+         Y6l+GkHmqyd/5P985lvRWMXYnibe2AoqqzHyDPDlX3A4yk2e95ICW1wZAWmduaxXyuRE
+         iLzIrm1c6ILYzBWAnU0NezoJQc/SWulyY5C1JlWHiF88NivwFLovrJrJdC7cAIckig1X
+         88GjElYIx/CFMugss+Gnb4KGD4YPvpb3PMU6qi5cl+CR/vVnrnII3fuaWHHCrcQtx/zO
+         CRdRNJweCasoH1HEwza8sVteDQad65WV/yU/jn+jqoalflpH0R1VyCGZkBF3Wq9sV4cC
+         nmpA==
+X-Gm-Message-State: AOJu0Yx8T1mtYaVWH6VHyAUXyg1UU9/J2I8qwI1JhafM5fOtx2RjWyML
+	T98BlaMXBiel1puENP7iOYGYcAGNyA3B17kT3UuKtNxEUxpKfBcToget9KrQujYNioiE3cUAvIe
+	i8H0=
+X-Google-Smtp-Source: AGHT+IHiFimL/uL6CiZ0/ffUHb5GjnvMvZQk5uciXsXYpJX5LXGSw9tTbmvr67JCBeLYBzWo/uqLsw==
+X-Received: by 2002:a05:620a:45a1:b0:788:4e44:a9b7 with SMTP id bp33-20020a05620a45a100b007884e44a9b7mr11466669qkb.78.1710175614423;
+        Mon, 11 Mar 2024 09:46:54 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (150.254.86.34.bc.googleusercontent.com. [34.86.254.150])
-        by smtp.gmail.com with ESMTPSA id d27-20020a05620a137b00b00788228fbe05sm2851589qkl.17.2024.03.11.09.46.51
+        by smtp.gmail.com with ESMTPSA id d27-20020a05620a137b00b00788228fbe05sm2851589qkl.17.2024.03.11.09.46.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 09:46:51 -0700 (PDT)
+        Mon, 11 Mar 2024 09:46:54 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -95,9 +95,9 @@ To: linux-kernel@vger.kernel.org,
 	vincent.guittot@linaro.org,
 	vschneid@redhat.com,
 	pasha.tatashin@soleen.com
-Subject: [RFC 09/14] mm/vmalloc: Add a get_vm_area_node() and vmap_pages_range_noflush() public functions
-Date: Mon, 11 Mar 2024 16:46:33 +0000
-Message-ID: <20240311164638.2015063-10-pasha.tatashin@soleen.com>
+Subject: [RFC 11/14] x86: add support for Dynamic Kernel Stacks
+Date: Mon, 11 Mar 2024 16:46:35 +0000
+Message-ID: <20240311164638.2015063-12-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 In-Reply-To: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
 References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
@@ -109,125 +109,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-get_vm_area_node()
-Unlike the other public get_vm_area_* variants, this one accepts node
-from which to allocate data structure, and also the align, which allows
-to create vm area with a specific alignment.
-
-This call is going to be used by dynamic stacks in order to ensure that
-the stack VM area of a specific alignment, and that even if there is
-only one page mapped, no page table allocations are going to be needed
-to map the other stack pages.
-
-vmap_pages_range_noflush()
-Is already a global function, but was exported through mm/internal.h,
-since we will need it from kernel/fork.c in order to map the initial
-stack pages, move the forward declaration of this function to the
-linux/vmalloc.h header.
+Add dynamic_stack_fault() calls to the kernel faults, and also declare
+HAVE_ARCH_DYNAMIC_STACK = y, so that dynamic kernel stacks can be
+enabled on x86 architecture.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- include/linux/vmalloc.h | 15 +++++++++++++++
- mm/internal.h           |  9 ---------
- mm/vmalloc.c            | 24 ++++++++++++++++++++++++
- 3 files changed, 39 insertions(+), 9 deletions(-)
+ arch/x86/Kconfig        | 1 +
+ arch/x86/kernel/traps.c | 3 +++
+ arch/x86/mm/fault.c     | 3 +++
+ 3 files changed, 7 insertions(+)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index c720be70c8dd..e18b6ab1584b 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -210,6 +210,9 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
- 					unsigned long flags,
- 					unsigned long start, unsigned long end,
- 					const void *caller);
-+struct vm_struct *get_vm_area_node(unsigned long size, unsigned long align,
-+				   unsigned long flags, int node, gfp_t gfp,
-+				   const void *caller);
- void free_vm_area(struct vm_struct *area);
- extern struct vm_struct *remove_vm_area(const void *addr);
- extern struct vm_struct *find_vm_area(const void *addr);
-@@ -241,10 +244,22 @@ static inline void set_vm_flush_reset_perms(void *addr)
- 		vm->flags |= VM_FLUSH_RESET_PERMS;
- }
- 
-+int __must_check vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-+					  pgprot_t prot, struct page **pages,
-+					  unsigned int page_shift);
-+
- #else
- static inline void set_vm_flush_reset_perms(void *addr)
- {
- }
-+
-+static inline
-+int __must_check vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-+					  pgprot_t prot, struct page **pages,
-+					  unsigned int page_shift)
-+{
-+	return -EINVAL;
-+}
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5edec175b9bf..9bb0da3110fa 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -197,6 +197,7 @@ config X86
+ 	select HAVE_ARCH_USERFAULTFD_WP         if X86_64 && USERFAULTFD
+ 	select HAVE_ARCH_USERFAULTFD_MINOR	if X86_64 && USERFAULTFD
+ 	select HAVE_ARCH_VMAP_STACK		if X86_64
++	select HAVE_ARCH_DYNAMIC_STACK		if X86_64
+ 	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_WITHIN_STACK_FRAMES
+ 	select HAVE_ASM_MODVERSIONS
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c3b2f863acf0..cc05401e729f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -413,6 +413,9 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+ 	}
  #endif
  
- /* for /proc/kcore */
-diff --git a/mm/internal.h b/mm/internal.h
-index f309a010d50f..ba1e2ce68157 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -969,19 +969,10 @@ size_t splice_folio_into_pipe(struct pipe_inode_info *pipe,
-  */
- #ifdef CONFIG_MMU
- void __init vmalloc_init(void);
--int __must_check vmap_pages_range_noflush(unsigned long addr, unsigned long end,
--                pgprot_t prot, struct page **pages, unsigned int page_shift);
- #else
- static inline void vmalloc_init(void)
- {
- }
--
--static inline
--int __must_check vmap_pages_range_noflush(unsigned long addr, unsigned long end,
--                pgprot_t prot, struct page **pages, unsigned int page_shift)
--{
--	return -EINVAL;
--}
- #endif
- 
- int __must_check __vmap_pages_range_noflush(unsigned long addr,
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index d12a17fc0c17..7dcba463ff99 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2650,6 +2650,30 @@ struct vm_struct *get_vm_area_caller(unsigned long size, unsigned long flags,
- 				  NUMA_NO_NODE, GFP_KERNEL, caller);
- }
- 
-+/**
-+ * get_vm_area_node - reserve a contiguous and aligned kernel virtual area
-+ * @size:	 size of the area
-+ * @align:	 alignment of the start address of the area
-+ * @flags:	 %VM_IOREMAP for I/O mappings
-+ * @node:	 NUMA node from which to allocate the area data structure
-+ * @gfp:	 Flags to pass to the allocator
-+ * @caller:	 Caller to be stored in the vm area data structure
-+ *
-+ * Search an area of @size/align in the kernel virtual mapping area,
-+ * and reserved it for out purposes.  Returns the area descriptor
-+ * on success or %NULL on failure.
-+ *
-+ * Return: the area descriptor on success or %NULL on failure.
-+ */
-+struct vm_struct *get_vm_area_node(unsigned long size, unsigned long align,
-+				   unsigned long flags, int node, gfp_t gfp,
-+				   const void *caller)
-+{
-+	return __get_vm_area_node(size, align, PAGE_SHIFT, flags,
-+				  VMALLOC_START, VMALLOC_END,
-+				  node, gfp, caller);
-+}
++	if (dynamic_stack_fault(current, address))
++		return;
 +
- /**
-  * find_vm_area - find a continuous kernel virtual area
-  * @addr:	  base address
+ 	irqentry_nmi_enter(regs);
+ 	instrumentation_begin();
+ 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index d6375b3c633b..651c558b10eb 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1198,6 +1198,9 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
+ 	if (is_f00f_bug(regs, hw_error_code, address))
+ 		return;
+ 
++	if (dynamic_stack_fault(current, address))
++		return;
++
+ 	/* Was the fault spurious, caused by lazy TLB invalidation? */
+ 	if (spurious_kernel_fault(hw_error_code, address))
+ 		return;
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
