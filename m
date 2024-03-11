@@ -1,83 +1,105 @@
-Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FBA3D986
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F8FF519;
+	Mon, 11 Mar 2024 12:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710159745; cv=none; b=bB4q9rUYD1kPZ8NDI2f6qXqG/yZP+7G1+vCg41toYyIg4nC+w1DFtLtrjE5iqdDHnliyulebysDB0KtLa0sG2AdprzffXAUgdCQV8Rzl6sP25Hy+r/AiQxBGYyLVCRC8cy+ovxcGBUI9eez9fXwDyflzTCxTEvnQDSPFd43cQVQ=
+	t=1710159895; cv=none; b=M54ya5rvgrC0CBVNAWJOBKaZ0Ceyb5FBo780RzXCTvMWUh65qzbHAjGAhiiq0RITj305Bt7f4UTM5hF35UVQLTGg7vG4xx0OWYACYtKuXIesnnb5Y2E17pjSstnYwibdYlNzeWIsTyNej1Kmnwv0swdbk+rIHCoL0rQ0yB2g0No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710159745; c=relaxed/simple;
-	bh=3lwYZCW9ioO9JlGldgEGKMmH+XHohLODrXZUv4HVftA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AHaI9LkRypW9iI5T2Rke9zSDvBR4FbD0v9XVqWm/eLsEVj7XEiWCdEDuB/0o4WAh1iKxTI5eK/zEYswCvZALzMTI0f+HUEfgj5tSdVkNJyXhaSl/OBKzwNi9eB5/oErZeqIWAisyIJeZyt6EWL6KH9F9sr2IXReFy85L/ojilac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
-Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 42BCMD8E013733;
-	Mon, 11 Mar 2024 17:52:13 +0530
-Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 42BCMDq0013732;
-	Mon, 11 Mar 2024 17:52:13 +0530
-From: Sunil Khatri <sunil.khatri@amd.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Shashank Sharma <shashank.sharma@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH] drm/amdgpu: add ring buffer information in devcoredump
-Date: Mon, 11 Mar 2024 17:52:12 +0530
-Message-Id: <20240311122212.13713-1-sunil.khatri@amd.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710159895; c=relaxed/simple;
+	bh=LluHyhjKemLvziSLq4mu73Bj2Ez4L1mtMOYpKAIdpW8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Jahq4AfxTBidA+pDAUhzGweIwQpoFAg8OOFnEBeEV+W1+emM/eCTxiYY19ixtUhzRoOo3KEehYcdhGh7uee3OzTeUTT1qGOQqk6B+mzYrTm812dr7XxIaG1DPdT0EZNnKjiOW4R9k/q7SjyMGfyZpsFpQcBxB9rvslRUuvFh1O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUDGwidr; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUDGwidr"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1dd8ee2441dso2357485ad.1;
+        Mon, 11 Mar 2024 05:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710159893; x=1710764693; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NJV6iNofzvP9/1KByDDXNTrF5EbVufMaGdHaNE1qGbU=;
+        b=DUDGwidrhzU+TsTaXz6zPbjio/2q/ICe6r2zTffe9JP+zw+y4wy3uBiIcOh4LeN9p2
+         uTgww5iH+BXkauAygiPOFyUXnSIvVDYleloifYDmtOYOyE7X4IawfQPIxHdxyjF9M3sJ
+         r3DiV1iRnrgvfcbR6U1Rs0X/UEu6RNh87cQ4EOq1KQRcRk/fVfv9fEQQb5USqgasTCxl
+         3cgtS18P1bH1g1+p5dxlwvuzzwZO3pV1TcbMqrE6/AgNQjCZJh0wyjvtxRUARSEXSEAL
+         UBqYijAkzET92quzZXugrq2rBCSycnGHGcOPpihkDLy2HvHJTP3In41dFmFMQ6DS1sDi
+         MNuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710159893; x=1710764693;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NJV6iNofzvP9/1KByDDXNTrF5EbVufMaGdHaNE1qGbU=;
+        b=Ub67cpu3aoBLQvBt+9ZNBx0gflUP9cwDWZMjFuf50E4e1HTaUcBrqpU1DkpIFAo5tI
+         oCZp8d0kTh5YEjNU/yfp1L0ryuh8xJqplzQtpyUTCyo+J6vPo4a59MGPVMEeWQF0EtRz
+         0Ou4eGcom6u+yH8UMqnRXCFpLm+8UAHjgAeCTu+BgykcrNugoKIcU2GsmfFKMeYeekcp
+         1C8kgxmjnJvKJIpsnMvlTuFzpAl90m+peLQuceXuXcCZ1uciTXv2e8KMkmL38+H4w5hH
+         TVvUNkHeAirdjqQgS9MrGikEZhOQXWv8mClqMaqt+2YIc7zwnKlI7WCB5mqliKbyaeRI
+         V4zg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+V86w8cUGGbOhH8OLH06fCgt372grMH14so5x7M5udG8FJniucuhLv765g+/znlZ5A+e5eC6Rxskfa+GzmMqomnYG8kjk
+X-Gm-Message-State: AOJu0YxIrwajbXb2oKwDD5Sdn63pCondr8NWhV+QNudAfqCeXVgJq7pE
+	7TcO1CCIoHTgT9hdY13C8jVuLjb4KS2S6FBjtDml5h/dn8p7Qz+tP+w9mjFHBP/1RF1c
+X-Google-Smtp-Source: AGHT+IHck0HQwvtlHJQzVHVrty9+g5PpjZj7C8mI81TwnrdjValzLLBDT+ZhtfYoISQ5QsL8BOBcIg==
+X-Received: by 2002:a05:6a20:9587:b0:1a1:67a6:511e with SMTP id iu7-20020a056a20958700b001a167a6511emr8859997pzb.2.1710159892844;
+        Mon, 11 Mar 2024 05:24:52 -0700 (PDT)
+Received: from localhost.localdomain ([111.194.45.84])
+        by smtp.gmail.com with ESMTPSA id p48-20020a056a0026f000b006e69a142458sm1075106pfw.213.2024.03.11.05.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 05:24:52 -0700 (PDT)
+From: Zheng Li <lizheng043@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	nhorman@tuxdriver.com,
+	davem@davemloft.net,
+	jmorris@namei.org
+Cc: James.Z.Li@Dell.com
+Subject: [PATCH] neighbour: guarantee the localhost connections be established successfully even the ARP table is full
+Date: Mon, 11 Mar 2024 20:24:01 +0800
+Message-Id: <20240311122401.6549-1-lizheng043@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add relevant ringbuffer information such as
-rptr, wptr, ring name, ring size and also
-the ring contents for each ring on a gpu reset.
+From: Zheng Li <James.Z.Li@Dell.com>
 
-Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+Inter-process communication on localhost should be established successfully even the ARP table is full,
+many processes on server machine use the localhost to communicate such as command-line interface (CLI),
+servers hope all CLI commands can be executed successfully even the arp table is full.
+Right now CLI commands got timeout when the arp table is full.
+Set the parameter of exempt_from_gc to be true for LOOPBACK net device to
+keep localhost neigh in arp table, not removed by gc.
+
+the steps of reproduced:
+server with "gc_thresh3 = 1024" setting, ping server from more than 1024 IPv4 addresses,
+run "ssh localhost" on console interface, then the command will get timeout.
+
+Signed-off-by: Zheng Li <James.Z.Li@Dell.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ net/core/neighbour.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-index 6d059f853adc..1992760039da 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
-@@ -215,6 +215,27 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
- 			   fault_info->status);
- 	}
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 552719c3bbc3..d96dee3d4af6 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -734,7 +734,10 @@ ___neigh_create(struct neigh_table *tbl, const void *pkey,
+ struct neighbour *__neigh_create(struct neigh_table *tbl, const void *pkey,
+ 				 struct net_device *dev, bool want_ref)
+ {
+-	return ___neigh_create(tbl, pkey, dev, 0, false, want_ref);
++	if (dev->flags & IFF_LOOPBACK)
++		return ___neigh_create(tbl, pkey, dev, 0, true, want_ref);
++	else
++		return ___neigh_create(tbl, pkey, dev, 0, false, want_ref);
+ }
+ EXPORT_SYMBOL(__neigh_create);
  
-+	drm_printf(&p, "Ring buffer information\n");
-+	for (int i = 0; i < coredump->adev->num_rings; i++) {
-+		int j = 0;
-+		struct amdgpu_ring *ring = coredump->adev->rings[i];
-+
-+		drm_printf(&p, "ring name: %s\n", ring->name);
-+		drm_printf(&p, "Rptr: 0x%llx Wptr: 0x%llx\n",
-+			   amdgpu_ring_get_rptr(ring) & ring->buf_mask,
-+			   amdgpu_ring_get_wptr(ring) & ring->buf_mask);
-+		drm_printf(&p, "Ring size in dwords: %d\n",
-+			   ring->ring_size / 4);
-+		drm_printf(&p, "Ring contents\n");
-+		drm_printf(&p, "Offset \t Value\n");
-+
-+		while (j < ring->ring_size) {
-+			drm_printf(&p, "0x%x \t 0x%x\n", j, ring->ring[j/4]);
-+			j += 4;
-+		}
-+		drm_printf(&p, "Ring dumped\n");
-+	}
-+
- 	if (coredump->reset_vram_lost)
- 		drm_printf(&p, "VRAM is lost due to GPU reset!\n");
- 	if (coredump->adev->reset_info.num_regs) {
 -- 
-2.34.1
+2.17.1
 
