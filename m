@@ -1,122 +1,66 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D91171D8
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EFB134B9;
+	Mon, 11 Mar 2024 09:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710147848; cv=none; b=dQ2qTpxXCA2jlnt9vHJm0No2Ntpf1ip0/uwcoBYZWrzH1vynYnX10UprHwXeAmAU7Qsyx0CJ1Y2rf9Y1tcy5YqxPT5I1J+8yd7/3R2VmkSnwf7nSqe0npchR8TTTzaq2U9pcLdM9m0p+HtTXbXBkjJ7i/h7htrS4bRiuIUwtpWk=
+	t=1710147902; cv=none; b=N0k7+JzETjFgg9uEPc86vDVWM9UKX/C3u3r/r/leJ+6YgTi7xFp02lxzbbqE5LLZv6vlA7Ibl+cDJlozn7ZPOU8+ogzNVIIE6AqiUsHqgBkj1NTnqHlSpU+pbCdOW8AE94vVyMXBdcV39ilXT5zAE62GQ0Uym390IaOuTgQsDjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710147848; c=relaxed/simple;
-	bh=YZIvk45Qdwe+WgoeWiUCSU3e5i9+mC93jSqXbug2wgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jhGnX4qpEbbo+27DBZrwXER2TM+7P+9hhPBXMEvQWn+xmC/0YrvxEYN6zrYN90L+lE3fmvGTk30xS/WBE0fUmhlibhotXV6qcA0aVfS1mU6ELw0sfA20fc07PLyD09RuWki2hRX264Hc6ss2WQNLh6Sl2LExP6OlRCXalgAf4WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QOxwuDhu; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOxwuDhu"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7ce4512d308so2444933241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 02:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710147846; x=1710752646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B6BaIj82ne96lSVNCUMkWu0rka7gtZJhD+DKobLwFLE=;
-        b=QOxwuDhucLDB8NXZdhw0Zh9iLejJHSoZGB98Zz7gAr/FsCaE5zCPCGchhebiazyx4l
-         HQ+AGSSUVHw2igVW8Pj+P4ZbM4GTVyvMgd16cmEmlpLvIioTSJ003CrntGkcOWdGMaCo
-         gJ7Tt45wulVxHrvF4PT92F41kiz9YRKu1/dVWPImSfJdwZ9YVrf+aJ17m4Kc99SQsAJZ
-         ZS/f28mPg5uxG4igMYVfKtaou0v6FjPvf6jEimnZV2mZXLAGs6RrzVx+H+QL8OW2Drne
-         QRxjC9QRDZp76KGA6F05MQQYoN69YMEHfyLBCB6mQiYPyBthCGQBMIRSeWz7n+dBu5hO
-         seig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710147846; x=1710752646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B6BaIj82ne96lSVNCUMkWu0rka7gtZJhD+DKobLwFLE=;
-        b=VShxuTMZCJo9S+S8ZCep3thG6JJKPj9Dn6zE+cwpJ4GzX99TzSPMEqEEnAtdtOZVba
-         J5YAqA7qSjwy/wfeKg3A/KspFjY8tFkNTotIP0N1RwRpwmi81fjw7WuAed1wOmDnIXnR
-         WIEI0yIxgbAdrEc+OXNP2CnsPeiOypOdLRAL1H+jmpYSccoTMqO9HG/1Zkkqk49Hg6Lg
-         WG5GWYCjBOTVVUHuq99CM2P83AF052Lvk+izRwSG4Ev9swt06jt3nN/BeHrfIG8HkDA8
-         Ik36FJMvUZj5EDiAVcUJb20OXjWtXLN8W+XE0uzhkc6UvtkwkQ2LnhhNIO3hGhzMNDrt
-         t2cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgZC7VZm3q8SwumvZP7Tp7F3yRG5OIYWhxHb5Qp4HxluzeM4I2N5Y/+HFqDjAnGXycivhmYu3n2hcgi1aKXvvnNYB9y4E+3YxC1eqW
-X-Gm-Message-State: AOJu0Yxfsvc5NJNe2tF0L8IX8nk5vnFlb9/QnA6ldTAUwbDFpCSxftHB
-	COmPxQov/SYWG2dMoH0/zxiLY9TMqozBuOpYmqn+nj8ySkzZkGe5kZgbH4j6VfdR2vJFNBB3lA7
-	ArXM599z1ymI0AvaSa/Z+yJJOY10SPm1JkdTy
-X-Google-Smtp-Source: AGHT+IGDyXcLeuaPrjaudYCASjkgYgdbUsiIhZv89u6VhpK9strLPA7X0y5X6IsmIJ0P7sQ9CtdvUxjjVZ8yX+o79Hc=
-X-Received: by 2002:a67:f607:0:b0:472:65bf:9f14 with SMTP id
- k7-20020a67f607000000b0047265bf9f14mr4320102vso.5.1710147845811; Mon, 11 Mar
- 2024 02:04:05 -0700 (PDT)
+	s=arc-20240116; t=1710147902; c=relaxed/simple;
+	bh=Hq9KMZlJYWHrarCVLuBeXH2ELq8mujCoLoueQLuYpv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBX+7E0iQx3Rf5CCvODga8IOBX2fXJJSvNtdhYOWGBp2Jvhzqvjm2VWFzPH2z5tdz9VEBZQOKr4Z3q/zRRxQsAslC5McphnIxHgBDXMds4Gh7UA/scHCplF7ZWI6XmivMzryJIJD47N2JAiT0nO5FnWdBYp0TaQbRb3allyzT48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DFA7FEC;
+	Mon, 11 Mar 2024 02:05:35 -0700 (PDT)
+Received: from bogus (unknown [10.57.94.75])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1545C3F762;
+	Mon, 11 Mar 2024 02:04:55 -0700 (PDT)
+Date: Mon, 11 Mar 2024 09:04:54 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sibi Sankar <quic_sibis@quicinc.com>, cristian.marussi@arm.com,
+	rafael@kernel.org, morten.rasmussen@arm.com,
+	dietmar.eggemann@arm.com, lukasz.luba@arm.com, sboyd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mdtipton@quicinc.com,
+	linux-arm-msm@vger.kernel.org, nm@ti.com
+Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Enable boost support
+Message-ID: <20240311090454.rcyefesrfw6rp2ad@bogus>
+References: <20240308104410.385631-1-quic_sibis@quicinc.com>
+ <20240308104410.385631-3-quic_sibis@quicinc.com>
+ <ZesbVW0dDd1i2F_F@bogus>
+ <20240311045513.om2dbej62kz3hex5@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-arc-for-list-v2-0-ae93201426b4@google.com>
- <20240228-arc-for-list-v2-2-ae93201426b4@google.com> <d52c5d95-99cd-4bd4-864f-b704299d3b1b@proton.me>
-In-Reply-To: <d52c5d95-99cd-4bd4-864f-b704299d3b1b@proton.me>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 11 Mar 2024 10:03:54 +0100
-Message-ID: <CAH5fLggrRANz1GrjEa671Vj0m9=UDeEcGV5vhOxq8XtR6EjUSg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] rust: sync: add `Arc::into_unique_or_drop`
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240311045513.om2dbej62kz3hex5@vireshk-i7>
 
-On Sat, Mar 9, 2024 at 2:02=E2=80=AFPM Benno Lossin <benno.lossin@proton.me=
-> wrote:
+On Mon, Mar 11, 2024 at 10:25:13AM +0530, Viresh Kumar wrote:
+> On 08-03-24, 14:06, Sudeep Holla wrote:
+> > Anyways apart for those nits on the commit message, this looks good.
+> > 
+> > Reviewed-by: <viresh.kumar@linaro.org>
+> 
+> :)
 >
-> On 2/28/24 14:00, Alice Ryhl wrote:
-> > +        // SAFETY: If the refcount reaches a non-zero value, then we h=
-ave destroyed this `Arc` and
-> > +        // will return without further touching the `Arc`. If the refc=
-ount reaches zero, then there
-> > +        // are no other arcs, and we can create a `UniqueArc`.
->
-> This comment is not explaining why it is safe to call
-> `refcount_dec_and_test` on `refcount`.
-> It dose however explain what you are going to do, so please keep it, but
-> not as a SAFETY comment.
 
-I'll reword.
+😉
 
-> > +        let is_zero =3D unsafe { bindings::refcount_dec_and_test(refco=
-unt) };
-> > +        if is_zero {
-> > +            // SAFETY: We have exclusive access to the arc, so we can =
-perform unsynchronized
-> > +            // accesses to the refcount.
-> > +            unsafe { core::ptr::write(refcount, bindings::REFCOUNT_INI=
-T(1)) };
-> > +
-> > +            // SAFETY: We own one refcount, so we can create a `Unique=
-Arc`. It needs to be pinned,
-> > +            // since an `Arc` is pinned.
->
-> The `unsafe` block is only needed due to the `new_unchecked` call, which
-> you could avoid by using `.into()`. The `SAFETY` should also be an
-> `INVARIANT` comment instead.
->
-> > +            unsafe {
-> > +                Some(Pin::new_unchecked(UniqueArc {
-> > +                    inner: Arc::from_inner(me.ptr),
-> > +                }))
-> > +            }
+So stupid of me, I wanted to make sure you were in to and seem to have
+copied the same address for my reviewed by. Sorry for that, obviously
+I meant:
 
-The from_inner method is also unsafe.
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-I think that using new_unchecked here makes more sense. That method is
-usually used in the case where something is already pinned, whereas
-into() is usually used to pin something that was not previously
-pinned.
-
-Alice
+--
+Regards,
+Sudeep
