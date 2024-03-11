@@ -1,302 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2046.outbound.protection.outlook.com [40.107.21.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A4338DED;
-	Mon, 11 Mar 2024 11:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710156165; cv=none; b=Zlrn4nxn5WbgENtrP7sGSd7/yV0mn7LR34x0JGZxqOFOxibYhB02b87+uErbsSo6eecPVv/0U+Ekna5Vj+km0hatde3/XF/6qXEy8hZtRGGfztpKZfkIvMZt+FO1cGPgWZQzG/a2/EYZyy107qkBYgsrrjvPvI0rGlm0ks7AuTE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710156165; c=relaxed/simple;
-	bh=bzriNqhRxAw42UiGUSxczR0T+CSLZBMYiugAD4TlN7o=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sGqVc0lYvAl60+pnx369NCI0XbU185XdClTWtw/eAUdUfOAefl4J+oM3Vc7C2+7SyyYEL5Gutf4MxzPXuoeTyguKn4D1HjAl/5w/9hLgpuedt0VhoId9crPV0pM2/1asxW4LPDJwYaUwjOZtG6M3Vw/VDNXtBdNRJdvC/9DYidE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPxn+F6Q; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F5F3BB20;
+	Mon, 11 Mar 2024 11:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710156245; cv=fail; b=JaLTK+iw2CK5zUsahtP6zmoja6JCz0LRAnGzITC8jHEFmHjiM3uuFmgSTfE2MMDRrMZfCH098NKriStpeUo4GSFdxVwRyF0lb+y6d0jL7bDyT5qwRGx0neV3Zxe/tuZRkjQ4wOewOQat8z58X0hQcpA61hko5w57z3l3a8VxSss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710156245; c=relaxed/simple;
+	bh=0OKdNpyMTvE35glb7QWRVBmBody/4wtEJrDdJp6slBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=SDSHex55fMHfMEaYuYCBWI6m2j/jWCyumCySTdc/WHFJ9pZp+dc+rd3weCEAuMlRBmHW8o497o/17iJPOF6Apv1wLo/6D7bgIAkpxVHSHI7YFEN/IgHUm+UbOcSNI2RNu6b9E/XrSLDbB+kHDIu3/k0Llnlrk+tYGsS7oH+4Op4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=l4rU/42P; arc=fail smtp.client-ip=40.107.21.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPxn+F6Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710156164; x=1741692164;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=bzriNqhRxAw42UiGUSxczR0T+CSLZBMYiugAD4TlN7o=;
-  b=PPxn+F6Qq0Z3/7vNcOHXOsD+woAZCDMaXEWSyYzb1ifgAhO0Xs8IjgMI
-   XXXMDB/kWhlTkl3LImvr6Zjit6j5sBikGQhnU7S7u9+6aSGSFFBIGmumc
-   rdAnBYTUu7DzL4X4NQSc1YW+IX7J+5z4ibDqN0I7lnFSkttD/yxBschMn
-   pMxTP6KXKgCWniFxWq2t5NKkO4aR+4eLWlwkCw1teuMBSCuWMLfUe5lmj
-   cgo+1s/+KxjMIm+3RPCRuMpgE/GFe0EITPQajrHpGRvpmQY0xr7I2gq7H
-   2N/mfKQerHjDZsfEmmCWmPn1CdlfDW60x+NZ6A/SDAcZZcg9EmDQIjvS7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4734408"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="4734408"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 04:22:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="11023859"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 04:22:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 Mar 2024 13:22:35 +0200 (EET)
-To: mustafa <mustafa.eskieksi@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, linux@roeck-us.net, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, pavel@ucw.cz, lee@kernel.org, 
-    linux-leds@vger.kernel.org, rishitbansal0@gmail.com
-Subject: Re: [PATCH v3 1/1] platform/x86: Add wmi driver for Casper Excalibur
- laptops
-In-Reply-To: <20240310181429.59451-2-mustafa.eskieksi@gmail.com>
-Message-ID: <8e46e7cc-eb3d-390d-f411-8a15b0d8d22c@linux.intel.com>
-References: <20240310181429.59451-1-mustafa.eskieksi@gmail.com> <20240310181429.59451-2-mustafa.eskieksi@gmail.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="l4rU/42P"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eO+pADOhpRD+cBCtzF5KP5F0uZ6eG8MNVy5SPIqR2Z6uOTLTdY7kUccBcm1eBDj/TYeRgZPyJhJqqb/R7BZvX4wX7Hxkm9I7LbLs/E9lFsf2JT5/Z030prCUCMQMxRllzJ8wBcYZ4dNZHdf87BFGNKcndtwxPd72MPlCxqSgYFvpp/oJmHhACj+6AmTOvkBklWcfDgct0G7yOmuOPdz7hJGBvWPHItcGxpgj2Fw6ajL2QTOjyBSQTgeJ65dxMKvOil98C8RRFeUh1WRQhTdmgZJXxTR6Q7oPDLIhsrXqxK0KXSAGbFT2yHn8zmhP3sG3LwKNasrBKM+IwXZT5Oq2Ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xCZ+oNcYdDnw7MRTGhDS4BmDzKPx2igFcE6vbn26Qlc=;
+ b=MxjXyYw9w8/KHyX8SasGbhmGzFDHto1s3M+CASUflI/RaWCaApRtPoYcdR26RgwosMfLu9Tc1jBIU4VU4BDy9k08E04Eie1XvabIBVxI8NwcgoCWbQFHBVmtG5XNaY7al0um3ztY2YuNMjPewldLOD2K3QLo0lh7oOmpKsQxPxzdGZBbO2FRG/F/fpMJ5bj044RiJuJ2GLoXWI7h7epgE7venScsZL67Vnlz9LgieAxFg0WjVOdNYswfVIxXSlGukZvRIomdJzZtuR12UZUKtYWm6rYjBpVHWnCbj2YK6y55+wmtYyPsEA7OH9l7MO72hL8Fb/lSBdUMVgkBX+NBZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xCZ+oNcYdDnw7MRTGhDS4BmDzKPx2igFcE6vbn26Qlc=;
+ b=l4rU/42PjbFRlMvhKJ6IksG4hfWHZOU+sqZcaUpBapVl2YnKi9wmxnUV7ew3QQdKKzaC6TDEcd0hAMeXi8UeyLhMmrpKMf6v9WpYVZgHpf6aIKNI1rw/7z6Nu+8ZfNrX4bsYb1uCBbaER/4YhC/e0kgsCb1Ww4/8gVaalz7ECz0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9377.eurprd04.prod.outlook.com (2603:10a6:10:36b::13)
+ by DBBPR04MB7690.eurprd04.prod.outlook.com (2603:10a6:10:200::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Mon, 11 Mar
+ 2024 11:24:00 +0000
+Received: from DB9PR04MB9377.eurprd04.prod.outlook.com
+ ([fe80::b3d4:17c4:91b7:101d]) by DB9PR04MB9377.eurprd04.prod.outlook.com
+ ([fe80::b3d4:17c4:91b7:101d%5]) with mapi id 15.20.7362.024; Mon, 11 Mar 2024
+ 11:24:00 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: ping.bai@nxp.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de
+Cc: kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v3 0/3] add pmic pca9451a support
+Date: Mon, 11 Mar 2024 19:31:58 +0800
+Message-Id: <20240311113201.664252-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0025.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::12) To DB9PR04MB9377.eurprd04.prod.outlook.com
+ (2603:10a6:10:36b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-888064519-1710155751=:1142"
-Content-ID: <a4660b43-91d8-fc1f-1ee3-eb0920241715@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9377:EE_|DBBPR04MB7690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c8f3e71-a12f-4a84-0d40-08dc41bdbfd9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ypk57eja/GmjDWxyg3a17bAWtAQGtSNIErd+YMOUKa1F7ULPRt9o/zgZC765gIOz2SMc5muAXoQiKWjzlocLE602YKTW8nCTNkDw+LniPs6YW0VyRa4XB+YCfPPtiiGdPXePZYT83opreXalJFGZcYyKxGvKlrQlC9Y39qi6a7ou+0KpdTfjnofAKPphFCodfO8VawSuWeHeO45O22FMdqKdtUIoXk5QJyHAu089X/RrmSrY2GUj94MUUJOGGgRd+tAVo1e4l5svUT0nSaFE4vmO03B1bv2Zn3pxYyYiu0p6oMmmljbrrxVjG78r8uPZnffCcP0McJmEYn6CmC9eHfBf8AscCXY6xlztZofDlzIyEyiDBqim1zF3n0YW2tiJYXyAl/4rZhdc2ruOUlVVuh/Lei12mcAX9FxW0i8kL/Hkc+/gjkU2LdujVy3Kc14eTDRXiUPVTPJHq2eqk5Mr2ekIfv26cPZUNYqccrCTM411T+TeuAaWaSYMQsnsryFyzqtgo4j8Q3Kygv6VHJck4284iaSFu5vIWT/D5RIbG5sDE7dc4Q7AaZmVMREAk/vke3g4lRyUC+KnT4BSWWggWbOXZMnAquQKtTIRU7HiLg781eY5uDdBPZnuh+JOWhPO6aJdmny4zlcycRJfF5WwqBuaOl8Bq9Kuaeq6/UEZDIwV69qeezgGXcOSY4XeToyNWR/edxU6I5mLH/MrZll28PAkBRldF6KN6mvzxixE8aE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9377.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(52116005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nCe6q8INEKUDunFXdqmvTXVeSJZJfD8MXfFHvyarYdEqZxmmtjqQQcVPaKVV?=
+ =?us-ascii?Q?zZNeltEuczN7llpDpot093rV3qUbX5wPox8i+iovO0mH0oaU3AMBnuDbpZE2?=
+ =?us-ascii?Q?K2xcY9SpECjmmRyIOtpQBPXwdiHgASAQIzGNCrz5ro3Vyn5pngVcQTI2U1V5?=
+ =?us-ascii?Q?PMTKSp+/HREbUuFPI3TRX5Z9fVU7hkd7d7UPWqR9UXlsuxvF7NYAkjFbvvTu?=
+ =?us-ascii?Q?8vEHiKRcg5TCC4lAY4PhCqMNbOzMhlVoiliEKmf6KOSkBQoUYHeO1N46i89H?=
+ =?us-ascii?Q?mlpo+4R5w42dT9KPvpLuIkVLAe5ISSgUu706ggUYM9IA28vuFztf+OHPE9l2?=
+ =?us-ascii?Q?+G8Zq1TWebTuArjmZLh3t0iBSNwlGhuuSc2pGZ889P2m+UXmg7wHr/izq/9l?=
+ =?us-ascii?Q?4My8sIX48ouQhL5/frEexndqqJnChCoJvZxOX7fXYBnR2vLtY1TWczGtUzeJ?=
+ =?us-ascii?Q?IYcrqaMRsbE7H/a4cvV4Jy5KnspagXBSryQoJZwqLwfbKC1T3qfyDmVyv2eI?=
+ =?us-ascii?Q?AiH4NxFNliEroiwPd00QZz+mwtwFL4u0mIXPI71qP4B3yuMzLN7x7cEJiD4K?=
+ =?us-ascii?Q?nYH7GXGhIZlfS6wxOOTpyvOIsxug7u91yjcSEYP8gRn94SfY3ajooyVW81Wg?=
+ =?us-ascii?Q?PpkjyX19U1k0yBVAd93PcOdF86ij2Df3dEsQ/CD9rKUBjxC/zqE27aguwnQf?=
+ =?us-ascii?Q?JW9WPlnz9CpvAxyZ1mUc86ThwWDToXkYYQKsLMytwDOJtYoa5GL6+U8C7RNr?=
+ =?us-ascii?Q?slsC79X/+liuAaYUrvwnHcHxEsF9u4b4myMSSW4haNTf0z5oRQ+t8mNPMIm4?=
+ =?us-ascii?Q?2Kx2rdXh/ghG5JC/TWApDnwK7TsT5Il4KR47UhGVpyGl+KE/yJUYoOCHsAWj?=
+ =?us-ascii?Q?h7mXUThv+VbOpLEddMWbrsTd/NXkWzGY0ikJOLdhX/uUJHhZmzedZsdWar3r?=
+ =?us-ascii?Q?aG8PH59JQwAogXn4uRthFJhkm3QtSfTvTYfZrfdOkmzddYfd+pYVqYrZ4sNh?=
+ =?us-ascii?Q?Dz7WCqfKHupUD93YLCYG4hwLqJWcEcVpumo5tGSg0IzgH3nlO9botV2HCxsa?=
+ =?us-ascii?Q?qjTPlzBgALi6+m7gd6J74khLhl0JlMeG51bqx9PGiugXCmewV1DhjMo0z0Jt?=
+ =?us-ascii?Q?MPdjUSY59hQqFJS9cY22bvzblD3Wnzm+qVb/bzTZVEgZRbNYelIlT5qtwpp6?=
+ =?us-ascii?Q?7rNqcQq6YlXoq7zzd6lEdt+OyjNqtjveKt6kLAE+DkAsLwdSuGbnktfhhuJ5?=
+ =?us-ascii?Q?LNoovVbLy33WZpSqgY4ftTKbYJfRz9wdTJK6sHCVZnTjUavMAoCv6XNzZmZZ?=
+ =?us-ascii?Q?QA9rPMuxObDESfWab0U/h5qpAj4NhJf95DB58o7jSULBC/HHML33yTKejuB0?=
+ =?us-ascii?Q?Nmzo9ZahkctuSx8LxQ60iiWedg5y0qJ9IDamZGy2uecZS1xRVrxgN/WSNn7n?=
+ =?us-ascii?Q?OAkJN7MmqQiPmn+iUcjKMXWZoJ+hQ6qaw4ooBqVkwSKdz3FsXuia1lCCmwNu?=
+ =?us-ascii?Q?OlqpS8Yd7S1EFftfZv25oHu2RTmpfaoTuZizhNY2sedxz4vaxYL6470shAyK?=
+ =?us-ascii?Q?Zc1Jl77t5u6kz40cdCnOZImyDTD6tyEr+u6H3q1j?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c8f3e71-a12f-4a84-0d40-08dc41bdbfd9
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9377.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 11:24:00.6150
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QVJV33ICV7YfPkncVTTcyNNOAZvgTXdBW+1YXjetHuHpX7xDink0qY46J9vWIoEN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7690
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The patchset supports pmic pca9451a.
+For the details, please check the patch commit log.
 
---8323328-888064519-1710155751=:1142
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <35a12ae5-79fc-122d-7f19-32626661a30a@linux.intel.com>
+---
+Changes in v3:
+- modify the dts voltags constraints.
+- remove unnecessary changes in driver code.
+- modify commit message.
+- add tag for dt-bindings.
 
-On Sun, 10 Mar 2024, mustafa wrote:
+Changes in v2:
+- drop old part support.
 
-> From: Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>
->=20
-> This wmi driver supports Casper Excalibur laptops' changing keyboard
-> backlight, reading fan speeds and changing power profiles. Multicolor
-> led device is used for backlight, platform_profile for power management
-> and hwmon for fan speeds. It supports both old (10th gen or older) and
-> new (11th gen or newer) laptops. It uses x86_match_cpu to check if the
-> laptop is old or new.
-> This driver's Multicolor keyboard backlight API is very similar to Rishit
-> Bansal's proposed API.
->=20
-> Signed-off-by: Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>
-> ---
-> Changes in v3:
->  - Replaced led_control attribute with multicolor led interface.
->  - Added struct led_cache, instead of storing only last color change.
->  - Added dmi list to prevent registering platform_profile driver in model=
-s
->    that doesn't have this feature.
->  - Added a x86_cpu_id to differentiate older laptops that are reporting
->    fan speeds in big-endian. Also newer laptops have a different power
->    profile scheme. I'm using x86_cpu_id because they don't have a
->    difference in model names, only in cpu generations (the official drive=
-r
->    download page makes you select your cpu's generation too).
->  - Removed hwmon_pwm device in favor of platform_profile driver. It
->    indirectly affects fans' speed but they also affect frequency and
->    power consumption as well.
->  - Replaced handwritten masks with GENMASK equivalents.
->  - Replaced led_classdev_register with
->    devm_led_classdev_multicolor_register. This should solve the bug
->    where led_classdev remains registered even if casper_wmi_probe
->    returns -ENODEV.
->  - Removed select NEW_LEDS and LEDS_CLASS, because it creates recursive
->    dependencies.
->  - And some minor changes.
-> Changes in v2:
->  - Added masks for
->  - Changed casper_set and casper_query returns Linux error code rather th=
-an
->    acpi_status.
->  - replaced complicated bit operations with FIELD_GET.
->  - Fixed some indentation and spacing.
->  - Broke fan speeds further.
->  - Moved module metadata to the end of the file.
-> ---
->  MAINTAINERS                       |   6 +
->  drivers/platform/x86/Kconfig      |  14 +
->  drivers/platform/x86/Makefile     |   1 +
->  drivers/platform/x86/casper-wmi.c | 639 ++++++++++++++++++++++++++++++
->  4 files changed, 660 insertions(+)
->  create mode 100644 drivers/platform/x86/casper-wmi.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1aabf1c15bb..e4cb770c990 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4724,6 +4724,12 @@ S:=09Maintained
->  W:=09https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
->  F:=09drivers/net/wireless/ath/carl9170/
-> =20
-> +CASPER EXCALIBUR WMI DRIVER
-> +M:=09Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>
-> +L:=09platform-driver-x86@vger.kernel.org
-> +S:=09Maintained
-> +F:=09drivers/platform/x86/casper-wmi.c
-> +
->  CAVIUM I2C DRIVER
->  M:=09Robert Richter <rric@kernel.org>
->  S:=09Odd Fixes
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9..4f951bcac1a 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1127,6 +1127,20 @@ config SEL3350_PLATFORM
->  =09  To compile this driver as a module, choose M here: the module
->  =09  will be called sel3350-platform.
-> =20
-> +config CASPER_WMI
-> +=09tristate "Casper Excalibur Laptop WMI driver"
-> +=09depends on ACPI_WMI
-> +=09depends on HWMON
-> +=09depends on LEDS_CLASS_MULTICOLOR
-> +=09select ACPI_PLATFORM_PROFILE
-> +=09help
-> +=09  Say Y here if you want to support WMI-based fan speed reporting,
-> +=09  power management and keyboard backlight support on Casper Excalibur
-> +=09  Laptops.
-> +
-> +=09  To compile this driver as a module, choose M here: the module will
-> +=09  be called casper-wmi.
-> +
->  endif # X86_PLATFORM_DEVICES
-> =20
->  config P2SB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-> index 1de432e8861..4b527dd44ad 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_MXM_WMI)=09=09=09+=3D mxm-wmi.o
->  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)=09+=3D nvidia-wmi-ec-backlight.o
->  obj-$(CONFIG_XIAOMI_WMI)=09=09+=3D xiaomi-wmi.o
->  obj-$(CONFIG_GIGABYTE_WMI)=09=09+=3D gigabyte-wmi.o
-> +obj-$(CONFIG_CASPER_WMI)=09=09+=3D casper-wmi.o
-> =20
->  # Acer
->  obj-$(CONFIG_ACERHDF)=09=09+=3D acerhdf.o
-> diff --git a/drivers/platform/x86/casper-wmi.c b/drivers/platform/x86/cas=
-per-wmi.c
-> new file mode 100644
-> index 00000000000..80e1e2b16fb
-> --- /dev/null
-> +++ b/drivers/platform/x86/casper-wmi.c
-> @@ -0,0 +1,639 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include <linux/module.h>
-> +#include <linux/bits.h>
-> +#include <linux/bitops.h>
-> +#include <linux/acpi.h>
-> +#include <linux/leds.h>
-> +#include <linux/slab.h>
-> +#include <linux/wmi.h>
-> +#include <linux/device.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <acpi/acexcep.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/platform_profile.h>
-> +#include <linux/led-class-multicolor.h>
-> +
-> +#include <linux/dmi.h>
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +
-> +#define CASPER_WMI_GUID "644C5791-B7B0-4123-A90B-E93876E0DAAD"
-> +
-> +#define CASPER_READ 0xfa00
-> +#define CASPER_WRITE 0xfb00
-> +#define CASPER_GET_HARDWAREINFO 0x0200
-> +#define CASPER_SET_LED 0x0100
-> +#define CASPER_POWERPLAN 0x0300
-> +
-> +#define CASPER_KEYBOARD_LED_1 0x03
-> +#define CASPER_KEYBOARD_LED_2 0x04
-> +#define CASPER_KEYBOARD_LED_3 0x05
-> +#define CASPER_ALL_KEYBOARD_LEDS 0x06
-> +#define CASPER_CORNER_LEDS 0x07
-> +#define CASPER_LED_COUNT 4
-> +
-> +const char * const zone_names[CASPER_LED_COUNT] =3D {
-> +=09"casper::kbd_zoned_backlight-right",
-> +=09"casper::kbd_zoned_backlight-middle",
-> +=09"casper::kbd_zoned_backlight-left",
-> +=09"casper::kbd_zoned_backlight-corners",
-> +};
-> +
-> +#define CASPER_LED_ALPHA GENMASK(31, 24)
-> +#define CASPER_LED_RED=09 GENMASK(23, 16)
-> +#define CASPER_LED_GREEN GENMASK(15, 8)
-> +#define CASPER_LED_BLUE  GENMASK(7, 0)
-> +#define CASPER_DEFAULT_COLOR (CASPER_LED_RED | CASPER_LED_GREEN | \
-> +=09=09=09      CASPER_LED_BLUE)
-> +#define CASPER_FAN_CPU 0
-> +#define CASPER_FAN_GPU 1
-> +
-> +enum casper_power_profile_old {
-> +=09CASPER_HIGH_PERFORMANCE =3D 1,
-> +=09CASPER_GAMING=09=09=3D 2,
-> +=09CASPER_TEXT_MODE=09=3D 3,
-> +=09CASPER_POWERSAVE=09=3D 4
-> +};
-> +
-> +enum casper_power_profile_new {
-> +=09CASPER_NEW_HIGH_PEROFRMANCE=09=3D 0,
+Joy Zou (3):
+  regulator: dt-bindings: pca9450: add pca9451a support
+  regulator: pca9450: add pca9451a support
+  arm64: dts: imx93-11x11-evk: add pca9451a support
 
-PERFORMANCE
+ .../regulator/nxp,pca9450-regulator.yaml      |   1 +
+ .../boot/dts/freescale/imx93-11x11-evk.dts    | 112 ++++++++++
+ drivers/regulator/pca9450-regulator.c         | 194 +++++++++++++++++-
+ include/linux/regulator/pca9450.h             |   1 +
+ 4 files changed, 306 insertions(+), 2 deletions(-)
 
+-- 
+2.37.1
 
-> +=09ret =3D casper_query(wdev, CASPER_GET_HARDWAREINFO, &out);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09switch (channel) {
-> +=09case CASPER_FAN_CPU:
-> +=09=09if (quirk_applied->big_endian_fans)
-> +=09=09=09*val =3D be16_to_cpu((u16) out.a4);
-
-So you use be16_to_cpu() but you cast the input to u16, not __be16!?!
-
-Please run sparse with endianness checking enabled and make sure it won't=
-=20
-complain on these lines.
-
-
-> +=09gen_id =3D x86_match_cpu(casper_gen);
-> +=09if (!gen_id)
-> +=09=09return -ENODEV;
-> +
-> +=09quirk_applied =3D (struct casper_quirk_entry *) gen_id->driver_data;
-
-Don't leave space after casts. There could=20
-
-> +=09dmi_id =3D dmi_first_match(casper_quirks);
-> +=09if (!dmi_id)
-> +=09=09return -ENODEV;
-> +
-> +=09quirk_applied->no_power_profiles =3D ((struct casper_quirk_entry *)
-> +=09=09dmi_id->driver_data)->no_power_profiles;
-
-Please make a local variable for struct casper_quirk_entry * instead of=20
-trying to cram this into a single, multi-line statement.
-
-> +=09casper_kbd_mcled_info =3D devm_kzalloc(&wdev->dev,
-> +=09=09sizeof(*casper_kbd_mcled_info)*CASPER_LED_COUNT, GFP_KERNEL);
-
-devm_kcalloc()
-
-
-I'm yet to go through the use of multicolor led stuff (I don't have time=20
-for that now and I'm not familiar enough with it to check it quickly).=20
-But hopefully we get one of the leds people to take a look at it before I=
-=20
-do, their input would be much more valuable than my review.
-
---=20
- i.
---8323328-888064519-1710155751=:1142--
