@@ -1,140 +1,103 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D425755
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED8314298
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710160842; cv=none; b=kFqaeBfo4q2zhHUHOhWc7/h8IHItVm8i+GyWKDER2BkwOXZwN8KbaxOvisV07n7pS8aTaqOnJQD1GD/o/nm7leAZdXEhYHj9eB1tXo7VTlvYqWi9ZDueZSTLhC4GMSbv8b7lrUjuXRQ+RMZicBERaXGdRr+M24ZgckUiAeMjGDU=
+	t=1710160944; cv=none; b=XvOAfUlDgGg1QMLHMIKSBa94ECA1gIO7as1+xe0GIVGlOJ/Kl8VTckeQk8PRpT50oH/O+yGA/++ggMz46lzYxOwdDmR9XKT0ffYVNsD+1Vn9jG7FXVU6PXJIvNzHqWzqg2mkXpylMWZckYOAmDFEGRb/shuOi0lkuenkSH9mWpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710160842; c=relaxed/simple;
-	bh=7iyN0obiYCS+6q+ebCFwc+JmlfO9przc4D5Z134DvjU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n/3r6Re6tNFJu5dHpFk2GOTrxsDnUvOdHF1SpkJ71bOYnh9JfN7ONdAoRbOy866dK+5qDeXU7rVpXOQX4yY3bh7/JA1ECD0w/+14MPJq7zC4844uPXeE5V2ynBkjXyangvCrrBg5ufr0QX15Mmns8YHn/LotJP2lp5Rq4HtDW9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=KWjn9wkd; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1710160944; c=relaxed/simple;
+	bh=drNSqX9EaSckBuQ7fqCj5jsg1tNnSNmL5x44pJ2lqQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkieM0PG3E224MC+Tu4j0L8HjTeazgMlmWm46WZtO3rZ9N3JA1ek7/iKZ2XAZITmicC4M9zZDZK4gpbT9G2zHJ03NJBRgKvDSLASHDKNxCk1qZr6OOU9AiKQnfMGqA/R/cIPvXBm6qLXBcO8l1Q5BejkAYcPapSe0dPfaPTeP1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rn6ztg7y; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="KWjn9wkd"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4132a348546so4550225e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 05:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1710160838; x=1710765638; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUeKqYGVxUsunuJQG4tec02NEsEnm7zmFbvtCQVCYHg=;
-        b=KWjn9wkdgjPZq1ztzOIEVSE13iOZsXsTh5/YI8IZDivNa4MjLRiLEEMeABVrAKzl0A
-         jKf9+nudKWBe1fiBGwzYtsTIYFKP03YfzI6aXpYHU7Hi9xHC/a6iLkmEkfzCevG2jwt2
-         FyvpDz8SsstPvhPnDksUZ3hJMgl1NtC3VBDLgdeWolwojqfj0p1C3AVWhW+cdw4KpYoJ
-         9pXJA2uRqrlk7ADdwCKezhNYeEFLic/FNZ29tdTYS9fSEscLjY14Ap7sJ7bmkoHVL9Ze
-         cMB752GZXnwq5Uvqdd3x7SRiJwVmPkN/Xs19y++G4cVnFdIE4FEeL8YFftEFVXN98/HD
-         GB/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710160838; x=1710765638;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CUeKqYGVxUsunuJQG4tec02NEsEnm7zmFbvtCQVCYHg=;
-        b=gbiqnx+ilFrktIMp0cvJSe8f6bigyeXLQ0Q7gKXhQJt9F8P1S9JxT/m5pCBolsp7KV
-         HMmPjN5AdE2+/jHP4bUO/+Yo08OtmS3iOE6bL8iipc8ESdYX6Mm455HHn+wqByZXJvu4
-         BaByMQ3CGeFDsUJemk1BKDmzdCtnQptF8+GKEBLtoGQdDQsTxxNdVe64jKcAfbZn+3Mu
-         5ueTqL1PJVBynEy8HhdzUKt6pK6R2AyDVZO9CSVQQwilEIKo1ZkI3C/qeUnY9/u8xCMe
-         pYdq2a1wtRElstSXYQ5EwakRku60o7Tm6Kphu5wfYDYPpTSySzzbuVCTvrPVeNL3V089
-         XIHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvFbyU++Ipk2tQcHOeWC2XxItPT10wzz1vw129ia5+R95R/tKghBk5GbQjUhokWSZhWTvWs4LSgxL8qU1T2ovqC4fnuP4874IXkfim
-X-Gm-Message-State: AOJu0YxdyQrdYJ3o6RyBuOEiifKtt/sc+2YOKuzAgv+ej+VOzHaLHI5q
-	ollQxt196+f87RMtb4FLoXfinoLsAm5QrN/Vcb74xpmC5bFw8OY+cTo1Orvvtr4=
-X-Google-Smtp-Source: AGHT+IGrWrKeOoeIXZ88Juws7JMAQU223c+6sOcyECtWdOTk8c7M3KTrvXuOfFZ0ZFTmwCOXsQgdNg==
-X-Received: by 2002:a05:600c:358f:b0:413:216c:9d67 with SMTP id p15-20020a05600c358f00b00413216c9d67mr4729237wmq.14.1710160838502;
-        Mon, 11 Mar 2024 05:40:38 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.232.6])
-        by smtp.gmail.com with ESMTPSA id p14-20020a05600c358e00b00412d4c8b743sm8983383wmq.30.2024.03.11.05.40.37
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 11 Mar 2024 05:40:37 -0700 (PDT)
-From: Ignat Korchagin <ignat@cloudflare.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-team@cloudflare.com,
-	Ignat Korchagin <ignat@cloudflare.com>
-Subject: [PATCH] net: veth: do not manipulate GRO when using XDP
-Date: Mon, 11 Mar 2024 12:40:15 +0000
-Message-Id: <20240311124015.38106-1-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rn6ztg7y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710160942; x=1741696942;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=drNSqX9EaSckBuQ7fqCj5jsg1tNnSNmL5x44pJ2lqQM=;
+  b=Rn6ztg7yq/hSCYzCESIGPPqyaxt6fQmkwOzzkHqp4k0aMBiII4Mm+6G/
+   b6c3VIy8gsA701JR1V01rBX/Yp2mGsezNtjzVCz/u8NxA/OrNewtfx49g
+   AgXFU6AGv8a7U4EnqV0/f3Vey8wstXC7olLlA6Lflo1Y8UJe0XIcFJ9j5
+   jFgKqNQ9Tp2HzpzowYOeAlvbrq5N7gDJaBjEfL3PBLH7xgQ3diF6Lz5+f
+   Ndu3DXhXODsyLAyAuVLjU8OvPrQ97OHJDLdJZs0CYcRqO1XYwGYWN0JsQ
+   8rUhZblZ9qCuTStYfoYKtHbBJkyX/pbbvHYLw7JCLfIHFCQQDaH42jCEf
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4663162"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="4663162"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:42:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="937049757"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="937049757"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Mar 2024 05:42:18 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 81F2F177; Mon, 11 Mar 2024 14:42:17 +0200 (EET)
+Date: Mon, 11 Mar 2024 14:42:17 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, the arch/x86 maintainers <x86@kernel.org>, linux-mm@kvack.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/3] x86/mm: make sure LAM is up-to-date during
+ context switching
+Message-ID: <e5tjo62yrvmviixily6ramjvnqqmokvayyr6k7c7qzrczcx4yd@yupixsoj53vm>
+References: <20240307133916.3782068-1-yosryahmed@google.com>
+ <20240307133916.3782068-3-yosryahmed@google.com>
+ <420fcb06-c3c3-4e8f-a82d-be2fb2ef444d@app.fastmail.com>
+ <35b670e2-9ef5-4d3a-b6ea-f8016dfa088d@intel.com>
+ <ZevHJ5o3G00_nBha@google.com>
+ <o5t3qrrlw37hdkcja2vny3ycpmhb4dowmdj74a2wrq2x4xctqk@5g5jvzen46qe>
+ <CAJD7tkZABvm4v87T2WJ593sjZ_Z9iLCcgecghQJHrZDnuisBLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJD7tkZABvm4v87T2WJ593sjZ_Z9iLCcgecghQJHrZDnuisBLg@mail.gmail.com>
 
-Commit d3256efd8e8b ("veth: allow enabling NAPI even without XDP") tried to fix
-the fact that GRO was not possible without XDP, because veth did not use NAPI
-without XDP. However, it also introduced the behaviour that GRO is always
-enabled, when XDP is enabled.
+On Sat, Mar 09, 2024 at 01:37:06PM -0800, Yosry Ahmed wrote:
+> On Sat, Mar 9, 2024 at 8:34 AM Kirill A. Shutemov
+> <kirill.shutemov@linux.intel.com> wrote:
+> >
+> > On Sat, Mar 09, 2024 at 02:19:19AM +0000, Yosry Ahmed wrote:
+> > > I don't see how skipping set_tlbstate_lam_mode() for kthreads fixes this
+> > > problem. Do you mind elaborating?
+> >
+> > Define what problem is.
+> >
+> > Yes, in this scenario kthread gets more permissive LAM mode than it needs.
+> > But nothing breaks.
+> 
+> 
+> The problem here is not how the kthread runs at all. It is the fact
+> that if that kthread context switches into the user process that has
+> enabled LAM, it may not update CR3 because the mm doesn't change.
+> switch_mm_irqs_off() will only update CR3 in this case if there is a
+> pending TLB flush. Otherwise, we just return, even if the LAM for this
+> mm has changed.
+> 
+> This can cause the process that has enabled LAM to run with LAM
+> disabled and fault on tagged addresses, right? Did I miss something?
 
-While it might be desired for most cases, it is confusing for the user at best
-as the GRO flag sudddenly changes, when an XDP program is attached. It also
-introduces some complexities in state management as was partially addressed in
-commit fe9f801355f0 ("net: veth: clear GRO when clearing XDP even when down").
+You are right. I think IPI is the way to go.
 
-But the biggest problem is that it is not possible to disable GRO at all, when
-an XDP program is attached, which might be needed for some use cases.
+Will you prepare a patch?
 
-Fix this by not touching the GRO flag on XDP enable/disable as the code already
-supports switching to NAPI if either GRO or XDP is requested.
-
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
----
- drivers/net/veth.c | 18 ------------------
- 1 file changed, 18 deletions(-)
-
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index cd4a6fe458f9..f0b2c4d5fe43 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -1533,8 +1533,6 @@ static netdev_features_t veth_fix_features(struct net_device *dev,
- 		if (peer_priv->_xdp_prog)
- 			features &= ~NETIF_F_GSO_SOFTWARE;
- 	}
--	if (priv->_xdp_prog)
--		features |= NETIF_F_GRO;
- 
- 	return features;
- }
-@@ -1638,14 +1636,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
- 		}
- 
- 		if (!old_prog) {
--			if (!veth_gro_requested(dev)) {
--				/* user-space did not require GRO, but adding
--				 * XDP is supposed to get GRO working
--				 */
--				dev->features |= NETIF_F_GRO;
--				netdev_features_change(dev);
--			}
--
- 			peer->hw_features &= ~NETIF_F_GSO_SOFTWARE;
- 			peer->max_mtu = max_mtu;
- 		}
-@@ -1661,14 +1651,6 @@ static int veth_xdp_set(struct net_device *dev, struct bpf_prog *prog,
- 			if (dev->flags & IFF_UP)
- 				veth_disable_xdp(dev);
- 
--			/* if user-space did not require GRO, since adding XDP
--			 * enabled it, clear it now
--			 */
--			if (!veth_gro_requested(dev)) {
--				dev->features &= ~NETIF_F_GRO;
--				netdev_features_change(dev);
--			}
--
- 			if (peer) {
- 				peer->hw_features |= NETIF_F_GSO_SOFTWARE;
- 				peer->max_mtu = ETH_MAX_MTU;
 -- 
-2.39.2
-
+  Kiryl Shutsemau / Kirill A. Shutemov
