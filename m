@@ -1,91 +1,88 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B762E53E0A
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 18:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1132D537FB;
+	Mon, 11 Mar 2024 18:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710181282; cv=none; b=mUF+cXIqi6gtewLLaGIl6nHqE32YsGBzVP5U1nv4JRLlVoMYeiJn2MtV0YJaxbflfgYcnxb56x0Cf+3H+2+l6EzbNSAIAVyB2o5FQkcLgcRv8UGN9p0zmic2hgNdYfL/kk28+n4vdCbDktsg41q8K4x0nqpkp2nm3pXtSQYtp6Q=
+	t=1710181534; cv=none; b=a+Xp9yYmFKMIYiixn1U8FkdWSDzkwtbsRgF8XNWPOcva3MXqUu+lare/469QptzhFHVYgz+u3xa69ZUtX7i+a3wDJPBr78C8ZW9j4Ur/jFyF6q5rLod3+SHiTYEXY9PwYntVKWWLo4yDlhoskswHR1k6Kl725MdHclFw+7T4zoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710181282; c=relaxed/simple;
-	bh=BUUe45GmcgEf+7sZXAFei90Gwt6yjfK4dCtth9t62L8=;
+	s=arc-20240116; t=1710181534; c=relaxed/simple;
+	bh=r3BDLwL9q69U152caiaU1puZXaBqIjvI7xhy1YrI7fw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ma2RiPQQI7uZSIzvQvKydxm08JzmmlrG7xqfi8UCCGcB4GmsCHpoEW5cofjTj4SHIiGrjeCiZMe2M8oXs4IEUNKCWiVEK5ur0qotdQYcL+VJApbWberzxPqsCtFlIcJU6ilRMUqVb1YC1EKHylCScYEg1I0igmPsh3rgeZhp3dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=z8AlPkLX; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	 MIME-Version:Content-Type; b=iz2is98VFjkbZQyMkFh1w34LG6ZC4BsJlqf1+7C9BpENQKqKoUU2ocXkocTzPwwuR5C2+mqNghlpLnvQNzhTkTAIP3Rb26Xfwht+dgbLap1zDp7oHJ9Zbl0yAbrr0d3Fm5ovpBgtVS8fjfYzNzThHWxHj8+PStApS3CY4+FT5PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXYPrR+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="z8AlPkLX"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id E98F51CF161;
-	Mon, 11 Mar 2024 19:21:18 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1710181279; bh=uu0vN9OWT5pwA8su6yrDf5xh0xrr2nA/BSmFKgc9obg=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXYPrR+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F4AC433C7;
+	Mon, 11 Mar 2024 18:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710181533;
+	bh=r3BDLwL9q69U152caiaU1puZXaBqIjvI7xhy1YrI7fw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=z8AlPkLXRH8Hln+3lBF66TakbKoQUJNIR7HACFeYLc4orin1UX92nUGDp6Gof/ce/
-	 EQ1hv+PfbQXUyjFF5VdWAjRr2jLchmmiN/QqFZMGlO58xrr+nTSIL66116Flyq170G
-	 am4F5ykQZhKId0GOCZ/puKSRUomgVsonaZAZC/jouLH0aDGhQpGkQkpYNHp0oMZptV
-	 ypJa45o8g4vyJOeZqoAg6VU+R65qWHeszCI1fdHilIlLAlJ+AAeM/KILPqHqCw1XNM
-	 hphvY1/fF3bpiPNqx6HpAVgdXaEUZzzZfAX5oSs36H7PnEbeICfJtQos3IHDnEMpF+
-	 M/BhtUiTpE3JA==
-Date: Mon, 11 Mar 2024 19:21:18 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Linux regressions mailing list
- <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>,
- "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, stable@kernel.org
-Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when
- used repeatedly in one file
-Message-ID: <20240311192118.31cfc1fb@meshulam.tesarici.cz>
-In-Reply-To: <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
-References: <20240306111157.29327-1-petr@tesarici.cz>
-	<20240311182516.1e2eebd8@meshulam.tesarici.cz>
-	<CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	b=MXYPrR+WUmb6e4dbDkvedPj73lMETfPnb3253qEzLmDERUURMB4/oHR77z/0XIgdK
+	 VsloJXnCmZVVl4bNUyQU+ccqGJASsJup/AktQhzm4S11SWqj92sNDBTIm+YA0dwJ4f
+	 1fIN3y86KzreS0CRO17Z24eZqqA7pHhtQqfeRcVAEGxf8ibQJrDp8fTdiopXPDmu1w
+	 uaSkZnkUaZgw+qBLuQvgNuOgHPIWPPI9y8nMW832hNuLzWESo4NY6zTXtiESRTcsEh
+	 1OSh7GGqpqqkZMKHsxZBdlPicMdQrlV8xLa52bsDCLjPW28wvbxUbYs0mKZw8YzKCY
+	 PyMOHWmKt4W5Q==
+Date: Mon, 11 Mar 2024 11:25:32 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Dennis Dalessandro
+ <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ keescook@chromium.org, "open list:HFI1 DRIVER"
+ <linux-rdma@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] IB/hfi1: allocate dummy net_device dynamically
+Message-ID: <20240311112532.71f1cb35@kernel.org>
+In-Reply-To: <20240311102251.GJ12921@unreal>
+References: <20240308182951.2137779-1-leitao@debian.org>
+	<20240310101451.GD12921@unreal>
+	<Ze7YNu5TrzClQcxy@gmail.com>
+	<20240311102251.GJ12921@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Mar 2024 18:43:59 +0100
-Eric Dumazet <edumazet@google.com> wrote:
+On Mon, 11 Mar 2024 12:22:51 +0200 Leon Romanovsky wrote:
+> > From my experience, you can leverage all the helpers to deal with the
+> > relationship between struct net_device and you private structure. Here
+> > are some examples that comes to my mind:
+> > 
+> > * alloc_netdev() allocates the private structure for you
+> > * netdev_priv() gets the private structure for you
+> > * dev->priv_destructor sets the destructure to be called when the
+> >   interface goes away or failures.  
+> 
+> Everything above is true, but it doesn't relevant to HFI1 devices which
+> are not netdev devices.
 
-> On Mon, Mar 11, 2024 at 6:25=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesa=
-rici.cz> wrote:
-> >
-> > On Wed,  6 Mar 2024 12:11:57 +0100
-> > Petr Tesarik <petr@tesarici.cz> wrote:
-> > =20
-> > > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
-> > > initialized in the same file.
-> > >
-> > > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
-> > >
-> > >       static struct lock_class_key __key;
-> > >
-> > > Since u64_stats_init() is a function (albeit an inline one), all calls
-> > > within the same file end up using the same instance, effectively trea=
-ting
-> > > them all as a single lock-class. =20
-> >
-> > What happens with this fix now?
-> >
-> > IIUC it should be reviewed by Eric, but I don't know through which tree
-> > it should be merged. Any plans yet? =20
->=20
-> I thought I gave a reply, but apparently not .
->=20
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
+Why are they abusing struct net_device then?
+If you're willing to take care of removing the use of NAPI from this
+driver completely, that'd be great.
 
-Thank you!
+> > > Will it create multiple "dummy" netdev in the system? Will all devices
+> > > have the same "dummy" name?  
+> > 
+> > Are these devices visible to userspace?  
+> 
+> HFI devices yes, dummy device no.
+> 
+> > 
+> > This allocation are using NET_NAME_UNKNOWN, which implies that the
+> > device is not expose to userspace.  
+> 
+> Great
+> 
+> > 
+> > Would you prefer a different name?  
+> 
+> I prefer to see some new wrapper over plain alloc_netdev, which will
+> create this dummy netdevice. For example, alloc_dummy_netdev(...).
 
-Petr T
+Nope, no bona fide APIs for hacky uses.
