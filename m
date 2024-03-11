@@ -1,181 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4C948792
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8073B7AC;
+	Mon, 11 Mar 2024 17:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710176755; cv=none; b=s2CyDfQUQHf7JtiW9O6YtjLnzqb7BeQPMWN6BnQ/2CJjcJsWEwvTVwRrSHSyZGnM8eGNUUWhG33B0DSeqOeroJHPSYmc7X0NccSJ1g8021vh184POoG79+qasPS/4CoAqeUOHP2xUxnYIqm01Jg3HzseSy3/zuvt9ES1ilm8zWQ=
+	t=1710176891; cv=none; b=Eu0q5CHp28F4y+yNR/onNsXfpEfLqup3E/f40CeShlquy9MKdNFhryUBhrReQblCQU2RACr54JyyEBL5ZbKpdQvjOTg7dW4cDTODrf4YQsWxXrFG5u5oqxnz18ZNKyoKbpn4oRRSop69+9AWmUC3JJ14G+LZd0qrzJexi+RG7TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710176755; c=relaxed/simple;
-	bh=XNwbXKaCLGvCbpxIvSjj9i4O3/8QvDmG0N51zcg49XU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifZwl6Xjrt/tFiyMG+rzkrNDddoxLmNTMNR5MayxmheajQ6sdH/GKiCOhJ/D4gsXgmGyq4xxMq1CoyvQmrCswnBgVs8R8FFYHkyax8T0whqsdhhiSZM3SUG18K7+XrqAXKKu7TLQ+3er50qD0lUOoRgELibkfYsxsPNyU7uAZe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DY0AFFXB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710176891; c=relaxed/simple;
+	bh=j1+lCDL3pPjq33bhRXpGF+V0YmEJ2UOr72fJ5Hlut3g=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qMXU4isdbu0LLzxmwxBokImuzAqdMmODgpPjw+h8qIb0FsZa2pF6y/0X9ZR6DoSPuDPm+9uV9qjuhGNsdVMkdhpmzE3YJq2pIpOCo4FImusDNWF6iijtdoFqsHCfSiq0rs5CEukUjC0ubbhs+hwkwOpiRirRg2RvBFJSmX3R5Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PX0CeTRQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DY0AFFXB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710176752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ofx1nXrTDjwWTrrBkspXHarb2XIic0gZXzZbExCDCt4=;
-	b=DY0AFFXBmW77aIXzSXSTRKcQ1CrMJJeElCKQpJTrI3FIJrtgbodG5uixJAoLqgOeyzYvgY
-	/chlDe60+zvfFXx6q5g4OQxYDngrO2ZBx+eFnGbPoBr7VbAkQtVj3Jnk752liHsy+oR/2N
-	sTKevpQx0rIF+YUUENcToUfWbrpm6rs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-33-rBUI-lgLPv2UhqEIqToHUg-1; Mon, 11 Mar 2024 13:05:28 -0400
-X-MC-Unique: rBUI-lgLPv2UhqEIqToHUg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33e92573a93so821493f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:05:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710176727; x=1710781527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ofx1nXrTDjwWTrrBkspXHarb2XIic0gZXzZbExCDCt4=;
-        b=UoZD0eViMZ7qx59M3ycL7dRm8MJ4U1t7UKDxUGVCucBfrZVhkehUg7MYXzfDuhFlIa
-         rhAds/DGtc7ax1w+1JGeIvnaw0GcusEOBYesHpnsd0v1AU2VCCp8Ewll1F9+E+Jra38L
-         4bEt2yv44x3xR1+QFip6QzpHRUnQs6gyhmM/S4ibDexozbOl3hfQDXc7yfQq2WZBB00f
-         MxlC4r7JnOrUhfiDDb/2D10C68C8hOX9i1oCiF7n6vVrqZZ7UWPpQF7S348HoMSexzeG
-         rFPrDAUNFidRrGrcVxvtSem1DFqUcuA1j3zIMM29v01A2G1TgxayoY07XgmO/0jR+7Qh
-         HhvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoKLLZCjTn/78gQ0IIHsoKv84M2HUqILS64B0ygvWX32EQW/ro9dgY/HSFnvDFm1M+HC5+EMtFsjD44wdY5YjCuuXOjusoNc4UH/iM
-X-Gm-Message-State: AOJu0YzIZDB1w1BobhJYOCLPMkFxATYBZg0kdEyvNVaVBbnndDIr5g4B
-	uYZa9l/D0ChzPVld1SqnhCXq8CIcf8Q7AN0yQ73XRkz1H4C4TK22EDgxD5Q0CjsJteH5F582V4F
-	/D8RBUe4NLN+YMNjPeFvUd3bklzu8zGecpofmqctSfDdslMKQpyaU+IyoefDjlA==
-X-Received: by 2002:a05:6000:230:b0:33e:96b7:af6d with SMTP id l16-20020a056000023000b0033e96b7af6dmr1971469wrz.6.1710176727046;
-        Mon, 11 Mar 2024 10:05:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHkykAXhh3ZDBHaIBqo4LqQhaHhS1QTgvnZKN/euSPkgltlwWOCucmDgB5XoQsM841Kz8WUQQ==
-X-Received: by 2002:a05:6000:230:b0:33e:96b7:af6d with SMTP id l16-20020a056000023000b0033e96b7af6dmr1971451wrz.6.1710176726496;
-        Mon, 11 Mar 2024 10:05:26 -0700 (PDT)
-Received: from redhat.com ([2.52.134.16])
-        by smtp.gmail.com with ESMTPSA id b3-20020a05600003c300b0033e239040d8sm7123545wrg.84.2024.03.11.10.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 10:05:25 -0700 (PDT)
-Date: Mon, 11 Mar 2024 13:05:21 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Tobias Huschle <huschle@linux.ibm.com>
-Cc: Jason Wang <jasowang@redhat.com>, Abel Wu <wuyun.abel@bytedance.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org
-Subject: Re: Re: Re: EEVDF/vhost regression (bisected to 86bfbb7ce4f6
- sched/fair: Add lag based placement)
-Message-ID: <20240311130446-mutt-send-email-mst@kernel.org>
-References: <42870.123121305373200110@us-mta-641.us.mimecast.lan>
- <20231213061719-mutt-send-email-mst@kernel.org>
- <25485.123121307454100283@us-mta-18.us.mimecast.lan>
- <20231213094854-mutt-send-email-mst@kernel.org>
- <20231214021328-mutt-send-email-mst@kernel.org>
- <92916.124010808133201076@us-mta-622.us.mimecast.lan>
- <20240121134311-mutt-send-email-mst@kernel.org>
- <07974.124020102385100135@us-mta-501.us.mimecast.lan>
- <20240201030341-mutt-send-email-mst@kernel.org>
- <89460.124020106474400877@us-mta-475.us.mimecast.lan>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PX0CeTRQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710176888;
+	bh=j1+lCDL3pPjq33bhRXpGF+V0YmEJ2UOr72fJ5Hlut3g=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=PX0CeTRQ/l4o+UZJghvdiZX9xmrFLq9w4rIe1uc7R4LXtVZU2CFNmre2kmJHbI465
+	 9xHfbbc8s1DAZgMVWt1mXB/Z140MOCEKXpH6SJyos8Kio+mRb9M+FxHnPWX/UnULRi
+	 9E+UU39eMR7H5eoPIPin7ZRXsW5kHnMR6vzP8Z+iD0HI8QQnP1LVV8f1c+2yYpJM05
+	 0Ht8Ch1dfgxmcSmDkm2nMpruzg8VSc83qGdi8pDSI6b5qxwLQCAq+YsxDJ+YtFMyBP
+	 8n7fRw1Gq/Rwdx9RaxZHcHWrJmlLXOMpnlewPMq8EgqOIzlhqv5XncZeYed4eK9H/F
+	 MGOWjd81NfAiw==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 94EF0378200D;
+	Mon, 11 Mar 2024 17:08:05 +0000 (UTC)
+Message-ID: <cf98ff2f-66a8-4800-855f-5c03c952b514@collabora.com>
+Date: Mon, 11 Mar 2024 22:08:36 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89460.124020106474400877@us-mta-475.us.mimecast.lan>
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>,
+ Mark Brown <broonie@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ "kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [Test Failure Report] exec: Test failures in execveat
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>
+References: <02c8bf8e-1934-44ab-a886-e065b37366a7@collabora.com>
+ <202403051256.7A50FE28E7@keescook>
+ <fd210d04-cc98-4e29-a051-bdb7e1367494@collabora.com>
+ <202403071238.AC7BD90@keescook>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <202403071238.AC7BD90@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 01, 2024 at 12:47:39PM +0100, Tobias Huschle wrote:
-> On Thu, Feb 01, 2024 at 03:08:07AM -0500, Michael S. Tsirkin wrote:
-> > On Thu, Feb 01, 2024 at 08:38:43AM +0100, Tobias Huschle wrote:
-> > > On Sun, Jan 21, 2024 at 01:44:32PM -0500, Michael S. Tsirkin wrote:
-> > > > On Mon, Jan 08, 2024 at 02:13:25PM +0100, Tobias Huschle wrote:
-> > > > > On Thu, Dec 14, 2023 at 02:14:59AM -0500, Michael S. Tsirkin wrote:
-> > > 
-> > > -------- Summary --------
-> > > 
-> > > In my (non-vhost experience) opinion the way to go would be either
-> > > replacing the cond_resched with a hard schedule or setting the
-> > > need_resched flag within vhost if the a data transfer was successfully
-> > > initiated. It will be necessary to check if this causes problems with
-> > > other workloads/benchmarks.
-> > 
-> > Yes but conceptually I am still in the dark on whether the fact that
-> > periodically invoking cond_resched is no longer sufficient to be nice to
-> > others is a bug, or intentional.  So you feel it is intentional?
+On 3/8/24 1:39 AM, Kees Cook wrote:
+> On Thu, Mar 07, 2024 at 02:22:27PM +0500, Muhammad Usama Anjum wrote:
+>> I've tested this patch. Still getting same failures.
 > 
-> I would assume that cond_resched is still a valid concept.
-> But, in this particular scenario we have the following problem:
+> Okay, thanks for testing!
 > 
-> So far (with CFS) we had:
-> 1. vhost initiates data transfer
-> 2. kworker is woken up
-> 3. CFS gives priority to woken up task and schedules it
-> 4. kworker runs
-> 
-> Now (with EEVDF) we have:
-> 0. In some cases, kworker has accumulated negative lag 
-> 1. vhost initiates data transfer
-> 2. kworker is woken up
-> -3a. EEVDF does not schedule kworker if it has negative lag
-> -4a. vhost continues running, kworker on same CPU starves
-> --
-> -3b. EEVDF schedules kworker if it has positive or no lag
-> -4b. kworker runs
-> 
-> In the 3a/4a case, the kworker is given no chance to set the
-> necessary flag. The flag can only be set by another CPU now.
-> The schedule of the kworker was not caused by cond_resched, but
-> rather by the wakeup path of the scheduler.
-> 
-> cond_resched works successfully once the load balancer (I suppose) 
-> decides to migrate the vhost off to another CPU. In that case, the
-> load balancer on another CPU sets that flag and we are good.
-> That then eventually allows the scheduler to pick kworker, but very
-> late.
+> What environment are you testing under? It would seem like some unexpected
+> userspace conditions exist that the test isn't prepared for. (I was able
+> to reproduce one error with /bin/dash, for example, but not the others,
+> so something must be different in the set up.)
+I'm testing on Debian Bookworm with v6.1, v6.7 and next-20240304 kernels.
+I've tested it on another VM which is also Debian Bookworm. The default
+shell is dash on Debian as well.
 
-Are we going anywhere with this btw?
+> 
+> -Kees
+> 
 
-
-> > I propose a two patch series then:
-> > 
-> > patch 1: in this text in Documentation/kernel-hacking/hacking.rst
-> > 
-> > If you're doing longer computations: first think userspace. If you
-> > **really** want to do it in kernel you should regularly check if you need
-> > to give up the CPU (remember there is cooperative multitasking per CPU).
-> > Idiom::
-> > 
-> >     cond_resched(); /* Will sleep */
-> > 
-> > 
-> > replace cond_resched -> schedule
-> > 
-> > 
-> > Since apparently cond_resched is no longer sufficient to
-> > make the scheduler check whether you need to give up the CPU.
-> > 
-> > patch 2: make this change for vhost.
-> > 
-> > WDYT?
-> 
-> For patch 1, I would like to see some feedback from Peter (or someone else
-> from the scheduler maintainers).
-> For patch 2, I would prefer to do some more testing first if this might have
-> an negative effect on other benchmarks.
-> 
-> I also stumbled upon something in the scheduler code that I want to verify.
-> Maybe a cgroup thing, will check that out again.
-> 
-> I'll do some more testing with the cond_resched->schedule fix, check the
-> cgroup thing and wait for Peter then.
-> Will get back if any of the above yields some results.
-> 
-> > 
-> > -- 
-> > MST
-> > 
-> > 
-
+-- 
+BR,
+Muhammad Usama Anjum
