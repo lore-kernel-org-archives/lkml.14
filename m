@@ -1,48 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3F418643;
-	Mon, 11 Mar 2024 09:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3476D17BD9;
+	Mon, 11 Mar 2024 09:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710150217; cv=none; b=DviIpv71tQjTn16cyFVhzkbrZVlrSnFtfOkuaKB1TDXyDh14Gy+TH3QIDfl1Hnrn58hgLi/wxnZzvYkfrVEo+akoNHa10hgoQXSw0HGC1YgEt6ktxWrlXMHmVl0QoaUGzzBvp+mYySq635B4wy7d5F4UXVM51Rh2MZ8KJ6aYxo8=
+	t=1710150294; cv=none; b=gCsQWacMQHI+7x7sEYrUZTl29ZRF4guPa8TzGknAesd7K8GhW2HsuJYw/XF0r8Oa73r82uwGniHMbxVDC/OquVOGoEua1SJcchRjeFObFCs02OHI1MQ3J1iKzVIS0WzrXNEpGZwK/BPcVB8C98Oasbg/MbCfti2ypxW5eDBoVqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710150217; c=relaxed/simple;
-	bh=yZ/RL5rPhH6GHVbkcDcntpSmzaRjN/cJqLI09syrTFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c6jKjspgJfwfs6YN4NUB9M/Cdjd51bLgfe5NsRb5PsPVqpHoxqAfH+88brs5ag6gYnsppHJ5qK7mkccebKe5VrPDow+iSil8hfkJ51gcsrKX8sbaSQHy5rDCLm3U6BlzHJW/j/7EXV+snR0ATFKlKWuPUb/57SRbeWUiW3Pjts0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UGB3Cmkd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UGB3Cmkd"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B8keQm007298;
-	Mon, 11 Mar 2024 09:43:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=SFVtr80gevnNIuE5evsZ9LlEeRl9dJRRHh5XOFnOAVA=; b=UG
-	B3Cmkd8GemGH8u1/A4LYvmozRboChSSGCvXodP4duKtkmhITajfd8yhYgyce7LCW
-	JWAlBVuzUSv0Kv/hDCDs0kU+l1NK+MCz7owSZCZOGzNfbE5CWLtGlYrvcV87JbJl
-	qnNa9pwmlYJ+O5gqY/S3K1fIb5Cdx7aDZ2h+sxiWKaOZOUoA5iPj8JJTjZmFiTjF
-	R/Rhci8ZyQOrWDE8Sn3tKyysRo/ljMfZ8ik7XlkcP23V5Eyj6YNsch9xQirvBcKf
-	9vObSaeBesVwI/gON1/3Az17Cz6EeRudBPnIkC1vINyaGtoRPXhe7pROzk3XR5gB
-	czz2DVYxBBxiRixCaVyQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wsxr1r3pn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 09:43:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42B9hTUb031093
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 09:43:29 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 11 Mar
- 2024 02:43:24 -0700
-Message-ID: <2b512404-bc56-41b8-89aa-dcbb23d7b2bd@quicinc.com>
-Date: Mon, 11 Mar 2024 17:43:22 +0800
+	s=arc-20240116; t=1710150294; c=relaxed/simple;
+	bh=mxn6v4qsoLRyc07OUq5fk0S7LTDOD/Zmjqwktx+NXBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T5WOEiFO8/noZDypbBIPDZptawDwOAb84kHyvBiB4acv5UH8tzfBW4RXfV23K8zo8tTsPaI5r6Lm+shYWGSh9icA5lsvfcnRLicrO7EZ3wHPfsJfE8lob9w6KCsOBoCPoSnWxbnK+u7AsjZylq7iDd6HgGSBqXxbCFP8Fjgf1zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD1CBFEC;
+	Mon, 11 Mar 2024 02:45:27 -0700 (PDT)
+Received: from [10.57.68.246] (unknown [10.57.68.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3CA03F762;
+	Mon, 11 Mar 2024 02:44:49 -0700 (PDT)
+Message-ID: <1d27e93b-1c6b-4909-859f-e0756974a640@arm.com>
+Date: Mon, 11 Mar 2024 09:44:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,100 +27,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: update compatible name
- for match with driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20240129092512.23602-1-quic_tengfan@quicinc.com>
- <20240129092512.23602-2-quic_tengfan@quicinc.com>
- <CAL_JsqJfsWaj9OPkvc34rBvx7W_3v9+1kZqNu6QKDsA=iWAA4w@mail.gmail.com>
- <CAL_JsqLbbRFijBXS5CyRm0P4FMY7bR3UUdgXA7xP4Z1oRevnzQ@mail.gmail.com>
- <CACRpkdZ3uhyTnF7YkMk9sOeJJFZ4UPEna7PwpqPeBpWDdAmayA@mail.gmail.com>
- <e828b14c-7a09-479a-bf60-0c16571f133f@quicinc.com>
- <abebde71-ac9f-434b-b48b-6567308a2873@linaro.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <abebde71-ac9f-434b-b48b-6567308a2873@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Cjeu1d7LmgJkYQ-PZ_VARWc6RnxpHCap
-X-Proofpoint-ORIG-GUID: Cjeu1d7LmgJkYQ-PZ_VARWc6RnxpHCap
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_06,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403110072
+Subject: Re: [PATCH -v3] mm: swap: fix race between free_swap_and_cache() and
+ swapoff()
+Content-Language: en-GB
+To: Huang Ying <ying.huang@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ David Hildenbrand <david@redhat.com>, stable@vger.kernel.org
+References: <20240311084426.447164-1-ying.huang@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240311084426.447164-1-ying.huang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 3/11/2024 2:48 PM, Krzysztof Kozlowski wrote:
-> On 11/03/2024 03:27, Tengfei Fan wrote:
->>
->>
->> On 3/10/2024 7:44 AM, Linus Walleij wrote:
->>> On Fri, Mar 8, 2024 at 9:10 PM Rob Herring <robh+dt@kernel.org> wrote:
->>>> On Tue, Feb 27, 2024 at 7:37 AM Rob Herring <robh+dt@kernel.org> wrote:
->>>>> On Mon, Jan 29, 2024 at 3:25 AM Tengfei Fan <quic_tengfan@quicinc.com> wrote:
->>>>>>
->>>>>> Use compatible name "qcom,sm4450-tlmm" instead of "qcom,sm4450-pinctrl"
->>>>>> to match the compatible name in sm4450 pinctrl driver.
->>>>>>
->>>>>> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
->>>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>>>>> ---
->>>>>>    Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
->>>>>> index bb08ca5a1509..bb675c8ec220 100644
->>>>>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
->>>>>> @@ -17,7 +17,7 @@ allOf:
->>>>>>
->>>>>>    properties:
->>>>>>      compatible:
->>>>>> -    const: qcom,sm4450-pinctrl
->>>>>> +    const: qcom,sm4450-tlmm
->>>>>
->>>>> I think you forgot to update the example:
->>>>>
->>>>> Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.example.dtb:
->>>>> /example-0/pinctrl@f100000: failed to match any schema with
->>>>> compatible: ['qcom,sm4450-tlmm']
->>>>
->>>> Still a warning in linux-next. Please send a fix.
->>>
->>> I understand it as applying 1/2 is the fix so I applied it.
->>
->> I will check this warning, and I will fix it.
+On 11/03/2024 08:44, Huang Ying wrote:
+> From: Ryan Roberts <ryan.roberts@arm.com>
 > 
-> Now? We were all waiting for you to respond here without any effect, so
-> finally I asked Linus to take the patch. In the future, be responsible
-> for your patches and comments happening to them. The same if your
-> applied commit causes issues in the next.
+> There was previously a theoretical window where swapoff() could run and
+> teardown a swap_info_struct while a call to free_swap_and_cache() was
+> running in another thread.  This could cause, amongst other bad
+> possibilities, swap_page_trans_huge_swapped() (called by
+> free_swap_and_cache()) to access the freed memory for swap_map.
+> 
+> This is a theoretical problem and I haven't been able to provoke it from a
+> test case.  But there has been agreement based on code review that this is
+> possible (see link below).
+> 
+> Fix it by using get_swap_device()/put_swap_device(), which will stall
+> swapoff().  There was an extra check in _swap_info_get() to confirm that
+> the swap entry was not free.  This isn't present in get_swap_device()
+> because it doesn't make sense in general due to the race between getting
+> the reference and swapoff.  So I've added an equivalent check directly in
+> free_swap_and_cache().
+> 
+> Details of how to provoke one possible issue:
+> 
+> --8<-----
+> 
+> CPU0                               CPU1
+> ----                               ----
+> shmem_undo_range
+>   shmem_free_swap
+>     xa_cmpxchg_irq
+>     free_swap_and_cache
+>       __swap_entry_free
+>       /* swap_count() become 0 */
+>                                    swapoff
+>                                      try_to_unuse
+>                                        shmem_unuse /* cannot find swap entry */
+>                                        find_next_to_unuse
+>                                        filemap_get_folio
+>                                        folio_free_swap
+>                                        /* remove swap cache */
+>                                        /* free si->swap_map[] */
+>       swap_page_trans_huge_swapped <-- access freed si->swap_map !!!
+> 
+> --8<-----
+> 
+> Link: https://lkml.kernel.org/r/20240306140356.3974886-1-ryan.roberts@arm.com
+> Closes: https://lore.kernel.org/linux-mm/8734t27awd.fsf@yhuang6-desk2.ccr.corp.intel.com/
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com> [patch description]
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> Hi, Andrew,
+> 
+> If it's not too late.  Please replace v2 of this patch in mm-stable
+> with this version.
 
-I will speed up the upstream work of the sm4450.
-Before that, I had been focusing on the work of AIM300.
+Thanks for sorting this out, Huang, Ying! I saw your note asking if I could do
+it, and it was on my list, but I've been busy debugging other urgent issues in
+mm-stable. That should be solved now so unblocks me finishing the testing on my
+large folios swap-out v4 series. Hopefully that will be incomming in the next
+couple of days.
+
+You did previously suggest you wanted some comments around synchronise_rcu() in
+swapoff(), but I don't see those here. I don't think that should hold this up
+though.
+
+Thanks,
+Ryan
+
 
 > 
-> Best regards,
-> Krzysztof
+> Changes since v2:
 > 
+>  - Remove comments for get_swap_device() because it's not correct.
+>  - Revised patch description about the race condition description.
+> 
+> Changes since v1:
+> 
+>  - Added comments for get_swap_device() as suggested by David
+>  - Moved check that swap entry is not free from get_swap_device() to
+>    free_swap_and_cache() since there are some paths that legitimately call with
+>    a free offset.
+> 
+> Best Regards,
+> Huang, Ying
+> 
+>  mm/swapfile.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 2b3a2d85e350..9e0691276f5e 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1609,13 +1609,19 @@ int free_swap_and_cache(swp_entry_t entry)
+>  	if (non_swap_entry(entry))
+>  		return 1;
+>  
+> -	p = _swap_info_get(entry);
+> +	p = get_swap_device(entry);
+>  	if (p) {
+> +		if (WARN_ON(data_race(!p->swap_map[swp_offset(entry)]))) {
+> +			put_swap_device(p);
+> +			return 0;
+> +		}
+> +
+>  		count = __swap_entry_free(p, entry);
+>  		if (count == SWAP_HAS_CACHE &&
+>  		    !swap_page_trans_huge_swapped(p, entry))
+>  			__try_to_reclaim_swap(p, swp_offset(entry),
+>  					      TTRS_UNMAPPED | TTRS_FULL);
+> +		put_swap_device(p);
+>  	}
+>  	return p != NULL;
+>  }
 
--- 
-Thx and BRs,
-Tengfei Fan
