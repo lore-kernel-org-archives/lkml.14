@@ -1,98 +1,186 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3047121115;
-	Mon, 11 Mar 2024 09:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C2A1755C;
+	Mon, 11 Mar 2024 09:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710147612; cv=none; b=X2H/1isEs/TuUf87jxINBjQEeEjbWZBwTA6blPT4GyQr8rJ3a3NcXwRAhEE1O6YxgLIWElb6D0ptXHIkC+rpXSJAaba1XIJynk3R0JbA/9gLMz4h8MjVluDQ4oqOVvjtbYUyYj4yGU/GKInmfBdG+BemDeiHuh+RJlZ4ukEufyY=
+	t=1710147640; cv=none; b=cms3LiqsnpswWi6Xwyte1H/6RMBQ61+9uPY83+Rvs4hRvJDwH1u+q6KPuawI3pAKUZfOrVLAEBgNIm0FQktsRmruMaiASYBVRnN2fzLZMJ3Chsc26tOydPRpCFH2K/0+7kwf/WyQXCnCTk5UHFtSdjBUNNMT1GnK//Lgpbk3wuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710147612; c=relaxed/simple;
-	bh=4T3LYMO4O+4sggHhLctCPj7vVLuqjXwtjA0tn25Lb6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VRBYLfVDt9jYhNa9eYCjELSAzCuvcw3tZvzI2zVA78TjDakKxmTR7Mq3ZGgyJZa/iw58J36LbICg+WjBbDjfrh1pAmSir9DN25h0Uf5sDPIxmKSx1WfW6PngzacjgcCSZ1mZt7a6cWsUAMbs5eqbIiHK31DFXDQ1s5yZbkcUloc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5c58ebdbc4ee4beeb079192331949678-20240311
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:64f28ce8-837a-4ed9-a4b9-142e4af9a9bf,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.37,REQID:64f28ce8-837a-4ed9-a4b9-142e4af9a9bf,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:19a7db84-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240311165439VOSJMZSU,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:ni
-	l,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 5c58ebdbc4ee4beeb079192331949678-20240311
-X-User: mengfanhui@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw
-	(envelope-from <mengfanhui@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
-	with ESMTP id 1931794865; Mon, 11 Mar 2024 16:54:36 +0800
-From: mengfanhui <mengfanhui@kylinos.cn>
-To: kashyap.desai@broadcom.com,
-	sumit.saxena@broadcom.com,
-	shivasharan.srikanteshwara@broadcom.com,
-	chandrakanth.patil@broadcom.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mengfanhui@kylinos.cn
-Subject: [PATCH] scsi: megaraid_sas: disabled shared host tagset feature by default
-Date: Mon, 11 Mar 2024 16:54:12 +0800
-Message-Id: <20240311085412.2391632-1-mengfanhui@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1710147640; c=relaxed/simple;
+	bh=0O6FBsd4NTZycTrEFX5YT662K9M5re4skJ3TZydmxQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DGaP43VH2eiL+/3XmiQFvXBvBD1Yt1sArI/lQ2NltrSX5nXNyyJE/MQH3c8HjXL2I1sNWbNUA2O/i3P9Vemt4nxrTQurAMAdCDfEJ2yDVzdaoZSxTdQgNRDMomHwQJNAsmZUyRt5oXKFuGoF5CnAIBcgMeBbZxd+HEywCikWyM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-60a057b6601so21805577b3.2;
+        Mon, 11 Mar 2024 02:00:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710147637; x=1710752437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T2hRnN3Ii0PKC/b/lsBmjg1nzJN5vZTlFaVVXF4Tk84=;
+        b=bnXO5G+Ost5ndlP8Q3NMkAW0THYzr6xmNSbg6j0RCg8DvBkVwomRpqleAobjaZWGrV
+         RTrPkKocQyii5LPIJiOj1WAfj/kqypivV6IjVleQr8ajz2y2a+QLlCk083+3UT+ROaT9
+         kHyoO7jpXENh7nM7axTiTV9RaGX/ZdWsRR5ZAOs5Im2cZpYEf64UXBpP1SXBDFKfNB9T
+         l+3pRX+3kKM9kJMVaO7y2hqIChyku5KXGa/Iws1QBytfkaIeRKIz6MKNQv5H8xyM89P7
+         KoaCsPTfyzoIjF4i1amRp7QKv43SzT9YxT/KUGbWQs49J7mKYr4eX0LibjLYuM5gRW01
+         ppZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaQrHJQSusHxU0Nn+PTcaellouNVuGbG6o9kkAYIdYu56RWx04+FzdlQiml/CsnLKVgD6bJeRuMRr8fAm6efkEYmSwyupT/CYCVcyZDeY+PVdptHZRqYG7emhAGrSZFYSaUVshu1HaVIVQxZZ7NzS9OCU1/n6/o6J0MaPPlmKOhQhYn+xYuywpWzHGQQkIyBG1fV2YP/MLK1su/T3UEYRSFI4AJ5nu
+X-Gm-Message-State: AOJu0YwLkd1W/SFSqBn6/RvbkBd0+71cnzKZaS3OXI41eRAaaOjWF48p
+	8CMFzwWv1XGMkuIvRgluEBFxy5lNFKgwHwMnygWunnQssYhNBED4CLp0PAOinHU=
+X-Google-Smtp-Source: AGHT+IFE3hacL/x5rfm5DcSYbZvAIjceedkZsJj2IsQ0p8CFe98NWUdwX7T7Cn4V329MZrjvXbM0UQ==
+X-Received: by 2002:a81:a150:0:b0:607:7c29:8f4f with SMTP id y77-20020a81a150000000b006077c298f4fmr5548287ywg.13.1710147637167;
+        Mon, 11 Mar 2024 02:00:37 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id o137-20020a0dcc8f000000b0060a0c161e03sm1227311ywd.59.2024.03.11.02.00.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Mar 2024 02:00:36 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so3873289276.1;
+        Mon, 11 Mar 2024 02:00:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVPcBmX+CekcK02HcUPgCcCzS00gpS47V4P1VGGxFY5ZlCE2hFBcgpwtlnhewVg2qnQdmFfcqYXsOfCOs20g7fNU+hcZHNMSHG0BlE0pGX9COrCTr9p77o+tTFs6YwvFMB4xj05jjUWVNmeaYr6IdzTXYlclTn1Wv5qVuZLfX5DRXCy2vrbbZQ2Og86YEM/nRWNtktw3T7nToqiTwXL0oa5jxqRFLdZ
+X-Received: by 2002:a25:e095:0:b0:dc6:d808:cf75 with SMTP id
+ x143-20020a25e095000000b00dc6d808cf75mr3988125ybg.20.1710147636388; Mon, 11
+ Mar 2024 02:00:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240308172726.225357-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240308172726.225357-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <7082ed3b-d6d0-4228-b7a6-7c0e0e46b8e2@linaro.org> <CA+V-a8tM29h10DULurMJtBZBnLK_ZF7pH_Y0bhZTvWO0O7-G-Q@mail.gmail.com>
+ <2974085a-d9b4-4a66-b60f-c02a06a74647@linaro.org>
+In-Reply-To: <2974085a-d9b4-4a66-b60f-c02a06a74647@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 11 Mar 2024 10:00:23 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVgp_vFnWr5ruzdyc1vNQKoCdM=pLZmgmkDjmUHvQBJJw@mail.gmail.com>
+Message-ID: <CAMuHMdVgp_vFnWr5ruzdyc1vNQKoCdM=pLZmgmkDjmUHvQBJJw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-By default, the host_tagset_enable feature is disabled，Fio performance
-has improved significantly
+Hi Krzysztof,
 
-fio test command:
-sudo fio -filename=/fio_test -direct=1 -iodepth 32 -thread -rw=write -ioengine=libaio
--bs=4K -size=5120M -runtime=600 -numjobs=$CPUN -group_reporting -name=**.result >> **.result
+On Sun, Mar 10, 2024 at 9:10=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 10/03/2024 00:28, Lad, Prabhakar wrote:
+> > On Sat, Mar 9, 2024 at 12:00=E2=80=AFPM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >> On 08/03/2024 18:27, Prabhakar wrote:
+> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>>
+> >>> Document support for the I2C Bus Interface (RIIC) available in the
+> >>> Renesas RZ/V2H (R9A09G057) SoC.
+> >>>
+> >>> The RIIC interface in the Renesas RZ/V2H differs from RZ/A in a
+> >>> couple of ways:
+> >>> - Register offsets for the RZ/V2H SoC differ from those of the RZ/A S=
+oC.
+> >>> - RZ/V2H register access is 8-bit, whereas RZ/A supports 8/16/32-bit.
+> >>> - RZ/V2H has some bit differences in the slave address register.
+> >>>
+> >>> To accommodate these differences in the existing driver, a new compat=
+ible
+> >>> string "renesas,riic-r9a09g057" is added.
+> >>>
+> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> >>> Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
-The test data results bw  are as follows：
-              v6.8_kernel       v6.8_kernel_disable_host_tagset
-4k randwrite     375                     642
-4k randread      210                     784
-4k  write        306                     387
-4k  read         435                     2457
-128k write       355                     380
-128k read        976                     3665
-1M   read        415                     3122
+> >>> --- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> >>> +++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> >>> @@ -15,14 +15,19 @@ allOf:
+> >>>
+> >>>  properties:
+> >>>    compatible:
+> >>> -    items:
+> >>> -      - enum:
+> >>> -          - renesas,riic-r7s72100   # RZ/A1H
+> >>> -          - renesas,riic-r7s9210    # RZ/A2M
+> >>> -          - renesas,riic-r9a07g043  # RZ/G2UL and RZ/Five
+> >>> -          - renesas,riic-r9a07g044  # RZ/G2{L,LC}
+> >>> -          - renesas,riic-r9a07g054  # RZ/V2L
+> >>> -      - const: renesas,riic-rz      # generic RIIC compatible
+> >>> +    oneOf:
+> >>> +      - items:
+> >>> +          - enum:
+> >>> +              - renesas,riic-r7s72100   # RZ/A1H
+> >>> +              - renesas,riic-r7s9210    # RZ/A2M
+> >>> +              - renesas,riic-r9a07g043  # RZ/G2UL and RZ/Five
+> >>> +              - renesas,riic-r9a07g044  # RZ/G2{L,LC}
+> >>> +              - renesas,riic-r9a07g054  # RZ/V2L
+> >>> +          - const: renesas,riic-rz      # generic RIIC compatible
+> >>> +
+> >>> +      - items:
+> >>> +          - enum:
+> >>> +              - renesas,riic-r9a09g057  # RZ/V2H(P)
+> >>
+> >> No, that does not look right. If you added generic compatible for all
+> >> RIIC then how can you add a new RIIC compatible which does not follow
+> >> generic one?
+> >>
+> > The generic compatible above which was added previously was for the
+> > RZ/(A) SoCs and not for all the RIICs. The RZ/G2L family was also
+>
+> No, it said: "generic RIIC compatible". It did not say "RIIC RZ/A". It
+> said RIIC RZ
 
-Signed-off-by: mengfanhui <mengfanhui@kylinos.cn>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+At the time the original bindings were written, only RZ/A1, RZ/T1,
+and RZ/N1 existed, and all RIIC modules present in these SoCs were
+identical.  Later, we got RZ/A2, which also included a compatible
+RIIC block.
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 3d4f13da1ae8..da19c4c07f2f 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -123,9 +123,9 @@ MODULE_PARM_DESC(poll_queues, "Number of queues to be use for io_uring poll mode
- 		"High iops queues are not allocated &\n\t\t"
- 		);
- 
--int host_tagset_enable = 1;
-+int host_tagset_enable;
- module_param(host_tagset_enable, int, 0444);
--MODULE_PARM_DESC(host_tagset_enable, "Shared host tagset enable/disable Default: enable(1)");
-+MODULE_PARM_DESC(host_tagset_enable, "Shared host tagset enable/disable Default: disable(0)");
- 
- MODULE_LICENSE("GPL");
- MODULE_VERSION(MEGASAS_VERSION);
--- 
-2.25.1
+Somewhere along the timeline, the marketing department became creative,
+and we got RZ/G1 (RZ/G1[HMNEC]) and RZ/G2 (RZ/G2[HMNE]), which were
+unrelated to earlier RZ series :-(  When marketing started smoking
+something different, we got RZ/G2L, which is unrelated to RZ/G2,
+but reuses some parts from RZ/A.  Recently, we got RZ/G3S, which is
+similar to RZ/G2L...
 
+> > compatible hence they fallback to the generic RZ one.
+>
+> riic-r9a09g057 is also RIIC RZ, isn't it?
+
+Yes, as in "it comes from the division that calls its products
+RZ/something". But...
+
+> >> This shows the ridiculousness of these generic compatibles. They are
+> >> generic till you figure out the truth: oh crap, it's not generic.
+> >>
+> > Sorry I lack skills to predict the future of upcoming IP blocks which
+> > fit in the SoC.
+>
+> So don't use generic compatibles as fallbacks. That's the point.
+
+It's indeed difficult to predict the future. So SoC-specific compatible
+values are safer.
+At the same time, we want to avoid having to add compatible values for
+each and every SoC to each driver, so we try to group SoCs per family.
+For R-Car that worked out reasonably well, however, for RZ...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
