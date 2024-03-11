@@ -1,246 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479323FB2E
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A952208B;
+	Mon, 11 Mar 2024 14:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710166924; cv=none; b=uS6RReDezHNeH0BBpJORQwamwr4lHisgwFtLMlCoWQKF2Abia4EDhvdvFgT0TZ9Ct1JM4MiTZPrEAKaAkLQJ5HSNUgSbAbwiGa0FdqWZNKM0PBMHzjILadRfRB7UTjN//baMXYWjghHA32REU667Te/LchlF9cV4DrDr0bFck1s=
+	t=1710167012; cv=none; b=NRiaX7YQnuNh4/HeP9DB2Y6mD1NiRBDzOmMJKC+YuEl0GTbXH+5KVazQLCFBqqkR+9W6X/o2SDrOzoJgMVnYh8oLnJQdTeYgs/xk6D6BYsIC1Hm5ALDEOegXvfpCtDyrCCh1R+HQcD2oHHGNQ9nPbHKT4NKe+Yh9i7+Wj47YjHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710166924; c=relaxed/simple;
-	bh=56NMSsh78LIDXtUGQ15OJt1n/hifnfNYi6T6+1kMdJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ne7sBIa8yUNvoNxsKIZPeI/WBT9fbebkHGwKC0YxYXlyInR55fugRhDFL1Xsq5XgpPXDSToYPhbucTlDHx6cDlWWmOX8zydUfzyTCnSlxqg5bnKOBvMg2X1uXoA8gR6KgR7uD4guUYD98AmNertoFe4qXKeRHpyEqYkWH0QbwVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jbqy9ovW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710167012; c=relaxed/simple;
+	bh=xUQa2duh6dBoxq9pcAdeK/i5MkMLxHJ3k/BzRbYSM7s=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=kE4DIwzW2BD4Nwg8a6nVyhIokUYhHhscqT4iDZ9QyklnfbqfbQ1UpVP1lqqBU6WQqiu1PDcfDeE6zLc7yfvl6l/IKM7mhrdmk++/mG/cCzipglDRA+Z0K9zO/BG5wP6kb3DBtVaKBe3L8JKSJ0UWaQq58K2KqDQGRDZNpFL3Ws4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCPrDa1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jbqy9ovW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710166921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RAM/g6tP3EohpH0ynb9pjDy8L9dI16bvnaUHNHXa5y0=;
-	b=Jbqy9ovWYYO7NDcVGMUPBMF1e39aCc2s8q5iT0gpkfb7EO/HR1kTdiEJ/CiseLx3kh2Tk2
-	OgwD1BtHV1B9xOdTdo3Zs5mOz62DEjqPLz+u8bTZ1kH52utCKFnNNSlnmdmJCAEXomTyDq
-	PTElLGVvdDX1QUcK21EJpl/HnGOjV40=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-137-C-hJt46GM36w6Ei6HLRj7g-1; Mon, 11 Mar 2024 10:21:59 -0400
-X-MC-Unique: C-hJt46GM36w6Ei6HLRj7g-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2d449d68bc3so2991331fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 07:21:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710166918; x=1710771718;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAM/g6tP3EohpH0ynb9pjDy8L9dI16bvnaUHNHXa5y0=;
-        b=dnAZclkTVZW6l/m3dSgdxBnJBTBcXYUbZSGC4yudL59Aa/791DyhCNqcCGCpS2qBjf
-         E03FF3hftNnIqECkkgmwt6aJYiynqRF34YIzs/Oja7afz8IVYSPAQBKZP5nNDevnZVGZ
-         8BqPNMhca5H09oag+dh1UCB9bELcVYugedoLq9vvp1Oh3wNLftxB0lFIrQUavEjfPryQ
-         m2+S/z13tUGlWDWWK3KMQ6h5Wgv5ONkL8KS3xmZSP9VUaXfP6wcnCZ/LjnNQw0Dkamhy
-         Mjb8w44vK5fMxdA+eYEa30NUbJZ2qPzfIaRkddPHPjAwopE1M9IzgawJolNj7Q60xsMX
-         DjXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtlyRfR3/mjgNAC8QMKcoXviP02A/gLT3xDxGiIERsxpQ32vrEeqBMafbxlDb4DGweGviFg/HQARegQszGbXbXV5Ybj3JrBLezFAeJ
-X-Gm-Message-State: AOJu0Yw9HtKnjussGCuljAMjApqNWs1BNmqpAPM9YzMk9nN2WXI04hpA
-	NdlesCWP+JNeK4fJ6FihBUzJYXita3y+aFIVlipNr120cEavCyth6RAhQPFiiYtkoUPWbO2ab+v
-	EDgbJqH/TzbGhdUpgYqwLrvZtGKmz5J2k9OCqeKlC0QWyxNvhXwyxAdYD+SDIUA==
-X-Received: by 2002:a2e:928c:0:b0:2d2:7813:6ca3 with SMTP id d12-20020a2e928c000000b002d278136ca3mr3987057ljh.9.1710166917846;
-        Mon, 11 Mar 2024 07:21:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEudDoSlDrAPGJDZZw9T6E13NYse0casdKPoAa9Hjpb6Oa45x3X+Yn3zLjLLEayZ4IwFH+K1A==
-X-Received: by 2002:a2e:928c:0:b0:2d2:7813:6ca3 with SMTP id d12-20020a2e928c000000b002d278136ca3mr3987042ljh.9.1710166917408;
-        Mon, 11 Mar 2024 07:21:57 -0700 (PDT)
-Received: from [192.168.10.81] ([151.49.77.21])
-        by smtp.googlemail.com with ESMTPSA id et8-20020a056402378800b00566a4dec01fsm2972343edb.11.2024.03.11.07.21.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Mar 2024 07:21:56 -0700 (PDT)
-Message-ID: <f27274a9-fc5d-4be3-a364-5f5a471c20bd@redhat.com>
-Date: Mon, 11 Mar 2024 15:21:55 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCPrDa1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59F8C433C7;
+	Mon, 11 Mar 2024 14:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710167011;
+	bh=xUQa2duh6dBoxq9pcAdeK/i5MkMLxHJ3k/BzRbYSM7s=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=QCPrDa1XY5vvlnXrPmOE7s/c+PBNmGA0e8BeVdhp29u0wlFq289Gvo6E1T6GwIN9j
+	 bKlDgyiezbA6BBLatZ9Igo8IK4bCprIGJJJ5cs8Zg4frRbvF0tqkIPmhaJTHHBzTx1
+	 Ahx+CUrKY1pZoO039RMSCwOAOED11pjWkthHAfjl1kD+6PY8bgx18A7Sv36GbwuJ2X
+	 9jfRBCF21w99RWVvJ53KocALHZf/LrMZHmeHqZcYiYrAGDpWFulBAVct2CZHsuc+6h
+	 61ulHWjyHcoSP15V7Vqnr5nyFIPbejwGnF0rxGNQF2SWwiVUQDerpgI3HGH+Tk4l1h
+	 xfXu1rFtE5jUw==
+Date: Mon, 11 Mar 2024 08:23:30 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] KVM: x86: Selftests changes for 6.9
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240308223702.1350851-1-seanjc@google.com>
- <20240308223702.1350851-7-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20240308223702.1350851-7-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <robh@kernel.org>
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ ~postmarketos/upstreaming@lists.sr.ht, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ phone-devel@vger.kernel.org, Adam Honse <calcprogrammer1@gmail.com>
+In-Reply-To: <20240310-samsung-hlte-v1-0-e9b55bf98a48@z3ntu.xyz>
+References: <20240310-samsung-hlte-v1-0-e9b55bf98a48@z3ntu.xyz>
+Message-Id: <171016679093.1126634.17115825771533066372.robh@kernel.org>
+Subject: Re: [PATCH 0/2] Add Samsung Galaxy Note 3 support
 
-On 3/8/24 23:36, Sean Christopherson wrote:
-> Add SEV(-ES) smoke tests, and start building out infrastructure to utilize the
-> "core" selftests harness and TAP.  In addition to provide TAP output, using the
-> infrastructure reduces boilerplate code and allows running all testscases in a
-> test, even if a previous testcase fails (compared with today, where a testcase
-> failure is terminal for the entire test).
+
+On Sun, 10 Mar 2024 15:13:35 +0100, Luca Weiss wrote:
+> Add the dts for "hlte" which is a phablet from 2013.
 > 
-> As noted in the PMU pull request, the "Use TAP interface" changes have a few
-> conflicts.  3 of 4 are relatively straightforward, but the one in
-> userspace_msr_exit_test.c's test_msr_filter_allow() is a pain.  At least, I
-> thought so as I botched it at least twice.  (LOL, make that three times, as I
-> just botched my test merge resolution).
-> 
-> The code should end up looking like this:
-> 
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
-> KVM_ONE_VCPU_TEST_SUITE(user_msr);
+> Adam Honse (1):
+>       ARM: dts: qcom: msm8974: Add Samsung Galaxy Note 3
 > 
-> KVM_ONE_VCPU_TEST(user_msr, msr_filter_allow, guest_code_filter_allow)
-> {
-> 	struct kvm_vm *vm = vcpu->vm;
-> 	uint64_t cmd;
-> 	int rc;
+> Luca Weiss (1):
+>       dt-bindings: arm: qcom: Add Samsung Galaxy Note 3
 > 
-> 	sync_global_to_guest(vm, fep_available);
-> 
-> 	rc = kvm_check_cap(KVM_CAP_X86_USER_SPACE_MSR);
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
+>  arch/arm/boot/dts/qcom/Makefile                    |   1 +
+>  .../boot/dts/qcom/qcom-msm8974-samsung-hlte.dts    | 403 +++++++++++++++++++++
+>  3 files changed, 405 insertions(+)
 > ---
+> base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+> change-id: 20240310-samsung-hlte-78d1a287b0a8
 > 
-> The resolutions I've been using can be found in kvm-x86/next.
+> Best regards,
+> --
+> Luca Weiss <luca@z3ntu.xyz>
 > 
 > 
-> The following changes since commit db7d6fbc10447090bab8691a907a7c383ec66f58:
 > 
->    KVM: remove unnecessary #ifdef (2024-02-08 08:41:06 -0500)
-> 
-> are available in the Git repository at:
-> 
->    https://github.com/kvm-x86/linux.git tags/kvm-x86-selftests-6.9
-> 
-> for you to fetch changes up to e9da6f08edb0bd4c621165496778d77a222e1174:
-> 
->    KVM: selftests: Explicitly close guest_memfd files in some gmem tests (2024-03-05 13:31:20 -0800)
-> 
-> ----------------------------------------------------------------
-> KVM selftests changes for 6.9:
-> 
->   - Add macros to reduce the amount of boilerplate code needed to write "simple"
->     selftests, and to utilize selftest TAP infrastructure, which is especially
->     beneficial for KVM selftests with multiple testcases.
-> 
->   - Add basic smoke tests for SEV and SEV-ES, along with a pile of library
->     support for handling private/encrypted/protected memory.
-> 
->   - Fix benign bugs where tests neglect to close() guest_memfd files.
-> 
-> ----------------------------------------------------------------
 
-Pulled, thanks.
 
-Paolo
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-> Ackerley Tng (1):
->        KVM: selftests: Add a macro to iterate over a sparsebit range
-> 
-> Dongli Zhang (1):
->        KVM: selftests: Explicitly close guest_memfd files in some gmem tests
-> 
-> Michael Roth (2):
->        KVM: selftests: Make sparsebit structs const where appropriate
->        KVM: selftests: Add support for protected vm_vaddr_* allocations
-> 
-> Peter Gonda (5):
->        KVM: selftests: Add support for allocating/managing protected guest memory
->        KVM: selftests: Explicitly ucall pool from shared memory
->        KVM: selftests: Allow tagging protected memory in guest page tables
->        KVM: selftests: Add library for creating and interacting with SEV guests
->        KVM: selftests: Add a basic SEV smoke test
-> 
-> Sean Christopherson (4):
->        KVM: selftests: Move setting a vCPU's entry point to a dedicated API
->        KVM: selftests: Extend VM creation's @shape to allow control of VM subtype
->        KVM: selftests: Use the SEV library APIs in the intra-host migration test
->        KVM: selftests: Add a basic SEV-ES smoke test
-> 
-> Thomas Huth (7):
->        KVM: selftests: x86: sync_regs_test: Use vcpu_run() where appropriate
->        KVM: selftests: x86: sync_regs_test: Get regs structure before modifying it
->        KVM: selftests: Add a macro to define a test with one vcpu
->        KVM: selftests: x86: Use TAP interface in the sync_regs test
->        KVM: selftests: x86: Use TAP interface in the fix_hypercall test
->        KVM: selftests: x86: Use TAP interface in the vmx_pmu_caps test
->        KVM: selftests: x86: Use TAP interface in the userspace_msr_exit test
-> 
->   tools/testing/selftests/kvm/Makefile               |   2 +
->   tools/testing/selftests/kvm/guest_memfd_test.c     |   3 +
->   .../selftests/kvm/include/aarch64/kvm_util_arch.h  |   7 ++
->   .../selftests/kvm/include/kvm_test_harness.h       |  36 ++++++
->   .../testing/selftests/kvm/include/kvm_util_base.h  |  61 +++++++++--
->   .../selftests/kvm/include/riscv/kvm_util_arch.h    |   7 ++
->   .../selftests/kvm/include/s390x/kvm_util_arch.h    |   7 ++
->   tools/testing/selftests/kvm/include/sparsebit.h    |  56 +++++++---
->   .../selftests/kvm/include/x86_64/kvm_util_arch.h   |  23 ++++
->   .../selftests/kvm/include/x86_64/processor.h       |   8 ++
->   tools/testing/selftests/kvm/include/x86_64/sev.h   | 107 ++++++++++++++++++
->   .../testing/selftests/kvm/lib/aarch64/processor.c  |  24 +++-
->   tools/testing/selftests/kvm/lib/kvm_util.c         |  67 ++++++++++--
->   tools/testing/selftests/kvm/lib/riscv/processor.c  |   9 +-
->   tools/testing/selftests/kvm/lib/s390x/processor.c  |  13 ++-
->   tools/testing/selftests/kvm/lib/sparsebit.c        |  48 ++++----
->   tools/testing/selftests/kvm/lib/ucall_common.c     |   3 +-
->   tools/testing/selftests/kvm/lib/x86_64/processor.c |  45 +++++++-
->   tools/testing/selftests/kvm/lib/x86_64/sev.c       | 114 +++++++++++++++++++
->   .../selftests/kvm/x86_64/fix_hypercall_test.c      |  27 +++--
->   .../kvm/x86_64/private_mem_conversions_test.c      |   2 +
->   .../selftests/kvm/x86_64/sev_migrate_tests.c       |  60 +++-------
->   .../testing/selftests/kvm/x86_64/sev_smoke_test.c  |  88 +++++++++++++++
->   .../testing/selftests/kvm/x86_64/sync_regs_test.c  | 121 +++++++++++++++------
->   .../selftests/kvm/x86_64/userspace_msr_exit_test.c |  52 +++------
->   .../selftests/kvm/x86_64/vmx_pmu_caps_test.c       |  52 ++-------
->   26 files changed, 802 insertions(+), 240 deletions(-)
->   create mode 100644 tools/testing/selftests/kvm/include/aarch64/kvm_util_arch.h
->   create mode 100644 tools/testing/selftests/kvm/include/kvm_test_harness.h
->   create mode 100644 tools/testing/selftests/kvm/include/riscv/kvm_util_arch.h
->   create mode 100644 tools/testing/selftests/kvm/include/s390x/kvm_util_arch.h
->   create mode 100644 tools/testing/selftests/kvm/include/x86_64/kvm_util_arch.h
->   create mode 100644 tools/testing/selftests/kvm/include/x86_64/sev.h
->   create mode 100644 tools/testing/selftests/kvm/lib/x86_64/sev.c
->   create mode 100644 tools/testing/selftests/kvm/x86_64/sev_smoke_test.c
-> 
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/qcom-msm8974-samsung-hlte.dtb' for 20240310-samsung-hlte-v1-0-e9b55bf98a48@z3ntu.xyz:
+
+arch/arm/boot/dts/qcom/qcom-msm8974-samsung-hlte.dtb: /: memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 0]]}
+	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+arch/arm/boot/dts/qcom/qcom-msm8974-samsung-hlte.dtb: l2-cache: Unevaluated properties are not allowed ('qcom,saw' was unexpected)
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm/boot/dts/qcom/qcom-msm8974-samsung-hlte.dtb: idle-states: 'spc' does not match any of the regexes: '^(cpu|cluster)-', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
+arch/arm/boot/dts/qcom/qcom-msm8974-samsung-hlte.dtb: syscon@f9011000: compatible: 'anyOf' conditional failed, one must be fixed:
+	['syscon'] is too short
+	'syscon' is not one of ['allwinner,sun8i-a83t-system-controller', 'allwinner,sun8i-h3-system-controller', 'allwinner,sun8i-v3s-system-controller', 'allwinner,sun50i-a64-system-controller', 'amd,pensando-elba-syscon', 'brcm,cru-clkset', 'freecom,fsg-cs2-system-controller', 'fsl,imx93-aonmix-ns-syscfg', 'fsl,imx93-wakeupmix-syscfg', 'hisilicon,dsa-subctrl', 'hisilicon,hi6220-sramctrl', 'hisilicon,pcie-sas-subctrl', 'hisilicon,peri-subctrl', 'hpe,gxp-sysreg', 'intel,lgm-syscon', 'loongson,ls1b-syscon', 'loongson,ls1c-syscon', 'marvell,armada-3700-usb2-host-misc', 'mediatek,mt8135-pctl-a-syscfg', 'mediatek,mt8135-pctl-b-syscfg', 'mediatek,mt8365-syscfg', 'microchip,lan966x-cpu-syscon', 'microchip,sparx5-cpu-syscon', 'mstar,msc313-pmsleep', 'nuvoton,ma35d1-sys', 'nuvoton,wpcm450-shm', 'rockchip,px30-qos', 'rockchip,rk3036-qos', 'rockchip,rk3066-qos', 'rockchip,rk3128-qos', 'rockchip,rk3228-qos', 'rockchip,rk3288-qos', 'rockchip,rk3368-qos', 'rockchip,rk3399-qos', 'rockchip,rk3568-qos', 'rockchip,rk3588-qos', 'rockchip,rv1126-qos', 'starfive,jh7100-sysmain', 'ti,am62-usb-phy-ctrl', 'ti,am654-dss-oldi-io-ctrl', 'ti,am654-serdes-ctrl', 'ti,j784s4-pcie-ctrl']
+	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
+
+
+
+
 
