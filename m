@@ -1,63 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A9058133
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 22:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAECA5810E
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 22:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710197078; cv=none; b=Ygjz1t6IfXMBLG9vkh2uTKLmOt1q0rNm67qsqvcZushbLdIE1RIvU+hTuOwP6CY0oL0npqX+kYIzLjLI/BVIp1JUS5x/4VKNyM+dKTY1nJbC2mA/6q1PDb+pZE7tdYStpUhJOuxwLD6B5tD0G49FOqEVyvt10kcqFJE15OqUHoA=
+	t=1710197200; cv=none; b=ca0Y27K3mBT8IzUdeqYFO8XsIc8j9ZIyV2ntDScNTpcbrtZl+qOhNIqIIoVqOe5p/IVWSdB8h2AQIg8ac80RaWtph7nZNHRqIkRAHkRj7iOo+QnQdw5+KJe8t5T2qMALubp0/q1MYznBH93yHyyZDnyp9mf1tTCtR5woZA8Lo58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710197078; c=relaxed/simple;
-	bh=oSJ5E/rWkfuWw+awWRC9JIBNkssFF7q6obYfnJE6RQY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RUzxeDwX+OvZnoSHYhSvOaCNoyfy08WENeOMvhVJIjygdtyU533DU8n6PnPsQYEb6DqrxAExdgxpDT9GsKS02C3aLZx5+NO2g6rzDL/OlRULuepyr0bpucuPiTxAYGGXJFgCpX11vE/48WlcIAQD8IsruGe8ZET6k8mIJqJMOz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3Bp4x5j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710197200; c=relaxed/simple;
+	bh=ZJAAeL3fVss9iGjRrFB3dUfBTrjy5/IGazLgsApqp4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lgQ3JTZdryU9wSg2hlPmMDxH8Yce9Mx5HjyD28sF4rzip1wFPN0RYhIkH7d4bzOKkaKidvHHNq9DpgLCqLLFt6VBxhbrep0EwqiG2t0Yt/aR5Ko6uoBlrhQSydVwiT3nC+Fvpha2giCuSylSC7b9zhhgx08yTMkHWAjUdvDrwck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQbd+xEN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3Bp4x5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EDB21C43330;
-	Mon, 11 Mar 2024 22:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710197078;
-	bh=oSJ5E/rWkfuWw+awWRC9JIBNkssFF7q6obYfnJE6RQY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=e3Bp4x5jmtyxZj9vcHXpHK0fTS0bg5/sbb4EXCAUELxbhHoKCIoOuZKBsRdP8nNUn
-	 qNEmsemw0SJ3wkvRuzlXKr3H8movTclqFpz4kmba/dveV1MC3Zeum0ehBQzBDtfV3Q
-	 Ffd6JNbhFBFsgK42aZKCXlDiuhtXSvb1dAzsKGYwilkMb/geVca3pzRXuZZ7janEUq
-	 x+bO2jJMKqpo39ukvfAEMTHl0W+xlKFveTFZzFrvp/fj7itUacGvaTMVZQOQW+Vlp2
-	 NS3lEN6kuldHNtzeY5G4FU/Z4zruj6m1ZXUmDO3FQdnPyMTO4Psc5kTML2hzRJqq4E
-	 Q7jJAwHBYSPrw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D15B3D95056;
-	Mon, 11 Mar 2024 22:44:37 +0000 (UTC)
-Subject: Re: [GIT pull] timers/core for v6.9-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <171011361729.2468526.2426064486971501672.tglx@xen13>
-References: <171011361246.2468526.10740060923051583953.tglx@xen13> <171011361729.2468526.2426064486971501672.tglx@xen13>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <171011361729.2468526.2426064486971501672.tglx@xen13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2024-03-10
-X-PR-Tracked-Commit-Id: 8ca1836769d758e4fbf5851bb81e181c52193f5d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d08c407f715f651e7ea40b3a037be46dd2b11e4c
-Message-Id: <171019707785.5315.11811802038250379972.pr-tracker-bot@kernel.org>
-Date: Mon, 11 Mar 2024 22:44:37 +0000
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQbd+xEN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710197199; x=1741733199;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZJAAeL3fVss9iGjRrFB3dUfBTrjy5/IGazLgsApqp4Q=;
+  b=FQbd+xENy+oxZbeIYdwrnN/sUNl+x577ZUtEZnv+Ln5Xd1yHsIPdtKVx
+   woOe+J4ZiomnEiyEIC8Z+rwEVq4/MMxtTdZqaMnvUJyAxobjXSlv/FVwx
+   5xibQEZKywY2hP0u29YfVO05LpmgBwcDSCW/msTgNHxEt0MzUoELaaLHv
+   ngXJxdu9esdJcCniR8ubM8Q+18VyDBa1vXOAqeqsRgg6hVwCCSNH4OxlH
+   +Mj1CEa7QDBdCVRCeqiOHLguyJsxqKk+wMdHHg7OEqx/6uEdAOa5fK/Fz
+   JB5apdjfRcSEgRtoBWH9qf4cO09ZPbtfLt/RZcMYqtvfa76biLxaNrqq9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="5069989"
+X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
+   d="scan'208";a="5069989"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 15:46:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
+   d="scan'208";a="15811648"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.137.71])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 15:46:31 -0700
+Date: Mon, 11 Mar 2024 15:46:29 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: "Felix N. Kimbu" <felixkimbu1@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: p80211conv: Rename local foo to decrypt_check
+Message-ID: <Ze+JxSpqc/eHfCKn@aschofie-mobl2>
+References: <Ze9Ie67PCSvBU+og@MOLeToid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ze9Ie67PCSvBU+og@MOLeToid>
 
-The pull request you sent on Mon, 11 Mar 2024 00:38:55 +0100 (CET):
+On Mon, Mar 11, 2024 at 07:07:55PM +0100, Felix N. Kimbu wrote:
+> This change renames the local variable foo to decrypt_check in functions
+> skb_ether_to_p80211(...) and skb_p80211_to_ether(...), giving intuitive
+> meaning to the identifier.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2024-03-10
+'rc' is typically used for cases like this. If the name of the function
+being called is reasonably intuitive, then 'rc' suffices for the return
+value.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d08c407f715f651e7ea40b3a037be46dd2b11e4c
+> 
+> It also indents the parameters to match the the opening parentheses.
 
-Thank you!
+'Also' signals that this patch is trying to do more than one thing.
+One type of 'thing' per patch please.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+The commit message prefixes are off. Please see First Patch Tutorial
+Section: "Following the Driver commit style"
+
+Patch fails checkpatch. Please see First Patch Tutorial Sections:
+"Git post-commit hooks" and "Understand patch best practices"
+
+
+
+--snip
