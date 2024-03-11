@@ -1,116 +1,114 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E0838DC0
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5B222064;
+	Mon, 11 Mar 2024 10:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710151886; cv=none; b=IBW8a/HBTv+rKmyYcHv85fu8b+MKUtm34Gi9203nJpvKEl5LFK55XWhAa9koNMnm6qDx6Uo7fuCO5zpyLzk4S0wMOX+N+R1225s/qsyl0w35Z4Z57VjzNOXRx1ekVOgKmfmQcZnTbBQKexJwcfS64VrbSVJA7tE7ENt3ZsU3Sws=
+	t=1710152136; cv=none; b=RVxr8FEeOkM2i0X4LF7QK2j/FTY0l0yJA3TDU17vCfxCuNPEcwO2ag2vVPMl1Q8S5gbktAeEy+8buQD7iQQ2mp2oeSUbgzk2eCGpfEfwGw2fY2FT2VKDXPiRmwPUq8793lzOzqiZU6lZ8z5GBBqckkEejDvZoznyXcg8uu3ZiP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710151886; c=relaxed/simple;
-	bh=90wxFtc2yl7pC0/MOznw1zbBPujem0U2+kENHa16YIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D0wYOlVdFrunvTddVwpvyEPITbQHeO39ucanEoXdIicu2ecKrJpqzbKEvTNIL3BGft32QwfwC+LmM50NQqgSaxHl1c4I+WSicA+z143f4JSpzaeGfg/CwIbsCthHF2jPO07E82wb1U9KeTkHSCqiMY3B0vRSj6P20V0ZsOYjyuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iEuDl0CX; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iEuDl0CX"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so4773625276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 03:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710151884; x=1710756684; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OW00I9htwoAsj3xBJZrkbzrUKhGDr0/+mmT+snWwiXg=;
-        b=iEuDl0CXWHzvdZYvg2Uqft91dUHE8s4S0nzX2JXi0jbuzaqbP/anhhfShGbtmAbj+6
-         dFvbr3wwsVc1l/yaFnWxdW9auVjedAAueOsEYCtd/ModbkuJ87LhwWNhfyYT9XIHG8Rg
-         NBXdgt4kfaL/thZyayXXcL5XztQ6r/VYqwHY+b0jAUMzWM+09I0c+AYDpX/iaZWoArCu
-         ZDCuk9xxDBrx37I/nCyzCsUY1m8U0Sf/vNFHetvMnoOOowTWDaAIQHxZQGdLCeli+uPI
-         QlfLzQ20Zjfb5+AatcjBlMjSEpCqglJQ28Sc25aQosThpL/N1kkhnSaA4YiQrxWazKkS
-         WDyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710151884; x=1710756684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OW00I9htwoAsj3xBJZrkbzrUKhGDr0/+mmT+snWwiXg=;
-        b=I3pFq1VdsL0+hEdY+UCfTeVER+JOi6gs/2uxSbSG2aX0PU00SYO7Zdb7Yz96p/sjL2
-         aWc1b/NAG4glmc1RruIFo7W/Mi0R0ssZa2WxX/hLGDKeA/szwcUlzWgpiKu5QRwBArVP
-         n25QAI43WWGEW5PDq6lEJ747zF9cYBrmlvVWTHL2s80EWI8Ujl61oLFsKrsqx1kw9pme
-         lELw+CSK4KRCarR8InIGqvopxkkhGB9srJJ10CEkHi4a/jTiEODKdJBxDUbBuyU7/nCc
-         2LitUlcLxOl/QA9xnCg46f1HCwOzqu4A3LegUtR7B2Gk2KC8ouIWcPNuuwxcn0S5IgvX
-         5FKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLwlas2EJaV0UKPW8lBClJmUiaDaJEj2z0dDz37LWxOACI3PcYvOodQgDtuk3tyjdlXLzWkVw/6CKLAJU7pW310mxN90F5KtVHC9nO
-X-Gm-Message-State: AOJu0Yx8bNWqvrdh1cu12tuhyJcQE2cpDy+OQ8jwIOXRg6FCXIjD91Uv
-	hRLwb/Cr87MMPn906g7xSUC1jBXCZp0bAk2RfD2dUwJwubhUoE4dmFqmpxR/DXTUP6bgW65GtyX
-	h0uIJzwYnjFNHafYuRMWNsYgUbrazYxHRZi5F
-X-Google-Smtp-Source: AGHT+IHeMf2I6e7HKYzUshIicVdYM485nxp+wOAn6CZ5eXC/DS89xt9vl9QxYES8bm7T9Wf6yE9ct4Shlv7P6VhvUsU=
-X-Received: by 2002:a25:28a:0:b0:dc6:ca3a:31da with SMTP id
- 132-20020a25028a000000b00dc6ca3a31damr5135139ybc.16.1710151884041; Mon, 11
- Mar 2024 03:11:24 -0700 (PDT)
+	s=arc-20240116; t=1710152136; c=relaxed/simple;
+	bh=NZRW6tzTmDle8kSotz8FaxRCcE6d0Ym/4Gh5ibq+z7o=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=ATS0VVyQ9DDRg+dTGqKs2BGLfOvyz1gg4IATPUp6hQCfkAAnJFtf4xmDmlgywriPknQYC2rUPJLgWLr+nvIuPmuPxBE0EeNX++IWSG3F3PrAnQDQDfJ307u61E2GQecSup1/IPLjutHuWBPMbLeb0Qu9Jf2099L1ZzCV/4zL7+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FA251A1970;
+	Mon, 11 Mar 2024 11:10:15 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C918D1A022C;
+	Mon, 11 Mar 2024 11:10:14 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 12492183AD15;
+	Mon, 11 Mar 2024 18:10:13 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi,
+	tfiga@chromium.org,
+	m.szyprowski@samsung.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v14 04/16] ASoC: fsl_asrc: move fsl_asrc_common.h to include/sound
+Date: Mon, 11 Mar 2024 17:53:49 +0800
+Message-Id: <1710150841-26991-5-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1710150841-26991-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1710150841-26991-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240311094947.3738200-1-howardyen@google.com> <Ze7W3o67JLTKlLzR@smile.fi.intel.com>
-In-Reply-To: <Ze7W3o67JLTKlLzR@smile.fi.intel.com>
-From: Howard Yen <howardyen@google.com>
-Date: Mon, 11 Mar 2024 18:10:47 +0800
-Message-ID: <CAJDAHvbRSm_UYgx0fE7o2dJqcBfBbcFR4DrnVydkwfxGo0O4Rg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Add support for multiple coherent memory regions
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, mathias.nyman@intel.com, 
-	hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
-	petr.tesarik.ext@huawei.com, broonie@kernel.org, james@equiv.tech, 
-	james.clark@arm.com, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 6:03=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Mar 11, 2024 at 09:49:45AM +0000, Howard Yen wrote:
-> > In the system I'm working on, there is an always-on subsystem which
-> > includes a small size memory, and several functions need to run and
-> > occupy the memory from the small memory if they need to run on the
-> > always-on subsystem. These functions must allocate the memory from the
-> > small memory region, so that they can get benefit from the always-on
-> > subsystem. So the small memory is split for multiple functions which ar=
-e
-> > satisfied with their generic use cases. But in specific use cases, like
-> > USB3 devices which support the stream trasnsfer or multiple devices
-> > connect to the host, they required more memory than their pre-allocated
-> > memory region. I tried to implement it in a generic way and propose thi=
-s
-> > patch to give it the ability to get the memory from the other larger
-> > memory to solve the issue.
->
-> > Changelog
-> > --------------------------------------------
-> > Changes in v5:
-> > - Fix build break.
-> > - Use of_property_count_u32_elems() instead of
-> >   of_property_count_elems_of_size().
->
-> Have you tried to use --histogram diff algo?
+Move fsl_asrc_common.h to include/sound that it can be
+included from other drivers.
 
-Yes, I used the below command to create the patch v5.
-`git format-patch --cover-letter --histogram -v5 51b70ff55`
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+---
+ {sound/soc/fsl => include/sound}/fsl_asrc_common.h | 0
+ sound/soc/fsl/fsl_asrc.h                           | 2 +-
+ sound/soc/fsl/fsl_asrc_dma.c                       | 2 +-
+ sound/soc/fsl/fsl_easrc.h                          | 2 +-
+ 4 files changed, 3 insertions(+), 3 deletions(-)
+ rename {sound/soc/fsl => include/sound}/fsl_asrc_common.h (100%)
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+diff --git a/sound/soc/fsl/fsl_asrc_common.h b/include/sound/fsl_asrc_common.h
+similarity index 100%
+rename from sound/soc/fsl/fsl_asrc_common.h
+rename to include/sound/fsl_asrc_common.h
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 1c492eb237f5..66544624de7b 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -10,7 +10,7 @@
+ #ifndef _FSL_ASRC_H
+ #define _FSL_ASRC_H
+ 
+-#include  "fsl_asrc_common.h"
++#include  <sound/fsl_asrc_common.h>
+ 
+ #define ASRC_M2M_INPUTFIFO_WML		0x4
+ #define ASRC_M2M_OUTPUTFIFO_WML		0x2
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index f501f47242fb..f067bf1ecea7 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -12,7 +12,7 @@
+ #include <sound/dmaengine_pcm.h>
+ #include <sound/pcm_params.h>
+ 
+-#include "fsl_asrc_common.h"
++#include <sound/fsl_asrc_common.h>
+ 
+ #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ 
+diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
+index c9f770862662..a24e540876a4 100644
+--- a/sound/soc/fsl/fsl_easrc.h
++++ b/sound/soc/fsl/fsl_easrc.h
+@@ -9,7 +9,7 @@
+ #include <sound/asound.h>
+ #include <linux/dma/imx-dma.h>
+ 
+-#include "fsl_asrc_common.h"
++#include <sound/fsl_asrc_common.h>
+ 
+ /* EASRC Register Map */
+ 
+-- 
+2.34.1
 
-
---=20
-Best Regards,
-
-Howard
