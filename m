@@ -1,138 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1412433CC;
-	Mon, 11 Mar 2024 22:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02F758119;
+	Mon, 11 Mar 2024 22:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710197357; cv=none; b=JM9FipOjq/aChUwscMR1/8ER1i5PYOIGJI5xiF76b8KzfZYGRwIMB6LXqE19AObHRvRz+WaCuuChyqkwXl8MZDGb+ZzSQZjKXvbNwlSOOi/I4I/7+bKLfWM+VuBY9Ta082je1v0dkk+HF3q0edjQChS+yfJOkAkxR3PVut4Lpm8=
+	t=1710197420; cv=none; b=SK3XbKGkStqy9qyjKbxekgWBxFG+ru0MqkyLTtE39NoaUKyI9jgbee24hoSebHVvZpvZ4xGMwlcB0Rd4Pa8+e+En45hPISoR98bIT/eJtYLRk8hApp6pcyuZtdxvKrIwMreAUmSmkOa3+gLuWtrAZTTSkU2Zl09p4iQWwfUyNDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710197357; c=relaxed/simple;
-	bh=4x5JZYqHqdYVcamVAyLlqhcsKG8VLNeJTDI/33dxYjw=;
+	s=arc-20240116; t=1710197420; c=relaxed/simple;
+	bh=6hEw/tubGvPxhFiRELWYV1/vJLyENcju0/g5UjQ5KqY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAtr42J+X4oEjPCmfxW++XlT/DWtgiJRQceenpa4MctaTEuJEUbWrQ01hYYgb6v1rDSwXJp1fSdowDmimexQLRYlHfmCD0PZR6nDrPa4ixoMbvexhkqhxv99hO4Dl80fNGmq0y8qRHQIkUk8CUwtUbjovVfpBa/v7Xzhzs5MI0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3QKdCO8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLy0ZphqNqWOgjp3UGqfpVDUUem3DDNduK5gRlE+v0ryGKAqq+N/H14VPP5vLRaEvkBMd7SF8N1Fv43uHcAw/9ADMFIbgweCc3uig+i54/qMPYsWSlfBlmSJ2njjmOz6tjhGRkSyDMOpF/2tTqOg17Mmh2iVsEpSOxysY9GLUQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2JMcx+Xw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F+g1Kpq1; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2JMcx+Xw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F+g1Kpq1; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3QKdCO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A3CC433C7;
-	Mon, 11 Mar 2024 22:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710197356;
-	bh=4x5JZYqHqdYVcamVAyLlqhcsKG8VLNeJTDI/33dxYjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X3QKdCO8OEHpC2I9zB5WhxNWKTIQT2TLVJ1wNuoQpDTz1DhrWcvo/TeN5UTHU3xjq
-	 Tqduy8Z8XGnw+97Jtn0zm3+JzRWVyqOj+ITmQrPLcuiJaSj8fi3kteBg0OSXvjhs3Q
-	 Z1CtVXUD76TOs/xOrGBAImIEAUjix6OX/NKddKPBCuftkUAovpkBALaQWX29w8O7NH
-	 wn7xOWzDURamytMIfgtrArXlr+LxK5r/biv09nQniXlBLRsBW3ChkwB8SjQVX3Oh9b
-	 YlDtMtE71edYmdIGcRA3yAl3FR3dgYNoLzFyMVTC7gRqVSrxgQH7+xm3XYpwbK7g6K
-	 S0qNTbW1e3d8g==
-Date: Mon, 11 Mar 2024 22:49:11 +0000
-From: Will Deacon <will@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-	Nicolin Chen <nicolinc@nvidia.com>,
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2JMcx+Xw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F+g1Kpq1";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2JMcx+Xw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F+g1Kpq1"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 88B38351BF;
+	Mon, 11 Mar 2024 22:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710197409;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZxUzTMlXn3tjcFXFnIZtmdtt4eI79Utif3t7gSNN5zI=;
+	b=2JMcx+XwlcbtzsHasDWy6ZqzZxXsO3ioT+8RzDCQ0YvK0mSr6RGEEmrDkprLn9iu/wrFlb
+	2nBv61lu5TWoLC+nmdgCMjeN3iwiOxMPT1xggX7YslQnNgaZkdTVnamLCxVzptOzNdUH+k
+	gdB/u14tP/OhBm72q0zbrsymW1HQx5s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710197409;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZxUzTMlXn3tjcFXFnIZtmdtt4eI79Utif3t7gSNN5zI=;
+	b=F+g1Kpq1z//72iAQU0s5syM1OR3D2vd1+VUaZDH/4porC6DOlqeOzQCvwxbMLLcaGNGQzW
+	MuVHYv5vFOygdiCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710197409;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZxUzTMlXn3tjcFXFnIZtmdtt4eI79Utif3t7gSNN5zI=;
+	b=2JMcx+XwlcbtzsHasDWy6ZqzZxXsO3ioT+8RzDCQ0YvK0mSr6RGEEmrDkprLn9iu/wrFlb
+	2nBv61lu5TWoLC+nmdgCMjeN3iwiOxMPT1xggX7YslQnNgaZkdTVnamLCxVzptOzNdUH+k
+	gdB/u14tP/OhBm72q0zbrsymW1HQx5s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710197409;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZxUzTMlXn3tjcFXFnIZtmdtt4eI79Utif3t7gSNN5zI=;
+	b=F+g1Kpq1z//72iAQU0s5syM1OR3D2vd1+VUaZDH/4porC6DOlqeOzQCvwxbMLLcaGNGQzW
+	MuVHYv5vFOygdiCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6618113695;
+	Mon, 11 Mar 2024 22:50:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QldwGKGK72XGBQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 11 Mar 2024 22:50:09 +0000
+Date: Mon, 11 Mar 2024 23:43:00 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-team@android.com" <kernel-team@android.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v6 4/6] swiotlb: Fix alignment checks when both
- allocation and DMA masks are present
-Message-ID: <20240311224910.GA28426@willie-the-truck>
-References: <20240308152829.25754-1-will@kernel.org>
- <20240308152829.25754-5-will@kernel.org>
- <20240311210507.217daf8b@meshulam.tesarici.cz>
- <SN6PR02MB41576E58DDF5A56FC6FC1EB6D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
+	Josef Bacik <josef@toxicpanda.com>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v2] statx: stx_subvol
+Message-ID: <20240311224259.GV2604@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240308022914.196982-1-kent.overstreet@linux.dev>
+ <2f598709-fccb-4364-bf15-f9c171b440aa@wdc.com>
+ <20240311-zugeparkt-mulden-48b143bf51e0@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB41576E58DDF5A56FC6FC1EB6D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240311-zugeparkt-mulden-48b143bf51e0@brauner>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [0.20 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 URIBL_BLOCKED(0.00)[wdc.com:email];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[44.46%]
+X-Spam-Score: 0.20
+X-Spam-Flag: NO
 
-On Mon, Mar 11, 2024 at 09:36:10PM +0000, Michael Kelley wrote:
-> From: Petr Tesařík <petr@tesarici.cz>
-> > On Fri,  8 Mar 2024 15:28:27 +0000
-> > Will Deacon <will@kernel.org> wrote:
-> > > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> > > index c20324fba814..c381a7ed718f 100644
-> > > --- a/kernel/dma/swiotlb.c
-> > > +++ b/kernel/dma/swiotlb.c
-> > > @@ -981,8 +981,7 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
-> > >  	dma_addr_t tbl_dma_addr =
-> > >  		phys_to_dma_unencrypted(dev, pool->start) & boundary_mask;
-> > >  	unsigned long max_slots = get_max_slots(boundary_mask);
-> > > -	unsigned int iotlb_align_mask =
-> > > -		dma_get_min_align_mask(dev) & ~(IO_TLB_SIZE - 1);
-> > > +	unsigned int iotlb_align_mask = dma_get_min_align_mask(dev);
-> > >  	unsigned int nslots = nr_slots(alloc_size), stride;
-> > >  	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
-> > >  	unsigned int index, slots_checked, count = 0, i;
-> > > @@ -993,6 +992,14 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
-> > >  	BUG_ON(!nslots);
-> > >  	BUG_ON(area_index >= pool->nareas);
-> > >
-> > > +	/*
-> > > +	 * Ensure that the allocation is at least slot-aligned and update
-> > > +	 * 'iotlb_align_mask' to ignore bits that will be preserved when
-> > > +	 * offsetting into the allocation.
-> > > +	 */
-> > > +	alloc_align_mask |= (IO_TLB_SIZE - 1);
-> > > +	iotlb_align_mask &= ~alloc_align_mask;
-> > > +
+On Mon, Mar 11, 2024 at 02:43:11PM +0100, Christian Brauner wrote:
+> On Mon, Mar 11, 2024 at 08:12:33AM +0000, Johannes Thumshirn wrote:
+> > On 08.03.24 03:29, Kent Overstreet wrote:
+> > > Add a new statx field for (sub)volume identifiers, as implemented by
+> > > btrfs and bcachefs.
+> > > 
+> > > This includes bcachefs support; we'll definitely want btrfs support as
+> > > well.
 > > 
-> > I have started writing the KUnit test suite, and the results look
-> > incorrect to me for this case.
+> > For btrfs you can add the following:
 > > 
-> > I'm calling swiotlb_tbl_map_single() with:
 > > 
-> > * alloc_align_mask = 0xfff
-> > * a device with min_align_mask = 0xfff
-> > * the 12 lowest bits of orig_addr are 0xfa0
+> >  From 82343b7cb2a947bca43234c443b9c22339367f68 Mon Sep 17 00:00:00 2001
+> > From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> > Date: Mon, 11 Mar 2024 09:09:36 +0100
+> > Subject: [PATCH] btrfs: provide subvolume id for statx
 > > 
-> > The min_align_mask becomes zero after the masking added by this patch,
-> > and the 12 lowest bits of the returned address are 0x7a0, i.e. not
-> > equal to 0xfa0.
+> > Add the inode's subvolume id to the newly proposed statx subvol field.
+> > 
+> > Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> > ---
 > 
-> The address returned by swiotlb_tbl_map_single() is the slot index
-> converted to an address, plus the offset modulo the min_align_mask for
-> the device.  The local variable "offset" in swiotlb_tbl_map_single()
-> should be 0xfa0.  The slot index should be an even number to meet
-> the alloc_align_mask requirement.  And the pool->start address should
-> be at least page aligned, producing a page-aligned address *before* the
-> offset is added. Can you debug which of these isn't true for the case
-> you are seeing?
+> Thanks, will fold, once I hear from Josef.
 
-I was just looking into this, and I think the problem starts because
-swiotlb_align_offset() doesn't return the offset modulo the min_align_mask,
-but instead returns the offset *into the slot*:
-
-	return addr & dma_get_min_align_mask(dev) & (IO_TLB_SIZE - 1);
-
-so this presumably lops off bit 11 without adjusting the slot number.
-
-I don't think swiotlb_find_slots() should be handling this though; it's
-more about how swiotlb_tbl_map_single() puts the address back together
-again.
-
-> > In other words, the min_align_mask constraint is not honored. Of course,
-> > given the above values, it is not possible to honor both min_align_mask
-> > and alloc_align_mask. 
-> 
-> When orig_addr is specified and min_align_mask is set, alloc_align_mask
-> governs the address of the _allocated_ space, which is not necessarily the
-> returned physical address.  The min_align_mask may dictate some
-> pre-padding of size "offset" within the allocated space, and the returned
-> address is *after* that pre-padding.  In this way, both can be honored.
-
-I agree, modulo the issue with the offset calculation.
-
-Will
+We're OK with it.
