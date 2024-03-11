@@ -1,201 +1,170 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0E147F6B
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BC54594B
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710175476; cv=none; b=Nj2MjBHjN7szACbQNRr8+zEGgp6sHb0YQCH/UCMfOcPuvCgsN3nWkz/dme9gi1gj81zZHNxJl7xx14viqUY9dWkvEUHM5Ote5cW1O237kYxbG7YywLzxuj9AucSTKgtzV+csyfc2DkjSP1uyR8fib/xu5UW3Qy064j2IYdpaghI=
+	t=1710175606; cv=none; b=RPMUqNhSUpB4j17aFQ25aYeLE8q3vzS6verD4T5Sw2cjfqG/4I/c2T4pqozkGJwNHkk/2ggdXSdQXuJNhwVkCj4T28GgxQA4/Ksir1mVpjjQrYj6s9nRstaNvqnDGA6rCTfZ1uS+FinYU1EWBBcSXRwwYtCNHeh2joptFq2euAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710175476; c=relaxed/simple;
-	bh=wn0Ab87jBO9FBfXotPayXSCcTMQFYUYVHXBhGR+V45I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CWfs2jjM9yiCMdeh428QRh6YD7OEUxrSR+QdhTEfJkM+fRiWi4j/FZ9qDycU2KQgsXyH2ji10JajB8NSM2ihafiS+Ss0GJ0/ytaaCLVT6n5v+3PaftRDbuVXtPPxl8rKpGTWh2+mSwO9SRh+x+NHf/kxyful8BsNgyLIRl9C0oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=KUHxIH7B; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1710175606; c=relaxed/simple;
+	bh=AakKpXi6oEnbZWS74OzKYeEGVjsY+mcu+WdaNyzi59I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ZJzrDglEcOHWSAQZZreY/F6Biq+jiSSvUI+aF7o75Bw8YMQVExS3BVyQTQegedHaowjdfuJCu+eiIfBuAGYVFpDlB1Cgwur0YwlI0c5rDupnwYKP/LgfknXSxS/L5gy757SBVPIMCcYgefitOB/hVMd2eIaqoaRMulpaZHt4Eb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=G5xoUH9D; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="KUHxIH7B"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e676ea4e36so2302758b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:44:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="G5xoUH9D"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a142375987so1666348eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1710175474; x=1710780274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iBoJvVf5erEJTx7bXeerABv2Y8BlFidva1ewEgzzucQ=;
-        b=KUHxIH7BoQ3rZZGIRbpjtn8S2ReTBNfdmqfUUEiNr3+vNdBytr23y2m0xSDboMHE9B
-         cpNouxloh2zT8nq/FJwNG68jLVZ3okS3VdoUrYFbMnqw36e3VWy+TXGSbtyzQ2BmNsQs
-         PSGZG1xRw9e93NMTdTmGiX9rZKTb8xLozkY0ILfle3WhKwU/JeL20vjOxsoyMlATRjYU
-         SudF/8UmEixsBcNH9Ok437x4EJ4Tt8FcgbMOFSZ/KcGCgSirPdW/3K4qEgfEs+7EN/d0
-         hqjHx3WsbS/p+GWU1nikEoi3/8I7hYSj0uX12G1rBlgwGv0JRoKDfNrtVjhppF9pnf25
-         Ib4w==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710175603; x=1710780403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jKDy5XLn4MxCpgW/wos6NfCyYowjlJJBXq+4EzKDJes=;
+        b=G5xoUH9DTjCgPIDtksxft3sspFyc5Lw+EHyXFZ1URyr7qU4uOEPSJEC5W4AV7A02Us
+         ggj1WfBIpsdjsfLK2frDegdpVnun3lymvUzSg1Yf8rkATadDXOHCWKLVc02vA6RcTytU
+         BfqC7HzCmAg/iM4CLEgZoPQmuQ55PlFZTOXbQfGGc98/ucI5OEPP5BWERKszIdS/0Alg
+         O+bEWayyMiavB0a3zY2A6P5yidM56qw+9io+zxl/LmKv5LnMQFZAg1SDAItNLjcFky7j
+         EUKRWYRXpGup/yh5jovv/ojX3qkyrsd3hYTNw8TXBhNv56ZpUeU85VovvM2WtqNzKj8Q
+         ujNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710175474; x=1710780274;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iBoJvVf5erEJTx7bXeerABv2Y8BlFidva1ewEgzzucQ=;
-        b=H1nbm5ges8I5Dc3nKBHC/hn5FqgeRSf8JRObnAV56fwAO0K1SBoIRNQ7M0sQjdgawX
-         /vwbcw0IxCyD37lbUEKeuL7+cxplRe4IfOyEZGXSK75PZec/pd8px30GPZlcg22lezZh
-         FucYA1AiVNr1NKHEaFaaro5n+LnxafpA2MybGs2Zjzo2xcLVq23UTWcL0tfwop3DhLQK
-         KD+M3IIOM/yPNfzqIc9rJIC25VXXvxZxvdwumCjiFhZhqcgvlxFLxIs6MZ+axC3X07Oj
-         a+iOUOrHpdU9K4mQq6j0mtZMSU2ajgCJuuAaFSVrRtfjuUndpG9CepkOjHHBD2zvF8cF
-         GnyQ==
-X-Gm-Message-State: AOJu0YwsDjSLNE9XA3Ii5wb+QuqQ5cEwbZQSDJWY/WJ0Q/wV3k8rmjYc
-	3PJ0mNhb00CO5KuhjQMQB/eZmfNuSYSiQF15yYWPLHI1al77ulwi0bHWhy9XjPOu3lCoSjOVFLh
-	G
-X-Google-Smtp-Source: AGHT+IGXDmMcwCIVX9FvBHiPZLWo+MEX5SLxnsrmntC+yQwtuKYUtiUkuJp+XdpyD0MsV9RMDJo4tg==
-X-Received: by 2002:a05:6a20:1b2a:b0:1a1:52d5:d17 with SMTP id ch42-20020a056a201b2a00b001a152d50d17mr804343pzb.35.1710175473727;
-        Mon, 11 Mar 2024 09:44:33 -0700 (PDT)
-Received: from hermes.local (204-195-123-141.wavecable.com. [204.195.123.141])
-        by smtp.gmail.com with ESMTPSA id z4-20020aa78884000000b006e680f60f25sm3694350pfe.211.2024.03.11.09.44.33
+        d=1e100.net; s=20230601; t=1710175603; x=1710780403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jKDy5XLn4MxCpgW/wos6NfCyYowjlJJBXq+4EzKDJes=;
+        b=V3JLwgyRSbAnMf8u0HTqbHMgQzZKJnAyDncwDWUBPXJBodEXIW3W5GDFCUIjYmEMLE
+         l/d9JF58eVQHoXVggHL9BlmE+nfq0DaaHUgYHWubm3mWjsqifybQM5EYT3ZTVvXh1Opk
+         KQdIjZNamJ9UayHGXvX5jRbq1dueJ+7Ue0rFk7doqjGAZXraN3b/E41jbPTwLncBfeWm
+         Vk6mVEWtMWK2oO61ssioQdVltMzBBNVZ03vcJYNvjRhO4C9JtykrcTb6iVOrBbNxTUce
+         rrr5Ztmagt0UBcYIQR7CrrZlra9JPlaxdaHCoPFANox5Y0oL6CihHt3stoNU/LBZe3wx
+         9s7Q==
+X-Gm-Message-State: AOJu0Yz1bYLZs9tdi8DccFrPWdoxHXUiwBTAn7puIJz9sbPhytEZCmOL
+	Ijl0XUplWMFhOjIfnaK6z2T3wLTWofBIBtinNzVV/t9vORQ/J/jVUp0iFWJHkdotcEtnMfKZzLD
+	3vGE=
+X-Google-Smtp-Source: AGHT+IHCf3gSyDwpxMQqAwcZOEE99Um3U9jb5cEHcYXAVoTC005pLQoY23vpn4Os61gkSYgimn/PHg==
+X-Received: by 2002:a05:6870:65a4:b0:221:ced3:4748 with SMTP id fp36-20020a05687065a400b00221ced34748mr6602625oab.24.1710175603623;
+        Mon, 11 Mar 2024 09:46:43 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (150.254.86.34.bc.googleusercontent.com. [34.86.254.150])
+        by smtp.gmail.com with ESMTPSA id d27-20020a05620a137b00b00788228fbe05sm2851589qkl.17.2024.03.11.09.46.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 09:44:33 -0700 (PDT)
-Date: Mon, 11 Mar 2024 09:44:32 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [ANNOUNCE] iproute2 6.8 release
-Message-ID: <20240311094432.16bf9516@hermes.local>
+        Mon, 11 Mar 2024 09:46:43 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	x86@kernel.org,
+	bp@alien8.de,
+	brauner@kernel.org,
+	bristot@redhat.com,
+	bsegall@google.com,
+	dave.hansen@linux.intel.com,
+	dianders@chromium.org,
+	dietmar.eggemann@arm.com,
+	eric.devolder@oracle.com,
+	hca@linux.ibm.com,
+	hch@infradead.org,
+	hpa@zytor.com,
+	jacob.jun.pan@linux.intel.com,
+	jgg@ziepe.ca,
+	jpoimboe@kernel.org,
+	jroedel@suse.de,
+	juri.lelli@redhat.com,
+	kent.overstreet@linux.dev,
+	kinseyho@google.com,
+	kirill.shutemov@linux.intel.com,
+	lstoakes@gmail.com,
+	luto@kernel.org,
+	mgorman@suse.de,
+	mic@digikod.net,
+	michael.christie@oracle.com,
+	mingo@redhat.com,
+	mjguzik@gmail.com,
+	mst@redhat.com,
+	npiggin@gmail.com,
+	peterz@infradead.org,
+	pmladek@suse.com,
+	rick.p.edgecombe@intel.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	tglx@linutronix.de,
+	urezki@gmail.com,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	pasha.tatashin@soleen.com
+Subject: [RFC 00/14] Dynamic Kernel Stacks
+Date: Mon, 11 Mar 2024 16:46:24 +0000
+Message-ID: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-This is regular release of iproute2 corresponding to the 6.8 kernel.
-In addition to the usual round of documentation fixes, many
-small changes to ss utility. Most of the work to have full JSON
-support in traffic control (TC) is done, only a few leftovers.
+This is follow-up to the LSF/MM proposal [1]. Please provide your
+thoughts and comments about dynamic kernel stacks feature. This is a WIP
+has not been tested beside booting on some machines, and running LKDTM
+thread exhaust tests. The series also lacks selftests, and
+documentations.
 
-Download:
-    https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-6.8.0.tar.gz
+This feature allows to grow kernel stack dynamically, from 4KiB and up
+to the THREAD_SIZE. The intend is to save memory on fleet machines. From
+the initial experiments it shows to save on average 70-75% of the kernel
+stack memory.
 
-Repository for current release
-    https://github.com/shemminger/iproute2.git
-    git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+The average depth of a kernel thread depends on the workload, profiling,
+virtualization, compiler optimizations, and driver implementations.
+However, the table below shows the amount of kernel stack memory before
+vs. after on idling freshly booted machines:
 
-And future release (net-next):
-    git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git
+CPU           #Cores #Stacks  BASE(kb) Dynamic(kb)   Saving
+AMD Genoa        384    5786    92576       23388    74.74%
+Intel Skylake    112    3182    50912       12860    74.74%
+AMD Rome         128    3401    54416       14784    72.83%
+AMD Rome         256    4908    78528       20876    73.42%
+Intel Haswell     72    2644    42304       10624    74.89%
 
-Contributions:
+Some workloads with that have millions of threads would can benefit
+significantly from this feature.
 
-Andrea Claudi (4):
-      iplink_xstats: spelling fix in error message
-      genl: ctrl.c: spelling fix in error message
-      treewide: fix typos in various comments
-      docs, man: fix some typos
+[1] https://lore.kernel.org/all/CA+CK2bBYt9RAVqASB2eLyRQxYT5aiL0fGhUu3TumQCyJCNTWvw@mail.gmail.com
 
-Daniel Borkmann (1):
-      ip, link: Add support for netkit
+Pasha Tatashin (14):
+  task_stack.h: remove obsolete __HAVE_ARCH_KSTACK_END check
+  fork: Clean-up ifdef logic around stack allocation
+  fork: Clean-up naming of vm_strack/vm_struct variables in vmap stacks
+    code
+  fork: Remove assumption that vm_area->nr_pages equals to THREAD_SIZE
+  fork: check charging success before zeroing stack
+  fork: zero vmap stack using clear_page() instead of memset()
+  fork: use the first page in stack to store vm_stack in cached_stacks
+  fork: separate vmap stack alloction and free calls
+  mm/vmalloc: Add a get_vm_area_node() and vmap_pages_range_noflush()
+    public functions
+  fork: Dynamic Kernel Stacks
+  x86: add support for Dynamic Kernel Stacks
+  task_stack.h: Clean-up stack_not_used() implementation
+  task_stack.h: Add stack_not_used() support for dynamic stack
+  fork: Dynamic Kernel Stack accounting
 
-David Ahern (2):
-      Update kernel headers
-      Update kernel headers
+ arch/Kconfig                     |  33 +++
+ arch/x86/Kconfig                 |   1 +
+ arch/x86/kernel/traps.c          |   3 +
+ arch/x86/mm/fault.c              |   3 +
+ include/linux/mmzone.h           |   3 +
+ include/linux/sched.h            |   2 +-
+ include/linux/sched/task_stack.h |  94 ++++++--
+ include/linux/vmalloc.h          |  15 ++
+ kernel/fork.c                    | 388 ++++++++++++++++++++++++++-----
+ kernel/sched/core.c              |   1 +
+ mm/internal.h                    |   9 -
+ mm/vmalloc.c                     |  24 ++
+ mm/vmstat.c                      |   3 +
+ 13 files changed, 487 insertions(+), 92 deletions(-)
 
-Denis Kirjanov (3):
-      ifstat: make load_info() more verbose on error
-      iptuntap: use TUNDEV macro
-      ifstat: handle unlink return value
-
-Eric Dumazet (5):
-      ip route: add support for TCP usec TS
-      ss: add report of TCPI_OPT_USEC_TS
-      tc: fq: add TCA_FQ_PRIOMAP handling
-      tc: fq: add TCA_FQ_WEIGHTS handling
-      tc: fq: reports stats added in linux-6.7
-
-Geliang Tang (1):
-      ss: mptcp: print out subflows_total counter
-
-Guillaume Nault (1):
-      ss: Add support for dumping TCP bound-inactive sockets.
-
-Ido Schimmel (1):
-      bridge: mdb: Add flush support
-
-Jiri Pirko (7):
-      ip/ipnetns: move internals of get_netnsid_from_name() into namespace.c
-      devlink: use snprintf instead of sprintf
-      devlink: do conditional new line print in pr_out_port_handle_end()
-      devlink: extend pr_out_nested_handle() to print object
-      devlink: introduce support for netns id for nested handle
-      devlink: print nested handle for port function
-      devlink: print nested devlink handle for devlink dev
-
-Lars Ellenberg (1):
-      ss: fix output of MD5 signature keys configured on TCP sockets
-
-Maks Mishin (2):
-      ctrl: Fix fd leak in ctrl_list()
-      ctrl: Fix fd leak in ctrl_listen()
-
-Matthieu Baerts (NGI0) (1):
-      ss: show extra info when '--processes' is not used
-
-Pedro Tammela (1):
-      bpf: include libgen.h for basename
-
-Petr Machata (5):
-      lib: utils: Switch matches() to returning int again
-      lib: utils: Generalize parse_one_of()
-      lib: utils: Convert parse_on_off() to strcmp()
-      lib: utils: Introduce parse_one_of_deprecated()
-      lib: utils: Have parse_one_of() warn about prefix matches
-
-Sam James (1):
-      configure: Add _GNU_SOURCE to strlcpy configure test
-
-Simon Egli (1):
-      man: correct double word in htb
-
-Stephen Gallagher (1):
-      iproute2: fix type incompatibility in ifstat.c
-
-Stephen Hemminger (27):
-      ip: require RTM_NEWLINK
-      remove support for iptables action
-      man: drop references to ifconfig
-      Revert "ss: prevent "Process" column from being printed unless requested"
-      uapi: update headers from 6.8-rc1
-      Reapply "ss: prevent "Process" column from being printed unless requested"
-      man: get rid of doc/actions/mirred-usage
-      man/tc-gact: move generic action documentation to man page
-      doc: remove ifb README
-      doc: remove out dated actions-general
-      uapi: remove tc_ipt.h
-      tc: unify clockid handling
-      tc: better clockid handling
-      man: fix duplicate words in l2tp, sfb and tipc
-      uapi: update virtio_config.h
-      color: handle case where fmt is NULL
-      spelling fixes
-      bpf: fix warning from basename()
-      ip: detect errors in netconf monitor mode
-      ip: detect rtnl_listen errors while monitoring netns
-      tc: u32: errors should be printed on stderr
-      tc: bpf: fix extra newline in JSON output
-      tc: print unknown action on stderr
-      tc: drop no longer used prototype from tc_util.h
-      tc: u32: check return value from snprintf
-      uapi: update in6.h
-      v6.8.0
-
-Takanori Hirano (4):
-      tc: Support json option in tc-fw.
-      tc: Change of json format in tc-fw
-      tc: Support json option in tc-cgroup, tc-flow and tc-route
-      tc: Fix json output for f_u32
-
-Xin Long (1):
-      man: ip-link.8: add a note for gso_ipv4_max_size
-
-Yedaya Katsman (5):
-      ip: remove non-existent amt subcommand from usage
-      ip: Add missing stats command to usage
-      ip: Add missing -echo option to usage
-      ip: Update command usage in man page
-      ip: Add missing command exaplantions in man page
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
