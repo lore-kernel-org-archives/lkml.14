@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD803CF6A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EDF56B62;
 	Mon, 11 Mar 2024 21:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710191432; cv=none; b=t124qO5IekVaWzHmaFUgG7gfWWKOxMWrARjonDc4HnQpAvU6PDQPHEGW/E4fNXm5DaqW8QqUnLCYKWtg+2fUcZ0QiJAYkjldSsSukenVQrPpxo6N0fAIg0MQ153T4iC7YhAoFcd4axr5U1SiGqfqtwp10ThsC33pDemWvSZ1R/I=
+	t=1710191432; cv=none; b=H1P/k7zAy1UXsWKfsUsSlcUlDllh8ikxA08hTrVY99ch5tD/c3OQSb/TWADTVNYI5ErYvebTJng3X/zdeJ9zYU2D62M28zwFlccAtrnEVzU6KnxsqFC9DyYxeAWYNBC7w6aSXk1OSLoswMsLNw0simpS7fl/ADMXiHpULcIlURc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710191432; c=relaxed/simple;
-	bh=RKd4KvIVsiKfmsQPL+OTvUcFBnZ/+QcQIzjHjvJ1Ris=;
+	bh=Amobz8hL1y1+pwNdbYRA6/Ay9RRsBNun/Pet/xmErV4=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qqdBDo+cIAqTVgsttyQnmFkS2PP+xhQnc2XmLUNm3RUIq+ap9uv9gtkuTBg0kb6nI9p/dIO7miMm1cIZbqtmYrQkIMx6EQKL26x4jtP3oCn4kL5yK2PvgE7lk7abm1KrWxA6hCwgd8zb8qiZMhJaryI1UBux4INrz2ffmRNh5Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHtfv+9T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Lgce4UmcOxDyfz9/2oy/PlZmRFPpr9bInagy211g08jJ5Jxsdx3NshFiV+bnqG/qdTDfQZ7SNM9E/MjEYahyYeYt8Nyi6mkwoYorBVi2W9G/uIkrXkN8UQ7z1POXygCuP/RHfexHF/c8G07N1tbeq/C593quz5AVxlh7NPbUupM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9yRy3JV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHtfv+9T"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CA3AFC43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9yRy3JV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BEB61C433F1;
 	Mon, 11 Mar 2024 21:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710191431;
-	bh=RKd4KvIVsiKfmsQPL+OTvUcFBnZ/+QcQIzjHjvJ1Ris=;
+	bh=Amobz8hL1y1+pwNdbYRA6/Ay9RRsBNun/Pet/xmErV4=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cHtfv+9TOIo7qpcBEIfmSXQcM5ZCdtyfaOLM8hk7QRKD8isuXtOFpu3oTssFChbKP
-	 3Nec8USezyUhthcZS7DRWqJPUz8e2aQwtaDXfRAKfSi/2WIJwcAo0XaMoDsL3/LDrr
-	 iWsxYrlU2RZqhSQb+ZyWR+HZ0WSFxd1/dbGqiUPz+6kYg8M8v1oe77asp+fqUVtXrP
-	 IjP1bY8wW8jmPbyKLvUuo6ZVA1I7zZVWOkvJd4Ogk8ok5T5vhuBb5TPzUhrtOn9kaz
-	 NAJ3nNyBYe5oSqcMY0vRHq+C7I85jg7PGsDngiuXmX2wFE8MAemDWlwjlSZuw9ZRXc
-	 3og8kBryilEyA==
+	b=g9yRy3JVOLIJg6MbyIJu+f9YDuHiQIOJ37+gHbSILvcbZfraAa8VhD8srzQwRjqZP
+	 b06swS8gBywEfB17TpFM7A71DZvuA/vqsEpCeJBqm4vrP0n7baqq6BQznKfBetKrOb
+	 TmZsHt3Tykh3yJKJyy/wVzSG4w0mN5gwNTfih/ebJOBbxbPmX+r6uiGQOttO8r1JfP
+	 WiPRnkbrgZwM+gnTcnjVwYCAcJCf3n25yOCQyZS2i1wWNWf6KvOmCWyXNkYu5lES1h
+	 qGsn//VK+Cg5zrEJYDzPIEZkzr/nNVhyjgiRJVJPy3lwWarYE5lcKKrBDAdItfeV2u
+	 I8U36j1iMRcMA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B1313C39563;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A75F0D95056;
 	Mon, 11 Mar 2024 21:10:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ptp: make ptp_class constant
+Subject: Re: [PATCH net-next v1 1/1] net: phy: marvell-88x2222: Remove unused
+ of_gpio.h
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171019143171.14853.3804892624016553605.git-patchwork-notify@kernel.org>
+ <171019143168.14853.16706473250952626200.git-patchwork-notify@kernel.org>
 Date: Mon, 11 Mar 2024 21:10:31 +0000
-References: <20240305-ptp-v1-1-ed253eb33c20@marliere.net>
-In-Reply-To: <20240305-ptp-v1-1-ed253eb33c20@marliere.net>
-To: Ricardo B. Marliere <ricardo@marliere.net>
-Cc: richardcochran@gmail.com, yangbo.lu@nxp.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+References: <20240307122346.3677534-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240307122346.3677534-1-andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 05 Mar 2024 17:11:27 -0300 you wrote:
-> Since commit 43a7206b0963 ("driver core: class: make class_register() take
-> a const *"), the driver core allows for struct class to be in read-only
-> memory, so move the ptp_class structure to be declared at build time
-> placing it into read-only memory, instead of having to be dynamically
-> allocated at boot time.
+On Thu,  7 Mar 2024 14:23:45 +0200 you wrote:
+> of_gpio.h is deprecated and subject to remove.
+> The driver doesn't use it, simply remove the unused header.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> [...]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/net/phy/marvell-88x2222.c | 2 --
+>  1 file changed, 2 deletions(-)
 
 Here is the summary with links:
-  - ptp: make ptp_class constant
-    https://git.kernel.org/netdev/net-next/c/c057eddcb45a
+  - [net-next,v1,1/1] net: phy: marvell-88x2222: Remove unused of_gpio.h
+    https://git.kernel.org/netdev/net-next/c/22ca20fd12f8
 
 You are awesome, thank you!
 -- 
