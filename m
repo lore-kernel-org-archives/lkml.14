@@ -1,90 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D896054F91;
-	Mon, 11 Mar 2024 15:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8195255774
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710169970; cv=none; b=Q5Gpkz1phbqwDQK/JQ3wjGXS+67Gv3msxWBQNig6D6hMPyBnqqbIyMeGc+8sqyMo2c2GbXXDmzjYlOyAtcIGm4rplmebnjlQGQb9fvDuC5HRUoGD6zBiUGqxT8/imreztt5ayXISrl16xUh9lt3E1ap7EX7SJSUFymb6vLdqmvA=
+	t=1710169973; cv=none; b=It0wnb3pty/nqMecvSl24dDH9BdThlENkAqmBs4mtRyHMM5NfaUZ5/Q7fQojLa1F+EWLKsxpWiG2w9Idb7EtcF0HIPUnzUa0KkIqmmyn2TQkKTJaryYDn2yfQ0nVcHnCdxBIAkICkr/0VStG8oCJdi8B8BbnGlvupwN+SesFQVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710169970; c=relaxed/simple;
-	bh=qExPU8C2HXd+ID3W+ZzNQdWxRTKsDvz5q7M7trnFqHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qEFD2s0vnhGgO0eZvvfVw52mZK4WpjTmVmJy2FRuuFTeMz4i5Vmeblhcn9XQz+10ImQizlSZKY59cK1qoF/69fnnu+oB7eJpg96m9TYpKUp7pvxgjrnpKW4FnKqsIsDo4MqmwJbluU58afDzkRJ3ZPuqpo0Uk6TwwFe5ps5ynag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j20kLSyk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710169973; c=relaxed/simple;
+	bh=PJtnhDdIoAXOMW3yzLoefuskzemlJ9YSHhJNxBAL2cY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=FkndpKZ8losNSyEymdMEP3AWpTJdOh9K7ZdwUlgTjh4DZIhDno6nqQrCbRCBAUItzRXAurg/AubiNyd3rws+CSvC802T73EIuP51tYKm0hhWkpW6fpTbWgo1821lXnupu8gGg0aoTu93I8RONW1P/k52bpSNjqTkMUJ1T60ZMgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYG+ipwL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j20kLSyk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D02C43390;
-	Mon, 11 Mar 2024 15:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYG+ipwL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E617C43390;
+	Mon, 11 Mar 2024 15:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710169970;
-	bh=qExPU8C2HXd+ID3W+ZzNQdWxRTKsDvz5q7M7trnFqHc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j20kLSyku3e9Kl1tjAucxhaBW/DjMKsUAJKUseKuDyPE3hCZHZYnlvLoYolVUhqAk
-	 sGijBZZOuO79m6q249LyKmBWEwXartX7/+lIdHQlNgvXkfAyz4QREQAhJvfAFQUV2N
-	 7X4csblkkeplxFvPdo3rtyCFEUOtaLVX6yypWDIqPcBivoCtf9ZZX48B1whTf2GrRL
-	 +aVFAiI0GzErTPdCZKH8fwhpk/n0uH72Aip4oTpnrzz2o7kdnuQgUz3c9jisYnOdfA
-	 fr4qKorV0CcP4nPCmJnoAnE7yw51hptW82Su4xz9NVm6/GjrchB60hW3Fb5NyIFvnR
-	 dKDLU90tHX6Lw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Kailang Yang <kailang@realtek.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	Sasha Levin <sashal@kernel.org>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	sbinding@opensource.cirrus.com,
-	luke@ljones.dev,
-	andy.chi@canonical.com,
-	shenghao-ding@ti.com,
-	ruinairas1992@gmail.com,
-	vitalyr@opensource.cirrus.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 15/23] ALSA: hda/realtek - ALC285 reduce pop noise from Headphone port
-Date: Mon, 11 Mar 2024 11:11:55 -0400
-Message-ID: <20240311151217.317068-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240311151217.317068-1-sashal@kernel.org>
-References: <20240311151217.317068-1-sashal@kernel.org>
+	s=k20201202; t=1710169973;
+	bh=PJtnhDdIoAXOMW3yzLoefuskzemlJ9YSHhJNxBAL2cY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mYG+ipwLW1gd1lSW6y9Z7t0PsqWZ0y8puJRX1VOC2006oMWdctIy/aGh50YpXdH+K
+	 NrdFWZagYSY5+0QkPaZdmlKvzyES8Jk2GC3rBhFcurvxwDDjjMOnlH/bmjTDgb2vt/
+	 lCAoE7wBrxsC4jWwqUmuF0do7iviYdyRDtVv+Z0E0OJXJrXLku72OX2xKewqp3YPPB
+	 lZChL3chsIC2FG8opsDFlPN6GwnuA2AO0O04HLX9msLwL6rQa4RItCYSRiXMpx8zHy
+	 nQ+alpUIHN7/hdZma0lo9C25sS9PeU4WaJD5TSryXet7zLoMtUWPaCjhM+nTrRVxjJ
+	 ymyFWj80F6oog==
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regmap updates for v6.9
+Date: Mon, 11 Mar 2024 15:12:40 +0000
+Message-Id: <20240311151253.0E617C43390@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.9
-Content-Transfer-Encoding: 8bit
 
-From: Kailang Yang <kailang@realtek.com>
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
 
-[ Upstream commit b34bf65838f7c6e785f62681605a538b73c2808c ]
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
 
-It had pop noise from Headphone port when system reboot state.
-If NID 58h Index 0x0 to fill default value, it will reduce pop noise.
+are available in the Git repository at:
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Link: https://lore.kernel.org/r/7493e207919a4fb3a0599324fd010e3e@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.9
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index eb45e5c3db8c6..ebde2ea8fa812 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3684,6 +3684,7 @@ static void alc285_hp_init(struct hda_codec *codec)
- 	int i, val;
- 	int coef38, coef0d, coef36;
- 
-+	alc_write_coefex_idx(codec, 0x58, 0x00, 0x1888); /* write default value */
- 	alc_update_coef_idx(codec, 0x4a, 1<<15, 1<<15); /* Reset HP JD */
- 	coef38 = alc_read_coef_idx(codec, 0x38); /* Amp control */
- 	coef0d = alc_read_coef_idx(codec, 0x0d); /* Digital Misc control */
--- 
-2.43.0
+for you to fetch changes up to bb92804ba2b6636e28db05f589a9a8ef62a07917:
 
+  regmap: kunit: Add a test for ranges in combination with windows (2024-02-26 13:46:24 +0000)
+
+----------------------------------------------------------------
+regmap: Updates for v6.9
+
+Just two updates this time around, a rework of max_register handling
+which enables us to support devices with only one register better and a
+new test which will be used to validate use of some new SPI
+optimisations which will be coming in during this merge window.
+
+----------------------------------------------------------------
+Jan Dakinevich (1):
+      regmap: rework ->max_register handling
+
+Mark Brown (1):
+      regmap: kunit: Add a test for ranges in combination with windows
+
+ drivers/base/regmap/internal.h      |  1 +
+ drivers/base/regmap/regcache-flat.c |  2 +-
+ drivers/base/regmap/regcache.c      |  4 ++-
+ drivers/base/regmap/regmap-kunit.c  | 66 +++++++++++++++++++++++++++++++++++++
+ drivers/base/regmap/regmap.c        | 10 +++---
+ include/linux/regmap.h              |  5 +++
+ 6 files changed, 82 insertions(+), 6 deletions(-)
