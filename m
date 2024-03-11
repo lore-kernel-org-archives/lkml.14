@@ -1,168 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB7E4D9E6
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D38E53E00
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179246; cv=none; b=kph7F7idnOOVO9ha1wqdqdJyOcpHw9S7yKbWvhF6So4qCew/fECHoFkfaZcUF1cOVKDeZ2dPrsN6fSQuSUFsT4TARkSFcwN+30dhHGP5GSZeQVzqJV07RcMLiEfS+kJPgBOvxnp2TxoAmhrXDFD/bhsW7meKW4F6c1lca59SWrQ=
+	t=1710179286; cv=none; b=uTFWjO10fm3gQ1h43t2+u4Z0kZzMyhIOe4CF3AnxtGd+Qg5mUpHz682Kf3NXrYxkHwSUZ2IJIN6fLcO7/khQIrcWDBmU/90zptbtWsXQvNVREuk6OvLnnEOpiRW03fRWEsqr5QEFi3yUt5vDD4Ly9of0stPShIviVz3ogAX7bZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179246; c=relaxed/simple;
-	bh=r7uClMLuZYE7AgrhsTWV2qszim5tbe2WKWP659ugFwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8ZngCxewK6sgoPe8v+UK8ybuzCIH+GHX4OIkvBtP1LiUb4mSC29pQGJPUnR26/3ZrQtGHAe4LJ/fIJKxkc1Pl8wTQ8hv5VnVsCTqJgSe+OEQAOCLrPuAnVoHtAUXah9NYcBVk73A+pTuGioswdnb/FiPAPnDsrFdFR6W+uDiw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YCr3TBI/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710179286; c=relaxed/simple;
+	bh=imBPUSGabX5HBFgzKPX5esrERwd3Fx6o9pGvNyZ4AbI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qJSpEiydDbd4Is6An2iPnqI2OyPL37XsaT+akzTKDNBx7iWK3jd1GtRwgdRgeE3m2PuIvSsh3reAK+XepYc7dICx8pwRp+hw0aMEzEZes2eAT83d07F3cVU4KL18sFfD0iwW18lp/Fg2tVk3BEbVHXLbsytrGhSpKl82IO+tt2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9bYxrq3; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YCr3TBI/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710179243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e3tUcIlJ5o5Hs/7+gdyglVV0O0xMiKwtCqd2APcSMtU=;
-	b=YCr3TBI/ENR1AkFjyEC9HN8lU7DyV0Yx9vVQpC2Ue5fEHaeSSL6abopXJkC+1W+OiX5TOY
-	aJkD+Doa7e4QvgvSa+vmgsevFuTaD1qNWGiqfjxx8RidKOBbQ63C1Rqk1jVkVWH8rnbxOI
-	yxnekcZDM0jA8kEDtAA4HJjLY2jfIxU=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-VmhUtWdHNIiDbzbJDaljAw-1; Mon, 11 Mar 2024 13:47:22 -0400
-X-MC-Unique: VmhUtWdHNIiDbzbJDaljAw-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-690b861a1c0so38402876d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:47:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9bYxrq3"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56847d9b002so2549910a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710179283; x=1710784083; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ecbBCBCe15Y100JmWAWGOrkx0ptRHMQJFdIhslePcMo=;
+        b=X9bYxrq37D/+46bdPS3dC8zTRF7jPmKxZ4LSJor0cObzEfyGlsElBXaRuqa9b+9K7U
+         a/vWwqvlno/LFBBa1koIZ2JOPg9r+VcdgEufQVvu/oaXaLuVTq32hDj2CBGq5oDr7Jsr
+         zQ1s4tMxaMy2PKWwQQ5i2xD2Nc9hHMBlTf17iWId7FqulHuX8FtASouflJ0Tp0JUZIXG
+         AIFlH+MFt2M5ct58V8auKmPsAm+C70WSiYspmJmYU1EIcLN4iC3dSHvrEeWmw0aD1ebM
+         5NoatPQlNw06MG8w/KzQcXSVXjasbbU8D57blRRkpEf8n8rvEDtO11pUa6XTMEdCZ8Sg
+         BCYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710179241; x=1710784041;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e3tUcIlJ5o5Hs/7+gdyglVV0O0xMiKwtCqd2APcSMtU=;
-        b=QNf4g5VoTiwQZrOaHg59s9JpdQt6/G6my3Tzjfu6sr7Zl9ZXKXMi5XlUvP8XVTEgLU
-         eq8zDUuPreFSTh8UsfhnB3VieDktTsJv6P5mo8c1p0TjE7fhAprdw1ZXXy16KleVWDFy
-         trZImTbyMorlSbt5yBRJimb/sTrA+pkR08xwgtaHkNKI7ih6gOJNnb3upIqmVI+U5cc9
-         ojC9VW+pYFFF9N5IToZgvvXMe62okLEmrYInkzzQdsnp4BdRckqmGEz5oZUgwD1dZ58l
-         sLltQG4sWBaew/Mi2309Lr2OfWw1vqFDYsiADbJRIOP/HQlk1YNERa5dnrCHV4FsZuC7
-         CMaw==
-X-Forwarded-Encrypted: i=1; AJvYcCW31MQIG/irNgwM6Fm5BvOtSIbWCNj5CzkRPiwCG1vq98pJNUVgtaa+XOmw/jv0yPuZMURSHlmuIruzUlzyLRrQr/pwo6rKJT/rMUwm
-X-Gm-Message-State: AOJu0YwincDlPnxnRiYrspTzS6xsG4feRZQMPqTRdOxhghNF/Cqbw3Nn
-	c4PjnxVdAqYQWqsm0o0gycyYLhrZunmGE/3nN5Ep29kRXw1jfwf6tNn7CouQtY25odIPBnEMgxe
-	Yus+0ibFRwNGlmAQ2YX08O0S97p/SnkXxgGlT1tgIwwsAW+0/CRqzhk3uvTAYBA1DA0vvWA==
-X-Received: by 2002:a05:6214:247:b0:690:db88:9eb with SMTP id k7-20020a056214024700b00690db8809ebmr1672459qvt.50.1710179241531;
-        Mon, 11 Mar 2024 10:47:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKkd3g/GU6B6xqvPUivb+7iFgK8i45ZkaZeEfZReIDlgxd3Q+6lkyFcUHq8gFduAC17Jv0uw==
-X-Received: by 2002:a05:6214:247:b0:690:db88:9eb with SMTP id k7-20020a056214024700b00690db8809ebmr1672446qvt.50.1710179241228;
-        Mon, 11 Mar 2024 10:47:21 -0700 (PDT)
-Received: from localhost (ip70-163-216-141.ph.ph.cox.net. [70.163.216.141])
-        by smtp.gmail.com with ESMTPSA id n13-20020a0cfbcd000000b00690bb839b5bsm2842551qvp.135.2024.03.11.10.47.20
+        d=1e100.net; s=20230601; t=1710179283; x=1710784083;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ecbBCBCe15Y100JmWAWGOrkx0ptRHMQJFdIhslePcMo=;
+        b=JZhXAKJj4BpAHm7iNiMTHJgQKjwGOTkWBOAFtereCzdlef6n+33wqCVQzNixcCq+4f
+         ujT6FUQhFtJ7JufQn/Di5OZCanhT0CkTSKPtfUPhWP/ld5n9xzEwSjs/xdiWxIGvmqc/
+         WM3KpTxkYJlL9tjJGSDbhVebydcWqREauaAVD5CyfLmG0n+dtsf3bluAIgvP8g1I887x
+         +uU6QBaQbvgzYJ2ZeagwhEjDIP7hjZOse2D2/BnDwyVbuLgJhkssGVP35+GsPtbwEoOX
+         1w+qAo2Lsn1Eigo62B95VuU5P2OI+5LG5GvSjLEojLUgXB/MkrygtpiH5YntYJVFR5to
+         V5Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVy4Z/JQHVghpDnv+ZU+hzUE/rbfDJSd6RzeS8xDdGvCqwkbBRg4crqzW+JGCJFoxY2zDUwMFZDo8HVOOUKESgED8LkLbJc15b3MR/Z
+X-Gm-Message-State: AOJu0YzqpT9Ogv2vnov+ic8Q3KQSaza3IKBI697ZEfSZQVTt0vv16Iia
+	HnRBDIb1AgFg9yzfcWweIJWX3K8s2E7491T0Yu2rY4ZyG6s7QX7D
+X-Google-Smtp-Source: AGHT+IGO67PecI1sgFey0dTacs9DhW/y+oL7j9v6XDu7UhBwavGchYeiuRmbSt9P4nJkX+FcQLQWew==
+X-Received: by 2002:a50:d483:0:b0:567:e812:e44e with SMTP id s3-20020a50d483000000b00567e812e44emr4840330edi.18.1710179282652;
+        Mon, 11 Mar 2024 10:48:02 -0700 (PDT)
+Received: from localhost.localdomain (89-76-44-138.dynamic.chello.pl. [89.76.44.138])
+        by smtp.gmail.com with ESMTPSA id r24-20020aa7d158000000b00568525ab2e8sm1757060edo.55.2024.03.11.10.48.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 10:47:20 -0700 (PDT)
-Date: Mon, 11 Mar 2024 10:47:19 -0700
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: mpe@ellerman.id.au, linux-integrity@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, jarkko@kernel.org, 
-	rnsastry@linux.ibm.com, peterhuewe@gmx.de, viparash@in.ibm.com, 
-	devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/3] powerpc/prom_init: Replace
- linux,sml-base/sml-size with linux,sml-log
-Message-ID: <s2a42qzx4pp7fvgde4p5t7pcwsop4wlm266e2gdgr2gb5y77cn@udrmavhiwqoo>
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-2-stefanb@linux.ibm.com>
+        Mon, 11 Mar 2024 10:48:02 -0700 (PDT)
+From: Kamil Kasperski <ressetkk@gmail.com>
+To: wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Kamil Kasperski <ressetkk@gmail.com>
+Subject: [PATCH 0/3] dts: arm64: sunxi: add initial support for t95 tv box
+Date: Mon, 11 Mar 2024 18:47:47 +0100
+Message-Id: <20240311174750.6428-1-ressetkk@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311132030.1103122-2-stefanb@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024 at 09:20:28AM -0400, Stefan Berger wrote:
-> linux,sml-base holds the address of a buffer with the TPM log. This
-> buffer may become invalid after a kexec. To avoid accessing an invalid
-> address or corrupted buffer, embed the whole TPM log in the device tree
-> property linux,sml-log. This helps to protect the log since it is
-> properly carried across a kexec soft reboot with both of the kexec
-> syscalls.
-> 
-> Avoid having the firmware ingest the whole TPM log when calling
-> prom_setprop but only create the linux,sml-log property as a place holder.
-> Insert the actual TPM log during the tree flattening phase.
-> 
-> Fixes: 4a727429abec ("PPC64: Add support for instantiating SML from Open Firmware")
-> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/prom_init.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-> index e67effdba85c..6f7ca72013c2 100644
-> --- a/arch/powerpc/kernel/prom_init.c
-> +++ b/arch/powerpc/kernel/prom_init.c
-> @@ -211,6 +211,8 @@ static cell_t __prombss regbuf[1024];
->  
->  static bool  __prombss rtas_has_query_cpu_stopped;
->  
-> +static u64 __prombss sml_base;
-> +static u32 __prombss sml_size;
+T95 is a most commonly known for being a box with a pre-installed malware.
+It uses Allwinner H616 and comes with eMMC and DDR3 memory.
+This device comes with two versions - one with AXP305 PMIC and another with AXP313 PMIC.
 
-Should inside an #ifdef CONFIG_PPC64 since prom_instantiate_sml() is?
+Kamil Kasperski (3):
+  dt-bindings: vendor-prefixes: sunxi: add T95 to vendor-prefixes
+  dt-bindings: arm: sunxi: add t95 compatible string to list of known
+    boards
+  dts: arm64: sunxi: add initial support for T95 AXP313 tv box
 
->  
->  /*
->   * Error results ... some OF calls will return "-1" on error, some
-> @@ -1954,17 +1956,15 @@ static void __init prom_instantiate_sml(void)
->  	}
->  	prom_printf(" done\n");
->  
-> -	reserve_mem(base, size);
-> -
-> -	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-base",
-> -		     &base, sizeof(base));
-> -	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-size",
-> -		     &size, sizeof(size));
-> -
-> -	prom_debug("sml base     = 0x%llx\n", base);
-> +	/* Add property now, defer adding log to tree flattening phase */
-> +	prom_setprop(ibmvtpm_node, "/vdevice/vtpm", "linux,sml-log",
-> +		     NULL, 0);
->  	prom_debug("sml size     = 0x%x\n", size);
->  
->  	prom_debug("prom_instantiate_sml: end...\n");
-> +
-> +	sml_base = base;
-> +	sml_size = size;
->  }
->  
->  /*
-> @@ -2645,6 +2645,17 @@ static void __init scan_dt_build_struct(phandle node, unsigned long *mem_start,
->  		}
->  		prev_name = sstart + soff;
->  
-> +		if (!prom_strcmp("linux,sml-log", pname)) {
-> +			/* push property head */
-> +			dt_push_token(OF_DT_PROP, mem_start, mem_end);
-> +			dt_push_token(sml_size, mem_start, mem_end);
-> +			dt_push_token(soff, mem_start, mem_end);
-> +			/* push property content */
-> +			valp = make_room(mem_start, mem_end, sml_size, 1);
-> +			memcpy(valp, (void *)sml_base, sml_size);
-> +			*mem_start = ALIGN(*mem_start, 4);
-> +			continue;
-> +		}
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-h616-t95-axp313.dts  | 138 ++++++++++++++++++
+ 4 files changed, 146 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h616-t95-axp313.dts
 
-Same question as above.
-
-Regards,
-Jerry
-
->  		/* get length */
->  		l = call_prom("getproplen", 2, 1, node, pname);
->  
-> -- 
-> 2.43.0
-> 
+-- 
+2.34.1
 
