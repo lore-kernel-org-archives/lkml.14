@@ -1,239 +1,431 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B2052F82
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFCA54BFE;
+	Mon, 11 Mar 2024 19:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710185134; cv=none; b=fiz/fXnShITCEvq3ZKIRGT9zgb1zrtRZHk7DBoxd1mk/tzq4tdvsySwbROpvSG1lQxnzjMPuu0uZfWoIgmYKXtAxdr0OgvrgJzlsiPF+z+Ur4KHuuFbtBfDhaU+vuc6pYHxfHGlZpYzLsmrgpiG4XsjJH8Yal6UMwg9pit7mpiQ=
+	t=1710185161; cv=none; b=RzgkTXJsm0TdmiAmVw1+xYwYfB3eUmqw7N5crbNZmGT5R8o3Yb45NwMNHlU4k84i1Vq6oYf71wxNidL7xviweThzRARLQI4FDntfcV6I8jN8rxVrVBxfod3YZvkCXTICBl8DXLxPacGrDyKe5VIj2ZmZJVT/WjAMy3yPMZ3d+mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710185134; c=relaxed/simple;
-	bh=BUb6mWms1cF3tzi6Wb0eoN6mk/QC4nbageqFaV8EQo8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QW23YqzdJptpy8HB9ZHGshnKC05vqtBJGFlKYYJTRA+hwCLzRjOgBIdmUrMKp5MjTCMqOK2R1hfeYLKLEmdP1L8KUQk8nlKQvrAkcXqMB7kyaXOBc4nZUGRVYH79KAK7WGVd7Z0bihQMlTJA50lI1An+0siEgbTTjM4dVj1fB3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=cmAYwwHu; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1710185161; c=relaxed/simple;
+	bh=RrY96Of+19Qplk+rzqdVAE5FfdpexzxLDgAjo/HRIPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LkRGLYOgd886JbnMkHETYYxsecJI6SOOa2SRQ3OZ/tqmazpqXnOG/bMRSl2xlxcLZEWMKT9Ooq/rOxeVADr4TLxlTnCJ+gFXJSW3dxu9yFToPDnPR/7J93teBPlPKPOPRQlbeCunrN+BZax5Fn+Un/poVuDfFQuf3lFcvRrMBlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=imRXjqn8; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=PkMS8ScY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="cmAYwwHu"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id DFBA3240104
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 20:25:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1710185123; bh=BUb6mWms1cF3tzi6Wb0eoN6mk/QC4nbageqFaV8EQo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=cmAYwwHuHFjkA6tT8jRTXHe7anaIK6NSItoJ7XtaNznJ6L9e4d2Rn5L2Dh/fRB9IK
-	 TrqltPCipVjSiRIn7IMD6GDwiA19tEFqalrPo8Ud9R5D+dzlFUr5wjaJ26ccwRV0gx
-	 vW15Qc0chbNMcKJpyftUVIquLuClay9K7QAYxfMtUYU7dlqjmHUKB64XbkOJeLEtGs
-	 mP+W//Jmkv+gAJY9vmpayMtAxQ1e9nG6KGUz1WLf693btv0+YhZ2iwmDKMPJig8ZlY
-	 HJWK4dre0T2ZpUaHTA9PPg51y3q/R0UH9EkZtTkybPYIHdx0XbFKu2jUbVRikwA/xV
-	 kc/qFlfWgx9/g==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TtmvL64Dvz6trs;
-	Mon, 11 Mar 2024 20:25:18 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,  Peter Zijlstra
- <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Mark Rutland
- <mark.rutland@arm.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  Jiri Olsa <jolsa@kernel.org>,  Ian
- Rogers <irogers@google.com>,  Adrian Hunter <adrian.hunter@intel.com>,
-  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf lock contention: skip traceiter functions
-In-Reply-To: <m2il1sbocg.fsf@posteo.net> (Anne Macedo's message of "Mon, 11
-	Mar 2024 15:44:15 -0300")
-References: <20240309132710.1055941-1-retpolanne@posteo.net>
-	<CAM9d7cjhiua5rBj=CTDJJC-XJN6PzKxQ5DsooJGEz0QcQAry7w@mail.gmail.com>
-	<m2il1sbocg.fsf@posteo.net>
-Date: Mon, 11 Mar 2024 19:25:16 +0000
-Message-ID: <m24jdcbmg3.fsf@posteo.net>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="imRXjqn8";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="PkMS8ScY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CAF3C34FCD;
+	Mon, 11 Mar 2024 19:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1710185156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LRb+QDVqmSBBfop+NmgzD1v195yCdoVF4ZrnYqydg0A=;
+	b=imRXjqn8Y3gat5grVn6HHxZ0KjbpcBKxMOd2sELqedc07gpk0nFONUp9xQljeik2gBOh5N
+	aeqBqsKysY3/aOtEc0IzdTDFUFC1x/6fY3VK2tVBkXGAZCObbUPlrTYpk13nmCLbEnL85E
+	cay+MECztdWObBl4ahlwhMoNPI0Sidc=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1710185155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=LRb+QDVqmSBBfop+NmgzD1v195yCdoVF4ZrnYqydg0A=;
+	b=PkMS8ScYtXNCrOCMZLxLm2S/mjX8DXlQn6LIu9ym/904zFJ8yK17gF2BbVdvlX/PrHlArE
+	gVaEijiZeXvkOiDaVtm+oj/FObNal/5/+mvGzlPzrO7J01bY27inKzdE6KHfSnOuEr/92m
+	ZEWQAaNJ043QkLS4AgJODTkmB2Rv8UQ=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C41D113695;
+	Mon, 11 Mar 2024 19:25:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hnPbL8Na72UPTQAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Mon, 11 Mar 2024 19:25:55 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs updates for 6.9
+Date: Mon, 11 Mar 2024 20:18:45 +0100
+Message-ID: <cover.1710183792.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.42.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Bar: /
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=PkMS8ScY
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.51 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 DWL_DNSWL_LOW(-1.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -0.51
+X-Rspamd-Queue-Id: CAF3C34FCD
+X-Spam-Flag: NO
 
-Anne Macedo <retpolanne@posteo.net> writes:
+Hi,
 
-> Namhyung Kim <namhyung@kernel.org> writes:
->
->> Hello Anne,
->>
->> On Sat, Mar 9, 2024 at 5:27=E2=80=AFAM Anne Macedo <retpolanne@posteo.ne=
-t> wrote:
->>>
->>> The perf lock contention program currently shows the caller of the locks
->>> as __traceiter_contention_begin+0x??. This caller can be ignored, as it=
- is
->>> from the traceiter itself. Instead, it should show the real callers for
->>> the locks.
->>>
->>> When fiddling with the --stack-skip parameter, the actual callers for
->>> the locks start to show up. However, just ignore the
->>> __traceiter_contention_begin and the __traceiter_contention_end symbols
->>> so the actual callers will show up.
->>>
->>> Before this patch is applied:
->>>
->>> sudo perf lock con -a -b -- sleep 3
->>>  contended   total wait     max wait     avg wait         type   caller
->>>
->>>          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __trac=
-eiter_contention_begin+0x44
->>>          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __trac=
-eiter_contention_begin+0x44
->>>          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __trac=
-eiter_contention_begin+0x44
->>>          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_=
-contention_begin+0x84
->>>          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __trac=
-eiter_contention_begin+0x44
->>>          1     13.54 us     13.54 us     13.54 us        mutex   trace_=
-contention_begin+0x84
->>>          1      3.67 us      3.67 us      3.67 us      rwsem:R   __trac=
-eiter_contention_begin+0x44
->>>
->>> Before this patch is applied - using --stack-skip 5
->>>
->>> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
->>>  contended   total wait     max wait     avg wait         type   caller
->>>
->>>          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epo=
-ll_wait+0x5a0
->>>          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exi=
-t+0x338
->>>          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_si=
-gnal+0x108
->>>          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   releas=
-e_task+0x68
->>>          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup=
-_kn_lock_live+0x58
->>>          1     24.71 us     24.71 us     24.71 us     spinlock   do_exi=
-t+0x44
->>>          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_m=
-m_and_find_vma+0xb0
->>>
->>> After this patch is applied:
->>>
->>> sudo ./perf lock con -a -b -- sleep 3
->>>  contended   total wait     max wait     avg wait         type   caller
->>>
->>>          4      4.13 s       2.07 s       1.03 s      rwlock:W   releas=
-e_task+0x68
->>>          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_upd=
-ate_next_owner+0x50
->>>          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exi=
-t+0x338
->>>          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup=
-_kn_lock_live+0x58
->>>          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exi=
-t+0x338
->>>
->>> changes since v0:
->>>
->>> - skip trace_contention functions
->>> - use sym->end instead of __traceiter_contention_end for text_end
->>>
->>> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
->>> ---
->>>  tools/perf/util/machine.c | 17 +++++++++++++++++
->>>  tools/perf/util/machine.h |  2 +-
->>>  2 files changed, 18 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->>> index 527517db3182..db443947ccd1 100644
->>> --- a/tools/perf/util/machine.c
->>> +++ b/tools/perf/util/machine.c
->>> @@ -3266,6 +3266,14 @@ bool machine__is_lock_function(struct machine *m=
-achine, u64 addr)
->>>
->>>                 sym =3D machine__find_kernel_symbol_by_name(machine, "_=
-_lock_text_end", &kmap);
->>>                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->sta=
-rt);
->>> +
->>> +               sym =3D machine__find_kernel_symbol_by_name(machine, "_=
-_traceiter_contention_begin", &kmap);
->>
->> Unlike __sched_text_{start,end} and __lock_text_{start,end} I guess
->> this traceiter thing is optional so it might not be there.  You need to
->> handle if it's NULL.
->>
->
-> Let me test with CONFIG_TRACEPOINTS=3Dn then.
->
-Thanks for pointing out, with CONFIG_TRACEPOINTS=3Dn perf lock contention
-won't work, but I tried with a faux symbol and got a segfault. v2 will
-handle that.
->
->> I think it depends on the kernel version and configuration.  I remember
->> I saw a different symbol on old kernels.  But it'd be hard to handle all
->> the cases.  Let's have a single trace text section in the struct machine
->> and use __traceiter_contention_begin only.  If it's not found you can
->> fallback to trace_contention_begin.
+there are mostly stabilization, refactoring and cleanup changes. There rest are
+minor performance optimizations due to caching or lock contention reduction and
+a few notable fixes.
 
-However, if we fallback to trace_contention_begin, we won't be able to
-filter out both __traceiter_contention_begin and trace_contention_begin
-at the same time.
+Please pull, thanks.
 
->>
-> ACK :)
->>
->> Thanks,
->> Namhyung
->>
->>
->>> +               machine->traceiter.text_start =3D map__unmap_ip(kmap, s=
-ym->start);
->>> +               machine->traceiter.text_end =3D map__unmap_ip(kmap, sym=
-->end);
->>> +
->>> +               sym =3D machine__find_kernel_symbol_by_name(machine, "t=
-race_contention_begin", &kmap);
->>> +               machine->trace.text_start =3D map__unmap_ip(kmap, sym->=
-start);
->>> +               machine->trace.text_end =3D map__unmap_ip(kmap, sym->en=
-d);
->>>         }
->>>
->>>         /* failed to get kernel symbols */
->>> @@ -3280,5 +3288,14 @@ bool machine__is_lock_function(struct machine *m=
-achine, u64 addr)
->>>         if (machine->lock.text_start <=3D addr && addr < machine->lock.=
-text_end)
->>>                 return true;
->>>
->>> +       /* traceiter functions currently don't have their own section
->>> +        * but we consider them lock functions
->>> +        */
->>> +       if (machine->traceiter.text_start <=3D addr && addr < machine->=
-traceiter.text_end)
->>> +               return true;
->>> +
->>> +       if (machine->trace.text_start <=3D addr && addr < machine->trac=
-e.text_end)
->>> +               return true;
->>> +
->>>         return false;
->>>  }
->>> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
->>> index e28c787616fe..4312f6db6de0 100644
->>> --- a/tools/perf/util/machine.h
->>> +++ b/tools/perf/util/machine.h
->>> @@ -49,7 +49,7 @@ struct machine {
->>>         struct {
->>>                 u64       text_start;
->>>                 u64       text_end;
->>> -       } sched, lock;
->>> +       } sched, lock, traceiter, trace;
->>>         pid_t             *current_tid;
->>>         size_t            current_tid_sz;
->>>         union { /* Tool specific area */
->>> --
->>> 2.39.2
->>>
-Thanks, Anne
+Performance improvements:
+
+- minor speedup in logging when repeatedly allocated structure is preallocated
+  only once, improves latency and decreases lock contention
+
+- minor throughput increase (+6%), reduced lock contention after clearing
+  delayed allocation bits, applies to several common workload types
+
+- skip full quota rescan if a new relation is added in the same transaction
+
+Fixes:
+
+- zstd fix for inline compressed file in subpage mode, updated version from the
+  6.8 time
+
+- proper qgroup inheritance ioctl parameter validation
+
+- more fiemap followup fixes after reduced locking done in 6.8
+  - fix race when detecting delalloc ranges
+
+Core changes:
+
+- more debugging code
+  - added assertions for a very rare crash in raid56 calculation
+  - tree-checker dumps page state to give more insights into possible reference
+    counting issues
+
+- add checksum calculation offloading sysfs knob, for now enabled under DEBUG
+  only to determine a good heuristic for deciding the offload or synchronous,
+  depends on various factors (block group profile, device speed) and is not as
+  clear as initially thought (checksum type)
+
+- error handling improvements, added assertions
+
+- more page to folio conversion (defrag, truncate), cached size and shift
+
+- preparation for more fine grained locking of sectors in subpage mode
+
+- cleanups and refactoring
+  - include cleanups, forward declarations
+  - pointer-to-structure helpers
+  - redundant argument removals
+  - removed unused code
+  - slab cache updates, last use of SLAB_MEM_SPREAD removed
+
+----------------------------------------------------------------
+The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
+
+  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-tag
+
+for you to fetch changes up to 1cab1375ba6d5337a25acb346996106c12bb2dd0:
+
+  btrfs: reuse cloned extent buffer during fiemap to avoid re-allocations (2024-03-05 18:14:19 +0100)
+
+----------------------------------------------------------------
+for-6.9-tag
+
+----------------------------------------------------------------
+Anand Jain (1):
+      btrfs: include device major and minor numbers in the device scan notice
+
+Chengming Zhou (1):
+      btrfs: remove SLAB_MEM_SPREAD flag use
+
+Colin Ian King (1):
+      btrfs: zlib: Fix spelling mistake "infalte" -> "inflate"
+
+David Sterba (62):
+      btrfs: replace sb::s_blocksize by fs_info::sectorsize
+      btrfs: replace i_blocksize by fs_info::sectorsize
+      btrfs: remove unused included headers
+      btrfs: handle errors returned from unpin_extent_cache()
+      btrfs: return errors from unpin_extent_range()
+      btrfs: make btrfs_error_unpin_extent_range() return void
+      btrfs: handle directory and dentry mismatch in btrfs_may_delete()
+      btrfs: handle invalid range and start in merge_extent_mapping()
+      btrfs: handle block group lookup error when it's being removed
+      btrfs: handle root deletion lookup error in btrfs_del_root()
+      btrfs: handle invalid root reference found in btrfs_find_root()
+      btrfs: handle invalid root reference found in btrfs_init_root_free_objectid()
+      btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
+      btrfs: handle invalid extent item reference found in check_committed_ref()
+      btrfs: export: handle invalid inode or root reference in btrfs_get_parent()
+      btrfs: delayed-inode: drop pointless BUG_ON in __btrfs_remove_delayed_item()
+      btrfs: change BUG_ON to assertion when checking for delayed_node root
+      btrfs: defrag: change BUG_ON to assertion in btrfs_defrag_leaves()
+      btrfs: change BUG_ON to assertion in btrfs_read_roots()
+      btrfs: change BUG_ON to assertion when verifying lockdep class setup
+      btrfs: change BUG_ON to assertion when verifying root in btrfs_alloc_reserved_file_extent()
+      btrfs: change BUG_ON to assertion in reset_balance_state()
+      btrfs: unify handling of return values of btrfs_insert_empty_items()
+      btrfs: move transaction abort to the error site in btrfs_delete_free_space_tree()
+      btrfs: move transaction abort to the error site in btrfs_create_free_space_tree()
+      btrfs: move transaction abort to the error site btrfs_rebuild_free_space_tree()
+      btrfs: tests: allocate dummy fs_info and root in test_find_delalloc()
+      btrfs: add helpers to get inode from page/folio pointers
+      btrfs: add helpers to get fs_info from page/folio pointers
+      btrfs: add helper to get fs_info from struct inode pointer
+      btrfs: hoist fs_info out of loops in end_bbio_data_write and end_bbio_data_read
+      btrfs: add forward declarations and headers, part 1
+      btrfs: add forward declarations and headers, part 2
+      btrfs: add forward declarations and headers, part 3
+      btrfs: push errors up from add_async_extent()
+      btrfs: update comment and drop assertion in extent item lookup in find_parent_nodes()
+      btrfs: handle invalid extent item reference found in extent_from_logical()
+      btrfs: handle invalid extent item reference found in find_first_extent_item()
+      btrfs: handle invalid root reference found in may_destroy_subvol()
+      btrfs: send: handle unexpected data in header buffer in begin_cmd()
+      btrfs: send: handle unexpected inode in header process_recorded_refs()
+      btrfs: send: handle path ref underflow in header iterate_inode_ref()
+      btrfs: change BUG_ON to assertion in tree_move_down()
+      btrfs: change BUG_ONs to assertions in btrfs_qgroup_trace_subtree()
+      btrfs: delete pointless BUG_ON check on quota root in btrfs_qgroup_account_extent()
+      btrfs: delete pointless BUG_ONs on extent item size
+      btrfs: delete BUG_ON in btrfs_init_locked_inode()
+      btrfs: factor out validation of btrfs_ioctl_vol_args::name
+      btrfs: factor out validation of btrfs_ioctl_vol_args_v2::name
+      btrfs: move balance args conversion helpers to volumes.c
+      btrfs: open code btrfs_backref_iter_free()
+      btrfs: open code btrfs_backref_get_eb()
+      btrfs: uninline some static inline helpers from backref.h
+      btrfs: uninline btrfs_init_delayed_root()
+      btrfs: drop static inline specifiers from tree-mod-log.c
+      btrfs: uninline some static inline helpers from tree-log.h
+      btrfs: open code trivial btrfs_lru_cache_size()
+      btrfs: uninline some static inline helpers from delayed-ref.h
+      btrfs: handle transaction commit errors in flush_reservations()
+      btrfs: pass btrfs_device to btrfs_scratch_superblocks()
+      btrfs: merge btrfs_del_delalloc_inode() helpers
+      btrfs: pass a valid extent map cache pointer to __get_extent_map()
+
+Filipe Manana (19):
+      btrfs: remove extent_map_tree forward declaration at extent_io.h
+      btrfs: document what the spinlock unused_bgs_lock protects
+      btrfs: add comment about list_is_singular() use at btrfs_delete_unused_bgs()
+      btrfs: preallocate temporary extent buffer for inode logging when needed
+      btrfs: stop passing root argument to btrfs_add_delalloc_inodes()
+      btrfs: stop passing root argument to __btrfs_del_delalloc_inode()
+      btrfs: assert root delalloc lock is held at __btrfs_del_delalloc_inode()
+      btrfs: rename btrfs_add_delalloc_inodes() to singular form
+      btrfs: reduce inode lock critical section when setting and clearing delalloc
+      btrfs: add lockdep assertion to remaining delalloc callbacks
+      btrfs: use assertion instead of BUG_ON when adding/removing to delalloc list
+      btrfs: remove do_list variable at btrfs_set_delalloc_extent()
+      btrfs: remove do_list variable at btrfs_clear_delalloc_extent()
+      btrfs: remove no longer used btrfs_transaction_in_commit()
+      btrfs: send: avoid duplicated search for last extent when sending hole
+      btrfs: avoid unnecessary ref initialization when freeing log tree block
+      btrfs: fix off-by-one chunk length calculation at contains_pending_extent()
+      btrfs: fix race when detecting delalloc ranges during fiemap
+      btrfs: reuse cloned extent buffer during fiemap to avoid re-allocations
+
+Goldwyn Rodrigues (1):
+      btrfs: page to folio conversion in btrfs_truncate_block()
+
+Johannes Thumshirn (1):
+      btrfs: remove duplicate recording of physical address
+
+Josef Bacik (1):
+      btrfs: WARN_ON_ONCE() in our leak detection code
+
+Kunwu Chan (6):
+      btrfs: use KMEM_CACHE() to create btrfs_delayed_node cache
+      btrfs: use KMEM_CACHE() to create btrfs_ordered_extent cache
+      btrfs: use KMEM_CACHE() to create btrfs_trans_handle cache
+      btrfs: use KMEM_CACHE() to create btrfs_path cache
+      btrfs: use KMEM_CACHE() to create delayed ref caches
+      btrfs: use KMEM_CACHE() to create btrfs_free_space cache
+
+Lijuan Li (2):
+      btrfs: mark __btrfs_add_free_space static
+      btrfs: mark btrfs_put_caching_control() static
+
+Matthew Wilcox (Oracle) (3):
+      btrfs: add set_folio_extent_mapped() helper
+      btrfs: convert defrag_prepare_one_page() to use a folio
+      btrfs: use a folio array throughout the defrag process
+
+Naohiro Aota (2):
+      btrfs: use READ/WRITE_ONCE for fs_devices->read_policy
+      btrfs: introduce offload_csum_mode to tweak checksum offloading behavior
+
+Neal Gompa (1):
+      btrfs: sysfs: drop unnecessary double logical negation in acl_show()
+
+Qu Wenruo (13):
+      btrfs: remove the pg_offset parameter from btrfs_get_extent()
+      btrfs: remove unused variable bio_offset from end_bbio_data_read()
+      btrfs: cache folio size and shift in extent_buffer
+      btrfs: zstd: fix and simplify the inline extent decompression (v2)
+      btrfs: raid56: extra debugging for raid6 syndrome generation
+      btrfs: unexport btrfs_subpage_start_writer() and btrfs_subpage_end_and_test_writer()
+      btrfs: subpage: make reader lock utilize bitmap
+      btrfs: subpage: make writer lock utilize bitmap
+      btrfs: compression: remove dead comments in btrfs_compress_heuristic()
+      btrfs: tree-checker: dump the page status if hit something wrong
+      btrfs: qgroup: always free reserved space for extent records
+      btrfs: qgroup: validate btrfs_qgroup_inherit parameter
+      btrfs: qgroup: allow quick inherit if snapshot is created and added to the same parent
+
+ fs/btrfs/accessors.c             |  15 +-
+ fs/btrfs/accessors.h             |  50 +----
+ fs/btrfs/acl.c                   |   1 -
+ fs/btrfs/acl.h                   |  11 ++
+ fs/btrfs/async-thread.c          |   1 -
+ fs/btrfs/async-thread.h          |   3 +
+ fs/btrfs/backref.c               | 119 ++++++++++--
+ fs/btrfs/backref.h               | 136 +++-----------
+ fs/btrfs/bio.c                   |  17 +-
+ fs/btrfs/bio.h                   |   2 +
+ fs/btrfs/block-group.c           |  15 +-
+ fs/btrfs/block-group.h           |  14 +-
+ fs/btrfs/block-rsv.c             |   1 -
+ fs/btrfs/block-rsv.h             |   7 +
+ fs/btrfs/btrfs_inode.h           |  25 ++-
+ fs/btrfs/compression.c           |  18 +-
+ fs/btrfs/compression.h           |  12 +-
+ fs/btrfs/ctree.c                 |  10 +-
+ fs/btrfs/ctree.h                 |  28 ++-
+ fs/btrfs/defrag.c                | 104 +++++------
+ fs/btrfs/defrag.h                |  10 +
+ fs/btrfs/delalloc-space.c        |   2 -
+ fs/btrfs/delalloc-space.h        |   4 +
+ fs/btrfs/delayed-inode.c         |  21 ++-
+ fs/btrfs/delayed-inode.h         |  21 +--
+ fs/btrfs/delayed-ref.c           |  85 +++++++--
+ fs/btrfs/delayed-ref.h           |  82 ++-------
+ fs/btrfs/dev-replace.c           |   5 +-
+ fs/btrfs/dev-replace.h           |   4 +
+ fs/btrfs/dir-item.h              |   6 +
+ fs/btrfs/disk-io.c               |  30 ++-
+ fs/btrfs/disk-io.h               |  20 +-
+ fs/btrfs/export.c                |  12 +-
+ fs/btrfs/export.h                |   4 +
+ fs/btrfs/extent-io-tree.c        |   6 +-
+ fs/btrfs/extent-io-tree.h        |   7 +
+ fs/btrfs/extent-tree.c           |  51 ++++--
+ fs/btrfs/extent-tree.h           |  10 +
+ fs/btrfs/extent_io.c             | 387 +++++++++++++++++++++++++--------------
+ fs/btrfs/extent_io.h             |  44 ++++-
+ fs/btrfs/extent_map.c            |  23 ++-
+ fs/btrfs/extent_map.h            |   8 +
+ fs/btrfs/file-item.c             |   6 -
+ fs/btrfs/file-item.h             |  13 ++
+ fs/btrfs/file.c                  |  43 +++--
+ fs/btrfs/file.h                  |  15 ++
+ fs/btrfs/free-space-cache.c      |  12 +-
+ fs/btrfs/free-space-cache.h      |  15 +-
+ fs/btrfs/free-space-tree.c       |  56 +++---
+ fs/btrfs/free-space-tree.h       |   6 +
+ fs/btrfs/fs.h                    |  59 +++++-
+ fs/btrfs/inode-item.c            |   1 -
+ fs/btrfs/inode-item.h            |   5 +-
+ fs/btrfs/inode.c                 | 238 +++++++++++++-----------
+ fs/btrfs/ioctl.c                 | 120 +++++++-----
+ fs/btrfs/ioctl.h                 |   9 +
+ fs/btrfs/locking.c               |   3 +-
+ fs/btrfs/locking.h               |   8 +-
+ fs/btrfs/lru_cache.h             |   7 +-
+ fs/btrfs/lzo.c                   |   4 +-
+ fs/btrfs/messages.c              |   2 -
+ fs/btrfs/misc.h                  |   2 +
+ fs/btrfs/ordered-data.c          |   6 +-
+ fs/btrfs/ordered-data.h          |  15 ++
+ fs/btrfs/orphan.c                |   1 -
+ fs/btrfs/orphan.h                |   5 +
+ fs/btrfs/print-tree.h            |   3 +
+ fs/btrfs/props.c                 |   3 +-
+ fs/btrfs/props.h                 |   7 +-
+ fs/btrfs/qgroup.c                | 148 +++++++++++++--
+ fs/btrfs/qgroup.h                |  20 +-
+ fs/btrfs/raid-stripe-tree.c      |   1 -
+ fs/btrfs/raid-stripe-tree.h      |   5 +
+ fs/btrfs/raid56.c                |  31 +++-
+ fs/btrfs/raid56.h                |   9 +
+ fs/btrfs/rcu-string.h            |   6 +
+ fs/btrfs/ref-verify.h            |   9 +
+ fs/btrfs/reflink.c               |  12 +-
+ fs/btrfs/reflink.h               |   4 +-
+ fs/btrfs/relocation.c            |   5 +-
+ fs/btrfs/relocation.h            |   9 +
+ fs/btrfs/root-tree.c             |  17 +-
+ fs/btrfs/root-tree.h             |  10 +
+ fs/btrfs/scrub.c                 |   9 +-
+ fs/btrfs/scrub.h                 |   6 +
+ fs/btrfs/send.c                  |  64 ++++---
+ fs/btrfs/send.h                  |   8 +-
+ fs/btrfs/space-info.c            |   1 -
+ fs/btrfs/space-info.h            |   9 +
+ fs/btrfs/subpage.c               |  74 ++++++--
+ fs/btrfs/subpage.h               |  21 ++-
+ fs/btrfs/super.c                 |   9 +-
+ fs/btrfs/super.h                 |   7 +
+ fs/btrfs/sysfs.c                 |  53 +++++-
+ fs/btrfs/sysfs.h                 |   9 +
+ fs/btrfs/tests/extent-io-tests.c |  28 ++-
+ fs/btrfs/tests/inode-tests.c     |  40 ++--
+ fs/btrfs/transaction.c           |  19 +-
+ fs/btrfs/transaction.h           |  18 +-
+ fs/btrfs/tree-checker.c          |   8 +-
+ fs/btrfs/tree-checker.h          |   2 +
+ fs/btrfs/tree-log.c              | 141 ++++++++++----
+ fs/btrfs/tree-log.h              |  49 ++---
+ fs/btrfs/tree-mod-log.c          |  13 +-
+ fs/btrfs/tree-mod-log.h          |   8 +-
+ fs/btrfs/ulist.c                 |   1 -
+ fs/btrfs/ulist.h                 |   1 +
+ fs/btrfs/uuid-tree.c             |   3 +-
+ fs/btrfs/uuid-tree.h             |   5 +
+ fs/btrfs/verity.c                |   1 -
+ fs/btrfs/verity.h                |   7 +
+ fs/btrfs/volumes.c               |  98 +++++++---
+ fs/btrfs/volumes.h               |  53 +++++-
+ fs/btrfs/xattr.h                 |   6 +-
+ fs/btrfs/zlib.c                  |   2 +-
+ fs/btrfs/zoned.c                 |   2 -
+ fs/btrfs/zoned.h                 |  15 ++
+ fs/btrfs/zstd.c                  |  75 +++-----
+ include/uapi/linux/btrfs.h       |   1 +
+ 119 files changed, 2131 insertions(+), 1116 deletions(-)
