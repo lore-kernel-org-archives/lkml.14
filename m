@@ -1,86 +1,84 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FA841C7C;
-	Mon, 11 Mar 2024 14:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E6243ABC;
+	Mon, 11 Mar 2024 14:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710168520; cv=none; b=GBHDoFAVzJbYRFknh0nEBxYX5oMrexfD2S+msRhdGqacmmQZ13zTpWYU1ivC4pUnF560s+vQYPW53cZyBLg5FgqO3B2AIyP0dR7XgsiS8r9Ax6X64b8IwBY6m1VYBUIyeoZksNCee3/h3dfAfgigB03LGV16j15c2gQ0kqYVZbc=
+	t=1710168523; cv=none; b=M/Vp7Jq7g1XqsjsoSZwIYbuj84vp1fc/rShWdkxH2PpSzxlf66FQy8kAxP/2dafXX86J+qh+BAXe2a2KVBEdQP6FqeqrTCM7iNtjLPMJpkmZYEFjv7WT/ZoX21XK96lnD5xRO1RoJAmCERod1DwnvyXSVon3IEHAJBTjmWNbM5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710168520; c=relaxed/simple;
-	bh=523jfBI1xIENsUirvelfVlDKtMZSRfA3IrXt++11hTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RqzpGIUWypoYjDRHo38sU9G5qNBVH/Hk44UeJJxn9NIIv1F8vESLE5XJ1xxdYNG4mTbcHRDVJKHJM7cIkI52TMXdyoh6m0fmi+gvwnF1+OIldMuqIaB2AZnYQiXQbsE22OCqm7BbM/AKJlecbtEPtE9/WDk0aacPcBtmBkNyY2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nSwfDdDt; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1710168523; c=relaxed/simple;
+	bh=QaXQgU7muHqiotjvDVVrFztSpl2LwqcnGS/d6VSbSu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wqvbfjqd4J7JSftYjvWSUmxgSvUWCh1eIBwzsAuhTar2xO+fy336UaFuVZzsUGg50IpZVq/Zmp/ttmlL3n0Ay1QVb+Ku1R2XZpSzArUJNPs5+NXtpjLL+6RJ8ZTNRD2TcdXe/jiXl7UvFv6QIXUVW4oPL377HS0K1AhTYrhQ5I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VzapdPd8; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nSwfDdDt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2607820010;
-	Mon, 11 Mar 2024 14:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710168516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gHkB9NZrCsX2vkEuwpPMC3STTmQwvzFReSv12yY2sNs=;
-	b=nSwfDdDtzQzgjXbzdlv/a/rtvXf8qlWVrJyV9HKKfLfvwmRbw6cZkQv70TcZYmtvmVCp0g
-	nyOYbro5RCPsCnu1Te4uvlA6hUQremIqJGoHI82Ny4zCytYbQi9HRqrQB6Tuia6DL9Aqey
-	ZGTU2WBEF9JiEF+qRHcjpgHB1v/KG0bBbiWAO3Ib9fyNlHOxLkynTR4vsIEuRy3AO9QnZi
-	KwJIWD+uW+FebkVzPF/IdM8KRsdviA5DQAE6wEG/g5MUtiTD4LxvcYCXgKlk8lnvTEQPWm
-	v0uB5otsre3ZnKXNGz8EtH+1A9CMqCdXnThb9VBqISRwtqNuQgFvBWyU4Sk4uQ==
-Date: Mon, 11 Mar 2024 15:48:35 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <thomas.petazzoni@bootlin.com>, Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v3 net-next] ptp: Move from simple ida to xarray
-Message-ID: <20240311154835.23679b89@kmaincent-XPS-13-7390>
-In-Reply-To: <43b0b4ad-69ac-450f-8b39-ae264355622e@intel.com>
-References: <20240311135949.1180157-1-kory.maincent@bootlin.com>
-	<43b0b4ad-69ac-450f-8b39-ae264355622e@intel.com>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VzapdPd8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710168522; x=1741704522;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QaXQgU7muHqiotjvDVVrFztSpl2LwqcnGS/d6VSbSu0=;
+  b=VzapdPd89g6VslGHU+Jh6PigKQAtvJPfd1H9usrhDg9SFGLsaDazvfgb
+   47JMPbtPddEUkyWtRvW80lD1g8MC8MrAE9c5DSSUQ6XvLx2GoiKrGnNBz
+   wYMjAMyzopxyASad5ydQF7axYBFQEmILVpsCpV2zsHujBAV9zaPosVEof
+   rgZXjNNgzDmb4Lvc1Wmshxmq2leoaIWzXnNZNWXbyqVQYRoCl6+dWPjbH
+   qWPNZe36DZdajlxzk9PeaX/z8+UTHF5I5S4ciCyB6uroS7pifcYVrajri
+   GPtsIILpFVD4WVdvJNFBXuaFRB5GubDP7gCE8vlzed0KEzzp6ittMkuR4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4688623"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="4688623"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:48:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="914361903"
+X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
+   d="scan'208";a="914361903"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:48:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rjgwu-0000000Bedm-0Iat;
+	Mon, 11 Mar 2024 16:48:20 +0200
+Date: Mon, 11 Mar 2024 16:48:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: rc: gpio-ir-recv: Remove unused of_gpio.h
+Message-ID: <Ze8Zs1VA3G8BpxCb@smile.fi.intel.com>
+References: <20240304180510.1201042-1-andriy.shevchenko@linux.intel.com>
+ <Ze8Ubb5YQ4DzNHTt@smile.fi.intel.com>
+ <Ze8WvTnlay4mDhgi@gofer.mess.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ze8WvTnlay4mDhgi@gofer.mess.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 11 Mar 2024 15:17:15 +0100
-Przemek Kitszel <przemyslaw.kitszel@intel.com> wrote:
+On Mon, Mar 11, 2024 at 02:35:41PM +0000, Sean Young wrote:
+> On Mon, Mar 11, 2024 at 04:25:49PM +0200, Andy Shevchenko wrote:
+> > On Mon, Mar 04, 2024 at 08:05:10PM +0200, Andy Shevchenko wrote:
+> > > of_gpio.h is deprecated and subject to remove.
+> > > The driver doesn't use it, simply remove the unused header.
+> > 
+> > Sean, are you okay with this change?
+> 
+> Looks great, I've applied it my branch.
 
-> On 3/11/24 14:59, Kory Maincent wrote:
-> > Move from simple ida to xarray for storing and loading the ptp_clock
-> > pointer. This prepares support for future hardware timestamp selection =
-by
-> > being able to link the ptp clock index to its pointer.
-> >=20
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > ---
-> >=20
-> > Change in v2:
-> > - Update an err value missing.
-> >=20
-> > Change in v3:
-> > - Refactor err management.
-> > ---
-> >   drivers/ptp/ptp_clock.c | 28 ++++++++++++++++------------
-> >   1 file changed, 16 insertions(+), 12 deletions(-)
-> >  =20
->=20
-> sorry for not commenting more on v2 :/
+Thank you!
 
-No worry, thanks for your review!!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+
