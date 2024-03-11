@@ -1,267 +1,178 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2074.outbound.protection.outlook.com [40.107.8.74])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AD21802E;
-	Mon, 11 Mar 2024 08:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710146424; cv=fail; b=mWHb6/WQ5WRP7vvpkI4WlLLPWd6Z+8gp0LCzvtq0cZHKxTWVh9SqCRNdBzKMhwE/IAtFeGaVTxU9PZ/kj5k2ESoHDXVWc0TGLcFsQrPEV3lKlU6tes5guz+vvV3BsRFVaJ+Oi20a3ASo6ZE9FY7mB98aHuK9p7I9wlVtGwE7TdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710146424; c=relaxed/simple;
-	bh=nVLyfL6oAub5QxTBIPSFcQT/DmeiCAhQOcUmVWUAo0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n9whxAqS3CFQAijLQStD322q8PSErLLui0pvlj1NWPJdjwJB4sIwp/AGgGLoinWYQYBjr9/q7wuN4Jv1rIBKTWwMr75TYbB7cblhmEITEpU5bntijMPCuuICMSuLJ2NIGJKxDq4CsgcCVjH3h4BCs/EVGS4wZAtpQgGPgNb0Bi8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=NLLWXtda; arc=fail smtp.client-ip=40.107.8.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CD91173F;
+	Mon, 11 Mar 2024 08:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710146578; cv=none; b=rZKzAuDpn/WJLnk3TaVE8FYG/eWhb8YNLw3/nJT65TDtQrmHyinmLSgy+6f1QXshYIWN78IG/XG4Cv33c5iBAelOUN6iQJmXpoAIwhk04eMSCaFeKTdgTbF/SvfvJMP+GkUMD1F9VRur9nHUWeNFK7yFFL3cnM/x7/PwR9OeEA4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710146578; c=relaxed/simple;
+	bh=nFtFkNNeWFq1qGq8aKTKJOBUm95N5gYay+CiAaz/Bqg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=d4rlNAL/nVWbEdPiqW07sDfQ/ddXHaOyHMsAQ7i83UrFONHRJmBDzTQDP3mN5yfBkxkKtSBOsAuRVrWg8Jxcv0tDnFN1OC0+0gKH+z09VkBDJUcmOjLzVQtkcK4wRF9kvHDczV37rUItyv7Siw/LrAj4lM5FjiFl7eEXp7GXNGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WKNg6Bgb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NLLWXtda"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NXQeTxQmJ1atz/+3y2xB1A64uJO01UU7x+Vcgf4rU7aS/x02ph5Y5Vixm2VCj4iohD5LD+Q6NhSQIY1vdwxe3KW520k3X+px02pAXlluTci1C/TJJaujhFxf1Mb5C/xfbxt37xdRbYOSa871ZLpBYKnC1hlQhXlljc5vRMSRTeMchsBCYvkl0rLqv84AnOT5tmAd6MrsVBp0vg5Je0qJanu/iSQmtOJxi/fuf0svZgdD8ESYfMeWUMBFdlQaKQFrnhmxX0me+IvMsZQQsRFxV44porfPYwLRPMFHeTUpu9++rvatW6lczdyiVAk4kDHmDeS0bp1o8MEDYA/R6Ulcrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IRfAeEf6ADAR/D5vDs3vSihaef3MqUZXstlPW6KnM/4=;
- b=OsMlMImBVGxKXSjnH+xdH6v4msLRQvWflS7pJ3QK2acW0kABR9WmFFMnBX+LmNUKaJ4EzpPmPLTZWSiTxcyx+Zofph/urSxUPpmyGxkdlEdg8axRYJLDIbMi+I7q9V22cE7YwPyBDLFoNzvL5c+Z63/nvVgdc3+xHz3Vcho25FuzmGfYK8kpzhY0dsD/JPcI+AvCe1BmPQjfCNzU0PzoNAE5/b/BfOqiNDb+NbVJQ9TAoiSyMA1OMsKfQFFS/2NrJP8F76mWPgiVSxogcFaiF3QWGtLP2G9LiylH+AYit6wY2hw33ATDMdwc5qfv8jpsigIJRIttPQxtrwB8bTORiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IRfAeEf6ADAR/D5vDs3vSihaef3MqUZXstlPW6KnM/4=;
- b=NLLWXtdaGGbY+P+tNhdPQpvDK43LlhN/xH0npWQSfd4Ttgg1/J74KKV5gy2OHcfeWpKIajLXw/hQmACMMJaK/yCzvkKmINyZ49dZktWLik2PdVv45GCNX9rmX7y5UM7pWIjadUwWZ8zlMN/Sz2XkwtUtjHmLhOUwKAIhaqUYc9g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9377.eurprd04.prod.outlook.com (2603:10a6:10:36b::13)
- by DB8PR04MB7035.eurprd04.prod.outlook.com (2603:10a6:10:127::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Mon, 11 Mar
- 2024 08:40:19 +0000
-Received: from DB9PR04MB9377.eurprd04.prod.outlook.com
- ([fe80::b3d4:17c4:91b7:101d]) by DB9PR04MB9377.eurprd04.prod.outlook.com
- ([fe80::b3d4:17c4:91b7:101d%5]) with mapi id 15.20.7362.024; Mon, 11 Mar 2024
- 08:40:19 +0000
-From: Joy Zou <joy.zou@nxp.com>
-To: ping.bai@nxp.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de
-Cc: kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: [PATCH v2 3/3] arm64: dts: imx93-11x11-evk: add pca9451a support
-Date: Mon, 11 Mar 2024 16:47:57 +0800
-Message-Id: <20240311084758.377889-4-joy.zou@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240311084758.377889-1-joy.zou@nxp.com>
-References: <20240311084758.377889-1-joy.zou@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0196.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::23) To DB9PR04MB9377.eurprd04.prod.outlook.com
- (2603:10a6:10:36b::13)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WKNg6Bgb"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B4Yabx026682;
+	Mon, 11 Mar 2024 08:42:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:from:subject:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=rbBiPLaD7aT3pY+ebUIPfAuhH4QRqD2CZRFmflsXf9M=; b=WK
+	Ng6BgbP0xIueqP9GSkcMWYNp7L+m/wHtET7b9bXiO0yDS7mNCCOmQP52fCYzqwXg
+	PvF5CMTTmyVl0Wu3nd/U7efHMIsmewKVYHpT64uhGOLjxwtQE4TsYQ5cME6+qGHD
+	IUTVpXeoBvEIQRgQb0wHYNSUuKy7U6yzUwq2NzecS8mjonOw41nO1YItxspbCMDE
+	5wiFyW7l7z8L5IVTwBhvexoGyS7Lo9oZWC8dBIq6NjsoXk+2axp10JTYPU/5epNu
+	HFOPt3q4K0rsHc49vjYyxJMLkLP1f6Ba1/QZWYtS8M7zN9EjuYMA2ReSes8vJLv3
+	d5gmYGs5kUuTAm8qvHAg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wssgv8hd7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 08:42:21 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42B8gLgo012316
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 08:42:21 GMT
+Received: from [10.214.66.253] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 11 Mar
+ 2024 01:42:14 -0700
+Message-ID: <2b0d8c5b-7e79-41ff-bc57-003d1b947c16@quicinc.com>
+Date: Mon, 11 Mar 2024 14:12:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9377:EE_|DB8PR04MB7035:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27b31cc0-3d9f-49b6-c46a-08dc41a6e231
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	J1AxOpPEaPMkDL3KCkZ7mCwWKdryMdweytWSfiL6cAGm480f5aGmBptA8os9H6v1SRB934qBHCnOvCUNVUcplbiPrN0VvCWX3+28d0aQasEcMVQGuat8uI7zCO5/YODoz7NBlhJQh6vXHdA3UvOvaZj9h5huYpvdtgzznNU2R7iDg4U8TeiO8xybEtJSpT70nvmkglw+dwH6Loow0FUr4Rq2EkxkceLSRJDBGr2/+gMa6CgZKIsnmpmCLZZ6OD/5L5LQNK+szJmJ/aftQj/6YpOY3y8hKs0u2LaIWm9i/LheSsK4yQ3+EVC3hz3f0NGmjZQIBHVFknE5LBRZ7SdBxKldKT+DZMp7Kf8lKkn6DkzKnJUOpaDC8xEDiBiToK/BKhQCCNzc7lR4qVxlu4/g8Mkczn+ukcQRoGD7G01pR4aSaanj+AsNskKGLaszye1l6c1kp04Qbj9O7aVDgcajrjurzOOx4Ya5OjOfatGgx7apdAl+J6VJZKVJWuda5i1rv/Tz8hqYbn8IRugG25n+/IEm5/7Fq5xYnYb/BndALX0SHRkG4rDQLpkBLmWqCQ6BMR4k8OdnBO9pDCHSPg6mUtCBhkFSvqaFYqKSOF7Ds9uGua+JtojdkZjptEF3kNFE86CMBGwrpItb91lYQbrUPv6ovCkbJ3qDX9RKsWpe9pvdkUfVk8fSVrcuYGfqtdZVk9QxuWSfd2aACROKEcTd7A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9377.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(7416005)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UQ7hZ874SDWOkZTodL9VEQ8/SMODlVTXTtEGFRf6Q3RGR0+xa0qKd/6/J89v?=
- =?us-ascii?Q?VM/E3NYpKe+NCcvqeCX+5bscOopXwETgGlWJ38p7QMt1EkNwxk8DKWiuTvvE?=
- =?us-ascii?Q?bN9fS4AgyuoD/HgjQwaxax7j9PXIkBVTvdACxg3JpRD+q2WcFowMdarNw9fJ?=
- =?us-ascii?Q?0K0zgiegwMMKFu91geh4WrRpOm3HG29A+E6lpgmXxrE5boGcrveTKLiYo7Ye?=
- =?us-ascii?Q?+W0OB7Mko6lhk23oV2YtBurR7siToTtyaXNFCjgHRYuZ34HpmnJC69/xXfc4?=
- =?us-ascii?Q?ut454XO6TL316oOy9Jc72HDhomIGDrGmSWeyA5U8wv0aPSIn3xHBWjMbo0Yg?=
- =?us-ascii?Q?S5cGkK4UXnUhm4kxh9OARHmlJmUZESIri02cGkw6d49pHM7wIoHX7OFoBRlA?=
- =?us-ascii?Q?qJMX52cX05rani2nFTbFo4uRHtz+lvUe7dignClRnphqWyOqYvBCmHQ+OZLZ?=
- =?us-ascii?Q?S9DplL8AE1M0B6uL45Mj00prEJgcE92DfwI1Ouh3+RxnS3TdoeMbvXXylLLf?=
- =?us-ascii?Q?QThyYsuuTK/qgc0xJiayXWPVBf6sxP0DghxzxgZLwxHhuiIjnkbjbzD8YLBr?=
- =?us-ascii?Q?xs6RdqzOeS0fuvOk8y5SPjufoFkvieK1miiaMMbAOPTtcnbD/0flM3e+72Wm?=
- =?us-ascii?Q?PY+WwFFJ7ujikQBn81Nqc97yZj7/3LV3ekfVHPJqLJaT2wuL+6xo9jqWSlbz?=
- =?us-ascii?Q?p99mtI9XKiHTrA27zzw6HWCjkXSO0JasakxurX84oILudBcN2HhZZWAFP/3g?=
- =?us-ascii?Q?hFOKsSol4qcqqU3MXz3hkjC+ZXZSwSh5C1X6Nh0Imti0scTfjgseTHNiIK3i?=
- =?us-ascii?Q?yZPGhY4R69MMlwITDjODBxCLnO2sMj3LsbJ9T0mqVCm7BykLJXEzb6WgCifO?=
- =?us-ascii?Q?hysmleOq/wRPHuQr+yNyJQ0rDyCOw8PXdWbZB7O+ofsJTHJJ7QkE/e3NMG0x?=
- =?us-ascii?Q?WyMjmK6xbp5HBhsNrVmvrN9sxWnK1g5EKQPvnVSHTc2vmhywnC5hHN1uvE4w?=
- =?us-ascii?Q?R8KgvGUA/SIOlJClZhcsXDaKzwr7knkQX8B/xzmXZwyFroFw8CrOS8PSM/XJ?=
- =?us-ascii?Q?RNRiVVBCm2hUSTKhRuigDnNqAEUN+zuqiBvs+H3EXocMylyI1TZuWFJMRQQs?=
- =?us-ascii?Q?PWZJP7hVN6lpPgmGJAPhpP9uVvgeINr/qX89MTKHTHCHQV2urfclbBk/P2Ud?=
- =?us-ascii?Q?4mvu/1Eq1MeLlR/E9ZzHFa6mjDDrT2k6jaH9CvA3LOKJlZjF12vUsizj0m6I?=
- =?us-ascii?Q?WOQVcO7OHQnfTSBXBWE7U9gNPNbEsC2arDwaK6dakvm7wVsf6O5hX0uGrFfb?=
- =?us-ascii?Q?vb2a1YHk12Wxc5anNzhC580itCsql+qUBfQgsy+pVjlLXvMJViBCeNIV77Ci?=
- =?us-ascii?Q?HQvJJqqLgRs9l6lgZHgL/s1j6u03gQrJqOUB6Mzprr+j/sGOr+G+PMBHBK7R?=
- =?us-ascii?Q?nok8Y+jO034tLgOaYMLoRrzSw/gBOgUu+BXG3D0FBeHNhlkQT5us4iuxpT+I?=
- =?us-ascii?Q?vogROT423VrzgQwepLUPNN3zfo2Tq1BgjzDk6qQFQEI7jZr8AuCfa4kVlkpt?=
- =?us-ascii?Q?fFCHKkAEoGU7Cod9jFxYZdBTOKjm6giPt5j7Bs2B?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27b31cc0-3d9f-49b6-c46a-08dc41a6e231
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9377.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 08:40:19.7044
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YGhXU26+X2IOfWS0VRJivYBmTbs6nqsyX7L7dNueO3DfpWLjuiGVPRI9OyQ2mkt3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7035
+User-Agent: Mozilla Thunderbird
+From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+Subject: Re: [PATCH v9 4/5] iommu/arm-smmu: add ACTLR data and support for
+ SM8550
+To: Will Deacon <will@kernel.org>
+CC: <robin.murphy@arm.com>, <joro@8bytes.org>, <dmitry.baryshkov@linaro.org>,
+        <konrad.dybcio@linaro.org>, <jsnitsel@redhat.com>,
+        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
+        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
+        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
+        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
+        <quic_molvera@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <saravanak@google.com>
+References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
+ <20240123144543.9405-5-quic_bibekkum@quicinc.com>
+ <20240213134714.GC28926@willie-the-truck>
+ <201fef09-50ab-436b-af63-4535c7510d15@quicinc.com>
+ <20240221132101.GB7273@willie-the-truck>
+Content-Language: en-US
+In-Reply-To: <20240221132101.GB7273@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: D7s9_4USJISRv-v30YVnG93YgSELK_Bw
+X-Proofpoint-ORIG-GUID: D7s9_4USJISRv-v30YVnG93YgSELK_Bw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_04,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1011 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403110064
 
-Support pca9451a on imx93-11x11-evk.
 
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
----
- .../boot/dts/freescale/imx93-11x11-evk.dts    | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-index 9921ea13ab48..6cb5b7d745bf 100644
---- a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-@@ -183,6 +183,105 @@ &wdog3 {
- 	status = "okay";
- };
- 
-+&lpi2c2 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&pinctrl_lpi2c2>;
-+	pinctrl-1 = <&pinctrl_lpi2c2>;
-+	status = "okay";
-+
-+	pmic@25 {
-+		compatible = "nxp,pca9451a";
-+		reg = <0x25>;
-+		interrupt-parent = <&pcal6524>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+
-+		regulators {
-+			buck1: BUCK1 {
-+				regulator-name = "BUCK1";
-+				regulator-min-microvolt = <650000>;
-+				regulator-max-microvolt = <2237500>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <3125>;
-+			};
-+
-+			buck2: BUCK2 {
-+				regulator-name = "BUCK2";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <2187500>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <3125>;
-+			};
-+
-+			buck4: BUCK4{
-+				regulator-name = "BUCK4";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck5: BUCK5{
-+				regulator-name = "BUCK5";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck6: BUCK6 {
-+				regulator-name = "BUCK6";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo1: LDO1 {
-+				regulator-name = "LDO1";
-+				regulator-min-microvolt = <1600000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo4: LDO4 {
-+				regulator-name = "LDO4";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo5: LDO5 {
-+				regulator-name = "LDO5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+	pcal6524: gpio@22 {
-+		compatible = "nxp,pcal6524";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pcal6524>;
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+};
-+
- &iomuxc {
- 	pinctrl_eqos: eqosgrp {
- 		fsl,pins = <
-@@ -239,6 +338,19 @@ MX93_PAD_DAP_TCLK_SWCLK__LPUART5_CTS_B		0x31e
- 	};
- 
- 	/* need to config the SION for data and cmd pad, refer to ERR052021 */
-+	pinctrl_lpi2c2: lpi2c2grp {
-+		fsl,pins = <
-+			MX93_PAD_I2C2_SCL__LPI2C2_SCL			0x40000b9e
-+			MX93_PAD_I2C2_SDA__LPI2C2_SDA			0x40000b9e
-+		>;
-+	};
-+
-+	pinctrl_pcal6524: pcal6524grp {
-+		fsl,pins = <
-+			MX93_PAD_CCM_CLKO2__GPIO3_IO27			0x31e
-+		>;
-+	};
-+
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
- 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x15fe
--- 
-2.37.1
+On 2/21/2024 6:51 PM, Will Deacon wrote:
+> On Wed, Feb 21, 2024 at 02:25:26PM +0530, Bibek Kumar Patro wrote:
+>> On 2/13/2024 7:17 PM, Will Deacon wrote:
+>>> On Tue, Jan 23, 2024 at 08:15:42PM +0530, Bibek Kumar Patro wrote:
+>>>> Add ACTLR data table for SM8550 along with support for
+>>>> same including SM8550 specific implementation operations.
+>>>>
+>>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+>>>> ---
+>>>>    drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 90 ++++++++++++++++++++++
+>>>>    1 file changed, 90 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+>>>> index 6004c6d9a7b2..db15b1eade97 100644
+>>>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+>>>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+>>>> @@ -23,6 +23,86 @@
+>>>>
+>>>>    #define CPRE			(1 << 1)
+>>>>    #define CMTLB			(1 << 0)
+>>>> +#define PREFETCH_SHIFT		8
+>>>> +#define PREFETCH_DEFAULT	0
+>>>> +#define PREFETCH_SHALLOW	(1 << PREFETCH_SHIFT)
+>>>> +#define PREFETCH_MODERATE	(2 << PREFETCH_SHIFT)
+>>>> +#define PREFETCH_DEEP		(3 << PREFETCH_SHIFT)
+>>>> +#define PREFETCH_SWITCH_GFX	(5 << 3)
+>>>> +
+>>>> +static const struct actlr_config sm8550_apps_actlr_cfg[] = {
+>>>> +	{ 0x18a0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
+>>>> +	{ 0x18e0, 0x0000, PREFETCH_SHALLOW | CPRE | CMTLB },
+>>>> +	{ 0x0800, 0x0020, PREFETCH_DEFAULT | CMTLB },
+>>>> +	{ 0x1800, 0x00c0, PREFETCH_DEFAULT | CMTLB },
+>>>> +	{ 0x1820, 0x0000, PREFETCH_DEFAULT | CMTLB },
+>>>> +	{ 0x1860, 0x0000, PREFETCH_DEFAULT | CMTLB },
+>>>> +	{ 0x0c01, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>> +	{ 0x0c02, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>> +	{ 0x0c03, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>> +	{ 0x0c04, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>> +	{ 0x0c05, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>> +	{ 0x0c06, 0x0020, PREFETCH_DEEP | CPRE | CMTLB },
+>>>
+>>> [...]
+>>>
+>>> Isn't this effectively hard-coding the topology of the SoC in the driver?
+>>> Wouldn't it better describing higher-level prefetch properties in the DT
+>>> nodes corresponding to the upstream devices?
+>>
+>> Since prefetch data stored in this table represent settings for the
+>> ACTLR register, and doesn't exactly define the hardware (So in this
+>> manner prefetch data won't exactly be a part of soc topology ?).
+> 
+> The first two columns of the table are StreamID/Mask pairs, no? How is that
+> _not_ the SoC topology? I really think it would be better to define some
+> high-level prefetch properties in the DT binding which can be put on the
+> master nodes.
+> 
+>> So it seemed apt not to use the device tree for storing the prefetch
+>> property. Hence we reverted from the DT approach (initial proposal in
+>> RFC to piggyback on iommus property to store prefetch settings) back to use
+>> driver for storing this data.
+>>
+>> Some drivers use the same approach for storing their platform specific
+>> data. Examples being
+>> drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+>> drivers/soc/qcom/llcc-qcom.c
+>> These drivers were taken as reference for storing platform specific ACTLR
+>> data.
+> 
+> I don't know anything about those drivers, but on the SMMU side we already
+> have ways to describe the topology in the DT and the driver is using them,
+> so I'm struggling to see the need to add these tables as well.
+> 
+> But as I said before, if Robin and the DT folks prefer this approach,
+> then I won't get in the way.
+> 
 
+With the driver approach at the current state of patches, it has been 
+ACKed by DT folks and it seems there has been no concern/objection from 
+Robin till now.
+So can this patch go ahead Will?
+Let us know Robin of your opinion as well please.
+
+Thanks & regards,
+Bibek
+
+> Will
