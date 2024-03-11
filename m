@@ -1,91 +1,69 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C441F2E3F7;
-	Mon, 11 Mar 2024 13:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F593DB8C;
+	Mon, 11 Mar 2024 13:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710164026; cv=none; b=b2Y/klesH7NTJyj5xEPlsqna+3ghac88jXjyxG2FxJAOJpE+Z3DJFl9yArZ8o8A9a/hXnQ8kTb4oih1ut6mI3JeelwCEQ6BAf7e/gmCOB8nYlDSVdsZKmMsw83Q6iK8wGJ6hyC/RAAbjhDNA9Uu2V7cHLqfaDbnp+PLN+9rgHM4=
+	t=1710164030; cv=none; b=s9E5K9m3q1KoFaV7/2V0PFSPkMINAoIIp1PnChYhXNZ8eGK1QoFn7saGwaTnvhJkqER2J2aFgsNwe7pGrFUR59wBb7VikiSqV4vNJVJJexivIiOKBpNfT2mRBwZUVFhYdOJWZYwDnhXRZNhE9CNxnlnn4/VedZJ2K+nKXRnuC7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710164026; c=relaxed/simple;
-	bh=jxq8f271ujvpbwEQPSIylVtewrclzvRsFccoNPWrj2w=;
+	s=arc-20240116; t=1710164030; c=relaxed/simple;
+	bh=XJxQOUTBMprwFgLG2ugpTyRv75h4GfUXt/D6X/lSOnk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iLOOoTrAG1vN8rkWFcZ8szdUg8VxhKKwJBdfNzoBkAwRgWHWBCG8+clvRTxHTKhM+yqOUA4YUbvqwBRdp7Z59bc/H3VODu87h6jAVVNAzjIJcVpDMgcoGwkxBsqpuJVk60dy3BoCs0q2n0MJVjfqaTvCHEeWuTiehM9HMRQglcY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZ22aUNNUw0GSgDlpZHA85fpn89n57ATAX9PF6OuxaT5ldbPV1Q9sCHJ1m7QnCvvaQm5nWHgEpXGmMnjid/MrPjbYqmNjc8itbXG/4HSnNgTXsNcoKckuN4skPVudddEcVG6LEeCFlys9jpSV6UWAAfIJvrs+uVn0fQTnfXO7gc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rjfO2-0001bk-00; Mon, 11 Mar 2024 14:08:14 +0100
+	id 1rjfO2-0001bg-00; Mon, 11 Mar 2024 14:08:14 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 3D2C9C0694; Mon, 11 Mar 2024 14:07:19 +0100 (CET)
-Date: Mon, 11 Mar 2024 14:07:19 +0100
+	id 9BF5AC0694; Mon, 11 Mar 2024 14:05:01 +0100 (CET)
+Date: Mon, 11 Mar 2024 14:05:01 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mips: cm: Convert __mips_cm_l2sync_phys_base() to
- weak function
-Message-ID: <Ze8CB27Ad427Gk3K@alpha.franken.de>
-References: <20240226105427.7191-1-fancer.lancer@gmail.com>
- <20240226105427.7191-2-fancer.lancer@gmail.com>
- <34af21b5-a878-418e-a70b-299cab61b37e@app.fastmail.com>
- <y2lxeu5uvj7ezlv7kf6lox5e5xprmvrhqmf3gvzjsatlrrlub7@mvqzoyq5mnvd>
- <cc9e02b3-57df-4a7d-bd21-2d574bf4b878@app.fastmail.com>
- <simbnmm644ouv3kc3agsxiub6fzg6advihkqsbjzgmb44nmuxv@ktgkhn3kr43z>
- <60e60313-3cc4-452f-a222-aadd7728183d@app.fastmail.com>
- <6n2synlvazjh2gptxtioju7dciwshwqyei4xnfzorns66b3hqx@c7blt5kwnpbl>
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 0/3] Extend devicetree coverage of MT7621's UART
+ interfaces
+Message-ID: <Ze8BfZl0IBFmK/1a@alpha.franken.de>
+References: <20240308155616.11742-1-justin.swartz@risingedge.co.za>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6n2synlvazjh2gptxtioju7dciwshwqyei4xnfzorns66b3hqx@c7blt5kwnpbl>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240308155616.11742-1-justin.swartz@risingedge.co.za>
 
-On Mon, Feb 26, 2024 at 04:11:05PM +0300, Serge Semin wrote:
-> On Mon, Feb 26, 2024 at 01:29:54PM +0100, Arnd Bergmann wrote:
-> > On Mon, Feb 26, 2024, at 13:20, Serge Semin wrote:
-> > > On Mon, Feb 26, 2024 at 01:04:33PM +0100, Arnd Bergmann wrote:
-> > >> On Mon, Feb 26, 2024, at 12:27, Serge Semin wrote:
-> > 
-> > > I see your point now. Thanks for clarification. IMO it would be less
-> > > readable due to the ifdef-ery and the new config, and less
-> > > maintainable due to the conditional compilation, but would provide a
-> > > more performant solution since the compiler will be able to inline the
-> > > singly used static method. Basically you suggest to emulate the weak
-> > > implementation by an additional kernel config.
-> > 
-> > I mean the kernel config that you already need here, since
-> > the strong version of the function is already optional.
+On Fri, Mar 08, 2024 at 05:56:13PM +0200, Justin Swartz wrote:
+> This patchset associates the uart1_pins group with serial0 and adds
+> two nodes, serial1 and serial2, that define the interface to the
+> MT7621's UART2 and UART3 respectively. 
 > 
-> Why would I need it if after this patch is applied the
-> mips_cm_l2sync_phys_base() method will be converted to a global weak
-> implementation?
+> Changes in v3:
+>   Added spacing between properties as requested by Arınç ÜNAL.
 > 
-> > 
-> > > Not sure whether it would be better than a well-known
-> > > weak-attribute-based pattern. Anyway let's wait for the
-> > > Thomas' opinion about your suggestion. If he thinks
-> > > it would be better I'll update the patches.
-> > 
-> > Weak functions are not used all that much outside of a
-> > couple of parts of the kernel. There is a lot of them
-> > in drivers/pci/, a little bit in acpi and efi, and
-> > then a bit in arch/*/, though most of that is in mips.
+> Changes in v2:
+>   Reordered properties as requested by Sergio Paracuellos.
 > 
-> + a lot of them in kernel/*, some in mm/* .)
+> Justin Swartz (3):
+>   mips: dts: ralink: mt7621: associate uart1_pins with serial0
+>   mips: dts: ralink: mt7621: reorder serial0 properties
+>   mips: dts: ralink: mt7621: add serial1 and serial2 nodes
 > 
-> > 
-> > Ifdef checks in .c files are not great, but at least they
-> > are much more common than __weak functions and self-documenting.
-> 
-> Ok. I don't have concretely strong opinion about what is better. Let's
-> wait for what Thomas thinks about this.
+>  arch/mips/boot/dts/ralink/mt7621.dtsi | 44 +++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 
-I've taken your patches as we get rid of this alias thing. As long as
-there is no big push against __weak I'm ok with this case.
+series applied to mips-next.
 
 Thomas.
 
