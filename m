@@ -1,66 +1,66 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CAC3F8F6
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BD7524AA
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710177812; cv=none; b=YwgLHucwNKZqh2FJwSgLhOW1bdKyEQcwAhytsUo3xGSGUSUSB5VlWFZbd20nnLArQpIYR0Ou+oTXQuWie6Lk6k5zTw5AEwG8jPI8MIEx5EwKTdSfBNWjje8JFkz0u03AYarsF5DImU1FFBToBa9dru+4cm8kZJStXy+7BPhgJCw=
+	t=1710177894; cv=none; b=pNkOwfMaFX/o6fAAr7lXo61hXMm1XYsn1UefQRDg5ELkUNk1yzgdIGVlIE4HandcS+6LeIpwDxhzoxtzU+9WXwMAiVImXKj60CC1t2sS0P88FSdSSyuxVRlH6tF7TbGFhAJeIpjTjtZCZPb0+PDYyzhP1D0dQoU1z6xNg4a9t5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710177812; c=relaxed/simple;
-	bh=yZFlhLhcrB6kOYi8DhWwE3UELCDKt6BcqMyQlgjCIUw=;
+	s=arc-20240116; t=1710177894; c=relaxed/simple;
+	bh=XWEi7LHXquSIEQW89Dhsaa+W0TGVTzrGxEyKMs1bzG4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g/Y/alRd+qLCoESq1Y7xgl1ebJWWU+PcEELQfQb9IwmoiN5yAvQd/sZHDicYxeZzhiPLzGoMA2QNaRIIRnZWEgG6/inVivF1cvo4jW5FAqlfdgQwq3XuaMu6lHqavZ3QUn4SZJPSyOEfUIKFjNwq4eG3HtrbAIImPGhyTDio5LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ztfqIqbC; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=HZrZ0u6KEZmbw1rZVLK8CO7KQP02KZxSiTBheGqjlS9n1ItGdTlTq2/p2nL8FTR676pEnKfFxR4AB7SDGCvNeGO3t7j2vb3U1xLPh3J09ePJX2+YkzCsL7OYzSPptLRmUycudT5R7KIgDxkAufJFm+NIjbIPjOL6zVPH/cVbT00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1WKsd2Za; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ztfqIqbC"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso6954862276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:23:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1WKsd2Za"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so3985020276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710177810; x=1710782610; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710177892; x=1710782692; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/HhEj7VyFIjZW59B2BWeffYMQd7D2SERuY842EgbKa4=;
-        b=ztfqIqbCzFZ/pFnoANMPCTO6KTWWGamV1tZz42QEOrkhRWh8G3wxmcTRIHsUrYwqE7
-         Lrk9rmExio4sApihshiBZ66l+u0Z+6gVWBLIBSEsDUd0b+mYKPX6hFdbo272SYcxvY6H
-         /Ft9lUy+yaHgKOH0fvFh2wH1le/LZx5MwCU880GXCd/D++qWb0I0OL93fpySu/sd2uvo
-         vkLDJVYzR/VE6+8Fk8Ac2x7KDNNrPQDnePObTsH0sy1PFFw3Vym+eebj+yWDaTEPXQ+F
-         VhcoQi67eYiTp/a0cBsfrDlQSAFEwsmb/9OTIvfy7dNHARU+MP4YV2idanzbB4Mi9brA
-         L9qw==
+        bh=UmZfmbMNljhd7xsF5ugG1U7e5cDaKYSiE/Ydm7nW5VY=;
+        b=1WKsd2Zadb2P7qkoBWxQ8e6ubhBzBjbK+mJ+ra/wHpq0aMhuYFw0IR+psLxXgmJ4h5
+         5dqU4/oF7BN91pHLZULM6uvyjkwMUtZn+i0tlfwM3iYCjP9VL/R9Y/mnx5RPtzkSbzwm
+         P6MVSYNB0kbnkvQcbDQU+JhSlP9+FfO5d4hsgp7PyK0csYG0Kozoeny5fYrrCB6rjjFM
+         TFqgYQdMYHLkBLT3uYVvurtGYOEjRKSHPQNQao/D6vwz+xpfiEnAxeBKl9oU7JklQSTT
+         7r/H0U9gArmGsVDFzFwgRoeJrJZdOLJRsVykhx76TUBVxi04vtMP8B+4dJaYbOBATKgO
+         JdLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710177810; x=1710782610;
+        d=1e100.net; s=20230601; t=1710177892; x=1710782692;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/HhEj7VyFIjZW59B2BWeffYMQd7D2SERuY842EgbKa4=;
-        b=rzeaHmKhq3peR/I4tsJf56EOgOSwJCruL+uv1H9cjJv8xjFvVfGjUNtEguwcIKax0Q
-         X03HEVPBNW99AqdiNr/s2gjZ8CeDMkNta/mrRS5uiyewRqFM8HjYP8U6IWxEmWkjhPsI
-         rd+7I0gD78TskC2UFkP1F0avYY0dg63HusPclGaxpxnm/Rsbaup5ZFGFOKLVzRYHvL6Q
-         PbK/fYpi7FR8cyWVXI9ZOFxEFSuGKr1zBwmEUldczpGMNxusKF2fCNF63ZuQdS3Ka6n/
-         npPCG2ITiWUy6UC9Od53aKjFQQfWa1ihpr6DcHiJfqHspxaAWfLkebBE+TBA+x+OU1lf
-         S7nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8leP8iyjrxR1T/V96xFvKkUKc/rdmZ6WHENiWhLZkilaFOzml71po6dR9GUAl4fLXubD/IPXrR6bpz0TiJ5hUzjq26azCPNv6vsot
-X-Gm-Message-State: AOJu0YwmfiAR24XbyVJUIgv8qcJ4pgFPbBzqtuqbUdKRBL+Xxd3y7fcU
-	QWOR5QVZpjB8V6F432s7pU6gNF0sg3K/EB7J8nGtjXRLtT/a4OUkYwLZg4w8uvGwjhDWVHgW0X2
-	xkA==
-X-Google-Smtp-Source: AGHT+IG0mnBtxFHLaktut+V3gXYUB62C0a0lN7Q53NFVUdtJgunINK62Mbm+Ikuf1ZYr3tHtvitWzHlQ5kE=
+        bh=UmZfmbMNljhd7xsF5ugG1U7e5cDaKYSiE/Ydm7nW5VY=;
+        b=LEh+nG75LjRP+0jzsxx+XFXXTCKFyqnGFipEp1AzBnQMnZCgQtYhrt8y8YnHirW3AR
+         OU9b1fOFz1GzHYuDhrBqXvHBAVlFU/YIVg17BUKw2IJzvlOYXRu5xmlG84UOLxFoxKNm
+         uKpVxvjdgWF8lUZj/h41Zmk9kgM/AQ6FHENDPxFql7jVKRm8Q8cEPj/TC+teY+B3cb32
+         z6hBXUnSPat3qR7Ii/0/aR9Q8ydY5OwCG68drSgFHUfYRLHbgw0oMTXqONUo4vvnA2w5
+         oUmbVTKLiR+TwlLBgrReOE2BJDz2pbn+mQj4LaUy0r1w7DCHTRJ7ggodiUh1lpHJIkWn
+         ZsIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGHGsaZc1QGczscGUE1ipqbvJm2PBJGpPjes1T4/jbtUuIp1IbQbIM6xc4TAVrbEJQANBI/j7G6BXUqWltGOwcQEmipjls9qQtaNJI
+X-Gm-Message-State: AOJu0YxQ7SGD3z1FuF8GlDI8UwVPx4UUbaXvAnqmLubYM8PWd53OFX62
+	xmTjsgPm8WYwBDIP+A8XnHObc7yRzKmGpzhZKYEiWzgUsXYxvkMtR3X3BhC7ZYyBukqnnxPuhpQ
+	d1g==
+X-Google-Smtp-Source: AGHT+IEVABktm40UKplc5dvcVtUQCh7R9y4g+7NzZVc1b+OisYBlVH4NzjyvZqhtI9Sfa389xEFRhrFGQDE=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1889:b0:dc6:dfc6:4207 with SMTP id
- cj9-20020a056902188900b00dc6dfc64207mr1961789ybb.10.1710177809878; Mon, 11
- Mar 2024 10:23:29 -0700 (PDT)
-Date: Mon, 11 Mar 2024 10:23:28 -0700
-In-Reply-To: <012b59708114ba121735769de94756fa5af3204d.1709288671.git.isaku.yamahata@intel.com>
+ (user=seanjc job=sendgmr) by 2002:a05:6902:18cc:b0:dc7:82ba:ba6e with SMTP id
+ ck12-20020a05690218cc00b00dc782baba6emr389686ybb.7.1710177891972; Mon, 11 Mar
+ 2024 10:24:51 -0700 (PDT)
+Date: Mon, 11 Mar 2024 10:24:50 -0700
+In-Reply-To: <b045dc17abd4f1330406964528ade5722ab63aa1.1709288671.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1709288671.git.isaku.yamahata@intel.com> <012b59708114ba121735769de94756fa5af3204d.1709288671.git.isaku.yamahata@intel.com>
-Message-ID: <Ze8-EFtsIONMyO3o@google.com>
-Subject: Re: [RFC PATCH 2/8] KVM: Add KVM_MAP_MEMORY vcpu ioctl to
- pre-populate guest memory
+References: <cover.1709288671.git.isaku.yamahata@intel.com> <b045dc17abd4f1330406964528ade5722ab63aa1.1709288671.git.isaku.yamahata@intel.com>
+Message-ID: <Ze8-YlvprcKou-Ho@google.com>
+Subject: Re: [RFC PATCH 3/8] KVM: x86/mmu: Introduce initialier macro for
+ struct kvm_page_fault
 From: Sean Christopherson <seanjc@google.com>
 To: isaku.yamahata@intel.com
 Cc: kvm@vger.kernel.org, isaku.yamahata@gmail.com, 
@@ -70,102 +70,49 @@ Cc: kvm@vger.kernel.org, isaku.yamahata@gmail.com,
 Content-Type: text/plain; charset="us-ascii"
 
 On Fri, Mar 01, 2024, isaku.yamahata@intel.com wrote:
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index d1fd9cb5d037..d77c9b79d76b 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4419,6 +4419,69 @@ static int kvm_vcpu_ioctl_get_stats_fd(struct kvm_vcpu *vcpu)
->  	return fd;
->  }
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+> 
+> Another function will initialize struct kvm_page_fault.  Add initializer
+> macro to unify the big struct initialization.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+>  arch/x86/kvm/mmu/mmu_internal.h | 44 +++++++++++++++++++--------------
+>  1 file changed, 26 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+> index 0669a8a668ca..72ef09fc9322 100644
+> --- a/arch/x86/kvm/mmu/mmu_internal.h
+> +++ b/arch/x86/kvm/mmu/mmu_internal.h
+> @@ -279,27 +279,35 @@ enum {
+>  	RET_PF_SPURIOUS,
+>  };
 >  
-> +__weak int kvm_arch_vcpu_pre_map_memory(struct kvm_vcpu *vcpu)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
+> +#define KVM_PAGE_FAULT_INIT(_vcpu, _cr2_or_gpa, _err, _prefetch, _max_level) {	\
+> +	.addr = (_cr2_or_gpa),							\
+> +	.error_code = (_err),							\
+> +	.exec = (_err) & PFERR_FETCH_MASK,					\
+> +	.write = (_err) & PFERR_WRITE_MASK,					\
+> +	.present = (_err) & PFERR_PRESENT_MASK,					\
+> +	.rsvd = (_err) & PFERR_RSVD_MASK,					\
+> +	.user = (_err) & PFERR_USER_MASK,					\
+> +	.prefetch = (_prefetch),						\
+> +	.is_tdp =								\
+> +	likely((_vcpu)->arch.mmu->page_fault == kvm_tdp_page_fault),		\
+> +	.nx_huge_page_workaround_enabled =					\
+> +	is_nx_huge_page_enabled((_vcpu)->kvm),					\
+> +										\
+> +	.max_level = (_max_level),						\
+> +	.req_level = PG_LEVEL_4K,						\
+> +	.goal_level = PG_LEVEL_4K,						\
+> +	.is_private =								\
+> +	kvm_mem_is_private((_vcpu)->kvm, (_cr2_or_gpa) >> PAGE_SHIFT),		\
+> +										\
+> +	.pfn = KVM_PFN_ERR_FAULT,						\
+> +	.hva = KVM_HVA_ERR_BAD, }
 > +
-> +__weak int kvm_arch_vcpu_map_memory(struct kvm_vcpu *vcpu,
-> +				    struct kvm_memory_mapping *mapping)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int kvm_vcpu_map_memory(struct kvm_vcpu *vcpu,
-> +			       struct kvm_memory_mapping *mapping)
-> +{
-> +	bool added = false;
-> +	int idx, r = 0;
 
-Pointless initialization of 'r'.
-
-> +
-> +	if (mapping->flags & ~(KVM_MEMORY_MAPPING_FLAG_WRITE |
-> +			       KVM_MEMORY_MAPPING_FLAG_EXEC |
-> +			       KVM_MEMORY_MAPPING_FLAG_USER |
-> +			       KVM_MEMORY_MAPPING_FLAG_PRIVATE))
-> +		return -EINVAL;
-> +	if ((mapping->flags & KVM_MEMORY_MAPPING_FLAG_PRIVATE) &&
-> +	    !kvm_arch_has_private_mem(vcpu->kvm))
-> +		return -EINVAL;
-> +
-> +	/* Sanity check */
-
-Pointless comment.
-
-> +	if (!IS_ALIGNED(mapping->source, PAGE_SIZE) ||
-> +	    !mapping->nr_pages ||
-
-> +	    mapping->base_gfn + mapping->nr_pages <= mapping->base_gfn)
-> +		return -EINVAL;
-> +
-> +	vcpu_load(vcpu);
-> +	idx = srcu_read_lock(&vcpu->kvm->srcu);
-> +	r = kvm_arch_vcpu_pre_map_memory(vcpu);
-
-This hooks is unnecessary, x86's kvm_mmu_reload() is optimized for the happy path
-where the MMU is already loaded.  Just make the call from kvm_arch_vcpu_map_memory().
-
-> +	if (r)
-> +		return r;
-
-Which is a good thing, because this leaks the SRCU lock.
-
-> +
-> +	while (mapping->nr_pages) {
-> +		if (signal_pending(current)) {
-> +			r = -ERESTARTSYS;
-
-Why -ERESTARTSYS instead of -EINTR?  The latter is KVM's typical response to a
-pending signal.
-
-> +			break;
-> +		}
-> +
-> +		if (need_resched())
-
-No need to manually check need_resched(), the below is a _conditional_ resched.
-The reason KVM explicitly checks need_resched() in MMU flows is because KVM needs
-to drop mmu_lock before rescheduling, i.e. calling cond_resched() directly would
-try to schedule() while holding a spinlock.
-
-> +			cond_resched();
-> +
-> +		r = kvm_arch_vcpu_map_memory(vcpu, mapping);
-> +		if (r)
-> +			break;
-> +
-> +		added = true;
-> +	}
-> +
-> +	srcu_read_unlock(&vcpu->kvm->srcu, idx);
-> +	vcpu_put(vcpu);
-> +
-> +	if (added && mapping->nr_pages > 0)
-> +		r = -EAGAIN;
-
-No, this clobbers 'r', which might hold a fatal error code.  I don't see any
-reason for common code to ever force -EAGAIN, it can't possibly know if trying
-again is reasonable.
-
-> +
-> +	return r;
-> +}
+Oof, no.  I would much rather refactor kvm_mmu_do_page_fault() as needed than
+have to maintain a macro like this.
