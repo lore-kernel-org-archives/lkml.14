@@ -1,45 +1,43 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7892C15A5;
-	Mon, 11 Mar 2024 03:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C1115B3;
+	Mon, 11 Mar 2024 03:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710128263; cv=none; b=ohEuV0UtFkG6wPORfqyiHe2GceM3QaM8cGqME18j3SFdX4qlncNGxrGCidDUnM7HdBY0LR5nCV17Ffiwi/T6UW70SYUrgTznYwBMImrGxZsEYsMHHRapAvQrB2EF7B7gqBnvg6mi6g4BTpt+plTE29ZxrFiWtf/kb45iM6SAeyY=
+	t=1710128508; cv=none; b=ddC9Wl62bGG6kJfMYEtyevfhIEVnUyZd5YAbtUvgISvfLJJEEvVEnJ5jkZt+8AqjBg0LybcApNmwWe21fNdJXE8uvXasidp86Aj5ntKXRqGP9q+nm/IJG02TfA7YJLoUcyRQMJVJGqufHQkPsnNT7NYEQJPCieXcvVAZiBaAUEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710128263; c=relaxed/simple;
-	bh=Wp+2CFODpwjtPtjrozncJ1/Odwiekwv08Kdnw072T34=;
+	s=arc-20240116; t=1710128508; c=relaxed/simple;
+	bh=IkVWhXDcD+dqXR0sg2CSh+0xLf+knakijimU2ebVXAw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EfFbdGK5oRIyWDTUGMfa1HMkHWYfKppUpQESvolmjHufRsgLkC/OZ+v8jwcODWmrYpVHU5kb6Tw2spcypmrh4zupoMjADF34k0yMbWSrS//Mjzo0d2DX4QJttKFJJ7lwTrzoMVIJH/24pm9s8Y4mGwlKazApIFzz16k0xssVqSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=O7eNa62v; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNajBsrNYwQo2gO3/BdwS6kiLrgQJnSBqMY1jfS2wLMqznfsZJB3hEr53ttUyO2i4n2GiIK+pgK6OjAqMJOgNOV/V3GhuIcWLIEiOwwwBqlWJFIqeY66WDDftvgYbwc3YM04/QkkFRZrqD/ioL6bg7F5sLt4yRgZ/tu7QW5ne48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MwlOgmeM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O7eNa62v"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id EF0D320B74C0; Sun, 10 Mar 2024 20:37:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EF0D320B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1710128254;
-	bh=UA0/rPCEp3CPu3Py2kKstccVQHFEChGVFCd3s6bNOCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O7eNa62v5yOKH3TpBPuKFXXrisL6p2BF4SYAFhQRjUWjXQRr7Qg1Ke9yu907Ttqe5
-	 hHoXUPqvqPoomIXmdW6glJiSb1M2C8j7lpTBY8hlrSVIcScoT6ylXqNuXXRfRXl1N8
-	 hwrq0wh3zbXCcQU+7k1Wbz2QKrjdR9J9qAELPMHc=
-Date: Sun, 10 Mar 2024 20:37:34 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Olaf Hering <olaf@aepfle.de>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination for
- keyfile format
-Message-ID: <20240311033734.GA16436@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1709297778-20420-1-git-send-email-shradhagupta@linux.microsoft.com>
- <4547D425-64EF-4974-A131-56811F25B9E6@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MwlOgmeM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0IhkeUfnkckGUpoB8ltx//YeJvd8V+1fi/yffsV3/DE=; b=MwlOgmeMRShI7BYlx0kHstVhwm
+	hgt4enB2uKdIIl4DUlbLzZAgYM+QIr0KyS8j52ssOJiKK7PECYrI8ur2Yg5lhXRWltKMEAENneSrE
+	GHF2O/16j7srHcEfH1vx8OVCLBeawcyjEPMfWR5ILjY3IwDhtYunJROk/J/tl8BnjxKVlEZWsxgjS
+	/Dcp6AB0D3HSZ35TjxPeb3I+2/djM5Cb2ToUPaPhPiBtf+sa1MAWGDDGrh9ASCl4fblf2yqAt41AG
+	oKTvkpanedvcrvAYsgMMKbeDl8FCEstEYqcbWMyZohgNKPC1eaDyPE2cqGu+fFt4kOPYA90L6LhUm
+	Ta8tWEPg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rjWXf-0000000HKj2-0ofC;
+	Mon, 11 Mar 2024 03:41:35 +0000
+Date: Mon, 11 Mar 2024 03:41:35 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: On the optimum size of a batch
+Message-ID: <Ze59byUR80z42m8R@casper.infradead.org>
+References: <Zeoble0xJQYEAriE@casper.infradead.org>
+ <Ze5onaXsI+LT1+Be@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,253 +46,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4547D425-64EF-4974-A131-56811F25B9E6@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <Ze5onaXsI+LT1+Be@dread.disaster.area>
 
-Thanks, will incorporate all these changes in next version
+On Mon, Mar 11, 2024 at 01:12:45PM +1100, Dave Chinner wrote:
+> > Batch size      Cost of allocating 100          thousand        million
+> > 1               500 (5 * 100)                   5000            5M
+> > 2               300 (6 * 50)                    3000            3M
+> > 4               200 (8 * 25)                    2000            2M
+> > 8               156 (12 * 13)                   1500            1.5M
+> > 16              140 (20 * 7)                    1260            1.25M
+> > 32              144 (36 * 4)                    1152            1.13M
+> > 64              136 (68 * 2)                    1088            1.06M
+> > 128             132 (132 * 1)                   1056            1.03M
+> 
+> Isn't this just repeating the fundamental observation that SLUB is
+> based on?  i.e. it can use high-order pages so that it can
+> pre-allocate optimally sized batches of objects regardless of their
+> size? i.e.  it tries to size the backing page order to allocate in
+> chunks of 30-40 objects at a time?
 
-Regards,
-Shradha
-On Wed, Mar 06, 2024 at 02:57:12PM +0530, Ani Sinha wrote:
+What SLUB is currently doing is inefficient.  One of the conversations
+I had (off-list) about appropriate batch size is in relation to SLUB-ng
+where one of the participants claimed that the batch size of 32 was
+obviously too small (it wasn't; the performance problem was due to a
+bug).
+
+What you're thinking about is the cost of allocating from the page
+allocator (which is now much cheaper than it used to be, but should
+be cheaper than it currently is).  But there is another inefficiency
+to consider, which is that the slab allocator has a per-slab lock,
+and while you can efficiently remove and add a number of objects to
+a single slab, you might only have one or two free objects per slab.
+To work around this some of the more performance sensitive parts of the
+kernel have implemented their own allocator in front of slab.  This is
+clearly a bad thing for all of us, and hence Vlastimil has been working
+on a better approach.
+
+https://lore.kernel.org/linux-mm/20231129-slub-percpu-caches-v3-0-6bcf536772bc@suse.cz/
+
+> Except for SLUB we're actually allocating in the hundreds of
+> millions to billions of objects on machines with TBs of RAM. IOWs we
+> really want to be much further down the curve than 8 - batches of at
+> least 32-64 have significantly lower cost and that matters when
+> scaling to (and beyond) hundreds of millions of objects....
+
+But that doesn't necessarily mean that you want a larger batch size.
+Because you're not just allocating, you're also freeing and over a
+large enough timescale the number of objects allocated and freed is
+approximately equal.  In the SLUB case, your batch size needs to be
+large enough to absorb most of the allcation-vs-free bias jitter; that
+is if you know they always alternate AFAFAFAFAF a batch size of 2 would
+be fine.  If you know you get four allocations followed by four frees,
+having a batch size of 5 woud be fine.  We'd never go to the parent
+allocator if we got a AFAAFFAAAFFFAAAAFFFFAAFFAFAAFAAFFF pattern.
+
+> > This is a simple model for only one situation.  If we have a locking
+> > contention breakdown, the overhead cost might be much higher than 4 units,
+> > and that would lead us to a larger batch size.
+> > 
+> > Another consideration is how much of each object we have to touch.
+> > put_pages_list() is frequently called with batches of 500 pages.  In order
+> > to free a folio, we have to manipulate its contents, so touching at least
+> > one cacheline per object.
 > 
+> Right, that's simply the cost of the batch cache footprint issue
+> rather than a "fixed cost mitigation" described for allocation.
+
+No, it's not, it's an illustration that too large a batch size can
+actively harm you.
+
+> So I'm not sure what you're trying to say here? We've known about
+> these batch optimisation considerations for a long, long time and
+> that batch size optimisation is always algorithm and access pattern
+> dependent, so.... ???
+
+People forget these "things we've always known".  I went looking and
+couldn't find a good writeup of this, so did my own.  In addition to the
+percpu slub batch size, various people have opined that the folio_batch
+size (15 objects) is too small for doing things like writeback and
+readahead.  They're going to have to bring data to convince me.
+
+> > And we make multiple passes over the batch,
+> > first decrementing the refcount, removing it from the lru list; second
+> > uncharging the folios from the memcg (writes to folio->memcg_data);
+> > third calling free_pages_prepare which, eg, sets ->mapping to NULL;
+> > fourth putting the folio on the pcp list (writing to the list_head).
 > 
-> > On 01-Mar-2024, at 18:26, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> > 
-> > If the network configuration strings are passed as a combination of IPv and
-> > IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
-> > configuration format.
-> > With these changes, the keyfile config generation logic scans through the
-> > list twice to generate IPv4 and IPv6 sections for the configuration files
-> > to handle this support.
-> > 
-> > Built-on: Rhel9
-> > Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > ---
-> > tools/hv/hv_kvp_daemon.c | 152 ++++++++++++++++++++++++++++-----------
-> > 1 file changed, 112 insertions(+), 40 deletions(-)
-> > 
-> > diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> > index 318e2dad27e0..7e84e40b55fb 100644
-> > --- a/tools/hv/hv_kvp_daemon.c
-> > +++ b/tools/hv/hv_kvp_daemon.c
-> > @@ -76,6 +76,11 @@ enum {
-> > DNS
-> > };
-> > 
-> > +enum {
-> > + IPV4 = 1,
-> > + IPV6
-> > +};
-> > +
-> > static int in_hand_shake;
-> > 
-> > static char *os_name = "";
-> > @@ -1171,6 +1176,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
-> > return 0;
-> > }
-> > 
-> > +int ip_version_check(const char *input_addr)
-> > +{
-> > + struct in6_addr addr;
-> > +
-> > + if (inet_pton(AF_INET, input_addr, &addr))
-> > + return IPV4;
-> > + else if (inet_pton(AF_INET6, input_addr, &addr))
-> > + return IPV6;
-> > + else
-> > + return -EINVAL;
-> > +}
-> > +
-> > /*
-> >  * Only IPv4 subnet strings needs to be converted to plen
-> >  * For IPv6 the subnet is already privided in plen format
-> > @@ -1197,14 +1214,56 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
-> > return plen;
-> > }
-> > 
-> > +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> > +  int ip_sec)
-> > +{
-> > + char addr[INET6_ADDRSTRLEN], *output_str;
-> > + int ip_offset = 0, error, ip_ver;
-> > + char *param_name;
-> > +
-> > + output_str = malloc(strlen(ip_string));
-> > +
-> > + if (!output_str)
-> > + return 1;
-> > +
-> > + output_str[0] = '\0';
-> > +
-> > + if (type == DNS)
-> > + param_name = "dns";
-> > + else
-> > + param_name = "gateway";
-> > +
-> > + while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> > +   (MAX_IP_ADDR_SIZE * 2))) {
-> > + ip_ver = ip_version_check(addr);
-> > +
-> > + if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-> > +    (ip_ver == IPV6 && ip_sec == IPV6)) {
-> > + strcat(output_str, addr);
-> > + strcat(output_str, ",");
-> 
-> We need to check if we are not going out of bounds here. So existing length of output_str + length of addr + 1 should be < strlen(ip_string) which is the length of the buffer. See parse_ip_val_buffer() how it does out of bounds check.
-> 
-> > + } else {
-> > + continue;
-> > + }
-> > + }
-> > +
-> > + if (strlen(output_str)) {
-> > + output_str[strlen(output_str) - 1] = '\0';
-> > + error = fprintf(f, "%s=%s\n", param_name, output_str);
-> > + if (error <  0)
-> > + return error;
-> > + }
-> > +
-> > + return 0;
-> > +}
-> > +
-> > static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> > - int is_ipv6)
-> > + int ip_sec)
-> > {
-> > char addr[INET6_ADDRSTRLEN];
-> > char subnet_addr[INET6_ADDRSTRLEN];
-> > int error, i = 0;
-> > int ip_offset = 0, subnet_offset = 0;
-> > - int plen;
-> > + int plen, ip_ver;
-> > 
-> > memset(addr, 0, sizeof(addr));
-> > memset(subnet_addr, 0, sizeof(subnet_addr));
-> > @@ -1216,10 +1275,13 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> >       subnet_addr,
-> >       (MAX_IP_ADDR_SIZE *
-> > 2))) {
-> > - if (!is_ipv6)
-> > + ip_ver = ip_version_check(addr);
-> > + if (ip_ver == IPV4 && ip_sec == IPV4)
-> > plen = kvp_subnet_to_plen((char *)subnet_addr);
-> > - else
-> > + else if (ip_ver == IPV6 && ip_sec == IPV6)
-> > plen = atoi(subnet_addr);
-> > + else
-> > + continue;
-> > 
-> > if (plen < 0)
-> > return plen;
-> > @@ -1242,8 +1304,8 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> > char if_filename[PATH_MAX];
-> > char nm_filename[PATH_MAX];
-> > FILE *ifcfg_file, *nmfile;
-> > + int ip_sections_count;
-> > char cmd[PATH_MAX];
-> > - int is_ipv6 = 0;
-> > char *mac_addr;
-> > int str_len;
-> > 
-> > @@ -1421,52 +1483,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
-> > if (error)
-> > goto setval_error;
-> > 
-> > - if (new_val->addr_family & ADDR_FAMILY_IPV6) {
-> > - error = fprintf(nmfile, "\n[ipv6]\n");
-> > - if (error < 0)
-> > - goto setval_error;
-> > - is_ipv6 = 1;
-> > - } else {
-> > - error = fprintf(nmfile, "\n[ipv4]\n");
-> > - if (error < 0)
-> > - goto setval_error;
-> > - }
-> > -
-> > /*
-> > - * Now we populate the keyfile format
-> > + * The keyfile format expects the IPv6 and IPv4 configuration in
-> > + * different sections. Therefore we iterate through the list twice,
-> > + * once to populate the IPv4 section and the next time for IPv6
-> > */
-> > + ip_sections_count = 1;
-> > + do {
-> > + if (ip_sections_count == 1) {
-> > + error = fprintf(nmfile, "\n[ipv4]\n");
-> > + if (error < 0)
-> > + goto setval_error;
-> > + } else {
-> > + error = fprintf(nmfile, "\n[ipv6]\n");
-> > + if (error < 0)
-> > + goto setval_error;
-> > + }
-> > 
-> > - if (new_val->dhcp_enabled) {
-> > - error = kvp_write_file(nmfile, "method", "", "auto");
-> > - if (error < 0)
-> > - goto setval_error;
-> > - } else {
-> > - error = kvp_write_file(nmfile, "method", "", "manual");
-> > + /*
-> > + * Now we populate the keyfile format
-> > + */
-> > +
-> > + if (new_val->dhcp_enabled) {
-> > + error = kvp_write_file(nmfile, "method", "", "auto");
-> > + if (error < 0)
-> > + goto setval_error;
-> > + } else {
-> > + error = kvp_write_file(nmfile, "method", "", "manual");
-> > + if (error < 0)
-> > + goto setval_error;
-> > + }
-> > +
-> > + /*
-> > + * Write the configuration for ipaddress, netmask, gateway and
-> > + * name services
-> > + */
-> > + error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> > +     (char *)new_val->sub_net,
-> > +     ip_sections_count);
-> > if (error < 0)
-> > goto setval_error;
-> > - }
-> > 
-> > - /*
-> > - * Write the configuration for ipaddress, netmask, gateway and
-> > - * name services
-> > - */
-> > - error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> > -     (char *)new_val->sub_net, is_ipv6);
-> > - if (error < 0)
-> > - goto setval_error;
-> > -
-> > - /* we do not want ipv4 addresses in ipv6 section and vice versa */
-> > - if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
-> > - error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
-> > + error = process_dns_gateway_nm(nmfile,
-> > +       (char *)new_val->gate_way,
-> > +       GATEWAY, ip_sections_count);
-> > if (error < 0)
-> > goto setval_error;
-> > - }
-> > 
-> > - if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
-> > - error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
-> > + error = process_dns_gateway_nm(nmfile,
-> > +       (char *)new_val->dns_addr, DNS,
-> > +       ip_sections_count);
-> > if (error < 0)
-> > goto setval_error;
-> > - }
-> > +
-> > + ip_sections_count++;
-> > + } while (ip_sections_count <= 2);
-> > +
-> > fclose(nmfile);
-> > fclose(ifcfg_file);
-> > 
-> > -- 
-> > 2.34.1
-> > 
+> Sounds like "batch cache footprint" would be reduced by inverting
+> that algorithm and doing all the work on a single object in a single
+> pass, rahter than doing it in multiple passes.  That way the cache
+> footprint of the batch is determined entirely by the size of the
+> data structures accessed to process each object in the batch.
+
+Well, now you're just opining without having studied the problem, and
+I have, so I can say confidently that you're wrong.  You could read
+the code if you like.
+
