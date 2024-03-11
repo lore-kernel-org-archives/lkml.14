@@ -1,290 +1,104 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69221756E
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E49A17745
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710148360; cv=none; b=qLodP9Zn4f/up7HbZf5/KIq7OWhdX500QcvEh4fsZXzwq/SMmD46wYLHK4cJT0RY6uxeiwo1EKWiwDX/Ynmor6UrmvqvaTX2tDUFbQfOOECcDILsix8DJDC3DVbGQ/8I/aywXWxVtu4nWgHz/d41nEbnBfHO0Rj0pt2jZTljz6w=
+	t=1710148409; cv=none; b=B9Q1sbuI4lOwytomTz0+iwj8ubm938zM9kEECMjwMuGdhuM88lzpJdUNowOQFXXwvV0DkXl7GG4ubVdD3aALhs3W89BOwAND1vmJnR+vBpZYHbwFRe0NcDIpRYDqDRW8TyYT4kc0iwEeIseyG8V4OgB9UGAaS8uRY80zZnLTW2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710148360; c=relaxed/simple;
-	bh=qcBs8VJi4ALCc01TWmrSgZNswNUBm7k4tsOLXylCIqY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=iP/v2RPwoJeZD1n+rmUrvfeenz7thNpqTHGZvrbpYcdIclvVSCNFIqceyuqMjghE5ownsFINaKBAMMYQFefUlOA7oeJ1cnFZ1sIpe0LvcBZiPK/fvrJlJ43uxg8dU7eby/Qvb0JdN4U/nXuM0j+01ORpn8JNszjSCc4qlCTjUG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c8aeef8f4eso55805039f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 02:12:37 -0700 (PDT)
+	s=arc-20240116; t=1710148409; c=relaxed/simple;
+	bh=TK8X9sM9kW6dwfMkzsCCI6shDz1pyiiVg7D3z7c9sRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=q7xV/8avTzdU1UJF9zXm/KKzbfdlDVZbkaLIYmh5YsXfjxroKVtQnUzQ5xg7YD4tH+yyFi97RS7DVAjsaeqzyPSBjCPFaxxG6ZEaSiyos5ZVbGGdWUPIoL2JsXJ/SswwECcVO6R0lRADkWpSNFfN0rkP1dH3LUjOH03YoichJcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZvKGhlH; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZvKGhlH"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2204e9290f9so1807245fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 02:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710148407; x=1710753207; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=G0t4DyXR98AS/goDoQ+5PMwi0emTXG9o44d4l+3uefE=;
+        b=WZvKGhlHAEuE02s789XmhRN+AQg1pzwU92adjN/0TbvyOS/5lWkV86IT4TEMjbCoFv
+         1UHL/1FQDG10G76QrKwrgd5A8Cfv47TiDLDUSvzZ9dZPlK2sKsy93F0wnfe7yF9SfAmZ
+         XGNz5TTQy+HdwwzUbs8dUxO1fzmKniK4I+PU8CMBMWS0PpiYfMQTEbevEnIhwsNi4eYA
+         NVUPgaVw3iQCMQlfLeLj7r/wXPgLnUBYQMMPHAWy2XR4hP5UJSMufNfQ/bjDHAUJ+LhN
+         TSIlK/7xiRqRx2+WAiV5NdKpOn20wAxUYdK5FKbWtboTso8gED6v2nCshYOUgnpShBSZ
+         9g9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710148357; x=1710753157;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zV+2MZPC9Fb2zhgtQv+/B2Z+g/NRuNuM1JR2FH6QjLg=;
-        b=o4BlPawHfuk+oH8MHmHFadb2+WG1OUlq21gdes+T40/e2mmXQV8vFKf9ih3Wf/morz
-         S8D03aaUvSqjlLAXCOYFU6icoL2c+m4KxDQ730uqHJk36rU73Uwwg+njem2T5xXVvIXS
-         qXsIhfZcYnhO5Cpkv/k7YW6Lwof1filKUG/Krz4AtIgoqRquCGq67ZdWgrPvWtH0P9bO
-         dRXEkSpzjHHxBWNOZxyWIbWa52u3hs1fDUKvLU+HhVwRYz2fp75AP54bovkNQ/UVS8rB
-         GdgLH9Sa/sPhl4fJXSkdYglBeLDLyyU2aA4f/6zq5Zqfn1P6GUVC5Vh5WFnrMHaIocJ/
-         haaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnsieNNvXrXqdYtRqGG4nDYHGGA2KLLKs2cck4CKRbzaR4codTJvfwR3nyyo8vKRwRjwE0GKg2p9i74sfFGUFlqC0PfUykbXglrGxC
-X-Gm-Message-State: AOJu0Yx0NvBkERtY/Fgv+oMckzS3MGxi7kh+DvG+S4oySSVo48C+KzCU
-	ZdxHtcLVcMVgHwTXC5Aqp6f7lwJlfMtrK3fMPMK14zHeentHY4FIzLr9w9/NvGz9HRbTAsgFhY7
-	D6vjtJa/Z1FIjtcISzeuxrVVgmAd2oRx+tTy3Y15e8Q0vbsZULK5qwQw=
-X-Google-Smtp-Source: AGHT+IEEBsLyMFDxA7YTAE/YZ0rkNbEGm4Fq1Uxy07bQDJBSvAcL8lpEI11i0Ak93X2nLSg8YlDCzeectrVOcCN1LLHvLI2TSJxt
+        d=1e100.net; s=20230601; t=1710148407; x=1710753207;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G0t4DyXR98AS/goDoQ+5PMwi0emTXG9o44d4l+3uefE=;
+        b=iIlnnR0gpu4n9iadi+PB5m9r61zOLVA3nTGfC/TIEL9jBbHu5Y7t9u1sqetHs/DKda
+         /y/7PHh6jgXgXY0jJ1c06IfUgFdsKTSUWtlmFpILp8KrPfeBtZgqpImmDsmo5Q/MSjAy
+         JLE7kIgIeIvsyeFjl0y5kftWnn6TrRbGyI5jOvKgnqdlcpccHliY7oZW12WlvrHfD9Qc
+         yRkfEQRjRW8PLv4sxNZKQRtszaekvmAv8puRPxCWXQxsvFfFl99CLwQd7H5R7Nol9Mn2
+         eJbKln1kuVr+RcuLl+MQoHdd1qw1XUXg2I5fe55re8wFssg1fcDRimeXXClQr4ihMzlr
+         w4nQ==
+X-Gm-Message-State: AOJu0Yz9Za+7rUjOol4a8niRjPYX7NN6V2OUvoawHwOfj5ND9yVltKut
+	iniwcc9RW2Lg070ZuLhB6ONm+o/D87CcJQUc2Y7tOObMgCUJrVR4
+X-Google-Smtp-Source: AGHT+IFZfA/M89E2cUNmgp6V/U5KfOLjehQmf7CELraT0hEZDdXUlKchVEjMx/4xHPJEWzca3jjVPA==
+X-Received: by 2002:a05:6870:5e13:b0:221:d6cc:b551 with SMTP id nd19-20020a0568705e1300b00221d6ccb551mr2995404oac.2.1710148406995;
+        Mon, 11 Mar 2024 02:13:26 -0700 (PDT)
+Received: from localhost ([163.114.132.7])
+        by smtp.gmail.com with ESMTPSA id l66-20020a633e45000000b005b7dd356f75sm3918028pga.32.2024.03.11.02.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 02:13:26 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Sun, 10 Mar 2024 23:13:25 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [GIT PULL] workqueue BH conversions for v6.9
+Message-ID: <Ze7LNUCf8bWg_wo5@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:16c4:b0:474:f7aa:d873 with SMTP id
- g4-20020a05663816c400b00474f7aad873mr303928jat.0.1710148355565; Mon, 11 Mar
- 2024 02:12:35 -0700 (PDT)
-Date: Mon, 11 Mar 2024 02:12:35 -0700
-In-Reply-To: <CALm+0cX+J-Cb_-Vd7i=2M3FiDa89BreqrdXYwMB=yeR6G7GGvw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003f383106135ef1e2@google.com>
-Subject: Re: [syzbot] [mm?] [input?] [usb?] INFO: rcu detected stall in asm_exc_page_fault
-From: syzbot <syzbot+360faf5c01a5be55581d@syzkaller.appspotmail.com>
-To: qiang.zhang1211@gmail.com
-Cc: akpm@linux-foundation.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-usb@vger.kernel.org, 
-	pasha.tatashin@soleen.com, qiang.zhang1211@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    90d35da658da Linux 6.8-rc7
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=122f6f6a180000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=119d08814b43915b
->> dashboard link: https://syzkaller.appspot.com/bug?extid=360faf5c01a5be55581d
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124056de180000
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/fb2c1adf4ec3/disk-90d35da6.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/09c5b88a8ceb/vmlinux-90d35da6.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/5e5cbc312e49/bzImage-90d35da6.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+360faf5c01a5be55581d@syzkaller.appspotmail.com
->
->
-> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+Hello,
 
-want either no args or 2 args (repo, branch), got 1
+This should be pulled after wq-for-6.9.
 
-> master
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 7019a40457a6..69e344f07e68 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -9233,6 +9233,7 @@ void show_state_filter(unsigned int state_filter)
->                  */
->                 touch_nmi_watchdog();
->                 touch_all_softlockup_watchdogs();
-> +               rcu_cpu_stall_reset();
->                 if (state_filter_match(state_filter, p))
->                         sched_show_task(p);
->
->         }
->
->
->>
->> rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: {
->>  1-....
->>  } 4831 jiffies s: 1849 root: 0x2/.
->> rcu: blocking rcu_node structures (internal RCU debug):
->> Sending NMI from CPU 0 to CPUs 1:
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->> NMI backtrace for cpu 1
->> CPU: 1 PID: 5232 Comm: syz-executor.3 Not tainted 6.8.0-rc7-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
->> RIP: 0010:format_decode+0x546/0x1bb0
->> Code: 85 96 01 00 00 45 84 ff 0f 84 8d 01 00 00 48 bb 00 ff ff ff 00 ff ff ff 48 8b 44 24 20 42 0f b6 04 30 84 c0 0f 85 4d 10 00 00 <48> 8b 54 24 48 48 21 da 48 8b 44 24 28 42 0f b6 04 30 84 c0 48 8d
->> RSP: 0000:ffffc900001efa20 EFLAGS: 00000046
->> RAX: 0000000000000000 RBX: ffffff00ffffff00 RCX: ffff8880219e0000
->> RDX: ffff8880219e0000 RSI: 0000000000000025 RDI: 0000000000000000
->> RBP: ffffc900001efb10 R08: ffffffff8b57a4c8 R09: ffffffff8b57a1aa
->> R10: 0000000000000002 R11: ffff8880219e0000 R12: ffffffff8bab75e6
->> R13: ffffffff8bab75e6 R14: dffffc0000000000 R15: 0000000000000025
->> FS:  0000555555c82480(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007f74dc087056 CR3: 0000000021bc6000 CR4: 00000000003506f0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>  <NMI>
->>  </NMI>
->>  <IRQ>
->>  vsnprintf+0x14f/0x1da0 lib/vsprintf.c:2776
->>  sprintf+0xda/0x120 lib/vsprintf.c:3028
->>  print_time kernel/printk/printk.c:1324 [inline]
->>  info_print_prefix+0x16b/0x310 kernel/printk/printk.c:1350
->>  record_print_text kernel/printk/printk.c:1399 [inline]
->>  printk_get_next_message+0x408/0xce0 kernel/printk/printk.c:2828
->>  console_emit_next_record kernel/printk/printk.c:2868 [inline]
->>  console_flush_all+0x42d/0xec0 kernel/printk/printk.c:2967
->>  console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3036
->>  vprintk_emit+0x508/0x720 kernel/printk/printk.c:2303
->>  _printk+0xd5/0x120 kernel/printk/printk.c:2328
->>  printk_stack_address arch/x86/kernel/dumpstack.c:72 [inline]
->>  show_trace_log_lvl+0x438/0x520 arch/x86/kernel/dumpstack.c:285
->>  sched_show_task+0x50c/0x6d0 kernel/sched/core.c:9171
->>  show_state_filter+0x19e/0x270 kernel/sched/core.c:9216
->>  kbd_keycode drivers/tty/vt/keyboard.c:1524 [inline]
->>  kbd_event+0x30fa/0x4910 drivers/tty/vt/keyboard.c:1543
->>  input_to_handler drivers/input/input.c:132 [inline]
->>  input_pass_values+0x945/0x1200 drivers/input/input.c:161
->>  input_event_dispose drivers/input/input.c:378 [inline]
->>  input_handle_event drivers/input/input.c:406 [inline]
->>  input_repeat_key+0x3fd/0x6c0 drivers/input/input.c:2263
->>  call_timer_fn+0x17e/0x600 kernel/time/timer.c:1700
->>  expire_timers kernel/time/timer.c:1751 [inline]
->>  __run_timers+0x621/0x830 kernel/time/timer.c:2038
->>  run_timer_softirq+0x67/0xf0 kernel/time/timer.c:2051
->>  __do_softirq+0x2bb/0x942 kernel/softirq.c:553
->>  invoke_softirq kernel/softirq.c:427 [inline]
->>  __irq_exit_rcu+0xf1/0x1c0 kernel/softirq.c:632
->>  irq_exit_rcu+0x9/0x30 kernel/softirq.c:644
->>  sysvec_apic_timer_interrupt+0x97/0xb0 arch/x86/kernel/apic/apic.c:1076
->>  </IRQ>
->>  <TASK>
->>  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:649
->> RIP: 0010:page_table_check_set+0x58/0x700 mm/page_table_check.c:109
->> Code: 95 ff 85 ed 0f 84 5f 03 00 00 49 bf 00 00 00 00 00 fc ff df 48 c1 e3 06 48 bd 00 00 00 00 00 ea ff ff 48 8d 3c 2b 48 89 3c 24 <e8> 33 e9 ff ff 49 89 c6 4c 8d 64 2b 08 4c 89 e5 48 c1 ed 03 42 80
->> RSP: 0000:ffffc90004d0f650 EFLAGS: 00000202
->> RAX: 0000000000000000 RBX: 0000000001c8ae80 RCX: ffff8880219e0000
->> RDX: ffff8880219e0000 RSI: 0000000000000001 RDI: ffffea0001c8ae80
->> RBP: ffffea0000000000 R08: ffffffff81fdf590 R09: 1ffffffff1f0880d
->> R10: dffffc0000000000 R11: fffffbfff1f0880e R12: 0000000000000000
->> R13: 0000000000000001 R14: 00000000722ba025 R15: dffffc0000000000
->>  __page_table_check_ptes_set+0x220/0x280 mm/page_table_check.c:196
->>  page_table_check_ptes_set include/linux/page_table_check.h:74 [inline]
->>  set_ptes include/linux/pgtable.h:241 [inline]
->>  set_pte_range+0x885/0x8b0 mm/memory.c:4549
->>  filemap_map_order0_folio mm/filemap.c:3513 [inline]
->>  filemap_map_pages+0xee2/0x1830 mm/filemap.c:3559
->>  do_fault_around mm/memory.c:4716 [inline]
->>  do_read_fault mm/memory.c:4749 [inline]
->>  do_fault mm/memory.c:4888 [inline]
->>  do_pte_missing mm/memory.c:3745 [inline]
->>  handle_pte_fault mm/memory.c:5164 [inline]
->>  __handle_mm_fault+0x485d/0x72d0 mm/memory.c:5305
->>  handle_mm_fault+0x27e/0x770 mm/memory.c:5470
->>  do_user_addr_fault arch/x86/mm/fault.c:1355 [inline]
->>  handle_page_fault arch/x86/mm/fault.c:1498 [inline]
->>  exc_page_fault+0x456/0x870 arch/x86/mm/fault.c:1554
->>  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
->> RIP: 0033:0x7f74dc087080
->> Code: Unable to access opcode bytes at 0x7f74dc087056.
->> RSP: 002b:00007ffe028d3bb8 EFLAGS: 00010246
->> RAX: 00007f74dcdfb9d0 RBX: 00007f74dcdfb6c0 RCX: 00007f74dc07de67
->> RDX: 0000000000000003 RSI: 0000000000020000 RDI: 00007f74dcdfb6c0
->> RBP: 0000000000000000 R08: 00000000ffffffff R09: 0000000000000000
->> R10: 0000000000021000 R11: 0000000000000206 R12: 00007ffe028d3e60
->> R13: ffffffffffffffc0 R14: 0000000000001000 R15: 0000000000000000
->>  </TASK>
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:kworker/u4:0    state:I stack:24400 pid:11    tgid:11    ppid:2      flags:0x00004000
->> Workqueue:  0x0 (events_unbound)
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5400 [inline]
->>  __schedule+0x177f/0x49a0 kernel/sched/core.c:6727
->>  __schedule_loop kernel/sched/core.c:6802 [inline]
->>  schedule+0x149/0x260 kernel/sched/core.c:6817
->>  worker_thread+0xc26/0x1000 kernel/workqueue.c:2802
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:kworker/u4:1    state:I stack:23344 pid:12    tgid:12    ppid:2      flags:0x00004000
->> Workqueue:  0x0 (bat_events)
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5400 [inline]
->>  __schedule+0x177f/0x49a0 kernel/sched/core.c:6727
->>  __schedule_loop kernel/sched/core.c:6802 [inline]
->>  schedule+0x149/0x260 kernel/sched/core.c:6817
->>  worker_thread+0xc26/0x1000 kernel/workqueue.c:2802
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:kworker/R-mm_pe state:I stack:28752 pid:13    tgid:13    ppid:2      flags:0x00004000
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5400 [inline]
->>  __schedule+0x177f/0x49a0 kernel/sched/core.c:6727
->>  __schedule_loop kernel/sched/core.c:6802 [inline]
->>  schedule+0x149/0x260 kernel/sched/core.c:6817
->>  rescuer_thread+0xc45/0xda0 kernel/workqueue.c:2937
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:rcu_tasks_kthre state:I stack:27448 pid:14    tgid:14    ppid:2      flags:0x00004000
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5400 [inline]
->>  __schedule+0x177f/0x49a0 kernel/sched/core.c:6727
->>  __schedule_loop kernel/sched/core.c:6802 [inline]
->>  schedule+0x149/0x260 kernel/sched/core.c:6817
->>  rcu_tasks_one_gp+0x7f5/0xda0 kernel/rcu/tasks.h:578
->>  rcu_tasks_kthread+0x186/0x1b0 kernel/rcu/tasks.h:625
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:rcu_tasks_trace state:I stack:27144 pid:15    tgid:15    ppid:2      flags:0x00004000
->> Call Trace:
->>  <TASK>
->>  context_switch kernel/sched/core.c:5400 [inline]
->>  __schedule+0x177f/0x49a0 kernel/sched/core.c:6727
->>  __schedule_loop kernel/sched/core.c:6802 [inline]
->>  schedule+0x149/0x260 kernel/sched/core.c:6817
->>  rcu_tasks_one_gp+0x7f5/0xda0 kernel/rcu/tasks.h:578
->>  rcu_tasks_kthread+0x186/0x1b0 kernel/rcu/tasks.h:625
->>  kthread+0x2ef/0x390 kernel/kthread.c:388
->>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->>  ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:243
->>  </TASK>
->> task:ksoftirqd/0
->>
->>
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->>
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->>
->> If you want syzbot to run the reproducer, reply with:
->> #syz test: git://repo/address.git branch-or-commit-hash
->> If you attach or paste a git patch, syzbot will apply it before testing.
->>
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->>
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->>
->> If you want to undo deduplication, reply with:
->> #syz undup
->>
+The following changes since commit 8eb17dc1a6b5db7e89681f59285242af8d182f95:
+
+  workqueue: Skip __WQ_DESTROYING workqueues when updating global unbound cpumask (2024-02-05 07:52:22 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.9-bh-conversions
+
+for you to fetch changes up to 8fea0c8fda30129b4168464975505d5dc9735ac1:
+
+  usb: core: hcd: Convert from tasklet to BH workqueue (2024-02-05 13:22:38 -1000)
+
+----------------------------------------------------------------
+workqueue: BH workqueue conversions for v6.9
+
+This pull request contains two patches that convert tasklet users to BH
+workqueue - backtractest and usb hcd. DM conversions are being routed
+through the respective subsystem tree. Hopefully, the next cycle will see a
+lot more conversions.
+
+----------------------------------------------------------------
+Tejun Heo (2):
+      backtracetest: Convert from tasklet to BH workqueue
+      usb: core: hcd: Convert from tasklet to BH workqueue
+
+ drivers/usb/core/hcd.c  | 23 ++++++++++++-----------
+ include/linux/usb/hcd.h |  2 +-
+ kernel/backtracetest.c  | 18 +++++++-----------
+ 3 files changed, 20 insertions(+), 23 deletions(-)
+
+-- 
+tejun
