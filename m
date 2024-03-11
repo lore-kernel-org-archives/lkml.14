@@ -1,120 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6E040BEB
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ED93FE20
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710167907; cv=none; b=HZNOrwLDc56E/VSuTS/RtDrniW2LmWYsDjmerqAEQ8tpP11nv//1NIYZ6atkJ/pJnH6DVKCfRdSJ1JvAkyE2YXaqKezwSmw2aC040x7jeBmEok/vb5ab0bIk/000Ii/KWpx9WLfUi02bEMP3KvX2d4fb++Z3OCbkGPVb3oUu11M=
+	t=1710167995; cv=none; b=VqueZcR5jqUTGlDtmLPsSHCEguFHOYM0RHLqLvfSRKSZBBadjQS3DjrxStAR8SL+rGWpK3XxFT46MViiAv/Tqdml19DAIJ1DXj5MpZOG4te9CHBgVu31WepxfzBgLnhIYiugkQqbLWpOT1iaMlhrO8fUgEym4kRcWOs4+TKZSG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710167907; c=relaxed/simple;
-	bh=ikG1QQ6Ft/EuPBNRvKuFA2EUFI7GLaO5HRAitUly3CQ=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=C99aql9mOua0OMnZflllDQv5lMqyWVbh5r8wE9KRhYNLV0Kf/E3GK6L1HRWydZDt9nnZ0eWlQ96ueS5HAIE0ZHE1c2iCxcGKFmwIFUZMZAVdQm12UE4ErQ0zYBJ0nwodvHyRnepWN4o/Kkv1opbfbdLP5xr8PHiD5P9YMrBvkfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4cR6e9Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710167995; c=relaxed/simple;
+	bh=u4RbZxYkIUcZLlV/Aac1nmArqd0mIIwdpdWDUU4vGBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WOn9de0p9HkR6sQG5tTPf+oIn2JYfo2rhxiztwuRIaZkP/YbJ60zsNAGRfcD4jg4jxXcj3NqoPJXQk4i4RE/cLD03NPQJX/XXGEhj0nqS06AjKPtsqq4d/M27vo/zoO5IWZ7gvvV8UrLgkqhU6SDCEQEFC2/oz4gY8jGTH8f5gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=FtwoKkDH; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4cR6e9Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5702EC433C7;
-	Mon, 11 Mar 2024 14:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710167905;
-	bh=ikG1QQ6Ft/EuPBNRvKuFA2EUFI7GLaO5HRAitUly3CQ=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=N4cR6e9QRDrGNAQ621FMoQQTlT4j45Gs0eckfvY/M7lYe3RJPP9cqw4gTdvhWrIQs
-	 YgUCH/ufRSS7UTVj75iR4J3usZFQg/+ihEAuav2/1GsLYx/p15WkJlphSKT+VyvlaL
-	 88Rw7kepSg7vzTJmrgPWImKZNbroOxc02gA3vxwviR3YU+nYvoS/R6CyS3pe95P9m7
-	 ee0zJ4OEDuZ14nW+8bmQyAOYz4vC7+FDykLmGphbSUTaePAdSv9EPCyh1vUizWXpjj
-	 PaQhqCO7jRz4QSozttnWsSz9U/Twjt/+zx/nn67Xk/L6T56U+rCqZZqqUVUdxsFh6j
-	 f/7lKfBY4EZsg==
-Content-Type: multipart/signed;
- boundary=45ed013812313c157f704b5e662bd3e921269c7d51848b7e818b5055826c;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Mon, 11 Mar 2024 15:38:17 +0100
-Message-Id: <CZQZXAB2GOCY.12YVJ6CRGG26B@kernel.org>
-Subject: Re: [PATCH 2/2] mtd: core: Don't fail mtd_device_parse_register()
- if OTP is unsupported
-Cc: "Mika Westerberg" <mika.westerberg@linux.intel.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Aapo Vienamo" <aapo.vienamo@linux.intel.com>, "Miquel Raynal"
- <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20240307130418.3131898-1-aapo.vienamo@linux.intel.com>
- <20240307130418.3131898-3-aapo.vienamo@linux.intel.com>
-In-Reply-To: <20240307130418.3131898-3-aapo.vienamo@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FtwoKkDH"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so9483233a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 07:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1710167991; x=1710772791; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HtzqfIQsJolmXYNugXTjr3G7HqidI6CITo9smjLyZOw=;
+        b=FtwoKkDHraZU1QoV8Gum7FNgNNK37LfUzLn/WibufGarZSGcL8edRvDxuPyl2KGgjV
+         hhRPWMJ4XjwgyCaT/VMpMPhN80X90X9eptqmTeE/4uxl+De2zMxiWc+fAGlp/IMWujoH
+         Pvcy0fRPRV3nf3vzu+ussZJOxEjjULlZ3x+V0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710167991; x=1710772791;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HtzqfIQsJolmXYNugXTjr3G7HqidI6CITo9smjLyZOw=;
+        b=d9LpddBor76qqJH8dDVlnCCMjD6QTxoXzsUaKii62JVvBfLGrmtnhxh7uy6vRVaGQw
+         u3xMKXkD3l4hz6sglLEJNlIzcEMY4/h+6fDvjxaJhSDtTtTT77KDs2Em25D0VDu6px4g
+         baVqlVddN18YuWJWrhjFrpSdi5CKw9o27lEbsKkHyR8xa4o0/7L5EFz7837wq3eA9ooa
+         rPPCu3xWdLNziw04wDwgpV6gCafaFBfucqA84a+lWTrF9q/v1GxB4f/aGkgRV3mV597H
+         fpCoVO04miDCjyw9B8IPn643jyhyl4D2Op6dNYcUFi4VvD7adgcYs9O0Ex8EITsNeN7n
+         qryw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCs+N6qqltxeOro1djQNdldHcqQnhEZpGSTZE8U/eP3oqbG7pX5qaxEEwfbN2/Lj+rGfNGGkVN/OoOP0alnxQSdGlmChnCJ0TJLTIz
+X-Gm-Message-State: AOJu0YxQiYvV/d0sCJegupZwomg+oSFDBLpA8PDKtHEdhhBkbevXRhAq
+	erl615zcr41Lcu1UiHkxJ31pGM+uei59RroO+Vbv54e3q+7VFQKoSL/5VoOM1bROoujsp+OMLJs
+	UEH7aQepBxUxrwFMvEkGdhqQgqZsTfQgkOOKfoA==
+X-Google-Smtp-Source: AGHT+IGf4wdVDNSe9F8sTHDMC/cjLnlVXjyWLYFxWYXRm2kSRwP0f2EzEVpHJ2uhZASUIGetXgmhSfoQf15nQCRa0/A=
+X-Received: by 2002:a17:906:9c8e:b0:a46:13d3:e5e6 with SMTP id
+ fj14-20020a1709069c8e00b00a4613d3e5e6mr5401892ejc.0.1710167990841; Mon, 11
+ Mar 2024 07:39:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240307160225.23841-1-lhenriques@suse.de> <20240307160225.23841-4-lhenriques@suse.de>
+ <CAJfpegtQSi0GFzUEDqdeOAq7BN2KvDV8i3oBFvPOCKfJJOBd2g@mail.gmail.com>
+ <87le6p6oqe.fsf@suse.de> <CAJfpeguN9nMJGJzx8sgwP=P9rJFVkYF5rVZOi_wNu7mj_jfBsA@mail.gmail.com>
+ <20240311-weltmeere-gesiegt-798c4201c3f8@brauner>
+In-Reply-To: <20240311-weltmeere-gesiegt-798c4201c3f8@brauner>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 11 Mar 2024 15:39:39 +0100
+Message-ID: <CAJfpegsn-jMY2J8Wd2Q9qmZFqxR6fAwZ4auoK+-uyxaK+F-0rw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] ovl: fix the parsing of empty string mount parameters
+To: Christian Brauner <brauner@kernel.org>
+Cc: Luis Henriques <lhenriques@suse.de>, "Theodore Ts'o" <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---45ed013812313c157f704b5e662bd3e921269c7d51848b7e818b5055826c
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Mon, 11 Mar 2024 at 14:25, Christian Brauner <brauner@kernel.org> wrote:
 
-On Thu Mar 7, 2024 at 2:04 PM CET, Aapo Vienamo wrote:
-> Handle the case where -EOPNOTSUPP is returned from OTP driver.
+> Yeah, so with that I do agree. But have you read my reply to the other
+> thread? I'd like to hear your thoughs on that. The problem is that
+> mount(8) currently does:
 >
-> This addresses an issue that occurs with the Intel SPI flash controller,
-> which has a limited supported opcode set. Whilst the OTP functionality
-> is not available due to this restriction, other parts of the MTD
-> functionality of the device are intact. This change allows the driver
-> to gracefully handle the restriction by allowing the supported
-> functionality to remain available instead of failing the probe
-> altogether.
+> fsconfig(3, FSCONFIG_SET_FLAG, "usrjquota", NULL, 0) = -1 EINVAL (Invalid argument)
 >
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> for both -o usrjquota and -o usrjquota=
+
+For "-o usrjquota" this seems right.
+
+For "-o usrjquota=" it doesn't.  Flags should never have that "=", so
+this seems buggy in more than one ways.
+
+> So we need a clear contract with userspace or the in-kernel solution
+> proposed here. I see the following options:
 >
-> ---
->  drivers/mtd/mtdcore.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> (1) Userspace must know that mount options such as "usrjquota" that can
+>     have no value must be specified as "usrjquota=" when passed to
+>     mount(8). This in turn means we need to tell Karel to update
+>     mount(8) to recognize this and infer from "usrjquota=" that it must
+>     be passed as FSCONFIG_SET_STRING.
+
+Yes, this is what I'm thinking.  Of course this only works if there
+are no backward compatibility issues, if "-o usrjquota" worked in the
+past and some systems out there relied on this, then this is not
+sufficient.
 >
-> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> index c365c97e7232..1cfc8bb5187d 100644
-> --- a/drivers/mtd/mtdcore.c
-> +++ b/drivers/mtd/mtdcore.c
-> @@ -1054,8 +1054,14 @@ int mtd_device_parse_register(struct mtd_info *mtd=
-, const char * const *types,
-> =20
->  	mtd_set_dev_defaults(mtd);
-> =20
-> +	/*
-> +	 * Don't abort MTD init if OTP functionality is unsupported. The
-> +	 * cleanup of the OTP init is contained within mtd_otp_nvmem_add().
-> +	 * Omitting goto out here is safe since the cleanup code there
-> +	 * should be no-ops.
-> +	 */
+> (2) We use the proposed in-kernel solution where relevant filesystems
+>     get the ability to declare this both as a string or as a flag value
+>     in their parameter parsing code. That's not a VFS generic thing.
+>     It's a per-fs thing.
 
-Only if that's true for both the factory and user OTP area.
-Also, you'll print an error message for EOPNOTSUPP, although that is
-not really an error. Is that intended?=20
+This encourages inconsistency between filesystems, but if there's no
+other way to preserve backward compatibility, then...
 
->  	ret =3D mtd_otp_nvmem_add(mtd);
-> -	if (ret)
-> +	if (ret && ret !=3D -EOPNOTSUPP)
+>
+> (3) We burden mount(8) with knowing what mount options are string
+>     options that are allowed to be empty. This is clearly the least
+>     preferable one, imho.
+>
+> (4) We add a sentinel such as "usrjquota=default" or
+>     "usrjquota=auto" as a VFS level keyword.
 
-Maybe there is a better way to handle this, like controller
-capabilities instead of putting these EOPNOTSUPP checks
-everywhere? I'm not sure.
+I don't really understand how this last one is supposed to fix the issue.
 
--michael
->  		goto out;
-> =20
->  	if (IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER)) {
+> In any case, we need to document what we want:
+>
+> https://github.com/brauner/man-pages-md/blob/main/fsconfig.md
 
+What's the plan with these?  It would be good if "man fsconfig" would
+finally work.
 
---45ed013812313c157f704b5e662bd3e921269c7d51848b7e818b5055826c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZe8XWRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQzcodo7VsRvumBgD+Ne3GfSC1vSlxnEWI5Pw4YrWak8YHEpYq
-E3KnfeyJR+wBALR/9/FAxfZci7xN2e0x1qQlGlpXIJeJiyCZctoKq7oO
-=B1CF
------END PGP SIGNATURE-----
-
---45ed013812313c157f704b5e662bd3e921269c7d51848b7e818b5055826c--
+Thanks,
+Miklos
