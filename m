@@ -1,150 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335E058AAC;
-	Mon, 11 Mar 2024 15:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DFE5823C
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710169988; cv=none; b=CsbPYHjcUelZ4qN/sC+LX7LAFkhgtW96J7lHFjjtqbg8KG27lD81+EdE4OkyHXK5NT0UOI9VlMT7yLJDmH0y4vbdBBAFwehuBpySCMCodQ7R0Y9OaByMQCPsO6oYpVtXfIMePEB2/ke0JzF5BEX/16xcc1iijkLDxM+dQ/KwT1o=
+	t=1710169988; cv=none; b=r/95JkSrrq6gV5S2RLm3a241rekznDLzzB3ncU7wnrkogr44tX5GVOAIsWLkOul6Fo/5q3QQgaiufb+90zaZqBHOCFnrOJtKUgrsQ4b+y06QKuICCFiJRQ0ErXv+OgF0N33+lS/T+kL6/2e0KyLMIhHbcWcq6giRXsW2408lMy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710169988; c=relaxed/simple;
-	bh=oMx6zHeOTkEXDKbjq76qlbY+QDGbPJEZZs3fhZ3D9bk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QUx9pw5vEkR/JNPocSASWr9KKoPkicO7zpKFN+V/rJZYYheiH5lxfxhuQ9XRXH8SppdesuJHVBKY2MKichQheQCGevAbpRZ6BQjANhtJ3wQqwp4syGg5un5P2nN2eaT6thpTPBTW1Li4byWXUXVIQ3svpMsFnIwKQFoQlL53mBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FH7qCz5I; arc=none smtp.client-ip=10.30.226.201
+	bh=W0zyoiSyQr48TA+xIVHucmNJrAo83ywrOJtChE3k7Dw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=uCRJoFWFFHccm7o8K4WL1mjEDLMcXhW84IS8Zr2LIZgw3+CeKJU92O7RSjUbpTrs8CN7YLGvKwipD0D9/IYy3CK4eI+G+umt8LlyJNX2p2Dk5dbMtaZrqdc/nb6OPG0JsbhN231/hTy2QyrIZtYsC9j1xVMMi49BCCj26V6ftfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMbwnIdI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FH7qCz5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC3CC43390;
-	Mon, 11 Mar 2024 15:13:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMbwnIdI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0406CC433C7;
+	Mon, 11 Mar 2024 15:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710169987;
-	bh=oMx6zHeOTkEXDKbjq76qlbY+QDGbPJEZZs3fhZ3D9bk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FH7qCz5I9D+5TG6yKE2OxT0QvT8KWAlC4La6EWzYw4zl9NDjchwcvyfv9HT4wxcuD
-	 kaGdZxBKVjM9aTXyzjcYDYFwFgFsOyd1YoeeDJYzGlJLKL5G6FtKQMLcbzJnN9kmxZ
-	 TSBIxNSGEImNrGIbarnVqZJ3DPfRacOOc6pm21MR3V1M7Dm4TNsRF1Kic6K915h7JS
-	 t5tM7psXtBrRSu+nTbqMNV2R2NxLm0+MBqLknklW+A2K6Ev9AdWg1S4LS72tXLQzFZ
-	 I9VIClDo+ac4eYXdg5/G8bA9RetUKzx5S9LoPOc8VCyhlXP7yBcnK2lBSUKpIP0nsS
-	 cXhUrFRUj5laA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Fei Wu <fei2.wu@intel.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Sasha Levin <sashal@kernel.org>,
-	atishp@atishpatra.org,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.7 23/23] perf: RISCV: Fix panic on pmu overflow handler
-Date: Mon, 11 Mar 2024 11:12:03 -0400
-Message-ID: <20240311151217.317068-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240311151217.317068-1-sashal@kernel.org>
-References: <20240311151217.317068-1-sashal@kernel.org>
+	s=k20201202; t=1710169988;
+	bh=W0zyoiSyQr48TA+xIVHucmNJrAo83ywrOJtChE3k7Dw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fMbwnIdInZctkz7rsLo9xh+72xW/Fzdn0oW19qlq8PjyXYkZYGzxW4PuXd7ClZnOf
+	 ix931GISNQkbPvdza1qHTEPlgoTCNJ5/0FKJmM6Fq9wp7iZ/RetRt2HUexS7qLFQXw
+	 NQsKj8Hkc6jo++AhcQSgtMF7BsLVD2/OrQVDZYIxIgH+gQFyrZ5JLK3vdBJxeAY5Gw
+	 PvSWItK1Vxx0SyXNE6aG+WPL6Hmwp4hkRGGFcALFF9k6xDQo0Q+d6UJN/vB9TnM91P
+	 sO4GKHQBIlKqca/BRfloaMDkSvIGoXJfBTkluJTRwggQ+zQcCOEhuVx2GaiHNBmxiF
+	 G/cKJTaxcMZng==
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator updates for v6.9
+Date: Mon, 11 Mar 2024 15:12:58 +0000
+Message-Id: <20240311151308.0406CC433C7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.9
-Content-Transfer-Encoding: 8bit
 
-From: Fei Wu <fei2.wu@intel.com>
+The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de0d:
 
-[ Upstream commit 34b567868777e9fd39ec5333969728a7f0cf179c ]
+  Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
 
-(1 << idx) of int is not desired when setting bits in unsigned long
-overflowed_ctrs, use BIT() instead. This panic happens when running
-'perf record -e branches' on sophgo sg2042.
+are available in the Git repository at:
 
-[  273.311852] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000098
-[  273.320851] Oops [#1]
-[  273.323179] Modules linked in:
-[  273.326303] CPU: 0 PID: 1475 Comm: perf Not tainted 6.6.0-rc3+ #9
-[  273.332521] Hardware name: Sophgo Mango (DT)
-[  273.336878] epc : riscv_pmu_ctr_get_width_mask+0x8/0x62
-[  273.342291]  ra : pmu_sbi_ovf_handler+0x2e0/0x34e
-[  273.347091] epc : ffffffff80aecd98 ra : ffffffff80aee056 sp : fffffff6e36928b0
-[  273.354454]  gp : ffffffff821f82d0 tp : ffffffd90c353200 t0 : 0000002ade4f9978
-[  273.361815]  t1 : 0000000000504d55 t2 : ffffffff8016cd8c s0 : fffffff6e3692a70
-[  273.369180]  s1 : 0000000000000020 a0 : 0000000000000000 a1 : 00001a8e81800000
-[  273.376540]  a2 : 0000003c00070198 a3 : 0000003c00db75a4 a4 : 0000000000000015
-[  273.383901]  a5 : ffffffd7ff8804b0 a6 : 0000000000000015 a7 : 000000000000002a
-[  273.391327]  s2 : 000000000000ffff s3 : 0000000000000000 s4 : ffffffd7ff8803b0
-[  273.398773]  s5 : 0000000000504d55 s6 : ffffffd905069800 s7 : ffffffff821fe210
-[  273.406139]  s8 : 000000007fffffff s9 : ffffffd7ff8803b0 s10: ffffffd903f29098
-[  273.413660]  s11: 0000000080000000 t3 : 0000000000000003 t4 : ffffffff8017a0ca
-[  273.421022]  t5 : ffffffff8023cfc2 t6 : ffffffd9040780e8
-[  273.426437] status: 0000000200000100 badaddr: 0000000000000098 cause: 000000000000000d
-[  273.434512] [<ffffffff80aecd98>] riscv_pmu_ctr_get_width_mask+0x8/0x62
-[  273.441169] [<ffffffff80076bd8>] handle_percpu_devid_irq+0x98/0x1ee
-[  273.447562] [<ffffffff80071158>] generic_handle_domain_irq+0x28/0x36
-[  273.454151] [<ffffffff8047a99a>] riscv_intc_irq+0x36/0x4e
-[  273.459659] [<ffffffff80c944de>] handle_riscv_irq+0x4a/0x74
-[  273.465442] [<ffffffff80c94c48>] do_irq+0x62/0x92
-[  273.470360] Code: 0420 60a2 6402 5529 0141 8082 0013 0000 0013 0000 (6d5c) b783
-[  273.477921] ---[ end trace 0000000000000000 ]---
-[  273.482630] Kernel panic - not syncing: Fatal exception in interrupt
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v6.9
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
-Signed-off-by: Fei Wu <fei2.wu@intel.com>
-Link: https://lore.kernel.org/r/20240228115425.2613856-1-fei2.wu@intel.com
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/perf/riscv_pmu_sbi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+for you to fetch changes up to e6f0b08a036734552628ab788ecb528ca53814ab:
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 16acd4dcdb96c..452aab49db1e8 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -512,7 +512,7 @@ static void pmu_sbi_set_scounteren(void *arg)
- 
- 	if (event->hw.idx != -1)
- 		csr_write(CSR_SCOUNTEREN,
--			  csr_read(CSR_SCOUNTEREN) | (1 << pmu_sbi_csr_index(event)));
-+			  csr_read(CSR_SCOUNTEREN) | BIT(pmu_sbi_csr_index(event)));
- }
- 
- static void pmu_sbi_reset_scounteren(void *arg)
-@@ -521,7 +521,7 @@ static void pmu_sbi_reset_scounteren(void *arg)
- 
- 	if (event->hw.idx != -1)
- 		csr_write(CSR_SCOUNTEREN,
--			  csr_read(CSR_SCOUNTEREN) & ~(1 << pmu_sbi_csr_index(event)));
-+			  csr_read(CSR_SCOUNTEREN) & ~BIT(pmu_sbi_csr_index(event)));
- }
- 
- static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
-@@ -731,14 +731,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
- 		/* compute hardware counter index */
- 		hidx = info->csr - CSR_CYCLE;
- 		/* check if the corresponding bit is set in sscountovf */
--		if (!(overflow & (1 << hidx)))
-+		if (!(overflow & BIT(hidx)))
- 			continue;
- 
- 		/*
- 		 * Keep a track of overflowed counters so that they can be started
- 		 * with updated initial value.
- 		 */
--		overflowed_ctrs |= 1 << lidx;
-+		overflowed_ctrs |= BIT(lidx);
- 		hw_evt = &event->hw;
- 		riscv_pmu_event_update(event);
- 		perf_sample_data_init(&data, 0, hw_evt->last_period);
--- 
-2.43.0
+  regulator: lp8788-buck: fix copy and paste bug in lp8788_dvs_gpio_request() (2024-03-06 14:03:32 +0000)
 
+----------------------------------------------------------------
+regulator: Updates for v6.9
+
+This has been a very quiet release, mostly cleanups, API updates and
+simple device additions.  I messed up slightly and there are a couple of
+duplicated commits resulting from me leaving things in my inbox which
+didn't seem worth removing by the time I noticed them.
+
+ - Conversion of several drivers to GPIO descriptors.
+ - Build out the features of of the MP8859 driver.
+ - Support for Qualcomm PM4125 and PM6150.
+
+----------------------------------------------------------------
+Andrei Simion (1):
+      regulator: dt-bindings: microchip,mcp16502: convert to YAML
+
+André Apitzsch (1):
+      dt-bindings: regulator: Convert ti,tps65132 to YAML
+
+Andy Shevchenko (1):
+      regulator: da9121: Remove unused of_gpio.h
+
+Christophe JAILLET (1):
+      regulator: fixed-helper: Save a few bytes of memory when registering a 'nfc_llc' engine
+
+Colin Ian King (2):
+      regulator: core: Remove redundant assignment to variable possible_uV
+      regulator: core: Remove redundant assignment to variable possible_uV
+
+Dan Carpenter (1):
+      regulator: lp8788-buck: fix copy and paste bug in lp8788_dvs_gpio_request()
+
+Danila Tikhonov (1):
+      dt-bindings: regulator: qcom,usb-vbus-regulator: Add PM6150 compatible
+
+Dmitry Baryshkov (2):
+      regulator: dt-bindings: qcom,usb-vbus-regulator: add support for PM4125
+      regulator: dt-bindings: qcom,usb-vbus-regulator: add support for PM4125
+
+Geert Uytterhoeven (2):
+      regulator: lp87565: Use bitfield helpers
+      regulator: lp873x: Use bitfield helpers
+
+John Keeping (1):
+      regulator: userspace-consumer: add module device table
+
+Konrad Dybcio (1):
+      regulator: qcom_smd: Keep one rpm handle for all vregs
+
+Linus Walleij (5):
+      regulator: max8973: Finalize switch to GPIO descriptors
+      regulator: da9055: Fully convert to GPIO descriptors
+      regulator: lp8788-buck: Fully convert to GPIO descriptors
+      regulator: max8997: Convert to GPIO descriptors
+      regulator: max8998: Convert to GPIO descriptors
+
+Mark Brown (11):
+      regulator: Merge up v6.8-rc5
+      regulator: mp8859: Specify register accessibility and enable caching
+      regulator: mp8859: Validate and log device identifier information
+      regulator: mp8859: Support enable control
+      regulator: mp8859: Support mode operations
+      regulator: mp8859: Support active discharge control
+      regulator: mp8859: Support status and error readback
+      regulator: mp8859: Report slew rate
+      regulator: mp8859: Implement set_current_limit()
+      Convert some regulator drivers to GPIO descriptors
+      regulator: mp8859: Cleanups and enhancements
+
+Ricardo B. Marliere (1):
+      regulator: core: make regulator_class constant
+
+Rob Herring (1):
+      regulator: dt-bindings: gpio-regulator: Fix "gpios-states" and "states" array bounds
+
+Uwe Kleine-König (2):
+      regulator: pwm-regulator: Use dev_err_probe() for error paths in .probe()
+      regulator: pwm-regulator: Use dev_err_probe() for error paths in .probe()
+
+ .../bindings/regulator/gpio-regulator.yaml         |   4 +-
+ .../bindings/regulator/mcp16502-regulator.txt      | 144 ------------
+ .../bindings/regulator/microchip,mcp16502.yaml     | 180 +++++++++++++++
+ .../regulator/qcom,usb-vbus-regulator.yaml         |  10 +-
+ .../devicetree/bindings/regulator/ti,tps65132.yaml |  84 +++++++
+ .../bindings/regulator/tps65132-regulator.txt      |  46 ----
+ drivers/regulator/core.c                           |   3 +-
+ drivers/regulator/da9055-regulator.c               |  48 ++--
+ drivers/regulator/da9121-regulator.c               |   1 -
+ drivers/regulator/fixed-helper.c                   |   4 +-
+ drivers/regulator/internal.h                       |   2 +-
+ drivers/regulator/lp873x-regulator.c               |   3 +-
+ drivers/regulator/lp87565-regulator.c              |   3 +-
+ drivers/regulator/lp8788-buck.c                    |  64 +++---
+ drivers/regulator/max8973-regulator.c              |  36 +--
+ drivers/regulator/max8997-regulator.c              |  85 ++-----
+ drivers/regulator/max8998.c                        | 150 +++++-------
+ drivers/regulator/mp8859.c                         | 252 ++++++++++++++++++++-
+ drivers/regulator/pwm-regulator.c                  |  40 ++--
+ drivers/regulator/qcom_smd-regulator.c             |  19 +-
+ drivers/regulator/userspace-consumer.c             |   1 +
+ include/linux/mfd/da9055/pdata.h                   |  13 --
+ include/linux/mfd/lp8788.h                         |   9 +-
+ include/linux/mfd/max8997.h                        |   1 -
+ include/linux/mfd/max8998.h                        |   6 -
+ include/linux/regulator/max8973-regulator.h        |   6 -
+ 26 files changed, 705 insertions(+), 509 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
