@@ -1,56 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD6C3FBBA;
-	Mon, 11 Mar 2024 14:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E6C3FE20;
+	Mon, 11 Mar 2024 14:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710167155; cv=none; b=jKpJLMCy92aMICE9B44ZvpBW9unWpSxEpXFDC0J/bVZhspeCW/EYHm7/P1n2hMvdw1X7gwRJ3+zZO3wSbYvnZMVU13xOgu9opGzwSB8Xqh2cHxDCePApQ2beYFnqxkELz7+RmTNp917pVgsLo2CQKj17BCqoh1U/EgBkpjDaNi4=
+	t=1710167231; cv=none; b=lqS6uSD5CAzB0p6HREwJJPpmDVxXmIyyvmnzY5ZJBArXpUXNFSYNlTHidp0nXkBp4+iSqCE4oKBRDZY8grzXNlKb9r5gRNiyVTU/VCzOMKRAnLu1WcejHCjPcp3590NLpCX1nnaLuKT1ssAZdbzNfNVyIJVguGRWxnMBF3zdBWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710167155; c=relaxed/simple;
-	bh=3EO+X4FVrYQQ7pN1391msu9E8YQJAXij990MMl3E35o=;
+	s=arc-20240116; t=1710167231; c=relaxed/simple;
+	bh=1aJ4w3r/zuASTGzt0lTlVBVdTLgTFG77gu8clfftNhw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r9h/iePah2nxyaYndxkSXqtqfsbAdYR+wDOfQ6t8sti7RuSSvPcVB2JeHMEyZGu8EOW6hB14ET//1aW5AfQO2ic6I93DMtc+oy1yBKI6AYVXLl16R+c3xw6BPdcJylmUix2FQ0vjO6LvV/jSOha1Jm9ikafmy83ivwR9qrvLUdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ve6LwyeZ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmVXmC1GizcPSEjBfnhY/NnYuDSWZpsZLwm5bEy6xjWhn86+k8mTLq3fKVCe3XXCYB8QfXddTYLnw7Nm6x1PCEAn08fR8U4lutcC6GiofN+xdrkeTuPoKO/oBthCHM+HwykX9D4o/BJBQrTZTbe9nox3HR6dxpPNEErA+rZPTqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WjVhg7Rx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ve6LwyeZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710167153; x=1741703153;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3EO+X4FVrYQQ7pN1391msu9E8YQJAXij990MMl3E35o=;
-  b=Ve6LwyeZb7nd0G2AIug62wSkrpdG5wYJY/xa9Bt8IgYDkLVTd+V3kLse
-   kflte/vJKGkpBylPRl6wIN1xs61zobScasUknPxQdF9ehQZD3KoOkG4ii
-   7Z8dFJ1paM5/LXH/gOd8EJNF/hcidI5MCLQMUIAKsvfuWGd3wozd9hcOR
-   3zJTHR1RDd0wKIAr7UshjtdgBXhZhBVKBxRz6beElzlTCSIA2KjZp+mr8
-   fTmaeVzvkJ1WXKL9UAKSK7wT8xw3N0hiVvqWxSQXcUFgflfjncnnl+bD2
-   Mv/moNhYKHVsT9ImIJyKIoaFZc8iTPhZiiNR59WtCn/SNPDoB2oVen52D
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15470984"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15470984"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:25:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="914361324"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="914361324"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:25:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rjgb7-0000000BeLH-26Z1;
-	Mon, 11 Mar 2024 16:25:49 +0200
-Date: Mon, 11 Mar 2024 16:25:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Young <sean@mess.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: rc: gpio-ir-recv: Remove unused of_gpio.h
-Message-ID: <Ze8Ubb5YQ4DzNHTt@smile.fi.intel.com>
-References: <20240304180510.1201042-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WjVhg7Rx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=oZTbxkjQedlArZ4e1pEnB9bCeXJ2IXvLPwUoSVRKmrU=; b=WjVhg7RxE78mYJA9EoCPJHHhGK
+	VMninMbKOuUUU0FUXCz9/F97u7+gipe1cZOlnhQLoslr7Qt6Ao8esrO9PVyGv6QQ+Nh0KUMCsKbsq
+	BrrNFHexTPpbmu/OTEE2KqJvS1lfONbB7ryS47D0OfHU6Ju+6LaU5LgYKdE3kfPdeUrA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rjgck-009yQL-RJ; Mon, 11 Mar 2024 15:27:30 +0100
+Date: Mon, 11 Mar 2024 15:27:30 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Elad Nachman <enachman@marvell.com>
+Cc: taras.chornyi@plvision.eu, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, kory.maincent@bootlin.com,
+	thomas.petazzoni@bootlin.com, miquel.raynal@bootlin.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] net: marvell: prestera: fix driver reload
+Message-ID: <4bd45f5f-d341-471e-8ceb-4fbc98d3ac33@lunn.ch>
+References: <20240311135112.2642491-1-enachman@marvell.com>
+ <20240311135112.2642491-2-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,17 +46,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240304180510.1201042-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240311135112.2642491-2-enachman@marvell.com>
 
-On Mon, Mar 04, 2024 at 08:05:10PM +0200, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it, simply remove the unused header.
+On Mon, Mar 11, 2024 at 03:51:10PM +0200, Elad Nachman wrote:
+> From: Elad Nachman <enachman@marvell.com>
+> 
+> Driver rmmod after insmod would fail because of
+> the following issues:
+> 
+> 1. API call to reset the switch HW and restart the
+>    firmware CPU firmware code loading was missing in
+>    driver removal code handler.
+> 2. Timeout waiting for the firmware CPU firmware
+>    loader code to start was too small.
+> 
+> Fix by adding API call to reset the switch HW and
+> restart the firmware CPU firmware code loading when
+> handling the driver removal procedure,
+> increase the timeout waiting for this restart operation
+> from 5 to 30 seconds.
 
-Sean, are you okay with this change?
+The commit messages suggests this does two things. So it should be two
+patches.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Please could you explain why the firmware needs resetting during
+shutdown. That is odd, so should be explained. The commit message is
+about Why?, not What?
 
-
+      Andrew
