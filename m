@@ -1,75 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C6A53E2C;
-	Mon, 11 Mar 2024 20:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0829E53E2C
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 20:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710188503; cv=none; b=NhfWsiOQWN+32ruee9l+uTbzXCXy3p7HBsKIeGYDdh47BRfrfEHOuWP8TBZDzJ1I6oCKRQQxRvXQprGAPGeXBeoqi2buVoe+u5ljGYn4K6ZGTgbYMQM63+AwAGaBpcn/zCuV+8d/+0brx0VliqDN3Zw7EiRQ1Q/RiFFlCcgsYxQ=
+	t=1710188605; cv=none; b=VrMnjkv+kNqcpPxDg4z/X/cSb+0469nCdNURyQjFcJwyDmXG+7474ol4zEMkohTnMRBtVmMCQKDO8teg9tsnOnOHWL8zeqNTRJt09xB92odDln3amOSRf+9sHi23H7V24n6GHzY4ueG/rNxCRiHNxFXfdkZvBnEmSATxxZpJW+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710188503; c=relaxed/simple;
-	bh=m0g91sXKYJS/kIzIdqTu2G6HaWEmgoKbDue6b3HELzA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=D7gD8ONUIFToxXSowm0jMjeuf2N9HcuVwOM73rdWXn6u+RNsbsRTb+l9Cjr/y54glTRlbU888E9qm6/JFBtPUfoANz1EJcQPVwmEJRFkZ8NSy0IW0h+8nXduIfwRAZn90xXowAEF+dhzv8s1z7DfNJzgWMJSG46iOpSp2kEhmak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRZCIsUw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710188605; c=relaxed/simple;
+	bh=hsPgk25OQvRjAzh0e1mK5VvQ1gHRpv3U/6nLPGY6c4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=crXwRkjodxvDki96DXMEnceSxjomoVtweJ0x3V1KxXJQGZWxZVjqtZ2gUg5v8H+z4kMrz6m5tPJUp8eS9X3dcJHPQSv18hGYmCYQDY/72iwQNmVfDQHV3IO41KPWac4weEA030m+Hu2MGsOoVetuZ+R6I/sURFUcjTwvJXfDIoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QL8DstTu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRZCIsUw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D49C433C7;
-	Mon, 11 Mar 2024 20:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710188502;
-	bh=m0g91sXKYJS/kIzIdqTu2G6HaWEmgoKbDue6b3HELzA=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=fRZCIsUw+ltmZpj7Ioa6QyF4bBXq0ClTyx5UbpaGj0BwwmhEKNap0i2kmsFvMTfYH
-	 uAF252gxfBFsafjM9Yuk4LafJYv3Me+15/ThPDqUT/zg6IVy0kX5DdZAEfIwHN5CJa
-	 kaWzEkGHE7xv/n1Re/hQ6Xh2eldHCz0IXefPxRAdP4TN6IF7a3sTG3G7rzjwPKzjFm
-	 9x7SzQmlcJu6w9SEwD1WoiYIV/WJ86JSJ9WMmBIwMVMwH/b8Ox9dwWhkJV1+UUAUt4
-	 SeFUzsKgAL8hqx2FabponQ8JhErgPZBo8wt5HWubHhzrwi+E8LQSEkDhXyw5hd4fY/
-	 Ptdw0KX8aKSVg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QL8DstTu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710188602;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IF4Yf8UPVouonx+uypANx40YxcO8AimTiTMmv9PB8BI=;
+	b=QL8DstTuVFtBgMn+NpETAF+bwdEUo2p5cJu4Z9BXHT007cECWYE2Q5WoxBx9sIiv7f8pwz
+	2zwMfkpEkK+X35ajiuboTavs2f58mPV5/h56n1vAA3JEW5TBODy6FahrYnH7BuqzF4ZdR2
+	rvR0p4LI5I2nUog0VM/lN3lxr+v+4hc=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-110-QwW-9zJkP3WOqPNNxmw0Ww-1; Mon, 11 Mar 2024 16:23:20 -0400
+X-MC-Unique: QwW-9zJkP3WOqPNNxmw0Ww-1
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36630680c5dso36691475ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 13:23:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710188600; x=1710793400;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IF4Yf8UPVouonx+uypANx40YxcO8AimTiTMmv9PB8BI=;
+        b=BXfuGzH2PO5UaXaL6QkLrE3EjSZJxd5mQc2xU20tbstFee6HEmk9V4wUM6TnNTg5gt
+         14uMIb4SrEaXgFNrc23re93Xs4MrmtguJtKA8LPe7GNPZRPhJm0CGUmZN9zbc91haNc4
+         9b2DbZBiiPVxgfjQVDKW7NtAYx8SHcqNexgBjUYKuzBRelvO5bRU2Ep+0Q8oWVx7yRPz
+         ms+qtihrz4skOlY86cn6awjtrQ7Vp7aRDVJC9/ILyMdHnDCpTQlLlZ8Ndp92+4JLaUPa
+         Bb/pM9Gu6+Z8mGCbb+MFI+hNuLgwjHbPtEiov2u2TGRTAQq48mdy37Rtjt62e0LEcRjE
+         89ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVfWvVRx4GgUR7Eyee1MtabsbO8kKprsmBGqOvmDur4b751OUQurv0vJNEXTyWeTByIFYIQELTKTTCQhPdAMaNEScNc1S/ydRf0UjsO
+X-Gm-Message-State: AOJu0YyVj8jvajOb2FE3SlH4idC/0kKADsZumv5S4T7KVrxfxB3CnM2N
+	/Y4E5isoCGphxHoIufMAa/R9fY45rVy4VbDsWpZ3G1e4BZm1PS5ifnK4dhSEoP5dl8Tut0+GjEI
+	0nVxIAvcdRCi59GZAYG8ztx+REPumHhRkRX4DM8pFvFcLesRQRsJaqvEll0PD4Q==
+X-Received: by 2002:a05:6e02:2148:b0:365:fe19:4a05 with SMTP id d8-20020a056e02214800b00365fe194a05mr9345926ilv.22.1710188599920;
+        Mon, 11 Mar 2024 13:23:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaQKNbrfo3rrAF+2VaMAWTzZiLHFJ+nJOl8ITvTDpcIh9aGIq/C9l1216ckFzKVt/yrNS7LQ==
+X-Received: by 2002:a05:6e02:2148:b0:365:fe19:4a05 with SMTP id d8-20020a056e02214800b00365fe194a05mr9345907ilv.22.1710188599583;
+        Mon, 11 Mar 2024 13:23:19 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id fx22-20020a0566381e1600b00474895385c0sm1926361jab.109.2024.03.11.13.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 13:23:19 -0700 (PDT)
+Date: Mon, 11 Mar 2024 14:23:18 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Brett Creeley <brett.creeley@amd.com>
+Cc: <jgg@ziepe.ca>, <yishaih@nvidia.com>,
+ <shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
+ <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <shannon.nelson@amd.com>
+Subject: Re: [PATCH vfio 0/2] vfio/pds: Reset related fixes/improvements
+Message-ID: <20240311142318.7c6bb476.alex.williamson@redhat.com>
+In-Reply-To: <20240308182149.22036-1-brett.creeley@amd.com>
+References: <20240308182149.22036-1-brett.creeley@amd.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 11 Mar 2024 22:21:38 +0200
-Message-Id: <CZR7866WNY28.3KDPSXW81I82N@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rnsastry@linux.ibm.com>,
- <peterhuewe@gmx.de>, <viparash@in.ibm.com>, <devicetree@vger.kernel.org>,
- <jsnitsel@redhat.com>
-Subject: Re: [RFC PATCH v2 1/3] powerpc/prom_init: Replace
- linux,sml-base/sml-size with linux,sml-log
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, <mpe@ellerman.id.au>,
- <linux-integrity@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-X-Mailer: aerc 0.17.0
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-2-stefanb@linux.ibm.com>
-In-Reply-To: <20240311132030.1103122-2-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon Mar 11, 2024 at 3:20 PM EET, Stefan Berger wrote:
-> linux,sml-base holds the address of a buffer with the TPM log. This
-> buffer may become invalid after a kexec. To avoid accessing an invalid
-> address or corrupted buffer, embed the whole TPM log in the device tree
-> property linux,sml-log. This helps to protect the log since it is
-> properly carried across a kexec soft reboot with both of the kexec
-> syscalls.
+On Fri, 8 Mar 2024 10:21:47 -0800
+Brett Creeley <brett.creeley@amd.com> wrote:
 
-- Describe the environment where TPM log gets corrupted.
-- Describe why TPM log gets corrupted on kexec.
+> This mini-series adds a fix for a patch that was recently accepted that
+> I missed during initial testing. The link can be found here:
+> https://lore.kernel.org/kvm/20240228003205.47311-2-brett.creeley@amd.com/
+> 
+> Also, remove the unnecessary deferred reset logic.
+> 
+> Brett Creeley (2):
+>   vfio/pds: Make sure migration file isn't accessed after reset
+>   vfio/pds: Refactor/simplify reset logic
+> 
+>  drivers/vfio/pci/pds/dirty.c    |  6 ++---
+>  drivers/vfio/pci/pds/lm.c       | 13 ++++++++++
+>  drivers/vfio/pci/pds/lm.h       |  1 +
+>  drivers/vfio/pci/pds/pci_drv.c  | 27 ++++----------------
+>  drivers/vfio/pci/pds/vfio_dev.c | 45 +++++++--------------------------
+>  drivers/vfio/pci/pds/vfio_dev.h |  8 ++----
+>  6 files changed, 33 insertions(+), 67 deletions(-)
+> 
 
->
-> Avoid having the firmware ingest the whole TPM log when calling
-> prom_setprop but only create the linux,sml-log property as a place holder=
-.
-> Insert the actual TPM log during the tree flattening phase.
+Applied to vfio next branch for v6.9.  Thanks,
 
-This commit message should shed some light about reasons of the
-corruption in order to conclude that it should be fixed up like
-this. I.e. why the "post-state" is a legit state where can be
-continued despite a log being corrupted. Especially in security
-features this is pretty essential information.
+Alex
 
-BR, Jarkko
