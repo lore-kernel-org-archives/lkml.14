@@ -1,88 +1,143 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E429424A11
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BD12BB1A;
+	Mon, 11 Mar 2024 10:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710152308; cv=none; b=SHYP47fascKy2dP7MrtIcfxkxKc1fAEJNqYEwcGrlTh/+/GHzon0oC0isz7TLW5vbrrGKQ+odiH9pNuXPLTj4GLfrKXLR5Y2ztydX7j7vJK0tTbkOHhLIY5HBLsNmU/+TXO10/gldS4vgnKbjXHLzO4Tyd8JvOdJrzhBctoicCY=
+	t=1710152324; cv=none; b=Jqy+7z0geCz2kDGa0lWWpgiWRafU0G9to2rUFLcleScppnm4N8uSAl+Scv2p8RnpJjSK3fIp9iujRulBQGO2qdD5kO2ilZGasxxTc6gvpYwlxVkt1aYsmUsJFW62GIL1CfB7kHy4P/odGHpTcKBS/elYjzOjmCr108iKbkPZJP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710152308; c=relaxed/simple;
-	bh=49p/z+I9ibGX9tkXzASFtaJyfmLbdA1BOuZStIYVDhg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G/GCh9fQ+Pp0q9LT38PBKWtueepCSBnKkplqaXfncH9XTisAmjo/1dnHotZ/LpTjFuoQWUkZc8ixQKNn9FAc3p0CjJhmazr4XAUoYnkwNv2V8FrYisl6dEugHp2ByIBRMHSjyBjoWz6BzKbWpvGzpKBPwRAA4nAkTFwZ4f6Gleg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-366555ecfe7so7475855ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 03:18:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710152306; x=1710757106;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PeeeQW0zVOCeEC+ecefxOMdD9qh/oMQiVsJYRGRAiHM=;
-        b=Oqx08DfR834qTuRW0KUpFHIbVSHmvNspVKCYKKdhJoQYFHCG41Ws6cBAU1Y+mGjSDY
-         cjLgfZZxltZBKnBc6Mg3n58UUzHJ/esk7Jl/mqFbQa0fEngKR5mUkUMuvhC2jQ98jxU0
-         nGIsUvbF3+PEVUEbd9OnVlQXsB2/OjCXqs4w+u9HAGXtRVdEzdJVklt6P8R2DpTw7lDk
-         AQBgPdlAHAAtp8Y0NQlcTMGWxiENhPO8AlgE7SQnXIiufsIToQ624cHW0tluNT/Yy1nO
-         MdcoTWKO7mNHMlSMnUlZikXdcaY9ln4BBg4uJzTn4C3k4tULOO2jX5zHnFdaraKB79j/
-         38xg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9p7kSOmfERJj+ZMLjLtv5M9HxIGHjDOaosGNyOgiKHP9vpVxvExgI0Bne5GPIVvO4I1DMZax3n3G3znD8kdssRAmhDPanu9ugZGP0
-X-Gm-Message-State: AOJu0Yy3HetWp0RZol800Ae87YBHR9N9gPB5VUKUrKgnWhzFb/NmZyaM
-	mzQlJJAysY7nRuHmXp5OQaXHBj8lCRS8iCuZ3/4R4PG8gbV2AmAkpXqq8wRbQIeC0mPjI8FYY3i
-	Nb2uNi5Pb2qlaBVoN6ejvx9IbYGmSmNRoxyxpnqKyY54ijR2cUKUiml0=
-X-Google-Smtp-Source: AGHT+IGyDFOwFe3vpd5h1XcY9fH/ePmTHy+TjyNNTo4z5/jgrAj391EgLeE6V7W+6kx8BJ7MA89VMnoKdMd5kpqMn7d9cx/tcO9h
+	s=arc-20240116; t=1710152324; c=relaxed/simple;
+	bh=fgYQVMxpAmTgYDCZIFPEaCK+FRLJh6UXAq9wyXsuRvM=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=T8JxqZAMSXC6/GrpVK7bLIXQdtt72VtBdZsfGLQ0y2BdFN3w6rzCcsfNtXs6uMKcQ/kRz9haUN/uOihNYeBis1054stPoM4mguUEYF0iBoLGBMlbdt+wK0C2W9cSBa7YuHAns55UNSyT6UJaOtCyIDijvbCXZ7ODdqe3Hrt09n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BB23E200F39;
+	Mon, 11 Mar 2024 11:10:28 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24C8D2007BB;
+	Mon, 11 Mar 2024 11:10:28 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id A2179180222A;
+	Mon, 11 Mar 2024 18:10:25 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi,
+	tfiga@chromium.org,
+	m.szyprowski@samsung.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v14 12/16] media: uapi: Declare interface types for Audio
+Date: Mon, 11 Mar 2024 17:53:57 +0800
+Message-Id: <1710150841-26991-13-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1710150841-26991-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1710150841-26991-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:218d:b0:365:26e3:6e47 with SMTP id
- j13-20020a056e02218d00b0036526e36e47mr348291ila.0.1710152306129; Mon, 11 Mar
- 2024 03:18:26 -0700 (PDT)
-Date: Mon, 11 Mar 2024 03:18:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b80a0d06135fdc97@google.com>
-Subject: [syzbot] Monthly bpf report (Mar 2024)
-From: syzbot <syzbot+listf53548453a719ea625e4@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello bpf maintainers/developers,
+Declare the interface types that will be used by Audio.
+The type is MEDIA_INTF_T_V4L_AUDIO.
 
-This is a 31-day syzbot report for the bpf subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/bpf
-
-During the period, 3 new issues were detected and 2 were fixed.
-In total, 12 issues are still open and 207 have been fixed so far.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 175     No    KMSAN: uninit-value in bpf_prog_run_generic_xdp
-                  https://syzkaller.appspot.com/bug?extid=0e6ddb1ef80986bdfe64
-<2> 94      Yes   KMSAN: uninit-value in ___bpf_prog_run (4)
-                  https://syzkaller.appspot.com/bug?extid=853242d9c9917165d791
-<3> 43      Yes   BUG: unable to handle kernel NULL pointer dereference in sk_msg_recvmsg
-                  https://syzkaller.appspot.com/bug?extid=84f695756ed0c4bb3aba
-<4> 4       Yes   KMSAN: uninit-value in strnchr
-                  https://syzkaller.appspot.com/bug?extid=9b8be5e35747291236c8
-<5> 3       Yes   INFO: rcu detected stall in sys_unshare (9)
-                  https://syzkaller.appspot.com/bug?extid=872bccd9a68c6ba47718
-
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../userspace-api/media/mediactl/media-types.rst    |  5 +++++
+ drivers/media/v4l2-core/v4l2-dev.c                  |  4 ++++
+ drivers/media/v4l2-core/v4l2-mem2mem.c              | 13 +++++++++----
+ include/uapi/linux/media.h                          |  1 +
+ 4 files changed, 19 insertions(+), 4 deletions(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/Documentation/userspace-api/media/mediactl/media-types.rst b/Documentation/userspace-api/media/mediactl/media-types.rst
+index 6332e8395263..adfb37430f8e 100644
+--- a/Documentation/userspace-api/media/mediactl/media-types.rst
++++ b/Documentation/userspace-api/media/mediactl/media-types.rst
+@@ -265,6 +265,7 @@ Types and flags used to represent the media graph elements
+ .. _MEDIA-INTF-T-V4L-SUBDEV:
+ .. _MEDIA-INTF-T-V4L-SWRADIO:
+ .. _MEDIA-INTF-T-V4L-TOUCH:
++.. _MEDIA-INTF-T-V4L-AUDIO:
+ .. _MEDIA-INTF-T-ALSA-PCM-CAPTURE:
+ .. _MEDIA-INTF-T-ALSA-PCM-PLAYBACK:
+ .. _MEDIA-INTF-T-ALSA-CONTROL:
+@@ -322,6 +323,10 @@ Types and flags used to represent the media graph elements
+        -  Device node interface for Touch device (V4L)
+        -  typically, /dev/v4l-touch?
+ 
++    *  -  ``MEDIA_INTF_T_V4L_AUDIO``
++       -  Device node interface for Audio device (V4L)
++       -  typically, /dev/v4l-audio?
++
+     *  -  ``MEDIA_INTF_T_ALSA_PCM_CAPTURE``
+        -  Device node interface for ALSA PCM Capture
+        -  typically, /dev/snd/pcmC?D?c
+diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
+index bac008fcedc6..ca8462a61e1f 100644
+--- a/drivers/media/v4l2-core/v4l2-dev.c
++++ b/drivers/media/v4l2-core/v4l2-dev.c
+@@ -844,6 +844,10 @@ static int video_register_media_controller(struct video_device *vdev)
+ 		intf_type = MEDIA_INTF_T_V4L_SUBDEV;
+ 		/* Entity will be created via v4l2_device_register_subdev() */
+ 		break;
++	case VFL_TYPE_AUDIO:
++		intf_type = MEDIA_INTF_T_V4L_AUDIO;
++		/* Entity will be created via v4l2_device_register_subdev() */
++		break;
+ 	default:
+ 		return 0;
+ 	}
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index 75517134a5e9..cda5e255305f 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -1143,10 +1143,15 @@ int v4l2_m2m_register_media_controller(struct v4l2_m2m_dev *m2m_dev,
+ 	if (ret)
+ 		goto err_rm_links0;
+ 
+-	/* Create video interface */
+-	m2m_dev->intf_devnode = media_devnode_create(mdev,
+-			MEDIA_INTF_T_V4L_VIDEO, 0,
+-			VIDEO_MAJOR, vdev->minor);
++	if (vdev->vfl_type == VFL_TYPE_AUDIO)
++		m2m_dev->intf_devnode = media_devnode_create(mdev,
++				MEDIA_INTF_T_V4L_AUDIO, 0,
++				VIDEO_MAJOR, vdev->minor);
++	else
++		/* Create video interface */
++		m2m_dev->intf_devnode = media_devnode_create(mdev,
++				MEDIA_INTF_T_V4L_VIDEO, 0,
++				VIDEO_MAJOR, vdev->minor);
+ 	if (!m2m_dev->intf_devnode) {
+ 		ret = -ENOMEM;
+ 		goto err_rm_links1;
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 1c80b1d6bbaf..9ff6dec7393a 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -260,6 +260,7 @@ struct media_links_enum {
+ #define MEDIA_INTF_T_V4L_SUBDEV			(MEDIA_INTF_T_V4L_BASE + 3)
+ #define MEDIA_INTF_T_V4L_SWRADIO		(MEDIA_INTF_T_V4L_BASE + 4)
+ #define MEDIA_INTF_T_V4L_TOUCH			(MEDIA_INTF_T_V4L_BASE + 5)
++#define MEDIA_INTF_T_V4L_AUDIO			(MEDIA_INTF_T_V4L_BASE + 6)
+ 
+ #define MEDIA_INTF_T_ALSA_BASE			0x00000300
+ #define MEDIA_INTF_T_ALSA_PCM_CAPTURE		(MEDIA_INTF_T_ALSA_BASE)
+-- 
+2.34.1
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
