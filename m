@@ -1,96 +1,100 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A28654744
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C929A4D9E8
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179032; cv=none; b=R7l5j6d7+/NEmJ48PvusW74GNBGmdKwH0VH9D831/rgOXZoVzqAEzXTJHVYGoKejRP0C6Kx/oyBsh88TFafBkqjO6OooRIH3uyoXWybYLKD3/XuhTy1OL2cmJ9p8/2X9E+raALzI+TDb4OjH60XBBCTO5/kfXfDSz9CgmftXd28=
+	t=1710179059; cv=none; b=hsQv4MQJM7M9lfvyKBtCTUQq5fz70wvi7R8AvAezHqbtsUZQaXl4mC+MCsMQvzTnoiiIplNX90lfZ2Ig2CnOuMVigLEU9RnvORBWZfnzvGTJPP7Hm71AhFO3PS2/KM9/103+LGeoiMdvWZgaOzFE0Bt/Ti9+wyZfE7l8SPbfOKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179032; c=relaxed/simple;
-	bh=6giF1Y1yY2eNcLEL7A3kln8xD7UdhAKJ+1Jewg7oVW4=;
+	s=arc-20240116; t=1710179059; c=relaxed/simple;
+	bh=dVABVYkEnzvrtDxSt88BcX8bbJ/2fnXzw4JV5D5ODLk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLMm6Y7cmhthvD9PLCp8pLVO0qOvx+w6se7H2/NGTMQu1P5z0dNNBPF2yPq8lW4QARxW2gFxF3cZtjkxIGAM2f8P+3SSECAuEdxiwzjqcOGW13qZxToqBr/A63UsEZEgYHJv+YQiarze/3HDm7ffeN6EegztVWsXZZ9TEP4b9Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7Qkamd4; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=kDorW4rhZT2T3JskocFzxL0gtQ8AYCf/b+hAasV4zn6OA5Z+iTqp97ZuuLpdw6NTtOFUtmqeXwZRO7PoYapiO5hp24DrGkKmKw/7kEOD8L/nIQv1TJnT2n5jfIQxKPQ6Zl3s7U5oiPblaYeGpNuNr1VbUJy4eygeFd1zWgfQS3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DBe8EM3M; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7Qkamd4"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3663528c0a5so7425ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:43:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DBe8EM3M"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-568251882d7so1070a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:44:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710179030; x=1710783830; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710179056; x=1710783856; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oF34FEnMH9EnB0cuP15G09+KTXv6xLWNfYuekhXlBCo=;
-        b=q7Qkamd4UXnrHRrB8DgXkiREgd0f/sdvVdwQZmGvZlYSI4gxX1cZ47GVph2o09FiTK
-         syLzN+nVx7jhiJU7jD/Jri5i8e4kTNTJvlYjut93dMk6xld+ccjroGmc0vb6w6eEQmmA
-         0FhOZlEKEZfdam9+uIcBTNaKi/5q9FJ81Pn360XN+5pYvSAquH01GK/eiyHrZ/o3ZkEd
-         ReJIPe+EtcTJRXaRXQKlLc8Q9GLl3pLXaHfwz+hokCRhYvrFbMMGv1nV/D+G5tdzC9MB
-         wg+8cRlM1zq5hT/v9W/gIm6nARb1NF6RxdMeNJ1sEXWKhjuPT5/MWWftWxL3P8q9dOXI
-         IDWw==
+        bh=6njN+Ix5AAlz5r+8JT2vb+hUlGcvA64q3xEcgqXOsgU=;
+        b=DBe8EM3M+uOHgw1nuC7hfGZRI7t6tM5y4+3JzHaot8whTg7ABkkVNrtoJsGlLD9GX1
+         ZhtYJEh8+STsA2Os6ZcBeQG9iLBswZ11efZMMgXf3Z/xwfJapbhH3akH295fcqiu9CJe
+         k/JreTCCozDDZbXeZ70lNAl4cQOFc4m44g210OVCLwv9GB0VvnTE3txTesLOZQOklO0H
+         x5euopO2KIuD6fUvmeN0eBifPvsC87zDNBl177DBtrnOu66HVP7jIEZaIuLAas2C+pj5
+         xo1VIftcS1OsuRt3WSuqK6T7lHRpvn26FmMn3WkJigIY4wwFPnF/MhhSVEgoxuIQznkK
+         Weqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710179030; x=1710783830;
+        d=1e100.net; s=20230601; t=1710179056; x=1710783856;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oF34FEnMH9EnB0cuP15G09+KTXv6xLWNfYuekhXlBCo=;
-        b=rpUl0Lm+pThQh4UQ3eVbpzlHcWALG7JWLEj5OjvxNa/yhpmbUh8xbnxSxKBy/6zt5z
-         V40EGYjHwT7+jHZEnrXTnmupzht23h4zrE8MGdKNGBAvdKG354rPeugwO3E2AIZMahuU
-         fn8sjNL2Ml4mVbRIVQJEV5Fbn6OhfBjpMyhv7uMW3/DINFdqzW9H2iDk2zbxG8B5HY6B
-         rwbaDuix5FUhb/9NNakAMjIp+edAROU138oFmR2t9B6QjOTYuaJ4niwjrghQc5ugjNKx
-         JM/j2ZQLJhBjIbfI8ErG6q/4Y3i02hzjKPeZd0Gqt/v3zh4WM32MA47EPL/Fg+YOegnO
-         LlrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGZoMKaQU6qvchOrsp3HfsybhnRWkUVIq7BODmWV03qIfngYGShEriTxIe6Fj+AIiCMtzlqgUXmtSt4U8xQnvwQSNbD3dvCyslHlEe
-X-Gm-Message-State: AOJu0Yx7Df5gh4ByNrxkNm+EotqGAKeE0j62aY5hEaeR857sawE0DTed
-	GKNUCtRVvXQ9OpeoIfjidFdHGuq0ThOhfBuTbAokkQt1cUjgYuslcmQvBBkKRnZkkIxCS1o2OWs
-	SHgg8IJ/FxPISnjnxHartKwUy2lix+Hhay+G3
-X-Google-Smtp-Source: AGHT+IEwJK8LM9z6GepM09xe/l66yPSQAakxHFHLM5guTXsfm4sHI3a8LbuWLfASfh/ViCQG02XZVW2mngXeYb08Zkk=
-X-Received: by 2002:a05:6e02:1c24:b0:366:50b7:10ec with SMTP id
- m4-20020a056e021c2400b0036650b710ecmr224089ilh.11.1710179030122; Mon, 11 Mar
- 2024 10:43:50 -0700 (PDT)
+        bh=6njN+Ix5AAlz5r+8JT2vb+hUlGcvA64q3xEcgqXOsgU=;
+        b=QUXzZ0kl5M7I+ohlRZSjagF37p3i4outNth8TCAZ7mMp5Gw6NMLl/mrhGMBbE6xnIl
+         aJxzoXvXHWNCCDX5ubIxAllfKge/MFKApiLNc4dzgMBcpq8/BwHxf9FOW492HCRJpEnw
+         DSbfAJHOUizYt0YXJ0Of8HU8sabQF5KpgkFmpHjzqqd5HpmJSPvX6TTaCv4ByKlf0irl
+         CS2tqEWURSy415dwGFeUm8HaFeTTL84hwXV2d/Ls7F7KSSb7E16PZQy6JomIRVRSyQUZ
+         8iE1+G8Ga7hByesgji6JBkVnTorEFklDzMXDLlxUzre4PVjBStztmhpQe3HgzCL8criW
+         mz6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUd/sOdCk710Ra6CJjkAX6um/ai/YkgR/kVgka/WNwLsFYKA2GKALtmyGwMFfKdjRMt/RJWL3vsj/ZnXXXAoiTpFeb/TTSpMz58vKTY
+X-Gm-Message-State: AOJu0YwjRmuC12CUTbWC1iBnZKnxhM0BbOXu7Wz1h+nmbRqnh35/DnuI
+	3xAdpWhRsaG7k8s9Ah97TNynVkHAJAcTMa+pFUHd2lrx6R21uxwdrGFn5LtEsFLSE1wfs6qGH2F
+	4+F1TwoT1gzHyDG82JzYxoGh1xOksaywUGJXCRXkrQ9XV0Rpc6w==
+X-Google-Smtp-Source: AGHT+IEiyXoLtl8FGPR0QpQwioDmfpwtMlSqt/TB1uax5qtbflKwpR9qoDDE3tJQLCaR9qvo9iItIuvqoZmyCSDKVLQ=
+X-Received: by 2002:aa7:d891:0:b0:568:569f:be4c with SMTP id
+ u17-20020aa7d891000000b00568569fbe4cmr193644edq.3.1710179053955; Mon, 11 Mar
+ 2024 10:44:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1710133771.git.sandipan.das@amd.com> <e100c902fd9e1e4f58e3a9c175d572962a9cdd50.1710133771.git.sandipan.das@amd.com>
-In-Reply-To: <e100c902fd9e1e4f58e3a9c175d572962a9cdd50.1710133771.git.sandipan.das@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Mar 2024 10:43:35 -0700
-Message-ID: <CAP-5=fU=gO49ASVVLUbT5bFPoOE3qi3+xJqvRD3tA=upVUT_aQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf vendor events amd: Add Zen 5 uncore events
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, eranian@google.com, ravi.bangoria@amd.com, 
-	ananth.narayan@amd.com
+References: <20240306111157.29327-1-petr@tesarici.cz> <20240311182516.1e2eebd8@meshulam.tesarici.cz>
+In-Reply-To: <20240311182516.1e2eebd8@meshulam.tesarici.cz>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 11 Mar 2024 18:43:59 +0100
+Message-ID: <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
+ repeatedly in one file
+To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, stable@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 10, 2024 at 10:24=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
-> wrote:
+On Mon, Mar 11, 2024 at 6:25=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesari=
+ci.cz> wrote:
 >
-> Add uncore events taken from Section 1.5 "L3 Cache Performance Monitor
-> Counters" and Section 2 "UMC Performance Monitors" of the Performance
-> Monitor Counters for AMD Family 1Ah Model 00h-0Fh Processors document
-> available at the link below. This constitutes events which capture L3
-> cache and UMC command activity.
+> On Wed,  6 Mar 2024 12:11:57 +0100
+> Petr Tesarik <petr@tesarici.cz> wrote:
+>
+> > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+> > initialized in the same file.
+> >
+> > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+> >
+> >       static struct lock_class_key __key;
+> >
+> > Since u64_stats_init() is a function (albeit an inline one), all calls
+> > within the same file end up using the same instance, effectively treati=
+ng
+> > them all as a single lock-class.
+>
+> What happens with this fix now?
+>
+> IIUC it should be reviewed by Eric, but I don't know through which tree
+> it should be merged. Any plans yet?
 
-Why do the L3 uncore PMU events go in the same topic as the core/cpu
-events, but the memory controller events not? Could they both go in
-separate files to make better use of the topic?
+I thought I gave a reply, but apparently not .
 
-Thanks,
-Ian
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
-> Link: https://bugzilla.kernel.org/attachment.cgi?id=3D305974
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
->  .../pmu-events/arch/x86/amdzen5/cache.json    | 175 ++++++++++++++++++
->  .../arch/x86/amdzen5/memory-controller.json   | 101 ++++++++++
-
-[ ... snip ... ]
+Thanks.
