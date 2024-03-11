@@ -1,88 +1,239 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523B138394;
-	Mon, 11 Mar 2024 13:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE803D0C6
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 13:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710162612; cv=none; b=ZVC9fIesfQMYgLKibayd32aAvZfiSQgdesiVuBVQ8csSqhYJKUw6VFDio99UCi9yhtP79bqLdJuIg4Qz4GxlD75kZx4iAYlzSReMavPuCM3uDYS03tkzDv5ZTha9X5gMvXUlh+zLoM4uG57+lgHb5RcQurWXpYvV9J0CVgtEr1k=
+	t=1710162806; cv=none; b=dk5zdQQgbw961T5z5CQF9UQ/XmEX5SEntpe4nWrCYNb67r+l8Y6orZwO89sARsT+AUTriefLNJELNUR7dlYc8PXX7t3DO7/+jkGaKq3bwPh7uXBXtv7pA+aWe3MqKRJXg5LZunfR6djDGxe+Xs+w6yPONv5pRN++HxEmPhIAieg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710162612; c=relaxed/simple;
-	bh=A+Mu6MgYNCf5RgY7hNoPKWfgf2zDD0mxKr1RXHYNs0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k3EM31cl64HXgZJP0sdMqTGx4ohmYlCnjUAuNbqYmSMPgqfoDtsxZ41I/KBqIpjCJYKvhD9vALx3zrD9+1d+6hGWE5lrSEXkOhOFstf/6Qp/rCNib6mDFtR87X8vqfWooBfaNqKpErV9JmDGClG332w0WSY3KzTSxhK6uFIkxBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUnSdRye; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710162806; c=relaxed/simple;
+	bh=oklUwL+uJA6fNtuusqrKD0mu1H8aZpzPS0lrskntuAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edhxYz+UjMwu9IBXWJEUXb2Snkz8+XtQVT0QAgAcM25UIFSjcoVVQTsevcSg6AdB6QSFGlPOsLQUt4ZS6sGhCAXjTvlAsTbp7T68K18ocYbrteY4H+cMs0HxwFAu6EmC7qGT02Qb9WXXo6TPpm0hjZzExzY/s6++Tm0Zm4Dw0W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RzAF3VmN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUnSdRye"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-29c07fac7a4so528970a91.1;
-        Mon, 11 Mar 2024 06:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710162610; x=1710767410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A+Mu6MgYNCf5RgY7hNoPKWfgf2zDD0mxKr1RXHYNs0k=;
-        b=IUnSdRyeFVAUoym+HZipHTkp+XWGum7rudQhtEGVG2cV9+spoowLJhJgtBOCr4gr+m
-         LOos9HiWW60S8iVEyWL99bxZZ8h7+wIj8wrnlopNXLCkPdZ5yDBy/B749hkjH/r1/Wkm
-         Sx6t1vTe6Dfy9lTp23i6WR4LKDP6t9ySjMPo4xGnJ2sTsD+YcEJkQNByUZhOBBqr1ZdI
-         o7zrVmLYSsOxwPExcz5IwAkWeQwQOWSsOx2LZrayt9mWWdIzhSLng2Dpm1vtD3mYoYhn
-         c2XK+eiqddMvwnO1kUgFquK0r3GmM+37w/WivFZuG3dWu/8UeGrmA3276QD/MwfLLt24
-         WoNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710162610; x=1710767410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A+Mu6MgYNCf5RgY7hNoPKWfgf2zDD0mxKr1RXHYNs0k=;
-        b=HbDFAkyC4yoK7elCXKk5RUhaQfyVIBOxYZ5DLOMEWjtXZFjYfE9V+VI3XFD7Vzjz7L
-         3Oq8WKxVGOlD4ag4WEXLRESVSZzEvbGPVTJkjT2FQwPJffzUvHsJn+cxwm5mSScYq03B
-         orPRLcXbJ2WUn9V3UpxByauSl5/vJTZFax+MYFv2k/SIpxzXpvbvdJKIlRnp5KpgG6zb
-         3yXQGRjnYptEXkd6YschAxi2BkhMDty7hbddHDsImZl/8KlRbt1+qh2JYILtNOy+eo8D
-         1/nU2FZu1uVM9OJ2yBuYg768dR5Ix1mcRlWujGbMPidz11JosAHrqjNBggFwmwymZFxE
-         K0Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVWhboMIqBIY2YrlZCkkPsKrMRaZI0lT52PDbY/g0dU4hct8yA34EU80qTcgny3uUYc1PGgluyalsJKeWYNUCE9wToCvcggUzxPTl3OHModZwckfHxXqt2yGkDOPKQh3RG0dIxDazsYoG+P6E0=
-X-Gm-Message-State: AOJu0YyL8nCYp7+xrKGvWKU2/uM7DSngQLnVrFrrSOdd66qDwNaIXcQH
-	1yAl+WvUv6vDkzsuYpKcjXX6ilXbcpploR//4uWqI24BHBmRnSIjPrAAY/wNvMXmABPCxAFI6Cs
-	43Ue2r40jrB4tzk0ISqmSBYA0+aM=
-X-Google-Smtp-Source: AGHT+IF6DQWdMMr6b36B8Qz2fGLuC79eyZPhod5NR7nCa/zXGZCZy785W52NqbWXaaLJ8404xu7I3KJw04gurxqO/5M=
-X-Received: by 2002:a17:90a:f3c4:b0:29a:a31d:695a with SMTP id
- ha4-20020a17090af3c400b0029aa31d695amr8716304pjb.1.1710162610571; Mon, 11 Mar
- 2024 06:10:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzAF3VmN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710162803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SF+hHbhR6PmZRbNnvRDOIoP+U+GWHfuAJbw7MsIUXN0=;
+	b=RzAF3VmNC8pdD51JRqQpFVROoKWgsgL43TW3xnvLJmXxTN0fBK7Olr/Abhsy2FObXnIZiW
+	JWbMMS+ddX+oU5EJbN7AmxYtGHysfKB0r4RA3HwNCFAFdtlGigjOu1jgNcQ68sW/z7ThL2
+	1VwEz0JZnHQ0h9eik+p0ZOoF6KxL/5A=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-182-Udhoi6WwMIqlcHlVxvW-Ng-1; Mon,
+ 11 Mar 2024 09:13:20 -0400
+X-MC-Unique: Udhoi6WwMIqlcHlVxvW-Ng-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5ED1538000B0;
+	Mon, 11 Mar 2024 13:13:19 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A3C7C04125;
+	Mon, 11 Mar 2024 13:13:12 +0000 (UTC)
+Date: Mon, 11 Mar 2024 21:13:08 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Patrick Plenefisch <simonpatp@gmail.com>
+Cc: Mike Snitzer <snitzer@kernel.org>,
+	Goffredo Baroncelli <kreijack@inwind.it>,
+	linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	regressions@lists.linux.dev, dm-devel@lists.linux.dev,
+	linux-btrfs@vger.kernel.org, ming.lei@redhat.com
+Subject: Re: LVM-on-LVM: error while submitting device barriers
+Message-ID: <Ze8DZLBHhCxgzc+r@fedora>
+References: <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
+ <a1e30dab-dfde-418e-a0dd-3e294838e839@inwind.it>
+ <CAOCpoWeB=2j+n+5K5ytj2maZxdrV80cxJcM5CL=z1bZKgpXPWQ@mail.gmail.com>
+ <a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it>
+ <ZedaKUge-EBo4CuT@redhat.com>
+ <ZeiS/bjJaRcrerWW@fedora>
+ <CAOCpoWeoQMh_-MxzxGBnK2Kf5EhvTLs=GrGwJ5XcfGVRTp73Eg@mail.gmail.com>
+ <Ze2azGlb1WxVFv7Z@fedora>
+ <Ze3RWqLvG18cQ4dz@redhat.com>
+ <CAOCpoWf7C=B1sdeUL46sVVtVUDH8+o_T9LGJNTOYqA317uMdmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223163726.12397-1-dakr@redhat.com> <6ba16a74-6fa4-4051-8cc6-f0e53a68d8b4@redhat.com>
- <Ze73aPMEg-BUCE8W@hs01.dakr.org>
-In-Reply-To: <Ze73aPMEg-BUCE8W@hs01.dakr.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 11 Mar 2024 14:10:04 +0100
-Message-ID: <CANiq72kK5CF0RQathACD_=7K1Ye4eMVdUnRcvkDZx4ALtq46wg@mail.gmail.com>
-Subject: Re: [PATCH v5] rust: str: add {make,to}_{upper,lower}case() to CString
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOCpoWf7C=B1sdeUL46sVVtVUDH8+o_T9LGJNTOYqA317uMdmA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Mon, Mar 11, 2024 at 1:22=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
-wrote:
->
-> It doesn't seem there's any further feedback, thus can this be merged?
+On Sun, Mar 10, 2024 at 02:11:11PM -0400, Patrick Plenefisch wrote:
+> On Sun, Mar 10, 2024 at 11:27 AM Mike Snitzer <snitzer@kernel.org> wrote:
+> >
+> > On Sun, Mar 10 2024 at  7:34P -0400,
+> > Ming Lei <ming.lei@redhat.com> wrote:
+> >
+> > > On Sat, Mar 09, 2024 at 03:39:02PM -0500, Patrick Plenefisch wrote:
+> > > > On Wed, Mar 6, 2024 at 11:00 AM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > >
+> > > > > #!/usr/bin/bpftrace
+> > > > >
+> > > > > #ifndef BPFTRACE_HAVE_BTF
+> > > > > #include <linux/blkdev.h>
+> > > > > #endif
+> > > > >
+> > > > > kprobe:submit_bio_noacct,
+> > > > > kprobe:submit_bio
+> > > > > / (((struct bio *)arg0)->bi_opf & (1 << __REQ_PREFLUSH)) != 0 /
+> > > > > {
+> > > > >         $bio = (struct bio *)arg0;
+> > > > >         @submit_stack[arg0] = kstack;
+> > > > >         @tracked[arg0] = 1;
+> > > > > }
+> > > > >
+> > > > > kprobe:bio_endio
+> > > > > /@tracked[arg0] != 0/
+> > > > > {
+> > > > >         $bio = (struct bio *)arg0;
+> > > > >
+> > > > >         if (($bio->bi_flags & (1 << BIO_CHAIN)) && $bio->__bi_remaining.counter > 1) {
+> > > > >                 return;
+> > > > >         }
+> > > > >
+> > > > >         if ($bio->bi_status != 0) {
+> > > > >                 printf("dev %s bio failed %d, submitter %s completion %s\n",
+> > > > >                         $bio->bi_bdev->bd_disk->disk_name,
+> > > > >                         $bio->bi_status, @submit_stack[arg0], kstack);
+> > > > >         }
+> > > > >         delete(@submit_stack[arg0]);
+> > > > >         delete(@tracked[arg0]);
+> > > > > }
+> > > > >
+> > > > > END {
+> > > > >         clear(@submit_stack);
+> > > > >         clear(@tracked);
+> > > > > }
+> > > > >
+> > > >
+> > > > Attaching 4 probes...
+> > > > dev dm-77 bio failed 10, submitter
+> > > >        submit_bio_noacct+5
+> > > >        __send_duplicate_bios+358
+> > > >        __send_empty_flush+179
+> > > >        dm_submit_bio+857
+> > > >        __submit_bio+132
+> > > >        submit_bio_noacct_nocheck+345
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > > completion
+> > > >        bio_endio+5
+> > > >        dm_submit_bio+955
+> > > >        __submit_bio+132
+> > > >        submit_bio_noacct_nocheck+345
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > >
+> > > > dev dm-86 bio failed 10, submitter
+> > > >        submit_bio_noacct+5
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > > completion
+> > > >        bio_endio+5
+> > > >        clone_endio+295
+> > > >        clone_endio+295
+> > > >        process_one_work+369
+> > > >        worker_thread+635
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > >
+> > > >
+> > > > For context, dm-86 is /dev/lvm/brokenDisk and dm-77 is /dev/lowerVG/lvmPool
+> > >
+> > > io_status is 10(BLK_STS_IOERR), which is produced in submission code path on
+> > > /dev/dm-77(/dev/lowerVG/lvmPool) first, so looks it is one device mapper issue.
+> > >
+> > > The error should be from the following code only:
+> > >
+> > > static void __map_bio(struct bio *clone)
+> > >
+> > >       ...
+> > >       if (r == DM_MAPIO_KILL)
+> > >               dm_io_dec_pending(io, BLK_STS_IOERR);
+> > >       else
+> > >               dm_io_dec_pending(io, BLK_STS_DM_REQUEUE);
+> > >     break;
+> >
+> > I agree that the above bpf stack traces for dm-77 indicate that
+> > dm_submit_bio failed, which would end up in the above branch if the
+> > target's ->map() returned DM_MAPIO_KILL or DM_MAPIO_REQUEUE.
+> >
+> > But such an early failure speaks to the flush bio never being
+> > submitted to the underlying storage. No?
+> >
+> > dm-raid.c:raid_map does return DM_MAPIO_REQUEUE with:
+> >
+> >         /*
+> >          * If we're reshaping to add disk(s)), ti->len and
+> >          * mddev->array_sectors will differ during the process
+> >          * (ti->len > mddev->array_sectors), so we have to requeue
+> >          * bios with addresses > mddev->array_sectors here or
+> >          * there will occur accesses past EOD of the component
+> >          * data images thus erroring the raid set.
+> >          */
+> >         if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
+> >                 return DM_MAPIO_REQUEUE;
+> >
+> > But a flush doesn't have an end_sector (it'd be 0 afaik).. so it seems
+> > weird relative to a flush.
+> >
+> > > Patrick, you mentioned lvmPool is raid1, can you explain how lvmPool is
+> > > built? It is dm-raid1 target or over plain raid1 device which is
+> > > build over /dev/lowerVG?
+> 
+> LVM raid1:
+> lvcreate --type raid1 -m 1 ...
 
-No, it cannot be applied until the merge window closes, i.e. 2 weeks from n=
-ow.
+OK, that is the reason, as Mike mentioned.
 
-Please note that there are other patches yet to be applied that were
-sent before this v5 -- we aim to send early PRs to Linus, and in
-general for at least a week in -next and for at least a week for
-review. Thus -rc5/6 is already quite late in general.
+dm-raid.c:raid_map returns DM_MAPIO_REQUEUE, which is translated into
+BLK_STS_IOERR in dm_io_complete().
 
-Cheers,
-Miguel
+Empty flush bio is sent from btrfs, both .bi_size and .bi_sector are set
+as zero, but the top dm is linear, which(linear_map()) maps new
+bio->bi_iter.bi_sector, and the mapped bio is sent to dm-raid(raid_map()),
+then DM_MAPIO_REQUEUE is returned.
+
+The one-line patch I sent in last email should solve this issue.
+
+https://lore.kernel.org/dm-devel/a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it/T/#m8fce3ecb2f98370b7d7ce8db6714bbf644af5459
+
+But DM_MAPIO_REQUEUE misuse needs close look, and I believe Mike is working
+on that bigger problem.
+
+I guess most of dm targets don't deal with empty bio well, at least
+linear & dm-raid, not look into others yet, :-(
+
+
+Thanks,
+Ming
+
