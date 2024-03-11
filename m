@@ -1,61 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6691878;
-	Mon, 11 Mar 2024 04:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BA77489
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 04:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710132486; cv=none; b=Se0Ff4dL+A2D8rfPx9YHKH/swzVGmclByXRQ1/63Yr8LMUcEn4VWsO/n+RQPr+0lmyRa5nyyGR7Z49GrAnwYAio4fw8qtMjRG8TrodxxACFhetczef5QdDenhVpVX6vwO3LynORYKjsbzwpuqGLsg6D0pSJa751zc6eu80bcTps=
+	t=1710132650; cv=none; b=ORiSL4A+jqpmh8sf27rjivyzGPt/QTQC63AEKLRUBxWFmgZa3pUJJQ5pL8wKdoowe7Bx8KGDx+GG83aRMVOX5uWFowGT0H+dcoJCux+C2sX1GQwtNZopNp/aewY4RTgedRO3Auwd4siO4Plb0jwg0y+bO5Tyc5pPiYXRRalwAF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710132486; c=relaxed/simple;
-	bh=+xQ984v3y25MBDNQk67yJ/vJQapd1ncJ6iyho2QJ5+w=;
+	s=arc-20240116; t=1710132650; c=relaxed/simple;
+	bh=x/uzfXxOzbqKSd67PBuy83Et2SEuvF/AVOWHtH5UYWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5Xe2S6qHDR6qvgUdVbzIkcj/mlhRGlokf9UQ5+eGL4S+VOzDFh/Smsru9KmzSoc+l8yGGskMSCeHY33bIfgULYwbsxE8uPJEdPMJsnxz99Kb+DZMYsbSQ/AbUcoXBtkPjKoW0v7mwnRrML5ZvjGNqk1JMpbKffNW+eM9uiUpuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kn5dAt4V; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFnftvlwRbBudEvxveX0kQpPUZVuG4BMkr4azlnTvhVJr2PqcWAf8Knm/ulJgNCpAnYn4JqNrGb3jezTQcr7ZvZ6wFn4h4SJ64mIcULYI/UvvF90+HYFaCDRK+c/QD3FVhO4doRpKF3RUI7FsD2apKtVLuaxyvkSy4+FEhqodPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EUuReWxJ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kn5dAt4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710132485; x=1741668485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+xQ984v3y25MBDNQk67yJ/vJQapd1ncJ6iyho2QJ5+w=;
-  b=kn5dAt4V8P2HSwOZkqIgtsDMnxKX+l8+HaNkBtvtgF+4cdCLYCHVENkD
-   iw3GBG6EDLjqkLs2BWFvhlgePLmcwDcvSKOwjVohk7fJ32UTq09Sk+skl
-   CZX3BBR/Idjl6lYvsbsC0fYv6nUpIR5QI1dHSotHaP2mDU48v3v4DyNH0
-   390p4vVhB5c3OT4WNJvfLdfnpeFInjmITCHjJaO9aX4hyyDuG+iD4cHKy
-   EsDFx4YBktc8Y3kzXro15BStJ20x0nwg3zHkEQpVchx/1lDhUQV6p+JfL
-   sQaV3W4oTGWKyrwwBhzWxDP3BbbisJmR1SChxC9oQ5FF28XayP5MI/4kp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4621577"
-X-IronPort-AV: E=Sophos;i="6.07,115,1708416000"; 
-   d="scan'208";a="4621577"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2024 21:48:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,115,1708416000"; 
-   d="scan'208";a="42030439"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 10 Mar 2024 21:48:01 -0700
-Date: Mon, 11 Mar 2024 12:43:41 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	Fuad Tabba <tabba@google.com>, David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH 09/16] KVM: x86/mmu: Move private vs. shared check above
- slot validity checks
-Message-ID: <Ze6L/Tnrvs7eayqG@yilunxu-OptiPlex-7050>
-References: <20240228024147.41573-1-seanjc@google.com>
- <20240228024147.41573-10-seanjc@google.com>
- <ZeqZ+BDTN5bIx0rm@yilunxu-OptiPlex-7050>
- <ZeufCK2Yj_8Bx7EV@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EUuReWxJ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dd10a37d68so33025965ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2024 21:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710132648; x=1710737448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1/vyyb7UixM+MEvW9AsLcC8YOFSA6iDMoo7vUn6seo=;
+        b=EUuReWxJKlbMsZrvH43PpeDcO3bhy7s4tyvJ1bivV+M8Cj0WyvkkacvlLhP9ml4Yk2
+         QP5aSbivsMM90HwvGbYKTPF/1d5MAplBP8KL525TeV3e29gq80a2HEcWmyPc2p5elrl6
+         3nXBAjDXio424qm5+Yl58A5ut7Br66syHBNNqGiJHqCUJD1ZwcpTnJbrAfBQGEwM1nIG
+         QD7kQeXpP9LzlfM0G7TPe4I6V1KhYwVCafpaRJnZx4rzgZB7UH9q2kIT4/+FmxV74IVD
+         T/CMQZrWc33k3peybKymV2oaT4dRmxuXKNCfV8THXSv8a2C22LMSBr0QvVgQ3afBZahZ
+         ySgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710132648; x=1710737448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q1/vyyb7UixM+MEvW9AsLcC8YOFSA6iDMoo7vUn6seo=;
+        b=GJqBcVJQOdxxRW3s+DDRKjXCN8bEhq1L4LxCjIQfj66mIy7hQXc/KIrLQrNDbEWUTs
+         spQh/bOTGkAaxB4O/mF3PAiyUCRAsTrnYi3HMgN96R4Ocw77BrXZFmJPGo8O2+o4lBds
+         jid/BQR8lX676zdc0N6Ssjqao1BwRqv94HT2P1wGqgKBUhjQM8kwNTLK/Zk+GNj+zvdJ
+         jkclg2UIuwIUDodqIHLq9jG28IU5DZudcTLiC0HJZQ/BZEMajgVB6q1GSsavcKzopkFY
+         iGvnu31dUtKl6ZJI4WKA1vWJDQN0cXs0HtEBeqNlnhJN4Y8UI4O6xWW/dWdKv9UVuB9X
+         SAXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4kPUY9ZqNyjFBqxTTnT+y+QJ5vfr3o0zZPMEjHCtTB0ZscEfevoazkofEMoKHsjCfzOH3agewLrSw4DChOkIXwgEZkRKbNI7cgBJQ
+X-Gm-Message-State: AOJu0YxVl3nCdsoemw0d7U0H7F4yqBOQL1nDk99nRTb77UuH+65toG11
+	uew9hyoa6Cbywr75cmP/H8i2u7izfady5sUTVzLbSIKkIGlvEdh4khAv2KGeVVI=
+X-Google-Smtp-Source: AGHT+IFaFumoYymXG0elFv9QWhPYx1mJ45zKOvRlcg+v0XYxM1IGW4kDZhWUjELeGZppoh4j4XYmZg==
+X-Received: by 2002:a17:902:ef8d:b0:1dd:6296:1709 with SMTP id iz13-20020a170902ef8d00b001dd62961709mr4639033plb.63.1710132648326;
+        Sun, 10 Mar 2024 21:50:48 -0700 (PDT)
+Received: from localhost ([122.172.85.206])
+        by smtp.gmail.com with ESMTPSA id d4-20020a170903230400b001d8be6d1ec4sm3591966plh.39.2024.03.10.21.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Mar 2024 21:50:47 -0700 (PDT)
+Date: Mon, 11 Mar 2024 10:20:44 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: dietmar.eggemann@arm.com, rafael@kernel.org, xuwei5@hisilicon.com,
+	zhanjie9@hisilicon.com, sudeep.holla@arm.com,
+	cristian.marussi@arm.com, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, quic_rgottimu@quicinc.com,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH V2] cpufreq: Fix per-policy boost behavior on SoCs using
+ cpufreq_boost_set_sw
+Message-ID: <20240311045044.7vvzbsx5nqs5a2lr@vireshk-i7>
+References: <20240308103630.383371-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,81 +71,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeufCK2Yj_8Bx7EV@google.com>
+In-Reply-To: <20240308103630.383371-1-quic_sibis@quicinc.com>
 
-On Fri, Mar 08, 2024 at 03:28:08PM -0800, Sean Christopherson wrote:
-> On Fri, Mar 08, 2024, Xu Yilun wrote:
-> > On Tue, Feb 27, 2024 at 06:41:40PM -0800, Sean Christopherson wrote:
-> > > Prioritize private vs. shared gfn attribute checks above slot validity
-> > > checks to ensure a consistent userspace ABI.  E.g. as is, KVM will exit to
-> > > userspace if there is no memslot, but emulate accesses to the APIC access
-> > > page even if the attributes mismatch.
-> > > 
-> > > Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
-> > > Cc: Yu Zhang <yu.c.zhang@linux.intel.com>
-> > > Cc: Chao Peng <chao.p.peng@linux.intel.com>
-> > > Cc: Fuad Tabba <tabba@google.com>
-> > > Cc: Michael Roth <michael.roth@amd.com>
-> > > Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > > ---
-> > >  arch/x86/kvm/mmu/mmu.c | 15 ++++++++++-----
-> > >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 9206cfa58feb..58c5ae8be66c 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -4365,11 +4365,6 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
-> > >  			return RET_PF_EMULATE;
-> > >  	}
-> > >  
-> > > -	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
-> > > -		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-> > > -		return -EFAULT;
-> > > -	}
-> > > -
-> > >  	if (fault->is_private)
-> > >  		return kvm_faultin_pfn_private(vcpu, fault);
-> > >  
-> > > @@ -4410,6 +4405,16 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
-> > >  	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
-> > >  	smp_rmb();
-> > >  
-> > > +	/*
-> > > +	 * Check for a private vs. shared mismatch *after* taking a snapshot of
-> > > +	 * mmu_invalidate_seq, as changes to gfn attributes are guarded by the
-> > > +	 * invalidation notifier.
-> > 
-> > I didn't see how mmu_invalidate_seq influences gfn attribute judgement.
-> > And there is no synchronization between the below check and
-> > kvm_vm_set_mem_attributes(), the gfn attribute could still be changing
-> > after the snapshot.
-> 
-> There is synchronization.  If kvm_vm_set_mem_attributes() changes the attributes,
-> and thus bumps mmu_invalidate_seq, after kvm_faultin_pfn() takes its snapshot,
-> then is_page_fault_stale() will detect that an invalidation related to the gfn
-> occured and resume the guest *without* installing a mapping in KVM's page tables.
-> 
-> I.e. KVM may read the old, stale gfn attributes, but it will never actually
-> expose the stale attirubtes to the guest.
+On 08-03-24, 16:06, Sibi Sankar wrote:
+> +		/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
+> +		if (cpufreq_driver->boost_enabled)
+> +			policy->boost_enabled = policy_has_boost_freq(policy) ? true : false;
 
-That makes sense!  I was just thinking of the racing for below few lines,
+Can be written as:
 
-	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
-		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-		return -EFAULT;
-	}
+policy->boost_enabled = cpufreq_boost_enabled() && policy_has_boost_freq(policy);
 
-But the guarding is actually for the whole kvm_faultin_pfn(). It is the
-the same mechanism between getting old gfn attributes and getting old pfn.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I wonder if we could instead add some general comments at
-
-   fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
-
-about the snapshot and is_page_fault_stale() thing.
-
-Thanks,
-Yilun
-> 
+-- 
+viresh
