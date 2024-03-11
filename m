@@ -1,283 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from tretyak2.mcst.ru (tretyak2.mcst.ru [212.5.119.215])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C30C4AEDA;
-	Mon, 11 Mar 2024 16:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83A05026D;
+	Mon, 11 Mar 2024 16:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.5.119.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710176139; cv=none; b=dR9k2KIYh4RMqe1rGq8EnF8GOdM2M9O3vtjrNgI3ByCcaEJB2gzOPfFZOsfmmeJ/PPRn7ja2izMUDyRf8hy6tpaFjNVZXHBxZ4gmS2COZGbdKW31E9JabpgwxB4tSJXVpzToq0uDcp2FKSxqiXP0+B8eRg6cYl3qSlVWQJr+r7c=
+	t=1710176150; cv=none; b=rF48Lojjzs7Z8BBMBft+EyjxwpeBfxPacnKHJkOtrdrBRvJuFejNEw1fy7AZwkyW9jOiij01Ucw+J4BQE+frowOJYsd3RQtZalR17Q++BqjPXyfA7j8YlLiR6lsz5k2J+xPSqEAFQ78MIclqlkGlC33XEnuV8RGeFKq0j5WDGPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710176139; c=relaxed/simple;
-	bh=QBY8yBI+jD/WBDEFOQqo+a95NUPLPrB7wWpPMM8YHPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ECF14MS5zdd8CFEaQyHfDIul9UtX1Y88BQqF1ajqKMjE0VDn5nLxQv3MkV4YD06IpKOvJ6OZNdyR1gOUoa51z+PldAFdD3jwVSzYL1EfTuAXWOvAXjK7Z1ChKNlRkfWhuKGG2pfc8al1TXkBKxOop7OlmJ9LwhUimVdvBjmhKkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpDcimtS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpDcimtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A1FC43399;
-	Mon, 11 Mar 2024 16:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710176139;
-	bh=QBY8yBI+jD/WBDEFOQqo+a95NUPLPrB7wWpPMM8YHPo=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
-	b=UpDcimtSdjhcOQaEPAOry33amGLofgoTr2C0SJMLlb90GodD85ERmPqrLLrC5iPUq
-	 dDocLlEIs6kUYvM5rQHYTUiBSCEgA74KlnmwiUuwyH1tuvs4AqMvHKAkF7Nha2dUh2
-	 5uIQds1PXNZ56Wl/ipAKlo7BOO0VZ6dpqi4MT2bRaB1tyQVEeIxzEKLB14i2efnQX4
-	 pSmNSEPMLa+V9syD0YlXspKugy12H0zycg071J0do2pYckzmFqqmvU2Sf1SFfYCEdx
-	 EYj/fmKwZn3XxEL7BrSailaNiWQQ+XU2NomF2O1ROTxy+3W9vbVSo63YAg0TCuBr4q
-	 BxOVlHVo9oMDQ==
-Date: Mon, 11 Mar 2024 10:55:37 -0600
-From: Rob Herring <robh@kernel.org>
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, frowand.list@gmail.com,
-	vgupta@kernel.org, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-	guoren@kernel.org, monstr@monstr.eu, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, dinguyen@kernel.org, chenhuacai@kernel.org,
-	tsbogend@alpha.franken.de, jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-	mpe@ellerman.id.au, ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, richard@nod.at,
-	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-	chris@zankel.net, jcmvbkbc@gmail.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	kernel@quicinc.com
-Subject: Re: [PATCH v4 2/4] of: reserved_mem: Add code to dynamically
- allocate reserved_mem array
-Message-ID: <20240311165537.GA1370807-robh@kernel.org>
-References: <20240308191204.819487-1-quic_obabatun@quicinc.com>
- <20240308191204.819487-3-quic_obabatun@quicinc.com>
+	s=arc-20240116; t=1710176150; c=relaxed/simple;
+	bh=kdzWBX3LAegiWKoliuOc67TGbPzxENLVqK5kivBeZ8A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OHz0osBoMyRlRtKYT1lsFdCo3L2ycjFQHs8yQRdr1ttpUNsiPqGX1GV8N8GMU6Vlo+/LjWMy8ZZzMmgzhtKlwVzAOUGqAvRx1IWkXzBRh4+rkuETCf/tcUbJXF6yqsOtw5kIaFfbnQUf7iuiGFSFRzW8DTScEJQARmJg06G6dRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru; spf=pass smtp.mailfrom=mcst.ru; arc=none smtp.client-ip=212.5.119.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mcst.ru
+Received: from tretyak2.mcst.ru (localhost [127.0.0.1])
+	by tretyak2.mcst.ru (Postfix) with ESMTP id 08035102398;
+	Mon, 11 Mar 2024 19:48:48 +0300 (MSK)
+Received: from frog.lab.sun.mcst.ru (frog.lab.sun.mcst.ru [176.16.4.50])
+	by tretyak2.mcst.ru (Postfix) with ESMTP id E9BF910239A;
+	Mon, 11 Mar 2024 19:48:02 +0300 (MSK)
+Received: from artemiev-i.lab.sun.mcst.ru (avior-1 [192.168.63.223])
+	by frog.lab.sun.mcst.ru (8.13.4/8.12.11) with ESMTP id 42BGm2ma020437;
+	Mon, 11 Mar 2024 19:48:02 +0300
+From: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Igor Artemiev <Igor.A.Artemiev@mcst.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: [lvc-project] [PATCH] wifi: cfg80211: fix rdev_dump_mpp() arguments order
+Date: Mon, 11 Mar 2024 19:45:19 +0300
+Message-Id: <20240311164519.118398-1-Igor.A.Artemiev@mcst.ru>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240308191204.819487-3-quic_obabatun@quicinc.com>
+Content-Transfer-Encoding: 8bit
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+	 bases: 20111107 #2745587, check: 20240311 notchecked
+X-AV-Checked: ClamAV using ClamSMTP
 
-On Fri, Mar 08, 2024 at 11:12:02AM -0800, Oreoluwa Babatunde wrote:
-> The reserved_mem array is statically allocated with a size of
-> MAX_RESERVED_REGIONS(64). Therefore, if the number of reserved_mem
-> regions exceeds this size, there will not be enough space to store
-> all the data.
-> 
-> Hence, extend the use of the static array by introducing a
-> dynamically allocated array based on the number of reserved memory
-> regions specified in the DT.
-> 
-> On architectures such as arm64, memblock allocated memory is not
-> writable until after the page tables have been setup. Hence, the
-> dynamic allocation of the reserved_mem array will need to be done only
-> after the page tables have been setup.
-> 
-> As a result, a temporary static array is still needed in the initial
-> stages to store the information of the dynamically-placed reserved memory
-> regions because the start address is selected only at run-time and is not
-> stored anywhere else.
-> It is not possible to wait until the reserved_mem array is allocated
-> because this is done after the page tables are setup and the reserved
-> memory regions need to be initialized before then.
-> 
-> After the reserved_mem array is allocated, all entries from the static
-> array is copied over to the new array, and the rest of the information
-> for the statically-placed reserved memory regions are read in from the
-> DT and stored in the new array as well.
-> 
-> Once the init process is completed, the temporary static array is
-> released back to the system because it is no longer needed. This is
-> achieved by marking it as __initdata.
-> 
-> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-> ---
->  drivers/of/fdt.c             | 15 +++++++---
->  drivers/of/of_private.h      |  1 +
->  drivers/of/of_reserved_mem.c | 53 ++++++++++++++++++++++++++++++++++--
->  3 files changed, 62 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index fe6c75c5a8c0..2468360d6053 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -614,13 +614,15 @@ void __init fdt_scan_reserved_mem_reg_nodes(void)
->  	}
->  }
->  
-> +int total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
-> +
+Fix the order of arguments in the TP_ARGS macro 
+for the rdev_dump_mpp tracepoint event.
 
-Put this in of_reserved_mem.c.
+Found by Linux Verification Center (linuxtesting.org).
 
->  /*
->   * fdt_scan_reserved_mem() - scan a single FDT node for reserved memory
->   */
->  static int __init fdt_scan_reserved_mem(void)
->  {
->  	int node, child;
-> -	int dynamic_nodes_cnt = 0;
-> +	int dynamic_nodes_cnt = 0, count = 0;
->  	int dynamic_nodes[MAX_RESERVED_REGIONS];
->  	const void *fdt = initial_boot_params;
->  
-> @@ -643,6 +645,8 @@ static int __init fdt_scan_reserved_mem(void)
->  		uname = fdt_get_name(fdt, child, NULL);
->  
->  		err = __reserved_mem_reserve_reg(child, uname);
-> +		if (!err)
-> +			count++;
->  
->  		/*
->  		 * Delay allocation of the dynamically-placed regions
-> @@ -657,12 +661,16 @@ static int __init fdt_scan_reserved_mem(void)
->  
->  	for (int i = 0; i < dynamic_nodes_cnt; i++) {
->  		const char *uname;
-> +		int err;
->  
->  		child = dynamic_nodes[i];
->  		uname = fdt_get_name(fdt, child, NULL);
->  
-> -		__reserved_mem_alloc_size(child, uname);
-> +		err = __reserved_mem_alloc_size(child, uname);
-> +		if (!err)
-> +			count++;
->  	}
-> +	total_reserved_mem_cnt = count;
->  	return 0;
->  }
->  
+Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+---
+ net/wireless/trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> @@ -715,8 +723,6 @@ void __init early_init_fdt_scan_reserved_mem(void)
->  			break;
->  		memblock_reserve(base, size);
->  	}
-> -
-> -	fdt_init_reserved_mem();
->  }
->  
->  /**
-> @@ -1405,6 +1411,7 @@ void __init unflatten_device_tree(void)
->  	of_alias_scan(early_init_dt_alloc_memory_arch);
->  
->  	unittest_unflatten_overlay_base();
-> +	fdt_init_reserved_mem();
+diff --git a/net/wireless/trace.h b/net/wireless/trace.h
+index 1f374c8a17a5..cc3fd4177bce 100644
+--- a/net/wireless/trace.h
++++ b/net/wireless/trace.h
+@@ -1013,7 +1013,7 @@ TRACE_EVENT(rdev_get_mpp,
+ TRACE_EVENT(rdev_dump_mpp,
+ 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, int _idx,
+ 		 u8 *dst, u8 *mpp),
+-	TP_ARGS(wiphy, netdev, _idx, mpp, dst),
++	TP_ARGS(wiphy, netdev, _idx, dst, mpp),
+ 	TP_STRUCT__entry(
+ 		WIPHY_ENTRY
+ 		NETDEV_ENTRY
+-- 
+2.39.2
 
-This change belongs in patch 1.
-
->  }
->  
->  /**
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 542e37a37a24..447b63413b39 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -42,6 +42,7 @@ extern struct mutex of_mutex;
->  extern raw_spinlock_t devtree_lock;
->  extern struct list_head aliases_lookup;
->  extern struct kset *of_kset;
-> +extern int total_reserved_mem_cnt;
->  
->  #if defined(CONFIG_OF_DYNAMIC)
->  extern int of_property_notify(int action, struct device_node *np,
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index d62f1956024c..3c4373b021be 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -26,7 +26,8 @@
->  
->  #include "of_private.h"
->  
-> -static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
-> +static struct reserved_mem reserved_mem_array[MAX_RESERVED_REGIONS] __initdata;
-> +static struct reserved_mem *reserved_mem __refdata = reserved_mem_array;
->  static int reserved_mem_count;
->  
->  static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
-> @@ -54,6 +55,48 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->  	return err;
->  }
->  
-> +/**
-> + * alloc_reserved_mem_array() - allocate memory for the reserved_mem
-> + * array using memblock
-> + *
-> + * This function is used to allocate memory for the reserved_mem array
-> + * according to the total number of reserved memory regions defined in
-> + * the DT.
-> + * After the new array is allocated, the information stored in the
-> + * initial static array is copied over to this new array and the
-> + * new array is used from this point on.
-> + */
-> +static int __init alloc_reserved_mem_array(void)
-> +{
-> +	struct reserved_mem *new_array;
-> +	size_t alloc_size, copy_size, memset_size;
-> +
-> +	alloc_size = array_size(total_reserved_mem_cnt, sizeof(*new_array));
-> +	if (alloc_size == SIZE_MAX)
-> +		return -1;
-
-Use EOVERFLOW
-
-> +
-> +	new_array = memblock_alloc(alloc_size, SMP_CACHE_BYTES);
-> +	if (!new_array)
-> +		return -ENOMEM;
-> +
-> +	copy_size = array_size(reserved_mem_count, sizeof(*new_array));
-> +	if (copy_size == SIZE_MAX)
-> +		goto overlow_err;
-
-This is the only path for goto, so move the cleanup here.
-
-> +
-> +	memset_size = alloc_size - copy_size;
-> +
-> +	memcpy(new_array, reserved_mem, copy_size);
-> +	memset(new_array + reserved_mem_count, 0, memset_size);
-> +
-> +	reserved_mem = new_array;
-> +	return 0;
-> +
-> +overlow_err:
-> +	memblock_free(new_array, alloc_size);
-> +	total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
-> +	return -1;
-
-Use EOVERFLOW
-
-> +}
-> +
->  /*
->   * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
->   */
-> @@ -62,7 +105,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
->  {
->  	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
->  
-> -	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
-> +	if (reserved_mem_count == total_reserved_mem_cnt) {
->  		pr_err("not enough space for all defined regions.\n");
->  		return;
->  	}
-> @@ -303,7 +346,11 @@ static void __init __rmem_check_for_overlap(void)
->   */
->  void __init fdt_init_reserved_mem(void)
->  {
-> -	int i;
-> +	int i, ret;
-> +
-> +	ret = alloc_reserved_mem_array();
-> +	if (ret)
-> +		pr_err("Failed to allocate memory for reserved_mem array with err: %d", ret);
-
-As printing a message is the only error handling, better to just print 
-something in alloc_reserved_mem_array() and return void.
-
->  
->  	fdt_scan_reserved_mem_reg_nodes();
->  
-> -- 
-> 2.34.1
-> 
