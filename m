@@ -1,162 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB24D125A9;
-	Mon, 11 Mar 2024 08:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895ECF501
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 08:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710146748; cv=none; b=V13ao0P+jGF9zCB6g+cymGZWcWvq6gQOpFMYhIB3r+g7HjQqbYk8NcBqNkfJM0Xh2VuNMVYUJt2lNFFABHbc/RaSbXtW3tNasaFqHrAmx+JuEo86zFQ+59qq0jkoQjYAzGjBR4+a9OgmJfKPSXbxjRpq1fyFO24G+8dEoPLSalI=
+	t=1710147029; cv=none; b=o8CEWdQhOv2m6Sj4VpJflZOJamYzn4hYmi+Z7ePs7vORsWKE7iym8zzEOHiM0Da7Dj9SL8QlC5egIOMnBNnSkZ7fuh80vmIxFFj2eLurZEsp4RGxt91L8z/UZz0xQIFqT5e5OZ/t6slRUX/IJ9qbw/M2cMBENYmmSRr1kmx8Scg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710146748; c=relaxed/simple;
-	bh=5zZfkh7bTy10cbt+byFNi1KVFCC5exwzUgnJ75DgeOM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lhk/drbJ2E/XaM8T8+CBnpQOVw9w2mL0uzPA4oEOr5h0qJTjXbJAtSGkh3EyIEf833TM8eojzCNdzGtcI+ePwWPFAIugZd13If7eN351VXLmZlNlUslZNGFOAk6q/5N3pQJ/1X/dy1xbKgKOCAzinccU5QhcLsHpv/T3DZ8vdMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C38SafKz; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710147029; c=relaxed/simple;
+	bh=xnk6qko3qBWNpJzMUUyUoDH/gLadPjFjHju8vDcesaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XZu2GlW++YFH05Yd7GN6Hw0DE5D93A2Z6RHV1Qhcr2b15U0IrLCRcpGamWST6PEKSDS3/sT+geP+cLBKQrE3EKhu8rbRGEoYYbToSd3p6ieqxtH+gFcjibhTCrgA5sxQdXxxA3PrJy4B4bRvsFwn6Zqz2HQvHlfCIz7g7uCwl2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NDuOzaeZ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C38SafKz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710146747; x=1741682747;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5zZfkh7bTy10cbt+byFNi1KVFCC5exwzUgnJ75DgeOM=;
-  b=C38SafKzUdAwb+LI1VWbsRiPY8w5ZSz0+3XNJYHNR0xe5xcgWbQFtWsT
-   4FZ1oSpShbUvP8L0GABxCmjVmM7Wo9ZFlRDislIjcrZwkdjz8oO7DQ2uc
-   LRqIMEA20XFhaQGslSVAVBdPmz83v24Md1i9kYVcwRfusEp+/SjB4oG4e
-   Ys6V0VBrOwzLJbrOvmXeIIhafsut4JfFk2gihbRUDhZeCNxCaafFwvNnH
-   a6O7CkGFDvvSx07MGUIDMlCKVCCaZkwOmXhiSveyOGcvfUNry5k5dUTvM
-   9oRq6pRQPGbw6sP2KFe2s/xpJ9eIVSKaWQg0VXni1ngnECAft5uJ4YXlG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="27267162"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="27267162"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 01:45:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="11535184"
-Received: from yhuang6-mobl2.sh.intel.com ([10.238.6.133])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 01:45:43 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	stable@vger.kernel.org
-Subject: [PATCH -v3] mm: swap: fix race between free_swap_and_cache() and swapoff()
-Date: Mon, 11 Mar 2024 16:44:26 +0800
-Message-Id: <20240311084426.447164-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NDuOzaeZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C54C340E016C;
+	Mon, 11 Mar 2024 08:50:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id bjagQScE8v0U; Mon, 11 Mar 2024 08:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1710147021; bh=jLGcsxNWVhClR+EyvE+0QsSjIMTzQRjj9uGdffxi9Yk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NDuOzaeZBxLV+YfnTZkc9ufLKMOCjEjGmgtC/nZujzDkvhVn15Vh/WIe29MBHDOxr
+	 pjGJA3DmcRr1pNuAXu6N5CbLzPxkQcSnyVflESG94TWrWz6DEjfmVWltU1Dd0c9N5I
+	 ajU4SOUujHI4rTXj6lKDyg0lcmdrX2/PwrNaoBbO2BUB0vhMYUqJTLgTkjfTiWHtrv
+	 yH/aLPf/kM/04ZkxvEaml06EofSpokgCfUkrKiUatIvVSJv4iZocD7rzGV1aA4xpXb
+	 qFki+joLb7eGqEQzTitYXDAIzGsyFxFINuiOQ0jc4Ln4zfnbV8SW302tyvdJIyyBub
+	 8xyv/tszFTHRXKFpL4U038+P902/MvGcVCpa/bc0JY/vjj/BfOGohEJ7hqtzGv0eFD
+	 MLbCz51hzvpArOmk6vFSoX5s8ZIJ6DhLD+yi/X3j1M36U166B92oFY1oYPjwy0JGNq
+	 focA2G8Ui3ezs0vnUx3yLl6dTRz63BcZf01fx8QmtWSebYJztsoUs94BDZ56eFLCIK
+	 touBDfsnn2g6odp2cn/xBK9bAUwt1ZU7tUoIPDt9zpnJN9ZbGJ0z12B63KPtB2azHO
+	 NlZZBd5WGod1U8L535AloyBTFeHCabnXZp6+AJ3hhcQqzCXC2eR9lUNW5FjKIesDyl
+	 yTpGFm1bl/5AaXx3tcd+1SqM=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 585EE40E0028;
+	Mon, 11 Mar 2024 08:50:18 +0000 (UTC)
+Date: Mon, 11 Mar 2024 09:50:11 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] ras/core for v6.9-rc1
+Message-ID: <20240311085011.GAZe7Fw40LPs6_T1cR@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-From: Ryan Roberts <ryan.roberts@arm.com>
+Hi Linus,
 
-There was previously a theoretical window where swapoff() could run and
-teardown a swap_info_struct while a call to free_swap_and_cache() was
-running in another thread.  This could cause, amongst other bad
-possibilities, swap_page_trans_huge_swapped() (called by
-free_swap_and_cache()) to access the freed memory for swap_map.
+please pull a very complex RAS fix for v6.9-rc1.
 
-This is a theoretical problem and I haven't been able to provoke it from a
-test case.  But there has been agreement based on code review that this is
-possible (see link below).
+:-)
 
-Fix it by using get_swap_device()/put_swap_device(), which will stall
-swapoff().  There was an extra check in _swap_info_get() to confirm that
-the swap entry was not free.  This isn't present in get_swap_device()
-because it doesn't make sense in general due to the race between getting
-the reference and swapoff.  So I've added an equivalent check directly in
-free_swap_and_cache().
+Thx.
 
-Details of how to provoke one possible issue:
-
---8<-----
-
-CPU0                               CPU1
-----                               ----
-shmem_undo_range
-  shmem_free_swap
-    xa_cmpxchg_irq
-    free_swap_and_cache
-      __swap_entry_free
-      /* swap_count() become 0 */
-                                   swapoff
-                                     try_to_unuse
-                                       shmem_unuse /* cannot find swap entry */
-                                       find_next_to_unuse
-                                       filemap_get_folio
-                                       folio_free_swap
-                                       /* remove swap cache */
-                                       /* free si->swap_map[] */
-      swap_page_trans_huge_swapped <-- access freed si->swap_map !!!
-
---8<-----
-
-Link: https://lkml.kernel.org/r/20240306140356.3974886-1-ryan.roberts@arm.com
-Closes: https://lore.kernel.org/linux-mm/8734t27awd.fsf@yhuang6-desk2.ccr.corp.intel.com/
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com> [patch description]
-Cc: David Hildenbrand <david@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
-Hi, Andrew,
 
-If it's not too late.  Please replace v2 of this patch in mm-stable
-with this version.
+The following changes since commit 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478:
 
-Changes since v2:
+  Linux 6.8-rc3 (2024-02-04 12:20:36 +0000)
 
- - Remove comments for get_swap_device() because it's not correct.
- - Revised patch description about the race condition description.
+are available in the Git repository at:
 
-Changes since v1:
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/ras_core_for_v6.9_rc1
 
- - Added comments for get_swap_device() as suggested by David
- - Moved check that swap entry is not free from get_swap_device() to
-   free_swap_and_cache() since there are some paths that legitimately call with
-   a free offset.
+for you to fetch changes up to a6a789165bbdb506b784f53b7467dbe0210494ad:
 
-Best Regards,
-Huang, Ying
+  x86/mce: Make mce_subsys const (2024-02-05 10:26:51 +0100)
 
- mm/swapfile.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+----------------------------------------------------------------
+ - Constify yet another static struct bus_type instance now that the
+   driver core can handle that
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 2b3a2d85e350..9e0691276f5e 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1609,13 +1609,19 @@ int free_swap_and_cache(swp_entry_t entry)
- 	if (non_swap_entry(entry))
- 		return 1;
- 
--	p = _swap_info_get(entry);
-+	p = get_swap_device(entry);
- 	if (p) {
-+		if (WARN_ON(data_race(!p->swap_map[swp_offset(entry)]))) {
-+			put_swap_device(p);
-+			return 0;
-+		}
-+
- 		count = __swap_entry_free(p, entry);
- 		if (count == SWAP_HAS_CACHE &&
- 		    !swap_page_trans_huge_swapped(p, entry))
- 			__try_to_reclaim_swap(p, swp_offset(entry),
- 					      TTRS_UNMAPPED | TTRS_FULL);
-+		put_swap_device(p);
- 	}
- 	return p != NULL;
- }
+----------------------------------------------------------------
+Ricardo B. Marliere (1):
+      x86/mce: Make mce_subsys const
+
+ arch/x86/kernel/cpu/mce/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
 -- 
-2.39.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
