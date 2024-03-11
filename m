@@ -1,132 +1,275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1F724A11;
-	Mon, 11 Mar 2024 09:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB8F2C695
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710149680; cv=none; b=EfNVKezCNN/V5aqO8dENyOGVqaw6GlpobHkjbr6dhXT9LxNLjJb0irdCoKmlQZ5d8JADpTWCIrXWfnuoKEGEKu2fRb3oIrdaebYzZh4FsjNfa1OUyynpGs0FvH+28yhR3XV35cx3xYevIEhOhwa1moTJlRd36Ae9PboQ9AUpQzM=
+	t=1710149685; cv=none; b=kzcCrvYYqgle4sV7W9v4omCbmf52R7fedztzJ8dFFhBdkBy23swBFC44qsQz5oTxNmigxIpUj2jM2iNdWq6TYDC79XhiHcXTG07+Whm1ArPrvFNKWo2I4D5Mgig4Io1mfyHghZQpTTW5E6ZUSa95DAuFGhHvP8KSAUgds/rD5Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710149680; c=relaxed/simple;
-	bh=GW58phvo715vgZ4OLgOYs7GQ4friduHICarbzwJ+rBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHae5ooqzuBUXL6wOtK8wsYqVGoUE7jcGgEaAYqOuefndcDXDKCPbp8rosqBlJAUginUBLN+0VFwhq6kJ6KoJoj1t25foFMvD6ItRy4CJ031oZQxVWGzA68qJFiAMkHuAYawXhJM8NDWLUZ31Dboq8FwPhsFmA06RK9WK8y5yuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHFfUwpU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710149685; c=relaxed/simple;
+	bh=gPSHW2/9unWuAhFncICuut3hiBk/07uto75Q0YZZP+U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BBEqwjTDvZtCc0j/MQrUmBLTbtoSODDhP2MGS1WGxizcaB/ZM55dxk6bWDp0MlZfyIbcMv2YHGi4pOpmvtp9KbDFK6J5z27zK4/rFh3rp6yjPxc6nC0t2lPxwhmGheRlQ7RotjM2vtzUdBE4efnUpEQ8Q58IzbyeV6yupimGO1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fCndtFff; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHFfUwpU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5225C433C7;
-	Mon, 11 Mar 2024 09:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710149680;
-	bh=GW58phvo715vgZ4OLgOYs7GQ4friduHICarbzwJ+rBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lHFfUwpU47zvYKu1hM+D7aUyoNUYYWyhmbB6eARHFy7mu5sAOJc1buAuJqMCkkKDL
-	 IBzWEx0q2ekbVzVZxj9v9IA0ndIesT5VC0jZj2hQSZMLmOZCu0/Dmfqym4lDQJywes
-	 il1bRyUc9ckkTiDcsCAAuTLlQ4g5ElqZSuqovJp6bVE8WL7sZPEQ8N67wN3nP/GEYj
-	 EoC5AuEGnoa1Gnsfvr/mF/QHJ8+9orwM1kQoUQlyxFF1ecZjKu/WHs2N443Qf6KzqG
-	 Sm7hCOv61YIHPp9kqUf/lHkUrjxPz1am59gRu6Z5ttUD+ZsHzv29wDXKr4kZWFjZfq
-	 AzTdl7VcwIaQA==
-Date: Mon, 11 Mar 2024 10:34:37 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Yang Xiwen <forbidden405@outlook.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] clk: set initial best mux parent to current parent
- with CLK_MUX_ROUND_CLOSEST
-Message-ID: <20240311-speedy-bat-of-art-4facfc@houat>
-References: <20240307-mux-v3-1-0885fc1ab2c9@outlook.com>
- <20240307-hot-hummingbird-of-atheism-87503c@houat>
- <SEZPR06MB6959882F5DA673456A3AA85D96202@SEZPR06MB6959.apcprd06.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fCndtFff"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e676ea4e36so1807268b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 02:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1710149683; x=1710754483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QjSWV41JlB3dq7HwIpKEF4e0TQa/o2d+dOhHoSuTF7U=;
+        b=fCndtFffu1Ss2NcYN91svt0lbgvg/8XEuiKcZFBYKp7qeeF+XLcmbg+m63YznekLld
+         GRZI7k/jvSHxYlpUhAl51sQNowp1tN0KStmqyTY58z+irKn+wdBqUqbuygyeyIrgBtEU
+         t5F747/SOt7yRqdumXdtJrM2+s7N27vDv/23Tc/kpoR86DnCGK5aM5jRiUfNM2R9d8LX
+         QXoebEhGQoGQzulAGDVWHrS43KwnxkOLJvXdDsl3XESVcCGBiArmh9gtRJBpz5sElNA/
+         Moey35A9/O63/cbjNgddzv+E44rO0Q1G7dbN91co4eRiYSx6W5P9WJ8/6UKao6Mbsq+6
+         sEHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710149683; x=1710754483;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QjSWV41JlB3dq7HwIpKEF4e0TQa/o2d+dOhHoSuTF7U=;
+        b=SmV+64/PZm4wERF57q/y4GJG+FF4OrylndPS84I2OwpBar8vCZq6lgJvssLEgWFHYt
+         H1ESWsHr48RvX36n5L/bDjXWNl33Bxd9SkmSyUoCZN4oLTNaTGVTOv4JM7ni7OClVrmi
+         J13xoY1gVIrwvGuB1KO6u1BV/F6U8xGBCpui8hAoMV/56qrTsu28Jpjoc7tAs9MLdcDQ
+         Y8ya1vx/5LUoxWnCE47dZY+q+peRnwt5AuaEJmhIvat1INQBMcuLder6iwvrSCfbMgUP
+         7c9mpysgdJ3PXlrglilkHf3xJf28sUkjoY1DX2SopBYqkv1wV+kMC6zL5kRN1o/WcF3n
+         t3TA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLUtPptVuoNM0z8dKW7hH7C5FWN/prZDOZjS4Kf8fer0AJzje3Y72bN6ZBvPt4u4cebIQYeN7mnnClkyyYWpi6yzZWq+XwjARq0zk8
+X-Gm-Message-State: AOJu0Ywgf3u/ItrdtGZ2rewzFGXdRf5c50M5T12f1IRKS5Us3rYmvjMa
+	vtsSvj0Efe3SwSlZyErvoK0FVEazkXUa9Zrh7G3uEzuYy/plpkDXbgl+xn5RD0w=
+X-Google-Smtp-Source: AGHT+IFbj6YfcHBYvXMM2NWizkuYpniqg3bImjqE4WhHnt6u4m7Hz7unmoAwRceekSZcHEkG6VDAnw==
+X-Received: by 2002:a05:6a20:438a:b0:1a1:431c:6696 with SMTP id i10-20020a056a20438a00b001a1431c6696mr4574882pzl.49.1710149683554;
+        Mon, 11 Mar 2024 02:34:43 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.25.208])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902f7c900b001dcad9cbf8bsm4253365plw.239.2024.03.11.02.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 02:34:43 -0700 (PDT)
+From: Menglong Dong <dongmenglong.8@bytedance.com>
+To: andrii@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	quentin@isovalent.com,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Menglong Dong <dongmenglong.8@bytedance.com>
+Subject: [PATCH bpf-next v2 2/9] bpf: refactor the modules_array to ptr_array
+Date: Mon, 11 Mar 2024 17:35:19 +0800
+Message-Id: <20240311093526.1010158-3-dongmenglong.8@bytedance.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bftwjk7fcovlmr3o"
-Content-Disposition: inline
-In-Reply-To: <SEZPR06MB6959882F5DA673456A3AA85D96202@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
+Refactor the struct modules_array to more general struct ptr_array, which
+is used to store the pointers.
 
---bftwjk7fcovlmr3o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Meanwhiles, introduce the bpf_try_add_ptr(), which checks the existing of
+the ptr before adding it to the array.
 
-On Thu, Mar 07, 2024 at 07:18:05PM +0800, Yang Xiwen wrote:
-> On 3/7/2024 4:48 PM, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Thu, Mar 07, 2024 at 10:03:50AM +0800, Yang Xiwen via B4 Relay wrote:
-> > > From: Yang Xiwen <forbidden405@outlook.com>
-> > >=20
-> > > Originally, the initial clock rate is hardcoded to 0, this can lead to
-> > > some problem when setting a very small rate with CLK_MUX_ROUND_CLOSES=
-T.
-> > >=20
-> > > For example, if the lowest possible rate provided by the mux is 1000H=
-z,
-> > > setting a rate below 500Hz will fail, because no clock can provide a
-> > > better rate than the non-existant 0Hz. But it should succeed with 100=
-0Hz
-> > > being set.
-> > >=20
-> > > Setting the initial best parent to current parent could solve this bu=
-g.
-> > >=20
-> > > Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> > I don't think it would be the way to go. The biggest issue to me is that
-> > it's inconsistent, and only changing the behaviour for a given flag
-> > doesn't solve that.
->=20
->=20
-> I think the current behavior is odd but conforms to the document if
-> CLK_MUX_ROUND_CLOSEST is not specified.
+Seems it should be moved to another files in "lib", and I'm not sure where
+to add it now, and let's move it to kernel/bpf/syscall.c for now.
 
-clk_mux_determine_rate_flags isn't documented, and the determine_rate
-clk_ops documentation doesn't mention it can return an error.
+Signed-off-by: Menglong Dong <dongmenglong.8@bytedance.com>
+---
+ include/linux/bpf.h      | 10 +++++++++
+ kernel/bpf/syscall.c     | 37 +++++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 48 ++++++----------------------------------
+ 3 files changed, 54 insertions(+), 41 deletions(-)
 
-> If i understand correctly, the default behavior of mux clocks is to
-> select the closest rate lower than requested rate, and
-> CLK_MUX_ROUND_CLOSEST removes the "lower than" limitation, which is
-> what this version tries to accomplish.
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 0f677fdcfcc7..997765cdf474 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -304,6 +304,16 @@ struct bpf_map {
+ 	s64 __percpu *elem_count;
+ };
+ 
++struct ptr_array {
++	void **ptrs;
++	int cnt;
++	int cap;
++};
++
++int bpf_add_ptr(struct ptr_array *arr, void *ptr);
++bool bpf_has_ptr(struct ptr_array *arr, struct module *mod);
++int bpf_try_add_ptr(struct ptr_array *arr, void *ptr);
++
+ static inline const char *btf_field_type_name(enum btf_field_type type)
+ {
+ 	switch (type) {
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index f63f4da4db5e..4f230fd1f8e4 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -479,6 +479,43 @@ static void bpf_map_release_memcg(struct bpf_map *map)
+ }
+ #endif
+ 
++int bpf_add_ptr(struct ptr_array *arr, void *ptr)
++{
++	void **ptrs;
++
++	if (arr->cnt == arr->cap) {
++		arr->cap = max(16, arr->cap * 3 / 2);
++		ptrs = krealloc_array(arr->ptrs, arr->cap, sizeof(*ptrs), GFP_KERNEL);
++		if (!ptrs)
++			return -ENOMEM;
++		arr->ptrs = ptrs;
++	}
++
++	arr->ptrs[arr->cnt] = ptr;
++	arr->cnt++;
++	return 0;
++}
++
++bool bpf_has_ptr(struct ptr_array *arr, struct module *mod)
++{
++	int i;
++
++	for (i = arr->cnt - 1; i >= 0; i--) {
++		if (arr->ptrs[i] == mod)
++			return true;
++	}
++	return false;
++}
++
++int bpf_try_add_ptr(struct ptr_array *arr, void *ptr)
++{
++	if (bpf_has_ptr(arr, ptr))
++		return -EEXIST;
++	if (bpf_add_ptr(arr, ptr))
++		return -ENOMEM;
++	return 0;
++}
++
+ static int btf_field_cmp(const void *a, const void *b)
+ {
+ 	const struct btf_field *f1 = a, *f2 = b;
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 241ddf5e3895..791e97a3f8e3 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2873,43 +2873,9 @@ static void symbols_swap_r(void *a, void *b, int size, const void *priv)
+ 	}
+ }
+ 
+-struct modules_array {
+-	struct module **mods;
+-	int mods_cnt;
+-	int mods_cap;
+-};
+-
+-static int add_module(struct modules_array *arr, struct module *mod)
+-{
+-	struct module **mods;
+-
+-	if (arr->mods_cnt == arr->mods_cap) {
+-		arr->mods_cap = max(16, arr->mods_cap * 3 / 2);
+-		mods = krealloc_array(arr->mods, arr->mods_cap, sizeof(*mods), GFP_KERNEL);
+-		if (!mods)
+-			return -ENOMEM;
+-		arr->mods = mods;
+-	}
+-
+-	arr->mods[arr->mods_cnt] = mod;
+-	arr->mods_cnt++;
+-	return 0;
+-}
+-
+-static bool has_module(struct modules_array *arr, struct module *mod)
+-{
+-	int i;
+-
+-	for (i = arr->mods_cnt - 1; i >= 0; i--) {
+-		if (arr->mods[i] == mod)
+-			return true;
+-	}
+-	return false;
+-}
+-
+ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u32 addrs_cnt)
+ {
+-	struct modules_array arr = {};
++	struct ptr_array arr = {};
+ 	u32 i, err = 0;
+ 
+ 	for (i = 0; i < addrs_cnt; i++) {
+@@ -2918,7 +2884,7 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 		preempt_disable();
+ 		mod = __module_address(addrs[i]);
+ 		/* Either no module or we it's already stored  */
+-		if (!mod || has_module(&arr, mod)) {
++		if (!mod || bpf_has_ptr(&arr, mod)) {
+ 			preempt_enable();
+ 			continue;
+ 		}
+@@ -2927,7 +2893,7 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 		preempt_enable();
+ 		if (err)
+ 			break;
+-		err = add_module(&arr, mod);
++		err = bpf_add_ptr(&arr, mod);
+ 		if (err) {
+ 			module_put(mod);
+ 			break;
+@@ -2936,14 +2902,14 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 
+ 	/* We return either err < 0 in case of error, ... */
+ 	if (err) {
+-		kprobe_multi_put_modules(arr.mods, arr.mods_cnt);
+-		kfree(arr.mods);
++		kprobe_multi_put_modules((struct module **)arr.ptrs, arr.cnt);
++		kfree(arr.ptrs);
+ 		return err;
+ 	}
+ 
+ 	/* or number of modules found if everything is ok. */
+-	*mods = arr.mods;
+-	return arr.mods_cnt;
++	*mods = (struct module **)arr.ptrs;
++	return arr.cnt;
+ }
+ 
+ static int addrs_check_error_injection_list(unsigned long *addrs, u32 cnt)
+-- 
+2.39.2
 
-The situation is not as clear-cut as you make it to be, unfortunately.
-The determine_rate clk_ops implementation states:
-
-  Given a target rate as input, returns the closest rate actually
-  supported by the clock, and optionally the parent clock that should be
-  used to provide the clock rate.
-
-So CLK_MUX_ROUND_CLOSEST shouldn't exist, because that's what
-determine_rate expects so it should always be there.
-
-Now, the "actually supported by the clock" can be interpreted in
-multiple ways, and most importantly, doesn't state what the behaviour is
-if we can't find a rate actually supported by the clock.
-
-But now, this situation has been ambiguous for a while and thus drivers
-kind of relied on that ambiguity.
-
-So the way to fix it up is:
-
-  - Assess what drivers are relying on
-  - Document the current behaviour in clk_ops determine_rate
-  - Make clk_mux_determine_rate_flags consistent with that
-  - Run that through kernelci to make sure we don't have any regression
-
-Maxime
-
---bftwjk7fcovlmr3o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZe7QLAAKCRDj7w1vZxhR
-xRtAAP4jnq0AU2eBH/EQxTHEF/Kw0cZq4fwDzKSVbh0+2DnA3QD/bl06o0eOOtCO
-eXKHNHCmleWeqbn3XdXUpoe3JNQYFwc=
-=Bdd2
------END PGP SIGNATURE-----
-
---bftwjk7fcovlmr3o--
