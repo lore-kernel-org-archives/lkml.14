@@ -1,247 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0C3BB48;
-	Mon, 11 Mar 2024 11:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710157617; cv=none; b=f7AvBQ5bnsxJChDrBF5/f9Xgsh7PXzI/Mxpo+UylqDiiQaunaqW/vAzIE4ViOjIRU+3fxbs85x0Va+NhmDwQCD/fmK/NBC8LsBhLigUK2Mqq1nWeWo6g9Yzjjpv216wgU5WxTJgPGMguNqTkeYxqjv9sle28R30U7ho3WFg8mV8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710157617; c=relaxed/simple;
-	bh=2xnjPp+ws1DED924zU93aBwKEm4rqsAdo/049oim5i0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mvpvwa9sVL9JKJwWEonKz0TDA/9T+RB92WvwwRRPqrye6ZqGvfgOeRaxTG0rkD//y3K1rYzyXzHXSIAzH1G/SKuyNvGz9/X7mB5q5vBlv49AsOuR7pLYKMPbnwqHyRaPuLMXFLfU3hDjdWHcqtnv2FaieUb6Z8tDFbOqw+8gKKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMTttGq1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342C529CE4
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 11:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710157823; cv=fail; b=FW337s3xcwGE2I6PhefWXEWs+g/hzvzttphER7oOBm6WTulihpR55pQARIEtyOrVgGAX3wkH/9edwetT/nVb6ekLJxbwAA+TJTrPQ5z8iN1A1q9erJNLkEicYvAWaA5XbPq8nqDQ6o/akfmSOsw7Xn01W1GMudn6ETEVpate+ao=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710157823; c=relaxed/simple;
+	bh=U8IQ6Dbr4LWDmJGsiaBEPjnkgjkYHgYUZC94XJXG1rk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XVeVzDzVCE7QdN6MEjIm4qsDuPopffZdOhjpI/ykc1ObnWvc+kD/kA7sTIxmXkp7Hsx/j6Q3gJxsjaG9FvmRgUrWRGtYRFMRs2NIa/Ks16LaiCfTrQS9VLItdg2ed1ObBd+U4AYVuTdgUUBfuZrgvLv38jkAVk0+EZzoNlo/Eco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l8d2YwNv; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMTttGq1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9DF19C433F1;
-	Mon, 11 Mar 2024 11:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710157616;
-	bh=2xnjPp+ws1DED924zU93aBwKEm4rqsAdo/049oim5i0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=vMTttGq1jSIAX8XY8YcC+U5xzu7TswAoiXd+pEM3dMhZW6pbS7MtR3DLtOVmO3Zfp
-	 u54qs15DN16ceMhnwdWzC/58UauGxOCenQBqbRp2OFRW6qSCsJnh9wDig4DJ//qkpH
-	 9OB0R/01Bcr1qBpQhbywCIfF0WrT/uX1H1YdQB2njw6c+3j6qUYokAnORNN8nfSPsM
-	 fPqXyyEKjMgBURNBYQWxRaGNdZLJ0pUIcBnUL7C6cHxNgyCk2G0R0xiIPLacr0Cokv
-	 7iS4wzP3L9ir93vUKzamjTGetYZEOt/6c34W8jxeC31AgK7UhTAYd9qNK3XLPNkQgP
-	 T2prQQeeHDLZg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EF0C54E60;
-	Mon, 11 Mar 2024 11:46:56 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 11 Mar 2024 14:46:38 +0300
-Subject: [PATCH net 1/2] net: dsa: mt7530: fix link-local frames that
- ingress vlan filtering ports
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l8d2YwNv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710157821; x=1741693821;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=U8IQ6Dbr4LWDmJGsiaBEPjnkgjkYHgYUZC94XJXG1rk=;
+  b=l8d2YwNvCBHo4T13oicGtKQdPi2sd8Yo/vS0NNS8a3nvWes/3NhCv8jm
+   Otyj62f8KDsrjNQtl88mFib2LHOl8f4p6RBe9W6UVRaoMinekCVqamnX6
+   qJW/ULRpqdRzGqK1SptGbM00aawxI2pYQfRSz9nVvvJ63ZEkMnNdUCO0T
+   YYD8qw6a2XUasT30T0P/2Pwg7pjZTUNby5s6HXda/FLhx/9q+TKqji3XS
+   rWfI0KtR/wtyYWQfNgPKuZUzMVJ8SumL4XbnzWGcGZ+cfTyWdOYpWwHHR
+   2aRy+jOgd+Z3oJ3nOETmBIiAf/FdGym283Z6AfSSJmj56Y/cvj3Nlgokj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="22335472"
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="22335472"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 04:50:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
+   d="scan'208";a="11235906"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Mar 2024 04:50:15 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 11 Mar 2024 04:50:13 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 11 Mar 2024 04:50:13 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 11 Mar 2024 04:50:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fdyl2KA8/eD8z610KwZT2if5Fhg2FD72DBEgcrw1OLwqBIx9ifqPtENrb74/dkFsFRTmhSHZau5ETu5SjjQ8QhKMH196Cnno/3eoN1IYBjAgWnhladTAWLSiX+TOslQfklKZNXfTCMZZbyhnfHak7+kG4jJYdFXfS61+3f2NuLY2pRlMCswC2M1J3kxiJtOaXDyJURZra34ivuBe8sOXo+uNSOjcis8lSDUfmXAq71paIHmtY+HgrHbf0E4W2Fm7ecKXWZJ5SmLtBOOFu4rkPXHS8qhrBDKVC1B925/4JwU77enql0hWrmHGJRPz/eDLeKg3tfyVtr3ozRXOb4BLCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x4wIKiys8jdcGGoWU0578CuSttNMdowLfjGSvGiOXGo=;
+ b=iK8B1aEbt6rgwQVFiSf3djLsytgSjmV0YjcZ6URyZF4atxEZTyVIxNwux2N1P5kKRbgly3XSCeHjN610r2ziBSfSCgeexBOB+PJuDDqeWYg71mKKunZ0go4J4FM2uroQ5iyZi4ER9CT3LPsCzy+bV08G/7534h+ZkgADT/GUqV7PSqvEU90ACgQYrDFvB6SPi954ZsEk3bW00DIp71m8gvVH45/2m3LbDS4abOIldAaJrECuuhWKygXDhh6ayHndG9uCVqech4uTSoDN1MqybGO9flU7A3hJ0dknD3RHX3F6tHFVhWIifehLZIXLW7jNXoqC3a+2z+BuukFVPFbyuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by LV3PR11MB8694.namprd11.prod.outlook.com (2603:10b6:408:21b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.16; Mon, 11 Mar
+ 2024 11:50:12 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7%5]) with mapi id 15.20.7386.016; Mon, 11 Mar 2024
+ 11:50:11 +0000
+Date: Mon, 11 Mar 2024 12:49:39 +0100
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Rex Nie <rex.nie@jaguarmicro.com>
+CC: "james.morse@arm.com" <james.morse@arm.com>, "fenghua.yu@intel.com"
+	<fenghua.yu@intel.com>, "reinette.chatre@intel.com"
+	<reinette.chatre@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Liming Wu <liming.wu@jaguar.com>
+Subject: Re: =?utf-8?B?562U5aSN?= =?utf-8?Q?=3A?= [PATCH] fs/resctrl: fix
+ domid loss precision issue
+Message-ID: <3fjeeggediya7cl26snya5o5oif6x2xfd26qmsvroe6jygtufu@whanfahntydy>
+References: <20240311064822.891-1-rex.nie@jaguarmicro.com>
+ <2u7eg2khp2zrcmbfpnh6ighxqbttv2w7giwdxlkndeywpgq2bq@2lccnqwkbo65>
+ <KL1PR0601MB577303C9D0B1247436BB06F8E6242@KL1PR0601MB5773.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <KL1PR0601MB577303C9D0B1247436BB06F8E6242@KL1PR0601MB5773.apcprd06.prod.outlook.com>
+X-ClientProxiedBy: VI1PR09CA0126.eurprd09.prod.outlook.com
+ (2603:10a6:803:78::49) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240311-b4-for-net-mt7530-fix-link-local-vlan-v1-1-d67e6cc31af2@arinc9.com>
-References:
- <20240311-b4-for-net-mt7530-fix-link-local-vlan-v1-0-d67e6cc31af2@arinc9.com>
-In-Reply-To:
- <20240311-b4-for-net-mt7530-fix-link-local-vlan-v1-0-d67e6cc31af2@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: =?utf-8?q?Alvin_=C5=A0ipraga?= <ALSI@bang-olufsen.dk>, 
- Frank Wunderlich <frank-w@public-files.de>, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com, 
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710157606; l=7136;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=K75hAu2dsFq9nTLqW4EpsuZ+WvDXtzzGUuh2+IG83rE=;
- b=G0SWuF5iJjU2Re/OK7NrmKcAAFLPFWF7ImnJg6XyOZdJqq2XCPLtc0wRxzkExnhAZHhqGKnMD
- 0UCDinMFdt2BQeVkacR56I872H2WJclDLjlhCNBYZUfQmjVieRv/dGv
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|LV3PR11MB8694:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7934a4fa-3a48-4f82-26bb-08dc41c1686a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6WfgiF3+RJsjnjTjpb9Tp3isOqJr1QTdbQvCQGo7k8ERsJ8emvpVOApS+3nBhFMutBKVHGYyZkEUEMpklNG5teh3InvzaS38v0upyrZ3ArquyDoW5eGkg/3h2dVRYRZfMVzAIwux61JIS1RZP0/wdN1eQ2XY890bJ2O/qOi7dDYJ4uiW98g6c4e0kaPqi3xr7s7heT3gfeJ8DrxskepqXR3YmYAQQWqadjzKKx/ylI5x0KZfsd9zEP1sz+ZB43EprcTAWKkivwKTaMu6220VEyjqTP/dMq9nJd9LNY3BDk5huaHi0qRwWVzd1z1clwWYwjMOUnhL6kBLLeMF8QmgHRa/YtmOVPpC1fY9LD4us6LAHVWwiBelHkMvECepYbcFTOnFK0OEpoaUGzXL5heuSf15oHv3OaTE5kxoly5L+i3ceunILu9n/adqFzN6iqVnZCuEj4dWnijei6wYchVdZq/So5fDFAto6GX//QoIf6rmKAA7fkSI0L/wueFvEd4d9/j+yULFx10bMV8W46VNiQ8NFJ+fpH3BxUqeZLpL4s/dQJdwa57lZoa7QHz9wVw9Ijp3l2PZX1XFiKyulVc3ZbjYt/6Of0tAky5CrrtFS/Q=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?5CJjlWX+N+TH81QzBFBW8pF1EE1V7aM73mZzHU8dTtU+5uB1M/nftTfezy?=
+ =?iso-8859-1?Q?hoIM6vxTIumz1UFRrQaBu4TIRi2eKwoSrPmef7+DDKIOELEBnVtbfv+rod?=
+ =?iso-8859-1?Q?Oo/1f22s4zsjLHcdvuWGqsSHxQ8K5+ec5FgrvWEMphl52B536BNfRuDKsw?=
+ =?iso-8859-1?Q?RHF03aTK3gWFAyuOgvF9wFYy6y+ZfCmho7pMP+dKB8gYu4wRpgak36ApMr?=
+ =?iso-8859-1?Q?GyZqbgZ64mVHzMFjUdTDrACpMmZP6NJrIp4/oM8mpCRsIN5QDwxy9Z8HfQ?=
+ =?iso-8859-1?Q?Eswjkw/Z5Thm+aVbOWK6bVynnYZCk43kh0JvzqME9hdkLSSl+1FoMA1qLK?=
+ =?iso-8859-1?Q?DXZU3c2PAs8qLihnm6TFr/7uZpy8ZDAIUs7lwHyCZVHHywC3heiWw/t8ec?=
+ =?iso-8859-1?Q?JLqI/bxB3WX3v/mQx9bnaFrg+bU/GNfY38VRewGqojRAGX0G3BoVhZM9JK?=
+ =?iso-8859-1?Q?PdLA/VOwfj4BGZgQAQ55urXaD21wurGjcWSlGXcJW+STf8YMFs1GxUxkcg?=
+ =?iso-8859-1?Q?KKiqw1A9wEjwd9rRydMqTFjEkajaId0M+X4rsnpN5mAf8IaM4MjTabk47K?=
+ =?iso-8859-1?Q?oN3qCNptQyiHCmtabLvOuRA4uTSnD+TNQYzjQ3eeRAtcxN4Y6cCFXpN4nx?=
+ =?iso-8859-1?Q?Qtc6PybRhsi/oxzMn7ftRcopRkFdQZEPzdzLpYFtCfWiwhkTihTJGKUbEG?=
+ =?iso-8859-1?Q?W0nDtibb1/gunrckybKesTSIh9Lzh8mmMHZVQKSG1zi45E552NArHlFckX?=
+ =?iso-8859-1?Q?4Ys7kZORgkdLgUeBnjgvEhLS4yGu/8R7+OJKCBtlg/wrBA7mpA68Avt5RE?=
+ =?iso-8859-1?Q?lu/dbEpDZekpx1kHtEFQv6Eg9JG0au4M3qB03CxzxixxdrBcg/N1rcUteu?=
+ =?iso-8859-1?Q?6+Fl68il4AOURNDyzijWocEjnO9FE/fMtnIt+rN0tcuAqsR8GThNWKsXxy?=
+ =?iso-8859-1?Q?rI+AvkfUxMRQWK+yX9+wUzK0oMgjbArmm+722v6ph4xqFYvIWbVKAuufm2?=
+ =?iso-8859-1?Q?LbJzZRggdeD4OoAXlRGehT86YoIr1kusjGQ5ja6Af8B/aH8Ipyn2aQNuLs?=
+ =?iso-8859-1?Q?kyTZC2nzVY1RIA8uBjJlUb/0tI0xtNwz+9sR4MUjB1jgshtoqAlDfd8vSb?=
+ =?iso-8859-1?Q?Oxj9Rbdv+DYkBCSsqNRV+kWRtjBqJu1otMBrnC1kw9sgd/3kO8PFP7BMb9?=
+ =?iso-8859-1?Q?NIwcGAXVhxEThLzLcHbCKZgOd4qY3jJlVDi9AzAylyqJLT98kk4uZc3/5B?=
+ =?iso-8859-1?Q?QctI9Tij54kLKIDNFDpn/tmS154Ro4em9N5m9cZ2o2f/BLQMrphh1ZdSvS?=
+ =?iso-8859-1?Q?rUJ31keL0CtWGp2lVNjJCw4I2wgqkt17i5CteKYYmArViweg+wVSQS4ZbQ?=
+ =?iso-8859-1?Q?yUjRkiqcmeMj6Q7o8gfLOmkammc6V68NRheLbKDcTE3j6EgVF8xFZuAPHE?=
+ =?iso-8859-1?Q?QDxIjq1IjHma3SfkmNWZ8tqaMZybwZTFEUVrGMXk/b9rWibiW8wQqPVcjU?=
+ =?iso-8859-1?Q?d9NzAQYaVxQmosiVcepYsAt5Szl2f0C8a3vRfQNBabjXqSw18IHUyHOtNo?=
+ =?iso-8859-1?Q?vxU0GgwnAUxFWYUvVNIvbywBWyPf1wXN+YxbE/SAZQylWWaLY6l237Mffl?=
+ =?iso-8859-1?Q?eVJfRaYL1lSrNKKcbM6Tfm2ENQGuyShyqiAVDzHr8RFZCXMMPPmqRPSusG?=
+ =?iso-8859-1?Q?FaDkNPTBKcnB4Om9btk=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7934a4fa-3a48-4f82-26bb-08dc41c1686a
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 11:50:11.7771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SBGpUj+QFeip+F9UhhKWRLi2JF52E3XqiIiSMmWJ+M1k2G1H1ZzlSy3I8I4WA7ecTUNq8I8qcvneMWM8tqlPaAIYCTKpSsl8SdgmgLUbovE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8694
+X-OriginatorOrg: intel.com
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Thanks for the reply,
 
-Whether VLAN-aware or not, on every VID VLAN table entry that has the CPU
-port as a member of it, frames are set to egress the CPU port with the VLAN
-tag stacked. This is so that VLAN tags can be appended after hardware
-special tag (called DSA tag in the context of Linux drivers).
+On 2024-03-11 at 09:37:37 +0000, Rex Nie wrote:
+>Hello,
+>	Please kindly check my inline reply. Thanks.
+>Best regards
+>Rex Nie
+>
+>> >This will cause below issue if cache_id > 0x3fff likes:
+>> 
+>> Is there some reason for cache_id ever being this high?
+>> 
+>> I thought the max for cache_id was the amount of L3 caches on a system. And I
+>> only observed it going up to 3 on some server platforms. So not nearly in the
+>> range of 0x3fff or 16k.
+>> 
+>It is exactly as you said on X86 platforms, but cache_Id on Arm platform is different.
+>According to ACPI for mpam, cache id is used as locator for cache MSC. Reference to RD_PPTT_CACHE_ID definition from edk2-platforms:
+>#define RD_PPTT_CACHE_ID(PackageId, ClusterId, CoreId, CacheType)         \
+>	(                                                              \
+>	  (((PackageId) & 0xF) << 20) | (((ClusterId) & 0xFF) << 12) |              \
+>	  (((CoreId) & 0xFF) << 4) | ((CacheType) & 0xF)                        \
+>	)
+>So it may be > 0x3fff on Arm platform.
+>
+>Reference RD_PPTT_CACHE_ID from edk2-platforms: https://github.com/tianocore/edk2-platforms/blob/master/Platform/ARM/SgiPkg/Include/SgiAcpiHeader.h#L202
 
-For user ports on a VLAN-unaware bridge, frame ingressing the user port
-egresses CPU port with only the special tag.
+and thanks for clearing it up for me! I browsed some MPAM patches but didn't
+notice cache_id was used differently on ARM.
 
-For user ports on a VLAN-aware bridge, frame ingressing the user port
-egresses CPU port with the special tag and the VLAN tag.
-
-This causes issues with link-local frames, specifically BPDUs, because the
-software expects to receive them VLAN-untagged.
-
-There are two options to make link-local frames egress untagged. Setting
-CONSISTENT or UNTAGGED on the EG_TAG bits on the relevant register.
-CONSISTENT means frames egress exactly as they ingress. That means
-egressing with the VLAN tag they had at ingress or egressing untagged if
-they ingressed untagged. Although link-local frames are not supposed to be
-transmitted VLAN-tagged, if they are done so, when egressing through a CPU
-port, the special tag field will be broken.
-
-BPDU egresses CPU port with VLAN tag egressing stacked, received on
-software:
-
-00:01:25.104821 AF Unknown (382365846), length 106:
-                                     | STAG  | | VLAN  |
-        0x0000:  0000 6c27 614d 4143 0001 0000 8100 0001  ..l'aMAC........
-        0x0010:  0026 4242 0300 0000 0000 0000 6c27 614d  .&BB........l'aM
-        0x0020:  4143 0000 0000 0000 6c27 614d 4143 0000  AC......l'aMAC..
-        0x0030:  0000 1400 0200 0f00 0000 0000 0000 0000  ................
-
-BPDU egresses CPU port with VLAN tag egressing untagged, received on
-software:
-
-00:23:56.628708 AF Unknown (25215488), length 64:
-                                     | STAG  |
-        0x0000:  0000 6c27 614d 4143 0001 0000 0026 4242  ..l'aMAC.....&BB
-        0x0010:  0300 0000 0000 0000 6c27 614d 4143 0000  ........l'aMAC..
-        0x0020:  0000 0000 6c27 614d 4143 0000 0000 1400  ....l'aMAC......
-        0x0030:  0200 0f00 0000 0000 0000 0000            ............
-
-BPDU egresses CPU port with VLAN tag egressing tagged, received on
-software:
-
-00:01:34.311963 AF Unknown (25215488), length 64:
-                                     | Mess  |
-        0x0000:  0000 6c27 614d 4143 0001 0001 0026 4242  ..l'aMAC.....&BB
-        0x0010:  0300 0000 0000 0000 6c27 614d 4143 0000  ........l'aMAC..
-        0x0020:  0000 0000 6c27 614d 4143 0000 0000 1400  ....l'aMAC......
-        0x0030:  0200 0f00 0000 0000 0000 0000            ............
-
-To prevent confusing the software, force the frame to egress UNTAGGED
-instead of CONSISTENT. This way, frames can't possibly be received TAGGED
-by software which would have the special tag field broken.
-
-VLAN Tag Egress Procedure
-
-   For all frames, one of these options set the earliest in this order will
-   apply to the frame:
-
-   - EG_TAG in certain registers for certain frames.
-     This will apply to frame with matching MAC DA or EtherType.
-
-   - EG_TAG in the address table.
-     This will apply to frame at its incoming port.
-
-   - EG_TAG in the PVC register.
-     This will apply to frame at its incoming port.
-
-   - EG_CON and [EG_TAG per port] in the VLAN table.
-     This will apply to frame at its outgoing port.
-
-   - EG_TAG in the PCR register.
-     This will apply to frame at its outgoing port.
-
-   EG_TAG in certain registers for certain frames:
-
-   PPPoE Discovery_ARP/RARP: PPP_EG_TAG and ARP_EG_TAG in the APC register.
-   IGMP_MLD: IGMP_EG_TAG and MLD_EG_TAG in the IMC register.
-   BPDU and PAE: BPDU_EG_TAG and PAE_EG_TAG in the BPC register.
-   REV_01 and REV_02: R01_EG_TAG and R02_EG_TAG in the RGAC1 register.
-   REV_03 and REV_0E: R03_EG_TAG and R0E_EG_TAG in the RGAC2 register.
-   REV_10 and REV_20: R10_EG_TAG and R20_EG_TAG in the RGAC3 register.
-   REV_21 and REV_UN: R21_EG_TAG and RUN_EG_TAG in the RGAC4 register.
-
-With this change, it can be observed that a bridge interface with stp_state
-and vlan_filtering enabled will properly block ports now.
-
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 23 +++++++++++++++--------
- drivers/net/dsa/mt7530.h |  9 ++++++++-
- 2 files changed, 23 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 3c1f657593a8..beef5bc38b88 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1001,16 +1001,23 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- static void
- mt753x_trap_frames(struct mt7530_priv *priv)
- {
--	/* Trap BPDUs to the CPU port(s) */
--	mt7530_rmw(priv, MT753X_BPC, MT753X_BPDU_PORT_FW_MASK,
-+	/* Trap 802.1X PAE frames and BPDUs to the CPU port(s) and egress them
-+	 * VLAN-untagged.
-+	 */
-+	mt7530_rmw(priv, MT753X_BPC, MT753X_PAE_EG_TAG_MASK |
-+		   MT753X_PAE_PORT_FW_MASK | MT753X_BPDU_EG_TAG_MASK |
-+		   MT753X_BPDU_PORT_FW_MASK,
-+		   MT753X_PAE_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
-+		   MT753X_PAE_PORT_FW(MT753X_BPDU_CPU_ONLY) |
-+		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
- 		   MT753X_BPDU_CPU_ONLY);
- 
--	/* Trap 802.1X PAE frames to the CPU port(s) */
--	mt7530_rmw(priv, MT753X_BPC, MT753X_PAE_PORT_FW_MASK,
--		   MT753X_PAE_PORT_FW(MT753X_BPDU_CPU_ONLY));
--
--	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) */
--	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_PORT_FW_MASK,
-+	/* Trap LLDP frames with :0E MAC DA to the CPU port(s) and egress them
-+	 * VLAN-untagged.
-+	 */
-+	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
-+		   MT753X_R0E_PORT_FW_MASK,
-+		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
- 		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY));
- }
- 
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 17e42d30fff4..cef2af3f24d5 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -65,12 +65,18 @@ enum mt753x_id {
- 
- /* Registers for BPDU and PAE frame control*/
- #define MT753X_BPC			0x24
--#define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
-+#define  MT753X_PAE_EG_TAG_MASK		GENMASK(24, 22)
-+#define  MT753X_PAE_EG_TAG(x)		FIELD_PREP(MT753X_PAE_EG_TAG_MASK, x)
- #define  MT753X_PAE_PORT_FW_MASK	GENMASK(18, 16)
- #define  MT753X_PAE_PORT_FW(x)		FIELD_PREP(MT753X_PAE_PORT_FW_MASK, x)
-+#define  MT753X_BPDU_EG_TAG_MASK	GENMASK(8, 6)
-+#define  MT753X_BPDU_EG_TAG(x)		FIELD_PREP(MT753X_BPDU_EG_TAG_MASK, x)
-+#define  MT753X_BPDU_PORT_FW_MASK	GENMASK(2, 0)
- 
- /* Register for :03 and :0E MAC DA frame control */
- #define MT753X_RGAC2			0x2c
-+#define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
-+#define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
- #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
- #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
- 
-@@ -253,6 +259,7 @@ enum mt7530_port_mode {
- enum mt7530_vlan_port_eg_tag {
- 	MT7530_VLAN_EG_DISABLED = 0,
- 	MT7530_VLAN_EG_CONSISTENT = 1,
-+	MT7530_VLAN_EG_UNTAGGED = 4,
- };
- 
- enum mt7530_vlan_port_attr {
+>
+>> >/sys/fs/resctrl/mon_groups/p1/mon_data/mon_L3_1048564 # cat
+>> >llc_occupancy
+>> 
+>> How did you get this file to appear? Could you maybe show how your
+>> mon_data directory looks like?
+>> 
+>I found this issue on Arm FVP N1 platform and my N2 platform.
+>
+>Below is the steps on Arm FVP N1:
+>mount -t resctrl resctrl / /sys/fs/resctrl
+>cd /sys/fs/resctrl/mon_data
+>
+>/sys/fs/resctrl/mon_data # ls -l
+>total 0
+>dr-xr-xr-x    2 0        0                0 Mar 11 09:24 mon_L3_1048564
+>
+>cd /sys/fs/resctrl/mon_data # cd mon_L3_1048564
+>/sys/fs/resctrl/mon_data/mon_L3_1048564 # cat llc_occupancy
+>cat: read error: No such file or directory
+>
+>Arm FVP MPAM: https://neoverse-reference-design.docs.arm.com/en/latest/mpam/mpam-resctrl.html#memory-system-resource-partitioning-and-monitoring-mpam
+>
 
 -- 
-2.40.1
-
+Kind regards
+Maciej Wiecz�r-Retman
