@@ -1,62 +1,115 @@
-Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.18.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F15B56B63;
-	Mon, 11 Mar 2024 19:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.18.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D4256B62
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710186231; cv=none; b=ipF1ZaxPLyFJDbGAvYno43UfZcUF1Ivvt6BoIpqN+nASART87uelXig1yEaHXKCkT5LnXEmzrqQgn6K6NMcfWLzZ4HuhqDJkUgJ0g8gY8nxxc0/9SHNJ1E2C0MqTMEc5XmiHUkjpdo7BaUMUfb9VCVfhprE54ylN9aA543qMBdY=
+	t=1710186230; cv=none; b=LLRVa+IHqQtXFZFLHy93g2s2TEs5i+z59Ss63qMqxBsILK6cIH+bUBJ5aXPE90wD04Ppdwzd+mxQ8p41DhSr1/n53xYC0G6aHl4Gi7uuFXEibNTbx85MSkZn+LsfjxRm0jOMECTQBFccVt9sTAKqQ0A1UzImCJ2jry9X+3CevQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710186231; c=relaxed/simple;
-	bh=KKQyo51bc/AIZ0093isHt1glyMS5E+CYMY5cLg6WvrE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ib8JcMCEUKawlCBM8GB3Dh2MLBGtjyP9QYKFXolaI1tr+ttWHASvUmC51uC9s37UAFhW3ThDavSWtS15a6ygsZNU2W56xMYhyTueZkaOSczcOXaQqI6qZGik5yN79Zz+UKtq8xaXOLiIeFC251/A/xDlhG2Z1WWWhHQnmDDw/Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; arc=none smtp.client-ip=80.67.18.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
-Received: from [92.206.191.65] (helo=note-book.lan)
-	by smtprelay01.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <git@apitzsch.eu>)
-	id 1rjkh9-000000002Z2-1Jfe;
-	Mon, 11 Mar 2024 19:48:19 +0100
-Message-ID: <a6d43f8cad8323ab59f44a2c7b0fd5a35cbc86d0.camel@apitzsch.eu>
-Subject: Re: [PATCH v4 2/2] leds: rgb: leds-ktd202x: Get device properties
- through fwnode to support ACPI
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de
- Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org
-Date: Mon, 11 Mar 2024 19:48:17 +0100
-In-Reply-To: <20240306025801.8814-3-hpa@redhat.com>
-References: <20240306025801.8814-1-hpa@redhat.com>
-	 <20240306025801.8814-3-hpa@redhat.com>
-Autocrypt: addr=git@apitzsch.eu; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	s=arc-20240116; t=1710186230; c=relaxed/simple;
+	bh=vB/me0X2TI4dQAXS9eSBwB79LBYLQgmarkesGSgK1ck=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=o6IRI0kLDvzQNDYQJ/0BrfldY2vrB24eAyUGKuRiIUvaunbaUEMqv6dw0KP+b0erl85GIHaFjalaHQEKIHsBHSxBnIIuhDRJ9tYG1JDW4HQFR8enq1jP5twHaMWcCMAbyS4ZywRiXDvp6HnMko0iaRW4j7kNwzyIT/wv8hpRJCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rR6J15n0; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rR6J15n0"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26eef6cso6102935276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710186228; x=1710791028; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o6UJtu1HH16m2XbkBIYqvJ1tQp9TP2uMiQKdHkNHJvQ=;
+        b=rR6J15n0PkHtUxmrGggUMqUPy4c3TuajwBbr/CZzoC9/3WsDARjDSK1Bf4X6Bw3yyX
+         HDpTZIrI7iLxo5D5bBQ2vAiQ9fav62s/K8nNIrgv4XEYxFn1BIb/eEWnsi1yOgkboydN
+         VMMklPNWN+7G1zFRHkBloh763Cr9m8xMrm6SrRZbnqBys2UsSilWxhUgpJq0WOY19qka
+         HFo+aMdQqJs1Igi+oEWa9eriR2GxAufGSC2I4c9qhRwuWrwqF/H/mpzq91JQefaV8LXt
+         htxm2bzSBQpYIN0/PgVotxjfULMT58KnH/Jwe0jhWqZ2BInC0I38jhCjtRrHm+D+wcec
+         OFkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710186228; x=1710791028;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o6UJtu1HH16m2XbkBIYqvJ1tQp9TP2uMiQKdHkNHJvQ=;
+        b=IiTHFQ+Hiu43eX0XsuqObdmkQZVAyeXZ2n4sb4V4nH9g4Fmim/4N+mVzEBPtd5JORJ
+         caBqZE7Ff0QsvC9gP21NloZtUxWFBOMQMMkEcs7IeecAkYUG9FQeyfm4ifGJ5+7W3TlS
+         S8j2XtGOp+56olHGB3hCQKOWF8IAjQdn57yJI2+LyWkvMSEmxdM/iXfcCHO3D3I8/B70
+         BKBNRlxdiabaD0yVfrq4HjH0u/vvWg30seD/oTuZt0KXe6jCLHJZk87Gp/EUK+XuSZh+
+         3Egutu0m0qzMQooCnh3Xlb/i2wlK44JQUvQ0YjeiVwRk8GkyVY9MANCCMVHeUwHtsrL+
+         uOYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHUFqXahRn6EQ1zkq7UfqvztdcV/OTTNx8xoFLD7/mnsi0JQXwbkAwkW2cLSlxQxlUedPC11CmCD43gnzYslYuPsUiA7fOMq0DgBj8
+X-Gm-Message-State: AOJu0Yz3EeKMPTf8RjMeemZtVydc2Yj6eFWZCAgGTDJ+mDj/UFHdTZKY
+	F2GoDVIbuKjzrS4IG8bD/dfmVJkF2mR94DHK0ZOSLIbn9rCHI4LcQvCAS0Vj4wo6yELiELmKYcz
+	fgyA9TFOgpBdHUahqBw==
+X-Google-Smtp-Source: AGHT+IEjE4RPBh2h1ZjpLGnSOpuQW3myo032wQ/NGNsdybflZDgTA9lg25piUM2Q2N+xBQnJoHArMT+oFGdf8EMZ
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6902:f02:b0:dcd:2f2d:7a0f with SMTP
+ id et2-20020a0569020f0200b00dcd2f2d7a0fmr387205ybb.9.1710186228508; Mon, 11
+ Mar 2024 12:43:48 -0700 (PDT)
+Date: Mon, 11 Mar 2024 19:43:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240311194346.2291333-1-yosryahmed@google.com>
+Subject: [PATCH] percpu: clean up all mappings when pcpu_map_pages() fails
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Am Mittwoch, dem 06.03.2024 um 10:58 +0800 schrieb Kate Hsuan:
-> This LED controller also installed on a Xiaomi pad2 and it is a x86
-> platform. The original driver is based on device tree and can't be
-> used for this ACPI based system. This patch migrated the driver to
-> use fwnode to access the properties. Moreover, the fwnode API
-> supports device tree so this work won't effect the original
-> implementations.
->=20
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+In pcpu_map_pages(), if __pcpu_map_pages() fails on a CPU, we call
+__pcpu_unmap_pages() to clean up mappings on all CPUs where mappings
+were created, but not on the CPU where __pcpu_map_pages() fails.
 
-Tested-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu> # on BQ Aquaris M5
+__pcpu_map_pages() and __pcpu_unmap_pages() are wrappers around
+vmap_pages_range_noflush() and vunmap_range_noflush(). All other callers
+of vmap_pages_range_noflush() call vunmap_range_noflush() when mapping
+fails, except pcpu_map_pages(). The reason could be that partial
+mappings may be left behind from a failed mapping attempt.
+
+Call __pcpu_unmap_pages() for the failed CPU as well in
+pcpu_map_pages().
+
+This was found by code inspection, no failures or bugs were observed.
+
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+---
+
+Perhaps the reason __pcpu_unmap_pages() is not currently being called
+for the failed CPU is that the size and alignment requirements make sure
+we never leave any partial mappings behind? I have no idea. Nonetheless,
+I think we want this change as that could be fragile, and is
+inconsistent with other callers.
+
+---
+ mm/percpu-vm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/percpu-vm.c b/mm/percpu-vm.c
+index 2054c9213c433..cd69caf6aa8d8 100644
+--- a/mm/percpu-vm.c
++++ b/mm/percpu-vm.c
+@@ -231,10 +231,10 @@ static int pcpu_map_pages(struct pcpu_chunk *chunk,
+ 	return 0;
+ err:
+ 	for_each_possible_cpu(tcpu) {
+-		if (tcpu == cpu)
+-			break;
+ 		__pcpu_unmap_pages(pcpu_chunk_addr(chunk, tcpu, page_start),
+ 				   page_end - page_start);
++		if (tcpu == cpu)
++			break;
+ 	}
+ 	pcpu_post_unmap_tlb_flush(chunk, page_start, page_end);
+ 	return err;
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
