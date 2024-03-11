@@ -1,133 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA83C56B77;
-	Mon, 11 Mar 2024 21:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E00A56B88
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 21:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710193700; cv=none; b=oJVakHvJZhFo3vLpSI6bs+Yc9hUCwFi1CokGCxTY6EQXckIGAICzDYZdR5o5tClv4J1jCnLMhehP7uJ23dlpfwTkiVqm/3IpKhNdm+eWwXCaiQGT5aSLqdYU9IqkZGfJ7oERwiajF2aF8evZAzGBPJF3ztA+OQP9iKD1UAxwnr0=
+	t=1710193757; cv=none; b=Q8wWA5nXUNDooksZkEcIZU39ECzqU6wxV0zbxUi4QiWtDEAftTtEJJLERoEqPbQGTyTrk94fcWjpuJJ0w5FHC0dCOknQngyhekY78kFE24yFenGaELKOQNdiYIImKy/91QTziiBMcK+RIE/5fKzh9lcjCFug3Vu2uC05HozCuMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710193700; c=relaxed/simple;
-	bh=kgsHjUwQwd4rVDKBpPbujkQt0Vy5Zo8ikjpALNVE4RY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c2toefkt6nS04Sau7s2x5OVdVpdUbGefQPYphBmSwHo96OtB7x97WQxMqqPQ/TKShznmaud66H3MBjksyDTredR5ackIYxgEvk35kdyrTzFeJGcmheIJaiYlzpb2ncYMSLugyBGSIHIs22UfFGzWS6oDXXxjVq0fWP4jss9IJh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OrNYXage; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710193757; c=relaxed/simple;
+	bh=eEjkdRQEd59H50uW8dgJSWnuFy20b7EzlfZ82fVd7SU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gBivS5KAENNG1wL5CwyT2df+XZhRtB/nPMUDlHJ4sJAV6JzFKYt+AfPi+0wPeACSdAIR7Xfg6qbm5kPyCS018IGjLwYr0a/IfTo0978dQlLVrtvQBA4imEhA0Ga+Gfisg+YxT12+NpupCEy39J1GX6qQN9nCxpXE1pOnkzU4BBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kt30xZwi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OrNYXage"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710193698; x=1741729698;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kgsHjUwQwd4rVDKBpPbujkQt0Vy5Zo8ikjpALNVE4RY=;
-  b=OrNYXagesYz1dCCxCKPcOGJwF+Q6sEsNg/c7TXfn9qJvr+9f81isz5i1
-   15vLy0O7rkj6ACwY74HKga5zPHqmNsOacxbtRoHuTFVTu9HDJtYhdcBiF
-   NeW7q/5Pk5Z3MpEnAAXN/TC5ZDwYGGhsZo7vPqR3xv2ToVwowehWCbWjx
-   qlyxeCRrjaSEjcPySAnZfcwQOI3QGp8H6VOsaog8GYyRC/DTZr7FlEc3L
-   r9BvywAtkId8TSQoYljNEObh45Y52uYeQ19YYh06HteiA/ysEePboWC8e
-   mvz2Y9TNmoVj89k+p1AhCnJN+lvgFBzuDp9VryI9ZMytmRWvW+nExC5KE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="27355603"
-X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
-   d="scan'208";a="27355603"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 14:48:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
-   d="scan'208";a="42296937"
-Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
-  by fmviesa001.fm.intel.com with ESMTP; 11 Mar 2024 14:48:17 -0700
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
-To: linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	ebiggers@kernel.org,
-	x86@kernel.org,
-	chang.seok.bae@intel.com
-Subject: [PATCH] crypto: x86/aesni - Update aesni_set_key() to return void
-Date: Mon, 11 Mar 2024 14:32:32 -0700
-Message-Id: <20240311213232.128240-1-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230607053558.GC941@sol.localdomain>
-References: <20230607053558.GC941@sol.localdomain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kt30xZwi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710193754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=wIL5uIc3/B5vYqNrwsTJakvRJ6Iyj3VheIuyfLhQ2KI=;
+	b=Kt30xZwiKf9R4Ha7dLJbc1R0HJxrBJm6bxq9KLXO6R2lAm4/VRaGL5QUw06BGwy6lHYLDc
+	zxybRAfiI1F/g3QJkz7FQtCFa8z7RdZgnCxi9FQ/98e0DO+J8qjEHtE73cVZDxeVUjNbbL
+	u3ZqkPDHLj/EUGrvu/Yl/veJyQEskDs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-269-LVJsQRu_NNituUYISq4hOA-1; Mon, 11 Mar 2024 17:49:08 -0400
+X-MC-Unique: LVJsQRu_NNituUYISq4hOA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1D27D101A526;
+	Mon, 11 Mar 2024 21:49:08 +0000 (UTC)
+Received: from localhost (unknown [10.22.8.139])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 394BE2024517;
+	Mon, 11 Mar 2024 21:49:07 +0000 (UTC)
+Date: Mon, 11 Mar 2024 18:49:06 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>,
+	Luis Goncalves <lgoncalv@redhat.com>
+Subject: [ANNOUNCE] 5.10.211-rt103
+Message-ID: <Ze98UsSvLqvlkS1_@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-The aesni_set_key() implementation has no error case, yet its prototype
-specifies to return an error code.
+Hello RT-list!
 
-Modify the function prototype to return void and adjust the related code.
+I'm pleased to announce the 5.10.211-rt103 stable release.
 
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-Previously, Eric identified a similar case in my AES-KL code [1]. Then,
-this parallel issue was realized.
+This release is an update to the new stable 5.10.211 version, with no
+extra changes.
 
-[1]: https://lore.kernel.org/lkml/20230607053558.GC941@sol.localdomain/
----
- arch/x86/crypto/aesni-intel_asm.S  | 5 ++---
- arch/x86/crypto/aesni-intel_glue.c | 6 +++---
- 2 files changed, 5 insertions(+), 6 deletions(-)
+You can get this release via the git tree at:
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index 411d8c83e88a..7ecb55cae3d6 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -1820,8 +1820,8 @@ SYM_FUNC_START_LOCAL(_key_expansion_256b)
- SYM_FUNC_END(_key_expansion_256b)
- 
- /*
-- * int aesni_set_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
-- *                   unsigned int key_len)
-+ * void aesni_set_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
-+ *                    unsigned int key_len)
-  */
- SYM_FUNC_START(aesni_set_key)
- 	FRAME_BEGIN
-@@ -1926,7 +1926,6 @@ SYM_FUNC_START(aesni_set_key)
- 	sub $0x10, UKEYP
- 	cmp TKEYP, KEYP
- 	jb .Ldec_key_loop
--	xor AREG, AREG
- #ifndef __x86_64__
- 	popl KEYP
- #endif
-diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
-index b1d90c25975a..c807b2f48ea3 100644
---- a/arch/x86/crypto/aesni-intel_glue.c
-+++ b/arch/x86/crypto/aesni-intel_glue.c
-@@ -87,8 +87,8 @@ static inline void *aes_align_addr(void *addr)
- 	return PTR_ALIGN(addr, AESNI_ALIGN);
- }
- 
--asmlinkage int aesni_set_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
--			     unsigned int key_len);
-+asmlinkage void aesni_set_key(struct crypto_aes_ctx *ctx, const u8 *in_key,
-+			      unsigned int key_len);
- asmlinkage void aesni_enc(const void *ctx, u8 *out, const u8 *in);
- asmlinkage void aesni_dec(const void *ctx, u8 *out, const u8 *in);
- asmlinkage void aesni_ecb_enc(struct crypto_aes_ctx *ctx, u8 *out,
-@@ -241,7 +241,7 @@ static int aes_set_key_common(struct crypto_aes_ctx *ctx,
- 		err = aes_expandkey(ctx, in_key, key_len);
- 	else {
- 		kernel_fpu_begin();
--		err = aesni_set_key(ctx, in_key, key_len);
-+		aesni_set_key(ctx, in_key, key_len);
- 		kernel_fpu_end();
- 	}
- 
--- 
-2.34.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v5.10-rt
+  Head SHA1: bffc88bd708c173b98b61469378f763e44c733e1
+
+Or to build 5.10.211-rt103 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.211.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.211-rt103.patch.xz
+
+Signing key fingerprint:
+
+  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Luis
 
