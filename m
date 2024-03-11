@@ -1,81 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA8C58100;
-	Mon, 11 Mar 2024 22:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B29E57867
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 22:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710195974; cv=none; b=uiVxAbyCH5PzhAQu4mJG5tBX+IZmwjYFlUiv5kpPdC/a9Sge9zqavzIcOWeIyV5cv8vz8DIavNRa7suQT0OcagML7J/Stkp006WJdJYdKZTHis4cJjmWhM0vJfyl6pq9ON6dB70NKUQP4Eumy0XH1D0vcTcJaR515C1LNd8Gg0M=
+	t=1710196052; cv=none; b=D/MK1JeCkVaDpJ2jsGXLitMKDQ9OcGUw0PE4fXOjkwF/MVP13jFM9B0C9igMc1iHBtZbybhD8an9939oDYDBPLgVWkkLxUb/gZjCmnhsNZhM802DEtr0WhxIloldfiH1Wts22Xx3hEPOsI+fN3oRnEniLnlsgAHzmRt2qleg2m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710195974; c=relaxed/simple;
-	bh=qLDDuJAGNKczHxrsPwfQUDoczAOA4iTCPEFqmie3o0k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DWPW6I9SzVsmw40gqVAnho/KEgEAmBSklHFVKtZ1SJ5MypECdk+58SsTiIzG14FUp59+ToBRfn7/xxk3VislmFIieC30Uy34lftqNNqG+lchqJ30LyaIutvbtCQSvaBw71eYmRXkZ5aFK72D2U09mXPBC3Mj2AcZfKuYzsFJPzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2wwzx3P; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2wwzx3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C8AC433C7;
-	Mon, 11 Mar 2024 22:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710195973;
-	bh=qLDDuJAGNKczHxrsPwfQUDoczAOA4iTCPEFqmie3o0k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=S2wwzx3PaCXMRfobfBu6CaqJJnhAVOdFIXsLoML09wVgCa2bWls5gPujEAcSRE6An
-	 yWFUHquwvXrth+XL4nUj2BMvJrTZODczaUm9QWlQ+5IEQ1X5JVTRGe3pqWJFpAWtM2
-	 fVHBAtscCdxDG0yjITn6Q8ldotdWMB42mEt6anR+w2XvYiWretoDGTLQYWHUIiqpYL
-	 nyELurqDwRYCIS+FYcF3yrVTGplYLlb5knzWJ73j8BbHJjwe6tf8r5qx7f363XW5tb
-	 jjIVZXjpd1mjL/caKT0oHmI43ySmaWnmqC+jLWdHxVX9pX4HYQDq9Kro4S0wPpZ1vw
-	 l6/5uz5tVdqqg==
-From: Rob Herring <robh@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-i2c@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: dt-bindings: qcom,i2c-cci: Fix OV7251 'data-lanes' entries
-Date: Mon, 11 Mar 2024 16:26:04 -0600
-Message-ID: <20240311222605.1940826-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710196052; c=relaxed/simple;
+	bh=sLhrfnF8dSizg/c5wOEza7Fobu4qwgdo33vs55Xb8qY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edwdVPmhvE8/xsf9jJpE6R63w8DjVkF/XIsaIMtFOLbawEkEEnGU89FoVsEqNuWWCmvdDALg+HAwpnfdjnT5adZENm9drccg8xX0hZB/UXYOSj0W+q844Yd9bfqTZJgmwLI7yj7FB62Olff9w0He0hvlPUmy6TnGDaRwKuRYrIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 618be5b6-dff6-11ee-a9de-005056bdf889;
+	Tue, 12 Mar 2024 00:26:20 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 12 Mar 2024 00:26:18 +0200
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+	Stephen Rothwell <sfr@rothwell.id.au>, linux-mips@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] mips: cm: Add __mips_cm_l2sync_phys_base prototype
+ declaration
+Message-ID: <Ze-FCrkZuRiHIItp@surfacebook.localdomain>
+References: <20240215171740.14550-1-fancer.lancer@gmail.com>
+ <20240215171740.14550-2-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215171740.14550-2-fancer.lancer@gmail.com>
 
-The OV7251 sensor only has a single data lane, so 2 entries is not valid.
-Fix this to be 1 entry as the schema specifies.
+Thu, Feb 15, 2024 at 08:17:26PM +0300, Serge Semin kirjoitti:
+> The __mips_cm_l2sync_phys_base() and mips_cm_l2sync_phys_base() couple was
+> introduced in commit 9f98f3dd0c51 ("MIPS: Add generic CM probe & access
+> code") where the former method was a weak implementation of the later
+> function. Such design pattern permitted to re-define the original method
+> and use the weak implementation in the new function. A similar approach
+> was introduced in the framework of another arch-specific programmable
+> interface: mips_cm_phys_base() and __mips_cm_phys_base(). The only
+> difference is that the underscored method of the later couple was declared
+> in the "asm/mips-cm.h" header file, but it wasn't done for the CM L2-sync
+> methods in the subject. Due to the missing the global function declaration
+> the "missing prototype" warning was spotted in the framework of the commit
+> 9a2036724cd6 ("mips: mark local function static if possible") and fixed
+> just be re-qualifying the weak method as static. Doing that broke what was
+> originally implied by having the weak implementation globally defined. Fix
+> that by dropping the static qualifier and adding the
+> __mips_cm_l2sync_phys_base() prototype declared in the "asm/mips-cm.h"
+> header file.
 
-The schema validation doesn't catch this currently due to some limitations
-in handling of arrays vs. matrices, but a fix is being worked on.
+...
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Of course, with only 1 lane, I'm not sure why we need data-lanes in the
-first place?
----
- Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +/**
+> + * __mips_cm_l2sync_phys_base - retrieve the physical base address of the CM
+> + *                              L2-sync region
+> + *
+> + * This function returns the physical base address of the Coherence Manager
+> + * L2-cache only region. It provides a default implementation which reads the
+> + * CMGCRL2OnlySyncBase register where available or returns a 4K region just
+> + * behind the CM GCR base address. It may be overridden by platforms which
+> + * determine this address in a different way by defining a function with the
+> + * same prototype except for the name mips_cm_l2sync_phys_base (without
+> + * underscores).
+> + */
+> +extern phys_addr_t __mips_cm_l2sync_phys_base(void);
 
-diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
-index 8386cfe21532..f0eabff86310 100644
---- a/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
-+++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
-@@ -270,7 +270,7 @@ examples:
- 
-                 port {
-                     ov7251_ep: endpoint {
--                        data-lanes = <0 1>;
-+                        data-lanes = <0>;
-                         link-frequencies = /bits/ 64 <240000000 319200000>;
-                         remote-endpoint = <&csiphy3_ep>;
-                     };
+I'm wondering if you run
+
+	scripts/kernel-doc -v -none -Wall ...
+
+against this file. I believe it will complain that you missed Return section.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
