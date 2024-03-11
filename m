@@ -1,40 +1,48 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706742E410;
-	Mon, 11 Mar 2024 10:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AF638DD2;
+	Mon, 11 Mar 2024 10:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710153909; cv=none; b=BTj7QGpOvcXsGU6XeaiCzOdxBz9ZY+WbAN83MVmRFE8kOVOXBbWML3jB4ScAvLNYt8JQX8pIxwvD8rO1TcGjMuwoIYa7AXkUX0R4ddov5R+qRWBTuec00eaJh7mmqqyFsnAe7ScXvQJvtBC5ZBXx28ouoJvntsEaIf+L70XDBlU=
+	t=1710153910; cv=none; b=erS+JJsjgKvMV6IKBzwqFPLxF4WxIfDy67ft1cEJ14ugThNotzrEgmzv8H/ppoQkUKKwl6lLuTEziZVkF1yszsnEZwhEETEHO6Re0O4PSY6n82aw0Drio2zZjTsG6JAgAPCZhAwvvXulQcnb9cqCVpdTKsXb10L/JOL57ZUGWME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710153909; c=relaxed/simple;
-	bh=WrbwWD64V4NOfPkPm3GizaWD64FSlu+yEQ1HOGnLdCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ki1BqYp79611dcHkHs/6Ed1bR0i8rWO9/kjZZuWmvW+hye8mYMT64ZVukU3qeRp6ed21SObUk81usWrxP+btH9jSTFDgLoJ6Ojl2FDNzHTyRtR95zuQh1ncyklgFKtGAZc2BBOU2ZXrWPA2Vc16NE8Jo5WoUfMSFIwTzNJ2n/Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ATIYZUqh; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710153910; c=relaxed/simple;
+	bh=+sxHONNnx1hFuxK0YIAbVsDwlEeH+igDtPPWM75FSv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BFPUNGZmw6t0ICYdgYH/9TqOjoDrZAmY4uqeNSA20oOfndeBzIMlHuK1Rg5KPZUN2590axFouflHR12AX5NS6+HnFOliCQPOJt2ZKuVMUtCVcxWP7rGmwSUDr6st/JEcxGVYJrN3IdXpzG1uSbsAM2Hd8TQDP2A84ulWYr6G2gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hyt+S1xV; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ATIYZUqh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710153905;
-	bh=WrbwWD64V4NOfPkPm3GizaWD64FSlu+yEQ1HOGnLdCI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ATIYZUqhE0Y6GACEs8aEzAE32w5BtbEnMutK6Ff0O4F9+2U9fYByYCHvtQXoZwOTI
-	 rJKQ9iU0FkY6GIH02fONVcBr29xXVlE2ddhrL5k/Vy8Ii9DfKR6fpeZIjDUVWrlKXy
-	 2ar7C6dtTdAJEhyBLOJuUXaIGxqI15fjjVsJC8ldmuc3Pq6qj3/voYluLuFN8owS4m
-	 leNqdnduF5GlAifd6RoytTnkmNem1zNpZ7Z0ivc5nlv/VJYeUHFYzesfNlQgSJbIFc
-	 +I7vTUMaQUsu1aR1C0Bat+J9WGTtSi2SXWHnRbSQ4fi23l5TspfoX+RVOAbb8bM6QJ
-	 kxm6DNT3D/0uA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0C7E53781FD3;
-	Mon, 11 Mar 2024 10:45:04 +0000 (UTC)
-Message-ID: <7692ec9b-52d2-4bae-a9af-a7a695b4e8f4@collabora.com>
-Date: Mon, 11 Mar 2024 11:45:04 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hyt+S1xV"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42BAiruH107557;
+	Mon, 11 Mar 2024 05:44:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1710153893;
+	bh=brk8hEUtZhRYQimGd+K1WoJ4/pWrBZiyIAP9nhQEREs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=hyt+S1xVq5Aa03sAcOxLAYUTmzaRTG91NigalPACIk2CoYlzcA3vdQNQtQgbS9Jfx
+	 73lEWYCDa/Y0xGf7by0MS0M2mW6ZkVY7rXCLUO5vT+68zy9X1lNpyIyGBBQWSLuchf
+	 7K8GFf9kG6LK4f9D6TlDMN3rrOXURGXSNUAl5MAI=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42BAirPa113120
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 11 Mar 2024 05:44:53 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 11
+ Mar 2024 05:44:52 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 11 Mar 2024 05:44:52 -0500
+Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42BAikUT105135;
+	Mon, 11 Mar 2024 05:44:47 -0500
+Message-ID: <0512d57f-af22-4bd8-8266-33d943d7eb4a@ti.com>
+Date: Mon, 11 Mar 2024 16:14:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,89 +50,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200
+Subject: Re: [PATCH v4 2/6] arm64: dts: ti: k3-j784s4: Add alias to MCU CPSW2G
 Content-Language: en-US
-To: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240221155905.1217340-1-mwalle@kernel.org>
- <20240221155905.1217340-2-mwalle@kernel.org>
- <CZQSEKZ288OL.205CBK4EC7G2J@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <CZQSEKZ288OL.205CBK4EC7G2J@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>
+References: <20240131101441.1362409-1-c-vankar@ti.com>
+ <20240131101441.1362409-3-c-vankar@ti.com>
+ <469a7f15-0539-48e9-993c-5b9c638917e0@ti.com>
+From: Chintan Vankar <c-vankar@ti.com>
+In-Reply-To: <469a7f15-0539-48e9-993c-5b9c638917e0@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Il 11/03/24 09:44, Michael Walle ha scritto:
-> Hi,
+
+
+On 31/01/24 21:06, Andrew Davis wrote:
+> On 1/31/24 4:14 AM, Chintan Vankar wrote:
+>> Add alias for the MCU CPSW2G port to enable Linux to fetch MAC Address
+>> for the port directly from U-Boot.
 > 
-> On Wed Feb 21, 2024 at 4:59 PM CET, Michael Walle wrote:
->> Add basic support for the Kontron 3.5" single board computer featuring a
->> Mediatek i1200 SoC (MT8395/MT8195).
->>
->> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> Could you explain *how* this alias allows Linux to fetch a MAC
+> address from U-Boot? Sounds like we are doing something hacky here..
 > 
-> Any feedback on this? Should I repost after the merge window or is
-> it fine as it is for now?
+Using "probe_daughtercards()" function U-Boot parses MAC addresses from
+EEPROM, then it internally calls "eth_env_set_enetaddr_by_index()"
+function which stores these MAC addresses into environment variables
+ethaddr, eth1addr, eth2addr and so on based on number of ports.
+
+U-Boot loads DTB during boot process, and it calls
+"fdt_fixup_ethernet()" function, which uses environment variables to
+update MAC addresses of ethernet ports as specified in the aliases
+section.
+
+> Why can't Linux fetch the MAC from efuses the same way U-Boot does,
+
+Linux can fetch the MAC address from efuses if "ti,syscon-efuse"
+property is enabled.
+
+> what happens if I don't use U-Boot to boot?
+
+If you don't use U-Boot to boot then the equivalent of
+"probe_daughtercards()" has to be implemented which is currently
+missing.
+
 > 
-
-My feedback is
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-...and no there's no need to repost after the merge window, at least, I'm not picky
-about that.
-
-Though, if I ever forget about this one for *whatever reason*, please feel free to
-ping me or Matthias about it and we will make sure to pick it up.
-
-Cheers!
-Angelo
-
-> -michael
+> Andrew
 > 
 >> ---
->> v3:
->> - add vsys regulator
->> - correct the LDO input of the mt6360 regulator
->> - add missing interrupt-cells
->> - no underscores in node names
->> - dropped regulator-compatible everywhere and use the correc node name
->>    instead
->> - reordered mmc0 properties
->> - split mmc1 pinctrl properties, add no-mmc
->> - removed all MTK_DRIVE_8mA
->> - add i2c0 and i2c1
->> - add comments for spi and i2c busses
->> - add firmware-name property for scp (this should probably go into the
->>    base dtsi?!)
->> - add missing tpm compatible
->> - renamed thermal zones to something more meaningful
->> - add correct bias-pull-up to (some) i2c busses
->> - moved reset handling into the PHY node, also added a compatible string
->>    for the PHY.
+>>   arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 1 +
+>>   1 file changed, 1 insertion(+)
 >>
->> Mh, my memory is hazy, but IIRC I run into the same problem which was
->> discussed on netdev some time ago. That is, the PHY driver cannot be
->> probed unless it is taken out of reset. Which will only happen if you
->> probe it. And the workaround/advise was to use the compatible string in
->> that case, which is unfortunate.
->> Just wanted to point out, that it is *not* the same as snps,reset-*
->> because the latter will work just fine without the compatible. I'll
->> go with the compatible for now.
->>
->> I did *not* add the vbus to the USB ports, not even on the front port.
->> That is because of:
->>    dependencies:
->>      connector: [ usb-role-switch ]
->> and we just have a simple USB3.2 USB-A connector, no dual roles. IMHO
->> that is a bug in the driver, which should handle the vbus supply as
->> optional.
->>
->> v2:
->> - none
-
-
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts 
+>> b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> index f34b92acc56d..b74f7d3025de 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> @@ -27,6 +27,7 @@ aliases {
+>>           mmc1 = &main_sdhci1;
+>>           i2c0 = &wkup_i2c0;
+>>           i2c3 = &main_i2c0;
+>> +        ethernet0 = &mcu_cpsw_port1;
+>>       };
+>>       memory@80000000 {
