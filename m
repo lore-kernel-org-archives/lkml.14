@@ -1,83 +1,67 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B4E12E58;
-	Mon, 11 Mar 2024 09:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8241642F
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710147926; cv=none; b=SEVhujvuayoNqOATniou2vjtcMyWy6F8ya/snA28kgVh59zjoSZr/Jy0MVdh0iyPt5HwZ86jA8r38WNd6VpbkaxEvOY7eYoI6IWZWQov73zwLd4qfdp+XeVNJRkUMTAC3pYL/I2pwMSHZ9l70wQq8SO6n2SBsN+iBaHW8VNXeag=
+	t=1710147935; cv=none; b=KgU/IAuhcW10dWO8csEw1nHPTZvAPtE+Iqyj8tanbGzVrXzmymXzPFUzZvlFBuBnew5R4A9eVXWaP/kGSAwV+26t8t2X5381eCFalYByWUjnUZpeFfl4pdCVZossv5XU9+aZtj+dkDZEDE1OsjLXZWCj5tWD4C2RLekvSBS6v54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710147926; c=relaxed/simple;
-	bh=LXDSRxlCG5CCneQuaLmC2tK3UwO3onm86dAkvFUIKWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fx1dXZvXDUQ812+RVjKrzbYTDcVY7JKKmNnCXZrgIvE0j0Gf2roLA3zMf3LxdyeCXV2REfHypLpNo/aiaZqBdf/fxDlNgy6e6OtNgtUshPKUo4pg5ouJUg0puXK1jR/ThoZ0nECxN8lMZ4lOtuUEbBUtoGNCoAti7SKlvlX9nMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=F3gbBwhr; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="F3gbBwhr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710147404;
-	bh=LXDSRxlCG5CCneQuaLmC2tK3UwO3onm86dAkvFUIKWQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F3gbBwhrhfInMUCcHzDvlAviU2qW0BhsNaWhd4AciDCfigP6s49NtcSLChisuolP1
-	 yRcwSCW3dcoWBlWr5pHM7+IstmJ7fvjmD1vZ4/Tcg31pRhtJUi4dpn0NdrD927/M3c
-	 n1x8GEY+ulYCLd0TfAi2WANCJUjZcpy96YAMBkfvnxB3XujRXIzW3zxYvExmMCTZuz
-	 yVdIKu9LydYr/kVSUX9PTGT0Tpbsl/dWOUUf7YkFdsDy645n/s2ZZ/5epYf8VV7Kdb
-	 wbIPwB04Wd0yl2Dq53EAhZG4v8IeQCfnBmZlfP8OPXNTHysWgiKtIgiijkaR22GFby
-	 37/lqySviz8KA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 790EE3780C21;
-	Mon, 11 Mar 2024 08:56:43 +0000 (UTC)
-Message-ID: <f7fb18dc-817e-4d93-94a8-a4b7493cc8a6@collabora.com>
-Date: Mon, 11 Mar 2024 09:56:42 +0100
+	s=arc-20240116; t=1710147935; c=relaxed/simple;
+	bh=su16VxET9iVNmavI6//qHIJdZH7F9u4t3Pf80tLZtR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Em9+SCIqW7o3Vg9GEmb8U4XEKRQbcxVxihAYVZ333croLpYrINtKvMDxhq1/+PUC2EbrDZ0TJXxdK/K1TnYeXVKqnZwxNpTADGHXpe88i+WCXn4ZYhAmg2c7StRltCWYP7w4GxGQTCm5qGV3Ga6HiW3dweGAux9BKlfcwnc4F2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D351AFEC;
+	Mon, 11 Mar 2024 02:06:09 -0700 (PDT)
+Received: from e126645.nice.arm.com (e126645.nice.arm.com [10.34.100.133])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D6CD63F762;
+	Mon, 11 Mar 2024 02:05:31 -0700 (PDT)
+From: Pierre Gondois <pierre.gondois@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Pierre Gondois <pierre.gondois@arm.com>,
+	kernel test robot <lkp@intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH -next] firmware: arm_scmi: Fix wrong fastchannel initialization
+Date: Mon, 11 Mar 2024 10:04:12 +0100
+Message-Id: <20240311090413.1710725-1-pierre.gondois@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: mediatek: pllfh: Don't log error for missing fhctl
- node
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Johnson Wang <johnson.wang@mediatek.com>,
- Edward-JW Yang <edward-jw.yang@mediatek.com>,
- Chen-Yu Tsai <wenst@chromium.org>
-Cc: kernel@collabora.com, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240308-mtk-fhctl-no-node-error-v1-1-51e446eb149a@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240308-mtk-fhctl-no-node-error-v1-1-51e446eb149a@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Il 08/03/24 21:29, Nícolas F. R. A. Prado ha scritto:
-> Support for fhctl clocks in apmixedsys was introduced at a later point
-> and to this moment only one mt6795 based platform has a fhctl DT node
-> present. Therefore the fhctl support in apmixedsys should be seen as
-> optional and not cause an error when it is missing.
-> 
-> Change the message's log level to warning. The warning level is chosen
-> so that it will still alert the fact that fhctl support might be
-> unintentionally missing, but without implying that this is necessarily
-> an issue.
-> 
-> Even if the FHCTL DT nodes are added to all current platforms moving
-> forward, since those changes won't be backported, this ensures stable
-> kernel releases won't have live with this error.
-> 
-> Fixes: d7964de8a8ea ("clk: mediatek: Add new clock driver to handle FHCTL hardware")
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Fastchannels are initialized with a bad index in:
+commit 2441caa84aac ("firmware: arm_scmi: Populate fast channel rate_limit")
+Fix this and provide a correct index.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202403100744.7Op3PI8L-lkp@intel.com/
+Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
+---
+ drivers/firmware/arm_scmi/powercap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/firmware/arm_scmi/powercap.c b/drivers/firmware/arm_scmi/powercap.c
+index ea9201e7044c..1fa79bba492e 100644
+--- a/drivers/firmware/arm_scmi/powercap.c
++++ b/drivers/firmware/arm_scmi/powercap.c
+@@ -736,7 +736,7 @@ static void scmi_powercap_domain_init_fc(const struct scmi_protocol_handle *ph,
+ 	ph->hops->fastchannel_init(ph, POWERCAP_DESCRIBE_FASTCHANNEL,
+ 				   POWERCAP_PAI_GET, 4, domain,
+ 				   &fc[POWERCAP_FC_PAI].get_addr, NULL,
+-				   &fc[POWERCAP_PAI_GET].rate_limit);
++				   &fc[POWERCAP_FC_PAI].rate_limit);
+ 
+ 	*p_fc = fc;
+ }
+-- 
+2.25.1
 
