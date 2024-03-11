@@ -1,42 +1,57 @@
-Received: from weierstrass.telenet-ops.be (weierstrass.telenet-ops.be [195.130.137.81])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40D83D970
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 13:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025C13E491;
+	Mon, 11 Mar 2024 13:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710165039; cv=none; b=ia1XGyx7GxkawCxEwEF1nXHVSEMrs1s9O4xlDk1BWuiT+UP/X7+XN6fwZmwkk2unxKW7RPRpjuFcaJpt59eEJLLMZbAIAc13CnehYdtvFXBIopapcKbXweCKUH3CNIvbVxdWymGE7VdlcOiC+hBHzdTQyw3p5p8NKAWv9KQQDjQ=
+	t=1710165095; cv=none; b=PT+9n5oJVo9x9iE/ZIJ0ba6Rfdo50bdHsQ2ZqbwP9O0f6UF2PX62wzE2RqsCVIFR3AZD9P2yt06LDzgvcpQeUFQCp9R7Jx7pahnfKYnoX8z1u/V1ukdMnysVXN9/xjPugYSXSOFi/3pwW0jRTfh8Anfw1DQzghTiQ2Ubgoey8FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710165039; c=relaxed/simple;
-	bh=RwsgmWjB5jQM5rG+Q8V+ThuRJIdkgmR4+Rfw1CoFMJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=duoNYMIXAXU3QeqI+kN7FQtT4lugcpD6xcl+cdnRXf3xubAVrefZF1Ko7WE5NJNMimdfHM3VpS66CkC1EGiMg5K8VKC1+of38XB4Jx3dhemL+TG+hC2jJS2Dv2iVsO8aalNzrAGpkeThLNl87yqKqE9st7mx8PSZoYhvIv9SY+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-	by weierstrass.telenet-ops.be (Postfix) with ESMTPS id 4TtdKp2bbJz4x1CT
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:44:14 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by michel.telenet-ops.be with bizsmtp
-	id xRk62B00T0SSLxL06Rk6bv; Mon, 11 Mar 2024 14:44:06 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rjfwV-003L5c-2T;
-	Mon, 11 Mar 2024 14:44:06 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rjfwk-005i88-Bg;
-	Mon, 11 Mar 2024 14:44:06 +0100
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] fork: Use THREAD_SIZE_ORDER
-Date: Mon, 11 Mar 2024 14:44:04 +0100
-Message-Id: <f713d82fe6526288f51fc138cd16681cec6b43a6.1710164592.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710165095; c=relaxed/simple;
+	bh=a4qDamwnmkvTg8Fr+2sFfNlrO1RU4hEtcpbHDa1dnLo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EIeXh3ER6MOirRPvW4TIgpPqPf9Y6bPhHVw4N7SwXXPckGgwI9HUo2gnI85oPEbuIMz9ESN9/Lpdn1/1X/3LlTOcFpWyPRUwxRjvZB2cyjFkUfHKoEfjuUnfjTlvmpqDnDxEAXWnwdVYjzUcQIVKKwGF70wBrUN2sOS4XzQrQ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=none smtp.helo=mx0b-0016f401.pphosted.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=i7MDCLqw; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="i7MDCLqw"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B9mVxe015527;
+	Mon, 11 Mar 2024 06:51:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=3tx4AikW
+	SVzffVoM4QxH3dLYukKV8Uobw1Prt+g5Ac8=; b=i7MDCLqwy5Dj1GJMa18h7dhz
+	6yamMdY+xmJh7Buad0QGe5ZxXqMGzkxs+yMPGAwLvD6VCpI0hAkqiQJ9aEb68TE8
+	v27aHaOZu/B7ct7oFLJ5wReZzhTeqNh4ALFAQ6KF2skeXmAaWtFSx24Atdee8uXD
+	zJyFT8kSo08wrjEgAmc1r/e/dwje9AqFcLea5UYpZLFUBqBcKSYDakNvwU7yt5j1
+	svpxrhrOVEabeuWUghg6AJDUyyFUjzHjIxdt6atV8z3WUrs1lc29U6wKRIrzT4dO
+	yzE+WHtxzXMtGS5uwBbcQNqTbzCnyaWj0P3ERQuf1+VhErE86YRLYK3HFUUXfQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wsynb0ngq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 06:51:19 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.12; Mon, 11 Mar 2024 06:51:18 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Mon, 11 Mar 2024 06:51:18 -0700
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id C55763F7045;
+	Mon, 11 Mar 2024 06:51:15 -0700 (PDT)
+From: Elad Nachman <enachman@marvell.com>
+To: <taras.chornyi@plvision.eu>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <andrew@lunn.ch>,
+        <kory.maincent@bootlin.com>, <thomas.petazzoni@bootlin.com>,
+        <miquel.raynal@bootlin.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>
+Subject: [PATCH 0/3] Fix prestera driver fail to probe twice
+Date: Mon, 11 Mar 2024 15:51:09 +0200
+Message-ID: <20240311135112.2642491-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,49 +59,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: rZ3ESQ97mnL5PZw73iANqYLg99DbGCp6
+X-Proofpoint-ORIG-GUID: rZ3ESQ97mnL5PZw73iANqYLg99DbGCp6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_08,2024-03-06_01,2023-05-22_02
 
-Use the existing THREAD_SIZE_ORDER definition instead of calculating it
-from THREAD_SIZE and PAGE_SIZE.
+From: Elad Nachman <enachman@marvell.com>
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- kernel/fork.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Fix issues resulting from insmod, rmmod and insmod of the
+prestera driver:
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 0d944e92a43ffa13..e79fdfe1f0bf4953 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -252,9 +252,9 @@ static int memcg_charge_kernel_stack(struct vm_struct *vm)
- 	int ret;
- 	int nr_charged = 0;
- 
--	BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
-+	BUG_ON(vm->nr_pages != THREAD_SIZE_ORDER);
- 
--	for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
-+	for (i = 0; i < THREAD_SIZE_ORDER; i++) {
- 		ret = memcg_kmem_charge_page(vm->pages[i], GFP_KERNEL, 0);
- 		if (ret)
- 			goto err;
-@@ -535,7 +535,7 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
- 		struct vm_struct *vm = task_stack_vm_area(tsk);
- 		int i;
- 
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-+		for (i = 0; i < THREAD_SIZE_ORDER; i++)
- 			mod_lruvec_page_state(vm->pages[i], NR_KERNEL_STACK_KB,
- 					      account * (PAGE_SIZE / 1024));
- 	} else {
-@@ -556,7 +556,7 @@ void exit_task_stack_account(struct task_struct *tsk)
- 		int i;
- 
- 		vm = task_stack_vm_area(tsk);
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-+		for (i = 0; i < THREAD_SIZE_ORDER; i++)
- 			memcg_kmem_uncharge_page(vm->pages[i], 0);
- 	}
- }
+1. Time-out
+2. memory referencing after freeing
+3. MAC addresses wrapping
+
+Elad Nachman (3):
+  net: marvell: prestera: fix driver reload
+  net: marvell: prestera: fix memory use after free
+  net: marvell: prestera: force good base mac
+
+ drivers/net/ethernet/marvell/prestera/prestera_hw.c       | 8 ++++++++
+ drivers/net/ethernet/marvell/prestera/prestera_hw.h       | 1 +
+ drivers/net/ethernet/marvell/prestera/prestera_main.c     | 7 +++++--
+ drivers/net/ethernet/marvell/prestera/prestera_pci.c      | 7 ++++++-
+ drivers/net/ethernet/marvell/prestera/prestera_router.c   | 1 -
+ .../net/ethernet/marvell/prestera/prestera_router_hw.c    | 1 -
+ 6 files changed, 20 insertions(+), 5 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
