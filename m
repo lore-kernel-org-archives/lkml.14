@@ -1,37 +1,59 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BCB54F95
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0414854F83
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 19:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710185343; cv=none; b=Fzlpx8XHQQzf5InrhZ526bmlpujAUokVtd01DlE4wk4TdN2B1+lBcOGV7j+4xM+aW5ed7/lb7oTzOjqQwd+M4PhzbaqVWhwekTlStTvAf7tg2F7rtTEpJf8gU/W11vj9HEreJAZ7cyHIt9I9YJFVXBcH9JMFdRYT9GG+uGZ7JSk=
+	t=1710185477; cv=none; b=fhKpTgFFf036QoEM6kieGY1etdcBFDKj0NJkfmQnEnhq01ofV/jMQ90+sWrMllbqbolryj6afVJm1giSGX7YdjFiu50InBnXGk43o1bj/r74E9sqX05XzXTUMyOSqFRKwtebX7rAn+rSZedimiDuUYpMV7gq5yQC2GCcsp6f9xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710185343; c=relaxed/simple;
-	bh=oIABW2DNy9dOFuOU2pfHQlTmZCb/X3jVT9ZrNe8DWhA=;
+	s=arc-20240116; t=1710185477; c=relaxed/simple;
+	bh=AC1uPRCZj/8wnOJitSEIWUojwXPSwENw/WWJYgzkVrg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aUxdf9P6TBXygvcC8eM2KgkD40cHXTX6HveADfs7EjMHgGhoMmvxb7seBAWPahX+oakQMZ42AeXZFi/DBwCqgzRwG+5N1Ab1VAGcs/RH7L9KWptHDh3OYz33Gn1Ms6FRPGh/MCfkmsUslqyUqtEurZc9pQJi5erwky7VagOIIfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C932C34FD2;
-	Mon, 11 Mar 2024 19:28:59 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7E16013695;
-	Mon, 11 Mar 2024 19:28:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0nXBHHtb72XkTQAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 11 Mar 2024 19:28:59 +0000
-Message-ID: <14c5a294-e68f-441f-8606-31cfb67670b7@suse.de>
-Date: Mon, 11 Mar 2024 20:28:58 +0100
+	 In-Reply-To:Content-Type; b=kZkd35ow0+jhkA8PCBLf+uxVV3ZVjxRe2KH1OgAvOM2ZxJBeGKJjxK/+eQ6V+uwb/uMe+pryCpnNyrKBTHlWAFnubBVVPEqQKsvU8NKux25AnxbxaBscxa6p+an78o93s/DEo6jyn2tKTVX5GN4hznWy3OXXt4rgGcSeiE0EtsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ap9LltHW; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ap9LltHW"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28cfca3c45so180068366b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 12:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710185474; x=1710790274; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DGD/K7PbcPXhTYr2ynjthnXfGqD/UYdkpGpwMVFT2yE=;
+        b=ap9LltHWFPKNPWQ8qOyhlCv0PVEUA7lkBtplFVtfaptrRRfohJLhwlIgu05UxBx9o4
+         OEa6lw4vGgVO90ULAG1WotTu09p9igKLN33cgDqxG3a+c2ViZkZSlS62d+7TCf4oTvre
+         WrsQHRnBMk2/148dtTR7fWAHdvu8rPRGeAhpGfBMF0ewnoEEPMaLD7bG7WO5l1oUxF9S
+         Xl4uNL2D+/Dj5tQkehILuxZuLuXJYK2I4FC+JYgWAhShEnnoFNKVgyga/8LEi9RCZAxn
+         OWRzIQVXpMAE5PsE6IVuHoVpAmSG6LySaS0xQHSCw9S4Vln+RBlvXNDom0WIcjUL9R4c
+         zdTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710185474; x=1710790274;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DGD/K7PbcPXhTYr2ynjthnXfGqD/UYdkpGpwMVFT2yE=;
+        b=tlvjxZ+J2oovSrST5SJjwW9N4DOwLR/lMlJyEuNw0eUZfnY7eW7U+98Vr4c3h1x7qq
+         1gONx3k7tKM7vha9/pUde26hsZsqUa+LgZlzeB02FsRQlOKJV9SifC1JDbGTn9SlUiuN
+         cV60JRsZM84f6LHvcTm5Aakl7VgwfjGWiT67awVA0WeC76PTgrE6SpBvJj0+pRmrO/nT
+         YDyc5+3+K1nGMTMSqXGnsofeMxWQ8GPYcfy70d2xntVlmvo+lJb6eCxz62Dvf6F3Shdf
+         R7m6mU6EBT8nQDZXTMExRDHfnl/Q/nU9dxN427aNw7hm6sIx1z6u9xZj/hfiLlDb1HX9
+         LYTg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Xhw8GekCmImcCnk5k3RiNVgDgwnkb4CgCQh0TNW57qnhgslzxfYyJcstJmRNeDIp3Ra2GbizznybbXFwuYwNEtlK4JaSy/vPbw9e
+X-Gm-Message-State: AOJu0YwNpPAFTHcxb5ixeAJ/aEuYRcyYH/4n50gUBHKSZN2gcYel/tdl
+	luRUWuIdIYk7RVmQGUWIXXH+d9m1cCa3tuxttS3CMyaWsh8SuxDg
+X-Google-Smtp-Source: AGHT+IFCp9YWXjL3GAKRj2gE9ehP0MXbh1gQhiEBhuAGk6m7UJhFvSbXcrXdc9w5PdZO+BaVqhGd/A==
+X-Received: by 2002:a17:906:3087:b0:a45:da91:8d29 with SMTP id 7-20020a170906308700b00a45da918d29mr4784404ejv.2.1710185474164;
+        Mon, 11 Mar 2024 12:31:14 -0700 (PDT)
+Received: from [192.168.0.104] (p54a07fa0.dip0.t-ipconnect.de. [84.160.127.160])
+        by smtp.gmail.com with ESMTPSA id oz14-20020a170906cd0e00b00a44a859fd9dsm3188581ejb.174.2024.03.11.12.31.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Mar 2024 12:31:13 -0700 (PDT)
+Message-ID: <6d643351-8924-4c86-9fb5-9951e016f5db@gmail.com>
+Date: Mon, 11 Mar 2024 20:31:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,89 +61,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] nvme-fabrics: introduce ref counting for
- nvmf_ctrl_options
+Subject: Re: [PATCH] staging: p80211conv: Rename local foo to decrypt_check
 Content-Language: en-US
-To: Daniel Wagner <dwagner@suse.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240221132404.6311-1-dwagner@suse.de>
- <20240221132404.6311-4-dwagner@suse.de>
- <342cf4cf-ad14-4fd0-bcab-fe5fcecf4c0a@grimberg.me>
- <3xjjwq56sldxrr3dmcxmzhqjebctrowmfpr3istfqmnitlvpv4@mzjixl3jjnbi>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <3xjjwq56sldxrr3dmcxmzhqjebctrowmfpr3istfqmnitlvpv4@mzjixl3jjnbi>
+To: "Felix N. Kimbu" <felixkimbu1@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: outreachy@lists.linux.dev
+References: <Ze9Ie67PCSvBU+og@MOLeToid>
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+In-Reply-To: <Ze9Ie67PCSvBU+og@MOLeToid>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: C932C34FD2
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 7bit
 
-On 3/11/24 18:36, Daniel Wagner wrote:
-> On Thu, Mar 07, 2024 at 12:27:43PM +0200, Sagi Grimberg wrote:
->> Why do we need a refcount for an object that has the same exact lifetime
->> as the ctrl itself? It just feels like unneeded complication.
+On 3/11/24 19:07, Felix N. Kimbu wrote:
+> This change renames the local variable foo to decrypt_check in functions
+> skb_ether_to_p80211(...) and skb_p80211_to_ether(...), giving intuitive
+> meaning to the identifier.
 > 
-> My claim the UAF is also possible with the current code is not correct.
-> Or at least not easy to reproduce. I've re-tested a lot and I couldn't
-> reproduce it.
+> It also indents the parameters to match the the opening parentheses.
 > 
-> Though, the UAF is very simple to reproduce with the sync connect patch
-> applied (nvme-fc: wait for initial connect attempt to finish) together
-> with Hannes' patch (nvme: authentication error are always
-> non-retryable):
-> 
-> In this case, the initial connect fails and the resources are removed,
-> while we are waiting in
-> 
-> +       if (!opts->connect_async) {
-> +               enum nvme_ctrl_state state;
-> +
-> +               wait_for_completion(&ctrl->connect_completion);
-> +               state = nvme_ctrl_state(&ctrl->ctrl);
-> +               nvme_fc_ctrl_put(ctrl);
-> +
-> +               if (state != NVME_CTRL_LIVE) {
-> +                       /* Cleanup is handled by the connect state machine */
-> +                       return ERR_PTR(-EIO);
-> +               }
-> +       }
-> 
-> This opens up the race window. While we are waiting here for the
-> completion, the ctrl entry in sysfs is still reachable. Unfortunately,
-> we also fire an uevent which starts another instance of nvme-cli. And
-> the new instance of nvme-cli iterates over sysfs and reads the already
-> freed options object.
-> 
-Curiously enough, I had been digging into better error reporting for 
-nvme-fabrics. And the one thing I came up with is to make the controller
-_options_ as a private pointer to seq_file.
-With that we can allocate and initialize the options during open(),
-and then have write() do the parsing and calling create_ctrl() as usual.
-But read() would then always have access to the option structure, and
-we can use this structure to pass any errors. EG parsing errors could
-be reported by an 'err_mask' field and so on.
+> Signed-off-by: Felix N. Kimbu <felixkimbu1@gmail.com>
 
-That would allow us to report errors back to nvme-cli, and,
-incidentally, also require reference counting.
-Two stones with a bird and all that.
+Hi Felix,
 
-Patch is in testing, and I'll be posting it once I get confirmation.
+I think the subject names the subsystem "staging" and then the driver 
+which is "wlan-ng" the file can follow but you cannot omit the driver 
+name.
 
 
-Cheers,
+Please check the following checkpatch warnings:
+File Nr: 0    Patch: ../../../Downloads/20240311-[PATCH] staging_ 
+p80211conv_ Rename local foo to decrypt_check-15036.txt
+WARNING: Possible repeated word: 'the'
+#11:
+It also indents the parameters to match the the opening parentheses.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+ERROR: code indent should use tabs where possible
+#41: FILE: drivers/staging/wlan-ng/p80211conv.c:189:
++^I^I^I^I  ^I^I^I^I^Iskb->len,$
+
+WARNING: please, no space before tabs
+#41: FILE: drivers/staging/wlan-ng/p80211conv.c:189:
++^I^I^I^I  ^I^I^I^I^Iskb->len,$
+
+CHECK: Alignment should match open parenthesis
+#41: FILE: drivers/staging/wlan-ng/p80211conv.c:189:
++		decrypt_check = wep_encrypt(wlandev, skb->data, p80211_wep->data,
++				  					skb->len,
+
+WARNING: line length of 115 exceeds 100 columns
+#42: FILE: drivers/staging/wlan-ng/p80211conv.c:190:
++									wlandev->hostwep & HOSTWEP_DEFAULTKEY_MASK,
+
+WARNING: line length of 105 exceeds 100 columns
+#43: FILE: drivers/staging/wlan-ng/p80211conv.c:191:
++									p80211_wep->iv, p80211_wep->icv);
+
+CHECK: Alignment should match open parenthesis
+#72: FILE: drivers/staging/wlan-ng/p80211conv.c:309:
++		decrypt_check = wep_decrypt(wlandev, skb->data + payload_offset + 4,
++									payload_length - 8, -1,
+
+total: 1 errors, 4 warnings, 2 checks, 58 lines checked
+
+Thanks for your support.
+
+Bye Philipp
+
+
+> ---
+>   drivers/staging/wlan-ng/p80211conv.c | 30 ++++++++++++++--------------
+>   1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/staging/wlan-ng/p80211conv.c b/drivers/staging/wlan-ng/p80211conv.c
+> index 8336435eccc2..a0413928a843 100644
+> --- a/drivers/staging/wlan-ng/p80211conv.c
+> +++ b/drivers/staging/wlan-ng/p80211conv.c
+> @@ -93,7 +93,7 @@ int skb_ether_to_p80211(struct wlandevice *wlandev, u32 ethconv,
+>   	struct wlan_ethhdr e_hdr;
+>   	struct wlan_llc *e_llc;
+>   	struct wlan_snap *e_snap;
+> -	int foo;
+> +	int decrypt_check;
+>   
+>   	memcpy(&e_hdr, skb->data, sizeof(e_hdr));
+>   
+> @@ -185,14 +185,14 @@ int skb_ether_to_p80211(struct wlandevice *wlandev, u32 ethconv,
+>   		p80211_wep->data = kmalloc(skb->len, GFP_ATOMIC);
+>   		if (!p80211_wep->data)
+>   			return -ENOMEM;
+> -		foo = wep_encrypt(wlandev, skb->data, p80211_wep->data,
+> -				  skb->len,
+> -				  wlandev->hostwep & HOSTWEP_DEFAULTKEY_MASK,
+> -				  p80211_wep->iv, p80211_wep->icv);
+> -		if (foo) {
+> +		decrypt_check = wep_encrypt(wlandev, skb->data, p80211_wep->data,
+> +				  					skb->len,
+> +									wlandev->hostwep & HOSTWEP_DEFAULTKEY_MASK,
+> +									p80211_wep->iv, p80211_wep->icv);
+> +		if (decrypt_check) {
+>   			netdev_warn(wlandev->netdev,
+>   				    "Host en-WEP failed, dropping frame (%d).\n",
+> -				    foo);
+> +				    decrypt_check);
+>   			kfree(p80211_wep->data);
+>   			return 2;
+>   		}
+> @@ -265,7 +265,7 @@ int skb_p80211_to_ether(struct wlandevice *wlandev, u32 ethconv,
+>   	struct wlan_llc *e_llc;
+>   	struct wlan_snap *e_snap;
+>   
+> -	int foo;
+> +	int decrypt_check;
+>   
+>   	payload_length = skb->len - WLAN_HDR_A3_LEN - WLAN_CRC_LEN;
+>   	payload_offset = WLAN_HDR_A3_LEN;
+> @@ -305,15 +305,15 @@ int skb_p80211_to_ether(struct wlandevice *wlandev, u32 ethconv,
+>   				   "WEP frame too short (%u).\n", skb->len);
+>   			return 1;
+>   		}
+> -		foo = wep_decrypt(wlandev, skb->data + payload_offset + 4,
+> -				  payload_length - 8, -1,
+> -				  skb->data + payload_offset,
+> -				  skb->data + payload_offset +
+> -				  payload_length - 4);
+> -		if (foo) {
+> +		decrypt_check = wep_decrypt(wlandev, skb->data + payload_offset + 4,
+> +									payload_length - 8, -1,
+> +									skb->data + payload_offset,
+> +									skb->data + payload_offset +
+> +									payload_length - 4);
+> +		if (decrypt_check) {
+>   			/* de-wep failed, drop skb. */
+>   			netdev_dbg(netdev, "Host de-WEP failed, dropping frame (%d).\n",
+> -				   foo);
+> +				   decrypt_check);
+>   			wlandev->rx.decrypt_err++;
+>   			return 2;
+>   		}
 
