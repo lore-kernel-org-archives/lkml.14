@@ -1,151 +1,163 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1123358203;
-	Mon, 11 Mar 2024 18:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 185AD56751
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 18:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710182888; cv=none; b=CraxYKbE4FMd+zAAmh9lHVq5JZrX/OhbtN5N3SxY7nLPBy7E9uuX9fta2hB8XBd3oTGIQb4BDdKdkPmrMNxKyjp6RrLLcbAMlQrk9FWtDaw1TkiLl2ISF8r8rmUkB88ojo9TpzSjuTbLzrVQwrQs5B4eP/5aRvIa3yrCOn4nFAg=
+	t=1710183090; cv=none; b=W6zcXSt5SeU3eCGM0feNTqRkaw98rJZzoQvjlmDfIwGKyCbLdxOvZNe6rsNxiREdLdE/dJbbgEZRKE/145TmJzo5tBsOCjq2davQRPa2hv1ipHc3RpPC79XU9Elu7TQ3/4xNROgO6fspRvmrpFftB9PhEEDjrG0eLniZejU/3dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710182888; c=relaxed/simple;
-	bh=mUUzn+Ga9yhfHo9EKvOS/7OF9mFKpbnPSScMGiqQnkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6M9L4DOvpdKSHvQxSUSbCEYCQRwc8QqDmc+Vj/FcU8mPowbpKfRWxyP78lpHAUhxrBIMFrD/4yY/VScmPmIkX9Avw25GEHTaMiKKeCgYP7MmiwhfXV4vOh1XLGhz28icL73AxpGDTBsCf3cR1M/2iNu4jCx62sEFsgHrMdwoaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rjRJLpdA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oUKhupSn; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ELHSdRsA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eNLSWRaW; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rjRJLpdA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oUKhupSn";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ELHSdRsA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eNLSWRaW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6CF8B5CA53;
-	Mon, 11 Mar 2024 18:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710182885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZB0gBvy/L4auocycyQAq42K+/ZipH3RzMsqZu8eZW+o=;
-	b=rjRJLpdADGapW+bLtHloCCk4PmeYcq0jiS7wTjt515EnHOKrohoW48hQ3RwEe0k39J7E/g
-	hQIJaqjuEXk6+ODkWk+LiUchTXMWYLk2RY54NlLaMKmu6dtXc6tZyXCPlFA5Zc95hoZPy/
-	gzFgoLH2WRIGGfn47Uw4khSrmn8IMtQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710182885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZB0gBvy/L4auocycyQAq42K+/ZipH3RzMsqZu8eZW+o=;
-	b=oUKhupSnzt45jAJgpSvY5GsowEJi0NYIT4eHexWP1E02MkUFJZN0jmBVZX4w1t1BStFFMS
-	NnDcn69ix0l0qmBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710182884; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZB0gBvy/L4auocycyQAq42K+/ZipH3RzMsqZu8eZW+o=;
-	b=ELHSdRsANKie5iUgl7dXE3yszldSlyrKlHtEqk4/6NHf5Dy7sCAe8r4CgXlwIksAQEZh+p
-	CpPBUp0GaJ7V+7yDcJJ/KrP+zn+3czJag018U4VYdZSY0GD9tb8qizhXauQPE+gpG85zlO
-	emZJ1ZilKI9fn1PlhV/KpVCbmUsJFJA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710182884;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZB0gBvy/L4auocycyQAq42K+/ZipH3RzMsqZu8eZW+o=;
-	b=eNLSWRaWklb2CNS5F0nbYwuAha+vBN6q+kz6gUgwvUmHb3xNQTnjJnGvN30wN9XTrovp39
-	3ddbFK1A++IvqSAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5D1D613695;
-	Mon, 11 Mar 2024 18:48:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZiqvFuRR72VWQgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 11 Mar 2024 18:48:04 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 08AA1A080A; Mon, 11 Mar 2024 19:48:00 +0100 (CET)
-Date: Mon, 11 Mar 2024 19:48:00 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+6ec38f7a8db3b3fb1002@syzkaller.appspotmail.com>
-Cc: almaz.alexandrovich@paragon-software.com, anton@tuxera.com,
-	axboe@kernel.dk, brauner@kernel.org, ebiederm@xmission.com,
-	jack@suse.cz, keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-ntfs-dev@lists.sourceforge.net, mjguzik@gmail.com,
-	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com,
-	tytso@mit.edu, viro@zeniv.linux.org.uk, willy@infradead.org
-Subject: Re: [syzbot] [ntfs3?] WARNING in do_open_execat
-Message-ID: <20240311184800.d7nuzahhz36rlxpg@quack3>
-References: <000000000000c74d44060334d476@google.com>
- <000000000000f67b790613665d7a@google.com>
+	s=arc-20240116; t=1710183090; c=relaxed/simple;
+	bh=L3czb4yKVFTuEdeekbnrd39IUTZN8nT4xpst5WMpWtU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nNk4Wu0PVWWD6qQEIDuAMtQFXc3FPRJclybi45ctuBrbh79ZevBHHUW78X85cmcucLeiXTZgWp+xISx7IyBV5IB39e/MOHhq3C2IhmHzVOJyw0eqIn9sUcJ8ShsOMy3uOlWR31AlFmB+iFMi3CbYzcLcXVsCtVn0g3EakJvaZ3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C48FEC;
+	Mon, 11 Mar 2024 11:52:04 -0700 (PDT)
+Received: from [10.57.68.246] (unknown [10.57.68.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D730F3F64C;
+	Mon, 11 Mar 2024 11:51:22 -0700 (PDT)
+Message-ID: <499a60c6-eeb8-4bbd-8563-9717c0d2e43d@arm.com>
+Date: Mon, 11 Mar 2024 18:51:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f67b790613665d7a@google.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: *
-X-Spam-Score: 1.68
-X-Spamd-Result: default: False [1.68 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-0.02)[53.82%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=bdf178b2f20f99b0];
-	 TAGGED_RCPT(0.00)[6ec38f7a8db3b3fb1002];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLn6wwtsxnyhk5uph3gjrme911)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.979];
-	 RCPT_COUNT_TWELVE(0.00)[18];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[paragon-software.com,tuxera.com,kernel.dk,kernel.org,xmission.com,suse.cz,chromium.org,vger.kernel.org,kvack.org,lists.sourceforge.net,gmail.com,lists.linux.dev,googlegroups.com,mit.edu,zeniv.linux.org.uk,infradead.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 2/5] mm: swap: introduce swap_nr_free() for batched
+ swap_free()
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: chengming.zhou@linux.dev, chrisl@kernel.org, david@redhat.com,
+ hannes@cmpxchg.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com,
+ steven.price@arm.com, surenb@google.com, wangkefeng.wang@huawei.com,
+ willy@infradead.org, xiang@kernel.org, ying.huang@intel.com,
+ yosryahmed@google.com, yuzhao@google.com, Chuanhua Han
+ <hanchuanhua@oppo.com>, Barry Song <v-songbaohua@oppo.com>
+References: <20240304081348.197341-1-21cnbao@gmail.com>
+ <20240304081348.197341-3-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240304081348.197341-3-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon 11-03-24 11:04:04, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
+On 04/03/2024 08:13, Barry Song wrote:
+> From: Chuanhua Han <hanchuanhua@oppo.com>
 > 
-> commit 6f861765464f43a71462d52026fbddfc858239a5
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Nov 1 17:43:10 2023 +0000
+> While swapping in a large folio, we need to free swaps related to the whole
+> folio. To avoid frequently acquiring and releasing swap locks, it is better
+> to introduce an API for batched free.
 > 
->     fs: Block writes to mounted block devices
+> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  include/linux/swap.h |  6 ++++++
+>  mm/swapfile.c        | 35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+)
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e3f58e180000
-> start commit:   eb3479bc23fa Merge tag 'kbuild-fixes-v6.7' of git://git.ke..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=bdf178b2f20f99b0
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6ec38f7a8db3b3fb1002
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15073fd4e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b20b8f680000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
- 
-#syz fix: fs: Block writes to mounted block devices
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 2955f7a78d8d..d6ab27929458 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -481,6 +481,7 @@ extern void swap_shmem_alloc(swp_entry_t);
+>  extern int swap_duplicate(swp_entry_t);
+>  extern int swapcache_prepare(swp_entry_t);
+>  extern void swap_free(swp_entry_t);
+> +extern void swap_nr_free(swp_entry_t entry, int nr_pages);
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+nit: In my swap-out v4 series, I've created a batched version of
+free_swap_and_cache() and called it free_swap_and_cache_nr(). Perhaps it is
+preferable to align the naming schemes - i.e. call this swap_free_nr(). Your
+scheme doesn't really work when applied to free_swap_and_cache().
+
+>  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+>  extern int free_swap_and_cache(swp_entry_t);
+>  int swap_type_of(dev_t device, sector_t offset);
+> @@ -561,6 +562,11 @@ static inline void swap_free(swp_entry_t swp)
+>  {
+>  }
+>  
+> +void swap_nr_free(swp_entry_t entry, int nr_pages)
+> +{
+> +
+> +}
+> +
+>  static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
+>  {
+>  }
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 3f594be83b58..244106998a69 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1341,6 +1341,41 @@ void swap_free(swp_entry_t entry)
+>  		__swap_entry_free(p, entry);
+>  }
+>  
+> +/*
+> + * Called after swapping in a large folio, batched free swap entries
+> + * for this large folio, entry should be for the first subpage and
+> + * its offset is aligned with nr_pages
+> + */
+> +void swap_nr_free(swp_entry_t entry, int nr_pages)
+> +{
+> +	int i;
+> +	struct swap_cluster_info *ci;
+> +	struct swap_info_struct *p;
+> +	unsigned type = swp_type(entry);
+
+nit: checkpatch.py will complain about bare "unsigned", preferring "unsigned
+int" or at least it did for me when I did something similar in my swap-out patch
+set.
+
+> +	unsigned long offset = swp_offset(entry);
+> +	DECLARE_BITMAP(usage, SWAPFILE_CLUSTER) = { 0 };
+
+I don't love this, as it could blow the stack if SWAPFILE_CLUSTER ever
+increases. But the only other way I can think of is to explicitly loop over
+fixed size chunks, and that's not much better.
+
+> +
+> +	/* all swap entries are within a cluster for mTHP */
+> +	VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUSTER);
+> +
+> +	if (nr_pages == 1) {
+> +		swap_free(entry);
+> +		return;
+> +	}
+> +
+> +	p = _swap_info_get(entry);
+
+You need to handle this returning NULL, like swap_free() does.
+
+> +
+> +	ci = lock_cluster(p, offset);
+
+The existing swap_free() calls lock_cluster_or_swap_info(). So if swap is backed
+by rotating media, and clusters are not in use, it will lock the whole swap
+info. But your new version only calls lock_cluster() which won't lock anything
+if clusters are not in use. So I think this is a locking bug.
+
+> +	for (i = 0; i < nr_pages; i++) {
+> +		if (__swap_entry_free_locked(p, offset + i, 1))
+> +			__bitmap_set(usage, i, 1);
+> +	}
+> +	unlock_cluster(ci);
+> +
+> +	for_each_clear_bit(i, usage, nr_pages)
+> +		free_swap_slot(swp_entry(type, offset + i));
+> +}
+> +
+>  /*
+>   * Called after dropping swapcache to decrease refcnt to swap entries.
+>   */
+
+Thanks,
+Ryan
+
