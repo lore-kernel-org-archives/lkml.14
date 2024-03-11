@@ -1,156 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B7140847;
-	Mon, 11 Mar 2024 19:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C585640847;
+	Mon, 11 Mar 2024 19:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710184290; cv=none; b=GeG/wfRqqok2GvN6ZanMDy9pFBRI6eW3jtSY7nrrlmtvUj5Q/FTLLCbQOtlzKFsSTmDXKJKTWMuj5weOn7eq6dRkReldEtYmgg3Au9YGH9Ti1zeX5s6bjmQFz+Ot5YEpaK9JHw/mm5r0cY5v3dIKUCN6Rpg32qZvMj1UJ2OyhiU=
+	t=1710184294; cv=none; b=FpulqPHFyMzaAE6zzmpPRJUiccGce6jlei7IlrFNJ5lkCCAQk5I8iPw2BwhPwfBW37w5UcpvHwSzO+hU+q5l03AY0PjTpUSGI1DPEPfg7ovusURr01JOzKgdQuHbNtQgJfKUhl1X8g5pQ29X5PZDduMUcVNvWB4cT55q2ldhRr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710184290; c=relaxed/simple;
-	bh=4LwPqX5B/kedEJN2uWC05iOjLmcODFip9S5O4WyitH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=phhsMo5AbAzNYfz5CT2orzkoIYFfHR3ofo0/0j5B0ln+6CTmgJl6ynbw87FfewF1szTtHl+zbRcMqvPaYppjDkguYU4jVSLBoMm2alUSQ7KQdDuXlFOiM0aHLbqAPjwsXUyMJ7zqwlb8frhWwYRzfjAusTT7pVu+7l0UinjAxoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PZMUJ6f3; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710184294; c=relaxed/simple;
+	bh=PUTxgOD0c6Psk4GX8+bMAve3zPoeWoP2pyJrAksPe14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqoNmmhQnN8H9yDmXFxr3HwjfxqaXVFTgBQQKxgqo+mUy+w6Ptl4Ep5OZ4PdAnBJ5pc8XEXKpUi7djEdWsQLJiYzdH5/ap1iGVY2xL/Xi93viWYUp0wWPATsW8w8TQZam07zmZH0HarE3hyAa3k6JMcsvJR+f1zuiTlWjHGy6SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dgiHBU0V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PZMUJ6f3"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BJ7luc011988;
-	Mon, 11 Mar 2024 19:11:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=cIC28NXyFQhnrE2WQSAna546CA7ZxTgRRfuoymC5yiU=;
- b=PZMUJ6f3AjMW2ZGqu1bXK12KjSIbvvGlefIKWVL4BIXvo4A/4fghfvVwFpMzv2ByyICj
- tnxi1qwYsFcCEStcZIhrIvVFbv6Z9yDoXfrPoU9UaL6qOXAyVABmZ4iO/bJhc6uTLrZv
- 7LHbYthp8R0V+xAQOzoDwtEmv7aO5GEe7Jd+eTnd6AQ0HQzRwSO0bu5xwvlJ+TtWqRMk
- TdtxD5FrZ8fUL5hw7WIQhPZ2koz1tNHumrjQqgMTMy19VcwGhpySnx7w1xVNpmOih31H
- ybfrKzrMRAA6ujCJzQFOml8ZWNE4dj48Dlre8oRXGL0jCqYoLasn1Llum9h7zTXuc18/ 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wt7uar1p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 19:11:13 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42BJ98Nm016204;
-	Mon, 11 Mar 2024 19:11:12 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wt7uar1hr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 19:11:12 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42BGXkRH014887;
-	Mon, 11 Mar 2024 19:10:44 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws33njfs8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 19:10:43 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42BJAguG46924208
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 11 Mar 2024 19:10:43 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 83A3158055;
-	Mon, 11 Mar 2024 19:10:42 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 91E095805B;
-	Mon, 11 Mar 2024 19:10:41 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 11 Mar 2024 19:10:41 +0000 (GMT)
-Message-ID: <2c9dc099-f450-40af-9723-27ca2b69afdc@linux.ibm.com>
-Date: Mon, 11 Mar 2024 15:10:40 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dgiHBU0V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3636BC43394;
+	Mon, 11 Mar 2024 19:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1710184294;
+	bh=PUTxgOD0c6Psk4GX8+bMAve3zPoeWoP2pyJrAksPe14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dgiHBU0VWdrXQGIB3NNNirpld5UNZ00GXraSDkMT07VGJoI03hDJPLAvG+NKTFrRP
+	 WREXYGtzi74TSsH/7ZF1lQF95JpD/r/QmN2N07NKVBWpM4ldlnBm9J0Lk9NLD32sMm
+	 upWrXGk8CDGdt9WZnqo5x1llPMqfG9Wq3Q5zbgd0=
+Date: Mon, 11 Mar 2024 15:11:33 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Luiz Angelo Daros de Luca <luizluca@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] net: dsa: realtek: keep default LED state
+ in rtl8366rb
+Message-ID: <20240311-flying-impossible-earthworm-51b889@lemur>
+References: <20240310-realtek-led-v1-0-4d9813ce938e@gmail.com>
+ <20240310-realtek-led-v1-2-4d9813ce938e@gmail.com>
+ <388b435f-13c5-446f-b265-6da98ccfd313@kernel.org>
+ <20240310113738.GA1623@kernel.org>
+ <09793a72-bfe5-4cb5-a6da-ffee565e6956@kernel.org>
+ <20240311091111.53191e08@kernel.org>
+ <20240311-chowchow-of-premium-piety-9e4a0d@lemur>
+ <20240311115228.5ad9db52@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/3] powerpc/prom_init: Replace
- linux,sml-base/sml-size with linux,sml-log
-Content-Language: en-US
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
-        "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jarkko@kernel.org" <jarkko@kernel.org>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "viparash@in.ibm.com" <viparash@in.ibm.com>
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-2-stefanb@linux.ibm.com>
- <0bde9a6f-e002-452e-8610-8d4040fb0b86@csgroup.eu>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <0bde9a6f-e002-452e-8610-8d4040fb0b86@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: q89qBJgZ5Gn7UriGH1PV_pfbJEKXRzzy
-X-Proofpoint-GUID: K94-f5m9lfd12jL9cXHK1-N4_xfkabyb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_11,2024-03-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2403110146
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240311115228.5ad9db52@kernel.org>
 
-
-
-On 3/11/24 13:24, Christophe Leroy wrote:
+On Mon, Mar 11, 2024 at 11:52:28AM -0700, Jakub Kicinski wrote:
+> > > Eh, hum. He does according to the X-Mailer header. More importantly
+> > > I thought the RFC to PATCH transition resetting version numbering
+> > > is how we always operated. Maybe b4 should be fixed?  
+> > 
+> > There is no way to make it work reliably the way you propose,
 > 
-> 
-> Le 11/03/2024 à 14:20, Stefan Berger a écrit :
->> linux,sml-base holds the address of a buffer with the TPM log. This
->> buffer may become invalid after a kexec. To avoid accessing an invalid
->> address or corrupted buffer, embed the whole TPM log in the device tree
->> property linux,sml-log. This helps to protect the log since it is
->> properly carried across a kexec soft reboot with both of the kexec
->> syscalls.
->>
->> Avoid having the firmware ingest the whole TPM log when calling
->> prom_setprop but only create the linux,sml-log property as a place holder.
->> Insert the actual TPM log during the tree flattening phase.
->>
->> Fixes: 4a727429abec ("PPC64: Add support for instantiating SML from Open Firmware")
->> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
+> Could you describe what the problem is?
+> Cover letter + date seems like fairly strong signal to me.
 
->> @@ -2645,6 +2645,17 @@ static void __init scan_dt_build_struct(phandle node, unsigned long *mem_start,
->>    		}
->>    		prev_name = sstart + soff;
->>    
->> +		if (!prom_strcmp("linux,sml-log", pname)) {
->> +			/* push property head */
->> +			dt_push_token(OF_DT_PROP, mem_start, mem_end);
->> +			dt_push_token(sml_size, mem_start, mem_end);
->> +			dt_push_token(soff, mem_start, mem_end);
->> +			/* push property content */
->> +			valp = make_room(mem_start, mem_end, sml_size, 1);
->> +			memcpy(valp, (void *)sml_base, sml_size);
-> 
-> You can't cast a u64 into a pointer. If sml_base is an address, it must
-> be declared as an unsigned long.
-> 
-> Build with pmac32_defconfig :
-> 
->     CC      arch/powerpc/kernel/prom_init.o
-> arch/powerpc/kernel/prom_init.c: In function 'scan_dt_build_struct':
-> arch/powerpc/kernel/prom_init.c:2663:38: error: cast to pointer from
-> integer of different size [-Werror=int-to-pointer-cast]
->    2663 |                         memcpy(valp, (void *)sml_base, sml_size);
->         |                                      ^
-> cc1: all warnings being treated as errors
-> make[4]: *** [scripts/Makefile.build:243:
-> arch/powerpc/kernel/prom_init.o] Error 1
+The problem is tracking the series all the way from its inception to its final
+inclusion into the tree. Links to previous versions of the series are
+sometimes included in the cover letter, but they are free-form and we can't
+reliably parse them.
 
-Next round will have this block under #ifdef CONFIG_PPC64.
+Specifically, we need to be able to *reliably* retrieve any previous/new
+versions of the same series:
 
-Thanks.
+- to allow running range-diff between vN-1 and vN
+- to allow checking if there is a newer version of the series available
+- to allow specifying series dependencies (this series depends on series X
+  version Y or newer)
+
+If dropping the RFC prefix resets the version count, then the above breaks
+unless we also use a different change-id, and if we do that, then we lose
+change history.
+
+> > so I strongly suggest that we do it the way b4 currently works:
+> > 
+> > - a series can start with RFC in the prefixes to indicate that it's not
+> >   something to be considered for inclusion
+> > - when the author feels that the series is ready for maintainers'
+> >   consideration, they simply drop the RFC and keep the same change-id and
+> >   versioning info; e.g. [PATCH RFC v3] -> [PATCH v4]
+> 
+> It's not a pain point for networking.
+> 
+> While I have you - it'd be great if the patchwork bot did not
+> repeatedly set patches to Superseded. Sometimes we want to keep and
+> apply non-latest version, because the latest version was posted based
+> on non-expert review, or we changed our mind.
+
+That's a request to helpdesk. :)
+
+> > Resetting the versioning requires resetting the change-id of the series, or a
+> > lot of automation breaks.
+> 
+> What is "change-id of the series"?
+
+It's the line that says "change-id: " at the bottom of the cover letter and
+doesn't change between v1..vN of the series. This is how we know it's the same
+series and are able to retrieve the entire series history without guesswork.
+
+-K
