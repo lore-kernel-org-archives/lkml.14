@@ -1,137 +1,63 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FCD5810E
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 22:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B95810E
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 22:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710196976; cv=none; b=evD/KiKXHssf9C2D2038ZBnYLGdtZex566t3i5FJ50pcIkBkRO+z94VwzZxb0rtTYahnCjjduCmdPSHGv3rsGxrt0EBeggTNL8A2L42WCE2iGc2GOfOKmxJO8iHP5x5EP1J2IL/wWAHCZetgSlCkhVf7AKW8CGkLzkFJjd10fp8=
+	t=1710197077; cv=none; b=PhROvreCtzacyxmoINwlWV3agLgrgxkpiT0NJhIe3nItS8/NQQw3WaIEvSrjc3VAHVN+q8pk7EuWLLbGKmJi664csW99Rali6eaTZaC6Iv3byJWEDY+FFsnFykxVcd+hFUqdWODa1m4thCwVfvXHWe86IhaGT+zPvqmPiB1JpFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710196976; c=relaxed/simple;
-	bh=+sZIqcnM2l7CrSRowV74v420SAwJuaeLZJ7Ypv/JKp8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WP/zCW17qjtNIUnzKtHNTdvD0qTslAxgkdObn5l9JeikHuKwO+Uj0O1RiPev0MvJOokZy5D0R4d2F/LP+zmOI3o95Nvk9K5AOVdcSVfWgeubPvCOMl3oVnBeylKViQ5gJ5dwZj3kKPbDiLoewC23vAYxUKyCj24prEwMsmmz2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id b165ae91-dff8-11ee-a9de-005056bdf889;
-	Tue, 12 Mar 2024 00:42:52 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 12 Mar 2024 00:42:51 +0200
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-Message-ID: <Ze-I63bNzaMkHfgg@surfacebook.localdomain>
-References: <20240306025801.8814-1-hpa@redhat.com>
- <20240306025801.8814-2-hpa@redhat.com>
+	s=arc-20240116; t=1710197077; c=relaxed/simple;
+	bh=gSLjUKQuiZ+go9sxFRBcW7++ax6JRsF9hPMbiCajCXI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KcdYlDQUV3W4nWza0vF2PA/rEabjjzQJNp0DVRWrCY2RfDyV3qLxFzXEHSIYjUA/ReFdhfCGJhw/xOpzU9MZdU0S+DD0l9zvw6RNH6bhjDw7gQzVamlYyTJ+0ronAdtxValCvlrmk444SvHg/a7HhZGErSRoSY7flcwIAZQ4LiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYfY0ErC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYfY0ErC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B2C5FC43399;
+	Mon, 11 Mar 2024 22:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710197077;
+	bh=gSLjUKQuiZ+go9sxFRBcW7++ax6JRsF9hPMbiCajCXI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=cYfY0ErCklYTmmBvfYz3aZvHXykN+xOeRce0ulSjG8+/nptpNP20LyJ+4RnMgqitO
+	 bApIVTY/63TWcct1OZ6KbUtySaA+K5m+pGbzJJLdcjO+a+iF32aCDVCPQ19Rillc5N
+	 TxyJiSkBoDQz5ENXkRfggMq5NkCPUjprcVYzj3N/pyoID0CKpAwybnob26s17o72J5
+	 O4zZknZqxyGvLKN4tq1edzun818Rkudc52hTm4sWn2MtzB3sdAeOtdOrJjL7j8rJN5
+	 dHr/caideDifMDnNR3avtez+hFGD2+Apwue/9VQO6AQ0eRTMLX8NwNZrIQGoR2mJBe
+	 xj82IDFSidZLw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9B983D95055;
+	Mon, 11 Mar 2024 22:44:37 +0000 (UTC)
+Subject: Re: [GIT pull] irq/core for v6.9-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <171011361246.2468526.10740060923051583953.tglx@xen13>
+References: <171011361246.2468526.10740060923051583953.tglx@xen13>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <171011361246.2468526.10740060923051583953.tglx@xen13>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2024-03-10
+X-PR-Tracked-Commit-Id: f7f56d59a3923e95bad2c49615a4d7313ed78314
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 02d4df78c5ae70d283ebb4f78b9dcfdd4dfb71c2
+Message-Id: <171019707763.5315.41050767105686955.pr-tracker-bot@kernel.org>
+Date: Mon, 11 Mar 2024 22:44:37 +0000
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306025801.8814-2-hpa@redhat.com>
 
-Wed, Mar 06, 2024 at 10:58:00AM +0800, Kate Hsuan kirjoitti:
-> There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
-> pad2. The ACPI for it is not properly made so the kernel can't get
-> a correct description of it.
-> 
-> This work add a description for this RGB LED controller and also set a
-> trigger to indicate the chaging event (bq27520-0-charging). When it is
-> charging, the indicator LED will be turn on.
+The pull request you sent on Mon, 11 Mar 2024 00:38:50 +0100 (CET):
 
-Ilpo, Kate, please consider the following remarks.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2024-03-10
 
-...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/02d4df78c5ae70d283ebb4f78b9dcfdd4dfb71c2
 
->  #include <linux/gpio/machine.h>
->  #include <linux/input.h>
->  #include <linux/platform_device.h>
-
-+ Blank line?
-
-> +#include <dt-bindings/leds/common.h>
-
-Not sure where to place this, some drivers put it the first, some after linux/*.
-
-...
-
-> +/* main fwnode for ktd2026 */
-> +static const struct software_node ktd2026_node = {
-
-No name?
-
-> +};
-> +
-> +static const struct property_entry ktd2026_rgb_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 0),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
-> +	PROPERTY_ENTRY_STRING("function", "indicator"),
-
-> +	PROPERTY_ENTRY_STRING("linux,default-trigger",
-> +			      "bq27520-0-charging"),
-
-It's less than 80, why not on a single line?
-
-> +
-
-Redundant blank line.
-
-> +	{ }
-> +};
-
-...
-
-> +/* B */
-
-B for red?!
-
-> +static const struct property_entry ktd2026_red_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 0),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
-> +	{ }
-> +};
-
-...
-
-> +/* R */
-
-R for blue?!
-
-> +static const struct property_entry ktd2026_blue_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 2),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
-> +	{ }
-> +};
-
-...
-
-> +static int __init xiaomi_mipad2_init(void)
-> +{
-> +	return software_node_register_node_group(ktd2026_node_group);
-> +}
-> +
-> +static void xiaomi_mipad2_exit(void)
-
-Don't you want to have __exit here?
-
-> +{
-> +	software_node_unregister_node_group(ktd2026_node_group);
-> +}
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
