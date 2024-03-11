@@ -1,335 +1,182 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2040.outbound.protection.outlook.com [40.107.95.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C418B4D9E6;
-	Mon, 11 Mar 2024 17:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179999; cv=fail; b=RBbYmD21dkkaLGX/r8HxylQjl08Ofya2C/WrBVAvhJu+fDoOLefUhZmU2RWOgsSY6CAIYywIjVaDMAGeoCKapuBwc4I1Hh5SgXRiw6WXSxokpzRrMQj87MJIVAsvdemC4VxMywUMhQgL+s0pgZuoer40iIj8WVDPLoyXZsNLEoA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179999; c=relaxed/simple;
-	bh=5AUhupikPmam0i2r5aCWBMICflaD0hJ0xeBKZsYi4T4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CU8wIBaT5Pa187GJnFisQNX7cDEzbvJTdGVoeehqWQ+w+jGSBBJsS+rA/L4YEKOGPrzWviR6w/Xd3ITIj5bWHhhCFSUQcTZ1JMo1iY7S6TOIY4y33f5ysKJTHnByP88DreMb0QriE8xts0MGn62NfCjCaNcuPPc1Tc+uh7hXzdE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g/R3gjJc; arc=fail smtp.client-ip=40.107.95.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B767537E3;
+	Mon, 11 Mar 2024 17:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710180001; cv=none; b=SfzUEy21WwUOg/R44JGpJf+LNyeUeFCEbDpXFja7pHcC118Ie3grjwgEkY8QY2r2JzpT6+Tf8V55EANDjfaOa0FfugCCoxVFbd/mfuGcoXOS8+EU5JfTzoPRtSmnoe0ZD7GgDarYyXs9BPrf4PhKVT67LC3cOTApay51MzKTLTo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710180001; c=relaxed/simple;
+	bh=2c3lV2jTzoYOBHWiSD2R429XF1UT/AUT774OAIhD9X8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcwXC5lyEoSZd5Maf3RdfscjqxkSQ/g1/N27L0f2D9mFUVtV2MEjVF7usR7aCJKTS0T4IKE55VW951XCBf7xTWtzYzLCnv0x4/wlYFzs9acsMbdnEqmY41f8vCTUNX0+DSXmghm3rwYoSJd0v0jh70+Tpt0PD7bEQ/MqBbQY6Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyL2tVQD; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g/R3gjJc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L9h2LhykutPOQUoviZ3tndOp8zpEN4xnuRH1pR00VRZURRCgJUn0B8p38nY+MVuYYc8OV1P7XyloWh5dKXfvbPB4JDu182vosW1k9jzxUoivcv2652m1R7H3fPHGrLTZiMlLQufjG8cOM/1Wvm0f5sZ2XeOnRKVlG2bN3kOwpr+IETvSxCj+boa0D9QDOrUeI3Mq2Aik9eyroeiB3d2jHCZsLmRb0u24Y99USvEDiUR6/gTvJhieTX01gnEUEHWiJGcOfZVitFjyMyWI7d5LdXKKb3utGPGt35CfSVFH7nuwTaAELoY447zCf83IdMq0eOV13tdGkTpwljJ5bAAR9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7KBJSiTUh5H8gAZwNJ5byG2b3A6H7udoV2uMSD+MKLY=;
- b=WT34Cm4YhKGmIGtIxDPcwBt6yIZF4TY56TMsvgcb31AIyUTTj1tf4BJQWazw8bSKDjncxSi4DNTxpxx8c0kCTfO/SAbm5bLUeCrR9Hf4uVd6ZtH4osnXfVEF+9g4GeCcMYPrTcEaTKgzIaF/1L0wRcFpEV//rntyposNcF36DvbcAAKrJj0qCD02xnUN+9dYH/3PeGe0nCsEfUMuzO4iFxtsphqeRsk5gPgnXod8LyOxcvaC/1KUdVz+I2QJCKTtaBZRiwGpGfLERq0ZfO5Vnji2E+eePkwhlM9cWJ4GY0or56NB19RYsRtWw8pIAkfL4Yg8KJjKCcGwXtUSvbwfeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7KBJSiTUh5H8gAZwNJ5byG2b3A6H7udoV2uMSD+MKLY=;
- b=g/R3gjJcU3spl6RwKvxVES5G+7oIIFLLZqaemInT6meEqI0pVnM5CfuFNievwmrlIIj/f0kFayHJ87P2rLIs+B9+GS0lsMi87MhNsgIfPxgmbLpEl6H3vtGftNsVS27mzxfG3quWzfcgf0z9cWZZLK0Mf9FAbW/r81vwuhHPCpY=
-Received: from CH2PR05CA0012.namprd05.prod.outlook.com (2603:10b6:610::25) by
- DM6PR12MB4468.namprd12.prod.outlook.com (2603:10b6:5:2ac::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7362.36; Mon, 11 Mar 2024 17:59:54 +0000
-Received: from CH2PEPF00000140.namprd02.prod.outlook.com
- (2603:10b6:610:0:cafe::38) by CH2PR05CA0012.outlook.office365.com
- (2603:10b6:610::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23 via Frontend
- Transport; Mon, 11 Mar 2024 17:59:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH2PEPF00000140.mail.protection.outlook.com (10.167.244.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7386.12 via Frontend Transport; Mon, 11 Mar 2024 17:59:54 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 11 Mar
- 2024 12:59:54 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 11 Mar
- 2024 12:59:53 -0500
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 11 Mar 2024 12:59:52 -0500
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <michal.simek@amd.com>, <ben.levinsky@amd.com>,
-	<tanmay.shah@amd.com>
-CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v13 1/4] remoteproc: zynqmp: fix lockstep mode memory region
-Date: Mon, 11 Mar 2024 10:59:24 -0700
-Message-ID: <20240311175926.1625180-2-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240311175926.1625180-1-tanmay.shah@amd.com>
-References: <20240311175926.1625180-1-tanmay.shah@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyL2tVQD"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29bd4dfbf56so1228973a91.3;
+        Mon, 11 Mar 2024 10:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710179998; x=1710784798; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VwzG5Nm3k5sScApQNXJxPh63PgQB/wEWtXh54ZIc9U4=;
+        b=WyL2tVQDdnLp2RXaf9XmW3L95i8laY0WpA1CdpZc57wlJCJSiXFZPyKdR620TgqGPS
+         tWMXcm8klEg2eDW7dxeA2BOSdKdFgHZvL17t8CpUqmvCov5fu//whn/92vmjwHQSV2d6
+         yO6jTnwShrbycRXcGiJbe4WVm3OfrflxWg/pMH57cdA8tIWcLGbj/KXhNkm2/qgVLNiw
+         uvN2IQqN5Qdl5yQQDfq+TbaNgJ0GPtdlAsMTKm1RCqyRdvi9FTWaCS0gb7dpWMRNGXvC
+         McYqnpGzNz5hy5TVFElA9VDtvkBvmnoHNVmEQed/JGtvn8kViLHSmiPuMUEDRd5RBJyp
+         LlQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710179998; x=1710784798;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VwzG5Nm3k5sScApQNXJxPh63PgQB/wEWtXh54ZIc9U4=;
+        b=I2XNp68b7/GznZyVXjTAZ5eq99FQFfMqhiz+P9qBXzN3/qdrJ2TM3xpQajsMDt+pdT
+         d86BwwgCaBI2f1OqP8spbAu+Rg91Zw81OfApDin5QIAskc/5b0gFooW5b3WH8q00VytC
+         zymrqlUN9ESkCvp22dwwDmL3MSTE2Q8odmxQIvyoV5sR/UX4klV6BKWTvTPM9kgJ1tJc
+         cLpctmMar/sq+MEYrSyLcneb6FniR3bjxfDMzbd6zEaj/RCuixa2g+wJqLRKlPjjQYrW
+         nIbQu63ifyfJGK3RQqDgSd5+hhg5iFSkk94QfMuPVOnE6zKUb0oUeSe/keSg8JvnIJM7
+         ghLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlCkUh8Bx/MAYKrzXcLKJvpGc48FfCla9vA4DMgYqTtVwoFUlNtUw+MpamY5eOtY/z/wQxSQL52yAKyrNnnRCInvAf4VjGRf5Ip2E/J+uf8bbo8XYlrM5ynOM+4MCO8tEFgKK+u1Id
+X-Gm-Message-State: AOJu0YzcZhE1/GX/NZPh62ft1Us+RsrEndVGE8WkZPCUkdREaQypdE/o
+	bT9qbs9zJoO66cOSO8jdMVvLG84ZQWunpjn0FRmLLZCFeIPUrcpR
+X-Google-Smtp-Source: AGHT+IFKY6YUN4OMd42c8vr9KnFOMejKrxTjFewl0BixWINQ9UOKdO7REdZ3namD0GMu3pRqLoLQpQ==
+X-Received: by 2002:a17:90a:df82:b0:299:4269:b8c9 with SMTP id p2-20020a17090adf8200b002994269b8c9mr5500216pjv.26.1710179998530;
+        Mon, 11 Mar 2024 10:59:58 -0700 (PDT)
+Received: from gmail.com ([205.251.233.182])
+        by smtp.gmail.com with ESMTPSA id z24-20020a17090ab11800b0029bacd0f271sm5952429pjq.31.2024.03.11.10.59.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 10:59:56 -0700 (PDT)
+Sender: Matt Wilson <mswilson@gmail.com>
+Received: by gmail.com (sSMTP sendmail emulation); Mon, 11 Mar 2024 10:59:54 -0700
+Date: Mon, 11 Mar 2024 10:59:54 -0700
+From: Matt Wilson <msw@linux.com>
+To: Vegard Nossum <vegard.nossum@oracle.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, cve@kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	security@kernel.org, Kees Cook <keescook@chromium.org>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Sasha Levin <sashal@kernel.org>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@denx.de>, John Haxby <john.haxby@oracle.com>,
+	Marcus Meissner <meissner@suse.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roxana Bradescu <roxabee@chromium.org>,
+	Solar Designer <solar@openwall.com>, Matt Wilson <msw@amazon.com>,
+	Matt Wilson <msw@linux.com>
+Subject: Re: [RFC PATCH 2/2] doc: distros: new document about assessing
+ security vulnerabilities
+Message-ID: <Ze9GmrqiW18GMkU6@uba002e82b7465e.ant.amazon.com>
+References: <20240311150054.2945210-1-vegard.nossum@oracle.com>
+ <20240311150054.2945210-2-vegard.nossum@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000140:EE_|DM6PR12MB4468:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27483346-22ec-416e-cfbe-08dc41f50e7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	i9pX+AyUZ5jxbJM3zpkELaaGIki9y3j7aREcJ2+ZO7Kf+XfSXFYe3FNT5FFYtx9KmbI4hNN5T9zwz+/MRx3w6udz3jZxbx6z8NWSZMfHHaKGqjca+R0Bx8M3V+zPruAZtkyvEcrO2xECzjyXsEMXaU3enJapu6f3W84MwTiNsVXncYAGzejw2kGm+Un4NTTRczvEg5B4LqkoRfcFG21rn3AYs9Wkc04Fjuiz0C/fNpyx4OhM7YAMBTTQOrxm1eA5nDdSfbUAXKaLnMg6mUympjYVSTvEAvCtz1ADRV3oYIJwEOtxh53JhU7AzvbNqayUEtzJG6OVo/5QVWahhWgalh5WJ5Qc6/4Zog+DlniYYqO8TlTFZ8AkLEiSwbjrO9qAUDh4tcw/2p0BUL1h1VL74jizv3TNY3fkSZ5ihDZJAx4qIZXYTdvMaT08xxOSYsp3GSg9EnDQfsQrdO8+FEvHIp5q2PpkljTd5MgdODvKnbOE16Jx4HAQrQWst5dQfnznTjFH2gAyycxjxIH8Fkge0rLRcEKREOa7GM3glBB2S7TyxMZQYbtLXxx2zOB/FR9mzQE2LKhqJlfs74RvBRI6oaAoGJp0CZYG0rUY67OudNMlQB+2rnsC8mS6XwcJU5iaWXA6xo+eSHyUHoAp8Bn8028+fJzBc3l6o2oThBUIPaMD4jdfBJClHj5PKBeJU8Vlvm/Ci0TZoljj2hPLfN8DC732/R6OatZP8q8fKaZImDCu8uvZz/vRSSS6vUaULGzY
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 17:59:54.5193
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27483346-22ec-416e-cfbe-08dc41f50e7f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000140.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4468
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240311150054.2945210-2-vegard.nossum@oracle.com>
 
-In lockstep mode, r5 core0 uses TCM of R5 core1. Following is lockstep
-mode memory region as per hardware reference manual.
+On Mon, Mar 11, 2024 at 04:00:54PM +0100, Vegard Nossum wrote:
+> On February 13, kernel.org became a CVE Numbering Authority (CNA):
+> 
+>   https://www.cve.org/Media/News/item/news/2024/02/13/kernel-org-Added-as-CNA
+> 
+> The kernel.org CNA/CVE team does not provide any kind of assessment of
+> the allocated CVEs or patches. However, this is something that many
+> distributions want and need.
+>
+> Provide a new document that can be used as a guide when assessing
+> vulnerabilities. The hope is to have a common point of reference that
+> can standardize or harmonize the process and hopefully enable more
+> cross-distribution collaboration when it comes to assessing bugfixes.
+> 
+> We deliberately emphasize the difficulty of assessing security impact
+> in the wide variety of configurations and deployments.
+> 
+> Since what most distros probably ultimately want is a type of CVSS score,
+> the guide is written with that in mind. CVSS provides its own "contextual"
+> modifiers, but these are not accurate or nuanced enough to capture the
+> wide variety of kernel configurations and deployments. We therefore focus
+> on practical evaluation under different sets of assumptions.
 
-    |      *TCM*         |   *R5 View* | *Linux view* |
-    | R5_0 ATCM (128 KB) | 0x0000_0000 | 0xFFE0_0000  |
-    | R5_0 BTCM (128 KB) | 0x0002_0000 | 0xFFE2_0000  |
+(sending from my msw@linux.com account to emphasize that I am speaking
+only for myself, not my current employer.)
 
-However, driver shouldn't model it as above because R5 core0 TCM and core1
-TCM has different power-domains mapped to it.
-Hence, TCM address space in lockstep mode should be modeled as 64KB
-regions only where each region has its own power-domain as following:
+I'm not sure that Linux distributions particularly *want* a CVSS base
+score for kernel CVEs. It is something that downstream _users_ of
+software have come to expect, especially those that operate under
+compliance regimes that suggest or require the use of CVSS in an
+enterprise's vulnerability management function.
 
-    |      *TCM*         |   *R5 View* | *Linux view* |
-    | R5_0 ATCM0 (64 KB) | 0x0000_0000 | 0xFFE0_0000  |
-    | R5_0 BTCM0 (64 KB) | 0x0002_0000 | 0xFFE2_0000  |
-    | R5_0 ATCM1 (64 KB) | 0x0001_0000 | 0xFFE1_0000  |
-    | R5_0 BTCM1 (64 KB) | 0x0003_0000 | 0xFFE3_0000  |
+Those compliance regimes often suggest using CVSS scores as found in
+the NVD in search of an objective third party assessment of a
+vulnerability. Unfortunately the text of these regulations suggests
+that the base scores generated by the CVSS system, and found in the
+NVD, are a measure of "risk" rather than a contextless measure of
+"impact".
 
-This makes driver maintanance easy and makes design robust for future
-platorms as well.
+There have been occurrences where a CVSSv3.1 score produced by a
+vendor of software are ignored when the score in the NVD is higher
+(often 9.8 due to NIST's standard practice in producing CVSS scores
+from "Incomplete Data" [1]). I don't know that harmonizing the
+practice of producing CVSSv3.1 base scores across Linux vendors will
+address the problem unless scores that are made available in the NVD
+match.
 
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
- drivers/remoteproc/xlnx_r5_remoteproc.c | 145 ++----------------------
- 1 file changed, 12 insertions(+), 133 deletions(-)
+But, stepping back for a moment I want to make sure that we are
+putting energy into a system that is fit for the Linux community's
+needs. CVSS lacks a strong scientific and statistical basis as an
+information capture and conveyance system. A study of the distribution
+of CVSSv3.1 base scores historically generated [2] shows that while
+the system was designed to resemble a normal distribution, in practice
+it is anything but.
 
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index 4395edea9a64..42b0384d34f2 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -84,12 +84,12 @@ static const struct mem_bank_data zynqmp_tcm_banks_split[] = {
- 	{0xffeb0000UL, 0x20000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
- };
- 
--/* In lockstep mode cluster combines each 64KB TCM and makes 128KB TCM */
-+/* In lockstep mode cluster uses each 64KB TCM from second core as well */
- static const struct mem_bank_data zynqmp_tcm_banks_lockstep[] = {
--	{0xffe00000UL, 0x0, 0x20000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 128KB each */
--	{0xffe20000UL, 0x20000, 0x20000UL, PD_R5_0_BTCM, "btcm0"},
--	{0, 0, 0, PD_R5_1_ATCM, ""},
--	{0, 0, 0, PD_R5_1_BTCM, ""},
-+	{0xffe00000UL, 0x0, 0x10000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 64KB each */
-+	{0xffe20000UL, 0x20000, 0x10000UL, PD_R5_0_BTCM, "btcm0"},
-+	{0xffe10000UL, 0x10000, 0x10000UL, PD_R5_1_ATCM, "atcm1"},
-+	{0xffe30000UL, 0x30000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
- };
- 
- /**
-@@ -540,14 +540,14 @@ static int tcm_mem_map(struct rproc *rproc,
- }
- 
- /*
-- * add_tcm_carveout_split_mode()
-+ * add_tcm_banks()
-  * @rproc: single R5 core's corresponding rproc instance
-  *
-- * allocate and add remoteproc carveout for TCM memory in split mode
-+ * allocate and add remoteproc carveout for TCM memory
-  *
-  * return 0 on success, otherwise non-zero value on failure
-  */
--static int add_tcm_carveout_split_mode(struct rproc *rproc)
-+static int add_tcm_banks(struct rproc *rproc)
- {
- 	struct rproc_mem_entry *rproc_mem;
- 	struct zynqmp_r5_core *r5_core;
-@@ -580,10 +580,10 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
- 					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
- 		if (ret < 0) {
- 			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
--			goto release_tcm_split;
-+			goto release_tcm;
- 		}
- 
--		dev_dbg(dev, "TCM carveout split mode %s addr=%llx, da=0x%x, size=0x%lx",
-+		dev_dbg(dev, "TCM carveout %s addr=%llx, da=0x%x, size=0x%lx",
- 			bank_name, bank_addr, da, bank_size);
- 
- 		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
-@@ -593,7 +593,7 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
- 		if (!rproc_mem) {
- 			ret = -ENOMEM;
- 			zynqmp_pm_release_node(pm_domain_id);
--			goto release_tcm_split;
-+			goto release_tcm;
- 		}
- 
- 		rproc_add_carveout(rproc, rproc_mem);
-@@ -601,7 +601,7 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
- 
- 	return 0;
- 
--release_tcm_split:
-+release_tcm:
- 	/* If failed, Turn off all TCM banks turned on before */
- 	for (i--; i >= 0; i--) {
- 		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
-@@ -610,127 +610,6 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
- 	return ret;
- }
- 
--/*
-- * add_tcm_carveout_lockstep_mode()
-- * @rproc: single R5 core's corresponding rproc instance
-- *
-- * allocate and add remoteproc carveout for TCM memory in lockstep mode
-- *
-- * return 0 on success, otherwise non-zero value on failure
-- */
--static int add_tcm_carveout_lockstep_mode(struct rproc *rproc)
--{
--	struct rproc_mem_entry *rproc_mem;
--	struct zynqmp_r5_core *r5_core;
--	int i, num_banks, ret;
--	phys_addr_t bank_addr;
--	size_t bank_size = 0;
--	struct device *dev;
--	u32 pm_domain_id;
--	char *bank_name;
--	u32 da;
--
--	r5_core = rproc->priv;
--	dev = r5_core->dev;
--
--	/* Go through zynqmp banks for r5 node */
--	num_banks = r5_core->tcm_bank_count;
--
--	/*
--	 * In lockstep mode, TCM is contiguous memory block
--	 * However, each TCM block still needs to be enabled individually.
--	 * So, Enable each TCM block individually.
--	 * Although ATCM and BTCM is contiguous memory block, add two separate
--	 * carveouts for both.
--	 */
--	for (i = 0; i < num_banks; i++) {
--		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
--
--		/* Turn on each TCM bank individually */
--		ret = zynqmp_pm_request_node(pm_domain_id,
--					     ZYNQMP_PM_CAPABILITY_ACCESS, 0,
--					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
--		if (ret < 0) {
--			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
--			goto release_tcm_lockstep;
--		}
--
--		bank_size = r5_core->tcm_banks[i]->size;
--		if (bank_size == 0)
--			continue;
--
--		bank_addr = r5_core->tcm_banks[i]->addr;
--		da = r5_core->tcm_banks[i]->da;
--		bank_name = r5_core->tcm_banks[i]->bank_name;
--
--		/* Register TCM address range, TCM map and unmap functions */
--		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
--						 bank_size, da,
--						 tcm_mem_map, tcm_mem_unmap,
--						 bank_name);
--		if (!rproc_mem) {
--			ret = -ENOMEM;
--			zynqmp_pm_release_node(pm_domain_id);
--			goto release_tcm_lockstep;
--		}
--
--		/* If registration is success, add carveouts */
--		rproc_add_carveout(rproc, rproc_mem);
--
--		dev_dbg(dev, "TCM carveout lockstep mode %s addr=0x%llx, da=0x%x, size=0x%lx",
--			bank_name, bank_addr, da, bank_size);
--	}
--
--	return 0;
--
--release_tcm_lockstep:
--	/* If failed, Turn off all TCM banks turned on before */
--	for (i--; i >= 0; i--) {
--		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
--		zynqmp_pm_release_node(pm_domain_id);
--	}
--	return ret;
--}
--
--/*
-- * add_tcm_banks()
-- * @rproc: single R5 core's corresponding rproc instance
-- *
-- * allocate and add remoteproc carveouts for TCM memory based on cluster mode
-- *
-- * return 0 on success, otherwise non-zero value on failure
-- */
--static int add_tcm_banks(struct rproc *rproc)
--{
--	struct zynqmp_r5_cluster *cluster;
--	struct zynqmp_r5_core *r5_core;
--	struct device *dev;
--
--	r5_core = rproc->priv;
--	if (!r5_core)
--		return -EINVAL;
--
--	dev = r5_core->dev;
--
--	cluster = dev_get_drvdata(dev->parent);
--	if (!cluster) {
--		dev_err(dev->parent, "Invalid driver data\n");
--		return -EINVAL;
--	}
--
--	/*
--	 * In lockstep mode TCM banks are one contiguous memory region of 256Kb
--	 * In split mode, each TCM bank is 64Kb and not contiguous.
--	 * We add memory carveouts accordingly.
--	 */
--	if (cluster->mode == SPLIT_MODE)
--		return add_tcm_carveout_split_mode(rproc);
--	else if (cluster->mode == LOCKSTEP_MODE)
--		return add_tcm_carveout_lockstep_mode(rproc);
--
--	return -EINVAL;
--}
--
- /*
-  * zynqmp_r5_parse_fw()
-  * @rproc: single R5 core's corresponding rproc instance
--- 
-2.25.1
+A guide that helps a practitioner evaluate the legitimate risks that
+may be present in a given version, configuration, and use case for the
+Linux kernel could be a very helpful thing. This guide is an excellent
+start for one! But as you rightly call out, CVSS is not a system that
+has an ability to capture all the nuance and context of software the
+likes of the Linux kernel, therefore the focus should be on practical
+evaluation under common use cases.
 
+> Create a new top-level (admittedly rather thin) "book" for information
+> for distros and place the document there as this document is not meant
+> for either developers or users.
+> 
+> See the rendered document at:
+> 
+>   https://vegard.github.io/linux/2024-03-11/security-assessment.html
+
+[...]
+
+> +
+> +CVEs and CVSS scores for the kernel
+> +===================================
+> +
+> +CVSS (`Common Vulnerability Scoring System <https://en.wikipedia.org/wiki/Common_Vulnerability_Scoring_System>`_)
+> +is an open standard for vulnerability scoring and the system which is
+> +commonly used by Linux distributions and various industry and government
+> +bodies.
+> +
+> +We won't go into the details of CVSS here, except to give a guide on how
+> +it could be applied most effectively in the context of the kernel.
+
+If the guide has something to say about CVSS, I (speaking only for
+myself) would like for it to call out the hazards that the system
+presents. I am not convinced that CVSS can be applied effectively in
+the context of the kernel, and would rather this section call out all
+the reasons why it's a fool's errand to try.
+
+--msw
+
+[1] https://nvd.nist.gov/vuln-metrics/cvss
+[2] https://theoryof.predictable.software/articles/a-closer-look-at-cvss-scores/#the-distribution-of-actual-scores
