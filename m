@@ -1,148 +1,85 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF05A54744;
-	Mon, 11 Mar 2024 21:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DFD3CF6A;
+	Mon, 11 Mar 2024 21:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710191578; cv=none; b=CpA5vq6u1DxtGyR27VpqijtPd0J7JdSH/YWr2IefC3vBbtWcYXystag81inBeRKEG0R2T9Mz32XHQDoDeK/jN7TqzFPr/4Gts6UPdfxzwGNAgqDzuyi29BPj1kNcAh+sxYNx7OJdxd8ns4i12ge/FtWqaiJDZCty5Hm2XxRq0mg=
+	t=1710191807; cv=none; b=VrPjEVeyLNIlLjaP1w1NvZmWY4hY5o1IsaNLlwbxU1IhAwB1ACIpnL6SiRrQo9d3tjUHnHFHwTKyhRKhi+MLMQ4Z+GSehae+s6GcuMwLjEAaYF4Rvwwkmu7VMhYKF1tSZSdwZy0neisvCFwJDXFBcMwJqADA4p2HSw8JXltzSO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710191578; c=relaxed/simple;
-	bh=ymIRjKPF05PZewLisrG0ZcCdHvSirNn8nsBXFGQq2CM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Alv2/rEqCV6GqhUrXhdA2hU3muyntKqXwUXIB5i1/uoGdHcLmoEXre4P+kKDgRy1sj6+4DeOtwvAKRMXm0X3wORlH2QZZ2I1nKcfBfXQF94vaWBActRvR4FH3BJHNYky8NDF1uAlUq10VGiBuG/cB/uXwTgQZad258G0gssm4W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3Cb/nP0I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jz0KQVjA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3Cb/nP0I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jz0KQVjA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1710191807; c=relaxed/simple;
+	bh=NQAUdkeOMHCqXYt8dPtca8uRa1FnOu5SFXIQfhNKX/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PpEXf8TsuBm36QCU+4FACSYY/ca6/lv6ZfiAstfseMIg26269VHasebDzoKhQWjxZ2Qefw038nvTpnU0ZbD1oSxOIzH0ulmDsOI6QF2whEjCGM6HxDRdxOPshjKrz7EzSNbC2I5nollkGXqKMUem39yFH+2gQmRtyU0/8q1l4lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tuqURkAF; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3Cb/nP0I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jz0KQVjA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3Cb/nP0I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jz0KQVjA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tuqURkAF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1710191794;
+	bh=r7YQNuX1FwERL+k0Ou4dBK9LfRd9VlTsxLg8B15x4JU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tuqURkAFdgBdA7OF7OrW1FYzi3fJZuqfTnZ4D8N5Vlu4GjvXuadG2IVR8o8W59fo4
+	 9oFGbH82GeRBI0JvG1PCoiWduZNZqeAg4L8CWmtzY/gZ0tcbUcIAvC3h6u+GsarBru
+	 7ogosuK095z/iJAypkeU21bkScYiIzCoUXDF3WAut7pZEmiOH79LloIEKOxNpJY4Jb
+	 CsLdoC9NPb2xdOM1vpcN4xxN23L96eP0vgUt9Q0KPcUj/zMz1OT4oTroc9HoXF71DJ
+	 oer6zVMPZtHOm5AF8pRjSc6yJP8Ih4+2Vg9V4q0O8N2XCcvMOST66xv8CRMDje5jlr
+	 M1DrfFjyYrr+w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9F788350BF;
-	Mon, 11 Mar 2024 21:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710191573;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s+AGE7RjnnQunZRwxXkho+EGWQnOSV7m+Iu1aFkXwxE=;
-	b=3Cb/nP0IEkTnr0afkVI5Enhiu8hgbHcFi5z8IStfPcQyv9elELnmJ3c9snDiUGnY23dCbo
-	IFQUa38PU+U7mYxQmZP0hY4LK4F+B925BQAZH4JFj1NeOg0NcqCRZT8avLgGi8AXczcJgb
-	YFbLbVbDT0Pdl77guTfbjuW+L2qaVFQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710191573;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s+AGE7RjnnQunZRwxXkho+EGWQnOSV7m+Iu1aFkXwxE=;
-	b=Jz0KQVjArop3YO9Khzq8lnCE673MM56QPUgQeR2Ao6a3cKdQqF6mvnbPa5L70SvcBnFFLh
-	vqZSy2OxtXtAuvDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710191573;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s+AGE7RjnnQunZRwxXkho+EGWQnOSV7m+Iu1aFkXwxE=;
-	b=3Cb/nP0IEkTnr0afkVI5Enhiu8hgbHcFi5z8IStfPcQyv9elELnmJ3c9snDiUGnY23dCbo
-	IFQUa38PU+U7mYxQmZP0hY4LK4F+B925BQAZH4JFj1NeOg0NcqCRZT8avLgGi8AXczcJgb
-	YFbLbVbDT0Pdl77guTfbjuW+L2qaVFQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710191573;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s+AGE7RjnnQunZRwxXkho+EGWQnOSV7m+Iu1aFkXwxE=;
-	b=Jz0KQVjArop3YO9Khzq8lnCE673MM56QPUgQeR2Ao6a3cKdQqF6mvnbPa5L70SvcBnFFLh
-	vqZSy2OxtXtAuvDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7AD5513695;
-	Mon, 11 Mar 2024 21:12:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9BVvHdVz72VSagAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Mon, 11 Mar 2024 21:12:53 +0000
-Date: Mon, 11 Mar 2024 22:05:40 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Josef Bacik <josef@toxicpanda.com>, Boris Burkov <boris@bur.io>,
-	David Sterba <dsterba@suse.com>, clm@fb.com,
-	linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.10 1/7] btrfs: add and use helper to check if
- block group is used
-Message-ID: <20240311210540.GU2604@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20240229155112.2851155-1-sashal@kernel.org>
- <Ze9w+3cUTI0mSDlL@duo.ucw.cz>
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TtqMk0lN5z4wcq;
+	Tue, 12 Mar 2024 08:16:34 +1100 (AEDT)
+Date: Tue, 12 Mar 2024 08:15:58 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the i2c-host-fixes tree
+Message-ID: <20240312081558.014deb45@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Ze9w+3cUTI0mSDlL@duo.ucw.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="3Cb/nP0I";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Jz0KQVjA
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.03 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-0.82)[85.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-0.998];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Score: -2.03
-X-Rspamd-Queue-Id: 9F788350BF
-X-Spam-Flag: NO
+Content-Type: multipart/signed; boundary="Sig_/U4vKAAIg+IDNvwlTeXq0OF3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, Mar 11, 2024 at 10:00:43PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Filipe Manana <fdmanana@suse.com>
-> > 
-> > [ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
-> > 
-> > Add a helper function to determine if a block group is being used and make
-> > use of it at btrfs_delete_unused_bgs(). This helper will also be used in
-> > future code changes.
-> 
-> Does not fix a bug and does not seem to be preparation for anything,
-> so probably should not be here.
+--Sig_/U4vKAAIg+IDNvwlTeXq0OF3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Agreed, this patch does not belong to stable and I objected in
-https://lore.kernel.org/all/20240229155207.GA2604@suse.cz/
+Hi all,
 
-for version 6.7 and all other stable versions.
+The following commits are also in Linus Torvalds' tree as different
+commits (but the same patches):
+
+  1f78f0901011 ("i2c: aspeed: Fix the dummy irq expected print")
+  7c16cfd69d51 ("i2c: i801: Avoid potential double call to gpiod_remove_loo=
+kup_table")
+  ace9dc1d1251 ("i2c: wmt: Fix an error handling path in wmt_i2c_probe()")
+  b60b86b55400 ("i2c: i801: Fix using mux_pdev before it's set")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/U4vKAAIg+IDNvwlTeXq0OF3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXvdI4ACgkQAVBC80lX
+0GwXdAf/UuTKraVoHjd6/gK6M0txixayi+arlcSYb/6IxTo+9pH+ZNjTIlK3DWit
+AhZz6fqQjM5jtInemnKQZg62TmukDwcKcJGRvT+pWkwYwtcAf8cdPjRyNfB1S30M
+i7UguYdxhzjcH84y5vtdtRYFvGx/iwozSVtl4lz/N5QbM/Hr1EXMomgvNCke8i9v
+cHhBAYAndLbHd+Wd6BLuEI52aJCZQODgGn/3hm7i6cRpI+fomGoQoIjvCzsGl3+9
+IktQLYgAoDFodXdCMVFmqAyZn/D1GAkTQp6Ob7Yiz7vQ6bXBrLmAUdE2FYSW+Sgo
+yhZNcvrdE+9xbCX689wvNnsvIVbJ9Q==
+=qhve
+-----END PGP SIGNATURE-----
+
+--Sig_/U4vKAAIg+IDNvwlTeXq0OF3--
