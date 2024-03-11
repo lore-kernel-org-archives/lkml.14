@@ -1,179 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA74182A1;
-	Mon, 11 Mar 2024 10:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E0838DC0
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710151872; cv=none; b=GpYbGSJi2Ynj7sShQjnZalLIjJA7JwpmqX3dABXmAh9uUp6TU0TwpWLolPrirNL9oizGv3PAvc8fqOZlcfSjOboC44PL7K0R9tauMEx1Zn0S0W0ykQIfwpkf0uV5iwBHvziJyCOut/jNMeht9BrqBkep40veTXq4nZGdJt+qVHs=
+	t=1710151886; cv=none; b=IBW8a/HBTv+rKmyYcHv85fu8b+MKUtm34Gi9203nJpvKEl5LFK55XWhAa9koNMnm6qDx6Uo7fuCO5zpyLzk4S0wMOX+N+R1225s/qsyl0w35Z4Z57VjzNOXRx1ekVOgKmfmQcZnTbBQKexJwcfS64VrbSVJA7tE7ENt3ZsU3Sws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710151872; c=relaxed/simple;
-	bh=I6gW/BhVUudvPkte5swzIwXeljQnXcB+mOb7zYQvmFU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SOEbxeqM/Rc1MobyyWpqZYNcx6FrzAqVFbY9uTXgdOwH+nPTJj0tZU5T6MOR34j7+Ns6/MUSzYu/LZYBzeyt7vUSpgkapxCERs5Usjk6PZWejdWF2KJ15VjKW3nlT6xhB7M0wMvwx5uJi8MJl/ZN1BrAmSch+gg6PDHrjrQqudo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Se+w522M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710151886; c=relaxed/simple;
+	bh=90wxFtc2yl7pC0/MOznw1zbBPujem0U2+kENHa16YIc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0wYOlVdFrunvTddVwpvyEPITbQHeO39ucanEoXdIicu2ecKrJpqzbKEvTNIL3BGft32QwfwC+LmM50NQqgSaxHl1c4I+WSicA+z143f4JSpzaeGfg/CwIbsCthHF2jPO07E82wb1U9KeTkHSCqiMY3B0vRSj6P20V0ZsOYjyuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iEuDl0CX; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Se+w522M"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 30C3BC433C7;
-	Mon, 11 Mar 2024 10:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710151872;
-	bh=I6gW/BhVUudvPkte5swzIwXeljQnXcB+mOb7zYQvmFU=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Se+w522M2QblUu7GUAiHxGhY54wouba/GQuvUpweNvdlq13UD9VjeCdyUAhgju9nE
-	 5pXkiM/JhO3+cIkY/O4dZ0ZRkiXgUzObblZ1Zi5TgWqKBvrb3N5Zzwr3mwfRiQv/V2
-	 etUXRynOdZSMgO6sR9KvXsf+GVsNFcoBZJ/3dlj7d9j66AOKzWLuvFWr2Orj5SDJ/7
-	 GCTBGJjQtXWhCn+wIBqUNUURjA826UhbeEsx8PFC5SyFz/EDluGrhqGHwTOAGx40Ln
-	 DRog57///x/78w5hHq/OzNOY4noB/i5nxIyr8AogrcKj8VafARO1jfxdWLyWFqlerH
-	 GtxL3GxwbLRAw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D268C54E58;
-	Mon, 11 Mar 2024 10:11:12 +0000 (UTC)
-From: Hui Liu via B4 Relay <devnull+quic_huliu.quicinc.com@kernel.org>
-Date: Mon, 11 Mar 2024 18:09:31 +0800
-Subject: [PATCH v5] arm64: dts: qcom: qcm6490-idp: enable PMIC Volume and
- Power buttons
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iEuDl0CX"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so4773625276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 03:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710151884; x=1710756684; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OW00I9htwoAsj3xBJZrkbzrUKhGDr0/+mmT+snWwiXg=;
+        b=iEuDl0CXWHzvdZYvg2Uqft91dUHE8s4S0nzX2JXi0jbuzaqbP/anhhfShGbtmAbj+6
+         dFvbr3wwsVc1l/yaFnWxdW9auVjedAAueOsEYCtd/ModbkuJ87LhwWNhfyYT9XIHG8Rg
+         NBXdgt4kfaL/thZyayXXcL5XztQ6r/VYqwHY+b0jAUMzWM+09I0c+AYDpX/iaZWoArCu
+         ZDCuk9xxDBrx37I/nCyzCsUY1m8U0Sf/vNFHetvMnoOOowTWDaAIQHxZQGdLCeli+uPI
+         QlfLzQ20Zjfb5+AatcjBlMjSEpCqglJQ28Sc25aQosThpL/N1kkhnSaA4YiQrxWazKkS
+         WDyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710151884; x=1710756684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OW00I9htwoAsj3xBJZrkbzrUKhGDr0/+mmT+snWwiXg=;
+        b=I3pFq1VdsL0+hEdY+UCfTeVER+JOi6gs/2uxSbSG2aX0PU00SYO7Zdb7Yz96p/sjL2
+         aWc1b/NAG4glmc1RruIFo7W/Mi0R0ssZa2WxX/hLGDKeA/szwcUlzWgpiKu5QRwBArVP
+         n25QAI43WWGEW5PDq6lEJ747zF9cYBrmlvVWTHL2s80EWI8Ujl61oLFsKrsqx1kw9pme
+         lELw+CSK4KRCarR8InIGqvopxkkhGB9srJJ10CEkHi4a/jTiEODKdJBxDUbBuyU7/nCc
+         2LitUlcLxOl/QA9xnCg46f1HCwOzqu4A3LegUtR7B2Gk2KC8ouIWcPNuuwxcn0S5IgvX
+         5FKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLwlas2EJaV0UKPW8lBClJmUiaDaJEj2z0dDz37LWxOACI3PcYvOodQgDtuk3tyjdlXLzWkVw/6CKLAJU7pW310mxN90F5KtVHC9nO
+X-Gm-Message-State: AOJu0Yx8bNWqvrdh1cu12tuhyJcQE2cpDy+OQ8jwIOXRg6FCXIjD91Uv
+	hRLwb/Cr87MMPn906g7xSUC1jBXCZp0bAk2RfD2dUwJwubhUoE4dmFqmpxR/DXTUP6bgW65GtyX
+	h0uIJzwYnjFNHafYuRMWNsYgUbrazYxHRZi5F
+X-Google-Smtp-Source: AGHT+IHeMf2I6e7HKYzUshIicVdYM485nxp+wOAn6CZ5eXC/DS89xt9vl9QxYES8bm7T9Wf6yE9ct4Shlv7P6VhvUsU=
+X-Received: by 2002:a25:28a:0:b0:dc6:ca3a:31da with SMTP id
+ 132-20020a25028a000000b00dc6ca3a31damr5135139ybc.16.1710151884041; Mon, 11
+ Mar 2024 03:11:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240311-gpio-keys-v5-1-08823582f6c9@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGDY7mUC/23MTQ6CMBCG4auQrq3pH+3gynsYF9AWmRgpUiUaw
- 90tbKzR5TeZ532R6Ef0keyKFxn9hBFDn0a5KYjt6v7kKbq0iWBCMcE0PQ0Y6Nk/I+USmsZByUQ
- FJP0Po2/xsbYOx7Q7jLcwPtf0xJfrv8rEKadGgzRV5eoW3P56R4u93dpwIUtnEpkVMrciWV61C
- hrpwGjxa+XHSsZzK5O1tdbKeTCmtL9W5VblViXLpGbKGQMW9Led5/kNMvYqhVgBAAA=
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Hui Liu <quic_huliu@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710151870; l=2997;
- i=quic_huliu@quicinc.com; s=20230823; h=from:subject:message-id;
- bh=P49AauHmA6KJoQvdRRaGDstedPDavIC2nds8wmnutYE=;
- b=03Wz5EeAwzrpIdHG6XXQbaisCr4nHg3GdAT6B7ypyIHxfudc4Nx9fJWoORpCeNxkq6pe7htPr
- hjwB5uUJ1b0AuKECDnFsM4EWhMV1VfMQqhv+CE1woGdo4tqj9t2Y91U
-X-Developer-Key: i=quic_huliu@quicinc.com; a=ed25519;
- pk=1z+A50UnTuKe/FdQv2c0W3ajDsJOYddwIHo2iivhTTA=
-X-Endpoint-Received:
- by B4 Relay for quic_huliu@quicinc.com/20230823 with auth_id=80
-X-Original-From: Hui Liu <quic_huliu@quicinc.com>
-Reply-To: <quic_huliu@quicinc.com>
+References: <20240311094947.3738200-1-howardyen@google.com> <Ze7W3o67JLTKlLzR@smile.fi.intel.com>
+In-Reply-To: <Ze7W3o67JLTKlLzR@smile.fi.intel.com>
+From: Howard Yen <howardyen@google.com>
+Date: Mon, 11 Mar 2024 18:10:47 +0800
+Message-ID: <CAJDAHvbRSm_UYgx0fE7o2dJqcBfBbcFR4DrnVydkwfxGo0O4Rg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] Add support for multiple coherent memory regions
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, mathias.nyman@intel.com, 
+	hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
+	petr.tesarik.ext@huawei.com, broonie@kernel.org, james@equiv.tech, 
+	james.clark@arm.com, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, iommu@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hui Liu <quic_huliu@quicinc.com>
+On Mon, Mar 11, 2024 at 6:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Mar 11, 2024 at 09:49:45AM +0000, Howard Yen wrote:
+> > In the system I'm working on, there is an always-on subsystem which
+> > includes a small size memory, and several functions need to run and
+> > occupy the memory from the small memory if they need to run on the
+> > always-on subsystem. These functions must allocate the memory from the
+> > small memory region, so that they can get benefit from the always-on
+> > subsystem. So the small memory is split for multiple functions which ar=
+e
+> > satisfied with their generic use cases. But in specific use cases, like
+> > USB3 devices which support the stream trasnsfer or multiple devices
+> > connect to the host, they required more memory than their pre-allocated
+> > memory region. I tried to implement it in a generic way and propose thi=
+s
+> > patch to give it the ability to get the memory from the other larger
+> > memory to solve the issue.
+>
+> > Changelog
+> > --------------------------------------------
+> > Changes in v5:
+> > - Fix build break.
+> > - Use of_property_count_u32_elems() instead of
+> >   of_property_count_elems_of_size().
+>
+> Have you tried to use --histogram diff algo?
 
-The Volume Down & Power buttons are controlled by the PMIC via
-the PON hardware, and the Volume Up is connected to a PMIC gpio.
+Yes, I used the below command to create the patch v5.
+`git format-patch --cover-letter --histogram -v5 51b70ff55`
 
-Enable the necessary hardware and setup the GPIO state for the
-Volume Up gpio key.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-Signed-off-by: Hui Liu <quic_huliu@quicinc.com>
----
-Changes in v5:
-- Removed the status setting for pmk8350_pon, because the default
-status is "okay".
-- Link to v4: https://lore.kernel.org/r/20240304-gpio-keys-v4-1-03604d778c86@quicinc.com
 
-Changes in v4:
-- Switch the order of "pinctrl-0" and "pinctrl-names".
-- Update "volume_up" to "Volume_up".
-- Remove "linux,input-type", because the default value is 1(EV_KEY).
-- Link to v3: https://lore.kernel.org/r/20240301-gpio-keys-v3-1-ca664de8775c@quicinc.com
+--=20
+Best Regards,
 
-Changes in v3:
-- Update the commit more concise and explicit.
-- remove "power-source" property and update the numeric value to defined
-name for "qcom,drive-strength".
-- Link to v2: https://lore.kernel.org/r/20240223-gpio-keys-v2-1-19f48b3d8762@quicinc.com
-
-Changes in v2:
-- Update the commit description.
-- Link to v1: https://lore.kernel.org/r/20240206-gpio-keys-v1-1-7683799daf8d@quicinc.com
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 37 ++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index acf145d1d97c..a4a7d55fb45c 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -9,7 +9,9 @@
- #define PM7250B_SID 8
- #define PM7250B_SID1 9
- 
-+#include <dt-bindings/input/linux-event-codes.h>
- #include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7280.dtsi"
- #include "pm7250b.dtsi"
-@@ -39,6 +41,22 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&key_vol_up_default>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume_up";
-+			gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			wakeup-source;
-+			debounce-interval = <15>;
-+			linux,can-disable;
-+		};
-+	};
-+
- 	reserved-memory {
- 		xbl_mem: xbl@80700000 {
- 			reg = <0x0 0x80700000 0x0 0x100000>;
-@@ -421,6 +439,16 @@ vreg_bob_3p296: bob {
- 	};
- };
- 
-+&pm7325_gpios {
-+	key_vol_up_default: key-vol-up-state {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+	};
-+};
-+
- &pm8350c_pwm {
- 	status = "okay";
- 
-@@ -448,6 +476,15 @@ led@3 {
- 	};
- };
- 
-+&pon_pwrkey {
-+	status = "okay";
-+};
-+
-+&pon_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
-
----
-base-commit: 23e11d0318521e8693459b0e4d23aec614b3b68b
-change-id: 20240206-gpio-keys-138bbd850298
-
-Best regards,
--- 
-Hui Liu <quic_huliu@quicinc.com>
-
+Howard
