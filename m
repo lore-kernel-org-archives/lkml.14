@@ -1,139 +1,191 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876CB56B63
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 21:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5566A56B63
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 21:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710192431; cv=none; b=dnNNWRMpifmUcIxsawy5TMU34gKm1KRx748Lp55bsF/qG1rg6mZ5h8CkobbNFfyF9s0P+BuEifws0jthnB200P+tn3kWlfZhHCxmQnb93U4o8JsxemNQkewCROixsNe/5S5Zx6S2nXW5PDl9XxQfzU3qpLfH7wWEvBsqHEjR4XY=
+	t=1710192472; cv=none; b=KNF4KhuwiZeNjMKIEfYlKDdwu1lKOSfVKK7OK5ClILuOr17qq6OzppAZwt1yz0hOcRGX4kVDn/yVWEJM/1kYdJEg+hOGfDzsRm5ROWP2jge5rtNqkVJSEEtubT8VfEIpq+NFHBtFSz1rH99XsyKINJWJD9oM+XPS8ME4NOCy+5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710192431; c=relaxed/simple;
-	bh=3BnoVAabTHfz7RxiwPnAvsouS24/it3klbkmoAucGoM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BMIK2+YSPiyWrICyrEeTNNTaBIy38E4q0VKvfy+spIFpjywCEYHUNRJj82qzI/5JFF89BgcZDMtZ3R9IYY88+Ejluj1qV2gNThFWcXBj0zeLDNM1TxExgn6epQO928mVlZKfkKrrgT+9kET5C19Uqio5ez2OskOoaNP6sKBbQZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nWhV9131; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710192472; c=relaxed/simple;
+	bh=ZmdP1tSm+qb+nNPO2UUjNu7uMmVk4E96vMUzvsP8Lc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nT6Ela21nJHdyreC6mdlWgU5vr3wxxLk9a9tUjaaOgLy+1lezdw7lRskZ9eiy/QsSjS6fxv8UISlph42c7boa+wnuXXY8806t1f3uQdHeick5a8L3N9dLZUDKPwpYbk30g/NnLxhpwYZsHBhT2zRoxT/yVHmjn0gpUBEQA1z6UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cpj4CVs8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nWhV9131"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-428405a0205so26731cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710192428; x=1710797228; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m48wge07cFCwEV0aIRK1/eMraB2WL2eyhOFlH9G55x8=;
-        b=nWhV9131v0cWtSxiPRC8ON4MPk77pbwhQY79XEQ+N8t3NLjFTZ2rwWMvO+qjRe0TcD
-         T5hwdgU19SnqMs56PcUrZjgAK6TCD2sytrxKBWvmRrr+CthMYV+dyboVjl1TZMTfY7DO
-         Zmkh1gSkmdAWhIGve6KJVS1YMpHEu5/hT2XA4VxS/71oReM3BxskQvu44LWleuPCd3ou
-         bzHGj4reDfI7qGgVSXfmCdoUp2NudmaRb01wsDuxk0yNF5+pG1rMmMuz0PpE0MPn4Lmp
-         rZfyLbrblkVtjN+8WD/J8S+tnTWR3GV5Ls8AJEXfXjbdXBWTTzdJGPHSAQAeufs9zhNT
-         fpkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710192428; x=1710797228;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m48wge07cFCwEV0aIRK1/eMraB2WL2eyhOFlH9G55x8=;
-        b=fpS5g8UTZJklOHeNHQWtND+oqTg/z28QaQZZDXK/QBojNfbtfrBBw8EA6yJPFcJWFW
-         IDzS+r934FTZ3C+du1UGlPEVqlgfmbuIMnAh4ymrifR83chDE9VdkZMGSkhSGrbROfL6
-         GUMgHOj+a80gboOnyAWPlQWDcZz5utNvHQOEt6IhAypwB2VNr/+dS9ONyzTds7+1/T7d
-         t7OGLiI+MkX8f+zPaz7qcqPrYwR5XXeCnTyBUssvXtCZ13x1eJMCXvuL1Yjzp139iPqQ
-         lRkBIZpFimkYPSvBtBsKvJOFSCKaa7cm2mnzitux6MVWnHeNAdq1arLLQK4nugp/EH52
-         ehbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJIRjNEz5V6x68nIvImpwJ9CbQObWu7KYUAWSr0wb5AO0TPjhYA5yK3qDfAiJF5SJf2AOcgVzDrih1NpN7W9Me5U3HTv6jN+HzeHg4
-X-Gm-Message-State: AOJu0YyXqYSgDP9OyGeImpuWoqlUB2rQkC2Xp6DWNL6P/RsdNx9s4iCE
-	CiE5hJxlFjoKGYhWUn9d4iarJ+amxNJXTrqEmENZP9wNvuczF0bnFUHPaTH25IwaZD8we8CTIMy
-	8oGvEO43/4wAyElaOY+GgPTD7X4R9FO1QqUCG
-X-Google-Smtp-Source: AGHT+IENS5NfjfXK7lN5Bkxy+P/3Qds/aQw6f0kFGWmkfLobVusHnbA/vMcsIs5jQjYU26B8DLKAFQMYIyJE+GAoPU4=
-X-Received: by 2002:a05:622a:4481:b0:42f:a3c:2d4f with SMTP id
- kb1-20020a05622a448100b0042f0a3c2d4fmr61762qtb.16.1710192428294; Mon, 11 Mar
- 2024 14:27:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cpj4CVs8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F24C433F1;
+	Mon, 11 Mar 2024 21:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710192471;
+	bh=ZmdP1tSm+qb+nNPO2UUjNu7uMmVk4E96vMUzvsP8Lc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cpj4CVs8QxtXolkOfXKSPGD7cdQcOzYl+xjVIt7s4maGcs5drai0fkAaSU37k4Dzs
+	 9hVcZ0CO7z1z2Y9KBQmoQ+ox8UIFFkKW0CetC+zd9ymx1BgXmjVdPtZTLMlIrOHnsF
+	 +Hu/IS4/4Y9xIoj0OsSNIesVnXuJRM2M/e1TrtC2/olA8lgSJb/NGR0FHfpeoNugMg
+	 u2r7U1a+1NGoueqUIvOHQtSp8jcb54pZoONIf5vMp8td/qnUp4JjT7mbNvLx3QSiL1
+	 sIllTR+ssAGSno54ZJzboDDOP71/h3QgXNqGIGN+ZCh0hqVExHavgzZzGcad/J3uXK
+	 zeAu1Qg04/Rfw==
+Date: Mon, 11 Mar 2024 18:27:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/1] perf beauty: Move uapi/linux/fs.h copy out of the
+ directory used to build perf
+Message-ID: <Ze93VPYpegMMt5kk@x1>
+References: <Ze9vjxv42PN_QGZv@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a9e3120d-8b79-4435-b113-ceb20aa45ee2@alu.unizg.hr>
- <4a5c8d28-7f73-4c15-b288-641f0ccc91c2@redhat.com> <Ze8Wr2qH8V0LMi_5@x1n>
- <b5ff4c70-6379-4cc7-8c92-778d80a6a658@redhat.com> <Ze8fYF5I4mlUGHd9@x1n>
- <CAJHvVcie+N+4j60m_Dxh7QzbZLmsjnq2-04peuqE8VkkMq984A@mail.gmail.com> <Ze9bWkrD6UBZ2ErV@x1n>
-In-Reply-To: <Ze9bWkrD6UBZ2ErV@x1n>
-From: James Houghton <jthoughton@google.com>
-Date: Mon, 11 Mar 2024 14:26:32 -0700
-Message-ID: <CADrL8HW59nt4ztY3x5G3VgpmaXQbXoXZeAjvzMp7SpsqxgDCxw@mail.gmail.com>
-Subject: Re: BUG selftests/mm]
-To: Peter Xu <peterx@redhat.com>
-Cc: Axel Rasmussen <axelrasmussen@google.com>, David Hildenbrand <david@redhat.com>, 
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jiaqi Yan <jiaqiyan@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ze9vjxv42PN_QGZv@x1>
 
-On Mon, Mar 11, 2024 at 12:28=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote=
-:
->
-> On Mon, Mar 11, 2024 at 11:59:59AM -0700, Axel Rasmussen wrote:
-> > I'd prefer not to require root or CAP_SYS_ADMIN or similar for
-> > UFFDIO_POISON, because those control access to lots more things
-> > besides, which we don't necessarily want the process using UFFD to be
-> > able to do. :/
+It is mostly used only to generate string tables, not to build perf, so
+move it to the tools/perf/trace/beauty/include/ hierarchy, that is used
+just for scrapping.
 
-I agree; UFFDIO_POISON should not require CAP_SYS_ADMIN.
+The only case where it was being used to build was in
+tools/perf/trace/beauty/sync_file_range.c, because some older systems
+doesn't have the SYNC_FILE_RANGE_WRITE_AND_WAIT define, just use the
+system's linux/fs.h header instead, defining it if not available.
 
-> >
-> > Ratelimiting seems fairly reasonable to me. I do see the concern about
-> > dropping some addresses though.
->
-> Do you know how much could an admin rely on such addresses?  How frequent
-> would MCE generate normally in a sane system?
+This is something that should've have been done already, as happened
+with the linux/socket.h scrapper, do it now as Ian suggested while doing
+an audit/refactor session in the headers used by perf.
 
-I'm not sure about how much admins rely on the address themselves. +cc
-Jiaqi Yan
+No other tools/ living code uses it, just <linux/fs.h> coming from
+either 'make install_headers' or from the system /usr/include/
+directory.
 
-It's possible for a sane hypervisor dealing with a buggy guest / guest
-userspace to trigger lots of these pr_errs. Consider the case where a
-guest userspace uses HugeTLB-1G, finds poison (which HugeTLB used to
-ignore), and then ignores SIGBUS. It will keep getting MCEs /
-SIGBUSes.
+Suggested-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/CAP-5=fWZVrpRufO4w-S4EcSi9STXcTAN2ERLwTSN7yrSSA-otQ@mail.gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.perf                              |  9 +++++----
+ tools/perf/check-headers.sh                           |  2 +-
+ tools/{ => perf/trace/beauty}/include/uapi/linux/fs.h |  0
+ tools/perf/trace/beauty/rename_flags.sh               |  2 +-
+ tools/perf/trace/beauty/sync_file_range.c             | 11 ++++++++++-
+ tools/perf/trace/beauty/sync_file_range.sh            |  2 +-
+ 6 files changed, 18 insertions(+), 8 deletions(-)
+ rename tools/{ => perf/trace/beauty}/include/uapi/linux/fs.h (100%)
 
-The sane hypervisor will use UFFDIO_POISON to prevent the guest from
-re-accessing *real* poison, but we will still get the pr_err, and we
-still keep injecting MCEs into the guest. We have observed scenarios
-like this before.
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d3a568abc38919e8..643e9fa6ec89c58c 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -472,6 +472,7 @@ arm64-sysreg-defs-clean:
+ 		clean > /dev/null
+ 
+ beauty_linux_dir := $(srctree)/tools/perf/trace/beauty/include/linux/
++beauty_uapi_linux_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/linux/
+ linux_uapi_dir := $(srctree)/tools/include/uapi/linux
+ asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
+ arch_asm_uapi_dir := $(srctree)/tools/arch/$(SRCARCH)/include/uapi/asm/
+@@ -647,8 +648,8 @@ $(x86_arch_MSRs_array): $(x86_arch_asm_dir)/msr-index.h $(x86_arch_MSRs_tbl)
+ rename_flags_array := $(beauty_outdir)/rename_flags_array.c
+ rename_flags_tbl := $(srctree)/tools/perf/trace/beauty/rename_flags.sh
+ 
+-$(rename_flags_array): $(linux_uapi_dir)/fs.h $(rename_flags_tbl)
+-	$(Q)$(SHELL) '$(rename_flags_tbl)' $(linux_uapi_dir) > $@
++$(rename_flags_array): $(beauty_uapi_linux_dir)/fs.h $(rename_flags_tbl)
++	$(Q)$(SHELL) '$(rename_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+ 
+ arch_errno_name_array := $(beauty_outdir)/arch_errno_name_array.c
+ arch_errno_hdr_dir := $(srctree)/tools
+@@ -660,8 +661,8 @@ $(arch_errno_name_array): $(arch_errno_tbl)
+ sync_file_range_arrays := $(beauty_outdir)/sync_file_range_arrays.c
+ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+ 
+-$(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
+-	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
++$(sync_file_range_arrays): $(beauty_uapi_linux_dir)/fs.h $(sync_file_range_tbls)
++	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(beauty_uapi_linux_dir) > $@
+ 
+ TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
+ 
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 66ba33dbcef22b23..015f74137b755eaf 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -11,7 +11,6 @@ FILES=(
+   "include/uapi/drm/i915_drm.h"
+   "include/uapi/linux/fadvise.h"
+   "include/uapi/linux/fcntl.h"
+-  "include/uapi/linux/fs.h"
+   "include/uapi/linux/fscrypt.h"
+   "include/uapi/linux/kcmp.h"
+   "include/uapi/linux/kvm.h"
+@@ -98,6 +97,7 @@ SYNC_CHECK_FILES=(
+ declare -a BEAUTY_FILES
+ BEAUTY_FILES=(
+   "include/linux/socket.h"
++  "include/uapi/linux/fs.h"
+ )
+ 
+ declare -a FAILURES
+diff --git a/tools/include/uapi/linux/fs.h b/tools/perf/trace/beauty/include/uapi/linux/fs.h
+similarity index 100%
+rename from tools/include/uapi/linux/fs.h
+rename to tools/perf/trace/beauty/include/uapi/linux/fs.h
+diff --git a/tools/perf/trace/beauty/rename_flags.sh b/tools/perf/trace/beauty/rename_flags.sh
+index 94bf7f45d28e6be6..702411dd7a1c2fc2 100755
+--- a/tools/perf/trace/beauty/rename_flags.sh
++++ b/tools/perf/trace/beauty/rename_flags.sh
+@@ -2,7 +2,7 @@
+ # Copyright (C) 2018, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+ # SPDX-License-Identifier: LGPL-2.1
+ 
+-[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
++[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/perf/trace/beauty/include/uapi/linux/
+ 
+ fs_header=${header_dir}/fs.h
+ 
+diff --git a/tools/perf/trace/beauty/sync_file_range.c b/tools/perf/trace/beauty/sync_file_range.c
+index 1c425f04047dbb24..3e8f50ff4fc701f9 100644
+--- a/tools/perf/trace/beauty/sync_file_range.c
++++ b/tools/perf/trace/beauty/sync_file_range.c
+@@ -7,7 +7,16 @@
+ 
+ #include "trace/beauty/beauty.h"
+ #include <linux/log2.h>
+-#include <uapi/linux/fs.h>
++#include <linux/fs.h>
++
++#ifndef SYNC_FILE_RANGE_WRITE_AND_WAIT
++#define SYNC_FILE_RANGE_WAIT_BEFORE     1
++#define SYNC_FILE_RANGE_WRITE           2
++#define SYNC_FILE_RANGE_WAIT_AFTER      4
++#define SYNC_FILE_RANGE_WRITE_AND_WAIT  (SYNC_FILE_RANGE_WRITE | \
++                                         SYNC_FILE_RANGE_WAIT_BEFORE | \
++                                         SYNC_FILE_RANGE_WAIT_AFTER)
++#endif
+ 
+ static size_t sync_file_range__scnprintf_flags(unsigned long flags, char *bf, size_t size, bool show_prefix)
+ {
+diff --git a/tools/perf/trace/beauty/sync_file_range.sh b/tools/perf/trace/beauty/sync_file_range.sh
+index 90bf633be879909a..b1084c4cab636b52 100755
+--- a/tools/perf/trace/beauty/sync_file_range.sh
++++ b/tools/perf/trace/beauty/sync_file_range.sh
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: LGPL-2.1
+ 
+ if [ $# -ne 1 ] ; then
+-	linux_header_dir=tools/include/uapi/linux
++	linux_header_dir=tools/perf/trace/beauty/include/uapi/linux/
+ else
+ 	linux_header_dir=$1
+ fi
+-- 
+2.44.0
 
->
-> > Perhaps we can mitigate that concern by defining our own ratelimit
-> > interval/burst configuration?
->
-> Any details?
->
-> > Another idea would be to only ratelimit it if !CONFIG_DEBUG_VM or
-> > similar. Not sure if that's considered valid or not. :)
->
-> This, OTOH, sounds like an overkill..
->
-> I just checked again on the detail of ratelimit code, where we by default
-> it has:
->
-> #define DEFAULT_RATELIMIT_INTERVAL      (5 * HZ)
-> #define DEFAULT_RATELIMIT_BURST         10
->
-> So it allows a 10 times burst rather than 2.. IIUC it means even if
-> there're continous 10 MCEs it won't get suppressed, until the 11th came, =
-in
-> 5 seconds interval.  I think it means it's possibly even less of a concer=
-n
-> to directly use pr_err_ratelimited().
 
-I'm okay with any rate limiting everyone agrees on. IMO, silencing
-these pr_errs if they came from UFFDIO_POISON (or, perhaps, if they
-did not come from real hardware MCE events) sounds like the most
-correct thing to do, but I don't mind. Just don't make UFFDIO_POISON
-require CAP_SYS_ADMIN. :)
-
-Thanks.
