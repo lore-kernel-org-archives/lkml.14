@@ -1,56 +1,59 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0452655E4F;
-	Mon, 11 Mar 2024 19:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E52E55E4F;
+	Mon, 11 Mar 2024 19:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710184630; cv=none; b=tC/FNow811mkf6VFDLf/+eiy1GO3uhLFQJWaA7bzFBbxx248f/cWSjVqIc5PPxypO1tU17wZfuEkuhmRg0xeGrN8ZNgFdac8YHCRhRIl1F44HwYL63SEaAr4ydIV57ZGWp1CAv+wPqy0O6EmFbYA678RPNw5U6RfT9e4O+l0ZT8=
+	t=1710184638; cv=none; b=CZY8+/iwKimlS2AHBZRcvwa8raRp1y3UvUPqSwtGEQ6wBIHiEJq5MKdx/zf2bwoCZwBPFjS4v8/mAZJtlcQ2NFBeecktLErh5uyZ0aAP1sK53OZus6tlcYIPdcYt0Cv704dQK04bKvzH2b4ns5k2roKc1fx2GI/TE4WRS8LadUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710184630; c=relaxed/simple;
-	bh=mMGeg29gwzpCoVxiA8/LEboh4bcjnzGK8a/aWqQS1Vw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rDMyyckLGScerBLxBZARUXM1envqM0VFJvnrBdjq7/cfChSd1bV2p/HKplOf16+Q72QkV1DDDwz2T+weRFe76grJVvrzDhESUnNOyInnBMrFyTKI54egHQVVV1o8QQAF6fjUxlqy4aa7ONHvNlBaNY3PJIUm332+x9wGWEu9fxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=E7z+hhWb; arc=none smtp.client-ip=67.231.148.174
+	s=arc-20240116; t=1710184638; c=relaxed/simple;
+	bh=vcsIZ+hG2f3IxnV3xuuSi8GFiiDOSumsWg+PacQYtG8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KCrfWBDkT1Rch37EuEhnhtPKfXDbQ79u7RXtsiMykf/JgAufPACtQGah73vTpRERDwKizEHppK57JPdMkMKc/vAKXHX16gs4t92PVFTz1EC66BHtfHdIFK1xFr4U35fS5xVy2I3JXJS3L1CyW4q7iPGn7pUEzbtgmosUnJMmakY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=EIN041VV; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="E7z+hhWb"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42BIWO9j004861;
-	Mon, 11 Mar 2024 12:17:00 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="EIN041VV"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42BEm4Nx028602;
+	Mon, 11 Mar 2024 12:17:09 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	pfpt0220; bh=jiAYZlSTTVTc9JemCt40FhYTOp4MDk5dogqt7SwUfZw=; b=E7z
-	+hhWbbG7DI3iTQLWjHvIceNcvMhPPHV6IrSdg5rbYdmV4etmc91vMH94UAMQPD7W
-	cTsVkGzcYMMI3gLt1SNrLrn+/bitYaDAZM5kIfM6HXyiqBpSbOysXk/enfnkrfP1
-	LypeHmjxmfjL+Gq+O5+yf/C9KAj7f3XxBWlestrrKx43KF7baZWX6RMvujCSs6AX
-	+suMFSwUGhwgC5xtMw37TODixV25iHKF/rV1lj8u2esYe8Ovk1LYPtFdxSDIGPxx
-	s/sgGE8ZzUUngLTiBZUELU9xhliyz7wJPsD4mM1VYMtGvSEW7iCe3YwH4VufoA9d
-	ZUxNqgEelqYMt3Vp/DQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wt54n0j2q-1
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=pfpt0220; bh=QJiPhH3X7OFSmOqhtzvu6
+	k0wxWOeOR4GzzsMc8QbapE=; b=EIN041VVpoL0FifdNTcpx31A09msYSa5Mn0El
+	0axwus7cND7e9MV1u/9yVNfbB2CR1ahHdlIxCKeVbf3muo3sbYCbhmkLwUFfwGJt
+	JwzOPp53oHU7ynFlr+w2LK6tKsFO9pr1J5uiO/hDHbmIvL/B4qyJ/wZaMMMDXHeS
+	wr/bEFbtLZdXZbPaqpS57UKBe2kGJlSO1/80s1q4UO7scbGamPtHucoxT7YlR2R5
+	hop/6aGtARiq/e8q/LHvuvCDIivPeyGQy7nlkZ8rY6mNPKY23DG/iFROyjRlTMMu
+	4MeW2YCHpzdbcZqHjoJEv+Y+0HYucia6a6uJfhMjxxJAqH2Uw==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3wswdctem0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 12:17:00 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	Mon, 11 Mar 2024 12:17:09 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Mon, 11 Mar 2024 12:16:59 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Mon, 11 Mar 2024 12:16:59 -0700
+ 15.2.1258.12; Mon, 11 Mar 2024 12:17:08 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Mon, 11 Mar 2024 12:17:08 -0700
 Received: from hyd1358.marvell.com (unknown [10.29.37.11])
-	by maili.marvell.com (Postfix) with ESMTP id 1F1773F704C;
-	Mon, 11 Mar 2024 12:16:55 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 83BE23F704C;
+	Mon, 11 Mar 2024 12:17:04 -0700 (PDT)
 From: Subbaraya Sundeep <sbhatta@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
         <pabeni@redhat.com>, <sgoutham@marvell.com>, <lcherian@marvell.com>,
         <gakula@marvell.com>, <hkelam@marvell.com>, <naveenm@marvell.com>,
-        <horms@kernel.org>
-Subject: [net PATCH 0/5] octeontx2-pf: RVU Mailbox fixes
-Date: Tue, 12 Mar 2024 00:46:47 +0530
-Message-ID: <1710184612-29027-1-git-send-email-sbhatta@marvell.com>
+        <horms@kernel.org>, Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: [net PATCH 2/5] octeontx2-pf: Wait till detach_resources msg is complete
+Date: Tue, 12 Mar 2024 00:46:49 +0530
+Message-ID: <1710184612-29027-3-git-send-email-sbhatta@marvell.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1710184612-29027-1-git-send-email-sbhatta@marvell.com>
+References: <1710184612-29027-1-git-send-email-sbhatta@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,71 +61,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: gWmHqV-kpJgr-RPAX_kdNud3GmVxf9W1
-X-Proofpoint-GUID: gWmHqV-kpJgr-RPAX_kdNud3GmVxf9W1
+X-Proofpoint-ORIG-GUID: mR7Z4rs2qrdxYamKG_M4H_0goxmTdt-j
+X-Proofpoint-GUID: mR7Z4rs2qrdxYamKG_M4H_0goxmTdt-j
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-11_11,2024-03-11_01,2023-05-22_02
 
-From: Hariprasad Kelam <hkelam@marvell.com>
+During VF driver remove, a message is sent to detach VF
+resources to PF but VF is not waiting until message is
+complete. Also mailbox interrupts need to be turned off
+after the detach resource message is complete. This patch
+fixes that problem.
 
-This patchset fixes the problems related to RVU mailbox.
-During long run tests some times VF commands like setting
-MTU or toggling interface fails because VF mailbox is timedout
-waiting for response from PF.
+Fixes: 05fcc9e08955 ("octeontx2-pf: Attach NIX and NPA block LFs")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 2 +-
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Below are the fixes
-Patch 1: There are two types of messages in RVU mailbox namely up and down
-messages. Down messages are synchronous messages where a PF/VF sends
-a message to AF and AF replies back with response. UP messages are
-notifications and are asynchronous like AF sending link events to
-PF. When VF sends a down message to PF, PF forwards to AF and sends
-the response from AF back to VF. PF has to forward VF messages since
-there is no path in hardware for VF to send directly to AF.
-There is one mailbox interrupt from AF to PF when raised could mean
-two scenarios one is where AF sending reply to PF for a down message
-sent by PF and another one is AF sending up message asynchronously
-when link changed for that PF. Receiving the up message interrupt while
-PF is in middle of forwarding down message causes mailbox errors.
-Fix this by receiver detecting the type of message from the mbox data register
-set by sender.
-
-Patch 2:
-During VF driver remove, VF has to wait until last message is
-completed and then turn off mailbox interrupts from PF.
-
-Patch 3:
-Do not use ordered workqueue for message processing since multiple works are
-queued simultaneously by all the VFs and PF link UP messages.
-
-Patch 4:
-When sending link event to VF by PF check whether VF is really up to
-receive this message.
-
-Patch 5:
-In AF driver, use separate interrupt handlers for the AF-VF interrupt and
-AF-PF interrupt. Sometimes both interrupts are raised to two CPUs at same
-time and both CPUs execute same function at same time corrupting the data.
-
-
-Subbaraya Sundeep (5):
-  octeontx2: Detect the mbox up or down message via register
-  octeontx2-pf: Wait till detach_resources msg is complete
-  octeontx2-pf: Use default max_active works instead of one
-  octeontx2-pf: Send UP messages to VF only when VF is up.
-  octeontx2-af: Use separate handlers for interrupts
-
- .../net/ethernet/marvell/octeontx2/af/mbox.c  |  44 ++++++-
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |   6 +
- .../marvell/octeontx2/af/mcs_rvu_if.c         |  13 +-
- .../net/ethernet/marvell/octeontx2/af/rvu.c   |  31 ++++-
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |   2 +
- .../ethernet/marvell/octeontx2/af/rvu_cgx.c   |  20 +--
- .../marvell/octeontx2/nic/otx2_common.c       |   2 +-
- .../marvell/octeontx2/nic/otx2_common.h       |   2 +-
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 119 ++++++++++++------
- .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  71 ++++++-----
- 10 files changed, 223 insertions(+), 87 deletions(-)
-
---
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 02d0b707aea5..a85ac039d779 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1592,7 +1592,7 @@ int otx2_detach_resources(struct mbox *mbox)
+ 	detach->partial = false;
+ 
+ 	/* Send detach request to AF */
+-	otx2_mbox_msg_send(&mbox->mbox, 0);
++	otx2_sync_mbox_msg(mbox);
+ 	mutex_unlock(&mbox->lock);
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index ced456cec8ba..cf0aa16d7540 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -775,8 +775,8 @@ static void otx2vf_remove(struct pci_dev *pdev)
+ 	otx2_mcam_flow_del(vf);
+ 	otx2_shutdown_tc(vf);
+ 	otx2_shutdown_qos(vf);
+-	otx2vf_disable_mbox_intr(vf);
+ 	otx2_detach_resources(&vf->mbox);
++	otx2vf_disable_mbox_intr(vf);
+ 	free_percpu(vf->hw.lmt_info);
+ 	if (test_bit(CN10K_LMTST, &vf->hw.cap_flag))
+ 		qmem_free(vf->dev, vf->dync_lmt);
+-- 
 2.17.1
+
