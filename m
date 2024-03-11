@@ -1,44 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAC4247F41
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20DA3FB9D;
+	Mon, 11 Mar 2024 15:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710169286; cv=none; b=ZLG0mQHsIVd91AIBNnTXhS0eno5ftUbqkg1od+jcJJ45qkEnheu5wnnnTu4QjiYFYZGRMeF7Ik4iU3TIrS2Dn6+gfzCjapt4ME8EaQaofwAJUzz4p1H8YO0IIk706yyI0pgonJ27zjQAzSh27T2DxNjGFaURXcu0K5WUrTUgsK4=
+	t=1710169353; cv=none; b=uTfjUjZ/vt4HiOY8pkjRHN9ZBkdK6t3cWCG42UVpCYKQWldf00zvHHc/++9q63SuHKzWGLdZocdTOQ3EkevZThEjSFf5IdtVpWvvPdyWzPShTrabHKWHuxLvOMO9PJN+ti+yM0E6CczL3IiX99rX3iakPh4+muLesHM2xegOHZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710169286; c=relaxed/simple;
-	bh=i8N9AeOLlOU3zHXlKW31HNI+AQCrILnV7S/8j95cLC8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YGhn75yTDJbJO9m76JmWl4Vmaz132yH5h1xI/VYcUKDD1zd40kdxiDcBF3Mr7DveIcwvoxaDuqMCGJYE0+gx1XPZIJ9+mEwQWayOV02Q53k07acGZ5JLm53MjxOfsXACmpXuxqozXHMwC+VjGX/t8ikEh6gukuRc+KZbkR4ruyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FEE3153B;
-	Mon, 11 Mar 2024 08:02:01 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 267053F64C;
-	Mon, 11 Mar 2024 08:01:22 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Huang Ying <ying.huang@intel.com>,
-	Gao Xiang <xiang@kernel.org>,
-	Yu Zhao <yuzhao@google.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Chris Li <chrisl@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/6] mm: madvise: Avoid split during MADV_PAGEOUT and MADV_COLD
-Date: Mon, 11 Mar 2024 15:00:58 +0000
-Message-Id: <20240311150058.1122862-7-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240311150058.1122862-1-ryan.roberts@arm.com>
-References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1710169353; c=relaxed/simple;
+	bh=0d1h+66LiZBG4l7r4vzhI6g9+f3v9VLhHMPpwzwCB1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s66FxJnryOv9m+W2fQhe7hLlPi6o+ffIp6gbOtjdzR2fwFwwHWadjffdJK8WcZAJ6bMJXYgsGvXDG/DmV2jhSLPbf0pU7s5dlQTAqFjM0FCCowFtDFrvWWFPJWP22bO/vma6muYOB4kz8BhnxG5IYJL/ENJlDhfbh0T+vIWq1aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=azBS6ah4; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="azBS6ah4"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BExtWO007122;
+	Mon, 11 Mar 2024 15:02:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=w/vL4sracDDYC8rXycaL7lPs9isu/fY8uteFKSY6cBI=;
+ b=azBS6ah4c2A62JuJ1hLEBxoWbAUvV/KdNh/9xEDGXurYC5Myvgb42D21hAsVaFRMbKhH
+ 7ZURIGEdigpD6y/s529MqmEY8wk62MbI/vrhcZG1ZjbGpbQg+XNDveneQS8hlWoPmdQG
+ karOwytWQJuTM2rLU7jqxmfL6rhCq875eKOZhKE7VieWtmVxF8CX9God1l3lsdfixq8w
+ vUGbasHbSCZtbW5Sr9Fj08ZUtFcU5YvS9qEtPuaFU3bFkeziK17SLODk8Rq/PzL8J1RB
+ kIX/vXQtEU50c/DrDEAPkMFk56oPUFU08eeHHiVJiJbyviET2EghgWFS6JVHJOt6UziR iQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wre6ebhh8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Mar 2024 15:02:20 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42BENe4T005252;
+	Mon, 11 Mar 2024 15:02:19 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre75ykya-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Mar 2024 15:02:19 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42BF2I3L000311;
+	Mon, 11 Mar 2024 15:02:18 GMT
+Received: from t460-2.nl.oracle.com (dhcp-10-175-49-173.vpn.oracle.com [10.175.49.173])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3wre75ykvn-1;
+	Mon, 11 Mar 2024 15:02:18 +0000
+From: Vegard Nossum <vegard.nossum@oracle.com>
+To: Jonathan Corbet <corbet@lwn.net>, cve@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        security@kernel.org, Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [RFC PATCH 1/2] docs: automarkup: linkify CVSS: strings
+Date: Mon, 11 Mar 2024 16:00:53 +0100
+Message-Id: <20240311150054.2945210-1-vegard.nossum@oracle.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,161 +58,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_10,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403110113
+X-Proofpoint-GUID: J-vTCBCe52pbfRHix-D-QdTHimg_w6ft
+X-Proofpoint-ORIG-GUID: J-vTCBCe52pbfRHix-D-QdTHimg_w6ft
 
-Rework madvise_cold_or_pageout_pte_range() to avoid splitting any large
-folio that is fully and contiguously mapped in the pageout/cold vm
-range. This change means that large folios will be maintained all the
-way to swap storage. This both improves performance during swap-out, by
-eliding the cost of splitting the folio, and sets us up nicely for
-maintaining the large folio when it is swapped back in (to be covered in
-a separate series).
+CVSS vectors encode the results of a vulnerability analysis.
 
-Folios that are not fully mapped in the target range are still split,
-but note that behavior is changed so that if the split fails for any
-reason (folio locked, shared, etc) we now leave it as is and move to the
-next pte in the range and continue work on the proceeding folios.
-Previously any failure of this sort would cause the entire operation to
-give up and no folios mapped at higher addresses were paged out or made
-cold. Given large folios are becoming more common, this old behavior
-would have likely lead to wasted opportunities.
+When encountered in the documentation, create links to first.org which
+can be used to explain and explore the various vector components and
+their values.
 
-While we are at it, change the code that clears young from the ptes to
-use ptep_test_and_clear_young(), which is more efficent than
-get_and_clear/modify/set, especially for contpte mappings on arm64,
-where the old approach would require unfolding/refolding and the new
-approach can be done in place.
+Example:
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+- https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:L/E:U/MPR:L
+
+FIRST is the Forum of Incident Response and Security Teams, founded
+in 1990, and is partnered and supported by many well-known organizations.
+
+Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
 ---
- mm/madvise.c | 89 ++++++++++++++++++++++++++++++----------------------
- 1 file changed, 51 insertions(+), 38 deletions(-)
+ Documentation/sphinx/automarkup.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 547dcd1f7a39..56c7ba7bd558 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -336,6 +336,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 	LIST_HEAD(folio_list);
- 	bool pageout_anon_only_filter;
- 	unsigned int batch_count = 0;
-+	int nr;
+diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+index a413f8dd5115..8cf95a404bc8 100644
+--- a/Documentation/sphinx/automarkup.py
++++ b/Documentation/sphinx/automarkup.py
+@@ -76,6 +76,11 @@ c_namespace = ''
+ RE_git = re.compile(r'commit\s+(?P<rev>[0-9a-f]{12,40})(?:\s+\(".*?"\))?',
+     flags=re.IGNORECASE | re.DOTALL)
  
- 	if (fatal_signal_pending(current))
- 		return -EINTR;
-@@ -423,7 +424,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 		return 0;
- 	flush_tlb_batched_pending(mm);
- 	arch_enter_lazy_mmu_mode();
--	for (; addr < end; pte++, addr += PAGE_SIZE) {
-+	for (; addr < end; pte += nr, addr += nr * PAGE_SIZE) {
-+		nr = 1;
- 		ptent = ptep_get(pte);
- 
- 		if (++batch_count == SWAP_CLUSTER_MAX) {
-@@ -447,55 +449,66 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 			continue;
- 
- 		/*
--		 * Creating a THP page is expensive so split it only if we
--		 * are sure it's worth. Split it if we are only owner.
-+		 * If we encounter a large folio, only split it if it is not
-+		 * fully mapped within the range we are operating on. Otherwise
-+		 * leave it as is so that it can be swapped out whole. If we
-+		 * fail to split a folio, leave it in place and advance to the
-+		 * next pte in the range.
- 		 */
- 		if (folio_test_large(folio)) {
--			int err;
--
--			if (folio_estimated_sharers(folio) > 1)
--				break;
--			if (pageout_anon_only_filter && !folio_test_anon(folio))
--				break;
--			if (!folio_trylock(folio))
--				break;
--			folio_get(folio);
--			arch_leave_lazy_mmu_mode();
--			pte_unmap_unlock(start_pte, ptl);
--			start_pte = NULL;
--			err = split_folio(folio);
--			folio_unlock(folio);
--			folio_put(folio);
--			if (err)
--				break;
--			start_pte = pte =
--				pte_offset_map_lock(mm, pmd, addr, &ptl);
--			if (!start_pte)
--				break;
--			arch_enter_lazy_mmu_mode();
--			pte--;
--			addr -= PAGE_SIZE;
--			continue;
-+			const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
-+						FPB_IGNORE_SOFT_DIRTY;
-+			int max_nr = (end - addr) / PAGE_SIZE;
++#
++# CVSS score vectors
++#
++RE_cvss = re.compile(r'CVSS:(?P<ver>[0-9\.]+)(/[A-Z-]{1,3}:[A-Z])+')
 +
-+			nr = folio_pte_batch(folio, addr, pte, ptent, max_nr,
-+					     fpb_flags, NULL);
+ def markup_refs(docname, app, node):
+     t = node.astext()
+     done = 0
+@@ -93,7 +98,8 @@ def markup_refs(docname, app, node):
+                            RE_union: markup_c_ref,
+                            RE_enum: markup_c_ref,
+                            RE_typedef: markup_c_ref,
+-                           RE_git: markup_git}
++                           RE_git: markup_git,
++                           RE_cvss: markup_cvss}
+ 
+     if sphinx.version_info[0] >= 3:
+         markup_func = markup_func_sphinx3
+@@ -290,6 +296,12 @@ def markup_git(docname, app, match):
+     return nodes.reference('', nodes.Text(text),
+         refuri=f'https://git.kernel.org/torvalds/c/{rev}')
+ 
++def markup_cvss(docname, app, match):
++    text = match.group(0)
++    ver = match.group('ver')
++    return nodes.reference('', nodes.Text(text),
++        refuri=f'https://www.first.org/cvss/calculator/{ver}#{text}')
 +
-+			if (nr < folio_nr_pages(folio)) {
-+				int err;
-+
-+				if (folio_estimated_sharers(folio) > 1)
-+					continue;
-+				if (pageout_anon_only_filter && !folio_test_anon(folio))
-+					continue;
-+				if (!folio_trylock(folio))
-+					continue;
-+				folio_get(folio);
-+				arch_leave_lazy_mmu_mode();
-+				pte_unmap_unlock(start_pte, ptl);
-+				start_pte = NULL;
-+				err = split_folio(folio);
-+				folio_unlock(folio);
-+				folio_put(folio);
-+				if (err)
-+					continue;
-+				start_pte = pte =
-+					pte_offset_map_lock(mm, pmd, addr, &ptl);
-+				if (!start_pte)
-+					break;
-+				arch_enter_lazy_mmu_mode();
-+				nr = 0;
-+				continue;
-+			}
- 		}
- 
- 		/*
- 		 * Do not interfere with other mappings of this folio and
--		 * non-LRU folio.
-+		 * non-LRU folio. If we have a large folio at this point, we
-+		 * know it is fully mapped so if its mapcount is the same as its
-+		 * number of pages, it must be exclusive.
- 		 */
--		if (!folio_test_lru(folio) || folio_mapcount(folio) != 1)
-+		if (!folio_test_lru(folio) ||
-+		    folio_mapcount(folio) != folio_nr_pages(folio))
- 			continue;
- 
- 		if (pageout_anon_only_filter && !folio_test_anon(folio))
- 			continue;
- 
--		VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
--
--		if (!pageout && pte_young(ptent)) {
--			ptent = ptep_get_and_clear_full(mm, addr, pte,
--							tlb->fullmm);
--			ptent = pte_mkold(ptent);
--			set_pte_at(mm, addr, pte, ptent);
--			tlb_remove_tlb_entry(tlb, pte, addr);
-+		if (!pageout) {
-+			for (; nr != 0; nr--, pte++, addr += PAGE_SIZE) {
-+				if (ptep_test_and_clear_young(vma, addr, pte))
-+					tlb_remove_tlb_entry(tlb, pte, addr);
-+			}
- 		}
- 
- 		/*
+ def auto_markup(app, doctree, name):
+     global c_namespace
+     c_namespace = get_c_namespace(app, name)
 -- 
-2.25.1
+2.34.1
 
