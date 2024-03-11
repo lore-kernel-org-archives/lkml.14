@@ -1,173 +1,331 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ECA4AEE4
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710173985; cv=none; b=VwkOewtreK9xosDmkPAO48/4479gd2/4afvCfr5xLYg1oYIYdIU4NtcYIubFmbucXTVR0OvwPgsWefWpxwhD9TV8rpNQHNHHZurs4I68QtG207yH59V4I6Qa3k+A9bXLRG/+LS96lpsG/LeNfA/9YvNHGO1+VRpL7w188aCIS3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710173985; c=relaxed/simple;
-	bh=xEXzD4kw6+Z0h4GXKK73qPjqgcYopWBM+dQs7NidtYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DxK2gLc6SbRtjNn/Qa5Asnz8eILqwb6UnIRo4MvK6ntqn4TJzKLSUFF0GzTYRQDvcG1RPqcWuHvRAVlXkXR3Lo1+nHfLGT3uKxgTbx63pMU30MX6wxbQtYKqi9LVSgqmC5q/fYBGmF606tf7aL1WGSwkogPgUw7qCKNH/dY+xy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TH9rFjT8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBFF482CD;
+	Mon, 11 Mar 2024 16:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710173983; cv=fail; b=V8ZuLdZHGraQP0E6w13e8d32Rng1ZzrVWpmmTRE2GAUWKjuTdWjIY13uerx4hYvjiib/hx9p1Nfp5ZitZiSbMHMsVW0npFhp0w6ERxI7K0Kjx3dsUpvgnOG2NEmHFo4ELN47QYgj8KGNwZGba8YL0n8Foiw16RsfHUsUvOC+6nQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710173983; c=relaxed/simple;
+	bh=GSitH76pU34XvEuLyOIIVUd8hHEzgzppgDzxu7zCHss=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l1L681KrkIwFOJVp+gJehlXfilyx4nVQI4FVQjK+hQ2ZAUjKe+3xVrrGdg2a5GJosT4FGTSeRHvbbX290CuzFhvvzvRDmOOxKuMwcze04z2NpF3hL6C8V86NsV/QqBb4C68SAE0YTfDj/azwdtq6zRAqNMKHyNEKMfyQNbkf8qs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=B6L2vYRW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RnFe+kFp; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TH9rFjT8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710173982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2mQahgGF7t5ilMRgxp66fiMOHm6Y8WHBX1CjCOYiUkk=;
-	b=TH9rFjT8lol5h7+jzy4qt5b9Y41hOiCwle+guXB0o0e1Hn/6MzW3BJ4BlNW4ifLeucouKw
-	H9zYE6r/ik0m4/SQEoJaMlLiSoCHYqGPnCA7mLA21sBhnfeo23I96J9e4NlZDiTNP/CfiI
-	9MdGUxkUsM5eIxwQmYzHSSD6C2g3euM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-44-G0BnLGr-PjafHaXo9CX4kw-1; Mon, 11 Mar 2024 12:19:31 -0400
-X-MC-Unique: G0BnLGr-PjafHaXo9CX4kw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a46376dcdcbso54657766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:19:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710173968; x=1710778768;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2mQahgGF7t5ilMRgxp66fiMOHm6Y8WHBX1CjCOYiUkk=;
-        b=e0WnT9IbgD3N3527kO0hTNnbsCxhTjQyA8jj6cQgCc1+Ffen2KTiI38CurPac4WU4q
-         EzErfPKbJhmRaIcsHz+ZUvwkB4+fRKm8Sm182N0EGkgenS+lFAPjs1nV4+Yg0N1fa+FV
-         /RQrGTZOEL/mv5KS8tmvMOUgBYgBl9Ab03jhT76wZVtwGVza3p9fMCZ8IXzHGTN1yVC3
-         n9GFDgm+O2PxOByqnr+uJhiaPxC0u+aQ4k+6yem6q3UzxVndObeGfnjKxqRldQwiFyst
-         DA1PFoKiLEoFJU6qJDTofIAayG74wB00kilGA6Tvy+tDCSiHAfOSJDwAxIfXM2zYEIXu
-         Vj1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVpHO23FUk0HZvlyqPSJ9Nd+zSlYhIDbyLMHcvFyaIxbbG0NtNEocLiW7LxlrSfMW7vNaGvGfWZhzn6nv1nCEORSUuZHPh4Sko8lk1F
-X-Gm-Message-State: AOJu0Yz8brh/+naEdUztC0sJj+oBcWFnvet4VujwGF9dsbUpjtMnD2IV
-	80nZ+UPVWwWpT1lhtQGiuvDTC0ntCbkwaxogPCwyjeB3HgvA35PCCm13AOmPtphVkJ72xjIM7KI
-	cLOxBwEn8/ZWdODZBVXYqaVxAUuoSll3ZUEG6fhqO4s+dVSYSMdJ+1j4PWZ9bKw==
-X-Received: by 2002:a17:906:358d:b0:a45:84e7:b25a with SMTP id o13-20020a170906358d00b00a4584e7b25amr5447608ejb.12.1710173968675;
-        Mon, 11 Mar 2024 09:19:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoO7EDAZVtRfBv/pvsoBN7WxmHLuGVQTvibOB0sKCLOJ5yA2DM2cCu/w9a+YzK+thyglRvgw==
-X-Received: by 2002:a17:906:358d:b0:a45:84e7:b25a with SMTP id o13-20020a170906358d00b00a4584e7b25amr5447590ejb.12.1710173968258;
-        Mon, 11 Mar 2024 09:19:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c72f:6100:aae:4b84:887c:15bb? (p200300cbc72f61000aae4b84887c15bb.dip0.t-ipconnect.de. [2003:cb:c72f:6100:aae:4b84:887c:15bb])
-        by smtp.gmail.com with ESMTPSA id bn23-20020a170906c0d700b00a462e4d7216sm786317ejb.76.2024.03.11.09.19.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Mar 2024 09:19:27 -0700 (PDT)
-Message-ID: <ef409d5e-5652-4fff-933c-49bda6d75018@redhat.com>
-Date: Mon, 11 Mar 2024 17:19:26 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B6L2vYRW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RnFe+kFp"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BG40Rw008069;
+	Mon, 11 Mar 2024 16:19:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version;
+ s=corp-2023-11-20; bh=BJr9RcGwSc4JLDRvLoY0l7FQdOkxq7x4rvjsHVHwkLY=;
+ b=B6L2vYRWV3qPhn2jJsLRLZP/j0K3DMKmmcdNiI6FFNDwgY5L7m3RZIDtKdARDNt6ToJo
+ rgASRmGlxtR4qGMWHOSpx4+5CoGrZJjofhiDCiioB0KlTXtNcAaIy0H3U7mHhvXNBCl0
+ IfnUaTy5hL3aqPFa9AiRnSIcZFp1r71UVPZDhfLqWhX0fT3dc/NdvZPfH7du4YH6tMyY
+ HC1djK2kI64ppqc/NymC8LvlrNtf2VTvzZG828sBeEOptvbSE8btZvLYBbtjcO64ZbdF
+ cACB9lpF3lkd9a8IfsG5P7wOWqi3BdFR9ecCKJwHCur/ee+dK+OmG0ooX9LB7OwsukJF mg== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wrftdbtka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Mar 2024 16:19:17 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42BGBYTs033753;
+	Mon, 11 Mar 2024 16:19:16 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wre75qxaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Mar 2024 16:19:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hNil7QSNVtLPj6L1WSXsh64ySCesvvs5JRKlC1pkPujVh2NFfjOdawKGFEm2wWwBvug9rXhXad00/cJrc49TZfYQPuIrNuvTW+tCtGxthJK/Yj4Ri9Q5na2DH6+6ZIkQviAPIVWv3NZMSHvQv1vt0OKKQZWQvUNWGra3W2OOi+fUzusiOuGylesNWs1oNXxMMiI8FAZNN3NpAmohwSxJC8gwoS1qqBgz9Zm7K4/Cwp9LCMtVlHE1vJJ7JvkExj8KPhoq1pU2qVuV5FnicYt60NrUxPuYeRbxzXkgNSZTlh/9z1q8eW8LeJ8J6KDD9WYe6Bggp8jXRzugmsNrC+3clA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BJr9RcGwSc4JLDRvLoY0l7FQdOkxq7x4rvjsHVHwkLY=;
+ b=XC8hSaPj+AahLRMQKHScud+/spJqfODS050QQtM0/dfUvf2GXNqK2DvpZskqr/u3rDyDQ3mYLyhNf97ASTj57bYEMR+t/ACQRQdfr/dT8dyunPoxPSF+U/KjZYG4qEkM9SSXVKRhb94alX56hgpP4MRjt5LMo6x3SB24MPGbpHIGugB4gJKhWx5dPIlywFrlue6cnQoyJUzF8Pzhq5497I0ZMKIDUNXGYxhN6/yIwsMEUwwvjWRGy04xMpxrMojTgo8bhi/re9RcmJtkN8rUpWWJZ7pPBDVGZ5xr4Y0WcqBG8Is8xLVAeQOYmgs/OhyXevg2DmidZxDbNwAEMrxOow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BJr9RcGwSc4JLDRvLoY0l7FQdOkxq7x4rvjsHVHwkLY=;
+ b=RnFe+kFpk9x4cpy+rN4FUMJeJLilEazdZl2uNvicd7/KEx6nwSaBLqMvPRrzaDdNJ3wfqzSnvbrVWms+LM6SqsoZpnWslzh5lGoqeQj+GeeLRA79dp1xCURO8LdIs/E2x2wElWjFTY6Ci4cQbK7zWOqsgUTKDwx0B4ar3xCmKuM=
+Received: from CH2PR10MB4150.namprd10.prod.outlook.com (2603:10b6:610:ac::13)
+ by DS7PR10MB5119.namprd10.prod.outlook.com (2603:10b6:5:297::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Mon, 11 Mar
+ 2024 16:19:13 +0000
+Received: from CH2PR10MB4150.namprd10.prod.outlook.com
+ ([fe80::9ade:bfad:c78e:e1f9]) by CH2PR10MB4150.namprd10.prod.outlook.com
+ ([fe80::9ade:bfad:c78e:e1f9%7]) with mapi id 15.20.7362.035; Mon, 11 Mar 2024
+ 16:19:13 +0000
+From: Eric Snowberg <eric.snowberg@oracle.com>
+To: linux-security-module@vger.kernel.org
+Cc: dhowells@redhat.com, dwmw2@infradead.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, ardb@kernel.org, jarkko@kernel.org,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, roberto.sassu@huawei.com,
+        dmitry.kasatkin@gmail.com, mic@digikod.net, casey@schaufler-ca.com,
+        stefanb@linux.ibm.com, eric.snowberg@oracle.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: [PATCH RFC 3/8] efi: Make clavis boot param persist across kexec
+Date: Mon, 11 Mar 2024 12:11:06 -0400
+Message-Id: <20240311161111.3268190-4-eric.snowberg@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240311161111.3268190-1-eric.snowberg@oracle.com>
+References: <20240311161111.3268190-1-eric.snowberg@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1P222CA0024.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::29) To CH2PR10MB4150.namprd10.prod.outlook.com
+ (2603:10b6:610:ac::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/khugepaged: reduce process visible downtime by
- pre-zeroing hugepage
-Content-Language: en-US
-To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
-Cc: mhocko@suse.com, zokeefe@google.com, shy828301@gmail.com,
- xiehuan09@gmail.com, songmuchun@bytedance.com, minchan@kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240308074921.45752-1-ioworker0@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240308074921.45752-1-ioworker0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR10MB4150:EE_|DS7PR10MB5119:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c14497d-9387-4bab-2e24-08dc41e6fdd2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	D1tv+08ocwCb9HrcmFGJkV4tN5rNfrXts3dbfsv5O4sYiJrCHhiGOKQxxqOqvZ1pyjsabW9U4q/+nffX0G1okz931v9FQVqfxFZEah8wleZ+F+LfxY83nHbiAdMLFSIXzGcL1E1kXxUxrH+md/xntve1RbQ/64v2P7KgfRRDZIUq28Kh6/2wLouhUR8Jc1DIMisZKfgbmMeUbl/rSR2usS/PlV5ZN4QdAburQCZTGomcCDx5fPldNcSYunNQdM0u7HhGwwJaSM9objGGIBbOD6VUpvFH9D/BpgCmv2kJVp1eGX2arK89Ursr0ObeXnvVpJ87ntEY4VZKrjQ8e+UAWqzan3u0spiVZ8YjldhSOeFxR7t0sTdHQfmFcgQE/MVtKtnfs3liXpDnIFxpezbcA6ADwlYQn+L7kBKgeTiUnXeGpFzHvHbMdj3XlDaZ4oHmiH19SJ+sg6XLf34fXzvV8uNb5IrGfy+xGTO6srZkZk2cZCHOwKxOPFS50nfJsrM80Xn3n6ifB/CX7Nas9vUuCPzhLOHMxTKIIE8+T5oKhr0krFt1Ih/pJOtJ95Yc0HtyM2gtUQzz0PpVUH74LQn/7PG63rMS1WerHPHv1dlXhXrcDdpesPSDzTX+jxlXWg0S0VcNL8XDjfrH2kEey32M+IPdOThAYEMX07ia/q80mvE=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4150.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?dBXcXqsO8gWc3koJmA5cyNVK0rog/nPWIxN6Cksd2uqcPzj4KFQtM6+V9PC/?=
+ =?us-ascii?Q?1+nurztPH8IiKpxDfAer8iCafFHEfyDwqNXTnFarVEAzE79jLa9yxNGH+GH1?=
+ =?us-ascii?Q?BhpMgywQv9a6TiUOzWDgWt537lW/TXvg0XPQAsVs7KWRhKDFrmFBDuJW1vhJ?=
+ =?us-ascii?Q?Hld3uB0xh7quWLDd/nhhzLZKW85fE01eb/bNhQKX5d1Z+/68xa7PUMBeeGro?=
+ =?us-ascii?Q?BbSpvu4z+8+liXcxjdg4JuNBXYYEAgvqO+b/LxFgrWZLN0MJhrIRVttmLir6?=
+ =?us-ascii?Q?0RstBYg0xMpNkB7ve3STPMrPAgOWSEU2Vl08As1ytfnhHNIoFHVjGt5M0jz/?=
+ =?us-ascii?Q?tDVb8JrbtJui9erksxmT5joTnXut9gh5G/R6WSoqPowcO+fOTk8qtbcnpY20?=
+ =?us-ascii?Q?9/nhMVcYjLXeyqgoGyVsm9nJd2Um7xtO/WPXG/4n3RayUFcGMoDl4E0H376m?=
+ =?us-ascii?Q?AQihOe6yW4Nxs2y2fpvEUjkw+vgRXkCXSJtSrWs/aYIE17pIsa7yrn3UIBLE?=
+ =?us-ascii?Q?RzakMF4qzzUDTOnveIxW3J8lWyGSc7v7bz6+XtwEq2NXZ7d0Qa32WhBkV/ML?=
+ =?us-ascii?Q?oxiKszW/P6OOshUi6VAFuRmcEudnHjFM7eGy2tHX3st7H/9qFrSQVfoStkL3?=
+ =?us-ascii?Q?AFASoomx7rTlJtRWHSSibTgFOJHesHKRv1ulgAH1z0SDzp3ITjf2E1ytpgoX?=
+ =?us-ascii?Q?9Po5GduAxpi1CJ5T7yYWOySfTyiSVxq2rZCV5NqgLBl4VbMQm2vDDs0BjPPy?=
+ =?us-ascii?Q?K8XwA0IaYhyRO4aTDcHqHaXlLqmvgbJ6ybVfOK7X4gbDzkjlACKd4PCOKmBq?=
+ =?us-ascii?Q?b694eruYZVwCZ0TGbF63XjhTWOKnOv8Fezl7D01XCL8MFNIqFmfcuwwoQIbV?=
+ =?us-ascii?Q?aZHLqwVszyeGJuKkkyuGAgdt7m/pxt/jEn5SNLmKyMUmJ7fmKAwuE/slnTwZ?=
+ =?us-ascii?Q?7yiPc8A6Fj0AAh+nw3fIC0XROCOsTDc0dmi1L9Rxgcp1poNCnwMsCH/kSDSH?=
+ =?us-ascii?Q?N0W28LY/QV54XWKUSvXQQ/Pu0dnExOv78MiRvsyIVkwFDa35q36TVuPqPa9h?=
+ =?us-ascii?Q?FAJDqoqL+Tf4ovk/38wY9lf8hlZ7mdaM0JkvazLf/0cyqah8oKMT4NWp6HyH?=
+ =?us-ascii?Q?Qw2neaNJ0HMOY+R24ZYooMjJYm//lGeOVVsv3ZBC91+aDCh2UbLkpC9BHZYa?=
+ =?us-ascii?Q?FtwsAKe9aGltPxX0xk11b4VgY+yhJATbzslPaD1Hw37IzBxR1VLc2JV5n7an?=
+ =?us-ascii?Q?6NFAKjsbSWeyLB8qQzCz7viO0B45kxGwQj8hLqg703uJ46jUSX3dFkh60MFH?=
+ =?us-ascii?Q?+FbW4Ku2szJALDnG4UsUIZZ5AsJqwiKugKjrxrzYvJmjz5+hPPFfHN4CJCVL?=
+ =?us-ascii?Q?/THY8ZcyC+Iow/MgyhFHaWeYU07Wlss2yKSlGf2br4EAy2p+nOzlrpHtrzH/?=
+ =?us-ascii?Q?2BIY2B/e4PjcTLa2fsdhiX8epMRroZqDtNw9NHw0gqhqv7PsZe1m4p+cmL0b?=
+ =?us-ascii?Q?F6PMRXvZKZAaB3tbXmqLLtAsRWvQ0U8+EmMb8eoBfKH2STE20ZSCDfs5+cYO?=
+ =?us-ascii?Q?ZM5JOreDWpxzv1S/35QwDOgIFbwpSFlQ6GVfOmyf4lSUMfH7ZilDrMzZLU6e?=
+ =?us-ascii?Q?tFpES/hvCiTm/IASwZWYjDk=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	n2+MLyi8q/7YpbaaJ1e3AEAhC0YZi7liIP0KBPF140f15F2aw9pBfkUsH7lGaWymvKF75oMrT24e4XVYfVaPXdVoe5LhBGfP0MojRfF3Wpwl2cyVNgZ8GZ5NwKwDrNccruSA0iAESKAvfLcQ5SKukStrCD7Au6uhuXa9hr/VPUADmEkhJ2p1aqs9fQZiz5VYA1K+xq0JPnQ84VFB0ceqUGHqXvEAMBqJ3tiV3gf3g9oRMaFPUfVc7acj/43DIUbDK0cc+97/zkoIFVF2vbesBPV+A4nhUyErA1tRiMAMt5yEWt4SSKE5mNdLNSA9YkH2/p4fdAbBGPK0FuJeJTkeYFxh0x9Y9Y4nydS/D+JqnJp+p+ZzPWjL4ohjS6rTngfpIjtvA/c4B1QIj9Q9r7rVm3OTwfSOGlzwdQG7nXZtzv20kpql6cm5paP0VaV5go9Bm2S+uT2dAWvMhSNa9w28RaoF9Jm0/BWI7BWI8MX/38SsmEbRCn4IpnWlbga6GUiQ7RYwyANQ++h3o2WQMXhLlnMTZBd9ZAcKHwFniv85Ebt07p/jeFlCBYBzLrrGXgBfSDnqWDSMoCTpJ7rKchdYGrLYkSQZaDWP4rpmQ0TFg/o=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c14497d-9387-4bab-2e24-08dc41e6fdd2
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4150.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 16:19:13.9156
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NGerSaY2/YGRHSlQAyyAFESyxGcoO0bwGRNuTILy0383Qkl0DP2075bSW+8Pt9QyWBJCrHydVoQg+hr99+6rug/VSH2e94Ck6GbOnYpUQ0Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5119
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_10,2024-03-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403110124
+X-Proofpoint-ORIG-GUID: R2b2nbVzclaVKTsPfJ1mirEdEp7IBwFF
+X-Proofpoint-GUID: R2b2nbVzclaVKTsPfJ1mirEdEp7IBwFF
 
-On 08.03.24 08:49, Lance Yang wrote:
-> The patch reduces the process visible downtime during hugepage
-> collapse. This is achieved by pre-zeroing the hugepage before
-> acquiring mmap_lock(write mode) if nr_pte_none >= 256, without
-> affecting the efficiency of khugepaged.
-> 
-> On an Intel Core i5 CPU, the process visible downtime during
-> hugepage collapse is as follows:
-> 
-> | nr_ptes_none  | w/o __GFP_ZERO | w/ __GFP_ZERO  |  Change |
-> --------------------------------------------------—----------
-> |      511      |     233us      |      95us      |  -59.21%|
-> |      384      |     376us      |     219us      |  -41.20%|
-> |      256      |     421us      |     323us      |  -23.28%|
-> |      128      |     523us      |     507us      |   -3.06%|
-> 
-> Of course, alloc_charge_hpage() will take longer to run with
-> the __GFP_ZERO flag.
-> 
-> |       Func           | w/o __GFP_ZERO | w/ __GFP_ZERO |
-> |----------------------|----------------|---------------|
-> | alloc_charge_hpage   |      198us     |      295us    |
-> 
-> But it's not a big deal because it doesn't impact the total
-> time spent by khugepaged in collapsing a hugepage. In fact,
-> it would decrease.
+Add the ability for the clavis boot param to persist across kexec.  This is
+done by creating a RT variable before ExitBootServices is called. The new
+variable is called Clavis with a new GUID
+193ccef6-348b-4f1f-a81b-0ea4b899dbf2.  This variable does not have NVRAM
+set, signifying it was created during the Boot Services phase.  This
+variable will persist across a kexec, however it will not persist across
+a power on reset.  This same type of functionality is currently used
+within EFI shim to mirror MOK variables into the kernel.  It is being used
+here so the clavis boot param can not be changed via kexec.  If a different
+clavis boot param is used, the one stored in the RT variable will be used
+instead. Enforcement of which boot param to use will be done in a follow
+on patch.
 
-It does look sane to me and not overly complicated.
+Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+---
+ drivers/firmware/efi/Kconfig                  | 12 +++++++
+ drivers/firmware/efi/libstub/Makefile         |  1 +
+ drivers/firmware/efi/libstub/clavis.c         | 33 +++++++++++++++++++
+ .../firmware/efi/libstub/efi-stub-helper.c    |  2 ++
+ drivers/firmware/efi/libstub/efi-stub.c       |  2 ++
+ drivers/firmware/efi/libstub/efistub.h        |  8 +++++
+ drivers/firmware/efi/libstub/x86-stub.c       |  2 ++
+ include/linux/efi.h                           |  1 +
+ 8 files changed, 61 insertions(+)
+ create mode 100644 drivers/firmware/efi/libstub/clavis.c
 
-But, it's an optimization really only when we have quite a bunch of 
-pte_none(), possibly repeatedly so that it really makes a difference.
-
-Usually, when we repeatedly collapse that many pte_none() we're just 
-wasting a lot of memory and should re-evaluate life choices :)
-
-So my question is: do we really care about it that much that we care to 
-optimize?
-
-But again, LGTM.
-
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 72f2537d90ca..8dcb5326d05d 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -186,6 +186,18 @@ config RESET_ATTACK_MITIGATION
+ 	  have been evicted, since otherwise it will trigger even on clean
+ 	  reboots.
+ 
++config EARLY_CLAVIS
++	bool "Early clavis"
++	depends on EFI_STUB
++	help
++	  Allow the clavis boot param to persist across kexec. This will create a
++	  variable called Clavis with a 193ccef6-348b-4f1f-a81b-0ea4b899dbf2 GUID.
++	  This variable does not have NVRAM set, signifying it was created during
++	  the Boot Services phase.  This variable will persist across a kexec,
++	  however it will not persist across a power on reset. During kexec, if
++	  a different clavis boot param is used, the one stored in the RT variable
++	  will be used instead.
++
+ config EFI_RCI2_TABLE
+ 	bool "EFI Runtime Configuration Interface Table Version 2 Support"
+ 	depends on X86 || COMPILE_TEST
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 06964a3c130f..c4aef94d877a 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -85,6 +85,7 @@ $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
+ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o string.o intrinsics.o systable.o \
+ 				   screen_info.o efi-stub-entry.o
+ 
++lib-$(CONFIG_EARLY_CLAVIS)	+= clavis.o
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= kaslr.o arm64.o arm64-stub.o smbios.o
+ lib-$(CONFIG_X86)		+= x86-stub.o
+diff --git a/drivers/firmware/efi/libstub/clavis.c b/drivers/firmware/efi/libstub/clavis.c
+new file mode 100644
+index 000000000000..3a715e87a13a
+--- /dev/null
++++ b/drivers/firmware/efi/libstub/clavis.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/efi.h>
++#include <asm/efi.h>
++#include "efistub.h"
++
++#define MAX_PARAM_LENGTH 64
++static const efi_char16_t clavis_param_name[] = L"Clavis";
++static const efi_guid_t clavis_guid = LINUX_EFI_CLAVIS_GUID;
++static unsigned char param_data[MAX_PARAM_LENGTH];
++static size_t param_len;
++
++void efi_parse_clavis(char *option)
++{
++	if (!option)
++		return;
++
++	param_len = strnlen(option, MAX_PARAM_LENGTH);
++	memcpy(param_data, option, param_len);
++}
++
++void efi_setup_clavis(void)
++{
++	efi_status_t error;
++
++	if (param_len) {
++		error = set_efi_var(clavis_param_name, &clavis_guid,
++				    EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
++				    param_len, &param_data);
++	}
++
++	if (error)
++		efi_err("Failed to set Clavis\n");
++}
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index bfa30625f5d0..0d9c6ac0a652 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -91,6 +91,8 @@ efi_status_t efi_parse_options(char const *cmdline)
+ 		} else if (!strcmp(param, "video") &&
+ 			   val && strstarts(val, "efifb:")) {
+ 			efi_parse_option_graphics(val + strlen("efifb:"));
++		} else if (!strcmp(param, "clavis") && val) {
++			efi_parse_clavis(val);
+ 		}
+ 	}
+ 	efi_bs_call(free_pool, buf);
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index f9c1e8a2bd1d..16e50a124ce1 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -183,6 +183,8 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+ 
+ 	install_memreserve_table();
+ 
++	efi_setup_clavis();
++
+ 	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+ 
+ 	free_screen_info(si);
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 212687c30d79..81a1f013f483 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -1060,6 +1060,14 @@ static inline void
+ efi_enable_reset_attack_mitigation(void) { }
+ #endif
+ 
++#ifdef CONFIG_EARLY_CLAVIS
++void efi_parse_clavis(char *option);
++void efi_setup_clavis(void);
++#else
++static inline void efi_parse_clavis(char *option) { }
++static inline void efi_setup_clavis(void) { }
++#endif
++
+ void efi_retrieve_tpm2_eventlog(void);
+ 
+ struct screen_info *alloc_screen_info(void);
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 0d510c9a06a4..08bd6224d17a 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -928,6 +928,8 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+ 
+ 	setup_unaccepted_memory();
+ 
++	efi_setup_clavis();
++
+ 	status = exit_boot(boot_params, handle);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_err("exit_boot() failed!\n");
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index c74f47711f0b..d0fe291d433e 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -420,6 +420,7 @@ void efi_native_runtime_setup(void);
+ #define LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID	EFI_GUID(0xd5d1de3c, 0x105c, 0x44f9,  0x9e, 0xa9, 0xbc, 0xef, 0x98, 0x12, 0x00, 0x31)
+ 
+ #define RISCV_EFI_BOOT_PROTOCOL_GUID		EFI_GUID(0xccd15fec, 0x6f73, 0x4eec,  0x83, 0x95, 0x3e, 0x69, 0xe4, 0xb9, 0x40, 0xbf)
++#define LINUX_EFI_CLAVIS_GUID			EFI_GUID(0x193ccef6, 0x348b, 0x4f1f,  0xa8, 0x1b, 0x0e, 0xa4, 0xb8, 0x99, 0xdb, 0xf2)
+ 
+ /*
+  * This GUID may be installed onto the kernel image's handle as a NULL protocol
 -- 
-Cheers,
-
-David / dhildenb
+2.39.3
 
