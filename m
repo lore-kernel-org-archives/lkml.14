@@ -1,118 +1,160 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB1512E48
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 08:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A66D11725;
+	Mon, 11 Mar 2024 08:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710145955; cv=none; b=u25X6yGDufXvE6zUYIK2v3MeHciprBIuCt5C8+MLP5AblO8DtVpGFaFKdo+vfXxaEB2ig1Mr1/OlzjCVNNJlPWJyZW7NI53OsiQtDDcYSa02PihA0xtknyUuDDYlDsbCDZenoiJzpY7Vx+GNIbNwS03noW/C9gH21Outz8SVlyM=
+	t=1710146405; cv=none; b=I3iz4/3wLAjHYhTB4LqSrfHutxawojpIeX4gPiPN5EF45YMBf/rTF5KxRdpvMY0TXkfxvcYJbmd2Ea8mL5pFNRolcRJY+Z1FV+zuNjevJMkGIsaj0xo/Y22JIGUMP2HpEgaoygcgCZ55hElefmQRnWlnZh/EOXR36R2aLteJmhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710145955; c=relaxed/simple;
-	bh=x5ec069Py/OgCXIu9yohHAJ93X7AijwmWNVCPg8q9bU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QvQzak4+WlZOTg6kb80to4I6j1DnlIdbm5rxDsxC58XNovjSSd++Z1I4UUfktcTJJWFAXl/wgb4JT+N59Oaf4o7g8KZjT8U7BVDmXyGZYRHArIqfuS4Mq+ZMADQ65l8odqQeGv2Hdng0lqjZH/ZC8Bd65x5Kt5/mnpAHds6IKrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fN5OYbT1; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710146405; c=relaxed/simple;
+	bh=u/HzVfHPDgGvIAyVqL6vd1wQwhGAYlAumZCp5eqbyZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEaqKnBJ8aoJYvDc7zrrtHTs1sHVnELl4Ze0MPI3Ik0HkhGPi80XdsGeyIOSKVBYVFAySZMAFTBMQ4ilFO0DUV4UuUHpazGUqH5K1CKGiH1gDSg05mD/vAKEGwHNoTljqkV6rjUmod3v2JicPlSzAy/jNGCVCspQU94mE9VUVf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPs1yrMD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fN5OYbT1"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso15928781fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 01:32:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710145951; x=1710750751; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S9r+vNYj9kj35H0PtwD9InlJXv44xx/+vmqGYDjLPXw=;
-        b=fN5OYbT19nj8YvWmtMtEkGvub/qGgxBlrnn0RHbULDYYnLHgDX53s6Uo3kS2kSNdI6
-         bsU0XZwpN3OpXpX8uv3d72TjVZ4fh/5+SO6clj4Ll4A3FKulr55jFhfaxaogm7VdkPa2
-         NNsTYkl/69XkgSv9MmmX3mnq9LCPNd5UvoZebcpWbZVCkbK4gFoEwXCbPer0fLFliuk0
-         TVMMlbdq3Ne1mc9lAZEjz+yqevhGU9QfXfL8xhVwDszU4Nv0X2BV6Get0JeLKdmh1R/Y
-         6I6HbJwlcXJRljYAh6tV7imEp7KWqw0YfzwXkMWyH5/8CEkXIDTr5AKPca7TUzfoT615
-         HaEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710145951; x=1710750751;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S9r+vNYj9kj35H0PtwD9InlJXv44xx/+vmqGYDjLPXw=;
-        b=JcY0y7gmmrJClX5HX2Qei94s9KvtYpquJY8TeqMP2QO70oMYbB9i+Omh8QX70uTLYH
-         TzDVTW7/zVy7vf1hUMOlrPaHlipJQ7Y8L90kNdtaNCDRLDb88vnFozgXlMoi1kJhJy/s
-         JlwypT8opCQ5MTdgi9AVSGdEXfnjq/P11WhW6GC6Rpk9rni/sOjVZ9QaOQpJpul+HBUZ
-         3bp1Fw8Fg8qmTeTWzbwdlh87Tyn96XpDL7M9b/EPmRVxij2RA2+Iz+G5h3dIbZ9w5aC4
-         9mssDoghv1GT/9GXxg6u2AEAn1cgRtI1JyblJEy8Pb4pdFKtPluXChrQdcgEvOt9xrsQ
-         vHVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVI7xBx68BW5oetREbj5RvYjx1FOpsXuHThV5fGXKTu51y4ucavdhzkthLcvZniAq5y2jD703x/4oPss0Kcc31mK5DJ30lKW4dlNZmr
-X-Gm-Message-State: AOJu0YzSv8Nj9ipMQnsBFV4jYefZIozPdCslKQqwul6Ud7u5SDvTkP3y
-	Zd8jxXROrqOZOa22q4vnXnkC705TotVV9BYji7NNtwrYkmlmEuctFRC7dJSZ4Xcw2zJn4uoPEqG
-	+vc4h9mTHLua51ecfIzG4eycmYLZnh0qcVlboeQ==
-X-Google-Smtp-Source: AGHT+IEAip1T5JTfQrWkZO10dn+9pmDK+miaRh+4HJ+wfeFupKLfGGITctyueGGBLotSjKXhuCJcoMvjmgN4GDfzcGc=
-X-Received: by 2002:a05:651c:14f:b0:2d2:abf0:1c0d with SMTP id
- c15-20020a05651c014f00b002d2abf01c0dmr3451548ljd.47.1710145950789; Mon, 11
- Mar 2024 01:32:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPs1yrMD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79ECC433F1;
+	Mon, 11 Mar 2024 08:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710146405;
+	bh=u/HzVfHPDgGvIAyVqL6vd1wQwhGAYlAumZCp5eqbyZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mPs1yrMDOT4qu17gVzoFqHfD4/PcM1EpPKdEPlw3EefZynzxlRt6TBYS3+2x0CI4R
+	 9ff17zB0FfByX522iSHZlUvLdYAJ5nllg8UXRfswuqzd5gjQyhTSG0oFQVVmTEntlB
+	 hvicqBKOTNktm1zDi4GeTX4dN/b6WbQVLwO9l0oI5wRPTtKh1bQ4Q32CZlXuUnI2ZI
+	 2utVOpkbR6jcDVWmcszNaCCXbMaftHFTu+jSW5LLcoqczwPxiLWpC/+5oXZF9nR+qj
+	 Xo05gL0o8n4cgAWxXIq/96y9SlCc2s3lRdOkoCXiMJ+Yl3+AHEYQl2OFLyaVVoo12l
+	 3hydjp0gbZyAQ==
+Date: Mon, 11 Mar 2024 09:40:02 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org, 
+	dave.pigott@collabora.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com, pawiecz@collabora.com, 
+	spbnick@gmail.com, tales.aparecida@gmail.com, workflows@vger.kernel.org, 
+	kernelci@lists.linux.dev, skhan@linuxfoundation.org, kunit-dev@googlegroups.com, 
+	nfraprado@collabora.com, davidgow@google.com, cocci@inria.fr, Julia.Lawall@inria.fr, 
+	laura.nao@collabora.com, ricardo.canuelo@collabora.com, kernel@collabora.com, 
+	torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 1/3] kci-gitlab: Introducing GitLab-CI Pipeline for
+ Kernel Testing
+Message-ID: <20240311-electric-cream-hippo-20eada@houat>
+References: <20240228225527.1052240-1-helen.koike@collabora.com>
+ <20240228225527.1052240-2-helen.koike@collabora.com>
+ <20240229-dancing-laughing-groundhog-d85161@houat>
+ <d417daa2a8e3951da44bf2d555e04d98c83a3c5c.camel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308204500.1112858-1-almasrymina@google.com>
-In-Reply-To: <20240308204500.1112858-1-almasrymina@google.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Mon, 11 Mar 2024 10:31:54 +0200
-Message-ID: <CAC_iWj+304K5jDYXpK6NAO_sRtSwt5QJ+dYn0c1PAhKSi-0aSQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v1] net: page_pool: factor out page_pool recycle check
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Yunsheng Lin <linyunsheng@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="w77ek3n4gomubfzs"
+Content-Disposition: inline
+In-Reply-To: <d417daa2a8e3951da44bf2d555e04d98c83a3c5c.camel@collabora.com>
 
-On Fri, 8 Mar 2024 at 22:45, Mina Almasry <almasrymina@google.com> wrote:
->
-> The check is duplicated in 2 places, factor it out into a common helper.
->
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->  net/core/page_pool.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index d706fe5548df..dd364d738c00 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -657,6 +657,11 @@ static bool page_pool_recycle_in_cache(struct page *page,
->         return true;
->  }
->
-> +static bool __page_pool_page_can_be_recycled(const struct page *page)
-> +{
-> +       return page_ref_count(page) == 1 && !page_is_pfmemalloc(page);
-> +}
-> +
->  /* If the page refcnt == 1, this will try to recycle the page.
->   * if PP_FLAG_DMA_SYNC_DEV is set, we'll try to sync the DMA area for
->   * the configured size min(dma_sync_size, pool->max_len).
-> @@ -678,7 +683,7 @@ __page_pool_put_page(struct page_pool *pool, struct page *page,
->          * page is NOT reusable when allocated when system is under
->          * some pressure. (page_is_pfmemalloc)
->          */
-> -       if (likely(page_ref_count(page) == 1 && !page_is_pfmemalloc(page))) {
-> +       if (likely(__page_pool_page_can_be_recycled(page))) {
->                 /* Read barrier done in page_ref_count / READ_ONCE */
->
->                 if (pool->p.flags & PP_FLAG_DMA_SYNC_DEV)
-> @@ -793,7 +798,7 @@ static struct page *page_pool_drain_frag(struct page_pool *pool,
->         if (likely(page_pool_unref_page(page, drain_count)))
->                 return NULL;
->
-> -       if (page_ref_count(page) == 1 && !page_is_pfmemalloc(page)) {
-> +       if (__page_pool_page_can_be_recycled(page)) {
->                 if (pool->p.flags & PP_FLAG_DMA_SYNC_DEV)
->                         page_pool_dma_sync_for_device(pool, page, -1);
->
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+
+--w77ek3n4gomubfzs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Nicolas,
+
+On Thu, Mar 07, 2024 at 01:05:12PM -0500, Nicolas Dufresne wrote:
+> Le jeudi 29 f=E9vrier 2024 =E0 10:02 +0100, Maxime Ripard a =E9crit=A0:
+> > On Wed, Feb 28, 2024 at 07:55:25PM -0300, Helen Koike wrote:
+> > > This patch introduces a `.gitlab-ci` file along with a `ci/` folder,
+> > > defininga basic test pipeline triggered by code pushes to a GitLab-CI
+> > > instance. This initial version includes static checks (checkpatch and
+> > > smatch for now) and build tests across various architectures and
+> > > configurations. It leverages an integrated cache for efficient build
+> > > times and introduces a flexible 'scenarios' mechanism for
+> > > subsystem-specific extensions.
+> > >=20
+> > > [ci: add prerequisites to run check-patch on MRs]
+> > > Co-developed-by: Tales Aparecida <tales.aparecida@redhat.com>
+> > > Signed-off-by: Tales Aparecida <tales.aparecida@redhat.com>
+> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > >=20
+> > > ---
+> > >=20
+> > > Hey all,
+> > >=20
+> > > You can check the validation of this patchset on:
+> > >         https://gitlab.collabora.com/koike/linux/-/pipelines/87035
+> > >=20
+> > > I would appreciate your feedback on this work, what do you think?
+> > >=20
+> > > If you would rate from 0 to 5, where:
+> > >=20
+> > > [ ] 0. I don't think this is useful at all, and I doubt it will ever =
+be. It doesn't seem worthwhile.
+> > > [ ] 1. I don't find it useful in its current form.
+> > > [ ] 2. It might be useful to others, but not for me.
+> > > [ ] 3. It has potential, but it's not yet something I can incorporate=
+ into my workflow.
+> > > [ ] 4. This is useful, but it needs some adjustments before I can inc=
+lude it in my workflow.
+> > > [ ] 5. This is really useful! I'm eager to start using it right away.=
+ Why didn't you send this earlier? :)
+> > >=20
+> > > Which rating would you select?
+> >=20
+> > 4.5 :)
+> >=20
+> > One thing I'm wondering here is how we're going to cope with the
+> > different requirements each user / framework has.
+> >=20
+> > Like, Linus probably want to have a different set of CI before merging a
+> > PR than (say) linux-next does, or stable, or before doing an actual
+> > release.
+> >=20
+> > Similarly, DRM probably has a different set of requirements than
+> > drm-misc, drm-amd or nouveau.
+> >=20
+> > I don't see how the current architecture could accomodate for that. I
+> > know that Gitlab allows to store issues template in a separate repo,
+> > maybe we could ask them to provide a feature where the actions would be
+> > separate from the main repo? That way, any gitlab project could provide
+> > its own set of tests, without conflicting with each others (and we could
+> > still share them if we wanted to)
+> >=20
+> > I know some of use had good relationship with Gitlab, so maybe it would
+> > be worth asking?
+>=20
+> As agreed, the .gitlab-ci.yaml file at the list will go away. Its a defau=
+lt
+> location, but not a required location. This way, each sub-system can have=
+ their
+> own (or not have one). The different sub-system forks will have to be con=
+figured
+> to point to their respective CI main configuration.
+>=20
+> Of course nothing prevents having common set of configuration for jobs an=
+d jobs
+> template. As an example, we could have a job template common for checkpat=
+ch, and
+> allow each subsystem adding their own sauce on top. It can save the dupli=
+cate
+> effort of parsing the tool results and reporting it in a format gitlab
+> understand.
+
+That makes total sense to me and would be incredibly useful indeed.
+
+Maxime
+
+--w77ek3n4gomubfzs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZe7DYQAKCRDj7w1vZxhR
+xV1bAP9SznauRTHmk6BDIF8VURG655ttC42MmrZ8cF89TuL8fgEAr49BYmklqUpK
+gyHR4Xi8NBxGUOVUbAeJr+Ys4vmCPA8=
+=ZXTU
+-----END PGP SIGNATURE-----
+
+--w77ek3n4gomubfzs--
