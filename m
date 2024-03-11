@@ -1,91 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428DB3FB93;
-	Mon, 11 Mar 2024 13:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7033EA9B;
+	Mon, 11 Mar 2024 13:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710163696; cv=none; b=Py5Y7s49k3ltOhq1FwZ5+oiI2Oa41xBvT33XX9GeRwQK6NTtX6F2OnvT0dqFqPLuyTUxF2DwKU1HC5JGcphUUWvejZUlCTrxuVFLkPeB+Pordehm3Dp+T/rrni3jgN2vl/04D9zLc8nsC9bvpkl2KdnP+Ua+xvy25MPSYgFWz/M=
+	t=1710163712; cv=none; b=sgrDMKnFVzFQDW/VeOxTGPLGfNpTMJZbrmHmTYdymOQXYjLWrCbdoLceNQCZN8yCSGkVIDHqOsmYHyUmbZRrLNGPE8Hed0eKlUzCaQ9Ei/BSUXGUCPSdAuvWHytaaSWvfQNIBGEiS/TpwuO1RPf9dyAQRpSWWAce7PNhtS8Y270=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710163696; c=relaxed/simple;
-	bh=sp8wPVWLcMFirjt1xb+bkWZ4tLirl6iWsWdIf0hhyrg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KxOz32VSntoRUoo+SY6vFICPrORZtI9NQBjoVYWpqPFBbsE9dMoISC8s2yw5XUxKvbfpxwFKBoP9xqr9Y0lnh8VG8fiVx0vzrXHWOGOQ4DqF+qWBgSHAjUhn6ZKqbUJbbnocngoZe5HOZhJF5Fd8/oZ9cBiZ8kPgIkl+i2yyGlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EyRdoZjS; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710163712; c=relaxed/simple;
+	bh=AFWzF1Lhea4tuERf2x297B9VZ9r3NjTyKmU+LYLRnBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLTSajHm+vEuBzNhBIZk1M1El4cCwCrD38SaGv3ZtXsAtCSxVI+oLZwRoq8g5T6W4K227AAenWuY4rnuVtrddc8gtwX/FJMGGJA+J6bYTAvxwHkJ+lshRxUElHX+UHhX5RiOWMB7hbuICPDs4dE/wd62o9YDbdLVBewUWKZ7WHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPxDyqod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EyRdoZjS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710163694; x=1741699694;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=sp8wPVWLcMFirjt1xb+bkWZ4tLirl6iWsWdIf0hhyrg=;
-  b=EyRdoZjSzBWbANkbyCEuYUKhvhBgQrJi8xh2JrruXi56DOo0UFMiUyD6
-   M9lPHKCSfppgLpefIET43TW3CIkAtqyMvFUQjchGTcIvRmMpqnMuech9Z
-   6Cao+es1nQNmReHEYChPLveLMWG0Zf9Q+vb4q1phmzmXY8TbPCFnFjYlU
-   VE3T6ic/AiRlxh1S8ZyRf3hS69ERMSv58qas85l6h8xZ6FwRMsi4+DjFE
-   Hk48CGaOhGeITEXvBsVttVBybzFamH5SD5n1y3zU6QkgmRIAEkAr/Naso
-   J5dW7L0xiwFVshVM9L2z5Q5xaiPwvhwMVIpkWp6xHkNJkKs7TAW7p7vTM
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15963217"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15963217"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 06:28:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="11259697"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 06:28:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 Mar 2024 15:28:00 +0200 (EET)
-To: Gergo Koteles <soyer@irl.hu>
-cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] map Fn + R key on newer Lenovo Yogas and
- Legions
-In-Reply-To: <cover.1710065750.git.soyer@irl.hu>
-Message-ID: <f77afd46-a238-630e-e77f-2c2506097554@linux.intel.com>
-References: <cover.1710065750.git.soyer@irl.hu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPxDyqod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8E8C433F1;
+	Mon, 11 Mar 2024 13:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710163711;
+	bh=AFWzF1Lhea4tuERf2x297B9VZ9r3NjTyKmU+LYLRnBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPxDyqodU2lXWD13IHKafN7AXPh4BTw/sVzUEAAjIkecY8zxRB4ScWj5IVQhfAvHc
+	 mKXiFm3PIDRHeb/Gv+X/5pe3Blmc6u3aV4engBMB4UoJdCtw28cTam+hruvh0VUvF8
+	 prrUi71HmFtkayEoj/5VEEW27EfVoJP+s7B0JI/AJYXnM9310774lLfoi5PVJ8Nzl5
+	 Y4564TATSxUX90KxbGew9dKxokZDiX/OJ0IDC8qQAECKoXuaAYNpVocM5ylEGt/yKi
+	 dxgxjJanXwkp4kndACOOedB8F5PWFp5U1DAuMgyGtCG0kAIDXNRAkOdTn7fD8ALqzq
+	 Ji6uHaYNh5Lhg==
+Date: Mon, 11 Mar 2024 13:28:24 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: ping.bai@nxp.com, lgirdwood@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+	festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	Joy Zou <joy.zou@nxp.com>
+Subject: Re: [PATCH v2 2/3] regulator: pca9450: add pca9451a support
+Message-ID: <5b257caf-5a14-4c82-9999-061a0093a831@sirena.org.uk>
+References: <20240311084758.377889-1-joy.zou@nxp.com>
+ <20240311084758.377889-3-joy.zou@nxp.com>
+ <6027895.lOV4Wx5bFT@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5xEXLheoiK7FmBC0"
+Content-Disposition: inline
+In-Reply-To: <6027895.lOV4Wx5bFT@steina-w>
+X-Cookie: Sorry.  Nice try.
 
-On Sun, 10 Mar 2024, Gergo Koteles wrote:
 
-> Hi All,
-> 
-> This patch series adds a new KEY_REFRESH_RATE_TOGGLE input event code 
-> and maps the Fn + R key to it in the ideapad-laptop driver.
-> 
-> It affects two WMI keycodes. I couldn't try the 0x0a.
-> 
-> Regards,
-> Gergo
-> 
-> Changes in v2:
->  - use KEY_REFRESH_RATE_TOGGLE instead of KEY_FN_R
-> 
-> [1]: https://lore.kernel.org/all/cover.1708399689.git.soyer@irl.hu/
-> 
-> Gergo Koteles (2):
->   Input: allocate keycode for Display refresh rate toggle
->   platform/x86: ideapad-laptop: map Fn + R key to
->     KEY_REFRESH_RATE_TOGGLE
+--5xEXLheoiK7FmBC0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+On Mon, Mar 11, 2024 at 10:09:12AM +0100, Alexander Stein wrote:
+> > +			.of_match = of_match_ptr("BUCK1"),
+> > +			.regulators_node = of_match_ptr("regulators"),
+> > +			.id = PCA9450_BUCK1,
+> > +			.ops = &pca9450_dvs_buck_regulator_ops,
+> > +			.type = REGULATOR_VOLTAGE,
 
-As mentioned in the other thread, please redo this on top of 
-pdx86/for-next.
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
--- 
- i.
+--5xEXLheoiK7FmBC0
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXvBvgACgkQJNaLcl1U
+h9A8/Af4ghJj9p33LNIkf0uGCYW+6YewUairPq/8Q81WYvjKcTtA8dUW1sES/9EA
+GNFWhs2jmCm+HUJZ1xH30dD7jZ1RB1OmpAWkPD4FtCiircG7npzn3MoAH2lF46Mo
+g5zcCDGlTi2qMHKIhqvmj8K+g9u03IFm6cncyTypMkYbmKrbaV7zwfKrSQ6wyt4r
+5vbljMy49ZQ5fue4jKn+4jk6cZvjSsVrskUxdL29EqIyVJ/v4mH4sW9+wKQ6VGnY
+LfHeLgYa65MzSJJx+h43Zr6yhYLX+Ez2C2FnaleA+43CskTwVDK8/mTLjHavwq8Y
+7yUuWWU1SoC6iSwb9GJ/Y0NQpSde
+=lHaH
+-----END PGP SIGNATURE-----
+
+--5xEXLheoiK7FmBC0--
