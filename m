@@ -1,377 +1,235 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBAF4174A;
-	Mon, 11 Mar 2024 14:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1076F1426A
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 14:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710168195; cv=none; b=Dlsj766YBMPivh+XWKPpNBU8qqkYLWZDLczIjhhcKEO5HvzmuIJztXV/d+h89g1wyu10Bw4QoTUDwpTT4sRrKbehEECE2mv7oVZdMJqeKqZ0aLJr2/4S2M28o14KjkVRm24BRf2tE6tllYRXigKkX3Kja0ffi9hD02np/yY/2qE=
+	t=1710168244; cv=none; b=D73yPMCAaCnf1/a/il4DZDFtyiHXxO6hyOfx26xnna5/CI+PBmWyFUivBeqMrEC0TTBlbutM9Dz1f/WY8smPOcK3AFvvKKPPeyZZe52mUIeuv8hBIRri/WBhPX8T5oKaR/a5qRdYZDEpXQBXB2LV2v2ujuha9Nn062aWJWTNEkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710168195; c=relaxed/simple;
-	bh=2pVTHbPFDAj+SIeIHGyAcE5S11BpmIs+2eQRS+qWt1U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oLwY0t6n2kmxbEta9DNG0A+pep2f8JlfFeHsnHjZBER+NF7QFwwAJ7zrvoq3sp6urqSRhZR9SwBgbVeGe27QczjrCGqFEVXuJOfv+A0r4uy84eZYzVr1uA1fbr6ucT7BXJbmWF+neURi7mWLJcutsBYETIYEBsCPyPptsxU+G80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TtdqN5nWhz9xrN0;
-	Mon, 11 Mar 2024 22:06:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 7A0B614064D;
-	Mon, 11 Mar 2024 22:26:13 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwBHPhd3FO9lMookBA--.19094S2;
-	Mon, 11 Mar 2024 15:26:12 +0100 (CET)
-Message-ID: <21597a6e143e4110d0103ef1421ac87fa98b7f32.camel@huaweicloud.com>
-Subject: Re: [RFC PATCH v14 01/19] security: add ipe lsm
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com,
-  jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org, 
- axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com, 
- paul@paul-moore.com
-Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, 
- linux-security-module@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- audit@vger.kernel.org,  linux-kernel@vger.kernel.org, Deven Bowers
- <deven.desai@linux.microsoft.com>
-Date: Mon, 11 Mar 2024 15:25:55 +0100
-In-Reply-To: <1709768084-22539-2-git-send-email-wufan@linux.microsoft.com>
-References: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
-	 <1709768084-22539-2-git-send-email-wufan@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1710168244; c=relaxed/simple;
+	bh=YFHELlx50p3iAmGFim0fvJoZs45ytT+Tg3y8mAusNwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tFLTVEA6w0RhatKkltAN3hkFjAn7zoDHpXDy9THOMoaBWpQxMvJCqqgZcCeYv3QFFArDIb4d3fsxp6PAMfyxWLoXPhwx3+eRCXYk9Y4kK5mFtPW3/TwSBOua2xBMFGW6e+DlmazGJ+6UczK4jwImopA67oP2jUK7PGWgBdx3N98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XHXDGY09; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHXDGY09"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710168242;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bCmY0lttRLSUbF4PLN5OL33CGHOcaBgqHKUv4QxTtWM=;
+	b=XHXDGY09FTUX3yHu9+1i/lG2PgcNE5029sAgMFrl90AbOMQpBgR45paYWGQRB0oKO8SUIB
+	BMRsQ2FQiLP7cupJfnXyUJgQBcM5S5g5movTnxq8HEaZT2yOBaLqZNaQ9sYkPhMSSk4h82
+	zvcRzvIeasxW6oCDp+7Zn1ux3pQa6QE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-lriFz63QMyaTgXEFvwZsUw-1; Mon, 11 Mar 2024 10:43:50 -0400
+X-MC-Unique: lriFz63QMyaTgXEFvwZsUw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso240347966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 07:43:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710168229; x=1710773029;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bCmY0lttRLSUbF4PLN5OL33CGHOcaBgqHKUv4QxTtWM=;
+        b=wD/2LQ44mc70Xj1yy/JPG2Fy8UVnvRqgZ41GHUBS4SLnrNOrnSERTiaPRuzdnIg3i0
+         CDSNptHXSG6zNyWG3DJA8R5ri+WEqhxnv3r5iEFwm0kS+D38YlpKZAKQXQWi0+qNadnD
+         4l/N+YgDb4kWFFuA/G1Kg0ZQ4Pux3Rm8HGiZyrzjM/qb7fvlf1ONZiW6+gkyJtkYxWSe
+         D2srJ0cQQbzSg369icXz0EUT01UppghHU1bNb5knE9CvPJg858ZLB1HX0a4rYMKyJBp9
+         c1JOwdNNhuRxrJGFd449ksrydAheJRPz7BE5jCi6DMDIGAFzMxO3yCXMvEZ8xMZEW873
+         5YGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmUHIpU96gWTNjhOK+BHB24cHrulheY+mIJ4xRT0Pqv48iKHzhh2CgeifQGCxtxlk4yFmEzRgMfZyQdBknDb/jUj81hXammbTUsKIo
+X-Gm-Message-State: AOJu0Yzo8hNuCY+iDHN7nK4Ai8bDjSVRtTqSJb66QeUdNlFFSXLtPav4
+	oRPF0OqMe0643hmzWpfL0h2CEXqA0bceAmVhYKHZ8cMT6ZEXRxRSXQAKIuAE1VuU8RNCG6Smtm/
+	CdpgUk5LZzNY1Hk3CN3+M1xYii/ha27Rfv0erKWBE2RIpmZRKz/h45oPKXKKx3A==
+X-Received: by 2002:a17:907:1603:b0:a45:20e4:e5ed with SMTP id cw3-20020a170907160300b00a4520e4e5edmr3655253ejd.77.1710168229243;
+        Mon, 11 Mar 2024 07:43:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFSt5xWxn5fPjZ9zpX4YYK4dzOMQubhQCKhz+bDzcyOgm8sO+u/90UunQ8oAI4tVtpH/65ASA==
+X-Received: by 2002:a17:907:1603:b0:a45:20e4:e5ed with SMTP id cw3-20020a170907160300b00a4520e4e5edmr3655236ejd.77.1710168228884;
+        Mon, 11 Mar 2024 07:43:48 -0700 (PDT)
+Received: from [192.168.10.81] ([151.49.77.21])
+        by smtp.googlemail.com with ESMTPSA id t25-20020a1709063e5900b00a45c8c9a876sm2911741eji.88.2024.03.11.07.43.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Mar 2024 07:43:47 -0700 (PDT)
+Message-ID: <6c7ca4d6-6f92-4107-a716-073ce0f7a02d@redhat.com>
+Date: Mon, 11 Mar 2024 15:43:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwBHPhd3FO9lMookBA--.19094S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3WrW8Zw4DCw48GrW7Aw45GFg_yoWDJw48pF
-	4kKF4fGFsrXFy3Wrs3CF1xGF1Sg395Gry5CwsxWw1jyFn0vw10qr42kryUCF15XrsrArW8
-	K3ZF9w4a93Wqv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkmb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-	WxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgEksDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgATBF1jj5c3xAAAsA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] KVM: Xen and gfn_to_pfn_cache changes for 6.9
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>
+References: <20240308223702.1350851-1-seanjc@google.com>
+ <20240308223702.1350851-9-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240308223702.1350851-9-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2024-03-06 at 15:34 -0800, Fan Wu wrote:
-> From: Deven Bowers <deven.desai@linux.microsoft.com>
->=20
-> Integrity Policy Enforcement (IPE) is an LSM that provides an
-> complimentary approach to Mandatory Access Control than existing LSMs
-> today.
->=20
-> Existing LSMs have centered around the concept of access to a resource
-> should be controlled by the current user's credentials. IPE's approach,
-> is that access to a resource should be controlled by the system's trust
-> of a current resource.
->=20
-> The basis of this approach is defining a global policy to specify which
-> resource can be trusted.
->=20
-> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
-> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
-> ---
-> v2:
->   + Split evaluation loop, access control hooks,
->     and evaluation loop from policy parser and userspace
->     interface to pass mailing list character limit
->=20
-> v3:
->   + Move ipe_load_properties to patch 04.
->   + Remove useless 0-initializations
->   + Prefix extern variables with ipe_
->   + Remove kernel module parameters, as these are
->     exposed through sysctls.
->   + Add more prose to the IPE base config option
->     help text.
->   + Use GFP_KERNEL for audit_log_start.
->   + Remove unnecessary caching system.
->   + Remove comments from headers
->   + Use rcu_access_pointer for rcu-pointer null check
->   + Remove usage of reqprot; use prot only.
->   + Move policy load and activation audit event to 03/12
->=20
-> v4:
->   + Remove sysctls in favor of securityfs nodes
->   + Re-add kernel module parameters, as these are now
->     exposed through securityfs.
->   + Refactor property audit loop to a separate function.
->=20
-> v5:
->   + fix minor grammatical errors
->   + do not group rule by curly-brace in audit record,
->     reconstruct the exact rule.
->=20
-> v6:
->   + No changes
->=20
-> v7:
->   + Further split lsm creation into a separate commit from the
->     evaluation loop and audit system, for easier review.
->=20
->   + Introduce the concept of an ipe_context, a scoped way to
->     introduce execution policies, used initially for allowing for
->     kunit tests in isolation.
->=20
-> v8:
->   + Follow lsmname_hook_name convention for lsm hooks.
->   + Move LSM blob accessors to ipe.c and mark LSM blobs as static.
->=20
-> v9:
->   + Remove ipe_context for simplification
->=20
-> v10:
->   + Add github url
->=20
-> v11:
->   + Correct github url
->   + Move ipe before bpf
->=20
-> v12:
->   + Switch to use lsm_id instead of string for lsm name
->=20
-> v13:
->   + No changes
->=20
-> v14:
->   + No changes
-> ---
->  MAINTAINERS              |  7 +++++++
->  include/uapi/linux/lsm.h |  1 +
->  security/Kconfig         | 11 ++++++-----
->  security/Makefile        |  1 +
->  security/ipe/Kconfig     | 17 +++++++++++++++++
->  security/ipe/Makefile    |  9 +++++++++
->  security/ipe/ipe.c       | 41 ++++++++++++++++++++++++++++++++++++++++
->  security/ipe/ipe.h       | 16 ++++++++++++++++
->  security/security.c      |  3 ++-
->  9 files changed, 100 insertions(+), 6 deletions(-)
->  create mode 100644 security/ipe/Kconfig
->  create mode 100644 security/ipe/Makefile
->  create mode 100644 security/ipe/ipe.c
->  create mode 100644 security/ipe/ipe.h
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 13158047f2af..8517011f88ff 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10650,6 +10650,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel=
-/git/zohar/linux-integrity.git
->  F:	security/integrity/
->  F:	security/integrity/ima/
-> =20
-> +INTEGRITY POLICY ENFORCEMENT (IPE)
-> +M:	Fan Wu <wufan@linux.microsoft.com>
-> +L:	linux-security-module@vger.kernel.org
-> +S:	Supported
-> +T:	git https://github.com/microsoft/ipe.git
-> +F:	security/ipe/
-> +
->  INTEL 810/815 FRAMEBUFFER DRIVER
->  M:	Antonino Daplas <adaplas@gmail.com>
->  L:	linux-fbdev@vger.kernel.org
-> diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
-> index f8aef9ade549..43e2fb32745a 100644
-> --- a/include/uapi/linux/lsm.h
-> +++ b/include/uapi/linux/lsm.h
-> @@ -62,6 +62,7 @@ struct lsm_ctx {
->  #define LSM_ID_LOCKDOWN		108
->  #define LSM_ID_BPF		109
->  #define LSM_ID_LANDLOCK		110
-> +#define LSM_ID_IPE		111
-> =20
->  /*
->   * LSM_ATTR_XXX definitions identify different LSM attributes
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 52c9af08ad35..cc7adfbb6b96 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -194,6 +194,7 @@ source "security/yama/Kconfig"
->  source "security/safesetid/Kconfig"
->  source "security/lockdown/Kconfig"
->  source "security/landlock/Kconfig"
-> +source "security/ipe/Kconfig"
-> =20
->  source "security/integrity/Kconfig"
-> =20
-> @@ -233,11 +234,11 @@ endchoice
-> =20
->  config LSM
->  	string "Ordered list of enabled LSMs"
-> -	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,=
-apparmor,bpf" if DEFAULT_SECURITY_SMACK
-> -	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smac=
-k,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
-> -	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,bpf" if DEFAUL=
-T_SECURITY_TOMOYO
-> -	default "landlock,lockdown,yama,loadpin,safesetid,bpf" if DEFAULT_SECUR=
-ITY_DAC
-> -	default "landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,=
-apparmor,bpf"
-> +	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,=
-apparmor,ipe,bpf" if DEFAULT_SECURITY_SMACK
-> +	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smac=
-k,tomoyo,ipe,bpf" if DEFAULT_SECURITY_APPARMOR
-> +	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,ipe,bpf" if DE=
-FAULT_SECURITY_TOMOYO
-> +	default "landlock,lockdown,yama,loadpin,safesetid,ipe,bpf" if DEFAULT_S=
-ECURITY_DAC
-> +	default "landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,=
-apparmor,ipe,bpf"
->  	help
->  	  A comma-separated list of LSMs, in initialization order.
->  	  Any LSMs left off this list, except for those with order
-> diff --git a/security/Makefile b/security/Makefile
-> index 59f238490665..cc0982214b84 100644
-> --- a/security/Makefile
-> +++ b/security/Makefile
-> @@ -25,6 +25,7 @@ obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+=3D lockdown/
->  obj-$(CONFIG_CGROUPS)			+=3D device_cgroup.o
->  obj-$(CONFIG_BPF_LSM)			+=3D bpf/
->  obj-$(CONFIG_SECURITY_LANDLOCK)		+=3D landlock/
-> +obj-$(CONFIG_SECURITY_IPE)		+=3D ipe/
-> =20
->  # Object integrity file lists
->  obj-$(CONFIG_INTEGRITY)			+=3D integrity/
-> diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
-> new file mode 100644
-> index 000000000000..e4875fb04883
-> --- /dev/null
-> +++ b/security/ipe/Kconfig
-> @@ -0,0 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Integrity Policy Enforcement (IPE) configuration
-> +#
-> +
-> +menuconfig SECURITY_IPE
-> +	bool "Integrity Policy Enforcement (IPE)"
-> +	depends on SECURITY && SECURITYFS
-> +	select PKCS7_MESSAGE_PARSER
-> +	select SYSTEM_DATA_VERIFICATION
-> +	help
-> +	  This option enables the Integrity Policy Enforcement LSM
-> +	  allowing users to define a policy to enforce a trust-based access
-> +	  control. A key feature of IPE is a customizable policy to allow
-> +	  admins to reconfigure trust requirements on the fly.
-> +
-> +	  If unsure, answer N.
-> diff --git a/security/ipe/Makefile b/security/ipe/Makefile
-> new file mode 100644
-> index 000000000000..f7a80d0f18f8
-> --- /dev/null
-> +++ b/security/ipe/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Copyright (C) Microsoft Corporation. All rights reserved.
-> +#
-> +# Makefile for building the IPE module as part of the kernel tree.
-> +#
-> +
-> +obj-$(CONFIG_SECURITY_IPE) +=3D \
-> +	ipe.o \
-> diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
-> new file mode 100644
-> index 000000000000..b013aed15e73
-> --- /dev/null
-> +++ b/security/ipe/ipe.c
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) Microsoft Corporation. All rights reserved.
-> + */
-> +#include <uapi/linux/lsm.h>
-> +
-> +#include "ipe.h"
-> +
-> +static struct lsm_blob_sizes ipe_blobs __ro_after_init =3D {
-> +};
-> +
-> +static const struct lsm_id ipe_lsmid =3D {
-> +	.name =3D "ipe",
-> +	.id =3D LSM_ID_IPE,
-> +};
-> +
-> +static struct security_hook_list ipe_hooks[] __ro_after_init =3D {
-> +};
-> +
-> +/**
-> + * ipe_init - Entry point of IPE.
-> + *
-> + * This is called at LSM init, which happens occurs early during kernel
-> + * start up. During this phase, IPE registers its hooks and loads the
-> + * builtin boot policy.
-> + * Return:
-> + * * 0		- OK
-> + * * -ENOMEM	- Out of memory
-> + */
-> +static int __init ipe_init(void)
-> +{
-> +	security_add_hooks(ipe_hooks, ARRAY_SIZE(ipe_hooks), &ipe_lsmid);
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_LSM(ipe) =3D {
-> +	.name =3D "ipe",
-> +	.init =3D ipe_init,
-> +	.blobs =3D &ipe_blobs,
-> +};
-> diff --git a/security/ipe/ipe.h b/security/ipe/ipe.h
-> new file mode 100644
-> index 000000000000..a1c68d0fc2e0
-> --- /dev/null
-> +++ b/security/ipe/ipe.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) Microsoft Corporation. All rights reserved.
-> + */
-> +
-> +#ifndef _IPE_H
-> +#define _IPE_H
-> +
-> +#ifdef pr_fmt
-> +#undef pr_fmt
-> +#endif
-> +#define pr_fmt(fmt) "IPE: " fmt
-> +
-> +#include <linux/lsm_hooks.h>
-> +
-> +#endif /* _IPE_H */
-> diff --git a/security/security.c b/security/security.c
-> index 7035ee35a393..f168bc30a60d 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -51,7 +51,8 @@
->  	(IS_ENABLED(CONFIG_SECURITY_SAFESETID) ? 1 : 0) + \
->  	(IS_ENABLED(CONFIG_SECURITY_LOCKDOWN_LSM) ? 1 : 0) + \
->  	(IS_ENABLED(CONFIG_BPF_LSM) ? 1 : 0) + \
-> -	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0))
-> +	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0) + \
-> +	(IS_ENABLED(CONFIG_SECURITY_IPE) ? 1 : 0))
+On 3/8/24 23:37, Sean Christopherson wrote:
+> Aaaand seeing my one commit in the shortlog made me realize I completely forgot
+> to get acks from s390 on the kvm_is_error_gpa() => kvm_is_gpa_in_memslot()
+> refactor.  Fudge.
+> 
+> s390 folks, my apologies for not reaching out earlier.  Please take a look at
+> commit 9e7325acb3dc ("KVM: s390: Refactor kvm_is_error_gpa() into
+> kvm_is_gpa_in_memslot()").  It *should* be a straight refactor, and I don't
+> expect the rename to be contentious, but I didn't intend to send this pull request
+> before getting an explicit ack.
+> 
+> As for the actual pull request, the bulk of the changes are to add support
+> for using gfn_to_pfn caches without a gfn, e.g. to opimize handling of overlay
+> pages, and then use that functionality for Xen's shared_info page.
+> 
+> Note, the commits towards the end are a variety of fixes from David that have
+> been on the list for a while, but only got applied this week due to issues with
+> the patches being corrupted (thanks to Evolution doing weird things).
 
-Hi Fan
+Evolution?!? :)
 
-you would also need to update
-tools/testing/selftests/lsm/lsm_list_modules_test.c.
+> The following changes since commit db7d6fbc10447090bab8691a907a7c383ec66f58:
+> 
+>    KVM: remove unnecessary #ifdef (2024-02-08 08:41:06 -0500)
+> 
+> are available in the Git repository at:
+> 
+>    https://github.com/kvm-x86/linux.git tags/kvm-x86-xen-6.9
+> 
+> for you to fetch changes up to 7a36d680658ba5a0d350f2ad275b97156b8d4333:
+> 
+>    KVM: x86/xen: fix recursive deadlock in timer injection (2024-03-04 16:22:39 -0800)
 
-Roberto
-=20
->  /*
->   * These are descriptions of the reasons that can be passed to the
+Pulled, thanks.
+
+Paolo
+
+> ----------------------------------------------------------------
+> KVM Xen and pfncache changes for 6.9:
+> 
+>   - Rip out the half-baked support for using gfn_to_pfn caches to manage pages
+>     that are "mapped" into guests via physical addresses.
+> 
+>   - Add support for using gfn_to_pfn caches with only a host virtual address,
+>     i.e. to bypass the "gfn" stage of the cache.  The primary use case is
+>     overlay pages, where the guest may change the gfn used to reference the
+>     overlay page, but the backing hva+pfn remains the same.
+> 
+>   - Add an ioctl() to allow mapping Xen's shared_info page using an hva instead
+>     of a gpa, so that userspace doesn't need to reconfigure and invalidate the
+>     cache/mapping if the guest changes the gpa (but userspace keeps the resolved
+>     hva the same).
+> 
+>   - When possible, use a single host TSC value when computing the deadline for
+>     Xen timers in order to improve the accuracy of the timer emulation.
+> 
+>   - Inject pending upcall events when the vCPU software-enables its APIC to fix
+>     a bug where an upcall can be lost (and to follow Xen's behavior).
+> 
+>   - Fall back to the slow path instead of warning if "fast" IRQ delivery of Xen
+>     events fails, e.g. if the guest has aliased xAPIC IDs.
+> 
+>   - Extend gfn_to_pfn_cache's mutex to cover (de)activation (in addition to
+>     refresh), and drop a now-redundant acquisition of xen_lock (that was
+>     protecting the shared_info cache) to fix a deadlock due to recursively
+>     acquiring xen_lock.
+> 
+> ----------------------------------------------------------------
+> David Woodhouse (5):
+>        KVM: x86/xen: improve accuracy of Xen timers
+>        KVM: x86/xen: inject vCPU upcall vector when local APIC is enabled
+>        KVM: x86/xen: remove WARN_ON_ONCE() with false positives in evtchn delivery
+>        KVM: pfncache: simplify locking and make more self-contained
+>        KVM: x86/xen: fix recursive deadlock in timer injection
+> 
+> Paul Durrant (17):
+>        KVM: pfncache: Add a map helper function
+>        KVM: pfncache: remove unnecessary exports
+>        KVM: x86/xen: mark guest pages dirty with the pfncache lock held
+>        KVM: pfncache: add a mark-dirty helper
+>        KVM: pfncache: remove KVM_GUEST_USES_PFN usage
+>        KVM: pfncache: stop open-coding offset_in_page()
+>        KVM: pfncache: include page offset in uhva and use it consistently
+>        KVM: pfncache: allow a cache to be activated with a fixed (userspace) HVA
+>        KVM: x86/xen: separate initialization of shared_info cache and content
+>        KVM: x86/xen: re-initialize shared_info if guest (32/64-bit) mode is set
+>        KVM: x86/xen: allow shared_info to be mapped by fixed HVA
+>        KVM: x86/xen: allow vcpu_info to be mapped by fixed HVA
+>        KVM: selftests: map Xen's shared_info page using HVA rather than GFN
+>        KVM: selftests: re-map Xen's vcpu_info using HVA rather than GPA
+>        KVM: x86/xen: advertize the KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA capability
+>        KVM: pfncache: check the need for invalidation under read lock first
+>        KVM: x86/xen: allow vcpu_info content to be 'safely' copied
+> 
+> Sean Christopherson (1):
+>        KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot()
+> 
+>   Documentation/virt/kvm/api.rst                     |  51 +++-
+>   arch/s390/kvm/diag.c                               |   2 +-
+>   arch/s390/kvm/gaccess.c                            |  14 +-
+>   arch/s390/kvm/kvm-s390.c                           |   4 +-
+>   arch/s390/kvm/priv.c                               |   4 +-
+>   arch/s390/kvm/sigp.c                               |   2 +-
+>   arch/x86/include/uapi/asm/kvm.h                    |   9 +-
+>   arch/x86/kvm/lapic.c                               |   5 +-
+>   arch/x86/kvm/x86.c                                 |  68 ++++-
+>   arch/x86/kvm/x86.h                                 |   1 +
+>   arch/x86/kvm/xen.c                                 | 325 ++++++++++++++-------
+>   arch/x86/kvm/xen.h                                 |  18 ++
+>   include/linux/kvm_host.h                           |  56 +++-
+>   include/linux/kvm_types.h                          |   8 -
+>   .../testing/selftests/kvm/x86_64/xen_shinfo_test.c |  59 +++-
+>   virt/kvm/pfncache.c                                | 245 +++++++++-------
+>   16 files changed, 602 insertions(+), 269 deletions(-)
+> 
 
