@@ -1,112 +1,98 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1073BB29
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 18:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B14D53E1E;
+	Mon, 11 Mar 2024 18:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710181720; cv=none; b=Th0DSbjjMX0VPaWQ5iTPyonS7by98bjHe/J+4fwSAWefqKkj82KiYMjaLSoE9jYU1Fy2cO7OGGaCxz7f94tUrWMK8euNGN8fPI9sTNyx+BasBm05CK01sr7KiKg1Gwy9Nmx61zJ72TtjFn7RDEQLvNTD8n9kEorrJj1eiK+tW40=
+	t=1710181737; cv=none; b=Bv4JaWfpLyeyYkdHJyWdgUYJ52Dq83Fprjbkd+ROJrwksB8H+/dz99zGXoAWCcycgy4EXMPQ51oQR4SrN2nfQPXc0WFsAUPEBdl+o/Ag3bcUYj8L5Wxr3Pq7z17YCJqjLrZhkzBDggSUnA6EYevcA4TS8UXP5/zVxwZ/5f83WGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710181720; c=relaxed/simple;
-	bh=PWhA/95D0w3WWTr9rPVx2B2b935xKBD2Q4H9+tL8x38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fv7b3Q8vABFSRIHrVNC2IIe3w+gYJwgsqAa7GYZil2YLZQnZCtymkLPTb+lTQONQbpjGyWOhrSpX5himWn0pVLT0GhLEw4gKA6WLQaxrLaz4y1oanI39rVE5jFAJ12L03tEtXa2g64i5l0AAP79DNX1JTPFAHlG1wa0tY2F/8OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y/fE0UYs; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710181737; c=relaxed/simple;
+	bh=1DFuVCZwt27vmcTybrkyMywbfdDU13ULx2O965nWEPg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d1+zgikBrkGMIVXupZX0KlAmX8shqdDAFXPSnrKbndqRKmn+9sCXrebvWpmhB4unstyt3HKDVUJhg34miq0EEFxGke8SNkzuhgytZ029bsdxvdVbyVi7TIArLt5hEYM5NIw9d+1IXs8krZLf1QHNzzfbp+AFClFIff5njCKuXqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QkMsk5rt; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y/fE0UYs"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51321e71673so5087585e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 11:28:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkMsk5rt"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5131c0691feso6065804e87.1;
+        Mon, 11 Mar 2024 11:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710181717; x=1710786517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PWhA/95D0w3WWTr9rPVx2B2b935xKBD2Q4H9+tL8x38=;
-        b=y/fE0UYsdvajN5Je8bGlQ4XiMWhCtFj1X0ksjyUYGa93dxlcbSKMzT8psW18yn3Gbg
-         8ZhylTKV6Wi+nQfH9SMkWYDnMkbspniohoze0lJy1F+B4b5L+dq4hA39WWKs80ujL5Ri
-         XtcZCjGdS7BdBkTPMAI4HWE11rmo+CzP1bEUPXwegF1AhCBjAWN/76/t/RNPNLUOtVq3
-         mkI3NMUSnf/66UbHuMqlKpHz/rUzIdPXspXUR5IoUa+Yquy3nEFbKQaSWbbF+f3m5Ghg
-         Nab/iJt+BCkv3YhK2e90XPmJ7fcrT25hUZV0NoWffMQI62EIAurFwU/kylaGwWjPYsIF
-         cjPA==
+        d=gmail.com; s=20230601; t=1710181734; x=1710786534; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EA+Rmd4LukCCiQcj2zW077PzEUtEhRdmwmt49q+L1Jc=;
+        b=QkMsk5rtLX7bCG8jc5g8LpD+j/F2xZfk6hYzGiFJQww/pqb2BJVLmDZs2EmJkj21LK
+         gyfTlIVEeX8RWsRxwNtFIJUlsK4WbvcBIxj1eANYjbqbmd7N8Vr4wAfBSWp+lb6RC/RP
+         0Tc1SNLkoTaM7O6IpdEkY5tnNX0sMBfISTjfgYx/FTqPmXUS3bxNjwi0FQ0o2oiA2fDj
+         IvGYTPbnlXSyGpYR47A9qn1F1urYwmwPqKFZb17Atgxk8FkWZFqj20Z9cYM/LJxKSNJ0
+         JAYnZmzjxU+n4HWI1uWDnhUMNvGJrdVKwRZwZvGV+efRTvjNd50SZkt9YWyHYLpg4aWb
+         eOng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710181717; x=1710786517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PWhA/95D0w3WWTr9rPVx2B2b935xKBD2Q4H9+tL8x38=;
-        b=im+tCCt3A83SRf1MAz5MWDghoEEoGHWTpihqHrRpeJPi75OYn83JfcRnsrCMza7+3Q
-         GC/wJ5deNWfnDccihutr/B1n2SXRD2XlvJVTGmxUea3uEgBTcv/xBsAIp/iZdtxAcgPb
-         Pw71tAEzvz4eQd3szCNzSrw79VYTcnVIKDwQgEOWZI+gDS1/1pKIDiA+5jqLzc6m6s+C
-         R8m+PCB8wMTAorK0omKuS90+E5b7W8BSgMzt2asXVjzyo4PIM7Jyf2SGHwvp5CZLLAQh
-         4pfGAQMJcqvUbIZbHAREI46I2J1cbnjH+TrlKSDmIoACXYSM+w3v8K5lIMK9yxjMdDD4
-         ou5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJQtYsg8cWVztFRPa9ZZhVjicE3AZolOI5ZItKRXCH5K/y64whD+dfBSaGj95HUTllKhDeEbG/DaND6RXD5Vn+R7PMlIomSP+YeKII
-X-Gm-Message-State: AOJu0Ywi4qAB6vpBwQtJGNR0iX5Z2R1SzN06g4XGBaYYbmaaKKFn0ky4
-	r9sfIMCTT3FQlzTys5mH3acQHG9TUmoC+GfrLH25ExNKdyvYPNsF/eeA3AMhdtsTqH+qCZok2KQ
-	z/ViRS1dcf2sa6S3pDlRwfehcZOPFXHAy8ciI
-X-Google-Smtp-Source: AGHT+IHrLmjzFAJTYl5719GqKvfQGhtCq5ZY6aYr3tOzSCXcxH1gXnPhub/BsTtVRYnXofvsz0JrLVDlNZB9+mS3OBA=
-X-Received: by 2002:a19:641e:0:b0:513:4764:2fa5 with SMTP id
- y30-20020a19641e000000b0051347642fa5mr5008706lfb.41.1710181717177; Mon, 11
- Mar 2024 11:28:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710181734; x=1710786534;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EA+Rmd4LukCCiQcj2zW077PzEUtEhRdmwmt49q+L1Jc=;
+        b=gTOmluRvW64SWC4Hs+x9BtAIx774YuVnQQXVDpLPyUZ3sgeYCYuKa2hIuOHCj6fe80
+         agCe0SfwASjIQobfOUa7Tv42m59NPF8sXVBlGZllnn+AsXXe4PHAQmiwpCJqU1Y8VtLP
+         nqNX4wR+6tYXtl9GWJ3fT1FL3iNYVu0Gg3nN953+m7XidIb0xNWL6TFLAt2bBK/m2Dp3
+         5Mz6/9u0SD/hao/3TQ0ktzpxUY6ZKW7mn4W34tFvxlApDPvfKe5BYUJcKnGW77V9F7qK
+         CX2mg8pm1tLFGZ0uX22SoID5tm9ZcoGsAneapE4dVtV11cB7Dd2MurbaPsePhcizYvSg
+         Eg0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuh7QPQNh+UIXMKce7xvDNL1AMZIbtJjMS5252sUJh/SoV1QOc60IMpTz2KI03XXU/e+t7EGHPl0YRPjNU+Ug304KmpAT0iSdZrelwKszA7D/nUKFXAiYgZAHIUQZtpl66kJ1DhElPp0H2iUdrz91sYJoseGmZm+9N
+X-Gm-Message-State: AOJu0YwRchHTXkiPmFlx7CAmMZeDXv50Cn3TFGZwG/MnnQiAs0keDp6s
+	ckfrltoAq6Hq5wbabDvfKtVPZ+czlIOXt4JyZmbozn2fVcWc3Dm7
+X-Google-Smtp-Source: AGHT+IGXa50h88Id2A4cH9Gq/82q8SMwoZ6hzlhcwUljLBpO5vwElRErN0BdiuE1MSmCm/Egj0AzlQ==
+X-Received: by 2002:a19:7513:0:b0:513:134f:8250 with SMTP id y19-20020a197513000000b00513134f8250mr3895187lfe.55.1710181734181;
+        Mon, 11 Mar 2024 11:28:54 -0700 (PDT)
+Received: from [192.168.1.94] (host-176-36-0-241.b024.la.net.ua. [176.36.0.241])
+        by smtp.gmail.com with ESMTPSA id hg9-20020a05600c538900b00412f855bcc2sm16238600wmb.43.2024.03.11.11.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 11:28:53 -0700 (PDT)
+Message-ID: <3b618a33551a0fe0ef5d74b9dc5399afca52209c.camel@gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: fix oob in btf_name_valid_section
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Edward Adam Davis <eadavis@qq.com>, 
+ syzbot+cc32304f6487ebff9b70@syzkaller.appspotmail.com, andrii@kernel.org, 
+ ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+ haoluo@google.com,  john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org,  linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+ netdev@vger.kernel.org,  sdf@google.com, song@kernel.org,
+ syzkaller-bugs@googlegroups.com,  yonghong.song@linux.dev
+Date: Mon, 11 Mar 2024 20:28:52 +0200
+In-Reply-To: <CAEf4BzbbvBEwy6_S1MRjiGWWfS_nxy6qNsEc0_Jdro1c10b8Vw@mail.gmail.com>
+References: <00000000000081fb0d06135eb3ca@google.com>
+	 <tencent_E4EB1B6A2584BA2BBBB733409EAE1B524B08@qq.com>
+	 <5f1446d409322de91946a569edc0b836daa52aae.camel@gmail.com>
+	 <CAEf4BzbbvBEwy6_S1MRjiGWWfS_nxy6qNsEc0_Jdro1c10b8Vw@mail.gmail.com>
+Autocrypt: addr=eddyz87@gmail.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307133916.3782068-1-yosryahmed@google.com>
- <20240307133916.3782068-3-yosryahmed@google.com> <420fcb06-c3c3-4e8f-a82d-be2fb2ef444d@app.fastmail.com>
- <35b670e2-9ef5-4d3a-b6ea-f8016dfa088d@intel.com> <ZevHJ5o3G00_nBha@google.com>
- <o5t3qrrlw37hdkcja2vny3ycpmhb4dowmdj74a2wrq2x4xctqk@5g5jvzen46qe>
- <CAJD7tkZABvm4v87T2WJ593sjZ_Z9iLCcgecghQJHrZDnuisBLg@mail.gmail.com> <e5tjo62yrvmviixily6ramjvnqqmokvayyr6k7c7qzrczcx4yd@yupixsoj53vm>
-In-Reply-To: <e5tjo62yrvmviixily6ramjvnqqmokvayyr6k7c7qzrczcx4yd@yupixsoj53vm>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 11 Mar 2024 11:27:58 -0700
-Message-ID: <CAJD7tkZ3-RSxSWmskGyqR1j=XHVS8=BpHPcbH1bgxih=Lo9CHw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] x86/mm: make sure LAM is up-to-date during
- context switching
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, "the arch/x86 maintainers" <x86@kernel.org>, linux-mm@kvack.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 5:42=E2=80=AFAM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> On Sat, Mar 09, 2024 at 01:37:06PM -0800, Yosry Ahmed wrote:
-> > On Sat, Mar 9, 2024 at 8:34=E2=80=AFAM Kirill A. Shutemov
-> > <kirill.shutemov@linux.intel.com> wrote:
-> > >
-> > > On Sat, Mar 09, 2024 at 02:19:19AM +0000, Yosry Ahmed wrote:
-> > > > I don't see how skipping set_tlbstate_lam_mode() for kthreads fixes=
- this
-> > > > problem. Do you mind elaborating?
-> > >
-> > > Define what problem is.
-> > >
-> > > Yes, in this scenario kthread gets more permissive LAM mode than it n=
-eeds.
-> > > But nothing breaks.
-> >
-> >
-> > The problem here is not how the kthread runs at all. It is the fact
-> > that if that kthread context switches into the user process that has
-> > enabled LAM, it may not update CR3 because the mm doesn't change.
-> > switch_mm_irqs_off() will only update CR3 in this case if there is a
-> > pending TLB flush. Otherwise, we just return, even if the LAM for this
-> > mm has changed.
-> >
-> > This can cause the process that has enabled LAM to run with LAM
-> > disabled and fault on tagged addresses, right? Did I miss something?
->
-> You are right. I think IPI is the way to go.
->
-> Will you prepare a patch?
+On Mon, 2024-03-11 at 11:01 -0700, Andrii Nakryiko wrote:
+[...]
 
-I am working on it.
+> Eduard, I'd also say we should make __btf_name_valid() a bit more
+> uniform by dropping that first if and then doing
+>=20
+> if (!__btf_name_char_ok(*src, src =3D=3D src_orig))
+>     return false;
+>=20
+> where we just remember original string pointer in src_orig.
+>=20
+> WDYT?
+
+Agree, this looks simpler.
