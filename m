@@ -1,36 +1,36 @@
 Received: from SE2P216CU007.outbound.protection.outlook.com (mail-koreacentralazon11020002.outbound.protection.outlook.com [52.101.154.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB2C37169;
-	Mon, 11 Mar 2024 10:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281F03A8C1;
+	Mon, 11 Mar 2024 10:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.154.2
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710154599; cv=fail; b=VfQvRfscrCn+WBslRD7wckPkme7z+TdTq3JPnI6BpHHtH7OfMXpJcmf5gEF9VjCPuZQwOxas15FSuygGGyslzVv42NUzL4jo4KyAVbXTiV/zvI3bV0epY8A7iNMFEp07pg6eUWIX2xxaS24Sk/syZ8ZRtoqTTGSn53SxssBwMgQ=
+	t=1710154603; cv=fail; b=IowkZcqgXhjiMTPA02u/owE7lGRPN2ff7QOFay21yhDqGwmcdLjtbB64CL7tZ8DDL6zuIgNedsWiW055Xda/fd3ZEVGkIeknNdmoMDZKlUuUUB3Xuw7nqJnBWsYu0UxpCHPqVUjfDiuZy1QOb7y/RQfM6fzoRAQ0SWdlP3gofYY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710154599; c=relaxed/simple;
-	bh=l2wUCmHDK8MzOelGsKM+UYRm9Vter11l6pl5SdW3fx0=;
+	s=arc-20240116; t=1710154603; c=relaxed/simple;
+	bh=yxNFp988MN/rGSkeStJyaW4sORGym2mKJNvRu9JwxrI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I1AFrGVVWctW2G5s6oXLgY4KW/VsPG+N+YRy0q51nQxfH3Vn+xL+SIMrjhHghVDUmvvd4082DLQ/q2FP53Q5kTa98t7KjsTwO/To0znFx/eQNDjI99d+H0KQzHV2HAVujOcSAbtIGgTC45iGpW1KlR7ngcuDaGAtI7uvO7zpS0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=pass smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=N0StllYb; arc=fail smtp.client-ip=52.101.154.2
+	 Content-Type:MIME-Version; b=m8EFmqlE8NY9w12GcP4Vl9HjCWW1EaMDMH3vxhfAASO6vxT+zX6MBgb3DjH/uPmqrasKQXfFUpIVvMBQkBmMgrSzRV+GOwRnag+x3+me62Eg9h2OMdlWxUoddqNyeb7/0e9AkGGowR+4HMso1lbZf1XRPLg7ygoSVbKNXBjjdN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=pass smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=Bgs78w2T; arc=fail smtp.client-ip=52.101.154.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="N0StllYb"
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="Bgs78w2T"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rc9CfVBCmg6iA7pm2NdTZvs8rT4Q7YWOAyroUm192e1GDbYu0G7u1TDngGmEpeKXjObGaGal//RT4TQkZ2Xn+tnx5CH1nlLGmsx/TSikS0upIswNfEkB152N6QyUkB72vQ14qWHUBwVxZKT+0XSLZgYRHIZnQWmMpVDp2l29xTH8lVCp5dAITb8cQyvAUgu48lHHHf3jRIGR6Osvtgv6qnay5WOpAufO+2TZwBMciUeJSXNyEiBgi2gB6BqGGKvWogUegfeZ3nCccoYrrEU1WBY5Q/3DYaOw3m9NlnSjuxQncGN3KiLU9Q+8r86rcWHk/6UM/DtqdU7ZbMF6xeBAIQ==
+ b=O/imnr/Xm2GlbLAdKDkTPEMZoPQqCTrZZtzYZb/A6Tc+7hoOYu8DSC0UEtCmRxmxseM72bj3XnbnPxzWerI2O/91A4e8u5rvf/+ePJPQ10HPWcxjCSEQtIigYLIUnFs869Z/iNoeaqdz/R0xH9dkQa8YFeW2FOaEj4B98j4qaRVLlgoB+Z3MfYO8zDz2slnNbBEESJLUOjmvQEy4vz1k7rf+SNZP6l/AX8kLx2+r8uayIqxBu330FtDxpSSWumd4XsoocZuGa1XPXzBgcQlFGTCcwHxNmGmK71sg4pVHMjrezACKa0z7/Twfdbu5TXYZtPjegcNakW7EK9LbQVLwVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rLpqCFd9QlagKVmdqGgrlC5upXeqJ3Sr5cHld6DJd6E=;
- b=Do7ZWhN3BQwkB+L10VDceYMnVrD5sQeIYfFFy0ZQfMYOtKx4ZeLpnV421dIUAYkVcJTCH1htq+3q2kXqU6t3wRMNV+tiO98BVuYfEwV4E57TPIF2rN/ZmsL5No2KUITJPuRUWhLXnpXVaTzxxgF8N7g+QUR4+U6M6rhRxJaBXA9/qFo50bIQRzSpO4yJ01MDSkVD9CZoxSSU6bn8NBebuPc/R+f8NvEibc8mg19D8tARL6rHFbJPEls3nChgytSH0SfOV2iOQWRXdnfc6FIPObJZfIFcHtVrMyCgGs/pKu818ldUfZSi4BxXOiMKFHoY+30Hlis+I7BjwoIWJV74pQ==
+ bh=5AOc2QOAt3qo30Tc77Pm7XC3tlB9nOy+F4lkE4s5kPw=;
+ b=MHCUCkkRa4xrwqaWKqQiQFQLb5SOU/fugASXXk5r5EeInUaBkJbO1qlHoVfW1qbDpqk6WI3YsXKUMpK3dxvsPtq9LLVEf1CYI8LjyKvL6w/wxOiF67qDRvkTQu8nEFkvEx2bTWnyt5Psk6NfLlv2VbwCkje1huzxSo5zMiaRxezxMqOBDrDF4zXtfLuPcb4P4WQfcxFBmq+Svyh32RUmcHYXRLi9RX5VKAlKGvJYDie5EMsDoBJp+HiefKPhwMlF0vs+0nWdoYkZi4P5Aku70Bz5mN+mmMGYc+doysdVTpf4t6CEX02SMoaJ6hcCHoW92yzjEfDZGHh5UQ8/ep8ptQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
  header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rLpqCFd9QlagKVmdqGgrlC5upXeqJ3Sr5cHld6DJd6E=;
- b=N0StllYbrYQSE41UPjOCVrkuXr7xZqk2CwjaYcPzruZIfgaAu+b7iMFjbx7kEx4kb9W968t506qw1bHjDdFxevY1k5o3RO3BtJpRENojAFre+uvAqnKHUgyUKJG2qbvX4XI2bFCKlLcoSOZMs9/rnLTaIeE9Mj/DcW2kWQkEaWI=
+ bh=5AOc2QOAt3qo30Tc77Pm7XC3tlB9nOy+F4lkE4s5kPw=;
+ b=Bgs78w2T57uhjhAPug3MkqG4hmaZgNjjEJn2SWusmY3LNBCUEtkJ0JN0W2D94hopegDua8d+dqq8W4YSswZQP2Her+VCIVBDnlKl5db9KtXEisoQJe0Z94Kvduh6QIp6q3YjBJVMNJnTlgLT04GHYOLQt8XWfYThSlFoPfJf2cg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
 Received: from SE1P216MB1303.KORP216.PROD.OUTLOOK.COM (2603:1096:101:15::5) by
@@ -40,7 +40,7 @@ Received: from SE1P216MB1303.KORP216.PROD.OUTLOOK.COM (2603:1096:101:15::5) by
 Received: from SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
  ([fe80::ebb8:2043:fd53:303a]) by SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
  ([fe80::ebb8:2043:fd53:303a%3]) with mapi id 15.20.7362.035; Mon, 11 Mar 2024
- 10:56:30 +0000
+ 10:56:31 +0000
 From: "jackson.lee" <jackson.lee@chipsnmedia.com>
 To: mchehab@kernel.org,
 	nicolas@ndufresne.ca,
@@ -52,9 +52,9 @@ Cc: linux-media@vger.kernel.org,
 	lafley.kim@chipsnmedia.com,
 	b-brnich@ti.com,
 	"Jackson.lee" <jackson.lee@chipsnmedia.com>
-Subject: [RESEND PATCH v2 1/4] media: chips-media: wave5: Support SPS/PPS generation for each IDR
-Date: Mon, 11 Mar 2024 19:56:20 +0900
-Message-Id: <20240311105623.20406-2-jackson.lee@chipsnmedia.com>
+Subject: [RESEND PATCH v2 4/4] media: chips-media: wave5: Support YUV422 raw pixel-formats on the encoder.
+Date: Mon, 11 Mar 2024 19:56:23 +0900
+Message-Id: <20240311105623.20406-5-jackson.lee@chipsnmedia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240311105623.20406-1-jackson.lee@chipsnmedia.com>
 References: <20240311105623.20406-1-jackson.lee@chipsnmedia.com>
@@ -69,152 +69,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SE1P216MB1303:EE_|SE1P216MB2024:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d2fb6ac-2fd6-4300-d1ed-08dc41b9e896
+X-MS-Office365-Filtering-Correlation-Id: da2880e9-1ddb-458b-e225-08dc41b9e90d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	rmq3OwIEJm8WTwuRSfrHgQFCxAncYeHYranuCx0Jr0PwpKx1RL5vwLpZRE9+mPHUYkivTXDrjlBxx+gA2zeNrLRFCwLZCpfJJzea905eIZr4CFyohwC9l0y5RVT10a8yAk8+phBV5MHp5sof+gKtoIQ2jBSGh8RmYMDLVlkEtUekGnz8KVFu8Ge54aDxWOlZ5WAeSbqaL/qNx3j9mwCROhcsWAqE1dKttbge5l5ebGV4CA6ia7/VncQdRg8a7inZ5ayUIzjt5jGI5iTiDDJ0ePwwo6yBLjU9YwtMdK7Nu6XRFhUiqNwmqgOE+iMyYS7cS4i3WopjZhlNGiqx6/h985PgRifyWXzBwjcWOlT9M02Vc8y+HHzGyoczxmbGXuRex38txKRC77z/Ee4EtLx1FwjRGvCMizwSUIwm3qssdHePdyTAnb4Ynkq4FNEvbbP6R8tY37jQdwkJRy6qAYqO3XuOEFC+o1/ajDCH0xcPdam1nk/Y/tfTSfsiJhnbG6U663ViDSW+eX5CAf3MKC0bN8uiOr9lvtpK90Np4WDPoG6Tuc88wbKEJzAy0HWYpqYnEaGClDKP0tFptyHF76Nnsvqdy6i3qbYshNRCoyyO8kGaUGePXnCIgD+3+9h14a4d96g6v9QkGIfBUES3eZGlMsM+yxhoMGoUpPYWc4cxSmjDYEE1EKKMJbBtupKcc6FKtx1ZeY/APzOPgHmg0OtQedimJOfBjPWVgPyNc8hoM78=
+	G1L5LpWatu5C9xrfDaMTvWoaw3WxmYp/x7XkbLFJJErni/KXKuEBwnL9zBF0drzJqggD6IJexvGqW3BDLqNaAgOGCMIhweyoyqeplJqLh2Yf4PqfzHY7sv4o7GV7a+ZNBuGftEnGgzpUJT39+CY4Cub1BJ0wTxyuf8YTpDJV9uBm50XE+v4oyeLYdtRfDiacNLEXrB3qoDrd+wD1jISnGSft+w7dWKNib6T3TdWkvACHK00h85THSwrXVig949Epk0Zn+zFMQxdNV8J0ztfdxbSMIHpOwkEBS23YGt+nVJPdcV0Bf9Iezqql/7xLXLSywrTvlDHOnE/ElIvECi8ZbcYFXT4+gHzKpVHO4HZfloNQ1iZaRPP4IVF1hQ82u4BNi1HJY20KZfZrna627sxXynOuJdjvMNjTleSGtRPS9p/2ytMk7OHrcQhRo0iqd6Iyg04xs3PRulRX6yrhY9Kwo0kq8yE/47Rvsj6/dwZPvuKcWRmDtP097V/eErLE4jVbTgk9OAk6+BTCLT62dgMHugoJ6hch1I9xLVTYeqVmQ08tKbXJ1LUMUiwa39JTg8yL29Ggxwwa4q+ROSJ7ht72h5J38x+6/3Si+gwj5p5WBkZeM8NxS56CNC0Jd6HjwRsHpWsAFd7ljfF417AXtP5hUrQIsvfd3XMIEItpCf38QyZyOXAsqKzHYNyrSwlTcPK4khyD2z/JTiQ1vIXUckYWCe2ymR95L1NiG6IaINg/3Z8=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SE1P216MB1303.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ek4IxOMPARtVagvrttkXy1CO7EtTChuP00gaLP/nBdJtmimEHXMOy7fdgXHK?=
- =?us-ascii?Q?eV0iXxrW5sK7C7J+f2P9aHevKTo4idKh2W7exgY4bGGPSLUTyb9xFMq2rQ8g?=
- =?us-ascii?Q?Kof4LuA5tMuTbcJCiCHW2ojtaq7od+Lz82+P5bIGUNZakY+tQVN/71ZvF6G4?=
- =?us-ascii?Q?vib2UzWU7sX3E6aSXM4Bh2dJ0vOrv8vnb0FUoq8Jpp69QIrnoEhtZCwuuQM1?=
- =?us-ascii?Q?WHkTRWJrQkdQiBgGKNAxNEXdiHnHuZ9iX0mCsK15eCeYCQohEK7bplR12zAX?=
- =?us-ascii?Q?zIXSf0lXJrJqHXfP3l50tZCFrss3rjq34bzP8ygRAc7QVHe98e+pZ4IdhUh8?=
- =?us-ascii?Q?lUsaYhUHjRU2u4sSe0j6/Hn2xcpZHjot4tkPB3qZgysxdq62bQx0IlTr1biA?=
- =?us-ascii?Q?keYYb1FvcNno5cgIHuHXD6kcFk4yD10y2Cqi/wrpXhjzlkoEDwhbkO7PVciY?=
- =?us-ascii?Q?fs/hQDDbsvuUEZ/vBTuap31DKxWFifFsIhpp0jLlSCDiT9ZUNT9DKw96HU8+?=
- =?us-ascii?Q?wxerkEiPtGicS/frFjQ3oZtrbefNxTQsqyKHDg2mFZ5ffTIsvl7fxfqytzYx?=
- =?us-ascii?Q?A4aVwyOVkNa0dY5zVhA/8seKqzNJPA3zbaNF9BfHlGtj2c9tPBKbHVcnekjM?=
- =?us-ascii?Q?axBTLeXY//owWfebiSnLygTuVKfhAqaXLGGBk7a0PUqVlHeUl7QmJnW1QYv/?=
- =?us-ascii?Q?ED032XrXj2bRhQeYy4XZuD7jmqprB0IKk+jik1ad6Djp3FjADqcBTmk6RwpU?=
- =?us-ascii?Q?41RuNElm3qMgGMffO6SV+aLauFleMZWcqbaoVxsGWVHlIGvOWKKmhSwov5xk?=
- =?us-ascii?Q?qD0yDm1baXEtPFpmgpgk735uGbisjavVUOUDPJUG1VWjq4Gnh4ZG+pzCIbC0?=
- =?us-ascii?Q?GjgMZN8Mkg+XQda09fGEJu4hbq8vkYBaenxz/nrw+BXB2NawAkfctjpD0i/N?=
- =?us-ascii?Q?46aHlm3XlXlo8psXtWv4IJSCvRHKo8MURikmz68s1V2NjxkSzGj9iVww+Y6g?=
- =?us-ascii?Q?5cdhYe3Bbw1niYKqsTdtB4Xfq+lZ+WHSdeVI96RZJdyAiIOKGSnOtfOfjQ+/?=
- =?us-ascii?Q?lr1CE72HH4tbX+4BQvOyhaBlrPg+Lw+DRZsbQ/SjWg5AgcaArJU7+BQr2pQ0?=
- =?us-ascii?Q?wqB1dAuh6HbJk+3DZZmm+G0Pyfa125Z3eXE0gD9SxE7J1ggPg5DLZNloIOYN?=
- =?us-ascii?Q?WJ37BiremuHz6vd7xivpz1HlrF3umpSAEJv9fPOf5vVW7pqwiABt+bl8vSZW?=
- =?us-ascii?Q?Aga/tIIj8u5mZNPZMsacRxoklt8tt6yUQgNL8gMpNFvV3Oydz5oAYiq/6OTt?=
- =?us-ascii?Q?QiNze5EGK2qPVI6ikNm8H8boimpIE96IWsSBjFjCKPorbeFUfG1CsyFrZdux?=
- =?us-ascii?Q?B1xt0UPJFYZFAlcthAIxS1N+QwkBDpmddgWlRjw8a3iuRtZotbnCdRQ2ZexS?=
- =?us-ascii?Q?8GHTIRE8+nfOGfgkNiA5K90D43ifvzYPzcE+i0WGbX4MsHDpuY/iBaVgCuLM?=
- =?us-ascii?Q?dlylKRYP0FUiTORb+yJO2u3Sk3RTaOsE4a3J/Xs0N88Kz0vKpz/7PE6sGw9T?=
- =?us-ascii?Q?KwLnhBnN5XEe8WcPp3V8m1SmpfsIQj+IqWCPDTA+B1YcdMSVnatryQXN7mE9?=
- =?us-ascii?Q?BGAUtVVe/o/ScPzofn+03m0=3D?=
+	=?us-ascii?Q?NxP+NFzny3H6BRWGp7EQ97yhu1GDNXoy+LcAbgZDUxtMUhxD39v3TQypV/7N?=
+ =?us-ascii?Q?KxrnEpNpVCtw8HOaqc0/dhY4NEVj3x9u85RBp99tLkS09amKhUhLNxxDMHIs?=
+ =?us-ascii?Q?dPkw2U4AthEeCDiNQGjAEqNoE0sDKzCuQjXMhSVrBRaR54h8FAXYVI3fA13W?=
+ =?us-ascii?Q?FL4ZnmnUQQH0wB0oe1pdt/4uar6hVMaGo2nDdtkRk09LcgdE7xEI45fkQ+1k?=
+ =?us-ascii?Q?ZEcnCsA60S0RamCNsGTsL0RtVLsCgmjq03YM/zzpYoTQFfGVDSIv6MP2sbjs?=
+ =?us-ascii?Q?NGucyjXoCWavZ92lGMFy7f0ka0U0kn8SqxxoKbHLzI+FCxqA+l4z1OxtC5fR?=
+ =?us-ascii?Q?/U+ILRtJP2Osx+d59dVwgkdO8ni+V/v4L1Yn01upCBQqYNoeKzMgeGpTQzom?=
+ =?us-ascii?Q?kw8pG1342jvnh2mEHDzVQm745DGfKkHcvOYNbC7uaIuRYkFaqgK95jJHWe5i?=
+ =?us-ascii?Q?GNzaPDY8xyuVL9zBYwNJrlR1RMKQ3H/K7PpbVMH8C0pQWNpVPw3NY2rbGNnV?=
+ =?us-ascii?Q?V4KHdeQeEwo7HnR6mYY8dWmKHFj2zpvmrtk+yC8G9TaMSesNZr7stu0fR7hN?=
+ =?us-ascii?Q?2evG+Np1zZpligrCU+vvb4ruOK4RY3xTIcDdktkOB78jmQE66CTscRAG3J8y?=
+ =?us-ascii?Q?CiFRWQYgB0XgF0/MOWmr0RxpTi08bEuiLfJLNqfQDzF6dbIVIj6gR78KlMJD?=
+ =?us-ascii?Q?3DKGANwMZXDl0zWuSiXb10l7/qUX+EoI4NLWbWYvnQVzYi1gvmGPvsZmk9fZ?=
+ =?us-ascii?Q?95Bh5JMIC5vlLULlEq+WjZdYtfjK4fGaA5HdLTurwbllVIOkp1htfLXwVUq+?=
+ =?us-ascii?Q?sWGIox1HAyYifIGCn0gC65xB/U9nruPzj3cD/0iRweMqquiEnPOHnIq3d+lW?=
+ =?us-ascii?Q?Qr3nVDhv3fYStZleNAPwxhpRX51l1buceKrSsaJQvz2msztQs6EKKv1tmyjQ?=
+ =?us-ascii?Q?+WW7B9lU92X5X3thvkon0VPuYei/60toKFxBzfXJnhOE8YQlLca4JTNzNEeW?=
+ =?us-ascii?Q?N71xmLaCj61x9KaMI+qPnUaNTi6E7jRViK1clFWlJsK+B9qRjR703DTW8uPW?=
+ =?us-ascii?Q?b5810AwJOFbdlpFZ/PT0pa7nvWWcMki6YQpuNNTw1RqDNpxuygna6QMhZQTj?=
+ =?us-ascii?Q?iMlpV7eo4u2dxkNv+5VgH31F/snaNOHSOPq3rSYmCl0cZPXjg5Pt4/V9rSwt?=
+ =?us-ascii?Q?YMOC8tQUHeq6atDMegQ591LaqaFaouKgzXdLhzqcULCtK98///yHYOgyzAZv?=
+ =?us-ascii?Q?lkWaWIHlq3HFoZh+m5/wZiz/y/WUeVKYFQUSoCbH7xU3gvajIyDwWlOpYeAZ?=
+ =?us-ascii?Q?8bwXu72ZGUkwLcmRSzxGNu+bt06e4oepIkzbhGvtYHQ/R537plrOciYyoHJ7?=
+ =?us-ascii?Q?6+80UzrNPjgMSkzdXWvQG8lMIIghmCZDAOS3bOMlFBRS8yx0G+c/qUvjaYAW?=
+ =?us-ascii?Q?fiXUydxXDpKnHLTNDF39gyMXO5LUC4YIXAAUWqJOo/VPCRuywPQHQcWTZ4ry?=
+ =?us-ascii?Q?XXy/NcrTPKXpRTRYzJ/wXcp6w5G4vV9KrHJn/ckfpMRueRzLPULtRF9ce403?=
+ =?us-ascii?Q?TxOaHG4YmJVZkKTi5nCXh1zXhOsIDuKcwU7MBqg2Wa9YGfMxQIsqqOjAArzx?=
+ =?us-ascii?Q?kg=3D=3D?=
 X-OriginatorOrg: chipsnmedia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d2fb6ac-2fd6-4300-d1ed-08dc41b9e896
+X-MS-Exchange-CrossTenant-Network-Message-Id: da2880e9-1ddb-458b-e225-08dc41b9e90d
 X-MS-Exchange-CrossTenant-AuthSource: SE1P216MB1303.KORP216.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 10:56:30.7800
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 10:56:31.5264
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tdklFd38tZ3s1CVgpOygb0QHHJDseD7F2AHqO2tregj/vesMdt9jTMEMyRLsnCFyYholKHniM5sRa2dAC1hQ+/efx45kly0tH+zYmshWBQE=
+X-MS-Exchange-CrossTenant-UserPrincipalName: ajZCkbccnSIgBIblDWoYyMGRr5LvfVDLsLElNz6cCloO9LpOWPVlMd/Ses/6kgbsJGE/yCf7hY7Ls1H6EV921Lamcc5v/oG0f4nbPHR5t78=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1P216MB2024
 
 From: "Jackson.lee" <jackson.lee@chipsnmedia.com>
 
-Provide a control to toggle (0 = off / 1 = on), whether the SPS and
-PPS are generated for every IDR.
+Add support for the YUV422P, NV16, NV61, YUV422M, NV16M, NV61M raw pixel-formats to the Wave5 encoder.
+All these formats have a chroma subsampling ratio of 4:2:2 and therefore require a new image size calculation as the driver previously only handled a ratio of 4:2:0.
 
 Signed-off-by: Jackson.lee <jackson.lee@chipsnmedia.com>
 Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
 ---
- .../platform/chips-media/wave5/wave5-hw.c     | 19 +++++++++++++++----
- .../chips-media/wave5/wave5-vpu-enc.c         |  7 +++++++
- .../platform/chips-media/wave5/wave5-vpuapi.h |  1 +
- 3 files changed, 23 insertions(+), 4 deletions(-)
+ .../chips-media/wave5/wave5-vpu-enc.c         | 59 +++++++++++++++++--
+ 1 file changed, 54 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-index f1e022fb148e..4a262822bf17 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-@@ -23,6 +23,15 @@
- #define FEATURE_AVC_ENCODER		BIT(1)
- #define FEATURE_HEVC_ENCODER		BIT(0)
- 
-+#define ENC_AVC_INTRA_IDR_PARAM_MASK	0x7ff
-+#define ENC_AVC_INTRA_PERIOD		6
-+#define ENC_AVC_IDR_PERIOD		17
-+#define ENC_AVC_FORCED_IDR_HEADER	28
-+
-+#define ENC_HEVC_INTRA_QP		3
-+#define ENC_HEVC_FORCED_IDR_HEADER	9
-+#define ENC_HEVC_INTRA_PERIOD		16
-+
- /* Decoder support fields */
- #define FEATURE_AVC_DECODER		BIT(3)
- #define FEATURE_HEVC_DECODER		BIT(2)
-@@ -1601,12 +1610,14 @@ int wave5_vpu_enc_init_seq(struct vpu_instance *inst)
- 
- 	if (inst->std == W_AVC_ENC)
- 		vpu_write_reg(inst->dev, W5_CMD_ENC_SEQ_INTRA_PARAM, p_param->intra_qp |
--				((p_param->intra_period & 0x7ff) << 6) |
--				((p_param->avc_idr_period & 0x7ff) << 17));
-+				((p_param->intra_period & ENC_AVC_INTRA_IDR_PARAM_MASK) << ENC_AVC_INTRA_PERIOD) |
-+				((p_param->avc_idr_period & ENC_AVC_INTRA_IDR_PARAM_MASK) << ENC_AVC_IDR_PERIOD) |
-+				(p_param->forced_idr_header_enable << ENC_AVC_FORCED_IDR_HEADER));
- 	else if (inst->std == W_HEVC_ENC)
- 		vpu_write_reg(inst->dev, W5_CMD_ENC_SEQ_INTRA_PARAM,
--			      p_param->decoding_refresh_type | (p_param->intra_qp << 3) |
--				(p_param->intra_period << 16));
-+			      p_param->decoding_refresh_type | (p_param->intra_qp << ENC_HEVC_INTRA_QP) |
-+			      (p_param->forced_idr_header_enable << ENC_HEVC_FORCED_IDR_HEADER) |
-+			      (p_param->intra_period << ENC_HEVC_INTRA_PERIOD));
- 
- 	reg_val = (p_param->rdo_skip << 2) |
- 		(p_param->lambda_scaling_enable << 3) |
 diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-index f29cfa3af94a..f04baa93a9b7 100644
+index 5a32bb138158..77657f63a169 100644
 --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
 +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-@@ -1061,6 +1061,9 @@ static int wave5_vpu_enc_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_MPEG_VIDEO_H264_ENTROPY_MODE:
- 		inst->enc_param.entropy_coding_mode = ctrl->val;
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR:
-+		inst->enc_param.forced_idr_header_enable = ctrl->val;
-+		break;
- 	case V4L2_CID_MIN_BUFFERS_FOR_OUTPUT:
- 		break;
- 	default:
-@@ -1219,6 +1222,7 @@ static void wave5_set_enc_openparam(struct enc_open_param *open_param,
- 		else
- 			open_param->wave_param.intra_refresh_arg = num_ctu_row;
+@@ -39,6 +39,24 @@ static const struct vpu_format enc_fmt_list[FMT_TYPES][MAX_FMTS] = {
+ 		{
+ 			.v4l2_pix_fmt = V4L2_PIX_FMT_NV21M,
+ 		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV422P,
++		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_NV16,
++		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_NV61,
++		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_YUV422M,
++		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_NV16M,
++		},
++		{
++			.v4l2_pix_fmt = V4L2_PIX_FMT_NV61M,
++		},
  	}
-+	open_param->wave_param.forced_idr_header_enable = input.forced_idr_header_enable;
- }
- 
- static int initialize_sequence(struct vpu_instance *inst)
-@@ -1702,6 +1706,9 @@ static int wave5_vpu_open_enc(struct file *filp)
- 			  0, 1, 1, 0);
- 	v4l2_ctrl_new_std(v4l2_ctrl_hdl, &wave5_vpu_enc_ctrl_ops,
- 			  V4L2_CID_MIN_BUFFERS_FOR_OUTPUT, 1, 32, 1, 1);
-+	v4l2_ctrl_new_std(v4l2_ctrl_hdl, &wave5_vpu_enc_ctrl_ops,
-+			  V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR,
-+			  0, 1, 1, 0);
- 
- 	if (v4l2_ctrl_hdl->error) {
- 		ret = -ENODEV;
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-index 352f6e904e50..3ad6118550ac 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-@@ -566,6 +566,7 @@ struct enc_wave_param {
- 	u32 lambda_scaling_enable: 1; /* enable lambda scaling using custom GOP */
- 	u32 transform8x8_enable: 1; /* enable 8x8 intra prediction and 8x8 transform */
- 	u32 mb_level_rc_enable: 1; /* enable MB-level rate control */
-+	u32 forced_idr_header_enable: 1; /* enable header encoding before IDR frame */
  };
  
- struct enc_open_param {
+@@ -101,13 +119,30 @@ static int start_encode(struct vpu_instance *inst, u32 *fail_res)
+ 	struct vb2_v4l2_buffer *dst_buf;
+ 	struct frame_buffer frame_buf;
+ 	struct enc_param pic_param;
+-	u32 stride = ALIGN(inst->dst_fmt.width, 32);
+-	u32 luma_size = (stride * inst->dst_fmt.height);
+-	u32 chroma_size = ((stride / 2) * (inst->dst_fmt.height / 2));
++	u32 stride = inst->src_fmt.plane_fmt[0].bytesperline;
++	u32 luma_size = (stride * inst->src_fmt.height);
++	u32 chroma_size = 0;
+ 
+ 	memset(&pic_param, 0, sizeof(struct enc_param));
+ 	memset(&frame_buf, 0, sizeof(struct frame_buffer));
+ 
++	if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV420 ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV420M)
++		chroma_size = luma_size / 4;
++	else if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV12 ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV21 ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV12M ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV21M)
++		chroma_size = luma_size / 2;
++	else if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV422P ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV422M)
++		chroma_size = luma_size / 2;
++	else if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16 ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61 ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16M ||
++		 inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61M)
++		chroma_size = luma_size;
++
+ 	dst_buf = v4l2_m2m_next_dst_buf(m2m_ctx);
+ 	if (!dst_buf) {
+ 		dev_dbg(inst->dev->dev, "%s: No destination buffer found\n", __func__);
+@@ -490,11 +525,15 @@ static int wave5_vpu_enc_s_fmt_out(struct file *file, void *fh, struct v4l2_form
+ 	}
+ 
+ 	if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV12 ||
+-	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV12M) {
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV12M ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16 ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16M) {
+ 		inst->cbcr_interleave = true;
+ 		inst->nv21 = false;
+ 	} else if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV21 ||
+-		   inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV21M) {
++		   inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV21M ||
++		   inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61 ||
++		   inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61M) {
+ 		inst->cbcr_interleave = true;
+ 		inst->nv21 = true;
+ 	} else {
+@@ -1086,6 +1125,16 @@ static void wave5_set_enc_openparam(struct enc_open_param *open_param,
+ 	u32 num_ctu_row = ALIGN(inst->dst_fmt.height, 64) / 64;
+ 	u32 num_mb_row = ALIGN(inst->dst_fmt.height, 16) / 16;
+ 
++	if (inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV422P ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16 ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61 ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_YUV422M ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV16M ||
++	    inst->src_fmt.pixelformat == V4L2_PIX_FMT_NV61M)
++		open_param->src_format = FORMAT_422;
++	else
++		open_param->src_format = FORMAT_420;
++
+ 	open_param->wave_param.gop_preset_idx = PRESET_IDX_IPP_SINGLE;
+ 	open_param->wave_param.hvs_qp_scale = 2;
+ 	open_param->wave_param.hvs_max_delta_qp = 10;
 -- 
 2.43.0
 
