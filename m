@@ -1,119 +1,125 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5593244371
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 15:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B12E47F7F;
+	Mon, 11 Mar 2024 15:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710171210; cv=none; b=oEizwVdN/VfhnEbwQYUKDtlwnZHrBkFKUHPu9+RE1nIIrrBQ2xquGPHJ+rPYm5CRBjiNFQRhoUDJhwcovhRewLuvwIS1U9IZdqYJekvxmIkD34i5+ibYjBuwkmC4fpcVNzAKGDCbMOds6shKDSdhJqj6w7PHLrwLIQOaTr4DPoY=
+	t=1710171256; cv=none; b=YrRYzO09xkb6ofOEzjZK9AAjAq7Lr35KVMNGAH0YGneexu3OsHRNnBuP+bTGEcTO6iHjo3uLHLSoqCshKqoVgcXhYOFSTCscx+BP8pp/V1R76nX0UtlbucAW3FrABYUm4Stia5lD3wetrhPSTBzpiX4xbZGXHBsrA3s5CcBESDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710171210; c=relaxed/simple;
-	bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AZDhe3tp+ixK6ZSVM3Fl6HGoAmlwdShQhOP0sAPG1/HRstDc5kwePdbxiYaHo1Vw8Kr8PiMviKjT578rkRLGYgNd6PFeNwcHjHaTT8Tdsu8Z4zipOeC/sKupTGOzTAV41MJS7uT1qAq7FNlFmg9jwqg0zkiB+JN0A5QtLSPZFDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x3GvtHSq; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710171256; c=relaxed/simple;
+	bh=az3hhnUgV3G0rSZ98uoM1GKIqe+YbSINpP+L4RTj85A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Aj/o/lU8eORa2MH+3wsv+ZXq4FZIU6IFkZdlMCUom9wrPtHAgtvCUHMQEkJpp2jtB8tHa+GNbufaG6HXsCc3CUyvrZUlI5eHKMUSDZH7PayzIQGD7Wc0Gg7ck7T7Rqe/WVvolVaVXAta9eNY/tyCDHVxkuze6TICsex7VEfK1hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2BdW5k2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3GvtHSq"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412e784060cso32258455e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 08:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710171206; x=1710776006; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
-        b=x3GvtHSq0o7fqG7Js8UBDYyiGGmbvocSiat9Ce2dQlflT25D8h7ggz6S8+gASAuM0B
-         ZcNxW7gGUOVAHN4yMSq63y+F16QTnDP3FUccCaH8FkRj/LeOysSud83iQawkCcPam07W
-         9pfrThKEf4kFIKs8T5RoOYGkxT9TGmyp0FgeYQkCH/VilTVBUVi141DcdPWk/VbqOBCP
-         mBtTfCXbvdRmTTgLT1xqdMQAN2KBxsgdLgQ5GfZHFCou5QYOaupFMGHF7m14yhvyw4XD
-         mQG1UJm9T1tbfyRqvnecr48HAYdNZPG2tsPlOAd3NOT+NlM/F6RtR56tpLp1wZzvUFYz
-         FvKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710171206; x=1710776006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
-        b=LT4xqxJCeXaLq5ffmiyz4+Qg4nR/7A6zmc7brQu/xOztDRr9G1cczkD+voI6JpzP/N
-         vIRx0FwGwC43/+yP2KHqnJoVdLDZa+WZ51A+qq6X/Ei7yqXmQbhzzuYxsTL0W0IJL48W
-         YiSMheJmlgomWgs2g+HsA8IsM4obvCGRbrOplAzM/c1etwR2h+K7JyngcRLg1LrIqHa1
-         U/aNcE7ieOCWqpKLSmadkP4pcd1pZbBfzbUq0rqtRWUEEXPI5T1fc+Z5WhIuHfUX0laq
-         Ui+SXJTST7feRv068K/qW0fo5Js172QScwp3Ox9hYV92M/5S4Q8+G2k4+z6SkhvmPXwt
-         YDUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTCt5oncRvtM79Br4niZ0QrgOvpx5SeX5QuF954dLkwiaeVp1jmm5Fyky9alSAit1g9TRChkIQEyGs2F8pUUzKiQk3oEBpCoATHmTt
-X-Gm-Message-State: AOJu0Yw9lXc6Jml231wNqXIuf0KitGtqXTQFpwZKi6y1MWYM5hEvhTmd
-	M2MdM0oHMvwBwOOLQS3RsHae1WzGELAqjm8/A4Lx3hbFuByDlASyYWOtHw3bOekY/oZXCNGWggb
-	SsEg7D6HEkTAUPX3LYxCZzyjKwBOJUhtZJOaa
-X-Google-Smtp-Source: AGHT+IE/th4Pg/GBs04QnTLC4gySgD/Ced3Hwsh9xlJGW37qnBqN80Ztb15KeaRy40uSPOSKwYSAYx2WXmVslFbnrPM=
-X-Received: by 2002:a5d:6751:0:b0:33e:1f2b:8cc5 with SMTP id
- l17-20020a5d6751000000b0033e1f2b8cc5mr6816452wrw.0.1710171205375; Mon, 11 Mar
- 2024 08:33:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2BdW5k2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62C8C43390;
+	Mon, 11 Mar 2024 15:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710171255;
+	bh=az3hhnUgV3G0rSZ98uoM1GKIqe+YbSINpP+L4RTj85A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J2BdW5k2Cu65uIcNFqXDlZBA+nowIy/eRey38lRWlsqzk1vTqPpmeP0ejOPEX4IkZ
+	 5EPWk3nyQgzRAIKRGlWMN+wsjtRmHegrcFqv7PU7dJ1ziV9Q1KgY+yo4wUCguskrfM
+	 GwJ4UIpSW+wY+XWsFOFMM2Vp4oiFOQWZ9tKThY9WZS8S2UFbCZbRABjRpQFuIaMv/A
+	 ipn/pEpBuIdP4wP9XTBZjE75j1V0VDLTj9U215/jdroBk3OhBl4KVPqeQ/Bi6qgxGA
+	 6iC1P1zawza1PD2v0uXT36a2hb9YtMUn82sV3uwWNOzgoGmWb7mvEq1S7dzBr7dxnK
+	 Qyb28Ej5VQHmw==
+Date: Mon, 11 Mar 2024 08:34:15 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH 1/4] xfs: match lock mode in
+ xfs_buffered_write_iomap_begin()
+Message-ID: <20240311153415.GS1927156@frogsfrogsfrogs>
+References: <20240311122255.2637311-1-yi.zhang@huaweicloud.com>
+ <20240311122255.2637311-2-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-14-irogers@google.com>
- <CANiq72=rgXk6oz65wb57ZP+jmSoD-a4SSVzU6s6SZLubV3cvBw@mail.gmail.com>
-In-Reply-To: <CANiq72=rgXk6oz65wb57ZP+jmSoD-a4SSVzU6s6SZLubV3cvBw@mail.gmail.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 11 Mar 2024 08:33:10 -0700
-Message-ID: <CAKwvOdkMYnYO2hyJEFj-M_iur6BneEZjPHvsodZAGw=b7PmmzA@mail.gmail.com>
-Subject: Re: [PATCH v1 13/13] tools headers: Rename noinline to __noinline
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
-	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
-	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, Christopher Di Bella <cjdb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240311122255.2637311-2-yi.zhang@huaweicloud.com>
 
-On Sun, Mar 10, 2024 at 4:25=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Sun, Mar 10, 2024 at 3:06=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > [1] https://clang.llvm.org/docs/AttributeReference.html#noinline
-> > Reported-by: Christopher Di Bella <cjdb@google.com>
->
-> Out of curiosity, was this due to the `[[gnu::noinline]]` or similar
-> in e.g. `src/string/memset_explicit.h`?
+On Mon, Mar 11, 2024 at 08:22:52PM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> Commit 1aa91d9c9933 ("xfs: Add async buffered write support") replace
+> xfs_ilock(XFS_ILOCK_EXCL) with xfs_ilock_for_iomap() when locking the
+> writing inode, and a new variable lockmode is used to indicate the lock
+> mode. Although the lockmode should always be XFS_ILOCK_EXCL, it's still
+> better to use this variable instead of useing XFS_ILOCK_EXCL directly
+> when unlocking the inode.
+> 
+> Fixes: 1aa91d9c9933 ("xfs: Add async buffered write support")
 
-Yes, and in src/__support/threads/linux/thread.cpp's definition of
-start_thread().
+AFAICT, xfs_ilock_for_iomap can change lockmode from SHARED->EXCL, but
+never changed away from EXCL, right?  And xfs_buffered_write_iomap_begin
+sets it to EXCL (and never changes it), right?
 
-Thanks for the patch!
+This seems like more of a code cleanup/logic bomb removal than an actual
+defect that someone could actually hit, correct?
 
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+If the answers are {yes, yes, yes} then:
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
---=20
-Thanks,
-~Nick Desaulniers
+--D
+
+
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> ---
+>  fs/xfs/xfs_iomap.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index 18c8f168b153..ccf83e72d8ca 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -1149,13 +1149,13 @@ xfs_buffered_write_iomap_begin(
+>  	 * them out if the write happens to fail.
+>  	 */
+>  	seq = xfs_iomap_inode_sequence(ip, IOMAP_F_NEW);
+> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +	xfs_iunlock(ip, lockmode);
+>  	trace_xfs_iomap_alloc(ip, offset, count, allocfork, &imap);
+>  	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, IOMAP_F_NEW, seq);
+>  
+>  found_imap:
+>  	seq = xfs_iomap_inode_sequence(ip, 0);
+> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +	xfs_iunlock(ip, lockmode);
+>  	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
+>  
+>  found_cow:
+> @@ -1165,17 +1165,17 @@ xfs_buffered_write_iomap_begin(
+>  		if (error)
+>  			goto out_unlock;
+>  		seq = xfs_iomap_inode_sequence(ip, IOMAP_F_SHARED);
+> -		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +		xfs_iunlock(ip, lockmode);
+>  		return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags,
+>  					 IOMAP_F_SHARED, seq);
+>  	}
+>  
+>  	xfs_trim_extent(&cmap, offset_fsb, imap.br_startoff - offset_fsb);
+> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +	xfs_iunlock(ip, lockmode);
+>  	return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags, 0, seq);
+>  
+>  out_unlock:
+> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +	xfs_iunlock(ip, lockmode);
+>  	return error;
+>  }
+>  
+> -- 
+> 2.39.2
+> 
+> 
