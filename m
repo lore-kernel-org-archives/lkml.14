@@ -1,127 +1,159 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AF638DD2;
-	Mon, 11 Mar 2024 10:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8BB2C861
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 10:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710153910; cv=none; b=erS+JJsjgKvMV6IKBzwqFPLxF4WxIfDy67ft1cEJ14ugThNotzrEgmzv8H/ppoQkUKKwl6lLuTEziZVkF1yszsnEZwhEETEHO6Re0O4PSY6n82aw0Drio2zZjTsG6JAgAPCZhAwvvXulQcnb9cqCVpdTKsXb10L/JOL57ZUGWME=
+	t=1710154041; cv=none; b=aL8UZI1Mf449WUZl5igXCGS3lLZcXVYKC6t8RUoSXjvYTEzqrydYTCpmcDDCNMtMrLTpySDl1zexP4h03GtfEjnPMziz4Te+AxGN/mj3s5+FIW+zXgvdp+izHgKLMgWKiCFvc2sQI5KkPIiE3jsHLH5YuLhWfPwIuc+nkC7zsyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710153910; c=relaxed/simple;
-	bh=+sxHONNnx1hFuxK0YIAbVsDwlEeH+igDtPPWM75FSv4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BFPUNGZmw6t0ICYdgYH/9TqOjoDrZAmY4uqeNSA20oOfndeBzIMlHuK1Rg5KPZUN2590axFouflHR12AX5NS6+HnFOliCQPOJt2ZKuVMUtCVcxWP7rGmwSUDr6st/JEcxGVYJrN3IdXpzG1uSbsAM2Hd8TQDP2A84ulWYr6G2gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hyt+S1xV; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1710154041; c=relaxed/simple;
+	bh=FCFtKM5ZoK2XTLYGhcLAlAmDD4xwFFMWyjuRlDleGTY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lF/Nhk2MPkv+GjUCuX41VbhXZtuxk5tjThXEGPA4CPX9RbaeP+ZAKEsRWCdZJYBhAAzxa5WuCgN/mSXTeOA0QmmzmZHNirsl5r0KPUJbtDpianFFuMmAlyYx11QXfuRnfiVHAMVnxIzBx8Mw3HPT6PgjowYKntet3Ig5xzNfkdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MiwezWWn; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hyt+S1xV"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42BAiruH107557;
-	Mon, 11 Mar 2024 05:44:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710153893;
-	bh=brk8hEUtZhRYQimGd+K1WoJ4/pWrBZiyIAP9nhQEREs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=hyt+S1xVq5Aa03sAcOxLAYUTmzaRTG91NigalPACIk2CoYlzcA3vdQNQtQgbS9Jfx
-	 73lEWYCDa/Y0xGf7by0MS0M2mW6ZkVY7rXCLUO5vT+68zy9X1lNpyIyGBBQWSLuchf
-	 7K8GFf9kG6LK4f9D6TlDMN3rrOXURGXSNUAl5MAI=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42BAirPa113120
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 11 Mar 2024 05:44:53 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 11
- Mar 2024 05:44:52 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 11 Mar 2024 05:44:52 -0500
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42BAikUT105135;
-	Mon, 11 Mar 2024 05:44:47 -0500
-Message-ID: <0512d57f-af22-4bd8-8266-33d943d7eb4a@ti.com>
-Date: Mon, 11 Mar 2024 16:14:46 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiwezWWn"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6900f479e3cso45147416d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 03:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710154038; x=1710758838; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cRIjS+xX+GPm53OcBVvySCiWaptis6C/taxIOwdOm1E=;
+        b=MiwezWWnFKe8CFyXo7GC85OnrSCA/SH8NmsvfAL1uZq01ddhSiHJJLCsi+lVFqQKaC
+         ckozFsZNvPwxFIPsYv5lCgwEmV+ujazm6dJgD7+fBJDC2Z1+SUJfy6cqWu0r3LHmn/Um
+         GtHA/TInxGgHM4+8/gX4csPjGCcv+C5Gx0mgiB8bNl/XQUnUC5MqHeSNRVfzMlaie+1a
+         4TX+DujKjdbLLkHpae2bg43w90OHHiuj1lFdyzPwl6R1oZRhiIeMJjXVi/W+Y89hXIfM
+         wDFsLNeV1099OKwqm28uikkToGNWA55GUGR8/iuY4y4Z21USjcaMJY9Oo9wJtB5gYaz1
+         hUgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710154038; x=1710758838;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cRIjS+xX+GPm53OcBVvySCiWaptis6C/taxIOwdOm1E=;
+        b=M8taTHHi+bjDUAOM0z6gQZuAgZ/dN7ZOClqJWyEYziGBAfGRqsGUoJ/bAfEnmxyezO
+         sHNDIt3GFdYs0Co6g/0WFoxQ0+uxUfwxwemgzHa1LPNx1DymYLhFu0zlI7EbkkPft3qF
+         KMOWFhAbEMqxdaGmhL7s+Pi+e3LZt4wFFuZ0VLH69EhTbfpQeVpODixChLNNRdlN86Jv
+         GC9B+Kot+PlSvygBzzI37/O2wD1ICXQHPYPe3FfNihWaLS6islssoBDHtDZS463TBE0k
+         Ci5V7TnzD+/I+0JpA1wYxXJZJNJY9f5IT8BQHBy5VhWQ8/cWBxc4/tilILUz7FjNlUqJ
+         /1Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXhAeq1LKrzGtw0u4A+4rrpDLUY1jFAJYEoHxcrj+ufandNFqow8rzrqRZkLtwLF7vV61Q8zbLtaPkMoABk3+FtgtJdGv0PMtYO3k5F
+X-Gm-Message-State: AOJu0YyHFZJqnkNCM8ted5q1FzFmwoLo5m3j6EpTmkH1/jru71LFg3/9
+	eQAcYWp5J95ZAZP8wDesyxFucVkOwBSX9pMeCNrv4An/Gr4k93qpPG2QbfY+Z9fP4C5BQv6rmg2
+	IeVjnWFsm44hqFInu7lzGscqTO5P0JMqbvecRJg==
+X-Google-Smtp-Source: AGHT+IGyrPx1d8EcSWfPY0WZ1CYoYrM93ITiWLlRr/ltcc0nW0tGxeB9PQdlmfL0rMLOYoJeiLKm/R9q7ev0Ge3Vbpc=
+X-Received: by 2002:ad4:58c5:0:b0:690:46a8:93f with SMTP id
+ dh5-20020ad458c5000000b0069046a8093fmr5235070qvb.44.1710154038009; Mon, 11
+ Mar 2024 03:47:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/6] arm64: dts: ti: k3-j784s4: Add alias to MCU CPSW2G
-Content-Language: en-US
-To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
- Menon <nm@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>
-References: <20240131101441.1362409-1-c-vankar@ti.com>
- <20240131101441.1362409-3-c-vankar@ti.com>
- <469a7f15-0539-48e9-993c-5b9c638917e0@ti.com>
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <469a7f15-0539-48e9-993c-5b9c638917e0@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240307135912.163996-1-tudor.ambarus@linaro.org> <073e5ef5-2a2e-4300-93d6-e25552276e13@linaro.org>
+In-Reply-To: <073e5ef5-2a2e-4300-93d6-e25552276e13@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 11 Mar 2024 10:47:06 +0000
+Message-ID: <CADrjBPojf92=Vvq9rVt9frC-61BQbKeX+5fRa-q8fqr9iGMryA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: exynos: gs101: define all PERIC USI nodes
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
+	willmcvicker@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Krzysztof & Tudor,
+
+On Fri, 8 Mar 2024 at 16:45, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 07/03/2024 14:59, Tudor Ambarus wrote:
+> > Universal Serial Interface (USI) supports three types of serial
+> > interface such as UART, SPI and I2C. Each protocol works independently.
+> > USI can be configured to work as one of these protocols. Define all the
+> > USI nodes from the PERIC blocks (USI0-14), in all their possible
+> > configurations. These blocks have the TX/RX FIFO depth of 64 bytes.
+> >
+> > Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+With Krzystof's comments addressed:
+
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+
+> > ---
+> > Please note that:
+> > - google,gs101-spi compatible was queued through the SPI tree:
+> >   https://lore.kernel.org/linux-arm-kernel/170742731537.2266792.3851016361229293846.b4-ty@kernel.org/
+> > - SPI dma properties were marked as not requiered. Queued through the
+> >   SPI tree:
+> >   https://lore.kernel.org/linux-spi/170967132774.228925.1759895846287455970.b4-ty@kernel.org/
+> >
+> >  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 782 +++++++++++++++++++
+> >  1 file changed, 782 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > index ee65ed9d2cfc..d7ecfbc7e440 100644
+> > --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > @@ -373,6 +373,398 @@ pinctrl_peric0: pinctrl@10840000 {
+> >                       interrupts = <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH 0>;
+> >               };
+> >
+> > +             usi1: usi@109000c0 {
+> > +                     compatible = "google,gs101-usi",
+> > +                                  "samsung,exynos850-usi";
+>
+> This should fit within 81 characters, which is pretty close to 80, so if
+> there is going to be any resend/new version, please join the lines.
+>
+> > +                     reg = <0x109000c0 0x20>;
+> > +                     ranges;
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <1>;
+> > +                     clocks = <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_PCLK_0>,
+> > +                              <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_0>;
+> > +                     clock-names = "pclk", "ipclk";
+> > +                     samsung,sysreg = <&sysreg_peric0 0x1000>;
+> > +                     status = "disabled";
+> > +
+> > +                     hsi2c_1: i2c@10900000 {
+> > +                             compatible = "google,gs101-hsi2c",
+> > +                                          "samsung,exynosautov9-hsi2c";
+> > +                             reg = <0x10900000 0xc0>;
+> > +                             interrupts = <GIC_SPI 635 IRQ_TYPE_LEVEL_HIGH 0>;
+>
+> I wonder why we use four cells in GIC...
+
+Due to the ppi-partitions defined in the gic for the pmu-(0-2) devices.
+
+regards,
+
+Peter.
 
 
 
-On 31/01/24 21:06, Andrew Davis wrote:
-> On 1/31/24 4:14 AM, Chintan Vankar wrote:
->> Add alias for the MCU CPSW2G port to enable Linux to fetch MAC Address
->> for the port directly from U-Boot.
-> 
-> Could you explain *how* this alias allows Linux to fetch a MAC
-> address from U-Boot? Sounds like we are doing something hacky here..
-> 
-Using "probe_daughtercards()" function U-Boot parses MAC addresses from
-EEPROM, then it internally calls "eth_env_set_enetaddr_by_index()"
-function which stores these MAC addresses into environment variables
-ethaddr, eth1addr, eth2addr and so on based on number of ports.
-
-U-Boot loads DTB during boot process, and it calls
-"fdt_fixup_ethernet()" function, which uses environment variables to
-update MAC addresses of ethernet ports as specified in the aliases
-section.
-
-> Why can't Linux fetch the MAC from efuses the same way U-Boot does,
-
-Linux can fetch the MAC address from efuses if "ti,syscon-efuse"
-property is enabled.
-
-> what happens if I don't use U-Boot to boot?
-
-If you don't use U-Boot to boot then the equivalent of
-"probe_daughtercards()" has to be implemented which is currently
-missing.
-
-> 
-> Andrew
-> 
->> ---
->>   arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts 
->> b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->> index f34b92acc56d..b74f7d3025de 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->> @@ -27,6 +27,7 @@ aliases {
->>           mmc1 = &main_sdhci1;
->>           i2c0 = &wkup_i2c0;
->>           i2c3 = &main_i2c0;
->> +        ethernet0 = &mcu_cpsw_port1;
->>       };
->>       memory@80000000 {
+>
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +                             pinctrl-names = "default";
+> > +                             pinctrl-0 = <&hsi2c1_bus>;
+>
+> Please reverse two lines, first pinctrl-0 then pinctrl-names. I know we
+> did not follow this convention till now, but at least new code can be
+> correct. Also clocks should be before pinctrl, so we keep some sort of
+> alphabetical order.
+>
+> It is anyway too late in the cycle for me to pick it up, so no need to
+> hurry with resend.
+>
+> Best regards,
+> Krzysztof
+>
