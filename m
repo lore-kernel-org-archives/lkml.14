@@ -1,57 +1,57 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B374AED1
-	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0DF51C52
+	for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 16:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710175610; cv=none; b=LEnwbILsB8zX69Fg933aDWUHEvtORoiRvO5lZgh0LBexKC8D5es0YTb77c6wy/yM6ZjibyBrjSY4RnDT9TxlWyBQBD1aEZCY0zfOJSIlrNNxjWCOonqTlPc9yfaGtQZxBC7rD3QS/CPBqMOm8sGDamoC4KJi5jf+RAFF2qQyDEU=
+	t=1710175611; cv=none; b=kKKtW1beQdzGOl++HXr7odiAQTHykt04jEppq54B4+eEv0jpn2HtddHxEBhgMJloiJzfUh0Rwx0KvNnEXhwWGFfZQ+5okjCDDVZlV4XCNJi4iZ/H4rLCp0oRkBFttBYWBOXYI+vtksK8fhmq5RCrkph5E3/P7OAhXQnRd0kYuOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710175610; c=relaxed/simple;
-	bh=1rbaxunOVQPm7FPgRClladfLQq23xPc2MbtK28dseXQ=;
+	s=arc-20240116; t=1710175611; c=relaxed/simple;
+	bh=YWX2hBlKKgeraszO5aQgtTxYaDusNvEWibyBtdLpKUA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VyzAAD1lS6sCJJnmxTk9sGNi2LEPCwGRxg3X/OXJ14DszkpFsYLW2FiU0kObGVksNAZF5ItxvbI0AqUo9DQbJUvrrHZRmZzATflur6M5MsLpTBHnRqgdiHwVqk/NXZTyro8gx0NwueXxaAplHuu8VrcUEG9M9ZCN4qpeSGe+EOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=q9Di0cQF; arc=none smtp.client-ip=209.85.222.180
+	 MIME-Version; b=RHBhVlMEsw5jOkVnJejAqb7SvWNDdkxPJ8by6qBObi7r+Cvq0FckFF9BB317ZYR0B+o2lVGeQ17Pflb7lmMyuf6aotXcn+JB3OQmqRr1vWynbmXEkhPscomAVs2rkd721ap8UXJCwiTgeRcRiLb/rzozNC0hCgtiGYuGqMij+8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=xWQwSztA; arc=none smtp.client-ip=209.85.160.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="q9Di0cQF"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7884114feb8so119905385a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:46:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="xWQwSztA"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-21eea6aab5eso2878629fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 09:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710175607; x=1710780407; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710175609; x=1710780409; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RZjnTg3rcm4xEs2wuMm2S2zMsfw/GRvQpvq6ZsCVNYQ=;
-        b=q9Di0cQFIiTo63gXIxSVQaGOI70w8l37/sKZzk4Af7Uh7nSl+Rx6ztOW/R2b0heH7K
-         CxS9f6ldFRJRtXWZLXifv4jqSUEHtkY+yrVDognppkBJ6Zk17TWRDmdnvx+qUskpwo6O
-         j6qBj1PLHtd2aWkvVwth14JPdOst4Q+LJAs/vtF1jkjueuuAL0xqkQD+hlXdUO5uH/PJ
-         4o6HmBjqeZ6bixvnWvKujRJszPjgzkyVaHscTs1WSFaWK5h1DbwIU7bpelCnOAHnIAB7
-         9iV0SSQRHNvVDFXIEWhK4HU1IXkVLDCw8IqjI6QxDuLokK7Y0OfY8vvHNM7xh52M18I0
-         2kew==
+        bh=WeoI5maDr3l2Ozw1ib0LWqoOcMWVTMRirMYG/aEeKfI=;
+        b=xWQwSztAqzOTGlXTBdhkxdWcW1v1o5EuHnBdcTwB6z2pFCyutKVaca0gOxHjj74u2c
+         a2Ksr6DsX90ki0Q+G85gofBtxAnRpJA8o4NOgzDJhZDcdcks5E1Zfnzz0M7xjWZB6T41
+         RyESUrjst9s2MuCWs35naXuLy7vhYt4VVerF0hr5wytJzFMPjhN8tFs3JYXy8tnigS9m
+         mz0iHZDcLaha4BctL4lgKI69jpfQSeREdrdKQdJR3zu3f/z0o6Unw9sle5tR8ds6GZyZ
+         fvwwWph6s9QAmcZHXPdNq8zZopHrkbrzx0Iip9A/iaFgPgoYJDNlbMWRomxHtZDxQfqG
+         mELw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710175607; x=1710780407;
+        d=1e100.net; s=20230601; t=1710175609; x=1710780409;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RZjnTg3rcm4xEs2wuMm2S2zMsfw/GRvQpvq6ZsCVNYQ=;
-        b=WdMnAFXOaR8Ac5pX6ByVpg3/AgcFWHfBi9JSUD4aWFOn5egrHvc2GeGVdwov/u1//+
-         4yK864H1q5SVDOIG17L8hQXD60sc8KLyhrJrgvF6PxIeXGNApRkEAULF4e/OKkterVmd
-         knDGO7ZhdjmFE6U5pPLGGjCx1lbwzDCiamxC7qjLhQZFdOvRHvzc4ZpV8PasK0PZtZWu
-         H/HmtKRY824ruu57tWvCJJ+mnvkAucN0nXpSiHCrdZk72Jlp8THB+k6uBrB3pIyEV89w
-         vHVcHl3/ybg2NMgHWpI9HQl97RcSf3tR7pcRp+qHgWhSHqjQs3PHKRrHOhZncfVTu9uq
-         S+BA==
-X-Gm-Message-State: AOJu0YzzWcnUu8VVO3zzeziBLmfhG0J6uLE7djB5Ayn03K96FwaiF3jy
-	JoP7EWMPhwijfOGuwuw+nLe30RTVku35IfIf3H4tNTJDxtWuzHbmYqW3kmaJzhA4TtHTHwv6WJ2
-	WkbY=
-X-Google-Smtp-Source: AGHT+IGK3ZkaISv7/cXUwYINZRSYzKZD81aDWnU5gX/aNi31ERoz+HAdpfJ4DupGmG/DqWHaLyf2Ag==
-X-Received: by 2002:a05:620a:3908:b0:788:7507:6e24 with SMTP id qr8-20020a05620a390800b0078875076e24mr1874945qkn.3.1710175607288;
-        Mon, 11 Mar 2024 09:46:47 -0700 (PDT)
+        bh=WeoI5maDr3l2Ozw1ib0LWqoOcMWVTMRirMYG/aEeKfI=;
+        b=g4oxT2V+lTBMxKLb7Jig+6nw+B1020DM5QsBJX3Ns3DjpM6XBk7C8WBwuHhPwrMNED
+         KvB9qyO5+/gPLEoITAinKSrZVDEYVmaWwiItTLa4eAVB1Wra9aAknFgX9ajOjkIfs+OQ
+         MXYToaWYqyZhTo5C3PRcKtocziJNE+3brIUGxyyZw4LH/5ekCYlPJKnP9JVURlwS9wAB
+         ukiOsfSknqrWypb17uXc7tds1pZVTftIikh58BVxeVFhiH2HOE08EP5F4YtsIsF4EP7D
+         THvQxC+T54PFfpHwQakt1aKp1iYyKWHmEC4NgMWdYdbmw0rAQKDyUuSteje46w0F+Qax
+         xQzQ==
+X-Gm-Message-State: AOJu0YxdcVa0mnQbPYbqbtjf2/ZFpWr++Dq05P4siiV0mc5sSh60D6ZL
+	JSv8/yV3LGUceqrXxCjwsMfGE3n9zFcW9PsGu3nepzWpMk8CY9rs80ywP/5Viv+/PZyDHxY5VNA
+	P+tk=
+X-Google-Smtp-Source: AGHT+IF7PMDKY7qPBLzKisHlCeRFB7P9dZ8FJtUn1b4P6yLcZu1GLHtuFZbDu9s9LwmUDKjKkIy2MQ==
+X-Received: by 2002:a05:6870:3307:b0:221:a43d:60ef with SMTP id x7-20020a056870330700b00221a43d60efmr8059130oae.3.1710175609309;
+        Mon, 11 Mar 2024 09:46:49 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (150.254.86.34.bc.googleusercontent.com. [34.86.254.150])
-        by smtp.gmail.com with ESMTPSA id d27-20020a05620a137b00b00788228fbe05sm2851589qkl.17.2024.03.11.09.46.46
+        by smtp.gmail.com with ESMTPSA id d27-20020a05620a137b00b00788228fbe05sm2851589qkl.17.2024.03.11.09.46.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 09:46:47 -0700 (PDT)
+        Mon, 11 Mar 2024 09:46:49 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -95,9 +95,9 @@ To: linux-kernel@vger.kernel.org,
 	vincent.guittot@linaro.org,
 	vschneid@redhat.com,
 	pasha.tatashin@soleen.com
-Subject: [RFC 04/14] fork: Remove assumption that vm_area->nr_pages equals to THREAD_SIZE
-Date: Mon, 11 Mar 2024 16:46:28 +0000
-Message-ID: <20240311164638.2015063-5-pasha.tatashin@soleen.com>
+Subject: [RFC 06/14] fork: zero vmap stack using clear_page() instead of memset()
+Date: Mon, 11 Mar 2024 16:46:30 +0000
+Message-ID: <20240311164638.2015063-7-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 In-Reply-To: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
 References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
@@ -109,67 +109,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In many places number of pages in the stack is detremined via
-(THREAD_SIZE / PAGE_SIZE). There is also a BUG_ON() that ensures that
-(THREAD_SIZE / PAGE_SIZE) is indeed equals to vm_area->nr_pages.
+In preporation for dynamic kernel stacks do not zero the whole span of
+the stack, but instead only the pages that are part of the vm_area.
 
-However, with dynamic stacks, the number of pages in vm_area will grow
-with stack, therefore, use vm_area->nr_pages to determine the actual
-number of pages allocated in stack.
+This is because with dynamic stacks we might have only partially
+populated stacks.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/fork.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/fork.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 60e812825a7a..a35f4008afa0 100644
+index 6a2f2c85e09f..41e0baee79d2 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -243,13 +243,11 @@ static int free_vm_stack_cache(unsigned int cpu)
- 
- static int memcg_charge_kernel_stack(struct vm_struct *vm)
+@@ -263,8 +263,8 @@ static int memcg_charge_kernel_stack(struct vm_struct *vm)
+ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
  {
+ 	struct vm_struct *vm_area;
++	int i, j, nr_pages;
+ 	void *stack;
 -	int i;
--	int ret;
-+	int i, ret, nr_pages;
- 	int nr_charged = 0;
  
--	BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
--
--	for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
-+	nr_pages = vm->nr_pages;
-+	for (i = 0; i < nr_pages; i++) {
- 		ret = memcg_kmem_charge_page(vm->pages[i], GFP_KERNEL, 0);
- 		if (ret)
- 			goto err;
-@@ -531,9 +529,10 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
- {
- 	if (IS_ENABLED(CONFIG_VMAP_STACK)) {
- 		struct vm_struct *vm = task_stack_vm_area(tsk);
--		int i;
-+		int i, nr_pages;
+ 	for (i = 0; i < NR_CACHED_STACKS; i++) {
+ 		vm_area = this_cpu_xchg(cached_stacks[i], NULL);
+@@ -282,7 +282,9 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
+ 		stack = kasan_reset_tag(vm_area->addr);
  
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-+		nr_pages = vm->nr_pages;
-+		for (i = 0; i < nr_pages; i++)
- 			mod_lruvec_page_state(vm->pages[i], NR_KERNEL_STACK_KB,
- 					      account * (PAGE_SIZE / 1024));
- 	} else {
-@@ -551,10 +550,11 @@ void exit_task_stack_account(struct task_struct *tsk)
+ 		/* Clear stale pointers from reused stack. */
+-		memset(stack, 0, THREAD_SIZE);
++		nr_pages = vm_area->nr_pages;
++		for (j = 0; j < nr_pages; j++)
++			clear_page(page_address(vm_area->pages[j]));
  
- 	if (IS_ENABLED(CONFIG_VMAP_STACK)) {
- 		struct vm_struct *vm;
--		int i;
-+		int i, nr_pages;
- 
- 		vm = task_stack_vm_area(tsk);
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-+		nr_pages = vm->nr_pages;
-+		for (i = 0; i < nr_pages; i++)
- 			memcg_kmem_uncharge_page(vm->pages[i], 0);
- 	}
- }
+ 		tsk->stack_vm_area = vm_area;
+ 		tsk->stack = stack;
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
