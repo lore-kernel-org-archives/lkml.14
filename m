@@ -1,138 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F2C55E6A;
-	Mon, 11 Mar 2024 19:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EBC56B62;
+	Mon, 11 Mar 2024 19:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710184383; cv=none; b=DUNQ0r51hliAVcYO0CpdLQmMcvmLiJ7nVu2IfyENTG7m9MgMJBtNHyOt1RSUCBq9p++BKfp7wgcd9kDr/EK2BDbbz6EReJAu04ONLNPJ8CdCqblJGk/iwKAfg/54o/z5dUKnOYTRXJhRGaRb64EDiI9cSE4HhQgivLPa4kBONzY=
+	t=1710184460; cv=none; b=fq5szcaIYCkOxdbiAtM6AbVGnh77JJAW/AI0bVHLgOj7++AY59lEkpJFzDzIhJMyCe2osJXTuJZGy1x7Kw5Q9v+2GTml5zw6ppZxtvqEzTyBN2KO60SEz7r/jWCf3dj2kqd85Nlj9CkC3LTVyT3ohzPdsK9hocaD28X2ur+Qc6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710184383; c=relaxed/simple;
-	bh=Bm88F28x3u+fvlR01BxaHWKDVnqJ17W1hQeeNr24xyo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RH0kYHFwhTIVhjMUvgWDrdWFCnqQ7+VNKCatZM/DzOh6vKJyQmGJPJv/mggADOMnildexpS45rhv3GPNzTfw4wsekwg0XRlOhNYb2DbSQZw4k1u74ec3ymYe/kgNaJd4Xt2ltpZscFVa3PKJKzxRMvsgOndjFUKh9GK+fPPJrPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rgo65XpS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MgtS9rKg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710184460; c=relaxed/simple;
+	bh=JuZL7oM7lKhmmzj290jDyn9KcxNQoNasVDvwUuItmEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pzeONZvU/OSPaDCJvA6MXEeaiKK1LChNWx0oGlaaA5DObnZRohw/r5fUhpzaJ4WaYL2PoHhgDZipIMrsptneKCAonx73Kgv211stOt6C4BjclYG53Y1nos3dQ5tdKbKFRMTBZZtDYVdkFvn97+BpR5lY4VYceq3LLBuvt/vf4EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=g0t3iAwX; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rgo65XpS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MgtS9rKg"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710184379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ojVF5KnTu9eflAVU8U0iQnMKfsuzwe1NcRF/4Nu1ku0=;
-	b=Rgo65XpSBswDXIVbhhr5JNjVSrbkGysrfzehxKTT6u+DAr7o88/XYdLRIeKGsKiCK9Tqx2
-	GHrb6l9AADDBymnfebyQ6s/ogzybtsiyHhg6n9Px50dsbrgtM4iqYgYsiEhc5ubaSF3fA6
-	zCzNzXpPax6YFRgH7a6FFuEFhT6DkR4NUNjaLBD8vJ39A1Q24ONjJnUzUawJ6mXDVr1V2r
-	0CFgc+aA5N8UYMVfYL7TckWMm5k78cr53BT9Lw3x2pHl7fe2lUIL4u8uvOo1u8JvY8Bos6
-	M86p+XNmf39CejcuMEfzpTon6jgItx2jakHnUtlGyUWf4G1DmZO1+dX+Xg5PlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710184379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ojVF5KnTu9eflAVU8U0iQnMKfsuzwe1NcRF/4Nu1ku0=;
-	b=MgtS9rKgX6BQX/+QeE+mXqbLr3cKXV3YAa/33pgzxOv+gdlDUcpltmPk+ADDcurJB/kUmi
-	dhNoMysWEdF+64BA==
-To: Joel Fernandes <joel@joelfernandes.org>, Ankur Arora
- <ankur.a.arora@oracle.com>
-Cc: paulmck@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- willy@infradead.org, mgorman@suse.de, jpoimboe@kernel.org,
- mark.rutland@arm.com, jgross@suse.com, andrew.cooper3@citrix.com,
- bristot@kernel.org, mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
- glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
- mattst88@gmail.com, krypton@ulrich-teichert.org, rostedt@goodmis.org,
- David.Laight@aculab.com, richard@nod.at, mjguzik@gmail.com,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, rcu@vger.kernel.org
-Subject: Re: [PATCH 15/30] rcu: handle quiescent states for PREEMPT_RCU=n,
- PREEMPT_COUNT=y
-In-Reply-To: <66820daa-421b-469a-a7e8-ae7ae9dfa978@joelfernandes.org>
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
- <20240213055554.1802415-16-ankur.a.arora@oracle.com>
- <20240310100330.GA2705505@joelbox2>
- <da51dacc-cdf7-4129-b424-b32764736f48@paulmck-laptop>
- <fd48ea5c-bc74-4914-a621-d12c9741c014@joelfernandes.org>
- <87r0ghl51f.fsf@oracle.com>
- <66820daa-421b-469a-a7e8-ae7ae9dfa978@joelfernandes.org>
-Date: Mon, 11 Mar 2024 20:12:58 +0100
-Message-ID: <87wmq8pop1.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="g0t3iAwX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=FGf/tNhnC4YEzI6MSBG52sbqC4xqonb3q4yeuMw8Xfk=; b=g0t3iAwXXc+OmGjPUCKpaYYxEY
+	4e1HCDEJMWgdxdzxOzZscPKhQp6IelAcdS5lyKRoNlSGeNe7jNhCjBUrOq1epQ52eqUd4PdxP3jlv
+	0O3BSrwPC7rO9cdIrDh15mVdJOxXnJFotqy1g0XHugt5Z4VMAqYwOZk6ZKbXr72mlSTJ+TxhvTcWj
+	rXIIfVlpiXyBXyKp1BrzMhddv8jQdMi83CIZ4A6FHIMIwaNZuIH0cShfzQLoVfpP+fSmVpUgAEANf
+	EFjNG4jsJvWOP8zIkvc063waQdkX4PVR0olGY3pypVzFX7MIBJsQNJxWLz4mneduNbb6qYdjtBiqx
+	xnlhk1+w==;
+Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.localnet)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1rjkqo-003cD8-2X;
+	Mon, 11 Mar 2024 13:58:18 -0500
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ wine-devel@winehq.org,
+ =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+ Wolfram Sang <wsa@kernel.org>, Arkadiusz Hiler <ahiler@codeweavers.com>,
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 04/31] ntsync: Introduce NTSYNC_IOC_WAIT_ANY.
+Date: Mon, 11 Mar 2024 13:58:18 -0500
+Message-ID: <4875514.GXAFRqVoOG@camazotz>
+In-Reply-To: <20240219223833.95710-5-zfigura@codeweavers.com>
+References:
+ <20240219223833.95710-1-zfigura@codeweavers.com>
+ <20240219223833.95710-5-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Mar 11 2024 at 11:25, Joel Fernandes wrote:
-> On 3/11/2024 1:18 AM, Ankur Arora wrote:
->>> Yes, I mentioned this 'disabling preemption' aspect in my last email. My point
->>> being, unlike CONFIG_PREEMPT_NONE, CONFIG_PREEMPT_AUTO allows for kernel
->>> preemption in preempt=none. So the "Don't preempt the kernel" behavior has
->>> changed. That is, preempt=none under CONFIG_PREEMPT_AUTO is different from
->>> CONFIG_PREEMPT_NONE=y already. Here we *are* preempting. And RCU is getting on
->> 
->> I think that's a view from too close to the implementation. Someone
->> using the kernel is not necessarily concered with whether tasks are
->> preempted or not. They are concerned with throughput and latency.
->
-> No, we are not only talking about that (throughput/latency). We are also talking
-> about the issue related to RCU reader-preemption causing OOM (well and that
-> could hurt both throughput and latency as well).
+On Monday, 19 February 2024 16:38:06 CDT Elizabeth Figura wrote:
+> +static struct ntsync_obj *get_obj(struct ntsync_device *dev, int fd)
+> +{
+> +	struct file *file = fget(fd);
+> +	struct ntsync_obj *obj;
+> +
+> +	if (file->f_op != &ntsync_obj_fops) {
+> +		fput(file);
+> +		return NULL;
+> +	}
 
-That happens only when PREEMPT_RCU=y. For PREEMPT_RCU=n the read side
-critical sections still have preemption disabled.
+I just noticed during self-review that this fails to check the result of 
+fget() for NULL :-/
 
-> With CONFIG_PREEMPT_AUTO=y, you now preempt in the preempt=none mode. Something
-> very different from the classical CONFIG_PREEMPT_NONE=y.
+I'll fix this next revision.
 
-In PREEMPT_RCU=y and preempt=none mode this happens only when really
-required, i.e. when the task does not schedule out or returns to user
-space on time, or when a higher scheduling class task gets runnable. For
-the latter the jury is still out whether this should be done or just
-lazily defered like the SCHED_OTHER preemption requests.
+> +
+> +	obj = file->private_data;
+> +	if (obj->dev != dev) {
+> +		fput(file);
+> +		return NULL;
+> +	}
+> +
+> +	return obj;
+> +}
 
-In any case for that to matter this forced preemption would need to
-preempt a RCU read side critical section and then keep the preempted
-task away from the CPU for a long time.
 
-That's very different from the unconditional kernel preemption model which
-preempt=full provides and only marginally different from the existing
-PREEMPT_NONE model. I know there might be dragons, but I'm not convinced
-yet that this is an actual problem.
 
-OTOH, doesn't PREEMPT_RCU=y have mechanism to mitigate that already?
-
-> Essentially this means preemption is now more aggressive from the point of view
-> of a preempt=none user. I was suggesting that, a point of view could be RCU
-> should always support preepmtiblity (don't give PREEEMPT_RCU=n option) because
-> AUTO *does preempt* unlike classic CONFIG_PREEMPT_NONE. Otherwise it is
-> inconsistent -- say with CONFIG_PREEMPT=y (another *preemption mode*) which
-> forces CONFIG_PREEMPT_RCU. However to Paul's point, we need to worry about those
-> users who are concerned with running out of memory due to reader
-> preemption.
-
-What's wrong with the combination of PREEMPT_AUTO=y and PREEMPT_RCU=n?
-Paul and me agreed long ago that this needs to be supported.
-
-> In that vain, maybe we should also support CONFIG_PREEMPT_RCU=n for
-> CONFIG_PREEMPT=y as well. There are plenty of popular systems with relatively
-> low memory that need low latency (like some low-end devices / laptops
-> :-)).
-
-I'm not sure whether that's useful as the goal is to get rid of all the
-CONFIG_PREEMPT_FOO options, no?
-
-I'd rather spend brain cycles on figuring out whether RCU can be flipped
-over between PREEMPT_RCU=n/y at boot or obviously run-time.
-
-Thanks,
-
-        tglx
