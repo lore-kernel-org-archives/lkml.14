@@ -1,219 +1,195 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B14433BD;
-	Tue, 12 Mar 2024 05:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8D710A12;
+	Tue, 12 Mar 2024 05:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710222267; cv=none; b=ul+XYmjzxIHak+SOsQFCXcol4fVuS3EzvTu6iTNnH6SJWN33Ay3CJxB8Ux+AeI6wK1v2eEH2YkvHhf51G7mnRU4BBeg9XQjzqPRv7BouKUsJ4cM3jqIcp0Cv//F2xlYmv5Ec1V1L4nYdfdNKrrFobfLAWX2iURrBrwAZKrQ/UEo=
+	t=1710222371; cv=none; b=QPBklSxauncsAjR5lp7M7vG0GlwW6PrYeMd9ExvMAKGGMbz5tUG1PScj9RRcPJo+T/H8kW7oJQUbY6F4yJ0OENc9o0LYw7IvtVWIW0ZEyD/FoouuvBZ0YJ4PyYv/9JZ3ejkqdYMe1eGp1h6WD/XwFP/UF/h1XnlIDzXqjOggB70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710222267; c=relaxed/simple;
-	bh=vsDdw5AoKb7t2Fr1pwSs+CiRh2m89COXoT7sPIXGtCk=;
+	s=arc-20240116; t=1710222371; c=relaxed/simple;
+	bh=p/qM/uvqJknlkhIz++zsgYm5UEdegHpPBL/SEz1rPBg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cBPhthXDfd4VBOu+TqEulbSTbIZqRU4x2HjnJR3dBuECWPd7aEmhiSQImAcB0XXTFCOC6qi+qiHSbLRFmJjFUkytyARF8eFbs2CsrlrxeiTXnObP8gOddoWA8tDQ3Ew6X5tdY8RNcsoNQRXopaZ7Db8klXcz0ueoLR/2waEbDOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=mRPgx98qBWyW+Jj11PoOGqPV2/mQr+Aa7oemlIMWlel5ag95fN4zQ1ZGWff11tn7ZNZkzQsRLz8u5JwOVaEaLzgj9Q7Zpfat4gvkK6u9aAqmckjGZ3hDB+zBr+YX5eOsBXiHC3VUhgX47b5EV9UGQYvmv7a6TiIs3eSsaKxlNpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29bbff1505dso1801485a91.0;
-        Mon, 11 Mar 2024 22:44:24 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a4429c556efso412448466b.0;
+        Mon, 11 Mar 2024 22:46:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710222264; x=1710827064;
+        d=1e100.net; s=20230601; t=1710222367; x=1710827167;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mikke4cs+ZZ27PoBUQOVOzuXIffj5gVMRmy7vQDDZeE=;
-        b=crvDmJWMjRjYUJD+7kdWDwblbdE2EhbuSDrs2/7xzooe9nZKt2b2B/nM8y6CFjPimJ
-         JY5qNe18pY/1Ho9+fBY7uIPejKHb3qyqTqTciapmiP0WgvVayyB+51zcCUZ1Cp+Y/qhS
-         Jr1+4mcpvA+h6oEHxiCs9I4MppiVo0ubC7/61hFwZvysU46oYVQgb5McAy8mxZeoNhYl
-         R3/C0eVMO1BrbQxdBnNV5JkW4vgShRrhRH8hqRxarEhP4lASOwvQR4jeto+rsDJgMRCm
-         28f/vARFZ/2kDR7Y+Y+w3iSl50xj6lhYO6/zIHEY4fA5sMSBIWL218VZvD4vfso+tj4e
-         61sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3BIGTipUvFpYTLoeaXxJQEDNZ/GPbdWdTU3uCpEVPfqhKynB1q1ylUuqRX5SseXLluuXspIGcNyG+1jGIYUlDWP3bMnNU4qwd31lNgqhqxZrPMwOXu/5PGEbbsPL+La3nTD4a9nexnqG0HaxHHA==
-X-Gm-Message-State: AOJu0YxjttC4vNnVi3iFLJYDLj7v63gFVtRFBM5L2CJpqILI3/D6zXtA
-	kf7mSTFEOIwrnDR9pdvLBjcnwA3tNOhp3RdnAIQagZVC/8dTgnyPLRqaKiwJg5onW4vSAdxVRls
-	Jyk+atvnfKSGG9Y1THtPvPazUhyc=
-X-Google-Smtp-Source: AGHT+IGYx33ZxIgxGQWOQHAYzCM45EMtSCfx0vcZ8NbS22ydjPzGF/yHICSx7ZDQqMdZFviAJ/dqszz2s+bT4LtR+EI=
-X-Received: by 2002:a17:90b:4b46:b0:29c:32ad:2fbe with SMTP id
- mi6-20020a17090b4b4600b0029c32ad2fbemr1207866pjb.49.1710222263698; Mon, 11
- Mar 2024 22:44:23 -0700 (PDT)
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mEgAABfrmv9f6da9s+EJl/QuGoeCFMl1ymUuyGPWf5k=;
+        b=VyfCdKi3dAVj8QpPD05LBPsZlUGgKNFMFoK2gac22WHcPpLNjhEvBYEyGwnrl6V1hA
+         zv2A+k+o3y3hxSaNwMiaka9/gVua3I4qsdGH5lSc/0vccADhaY6DW53sLNJ8puoNVAt1
+         Igl8TJILhc3+4YnRNX4R6ZPFldo228FmC/0SKKJg4gp7cJgx6GyI6Wxm41/6Zi5PpBNc
+         43GhLliCCUugeDvbQsKyOsf0PEQV6rv++SwRIFJiEiLBnCltxj6X0+miHMFvdZziR+wi
+         foxQIRVHgKf8aWOSnLILlcJZe5+9lNtoxUtgKz/YAExyU4mdf9/ryKqjiKKcmDbUoBnI
+         4Cfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXumGokw+oboMJu6UIeyDpDLC6Mqywnk2bxtDH9GTY77XZUqyjeOVI/jeXNX4HLK7gs+AKnKNIVOToXnUpmcJvZUgQKeEVf2Na0U26AMQnwB0SUqGwGr2IN4memhm9a1qJMqXwy0wRxmPXODqr4FW+TW3XYNs8Q4eWBguVpRH6h6U51
+X-Gm-Message-State: AOJu0YxQyd5AY1J5zK7C8AIdZM0mByWrYcRHNZaUCkLT6bjkBtXvuv1X
+	n4wTofPmEn1Rrac3HIdKwvL4nH0ZCiXZ3rHSBT/fkhRGQaBf0mCrjvNJRI+WI6EltA==
+X-Google-Smtp-Source: AGHT+IHtYv9eZ0NExks4bz6UDwMuY2zHFIV7h+rZrwrs52ipFLTfRTqWDy2dfIl+mC4lJvmeJtk3Fg==
+X-Received: by 2002:a17:906:3daa:b0:a3f:5144:ada2 with SMTP id y10-20020a1709063daa00b00a3f5144ada2mr5117620ejh.2.1710222366772;
+        Mon, 11 Mar 2024 22:46:06 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id r24-20020a170906549800b00a45a62e0ed0sm3512226ejo.98.2024.03.11.22.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Mar 2024 22:46:06 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4429c556efso412446566b.0;
+        Mon, 11 Mar 2024 22:46:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNSYnKA5F45lIyBdn7PlcZBypepjMFLGhV8U1VAnMMckA8K9N8/8EHiUtnsb64+hMeoPrGGOVaUHyEtFA/ZhC43f04RscS3cF9Ft99JgNmHrI2NqwjaMGOGv/1TWO7yMOXtLOWtbL06yKfAtmZr1h9yPt8L+wI07Pq2BPlUW+SK+HI
+X-Received: by 2002:a17:906:4a89:b0:a46:2b4d:e3f8 with SMTP id
+ x9-20020a1709064a8900b00a462b4de3f8mr2377402eju.19.1710222366228; Mon, 11 Mar
+ 2024 22:46:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311225617.179184-1-retpolanne@posteo.net>
-In-Reply-To: <20240311225617.179184-1-retpolanne@posteo.net>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 22:44:12 -0700
-Message-ID: <CAM9d7civcSVL92SYhssCjYzaomyJNfn0CHWz7ErGwKY-H8_Kfw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf lock contention: skip traceiter functions
-To: Anne Macedo <retpolanne@posteo.net>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240311161558.1310-1-mhklinux@outlook.com> <20240311161558.1310-3-mhklinux@outlook.com>
+ <13581af9-e5f0-41ca-939f-33948b2133e7@linux.intel.com>
+In-Reply-To: <13581af9-e5f0-41ca-939f-33948b2133e7@linux.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Date: Mon, 11 Mar 2024 22:45:54 -0700
+X-Gmail-Original-Message-ID: <CAC41dw9RKh1EzprEHqy+BpRbPNYiwOLvnWeauErdMLDCJdRyLA@mail.gmail.com>
+Message-ID: <CAC41dw9RKh1EzprEHqy+BpRbPNYiwOLvnWeauErdMLDCJdRyLA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] Drivers: hv: vmbus: Track decrypted status in vmbus_gpadl
+To: mhklinux@outlook.com, rick.p.edgecombe@intel.com, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	gregkh@linuxfoundation.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, kirill.shutemov@linux.intel.com, 
+	dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-coco@lists.linux.dev
+Cc: elena.reshetova@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 3:57=E2=80=AFPM Anne Macedo <retpolanne@posteo.net>=
- wrote:
+On Mon, Mar 11, 2024 at 10:02=E2=80=AFPM Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 >
-> The perf lock contention program currently shows the caller of the locks
-> as __traceiter_contention_begin+0x??. This caller can be ignored, as it i=
-s
-> from the traceiter itself. Instead, it should show the real callers for
-> the locks.
 >
-> When fiddling with the --stack-skip parameter, the actual callers for
-> the locks start to show up. However, just ignore the
-> __traceiter_contention_begin and the __traceiter_contention_end symbols
-> so the actual callers will show up.
+> On 3/11/24 9:15 AM, mhkelley58@gmail.com wrote:
+> > From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> >
+> > In CoCo VMs it is possible for the untrusted host to cause
+> > set_memory_encrypted() or set_memory_decrypted() to fail such that an
+> > error is returned and the resulting memory is shared. Callers need to
+> > take care to handle these errors to avoid returning decrypted (shared)
+> > memory to the page allocator, which could lead to functional or securit=
+y
+> > issues.
+> >
+> > In order to make sure callers of vmbus_establish_gpadl() and
+> > vmbus_teardown_gpadl() don't return decrypted/shared pages to
+> > allocators, add a field in struct vmbus_gpadl to keep track of the
+> > decryption status of the buffers. This will allow the callers to
+> > know if they should free or leak the pages.
+> >
+> > Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> >  drivers/hv/channel.c   | 25 +++++++++++++++++++++----
+> >  include/linux/hyperv.h |  1 +
+> >  2 files changed, 22 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> > index 56f7e06c673e..bb5abdcda18f 100644
+> > --- a/drivers/hv/channel.c
+> > +++ b/drivers/hv/channel.c
+> > @@ -472,9 +472,18 @@ static int __vmbus_establish_gpadl(struct vmbus_ch=
+annel *channel,
+> >               (atomic_inc_return(&vmbus_connection.next_gpadl_handle) -=
+ 1);
+> >
+> >       ret =3D create_gpadl_header(type, kbuffer, size, send_offset, &ms=
+ginfo);
+> > -     if (ret)
+> > +     if (ret) {
+> > +             gpadl->decrypted =3D false;
 >
-> Before this patch is applied:
+> Why not set it by default at the beginning of the function?
 >
-> sudo perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
+> >               return ret;
+> > +     }
+> >
+> > +     /*
+> > +      * Set the "decrypted" flag to true for the set_memory_decrypted(=
+)
+> > +      * success case. In the failure case, the encryption state of the
+> > +      * memory is unknown. Leave "decrypted" as true to ensure the
+> > +      * memory will be leaked instead of going back on the free list.
+> > +      */
+> > +     gpadl->decrypted =3D true;
+> >       ret =3D set_memory_decrypted((unsigned long)kbuffer,
+> >                                  PFN_UP(size));
+> >       if (ret) {
+> > @@ -563,9 +572,15 @@ static int __vmbus_establish_gpadl(struct vmbus_ch=
+annel *channel,
+> >
+> >       kfree(msginfo);
+> >
+> > -     if (ret)
+> > -             set_memory_encrypted((unsigned long)kbuffer,
+> > -                                  PFN_UP(size));
+> > +     if (ret) {
+> > +             /*
+> > +              * If set_memory_encrypted() fails, the decrypted flag is
+> > +              * left as true so the memory is leaked instead of being
+> > +              * put back on the free list.
+> > +              */
+> > +             if (!set_memory_encrypted((unsigned long)kbuffer, PFN_UP(=
+size)))
+> > +                     gpadl->decrypted =3D false;
+> > +     }
+> >
+> >       return ret;
+> >  }
+> > @@ -886,6 +901,8 @@ int vmbus_teardown_gpadl(struct vmbus_channel *chan=
+nel, struct vmbus_gpadl *gpad
+> >       if (ret)
+> >               pr_warn("Fail to set mem host visibility in GPADL teardow=
+n %d.\n", ret);
 >
->          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_co=
-ntention_begin+0x84
->          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          1     13.54 us     13.54 us     13.54 us        mutex   trace_co=
-ntention_begin+0x84
->          1      3.67 us      3.67 us      3.67 us      rwsem:R   __tracei=
-ter_contention_begin+0x44
+> Will this be called only if vmbus_establish_gpad() is successful? If not,=
+ you might want to skip
+> set_memory_encrypted() call for decrypted =3D false case.
 >
-> Before this patch is applied - using --stack-skip 5
+> >
+> > +     gpadl->decrypted =3D ret;
+> > +
 >
-> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
->
->          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll=
-_wait+0x5a0
->          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+=
-0x338
->          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_sign=
-al+0x108
->          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_=
-task+0x68
->          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_k=
-n_lock_live+0x58
->          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+=
-0x44
->          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_=
-and_find_vma+0xb0
->
-> After this patch is applied:
->
-> sudo ./perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
->
->          4      4.13 s       2.07 s       1.03 s      rwlock:W   release_=
-task+0x68
->          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_updat=
-e_next_owner+0x50
->          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+=
-0x338
->          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_k=
-n_lock_live+0x58
->          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+=
-0x338
->
-> changes since v1:
->
-> - consider trace_contention and __traceiter_contention functions as
-> optional (i.e. check if sym is null to avoid segfault)
->
-> changes since v0:
->
-> - skip trace_contention functions
-> - use sym->end instead of __traceiter_contention_end for text_end
->
-> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
-> ---
->  tools/perf/util/machine.c | 21 +++++++++++++++++++++
->  tools/perf/util/machine.h |  2 +-
->  2 files changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 527517db3182..968f69364f9a 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -3266,6 +3266,18 @@ bool machine__is_lock_function(struct machine *mac=
-hine, u64 addr)
->
->                 sym =3D machine__find_kernel_symbol_by_name(machine, "__l=
-ock_text_end", &kmap);
->                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->start=
-);
-> +
-> +               sym =3D machine__find_kernel_symbol_by_name(machine, "__t=
-raceiter_contention_begin", &kmap);
-> +               if (sym) {
-> +                       machine->traceiter.text_start =3D map__unmap_ip(k=
-map, sym->start);
-> +                       machine->traceiter.text_end =3D map__unmap_ip(kma=
-p, sym->end);
-> +               }
-> +
-> +               sym =3D machine__find_kernel_symbol_by_name(machine, "tra=
-ce_contention_begin", &kmap);
-> +               if (sym) {
-> +                       machine->trace.text_start =3D map__unmap_ip(kmap,=
- sym->start);
-> +                       machine->trace.text_end =3D map__unmap_ip(kmap, s=
-ym->end);
-> +               }
->         }
->
->         /* failed to get kernel symbols */
-> @@ -3280,5 +3292,14 @@ bool machine__is_lock_function(struct machine *mac=
-hine, u64 addr)
->         if (machine->lock.text_start <=3D addr && addr < machine->lock.te=
-xt_end)
->                 return true;
->
-> +       /* traceiter functions currently don't have their own section
-> +        * but we consider them lock functions
-> +        */
-> +       if (machine->traceiter.text_start <=3D addr && addr < machine->tr=
-aceiter.text_end)
-> +               return true;
-> +
-> +       if (machine->trace.text_start <=3D addr && addr < machine->trace.=
-text_end)
-> +               return true;
+> IMO, you can set it to false by default. Any way with non zero return, us=
+er know about the
+> decryption failure.
 
-You cannot simply check these as they are set optionally.
+I understand this change after looking at the rest of the patches. So
+please ignore the above
+comment.
 
-Thanks,
-Namhyung
-
-
-> +
->         return false;
->  }
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index e28c787616fe..4312f6db6de0 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -49,7 +49,7 @@ struct machine {
->         struct {
->                 u64       text_start;
->                 u64       text_end;
-> -       } sched, lock;
-> +       } sched, lock, traceiter, trace;
->         pid_t             *current_tid;
->         size_t            current_tid_sz;
->         union { /* Tool specific area */
+>
+> >       return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(vmbus_teardown_gpadl);
+> > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> > index 2b00faf98017..5bac136c268c 100644
+> > --- a/include/linux/hyperv.h
+> > +++ b/include/linux/hyperv.h
+> > @@ -812,6 +812,7 @@ struct vmbus_gpadl {
+> >       u32 gpadl_handle;
+> >       u32 size;
+> >       void *buffer;
+> > +     bool decrypted;
+> >  };
+> >
+> >  struct vmbus_channel {
+>
 > --
-> 2.39.2
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
 >
