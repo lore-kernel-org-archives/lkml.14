@@ -1,110 +1,187 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9095E76EEA;
-	Tue, 12 Mar 2024 08:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81FD76EEA
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710233049; cv=none; b=Uz//WUfu1/w3P24X/kLjo9FfhvdsXtKCyVQzjWF4hap6DTwLYreCaL5FqbM5wdFpCmktR7Zpcf4V1UYiZbZWt3akF4R85A0f9gnyBfF8PSd78UtvermEjH4KqYQ/X4lusYqQfbqtFpnSkhw0FNsYjRDlzgu9xZI0rKKVWxQ829o=
+	t=1710233128; cv=none; b=O3JDejSzg+c/2ZzuGU7k0klXLisowvLB4KJt1CclYIWlPAqGyUvp6v/UcXLdjLEFNSyU5MZOO70Yj/RS0dzAKfeMKM97YLJr9UfFnS4Ji8yUEF7UBxKQwT+wVV2gdGx78FSPBN/ZccaMA/VpDpp9+iAc9FGBhY6MpdXki9CocW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710233049; c=relaxed/simple;
-	bh=Ko17xREfnVJ9Q5io/toRscNTgq+ljN4IWA6tUQbIDlw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MSAROLV4FDjQgXp8WLY7jvLc43Oc0pQItJhFJL5/xUy4ax3epcBWW4MMLHFrk0B01ad/9gCo3PavLUfBD443JrjWoOU4qkhoiKxG8IJI5IMUXOkjTHc5aCoGaCPMAh/cVzaDHdEcnBmPot0+Oh6dR1QLvqdSxot9Ux9IL2k9AeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60a0a54869bso28092797b3.1;
-        Tue, 12 Mar 2024 01:44:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710233044; x=1710837844;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BpBVGXK2hwvv9G4vuoIjIOAjMy0hLwpCGg7dYfSa+5Q=;
-        b=XjQeJ5g3t+Qt/u9cXSTcVrF041/9R0lWmbOyoHOwGCtq7WUOV/3pOvdaSp55ExR0bL
-         h/bSmWLpVpnCu0Vbt001JzD9wOMs6FUP43pVQOkV4mwNVkKT/tKNChuoPuP/E3kFKiOy
-         xp28GfMc22i14SJAztVQhBSD0QNn50nKIxNfs0aT4SEIBj+FG/QHQ6zOCbkTe/6tvVNk
-         WwySZpJLYuRcNuZgYauXQaxfaemRWJUfkYCU7CoCeVp9Ff6f22AZiodOBAA2Uipp5LvX
-         LGdhwrNpiDlnju9cwELsFCVRAUBW24oAajfU5ImXKZLskWZuk8RGQ/I8Yqx9ZW21Toc2
-         uNXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX85gB5xUttrxgB90hC4Al/wzqws0BUTehcJvzJH60hubONvBBVeuuT6rG3uFIzFHCUSoCkBaOvcVO0eY99WNyHOHWvKw7VCmn4Yeu+6GQtszCRSpstvd0ACDLl6BIPOHTOy4e3MvpFHiAwUwmluGu+kPxfxUTE628o2vtQWljzvk12fVs+KWjg1MYeSsXYHAi3NYJ9PSwg3M1s5F8O2otFT7HL
-X-Gm-Message-State: AOJu0YyRcCYeVjiDPgTQIKFxWWfVTHhSu3a5trrwlX4lobM+JXx3dj/s
-	W9qWmH/ckLbNOjvfgZ73U63mNl6vWCj8hBIfGDLt8vvZUIRPWVnnfE7UvWttEZ0=
-X-Google-Smtp-Source: AGHT+IHUx+pbNmqsxtbHSGk4Vf8bAiZn6JFHiMHA3b9jK4MV2hR2LblXne40u3jAzeSNSZr+o+Ammw==
-X-Received: by 2002:a0d:db0c:0:b0:60a:57fa:2e45 with SMTP id d12-20020a0ddb0c000000b0060a57fa2e45mr646745ywe.1.1710233043674;
-        Tue, 12 Mar 2024 01:44:03 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id fq7-20020a05690c350700b006049315b542sm1746900ywb.136.2024.03.12.01.44.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Mar 2024 01:44:02 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-609f4d8551eso40205287b3.1;
-        Tue, 12 Mar 2024 01:44:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5gZtJ3hwJDAXCDinypTkfzRFSXMpW1qOXDej4x6jVyUMRpwXbzW9J7oIqmo/SnVEzXAPEtOzcCTvg+ZuPE9yYiIcVCUJFTvQKy0U6bG0sMycMdp+SgTUDKwhVDZPwsak7X17SK2naX8g0oANO74WAFVpjH4OvGKtUZUZ9jXyK/BgOe3i5CmXUMOnhAqXhsRWSSul30llORJU+TWoH+8EDZvqw
-X-Received: by 2002:a81:4806:0:b0:609:a1ed:5558 with SMTP id
- v6-20020a814806000000b00609a1ed5558mr5385429ywa.11.1710233042268; Tue, 12 Mar
- 2024 01:44:02 -0700 (PDT)
+	s=arc-20240116; t=1710233128; c=relaxed/simple;
+	bh=geOnI5+yro433FwcsqWEKQU6S+hcouaat93T1RGM1As=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eGcZiclhiOYfLZpmnbjacBAV5DBrMn21aLI+55E+f1F8nGbIPpCvQ4MkdFyPsTpf34ZMo1zNZauK3vt1MJGR0LUolKH6cxcvgfrPPbxbTRSTr7XU2NjdW3WXq+EqlvdY/S1oL8MS2HzNVokmcq6tDMz6d7ewG98GMMsTRy2BXIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED2B11007;
+	Tue, 12 Mar 2024 01:46:01 -0700 (PDT)
+Received: from [10.57.68.246] (unknown [10.57.68.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81D7E3F73F;
+	Tue, 12 Mar 2024 01:45:22 -0700 (PDT)
+Message-ID: <f845b091-c2e6-4ee7-a736-c82dad3b51f9@arm.com>
+Date: Tue, 12 Mar 2024 08:45:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229204039.2861519-1-sashal@kernel.org> <20240229204039.2861519-12-sashal@kernel.org>
- <Ze9x6qqGYdRiWy3h@duo.ucw.cz> <CAMuHMdX-ht_Vetq7+Xh0TqWOcnCdi=3d0VvfgXBF4ExtzGcRDg@mail.gmail.com>
- <ZfAUgYj0ksDmGuhN@amd.ucw.cz>
-In-Reply-To: <ZfAUgYj0ksDmGuhN@amd.ucw.cz>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 12 Mar 2024 09:43:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXdTG=r8CJOGg2+xqMbrJ_uA3_EkoU9F2gq+zok2cGJpQ@mail.gmail.com>
-Message-ID: <CAMuHMdXdTG=r8CJOGg2+xqMbrJ_uA3_EkoU9F2gq+zok2cGJpQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.1 12/12] arm64: dts: Fix dtc interrupt_provider warnings
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Chanho Min <chanho.min@lge.com>, 
-	Arnd Bergmann <arnd@arndb.de>, tsahee@annapurnalabs.com, atenart@kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	rjui@broadcom.com, sbranden@broadcom.com, andrew@lunn.ch, 
-	gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, 
-	matthias.bgg@gmail.com, magnus.damm@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] Swap-out mTHP without splitting
+Content-Language: en-GB
+To: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>,
+ Michal Hocko <mhocko@suse.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240311150058.1122862-1-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Pavel,
+On 11/03/2024 15:00, Ryan Roberts wrote:
+> Hi All,
+> 
+> This series adds support for swapping out multi-size THP (mTHP) without needing
+> to first split the large folio via split_huge_page_to_list_to_order(). It
+> closely follows the approach already used to swap-out PMD-sized THP.
+> 
+> There are a couple of reasons for swapping out mTHP without splitting:
+> 
+>   - Performance: It is expensive to split a large folio and under extreme memory
+>     pressure some workloads regressed performance when using 64K mTHP vs 4K
+>     small folios because of this extra cost in the swap-out path. This series
+>     not only eliminates the regression but makes it faster to swap out 64K mTHP
+>     vs 4K small folios.
+> 
+>   - Memory fragmentation avoidance: If we can avoid splitting a large folio
+>     memory is less likely to become fragmented, making it easier to re-allocate
+>     a large folio in future.
+> 
+>   - Performance: Enables a separate series [4] to swap-in whole mTHPs, which
+>     means we won't lose the TLB-efficiency benefits of mTHP once the memory has
+>     been through a swap cycle.
+> 
+> I've done what I thought was the smallest change possible, and as a result, this
+> approach is only employed when the swap is backed by a non-rotating block device
+> (just as PMD-sized THP is supported today). Discussion against the RFC concluded
+> that this is sufficient.
+> 
+> 
+> Performance Testing
+> ===================
+> 
+> I've run some swap performance tests on Ampere Altra VM (arm64) with 8 CPUs. The
+> VM is set up with a 35G block ram device as the swap device and the test is run
+> from inside a memcg limited to 40G memory. I've then run `usemem` from
+> vm-scalability with 70 processes, each allocating and writing 1G of memory. I've
+> repeated everything 6 times and taken the mean performance improvement relative
+> to 4K page baseline:
+> 
+> | alloc size |            baseline |       + this series |
+> |            |  v6.6-rc4+anonfolio |                     |
 
-On Tue, Mar 12, 2024 at 9:38=E2=80=AFAM Pavel Machek <pavel@ucw.cz> wrote:
-> > > > From: Rob Herring <robh@kernel.org>
-> > > >
-> > > > [ Upstream commit 91adecf911e5df78ea3e8f866e69db2c33416a5c ]
-> > > >
-> > > > The dtc interrupt_provider warning is off by default. Fix all the w=
-arnings
-> > > > so it can be enabled.
-> > >
-> > > We don't have that warning in 6.1 and likely won't enable it, so we
-> > > should not need this.
-> >
-> > Still, this fixes issues in DTS that were not noticed before because
-> > the checks were disabled.
->
-> Is this patch known to fix user-visible behaviour?
+Oops, just noticed I failed to update these column headers. The baseline is
+actually mm-unstable (d7182786dd0a) which is based on v6.8-rc5 and already
+contains "anonfolio" - now called mTHP.
 
-None that I am aware of.
 
-Gr{oetje,eeting}s,
+> |:-----------|--------------------:|--------------------:|
+> | 4K Page    |                0.0% |                1.4% |
+> | 64K THP    |              -14.6% |               44.2% |
+> | 2M THP     |               87.4% |               97.7% |
+> 
+> So with this change, the 64K swap performance goes from a 15% regression to a
+> 44% improvement. 4K and 2M swap improves slightly too.
+> 
+> This test also acts as a good stress test for swap and, more generally mm. A
+> couple of existing bugs were found as a result [5] [6].
+> 
+> 
+> ---
+> The series applies against mm-unstable (d7182786dd0a). Although I've
+> additionally been running with a couple of extra fixes to avoid the issues at
+> [6].
+> 
+> 
+> Changes since v3 [3]
+> ====================
+> 
+>  - Renamed SWAP_NEXT_NULL -> SWAP_NEXT_INVALID (per Huang, Ying)
+>  - Simplified max offset calculation (per Huang, Ying)
+>  - Reinstated struct percpu_cluster to contain per-cluster, per-order `next`
+>    offset (per Huang, Ying)
+>  - Removed swap_alloc_large() and merged its functionality into
+>    scan_swap_map_slots() (per Huang, Ying)
+>  - Avoid extra cost of folio ref and lock due to removal of CLUSTER_FLAG_HUGE
+>    by freeing swap entries in batches (see patch 2) (per DavidH)
+>  - vmscan splits folio if its partially mapped (per Barry Song, DavidH)
+>  - Avoid splitting in MADV_PAGEOUT path (per Barry Song)
+>  - Dropped "mm: swap: Simplify ssd behavior when scanner steals entry" patch
+>    since it's not actually a problem for THP as I first thought.
+> 
+> 
+> Changes since v2 [2]
+> ====================
+> 
+>  - Reuse scan_swap_map_try_ssd_cluster() between order-0 and order > 0
+>    allocation. This required some refactoring to make everything work nicely
+>    (new patches 2 and 3).
+>  - Fix bug where nr_swap_pages would say there are pages available but the
+>    scanner would not be able to allocate them because they were reserved for the
+>    per-cpu allocator. We now allow stealing of order-0 entries from the high
+>    order per-cpu clusters (in addition to exisiting stealing from order-0
+>    per-cpu clusters).
+> 
+> 
+> Changes since v1 [1]
+> ====================
+> 
+>  - patch 1:
+>     - Use cluster_set_count() instead of cluster_set_count_flag() in
+>       swap_alloc_cluster() since we no longer have any flag to set. I was unable
+>       to kill cluster_set_count_flag() as proposed against v1 as other call
+>       sites depend explicitly setting flags to 0.
+>  - patch 2:
+>     - Moved large_next[] array into percpu_cluster to make it per-cpu
+>       (recommended by Huang, Ying).
+>     - large_next[] array is dynamically allocated because PMD_ORDER is not
+>       compile-time constant for powerpc (fixes build error).
+> 
+> 
+> [1] https://lore.kernel.org/linux-mm/20231010142111.3997780-1-ryan.roberts@arm.com/
+> [2] https://lore.kernel.org/linux-mm/20231017161302.2518826-1-ryan.roberts@arm.com/
+> [3] https://lore.kernel.org/linux-mm/20231025144546.577640-1-ryan.roberts@arm.com/
+> [4] https://lore.kernel.org/linux-mm/20240304081348.197341-1-21cnbao@gmail.com/
+> [5] https://lore.kernel.org/linux-mm/20240311084426.447164-1-ying.huang@intel.com/
+> [6] https://lore.kernel.org/linux-mm/79dad067-1d26-4867-8eb1-941277b9a77b@arm.com/
+> 
+> Thanks,
+> Ryan
+> 
+> 
+> Ryan Roberts (6):
+>   mm: swap: Remove CLUSTER_FLAG_HUGE from swap_cluster_info:flags
+>   mm: swap: free_swap_and_cache_nr() as batched free_swap_and_cache()
+>   mm: swap: Simplify struct percpu_cluster
+>   mm: swap: Allow storage of all mTHP orders
+>   mm: vmscan: Avoid split during shrink_folio_list()
+>   mm: madvise: Avoid split during MADV_PAGEOUT and MADV_COLD
+> 
+>  include/linux/pgtable.h |  28 ++++
+>  include/linux/swap.h    |  33 +++--
+>  mm/huge_memory.c        |   3 -
+>  mm/internal.h           |  48 +++++++
+>  mm/madvise.c            | 101 ++++++++------
+>  mm/memory.c             |  13 +-
+>  mm/swapfile.c           | 298 ++++++++++++++++++++++------------------
+>  mm/vmscan.c             |   9 +-
+>  8 files changed, 332 insertions(+), 201 deletions(-)
+> 
+> --
+> 2.25.1
+> 
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
