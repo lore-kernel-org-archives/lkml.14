@@ -1,571 +1,935 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D3679B9A
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FFE79B76;
+	Tue, 12 Mar 2024 09:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710236513; cv=none; b=b/xIeK1ZiLnqeI8IsGtAgrQvRKRN9nvKKuGT4uvCQZmqnoJrw3erejs+hos3Es1RL2XPNA7h7y9+p4oSDwyRSAC3UO9O0X7I+x62yMvtNYPDICGmGCe9zKXjwV0l3tDXUeX2H4ztkCOaBxlfygCG0TmVswVozsXtZn2ptAS5UOg=
+	t=1710236512; cv=none; b=Zzj0ELLdiONX0mcQM02/AM1LkQQU/7qNW2MPFvpodno2b2DpKrLnFsntSLNS1zYrAoGsYouAxKNVCyd+d+wriZlRFSHYIrQk2cKwFCF9rA7zjt07hYh8TBNtVhcnfQVlBap/EUiDqqBmAQGtHvnv1wGBR/IfdEEd/SejOJO0/+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710236513; c=relaxed/simple;
-	bh=aE+p22tweMC/IDat2OPkdUMlUaO+IRnkn6m8Btrw+BU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QXxggiAxgs6lmvhfZNblrZvwvO3ryQP2Cr0ZSbUv1Cf0PmAeGWEucqAJYeABsKDdipP5uPt+RAL+QESdU/mcgfLBLBsshuBcA/yqj2RhYb9slQJfXSLwsY8942SWFafmjknTrmrgfT0mf1FXyTfNR/lsFjdjzo4B8h3WCuT3bNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=V97jcgPo; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1710236512; c=relaxed/simple;
+	bh=Omq365Kj1al0RkJPvgZIzFzSXcfY8a+g04YUU/Wsn9U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HxoubMDGE4tBj2yU+EY7YlGmPLeTUcW8XgRGJwysyu5yfy+FdODSAtvPjow84fGRJ7DK9eR5rW1ZGy4DDLX/l8w3qsCXX+kjUNzEpjQXTl8lHnw8QnPanNziRopO2ez9+r0goSufCXR3H06UkppiBQcMUCzgyMtZI2wtxiuwXas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Me3+7Xpk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="V97jcgPo"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a44665605f3so743092566b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 02:41:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1710236509; x=1710841309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0dV8qz5b7vjFxc+nJLBNBJ+56OSa6LDyqLZDY8SGrTc=;
-        b=V97jcgPoMvewcIRljua0qMNbYAmLdkUm8omOvRDOvw7XfyFmhiMyBLRNI/n2za3Bpa
-         ZVbjGCv0Q4wmcjBNV6FEpy34JqUHr7EgNDQMxW6bxoQ/p/8XVGqmSfB9lccGUvIsV1mk
-         gql0G25SHAQD7Up7ALvmrVkxYm2aaFeWyi1KZMAw2AasBCbOY2TYHTq6l/9nbOFszxC7
-         fXcrDCWNQqrJDIps5f/O9JBo/jkIPUVK7QNHJff+RKP2LnZfPaBa6maVVEDGneGJM5sN
-         rcbDehLuCJxz44oqAnqPiq4ixoEHr/dpS09nSyDKKpp2EggJkkVF9SqCut69LznV5mDw
-         eTKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710236509; x=1710841309;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0dV8qz5b7vjFxc+nJLBNBJ+56OSa6LDyqLZDY8SGrTc=;
-        b=juEAQmcRxgkeNg42KifkgoItw1yHOVq/RtSvVpR6ELt29YyT8cwAYtT+K36I1bY8gV
-         hKPOxVDlMRa3Tf5uChygmcKcd9qDg1u+4bYnBEIVfj9ONNiR5NpV2LTy/EF+UliYQRue
-         pzA5wXa0xcFaUfTfiFoRuf3o231cx6LU6HLnpgHWV/p97S9gKnAk0AJSScWD6OH5a8oL
-         6gn6APS5sl7tvh822z0YXT5xRtfUYYEAl04UpcDRaPw4jbTFQRJHZtPzt4UaWSJxYGCJ
-         BWum0cCWtU/K5NUOiKgpjZEyHkVfhmUsjudbzfSwJYNtN2bHXOzF3dJ2yGkmLjb9TaAU
-         4skw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsA2j4gcTwIi5Zya19kJrLjMDavoSOlN4Peu5lne7ruG+3e8paHfefg/YahwzWsBUpYP0D3YFWB+ulbaXutSom4I8brYAz/tjzmMCJ
-X-Gm-Message-State: AOJu0Yz0TOzxKU8GNxHz7pYGNjRQe5tO8Hb1L5NEfbAmfdAzDUZX8hQ9
-	skMT6G1VoGg972VDw2+8TSz4+ZyXXUaIyyp3Zehi7CWKhEAio1nrMVk48yrZYgg=
-X-Google-Smtp-Source: AGHT+IGrxpm0eSCROeFSVIEIba08X0zlEkLFpXxq0Se/EN1b10t9i0f+FR5p5s277YyLY4fp4vl2zw==
-X-Received: by 2002:a17:907:a809:b0:a46:1a14:356a with SMTP id vo9-20020a170907a80900b00a461a14356amr4291481ejc.53.1710236509046;
-        Tue, 12 Mar 2024 02:41:49 -0700 (PDT)
-Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4623030893sm2091961ejb.126.2024.03.12.02.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 02:41:48 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: willy@infradead.org,
-	sfr@canb.auug.org.au,
-	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 01/15] drivers: add missing includes on linux/mm.h (and others)
-Date: Tue, 12 Mar 2024 10:41:19 +0100
-Message-Id: <20240312094133.2084996-2-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240312094133.2084996-1-max.kellermann@ionos.com>
-References: <20240312094133.2084996-1-max.kellermann@ionos.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Me3+7Xpk"
+Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B9CC829E2;
+	Tue, 12 Mar 2024 10:41:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710236478;
+	bh=Omq365Kj1al0RkJPvgZIzFzSXcfY8a+g04YUU/Wsn9U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Me3+7XpkCvjOmgD0iGPMOG+c4XkBqN0bc8kelLSJ8HoS5h6iy9y3GEdh62J6Nd1EF
+	 p1p8TShvn5hXfT35+wbZqnoccgczZzAD8C+/DpqfUWd5S4WBrXSvKcRx69/xin9707
+	 l4Dl5o1nGYUzJw1LE3rZZ8RfreGS9Mv/MOILGS9s=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Tue, 12 Mar 2024 11:41:05 +0200
+Subject: [PATCH 4/4] drm: xlnx: zynqmp_dpsub: Add DP audio support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240312-xilinx-dp-audio-v1-4-696c79facbb9@ideasonboard.com>
+References: <20240312-xilinx-dp-audio-v1-0-696c79facbb9@ideasonboard.com>
+In-Reply-To: <20240312-xilinx-dp-audio-v1-0-696c79facbb9@ideasonboard.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Vishal Sagar <vishal.sagar@amd.com>, 
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
+ =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=26252;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=Omq365Kj1al0RkJPvgZIzFzSXcfY8a+g04YUU/Wsn9U=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBl8CNLlRoaCNVfWP0CGafK1Yxc07VRaLJU+Pgye
+ tud1l/qSaCJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZfAjSwAKCRD6PaqMvJYe
+ 9VZgD/9N8M11mqaqbMhXHn3c5tjP3xXHrh3dN+R2Is6wPKduw1MSg5A/JIRtEZ3lNd5dmw8d/4F
+ dwTWacYjZ5UwCSGQQMSOgtZNvdIqSXcrNJ85DfwGZv4kPhCVMeFpbitHcs8uJUJUvNblUscpeud
+ 35x2LdrESkTNp+rbwaIeEbDZHA0bFYUhrMj8gNpiVqaUsDmaZcKsiVaR9a9QBNiQRvI+IFrO0nl
+ +7sAXSiIcuZiY0mPRZsVbpnMQnlJs4PXL6quEJr+XW0t/bk5ct/ei9hhYHnbT/eXX45dtXaIS1j
+ vQ0mLPz/spqHKdUcRLLo6/NtVxms24I7L3x9tds3ApiiOL4H0GdvejgrrrI62dJN1bsFqekWCxq
+ oziX1Khk9WP2K1sde53QI0m/AIIQLsbClXzSgDOrRmdW2T7MU6E4a5Rmc3k0wLJbNxsJ9Iz+0lk
+ 2CODLf+FllwzoaRHzls2pMvDrJnVRsTsc+LEpZ+cQebXRHjhU2RggbOPyUsXq9+xWWfjR30tnYl
+ P45u1dFoZL4RgCEG2JfVlnDTJRCucYd1nL034tNLiE2Lpzxrsp6Ptlv2XvqM5c4QYF4qFzXcXAb
+ Tz8512AK5A2thnZxPx3c747XUCxgZqceLC6WiIGMd6O0grlsQOVfeoPHSPBxdNhiD9foAVdo0td
+ hAsqYq5Czb/4U5A==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-After developing the other patches in this series, I had lots of build
-failures because "#include <linux/mm.h>" was missing.  This patch
-fixes those build failures by adding the missing "#include" lines.  To
-allow bisects, it is ordered before the others.
+Add basic DisplayPort audio support.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Support non-live audio playback from two PCMs (DMA channels), and the
+volume control in the audio mixer.
+
+As older dtb files may not have the audio DMA channels defined, the
+driver will just mark the audio support as disabled if the audio DMA is
+missing, and will continue with only display support.
+
+Note: Reset doesn't seem to work (ZYNQMP_DISP_AUD_SOFT_RESET). If we do
+a reset, audio playback won't start again even if, afaics, we do set up
+all the necessary registers. So, at the moment, resetting the audio
+block in dp_dai_hw_free() is commented out.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- arch/arm/mm/iomap.c                                       | 3 +++
- drivers/comedi/comedi_buf.c                               | 1 +
- drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c | 1 +
- drivers/dma/bcm2835-dma.c                                 | 1 +
- drivers/dma/dma-axi-dmac.c                                | 1 +
- drivers/dma/sh/rcar-dmac.c                                | 1 +
- drivers/firmware/qcom/qcom_scm-legacy.c                   | 1 +
- drivers/firmware/qcom/qcom_scm-smc.c                      | 1 +
- drivers/firmware/raspberrypi.c                            | 1 +
- drivers/iio/buffer/industrialio-buffer-dma.c              | 1 +
- drivers/iommu/iommufd/ioas.c                              | 2 ++
- drivers/iommu/iommufd/selftest.c                          | 1 +
- drivers/media/platform/mediatek/vpu/mtk_vpu.c             | 1 +
- drivers/media/platform/ti/omap/omap_voutlib.c             | 1 +
- drivers/misc/bcm-vk/bcm_vk_dev.c                          | 1 +
- drivers/misc/fastrpc.c                                    | 1 +
- drivers/misc/genwqe/card_dev.c                            | 1 +
- drivers/misc/uacce/uacce.c                                | 1 +
- drivers/mtd/spi-nor/core.h                                | 2 ++
- drivers/pci/p2pdma.c                                      | 1 +
- drivers/pci/pci.c                                         | 1 +
- drivers/remoteproc/remoteproc_core.c                      | 1 +
- drivers/soc/qcom/rmtfs_mem.c                              | 1 +
- drivers/spi/spi-aspeed-smc.c                              | 1 +
- drivers/spi/spi-bcm2835.c                                 | 2 ++
- drivers/spi/spi-intel.c                                   | 1 +
- drivers/virtio/virtio_ring.c                              | 1 +
- include/linux/huge_mm.h                                   | 2 ++
- include/linux/iommu.h                                     | 1 +
- include/linux/nvme-keyring.h                              | 2 ++
- include/linux/page-flags.h                                | 3 +++
- include/linux/scatterlist.h                               | 6 ++++++
- include/scsi/scsicam.h                                    | 3 +++
- kernel/dma/ops_helpers.c                                  | 1 +
- kernel/dma/remap.c                                        | 1 +
- mm/dmapool.c                                              | 1 +
- 36 files changed, 52 insertions(+)
+ drivers/gpu/drm/xlnx/Kconfig            |   9 +
+ drivers/gpu/drm/xlnx/Makefile           |   1 +
+ drivers/gpu/drm/xlnx/zynqmp_disp.c      |  50 ----
+ drivers/gpu/drm/xlnx/zynqmp_disp_regs.h |   7 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c        |  54 ++--
+ drivers/gpu/drm/xlnx/zynqmp_dp.h        |   7 +
+ drivers/gpu/drm/xlnx/zynqmp_dp_audio.c  | 461 ++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c     |  39 +--
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h     |  15 +-
+ 9 files changed, 540 insertions(+), 103 deletions(-)
 
-diff --git a/arch/arm/mm/iomap.c b/arch/arm/mm/iomap.c
-index 415d0a454237..9873d8156908 100644
---- a/arch/arm/mm/iomap.c
-+++ b/arch/arm/mm/iomap.c
-@@ -29,6 +29,9 @@ EXPORT_SYMBOL(ioport_unmap);
- #endif
- 
- #ifdef CONFIG_PCI
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index 68ee897de9d7..d88cfbaf2863 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -15,3 +15,12 @@ config DRM_ZYNQMP_DPSUB
+ 	  This is a DRM/KMS driver for ZynqMP DisplayPort controller. Choose
+ 	  this option if you have a Xilinx ZynqMP SoC with DisplayPort
+ 	  subsystem.
 +
-+#include <asm/pgtable.h> // for VMALLOC_*
-+
- unsigned long pcibios_min_io = 0x1000;
- EXPORT_SYMBOL(pcibios_min_io);
- 
-diff --git a/drivers/comedi/comedi_buf.c b/drivers/comedi/comedi_buf.c
-index 393966c09740..23b07ebc97ca 100644
---- a/drivers/comedi/comedi_buf.c
-+++ b/drivers/comedi/comedi_buf.c
-@@ -10,6 +10,7 @@
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
- #include <linux/comedi/comedidev.h>
-+#include <asm/pgtable.h> // for PAGE_KERNEL*
- #include "comedi_internal.h"
- 
- #ifdef PAGE_KERNEL_NOCACHE
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
-index ee0b5079de3e..c9b2787baac7 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
-+++ b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2023 Intel Corporation */
- #include <linux/dma-mapping.h>
-+#include <linux/fs.h> // for simple_read_from_buffer()
- #include <linux/kernel.h>
- #include <linux/string_helpers.h>
- #include <linux/stringify.h>
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 9d74fe97452e..1d971999fd39 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -31,6 +31,7 @@
- #include <linux/spinlock.h>
- #include <linux/of.h>
- #include <linux/of_dma.h>
-+#include <asm/pgtable.h> // for ZERO_PAGE()
- 
- #include "virt-dma.h"
- 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 4e339c04fc1e..0c98bf0e4b5d 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -15,6 +15,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_dma.h>
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 40482cb73d79..784da367665c 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -12,6 +12,7 @@
- #include <linux/dmaengine.h>
- #include <linux/interrupt.h>
- #include <linux/list.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-diff --git a/drivers/firmware/qcom/qcom_scm-legacy.c b/drivers/firmware/qcom/qcom_scm-legacy.c
-index 029e6d117cb8..01e082c7163c 100644
---- a/drivers/firmware/qcom/qcom_scm-legacy.c
-+++ b/drivers/firmware/qcom/qcom_scm-legacy.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/errno.h>
-diff --git a/drivers/firmware/qcom/qcom_scm-smc.c b/drivers/firmware/qcom/qcom_scm-smc.c
-index 16cf88acfa8e..a5c74d8996fe 100644
---- a/drivers/firmware/qcom/qcom_scm-smc.c
-+++ b/drivers/firmware/qcom/qcom_scm-smc.c
-@@ -5,6 +5,7 @@
- #include <linux/io.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index 322aada20f74..beef5c4afef2 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -9,6 +9,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/kref.h>
- #include <linux/mailbox_client.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
-diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c b/drivers/iio/buffer/industrialio-buffer-dma.c
-index 5610ba67925e..b3ce8c4b101a 100644
---- a/drivers/iio/buffer/industrialio-buffer-dma.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dma.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/slab.h>
- #include <linux/kernel.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/workqueue.h>
-diff --git a/drivers/iommu/iommufd/ioas.c b/drivers/iommu/iommufd/ioas.c
-index 742248276548..40c4942406cd 100644
---- a/drivers/iommu/iommufd/ioas.c
-+++ b/drivers/iommu/iommufd/ioas.c
-@@ -5,6 +5,8 @@
- #include <linux/interval_tree.h>
- #include <linux/iommufd.h>
- #include <linux/iommu.h>
-+#include <linux/capability.h>
-+#include <linux/slab.h>
- #include <uapi/linux/iommufd.h>
- 
- #include "io_pagetable.h"
-diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
-index 7a2199470f31..bcecf44681fe 100644
---- a/drivers/iommu/iommufd/selftest.c
-+++ b/drivers/iommu/iommufd/selftest.c
-@@ -5,6 +5,7 @@
++config DRM_ZYNQMP_DPSUB_AUDIO
++	bool "ZynqMP DisplayPort Audio Support"
++	depends on DRM_ZYNQMP_DPSUB
++	depends on SND && SND_SOC
++	select SND_SOC_GENERIC_DMAENGINE_PCM
++	help
++	  Choose this option to enable DisplayPort audio support in the ZynqMP
++	  DisplayPort driver.
+diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
+index ea1422a39502..ab6e2ffd7e8d 100644
+--- a/drivers/gpu/drm/xlnx/Makefile
++++ b/drivers/gpu/drm/xlnx/Makefile
+@@ -1,2 +1,3 @@
+ zynqmp-dpsub-y := zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o zynqmp_kms.o
++zynqmp-dpsub-$(CONFIG_DRM_ZYNQMP_DPSUB_AUDIO) += zynqmp_dp_audio.o
+ obj-$(CONFIG_DRM_ZYNQMP_DPSUB) += zynqmp-dpsub.o
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 407bc07cec69..d2bf0e2d0135 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -130,7 +130,6 @@ struct zynqmp_disp_layer {
+  * @dpsub: Display subsystem
+  * @blend.base: Register I/O base address for the blender
+  * @avbuf.base: Register I/O base address for the audio/video buffer manager
+- * @audio.base: Registers I/O base address for the audio mixer
+  * @layers: Layers (planes)
   */
- #include <linux/slab.h>
- #include <linux/iommu.h>
-+#include <linux/mm.h> // for GUP_PIN_COUNTING_BIAS
- #include <linux/xarray.h>
- #include <linux/file.h>
- #include <linux/anon_inodes.h>
-diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.c b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-index 724ae7c2ab3b..f248e4194b49 100644
---- a/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-+++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
-@@ -8,6 +8,7 @@
- #include <linux/firmware.h>
- #include <linux/interrupt.h>
- #include <linux/iommu.h>
-+#include <linux/mm.h> // for totalram_pages()
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
-diff --git a/drivers/media/platform/ti/omap/omap_voutlib.c b/drivers/media/platform/ti/omap/omap_voutlib.c
-index 0ac46458e41c..3b653b49cc48 100644
---- a/drivers/media/platform/ti/omap/omap_voutlib.c
-+++ b/drivers/media/platform/ti/omap/omap_voutlib.c
-@@ -18,6 +18,7 @@
-  *
+ struct zynqmp_disp {
+@@ -143,9 +142,6 @@ struct zynqmp_disp {
+ 	struct {
+ 		void __iomem *base;
+ 	} avbuf;
+-	struct {
+-		void __iomem *base;
+-	} audio;
+ 
+ 	struct zynqmp_disp_layer layers[ZYNQMP_DPSUB_NUM_LAYERS];
+ };
+@@ -807,42 +803,6 @@ static void zynqmp_disp_blend_layer_disable(struct zynqmp_disp *disp,
+ 					csc_zero_offsets);
+ }
+ 
+-/* -----------------------------------------------------------------------------
+- * Audio Mixer
+- */
+-
+-static void zynqmp_disp_audio_write(struct zynqmp_disp *disp, int reg, u32 val)
+-{
+-	writel(val, disp->audio.base + reg);
+-}
+-
+-/**
+- * zynqmp_disp_audio_enable - Enable the audio mixer
+- * @disp: Display controller
+- *
+- * Enable the audio mixer by de-asserting the soft reset. The audio state is set to
+- * default values by the reset, set the default mixer volume explicitly.
+- */
+-static void zynqmp_disp_audio_enable(struct zynqmp_disp *disp)
+-{
+-	/* Clear the audio soft reset register as it's an non-reset flop. */
+-	zynqmp_disp_audio_write(disp, ZYNQMP_DISP_AUD_SOFT_RESET, 0);
+-	zynqmp_disp_audio_write(disp, ZYNQMP_DISP_AUD_MIXER_VOLUME,
+-				ZYNQMP_DISP_AUD_MIXER_VOLUME_NO_SCALE);
+-}
+-
+-/**
+- * zynqmp_disp_audio_disable - Disable the audio mixer
+- * @disp: Display controller
+- *
+- * Disable the audio mixer by asserting its soft reset.
+- */
+-static void zynqmp_disp_audio_disable(struct zynqmp_disp *disp)
+-{
+-	zynqmp_disp_audio_write(disp, ZYNQMP_DISP_AUD_SOFT_RESET,
+-				ZYNQMP_DISP_AUD_SOFT_RESET_AUD_SRST);
+-}
+-
+ /* -----------------------------------------------------------------------------
+  * ZynqMP Display Layer & DRM Plane
   */
+@@ -1169,8 +1129,6 @@ void zynqmp_disp_enable(struct zynqmp_disp *disp)
+ 					     true);
+ 	zynqmp_disp_avbuf_enable_channels(disp);
+ 	zynqmp_disp_avbuf_enable_audio(disp);
+-
+-	zynqmp_disp_audio_enable(disp);
+ }
  
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
-diff --git a/drivers/misc/bcm-vk/bcm_vk_dev.c b/drivers/misc/bcm-vk/bcm_vk_dev.c
-index d4a96137728d..c5a39a8189bf 100644
---- a/drivers/misc/bcm-vk/bcm_vk_dev.c
-+++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
-@@ -11,6 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/panic_notifier.h>
- #include <linux/kref.h>
-+#include <linux/mm.h> // for io_remap_pfn_range()
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 4c67e2c5a82e..e0549b4b1c33 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -10,6 +10,7 @@
- #include <linux/idr.h>
- #include <linux/list.h>
- #include <linux/miscdevice.h>
-+#include <linux/mm.h> // for find_vma()
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of.h>
-diff --git a/drivers/misc/genwqe/card_dev.c b/drivers/misc/genwqe/card_dev.c
-index 4441aca2280a..ce3acb938ca6 100644
---- a/drivers/misc/genwqe/card_dev.c
-+++ b/drivers/misc/genwqe/card_dev.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-+#include <linux/mm.h> // for struct vm_operations_struct
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/string.h>
-diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-index bdc2e6fda782..af815b8a718e 100644
---- a/drivers/misc/uacce/uacce.c
-+++ b/drivers/misc/uacce/uacce.c
-@@ -2,6 +2,7 @@
- #include <linux/compat.h>
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
-+#include <linux/mm.h> // for struct vm_operations_struct
- #include <linux/module.h>
- #include <linux/poll.h>
- #include <linux/slab.h>
-diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index 442786685515..c113ed8e8751 100644
---- a/drivers/mtd/spi-nor/core.h
-+++ b/drivers/mtd/spi-nor/core.h
-@@ -9,6 +9,8 @@
- 
- #include "sfdp.h"
- 
-+#include <linux/sizes.h> // for SZ_*
-+
- #define SPI_NOR_MAX_ID_LEN	6
- /*
-  * 256 bytes is a sane default for most older flashes. Newer flashes will
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 4f47a13cb500..ef37ea6c09fc 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/genalloc.h>
- #include <linux/memremap.h>
-+#include <linux/mm.h> // for VM_MAYSHARE
- #include <linux/percpu-refcount.h>
- #include <linux/random.h>
- #include <linux/seq_buf.h>
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd4288..75e05c3518f4 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -25,6 +25,7 @@
- #include <linux/logic_pio.h>
- #include <linux/pm_wakeup.h>
- #include <linux/device.h>
-+#include <linux/pgtable.h> // for pgprot_device()
- #include <linux/pm_runtime.h>
- #include <linux/pci_hotplug.h>
- #include <linux/vmalloc.h>
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index f276956f2c5c..938220fe29f5 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -18,6 +18,7 @@
- 
- #include <linux/delay.h>
- #include <linux/kernel.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/panic_notifier.h>
-diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
-index df850d073102..15c2f6e5eaff 100644
---- a/drivers/soc/qcom/rmtfs_mem.c
-+++ b/drivers/soc/qcom/rmtfs_mem.c
-@@ -6,6 +6,7 @@
- #include <linux/kernel.h>
- #include <linux/cdev.h>
- #include <linux/err.h>
-+#include <linux/mm.h> // for remap_pfn_range()
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
-diff --git a/drivers/spi/spi-aspeed-smc.c b/drivers/spi/spi-aspeed-smc.c
-index bbd417c55e7f..e45f64761e5e 100644
---- a/drivers/spi/spi-aspeed-smc.c
-+++ b/drivers/spi/spi-aspeed-smc.c
-@@ -11,6 +11,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/sizes.h> // for SZ_*
- #include <linux/spi/spi.h>
- #include <linux/spi/spi-mem.h>
- 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index e1b9b1235787..d8ed5575a9c6 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -33,6 +33,8 @@
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- 
-+#include <asm/pgtable.h> // for ZERO_PAGE()
-+
- /* SPI register offsets */
- #define BCM2835_SPI_CS			0x00
- #define BCM2835_SPI_FIFO		0x04
-diff --git a/drivers/spi/spi-intel.c b/drivers/spi/spi-intel.c
-index 3e5dcf2b3c8a..cf8e4f1c4d93 100644
---- a/drivers/spi/spi-intel.c
-+++ b/drivers/spi/spi-intel.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/iopoll.h>
- #include <linux/module.h>
-+#include <linux/sizes.h> // for SZ_*
- 
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/spi-nor.h>
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 6f7e5010a673..48f694d1bc46 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -12,6 +12,7 @@
- #include <linux/hrtimer.h>
- #include <linux/dma-mapping.h>
- #include <linux/kmsan.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- #include <linux/spinlock.h>
- #include <xen/xen.h>
- 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index de0c89105076..55b94db3bd5c 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -7,6 +7,8 @@
- 
- #include <linux/fs.h> /* only for vma_is_dax() */
- 
-+#include <asm/page.h> // for pmd_t
-+
- vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
- int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
- 		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 2e925b5eba53..4e72c2429342 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -14,6 +14,7 @@
- #include <linux/err.h>
- #include <linux/of.h>
- #include <linux/iova_bitmap.h>
-+#include <linux/uaccess.h> // for copy_struct_from_user()
- 
- #define IOMMU_READ	(1 << 0)
- #define IOMMU_WRITE	(1 << 1)
-diff --git a/include/linux/nvme-keyring.h b/include/linux/nvme-keyring.h
-index e10333d78dbb..9e033850b967 100644
---- a/include/linux/nvme-keyring.h
-+++ b/include/linux/nvme-keyring.h
-@@ -6,6 +6,8 @@
- #ifndef _NVME_KEYRING_H
- #define _NVME_KEYRING_H
- 
-+#include <linux/key.h>
-+
- #if IS_ENABLED(CONFIG_NVME_KEYRING)
- 
- key_serial_t nvme_tls_psk_default(struct key *keyring,
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 652d77805e99..c7243b85328b 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -12,6 +12,9 @@
- #ifndef __GENERATING_BOUNDS_H
- #include <linux/mm_types.h>
- #include <generated/bounds.h>
-+#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-+#include <linux/jump_label.h> // for DECLARE_STATIC_KEY_FALSE
-+#endif
- #endif /* !__GENERATING_BOUNDS_H */
- 
- /*
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 77df3d7b18a6..0516e64dc03e 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -8,6 +8,12 @@
- #include <linux/mm.h>
- #include <asm/io.h>
- 
-+#ifdef CONFIG_UML
-+#include <asm/pgtable.h> // for virt_to_page(), page_to_phys()
-+#else
-+#include <asm/page.h> // for virt_to_page(), page_to_phys()
-+#endif
-+
- struct scatterlist {
- 	unsigned long	page_link;
- 	unsigned int	offset;
-diff --git a/include/scsi/scsicam.h b/include/scsi/scsicam.h
-index 08edd603e521..6eb9fb7a57d0 100644
---- a/include/scsi/scsicam.h
-+++ b/include/scsi/scsicam.h
-@@ -13,6 +13,9 @@
- 
- #ifndef SCSICAM_H
- #define SCSICAM_H
-+
-+#include <linux/types.h> // for sector_t
-+
- int scsicam_bios_param(struct block_device *bdev, sector_t capacity, int *ip);
- bool scsi_partsize(struct block_device *bdev, sector_t capacity, int geom[3]);
- unsigned char *scsi_bios_ptable(struct block_device *bdev);
-diff --git a/kernel/dma/ops_helpers.c b/kernel/dma/ops_helpers.c
-index af4a6ef48ce0..641363b13bb9 100644
---- a/kernel/dma/ops_helpers.c
-+++ b/kernel/dma/ops_helpers.c
-@@ -4,6 +4,7 @@
-  * the allocated memory contains normal pages in the direct kernel mapping.
+ /**
+@@ -1179,8 +1137,6 @@ void zynqmp_disp_enable(struct zynqmp_disp *disp)
   */
- #include <linux/dma-map-ops.h>
-+#include <linux/mm.h> // for PAGE_ALIGN()
- 
- static struct page *dma_common_vaddr_to_page(void *cpu_addr)
+ void zynqmp_disp_disable(struct zynqmp_disp *disp)
  {
-diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
-index 27596f3b4aef..87b3c874d370 100644
---- a/kernel/dma/remap.c
-+++ b/kernel/dma/remap.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2014 The Linux Foundation
-  */
- #include <linux/dma-map-ops.h>
-+#include <linux/mm.h> // for vmap(), PAGE_ALIGN()
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
+-	zynqmp_disp_audio_disable(disp);
+-
+ 	zynqmp_disp_avbuf_disable_audio(disp);
+ 	zynqmp_disp_avbuf_disable_channels(disp);
+ 	zynqmp_disp_avbuf_disable(disp);
+@@ -1249,12 +1205,6 @@ int zynqmp_disp_probe(struct zynqmp_dpsub *dpsub)
+ 		goto error;
+ 	}
  
-diff --git a/mm/dmapool.c b/mm/dmapool.c
-index f0bfc6c490f4..b8e23fdc81d7 100644
---- a/mm/dmapool.c
-+++ b/mm/dmapool.c
-@@ -25,6 +25,7 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/export.h>
-+#include <linux/mm.h> // for want_init_on_alloc()
- #include <linux/mutex.h>
- #include <linux/poison.h>
- #include <linux/sched.h>
+-	disp->audio.base = devm_platform_ioremap_resource_byname(pdev, "aud");
+-	if (IS_ERR(disp->audio.base)) {
+-		ret = PTR_ERR(disp->audio.base);
+-		goto error;
+-	}
+-
+ 	ret = zynqmp_disp_create_layers(disp);
+ 	if (ret)
+ 		goto error;
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp_regs.h b/drivers/gpu/drm/xlnx/zynqmp_disp_regs.h
+index f92a006d5070..77cfa181a615 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp_regs.h
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp_regs.h
+@@ -177,12 +177,7 @@
+ #define ZYNQMP_DISP_AUD_MIXER_VOLUME			0x0
+ #define ZYNQMP_DISP_AUD_MIXER_VOLUME_NO_SCALE		0x20002000
+ #define ZYNQMP_DISP_AUD_MIXER_META_DATA			0x4
+-#define ZYNQMP_DISP_AUD_CH_STATUS0			0x8
+-#define ZYNQMP_DISP_AUD_CH_STATUS1			0xc
+-#define ZYNQMP_DISP_AUD_CH_STATUS2			0x10
+-#define ZYNQMP_DISP_AUD_CH_STATUS3			0x14
+-#define ZYNQMP_DISP_AUD_CH_STATUS4			0x18
+-#define ZYNQMP_DISP_AUD_CH_STATUS5			0x1c
++#define ZYNQMP_DISP_AUD_CH_STATUS(x)			(0x8 + ((x) * 4))
+ #define ZYNQMP_DISP_AUD_CH_A_DATA0			0x20
+ #define ZYNQMP_DISP_AUD_CH_A_DATA1			0x24
+ #define ZYNQMP_DISP_AUD_CH_A_DATA2			0x28
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+index a0606fab0e22..4383ea93423c 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -1227,7 +1227,6 @@ static void zynqmp_dp_encoder_mode_set_stream(struct zynqmp_dp *dp,
+ {
+ 	u8 lane_cnt = dp->mode.lane_cnt;
+ 	u32 reg, wpl;
+-	unsigned int rate;
+ 
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_HTOTAL, mode->htotal);
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_VTOTAL, mode->vtotal);
+@@ -1252,18 +1251,8 @@ static void zynqmp_dp_encoder_mode_set_stream(struct zynqmp_dp *dp,
+ 		reg = drm_dp_bw_code_to_link_rate(dp->mode.bw_code);
+ 		zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_N_VID, reg);
+ 		zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_M_VID, mode->clock);
+-		rate = zynqmp_dpsub_get_audio_clk_rate(dp->dpsub);
+-		if (rate) {
+-			dev_dbg(dp->dev, "Audio rate: %d\n", rate / 512);
+-			zynqmp_dp_write(dp, ZYNQMP_DP_TX_N_AUD, reg);
+-			zynqmp_dp_write(dp, ZYNQMP_DP_TX_M_AUD, rate / 1000);
+-		}
+ 	}
+ 
+-	/* Only 2 channel audio is supported now */
+-	if (zynqmp_dpsub_audio_enabled(dp->dpsub))
+-		zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CHANNELS, 1);
+-
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_USER_PIX_WIDTH, 1);
+ 
+ 	/* Translate to the native 16 bit datapath based on IP core spec */
+@@ -1272,6 +1261,44 @@ static void zynqmp_dp_encoder_mode_set_stream(struct zynqmp_dp *dp,
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_USER_DATA_COUNT_PER_LANE, reg);
+ }
+ 
++/* -----------------------------------------------------------------------------
++ * Audio
++ */
++
++void zynqmp_dp_audio_set_channels(struct zynqmp_dp *dp,
++				  unsigned int num_channels)
++{
++	zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CHANNELS, num_channels - 1);
++}
++
++void zynqmp_dp_audio_enable(struct zynqmp_dp *dp)
++{
++	zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CONTROL, 1);
++}
++
++void zynqmp_dp_audio_disable(struct zynqmp_dp *dp)
++{
++	zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CONTROL, 0);
++}
++
++void zynqmp_dp_audio_write_n_m(struct zynqmp_dp *dp)
++{
++	unsigned int rate;
++	u32 link_rate;
++
++	if (!(dp->config.misc0 & ZYNQMP_DP_MAIN_STREAM_MISC0_SYNC_LOCK))
++		return;
++
++	link_rate = drm_dp_bw_code_to_link_rate(dp->mode.bw_code);
++
++	rate = clk_get_rate(dp->dpsub->aud_clk);
++
++	dev_dbg(dp->dev, "Audio rate: %d\n", rate / 512);
++
++	zynqmp_dp_write(dp, ZYNQMP_DP_TX_N_AUD, link_rate);
++	zynqmp_dp_write(dp, ZYNQMP_DP_TX_M_AUD, rate / 1000);
++}
++
+ /* -----------------------------------------------------------------------------
+  * DISP Configuration
+  */
+@@ -1445,8 +1472,7 @@ static void zynqmp_dp_bridge_atomic_enable(struct drm_bridge *bridge,
+ 	/* Enable the encoder */
+ 	dp->enabled = true;
+ 	zynqmp_dp_update_misc(dp);
+-	if (zynqmp_dpsub_audio_enabled(dp->dpsub))
+-		zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CONTROL, 1);
++
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_TX_PHY_POWER_DOWN, 0);
+ 	if (dp->status == connector_status_connected) {
+ 		for (i = 0; i < 3; i++) {
+@@ -1479,8 +1505,6 @@ static void zynqmp_dp_bridge_atomic_disable(struct drm_bridge *bridge,
+ 	drm_dp_dpcd_writeb(&dp->aux, DP_SET_POWER, DP_SET_POWER_D3);
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_TX_PHY_POWER_DOWN,
+ 			ZYNQMP_DP_TX_PHY_POWER_DOWN_ALL);
+-	if (zynqmp_dpsub_audio_enabled(dp->dpsub))
+-		zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CONTROL, 0);
+ 
+ 	zynqmp_dp_disp_disable(dp, old_bridge_state);
+ 
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.h b/drivers/gpu/drm/xlnx/zynqmp_dp.h
+index f077d7fbd0ad..a3257793e23a 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.h
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.h
+@@ -22,4 +22,11 @@ void zynqmp_dp_disable_vblank(struct zynqmp_dp *dp);
+ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub);
+ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub);
+ 
++void zynqmp_dp_audio_set_channels(struct zynqmp_dp *dp,
++				  unsigned int num_channels);
++void zynqmp_dp_audio_enable(struct zynqmp_dp *dp);
++void zynqmp_dp_audio_disable(struct zynqmp_dp *dp);
++
++void zynqmp_dp_audio_write_n_m(struct zynqmp_dp *dp);
++
+ #endif /* _ZYNQMP_DP_H_ */
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+new file mode 100644
+index 000000000000..8fdab557f3b2
+--- /dev/null
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+@@ -0,0 +1,461 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ZynqMP DisplayPort Subsystem Driver - Audio support
++ *
++ * Copyright (C) 2015 - 2023 Xilinx, Inc.
++ *
++ * Authors:
++ * - Hyun Woo Kwon <hyun.kwon@xilinx.com>
++ * - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/mutex.h>
++#include <linux/pm_runtime.h>
++
++#include <sound/asoundef.h>
++#include <sound/core.h>
++#include <sound/dmaengine_pcm.h>
++#include <sound/initval.h>
++#include <sound/pcm.h>
++#include <sound/soc.h>
++#include <sound/tlv.h>
++
++#include "zynqmp_disp_regs.h"
++#include "zynqmp_dp.h"
++#include "zynqmp_dpsub.h"
++
++#define ZYNQMP_DISP_AUD_SMPL_RATE_TO_CLK 512
++#define ZYNQMP_NUM_PCMS 2
++
++struct zynqmp_dpsub_audio {
++	void __iomem *base;
++
++	struct snd_soc_card card;
++
++	const char *dai_name;
++	const char *link_names[ZYNQMP_NUM_PCMS];
++	const char *pcm_names[ZYNQMP_NUM_PCMS];
++
++	struct snd_soc_dai_driver dai_driver;
++	struct snd_dmaengine_pcm_config pcm_configs[2];
++
++	struct snd_soc_dai_link links[ZYNQMP_NUM_PCMS];
++
++	struct {
++		struct snd_soc_dai_link_component cpu;
++		struct snd_soc_dai_link_component codec;
++		struct snd_soc_dai_link_component platform;
++	} components[ZYNQMP_NUM_PCMS];
++
++	/*
++	 * Protects:
++	 * - enabled_streams
++	 * - volumes
++	 * - current_rate
++	 */
++	struct mutex enable_lock;
++
++	u32 enabled_streams;
++	u32 current_rate;
++
++	u16 volumes[2];
++};
++
++static const struct snd_pcm_hardware zynqmp_dp_pcm_hw = {
++	.info = SNDRV_PCM_INFO_MMAP |
++		SNDRV_PCM_INFO_MMAP_VALID |
++		SNDRV_PCM_INFO_INTERLEAVED |
++		SNDRV_PCM_INFO_PAUSE |
++		SNDRV_PCM_INFO_RESUME |
++		SNDRV_PCM_INFO_NO_PERIOD_WAKEUP,
++
++	.buffer_bytes_max       = 128 * 1024,
++	.period_bytes_min       = 256,
++	.period_bytes_max       = 1024 * 1024,
++	.periods_min            = 2,
++	.periods_max            = 256,
++};
++
++static int zynqmp_dp_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++
++	snd_pcm_hw_constraint_step(runtime, 0, SNDRV_PCM_HW_PARAM_PERIOD_BYTES,
++				   256);
++
++	return 0;
++}
++
++static const struct snd_soc_ops zynqmp_dp_ops = {
++	.startup = zynqmp_dp_startup,
++};
++
++static void zynqmp_dp_audio_write(struct zynqmp_dpsub_audio *audio, int reg,
++				  u32 val)
++{
++	writel(val, audio->base + reg);
++}
++
++static int dp_dai_hw_params(struct snd_pcm_substream *substream,
++			    struct snd_pcm_hw_params *params,
++			    struct snd_soc_dai *socdai)
++{
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
++	struct zynqmp_dpsub *dpsub =
++		snd_soc_dai_get_drvdata(snd_soc_rtd_to_cpu(rtd, 0));
++	struct zynqmp_dpsub_audio *audio = dpsub->audio;
++	int ret;
++	u32 sample_rate;
++	struct snd_aes_iec958 iec = { 0 };
++	unsigned long rate;
++
++	sample_rate = params_rate(params);
++
++	if (sample_rate != 48000 && sample_rate != 44100)
++		return -EINVAL;
++
++	mutex_lock(&audio->enable_lock);
++
++	if (audio->enabled_streams && audio->current_rate != sample_rate) {
++		dev_err(dpsub->dev,
++			"Can't change rate while playback enabled\n");
++		ret = -EINVAL;
++		goto err_unlock;
++	}
++
++	if (audio->enabled_streams > 0) {
++		/* Nothing to do */
++		audio->enabled_streams++;
++		mutex_unlock(&audio->enable_lock);
++		return 0;
++	}
++
++	audio->current_rate = sample_rate;
++
++	/* Note: clock rate can only be changed if the clock is disabled */
++	ret = clk_set_rate(dpsub->aud_clk,
++			   sample_rate * ZYNQMP_DISP_AUD_SMPL_RATE_TO_CLK);
++	if (ret) {
++		dev_err(dpsub->dev, "can't set aud_clk to %u err:%d\n",
++			sample_rate * ZYNQMP_DISP_AUD_SMPL_RATE_TO_CLK, ret);
++		goto err_unlock;
++	}
++
++	clk_prepare_enable(dpsub->aud_clk);
++
++	rate = clk_get_rate(dpsub->aud_clk);
++
++	/* Ignore some offset +- 10 */
++	if (abs(sample_rate * ZYNQMP_DISP_AUD_SMPL_RATE_TO_CLK - rate) > 10) {
++		dev_err(dpsub->dev, "aud_clk offset is higher: %ld\n",
++			sample_rate * ZYNQMP_DISP_AUD_SMPL_RATE_TO_CLK - rate);
++		clk_disable_unprepare(dpsub->aud_clk);
++		ret = -EINVAL;
++		goto err_unlock;
++	}
++
++	pm_runtime_get_sync(dpsub->dev);
++
++	zynqmp_dp_audio_write(audio, ZYNQMP_DISP_AUD_MIXER_VOLUME,
++			      audio->volumes[0] | (audio->volumes[1] << 16));
++
++	/* Clear the audio soft reset register as it's an non-reset flop. */
++	zynqmp_dp_audio_write(audio, ZYNQMP_DISP_AUD_SOFT_RESET, 0);
++
++	/* Only 2 channel audio is supported now */
++	zynqmp_dp_audio_set_channels(dpsub->dp, 2);
++
++	zynqmp_dp_audio_write_n_m(dpsub->dp);
++
++	/* Channel status */
++
++	if (sample_rate == 48000)
++		iec.status[3] = IEC958_AES3_CON_FS_48000;
++	else
++		iec.status[3] = IEC958_AES3_CON_FS_44100;
++
++	for (unsigned int i = 0; i < AES_IEC958_STATUS_SIZE / 4; ++i) {
++		u32 v;
++
++		v = (iec.status[(i * 4) + 0] << 0) |
++		    (iec.status[(i * 4) + 1] << 8) |
++		    (iec.status[(i * 4) + 2] << 16) |
++		    (iec.status[(i * 4) + 3] << 24);
++
++		zynqmp_dp_audio_write(audio, ZYNQMP_DISP_AUD_CH_STATUS(i), v);
++	}
++
++	zynqmp_dp_audio_enable(dpsub->dp);
++
++	audio->enabled_streams++;
++
++	mutex_unlock(&audio->enable_lock);
++
++	return 0;
++
++err_unlock:
++	mutex_unlock(&audio->enable_lock);
++	return ret;
++}
++
++static int dp_dai_hw_free(struct snd_pcm_substream *substream,
++			  struct snd_soc_dai *socdai)
++{
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
++	struct zynqmp_dpsub *dpsub =
++		snd_soc_dai_get_drvdata(snd_soc_rtd_to_cpu(rtd, 0));
++	struct zynqmp_dpsub_audio *audio = dpsub->audio;
++
++	mutex_lock(&audio->enable_lock);
++
++	/* Nothing to do */
++	if (audio->enabled_streams > 1) {
++		audio->enabled_streams--;
++		mutex_unlock(&audio->enable_lock);
++		return 0;
++	}
++
++	pm_runtime_put(dpsub->dev);
++
++	zynqmp_dp_audio_disable(dpsub->dp);
++
++	/*
++	 * Reset doesn't work. If we assert reset between audio stop and start,
++	 * the audio won't start anymore. Probably we are missing writing
++	 * some audio related registers. A/B buf?
++	 */
++	/*
++	zynqmp_disp_audio_write(audio, ZYNQMP_DISP_AUD_SOFT_RESET,
++				ZYNQMP_DISP_AUD_SOFT_RESET_AUD_SRST);
++	*/
++
++	clk_disable_unprepare(dpsub->aud_clk);
++
++	audio->current_rate = 0;
++	audio->enabled_streams--;
++
++	mutex_unlock(&audio->enable_lock);
++
++	return 0;
++}
++
++static const struct snd_soc_dai_ops zynqmp_dp_dai_ops = {
++	.hw_params	= dp_dai_hw_params,
++	.hw_free	= dp_dai_hw_free,
++};
++
++/*
++ * Min = 10 * log10(0x1 / 0x2000) = -39.13
++ * Max = 10 * log10(0xffffff / 0x2000) = 9.03
++ */
++static const DECLARE_TLV_DB_RANGE(zynqmp_dp_tlv,
++	0x0, 0x0, TLV_DB_SCALE_ITEM(TLV_DB_GAIN_MUTE, -3913, 1),
++	0x1, 0x2000, TLV_DB_LINEAR_ITEM(-3913, 0),
++	0x2000, 0xffff, TLV_DB_LINEAR_ITEM(0, 903),
++);
++
++static const struct snd_kcontrol_new zynqmp_dp_snd_controls[] = {
++	SOC_SINGLE_TLV("Input0 Playback Volume", 0,
++		       0, 0xffff, 0, zynqmp_dp_tlv),
++	SOC_SINGLE_TLV("Input1 Playback Volume", 1,
++		       0, 0xffff, 0, zynqmp_dp_tlv),
++};
++
++/*
++ * Note: these read & write functions only support two "registers", 0 and 1,
++ * for volume 0 and 1. In other words, these are not real register read/write
++ * functions.
++ *
++ * This is done to support caching the volume value for the case where the
++ * hardware is not enabled, and also to support locking as volumes 0 and 1
++ * are in the same register.
++ */
++static unsigned int zynqmp_dp_dai_read(struct snd_soc_component *component,
++				       unsigned int reg)
++{
++	struct zynqmp_dpsub *dpsub = dev_get_drvdata(component->dev);
++	struct zynqmp_dpsub_audio *audio = dpsub->audio;
++
++	return audio->volumes[reg];
++}
++
++static int zynqmp_dp_dai_write(struct snd_soc_component *component,
++			       unsigned int reg, unsigned int val)
++{
++	struct zynqmp_dpsub *dpsub = dev_get_drvdata(component->dev);
++	struct zynqmp_dpsub_audio *audio = dpsub->audio;
++
++	mutex_lock(&audio->enable_lock);
++
++	audio->volumes[reg] = val;
++
++	if (audio->enabled_streams)
++		zynqmp_dp_audio_write(audio, ZYNQMP_DISP_AUD_MIXER_VOLUME,
++				      audio->volumes[0] |
++				      (audio->volumes[1] << 16));
++
++	mutex_unlock(&audio->enable_lock);
++
++	return 0;
++}
++
++static const struct snd_soc_component_driver zynqmp_dp_component_driver = {
++	.idle_bias_on		= 1,
++	.use_pmdown_time	= 1,
++	.endianness		= 1,
++	.controls		= zynqmp_dp_snd_controls,
++	.num_controls		= ARRAY_SIZE(zynqmp_dp_snd_controls),
++	.read			= zynqmp_dp_dai_read,
++	.write			= zynqmp_dp_dai_write,
++};
++
++int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
++{
++	struct platform_device *pdev = to_platform_device(dpsub->dev);
++	struct device *dev = dpsub->dev;
++	struct zynqmp_dpsub_audio *audio;
++	struct snd_soc_card *card;
++	void *dev_data;
++	int ret;
++
++	if (!dpsub->aud_clk)
++		return 0;
++
++	audio = devm_kzalloc(dev, sizeof(*audio), GFP_KERNEL);
++	if (!audio)
++		return -ENOMEM;
++
++	dpsub->audio = audio;
++
++	mutex_init(&audio->enable_lock);
++
++	/* 0x2000 is the zero level, no change */
++	audio->volumes[0] = 0x2000;
++	audio->volumes[1] = 0x2000;
++
++	audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
++					 "%s-dai", dev_name(dev));
++
++	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
++		audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
++						      "%s-dp-%u", dev_name(dev), i);
++		audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
++						     "%s-pcm-%u", dev_name(dev), i);
++	}
++
++	audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
++	if (IS_ERR(audio->base))
++		return PTR_ERR(audio->base);
++
++	/* Create CPU DAI */
++
++	audio->dai_driver = (struct snd_soc_dai_driver) {
++		.name		= audio->dai_name,
++		.ops		= &zynqmp_dp_dai_ops,
++		.playback	= {
++			.channels_min	= 2,
++			.channels_max	= 2,
++			.rates		= SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000,
++			.formats	= SNDRV_PCM_FMTBIT_S16_LE,
++		},
++	};
++
++	ret = devm_snd_soc_register_component(dev, &zynqmp_dp_component_driver,
++					      &audio->dai_driver, 1);
++	if (ret) {
++		dev_err(dev, "Failed to register CPU DAI\n");
++		return ret;
++	}
++
++	/* Create PCMs */
++
++	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
++		struct snd_dmaengine_pcm_config *pcm_config =
++			&audio->pcm_configs[i];
++
++		*pcm_config = (struct snd_dmaengine_pcm_config){
++			.name = audio->pcm_names[i],
++			.pcm_hardware = &zynqmp_dp_pcm_hw,
++			.prealloc_buffer_size = 64 * 1024,
++			.chan_names[SNDRV_PCM_STREAM_PLAYBACK] =
++				i == 0 ? "aud0" : "aud1",
++		};
++
++		ret = devm_snd_dmaengine_pcm_register(dev, pcm_config, 0);
++		if (ret) {
++			dev_err(dev, "Failed to register PCM %u\n", i);
++			return ret;
++		}
++	}
++
++	/* Create card */
++
++	card = &audio->card;
++	card->name = "DisplayPort";
++	card->long_name = "DisplayPort Monitor";
++	card->driver_name = "zynqmp_dpsub";
++	card->dev = dev;
++	card->owner = THIS_MODULE;
++	card->num_links = ZYNQMP_NUM_PCMS;
++	card->dai_link = audio->links;
++
++	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
++		struct snd_soc_dai_link *link = &card->dai_link[i];
++
++		link->ops = &zynqmp_dp_ops;
++
++		link->name = audio->link_names[i];
++		link->stream_name = audio->link_names[i];
++
++		link->cpus = &audio->components[i].cpu;
++		link->num_cpus = 1;
++		link->cpus[0].dai_name = audio->dai_name;
++
++		link->codecs = &audio->components[i].codec;
++		link->num_codecs = 1;
++		link->codecs[0].name = "snd-soc-dummy";
++		link->codecs[0].dai_name = "snd-soc-dummy-dai";
++
++		link->platforms = &audio->components[i].platform;
++		link->num_platforms = 1;
++		link->platforms[0].name = audio->pcm_names[i];
++	}
++
++	/*
++	 * HACK: devm_snd_soc_register_card() overwrites current drvdata
++	 * so we need to hack it back.
++	 */
++	dev_data = dev_get_drvdata(dev);
++	ret = devm_snd_soc_register_card(dev, card);
++	dev_set_drvdata(dev, dev_data);
++	if (ret) {
++		/*
++		 * As older dtbs may not have the audio channel dmas defined,
++		 * instead of returning an error here we'll continue and just
++		 * mark the audio as disabled.
++		 */
++		dev_err(dev, "Failed to register sound card, disabling audio support\n");
++
++		devm_kfree(dev, audio);
++		dpsub->audio = NULL;
++
++		return 0;
++	}
++
++	return 0;
++}
++
++void zynqmp_audio_uninit(struct zynqmp_dpsub *dpsub)
++{
++	struct zynqmp_dpsub_audio *audio = dpsub->audio;
++
++	if (!audio)
++		return;
++
++	if (!dpsub->aud_clk)
++		return;
++
++	mutex_destroy(&audio->enable_lock);
++}
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+index 88eb33acd5f0..2b7dd38d3def 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
+@@ -56,36 +56,6 @@ static const struct dev_pm_ops zynqmp_dpsub_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(zynqmp_dpsub_suspend, zynqmp_dpsub_resume)
+ };
+ 
+-/* -----------------------------------------------------------------------------
+- * DPSUB Configuration
+- */
+-
+-/**
+- * zynqmp_dpsub_audio_enabled - If the audio is enabled
+- * @dpsub: DisplayPort subsystem
+- *
+- * Return if the audio is enabled depending on the audio clock.
+- *
+- * Return: true if audio is enabled, or false.
+- */
+-bool zynqmp_dpsub_audio_enabled(struct zynqmp_dpsub *dpsub)
+-{
+-	return !!dpsub->aud_clk;
+-}
+-
+-/**
+- * zynqmp_dpsub_get_audio_clk_rate - Get the current audio clock rate
+- * @dpsub: DisplayPort subsystem
+- *
+- * Return: the current audio clock rate.
+- */
+-unsigned int zynqmp_dpsub_get_audio_clk_rate(struct zynqmp_dpsub *dpsub)
+-{
+-	if (zynqmp_dpsub_audio_enabled(dpsub))
+-		return 0;
+-	return clk_get_rate(dpsub->aud_clk);
+-}
+-
+ /* -----------------------------------------------------------------------------
+  * Probe & Remove
+  */
+@@ -264,10 +234,17 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
+ 		drm_bridge_add(dpsub->bridge);
+ 	}
+ 
++	ret = zynqmp_audio_init(dpsub);
++	if (ret)
++		goto err_drm_cleanup;
++
+ 	dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
+ 
+ 	return 0;
+ 
++err_drm_cleanup:
++	if (dpsub->drm)
++		zynqmp_dpsub_drm_cleanup(dpsub);
+ err_disp:
+ 	zynqmp_disp_remove(dpsub);
+ err_dp:
+@@ -286,6 +263,8 @@ static void zynqmp_dpsub_remove(struct platform_device *pdev)
+ {
+ 	struct zynqmp_dpsub *dpsub = platform_get_drvdata(pdev);
+ 
++	zynqmp_audio_uninit(dpsub);
++
+ 	if (dpsub->drm)
+ 		zynqmp_dpsub_drm_cleanup(dpsub);
+ 	else
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.h b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+index 09ea01878f2a..9951d0176476 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
++++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.h
+@@ -12,6 +12,8 @@
+ #ifndef _ZYNQMP_DPSUB_H_
+ #define _ZYNQMP_DPSUB_H_
+ 
++#include <linux/types.h>
++
+ struct clk;
+ struct device;
+ struct drm_bridge;
+@@ -39,6 +41,8 @@ enum zynqmp_dpsub_format {
+ 	ZYNQMP_DPSUB_FORMAT_YONLY,
+ };
+ 
++struct zynqmp_dpsub_audio;
++
+ /**
+  * struct zynqmp_dpsub - ZynqMP DisplayPort Subsystem
+  * @dev: The physical device
+@@ -76,10 +80,17 @@ struct zynqmp_dpsub {
+ 	struct zynqmp_dp *dp;
+ 
+ 	unsigned int dma_align;
++
++	struct zynqmp_dpsub_audio *audio;
+ };
+ 
+-bool zynqmp_dpsub_audio_enabled(struct zynqmp_dpsub *dpsub);
+-unsigned int zynqmp_dpsub_get_audio_clk_rate(struct zynqmp_dpsub *dpsub);
++#ifdef CONFIG_DRM_ZYNQMP_DPSUB_AUDIO
++int zynqmp_audio_init(struct zynqmp_dpsub *dpsub);
++void zynqmp_audio_uninit(struct zynqmp_dpsub *dpsub);
++#else
++static inline int zynqmp_audio_init(struct zynqmp_dpsub *dpsub) { return 0; }
++static inline void zynqmp_audio_uninit(struct zynqmp_dpsub *dpsub) { }
++#endif
+ 
+ void zynqmp_dpsub_release(struct zynqmp_dpsub *dpsub);
+ 
+
 -- 
-2.39.2
+2.34.1
 
