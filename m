@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7801448D5
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 22:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461B71448E6
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 22:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710282550; cv=none; b=s6C3Roe3TE4MWsM2fF90m7hCl0azbpYjhvWfLNdOhNEHV8WgBR8kNDXmKnQzefDMyi2Lvqhp/IeT+35hP6g2d+v9BzeDV6c7tpYp8daHXwgroiinTDjtyV0O9pcuLzOOuuWq7AQSvO97Me7tZbC/zc+ecMSb6rMF+Ygd+9R0AXQ=
+	t=1710282551; cv=none; b=rbGMc9p5TP3JNXLTAap5lKtk0UJAAW+tHgFNUqvv+TfXJnpu587/95DhK+/OhGXzOsuGJbvHQW3TuQRtBqDjWiAQtH6k0NZpjAlvXMfv2ZvwXdquVqb7C6SJ7IOdUK4Co9bZJ30yzm9xsw9rO1eHmgRmic5isgv3S9LbLt/irU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710282550; c=relaxed/simple;
-	bh=SOxmdONZG+ooJ46ryKwSr/UQJN1BRbIVpZR9p2Kx8ZQ=;
+	s=arc-20240116; t=1710282551; c=relaxed/simple;
+	bh=DqX79GXBAG2/j46/SZGgINNlJjEl0m3V0W63EM+RdAU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vf5YJ06agcMTvPzS/KtWG9xiXOotpvIWwV6hGeyCs0bbdgopT63aeXnASOkPCn6WsmxjXZep161ObErVHtv5x2CQCjOCfLpIWzVOyTc9RsGPI/RvjglkH2FIeEGpQgzA0XdyHoDnMw68HlN/1c466Dx4ztNeOCa44IW/80Tp4S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RITabw2D; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=k78BSFm8ZyDMAng6E/1MEsnQUEREG7AORKT2w11gevwDlqvk2aL4Q/YQT026O9Vn5XABoBobCs2DUWoBYKxOH6jiF4qoQLmAn115jIlcdU2oFR88INe3Xvj4E8K2bwXQj5Gtwo0gJLtqCV9W0Dc3DsWzoG+5L0Q3kfDH+vQryVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eyJOLy9p; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RITabw2D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eyJOLy9p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1710282549; x=1741818549;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SOxmdONZG+ooJ46ryKwSr/UQJN1BRbIVpZR9p2Kx8ZQ=;
-  b=RITabw2DjNdHts4LOOzYBA7YTt5/3f8/fMVgayp5PF17FEOURjdpRMc2
-   dP4D+/JMMlyShm3x3XrpOpEuvKU+7Wc7f2T3EmUHnWfEJFSejBCXf5Xrb
-   n7mXGE7kg59XQE7R7HejawVdbj0yeu/GRYAeHhcb/owp+ypAqjHQPB0aF
-   M3nC3/QUfoItaHx9rKQbOab21HFn0Jzmvpkb0tUSAsf0ENsUtBnMuRaxg
-   KNZQyLiHGQL6sSfJPkXEPnMYeqvxcna4GF9T78gln5tTjG6+q4PkIplrV
-   fOZUAgxnMS2US23YPdMnM1D0R9NQAFLHzxAkU4w+qosKWeoNX5hXzYIQd
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5192005"
+  bh=DqX79GXBAG2/j46/SZGgINNlJjEl0m3V0W63EM+RdAU=;
+  b=eyJOLy9pry3ZnXbUhxW2Sx4lpHv+Lhs8nQg73Ni2LZacxHn4fh3H22Ny
+   emcMvD9HBw9SDeCJXvXyqs+JGKzzTGYlk2mzYmD2bK13O1Mgqk7bO31SD
+   MohS3G978Z+EXEEkYVwDeHMNFWARbXufA1xblVTBokwaeBHyKFu/ZolgY
+   CX4XQhZYcRjTyHk8f/AqtWEFADf5AU3lucqM2rqpt4JfltV2YVNcjD0GU
+   E1zQ01yTLMgVt/dlp4LCojJK8qu+QPJMqlBgAJQQb2z6j/f/H44mW+Ip4
+   sDHEeYw6V4pbkhP+nCPZnnnLTmcYUujrorWvH9/kQIXSaWxsCiR+6yrkE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5192057"
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="5192005"
+   d="scan'208";a="5192057"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 15:29:03 -0700
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 15:29:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="16356860"
+   d="scan'208";a="16356874"
 Received: from gargayus-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.255.231.196])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 15:29:03 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 15:29:04 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: Liam.Howlett@oracle.com,
 	akpm@linux-foundation.org,
@@ -57,15 +57,10 @@ To: Liam.Howlett@oracle.com,
 	christophe.leroy@csgroup.eu
 Cc: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
-	rick.p.edgecombe@intel.com,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v3 07/12] powerpc: Use initializer for struct vm_unmapped_area_info
-Date: Tue, 12 Mar 2024 15:28:38 -0700
-Message-Id: <20240312222843.2505560-8-rick.p.edgecombe@intel.com>
+	rick.p.edgecombe@intel.com
+Subject: [PATCH v3 09/12] mm: Take placement mappings gap into account
+Date: Tue, 12 Mar 2024 15:28:40 -0700
+Message-Id: <20240312222843.2505560-10-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240312222843.2505560-1-rick.p.edgecombe@intel.com>
 References: <20240312222843.2505560-1-rick.p.edgecombe@intel.com>
@@ -75,119 +70,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Future changes will need to add a new member to struct
-vm_unmapped_area_info. This would cause trouble for any call site that
-doesn't initialize the struct. Currently every caller sets each member
-manually, so if new members are added they will be uninitialized and the
-core code parsing the struct will see garbage in the new member.
+When memory is being placed, mmap() will take care to respect the guard
+gaps of certain types of memory (VM_SHADOWSTACK, VM_GROWSUP and
+VM_GROWSDOWN). In order to ensure guard gaps between mappings, mmap()
+needs to consider two things:
+ 1. That the new mapping isn’t placed in an any existing mappings guard
+    gaps.
+ 2. That the new mapping isn’t placed such that any existing mappings
+    are not in *its* guard gaps.
 
-It could be possible to initialize the new member manually to 0 at each
-call site. This and a couple other options were discussed, and a working
-consensus (see links) was that in general the best way to accomplish this
-would be via static initialization with designated member initiators.
-Having some struct vm_unmapped_area_info instances not zero initialized
-will put those sites at risk of feeding garbage into vm_unmapped_area() if
-the convention is to zero initialize the struct and any new member addition
-misses a call site that initializes each member manually.
+The long standing behavior of mmap() is to ensure 1, but not take any care
+around 2. So for example, if there is a PAGE_SIZE free area, and a
+mmap() with a PAGE_SIZE size, and a type that has a guard gap is being
+placed, mmap() may place the shadow stack in the PAGE_SIZE free area. Then
+the mapping that is supposed to have a guard gap will not have a gap to
+the adjacent VMA.
 
-It could be possible to leave the code mostly untouched, and just change
-the line:
-struct vm_unmapped_area_info info
-to:
-struct vm_unmapped_area_info info = {};
+For MAP_GROWSDOWN/VM_GROWSDOWN and MAP_GROWSUP/VM_GROWSUP this has not
+been a problem in practice because applications place these kinds of
+mappings very early, when there is not many mappings to find a space
+between. But for shadow stacks, they may be placed throughout the lifetime
+of the application.
 
-However, that would leave cleanup for the members that are manually set
-to zero, as it would no longer be required.
-
-So to be reduce the chance of bugs via uninitialized members, instead
-simply continue the process to initialize the struct this way tree wide.
-This will zero any unspecified members. Move the member initializers to the
-struct declaration when they are known at that time. Leave the members out
-that were manually initialized to zero, as this would be redundant for
-designated initializers.
+Use the start_gap field to find a space that includes the guard gap for
+the new mapping. Take care to not interfere with the alignment.
 
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: https://lore.kernel.org/lkml/202402280912.33AEE7A9CF@keescook/#t
-Link: https://lore.kernel.org/lkml/j7bfvig3gew3qruouxrh7z7ehjjafrgkbcmg6tcghhfh3rhmzi@wzlcoecgy5rs/
 ---
 v3:
- - Fixed spelling errors in log
- - Be consistent about field vs member in log
+ - Spelling fix in comment
 
-Hi,
-
-This patch was split and refactored out of a tree-wide change [0] to just
-zero-init each struct vm_unmapped_area_info. The overall goal of the
-series is to help shadow stack guard gaps. Currently, there is only one
-arch with shadow stacks, but two more are in progress. It is compile tested
-only.
-
-There was further discussion that this method of initializing the structs
-while nice in some ways has a greater risk of introducing bugs in some of
-the more complicated callers. Since this version was reviewed my arch
-maintainers already, leave it as was already acknowledged.
-
-Thanks,
-
-Rick
-
-[0] https://lore.kernel.org/lkml/20240226190951.3240433-6-rick.p.edgecombe@intel.com/
+v2:
+ - Remove VM_UNMAPPED_START_GAP_SET and have struct vm_unmapped_area_info
+   initialized with zeros (in another patch). (Kirill)
+ - Drop unrelated space change (Kirill)
+ - Add comment around interactions of alignment and start gap step
+   (Kirill)
 ---
- arch/powerpc/mm/book3s64/slice.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ include/linux/mm.h |  1 +
+ mm/mmap.c          | 12 +++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/slice.c b/arch/powerpc/mm/book3s64/slice.c
-index c0b58afb9a47..6c7ac8c73a6c 100644
---- a/arch/powerpc/mm/book3s64/slice.c
-+++ b/arch/powerpc/mm/book3s64/slice.c
-@@ -282,12 +282,12 @@ static unsigned long slice_find_area_bottomup(struct mm_struct *mm,
- {
- 	int pshift = max_t(int, mmu_psize_defs[psize].shift, PAGE_SHIFT);
- 	unsigned long found, next_end;
--	struct vm_unmapped_area_info info;
--
--	info.flags = 0;
--	info.length = len;
--	info.align_mask = PAGE_MASK & ((1ul << pshift) - 1);
--	info.align_offset = 0;
-+	struct vm_unmapped_area_info info = {
-+		.flags = 0,
-+		.length = len,
-+		.align_mask = PAGE_MASK & ((1ul << pshift) - 1),
-+		.align_offset = 0
-+	};
- 	/*
- 	 * Check till the allow max value for this mmap request
- 	 */
-@@ -326,13 +326,14 @@ static unsigned long slice_find_area_topdown(struct mm_struct *mm,
- {
- 	int pshift = max_t(int, mmu_psize_defs[psize].shift, PAGE_SHIFT);
- 	unsigned long found, prev;
--	struct vm_unmapped_area_info info;
-+	struct vm_unmapped_area_info info = {
-+		.flags = VM_UNMAPPED_AREA_TOPDOWN,
-+		.length = len,
-+		.align_mask = PAGE_MASK & ((1ul << pshift) - 1),
-+		.align_offset = 0
-+	};
- 	unsigned long min_addr = max(PAGE_SIZE, mmap_min_addr);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d91cde79aaee..deade7be00d0 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3418,6 +3418,7 @@ struct vm_unmapped_area_info {
+ 	unsigned long high_limit;
+ 	unsigned long align_mask;
+ 	unsigned long align_offset;
++	unsigned long start_gap;
+ };
  
--	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
--	info.length = len;
--	info.align_mask = PAGE_MASK & ((1ul << pshift) - 1);
--	info.align_offset = 0;
- 	/*
- 	 * If we are trying to allocate above DEFAULT_MAP_WINDOW
- 	 * Add the different to the mmap_base.
+ extern unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info);
+diff --git a/mm/mmap.c b/mm/mmap.c
+index b889c79d11bd..634e706fd97e 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1582,7 +1582,7 @@ static unsigned long unmapped_area(struct vm_unmapped_area_info *info)
+ 	MA_STATE(mas, &current->mm->mm_mt, 0, 0);
+ 
+ 	/* Adjust search length to account for worst case alignment overhead */
+-	length = info->length + info->align_mask;
++	length = info->length + info->align_mask + info->start_gap;
+ 	if (length < info->length)
+ 		return -ENOMEM;
+ 
+@@ -1594,7 +1594,13 @@ static unsigned long unmapped_area(struct vm_unmapped_area_info *info)
+ 	if (mas_empty_area(&mas, low_limit, high_limit - 1, length))
+ 		return -ENOMEM;
+ 
+-	gap = mas.index;
++	/*
++	 * Adjust for the gap first so it doesn't interfere with the
++	 * later alignment. The first step is the minimum needed to
++	 * fulill the start gap, the next steps is the minimum to align
++	 * that. It is the minimum needed to fulill both.
++	 */
++	gap = mas.index + info->start_gap;
+ 	gap += (info->align_offset - gap) & info->align_mask;
+ 	tmp = mas_next(&mas, ULONG_MAX);
+ 	if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
+@@ -1633,7 +1639,7 @@ static unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info)
+ 
+ 	MA_STATE(mas, &current->mm->mm_mt, 0, 0);
+ 	/* Adjust search length to account for worst case alignment overhead */
+-	length = info->length + info->align_mask;
++	length = info->length + info->align_mask + info->start_gap;
+ 	if (length < info->length)
+ 		return -ENOMEM;
+ 
 -- 
 2.34.1
 
