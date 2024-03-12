@@ -1,82 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7A87CF2A;
-	Tue, 12 Mar 2024 15:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4597CF01;
+	Tue, 12 Mar 2024 15:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710258782; cv=none; b=o0OaHR9lgXlbVBfXZPm+HMMKWpIabk/areoad5nKz4eXaIdp2im6xo8ZcyaBSm79P9+IJ9d7AzhVnPvkoAZbqFa8jivyYk/rnXwQLziT2CMHUUwjGYtQ7SqLMYbRKvBTSyjuGsDAChn62IupZ3nvItkgMdouMA6Y91KOOkcUM/A=
+	t=1710258876; cv=none; b=HIWmYLa0/ptpEsjTphNqKFpt2JMHwnGhK9ifXlWLxPXnhw2W4rPxuD820r+Q3E6F/HaaN1NkMAoVHCgQGHKK8kCBGvxs4GvLkDCNga0KiUBo0lKxg7F+Zxr0XhRT9+mSLSYh+sIzU9yCVvKUt9kcLQ35+3x8stA8amPqAiAn5eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710258782; c=relaxed/simple;
-	bh=W4547WbRCvwF1NrgSJ+HFYlSmHPmUaJuvTwISWCX+Wc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=VlYz4SraumZXhwGn+gIj9/KzMivNIRMQeRWY1REsablY+Cg02ZsCHeReCXJjXHZUjUCedzWy8zC3RRhOt2hXqvKlNoxDXCuczDPwLnMkFnkL9uVjfDYF4d6ysocaH944NxmGnmfC7RmcW0fOH76QDmcM2dVaFBNr+wkTgAQdHsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3hLq7tm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3hLq7tm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C6BDC433C7;
-	Tue, 12 Mar 2024 15:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710258782;
-	bh=W4547WbRCvwF1NrgSJ+HFYlSmHPmUaJuvTwISWCX+Wc=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=K3hLq7tm12VIejaWDEb1c1SwckRzmCYiZ5DlLewh1U7oMxp4qzIaEhNcxYQYWRn8r
-	 w3gqYmmj1fkc+9x4C9LfZZQhg6Xloe3+lwxkvWtaJiM7CD4L7KPt9qK5bMbJ+/4wd+
-	 BTPlyedZQujtvNcyCBos9NfbjXzKlj4sEDTxHb27Sfpf+VYG61nV0L0DkZlEoJW7hX
-	 buCoo5iSBN7dDsqIMrdRQtgTI6kWYuGpVu1YVMs0tKMk69NnNC5D2jy2S+Dz1fTZ6V
-	 a/9OEBl1VqjgdZVUKCwvcUTertBjR+kGijsKdj7PQXSplB7tYYY5pQsEXJuEv6t8QP
-	 /YUu0KE74buHw==
+	s=arc-20240116; t=1710258876; c=relaxed/simple;
+	bh=v3POtPwN+9vwQRkEzWIsQmdDZ3vrID9kjRKzGYMx+2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p7w0iPaXNpnaZZg9o19OSPdProi9Yud/8b//GB29fmPn6a4ZTk17QcWlYgzy+d/iI28D7wvNwYQKMxY6Vw6O4Xq3l/eJWv/pBu3iiYS7+79XTaXziA+t+xaSfrcal2qlfX7UG/G/WsmKso3sGKMwyy4lMUU8uGXGfPM/vns+ZKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957DAC43394;
+	Tue, 12 Mar 2024 15:54:35 +0000 (UTC)
+Date: Tue, 12 Mar 2024 11:56:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Do not set shortest_full when full target is
+ hit
+Message-ID: <20240312115641.6aa8ba08@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 12 Mar 2024 17:52:57 +0200
-Message-Id: <CZRW4ZZEH3BK.80W6O7YT5HH5@kernel.org>
-Cc: <mpe@ellerman.id.au>, <linux-integrity@vger.kernel.org>,
- <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
- <rnsastry@linux.ibm.com>, <peterhuewe@gmx.de>, <viparash@in.ibm.com>,
- <devicetree@vger.kernel.org>, <jsnitsel@redhat.com>, "Nayna Jain"
- <nayna@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 2/3] dt-bindings: tpm: Add linux,sml-log to
- ibm,vtpm.yaml
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Lukas Wunner" <lukas@wunner.de>, "Stefan Berger"
- <stefanb@linux.ibm.com>
-X-Mailer: aerc 0.17.0
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-3-stefanb@linux.ibm.com>
- <ZfA4TZspY7oOQ4vz@wunner.de>
-In-Reply-To: <ZfA4TZspY7oOQ4vz@wunner.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue Mar 12, 2024 at 1:11 PM EET, Lukas Wunner wrote:
-> On Mon, Mar 11, 2024 at 09:20:29AM -0400, Stefan Berger wrote:
-> > Add linux,sml-log, which carries the firmware TPM log in a uint8-array,=
- to
-> > the properties. Either this property is required or both linux,sml-base=
- and
-> > linux,sml-size are required. Add a test case for verification.
-> >=20
-> > Fixes: 82003e0487fb ("Documentation: tpm: add the IBM Virtual TPM devic=
-e tree binding documentation")
->
-> The Fixes tag is confusing.  The patch won't even apply cleanly to the
-> v4.10 commit referenced here as the conversion to yaml happened only
-> recently with v6.8.
->
-> Why is the Fixes tag necessary in the first place?  Same question for
-> the other patches in the series.  This looks like feature work rather
-> than a fix.  Not sure whether it satisfies the "obviously correct"
-> rule per Documentation/process/stable-kernel-rules.rst.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I'm not yet sure whether these are bug fixes and or improvements because
-I did not fully understand the scenario where TPM corrupts the event log
-so that part reminds to be seen.
+The rb_watermark_hit() checks if the amount of data in the ring buffer is
+above the percentage level passed in by the "full" variable. If it is, it
+returns true.
 
-Probably once I fully understand what is going on, it is possible to
-argue on that.
+But it also sets the "shortest_full" field of the cpu_buffer that informs
+writers that it needs to call the irq_work if the amount of data on the
+ring buffer is above the requested amount.
 
-BR, Jarkko
+The rb_watermark_hit() always sets the shortest_full even if the amount in
+the ring buffer is what it wants. As it is not going to wait, because it
+has what it wants, there's no reason to set shortest_full.
+
+Cc: stable@vger.kernel.org
+Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9b887d44b8d9..350607cce869 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -834,9 +834,10 @@ static bool rb_watermark_hit(struct trace_buffer *buffer, int cpu, int full)
+ 		pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+ 		ret = !pagebusy && full_hit(buffer, cpu, full);
+ 
+-		if (!cpu_buffer->shortest_full ||
+-		    cpu_buffer->shortest_full > full)
+-			cpu_buffer->shortest_full = full;
++		if (!ret && (!cpu_buffer->shortest_full ||
++			     cpu_buffer->shortest_full > full)) {
++		    cpu_buffer->shortest_full = full;
++		}
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	}
+ 	return ret;
+-- 
+2.43.0
+
