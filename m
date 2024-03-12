@@ -1,87 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30906997A;
-	Tue, 12 Mar 2024 15:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026226997A
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710256547; cv=none; b=NvHdrdScemd5djw1QcUolkrzhOKdhNAlT+hBAJtWuORU9isq3kk7Gan6GVm/NrVxlZ5VuVZ8mi7YO/lC7ct4ZE8uvorgikqjwisRECuIXuGG7ujnNUXsI8rkZXXiFnAsHL50OYa8iIBraXlbyAnDyEQkuAjj3SQiyW8ZTpg2e0s=
+	t=1710256582; cv=none; b=WEpxS+3DBQ7EtbDMV/HNad71t5iTNQKQsJlp9md5Cl43XohQJG54b8TfJHMFUtWWlHGHP75mtbjlEf8w14fWmAQWdeTmYBEb1y3dTMfoS4GluQVjOFDjtAh3Rldc6MBJ3bNYn9TjkCzckFR3BNTDRqEDPlBBT54JtR3EUHCjqi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710256547; c=relaxed/simple;
-	bh=VZ4RdUpZnnmsa7p41EkDiD8Pda6QAnfCyDAaAvhh35M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eyYY6q+QcDa1KMjvvqgYuLtCceYjHBQH8pqXRRpQ3EZIs9Bu8f+v0nvDDnjFpQPgCcva3WAA8gQlKY1CvOjOrw6vm0RjUJ7MSx5m1DSUi45dhUdk9SBJSpqlUNiXfUie0PKeJcODpWnwYsurTLYwEk/rjYfcWPbOmK5oOuKW9ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JW//o/XO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JW//o/XO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F7EC433C7;
-	Tue, 12 Mar 2024 15:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710256547;
-	bh=VZ4RdUpZnnmsa7p41EkDiD8Pda6QAnfCyDAaAvhh35M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JW//o/XOd16LQfnD9OhRP5h8UBGG4+NJgz4hSATwgEM7PcKKeHzgX4wKZPY0UGDeg
-	 pqIQRB46iUE0L8CTkskV93k8ZCoiBbZi6iQ4EbF53cx2ZGx5Q4QakvXlHnnfkG5oHV
-	 CKEe+qypY1dFWhIbixGj2qrXsBXWiewcrTcUCqu0U8svWRKBslLjuQnbaFXFoVc3LF
-	 kzZTqR1aqt5NxqwdHQJX82rE/rnB//sxEWGQmhnBaV9iGWyLmWy3DsyfxtJO+tGdXL
-	 pPVyRNlBHms6Sj/E530ZgYUfV7cnevsU3yeEHf6XGCb/v/Bmq/5DtEIO4Hrzo8Iknj
-	 qRWugAQTYLadA==
-Date: Tue, 12 Mar 2024 15:15:41 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Valentin Obst <kernel@valentinobst.de>
-Cc: Shuah Khan <shuah@kernel.org>, Anders Roxell <anders.roxell@linaro.org>,
-	Benjamin Poirier <bpoirier@nvidia.com>,
-	Guillaume Tucker <guillaume.tucker@collabora.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC] selftests: default to host arch for LLVM builds
-Message-ID: <dcfc27f1-430f-4fe2-b16f-e0bf9c51de5a@sirena.org.uk>
-References: <20240303-selftests-libmk-llvm-rfc-v1-1-9ab53e365e31@valentinobst.de>
+	s=arc-20240116; t=1710256582; c=relaxed/simple;
+	bh=2tcPIVSB5W57B2YzrkJQ5c17vXSl/d0ZRK/bKySpLsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fk983IqVQVjsshNvb2O+QdfTVS15yXPLJLfIP855cfOSy3cLY3KtHnoOF2MMbFWAPdPij9XQd0JiKowoTmUNm1ZrzVdjeUQVQjMOHHTLRJx6NAlBM0XESfK2EqrfSlA9tq5ejbaPDIfu9jVqyKXQUdmhgGz1Q1B9KZOxhGpIz58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65B32C433F1;
+	Tue, 12 Mar 2024 15:16:20 +0000 (UTC)
+Date: Tue, 12 Mar 2024 11:18:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: wenyang.linux@foxmail.com
+Cc: Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar
+ <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Christian Brauner <brauner@kernel.org>, Mel Gorman
+ <mgorman@techsingularity.net>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] exit: move trace_sched_process_exit earlier in
+ do_exit()
+Message-ID: <20240312111826.1b5bec27@gandalf.local.home>
+In-Reply-To: <tencent_277EBFCF545587D4FD41EF932AE972CC6708@qq.com>
+References: <tencent_277EBFCF545587D4FD41EF932AE972CC6708@qq.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="K+VY3Y953r366r+6"
-Content-Disposition: inline
-In-Reply-To: <20240303-selftests-libmk-llvm-rfc-v1-1-9ab53e365e31@valentinobst.de>
-X-Cookie: Oh, so there you are!
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Sun, 10 Mar 2024 13:25:29 +0800
+wenyang.linux@foxmail.com wrote:
+
+> From: Wen Yang <wenyang.linux@foxmail.com>
+> 
+> Currently coredump_task_exit() takes some time to wait for the generation
+> of the dump file. But if the user-space wants to receive a notification
+> as soon as possible it maybe inconvenient.
+> 
+> Move trace_sched_process_exit() earlier in do_exit().
+> This way a user-space monitor could detect the exits and
+> potentially make some preparations in advance.
+> 
+> Oleg initially proposed this suggestion, and Steven further provided some
+> detailed suggestions, and Mathieu carefully checked the historical code
+> and said:
+> : I've checked with Matthew Khouzam (maintainer of Trace Compass)
+> : which care about this tracepoint, and we have not identified any
+> : significant impact of moving it on its model of the scheduler, other
+> : than slightly changing its timing.
+> : I've also checked quickly in lttng-analyses and have not found
+> : any code that care about its specific placement.
+> : So I would say go ahead and move it earlier in do_exit(), it's
+> : fine by me.
+> 
+
+I'm putting together last minute minor patches for this merge window. I can
+take this if nobody has any objections.
+
+-- Steve
 
 
---K+VY3Y953r366r+6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  kernel/exit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 493647fd7c07..2cff6533cb39 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
+>  
+>  	WARN_ON(tsk->plug);
+>  
+> +	trace_sched_process_exit(tsk);
+>  	kcov_task_exit(tsk);
+>  	kmsan_task_exit(tsk);
+>  
+> @@ -866,7 +867,6 @@ void __noreturn do_exit(long code)
+>  
+>  	if (group_dead)
+>  		acct_process();
+> -	trace_sched_process_exit(tsk);
+>  
+>  	exit_sem(tsk);
+>  	exit_shm(tsk);
 
-On Sun, Mar 03, 2024 at 01:44:36PM +0100, Valentin Obst wrote:
-> When using gcc without cross compiling, i.e., `CROSS_COMPILE` unset or
-> empty, the selftests build defaults to the host architecture, i.e., it uses
-> plain gcc. However, when compiling with clang an unset `ARCH` variable in
-> combination with an unset `CROSS_COMPILE` variable, i.e., compiling for
-> the host architecture, leads to compilation failures since `lib.mk` can
-> not determine the clang target triple. In this case, the following error
-> message is displayed for each subsystem that does not set `ARCH` in its
-> own Makefile before including `lib.mk` (lines wrapped at 75 chrs):
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---K+VY3Y953r366r+6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXwcZ0ACgkQJNaLcl1U
-h9BUQgf9FBk0W4fl1KIsv1Zq1y29HJ7MuSO3XtmT0CG5+VmvTrmU0NYgenK7GniC
-Ydf4SfucSUfcc3S933rBslfvRACYhWMLlrY7BVn0qkTn1Cd3Omxt2BZww4/CxrNU
-0mRxSUtjOH5yBuEwJOolHQimtn3L0IYTyeAEPIM3j9o1derPNluU6gSzNpRkKsZD
-d9GX4VKQsFKwbVgr+UKPGgV0Zqd61W4KyD4X3j2I3nk6Y5ZNwhgN9KZNze0fs5tE
-NxHkFt+OQUjfrQP5KDCaoPoaB8Nxz3amut7vARmSa5U5L6ozdiwKzG3asLBBXgYp
-AyvsKJ/MjUcj7yfLZ4Jva0tsKc61BA==
-=D88T
------END PGP SIGNATURE-----
-
---K+VY3Y953r366r+6--
