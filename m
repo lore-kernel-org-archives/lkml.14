@@ -1,130 +1,88 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70BE142636
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 22:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFAC143753
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 22:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710281933; cv=none; b=U39aGv5QfpWLGX2Q7k9x0/+N5ampz1g+xvqTOIse2HzClj7yMox80lrOygd2grcW+0yFP8M+X0UbcUtAAFNQAPgasFlv/jTDwACQ2ni+Fvoyv+OYh/2FxJ4MpIeaiJ8Tlkk69E0y1VIPXweRUTnHjDdtX8rKjOfIFHDdiBFuivg=
+	t=1710282016; cv=none; b=Nibs4i4DUrqrBCHnLc0j7DXyF1/qmpvWu9A54KJFjJvuesvElbnCirMHWGRhfeWM+lazuUCgcRwOEhVkvgNjDU41Kzk8o76hH/G2yxFJsX622Sw5qKWmAoB4/HJNSG6lPGExCh3XffdDL+ECUue5AeTg7WTOcdT++4eC1aCn+Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710281933; c=relaxed/simple;
-	bh=DB0NP+6RaWIb4j+WqcnBBaMZdI0vXoKD8AOtv1qnpjE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=DzrEzL3+Ap4nQFm85R6dL7s4hx7dPdGtN7QShjWkM4/oZJYHkqR5YLgwKuem7ZO5YU8cS0/lDlphoKrWmaPmU/l4v0/GGNCf4KD+HPBbcMNYJ5TH8Hk9bm0txxzocEOK0XxnR6ZJyAwIE2H4+eD2dAvkODSZMa0/8JDReIBsxAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-232-H9lG9RwBO_iiT9WO8XAUZQ-1; Tue, 12 Mar 2024 22:18:38 +0000
-X-MC-Unique: H9lG9RwBO_iiT9WO8XAUZQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 12 Mar
- 2024 22:18:39 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Tue, 12 Mar 2024 22:18:39 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Pasha Tatashin' <pasha.tatashin@soleen.com>, "H. Peter Anvin"
-	<hpa@zytor.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "x86@kernel.org" <x86@kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>, "brauner@kernel.org" <brauner@kernel.org>,
-	"bristot@redhat.com" <bristot@redhat.com>, "bsegall@google.com"
-	<bsegall@google.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "dianders@chromium.org"
-	<dianders@chromium.org>, "dietmar.eggemann@arm.com"
-	<dietmar.eggemann@arm.com>, "eric.devolder@oracle.com"
-	<eric.devolder@oracle.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"hch@infradead.org" <hch@infradead.org>, "jacob.jun.pan@linux.intel.com"
-	<jacob.jun.pan@linux.intel.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "jroedel@suse.de"
-	<jroedel@suse.de>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
-	"kinseyho@google.com" <kinseyho@google.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"lstoakes@gmail.com" <lstoakes@gmail.com>, "luto@kernel.org"
-	<luto@kernel.org>, "mgorman@suse.de" <mgorman@suse.de>, "mic@digikod.net"
-	<mic@digikod.net>, "michael.christie@oracle.com"
-	<michael.christie@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"mjguzik@gmail.com" <mjguzik@gmail.com>, "mst@redhat.com" <mst@redhat.com>,
-	"npiggin@gmail.com" <npiggin@gmail.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "pmladek@suse.com" <pmladek@suse.com>,
-	"rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "surenb@google.com"
-	<surenb@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"urezki@gmail.com" <urezki@gmail.com>, "vincent.guittot@linaro.org"
-	<vincent.guittot@linaro.org>, "vschneid@redhat.com" <vschneid@redhat.com>
-Subject: RE: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Topic: [RFC 00/14] Dynamic Kernel Stacks
-Thread-Index: AQHadLYCAhDItuNbYkuiZHzHZ11K+bE0pxog
-Date: Tue, 12 Mar 2024 22:18:39 +0000
-Message-ID: <e0e7e253412240b3b427624a984642e6@AcuMS.aculab.com>
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
- <CA+CK2bC+bgOfohCEEW7nwAdakVmzg=RhUjjw=+Rw3wFALnOq-Q@mail.gmail.com>
-In-Reply-To: <CA+CK2bC+bgOfohCEEW7nwAdakVmzg=RhUjjw=+Rw3wFALnOq-Q@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1710282016; c=relaxed/simple;
+	bh=A8PvxD8p2YWdWoF8iZckuZl+Q4BMXNJr/9JH+5/H4dI=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=nQqe6hUcgryXgWcG1Hh9US8QV2J8fgabSHmZJ1Kx61zdj29y6r5xA/TOMgAG0KTn8HlmrQm2KmoyOV1U1wLIqLLtUrNzIT+Ng3qOmDtHdkyv7Vv9XUdLISyOqFM3thq12ZHlFYuaFl+JggqqG6upuwsPnjPelZLjqyS7+pwzSQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA510C433F1;
+	Tue, 12 Mar 2024 22:20:15 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rkAVr-000000022JW-0bSP;
+	Tue, 12 Mar 2024 18:22:23 -0400
+Message-ID: <20240312222059.823191689@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 12 Mar 2024 18:20:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-linus][PATCH 0/5] tracing/ring-buffer: Updates that should have made it for 6.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
 
-Li4uDQo+IEkgcmUtcmVhZCBteSBjb3ZlciBsZXR0ZXIsIGFuZCBJIGRvIG5vdCBzZWUgd2hlcmUg
-Imtlcm5lbCBtZW1vcnkiIGlzDQo+IG1lbnRpb25lZC4gV2UgYXJlIHRhbGtpbmcgYWJvdXQga2Vy
-bmVsIHN0YWNrcyBvdmVyaGVhZCB0aGF0IGlzDQo+IHByb3BvcnRpb25hbCB0byB0aGUgdXNlciB3
-b3JrbG9hZCwgYXMgZXZlcnkgYWN0aXZlIHRocmVhZCBoYXMgYW4NCj4gYXNzb2NpYXRlZCBrZXJu
-ZWwgc3RhY2suIFRoZSBpZGVhIGlzIHRvIHNhdmUgbWVtb3J5IGJ5IG5vdA0KPiBwcmUtYWxsb2Nh
-dGluZyBhbGwgcGFnZXMgb2Yga2VybmVsLXN0YWNrcywgYnV0IGluc3RlYWQgdXNlIGl0IGFzIGEN
-Cj4gc2FmZWd1YXJkIHdoZW4gYSBzdGFjayBhY3R1YWxseSBiZWNvbWVzIGRlZXAuIENvbWUtdXAg
-d2l0aCBhIHNvbHV0aW9uDQo+IHRoYXQgY2FuIGhhbmRsZSByYXJlIGRlZXBlciBzdGFja3Mgb25s
-eSB3aGVuIG5lZWRlZC4gVGhpcyBjb3VsZCBiZQ0KPiBkb25lIHRocm91Z2ggZmF1bHRpbmcgb24g
-dGhlIHN1cHBvcnRlZCBoYXJkd2FyZSAoYXMgcHJvcG9zZWQgaW4gdGhpcw0KPiBzZXJpZXMpLCBv
-ciB2aWEgcHJlLW1hcCBvbiBldmVyeSBzY2hlZHVsZSBldmVudCwgYW5kIGNoZWNraW5nIHRoZQ0K
-PiBhY2Nlc3Mgd2hlbiB0aHJlYWQgZ29lcyBvZmYgY3B1IChhcyBwcm9wb3NlZCBieSBBbmR5IEx1
-dG9taXJza2kgdG8NCj4gYXZvaWQgZG91YmxlIGZhdWx0cyBvbiB4ODYpIC4NCj4gDQo+IEluIG90
-aGVyIHdvcmRzLCB0aGlzIGZlYXR1cmUgaXMgb25seSBhYm91dCBvbmUgdmVyeSBzcGVjaWZpYyB0
-eXBlIG9mDQo+IGtlcm5lbCBtZW1vcnkgdGhhdCBpcyBub3QgZXZlbiBkaXJlY3RseSBtYXBwZWQg
-KHRoZSBmZWF0dXJlIHJlcXVpcmVkDQo+IHZtYXBwZWQgc3RhY2tzKS4NCg0KSnVzdCBmb3IgaW50
-ZXJlc3QgaG93IGJpZyBkb2VzIHRoZSByZWdpc3RlciBzYXZlIGFyZWEgZ2V0Pw0KSW4gdGhlICdn
-b29kIG9sZCBkYXlzJyBpdCBjb3VsZCBiZSBhbGxvY2F0ZWQgZnJvbSB0aGUgbG93IGVuZCBvZiB0
-aGUNCnN0YWNrIG1lbW9yeS4gQnV0IEFWWDUxMiBzdGFydHMgbWFraW5nIGl0IGxhcmdlIC0gbmV2
-ZXIgbWluZCBzb21lDQpvdGhlciB0aGluZ3MgdGhhdCAoSUlSQykgbWlnaHQgZ2V0IHRvIDhrLg0K
-RXZlbiB0aGUgdGFzayBhcmVhIGlzIHByb2JhYmx5IG5vbi10cml2aWFsIHNpbmNlIGZhciBmZXdl
-ciB0aGluZ3MNCmNhbiBiZSBzaGFyZWQgdGhhbiBvbmUgbWlnaHQgaG9wZS4NCg0KSSdtIHN1cmUg
-SSByZW1lbWJlciBzb21lb25lIGNvbnRlbXBsYXRpbmcgbm90IGFsbG9jYXRpbmcgc3RhY2tzIHRv
-DQplYWNoIHRocmVhZC4gSSB0aGluayB0aGF0IHJlcXVpcmVzIHdha2luZyB1cCB3aXRoIGEgc3lz
-dGVtIGNhbGwNCnJlc3RhcnQgZm9yIHNvbWUgc3lzdGVtIGNhbGxzIC0gcGxhdXNpYmx5IHBvc3Np
-YmxlIGZvciBmdXRleCgpIGFuZCBwb2xsKCkuDQoNCkFub3RoZXIgb3B0aW9uIGlzIHRvIGRvIGEg
-cHJvcGVyIHN0YXRpYyBhbmFseXNpcyBvZiBzdGFjayB1c2FnZQ0KYW5kIGZpeCB0aGUgcGF0aHMg
-dGhhdCBoYXZlIGRlZXAgc3RhY2tzIGFuZCByZW1vdmUgYWxsIHJlY3Vyc2lvbi4NCkknbSBwcmV0
-dHkgc3VyZSBvYmp0b29sIGtub3dzIHRoZSBzdGFjayBvZmZzZXRzIG9mIGV2ZXJ5IGNhbGwgaW5z
-dHJ1Y3Rpb24uDQpUaGUgaW5kaXJlY3QgY2FsbCBoYXNoZXMgKGZpbmUgSUJUPykgc2hvdWxkIGFs
-bG93IGluZGlyZWN0IGNhbGxzDQpiZSBoYW5kbGVkIGFzIHdlbGwgYXMgZGlyZWN0IGNhbGxzLg0K
-UHJvY2Vzc2luZyB0aGUgJ0EgY2FsbHMgQiBhdCBvZmZzZXQgbicgdG8gZ2VuZXJhdGUgYSBtYXgg
-ZGVwdGgNCmlzIGp1c3QgYSBTTU9QLg0KDQpBdCB0aGUgbW9tZW50IEkgdGhpbmsgYWxsICd2b2lk
-ICgqKSh2b2lkICopJyBmdW5jdGlvbiBoYXZlIHRoZSBzYW1lIGhhc2g/DQpTbyB0aGUgY29tcGls
-ZXIgd291bGQgbmVlZCBhIGZ1bmN0aW9uIGF0dHJpYnV0ZSB0byBzZWVkIHRoZSBoYXNoLg0KDQpX
-aXRoIHRoYXQgeW91IG1pZ2h0IGJlIGFibGUgdG8gcmVtb3ZlIGFsbCB0aGUgY29kZSBwYXRocyB0
-aGF0IGFjdHVhbGx5DQp1c2UgYSBsb3Qgb2Ygc3RhY2sgLSBpbnN0ZWFkIG9mIGp1c3QgZ3Vlc3Np
-bmcgYW5kIGxpbWl0aW5nIGluZGl2aWR1YWwNCnN0YWNrIGZyYW1lcy4NCg0KTXkgJ2d1dCBmZWVs
-JyBmcm9tIGNhbGN1bGF0aW5nIHRoZSBzdGFjayB1c2UgdGhhdCB3YXkgZm9yIGFuIGVtYmVkZGVk
-DQpzeXN0ZW0gYmFjayBpbiB0aGUgZWFybHkgMTk4MHMgaXMgdGhhdCB0aGUgbWF4IHVzZSB3aWxs
-IGJlIGluc2lkZQ0KcHJpbnRrKCkgaW5zaWRlIGFuIG9ic2N1cmUgZXJyb3IgcGF0aCBhbmQgaWYg
-eW91IGFjdHVhbGx5IGhpdCBpdA0KdGhpbmdzIHdpbGwgZXhwbG9kZS4NCihXZSBkaWRuJ3QgaGF2
-ZSBlbm91Z2ggbWVtb3J5IHRvIGFsbG9jYXRlIGJpZyBlbm91Z2ggc3RhY2tzISkNCg0KCURhdmlk
-DQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBG
-YXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2
-IChXYWxlcykNCg==
 
+Tracing/ring-buffer fixes for 6.8 (to be applied in 6.9-rc):
+
+- Do not update shortest_full in rb_watermark_hit() if the watermark
+  is hit. The shortest_full field was being updated regardless if
+  the task was going to wait or not. If the watermark is hit, then
+  the task is not going to wait, so do not update the shortest_full
+  field (used by the waker).
+
+- Update shortest_full field before setting the full_waiters_pending flag
+
+  In the poll logic, the full_waiters_pending flag was being set
+  before the shortest_full field was set. If the full_waiters_pending
+  flag is set, writers will check the shortest_full field which has
+  the least percentage of data that the ring buffer needs to be
+  filled before waking up. The writer will check shortest_full if
+  full_waiters_pending is set, and if the ring buffer percentage filled
+  is greater than shortest full, then it will call the irq_work to
+  wake up the waiters.
+
+  The problem was that the poll logic set the full_waiters_pending flag
+  before updating shortest_full, which when zero will always trigger
+  the writer to call the irq_work to wake up the waiters. The irq_work
+  will reset the shortest_full field back to zero as the woken waiters
+  is suppose to reset it.
+
+- There's some optimized logic in the rb_watermark_hit() that is used
+  in ring_buffer_wait(). Use that helper function to the poll logic
+  as well.
+
+- Restructure ring_buffer_wait() to use wait_event_interruptible()
+
+  The logic to wake up pending readers when the file descriptor is
+  closed is racy. Restructure ring_buffer_wait() to allow callers
+  to pass in conditions besides the ring buffer having enough data
+  in it by using wait_event_interruptible().
+
+- Update the tracing_wait_on_pipe() to call ring_buffer_wait() with
+  its own conditions to exit the wait loop.
+
+Steven Rostedt (Google) (5):
+      ring-buffer: Do not set shortest_full when full target is hit
+      ring-buffer: Fix full_waiters_pending in poll
+      ring-buffer: Reuse rb_watermark_hit() for the poll logic
+      ring-buffer: Use wait_event_interruptible() in ring_buffer_wait()
+      tracing/ring-buffer: Fix wait_on_pipe() race
+
+----
+ include/linux/ring_buffer.h  |   4 +-
+ include/linux/trace_events.h |   5 +-
+ kernel/trace/ring_buffer.c   | 158 +++++++++++++++++++++++++------------------
+ kernel/trace/trace.c         |  43 ++++++++----
+ 4 files changed, 132 insertions(+), 78 deletions(-)
