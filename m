@@ -1,98 +1,111 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB41F4F88B
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 23:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D29B481AB
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 23:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710287591; cv=none; b=goxG1vOPo51yJ3+DkupH/quRlD+hmjnQkbxrrh3oKTZiMYOKnsP+RW0WTMjlaS4YFA2AFF886MNMLK0XOS1Bkr6SsOcP4efuJ/cPKEnQ5es3LG7DdTEJm5ixYRKqUe0cq44+o2l2IljbBG0he9/4BtmZoOEQ52VHWDuY/U2GPIc=
+	t=1710287626; cv=none; b=AOqve+bwVOSojQBBYgXwvXPl4KR2ZlodyiJcup958eDvNTtrSAjOM/epIM2noCi05xrHbfaW3fSlsqThTxoRIsCoZO0B02CK1p2MaK9CLdBuD+uILIp8B3zS3TAvs30/39qPUXQoxCaIQkux0Of+CaDkTL6aCdBjWtR5IqP/+Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710287591; c=relaxed/simple;
-	bh=2Ql1pouZHlKg1FTlweC7vW/fpZtUlaBTyah42JkgvpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PHRNMWm4d3HT8NOrWYfr2elbUzVOPP5PfKu9FHeHtN2ul5sT3aZ+UOnNLZu9yfm8PY6GbMYksTYt3I7YdmbLGXZq3fqe3+9gkArYhsEFSbUYaSOv7Y6j+n6R/YXy4PGyY+C/t+YYb0OvdflTw2kZYb0jetjkjX291N64zvHOJPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ncLNkFzU; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710287626; c=relaxed/simple;
+	bh=kzrpE3Jf/ixYwB6jIjCMuZiuZ4uucOwZGOq0f8reVWQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Zqom0VgqhFGVIS5a9pJL7535PRwjytAWwZ20/aOZrX5ZU+BhYEALEgrAXjuYYgGYnTexc6Ox8e15jD96KRX1RaB6rIoXH1gFBtZDNuu3haOus+/8hUcecY88s5F4jQMwevlIB/we4BK7/AktjGV29PyzfqIvGkeQ/qZVvyQS7xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=1woHkUG0; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ncLNkFzU"
-Message-ID: <2a4cb416-5d95-459d-8c1c-3fb225240363@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710287587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLl+NDi9Pq4wqH+MIJSBbYaoK01Y8BsOP+TM5utTVpg=;
-	b=ncLNkFzUrhOaHVCuetngKJyq2z+07yW3B+q9MY6A2QQI5gVMsmzHqfmeoinY2JTZJjFOli
-	k3bhhs7QMPqrjJ+YRqQNMyPZbzf+Ji2ryUAFRRUJPzm0GCoDbu7yIh3ISYjTh2rFWfzBCj
-	jRms52n2CL8fvPznonqB6DuFidhUx88=
-Date: Tue, 12 Mar 2024 16:52:58 -0700
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="1woHkUG0"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd878da011so21002005ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710287624; x=1710892424; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TXYFACIdPWJdwy+Yl+k20SzAykOCyOjeDPUfEzEnCdk=;
+        b=1woHkUG05Nkc8dc4j9FeFIJHST02NbSttNuLuttqP4qO3X/NJLSTJtovGkpj3Pjzn+
+         O4AHzrLLCsz+fyllf9iM+YRY/Up9hg635QnH37t6Yg5yPZPCRYEl5oJfiBCvs2p5I212
+         Lwc8Dx/cIpd6/i0o3VXVPe3kbVhFSg+kfoUFzWPN45xYGI1wQY7Z8cqtFmamECDAW2jO
+         BBoMYlmX/er4vze+/p2K3lriFQrpPHxQ/037BXCx28aqrEP9FwFxRXV35OIIoBKFcC0M
+         hlYIu7oY3hm6iwgxUkvOCotKvLyuoQIZK5nWjLsHLzmOLIXfq1XQs/3j5M/cYNA2OviO
+         7skA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710287624; x=1710892424;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TXYFACIdPWJdwy+Yl+k20SzAykOCyOjeDPUfEzEnCdk=;
+        b=SKZO6+qc2zhK8QIkZ+4NFz7MRXQBaAY3DYji5jELsLFVQnPAlGgQ12an274SYUu26b
+         V02WAPOZVkGp3qNcbz/jf5IkgbIA/dkNTfnaK1bF2AFa4p43onurQAmZ+H6zHccBWwAA
+         Bc+bzJRde/yVHnRIiOE7+V3I/IAcLTO9MBiiwOeRhWtgeDH/r3IDk7KbratsmRWb+bNa
+         tzUA5z/d6NWwOx58UmaD9tYS/353g6ZH9Bj2ZnetaIcPf2gUXBuZsjkdeMKLkEEm3GHq
+         PZ0Z7Hh0oZVhmZV5bxHjjtVHEl3j7/zXQgQWumY7wJ/fdBwB98cqNIi9zCFQeVuWnKRT
+         2XwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ1Y2s8hnoof+pu0WxSB6dnTTpaMIe3h3v6MRcFmxjrQ999Qm/dyn9SfhbmC13SkGDTAQWKjdyiRQnEts80bs84+UTRnFsA2rLJ116
+X-Gm-Message-State: AOJu0YwZPisMqY6c97OXHbsSdnnT9wGv0PmhzRjgZ7GFaIkKOXwwVcOf
+	2UurMsidYWXAwByyBLcZaXGhvmtqD+LD+DCNHUs+uGoG889wH74OHHf7AQkPHhE8aoLbIswD8X6
+	q
+X-Google-Smtp-Source: AGHT+IH0SfMIDZtbDgW+D7kbou1UQHEhchAClAhNSOZvw6/dDwtvlbI2nHGNgmwsKXGf11eS2MPl9w==
+X-Received: by 2002:a17:902:cec2:b0:1dd:6174:c646 with SMTP id d2-20020a170902cec200b001dd6174c646mr3163048plg.8.1710287624279;
+        Tue, 12 Mar 2024 16:53:44 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902f7c900b001dcad9cbf8bsm7282844plw.239.2024.03.12.16.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 16:53:43 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Tue, 12 Mar 2024 16:53:40 -0700
+Subject: [PATCH v13 1/4] riscv: Remove unnecessary irqflags processor.h
+ include
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v4] net: Re-use and set mono_delivery_time bit
- for userspace tstamp packets
-Content-Language: en-US
-To: Abhishek Chauhan <quic_abchauha@quicinc.com>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: kernel@quicinc.com, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
- Martin KaFai Lau <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>
-References: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <20240312-fencei-v13-1-4b6bdc2bbf32@rivosinc.com>
+References: <20240312-fencei-v13-0-4b6bdc2bbf32@rivosinc.com>
+In-Reply-To: <20240312-fencei-v13-0-4b6bdc2bbf32@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Atish Patra <atishp@atishpatra.org>, Randy Dunlap <rdunlap@infradead.org>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710287621; l=659;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=kzrpE3Jf/ixYwB6jIjCMuZiuZ4uucOwZGOq0f8reVWQ=;
+ b=JdUmv9KuobgRo10PoWynjhbDzqMEbIcDakiliqU/bWiH/yeoVaClcS5c6gI0xUpubRXXVWRFH
+ vfEzAOtdC8OBOMPEPNikt9gJbUM6yqYKdtTdzPyRLqTmxVZE5W122JX
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On 3/1/24 12:13 PM, Abhishek Chauhan wrote:
-> Bridge driver today has no support to forward the userspace timestamp
-> packets and ends up resetting the timestamp. ETF qdisc checks the
-> packet coming from userspace and encounters to be 0 thereby dropping
-> time sensitive packets. These changes will allow userspace timestamps
-> packets to be forwarded from the bridge to NIC drivers.
-> 
-> Setting the same bit (mono_delivery_time) to avoid dropping of
-> userspace tstamp packets in the forwarding path.
-> 
-> Existing functionality of mono_delivery_time remains unaltered here,
-> instead just extended with userspace tstamp support for bridge
-> forwarding path.
+This include is not used and can lead to circular dependencies.
 
-The patch currently broke the bpf selftest test_tc_dtime: 
-https://github.com/kernel-patches/bpf/actions/runs/8242487344/job/22541746675
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+---
+ arch/riscv/include/asm/irqflags.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-In particular, there is a uapi field __sk_buff->tstamp_type which currently has 
-BPF_SKB_TSTAMP_DELIVERY_MONO to mean skb->tstamp has the MONO "delivery" time. 
-BPF_SKB_TSTAMP_UNSPEC means everything else (this could be a rx timestamp at 
-ingress or a delivery time set by user space).
+diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/asm/irqflags.h
+index 08d4d6a5b7e9..6fd8cbfcfcc7 100644
+--- a/arch/riscv/include/asm/irqflags.h
++++ b/arch/riscv/include/asm/irqflags.h
+@@ -7,7 +7,6 @@
+ #ifndef _ASM_RISCV_IRQFLAGS_H
+ #define _ASM_RISCV_IRQFLAGS_H
+ 
+-#include <asm/processor.h>
+ #include <asm/csr.h>
+ 
+ /* read interrupt enabled status */
 
-__sk_buff->tstamp_type depends on skb->mono_delivery_time which does not 
-necessarily mean mono after this patch. I thought about fixing it on the bpf 
-side such that reading __sk_buff->tstamp_type only returns 
-BPF_SKB_TSTAMP_DELIVERY_MONO when the skb->mono_delivery_time is set and skb->sk 
-is IPPROTO_TCP. However, it won't work because of bpf_skb_set_tstamp().
-
-There is a bpf helper, bpf_skb_set_tstamp(skb, tstamp, 
-BPF_SKB_TSTAMP_DELIVERY_MONO). This helper changes both the skb->tstamp and the 
-skb->mono_delivery_time. The expectation is this could change skb->tstamp in the 
-ingress skb and redirect to egress sch_fq. It could also set a mono time to 
-skb->tstamp where the udp sk->sk_clockid may not be necessary in mono and then 
-bpf_redirect to egress sch_fq. When bpf_skb_set_tstamp(skb, tstamp, 
-BPF_SKB_TSTAMP_DELIVERY_MONO) succeeds, reading __sk_buff->tstamp_type expects 
-BPF_SKB_TSTAMP_DELIVERY_MONO also.
-
-I ran out of idea to solve this uapi breakage.
-
-I am afraid it may need to go back to v1 idea and use another bit 
-(user_delivery_time) in the skb.
+-- 
+2.43.2
 
