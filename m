@@ -1,71 +1,178 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017B97E11F
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B048C7D3E9;
+	Tue, 12 Mar 2024 16:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710260500; cv=none; b=L3yI2BtJTeuv/z16ZeMd+c8e0g+Rxk97f6wu6HqfHY3d8EXfGoVM9K/v00rha0CA2vfWpJKmcGMBwPez0/ExhgcDkMoR6B158glJwJTfkYiRnQd0MtsQtVd1vdHGT3UvVVE/sJe48p5xRu3k7ZYtx9gP9S6rjzrMZz+GPrMmyp8=
+	t=1710260511; cv=none; b=VzGnjkOoKiYFYMbAv1vzToKrCaa6hHX9cXrz3RauK+bU2EZ/b1YJwxJGFbnLwF7f09QHj9joMchBjWRgS0wv9fauCExyMryAf+CZnz4a7BkKCrSEqPJHfyVsA0R8A6Xg4EXfQF2WR5BCPwbtYpfmWZYe6ymD06byEy5kN+K1yuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710260500; c=relaxed/simple;
-	bh=50eYY7syBfoEwxVPYan4n/6y+gz5q6VYg8y0DY7CJ24=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jkFwmwJvhc7bRA9LpDKiuRpnsLg99xHm+Y3OHsusjUBWrIZwfpMULA0Kxrl8mIaqlzPaTkQm0CzA+i7C+I2rzoZ+P0MAu6R7V3RitML1joz1MKEHBzT3hZxr05BNzbsNrND/yHPOyUj51iMl/k2iJ/DdWDa5Wn+A7PkzN9PiJ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from abreu.molgen.mpg.de (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1C5C461E5FE0A;
-	Tue, 12 Mar 2024 17:20:39 +0100 (CET)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Xin Li <xin3.li@intel.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/fred: Add missing *it* to Kconfig description
-Date: Tue, 12 Mar 2024 17:19:58 +0100
-Message-ID: <20240312161958.102927-2-pmenzel@molgen.mpg.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710260511; c=relaxed/simple;
+	bh=9gouWIccOcWNOC2Wg5Zduc51A/XGK7M/IeuGTXAVNPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYvlVMxptSDu09AsYMD1BqqrQP8YuR01JXtWyAUaC2ovqvlztTVykrZmDJP14ZOvr33hM4oqJ0pseHTNbdrn9nib10e02Z3/aNg5f/25ud7m7OwHgP7Pl0I+1DCu4Nm9eFt4iUa0ldk3lv8+rldqLSP8pM1ih1A1IKe/JYipPXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3Avj8mx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3Avj8mx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A9CC433F1;
+	Tue, 12 Mar 2024 16:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710260511;
+	bh=9gouWIccOcWNOC2Wg5Zduc51A/XGK7M/IeuGTXAVNPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j3Avj8mxcInDVki81FNuFDqI9wRb4UlzVI1KiH5d6hqGyTHuRl9N0LUMQ7bjp51ah
+	 P1mKEguRw8x9PqbEuxpGa6iMlzCcY1OZadVQWNsj5KOWjqmeVX60ZtIN9lWzxIyrKX
+	 Ly/NI5INZNUapKVUUc+pl1NSWcp8OY8YhIIavzq1ZxQUcOHHgIJtsX6GGG4XrKtO07
+	 sIsDR7A+gKxdlgCBoMa9T7zQ3w2q6zM0pqqEBh0Iy63CP6e0j6zYDAcMflyGeh5ZWE
+	 oAP7HyvYBO83/f1xqmzuNGEH8CAAyz0cVHqlrRKpJpUi+7sHMFggkaKZ4NVQThtU6E
+	 +zFaMlWjfvjDA==
+Date: Tue, 12 Mar 2024 09:21:50 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH 2/4] xfs: convert delayed extents to unwritten when
+ zeroing post eof blocks
+Message-ID: <20240312162150.GB1927156@frogsfrogsfrogs>
+References: <20240311122255.2637311-1-yi.zhang@huaweicloud.com>
+ <20240311122255.2637311-3-yi.zhang@huaweicloud.com>
+ <20240311153737.GT1927156@frogsfrogsfrogs>
+ <aab454d0-d8f3-61c8-0d14-a5ae4c35746e@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aab454d0-d8f3-61c8-0d14-a5ae4c35746e@huaweicloud.com>
 
-The sentence is incomplete, so add the missing *it*.
+On Tue, Mar 12, 2024 at 08:31:58PM +0800, Zhang Yi wrote:
+> On 2024/3/11 23:37, Darrick J. Wong wrote:
+> > On Mon, Mar 11, 2024 at 08:22:53PM +0800, Zhang Yi wrote:
+> >> From: Zhang Yi <yi.zhang@huawei.com>
+> >>
+> >> Current clone operation could be non-atomic if the destination of a file
+> >> is beyond EOF, user could get a file with corrupted (zeroed) data on
+> >> crash.
+> >>
+> >> The problem is about to pre-alloctions. If you write some data into a
+> >> file [A, B) (the position letters are increased one by one), and xfs
+> >> could pre-allocate some blocks, then we get a delayed extent [A, D).
+> >> Then the writeback path allocate blocks and convert this delayed extent
+> >> [A, C) since lack of enough contiguous physical blocks, so the extent
+> >> [C, D) is still delayed. After that, both the in-memory and the on-disk
+> >> file size are B. If we clone file range into [E, F) from another file,
+> >> xfs_reflink_zero_posteof() would call iomap_zero_range() to zero out the
+> >> range [B, E) beyond EOF and flush range. Since [C, D) is still a delayed
+> >> extent, it will be zeroed and the file's in-memory && on-disk size will
+> >> be updated to D after flushing and before doing the clone operation.
+> >> This is wrong, because user can user can see the size change and read
+> >> zeros in the middle of the clone operation.
+> >>
+> >> We need to keep the in-memory and on-disk size before the clone
+> >> operation starts, so instead of writing zeroes through the page cache
+> >> for delayed ranges beyond EOF, we convert these ranges to unwritten and
+> >> invalidating any cached data over that range beyond EOF.
+> >>
+> >> Suggested-by: Dave Chinner <david@fromorbit.com>
+> >> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> >> ---
+> >>  fs/xfs/xfs_iomap.c | 29 +++++++++++++++++++++++++++++
+> >>  1 file changed, 29 insertions(+)
+> >>
+> >> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> >> index ccf83e72d8ca..2b2aace25355 100644
+> >> --- a/fs/xfs/xfs_iomap.c
+> >> +++ b/fs/xfs/xfs_iomap.c
+> >> @@ -957,6 +957,7 @@ xfs_buffered_write_iomap_begin(
+> >>  	struct xfs_mount	*mp = ip->i_mount;
+> >>  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+> >>  	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, count);
+> >> +	xfs_fileoff_t		eof_fsb = XFS_B_TO_FSBT(mp, XFS_ISIZE(ip));
+> >>  	struct xfs_bmbt_irec	imap, cmap;
+> >>  	struct xfs_iext_cursor	icur, ccur;
+> >>  	xfs_fsblock_t		prealloc_blocks = 0;
+> >> @@ -1035,6 +1036,22 @@ xfs_buffered_write_iomap_begin(
+> >>  	}
+> >>  
+> >>  	if (imap.br_startoff <= offset_fsb) {
+> >> +		/*
+> >> +		 * For zeroing out delayed allocation extent, we trim it if
+> >> +		 * it's partial beyonds EOF block, or convert it to unwritten
+> >> +		 * extent if it's all beyonds EOF block.
+> >> +		 */
+> >> +		if ((flags & IOMAP_ZERO) &&
+> >> +		    isnullstartblock(imap.br_startblock)) {
+> >> +			if (offset_fsb > eof_fsb)
+> >> +				goto convert_delay;
+> >> +			if (end_fsb > eof_fsb) {
+> >> +				end_fsb = eof_fsb + 1;
+> >> +				xfs_trim_extent(&imap, offset_fsb,
+> >> +						end_fsb - offset_fsb);
+> >> +			}
+> >> +		}
+> >> +
+> >>  		/*
+> >>  		 * For reflink files we may need a delalloc reservation when
+> >>  		 * overwriting shared extents.   This includes zeroing of
+> >> @@ -1158,6 +1175,18 @@ xfs_buffered_write_iomap_begin(
+> >>  	xfs_iunlock(ip, lockmode);
+> >>  	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
+> >>  
+> >> +convert_delay:
+> >> +	end_fsb = min(end_fsb, imap.br_startoff + imap.br_blockcount);
+> >> +	xfs_iunlock(ip, lockmode);
+> >> +	truncate_pagecache_range(inode, offset, XFS_FSB_TO_B(mp, end_fsb));
+> >> +	error = xfs_iomap_write_direct(ip, offset_fsb, end_fsb - offset_fsb,
+> >> +				       flags, &imap, &seq);
+> > 
+> > I expected this to be a direct call to xfs_bmapi_convert_delalloc.
+> > What was the reason not for using that?
+> > 
+> 
+> It's because xfs_bmapi_convert_delalloc() isn't guarantee to convert
+> enough blocks once a time, it may convert insufficient blocks since lack
+> of enough contiguous free physical blocks. If we are going to use it, I
+> suppose we need to introduce a new helper something like
+> xfs_convert_blocks(), add a loop to do the conversion.
 
-Fixes: 2cce95918d63 ("x86/fred: Add Kconfig option for FRED (CONFIG_X86_FRED)")
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
----
-As a casual user, I wouldn’t know how to figure out, what is required
-from my system to support FRED.
+I thought xfs_bmapi_convert_delalloc passes out (via @iomap) the extent
+that xfs_bmapi_allocate (or anyone else) allocated (bma.got).  If that
+mapping is shorter, won't xfs_buffered_write_iomap_begin pass the
+shortened mapping out to the iomap machinery?  In which case that
+iomap_iter loop will call ->iomap_begin on the unfinished delalloc
+conversion work?
 
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> xfs_iomap_write_direct() has done all the work of converting, but the
+> name of this function is non-obviousness than xfs_bmapi_convert_delalloc(),
+> I can change to use it if you think xfs_bmapi_convert_delalloc() is
+> better. :)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8f7271d9f1d7..5fc9fdb84f46 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -504,7 +504,7 @@ config X86_FRED
- 	  When enabled, try to use Flexible Return and Event Delivery
- 	  instead of the legacy SYSCALL/SYSENTER/IDT architecture for
- 	  ring transitions and exception/interrupt handling if the
--	  system supports.
-+	  system supports it.
- 
- if X86_32
- config X86_BIGSMP
--- 
-2.43.0
+Yes.
 
+--D
+
+> Thanks,
+> Yi.
+> 
+> > --D
+> > 
+> >> +	if (error)
+> >> +		return error;
+> >> +
+> >> +	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
+> >> +	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, IOMAP_F_NEW, seq);
+> >> +
+> >>  found_cow:
+> >>  	seq = xfs_iomap_inode_sequence(ip, 0);
+> >>  	if (imap.br_startoff <= offset_fsb) {
+> >> -- 
+> >> 2.39.2
+> >>
+> >>
+> 
+> 
