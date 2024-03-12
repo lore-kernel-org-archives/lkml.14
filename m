@@ -1,39 +1,38 @@
 Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC9177F06;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCFD77F07;
 	Tue, 12 Mar 2024 08:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710233549; cv=none; b=eEn1lrbq876FzgqAhwcD/qRzpvVAdMMrA2vcK11hHWMYXKz/FVZuHBq/IjSPigGnO7/AuUomBg0pBeBl769IzfYgDy2+sYYP3F5uM/M4YJCj0eWc2lHGKEV0X/uFKojL5J93vPN7e4SkcbYqSKnHYOiq/boCfUiXv8iyr7takHc=
+	t=1710233549; cv=none; b=DVIf2wldrCvCmdQqjBRFBmQdLWeCfCV9GVG1ae6VBr06od7OJy7NXurBOOLnO5zoTQh/GMGFE7cnAKol5E+qU835IuuS3FJhmqPJLE5XDEZFlUlVyw9UjWhKroBNPjC6+EZ6vTuQgDjouJFq24vWaC0At0JYAKRKRPa57e6dHeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710233549; c=relaxed/simple;
-	bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZvWX9q6myz+IUjVSszqWJl9pXGRbiguy5TBS9fv6NwWGYrN5qA2EQnhI2ximkA8nJavtoBRTst78TzqaxdcUv2dRBLCl2qErmLjON8nvy7M5qgp8qEPyxsrd1eD3hmzzACcwjbI0FClSKSrcWbZleAyGsITpg01JxqlndWkDUeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=HmpIIgtn; arc=none smtp.client-ip=194.87.146.52
+	bh=slL5bRycpHhI2+Y7J6KNxlIBy/lluYrU3g56qphs/Tw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=swL55mjBfOG5wFPtbSgu5yv6Fr3Y1IJtJnu7Nabb1nvnkQSnfqrGLybFXVL7IunFH7BQ/fIKU77bfHSM50gBc9IESBQ9jjP8EibqX28nRcv35iHTL/lN+rbdXzg9ecrijmeOyaaVNzD2zkewuJ/AGAEmXJ9WtlDNjlwjb7PzY7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=FapqdML2; arc=none smtp.client-ip=194.87.146.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="HmpIIgtn"
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="FapqdML2"
 Received: from authenticated-user (box.trvn.ru [194.87.146.52])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id ED4C741DDD;
-	Tue, 12 Mar 2024 13:42:23 +0500 (+05)
+	by box.trvn.ru (Postfix) with ESMTPSA id E6630400F9;
+	Tue, 12 Mar 2024 13:42:19 +0500 (+05)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1710232944; bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HmpIIgtnNZoKS1Zr2NkaS/2JEglvF4JkU9ZUOFjz/qtSF+jTKwQjc7Gqw5+boDDK6
-	 brtx33BZ9oY73lzRf+AmTAM2XmUtj5fwQ2A0USRe4zDk0cSVYLGyIaDp64fv+DmH3S
-	 5fkCQRkKUycm+SLIBWONzjBu/GicTIU7ZK6gsi2whO9igYeCfRWhzctq8IeTxsew7S
-	 GFK0X+6Exr5V8AW4KSR2I+msGutzRMB+Q9Dm5TtVeZhnwtw+QM1dMzmRzXGcXCzWlO
-	 WPDdqgtrsNiKhZL3ouHH+M0ObhbhPpaC3gu4l3pdu3hKohpikp08jr7CFHtE2k9nso
-	 1lrDAkobUSP5g==
+	t=1710232941; bh=slL5bRycpHhI2+Y7J6KNxlIBy/lluYrU3g56qphs/Tw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FapqdML2C4/6AC9fAy5pBSc7KVObiY7aABWf24FdWul2S9QlDKemBiErH4YP0VjEM
+	 VfN/8mnBsqSyPWw7csIC3PJcEbVvAKoNv6XgOJbNmAPHPvv+t4msbAl37ggeG5LMSz
+	 GTIoRsSb6xrzKPxhI1ruMkGDJIF2hEFtOjEyWfovFbzMaoHyMmtIwpyfZc1HdipCOr
+	 XjCY8Mbm5keZQOTVM4LCWU+yGKBvBllmMzIfC/DL/kWlk6ueV/FZrRJNRvpSFJy78m
+	 u/3mulPJ5QFEVRi4AhKQtQqGvMcrn9CZSQeoJ/iUJkNkO0rU93vKsAus43fzo4iJ6M
+	 hlBZLc3uo2gFw==
 From: Nikita Travkin <nikita@trvn.ru>
-Date: Tue, 12 Mar 2024 13:42:10 +0500
-Subject: [PATCH v4 4/4] arm64: dts: qcom: acer-aspire1: Add embedded
- controller
+Subject: [PATCH v4 0/4] platform: arm64: Acer Aspire 1 embedded controller
+Date: Tue, 12 Mar 2024 13:42:06 +0500
+Message-Id: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240312-aspire1-ec-v4-4-bd8e3eea212f@trvn.ru>
-References: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
-In-Reply-To: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
+X-B4-Tracking: v=1; b=H4sIAF4V8GUC/1XMQQ6CMBCF4auQrq2ZmSINrryHcTGUUbtB0mKjI
+ dzdQkKE5XvJ948qSvAS1bkYVZDko391eZSHQrkndw/Rvs1bEZBBgkpz7H0Q1OJ01ZiWHDtkSyq
+ DPsjdf5bY9Zb308fhFb5LO+H8rhm7zSTUoBuuBR2RBbCXIaTuGN5qjiTaQKQdpAwdl/VJGNiy2
+ 0OzwhKIYAdNhkCuQVNnbvAPp2n6AUpcigsUAQAA
 To: Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
  Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
@@ -55,20 +55,20 @@ To: Hans de Goede <hdegoede@redhat.com>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2209; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl8BVrccxopNDy05Gy0/m6i1aDHJfSPZjMCUERj
- 2DmLQYPDhqJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfAVawAKCRBDHOzuKBm/
- dYCHD/9gU6VDWMdigpmmBvodBpEXHEGimk/bDIpQeSkoResC6yw/CVJzdxaVVwdK8J2ZXybC34b
- sZw8i8mBFwLDN2REtfMOQysJ8YEciKUbv6OKkls6Cpe52TFTLrFPJCbINDak6m8TCJ2NKcGuE/G
- GmECsRnMNXEejm8z2nOWzWnLV9xT4u73IlozvzcDJOmice5PfXyUEjDEMC0gzjlyEWt97CqGGGW
- dwPqcNisa61gZFA+D/Gl9JbUcELupfQt6wL4luY89RfMQ/aQLJlfzR7csLswIw5xSiVKRgjLKZY
- oYNgMV3bdPQsPgmDXFpa8G1xE9NESwnR962w1Sq95JjpjlzRlEj5cmIp8c+xOQWF55zGTWwNFcO
- TYugld5bEOgkxRU15ukWxT0tqJOfmSPYllhaL00VLQFb/ANwA8pwDdJ/sgu0iu7PFWrTR7kqxk0
- uMS4KnqG8eHpKJUc04XfsOlKT8lTCaAIVBwC+wAP30aYF3obBeIP2hkd+S6O0yr1MrxwTV6oMqV
- 06L0bWgub5xPvjpYcIN9z9EH3E1KGPxB68WcLZAoJCC+056XbNdj/oY6OhT/JO71n0I1HfQXLHS
- uvaJpQfpdiSKmcFghl2CDvyTMw4+GeD0wckOy3V6XG779km/S0cPJRlG1UOc7X7VuPlgP4CLMul
- 46ujk4mxtBANnHA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2665; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=slL5bRycpHhI2+Y7J6KNxlIBy/lluYrU3g56qphs/Tw=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl8BVoNtD/XcPJO4FKbwDVc2v3P0F8OnfolTAbY
+ Vi5SvGn5lyJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfAVaAAKCRBDHOzuKBm/
+ dTXqD/9mLhyNTyI0MH6CWQDuTVLVYqpnYMOOCYwoWd2zSovWgp6HSI67FmmCHt/neu48iFk9o1f
+ 5xNcN+KSj7Y8X16eZFfWf1bAtO3ZmJdJa5qctNftmh3xN7fQ4Tiiz+/gMSfQYhB9dnXDKZgQT28
+ /16c528q0nnFqV57FrOsq0aQjG4SamUJwzRKtsFJkLEGmnO7+9Xp7b393XCbwMZwpAUkWp4I5Pc
+ 0p91Or8ds9B0cXDaMcJJwoJmKz7/kq9V7H7kTRURBw7bqtSoFF3xQb8sHFXWphWdnaSUNd6dLvz
+ UHi4jlonmJWXRSWn3j77I5q+A1y1vbiGidYz60lXyZ6ptb2LVVBT+aEPq9vr67dB0aVhn/+T7mS
+ 2GDrD0l1Ws7B46Vztz+46EgncHgHwA0kobex6WwYtktBsxgHJJ3LF/mR97kfw7ckoOUsbLuX1xK
+ aREfsfDZLMfOz46um2V/B4WzvgQdauiukbZN3BmFFOQBVkFOE79n/O9+KsAMJQtVqn4zNo0xCr1
+ D0uJUulbAp3gT/vKlVtuYWKZxNT0CIHEzworVdJ/OqmCUK/fFtFsby6ahluFWsIXXNh+z3z/uVf
+ Ce2QTFOuUxkRpWx8RY8xFgg5vILwq653Evf2R8QkmOHIJFwsdX43xwA+aOF2c0F/vgmuf+Dv0II
+ jTY8p8xLc0BRFBg==
 X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
  fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
@@ -84,81 +84,59 @@ features:
 bus and is already enabled. This port only provides fn key behavior
 configuration.
 
-Add the EC to the device tree and describe the relationship between the
-EC-managed type-c port and the SoC DisplayPort.
+Unfortunately, while all this functionality is implemented in ACPI, it's
+currently not possible to use ACPI to boot Linux on such Qualcomm
+devices. Thus this series implements and enables a new driver that
+provides support for the EC features.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+The EC would be one of the last pieces to get almost full support for the
+Acer Aspire 1 laptop in the upstream Linux kernel.
+
+This series is similar to the EC driver for Lenovo Yoga C630, proposed
+in [1] but seemingly never followed up...
+
+[1] https://lore.kernel.org/all/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
+
 Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
- arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts | 40 +++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+Changes in v4:
+- Move to platform/arm64 (Sebastian, Hans)
+- Drop fn mode dt property (Rob)
+- Add fn_lock attribute in sysfs (Rob)
+- Report psy present correctly (Sebastian)
+- Link to v3: https://lore.kernel.org/r/20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
-index 5afcb8212f49..3f0d3e33894a 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
-@@ -255,7 +255,25 @@ &i2c2 {
- 	clock-frequency = <400000>;
- 	status = "okay";
- 
--	/* embedded-controller@76 */
-+	embedded-controller@76 {
-+		compatible = "acer,aspire1-ec";
-+		reg = <0x76>;
-+
-+		interrupts-extended = <&tlmm 30 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-0 = <&ec_int_default>;
-+		pinctrl-names = "default";
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+
-+			port {
-+				ec_dp_in: endpoint {
-+					remote-endpoint = <&mdss_dp_out>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &i2c4 {
-@@ -419,6 +437,19 @@ &mdss {
- 	status = "okay";
- };
- 
-+&mdss_dp {
-+	data-lanes = <0 1>;
-+
-+	vdda-1p2-supply = <&vreg_l3c_1p2>;
-+	vdda-0p9-supply = <&vreg_l4a_0p8>;
-+
-+	status = "okay";
-+};
-+
-+&mdss_dp_out {
-+	remote-endpoint = <&ec_dp_in>;
-+};
-+
- &mdss_dsi0 {
- 	vdda-supply = <&vreg_l3c_1p2>;
- 	status = "okay";
-@@ -857,6 +888,13 @@ codec_irq_default: codec-irq-deault-state {
- 		bias-disable;
- 	};
- 
-+	ec_int_default: ec-int-default-state {
-+		pins = "gpio30";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
- 	edp_bridge_irq_default: edp-bridge-irq-default-state {
- 		pins = "gpio11";
- 		function = "gpio";
+Changes in v3:
+- Supress warning on few no-op events.
+- Invert the fn key behavior (Rob, Conor)
+- Link to v2: https://lore.kernel.org/r/20231212-aspire1-ec-v2-0-ca495ea0a7ac@trvn.ru
 
+Changes in v2:
+- Drop incorrectly allowed reg in the ec connector binding (Krzysztof)
+- Minor style changes (Konrad)
+- Link to v1: https://lore.kernel.org/r/20231207-aspire1-ec-v1-0-ba9e1c227007@trvn.ru
+
+---
+Nikita Travkin (4):
+      dt-bindings: platform: Add Acer Aspire 1 EC
+      platform: Add ARM64 platform directory
+      platform: arm64: Add Acer Aspire 1 embedded controller driver
+      arm64: dts: qcom: acer-aspire1: Add embedded controller
+
+ .../bindings/platform/acer,aspire1-ec.yaml         |  60 +++
+ MAINTAINERS                                        |   9 +
+ arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts   |  40 +-
+ drivers/platform/Kconfig                           |   2 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/arm64/Kconfig                     |  35 ++
+ drivers/platform/arm64/Makefile                    |   8 +
+ drivers/platform/arm64/acer-aspire1-ec.c           | 555 +++++++++++++++++++++
+ 8 files changed, 709 insertions(+), 1 deletion(-)
+---
+base-commit: a1184cae56bcb96b86df3ee0377cec507a3f56e0
+change-id: 20231206-aspire1-ec-6b3d2cac1a72
+
+Best regards,
 -- 
-2.43.2
+Nikita Travkin <nikita@trvn.ru>
 
