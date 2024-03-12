@@ -1,142 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2A651C3B;
-	Tue, 12 Mar 2024 23:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B0A4E1C4
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 23:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710287629; cv=none; b=Muh06ZoXi+J+ThHFynRmjXD0J4V0aQSB9bMZ0qFEkuAL40xGuENo3gLMBqR0g4h8Np/hY8LB1DLYa2QVazmsEjUjLVdsNhZ/YfxqOI1rBUFfip2wtB87N3gB0VSTTW1mNrU/IP/M2z3a5Eh7ANhKgpXxigQ58818+ClHF+8asTo=
+	t=1710287629; cv=none; b=M0GAKLHdNnkX+RyAXAeV83YrHpAktcemcOnKOEkUau1PF10uawmcDbg0ptNRfX2cBqfVGxAiJxHrBpeF/NFmbjz5BNNpeQW54MiisiHGzUm+7LneNYnL1vShSJ7uJWA8vcCZvRVZNF3x23C6eF8JPyggzUwcJleWalPw+StOd2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710287629; c=relaxed/simple;
-	bh=QyUcVoiFBH6lEX6Up734N1/h/U5ZNuzaTmYYuEdRf30=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HqKnbtyfH8GobbAjhPdxPuqQgOikBO5Gp6WcbF2jm2Wp+FyEn8C0kUAnaWQih+wdeuDvev/huJX4l37J7faUe+34Ls8ZgkR2IG0TzxnOkTP56GZSP66DWcTv8csaGiWDG7Lrd6FL2E5BDj0IoaBQq03+/fUAAEAznwJbyPY/Au0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXgBWYl+; arc=none smtp.client-ip=10.30.226.201
+	bh=VhbTJ9D/d65WnO+JrY1SIvIOPQdT9MHfEzWOw+OIGSo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dJGkBm/GtQjQgPAQVmQHZ9oJPWqAeR8hYMBwJ6bGLqqvsmxpTHhxwcrLKz8WHGvlxhvVaaPRyNam5xeszQc+Utr/jgwAsqMo2b/yih7EdIAXFGei3RboGHeIf+t4l2sjPRDYKsFF/Hmcru2pm4zO7rkAz60XTZtPqybIGjSEUh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sVJNUsyJ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXgBWYl+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7657AC433F1;
-	Tue, 12 Mar 2024 23:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710287628;
-	bh=QyUcVoiFBH6lEX6Up734N1/h/U5ZNuzaTmYYuEdRf30=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fXgBWYl+S4cHuj5SvafvgWUAIUbapF+Lc6Im8xuIj2QZNLDbxPDpWngAf0RK+yn2g
-	 8WIVUDN1N7v0rZglYiR1iuMLn39lLK7ZV4WiT/XtbF1+B5wawCY9QtSnkLOo4Rv6uJ
-	 Y6kNH4UiqaeLA/vBMcIHIcgSADXe6OmNgQGcUmNh3YoPtcOPNvwx3/OlCNjFLn67Lb
-	 Xc4Rp6XBAwOF2qaXHvyND5T33SXkiKBoWPV8SI82uubhCuS1OJ93CY/DDPmf/SxHp/
-	 +Icm6dqeA5DTFFe4Ecaqs3+GMbzHxN4USNF79niJW+ekEBNzXnZGeYfZJqDAneYF9X
-	 jHjS3G0SWY9uQ==
-Date: Tue, 12 Mar 2024 16:53:46 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Cc: ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
- alexandre.torgue@foss.st.com, andrew@lunn.ch, corbet@lwn.net,
- davem@davemloft.net, dtatulea@nvidia.com, edumazet@google.com,
- gal@nvidia.com, hkallweit1@gmail.com, jacob.e.keller@intel.com,
- jiri@resnulli.us, joabreu@synopsys.com, justinstitt@google.com,
- kory.maincent@bootlin.com, leon@kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, liuhangbin@gmail.com,
- maxime.chevallier@bootlin.com, netdev@vger.kernel.org, pabeni@redhat.com,
- paul.greenwalt@intel.com, przemyslaw.kitszel@intel.com,
- rdunlap@infradead.org, richardcochran@gmail.com, saeed@kernel.org,
- tariqt@nvidia.com, vadim.fedorenko@linux.dev, vladimir.oltean@nxp.com,
- wojciech.drewek@intel.com
-Subject: Re: [PATCH RFC v2 1/6] ethtool: add interface to read Tx hardware
- timestamping statistics
-Message-ID: <20240312165346.14ec1941@kernel.org>
-In-Reply-To: <20240309084440.299358-2-rrameshbabu@nvidia.com>
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
-	<20240309084440.299358-1-rrameshbabu@nvidia.com>
-	<20240309084440.299358-2-rrameshbabu@nvidia.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sVJNUsyJ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ddcec424a6so71895ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710287627; x=1710892427; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xy5TOqSKX3DblYxEOD5MVVtHMk7JBMIm4GkKJlZsbS8=;
+        b=sVJNUsyJ5goUle0ZXUpqeoFbNEn9YwoaklklZNk53B3oHOiNFnMp2gLAnKHEKQxzHd
+         kONetzMkvVSzvdlJMDEhUkjkA8xeTMZ6T+yQDKcHYhYGaRAkLR/chWtbulxn0tFA7cp7
+         ORGG90zqBcP5L8qrglXqZcaO1rYHcRsnvkOoxk/HBqyY9BN/iuR9USrv4Wjqx2f9isAa
+         AGVYG+B1RLEvNVXHJh3QWlJgT/UCu9E/Ch2c7QQedpCMMjsHI+/HuxPlaXq4yoyr0M2z
+         MHjC84DWLRF0ZgqxXGBq6i6NBjeUw8A1fvl2rRQ1C26Q2x9jYQ9AahkWbUefpccqxASw
+         Duzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710287627; x=1710892427;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xy5TOqSKX3DblYxEOD5MVVtHMk7JBMIm4GkKJlZsbS8=;
+        b=g1MTea2NhPJ5FCTdee8jtCIFcVxClXchtoisaGISL08ccRNrAO3YyJEgojVsAZhNRO
+         To0alDlwWrW312Oc7QGuGKPdb4szDS1RDsi5nQJ7No4a4yLnyohkgjI+xCt9xE0F+LHh
+         wbzW4SVWMnv8yEnDUb58FY7a/HeRV9S/6H1p2/STRVdFd3KhlgbCRsDRSv83AQoRKaQe
+         caqMMwpkAHt2gMVO5sDVmrLGxJHPCSDGQupUXoXo5O7cZo4nSbKHQBCa34sOn2uDMNhM
+         3/7106Ibc9hgrf0EpD8tbbJjZHo46ctQQYsYLv8EkuUAOS2TeJjtl3UdXSXvU2hOBt+H
+         63lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqBVIDiF963wlWFyjXM62rd0Hh4FFZXkZA2eJKoIMcq3Ko1Rt9vOXOxLWnufvE17lMAHQAU4/oFFOp6v+02pqSdoNI+W1piA3oKqOp
+X-Gm-Message-State: AOJu0YxSmH6ZUY7nufR+v8RUmDlVx3OGMqGN7TFoYGP2Jgig14dTwzud
+	OAevjD5+7/HrTa0LuDK9u41rwrIxVrHw+ofBis9PkKliCmOWJS1m0RDcZ/BqRQY=
+X-Google-Smtp-Source: AGHT+IGOuq44oY+SA4/K6Jk2+JXY0tCiJaFcX1Kd9JQD8qXjj735tLLLMG623VHrrnU0hXZIrtQRgA==
+X-Received: by 2002:a17:902:ecc4:b0:1dc:df18:c5c0 with SMTP id a4-20020a170902ecc400b001dcdf18c5c0mr11755148plh.0.1710287626915;
+        Tue, 12 Mar 2024 16:53:46 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902f7c900b001dcad9cbf8bsm7282844plw.239.2024.03.12.16.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 16:53:46 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Tue, 12 Mar 2024 16:53:42 -0700
+Subject: [PATCH v13 3/4] documentation: Document
+ PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240312-fencei-v13-3-4b6bdc2bbf32@rivosinc.com>
+References: <20240312-fencei-v13-0-4b6bdc2bbf32@rivosinc.com>
+In-Reply-To: <20240312-fencei-v13-0-4b6bdc2bbf32@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Atish Patra <atishp@atishpatra.org>, Randy Dunlap <rdunlap@infradead.org>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
+ Atish Patra <atishp@rivosinc.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710287621; l=4601;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=VhbTJ9D/d65WnO+JrY1SIvIOPQdT9MHfEzWOw+OIGSo=;
+ b=cZs4wpLQVtK7aTyxMXY6Q9lLyWJ4tLsVLAH4e9c1IqQElmGi36HzjYpFtCMt0IsozfaaDWWOb
+ QEJZI4fNKu1AxAOBDJtLa+UZHCwjpFVve7bojE9mGLUn6bjOh1cblBo
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Sat,  9 Mar 2024 00:44:35 -0800 Rahul Rameshbabu wrote:
-> Multiple network devices that support hardware timestamping appear to have
-> common behavior with regards to timestamp handling. Implement common Tx
-> hardware timestamping statistics in a tx_stats struct_group. Common Rx
-> hardware timestamping statistics can subsequently be implemented in a
-> rx_stats struct_group for ethtool_ts_stats.
+Provide documentation that explains how to properly do CMODX in riscv.
 
->  Documentation/netlink/specs/ethtool.yaml | 20 +++++++++
->  include/linux/ethtool.h                  | 21 ++++++++++
->  include/uapi/linux/ethtool_netlink.h     | 15 +++++++
->  net/ethtool/tsinfo.c                     | 52 +++++++++++++++++++++++-
->  4 files changed, 107 insertions(+), 1 deletion(-)
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ Documentation/arch/riscv/cmodx.rst | 98 ++++++++++++++++++++++++++++++++++++++
+ Documentation/arch/riscv/index.rst |  1 +
+ 2 files changed, 99 insertions(+)
 
-Feels like we should mention the new stats somehow in 
-Documentation/networking/ethtool-netlink.rst
+diff --git a/Documentation/arch/riscv/cmodx.rst b/Documentation/arch/riscv/cmodx.rst
+new file mode 100644
+index 000000000000..1c0ca06b6c97
+--- /dev/null
++++ b/Documentation/arch/riscv/cmodx.rst
+@@ -0,0 +1,98 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============================================================================
++Concurrent Modification and Execution of Instructions (CMODX) for RISC-V Linux
++==============================================================================
++
++CMODX is a programming technique where a program executes instructions that were
++modified by the program itself. Instruction storage and the instruction cache
++(icache) are not guaranteed to be synchronized on RISC-V hardware. Therefore, the
++program must enforce its own synchronization with the unprivileged fence.i
++instruction.
++
++However, the default Linux ABI prohibits the use of fence.i in userspace
++applications. At any point the scheduler may migrate a task onto a new hart. If
++migration occurs after the userspace synchronized the icache and instruction
++storage with fence.i, the icache on the new hart will no longer be clean. This
++is due to the behavior of fence.i only affecting the hart that it is called on.
++Thus, the hart that the task has been migrated to may not have synchronized
++instruction storage and icache.
++
++There are two ways to solve this problem: use the riscv_flush_icache() syscall,
++or use the ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` prctl() and emit fence.i in
++userspace. The syscall performs a one-off icache flushing operation. The prctl
++changes the Linux ABI to allow userspace to emit icache flushing operations.
++
++As an aside, "deferred" icache flushes can sometimes be triggered in the kernel.
++At the time of writing, this only occurs during the riscv_flush_icache() syscall
++and when the kernel uses copy_to_user_page(). These deferred flushes happen only
++when the memory map being used by a hart changes. If the prctl() context caused
++an icache flush, this deferred icache flush will be skipped as it is redundant.
++Therefore, there will be no additional flush when using the riscv_flush_icache()
++syscall inside of the prctl() context.
++
++prctl() Interface
++---------------------
++
++Call prctl() with ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` as the first argument. The
++remaining arguments will be delegated to the riscv_set_icache_flush_ctx
++function detailed below.
++
++.. kernel-doc:: arch/riscv/mm/cacheflush.c
++	:identifiers: riscv_set_icache_flush_ctx
++
++Example usage:
++
++The following files are meant to be compiled and linked with each other. The
++modify_instruction() function replaces an add with 0 with an add with one,
++causing the instruction sequence in get_value() to change from returning a zero
++to returning a one.
++
++cmodx.c::
++
++	#include <stdio.h>
++	#include <sys/prctl.h>
++
++	extern int get_value();
++	extern void modify_instruction();
++
++	int main()
++	{
++		int value = get_value();
++		printf("Value before cmodx: %d\n", value);
++
++		// Call prctl before first fence.i is called inside modify_instruction
++		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_ON, PR_RISCV_CTX_SW_FENCEI, PR_RISCV_SCOPE_PER_PROCESS);
++		modify_instruction();
++		// Call prctl after final fence.i is called in process
++		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_OFF, PR_RISCV_CTX_SW_FENCEI, PR_RISCV_SCOPE_PER_PROCESS);
++
++		value = get_value();
++		printf("Value after cmodx: %d\n", value);
++		return 0;
++	}
++
++cmodx.S::
++
++	.option norvc
++
++	.text
++	.global modify_instruction
++	modify_instruction:
++	lw a0, new_insn
++	lui a5,%hi(old_insn)
++	sw  a0,%lo(old_insn)(a5)
++	fence.i
++	ret
++
++	.section modifiable, "awx"
++	.global get_value
++	get_value:
++	li a0, 0
++	old_insn:
++	addi a0, a0, 0
++	ret
++
++	.data
++	new_insn:
++	addi a0, a0, 1
+diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+index 4dab0cb4b900..eecf347ce849 100644
+--- a/Documentation/arch/riscv/index.rst
++++ b/Documentation/arch/riscv/index.rst
+@@ -13,6 +13,7 @@ RISC-V architecture
+     patch-acceptance
+     uabi
+     vector
++    cmodx
+ 
+     features
+ 
 
-> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-> index 197208f419dc..f99b003c78c0 100644
-> --- a/Documentation/netlink/specs/ethtool.yaml
-> +++ b/Documentation/netlink/specs/ethtool.yaml
-> @@ -559,6 +559,21 @@ attribute-sets:
->        -
->          name: tx-lpi-timer
->          type: u32
-> +  -
-> +    name: ts-stat
-> +    attributes:
-> +      -
-> +        name: pad
-> +        type: pad
+-- 
+2.43.2
 
-You can remove the pad entry, and...
-
-> +      -
-> +        name: tx-pkts
-> +        type: u64
-
-...use the uint type for the stats
-
-> +      -
-> +        name: tx-lost
-> +        type: u64
-> +      -
-> +        name: tx-err
-> +        type: u64
->    -
->      name: tsinfo
->      attributes:
-
-> +/**
-> + * struct ethtool_ts_stats - HW timestamping statistics
-> + * @tx_stats: struct group for TX HW timestamping
-> + *	@pkts: Number of packets successfully timestamped by the queried
-> + *	      layer.
-> + *	@lost: Number of packet timestamps that failed to get applied on a
-> + *	      packet by the queried layer.
-> + *	@err: Number of timestamping errors that occurred on the queried
-> + *	     layer.
-
-the kdocs for @lost and @err are not very clear
-
-> + * @get_ts_stats: Query the device hardware timestamping statistics.
-
-Let's copy & paste the "Drivers must not zero" text in here?
-People seem to miss that requirement anyway, but at least we'll
-have something to point at in review.
-
-> +enum {
-> +	ETHTOOL_A_TS_STAT_UNSPEC,
-> +	ETHTOOL_A_TS_STAT_PAD,
-> +
-> +	ETHTOOL_A_TS_STAT_TX_PKT,			/* array, u64 */
-> +	ETHTOOL_A_TS_STAT_TX_LOST,			/* array, u64 */
-> +	ETHTOOL_A_TS_STAT_TX_ERR,			/* array, u64 */
-
-I don't think these are arrays.
-
-> +
-> +	/* add new constants above here */
-> +	__ETHTOOL_A_TS_STAT_CNT,
-> +	ETHTOOL_A_TS_STAT_MAX = (__ETHTOOL_A_TS_STAT_CNT - 1)
-> +
-> +};
