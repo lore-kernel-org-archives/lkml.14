@@ -1,736 +1,342 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B127482;
-	Tue, 12 Mar 2024 03:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710212616; cv=none; b=G5x0jg59/VBl+7R5sJGFnl9BzaTPLtHvB/2/lFw4RXyyl30RXqsSQUkn3uk9IHsnpNLFG3moOl8Mz2bK0m7RR8SW4JWf57rQmHxMEi0t2pioRZ4RelYOlVrieXUlvIXYP0z0sXXgcrAxWvDjs0w0S6kFtqWmYTSOMmn593g8910=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710212616; c=relaxed/simple;
-	bh=bAaeYI5tXJ41UTbjSmsjHrS3C/aXkIuLaTW0uaGTagg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fyxpdl2EwAcGvsubhCcBY1tonArzSL82SZDRwiyhPFqYDaQmets9XESgbUD8ZSML4T6ZBCoXoZZk3PHoLyVNl8Cwe4N6+uqdbWoINgDc33Yr+xw4L2ggvKxodTKj2Bo6RP6heZN5YH4BthnFhg3NumkJxq7Y/KWkWiuzG6Qn8GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=iHYX3lqj; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D884F8BFA;
+	Tue, 12 Mar 2024 03:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710212676; cv=fail; b=oYS0IA2iM4NYVKAI4jx2D8napdzoFLgT9IJe7GJIUxshwKwBT2MlcPPTNZhGfdk19S0BeMKqxbj1fsbNvfMvrcxtE/fUUvAFZI1lB4BaLIzpGESWGHk5jO88bLslWK9G4ghwNRRzfc2cXPS6K9QJbqrHoUqjiMfwQDXSgp+20oU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710212676; c=relaxed/simple;
+	bh=bN2cXZYklqtzoWUQo2JcVIu9WiayIoaMjmAFlr2DbFs=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oEUPQldtuYWrTecSF8iUJ571WCKha+BcIHtBrjG+E+tl3HS0dOWrytIaOBT3CaUPuTnxXGuDhvXBoP6c4kMJvluIewqglpAXxTaw6K+d2T2XLMmq6aXUrpiYui/VrqqdNL9igR5aWuWCb3Ic2exusbUCcS1aa9VaKy/TsL+7K94=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=marzLvEJ; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="iHYX3lqj"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42BIWdMF004951;
-	Mon, 11 Mar 2024 20:03:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pfpt0220; bh=bHcS0xWCivDkdsIOpL+vp2
-	qjUskwBgTvlL6VkxEiMno=; b=iHYX3lqjaMv/rimQj4TGjx3Z0DcklYEZ+bAIby
-	Kw+34wOTxDXfYsGZtI9jrZP1px5FDoSJCDK1lB8Yx+jSxrAbkTkD2G7LGnIpMCgC
-	/xqg9c36Kuw6rmZSSUknOcQypnJ1z4ZE3UMxuL/PtAsJswAXp2xLNpu0LzKpopp3
-	Js8jzw6SkPzW5hGw+VC7fth66U/4enqNZbN+b5cou19CjoGzDZeQ8gI5LkGgavKE
-	Xry7YERP0oT5A7MI3Nv9xspPllh+fKaaGlsvLnuZs/1WNsbQhF1u2VZZWCPFiAMu
-	kcx5TE8iMj02VvTjnHUSgrZ5OoQVfSphVP94+2Ww3Atbu00g==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wt54n1p65-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 20:03:14 -0700 (PDT)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 11 Mar
- 2024 20:03:13 -0700
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH02.marvell.com (10.69.176.39) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Mon, 11 Mar 2024 20:03:09 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Mon, 11 Mar 2024 20:03:09 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id E69A65B6927;
-	Mon, 11 Mar 2024 20:03:04 -0700 (PDT)
-Date: Tue, 12 Mar 2024 08:33:03 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: Jijie Shao <shaojijie@huawei.com>
-CC: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <jiri@resnulli.us>, <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-        <liuyonglong@huawei.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V5 net-next 3/4] net: hns3: dump more reg info based on
- ras mod
-Message-ID: <20240312030303.GA1249254@maili.marvell.com>
-References: <20240309100044.2351166-1-shaojijie@huawei.com>
- <20240309100044.2351166-4-shaojijie@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="marzLvEJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710212675; x=1741748675;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=bN2cXZYklqtzoWUQo2JcVIu9WiayIoaMjmAFlr2DbFs=;
+  b=marzLvEJ6swVNY2EdTwOY+7RnEJ+rmwjQ6Gz1uAPu7rB6Plc2VdlUeSm
+   vm+krj5Zw+tsnvuIKmiUpcpd9mnPQJD2tX0hLRmJuc2AaT9cJS+/5LnxJ
+   6Jeusi/4Qd5Qt3mdxWNabuTh8B+F6pgXOjHD8gvkoD38/WhiHHLZY607a
+   si0s19cqitduGLClnFCs5MSAXF8Oiyk26Z4Z0DvJjDBjhpBp4DkQe+7ZW
+   l/fyFHGAl4bmlIm1d00RJ5o/HyIiKgh5G9n0ZwVfJmJRccgzR5xMABHvf
+   J4wFno8NqIYnTTkjfsnG0uHFtx1VUO8YmEAfEbrM76cXBWoWroyjFUfaq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="16048931"
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="16048931"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 20:04:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="42372596"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Mar 2024 20:04:33 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 11 Mar 2024 20:04:33 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 11 Mar 2024 20:04:33 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 11 Mar 2024 20:04:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cj8ZQ+dpGTs1LFEt5TNYox5QgT1Rjpd331PkLdXNJr8iJBAdVOM698INXWai24tGw0XuXxQWietOArTyfsQIxYSKHQkawdpb4DP7/LrQow1tX/MvudKzR0ibdHXhLaExpDhmaVhYvjikHHnxz1zL/2RaHxiWzz7WtgHSB2aZR0rPL1X23mVCL5mOb1plsRT8fxR4T8SrCS5sVNpYQJXlDLD+zUeiMBw2PAOPcZxaBFyK5nDaKmd52WZuEbPTHd0+pqR6+VuxlsVbut0UUZeEv468mVcyuLB4YFaI043jZf9qz6v1n/bGDuT/+9Gfj+xhiNtMMQ29jGTljxnwKsTwSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iaS3aIGBDovugWaJxcEj75fzaTl0wMwtgUdhnc0S4zg=;
+ b=PltijHd5EDM4JG1tK+8x4muu2yE+LmeRNr8H7P2Q/48FH4uk5jXmS5pw0rWWtnvfZkI5s853ns42t9I9g8c4i5YBEyLIpQDAEHLWugzWs08DJzTgXNAnfOoADn1g6eov/u+zwxIQwPeGXE8TYofbLy+P6Vpt/53WfUcO8L+Gkg35YIAD4uAxulsd8r+FXcDXEj+O/HuVNnYE64tUiri8z/VWlBNjh86L2E16rQIiaU9OnGk+xMSg/zLWGh+PdIsQZrt2/fxYeUV3zbUFXQnRGdwiipF94itVCtnWFajk+vRYNIWPByvzcU6Q9y72UjqOr3+FT9SUaJaPsTvABW4zew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by DS0PR11MB7557.namprd11.prod.outlook.com (2603:10b6:8:14d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.17; Tue, 12 Mar
+ 2024 03:04:30 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b1f5:9d1f:f510:d54c]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b1f5:9d1f:f510:d54c%3]) with mapi id 15.20.7386.015; Tue, 12 Mar 2024
+ 03:04:30 +0000
+Message-ID: <585423de-9173-4c97-b596-71e1564d8b4e@intel.com>
+Date: Tue, 12 Mar 2024 11:07:48 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] iommu: Introduce a replace API for device pasid
+Content-Language: en-US
+To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@nvidia.com>
+CC: "joro@8bytes.org" <joro@8bytes.org>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "cohuck@redhat.com"
+	<cohuck@redhat.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
+	"chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
+	"yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>, "peterx@redhat.com"
+	<peterx@redhat.com>, "jasowang@redhat.com" <jasowang@redhat.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
+ Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
+	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
+	<yan.y.zhao@intel.com>
+References: <20231127063428.127436-1-yi.l.liu@intel.com>
+ <20231127063428.127436-2-yi.l.liu@intel.com>
+ <20240115171950.GL734935@nvidia.com>
+ <c831bf5e-f623-402d-9347-8718987d1610@intel.com>
+ <BN9PR11MB52766161477C2540969C83568C242@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <BN9PR11MB52766161477C2540969C83568C242@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0008.apcprd02.prod.outlook.com
+ (2603:1096:4:194::12) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240309100044.2351166-4-shaojijie@huawei.com>
-X-Proofpoint-ORIG-GUID: t9pKaOkAnOAryR3VNF1tcPge4sNTWd4P
-X-Proofpoint-GUID: t9pKaOkAnOAryR3VNF1tcPge4sNTWd4P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_02,2024-03-11_01,2023-05-22_02
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|DS0PR11MB7557:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3549fc76-5f7f-4e7d-9572-08dc424122be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lBkb11NWfmnaCHY5Hp5927mTBc6reIndL886Ei4z49GdN+7woQjiOukmsyaTq05M0bLFLQuvRQKOjbFfYwwYim3uQ1aIgHpkayqw0l792ChLJUTixhvkA+HLfHVnuoDj9b/UwF8Gz/gVtvcK1BIKJlSmng9ORwKxKwNV4W5+LqMd4zl3ZkU/iIZDicuxGhcgoY4USfihWNi9w5Eo6ksr7WSyBPSN0F8SHC5SnYTyW8MKeV+en6z95WyKrWq47A9yr9gmgLG5gPUc0qgMNfZ/FoVMCSRJ6hbg+HzYqYpxTavPo5nn9EKuPnINGgqo8IgbyhXobnZ/kVqBtGqe1nSQQ3ECMv3CFIFCXbbntGlVPJFx0FJHe/dXcyfS988/+y+TAbdPFh/FmT0AMKRJ41TgchexsddrrTIfKaUtB7ujK4T2imMvsJSdGiXMEUq5Obg+NLNvnXjpS5HFLjR7aaaL6I8yjryYyhBSFvFJlaWrZCuNWO6PdoCbQMFi3SGLBqQbUjw1Z5PYg/OCV37N8i2J6cohlf5KOP28GLndRyxIQCWlllLK8vyus9spEsGZcfMaVqJxo0C80O/IB3FQbQhKpmksNSFWiy1Cn2vowt0RCow=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bjhMbEsyNm9TM2tFa0dzcW1SY3I2T0g4WUwzZ1JVa1B0c2dNSmg5WHhJTW9h?=
+ =?utf-8?B?V0tweWg1MWtQTUY0dWpEVHliT0hFM1ZNaGhCUWVSbTU0bytYSXhIYXcxek51?=
+ =?utf-8?B?VzliZTA1bDk1UWxKdWVHaFBtaFY0cmZtSUtEcEgzaXNIUHIwNnNhUzRUcllo?=
+ =?utf-8?B?N3Vta0FGMm9Yak1uL2drQmVYdW4xZWVJUlVOem10ZVNoK29PM1JqMlUyL01i?=
+ =?utf-8?B?cXNXd3VaV2VmUDU2TmtERmNwaFpIajhsa2gyVEoxUGdjK0kwYkhmejUveWNh?=
+ =?utf-8?B?NFJBWlp3cCt2a2hrb0FGVlZlN1BsZ1FJbmloay9aaFpSRVoxdTYzSmQ4bFdj?=
+ =?utf-8?B?Z2Y2WkhJQnNaVUhlRUd3L3VSZkxPbGxYdFRlT1JyL0hlU2dBeElhSWdwZzJi?=
+ =?utf-8?B?ZG9OWlVRQzB2aUQyKzBhTkZ2cGVJOS9yZTdnMEhvZjhyVFVqR0JiSmw4MzBm?=
+ =?utf-8?B?Q3dBK0V6QUZXMm5iMFI0dCt5TEg5T2dnZFBBdjczMzkyTkpza2xnV3A4cFZU?=
+ =?utf-8?B?a21wSnVrRUhXTG8rQytMSXE5cWxyWFY4aWwzK2YyLzJBMFJoUmh1SGJHNFh2?=
+ =?utf-8?B?U1d0RGFMNmdZZnJ0WkNKZURIYTg1TGNJWVJDR1dxRlpjM0h0Y05NWlZveFMz?=
+ =?utf-8?B?MXkzNWFwNDhhVVFMTWUvbnd1Q0tCekprTEpRU0I4bCtnOWdDb3MzSmJpZytE?=
+ =?utf-8?B?SG5QTG1VL1BNMS9IU1VoZXdPZlRaWnlrbFhwN0E1enNXR3drWXUwak9mNmZa?=
+ =?utf-8?B?VDYwQ1JoWW54V1p4anZaSDlYYTRBbXBlK1lLRXFzdmt5Rk1TQ1FGQTVaQXVX?=
+ =?utf-8?B?RHViWi9FSW01Q2hUaHBhcUgzRDd2ckRmZ0Y0SWhSR1VvTllVTDROcExpRVd2?=
+ =?utf-8?B?cXFzSW5TMHA2MTAwUFFFY3FSSm5wYWRHeHY2NnhPck80NGhiRFh1LzZzZTdV?=
+ =?utf-8?B?RU82WG1mU0VsOHZYdVpWOEdWVklPR09UeUw4TUd6WUdIdWd5TlJOMDFiZ2g1?=
+ =?utf-8?B?TVlyZzBoU0hZT1JHT2lQQ0lGK0xPQzZkYklUNzBkb09BcVdUZzhDVHljbWhR?=
+ =?utf-8?B?R21TT09tQVcwdWFORGFzOXQ2dW9jR0Fxd1VSNjRNbGFYVkRiQ2hwUWtxVW8y?=
+ =?utf-8?B?cXgxR1ZYZWc1TUJ1T3lpaUwxZFZsbnh5aisraWVMcjJzMTd6YXRaa0dqQllT?=
+ =?utf-8?B?Z0pubW95enVZVnVLTlZNUjdkRTFZTXQzdnROU1dOdXhiU1hwQjBZWlJtS0U5?=
+ =?utf-8?B?a25NWTA1enFYb0Z3RERqWGVMNlRMUkNnUzJyaDl3b1cwekpoQU9McEFnS2Nk?=
+ =?utf-8?B?QmpXMlN0YjIvS0xjN1pqOFNXckdMVHplcFJsdFpvNDJqVG9xcGo4ankvc2gr?=
+ =?utf-8?B?UUlPVDQwVGhRNnhoMkVUbDZ1WVFXSm5CMzhzbGJOUzVIYnpLTjVsNU5BVFRi?=
+ =?utf-8?B?WkJnQUxzekZza1oreWxkSUFPYW1DR2F0dkY4b1pMb3B1cmZPRGRUZG1ncDJX?=
+ =?utf-8?B?VHprcGpRRlY0UHUzVGVvdmJabnZpRlJ2VEZoZmtPTXltaUpTVXRtM01Ga3hv?=
+ =?utf-8?B?cThYN2dEY05JYjlIVytSS2JJeStZT3VQUDUwc0pUTEdPeFpSUURiOW5nc28v?=
+ =?utf-8?B?UUcwL1JpRHNGSmY3MUZSVzhMaStzNHk2RGhieUVJMDQrQkNjRUlXWnpMQzZU?=
+ =?utf-8?B?Z1YwcUFicnBMQllOVEo5Unc1ZWJoS0dBZlFabWRyejYwcnNIT29ySlJxYWZl?=
+ =?utf-8?B?THpiNUJSeXFhenZRNzJlTGZ4RDFKVXBGTSt6V1JIN0hKcTJTajhXTTJoaFZC?=
+ =?utf-8?B?ZHcvajZRcitCVGd2b2pZL1pnOTgySTEzempWYUd1Q0N6STFuOW5CMXg0WkV6?=
+ =?utf-8?B?cVNsUUxDc2hxS1RqMWx0cFd5TmY2NVdsT2VOa1lYWEJJMFByVVlheXBFaVJH?=
+ =?utf-8?B?YnVPdDdrejBMZXZuYSs2aGNPYkQ4NnRSR21hcHlHeW5US3F3dVRpNVZ6c2xq?=
+ =?utf-8?B?SDhNSzc3L0UvS1J5ZERTU2JraTc2aVVGaUVwemllcGVWbzlaN0JIdmZISWlz?=
+ =?utf-8?B?UFRXUjk3UlJsMDZ1Yk1ZYUsreDlqN0k3dmVkM1B6OFB2SzFnN243d2tVQndn?=
+ =?utf-8?Q?lOm9eORvT5+SjSzFZq7ccO4Dm?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3549fc76-5f7f-4e7d-9572-08dc424122be
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 03:04:30.5996
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nTq+jviutkJO3V5ybtjVCraC0lhrVgIwe9P1fSFk3qeF+4x+naeQt3Oq6xwmBac4GA2mK1VOS2kFVNI3IpGrLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7557
+X-OriginatorOrg: intel.com
 
-On 2024-03-09 at 15:30:43, Jijie Shao (shaojijie@huawei.com) wrote:
->
-> Dump more reg info base on ras mod before reset, which is useful to
-> analyze the ras error.
->
-> Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
-> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> ---
->  drivers/net/ethernet/hisilicon/hns3/hnae3.h   |   4 +
->  .../hns3/hns3_common/hclge_comm_cmd.c         |   1 +
->  .../hns3/hns3_common/hclge_comm_cmd.h         |   2 +
->  .../hisilicon/hns3/hns3pf/hclge_debugfs.c     |   6 +-
->  .../hisilicon/hns3/hns3pf/hclge_debugfs.h     |   3 +
->  .../hisilicon/hns3/hns3pf/hclge_err.c         | 434 +++++++++++++++++-
->  .../hisilicon/hns3/hns3pf/hclge_err.h         |  36 ++
->  7 files changed, 478 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-> index f19f1e1d1f9f..e9266c65b331 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-> @@ -104,6 +104,7 @@ enum HNAE3_DEV_CAP_BITS {
->  	HNAE3_DEV_SUPPORT_WOL_B,
->  	HNAE3_DEV_SUPPORT_TM_FLUSH_B,
->  	HNAE3_DEV_SUPPORT_VF_FAULT_B,
-> +	HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B,
->  };
->
->  #define hnae3_ae_dev_fd_supported(ae_dev) \
-> @@ -181,6 +182,9 @@ enum HNAE3_DEV_CAP_BITS {
->  #define hnae3_ae_dev_vf_fault_supported(ae_dev) \
->  	test_bit(HNAE3_DEV_SUPPORT_VF_FAULT_B, (ae_dev)->caps)
->
-> +#define hnae3_ae_dev_gen_reg_dfx_supported(hdev) \
-> +	test_bit(HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B, (hdev)->ae_dev->caps)
-> +
->  enum HNAE3_PF_CAP_BITS {
->  	HNAE3_PF_SUPPORT_VLAN_FLTR_MDF_B = 0,
->  };
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-> index 11df6fbd641d..ea40b594dbac 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.c
-> @@ -158,6 +158,7 @@ static const struct hclge_comm_caps_bit_map hclge_pf_cmd_caps[] = {
->  	{HCLGE_COMM_CAP_WOL_B, HNAE3_DEV_SUPPORT_WOL_B},
->  	{HCLGE_COMM_CAP_TM_FLUSH_B, HNAE3_DEV_SUPPORT_TM_FLUSH_B},
->  	{HCLGE_COMM_CAP_VF_FAULT_B, HNAE3_DEV_SUPPORT_VF_FAULT_B},
-> +	{HCLGE_COMM_CAP_ERR_MOD_GEN_REG_B, HNAE3_DEV_SUPPORT_ERR_MOD_GEN_REG_B},
->  };
->
->  static const struct hclge_comm_caps_bit_map hclge_vf_cmd_caps[] = {
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-> index e6a087576df6..a2bc5a9adaa3 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_common/hclge_comm_cmd.h
-> @@ -91,6 +91,7 @@ enum hclge_opcode_type {
->  	HCLGE_OPC_DFX_RCB_REG		= 0x004D,
->  	HCLGE_OPC_DFX_TQP_REG		= 0x004E,
->  	HCLGE_OPC_DFX_SSU_REG_2		= 0x004F,
-> +	HCLGE_OPC_DFX_GEN_REG		= 0x7038,
->
->  	HCLGE_OPC_QUERY_DEV_SPECS	= 0x0050,
->  	HCLGE_OPC_GET_QUEUE_ERR_VF      = 0x0067,
-> @@ -353,6 +354,7 @@ enum HCLGE_COMM_CAP_BITS {
->  	HCLGE_COMM_CAP_LANE_NUM_B = 27,
->  	HCLGE_COMM_CAP_WOL_B = 28,
->  	HCLGE_COMM_CAP_TM_FLUSH_B = 31,
-> +	HCLGE_COMM_CAP_ERR_MOD_GEN_REG_B = 32,
->  };
->
->  enum HCLGE_COMM_API_CAP_BITS {
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> index 243be19a7557..debf143e9940 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> @@ -801,10 +801,8 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset,
->  	return 0;
->  }
->
-> -static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
-> -			      struct hclge_desc *desc_src,
-> -			      int index, int bd_num,
-> -			      enum hclge_opcode_type cmd)
-> +int hclge_dbg_cmd_send(struct hclge_dev *hdev, struct hclge_desc *desc_src,
-> +		       int index, int bd_num, enum hclge_opcode_type cmd)
->  {
->  	struct hclge_desc *desc = desc_src;
->  	int ret, i;
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-> index 31a775fb032b..2b998cbed826 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-> @@ -131,4 +131,7 @@ struct hclge_dbg_vlan_cfg {
->  	u8 pri_only2;
->  };
->
-> +int hclge_dbg_cmd_send(struct hclge_dev *hdev, struct hclge_desc *desc_src,
-> +		       int index, int bd_num, enum hclge_opcode_type cmd);
-> +
->  #endif
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-> index d63e114f93d0..468372b7253d 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-> @@ -1198,6 +1198,426 @@ static const struct hclge_hw_error hclge_rocee_qmm_ovf_err_int[] = {
->  	}
->  };
->
-> +static const struct hclge_mod_reg_info hclge_ssu_reg_0_info[] = {
-> +	{
-> +		.reg_name = "SSU_BP_STATUS_0~5",
-> +		.reg_offset_group = { 5, 6, 7, 8, 9, 10},
-> +		.group_size = 6
-> +	}, {
-> +		.reg_name = "LO_PRI_UNICAST_CUR_CNT",
-> +		.reg_offset_group = {54},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "HI/LO_PRI_MULTICAST_CUR_CNT",
-> +		.reg_offset_group = {55, 56},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "SSU_MB_RD_RLT_DROP_CNT",
-> +		.reg_offset_group = {29},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "SSU_PPP_MAC_KEY_NUM",
-> +		.reg_offset_group = {31, 30},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "SSU_PPP_HOST_KEY_NUM",
-> +		.reg_offset_group = {33, 32},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "PPP_SSU_MAC/HOST_RLT_NUM",
-> +		.reg_offset_group = {35, 34, 37, 36},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "FULL/PART_DROP_NUM",
-> +		.reg_offset_group = {18, 19},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "PPP_KEY/RLT_DROP_NUM",
-> +		.reg_offset_group = {20, 21},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "NIC/ROC_L2_ERR_DROP_PKT_CNT",
-> +		.reg_offset_group = {48, 49},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "NIC/ROC_L2_ERR_DROP_PKT_CNT_RX",
-> +		.reg_offset_group = {50, 51},
-> +		.group_size = 2
-> +	},
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_ssu_reg_1_info[] = {
-> +	{
-> +		.reg_name = "RX_PACKET_IN/OUT_CNT",
-> +		.reg_offset_group = {13, 12, 15, 14},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_IN/OUT_CNT",
-> +		.reg_offset_group = {17, 16, 19, 18},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC0_IN/OUT_CNT",
-> +		.reg_offset_group = {25, 24, 41, 40},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC1_IN/OUT_CNT",
-> +		.reg_offset_group = {27, 26, 43, 42},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC2_IN/OUT_CNT",
-> +		.reg_offset_group = {29, 28, 45, 44},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC3_IN/OUT_CNT",
-> +		.reg_offset_group = {31, 30, 47, 46},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC4_IN/OUT_CNT",
-> +		.reg_offset_group = {33, 32, 49, 48},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC5_IN/OUT_CNT",
-> +		.reg_offset_group = {35, 34, 51, 50},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC6_IN/OUT_CNT",
-> +		.reg_offset_group = {37, 36, 53, 52},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "RX_PACKET_TC7_IN/OUT_CNT",
-> +		.reg_offset_group = {39, 38, 55, 54},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC0_IN/OUT_CNT",
-> +		.reg_offset_group = {57, 56, 73, 72},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC1_IN/OUT_CNT",
-> +		.reg_offset_group = {59, 58, 75, 74},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC2_IN/OUT_CNT",
-> +		.reg_offset_group = {61, 60, 77, 76},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC3_IN/OUT_CNT",
-> +		.reg_offset_group = {63, 62, 79, 78},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC4_IN/OUT_CNT",
-> +		.reg_offset_group = {65, 64, 81, 80},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC5_IN/OUT_CNT",
-> +		.reg_offset_group = {67, 66, 83, 82},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC6_IN/OUT_CNT",
-> +		.reg_offset_group = {69, 68, 85, 84},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PACKET_TC7_IN/OUT_CNT",
-> +		.reg_offset_group = {71, 70, 87, 86},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "PACKET_TC0~3_CURR_BUFFER_CNT",
-> +		.reg_offset_group = {1, 2, 3, 4},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "PACKET_TC4~7_CURR_BUFFER_CNT",
-> +		.reg_offset_group = {5, 6, 7, 8},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "ROC_RX_PACKET_IN_CNT",
-> +		.reg_offset_group = {21, 20},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "ROC_TX_PACKET_OUT_CNT",
-> +		.reg_offset_group = {23, 22},
-> +		.group_size = 2
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_rpu_reg_0_info[] = {
-> +	{
-> +		.reg_name = "RPU_FSM_DFX_ST0/ST1_TNL",
-> +		.has_suffix = true,
-> +		.reg_offset_group = {1, 2},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "RPU_RX_PKT_DROP_CNT_TNL",
-> +		.has_suffix = true,
-> +		.reg_offset_group = {3},
-> +		.group_size = 1
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_rpu_reg_1_info[] = {
-> +	{
-> +		.reg_name = "FIFO_DFX_ST0_1_2_4",
-> +		.reg_offset_group = {1, 2, 3, 5},
-> +		.group_size = 4
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_igu_egu_reg_info[] = {
-> +	{
-> +		.reg_name = "IGU_RX_ERR_PKT",
-> +		.reg_offset_group = {1},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "IGU_RX_OUT_ALL_PKT",
-> +		.reg_offset_group = {29, 28},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "EGU_TX_OUT_ALL_PKT",
-> +		.reg_offset_group = {39, 38},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "EGU_TX_ERR_PKT",
-> +		.reg_offset_group = {5},
-> +		.group_size = 1
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_gen_reg_info_tnl[] = {
-> +	{
-> +		.reg_name = "SSU2RPU_TNL_WR_PKT_CNT_TNL",
-> +		.has_suffix = true,
-> +		.reg_offset_group = {1},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "RPU2HST_TNL_WR_PKT_CNT_TNL",
-> +		.has_suffix = true,
-> +		.reg_offset_group = {12},
-> +		.group_size = 1
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_info hclge_gen_reg_info[] = {
-> +	{
-> +		.reg_name = "SSU_OVERSIZE_DROP_CNT",
-> +		.reg_offset_group = {12},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "ROCE_RX_BYPASS_5NS_DROP_NUM",
-> +		.reg_offset_group = {13},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "RX_PKT_IN/OUT_ERR_CNT",
-> +		.reg_offset_group = {15, 14, 19, 18},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "TX_PKT_IN/OUT_ERR_CNT",
-> +		.reg_offset_group = {17, 16, 21, 20},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "ETS_TC_READY",
-> +		.reg_offset_group = {22},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_BAD_PKTS",
-> +		.reg_offset_group = {19, 18, 29, 28},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_GOOD_PKTS",
-> +		.reg_offset_group = {21, 20, 31, 30},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_TOTAL_PKTS",
-> +		.reg_offset_group = {23, 22, 33, 32},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_PAUSE_PKTS",
-> +		.reg_offset_group = {25, 24, 35, 34},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX_ERR_ALL_PKTS",
-> +		.reg_offset_group = {27, 26},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "MIB_RX_FCS_ERR_PKTS",
-> +		.reg_offset_group = {37, 36},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "IGU_EGU_AUTO_GATE_EN",
-> +		.reg_offset_group = {42},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "IGU_EGU_INT_SRC",
-> +		.reg_offset_group = {43},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "EGU_READY_NUM_CFG",
-> +		.reg_offset_group = {44},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "IGU_EGU_TNL_DFX",
-> +		.reg_offset_group = {45},
-> +		.group_size = 1
-> +	}, {
-> +		.reg_name = "TX_TNL_NOTE_PKT",
-> +		.reg_offset_group = {46},
-> +		.group_size = 1
-> +	}
-> +};
-> +
-> +static const struct hclge_mod_reg_common_msg hclge_ssu_reg_common_msg[] = {
-> +	{
-> +		.cmd = HCLGE_OPC_DFX_SSU_REG_0,
-> +		.result_regs = hclge_ssu_reg_0_info,
-> +		.bd_num = HCLGE_BD_NUM_SSU_REG_0,
-> +		.result_regs_size = ARRAY_SIZE(hclge_ssu_reg_0_info)
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_SSU_REG_1,
-> +		.result_regs = hclge_ssu_reg_1_info,
-> +		.bd_num = HCLGE_BD_NUM_SSU_REG_1,
-> +		.result_regs_size = ARRAY_SIZE(hclge_ssu_reg_1_info)
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_RPU_REG_0,
-> +		.result_regs = hclge_rpu_reg_0_info,
-> +		.bd_num = HCLGE_BD_NUM_RPU_REG_0,
-> +		.result_regs_size = ARRAY_SIZE(hclge_rpu_reg_0_info),
-> +		.need_para = true
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_RPU_REG_1,
-> +		.result_regs = hclge_rpu_reg_1_info,
-> +		.bd_num = HCLGE_BD_NUM_RPU_REG_1,
-> +		.result_regs_size = ARRAY_SIZE(hclge_rpu_reg_1_info)
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_IGU_EGU_REG,
-> +		.result_regs = hclge_igu_egu_reg_info,
-> +		.bd_num = HCLGE_BD_NUM_IGU_EGU_REG,
-> +		.result_regs_size = ARRAY_SIZE(hclge_igu_egu_reg_info)
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_GEN_REG,
-> +		.result_regs = hclge_gen_reg_info_tnl,
-> +		.bd_num = HCLGE_BD_NUM_GEN_REG,
-> +		.result_regs_size = ARRAY_SIZE(hclge_gen_reg_info_tnl),
-> +		.need_para = true
-> +	}, {
-> +		.cmd = HCLGE_OPC_DFX_GEN_REG,
-> +		.result_regs = hclge_gen_reg_info,
-> +		.bd_num = HCLGE_BD_NUM_GEN_REG,
-> +		.result_regs_size = ARRAY_SIZE(hclge_gen_reg_info)
-> +	}
-> +};
-> +
-> +static int
-> +hclge_print_mod_reg_info(struct device *dev, struct hclge_desc *desc,
-> +			 const struct hclge_mod_reg_info *reg_info, int size)
-> +{
-> +	int i, j, pos, actual_len;
-> +	u8 offset, bd_idx, index;
-> +	char *buf;
-> +
-> +	buf = kzalloc(HCLGE_MOD_REG_INFO_LEN_MAX, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		actual_len = strlen(reg_info[i].reg_name) +
-> +			     HCLGE_MOD_REG_EXTRA_LEN +
-> +			     HCLGE_MOD_REG_VALUE_LEN * reg_info[i].group_size;
-> +		if (actual_len > HCLGE_MOD_REG_INFO_LEN_MAX) {
-> +			dev_info(dev, "length of reg(%s) is invalid, len=%d\n",
-> +				 reg_info[i].reg_name, actual_len);
-> +			continue;
-> +		}
-> +
-> +		pos = scnprintf(buf, HCLGE_MOD_REG_INFO_LEN_MAX, "%s",
-> +				reg_info[i].reg_name);
-> +		if (reg_info[i].has_suffix)
-> +			pos += scnprintf(buf + pos,
-> +					 HCLGE_MOD_REG_INFO_LEN_MAX - pos, "%u",
-> +					 le32_to_cpu(desc->data[0]));
-> +		pos += scnprintf(buf + pos,
-> +				 HCLGE_MOD_REG_INFO_LEN_MAX - pos,
-> +				 ":");
-> +		for (j = 0; j < reg_info[i].group_size; j++) {
-> +			offset = reg_info[i].reg_offset_group[j];
-> +			index = offset % HCLGE_DESC_DATA_LEN;
-> +			bd_idx = offset / HCLGE_DESC_DATA_LEN;
-> +			pos += scnprintf(buf + pos,
-> +					 HCLGE_MOD_REG_INFO_LEN_MAX - pos,
-> +					 " %08x",
-> +					 le32_to_cpu(desc[bd_idx].data[index]));
-> +		}
-> +		buf[pos] = '\0';
-ASFAIK, scnprintf does null terminate the string.
+On 2024/3/11 17:26, Tian, Kevin wrote:
+>> From: Liu, Yi L <yi.l.liu@intel.com>
+>> Sent: Sunday, March 10, 2024 9:06 PM
+>>
+>> On 2024/1/16 01:19, Jason Gunthorpe wrote:
+>>> On Sun, Nov 26, 2023 at 10:34:21PM -0800, Yi Liu wrote:
+>>>> +int iommu_replace_device_pasid(struct iommu_domain *domain,
+>>>> +			       struct device *dev, ioasid_t pasid)
+>>>> +{
+>>>> +	struct iommu_group *group = dev->iommu_group;
+>>>> +	struct iommu_domain *old_domain;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!domain)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (!group)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	mutex_lock(&group->mutex);
+>>>> +	__iommu_remove_group_pasid(group, pasid);
+>>>
+>>> It is not replace if you do remove first.
+>>>
+>>> Replace must just call set_dev_pasid and nothing much else..
+>>
+>> Seems uneasy to do it so far. The VT-d driver needs to get the old domain
+>> first in order to do replacement. However, VT-d driver does not track the
+>> attached domains of pasids. It gets domain of a pasid
+>> by iommu_get_domain_for_dev_pasid(). Like
+>> intel_iommu_remove_dev_pasid)
+>> in link [1]. While the iommu layer exchanges the domain in the
+>> group->pasid_array before calling into VT-d driver. So when calling into
+>> VT-d driver, the domain got by iommu_get_domain_for_dev_pasid() is
+>> already
+>> the new domain. To solve it, we may need to let VT-d driver have its
+>> own tracking on the domains. How about your thoughts? @Jason, @Kevin,
+>> @Baoplu?
+>>
+>> [1]
+>> https://github.com/torvalds/linux/blob/master/drivers/iommu/intel/iommu
+>> .c#L4621C19-L4621C20
+>>
+> 
+> Jason's point was that the core helper should directly call set_dev_pasid
+> and underlying iommu driver decides whether atomic replacement
+> can be implemented inside the callback. If you first remove in the core
+> then one can never implement a replace semantics.
 
-> +		dev_info(dev, "%s\n", buf);
-> +	}
-> +
-> +	kfree(buf);
-> +	return 0;
-> +}
-> +
-> +static bool hclge_err_mod_check_support_cmd(enum hclge_opcode_type opcode,
-> +					    struct hclge_dev *hdev)
-> +{
-> +	if (opcode == HCLGE_OPC_DFX_GEN_REG &&
-> +	    !hnae3_ae_dev_gen_reg_dfx_supported(hdev))
-> +		return false;
-> +	return true;
-> +}
-> +
-> +/* For each common msg, send cmdq to IMP and print result reg info.
-> + * If there is a parameter, loop it and request.
-> + */
-> +static void
-> +hclge_query_reg_info(struct hclge_dev *hdev,
-> +		     struct hclge_mod_reg_common_msg *msg, u32 loop_time,
-> +		     u32 *loop_para)
-> +{
-> +	int desc_len, i, ret;
-> +
-> +	desc_len = msg->bd_num * sizeof(struct hclge_desc);
-> +	msg->desc = kzalloc(desc_len, GFP_KERNEL);
-> +	if (!msg->desc) {
-> +		dev_err(&hdev->pdev->dev, "failed to query reg info, ret=%d",
-> +			-ENOMEM);
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < loop_time; i++) {
-> +		ret = hclge_dbg_cmd_send(hdev, msg->desc, *loop_para,
-> +					 msg->bd_num, msg->cmd);
-> +		loop_para++;
-> +		if (ret)
-> +			continue;
-> +		ret = hclge_print_mod_reg_info(&hdev->pdev->dev, msg->desc,
-> +					       msg->result_regs,
-> +					       msg->result_regs_size);
-> +		if (ret)
-> +			dev_err(&hdev->pdev->dev, "failed to print mod reg info, ret=%d\n",
-> +				ret);
-> +	}
-> +
-> +	kfree(msg->desc);
-> +}
-> +
-> +static void hclge_query_reg_info_of_ssu(struct hclge_dev *hdev)
-> +{
-> +	u32 loop_para[HCLGE_MOD_MSG_PARA_ARRAY_MAX_SIZE] = {0};
-> +	struct hclge_mod_reg_common_msg msg;
-> +	u8 i, j, num;
-> +	u32 loop_time;
-> +
-> +	num = ARRAY_SIZE(hclge_ssu_reg_common_msg);
-> +	for (i = 0; i < num; i++) {
-> +		msg = hclge_ssu_reg_common_msg[i];
-> +		if (!hclge_err_mod_check_support_cmd(msg.cmd, hdev))
-> +			continue;
-> +		loop_time = 1;
-> +		loop_para[0] = 0;
-> +		if (msg.need_para) {
-> +			loop_time = hdev->ae_dev->dev_specs.tnl_num;
-> +			for (j = 0; j < loop_time; j++)
-> +				loop_para[j] = j + 1;
-> +		}
-> +		hclge_query_reg_info(hdev, &msg, loop_time, loop_para);
-> +	}
-> +}
-> +
->  static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
->  	{
->  		.module_id = MODULE_NONE,
-> @@ -1210,7 +1630,8 @@ static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
->  		.msg = "MODULE_GE"
->  	}, {
->  		.module_id = MODULE_IGU_EGU,
-> -		.msg = "MODULE_IGU_EGU"
-> +		.msg = "MODULE_IGU_EGU",
-> +		.query_reg_info = hclge_query_reg_info_of_ssu
->  	}, {
->  		.module_id = MODULE_LGE,
->  		.msg = "MODULE_LGE"
-> @@ -1231,7 +1652,8 @@ static const struct hclge_hw_module_id hclge_hw_module_id_st[] = {
->  		.msg = "MODULE_RTC"
->  	}, {
->  		.module_id = MODULE_SSU,
-> -		.msg = "MODULE_SSU"
-> +		.msg = "MODULE_SSU",
-> +		.query_reg_info = hclge_query_reg_info_of_ssu
->  	}, {
->  		.module_id = MODULE_TM,
->  		.msg = "MODULE_TM"
-> @@ -2762,7 +3184,7 @@ void hclge_handle_occurred_error(struct hclge_dev *hdev)
->  }
->
->  static bool
-> -hclge_handle_error_type_reg_log(struct device *dev,
-> +hclge_handle_error_type_reg_log(struct hclge_dev *hdev,
->  				struct hclge_mod_err_info *mod_info,
->  				struct hclge_type_reg_err_info *type_reg_info)
->  {
-> @@ -2770,6 +3192,7 @@ hclge_handle_error_type_reg_log(struct device *dev,
->  #define HCLGE_ERR_TYPE_IS_RAS_OFFSET 7
->
->  	u8 mod_id, total_module, type_id, total_type, i, is_ras;
-> +	struct device *dev = &hdev->pdev->dev;
->  	u8 index_module = MODULE_NONE;
->  	u8 index_type = NONE_ERROR;
->  	bool cause_by_vf = false;
-> @@ -2810,6 +3233,9 @@ hclge_handle_error_type_reg_log(struct device *dev,
->  	for (i = 0; i < type_reg_info->reg_num; i++)
->  		dev_err(dev, "0x%08x\n", type_reg_info->hclge_reg[i]);
->
-> +	if (hclge_hw_module_id_st[index_module].query_reg_info)
-> +		hclge_hw_module_id_st[index_module].query_reg_info(hdev);
-> +
->  	return cause_by_vf;
->  }
->
-> @@ -2850,7 +3276,7 @@ static void hclge_handle_error_module_log(struct hnae3_ae_dev *ae_dev,
->
->  			type_reg_info = (struct hclge_type_reg_err_info *)
->  					    &buf[offset++];
-> -			if (hclge_handle_error_type_reg_log(dev, mod_info,
-> +			if (hclge_handle_error_type_reg_log(hdev, mod_info,
->  							    type_reg_info))
->  				cause_by_vf = true;
->
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-> index 68b738affa66..45a783a50643 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-> @@ -5,6 +5,7 @@
->  #define __HCLGE_ERR_H
->
->  #include "hclge_main.h"
-> +#include "hclge_debugfs.h"
->  #include "hnae3.h"
->
->  #define HCLGE_MPF_RAS_INT_MIN_BD_NUM	10
-> @@ -115,6 +116,18 @@
->  #define HCLGE_REG_NUM_MAX			256
->  #define HCLGE_DESC_NO_DATA_LEN			8
->
-> +#define HCLGE_BD_NUM_SSU_REG_0		10
-> +#define HCLGE_BD_NUM_SSU_REG_1		15
-> +#define HCLGE_BD_NUM_RPU_REG_0		1
-> +#define HCLGE_BD_NUM_RPU_REG_1		2
-> +#define HCLGE_BD_NUM_IGU_EGU_REG	9
-> +#define HCLGE_BD_NUM_GEN_REG		8
-> +#define HCLGE_MOD_REG_INFO_LEN_MAX	256
-> +#define HCLGE_MOD_REG_EXTRA_LEN		11
-> +#define HCLGE_MOD_REG_VALUE_LEN		9
-> +#define HCLGE_MOD_REG_GROUP_MAX_SIZE	6
-> +#define HCLGE_MOD_MSG_PARA_ARRAY_MAX_SIZE	8
-> +
->  enum hclge_err_int_type {
->  	HCLGE_ERR_INT_MSIX = 0,
->  	HCLGE_ERR_INT_RAS_CE = 1,
-> @@ -191,6 +204,7 @@ struct hclge_hw_error {
->  struct hclge_hw_module_id {
->  	enum hclge_mod_name_list module_id;
->  	const char *msg;
-> +	void (*query_reg_info)(struct hclge_dev *hdev);
->  };
->
->  struct hclge_hw_type_id {
-> @@ -218,6 +232,28 @@ struct hclge_type_reg_err_info {
->  	u32 hclge_reg[HCLGE_REG_NUM_MAX];
->  };
->
-> +struct hclge_mod_reg_info {
-> +	const char *reg_name;
-> +	bool has_suffix; /* add suffix for register name */
-> +	/* the positions of reg values in hclge_desc.data */
-> +	u8 reg_offset_group[HCLGE_MOD_REG_GROUP_MAX_SIZE];
-> +	u8 group_size;
-> +};
-> +
-> +/* This structure defines cmdq used to query the hardware module debug
-> + * regisgers.
-> + */
-> +struct hclge_mod_reg_common_msg {
-> +	enum hclge_opcode_type cmd;
-> +	struct hclge_desc *desc;
-> +	u8 bd_num; /* the bd number of hclge_desc used */
-> +	bool need_para; /* whether this cmdq needs to add para */
-> +
-> +	/* the regs need to print */
-> +	const struct hclge_mod_reg_info *result_regs;
-> +	u16 result_regs_size;
-> +};
-> +
->  int hclge_config_mac_tnl_int(struct hclge_dev *hdev, bool en);
->  int hclge_config_nic_hw_error(struct hclge_dev *hdev, bool state);
->  int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en);
-> --
-> 2.30.0
->
+yeah, I got Jason's point. I'm raising an open to make the set_dev_pasid
+callback to handle domain replacement. The existing intel iommu driver
+does not track attached domains for pasid. But it's needed to know the
+attached domain of a pasid and find the dev_pasid under the domain, hence
+be able to clean up the old attachment and do the new attachment. Existing
+code cannot work as I mentioned above. The group->pasid_xarray is updated
+before calling set_dev_pasid callback. This means the underlying iommu
+driver cannot get the old domain in the set_dev_pasid callback by the
+iommu_get_domain_for_dev_pasid() helper.
+
+As above, I'm considering the possibility to track attached domains for
+pasid by an xarray in the struct device_domain_info. Hence, intel iommu
+driver could store/retrieve attached domain for pasids. If it's
+replacement, the set_dev_pasid callback could find the attached domain and
+the dev_pasid instance in the domain. Then be able to do detach and clean
+up the tracking structures (e.g. dev_pasid).
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index e58263dcfadd..03a847a406e1 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4398,6 +4398,7 @@ static struct iommu_device 
+*intel_iommu_probe_device(struct device *dev)
+
+  	info->dev = dev;
+  	info->iommu = iommu;
++	xa_init(&info->pasid_array);
+  	if (dev_is_pci(dev)) {
+  		if (ecap_dev_iotlb_support(iommu->ecap) &&
+  		    pci_ats_supported(pdev) &&
+@@ -4464,6 +4465,7 @@ static void intel_iommu_release_device(struct device 
+*dev)
+  	mutex_unlock(&iommu->iopf_lock);
+  	dmar_remove_one_dev_info(dev);
+  	intel_pasid_free_table(dev);
++	WARN_ON(!xa_empty(&info->pasid_array));
+  	intel_iommu_debugfs_remove_dev(info);
+  	kfree(info);
+  	set_dma_ops(dev, NULL);
+@@ -4707,7 +4709,13 @@ static int intel_iommu_iotlb_sync_map(struct 
+iommu_domain *domain,
+  	return 0;
+  }
+
+-static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
++/*
++ * Clear the pasid table entries so that all DMA requests with specific
++ * PASID from the device are blocked. If the page table has been set, clean
++ * up the data structures.
++ */
++static void device_pasid_block_translation(struct device *dev, ioasid_t pasid,
++					   bool remove)
+  {
+  	struct device_domain_info *info = dev_iommu_priv_get(dev);
+  	struct dev_pasid_info *curr, *dev_pasid = NULL;
+@@ -4716,9 +4724,11 @@ static void intel_iommu_remove_dev_pasid(struct 
+device *dev, ioasid_t pasid)
+  	struct iommu_domain *domain;
+  	unsigned long flags;
+
+-	domain = iommu_get_domain_for_dev_pasid(dev, pasid, 0);
+-	if (WARN_ON_ONCE(!domain))
++	domain = xa_erase(&info->pasid_array, pasid);
++	if (!domain) {
++		WARN_ON_ONCE(remove);
+  		return;
++	}
+
+  	/*
+  	 * The SVA implementation needs to handle its own stuffs like the mm
+@@ -4753,6 +4763,11 @@ static void intel_iommu_remove_dev_pasid(struct 
+device *dev, ioasid_t pasid)
+  	intel_drain_pasid_prq(dev, pasid);
+  }
+
++static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
++{
++	device_pasid_block_translation(dev, pasid, true);
++}
++
+  static int intel_iommu_set_dev_pasid(struct iommu_domain *domain,
+  				     struct device *dev, ioasid_t pasid)
+  {
+@@ -4772,6 +4787,9 @@ static int intel_iommu_set_dev_pasid(struct 
+iommu_domain *domain,
+  	if (context_copied(iommu, info->bus, info->devfn))
+  		return -EBUSY;
+
++	/* Try to block translation if it already has */
++	device_pasid_block_translation(dev, pasid, false);
++
+  	ret = prepare_domain_attach_device(domain, dev);
+  	if (ret)
+  		return ret;
+@@ -4801,6 +4819,8 @@ static int intel_iommu_set_dev_pasid(struct 
+iommu_domain *domain,
+  	list_add(&dev_pasid->link_domain, &dmar_domain->dev_pasids);
+  	spin_unlock_irqrestore(&dmar_domain->lock, flags);
+
++	xa_store(&info->pasid_array, pasid, dmar_domain, GFP_KERNEL);
++
+  	if (domain->type & __IOMMU_DOMAIN_PAGING)
+  		intel_iommu_debugfs_create_dev_pasid(dev_pasid);
+
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 94e2ecc3c73f..a466555f61fe 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -767,6 +767,7 @@ struct device_domain_info {
+  #ifdef CONFIG_INTEL_IOMMU_DEBUGFS
+  	struct dentry *debugfs_dentry; /* pointer to device directory dentry */
+  #endif
++	struct xarray pasid_array; /* Attached domains per PASID */
+  };
+
+  struct dev_pasid_info {
+
+-- 
+Regards,
+Yi Liu
