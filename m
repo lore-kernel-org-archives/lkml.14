@@ -1,210 +1,179 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2035.outbound.protection.outlook.com [40.92.53.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330B269D0C;
-	Tue, 12 Mar 2024 11:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710242389; cv=none; b=SzJFJVQWnU6YnP3XaCQqp7cnx3AfxKQ0fNnnOqk0q+PiORAojvb24Qxq+TJEZ053lT4sWVBVkBSJrqI6FQC2rY85f4DGFUJovKwIZr6yS87IXb55ZN925J5iEvlgQLd6qU+D0/amwNpaqYc1v7emXFpr0mNPKk/B64yMtdX0T6Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710242389; c=relaxed/simple;
-	bh=CQCphKWr4o25jDk8CXK4sQL5dE4RRsnaO39JGnEXsBk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ZhaXLCUb9XEE9AD3tuKJIsNY+YuK0GJJP7ycET2b3x1YPF5b2TyCwBugWYi6ZfbdSH3spCq0oLK82tulcDNwfGGEIynyt5V73qWRgXdu+rFtmoGNBbyn/+w8pofbW8kohyKQ8QwYhOfOmI02/40yeK5NlmeXa06tWXl1365BuIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VPapf6gr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SAcRHzfP; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8974879B91;
+	Tue, 12 Mar 2024 11:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710242393; cv=fail; b=cEtbNgr145cXwZgkYxogAf32gbvzMBQ36OVLtw11z4l3Z1ItrWRcwjzKnk/Aj2pXNWnmEp+x3BoZzOlvEfIL3O1IL/ubNTa0Q/YK3+kfrxbwLTBK/MpGNBP8IIItmfoE5vUDenlxYP93y0QTvdUAxtRVfYxfHIokA0EH6JX1QLU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710242393; c=relaxed/simple;
+	bh=ViWP+GzhJi5tp7n6538jc5mz76Bk80ZEBX9POYWiGCE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qVcy6v8PJXZdYSYbAserOoVIMJFGhxvW6Uawh7B68ipTtTHDb7rr2gdXsPB1A1pc+4aphYEkjeLvxyG9GCFICY3vjTEJBUCIaxduc8Kwjxq12RBZlplkerKiKxRQkiHJFALVnCVRXPBXvBB47wp8znsBRNdRAFSZADH4KrQEufY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=PnsnQ+TP; arc=fail smtp.client-ip=40.92.53.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VPapf6gr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SAcRHzfP"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 1BFFF1140150;
-	Tue, 12 Mar 2024 07:19:46 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 12 Mar 2024 07:19:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1710242386;
-	 x=1710328786; bh=YRT9uyaC97F1MKGGv+BnROns3fVOkRDmiWjZt3YyyvI=; b=
-	VPapf6grS6pV/lcvu1jh2cuW2/02JzQH/gsZg7thaJNEQKsB/fJt4j4CiKRWuA3Y
-	+mFt/as935gZ1F87Im5BvWXLCMnah9IFoFGE9w9uqYZo7xV4rwY5AdDJgZDptT01
-	BgZT4gIk3Jwxepo2a2NN30D5mNaVSdLTgxIP4pxq0g3vBgNX9+Xevylh4UzYOPol
-	JjykPX8l+faKq/7njBEIPZH70EAHNna2DGNraQvbWj3RArWrGl7wL3W+GGoqCx2/
-	3/pAUNSdwW2DXw/Q6cs0LIPMTxWlrml80/+rDT1EugBK9YWQSVXdQhlcPZtuDrIp
-	acBshciDKglR82Vw+IHBCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710242386; x=
-	1710328786; bh=YRT9uyaC97F1MKGGv+BnROns3fVOkRDmiWjZt3YyyvI=; b=S
-	AcRHzfPnfr2lqcel970ZOU51cSCBWkUybtxt23FZu+6uYWz1VWCZFTffztgeSheV
-	jD/LkkPwpxaTe5WKpqM132dTokJx1zWhqWAGT9mDTexzbABvmlEuXZs8pVPSnLoI
-	+b0sO2JLiD6WK9ThyyAtUUuFVj0wtvDDcQJrCMIcBBBuFyn2HEP+Ec6j2gKNco38
-	VXyrG09P2eVJXxh7v0Qa3dyt/tQU/56Bqs6FP+6wIdnoyRYwpVh307lAAI9QMOno
-	ZwSvzYK2gIYlqrbq7br5C7viNb2fes/tF/vp39VOwJqX5T1labGM/dyK+ElZ1jFa
-	uc+fzowxyEZ9N3ZG+lNlg==
-X-ME-Sender: <xms:UTrwZRJbFYezQJqKbvrcdR-V-qowY5mlPFmIySt5uRq46_PZJ22Y4w>
-    <xme:UTrwZdIOeIzklaevJaIM8S2Cxo2rh3lJucbhMuwc-A07oocKt-5visU-8Vqs2mAt2
-    UKksDGV31shFM6Xw_o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeefgddvjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:UTrwZZtTZ2lBXV9FfpNpUzSKlOOIgb6OYzeULw5Jyz6vRQm0mtaZdA>
-    <xmx:UTrwZSZH43ddw2MmcbQ_s_QQdZISnNexDVlRSubNYHDQpKlaTtpdZQ>
-    <xmx:UTrwZYYz_QTbXskec5eswQE-UoPP2tzh93IS9tuBQrd7MwFnU_2cOA>
-    <xmx:UTrwZWDwh9B2of9OJvn6Kd3fNw6KYpjCiakv8FIpHBHppFYkd0k7Tg>
-    <xmx:UjrwZZG-VTJnpoD0o2Kw_MTpuQPsNthd0hL1DzA6VqCvj2JdeAQ-0w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 47B8FB6008D; Tue, 12 Mar 2024 07:19:45 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="PnsnQ+TP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LsUPx3LsyP6hGjqGGDA1uuueJcDUkpFqVEnI2cFGLF68t6Pk4vJ772pxRUZ2GVdZO/bnEZeYBDd2jGV+OmxmDTNOTMuiZcDZYaqj/YZ6mF3E2rdmi2o23XB2j64bGm5p+j5fxG4bYmJaFbLU4mCGsXYBaBZSWq3N+LY9ReJwhmHtEV2I+35fEJJ1K+A0+nT2FR4PcpegwE7xKP2MRF3FLvAFDtG8fKmb80HnLwSPS6vHgUVaxnFHmefOU/iw9HWSbT++q/zAJMV4PnaFYaNNOuzIXANvmFF6fQPCmofy8S5JFvjMkBjhMFBxElVmtFNCT03gKY0XojdeQAe8sMHOEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pd4H4LhF8d2P8bdCjIywxHrNhUxr2m2e88BQxFTsUO0=;
+ b=F/rZrhYqEtb0QQF3YADQHxgJXBlqztWDpZk1l/CvIj1+qPDc9WyqESw7NyNthnZzvW/5LGeGcrN0j5urV2JRy1uQV8EFxGX1vFIS0rpuEwcK7HQ+uiQPf3m7xPTa7s2JZjzISqIJr5v5G2NANWnCO+4clht4pF2SvwRqMr7+DKGtT421Znb3ZmHbAouRLdZWDD1cHasM9nrqFxsc+eMjme7j3/tm48lSI1OFwyd3GxvnOd1xASrWfpVAjsJIS5WLZJeAgQUHJROSjsXm3jzlyQaa8q52tRNaz0PCOequdiDjYHB+51GQJ6pjQQXoOPZ0GtE2gQTcu3rMTRITV9Cn0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pd4H4LhF8d2P8bdCjIywxHrNhUxr2m2e88BQxFTsUO0=;
+ b=PnsnQ+TPaepsCuUSdy3NW8S/c/OJxNiUdlgkClsYbLRGhIC1yuihBjO57YRk4GHTDXfWQGcSrwaqPnv+8uJ+Yn5dLQbSVSgMptyAatCbkWLelV+/hef/W3phSoJ5VyOkV7b7+/RgV+72P44U0phnq75lehILx7NNNyQUrWg6XXBTuTEGZacfowydEPujvsia/msQijCJjJo41HNR69Ou0UEno3YEjNyB0yV4U+6b8KWGC+hYYcEfyeXwxzZVeSvmzukpKLI8MvnKSMILbiISnUpQ+4MUW8yu8UYwnWTnUOAGNZYVBS/PRcSvXkTFYFKP5XyHHECfDaw0PAdGKcdslw==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by PUZPR06MB6145.apcprd06.prod.outlook.com (2603:1096:301:11a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Tue, 12 Mar
+ 2024 11:19:46 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::aced:cbb9:4616:96d8]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::aced:cbb9:4616:96d8%2]) with mapi id 15.20.7362.035; Tue, 12 Mar 2024
+ 11:19:46 +0000
+Message-ID:
+ <SEZPR06MB695952078B51C4549191F8AB962B2@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Tue, 12 Mar 2024 19:19:42 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
+ info, maintenance irq and GICH, GICV spaces
+Content-Language: en-US
+To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Jiancheng Xue <xuejiancheng@hisilicon.com>, Alex Elder <elder@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240219-cache-v3-0-a33c57534ae9@outlook.com>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <20240219-cache-v3-0-a33c57534ae9@outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN: [Bu/zXJ3Uaajk9qpUkZKcFgg5d0Zs91JnAvfX5w9RmSlInlMrhoRfh/b+pvA8nYNs]
+X-ClientProxiedBy: SI2PR01CA0010.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::12) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <97639ac1-ab7a-4c55-9245-1814fc0ed885@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7bf7d444-4a08-4df4-9aa1-9cd28609d166@app.fastmail.com>
-In-Reply-To: <20240312095005.8909-1-maimon.sagi@gmail.com>
-References: <20240312095005.8909-1-maimon.sagi@gmail.com>
-Date: Tue, 12 Mar 2024 12:17:48 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sagi Maimon" <maimon.sagi@gmail.com>,
- "Richard Cochran" <richardcochran@gmail.com>,
- "Andy Lutomirski" <luto@kernel.org>, datglx@linutronix.de,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Johannes Weiner" <hannes@cmpxchg.org>,
- "Sohil Mehta" <sohil.mehta@intel.com>,
- "Rick Edgecombe" <rick.p.edgecombe@intel.com>,
- "Nhat Pham" <nphamcs@gmail.com>, "Palmer Dabbelt" <palmer@sifive.com>,
- "Kees Cook" <keescook@chromium.org>, "Alexey Gladkov" <legion@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Miklos Szeredi" <mszeredi@redhat.com>,
- "Casey Schaufler" <casey@schaufler-ca.com>, reibax@gmail.com,
- "David S . Miller" <davem@davemloft.net>,
- "Christian Brauner" <brauner@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v6] posix-timers: add clock_compare system call
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|PUZPR06MB6145:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cfe8548-e4c9-46b5-0729-08dc4286529d
+X-MS-Exchange-SLBlob-MailProps:
+	f3ElpFvzDvYAMeNa7EA2e7b34de8LVcfJdQ1GT/QTwTTyOCrl1X3oKHldUSwSBnj7YFtU7Ez80nicOE7s2HbmXxJ9HHlkyBlND1hTM2nTTWy3ZFUENvkC6QzKCxLOiweMUGG4TZ29qqv5vKel5kGZBTmykJiDtnYPvVMJiBNFc4n1GrBdwDpv/xKFt5HonYuD/t8CH0gj3T/ec0RCGFkEV91elchvAlKHycGXIoaUbU3z8xxwPCx9CNVWeI/04Xxqvigt66WzNeQvAqlC/z/bsbJjWKDVENIuI4T0QP6Qgzb4398Q1z3FckkHMlaltS1OIRcLVXAiFafMsBR5tZbAgiBBxa3CJlibaMpxoVV0cwqWVVwLDC7MBLOxACGOJO9aqrrPnXig97cMutYXUSrKdgynPo+6CuaQCo8uZ6qxhwy/FuhVQWRp6O8vCWrNmi8ymrqF+dz25R1zMYrXLTMzATpUz4bKl9wcWqA13zoPSWCD51I1si4jwzeVTejgifB0xeOpSHZgi4CUvjfOCV1cdm3bSVz4ni48tYj40AKAXkQ4X2MXLiKzGEYxJhSvI+uIWAfQMywAu4gMedtwUn08lkIIBA16IsKEI1iGNRqt4UimtWIdmhKOhpqUUf1Rb+6VhRpsofyxBiIiob+ZIAc4pjYiRgjoEwp5XeYTu5EvsSDX2Ark3HP2JGmh2T9KXnHtjHC+PtVYTj7mmafjChH9ZZhfhJNFn7jL5PGpeteYZEZu+OSo6KC+tU4RSl0aze6snUUo/vkGGc3uzuk1bu3Q4w/LA4rUxE9ERXKYcSeWJmzv0Rq0qRbgSEpZYtXHzIefdvloKQFmoWuh9pA83y0ilQHhLWtSsYJ6rjTQesszluUUUgwhHk1Khk9nQag9LdP8vYU1h3upAY=
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	P5zI4/P9x5o78y5St8FecdjMSbuDxVGZU0Z7caYJTO1n6gYzB5GG3o9+kzs/d0rY9k5B8JrjmtH8PpsxajhqJmQR+1VJI+XHwn8u0dlmYZl7u8SetN9gX3XA1pJSYmqJrBEJaRns+ROhOlpi1aqGQz4aBOwK89WsNX24G+yhPzhq4W1FOu+tf9q40n9XIEIGQ0gqvZY0+OU+IKpnyFWd53FdwLV0GEE7qjopgbnzalDx3E6i9buUwgcpqN0rQhgjMfL9SyfgqKi2M13ZDa/HKGZ/9qlJSC3BWScyMwFuB1L3DTbH3ZgEh9Ba8/3CWQbfNyacfLE523lQuBBAgoPd+M5DTs2S3mo5K1rlQyrK+i9X+BzNH2PlOrq/klFpfb1Rp1n4TMZUoFh1uN3SSuKESz8mkbuDqrjf8AiRtROaG80adFSr1A2ZikvmAkmNTxFGinzqDnLljwhE3v5LS+IIErMmKrSPNfgjYtBN34f5tynuplBu0nEno/i4/68pVQ/bSCGWNlMIK01XIlShFk1fp4gggw7wp/7abHNo7b34XfCe0h1+nynPoe4usoBfTKwep0V0mQxoKSN7lNLEGlRDz23W2pebImIjfqoBsVaWn9P3hat8CI4vKBiFgY9lj+MenKzBQtTHmvSe7HApsw3CXae43vUDfkaO7bDR44i4s60=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cXVISGZWZmtNbW83UU0vU292K0VnWGE5cFNOMmUzcm1kSCt1VkhRbGVES2c2?=
+ =?utf-8?B?UCtSTCtPa2NJanNQTFAvUDFHS2xUTVFwcGlHUGVmdkJaaEROc0pLaEZ2ZTU5?=
+ =?utf-8?B?Um1JN3BqbU1KNEZxczU0UlJ1ZXB0TE4zWUJ2bXY5TTI4WkpkZGRaNnpUZlJl?=
+ =?utf-8?B?eThIWFZwN0E0TDVwYW1uckkvL0ZwRlRBa2dHOTJac01VVERXWEc5cUR0R0lu?=
+ =?utf-8?B?b2hWWVdDSHBGMGk1YnhyT3drOWZKRFBaaFE3Y0lZak9BTVlTQXJrdE95VWw5?=
+ =?utf-8?B?RGJPVzAxa0tPQ0FHcjZBUk5hT1lKNG9jSm1LTkIxOGRRcFJOM0g1akFYUDBS?=
+ =?utf-8?B?SGx3SUp2L2xNVHVicjlodHZZeVpXb0RoZElwVlQ3SzJ4MzJqNVp5aTFBNHFV?=
+ =?utf-8?B?UVh2NFB4ZTZZNGU2Vi9NVHZBR2dmdDA3U1dpTU5ReUpDY0MzNmYvTXVTaXlO?=
+ =?utf-8?B?Uk10QUV3UUg4SzhsMVNIZ3lSNFhWNFA2NDFHRW5IRCtzaE1WY2UvWmlhR3lL?=
+ =?utf-8?B?Z2RpV0tva2JJQStCcEQyaU1DQzhKdk4zVjZiQ0k3WEdldGpnOUtSUSs5a3Uz?=
+ =?utf-8?B?VDhXWTR6N29ObVBSajVJSkE3VFVLMnNqTEgxRVVhSlViSFJtVGpRT0FjRFlI?=
+ =?utf-8?B?ZkZsUy9JbTY3TWFLbFZhOS9FSXRJc01ST084b3VmYk00N1lVSVRXTWJOcUY3?=
+ =?utf-8?B?U0VlSlhCK2JjazZKVEZObUl0V01LRUxGN2Uvb0pCNlEvS1VHbTRRMmxhQ0ZR?=
+ =?utf-8?B?cHhhS1E5NFhJRlVQbXJGWU8vVzZKZTVOckFJMHdWVEVTN2dCZy9ieHhpQ0xU?=
+ =?utf-8?B?dE82eEZTR2R1bW5CUjNMWkNrUGVnZi9LRkRtTTNRR0x0QkpzYUNheWNLUDJs?=
+ =?utf-8?B?emJEZkhpcXkvZ1JIc0Znc2NlSlBVNGFCWUZucEo0RHBXRklpOGVqQnNCdUM4?=
+ =?utf-8?B?b2tkZVBVRnluSjVTaTBlaHR4d09XYTI1bzYxVDNlRDFNbm54d1pWdjltQUMy?=
+ =?utf-8?B?OEJFVURyRnMxVmlGTjRWTDJIcGdlRngyS2NYU3dSRW9hU1BPUFNFVnIxQWlx?=
+ =?utf-8?B?VVZlWEpBVXhaZFcvOXBNTEdwVkJXVHhMUTk4TFl3QnlyK3FpNlltUlpWYzdx?=
+ =?utf-8?B?VUgyU3RjaWdKNENsTWo5TmtTaU16Q3lLUFZ6WExybFFRMU5KOEx1NVlmaExh?=
+ =?utf-8?B?bVlrNEE5WExuczlyUmFnTDRVbm1sOGExRnZGdGxUSVNIcm5PRUlQYmZWMGxn?=
+ =?utf-8?B?WklzSmQwcVRCMmhlbE5OMnhrTlpObUM3c3B4RG9taUVXSjBac24vdWZBWnpu?=
+ =?utf-8?B?b29xNys4UVA0K3VCMkI2SDdHeDhZTkhiUzZEdGZCMWlYNi9xWC9Jb1BNZmQ3?=
+ =?utf-8?B?SFVmWmNiMWhOU1E5N0Y3U3NwNUVnSGJ3bm1PTnREU3dIY2JXaW82d3JPMUZU?=
+ =?utf-8?B?U3Zra3VGTXRmN1FNclhEZUNkZzd2TUR0M0drbEY1K1lCbHhIWUlXVUUzQmNp?=
+ =?utf-8?B?SW1iS054NjFhOThTQm1ta1M4T3ZGcjIvdjVwdmx3R0hsS3VFN3RyU0dGYmRD?=
+ =?utf-8?B?akZkeUtWS1NGQ01JMS9UWDR5azJnZkF2WHV0Kzl5ZGVVN2dQT0dJck1sRmJQ?=
+ =?utf-8?B?d2JjYkdYejRhbVJYVkhKcW44UjR3ZHRIWHRvSHd5aTdGRUFHbmFsUkV1WHlG?=
+ =?utf-8?B?WWJGUHYwdWpMcUhJOWlGMWhxalhFSjE2cWtsM0tLOGZMY0c4d201aXVEK0FL?=
+ =?utf-8?Q?0TFn7eEOXXNjoyru4ipGd7saF1Gd1FPqZUYidqz?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cfe8548-e4c9-46b5-0729-08dc4286529d
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 11:19:46.1386
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6145
 
-On Tue, Mar 12, 2024, at 10:50, Sagi Maimon wrote:
-> Some user space applications need to read a couple of different clocks.
-> Each read requires moving from user space to kernel space.
-> Reading each clock separately (syscall) introduces extra
-> unpredictable/unmeasurable delay. Minimizing this delay contributes to=
- user
-> space actions on these clocks (e.g. synchronization etc).
+On 2/19/2024 11:05 PM, Yang Xiwen via B4 Relay wrote:
+> The patchset fixes some warnings reported by the kernel during boot.
 >
-> Introduce a new system call clock_compare, which can be used to measure
-> the offset between two clocks, from variety of types: PHC, virtual PHC
-> and various system clocks (CLOCK_REALTIME, CLOCK_MONOTONIC, etc).
-> The system call returns the clocks timestamps.
+> The cache size info is from Processor_Datasheet_v2XX.pdf [1], Section
+> 2.2.1 Master Processor.
 >
-> When possible, use crosstimespec to sync read values.
-> Else, read clock A twice (before, and after reading clock B) and avera=
-ge these
-> times =E2=80=93 to be as close as possible to the time we read clock B.
+> The cache line size and the set-associative info are from Cortex-A53
+> Documentation [2].
 >
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+>  From the doc, it can be concluded that L1 i-cache is 4-way assoc, L1
+> d-cache is 2-way assoc and L2 cache is 16-way assoc. Calculate the dts
+> props accordingly.
+>
+> Also, to use KVM's VGIC code, GICH, GICV registers spaces and maintenance
+> IRQ are added to the dts with verification.
+>
+> [1]: https://github.com/96boards/documentation/blob/master/enterprise/poplar/hardware-docs/Processor_Datasheet_v2XX.pdf
+> [2]: https://developer.arm.com/documentation/ddi0500/j/Level-1-Memory-System
+>
+> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+> ---
+> Changes in v3:
+> - send patches to stable (Andrew Lunn)
+> - rewrite the commit logs more formally (Andrew Lunn)
+> - rename l2-cache0 to l2-cache (Krzysztof Kozlowski)
+> - Link to v2: https://lore.kernel.org/r/20240218-cache-v2-0-1fd919e2bd3e@outlook.com
+>
+> Changes in v2:
+> - arm64: dts: hi3798cv200: add GICH, GICV register spces and
+>    maintainance IRQ.
+> - Link to v1: https://lore.kernel.org/r/20240218-cache-v1-0-2c0a8a4472e7@outlook.com
+>
+> ---
+> Yang Xiwen (3):
+>        arm64: dts: hi3798cv200: fix the size of GICR
+>        arm64: dts: hi3798cv200: add GICH, GICV register space and irq
+>        arm64: dts: hi3798cv200: add cache info
+>
+>   arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 43 +++++++++++++++++++++++++-
+>   1 file changed, 42 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+> change-id: 20240218-cache-11c8bf7566c2
+>
+> Best regards,
 
-I like this a lot better than the previous versions I looked at,
-so just a few ideas here how this might be improved further.
+May someone apply this patchset to their tree so that it can land in 
+stable at the end? This is a fix, not adding new functionalities. It's 
+been 2 weeks already.
 
-> +/**
-> + * clock_compare - Get couple of clocks time stamps
-> + * @clock_a:	clock a ID
-> + * @clock_b:	clock b ID
-> + * @tp_a:		Pointer to a user space timespec64 for clock a storage
-> + * @tp_b:		Pointer to a user space timespec64 for clock b storage
-> + *
-> + * clock_compare gets time sample of two clocks.
-> + * Supported clocks IDs: PHC, virtual PHC and various system clocks.
-> + *
-> + * In case of PHC that supports crosstimespec and the other clock is=20
-> Monotonic raw
-> + * or system time, crosstimespec will be used to synchronously capture
-> + * system/device time stamp.
-> + *
-> + * In other cases: Read clock_a twice (before, and after reading=20
-> clock_b) and
-> + * average these times =E2=80=93 to be as close as possible to the ti=
-me we=20
-> read clock_b.
-> + *
-> + * Returns:
-> + *	0		Success. @tp_a and @tp_b contains the time stamps
-> + *	-EINVAL		@clock a or b ID is not a valid clock ID
-> + *	-EFAULT		Copying the time stamp to @tp_a or @tp_b faulted
-> + *	-EOPNOTSUPP	Dynamic POSIX clock does not support crosstimespec()
-> + **/
-> +SYSCALL_DEFINE5(clock_compare, const clockid_t, clock_a, const=20
-> clockid_t, clock_b,
-> +		struct __kernel_timespec __user *, tp_a, struct __kernel_timespec=20
-> __user *,
-> +		tp_b, int64_t __user *, offs_err)
+-- 
+Regards,
+Yang Xiwen
 
-The system call is well-formed in the way that the ABI is the
-same across all supported architectures, good.
-
-A minor issue is the use of int64_t, which in user interfaces
-can cause namespace problems. Please change that to the kernel
-side __s64 type.
-
-> +	kc_a =3D clockid_to_kclock(clock_a);
-> +	if (!kc_a) {
-> +		error =3D -EINVAL;
-> +		return error;
-> +	}
-> +
-> +	kc_b =3D clockid_to_kclock(clock_b);
-> +	if (!kc_b) {
-> +		error =3D -EINVAL;
-> +		return error;
-> +	}
-
-I'm not sure if we really need to have it generic enough to
-support any combination of clocks here. It complicates the
-implementation a bit but it also generalizes the user space
-side of it.
-
-Can you think of cases where you want to compare against
-something other than CLOCK_MONOTONIC_RAW or CLOCK_REALTIME,
-or are these going to be the ones that you expect to
-be used anyway?
-
-> +	if (crosstime_support_a) {
-> +		ktime_a1 =3D xtstamp_a1.device;
-> +		ktime_a2 =3D xtstamp_a2.device;
-> +	} else {
-> +		ktime_a1 =3D timespec64_to_ktime(ts_a1);
-> +		ktime_a2 =3D timespec64_to_ktime(ts_a2);
-> +	}
-> +
-> +	ktime_a =3D ktime_add(ktime_a1, ktime_a2);
-> +
-> +	ts_offs =3D ktime_divns(ktime_a, 2);
-> +
-> +	ts_a1 =3D ns_to_timespec64(ts_offs);
-
-Converting nanoseconds to timespec64 is rather expensive,
-so I wonder if this could be changed to something cheaper,
-either by returning nanoseconds in the end and consistently
-working on those, or by doing the calculation on the
-timespec64 itself.
-
-     Arnd
