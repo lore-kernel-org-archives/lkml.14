@@ -1,106 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B00569973
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3239D69D01;
+	Tue, 12 Mar 2024 08:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710230729; cv=none; b=TvgoxQTWTmIN6cf49HFwxXGnPIe489DlRDhxzFz4ixYlKF1n7EfqBJW/DX6BuPMoHUTDKtHfeV5OlcmnLaMmT8PVPDyoQyzCCXM3lR77ZyKwc3dpU4/oDxDBCT5ZCnstdSt2aD/4/gA0u/sq17gWx6YJy6f7O5YMUNoscy8dBgU=
+	t=1710230729; cv=none; b=Ar1wNXfJexzNVgSmUqmKN4Kyqd92aMatGToeAwCd88Vs+yzDxCp6s5rBxVX7j6WyaWZIKzpvHwqYR3R0PGuUfwTo9sYZlUf9W2jY/rnK5AQNEMx9WS28Dh+DLY4I48hfMxFL7x5Uap/NEZmET6fHlTP+BVveMArtbFNF/nl87zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710230729; c=relaxed/simple;
-	bh=bl6AfL2X8NIjP+96i5PQItkn9CCWuVzDqSvid1nmuvo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nx3VIINUpcCnfSZUm0YDQMxYp+UD7MwqX/rMY2STHUapz2VJTg8XlOqlc7IzH6ZxFTI+akwkeZDfoR5yzOco3rfCCiY4PR6nu6i8/F+a0cTMGr2VPppMgizYLWsSPw0qXE1Wm57LZHwOVr8WCVTGSsoBf4u/pFaMBLnYzzTZpMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82A041007;
-	Tue, 12 Mar 2024 01:06:03 -0700 (PDT)
-Received: from [10.57.68.246] (unknown [10.57.68.246])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC8433F73F;
-	Tue, 12 Mar 2024 01:05:24 -0700 (PDT)
-Message-ID: <e3e14098-eade-483e-a459-e43200b87941@arm.com>
-Date: Tue, 12 Mar 2024 08:05:23 +0000
+	bh=ZGEVlJ/kaJVd0E8jYAG2DeF+zHotxbyxow0UORgWJEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GF0hUMxQeFfIyz2djOibgGlFp43b20llN+oa1idX28hCo+zqcahS7YFqjcrsSNK+qKJmyWz2FvK9fzUGqpSMTt5pjo7YrQSWSdzmxGtwhA9wJDmsX1UglA/h22urcIXB/7DURip3b3UhMDh1QtzRVqD7C9M593OWzLkSr3X5zAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzZN5mtv; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzZN5mtv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710230728; x=1741766728;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZGEVlJ/kaJVd0E8jYAG2DeF+zHotxbyxow0UORgWJEs=;
+  b=nzZN5mtvVWMMfEjLfqLh5rSSt61Sk3cMw76OFkZLauotveCBa84RELz3
+   8x/n01blZAK2tgxVrGPfLMdBViiCj3Vl3BPlEkTiSEO9J4nIAeoZvaGCg
+   /dDABe5qoDiWt4GwkS5WtC9shD/s4+hXOqqbUshj2ZQxSLhx6QP/4KNYo
+   4Fe2um9ctgKQWJc1wsSXxDQ7tM+9MQ3RpsbuDY3RIKcZ1bvbjH5kqA1NF
+   lFr1WDqCy49QKP3Ni7kqfOo6rjx4Y1JfEDX3mB+5hC+qigQ+kC3MeFQVq
+   iTAfROEgHxbrynoz4sihMlMuy+OH7YqOjwHfPc7H8CplsG1OTnzlHobqG
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="5112973"
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="5112973"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 01:05:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="34631465"
+Received: from qzhang4-desk.sh.intel.com (HELO localhost) ([10.239.147.49])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 01:05:24 -0700
+From: Qiang Zhang <qiang4.zhang@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Qiang Zhang <qiang4.zhang@intel.com>,
+	Stable@vger.kernel.org
+Subject: [PATCH] memtest: use {READ,WRITE}_ONCE in memory scanning
+Date: Tue, 12 Mar 2024 16:04:23 +0800
+Message-Id: <20240312080422.691222-1-qiang4.zhang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/migrate: put dest folio on deferred split list if
- source was there.
-Content-Language: en-GB
-To: Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Yang Shi <shy828301@gmail.com>, Huang Ying <ying.huang@intel.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- linux-kernel@vger.kernel.org
-References: <20240311195848.135067-1-zi.yan@sent.com>
- <Ze_P6xagdTbcu1Kz@casper.infradead.org>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <Ze_P6xagdTbcu1Kz@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/03/2024 03:45, Matthew Wilcox wrote:
-> On Mon, Mar 11, 2024 at 03:58:48PM -0400, Zi Yan wrote:
->> @@ -1168,6 +1172,17 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
->>  		folio_lock(src);
->>  	}
->>  	locked = true;
->> +	if (folio_test_large_rmappable(src) &&
+memtest failed to find bad memory when compiled with clang. So use
+{WRITE,READ}_ONCE  to access memory to avoid compiler over optimization.
 
-I think you also need to check that the order > 1, now that we support order-1
-pagecache folios? _deferred_list only exists if order > 1.
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
+---
+ mm/memtest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->> +		!list_empty(&src->_deferred_list)) {
->> +		struct deferred_split *ds_queue = get_deferred_split_queue(src);
->> +
->> +		spin_lock(&ds_queue->split_queue_lock);
->> +		ds_queue->split_queue_len--;
->> +		list_del_init(&src->_deferred_list);
->> +		spin_unlock(&ds_queue->split_queue_lock);
->> +		old_page_state |= PAGE_WAS_ON_DEFERRED_LIST;
->> +	}
-> 
-> I have a few problems with this ...
-> 
-> Trivial: your whitespace is utterly broken.  You can't use a single tab
-> for both indicating control flow change and for line-too-long.
-> 
-> Slightly more important: You're checking list_empty outside the lock
-> (which is fine in order to avoid unnecessarily acquiring the lock),
-> but you need to re-check it inside the lock in case of a race.  And you
-> didn't mark it as data_race(), so KMSAN will whinge.
-
-I've seen data_race() used around list_empty() without the lock held
-inconsistently (see deferred_split_folio()). What are the rules? Given that we
-are not doing a memory access here, I don't really understand why it is needed?
-list_empty() uses READ_ONCE() which I thought would be sufficient? (I've just
-added a similar lockless check in my swap-out series - will add data_race() if
-needed, but previously concluded it's not).
-
-> 
-> Much more important: You're doing this with a positive refcount, which
-> breaks the (undocumented) logic in deferred_split_scan() that a folio
-> with a positive refcount will not be removed from the list.
-> 
-> Maximally important: Wer shouldn't be doing any of this!  This folio is
-> on the deferred split list.  We shouldn't be migrating it as a single
-> entity; we should be splitting it now that we're in a context where we
-> can do the right thing and split it.  Documentation/mm/transhuge.rst
-> is clear that we don't split it straight away due to locking context.
-> Splitting it on migration is clearly the right thing to do.
-> 
-> If splitting fails, we should just fail the migration; splitting fails
-> due to excess references, and if the source folio has excess references,
-> then migration would fail too.
-
-This comment makes me wonder what we do in split_huge_page_to_list_to_order() if
-the target order is greater than 1 and the input folio is on the deferred split
-list. Looks like we currently just remove it from the deferred list. Is there a
-case for putting any output folios that are still partially mapped back on the
-deferred list, or splitting them to a lower order such that all output folios
-are fully mapped, and all unmapped portions are freed?
-
+diff --git a/mm/memtest.c b/mm/memtest.c
+index 32f3e9dda837..c2c609c39119 100644
+--- a/mm/memtest.c
++++ b/mm/memtest.c
+@@ -51,10 +51,10 @@ static void __init memtest(u64 pattern, phys_addr_t start_phys, phys_addr_t size
+ 	last_bad = 0;
+ 
+ 	for (p = start; p < end; p++)
+-		*p = pattern;
++		WRITE_ONCE(*p, pattern);
+ 
+ 	for (p = start; p < end; p++, start_phys_aligned += incr) {
+-		if (*p == pattern)
++		if (READ_ONCE(*p) == pattern)
+ 			continue;
+ 		if (start_phys_aligned == last_bad + incr) {
+ 			last_bad += incr;
+-- 
+2.39.2
 
