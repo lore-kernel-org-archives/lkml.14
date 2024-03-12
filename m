@@ -1,95 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A576156750;
-	Tue, 12 Mar 2024 14:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1228416439
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 14:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710253901; cv=none; b=GAmEkabfzYQ0b2CtoHWepcCM8UDpP2IFWKH7PYn48CQHbOoIM2++BLSHfjXeBfmC8zmUrUCPVDpy0ntbfbuq8FGJRUtuZNTf/2qcmCVOL/juHNOv1uwEnMZOj+yaVo4HRX225qLmof5trsDdMF9OKAn9MgJTh6n2tY3uv1Jgu7k=
+	t=1710253989; cv=none; b=X3T9LZYXjLJhlmYsY8QuMlzVdpcISLQ43G+KNw+UGw3bzbp0WeSfhHPpQV0iZMX0V/ISBv+ip6+GfuhrK5fvl3cj1llR5t1JjGKyRT3sP2a0oOL8Fpbyr4uPGc6XfhACD0H3Z+zIyEFfG+d3d0ZHRkPlQfNBgPxT+wlhwZcXXbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710253901; c=relaxed/simple;
-	bh=JkjP3QBcCVXwodpuOnjb64q87p6hcmN+DHZyzdDU3n4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J/yHUQ1BGOKcla1aWOBMUOmvviq8ro+95hcQOujK5Rs38a5I8MB1Hzk1IBPjwQQWQTagbrjppDHS8DvUE154h2GdYO1RNxEbVqYu4dc9GUhGcJpvh4b920+NObegAfKpDDEIIF/ACs6ieJ/Cd2IfOzDIH9nvWWt9a/9wkh6eFcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8Y55hkG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8Y55hkG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FD1C433C7;
-	Tue, 12 Mar 2024 14:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710253901;
-	bh=JkjP3QBcCVXwodpuOnjb64q87p6hcmN+DHZyzdDU3n4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m8Y55hkG6WDmkZz6/FOoTr5ivZwbyLII8RO2gW6ywhz7XcoUG451PetQHfP4sWdA1
-	 b94BiGCvRzsYfLIQj2+A0Gq1u0jbiyOPCH2OBjhdgOIms/21Re0s5IVaO9VUgF0EwY
-	 r7e6baT45S6fYkOYEh+XgBVzoUAjdjKSRhi+ZcJ50bjprg7ng/zLKkLcci4tixbJEi
-	 FvS7zOlDaT3u+KvPF+F/43V1wVZ7+GpL7CfP8R7MnC9GAjP6VS+wjcfdi/OoKHNRzs
-	 qgiLxfOQndj4b+ziXRawuo1kCFw4qFK6DAjBODRB2qan4pqyGKRXlnnOB1tJ0g+glh
-	 IfvF7O4MRnajA==
-Date: Tue, 12 Mar 2024 14:31:37 +0000
-From: Mark Brown <broonie@kernel.org>
-To: xuhanwu <2433926602@qq.com>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	xuhanwu <xu.hanwu@zxelec.com>
-Subject: Re: [PATCH] ASoC: soc-pcm: add a check for unsupported commands to
- the soc_pcm_trigger
-Message-ID: <dff13df4-39c4-4995-b7cf-f9240a970cbc@sirena.org.uk>
-References: <tencent_002E3C6C67928986481018466EEDF8D05706@qq.com>
- <tencent_8A7C0C985AE1A1975C25D8DE24010D8B2007@qq.com>
+	s=arc-20240116; t=1710253989; c=relaxed/simple;
+	bh=xibwLgdugElJ6qgRit1db6TNWxjYG1ahf7c6qBY+KNw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=h48HlmAtif3kzlbclSgoTTZA2V2a+CjRtc3jS+nPNVE15x7vpO0QzU2Taw0NR8y9MWfMQt2YkBVdQBcLw4WCb5dqTkA+6AWEy1+9dcFP6MRYQX0Pt3g/i6YN7unzIgXNDSOCGVcqYgs6jwtvAvDXPMeI0JKI+XiRFMISP5908a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c8a960bd9eso260686739f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 07:33:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710253987; x=1710858787;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jcchRI6klPvetLBhvBb86zluU2kYnKjxKm1+oLxHEBs=;
+        b=aRx1h5pX5Xy7JsQvlRhDrU0oX6R+p1iNJbrO9Dymut+Ta5HVq1S0C82OUkD8u4NeNn
+         X1ti9Rb/yODlBMRLSW29E5V0Wv96klW5SothrJBa47WrNrZJaQf1462QqFcil8Wl0W8y
+         CZbqv6T5mnazM2nYEdRg0ySjYNULoSd5wvg3F0KvmokW9jFlqicQFNGY1nPKbJm72UF5
+         LUBWCuCjPJPNjucDrpC0LzddvfyxV5BgYmzYgSwTHmzgn3pnlESPO7S4jKvsGopri1vb
+         oEL640YKtsfBH1Oo3+E8uyCHGIkEIEA4zvUHtoh0JsduiE8svEtR2A6xEPt8KSRcetQA
+         fUWA==
+X-Gm-Message-State: AOJu0YxPfri8akDypH//7o5kfiv01CxAqjtfLl3DHq9tEj89QTQ4bOtj
+	FtgKyrp+Aga3GzEdmL9lhryqGfFw1BNNlX7xmr6LTNN34H0i023Nv/KOXLCze2TVOfbH2JNKgJZ
+	NpjVuT3L2sIizyJ4gSraOriMLUNy1wGA01eX4Y0v0xkyoqoxiGlDDmGOQZw==
+X-Google-Smtp-Source: AGHT+IGrmDBXSengP5xvtuCRKmhYSdS26h6jls71GcexbjIFLjkjCAM6hDA9YLXi837QFAHUki7QAsOH6lYx6VS9rn1KlUHaxBjY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SVXtnl3SxrTOaMQW"
-Content-Disposition: inline
-In-Reply-To: <tencent_8A7C0C985AE1A1975C25D8DE24010D8B2007@qq.com>
-X-Cookie: Oh, so there you are!
+X-Received: by 2002:a05:6602:3425:b0:7c8:4807:7a0 with SMTP id
+ n37-20020a056602342500b007c8480707a0mr3354ioz.2.1710253987211; Tue, 12 Mar
+ 2024 07:33:07 -0700 (PDT)
+Date: Tue, 12 Mar 2024 07:33:07 -0700
+In-Reply-To: <0000000000001663ea060ee476ea@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006249bd0613778910@google.com>
+Subject: Re: [syzbot] Test for 2ef3a8ce8e91b5a50098
+From: syzbot <syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
---SVXtnl3SxrTOaMQW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+***
 
-On Mon, Mar 11, 2024 at 03:05:48PM +0800, xuhanwu wrote:
+Subject: Test for 2ef3a8ce8e91b5a50098
+Author: syoshida@redhat.com
 
-> >	As can be seen from inspection of the immediately
-> >	preceeding handling of start, we're deliberately
-> >        ignoring half the values in each switch.
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
 
-> In kernel version 6.2, when the soc_pcm_trigger function receives a
-> command parameter cmd set to SNDRV_PCM_TRIGGER_DRAIN,
-> it returns a value of -EINVAL.The function snd_pcm_drain checks
-> the returned error value and exits accordingly.
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 6d14d935ee82..b983232e25cb 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -228,6 +228,9 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
+ 	 */
+ 	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
+ 	    ethhdr->h_proto == htons(ETH_P_HSR)) {
++		if (skb->mac_len < sizeof(struct hsr_ethhdr))
++			return NULL;
++
+ 		/* Use the existing sequence_nr from the tag as starting point
+ 		 * for filtering duplicate frames.
+ 		 */
 
-The current kernel version is v6.8 (we're in the merge window for v6.9
-now) - any changes that you're submitting should be submitted against
-current code, not v6.2.
-
-> In the latest code, when the cmd parameter is set to SNDRV_PCM_TRIGGER_DRAIN,
-> the return value is 0. If snd_pcm_drain finds that the return value is 0,
-> it will not execute the goto unlock;
-
-Well, it will get to the unlock eventually after going through the for
-loop so the lock doesn't get leaked AFAICT?  I'm not sure what the issue
-you're seeing here is.
-
---SVXtnl3SxrTOaMQW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXwZ0gACgkQJNaLcl1U
-h9D7CQf+I65qwiSF2Y7Qh8DH3RkCpngGIXOKfpL2TThE6NklN8FE2csXpMZpGDFD
-CVEyolsym8c+sLekPSky2TTMtZ3hBHuukCrGciB9qffhrorQ7MgRdEgBtP1Efip7
-GApg3MCVPYwlZYVqWWh7HamuHn6aHJCSqAw3EuvN9JpdWl9tXN8hdc7hNPQun1nG
-utgMOAxUseqF7onB9MxViFHFJ2Zd55DrqorFMkjpaOzIVDE8DnV6p+RHgVRv1ISt
-dMuTHFQowR3cT6+CJEdyzW2ozg7SCUXr9qIwNG0acBvBOb+WKTw4gXZaiqgS0+tx
-XiVAdwuJhfWW/OfNW5e1k+MuJbL72w==
-=23qx
------END PGP SIGNATURE-----
-
---SVXtnl3SxrTOaMQW--
