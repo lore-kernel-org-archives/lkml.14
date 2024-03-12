@@ -1,66 +1,65 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91A23A6;
-	Tue, 12 Mar 2024 19:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52B423A6
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710272240; cv=none; b=dedthlQ9sLryjlmMU/ihopITLHxiGMHCu4csFOQhV3btvXpqSGCwXtsfqDeYGo7lYL+Y2nHDoUPCxmXoGj8NZonVOv6miFFr8p54P78Mx0oB/qcAksGOII9rwPPihwH3ZmSac11jFMGsXQ/RYqYnbDHFYakGtfR6EtxrPxNwAO8=
+	t=1710272309; cv=none; b=ALYt1efXZ6lsEQuwj1RDdtiGwlPFEpA+65NVpo8Hl2bAgi8FyvB1yERSiDYL7r+Rq/gc+L1TLx/VkH646XwgMmEWU7dZ+d/dEnSO8hS9grqkwrVdXMQx0yrfPhARQT/CfV3bWO3WoY9vdNoZH4JXd+ohH6DPTiFAoEoKyulvIMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710272240; c=relaxed/simple;
-	bh=IYGGfO+zzpOZyYV6oCe1RH59zp5nn/5T//wxPhZKefM=;
+	s=arc-20240116; t=1710272309; c=relaxed/simple;
+	bh=tZ8a6vbF2Am0MpFqEToA50rmKFe/nHhBL/0jX4rogxg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VSMBMJXiX+kD2Y73u3B16BYUuq2QV+r99abn/gTz643isdm88Z6Yv0ImAaNm5tG3xBDUYcL0HgoajRbsJ9Ggzt1OZWa1quCfyIqUIw5aEZ+9z0lP22NIqzyC7wKuH7qJZlRMrAYi1BXnxg8KniDNYWdzn2F2KFrtnU9BZJ2Avag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IzMtufyi; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=FB7GkvYDIxHeK9kpyDtFc7/OSy5CXaILfHLIE4RFgoKue8nd9BMJDWIZog8+aCCwQNiSwGH9xEQJI1BvmMxFcL5EvMRkcSDoMm4ipe0IVTtWf+ZhPkHMZC6+cviXga/qdYXmdDHzw+B2vqlxDwI4J27f4AZoKVAA2wcsIUE+Zbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gXORYVQT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IzMtufyi"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CIus7Y012523;
-	Tue, 12 Mar 2024 19:37:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=80wPmnITO8gQWN+zUxQmSA2ZI8Fawb2/8IYwf+7K3Eg=;
- b=IzMtufyiFM/OdIcCkMkaKiA8BgSUs0K1/85+EtVOt7mwUJ3KS8AsWLpSpPJj35cTAcQ2
- AAtomTwt6pMCSyxcifJwjvXcrEEWlei2AyaAXJTef8ahfGdk/XcNe2pldBIDtreG3Vbl
- wJckCl5ufl/XCRbSx27kKTkoUaCjDovFkTJpqAKtir2J531YtbipeZ1icqg2DEiMwlel
- aj4qNov4U2NjlJWRKz3eU2A0T0dmn7415ocCk0+Y7QJnFCjFMgdCktZ+pDgDGASSmwoE
- 9JKbQLV/kLoU1LeI5BmKyrIVQUyi3ZUmMOlejvZhzE1xwBKFv6GBQ/KpnLRPPoszMDzq mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtvs90hd6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 19:37:09 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42CJRFxI017257;
-	Tue, 12 Mar 2024 19:37:08 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtvs90hcs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 19:37:08 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42CJNleX018581;
-	Tue, 12 Mar 2024 19:37:07 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ws4t20pw5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 19:37:07 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42CJb4mf47251884
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Mar 2024 19:37:06 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CDB558063;
-	Tue, 12 Mar 2024 19:37:04 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA3D35804B;
-	Tue, 12 Mar 2024 19:37:03 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 12 Mar 2024 19:37:03 +0000 (GMT)
-Message-ID: <81cd893e-46c3-4d38-aa93-8ab410a770ea@linux.ibm.com>
-Date: Tue, 12 Mar 2024 15:37:03 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXORYVQT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710272306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=psDXtzAtaeLWZ6h84OMUa5HGJJQUkVe5Pctqz1uMo58=;
+	b=gXORYVQT+7lQ48Zw3HhZfSpB4ohpX68VRJD+jEyDVW6ZfGFN3ewtw5+YdovVfAvLeSITej
+	yyktCUAEPgLN6aR36yzUHtTIBu80FaIC7oHSaeGNfBOJAXq6nrdxbxQiVWWoY1K3en03EI
+	XLUAGEU9o1+P9xrWCvS01FjrARV4fo0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-vPtgj_-BOeOava5HI44tGQ-1; Tue, 12 Mar 2024 15:38:25 -0400
+X-MC-Unique: vPtgj_-BOeOava5HI44tGQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4131b4161dcso21552365e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:38:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710272304; x=1710877104;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=psDXtzAtaeLWZ6h84OMUa5HGJJQUkVe5Pctqz1uMo58=;
+        b=qtGh5fABHeotTOuD7gkPYqfXNe8LS2M93Or0WSD3NpuPt6SnqGVDen67Om1djfguRN
+         uaEyZSivkey7dMZAM3QN4IQM8M6NAI6WEOvnrBEwNmBvnUZGdEOzWoD3JuGA8StQTJEJ
+         EKMM+U6WJZPMwS0lZftCRAA8wymvEA+Vcj0w8e8Ajj4u4Xf9C/EX/wfu5byqGRJOwbk+
+         EK2pkJGoLaIGgUUDxUQloZNy8FHJOFRRVQkIwK0sHCndWP1UYnSfMZhEd7+tWlkioLED
+         xpBeGidmlJOppSns/X8+PpeNEx5n1o2UpEVCFsRWmtb+KpcfbnLkv6lKdpj37o3jLzPj
+         ltlw==
+X-Gm-Message-State: AOJu0YxAKz3kv+vRU/JqJK6/m1fFWmg5dKa69tSLpnbx1kaMgKMZU1k3
+	/EzJnq7/XLiXnKYXlWXwOxgWb62wlU1Q+lZv5N8uLZO5khOxYIq57VhcOyG5/H3GXyafxzQMJ/A
+	sm+Be9sKzksN7v3Tjs6nm+3mmdL/TyNKO5kDtl6evKxO2c1CcsqwFSkR0T3liow==
+X-Received: by 2002:a05:600c:6a1a:b0:413:1285:6e40 with SMTP id jj26-20020a05600c6a1a00b0041312856e40mr7921406wmb.20.1710272303969;
+        Tue, 12 Mar 2024 12:38:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+pkZ5+QRNJOvBbT4D5nVugKeclarW1LOJjPYe9Y3rAEGbbJwi4mYALYWVSvCFcfsGuhsjXQ==
+X-Received: by 2002:a05:600c:6a1a:b0:413:1285:6e40 with SMTP id jj26-20020a05600c6a1a00b0041312856e40mr7921394wmb.20.1710272303587;
+        Tue, 12 Mar 2024 12:38:23 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4f00:a44a:5ad6:765a:635? (p200300cbc7074f00a44a5ad6765a0635.dip0.t-ipconnect.de. [2003:cb:c707:4f00:a44a:5ad6:765a:635])
+        by smtp.gmail.com with ESMTPSA id ea13-20020a05600c674d00b004132ae838absm6845613wmb.43.2024.03.12.12.38.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Mar 2024 12:38:23 -0700 (PDT)
+Message-ID: <5bc9de2f-c3ba-46e7-a234-3d3a46e53ba1@redhat.com>
+Date: Tue, 12 Mar 2024 20:38:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,106 +67,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 3/3] tpm: of: If available use linux,sml-log to get
- the log and its size
+Subject: Re: [PATCH v1] x86/mm/pat: fix VM_PAT handling in COW mappings
 Content-Language: en-US
-To: Jarkko Sakkinen <jarkko@kernel.org>, mpe@ellerman.id.au,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, rnsastry@linux.ibm.com, peterhuewe@gmx.de,
-        viparash@in.ibm.com, devicetree@vger.kernel.org, jsnitsel@redhat.com
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-4-stefanb@linux.ibm.com>
- <CZR7B45P71XS.53XNZD9FWZSL@kernel.org>
- <916fb19b-daf8-4c1b-bc25-f071d2b3ae33@linux.ibm.com>
- <CZRVXE96ZZA8.33VFES8S07YS9@kernel.org>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <CZRVXE96ZZA8.33VFES8S07YS9@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ Wupeng Ma <mawupeng1@huawei.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <20240312181118.318701-1-david@redhat.com>
+ <ZfCrkL-Aieer2EAg@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZfCrkL-Aieer2EAg@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: uYpch5nFxdfwWQwYQw4GeJGEeaWxQcn8
-X-Proofpoint-ORIG-GUID: B-r6TN2dDjIyVKTP_5HXBJqJIT_DYiuG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_12,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 suspectscore=0 priorityscore=1501 phishscore=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403120150
 
-
-
-On 3/12/24 11:43, Jarkko Sakkinen wrote:
-> On Mon Mar 11, 2024 at 10:33 PM EET, Stefan Berger wrote:
->>
->>
->> On 3/11/24 16:25, Jarkko Sakkinen wrote:
->>> On Mon Mar 11, 2024 at 3:20 PM EET, Stefan Berger wrote:
->>>> If linux,sml-log is available use it to get the TPM log rather than the
->>>> pointer found in linux,sml-base. This resolves an issue on PowerVM and KVM
->>>> on Power where after a kexec the memory pointed to by linux,sml-base may
->>>> have become inaccessible or corrupted. Also, linux,sml-log has replaced
->>>> linux,sml-base and linux,sml-size on these two platforms.
->>>>
->>>> Keep the handling of linux,sml-base/sml-size for powernv platforms that
->>>> provide the two properties via skiboot.
->>>>
->>>> Fixes: c5df39262dd5 ("drivers/char/tpm: Add securityfs support for event log")
->>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>
->>> I'm worried about not being up to date and instead using "cached" values
->>> when verifying anything from a security chip. Does this guarantee that
->>> TPM log is corrupted and will not get updated somehow?
->>
->>
->> What do you mean 'guarantee that TPM log is corrupted'?
+On 12.03.24 20:22, Matthew Wilcox wrote:
+> On Tue, Mar 12, 2024 at 07:11:18PM +0100, David Hildenbrand wrote:
+>> PAT handling won't do the right thing in COW mappings: the first PTE
+>> (or, in fact, all PTEs) can be replaced during write faults to point at
+>> anon folios. Reliably recovering the correct PFN and cachemode using
+>> follow_phys() from PTEs will not work in COW mappings.
 > 
-> I presume that this is for power architecture but I have no idea what
+> I guess the first question is: Why do we want to support COW mappings
+> of VM_PAT areas?  What breaks if we just disallow it?
 
-Yes it is for Power. From commit message above: "This resolves an issue 
-on PowerVM and KVM on Power where after a kexec the memory pointed to by 
-linux,sml-base may have become inaccessible or corrupted."
+Well, that was my first approach. Then I decided to be less radical (IOW 
+make my life easier by breaking less user space) and "fix it" with 
+minimal effort.
 
-> leads log being corrupted, and is the scope all of that that arch or
-> some subset of CPUs.
+Chances of breaking some weird user space is possible, although I 
+believe for most such mappings MAP_PRIVATE doesn't make too much sense 
+sense.
 
-Every CPU will see a corrupted log.
+Nasty COW support for VM_PFNMAP mappings dates back forever. So does PAT 
+support.
 
-> 
-> The commit message is not very detailed on kexec scenario. It more like
+I can try finding digging through some possible user space users tomorrow.
 
-I guess what is missing in the message that the buffer was not properly 
-protected during the kexec and may have been overwritten for example 
-since it was mistakenly assumed to be free memory?
+-- 
+Cheers,
 
-> assumes that reader knows all the detail beforehand. So probably this
-> will start to make sense once the backing story is improved, that's
-> all.
-> 
->> The TPM was handed over from the firmware to Linux and the firmware then
->> freed all memory associated with the log and will then not create a new
->> log or touch the TPM or do anything that would require an update to the
->> handed-over log. Linux also does not append to the firmware log. So
->> whatever we now find in linux,sml-log would be the latest firmware log
->> and the state of the 'firmware PCRs' computed from it should correspond
->> to the current state of the 'firmware PCRs'.
-> 
-> So on what CPU this happens and is there any bigger picture for that
-> design choice in the firmware?
+David / dhildenb
 
-The firmware provides a call sml-handover, which hands over the TPM log 
-to the caller and at the same time frees the log. You cannot call the 
-firmware a 2nd time for the log.
-
-> 
-> If it is a firmware bug, this should emit FW_BUG log message. If not,
-> then this commit message should provide the necessary context.
-
-It's not a firmware bug. The issue is that the buffer holding the TPM 
-log is not properly carried across a kexec soft reboot and may for 
-example have been overwritten since it was assumed to be free memory.
-
-> 
-> BR, Jarkko
-> 
