@@ -1,118 +1,119 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4186AD48
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 00:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE000370
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 00:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710201844; cv=none; b=bA24Xyr+keFvHZRCC21HeGodjJqgfdptYAxDZ4WLPkH5JVWXX9sVW6dIkC9w/AFf1/EJ13hz9QLoN3YVmRZ8bHmOt7QwcgVNhgKqKJJuJIWPVJRQCx2YwjP/2knCzGPZ5P0i3rhSSPEmytyf7RrE63EhiAgmZeiZ4LTkswSpD3A=
+	t=1710202088; cv=none; b=raCrz/mt57KD79U0gfLLgECRxEgFzNo1k3CnoUHecC7Ctbvce1TMD47qZBX6TQN9Y/pYUYhcnihnvuMSKWVu4RNSM83hARQ8FRlLc2wbr1SafFBKJ7C4lSgK/FuVaiv6FWZesyT24HPCGqGuLKCHHv18mp2/hNlvv7U1A4tyHIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710201844; c=relaxed/simple;
-	bh=GtWzUpROLy03of4DzRBU4Zj6eH43yIsxZ63cj2+uvk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DHg1L2x7Fv0IFLXD9lwJkDTRNRpu7WnVTch8ysK0eVnEltH3BSwl/J5W8syjr3EVhS4aU0OLWPtiVpwTSocNeAGfTFVlncaUjTm4qZBt3SIcKpwDuWzcUkiHMH6Jn9sHlZ4v9D78UF8BPwhAhuP61fGyWb2dPkPCtThEyvYB0/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jH+2Iac9; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710202088; c=relaxed/simple;
+	bh=l6rVoLL7b5GYnY86FxsMiWPpqEw2YPCNBuuoZ8f4T38=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kUt9jiKPv7Gonkb+dTp62fv8rZ21HUILfyWKH40pipC72sh05ORBkV5eGaco9stmlT2VbIDyA3IdpGgunbBCzn/1b7XLFsYwlzFal4TrEuSP8XrqyGQGz7eakOxjUz/4kdit2hf9xbOVTOAH4+D8iWiQpKAKoZpVbWCC1DbxYQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NBcMzKgL; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jH+2Iac9"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51323dfce59so3339423e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:04:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBcMzKgL"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dced704f17cso8520221276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710201841; x=1710806641; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BQpqFFicQ5YfomKVXzegGQYmkOjou4tROZ8z6s/Q/bE=;
-        b=jH+2Iac9k/rDZ+xgG4jZbQpeTCnJDJB4jJsSVdVz5AeAtzD6pzaGz4cz9IXSrPwrpM
-         pU7opKFPH0m5gFm8LebMbVLf/Vtl1jYIWASRUFNlydkzDLry3I+va7l2K1z2NlO49RvX
-         rZEI6N8UmxWrO/4CIZ6smHIU1jDpFvI7jPJ1MIl1/c8B6+8k2UYVp9prAMY3Gt6hXQnF
-         2TRBiv7uuedsyTAoH9ZaY4Djf/Wf9cyZ5DAkqdGEKwlhLr5Z7dbVNS0I+gVyV96Nuybc
-         nyYzHqKmnZxy/blq3zeknbaOtSY0nUB992Ka0mTmk5UY2pSU6FsYaL2T22qe9mltJ/Fq
-         yHMQ==
+        d=google.com; s=20230601; t=1710202086; x=1710806886; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pum+V0ZuZEgl9/jYMpYphQnY8pqiA+YW9T5jbGt8uRw=;
+        b=NBcMzKgLEfN0BungWxGhN6WGxnrtYOf4wVN2zMaDYZ8HpR7p/53fLBVvhCOF4FbBOC
+         VuvfO4G+uE077eqJISDKMnTOwZHJKeYthhbFBSKnZLNtZSWh9NiEcNwQ20NkKdPocfDy
+         N99HKEIyCNzU54XTJ0pd7Bx9vwH73VsnHfJsD+tfGoCxDne4YLKFSD9uLmm9ziu2y5pY
+         KIDBSESjACFonf4khiHuNgsxh+sPE4ZBdYqkiMxR6rzMlfxeSyTh1ZDGH5MmoghD79pJ
+         a/mKoFNWXYOH+kTpu8LZbUjkGeCUDFG/6hyFfQHAjXRq2t/14WTQh71dwJvqFj7woLF0
+         XaiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710201841; x=1710806641;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BQpqFFicQ5YfomKVXzegGQYmkOjou4tROZ8z6s/Q/bE=;
-        b=XOnX9KA3xcrmPk/DhoBZsCYhPhvES3MhfQ3/14EC4klU60VKZoYW+sthkFt6bx/NUf
-         fGSAlpR1g2S1LSnUSHXBy5InTb+SuGGg+XdqcqgCA50X2duzji647uuWGSghe5nli/9p
-         VF2YddoeCL6vRouBxYxxE4KYKP46Tx+3jQQHW8qRZzbMf/25OKouY4jStaX13mooFmXO
-         s/D44ffFYEBZGAUkdEeB/7agmz9k2K/nyiK8fFhwaLyaRqbuGosVC3s1P4y0fNIOT5M5
-         i/n1Jyoi69tYjYyw9yulgnr8Zg99HxKRPJbXK/0uIiU85oCyP+SLZEy6xiEyGxI9gxc3
-         noKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8ptwgHUVHSYes2g3I0IRkbPCubUXIn3bgjEa9XXhfCwjlCAbobyg8Xwcyv1cdujvRCI31wFzqMDqV9ssV7NXFByxMr+iSxk4tQO5z
-X-Gm-Message-State: AOJu0YxdGaXJuNtcDkdlVNqvc4kGnCDrN6xKIVO4v6G8YWAb30Q4JwIW
-	G+eAEsWYFcUBL11wsrm/A8FOaZp+RXd4kV2wEgVTsebPGWlJEUGsq+ki+X5bSAI=
-X-Google-Smtp-Source: AGHT+IH6yRmOXext+BOdsK7e8To7SfioRgtqDEWmkaxrfNU+TvvgE17KOn0grChRMEn/Uu4NSlYjhQ==
-X-Received: by 2002:a19:ca17:0:b0:513:3fa6:efe3 with SMTP id a23-20020a19ca17000000b005133fa6efe3mr5254639lfg.8.1710201841082;
-        Mon, 11 Mar 2024 17:04:01 -0700 (PDT)
-Received: from [172.30.205.61] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id n16-20020ac24910000000b00512ebe62693sm1300360lfi.255.2024.03.11.17.03.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Mar 2024 17:04:00 -0700 (PDT)
-Message-ID: <e787706d-b5ef-40bd-9fa8-fed784a9d7b7@linaro.org>
-Date: Tue, 12 Mar 2024 01:04:00 +0100
+        d=1e100.net; s=20230601; t=1710202086; x=1710806886;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pum+V0ZuZEgl9/jYMpYphQnY8pqiA+YW9T5jbGt8uRw=;
+        b=wqMfHMMrbNllt6G/RG9Uh86kVHEg0H3wqeHaVGWv67mkVewKWRAUTedLTzoBUPcQhk
+         N54WppqlZKjH8/ouRVV9xTm7VyP82Z5Ai14GQmMYk8VYC6TuKORJqW7F4BuwJfAWwur+
+         nTBv55Q3BicQP9tijRZamNe5J0IcEqkWYePgQsgRx7XLNp7DWXiXEvL3YIWiQS5rUCm6
+         +d90DY/nIPqbL6LIt9p1iuLCMKCqakEZ3rqTnkyjNuQkULt9Nye2yh+xbchZGVH4Mxe+
+         xAzJuaFaccfhwJqb4/9IeFU9o/zmAau0SxOxmtf3FBIhz/d78MY/Twsq5R7J1v8/EirA
+         ZV7w==
+X-Forwarded-Encrypted: i=1; AJvYcCX/LG694rtVBfX31jYsFj3U9pTcfaEojCwLAwl69WkT6ZSmkNxItKRnwXmmtgEa1scvvEo4jlXOXHWzMnH7nY5DeOC7os+VQwEXS8z+
+X-Gm-Message-State: AOJu0Yz0OrZiWEVGSxQgh+xZlX83qz434bJnDjqbnM8UpRLUvTw+NKth
+	WXT6O5Q8tvZXQSvSvrw5ATxgeI1WSk1rwK4tO2m89/HaGTyuWT/NR618iIgmcsZF3discMZ77tD
+	tvQ==
+X-Google-Smtp-Source: AGHT+IEVKzIpLefkYwyffPzY5rPsN9c/eliMN4nhjFt7FymhL9wQsQdn682GY/SO83Yj7xm2vR5Ew7/BGnQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:4ad:b0:dcc:94b7:a7a3 with SMTP id
+ r13-20020a05690204ad00b00dcc94b7a7a3mr418633ybs.12.1710202085872; Mon, 11 Mar
+ 2024 17:08:05 -0700 (PDT)
+Date: Mon, 11 Mar 2024 17:08:04 -0700
+In-Reply-To: <Ze6L/Tnrvs7eayqG@yilunxu-OptiPlex-7050>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: qdu1000-idp: enable USB nodes
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Komal Bajaj <quic_kbajaj@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Amrit Anand <quic_amrianan@quicinc.com>
-References: <20240311120859.18489-1-quic_kbajaj@quicinc.com>
- <20240311120859.18489-3-quic_kbajaj@quicinc.com>
- <CAA8EJpqMWBWAEUCiJXm0x7zjZYbP8SkRDgu+w+goYjB=8JBN0A@mail.gmail.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <CAA8EJpqMWBWAEUCiJXm0x7zjZYbP8SkRDgu+w+goYjB=8JBN0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240228024147.41573-1-seanjc@google.com> <20240228024147.41573-10-seanjc@google.com>
+ <ZeqZ+BDTN5bIx0rm@yilunxu-OptiPlex-7050> <ZeufCK2Yj_8Bx7EV@google.com> <Ze6L/Tnrvs7eayqG@yilunxu-OptiPlex-7050>
+Message-ID: <Ze-c5KHDmpz7M6eN@google.com>
+Subject: Re: [PATCH 09/16] KVM: x86/mmu: Move private vs. shared check above
+ slot validity checks
+From: Sean Christopherson <seanjc@google.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-
-
-On 3/11/24 13:14, Dmitry Baryshkov wrote:
-> On Mon, 11 Mar 2024 at 14:10, Komal Bajaj <quic_kbajaj@quicinc.com> wrote:
->>
->> Enable both USB controllers and associated hsphy and qmp phy nodes
->> on QDU1000 IDP.
->>
->> Co-developed-by: Amrit Anand <quic_amrianan@quicinc.com>
->> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
->> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qdu1000-idp.dts | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qdu1000-idp.dts b/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->> index 89b84fb0f70a..126bc71afd90 100644
->> --- a/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/qdu1000-idp.dts
->> @@ -500,3 +500,27 @@ &tlmm {
->>   &uart7 {
->>          status = "okay";
->>   };
->> +
->> +&usb_1 {
->> +       status = "okay";
->> +};
->> +
->> +&usb_1_dwc3 {
->> +       dr_mode = "peripheral";
+On Mon, Mar 11, 2024, Xu Yilun wrote:
+> On Fri, Mar 08, 2024 at 03:28:08PM -0800, Sean Christopherson wrote:
+> > On Fri, Mar 08, 2024, Xu Yilun wrote:
+> > > On Tue, Feb 27, 2024 at 06:41:40PM -0800, Sean Christopherson wrote:
+> > > > @@ -4410,6 +4405,16 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+> > > >  	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
+> > > >  	smp_rmb();
+> > > >  
+> > > > +	/*
+> > > > +	 * Check for a private vs. shared mismatch *after* taking a snapshot of
+> > > > +	 * mmu_invalidate_seq, as changes to gfn attributes are guarded by the
+> > > > +	 * invalidation notifier.
+> > > 
+> > > I didn't see how mmu_invalidate_seq influences gfn attribute judgement.
+> > > And there is no synchronization between the below check and
+> > > kvm_vm_set_mem_attributes(), the gfn attribute could still be changing
+> > > after the snapshot.
+> > 
+> > There is synchronization.  If kvm_vm_set_mem_attributes() changes the attributes,
+> > and thus bumps mmu_invalidate_seq, after kvm_faultin_pfn() takes its snapshot,
+> > then is_page_fault_stale() will detect that an invalidation related to the gfn
+> > occured and resume the guest *without* installing a mapping in KVM's page tables.
+> > 
+> > I.e. KVM may read the old, stale gfn attributes, but it will never actually
+> > expose the stale attirubtes to the guest.
 > 
-> Are these ports really peripheral-only?
+> That makes sense!  I was just thinking of the racing for below few lines,
 > 
->> +       maximum-speed = "high-speed";
+> 	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+> 		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> 		return -EFAULT;
+> 	}
+> 
+> But the guarding is actually for the whole kvm_faultin_pfn(). It is the
+> the same mechanism between getting old gfn attributes and getting old pfn.
+> 
+> I wonder if we could instead add some general comments at
+> 
+>    fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
+> 
+> about the snapshot and is_page_fault_stale() thing.
 
-More importantly, are these ports really HS-only?
-
-Konrad
+Yeah, I'll add a comment.  The only reason not to add a comment is that, ideally,
+the comment/documentation would live in common KVM code, not x86.  But this code
+already has a few big comments about the mmu_notifier retry logic, one more
+definitely won't hurt.
