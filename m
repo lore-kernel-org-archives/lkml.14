@@ -1,96 +1,186 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4696B4AEEB;
-	Tue, 12 Mar 2024 21:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D38714375F;
+	Tue, 12 Mar 2024 21:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710280303; cv=none; b=GXhlKAr9BGF0rYelmDY+601s9Cc/NPrS7XsXrAkawywQWzc+VMdAQMUFZyv7VriP0Nv375Os4cOteB72reIvltZWY452hrMShUXz5Zv3CzdHSytI0vKcG0Ijko0al6rSN18J/+k7TothrnQFsxJ9jqNL71dTh7qZr51irETfp9k=
+	t=1710280319; cv=none; b=YdtMriysrTzed8CB/haKJdrKBV4s7H++J91/CtDWDuR+rGnxymF+AadKhNvSQHCDPgpNW08ZOVBnnze0cncUbgGVSwZjTmb+KotMkm7CRksz3j4262tQeAxhTpkblTlB0BNlppcG+8+YHHCjC/m/hYpWrdbIV7mdB+jgZy/dN8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710280303; c=relaxed/simple;
-	bh=7NqfT9TdaICSlrZte0UgCg2l9YA4Ye8LMG1y7vQ4YSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jDYseYLXiMpn0jJMdctTwtNvZc3deePXUBCS16N1OXzt9oJAvk2U134bw1cGX+n2NqWYJF0jK0SiDEBUip00+JbD+HgLW13A6gaMB0OTmSVZcDw9AfB1pcb3sklR1Wvwkq/RQPKSpfUCc3uyOzof6Elr0+Z+pO7ICL6aSE+5Whw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GBTcO4cd; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GBTcO4cd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1710280297;
-	bh=NfQLoHYJ5DClXcTQfww+2SzYHTQ8VCi5zsfEcgF2NkY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GBTcO4cd5pIoA8qLzrR58SF7RhnjftJttvDke11txK/Q2jXKz49wT+nF0MFV/D3hP
-	 SdP3nfqdn8YLexcjTX2mLSbEF+NaGmiDxCFih4O7qjP7wNvQqEcjqeAc+nlz1SC5OY
-	 00ydZW0BQIOT/jre7HYlbh3G5j1MX1SV3dq2q0UpJ2aRYF6ByiSug//3iHKmypYweA
-	 dXxnaKF4kvaH1VaAzWmpboR7qVTjQuBpLcGl+Uqf+tNd7tOxjPpFDm1LwjnhVMcmxe
-	 xAzqMUi3HETLhjFDyGRcQFSb0BlzMxbefoIpwUCuyn4/fahAyy5tPZYES4xMIqgUpN
-	 fKnJdIjePcknw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TvS5j1GfHz4wcT;
-	Wed, 13 Mar 2024 08:51:36 +1100 (AEDT)
-Date: Wed, 13 Mar 2024 08:51:36 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Johan Carlsson <johan.carlsson@teenage.engineering>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the sound-current tree
-Message-ID: <20240313085136.056eaf24@canb.auug.org.au>
+	s=arc-20240116; t=1710280319; c=relaxed/simple;
+	bh=Dz2aAXOKAnU/8r8PLH1oAU5mjx3wiu5j9YEMToKkNcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iV0OogPp1kvTMa/WS0kSy69HwAPRmUwt4pPvFgFiSGkwe1zt0Ewuf/4XEyUaOVGZEOpvYmmIeK08IZYRUC03L/RcTFsNYTM6jmKzoHltVQLQyA4MXLXTRUFJvu5lPWJ965zm7ariuJ8iAqLGO9YzTFVPsPRDZX3s6KyH2Rd9ejc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7781AC43390;
+	Tue, 12 Mar 2024 21:51:58 +0000 (UTC)
+Date: Tue, 12 Mar 2024 17:54:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH v4] ring-buffer: Have mmapped ring buffer keep track of
+ missed events
+Message-ID: <20240312175405.12fb6726@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yuQLNtLuXwX5yCCUtDYktAx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/yuQLNtLuXwX5yCCUtDYktAx
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-After merging the sound-current tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+While testing libtracefs on the mmapped ring buffer, the test that checks
+if missed events are accounted for failed when using the mapped buffer.
+This is because the mapped page does not update the missed events that
+were dropped because the writer filled up the ring buffer before the
+reader could catch it.
 
-sound/usb/stream.c: In function 'convert_chmap':
-sound/usb/stream.c:306:34: error: 'chmaps' undeclared (first use in this fu=
-nction); did you mean 'chmap'?
-  306 |                         if (c =3D=3D chmaps->channels)
-      |                                  ^~~~~~
-      |                                  chmap
-sound/usb/stream.c:306:34: note: each undeclared identifier is reported onl=
-y once for each function it appears in
+Add the missed events to the reader page/sub-buffer when the IOCTL is done
+and a new reader page is acquired.
 
-Caused by commit
+Note that all accesses to the reader_page via rb_page_commit() had to be
+switched to rb_page_size(), and rb_page_size() which was just a copy of
+rb_page_commit() but now it masks out the RB_MISSED bits. This is needed
+as the mapped reader page is still active in the ring buffer code and
+where it reads the commit field of the bpage for the size, it now must
+mask it otherwise the missed bits that are now set will corrupt the size
+returned.
 
-  a94566ace3ca ("ALSA: usb-audio: Stop parsing channels bits when all chann=
-els are found.")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v3: https://lore.kernel.org/linux-trace-kernel/20240109212702.5b8e6045@gandalf.local.home
 
-I have reverted that commit for today.
+- Almost forgot to add this, but one of my libtracefs tests failed due to it.
 
---=20
-Cheers,
-Stephen Rothwell
+- Rebased against the latest code.
 
---Sig_/yuQLNtLuXwX5yCCUtDYktAx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+- Removed the zeroing out at the end of the page as the ring buffer is now
+  zeroed out when allocated. Not too worried about stale tracing data, but
+  having non tracing data would be a problem.
 
------BEGIN PGP SIGNATURE-----
+ kernel/trace/ring_buffer.c | 53 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 6 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXwzmgACgkQAVBC80lX
-0GwscwgAlXVVuvuaUyEQ7JabKXohY1sAKqXask288JoeLabO9BQ5FituhwvBLjgH
-p/n5SZgijHJTgajQlnHduxalnsTwCqqg1CR4nNvhzRoizcfrJuF94FU9LgWq9fQ/
-mGPE8ijMAT4LJzu6nP3Q8q8+hAgI3NR/S3zItb/7qmaO+kqWWDhYUklnOBG+j9Lx
-ODPpP9icVTGqdrC4fqmGtRSHdrFqLxVZkT9RmJ9hcuglw6IcTMds6nJZLSEe7yeZ
-l0cTQYhRbivIY90Hc1caZMNyN4YHd52+0rdvt2xPmLie9kYBecEEyt986Xe6Zaqz
-3FEQblwf0FNVLczFDGmzlZRFKBoBQg==
-=W1PY
------END PGP SIGNATURE-----
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 13250856a3a8..abe21c47fb49 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -313,6 +313,8 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
+ /* Missed count stored at end */
+ #define RB_MISSED_STORED	(1 << 30)
+ 
++#define RB_MISSED_MASK		(3 << 30)
++
+ struct buffer_data_page {
+ 	u64		 time_stamp;	/* page time stamp */
+ 	local_t		 commit;	/* write committed index */
+@@ -2274,7 +2276,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ /* Size is determined by what has been committed */
+ static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
+ {
+-	return rb_page_commit(bpage);
++	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
+ }
+ 
+ static __always_inline unsigned
+@@ -3901,7 +3903,7 @@ static bool rb_per_cpu_empty(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return true;
+ 
+ 	/* Reader should exhaust content in reader page */
+-	if (reader->read != rb_page_commit(reader))
++	if (reader->read != rb_page_size(reader))
+ 		return false;
+ 
+ 	/*
+@@ -4372,7 +4374,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
+ 	return ((iter->head_page == commit_page && iter->head >= commit) ||
+ 		(iter->head_page == reader && commit_page == head_page &&
+ 		 head_page->read == commit &&
+-		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
++		 iter->head == rb_page_size(cpu_buffer->reader_page)));
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_empty);
+ 
+@@ -5701,7 +5703,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	event = rb_reader_event(cpu_buffer);
+ 
+ 	read = reader->read;
+-	commit = rb_page_commit(reader);
++	commit = rb_page_size(reader);
+ 
+ 	/* Check if any events were dropped */
+ 	missed_events = cpu_buffer->lost_events;
+@@ -5778,7 +5780,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	} else {
+ 		/* update the entry counter */
+ 		cpu_buffer->read += rb_page_entries(reader);
+-		cpu_buffer->read_bytes += rb_page_commit(reader);
++		cpu_buffer->read_bytes += rb_page_size(reader);
+ 
+ 		/* swap the pages */
+ 		rb_init_page(bpage);
+@@ -6331,6 +6333,8 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
++	struct buffer_page *reader;
++	unsigned long missed_events;
+ 	unsigned long reader_size;
+ 	unsigned long flags;
+ 
+@@ -6356,9 +6360,46 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
++	reader = rb_get_reader_page(cpu_buffer);
++	if (WARN_ON(!reader))
+ 		goto out;
+ 
++	/* Check if any events were dropped */
++	missed_events = cpu_buffer->lost_events;
++
++	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
++		if (missed_events) {
++			struct buffer_data_page *bpage = reader->page;
++			unsigned int commit;
++			/*
++			 * Use the real_end for the data size,
++			 * This gives us a chance to store the lost events
++			 * on the page.
++			 */
++			if (reader->real_end)
++				local_set(&bpage->commit, reader->real_end);
++			/*
++			 * If there is room at the end of the page to save the
++			 * missed events, then record it there.
++			 */
++			commit = rb_page_size(reader);
++			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
++				memcpy(&bpage->data[commit], &missed_events,
++				       sizeof(missed_events));
++				local_add(RB_MISSED_STORED, &bpage->commit);
++			}
++			local_add(RB_MISSED_EVENTS, &bpage->commit);
++		}
++	} else {
++		/*
++		 * There really shouldn't be any missed events if the commit
++		 * is on the reader page.
++		 */
++		WARN_ON_ONCE(missed_events);
++	}
++
++	cpu_buffer->lost_events = 0;
++
+ 	goto consume;
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-- 
+2.43.0
 
---Sig_/yuQLNtLuXwX5yCCUtDYktAx--
