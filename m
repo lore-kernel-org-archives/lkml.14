@@ -1,109 +1,76 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB0958ADB
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 10:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+Received: from chinatelecom.cn (smtpnm6-08.21cn.com [182.42.159.130])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0444555E73
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.159.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710240252; cv=none; b=e7Y7x1aJNyqR3nM0PBj6HxeKBkeAkb6AWOQW746lZtW/I0pc4pd5YFztJHtrYiEQfvp1XxdpBcGuNkIwXJvZlgXSBBdgj5NkeyB4YvVKkHWFdMUcUiogj/Zql+hoOy6el0V3j6EQgFgneHd+A3j2xvlKZLxJoTwXWFNUy1pf4kc=
+	t=1710240271; cv=none; b=GDnPXzXTKztYiNkiIQz3PtqlUy4Z+b031Hg9QZOtbw28blcMml8omGmVWFQMmCLNCiy2YTlUNt1Mil3UxwwGBAXtAEK0AzNTx9uTJYz7SEG+iqsjO1T0cDu1jX+ps+a7Tk8KjMPDH5F+yqwRV6rGydEzoksMIjg/tJZpd1KxETk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710240252; c=relaxed/simple;
-	bh=IvsQlHr33C+BlhA4MSbkk54Qsryx8yzEIHkCOnKNFjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RZTbrcJdxo32g4usUvitgkbt9rSJuPY1HJSMsBlAXNKDWgIgTgGvDL6+/yzFQKiQcIlzdJcLrBM3xAcdbd1qizlOL9kHlynagxv5k+80tSfayNJeCclhAUzsgAWAoWs+G+IF9UvMlBD21VhWDkdSbArq0Ap/eNgK/GSrjS3TCR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=kQh2ipPA; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="kQh2ipPA"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id D7F06192F81;
-	Tue, 12 Mar 2024 11:44:06 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1710240247; bh=ITLwhGMEZ24CbUrHEJA7iFp8qXIC6P69efW9R3b30Xk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kQh2ipPAvoEV0qxucFcQ465bMg8jOaopCLq4e2wmGWwB4QWYe9e+DMbqBMVDHiLoM
-	 dW3HTWBxWK2vjD+qkaKnEm7ahmnFbErOQ+39VIc15U3oENnQ0l60gBwbfXUE9JW9D9
-	 47yrNmEuu8Ww0eaQPPQmy/IWk5hNFlpNeDjluB4gkRVmnVVZA0YQt0P6MHojKVo3oz
-	 8kdQ+0Y31hObogc7F+n3dqGFzsvM40dCIROeG8nuLyYT6plQB1kZ9UJYIVH38SJKr0
-	 evPv1kw4jbXccgLItIq3YSC8wZksR1Ww2D/MU+XfdOmUKJ4uy/ahp17MSmYc6KFzCO
-	 kEBY88ej4Rtdw==
-Date: Tue, 12 Mar 2024 11:44:06 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Michael Kelley <mhklinux@outlook.com>, Will Deacon <will@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kernel-team@android.com" <kernel-team@android.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>, Christoph Hellwig
- <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy
- <robin.murphy@arm.com>, Petr Tesarik <petr.tesarik1@huawei-partners.com>,
- Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v6 4/6] swiotlb: Fix alignment checks when both
- allocation and DMA masks are present
-Message-ID: <20240312114406.792cc8f9@meshulam.tesarici.cz>
-In-Reply-To: <Ze+nT+4Radnd/iyw@Asurada-Nvidia>
-References: <20240308152829.25754-1-will@kernel.org>
-	<20240308152829.25754-5-will@kernel.org>
-	<20240311210507.217daf8b@meshulam.tesarici.cz>
-	<SN6PR02MB41576E58DDF5A56FC6FC1EB6D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<Ze+nT+4Radnd/iyw@Asurada-Nvidia>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	s=arc-20240116; t=1710240271; c=relaxed/simple;
+	bh=MfKDSsCO+k//eJBVuSOO62heQl3fYjZ9fUGxXXuhUXE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tDKyk3yLv2VrFH0PbJyt5l/LulapauKqQzVTKynsBnFMCiC8eZAtois5Q9mMzzuqUmI51iDw0i2YR9kqpzHzsZNtR9mvedtaXSUMQIne8Y20jI4Vmw+fcz1MZlQtpbf9WmcuJq0lNYy9imdba4U4b4yS7fVgC1zIf3i037umyiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.159.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
+HMM_SOURCE_IP:192.168.139.44:63786.1870684316
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-124.127.58.150 (unknown [192.168.139.44])
+	by chinatelecom.cn (HERMES) with SMTP id 7579290322CA;
+	Tue, 12 Mar 2024 18:35:46 +0800 (CST)
+X-189-SAVE-TO-SEND: +sibs@chinatelecom.cn
+Received: from  ([124.127.58.150])
+	by gateway-ssl-dep-77bc75f6c8-x5lfc with ESMTP id c6fa781bcd40441ca0a54af00e4aa89d for kai.huang@intel.com;
+	Tue, 12 Mar 2024 18:35:56 CST
+X-Transaction-ID: c6fa781bcd40441ca0a54af00e4aa89d
+X-Real-From: sibs@chinatelecom.cn
+X-Receive-IP: 124.127.58.150
+X-MEDUSA-Status: 0
+Sender: sibs@chinatelecom.cn
+From: Bingsong Si <sibs@chinatelecom.cn>
+To: kai.huang@intel.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org,
+	sibs@chinatelecom.cn
+Subject: [PATCH v3] x86/cpu: Clear TME feature flag if TME is not enabled by BIOS
+Date: Tue, 12 Mar 2024 18:35:34 +0800
+Message-Id: <20240312103534.9037-1-sibs@chinatelecom.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <b909cb856eb625f00402472d3f3153db2294f259.camel@intel.com>
+References: <b909cb856eb625f00402472d3f3153db2294f259.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 11 Mar 2024 17:52:31 -0700
-Nicolin Chen <nicolinc@nvidia.com> wrote:
+When TME is disabled by BIOS, dmesg output is "x86/tme: not enabled by
+BIOS" but the TME feature is still shown in the output of/proc/cpuinfo.
 
-> On Mon, Mar 11, 2024 at 09:36:10PM +0000, Michael Kelley wrote:
-> > From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> =20
-> > > I find it somewhat surprising that NVMe does not
-> > > in fact require that the NVME_CTRL_PAGE_SHIFT low bits are preserved,
-> > > as suggested by Nicolin's successful testing.
-> > >
-> > > Why is that? =20
-> >=20
-> > I saw only one stack trace from Nicolin, and it was file system buffer
-> > flushing code that initiated the I/O.  In such cases, it's very likely =
-that the
-> > original address is at least 4K aligned.  Hence the offset is zero and
-> > the low bits will typically be correct. =20
->=20
-> Though I didn't dig any deeper here, I do see some unaligned
-> original addresses passed in at the top level:
->        fsck.ext4-286     [004] .....     2.594190: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be750600
->        fsck.ext4-286     [004] .....     2.613032: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be780400
->        fsck.ext4-286     [004] .....     2.614096: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be7c0600
->        fsck.ext4-286     [004] .....     2.614103: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be7e0400
->            mount-288     [005] .....     2.615157: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be800400
->       multipathd-405     [003] .....     3.062878: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: bda40218
->       multipathd-502     [002] .....     3.231721: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: bd3107b8
->            mount-525     [002] .....     3.250281: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: bd340200
->       multipathd-529     [004] .....     3.259053: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be620478
->       multipathd-571     [005] .....     3.292893: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be900328
->       multipathd-580     [005] .....     3.318832: iommu_dma_map_page: ca=
-lling swiotlb_tbl_map_single with phys: be9207c8
+Signed-off-by: Bingsong Si <sibs@chinatelecom.cn>
+---
+ arch/x86/kernel/cpu/intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you. Indeed, bit 11 of the physical address was zero in all the
-above calls, and that's why it works.
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 40dec9b56f87..119ae291573b 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -228,6 +228,7 @@ static void detect_tme_early(struct cpuinfo_x86 *c)
+ 	if (!TME_ACTIVATE_LOCKED(tme_activate) || !TME_ACTIVATE_ENABLED(tme_activate)) {
+ 		pr_info_once("x86/tme: not enabled by BIOS\n");
+ 		mktme_status = MKTME_DISABLED;
++		clear_cpu_cap(c, X86_FEATURE_TME);
+ 		return;
+ 	}
+ 
+-- 
+2.34.1
 
-Petr T
