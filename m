@@ -1,53 +1,42 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF995B1E1;
-	Tue, 12 Mar 2024 13:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965B27A700
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710250918; cv=none; b=V3YH6NNAzbKvKuk5g1aitiffYsUhnpDydhYR+oRQZaXirwTXdBAiN0iG0zjcGL8FOZw63cUrkA8NwHpBnAd1JTyOxgfe2A+U7bhEtRz2LEhzIPWjY7wml6evVsP2pXIAutopfC9QuvwEX94wSmHCCUZf/UcqPvaVXwlXcLT4hf4=
+	t=1710250945; cv=none; b=MiWqcdO8Cr6WzXgBTEuSpFaH9vH61acfZ8pDC2LaFLsWmauH8dfV8KF/p2iM2jjB+X1FIG+Sf79wWKgU++MvSayUkjHi+soMTUxc4sl19Xn0pCFP0Ts/VbxUAk31tdgrRH/ar2VU142fuYAAvNnUSyeyOszi4bYVPv9gGdIc+iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710250918; c=relaxed/simple;
-	bh=e0tD6pX6xwZoiwXkNmdHyZiDqoGTK5swzwTMQ0e4R40=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oHkAKf+Pgaqv9M188Xu2INAnVKAR+9Zb57pmPO+nwIGXDREtvKMv67EbogPrHsTNCXsMu2TGWeugLcPytLL0FMcXYfZebFBbcLT7ymKwWmYq/+E6JiK6dT5VTG2HdvDA3Wu1q7a8tJMlubH7MmaHH5UrSwB1vRHZTC9RTLPWOZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AsFv99gt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AsFv99gt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=xa8JQ3KvRA3TOgaBHWeRGuMMjhi7suQa/WUm17VoCcg=; b=AsFv99gt9tiVB4IvPWpp0zhn/q
-	yAbrTW80SEAlzDGcnxg0eIauLDMd8Ueell+LxV1jgKPF6ZeEHtxE95I4up6xl7/iYxoR+E4PbscFS
-	+UKnA2/qIyCqV3MF1qK3cHd7Ga86D01o45mEWZJYrJCtP3dPc57wEz85CqU/DQ7FdAyoK2Xzr+xOA
-	lc08WumNg6hxdL2/7cf6dYDCvBqBGk5/WMCu2n4/5DIZhidooDV9qS9CdjA0WHKMGaYl8sZrPs1Al
-	9yNGbz6L5ql2Ubj5V3bvOM24V/9i7h58oz/wSqcZ5nkqkWPI2BQUaR0BzstRC23MOlPJRUqwNECAT
-	VAq7uKSw==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rk2O5-00000009UzB-2mNO;
-	Tue, 12 Mar 2024 13:41:49 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rk2O4-000000033FJ-0PsV;
-	Tue, 12 Mar 2024 13:41:48 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	s=arc-20240116; t=1710250945; c=relaxed/simple;
+	bh=4LOfLz//4stF1IyW6kG8Qzj1vCEfzfpLV6bnrTyxpQI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MNFaBNCSDUyMnQuUBDvNvYW8fQW1W72JYWJi5tLTBQV7Ii4ou/8RbMaltTtaRLWMjjTdz1NcPit1LaU75tBSNpBfGdRMPpto0vNQHRE33hm/9MNPviHqWIBPthNsN76eyDJC5evEds178NWK2D+lT5v/3S/tkb1s56lKBTh2hJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TvDtr1lCPz9xsCv
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 21:26:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 272F1140890
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 21:42:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.48.131.93])
+	by APP1 (Coremail) with SMTP id LxC2BwD3oBmmW_BlDi4zBA--.21282S2;
+	Tue, 12 Mar 2024 14:42:08 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
 	Will Deacon <will@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	mediou@amazon.de,
-	alisaidi@amazon.com,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: [PATCH 1/2] ACPICA: Detect FACS even for hardware reduced platforms
-Date: Tue, 12 Mar 2024 13:41:46 +0000
-Message-ID: <20240312134148.727454-1-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.44.0
+	Michael Kelley <mhklinux@outlook.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Subject: [PATCH 1/1] swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
+Date: Tue, 12 Mar 2024 14:41:49 +0100
+Message-Id: <20240312134149.497-1-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,82 +44,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-CM-TRANSID:LxC2BwD3oBmmW_BlDi4zBA--.21282S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw4rZr4xXw1fZw4fKrW5trb_yoW7XrW3pF
+	4fKa1rKFWDJFyxCanFka18KF1F934kAry5CF4S9ryY9r1kXF98XF98A34Yga4FqFWv9FW2
+	qFyrur40kF47Jr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY1x0264kExVAvwVAq07x20xyl42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRWbyCUUUUU
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-ACPICA PR https://github.com/acpica/acpica/pull/933
+Allow a buffer pre-padding of up to alloc_align_mask. If the allocation
+alignment is bigger than IO_TLB_SIZE and min_align_mask covers any non-zero
+bits in the original address between IO_TLB_SIZE and alloc_align_mask,
+these bits are not preserved in the swiotlb buffer address.
 
-The FACS is optional even on hardware reduced platforms, and may exist
-for the purpose of communicating the hardware_signature field to provke
-a clean reboot instead of a resume from hibernation.
+To fix this case, increase the allocation size and use a larger offset
+within the allocated buffer. As a result, extra padding slots may be
+allocated before the mapping start address.
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Set the orig_addr in these padding slots to INVALID_PHYS_ADDR, because they
+do not correspond to any CPU buffer and the data must never be synced.
+
+The padding slots should be automatically released when the buffer is
+unmapped. However, swiotlb_tbl_unmap_single() takes only the address of the
+DMA buffer slot, not the first padding slot. Save the number of padding
+slots in struct io_tlb_slot and use it to adjust the slot index in
+swiotlb_release_slots(), so all allocated slots are properly freed.
+
+Fixes: 2fd4fa5d3fb5 ("swiotlb: Fix alignment checks when both allocation and DMA masks are present")
+Link: https://lore.kernel.org/linux-iommu/20240311210507.217daf8b@meshulam.tesarici.cz/
+Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 ---
- drivers/acpi/acpica/tbfadt.c  | 30 +++++++++++++-----------------
- drivers/acpi/acpica/tbutils.c |  7 +------
- 2 files changed, 14 insertions(+), 23 deletions(-)
+ kernel/dma/swiotlb.c | 34 +++++++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/acpica/tbfadt.c b/drivers/acpi/acpica/tbfadt.c
-index 44267a92bce5..3c126c6d306b 100644
---- a/drivers/acpi/acpica/tbfadt.c
-+++ b/drivers/acpi/acpica/tbfadt.c
-@@ -315,23 +315,19 @@ void acpi_tb_parse_fadt(void)
- 				       ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL,
- 				       NULL, FALSE, TRUE, &acpi_gbl_dsdt_index);
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 86fe172b5958..8ce11abc691f 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -69,11 +69,13 @@
+  * @alloc_size:	Size of the allocated buffer.
+  * @list:	The free list describing the number of free entries available
+  *		from each index.
++ * @padding:    Number of preceding padding slots.
+  */
+ struct io_tlb_slot {
+ 	phys_addr_t orig_addr;
+ 	size_t alloc_size;
+ 	unsigned int list;
++	unsigned int padding;
+ };
  
--	/* If Hardware Reduced flag is set, there is no FACS */
--
--	if (!acpi_gbl_reduced_hardware) {
--		if (acpi_gbl_FADT.facs) {
--			acpi_tb_install_standard_table((acpi_physical_address)
--						       acpi_gbl_FADT.facs,
--						       ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL,
--						       NULL, FALSE, TRUE,
--						       &acpi_gbl_facs_index);
--		}
--		if (acpi_gbl_FADT.Xfacs) {
--			acpi_tb_install_standard_table((acpi_physical_address)
--						       acpi_gbl_FADT.Xfacs,
--						       ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL,
--						       NULL, FALSE, TRUE,
--						       &acpi_gbl_xfacs_index);
--		}
-+	if (acpi_gbl_FADT.facs) {
-+		acpi_tb_install_standard_table((acpi_physical_address)
-+					       acpi_gbl_FADT.facs,
-+					       ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL,
-+					       NULL, FALSE, TRUE,
-+					       &acpi_gbl_facs_index);
-+	}
-+	if (acpi_gbl_FADT.Xfacs) {
-+		acpi_tb_install_standard_table((acpi_physical_address)
-+					       acpi_gbl_FADT.Xfacs,
-+					       ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL,
-+					       NULL, FALSE, TRUE,
-+					       &acpi_gbl_xfacs_index);
+ static bool swiotlb_force_bounce;
+@@ -287,6 +289,7 @@ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
+ 					 mem->nslabs - i);
+ 		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
+ 		mem->slots[i].alloc_size = 0;
++		mem->slots[i].padding = 0;
  	}
- }
  
-diff --git a/drivers/acpi/acpica/tbutils.c b/drivers/acpi/acpica/tbutils.c
-index bb4a56e5673a..15fa68a5ea6e 100644
---- a/drivers/acpi/acpica/tbutils.c
-+++ b/drivers/acpi/acpica/tbutils.c
-@@ -36,12 +36,7 @@ acpi_status acpi_tb_initialize_facs(void)
+ 	memset(vaddr, 0, bytes);
+@@ -1328,11 +1331,12 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 		unsigned long attrs)
  {
- 	struct acpi_table_facs *facs;
+ 	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+-	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
++	unsigned int offset;
+ 	struct io_tlb_pool *pool;
+ 	unsigned int i;
+ 	int index;
+ 	phys_addr_t tlb_addr;
++	unsigned int padding;
  
--	/* If Hardware Reduced flag is set, there is no FACS */
--
--	if (acpi_gbl_reduced_hardware) {
--		acpi_gbl_FACS = NULL;
--		return (AE_OK);
--	} else if (acpi_gbl_FADT.Xfacs &&
-+	if (acpi_gbl_FADT.Xfacs &&
- 		   (!acpi_gbl_FADT.facs
- 		    || !acpi_gbl_use32_bit_facs_addresses)) {
- 		(void)acpi_get_table_by_index(acpi_gbl_xfacs_index,
+ 	if (!mem || !mem->nslabs) {
+ 		dev_warn_ratelimited(dev,
+@@ -1349,6 +1353,15 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 		return (phys_addr_t)DMA_MAPPING_ERROR;
+ 	}
+ 
++	/*
++	 * Calculate buffer pre-padding within the allocated space. Use it to
++	 * preserve the low bits of the original address according to device's
++	 * min_align_mask. Limit the padding to alloc_align_mask or slot size
++	 * (whichever is bigger); higher bits of the original address are
++	 * preserved by selecting a suitable IO TLB slot.
++	 */
++	offset = orig_addr & dma_get_min_align_mask(dev) &
++		(alloc_align_mask | (IO_TLB_SIZE - 1));
+ 	index = swiotlb_find_slots(dev, orig_addr,
+ 				   alloc_size + offset, alloc_align_mask, &pool);
+ 	if (index == -1) {
+@@ -1364,6 +1377,12 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 	 * This is needed when we sync the memory.  Then we sync the buffer if
+ 	 * needed.
+ 	 */
++	padding = 0;
++	while (offset >= IO_TLB_SIZE) {
++		pool->slots[index++].orig_addr = INVALID_PHYS_ADDR;
++		pool->slots[index].padding = ++padding;
++		offset -= IO_TLB_SIZE;
++	}
+ 	for (i = 0; i < nr_slots(alloc_size + offset); i++)
+ 		pool->slots[index + i].orig_addr = slot_addr(orig_addr, i);
+ 	tlb_addr = slot_addr(pool->start, index) + offset;
+@@ -1385,12 +1404,16 @@ static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
+ 	struct io_tlb_pool *mem = swiotlb_find_pool(dev, tlb_addr);
+ 	unsigned long flags;
+ 	unsigned int offset = swiotlb_align_offset(dev, tlb_addr);
+-	int index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
+-	int nslots = nr_slots(mem->slots[index].alloc_size + offset);
+-	int aindex = index / mem->area_nslabs;
+-	struct io_tlb_area *area = &mem->areas[aindex];
++	int index, nslots, aindex;
++	struct io_tlb_area *area;
+ 	int count, i;
+ 
++	index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
++	index -= mem->slots[index].padding;
++	nslots = nr_slots(mem->slots[index].alloc_size + offset);
++	aindex = index / mem->area_nslabs;
++	area = &mem->areas[aindex];
++
+ 	/*
+ 	 * Return the buffer to the free list by setting the corresponding
+ 	 * entries to indicate the number of contiguous entries available.
+@@ -1413,6 +1436,7 @@ static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
+ 		mem->slots[i].list = ++count;
+ 		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
+ 		mem->slots[i].alloc_size = 0;
++		mem->slots[i].padding = 0;
+ 	}
+ 
+ 	/*
 -- 
-2.44.0
+2.34.1
 
