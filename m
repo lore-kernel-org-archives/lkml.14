@@ -1,66 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511A77D069
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8996116FF3B;
+	Tue, 12 Mar 2024 15:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710259039; cv=none; b=oam5VM9iTkpGTtqowLDIhNjbn8vrg+4F6G3qViu0X6ElgNlFwi9kS1klFM1226Ovlx4vxc7aGIkWeRkmW8N0+OFuRQ/pcglYIc5qYqHLJgMzBtkdv1W31QhQjRnDu5WxQKwUK6G/dGUPkZySEEuhGx33II64Hh32prEpQg0Qd5E=
+	t=1710259068; cv=none; b=tEny7+y/TOyiRf94sEyYvhA/DeSnlO8l1yfDUOei427PGRUp86bKgoER/FMjR4QeMen4Ld/Q7RRoBBV4bJ+wDt3yKSx5zT6ZK22YNXRVTpyZHotrK0vfxOmoNTGUTW9jDuNmGU1WWxduXgP/jpk02U0aVIk4EZLRS9Qmbd5M8Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710259039; c=relaxed/simple;
-	bh=mNMHK1T1QnXwQ0bnvHui2hdAh/gJvX+CqXtKZELLAzU=;
+	s=arc-20240116; t=1710259068; c=relaxed/simple;
+	bh=qHTdrZJMFBSmWNwbyHjOmWb7ZpYhhu2kMlfqSqKfUEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tg16yP5DYZpgpNNrmk9hSpLOXnKuYl3/nD8ll+sspo/O97odM/FwhwwjqTb3vQUCaMct6xFaxnqwgW2dQm5p0w+pRREc+rnxac1rveNCW8fqkMATitOATXpYXvGmjnrXPN4M0qPSIXbgvX8yHe325LcDCjTmmffdu/V9uQeUfOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUMAXtpg; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUMAXtpg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710259038; x=1741795038;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mNMHK1T1QnXwQ0bnvHui2hdAh/gJvX+CqXtKZELLAzU=;
-  b=aUMAXtpgXuilFYtqyFV2sdDYJRTjJOxxbuWMTWEG9q4UTDlq15MkHFZX
-   0gafHrxn2DXGHNDhZ/RTf0nixVmJpqwtD1+BR05BkpfJG4e8+PbNad6U1
-   K42ZzLOMUomgbMz9oA2IJK+kEjyeKK1SLDQH7NSvRHGTBNU1zYcyZZnNi
-   ckq1UnmLgObkzS75zFLaewbI1axkdOooA2VTBriKNSxV7p3PWOVqo7OMv
-   J5f6lPIgpYcpxFYg5yCPYjQ7+bmCZPQVBNOwUalEuGX+FOmwYtbnd2Av2
-   +jOETPMFyulQ4V7pT2YBDnYQBdCC0OzUR3b2+/yYcQ2LqmTHfu3LJU6x8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="15531075"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="15531075"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:57:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="937051909"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="937051909"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Mar 2024 08:57:08 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 97E3C2B7; Tue, 12 Mar 2024 17:57:07 +0200 (EET)
-Date: Tue, 12 Mar 2024 17:57:07 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, hpa@zytor.com, jacob.jun.pan@linux.intel.com, 
-	jgg@ziepe.ca, jpoimboe@kernel.org, jroedel@suse.de, juri.lelli@redhat.com, 
-	kent.overstreet@linux.dev, kinseyho@google.com, lstoakes@gmail.com, luto@kernel.org, 
-	mgorman@suse.de, mic@digikod.net, michael.christie@oracle.com, mingo@redhat.com, 
-	mjguzik@gmail.com, mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, 
-	pmladek@suse.com, rick.p.edgecombe@intel.com, rostedt@goodmis.org, 
-	surenb@google.com, tglx@linutronix.de, urezki@gmail.com, vincent.guittot@linaro.org, 
-	vschneid@redhat.com
-Subject: Re: [RFC 05/14] fork: check charging success before zeroing stack
-Message-ID: <n7fm2gtlnj76hnlbpmednqpq2nfdrb7lii5gpughsey5omvnxs@mponlekek6ne>
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-6-pasha.tatashin@soleen.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KfVPWif/5hLh1eZwRayH3q3lKC0h/JtC2u0n2NNk+gl3dQZzVJ9sFWU+PgDWjW+9mviMU5hFW/bjJQQek+jP9FLu8rh21hX9Sf+uBMRvSvGAzrIQ1XEDyoBAQ3QfkFmLvPXryrdcL+1BWmgGLQ1OcNoENtuHjlxc/FWsajPEzak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE2391007;
+	Tue, 12 Mar 2024 08:58:22 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 558A63F73F;
+	Tue, 12 Mar 2024 08:57:42 -0700 (PDT)
+Date: Tue, 12 Mar 2024 15:57:39 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Mostafa Saleh <smostafa@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] arm64: Use SYSTEM_OFF2 PSCI call to power off
+ for hibernate
+Message-ID: <ZfB7c9ifUiZR6gy1@bogus>
+References: <20240312135958.727765-1-dwmw2@infradead.org>
+ <20240312135958.727765-3-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,12 +52,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240311164638.2015063-6-pasha.tatashin@soleen.com>
+In-Reply-To: <20240312135958.727765-3-dwmw2@infradead.org>
 
-On Mon, Mar 11, 2024 at 04:46:29PM +0000, Pasha Tatashin wrote:
-> No need to do zero cahced stack if memcg charge fails, so move the
+On Tue, Mar 12, 2024 at 01:51:29PM +0000, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> The PSCI v1.3 specification (alpha) adds support for a SYSTEM_OFF2
+> function which is analogous to ACPI S4 state. This will allow hosting
+> environments to determine that a guest is hibernated rather than just
+> powered off, and handle that state appropriately on subsequent launches.
+> 
+> Since commit 60c0d45a7f7a ("efi/arm64: use UEFI for system reset and
+> poweroff") the EFI shutdown method is deliberately preferred over PSCI
+> or other methods. So register a SYS_OFF_MODE_POWER_OFF handler which
+> *only* handles the hibernation, leaving the original PSCI SYSTEM_OFF as
+> a last resort via the legacy pm_power_off function pointer.
+> 
+> The hibernation code already exports a system_entering_hibernation()
+> function which is be used by the higher-priority handler to check for
+> hibernation. That existing function just returns the value of a static
+> boolean variable from hibernate.c, which was previously only set in the
+> hibernation_platform_enter() code path. Set the same flag in the simpler
+> code path around the call to kernel_power_off() too.
+> 
+> An alternative way to hook SYSTEM_OFF2 into the hibernation code would
+> be to register a platform_hibernation_ops structure with an ->enter()
+> method which makes the new SYSTEM_OFF2 call. But that would have the
+> unwanted side-effect of making hibernation take a completely different
+> code path in hibernation_platform_enter(), invoking a lot of special dpm
+> callbacks.
+> 
+> Another option might be to add a new SYS_OFF_MODE_HIBERNATE mode, with
+> fallback to SYS_OFF_MODE_POWER_OFF. Or to use the sys_off_data to
+> indicate whether the power off is for hibernation.
+> 
+> But this version works and is relatively simple.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  drivers/firmware/psci/psci.c | 35 +++++++++++++++++++++++++++++++++++
+>  kernel/power/hibernate.c     |  5 ++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index d9629ff87861..69d2f6969438 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -78,6 +78,7 @@ struct psci_0_1_function_ids get_psci_0_1_function_ids(void)
+>  
+>  static u32 psci_cpu_suspend_feature;
+>  static bool psci_system_reset2_supported;
+> +static bool psci_system_off2_supported;
+>  
+>  static inline bool psci_has_ext_power_state(void)
+>  {
+> @@ -333,6 +334,28 @@ static void psci_sys_poweroff(void)
+>  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
+>  }
+>  
+> +#ifdef CONFIG_HIBERNATION
+> +static int psci_sys_hibernate(struct sys_off_data *data)
+> +{
+> +	if (system_entering_hibernation())
+> +		invoke_psci_fn(PSCI_FN_NATIVE(1_3, SYSTEM_OFF2),
+> +			       PSCI_1_3_HIBERNATE_TYPE_OFF, 0, 0);
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int __init psci_hibernate_init(void)
+> +{
+> +	if (psci_system_off2_supported) {
+> +		/* Higher priority than EFI shutdown, but only for hibernate */
+> +		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF,
+> +					 SYS_OFF_PRIO_FIRMWARE + 2,
+> +					 psci_sys_hibernate, NULL);
+> +	}
+> +	return 0;
+> +}
+> +subsys_initcall(psci_hibernate_init);
 
-Typo.
+Looked briefly at register_sys_off_handler and it should be OK to call
+it from psci_init_system_off2() below. Any particular reason for having
+separate initcall to do this ? We can even eliminate the need for
+psci_init_system_off2 if it can be called from there. What am I missing ?
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+--
+Regards,
+Sudeep
