@@ -1,60 +1,61 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2050D7A13C
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC781428E5
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710272877; cv=none; b=a6WWmv/8tRRwvBtP1zK0nBkqJsSv5Yr00ZcvZ/WtqqIoa0mkrcG4E6RNne9i5uuadRSQWfOrcBkbWA7DAM+63IPQIqCY0RtBvowvasQPQJ9BGdEvIA0gBb5tuGZhMwZi/FbtT9nfn3DEFd2BCC0rU5KDbSUCKyfz/HF/0cDzIDU=
+	t=1710272880; cv=none; b=QqfmtkUja9tubIuHOfPLA2mxEAtJxdb2cJkR3u7e5CdZJ1e5LFkyWiAiJVmRYUFUZYOpCaVfXu7l3CNL90YURMDUMSKFTG2YtYwT175j2MHoo5BWDcd5/Di+UL2wpLWDa5cLoxny7xuNyhZVafN4JdWZNepuh3MYJ4aQr2ITMFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710272877; c=relaxed/simple;
-	bh=293duvTiTO7AmusJrssuEGh1xmveyH0tjDRqNUMHyLo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JzSLIS0N4+vIC8qUDGsCJz0jMZOWZOn65cf5FGNwEwKj1y2HON7N+2oDyIrwm72hRE4naH0NkLTfFP4olxMtT5dyifluEersC3DjNJNdX+PAe2zD6KR5Q0KVxIYL0VjGOC0VNLRPEQ87lFHzR7oXL1FCP1fH5IBhN4n9OjsIf0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=J8UBmsln; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1710272880; c=relaxed/simple;
+	bh=VhbTJ9D/d65WnO+JrY1SIvIOPQdT9MHfEzWOw+OIGSo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XJ1UrCPgQPAsAOMnv/fKg320yxPiKCgojCW08lunMGoCPRXJsY3+WnkW3wPXcWNFkuRhNJlStL0L664Eu9F1KF7CuKR4LX5klJTdb/rnBHNlDF74RjPsJ+BvRHGrDrWCPiLeTZSSAM5T7Ya6U8JTccR05sJRLBAk4+5O8DT8YtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QtFhgdbK; arc=none smtp.client-ip=209.85.161.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="J8UBmsln"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6adc557f3so740175b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:47:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QtFhgdbK"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5a228309c93so655284eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710272874; x=1710877674; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zXPeuy0/BW9yxNC4xB8sCNAgbx5dW6dIXCmDi0B+vZE=;
-        b=J8UBmsln5+7rGD3HdFighDE/gPZbpitGC5PF5T61jPTs8e8a1OqI0VLkVd7Q4OY/0c
-         06tOdIlwUXfHPV9sfxWVRiJ4S0lXGOaV3tJnKNms02XDjJpCi9xe4BzQ5O2Jg2FNJsGu
-         wp3e1OV14cxaiHnXi7scGA8rPf3+l0NTzn1xQbeekWoTeVPJls7kEV/Xr22kd0FBvwM2
-         zrxTOn8IMf12V+9C/AZthjLQscr+yMBcj1/xl6YtazVLwvvj/AXkXIXeSqqxwJJqkluK
-         257iWLiZy1bOpFWw0QHs5Bvl+uAM9hw/fNFSrBzhFxy8nBI7C5C+WxIUhAkUsUxWj7nj
-         qmtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710272874; x=1710877674;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710272877; x=1710877677; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zXPeuy0/BW9yxNC4xB8sCNAgbx5dW6dIXCmDi0B+vZE=;
-        b=hu/2WKVD0nLaRzpKBt/1Imhe3tUA1I1mVHIy97TSRH3w6IMvX4VH58dWUYUl63q/BR
-         8X8NMQzBp0sK1FD8zekbWZb7vZEfvlbG+nLd1USoeaw6nQXkdtowfp+hFsP/Bb9bWtB9
-         1dN8bddsLAc9UaeF0j+0OlHoV+hzzhFvburOt8nK/VV8ZiUpbSSa0seRMtn8IbAEl1yc
-         U42w8fe7VnMooea1ciniASr+T4lO5DbYMVq8FJM4RvlW+f4vmOuGXaMNd9zqgmmKZnBz
-         NWyLw5QFBwb8CoedFa0Xidtfc3dZ/d+/XnaSsrvxVqlGU2PWsX2XjzGnO6GOfd4pSfgd
-         YAYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuaJwyAd14zE8Ir7Xgv1cCHshBPXogG4ia7depVOCA+vwAn+uVbKxtPEHizYR2EJ+1k7V5Fxc0AxokX7hAmOb7ILCmUfvuhL12zczF
-X-Gm-Message-State: AOJu0Yy9nzJ8Lf6+o9nLSnGXr0Uxdn53S+cikRwfC5geSRG1B14crX9g
-	QFvZXQxKaTEhIwXJIaxtyljlIAr25Mg77nP8pL+nbaOQVWWyg36guIyjDeAv0A4=
-X-Google-Smtp-Source: AGHT+IGX+D68w3x0dx2Z04bccP2/LvAA03/ZVesfCrUprbQXweWUXCgMYw858hcbQuhpxX/TUksKjg==
-X-Received: by 2002:a05:6a00:4fcb:b0:6e6:98c2:aa5f with SMTP id le11-20020a056a004fcb00b006e698c2aa5fmr521086pfb.10.1710272872891;
-        Tue, 12 Mar 2024 12:47:52 -0700 (PDT)
+        bh=Xy5TOqSKX3DblYxEOD5MVVtHMk7JBMIm4GkKJlZsbS8=;
+        b=QtFhgdbKcCy0hrAkJpd39PXZVQ6lDUQX6kq9H9oNgZpu2uTpO/g12cv37ENG5wBogN
+         H+nTYPRFAIAWQuiYfh1GApdp98K/9NMkYDHNCiCv6KyIuV3nmTIVNPDPyxuIf/UzjGVI
+         sOVjTUNhHFv24+f2TwqfMXx+Zhv5mwrf+qsdEfMX962irZfDsb07V6srJS+e7jcFRjOJ
+         PdLmGI1C6XY2+wu88ehdPxYAXUTQpe6E6eRaj4ICwwr9IDy+ZGg1/Tm67b/5yynTtXq0
+         wGCZrlU64tVqi+rUcFJ5uYbfvKeanEyGAKUEsnU2vqbQcIFbfKmVwD5vHO7eKK7G3iz0
+         DORg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710272877; x=1710877677;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xy5TOqSKX3DblYxEOD5MVVtHMk7JBMIm4GkKJlZsbS8=;
+        b=KNe/cvmWciGGleGDoR6li6Ke8tdtpwgwbjgujnSeFDltsUG7aPGOo/qx8YLfeD5erB
+         IoYFyxP6LN8oEwRsaTUM3ClGs+YaWpSuzg0EjHIwjTg2u9xCcQ/RhD9u4cfLR2Y2m8wP
+         QBEmDzmWmGpgEhccREc1RkQHa+nEckDdPF00gyeHXYMwx+UMBW3lbsdH1BKctIQ5epxe
+         mt1zCg2fUM5Cx/fWeBgP6CdoFe95th6z1J70cuuOXlqc24q3Q7Yu0iF441TwhueW3LHS
+         D47vbWZl0kzqW0vK/W6AS0cPE8KvToJuX3l3mzygod7VIRwSd1pagpF64HJF8q88wspv
+         Bj3g==
+X-Forwarded-Encrypted: i=1; AJvYcCX8EyjFvx6OULTC9o/vqvYm2n3XV78KTV0sHJ4Ndoedl+fikbEndV1QDtQnTuYkSkrlSdVsDMtjPImjepaAMkcw6t6ESanUe0lPhCUK
+X-Gm-Message-State: AOJu0Yxfal/HwIAwZ1s3PAz3LZD6PNzi73iL+3rj/QhwwN8Wol14K7wB
+	p+yoAXKuQGvqbxwfl7v0ZLAjRFxpQBS3F8z56Nhx/nTGI38G2YQxh1S5LV6CXr4=
+X-Google-Smtp-Source: AGHT+IFd0bZPr6/Tvi+JuSoOyuixgtJ6WAYK/olTHFvdOw4qN2FQVd8SGzL4/UjSf4c9J6b7yNldzw==
+X-Received: by 2002:a05:6358:890:b0:17e:8b57:df56 with SMTP id m16-20020a056358089000b0017e8b57df56mr2915905rwj.5.1710272877364;
+        Tue, 12 Mar 2024 12:47:57 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id z69-20020a633348000000b005dc884e9f5bsm6433495pgz.38.2024.03.12.12.47.51
+        by smtp.gmail.com with ESMTPSA id z69-20020a633348000000b005dc884e9f5bsm6433495pgz.38.2024.03.12.12.47.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 12:47:52 -0700 (PDT)
+        Tue, 12 Mar 2024 12:47:56 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Subject: [PATCH v12 0/4] riscv: Create and document
+Date: Tue, 12 Mar 2024 12:47:53 -0700
+Subject: [PATCH v12 3/4] documentation: Document
  PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
-Date: Tue, 12 Mar 2024 12:47:50 -0700
-Message-Id: <20240312-fencei-v12-0-0f340f004ce7@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,13 +63,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAGax8GUC/23Sy07EIBQG4FeZdG3N+Q9QqCvfw7goN4eF7aQ1j
- WYy7y6dOC0xLCF8/7mEa7OEOYWleTldmzmsaUnTmA/gp1PjzsP4Edrk80XDxAKAbmMYXUht7GN
- HXhsZB2ry48scYvq+J7295/M5LV/T/HMPXrHd/kUwPyJWtNTa4MgAzjL4dU7rtKTRPbvps9lSV
- i6koF1yluxsx2KwsIgVKQ7JELsUW02toAwLE6yuSPmQkkD7wKvM0ksXOdqelBcVqUppdqmyHAY
- EBa+ZudZtV8p+l12WJIEuWymVq0hdSBy71VlqE6mDDPCWKtKUstulyVKKQeatyUiMiuwLycdu+
- 60mcrs2BuN1TYJKKo+vQNuOWPUaUQqCr1kclotRsf2jAME6sooB/2e93W6/1CkogegCAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240312-fencei-v12-3-0f340f004ce7@rivosinc.com>
+References: <20240312-fencei-v12-0-0f340f004ce7@rivosinc.com>
+In-Reply-To: <20240312-fencei-v12-0-0f340f004ce7@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
  Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
@@ -79,103 +77,141 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
  Atish Patra <atishp@rivosinc.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710272871; l=3671;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710272871; l=4601;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=293duvTiTO7AmusJrssuEGh1xmveyH0tjDRqNUMHyLo=;
- b=xtuAngWCeGAUg9P52pp2yKzuuAbwPl3UJib33NKZU/1Dxerz2QYNQ7V4pB0PfDVTXyJyWLZcr
- JdYKO22UIY/BwTV0UJIuKkwFOrt/GGw9lXiuE63FO7OGqMH57tfX1XX
+ bh=VhbTJ9D/d65WnO+JrY1SIvIOPQdT9MHfEzWOw+OIGSo=;
+ b=S4Q4g0OL9AJrAQOCaFiNRjCCUHmDz6cnpcZDAWNuFSLRFGJkYKZODksUzU2K0QWVnOLzgR8qC
+ ctajQdPe12QC2H9MPFlltFUNQPxIkrJ/gFbKGLR5Dp9mRPYZJLteExZ
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-Improve the performance of icache flushing by creating a new prctl flag
-PR_RISCV_SET_ICACHE_FLUSH_CTX. The interface is left generic to allow
-for future expansions such as with the proposed J extension [1].
-
-Documentation is also provided to explain the use case.
-
-Patch sent to add PR_RISCV_SET_ICACHE_FLUSH_CTX to man-pages [2].
-
-[1] https://github.com/riscv/riscv-j-extension
-[2] https://lore.kernel.org/linux-man/20240124-fencei_prctl-v1-1-0bddafcef331@rivosinc.com
+Provide documentation that explains how to properly do CMODX in riscv.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
-Changes in v12:
-- Use context.icache_stale_mask instead of thread.icache_stale_mask in
-  PR_RISCV_CTX_SW_FENCEI_OFF (Samuel)
-- Link to v11: https://lore.kernel.org/r/20240212-fencei-v11-0-e1327f25fe10@rivosinc.com
-
-Changes in v11:
-- Add back PR_RISCV_CTX_SW_FENCEI_OFF (Samuel)
-- Fix under nosmp (Samuel)
-- Change set_prev_cpu (Samuel)
-- Fixup example testcase in docs
-- Change wording of documentation slightly (Alejandor Colomar)
-- Link to v10: https://lore.kernel.org/r/20240124-fencei-v10-0-a25971f4301d@rivosinc.com
-
-Changes in v10:
-- Fix fence.i condition to properly only flush on migration (Alex)
-- Fix documentation wording (Alex)
-- Link to v9: https://lore.kernel.org/r/20240123-fencei-v9-0-71411bfe8d71@rivosinc.com
-
-Changes in v9:
-- Remove prev_cpu from mm (Alex)
-- Link to v8: https://lore.kernel.org/r/20240116-fencei-v8-0-43a42134f021@rivosinc.com
-
-Changes in v8:
-- Only flush icache if migrated to different cpu (Alex)
-- Move flushing to switch_to to catch per-thread flushing properly
-- Link to v7: https://lore.kernel.org/r/20240112-fencei-v7-0-78f0614e1db0@rivosinc.com
-
-Changes in v7:
-- Change "per_thread" parameter to "scope" and provide constants for the
-  parameter.
-- Link to v6: https://lore.kernel.org/r/20240109-fencei-v6-0-04116e51445c@rivosinc.com
-
-Changes in v6:
-- Fixup documentation formatting
-- Link to v5: https://lore.kernel.org/r/20240108-fencei-v5-0-aa1e51d7222f@rivosinc.com
-
-Changes in v5:
-- Minor documentation changes (Randy)
-- Link to v4: https://lore.kernel.org/r/20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com
-
-Changes in v4:
-- Add OFF flag to disallow fence.i in userspace (Atish)
-- Fix documentation issues (Atish)
-- Link to v3: https://lore.kernel.org/r/20231213-fencei-v3-0-b75158238eb7@rivosinc.com
-
-Changes in v3:
-- Check if value force_icache_flush set on thread, rather than in mm
-  twice (Clément)
-- Link to v2: https://lore.kernel.org/r/20231130-fencei-v2-0-2cb623ab1b1f@rivosinc.com
-
-Changes in v2:
-- Fix kernel-doc comment (Conor)
-- Link to v1: https://lore.kernel.org/r/20231122-fencei-v1-0-bec0811cb212@rivosinc.com
-
----
-Charlie Jenkins (4):
-      riscv: Remove unnecessary irqflags processor.h include
-      riscv: Include riscv_set_icache_flush_ctx prctl
-      documentation: Document PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
-      cpumask: Add assign cpu
-
  Documentation/arch/riscv/cmodx.rst | 98 ++++++++++++++++++++++++++++++++++++++
  Documentation/arch/riscv/index.rst |  1 +
- arch/riscv/include/asm/irqflags.h  |  1 -
- arch/riscv/include/asm/mmu.h       |  2 +
- arch/riscv/include/asm/processor.h | 10 ++++
- arch/riscv/include/asm/switch_to.h | 23 +++++++++
- arch/riscv/mm/cacheflush.c         | 94 ++++++++++++++++++++++++++++++++++++
- arch/riscv/mm/context.c            | 17 +++++--
- include/linux/cpumask.h            | 16 +++++++
- include/uapi/linux/prctl.h         |  6 +++
- kernel/sys.c                       |  6 +++
- 11 files changed, 268 insertions(+), 6 deletions(-)
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20231117-fencei-f9f60d784fa0
+ 2 files changed, 99 insertions(+)
+
+diff --git a/Documentation/arch/riscv/cmodx.rst b/Documentation/arch/riscv/cmodx.rst
+new file mode 100644
+index 000000000000..1c0ca06b6c97
+--- /dev/null
++++ b/Documentation/arch/riscv/cmodx.rst
+@@ -0,0 +1,98 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============================================================================
++Concurrent Modification and Execution of Instructions (CMODX) for RISC-V Linux
++==============================================================================
++
++CMODX is a programming technique where a program executes instructions that were
++modified by the program itself. Instruction storage and the instruction cache
++(icache) are not guaranteed to be synchronized on RISC-V hardware. Therefore, the
++program must enforce its own synchronization with the unprivileged fence.i
++instruction.
++
++However, the default Linux ABI prohibits the use of fence.i in userspace
++applications. At any point the scheduler may migrate a task onto a new hart. If
++migration occurs after the userspace synchronized the icache and instruction
++storage with fence.i, the icache on the new hart will no longer be clean. This
++is due to the behavior of fence.i only affecting the hart that it is called on.
++Thus, the hart that the task has been migrated to may not have synchronized
++instruction storage and icache.
++
++There are two ways to solve this problem: use the riscv_flush_icache() syscall,
++or use the ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` prctl() and emit fence.i in
++userspace. The syscall performs a one-off icache flushing operation. The prctl
++changes the Linux ABI to allow userspace to emit icache flushing operations.
++
++As an aside, "deferred" icache flushes can sometimes be triggered in the kernel.
++At the time of writing, this only occurs during the riscv_flush_icache() syscall
++and when the kernel uses copy_to_user_page(). These deferred flushes happen only
++when the memory map being used by a hart changes. If the prctl() context caused
++an icache flush, this deferred icache flush will be skipped as it is redundant.
++Therefore, there will be no additional flush when using the riscv_flush_icache()
++syscall inside of the prctl() context.
++
++prctl() Interface
++---------------------
++
++Call prctl() with ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` as the first argument. The
++remaining arguments will be delegated to the riscv_set_icache_flush_ctx
++function detailed below.
++
++.. kernel-doc:: arch/riscv/mm/cacheflush.c
++	:identifiers: riscv_set_icache_flush_ctx
++
++Example usage:
++
++The following files are meant to be compiled and linked with each other. The
++modify_instruction() function replaces an add with 0 with an add with one,
++causing the instruction sequence in get_value() to change from returning a zero
++to returning a one.
++
++cmodx.c::
++
++	#include <stdio.h>
++	#include <sys/prctl.h>
++
++	extern int get_value();
++	extern void modify_instruction();
++
++	int main()
++	{
++		int value = get_value();
++		printf("Value before cmodx: %d\n", value);
++
++		// Call prctl before first fence.i is called inside modify_instruction
++		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_ON, PR_RISCV_CTX_SW_FENCEI, PR_RISCV_SCOPE_PER_PROCESS);
++		modify_instruction();
++		// Call prctl after final fence.i is called in process
++		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_OFF, PR_RISCV_CTX_SW_FENCEI, PR_RISCV_SCOPE_PER_PROCESS);
++
++		value = get_value();
++		printf("Value after cmodx: %d\n", value);
++		return 0;
++	}
++
++cmodx.S::
++
++	.option norvc
++
++	.text
++	.global modify_instruction
++	modify_instruction:
++	lw a0, new_insn
++	lui a5,%hi(old_insn)
++	sw  a0,%lo(old_insn)(a5)
++	fence.i
++	ret
++
++	.section modifiable, "awx"
++	.global get_value
++	get_value:
++	li a0, 0
++	old_insn:
++	addi a0, a0, 0
++	ret
++
++	.data
++	new_insn:
++	addi a0, a0, 1
+diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+index 4dab0cb4b900..eecf347ce849 100644
+--- a/Documentation/arch/riscv/index.rst
++++ b/Documentation/arch/riscv/index.rst
+@@ -13,6 +13,7 @@ RISC-V architecture
+     patch-acceptance
+     uabi
+     vector
++    cmodx
+ 
+     features
+ 
+
 -- 
-- Charlie
+2.43.2
 
