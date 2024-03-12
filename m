@@ -1,113 +1,187 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8452469D;
-	Tue, 12 Mar 2024 01:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBB61C17
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 01:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710208355; cv=none; b=BUSs4UC4oX5sJvfitbDWXZmPdJj5UJ9UrFQjAxh73J8xl9D0b0a3VGuUKV/c3zHULA/mT4JDYeO99rfePQvM7dRFzSpi9T/PifcBeSWjkS/Vaut4m8wJZv3icJAmh7+u3P7NdZ6Y2pq9lyZ10nK/4X5enLQnTqdOM9xDBMmqIzU=
+	t=1710208438; cv=none; b=Vn7L0c6KPiaiIbWKWl9Hq3dzg+2Zhg5qQJvymlvKjYsKJIa/yuDs7y30fziomhQkJdtpkPwU1WYtoURkThAPXXLZz7NfmJot5EUQuACBqkcRigf/sXidCD3+KkpUlL83norMeHfUpotx8MRPBB/3lzK/fSvXiW4VEMRVfmYvZSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710208355; c=relaxed/simple;
-	bh=oZSt8rOcfsApDGaXioQ83dqa7XFV7dDDeX7YZCZIXWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qjFzsdOGiOHt9eDon2HoTqMH9nfNRjO6zPRISximx74/9ERa4sBh6gyEBNgbD1yh4mJ9sn7Xo0DUhQIy89bF1flNg9VSIN3t9SGgG6eufpJyu7hiE0GQQX5bKIXyYKQanmjyQznX+j9V7Vo2vyw6gs/pJOv/4KTOM9VmVCAbFnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp90t1710208311tl9p0klz
-X-QQ-Originating-IP: s65UGkHpF2o9p4eY6Dtwin3B09Ieh1+LZF8N2A+5T0M=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 12 Mar 2024 09:51:50 +0800 (CST)
-X-QQ-SSF: 01400000000000C0B000000A0000000
-X-QQ-FEAT: +ynUkgUhZJknQdj8DNcL8xe+8WjYPGdGsyvtr2K5zIPQKmQCiczINsccDoZnI
-	HJVUjYUBSd8lDwyrexXgUWl244sLWMjP/w183+z4b7bftBLDzY8Av2OVl0ez4k8xWxj4Ez6
-	9bVlrmszXEyztdKczipe13X4bYZh5IuP41Fln6ESwV+oA6cicmCuKIwX7ZNkZJz93pIUj7v
-	K1mnHPGJ90iJTHa42FrY7yqdJfyTmUY9CCMSQZ63hJbTL/gFnxQGDXbRfvAWznFG7sQs2Re
-	ZNzEZHRww3pRL4dz/zhx/1Un5HB+rQsTUwDuXR0C+bVsLICZ6YakvdM0lacMi7Y3lLjFS1e
-	bkslMyyfKivbHZAYWVB+XnhmA1TuQ71x+ZCKACRgFIB4IO3XDOJprc4GMqP0dnDc8DtVFwD
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4870457541553938088
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com,
-	marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: Larry.Finger@lwfinger.net,
-	guanwentao@uniontech.com,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] Bluetooth: Add device 0bda:4853 to blacklist/quirk table
-Date: Tue, 12 Mar 2024 09:51:33 +0800
-Message-ID: <893FB314C6C03130+20240312015133.232214-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710208438; c=relaxed/simple;
+	bh=I3fTBn/wVvCv8wJz3S0c7XFDmGuGRN+xuP6W+JUCPFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ux6xq5QWKApmj7XyOLzd3TXHCTbxX47hGI/0GLPiZZ4WKlJuBukoYvF6qyxI9E5Czyk6VWIgCjJfvWKIs3bNLezvseypMj4VquCKl2XE+eBYcRzBaHcuI+vKs1AoYppkBohVHb5iL3e4WYfZJpoxN5u2dEBmNCIHM+Mr/jyYQ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gqzO+a1j; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gqzO+a1j"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5dc949f998fso4625370a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 18:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1710208436; x=1710813236; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m+8U24REJsycoMY3gapLXd6No4Kdp5va5OvGqVZaNtY=;
+        b=gqzO+a1jjHOI/w0pMfToI1QKtDcRnyMXI1L4htcnM9oM3BxUP5MzM64TykQ1A/w61B
+         6SN/UpkjdOP/nLhZYMxzhkf8I1bt098WSz2tbezMnBmbXzK1vSkzxRCr8zwY23epb+Hq
+         DwyNxPr4uAglsLiod8M5wN3XSVQztL9k2Tp8h+TsVRhyLfTqLN4yAscHjE9s4XdONMG6
+         rQI98uDiDheGtIYYe3ikSJZFDL+DpK7Fof38hYjjh7hhvmvNvRVBJ9z6xdbZtgnGTfww
+         0s9ah7zPLeQ/eP8dnV6Ocnt06QcFG5Mz3K5dRAaYWlLI7UWaVi0l8kTd77ldtBLe7SAP
+         DjMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710208436; x=1710813236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m+8U24REJsycoMY3gapLXd6No4Kdp5va5OvGqVZaNtY=;
+        b=hOT38En+hg8VmuB1Exs/ZWlMvfvqGWziVugbFbogOxxMVuOXUzxWN/O52HfIK4xaWd
+         7vUcSjlPdjQwBdRNxqfsM5Hqdxwd1ZQiJuy1jvPS/NzzzxO9z+J0iL3ic1mbhCYtQuW+
+         lyPDx4VTxvOrJjHxvpLd2yDPKTdqm06cS2IGJUIqbd3/Ptglc8vWxusKljaCGxU7VBLe
+         A+/sCgygfMX0IuUfcmcD0roH2g5HJmk0yhj4n0fT3rt8fnVDycUL0TgeRVdrwXv2uBrU
+         GxhbA/FDvuoNQy05VPhlNWZ8Ha/q0CtkX1lHoNFimBIMQo/sRmVvJZBNLpHbWt5QoIz+
+         E7ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUpd/bz0Z9onJ3hHASGOoBYjCNWrWQuVJhGxoN7K8GZz/FTJ3dHUIq44YoU3P75pAvftsgydXMCtg+wrQBynQ3N0GtGIAczSCZBR+nO
+X-Gm-Message-State: AOJu0YwcSw1L0CdfkAAAgAoP8Fjr8LJ0Jc8Ws+fiCLQkDxOwQRRBPOMK
+	0phgQAm0dsezZBQ0kF0RHA8LYU7OUCvkLn9pNS29sobXQXIrDPhGwQY7Y5WuePXocaNWJfu6bEO
+	FUUlkJ4tmzA9iTK/KRhdetZkDme5lLTeZae/JlQ==
+X-Google-Smtp-Source: AGHT+IGOVuFmtgDB4ZKZlti8h1HNW5R33qsIGe5aBgT97QBW6StCjxMixdB7ixy5JtN/Q4HVD/m09pDHUBGfcjfmCjc=
+X-Received: by 2002:a05:6a20:429a:b0:1a1:4a4c:9f5e with SMTP id
+ o26-20020a056a20429a00b001a14a4c9f5emr646029pzj.49.1710208436407; Mon, 11 Mar
+ 2024 18:53:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-3-dongmenglong.8@bytedance.com> <CAADnVQK57PziY+xdzW=d3HaG-bn87E3p9zf7thvmqV1t0iR4Yg@mail.gmail.com>
+In-Reply-To: <CAADnVQK57PziY+xdzW=d3HaG-bn87E3p9zf7thvmqV1t0iR4Yg@mail.gmail.com>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Tue, 12 Mar 2024 09:53:45 +0800
+Message-ID: <CALz3k9jNY8NmB-=qKogA=WVC1dGA=git_hy95UoJV2=KLfhb5g@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 2/9] bpf: refactor the
+ modules_array to ptr_array
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This new device is part of a Realtek RTW8852BE chip. Without this change
-the device utilizes an obsolete version of the firmware that is encoded
-in it rather than the updated Realtek firmware and config files from
-the firmware directory. The latter files implement many new features.
+On Tue, Mar 12, 2024 at 9:49=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Mon, Mar 11, 2024 at 2:34=E2=80=AFAM Menglong Dong
+> <dongmenglong.8@bytedance.com> wrote:
+> >
+> > Refactor the struct modules_array to more general struct ptr_array, whi=
+ch
+> > is used to store the pointers.
+> >
+> > Meanwhiles, introduce the bpf_try_add_ptr(), which checks the existing =
+of
+> > the ptr before adding it to the array.
+> >
+> > Seems it should be moved to another files in "lib", and I'm not sure wh=
+ere
+> > to add it now, and let's move it to kernel/bpf/syscall.c for now.
+> >
+> > Signed-off-by: Menglong Dong <dongmenglong.8@bytedance.com>
+> > ---
+> >  include/linux/bpf.h      | 10 +++++++++
+> >  kernel/bpf/syscall.c     | 37 +++++++++++++++++++++++++++++++
+> >  kernel/trace/bpf_trace.c | 48 ++++++----------------------------------
+> >  3 files changed, 54 insertions(+), 41 deletions(-)
+> >
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 0f677fdcfcc7..997765cdf474 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -304,6 +304,16 @@ struct bpf_map {
+> >         s64 __percpu *elem_count;
+> >  };
+> >
+> > +struct ptr_array {
+> > +       void **ptrs;
+> > +       int cnt;
+> > +       int cap;
+> > +};
+> > +
+> > +int bpf_add_ptr(struct ptr_array *arr, void *ptr);
+> > +bool bpf_has_ptr(struct ptr_array *arr, struct module *mod);
+> > +int bpf_try_add_ptr(struct ptr_array *arr, void *ptr);
+> > +
+> >  static inline const char *btf_field_type_name(enum btf_field_type type=
+)
+> >  {
+> >         switch (type) {
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index f63f4da4db5e..4f230fd1f8e4 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -479,6 +479,43 @@ static void bpf_map_release_memcg(struct bpf_map *=
+map)
+> >  }
+> >  #endif
+> >
+> > +int bpf_add_ptr(struct ptr_array *arr, void *ptr)
+> > +{
+> > +       void **ptrs;
+> > +
+> > +       if (arr->cnt =3D=3D arr->cap) {
+> > +               arr->cap =3D max(16, arr->cap * 3 / 2);
+> > +               ptrs =3D krealloc_array(arr->ptrs, arr->cap, sizeof(*pt=
+rs), GFP_KERNEL);
+> > +               if (!ptrs)
+> > +                       return -ENOMEM;
+> > +               arr->ptrs =3D ptrs;
+> > +       }
+> > +
+> > +       arr->ptrs[arr->cnt] =3D ptr;
+> > +       arr->cnt++;
+> > +       return 0;
+> > +}
+> > +
+> > +bool bpf_has_ptr(struct ptr_array *arr, struct module *mod)
+>
+> Don't you need 'void *mod' here?
+>
 
-The device table is as follows:
+Oops, it should be void *ptr here, my mistake~
 
-T: Bus=03 Lev=01 Prnt=01 Port=09 Cnt=03 Dev#= 4 Spd=12 MxCh= 0
-D: Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs= 1
-P: Vendor=0bda ProdID=4853 Rev= 0.00
-S: Manufacturer=Realtek
-S: Product=Bluetooth Radio
-S: SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=81(I) Atr=03(Int.) MxPS= 16 Ivl=1ms
-E: Ad=02(O) Atr=02(Bulk) MxPS= 64 Ivl=0ms
-E: Ad=82(I) Atr=02(Bulk) MxPS= 64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 0 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 0 Ivl=1ms
-I: If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 9 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 9 Ivl=1ms
-I: If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 17 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 17 Ivl=1ms
-I: If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 25 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 25 Ivl=1ms
-I: If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 33 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 33 Ivl=1ms
-I: If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E: Ad=03(O) Atr=01(Isoc) MxPS= 49 Ivl=1ms
-E: Ad=83(I) Atr=01(Isoc) MxPS= 49 Ivl=1ms
+> > +{
+> > +       int i;
+> > +
+> > +       for (i =3D arr->cnt - 1; i >=3D 0; i--) {
+> > +               if (arr->ptrs[i] =3D=3D mod)
+> > +                       return true;
+> > +       }
+> > +       return false;
+> > +}
+>
+> ...
+>
+> > -               kprobe_multi_put_modules(arr.mods, arr.mods_cnt);
+> > -               kfree(arr.mods);
+> > +               kprobe_multi_put_modules((struct module **)arr.ptrs, ar=
+r.cnt);
+>
+> Do you really need to type cast? Compiler doesn't convert void**
+> automatically?
 
-Link: https://lore.kernel.org/all/20230810144507.9599-1-Larry.Finger@lwfinger.net/
-Cc: stable@vger.kernel.org
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/bluetooth/btusb.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 06e915b57283..d9c621d15fee 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -542,6 +542,8 @@ static const struct usb_device_id quirks_table[] = {
- 	/* Realtek 8852BE Bluetooth devices */
- 	{ USB_DEVICE(0x0cb8, 0xc559), .driver_info = BTUSB_REALTEK |
- 						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x0bda, 0x4853), .driver_info = BTUSB_REALTEK |
-+						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x0bda, 0x887b), .driver_info = BTUSB_REALTEK |
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x0bda, 0xb85b), .driver_info = BTUSB_REALTEK |
--- 
-2.43.0
-
+Yeah, the compiler reports errors without this casting.
