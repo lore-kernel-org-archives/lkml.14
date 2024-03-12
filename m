@@ -1,186 +1,194 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468F169944;
-	Tue, 12 Mar 2024 06:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071EDC2FD;
+	Tue, 12 Mar 2024 06:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710226160; cv=none; b=ht13XW5F49VDXK71gjpWCgca30CnDgIElpqQciHZp9JkXKGjNvL7p15gEDF+dBvYY72liwMOqQtM47RE2b8oIEGJg+RdmIV70/5kUR53K5n7ljI/mJwJORlWrBPaY/D5ClCOGrLzrzsfDJS9nZx35RzdSOsEwSlSyKSE4qBAXUs=
+	t=1710226507; cv=none; b=t3+tuu5o/Lq8VDDgDFOCCneyX4lF/NEOy8ff1toE5YAmhAPNwD+lzsOPeNrL/GHJeNM5L7MeXDsLlkgVxwQelTIdt+DgfBozbpqg/y9po8j2wOEC0wwvTRK1WvMvpAtfjc/r9jPLcWGSh9vr49xRjl4fMpyD78vZRo1uVwPAXdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710226160; c=relaxed/simple;
-	bh=NpTpzOFpjTFaXZX5FuKeyjBow4yCTS2iQk19N51842M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qm6RATTZhK5q11FMjgwGyYUD4Qxn62wzHSKjCekh8+WtlFWCGBEz5JcjT/Pzoa2tnMPu70bCeJ3iwWCeeVHxsy7oSUYkxPAJ1HZThMdUWhVpHRuNda3m/2tcexCBhN9F98C0zHjq1PvFX3vfC5cwEYKC2x0/0752C+hWAbwoaZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso4414152a12.2;
-        Mon, 11 Mar 2024 23:49:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710226158; x=1710830958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dcrdLEFHw+u0g7KmoV4uvHmtfMU74jrO4Ftzic9JdHY=;
-        b=w+JzyRFAPkfsyHTDa7K2jJxbjZ2OMTpi2ey3NeG7PKw1/twG4l99XDfJok+8wPbGzf
-         oysxQq3OO0A5lSPo/ryfCLVTYSLeSWFq6plnNkwZDMgChAmdQolJMPaCKeuio6nTmOiC
-         Y5LaXs6LJ3ibuRAFVp8bI6tEfVj0Srm5VLY7DDXSBNaFoUquMd5yuSgzsnS9I9/0ij7p
-         Unv1XD98YTxaVd+HFONypE8+n0AodXkeR0kq9ZZCzWyY7bObN1usXmlZa7wLicuaWHj/
-         AheWs1wzGIxX89qlHW/Kux5Ol2rNAMCaZnBrucmvo1DPf2xnmaHGUYJC+4B95gUFyK3u
-         XQ0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7CKA792BUj2v8FumZXxp0apr1UL2avnFuG2nibVYQSwbpIPU/4z6CXrtBSSS8E8htGsjsZXEouSCfCZTe0GmLTEIUzrYR26Ql3Fczoh4+33EMXqpEvUE9MgpshbN1i+LnbAU4caZNMtGOze9MEA==
-X-Gm-Message-State: AOJu0YyFIf2KqGlxUtiwqadtAZ/jg9vATCykvcKvs0ShixhgD1pnDDO9
-	AfWokTctrVJ34WFvhI0Ycuk8pyB+w6tyLzPobpZFT6tIkU8c/J0P37LNgvtx85w2k1WoHnQjMiV
-	XJl6tzNh9uLyFjJ86VF1VL6GULbs=
-X-Google-Smtp-Source: AGHT+IHEEQ4htWFGblRT2MDrS6Alav/pYfvCk8JQ92wqkOomZN63ZSyGvbrCmp/vxvJ76Dpnic40NYf7b1gVWwK3A14=
-X-Received: by 2002:a05:6a20:2443:b0:1a1:847f:8e8c with SMTP id
- t3-20020a056a20244300b001a1847f8e8cmr10907618pzc.20.1710226158531; Mon, 11
- Mar 2024 23:49:18 -0700 (PDT)
+	s=arc-20240116; t=1710226507; c=relaxed/simple;
+	bh=oqNjeuSysANvVbGkjKiQlhoDMqcAkltZeREJm+0F4Pw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QotiUfroz1Q7v+m2bS4gj5eDbM1MzZ9nudOSTHRm4fSSAwPXhqz7WcalSBeHqIYy9I/tokj34pXG48A4zoPs9G2EUJsyg38idKvsaQ67YRzad5LOGiexmu12brUXAB0/sEh4P6e+voKOeTdKfoqpno+f7Si91MK70sV9TkO/fvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 42C6smCW34092627, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 42C6smCW34092627
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Mar 2024 14:54:50 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 12 Mar 2024 14:54:49 +0800
+Received: from localhost.localhost (172.21.132.123) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 12 Mar 2024 14:54:48 +0800
+From: <max.chou@realtek.com>
+To: <marcel@holtmann.org>
+CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
+        <karenhsu@realtek.com>, <kidman@realtek.com>, <max.chou@realtek.com>
+Subject: [PATCH] Bluetooth: btrtl: Add the support for RTL8922A
+Date: Tue, 12 Mar 2024 14:54:41 +0800
+Message-ID: <20240312065441.31883-1-max.chou@realtek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-6-weilin.wang@intel.com>
-In-Reply-To: <20240302001139.604829-6-weilin.wang@intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 23:49:07 -0700
-Message-ID: <CAM9d7ciP5HJP__Hoh70q5F2drCwtyqzSmvLzMS06dvkYeVu2-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 5/6] perf stat: Add retire latency print functions
- to print out at the very end of print out
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS03.realtek.com.tw (172.21.6.96)
+X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add print out functions so that users could read retire latency values.
+From: Max Chou <max.chou@realtek.com>
 
-Can you please put some example output here?
+Add the support for RTL8922A BT controller on USB interface.
+The necessary firmware will be submitted to linux-firmware project.
 
-Thanks,
-Namhyung
+The device info from /sys/kernel/debug/usb/devices as below.
 
+T:  Bus=01 Lev=02 Prnt=02 Port=02 Cnt=01 Dev#=  3 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=0bda ProdID=8922 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00E04C885A01
+C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+I:  If#= 1 Alt= 6 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  63 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  63 Ivl=1ms
 
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/util/stat-display.c | 65 ++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index bfc1d705f437..e2996ba67bfe 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -21,6 +21,7 @@
->  #include "iostat.h"
->  #include "pmu.h"
->  #include "pmus.h"
-> +#include "metricgroup.h"
->
->  #define CNTR_NOT_SUPPORTED     "<not supported>"
->  #define CNTR_NOT_COUNTED       "<not counted>"
-> @@ -34,6 +35,7 @@
->  #define COMM_LEN     16
->  #define PID_LEN       7
->  #define CPUS_LEN      4
-> +#define RETIRE_LEN    8
->
->  static int aggr_header_lens[] =3D {
->         [AGGR_CORE]     =3D 18,
-> @@ -426,6 +428,67 @@ static void print_metric_std(struct perf_stat_config=
- *config,
->         fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
->  }
->
-> +static void print_retire_lat_std(struct perf_stat_config *config,
-> +                                struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       bool newline =3D os->newline;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               if (newline)
-> +                       do_new_line_std(config, os);
-> +               fprintf(out, "%'*.2f %-*s", COUNTS_LEN, t->val, EVNAME_LE=
-N, t->name);
-> +               fprintf(out, "%*ld %*d\n", RETIRE_LEN, t->count,
-> +                        RETIRE_LEN, t->sum);
-> +       }
-> +}
-> +
-> +static void print_retire_lat_csv(struct perf_stat_config *config,
-> +                                struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +       const char *sep =3D config->csv_sep;
-> +
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->=
-name, sep,
-> +                       t->count, sep, t->sum);
-> +       }
-> +}
-> +
-> +static void print_retire_lat_json(struct perf_stat_config *config,
-> +                                 struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +
-> +       fprintf(out, "{");
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->va=
-l);
-> +               fprintf(out, "\"event-name\" : \"%s\"", t->name);
-> +               fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
-> +               fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
-> +       }
-> +       fprintf(out, "}");
-> +}
-> +
-> +static void print_retire_lat(struct perf_stat_config *config,
-> +                            struct outstate *os)
-> +{
-> +       if (!&config->tpebs_results)
-> +               return;
-> +       if (config->json_output)
-> +               print_retire_lat_json(config, os);
-> +       else if (config->csv_output)
-> +               print_retire_lat_csv(config, os);
-> +       else
-> +               print_retire_lat_std(config, os);
-> +}
-> +
->  static void new_line_csv(struct perf_stat_config *config, void *ctx)
->  {
->         struct outstate *os =3D ctx;
-> @@ -1609,6 +1672,8 @@ void evlist__print_counters(struct evlist *evlist, =
-struct perf_stat_config *conf
->                 break;
->         }
->
-> +       print_retire_lat(config, &os);
-> +
->         print_footer(config);
->
->         fflush(config->output);
-> --
-> 2.43.0
->
+Signed-off-by: Max Chou <max.chou@realtek.com>
+---
+ drivers/bluetooth/btrtl.c | 16 ++++++++++++++++
+ drivers/bluetooth/btusb.c | 11 +++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index cc50de69e8dc..51a2d459cf6d 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -30,6 +30,7 @@
+ #define RTL_ROM_LMP_8822B	0x8822
+ #define RTL_ROM_LMP_8852A	0x8852
+ #define RTL_ROM_LMP_8851B	0x8851
++#define RTL_ROM_LMP_8922A	0x8922
+ #define RTL_CONFIG_MAGIC	0x8723ab55
+ 
+ #define RTL_VSC_OP_COREDUMP	0xfcff
+@@ -69,6 +70,7 @@ enum btrtl_chip_id {
+ 	CHIP_ID_8852B = 20,
+ 	CHIP_ID_8852C = 25,
+ 	CHIP_ID_8851B = 36,
++	CHIP_ID_8922A = 44,
+ 	CHIP_ID_8852BT = 47,
+ };
+ 
+@@ -309,6 +311,15 @@ static const struct id_table ic_id_table[] = {
+ 	  .cfg_name = "rtl_bt/rtl8851bu_config",
+ 	  .hw_info  = "rtl8851bu" },
+ 
++	/* 8922A */
++	{ IC_INFO(RTL_ROM_LMP_8922A, 0xa, 0xc, HCI_USB),
++	  .config_needed = false,
++	  .has_rom_version = true,
++	  .has_msft_ext = true,
++	  .fw_name  = "rtl_bt/rtl8922au_fw",
++	  .cfg_name = "rtl_bt/rtl8922au_config",
++	  .hw_info  = "rtl8922au" },
++
+ 	/* 8852BT/8852BE-VT */
+ 	{ IC_INFO(RTL_ROM_LMP_8852A, 0x87, 0xc, HCI_USB),
+ 	  .config_needed = false,
+@@ -655,6 +666,7 @@ static int rtlbt_parse_firmware(struct hci_dev *hdev,
+ 		{ RTL_ROM_LMP_8852A, 20 },	/* 8852B */
+ 		{ RTL_ROM_LMP_8852A, 25 },	/* 8852C */
+ 		{ RTL_ROM_LMP_8851B, 36 },	/* 8851B */
++		{ RTL_ROM_LMP_8922A, 44 },	/* 8922A */
+ 		{ RTL_ROM_LMP_8852A, 47 },	/* 8852BT */
+ 	};
+ 
+@@ -1255,6 +1267,7 @@ int btrtl_download_firmware(struct hci_dev *hdev,
+ 	case RTL_ROM_LMP_8852A:
+ 	case RTL_ROM_LMP_8703B:
+ 	case RTL_ROM_LMP_8851B:
++	case RTL_ROM_LMP_8922A:
+ 		err = btrtl_setup_rtl8723b(hdev, btrtl_dev);
+ 		break;
+ 	default:
+@@ -1286,6 +1299,7 @@ void btrtl_set_quirks(struct hci_dev *hdev, struct btrtl_device_info *btrtl_dev)
+ 	case CHIP_ID_8852B:
+ 	case CHIP_ID_8852C:
+ 	case CHIP_ID_8851B:
++	case CHIP_ID_8922A:
+ 	case CHIP_ID_8852BT:
+ 		set_bit(HCI_QUIRK_VALID_LE_STATES, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
+@@ -1522,3 +1536,5 @@ MODULE_FIRMWARE("rtl_bt/rtl8852btu_config.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852cu_fw_v2.bin");
+ MODULE_FIRMWARE("rtl_bt/rtl8852cu_config.bin");
++MODULE_FIRMWARE("rtl_bt/rtl8922au_fw.bin");
++MODULE_FIRMWARE("rtl_bt/rtl8922au_config.bin");
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 06e915b57283..d4aa9a84979b 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -556,6 +556,17 @@ static const struct usb_device_id quirks_table[] = {
+ 	/* Realtek 8852BT/8852BE-VT Bluetooth devices */
+ 	{ USB_DEVICE(0x0bda, 0x8520), .driver_info = BTUSB_REALTEK |
+ 						     BTUSB_WIDEBAND_SPEECH },
++
++	/* Realtek 8922AE Bluetooth devices */
++	{ USB_DEVICE(0x0bda, 0x8922), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x13d3, 0x3617), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x13d3, 0x3616), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe130), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
++
+ 	/* Realtek Bluetooth devices */
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
+ 	  .driver_info = BTUSB_REALTEK },
+-- 
+2.25.1
+
