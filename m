@@ -1,121 +1,148 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300D741C89
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 10:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAFD41C89;
+	Tue, 12 Mar 2024 10:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710239707; cv=none; b=UP6oodvAb9o+9Vy8h9lMEOgR9JFupClRcXJfGrIFYV6IpPhEgfKkgbHljgNfi3d75KOkogdVNOwvm83jCne1BHHHO1y3nOJNfqHI/Zv2XrPbQhsIRdgBhG3MAKSkvQLmOjrWMcgcasTmTPG9yEY9pzeDwoB97K7ShhGQSNySpds=
+	t=1710239747; cv=none; b=HqJGFvWQYSqhpZajF4LsgC1W3+jxEiMqQcn8ONLnDox4VUdcVdJoyKW1JITI/tE0YKGf/mryxCf/vuDvWZwmq3d/jUZ7Ou9xXFZ6JwwQKtTUDZaz83VRSjYpdC3tFFjAiT3vXSj4lfCH++Il7C8AWKDLmurZq997t0PzP0MMgRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710239707; c=relaxed/simple;
-	bh=XBc7Af1NkUozACweWiULsPD5xPfiFYsgN8mpnQ4+IEo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IObkDpBf+17YBYb62KpuhGSFK5QMEZSXb0Nz2kHXrJ2oc2EMqT1/38aDGCipaL+tIbWNDC9MjRThSNIFeqFOT7yUl6VnP55Kz4pJsreTb2MN1ysBsV8rrDr5Jni0sdb7CK2RSCvlP3cLPetdI8FB5Bo5jpxYWn5ZHTetxzIHIBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by andre.telenet-ops.be with bizsmtp
-	id xmb22B0020SSLxL01mb2E4; Tue, 12 Mar 2024 11:35:02 +0100
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rjzTJ-003RY5-Tk;
-	Tue, 12 Mar 2024 11:35:01 +0100
-Date: Tue, 12 Mar 2024 11:35:01 +0100 (CET)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Christian Brauner <brauner@kernel.org>
-cc: linux-fsdevel@vger.kernel.org, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, 
-    Seth Forshee <sforshee@kernel.org>, Tycho Andersen <tycho@tycho.pizza>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pidfd: add pidfdfs
-In-Reply-To: <20240213-vfs-pidfd_fs-v1-2-f863f58cfce1@kernel.org>
-Message-ID: <71bc82f4-b2df-c813-3aba-107d95c67d33@linux-m68k.org>
-References: <20240213-vfs-pidfd_fs-v1-0-f863f58cfce1@kernel.org> <20240213-vfs-pidfd_fs-v1-2-f863f58cfce1@kernel.org>
+	s=arc-20240116; t=1710239747; c=relaxed/simple;
+	bh=QDB+v8Xy4M7nLhPofhtwM2OqHObbpVpZmD9JZ7L7PmI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hP+kw8cfQKz7JogaBaWn2tzwUnxROFmWYNxS+3P7h8mk99uNlL1DuV9ZrQt4LeGS/qOM9nH2u2DyrbRdouwGvhSzB1/Dw743/llaxvTAhANVghb42M6A83+x5M2ig4Xe9MAbHrT9j2VNI5zJd68XVGVvE7WrJq/bNmTQhgPse5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJkPSNeC; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJkPSNeC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710239747; x=1741775747;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QDB+v8Xy4M7nLhPofhtwM2OqHObbpVpZmD9JZ7L7PmI=;
+  b=OJkPSNeCJD8umcFOAfubxRY8TfXNdAWd0yCdsSqf2xP62Y79OVrydINB
+   Dc7PMdiOnrtyEKGdWLfKRjOFhBVv3/y2OTn8GxKR36gRwacMyRQMi7Q4P
+   rvomFnlFfZRsqH8BDvqsx4vrOA25QJbFwsF9Nq6XB/AAIAMGlmW9q67UK
+   3zqXuQncxzeXWGikhmdzCUwlJVdDzLHwNSJB9ANrR5h6KGS85uIdG7Rzf
+   iZ7tIRey/L9/LE4+GJqA93UcGjMt1vUcHxt7/jjQYpcf9kapQvQ6UJ2lM
+   TN1k7A9YqWcAjF0jt1Qou43mWtMdzZ1wzNaGzedtFM2sHJFyUgXK24Urx
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="4798576"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="4798576"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 03:35:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="11412344"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.6])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 03:35:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 12 Mar 2024 12:35:38 +0200 (EET)
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+cc: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>, 
+    Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Andr=E9_Apitzsch?= <git@apitzsch.eu>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] platform: x86-android-tablets: other: Add swnode
+ for Xiaomi pad2 indicator LED
+In-Reply-To: <Ze-I63bNzaMkHfgg@surfacebook.localdomain>
+Message-ID: <18ef7e97-db6e-2dc4-5728-5a539ae4c9bb@linux.intel.com>
+References: <20240306025801.8814-1-hpa@redhat.com> <20240306025801.8814-2-hpa@redhat.com> <Ze-I63bNzaMkHfgg@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 
- 	Hi Christian,
+On Tue, 12 Mar 2024, Andy Shevchenko wrote:
 
-On Tue, 13 Feb 2024, Christian Brauner wrote:
-> This moves pidfds from the anonymous inode infrastructure to a tiny
-> pseudo filesystem. This has been on my todo for quite a while as it will
-> unblock further work that we weren't able to do simply because of the
-> very justified limitations of anonymous inodes. Moving pidfds to a tiny
-> pseudo filesystem allows:
->
-> * statx() on pidfds becomes useful for the first time.
-> * pidfds can be compared simply via statx() and then comparing inode
->  numbers.
-> * pidfds have unique inode numbers for the system lifetime.
-> * struct pid is now stashed in inode->i_private instead of
->  file->private_data. This means it is now possible to introduce
->  concepts that operate on a process once all file descriptors have been
->  closed. A concrete example is kill-on-last-close.
-> * file->private_data is freed up for per-file options for pidfds.
-> * Each struct pid will refer to a different inode but the same struct
->  pid will refer to the same inode if it's opened multiple times. In
->  contrast to now where each struct pid refers to the same inode. Even
->  if we were to move to anon_inode_create_getfile() which creates new
->  inodes we'd still be associating the same struct pid with multiple
->  different inodes.
-> * Pidfds now go through the regular dentry_open() path which means that
->  all security hooks are called unblocking proper LSM management for
->  pidfds. In addition fsnotify hooks are called and allow for listening
->  to open events on pidfds.
->
-> The tiny pseudo filesystem is not visible anywhere in userspace exactly
-> like e.g., pipefs and sockfs. There's no lookup, there's no complex
-> inode operations, nothing. Dentries and inodes are always deleted when
-> the last pidfd is closed.
->
-> The code is entirely optional and fairly small. If it's not selected we
-> fallback to anonymous inodes. Heavily inspired by nsfs which uses a
-> similar stashing mechanism just for namespaces.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> Wed, Mar 06, 2024 at 10:58:00AM +0800, Kate Hsuan kirjoitti:
+> > There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
+> > pad2. The ACPI for it is not properly made so the kernel can't get
+> > a correct description of it.
+> > 
+> > This work add a description for this RGB LED controller and also set a
+> > trigger to indicate the chaging event (bq27520-0-charging). When it is
+> > charging, the indicator LED will be turn on.
+> 
+> Ilpo, Kate, please consider the following remarks.
+> 
+> ...
+> 
+> >  #include <linux/gpio/machine.h>
+> >  #include <linux/input.h>
+> >  #include <linux/platform_device.h>
+> 
+> + Blank line?
+> 
+> > +#include <dt-bindings/leds/common.h>
+> 
+> Not sure where to place this, some drivers put it the first, some after linux/*.
+> 
+> ...
+> 
+> > +/* main fwnode for ktd2026 */
+> > +static const struct software_node ktd2026_node = {
+> 
+> No name?
+> 
+> > +};
+> > +
+> > +static const struct property_entry ktd2026_rgb_led_props[] = {
+> > +	PROPERTY_ENTRY_U32("reg", 0),
+> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
+> > +	PROPERTY_ENTRY_STRING("function", "indicator"),
+> 
+> > +	PROPERTY_ENTRY_STRING("linux,default-trigger",
+> > +			      "bq27520-0-charging"),
+> 
+> It's less than 80, why not on a single line?
+> 
+> > +
+> 
+> Redundant blank line.
+> 
+> > +	{ }
+> > +};
+> 
+> ...
+> 
+> > +/* B */
+> 
+> B for red?!
+> 
+> > +static const struct property_entry ktd2026_red_led_props[] = {
+> > +	PROPERTY_ENTRY_U32("reg", 0),
+> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
+> > +	{ }
+> > +};
 
-Thanks for your patch, which is now commit cb12fd8e0dabb9a1
-("pidfd: add pidfs") upstream.
+The name with "red" and LED_COLOR_ID_BLUE are also inconsistent.
 
-> --- a/fs/Kconfig
-> +++ b/fs/Kconfig
-> @@ -174,6 +174,12 @@ source "fs/proc/Kconfig"
-> source "fs/kernfs/Kconfig"
-> source "fs/sysfs/Kconfig"
->
-> +config FS_PIDFD
-> +	bool "Pseudo filesystem for process file descriptors"
-> +	depends on 64BIT
+> ...
+> 
+> > +/* R */
+> 
+> R for blue?!
+> 
+> > +static const struct property_entry ktd2026_blue_led_props[] = {
+> > +	PROPERTY_ENTRY_U32("reg", 2),
+> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
+> > +	{ }
+> > +};
 
-I think it would have been good if this dependency would have been
-explained in the commit message.  I.e. why does this depend on 64BIT?
+Here as well.
 
-What is the risk this will not stay entirely optional?  I.e. can it
-become a requirement for modern userspace, and thus be used as a stick
-to kill support for 32-bit architectures?
+I think it's better I drop this patch (it's only in review-ilpo) and wait 
+for v5 version as there's some much still to correct.
 
-> +	help
-> +	  Pidfdfs implements advanced features for process file descriptors.
-> +
-> config TMPFS
-> 	bool "Tmpfs virtual memory file system support (former shm fs)"
-> 	depends on SHMEM
 
-Gr{oetje,eeting}s,
+-- 
+ i.
 
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
