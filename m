@@ -1,58 +1,57 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B31A7AE61
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B337866B
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710236522; cv=none; b=O3IGhG4mv4vahITLpI/YdEf64eBS9PDhSqYPw6gpmv4nIvmEqTtTpA+9n4NYnAMCvgnNPobocw/NiTPDA3K/qWpOg72aYlR9MLYMAT0LYrAtPFK6jA3eFqoia2FTvvBo96KrVX8SykCkrb43y1usPmNeFDgljlgvur60bIrLuvs=
+	t=1710236524; cv=none; b=h8BbgNjWGu73RiN//rvoK4b+FnmXxxCh4YNkB84NlN9Fco2hugeFE/uRX0V2siiSwBU8kSYmmbew7Lfg03VB9STyzW14omLgrlMhDpI3OEd5gvqLVvIbQMnuIMyUN0R6PZGaQjTKeJTlLE2rAPJVUydCm/MsedBp5ezQ+W8xkzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710236522; c=relaxed/simple;
-	bh=MIHkIFvab96I9R+obMDPY3PJG78+nlUxbYh17e4Y/Ic=;
+	s=arc-20240116; t=1710236524; c=relaxed/simple;
+	bh=NEV56k/1bcmu9rz0L5zz1lY42ec57ywMmk7znO1WYnM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Dta/pbD9qbZZ+ieQg7CKzJRlSWBTQAP/YHzxsKDJotU0AgXRYT3Zkn4rQn9mzbZ3UN3mngwfEZGhFL0/slE0TEhAvfm4zjE/eP9iVVAAUzr0lYPg29+TJMYuNL3da6z0J1y3wxRNufKaksBnp67ONPYzQ6vftRScY9r57RnOpsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=bQ7pjCUr; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=ZdGLPFTMhZt1iOOsBcwrFjmFW/0mfrau7CRSQvOKj5tp/uQcNqcek1Iq+HV+QQavqwR8X2XjcIn1pG7hIn5uqW4dqu+9t+recgse7wreZ7vgALwXm5BWxgbxXEA7F3ovzjvKUfbuU+wlPeVIvtPuY6BXm8OfetDOu+1fjFLnYwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=XZoEYIcn; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="bQ7pjCUr"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56878bb1abdso336709a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 02:42:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="XZoEYIcn"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a45cdb790dfso545729566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 02:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1710236519; x=1710841319; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1710236520; x=1710841320; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TT7smv1j1+eH6dLDpyJyxapeCn0BRAoD8ideYTGL8g4=;
-        b=bQ7pjCUrKl4j7J/tjcVdLvXvbOfqqC9/4CPtS+o690FrzLP+Aq94tQx/PbcW4jO7Jc
-         c49Hrj/HX9xqk/cDU0Rk7YCzIpMMbMYTrNhhy/KkrL/128kRnF/f0xQsrVH29kvfKzOx
-         sr0zXU0oUnY0SDEIq/HUnxAXQQ7IThMzTxuO0Efr0IynSCqJzXTbh/FEZzy+DjAOJhTN
-         JBSeY00tHhEInF9cO2pE39zIdQCRG2MnLoz+hDZLBvbSk4fW8esBf81Qy1j5Kc+i+sy4
-         IGJy+mK+id9JWZOURIN37x8ChhOXdUKAqoQMCv11FIebOZZugq2A0rPEg3RIvuPc5w6X
-         3YDQ==
+        bh=KC2kNgBeF7Vel8Ro1rxtb7kBWctFnYPn6ChmmeyuWYw=;
+        b=XZoEYIcnINJYx2Q82RNXNLwqjk6pwQ37uDR2uhQ7M8w6V6HYDbrK4Xg3IfBGvIf1Jm
+         tEmRQVqCYSyQGExekQpXNh3jsZ0Wn6enxsEtjWLetmMfxA3DfBZKd+tqvf7gz6T0Ghw1
+         fWXHcYOaxTOwKnrU3Qhl305pJFAHfQLE70B4L6msNo597GoZ7TBmzW4n6OMi1lHvFNQ2
+         7i9df18KtvTckICKTQFc6X9HJMt0tyYi1iTXUqLVSbHffSG5a9xQjEeQAPE97FZbsP3q
+         Iek3MMH1UXnu6DAdjmJVBNBtZoYawGsdiRtctKio97ePwLkQwKw69r2tlQp9DyBaSVMJ
+         o9Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710236519; x=1710841319;
+        d=1e100.net; s=20230601; t=1710236520; x=1710841320;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TT7smv1j1+eH6dLDpyJyxapeCn0BRAoD8ideYTGL8g4=;
-        b=mkyFAjVTNl88DIQhZl6zwaqSuntsiQola8r4LvpaoDRrgG13gDUsWuhy9+N0dZK0eL
-         PuWElzqtZ2Ce63SjJAu/Qb9JixCy3PqVPn+eoVaXpIhpp3r+4cJh8ov8WvZuLoT2fOSv
-         kKsZ4hVCS7jsrWwu5xmeIHMlJGSVMFk9NOuEaM0y0pS9ldaE7InQDhAL/DH++Go1soWe
-         9H9JcevjvTeozfYN6nU7JciOBsVrt8kzGc6hcXvVCtbqdIC11soxAukHAV3L72TM6Yxu
-         ocbaErOegm+X0RqKcFD4Ua0bm+sa2Dz+nKIcBc3Kvv3JUji+ZFN2REcUNw7f3Zrz8ZpT
-         HSbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdtvQxbQQmVW+msDCABDJZr9I9AX9chQ4v8A0vTxMVv3++Jtt0TiIQEyhNz4z6nCBfI/hk/Lagrzlc2iCiJ8Y+KANyT2jDom7x2ep/
-X-Gm-Message-State: AOJu0Yy4F6FwiIgw4Sd81VugKMKoz/SPSz8zxi8wIUcu3KW75Ck//VJb
-	35UL++QJUGHSvlCo/5Ubz72cI6sIwtC8Xm2jQy4dZgaG/zwZMHBx+CdGmVI4ULGM25gnXA9ziL0
-	Q
-X-Google-Smtp-Source: AGHT+IH7z82KjX3aHCRWUOCeL5FyYqD0JcQ3ejtaHjG0l89tCOrVbvS2n36rt9l5T0g5qz32g+2nTg==
-X-Received: by 2002:a17:906:7751:b0:a43:f22e:57a6 with SMTP id o17-20020a170906775100b00a43f22e57a6mr852298ejn.67.1710236518882;
-        Tue, 12 Mar 2024 02:41:58 -0700 (PDT)
+        bh=KC2kNgBeF7Vel8Ro1rxtb7kBWctFnYPn6ChmmeyuWYw=;
+        b=U+jsh1Z0YK6rucMOclTgB2RzfGcx6L+EShQ2DeSNH4Al+tVt4zvxwFRXPC2yvcvtii
+         /+gmD2UP/A6gfsgtmdlNRjQ5vSJv7LMLLFM23DWZ9VuKYhGGRj3dZpvMSRjFz9a7n/Pn
+         0jhsiH4lvdaFcpwNPCSZYvnTUs/OSqBfnHz0dYldg96fpnL8ZpqPoQKNhnhMOz7UBu1c
+         9/jlwrbiMgHfiZejn+QrId3wswg114xCBpKMvT+wVeyu0B8cgfXxI9jnJY2uRp1GlYNV
+         wKdnbZKzHduEc0Hl+5f8BjBWxtf3zFwz097eAerCkdD8uIIcFupJ0+0sIspzjo9vPdc0
+         5k4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXJOswxNLxxBAzcnCV1xDNys2i4da2x7Ff3aop9e5gyZCsU2xtJT748sg3XCK3yjaAsf4sN39ZDgRU/WBMs8QLWYRTRmEpGDaSG646h
+X-Gm-Message-State: AOJu0Yy83RIjlb5PpCDOjmk88MJnmDfiIMbD6Y6XOVf72ODcvG5/lDfK
+	7P9g//7GsM5Abac0kp2w2nTsLvHzsPZLb6LlM77vOEHr0+QI4toyecZkRWfxpvQ=
+X-Google-Smtp-Source: AGHT+IE7UDJ1nLsSaEjUG1+PH6IJCzOExfGwyVhrMeJ4rHCcxaB2l8oErbSbMLUVuRymbgh224TGQw==
+X-Received: by 2002:a17:907:3594:b0:a43:f182:66c4 with SMTP id ao20-20020a170907359400b00a43f18266c4mr5390555ejc.17.1710236520620;
+        Tue, 12 Mar 2024 02:42:00 -0700 (PDT)
 Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4623030893sm2091961ejb.126.2024.03.12.02.41.57
+        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4623030893sm2091961ejb.126.2024.03.12.02.42.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 02:41:57 -0700 (PDT)
+        Tue, 12 Mar 2024 02:42:00 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
@@ -60,9 +59,9 @@ To: akpm@linux-foundation.org,
 Cc: willy@infradead.org,
 	sfr@canb.auug.org.au,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 09/15] linux/mm.h: move devmap-related declarations to mm/devmap_managed.h
-Date: Tue, 12 Mar 2024 10:41:27 +0100
-Message-Id: <20240312094133.2084996-10-max.kellermann@ionos.com>
+Subject: [PATCH v4 11/15] linux/mm.h: move page_zone_id() and more to mm/folio_zone.h
+Date: Tue, 12 Mar 2024 10:41:29 +0100
+Message-Id: <20240312094133.2084996-12-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240312094133.2084996-1-max.kellermann@ionos.com>
 References: <20240312094133.2084996-1-max.kellermann@ionos.com>
@@ -74,105 +73,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepare to reduce dependencies on linux/mm.h.
-
-put_devmap_managed_page() is called by put_page().  Moving it to a
-separate header allows us to move put_page() to a separate lean header
-as well.
+This is needed to eliminate linux/skbuff.h's dependency on linux/mm.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/mm.h                | 25 +--------------------
- include/linux/mm/devmap_managed.h | 37 +++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 24 deletions(-)
- create mode 100644 include/linux/mm/devmap_managed.h
+ include/linux/mm.h            | 28 +--------------------------
+ include/linux/mm/folio_zone.h | 36 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 27 deletions(-)
+ create mode 100644 include/linux/mm/folio_zone.h
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e6c2df977abc..61f1312a626e 100644
+index e8a914e7bebd..b3f83fb26aca 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_MM_H
- #define _LINUX_MM_H
- 
-+#include <linux/mm/devmap_managed.h>
+@@ -5,6 +5,7 @@
  #include <linux/mm/folio_next.h>
  #include <linux/mm/folio_size.h>
+ #include <linux/mm/folio_usage.h>
++#include <linux/mm/folio_zone.h>
  #include <linux/mm/page_address.h>
-@@ -1357,30 +1358,6 @@ vm_fault_t finish_fault(struct vm_fault *vmf);
-  *   back into memory.
-  */
+ #include <linux/mm/page_section.h>
+ #include <linux/errno.h>
+@@ -1370,33 +1371,6 @@ static inline bool is_nommu_shared_mapping(vm_flags_t flags)
+ }
+ #endif
  
--#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
--DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
--
--bool __put_devmap_managed_page_refs(struct page *page, int refs);
--static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
+-/*
+- * The identification function is mainly used by the buddy allocator for
+- * determining if two pages could be buddies. We are not really identifying
+- * the zone since we could be using the section number id if we do not have
+- * node id available in page flags.
+- * We only guarantee that it will return the same value for two combinable
+- * pages in a zone.
+- */
+-static inline int page_zone_id(struct page *page)
 -{
--	if (!static_branch_unlikely(&devmap_managed_key))
--		return false;
--	if (!is_zone_device_page(page))
--		return false;
--	return __put_devmap_managed_page_refs(page, refs);
--}
--#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
--static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
--{
--	return false;
--}
--#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
--
--static inline bool put_devmap_managed_page(struct page *page)
--{
--	return put_devmap_managed_page_refs(page, 1);
+-	return (page->flags >> ZONEID_PGSHIFT) & ZONEID_MASK;
 -}
 -
- /* 127: arbitrary random number, small enough to assemble well */
- #define folio_ref_zero_or_close_to_overflow(folio) \
- 	((unsigned int) folio_ref_count(folio) + 127u <= 127u)
-diff --git a/include/linux/mm/devmap_managed.h b/include/linux/mm/devmap_managed.h
+-#ifdef NODE_NOT_IN_PAGE_FLAGS
+-int page_to_nid(const struct page *page);
+-#else
+-static inline int page_to_nid(const struct page *page)
+-{
+-	return (PF_POISONED_CHECK(page)->flags >> NODES_PGSHIFT) & NODES_MASK;
+-}
+-#endif
+-
+-static inline int folio_nid(const struct folio *folio)
+-{
+-	return page_to_nid(&folio->page);
+-}
+-
+ #ifdef CONFIG_NUMA_BALANCING
+ /* page access time bits needs to hold at least 4 seconds */
+ #define PAGE_ACCESS_TIME_MIN_BITS	12
+diff --git a/include/linux/mm/folio_zone.h b/include/linux/mm/folio_zone.h
 new file mode 100644
-index 000000000000..0773529d80b2
+index 000000000000..572fe37068f1
 --- /dev/null
-+++ b/include/linux/mm/devmap_managed.h
-@@ -0,0 +1,37 @@
++++ b/include/linux/mm/folio_zone.h
+@@ -0,0 +1,36 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_DEVMAP_MANAGED_H
-+#define _LINUX_MM_DEVMAP_MANAGED_H
++#ifndef _LINUX_MM_FOLIO_ZONE_H
++#define _LINUX_MM_FOLIO_ZONE_H
 +
-+#include <linux/types.h> // for bool
++#include <linux/mm_types.h> // for struct page, struct folio
++#include <linux/mmzone.h> // for ZONEID_*, NODES_*
++#include <linux/page-flags.h> // for PF_POISONED_CHECK()
 +
-+struct page;
-+
-+#if defined(CONFIG_ZONE_DEVICE) && defined(CONFIG_FS_DAX)
-+
-+#include <linux/jump_label.h> // for DECLARE_STATIC_KEY_FALSE(), static_branch_unlikely()
-+#include <linux/mmzone.h> // is_zone_device_page()
-+
-+DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
-+
-+bool __put_devmap_managed_page_refs(struct page *page, int refs);
-+static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
++/*
++ * The identification function is mainly used by the buddy allocator for
++ * determining if two pages could be buddies. We are not really identifying
++ * the zone since we could be using the section number id if we do not have
++ * node id available in page flags.
++ * We only guarantee that it will return the same value for two combinable
++ * pages in a zone.
++ */
++static inline int page_zone_id(struct page *page)
 +{
-+	if (!static_branch_unlikely(&devmap_managed_key))
-+		return false;
-+	if (!is_zone_device_page(page))
-+		return false;
-+	return __put_devmap_managed_page_refs(page, refs);
-+}
-+#else /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
-+static inline bool put_devmap_managed_page_refs(struct page *page, int refs)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_ZONE_DEVICE && CONFIG_FS_DAX */
-+
-+static inline bool put_devmap_managed_page(struct page *page)
-+{
-+	return put_devmap_managed_page_refs(page, 1);
++	return (page->flags >> ZONEID_PGSHIFT) & ZONEID_MASK;
 +}
 +
-+#endif /* _LINUX_MM_DEVMAP_MANAGED_H */
++#ifdef NODE_NOT_IN_PAGE_FLAGS
++int page_to_nid(const struct page *page);
++#else
++static inline int page_to_nid(const struct page *page)
++{
++	return (PF_POISONED_CHECK(page)->flags >> NODES_PGSHIFT) & NODES_MASK;
++}
++#endif
++
++static inline int folio_nid(const struct folio *folio)
++{
++	return page_to_nid(&folio->page);
++}
++
++#endif /* _LINUX_MM_FOLIO_ZONE_H */
 -- 
 2.39.2
 
