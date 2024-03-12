@@ -1,126 +1,105 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CDD7A73F
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D94E7C6DE;
+	Tue, 12 Mar 2024 16:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710259985; cv=none; b=DgpJCHhLJWZ8EKR1UQ8pTAzsQSQvJNd5gFzwWA8acgaGtMdcMQZRead9QGYxid7KGJMKCmGY9kswiDhUUbxL6RcxXwF4fpPW8vL5AoidMajcU2w6dAvc7iCFFNlV/MMXjMmNozJ5Azox5PRjW3sX5AOlhUpa/yeTRXQP7xNh/e8=
+	t=1710260040; cv=none; b=Pd2j0saP3e5PwPuFAESCKIXTScyas/EUaffYUOVSiGVzykHk2sZ+xpMDRF1aDyM8thcjJf02lkYraD64L9p6YXr/pFy8rW6OZxu3/X2gwOVbP6xymVygpC/wrwb8WSePfMZTCyEGhOoNsvSGI9Y/rAUHFuqqXQcQivV3U6wHhzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710259985; c=relaxed/simple;
-	bh=ZCJROvJRrAYT7Jc6E1xIj5ZKRMxyPfvbC0G1OA9L3W8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aLtdJAMw8X7A62WSEiZibQuH5q76lOZLhl1PFTDVsd/5Ej8oWR8NLfeLWg+CpmG8onncn4U4ts5AckhVNz0KssUwwVCtxtZY9ImzocAC3WXUSac5nEvT+ka5fz2RnD3uHdAxUnTYRurH8pSdxfzgdmXVSBg/gtomSiIwavjgbGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EkPp1FMb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710260040; c=relaxed/simple;
+	bh=POYzrEHdQajIu9lkNDUq+dYvLkhAmYXGQT424dUgbDs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Cvhgm+KtUjXM1p509r03DaT4xWxYQg1XIhUaGaCkOWf9zDWmqyIEzqn/lgvS3n5HPnl5facoa3wyndUWU6rAAwwp3pQ1+5miK9Wszh3Hd6HjuDZig2VQvVxhbG5XKdXaLf3Dl19bWOL1rndVHJFHoDVjYVJz2TLkjsrUJsUNkyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ET3wvV0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EkPp1FMb"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42CDK4Xx023716;
-	Tue, 12 Mar 2024 16:12:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=jFeOfqofpER02Z0W5dJuJpJa9a9anKP1f9O1bGqjJMY=; b=Ek
-	Pp1FMb9TvCDqEaWHo5ap2AkjMtbnuOsZWJp4CnhKpRFqWveniZPH0+6VPp1U+XNP
-	NGvRTIoQxJ23Ys/zQojnxVcRzIH7Qckgo405506I8+ihLC4xKUJxsrU4cJorZUsI
-	3mDqsahVooQa0b8IPhdyIxg45ZguMtgW7WcWeUB7mM8qEY9+7JbIDLoicL+i3ihw
-	jCGAIDFqUo80HNO4hqfhfhDG3gsP59jf3Q3MUiP3NR5ZTXMha+m382/3kMNRTmql
-	FHvSvN7sHpdTGso9K+nVNfg2OdU4/cK0r9UaNNAQkUOQNnVH2W/tnUqwQ0qxp99t
-	F/iqZI/RRT3tfx9T8YjQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wtgc3hdhq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 16:12:57 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42CGCvWC004990
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 16:12:57 GMT
-Received: from [10.216.60.182] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 12 Mar
- 2024 09:12:53 -0700
-Message-ID: <792e956f-eefb-3d2b-ada2-0eaa175ba81e@quicinc.com>
-Date: Tue, 12 Mar 2024 21:42:36 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ET3wvV0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CDEC43390;
+	Tue, 12 Mar 2024 16:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710260040;
+	bh=POYzrEHdQajIu9lkNDUq+dYvLkhAmYXGQT424dUgbDs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ET3wvV0Mp7+ILFL8o5hLW8Y+dbekfxr6qwl6XfVnrFF5mj9M83/YrWGCxzJZWrv6r
+	 /fvUKJ2irszA+7jIzRLpcO9v9kVDyMtGEOLwaFgGUBs+1r8y1b2oHVW+a9uJlTXPJX
+	 wTWmf6X0WLUq2sClCgVhGUWIyNw8wftxTEv9k4pvCOylOFLOnm6s9wO1x5+mIKxOVt
+	 2LLkI50pvYLmtA6gPJtGdjy/K8R6aTOfBr1yk2zXceqMWp6IGRZkXnlkLvRyCXyAXi
+	 NFtKZzUgNkrajiXjTPpfyDneYJBY6i7SthLZVd7xNer4ovKR2ssqVf8zWmc0bpz04H
+	 OZXiAHlMU7UrA==
+Date: Wed, 13 Mar 2024 01:13:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Do not set shortest_full when full target
+ is hit
+Message-Id: <20240313011355.7cc65a601f8074c778e39d7d@kernel.org>
+In-Reply-To: <20240312115641.6aa8ba08@gandalf.local.home>
+References: <20240312115641.6aa8ba08@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] nvmem: meson-mx-efuse: Remove nvmem_device from efuse
- struct
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC: <srinivas.kandagatla@linaro.org>, <neil.armstrong@linaro.org>,
-        <khilman@baylibre.com>, <jbrunet@baylibre.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1709621888-3173-1-git-send-email-quic_mojha@quicinc.com>
- <CAFBinCC2n+Muu2qaAG0PWFj6f+bVFDtHnzm78jSpeodTD47TOg@mail.gmail.com>
-Content-Language: en-US
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <CAFBinCC2n+Muu2qaAG0PWFj6f+bVFDtHnzm78jSpeodTD47TOg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: GfegUGf7_eY_C748SFCEi1-9w7RLtqJz
-X-Proofpoint-GUID: GfegUGf7_eY_C748SFCEi1-9w7RLtqJz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_10,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0
- spamscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403120122
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Martin,
+On Tue, 12 Mar 2024 11:56:41 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 3/8/2024 2:26 AM, Martin Blumenstingl wrote:
-> Hello Mukesh,
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> On Tue, Mar 5, 2024 at 7:58 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->>
->> nvmem_device is used at one place while registering nvmem
->> device and it is not required to be present in efuse struct
->> for just this purpose.
->>
->> Drop nvmem_device and manage with nvmem device stack variable.
-> I'm generally fine with this approach
-
-Thanks.
-Sorry for the late reply, was on vacation.
-
+> The rb_watermark_hit() checks if the amount of data in the ring buffer is
+> above the percentage level passed in by the "full" variable. If it is, it
+> returns true.
 > 
-> [...]
->> @@ -223,9 +222,9 @@ static int meson_mx_efuse_probe(struct platform_device *pdev)
->>                  return PTR_ERR(efuse->core_clk);
->>          }
->>
->> -       efuse->nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
->> +       nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
-> But this doesn't compile for me:
->    CC      drivers/nvmem/meson-mx-efuse.o
-> ../drivers/nvmem/meson-mx-efuse.c: In function 'meson_mx_efuse_probe':
-> ../drivers/nvmem/meson-mx-efuse.c:252:9: error: 'nvmem' undeclared
-> (first use in this function)
->   252 |         nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
-
-Sent too soon., change was cached never got commited..
-
-v2:
-https://lore.kernel.org/lkml/1710259663-14095-1-git-send-email-quic_mojha@quicinc.com/
-
-Thanks,
--Mukesh
-
+> But it also sets the "shortest_full" field of the cpu_buffer that informs
+> writers that it needs to call the irq_work if the amount of data on the
+> ring buffer is above the requested amount.
 > 
+> The rb_watermark_hit() always sets the shortest_full even if the amount in
+> the ring buffer is what it wants. As it is not going to wait, because it
+> has what it wants, there's no reason to set shortest_full.
 > 
-> Best regards,
-> Martin
+
+Yeah, it should avoid setting if !ret. Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Cc: stable@vger.kernel.org
+> Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 9b887d44b8d9..350607cce869 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -834,9 +834,10 @@ static bool rb_watermark_hit(struct trace_buffer *buffer, int cpu, int full)
+>  		pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+>  		ret = !pagebusy && full_hit(buffer, cpu, full);
+>  
+> -		if (!cpu_buffer->shortest_full ||
+> -		    cpu_buffer->shortest_full > full)
+> -			cpu_buffer->shortest_full = full;
+> +		if (!ret && (!cpu_buffer->shortest_full ||
+> +			     cpu_buffer->shortest_full > full)) {
+> +		    cpu_buffer->shortest_full = full;
+> +		}
+>  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+>  	}
+>  	return ret;
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
