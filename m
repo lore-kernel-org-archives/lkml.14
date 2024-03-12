@@ -1,207 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F398C8DD
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B876997B;
+	Tue, 12 Mar 2024 08:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710233400; cv=none; b=B4fHJOMhxEdoLIpBEyujun3OrEmVjmJWs5OIyh9jOC2yuhEehagq63udF5sGq3bfZWIhcx7cUZrl2jVeK2xiupW6+RGSs5TzFouAb+RGkMLhedfnfiHM7EFUTutH5P2So567PB/dot1UfPA6mIWbPpRhCSRsBj5N8UwA8xVtgGA=
+	t=1710233458; cv=none; b=bMm4eYorRAKv8drpXfxIJLrm+t+tVIAwra9At5Ado5qcHqyOQO7+ZTH6JPfQ1HVSAOrw8TaNfKfezxQR8AnQuS5+u9ZWYxQ/ZiVehohk6OBJTDHLyooYUA6wydcvmUpfSL1kmeKNwYCnn44O55gvaZxzz1ztpY1oyOCBjIX2zJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710233400; c=relaxed/simple;
-	bh=i2boc0HX4NhswBVfSTAFQmfI0CY6yLEpHrkja9msqJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GiwioQYuQBdx17RyPfT1uM4IcYpROPpoixfSW5BK3Zesx5/br2fQsp3h8GN492Qh2cry93tRG28A0KAc64Q5DFnUA0lD728a4FKdug+x9eyr6nnpqTeGmkY0uMgsgixNrc1tZoqp/VD+FazV6Q5yI9RvLA7L6LZ6Osv4aDrnphE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B67871007;
-	Tue, 12 Mar 2024 01:50:34 -0700 (PDT)
-Received: from [10.57.68.246] (unknown [10.57.68.246])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 560473F762;
-	Tue, 12 Mar 2024 01:49:55 -0700 (PDT)
-Message-ID: <28914585-80bd-4308-b3aa-dd0dbb2cb201@arm.com>
-Date: Tue, 12 Mar 2024 08:49:53 +0000
+	s=arc-20240116; t=1710233458; c=relaxed/simple;
+	bh=UkEHwkFP0GJ42KgigzEfzH5VwwhLCveVEoSZfymiQ7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r59yekzAP2gr7C15HvzRvxvdq3+Ysx4YQGpAtEh89XpCXZrCtB0jxuwlimIfYEcTuxx43mL8S5pMEgx/iKpyRRfg7Lutb/h/v0Dd3eE6DoS28oyVtwc0aRkWgPKMU395o1I0B/E1/MHkYp2LHUWIwxWCmqbe5K5aD9L0z32Lvmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkTfJF0x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkTfJF0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC3EC433C7;
+	Tue, 12 Mar 2024 08:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710233457;
+	bh=UkEHwkFP0GJ42KgigzEfzH5VwwhLCveVEoSZfymiQ7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GkTfJF0x5UxRgfSyApu4CDiDhrydZ3Zrc4DOd5q55HaVgK7X6kzKBcCWgc/oGyF80
+	 OwBnxAh/BNFL52qSaDo5H6jvVtoTm7pNGMoW5IjEyBaGgvYz4zuTXkYwZiAbu60cR1
+	 Oz2eZYI00wzaFViL+zuME5oxOv9bvtjPejiH6qAP3LBXtYibsYqG7pcYiZh8jd0lqR
+	 KHnrLnU1UavaZOvzTDiw3M7K1eR7RFML0kApzy32kIZW9SZ0dVO1PA/uTizKLyKRg9
+	 rjC6sHtQphD5LTZ4PUp4zxxG4VwlFLyknhRX6owfpn0r/C3t+4u/CIbVNdTxLIyxm6
+	 byTbLk3UW5xkQ==
+Date: Tue, 12 Mar 2024 09:50:46 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Luis Henriques <lhenriques@suse.de>, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] ovl: fix the parsing of empty string mount
+ parameters
+Message-ID: <20240312-gaukeln-mehrpolig-8e8fb77f221d@brauner>
+References: <20240307160225.23841-1-lhenriques@suse.de>
+ <20240307160225.23841-4-lhenriques@suse.de>
+ <CAJfpegtQSi0GFzUEDqdeOAq7BN2KvDV8i3oBFvPOCKfJJOBd2g@mail.gmail.com>
+ <87le6p6oqe.fsf@suse.de>
+ <CAJfpeguN9nMJGJzx8sgwP=P9rJFVkYF5rVZOi_wNu7mj_jfBsA@mail.gmail.com>
+ <20240311-weltmeere-gesiegt-798c4201c3f8@brauner>
+ <CAJfpegsn-jMY2J8Wd2Q9qmZFqxR6fAwZ4auoK+-uyxaK+F-0rw@mail.gmail.com>
+ <20240311180127.4qdr6ln2xf6vviu3@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/6] Swap-out mTHP without splitting
-Content-Language: en-GB
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
- Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
- Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
- Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240311150058.1122862-1-ryan.roberts@arm.com>
- <878r2n516c.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <878r2n516c.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240311180127.4qdr6ln2xf6vviu3@quack3>
 
-On 12/03/2024 08:01, Huang, Ying wrote:
-> Ryan Roberts <ryan.roberts@arm.com> writes:
+On Mon, Mar 11, 2024 at 07:01:27PM +0100, Jan Kara wrote:
+> On Mon 11-03-24 15:39:39, Miklos Szeredi wrote:
+> > On Mon, 11 Mar 2024 at 14:25, Christian Brauner <brauner@kernel.org> wrote:
+> > 
+> > > Yeah, so with that I do agree. But have you read my reply to the other
+> > > thread? I'd like to hear your thoughs on that. The problem is that
+> > > mount(8) currently does:
+> > >
+> > > fsconfig(3, FSCONFIG_SET_FLAG, "usrjquota", NULL, 0) = -1 EINVAL (Invalid argument)
+> > >
+> > > for both -o usrjquota and -o usrjquota=
+> > 
+> > For "-o usrjquota" this seems right.
+> > 
+> > For "-o usrjquota=" it doesn't.  Flags should never have that "=", so
+> > this seems buggy in more than one ways.
+> > 
+> > > So we need a clear contract with userspace or the in-kernel solution
+> > > proposed here. I see the following options:
+> > >
+> > > (1) Userspace must know that mount options such as "usrjquota" that can
+> > >     have no value must be specified as "usrjquota=" when passed to
+> > >     mount(8). This in turn means we need to tell Karel to update
+> > >     mount(8) to recognize this and infer from "usrjquota=" that it must
+> > >     be passed as FSCONFIG_SET_STRING.
+> > 
+> > Yes, this is what I'm thinking.  Of course this only works if there
+> > are no backward compatibility issues, if "-o usrjquota" worked in the
+> > past and some systems out there relied on this, then this is not
+> > sufficient.
 > 
->> Hi All,
->>
->> This series adds support for swapping out multi-size THP (mTHP) without needing
->> to first split the large folio via split_huge_page_to_list_to_order(). It
->> closely follows the approach already used to swap-out PMD-sized THP.
->>
->> There are a couple of reasons for swapping out mTHP without splitting:
->>
->>   - Performance: It is expensive to split a large folio and under extreme memory
->>     pressure some workloads regressed performance when using 64K mTHP vs 4K
->>     small folios because of this extra cost in the swap-out path. This series
->>     not only eliminates the regression but makes it faster to swap out 64K mTHP
->>     vs 4K small folios.
->>
->>   - Memory fragmentation avoidance: If we can avoid splitting a large folio
->>     memory is less likely to become fragmented, making it easier to re-allocate
->>     a large folio in future.
->>
->>   - Performance: Enables a separate series [4] to swap-in whole mTHPs, which
->>     means we won't lose the TLB-efficiency benefits of mTHP once the memory has
->>     been through a swap cycle.
->>
->> I've done what I thought was the smallest change possible, and as a result, this
->> approach is only employed when the swap is backed by a non-rotating block device
->> (just as PMD-sized THP is supported today). Discussion against the RFC concluded
->> that this is sufficient.
->>
->>
->> Performance Testing
->> ===================
->>
->> I've run some swap performance tests on Ampere Altra VM (arm64) with 8 CPUs. The
->> VM is set up with a 35G block ram device as the swap device and the test is run
->> from inside a memcg limited to 40G memory. I've then run `usemem` from
->> vm-scalability with 70 processes, each allocating and writing 1G of memory. I've
->> repeated everything 6 times and taken the mean performance improvement relative
->> to 4K page baseline:
->>
->> | alloc size |            baseline |       + this series |
->> |            |  v6.6-rc4+anonfolio |                     |
->> |:-----------|--------------------:|--------------------:|
->> | 4K Page    |                0.0% |                1.4% |
->> | 64K THP    |              -14.6% |               44.2% |
->> | 2M THP     |               87.4% |               97.7% |
->>
->> So with this change, the 64K swap performance goes from a 15% regression to a
->> 44% improvement. 4K and 2M swap improves slightly too.
-> 
-> I don't understand why the performance of 2M THP improves.  The swap
-> entry allocation becomes a little slower.  Can you provide some
-> perf-profile to root cause it?
+> No, "-o usrjquota" never worked and I'm inclined to keep refusing this
+> variant as IMHO it is confusing.
 
-I didn't post the stdev, which is quite large (~10%), so that may explain some
-of it:
-
-| kernel   |   mean_rel |   std_rel |
-|:---------|-----------:|----------:|
-| base-4K  |       0.0% |      5.5% |
-| base-64K |     -14.6% |      3.8% |
-| base-2M  |      87.4% |     10.6% |
-| v4-4K    |       1.4% |      3.7% |
-| v4-64K   |      44.2% |     11.8% |
-| v4-2M    |      97.7% |     13.3% |
-
-Regardless, I'll do some perf profiling and post results shortly.
+Tbh, I'm not too sure that having empty string options was a good idea
+even though it can be useful. I think it would've been better if we had
+used a specific phantom value to signify this. But yes, I just filed an
+issue on util-linux to get this fixed. I think we should also
+util-linux and Karel's up for handling this.
 
 > 
-> --
-> Best Regards,
-> Huang, Ying
+> > > In any case, we need to document what we want:
+> > >
+> > > https://github.com/brauner/man-pages-md/blob/main/fsconfig.md
+> > 
+> > What's the plan with these?  It would be good if "man fsconfig" would
+> > finally work.
 > 
->> This test also acts as a good stress test for swap and, more generally mm. A
->> couple of existing bugs were found as a result [5] [6].
->>
->>
->> ---
->> The series applies against mm-unstable (d7182786dd0a). Although I've
->> additionally been running with a couple of extra fixes to avoid the issues at
->> [6].
->>
->>
->> Changes since v3 [3]
->> ====================
->>
->>  - Renamed SWAP_NEXT_NULL -> SWAP_NEXT_INVALID (per Huang, Ying)
->>  - Simplified max offset calculation (per Huang, Ying)
->>  - Reinstated struct percpu_cluster to contain per-cluster, per-order `next`
->>    offset (per Huang, Ying)
->>  - Removed swap_alloc_large() and merged its functionality into
->>    scan_swap_map_slots() (per Huang, Ying)
->>  - Avoid extra cost of folio ref and lock due to removal of CLUSTER_FLAG_HUGE
->>    by freeing swap entries in batches (see patch 2) (per DavidH)
->>  - vmscan splits folio if its partially mapped (per Barry Song, DavidH)
->>  - Avoid splitting in MADV_PAGEOUT path (per Barry Song)
->>  - Dropped "mm: swap: Simplify ssd behavior when scanner steals entry" patch
->>    since it's not actually a problem for THP as I first thought.
->>
->>
->> Changes since v2 [2]
->> ====================
->>
->>  - Reuse scan_swap_map_try_ssd_cluster() between order-0 and order > 0
->>    allocation. This required some refactoring to make everything work nicely
->>    (new patches 2 and 3).
->>  - Fix bug where nr_swap_pages would say there are pages available but the
->>    scanner would not be able to allocate them because they were reserved for the
->>    per-cpu allocator. We now allow stealing of order-0 entries from the high
->>    order per-cpu clusters (in addition to exisiting stealing from order-0
->>    per-cpu clusters).
->>
->>
->> Changes since v1 [1]
->> ====================
->>
->>  - patch 1:
->>     - Use cluster_set_count() instead of cluster_set_count_flag() in
->>       swap_alloc_cluster() since we no longer have any flag to set. I was unable
->>       to kill cluster_set_count_flag() as proposed against v1 as other call
->>       sites depend explicitly setting flags to 0.
->>  - patch 2:
->>     - Moved large_next[] array into percpu_cluster to make it per-cpu
->>       (recommended by Huang, Ying).
->>     - large_next[] array is dynamically allocated because PMD_ORDER is not
->>       compile-time constant for powerpc (fixes build error).
->>
->>
->> [1] https://lore.kernel.org/linux-mm/20231010142111.3997780-1-ryan.roberts@arm.com/
->> [2] https://lore.kernel.org/linux-mm/20231017161302.2518826-1-ryan.roberts@arm.com/
->> [3] https://lore.kernel.org/linux-mm/20231025144546.577640-1-ryan.roberts@arm.com/
->> [4] https://lore.kernel.org/linux-mm/20240304081348.197341-1-21cnbao@gmail.com/
->> [5] https://lore.kernel.org/linux-mm/20240311084426.447164-1-ying.huang@intel.com/
->> [6] https://lore.kernel.org/linux-mm/79dad067-1d26-4867-8eb1-941277b9a77b@arm.com/
->>
->> Thanks,
->> Ryan
->>
->>
->> Ryan Roberts (6):
->>   mm: swap: Remove CLUSTER_FLAG_HUGE from swap_cluster_info:flags
->>   mm: swap: free_swap_and_cache_nr() as batched free_swap_and_cache()
->>   mm: swap: Simplify struct percpu_cluster
->>   mm: swap: Allow storage of all mTHP orders
->>   mm: vmscan: Avoid split during shrink_folio_list()
->>   mm: madvise: Avoid split during MADV_PAGEOUT and MADV_COLD
->>
->>  include/linux/pgtable.h |  28 ++++
->>  include/linux/swap.h    |  33 +++--
->>  mm/huge_memory.c        |   3 -
->>  mm/internal.h           |  48 +++++++
->>  mm/madvise.c            | 101 ++++++++------
->>  mm/memory.c             |  13 +-
->>  mm/swapfile.c           | 298 ++++++++++++++++++++++------------------
->>  mm/vmscan.c             |   9 +-
->>  8 files changed, 332 insertions(+), 201 deletions(-)
->>
->> --
->> 2.25.1
+> Yes, merging these into official manpages would be nice.
 
+I'll try to get around to it.
