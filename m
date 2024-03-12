@@ -1,136 +1,578 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C980E77F2F;
-	Tue, 12 Mar 2024 09:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C989678267
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710236442; cv=none; b=FmbseeIJ7a0ZrpX3u7Nd9mhdhPbxpeS4fRjz2ro+1D0nVwIU/0iIaQ9uSv3EnwGKnibgjTrQpvQFo+zv7sI34dBHjA9OmfbxhnEFbnquU96BY1mn49wTYS8c3CslC8/XIPYU6b3SPSF2nneBEDVDUPC1nSQqpmQbypi+VamDOwM=
+	t=1710236463; cv=none; b=oJcAuCrzJpQfRDkTEoyrpbs/OpAMYaaYbEg4wwPHKAfek8N6h4oel/XvHP1YeEW5bFqwIaURNHeZh1/6Gr8VsYkvhUZ3/OV1gLoG67U861F31XBs+ji59pd8JjhFprQm1WgO0hZAacEWfKfTeZLH3W2QRlz7hVWO0LLL1uuSt1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710236442; c=relaxed/simple;
-	bh=tmePU1iEUeptB/usXESyaF9rgBcN4g4YCoYahzxHmIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HlryOA4jbPj9A2hYSsFZzVKIhLz5fMKoSApC6QbkflbMImZYQbhILu9ChnYc5/Xd10F9C91vpiThyS5wKgtFOlKzrYgM3Qusj+eSku/1jNLQWaM+CoKxn6LCeDxd+QLTi+COm4HAmGiAi2WeD6C/X5fQuPkFI2hokLCOb98m6xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hQDHc8T6; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQDHc8T6"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d26227d508so80419541fa.2;
-        Tue, 12 Mar 2024 02:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710236439; x=1710841239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9fbTW88c5dd+uJ3t+O23Zk0Rd2E0M+rmOigqz72HeI=;
-        b=hQDHc8T6GrHQKyaE43cFy+nXwSzBAoterJVXXC8d4XzrC1TtI9tGhn4g0NUD9spuQC
-         MdsChiCwSEK6cCd4N+uBV5ewqfrF0GMoTS6qTUoQHOmuXNWv5MiStHesIFWlUM+jBEZH
-         5yJKB00qM7QU1O1+NQLcNXwrMQ7n9o9HRxCiRCIZThTCbbnte+MTMhD6X5IwjU/CqMLf
-         sSAsypw7lV+KsnAHsuDQk+xmVIqffWJJmrFMQO9rAE0D2BPtDbbMKy3ctn8PKBxNPUDI
-         vTuSjvRxaCxr/NVnwJTiOEqibaNPD/lMkVZQnSJY+lt8VCqb4DmRZuXHezn2+6ETg81o
-         KfzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710236439; x=1710841239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B9fbTW88c5dd+uJ3t+O23Zk0Rd2E0M+rmOigqz72HeI=;
-        b=FuaJchLJlQS3QBAsSrHb9R3r8eJjKizE7b/UqUHUZNRaoFQoGAdCO+zBRCi9hOkF3R
-         USMqyb82fHM4POI3Yz3vtNU10oNyBgISu0CYhzthLxFBLFZaeQF0ZZ4MOAOZAsR6E6Mi
-         t8iI7TkmQCZNMZqssA/GcwGZrqY0tN8RsyZMfo9Z10MuWnlUznzrgAhtt4Li3Tb4g3b3
-         SCESEeHzJ8LdHai5oi/zI/2lKTe62GrJXhnISRa8hfDdAF47FWA8fg8DMSeReeDG4DzY
-         v+t5J7wLDRTEWzknDKmgS9+hafonEgckSD7cwnkz64tj0h4AxvRww97J4rp9VkG6Nxrd
-         CYzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdbTb5Hxw0NDYNyVlukyQFlfUy+uvIT+NbElwvTB78iQWV2OzxjUmA2GnLRFdzEJIEdaeoMcLIbxuaISMjXCNjEdxAuLQXri0R0elDq3W5GqSTEaWOTp+f0Zneg749AWTi8JnV
-X-Gm-Message-State: AOJu0YzN3pqR9UkiK/uKfp99qnUb48T6mxpKlLLVUd+biKwXTLQPTRty
-	cenWRcvUHNg2uY2OgoDPpe6QKLSJVhTs2uUR4j5MgwCSGhMgNtk9
-X-Google-Smtp-Source: AGHT+IFuSl2KQf9S7ZnfmhVEsHDRf9lt5h2kPj4tW55Giijk7aCci9Cl7tyOz1BXGzJ4nqu7VKAttg==
-X-Received: by 2002:ac2:5042:0:b0:513:9d46:5fec with SMTP id a2-20020ac25042000000b005139d465fecmr6006986lfm.15.1710236438599;
-        Tue, 12 Mar 2024 02:40:38 -0700 (PDT)
-Received: from macminim1.retailmedia.com ([2a01:e0a:b14:c1f0:617b:c61e:d65f:861e])
-        by smtp.googlemail.com with ESMTPSA id jt23-20020a05600c569700b00412f4afab4csm515346wmb.1.2024.03.12.02.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 02:40:37 -0700 (PDT)
-From: Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-To: 
-Cc: Erwan Velu <e.velu@criteo.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] i40e: Prevent setting MTU if greater than MFS
-Date: Tue, 12 Mar 2024 10:37:55 +0100
-Message-ID: <20240312093757.770283-1-e.velu@criteo.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1710236463; c=relaxed/simple;
+	bh=O/jRykJDSo2Tv1HY/zHteBGljvZ4hSMp4zok8dGNe6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZcNa0NAo6D2Na84SsZkPmdKU/YQQiLN/jRsUPOX+GQQ3vHSN03ugx8gEn3ZJkzns2S0wxXJap6PeGuGcPD13n65NZzjaBHBsBKPAP5TtAd3m3u8oyE+ww1bJlu8DNTNj0sayjogqP72pjclYoFwM99aVOlbKaic8zpRR6aE/chU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 614C11007;
+	Tue, 12 Mar 2024 02:41:37 -0700 (PDT)
+Received: from [10.57.68.246] (unknown [10.57.68.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4CA83F762;
+	Tue, 12 Mar 2024 02:40:57 -0700 (PDT)
+Message-ID: <f3d063d0-42a1-40cd-9b70-732bd600d6a8@arm.com>
+Date: Tue, 12 Mar 2024 09:40:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/6] mm: swap: Allow storage of all mTHP orders
+Content-Language: en-GB
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-5-ryan.roberts@arm.com>
+ <87jzm751n3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <87jzm751n3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit 6871a7de705b6f6a4046f0d19da9bcd689c3bc8e from iPXE project is
-setting the MFS to 0x600 = 1536.
+On 12/03/2024 07:51, Huang, Ying wrote:
+> Ryan Roberts <ryan.roberts@arm.com> writes:
+> 
+>> Multi-size THP enables performance improvements by allocating large,
+>> pte-mapped folios for anonymous memory. However I've observed that on an
+>> arm64 system running a parallel workload (e.g. kernel compilation)
+>> across many cores, under high memory pressure, the speed regresses. This
+>> is due to bottlenecking on the increased number of TLBIs added due to
+>> all the extra folio splitting when the large folios are swapped out.
+>>
+>> Therefore, solve this regression by adding support for swapping out mTHP
+>> without needing to split the folio, just like is already done for
+>> PMD-sized THP. This change only applies when CONFIG_THP_SWAP is enabled,
+>> and when the swap backing store is a non-rotating block device. These
+>> are the same constraints as for the existing PMD-sized THP swap-out
+>> support.
+>>
+>> Note that no attempt is made to swap-in (m)THP here - this is still done
+>> page-by-page, like for PMD-sized THP. But swapping-out mTHP is a
+>> prerequisite for swapping-in mTHP.
+>>
+>> The main change here is to improve the swap entry allocator so that it
+>> can allocate any power-of-2 number of contiguous entries between [1, (1
+>> << PMD_ORDER)]. This is done by allocating a cluster for each distinct
+>> order and allocating sequentially from it until the cluster is full.
+>> This ensures that we don't need to search the map and we get no
+>> fragmentation due to alignment padding for different orders in the
+>> cluster. If there is no current cluster for a given order, we attempt to
+>> allocate a free cluster from the list. If there are no free clusters, we
+>> fail the allocation and the caller can fall back to splitting the folio
+>> and allocates individual entries (as per existing PMD-sized THP
+>> fallback).
+>>
+>> The per-order current clusters are maintained per-cpu using the existing
+>> infrastructure. This is done to avoid interleving pages from different
+>> tasks, which would prevent IO being batched. This is already done for
+>> the order-0 allocations so we follow the same pattern.
+>>
+>> As is done for order-0 per-cpu clusters, the scanner now can steal
+>> order-0 entries from any per-cpu-per-order reserved cluster. This
+>> ensures that when the swap file is getting full, space doesn't get tied
+>> up in the per-cpu reserves.
+>>
+>> This change only modifies swap to be able to accept any order mTHP. It
+>> doesn't change the callers to elide doing the actual split. That will be
+>> done in separate changes.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  include/linux/swap.h |   8 ++-
+>>  mm/swapfile.c        | 167 +++++++++++++++++++++++++------------------
+>>  2 files changed, 103 insertions(+), 72 deletions(-)
+>>
+>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+>> index 0cb082bee717..39b5c18ccc6a 100644
+>> --- a/include/linux/swap.h
+>> +++ b/include/linux/swap.h
+>> @@ -268,13 +268,19 @@ struct swap_cluster_info {
+>>   */
+>>  #define SWAP_NEXT_INVALID	0
+>>  
+>> +#ifdef CONFIG_THP_SWAP
+>> +#define SWAP_NR_ORDERS		(PMD_ORDER + 1)
+>> +#else
+>> +#define SWAP_NR_ORDERS		1
+>> +#endif
+>> +
+>>  /*
+>>   * We assign a cluster to each CPU, so each CPU can allocate swap entry from
+>>   * its own cluster and swapout sequentially. The purpose is to optimize swapout
+>>   * throughput.
+>>   */
+>>  struct percpu_cluster {
+>> -	unsigned int next; /* Likely next allocation offset */
+>> +	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
+>>  };
+>>  
+>>  struct swap_cluster_list {
+>> diff --git a/mm/swapfile.c b/mm/swapfile.c
+>> index 3828d81aa6b8..61118a090796 100644
+>> --- a/mm/swapfile.c
+>> +++ b/mm/swapfile.c
+>> @@ -551,10 +551,12 @@ static void free_cluster(struct swap_info_struct *si, unsigned long idx)
+>>  
+>>  /*
+>>   * The cluster corresponding to page_nr will be used. The cluster will be
+>> - * removed from free cluster list and its usage counter will be increased.
+>> + * removed from free cluster list and its usage counter will be increased by
+>> + * count.
+>>   */
+>> -static void inc_cluster_info_page(struct swap_info_struct *p,
+>> -	struct swap_cluster_info *cluster_info, unsigned long page_nr)
+>> +static void add_cluster_info_page(struct swap_info_struct *p,
+>> +	struct swap_cluster_info *cluster_info, unsigned long page_nr,
+>> +	unsigned long count)
+>>  {
+>>  	unsigned long idx = page_nr / SWAPFILE_CLUSTER;
+>>  
+>> @@ -563,9 +565,19 @@ static void inc_cluster_info_page(struct swap_info_struct *p,
+>>  	if (cluster_is_free(&cluster_info[idx]))
+>>  		alloc_cluster(p, idx);
+>>  
+>> -	VM_BUG_ON(cluster_count(&cluster_info[idx]) >= SWAPFILE_CLUSTER);
+>> +	VM_BUG_ON(cluster_count(&cluster_info[idx]) + count > SWAPFILE_CLUSTER);
+>>  	cluster_set_count(&cluster_info[idx],
+>> -		cluster_count(&cluster_info[idx]) + 1);
+>> +		cluster_count(&cluster_info[idx]) + count);
+>> +}
+>> +
+>> +/*
+>> + * The cluster corresponding to page_nr will be used. The cluster will be
+>> + * removed from free cluster list and its usage counter will be increased by 1.
+>> + */
+>> +static void inc_cluster_info_page(struct swap_info_struct *p,
+>> +	struct swap_cluster_info *cluster_info, unsigned long page_nr)
+>> +{
+>> +	add_cluster_info_page(p, cluster_info, page_nr, 1);
+>>  }
+>>  
+>>  /*
+>> @@ -595,7 +607,7 @@ static void dec_cluster_info_page(struct swap_info_struct *p,
+>>   */
+>>  static bool
+>>  scan_swap_map_ssd_cluster_conflict(struct swap_info_struct *si,
+>> -	unsigned long offset)
+>> +	unsigned long offset, int order)
+>>  {
+>>  	struct percpu_cluster *percpu_cluster;
+>>  	bool conflict;
+>> @@ -609,24 +621,39 @@ scan_swap_map_ssd_cluster_conflict(struct swap_info_struct *si,
+>>  		return false;
+>>  
+>>  	percpu_cluster = this_cpu_ptr(si->percpu_cluster);
+>> -	percpu_cluster->next = SWAP_NEXT_INVALID;
+>> +	percpu_cluster->next[order] = SWAP_NEXT_INVALID;
+>> +	return true;
+>> +}
+>> +
+>> +static inline bool swap_range_empty(char *swap_map, unsigned int start,
+>> +				    unsigned int nr_pages)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < nr_pages; i++) {
+>> +		if (swap_map[start + i])
+>> +			return false;
+>> +	}
+>> +
+>>  	return true;
+>>  }
+>>  
+>>  /*
+>> - * Try to get a swap entry from current cpu's swap entry pool (a cluster). This
+>> - * might involve allocating a new cluster for current CPU too.
+>> + * Try to get a swap entry (or size indicated by order) from current cpu's swap
+> 
+> IMO, it's not necessary to make mTHP a special case other than base
+> page.  So, this can be changed to
+> 
+>  * Try to get swap entries with specified order from current cpu's swap
 
-At boot time the i40e driver complains about it with
-the following message but continues.
+Sure, will fix in next version.
 
-	MFS for port 1 has been set below the default: 600
+> 
+>> + * entry pool (a cluster). This might involve allocating a new cluster for
+>> + * current CPU too.
+>>   */
+>>  static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+>> -	unsigned long *offset, unsigned long *scan_base)
+>> +	unsigned long *offset, unsigned long *scan_base, int order)
+>>  {
+>> +	unsigned int nr_pages = 1 << order;
+>>  	struct percpu_cluster *cluster;
+>>  	struct swap_cluster_info *ci;
+>>  	unsigned int tmp, max;
+>>  
+>>  new_cluster:
+>>  	cluster = this_cpu_ptr(si->percpu_cluster);
+>> -	tmp = cluster->next;
+>> +	tmp = cluster->next[order];
+>>  	if (tmp == SWAP_NEXT_INVALID) {
+>>  		if (!cluster_list_empty(&si->free_clusters)) {
+>>  			tmp = cluster_next(&si->free_clusters.head) *
+>> @@ -647,26 +674,27 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+>>  
+>>  	/*
+>>  	 * Other CPUs can use our cluster if they can't find a free cluster,
+>> -	 * check if there is still free entry in the cluster
+>> +	 * check if there is still free entry in the cluster, maintaining
+>> +	 * natural alignment.
+>>  	 */
+>>  	max = min_t(unsigned long, si->max, ALIGN(tmp + 1, SWAPFILE_CLUSTER));
+>>  	if (tmp < max) {
+>>  		ci = lock_cluster(si, tmp);
+>>  		while (tmp < max) {
+>> -			if (!si->swap_map[tmp])
+>> +			if (swap_range_empty(si->swap_map, tmp, nr_pages))
+>>  				break;
+>> -			tmp++;
+>> +			tmp += nr_pages;
+>>  		}
+>>  		unlock_cluster(ci);
+>>  	}
+>>  	if (tmp >= max) {
+>> -		cluster->next = SWAP_NEXT_INVALID;
+>> +		cluster->next[order] = SWAP_NEXT_INVALID;
+>>  		goto new_cluster;
+>>  	}
+>>  	*offset = tmp;
+>>  	*scan_base = tmp;
+>> -	tmp += 1;
+>> -	cluster->next = tmp < max ? tmp : SWAP_NEXT_INVALID;
+>> +	tmp += nr_pages;
+>> +	cluster->next[order] = tmp < max ? tmp : SWAP_NEXT_INVALID;
+>>  	return true;
+>>  }
+>>  
+>> @@ -796,13 +824,14 @@ static bool swap_offset_available_and_locked(struct swap_info_struct *si,
+>>  
+>>  static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  			       unsigned char usage, int nr,
+>> -			       swp_entry_t slots[])
+>> +			       swp_entry_t slots[], unsigned int nr_pages)
+> 
+> IMHO, it's better to use order as parameter directly.  We can change the
+> parameter of get_swap_pages() too.
 
-If the MTU size is increased, the driver accept it but large packets will not
-be processed by the firmware generating tx_errors. The issue is pretty
-silent for users. i.e doing TCP in such context will generates lots of
-retransmissions until the proper window size (below 1500) will be used.
+I agree that this will make the interface clearer/self documenting. I'll do it
+in the next version.
 
-To fix this case, it would have been ideal to increase the MFS,
-via i40e_aqc_opc_set_mac_config, but I didn't found a reliable way to do it.
+> 
+>>  {
+>>  	struct swap_cluster_info *ci;
+>>  	unsigned long offset;
+>>  	unsigned long scan_base;
+>>  	unsigned long last_in_cluster = 0;
+>>  	int latency_ration = LATENCY_LIMIT;
+>> +	int order = ilog2(nr_pages);
+>>  	int n_ret = 0;
+>>  	bool scanned_many = false;
+>>  
+>> @@ -817,6 +846,26 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  	 * And we let swap pages go all over an SSD partition.  Hugh
+>>  	 */
+>>  
+>> +	if (nr_pages > 1) {
+>> +		/*
+>> +		 * Should not even be attempting large allocations when huge
+>> +		 * page swap is disabled.  Warn and fail the allocation.
+>> +		 */
+>> +		if (!IS_ENABLED(CONFIG_THP_SWAP) ||
+>> +		    nr_pages > SWAPFILE_CLUSTER ||
+>> +		    !is_power_of_2(nr_pages)) {
+>> +			VM_WARN_ON_ONCE(1);
+>> +			return 0;
+>> +		}
+>> +
+>> +		/*
+>> +		 * Swapfile is not block device or not using clusters so unable
+>> +		 * to allocate large entries.
+>> +		 */
+>> +		if (!(si->flags & SWP_BLKDEV) || !si->cluster_info)
+>> +			return 0;
+>> +	}
+>> +
+>>  	si->flags += SWP_SCANNING;
+>>  	/*
+>>  	 * Use percpu scan base for SSD to reduce lock contention on
+>> @@ -831,8 +880,11 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  
+>>  	/* SSD algorithm */
+>>  	if (si->cluster_info) {
+>> -		if (!scan_swap_map_try_ssd_cluster(si, &offset, &scan_base))
+>> +		if (!scan_swap_map_try_ssd_cluster(si, &offset, &scan_base, order)) {
+>> +			if (order > 0)
+>> +				goto no_page;
+>>  			goto scan;
+>> +		}
+>>  	} else if (unlikely(!si->cluster_nr--)) {
+>>  		if (si->pages - si->inuse_pages < SWAPFILE_CLUSTER) {
+>>  			si->cluster_nr = SWAPFILE_CLUSTER - 1;
+>> @@ -874,26 +926,30 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  
+>>  checks:
+>>  	if (si->cluster_info) {
+>> -		while (scan_swap_map_ssd_cluster_conflict(si, offset)) {
+>> +		while (scan_swap_map_ssd_cluster_conflict(si, offset, order)) {
+>>  		/* take a break if we already got some slots */
+>>  			if (n_ret)
+>>  				goto done;
+>>  			if (!scan_swap_map_try_ssd_cluster(si, &offset,
+>> -							&scan_base))
+>> +							&scan_base, order)) {
+>> +				if (order > 0)
+>> +					goto no_page;
+>>  				goto scan;
+>> +			}
+>>  		}
+>>  	}
+>>  	if (!(si->flags & SWP_WRITEOK))
+>>  		goto no_page;
+>>  	if (!si->highest_bit)
+>>  		goto no_page;
+>> -	if (offset > si->highest_bit)
+>> +	if (order == 0 && offset > si->highest_bit)
+> 
+> I don't think that we need to check "order == 0" here.  The original
+> condition will always be false for "order != 0".
 
-At least, this commit prevents setting up an MTU greater than the current MFS.
-It will avoid being in the position of having an MTU set to 9000 on the
-netdev with a firmware refusing packets larger than 1536.
+I spent ages looking at this and couldn't quite convince myself that this is
+definitely safe. Certainly it would be catastrophic if we modified the returned
+offset for a non-order-0 case (the code below assumes order-0 when checking). So
+I decided in the end to be safe and add this condition. Looking again, I agree
+with you. Will fix in next version.
 
-A typical trace looks like the following :
-[  377.548696] i40e 0000:5d:00.0 eno5: Error changing mtu to 9000 which is greater than the current mfs: 1536
+> 
+>>  		scan_base = offset = si->lowest_bit;
+>>  
+>>  	ci = lock_cluster(si, offset);
+>>  	/* reuse swap entry of cache-only swap if not busy. */
+>>  	if (vm_swap_full() && si->swap_map[offset] == SWAP_HAS_CACHE) {
+>>  		int swap_was_freed;
+>> +		VM_WARN_ON(order > 0);
+> 
+> Instead of add WARN here, I think that it's better to add WARN at the
+> beginning of "scan" label.  We should never scan if "order > 0", it can
+> capture even more abnormal status.
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+OK, will do.
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 89a3401d20ab..225b2fd0449e 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -2950,7 +2950,7 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
- 	struct i40e_netdev_priv *np = netdev_priv(netdev);
- 	struct i40e_vsi *vsi = np->vsi;
- 	struct i40e_pf *pf = vsi->back;
--	int frame_size;
-+	int frame_size, mfs, max_mtu;
- 
- 	frame_size = i40e_max_vsi_frame_size(vsi, vsi->xdp_prog);
- 	if (new_mtu > frame_size - I40E_PACKET_HDR_PAD) {
-@@ -2959,6 +2959,14 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
- 		return -EINVAL;
- 	}
- 
-+	mfs = pf->hw.phy.link_info.max_frame_size;
-+	max_mtu = mfs - I40E_PACKET_HDR_PAD;
-+	if (new_mtu > max_mtu) {
-+		netdev_err(netdev, "Error changing mtu to %d, Max is %d. MFS is too small.\n",
-+			   new_mtu, max_mtu);
-+		return -EINVAL;
-+	}
-+
- 	netdev_dbg(netdev, "changing MTU from %d to %d\n",
- 		   netdev->mtu, new_mtu);
- 	netdev->mtu = new_mtu;
--- 
-2.44.0
+> 
+>>  		unlock_cluster(ci);
+>>  		spin_unlock(&si->lock);
+>>  		swap_was_freed = __try_to_reclaim_swap(si, offset, TTRS_ANYWAY);
+>> @@ -905,17 +961,18 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  	}
+>>  
+>>  	if (si->swap_map[offset]) {
+>> +		VM_WARN_ON(order > 0);
+
+And remove this one too? (relying on the one in scan instead)
+
+>>  		unlock_cluster(ci);
+>>  		if (!n_ret)
+>>  			goto scan;
+>>  		else
+>>  			goto done;
+>>  	}
+>> -	WRITE_ONCE(si->swap_map[offset], usage);
+>> -	inc_cluster_info_page(si, si->cluster_info, offset);
+>> +	memset(si->swap_map + offset, usage, nr_pages);
+> 
+> Add barrier() here corresponds to original WRITE_ONCE()?
+> unlock_cluster(ci) may be NOP for some swap devices.
+
+Yep, good spot!
+
+> 
+>> +	add_cluster_info_page(si, si->cluster_info, offset, nr_pages);
+>>  	unlock_cluster(ci);
+>>  
+>> -	swap_range_alloc(si, offset, 1);
+>> +	swap_range_alloc(si, offset, nr_pages);
+>>  	slots[n_ret++] = swp_entry(si->type, offset);
+>>  
+>>  	/* got enough slots or reach max slots? */
+> 
+> If "order > 0", "nr" must be 1.  So, we will "goto done" in the
+> following code.
+
+I've deliberately implemented scan_swap_map_slots() so that it allows nr > 1 for
+order > 0. And leave it to the higher layers to decide on policy.
+
+> 
+>         /* got enough slots or reach max slots? */
+>         if ((n_ret == nr) || (offset >= si->highest_bit))
+>            goto done;
+> 
+> We can add VM_WARN_ON() here to capture some abnormal status.
+
+That was actually how I implemented initially. But decided that it doesn't cost
+anything to allow nr > 1 for order > 0, and IMHO makes the function easier to
+understand because we remove this uneccessary constraint.
+
+> 
+>> @@ -936,8 +993,10 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  
+>>  	/* try to get more slots in cluster */
+>>  	if (si->cluster_info) {
+>> -		if (scan_swap_map_try_ssd_cluster(si, &offset, &scan_base))
+>> +		if (scan_swap_map_try_ssd_cluster(si, &offset, &scan_base, order))
+>>  			goto checks;
+>> +		if (order > 0)
+>> +			goto done;
+> 
+> Don't need to add this, if "order > 0", we will never go here.
+
+As per above.
+
+> 
+>>  	} else if (si->cluster_nr && !si->swap_map[++offset]) {
+>>  		/* non-ssd case, still more slots in cluster? */
+>>  		--si->cluster_nr;
+>> @@ -964,7 +1023,8 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  	}
+>>  
+>>  done:
+>> -	set_cluster_next(si, offset + 1);
+>> +	if (order == 0)
+>> +		set_cluster_next(si, offset + 1);
+>>  	si->flags -= SWP_SCANNING;
+>>  	return n_ret;
+>>  
+>> @@ -997,38 +1057,6 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+>>  	return n_ret;
+>>  }
+>>  
+>> -static int swap_alloc_cluster(struct swap_info_struct *si, swp_entry_t *slot)
+>> -{
+>> -	unsigned long idx;
+>> -	struct swap_cluster_info *ci;
+>> -	unsigned long offset;
+>> -
+>> -	/*
+>> -	 * Should not even be attempting cluster allocations when huge
+>> -	 * page swap is disabled.  Warn and fail the allocation.
+>> -	 */
+>> -	if (!IS_ENABLED(CONFIG_THP_SWAP)) {
+>> -		VM_WARN_ON_ONCE(1);
+>> -		return 0;
+>> -	}
+>> -
+>> -	if (cluster_list_empty(&si->free_clusters))
+>> -		return 0;
+>> -
+>> -	idx = cluster_list_first(&si->free_clusters);
+>> -	offset = idx * SWAPFILE_CLUSTER;
+>> -	ci = lock_cluster(si, offset);
+>> -	alloc_cluster(si, idx);
+>> -	cluster_set_count(ci, SWAPFILE_CLUSTER);
+>> -
+>> -	memset(si->swap_map + offset, SWAP_HAS_CACHE, SWAPFILE_CLUSTER);
+>> -	unlock_cluster(ci);
+>> -	swap_range_alloc(si, offset, SWAPFILE_CLUSTER);
+>> -	*slot = swp_entry(si->type, offset);
+>> -
+>> -	return 1;
+>> -}
+>> -
+>>  static void swap_free_cluster(struct swap_info_struct *si, unsigned long idx)
+>>  {
+>>  	unsigned long offset = idx * SWAPFILE_CLUSTER;
+>> @@ -1050,8 +1078,8 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+>>  	int n_ret = 0;
+>>  	int node;
+>>  
+>> -	/* Only single cluster request supported */
+>> -	WARN_ON_ONCE(n_goal > 1 && size == SWAPFILE_CLUSTER);
+>> +	/* Only single THP request supported */
+>> +	WARN_ON_ONCE(n_goal > 1 && size > 1);
+>>  
+>>  	spin_lock(&swap_avail_lock);
+>>  
+>> @@ -1088,14 +1116,10 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+>>  			spin_unlock(&si->lock);
+>>  			goto nextsi;
+>>  		}
+>> -		if (size == SWAPFILE_CLUSTER) {
+>> -			if (si->flags & SWP_BLKDEV)
+>> -				n_ret = swap_alloc_cluster(si, swp_entries);
+>> -		} else
+>> -			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+>> -						    n_goal, swp_entries);
+>> +		n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+>> +					    n_goal, swp_entries, size);
+>>  		spin_unlock(&si->lock);
+>> -		if (n_ret || size == SWAPFILE_CLUSTER)
+>> +		if (n_ret || size > 1)
+>>  			goto check_out;
+>>  		cond_resched();
+>>  
+>> @@ -1647,7 +1671,7 @@ swp_entry_t get_swap_page_of_type(int type)
+>>  
+>>  	/* This is called for allocating swap entry, not cache */
+>>  	spin_lock(&si->lock);
+>> -	if ((si->flags & SWP_WRITEOK) && scan_swap_map_slots(si, 1, 1, &entry))
+>> +	if ((si->flags & SWP_WRITEOK) && scan_swap_map_slots(si, 1, 1, &entry, 1))
+>>  		atomic_long_dec(&nr_swap_pages);
+>>  	spin_unlock(&si->lock);
+>>  fail:
+>> @@ -3101,7 +3125,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>>  		p->flags |= SWP_SYNCHRONOUS_IO;
+>>  
+>>  	if (p->bdev && bdev_nonrot(p->bdev)) {
+>> -		int cpu;
+>> +		int cpu, i;
+>>  		unsigned long ci, nr_cluster;
+>>  
+>>  		p->flags |= SWP_SOLIDSTATE;
+>> @@ -3139,7 +3163,8 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>>  			struct percpu_cluster *cluster;
+>>  
+>>  			cluster = per_cpu_ptr(p->percpu_cluster, cpu);
+>> -			cluster->next = SWAP_NEXT_INVALID;
+>> +			for (i = 0; i < SWAP_NR_ORDERS; i++)
+>> +				cluster->next[i] = SWAP_NEXT_INVALID;
+>>  		}
+>>  	} else {
+>>  		atomic_inc(&nr_rotate_swap);
+> 
+> You also need to check whether we should add swap_entry_size() for some
+> functions to optimize for small system.  We may need to add swap_order()
+> too.
+
+I was planning to convert swap_entry_size() to swap_entry_order() as part of
+switching to pass order instead of nr_pages. There is one other site that uses
+swap_entry_size() and needs a size, so was going to just change it to 1 <<
+swap_entry_order(). Does that work for you?
+
+I'll do an audit for places to use swap_entry_order() but quick scan just now
+suggests that the constant should propagate to all the static functions from
+get_swap_pages().
+
+Thanks,
+Ryan
+
+> 
+> --
+> Best Regards,
+> Huang, Ying
 
