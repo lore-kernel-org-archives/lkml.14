@@ -1,98 +1,124 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810DD7AE51
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 14:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9010E77655
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 14:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710253210; cv=none; b=KXQnL6SlLGQ8dMm0obWO+FeHmN/MYe2KNdyyM3Sfnvr1Id5NuBX8OBOrZSsI2j7H6S03TJ2NGs1W624yNACRNxSEFj9yrf2eV/8TX9E7cfVWKbR2ho1uAr6IwRdukuoXTCsqBWS+VxLbzabbtmA6efS4DA1wikjZNm+vi9CoKMU=
+	t=1710253412; cv=none; b=GDYwRqVbzAOnuXyaBwciXUeGNI5LGfEnp5NLnLWTFB7kZ7gParmki2P0iAc94REtuqtPTVxFZ/CkillgsSqfzDnwZ8QdLpl0PAxYK6WKeXZYi/p3B0+XlBc5B6PPU87zOM/5tg97NSQPX98sRlXjXjByFgwt22LFOJMP+Dj4ofQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710253210; c=relaxed/simple;
-	bh=Cyv31l3V93wJczzZuVe6h3HTL/aj20Zlxrvzm4Sh8lE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X9y0/hEb2hlzoIesUlQqXLaQIvmRCROKj5z+PsMHGyGEageoCAYKatMQT927ix0e/YPOAK0q+FZCj0+txA1A93DVY11vBklVaLG0q5hRY73jy54lDsGQ76oP7+SGXh7GsEL3HfcYVQp+O1+ld47AVl+NGUWPaqZ6Q3oOgsMp05Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H0zhra1t; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1710253412; c=relaxed/simple;
+	bh=gf9yMtKzRBlOhLL/fmxIguN/CTFdrmIfHjtFEg9Eo+g=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=l6mJkTtFAOovz6oHm2xu54L/cvveEWxenmLSFaKmMHGcJpGEeSePqA/7KuhYBUwSHS7vtWgANE1RyUbrNVwf/f1xG5hGV6nCCK+4vl+wYb7QNhHq12q4KxfV2cO8HXd11ymPt0Bq8jJ/RgoA9cm+kp9s9VTxzbXKrfheWvCaha4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=yPI9Gd9b; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H0zhra1t"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc657e9bdc4so1214890276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 07:20:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="yPI9Gd9b"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dca3951ad9so45494535ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 07:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710253207; x=1710858007; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Jjb/PAOgGaN7lAsVIUO9NyizSvHp4sC3GUTaZ0PNJs=;
-        b=H0zhra1tbF2BHsVDBkI/e5ByzJ1FKwfcZbWw1ikPhXbAFRTByAcXlwfuKBTUfpKuGg
-         CByuuIJnmYSODXsQSDj/P/i9r+sVyopD8lUmj1ePR5mDX5eIpY/ZB2mKnp55rjFf0wjk
-         oVZPp+PviACFX0D75LmUIcGshgNM5+TcJcGTgUNI5mOmsu5h4/kJVMIr1yywq2GXdJRF
-         E9yMg6dSYc+i1Qv9To6d+ZRoVT0EIHa57RdXGeJIaBAoBGQFHlWnr361WFwXF3E3DAo7
-         TdHkMpx4rh55d9XxCwwWnzmnNnZfmIOLZR4pqy55TIzMJAsOONvd0+7aPxTnartrDA+c
-         GLXA==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1710253409; x=1710858209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ixjDXdUDhwXI0JLFZkupTe/KFpB3Bws3seOjqAl5dc=;
+        b=yPI9Gd9b0/sHZX4nK0ssdhSH1TyxAh6WrCWLTY9SS+lNVJPhJB+BVACb5H53ie+hbX
+         hYBweQcZp3gfut0+IYunnyabD75TuihKhTugYI+PbgBwFoJLAbIR7wT8AGXeXE45NtWF
+         pOmjMW8c4dCHy5g3DCZ0kv5itqwE8MzLpT3SJ+LQ2MyK41t6qjPMyCIIK3CDTeIrGNrs
+         yOD5kBdcGWRVcRflPZDnHFNDWkVVTzIoiNUERgaBjkJpmSUOOkioWDiwT1934PY94t1Y
+         PU/BGcuI+lqwUMYyBJj97zSnOFPuYX4dEX6rmy3MpNW/5fFzAOlralB9A0vqFGhL4oGO
+         J9BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710253207; x=1710858007;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Jjb/PAOgGaN7lAsVIUO9NyizSvHp4sC3GUTaZ0PNJs=;
-        b=WfsO+Zv4AwBS2Q5FGNhmx6NxRBrW/U89pA7UuZbPSiDMZ2JvOVZPsi/xRuJRsibf9W
-         qJ6nG35hw5gHymTUre4qoaEpi456Rk85kND+UWPUAwrP9xchdcAanCr0G9LSeFe5vXNT
-         7H+Auj7vzjcaUVNzJuAGCunCoJWX9U3QfFsc6F506U47IkwDPIyI1br8MwVdlnN4Jmce
-         vTMoKsspE3mKn4S6dQkjPAaly1SakoMsE0eBRvKgk1EluB986pwQGyvxqsxCMGki1udx
-         FYMSHFhOYVmg3kOpTcJzHYh5BrjqvPQjMKSnjHkWam7DoFkePT5yn2zKQJsBcr4CrbGC
-         VQ6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW5vnWR3xjQ8N4nrTHrDQmQc2gYjUX8Uqrjvs1myQEXjrrk88zvfJC5+5u1N+h5NPJViWq4iKjkP1yh5KSRHjQNep8UUd51hjD25XPF
-X-Gm-Message-State: AOJu0YxOvt5ANzVXO4ENuC9AzbjQE6ZlG6+Sx0wv8PufqTWoC5UtESOS
-	UVFAVEJg8UI6lvGM8yaO6ZpYOVAV6Klx9ffvazA9/R8ukiCNR/y6uxfxOeYIXzKLIrcc7s5MjXt
-	22g==
-X-Google-Smtp-Source: AGHT+IF2G7mI6BP+EmptPVIitfTTiB7haHK5wPTRnTR7LM1v/cn/RH1kQsYUCQo17zt2GU1GfGk8M1szpTU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:be49:0:b0:dc6:44d4:bee0 with SMTP id
- d9-20020a25be49000000b00dc644d4bee0mr512108ybm.7.1710253207502; Tue, 12 Mar
- 2024 07:20:07 -0700 (PDT)
-Date: Tue, 12 Mar 2024 07:20:05 -0700
-In-Reply-To: <6b38d1ea3073cdda0f106313d9f0e032345b8b75.camel@intel.com>
+        d=1e100.net; s=20230601; t=1710253409; x=1710858209;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ixjDXdUDhwXI0JLFZkupTe/KFpB3Bws3seOjqAl5dc=;
+        b=G7AaDJq720d91NBiXlW3JZKVlEQyypGYOjdlC7cIBjiXLhJ10FhTb4Eh9o3Y60346W
+         ZaSmqRXF0H3Ia+bp9PJUjt0UVSAG7lKnVlAKdK4n6HIXE/Yj9hK4NplYPQJ7338nW+if
+         hoGasYnL/ttGL3Ei5rOdIKcX4cIr30ph98a1shArhXhk0AFIJ5LY8aiW9pqmn3lAokQJ
+         UhdIyNifyqAeOpDdpWPKSv1RyVysz6Rv78DUJ3sjd3hIvjZIXqqMiqH7jb4wukCGKj5H
+         QeoewUpYW7hE6b2rf8dX0ov6564Dl88C/Mam5qipiC2UyGIham9fD9iBJQB3dy4X95t9
+         Tzyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjmEPzCTBfmiZr1QWUB9NsbVMqE6/oC7D93piPUOLD1kTxe+dvpD754dfEUMI8WKHLpCz2MSA/7H254I9Eg2GljcmLlL3DxgBETXTd
+X-Gm-Message-State: AOJu0YxIEZ3anhBWWqczcrFkJD1CPCeRiNmko8KOfoQOQWQkiZkP6Miv
+	FtaIovL60B+TyKyy7aM/0NBcTSaN9RRD9JwAMaj+X5XHtf8n9hm6ouVtZ4PHAA4=
+X-Google-Smtp-Source: AGHT+IF5Tdh4z8JQsHyW1PPsqQuYiflOdAu+RNp46pn6g+B0xVaFC5Y6Ggu7odCPQpbbShIDcpWR1Q==
+X-Received: by 2002:a17:902:e74a:b0:1dd:a134:5680 with SMTP id p10-20020a170902e74a00b001dda1345680mr6869873plf.69.1710253408730;
+        Tue, 12 Mar 2024 07:23:28 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id jy8-20020a17090342c800b001dd5806eff3sm6836433plb.306.2024.03.12.07.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 07:23:28 -0700 (PDT)
+Date: Tue, 12 Mar 2024 07:23:28 -0700 (PDT)
+X-Google-Original-Date: Tue, 12 Mar 2024 07:23:26 PDT (-0700)
+Subject:     Re: [PATCH v9 03/10] irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
+In-Reply-To: <871q93eehn.ffs@tglx>
+CC: peterlin@andestech.com, acme@kernel.org, adrian.hunter@intel.com,
+  ajones@ventanamicro.com, alexander.shishkin@linux.intel.com, andre.przywara@arm.com,
+  anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, conor+dt@kernel.org,
+  Conor Dooley <conor.dooley@microchip.com>, Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
+  Evan Green <evan@rivosinc.com>, geert+renesas@glider.be, guoren@kernel.org, Heiko Stuebner <heiko@sntech.de>,
+  irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org,
+  krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+  linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+  linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com,
+  Mark Rutland <mark.rutland@arm.com>, mingo@redhat.com, n.shubin@yadro.com, namhyung@kernel.org,
+  Paul Walmsley <paul.walmsley@sifive.com>, peterlin@andestech.com, peterz@infradead.org,
+  prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org,
+  Sunil V L <sunilvl@ventanamicro.com>, tim609@andestech.com, uwu@icenowy.me, wens@csie.org,
+  Will Deacon <will@kernel.org>, inochiama@outlook.com, unicorn_wang@outlook.com, wefu@redhat.com,
+  randolph@andestech.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: tglx@linutronix.de
+Message-ID: <mhng-d47edbdb-0a36-4adb-9575-8af094d80e5e@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1709288671.git.isaku.yamahata@intel.com>
- <66a957f4ec4a8591d2ff2550686e361ec648b308.1709288671.git.isaku.yamahata@intel.com>
- <Ze-TJh0BBOWm9spT@google.com> <6b38d1ea3073cdda0f106313d9f0e032345b8b75.camel@intel.com>
-Message-ID: <ZfBkle1eZFfjPI8l@google.com>
-Subject: Re: [RFC PATCH 6/8] KVM: x86: Implement kvm_arch_{, pre_}vcpu_map_memory()
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"federico.parola@polito.it" <federico.parola@polito.it>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"dmatlack@google.com" <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 12, 2024, Kai Huang wrote:
-> > Wait. KVM doesn't *need* to do PAGE.ADD from deep in the MMU.  The only inputs to
-> > PAGE.ADD are the gfn, pfn, tdr (vm), and source.  The S-EPT structures need to be
-> > pre-built, but when they are built is irrelevant, so long as they are in place
-> > before PAGE.ADD.
-> > 
-> > Crazy idea.  For TDX S-EPT, what if KVM_MAP_MEMORY does all of the SEPT.ADD stuff,
-> > which doesn't affect the measurement, and even fills in KVM's copy of the leaf EPTE, 
-> > but tdx_sept_set_private_spte() doesn't do anything if the TD isn't finalized?
-> > 
-> > Then KVM provides a dedicated TDX ioctl(), i.e. what is/was KVM_TDX_INIT_MEM_REGION,
-> > to do PAGE.ADD.  KVM_TDX_INIT_MEM_REGION wouldn't need to map anything, it would
-> > simply need to verify that the pfn from guest_memfd() is the same as what's in
-> > the TDP MMU.
-> 
-> One small question:
-> 
-> What if the memory region passed to KVM_TDX_INIT_MEM_REGION hasn't been pre-
-> populated?  If we want to make KVM_TDX_INIT_MEM_REGION work with these regions,
-> then we still need to do the real map.  Or we can make KVM_TDX_INIT_MEM_REGION
-> return error when it finds the region hasn't been pre-populated?
+On Fri, 23 Feb 2024 01:06:44 PST (-0800), tglx@linutronix.de wrote:
+> On Fri, Feb 23 2024 at 09:54, Thomas Gleixner wrote:
+>> On Fri, Feb 23 2024 at 09:49, Thomas Gleixner wrote:
+>>> On Thu, Feb 22 2024 at 22:36, Thomas Gleixner wrote:
+>>>> Palmer, feel free to take this through the riscv tree. I have no other
+>>>> changes pending against that driver.
+>>>
+>>> Aargh. Spoken too early. This conflicts with Anups AIA series.
+>>>
+>>>   https://lore.kernel.org/all/20240222094006.1030709-1-apatel@ventanamicro.com
+>>>
+>>> So I rather take the pile through my tree and deal with the conflicts
+>>> localy than inflicting it on next.
+>>
+>>> Palmer?
+>>
+>> Nah. I just apply the two intc patches localy and give you a tag to pull
+>> from so we carry both the same commits. Then I can deal with the
+>> conflicts on my side trivially.
+>
+> Here you go:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-for-riscv-02-23-24
+>
+> Contains:
+>
+>   f4cc33e78ba8 ("irqchip/riscv-intc: Introduce Andes hart-level interrupt controller")
+>   96303bcb401c ("irqchip/riscv-intc: Allow large non-standard interrupt number")
+>
+> on top of v6.8-rc1
 
-Return an error.  I don't love the idea of bleeding so many TDX details into
-userspace, but I'm pretty sure that ship sailed a long, long time ago.
+Sorry I missed this.  I just merged this into my testing tree, it might 
+take a bit to show up because I've managed to break my VPN so I can't 
+poke the tester box right now...
+
+>
+> Thanks,
+>
+>         tglx
