@@ -1,102 +1,135 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C38F7E114
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F68CAD5C;
+	Tue, 12 Mar 2024 16:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710260668; cv=none; b=TQAiY3a+LghdxBtgkoqxQWoxim0SyAOdVFFrxREQtvmwBHpggOpcTyMJxoFIKBtyl9NYvpnY8bpL5JWNZym6/tZUG+2q/kl4Wk5jw5PF6aKit9kZStVHgIbjsRF5QChJ3dHbjrwtJdkt/MiJo7+jTdjBWr7M2Dy/UmwHQh6eB3s=
+	t=1710260725; cv=none; b=XxNp9JC+wI8YUYay0wqACHkTT/JpZPrEy4p1+Wgkh7n/RVwDw3CTICwhnDJaARUPlnpfWGSiJcsjDwa/SqXyMj3wNbvjwiMkKRxWdiRgEIcEX63PREZVIRlX/05rikQa/IUZsvKE+dTZ3FtpV5/Lx9csrnHIDtB0uMBSFR3JAuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710260668; c=relaxed/simple;
-	bh=IMTi1mmB21fOGrwdrG1aJWx8CERlzTfordyN6vtcN1Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+6yEag1j3h8TejTQF+T0rfsW3Gj0+UMawAYEdhY81dkyHMM5nrvUWXrQ9rAwGlW8+tZoaeuJoFzSu/eaeQoiOgfEhUcFH3Y9/cAS287+D5x7lyH0rBpgHWvEB/d6neXqbRf7h+SnD60zK2Txdl3u1m1Z8nQM7PRQ7QXySZ8bxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NVjxajyq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710260725; c=relaxed/simple;
+	bh=FKqPwv8fmZYtCQqlF7LSJcgqG/Bdfs+UfdZdl9iIowo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lCA0p99vMfSyVV45tYZ36i/3XlPjpxcdQYDdgzq2JYBAwRaGC9UFoBL+2QYjfzPHwG1UjLKSfQp+hnV1KWg4bRl3uajYfrF4b06uqdtbYrkqWgYEz1sAgcXt+3zzqJpAFdM1kwb0Tvn0+9zVvBUsGFDs1sv148SBvN1JJbCuFMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LfIwvXW6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVjxajyq"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a44665605f3so809162166b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710260665; x=1710865465; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IMTi1mmB21fOGrwdrG1aJWx8CERlzTfordyN6vtcN1Y=;
-        b=NVjxajyq0h8aMkzHz+E3bPuW7+4RbsM5QXfuFNWsVKI6DhcjBDEalBpI46Ixhj8iqo
-         Xc+oRGqtJOttbDzpzaRtfKRW/A52aK6aMIZV+eLm8qFwZDBTarAPq4w2Y4wM7+Ftt0au
-         duwIdY2RzhEaAq5tPWFOgKt0HmflkIg2zcdTKU0lej9P5ZLgQ6g4KG/Ou3TqALEYA+rp
-         wzSzNRk2K+wy1d+fTBFe+iBc1aruAJCUlmsvyT1AnSFpWCPYeaUhfnOh3CSajiczxpzz
-         5LkWuE8jz3H6pCkiDsyD7ilVc88W8QUc1oY2PRvVBrHwDgqKpj5M9UamsgicCceIs913
-         ILOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710260665; x=1710865465;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IMTi1mmB21fOGrwdrG1aJWx8CERlzTfordyN6vtcN1Y=;
-        b=EeVwsDrkY6QLx1xSn6vYcgP9VugQ/DLFwx3CRi06CjYc5INim8LYTLebDXNvKuFaZi
-         CaUy5PPshv9u1JvbJH3/NsHJECgIrwKn7hEhY8s3dM47Dma0enLESJu4LnLVo+fPAtyC
-         mcncMSOy/Ym5HLnzNz1bIRAKrP/w5Oe9gmoBQo0AgKSLVFNLmd/BcmSnBwtgl5pKoPFE
-         RHIGoTIHu6WF4NdFO8kcIUTxnYJDmMR4CfCF8Cu1qdci7pS9q73w8vX2/2Bse74I9mG6
-         UCkEJ2BPZcOOgS/X0rkcJtucOgyzIdQOkTfp3WTLQbdzBgLbkVDdYwL5WH31AlP59saJ
-         O+Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUj9d4TkFG9J1WF535cCXIsYjIKA1kndwLRYqIsnRVFBbQFX9qWkSlv2MH3mHF6TT+9Gt5q/S7JVx7W2ph302Fc283dP7Xw0SIJQpPg
-X-Gm-Message-State: AOJu0YwM30/X0ttqC4uuWbcRZqLVn0Aosa6S3dJI/+2CjP7QrK7Gv0MA
-	1h1vnZDojAK5uObrFVmhdtmyOg+MEGCuXTKQvZvwfZtKaMG8tASAgAeIOLEa4QYnKAgqnUInvYL
-	CfeW0gVERZfn2ZwFc5twE5xl8znMsjeBWdvCl
-X-Google-Smtp-Source: AGHT+IFslqmmUssGyflGn1EGvqy/X6vDu2aiTHkYqqbD1uKW93yCxokoKZ+bIq5yFMGyKXdhGCAS8UiLrLdKB9/dtjM=
-X-Received: by 2002:a17:906:19c5:b0:a46:2c22:7f4c with SMTP id
- h5-20020a17090619c500b00a462c227f4cmr3631747ejd.35.1710260664523; Tue, 12 Mar
- 2024 09:24:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LfIwvXW6"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42CBwfBK019350;
+	Tue, 12 Mar 2024 16:25:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=rnquy9/lu+MkzRCfqfD7IRHO13mqattlw1+Mkjnu3uU=; b=Lf
+	IwvXW6pg97ldTNpumYS2MXd/eRIt7Zgy5AziQwh+QnfseTWkkFxkkWBwmFf0+WfT
+	lUJOoLr6pOGRPTSwvEH8DGfw0mycyVpY2TE5sVtu1cn46iqtIQBlEQqlH7WAOca2
+	5WdHHF3qliiMrL5JEOvmD9Kr0loDatNMzLPN1RglnkitV6ZVUN9a/sq0eWxi47ZS
+	IKu4FbFvWxp/BseXliEMQLT/u4pl7roX5l81WK0BSzPvDbcRl0qbL5ef1y2Kc0Om
+	YpC4mCFc3Z3eUFMK4zKrO3/FVjqXRm4tXGwjApEhqueiA/rRLfvjZ7uvqR3GjF1o
+	Qb63XHuX7QRq+AARdUuQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wtjef15hx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 16:25:19 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42CGPHwd010651
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 16:25:17 GMT
+Received: from [10.216.60.182] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 12 Mar
+ 2024 09:25:14 -0700
+Message-ID: <ffa32cab-fa74-0c37-b3c9-c3c41cff9f9c@quicinc.com>
+Date: Tue, 12 Mar 2024 21:55:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312155641.4003683-1-yosryahmed@google.com>
- <d24c8736-d963-4aa5-a3cb-5cc1110e3ca8@intel.com> <CAJD7tkYXfFiOQMpM+GkR7a=aUxFM-smDc-ZFTTtFu2Kbd2KoPQ@mail.gmail.com>
- <20240312161337.GFZfB_MdSFtAUXjeLU@fat_crate.local>
-In-Reply-To: <20240312161337.GFZfB_MdSFtAUXjeLU@fat_crate.local>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 12 Mar 2024 09:23:48 -0700
-Message-ID: <CAJD7tkYa_NuX2_PD1sEn6kE6Q0Z0VCyq2T2HK_Qdj-_94+OG_w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] x86/mm: Use IPIs to synchronize LAM enablement
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] soc: qcom: llcc: Add llcc device availability check
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240220122805.9084-1-quic_mojha@quicinc.com>
+ <20332b6f-e0cc-4356-83ec-0c9771481083@kernel.org>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20332b6f-e0cc-4356-83ec-0c9771481083@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Rti3HYmDwVgeZxDqx1QZmjDjjBglBIu6
+X-Proofpoint-GUID: Rti3HYmDwVgeZxDqx1QZmjDjjBglBIu6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_10,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403120123
 
-On Tue, Mar 12, 2024 at 9:14=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
-e:
->
-> On Tue, Mar 12, 2024 at 09:09:30AM -0700, Yosry Ahmed wrote:
-> > My bad, I lost track of when I sent v1 and saw Kirill's comment when I
-> > woke up so I addressed that. FWIW, v1 and v2 are almost identical
-> > except for a small change in patch 2 to address Kirill's comment. I
-> > will hold off on sending anything else this week.
->
-> and while you do, you can have a look at
->
-> https://kernel.org/doc/html/latest/process/development-process.html
 
-Sure, although I am kinda familiar with that. It would be useful to
-point out what part(s) I may be violating :)
 
->
-> And we're in a merge window now so no queueing of new patches for
-> 2 weeks unless they're regressions.
+On 3/7/2024 3:51 PM, Krzysztof Kozlowski wrote:
+> On 20/02/2024 13:28, Mukesh Ojha wrote:
+>> When llcc driver is enabled  and llcc device is not
+>> physically there on the SoC, client can get
+>> -EPROBE_DEFER on calling llcc_slice_getd() and it
+>> is possible they defer forever.
+> 
+> Please wrap commit message according to Linux coding style / submission
+> process (neither too early nor over the limit):
+> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 
-Right, I am aware of that part. According to the tip tree handbook I
-shouldn't expect them to be handled during the merge window, but do
-x86 folks prefer I hold off on sending them until after the merge
-window?
+Noted.
+
+> 
+>>
+>> Let's add a check device availabilty and set the
+>> appropriate applicable error in drv_data.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/llcc-qcom.c | 23 ++++++++++++++++++++++-
+>>   1 file changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+>> index 4ca88eaebf06..cb336b183bba 100644
+>> --- a/drivers/soc/qcom/llcc-qcom.c
+>> +++ b/drivers/soc/qcom/llcc-qcom.c
+>> @@ -769,6 +769,27 @@ static const struct qcom_sct_config x1e80100_cfgs = {
+>>   };
+>>   
+>>   static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
+>> +static DEFINE_MUTEX(dev_avail);
+>> +
+>> +static bool is_llcc_device_available(void)
+>> +{
+>> +	static struct llcc_drv_data *ptr;
+>> +
+>> +	mutex_lock(&dev_avail);
+>> +	if (!ptr) {
+>> +		struct device_node *node;
+>> +
+>> +		node = of_find_node_by_name(NULL, "system-cache-controller");
+> 
+> Why do you look names by name? This create undocumented ABI. >
+> NAK (also for any future uses of such of_find_node_by_name()).
+
+I agree, what if we add a common compatible string like qcom,llcc to all 
+llcc supported SoCs.
+
+-Mukesh
+> 
+> Best regards,
+> Krzysztof
+> 
