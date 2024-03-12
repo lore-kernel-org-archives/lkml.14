@@ -1,320 +1,247 @@
-Received: from outgoing6.flk.host-h.net (outgoing6.flk.host-h.net [188.40.0.77])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBD87C091;
-	Tue, 12 Mar 2024 16:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD77232C85;
+	Tue, 12 Mar 2024 16:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710261365; cv=none; b=ce6PJanakhdxhYX0kmMnkwxPUk/ryQhWSfQOzu7mLdv4rB9XnN1EmG7VeEerbaVcOSeRWkC+6cqAk/h2EaxoXYSXlMEHAwU1FhnWRPGdgW1u98lvbENECleIbRoUFjZswUs9vh1Al/0m3EGuHlo8Nq8QjhPYrCQRdtiam6jBTAc=
+	t=1710261374; cv=none; b=Ph3A1qdpJZzUUVR0oN0qU60DQykbqbO+uuKWWCUPgvSPsw1lXICVzfvDRE6E2RGkiai/pbXdmxc+JupeeUVCfEHSvwxPpJxmiFFiCfxCyA1qRif05cPbrpq3tN3i0yp9obo1oDy5Tn71vNepejbn9LvaFtWOuatASmP4/ilGdXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710261365; c=relaxed/simple;
-	bh=h0m6V52SrJe1v2wSyxARFMDVuZtknqDrGF7IJd8CboE=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=fC6c1lzo4aoXih6+NITgLjDJZkKqLPQHxkkVwz2NpVD+2MjNF2NxWzuuzVhOGClNtAVj587DxH7CmEvdSA5vi4qgLYhDG62zUppoy8id0mchg2iVJzTW1drTMVX7W1ZhJKim1pXyuhHGNqYAkwJJ1mNpB520ZR3jSBpGqeC6nHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=oy6s3xtd; arc=none smtp.client-ip=188.40.0.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
+	s=arc-20240116; t=1710261374; c=relaxed/simple;
+	bh=i/OB7tkHAp80mK7oESq+vcbeXeayEs45BxXPIiLLQgY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Q6Yp6l23E/7hJJLSqZNTPuFsD0M7ZCULceIlmDbaFQ8IoxUQLxIq3+hAmSyLtW8IKrqGUfKKMoo6Faav6iNsQ7hdD6fXZkK7JGbueETjH+zFqCZoQD1ZXY7+6XgQ4cOqVlal7NZfJUI9mnOhHDu3UKuTMaP/de3vfW0c+XRM6nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tQzUJNXy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="oy6s3xtd"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tQzUJNXy"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=risingedge.co.za; s=xneelo; h=Message-ID:References:In-Reply-To:Subject:Cc:
-	To:From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:reply-to:
-	sender:bcc; bh=yg+g+abNrGcwEzQSWBbG2h+JPGpvEcqsYIaVOBM+AUA=; b=oy6s3xtd7jDtGp
-	6RPb1fsedIa8PfieDnwpdvgYnnczVWLLrzOAQzhyGUwfduVZbZDsS+yrEvgA0HDclaUMieAQRVn9/
-	H7XKezlmXa83mffFgtPLjzZDO2FiGPa1xuyDZ4bjqfiz3XbKzMTxfNuWvhLcvTiHV72LDMtxyhyeL
-	2whpDNtHlKk89s1WmLKSEgsDMZrfqYnblmj84LfBWsfWTmOXAyCgBL+8XtxRgkvBk8A3XbJ4ijESZ
-	rL8GyZ5auxRApC6T097AoG+7oZZG6RbE1KFVqpMzKSDfEudsvVorEI+q8ZpjU2dJNdfG+Gf06KrM6
-	o9JMgRLlDbOd/cNfgu4w==;
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-	by antispam2-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rk56N-007QAO-TD; Tue, 12 Mar 2024 18:35:47 +0200
-Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
-	by www31.flk1.host-h.net with esmtpa (Exim 4.92)
-	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rk56H-0004yq-Ib; Tue, 12 Mar 2024 18:35:37 +0200
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yTPz2WUx7Ofa7QimOOSP5oRBRq9lT8LwTb6J1vqcvn8=; b=tQzUJNXyOgLCfidwgz86kDRcyF
+	JP9qTaVLsLhrO+GBb/CgO2sEfziCnyG5UAjOWsJqp/eD5Xy5lLjHGkz6zbhRnGXJfxVjS/Q5IejU+
+	U8knd1Ei/9ksGv2td4HM/rdO+8yX6q+YHvR7etHe2geSR+sVZ/ZcIBdctbihjsL489VT9AKhHEQkf
+	r1PB2hDS5KqDmN+ujv8uQHjRnFc5hRGw7g3Zut2/yufazjp4UgzyqWW8JVX5/cuD6cYdlervatXOA
+	paHjLjoipz9L5p8S9Rb7tDsGeUHjHutDufbtD7i09OvwNYUpVo926nGAo4wH+AaYNcvT7dj2KaNAV
+	ZZ5GPLiw==;
+Received: from [2001:8b0:10b:5:6838:c863:5a1f:a558] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rk56k-00000003RIJ-1TY5;
+	Tue, 12 Mar 2024 16:36:06 +0000
+Message-ID: <520ce28050c29cca754493f0595d4a64d45796ee.camel@infradead.org>
+Subject: Re: [RFC PATCH 2/2] arm64: Use SYSTEM_OFF2 PSCI call to power off
+ for hibernate
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, Paolo Bonzini
+ <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier
+ <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, James Morse
+ <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui
+ Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Mostafa Saleh
+ <smostafa@google.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev,  linux-pm@vger.kernel.org
+Date: Tue, 12 Mar 2024 16:36:05 +0000
+In-Reply-To: <ZfB7c9ifUiZR6gy1@bogus>
+References: <20240312135958.727765-1-dwmw2@infradead.org>
+	 <20240312135958.727765-3-dwmw2@infradead.org> <ZfB7c9ifUiZR6gy1@bogus>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-vvUYNaR9qVEvIf4vc7wo"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date: Tue, 12 Mar 2024 18:35:37 +0200
-From: Justin Swartz <justin.swartz@risingedge.co.za>
-To: =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Florian
- Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] net: dsa: mt7530: disable LEDs before reset
-In-Reply-To: <9a7c29b51575083201b963638bdb9fa5@risingedge.co.za>
-References: <20240305043952.21590-1-justin.swartz@risingedge.co.za>
- <6064ba52-2470-4c56-958c-35632187f148@arinc9.com>
- <d45083788db8b0b1ace051adecfe6a3a@risingedge.co.za>
- <1bfd93f1-36d5-436e-818e-2ebdcf475b44@arinc9.com>
- <0439f80319127b6a4a9c19108bcc0065@risingedge.co.za>
- <6df6db7e-7842-4194-b429-ab7443a18ccb@arinc9.com>
- <9a7c29b51575083201b963638bdb9fa5@risingedge.co.za>
-Message-ID: <f594a72a91d12f1d027a06962caa9750@risingedge.co.za>
-X-Sender: justin.swartz@risingedge.co.za
-User-Agent: Roundcube Webmail/1.3.17
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.06)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+lUXMrY4PnmjnViZCjXhQaPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
- WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
- 3T+KSG//gbuP7hnUK8NQdLwsVWKIv+fXqqb3FJ1Z7kkAIev0U9CKH/oA07tJunDPm536TODb5GPR
- oyaaXp1VNA9dXvxV+mFktoWo3CKg4C3LDJ75vu2U4GT70q7ZqN/P49BncZ5XB7lfx9K88uL/WnJE
- LAEP514Y/yfAEbrTclu3OeNcbACmFr3ts0d2E6vXySsvfMaT9Bjf4etJ827HW1/sdZ81dz6BqXHU
- oYg+nmOeSIjjxA24TPuOyBrko5yKpcR03QEJ9DjWmjcfK/FpTD0spWG+rMYoj8CdNq4vLYsMDbt4
- 2oUP1Ae/eGZl2OLANHAHEjHENEhX9cq65nsXPA0MIFDIPOMDW/6+MC+5Mq5RH9OoW0W22an/ubzj
- InB/ImqScRfGyrhHVstPeAuxsRhUFJC4TtSvIahFt3uEpT0304dV2Yoz1SesQUA6bnjJZT6m9lal
- 9vikoy50DqR3hu/rL5PGAoTDzn0QdoxFeruM0Uhu+RLoZIyBwur4TJrMt0TK0/cihnVW8zB2Qi26
- vkVALycwzSdeC1kd8cXa71WqOc72jXbRpMw6Agze1f399OurHEyYS7nq+EBNvgiWKNNSkdVDZOrL
- 5kxgO94lq2025NSImfKeGaSpuwkt9kMFaoxOFH3nT6Zph4wUZj+IQLUKRJzeMs4VIrisX+dtrxYn
- /0jYEvj5QBAPtzfeVlNHdCJmwgf0M7fnqgzRvCMiN68tcHQey84mBB4XoB473XOJmIRPynE3O7YZ
- oFBs6I7QuC1BjGNT52hVLEr/9PrrMm81h6IAYzikeIJfw26MB/V1E5BP9Gv0xI1YXOxC1lZqyFpL
- AwQr6muMti2YanICQnMITeB2fd0UyjU/MIq3Vtx6CgQGHtezYqxGMqsKjARq8PBC4qgGsfAERwCB
- JFs7XjZYbJPBsmpIto2O4JO2fx1gIuNHgi11AwJSTGCrOFs22K1ZnDqAw3gLmOBPHazhChxq9nGW
- aSi6bFHidB1VgzDzDZn/+QEiRQv+PVjjwa+Z5RFCOMRmYvGVP5J/K7tDFQHNyAqzdfFYVDBYJee7
- gx/u82RtU9UW3dl9fwt0Tdq4PMjNsqE0mVfWLKEgol9rYV4JEcNP1rJoln/cD8h/RIvkzXRTCYvX
- WLQhlD92+1l+zHfJg1FMwntsduNBxKPaTpE5L8d4VqFy6yKUFQtzhTlGiGL9B0nAIzS3VGMYMsaD
- t/vlLode8ZEQhyUpJRaYI785W4/hIIDSVMZhrIoAWTF5tIdhy/UIEBYDcZg+Q8UhuRLyBn1+pvlH
- hV6a5QjptwQBGybQyDQ2/GYwPjlMcE57ESN6G+kn87CtwPdB/10jfVNpDbYnXJdSRQj8460WHJib
- IxmU2pb4i4DTkMZeMiNI9JSIyUbtnrlbG4BI8o81FOo91axhCaqPShJzgHH7y4ZfQxML
-X-Report-Abuse-To: spam@antispamquarantine.host-h.net
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
-On 2024-03-12 17:25, Justin Swartz wrote:
-> On 2024-03-12 16:06, Arınç ÜNAL wrote:
->> On 12.03.2024 15:01, Justin Swartz wrote:
->>> Arınç
->>> 
->>> On 2024-03-12 04:41, Arınç ÜNAL wrote:
->>>> Wouldn't it be a better idea to increase the delay between
->>>> reset_control_assert() and reset_control_deassert(), and
->>>> gpiod_set_value_cansleep(priv->reset, 0) and
->>>> gpiod_set_value_cansleep(priv->reset, 1) instead of disabling the 
->>>> LED
->>>> controller and delaying before reset?
->>> 
->>> I've done some additional tests to see what the difference would be
->>> between increasing the reset hold period vs. disabling the LEDs then
->>> sleeping before reset.
->>> 
->>> 
->>> I wanted to know:
->>> 
->>> When an active link is present on Port 3 at boot, what are the
->>> minimum, maximum and average periods between ESW_P3_LED_0
->>> going low and the signal inversion that seems to co-incide with
->>> reset_control_deassert() for each approach?
->>> 
->>> 
->>> I created two patches:
->>> 
->>> WITH INCREASED RESET DELAY
->>> 
->>> As I submitted a patch that added an intended 1000 - 1100 usec delay
->>> before reset, I thought it would be fair to increase the reset hold
->>> period by the same value.
->>> 
->>> ---%---
->>> --- a/drivers/net/dsa/mt7530.c
->>> +++ b/drivers/net/dsa/mt7530.c
->>> @@ -2243,11 +2243,11 @@ mt7530_setup(struct dsa_switch *ds)
->>>           */
->>>          if (priv->mcm) {
->>>                  reset_control_assert(priv->rstc);
->>> -               usleep_range(1000, 1100);
->>> +               usleep_range(2000, 2200);
->>>                  reset_control_deassert(priv->rstc);
->>>          } else {
->>>                  gpiod_set_value_cansleep(priv->reset, 0);
->>> -               usleep_range(1000, 1100);
->>> +               usleep_range(2000, 2200);
->>>                  gpiod_set_value_cansleep(priv->reset, 1);
->>>          }
->>> ---%---
->>> 
->>> 
->>> DISABLE LEDS BEFORE RESET
->>> 
->>> Reset hold period unchanged from the intended 1000 - 1100 usec.
->>> 
->>> ---%---
->>> --- a/drivers/net/dsa/mt7530.c
->>> +++ b/drivers/net/dsa/mt7530.c
->>> @@ -2238,6 +2238,12 @@ mt7530_setup(struct dsa_switch *ds)
->>>                  }
->>>          }
->>> 
->>> +       /* Disable LEDs before reset to prevent the MT7530 sampling a
->>> +        * potentially incorrect HT_XTAL_FSEL value.
->>> +        */
->>> +       mt7530_write(priv, MT7530_LED_EN, 0);
->>> +       usleep_range(1000, 1100);
->>> +
->>>          /* Reset whole chip through gpio pin or memory-mapped 
->>> registers for
->>>           * different type of hardware
->>>           */
->>> ---%---
->>> 
->>> 
->>> I ran 20 tests per patch, applied exclusively. 40 tests in total.
->>> 
->>>       <-- ESW_P3_LED_0 Low Period before Reset Deassertion -->
->>> 
->>>    TEST    WITH INCREASED RESET DELAY    DISABLE LEDS BEFORE RESET
->>>       #                        (usec)                       (usec)
->>> -------------------------------------------------------------------
->>>       1                           182                         4790
->>>       2                           370                         3470
->>>       3                           240                         4635
->>>       4                          1475                         4850
->>>       5                            70                         4775
->>>       6                          2730                         4575
->>>       7                          3180                         4565
->>>       8                           265                         5650
->>>       9                           270                         4690
->>>      10                          1525                         4450
->>>      11                          3210                         4735
->>>      12                           120                         4690
->>>      13                           185                         4625
->>>      14                           305                         7020
->>>      15                          2975                         4720
->>>      16                           245                         4675
->>>      17                           350                         4740
->>>      18                            80                        17920
->>>      19                           150                        17665
->>>      20                           100                         4620
->>> 
->>>     Min                            70                         3470
->>>     Max                          3210                        17920
->>> 
->>>    Mean                           270                         4720
-> -1s/  Mean/Median/
-> 
->>>     Avg                       923.421                     6161.579
->>> 
->>> 
->>> Every test resulted in a 40MHz HT_XTAL_FSEL, but after seeing 70 usec
->>> and 80 usec periods I wondered how many more tests it may take before
->>> an 25MHz HT_XTAL_FSEL appears.
->>> 
->>> I was also surprised by the 17920 usec and 17665 usec periods listed
->>> under the DISABLED LEDS BEFORE RESET column. Nothing unusual seemed
->>> to be happening, at least as far as the kernel message output was
->>> concerned.
->>> 
->>> What do you make of these results?
->> 
->> What I see is setting ESW_P3_LED_0 low via reset assertion is much 
->> more
->> efficient than doing so by setting the LED controller off. So I'd 
->> prefer
->> increasing the delay between assertion and reassertion. For example, 
->> the
->> Realtek DSA subdriver has a much more generous delay. 25ms after reset
->> assertion [1].
->> 
->> Looking at your results, 2000 - 2200 usec delay still seems too close, 
->> so
->> let's agree on an amount that will ensure that boards in any 
->> circumstances
->> will have these pins back to the bootstrapping configuration before 
->> reset
->> deassertion. What about 5000 - 5100 usec?
-> 
->    TEST    ESW_P3_LED_0 LOW PERIOD
->       #                     (usec)
-> ----------------------------------
->       1                       5410
->       2                       5440
->       3                       4375
->       4                       5490
->       5                       5475
->       6                       4335
->       7                       4370
->       8                       5435
->       9                       4205
->      10                       4335
->      11                       3750
->      12                       3170
->      13                       4395
->      14                       4375
->      15                       3515
->      16                       4335
->      17                       4220
->      18                       4175
->      19                       4175
->      20                       4350
-> 
->     Min                       3170
->     Max                       5490
-> 
->  Median                   4342.500
->     Avg                   4466.500
-> 
-> Looks reasonable to me.
+--=-vvUYNaR9qVEvIf4vc7wo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I had messed up the Median/Average calculation with the data
-I had pasted earlier after copying and pasting formulas without
-double checking how they had been affected.
+On Tue, 2024-03-12 at 15:57 +0000, Sudeep Holla wrote:
+> Looked briefly at register_sys_off_handler and it should be OK to call
+> it from psci_init_system_off2() below. Any particular reason for having
+> separate initcall to do this ? We can even eliminate the need for
+> psci_init_system_off2 if it can be called from there. What am I missing ?
 
-So here's the table again, now with the 5000 - 5100 usec test
-run tacked on for easier comparison:
+My first attempt did that. I don't think we can kmalloc that early:
 
-              2000 usec                      5000 usec
-            - 2200 usec    DISABLE LEDS    - 5100 usec
-    TEST     RESET HOLD    BEFORE RESET     RESET HOLD
-       #         (usec)          (usec)         (usec)
---------------------------------------------------------
-       1            182            4790           5410
-       2            370            3470           5440
-       3            240            4635           4375
-       4           1475            4850           5490
-       5             70            4775           5475
-       6           2730            4575           4335
-       7           3180            4565           4370
-       8            265            5650           5435
-       9            270            4690           4205
-      10           1525            4450           4335
-      11           3210            4735           3750
-      12            120            4690           3170
-      13            185            4625           4395
-      14            305            7020           4375
-      15           2975            4720           3515
-      16            245            4675           4335
-      17            350            4740           4220
-      18             80           17920           4175
-      19            150           17665           4175
-      20            100            4620           4350
-
-     Min             70            3470           3170
-     Max           3210           17920           5490
-
-  Median        267.500            4705       4342.500
-     Avg        901.350            6093       4466.500
+[    0.000000] psci: SMC Calling Convention v1.1
+[    0.000000] Unable to handle kernel read from unreadable memory at virtu=
+al address 0000000000000018
+[    0.000000] Mem abort info:
+[    0.000000]   ESR =3D 0x0000000096000004
+[    0.000000]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[    0.000000]   SET =3D 0, FnV =3D 0
+[    0.000000]   EA =3D 0, S1PTW =3D 0
+[    0.000000]   FSC =3D 0x04: level 0 translation fault
+[    0.000000] Data abort info:
+[    0.000000]   ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
+[    0.000000]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+[    0.000000]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+[    0.000000] [0000000000000018] user address but active_mm is swapper
+[    0.000000] Internal error: Oops: 0000000096000004 [#1] SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-rc3+ #30
+[    0.000000] pstate: 804000c5 (Nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[    0.000000] pc : kmalloc_trace+0x138/0x340
+[    0.000000] lr : register_sys_off_handler+0x60/0x258
+[    0.000000] sp : ffff8000827d3d10
+[    0.000000] x29: ffff8000827d3d20 x28: 000000005cd7e0ac x27: 00000000000=
+01f3f
+[    0.000000] x26: 0000000000000000 x25: ffff8000802bd890 x24: ffff8000802=
+bd890
+[    0.000000] x23: 0000000000000040 x22: 0000000000000dc0 x21: 00000000000=
+00001
+[    0.000000] x20: 0000000000000000 x19: 0000000000000000 x18: 00000000000=
+00006
+[    0.000000] x17: 000000000036fd40 x16: 000000005ec902c0 x15: ffff8000827=
+d37c0
+[    0.000000] x14: 0000000000000000 x13: 312e3176206e6f69 x12: 746e65766e6=
+f4320
+[    0.000000] x11: 00000000ffffdfff x10: ffff8000828cebe0 x9 : ffff8000828=
+1ea10
+[    0.000000] x8 : ffff8000827d3d78 x7 : 0000000000000000 x6 : 00000000000=
+00000
+[    0.000000] x5 : 0000000000000000 x4 : ffff8000827e0000 x3 : ffff8000827=
+f41c0
+[    0.000000] x2 : 0000000000000040 x1 : 0000000000000dc0 x0 : 00000000000=
+00000
+[    0.000000] Call trace:
+[    0.000000]  kmalloc_trace+0x138/0x340
+[    0.000000]  register_sys_off_handler+0x60/0x258
+[    0.000000]  psci_probe+0x2cc/0x350
+[    0.000000]  psci_acpi_init+0x50/0x88
+[    0.000000]  setup_arch+0x194/0x278
+[    0.000000]  start_kernel+0x7c/0x410
+[    0.000000]  __primary_switched+0xb8/0xc8
+[    0.000000] Code: b5000f7a f94003f4 aa1803fe d50320ff (b9401a64)=20
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the i=
+dle task! ]---
 
 
->> [1]
->> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/realtek/rtl83xx.c#n205
->> 
->> Arınç
+
+--=-vvUYNaR9qVEvIf4vc7wo
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwMzEyMTYzNjA1WjAvBgkqhkiG9w0BCQQxIgQgvy9uDfLQ
+l6kcriwMjsEmHsYiMChul9dvlModroDp8Bwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAavgHGdeBDiese+M/kAJr7SeDaP73ClfQg
+HoNgJdiXYWDHC8k4pTqK2mXuVcKySnQHRp0wG20vnDHUo4rQGlROqAFWvF6T81A5y4R96JyIN7cK
+5+m+Zutx1iMfueVLTjXUlfF/tZCc0DG5IhLrYYl8UgGW5zhKMQJnCMCABYXlWflwZehiH/6eVlj6
+trmQchDWGTpC/eTZ2/ESbDn4vYb2q3UgJQ7HveUA/Te0tJh7d8vFC7HXKlCeB/k5GWOfrrXKAhhD
+KBd90IeddAFP/lOpx1EaWfpFuxLCWdL3eTiOpP5BJ5nL7urKVr5KaQLc0aZF/Mr+pGXFpRcHmq7r
+4loCPpHB6xCtQ2p7roYHS1yL1HxC8P7ay9ohGlJdycKh1E2zGpdxGUf1WmAA7JHmAQqlTtcLSXO4
+tgQDXD+jrAyOLnp0WFnpfejh1sFApUR9GUX73k2R6cP3WE46f8fwDPxjCf2yX4UqQ31A3cDWQ/FO
+QYCy0CCYgUgJz1VpaK0e9hDcwDcy+RY0qjUyYk6FFWZCBlzXdj+ddUFN6jv+/euvjehsV75PBlxu
+lCopZnjamXNBLM46rfyM88x9RukYHNILLiybypJLl5jwIRPy2aRMPCs7kHuAanhDwrGS5c9BuzqH
+v6ej6FXZmPnypkxd1gd2I3teaoKKZOrlQRB1Wld8FwAAAAAAAA==
+
+
+--=-vvUYNaR9qVEvIf4vc7wo--
