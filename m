@@ -1,302 +1,232 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2081.outbound.protection.outlook.com [40.107.117.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0631310A12;
-	Tue, 12 Mar 2024 05:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710222444; cv=fail; b=KlgEyIYlvkU29BOXPOxkW53abWCJUNER5Ol3r/HqPA5N5NSk5z3XafZ70eF3Ncvho/ioB75LVVVApS0HVMF8tKS3C+N0Qh2dhZT4AVl+qmnRVZI7jw7Bd4VML9wWgzMkXuJGls3vkabhu/Uo8Q8gYl0X5p9HDYngCcfZJiCbKys=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710222444; c=relaxed/simple;
-	bh=Ow2ZWUYgvFMELb8UseOUtUy/lQov5QRhj7aXXL/T42s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=B3e0/2rafb9C8Dmuxc78MRdNXZNuJ3OWFamyanFvqKIfyyys+oDnkWX9rBJ5NNRUWmgn8bzCS/5e+X7TSBqjgqludwhGWHD/2MPsaUO39q82rDtAzAQJKy5GFQU4bthocoG41p5VUCC61kNCvkVqyfB+zGPk9RDGjOogfYVcE9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com; spf=pass smtp.mailfrom=nuvoton.com; dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b=kcbqX0Kk; arc=fail smtp.client-ip=40.107.117.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nuvoton.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB39FECC
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 05:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710223046; cv=none; b=HwZpiRsN1G6x20cNVB7Xnq35YDIG/Wq6J0oIHgsnZgWOTAKVR0BoR9kEtP55WjiMew7+6d69lZO3GpXZHT5lN8BGawyl4AxLd5voCGA2zB9V/aVbuFJYvvtP1njx9sTM1wuNECza4OoXU5PDPO5Zf2XXws8cfz9M5hoI6lXRXlU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710223046; c=relaxed/simple;
+	bh=BHVgi0sIBN+jZAkaSd+ERPJlhw4+5J9qwW41gm3rHdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qXReS6F4de+1CvDkHa721xPOCJlMrTQZs+J3dZ/lgOfVsSq+0fNGu50vUX4ZllgFrwAYBPUvIQiaXwbU40TbSfa4N6Wz6J/bEDT6dp9nD0FCgr819RYHrlz/r8oE7OW7ugOFxCL/tMA+KhiWtyanrT6idWpaarZdcNGbwe6uriM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IrBY+nO3; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b="kcbqX0Kk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OA/i1jv1nI0QuObgOX2hYNEYH5Hx+DBIn9zPNYWWGh/kCCfe6IlHtWRF4Kev4kaHvXbehksEqtJkghwuh64lw6rWsaCXKzs2O+ptz8t/EcbJTj3f7psCkx27S3kmHq0QoZMmo54iFhbnWXAIrzt70FXrQ6LulJnbmpua2SQdMQrupaDOSkYMLkymfGJuoLcrM4q95xiLZeMSAu1P13c7ZHuN2hnlUDDNmEJ6W4rHMQQYGXL+iTM8rTBSpU+GLbNjLniy35SMF/dNyIOHaB/lEOYTYKn8A5yzoUY/wNvZWOdWgq31LcrvZrU7sTgKuQkAYZsgqQIuAUHMYw2fE/F9ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fha6Q0bMHzghyKG7R+TGJu3ftJT4ZRjwt5cmplO9tUs=;
- b=NCsPFpTVfCCMZ3DT8dpdx8tgLZH0HMmr+zX1zevZs7EgPgk2UySjMTkcHETRtzOozg7NOK1qFjsZfqmjPG1G5LC6/fL4Q1O5XxZTGk6oPaqhsJtXtKjFjJp1egqDy9tcIJ0uONJanu9uE17FCgeWQZb6CksJWRdiFTAYfvhYj0s+sYPHusjXO4BPMlLMGICw4/MzY11YR/+etyPlw9eM0qk1vk4GYnYhvY8t4H40axJ9L3OgYpTla5KulIc1MPyIVXOKy8EX1NSyMEOojd2j33GwCQlL4Zvy3BwJEGHb/IlceK9T20eqtk7KFSI8Wx72Qyq/+K8rjlTI6HGGbq3ftw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nuvoton.com; dmarc=pass action=none header.from=nuvoton.com;
- dkim=pass header.d=nuvoton.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuvoton.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fha6Q0bMHzghyKG7R+TGJu3ftJT4ZRjwt5cmplO9tUs=;
- b=kcbqX0KkRmZTc8ykO9r/ZdBZpPLuxkSlgdGMVQ9D/xfHA8ZfMFsTDAIR9qBURXlrKokidfipNblA2R1RWJjNf5p7I+T0ej8dQBGPYgg7afHg8MTz/G9IuAYryrBEcft3spA1fN66KgK9WNEc2Sl+/ZXzZ5sqjM4CPe8Xwx0QGXY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nuvoton.com;
-Received: from SEYPR03MB8378.apcprd03.prod.outlook.com (2603:1096:101:1fd::9)
- by SEZPR03MB7898.apcprd03.prod.outlook.com (2603:1096:101:182::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Tue, 12 Mar
- 2024 05:47:16 +0000
-Received: from SEYPR03MB8378.apcprd03.prod.outlook.com
- ([fe80::56e1:5482:dfef:a8a9]) by SEYPR03MB8378.apcprd03.prod.outlook.com
- ([fe80::56e1:5482:dfef:a8a9%4]) with mapi id 15.20.7362.024; Tue, 12 Mar 2024
- 05:47:15 +0000
-Message-ID: <bc70cb4e-1b98-41c2-8656-929b2e931800@nuvoton.com>
-Date: Tue, 12 Mar 2024 13:47:10 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: Added schema for
- "nuvoton,nau8325"
-To: Rob Herring <robh@kernel.org>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- conor+dt@kernel.org, YHCHuang@nuvoton.com, KCHSU0@nuvoton.com,
- CTLIN0@nuvoton.com, SJLIN0@nuvoton.com, scott6986@gmail.com,
- supercraig0719@gmail.com, dardar923@gmail.com, wtli@nuvoton.com
-References: <20240304101523.538989-1-wtli@nuvoton.com>
- <20240304101523.538989-2-wtli@nuvoton.com>
- <20240304133731.GA105655-robh@kernel.org>
-Content-Language: en-US
-From: WTLI <wtli@nuvoton.com>
-In-Reply-To: <20240304133731.GA105655-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: SI2P153CA0002.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::16) To SEYPR03MB8378.apcprd03.prod.outlook.com
- (2603:1096:101:1fd::9)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrBY+nO3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710223045; x=1741759045;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BHVgi0sIBN+jZAkaSd+ERPJlhw4+5J9qwW41gm3rHdk=;
+  b=IrBY+nO3qiJ2MzYroL/mkcBQ7T8jtF1rvLwnk8M+8jXZXEz+jaSpgt7n
+   XptmcGrnaLJvSyh3iPbToMX4wyZJanQvcL2WTan1Su+A0Fq9vHoNbiq9m
+   PIDc4W3SH2xz3bfZnnVL2kMDsgtgdsCb8zhB90N/tKP0ksXt+Xt0G3Q3c
+   mmJRzcGsnWe06PRgYdcMiv3UUBVWSIfHZgPstZA2+GKOBft+OHiszk0qj
+   DBEv7v3YQQZOUZYeabzUCa51TUSpbZimDK/5D9TmeBQGXf9DDuIq7B/vF
+   8vhd4Ok5M7XCfBYd6iMWHRcABy8FXUSqtuL3hJgUmKENVM/V59ffwJ6P/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="5051669"
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="5051669"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 22:57:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
+   d="scan'208";a="16114065"
+Received: from sbrowne-mobl.amr.corp.intel.com (HELO [10.209.68.239]) ([10.209.68.239])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 22:57:24 -0700
+Message-ID: <fa7cee6f-954b-4acf-a438-17ae3d1e781a@linux.intel.com>
+Date: Mon, 11 Mar 2024 22:57:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEYPR03MB8378:EE_|SEZPR03MB7898:EE_
-X-MS-Office365-Filtering-Correlation-Id: e522f95c-d752-4f72-c1de-08dc4257df1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PD0pbSM4/7CaGmaNnGRfkJNbw7Iq+EPbxBcDC6LnQ55C2fNJXDwsUh+qaG7XL/ymElOIVMRVZKGFjk9WNe9wVWwbnjLNakMfySBSOIw9vPJcRIrbB88jTINqVMuRF2xXOfw6ng9uYgUvn2y64ShZBZKz+fQ6mG7T4sfomN6FiBpi4d/s8A1T5/YyuQatpS/iwLQSJU5g7eH4Bw15xAxHO+qBfEaglCY1R5WwpPEe4AP8pQuhJgaLJ3PSURMBtsmKSC1xVTK6LTuyosRpBA5reNLGO8X1T39OQgK+o9j0gXvcrmRWgmemWGWj6NMlFiv97DMTUy8VZGhPLUTp3eUrfAFUkKiTUD8Xj7cAeVLbtDmfisUP2Gp6GXVlE5aE0baLH65dLRwq4QJIfqp4tI/GsVhrS/hxoTgKSpwLYMZ8U/HEywnLwwckZstcTrrcevmS7QCx4ANI4l6HpnprSYJ2du107D4s1oZXacPjpkiCDVp+UpOZIcHugKsK0Qtzbkf5hmuzo2UM88lQX2RidwXCFZX24Q1smCdw246nPMpNCAIQDs5IJdJPw8E0N7+xXNv1Jfj/M92Uzew2CmxVHRe0kg4kF7CIuA1p3xts96hTWBw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB8378.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?STMrRXhOWFNmdlRUM1Z4UFRSZkVMc2JvUnFpSUM2eUJRVDc1dGx6VFhoZnpw?=
- =?utf-8?B?WS9iaXJodTZaN2lYWlplRXhhaWhTdHJDR1Z3TDhKNzRFNkV4bEJ2OG1lUmVx?=
- =?utf-8?B?NFVtek1OaTg5ZHRFNE1wOTU2bFlOR09IMllhWnhmT053a2xNejJlcHlPY3ZZ?=
- =?utf-8?B?L0duSFdvTVJHUnlKRnBxb2QvUUl1aG5FbFBIdjRKaHBxNU1hQjNjNUdnSmE1?=
- =?utf-8?B?V3hFWWJoendPNC9ZY3BmajB3V25OSXdHTjNpaTMzZGlPZnNaVXFtMnhxckJF?=
- =?utf-8?B?N1pSUElaR1E1NkdsWGJ1S3JIbVNsNkVBWGZLYndFZXRUT0I5UEFMRnIwR2dK?=
- =?utf-8?B?OTgxdlArZ3hpYjVza0Uzc2lVVGN5OWtZRTNRc1F1YzZxZStKSHBxY1BUUHN1?=
- =?utf-8?B?TVpMQWk5bG8wU0NXeDFvL1Fyb0tYa3Z3dlE2REpCSzA5UzVwVmFOQW1kdXVR?=
- =?utf-8?B?dE12U0JIdHFIZnA5VUI0bitRZVpFTmx5Y0gvb2czR0RFSURZUVFpMmlmaU5I?=
- =?utf-8?B?YWJqWDBUd3Z5N2Q5TWRsSnY2YW4zdEg1ZTdZVWgyOGpmSUVFaTRVMGFGeGww?=
- =?utf-8?B?YmxieFRhbTNTN0dxZXpwNkxpa1g4YWU2UWVTSlRqT2pLQm91T1V2VmYwQ0Fz?=
- =?utf-8?B?Y2pBVkNCbHFCOEpGazA3TThjdWZnVXU1RkpWbTZSbk9TQXNpZHhHMGhJRlFK?=
- =?utf-8?B?UGo2SUNlNms3ZEMzVWVnWjhVYWZLMUdNRWtpUzhna1VocnAyRmoxdXdmL0FW?=
- =?utf-8?B?V1Z0T0Y4Y1prTUtjL3FldVFVNlpKYjErdUw1MkUrdjhiRlVMOTZUT2txTndw?=
- =?utf-8?B?NjdFbGNmcGRnQUFsd3VoNjNKN0VnY0NZQUVTd0VaOFZTM2gwejdpc0xDQ1dt?=
- =?utf-8?B?WXY2YlR1N3VVU2tlWXJDSzlWT0dJcGJQclJBY3RyRXFUT3poZTJXT2hFdWVm?=
- =?utf-8?B?MHVzcDJpaXlEK3Qrb1NFWk1KUERLSXFzbTFFNmxkSGhhYVJ5MDRySTZaU3V0?=
- =?utf-8?B?ZGZRTmVNRndWSjRLcW9VaTZibHJIUnpaM3k3VER3cjBRYVhyNzNxS1hEZk5u?=
- =?utf-8?B?WlQyeFhzVkhmOVkxVWVDQjcvYmRVeEZxWmZSa1NyWmY0YkJJTmVzb2JmUHNq?=
- =?utf-8?B?Q0FMOHlPM3RnUklyS1l5OWlKU0p1ZHJLZ1lhc1k1MThDYTBSYm0wcjAyd2l3?=
- =?utf-8?B?ZTdIU1Zoc0pqaEpycGNDeWNXVzRHWTVEWW9RUGs0YzdxekwzWlBNWjloT1JW?=
- =?utf-8?B?RzNnZElsYnVvWHVPU2tLWE9rZi9vbW93VnR5bm4raXlpa0tPekZRMmdrKzUv?=
- =?utf-8?B?KzJBdERiYXNIcmpuSDN3UzAyRlBUZTdWQ0IxdXF5QkhjeTlvS0JQUU53VlVH?=
- =?utf-8?B?YllaRXdZQmxsaGRKdDFEc01zaG5zV3cxb2hudjlTTzJ4cE5xZ2dHMUxFRVpB?=
- =?utf-8?B?SjRnTld6ZTRXTlQ5OVRJSHVZVi9VZ1lmTllHYnd4Y0wxSlkvWDNacEhzS3Z2?=
- =?utf-8?B?RllHdGk4SjdXUDRkd0lFc1JkWE13RmxpOFppdnoxQ3hUdmNFQjNpWnFDaFRs?=
- =?utf-8?B?SFdyK3BnSndXTk1qekhTVEJUbUdpWjlHQ3RiQmJwZEJzKysyRWMra2lpQm84?=
- =?utf-8?B?V3VNZzZqWE95b3QwbnNIb1ZhMXlyZlpiTzl1MXhDeHdESWxsdUpFVEZDQllp?=
- =?utf-8?B?RFVqQzZVVXRvdndqM1dLSXcwWmFmajBnOUpYbStsU1MxU2xCZnpvVnRjRVBO?=
- =?utf-8?B?R3Rscytoakw0a011cUIzOHEvZm53emZlL2tGVURKdGwzT3J6S2xSOXc1MGZU?=
- =?utf-8?B?YVp0MHlhZnl3aVVQRXF2dzZsVWg0anIvVlJlZ0tVZUpoa25ndmxhWEU1bXhl?=
- =?utf-8?B?czlVVFRCTHIzcGZTSzNCMlF5WHJ1OFQvZXkyakt6bSt4OHkvQjhhREZFVVdJ?=
- =?utf-8?B?VTNGOFUxdWtXclJjZHY2dno1WDgxREtHUk9KTjd3bWV5b0tSZkpxVHBOdlNi?=
- =?utf-8?B?NTBrd3c0TDVnZlB5RlIrYlBVS3dsMWg4Nk95TjRrdGxnU2FueDBUQWZSOEVG?=
- =?utf-8?B?UWtBQUpuNUNmRkJaS3hNZXErZldkem54MzZXcTFlL0ZPYk5MaDhUdVNrZ1NH?=
- =?utf-8?Q?kYZ8yTtHuMuYVAyrCMWO+O4Hw?=
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e522f95c-d752-4f72-c1de-08dc4257df1e
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB8378.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 05:47:15.4467
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bJr+4jCDg+jPJiFvOLH3/oozCi8SUX91p4Aebnm4ktB+tnkFn4CjAII5f4nGkwP+wiOFJCv72l/xFpZXcIvIxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7898
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/14] x86/sev: Extend the config-fs attestation
+ support for an SVSM
+Content-Language: en-US
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Michael Roth
+ <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+References: <cover.1709922929.git.thomas.lendacky@amd.com>
+ <a6d236e247c4a0258e5e28c7378350389997cc59.1709922929.git.thomas.lendacky@amd.com>
+ <93f36ae1-35b3-4852-8b36-3277f250408e@intel.com>
+ <805b863c-1631-477d-9faf-f7569a8d80e4@amd.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <805b863c-1631-477d-9faf-f7569a8d80e4@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-Rob Herring =E6=96=BC 3/4/2024 9:37 PM =E5=AF=AB=E9=81=93:
-> CAUTION - External Email: Do not click links or open attachments unless y=
-ou acknowledge the sender and content.
->
->
-> On Mon, Mar 04, 2024 at 06:15:22PM +0800, Seven Lee wrote:
->> Added a DT schema for describing nau8325 audio amplifiers.
-> Present tense: Add a ...
->
-> Please say more about this device. Features, link to datasheet, etc.
-
-Are the following revisions correct?
-Add a DT schema for describing nau8325 audio amplifiers. The key
-features are as follows:
-  - Low SPK_VDD Quiescent Current
-  - Gain Setting with 2-wire interface
-  - Powerful Stereo Class-D Amplifier
-  - Low Output Noise
-  - Low Current Shutdown Mode
-  - Click-and Pop Suppression
-
-More resources :
-https://www.nuvoton.com/products/smart-home-audio/audio-amplifiers/class-d-=
-series/nau8325yg/
-
->
->> Signed-off-by: Seven Lee <wtli@nuvoton.com>
->> ---
->>   .../bindings/sound/nuvoton,nau8325.yaml       | 74 +++++++++++++++++++
->>   1 file changed, 74 insertions(+)
->>   create mode 100755 Documentation/devicetree/bindings/sound/nuvoton,nau=
-8325.yaml
-> Schemas aren't executable. checkpatch.pl will tell you this.
-
-yes, I will.
-
->
->> diff --git a/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yam=
-l b/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
->> new file mode 100755
->> index 000000000000..297d29462812
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
->> @@ -0,0 +1,74 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/nuvoton,nau8325.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: NAU8325 audio Amplifier
->> +
->> +maintainers:
->> +  - Seven Lee <WTLI@nuvoton.com>
->> +
->> +allOf:
->> +  - $ref: dai-common.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: nuvoton,nau8325
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  nuvoton,vref-impedance:
->> +    description:
->> +      VREF impedance selection.
->> +    enum: ["Open", "25kOhm", "125kOhm", "2.5kOhm"]
-> Use standard units (-ohms), not strings. For "open", just omit the
-> property.
-
-Is the description of the following modification correct?
-nuvoton,vref-impedance:
-   $ref: /schemas/types.yaml#/definitions/uint32
-   description:
-       The vref impedance to be used in KOhms. Voltage Reference impedance
-       selection. VREF impedance selection.
-   enum:
-       - 0 # Disable tie off resistance
-       - 1 # 25KOhms
-       - 2 # 125KOhms
-       - 3 # 2.5kOhms
-     default: 2
-
->
->> +
->> +
->> +  nuvoton,dac-vref:
->> +    description: DAC Reference Voltage Setting.
->> +    enum: ["External VDDA", "1.5V", "1.6V", "1.7V"]
-> Use standard units.
-
-Is the description of the following modification correct?
-   nuvoton,dac-vref:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-         The dac vref to be used in voltage. DAC reference voltage setting.
-     enum:
-         - 0 # VDDA
-         - 1 # VDDA*1.5
-         - 2 # VDDA*1.6
-         - 3 # VDDA*1.7
-     default: 2
-
->
->> +
->> +
->> +  nuvoton,alc-enable:
->> +    description:
->> +      Enable digital automatic level control (ALC) function.
->> +    type: boolean
->> +
->> +  nuvoton,clock-detection-disable:
->> +    description:
->> +      When clock detection is enabled, it will detect whether MCLK
->> +      and FS are within the range. MCLK range is from 2.048MHz to 24.57=
-6MHz.
->> +      FS range is from 8kHz to 96kHz. And also needs to detect the rati=
-o
->> +      MCLK_SRC/LRCK of 256, 400 or 500, and needs to detect the BCLK
->> +      to make sure data is present. There needs to be at least 8 BCLK
->> +      cycles per Frame Sync.
->> +    type: boolean
->> +
->> +  nuvoton,clock-det-data:
->> +    description:
->> +      Request clock detection to require 2048 non-zero samples before e=
-nabling
->> +      the audio paths. If set then non-zero samples is required, otherw=
-ise it
->> +      doesn't matter.
->> +    type: boolean
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +        #address-cells =3D <1>;
->> +        #size-cells =3D <0>;
->> +        codec@21 {
->> +            compatible =3D "nuvoton,nau8325";
->> +            reg =3D <0x21>;
->> +            nuvoton,vref-impedance =3D "125kOhm";
->> +            nuvoton,dac-vref =3D "1.6V";
->> +            nuvoton,alc-enable;
->> +            nuvoton,clock-det-data;
->> +        };
->> +    };
->> --
->> 2.25.1
+On 3/11/24 9:16 AM, Tom Lendacky wrote:
+> On 3/10/24 00:06, Kuppuswamy, Sathyanarayanan wrote:
 >>
-________________________________
-________________________________
- The privileged confidential information contained in this email is intende=
-d for use only by the addressees as indicated by the original sender of thi=
-s email. If you are not the addressee indicated in this email or are not re=
-sponsible for delivery of the email to such a person, please kindly reply t=
-o the sender indicating this fact and delete all copies of it from your com=
-puter and network server immediately. Your cooperation is highly appreciate=
-d. It is advised that any unauthorized use of confidential information of N=
-uvoton is strictly prohibited; and any information in this email irrelevant=
- to the official business of Nuvoton shall be deemed as neither given nor e=
-ndorsed by Nuvoton.
+>> On 3/8/24 10:35 AM, Tom Lendacky wrote:
+>>> When an SVSM is present, the guest can also request attestation reports
+>>> from the SVSM. These SVSM attestation reports can be used to attest the
+>>> SVSM and any services running within the SVSM.
+>>>
+>>> Extend the config-fs attestation support to allow for an SVSM attestation
+>>> report. This involves creating four (4) new config-fs attributes:
+>>>
+>>>    - 'svsm' (input)
+>>>      This attribute is used to determine whether the attestation request
+>>>      should be sent to the SVSM or to the SEV firmware.
+>>>
+>>>    - 'service_guid' (input)
+>>>      Used for requesting the attestation of a single service within the
+>>>      SVSM. A null GUID implies that the SVSM_ATTEST_SERVICES call should
+>>>      be used to request the attestation report. A non-null GUID implies
+>>>      that the SVSM_ATTEST_SINGLE_SERVICE call should be used.
+>>>
+>>>    - 'service_manifest_version' (input)
+>>>      Used with the SVSM_ATTEST_SINGLE_SERVICE call, the service version
+>>>      represents a specific service manifest version be used for the
+>>>      attestation report.
+>>>
+>>>    - 'manifestblob' (output)
+>>>      Used to return the service manifest associated with the attestation
+>>>      report.
+>>>
+>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>> ---
+>>>   Documentation/ABI/testing/configfs-tsm  |  59 ++++++++++
+>>>   arch/x86/include/asm/sev.h              |  31 ++++-
+>>>   arch/x86/kernel/sev.c                   |  50 ++++++++
+>>>   drivers/virt/coco/sev-guest/sev-guest.c | 147 ++++++++++++++++++++++++
+>>>   drivers/virt/coco/tsm.c                 |  95 ++++++++++++++-
+>>>   include/linux/tsm.h                     |  11 ++
+>>>   6 files changed, 390 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/ABI/testing/configfs-tsm b/Documentation/ABI/testing/configfs-tsm
+>>> index dd24202b5ba5..a4663610bf7c 100644
+>>> --- a/Documentation/ABI/testing/configfs-tsm
+>>> +++ b/Documentation/ABI/testing/configfs-tsm
+>
+>>> +
+>>> +What:        /sys/kernel/config/tsm/report/$name/svsm
+>>> +Date:        January, 2024
+>>> +KernelVersion:    v6.9
+>>> +Contact:    linux-coco@lists.linux.dev
+>>> +Description:
+>>> +        (WO) Attribute is visible if a TSM implementation provider
+>>> +        supports the concept of attestation reports for TVMs running
+>>> +        under an SVSM, like SEV-SNP. Specifying a 1 (or other boolean
+>>
+>> Since service_guid can be used for non SVSM services as well, can we use
+>> a generic term "service" here? And let user specify the service type
+>> (like service=svsm)
+>
+> I suppose that's possible. I think we would need a better term than just service, though, since service_guid is specific to a service within the service provider... so maybe service_provider.
+
+I am ok with service_provider
+
+>
+>>
+>>> +        equivalent, e.g. "Y") implies that the attestation report
+>>> +        should come from the SVSM.
+>>> +        Secure VM Service Module for SEV-SNP Guests v1.00 Section 7.
+>>> +        https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58019.pdf
+>>> +
+>>> +What:        /sys/kernel/config/tsm/report/$name/service_guid
+>>> +Date:        January, 2024
+>>> +KernelVersion:    v6.9
+>>> +Contact:    linux-coco@lists.linux.dev
+>>> +Description:
+>>> +        (WO) Attribute is visible if a TSM implementation provider
+>>> +        supports the concept of attestation reports for TVMs running
+>>> +        under an SVSM, like SEV-SNP. Specifying a empty or null GUID
+>>> +        (00000000-0000-0000-0000-000000) requests all active services
+>>> +        within the SVSM be part of the attestation report. Specifying
+>>> +        a non-null GUID requests an attestation report of just the
+>>> +        specified service using the manifest form specified by the
+>>> +        service_manifest_version attribute.
+>>> +        Secure VM Service Module for SEV-SNP Guests v1.00 Section 7.
+>>> +        https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58019.pdf
+>>> +
+>>
+>> I think it will be useful to the user if there is a attribute to list the service GUIDs
+>> supported. It can help prevent user using incorrect or unsupported GUIDs.
+>
+> A list of supported GUIDs can be obtained from the manifest of a all-services attestation request.
+
+So they have to make a request twice? Once with a NULL GUID to get the
+manifest with all service list, and another to make service-specific request?
+There should be a fixed list of service GUIDs, right? Why not list them by
+default?
+
+>
+>>  >> +    if (guid_is_null(&desc->service_guid)) {
+>>> +        call_id = SVSM_ATTEST_CALL(SVSM_ATTEST_SERVICES);
+>>> +    } else {
+>>> +        export_guid(attest_call.service_guid, &desc->service_guid);
+>>> +        attest_call.service_manifest_version = desc->service_manifest_version;
+>>> +
+>>> +        call_id = SVSM_ATTEST_CALL(SVSM_ATTEST_SINGLE_SERVICE);
+>>> +    }
+>>
+>> Above initialization will not change during retry, right? Why not move it above
+>> retry?
+>
+> True, will move it outside of the loop.
+>
+>>
+>
+>>> +
+>>> +    /* Obtain the GUID string length */
+>>> +    guid_len = (len && buf[len - 1] == '\n') ? len - 1 : len;
+>>> +    if (guid_len && guid_len != UUID_STRING_LEN)
+>>> +        return -EINVAL;
+>>> +
+>>
+>> I don't think you need above checks. I think guid_parse will fail, if it is not
+>> a valid GUID.
+>
+> Yes and no. The guid_parse() function will succeed if the string is longer than UUID_STRING_LEN as long as it is a valid UUID up to UUID_STRING_LEN. In other words, guid_parse() of:
+>
+>     aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+>
+> and
+>     aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee-gg
+>
+> both succeed.
+>
+> I'm ok with eliminating the length calculation and check if everyone is in favor of doing that given the above behavior.
+
+Got it. Existing callers of guid_parse() does not seem to care about it. But I am fine either way.
+
+>
+>>
+>>> +    if (guid_len == UUID_STRING_LEN) {
+>>> +        rc = guid_parse(buf, &report->desc.service_guid);
+>>> +        if (rc)
+>>> +            return rc;
+>>> +    } else {
+>>> +        report->desc.service_guid = guid_null;
+>>
+>> I think the default value will be guid_null right, why reset it to NULL for every failed attempt?
+>
+> Default, yes. But what if it is written once, then a second time with an invalid GUID. Should the previously written GUID still be used?
+>
+
+If the user write fails, why update the state? IMO, we can leave it at the old value. But, lets see what others think.
+
+> Thanks,
+> Tom
+>
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
