@@ -1,302 +1,79 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6071A81725;
-	Tue, 12 Mar 2024 14:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23027AE51;
+	Tue, 12 Mar 2024 14:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710253723; cv=none; b=KVWmrQ+zjDkzQIaNY5SvuANzhn1neAZqlm/7TEcBRsfB/eTmNfFg4At82SEBV2JuYinA/6eXh8qskLJKmSXrwHb6XBvIbSpb2SoZQ3sInb0gWgi7dTEsjx19HS3WnIbk9UsfMAl7Yaoh+YMSsZLw2gG3bq1+rih0qvRqNP9/Nm8=
+	t=1710253748; cv=none; b=m+ZAv+mEtEsQXm10a/tgbEjiEVNdu/0PLN66TWGqPKCxYd4ruQumLGGr7NKQZxCRgR/tB6PzzV+/MJwvp5KgOWXvqu/3Sjn0EsSZfsKnQsRx6Y18Nytegxs+glaq/34OHSuDO8R/UQkmMt7IkhbJgB7ddxxxyH2Zd6Ewt8ViQDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710253723; c=relaxed/simple;
-	bh=Ic5pIypFycvi0eUEkM3hz+KkI4v8+KMJMXEw0d8RobM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N81mSKkmHQKN7DsXwXQ8BWP1LFAoLTOUKBqP/F6B5tfQ0GiTY6G81qJUvFuZRWHKyPiGre+4yAM/oxw09aJpMPJU7IZaLrt3+oHvUpV0bPQ5xt4iPgIfDre6/g6klWt6zT8yQkWo1g53Cz4NjuDMZr6G5BEedPhsw7TKrubZEeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=c5fpynmg; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1710253748; c=relaxed/simple;
+	bh=YSIzAEOxvxB8VGNd/9Gww9F6GQ70E0UmyZYJIqPU7xo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b8UpHbIexxgXyt1BQvGfMC05vVYf1aRXBjMtmm/2l7KPaEo36yIzttj+H0rXyZYeJ8nFG2x3q/o4govITfb9FDDb2H4YZMYQu5Ec+fzQjxUSZWVE2+2Gb60uVkJlJL4dEs28TlOGVhNjrmzUMrnEitd/43uqBGek/Hz7ABOG+s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EA45PRW0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="c5fpynmg"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710253701; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=kPC1HIF7q+Gt5N9a2ODngYs/F/Y4aC6KdoFMnSwlNBU=;
-	b=c5fpynmgTPEn0ktZ/dklBm2x7IqrnqwpN2SeHOsvQTQzLN6caJNYLDKFN7pvOkvdsMnfMied3D7MMf/yUfg6PMd4ba+Bs7oaGbrwybZ3RXMyc+Jh0tfOQGIXiK2Tb5MxawQ3NyvEJVRDyYhNEjavH6t6W3dCq4tjFyQTs2lhAAI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W2M60ZQ_1710253699;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W2M60ZQ_1710253699)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Mar 2024 22:28:21 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wintera@linux.ibm.com,
-	twinkler@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	wenjia@linux.ibm.com,
-	jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EA45PRW0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A59C433C7;
+	Tue, 12 Mar 2024 14:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710253748;
+	bh=YSIzAEOxvxB8VGNd/9Gww9F6GQ70E0UmyZYJIqPU7xo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EA45PRW0whCcEeWaee4KU806em3InvFrAFbRUcCrvLIUt/xQniqvZYkfU9BAkl5Rr
+	 JIr5XZfESu/ZBSFH1GkWUxoCcGLvaMaeSJM19NXFHVx4Tnl0Wg3r1iQjJHR9zxt79/
+	 NLbKHiPnMku19IlBP7fErxG6kEgkqr37/OqZPc88n+QCKA/+KR8FR8bEHBvGQDxRx/
+	 gEXEZJ3uOUyiss4FARAw10LH6VrH654ixXc18gMrPg0qapyjttsuySJCZqLkAjhKV0
+	 iqQ9gV4WvVkd6aV+dXIafLHslRScZi3vTiUie3MS6MXJOWtK70FofcOakb/iQK5WbF
+	 CTBcwaET8cJyQ==
+From: Christian Brauner <brauner@kernel.org>
+To: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v3 11/11] net/smc: implement DMB-merged operations of loopback-ism
-Date: Tue, 12 Mar 2024 22:27:43 +0800
-Message-Id: <20240312142743.41406-12-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240312142743.41406-1-guwen@linux.alibaba.com>
-References: <20240312142743.41406-1-guwen@linux.alibaba.com>
+	linux-unionfs@vger.kernel.org,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH] fs_parser: move fsparam_string_empty() helper into header
+Date: Tue, 12 Mar 2024 15:28:51 +0100
+Message-ID: <20240312-monieren-wallung-9c0559b4bdaa@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240312104757.27333-1-luis.henriques@linux.dev>
+References: <20240312104757.27333-1-luis.henriques@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1025; i=brauner@kernel.org; h=from:subject:message-id; bh=YSIzAEOxvxB8VGNd/9Gww9F6GQ70E0UmyZYJIqPU7xo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR+SFtjselouoter9Hb0j9dUhyLV6xTnSTUbn755Qmpi npGodxnHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABOJLWX4H72taPIt3Qls/aKX g1tcc8QOfLj+4e+8NuMOHV72o9uPCzEyfLj3ly1/Z+ey1X8vufZ+/H2CO3W625T/EzmWbwvf1pB /iQ8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-This implements operations related to merging sndbuf with peer DMB in
-loopback-ism. The DMB won't be freed until no sndbuf is attached to it.
+On Tue, 12 Mar 2024 10:47:57 +0000, Luis Henriques (SUSE) wrote:
+> Since both ext4 and overlayfs define the same macro to specify string
+> parameters that may allow empty values, define it in an header file so
+> that this helper can be shared.
+> 
+> 
 
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- net/smc/smc_loopback.c | 123 +++++++++++++++++++++++++++++++++++------
- net/smc/smc_loopback.h |   3 +
- 2 files changed, 109 insertions(+), 17 deletions(-)
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-diff --git a/net/smc/smc_loopback.c b/net/smc/smc_loopback.c
-index c3e1133da8d7..202cd081c758 100644
---- a/net/smc/smc_loopback.c
-+++ b/net/smc/smc_loopback.c
-@@ -21,6 +21,7 @@
- 
- #if IS_ENABLED(CONFIG_SMC_LO)
- #define SMC_LO_V2_CAPABLE	0x1 /* loopback-ism acts as ISMv2 */
-+#define SMC_LO_SUPPORT_NOCOPY	0x1
- #define SMC_DMA_ADDR_INVALID	(~(dma_addr_t)0)
- 
- static const char smc_lo_dev_name[] = "loopback-ism";
-@@ -82,6 +83,7 @@ static int smc_lo_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
- 		goto err_node;
- 	}
- 	dmb_node->dma_addr = SMC_DMA_ADDR_INVALID;
-+	refcount_set(&dmb_node->refcnt, 1);
- 
- again:
- 	/* add new dmb into hash table */
-@@ -95,6 +97,7 @@ static int smc_lo_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
- 	}
- 	hash_add(ldev->dmb_ht, &dmb_node->list, dmb_node->token);
- 	write_unlock_bh(&ldev->dmb_ht_lock);
-+	atomic_inc(&ldev->dmb_cnt);
- 
- 	dmb->sba_idx = dmb_node->sba_idx;
- 	dmb->dmb_tok = dmb_node->token;
-@@ -111,13 +114,29 @@ static int smc_lo_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
- 	return rc;
- }
- 
-+static void __smc_lo_unregister_dmb(struct smc_lo_dev *ldev,
-+				    struct smc_lo_dmb_node *dmb_node)
-+{
-+	/* remove dmb from hash table */
-+	write_lock_bh(&ldev->dmb_ht_lock);
-+	hash_del(&dmb_node->list);
-+	write_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
-+	kvfree(dmb_node->cpu_addr);
-+	kfree(dmb_node);
-+
-+	if (atomic_dec_and_test(&ldev->dmb_cnt))
-+		wake_up(&ldev->ldev_release);
-+}
-+
- static int smc_lo_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
- {
- 	struct smc_lo_dmb_node *dmb_node = NULL, *tmp_node;
- 	struct smc_lo_dev *ldev = smcd->priv;
- 
--	/* remove dmb from hash table */
--	write_lock_bh(&ldev->dmb_ht_lock);
-+	/* find dmb from hash table */
-+	read_lock_bh(&ldev->dmb_ht_lock);
- 	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb->dmb_tok) {
- 		if (tmp_node->token == dmb->dmb_tok) {
- 			dmb_node = tmp_node;
-@@ -125,16 +144,76 @@ static int smc_lo_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
- 		}
- 	}
- 	if (!dmb_node) {
--		write_unlock_bh(&ldev->dmb_ht_lock);
-+		read_unlock_bh(&ldev->dmb_ht_lock);
- 		return -EINVAL;
- 	}
--	hash_del(&dmb_node->list);
--	write_unlock_bh(&ldev->dmb_ht_lock);
-+	read_unlock_bh(&ldev->dmb_ht_lock);
- 
--	clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
--	kfree(dmb_node->cpu_addr);
--	kfree(dmb_node);
-+	if (refcount_dec_and_test(&dmb_node->refcnt))
-+		__smc_lo_unregister_dmb(ldev, dmb_node);
-+	return 0;
-+}
-+
-+static int smc_lo_support_dmb_nocopy(struct smcd_dev *smcd)
-+{
-+	return SMC_LO_SUPPORT_NOCOPY;
-+}
-+
-+static int smc_lo_attach_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
-+{
-+	struct smc_lo_dmb_node *dmb_node = NULL, *tmp_node;
-+	struct smc_lo_dev *ldev = smcd->priv;
- 
-+	/* find dmb_node according to dmb->dmb_tok */
-+	read_lock_bh(&ldev->dmb_ht_lock);
-+	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb->dmb_tok) {
-+		if (tmp_node->token == dmb->dmb_tok) {
-+			dmb_node = tmp_node;
-+			break;
-+		}
-+	}
-+	if (!dmb_node) {
-+		read_unlock_bh(&ldev->dmb_ht_lock);
-+		return -EINVAL;
-+	}
-+	read_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	if (!refcount_inc_not_zero(&dmb_node->refcnt))
-+		/* the dmb is being unregistered, but has
-+		 * not been removed from the hash table.
-+		 */
-+		return -EINVAL;
-+
-+	/* provide dmb information */
-+	dmb->sba_idx = dmb_node->sba_idx;
-+	dmb->dmb_tok = dmb_node->token;
-+	dmb->cpu_addr = dmb_node->cpu_addr;
-+	dmb->dma_addr = dmb_node->dma_addr;
-+	dmb->dmb_len = dmb_node->len;
-+	return 0;
-+}
-+
-+static int smc_lo_detach_dmb(struct smcd_dev *smcd, u64 token)
-+{
-+	struct smc_lo_dmb_node *dmb_node = NULL, *tmp_node;
-+	struct smc_lo_dev *ldev = smcd->priv;
-+
-+	/* find dmb_node according to dmb->dmb_tok */
-+	read_lock_bh(&ldev->dmb_ht_lock);
-+	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, token) {
-+		if (tmp_node->token == token) {
-+			dmb_node = tmp_node;
-+			break;
-+		}
-+	}
-+	if (!dmb_node) {
-+		read_unlock_bh(&ldev->dmb_ht_lock);
-+		return -EINVAL;
-+	}
-+	read_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	if (refcount_dec_and_test(&dmb_node->refcnt))
-+		__smc_lo_unregister_dmb(ldev, dmb_node);
- 	return 0;
- }
- 
-@@ -170,6 +249,13 @@ static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
- {
- 	struct smc_lo_dmb_node *rmb_node = NULL, *tmp_node;
- 	struct smc_lo_dev *ldev = smcd->priv;
-+	struct smc_connection *conn;
-+
-+	if (!sf)
-+		/* since sndbuf is merged with peer DMB, there is
-+		 * no need to copy data from sndbuf to peer DMB.
-+		 */
-+		return 0;
- 
- 	read_lock_bh(&ldev->dmb_ht_lock);
- 	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_tok) {
-@@ -186,15 +272,10 @@ static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
- 
- 	memcpy((char *)rmb_node->cpu_addr + offset, data, size);
- 
--	if (sf) {
--		struct smc_connection *conn =
--			smcd->conn[rmb_node->sba_idx];
--
--		if (conn && !conn->killed)
--			tasklet_schedule(&conn->rx_tsklet);
--		else
--			return -EPIPE;
--	}
-+	conn = smcd->conn[rmb_node->sba_idx];
-+	if (!conn || conn->killed)
-+		return -EPIPE;
-+	tasklet_schedule(&conn->rx_tsklet);
- 	return 0;
- }
- 
-@@ -226,6 +307,9 @@ static const struct smcd_ops lo_ops = {
- 	.query_remote_gid = smc_lo_query_rgid,
- 	.register_dmb = smc_lo_register_dmb,
- 	.unregister_dmb = smc_lo_unregister_dmb,
-+	.support_dmb_nocopy = smc_lo_support_dmb_nocopy,
-+	.attach_dmb = smc_lo_attach_dmb,
-+	.detach_dmb = smc_lo_detach_dmb,
- 	.add_vlan_id = smc_lo_add_vlan_id,
- 	.del_vlan_id = smc_lo_del_vlan_id,
- 	.set_vlan_required = smc_lo_set_vlan_required,
-@@ -304,12 +388,17 @@ static int smc_lo_dev_init(struct smc_lo_dev *ldev)
- 	smc_lo_generate_id(ldev);
- 	rwlock_init(&ldev->dmb_ht_lock);
- 	hash_init(ldev->dmb_ht);
-+	atomic_set(&ldev->dmb_cnt, 0);
-+	init_waitqueue_head(&ldev->ldev_release);
-+
- 	return smcd_lo_register_dev(ldev);
- }
- 
- static void smc_lo_dev_exit(struct smc_lo_dev *ldev)
- {
- 	smcd_lo_unregister_dev(ldev);
-+	if (atomic_read(&ldev->dmb_cnt))
-+		wait_event(ldev->ldev_release, !atomic_read(&ldev->dmb_cnt));
- }
- 
- static void smc_lo_dev_release(struct device *dev)
-diff --git a/net/smc/smc_loopback.h b/net/smc/smc_loopback.h
-index 24ab9d747613..9156a6c37e65 100644
---- a/net/smc/smc_loopback.h
-+++ b/net/smc/smc_loopback.h
-@@ -30,6 +30,7 @@ struct smc_lo_dmb_node {
- 	u32 sba_idx;
- 	void *cpu_addr;
- 	dma_addr_t dma_addr;
-+	refcount_t refcnt;
- };
- 
- struct smc_lo_dev {
-@@ -37,9 +38,11 @@ struct smc_lo_dev {
- 	struct device dev;
- 	u16 chid;
- 	struct smcd_gid local_gid;
-+	atomic_t dmb_cnt;
- 	rwlock_t dmb_ht_lock;
- 	DECLARE_BITMAP(sba_idx_mask, SMC_LO_MAX_DMBS);
- 	DECLARE_HASHTABLE(dmb_ht, SMC_LO_DMBS_HASH_BITS);
-+	wait_queue_head_t ldev_release;
- };
- #endif
- 
--- 
-2.32.0.3.g01195cf9f
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] fs_parser: move fsparam_string_empty() helper into header
+      https://git.kernel.org/vfs/vfs/c/39c99a820c4a
