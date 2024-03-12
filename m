@@ -1,292 +1,320 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D08F1E876;
-	Tue, 12 Mar 2024 14:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9B811C88;
+	Tue, 12 Mar 2024 14:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710253988; cv=none; b=GlYgtTkdcXHUPR6ySUceMmc79B27t4uXce0dTheVdkqnhOmVueSqTQM/pWwqHKpzDZ3LOO3FbgRokY0il8vVa2cF10Tr1EaMiTb7hX4fqZT20erlYMBbc9tN+KeBVp19ZYN11yDbQGFGw1ceqCmk2HQCe6XSP0ZZiSovrWwLPp8=
+	t=1710254023; cv=none; b=putMcYaWxOoHUznP5n/+80g5jjWX39p/LegCvIs7hqucBwh1iuyN9Lfx3WcfHNm5m+s3sW7f3BLEmD0OChhver6A2fI51jTg10N4cYvrC0/6THyeLYYBdvbv+inAM2oIXBPufVFmMXywFXW7s58bbCqSPVCnwQk9Z/mrpvlQoHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710253988; c=relaxed/simple;
-	bh=IBsQDM1LzXQ9bzAmJnrj1r1z5DtBA8DHkjcXLUs7F4M=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=XUiHit/dlttglZOf07W2smYlnkUIDQqTGO4ZMo3b0TvgwDDn3YzWq1wNpPfs6Mq4n65hsGPDhc3apfoqy1zSzKCK89lFVHOq6d3QfSPYyRs47Y1u1Bjd3+REVevNEaSrt7f1RpVSXdhqVQTN7X0kQNCPqJPZXUPRnpLLcBKITQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhRLtYZw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710254023; c=relaxed/simple;
+	bh=FuaXFocoqibyacwRnfOog/L9D2LtbDRa1H5j3PhMU3U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Qb5YhAGHIDMQWvkxWoE2xqckPkWXo17iFa2KyPMse1BpkhIOOK/8SMSkpLTQSEnTT2JrqGuAUMwxDstWMDKyLl1+PgOfBBqpfWdGGkwqUw+WPKxyRSoSrWXZ22A/YfqRlf4ZrbwSrpgsfG92vQO3s4ipP40dNDvI7rw/FDMlh7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WYwjiR0m; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhRLtYZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6553EC433F1;
-	Tue, 12 Mar 2024 14:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710253987;
-	bh=IBsQDM1LzXQ9bzAmJnrj1r1z5DtBA8DHkjcXLUs7F4M=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=NhRLtYZw7uONAHRfiWK/fnOjBeXaB4mdecnEUKZVHd2XltjPSFGFCS4ChxhEHpfEb
-	 rl32RngKRmhFD3dTfbFoqYcq9/u85OfLSkBOaRCegcD6SqyhkrKAFCQ4bBuPZVSKD6
-	 p+48NhhWs0NPEV29tBfYNvJTuPTa8Q9kh75Mp1DxJu4GW4g4UOoyx8aq22sAiFE1uS
-	 0nACuvMGddDi3V8PZg7TeK59bEgaZAQn5Ggz91gZojL9zh3DEhpsZHDFI6tfPOb719
-	 gmHwXUCGyZD8tK8LldFlcExHRfg7r8tKiFC6pfqZ60DyDo0XFessgBNs5dK46qqpq6
-	 YyQnYUzJHD5hQ==
-Date: Tue, 12 Mar 2024 08:33:06 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WYwjiR0m"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CEWdDQ031157;
+	Tue, 12 Mar 2024 14:33:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=PwURnrrmx+ula6+whl4TYWyDnOW6GQGe035wijkCzF8=;
+ b=WYwjiR0merrVznuOeZ2i05s1FOvtl4o1TwFqpIauheD30VMJUfRaVFDYRldPQ9F9ftXq
+ ryd673vBJda2yycXcjoTtx/UB61bcArF62/eGd7uUm26B1CcQ30qFM6uPWrt4yuxSgwn
+ hGHl86kLTcVe85uD2qBAVuMQPUgzkJVq6EA1fLrzECTN1vhicWnCygufOjHYTXd70SuY
+ Lgtl7lXGlo6do9VXR3HzpJDVAvNGUEzm/OV0kX6u43aOS5Yw2dvr2QT/Bavk0YiK05kA
+ 9YUO8BpTeXuxxSKXoictZhikTSrmfBBBBPrMZsk6bExmIMGTavT37hEI4xryVmcVmvPh ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtncsv3bx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 14:33:34 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42CEQbvh017136;
+	Tue, 12 Mar 2024 14:33:34 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtncsv3bp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 14:33:34 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42CCUCSW020496;
+	Tue, 12 Mar 2024 14:33:33 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws3kkyepg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 14:33:33 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42CEXRS737421512
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Mar 2024 14:33:29 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9B032004D;
+	Tue, 12 Mar 2024 14:33:27 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B7A62005A;
+	Tue, 12 Mar 2024 14:33:27 +0000 (GMT)
+Received: from [9.155.198.211] (unknown [9.155.198.211])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 Mar 2024 14:33:27 +0000 (GMT)
+Message-ID: <aa8062a9-9caa-4773-a3f5-29df70ec93b7@linux.ibm.com>
+Date: Tue, 12 Mar 2024 15:33:26 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 00/11] net/smc: SMC intra-OS shortcut with
+ loopback-ism
+To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com,
+        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org
+References: <20240312142743.41406-1-guwen@linux.alibaba.com>
+From: Jan Karcher <jaka@linux.ibm.com>
+Organization: IBM - Network Linux on Z
+In-Reply-To: <20240312142743.41406-1-guwen@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0e4a5ricnJty8cHrHQicNTL8ygdDhBgq
+X-Proofpoint-ORIG-GUID: KUotXcrSpMec7Ji7J7AxeSyCaYyZvhpn
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patrick@stwcx.xyz, Andrew Jeffery <andrew@codeconstruct.com.au>, 
- linux-aspeed@lists.ozlabs.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20240312061556.496605-1-Delphine_CC_Chiu@wiwynn.com>
-References: <20240312061556.496605-1-Delphine_CC_Chiu@wiwynn.com>
-Message-Id: <171025376449.2190602.9706298044805249290.robh@kernel.org>
-Subject: Re: [PATCH v6 00/22] Add i2c-mux and eeprom devices for Meta
- Yosemite 4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_09,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 malwarescore=0 bulkscore=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403120112
 
 
-On Tue, 12 Mar 2024 14:15:32 +0800, Delphine CC Chiu wrote:
-> Changelog:
->   - v6
->     - Revise i2c duty-cycle for meeting 400khz spec
->   - v5
->     - Support medusa board adc sensors
->     - support NIC eeprom
->   - v4
->     - Re-format gpio linename
->     - Revise i2c device node names
->     - Split patches by logic changes
->   - v3
->     - Correct patch for revising gpio name
->   - v2
->     - Revise mx31790 fan tach config
->     - Add mctp config for NIC
->     - Support mux to cpld
->     - Revise gpio name
->   - v1
->     - Add gpio and eeprom behind i2c-mux
->     - Remove redundant idle-state setting for i2c-mux
->     - Enable adc 15, wdt2,spi gpio for yosemite4 use
->     - Revise quad mode to dual mode to avoid WP pin influnece the SPI
->     - Revise power sensor adm1281 for yosemite4 schematic change
->     - Add gpio pca9506 I/O expander for yosemite4 use
->     - remove space for adm1272 compatible
->     - enable interrupt setting for pca9555
->     - add eeprom for yosemite4 medusa board/BSM use
->     - remove temperature sensor for yosemite4 schematic change
->     - add power sensor for power module reading
->     - Revise adc128d818 adc mode for yosemite4 schematic change
->     - Revise ina233 for yosemite4 schematic change
->     - Remove idle state setting for yosemite4 NIC connection
->     - Initialize bmc gpio state
->     - Revise mx31790 fan tach config
->     - Add mctp config for NIC
->     - Support mux to cpld
->     - Revise gpio name
+
+On 12/03/2024 15:27, Wen Gu wrote:
+> This patch set acts as the second part of the new version of [1] (The first
+> part can be referred from [2]), the updated things of this version are listed
+> at the end.
+
+Hi Wen Gu,
+
+Re-running the tests with this version and finishing up review.
+Please give me some time.
+
+Thank you
+- Jan
+
 > 
-> Delphine CC Chiu (22):
->   ARM: dts: aspeed: yosemite4: Revise i2c-mux devices
->   ARM: dts: aspeed: yosemite4: Enable adc15
->   ARM: dts: aspeed: yosemite4: Enable spi-gpio setting
->   ARM: dts: aspeed: yosemite4: Enable watchdog2
->   ARM: dts: aspeed: yosemite4: Revise quad mode to dual mode
->   ARM: dts: aspeed: yosemite4: Revise power sensor adm1281 for schematic
->     change
->   ARM: dts: aspeed: yosemite4: Add gpio pca9506
->   ARM: dts: aspeed: yosemite4: Remove space for adm1272 compatible
->   ARM: dts: aspeed: yosemite4: Enable interrupt setting for pca9555
->   ARM: dts: aspeed: yosemite4: Add power sensor for power module reading
->   ARM: dts: aspeed: yosemite4: Add eeprom for yosemite4 use
->   ARM: dts: aspeed: yosemite4: Remove temperature sensor for yosemite4
->     schematic change
->   ARM: dts: aspeed: yosemite4: Revise adc128d818 adc mode for yosemite4
->     schematic change
->   ARM: dts: aspeed: yosemite4: Revise ina233 config for yosemite4
->     schematic change
->   ARM: dts: aspeed: yosemite4: Remove idle state setting for yosemite4
->     NIC connection
->   ARM: dts: aspeed: yosemite4: Initialize bmc gpio state
->   ARM: dts: aspeed: yosemite4: Revise mx31790 fan tach config
->   ARM: dts: aspeed: yosemite4: add mctp config for NIC
->   ARM: dts: aspeed: yosemite4: support mux to cpld
->   ARM: dts: aspeed: yosemite4: support medusa board adc sensors
->   ARM: dts: aspeed: yosemite4: support NIC eeprom
->   ARM: dts: aspeed: yosemite4: Revise i2c duty-cycle
+> - Background
 > 
->  .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 1258 +++++++++++++++--
->  1 file changed, 1151 insertions(+), 107 deletions(-)
+> SMC-D is now used in IBM z with ISM function to optimize network interconnect
+> for intra-CPC communications. Inspired by this, we try to make SMC-D available
+> on the non-s390 architecture through a software-implemented Emulated-ISM device,
+> that is the loopback-ism device here, to accelerate inter-process or
+> inter-containers communication within the same OS instance.
 > 
-> --
-> 2.25.1
+> - Design
+> 
+> This patch set includes 3 parts:
+> 
+>   - Patch #1-#2: some prepare work for loopback-ism.
+>   - Patch #3-#7: implement loopback-ism device. Noted that loopback-ism now
+>     serves only SMC and no userspace interface exposed.
+>   - Patch #10-#15: memory copy optimization for intra-OS scenario.
+> 
+> The loopback-ism device is designed as an ISMv2 device and not be limited to
+> a specific net namespace, ends of both inter-process connection (1/1' in diagram
+> below) or inter-container connection (2/2' in diagram below) can find the same
+> available loopback-ism and choose it during the CLC handshake.
+> 
+>   Container 1 (ns1)                              Container 2 (ns2)
+>   +-----------------------------------------+    +-------------------------+
+>   | +-------+      +-------+      +-------+ |    |        +-------+        |
+>   | | App A |      | App B |      | App C | |    |        | App D |<-+     |
+>   | +-------+      +---^---+      +-------+ |    |        +-------+  |(2') |
+>   |     |127.0.0.1 (1')|             |192.168.0.11       192.168.0.12|     |
+>   |  (1)|   +--------+ | +--------+  |(2)   |    | +--------+   +--------+ |
+>   |     `-->|   lo   |-` |  eth0  |<-`      |    | |   lo   |   |  eth0  | |
+>   +---------+--|---^-+---+-----|--+---------+    +-+--------+---+-^------+-+
+>                |   |           |                                  |
+>   Kernel       |   |           |                                  |
+>   +----+-------v---+-----------v----------------------------------+---+----+
+>   |    |                            TCP                               |    |
+>   |    |                                                              |    |
+>   |    +--------------------------------------------------------------+    |
+>   |                                                                        |
+>   |                           +--------------+                             |
+>   |                           | smc loopback |                             |
+>   +---------------------------+--------------+-----------------------------+
+> 
+> loopback-ism device creates DMBs (shared memory) for each connection peer.
+> Since data transfer occurs within the same kernel, the sndbuf of each peer
+> is only a descriptor and point to the same memory region as peer DMB, so that
+> the data copy from sndbuf to peer DMB can be avoided in loopback-ism case.
+> 
+>   Container 1 (ns1)                              Container 2 (ns2)
+>   +-----------------------------------------+    +-------------------------+
+>   | +-------+                               |    |        +-------+        |
+>   | | App C |-----+                         |    |        | App D |        |
+>   | +-------+     |                         |    |        +-^-----+        |
+>   |               |                         |    |          |              |
+>   |           (2) |                         |    |     (2') |              |
+>   |               |                         |    |          |              |
+>   +---------------|-------------------------+    +----------|--------------+
+>                   |                                         |
+>   Kernel          |                                         |
+>   +---------------|-----------------------------------------|--------------+
+>   | +--------+ +--v-----+                           +--------+ +--------+  |
+>   | |dmb_desc| |snd_desc|                           |dmb_desc| |snd_desc|  |
+>   | +-----|--+ +--|-----+                           +-----|--+ +--------+  |
+>   | +-----|--+    |                                 +-----|--+             |
+>   | | DMB C  |    +---------------------------------| DMB D  |             |
+>   | +--------+                                      +--------+             |
+>   |                                                                        |
+>   |                           +--------------+                             |
+>   |                           | smc loopback |                             |
+>   +---------------------------+--------------+-----------------------------+
+> 
+> - Benchmark Test
+> 
+>   * Test environments:
+>        - VM with Intel Xeon Platinum 8 core 2.50GHz, 16 GiB mem.
+>        - SMC sndbuf/DMB size 1MB.
+> 
+>   * Test object:
+>        - TCP: run on TCP loopback.
+>        - SMC lo: run on SMC loopback-ism.
+> 
+> 1. ipc-benchmark (see [3])
+> 
+>   - ./<foo> -c 1000000 -s 100
+> 
+>                              TCP                  SMC-lo
+> Message
+> rate (msg/s)              81433                  143938(+76.75%)
+> 
+> 2. sockperf
+> 
+>   - serv: <smc_run> taskset -c <cpu> sockperf sr --tcp
+>   - clnt: <smc_run> taskset -c <cpu> sockperf { tp | pp } --tcp --msg-size={ 64000 for tp | 14 for pp } -i 127.0.0.1 -t 30
+> 
+>                              TCP                  SMC-lo
+> Bandwidth(MBps)         4903.07                 7978.69(+62.73%)
+> Latency(us)               6.095                   3.539(-41.94%)
+> 
+> 3. nginx/wrk
+> 
+>   - serv: <smc_run> nginx
+>   - clnt: <smc_run> wrk -t 8 -c 1000 -d 30 http://127.0.0.1:80
+> 
+>                             TCP                   SMC-lo
+> Requests/s           161665.67                244272.41(+51.10%)
+> 
+> 4. redis-benchmark
+> 
+>   - serv: <smc_run> redis-server
+>   - clnt: <smc_run> redis-benchmark -h 127.0.0.1 -q -t set,get -n 400000 -c 200 -d 1024
+> 
+>                             TCP                   SMC-lo
+> GET(Requests/s)       88790.23                117474.30(+32.31%)
+> SET(Requests/s)       87508.20                118623.96(+35.57%)
 > 
 > 
+> Change log:
 > 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y aspeed/aspeed-bmc-facebook-yosemite4.dtb' for 20240312061556.496605-1-Delphine_CC_Chiu@wiwynn.com:
-
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:550.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:576.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:601.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@2:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:626.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@3:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:661.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:686.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:711.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@2:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:736.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@3:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:773.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:821.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:980.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1006.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1012.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@2:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1018.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@3:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1324.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1345.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1366.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@2:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1387.4-14: Warning (reg_format): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@3:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:547.17-571.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@0: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:547.17-571.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@0: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:573.17-596.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@1: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:573.17-596.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@1: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:598.17-621.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@2: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:598.17-621.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@2: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:623.17-646.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@3: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:623.17-646.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@480/i2c-mux@70/i2c@3: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:658.17-681.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@0: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:658.17-681.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@0: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:683.17-706.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@1: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:683.17-706.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@1: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:708.17-731.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@2: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:708.17-731.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@2: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:733.17-757.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@3: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:733.17-757.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@500/i2c-mux@71/i2c@3: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:770.17-816.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@0: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:770.17-816.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@0: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:818.17-822.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@1: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:818.17-822.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@580/i2c-mux@74/i2c@1: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:977.17-1001.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@0: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:977.17-1001.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@0: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1003.17-1007.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@1: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1003.17-1007.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@1: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1009.17-1013.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@2: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1009.17-1013.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@2: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1015.17-1019.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@3: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1015.17-1019.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@680/i2c-mux@70/i2c@3: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1321.17-1340.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@0: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1321.17-1340.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@0: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1342.17-1361.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@1: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1342.17-1361.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@1: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1363.17-1382.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@2: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1363.17-1382.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@2: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1384.17-1403.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@3: Relying on default #address-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1384.17-1403.5: Warning (avoid_default_addr_size): /ahb/apb/bus@1e78a000/i2c-bus@800/i2c-mux@72/i2c@3: Relying on default #size-cells value
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1553.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_b4:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1552.14-1555.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_b4: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/usb2bd_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1557.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_b5:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1556.14-1559.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_b5: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/interrupt-controller@560 or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1561.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f0:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1560.14-1563.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f0: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/txd1_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1565.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f1:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1564.14-1567.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f1: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/rxd1_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1569.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f2:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1568.14-1571.5: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f2: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/wdtrst1_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1573.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f3:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1572.14-1575.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f3: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/wdtrst2_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1577.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f4:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1576.14-1579.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f4: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/emmc_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1581.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f5:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1580.14-1583.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f5: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/txd2_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1585.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f6:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1584.14-1587.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f6: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/rxd2_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1589.3-29: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f7:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1588.14-1591.4: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_f7: Missing property '#gpio-cells' in node /ahb/apb/syscon@1e6e2000/pinctrl/txd3_default or bad phandle (referred from gpios[0])
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1593.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_l6:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1593.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_l6:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1597.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_l7:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1597.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_l7:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1601.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_s0:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1601.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_s0:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1605.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_s1:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1605.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_s1:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1609.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v0:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1609.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v0:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1613.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v1:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1613.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v1:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1617.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v2:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1617.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v2:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1621.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v3:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1621.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_v3:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1625.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w0:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1625.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w0:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1629.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w1:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1629.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w1:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1633.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w2:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1633.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w2:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1637.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w3:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1637.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w3:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1641.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w4:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1641.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w4:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1645.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w5:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1645.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w5:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1649.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w6:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1649.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w6:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1653.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w7:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1653.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_w7:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1657.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z3:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1657.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z3:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1661.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z4:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1661.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z4:gpios: Could not get phandle node for (cell 0)
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1665.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z5:gpios: cell 0 is not a phandle reference
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:1665.3-30: Warning (gpios_property): /ahb/apb/gpio@1e780000/pin_gpio_z5:gpios: Could not get phandle node for (cell 0)
-Traceback (most recent call last):
-  File "/home/rob/.local/bin/dt-validate", line 8, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/rob/proj/dt-schema/dtschema/dtb_validate.py", line 144, in main
-    sg.check_dtb(filename)
-  File "/home/rob/proj/dt-schema/dtschema/dtb_validate.py", line 87, in check_dtb
-    dt = self.validator.decode_dtb(f.read())
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/rob/proj/dt-schema/dtschema/validator.py", line 518, in decode_dtb
-    return [dtschema.dtb.fdt_unflatten(self, dtb)]
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/rob/proj/dt-schema/dtschema/dtb.py", line 492, in fdt_unflatten
-    fixup_gpios(dt)
-  File "/home/rob/proj/dt-schema/dtschema/dtb.py", line 381, in fixup_gpios
-    fixup_gpios(v)
-  File "/home/rob/proj/dt-schema/dtschema/dtb.py", line 381, in fixup_gpios
-    fixup_gpios(v)
-  File "/home/rob/proj/dt-schema/dtschema/dtb.py", line 381, in fixup_gpios
-    fixup_gpios(v)
-  [Previous line repeated 1 more time]
-  File "/home/rob/proj/dt-schema/dtschema/dtb.py", line 402, in fixup_gpios
-    node = phandles[phandle]
-           ~~~~~~~~^^^^^^^^^
-KeyError: 94
-
-
-
-
-
+> v3->v2:
+> - Patch #11: use tasklet_schedule(&conn->rx_tsklet) instead of smcd_cdc_rx_handler()
+>    to avoid possible recursive locking of conn->send_lock and use {read|write}_lock_bh()
+>    to acquire dmb_ht_lock.
+> 
+> v2->v1:
+> Link: https://lore.kernel.org/netdev/20240307095536.29648-1-guwen@linux.alibaba.com/
+> - All the patches: changed the term virtual-ISM to Emulated-ISM as defined by SMCv2.1.
+> - Patch #3: optimized the description of SMC_LO config. Avoid exposing loopback-ism
+>    to sysfs and remove all the knobs until future definition clear.
+> - Patch #3: try to make lockdep happy by using read_lock_bh() in smc_lo_move_data().
+> - Patch #6: defaultly use physical contiguous DMB buffers.
+> - Patch #11: defaultly enable DMB no-copy for loopback-ism and free the DMB in
+>    unregister_dmb or detach_dmb when dmb_node->refcnt reaches 0, instead of using
+>    wait_event to keep waiting in unregister_dmb.
+> 
+> v1->RFC:
+> Link: https://lore.kernel.org/netdev/20240111120036.109903-1-guwen@linux.alibaba.com/
+> - Patch #9: merge rx_bytes and tx_bytes as xfer_bytes statistics:
+>    /sys/devices/virtual/smc/loopback-ism/xfer_bytes
+> - Patch #10: add support_dmb_nocopy operation to check if SMC-D device supports
+>    merging sndbuf with peer DMB.
+> - Patch #13 & #14: introduce loopback-ism device control of DMB memory type and
+>    control of whether to merge sndbuf and DMB. They can be respectively set by:
+>    /sys/devices/virtual/smc/loopback-ism/dmb_type
+>    /sys/devices/virtual/smc/loopback-ism/dmb_copy
+>    The motivation for these two control is that a performance bottleneck was
+>    found when using vzalloced DMB and sndbuf is merged with DMB, and there are
+>    many CPUs and CONFIG_HARDENED_USERCOPY is set [4]. The bottleneck is caused
+>    by the lock contention in vmap_area_lock [5] which is involved in memcpy_from_msg()
+>    or memcpy_to_msg(). Currently, Uladzislau Rezki is working on mitigating the
+>    vmap lock contention [6]. It has significant effects, but using virtual memory
+>    still has additional overhead compared to using physical memory.
+>    So this new version provides controls of dmb_type and dmb_copy to suit
+>    different scenarios.
+> - Some minor changes and comments improvements.
+> 
+> RFC->old version([1]):
+> Link: https://lore.kernel.org/netdev/1702214654-32069-1-git-send-email-guwen@linux.alibaba.com/
+> - Patch #1: improve the loopback-ism dump, it shows as follows now:
+>    # smcd d
+>    FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+>    0000 0     loopback-ism  ffff   No        0
+> - Patch #3: introduce the smc_ism_set_v2_capable() helper and set
+>    smc_ism_v2_capable when ISMv2 or virtual ISM is registered,
+>    regardless of whether there is already a device in smcd device list.
+> - Patch #3: loopback-ism will be added into /sys/devices/virtual/smc/loopback-ism/.
+> - Patch #8: introduce the runtime switch /sys/devices/virtual/smc/loopback-ism/active
+>    to activate or deactivate the loopback-ism.
+> - Patch #9: introduce the statistics of loopback-ism by
+>    /sys/devices/virtual/smc/loopback-ism/{{tx|rx}_tytes|dmbs_cnt}.
+> - Some minor changes and comments improvements.
+> 
+> [1] https://lore.kernel.org/netdev/1695568613-125057-1-git-send-email-guwen@linux.alibaba.com/
+> [2] https://lore.kernel.org/netdev/20231219142616.80697-1-guwen@linux.alibaba.com/
+> [3] https://github.com/goldsborough/ipc-bench
+> [4] https://lore.kernel.org/all/3189e342-c38f-6076-b730-19a6efd732a5@linux.alibaba.com/
+> [5] https://lore.kernel.org/all/238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com/
+> [6] https://lore.kernel.org/all/20240102184633.748113-1-urezki@gmail.com/
+> 
+> Wen Gu (11):
+>    net/smc: adapt SMC-D device dump for Emulated-ISM
+>    net/smc: decouple ism_client from SMC-D DMB registration
+>    net/smc: introduce loopback-ism for SMC intra-OS shortcut
+>    net/smc: implement ID-related operations of loopback-ism
+>    net/smc: implement some unsupported operations of loopback-ism
+>    net/smc: implement DMB-related operations of loopback-ism
+>    net/smc: register loopback-ism into SMC-D device list
+>    net/smc: add operations to merge sndbuf with peer DMB
+>    net/smc: attach or detach ghost sndbuf to peer DMB
+>    net/smc: adapt cursor update when sndbuf and peer DMB are merged
+>    net/smc: implement DMB-merged operations of loopback-ism
+> 
+>   drivers/s390/net/ism_drv.c |   2 +-
+>   include/net/smc.h          |   7 +-
+>   net/smc/Kconfig            |  13 ++
+>   net/smc/Makefile           |   2 +-
+>   net/smc/af_smc.c           |  28 ++-
+>   net/smc/smc_cdc.c          |  52 ++++-
+>   net/smc/smc_core.c         |  61 ++++-
+>   net/smc/smc_core.h         |   1 +
+>   net/smc/smc_ism.c          |  71 +++++-
+>   net/smc/smc_ism.h          |   5 +
+>   net/smc/smc_loopback.c     | 462 +++++++++++++++++++++++++++++++++++++
+>   net/smc/smc_loopback.h     |  52 +++++
+>   12 files changed, 727 insertions(+), 29 deletions(-)
+>   create mode 100644 net/smc/smc_loopback.c
+>   create mode 100644 net/smc/smc_loopback.h
+> 
