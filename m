@@ -1,159 +1,89 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007D67A15B
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94047E114;
+	Tue, 12 Mar 2024 16:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710261619; cv=none; b=B6/bTAcW68FN37c+pyOVOgLal4rtEWg/4BVLhcPk+9i7hFAefSi8eAm5zFEc6t2m24K9ZJzy3dNYcTqdXqxQMk1P+RQYlrKw6+hzxsXpgLQKULVnJsRFtUgmLJxEem3ovm1jMFleFnl5V/gz0GZdh5etrspF9DeKjRINKdzyo5A=
+	t=1710261677; cv=none; b=uy9kadAYKvUZadlJ6M4+sMq60SenBuAYNWhjdP4CEOW0/fQ8e5j/lNoYixOQvdK9HYatmRq7nH0E5KUdTxe7Y7AwaJqt1bfFAFpXOXFUw+CdlCNuv+VycDshLAAqecnCYlhgSNxf+gPd1eVVjXmCW9r9IQqgkKuFPvXxX7IYzHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710261619; c=relaxed/simple;
-	bh=PFzijgEHfFJ1RqmvEdnyVlBbRRCYXP8e7Eh/psoGdGY=;
-	h=MIME-Version:Message-Id:Date:From:To:Cc:Subject:Content-Type; b=ufXByH5prz8TgGtYwBOIJAcu2NceeBb0FWFaOpJ7eFr34NF3ppcBFud4w70NXYDmf4HbQQWRJQlISEekS3kl+IOK7Bwfe2yqvdb/HiomEKgJ6nrIvqG85ZcHWk/1lvdb8ODCiMxDzbsIaGD4Xwsjy+qiiPTcxsxDfaTMEoquKuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jbDhcBSn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Rf8Bq+0+; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1710261677; c=relaxed/simple;
+	bh=0g9LLPvlH5qpBdQAUmu++557crlx9uckDyhZnn5Qxls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiigUdyI4QuOzoMmBDv1a0vsIkB0HP1g7VhgCHxESa3EOUqEIHr/uRMzpss4rUXyuz4WS1cyeAFTr2ifwfi5pULdPeV4NpWjNTrt+D/QBpHgl6IqVaPrf0Fu6tT+gptOC5tJNfltqtMg2cNYG0jVFmr4IUEl1hwABAD52VyUj30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCyyrJVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jbDhcBSn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rf8Bq+0+"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id C8AB41C0010B;
-	Tue, 12 Mar 2024 12:40:15 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 12 Mar 2024 12:40:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1710261615; x=1710348015; bh=No
-	3/x37VrAXFxgp1EVrtb4FFgXQ4bK6K83UBpoL3gdo=; b=jbDhcBSnCclYHzQtYl
-	qK3x9qd2+KMRxvhFA7volvMMddM5G4E/lCMzfDy8NoEksqqUD+CuIpn5XhU395hA
-	uvHmWwBPd/9M8b4vuLPwbJQZ9LPsOqwab9oxCUyzC5veGE4txEDnKlmWTJKrrPhs
-	tVeD+H2o+2nqOFxpTTWIHe28aJ1P8exDk+3z0PyErf7anbC0tJVjoE/taO2WKRTL
-	vq+gpVbWliIbsyAhk1wVXWAUPioG1x9i8vKQc86h4e/ep4c6l8fqx8Q/rBVIY3uu
-	5oA3HYPn2qHeim1awzS8bnaHhvp931F05sBbRS/2lkmYXk7aPF1gJ/jF9eOf6Msr
-	sZAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1710261615; x=1710348015; bh=No3/x37VrAXFx
-	gp1EVrtb4FFgXQ4bK6K83UBpoL3gdo=; b=Rf8Bq+0+dg7i5dR4MQHJ1k58EdTeu
-	h1Hqq/5BtiUE7juQnyYLr3H/IiPSi+YyGilTTGEADttY8lnfPdcr2VY0OWPxpgNe
-	hpePjdVdoOtZM6WgyawgCgv/3c234fOkJ8CwqB+bCrdi0xO0D7PJFKeVZcl1Abrr
-	T025FMKaS96iuOPRBFhkQqKnPWbwnrDEs8OkLAxs9q5TD8WWiamiUyBgPCGFbWyK
-	1PayQcZmhKJyI4ARzKLsHG6Er88AEQV+PNywyBCqETF5mQofkGkYiBSe8IMkGsEB
-	573CWUBwRDMHaNg9TSnwbOvkaDtkYpreN3Ii5GC95wCdOjpKmxRkVl1mQ==
-X-ME-Sender: <xms:b4XwZRQWUJjpzLygpclXjmvZF9z52xqOQT_grMTe2ztjTFPcX20x9Q>
-    <xme:b4XwZax6Vci_63EonTFoGC3vZMv7deff-n7qMqPAp-CsyN6Igl9cQs33k3Qh5aLAO
-    O1xNtqy78bFv6FJpPI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeefgdeludcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepfeehleefteehledvieeifeeftefhkedvheehudelteevieekhefhgefhveekffeu
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:b4XwZW0bjE5Tcl8iaF6GyB7sDcyPIiQ4tWv0-p2QxIcvtxmREtrW9w>
-    <xmx:b4XwZZAHq2Xg4v5cE0DDpr1rIzBTSubAuIcXjey-A_gV2E_dZSdp4g>
-    <xmx:b4XwZahcoQfMXLSTCyJoDmjTmMD_1Jeycd8cyQnwgy2FFry2B8pYKQ>
-    <xmx:b4XwZdr_udQ3dvmxPfVlaA2PcDQZwA_ta6-x0VK-qid4xYFVYFt82A>
-    <xmx:b4XwZSc_9I6C_Exar2BcPI6_ivAqKXZ-gJrpJP-_LJ5F8qbzQt-IPQV3pM0>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 1FF06B6008D; Tue, 12 Mar 2024 12:40:15 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCyyrJVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE3EC433F1;
+	Tue, 12 Mar 2024 16:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710261676;
+	bh=0g9LLPvlH5qpBdQAUmu++557crlx9uckDyhZnn5Qxls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mCyyrJVi8Gfx4GQpxPp/xOYa4x3L/5rtjT+tWPz/oNwV+8ariPs6A9sEHDdmj1DV+
+	 pBmgoR0O1eT9oyW/GOEZBaJj6N2MaF2RlMtTgdBGb/xoHfxC6bjVMD4H9u4DvvU84S
+	 hM2T++jhIZ8UkplTr7aH/5Oa8odR3abY9IRzQX9HpeOJfFc67JP7p9fqdLkZMwOzV4
+	 6g+Uo2hgDhS/f//VYHB0rO9DFINzDI9uv89grP2I56yU0nGsgRhhOPj350h3LzPpmY
+	 uqBCPQS42VJeYxGVGlmF/1nV7JxtSTHIPYVyGE7VU3ttUfNA7ehckv3NBzURj2+QS/
+	 Vr4xm7r6P6fIw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rk5Bq-000000005fC-2l0B;
+	Tue, 12 Mar 2024 17:41:23 +0100
+Date: Tue, 12 Mar 2024 17:41:22 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	dri-devel@lists.freedesktop.org, swboyd@chromium.org,
+	quic_jesszhan@quicinc.com, quic_parellan@quicinc.com,
+	quic_bjorande@quicinc.com, Rob Clark <robdclark@chromium.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/dp: move link_ready out of HPD event thread
+Message-ID: <ZfCFsmNv62-KMkA6@hovoldconsulting.com>
+References: <20240308214532.1404038-1-quic_abhinavk@quicinc.com>
+ <ZfApxyVAJMK4bL8O@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <89d0bb77-a608-4ae0-b9d9-e17fdf5f12da@app.fastmail.com>
-Date: Tue, 12 Mar 2024 17:39:54 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: soc@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL 0/4] ARM SoC updates for 6.9
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfApxyVAJMK4bL8O@hovoldconsulting.com>
 
-Hi Linus,
+On Tue, Mar 12, 2024 at 11:09:11AM +0100, Johan Hovold wrote:
+> On Fri, Mar 08, 2024 at 01:45:32PM -0800, Abhinav Kumar wrote:
 
-The SoC updates this time are rather uneventful this time, with
-not much sticking out at all, just the usual amount of normal
-maintenance going on throughout the tree. It is less dominated
-by Qualcomm SoC work than the past few releases, with sizable
-contributions for TI, Mediatek, NXP, Rockchip and NVIDIA as well.
+> > @@ -466,6 +466,8 @@ static int dp_display_notify_disconnect(struct device *dev)
+> >  {
+> >  	struct dp_display_private *dp = dev_get_dp_display_private(dev);
+> >  
+> > +	dp->dp_display.link_ready = false;
+> 
+> As I also pointed out in the other thread, setting link_ready to false
+> here means that any spurious connect event (during physical disconnect)
+> will always be processed, something which can currently lead to a leaked
+> runtime pm reference.
+> 
+> Wasting some power is of course preferred over crashing the machine, but
+> please take it into consideration anyway.
+> 
+> Especially if your intention with this patch was to address the resets
+> we saw with sc8280xp which are gone since the HPD notify revert (which
+> fixed the hotplug detect issue that left the bridge in a
+> half-initialised state).
 
-There are a total of 996 non-merge changesets from 242 individual
-contributors, though a small number of these will come in a later
-pull request. The main contributors by number of patches are:
+Heh. This is getting ridiculous. I just tried running with this patch
+and it again breaks hotplug detect in a VT console and in X (where I
+could enable a reconnected external display by running xrandr twice
+before).
 
-     59 Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-     43 Alexander Stein <alexander.stein@ew.tq-group.com>
-     40 Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-     37 Andrew Davis <afd@ti.com>
-     32 Geert Uytterhoeven <geert+renesas@glider.be>
-     28 Konrad Dybcio <konrad.dybcio@linaro.org>
-     20 Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-     18 Nishanth Menon <nm@ti.com>
-     17 Randy Dunlap <rdunlap@infradead.org>
-     17 Cristian Marussi <cristian.marussi@arm.com>
-     16 Michal Simek <michal.simek@amd.com>
-     15 Neil Armstrong <neil.armstrong@linaro.org>
-     15 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-     14 Vaishnav Achath <vaishnav.a@ti.com>
-     14 Josua Mayer <josua@solid-run.com>
-     14 Frieder Schrempf <frieder.schrempf@kontron.de>
-     13 Abel Vesa <abel.vesa@linaro.org>
-     12 Luca Weiss <luca.weiss@fairphone.com>
-     12 Bjorn Andersson <quic_bjorande@quicinc.com>
-     11 Mark Hasemeyer <markhas@chromium.org>
-     11 Frank Li <Frank.Li@nxp.com>
-     11 Chen-Yu Tsai <wenst@chromium.org>
-     10 Jagan Teki <jagan@edgeble.ai>
-     10 Duy Nguyen <duy.nguyen.rh@renesas.com>
+So, please, do not apply this one.
 
-This is the overall dirstat:
-
-   1.2% Documentation/devicetree/bindings/arm/
-   0.3% Documentation/devicetree/bindings/bus/
-   0.3% Documentation/devicetree/bindings/clock/
-   0.4% Documentation/devicetree/bindings/memory-controllers/fsl/
-   0.6% Documentation/devicetree/bindings/soc/
-   0.7% Documentation/devicetree/bindings/
-   0.9% arch/arm/boot/dts/microchip/
-   6.0% arch/arm/boot/dts/nvidia/
-   3.2% arch/arm/boot/dts/nxp/imx/
-   2.7% arch/arm/boot/dts/qcom/
-   2.0% arch/arm/boot/dts/ti/omap/
-   1.2% arch/arm/boot/dts/
-   0.3% arch/arm/mach-omap2/
-   0.9% arch/arm/
-   1.1% arch/arm64/boot/dts/allwinner/
-   1.6% arch/arm64/boot/dts/amlogic/
-   0.3% arch/arm64/boot/dts/exynos/google/
-   8.3% arch/arm64/boot/dts/freescale/
-   6.9% arch/arm64/boot/dts/mediatek/
-   5.6% arch/arm64/boot/dts/nvidia/
-  15.2% arch/arm64/boot/dts/qcom/
-   4.6% arch/arm64/boot/dts/renesas/
-   9.0% arch/arm64/boot/dts/rockchip/
-  14.2% arch/arm64/boot/dts/ti/
-   0.4% arch/arm64/boot/dts/xilinx/
-   0.3% arch/arm64/boot/dts/
-   0.6% arch/riscv/boot/dts/starfive/
-   1.5% drivers/firmware/arm_scmi/
-   1.7% drivers/memory/
-   0.6% drivers/reset/
-   0.4% drivers/soc/mediatek/
-   1.2% drivers/soc/qcom/
-   0.4% drivers/soc/samsung/
-   0.4% drivers/soc/tegra/fuse/
-   0.6% drivers/
-   1.4% include/dt-bindings/clock/
-   0.3% include/dt-bindings/
+Johan
