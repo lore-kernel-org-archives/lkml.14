@@ -1,219 +1,233 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8687C79B82;
-	Tue, 12 Mar 2024 11:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4297B1F95F;
+	Tue, 12 Mar 2024 11:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710243568; cv=none; b=szqpL+5Dsf/EVhdzQPfXY24D7KMk4Vv1TU2OazTsr5WjDEQLZayNMvotILyh9vACNqKMsdMsu1nyTKUYmX7k1UsmBwmV7GfuMB5rjc3haRE7spmBa+RlhBsTteqo8+V9uq4Nui8TdsYa6/ks6M+X7HVIaPGGh9FzBxx1lVS7XfA=
+	t=1710243572; cv=none; b=rJJFKmUlSVsVf6ZXJ+N6bbqSDtknZuNqR1gXzkaIlf7iDNKIIEEtMsnetXjbTLxuuMIoJ+OxfSUuX9NprExVNLgPznLPkPNzHEpg56E+y6I2c3IIqx1WDyksZxZfUwbE3MG9MXzIZypMXfIytBkXJWir9+s/4FOuSv07jHADN3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710243568; c=relaxed/simple;
-	bh=NX/WqLcxRYK7xucZrIxlFXY7ZZZGHpHpD24ZYlaKNAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Dxt5Tc8OBKSkdXJsJZuS+YnU1fBz9t0/m43ekc3QXFMbrxodVOhgzMT5P4PZze2JUeOrHBMbEhX3I8Kaj5IpqGAIeazqsGNIq+shoTF/LiDLFTxs6DxhMocUiDiCPekpQ6sHUAbU77xB90tvgCu6UsNvEnA/D9071LNVvo5cwiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=JL/eHPSY; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="JL/eHPSY"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A7D2012000B;
-	Tue, 12 Mar 2024 14:39:14 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A7D2012000B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710243554;
-	bh=Wtg3cpBcwUQyjC8p2zPk4EO2014tUKdoqwKaa7CC57w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=JL/eHPSY5cY9DEjLFrq9GPJtnrRN6iX6pWWeCXLN5I97foorOMsi8J/xA988GgLM5
-	 T3OwEwfHtFsptqVPSsV3fB+3u5b/B7vWNvfbTOqTlOxHsCo6pON5KnAaX3EQTKNwkw
-	 30LeIdAudODv1a99KA5TAKZ2oOQDeNVg72/qcmhKitUeFw1Vs3jmetAjV0JrIryR2V
-	 fmKVnYwnCKoEwEKQkjfz6/raki9hr8NTEdzERGN/6X9uHi2onEmy7B1Ndkiq0xTKIc
-	 RZLx18YSvefiL+5rvojfx9KffYMGLLPeH7rfPUTXOHM3C0JqNfZc2AxKHzklp3TqTU
-	 oylA1Kbz35J3g==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 12 Mar 2024 14:39:14 +0300 (MSK)
-Received: from [172.28.66.90] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 12 Mar 2024 14:39:14 +0300
-Message-ID: <9e13fd46-b05b-4fc2-abb6-c6c96dd576ee@salutedevices.com>
-Date: Tue, 12 Mar 2024 14:39:13 +0300
+	s=arc-20240116; t=1710243572; c=relaxed/simple;
+	bh=DPI9vTTcn4dH2XQ7PWhAYSYxobucnJ0fRAPUtDXFC0Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qHTMw9l3YZlVbrgsmp6L4DI9Mj0ybRmNNOgAb2HisTjCfoX622xHV2xibNfEllU8ATtMm1w4Ztv9JOKVBVjU/9TGMDKeCl2MbgXOViZNO4lKeHVPHGiWXuNm/JJVdNO+MbhlKWBQ78Yi6cdKPUQzFu6h4WrLWtrv/CjGKR/8Btw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TvBSW2jDBz2BfxP;
+	Tue, 12 Mar 2024 19:36:59 +0800 (CST)
+Received: from dggpemm500019.china.huawei.com (unknown [7.185.36.180])
+	by mail.maildlp.com (Postfix) with ESMTPS id C906B1A016C;
+	Tue, 12 Mar 2024 19:39:25 +0800 (CST)
+Received: from huawei.com (10.67.174.193) by dggpemm500019.china.huawei.com
+ (7.185.36.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 12 Mar
+ 2024 19:39:25 +0800
+From: Luo Gengkun <luogengkun2@huawei.com>
+To: <peterz@infradead.org>
+CC: <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<luogengkun2@huawei.com>
+Subject: [PATCH v2] perf/core: Fix small negative period being ignored
+Date: Tue, 12 Mar 2024 19:38:01 +0000
+Message-ID: <20240312193801.520641-1-luogengkun2@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/10] locking/mutex: introduce devm_mutex_init
-Content-Language: en-US
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	=?UTF-8?Q?Marek_Beh=C3=BAn?= <marek.behun@nic.cz>, Waiman Long
-	<longman@redhat.com>
-CC: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "pavel@ucw.cz"
-	<pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>, "vadimp@nvidia.com"
-	<vadimp@nvidia.com>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-	"npiggin@gmail.com" <npiggin@gmail.com>, "hdegoede@redhat.com"
-	<hdegoede@redhat.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "will@kernel.org" <will@kernel.org>,
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "nikitos.tr@gmail.com"
-	<nikitos.tr@gmail.com>, "kabel@kernel.org" <kabel@kernel.org>,
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"kernel@salutedevices.com" <kernel@salutedevices.com>
-References: <20240307024034.1548605-1-gnstark@salutedevices.com>
- <20240307024034.1548605-3-gnstark@salutedevices.com>
- <20240307095639.b6utkbzr36liuu3p@kandell>
- <3d95ab40-2df5-4988-87be-568a628a0561@redhat.com>
- <20240307174414.4059d7ee@dellmb>
- <cfceef12-883e-4593-9dca-50768acb1aa9@salutedevices.com>
- <c3be9cb4-06cf-45c5-841f-3fa016e4d087@csgroup.eu>
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <c3be9cb4-06cf-45c5-841f-3fa016e4d087@csgroup.eu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500019.china.huawei.com (7.185.36.180)
 
-Hello Christophe
+In perf_adjust_period, we will first calculate period, and then use
+this period to calculate delta. However, when delta is less than 0,
+there will be a deviation compared to when delta is greater than or
+equal to 0. For example, when delta is in the range of [-14,-1], the
+range of delta = delta + 7 is between [-7,6], so the final value of
+delta/8 is 0. Therefore, the impact of -1 and -2 will be ignored.
+This is unacceptable when the target period is very short, because
+we will lose a lot of samples.
 
-Thanks for the review
-You were right about typecheck - it was meant to check errors even if 
-CONFIG_DEBUG_MUTEXES was off.
+Here are some tests and analyzes:
+before:
+  # perf record -e cs -F 1000  ./a.out
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.022 MB perf.data (518 samples) ]
 
-Here's new version based on the comments:
+  # perf script
+  ...
+  a.out     396   257.956048:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.957891:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.959730:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.961545:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.963355:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.965163:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.966973:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.968785:         23 cs:  ffffffff81f4eeec schedul>
+  a.out     396   257.970593:         23 cs:  ffffffff81f4eeec schedul>
+  ...
 
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index 67edc4ca2bee..9193b163038f 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -22,6 +22,8 @@
-  #include <linux/cleanup.h>
-  #include <linux/mutex_types.h>
+after:
+  # perf record -e cs -F 1000  ./a.out
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.058 MB perf.data (1466 samples) ]
 
-+struct device;
-+
-  #ifdef CONFIG_DEBUG_LOCK_ALLOC
-  # define __DEP_MAP_MUTEX_INITIALIZER(lockname)			\
-  		, .dep_map = {					\
-@@ -117,6 +119,34 @@ do {							\
-  } while (0)
-  #endif /* CONFIG_PREEMPT_RT */
+  # perf script
+  ...
+  a.out     395    59.338813:         11 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.339707:         12 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.340682:         13 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.341751:         13 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.342799:         12 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.343765:         11 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.344651:         11 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.345539:         12 cs:  ffffffff81f4eeec schedul>
+  a.out     395    59.346502:         13 cs:  ffffffff81f4eeec schedul>
+  ...
 
-+#ifdef CONFIG_DEBUG_MUTEXES
-+
-+int debug_devm_mutex_init(struct device *dev, struct mutex *lock);
-+
-+static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
-+{
-+	return debug_devm_mutex_init(dev, lock);
-+}
-+
-+#else
-+
-+static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
-+{
-+	/*
-+	* When CONFIG_DEBUG_MUTEXES is off mutex_destroy is just a nop so
-+	* no really need to register it in devm subsystem.
-+	*/
-+	return 0;
-+}
-+
-+#endif
-+
-+#define devm_mutex_init(dev, mutex)			\
-+({							\
-+	mutex_init(mutex);				\
-+	__devm_mutex_init(dev, mutex);			\
-+})
-+
-  /*
-   * See kernel/locking/mutex.c for detailed documentation of these APIs.
-   * Also see Documentation/locking/mutex-design.rst.
-diff --git a/kernel/locking/mutex-debug.c b/kernel/locking/mutex-debug.c
-index bc8abb8549d2..967a5367c79a 100644
---- a/kernel/locking/mutex-debug.c
-+++ b/kernel/locking/mutex-debug.c
-@@ -19,6 +19,7 @@
-  #include <linux/kallsyms.h>
-  #include <linux/interrupt.h>
-  #include <linux/debug_locks.h>
-+#include <linux/device.h>
+test.c
 
-  #include "mutex.h"
+int main() {
+        for (int i = 0; i < 20000; i++)
+                usleep(10);
 
-@@ -89,6 +90,16 @@ void debug_mutex_init(struct mutex *lock, const char 
-*name,
-  	lock->magic = lock;
-  }
+        return 0;
+}
 
-+static void devm_mutex_release(void *res)
-+{
-+	mutex_destroy(res);
-+}
+  # time ./a.out
+  real    0m1.583s
+  user    0m0.040s
+  sys     0m0.298s
+
+The above results were tested on x86-64 qemu with KVM enabled using
+test.c as test program. Ideally, we should have around 1500 samples,
+but the previous algorithm had only about 500, whereas the modified
+algorithm now has about 1400. Further more, the new version shows 1
+sample per 0.001s, while the previous one is 1 sample per 0.002s.This
+indicates that the new algorithm is more sensitive to small negative
+values compared to old algorithm.
+
+Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
+
+Link:https://lore.kernel.org/all/7919005d-ca26-4cae-8c1c-4adea63704ce@huawei.com/
+Signed-off-by: Luo Gengkun <luogengkun2@huawei.com>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+---
+v1 -> v2: Fix incorrected time diff in tick adjust period and review
+
+It seems that the Timer Interrupts is not coming every TICK_NSEC when
+system is idle. So the final period that we calculate will be bigger
+than expected because we pass an incorrected nsec to perf_adjust_period.
+As shown below, the unexcepted period is come from perf_adjust_freq_unthr_context.
+Moreover, we cannot re-adjust the period using __perf_event_account_interrupt
+because the overflow time is larger than 2 * TICK_NSEC. To fix this
+problem, we can calculate the interval of Timer Interrupts using perf_clock.
+
+  # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
+
+  # perf script
+  ...
+  test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
+  test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
+  ...
+---
+---
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 22 ++++++++++++++++++----
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index afb028c54f33..2708f1d0692c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -265,6 +265,7 @@ struct hw_perf_event {
+ 	 * State for freq target events, see __perf_event_overflow() and
+ 	 * perf_adjust_freq_unthr_context().
+ 	 */
++	u64				freq_tick_stamp;
+ 	u64				freq_time_stamp;
+ 	u64				freq_count_stamp;
+ #endif
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 683dc086ef10..3f58d3803237 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4078,7 +4078,11 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
+ 	period = perf_calculate_period(event, nsec, count);
+ 
+ 	delta = (s64)(period - hwc->sample_period);
+-	delta = (delta + 7) / 8; /* low pass filter */
++	if (delta >= 0)
++		delta += 7;
++	else
++		delta -= 7;
++	delta /= 8; /* low pass filter */
+ 
+ 	sample_period = hwc->sample_period + delta;
+ 
+@@ -4108,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ {
+ 	struct perf_event *event;
+ 	struct hw_perf_event *hwc;
+-	u64 now, period = TICK_NSEC;
++	u64 now, period, tick_stamp;
+ 	s64 delta;
+ 
+ 	/*
+@@ -4147,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ 		 */
+ 		event->pmu->stop(event, PERF_EF_UPDATE);
+ 
++		tick_stamp = perf_clock();
++		period = tick_stamp - hwc->freq_tick_stamp;
++		hwc->freq_tick_stamp = tick_stamp;
 +
-+int debug_devm_mutex_init(struct device *dev, struct mutex *lock)
-+{
-+	return devm_add_action_or_reset(dev, devm_mutex_release, lock);
-+}
-+
-  /***
-   * mutex_destroy - mark a mutex unusable
-   * @lock: the mutex to be destroyed
+ 		now = local64_read(&event->count);
+ 		delta = now - hwc->freq_count_stamp;
+ 		hwc->freq_count_stamp = now;
+@@ -4158,8 +4166,14 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ 		 * to perf_adjust_period() to avoid stopping it
+ 		 * twice.
+ 		 */
+-		if (delta > 0)
+-			perf_adjust_period(event, period, delta, false);
++		if (delta > 0) {
++			/*
++			 * we skip first tick adjust period
++			 */
++			if (likely(period != tick_stamp && period < 2*TICK_NSEC)) {
++				perf_adjust_period(event, period, delta, false);
++			}
++		}
+ 
+ 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
+ 	next:
 -- 
-2.25.1
+2.34.1
 
-
-
-On 3/12/24 09:04, Christophe Leroy wrote:
-
-...
-
-> 
-> I think it would be preferable to minimise the number of macros.
-> 
-> If I were you I would keep your devm_mutex_init() as is but rename it
-> __devm_mutex_init() and just remove the mutex_init() from it, then add
-> only one macro that works independant of CONFIG_DEBUG_MUTEXES:
-> 
-> #define devm_mutex_init(dev, mutex)	\
-> ({					\
-> 	mutex_init(mutex);		\
-> 	__devm_mutex_init(dev, mutex);	\
-> })
-> 
-> With that, no need of a second version of the macro and no need for the
-> typecheck either.
-> 
-> Note the __ which is a clear indication that allthough that function is
-> declared in public mutex.h, it is not meant to be used outside of it.
-> 
-> 
-> 
-
-
--- 
-Best regards
-George
