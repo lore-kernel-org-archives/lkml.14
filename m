@@ -1,75 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485B143737;
-	Tue, 12 Mar 2024 21:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6811B14372D;
+	Tue, 12 Mar 2024 21:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710280439; cv=none; b=Pgji74tFFKbBW+FYVGoFAjynE9Z0f2tbEVeBhaMPZ6kNDHb/AkImVWvtwHGYBol/IKlMGqnYCjM0Xhochxi0dy7qyvVesIrV3HlsVUO9vIIOtvDJr/umOiC5mDANxK83wNiQ+nQtcxFAgwmTZsGfy8bNyG/btUKoKM9Sv5cwTSg=
+	t=1710280518; cv=none; b=k7PoirrDTcbjRcTIA0dpDuvMilgA61stMpbmX0NOiVz7W3i+2UGoTmEp5YwTTTW27CgeHt1C59ZiITAcsOoU8u6Nhx4m9LAn3L8iEaxx2XKVU7LHtCRSBidg/51QaTlf7LP+BswzxUbTiRsVuI89TKwYiSjLJOY+E6pzj7mnzwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710280439; c=relaxed/simple;
-	bh=Tc348j2ztBETv5vIUAMjzjQsx1Ha/CAwf8R18X+E9Zk=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=TOIq+xCBzsj8meCyY23zUM9xEfyGAuhbQlUC9jAMjcuXy3rDbpMS2tjnEsdafZwc2rbvUwveBnA7tL+UVTrvPC+ACGIn0X+b7RiFQsPcEaR6D1qidI2KtCQOw37ycQNQRSz9irtyP4cTFnoTrP+qGlQaTBOgc88/cNAH7bjlHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qeIf8Pf6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710280518; c=relaxed/simple;
+	bh=rWyBCaABM7BjP+jsKhkBAhIamVuOWhkDoE+2oVJFpyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ntGeb0gwJ021EDTUKHnKhxiP/tZnEqP3cIW8+TP92CzoXGorP0wOY1CO2ldQoNqmwRply9j9fxcGvn8ZKLJw9RFN2ed9xxPa2d8/oeHalT9VQZ63PgzDHzkhqy3gNdgVEzTcOhG0xYkwjx5QGD6jD6cmOTRikA8XYm27ufbFA5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNMTFNkp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qeIf8Pf6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB27DC433F1;
-	Tue, 12 Mar 2024 21:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNMTFNkp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914D9C433C7;
+	Tue, 12 Mar 2024 21:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710280438;
-	bh=Tc348j2ztBETv5vIUAMjzjQsx1Ha/CAwf8R18X+E9Zk=;
-	h=Subject:From:To:Date:From;
-	b=qeIf8Pf6yWuog9kMOm0eatpzHJxSwPhXNSfVz9x+XRWSFp+FmI5MVnBiL0AnObfFJ
-	 YpHQ61u27aMB8hCB/lsjDtcN+jiLflhDUTKj6G3S5CG29HOsEE47O1P5f4zMEPrhW2
-	 t23KXHn4zqKKfUMeVOHTjN27x0WkGMrPfxnKYciIwodC4rCgpbF87p+Cl4qNxPKas0
-	 ESypucrs1jL9qESu/mJI1l/pWeYUEE3dU/rCZJKJJxzDTMMOb17qqIWik1hy/i0CmU
-	 SS2kpsskGa91WW5MlcgZ5GQm88ywv3gfwOtujBbKgR59Py24mtqQ06UUSUu6HFPLNf
-	 6vdSBwvXtds/A==
-Message-ID: <56d1878f04b83c3f681260557fade4fcd7a87b04.camel@kernel.org>
-Subject: [ANNOUNCE] 5.4.271-rt89
-From: Tom Zanussi <zanussi@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users
- <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John
- Kacur <jkacur@redhat.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Daniel Wagner <wagi@monom.org>, Clark Williams
- <williams@redhat.com>,  "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
- Tom Zanussi <zanussi@kernel.org>
-Date: Tue, 12 Mar 2024 16:53:54 -0500
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=k20201202; t=1710280518;
+	bh=rWyBCaABM7BjP+jsKhkBAhIamVuOWhkDoE+2oVJFpyE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eNMTFNkpuAX9/+aM/SM9R6Z9B0iaqnJSlXIC9sTDZ5yRZc93MmrFK5e+NLh+KMf6o
+	 86Mfd2UphZdGS1M7YlxbxQl2UIR3mGA3VR08pDJp80KSRAwh20JQLMiBC3n69bkrRl
+	 kVxg3P9ibpBw3NvVvGN8LAiBXc/Pm8Y4lVeepG7loh5UoXAvDlWfQloKGnQijMPJkA
+	 NsJH10QQ+nG9IzHIxUZI8Pszsg1W1bhU4F34xVb44mdbMBMIrkNf/6AhpbNM/qAW+z
+	 g1jRWvx01L7fICIuHJzzqi5qamNsr+9lSb4t9yW9LViRlGez56kDAvBKTyKPVHTijv
+	 MjQDWuGhkYrTw==
+Date: Tue, 12 Mar 2024 14:55:16 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Johannes Thumshirn
+ <johannes.thumshirn@wdc.com>, davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pabeni@redhat.com, bpf@vger.kernel.org, Tejun
+ Heo <tj@kernel.org>
+Subject: Re: [GIT PULL] Networking for v6.9
+Message-ID: <20240312145455.403b713f@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20240312144806.5f9c5d8e@kernel.org>
+References: <20240312042504.1835743-1-kuba@kernel.org>
+	<CAHk-=wgknyB6yR+X50rBYDyTnpcU4MukJ2iQ5mQQf+Xzm9N9Dw@mail.gmail.com>
+	<20240312133427.1a744844@kernel.org>
+	<20240312134739.248e6bd3@kernel.org>
+	<CAHk-=wiOaBLqarS2uFhM1YdwOvCX4CZaWkeyNDY1zONpbYw2ig@mail.gmail.com>
+	<39c3c4dc-d852-40b3-a662-6202c5422acf@kernel.dk>
+	<20240312144806.5f9c5d8e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello RT Folks!
+On Tue, 12 Mar 2024 14:48:06 -0700 Jakub Kicinski wrote:
+> > index 9a85bfbbc45a..646b50e1c914 100644
+> > --- a/block/blk-iocost.c
+> > +++ b/block/blk-iocost.c
+> > @@ -1044,7 +1044,7 @@ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
+> >  	unsigned seq;
+> >  	u64 vrate;
+> >  
+> > -	now->now_ns = blk_time_get_ns();
+> > +	now->now_ns = ktime_get_ns();
+> >  	now->now = ktime_to_us(now->now_ns);
+> >  	vrate = atomic64_read(&ioc->vtime_rate);  
+> 
+> Let me try this, 'cause doing the revert while listening to some
+> meeting is beyond me :)
 
-I'm pleased to announce the 5.4.271-rt89 stable release.
-
-This release is just an update to the new stable 5.4.271
-version and no RT specific changes have been made.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.4-rt
-  Head SHA1: cef72c43e133263183674cd4dc449511432c8d91
-
-Or to build 5.4.271-rt89 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.271.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.271-rt8=
-9.patch.xz
-
-Enjoy!
-
-   Tom
-
+That fixes the crash for me!
