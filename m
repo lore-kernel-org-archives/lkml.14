@@ -1,393 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA87A72C
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 14:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299E0446DB;
+	Tue, 12 Mar 2024 14:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710254356; cv=none; b=D9RofnznXwCtYHvRbO1Cx9ZLVFzKXoTKh5qPbDjDxSmTjwZpVDdBQ0s58NGnN3lhiIGTs8kMhVwkC5x0O9kx/U7/UfRHjkaXF7YHfHpxNenphx1IRFOnQFMyuoYw1BS4E1DOk7jNwZU4Dw52r0kocrEE+xyx1hbJkJl0aNepRAU=
+	t=1710254508; cv=none; b=UR/sfJ/cm29CjB+UI/dqjCUpnU/xuLdcnKySxeRZQD3f12uGo2ApK58necONZS43WYfBaOZBH4RD+AuRliSsFLjiS3PlgMbzhynMEgEW4pHoRS9zzIzWwV/Apg9LpIVp61PXr/9gmP+o41m6Tk5015BLBzddc05/7VclPUNevx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710254356; c=relaxed/simple;
-	bh=6G228Lphk0rlkU29bdOENgX5OXrMOrVaqWm38EVzM0Y=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lpoHBjQ275VsawSAioBDJgVG/jt5gfFSn2uxJ7S/81tDMCJmKmkwg+ivRMlo6+zFY3pmBaTaYC7TFo5p5wvOcefWAH2Hjy2oLH2IJwOsFoEzkah+KyBELbCpDz9n1//ctKzewcqT5VgcjCzwMEcj0hzh2lcYaOJZv/UuBmmXdh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gx7jBqVl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gx7jBqVl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710254353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XMJRtZVN7j/hb0lf5DmhVFdq1TvSh1Jy4166EHZPeco=;
-	b=Gx7jBqVlQWzGYSQKGIlmDPECiPZntPxp3oBfAxBUt4p9N0YhLeBPa1SNuwGCWEAIE+Hp+Y
-	WiYRGtmiDVeeIQ6/B31Wr+Nwy70TYLXBJWHpMJn271fueLK2+cznSpCaCpDP/NmpnO823M
-	viucHErMvbHFLvEJutYfSVYAEidx+0M=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-6BA6fyAFN7GDnRxt7lHTjQ-1; Tue, 12 Mar 2024 10:39:12 -0400
-X-MC-Unique: 6BA6fyAFN7GDnRxt7lHTjQ-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5ce67a3f275so2851153a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 07:39:12 -0700 (PDT)
+	s=arc-20240116; t=1710254508; c=relaxed/simple;
+	bh=uOpsSVCbQLH9NXmsb8YDOq8vdcXwSuTFtG7lRr025Hs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RHionPf1XAqYdN5SW0kMWoITz7evdFqS9MWJQ/ne9wJZJCIrgAoUPxMe28H8h1PiI9ZFy8wsp3/rAE9vH35PQu86iOwFEnp7R75U1KTO68gPgarFvXc7Qf2L+YwkhtL77Q4p7VxY9HJdEdYpujJSEBpRY31yIJPvDwvZbTv4Di0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-609f1f97864so55695997b3.0;
+        Tue, 12 Mar 2024 07:41:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710254351; x=1710859151;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XMJRtZVN7j/hb0lf5DmhVFdq1TvSh1Jy4166EHZPeco=;
-        b=oupj0O9DG7WplYnugjGj8zFeWt2DoRGEfgQ8Z/lk7+rkjF9H4nU1Pn0eaL5obvzIBF
-         REF8uN0mTq8MFe+kPMapCKMivjpa2o3WGjyu6ACg7g1Fi7aCoXDTFtSxDJACSAAYjZt5
-         PqhQOPOSMi9pK20d+IAGG0BTUca/J7CFZH/Jc99TxZVzW3WAo2DlXiWPWoULLwWkHg79
-         l5HzbV5RRC/MilFIyIjBhxKcA5P++sq6Ta8VfDffqhWD43UeA62Z6EvMMyQzqOswdHIX
-         XVW2QgOE5ZcVtLVUh3Dd1Dtv2fk3uG5jUwWK0NyEe7/o7FwVIy7Dc4hMhEapyGO6F8CM
-         tM9A==
-X-Gm-Message-State: AOJu0YwyWmia0IMriV4otc61HfBVUAARCEaAvcn2Y0Qm6rZ2JoNtUYp7
-	Xudw7EZ7wLTKgCd/75zR5iEatucwXcVUHUouZgomEpcXP5GkFa39ALU3SaKFE4bHsCcJH6ydKMA
-	8of8wUUJjvKF9bM99SupgngzsejLZWRaQLDSkLwBiBFj0ndl5aaTW5D6Dn5gQ+A==
-X-Received: by 2002:a05:6a20:3b86:b0:1a1:484b:bb72 with SMTP id b6-20020a056a203b8600b001a1484bbb72mr5382584pzh.51.1710254351255;
-        Tue, 12 Mar 2024 07:39:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPP5p51xPHF2DD8z81UogPopL+7AvbfQe8qKjS8v04/Cfcqoeaa+s5PtsgFBJjF90oaSKGoQ==
-X-Received: by 2002:a05:6a20:3b86:b0:1a1:484b:bb72 with SMTP id b6-20020a056a203b8600b001a1484bbb72mr5382568pzh.51.1710254350762;
-        Tue, 12 Mar 2024 07:39:10 -0700 (PDT)
-Received: from fc37-ani ([27.6.216.53])
-        by smtp.googlemail.com with ESMTPSA id q66-20020a17090a17c800b0029bb1631819sm694127pja.0.2024.03.12.07.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 07:39:10 -0700 (PDT)
-Date: Tue, 12 Mar 2024 20:09:03 +0530 (IST)
-From: Ani Sinha <anisinha@redhat.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    "K. Y. Srinivasan" <kys@microsoft.com>, 
-    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-    Michael Kelley <mikelley@microsoft.com>, Olaf Hering <olaf@aepfle.de>, 
-    Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2] hv/hv_kvp_daemon: Handle IPv4 and Ipv6 combination
- for keyfile format
-In-Reply-To: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
-Message-ID: <2d4aeba3-79db-67f7-9d38-5a55788e7cc7@redhat.com>
-References: <1710247112-7414-1-git-send-email-shradhagupta@linux.microsoft.com>
+        d=1e100.net; s=20230601; t=1710254505; x=1710859305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FXmOsnx/ac8DtMDdTaI7xWpzg70Sr5+vs/F3ep2Teoo=;
+        b=Gb9rK+6amKsX1tPvJNdbvw5LUCDa0lbKzhQ6CTIDLPI6AUmQTe92Wyfb1c/kZo6cLW
+         byEcwcsTKCBeeQCcA9ivK0OEGy3QJITbyhp+CSavgfjWBvhwV8xmjMHfSi53aQX6aWEb
+         u6AWe5vvDXETZClkghmQ4NuM+ExRp4tXek+klFiSRTFf6X4cpTPb+P0dzK9rikyb+mni
+         Pu4wbsTn5EgkJqx6CWo8ET/RmkiklZ/6CJamKnB682aaWDiejHUj63yxVb6iuZKl/436
+         CG3ScmoXC0KlD9QX8Y9qXi4XaM2WIWPS6S4G3q/eDXHeoa4RZ15/H6ixpLk1uny/8xP8
+         gSIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUBly8RdBEm4ypHM0E3uUZtHD9TAhnBa/TEapq/m/J+cf9D768rFmHifQTkKhGUYmJLdTXDwMRIB+oETXM+hVfVeVZlPN7PBCdUpXJFJR3oWQIbhrJzDwMaxCW+v/0HlmSz239Q5uDqlPX7RZrduhFNBIn8yqq4kSfowQ+lfaFauOp2VrGQ6rqXg==
+X-Gm-Message-State: AOJu0YyRHBNFygXosKKgoJFke1vnxxFlalCxKTsz27o1jfFD120/ZCLD
+	XwH4BhE2wxVCj+yc1gRoiPDdZRF7O3Chf058jZ2LMu5ICBBAUpjAzORpYgzStd4=
+X-Google-Smtp-Source: AGHT+IFLwd80llousdW43NQpvSVAF9TrBV6DC7CPUdtOC5qyNcQLYMvcQCQWU24VbvyzJLfnk6Vsog==
+X-Received: by 2002:a5b:f09:0:b0:dc7:45d3:ffd0 with SMTP id x9-20020a5b0f09000000b00dc745d3ffd0mr7126482ybr.1.1710254504686;
+        Tue, 12 Mar 2024 07:41:44 -0700 (PDT)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id w12-20020a25918c000000b00dcd9e3d3fd0sm1654333ybl.19.2024.03.12.07.41.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Mar 2024 07:41:44 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-db3a09e96daso4788449276.3;
+        Tue, 12 Mar 2024 07:41:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXnV3/HQE+LAvydLJTu+RgETy5FoiWEpsmakY+GgBjoA8xGbK8ZdBSJx07+hvYmaldzGtxB5Q4qFi1XIvWyJQlWxeUZJRya4dVKJHRpWHDKrYjzP7k3mLduc1trd6n3JA3FN8GAeIPcNfDn05Zh8rzWEezCL7F9mnH/nrBbCg1sTn3n9AhJKvgJw==
+X-Received: by 2002:a25:4886:0:b0:dbe:9509:141c with SMTP id
+ v128-20020a254886000000b00dbe9509141cmr6367424yba.30.1710254504263; Tue, 12
+ Mar 2024 07:41:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240217060843.GA16460@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <CAL_Jsq+Feu9NnzTNx=XU5vgHhibGAQXvkuTeWbpu8gJ3rVrzcw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+Feu9NnzTNx=XU5vgHhibGAQXvkuTeWbpu8gJ3rVrzcw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 12 Mar 2024 15:41:32 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUKa-KdWfYswEpFvj3RjQPM+ThhU85myfBGVkXxZqbHWw@mail.gmail.com>
+Message-ID: <CAMuHMdUKa-KdWfYswEpFvj3RjQPM+ThhU85myfBGVkXxZqbHWw@mail.gmail.com>
+Subject: Re: [PATCH 2/7] of: Create of_root if no dtb provided by firmware
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, Frank Rowand <frowand.list@gmail.com>, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, 
+	devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+	"Gabriel L. Somlo" <gsomlo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Rob,
 
+CC broonie
+CC somlo
 
-On Tue, 12 Mar 2024, Shradha Gupta wrote:
+On Wed, Feb 21, 2024 at 3:06=E2=80=AFPM Rob Herring <robh+dt@kernel.org> wr=
+ote:
+> On Fri, Feb 16, 2024 at 11:08=E2=80=AFPM Saurabh Singh Sengar
+> <ssengar@linux.microsoft.com> wrote:
+> > On Fri, Feb 16, 2024 at 05:05:51PM -0800, Frank Rowand wrote:
+> > > When enabling CONFIG_OF on a platform where 'of_root' is not populate=
+d
+> > > by firmware, we end up without a root node. In order to apply overlay=
+s
+> > > and create subnodes of the root node, we need one. Create this root n=
+ode
+> > > by unflattening an empty builtin dtb.
+> > >
+> > > If firmware provides a flattened device tree (FDT) then the FDT is
+> > > unflattened via setup_arch(). Otherwise, the call to
+> > > unflatten(_and_copy)?_device_tree() will create an empty root node.
+> > >
+> > > We make of_have_populated_dt() return true only if the DTB was loaded=
+ by
+> > > firmware so that existing callers don't change behavior after this
+> > > patch. The call in the of platform code is removed because it prevent=
+s
+> > > overlays from creating platform devices when the empty root node is
+> > > used.
+> > >
+> > > [sboyd@kernel.org: Update of_have_populated_dt() to treat this empty =
+dtb
+> > > as not populated. Drop setup_of() initcall]
+> > >
+> > > Signed-off-by: Frank Rowand <frowand.list@gmail.com>
+> > > Link: https://lore.kernel.org/r/20230317053415.2254616-2-frowand.list=
+@gmail.com
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-> If the network configuration strings are passed as a combination of IPv and
-> IPv6 addresses, the current KVP daemon doesnot handle it for the keyfile
-> configuration format.
-> With these changes, the keyfile config generation logic scans through the
-> list twice to generate IPv4 and IPv6 sections for the configuration files
-> to handle this support.
+Thanks for your patch, which is now commit 7b937cc243e5b1df ("of:
+Create of_root if no dtb provided by firmware") in dt-rh/for-next
+(next-20240312 and later).
+
+On my OrangeCrab FPGA running Linux on LiteX/VexRiscv-V, the attached
+OLED display now fails to probe:
+
+    -ssd130x-i2c 0-003c: supply vcc not found, using dummy regulator
+    -[drm] Initialized ssd130x 1.0.0 20220131 for 0-003c on minor 0
+    +ssd130x-i2c 0-003c: incomplete constraints, dummy supplies not allowed
+    +ssd130x-i2c 0-003c: error -ENODEV: Failed to get VCC regulator
+
+> > > @@ -1645,6 +1635,21 @@ static inline bool of_device_is_system_power_c=
+ontroller(const struct device_node
+> > >       return of_property_read_bool(np, "system-power-controller");
+> > >  }
+> > >
+> > > +/**
+> > > + * of_have_populated_dt() - Has DT been populated by bootloader
+> > > + *
+> > > + * Return: True if a DTB has been populated by the bootloader and it=
+ isn't the
+> > > + * empty builtin one. False otherwise.
+> > > + */
+> > > +static inline bool of_have_populated_dt(void)
+> > > +{
+> > > +#ifdef CONFIG_OF
+> > > +     return of_property_present(of_root, "compatible");
+> >
+> > This adds the strict check for compatible which makes compatible
+> > to be mandatory for root nodes. So far, DeviceTree without compatible
+> > property in root nodes can work. Do we want to make this documented
+> > somewhere ?
 >
-> Built-on: Rhel9
-> Tested-on: Rhel9(IPv4 only, IPv6 only, IPv4 and IPv6 combination)
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->  Changes in v2
->  * Use calloc to avoid initialization later
->  * Return standard error codes
->  * Free the output_str pointer on completion
->  * Add out-of bound checks while writing to buffers
-> ---
->  tools/hv/hv_kvp_daemon.c | 173 +++++++++++++++++++++++++++++----------
->  1 file changed, 132 insertions(+), 41 deletions(-)
->
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 318e2dad27e0..ae65be004eb1 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -76,6 +76,12 @@ enum {
->  	DNS
->  };
->
-> +enum {
-> +	IPV4 = 1,
-> +	IPV6,
-> +	IP_TYPE_MAX
-> +};
-> +
->  static int in_hand_shake;
->
->  static char *os_name = "";
-> @@ -102,6 +108,7 @@ static struct utsname uts_buf;
->
->  #define MAX_FILE_NAME 100
->  #define ENTRIES_PER_BLOCK 50
-> +#define MAX_IP_ENTRIES 64
->
->  struct kvp_record {
->  	char key[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
-> @@ -1171,6 +1178,18 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
->  	return 0;
->  }
->
-> +int ip_version_check(const char *input_addr)
-> +{
-> +	struct in6_addr addr;
-> +
-> +	if (inet_pton(AF_INET, input_addr, &addr))
-> +		return IPV4;
-> +	else if (inet_pton(AF_INET6, input_addr, &addr))
-> +		return IPV6;
-> +	else
-> +		return -EINVAL;
-> +}
-> +
->  /*
->   * Only IPv4 subnet strings needs to be converted to plen
->   * For IPv6 the subnet is already privided in plen format
-> @@ -1197,14 +1216,71 @@ static int kvp_subnet_to_plen(char *subnet_addr_str)
->  	return plen;
->  }
->
-> +static int process_dns_gateway_nm(FILE *f, char *ip_string, int type,
-> +				  int ip_sec)
-> +{
-> +	char addr[INET6_ADDRSTRLEN], *output_str;
-> +	int ip_offset = 0, error = 0, ip_ver;
-> +	char *param_name;
-> +
-> +	output_str = (char *)calloc(INET6_ADDRSTRLEN * MAX_IP_ENTRIES,
-> +				    sizeof(char));
+> It already is in the DT spec and schemas.
 
-Can we define INET6_ADDRSTRLEN * MAX_IP_ENTRIES as something like
-OUTSTR_BUF_SZ or some such? Then it becomes more readable here and below.
+How many systems in the wild violate this?
 
-> +
-> +	if (!output_str)
-> +		return -ENOMEM;
-> +
-> +	memset(addr, 0, sizeof(addr));
+Apparently the DTS generated by LiteX does not have a root compatible
+(and model) property, hence of_have_populated_dt() returns false.
+While my gateware and DTS is quite old, a quick look at recent
+litex_json2dts_linux.py history shows this is still true for current LiteX.
 
+Now, how is this related to the failure I am seeing?
 
-> +
-> +	if (type == DNS) {
-> +		param_name = "dns";
-> +	} else if (type == GATEWAY) {
-> +		param_name = "gateway";
-> +	} else {
-> +		error = -EINVAL;
-> +		goto cleanup;
-> +	}
+drivers/regulator/core.c has:
 
-If you move the above check before you allocate memory for output_str, you
-can return right away without doing a free().
+    static bool have_full_constraints(void)
+    {
+            return has_full_constraints || of_have_populated_dt();
+    }
 
-> +
-> +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> +				   (MAX_IP_ADDR_SIZE * 2))) {
-> +		ip_ver = ip_version_check(addr);
-> +		if (ip_ver < 0)
-> +			continue;
-> +
-> +		if ((ip_ver == IPV4 && ip_sec == IPV4) ||
-> +		    (ip_ver == IPV6 && ip_sec == IPV6)) {
-> +			if (((INET6_ADDRSTRLEN * MAX_IP_ENTRIES) - strlen(output_str)) >
-> +			    (strlen(addr))) {
-> +				strcat(output_str, addr);
-> +				strcat(output_str, ",");
+and
 
-Your bound check does not take into consideration one additional character
-(the ","). It should be
+    static int __init regulator_init_complete(void)
+    {
+            /*
+             * Since DT doesn't provide an idiomatic mechanism for
+             * enabling full constraints and since it's much more natural
+             * with DT to provide them just assume that a DT enabled
+             * system has full constraints.
+             */
+            if (of_have_populated_dt())
+                    has_full_constraints =3D true;
 
-(INET6_ADDRSTRLEN * MAX_IP_ENTRIES) - strlen(output_str) > strlen(addr) + 1
+            ...
+    }
+    late_initcall_sync(regulator_init_complete);
 
-> +			}
-> +			memset(addr, 0, sizeof(addr));
-> +
-> +		} else {
-> +			memset(addr, 0, sizeof(addr));
+(The latter looks a bit futile, as have_full_constraints() already
+ contains a check for of_have_populated_dt()?)
 
-if you do memset() at the beginning of the loop, you do not need to do
-this separately for both branches. Plus there would be no need to do this
-at the beginning of the function as well.
-So you could do something like:
+When have_full_constraints() returns false, any dummy regulator will
+fail to probe.
 
-while(1) {
-  memset(addr ...);
-  if (!parse_ip_val_buffer(...))
-      break;
-  ...
-}
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> +			continue;
-> +		}
-> +	}
-> +
-> +	if (strlen(output_str)) {
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-                // remove the last comma character
-
-> +		output_str[strlen(output_str) - 1] = '\0';
-> +		error = fprintf(f, "%s=%s\n", param_name, output_str);
-> +		if (error <  0)
-> +			goto cleanup;
-
-You need to free memory regardless of whether there is an error or not.
-
-> +	}
-> +
-> +cleanup:
-> +	free(output_str);
-> +	return error;
-> +}
-> +
->  static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> -				int is_ipv6)
-> +				int ip_sec)
->  {
->  	char addr[INET6_ADDRSTRLEN];
->  	char subnet_addr[INET6_ADDRSTRLEN];
->  	int error, i = 0;
->  	int ip_offset = 0, subnet_offset = 0;
-> -	int plen;
-> +	int plen, ip_ver;
->
->  	memset(addr, 0, sizeof(addr));
->  	memset(subnet_addr, 0, sizeof(subnet_addr));
-> @@ -1216,10 +1292,16 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
->  						       subnet_addr,
->  						       (MAX_IP_ADDR_SIZE *
->  							2))) {
-> -		if (!is_ipv6)
-> +		ip_ver = ip_version_check(addr);
-> +		if (ip_ver < 0)
-> +			continue;
-> +
-> +		if (ip_ver == IPV4 && ip_sec == IPV4)
->  			plen = kvp_subnet_to_plen((char *)subnet_addr);
-> -		else
-> +		else if (ip_ver == IPV6 && ip_sec == IPV6)
->  			plen = atoi(subnet_addr);
-> +		else
-> +			continue;
->
->  		if (plen < 0)
->  			return plen;
-> @@ -1238,12 +1320,11 @@ static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
->
->  static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  {
-> -	int error = 0;
-> +	int error = 0, ip_type;
->  	char if_filename[PATH_MAX];
->  	char nm_filename[PATH_MAX];
->  	FILE *ifcfg_file, *nmfile;
->  	char cmd[PATH_MAX];
-> -	int is_ipv6 = 0;
->  	char *mac_addr;
->  	int str_len;
->
-> @@ -1421,52 +1502,62 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  	if (error)
->  		goto setval_error;
->
-> -	if (new_val->addr_family & ADDR_FAMILY_IPV6) {
-> -		error = fprintf(nmfile, "\n[ipv6]\n");
-> -		if (error < 0)
-> -			goto setval_error;
-> -		is_ipv6 = 1;
-> -	} else {
-> -		error = fprintf(nmfile, "\n[ipv4]\n");
-> -		if (error < 0)
-> -			goto setval_error;
-> -	}
-> -
->  	/*
-> -	 * Now we populate the keyfile format
-> +	 * The keyfile format expects the IPv6 and IPv4 configuration in
-> +	 * different sections. Therefore we iterate through the list twice,
-> +	 * once to populate the IPv4 section and the next time for IPv6
->  	 */
-> +	ip_type = IPV4;
-> +	do {
-> +		if (ip_type == IPV4) {
-> +			error = fprintf(nmfile, "\n[ipv4]\n");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		} else {
-> +			error = fprintf(nmfile, "\n[ipv6]\n");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		}
->
-> -	if (new_val->dhcp_enabled) {
-> -		error = kvp_write_file(nmfile, "method", "", "auto");
-> -		if (error < 0)
-> -			goto setval_error;
-> -	} else {
-> -		error = kvp_write_file(nmfile, "method", "", "manual");
-> +		/*
-> +		 * Now we populate the keyfile format
-> +		 */
-> +
-> +		if (new_val->dhcp_enabled) {
-> +			error = kvp_write_file(nmfile, "method", "", "auto");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		} else {
-> +			error = kvp_write_file(nmfile, "method", "", "manual");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		}
-> +
-> +		/*
-> +		 * Write the configuration for ipaddress, netmask, gateway and
-> +		 * name services
-> +		 */
-> +		error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> +					     (char *)new_val->sub_net,
-> +					     ip_type);
->  		if (error < 0)
->  			goto setval_error;
-> -	}
->
-> -	/*
-> -	 * Write the configuration for ipaddress, netmask, gateway and
-> -	 * name services
-> -	 */
-> -	error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> -				     (char *)new_val->sub_net, is_ipv6);
-> -	if (error < 0)
-> -		goto setval_error;
-> -
-> -	/* we do not want ipv4 addresses in ipv6 section and vice versa */
-> -	if (is_ipv6 != is_ipv4((char *)new_val->gate_way)) {
-> -		error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
-> +		error = process_dns_gateway_nm(nmfile,
-> +					       (char *)new_val->gate_way,
-> +					       GATEWAY, ip_type);
->  		if (error < 0)
->  			goto setval_error;
-> -	}
->
-> -	if (is_ipv6 != is_ipv4((char *)new_val->dns_addr)) {
-> -		error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
-> +		error = process_dns_gateway_nm(nmfile,
-> +					       (char *)new_val->dns_addr, DNS,
-> +					       ip_type);
->  		if (error < 0)
->  			goto setval_error;
-> -	}
-> +
-> +		ip_type++;
-> +	} while (ip_type < IP_TYPE_MAX);
-> +
->  	fclose(nmfile);
->  	fclose(ifcfg_file);
->
-> --
-> 2.34.1
->
->
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
