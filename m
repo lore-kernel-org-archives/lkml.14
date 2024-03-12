@@ -1,58 +1,46 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E971B657
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 07:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110DF16FF2B;
+	Tue, 12 Mar 2024 07:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710229833; cv=none; b=K2Q2Lp4MAz1RSzUU37RtVgLDdrCRSLYmHyBVR8qX5t6KNm47YbyXvyGdAI2FINu1ARZyjKQDBg5+ZwiKol+SAp+AigPr1M1E1Vh/Ld5MXPkJM18/ul8c9HSHrXaXAhilqtkA0HogZ0uh3pUMY2HLzvM4qW9sSaIAJusiDpWQZ04=
+	t=1710229961; cv=none; b=IlRTs8Ehw7bE67lmA4JG+Ey367rbhWeRn4sqw1reab5Wd2l5x/XZQHAZSwjWfpuQPHGv1ZboqYtEcOeNiRMQuP02f1O+KosxLHcgWJOFZeDU5PlcRTmS/D37lY+8BeSb9R86b1hfPlys7CGsWTG7RnVyiQg1YU9jgOCh0GMjTu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710229833; c=relaxed/simple;
-	bh=NLUmHsYEQv8DOxsFmYDsJDVSVmtMfbpGlF0YJGtG0KU=;
+	s=arc-20240116; t=1710229961; c=relaxed/simple;
+	bh=pPdblc9BNa6xMJbEOXOEvKiHrD0Gt9YejfwF6KCsXuE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1UtqJqzXaLuVRJsnyPbFIHE350zC89ei1MBWwBrxVn8gCBX1v4klYaaeZq9UQ4DFv4UqmOf4Lc06Q4WfYf59PEAnbVR4dGWE2H6Z51TGxtPD5PudyOlxKpa2WXsClWuPhKt7Wg+5rqikAHwJ5BE1sX1yBbAMq0Ml9kfCMwzo0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gfuek7bA; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ez6Fpa52WlnkrVZ5FqpSv3y92ZWMbRNos0T0sdGRZI7+m1cIgCerefVVKyhXXoVS5aH6iU+del96/PxgnX7d8xOTlOUgMVNTVmFHau6E5RAoafRAPZ+y0Paw+3HjYhRfjqAarZ/GYHGms0aazGJ0vy+bNO77UCeNTfzABLX+xac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=or+eoyVy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gfuek7bA"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7838340E0174;
-	Tue, 12 Mar 2024 07:50:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 02ik2aRdF5bB; Tue, 12 Mar 2024 07:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1710229826; bh=PZ8aTG0JAvJMFTb6smzy3OjFvRvOiNjZnnn3EorMbnM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="or+eoyVy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D43C433C7;
+	Tue, 12 Mar 2024 07:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710229960;
+	bh=pPdblc9BNa6xMJbEOXOEvKiHrD0Gt9YejfwF6KCsXuE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gfuek7bAjEvrmBmNNACsj+vr1Dw9OPC/nlYG1rhR3VL/QzcQww0lu5gPScQKWHXNB
-	 oKfmLN141bwPo9GPU2INpyTCP2BmLZVDQphDFeo20ihWSUM0NukIj2qOh+NyhkxOeO
-	 xy8v2ZoUPOA8J4IFbiZ2CmnaOTh9oX6KEo6W/xFISEfOKcDbqtXispaNqK94T3Y4FN
-	 J0xTads15lPf7ZKFYzKAgO1DNn59BQYs0rqIYWIl/avkPo9hM+LzCmLb7KctKNsZ3B
-	 H5LIxoxB/YlooJsyARxoA9d9hlEmK3FvNHdSKm29IgQGh+bKCUwLrw/2gp0lA9ymmh
-	 Xk3s2GsS1HfnzWkCXfJiUnlVPIe5hX23TvSu+nZiykdq4PZsI4PbHF3sPaBgnUUkV3
-	 /kbdgUJDd5RrvKsPJddE+RqSSRb7kk1/ytZYRs/1eFSCXyG1ltvby7bCYf7SfKapp2
-	 vVsTCDQz+IeJ2X0+dP/pyHTae0iAVCvqkl4jLBh6mt231TmG8QRMaEwFtuzwZAV9BO
-	 g63f3WjIdJ5pEvaeUU80ALHYtOkBMp1lqEtlZVHPzAVVblHRJnKx8iFLRbCijv1pfx
-	 JmctBKDIZ0oJlrojpazGESg8F0K0hjxYe0XQh/U8myXMriqToZk+AMI8vl9XXlkmOj
-	 Gd6eoy84DpFbDeaZDtzec3ZU=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D25E40E016B;
-	Tue, 12 Mar 2024 07:50:23 +0000 (UTC)
-Date: Tue, 12 Mar 2024 08:50:21 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] x86/sev for v6.9-rc1
-Message-ID: <20240312075021.GBZfAJPb5ZRBnNp3na@fat_crate.local>
-References: <20240311151909.GAZe8g7SqDKRcP4XrO@fat_crate.local>
- <CAHk-=witL2fFR-FK_nt5TTLHKffueUQnv875-aDGUqn8O3+o_w@mail.gmail.com>
+	b=or+eoyVyA+bhQqmC/ZM64SUyqR6OxiupKbMH+fpY96t+wkRKf4pzKEIBMziijAh0Q
+	 bxLxXQa/kNwik8fE91GwuQYtMKUzk3Yd7VD/SB1kR7KQC7Kg+vrZIAKz1bRPlWLUQJ
+	 lPZAlOt7l/mRKSSKBv6vo2SUn9smoZOajJX+WWP4yk3l9KPYSw0dX7ysVyhD1Hyr3v
+	 vB/ePActrxkDOfY567KAWNvw9dsvLQhAilku7dZeVvzn5tZq68pP7HMUefCDFTmNfd
+	 sYbC5wMifEG/r/6xUb5TirohbZaEhNfMTPUmPAmbh/tIwrTDuYsZLXRPniVyu/gcCd
+	 SGo5pt5p7/gwA==
+Date: Tue, 12 Mar 2024 09:52:36 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, keescook@chromium.org,
+	"open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] IB/hfi1: allocate dummy net_device dynamically
+Message-ID: <20240312075236.GL12921@unreal>
+References: <20240308182951.2137779-1-leitao@debian.org>
+ <20240310101451.GD12921@unreal>
+ <Ze7YNu5TrzClQcxy@gmail.com>
+ <20240311102251.GJ12921@unreal>
+ <20240311112532.71f1cb35@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,24 +49,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=witL2fFR-FK_nt5TTLHKffueUQnv875-aDGUqn8O3+o_w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240311112532.71f1cb35@kernel.org>
 
-On Mon, Mar 11, 2024 at 05:50:48PM -0700, Linus Torvalds wrote:
-> Let's hope my artistic merge resolution doesn't end up coming back to bite me.
+On Mon, Mar 11, 2024 at 11:25:32AM -0700, Jakub Kicinski wrote:
+> On Mon, 11 Mar 2024 12:22:51 +0200 Leon Romanovsky wrote:
+> > > From my experience, you can leverage all the helpers to deal with the
+> > > relationship between struct net_device and you private structure. Here
+> > > are some examples that comes to my mind:
+> > > 
+> > > * alloc_netdev() allocates the private structure for you
+> > > * netdev_priv() gets the private structure for you
+> > > * dev->priv_destructor sets the destructure to be called when the
+> > >   interface goes away or failures.  
+> > 
+> > Everything above is true, but it doesn't relevant to HFI1 devices which
+> > are not netdev devices.
+> 
+> Why are they abusing struct net_device then?
 
-Makes sense and looks ok to me.
+Care to explain what is the abuse here?
+HFI1 uses init_dummy_netdev() exactly as it should be used according to
+the commit message.
 
-I think this'll start becoming a problem when it gets referenced from
-outside, see the respective example with cc_vendor:
+This netdevice is controlled by HFI1 lifetime model and used for NAPI.
+https://lore.kernel.org/netdev/1231906495.22571.79.camel@pasglop/
 
-e45964771007 ("x86/coco: Define cc_vendor without CONFIG_ARCH_HAS_CC_PLATFORM")
+> If you're willing to take care of removing the use of NAPI from this
+> driver completely, that'd be great.
 
-but we'll cross that bridge when we get to it.
+I have no plans to remove NAPI from HFI1 driver. We are not against to
+accept Bruno's removal patch, but we are asking for justification
+in commit message.
 
-Thx.
+> 
+> > > > Will it create multiple "dummy" netdev in the system? Will all devices
+> > > > have the same "dummy" name?  
+> > > 
+> > > Are these devices visible to userspace?  
+> > 
+> > HFI devices yes, dummy device no.
+> > 
+> > > 
+> > > This allocation are using NET_NAME_UNKNOWN, which implies that the
+> > > device is not expose to userspace.  
+> > 
+> > Great
+> > 
+> > > 
+> > > Would you prefer a different name?  
+> > 
+> > I prefer to see some new wrapper over plain alloc_netdev, which will
+> > create this dummy netdevice. For example, alloc_dummy_netdev(...).
+> 
+> Nope, no bona fide APIs for hacky uses.
 
--- 
-Regards/Gruss,
-    Boris.
+Interesting position, instead of making simple and self descriptive API
+which is impossible to misuse, you prefer complexity.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+HFI1 is not alone in using init_dummy_netdev():
+➜  kernel git:(rdma-next) ✗ git grep "init_dummy_netdev(&"
+rivers/infiniband/hw/hfi1/netdev_rx.c: init_dummy_netdev(&rx->rx_napi);
+drivers/net/ethernet/ibm/emac/mal.c:    init_dummy_netdev(&mal->dummy_dev);
+drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:  init_dummy_netdev(&sdma->napi_dev);
+drivers/net/ethernet/mediatek/mtk_eth_soc.c:    init_dummy_netdev(&eth->dummy_dev);
+drivers/net/ipa/gsi.c:  init_dummy_netdev(&gsi->dummy_dev);
+drivers/net/wireless/ath/ath10k/core.c: init_dummy_netdev(&ar->napi_dev);
+drivers/net/wireless/ath/ath11k/ahb.c:          init_dummy_netdev(&irq_grp->napi_ndev);
+drivers/net/wireless/ath/ath11k/pcic.c:         init_dummy_netdev(&irq_grp->napi_ndev);
+drivers/net/wireless/ath/ath12k/pci.c:          init_dummy_netdev(&irq_grp->napi_ndev);
+drivers/net/wireless/ath/wil6210/netdev.c:      init_dummy_netdev(&wil->napi_ndev);
+drivers/net/wireless/intel/iwlwifi/pcie/trans.c:                init_dummy_netdev(&trans_pcie->napi_dev);
+drivers/net/wireless/mediatek/mt76/dma.c:       init_dummy_netdev(&dev->napi_dev);
+drivers/net/wireless/mediatek/mt76/dma.c:       init_dummy_netdev(&dev->tx_napi_dev);
+drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c:     init_dummy_netdev(&bus->mux_dev);
+drivers/net/wireless/realtek/rtw88/pci.c:       init_dummy_netdev(&rtwpci->netdev);
+drivers/net/wireless/realtek/rtw89/core.c:      init_dummy_netdev(&rtwdev->netdev);
+drivers/net/wwan/t7xx/t7xx_netdev.c:    init_dummy_netdev(&ctlb->dummy_dev);
+net/mptcp/protocol.c:   init_dummy_netdev(&mptcp_napi_dev);
+net/xfrm/xfrm_input.c:  init_dummy_netdev(&xfrm_napi_dev);
+
+Thanks
