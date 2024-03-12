@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F279113A882;
-	Tue, 12 Mar 2024 17:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA99513B29B;
+	Tue, 12 Mar 2024 17:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710264881; cv=none; b=P9X7QClROD1fVwIbXYl+oEWVE22z0MJ6sU9zY8t88p604VS89FEAbiGA0EynaNRVRc03tCjjIUndoeUGsIUkDrqllcnZx1UmXgWNKhj8EJ1lsQzwa00XYmQe2HPyOdRhrEC5XqoVl/chnXQRVZ0siFbilBwPVAA3fWLnekN/OgA=
+	t=1710264886; cv=none; b=cRhn7kR973sxYbbqlGv9RXtt2hDxxM0/2a0faWvf8HJPW3PdJzZLTe42v16QhIWuj2vxAPm8268tysEbmSXyMNTtyeSeTz4cqOVc9Fv+azzm34W0cx2O0VrIe71U5TNEGCiqj6RoGL/Fw8wGCVV4SThKy7Wn3Fm8wmSnSv52afQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710264881; c=relaxed/simple;
-	bh=RaSs6kuPPiFYwd0/wGwDdI6DqyKHpAh2TLMSAZ6DhVE=;
+	s=arc-20240116; t=1710264886; c=relaxed/simple;
+	bh=N2jXvmloCVFQbL6+Vb3DnGt/iNl7WwTUKjV6MPRxljA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ABKbrZP7u0ioZ2YM+YrXhpVMsvik5K3cnd2qbUPCOp5+ovVRbYujPT0kzf+8VuNLfx5DnMuZ2zq38kUeghcK2sKN8Aw2goFn5jXz4KKPwDR9szMDNrz3ZefEvd0zkegnr51As6m7zxoz2KTjcA1ZsUF0vVCOEiu/nKDc9LNP52M=
+	 MIME-Version; b=q0m9VVgZ/5srUFvmMAEQs/ki8LSOcUnCtT8xXpNKeoyZN1no/tgNxJF4PVTpoDyY892FkAqad0zICjT/nJHvHJqX/MJXmRWtyyfZKgLGqF3p/keTKj3nomPUYajZNaqioGTsMju2ZTOWzn0VrWrRST24AY3qT3TDKEMxjG9wJzY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8607615DB;
-	Tue, 12 Mar 2024 10:35:16 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599381650;
+	Tue, 12 Mar 2024 10:35:21 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 551FD3F762;
-	Tue, 12 Mar 2024 10:34:37 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 28AB03F762;
+	Tue, 12 Mar 2024 10:34:42 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -34,9 +34,9 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	x86@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	jialong.yang@shingroup.cn
-Subject: [PATCH 06/10] drivers/perf: Clean up redundant per-task checks
-Date: Tue, 12 Mar 2024 17:34:08 +0000
-Message-Id: <c5839e5a43a747d661be86cd1a55f0e92289e2b6.1710257512.git.robin.murphy@arm.com>
+Subject: [PATCH 08/10] drivers/perf: Use common uncore capabilities
+Date: Tue, 12 Mar 2024 17:34:10 +0000
+Message-Id: <c32c988afe9c9a3005b5b7c448bcf56735b5549b.1710257512.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1710257512.git.robin.murphy@arm.com>
 References: <cover.1710257512.git.robin.murphy@arm.com>
@@ -48,423 +48,364 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It turns out that a while back, perf_event_alloc() grew the ability
-to properly refuse all per-task and cgroup events on behalf of
-uncore/system PMUs using perf_invalid_context, so that's a whole load
-more inconsistent boilerplate which can also go from our drivers. This
-includes a couple more cases of drivers foolishly checking event->cpu
-*after* overriding it with their own (necessarily valid) CPU...
+Now that we've ratified it, adopt PERF_PMU_UNCORE_CAPS.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/alibaba_uncore_drw_pmu.c     |  5 -----
- drivers/perf/amlogic/meson_ddr_pmu_core.c |  6 ------
- drivers/perf/arm-cci.c                    |  6 ------
- drivers/perf/arm-ccn.c                    |  4 ----
- drivers/perf/arm-cmn.c                    |  5 -----
- drivers/perf/arm_cspmu/arm_cspmu.c        | 10 ----------
- drivers/perf/arm_dmc620_pmu.c             | 12 ------------
- drivers/perf/arm_dsu_pmu.c                |  6 ------
- drivers/perf/arm_smmuv3_pmu.c             |  5 -----
- drivers/perf/cxl_pmu.c                    |  2 --
- drivers/perf/dwc_pcie_pmu.c               |  4 ----
- drivers/perf/fsl_imx8_ddr_perf.c          |  8 --------
- drivers/perf/fsl_imx9_ddr_perf.c          |  8 --------
- drivers/perf/hisilicon/hisi_pcie_pmu.c    |  3 ---
- drivers/perf/hisilicon/hisi_uncore_pmu.c  | 15 ---------------
- drivers/perf/hisilicon/hns3_pmu.c         |  3 ---
- drivers/perf/marvell_cn10k_ddr_pmu.c      |  5 -----
- drivers/perf/qcom_l2_pmu.c                |  6 ------
- drivers/perf/qcom_l3_pmu.c                |  7 -------
- drivers/perf/thunderx2_pmu.c              | 10 ----------
- drivers/perf/xgene_pmu.c                  |  9 ---------
- 21 files changed, 139 deletions(-)
+ drivers/perf/alibaba_uncore_drw_pmu.c     | 4 +---
+ drivers/perf/amlogic/meson_ddr_pmu_core.c | 4 +---
+ drivers/perf/arm-cci.c                    | 4 +---
+ drivers/perf/arm-ccn.c                    | 4 +---
+ drivers/perf/arm-cmn.c                    | 4 +---
+ drivers/perf/arm_cspmu/arm_cspmu.c        | 4 +---
+ drivers/perf/arm_dmc620_pmu.c             | 4 +---
+ drivers/perf/arm_dsu_pmu.c                | 4 +---
+ drivers/perf/arm_smmuv3_pmu.c             | 4 +---
+ drivers/perf/cxl_pmu.c                    | 4 +---
+ drivers/perf/dwc_pcie_pmu.c               | 4 +---
+ drivers/perf/fsl_imx8_ddr_perf.c          | 4 +---
+ drivers/perf/fsl_imx9_ddr_perf.c          | 4 +---
+ drivers/perf/hisilicon/hisi_pcie_pmu.c    | 4 +---
+ drivers/perf/hisilicon/hisi_uncore_pmu.c  | 4 +---
+ drivers/perf/hisilicon/hns3_pmu.c         | 4 +---
+ drivers/perf/marvell_cn10k_ddr_pmu.c      | 4 +---
+ drivers/perf/marvell_cn10k_tad_pmu.c      | 4 +---
+ drivers/perf/qcom_l2_pmu.c                | 4 +---
+ drivers/perf/qcom_l3_pmu.c                | 4 +---
+ drivers/perf/thunderx2_pmu.c              | 4 +---
+ drivers/perf/xgene_pmu.c                  | 4 +---
+ 22 files changed, 22 insertions(+), 66 deletions(-)
 
 diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
-index eadf4118d1ec..42172939721b 100644
+index 42172939721b..9bacb79a86c4 100644
 --- a/drivers/perf/alibaba_uncore_drw_pmu.c
 +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
-@@ -535,11 +535,6 @@ static int ali_drw_pmu_event_init(struct perf_event *event)
- 	struct perf_event *sibling;
- 	struct device *dev = drw_pmu->pmu.dev;
+@@ -696,9 +696,7 @@ static int ali_drw_pmu_probe(struct platform_device *pdev)
+ 		.stop		= ali_drw_pmu_stop,
+ 		.read		= ali_drw_pmu_read,
+ 		.attr_groups	= ali_drw_pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->attach_state & PERF_ATTACH_TASK) {
--		dev_err(dev, "Per-task counter cannot allocate!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	event->cpu = drw_pmu->irq->cpu;
- 
- 	if (event->group_leader != event &&
+ 	ret = perf_pmu_register(&drw_pmu->pmu, name, -1);
 diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-index 3bc887cde163..6fcd37b11dd8 100644
+index 6fcd37b11dd8..e6370ea08231 100644
 --- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
 +++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-@@ -121,12 +121,6 @@ static int meson_ddr_perf_event_init(struct perf_event *event)
- 	u64 config1 = event->attr.config1;
- 	u64 config2 = event->attr.config2;
- 
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0)
--		return -EOPNOTSUPP;
--
- 	/* check if the number of parameters is too much */
- 	if (event->attr.config != ALL_CHAN_COUNTER_ID &&
- 	    hweight64(config1) + hweight64(config2) > MAX_AXI_PORTS_OF_CHANNEL)
+@@ -483,9 +483,7 @@ int meson_ddr_pmu_create(struct platform_device *pdev)
+ 	*pmu = (struct ddr_pmu) {
+ 		.pmu = {
+ 			.module		= THIS_MODULE,
+-			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-					  PERF_PMU_CAP_NO_SAMPLING |
+-					  PERF_PMU_CAP_NO_COMMON_EVENTS,
++			.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 			.task_ctx_nr	= perf_invalid_context,
+ 			.attr_groups	= attr_groups,
+ 			.event_init	= meson_ddr_perf_event_init,
 diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index cf8fa2474bed..2ccce0e66ada 100644
+index 2ccce0e66ada..916e9881adf9 100644
 --- a/drivers/perf/arm-cci.c
 +++ b/drivers/perf/arm-cci.c
-@@ -1312,10 +1312,6 @@ static int cci_pmu_event_init(struct perf_event *event)
- 	atomic_t *active_events = &cci_pmu->active_events;
- 	int err = 0;
+@@ -1407,9 +1407,7 @@ static int cci_pmu_init(struct cci_pmu *cci_pmu, struct platform_device *pdev)
+ 		.stop		= cci_pmu_stop,
+ 		.read		= pmu_read,
+ 		.attr_groups	= pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	/* Shared by all CPUs, no meaningful state to sample */
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	/*
- 	 * Following the example set by other "uncore" PMUs, we accept any CPU
- 	 * and rewrite its affinity dynamically rather than having perf core
-@@ -1325,8 +1321,6 @@ static int cci_pmu_event_init(struct perf_event *event)
- 	 * the event being installed into its context, so the PMU's CPU can't
- 	 * change under our feet.
- 	 */
--	if (event->cpu < 0)
--		return -EINVAL;
- 	event->cpu = cci_pmu->cpu;
- 
- 	event->destroy = hw_perf_event_destroy;
+ 	cci_pmu->plat_device = pdev;
 diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 4114349e62dd..2adb6a1d136f 100644
+index 2adb6a1d136f..3f2f41ee476e 100644
 --- a/drivers/perf/arm-ccn.c
 +++ b/drivers/perf/arm-ccn.c
-@@ -720,10 +720,6 @@ static int arm_ccn_pmu_event_init(struct perf_event *event)
+@@ -1257,9 +1257,7 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
+ 		.read = arm_ccn_pmu_event_read,
+ 		.pmu_enable = arm_ccn_pmu_enable,
+ 		.pmu_disable = arm_ccn_pmu_disable,
+-		.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-				PERF_PMU_CAP_NO_SAMPLING |
+-				PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities = PERF_PMU_UNCORE_CAPS,
+ 	};
  
- 	ccn = pmu_to_arm_ccn(event->pmu);
- 
--	if (event->cpu < 0) {
--		dev_dbg(ccn->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
+ 	/* No overflow interrupt? Have to use a timer instead. */
 diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index e1f151f04c9f..26ede1db1f72 100644
+index 26ede1db1f72..e779da94351a 100644
 --- a/drivers/perf/arm-cmn.c
 +++ b/drivers/perf/arm-cmn.c
-@@ -1696,12 +1696,7 @@ static int arm_cmn_event_init(struct perf_event *event)
- 	bool bynodeid;
- 	u16 nodeid, eventid;
- 
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
- 	event->cpu = cmn->cpu;
--	if (event->cpu < 0)
--		return -EINVAL;
- 
- 	type = CMN_EVENT_TYPE(event);
- 	/* DTC events (i.e. cycles) already have everything they need */
+@@ -2463,9 +2463,7 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 	cmn->pmu = (struct pmu) {
+ 		.module = THIS_MODULE,
+ 		.attr_groups = arm_cmn_attr_groups,
+-		.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-				PERF_PMU_CAP_NO_SAMPLING |
+-				PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities = PERF_PMU_UNCORE_CAPS,
+ 		.task_ctx_nr = perf_invalid_context,
+ 		.pmu_enable = arm_cmn_pmu_enable,
+ 		.pmu_disable = arm_cmn_pmu_disable,
 diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index c5c7198e6921..b007e1fdd336 100644
+index b007e1fdd336..2d9cb2ac0213 100644
 --- a/drivers/perf/arm_cspmu/arm_cspmu.c
 +++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -676,16 +676,6 @@ static int arm_cspmu_event_init(struct perf_event *event)
+@@ -1179,9 +1179,7 @@ static int arm_cspmu_register_pmu(struct arm_cspmu *cspmu)
+ 		.stop		= arm_cspmu_stop,
+ 		.read		= arm_cspmu_read,
+ 		.attr_groups	= (const struct attribute_group **)attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
- 	cspmu = to_arm_cspmu(event->pmu);
- 
--	/*
--	 * Following other "uncore" PMUs, we do not support sampling mode or
--	 * attach to a task (per-process mode).
--	 */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(cspmu->pmu.dev,
--			"Can't support per-task counters\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Make sure the CPU assignment is on one of the CPUs associated with
- 	 * this PMU.
+ 	/* Hardware counter init */
 diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
-index 47d3a166bccc..98e7c2333cc6 100644
+index 98e7c2333cc6..047bff8733c4 100644
 --- a/drivers/perf/arm_dmc620_pmu.c
 +++ b/drivers/perf/arm_dmc620_pmu.c
-@@ -515,16 +515,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_event *sibling;
+@@ -657,9 +657,7 @@ static int dmc620_pmu_device_probe(struct platform_device *pdev)
  
--	/*
--	 * DMC 620 PMUs are shared across all cpus and cannot
--	 * support task bound and sampling events.
--	 */
--	if (event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(dmc620_pmu->pmu.dev,
--			"Can't support per-task counters\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
-@@ -535,8 +525,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 	 * processor.
- 	 */
- 	event->cpu = dmc620_pmu->irq->cpu;
--	if (event->cpu < 0)
--		return -EINVAL;
- 
- 	/*
- 	 * We can't atomically disable all HW counters so only one event allowed,
+ 	dmc620_pmu->pmu = (struct pmu) {
+ 		.module = THIS_MODULE,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= dmc620_pmu_event_init,
+ 		.add		= dmc620_pmu_add,
 diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index 3424d165795c..740f8c958976 100644
+index 740f8c958976..8d97ef86f9a8 100644
 --- a/drivers/perf/arm_dsu_pmu.c
 +++ b/drivers/perf/arm_dsu_pmu.c
-@@ -544,12 +544,6 @@ static int dsu_pmu_event_init(struct perf_event *event)
- {
- 	struct dsu_pmu *dsu_pmu = to_dsu_pmu(event->pmu);
+@@ -742,9 +742,7 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
+ 		.read		= dsu_pmu_read,
  
--	/* We cannot support task bound events */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK) {
--		dev_dbg(dsu_pmu->pmu.dev, "Can't support per-task counters\n");
--		return -EINVAL;
--	}
--
- 	if (!cpumask_test_cpu(event->cpu, &dsu_pmu->associated_cpus)) {
- 		dev_dbg(dsu_pmu->pmu.dev,
- 			 "Requested cpu is not associated with the DSU\n");
+ 		.attr_groups	= dsu_pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
+ 
+ 	rc = perf_pmu_register(&dsu_pmu->pmu, name, -1);
 diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 8206ba0c1637..f4e22ff179b9 100644
+index f4e22ff179b9..34669d1314a4 100644
 --- a/drivers/perf/arm_smmuv3_pmu.c
 +++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -401,11 +401,6 @@ static int smmu_pmu_event_init(struct perf_event *event)
- 	int group_num_events = 1;
- 	u16 event_id;
+@@ -857,9 +857,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 		.stop		= smmu_pmu_event_stop,
+ 		.read		= smmu_pmu_event_read,
+ 		.attr_groups	= smmu_pmu_attr_grps,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->cpu < 0) {
--		dev_dbg(dev, "Per-task mode not supported\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/* Verify specified event is supported on this PMU */
- 	event_id = get_event(event);
- 	if (event_id < SMMU_PMCG_ARCH_MAX_EVENTS &&
+ 	smmu_pmu->reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res_0);
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 41afbbd221a9..e78f8db8ef52 100644
+index e78f8db8ef52..8b7548192245 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -571,8 +571,6 @@ static int cxl_pmu_event_init(struct perf_event *event)
- 	struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
- 	int rc;
+@@ -864,9 +864,7 @@ static int cxl_pmu_probe(struct device *dev)
+ 		.read = cxl_pmu_read,
+ 		.task_ctx_nr = perf_invalid_context,
+ 		.attr_groups = cxl_pmu_attr_groups,
+-		.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-				PERF_PMU_CAP_NO_SAMPLING |
+-				PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities = PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
- 	/* TODO: Validation of any filter */
- 
- 	/*
+ 	if (info->irq <= 0)
 diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index 638ad527f252..c2c4a7673e58 100644
+index c2c4a7673e58..bb8d77b470ce 100644
 --- a/drivers/perf/dwc_pcie_pmu.c
 +++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -366,10 +366,6 @@ static int dwc_pcie_pmu_event_init(struct perf_event *event)
- 	struct perf_event *sibling;
- 	u32 lane;
- 
--	/* We cannot support task bound events */
--	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
- 	if (event->group_leader != event &&
- 	    !is_software_event(event->group_leader))
- 		return -EINVAL;
+@@ -625,9 +625,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+ 		.parent		= &pdev->dev,
+ 		.module		= THIS_MODULE,
+ 		.attr_groups	= dwc_pcie_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= dwc_pcie_pmu_event_init,
+ 		.add		= dwc_pcie_pmu_event_add,
 diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 0070f2bd4d88..612216277ea5 100644
+index 612216277ea5..1f250ff3075b 100644
 --- a/drivers/perf/fsl_imx8_ddr_perf.c
 +++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -398,14 +398,6 @@ static int ddr_perf_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_event *sibling;
- 
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/*
- 	 * We must NOT create groups containing mixed PMUs, although software
- 	 * events are acceptable (for example to create a CCN group
+@@ -640,9 +640,7 @@ static int ddr_perf_init(struct ddr_pmu *pmu, void __iomem *base,
+ 	*pmu = (struct ddr_pmu) {
+ 		.pmu = (struct pmu) {
+ 			.module	      = THIS_MODULE,
+-			.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-					PERF_PMU_CAP_NO_SAMPLING |
+-					PERF_PMU_CAP_NO_COMMON_EVENTS,
++			.capabilities = PERF_PMU_UNCORE_CAPS,
+ 			.task_ctx_nr = perf_invalid_context,
+ 			.attr_groups = attr_groups,
+ 			.event_init  = ddr_perf_event_init,
 diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-index 83822abf8031..80b4703bef89 100644
+index 80b4703bef89..a9156f17886b 100644
 --- a/drivers/perf/fsl_imx9_ddr_perf.c
 +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-@@ -416,14 +416,6 @@ static int ddr_perf_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_event *sibling;
- 
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/*
- 	 * We must NOT create groups containing mixed PMUs, although software
- 	 * events are acceptable (for example to create a CCN group
+@@ -517,9 +517,7 @@ static void ddr_perf_init(struct ddr_pmu *pmu, void __iomem *base,
+ 	*pmu = (struct ddr_pmu) {
+ 		.pmu = (struct pmu) {
+ 			.module       = THIS_MODULE,
+-			.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-					PERF_PMU_CAP_NO_SAMPLING |
+-					PERF_PMU_CAP_NO_COMMON_EVENTS,
++			.capabilities = PERF_PMU_UNCORE_CAPS,
+ 			.task_ctx_nr  = perf_invalid_context,
+ 			.attr_groups  = attr_groups,
+ 			.event_init   = ddr_perf_event_init,
 diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-index 7579b93dc462..d37c65d40a30 100644
+index d37c65d40a30..35f0407f4e10 100644
 --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
 +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -358,9 +358,6 @@ static int hisi_pcie_pmu_event_init(struct perf_event *event)
- 	else
- 		hwc->event_base = HISI_PCIE_CNT;
+@@ -805,9 +805,7 @@ static int hisi_pcie_alloc_pmu(struct pci_dev *pdev, struct hisi_pcie_pmu *pcie_
+ 		.read		= hisi_pcie_pmu_read,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.attr_groups	= hisi_pcie_pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	if (!hisi_pcie_pmu_valid_filter(event, pcie_pmu))
- 		return -EINVAL;
- 
+ 	return 0;
 diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-index 7718b031f671..5de53e76e42f 100644
+index 5de53e76e42f..25d1e704ea25 100644
 --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
 +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-@@ -186,21 +186,6 @@ int hisi_uncore_pmu_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct hisi_pmu *hisi_pmu;
+@@ -530,9 +530,7 @@ void hisi_pmu_init(struct hisi_pmu *hisi_pmu, struct module *module)
+ 	pmu->stop               = hisi_uncore_pmu_stop;
+ 	pmu->read               = hisi_uncore_pmu_read;
+ 	pmu->attr_groups        = hisi_pmu->pmu_events.attr_groups;
+-	pmu->capabilities       = PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS;
++	pmu->capabilities       = PERF_PMU_UNCORE_CAPS;
+ }
+ EXPORT_SYMBOL_GPL(hisi_pmu_init);
  
--	/*
--	 * We do not support sampling as the counters are all
--	 * shared by all CPU cores in a CPU die(SCCL). Also we
--	 * do not support attach to a task(per-process mode)
--	 */
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	/*
--	 *  The uncore counters not specific to any CPU, so cannot
--	 *  support per-task
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/*
- 	 * Validate if the events in group does not exceed the
- 	 * available counters in hardware.
 diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
-index 3d089df22c01..09bf38e56909 100644
+index 09bf38e56909..34b1ca3f0bb6 100644
 --- a/drivers/perf/hisilicon/hns3_pmu.c
 +++ b/drivers/perf/hisilicon/hns3_pmu.c
-@@ -1236,9 +1236,6 @@ static int hns3_pmu_event_init(struct perf_event *event)
- 	int idx;
- 	int ret;
+@@ -1422,9 +1422,7 @@ static int hns3_pmu_alloc_pmu(struct pci_dev *pdev, struct hns3_pmu *hns3_pmu)
+ 		.read		= hns3_pmu_read,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.attr_groups	= hns3_pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
- 	event->cpu = hns3_pmu->on_cpu;
- 
- 	idx = hns3_pmu_get_event_idx(hns3_pmu);
+ 	return 0;
 diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index bb16a193ff36..ebafa39a6b24 100644
+index ebafa39a6b24..ee69077a9320 100644
 --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
 +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -325,11 +325,6 @@ static int cn10k_ddr_perf_event_init(struct perf_event *event)
- 	struct cn10k_ddr_pmu *pmu = to_cn10k_ddr_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
+@@ -643,9 +643,7 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
  
--	if (event->cpu < 0) {
--		dev_warn(pmu->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
- 	/*  We must NOT create groups containing mixed PMUs */
- 	if (event->group_leader->pmu != event->pmu &&
- 	    !is_software_event(event->group_leader))
+ 	ddr_pmu->pmu = (struct pmu) {
+ 		.module	      = THIS_MODULE,
+-		.capabilities = PERF_PMU_CAP_NO_EXCLUDE |
+-				PERF_PMU_CAP_NO_SAMPLING |
+-				PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities = PERF_PMU_UNCORE_CAPS,
+ 		.task_ctx_nr = perf_invalid_context,
+ 		.attr_groups = cn10k_attr_groups,
+ 		.event_init  = cn10k_ddr_perf_event_init,
+diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
+index aaedb5715d69..c83924a094dc 100644
+--- a/drivers/perf/marvell_cn10k_tad_pmu.c
++++ b/drivers/perf/marvell_cn10k_tad_pmu.c
+@@ -317,9 +317,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
+ 
+ 		.module		= THIS_MODULE,
+ 		.attr_groups	= tad_pmu_attr_groups,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 
+ 		.event_init	= tad_pmu_event_init,
 diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 3f7837632988..d85f11c9261f 100644
+index d85f11c9261f..67e69e0293aa 100644
 --- a/drivers/perf/qcom_l2_pmu.c
 +++ b/drivers/perf/qcom_l2_pmu.c
-@@ -442,12 +442,6 @@ static int l2_cache_event_init(struct perf_event *event)
- 	struct perf_event *sibling;
- 	struct l2cache_pmu *l2cache_pmu = to_l2cache_pmu(event->pmu);
+@@ -897,9 +897,7 @@ static int l2_cache_pmu_probe(struct platform_device *pdev)
+ 		.stop		= l2_cache_event_stop,
+ 		.read		= l2_cache_event_read,
+ 		.attr_groups	= l2_cache_pmu_attr_grps,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	if (event->cpu < 0) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--				    "Per-task mode not supported\n");
--		return -EOPNOTSUPP;
--	}
--
- 	if (((L2_EVT_GROUP(event->attr.config) > L2_EVT_GROUP_MAX) ||
- 	     ((event->attr.config & ~L2_EVT_MASK) != 0)) &&
- 	    (event->attr.config != L2CYCLE_CTR_RAW_CODE)) {
+ 	l2cache_pmu->num_counters = get_num_counters();
 diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 54fde33802f4..733067fa68e5 100644
+index 733067fa68e5..f545c01aa671 100644
 --- a/drivers/perf/qcom_l3_pmu.c
 +++ b/drivers/perf/qcom_l3_pmu.c
-@@ -480,13 +480,6 @@ static int qcom_l3_cache__event_init(struct perf_event *event)
- 	struct l3cache_pmu *l3pmu = to_l3cache_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
+@@ -741,9 +741,7 @@ static int qcom_l3_cache_pmu_probe(struct platform_device *pdev)
+ 		.read		= qcom_l3_cache__event_read,
  
--	/*
--	 * Task mode not available, we run the counters as socket counters,
--	 * not attributable to any CPU and therefore cannot attribute per-task.
--	 */
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	/* Validate the group */
- 	if (!qcom_l3_cache__validate_event_group(event))
- 		return -EINVAL;
+ 		.attr_groups	= qcom_l3_cache_pmu_attr_grps,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
+ 
+ 	l3pmu->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &memrc);
 diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 06b589799536..d9da3070f27c 100644
+index d9da3070f27c..c1e2372f57c5 100644
 --- a/drivers/perf/thunderx2_pmu.c
 +++ b/drivers/perf/thunderx2_pmu.c
-@@ -574,16 +574,6 @@ static int tx2_uncore_event_init(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct tx2_uncore_pmu *tx2_pmu;
+@@ -722,9 +722,7 @@ static int tx2_uncore_pmu_register(
+ 		.start		= tx2_uncore_event_start,
+ 		.stop		= tx2_uncore_event_stop,
+ 		.read		= tx2_uncore_event_read,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	/*
--	 * SOC PMU counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 */
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	tx2_pmu = pmu_to_tx2_pmu(event->pmu);
- 	if (tx2_pmu->cpu >= nr_cpu_ids)
- 		return -EINVAL;
+ 	tx2_pmu->pmu.name = devm_kasprintf(dev, GFP_KERNEL,
 diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-index 7f753b8f4e93..b2d855866354 100644
+index b2d855866354..8cc6989857e8 100644
 --- a/drivers/perf/xgene_pmu.c
 +++ b/drivers/perf/xgene_pmu.c
-@@ -888,15 +888,6 @@ static int xgene_perf_event_init(struct perf_event *event)
- 	struct hw_perf_event *hw = &event->hw;
- 	struct perf_event *sibling;
+@@ -1098,9 +1098,7 @@ static int xgene_init_perf(struct xgene_pmu_dev *pmu_dev, char *name)
+ 		.start		= xgene_perf_start,
+ 		.stop		= xgene_perf_stop,
+ 		.read		= xgene_perf_read,
+-		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+-				  PERF_PMU_CAP_NO_SAMPLING |
+-				  PERF_PMU_CAP_NO_COMMON_EVENTS,
++		.capabilities	= PERF_PMU_UNCORE_CAPS,
+ 	};
  
--	/*
--	 * SOC PMU counters are shared across all cores.
--	 * Therefore, it does not support per-process mode.
--	 */
--	if (event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
- 	/*
- 	 * Many perf core operations (eg. events rotation) operate on a
- 	 * single CPU context. This is obvious for CPU PMUs, where one
+ 	/* Hardware counter init */
 -- 
 2.39.2.101.g768bb238c484.dirty
 
