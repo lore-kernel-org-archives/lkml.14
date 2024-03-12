@@ -1,74 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D4FF4FA;
-	Tue, 12 Mar 2024 15:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FC6F4FA;
+	Tue, 12 Mar 2024 15:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257555; cv=none; b=BIHabCJG2KUSKVuxc4oDWahOC/fo6ctllVGkiJSy6ETMd+KMONevYZgW8r6O4EnHdIBVLqf928laW0Od8ZhtGnQoF0IA8ArKwtpQ5m7JIte1nRbWWC13w8Vcu+IYJcwilbF/nPwWPgzoKHyPHglDpLNPF+CHoTpV4WYnvy9qbY8=
+	t=1710257594; cv=none; b=cL3dBscErAhRjl8hMwjFFbvKklZJwZWR+tO9Uq8Eryf1zslse+quaVlrtVKCQnBX17t9axfv29Rf2Ffx23ULOPK1s8o5wqLabjp2ZF4ySUvW8p0UrJ9Auav2EMuEkAG/3ztntP+mrt9qttaOjNv2Ll+84uvWF2l4IyWECLaqSNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257555; c=relaxed/simple;
-	bh=B699QGzqbXGKmn7SCx9L3vDjnq6OqBfZza3oOdqYJNU=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=hiYfMQZmY72ZjIdFYF1SozTgz/xSundkC+r+1dWdqrjFqEdnE4gNEyi5so1irXf57jHp5hSXBvTFTToM5Pra5rCUaoxB4QbWp5MyRPM0NUJU632k7Wna/62VX9qgd4TUYGZYIZT8f0SeYJ8XiyXrjRYxPAerlqDFCCJBG8hoQeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b78phves; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710257594; c=relaxed/simple;
+	bh=zBldKUeuDZ8cndWCaJ35EMQR5qhLvUmjXhzazIzp9BM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j9i5s7TxpLlNPi3HKdol2l1jRhJ03oyHfrneOI5fpe8gu9Y9BI2IpcBdWCDSb7wHv3TqWvsISxVq6WERHUiDB4omwVXIAcberZtKVLnxWHHe02z/a6onEeoDeHb3c+rWkE/r4jHmzhPWibCOTfkoHmcGCOz8Kjert2D/KsHFxps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XkeTwepu; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b78phves"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86242C433C7;
-	Tue, 12 Mar 2024 15:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710257555;
-	bh=B699QGzqbXGKmn7SCx9L3vDjnq6OqBfZza3oOdqYJNU=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=b78phvese5WkORrMEAdhLdcw3mIJkLLDnhOEjrrVmXijBl0xr/2M0zq+Q5uxPnZzh
-	 HiQI1cF7qYRN4gtHpLyIij87ik+RMD5x6rfW3k5p4nZwCfBcA6LCg1Y4fdkqUmXpwy
-	 omlAX26md23Dwed1LOIvKaVbsNPjkEbLc2ODA+FkQen4yfY9gje7Az3cZjix49VbPn
-	 0PGh8sKG7A0DTvDvubdvYBwx4i3BIxEYstWK9GZoBycpEnoZa0HAqxNkBknDIVEdlI
-	 7aH8ovhcoTA5+wY3HMrYopzo6GS+E1rTTpkVrpneiKZ70hvSMdtc0FrEsDUR1NsNcI
-	 rVHaGRImE4atA==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XkeTwepu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710257593; x=1741793593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zBldKUeuDZ8cndWCaJ35EMQR5qhLvUmjXhzazIzp9BM=;
+  b=XkeTwepuWQ8V5eVKaCZZaa1WfA02q+OhkyXWVgVVwWjoMXirt/LF5HB+
+   0jdnLqvqi0DGHheZajdKmdzXxfAJMZOnorMOS8LtCKcQNDe2Fdu+Ff0XC
+   Qppg55SrwF8IeKiuOfixqi4DefK5P1seevBWDkEVcV7npoN9T6slxJKeo
+   AYSeX1rBUEABAuFdKZpoLxpYORtikAkV5ld4+vq1zh2NDA1/RGcggfIKI
+   +0PUD9tnRgpQwNfXAEVS0ffPeD/c72cdFOahVRk/FUOUiBqI0ORhQgWXF
+   ik+l04Ch7GmmCP8WvlXN5DAdcXDC+2VhO/Wxuahlb1hXTjh2U1TeDPU3w
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4826244"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="4826244"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:33:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="914399879"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="914399879"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:33:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rk47n-0000000Bvm2-2qe4;
+	Tue, 12 Mar 2024 17:33:07 +0200
+Date: Tue, 12 Mar 2024 17:33:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: snps,dma-spear1340: Fix data{-,_}width
+ schema
+Message-ID: <ZfB1s2Vy8lXCSLme@smile.fi.intel.com>
+References: <20240311222522.1939951-1-robh@kernel.org>
+ <171025134347.2083269.1302794772701834117.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] wifi: brcmfmac: pcie: handle randbuf allocation
- failure
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20240306140437.18177-1-duoming@zju.edu.cn>
-References: <20240306140437.18177-1-duoming@zju.edu.cn>
-To: Duoming Zhou <duoming@zju.edu.cn>
-Cc: linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- brcm80211@lists.linux.dev, linux-wireless@vger.kernel.org,
- minipli@grsecurity.net, hdegoede@redhat.com, arend.vanspriel@broadcom.com,
- arnd@arndb.de, Duoming Zhou <duoming@zju.edu.cn>
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <171025755133.1969294.16879379450612075833.kvalo@kernel.org>
-Date: Tue, 12 Mar 2024 15:32:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171025134347.2083269.1302794772701834117.robh@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Duoming Zhou <duoming@zju.edu.cn> wrote:
+On Tue, Mar 12, 2024 at 07:49:05AM -0600, Rob Herring wrote:
+> On Mon, 11 Mar 2024 16:25:22 -0600, Rob Herring wrote:
 
-> The kzalloc() in brcmf_pcie_download_fw_nvram() will return null
-> if the physical memory has run out. As a result, if we use
-> get_random_bytes() to generate random bytes in the randbuf, the
-> null pointer dereference bug will happen.
-> 
-> In order to prevent allocation failure, this patch adds a separate
-> function using buffer on kernel stack to generate random bytes in
-> the randbuf, which could prevent the kernel stack from overflow.
-> 
-> Fixes: 91918ce88d9f ("wifi: brcmfmac: pcie: Provide a buffer of random bytes to the device")
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+...
 
-Patch applied to wireless-next.git, thanks.
+> My bot found errors
 
-316f790ebcf9 wifi: brcmfmac: pcie: handle randbuf allocation failure
+Well done! :-)
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240306140437.18177-1-duoming@zju.edu.cn/
+With Best Regards,
+Andy Shevchenko
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
