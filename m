@@ -1,344 +1,195 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C46B7C09F
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F56B7CF3D
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257908; cv=none; b=TwRcpbslKDj41pxobyaMRkGTErHXLhEUVX039bHsjDznsK0Y8tiHO07Rren3qN4i6zKej44ZGucnr0meuWDJLQcWTbKsLLFITmmZ/Fz1rwcNoN2khEqE2aaQh0clAL7CJzK2HUGBsd2kXhhWcKg7pY5Wu2jAns1pqTYifq42I8k=
+	t=1710257912; cv=none; b=dYPP4G8bKDY1X0+rXbFFg/1CoSPB+fUDDI4FJKwYs0qOsd+L8sFBL8OwKm6lAzpz9057NSV9FBqZ2uUpq4hGld3lVVcK8mfqyV7YdFKmH+DXIW1KoZCCPibTcLWVZzj6ZexBCzVAeonF3Z/6+ZFblpB3KPTwLGbPdZAJjzcnDSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257908; c=relaxed/simple;
-	bh=+ew1KP7lo6wFjKpRFhRTXmvsgt0nbNGzLE2XMhqglLg=;
+	s=arc-20240116; t=1710257912; c=relaxed/simple;
+	bh=gn0sV1uxiOEoJMBzIZ3R7cJwBhxeZ+ywvlsbeFJxWmo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hh512hC17v1FNYfMycXLKFBA8fKlFNNlE9kv4ZOBHHKIEolvqDfxfo6tGSRzQsjrINV1LYtTtsRvyFvJ4PmMuNv591eg5QdekD3iux0fMOlps7P2Dwhhc3XQVBGxlOrzg8FoTHit+YBcQTS0n/zF7IJDFv+o1hMjEtZy+fmLBoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E94E11007;
-	Tue, 12 Mar 2024 08:39:02 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.69.97])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C6273F762;
-	Tue, 12 Mar 2024 08:38:24 -0700 (PDT)
-Date: Tue, 12 Mar 2024 15:38:02 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Li Zetao <lizetao1@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, quic_jiles@quicinc.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: lib: improve usercopy performance by mitigating
- data dependencies
-Message-ID: <ZfB22hqeX2nHbxDU@FVFF77S0Q05N>
-References: <20240312150845.1356415-1-lizetao1@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Icl/3JDHsjPjM56NidQIlOWg+bpLiI2fp+GWd09ltI6ZwqgzMDn0SAiRMG1DcOdT0ckl7lNLy6/DL57Pdq0PMRDmNGQwrTw4DcdMsTuNYGsCEQ4twQ9ifKZUPbDSsdgMabsvl5oJHiFd4rpin5E1lCtxM8eUF81qywuIzqyJjVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A0z8OKEB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0z8OKEB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710257909;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4NO2ng5ojcuuq2VJkd8yzdtqpo1AFnaPqHeS1TAsaTo=;
+	b=A0z8OKEBhlZG60K0oE83e/t0n2z7AT7OUgn94Q2VyOMwxIVdJbNdTyL/L+BkEQZJJ5UG38
+	40HNfe+u4rODluyUTbSbypYx7wjBoaQCKeEfg3+MWEocPppYc6d7Fgws0lmIde/RP+WygK
+	S3ojY94EFXJe/6v9fbXN7unwo9ENo+A=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664-se4337VNMmyouMWGKfKJWw-1; Tue, 12 Mar 2024 11:38:28 -0400
+X-MC-Unique: se4337VNMmyouMWGKfKJWw-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6818b8cb840so17713416d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:38:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710257907; x=1710862707;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4NO2ng5ojcuuq2VJkd8yzdtqpo1AFnaPqHeS1TAsaTo=;
+        b=jWzS7qr+lRGJ1tB8deCdYYtXOJh0nU3dSCk3+Yi5/aTAzY4vrMgJyCE940ErrVeFlu
+         Kph+1/REY22SO920uZ10YtmTsjgJ8D4SDpOCSf1JkiC7L93x6EYt/Wezyy0EojA4vssv
+         DGTvNVHTFTInBgkBLuHKGYnyGGYYS6ql4ITJY89c3VaLx4urJLAIWSmMSufGwGtjGUKh
+         oo81CWfLMbx0K08VddtV8DUomkdyXlFemUd1rb8zSlRa7B3Nu8Zw1QFGbG+MDTPiA8BC
+         bGaZEeRuZ2wyZHFb1IerdrJp/etay7T/gapCf1CRW20YD1RvHfT8xMRpqUazl+M9qycX
+         U8HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7UDzDhWz0mwrIUIMCOnjy+WJgW8AZQMx3y6AjcIc+hYW1BRZ8odDFjjWkVAMQ4MvDkg3bHF4kHAuf7XsluFK6pv2xmnxNXGSlfZU1
+X-Gm-Message-State: AOJu0Yz9F6VS62CUkdAGi7nQhNLMoG9LPShqJFT1C0hQOveDaePysXqI
+	8uZWqCwrbLBRqhD/WM6NFsShXcAc7psFUl2bp9Aw4bWdbSe5VknI9ZiZuS3+E/yuOCx+vq0WmjP
+	uVLs/2A6HLpvrDvezfjCb8Z3Q5H4lqrh9h5X3zg91gzpVgF6u//55bMZPS+FRvw==
+X-Received: by 2002:a05:620a:3710:b0:788:5c6b:16bf with SMTP id de16-20020a05620a371000b007885c6b16bfmr13059532qkb.0.1710257907594;
+        Tue, 12 Mar 2024 08:38:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3+TlXwXVB3tqs6EXZGDEfptiQhjVAgR1EIKYOT2l1whs/cgzV0RS0fKe3uH059/AIE8NOpg==
+X-Received: by 2002:a05:620a:3710:b0:788:5c6b:16bf with SMTP id de16-20020a05620a371000b007885c6b16bfmr13059511qkb.0.1710257907234;
+        Tue, 12 Mar 2024 08:38:27 -0700 (PDT)
+Received: from x1n (cpe688f2e2cb7c3-cm688f2e2cb7c0.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id c18-20020a05620a0cf200b007871bac855fsm3792631qkj.47.2024.03.12.08.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 08:38:26 -0700 (PDT)
+Date: Tue, 12 Mar 2024 11:38:24 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jiaqi Yan <jiaqiyan@google.com>
+Cc: James Houghton <jthoughton@google.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: BUG selftests/mm]
+Message-ID: <ZfB28NIbflrnsqiX@x1n>
+References: <a9e3120d-8b79-4435-b113-ceb20aa45ee2@alu.unizg.hr>
+ <4a5c8d28-7f73-4c15-b288-641f0ccc91c2@redhat.com>
+ <Ze8Wr2qH8V0LMi_5@x1n>
+ <b5ff4c70-6379-4cc7-8c92-778d80a6a658@redhat.com>
+ <Ze8fYF5I4mlUGHd9@x1n>
+ <CAJHvVcie+N+4j60m_Dxh7QzbZLmsjnq2-04peuqE8VkkMq984A@mail.gmail.com>
+ <Ze9bWkrD6UBZ2ErV@x1n>
+ <CADrL8HW59nt4ztY3x5G3VgpmaXQbXoXZeAjvzMp7SpsqxgDCxw@mail.gmail.com>
+ <CACw3F51vMqPBHmvj4ehSA8PadXw30s3MxCqph1op5dxtB-tV6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240312150845.1356415-1-lizetao1@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACw3F51vMqPBHmvj4ehSA8PadXw30s3MxCqph1op5dxtB-tV6Q@mail.gmail.com>
 
-On Tue, Mar 12, 2024 at 11:08:45PM +0800, Li Zetao wrote:
-> In the copy_from/to_user scenario, due to the need to accurately
-> calculate the number of copied bytes for fixup, it is necessary to
-> increment the values of src and dst after each copy of the data.
-> Therefore, this introduce RAW dependency which result in some bubble
-> in pipline and degrade the IPC.
+On Mon, Mar 11, 2024 at 03:28:28PM -0700, Jiaqi Yan wrote:
+> On Mon, Mar 11, 2024 at 2:27 PM James Houghton <jthoughton@google.com> wrote:
+> >
+> > On Mon, Mar 11, 2024 at 12:28 PM Peter Xu <peterx@redhat.com> wrote:
+> > >
+> > > On Mon, Mar 11, 2024 at 11:59:59AM -0700, Axel Rasmussen wrote:
+> > > > I'd prefer not to require root or CAP_SYS_ADMIN or similar for
+> > > > UFFDIO_POISON, because those control access to lots more things
+> > > > besides, which we don't necessarily want the process using UFFD to be
+> > > > able to do. :/
+> >
+> > I agree; UFFDIO_POISON should not require CAP_SYS_ADMIN.
 > 
-> Consider updating the values of src and dst only when the copy is
-> completed in the current stage to reduce data dependence. But this will
-> break the function of fixup, so in order to maintain the function of
-> fixup, a new variable is introduced to record the number of bytes to be
-> copied in the current stage. Once an access exception occurs, the variable
-> can be used to determined the final index of access exception by copying
-> byte-by-byte.
+> +1.
 > 
-> Here are the test result:
->   Copy 128 bytes cost on Kunpeng-920(us):
->     Without this patch:
->     copy_from_user: 1.0187 copy_to_user: 1.1021
 > 
->     With this patch:
->     copy_from_user: 0.9523 copy_to_user: 1.0159
+> >
+> > > >
+> > > > Ratelimiting seems fairly reasonable to me. I do see the concern about
+> > > > dropping some addresses though.
+> > >
+> > > Do you know how much could an admin rely on such addresses?  How frequent
+> > > would MCE generate normally in a sane system?
+> >
+> > I'm not sure about how much admins rely on the address themselves. +cc
+> > Jiaqi Yan
 > 
-> It's about 7% improvement in copy_from/to_user()
+> I think admins mostly care about MCEs from **real** hardware. For
+> example they may choose to perform some maintenance if the number of
+> hardware DIMM errors, keyed by PFN, exceeds some threshold. And I
+> think mcelog or /sys/devices/system/node/node${X}/memory_failure are
+> better tools than dmesg. In the case all memory errors are emulated by
+> hypervisor after a live migration, these dmesgs may confuse admins to
+> think there is dimm error on host but actually it is not the case. In
+> this sense, silencing these emulated by UFFDIO_POISON makes sense (if
+> not too complicated to do).
 
-How exactly are you testing this? Can you share your test code?
+Now we have three types of such error: (1) PFN poisoned, (2) swapin error,
+(3) emulated.  Both 1+2 should deserve a global message dump, while (3)
+should be process-internal, and nobody else should need to care except the
+process itself (via the signal + meta info).
 
-The current structure of this code (and e.g. the use of write-back addressing)
-is largely force upon us by the structure of the Cortex strings functions,
-which are already painful enough to read and work on. If we're going to rewrite
-those I'd rather we abandoned the Cortex strings template for usercopies. 
+If we want to differenciate (2) v.s. (3), we may need 1 more pte marker bit
+to show whether such poison is "global" or "local" (while as of now 2+3
+shares the usage of the same PTE_MARKER_POISONED bit); a swapin error can
+still be seen as a "global" error (instead of a mem error, it can be a disk
+error, and the err msg still applies to it describing a VA corrupt).
+Another VM_FAULT_* flag is also needed to reflect that locality, then
+ignore a global broadcast for "local" poison faults.
 
-I had previously attempted to rewrite some of these along with some functional
-tests:
-
-  https://lore.kernel.org/linux-arm-kernel/20230314115030.347976-1-mark.rutland@arm.com/
-
-Could you give those a go?  Specifically, could you see how copy_to_user()
-performs with the patch at:
-
-  https://lore.kernel.org/linux-arm-kernel/20230314115030.347976-4-mark.rutland@arm.com/
-
-... if that gets you a similar benefit I'd be happy to revive the series and
-give copy_from_user() similar treatment.
-
-Thanks,
-Mark.
-
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
-> ---
->  arch/arm64/include/asm/asm-uaccess.h | 14 +++---
->  arch/arm64/lib/copy_from_user.S      | 21 +++++++--
->  arch/arm64/lib/copy_template.S       | 66 +++++++++++++++++-----------
->  arch/arm64/lib/copy_to_user.S        | 22 +++++++---
->  4 files changed, 81 insertions(+), 42 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/asm-uaccess.h b/arch/arm64/include/asm/asm-uaccess.h
-> index 5b6efe8abeeb..ccbde0d0c113 100644
-> --- a/arch/arm64/include/asm/asm-uaccess.h
-> +++ b/arch/arm64/include/asm/asm-uaccess.h
-> @@ -66,19 +66,17 @@ alternative_else_nop_endif
->   * This is complicated as there is no post-increment or pair versions of the
->   * unprivileged instructions, and USER() only works for single instructions.
->   */
-> -	.macro user_ldp l, reg1, reg2, addr, post_inc
-> -8888:		ldtr	\reg1, [\addr];
-> -8889:		ldtr	\reg2, [\addr, #8];
-> -		add	\addr, \addr, \post_inc;
-> +	.macro user_ldp l, reg1, reg2, addr, offs_inc
-> +8888:		ldtr	\reg1, [\addr, \offs_inc];
-> +8889:		ldtr	\reg2, [\addr, \offs_inc + 8];
->  
->  		_asm_extable_uaccess	8888b, \l;
->  		_asm_extable_uaccess	8889b, \l;
->  	.endm
->  
-> -	.macro user_stp l, reg1, reg2, addr, post_inc
-> -8888:		sttr	\reg1, [\addr];
-> -8889:		sttr	\reg2, [\addr, #8];
-> -		add	\addr, \addr, \post_inc;
-> +	.macro user_stp l, reg1, reg2, addr, offs_inc
-> +8888:		sttr	\reg1, [\addr, \offs_inc];
-> +8889:		sttr	\reg2, [\addr, \offs_inc + 8];
->  
->  		_asm_extable_uaccess	8888b,\l;
->  		_asm_extable_uaccess	8889b,\l;
-> diff --git a/arch/arm64/lib/copy_from_user.S b/arch/arm64/lib/copy_from_user.S
-> index 34e317907524..c575829b85be 100644
-> --- a/arch/arm64/lib/copy_from_user.S
-> +++ b/arch/arm64/lib/copy_from_user.S
-> @@ -49,7 +49,7 @@
->  	.endm
->  
->  	.macro stp1 reg1, reg2, ptr, val
-> -	stp \reg1, \reg2, [\ptr], \val
-> +	stp \reg1, \reg2, [\ptr, \val]
->  	.endm
->  
->  end	.req	x5
-> @@ -62,12 +62,25 @@ SYM_FUNC_START(__arch_copy_from_user)
->  	ret
->  
->  	// Exception fixups
-> -9997:	cmp	dst, dstin
-> +9997:	sub	x7, src, srcin
-> +	sub	x8, dst, dstin
-> +	cmp	x7, x8
-> +	b.le	no_need_to_adjust_src
-> +	sub	x9, x7, x8
-> +	sub	src, src, p_copy
-> +	add	p_copy, p_copy, x9
-> +no_need_to_adjust_src:
-> +	cmp	dst, dstin
->  	b.ne	9998f
->  	// Before being absolutely sure we couldn't copy anything, try harder
-> -USER(9998f, ldtrb tmp1w, [srcin])
-> +calculate_bytes_copied:
-> +USER(9999f, ldtrb tmp1w, [src])
->  	strb	tmp1w, [dst], #1
-> -9998:	sub	x0, end, dst			// bytes not copied
-> +	add	src, src, #1
-> +	sub	p_copy, p_copy, #1
-> +9998:	cmp	p_copy, 0
-> +	b.ge	calculate_bytes_copied
-> +9999:	sub	x0, end, dst			// bytes not copied
->  	ret
->  SYM_FUNC_END(__arch_copy_from_user)
->  EXPORT_SYMBOL(__arch_copy_from_user)
-> diff --git a/arch/arm64/lib/copy_template.S b/arch/arm64/lib/copy_template.S
-> index 488df234c49a..8832b9fd0257 100644
-> --- a/arch/arm64/lib/copy_template.S
-> +++ b/arch/arm64/lib/copy_template.S
-> @@ -29,6 +29,7 @@ tmp1w	.req	w3
->  tmp2	.req	x4
->  tmp2w	.req	w4
->  dst	.req	x6
-> +p_copy	.req	x16
->  
->  A_l	.req	x7
->  A_h	.req	x8
-> @@ -39,6 +40,7 @@ C_h	.req	x12
->  D_l	.req	x13
->  D_h	.req	x14
->  
-> +	mov	p_copy, 16
->  	mov	dst, dstin
->  	cmp	count, #16
->  	/*When memory length is less than 16, the accessed are not aligned.*/
-> @@ -82,19 +84,26 @@ D_h	.req	x14
->  	* Copy up to 48 bytes of data. At this point we only need the
->  	* bottom 6 bits of count to be accurate.
->  	*/
-> +	mov	p_copy, #16
->  	ands	tmp1, count, #0x30
->  	b.eq	.Ltiny15
->  	cmp	tmp1w, #0x20
->  	b.eq	1f
->  	b.lt	2f
-> -	ldp1	A_l, A_h, src, #16
-> -	stp1	A_l, A_h, dst, #16
-> +	ldp1	A_l, A_h, src, #0
-> +	stp1	A_l, A_h, dst, #0
-> +	add	src, src, #16
-> +	add	dst, dst, #16
->  1:
-> -	ldp1	A_l, A_h, src, #16
-> -	stp1	A_l, A_h, dst, #16
-> +	ldp1	A_l, A_h, src, #0
-> +	stp1	A_l, A_h, dst, #0
-> +	add	src, src, #16
-> +	add	dst, dst, #16
->  2:
-> -	ldp1	A_l, A_h, src, #16
-> -	stp1	A_l, A_h, dst, #16
-> +	ldp1	A_l, A_h, src, #0
-> +	stp1	A_l, A_h, dst, #0
-> +	add	src, src, #16
-> +	add	dst, dst, #16
->  .Ltiny15:
->  	/*
->  	* Prefer to break one ldp/stp into several load/store to access
-> @@ -126,20 +135,23 @@ D_h	.req	x14
->  	b	.Lexitfunc
->  
->  .Lcpy_over64:
-> +	mov	p_copy, #64
->  	subs	count, count, #128
->  	b.ge	.Lcpy_body_large
->  	/*
->  	* Less than 128 bytes to copy, so handle 64 here and then jump
->  	* to the tail.
->  	*/
-> -	ldp1	A_l, A_h, src, #16
-> -	stp1	A_l, A_h, dst, #16
-> +	ldp1	A_l, A_h, src, #0
-> +	stp1	A_l, A_h, dst, #0
->  	ldp1	B_l, B_h, src, #16
-> -	ldp1	C_l, C_h, src, #16
-> +	ldp1	C_l, C_h, src, #32
->  	stp1	B_l, B_h, dst, #16
-> -	stp1	C_l, C_h, dst, #16
-> -	ldp1	D_l, D_h, src, #16
-> -	stp1	D_l, D_h, dst, #16
-> +	stp1	C_l, C_h, dst, #32
-> +	ldp1	D_l, D_h, src, #48
-> +	stp1	D_l, D_h, dst, #48
-> +	add	src, src, #64
-> +	add	dst, dst, #64
->  
->  	tst	count, #0x3f
->  	b.ne	.Ltail63
-> @@ -152,30 +164,34 @@ D_h	.req	x14
->  	.p2align	L1_CACHE_SHIFT
->  .Lcpy_body_large:
->  	/* pre-get 64 bytes data. */
-> -	ldp1	A_l, A_h, src, #16
-> +	ldp1	A_l, A_h, src, #0
->  	ldp1	B_l, B_h, src, #16
-> -	ldp1	C_l, C_h, src, #16
-> -	ldp1	D_l, D_h, src, #16
-> +	ldp1	C_l, C_h, src, #32
-> +	ldp1	D_l, D_h, src, #48
-> +	add	src, src, #64
->  1:
->  	/*
->  	* interlace the load of next 64 bytes data block with store of the last
->  	* loaded 64 bytes data.
->  	*/
-> -	stp1	A_l, A_h, dst, #16
-> -	ldp1	A_l, A_h, src, #16
-> +	stp1	A_l, A_h, dst, #0
-> +	ldp1	A_l, A_h, src, #0
->  	stp1	B_l, B_h, dst, #16
->  	ldp1	B_l, B_h, src, #16
-> -	stp1	C_l, C_h, dst, #16
-> -	ldp1	C_l, C_h, src, #16
-> -	stp1	D_l, D_h, dst, #16
-> -	ldp1	D_l, D_h, src, #16
-> +	stp1	C_l, C_h, dst, #32
-> +	ldp1	C_l, C_h, src, #32
-> +	stp1	D_l, D_h, dst, #48
-> +	ldp1	D_l, D_h, src, #48
-> +	add	src, src, #64
-> +	add	dst, dst, #64
->  	subs	count, count, #64
->  	b.ge	1b
-> -	stp1	A_l, A_h, dst, #16
-> +	stp1	A_l, A_h, dst, #0
->  	stp1	B_l, B_h, dst, #16
-> -	stp1	C_l, C_h, dst, #16
-> -	stp1	D_l, D_h, dst, #16
-> +	stp1	C_l, C_h, dst, #32
-> +	stp1	D_l, D_h, dst, #48
-> +	add	dst, dst, #64
->  
->  	tst	count, #0x3f
->  	b.ne	.Ltail63
-> -.Lexitfunc:
-> +.Lexitfunc: mov	p_copy, #0
-> diff --git a/arch/arm64/lib/copy_to_user.S b/arch/arm64/lib/copy_to_user.S
-> index 802231772608..89db19e09ca2 100644
-> --- a/arch/arm64/lib/copy_to_user.S
-> +++ b/arch/arm64/lib/copy_to_user.S
-> @@ -44,7 +44,7 @@
->  	.endm
->  
->  	.macro ldp1 reg1, reg2, ptr, val
-> -	ldp \reg1, \reg2, [\ptr], \val
-> +	ldp \reg1, \reg2, [\ptr, \val]
->  	.endm
->  
->  	.macro stp1 reg1, reg2, ptr, val
-> @@ -61,13 +61,25 @@ SYM_FUNC_START(__arch_copy_to_user)
->  	ret
->  
->  	// Exception fixups
-> -9997:	cmp	dst, dstin
-> +9997:	sub	x7, src, srcin
-> +	sub	x8, dst, dstin
-> +	cmp	x7, x8
-> +	b.le	no_need_to_adjust_src
-> +	sub	x9, x7, x8
-> +	sub	src, src, x9
-> +	add	p_copy, p_copy, x9
-> +no_need_to_adjust_src:
-> +	cmp	dst, dstin
->  	b.ne	9998f
->  	// Before being absolutely sure we couldn't copy anything, try harder
-> -	ldrb	tmp1w, [srcin]
-> -USER(9998f, sttrb tmp1w, [dst])
-> +calculate_bytes_copied:
-> +	ldrb	tmp1w, [src], #1
-> +USER(9999f, sttrb tmp1w, [dst])
->  	add	dst, dst, #1
-> -9998:	sub	x0, end, dst			// bytes not copied
-> +	sub	p_copy, p_copy, #1
-> +9998:	cmp	p_copy, 0
-> +	b.ge	calculate_bytes_copied
-> +9999:	sub	x0, end, dst			// bytes not copied
->  	ret
->  SYM_FUNC_END(__arch_copy_to_user)
->  EXPORT_SYMBOL(__arch_copy_to_user)
-> -- 
-> 2.34.1
+> SIGBUS (and logged "MCE: Killing %s:%d due to hardware memory
+> corruption fault at %lx\n") emit by fault handler due to UFFDIO_POISON
+> are less useful to admins AFAIK. They are for sure crucial to
+> userspace / vmm / hypervisor, but the SIGBUS sent already contains the
+> poisoned address (in si_addr from force_sig_mceerr).
 > 
+> >
+> > It's possible for a sane hypervisor dealing with a buggy guest / guest
+> > userspace to trigger lots of these pr_errs. Consider the case where a
+> > guest userspace uses HugeTLB-1G, finds poison (which HugeTLB used to
+> > ignore), and then ignores SIGBUS. It will keep getting MCEs /
+> > SIGBUSes.
+> >
+> > The sane hypervisor will use UFFDIO_POISON to prevent the guest from
+> > re-accessing *real* poison, but we will still get the pr_err, and we
+> > still keep injecting MCEs into the guest. We have observed scenarios
+> > like this before.
+> >
+> > >
+> > > > Perhaps we can mitigate that concern by defining our own ratelimit
+> > > > interval/burst configuration?
+> > >
+> > > Any details?
+> > >
+> > > > Another idea would be to only ratelimit it if !CONFIG_DEBUG_VM or
+> > > > similar. Not sure if that's considered valid or not. :)
+> > >
+> > > This, OTOH, sounds like an overkill..
+> > >
+> > > I just checked again on the detail of ratelimit code, where we by default
+> > > it has:
+> > >
+> > > #define DEFAULT_RATELIMIT_INTERVAL      (5 * HZ)
+> > > #define DEFAULT_RATELIMIT_BURST         10
+> > >
+> > > So it allows a 10 times burst rather than 2.. IIUC it means even if
+> > > there're continous 10 MCEs it won't get suppressed, until the 11th came, in
+> > > 5 seconds interval.  I think it means it's possibly even less of a concern
+> > > to directly use pr_err_ratelimited().
+> >
+> > I'm okay with any rate limiting everyone agrees on. IMO, silencing
+> > these pr_errs if they came from UFFDIO_POISON (or, perhaps, if they
+> > did not come from real hardware MCE events) sounds like the most
+> > correct thing to do, but I don't mind. Just don't make UFFDIO_POISON
+> > require CAP_SYS_ADMIN. :)
+> >
+> > Thanks.
+> 
+
+-- 
+Peter Xu
+
