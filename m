@@ -1,159 +1,86 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A556B19B
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 00:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4A9365;
+	Tue, 12 Mar 2024 00:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710203151; cv=none; b=Q5r23g8tQEmneVnmv5bHUkykNROjLLBig2Uc0nc1/c7sQTF4LkrkOQuk/PzXTueuIYcsTrr8pBt+mktS9AOxU2Bqe9mu3QdNCUOr0SpQGvYa51KitIyaCeMm03DBhJtCBu7op409f/iwi/feKEPpZlWPyTLI4dH4LQ/fKkbqm5s=
+	t=1710203349; cv=none; b=bIAKVeqSjo0V5n+ZskArIwKx8qK+lFIdVgRU3+BOAj0iWN9L7OkQrLEXtnNs2Q+86wIyo0wL4BeBzpf+UydRKbSHBImbr7lxoe7f288tXToE/JyAIDMfb7hxDEsbKrunVIj1n+XipL5kjf5jQB3UclXRIJoHih93swEnXFdrRZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710203151; c=relaxed/simple;
-	bh=DN4kgqkguxDqDuzpxWOfE0S71IXcgVo6miwC7b+9qOw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bwMlUZanSC8uzDDh0VxbQ7SEE4jqFrfgHfepMGuzoEuWqexdLnc905K2ZoNKESDYyvVNj91Pp60WlVWmyMvyyKe2b8WRqtBtPE3HyRYWh7+f3SVy9ta5rpLVpcqYLQpccE+MpcDzBUxiDDdaOL6JRNqsLEJEF6lKF2OjHGlJJQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3/Xcn34j; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1710203349; c=relaxed/simple;
+	bh=QqEqfyzSg7vN+OQTmwyFR+1vKvfepw0L7qwqCzMM8fU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l9XuSWMIjCqYSXriSTaJ3GGWRZw4zJcPePM9SZ8l6aUEyDXSuolJidjycigBX2l0eFReU4s84n+XXqH7ZYYKVdJXx6So2zX/pjwJImOMrwLMCxuHW75XdMxKxAWxSTpEgjOUyjIPCzP7JI3r5iOVd3rAeG+dbGKGMIvxzpe4EtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQhc/pgq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3/Xcn34j"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60832a48684so74375647b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 17:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710203149; x=1710807949; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DSKE9dynpVDGdnjTP2PPz0UtHmW2LY6em1fpB/+NyBg=;
-        b=3/Xcn34j/nGHh3CzJjVJwx5sC5qPTQNUUoZAmSVL2XfV1iKowyqSj/WJLHalLEdYLr
-         BY3WjtBhABWunzDKuv0wI2AvencPnZNTZktMkF77HsreOXEcBuKzdSIYGlhT8uAb7N5n
-         kBnoFxXICP9tok1lvDDbeli/h4rcV8lCK9wBi4A63BbKYxguvs810DGY/L5fL0fiEnNE
-         NCIopgKPosSfAmu7Tg+E20YmGZq1BrsxvxgW6Keeyq0gDAuVRIihPVYqG4e8ffUMq6yX
-         apV1AHbYUGzbP4BQe8dBgB98WZ7EcQ2XUzVTq9YbM8wmx9pTtF8axl+XaeM6j+CdzT5h
-         vrAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710203149; x=1710807949;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DSKE9dynpVDGdnjTP2PPz0UtHmW2LY6em1fpB/+NyBg=;
-        b=SsPK074CFV84M5y7CFOFVqi7plVRfIH79+O0SzvPBwZUC4CHQWoGbQodPTh0Ju+rzR
-         SGuvoKZEAgVCod+Ke1D/te4Dpp5yTM9Xrmt2y4jwmik9TtISsdXbD3AIXx0CXBdKZokF
-         zSDKOrx9XdudBmoLoKQHUMZxmNreD3Tol51LdYxAnB7X2qLJU/PtxH141uugxjszBpqB
-         QgY/tFVt8QqSwTIuIOR5KgI14TFhvu6avU5XbvWRzCBF0WsBLVzIdlRrXWxaSucST6sF
-         B8I8UOz3KkRILfnGdlDkfxqPRCKw9+xLOz/bqLKtL1RA0vHGcA6v4YqtXmHh4wtOb33/
-         bkqw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9e9hjJ8SqSM6L+GO6pVF3dnjwZEFhDqShz2Y7n9uaCh6BvDsgAcdzIGnRlqdKfWOh8RtYldg3f69XLneKiHc11HdmPkWVod51j71Z
-X-Gm-Message-State: AOJu0YzoJr0SH3Gwcqdf5w10cKxTX7ZvSPqGLNzPCjRjpmwwCSTZUApm
-	vkInuKLaDwAssgkxWQoKKBwphE7yRvFAXmMkHdMQ3mpbURhgPcjMP4CE45aLlk2bh2SqrIHOIHd
-	TCg==
-X-Google-Smtp-Source: AGHT+IGzoNaeLD5UF6HPjQNHq3cJfFHLeuCdtnN3G+/43PHfTFE8knrmObKsB05Sk+y7M0LF1sr9r44xtTU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:d486:0:b0:60a:2eb9:539a with SMTP id
- w128-20020a0dd486000000b0060a2eb9539amr1057117ywd.2.1710203148785; Mon, 11
- Mar 2024 17:25:48 -0700 (PDT)
-Date: Mon, 11 Mar 2024 17:25:47 -0700
-In-Reply-To: <Ze5bee/qJ41IESdk@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQhc/pgq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE684C433F1;
+	Tue, 12 Mar 2024 00:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710203349;
+	bh=QqEqfyzSg7vN+OQTmwyFR+1vKvfepw0L7qwqCzMM8fU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nQhc/pgqvfzW/fVaPBv2+XkG3S4+isF6GMu91gCdCoCJdoINxNlq2hYsXBhnhE69z
+	 dWjYVqZc7OIb/3B5USgbpB1rItyG6FZJCIGH4pAv/swL63oYcZvNsq7lHV6IQrmVlN
+	 YMij/ViGfUwjmPCltgnMGGoPotYBkM5X2amDg8c/vNVtsotsArd5hhDX8a1aWGNQMp
+	 hHNvxlOxhKzisildTxm9ixEd3ZatNQn5LjP0uFpIzPmsnYel4Z2abWIJgN0ML72Wq5
+	 xlLBDsYZBsiHT/hVdj+wOP1wJDRNo+MhTBvryovh+64TBGiAh+k4vJHM30eDLcV6tm
+	 D6TEjaRX0kHqQ==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	David Howells <dhowells@redhat.com>,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org
+Subject: [GIT PULL] tpmdd changes for v6.9
+Date: Tue, 12 Mar 2024 02:29:04 +0200
+Message-Id: <20240312002904.1929283-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240309010929.1403984-1-seanjc@google.com> <20240309010929.1403984-6-seanjc@google.com>
- <Ze5bee/qJ41IESdk@yzhao56-desk.sh.intel.com>
-Message-ID: <Ze-hC8NozVbOQQIT@google.com>
-Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that support self-snoop
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>, kvm@vger.kernel.org, 
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kevin Tian <kevin.tian@intel.com>, Yiwei Zhang <zzyiwei@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024, Yan Zhao wrote:
-> On Fri, Mar 08, 2024 at 05:09:29PM -0800, Sean Christopherson wrote:
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 17a8e4fdf9c4..5dc4c24ae203 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -7605,11 +7605,13 @@ static u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
-> >  
-> >  	/*
-> >  	 * Force WB and ignore guest PAT if the VM does NOT have a non-coherent
-> > -	 * device attached.  Letting the guest control memory types on Intel
-> > -	 * CPUs may result in unexpected behavior, and so KVM's ABI is to trust
-> > -	 * the guest to behave only as a last resort.
-> > +	 * device attached and the CPU doesn't support self-snoop.  Letting the
-> > +	 * guest control memory types on Intel CPUs without self-snoop may
-> > +	 * result in unexpected behavior, and so KVM's (historical) ABI is to
-> > +	 * trust the guest to behave only as a last resort.
-> >  	 */
-> > -	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
-> > +	if (!static_cpu_has(X86_FEATURE_SELFSNOOP) &&
-> > +	    !kvm_arch_has_noncoherent_dma(vcpu->kvm))
-> >  		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
-> 
-> For the case of !static_cpu_has(X86_FEATURE_SELFSNOOP) &&
-> kvm_arch_has_noncoherent_dma(vcpu->kvm), I think we at least should warn
-> about unsafe before honoring guest memory type.
+  Merge tag 'cgroup-for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup (2024-03-11 13:13:22 -0700)
 
-I don't think it gains us enough to offset the potential pain such a message
-would bring.  Assuming the warning isn't outright ignored, the most likely scenario
-is that the warning will cause random end users to worry that the setup they've
-been running for years is broken, when in reality it's probably just fine for their
-use case.
+are available in the Git repository at:
 
-I would be quite surprised if there are people running untrusted workloads on
-10+ year old silicon *and* have passthrough devices and non-coherent IOMMUs/DMA.
-And anyone exposing a device directly to an untrusted workload really should have
-done their homework.
+  git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags/tpmdd-v6.9-rc1
 
-And it's not like we're going to change KVM's historical behavior at this point.
+for you to fetch changes up to 6fa6b796e037a15b1c208b1158f801f9adcb1f2b:
 
-> Though it's a KVM's historical ABI, it's not safe in the security perspective
-> because page aliasing without proper cache flush handling on CPUs without
-> self-snoop may open a door for guest to read uninitialized host data.
-> e.g. when there's a noncoherent DMA device attached, and if there's a memory
-> region that is not pinned in vfio/iommufd side, (e.g. memory region in vfio's
-> skipped section), then though the guest memory from this memory region is not
-> accessible to noncoherent DMAs, vCPUs can still access this part of guest memory.
-> Then if vCPUs use WC as guest type, it may bypass host's initialization data in
-> cache and read stale data in host, causing information leak.
-> 
-> My preference is still to force WB
-> (i.e. (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT) in case of
-> !static_cpu_has(X86_FEATURE_SELFSNOOP) && kvm_arch_has_noncoherent_dma(vcpu->kvm).
-> Firstly, it's because there're few CPUs with features VMX without self-snoop;
+  tpm: tis_i2c: Add compatible string nuvoton,npct75x (2024-03-12 00:26:06 +0200)
 
-This is unfortunately not true.  I don't know the details, but apparently all
-Intel CPUs before Ivy Bridge had a one or more related errata.
+----------------------------------------------------------------
+Hi,
 
-/*
- * Processors which have self-snooping capability can handle conflicting
- * memory type across CPUs by snooping its own cache. However, there exists
- * CPU models in which having conflicting memory types still leads to
- * unpredictable behavior, machine check errors, or hangs. Clear this
- * feature to prevent its use on machines with known erratas.
- */
-static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
-{
-	switch (c->x86_model) {
-	case INTEL_FAM6_CORE_YONAH:
-	case INTEL_FAM6_CORE2_MEROM:
-	case INTEL_FAM6_CORE2_MEROM_L:
-	case INTEL_FAM6_CORE2_PENRYN:
-	case INTEL_FAM6_CORE2_DUNNINGTON:
-	case INTEL_FAM6_NEHALEM:
-	case INTEL_FAM6_NEHALEM_G:
-	case INTEL_FAM6_NEHALEM_EP:
-	case INTEL_FAM6_NEHALEM_EX:
-	case INTEL_FAM6_WESTMERE:
-	case INTEL_FAM6_WESTMERE_EP:
-	case INTEL_FAM6_SANDYBRIDGE:
-		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
-	}
-}
+This is my pull request for Linux v6.9. Contains small scope bug fixes
+and device tree updates. No new features.
 
-> Secondly, security takes priority over functionality :)
+BR, Jarkko
 
-Yeah, but not breaking userspace for setups that have existed for 10+ years takes
-priority over all of that :-)
+----------------------------------------------------------------
+Lino Sanfilippo (1):
+      tpm,tpm_tis: Avoid warning splat at shutdown
+
+Lukas Wunner (4):
+      dt-bindings: tpm: Add compatible string atmel,attpm20p
+      tpm_tis_spi: Add compatible string atmel,attpm20p
+      tpm_tis: Add compatible string atmel,at97sc3204
+      tpm: tis_i2c: Add compatible string nuvoton,npct75x
+
+Randy Dunlap (1):
+      tpm/tpm_ftpm_tee: fix all kernel-doc warnings
+
+ Documentation/devicetree/bindings/tpm/tcg,tpm_tis-spi.yaml | 1 +
+ drivers/char/tpm/tpm_ftpm_tee.c                            | 6 +++---
+ drivers/char/tpm/tpm_tis.c                                 | 1 +
+ drivers/char/tpm/tpm_tis_core.c                            | 3 +--
+ drivers/char/tpm/tpm_tis_i2c.c                             | 2 ++
+ drivers/char/tpm/tpm_tis_spi_main.c                        | 1 +
+ 6 files changed, 9 insertions(+), 5 deletions(-)
