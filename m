@@ -1,104 +1,112 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878C67C0B1
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DBF79B65;
+	Tue, 12 Mar 2024 15:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710258173; cv=none; b=bhLeRgdZX0brK8eZY2kYiZyL7vQNuo1jvMn1jRTCNPKBcfLSfHYyY3oZeGneQNfsssRFzAUg6hd/FClINqW3+HadvzTHRQL481QDra/tQlT1tQ9Ov6RMF4WWdR6ndXbRA1Sjmict17GvwP9RVkMqM04djYOTD88L205fRkgnyWQ=
+	t=1710258186; cv=none; b=GV4Ev5kMvke3HhqQh/j9XpNV+u8ieOO4J3FTjMJzkrMBq43mYJYqyJ3iaxwX1dYlRHPqjFVqQSJdDdOxXSR+AqH8d/yYlgoYmJofe9KvroKpGjVl3azdVxlJqdhwQNJk+ugbypG/vUoyE8ZOp7yRQpCHO4l4P+66b1Q08L8Yu34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710258173; c=relaxed/simple;
-	bh=D2tjCaFOD85nEnhCR05G4D9nbK1x8BdziW9THhyUTAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KSA755jBywvWspmBnyn7hFlFJQY4TD0abtxW5hoGSFZTignlrIOqRl3wm/fVf5+BB5TdU1DuSLUDh2fbyk0JRyx4aXrXVbSPsJ0UWiO/bKvAp7UuszXzSUGrFHLYxINeG5i9RLMjLuZskCr/OZt9GUmVaJh18uciuQs8589yspc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i4m6k7XQ; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710258186; c=relaxed/simple;
+	bh=saSsJLPGKVqRyifWAvITNA+MsAjtts2uqCkZdCGrjgs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ekeFA6reD+erHbw4vaE4wLZnceCBCD1z60Kj492/vfK0FIE8RWWDHqkWNKNA5MB+wgWxvbu1Nd98L8/EA0aG5ygSiM6AUr8TlxJ43kUatsuNqjM18y++1fpBLo+DRxGMpSRIuQWKIhAYsHjz3gVZpiBP6Jn266bfjnbpSzujd8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TemBDO3n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i4m6k7XQ"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3666ffc850eso51405ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710258170; x=1710862970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D2tjCaFOD85nEnhCR05G4D9nbK1x8BdziW9THhyUTAY=;
-        b=i4m6k7XQaNWFGX8iEZbaov2f1OT6TCHT/gCJoVXTr4qX/RkFx3iIp7LrIkwwJ/vb7q
-         5dXYU9BXAbPSdyYY5RyqNRnfP2QKEMHSBGRzhri41H5avGIK8zm8dAi7YSoMc3oY8M3t
-         5SSqGucfUhVwVIszA7SWs38sEZrrwHnIwxHY+0Sp4c5XayQfKhBTAi256vXh1/e6Jk+C
-         vKx4TKBPyxDBFZyt4cpASIooQA/Vx21aMVHbQdjVKDrExO7QXvysoyD3N9qQItHq0Thb
-         vKLnMlMV5XJ6REJwrDzjm8CdbEAGy54oaP8nXck687ZNRStjGXM9oC72bvA+PxWxuqe4
-         3RkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710258170; x=1710862970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D2tjCaFOD85nEnhCR05G4D9nbK1x8BdziW9THhyUTAY=;
-        b=THY+/6yvMXyTNYYVwMijaGdMTe9XMlfe+FQHTn+1sfb4uRq3dC0BHQyYYB53QKwgGO
-         J4jY9tNkDtrKzTCySSLEEZrpHN/g+Vv/DaCrdWUnfAyPyQKE4gbPW+caszxeiBTDsYzd
-         cD5jttvl+BSKUQe8/9jto8Rhn1wfSDposfTjSmVq41VS8zc0qZPKE7iJxkMvx1VFtVhT
-         /jrj6G2+hs7zFAvbCIZfpC6ukVeMIpqYgr3f5mdbfiLWVyRWEP42TaqcM2GrBvdJZMet
-         cyffJohny6zk9H2HyCHKLK/vRWAT4WQgnILtMxRFKX2eHTrTnwWHVsG9ZdEmC1akGjs1
-         Z20w==
-X-Forwarded-Encrypted: i=1; AJvYcCWVzQB6rRXCTLZzISyxBjV6Seie7n6Dz9QkppEN+ywIJAF5B7lZ35AQ1N8jBBB0A00z1yj2QWJul8RH08O82mVaqHg1tibAY47hzcdP
-X-Gm-Message-State: AOJu0YxweX70W2Ne7Y+QlDs3njUNUn1x2OscHd6Yx3AIP65Ipf4SjmDh
-	W/2NVwWdypDA5lGT9Z4HhV5nza6sJYJK5+eZuxPCtD5bT/pO5/FnRSfo0CMqS+Qp7ew4lQTcwaV
-	wi+Ht9FT3hbYcyNXAXirFIBuIu+8LlQAyBHr/JqJ+DZlqDyoNfQ95lQk=
-X-Google-Smtp-Source: AGHT+IGyr7fkPVmix7QIrcf09wKbqAG8ltOURX3fpz48z+SfwWPk4mdK5NdWsXlA1EfCdZ2UKlHIGUs11L92l22VPFs=
-X-Received: by 2002:a05:6e02:1ca5:b0:365:fe08:6ec5 with SMTP id
- x5-20020a056e021ca500b00365fe086ec5mr259243ill.12.1710258170384; Tue, 12 Mar
- 2024 08:42:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TemBDO3n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F2CC433C7;
+	Tue, 12 Mar 2024 15:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710258185;
+	bh=saSsJLPGKVqRyifWAvITNA+MsAjtts2uqCkZdCGrjgs=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=TemBDO3nAYXN5PjNextlJQDVn+cFCmHn/AifJjXH6yecbnsdNN8Ous1QY12Ws6cGx
+	 2eRXf8mSyuVI3HwcyjjVcIk91kh534i8hyGyDbalN1eZXfkQs8Pu56OJvudVLCWp2N
+	 fPdsDzwUn+99Jh8zVJwhktzAUB1IG0habTa2gU7ksuArwToqzBSa4vmVRZNSsKrp1s
+	 fjKckEktCEAjODpf8UymIbvTGSTv1tpJyXHGaFaWJSsUinXKYRGwerCLQ2p5D3yzM8
+	 QsDbA09IbM0jG5La0Z+u23T/tBCKlpI3Xg4/J7AIfG6p9yk0veQNhXzNbAmvlykzNi
+	 iWrLDRvuUxmAw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <Ze9vjxv42PN_QGZv@x1> <Ze93VPYpegMMt5kk@x1>
-In-Reply-To: <Ze93VPYpegMMt5kk@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 12 Mar 2024 08:42:36 -0700
-Message-ID: <CAP-5=fWw8qGB4Djm34_Apjf6jEk+LdhKP2pSkF2Z2q-qWW1UPA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf beauty: Move uapi/linux/fs.h copy out of the
- directory used to build perf
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 12 Mar 2024 17:43:01 +0200
+Message-Id: <CZRVXE96ZZA8.33VFES8S07YS9@kernel.org>
+Subject: Re: [RFC PATCH v2 3/3] tpm: of: If available use linux,sml-log to
+ get the log and its size
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, <mpe@ellerman.id.au>,
+ <linux-integrity@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+Cc: <linux-kernel@vger.kernel.org>, <rnsastry@linux.ibm.com>,
+ <peterhuewe@gmx.de>, <viparash@in.ibm.com>, <devicetree@vger.kernel.org>,
+ <jsnitsel@redhat.com>
+X-Mailer: aerc 0.17.0
+References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
+ <20240311132030.1103122-4-stefanb@linux.ibm.com>
+ <CZR7B45P71XS.53XNZD9FWZSL@kernel.org>
+ <916fb19b-daf8-4c1b-bc25-f071d2b3ae33@linux.ibm.com>
+In-Reply-To: <916fb19b-daf8-4c1b-bc25-f071d2b3ae33@linux.ibm.com>
 
-On Mon, Mar 11, 2024 at 2:27=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon Mar 11, 2024 at 10:33 PM EET, Stefan Berger wrote:
 >
-> It is mostly used only to generate string tables, not to build perf, so
-> move it to the tools/perf/trace/beauty/include/ hierarchy, that is used
-> just for scrapping.
 >
-> The only case where it was being used to build was in
-> tools/perf/trace/beauty/sync_file_range.c, because some older systems
-> doesn't have the SYNC_FILE_RANGE_WRITE_AND_WAIT define, just use the
-> system's linux/fs.h header instead, defining it if not available.
+> On 3/11/24 16:25, Jarkko Sakkinen wrote:
+> > On Mon Mar 11, 2024 at 3:20 PM EET, Stefan Berger wrote:
+> >> If linux,sml-log is available use it to get the TPM log rather than th=
+e
+> >> pointer found in linux,sml-base. This resolves an issue on PowerVM and=
+ KVM
+> >> on Power where after a kexec the memory pointed to by linux,sml-base m=
+ay
+> >> have become inaccessible or corrupted. Also, linux,sml-log has replace=
+d
+> >> linux,sml-base and linux,sml-size on these two platforms.
+> >>
+> >> Keep the handling of linux,sml-base/sml-size for powernv platforms tha=
+t
+> >> provide the two properties via skiboot.
+> >>
+> >> Fixes: c5df39262dd5 ("drivers/char/tpm: Add securityfs support for eve=
+nt log")
+> >> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> >=20
+> > I'm worried about not being up to date and instead using "cached" value=
+s
+> > when verifying anything from a security chip. Does this guarantee that
+> > TPM log is corrupted and will not get updated somehow?
 >
-> This is something that should've have been done already, as happened
-> with the linux/socket.h scrapper, do it now as Ian suggested while doing
-> an audit/refactor session in the headers used by perf.
 >
-> No other tools/ living code uses it, just <linux/fs.h> coming from
-> either 'make install_headers' or from the system /usr/include/
-> directory.
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/lkml/CAP-5=3DfWZVrpRufO4w-S4EcSi9STXcTAN2ER=
-LwTSN7yrSSA-otQ@mail.gmail.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> What do you mean 'guarantee that TPM log is corrupted'?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I presume that this is for power architecture but I have no idea what
+leads log being corrupted, and is the scope all of that that arch or
+some subset of CPUs.
 
-Thanks,
-Ian
+The commit message is not very detailed on kexec scenario. It more like
+assumes that reader knows all the detail beforehand. So probably this
+will start to make sense once the backing story is improved, that's
+all.
+
+> The TPM was handed over from the firmware to Linux and the firmware then=
+=20
+> freed all memory associated with the log and will then not create a new=
+=20
+> log or touch the TPM or do anything that would require an update to the=
+=20
+> handed-over log. Linux also does not append to the firmware log. So=20
+> whatever we now find in linux,sml-log would be the latest firmware log=20
+> and the state of the 'firmware PCRs' computed from it should correspond=
+=20
+> to the current state of the 'firmware PCRs'.
+
+So on what CPU this happens and is there any bigger picture for that
+design choice in the firmware?
+
+If it is a firmware bug, this should emit FW_BUG log message. If not,
+then this commit message should provide the necessary context.
+
+BR, Jarkko
