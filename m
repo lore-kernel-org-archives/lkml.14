@@ -1,77 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69A626286
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 23:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C968467;
+	Tue, 12 Mar 2024 23:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710284778; cv=none; b=sxW7XFADVHBpKdVNxk7o8ArwUM+wdWVy5HQ/OpjvdwEGd+3+O/TA+JMgbGyqFtEOdXzMJgXzDeJkw0JLXs6NWn37M+VNdWu9Uf1jaZCvHzsGB7nxjfsQPPbFCRAHzPmZDeKJ39kcS79Dtdj5So1E/QMubBwjjc5scFJvxEpNhSo=
+	t=1710285196; cv=none; b=Q6BI/qjHlwi2S7p33TIeb9MMgxXHNIwHM5vhVUOkFWFbH0s5z240IMq0rYJ2WrE4gl5Dmv/S/k+JOd7v6I6WhrjDPOvQByZTe+8yRDLf49bGAWmKGCYOCFjiGGGs8kTSlgJgT0P9x3egyWorWqXr3Wbn3YXiuS+odQnJKfE4f14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710284778; c=relaxed/simple;
-	bh=9eDnSFXNy8nzr190Z9PURmwYJ8sNZi/Vd4eFppNmsr4=;
+	s=arc-20240116; t=1710285196; c=relaxed/simple;
+	bh=7NwAqzcbnrvXpLI+g+cYC9rPgqiwHgqcCGd321u9IaY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5b4jo3C+t06eAHgWIh5newUrLPBFN1w/EVrOVu7bIyxjyckgymZG6BTz+osuqwIWrq/ghcOoJ8JuXarUTuxQ2ndZws2S40mcQa0OXdQnyN/h6CMzrfaO/A0Evj3y0prDgVjGcS8dnuYeniurqn/cKi6M2quvlvsidFmExjyiUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiUZw4o0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QFoELQB+yUG3Yls+gMJ0ih2f90A1y6ITS6vxUKYxfOD8gymiNCZJEV+YSVcRd0EBAoZp+/hdRLpBP9Cm+x7F6HaB87pCzBRElkduLl753zq+FngWiiO3vwSspg/IhygVLaWKWnnDECK6kXd3rVV+5PgVLoc7sT+f4jO9nNWEEkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJbE9yie; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiUZw4o0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1DEC43390;
-	Tue, 12 Mar 2024 23:06:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJbE9yie"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6D6C433C7;
+	Tue, 12 Mar 2024 23:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710284778;
-	bh=9eDnSFXNy8nzr190Z9PURmwYJ8sNZi/Vd4eFppNmsr4=;
+	s=k20201202; t=1710285195;
+	bh=7NwAqzcbnrvXpLI+g+cYC9rPgqiwHgqcCGd321u9IaY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IiUZw4o0gts/d+Cl8Spf7u6L4n9Jx5PO/CEkDIAZrGBg6wGB+Snq+b0vG09BHbiXu
-	 e55wJ1cYTdAafnBcZh7e6s5OxBR0dRPPYGER2SnBJa5L/WiIGCODw6jb2OPfLwZoeo
-	 ffzuf0nW2vS+tpKSORAml9i9ptVN2FH66kLNsnnFdud6WBZOAlCegvW5AM1b1tzSF5
-	 1havU1JzvcSRFTRf53NioSlaE3bON9uENO2mjlkCLEhc9lmdhPyjas/CnMHJkRXMNt
-	 0n+NuOtVxrStbBqhxx7EYy6g07v1XfS68WBgkkbsY91490oak7h1dvsijKMk3Atlc7
-	 CJSfo0lae4Leg==
-Date: Tue, 12 Mar 2024 16:06:16 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] Improve performance of 'faddr2line'
-Message-ID: <20240312230616.u7rvo2iowdumlm2v@treble>
-References: <20240311204019.1183634-1-bjohannesmeyer@gmail.com>
+	b=aJbE9yiePEehho9goUJFvFbQiYTBmie9ybqS8PYl4CbfH4mGo7nZBFYiJVzhXDH/h
+	 r0DB0A0X4I/37xQkdTbGWom5qNLYBUo4/wlMwrCTZUiQMDr5GvSxFWOCWIRXxfubFA
+	 U06YJHKHBhw0Y/AkpM765vfubCmIE2rSxbzWEllVKkOy8qm5tcRGwZnxZO2ogeo5qK
+	 vnpEbwxLh5NfLOV6lgkl3ebeb1ChaA8BXCtq0oVLJt7yjgatR6GE813/yIlEKOSkQ0
+	 DShnQjxKoV7Y5kEs8leNLcQmAFLsSv1EkFwwHtfEYwJY9cXc1gtRsia8KRlIYnzOmb
+	 y/LGfMFvIkXVw==
+Date: Wed, 13 Mar 2024 00:13:13 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: jalliste@amazon.co.uk, mhiramat@kernel.org, akpm@linux-foundation.org,
+	pmladek@suse.com, rdunlap@infradead.org, tsi@tuyoix.net,
+	nphamcs@gmail.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	pbonzini@redhat.com, seanjc@google.com, paulmck@kernel.org
+Subject: Re: [RFC] cputime: Introduce option to force full dynticks
+ accounting on NOHZ & NOHZ_IDLE CPUs
+Message-ID: <ZfDhiakZWIYGSUTl@pavilion.home>
+References: <20240219175735.33171-1-nsaenz@amazon.com>
+ <CZR39LW50A9F.1DWG2FYJ3OZP8@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240311204019.1183634-1-bjohannesmeyer@gmail.com>
+In-Reply-To: <CZR39LW50A9F.1DWG2FYJ3OZP8@amazon.com>
 
-On Mon, Mar 11, 2024 at 09:40:12PM +0100, Brian Johannesmeyer wrote:
-> Hello,
+Le Mon, Mar 11, 2024 at 05:15:26PM +0000, Nicolas Saenz Julienne a écrit :
+> Hi Frederic,
 > 
-> I was looking at the performance of faddr2line and noticed that it spends
-> most of its time performing two tasks:
-> - (1) Making redundant calls to readelf and addr2line for each address
->   (e.g., it makes 7 readelf calls and 2 addr2line calls when converting 1
-> address, and it makes 252 readelf calls and 51 addr2line calls when
-> converting 50 addresses); and
-> - (2) Calculating a symbolâ€™s size by unnecessarily looping through every
->   symbol in a particular section.
+> On Mon Feb 19, 2024 at 5:57 PM UTC, Nicolas Saenz Julienne wrote:
+> > Under certain extreme conditions, the tick-based cputime accounting may
+> > produce inaccurate data. For instance, guest CPU usage is sensitive to
+> > interrupts firing right before the tick's expiration. This forces the
+> > guest into kernel context, and has that time slice wrongly accounted as
+> > system time. This issue is exacerbated if the interrupt source is in
+> > sync with the tick, significantly skewing usage metrics towards system
+> > time.
+> >
+> > On CPUs with full dynticks enabled, cputime accounting leverages the
+> > context tracking subsystem to measure usage, and isn't susceptible to
+> > this sort of race conditions. However, this imposes a bigger overhead,
+> > including additional accounting and the extra dyntick tracking during
+> > user<->kernel<->guest transitions (RmW + mb).
+> >
+> > So, in order to get the best of both worlds, introduce a cputime
+> > configuration option that allows using the full dynticks accounting
+> > scheme on NOHZ & NOHZ_IDLE CPUs, while avoiding the expensive
+> > user<->kernel<->guest dyntick transitions.
+> >
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
+> > Signed-off-by: Jack Allister <jalliste@amazon.co.uk>
+> > ---
 > 
-> This patch series consists of the following parts:
-> - Patches 1-2 reduce the total number of readelf calls to one,
-> - Patches 3-4 make minor changes in preparation for the following patches,
-> - Patches 5-6 reduce the total number of addr2line calls to one, and
-> - Patch 7 modifies the symbol size calculation to only check two symbols.
-> 
-> I evaluated the performance of the patch series by running faddr2line with
-> a standard kernel image (X86_64 defconfig with CONFIG_DEBUG_INFO enabled).
-> When converting only 1 address, the patch series gives a negligible
-> speedup. When converting 50 addresses, however, it gives a 15x speedup.
+> Would you be opposed to introducing a config option like this? Any
+> alternatives you might have in mind?
 
-This looks really nice.
-
-If testing runs ok, I'll go ahead and queue it up.
+I'm not opposed to the idea no. It is not the first time I hear about people
+using generic virt Cputime accounting for precise stime/utime measurements on
+benchmarks. But let me sit down and have a look at your patch. Once I find
+my way through performance regression reports and rcutorture splats anyway...
 
 Thanks!
-
--- 
-Josh
