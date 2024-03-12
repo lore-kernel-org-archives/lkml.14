@@ -1,284 +1,126 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AF278273;
-	Tue, 12 Mar 2024 09:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F67078273;
+	Tue, 12 Mar 2024 09:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710236495; cv=none; b=ZbTOulhdLw+++OtY683nKbzLHkEDoCNXrIW3FESjfrBDC8IJM8yQLJ3CyoctQavDA5YH8WuaL4+DT+FyU4Q9rvz+e1rqsOtepY9T3DdeRD+tJ1c/a//WkpObsnbfTKbFvpWfP/rNkH4KJd0S7y4H75RMORduz5ECfAW0nJLZax8=
+	t=1710236502; cv=none; b=C8xkOxOdgkwghsX8LLlr0FdVFWEn9+cCLRgEiOh2RM3HDFfnuQyG3GTWt8XcAhDCAXV7V6rbTpr4YFL4Caq8SOtTNFFusQt9cwVT0bkHaQcxChtTXtaTTDODrTWIRLluFY0JBnD308WoL9NJo7CFPb+3UJR4RVQZCgmsUDMiHrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710236495; c=relaxed/simple;
-	bh=9BVd3T4GZqlg+poIfhaoPYk3KkThuqvVtjsxrrpVzUg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nXsjDloJSJjTY1IYr81d91FJtZJfe9iTyfdcFrYgOo2ukmQqw19ry4ICQz/avYpvbtpPGC9V+phYCf4Wq8KpEjge7+eO3334C8ShFZ3aN/NWFnDOeg2DDTLr0X4o3bWuXI1m6DXx8GYb1Dl1S8XeIavYxCYu9AarsH7yPI10UVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tv7pW0sy4z688hZ;
-	Tue, 12 Mar 2024 17:37:23 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (unknown [7.191.162.67])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5738E140D1D;
-	Tue, 12 Mar 2024 17:41:28 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 12 Mar 2024 09:41:27 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
- Tue, 12 Mar 2024 09:41:27 +0000
-From: Shiju Jose <shiju.jose@huawei.com>
-To: fan <nifan.cxl@gmail.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
-Thread-Topic: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox command
-Thread-Index: AQHaZmXa2rf54FiQvUO4a7U5LboEzbEzJw+AgADJeeA=
-Date: Tue, 12 Mar 2024 09:41:27 +0000
-Message-ID: <b6aa1dd19ab44b7db7b9aa1318c5d8b0@huawei.com>
-References: <20240223143723.1574-1-shiju.jose@huawei.com>
- <20240223143723.1574-4-shiju.jose@huawei.com> <Ze91l0jz_DZR9jjx@debian>
-In-Reply-To: <Ze91l0jz_DZR9jjx@debian>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1710236502; c=relaxed/simple;
+	bh=2aEimQhgFxmWJYn6GcjIbcGQw3slBQN7rqnpfFA3a7Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PqhL/5dSVMOWO3QfQ+Db6LcALucokzHqbwiMcAClPLCiTYuTIucyx+OHBcaoxArZJPy3Njn6DbY9xtQBYL8uixMyWn3icGmJLOh0Q4VWrAQcbi9uLyPOIDoGhqZ0gxu6HXp97/kLsxBwv5dIC1ho6ZxcVSgIpNXOyRYNFCLYw28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qSi5GOWk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qSi5GOWk"
+Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EA2BE6BE;
+	Tue, 12 Mar 2024 10:41:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710236472;
+	bh=2aEimQhgFxmWJYn6GcjIbcGQw3slBQN7rqnpfFA3a7Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qSi5GOWkNp3rBG+Pufp3fLgvoZAdTjDz5F1yUlw1L5lAuqhN4wOPTCZUrBaXvfeXt
+	 lzF7dcBxpbuyUQnjnefVejUMbdK0E5wWDYrVwgr4VMBJPtzLn1jAcpjpEBi4NHZP7a
+	 5i+VV31WDxc3w7NpTewN2bdgkBS1jziWKcP3cQv8=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: [PATCH 0/4] drm: xlnx: zynqmp: Add DP audio support
+Date: Tue, 12 Mar 2024 11:41:01 +0200
+Message-Id: <20240312-xilinx-dp-audio-v1-0-696c79facbb9@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC0j8GUC/x3MQQqAIBBA0avErBvISaS6SrSQHGsgLJRCkO6et
+ HyL/wskjsIJpqZA5EeSnKFCtQ2suw0bo7hqoI501yvCLIeEjO5Cezs5UZvBOkV+9EZDra7IXvJ
+ /nJf3/QBk1wuEYQAAAA==
+To: Lars-Peter Clausen <lars@metafoo.de>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Vishal Sagar <vishal.sagar@amd.com>, 
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
+ =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2156;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=2aEimQhgFxmWJYn6GcjIbcGQw3slBQN7rqnpfFA3a7Q=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBl8CNGUu4queGy9PSBXJQ9gvh4uSIIYmIqaQ6Ez
+ ookQ6CorvqJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZfAjRgAKCRD6PaqMvJYe
+ 9QkSD/wMNPPabtvMaovE9RIESQnKyXvtLUuJQNoSaZh/P+61WDzI5Bk2WfJpuEm+lNWNTsr/DWb
+ 3zutn7tAFHWMg1OlttiXezVNI/+3RtNRlGK96b39sgvbDt/NZgfG7QPsKrOgzqYv7KIdFpF7oJj
+ G1LJIcdaOT37n5Umfxj+xPlOhONzSZC4jGLISJ0yl8rSf6pP8eq1NZNcw441ACUzqx2p9ZNjYp/
+ v2hgYJXwk1AVrzZf371WoihZCoP7DMg1hCDzGpqxt2GjaqrEYDKmEbySZn3syNZCnUj9rzUjQMg
+ ob0V0GhpXbPzwYxLF9Two7PMmXnirLV1PfWIlr/zYpx2LocGygZj5a8VjVFQaZ0BHw14E/9s+qC
+ nLVk+GRrxQHlm35KcfK5bREWj3hiW5hyEwCFUWi3szZwaVY3/4rlgKE9kvNSJAWulSIYml78Wp2
+ WiEtHilmRiP6HG7YzKyke2ZuU1v94IEm9xCAE/Q6MoFFsZRKvACPgjJqw1KT7Ci9U4TttEv8FqJ
+ 0G0nuVEmvbZmNkvs1DAxGzRMfv2TZ6SwPr3K5dcAIG7Se4uEgWy5KlUyQJq6xyzERc0V9cShiks
+ QGYKu1ajblPxpysQfYeTUgAhKwmDlQ/WKHvAoohXjin0IKfS0zQ0ohnKDQK8KU5GrLwyULVhx6B
+ YRT4z38AeIRF89g==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Hi Fan,
+Add DisplayPort audio support for Xilinx ZynqMP platforms.
 
->-----Original Message-----
->From: fan <nifan.cxl@gmail.com>
->Sent: 11 March 2024 21:20
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
->mm@kvack.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; david@redhat.com=
-;
->Vilas.Sridharan@amd.com; leo.duran@amd.com; Yazen.Ghannam@amd.com;
->rientjes@google.com; jiaqiyan@google.com; tony.luck@intel.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com; rafael@kernel.org;
->lenb@kernel.org; naoya.horiguchi@nec.com; james.morse@arm.com;
->jthoughton@google.com; somasundaram.a@hpe.com;
->erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->mike.malvestuto@intel.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>=
-;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [RFC PATCH v7 03/12] cxl/mbox: Add SET_FEATURE mailbox
->command
->
->On Fri, Feb 23, 2024 at 10:37:14PM +0800, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add support for SET_FEATURE mailbox command.
->>
->> CXL spec 3.1 section 8.2.9.6 describes optional device specific features=
-.
->> CXL devices supports features with changeable attributes.
->> The settings of a feature can be optionally modified using Set Feature
->> command.
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/cxl/core/mbox.c | 67
->+++++++++++++++++++++++++++++++++++++++++
->>  drivers/cxl/cxlmem.h    | 30 ++++++++++++++++++
->>  2 files changed, 97 insertions(+)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c index
->> c078e62ea194..d1660bd20bdb 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -1366,6 +1366,73 @@ size_t cxl_get_feature(struct cxl_memdev_state
->> *mds,  }  EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
->>
->> +int cxl_set_feature(struct cxl_memdev_state *mds,
->> +		    const uuid_t feat_uuid, u8 feat_version,
->> +		    void *feat_data, size_t feat_data_size,
->> +		    u8 feat_flag)
->> +{
->> +	struct cxl_memdev_set_feat_pi {
->> +		struct cxl_mbox_set_feat_hdr hdr;
->> +		u8 feat_data[];
->> +	}  __packed;
->> +	size_t data_in_size, data_sent_size =3D 0;
->> +	struct cxl_mbox_cmd mbox_cmd;
->> +	size_t hdr_size;
->> +	int rc =3D 0;
->> +
->> +	struct cxl_memdev_set_feat_pi *pi __free(kfree) =3D
->> +					kmalloc(mds->payload_size,
->GFP_KERNEL);
->> +	pi->hdr.uuid =3D feat_uuid;
->> +	pi->hdr.version =3D feat_version;
->> +	feat_flag &=3D ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
->> +	hdr_size =3D sizeof(pi->hdr);
->> +	/*
->> +	 * Check minimum mbox payload size is available for
->> +	 * the feature data transfer.
->> +	 */
->> +	if (hdr_size + 10 > mds->payload_size)
->
->Where does this magic number come from?
+This depends on patch adding cyclic DMA mode for DPDMA driver:
 
-This represents minimum extra number of bytes to be available in the mail b=
-ox
-for storing the actual feature data to work with multipart feature data tra=
-nsfers.
-This will be set as a definition in the next version and however not sure t=
-he
-best value to be set.
->
->Fan
->
->> +		return -ENOMEM;
->> +
->> +	if ((hdr_size + feat_data_size) <=3D mds->payload_size) {
->> +		pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
->> +		data_in_size =3D feat_data_size;
->> +	} else {
->> +		pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
->> +		data_in_size =3D mds->payload_size - hdr_size;
->> +	}
->> +
->> +	do {
->> +		pi->hdr.offset =3D cpu_to_le16(data_sent_size);
->> +		memcpy(pi->feat_data, feat_data + data_sent_size,
->data_in_size);
->> +		mbox_cmd =3D (struct cxl_mbox_cmd) {
->> +			.opcode =3D CXL_MBOX_OP_SET_FEATURE,
->> +			.size_in =3D hdr_size + data_in_size,
->> +			.payload_in =3D pi,
->> +		};
->> +		rc =3D cxl_internal_send_cmd(mds, &mbox_cmd);
->> +		if (rc < 0)
->> +			return rc;
->> +
->> +		data_sent_size +=3D data_in_size;
->> +		if (data_sent_size >=3D feat_data_size)
->> +			return 0;
->> +
->> +		if ((feat_data_size - data_sent_size) <=3D (mds->payload_size -
->hdr_size)) {
->> +			data_in_size =3D feat_data_size - data_sent_size;
->> +			pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
->> +		} else {
->> +			pi->hdr.flags =3D cpu_to_le32(feat_flag |
->> +
->CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
->> +		}
->> +	} while (true);
->> +
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
->> +
->>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->>  		       struct cxl_region *cxlr)
->>  {
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
->> bcfefff062a6..a8d4104afa53 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -531,6 +531,7 @@ enum cxl_opcode {
->>  	CXL_MBOX_OP_GET_LOG		=3D 0x0401,
->>  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	=3D 0x0500,
->>  	CXL_MBOX_OP_GET_FEATURE		=3D 0x0501,
->> +	CXL_MBOX_OP_SET_FEATURE		=3D 0x0502,
->>  	CXL_MBOX_OP_IDENTIFY		=3D 0x4000,
->>  	CXL_MBOX_OP_GET_PARTITION_INFO	=3D 0x4100,
->>  	CXL_MBOX_OP_SET_PARTITION_INFO	=3D 0x4101,
->> @@ -773,6 +774,31 @@ struct cxl_mbox_get_feat_in {
->>  	u8 selection;
->>  }  __packed;
->>
->> +/* Set Feature CXL 3.1 Spec 8.2.9.6.3 */
->> +/*
->> + * Set Feature input payload
->> + * CXL rev 3.1 section 8.2.9.6.3 Table 8-101  */
->> +/* Set Feature : Payload in flags */
->> +#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
->> +enum cxl_set_feat_flag_data_transfer {
->> +	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
->> +	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
->> +};
->> +#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
->> +
->> +struct cxl_mbox_set_feat_hdr {
->> +	uuid_t uuid;
->> +	__le32 flags;
->> +	__le16 offset;
->> +	u8 version;
->> +	u8 rsvd[9];
->> +}  __packed;
->> +
->>  /* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */  struct
->> cxl_mbox_poison_in {
->>  	__le64 offset;
->> @@ -912,6 +938,10 @@ size_t cxl_get_feature(struct cxl_memdev_state
->*mds,
->>  		       size_t feat_out_size,
->>  		       size_t feat_out_min_size,
->>  		       enum cxl_get_feat_selection selection);
->> +int cxl_set_feature(struct cxl_memdev_state *mds,
->> +		    const uuid_t feat_uuid, u8 feat_version,
->> +		    void *feat_data, size_t feat_data_size,
->> +		    u8 feat_flag);
->>  int cxl_poison_state_init(struct cxl_memdev_state *mds);  int
->> cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->>  		       struct cxl_region *cxlr);
->> --
->> 2.34.1
->>
+https://lore.kernel.org/all/20240228042124.3074044-3-vishal.sagar@amd.com/
 
-Thanks,
-Shiju
+If that patch is missing, starting an audio playback will fail with an
+ASoC error.
+
+The current DT is, for some reason, missing the DMA channels for the
+audio. This series adds that to the bindings and the dts file, but to
+support older dtb files without the audio DMA, the driver will not fail
+if the audio DMA is missing, but will just mark the audio support as
+disabled.
+
+The series also includes an improvement to the
+soc-generic-dmaengine-pcm.c, required to support two dmaengine_pcms.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+Tomi Valkeinen (4):
+      ASoC: dmaengine_pcm: Allow passing component name via config
+      dt-bindings: display/xlnx/zynqmp-dpsub: Add audio DMAs
+      arm64: dts: zynqmp: Add DMA for DP audio
+      drm: xlnx: zynqmp_dpsub: Add DP audio support
+
+ .../bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml   |  10 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   7 +-
+ drivers/gpu/drm/xlnx/Kconfig                       |   9 +
+ drivers/gpu/drm/xlnx/Makefile                      |   1 +
+ drivers/gpu/drm/xlnx/zynqmp_disp.c                 |  50 ---
+ drivers/gpu/drm/xlnx/zynqmp_disp_regs.h            |   7 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c                   |  54 ++-
+ drivers/gpu/drm/xlnx/zynqmp_dp.h                   |   7 +
+ drivers/gpu/drm/xlnx/zynqmp_dp_audio.c             | 461 +++++++++++++++++++++
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.c                |  39 +-
+ drivers/gpu/drm/xlnx/zynqmp_dpsub.h                |  15 +-
+ include/sound/dmaengine_pcm.h                      |   2 +
+ sound/soc/soc-core.c                               |   8 +-
+ sound/soc/soc-generic-dmaengine-pcm.c              |   3 +
+ 14 files changed, 563 insertions(+), 110 deletions(-)
+---
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+change-id: 20240312-xilinx-dp-audio-468ad12f9f64
+
+Best regards,
+-- 
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
