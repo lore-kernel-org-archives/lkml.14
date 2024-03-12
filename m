@@ -1,127 +1,85 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEADC138483
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 17:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15B7137C3A;
+	Tue, 12 Mar 2024 17:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710263971; cv=none; b=m2HsNy701y8bVW66CU4rN0zdjR2jyM6zL8Sgw59SQLCdaouV+I9V0uSdOgWHLu2AQV/qbzcNsJMGaQjiBf964TdOE9VDi0/Eob8eNY9hRKzMsgnWI3WzX5olitH7lubrvkG1TuozkguettEZ8FHfZGG3gYQAFUic/f9DCFJaiVA=
+	t=1710264072; cv=none; b=BDmbmfXOpacGxz968TcUGmuFUw+sDevv0SeAQ1UGhOS8gHEc4NGOG04gxx5NT53l8Yz6Tcnh7EI+2lmP5Cs1LnyJogu3XN+YYeCYBZup3jrtX/kTjq+J4wLNT+DARDGObhZaWUsqGNJ1nVeG8oUcV58rdOdYUpaH9u5M2mtAa2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710263971; c=relaxed/simple;
-	bh=hdtuhTEpAOXd9JCt1DPtGZWNz6gzkTQigsXJb9JT4bY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Hqa/5Ee0fiTbtD6z9qaRS8SaAMl222BHEDlCUkZndjEQs6H78h5u0QUR59Jxhwqz8AbWOo/ldBWUS3mIDQUKfxIhIqaFUUR6RDYYzpP3awvyhUDiOSl1dplviB3tZiQ9xfGplPyQJEtYHY4DKRUlpqKO7ZvjwIlgBwF1PjVX0zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=mLp1Ekhg; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1710264072; c=relaxed/simple;
+	bh=6V6GW1BvyQK/faDNyVxthxDLtscWzzjZUS4ESvRtIpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tpq7lXqgNdJnG4ETfxWONgSZ0/g5RfPH+Ow0FrPK18TdzDHF2ElsRlsksq0pEuktycI5XqGp+NKUYvi5AwOT7JePUXZ9j/EW0cE5jmPklGdmlcDm1DYgBTO9zzN307T8+CgZ95AY4SunfCOhnaYNOdUkbtU2+5dSTdXXr+MvuDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bKV79gVN; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mLp1Ekhg"
-Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 42CHIGVW1562136
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 12 Mar 2024 10:18:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 42CHIGVW1562136
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1710263899;
-	bh=Qe3oFmqY5MEQgBRHG9tAoiRCX5zfTbErpUtF36h8c24=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=mLp1EkhgGinRLcAGo8uGBaxXRz4LyCYuneOqQidnn7SHNigpbVDY+9R9UYgZaugvz
-	 pybLWZ5O1JTDCT4asghe5oUkn6PLjyI/zfGKtfiwR5bN4zqH9pRFu90V+e88Aebqp2
-	 vszN1QorH3ASTGbSs4NJ5WS1jmYrdiI0HWqDN2dFYjbIGrmJY68nFyzsJFMdMpfPcZ
-	 p0LUGdVWGyBe3LoXS2WoQkQ/ea0HIp1eUXwRnqkBiTiIDXE+WV2By5fA4lbPCQEbB+
-	 CcWgj1ozJ4SJm3cdsS8LRFyiI4ADdFFe/NIsv56OqXZwHXXQLSFDnY14wTBYTp4UTd
-	 YH5rvrAVUJrZQ==
-Message-ID: <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
-Date: Tue, 12 Mar 2024 10:18:10 -0700
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bKV79gVN"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd10ae77d8so43862105ad.0;
+        Tue, 12 Mar 2024 10:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1710264070; x=1710868870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MbzYizPrcA31r27IhlGfXYPRToUyr5sIrzzrrp+vlHg=;
+        b=bKV79gVNlxT+6CeoDuC7AtYeapFBanaVauubQYtIuDA1wueT9ddTD6yfxDPaFlzvWi
+         SLP0CsTtLLHcPLPUViBJwbdoTNSGzVl7SVyFesUxR2Dq4PZEJx+Q40iBQ+AFNTqeR4B8
+         pgSuQOn01FQTqd1w8d6YiXPCxt0f9hJmc3pDuL3QJDmqjZYuuEv392Ywo4tP8sUN0gLh
+         GVDg/Y8VKeaeekMOSHfRj0c8UWVBhC30mbFLbR4GRzG6wTogoIArBWwTGMcqtDu5Feek
+         s8yAKnZmxudYOZz/3nm6MPnbJhO9bv2q7osHPphspcxWkyjty8nKpe7zuHymul8bhWCo
+         0i9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710264070; x=1710868870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MbzYizPrcA31r27IhlGfXYPRToUyr5sIrzzrrp+vlHg=;
+        b=AbemwH3mev7lUf0d6+4ID0mMFYLmAFWtOV53SwSpfZGzRjt4SD3+kHmcKm5e7F7sKo
+         UUP4zfnVyUntSDEPM7UhkmpldkGmoDdVgwKDJSj2WcWo76VPWnbpu4MRzTZDuQ7L/CBm
+         HLfXOTYv0QAtrafKjOqsc7qghjf0nOeM/WTPy1eMyJHYuhRLk/jRhXxdbh1zFGJMFBHG
+         pi6eROe0SsSApgnlozfzYFXwkqq8fkFrR0xZXZvsyMBGjj50Wmi0hUf+NcVomzPz0qfP
+         cWu4Qj/oSHbBY2kt65vXipgw+wnwqhfqk8WTNhq72XVh6kLbKrn5i2w8226+9mVpS1S6
+         Iw8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVgM2A5GBreFR2mifHBZ060JLI04pQsFgCKzGt+/r0n47ZmsfUNPVdyna1QUdDMxpoliSrRS0mORI/f+kvfJMNMhSMjHljHlyP2N/Xd00mRNRDWZEy7p+7zRlgiaMbvym7FANQNNByKaw==
+X-Gm-Message-State: AOJu0Yx916JsMv24P+KDO65+q0IFFS6wZaW/XMtGCpePMjS78XLXRWWx
+	DWJo8aR3Qgf1MJM5yBzWIl+18lNZ5xol5XUjpO6ljoNTbGbx/armN0M1qlY65koGgPS9vN7219E
+	lW71JPm6R0QBnX6MnEw5jhyx9nt0=
+X-Google-Smtp-Source: AGHT+IGbu3in/CKHQtuChqNrVACfSVFLlMyrSjQJ9lpv588lBvl8onmp+AGlxEmJDhJDIS0HIA9ruCBxORmovg9TRyw=
+X-Received: by 2002:a17:902:7ed0:b0:1dc:de65:623b with SMTP id
+ p16-20020a1709027ed000b001dcde65623bmr1927169plb.60.1710264069927; Tue, 12
+ Mar 2024 10:21:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
-Content-Language: en-US
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, x86@kernel.org,
-        bp@alien8.de, brauner@kernel.org, bristot@redhat.com,
-        bsegall@google.com, dave.hansen@linux.intel.com, dianders@chromium.org,
-        dietmar.eggemann@arm.com, eric.devolder@oracle.com, hca@linux.ibm.com,
-        hch@infradead.org, jacob.jun.pan@linux.intel.com, jgg@ziepe.ca,
-        jpoimboe@kernel.org, jroedel@suse.de, juri.lelli@redhat.com,
-        kent.overstreet@linux.dev, kinseyho@google.com,
-        kirill.shutemov@linux.intel.com, lstoakes@gmail.com, luto@kernel.org,
-        mgorman@suse.de, mic@digikod.net, michael.christie@oracle.com,
-        mingo@redhat.com, mjguzik@gmail.com, mst@redhat.com, npiggin@gmail.com,
-        peterz@infradead.org, pmladek@suse.com, rick.p.edgecombe@intel.com,
-        rostedt@goodmis.org, surenb@google.com, tglx@linutronix.de,
-        urezki@gmail.com, vincent.guittot@linaro.org, vschneid@redhat.com
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240312-basic_dt-v1-0-7f11df3a0896@amlogic.com> <20240312-basic_dt-v1-1-7f11df3a0896@amlogic.com>
+In-Reply-To: <20240312-basic_dt-v1-1-7f11df3a0896@amlogic.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 12 Mar 2024 18:20:58 +0100
+Message-ID: <CAFBinCBiCoOY7wK+8j4kNZwny5LFTX99PLk03gUvqnGxJXgvEg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: arm: amlogic: add A4 support
+To: xianwei.zhao@amlogic.com
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 3/11/24 09:46, Pasha Tatashin wrote:
-> This is follow-up to the LSF/MM proposal [1]. Please provide your
-> thoughts and comments about dynamic kernel stacks feature. This is a WIP
-> has not been tested beside booting on some machines, and running LKDTM
-> thread exhaust tests. The series also lacks selftests, and
-> documentations.
-> 
-> This feature allows to grow kernel stack dynamically, from 4KiB and up
-> to the THREAD_SIZE. The intend is to save memory on fleet machines. From
-> the initial experiments it shows to save on average 70-75% of the kernel
-> stack memory.
-> 
-> The average depth of a kernel thread depends on the workload, profiling,
-> virtualization, compiler optimizations, and driver implementations.
-> However, the table below shows the amount of kernel stack memory before
-> vs. after on idling freshly booted machines:
-> 
-> CPU           #Cores #Stacks  BASE(kb) Dynamic(kb)   Saving
-> AMD Genoa        384    5786    92576       23388    74.74%
-> Intel Skylake    112    3182    50912       12860    74.74%
-> AMD Rome         128    3401    54416       14784    72.83%
-> AMD Rome         256    4908    78528       20876    73.42%
-> Intel Haswell     72    2644    42304       10624    74.89%
-> 
-> Some workloads with that have millions of threads would can benefit
-> significantly from this feature.
-> 
-
-Ok, first of all, talking about "kernel memory" here is misleading. 
-Unless your threads are spending nearly all their time sleeping, the 
-threads will occupy stack and TLS memory in user space as well.
-
-Second, non-dynamic kernel memory is one of the core design decisions in 
-Linux from early on. This means there are lot of deeply embedded 
-assumptions which would have to be untangled.
-
-Linus would, of course, be the real authority on this, but if someone 
-would ask me what the fundamental design philosophies of the Linux 
-kernel are -- the design decisions which make Linux Linux, if you will 
--- I would say:
-
-	1. Non-dynamic kernel memory
-	2. Permanent mapping of physical memory
-	3. Kernel API modeled closely after the POSIX API
-	   (no complicated user space layers)
-	4. Fast system call entry/exit (a necessity for a
-	   kernel API based on simple system calls)
-	5. Monolithic (but modular) kernel environment
-	   (not cross-privilege, coroutine or message passing)
-
-Third, *IF* this is something that should be done (and I personally 
-strongly suspect it should not), at least on x86-64 it probably should 
-be for FRED hardware only. With FRED, it is possible to set the #PF 
-event stack level to 1, which will cause an automatic stack switch for 
-#PF in kernel space (only). However, even in kernel space, #PF can sleep 
-if it references a user space page, in which case it would have to be 
-demoted back onto the ring 0 stack (there are multiple ways of doing 
-that, but it does entail an overhead.)
-
-	-hpa
+On Tue, Mar 12, 2024 at 10:19=E2=80=AFAM Xianwei Zhao via B4 Relay
+<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
+[...]
+> +      - description: Boards with the Amlogic A4 A113L2 SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,ba400
+> +              - amlogic,ba401
+> +              - amlogic,ba409
+Within this series you are only sending a .dts with "amlogic,ba400"
+What about the other two compatible strings?
