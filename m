@@ -1,63 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4841144055;
-	Tue, 12 Mar 2024 22:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CFC14375A;
+	Tue, 12 Mar 2024 22:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710282265; cv=none; b=VPMrGn/skbsNnca6cPMMgLCDuSDwlGq/DJSd4wNGojkJj6OIPVcy/cAY871Qo1iPy7oDBwsVtlh1E7+tlBDrbsTaIswACCQduJvhm/KIew+XufTRlRMpH9JwbkzcfeQX/ebHSs3aM+1HN5weqrX9fgTUe05fTaefziQhRlPnaFY=
+	t=1710282329; cv=none; b=ViwwH8Z5VkxxPkSB2+M2/YHGzBYbP5FulbfiTB2Ma/C+rC4EawlXGOCTnKvIFnfyiWyXX/vENhcfwjpZZIU2PtIha8pd8fjVPyaAWwuvVWi/OdNzTVnQQDS1n8J+Og3g6Ssdm7DYsK96PTPXXmssJnCFE6Oof0wlRC4UQRoJwKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710282265; c=relaxed/simple;
-	bh=sNe+jdXp5gLZtIDfWj+gNMAK7ppKKGTMga/SGdLvIHU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=OKKzbO82WhJvnT46otRWPFxw4lIGmpi///qZ7lTp9/bS/PdcVBPekgPICiyiqoHltfLRqXb8AMDor9mylSW5JjnAacaA9n1mzkJAB3aCAVl+ZBrBFgKJnZcxdOcmlA5LwE8HGt2qufxUMjAbCOu/3XaDwcxfzFi31ppMOQkVxi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcgcvNUG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710282329; c=relaxed/simple;
+	bh=OO2ImKt+yzE/6mQxJap8nWoSwoNAyzAeOPGUmuM5ZJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pg7MR0pShC0juiEHT9WjOmwuJxvDN86l37loLxOKNNLXlKbUgiNd8yOvmR7ZX42F9CgesuLjodXIeE/u5afPkzEEmBzTA+Bb+7NJXzcAzi/5RW5AO3cqYtWi3oEKP9/k0E31CAEA1F6pcB5nmDUDAlQtwejBMZqr83uwZ4zE/bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T8BkA3df; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcgcvNUG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1265FC43390;
-	Tue, 12 Mar 2024 22:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710282265;
-	bh=sNe+jdXp5gLZtIDfWj+gNMAK7ppKKGTMga/SGdLvIHU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=rcgcvNUGyVz3rNESXsAonfYCODuWg4jfanDMTlmA9jgWdIbiKupkV+jjZUrHjQrpF
-	 SChe65OF4MMhGVt6WzNTJLr2+QDEL646r2dhlo2B+6W7SOmoDzq08FHVKyaJ319SRX
-	 zBb9oqxMdDFGUqR2QcBoTFO6EPmQs/K/h47b6D45IbSdByMHD/q3EAVpQWPcGOkZ0G
-	 j3YK25kqQg6GMduIKiS2dwvnYIeD3NijAjHltyzya8mkGuk3sS8O2RYMFBfbV+NrOy
-	 uwU0KHeRUe67tHp7fPzFeNyeUHT93j7E9gVeeyzPK6pr3ywCTDEuBcbQSYdQRaYPfW
-	 kBYQorw3DOwpg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3A77D95057;
-	Tue, 12 Mar 2024 22:24:24 +0000 (UTC)
-Subject: Re: [GIT PULL] audit/audit-pr-20240312
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <a51f65333f170f8079c72d98c16137d9@paul-moore.com>
-References: <a51f65333f170f8079c72d98c16137d9@paul-moore.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <a51f65333f170f8079c72d98c16137d9@paul-moore.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20240312
-X-PR-Tracked-Commit-Id: aa13b709084a0287ef250a9fbde5993e4dfc3078
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3749bda230478a8716a812f4d069c2f29dd246c4
-Message-Id: <171028226499.16151.7359529784475955596.pr-tracker-bot@kernel.org>
-Date: Tue, 12 Mar 2024 22:24:24 +0000
-To: Paul Moore <paul@paul-moore.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, audit@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T8BkA3df"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dshDnzyUQrrdegtxX0ygDjlw8CGJ1te6VM9OOwOHvzQ=; b=T8BkA3dfi2yTsF2TqGpUTvHNcZ
+	AGWp0DBuTYTWk1VA3uDouywKT5w7gJbGIJ/NakCsi44nfjbEzz0sjPLROkR+7rtgs+KLfbYEf0mhR
+	XEMlCxP3JHjs3B/wlvmrdEE38cTvGhkNOvqxeQAoTwbqqDMeYxUB218tIXCtsg2397TOrPaZ+jiTo
+	F6wKaVkryuN0cwHMqLYuWOS73jA+dpN6k6Pkg3gpt8I0IytHdtA2wsvEyufWVXX4xmVqcSowLUk0g
+	aTGjAEJEcQuVN2FQTTWAbYHFreJz/5e4qd5weo8BgEKEzm2v/axUzLC6eSpgwAajcw5ObHlY1c1NB
+	imeIWiYw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rkAYp-00000007oot-2n0R;
+	Tue, 12 Mar 2024 22:25:27 +0000
+Date: Tue, 12 Mar 2024 15:25:27 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Andrew Kanner <andrew.kanner@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org
+Subject: Re: [PATCH v1] module.h: define __symbol_get_gpl() as a regular
+ __symbol_get()
+Message-ID: <ZfDWV227fOffscv7@bombadil.infradead.org>
+References: <20240131190251.4668-1-andrew.kanner@gmail.com>
+ <20240201052958.GA14943@lst.de>
+ <65bb648c.190a0220.d431d.4f63@mx.google.com>
+ <ZbvfYqIKKWkTWLf9@bombadil.infradead.org>
+ <65cbe0ee.050a0220.1c11e.d156@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65cbe0ee.050a0220.1c11e.d156@mx.google.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-The pull request you sent on Tue, 12 Mar 2024 17:07:33 -0400:
+On Tue, Feb 13, 2024 at 02:10:45PM +0300, Andrew Kanner wrote:
+> On Thu, Feb 01, 2024 at 10:13:54AM -0800, Luis Chamberlain wrote:
+> > 
+> > While you're at it, if you want to try it, you could see if you can
+> > improve the situation more by looking at symbol_get() users that remain
+> > and seeing if you can instead fix it with proper Kconfig dependency and
+> > at build time. Then we can just remove it as well.
+> > 
+> >   Luis
+> 
+> Sorry for the late reply.
+> 
+> Luis, can you give more details of your idea? I re-read it once, then
+> came back and still don't understand.
+> 
+> I see that there are ~10 users for symbol_get() currently. Do you want
+> to stringify symbol names at build time to completely remove
+> symbol_get() from module.h? Correct me if I'm wrong since using of a
+> fuction which is not declared anywhere sounds confusing.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20240312
+As an example look at the code and see if there's a sensible way to make
+some calls built-in instead of part of the module, then the module can
+have a kconfig builtin option, that adds to the built-in code which
+means you don't need the symbol_get().
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3749bda230478a8716a812f4d069c2f29dd246c4
+For some other pieces of code it may require other strategies.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+  Luis
