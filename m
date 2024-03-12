@@ -1,66 +1,86 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED68137C22;
-	Tue, 12 Mar 2024 16:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FDA273FC;
+	Tue, 12 Mar 2024 16:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710262490; cv=none; b=YwLSEYsLZ9SIPAfQCAhyMySTKnQgJ83ghUctbtvLAxfgiHcyuje8FmT9Af6tIu+4JAGpAZI5m5PnFFW2bnKgGI96RQxPKIqN8xoVvU466F2BEl1jUjqNTPrCmulVCFazaI6VwdwTW5COhJ8eshZ/45eCVS23YgqvJVrplm/xod8=
+	t=1710262640; cv=none; b=hGHswftbv79Jf1ajjct2g/F1pHbdBsWc/bU8d4HK4y+pl6B5bhtL9Bdgs1yeoyLxaeZQ9Ylxa1DStmxUO1VQvxLHEhXPSXj2p6D6LSj87YLpKq88jk4CX4QTvWJ0hBLTgEuh8D2Y7EUPHTUOrAlzJkWrTP7Fm20+J6HlL2QyAT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710262490; c=relaxed/simple;
-	bh=IatuUoyah9BqPO/PBrdSSVVhJx3+CGn5xo0Pwxl1H+o=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nlAgdkfUWGIt7m7oF61pl4TkH/t2IJl4iuQWQZdWN6xbLh3Fv6XATUJ69dn75KWv+y1AtfOTgNTG4y9VKfTiSDGdfj1qmRSJY14TFc+85E0ofGqR9mOwM4GhsJK6RyJXSfT6X35QtgtpNWKaRfV1sWVZ7y7fRgp/+ZYpuFT6aAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Jakub Kicinski <kuba@kernel.org>, Florian Fainelli
-	<florian.fainelli@broadcom.com>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Doug
- Berger <opendmb@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net-next] net: phy: mdio-bcm-unimac: Cast denominator to unsigned long to avoid overflow
-Date: Tue, 12 Mar 2024 19:53:58 +0300
-Message-ID: <20240312165358.7712-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1710262640; c=relaxed/simple;
+	bh=PoMYnCgPakbjiaIG4AGm3MpS8jEc7BheNhqUZ/bRjdM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VAkS4tmUhyVHrVvmaRpMcTcRp4pVenMoajL4Zxz3jlH2tj7cHvvJ796nFwP8f7+sS+PK0y6Is6GbZDM2GKvtyvysvC84NBSlOehSLmR3+jEQd1v6l/Go0GKzCs1p/L63n5B9GsI9cQvjLGOfFP0Ue9T5bR09btfy+ZsMHkf321w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuVBQ3lW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuVBQ3lW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4ADC433F1;
+	Tue, 12 Mar 2024 16:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710262640;
+	bh=PoMYnCgPakbjiaIG4AGm3MpS8jEc7BheNhqUZ/bRjdM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IuVBQ3lWf5x6beNTTHw+NBaFEpnOMVIoNQqY01RMGZkaGcsE1qid1HNtGrnitnlVo
+	 1IgFQnkrQd38DUFGVjqBiKy3TjKoj4z5mDkZiFUeGXi2T+6IKB2GRuoqr12R7xvvfZ
+	 gVs8v8CDOzy3xQSzD14ywyRpkoa9WS9gHw+PbctiyeH/caQnzEDpXwx3tMP6AbvA7l
+	 hL3ICWvq4hHdLsBHyGNQbFwSuRwzCqqy9s3UEJcWsa38fuW/6OIFQt6rdkkHORvycX
+	 olzERaPLmo8kQNzCQPcNFmjYL1yQK+ogGVKNhgJNFUMCUZ6mx+a2r8h/u+FU7aJbpv
+	 /FwDOFL8QOG8w==
+From: Mark Brown <broonie@kernel.org>
+To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
+ Janne Grunau <j@jannau.net>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, regressions@lists.linux.dev
+In-Reply-To: <20240311-spi-cs-delays-regression-v1-1-0075020a90b2@jannau.net>
+References: <20240311-spi-cs-delays-regression-v1-1-0075020a90b2@jannau.net>
+Subject: Re: [PATCH] spi: Restore delays for non-GPIO chip select
+Message-Id: <171026263882.57722.2234727273926926410.b4-ty@kernel.org>
+Date: Tue, 12 Mar 2024 16:57:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-02.aladdin.ru (192.168.1.102) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
-The expression priv->clk_freq * 2 can lead to overflow that will cause
-a division by zero. So, let's cast it to unsigned long to avoid it.
+On Mon, 11 Mar 2024 23:53:17 +0100, Janne Grunau wrote:
+> SPI controller with integrated chip select handling still need to adhere
+> to SPI device's CS setup, hold and inactive delays. For controller
+> without set_cs_timing spi core shall handle the delays to avoid
+> duplicated delay handling in each controller driver.
+> Fixes a regression for the out of tree SPI controller and SPI HID
+> transport on Apple M1/M1 Pro/Max notebooks.
+> 
+> [...]
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Applied to
 
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- drivers/net/mdio/mdio-bcm-unimac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/drivers/net/mdio/mdio-bcm-unimac.c b/drivers/net/mdio/mdio-bcm-unimac.c
-index f40eb50bb978..0425b622c09f 100644
---- a/drivers/net/mdio/mdio-bcm-unimac.c
-+++ b/drivers/net/mdio/mdio-bcm-unimac.c
-@@ -214,7 +214,7 @@ static int unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
- 	else
- 		rate = clk_get_rate(priv->clk);
- 
--	div = (rate / (2 * priv->clk_freq)) - 1;
-+	div = (rate / (2 * (unsigned long)priv->clk_freq)) - 1;
- 	if (div & ~MDIO_CLK_DIV_MASK) {
- 		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
- 		ret = 0;
--- 
-2.25.1
+Thanks!
+
+[1/1] spi: Restore delays for non-GPIO chip select
+      commit: aa0162dc0dd95c3bf248e3c78068760094e8f64b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
