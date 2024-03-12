@@ -1,132 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFABF7B3EF;
-	Tue, 12 Mar 2024 15:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575D1F4FA;
+	Tue, 12 Mar 2024 15:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257450; cv=none; b=rpsz8pZ9xFO0XANOKFs89O7ixgP7CWREtD+5UANdPLRLvNfs7pZ8t202DjlIsMahYP3iFGrBhlk38MCTpAwiZsOAoj52GARFY2ykZk4mKDrTEippn2VClRjwuoo1+EFIVjcyKG70Fm21Dxi58Zz4WrMzcivNX6hMl+KEtcmLRA4=
+	t=1710257452; cv=none; b=J7Lw7rSmK745bsgdbBsY6gOyDl+do5Q8D2u/I/ectlVrBeb+Qvi4gsg7VW3JtGyGTdioNiKanOiPt8sQE+RFwT+WnEJFe8ossyzHMbd54JsNwOFschF3j3PcvHb6r8NuYfuNUgnAkgZ4/WHVOETvVM19EVUxr5cKcxbZ2EYeJc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257450; c=relaxed/simple;
-	bh=Z2McJvRwMphtzX4Zb63W7c5mKRkPIJErF1gDpAxflBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NDUgVDVFZK+4wvnQbAKpkP41e6jtzG1NY/qJ0Ior+zE1zHCFZezp5EcNBjb/sLCDN5HZVvpMguPKsUGEZADsC4pT5mx9R2mWLqCWX2UYbc4rhUBsfrTAxYaNzHCT8a9JA2YtNfu8ASf65m9SBvS9FPR0g/bp0Mz/4OMXgrNiaPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3E3C43390;
-	Tue, 12 Mar 2024 15:30:48 +0000 (UTC)
-Date: Tue, 12 Mar 2024 11:32:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ring-buffer: Fix full_waiters_pending in poll
-Message-ID: <20240312113254.78455352@gandalf.local.home>
-In-Reply-To: <20240313002210.d89600218f78a4c55f56b998@kernel.org>
-References: <20240312131919.314231457@goodmis.org>
-	<20240312131952.630922155@goodmis.org>
-	<20240313002210.d89600218f78a4c55f56b998@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710257452; c=relaxed/simple;
+	bh=5rw4QiJ/GmqukPg5Nr4vTlihz+pZ4zC1En7U/JwFl2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fY/mw+8BKJbIyblbiwmP2gkNgLTa1U2nbcfOE2aGzLY8iPXSoxNbBMRG750qSqhgrD4HeJ22uRdI3lQXsUpdJw+BrWaEl70gvycCoWkAzCivIQJn2XJYdIJXq08NYU2aBrDGFyvqQsMaFrSZUcv884D/XM18ibSjux76E3lvorw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=THFtL2OD; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="THFtL2OD"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 5234410000B;
+	Tue, 12 Mar 2024 18:30:43 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5234410000B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710257443;
+	bh=D30X9TVY00SV7Cw8ldbS2oJxymN6E02acOCqp5RlXEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=THFtL2ODmV4RIvMaps61366Xss5YdZGoXfR747GPLXiUrku/hBlK2vSH63/CMJ14v
+	 /Id5c/2bxwEULEFXE8MUzXx0uBIF5HdjQSnHwfaFq8WCc42RoiGvej5t/DQdW0xgoX
+	 COtNbW2gUMqLJPeWgYeCOPDFmKt4UNZ4efTDdqJVo0N/J8MC6gNCMYxXfzGJjLsvIt
+	 8PcI/KIxROuZ+ZMC5+yRY4sy0PYIDlBZoynu6FE74gXUxfiUn/jlAWkKmw5vgxBK42
+	 RuN2wgXnz+/Y/SmQiTBRMjkZF95smqEJ0PewgFCVREJBi+0+IuPyhcp11Dnlzk+6kw
+	 B9fflsiaAKEfw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 12 Mar 2024 18:30:43 +0300 (MSK)
+Received: from [172.28.66.90] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 12 Mar 2024 18:30:42 +0300
+Message-ID: <1f3395cb-ebab-44cd-b2b1-716e0130abad@salutedevices.com>
+Date: Tue, 12 Mar 2024 18:30:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/10] locking/mutex: introduce devm_mutex_init
+Content-Language: en-US
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	=?UTF-8?Q?Marek_Beh=C3=BAn?= <marek.behun@nic.cz>, Waiman Long
+	<longman@redhat.com>
+CC: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "pavel@ucw.cz"
+	<pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>, "vadimp@nvidia.com"
+	<vadimp@nvidia.com>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+	"npiggin@gmail.com" <npiggin@gmail.com>, "hdegoede@redhat.com"
+	<hdegoede@redhat.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
+	<mingo@redhat.com>, "will@kernel.org" <will@kernel.org>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "nikitos.tr@gmail.com"
+	<nikitos.tr@gmail.com>, "kabel@kernel.org" <kabel@kernel.org>,
+	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"kernel@salutedevices.com" <kernel@salutedevices.com>
+References: <20240307024034.1548605-1-gnstark@salutedevices.com>
+ <20240307024034.1548605-3-gnstark@salutedevices.com>
+ <20240307095639.b6utkbzr36liuu3p@kandell>
+ <3d95ab40-2df5-4988-87be-568a628a0561@redhat.com>
+ <20240307174414.4059d7ee@dellmb>
+ <cfceef12-883e-4593-9dca-50768acb1aa9@salutedevices.com>
+ <c3be9cb4-06cf-45c5-841f-3fa016e4d087@csgroup.eu>
+ <9e13fd46-b05b-4fc2-abb6-c6c96dd576ee@salutedevices.com>
+ <2106ea35-2d96-43f9-92a1-7d33ad5240b4@csgroup.eu>
+From: George Stark <gnstark@salutedevices.com>
+In-Reply-To: <2106ea35-2d96-43f9-92a1-7d33ad5240b4@csgroup.eu>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/02/29 16:52:00
+X-KSMG-LinksScanning: Clean, bases: 2024/02/29 16:52:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, 13 Mar 2024 00:22:10 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hello Christophe
 
-> On Tue, 12 Mar 2024 09:19:20 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On 3/12/24 14:51, Christophe Leroy wrote:
 > 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > If a reader of the ring buffer is doing a poll, and waiting for the ring
-> > buffer to hit a specific watermark, there could be a case where it gets
-> > into an infinite ping-pong loop.
-> > 
-> > The poll code has:
-> > 
-> >   rbwork->full_waiters_pending = true;
-> >   if (!cpu_buffer->shortest_full ||
-> >       cpu_buffer->shortest_full > full)
-> >          cpu_buffer->shortest_full = full;
-> > 
-> > The writer will see full_waiters_pending and check if the ring buffer is
-> > filled over the percentage of the shortest_full value. If it is, it calls
-> > an irq_work to wake up all the waiters.
-> > 
-> > But the code could get into a circular loop:
-> > 
-> > 	CPU 0					CPU 1
-> > 	-----					-----
-> >  [ Poll ]
-> >    [ shortest_full = 0 ]
-> >    rbwork->full_waiters_pending = true;
-> > 					  if (rbwork->full_waiters_pending &&
-> > 					      [ buffer percent ] > shortest_full) {
-> > 					         rbwork->wakeup_full = true;
-> > 					         [ queue_irqwork ]  
 > 
-> Oh, so `[ buffer percent ] > shortest_full` does not work because
-> if this happens in this order, shortest_full may be 0.
+> Le 12/03/2024 à 12:39, George Stark a écrit :
+>> [Vous ne recevez pas souvent de courriers de gnstark@salutedevices.com.
+>> Découvrez pourquoi ceci est important à
+>> https://aka.ms/LearnAboutSenderIdentification ]
 
-Exactly!
+...
 
+> You don't need that inline function, just change debug_devm_mutex_init()
+> to __devm_mutex_init().
+
+I stuck to debug_* name because mutex-debug.c already exports a set
+of debug_ calls so...
+Well it's not essential anyway. Here's the next try:
+
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 67edc4ca2bee..537b5ea18ceb 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -22,6 +22,8 @@
+  #include <linux/cleanup.h>
+  #include <linux/mutex_types.h>
+
++struct device;
++
+  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+  # define __DEP_MAP_MUTEX_INITIALIZER(lockname)			\
+  		, .dep_map = {					\
+@@ -117,6 +119,29 @@ do {							\
+  } while (0)
+  #endif /* CONFIG_PREEMPT_RT */
+
++#ifdef CONFIG_DEBUG_MUTEXES
++
++int __devm_mutex_init(struct device *dev, struct mutex *lock);
++
++#else
++
++static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
++{
++	/*
++	 * When CONFIG_DEBUG_MUTEXES is off mutex_destroy is just a nop so
++	 * no really need to register it in devm subsystem.
++	 */
++	return 0;
++}
++
++#endif
++
++#define devm_mutex_init(dev, mutex)			\
++({							\
++	mutex_init(mutex);				\
++	__devm_mutex_init(dev, mutex);			\
++})
++
+  /*
+   * See kernel/locking/mutex.c for detailed documentation of these APIs.
+   * Also see Documentation/locking/mutex-design.rst.
+diff --git a/kernel/locking/mutex-debug.c b/kernel/locking/mutex-debug.c
+index bc8abb8549d2..6aa77e3dc82e 100644
+--- a/kernel/locking/mutex-debug.c
++++ b/kernel/locking/mutex-debug.c
+@@ -19,6 +19,7 @@
+  #include <linux/kallsyms.h>
+  #include <linux/interrupt.h>
+  #include <linux/debug_locks.h>
++#include <linux/device.h>
+
+  #include "mutex.h"
+
+@@ -89,6 +90,16 @@ void debug_mutex_init(struct mutex *lock, const char 
+*name,
+  	lock->magic = lock;
+  }
+
++static void devm_mutex_release(void *res)
++{
++	mutex_destroy(res);
++}
++
++int __devm_mutex_init(struct device *dev, struct mutex *lock)
++{
++	return devm_add_action_or_reset(dev, devm_mutex_release, lock);
++}
++
+  /***
+   * mutex_destroy - mark a mutex unusable
+   * @lock: the mutex to be destroyed
+-- 
+2.25.1
+
+
+
+>> +
+>> +#else
+>> +
+>> +static inline int __devm_mutex_init(struct device *dev, struct mutex
+>> *lock)
+>> +{
+>> +       /*
+>> +       * When CONFIG_DEBUG_MUTEXES is off mutex_destroy is just a nop so
+>> +       * no really need to register it in devm subsystem.
+>> +       */
 > 
-> > 
-> >    cpu_buffer->shortest_full = full;
-> > 
-> > 					  [ IRQ work ]
-> > 					  if (rbwork->wakeup_full) {
-> > 					        cpu_buffer->shortest_full = 0;
+> Don't know if it is because tabs are replaced by blanks in you email,
+> but the stars should be aligned
 
-And here shortest_full gets set back to zero! (But that's not the bug).
+Ack
 
-> > 					        wakeup poll waiters;
-> >   [woken]
-> >    if ([ buffer percent ] > full)
-> >       break;
-> >    rbwork->full_waiters_pending = true;
 
-The bug is setting full_waiters_pending before updating the shortest_full.
-
-> > 					  if (rbwork->full_waiters_pending &&
-> > 					      [ buffer percent ] > shortest_full) {
-> > 					         rbwork->wakeup_full = true;
-> > 					         [ queue_irqwork ]
-> > 
-> >    cpu_buffer->shortest_full = full;
-> > 
-> > 					  [ IRQ work ]
-> > 					  if (rbwork->wakeup_full) {
-> > 					        cpu_buffer->shortest_full = 0;
-> > 					        wakeup poll waiters;
-> >   [woken]
-> > 
-> >  [ Wash, rinse, repeat! ]
-> > 
-> > In the poll, the shortest_full needs to be set before the
-> > full_pending_waiters, as once that is set, the writer will compare the
-> > current shortest_full (which is incorrect) to decide to call the irq_work,
-> > which will reset the shortest_full (expecting the readers to update it).
-> > 
-> > Also move the setting of full_waiters_pending after the check if the ring
-> > buffer has the required percentage filled. There's no reason to tell the
-> > writer to wake up waiters if there are no waiters.
-> >   
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-I'm running it through my tests and when they finish, I'll be posting the
-for-linus patches.
-
--- Steve
+-- 
+Best regards
+George
