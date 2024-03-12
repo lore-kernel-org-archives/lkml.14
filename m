@@ -1,93 +1,110 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE57A140;
-	Tue, 12 Mar 2024 12:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9336558207;
+	Tue, 12 Mar 2024 12:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710244865; cv=none; b=aiioAUYvzk6pV1tJtf76Ww6uLCxGkE2EiADHF6rD1ar2kEvuTCIB4kadeyrdMmlnSaG5kJ4CoKQ2fDGNOhlwWdE7WNBX6SZP1lanWmAniElcPQD0QLURB9m5MfR7rnenAtfkgKLK09Czwbd8m3wrXez/yzfsrYdjHg9UXhggVe0=
+	t=1710244895; cv=none; b=cvBUZGdHnicjJdwAmCe0zzI7tNX0+7C+tzeolAlcLv3q709SGlZhKxOsuuoiUeifYW7a5rtQ0kmpVoGHcpkKGqjeM8AEbKKeeqrzwlh6CeHghtcAx+pomFBeWnWJQTGEghlbbtP2pQHNkbSgvxlJ3MZxNFGi4rgHQBuE99Yv+PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710244865; c=relaxed/simple;
-	bh=ePk5iQwBef/BCg5M8C1xgxE/8EWgCoYElleiuQnLZ3E=;
-	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
-	 In-Reply-To:Content-Type; b=uJyYp5HvAce+nDGjfEHAeuEXewc5ukwRLnm+BkGZ5PRv8lKYjld2qF8m3SkrDxBhvV6gmPA3G2eM+ZbHy2wvJWXxwD6EykCOfyvpIfU81gXKJ/x5nehDXaiXkyO/mhM/krrp25Z0lUILmRmbsavJXGJN10kLUpjdt7eFFFIw8J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TvBxF4bSJz1Z1w9;
-	Tue, 12 Mar 2024 19:58:25 +0800 (CST)
-Received: from kwepemd100008.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6591914040F;
-	Tue, 12 Mar 2024 20:00:52 +0800 (CST)
-Received: from [10.67.121.2] (10.67.121.2) by kwepemd100008.china.huawei.com
- (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Tue, 12 Mar
- 2024 20:00:51 +0800
-Message-ID: <65F043F3.3040908@hisilicon.com>
-Date: Tue, 12 Mar 2024 20:00:51 +0800
-From: Wei Xu <xuwei5@hisilicon.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+	s=arc-20240116; t=1710244895; c=relaxed/simple;
+	bh=PyhcmeEqpMLLpLqlTJwAk+iqEAYM+edKPATKaLpLegc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=JxkP+5a7UVK0owum23m4ulFiQS/77RddAeYoKnrwScB0QuZPmrq/T+Efr/OmKYLrunjfaFwLaWFAWbtoJ2DhyD86iOunnpNy7+mgiUU2eLScimlEpdyr7lVu5J9Ky6VFdaO2WRWW5LctOtTyedy7Ea0dhZcC8t5/o52MAWMgceU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB35C433C7;
+	Tue, 12 Mar 2024 12:01:35 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rk0r7-00000001uGd-2Jkx;
+	Tue, 12 Mar 2024 08:03:41 -0400
+Message-ID: <20240312120252.998983805@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 12 Mar 2024 08:02:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ joel@joelfernandes.org,
+ linke li <lilinke99@qq.com>,
+ Rabin Vincent <rabin@rab.in>
+Subject: [PATCH v3 0/2] tracing/ring-buffer: Fix wakeup of ring buffer waiters
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Yang Xiwen
-	<forbidden405@outlook.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, Alex Elder
-	<elder@linaro.org>, Peter Griffin <peter.griffin@linaro.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH v3 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
- info, maintenance irq and GICH, GICV spaces
-References: <20240219-cache-v3-0-a33c57534ae9@outlook.com> <SEZPR06MB695952078B51C4549191F8AB962B2@SEZPR06MB6959.apcprd06.prod.outlook.com> <dbdce27e-f33a-4597-b978-965c395c7169@linaro.org>
-In-Reply-To: <dbdce27e-f33a-4597-b978-965c395c7169@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100008.china.huawei.com (7.221.188.193)
 
-Hi Krzysztof,
 
-On 2024/3/12 19:36, Krzysztof Kozlowski wrote:
-> On 12/03/2024 12:19, Yang Xiwen wrote:
->>> Yang Xiwen (3):
->>>        arm64: dts: hi3798cv200: fix the size of GICR
->>>        arm64: dts: hi3798cv200: add GICH, GICV register space and irq
->>>        arm64: dts: hi3798cv200: add cache info
->>>
->>>   arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 43 +++++++++++++++++++++++++-
->>>   1 file changed, 42 insertions(+), 1 deletion(-)
->>> ---
->>> base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
->>> change-id: 20240218-cache-11c8bf7566c2
->>>
->>> Best regards,
->>
->> May someone apply this patchset to their tree so that it can land in 
->> stable at the end? This is a fix, not adding new functionalities. It's 
->> been 2 weeks already.
-> 
-> It's merge window, what do you expect to happen now? Please observe the
-> process timelines.
-> 
-> For arm-soc usually the cut-off is around rc6. When did you send it?
-> Week before rc6, so a bit late.
-> 
-> Anyway, I bookmarked this patchset, so if no one applies within some
-> time after merge window, I'll take it.
 
-Thanks for your explanation and kindness!
+A patch was sent to "fix" the wait_index variable that is used to help with
+waking of waiters on the ring buffer. The patch was rejected, but I started
+looking at associated code. Discussing it on IRC with Mathieu Desnoyers
+we discovered a design flaw.
 
-Best Regards,
-Wei
+The waiter reads "wait_index" then enters a "wait loop". After adding
+itself to the wait queue, if the buffer is filled or a signal is pending
+it will exit out. If wait_index is different, it will also exit out.
+(Note, I noticed that the check for wait_index was after the schedule()
+call and should have been before it, but that's besides the point).
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> .
-> 
+The race is what happens if the waker updates the wait_index,
+a new waiter comes in and reads the updated wait_index before it adds
+itself to the queue, it will miss the update!
+
+These patches fix the design by converting the ring_buffer_wait()
+to use the wait_event_interruptible() interface.
+
+Then the wait_to_pipe() caller will pass its own condition into
+the ring_buffer_wait() to be checked by the wait_event_interruptible().
+
+- The first patch restructures the ring_buffer_wait() to use the
+  wait_event_interruptible() logic. It does not change the interface,
+  but adds a local "cond" condition callback function that will be
+  what it defaults to in the second patch if NULL is passed in.
+
+  The default cond function is just a "wait once" function. That
+  is, the first time it is called (before the wait_event_interruptible()
+  calls schedule) will set the "once" variable to one and return
+  false. The next time it is called (after wait_event_interruptible()
+  wakes up) it will return true to break out of the loop.
+
+- The second patch changes the ring_buffer_wait() interface to allow
+  the caller to define its own "cond" callback. That will be checked
+  in wait_event_interruptible() along with checking if the proper
+  amount of data in the ring buffer has been hit.
+
+Changes since v2: https://lore.kernel.org/all/20240308202402.234176464@goodmis.org/
+
+- Patches 1-3 of v2 have been accepted.
+
+- Instead of breaking ring_buffer_wait() into three functions that do
+  a prepare_to_wait(), wait() and finish_wait(), have ring_buffer_wait()
+  take a condition callback function and a data parameter.
+
+  The ring_buffer_wait() now uses a wait_event_interruptible() code,
+  and added a helper function to do check its own conditions, and also
+  to call the passed in condition function and allow the caller to
+  specify other conditions to break out of the event loop.
+
+Changes since v1: https://lore.kernel.org/lkml/20240308183816.676883229@goodmis.org/
+
+- My tests triggered a warning about calling a mutex_lock() after a
+  prepare_to_wait() that changed the task's state. Convert the affected
+  mutex over to a spinlock.
+
+
+
+Steven Rostedt (Google) (2):
+      ring-buffer: Use wait_event_interruptible() in ring_buffer_wait()
+      tracing/ring-buffer: Fix wait_on_pipe() race
+
+----
+ include/linux/ring_buffer.h  |   4 +-
+ include/linux/trace_events.h |   5 +-
+ kernel/trace/ring_buffer.c   | 117 +++++++++++++++++++++++++------------------
+ kernel/trace/trace.c         |  43 +++++++++++-----
+ 4 files changed, 107 insertions(+), 62 deletions(-)
