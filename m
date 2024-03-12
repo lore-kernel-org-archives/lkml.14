@@ -1,126 +1,119 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC81C1E53F
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C53142648
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710273406; cv=none; b=jL30MJ4/LNdgeHsf8uXZ3vpzrwDAwVW5xaIX2W8Ljr1c3KSc+MX2NJ/7AsTFlHyEDvll7gXAOMLnFSxlDuI+rqHqLjhuya7kxb1ok6xPNO1Jgj+S8s/l2UvZTNdHH6eUU+hYwuMwpR+DZRUgLWu6xScMmXcDSYWi/orz1nblc74=
+	t=1710273432; cv=none; b=KdwTHnK6EwNh1lUByzNSzOgpJmKt71TnlUBgUWQjwpWKu5/vqXdHe8E9SIx4ebGBrtlWK8jFoA3F9HzCdIU/A673MhsECFtKQW9iv3WvndvwJcmNQJqFFOy35Ywmn/0jpmopclxO0cuSX08B+rYb7F/jQnvF0m+QhnlCnCFIfQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710273406; c=relaxed/simple;
-	bh=NfuMaH7Y/8CSMgzfmLwCZoP8iZSzw8HM7XZf9JY3qEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/yV06rUzZBrvDOI3wHb0QsEivxdfPF0q7OXd529p8Ipwk82+4yX39e55hP4DNnAgEd6Gv9GS22wokrsbzNSfLtAu61C/Q7mDoaO3DPn63oFNXZ+NlCXoFpNhfTBkgSRUXAZpeN3XklrBrQRu2n5H78ksk5jU1cDRh5jigY+tPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=QZI1LJ2R; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1710273432; c=relaxed/simple;
+	bh=0aWGvxVmbgp4kFphrT5DgrMJEPHTfdbj9FAM43oX9JA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u6gEikuF32bagjmwMAt7Tvu0Z/VeNr62anUETh7BX5JMdaWFSiskgw60cuasgKrubahCnF1H2wrENc7UPI8yoqV1aGJ2IqsUd4a0qFEM9dChyed67N70Pd6xCEoV0qzQ91ogczCUp/HBn4OBPsVIh5xLlSz3WRWv2WGQwlyfHA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n9SkdvBC; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QZI1LJ2R"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dd8f7d50c6so1674475ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:56:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n9SkdvBC"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60a0599f647so3316877b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:57:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1710273403; x=1710878203; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vxEx3iDsM3WrZG2Ndd+J9E+wXDu/hB2Os8/24Q1t3OY=;
-        b=QZI1LJ2REYGo1Bsc+3/Zqq2HkKct0LVwKXwjvtRUVdoTYpnvFrLuLNk5jJaNBmF8hP
-         KgG7HxYJuYs1yT5N46OP5XurGkntOyZ+8UVrpWeNxRGEbFpLnV95CD91uYzN3tNv2xX2
-         +E50mP7/BOglB3SmJVyEH/o7VpJ1OXjbGXeXM2oa6f04MrW69uFJWgL0H6enqnkCSVj/
-         ApcqOgCuz+BFQQTLt6oRG/ryyK6ZygjUHNVZ1keJVcmndWfHEZ09gggSeZgokmXR8vi9
-         Rxkapb02l9ucsKxnRass5RMvSHXbto/4tsRUyyluvKsNX1xCrgnB5G0Gcq94FOIrQRc0
-         CICg==
+        d=google.com; s=20230601; t=1710273428; x=1710878228; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wT+2mjCDEB2wrTUTyTKLuab+xNoniRJZtNtidsDDPI8=;
+        b=n9SkdvBCP29jpiwunTx9H1BR2Ml5UNn8v5otShFLYbK7JyH9MubPTv36E75no1LqDL
+         F087Nx5gd76hBnyWnz1RKILaph74iezHR8dfxhvrNyu4hW+OvUANcVGR85oF6szeI66p
+         LehTfrQIsekB3y0zSlUlFw+k4rC27MANhiDGq5MWUDj0v7p8X/r6xuB6IfOk+yaiotpi
+         6PNsdZ7oDH/REX+V59tRksPbBVobOBRxA5gTKm3fkVWKTVvVvhW6qkyHeDff6HIEDksZ
+         NyymvyrhhQDYaBGvJfqmaPS8cnXSuEknUF0Um/xxxhDbr2bvMvHMcAwmZuBE64EiPD4M
+         sflQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710273403; x=1710878203;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vxEx3iDsM3WrZG2Ndd+J9E+wXDu/hB2Os8/24Q1t3OY=;
-        b=ZocujWaapQCG6b8kpdHTOkjx7jtS8nOaXTwHZvcQgVqqIY2PNhEK2GA1nXGCi9YV1E
-         axkrwvvboCwW2ZI4MbPOifYyrZt62dT05fS3jserVEqTnzTKVmR8YIvMHNq7dMGU9fNX
-         Njtj+9eh0Tc8ojzOj02l2KYYmN4DoXXTsCfgLQmp4HnqaAfxdqBgW/v846gbznaNStcH
-         4Hsx7hHj4uhbA6/qI5uz0PLz/kgbkt3MaHj5pOiKPre5lFuBPwdKeXzmFscjtkzSMMSZ
-         GKl47tt9MFX0QetdWrgR6CK4NpwIqi2K++0G5GziBim9/REcYLCITUiVUSpBI7Lx1YA+
-         eseg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzNEy5ep3iyLnlx9OC0DXJX6y8tPRsm7dmCeqNSZt//Y7MSR6K80RCr2RSf7netKhhzVtj1AZY/9YfFnfT2WdlxNqnTzaHFJsJL++L
-X-Gm-Message-State: AOJu0YyMy1s02HJ+rztIUoRIW8NniGltX4sy4iby8HUYyJxen4ugASRb
-	53kbda5NUOS9jvLlWFGQVAVT5iWspWYdTfeTKZlToCIsk8VUDUC/ziRaRB3WjR4=
-X-Google-Smtp-Source: AGHT+IFpt7ff6HNFHc9Yq78Z63OwKzFZJ801dFotJRAscTaClrr1h/Au36ogZQmQ69SY/YT0n6oNpQ==
-X-Received: by 2002:a17:90a:e54f:b0:29b:c49b:eb13 with SMTP id ei15-20020a17090ae54f00b0029bc49beb13mr628731pjb.24.1710273403142;
-        Tue, 12 Mar 2024 12:56:43 -0700 (PDT)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id hi23-20020a17090b30d700b0029bed0e75dbsm4708774pjb.17.2024.03.12.12.56.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 12:56:42 -0700 (PDT)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] riscv: Do not save the scratch CSR during suspend
-Date: Tue, 12 Mar 2024 12:56:38 -0700
-Message-ID: <20240312195641.1830521-1-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.43.1
+        d=1e100.net; s=20230601; t=1710273428; x=1710878228;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wT+2mjCDEB2wrTUTyTKLuab+xNoniRJZtNtidsDDPI8=;
+        b=VDA9Bgf4MRLs0vFp2hT1V2rdIDukxNW+eeLt1t+YC6tHyy6ywTaUSUuMZ4160VKNhk
+         S4qj4vjDvBYO1UzlESp9ztz/Njpaf56f9x2meqWxOFQVOYuUTmEJwydU9OqFaTd5ZZit
+         gG55d7A7f9J/DPOX+Et1+sWdMy4ujsQzhADq51VFSEcgc1GEp+LGKPYSI225wR7JbrZI
+         g4tFJFTUgwqPn5M+AV+n/c5YlGGO6BlilahUxHDlggIJwHrLoOVBKBrbItdfXE/41CR+
+         hJEI3O68hxukulCpnWUMBIC0uadKYonYgxq5YCgYWi2vQ0gGwlIPzl7V2xtOPfONiEB8
+         VeXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnT+BOJCD79KlaGB6ClaKQ8sWUSPFG/EU7yEO0ixD9udmsJeuNLcCYKq7Uxx5wi8m2wW4+HpSVDoMBCv4vCan2L2t3z0bzObFwchqP
+X-Gm-Message-State: AOJu0YxpaPLyuCrIQXrxDy2gsPKZQmDHlH++5VSiVRZt4OTYYOHI3yrt
+	h3QO1jimiqZw5U8kQvRmvcFJVajt6aAQ3i9M9h/wE2Y68l4JCJvCrlrXYbNqHPmHiY5AuYpaad2
+	ijW0K49d1z9Kkzki+wVyGb5fKJywXRgfGTW6p
+X-Google-Smtp-Source: AGHT+IFrpwFQf6DsD+MDcouIBUBxz7xm6ZVbTg/EsBFYmgBgqnN4d7DhlPhedvQ2z/xYUtX9OCTiPw5W4WvHfMsUOCA=
+X-Received: by 2002:a0d:e885:0:b0:60a:67fb:146 with SMTP id
+ r127-20020a0de885000000b0060a67fb0146mr551414ywe.17.1710273427660; Tue, 12
+ Mar 2024 12:57:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-14-surenb@google.com>
+ <a9ebb623-298d-4acf-bdd5-0025ccb70148@suse.cz> <ZfCdsbPgiARPHUkw@bombadil.infradead.org>
+In-Reply-To: <ZfCdsbPgiARPHUkw@bombadil.infradead.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 12 Mar 2024 12:56:54 -0700
+Message-ID: <CAJuCfpErSnRK3TH-+keVF+2Vq-e1cSXrOcg8UAFke3btt2Y9+w@mail.gmail.com>
+Subject: Re: [PATCH v4 13/36] lib: prevent module unloading if memory is not freed
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org, kent.overstreet@linux.dev, 
+	mhocko@suse.com, hannes@cmpxchg.org, roman.gushchin@linux.dev, 
+	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, 
+	liam.howlett@oracle.com, penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, 
+	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
+	peterx@redhat.com, david@redhat.com, axboe@kernel.dk, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
+	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-While the processor is executing kernel code, the value of the scratch
-CSR is always zero, so there is no need to save the value. Continue to
-write the CSR during the resume flow, so we do not rely on firmware to
-initialize it.
+On Tue, Mar 12, 2024 at 11:23=E2=80=AFAM Luis Chamberlain <mcgrof@kernel.or=
+g> wrote:
+>
+> On Mon, Feb 26, 2024 at 05:58:40PM +0100, Vlastimil Babka wrote:
+> > On 2/21/24 20:40, Suren Baghdasaryan wrote:
+> > > Skip freeing module's data section if there are non-zero allocation t=
+ags
+> > > because otherwise, once these allocations are freed, the access to th=
+eir
+> > > code tag would cause UAF.
+> > >
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> >
+> > I know that module unloading was never considered really supported etc.
+>
+> If its not supported then we should not have it on modules. Module
+> loading and unloading should just work, otherwise then this should not
+> work with modules and leave them in a zombie state.
 
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+I replied on the v5 thread here:
+https://lore.kernel.org/all/20240306182440.2003814-13-surenb@google.com/
+. Let's continue the discussion in that thread. Thanks!
 
- arch/riscv/include/asm/suspend.h | 1 -
- arch/riscv/kernel/suspend.c      | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/riscv/include/asm/suspend.h b/arch/riscv/include/asm/suspend.h
-index 491296a335d0..6569eefacf38 100644
---- a/arch/riscv/include/asm/suspend.h
-+++ b/arch/riscv/include/asm/suspend.h
-@@ -13,7 +13,6 @@ struct suspend_context {
- 	/* Saved and restored by low-level functions */
- 	struct pt_regs regs;
- 	/* Saved and restored by high-level functions */
--	unsigned long scratch;
- 	unsigned long envcfg;
- 	unsigned long tvec;
- 	unsigned long ie;
-diff --git a/arch/riscv/kernel/suspend.c b/arch/riscv/kernel/suspend.c
-index 299795341e8a..3d306d8a253d 100644
---- a/arch/riscv/kernel/suspend.c
-+++ b/arch/riscv/kernel/suspend.c
-@@ -14,7 +14,6 @@
- 
- void suspend_save_csrs(struct suspend_context *context)
- {
--	context->scratch = csr_read(CSR_SCRATCH);
- 	if (riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_XLINUXENVCFG))
- 		context->envcfg = csr_read(CSR_ENVCFG);
- 	context->tvec = csr_read(CSR_TVEC);
-@@ -37,7 +36,7 @@ void suspend_save_csrs(struct suspend_context *context)
- 
- void suspend_restore_csrs(struct suspend_context *context)
- {
--	csr_write(CSR_SCRATCH, context->scratch);
-+	csr_write(CSR_SCRATCH, 0);
- 	if (riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_XLINUXENVCFG))
- 		csr_write(CSR_ENVCFG, context->envcfg);
- 	csr_write(CSR_TVEC, context->tvec);
--- 
-2.43.1
-
+>
+>   Luis
