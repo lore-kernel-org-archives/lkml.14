@@ -1,93 +1,142 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6BA7E11A
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058267D3E1
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710259811; cv=none; b=Ndv1QUrD6VlF/YJXFNZLeC4QsHlM3VEvuxu/sj2BEx/35hjW2MMqTafEutq5xWf9AGqpy/3cHFHctsl/Q4AnPaa7zM7tD/238LVT3pNkaIcw8DjgowpOPVJe3NSdPX9W4BMmdqJtxvuO7vjlFD14/Sgom7/sP1ONnsEyXjjjmVI=
+	t=1710259812; cv=none; b=jN8zJhg9mrJKpWiQcB/QbHxPnKti77oNdpL3pJrrX3bHjs47Fxks7UsPgXnC0o+44w2auh0AK7QKv3Ek/XOQgN+krKZRAJ1f+c18mMNg5nsxyFihxLYGO0QYdDP96kFNc8avUyCs2Mq+/xBv3mJ66YcKB/8mKZ36fwjfZebd5nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710259811; c=relaxed/simple;
-	bh=qPjhJHW1dcYo8k1atulrqKd7xFkV2OV5T4XFSz4kxUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kzbbx83V5jVi8WXuy3E5XcHYeKgZ11gXWshuSjcAMzvlS7SDhTbyW8pqMDlzVMTD0LeizkPaRKqnGGCoIpePZ66W4it3e6tGcZYd8iN+SVkMB3HAHNKPknFHvL96/1JoUMj8gyzo8Ri+0AXmMYAsFvsZ1Rk6kSwzyNjL6v2s6BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iT4MRI2b; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710259812; c=relaxed/simple;
+	bh=Fc7O8sfBRRb8zOY1eOkMRYKNnB5ApRvE6ZnNgsRMbYg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C0OLBO3BUwCtbnPv2v9uEzXlWeyqfntjimolugSY9+ryIaBJUJMVWbJ7OjBlslbcTjcsOyS9epZZKr6YbAndbRWE0i/pp21Vjc+/6+H6UcTK/vtgeHnu9178HRQSP9adV2TPfIc0Jm0rYQ/W6+X11ig5Si0kt5bWJC2fiHiusWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=WfeGElob; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iT4MRI2b"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a4649c6f040so84085166b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:10:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="WfeGElob"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-413e642806fso1207715e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:10:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710259808; x=1710864608; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=cloudflare.com; s=google09082023; t=1710259809; x=1710864609; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S3+O10vd3liFJMunazLMlhKBOkgOhJq74haBneqSUXs=;
-        b=iT4MRI2bJVX2UqPUI6iUq2aGqBj7UAhiIR9Xf73KajY1rVBvNLhzfUGof5ndn+wo4d
-         LUSipPernN1zCeRZ8cPEKLeX6BjMknn4GbQ9ytAyNqkUXIl62TI/0NeJbfxAMI2NXmON
-         jQYbWhXuCTUCT4WsCDp5jHr+jN2utX7u2vLsV9cmzaZIdBosM/OiYwaW2eaaQVsy0ntY
-         Tb9e3UWnG7iorxsdk94fAyt2oNfhM9I8hqwUd9OH2iiu6JHt2pnhLwxRLXO1AdW3W8M6
-         huit4gHauSjOiWxMN2ieFxSBny/nplkzcJL4nI0zqoYbb+FS7NIhYYMHnv5j/2aWTyb9
-         mPVg==
+        bh=9wNUX9DZCZhkOtkzBdWY6lDTHbYdRFBZXQzvAC4CccA=;
+        b=WfeGElob94iVcNvEUrLD+hD8IJpTbHvgaI3ykcUz8EI9MyeYXhnmblK0VLvuzDGKsL
+         oKXQtHwEO1cmNl5w4j2qseyBWbAazM1QmqOzgOthxNx3OKFIaDhZvU42AKfwwmZPg41m
+         LTLf0BDBJ99PkNAT0M+hff4C6aieJsbpfwCIIKuxlr8cN0lFON4R11oxp3GvHnXUbfSA
+         xr1NKAzkqFqX7YSCTYWTrypKMyBQ8XsxnNzDIEFQ8cl5BSKKXdD4lH6W7ylDOYOIm8Sg
+         D/U7aPYXT43vgaGjOPX2iVG0G1YsD/AvjjK9SJtEZ/ckdrLLgN6USca979ApfivmtwpI
+         ILeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710259808; x=1710864608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710259809; x=1710864609;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S3+O10vd3liFJMunazLMlhKBOkgOhJq74haBneqSUXs=;
-        b=Vi/WPxiVaA417nKZQP8PP/AJ2681IcZ+vt1llWZ5Udkzac5H7z2ixFODOMLVlLDHCf
-         Pa108LWkiEkFGPQqP5Cf0zSma6wg+Sa080VSXzKOp3lCEu0t5wuZ8UA7rAHIBLPe+V5t
-         d1Bu3tHaAlR1DE/Kj3yhCqSnSqwQgIPJFNcwBdCb3u9ug6NKEeQidIBbWTgTR9KKNdo3
-         8ee7PQbuFcc18iu6cNm8dpRnjqLiJSeTfkMy0SP9KB1cRTXHSW5PJ76c0w5v1BydbHX8
-         ZflCqaxE9laJy2PvjBcLoh0UpooVZpyW8A1LgYuscp8jnqzrBQCPU5YUutGTeYD9+NCm
-         ODjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxZO/CdvAqDc+UW7JQPRcPopECT28y6sI/qDvo5q8n62XlHUd/UmDBou0hSt+x1JZzxzXXmJk6YhRcqI+j77fImV/KSn8b+YsLyg+1
-X-Gm-Message-State: AOJu0YzcUwX2WmQv4n9+lqimFIg+/seBQMHdmL7dp2pzzTjcCLkyiThV
-	6R3yLj7n11bRPIDB1l8llSaRG7AcPehJo97X3EhmbJOBtQBWbfVZxrcecJHD3mGp2ex03Ee470K
-	8M+uboTPaBISUUbn9CkCoPSvH6XFtxdYawnMn
-X-Google-Smtp-Source: AGHT+IE80lye4zSsuGhA8kA3D+sK/NVpvlJukMC7Gww9CfMolxu7wRSlYSv2oORoukxm9HtOLfrE1Q10/pe/qHtuCto=
-X-Received: by 2002:a17:906:b14e:b0:a43:6cd2:7bb7 with SMTP id
- bt14-20020a170906b14e00b00a436cd27bb7mr6714888ejb.47.1710259808090; Tue, 12
- Mar 2024 09:10:08 -0700 (PDT)
+        bh=9wNUX9DZCZhkOtkzBdWY6lDTHbYdRFBZXQzvAC4CccA=;
+        b=OaXbwTydZ0O4ydUFHm8RSQ86QqtPLNWAMSTMceYf057xmVo36qpbfzID194LTTiwd2
+         vANk4yAzC/H7VqZ+60kggaOYvLotyzRUXd5XdUb3gcdEvZPSKeJdoeaK692dCOkNkkaj
+         ZJLfEwDgnSETcrmh8qsWDtnZ82jI77ptxVg8dje+6MCmc2Sv3H91VDo1VcpxZjmjazkV
+         cp9Ph4yTfonpYAx14Glf+6soBPKNETP8MR6hfS6mdFiZ8CHyyrsP94xxk/U0TAjqPWBA
+         Hmym3bslXy9K9L7NNgRfEegmVKreG2DswGt/KW6F09m/YZbINiSDHEFoMq7i9m2oZsAY
+         ojwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVq2wFCMti9Z258AACdLYJ4tNESjyAdxLUSL6rKhoAbQgwo1DNqHQDwSciOqHkdplj3L+iN5AFORIjVanwrNPGgu+Pz45PwuMWaN0Xk
+X-Gm-Message-State: AOJu0YyOQEoGaEg8J5GBr3gAo9K1FIbSstrBgL4eWWWfglRDvAJfAT/7
+	VqGsGxBIl7X0e0XzcH2nsn+qrpj0JFACOvqcRLdlAP8TChR4Jfwa11j69qichp4=
+X-Google-Smtp-Source: AGHT+IF+bWouiIFf+uP88Mr8eQSuWHP1533kqdq4LfgBW7SC7cEl/s7h/DffeGifPPsn3+G8rECSuw==
+X-Received: by 2002:a05:600c:4690:b0:412:95fb:e41 with SMTP id p16-20020a05600c469000b0041295fb0e41mr1840249wmo.24.1710259809271;
+        Tue, 12 Mar 2024 09:10:09 -0700 (PDT)
+Received: from localhost.localdomain ([104.28.232.7])
+        by smtp.gmail.com with ESMTPSA id fl8-20020a05600c0b8800b00413e523b7f9sm474253wmb.43.2024.03.12.09.10.08
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 12 Mar 2024 09:10:08 -0700 (PDT)
+From: Ignat Korchagin <ignat@cloudflare.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel-team@cloudflare.com,
+	Ignat Korchagin <ignat@cloudflare.com>
+Subject: [PATCH net v2 2/2] selftests: net: veth: test the ability to independently manipulate GRO and XDP
+Date: Tue, 12 Mar 2024 16:05:52 +0000
+Message-Id: <20240312160551.73184-3-ignat@cloudflare.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240312160551.73184-1-ignat@cloudflare.com>
+References: <20240312160551.73184-1-ignat@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312155641.4003683-1-yosryahmed@google.com> <d24c8736-d963-4aa5-a3cb-5cc1110e3ca8@intel.com>
-In-Reply-To: <d24c8736-d963-4aa5-a3cb-5cc1110e3ca8@intel.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 12 Mar 2024 09:09:30 -0700
-Message-ID: <CAJD7tkYXfFiOQMpM+GkR7a=aUxFM-smDc-ZFTTtFu2Kbd2KoPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] x86/mm: Use IPIs to synchronize LAM enablement
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 12, 2024 at 9:04=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> Yosry,
->
-> Could you please slow down a bit on these?  Us lazy west coast Americans
-> are barely a cup of coffee into our day.  We haven't even had a chance
-> to read v1.
->
-> Once a week is about the right cadence to be sending these.  Every 12
-> hours is more than my poor inbox can take! :)
+We should be able to independently flip either XDP or GRO states and toggling
+one should not affect the other.
 
-My bad, I lost track of when I sent v1 and saw Kirill's comment when I
-woke up so I addressed that. FWIW, v1 and v2 are almost identical
-except for a small change in patch 2 to address Kirill's comment. I
-will hold off on sending anything else this week.
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+---
+ tools/testing/selftests/net/veth.sh | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-Cheers!
+diff --git a/tools/testing/selftests/net/veth.sh b/tools/testing/selftests/net/veth.sh
+index 5ae85def0739..3a394b43e274 100755
+--- a/tools/testing/selftests/net/veth.sh
++++ b/tools/testing/selftests/net/veth.sh
+@@ -249,9 +249,9 @@ cleanup
+ create_ns
+ ip -n $NS_DST link set dev veth$DST up
+ ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp
+-chk_gro_flag "gro vs xdp while down - gro flag on" $DST on
++chk_gro_flag "gro vs xdp while down - gro flag off" $DST off
+ ip -n $NS_DST link set dev veth$DST down
+-chk_gro_flag "                      - after down" $DST on
++chk_gro_flag "                      - after down" $DST off
+ ip -n $NS_DST link set dev veth$DST xdp off
+ chk_gro_flag "                      - after xdp off" $DST off
+ ip -n $NS_DST link set dev veth$DST up
+@@ -260,6 +260,21 @@ ip -n $NS_SRC link set dev veth$SRC xdp object ${BPF_FILE} section xdp
+ chk_gro_flag "                      - after peer xdp" $DST off
+ cleanup
+ 
++create_ns
++ip -n $NS_DST link set dev veth$DST up
++ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp
++ip netns exec $NS_DST ethtool -K veth$DST generic-receive-offload on
++chk_gro_flag "gro vs xdp while down - gro flag on" $DST on
++ip -n $NS_DST link set dev veth$DST down
++chk_gro_flag "                      - after down" $DST on
++ip -n $NS_DST link set dev veth$DST xdp off
++chk_gro_flag "                      - after xdp off" $DST on
++ip -n $NS_DST link set dev veth$DST up
++chk_gro_flag "                      - after up" $DST on
++ip -n $NS_SRC link set dev veth$SRC xdp object ${BPF_FILE} section xdp
++chk_gro_flag "                      - after peer xdp" $DST on
++cleanup
++
+ create_ns
+ chk_channels "default channels" $DST 1 1
+ 
+@@ -327,11 +342,14 @@ if [ $CPUS -gt 2 ]; then
+ fi
+ 
+ ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp 2>/dev/null
+-chk_gro_flag "with xdp attached - gro flag" $DST on
++chk_gro_flag "with xdp attached - gro flag" $DST off
+ chk_gro_flag "        - peer gro flag" $SRC off
+ chk_tso_flag "        - tso flag" $SRC off
+ chk_tso_flag "        - peer tso flag" $DST on
+ ip netns exec $NS_DST ethtool -K veth$DST rx-udp-gro-forwarding on
++chk_gro "        - no aggregation" 10
++ip netns exec $NS_DST ethtool -K veth$DST generic-receive-offload on
++chk_gro_flag "        - gro flag with GRO on" $DST on
+ chk_gro "        - aggregation" 1
+ 
+ 
+-- 
+2.39.2
+
