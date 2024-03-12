@@ -1,75 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8714A1E534;
-	Tue, 12 Mar 2024 15:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20997C0B2
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257869; cv=none; b=u379j4GGoFHWb/FNQJGjeLUepgHYpI3PlgraglhcWAjFsbNFukMZMyrb8YL6gOX8GngDJU6dUUzumx8qPKWvfBqBVZyo0u0/9QX2uNNVieg+5wPmvaQtfG4Ija1sJhdrYm2fehVcxd0v9oaXQKnKrd3Npmjoo8l3xsvnhHeraLg=
+	t=1710257909; cv=none; b=AforkQqpr668Bw6XdgdszGWcuiCKshxc/V5BTRiojICg95xI2ZLkJG6qitksRmIY8KztbIyOyPqFlYgUDJnZl0VctzQivoPBmFgj/4md1tEEHOWw54NjwzQ9TlRgumJYegT+YUae+XBhXHDq4O5YtsScloFPnibNcK1ieaCsxSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257869; c=relaxed/simple;
-	bh=a1HUuTjqXPjdMAODl61yMmgB6v/nDK8Z43bW0h5mYQw=;
+	s=arc-20240116; t=1710257909; c=relaxed/simple;
+	bh=Qmb/J/71t1f40+UHTg1KaoGDofb1fNGn8OjvQR8BHJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUI9ls4g3LJDPv8v6EiJ0Iseu/W4AUv27bxz3Zfj2FvD+6rDnuG1cmT4W0vZ5ounZSM771NT+qQS6ZZArlD6rwXhjcDGUdCh6sZHLE0x+nS/ZUnN54vOmUIzRwwzEp6j0ml4WsCGctWvB9nKD2qJgYgMOfHcomVesK/bwyE+xl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNcucUym; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNcucUym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A15C433C7;
-	Tue, 12 Mar 2024 15:37:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710257869;
-	bh=a1HUuTjqXPjdMAODl61yMmgB6v/nDK8Z43bW0h5mYQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kNcucUymh43PmouWxMJDNZU9OYI1fqD413lILPRCs/jiUxGX7/2IABS7O7aGHJQ3b
-	 0txvh53c7QGo/I7YNQvsyI2tMVUNFGRclMJFUUhVWLtuB4Jr9l2nAsbxogq14q/rRH
-	 l8PHWNIgHrnuhYwJsMhG28B5fp6aKhi613a+9Woeqt7z1hyn1J7dVaEOIhZdxQPWdT
-	 drrWTinBC5ctHwL1e3of0TqORKafkuUNzYhhKQocsoKxdvYwMYEuRR5heOZEH9Eild
-	 vfBJZ04IbpRJpDUc/DnTE9AWmMp/8ixHSqa/I0hl51Njz0g76Ic3oNtR53qmwJOdlG
-	 K4iwM39T5mTgw==
-Date: Tue, 12 Mar 2024 16:37:42 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Jason Yan <yanaijie@huawei.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jack Wang <jinpu.wang@cloud.ionos.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/7] ata: libata-sata: Factor out NCQ Priority
- configuration helpers
-Message-ID: <ZfB2xrTOuNrrl2Q8@ryzen>
-References: <20240307214418.3812290-1-ipylypiv@google.com>
- <20240307214418.3812290-2-ipylypiv@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=l31n0haeXgXh2sAmNpLSwQI0apE5uYSgYpbEs3PjvWIxeDJTRSAbk4R9Zh9AP7xnNNAECIZNutWr4oZfd8yPa6bDtXJYXvNeYd6UrZOwUzslIi61Otu2LC9WbHLL/7gEJbPDXN0V8sb4L9hbDqGsrOEHot7kbqMu///xoBCALpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4827490"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="4827490"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:38:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="914399992"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="914399992"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 08:38:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rk4Ct-0000000BvqL-1Rx9;
+	Tue, 12 Mar 2024 17:38:23 +0200
+Date: Tue, 12 Mar 2024 17:38:23 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+	Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH 0/3] auxdisplay: Convert to platform remove callback
+ returning void
+Message-ID: <ZfB27-QS2nm1xkp9@smile.fi.intel.com>
+References: <cover.1710194084.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240307214418.3812290-2-ipylypiv@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1710194084.git.u.kleine-koenig@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Mar 07, 2024 at 01:44:12PM -0800, Igor Pylypiv wrote:
-> Export libata NCQ Priority configuration helpers to be reused
-> for libsas managed SATA devices.
+On Mon, Mar 11, 2024 at 10:59:21PM +0100, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Switched locking from spin_lock_irq() to spin_lock_irqsave().
-> In the future someone might call these helper functions when interrupts
-> are disabled. spin_unlock_irq() could lead to a premature re-enabling
-> of interrupts, whereas spin_unlock_irqrestore() restores the interrupt
-> state to its condition prior to the spin_lock_irqsave() call.
+> this series converts all platform drivers below drivers/auxdisplay to
+> stop using struct platform_driver::remove(). See commit 5c5a7680e67b
+> ("platform: Provide a remove callback that returns no value") for an
+> extended explanation and the eventual goal.
 > 
-> Acked-by: Damien Le Moal <dlemoal@kernel.org>
-> Reviewed-by: Jason Yan <yanaijie@huawei.com>
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
-> ---
+> All conversations are trivial, because the driver's .remove() callbacks
+> returned zero unconditionally.
+> 
+> There are no interdependencies between these patches, still I'd expect
+> them to be picked up together. This is merge window material.
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Pushed to my review and testing queue, thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
