@@ -1,142 +1,149 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058267D3E1
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139D7D071
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710259812; cv=none; b=jN8zJhg9mrJKpWiQcB/QbHxPnKti77oNdpL3pJrrX3bHjs47Fxks7UsPgXnC0o+44w2auh0AK7QKv3Ek/XOQgN+krKZRAJ1f+c18mMNg5nsxyFihxLYGO0QYdDP96kFNc8avUyCs2Mq+/xBv3mJ66YcKB/8mKZ36fwjfZebd5nQ=
+	t=1710259838; cv=none; b=u2ua941LOta3hv7ip2USYQWrIiyDsoZWwV8TRWmBcC+4o2JcF5euVO5fFiZCexQtG6ZcCYsqk6sxMkYFq820MGlZ1H3Sj7e+hbTYtmnBYHZDlzVnVwIDdwZ8bLu+ld/PpXs3aFb0Gk/2t61BYRJfCFxJV71JK2vh+s+YTOHlJH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710259812; c=relaxed/simple;
-	bh=Fc7O8sfBRRb8zOY1eOkMRYKNnB5ApRvE6ZnNgsRMbYg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C0OLBO3BUwCtbnPv2v9uEzXlWeyqfntjimolugSY9+ryIaBJUJMVWbJ7OjBlslbcTjcsOyS9epZZKr6YbAndbRWE0i/pp21Vjc+/6+H6UcTK/vtgeHnu9178HRQSP9adV2TPfIc0Jm0rYQ/W6+X11ig5Si0kt5bWJC2fiHiusWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=WfeGElob; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1710259838; c=relaxed/simple;
+	bh=Xin2BNfp+1GFjzXov7nfhyb64jGMW92ZD82o5arevvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X19n4/akbsn8pCDZ3Vxp88+qTiB1sRcd9ReR5xHKldpHWfxGHnE66nXk5zoimVSgDx2SgBp0UfGqYRzvyWN8XtiIGtSqorou/xGdFN1faMVE6t6gnkFFEYP/GFzelRBqkx7e5zyBtNQn1F19xgFZJIFtpQ9+nBnEMlHfcl3ywGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VUvroWiN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="WfeGElob"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-413e642806fso1207715e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1710259809; x=1710864609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9wNUX9DZCZhkOtkzBdWY6lDTHbYdRFBZXQzvAC4CccA=;
-        b=WfeGElob94iVcNvEUrLD+hD8IJpTbHvgaI3ykcUz8EI9MyeYXhnmblK0VLvuzDGKsL
-         oKXQtHwEO1cmNl5w4j2qseyBWbAazM1QmqOzgOthxNx3OKFIaDhZvU42AKfwwmZPg41m
-         LTLf0BDBJ99PkNAT0M+hff4C6aieJsbpfwCIIKuxlr8cN0lFON4R11oxp3GvHnXUbfSA
-         xr1NKAzkqFqX7YSCTYWTrypKMyBQ8XsxnNzDIEFQ8cl5BSKKXdD4lH6W7ylDOYOIm8Sg
-         D/U7aPYXT43vgaGjOPX2iVG0G1YsD/AvjjK9SJtEZ/ckdrLLgN6USca979ApfivmtwpI
-         ILeg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VUvroWiN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710259835;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ImrxqmDUR8l6fpVD0DMxxCsB0mCaYWEH2Q4v2duRTKw=;
+	b=VUvroWiNOYSF6Vdlt+XxrNjfF/DcoU9AkUIBF5K0MyPZP6cljYc8fedUsRYSrcqGH+w/zz
+	lmJv18XRTUQLBNv2yV033ALGKqsswiU5ylFVOPGpCTzwX9SGh7ltIuHNndQnem/o7iJ/tL
+	xucfCKdxSqzQi1bn6FMh9/FiNY+OkFE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-AlIGr721M9mUCsL4FmJnDg-1; Tue, 12 Mar 2024 12:10:33 -0400
+X-MC-Unique: AlIGr721M9mUCsL4FmJnDg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-412fb99c892so582315e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:10:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710259809; x=1710864609;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9wNUX9DZCZhkOtkzBdWY6lDTHbYdRFBZXQzvAC4CccA=;
-        b=OaXbwTydZ0O4ydUFHm8RSQ86QqtPLNWAMSTMceYf057xmVo36qpbfzID194LTTiwd2
-         vANk4yAzC/H7VqZ+60kggaOYvLotyzRUXd5XdUb3gcdEvZPSKeJdoeaK692dCOkNkkaj
-         ZJLfEwDgnSETcrmh8qsWDtnZ82jI77ptxVg8dje+6MCmc2Sv3H91VDo1VcpxZjmjazkV
-         cp9Ph4yTfonpYAx14Glf+6soBPKNETP8MR6hfS6mdFiZ8CHyyrsP94xxk/U0TAjqPWBA
-         Hmym3bslXy9K9L7NNgRfEegmVKreG2DswGt/KW6F09m/YZbINiSDHEFoMq7i9m2oZsAY
-         ojwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVq2wFCMti9Z258AACdLYJ4tNESjyAdxLUSL6rKhoAbQgwo1DNqHQDwSciOqHkdplj3L+iN5AFORIjVanwrNPGgu+Pz45PwuMWaN0Xk
-X-Gm-Message-State: AOJu0YyOQEoGaEg8J5GBr3gAo9K1FIbSstrBgL4eWWWfglRDvAJfAT/7
-	VqGsGxBIl7X0e0XzcH2nsn+qrpj0JFACOvqcRLdlAP8TChR4Jfwa11j69qichp4=
-X-Google-Smtp-Source: AGHT+IF+bWouiIFf+uP88Mr8eQSuWHP1533kqdq4LfgBW7SC7cEl/s7h/DffeGifPPsn3+G8rECSuw==
-X-Received: by 2002:a05:600c:4690:b0:412:95fb:e41 with SMTP id p16-20020a05600c469000b0041295fb0e41mr1840249wmo.24.1710259809271;
-        Tue, 12 Mar 2024 09:10:09 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.232.7])
-        by smtp.gmail.com with ESMTPSA id fl8-20020a05600c0b8800b00413e523b7f9sm474253wmb.43.2024.03.12.09.10.08
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 12 Mar 2024 09:10:08 -0700 (PDT)
-From: Ignat Korchagin <ignat@cloudflare.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-team@cloudflare.com,
-	Ignat Korchagin <ignat@cloudflare.com>
-Subject: [PATCH net v2 2/2] selftests: net: veth: test the ability to independently manipulate GRO and XDP
-Date: Tue, 12 Mar 2024 16:05:52 +0000
-Message-Id: <20240312160551.73184-3-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240312160551.73184-1-ignat@cloudflare.com>
-References: <20240312160551.73184-1-ignat@cloudflare.com>
+        d=1e100.net; s=20230601; t=1710259832; x=1710864632;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ImrxqmDUR8l6fpVD0DMxxCsB0mCaYWEH2Q4v2duRTKw=;
+        b=SSh1ATtiLTP4pRuwwUDnm+dBiG5yQFq1o++OJYdhepHXx88c8dVGNctEfxVBfh972r
+         UQHYIJDG6MT1axg3gQqnXGBgCZYGVtExBGOOZ8H8ZGQrLWR3lC+Brf+2FsjpDqp5keN0
+         cgh6VN8gLZPTbCk9rmWB2ZxAJ0J2y0Y4Y8Q7z53R91I46bd28/YLNCoVUv57K6aRwxtz
+         nixJVf7gIqwxgvln67eOyjHs5mizz9Vysm2U8NHRiyzsb3FMhPiB/dVK+8Dxb/9yz/LP
+         bqei0bP4F5780AFkQjxq/m562BxSEYIoEh5PPgv37IBuMYzJ9d3Ju2Z8oq0ua2YDjfnX
+         sB6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXr6jyogXybobUXM4k5hWZc7WjkuYMSS27CxHZTm1yQ0HNaEBQ/8K7fpkOrHl5dHLnWImlY+YwQiVuDBFLmblkp8tASdM7/+H1GNOl8
+X-Gm-Message-State: AOJu0Yy87sAiYUpiOItFdSGhFr4DhhDCOrOPunA8HaGxf13MI4cweOm1
+	kHA/TXr/T2Ri29CQi3VE/RoII+CoVwsLFWmwfqP0vYDNeRDjGGrHjXloUlylMafvJxJkSOhY/uV
+	33dxPzpbOpgKz0Y6cltFUxmPomOhF1AGKo9R/2qq/9tuceWZzgiCf0taOAioLtvthEkoR0A==
+X-Received: by 2002:a05:600c:b8a:b0:413:e69f:e52b with SMTP id fl10-20020a05600c0b8a00b00413e69fe52bmr39689wmb.2.1710259832676;
+        Tue, 12 Mar 2024 09:10:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBa6B5qWxK1iohynqXZubqORyNA9XAJ3s168g8XNdnEYTmjPfSj366zFNWIUNULqzFvMEZOQ==
+X-Received: by 2002:a05:600c:b8a:b0:413:e69f:e52b with SMTP id fl10-20020a05600c0b8a00b00413e69fe52bmr39669wmb.2.1710259832198;
+        Tue, 12 Mar 2024 09:10:32 -0700 (PDT)
+Received: from [192.168.3.108] (p4ff23be3.dip0.t-ipconnect.de. [79.242.59.227])
+        by smtp.gmail.com with ESMTPSA id fs20-20020a05600c3f9400b004132b1385aesm6178849wmb.15.2024.03.12.09.10.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Mar 2024 09:10:31 -0700 (PDT)
+Message-ID: <58fbe42a-3051-46bf-a3f9-d59da28a9cd7@redhat.com>
+Date: Tue, 12 Mar 2024 17:10:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/15] Fast kernel headers: split linux/mm.h
+Content-Language: en-US
+To: Max Kellermann <max.kellermann@ionos.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: willy@infradead.org, sfr@canb.auug.org.au
+References: <20240312094133.2084996-1-max.kellermann@ionos.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240312094133.2084996-1-max.kellermann@ionos.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-We should be able to independently flip either XDP or GRO states and toggling
-one should not affect the other.
+On 12.03.24 10:41, Max Kellermann wrote:
+> This patch set aims to clean up the linux/mm.h header and reduce
+> dependencies on it by moving parts out.
+> 
+> The goal was to eliminate dependencies on linux/mm.h from other
+> popular headers such as highmem.h and dma-mapping.h, and I started by
+> checking which symbols were really used and moved those declarations
+> to separate slim headers.
+> 
 
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
----
- tools/testing/selftests/net/veth.sh | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/tools/testing/selftests/net/veth.sh b/tools/testing/selftests/net/veth.sh
-index 5ae85def0739..3a394b43e274 100755
---- a/tools/testing/selftests/net/veth.sh
-+++ b/tools/testing/selftests/net/veth.sh
-@@ -249,9 +249,9 @@ cleanup
- create_ns
- ip -n $NS_DST link set dev veth$DST up
- ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp
--chk_gro_flag "gro vs xdp while down - gro flag on" $DST on
-+chk_gro_flag "gro vs xdp while down - gro flag off" $DST off
- ip -n $NS_DST link set dev veth$DST down
--chk_gro_flag "                      - after down" $DST on
-+chk_gro_flag "                      - after down" $DST off
- ip -n $NS_DST link set dev veth$DST xdp off
- chk_gro_flag "                      - after xdp off" $DST off
- ip -n $NS_DST link set dev veth$DST up
-@@ -260,6 +260,21 @@ ip -n $NS_SRC link set dev veth$SRC xdp object ${BPF_FILE} section xdp
- chk_gro_flag "                      - after peer xdp" $DST off
- cleanup
- 
-+create_ns
-+ip -n $NS_DST link set dev veth$DST up
-+ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp
-+ip netns exec $NS_DST ethtool -K veth$DST generic-receive-offload on
-+chk_gro_flag "gro vs xdp while down - gro flag on" $DST on
-+ip -n $NS_DST link set dev veth$DST down
-+chk_gro_flag "                      - after down" $DST on
-+ip -n $NS_DST link set dev veth$DST xdp off
-+chk_gro_flag "                      - after xdp off" $DST on
-+ip -n $NS_DST link set dev veth$DST up
-+chk_gro_flag "                      - after up" $DST on
-+ip -n $NS_SRC link set dev veth$SRC xdp object ${BPF_FILE} section xdp
-+chk_gro_flag "                      - after peer xdp" $DST on
-+cleanup
-+
- create_ns
- chk_channels "default channels" $DST 1 1
- 
-@@ -327,11 +342,14 @@ if [ $CPUS -gt 2 ]; then
- fi
- 
- ip -n $NS_DST link set dev veth$DST xdp object ${BPF_FILE} section xdp 2>/dev/null
--chk_gro_flag "with xdp attached - gro flag" $DST on
-+chk_gro_flag "with xdp attached - gro flag" $DST off
- chk_gro_flag "        - peer gro flag" $SRC off
- chk_tso_flag "        - tso flag" $SRC off
- chk_tso_flag "        - peer tso flag" $DST on
- ip netns exec $NS_DST ethtool -K veth$DST rx-udp-gro-forwarding on
-+chk_gro "        - no aggregation" 10
-+ip netns exec $NS_DST ethtool -K veth$DST generic-receive-offload on
-+chk_gro_flag "        - gro flag with GRO on" $DST on
- chk_gro "        - aggregation" 1
- 
- 
+>   include/linux/mm.h                            | 583 +-----------------
+>   include/linux/mm/devmap_managed.h             |  37 ++
+>   include/linux/mm/folio_next.h                 |  27 +
+
+Isn't that a bit excessive? Do we really need that many folio headers?
+
 -- 
-2.39.2
+Cheers,
+
+David / dhildenb
 
