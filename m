@@ -1,182 +1,111 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671687A13C
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA7C142634
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 19:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710272786; cv=none; b=c0+UWoIGJLegyJhiZSr6ib+YhoZZrQfb26tv2hSm3MV4GdkS8B3+v9sIvZvTva8n7WKQ5+FVqTLYG1wwvIq0HLrO3YzfAX1QuprMyuOr8fOWP4ICJwi5J5gMYRqH5bnHR3V05jkggw/qKI0yb3e/u794J0QfboLP85lJrpPTAkA=
+	t=1710272877; cv=none; b=Vbl+D0hnT4q2YJvp8iZmvBuk0LsD4yYB3mcspTSyejnUiTxc7VP+YCT7h72krUXBnYHRzYaQDLyxtav1CIllzgCnFLKeyij9Y3lnvI6lup/Crfn21awsQrv39nbj5SDPzbRzjsZkItNhxBNMKKuap2XFaIdo7IHysn/yryYHFvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710272786; c=relaxed/simple;
-	bh=5mUls8Ku27e1Rzkt70Xdh/u8lFDUn59BuyQL45vxSic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G7eDC4EB0FCCCqeaUaDrTyZm4+gX82+qBIg+iFHqpbl1+QJSJ5FTgMArfGOl1iA8qUEgnVxcFSktuDpgOFR8JLYkX3y9PBR++LPoOs3llgsoaCBhnfBicBR03VnshKIyOfSrzUcWXTEaWAZHL2vkicUBKt8y1pfY1HL8ox7cVP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=29nE4Knf; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1710272877; c=relaxed/simple;
+	bh=U1yCIqRq0duvpJX2nz5FFSagYRqS2vPnAY5Af8ygvZo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qILXuyRVbuCPBS4+cNSzKwW1DbjmsHvblECXPw7zhjQx4D9vpFaKr6TQLfoFUSZBoDLLe1t5UXRGL779yGxX3RtwOifg2zF4tlvc2tl0KswLtnVYofX5eAKBS1wPOmRswc3N9EpbaUK83kiopPO8wKfqIbGeQAheFNFLT95ePSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XBlu3+39; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="29nE4Knf"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c1e992f069so3019609b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:46:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XBlu3+39"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5a19de33898so221161eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710272783; x=1710877583; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+k5a1edRWn/GNqW+k0d2uxrg3xuipstfEZ2u0wtLdYU=;
-        b=29nE4KnfgRj+O1d0Stww5Y9jFx2MVSis5xWiXOy12T/42qKQKuzj/s+wOkuvI8pOlp
-         mTRB2skdRvVWKq6sgW5TMnuMV1Q1jCPCMWvlfbh0fY8V2200u/GivzZr7AGROE+taOlH
-         UBnSE2shitIMfmvfAn2pb4/UagY1iJBU0JUTbItcYuWsTnZUgSzRvMMrZJ0D16PLKs9L
-         MgnY+fu7olI5TiPmnS/TzOoRPqBKRI2OG79kxjSxcrQ2u8MxTSir+8rdfEusob/9XkeQ
-         +Ua6632/659UlJNK/rKAQ3u2AA3trBslLkQ20RHAPQ+G9y4aZ6vFjHBaU0J+TySvi/4g
-         y3YQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710272874; x=1710877674; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JOqRUTnz4dMY1mDsAaQqT8RlSz6vNVMJhwSPPEU0/Tk=;
+        b=XBlu3+39DS35WQKvpj1l1k9QknOGZUQRwfMYYFXgJjjnGdIw4UioCcFjGfq3RtOHfw
+         SMOd1B165Xxq10WCu/lLNqp0o1jv8eqcOcTuLx3Ze/u5b6epq1OrjR3Ax4h+JkDWM8Ub
+         mA329ajlsEElbTBwabifjORjGbMA/5ypYwgLRBxmWQr8T4AUM6FPDZuyLT7xtNzojfbD
+         duJtDz/hxl9RfVONEw1+Vv3Tlw01yf+fUOswsSgw+TCVQwaSUbaLpNqBDE75wr5SGF5y
+         GNVy4drxIgFOEDF4ZzzXN38PGJKjnhw9npIjvxJKtmpv9AHIerw23wKJP51J+DteflAJ
+         TrXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710272783; x=1710877583;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710272874; x=1710877674;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+k5a1edRWn/GNqW+k0d2uxrg3xuipstfEZ2u0wtLdYU=;
-        b=ZbUYlDEEEzQZ/Jhu8orpHyWCjz+jENCwpU6LsRmVIVTVmOypHBLZAwgYj9PpQwip0c
-         UvltxIuOaDCs67Qz2tDDt1BWZ4547X6/UJ11N9o1Xq0GPU3LeXvzgr7Fw/A+hje2Vl5c
-         3zb8FWkHaOzwW4sJQ5yhvZHcwvqcMO/KSnRs0yQM77YK81iPE6P/oEhgu5u8Ng+zP+LM
-         bS/RF1scxgMTdR2k1TqWN/X2Pk96xwQqVQisYMxLx0wIi/KdwUCtoxaggQUuymazumYb
-         Eu86YWUY0BH5DwjxWWbzrEOdIKQl8VBFH6A7E3KsJXjd9Alp+kZMnMLz2+snr6jCOhmP
-         ztRg==
-X-Gm-Message-State: AOJu0YxDQcXgVaKoKqdzhaXycpg3UZsakGszK/B/rnyXg+Gmkro4PFTU
-	J1m0mot0exjzTCvSoIjahXAMg/k7P4AtaOb2uOHPPo2pUS3FbBuPUPaH1v6leYI9hhUpgPyX6LF
-	pa/x+tl77yoDJtZfQb+et0jLk0Tavga2JXFwAaw==
-X-Google-Smtp-Source: AGHT+IFCSecG9JVro32J9SgF6VVa2fZX7giCOM+EunUYFBUZXmDzBkZ/0+GBTOC0v9b6/Zvw5GomwU16QkYU+z1k1Eg=
-X-Received: by 2002:a05:6808:1528:b0:3c2:1792:105b with SMTP id
- u40-20020a056808152800b003c21792105bmr13478223oiw.43.1710272782623; Tue, 12
- Mar 2024 12:46:22 -0700 (PDT)
+        bh=JOqRUTnz4dMY1mDsAaQqT8RlSz6vNVMJhwSPPEU0/Tk=;
+        b=KmPMUVE4hg2OcHaF/3XLETwqobnePKfnlLR4BBaVKEsrm+fzfXq93IrtqEmAuxJgBP
+         nwIHewub837vZ2XNsHkQKzagtlWIiZvWekrxxqAfbUo9g7udjb33IbGjlS0ylAlRLBpg
+         toYM7LIpEaur9VHGeTApqyh8VUj2ZZMaLwFoKX4rDpbm3OYrLb0ETClc3agqOZMcY1W1
+         Af79oW/qa+ikQKhQ4EoBzEHXMJBDKYbz2jhWrywspyrlXW6ZS/Iz/L94FilaKqv2ZBo8
+         h2YjL4CEZEnus66IA30rzHpoEpWWW9r+zNFq1wxy1sGYHccgoUaGFA/I7Zrw/rwPdQr2
+         7aww==
+X-Forwarded-Encrypted: i=1; AJvYcCXLDTurNX2Us7dQCzGcX3wkbqbnXZOWHqSa0PeAs34JraRRb+hMDHOpHxMpJRystffWMUZVGYz6fVMwqLnR0AwxJpNsD04nft7HwCgG
+X-Gm-Message-State: AOJu0YwqEHn8OgPCt66ZcpkfAZv/RQzaQYJ/pA/fIn255fTtUimZVRWp
+	/n7WwmEB2TdF1qyu9AL2r57Zyni8jpr0xVltt8CS48nt74NwlLI1ytwCcInOCXg=
+X-Google-Smtp-Source: AGHT+IGI3bdfpp+X8J+ZAKrqf6mS+YBT6i2j3SsCGQcUF6D9lLzGReHwzZfu7T6A9BAy8M6S+dJeAg==
+X-Received: by 2002:a05:6358:3228:b0:17e:6924:e4ef with SMTP id a40-20020a056358322800b0017e6924e4efmr4693399rwe.24.1710272874205;
+        Tue, 12 Mar 2024 12:47:54 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id z69-20020a633348000000b005dc884e9f5bsm6433495pgz.38.2024.03.12.12.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 12:47:53 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Tue, 12 Mar 2024 12:47:51 -0700
+Subject: [PATCH v12 1/4] riscv: Remove unnecessary irqflags processor.h
+ include
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com> <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
-In-Reply-To: <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 12 Mar 2024 15:45:44 -0400
-Message-ID: <CA+CK2bC+bgOfohCEEW7nwAdakVmzg=RhUjjw=+Rw3wFALnOq-Q@mail.gmail.com>
-Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, jacob.jun.pan@linux.intel.com, 
-	jgg@ziepe.ca, jpoimboe@kernel.org, jroedel@suse.de, juri.lelli@redhat.com, 
-	kent.overstreet@linux.dev, kinseyho@google.com, 
-	kirill.shutemov@linux.intel.com, lstoakes@gmail.com, luto@kernel.org, 
-	mgorman@suse.de, mic@digikod.net, michael.christie@oracle.com, 
-	mingo@redhat.com, mjguzik@gmail.com, mst@redhat.com, npiggin@gmail.com, 
-	peterz@infradead.org, pmladek@suse.com, rick.p.edgecombe@intel.com, 
-	rostedt@goodmis.org, surenb@google.com, tglx@linutronix.de, urezki@gmail.com, 
-	vincent.guittot@linaro.org, vschneid@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240312-fencei-v12-1-0f340f004ce7@rivosinc.com>
+References: <20240312-fencei-v12-0-0f340f004ce7@rivosinc.com>
+In-Reply-To: <20240312-fencei-v12-0-0f340f004ce7@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Atish Patra <atishp@atishpatra.org>, Randy Dunlap <rdunlap@infradead.org>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710272871; l=696;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=U1yCIqRq0duvpJX2nz5FFSagYRqS2vPnAY5Af8ygvZo=;
+ b=B4BSJn3Ds/uhAQxDonyv5DKERy7Fsrbt2TvkM0fPKhogZvT+pJ7QmCDUxVLS6ckX7qedOXG0u
+ KalC8LH+1ZCD46M/5bI5dIEnZ3XJ5XlRQEEBBBsLpauEY6z5ACcZhlV
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Tue, Mar 12, 2024 at 1:19=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrot=
-e:
->
->
->
-> On 3/11/24 09:46, Pasha Tatashin wrote:
-> > This is follow-up to the LSF/MM proposal [1]. Please provide your
-> > thoughts and comments about dynamic kernel stacks feature. This is a WI=
-P
-> > has not been tested beside booting on some machines, and running LKDTM
-> > thread exhaust tests. The series also lacks selftests, and
-> > documentations.
-> >
-> > This feature allows to grow kernel stack dynamically, from 4KiB and up
-> > to the THREAD_SIZE. The intend is to save memory on fleet machines. Fro=
-m
-> > the initial experiments it shows to save on average 70-75% of the kerne=
-l
-> > stack memory.
-> >
-> > The average depth of a kernel thread depends on the workload, profiling=
-,
-> > virtualization, compiler optimizations, and driver implementations.
-> > However, the table below shows the amount of kernel stack memory before
-> > vs. after on idling freshly booted machines:
-> >
-> > CPU           #Cores #Stacks  BASE(kb) Dynamic(kb)   Saving
-> > AMD Genoa        384    5786    92576       23388    74.74%
-> > Intel Skylake    112    3182    50912       12860    74.74%
-> > AMD Rome         128    3401    54416       14784    72.83%
-> > AMD Rome         256    4908    78528       20876    73.42%
-> > Intel Haswell     72    2644    42304       10624    74.89%
-> >
-> > Some workloads with that have millions of threads would can benefit
-> > significantly from this feature.
-> >
->
-> Ok, first of all, talking about "kernel memory" here is misleading.
+This include is not used. Remove it to avoid a circular dependency in
+the next patch in the series.
 
-Hi Peter,
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+---
+ arch/riscv/include/asm/irqflags.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-I re-read my cover letter, and I do not see where "kernel memory" is
-mentioned. We are talking about kernel stacks overhead that is
-proportional to the user workload, as every active thread has an
-associated kernel stack. The idea is to save memory by not
-pre-allocating all pages of kernel-stacks, but instead use it as a
-safeguard when a stack actually becomes deep. Come-up with a solution
-that can handle rare deeper stacks only when needed. This could be
-done through faulting on the supported hardware (as proposed in this
-series), or via pre-map on every schedule event, and checking the
-access when thread goes off cpu (as proposed by Andy Lutomirski to
-avoid double faults on x86) .
+diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/asm/irqflags.h
+index 08d4d6a5b7e9..6fd8cbfcfcc7 100644
+--- a/arch/riscv/include/asm/irqflags.h
++++ b/arch/riscv/include/asm/irqflags.h
+@@ -7,7 +7,6 @@
+ #ifndef _ASM_RISCV_IRQFLAGS_H
+ #define _ASM_RISCV_IRQFLAGS_H
+ 
+-#include <asm/processor.h>
+ #include <asm/csr.h>
+ 
+ /* read interrupt enabled status */
 
-In other words, this feature is only about one very specific type of
-kernel memory that is not even directly mapped (the feature required
-vmapped stacks).
+-- 
+2.43.2
 
-> Unless your threads are spending nearly all their time sleeping, the
-> threads will occupy stack and TLS memory in user space as well.
-
-Can you please elaborate, what data is contained in the kernel stack
-when thread is in user space? My series requires thread_info not to be
-in the stack by depending on THREAD_INFO_IN_TASK.
-
-> Second, non-dynamic kernel memory is one of the core design decisions in
-> Linux from early on. This means there are lot of deeply embedded
-> assumptions which would have to be untangled.
->
-> Linus would, of course, be the real authority on this, but if someone
-> would ask me what the fundamental design philosophies of the Linux
-> kernel are -- the design decisions which make Linux Linux, if you will
-> -- I would say:
->
->         1. Non-dynamic kernel memory
->         2. Permanent mapping of physical memory
-
-The one and two are correlated. Given that all the memory is directly
-mapped, the kernel core cannot be relocatable, swappable, faultable
-etc.
-
->         3. Kernel API modeled closely after the POSIX API
->            (no complicated user space layers)
->         4. Fast system call entry/exit (a necessity for a
->            kernel API based on simple system calls)
->         5. Monolithic (but modular) kernel environment
->            (not cross-privilege, coroutine or message passing)
->
-> Third, *IF* this is something that should be done (and I personally
-> strongly suspect it should not), at least on x86-64 it probably should
-> be for FRED hardware only. With FRED, it is possible to set the #PF
-> event stack level to 1, which will cause an automatic stack switch for
-> #PF in kernel space (only). However, even in kernel space, #PF can sleep
-> if it references a user space page, in which case it would have to be
-> demoted back onto the ring 0 stack (there are multiple ways of doing
-> that, but it does entail an overhead.)
-
-My understanding is that with the proposed approach only double faults
-are prohibited to be used. Pre-map/check-access could still work, even
-though it would add some cost to the context switching.
-
-Thank you,
-Pasha
