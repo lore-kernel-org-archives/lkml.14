@@ -1,217 +1,94 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385113D3A7
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782B133994
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710237339; cv=none; b=LI2Xv2UTkPpSe5E5nmL2+/SvwTYifWpl3fBfMuj0TUMrNkrO2axjoJOJyUOir9NbAXOdCixCOmWT2/oAh9HhYv+Vr2znZFOQbt8lvQ2X8thqR3AKjIIxDMxcUA+grSaB1XsrEJgKHW2DfqwD9j13WCcFe+4Bzhm+bOnTQNm3GRw=
+	t=1710237482; cv=none; b=objimq+iEx+c8pTAW9xVO0vIVHloo4LvDeEX/BUuGRuTR7ilgzrjbGD43JkjLLkN2pzU8r2UQeEBdRpN+3OTbnlv+45/3BBzpAQQVMiq1V3SxmyW4dbnIli8EMIyFhSGT/OI6S6mMP43xBW7DV2gyLAhm2SvtembGeka7/J8kfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710237339; c=relaxed/simple;
-	bh=aVU9zpMOIfibE9jR2lbs959lkX8Xhz6OvWV2wcRicpk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=iutTMbx0yUr7/qZLRVY9G0P3wv0qhNAvnq8/e0rZZxcJcslNMTl/ziFIIkDdDVIldlX/+weZxzyRjuUi0nEAFvcKlfQU4F7jK+0kr0RCZP/AG4gA56B+3uysEJPbtKtXLacHrjNEUIAQ1GDEkLCeOwjN/5pxJW2k1CuS7Hq4b8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=H7j5tXUm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9NsR97zB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=H7j5tXUm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9NsR97zB; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1710237482; c=relaxed/simple;
+	bh=XRrd/mRYiuVNaYDbIbSa1EEqn9i8XS+3pxvuW9JmMSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CseOi/Gc8almSsZ6Y6RPTSAl5RABywqT5xrukEH0FS/IC06IE8HHkNOiYXqUu0lAikTM49zSRpted7sbLt2/Kc2hiyf4DRthcC9H4g7iMohfAhbrO8Vk2iYSexQsxasGpVzD+pPtKoHIoaw72Fas5/WFxG+U3IP284L9jczPgts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iWiN612H; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="H7j5tXUm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9NsR97zB";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="H7j5tXUm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9NsR97zB"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 800215D329;
-	Tue, 12 Mar 2024 09:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710237333; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YzJACWi54kwPIGZqHOdVD9RXCFTA28hRNteB4QElH0Y=;
-	b=H7j5tXUmQnatggY+G5G6M2ZVgSSA4vMyTza9w6W82MdBE9u2JLEB9S40FpANNaNolN3i18
-	kgnL5BeC035nF0W7RuVBDaJrScWXmwX2agA5MyCM2jXOLi1/VFT/hf4n5OC0K9GQRjmNsT
-	wm/oCAInQyCVaCa7x1VDLb7jlHNubKU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710237333;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YzJACWi54kwPIGZqHOdVD9RXCFTA28hRNteB4QElH0Y=;
-	b=9NsR97zBV+tUKXMO2FP/AvYai5gm6w0ppcRK41rcECNk55kDPsD/RZMwPmLaiZSsw3RaFe
-	Q1jON5EqK1iRD9Dg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710237333; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YzJACWi54kwPIGZqHOdVD9RXCFTA28hRNteB4QElH0Y=;
-	b=H7j5tXUmQnatggY+G5G6M2ZVgSSA4vMyTza9w6W82MdBE9u2JLEB9S40FpANNaNolN3i18
-	kgnL5BeC035nF0W7RuVBDaJrScWXmwX2agA5MyCM2jXOLi1/VFT/hf4n5OC0K9GQRjmNsT
-	wm/oCAInQyCVaCa7x1VDLb7jlHNubKU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710237333;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YzJACWi54kwPIGZqHOdVD9RXCFTA28hRNteB4QElH0Y=;
-	b=9NsR97zBV+tUKXMO2FP/AvYai5gm6w0ppcRK41rcECNk55kDPsD/RZMwPmLaiZSsw3RaFe
-	Q1jON5EqK1iRD9Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 620A51364F;
-	Tue, 12 Mar 2024 09:55:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SoWOF5Um8GX6PwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 12 Mar 2024 09:55:33 +0000
-Message-ID: <c021631d-29e5-432f-bfcd-1d75ec28d065@suse.cz>
-Date: Tue, 12 Mar 2024 10:55:33 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iWiN612H"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33e99b62e01so1364974f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 02:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710237479; x=1710842279; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XRrd/mRYiuVNaYDbIbSa1EEqn9i8XS+3pxvuW9JmMSQ=;
+        b=iWiN612H4XiEmaR6YxjQmgAQ6InikZD4vddxmqXfcYilphYeoqrJjx2/pnzjoxFbJZ
+         2o2cTP0aJs3zRzkeimUCYb0CWYVgZZE8t76Ng3rOO59hAhUfKJyHLZ11xlRWeZ5/yMPC
+         JvfL5H+sLKDAs48wZw2w2QErG8tQFx7LWhnkJ7TWT5ZtRbRAaZMInxXKEF8R2wUt5O3a
+         N8hHXgF2cb36NqGJEW/4vay/G+A6kMzFm7GKHAA9eNXx/21iL/k3mCYa57lymrAEMUPO
+         1c+KoZuNDj7Da2DVl7t2zY6t30V1t1mStV0gcYeFGKZkmlYoNkuqWJsd1KdNSfW3kIgt
+         rvig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710237479; x=1710842279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XRrd/mRYiuVNaYDbIbSa1EEqn9i8XS+3pxvuW9JmMSQ=;
+        b=FHjQIk2XNxQ6pP1WGuGlXNafSgfSKTsitSDf4MWWXsZxINLiqUwi9nS+DHMsz5S4Pd
+         Bxy2+OnD2MTlU9kUUQCLec6pJrqo9NU2jsSBeFNo7+xxYXCpj2uwF/yymYNLZkM/8EDX
+         Wawo/cJIfk41sXSe16KeMFSkGxjZM9xevgdhu+itodTZSDX60DNE9F1EsQBaq8N4w+5z
+         RouigkghI/y0gK8ArzhKCNkdZt1CC/ArigcAdTB/iw7vy84aJXbAI30gyCpEnbBqrz5f
+         gdwJwBxAzA7J5rxwT3/ShhP9SG+WUgO3RWbJg48d38GYQh0WZ76F5AgTLvpPqfROwoyA
+         5LKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUc8+MdYhvoC31e7cPImqzhCP8FhVb2KHphxli1ozHStDwipaZ0uuzgAMEjunNbrahr1RktcsHg03mp/IjgbSctDHoxKXN0zkOPInvu
+X-Gm-Message-State: AOJu0Yz8gwzxuq6bGNf/UuLrOG3Ir0mi5vmDywSwUXbVQ26W6TEqy9Fy
+	8DxPkVedGLSJNIsw40xNC4UkdqFTGV/e+CgQA2bQuQjGPO49WwCgPSY1DVVHz7T6XikR+3fLaUy
+	pHHo=
+X-Google-Smtp-Source: AGHT+IETA/fhuKCiOQdvs/qQPMu8fwiw5YqR4JFWLLA9lS90bkIdlBJzwgAtJ7p3egiNO9bXfcY3Hw==
+X-Received: by 2002:a5d:4306:0:b0:33e:7fcb:c0e with SMTP id h6-20020a5d4306000000b0033e7fcb0c0emr874687wrq.6.1710237478891;
+        Tue, 12 Mar 2024 02:57:58 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id y3-20020adff143000000b0033dc3f3d689sm8594544wro.93.2024.03.12.02.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 02:57:58 -0700 (PDT)
+Date: Tue, 12 Mar 2024 09:57:56 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Liuye <liu.yeC@h3c.com>
+Cc: "jason.wessel@windriver.com" <jason.wessel@windriver.com>,
+	"dianders@chromium.org" <dianders@chromium.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"kgdb-bugreport@lists.sourceforge.net" <kgdb-bugreport@lists.sourceforge.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI0=?= =?utf-8?Q?=3A?= [PATCH] kdb:
+ Fix the deadlock issue in KDB debugging.
+Message-ID: <20240312095756.GB202685@aspen.lan>
+References: <20240228025602.3087748-1-liu.yeC@h3c.com>
+ <20240228120516.GA22898@aspen.lan>
+ <8b41d34adaef4ddcacde2dd00d4e3541@h3c.com>
+ <20240301105931.GB5795@aspen.lan>
+ <2ea381e7407a49aaa0b08fa7d4ff62d3@h3c.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Vlastimil Babka <vbabka@suse.cz>
-Subject: [GIT PULL] slab updates for 6.9
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>, Joonsoo Kim
- <iamjoonsoo.kim@lge.com>, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
- LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Chengming Zhou <chengming.zhou@linux.dev>,
- Xiongwei Song <xiongwei.song@windriver.com>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=H7j5tXUm;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=9NsR97zB
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[google.com,lge.com,linux.com,kernel.org,linux-foundation.org,kvack.org,vger.kernel.org,lists.linux.dev,linux.dev,gmail.com,windriver.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -3.00
-X-Rspamd-Queue-Id: 800215D329
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ea381e7407a49aaa0b08fa7d4ff62d3@h3c.com>
 
-Hi Linus,
+On Tue, Mar 12, 2024 at 08:37:11AM +0000, Liuye wrote:
+> I know that you said schedule_work is not NMI save, which is the first
+> issue. Perhaps it can be fixed using irq_work_queue. But even if
+> irq_work_queue is used to implement it, there will still be a deadlock
+> problem because slave cpu1 still has not released the running queue
+> lock of master CPU0.
 
-please pull the latest slab updates from:
+This doesn't sound right to me. Why do you think CPU1 won't release the
+run queue lock?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git tags/slab-for-6.9
 
-I'm not aware of any merge conflicts this time.
-
-Thanks,
-Vlastimil
-
-======================================
-
-- Freelist loading optimization (Chengming Zhou)
-
-  When the per-cpu slab is depleted and a new one loaded from the cpu partial
-  list, optimize the loading to avoid an irq enable/disable cycle. This results
-  in a 3.5% performance improvement on the "perf bench sched messaging" test.
-
-- Kernel boot parameters cleanup after SLAB removal (Xiongwei Song)
-
-  Due to two different main slab implementations we've had boot parameters
-  prefixed either slab_ and slub_ with some later becoming an alias as both
-  implementations gained the same functionality (i.e. slab_nomerge vs
-  slub_nomerge). In order to eventually get rid of the implementation-specific
-  names, the canonical and documented parameters are now all prefixed slab_
-  and the slub_ variants become deprecated but still working aliases.
-
-- SLAB_ kmem_cache creation flags cleanup (Vlastimil Babka)
-
-  The flags had hardcoded #define values which became tedious and error-prone
-  when adding new ones. Assign the values via an enum that takes care of
-  providing unique bit numbers. Also deprecate SLAB_MEM_SPREAD which was only
-  used by SLAB, so it's a no-op since SLAB removal. Assign it an explicit zero
-  value.  The removals of the flag usage are handled independently in the
-  respective subsystems, with a final removal of any leftover usage planned
-  for the next release.
-
-- Misc cleanups and fixes (Chengming Zhou, Xiaolei Wang, Zheng Yejian)
-
-  Includes removal of unused code or function parameters and a fix of a
-  memleak.
-
-----------------------------------------------------------------
-Chengming Zhou (7):
-      mm/slub: directly load freelist from cpu partial slab in the likely case
-      mm/slub: remove full list manipulation for non-debug slab
-      mm/slub: remove unused parameter in next_freelist_entry()
-      mm, slab: remove unused object_size parameter in kmem_cache_flags()
-      mm, slab: fix the comment of cpu partial list
-      mm, slab: remove the corner case of inc_slabs_node()
-      slab: remove PARTIAL_NODE slab_state
-
-Vlastimil Babka (6):
-      mm, slab: deprecate SLAB_MEM_SPREAD flag
-      mm, slab: use an enum to define SLAB_ cache creation flags
-      mm, slab, kasan: replace kasan_never_merge() with SLAB_NO_MERGE
-      mm, slab: remove memcg_from_slab_obj()
-      Merge branch 'slab/for-6.9/optimize-get-freelist' into slab/for-linus
-      Merge branch 'slab/for-6.9/slab-flag-cleanups' into slab/for-linus
-
-Xiaolei Wang (1):
-      mm/slab: Fix a kmemleak in kmem_cache_destroy()
-
-Xiongwei Song (4):
-      Documentation: kernel-parameters: remove noaliencache
-      mm/slub: unify all sl[au]b parameters with "slab_$param"
-      mm/slub: replace slub_$params with slab_$params in slub.rst
-      mm/slub: make the description of slab_min_objects helpful in doc
-
-Zheng Yejian (1):
-      mm/slub: remove parameter 'flags' in create_kmalloc_caches()
-
- Documentation/admin-guide/kernel-parameters.txt |  75 +++++++--------
- Documentation/mm/slub.rst                       |  60 ++++++------
- drivers/misc/lkdtm/heap.c                       |   2 +-
- include/linux/kasan.h                           |   6 --
- include/linux/slab.h                            |  97 ++++++++++++++------
- mm/Kconfig.debug                                |   6 +-
- mm/kasan/generic.c                              |  22 ++---
- mm/slab.h                                       |  11 +--
- mm/slab_common.c                                |  29 +++---
- mm/slub.c                                       | 116 ++++++++++--------------
- tools/include/linux/slab.h                      |   1 -
- 11 files changed, 210 insertions(+), 215 deletions(-)
+Daniel.
