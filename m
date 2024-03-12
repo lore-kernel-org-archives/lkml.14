@@ -1,117 +1,92 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77797B3C7
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E51A32C85;
+	Tue, 12 Mar 2024 16:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710261330; cv=none; b=cem4PoSLifAQE4QPjC0T7iukkEDMzx88+5yTG9GKPOeugATjhdbNO2vZ/qYXYNqV20/V9buRl9udWhV13Clyqsd6kKpSsf/PEJ16/0xLJwFqepFR8iwJFYozTTGzE3ej3ii9zvmt9MUmPRW1S1f2Rn1a35vOw699plZdcixhrc8=
+	t=1710261365; cv=none; b=g9knDFrSV10nDIWTItBt/TMrt+elGdn7PLU6dSSmMB8Hy9QyLeahj4IsUrIrZXQmQWlyVIqRPJM265b4qPnBXjJN29VzqnLnQMW3qenhSF1B8aDuSR7aYPbu4/DFPu9kkYvyQQvbjDPkZON5y5gtq5CRNbCRAWGK0J/WvOH5KQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710261330; c=relaxed/simple;
-	bh=S8Gs69JN4BRkAeykLxUkio2jGlDuEezvviIDYxcsAWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYTzJGIl0y6XM0pO4RIMBe3A7oDmQsvHxxa3UXJTOXCBQY+JvdXW2GuzVRdzmEt3cDLP3aVcV5zmzjEqO5bLTbc/JWU25I2iLTiwVFSIJO2i2zjTVZdbAd0tc0CVpo2FDNAnTPE4YYwaTxS7yqCx2LKk5FdP/AeL5OB58RXx4no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AZVdRiHX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1710261365; c=relaxed/simple;
+	bh=T69s4z2/Pz7KrsIkKDfhH6XQgMeAXd8VOP95OvHFy5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sLIT2BKR1aeR7Nx4NgKlAc1XZvEkDeF70QZpyFr1iXPhQRN6EGIVaMCUzM+8nHUHZGAdnczaGhK/Cn6dotXque9izvrZ1bhvL7lP5LintfDlwEPqi/w4OHU+HcDQuhPSUbtsiBb/huDtuqT28ldtHU1I8E7Tt+OCYkh1Ol5KhBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WHwTMZ7D; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AZVdRiHX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4B7E140E01A0;
-	Tue, 12 Mar 2024 16:35:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id C7Fj07iVaBQ2; Tue, 12 Mar 2024 16:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1710261323; bh=P6Nl44Mmk5e+Il2mmTMKgMSHn/Wtfj20yZkZYWVB8Gs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AZVdRiHXZef7l0OGlxlbI6SoxrveedSFzf03ZcUuRzJXZtM794XB2slSMvi0l3P4H
-	 myLYJheI1jT6lDWHIcabRHGOKvVTvzBvjJ8DnMe1EylB1iLVf/RBTN0lTf02U3lxpI
-	 bO0VcO4Z9oG0onMeephMq7Lre6CRv0U0m7hIYfByQjE/W6Uy6p9lt8COWXDLe58lID
-	 W+3ZDUnsRg+wlK98R/jv5Az6j4oGLrZL52kxhLgsqx5bwR1KLkrTyqggiTNe6VAidJ
-	 iK4suK3AuqGiGN0RZcksQrv5RXSU/xek9gq5Da+pIvftgpxN7pSusWpX4twi5vWcYu
-	 CA4OJZy+lCqDdRxTCExCBwNJ8uNED3R7LB6V/qIGzrkokuib/M4KnibwpZcOQJnSDk
-	 lJnVbDF2O+WBuJTEX1ulc09wCi1c8zfZ7uSr+vJixzzk3VDihLanhL9IlTUo9p+zr+
-	 dY/ALOvvHLYBb/UQK8yAe4ZocdifI2dNnCa/BzRtzMeLtMNz+mSR1OvyuqD+T/hlrZ
-	 UsVcKVbHCQe6TYRx1+sfrAyIxSLpxI4qay6l1+z137D7IJ5bzu8u4Zs8xjNDhIwsBY
-	 Y5BMo/KPX0P4BqCxq6nG/UZIKf/5Fg8TOw9I9bCoAwPEtNMASwTnOlJFb6lBwhXFWc
-	 zEmyw1hYE3OtSnFXQ0QzFgJE=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F86240E016B;
-	Tue, 12 Mar 2024 16:35:08 +0000 (UTC)
-Date: Tue, 12 Mar 2024 17:35:02 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@google.com>
-Subject: Re: [PATCH v2 1/3] x86/mm: Use IPIs to synchronize LAM enablement
-Message-ID: <20240312163502.GGZfCENkvNb41IJWPy@fat_crate.local>
-References: <20240312155641.4003683-1-yosryahmed@google.com>
- <d24c8736-d963-4aa5-a3cb-5cc1110e3ca8@intel.com>
- <CAJD7tkYXfFiOQMpM+GkR7a=aUxFM-smDc-ZFTTtFu2Kbd2KoPQ@mail.gmail.com>
- <20240312161337.GFZfB_MdSFtAUXjeLU@fat_crate.local>
- <CAJD7tkYa_NuX2_PD1sEn6kE6Q0Z0VCyq2T2HK_Qdj-_94+OG_w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WHwTMZ7D"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 963D3C0002;
+	Tue, 12 Mar 2024 16:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710261361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z6bQhCQE01Ujonl7Mz5FErOFVrta+uGBf3aUm0L3jnc=;
+	b=WHwTMZ7DdNvrjxS9IFff9ymsTmtxtVRHarnqh+NztlsUettExo9mOfUA7XQ8siPUb7K8dI
+	HRhgJdeu326fz7VRcznToh7VKdgGQvPOv3LaFEVUPeV4XKpuBxv5tqBryc0pLVsV2OxD3Z
+	qL6UUkWbHZSx8nc/VIp1rhUSKFK8z8/xav/F1K7Eyj1YGKRzW6e6XTn2hHKZgm4Zw2AEfz
+	bXZfgrrbvP73Rzj7N7VTqHQIVuLCj9hm2EVjnViDHmSELWX06cwgI35obakl+C7puUdDYx
+	dJ9iJxcfJllPjccG3TbcmQiKmtAoDFWYcAmERb6cn+T962/z+a4z28TMX4h5gg==
+Date: Tue, 12 Mar 2024 17:35:56 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yury Norov
+ <yury.norov@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] lib/bitmap: Fix bitmap_scatter() and bitmap_gather()
+ kernel doc
+Message-ID: <20240312173556.4727ebbf@bootlin.com>
+In-Reply-To: <ZfB4BOknvWRFbn6O@smile.fi.intel.com>
+References: <20240312085403.224248-1-herve.codina@bootlin.com>
+	<ZfB30-rLXEnJtjrY@smile.fi.intel.com>
+	<ZfB4BOknvWRFbn6O@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJD7tkYa_NuX2_PD1sEn6kE6Q0Z0VCyq2T2HK_Qdj-_94+OG_w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Tue, Mar 12, 2024 at 09:23:48AM -0700, Yosry Ahmed wrote:
-> Sure, although I am kinda familiar with that. It would be useful to
-> point out what part(s) I may be violating :)
+Hi Andy,
 
-Are you kidding?
+On Tue, 12 Mar 2024 17:43:00 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Dave just told you.
+> On Tue, Mar 12, 2024 at 05:42:11PM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 12, 2024 at 09:54:03AM +0100, Herve Codina wrote:  
+> > > The make htmldoc command failed with the following error
+> > >   ... include/linux/bitmap.h:524: ERROR: Unexpected indentation.
+> > >   ... include/linux/bitmap.h:524: CRITICAL: Unexpected section title or transition.
+> > > 
+> > > Move the visual representation to a literal block.  
+> 
+> ...
+> 
+> > > This patch fixes de5f84338970 ("lib/bitmap: Introduce bitmap_scatter() and bitmap_gather() helpers")
+> > > available in net-next and linux-next  
+> > 
+> > Not sure about rules of net-next, but I would add Fixes FWIW:
+> > 
+> > Fixes: de5f84338970 ("lib/bitmap: Introduce bitmap_scatter() and bitmap_gather() helpers")
 
-Lemme paste the whole text for you:
+I think I cannot add the Fixes tag as the de5f84338970 commit is not yet
+merged in Torvald's tree and I am not sure that the commit hash will not
+change during the merge process.
+  
+> 
+> And probably Reported-by...
+> 
 
-"Don't get discouraged - or impatient
-
-After you have submitted your change, be patient and wait. Reviewers are
-busy people and may not get to your patch right away.
-
-Once upon a time, patches used to disappear into the void without
-comment, but the development process works more smoothly than that now.
-You should receive comments within a few weeks (typically 2-3); if that
-does not happen, make sure that you have sent your patches to the right
-place. Wait for a minimum of one week before resubmitting or pinging
-reviewers - possibly longer during busy times like merge windows."
-
-https://kernel.org/doc/html/latest/process/submitting-patches.html
-
-> Right, I am aware of that part. According to the tip tree handbook I
-> shouldn't expect them to be handled during the merge window, but do
-> x86 folks prefer I hold off on sending them until after the merge
-> window?
-
-I believe I speak for all of tip folks when I say that they prefer not
-to be spammed with the same set too regularly.
-
-As to when you send: there's never a good moment because our mailboxes
-are constantly overflowing.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Hervé
