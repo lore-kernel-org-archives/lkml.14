@@ -1,99 +1,122 @@
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEB17D3ED;
-	Tue, 12 Mar 2024 15:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECAE7CF23;
+	Tue, 12 Mar 2024 15:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257916; cv=none; b=e2caNAd7g0LQPrzf/W6bC8HZaRVpzrwNc9eaM2nblL9ECBlPj1g/GE7ZypWj/BmMng7s3R8euC2gmb0zOMbCZMST+miENl0xI43wT4B0KBgm+pIiE1QY6KHj1d2i7I9anoo+fWfkghDbTU0DUQnegInaQIlShILhbbv3upqQnqA=
+	t=1710257927; cv=none; b=k7hdjEBI8Pk+tjkxqe7RL7SQA8Q4bStga6h409IafwLIq9/RltCleKaeOmWHujVSRq07PZVdKKoUyVyMksHuur/VIJCJaXgYou1Y7N9PSHosv9ogNX/6UHpOaEGkVM1CjgiD6fAznDv5+sipge92eF0ESUSnjSrAOtZTp6Kka48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257916; c=relaxed/simple;
-	bh=0Rva4MDeT0xT+wbucis/QAB8TKQhRHatjKufsZEJH3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t27EQ7Y88oAFZLYX7xYYSb3ReHsUnn1YuM9MHYgZvl4EG3s50wFJJ09SuacuLdwyylMeIEtG5G5P4BmvZeAi3bu9kH4mcmjdLNYa3Fp260+kQhJVE06ZF1j1pHpjpBduTg20n7sagcfyfMBCSvsrqqogTTRV8XLhhJqA/czHE6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnNij+wl; arc=none smtp.client-ip=209.85.167.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710257927; c=relaxed/simple;
+	bh=KrjUr0fKLEMJXBr7/aqGGHUCFtbu9uuJVf+zBR7qhTk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NcceKAtn3Cf/k1dkEx0aas0B79fF2GjzidveGSo/8OSwPRMzLXSPF6P8HsST12qXtuAUBZ2HZ6L7K0SdwkO8SouZJEdux2WKE+c/DlWhmIlyKt3GsccFwhUp1dbs7VOT4TmWMscciXYBcmbRxEfOgb/d9nPI3k+zMaXx5kTt3Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEAdbJPD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnNij+wl"
-Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-513c1434283so14537e87.3;
-        Tue, 12 Mar 2024 08:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710257913; x=1710862713; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MpYZYXFYiMHqF9KEGRX59SN9aENbkML8CEYB3aujr40=;
-        b=RnNij+wlv0+dXUi2I+0i9grp5iBwU3ez8eNnPCmmSZ7+0OIK7cHwlnAkLqiLEtqHMR
-         ZJJk7UPxk4vIriH/QU8L6PPOd+AZRddLutNPa+MaAl+i7yIfoZ6VnApCCKxEBy3gXXOL
-         xt+Cye2cHeru0BCSAmuTjzDz1ydnJd55Sr0EJNoYX1d8W7Cry19SErscQN3qcZHpc/3/
-         Q9gKuLDtPAL4YwLIhvmLQrncm2uGXk/PHvSI4W5uwgE+uzyB7lnayaf+rbgbJuLOzijl
-         X3tg/ecEU/dveDPtEDMhqgR376OZomKprbrczP8/PWUBv33uSPqZFEamE6YDM0/I+ms8
-         BWwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710257913; x=1710862713;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MpYZYXFYiMHqF9KEGRX59SN9aENbkML8CEYB3aujr40=;
-        b=ttoLXbVJwXShDE+xeqX0fa1ERhVpMu3LqG4l4Hib7A7Y3ZXoVQ85ScpyXd5Jvz8Qkz
-         JJ1i2cMg2pLH663H0siNhwLpF6nN5vvyfH+jp2cDHUbFgmkH0HkrhuHiMbQF8mDw9IqQ
-         z+uf0LWkLFXnCzSbrwbmyD33bwEnKN/9zw6aVYeX3rmGiXYwyXpBSa7L1nKDEhYz7JkT
-         yPiuAcB1D8OhJKOPSawzS8wU/AEK0rXZ8oxWPs7PqmM0NBHL4xERUjGapmL0wNdzf9j+
-         uE5zhfbZN1sVBK/dZmlwyPHVtaq1zRb4RZEOyrx3U++3Fxh5nSff0E+augOPjHgLIRFW
-         2tfA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3aGERnI5SQZBbGlW4gUEPB4L5J4WXwpiOLZO9TF1FojhPYUQgY/u4WFuUgh5S5vBtuDQBr6YJxijF67UKIXclfBxFu2YZ0xPS5Uv4
-X-Gm-Message-State: AOJu0Yz2BbMEJZ7T7E9c9LHqzolYH5Bg6Oyx6dGNvvOMdpQcEdtDVbz5
-	e6uijurxGpqcFxCfA9ahKD8LtWzj7IjZEyujXBemlTsEnxufZ3nS
-X-Google-Smtp-Source: AGHT+IGzuHtxEkX2jKr0g66lDy+8pZDNTTQ1lJX6sCTXlKhXXHyfZMozBdZQyQCScO/+JaftgPGEsw==
-X-Received: by 2002:a05:6512:46e:b0:513:c5b7:9ee3 with SMTP id x14-20020a056512046e00b00513c5b79ee3mr417013lfd.6.1710257912789;
-        Tue, 12 Mar 2024 08:38:32 -0700 (PDT)
-Received: from localhost ([217.212.240.67])
-        by smtp.gmail.com with ESMTPSA id i17-20020a05600c355100b00413079f9065sm12813145wmq.8.2024.03.12.08.38.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Mar 2024 08:38:32 -0700 (PDT)
-Message-ID: <e1167dbc-db51-487d-bf6c-9bb5c73539d0@gmail.com>
-Date: Tue, 12 Mar 2024 16:38:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEAdbJPD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8119C433F1;
+	Tue, 12 Mar 2024 15:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710257926;
+	bh=KrjUr0fKLEMJXBr7/aqGGHUCFtbu9uuJVf+zBR7qhTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eEAdbJPD0or1tO0Pg1cVnQNEZw4hTcLP7UWtv3SQdbx/U5qjgqIwRHpZt87aU70uP
+	 1S+7jTWMBmN9We2cbyzn8iiHoE8qdVN7slhrfmT7Z/NF5bsFse9vSTDGGVfQwbXA9m
+	 Viwvad3EibOsXZveqpqIVgxhgXFuTqYFgZREfvyPfWP5CEPDmK41keFeyXUru266pA
+	 FErtKyLsn0Kn3r8n/a+eSWtHmi657e+5MbK0otspcE8cvSkum4D5lZ6FCEkoTNgdpb
+	 Bn/BkEHEn2/IuRGTN8ix0rbztH3qmuvtquZVR+xWe8Dz78tmXJfigPhY3t5tnOFMts
+	 jD1RC+Yepao1w==
+Date: Wed, 13 Mar 2024 00:38:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] ring-buffer: Reuse rb_watermark_hit() for the
+ poll logic
+Message-Id: <20240313003842.207e83107633bef0c4a798b4@kernel.org>
+In-Reply-To: <20240312131952.802267543@goodmis.org>
+References: <20240312131919.314231457@goodmis.org>
+	<20240312131952.802267543@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH net-next 0/4] net: route: improve route hinting
-Content-Language: en-US
-To: David Ahern <dsahern@kernel.org>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, willemb@google.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240307171202.232684-1-leone4fernando@gmail.com>
- <9ce73c04-ee8f-4aa5-ab15-c31dbe409401@kernel.org>
-From: Leone Fernando <leone4fernando@gmail.com>
-In-Reply-To: <9ce73c04-ee8f-4aa5-ab15-c31dbe409401@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-David Ahern wrote:
-> I have looked at all of the sets sent. I can not convince myself this is
-> a good idea, but at the same time I do not have constructive feedback on
-> why it is not acceptable. The gains are modest at best.
+On Tue, 12 Mar 2024 09:19:21 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The check for knowing if the poll should wait or not is basically the
+> exact same logic as rb_watermark_hit(). The only difference is that
+> rb_watermark_hit() also handles the !full case. But for the full case, the
+> logic is the same. Just call that instead of duplicating the code in
+> ring_buffer_poll_wait().
 > 
 
-Thanks for the comment.
+This changes a bit (e.g. adding pagebusy check) but basically that should
+be there. And new version appears to be consistent between ring_buffer_wait()
+and ring_buffer_poll_wait(). So looks good to me.
 
-I believe an improvement of 5-8% in PPS is significant. 
-Note that the cache is per-cpu (e.g., for a machine with 10 CPUs, the improvement
-affects 10X the conns mentioned).
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Could you please provide more information about what you don't like
-in the patch?
+Thank you,
 
-Some possible issues I can think of:
-- Do you think the improvement is not affecting the common case?
-In this case, it can be solved by tweaking the cache parameters.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 21 +++++++--------------
+>  1 file changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index adfe603a769b..857803e8cf07 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -959,25 +959,18 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+>  	}
+>  
+>  	if (full) {
+> -		unsigned long flags;
+> -
+>  		poll_wait(filp, &rbwork->full_waiters, poll_table);
+>  
+> -		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> -		if (!cpu_buffer->shortest_full ||
+> -		    cpu_buffer->shortest_full > full)
+> -			cpu_buffer->shortest_full = full;
+> -		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> -		if (full_hit(buffer, cpu, full))
+> +		if (rb_watermark_hit(buffer, cpu, full))
+>  			return EPOLLIN | EPOLLRDNORM;
+>  		/*
+>  		 * Only allow full_waiters_pending update to be seen after
+> -		 * the shortest_full is set. If the writer sees the
+> -		 * full_waiters_pending flag set, it will compare the
+> -		 * amount in the ring buffer to shortest_full. If the amount
+> -		 * in the ring buffer is greater than the shortest_full
+> -		 * percent, it will call the irq_work handler to wake up
+> -		 * this list. The irq_handler will reset shortest_full
+> +		 * the shortest_full is set (in rb_watermark_hit). If the
+> +		 * writer sees the full_waiters_pending flag set, it will
+> +		 * compare the amount in the ring buffer to shortest_full.
+> +		 * If the amount in the ring buffer is greater than the
+> +		 * shortest_full percent, it will call the irq_work handler
+> +		 * to wake up this list. The irq_handler will reset shortest_full
+>  		 * back to zero. That's done under the reader_lock, but
+>  		 * the below smp_mb() makes sure that the update to
+>  		 * full_waiters_pending doesn't leak up into the above.
+> -- 
+> 2.43.0
+> 
+> 
+> 
 
-- In case performance degradation for some # of conns is problematic - we can
-find ways to reduce it. For example, the degradation for 1 connection can
-probably be solved by keeping the route hints.
 
-Leone
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
