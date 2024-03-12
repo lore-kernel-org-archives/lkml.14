@@ -1,202 +1,45 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail0.dakesat.info (mail0.dakesat.info [192.227.137.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023638062A
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911CC69D21
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 16:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.227.137.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710262091; cv=none; b=XHYmFA5yU+OVSRf4dUaRre+qnFZF3RzYF5MVE6GB0NTh4U0f4oAmIyKUhgYUVYLO/rW9uw4gXpViEM6sKH6gXsHSQryFoO12zkj3U2GyHwkfj0fMSZFM/uzBsYk/m5Ayf1ueKO6To7VozDQtOqu2V5XP/Eq58oe/ftkso2pQTLM=
+	t=1710262097; cv=none; b=tddFjPJbGvZEo7q+WFhbNVrzNtx3aXNwTdU+J76Uv/EuESGlfrSBLoJasO3CgFfngDLZTsSbzC4Q2Medqq3a5uI66fJ3Ou62vbEP5GO0OSMYHRMfyyF1Vio2AYRzvi1CMT+x2EeMPg4rDpk7LfSdGEbMuiMpN3cNfEDqOpeMPIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710262091; c=relaxed/simple;
-	bh=Q9HjHKn/d07di0Ny/VSuzvRdRoFuJ8TFJKvZUrjtdv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b7nNj6zqLOe0gzKRzT3TMYmmXQCUxuhkZHTBR+nmPTxvIv31kPk5mTLonqqSVQSmgsNW5tu1Kq1CITPlfH0QAETRWgzGcVj/H1KOckUZqOnoO1aB1qjG64bhM/it02N8ta8AHFoiLT+Lb63CO52g97mVTEHYt4CgnPA4m3evk2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0M7GvAmw; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0M7GvAmw"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-413e613316cso1449135e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710262088; x=1710866888; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X1JdD3SjakPudHQVJ76rnnq2H2jE37lLZ/0x/M6KH0I=;
-        b=0M7GvAmw5MXxK8s34JKi6K+N9SVvWcUQFaEdziy56einrtrPwp+6Sy7iNgYACkcUe0
-         QwLeRyq4wVefsHU82lFwZ3dA9PzuyU3OyxizEUe3AFDS031FvDjZrf7ReRu5mLL2jTIR
-         x25ZxQH9YjhhSHki1b6HdTLBrVnjEhQtERV77PJ851qQrJozFIYaA2KfXHqdNpiloVkT
-         r+ngswREVrv7r/SkwALcTqUbcosyZkqxzYDwtFPxBecK18WRGlyIku0hq4N3OItRlGsf
-         HC1SYAlvqxmUcvQjsCjlpVAlGhS4Yx9pUWBmpzl8ts2lxhcUmAOsPySEN7ujNhwE071j
-         HwmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710262088; x=1710866888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X1JdD3SjakPudHQVJ76rnnq2H2jE37lLZ/0x/M6KH0I=;
-        b=qXTTj/y+B1aB4uuyI6tJU8QR+BKZw1tc6VoXf4B8dbb8V2zKn3Wzh2JISy1I2bHgRu
-         g0tl6c71AZwO8x0smDbEwt83NmX9SCjENV5/5/H+Z6yXb03FtNkOT0janQuyrQa1jOcx
-         Fg6jwi2Pg4s1NqoX0kV87Bmqp6xW9UhPq8OPrQinXmMs2guDfutUuasLuTXubuXMgIsw
-         mqQLzQ+2mjZY4wi46d0GtMRXWhLsTlls/93wIPYy76r0RubFTKvw6kS/6p/hzECz9APX
-         Ol8p/BUqcbvy4DL8voGsXbG22qgee/ApaMNuBJ1nD+By2+WFXPTae53zo/z+IbhwRsGX
-         +9UA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1EKdyaGj66FmRi8+bD0hq4iHPraKHq1BbbuTLE1qX043/yMYzeC0cxONz4vJaN8hx04GjF8635nxeYla1evtN1axhl+SDCofJrgRE
-X-Gm-Message-State: AOJu0YzViozEtdd+E4sPwtevyv3MhnJ+tXu5Lww63iTr/Vr1exfX9Ax/
-	RL1CFJ2V6yv/I37K+9myaUELHyMGKqzzrmFQ6I4vBOHzQj4p7UL7qLv+oFGU6c1pZcpmPzDVnbd
-	Ij6P0iAMTS2PVsWKNcuErsCIg/SofXN2u70cn
-X-Google-Smtp-Source: AGHT+IHz1t46LqyIdp7DJe0W007vNHqs968mX/S24f/EmXbCZ+L80gonmf0M4eO18CLGv4wGugu605YqTZHSHfDeU2Y=
-X-Received: by 2002:a05:600c:5251:b0:412:ebce:aa81 with SMTP id
- fc17-20020a05600c525100b00412ebceaa81mr7255060wmb.23.1710262088195; Tue, 12
- Mar 2024 09:48:08 -0700 (PDT)
+	s=arc-20240116; t=1710262097; c=relaxed/simple;
+	bh=l6KNlMY1mNWj5VAYVpAkOW/IlIcEmkveAgnYt/kAxmY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dRfTa9Ob9M7jaaMtpCX2TKRSNxrPX4t5TdrwK/6IF6ahJNILDfazK++9fGiec//TpK3mXTKL34GipFj6HYdjpgzCX2asTdSH89a03LcFHfrAwUjHc7iz750CdxrKMhErzgQw3aa+1pRt6TPR+/jVbxBBFe8tLGQWUUrnh1/rDoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=permerror (bad message/signature format); arc=none smtp.client-ip=192.227.137.121
+Authentication-Results:smtp.subspace.kernel.org; dkim=permerror (bad message/signature format)
+Reply-To: howard@fiinancier.com
+From: <Howard> contatti90@dakesat.info
+To: linux-kernel@vger.kernel.org
+Subject: INVESTMENT PROPOSAL 
+Date: 12 Mar 2024 17:40:45 +0100
+Message-ID: <20240312174045.4393E88235D3BA7D@dakesat.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a9e3120d-8b79-4435-b113-ceb20aa45ee2@alu.unizg.hr>
- <4a5c8d28-7f73-4c15-b288-641f0ccc91c2@redhat.com> <Ze8Wr2qH8V0LMi_5@x1n>
- <b5ff4c70-6379-4cc7-8c92-778d80a6a658@redhat.com> <Ze8fYF5I4mlUGHd9@x1n>
- <CAJHvVcie+N+4j60m_Dxh7QzbZLmsjnq2-04peuqE8VkkMq984A@mail.gmail.com>
- <Ze9bWkrD6UBZ2ErV@x1n> <CADrL8HW59nt4ztY3x5G3VgpmaXQbXoXZeAjvzMp7SpsqxgDCxw@mail.gmail.com>
- <CACw3F51vMqPBHmvj4ehSA8PadXw30s3MxCqph1op5dxtB-tV6Q@mail.gmail.com> <ZfB28NIbflrnsqiX@x1n>
-In-Reply-To: <ZfB28NIbflrnsqiX@x1n>
-From: Axel Rasmussen <axelrasmussen@google.com>
-Date: Tue, 12 Mar 2024 09:47:31 -0700
-Message-ID: <CAJHvVcizoDwYVqnkroBz4nrXJRCkynC19=RBgWhT6xPdrvJ0sA@mail.gmail.com>
-Subject: Re: BUG selftests/mm]
-To: Peter Xu <peterx@redhat.com>
-Cc: Jiaqi Yan <jiaqiyan@google.com>, James Houghton <jthoughton@google.com>, 
-	David Hildenbrand <david@redhat.com>, Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2024 at 8:38=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Mon, Mar 11, 2024 at 03:28:28PM -0700, Jiaqi Yan wrote:
-> > On Mon, Mar 11, 2024 at 2:27=E2=80=AFPM James Houghton <jthoughton@goog=
-le.com> wrote:
-> > >
-> > > On Mon, Mar 11, 2024 at 12:28=E2=80=AFPM Peter Xu <peterx@redhat.com>=
- wrote:
-> > > >
-> > > > On Mon, Mar 11, 2024 at 11:59:59AM -0700, Axel Rasmussen wrote:
-> > > > > I'd prefer not to require root or CAP_SYS_ADMIN or similar for
-> > > > > UFFDIO_POISON, because those control access to lots more things
-> > > > > besides, which we don't necessarily want the process using UFFD t=
-o be
-> > > > > able to do. :/
-> > >
-> > > I agree; UFFDIO_POISON should not require CAP_SYS_ADMIN.
-> >
-> > +1.
-> >
-> >
-> > >
-> > > > >
-> > > > > Ratelimiting seems fairly reasonable to me. I do see the concern =
-about
-> > > > > dropping some addresses though.
-> > > >
-> > > > Do you know how much could an admin rely on such addresses?  How fr=
-equent
-> > > > would MCE generate normally in a sane system?
-> > >
-> > > I'm not sure about how much admins rely on the address themselves. +c=
-c
-> > > Jiaqi Yan
-> >
-> > I think admins mostly care about MCEs from **real** hardware. For
-> > example they may choose to perform some maintenance if the number of
-> > hardware DIMM errors, keyed by PFN, exceeds some threshold. And I
-> > think mcelog or /sys/devices/system/node/node${X}/memory_failure are
-> > better tools than dmesg. In the case all memory errors are emulated by
-> > hypervisor after a live migration, these dmesgs may confuse admins to
-> > think there is dimm error on host but actually it is not the case. In
-> > this sense, silencing these emulated by UFFDIO_POISON makes sense (if
-> > not too complicated to do).
->
-> Now we have three types of such error: (1) PFN poisoned, (2) swapin error=
-,
-> (3) emulated.  Both 1+2 should deserve a global message dump, while (3)
-> should be process-internal, and nobody else should need to care except th=
-e
-> process itself (via the signal + meta info).
->
-> If we want to differenciate (2) v.s. (3), we may need 1 more pte marker b=
-it
-> to show whether such poison is "global" or "local" (while as of now 2+3
-> shares the usage of the same PTE_MARKER_POISONED bit); a swapin error can
-> still be seen as a "global" error (instead of a mem error, it can be a di=
-sk
-> error, and the err msg still applies to it describing a VA corrupt).
-> Another VM_FAULT_* flag is also needed to reflect that locality, then
-> ignore a global broadcast for "local" poison faults.
 
-It's easy to implement, as long as folks aren't too offended by taking
-one more bit. :) I can send a patch for this on Monday if there are no
-objections.
+Good day,
 
->
-> >
-> > SIGBUS (and logged "MCE: Killing %s:%d due to hardware memory
-> > corruption fault at %lx\n") emit by fault handler due to UFFDIO_POISON
-> > are less useful to admins AFAIK. They are for sure crucial to
-> > userspace / vmm / hypervisor, but the SIGBUS sent already contains the
-> > poisoned address (in si_addr from force_sig_mceerr).
-> >
-> > >
-> > > It's possible for a sane hypervisor dealing with a buggy guest / gues=
-t
-> > > userspace to trigger lots of these pr_errs. Consider the case where a
-> > > guest userspace uses HugeTLB-1G, finds poison (which HugeTLB used to
-> > > ignore), and then ignores SIGBUS. It will keep getting MCEs /
-> > > SIGBUSes.
-> > >
-> > > The sane hypervisor will use UFFDIO_POISON to prevent the guest from
-> > > re-accessing *real* poison, but we will still get the pr_err, and we
-> > > still keep injecting MCEs into the guest. We have observed scenarios
-> > > like this before.
-> > >
-> > > >
-> > > > > Perhaps we can mitigate that concern by defining our own ratelimi=
-t
-> > > > > interval/burst configuration?
-> > > >
-> > > > Any details?
-> > > >
-> > > > > Another idea would be to only ratelimit it if !CONFIG_DEBUG_VM or
-> > > > > similar. Not sure if that's considered valid or not. :)
-> > > >
-> > > > This, OTOH, sounds like an overkill..
-> > > >
-> > > > I just checked again on the detail of ratelimit code, where we by d=
-efault
-> > > > it has:
-> > > >
-> > > > #define DEFAULT_RATELIMIT_INTERVAL      (5 * HZ)
-> > > > #define DEFAULT_RATELIMIT_BURST         10
-> > > >
-> > > > So it allows a 10 times burst rather than 2.. IIUC it means even if
-> > > > there're continous 10 MCEs it won't get suppressed, until the 11th =
-came, in
-> > > > 5 seconds interval.  I think it means it's possibly even less of a =
-concern
-> > > > to directly use pr_err_ratelimited().
-> > >
-> > > I'm okay with any rate limiting everyone agrees on. IMO, silencing
-> > > these pr_errs if they came from UFFDIO_POISON (or, perhaps, if they
-> > > did not come from real hardware MCE events) sounds like the most
-> > > correct thing to do, but I don't mind. Just don't make UFFDIO_POISON
-> > > require CAP_SYS_ADMIN. :)
-> > >
-> > > Thanks.
-> >
->
-> --
-> Peter Xu
->
+
+
+Our investors are exploring all possibilities to initiate change=20
+on a massive scale of investment opportunities, We offer=20
+personal, business, loans at a fixed interest rate of 2% per=20
+annum.
+
+
+
+Regards
+Howard Ethan
+Financial Advisor
