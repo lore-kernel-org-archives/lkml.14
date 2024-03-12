@@ -1,144 +1,86 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339D11386AA
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 20:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5637E1386AA
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 20:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710275213; cv=none; b=fnSWfh9hXT3HeGZNBwUjo/g0CHp6p2Fy/Qcph3UfEetBXPcC1nOavpa3/wEpnH39l5kVsIKE8iqAzu8rkF0Qh+tBBqoI3tRsu/87PQyhBuRAwMFaTj0ACY5bkpZJX3qAnDqTLSRwQY2yNw0HFjLRz4djWQVwj1c40LHOz3OAn3I=
+	t=1710275308; cv=none; b=fDSvLtfw7id6dxOnoc6dcMFyXGIuo8luJmkrDWBZcPCrJp0Hk66f08ur4GMKOPd19u/LzbrLB88ogL8GB/Ly3XBLsZyNmrDhOP+2uH/rHI32gdXfHb4IFk8AoKdLDAOsOtNQD/unY/PNYMtE8HyEC/nN9g6/b3R5OIpacMdaHaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710275213; c=relaxed/simple;
-	bh=6QqCqncS8fTFBYJS77lc/hwVrLjNV1a8m1Jo+xCPFRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VAwMYuSZSxYR0PHgwXwFk2ZfIItUX/b3SSsnHlaFmzz/zK86cb0K02oTxODLknkYCJYJYbeElB0sc7ZFT7BCXpcBaxNZBFJRCBKp5ya/35pXINvh5OpywQFD4iueM/YiDQWpLQBjoch1tpUBGdjqqBXcS+7NBe3J8KmBiQAmIG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Cw8/tuwE; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1710275308; c=relaxed/simple;
+	bh=ykT9yKbx0+VuRmF6O/tIDeQGMwBH6YZOwESq74481ek=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hsm306Ni6Bt5TrAd5v5778/bm2+Mwv2Dtyoud/w2myfRegz/xkZt1fiEOCzQRRJ4yhBVfcgZLOTLLUqOI+fF5adwyCQdzmQswdAk7XkZSEq3gTMJRYp4WrsfOqI8AELGUmJN5OwlhTI7okWZp1vj/jmzXo+IjSj6TTA4kvlA0lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=yuGTwXmH; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Cw8/tuwE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=vB/FuN5JdbTJIQDfsr256losXLHU4seda82ExkFZ/Bc=; b=Cw8/tuwEQaWKJA8VMqnvHjabrs
-	VdnsLEs4hM7BCCkv1GHT7sEjEnyJWjAssG0WgahqpMd2du/xFRidWBu8yNaiLTk6OlIhZMq6FNFoq
-	HdNs2CCG4y3kyn3nEJSMc8/8Se/II0NrrCkkAp0ejGBJsX8UAagUfVeeIdu19Iip+hoAN3J3qTKiu
-	Z0mx0ST5O4K21+N60hI1LzezAQ5BaJLs0IswlxqrrcqDkQIB6iFEbtOj8Pa87zsz0EWrtXGj5DVQX
-	toixFVPj4HvdjVao7dAWUzhO5fcVEj2b4GVgbUHslfnPC/KbtF8ap1ILRrt8DOW2+l/iMIp8XMRBH
-	72whPzgg==;
-Received: from [189.6.17.125] (helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1rk8hj-009VrP-Gy; Tue, 12 Mar 2024 21:26:32 +0100
-Date: Tue, 12 Mar 2024 17:26:17 -0300
-From: Melissa Wen <mwen@igalia.com>
-To: =?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>
-Cc: Arthur Grillo <arthurgrillo@riseup.net>, 
-	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, Melissa Wen <melissa.srw@gmail.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi, 
-	Louis Chauvet <louis.chauvet@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com, 
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com, 
-	Pekka Paalanen <pekka.paalanen@collabora.com>
-Subject: Re: [PATCH 0/7] Additions to "Reimplement line-per-line pixel
- conversion for plane reading" series
-Message-ID: <x6vrj6l7mpn5hwrx4ceafdaagqbbcsj5n753wrx2bapzl5w27e@ye4e2kgi3fcm>
-References: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
- <4b01ba61-9184-4a17-9fe6-59eb88a21214@igalia.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="yuGTwXmH"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2E2552C02AF;
+	Wed, 13 Mar 2024 09:28:22 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1710275302;
+	bh=ykT9yKbx0+VuRmF6O/tIDeQGMwBH6YZOwESq74481ek=;
+	h=From:To:Subject:Date:From;
+	b=yuGTwXmHHhGCLSDYlW7JI3fpOMjpVb8xwpDcPYkmd2PajbhWSTNQVwmST8V/022nX
+	 kSolwWHiuOf+gX2GAH7gYfVRRpdzO5NXCW/n9tvY2r+nuLkQBTKIMPZAxbBzTX95UC
+	 0GOLqhaCy9nYhLkvxGyyJbV4iovRIg2wNA41radpudRJBU5yS0EldINgfn1W+oqUbr
+	 D4ELok+cT5aApxNBaZQ7EqcBTZ682ofZVD/HzM8ln5vEI6N9vDgnjV8g+/csUXuubU
+	 jKUXg47SHE19H68dcyQI9pSvopSdiplxez4GW7juctBCeJ4SyD1EfpU4E7ioT3oa2I
+	 iBgWmiF4SJeag==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65f0bae60000>; Wed, 13 Mar 2024 09:28:22 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 13 Mar 2024 09:28:21 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.040; Wed, 13 Mar 2024 09:28:21 +1300
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: "x86@kernel.org" <x86@kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Adding an interrupt to a PCI device via an ACPI entry
+Thread-Topic: Adding an interrupt to a PCI device via an ACPI entry
+Thread-Index: AQHadLvTcmvpPwDP9EGYKm6sb+rMpA==
+Date: Tue, 12 Mar 2024 20:28:21 +0000
+Message-ID: <20b215fd-51bd-4450-a2ff-110e88d11e95@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B8F7A06CA1840047A1649D8E4A28B4DC@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b01ba61-9184-4a17-9fe6-59eb88a21214@igalia.com>
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65f0bae6 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=2t1nXh0JOdlP8bczTaIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-On 03/08, Maíra Canal wrote:
-> Hi Arthur,
-> 
-> Would it be possible for you to coordinate with Louis and create a
-> single series with all the modification?
-> 
-> I don't see a reason to submit fixes to a series that it is still
-> on review.
-
-I agree. Moreover, the fix for drm_fixp2int_round() should go in a
-single patch detached from these multiple work branches, since it
-is addressing an issue already upstream.
-
-Thanks,
-
-Melissa
-
-> 
-> Best Regards,
-> - Maíra
-> 
-> On 3/6/24 17:03, Arthur Grillo wrote:
-> > These are some patches that add some fixes/features to the series by
-> > Louis Chauvet[1], it was based on top of the patches from v4.
-> > 
-> > Patches #2 and #3 should be amended to "[PATCH v4 11/14] drm/vkms: Add
-> > YUV support". To make patch #3 work, we need patch #1. So, please, add
-> > it before the patch that #2 and #3 amend to.
-> > 
-> > Patches #4 to #6 should be amended to "[PATCH v4 14/14] drm/vkms: Create
-> > KUnit tests for YUV conversions". While doing the additions, I found
-> > some compilation issues, so I fixed them (patch #4). That's when I
-> > thought that it would be good to add some documentation on how to run
-> > them (patch #7), this patch should be added to the series as new patch.
-> > 
-> > [1]: https://lore.kernel.org/r/20240304-yuv-v4-0-76beac8e9793@bootlin.com
-> > 
-> > To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > To: Melissa Wen <melissa.srw@gmail.com>
-> > To: Maíra Canal <mairacanal@riseup.net>
-> > To: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > To: Daniel Vetter <daniel@ffwll.ch>
-> > To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > To: Maxime Ripard <mripard@kernel.org>
-> > To: Thomas Zimmermann <tzimmermann@suse.de>
-> > To: David Airlie <airlied@gmail.com>
-> > To: arthurgrillo@riseup.net
-> > To: Jonathan Corbet <corbet@lwn.net>
-> > To: pekka.paalanen@haloniitty.fi
-> > To: Louis Chauvet <louis.chauvet@bootlin.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: jeremie.dautheribes@bootlin.com
-> > Cc: miquel.raynal@bootlin.com
-> > Cc: thomas.petazzoni@bootlin.com
-> > Cc: seanpaul@google.com
-> > Cc: marcheu@google.com
-> > Cc: nicolejadeyee@google.com
-> > 
-> > Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> > ---
-> > Arthur Grillo (7):
-> >        drm: Fix drm_fixp2int_round() making it add 0.5
-> >        drm/vkms: Add comments
-> >        drm/vkmm: Use drm_fixed api
-> >        drm/vkms: Fix compilation issues
-> >        drm/vkms: Add comments to format tests
-> >        drm/vkms: Change the gray RGB representation
-> >        drm/vkms: Add how to run the Kunit tests
-> > 
-> >   Documentation/gpu/vkms.rst                    |  11 +++
-> >   drivers/gpu/drm/vkms/tests/vkms_format_test.c |  81 +++++++++++++++++++--
-> >   drivers/gpu/drm/vkms/vkms_drv.h               |   4 +
-> >   drivers/gpu/drm/vkms/vkms_formats.c           | 101 +++++++++++++++++++-------
-> >   include/drm/drm_fixed.h                       |   2 +-
-> >   5 files changed, 165 insertions(+), 34 deletions(-)
-> > ---
-> > base-commit: 9658aba38ae9f3f3068506c9c8e93e85b500fcb4
-> > change-id: 20240306-louis-vkms-conv-61362ff12ab8
-> > 
-> > Best regards,
+SGkgQWxsLA0KDQpJcyB0aGVyZSBhIHdheSB0byBhZGQgaW5mb3JtYXRpb24gYWJvdXQgYSBQQ0kg
+ZGV2aWNlIHZpYSBhbiBBQ1BJIGVudHJ5PyANCkknbSB0cnlpbmcgdG8gZGVhbCB3aXRoIGEgZGV2
+aWNlIHRoYXQgaGFzIGFuIGVycmF0dW0gd2hlcmUgcmVndWxhciBQQ0ktZSANCk1TSSBpbnRlcnJ1
+cHRzIGRvbid0IHdvcmsuIFRoZSB3b3JrYXJvdW5kIGlzIHRvIGNvbm5lY3QgYSBkZWRpY2F0ZWQg
+SU5UIA0Kb3V0cHV0IGxpbmUgdG8gYW4gaW50ZXJydXB0IGlucHV0IG9uIHRoZSBib2FyZC4gVGhl
+IGhhcmR3YXJlIGRlc2lnbiBoYXMgDQpkb25lIHRoaXMgYnV0IEknbSB0cnlpbmcgdG8gZmlndXJl
+IG91dCBob3cgdG8gbWFrZSB0aGF0IHdvcmsgd2l0aCBBQ1BJIA0KZGVzY3JpYmluZyB0aGUgaGFy
+ZHdhcmUuDQoNCkkga25vdyBpbiBkZXZpY2V0cmVlIGxhbmQgSSBjYW4gZG8gdGhpcyB3aXRoIHNv
+bWV0aGluZyBsaWtlDQoNCiZwY2ljIHsNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+bXlkZXZpY2VAMSwwIHsNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGNvbXBhdGlibGUgPSAicGNpMTIzNCw1Njc4IjsNCiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDwweDAwMDAwMDAwIDAgMCAwIDA+Ow0K
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW50ZXJydXB0
+LXBhcmVudCA9IDwmaW50Yz47DQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsNCn07DQoNCkFuZCB0aGVuIHdoZW4gbXkgZHJpdmVy
+IGlzIGJvdW5kIHRvIGRldmljZSB0aGUgdXN1YWwgaXJxIHJlc291cmNlIHN0dWZmIA0Kd2lsbCBn
+aXZlIG1lIHRoZSByaWdodCBpbnRlcnJ1cHQgbGluZS4NCg0KSXMgdGhlcmUgYSB3YXkgb2YgZXhw
+cmVzc2luZyB0aGlzIGtpbmQgb2YgdGhpbmcgaW4gQUNQST8NCg0KVGhhbmtzLA0KQ2hyaXMNCg==
