@@ -1,88 +1,87 @@
 Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D567827E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0C778289
 	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 09:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710235771; cv=none; b=JvuhZuapTIx5W4Rv2ahHQgg/ql+ttn96dywSpUBATB8pRqbHduM3EeDrKXSr56woeSgcZ/Y2P/redCCXPCcisLqCl4p62/KI/AmIB/Z2wFhePaJC28EnDo9nc+f+otC2ZRipgbSA/LFL7w6pjrFwmuHl2/b/nQBmHCNkFxaEgRo=
+	t=1710235771; cv=none; b=QiPJ8XnP2oVCH1FnPtaKMfxIz0PWX3Dj+uCsQPrl+NwB+IZgjr3jA6Q1rXHR2mTYu+Mk0oqd1r4oYo4tqlqfZQxRZ1FJenLfwnjcv54J939Gpl8g7mrCfkZKth4qqVxsyVXtGYqsr7oE5uUGfJG2ymOLLSVefB8ZxNPkwl+FzKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710235771; c=relaxed/simple;
-	bh=oQ0fJgicIcem3o+93r+NoNpV8EvVrbBZcKThJfj+4/w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GadtodNScqGDX+AnVIvwgdxZsfYP1hZX7NDQegdVrxQu4P63xgMsKDrZ/tiAmLwI4zOMWAWs8LPqY2TbcmS9dorQYcf0+6fGF8xBIuu9rzZYaoZzJKHm3xzNhYnubIhC3qEWgBty/69bSDeE7nRzuENYeijJ+ZRZ800eLvaVa2o=
+	bh=mISnCRNrBVZrMYQ53f9k8mk7rmapdHLOM+rzryM25Bo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rlpIUSy505/LZErGciRG0gRJPmiUzPW9323MgEh1TfTETpWR7Y0fL4n3NklOHtcakeqw+FU1ahYJco+KvS+2Xr08ldJdiPcryoJ1pml9IYL7/4f3fNEs+4vJdRJsGYS3ZFlQH/na5IzCBIMsGl/9gw0kCChPIZJ8tBM0igFHHq4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c874fb29a3so475789139f.1
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c8ae14c2ccso192847739f.2
         for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 02:29:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710235768; x=1710840568;
+        d=1e100.net; s=20230601; t=1710235769; x=1710840569;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+Hr30nM15V8weJdzXLe17u9zEcaYbFDWB4eVxhT/QoM=;
-        b=IbF5NA9LbxuC+fYhQrH792S6OpabjJ0UFHgGjXk+Ye/kxZ0XFxCZSgD3dQaYIz6kAX
-         0+SPSojeL5XljpgweSzpZ0v32eSZNWyotrvEVyXiDfCv2JGmJJ/jLn7dEHgPWuxSie8e
-         aO6J7w6CCUxRdyQDv/f38tUFstKdVFv5J5AJvebn5wbRKNhS+U5F8LRqnrHp3FQibzVY
-         Bf8E3s4K9l0Dy9HYnwMntF9Itp/0FMgz06gPrBv0ypMOfDRbiaWZ8yFvbEpsoPJXVdL2
-         RXa4tVXM1MO5IhXeYDHPLzEr4Z3GZUa8t2yXe0Fql6rSJV8WxqvJBuXk10cMt3UcbOwq
-         M8Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCX/Cbr38tFpuTaRHcPc2k5aGBXZDTY7OV/mkFsr0czGV1snfQla9A3S4Hlqai3ZPEvxLehSG+QP4vJnbum0jzNZxSlZg0dZ07VniOVG
-X-Gm-Message-State: AOJu0YzWse+OZiZoyOKjglklB5NO2Vptm4rJhmSgsxbM3oDXzqiVUpaq
-	QtJHjnK8YMUT8O7ZfoZlCOs8nSMhRA7scC5+US0MlI+etgsvhDh7zilcn08NqhkJK4IB7slQm0o
-	R3b44rpmeL1iqvDiBrkI2nNmSQI8/p0h6CBlnAAn1nKwUb6UiX/1ngug=
-X-Google-Smtp-Source: AGHT+IFpGY0Txi0H6/WYIqz/o0vuRKBmWq9Kro6R/BB9NeySF7okP8eDmbMonH9ZELZDRXw2T3W0PFrWmX6GQTAhoRc6fphm4ie5
+        bh=Dd3z8i+orPF3QV/wl6xzqYgpXBy4YLJkGho4zyPcEx4=;
+        b=WxEBF5uXZkAup1/i6VlZ4OjexC5PWNp6y3av1R/Ff51tbEWHiWv44DxdZr3jhh4ZYv
+         pE3YKNOrK3ns8pPRwoJEjM3Kx9flC4J/r9eC4hHUsaOYiTTYi6QlQaMiGrM+RcoqcZXW
+         efSASZaB+9zgkabco0KsnzZWo2gla/Ga+ct+C9PQ7lPGgtJ0SrnlOkRT4ftWw/2H+9/x
+         i7vHb8coA9GSHHDEkFwee5OBed5sfWsxLrN0XuzkaW/yRzYOZ1KFpFF2svPcggW0Yyc1
+         FHlF8HzIIDDB3IKyG7P4s1a/7q9VL2NybQIStHz4FqLRpTYSNJM2MwlaHAXXylIZYM8U
+         4Kgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWp2neIfYgun+eb79nq7k5QNVVQSc1l5v5ohXitZnfpIZ6S6RqpgKBJyH6IEG3vV4WGKxz4qdG90AXts4xMYXfKq/5uhFPePV7xj+SP
+X-Gm-Message-State: AOJu0Yz34nz3SSeTL4ycsOvo96UgDrfNuwtH3HJ6pEK+QcnTI9sYUtUM
+	TuaPz2NoJ+tYMPau2iQT+haJVVf9yk7iAfIcfeBT6dkeJHM09S5qiqo4Pu4dgwMWpjXdPIaGZ2u
+	mwy51iNpCSJW/mH5BJPBXwx1dXhR5SHnbgSG2CR6if7PLmW4NWgnkF50=
+X-Google-Smtp-Source: AGHT+IGq98iCqsDnSQkeiNPaj5MNdKvAZDHjBnRfQO/Gcd11JCE0t91MQzR0PBrcK6viWODPyJBaCraxIt1VH9lML8OKHRdRqK4a
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3424:b0:7c8:37ac:23d4 with SMTP id
- n36-20020a056602342400b007c837ac23d4mr211808ioz.3.1710235766610; Tue, 12 Mar
- 2024 02:29:26 -0700 (PDT)
-Date: Tue, 12 Mar 2024 02:29:26 -0700
+X-Received: by 2002:a05:6638:3710:b0:476:d11a:33f with SMTP id
+ k16-20020a056638371000b00476d11a033fmr93027jav.6.1710235769055; Tue, 12 Mar
+ 2024 02:29:29 -0700 (PDT)
+Date: Tue, 12 Mar 2024 02:29:29 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000059e9150613734b41@google.com>
-Subject: [syzbot] Monthly btrfs report (Mar 2024)
-From: syzbot <syzbot+lista09af84377603bde66b5@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000007f36a30613734ba8@google.com>
+Subject: [syzbot] Monthly hfs report (Mar 2024)
+From: syzbot <syzbot+list28302c815c5fd308cf50@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello btrfs maintainers/developers,
+Hello hfs maintainers/developers,
 
-This is a 31-day syzbot report for the btrfs subsystem.
+This is a 31-day syzbot report for the hfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/btrfs
+https://syzkaller.appspot.com/upstream/s/hfs
 
-During the period, 1 new issues were detected and 1 were fixed.
-In total, 39 issues are still open and 52 have been fixed so far.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 43 issues are still open and 15 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref  Crashes Repro Title
-<1>  5822    Yes   kernel BUG in close_ctree
-                   https://syzkaller.appspot.com/bug?extid=2665d678fffcc4608e18
-<2>  2942    Yes   WARNING in btrfs_space_info_update_bytes_may_use
-                   https://syzkaller.appspot.com/bug?extid=8edfa01e46fd9fe3fbfb
-<3>  301     Yes   WARNING in lookup_inline_extent_backref
-                   https://syzkaller.appspot.com/bug?extid=d6f9ff86c1d804ba2bc6
-<4>  261     Yes   INFO: task hung in lock_extent
-                   https://syzkaller.appspot.com/bug?extid=eaa05fbc7563874b7ad2
-<5>  226     Yes   WARNING in btrfs_remove_chunk
-                   https://syzkaller.appspot.com/bug?extid=e8582cc16881ec70a430
-<6>  145     Yes   kernel BUG in insert_state_fast
-                   https://syzkaller.appspot.com/bug?extid=9ce4a36127ca92b59677
-<7>  111     Yes   WARNING in __btrfs_free_extent
-                   https://syzkaller.appspot.com/bug?extid=560e6a32d484d7293e37
-<8>  106     Yes   kernel BUG in btrfs_free_tree_block
-                   https://syzkaller.appspot.com/bug?extid=a306f914b4d01b3958fe
-<9>  96      Yes   kernel BUG in set_state_bits
-                   https://syzkaller.appspot.com/bug?extid=b9d2e54d2301324657ed
-<10> 84      Yes   WARNING in btrfs_commit_transaction (2)
-                   https://syzkaller.appspot.com/bug?extid=dafbca0e20fbc5946925
+<1>  10200   Yes   KASAN: slab-out-of-bounds Read in generic_perform_write
+                   https://syzkaller.appspot.com/bug?extid=4a2376bc62e59406c414
+<2>  9548    Yes   possible deadlock in hfsplus_file_truncate
+                   https://syzkaller.appspot.com/bug?extid=6030b3b1b9bf70e538c4
+<3>  9352    Yes   possible deadlock in hfsplus_file_extend
+                   https://syzkaller.appspot.com/bug?extid=325b61d3c9a17729454b
+<4>  5365    Yes   possible deadlock in hfsplus_get_block
+                   https://syzkaller.appspot.com/bug?extid=b7ef7c0c8d8098686ae2
+<5>  3485    Yes   KMSAN: uninit-value in hfs_revalidate_dentry
+                   https://syzkaller.appspot.com/bug?extid=3ae6be33a50b5aae4dab
+<6>  2010    Yes   kernel BUG in __hfsplus_setxattr
+                   https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+<7>  884     Yes   KASAN: slab-out-of-bounds Read in hfsplus_uni2asc
+                   https://syzkaller.appspot.com/bug?extid=076d963e115823c4b9be
+<8>  791     Yes   kernel BUG in hfs_write_inode
+                   https://syzkaller.appspot.com/bug?extid=97e301b4b82ae803d21b
+<9>  694     Yes   KMSAN: uninit-value in hfsplus_delete_cat
+                   https://syzkaller.appspot.com/bug?extid=fdedff847a0e5e84c39f
+<10> 687     Yes   WARNING in hfs_bnode_create
+                   https://syzkaller.appspot.com/bug?extid=a19ca73b21fe8bc69101
 
 ---
 This report is generated by a bot. It may contain errors.
