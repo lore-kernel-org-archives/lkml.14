@@ -1,76 +1,106 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EEB2AE66
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4412AE66;
+	Tue, 12 Mar 2024 13:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710250877; cv=none; b=qHqCjSICxJYoT92IXPY+scRlozTEikZR2apDFOJntKlhD7NuZvlpB+i/ABerpUtx6z9DnHOChihvL0PIp167WcEB5G4GE255Mz2EL4BbWGVSuUxWcVIIKjKUv86D/VQeGkSGxbxSAK1IUJA6J0XSQ94mBvxesUahQeFEHpjRBHg=
+	t=1710250916; cv=none; b=i3lW++PtpueyNLFMX48P8WA1XKtKgDio0mGBjDaeYIs2KyM/5grCOP1OjfMWquEzYtpVRnZ62rHNDNXVDNkT528FxsG+CRkluhKI1JJzrv7uuWTH+ATMHcVxEbZm3ZDXcR7x+WJkNRE8mhTIiwTxQ+vIyBPHPDFowYldnSu5m/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710250877; c=relaxed/simple;
-	bh=PjY9Hx4tOJdG4XqfmaFoKDKo7zwgV5FzXjCGKYeM9Is=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WB87vn59NWrZbq5ramDp8JQjCOK3IT8dPp6CXt7+DMwPqknY3jObpN7HO+jbKGPPndoufeucReWqMSlnvLhB5FIIqJZiQLacTrMz1Qmxdr9n8FG2xiIbXZ/plSCm0sULKxkL2kE3aNd92u5htZw1LUjl1AnM6S03LhdvMZZXpA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3665283d42cso24406915ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 06:41:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710250875; x=1710855675;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s0AA3R38g+NMxfqYoN/vqX14LWr3c0ZeG2Q50m10+nM=;
-        b=bbGNC7HzWxi/E9vq1gzgP4VsuSHHsx3SMlhXfrU/E3rywuA0UzOZwdWKW9Q2VLXvfR
-         HJaroeIuXzajlK9NqHrjb37+fN5oUa1EjUr4KTKU/biS6pUU1naIIEyvG/+WYCVZowlX
-         Zb2vdSo1jtOGOBlsoEXXAlqL2zeCeK5ak0PETlTiTg77pNk2NHracvmcK+NdopxsOKRo
-         TzCkQL2ShLmZoj0U395hjFGksNrl/g82vEJgUlmSc1bF2bpxkjXQKZ1B3e8RQOvLOCs4
-         cZtJs1ssB2X64TaraJ95/F+nBKEiSNZQ3gP5IwC06xg6U/pnyKlsAMM2BEef7aBTuJpP
-         RVoA==
-X-Gm-Message-State: AOJu0Ywd6MzWw2KkK5LHcjiQpAmQspGUdVgIP3J/LbJr7Wxxoe0K/uGl
-	6tXXvxeUhE6xxEGAorUifJ7Q58/vpunl8yP6DIcXR1vkpFZ33TynUbLveG/6vno6Rzr9AictSLE
-	CBWWdaQE1JQzuLcOO6uQVBg36rvQdxjb9JhaV7tHdub1v8Y9nF+KuZdMXCw==
-X-Google-Smtp-Source: AGHT+IFsIUqg0/SLj0rWp59RR86LchZSPN/cneAudsbtNkUgubOuZvJ8R30cUXy3lWz6wFNUpQAp1VzQRsMkqNMut2W2DmxvfauX
+	s=arc-20240116; t=1710250916; c=relaxed/simple;
+	bh=FxDY+kZRT1RApJ1t6STPTz8JjYr743x0+SzzLlFAsTw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OUdH0s99N3MhsleaJlr2HiRtEnz1xM1ym70CrpEHlBrztklQCkAyqkyq62aYFk48X3O5EN+7dls3jt7K1t4A1Y+sWAY91iJvF2cWghI1sogzk30ZaFQGy2Kuf4bmgz5TzPn00vSh1YezAQN1AeAgtgdYaSyuAJhWKPR79SZRzfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rYlrYsh7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rYlrYsh7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=afNcz38ZHur08T8xK+zgfWPGvMN0cnA27BpXSiLWcYI=; b=rYlrYsh75MAHk+v6ElXVZKnHIB
+	71X829QiPdMXkKz3CfWeKyp4JEnwNoA6w/LT0YNu3LWXp7BmQLzRl4jUZfHN3YMM/FH1J8+7X4KHg
+	MPPPil6RUPzOBsUELC7PlKyCIfFb6nHKiC047G2WcUhhutnwZuH90A+ewM0gluxdwIb0HU+B8crce
+	wC4TwPKywtPWSzVBHwQMRn1uH6xM+vVNE25O6MvriYODW8wAnvx3jbhLWIHJ4WXAkij6A/xy/ehU7
+	tSe/LnsV2HZ6NEj1vWeVMgrzkSLcEXNtpNfQW08GfhfSmC+3DmlkKyGVGkoyT15P/riUDpe+KK1SR
+	SFZKgYrQ==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rk2O4-000000037rM-23j8;
+	Tue, 12 Mar 2024 13:41:48 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rk2O4-000000033FM-0fbO;
+	Tue, 12 Mar 2024 13:41:48 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	mediou@amazon.de,
+	alisaidi@amazon.com,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: [PATCH 2/2] arm64: acpi: Honour firmware_signature field of FACS, if it exists
+Date: Tue, 12 Mar 2024 13:41:47 +0000
+Message-ID: <20240312134148.727454-2-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240312134148.727454-1-dwmw2@infradead.org>
+References: <20240312134148.727454-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20ec:b0:365:3db4:16eb with SMTP id
- q12-20020a056e0220ec00b003653db416ebmr14652ilv.3.1710250875148; Tue, 12 Mar
- 2024 06:41:15 -0700 (PDT)
-Date: Tue, 12 Mar 2024 06:41:15 -0700
-In-Reply-To: <000000000000169132060fc66db3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e3ef32061376cfac@google.com>
-Subject: Re: [syzbot] [PATCH] nfc: nci: Fix uninit-value in nci_dev_up
-From: syzbot <syzbot+7ea9413ea6749baf5574@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-***
+If the firmware_signature changes then OSPM should not attempt to resume
+from hibernate, but should instead perform a clean reboot. Set the global
+swsusp_hardware_signature to allow the generic code to include the value
+in the swsusp header on disk, and perform the appropriate check on resume.
 
-Subject: [PATCH] nfc: nci: Fix uninit-value in nci_dev_up
-Author: ryasuoka@redhat.com
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/arm64/kernel/acpi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
-
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index 994a0a1efb58..56624387e253 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -765,6 +765,9 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 		 nci_opcode_oid(ntf_opcode),
- 		 nci_plen(skb->data));
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index dba8fcec7f33..e0e7b93c16cc 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -26,6 +26,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/smp.h>
+ #include <linux/serial_core.h>
++#include <linux/suspend.h>
+ #include <linux/pgtable.h>
  
-+	if (!nci_plen(skb->data))
-+		goto end;
-+
- 	/* strip the nci control header */
- 	skb_pull(skb, NCI_CTRL_HDR_SIZE);
+ #include <acpi/ghes.h>
+@@ -227,6 +228,15 @@ void __init acpi_boot_table_init(void)
+ 		if (earlycon_acpi_spcr_enable)
+ 			early_init_dt_scan_chosen_stdout();
+ 	} else {
++#ifdef CONFIG_HIBERNATION
++		struct acpi_table_header *facs = NULL;
++		acpi_get_table(ACPI_SIG_FACS, 1, &facs);
++		if (facs) {
++			swsusp_hardware_signature =
++				((struct acpi_table_facs *)facs)->hardware_signature;
++			acpi_put_table(facs);
++		}
++#endif
+ 		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
+ 		if (IS_ENABLED(CONFIG_ACPI_BGRT))
+ 			acpi_table_parse(ACPI_SIG_BGRT, acpi_parse_bgrt);
+-- 
+2.44.0
 
