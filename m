@@ -1,129 +1,76 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FBA69D0C;
-	Tue, 12 Mar 2024 11:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986AF78B7B
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 11:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710241875; cv=none; b=opvACLjuJq+rHsFT4DtNIgmZbENNJoboC+MOO/ql2qkCjKUHs9Qo+dlMQwHRJepynq9/K7OXeTnKRTcPMV4thdqnjW83KQoS6lxyvwJzs6JZOOa2E2eiTrLEFSfhmvznexTD5oHbivZ4UN2RG/8157F84X6h7Iyarstv5Kp3Jlw=
+	t=1710241925; cv=none; b=ufFkfxyI+UQyvm/KIIC4dOiOgYKb1OKAN2kI+ALa+M5HDA03Myst0YPmMdJE9APQumEFP+Sp9fXwpFHdwtA3uov3zW5oShFHA/Gr2Gw1Bh+LC7Nmx6HrzJWmCoR0EDN68Fqs/uAq9iTkacYoeSDq95Bsdiceo2HO4pdELSRofVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710241875; c=relaxed/simple;
-	bh=5szbvSG9JnrvwDFGxsynaJ40kTIHT7cLhwAkgTEXuR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNtQSYkGliuwjqfdMnoCFtxRNaIRX/Px38cpTp0T7loA5J8J1RwWKwBlnxt8NMULUzuWWCBW129gAlhlmFq/X677laD39aw6bD61zQjA0ap/5gzx/MFcEcKuW88XWs5/Rxe1PZZ9niQJZwK5GxKGnTg8XemDh4tEmkml67Swaa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E95E1100DA1D9;
-	Tue, 12 Mar 2024 12:11:09 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id AFE422BC2D8; Tue, 12 Mar 2024 12:11:09 +0100 (CET)
-Date: Tue, 12 Mar 2024 12:11:09 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	jarkko@kernel.org, rnsastry@linux.ibm.com, peterhuewe@gmx.de,
-	viparash@in.ibm.com, devicetree@vger.kernel.org,
-	jsnitsel@redhat.com, Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 2/3] dt-bindings: tpm: Add linux,sml-log to
- ibm,vtpm.yaml
-Message-ID: <ZfA4TZspY7oOQ4vz@wunner.de>
-References: <20240311132030.1103122-1-stefanb@linux.ibm.com>
- <20240311132030.1103122-3-stefanb@linux.ibm.com>
+	s=arc-20240116; t=1710241925; c=relaxed/simple;
+	bh=F/F5iY7dNNbeFNuDWmqJTXlF4HeuHZwN+TMZQ4coK0g=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jNZPkLwpxTCfV7pQAvpJ6ta0zrW+EVxewqn896eXTDBc7hGO7javdOTGW2PYAzGY69ITgj8fRYdPQVKz6FrXB2n/hJGcXQ9aDGPZCs4GzB2ZxPNYKilIOhcvMmVEDKHZw15NYmWzYR3ZvmUMWihj8hcjUFdTbpCwobdGd89QYcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c8a98e52b5so244151639f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 04:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710241923; x=1710846723;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HZbS9O7jYNBOBghH7cVJooPu+oqs6wIvnfHd3EqYfcA=;
+        b=jCibTyPj8NEPNTB5KAVltCZnoXgRLC9tTlCRdLH1ziZGA+WplYxj6JmIVC06TIovYY
+         O1e4DI1/MWmXsFVZqyPfOqZ4iPK/aXOz7cEggsXFqLN64moSNEsggr0TKQjeT2YI046Y
+         3AnDt8wf3cERVdxyNjrY2/WGCzptSKIe4IYaxrnUlBmy+uT1dKc26/hmKfMxBU8ra0uz
+         faNHCQN8glT5z5Duw3kZIq+wNxEOn8lFR7t7tpUp+AYzNEsJAazIAgTwZX+9amB6oFur
+         Pvs60Arn/zjRGVfFz1+8poPyBHtvvf6aloqC+DEnqtVYcRC1HbdTNoHqccrI1/3tQ/1m
+         3MRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUI9MBi5lyykmRKwwPxTG1ZTmCgLCEFoshqA+hAmZUHDdlEPdc5QHg2ess8Uj9p0dtgLrL6hukskUeZYGXVS7mWhlYWLh44Ne6FQnS
+X-Gm-Message-State: AOJu0Yyatk/URcKkRpWJTGR7xfI5SH4QqBejqiZ3kdVP21Mkm9DBQetS
+	jGfOiLQyAXy9OWkEEB9I/CX+P31nxsKXEEwlZUwLP2tEMKKYxK3RHLcAxm0sMRkXUqDiRjQJTxb
+	JQoPzlN+VnYfMxS3InYB9xlB6+/LGxmrPtlmDZit7r0IZvnXTqrtZ46E=
+X-Google-Smtp-Source: AGHT+IGfGq3rEfX/wKWwVeENmMXpKFCaNRe2flrJiSKzamE5rF5j9cNAunR0ycSD57ABQVQD/SPDwd6rXQp4sBQlhp4bVx5bvynT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311132030.1103122-3-stefanb@linux.ibm.com>
+X-Received: by 2002:a05:6602:3fcc:b0:7c8:b6cb:9201 with SMTP id
+ fc12-20020a0566023fcc00b007c8b6cb9201mr138082iob.2.1710241922914; Tue, 12 Mar
+ 2024 04:12:02 -0700 (PDT)
+Date: Tue, 12 Mar 2024 04:12:02 -0700
+In-Reply-To: <000000000000fc57030601f44e7a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004babdc061374bab1@google.com>
+Subject: Re: [syzbot] [btrfs?] INFO: task hung in extent_writepages
+From: syzbot <syzbot+d9d40a56a26bdd36922e@syzkaller.appspotmail.com>
+To: anand.jain@oracle.com, brauner@kernel.org, clm@fb.com, dsterba@suse.com, 
+	johannes.thumshirn@wdc.com, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 11, 2024 at 09:20:29AM -0400, Stefan Berger wrote:
-> Add linux,sml-log, which carries the firmware TPM log in a uint8-array, to
-> the properties. Either this property is required or both linux,sml-base and
-> linux,sml-size are required. Add a test case for verification.
-> 
-> Fixes: 82003e0487fb ("Documentation: tpm: add the IBM Virtual TPM device tree binding documentation")
+syzbot suspects this issue was fixed by commit:
 
-The Fixes tag is confusing.  The patch won't even apply cleanly to the
-v4.10 commit referenced here as the conversion to yaml happened only
-recently with v6.8.
+commit a1912f712188291f9d7d434fba155461f1ebef66
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Wed Nov 22 17:17:55 2023 +0000
 
-Why is the Fixes tag necessary in the first place?  Same question for
-the other patches in the series.  This looks like feature work rather
-than a fix.  Not sure whether it satisfies the "obviously correct"
-rule per Documentation/process/stable-kernel-rules.rst.
+    btrfs: remove code for inode_cache and recovery mount options
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13a76f71180000
+start commit:   861deac3b092 Linux 6.7-rc7
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=10c7857ed774dc3e
+dashboard link: https://syzkaller.appspot.com/bug?extid=d9d40a56a26bdd36922e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13db2979e80000
 
-> --- a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-> +++ b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-> @@ -74,8 +74,6 @@ required:
->    - ibm,my-dma-window
->    - ibm,my-drc-index
->    - ibm,loc-code
-> -  - linux,sml-base
-> -  - linux,sml-size
+If the result looks correct, please mark the issue as fixed by replying with:
 
-I assume that either these two or the new "linux,sml-log" property
-are (still) required?  If so, a quick grep through the bindings
-(e.g. auxdisplay/img,ascii-lcd.yaml) shows that the following
-might work:
+#syz fix: btrfs: remove code for inode_cache and recovery mount options
 
-required:
-  - ...
-
-oneOf:
-  - required:
-      - linux,sml-base
-  - required:
-      - linux,sml-log
-
-
-> --- a/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-> +++ b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
-> @@ -30,6 +30,11 @@ properties:
->        size of reserved memory allocated for firmware event log
->      $ref: /schemas/types.yaml#/definitions/uint32
->  
-> +  linux,sml-log:
-> +    description:
-> +      Content of firmware event log
-
-Please add one or two sentences of context so that readers don't
-need to use git blame + git log to find out what this is for.
-(Mention at least that the property may be used to pass the log
-to a kexec kernel.)
-
-
-> -# must only have either memory-region or linux,sml-base
-> +# must only have either memory-region or linux,sml-base/size or linux,sml-log
->  # as well as either resets or reset-gpios
->  dependentSchemas:
->    memory-region:
->      properties:
->        linux,sml-base: false
-> +      linux,sml-log: false
->    linux,sml-base:
->      properties:
->        memory-region: false
-> +      linux,sml-log: false
-> +  linux,sml-log:
-> +    properties:
-> +      memory-region: false
-> +      linux,sml-base: false
-> +      linux,sml-size: false
-
-Could you add "linux,sml-size: false" to "memory-region" as well
-while at it for consistency?
-
-Thanks,
-
-Lukas
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
