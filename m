@@ -1,109 +1,93 @@
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FAC80BF5;
-	Tue, 12 Mar 2024 12:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE57A140;
+	Tue, 12 Mar 2024 12:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710244843; cv=none; b=fduS2/KeOwsvqN90GG5tup7VYWAfnNZv+uhkUqcGeQaaRc3h8UDAGK5qaFKQXoWyK1Oqi8lODRm28T2ni0oaA60YjZDbuwEFBI14ND8FcPTjSbVNRYxICZ7YYuyyfV0ZV15yUI2QJOk4vQEKAr9TNB/uGZNjU36awQwT/4r00m0=
+	t=1710244865; cv=none; b=aiioAUYvzk6pV1tJtf76Ww6uLCxGkE2EiADHF6rD1ar2kEvuTCIB4kadeyrdMmlnSaG5kJ4CoKQ2fDGNOhlwWdE7WNBX6SZP1lanWmAniElcPQD0QLURB9m5MfR7rnenAtfkgKLK09Czwbd8m3wrXez/yzfsrYdjHg9UXhggVe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710244843; c=relaxed/simple;
-	bh=ECvTdEoAjK3wzw4q4k0AY533HkqELBjzkJcJlUf2zXU=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=czoqGZvV6MgnIGhGP8Zz22Es2PlIJ9fg/1AzEEXdkEXYSBw9PbQ5zK0MiPOa7z1xITTPkxqI4bPbosHeTOeO3WZyN6XyYi7p6BvwNkizxREjzp0ef985YSCcjuTZESymAbopUxJmJVaLlmgLrBfFp5GJPhRdjJ0GEEgaufxr4aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=TTdCiPqk; arc=none smtp.client-ip=194.87.146.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="TTdCiPqk"
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 5375941AAD;
-	Tue, 12 Mar 2024 17:00:29 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1710244836; bh=ECvTdEoAjK3wzw4q4k0AY533HkqELBjzkJcJlUf2zXU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TTdCiPqkNVqozm0hSc+6i6uFw+Sjn2QQpT2Ye3bNmXBdN1kf+MNKQZ51ECrUxOJQ8
-	 JX67cn7Qc5XQrEE9F3rJGRQaOaodFzw+pkNzaEoowt9z/VNfnnvtzTOkxM+qsgX2q2
-	 Gpzqv7ZziNWPpQPDar/LMHbIn7pURNDp6TY6KMnpglKYG+aJ+EiS7NUqMcR3RH6KBS
-	 B7Gw+wfYnEvw8e/y/x90YDnXePJpVJUGYjrdmGiGDQ8ftbIMPbboZYCAKX8wxmg3Q1
-	 TIivPIRjPt6t4b+9Vr34bcwzE3qa67RyewEbnr5YvCN+x8hx5OWZli5sAN7oqObklK
-	 AXARBiikrYrBg==
+	s=arc-20240116; t=1710244865; c=relaxed/simple;
+	bh=ePk5iQwBef/BCg5M8C1xgxE/8EWgCoYElleiuQnLZ3E=;
+	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
+	 In-Reply-To:Content-Type; b=uJyYp5HvAce+nDGjfEHAeuEXewc5ukwRLnm+BkGZ5PRv8lKYjld2qF8m3SkrDxBhvV6gmPA3G2eM+ZbHy2wvJWXxwD6EykCOfyvpIfU81gXKJ/x5nehDXaiXkyO/mhM/krrp25Z0lUILmRmbsavJXGJN10kLUpjdt7eFFFIw8J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TvBxF4bSJz1Z1w9;
+	Tue, 12 Mar 2024 19:58:25 +0800 (CST)
+Received: from kwepemd100008.china.huawei.com (unknown [7.221.188.193])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6591914040F;
+	Tue, 12 Mar 2024 20:00:52 +0800 (CST)
+Received: from [10.67.121.2] (10.67.121.2) by kwepemd100008.china.huawei.com
+ (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Tue, 12 Mar
+ 2024 20:00:51 +0800
+Message-ID: <65F043F3.3040908@hisilicon.com>
+Date: Tue, 12 Mar 2024 20:00:51 +0800
+From: Wei Xu <xuwei5@hisilicon.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 12 Mar 2024 17:00:23 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Sebastian Reichel <sre@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] platform: Add ARM64 platform directory
-In-Reply-To: <4b65793d-0196-0118-6304-b078eaacd482@linux.intel.com>
-References: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
- <20240312-aspire1-ec-v4-2-bd8e3eea212f@trvn.ru>
- <4b65793d-0196-0118-6304-b078eaacd482@linux.intel.com>
-Message-ID: <73b554ac76f404a485d2bb3b34dca962@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Yang Xiwen
+	<forbidden405@outlook.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, Alex Elder
+	<elder@linaro.org>, Peter Griffin <peter.griffin@linaro.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v3 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
+ info, maintenance irq and GICH, GICV spaces
+References: <20240219-cache-v3-0-a33c57534ae9@outlook.com> <SEZPR06MB695952078B51C4549191F8AB962B2@SEZPR06MB6959.apcprd06.prod.outlook.com> <dbdce27e-f33a-4597-b978-965c395c7169@linaro.org>
+In-Reply-To: <dbdce27e-f33a-4597-b978-965c395c7169@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd100008.china.huawei.com (7.221.188.193)
 
-Ilpo Järvinen писал(а) 12.03.2024 16:40:
-> On Tue, 12 Mar 2024, Nikita Travkin wrote:
-> 
->> Some ARM64 based laptops and computers require vendor/board specific
->> drivers for their embedded controllers. Even though usually the most
->> important functionality of those devices is implemented inside ACPI,
->> unfortunately Linux doesn't currently have great support for ACPI on
->> platforms like Qualcomm Snapdragon that are used in most ARM64 laptops
->> today. Instead Linux relies on Device Tree for Qualcomm based devices
->> and it's significantly easier to reimplement the EC functionality in
->> a dedicated driver than to make use of ACPI code.
+Hi Krzysztof,
+
+On 2024/3/12 19:36, Krzysztof Kozlowski wrote:
+> On 12/03/2024 12:19, Yang Xiwen wrote:
+>>> Yang Xiwen (3):
+>>>        arm64: dts: hi3798cv200: fix the size of GICR
+>>>        arm64: dts: hi3798cv200: add GICH, GICV register space and irq
+>>>        arm64: dts: hi3798cv200: add cache info
+>>>
+>>>   arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 43 +++++++++++++++++++++++++-
+>>>   1 file changed, 42 insertions(+), 1 deletion(-)
+>>> ---
+>>> base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+>>> change-id: 20240218-cache-11c8bf7566c2
+>>>
+>>> Best regards,
 >>
->> This commit introduces a new platform/arm64 subdirectory to give a
->> place to such drivers for EC-like devices.
->>
->> A new MAINTAINERS entry is added for this directory. Patches to files in
->> this directory will be taken up by the platform-drivers-x86 team (i.e.
->> Hans de Goede and Mark Gross).
+>> May someone apply this patchset to their tree so that it can land in 
+>> stable at the end? This is a fix, not adding new functionalities. It's 
+>> been 2 weeks already.
 > 
-> Mark -> me.
+> It's merge window, what do you expect to happen now? Please observe the
+> process timelines.
+> 
+> For arm-soc usually the cut-off is around rc6. When did you send it?
+> Week before rc6, so a bit late.
+> 
+> Anyway, I bookmarked this patchset, so if no one applies within some
+> time after merge window, I'll take it.
 
-Oops, copied without noticing that, sorry, will reword.
+Thanks for your explanation and kindness!
+
+Best Regards,
+Wei
 
 > 
->> +ARM64 PLATFORM DRIVERS
->> +M:	Hans de Goede <hdegoede@redhat.com>
->> +M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> +L:	platform-driver-x86@vger.kernel.org
->> +S:	Maintained
->> +Q:	https://patchwork.kernel.org/project/platform-driver-x86/list/
->> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
->> +F:	drivers/platform/arm64/
+> Best regards,
+> Krzysztof
 > 
-> Is some ARM64 person going to pay attention to these patches (you or 
-> perhaps somebody else)?
+> .
 > 
-> It's perfectly fine to have some ARM64 person(s) listed as an additional 
-> maintainer there even if the patches themselves are routed through Hans 
-> and me (and pdx86 tree). With Mellanox and Surface platform drivers which 
-> are also routed through pdx86 tree, we have Hans + me + 3rd person listed 
-> as maintainers.
-> 
-> (This is not to force anything on anyone but it could be beneficial if 
-> somebody more familiar with ARM64 is in the loop.)
-
-I've just replied to Bryan with my thoughts on this, but if you think
-explicit arm list would be good here, we could indeed add linux-arm-msm
-for now as Bryan suggested.
-
-Nikita
