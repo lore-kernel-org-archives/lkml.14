@@ -1,108 +1,71 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9B71EB5C;
-	Tue, 12 Mar 2024 02:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9A653A1;
+	Tue, 12 Mar 2024 02:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710209599; cv=none; b=Mb1Rlkdu4BnLyZF85yRbVZ8/SwmD92mZQ7kvVXyxrXP69/+DnT702rZRlp1UVw7ARwZr34yaST0ITJ77QapGXWfCGWcfxwIXvlKwFRYvmRHTr2MDdAyzTPX511lHOdb5r0qiR1P64KeT1NpJ4mnoCLhlSt+lcKroWT10Ob/8FL0=
+	t=1710209704; cv=none; b=RcKlHVQPPlBQk38ycuLunpDdCsPB0buC0kpCC1dnZPwue6yyfRAcZ/PHjP0GzlVX6p8hSvt7C+CCnUcMQ7Sv5x4MTAvvlfov4weMHciYC1DLzXdPgcNjzPz8Y5k7J0JEjsLlMAfMQhCFjosdKYw4Fn+m0y7CZCXdplMt38DKfMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710209599; c=relaxed/simple;
-	bh=xxgkr5eNkvW5q1zkcYlUGp+GjUJ5hPdmOjnvJkUucnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dn/iiSEex6TiwnyGjOdH5lhsGnQRNz1Hmx1HTyquVyxTzFYSgeC1dcK1F1AzvleOzVGUdQSOobgkZvTrXbWQ2eoyds/zPB6ZcsJi1aLXd8cRwHhxJfHfXUX9AWgc1kbMrHgxmg9kI0dyjVlpitPdPklSy91FRKIMlD8vO737y6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EI8/DEW4; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710209704; c=relaxed/simple;
+	bh=PJovpp2A+JaRMOnogNorzQ2dH5WkxIAjttZeU5mf2+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4m8U70bgTOnYUTyPvLO0ZpViAMwzyVRaEaR0OQIoo4I3iGdaBZB+EDvqlHTFLo/RF4lIWh6la/x5k+PBCbOPZm5RgcKGVPfqxIHUKEQoRshGYFodYa2/6sScQcZScsn3PArbpuO4bF1832Sn0Wgr0EjTUeLu4pn2wB7oMOsqTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKkAFQ06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI8/DEW4"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33e899ce9e3so1805288f8f.1;
-        Mon, 11 Mar 2024 19:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710209596; x=1710814396; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxgkr5eNkvW5q1zkcYlUGp+GjUJ5hPdmOjnvJkUucnk=;
-        b=EI8/DEW4FPp43ofgqsH2qBfW49i50NoDCrizUb6IYCuupG45uqgzh0Exxt7Isq63pw
-         fbg5COrtcmXD63Qu2BfHZL2/skr4dnSx8BufGb+fH3xb93d1jOmCMWMdQfcSOUqk5UNh
-         WGrgQ3qV0zStRiyHj655rMmMDIUNftrzZvoHv3npiGzAN57p1pLmHQIlQ0go8EOXhkcG
-         En1ujhLOX29nn6LpGrjX44RbCS4WOVFnOcH1SOc33lAF4xhMq1RtE6DYnEnFaZL2Db39
-         fw5O35I8YtGn2lik5fJPZ+X/zyyM7oLK3W3HtCMZM15vHuw2Dn1SEpxbEVNGlV3qx8+z
-         216g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710209596; x=1710814396;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xxgkr5eNkvW5q1zkcYlUGp+GjUJ5hPdmOjnvJkUucnk=;
-        b=dgSs3a2MIyxDxomMuoq0dNeZsgmiKXA7gcUbcULgc/W8xoB6fcK6IPkNFqIXF2ix8C
-         zOB2T8KCL1BzVVO0EHy8WGsGrFWVTKtQ+xPl+ZPNUzQ1b8WGGSsD0Xd9xRzFc7zBnNXi
-         kfjAIkHMPBsSz3fE+RFUz2uRyU0TiWwlNveYirzLfH1WJclFivqEgfYDWR1c+6W0nGQw
-         qX93w3vQdEyJ/p8ivuIdEnLtkLIPE04MYnJY03+CqVRpNgMI21QJIOcYoGxtLfeWXQE5
-         RQIiR4lr2W8rEDPTvPzVvDoAq9Nicad6LXXyUzBuOf2FwMZqWaVLrHZiBPlgD549KdRf
-         GzfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCvbMxEXCNkSmEeKEMjaD4seLhhkiEkzWipJXMFGHN95lPfC6WXvjkqL6pyCK0noLLpBFPK7KXWhUjMvVwZYQxCaz2DwlJtHhn+czXAt7TV58+7mrgl8FnjlNyBFE1fxlqMIWPsn0YWt8PaA1jAH6oa9rolni47ezC2njkdNshk2oNbyBbz1dNsk/hjK+2DExpVfiwKqLyna/f90bj34y64PAfgIXl1jHQNb7MPCUjuqM0nJoA8NLA5HnHLNmx6WeDdamWU7yz2Drxcjxb1LOl0gDxAziRUeGkSA==
-X-Gm-Message-State: AOJu0YxsgvTpIp43h+AalndypjPsQB29bSwBY+JRm1vAbxqOQVPlLRDa
-	lpcvfydqZZ4YZ7cekcpDpalRrG70mcu6SnoeqjYEP+NvijXs8F++KZcK9E3gkNt63TCqkggmh+G
-	BcM8SKxYoKSLBlv+CC1Vhd44tPsE=
-X-Google-Smtp-Source: AGHT+IGaeIqJnZOJ/SuZRPtu+8MtD/3nozajQZ94fUgHlD7gwqeVkMLfFrTcgwoFQp9lHB+TsWg3BU+ivdAF6tyjFJM=
-X-Received: by 2002:a5d:4112:0:b0:33e:74c6:bcb2 with SMTP id
- l18-20020a5d4112000000b0033e74c6bcb2mr5165378wrp.16.1710209596408; Mon, 11
- Mar 2024 19:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKkAFQ06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C475AC433C7;
+	Tue, 12 Mar 2024 02:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710209704;
+	bh=PJovpp2A+JaRMOnogNorzQ2dH5WkxIAjttZeU5mf2+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sKkAFQ06PHlEUHbibzQjppazuw2ho4yAVBApbsT5E0z3RuR6Mnmc+9tJKvBXyTdFO
+	 4CCjYd1/mkFtSs1Ym1fJuRrld/n+DfzS6pr4XhO/DE6IcLc5qUaP3i6L9cfy3jCz+t
+	 uayY/pY2TRXh5blsEqSEFTsYKlT2NkXhAUAPq7lL0n3qCqVvEmh32B7sSlVu/aS2PU
+	 Px0ubjorDH87kuBNC/JECWUonlQ19hDkuA0NIVZKM0N650+Q2i60PbRIvQ1gn8XQ4x
+	 J5/fXmG9J8A2bYuz02Q68ILhR+OuwKbrkFP4UNdVXdNdnJkhIDx/2qQnT8872xoCpJ
+	 D91ps8Df7kGng==
+Date: Mon, 11 Mar 2024 19:15:02 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net, x86@kernel.org
+Subject: Re: [PATCH] crypto: x86/aesni - Update aesni_set_key() to return void
+Message-ID: <20240312021502.GB1182@sol.localdomain>
+References: <20230607053558.GC941@sol.localdomain>
+ <20240311213232.128240-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-8-dongmenglong.8@bytedance.com> <CAADnVQK4tdefa3s=sim69Sc+ztd-hHohPEDXaUNVTU-mLNYUiw@mail.gmail.com>
- <CALz3k9iabeOwHSrPb9mkfCuOebanh3+bAfi7xh3kBBN0DzHC3A@mail.gmail.com>
-In-Reply-To: <CALz3k9iabeOwHSrPb9mkfCuOebanh3+bAfi7xh3kBBN0DzHC3A@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 11 Mar 2024 19:13:05 -0700
-Message-ID: <CAADnVQKsrLB-2bD53R4ZdzUVdx1aqkgom1rzGCGKK0M3Uc+csQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 7/9] libbpf: don't free btf if
- program of multi-link tracing existing
-To: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240311213232.128240-1-chang.seok.bae@intel.com>
 
-On Mon, Mar 11, 2024 at 7:05=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <dongme=
-nglong.8@bytedance.com> wrote:
->
-> > >
-> > > +LIBBPF_API void bpf_object__free_btfs(struct bpf_object *obj);
-> > > +
-> >
-> > It shouldn't be exported.
-> > libbpf should clean it up when bpf_object is freed.
->
-> Yes, libbpf will clean up the btfs when bpf_object is freed in
-> this commit. And I'm trying to offer a way to early free the btfs
-> by the users manual to reduce the memory usage. Or, the
-> btfs that we opened will keep existing until we close the
-> bpf_object.
->
-> This is optional, I can remove it if you prefer.
+On Mon, Mar 11, 2024 at 02:32:32PM -0700, Chang S. Bae wrote:
+> The aesni_set_key() implementation has no error case, yet its prototype
+> specifies to return an error code.
+> 
+> Modify the function prototype to return void and adjust the related code.
+> 
+> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> Previously, Eric identified a similar case in my AES-KL code [1]. Then,
+> this parallel issue was realized.
+> 
+> [1]: https://lore.kernel.org/lkml/20230607053558.GC941@sol.localdomain/
+> ---
+>  arch/x86/crypto/aesni-intel_asm.S  | 5 ++---
+>  arch/x86/crypto/aesni-intel_glue.c | 6 +++---
+>  2 files changed, 5 insertions(+), 6 deletions(-)
 
-Let's not extend libbpf api unless we really need to.
-bpf_program__attach_trace_multi_opts() and
-*skel*__attach() can probably free them.
-I don't see a use case where you'd want to keep them afterwards.
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+
+- Eric
