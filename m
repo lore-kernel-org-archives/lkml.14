@@ -1,156 +1,63 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2084.outbound.protection.outlook.com [40.107.244.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D8139568;
-	Tue, 12 Mar 2024 18:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710267462; cv=fail; b=HBhiW18IPSRe6ftxW5XtV8yilTn+EVTOoqRGb4Oje7N/sz+A+ymSv3Mf8jm6tFpquHrMfAjlcd9v07Zcs8aZAtBuppHglFAcX0gOHDgTLYl5TSjNjUbK/Q0MnUEZZ4Wk+REA6C3RFw5JJSwhdc59Tdj9P0IhtuuOdnuQsvuz7uM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710267462; c=relaxed/simple;
-	bh=kuHZofzAq/2R0Z4fbDkAWJam4FC2tX3kUlK5B37tcjM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOHYiJWyStFTz6d8Nu3OlRF29OK1KXkTZiuizVv4nLAJeUkTHJSiujj/NogQc5HvpAA1xleW1W/nUMuIoLTHiHDmDbrJafFNMm0xRDiZUPiiIc0G7E1PH/ufw9EwCf7XeM+czKKb0w04exNqv0JIGWzZy6vjr9IU/GvUf0tqgV4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XN8jeFAx; arc=fail smtp.client-ip=40.107.244.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CFA13956C;
+	Tue, 12 Mar 2024 18:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710267607; cv=none; b=AhwdJtlla700fm41XszVr5te9vyyVw9oZ1Voev1RxtOoFRnHEJrTGZJLpl7nRA//sHmY+fX8emgWdct6Vx4I2wQtrN8D+tL2aWa8m6aTa9aze1iCfyfmlmJBGVYDXmJAV9ai6vjSx153V0GISMG1+JemgokfM3WmcWb0QRrQ7yE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710267607; c=relaxed/simple;
+	bh=hqWitlsPnL+8yPjT+KvzavZzgnkaJT/HqdtzAkufuqc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=sMX0co9VIf9a7TYL7qkrwR+SPV+pJvx6I31tIL/PTLPrLldwvrciY5hxxggbh39F0OBN5UkbdABfzVBYuZbfAaZymh7IeemVIg4tcQxxmb1ZW5UV/8v4te+vph+D0mqCHHwhlF0ZH0s6ZGb4/xh2eI+RERc97FMz61g9cP6pW/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rucpyEOS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XN8jeFAx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eczUq5PO1sVq1O/BdMyrWU2lRWVcPStvuJWIX+8js2J3LjQTTHf2SkAt5M7IHYJTmx5ciB1aNyIntNGUiZDMV81Px3AF1r76TCMtYy+fKntEe8NrWVmsTZEw2zCQh+Jl4SrCmhnV4SqZ1Ok/ROKWS0Tpa5coccgYxhagbFQyZ5R9cWO8Xr7pT0HiiZ6nAfY/81qqP/4K2vwiyCd/8HixBqBzzfYOfrDKkra1CNrlYxhZEH21bByf4bOoi6JDe73ih1F2twPH643VdUjNOmJ5EV5a8rPt/YgAARsxYQO+Is3VIyilv32hRqUNJoRMNFLoqwnvW4NM4fANWVHuinTEWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VwTN2VXR1tAhU+uS4RNEOXcBSgcbdvl/I1ALc/OZnpI=;
- b=HOXg8Qloqi230OKRzyssUaJd3FQ51BYDlWYeYa60pRi1QmQHx0jDN6bQzXfGTh+u08PN/VXLUT2UNsQnqfaStzyRZYsKpSqZQ9fjDWaQBe1Y5VJPvifKx3STO+Qtr5s8GSq9hgBtJR2DuavRSJ4FoAiw53PgFd8buIb/9OGelkPITfi4efyfSzl8W/5jNFRxxCH5cMdxZVc8wzYJA9FelSnDXg0k5vvydG7tZaDiu+uUthAaPr7koJISYCkosQWzDaXC8Ob8Ilvxe4zS5hsEcq+bnUqX0KvvTLPX9HRy3xICXQG2B7Ljx89RLqkDRaPkIvnfeuNUathEXD/029yTDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VwTN2VXR1tAhU+uS4RNEOXcBSgcbdvl/I1ALc/OZnpI=;
- b=XN8jeFAx0asIltEg+Sqv9+Uw/sVhgQ9O4ZfbQSXN0+s8srNbQFJIq+mxQGUBdrd1YTXn2cnCiwfJpqckiS49ksEN6gsU8+SZk+8VGvq/WawRKMTgcoPB2yoZtZee04ajWFA882F3p/G4T+PgozoQWLTKlkyeyL/v94bzEmBrTts=
-Received: from SN6PR08CA0033.namprd08.prod.outlook.com (2603:10b6:805:66::46)
- by CY8PR12MB7363.namprd12.prod.outlook.com (2603:10b6:930:51::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Tue, 12 Mar
- 2024 18:17:38 +0000
-Received: from SA2PEPF00001508.namprd04.prod.outlook.com
- (2603:10b6:805:66:cafe::c2) by SN6PR08CA0033.outlook.office365.com
- (2603:10b6:805:66::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36 via Frontend
- Transport; Tue, 12 Mar 2024 18:17:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7386.12 via Frontend Transport; Tue, 12 Mar 2024 18:17:38 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 12 Mar
- 2024 13:17:33 -0500
-Date: Tue, 12 Mar 2024 10:19:02 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<seanjc@google.com>, <aik@amd.com>
-Subject: Re: [PATCH v3 03/15] KVM: SVM: Invert handling of SEV and SEV_ES
- feature flags
-Message-ID: <20240312151902.xkh7bxdmecwzw77h@amd.com>
-References: <20240226190344.787149-1-pbonzini@redhat.com>
- <20240226190344.787149-4-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rucpyEOS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ABCC7C433C7;
+	Tue, 12 Mar 2024 18:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710267607;
+	bh=hqWitlsPnL+8yPjT+KvzavZzgnkaJT/HqdtzAkufuqc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=rucpyEOS2KtZ7n86w4aIDhBFDELDjA50fJqzbewKJWj+IbEyLaPomcNnZSXoxFIcq
+	 zlbpHdF+PD/Gjr7n/A192/moTXeszrTOvWIuy2tkELuGa1epsHM0otl7foygZt+He4
+	 TB/on4DOTs4DC2b0IkR/UrqZ4vAaQjNYxQuFse53RAARmwYBFEdlnnwPr8e2CgTOu9
+	 v7oy5YREGFTIpg096qq0j5yxR61P8cliyVWobAVcDu61OA8tRZmaF5XS4mjA6ehnJn
+	 2wVZgKUEyov6QYzK58nsfKd49jW+6gQeFbG5TuqlgOvLJoI0y1L32J68p9KYFW98mo
+	 YCzzBbo2QBF0g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 92352D84BAD;
+	Tue, 12 Mar 2024 18:20:07 +0000 (UTC)
+Subject: Re: [GIT PULL] s390 updates for 6.9 merge window
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240311105146.20399-B-hca@linux.ibm.com>
+References: <20240311105146.20399-B-hca@linux.ibm.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240311105146.20399-B-hca@linux.ibm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.9-1
+X-PR-Tracked-Commit-Id: fa9e3139e6c5ac756e1ab2a6c7eca99eb684a2fe
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 691632f0e86973604678d193ccfa47b9614581aa
+Message-Id: <171026760756.25732.8596407807038646032.pr-tracker-bot@kernel.org>
+Date: Tue, 12 Mar 2024 18:20:07 +0000
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240226190344.787149-4-pbonzini@redhat.com>
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|CY8PR12MB7363:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7cab4da5-e4b6-4c9a-1d51-08dc42c0b2e0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	oOm3yCQr9TCoLxV0m+aIEx9XMyQ6LGikAvrdKWb0lg/NpZOIKBPI6nawxay2wB/7YvbdAL5tmyKJNepm0D3mjDm3fjmwisSgbimPmO59M9uYHsjDtyNiYvC0PXpxdDeGQZKNJZN8J4Y4GcDs4zg2+Hr7Eg9ZpKdVNVqmtNiABVXR0otD8+v9XUZLP6oSXkAzns4squUoAIZIk5dUYJr98Hyg1ZFZjXNDka6kUj2O+JgM43tKvSBBmdryN1FyPDl5qVH3vOwYqKrx5drTfwSaJpyU3MvPUo5BXcdI0a6cGhQbhENF36sO8s9e5Xm7DGD7Yxk6cpYr4rq+i+c7caMUZ5SfR4vOAd82o5SBr11IIXduFn4McslIvc9Xp488ikRI6h8BlzXrmDqKyK4veXv4euWo5U3laz1DH0zUXpbWRnsnGEX+eglavbvddQNbOLkNaJToq+tGOGLfRnLVl4v/eScuoYT8NwiKEJNLzGDNWdtyZ1VeFR9qoZYKyg89HY+aq8gvmN3y6arEGK126KmBqJCAnPFzdFIP5+UK7I8+/FXPs12rgcR8ubUKjZ+IPjxf6QkMy6JDm9jq5GGYN7v4DHjW4BSIZePHVG81tWpzmVxObFsG38mO8eEQKbF+i8fjggkaR4tJs/slQk4Sf5XhxfqxoUB4zSkvVk7oyseanz4oLaCIOzT9JsgsKOCm9f/rVipRAKGNbYQ1vmhdxXFHP4BYYaEfE+xYigw2kv4eL454UZqP9QFSkJouVH0VSPTH
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 18:17:38.1328
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cab4da5-e4b6-4c9a-1d51-08dc42c0b2e0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001508.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7363
 
-On Mon, Feb 26, 2024 at 02:03:32PM -0500, Paolo Bonzini wrote:
-> From: Sean Christopherson <seanjc@google.com>
-> 
-> Leave SEV and SEV_ES '0' in kvm_cpu_caps by default, and instead set them
-> in sev_set_cpu_caps() if SEV and SEV-ES support are fully enabled.  Aside
-> from the fact that sev_set_cpu_caps() is wildly misleading when it *clears*
-> capabilities, this will allow compiling out sev.c without falsely
-> advertising SEV/SEV-ES support in KVM_GET_SUPPORTED_CPUID.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The pull request you sent on Mon, 11 Mar 2024 11:51:46 +0100:
 
-Reviewed-by: Michael Roth <michael.roth@amd.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.9-1
 
-> ---
->  arch/x86/kvm/cpuid.c   | 2 +-
->  arch/x86/kvm/svm/sev.c | 8 ++++----
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index adba49afb5fe..bde4df13a7e8 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -761,7 +761,7 @@ void kvm_set_cpu_caps(void)
->  	kvm_cpu_cap_mask(CPUID_8000_000A_EDX, 0);
->  
->  	kvm_cpu_cap_mask(CPUID_8000_001F_EAX,
-> -		0 /* SME */ | F(SEV) | 0 /* VM_PAGE_FLUSH */ | F(SEV_ES) |
-> +		0 /* SME */ | 0 /* SEV */ | 0 /* VM_PAGE_FLUSH */ | 0 /* SEV_ES */ |
->  		F(SME_COHERENT));
->  
->  	kvm_cpu_cap_mask(CPUID_8000_0021_EAX,
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index f06f9e51ad9d..aec3453fd73c 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -2178,10 +2178,10 @@ void sev_vm_destroy(struct kvm *kvm)
->  
->  void __init sev_set_cpu_caps(void)
->  {
-> -	if (!sev_enabled)
-> -		kvm_cpu_cap_clear(X86_FEATURE_SEV);
-> -	if (!sev_es_enabled)
-> -		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
-> +	if (sev_enabled)
-> +		kvm_cpu_cap_set(X86_FEATURE_SEV);
-> +	if (sev_es_enabled)
-> +		kvm_cpu_cap_set(X86_FEATURE_SEV_ES);
->  }
->  
->  void __init sev_hardware_setup(void)
-> -- 
-> 2.39.1
-> 
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/691632f0e86973604678d193ccfa47b9614581aa
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
