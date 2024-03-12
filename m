@@ -1,114 +1,100 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17A520304;
-	Tue, 12 Mar 2024 11:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6366179B69;
+	Tue, 12 Mar 2024 11:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710242525; cv=none; b=JQNzKE6GFdG/iwTjNLpzBpzxFwLlzKlt0Dsoy9lb5qSQlppbrS1cRokztVZ4wo8fn53AauHM5hA4POakBfOX1vcty5NggaDXtcldT4+pFcUNLOW/B2Wpvk57sgr7kPvqYiyLRVPciDsKf5Ys0fb2GOHLptkMsSzbDFjmXDZjY2E=
+	t=1710242552; cv=none; b=QIUt+ujixUQ2mt5hqjR+z6QS0mfBijnFTfFH2G8qKNse3FqFG4mHTaYkVhvf1wtTjUo6fdU/kuxvdLpXZiJEmusolkrSWlJW+8kb7BHT7QZsnTxsbXIOpQT31v0v0nXvxXBapSvGg11YsSPELWl5kIlO1coDlVtJ68EnSRGiSoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710242525; c=relaxed/simple;
-	bh=Z0TSylZlSlnWy9qRsvC4bqqwk7tdSqUZP0+E5DtexE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPDmKw/LNP9u5fFFTvW7FMuRRtwfQ/u+AVcDik8nAT3MJgV68JAPZHuS2Cpm50X0YVuHJ/FIEAiUU6Eib8PFL7BGQl3662wKBy4lF6czmStS3XD2WgQlTQaMfOLUWyCq/jdMi8EsABCdiT0gxKlLxd/VW/TeNVFSmYqlbDNh+yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=e2rYS5fY; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1710242552; c=relaxed/simple;
+	bh=cywT/QByQFIJdhADZzCtgX79R/D7p67c/GQR1xc82d0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qdpPK2V5+SgpSyT//BHZ8/OJqXwjhdkURKF1ZdgaCvsZ0NK3NNzv2z8jfA+qpmLQMwR0PizS7viejUXd38x7aLA6T1ilQtpOcSAlc0VBy64kerXBcZF97Q62n35lpcntX+3TybuJvLmk23IdtuUrJMjbT16RQglygC/epH1whs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ac1emfkd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lNsVlYH+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="e2rYS5fY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BAF94C0002;
-	Tue, 12 Mar 2024 11:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1710242515;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ac1emfkd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lNsVlYH+"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710242549;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hOdo/1mCWJYcxEKaBRYTzgE0ZAGk9OmOvt81SZQggfg=;
-	b=e2rYS5fYWK1UsqRzdoJvxmWsFEW5R/stulHvr/IRvZMqd8xQ1kXaphv1yGlWUkqMm3sbqt
-	mDkD+/xCZ19gLSuDFIe4REOLdWMIz6ysjUjOmU5WRdq/breAHOft0O4/yNbdSn4RLibxWz
-	l/2UKwNDAgfDaA6Z5EBVyFBs4DgShMIDfuK/HmsYa55/INONdz7yFYMNKlJ2HNNToR1IjL
-	hHHyIOQkbMtZjGELXf/D67xTTQjHdEKBllaTjK4ayndNwL+3zawidrcmV+PATJoWbsJJSI
-	ZS5Y5uum0JmJi9ELMRMlDZD6g+0DIclL2Bvw4PqpNsT5vPu5WkhZZR92L/sTPg==
-Message-ID: <941e7c70-a90f-4e6b-a2b7-867fc798d693@arinc9.com>
-Date: Tue, 12 Mar 2024 14:21:37 +0300
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sf8IIBXXR308h4kRJYGu81pgt61c8R8ZXVrdx1HuATA=;
+	b=Ac1emfkdlm80k4NNTrCk8ypmAbhqVcLh0Kz1QOcDVFPeDx9wpxESgrFvxYlIX1BzpQUp/p
+	em+4Tmjou7GWCWrnQq7k6OpRokEfvU3eKL4sui1heA0izq4y4rY0BLAL6CjQkJorH4XyXu
+	ZU9+FKCqgt1YuWe+GwdNjAafSnXf6H2RiO68MdGyK7m1D15TOeMdHRs8+BtL+L4mwjR5gU
+	PTZGw0ikFWrZIQUtR9rsfeZa+pS6T9QXluTpUC/4zyQ6szYjeGt+Q9ie6YOH8bXa9XyPrc
+	GLPvVp/OsV26opnHbRV2AVepeHgEbK5FX4aJKT5ycRCI5kdF30He28WL4JdqbQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710242549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sf8IIBXXR308h4kRJYGu81pgt61c8R8ZXVrdx1HuATA=;
+	b=lNsVlYH+t9pbriX1H3dOtFuKudDyN9IUKK3uLJfP6y+9tXbhZxDSsh7XxbMlABleSvEYfi
+	+yzmuutONeyQN6AA==
+Date: Tue, 12 Mar 2024 12:22:28 +0100
+Subject: [PATCH] ALSA: aaci: Delete unused variable in aaci_do_suspend
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: dsa: mt7530: disable LEDs before reset
-Content-Language: en-US
-To: Paolo Abeni <pabeni@redhat.com>, patchwork-bot+netdevbpf@kernel.org,
- Justin Swartz <justin.swartz@risingedge.co.za>
-Cc: daniel@makrotopia.org, dqfext@gmail.com, sean.wang@mediatek.com,
- andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240305043952.21590-1-justin.swartz@risingedge.co.za>
- <171019143163.14853.15330891015381229970.git-patchwork-notify@kernel.org>
- <7780460c-abc3-4009-9f95-28d123a9a23d@arinc9.com>
- <4fb0b96fe4049578718befc41f2121ce18c30fbe.camel@redhat.com>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <4fb0b96fe4049578718befc41f2121ce18c30fbe.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+Message-Id: <20240312-aaci-unused-v1-1-09be643f67c2@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAPM68GUC/x3MQQqAIBBA0avIrBtQM6SuEi1Ep5qNhWIE4t2Tl
+ m/xf4VMiSnDIiokejjzFTvUIMCfLh6EHLpBS23kqDQ65xlLLJkCBmuUVXLWNEnoxZ1o5/e/rVt
+ rH4HQ5qNdAAAA
+To: Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710242548; l=1049;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=cywT/QByQFIJdhADZzCtgX79R/D7p67c/GQR1xc82d0=;
+ b=Gx2FROu1Olg8QxebPKXGIbZIuHew1YoC26h43RlpBK9Hj4HCacMYmsn4XBAh6+PgVx/d5keqb
+ rEIQpH/iYx5DKFGyxE0rb0k+2cGlGMzdAeqGYoConcgYqrUUNP0R94J
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 12.03.2024 13:46, Paolo Abeni wrote:
-> On Tue, 2024-03-12 at 11:38 +0300, Arınç ÜNAL wrote:
->> I am once again calling for this patch to be reverted on the net-next tree
->> on the basis of:
->>
->> - This patch did not go through a proper reviewing process. There are
->>     proposed changes on the code it changes regarding the scope and the
->>     method of the patch, and improvements to be made on the patch log.
->>
->> - This patch should be backported to stable releases, therefore it
->>     shouldn't be on the net-next tree and should be submitted to the net tree
->>     instead.
-> 
-> The net-next pull request is out:
-> 
-> https://lore.kernel.org/netdev/20240312042504.1835743-1-kuba@kernel.org/
-> 
-> at this point I believe we can't retract it unless there is a very
-> serious regression affecting most/all users. This does not look such
-> case.
+The variable aaci is not used anymore and can be deleted.
 
-It seems so. This patch was not tested on standalone MT7530 at submission.
-Whilst the patch is useless for standalone MT7530, it doesn't seem to break
-anything either, from my simple test on a board with it.
+Fixes: 792a6c51875c ("[ALSA] Fix PM support")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Note: This only seems to trigger with the series
+"ALSA: Clean up with DEFINE_SIMPLE_DEV_PM_OPS()" applied.
 
-> 
-> I think the better option is follow-up on net with follow-up fixes if
-> any.
-> 
-> All the relevant patches could be sent to the stable tree later:
-> 
-> https://elixir.bootlin.com/linux/latest/source/Documentation/process/stable-kernel-rules.rst#L47
-> 
-> To try to reduce the possibilities of this kind of situation in the
-> future, may I kindly ask you to invest some more little time to help
-> the reviewers and the maintainers? e.g. trimming the replies explicitly
-> cutting all the unneeded parts in the quoted code/text would make the
-> whole conversation much easier to follow (at least to me). The netdev
-> volume is insane, it's very easy to get lost in a given thread and miss
-> relevant part of it.
+(Encountered on next-20240312)
 
-I already try to do this. Here's my proposal that would not reduce but
-completely avoid this kind of situation in the future, and at the same time
-reduce the workload of the netdev maintainers. Do not apply patches without
-ACKs. Ask for reviews at least once if the patch had been stale for a
-while, and wait a bit for reviews. Only then apply the patch with/without
-ACKs.
+[0] https://lore.kernel.org/all/20240207155140.18238-1-tiwai@suse.de/
+---
+ sound/arm/aaci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Arınç
+diff --git a/sound/arm/aaci.c b/sound/arm/aaci.c
+index 0817ad21af74..2bfffdd33864 100644
+--- a/sound/arm/aaci.c
++++ b/sound/arm/aaci.c
+@@ -740,7 +740,6 @@ static const struct snd_pcm_ops aaci_capture_ops = {
+ #ifdef CONFIG_PM
+ static int aaci_do_suspend(struct snd_card *card)
+ {
+-	struct aaci *aaci = card->private_data;
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D3cold);
+ 	return 0;
+ }
+
+---
+base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
+change-id: 20240312-aaci-unused-d74171092e50
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
