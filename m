@@ -1,76 +1,62 @@
-Received: from chinatelecom.cn (smtpnm6-08.21cn.com [182.42.159.130])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0444555E73
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 10:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.159.130
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE77959147;
+	Tue, 12 Mar 2024 10:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710240271; cv=none; b=GDnPXzXTKztYiNkiIQz3PtqlUy4Z+b031Hg9QZOtbw28blcMml8omGmVWFQMmCLNCiy2YTlUNt1Mil3UxwwGBAXtAEK0AzNTx9uTJYz7SEG+iqsjO1T0cDu1jX+ps+a7Tk8KjMPDH5F+yqwRV6rGydEzoksMIjg/tJZpd1KxETk=
+	t=1710240303; cv=none; b=NBteDvkcpIKIFjn1kWAgWdqGrWdzcMbJmArsJgeIEr8Fv7y/rTIsoC+gPDPlD7Z5cUKBtnIILF8TupkU9O0NGXkJharl+pxdhIIlhZYmxdHZ0KAlofqgIWIH4dwwmRvFCjyakdKVjlCC39g1BPQXGxcLnTNxT75hWdxpWrLikO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710240271; c=relaxed/simple;
-	bh=MfKDSsCO+k//eJBVuSOO62heQl3fYjZ9fUGxXXuhUXE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tDKyk3yLv2VrFH0PbJyt5l/LulapauKqQzVTKynsBnFMCiC8eZAtois5Q9mMzzuqUmI51iDw0i2YR9kqpzHzsZNtR9mvedtaXSUMQIne8Y20jI4Vmw+fcz1MZlQtpbf9WmcuJq0lNYy9imdba4U4b4yS7fVgC1zIf3i037umyiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.159.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
-HMM_SOURCE_IP:192.168.139.44:63786.1870684316
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-124.127.58.150 (unknown [192.168.139.44])
-	by chinatelecom.cn (HERMES) with SMTP id 7579290322CA;
-	Tue, 12 Mar 2024 18:35:46 +0800 (CST)
-X-189-SAVE-TO-SEND: +sibs@chinatelecom.cn
-Received: from  ([124.127.58.150])
-	by gateway-ssl-dep-77bc75f6c8-x5lfc with ESMTP id c6fa781bcd40441ca0a54af00e4aa89d for kai.huang@intel.com;
-	Tue, 12 Mar 2024 18:35:56 CST
-X-Transaction-ID: c6fa781bcd40441ca0a54af00e4aa89d
-X-Real-From: sibs@chinatelecom.cn
-X-Receive-IP: 124.127.58.150
-X-MEDUSA-Status: 0
-Sender: sibs@chinatelecom.cn
-From: Bingsong Si <sibs@chinatelecom.cn>
-To: kai.huang@intel.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org,
-	sibs@chinatelecom.cn
-Subject: [PATCH v3] x86/cpu: Clear TME feature flag if TME is not enabled by BIOS
-Date: Tue, 12 Mar 2024 18:35:34 +0800
-Message-Id: <20240312103534.9037-1-sibs@chinatelecom.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <b909cb856eb625f00402472d3f3153db2294f259.camel@intel.com>
-References: <b909cb856eb625f00402472d3f3153db2294f259.camel@intel.com>
+	s=arc-20240116; t=1710240303; c=relaxed/simple;
+	bh=FsPCYcZaKzqSZ2us0EWfKrjuJpzBgnJIjOqeITPr6SE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iB+kZ0zRCtXxSOLmMYxwTIFg6Fc4Y2S5WCiJ7zeM8t5pcYKnNselnUM9t7hapii+gRUAjMkpabNONNr4GlHVshmjim67+5wZFgCwe8RjNOWyAAvU3XCq9FsAhleNgfUGHwIW+A1WlpoWX8+/JhQl0YB2YQWC7BZKTKli3X/ZpB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fi++c9Vq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fi++c9Vq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44C5C433F1;
+	Tue, 12 Mar 2024 10:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710240302;
+	bh=FsPCYcZaKzqSZ2us0EWfKrjuJpzBgnJIjOqeITPr6SE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fi++c9VqMMvO6hQeEG7Gx+JJWNa+ISYp5gul7DkdLKxAtK8iIPnY16n14L1zby2rF
+	 nvIQ4p6ymU/3dbISEvFoYvjTM2FDGDSxJvp26KN+Y4vQo4q6Ra6J/C782KkclySJiV
+	 6ZN2cZX8OgBfHZiLutS/S/MZfZL67wkqO5laVBn+/hh8Vc+86QdHaCITx1tU2ujXQK
+	 iJ6KPb9Krj7R01vUYTeqkisFr6o8BAvGkHhZTtmQDwDvxJK/TFZW4UXaIlEDuF07I9
+	 wydFTRdhHnY11z5dhMpoHqrdlS844JQFIvAXRdOnU5vsaJ18TQe1sCyoSiYkTy7Xhl
+	 wTGZFXIQiFlKw==
+Date: Tue, 12 Mar 2024 11:44:57 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the i2c-host tree
+Message-ID: <yb2yieqtfot2vzjrr4xihartlz7gmlmrv5r3y7kk66pr3unonq@mzhhakwmiaja>
+References: <20240312104127.3fb5e650@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240312104127.3fb5e650@canb.auug.org.au>
 
-When TME is disabled by BIOS, dmesg output is "x86/tme: not enabled by
-BIOS" but the TME feature is still shown in the output of/proc/cpuinfo.
+Hi Stephen,
 
-Signed-off-by: Bingsong Si <sibs@chinatelecom.cn>
----
- arch/x86/kernel/cpu/intel.c | 1 +
- 1 file changed, 1 insertion(+)
+> After merging the i2c-host tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/i2c/busses/i2c-qcom-geni.c: In function 'i2c_gpi_cb_result':
+> drivers/i2c/busses/i2c-qcom-geni.c:493:18: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+>   493 |         status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
+>       |                  ^~~~~~~~~
+> cc1: all warnings being treated as errors
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 40dec9b56f87..119ae291573b 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -228,6 +228,7 @@ static void detect_tme_early(struct cpuinfo_x86 *c)
- 	if (!TME_ACTIVATE_LOCKED(tme_activate) || !TME_ACTIVATE_ENABLED(tme_activate)) {
- 		pr_info_once("x86/tme: not enabled by BIOS\n");
- 		mktme_status = MKTME_DISABLED;
-+		clear_cpu_cap(c, X86_FEATURE_TME);
- 		return;
- 	}
- 
--- 
-2.34.1
+sorry about that, will remove it.
 
+Thanks,
+Andi
