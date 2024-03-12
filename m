@@ -1,112 +1,256 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4D4139591
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 18:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052C913957D;
+	Tue, 12 Mar 2024 18:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710267292; cv=none; b=gz8opgI8xmtvjxHeL/VD5+PJlBhkC4EARV1YVtF+DhgqDur/ahZnL25fDDg/2ot8/6nqUkkcf8ogXTiVoAKl25enXHI72dQ7s3FGiL5FMfJuvfbzcehytH8XzqGbPZhqCRexN9QIK1bXAjTFSgmBujuFTm6cWLpM3XaxVD29HtM=
+	t=1710267303; cv=none; b=Rqmj/wIhM85VHpfRhjz568pNRwk3ACR9b8pW6yN6JeysIUOpXNlInMwVYYTFnLTQb0qABSrdMcJc/dZFU/2W2axs7WA1XwE2XIPhFrRLpzvMyzWkxxuzOswbjupgH26xuoGVzf1FNVwLaiKqs2ZWl98iUe70Cl/wE1VzcmFt+T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710267292; c=relaxed/simple;
-	bh=NoHLxl5q4br2NmwuVbEbWC8Hgzx+ElYfgu5TSPvDZak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSXN1O+hcQQ4M1tXPXtmuRflEVl/oGp50ZNIsMnbMZODgY5G6fKSGT35JK1edw5UO/WcvGvgx1aHmnhv8lgaezIHwIQTi4lTieXTkvqxfmEEsdjqPuAjurf9fNoZ/WQqJ+D8fAnneh3Zt0hndNIL0iauxalh6OY5G/zBsQPQsqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iIkZ4nyI; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710267303; c=relaxed/simple;
+	bh=Q9lR3Qc4aZyC79bNu2JhyhHRNGYRw7S0CjSfhzbIwYM=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F3HTQaMVp4MnndAgz+Ay2NkA9/IHJDbbknCHkoAEqINUp4xvtXUP0rkzwOZeAElpd4TmBtih0fkKrEuSLJrksDUf1jZo1s4oVFRzFvL2bQVj5VHn3HWnAYkUf+6vb3Fk1nIC3d9MI6zuO+2bdlGEpY2vgoPOXbcvQkGT7/QBS1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tq59OYoF; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIkZ4nyI"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-512ed314881so5245801e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 11:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710267289; x=1710872089; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ndyrovNU7gmuZatlaLPeU/xwQKMeCdI2vpreLiAY164=;
-        b=iIkZ4nyI2z+siU5OovPexeDkLfJpvNaCsQrPYm5xao0TXt/wBm9LRO3ZLix5bliNWw
-         szZ3Xvzyfv11pYa+p/iwKTVNFoudRH38/ol8dZ4U1k4C9KcUnWpl89bQCjeytHpx5ePa
-         Tx9Ty6vnmMdfV5Z4/mKz7Ci/8gEo0y+r8sQQMWMdtl0c4FL01L9Y3K5BiobNcPM5p+ui
-         Yhk1dJtEBW+9SjIpxMetnoex8+H23sUV7dbesA2L5hquRUgFURxRAHgxI/CbXlszVhYU
-         sF21GGuC5+vW6MKFvCUH+nic/QyoYmenACn0aJ6h0JXbDpsUPK8wgQGFrfXYbFR/lAqk
-         HOkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710267289; x=1710872089;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ndyrovNU7gmuZatlaLPeU/xwQKMeCdI2vpreLiAY164=;
-        b=BuqeApzAtLrkZA3bFhbbed3EaTvL97fvafolNZN0CUg6nZw7XZ4hObpynnhlBzDG6y
-         Yjwdu1TjZzDPutgx8MeSMznd5xkJGjPiK+Q1z9RsEXXA2bgx9mKs2oL3y7nXXgAdGrsd
-         n1yBynhkIp/EuRAAQpaREasBnOOUxtsQZXQeF0amPJJdSw1199qctrEhfWyJS620l42n
-         wyDPl04hhyPMA0iuCk/oRXNfheuam+c7q4BP4XKL2IrC0ltGJVh1ZTwXaTDBKRyWUB09
-         KgUrrGesx5rE7w40xIXz2JE3p2mI9UX9DR6aW5ejVRNwiK+94n0qtlyGvzXj5EMpCh7J
-         Bw+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXWA/kOImoIlUx6gRhKM2fAlpHWQuUu90V+4u7DC+11IACTj/x0EhLYwGZ/RFU+kKlg8jnYE+Hj370MDZh9rhf3ALTE/r1Js0lo80HE
-X-Gm-Message-State: AOJu0YzHuABwZDnacp5+u32+jDNETXSaqRSyHZ1ZO/zvIMbPkEwpfWGa
-	3z5Y3MoKS+A81z9ND/Xjx5uVqP+qJcSyAeIgBI4Sc92FcuRQl4FO4nb/V1xZuZ0=
-X-Google-Smtp-Source: AGHT+IEESLK6yRlor/BAs+mtT8DWCpjx4vz0GFvh9t3WEDBysSuHBbCc7YBtd8LxA3B7iMwul9UANg==
-X-Received: by 2002:ac2:4901:0:b0:513:a140:fbf8 with SMTP id n1-20020ac24901000000b00513a140fbf8mr6285218lfi.30.1710267289328;
-        Tue, 12 Mar 2024 11:14:49 -0700 (PDT)
-Received: from [172.30.204.193] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id c28-20020ac25f7c000000b0051313a9bddasm1675985lfc.252.2024.03.12.11.14.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Mar 2024 11:14:48 -0700 (PDT)
-Message-ID: <8e00b2e8-866e-490a-bb81-73a9cb9dc737@linaro.org>
-Date: Tue, 12 Mar 2024 19:14:45 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tq59OYoF"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CI0VUR032729;
+	Tue, 12 Mar 2024 18:14:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=uszZoHUScvfpeeagNwfFGLg8tvqjaAxDDkFYoQOnBbw=;
+ b=tq59OYoFryHBMRfr8jnsahJNUT+fpLCEv1kLdtL7ZBBTiTY0tRQlXwav41eH7nuWrWYp
+ tx+PZKvKYAMrDUiY4TJ0oHmIW7/2Ry84XWSoSTU7MZupFGZW0uBlGHRipxZ9hUxGoMr6
+ 9AilEQY0fvpHT6gAot/2qNdoZZj0Dj1Xnx/6ewfpp0fYn2zEvVrO0ErIFT/KugyG6K0y
+ lXd9W1hluC0e86YAratmluxhs89OAKyHdhJcEIHR2JvD0jzrSrMmuuUWBWFuDMOOlpN8
+ OkND/bDX8DWSr061/Ozzqutrc7XDI/usciDdnYg4PVnkyS/oZB9oXm8XD14DYwjMLyjZ mA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wturh8chr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 18:14:31 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42CI6VSX019017;
+	Tue, 12 Mar 2024 18:14:30 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wturh8chd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 18:14:30 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42CFSEoY020423;
+	Tue, 12 Mar 2024 18:14:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws3km0m4y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 18:14:29 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42CIEN3G37945740
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Mar 2024 18:14:25 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 681D920049;
+	Tue, 12 Mar 2024 18:14:23 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B169020040;
+	Tue, 12 Mar 2024 18:14:20 +0000 (GMT)
+Received: from ltcd48-lp2.aus.stglabs.ibm.com (unknown [9.3.101.175])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 Mar 2024 18:14:20 +0000 (GMT)
+Subject: [RFC PATCH 1/3] powerpc/pseries/iommu: Bring back userspace view for
+ single level TCE tables
+From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+To: tpearson@raptorengineering.com, alex.williamson@redhat.com,
+        linuxppc-dev@lists.ozlabs.org
+Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com,
+        gbatra@linux.vnet.ibm.com, brking@linux.vnet.ibm.com,
+        sbhat@linux.ibm.com, aik@ozlabs.ru, jgg@ziepe.ca, robh@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, aik@amd.com,
+        msuchanek@suse.de, jroedel@suse.de, vaibhav@linux.ibm.com,
+        svaidy@linux.ibm.com
+Date: Tue, 12 Mar 2024 13:14:20 -0500
+Message-ID: <171026725393.8367.17497620074051138306.stgit@linux.ibm.com>
+In-Reply-To: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com>
+References: <171026724548.8367.8321359354119254395.stgit@linux.ibm.com>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/7] iommu/arm-smmu-qcom: Use a custom context fault
- handler for sdm845
-Content-Language: en-US
-To: Georgi Djakov <quic_c_gdjako@quicinc.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, will@kernel.org,
- robin.murphy@arm.com, joro@8bytes.org, iommu@lists.linux.dev
-Cc: devicetree@vger.kernel.org, andersson@kernel.org, robdclark@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, quic_cgoldswo@quicinc.com,
- quic_sukadev@quicinc.com, quic_pdaly@quicinc.com, quic_sudaraja@quicinc.com,
- djakov@kernel.org
-References: <20240307190525.395291-1-quic_c_gdjako@quicinc.com>
- <20240307190525.395291-5-quic_c_gdjako@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240307190525.395291-5-quic_c_gdjako@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5-fhysGSE_e6smelR3AT1kYjih6oe9_C
+X-Proofpoint-GUID: 7cKbR36YwbMJnTzz3TDT8ElrmbaqRYBj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_11,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ phishscore=0 impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403120138
+
+The commit 090bad39b237a ("powerpc/powernv: Add indirect levels to
+it_userspace") which implemented the tce indirect levels
+support for PowerNV ended up removing the single level support
+which existed by default(generic tce_iommu_userspace_view_alloc/free()
+calls). On pSeries the TCEs are single level, and the allocation
+of userspace view is lost with the removal of generic code.
+
+The patch attempts to bring it back for pseries on the refactored
+code base.
+
+On pSeries, the windows/tables are "borrowed", so the it_ops->free()
+is not called during the container detach or the tce release call paths
+as the table is not really freed. So, decoupling the userspace view
+array free and alloc from table's it_ops just the way it was before.
+
+Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+---
+ arch/powerpc/platforms/pseries/iommu.c |   19 ++++++++++--
+ drivers/vfio/vfio_iommu_spapr_tce.c    |   51 ++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index e8c4129697b1..40de8d55faef 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -143,7 +143,7 @@ static int tce_build_pSeries(struct iommu_table *tbl, long index,
+ }
+ 
+ 
+-static void tce_free_pSeries(struct iommu_table *tbl, long index, long npages)
++static void tce_clear_pSeries(struct iommu_table *tbl, long index, long npages)
+ {
+ 	__be64 *tcep;
+ 
+@@ -162,6 +162,11 @@ static unsigned long tce_get_pseries(struct iommu_table *tbl, long index)
+ 	return be64_to_cpu(*tcep);
+ }
+ 
++static void tce_free_pSeries(struct iommu_table *tbl)
++{
++	/* Do nothing. */
++}
++
+ static void tce_free_pSeriesLP(unsigned long liobn, long, long, long);
+ static void tce_freemulti_pSeriesLP(struct iommu_table*, long, long);
+ 
+@@ -576,7 +581,7 @@ struct iommu_table_ops iommu_table_lpar_multi_ops;
+ 
+ struct iommu_table_ops iommu_table_pseries_ops = {
+ 	.set = tce_build_pSeries,
+-	.clear = tce_free_pSeries,
++	.clear = tce_clear_pSeries,
+ 	.get = tce_get_pseries
+ };
+ 
+@@ -685,15 +690,23 @@ static int tce_exchange_pseries(struct iommu_table *tbl, long index, unsigned
+ 
+ 	return rc;
+ }
++
++static __be64 *tce_useraddr_pSeriesLP(struct iommu_table *tbl, long index,
++				      bool __always_unused alloc)
++{
++	return tbl->it_userspace ? &tbl->it_userspace[index - tbl->it_offset] : NULL;
++}
+ #endif
+ 
+ struct iommu_table_ops iommu_table_lpar_multi_ops = {
+ 	.set = tce_buildmulti_pSeriesLP,
+ #ifdef CONFIG_IOMMU_API
+ 	.xchg_no_kill = tce_exchange_pseries,
++	.useraddrptr = tce_useraddr_pSeriesLP,
+ #endif
+ 	.clear = tce_freemulti_pSeriesLP,
+-	.get = tce_get_pSeriesLP
++	.get = tce_get_pSeriesLP,
++	.free = tce_free_pSeries
+ };
+ 
+ /*
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+index a94ec6225d31..1cf36d687559 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -177,6 +177,50 @@ static long tce_iommu_register_pages(struct tce_container *container,
+ 	return ret;
+ }
+ 
++static long tce_iommu_userspace_view_alloc(struct iommu_table *tbl,
++		struct mm_struct *mm)
++{
++	unsigned long cb = ALIGN(sizeof(tbl->it_userspace[0]) *
++			tbl->it_size, PAGE_SIZE);
++	unsigned long *uas;
++	long ret;
++
++	if (tbl->it_indirect_levels)
++		return 0;
++
++	WARN_ON(tbl->it_userspace);
++
++	ret = account_locked_vm(mm, cb >> PAGE_SHIFT, true);
++	if (ret)
++		return ret;
++
++	uas = vzalloc(cb);
++	if (!uas) {
++		account_locked_vm(mm, cb >> PAGE_SHIFT, false);
++		return -ENOMEM;
++	}
++	tbl->it_userspace = (__be64 *) uas;
++
++	return 0;
++}
++
++static void tce_iommu_userspace_view_free(struct iommu_table *tbl,
++		struct mm_struct *mm)
++{
++	unsigned long cb = ALIGN(sizeof(tbl->it_userspace[0]) *
++			tbl->it_size, PAGE_SIZE);
++
++	if (!tbl->it_userspace)
++		return;
++
++	if (tbl->it_indirect_levels)
++		return;
++
++	vfree(tbl->it_userspace);
++	tbl->it_userspace = NULL;
++	account_locked_vm(mm, cb >> PAGE_SHIFT, false);
++}
++
+ static bool tce_page_is_contained(struct mm_struct *mm, unsigned long hpa,
+ 		unsigned int it_page_shift)
+ {
+@@ -554,6 +598,12 @@ static long tce_iommu_build_v2(struct tce_container *container,
+ 	unsigned long hpa;
+ 	enum dma_data_direction dirtmp;
+ 
++	if (!tbl->it_userspace) {
++		ret = tce_iommu_userspace_view_alloc(tbl, container->mm);
++		if (ret)
++			return ret;
++	}
++
+ 	for (i = 0; i < pages; ++i) {
+ 		struct mm_iommu_table_group_mem_t *mem = NULL;
+ 		__be64 *pua = IOMMU_TABLE_USERSPACE_ENTRY(tbl, entry + i);
+@@ -637,6 +687,7 @@ static void tce_iommu_free_table(struct tce_container *container,
+ {
+ 	unsigned long pages = tbl->it_allocated_size >> PAGE_SHIFT;
+ 
++	tce_iommu_userspace_view_free(tbl, container->mm);
+ 	iommu_tce_table_put(tbl);
+ 	account_locked_vm(container->mm, pages, false);
+ }
 
 
-
-On 3/7/24 20:05, Georgi Djakov wrote:
-> The sdm845 platform now supports TBUs, so let's get additional debug
-> info from the TBUs when a context fault occurs. Implement a custom
-> context fault handler that does both software + hardware page table
-> walks and TLB Invalidate All.
-> 
-> Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
-> ---
-
-[...]
-
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> index 5c7cfc51b57c..7a58b1b96bca 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> @@ -422,6 +422,10 @@ static const struct arm_smmu_impl sdm845_smmu_500_impl = {
->   	.reset = qcom_sdm845_smmu500_reset,
->   	.write_s2cr = qcom_smmu_write_s2cr,
->   	.tlb_sync = qcom_smmu_tlb_sync,
-> +#ifdef CONFIG_ARM_SMMU_QCOM_TBU
-> +	.context_fault = qcom_smmu_context_fault,
-> +	.context_fault_needs_threaded_irq = true,
-> +#endif
-
-Is this enough for cases where CONFIG_ARM_SMMU_QCOM_TBU=y but the
-dts changes aren't there? IIUC this will spam the error message in
-qcom_find_tbu()
-
-Konrad
