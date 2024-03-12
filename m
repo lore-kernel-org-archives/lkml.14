@@ -1,108 +1,268 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02954BA28;
-	Tue, 12 Mar 2024 12:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9107A73B
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 12:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710245760; cv=none; b=IJ2yGI64RTxEct3IXTJu8hASuDsMxeGusWZ4Gdpt+YFipFBy0Bf3YxoxeTfIHY7rD3p+P4SJaKyqFQxUcdwn9eK4L+JGN0eKCZA/8NOTGXaR/WLWFaS7Z1brULfVdDMZ4rs5pYAkCjLXZHNs/eQsAK2kTbj4HQgXlpXY1Bs6mn8=
+	t=1710245766; cv=none; b=QvKCZhcgzTEH2TvRPPN59Wu9hjtFumC+XynjciYoEB0I7ESXxiTfRjw62WgOlwljVkAqgifsMZc9W/AtsrF1C/jsv5xV4hnswz3LzjiKJ/nZ/d6KmTBi/uK2gcpbsvG1zC/K5pa8IAd/Aj66QRQd0wvGxcK/wR/7DIuuEVkTvZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710245760; c=relaxed/simple;
-	bh=eWOfUZKmPNZhyLKzOWRxcFwX/pcgSuoNoaDv6gFnoaY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=G71mb3/MHPbc53GrwJBAFz8uidxymiiQ0oQp8S9o/EqDLoV7XnXe0e5vq0siuQJg/g2rRCSZbW/8quqbr4+fdcyE+l3l4sOHoXHDO18lFrBEjYbL4RIKwXXqIGBtiDKmSrc9lXKcd6jFLC2JoOYf1RqR8WQCWwORxFXnV4qbvac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=adYU1hc0; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710245766; c=relaxed/simple;
+	bh=toSAL6LOqqiAcHCFf2a7KtT/GkwF4PILGROHmUBWIwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0QSyTfYItHGxtebj/2ADCdkC8858Rd8gAmte6U4y+3bRHaTgzJH0gbRfv6umCxTA+UupkikchShbmnafT5iOHuhnSxRn3+V4+rE8YUKnBImhJfOW8zwxjz241Kopyf2cCJBBqkpSo0eZdS84WTtp416iJZiQvCXmmpfep9UwgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=qAo3RkH4; arc=none smtp.client-ip=83.166.143.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="adYU1hc0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710245756;
-	bh=eWOfUZKmPNZhyLKzOWRxcFwX/pcgSuoNoaDv6gFnoaY=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=adYU1hc0/HUIwUycHrtd4GegMyOYxLD39anPc8saT3TETvOqtNyQ1llQF2VUsLSr7
-	 7GeJ+1fEoSnY9Hm3uUOvfQWEoit6kSpS3/72J3TcBaVhHpu2qgZROsZcIgS0vv0xGd
-	 wBS69XgiEJRrrZIJ4abtOSNXdr2i8lmsR4hMzIVt1b1S5Ns7pwZisRAXt29+Z2OsHe
-	 ASDxfuus5r7Mm0Wmlt0btj7g0xR+3wE7Ki0Xj+x3DIrXKuf/KoQxi9+E0sQrT3ZfhR
-	 XMtJnwEj6Ql9qIpQHQ5PwM/rfWFjH3ngRjtEGLwPNFZsgsjczDJqL40bY2jUv1/Wkt
-	 6HgrTtkgafApw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0E2D3378207B;
-	Tue, 12 Mar 2024 12:15:53 +0000 (UTC)
-Message-ID: <d690b7d7-2568-4a47-a653-eb25671fb138@collabora.com>
-Date: Tue, 12 Mar 2024 17:16:23 +0500
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="qAo3RkH4"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TvCKR2dbfzMq0WP;
+	Tue, 12 Mar 2024 13:15:55 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TvCKQ0rNKzhRP;
+	Tue, 12 Mar 2024 13:15:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1710245755;
+	bh=toSAL6LOqqiAcHCFf2a7KtT/GkwF4PILGROHmUBWIwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qAo3RkH4vnvOXezdBsHKVdull/R1EkYTke/fr8cEyftmemu+MgRBRD/0RcN+EPCaG
+	 EUdqDuICfGoyovJLyRKBQ5wMhZjn3FSHKL9MM4TRX7SU5KCMHkdmzm5XJt5suSvpBx
+	 8B6TWfN5IyjrCbk70Iong7MQSOB1Kknnk8bSCZSo=
+Date: Tue, 12 Mar 2024 13:15:43 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>, 
+	Kees Cook <keescook@chromium.org>, Rae Moar <rmoar@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Morris <jamorris@linux.microsoft.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v2 6/7] kunit: Print last test location on fault
+Message-ID: <20240312.ku4TaiC9uosh@digikod.net>
+References: <20240301194037.532117-1-mic@digikod.net>
+ <20240301194037.532117-7-mic@digikod.net>
+ <CABVgOSk_vea-LrPwJet6hQ4D3PBQOLVg32nZ_gE4c9kgGDEEnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Michael Walle <mwalle@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Takahiro Kuwano <Takahiro.Kuwano@infineon.com>, kernel@collabora.com,
- kernel-janitors@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mtd: spi-nor: core: correct type of i
-Content-Language: en-US
-To: Pratyush Yadav <pratyush@kernel.org>
-References: <20240304090103.818092-1-usama.anjum@collabora.com>
- <865fc24b-ae27-4084-893b-c5c389480a09@collabora.com>
- <mafs0r0gf8x6c.fsf@kernel.org>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <mafs0r0gf8x6c.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABVgOSk_vea-LrPwJet6hQ4D3PBQOLVg32nZ_gE4c9kgGDEEnQ@mail.gmail.com>
+X-Infomaniak-Routing: alpha
 
-On 3/12/24 5:14 PM, Pratyush Yadav wrote:
-> Hi,
+On Tue, Mar 12, 2024 at 12:54:48PM +0800, David Gow wrote:
+> On Sat, 2 Mar 2024 at 03:40, Mickaël Salaün <mic@digikod.net> wrote:
+> >
+> > This helps identify the location of test faults.
+> >
+> > Cc: Brendan Higgins <brendanhiggins@google.com>
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Rae Moar <rmoar@google.com>
+> > Cc: Shuah Khan <skhan@linuxfoundation.org>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > Link: https://lore.kernel.org/r/20240301194037.532117-7-mic@digikod.net
+> > ---
 > 
-> On Mon, Mar 11 2024, Muhammad Usama Anjum wrote:
+> I like the idea of this, but am a little bit worried about how
+> confusing it might be, given that the location only updates on those
+> particular macros.
 > 
->> Soft reminder
+> Maybe the answer is to make the __KUNIT_SAVE_LOC() macro, or something
+> equivalent, a supported API.
 > 
-> Miquel should pick up the patch when sending out his pull request [0].
+> One possibility would be to have a KUNIT_MARKER() macro. If we really
+> wanted to, we could expand it to take a string so we can have a more
+> user-friendly KUNIT_MARKER(test, "parsing packet") description of
+> where things went wrong. Another could be to extend this to use the
+> code tagging framework[1], if that lands.
 > 
-> [0] https://lore.kernel.org/linux-mtd/20240307180919.4cb7a4cb@xps-13/
-Thanks Pratyush!
+> That being said, I think this is still an improvement without any of
+> those features. I've left a few comments below. Let me know what you
+> think.
+
+This patch adds opportunistic markers to test code.  Because an uncaught
+fault would be a bug, I think in practice nobody would use
+KUNIT_MARKER() explicitly.  I found _KUNIT_SAVE_LOC() to be useful while
+writing tests or debugging them.  With this patch, it is still possible
+to call KUNIT_SUCCESS() if someone wants to add an explicit mark, and I
+think it would make more sense.
 
 > 
->>
->> On 3/4/24 2:01 PM, Muhammad Usama Anjum wrote:
->>> The i should be signed to find out the end of the loop. Otherwise,
->>> i >= 0 is always true and loop becomes infinite. Make its type to be
->>> int.
->>>
->>> Fixes: 6a9eda34418f ("mtd: spi-nor: core: set mtd->eraseregions for non-uniform erase map")
->>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>> ---
->>> Changes since v1:
->>> - Make i int instead of u8
->>> ---
->>>  drivers/mtd/spi-nor/core.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
->>> index 65b32ea59afc6..3e1f1913536bf 100644
->>> --- a/drivers/mtd/spi-nor/core.c
->>> +++ b/drivers/mtd/spi-nor/core.c
->>> @@ -3373,7 +3373,7 @@ static u32
->>>  spi_nor_get_region_erasesize(const struct spi_nor_erase_region *region,
->>>  			     const struct spi_nor_erase_type *erase_type)
->>>  {
->>> -	u8 i;
->>> +	int i;
->>>  
->>>  	if (region->overlaid)
->>>  		return region->size;
+> Cheers,
+> -- David
 > 
+> [1]: https://lwn.net/Articles/906660/
+> >
+> > Changes since v1:
+> > * Added Kees's Reviewed-by.
+> > ---
+> >  include/kunit/test.h  | 24 +++++++++++++++++++++---
+> >  lib/kunit/try-catch.c | 10 +++++++---
+> >  2 files changed, 28 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index fcb4a4940ace..f3aa66eb0087 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -301,6 +301,8 @@ struct kunit {
+> >         struct list_head resources; /* Protected by lock. */
+> >
+> >         char status_comment[KUNIT_STATUS_COMMENT_SIZE];
+> > +       /* Saves the last seen test. Useful to help with faults. */
+> > +       struct kunit_loc last_seen;
+> >  };
+> >
+> >  static inline void kunit_set_failure(struct kunit *test)
+> > @@ -567,6 +569,15 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
+> >  #define kunit_err(test, fmt, ...) \
+> >         kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
+> >
+> > +/*
+> > + * Must be called at the beginning of each KUNIT_*_ASSERTION().
+> > + * Cf. KUNIT_CURRENT_LOC.
+> > + */
+> > +#define _KUNIT_SAVE_LOC(test) do {                                            \
+> > +       WRITE_ONCE(test->last_seen.file, __FILE__);                            \
+> > +       WRITE_ONCE(test->last_seen.line, __LINE__);                            \
+> > +} while (0)
+> 
+> Can we get rid of the leading '_', make this public, and document it?
+> If we want to rename it to KUNIT_MARKER() or similar, that might work
+> better, too.
 
--- 
-BR,
-Muhammad Usama Anjum
+We can do that but I'm not convinced it would be useful.
+
+> 
+> > +
+> >  /**
+> >   * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
+> >   * @test: The test context object.
+> > @@ -575,7 +586,7 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
+> >   * words, it does nothing and only exists for code clarity. See
+> >   * KUNIT_EXPECT_TRUE() for more information.
+> >   */
+> > -#define KUNIT_SUCCEED(test) do {} while (0)
+> > +#define KUNIT_SUCCEED(test) _KUNIT_SAVE_LOC(test)
+> >
+> >  void __noreturn __kunit_abort(struct kunit *test);
+> >
+> > @@ -601,14 +612,16 @@ void __kunit_do_failed_assertion(struct kunit *test,
+> >  } while (0)
+> >
+> >
+> > -#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)                     \
+> > +#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...) do {                \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         _KUNIT_FAILED(test,                                                    \
+> >                       assert_type,                                             \
+> >                       kunit_fail_assert,                                       \
+> >                       kunit_fail_assert_format,                                \
+> >                       {},                                                      \
+> >                       fmt,                                                     \
+> > -                     ##__VA_ARGS__)
+> > +                     ##__VA_ARGS__);                                          \
+> > +} while (0)
+> >
+> >  /**
+> >   * KUNIT_FAIL() - Always causes a test to fail when evaluated.
+> > @@ -637,6 +650,7 @@ void __kunit_do_failed_assertion(struct kunit *test,
+> >                               fmt,                                             \
+> >                               ...)                                             \
+> >  do {                                                                          \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         if (likely(!!(condition_) == !!expected_true_))                        \
+> >                 break;                                                         \
+> >                                                                                \
+> > @@ -698,6 +712,7 @@ do {                                                                               \
+> >                 .right_text = #right,                                          \
+> >         };                                                                     \
+> >                                                                                \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         if (likely(__left op __right))                                         \
+> >                 break;                                                         \
+> >                                                                                \
+> > @@ -758,6 +773,7 @@ do {                                                                               \
+> >                 .right_text = #right,                                          \
+> >         };                                                                     \
+> >                                                                                \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         if (likely((__left) && (__right) && (strcmp(__left, __right) op 0)))   \
+> >                 break;                                                         \
+> >                                                                                \
+> > @@ -791,6 +807,7 @@ do {                                                                               \
+> >                 .right_text = #right,                                          \
+> >         };                                                                     \
+> >                                                                                \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         if (likely(__left && __right))                                         \
+> >                 if (likely(memcmp(__left, __right, __size) op 0))              \
+> >                         break;                                                 \
+> > @@ -815,6 +832,7 @@ do {                                                                               \
+> >  do {                                                                          \
+> >         const typeof(ptr) __ptr = (ptr);                                       \
+> >                                                                                \
+> > +       _KUNIT_SAVE_LOC(test);                                                 \
+> >         if (!IS_ERR_OR_NULL(__ptr))                                            \
+> >                 break;                                                         \
+> >                                                                                \
+> > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> > index c6ee4db0b3bd..2ec21c6918f3 100644
+> > --- a/lib/kunit/try-catch.c
+> > +++ b/lib/kunit/try-catch.c
+> > @@ -91,9 +91,13 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+> >
+> >         if (exit_code == -EFAULT)
+> >                 try_catch->try_result = 0;
+> > -       else if (exit_code == -EINTR)
+> > -               kunit_err(test, "try faulted\n");
+> > -       else if (exit_code == -ETIMEDOUT)
+> > +       else if (exit_code == -EINTR) {
+> > +               if (test->last_seen.file)
+> > +                       kunit_err(test, "try faulted after %s:%d\n",
+> > +                                 test->last_seen.file, test->last_seen.line);
+> 
+> It's possibly a bit confusing to just say "after file:line",
+> particularly if we then loop or call a function "higher up" in the
+> file. Maybe something like "try faulted: last line seen %s:%d" is
+> clearer.
+
+OK
+
+> 
+> > +               else
+> > +                       kunit_err(test, "try faulted before the first test\n");
+> 
+> I don't like using "test" here, as it introduces ambiguity between
+> "kunit tests" and "assertions/expectations" if we call them both
+> tests. Maybe just "try faulted" here, or "try faulted (no markers
+> seen)" or similar?
+
+I agree that "try faulted" would be enough.  I'm totally OK for you to
+update this patch directly. Please let me know if you'd prefer me to
+send another version with these fixes though.
+
+Do you plan to merge this patches with the v6.9 merge window?
+
+> 
+> 
+> > +       } else if (exit_code == -ETIMEDOUT)
+> >                 kunit_err(test, "try timed out\n");
+> >         else if (exit_code)
+> >                 kunit_err(test, "Unknown error: %d\n", exit_code);
+> > --
+> > 2.44.0
+> >
+
+
