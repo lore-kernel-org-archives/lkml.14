@@ -1,89 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B3C5820A;
-	Tue, 12 Mar 2024 13:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F5F7A152
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710249936; cv=none; b=neiVOsvrtwShF0AjMJ526/GRuj5YLuN2KsQF+08/yjCfV9X9+qZUAhrSrtvCZU/MX2K9CMqTe+eMHy77EpGUg+epgskxH3D56/cf+y3/traFk6dXinYYutFI6F1Yl909xtLBM54QxweKqMADRnoz3YsAeRGsSIMx+qaJnM3iuIQ=
+	t=1710250165; cv=none; b=Hi00zUqNzsed86LjgSSLK0HjXE+m0uZItb6YHQRdXTpB+lZ7jP5oQZSqJAlbBZ477Og2shE+0io0+m1mAWIHv1rH413RiEex3lA6naXgROQO6ZxZdNg7QQ+/B/VDLgvL4wqTqq3CEqfjTITFOJNUyPmUASOwceOiV8l0o2FrJo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710249936; c=relaxed/simple;
-	bh=h0F/trfAXXYdqEzqin5+0bJCK93Ym81jka9vQjFNIrs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WfvYk3huILrTFR5DxVddnerCL6dwM+tp8aLNseCs7b4hmVyaxM6Bc5s8GTTb1+Aqcb598DXKuZpNsWNHDsxJ8rtQEksXclnpgBorYXizyAuA5NQDFSrbzkoG7eaFpHzTBWkVJ7kgNN1oMA2IEjCkK3hdI5BG3F1FYNDPru5aNfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24ADC1007;
-	Tue, 12 Mar 2024 06:26:11 -0700 (PDT)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 682773F762;
-	Tue, 12 Mar 2024 06:25:31 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf docs: arm_spe: Clarify more SPE requirements
-Date: Tue, 12 Mar 2024 13:25:07 +0000
-Message-Id: <20240312132508.423320-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710250165; c=relaxed/simple;
+	bh=9zDWvzr+Z/USZHV5GgIfmY6ihcfdVLNoDxi/gf9ye2s=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=EwoUUv123b1Lqnn4haBgd/gVeByt+QSMigQBKlffjTXOZd7AIi3MkGGFcoB1szfq+nve+tR7kK5DcwJAk/mIOKZxzA+90+Z56P/p+lCBn9nDnIcgNM0cL9M1Vbhn6Ct7zlQ3TF0hFAbd+AOk0GXx5+zu/eweTHWwOwnMh1MwSAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c88a694b46so490474339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 06:29:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710250163; x=1710854963;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bq8oySasJniwgrTVTRjL6eVYP1UAR0wtRyHJzV1J4yQ=;
+        b=Ei8cERoyauQVsnWMtHnBHJIeJGaC15Q6xXuB+a8NNo9fjmN5K6lKcfLG7Zr32cQFFx
+         qlR39TbzRHuCNhLFUX5xZHeQjrPRPeiQfNAsiFJHt3BsZfebepAzVehaqjQROQLSCG7y
+         HZdr72+t2P/gwuZX9Qj42xXyaRJEndgDMdYRJVY/te7mz+R4c9iR7GxvIqMIDCmhAqlc
+         u1UzwSnwDVGwjWwIVahr/S+iavVS/zvWzIkvn45APu4yau/6mXDZOG2GGHJbt5NYfbC1
+         1tW53Q0e160kSKzcMitFOruRUFWFQnYssBICoGQ3yZQxxBxVdyrTtqrQGBEjDAUNZveu
+         cKXw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2BgpdjXDp8qZKk50UXsMelH0sME0lhn2j1EatAaCzQ/DyW7g6uW6U1BUHVOmE/A5AYqWCXQEOUus9aHCrKa2mKx7VWwABfuExSWnJ
+X-Gm-Message-State: AOJu0Yz5NzV67I2TxO2UG8Babzexj8jAzyHDFhC23JzTCnADcg+BNjW2
+	hh7mIC5yargH7wdT6ao63h7IM9544wg96QOLwW9CwFaPVQ9YG3+AsnmJDuge6M7SOr/3uq4pJli
+	7Ysn4a5zSSXTI35aGFBAUcIj9qS9+N6pli9UVwZGOHW2jd/gKletDh58=
+X-Google-Smtp-Source: AGHT+IGZeZXXf8bH1DA0X3MAx8JZZLhiIrMrnaS65+hIG+wrDzDFoNAll+p4zbvX73DtHyoDMbY6aHVDzjeMhO65SD2eaihZWCxn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2dc2:b0:7c8:de8:83c with SMTP id
+ l2-20020a0566022dc200b007c80de8083cmr141541iow.2.1710250162968; Tue, 12 Mar
+ 2024 06:29:22 -0700 (PDT)
+Date: Tue, 12 Mar 2024 06:29:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000070f071061376a5b6@google.com>
+Subject: [syzbot] [net?] [afs?] WARNING in rxrpc_alloc_data_txbuf
+From: syzbot <syzbot+150fa730f40bce72aa05@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dhowells@redhat.com, edumazet@google.com, 
+	kuba@kernel.org, linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The question of exactly when KPTI needs to be disabled comes up a lot
-because it doesn't always need to be done. Add the relevant kernel
-function and some examples that describe the behavior.
+Hello,
 
-Also describe the interrupt requirement and that no error message will
-be printed if this isn't met.
+syzbot found the following issue on:
 
-Signed-off-by: James Clark <james.clark@arm.com>
+HEAD commit:    75c2946db360 Merge tag 'wireless-next-2024-03-08' of git:/..
+git tree:       net-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=16700bf2180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bc4c0052bd7e51d8
+dashboard link: https://syzkaller.appspot.com/bug?extid=150fa730f40bce72aa05
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163dfe92180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17818449180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b9317816c71d/disk-75c2946d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0d18e4d62eff/vmlinux-75c2946d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9089b556e6fd/bzImage-75c2946d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+150fa730f40bce72aa05@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5074 at include/linux/gfp.h:323 page_frag_alloc_align include/linux/gfp.h:323 [inline]
+WARNING: CPU: 1 PID: 5074 at include/linux/gfp.h:323 rxrpc_alloc_data_txbuf+0x7cf/0xda0 net/rxrpc/txbuf.c:36
+Modules linked in:
+CPU: 1 PID: 5074 Comm: syz-executor206 Not tainted 6.8.0-rc7-syzkaller-02348-g75c2946db360 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+RIP: 0010:page_frag_alloc_align include/linux/gfp.h:323 [inline]
+RIP: 0010:rxrpc_alloc_data_txbuf+0x7cf/0xda0 net/rxrpc/txbuf.c:36
+Code: 96 01 f7 4c 89 f7 e8 a0 f1 58 f7 45 31 f6 4c 89 f0 48 83 c4 40 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 42 96 01 f7 90 <0f> 0b 90 e9 8d f9 ff ff 44 89 fe 83 e6 01 31 ff e8 6c 9a 01 f7 44
+RSP: 0018:ffffc9000398f328 EFLAGS: 00010293
+RAX: ffffffff8a91d8de RBX: 0000000000000000 RCX: ffff8880284f5940
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000000 R08: ffffffff8a91d266 R09: 1ffffffff1f0c0fd
+R10: dffffc0000000000 R11: fffffbfff1f0c0fe R12: ffff88802e3a4390
+R13: ffff88801b6b5280 R14: ffff88801caf4900 R15: 0000000000000cc0
+FS:  0000555556094380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020005c08 CR3: 00000000755e2000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rxrpc_send_data+0xb17/0x2800 net/rxrpc/sendmsg.c:351
+ rxrpc_do_sendmsg+0x1569/0x1910 net/rxrpc/sendmsg.c:718
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:745
+ ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
+ ___sys_sendmsg net/socket.c:2638 [inline]
+ __sys_sendmmsg+0x3b2/0x740 net/socket.c:2724
+ __do_sys_sendmmsg net/socket.c:2753 [inline]
+ __se_sys_sendmmsg net/socket.c:2750 [inline]
+ __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2750
+ do_syscall_64+0xf9/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7fb02c0cf369
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdc045a3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00007ffdc045a5c8 RCX: 00007fb02c0cf369
+RDX: 0000000000000001 RSI: 0000000020005c00 RDI: 0000000000000003
+RBP: 00007fb02c142610 R08: 00007ffdc045a5c8 R09: 00007ffdc045a5c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffdc045a5b8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
- tools/perf/Documentation/perf-arm-spe.txt | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-index bf03222e9a68..0a3eda482307 100644
---- a/tools/perf/Documentation/perf-arm-spe.txt
-+++ b/tools/perf/Documentation/perf-arm-spe.txt
-@@ -116,6 +116,15 @@ Depending on CPU model, the kernel may need to be booted with page table isolati
- (kpti=off). If KPTI needs to be disabled, this will fail with a console message "profiling buffer
- inaccessible. Try passing 'kpti=off' on the kernel command line".
- 
-+For the full criteria that determine whether KPTI needs to be forced off or not, see function
-+unmap_kernel_at_el0() in the kernel sources. Common cases where it's not required
-+are on the CPUs in kpti_safe_list, or on Arm v8.5+ where FEAT_E0PD is mandatory.
-+
-+The SPE interrupt must also be described by the firmware. If the module is loaded and KPTI is
-+disabled (or isn't required to be disabled) but the SPE PMU still doesn't show in
-+/sys/bus/event_source/devices/, then it's possible that the SPE interrupt isn't described by
-+ACPI or DT. In this case no warning will be printed by the driver.
-+
- Capturing SPE with perf command-line tools
- ------------------------------------------
- 
-@@ -199,7 +208,8 @@ Common errors
- 
-  - "Cannot find PMU `arm_spe'. Missing kernel support?"
- 
--   Module not built or loaded, KPTI not disabled (see above), or running on a VM
-+   Module not built or loaded, KPTI not disabled, interrupt not described by firmware,
-+   or running on a VM. See 'Kernel Requirements' above.
- 
-  - "Arm SPE CONTEXT packets not found in the traces."
- 
--- 
-2.34.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
