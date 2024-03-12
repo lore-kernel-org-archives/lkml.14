@@ -1,120 +1,77 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEBDA939;
-	Tue, 12 Mar 2024 13:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BD7A939
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710251494; cv=none; b=qXLkli9s/i9g7bipNBBXoLqat3s33q0IXwZu7oIcdjxV7D7ftiohBOPBcEWBKFONYyiKdn7+f+OSqLuPGBw43I2FAyGX1F/efzpzxiUXGah2g5zhDFTZvhvk7wJK/RmEWibtMHddSYd9oSTTx1ZueY1PM7HX4/Kt1mAKcVTsDbI=
+	t=1710251534; cv=none; b=Cip3G2e3cCG/nFMOa9Hc1UW8ifEYsPOhqIB5dDGhYZeEv8FXU8eA7SQ5Lba0E6ChoTarhK+PCkKVFFXJcbxfawHJ9eE6/q/PeUAwOvsbBsvqwvHJIuz0fLG4oBs8Oa3V3go2BZ9m9YxthmqXNNYdOyWVSqve9VwOSKe85nIkB+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710251494; c=relaxed/simple;
-	bh=qUIQDwVkNhqHGtVr61movIKhOxPIBocHfP0erjlEQiM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPlGX6FoEvlrGneP/gSpyLNRpKx+EIdGiQ+ARJ/eYEpm0tSwS5fkkKhIYx3DRmHMLenHeREhOxDyw06u+aOpHpOKbMXmOWcHMhtuRr5jM2amPV9OMDQU8cTQfmJER+hqwCREsX5XTm2nNxBCklFXhQxha68J5BVM9lCBwrvT6SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=A5Tmndt2; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="A5Tmndt2"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42C5Whac023805;
-	Tue, 12 Mar 2024 08:51:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=RjYWwCJuJ3X8Wvm
-	1CI3hmDo7m+jseERS+0GlvROE8Kc=; b=A5Tmndt2aHzDT+2CZeMaFbQIqLTM3ju
-	wPOk12nxAgL0n/s2uV2mLf4UloOHaS55BpszAd6quy0ZF0QqDLm+3LcoS8KIuHuI
-	YZh3wgMlhzdTx2rIaEDuyluSPpj3kwlbS/VTsmtzZu4jSIQpfT+z0Bqd3eVEOYiI
-	rHI24Ii/QMRahjpoZuEDJuWxmMYK5C1Z48UWm/j0D1UldEp7cmSF+W91+nR/KWww
-	S+lF6QAd5t6FMpukdg701hMKxzFW1FfwDK/8bt6VT3Nsj1koHhPkQyayZoupzNJU
-	Ts4gbzHGm5qnzJYIEu97OxibGiDwPpa/DLiRLs7J+eSmhuFEeFeNeRQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wrp22u7jy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 08:51:06 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 12 Mar
- 2024 13:51:03 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
- via Frontend Transport; Tue, 12 Mar 2024 13:51:03 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id A0755820241;
-	Tue, 12 Mar 2024 13:51:03 +0000 (UTC)
-Date: Tue, 12 Mar 2024 13:51:02 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
-CC: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>,
-        <patches@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        "Mark
- Brown" <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai
-	<tiwai@suse.com>
-Subject: Re: [RFC PATCH v1] ASoC: wm8904: enable fll with fixed mclk
-Message-ID: <ZfBdxrzX3EnPuGOn@ediswmail9.ad.cirrus.com>
-References: <20240308155831.141229-1-andrejs.cainikovs@gmail.com>
- <Ze7smWSeoCVIcxIo@ediswmail9.ad.cirrus.com>
- <ZfBG9IMFEjjIdgdi@toradex.com>
+	s=arc-20240116; t=1710251534; c=relaxed/simple;
+	bh=CcFRwB322LGtp0dNZVWDbfFecbOY4MMxCdh537eoH8I=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gJyy7rV6G6+FNsE9ENNESQfnzqGPPOHqUYtZR6ZJsFFP82cjDSinJflD4UnrgsHrr0IxlmtICFPyS2jOhWEZL+gXy6VfGu3x48ogsJClMm4eqIs4keMtsCc2wuAqjpbnQF6QpJsQ7aFh6BtEIJZSNvTMD6Ehz97g/1gTg2pyIJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c8a98e52b5so259603139f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 06:52:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710251532; x=1710856332;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YVL6n7u9irY/XXq0R9kO5Vk3K/+z7RkaEdKNYOOG1vg=;
+        b=ZElQNigv0P/iXONsdsXOwrVLrwOeDFOpLWy/OdwABWkBfHsSUAOjhl4EU2C1cmOjWb
+         RB0HuwpY7OKHX3MZrOvYdN+8fPHcEKEY8FbUwrdpu4JjEsRGymyhXRKoDdYc/NNhSFC2
+         absDJkpmBlHCGvR0sRGHjwMpqPHa5EVAcmaW0vsvWYdL7wWTooNcTZXhy83LoEa+TFQm
+         3F3SzfFl0R1YFzSL7K5sdFvAzk0gTHD7fyRV2Ykf8VGI6ThrWK3T63WUyWvd8szpo4w9
+         bY3lWqucpg/0s4hjixxPNHdiot1iH0GHS8EPOMG9DUaB0s6z1nZpH4BleOnNcSGTPgD9
+         QKNg==
+X-Gm-Message-State: AOJu0YyJETbS79WHqFPKfM2/Z6ALmkMS4rK7qgTC0rqDbPkEQcjssYfc
+	d69zWcghNGcMr0IoXkmeoHZwMvOjn7KSs5gto35W2vIvmRY9G/zegt1D6HqjhiBtkIYPASgWyGu
+	8eD7+WdUoK1rKmwlv4aZCRubBlKXoDaEaiaq0eFJm5g9adtfjkQtuLK9ZSQ==
+X-Google-Smtp-Source: AGHT+IFj6zvgQMmt7pPppEul0jueKmLFCEcfbL1/JWEXUk2aLZZ5Y2sRsGIxss7knhblobl7rpwXV8IFyf6eXaujhO6HOgNBEhsA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZfBG9IMFEjjIdgdi@toradex.com>
-X-Proofpoint-GUID: iZDarsVptUBAMHR0ZgPVsN7Fsdut8fUs
-X-Proofpoint-ORIG-GUID: iZDarsVptUBAMHR0ZgPVsN7Fsdut8fUs
-X-Proofpoint-Spam-Reason: safe
+X-Received: by 2002:a05:6638:1393:b0:476:f2cb:8790 with SMTP id
+ w19-20020a056638139300b00476f2cb8790mr138138jad.0.1710251532095; Tue, 12 Mar
+ 2024 06:52:12 -0700 (PDT)
+Date: Tue, 12 Mar 2024 06:52:12 -0700
+In-Reply-To: <0000000000001663ea060ee476ea@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000c23d0061376f73e@google.com>
+Subject: Re: [syzbot] Test for 2ef3a8ce8e91b5a50098
+From: syzbot <syzbot+2ef3a8ce8e91b5a50098@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 12, 2024 at 01:13:40PM +0100, Andrejs Cainikovs wrote:
-> On Mon, Mar 11, 2024 at 11:35:53AM +0000, Charles Keepax wrote:
-> > On Fri, Mar 08, 2024 at 04:58:31PM +0100, Andrejs Cainikovs wrote:
-> > > From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
-> With or without mclk-fs wm8904_set_sysclk() is called always during probe,
-> with following parameters:
-> 
-> clk_id = 0
-> dir = 0
-> freq = 25000000
-> mclk_freq = 25000000
-> 
-> When mclk-fs is set, wm8904_set_sysclk() is also called before each
-> playback [1]. In case of 44.1kHz:
-> 
-> clk_id = 0
-> dir = 0
-> freq = 11289600
-> mclk_freq = 11235955
-> 
-> In both scenarios, clk_id is always WM8904_CLK_AUTO.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Ah, ok I see what I was missing here. simple_card_utils calls
-clk_set_rate if you specify mclk_fs. Which you don't want in this
-case. My gut reaction is that really the problem here is the machine
-driver doesn't support the clocking setup you have.
+***
 
-Having a quick look through the simple card stuff can you remove:
+Subject: Test for 2ef3a8ce8e91b5a50098
+Author: syoshida@redhat.com
 
-	clocks = <&audio_refclk1>;
+#syz test
 
-From the machine driver DT stuff, and add mclk-fs. I think that
-should cause the simple card to call the codec dai_set_sysclk
-but without ever touching the audio_refclk. A small change in
-simple_util_parse_clk might also be needed to allow it to return
-without finding a clock. Which feels like a much simpler and less
-scary change.
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 6d14d935ee82..b983232e25cb 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -228,6 +228,9 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
+ 	 */
+ 	if (ethhdr->h_proto == htons(ETH_P_PRP) ||
+ 	    ethhdr->h_proto == htons(ETH_P_HSR)) {
++		if (skb->mac_len < sizeof(struct hsr_ethhdr))
++			return NULL;
++
+ 		/* Use the existing sequence_nr from the tag as starting point
+ 		 * for filtering duplicate frames.
+ 		 */
 
-My only slight reservation is the automatic clocking thing only
-really exists as a hack to support simple card anyway. But overal
-I think it might be better to try to move the direction of travel
-more to adding support for the clocking systems that exist into
-simple-card rather than tweaking the codec driver to work around
-it.
-
-Thanks,
-Charles
