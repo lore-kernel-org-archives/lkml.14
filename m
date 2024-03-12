@@ -1,75 +1,63 @@
-Received: from out28-123.mail.aliyun.com (out28-123.mail.aliyun.com [115.124.28.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221B77E6;
-	Tue, 12 Mar 2024 01:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1525F811;
+	Tue, 12 Mar 2024 01:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710206918; cv=none; b=XMehRS8yvr2AVlalUTIuKnWTFG+5ZaYThz8omDKJU/fFcIHAbvzNFOs4BnZYfpYMtUrYwPbpwZEEJX8/biO+lGN1Ji/MBhqP/6Zfxv2w4lhZ3+XzdG379Gi4bWnBKdBqydrVFRJxZ3BNcSHfGzLU485+TnZltvymm6PLZeJSqpU=
+	t=1710207005; cv=none; b=kKMXNTdcvOiAdaxSJaVh7FdwYJaUVAGm79lkUHeEHcd5Cuqj8UNOQI4jBpyUl3KH4TLrdN06mff9Uo7LxVEPgjk3GrNFNSzGsd65eTRWv+Sc7l1qe6mkebrGS6rQ5miHM6Z0Ez0UOF9EwQPo3yk0aSOGUeWXTiBsAdLkwLrtlEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710206918; c=relaxed/simple;
-	bh=ZOW09UAyi19w6YXLQJO4RsJctfi8bD03FHleAH9bN6s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O6ri9oRs015VOv+YORCzGPI296sWMshycJUgXtvq0kLv7MNTxt7G79qkkTs27ae1i9etRivBGNblWhVp/jAopjIwK/d1WpMKKEjxJumbg7NGPRGYz1BAdqKE5yiyLh6xHlr8QsmE9qMISC/F/K37DB9JFR3vgjEFPcAq7cnTaCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.257409|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0556319-0.00218893-0.942179;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047188;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.WkSydQt_1710205966;
-Received: from SunxiBot.allwinnertech.com(mailfrom:michael@allwinnertech.com fp:SMTPD_---.WkSydQt_1710205966)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Mar 2024 09:12:47 +0800
-From: Michael Wu <michael@allwinnertech.com>
-To: heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	linux@roeck-us.net,
-	badhri@google.com,
-	kyletso@google.com,
-	frank.wang@rock-chips.com,
-	rdbabiera@google.com,
-	xu.yang_2@nxp.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: typec: tcpm: support sink port for debounce
-Date: Tue, 12 Mar 2024 09:13:00 +0800
-Message-Id: <20240312011300.75081-1-michael@allwinnertech.com>
-X-Mailer: git-send-email 2.29.0
+	s=arc-20240116; t=1710207005; c=relaxed/simple;
+	bh=zNReEfidZjW7TzC29kl2o6cK/Ja/nTmzX+A/3j/LoCU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=a0pCpbJfxEnCHZKlpNXS+j48G68VUPHmiwYdqkzpa+U1wbv/VTzj8SMnk7hEGCM/osyT5e4lWSXxRHNp6fOLj85FYZ4oIx2+SMpRCaJWMMh860KKKL4z4ztf8ziXPA8wvAQcVfusOpjLu3aUbyoriPjU/kWem0AKqbD3BvWa6+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dssKHF2w; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dssKHF2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E13F3C43390;
+	Tue, 12 Mar 2024 01:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710207004;
+	bh=zNReEfidZjW7TzC29kl2o6cK/Ja/nTmzX+A/3j/LoCU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dssKHF2wCxjIubgJ8fZYQGJzzsGzOZqERFxe73vaA0C73pkifDogwZfzILvmTqz2F
+	 1buMoEpFfBFXdjv5M+BG/2Ymrr6T/DQ8jodRvWoD5doE8obOz+f39V5x9YDCy6w2pG
+	 OpoO2Dhvka76SmS4jUgaGd0xW2B6TeQXIGxKx2HOK8DnExivwk/5NqOEFPDSLovdvK
+	 5HqBIIb8dqVqFr+o9gGGe1A32V3MoAIdWMU4MfEfEFw77dxfuuvGu/eI/iMJK/NM3A
+	 ss8Gz9zphw8bW2KoCjm74pmDvEe6oTsOBZwMOrYP5S9jayDxGrNvUzVQ2gTAHi4Rvc
+	 HIeHVzd15UUow==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BAD34D95055;
+	Tue, 12 Mar 2024 01:30:04 +0000 (UTC)
+Subject: Re: [GIT PULL] EDAC updates for v6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240311155651.GAZe8pw0urOnUZj1y_@fat_crate.local>
+References: <20240311155651.GAZe8pw0urOnUZj1y_@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-edac.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240311155651.GAZe8pw0urOnUZj1y_@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_v6.9
+X-PR-Tracked-Commit-Id: af65545a0f82d7336f62e34f69d3c644806f5f95
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b0402403e54ae9eb94ce1cbb53c7def776e97426
+Message-Id: <171020700473.888.16637533826672826953.pr-tracker-bot@kernel.org>
+Date: Tue, 12 Mar 2024 01:30:04 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-edac <linux-edac@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When both CC1 and CC2 pins are simultaneously pulled up, it often leads
-to the double Rp to Vbus cable being stuck in the SNK_ATTACH_WAIT state.
-And the state machine fails to transition to the SNK_ATTACHED state.
+The pull request you sent on Mon, 11 Mar 2024 16:57:11 +0100:
 
-Therefore, it is recommended to focus on transitioning the sink port to
-the SNK_DEBOUNCED state instead. By doing so, the desired outcome can be
-achieved more effectively.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_v6.9
 
-[  134.525750] VBUS on
-[  134.713240] CC1: 0 -> 3, CC2: 0 -> 3 [state TOGGLING, polarity 0, connected]
-[  134.713249] state change TOGGLING -> SNK_ATTACH_WAIT [rev3 NONE_AMS]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b0402403e54ae9eb94ce1cbb53c7def776e97426
 
-Signed-off-by: Michael Wu <michael@allwinnertech.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you!
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 0965972310275..9228dbd78bf2b 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4197,6 +4197,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		else if (tcpm_port_is_disconnected(port))
- 			tcpm_set_state(port, SNK_UNATTACHED,
- 				       PD_T_PD_DEBOUNCE);
-+		else if (tcpm_port_is_sink(port))
-+			tcpm_set_state(port, SNK_DEBOUNCED, 0);
- 		break;
- 	case SNK_DEBOUNCED:
- 		if (tcpm_port_is_disconnected(port))
 -- 
-2.29.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
