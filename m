@@ -1,43 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8105F482CD;
-	Tue, 12 Mar 2024 23:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F338D481AB;
+	Tue, 12 Mar 2024 23:49:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710287375; cv=none; b=oRsuI8fpKy9ZvwHw1Ird+ITzqvrS3pexaWFLh4e/nmlx0Ip7mhlGGMd0fM1HEY3RiVqyvYzP80exNVUdIf70+KvFiv2gFYF52mbLCSE7JtAiNGfsDDp6IUy/Em1LVU1fsMmXTxrZqPAQrjwSb5hvjjEVoLbgQBzSNvn3U9AAoIY=
+	t=1710287377; cv=none; b=nZAaSQzgemGZQoK7V94c51Vz0+XgBVB6hqB7qjSMlB35Y9ws5+LOUq8QBkNPWmnFDwoGgfVGg1z3a99BWwQzG0sHwRizsu4eQ7k/tVHMjfkTk0Edvh0cEv6fTDA19+fNxGnf44JWCPdhTVhas2OAX2AJ4PCu8S4ZX/AgXJIMBZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710287375; c=relaxed/simple;
-	bh=OtolE6CfIog4+s2OsadQub4oH1qqtGz/aAJ3MFhUzus=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UK0lI0Q/Pq0uDUb73uzumKJl2OyM85NGCIJn9lqdjgUQbi4+/qTMep99P4IbNAaB5evP+Qrq8RsGVs2JJmCHtLRYmri87l5u0332Rk3StWkNQOwlMVfo6MLgQjc/NQ0gM6U+/075XTEGHnA2SDtvQbCRu0yfKJzwdFmeY3H+DX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j/DoIPeG; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1710287377; c=relaxed/simple;
+	bh=sk3JbX6PBhz/acDUmi4GyK48cKZZGnT2//5KEDwyXIQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MbCghFC5f+PW4SoB2UAfgUZvayXbO9Ej5H04VJRB471pNWjTIpxbOMo3IJ0V5SrujHJ89wACcMSfz6g8eMMiYmz+E4o9bQmAVuassS+Ya6Enlij3OIRIBXB/SAxzBMWpyKhMm0RwBb84IiO1nLGswftU7eanhjKA6MeJgW9+eQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EnqiXsaU; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j/DoIPeG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EnqiXsaU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710287373; x=1741823373;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OtolE6CfIog4+s2OsadQub4oH1qqtGz/aAJ3MFhUzus=;
-  b=j/DoIPeGckomc2OAs4mRLh5J46Kory4DPegxTD75aaVrJXVjxIUdwHNi
-   eIyRL6Vso54HEAPzal/N4bLTKe0Vmu1w1QbNsAolRCmrWQQykIIovqv0x
-   aeaS75V4qz8g80nETxY84GXTwPzdLp1NVhiFEs2jtkxms6rVNRfjOLtq3
-   6oJ079kPr+k+5Z9ifa1leRVEAXrsB9jd9JAzw77lMTOpLBnTY7992rtO/
-   kJxeDfO938/BAYUKYgVvWrlYkePNfv2ww31D4C0dCacdAsPVichcxxvEY
-   qEkGjYZcHQ96Ma9yfb5iws8KEfC4vvebgVlgO6eTFqButs46CqeZ9m8rU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8847684"
+  t=1710287376; x=1741823376;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sk3JbX6PBhz/acDUmi4GyK48cKZZGnT2//5KEDwyXIQ=;
+  b=EnqiXsaUbR3Kuocr6pt6yot04eqKX4Zr4Bj79SXX6AkQ7KSfV2wzSaVm
+   CcIf2VL3XrTWhZ/eKZlx+vM6PgFZS0KbaPZ4g5YcUVihpoAW8hBOB6N7G
+   DKuSv+nX1aMvTtgqkh3meB22H1BIZQO9RS8NexaV7u7NSwX3MirGDssjA
+   tDv49CrGSORQi3/JooocKwmjF7DQj+5OdMDcZnx55smjk+sGfPjHAofvk
+   SxYii8T698cm8tx/5pzFaxOBnQteT4g5Aiu+DSMJy22ItOgNfOO1Ngga3
+   akvuh5DkkG8dumJmswHqVNRhMVSS7xeJ2aYmq9MQNpu1a0CFcyr/c89+s
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8847699"
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="8847684"
+   d="scan'208";a="8847699"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 16:49:33 -0700
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 16:49:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="42715663"
+   d="scan'208";a="42715681"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by fmviesa001.fm.intel.com with ESMTP; 12 Mar 2024 16:49:32 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 12 Mar 2024 16:49:34 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -54,10 +55,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v4 0/6] TPEBS counting mode support
-Date: Tue, 12 Mar 2024 19:49:15 -0400
-Message-ID: <20240312234921.812685-1-weilin.wang@intel.com>
+Subject: [RFC PATCH v4 3/6] perf stat: Add retire latency values into the expr_parse_ctx to prepare for final metric calculation
+Date: Tue, 12 Mar 2024 19:49:18 -0400
+Message-ID: <20240312234921.812685-4-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240312234921.812685-1-weilin.wang@intel.com>
+References: <20240312234921.812685-1-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,39 +71,77 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Changes in v4:
-- Remove uncessary debug print and update code and comments for better
-readability and quality [Namhyung]
-- Update mtl metric json file with consistent TmaL1 and TopdownL1 metricgroup
+Retire latency values of events are used in metric formulas. This update adds
+code to process data from perf record for required retire latency values.
 
-v3: https://lore.kernel.org/all/20240302001139.604829-1-weilin.wang@intel.com/
+Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+---
+ tools/perf/builtin-stat.c     |  1 +
+ tools/perf/util/metricgroup.h |  1 +
+ tools/perf/util/stat-shadow.c | 19 +++++++++++++++++++
+ 3 files changed, 21 insertions(+)
 
-Weilin Wang (6):
-  perf stat: Parse and find tpebs events when parsing metrics to prepare
-    for perf record sampling
-  perf stat: Fork and launch perf record when perf stat needs to get
-    retire latency value for a metric.
-  perf stat: Add retire latency values into the expr_parse_ctx to
-    prepare for final metric calculation
-  perf stat: Create another thread for sample data processing
-  perf stat: Add retire latency print functions to print out at the very
-    end of print out
-  perf vendor events intel: Add MTL metric json files
-
- tools/perf/builtin-stat.c                     |  211 +-
- .../arch/x86/meteorlake/metricgroups.json     |  127 +
- .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
- tools/perf/util/data.c                        |    4 +
- tools/perf/util/data.h                        |    1 +
- tools/perf/util/metricgroup.c                 |   88 +-
- tools/perf/util/metricgroup.h                 |   23 +-
- tools/perf/util/stat-display.c                |   65 +
- tools/perf/util/stat-shadow.c                 |   19 +
- tools/perf/util/stat.h                        |    4 +
- 10 files changed, 3074 insertions(+), 19 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
-
---
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 4e92e73cbeaf..a479b21874b0 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -786,6 +786,7 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
+ 		if (!strcmp(evname, t->name)) {
+ 			t->count += 1;
+ 			t->sum += sample->retire_lat;
++			t->val = (double) t->sum / t->count;
+ 			break;
+ 		}
+ 	}
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 3c37d80c4d34..38f9134d8b54 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -82,6 +82,7 @@ struct tpebs_retire_lat {
+ 	const char *tpebs_name;
+ 	size_t count;
+ 	int sum;
++	double val;
+ };
+ 
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 3466aa952442..8fc3415de106 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -355,6 +355,20 @@ static void print_nsecs(struct perf_stat_config *config,
+ 		print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
+ }
+ 
++static int prepare_retire_lat(struct expr_parse_ctx *pctx,
++			     struct list_head *retire_lats)
++{
++	int ret = 0;
++	struct tpebs_retire_lat *t;
++
++	list_for_each_entry(t, retire_lats, nd) {
++		ret = expr__add_id_val(pctx, strdup(t->tpebs_name), t->val);
++		if (ret < 0)
++			return ret;
++	}
++	return ret;
++}
++
+ static int prepare_metric(const struct metric_expr *mexp,
+ 			  const struct evsel *evsel,
+ 			  struct expr_parse_ctx *pctx,
+@@ -486,6 +500,11 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+ 	pctx->sctx.runtime = runtime;
+ 	pctx->sctx.system_wide = config->system_wide;
++	i = prepare_retire_lat(pctx, &config->tpebs_results);
++	if (i < 0) {
++		expr__ctx_free(pctx);
++		return;
++	}
+ 	i = prepare_metric(mexp, evsel, pctx, aggr_idx);
+ 	if (i < 0) {
+ 		expr__ctx_free(pctx);
+-- 
 2.43.0
 
