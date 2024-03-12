@@ -1,33 +1,39 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D3B6997B
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 08:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC9177F06;
+	Tue, 12 Mar 2024 08:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710233521; cv=none; b=VPKk7B0dcIdNMFxypJu/UTUXqCgOrk+Skn/LfmVXcwbusB4j4yVvwpnMd9p1Q5y+CLWWslbVxN9tGhiY1r2XeQwhEwjoVkvTorsPXCHKLXyy0sIBLAMHwvbwBysYPunotYPy6Nj/n//Gh8IiozEOUX0VXtgyJw2y4DS9mZ2w0kM=
+	t=1710233549; cv=none; b=eEn1lrbq876FzgqAhwcD/qRzpvVAdMMrA2vcK11hHWMYXKz/FVZuHBq/IjSPigGnO7/AuUomBg0pBeBl769IzfYgDy2+sYYP3F5uM/M4YJCj0eWc2lHGKEV0X/uFKojL5J93vPN7e4SkcbYqSKnHYOiq/boCfUiXv8iyr7takHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710233521; c=relaxed/simple;
-	bh=RfrIGaUBPnbxtPJtTaj/4+KTrkxzufzY4u5uqIdEyU8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q2jU4zRTT3LJHWZZIlRfgHiMfXiueVEJFY8V6tOEGCnfd2n5Rqw698CowHUFyr+Nnft+GhHVHP2QrATmBGY+I9vd9SFPHmb5f+BrHpgZOhV5gkMcVMt2wVrEi7Uzb9VEaEAV8WmHdW/RTjS+kCi4UcwAM/NU/WUlVmuHl8onQfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UrKSoBLk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1710233549; c=relaxed/simple;
+	bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZvWX9q6myz+IUjVSszqWJl9pXGRbiguy5TBS9fv6NwWGYrN5qA2EQnhI2ximkA8nJavtoBRTst78TzqaxdcUv2dRBLCl2qErmLjON8nvy7M5qgp8qEPyxsrd1eD3hmzzACcwjbI0FClSKSrcWbZleAyGsITpg01JxqlndWkDUeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=HmpIIgtn; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UrKSoBLk"
-Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 886C4593;
-	Tue, 12 Mar 2024 09:51:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1710233495;
-	bh=RfrIGaUBPnbxtPJtTaj/4+KTrkxzufzY4u5uqIdEyU8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=UrKSoBLkxrE3FL9dpcS1/wHgC4DMquLE+rPATQL4ge5BOqKV2hNh8smPFer0IFw8I
-	 oMwI5pAwt/1UhUTSDFvHTXS2Rkqne8Z6I7vjXyrELiO8rxVZzArKnReOQJwYT0n4K5
-	 8naEIg2TA1BVItx70DEVlYfbsU0nGnCpqeI5tapI=
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Tue, 12 Mar 2024 10:51:15 +0200
-Subject: [PATCH] drm: xlnx: zynqmp_dpsub: Fix missing drm_bridge_add() call
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="HmpIIgtn"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id ED4C741DDD;
+	Tue, 12 Mar 2024 13:42:23 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1710232944; bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=HmpIIgtnNZoKS1Zr2NkaS/2JEglvF4JkU9ZUOFjz/qtSF+jTKwQjc7Gqw5+boDDK6
+	 brtx33BZ9oY73lzRf+AmTAM2XmUtj5fwQ2A0USRe4zDk0cSVYLGyIaDp64fv+DmH3S
+	 5fkCQRkKUycm+SLIBWONzjBu/GicTIU7ZK6gsi2whO9igYeCfRWhzctq8IeTxsew7S
+	 GFK0X+6Exr5V8AW4KSR2I+msGutzRMB+Q9Dm5TtVeZhnwtw+QM1dMzmRzXGcXCzWlO
+	 WPDdqgtrsNiKhZL3ouHH+M0ObhbhPpaC3gu4l3pdu3hKohpikp08jr7CFHtE2k9nso
+	 1lrDAkobUSP5g==
+From: Nikita Travkin <nikita@trvn.ru>
+Date: Tue, 12 Mar 2024 13:42:10 +0500
+Subject: [PATCH v4 4/4] arm64: dts: qcom: acer-aspire1: Add embedded
+ controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,102 +42,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240312-xilinx-dp-lock-fix-v1-1-1698f9f03bac@ideasonboard.com>
-X-B4-Tracking: v=1; b=H4sIAIIX8GUC/x2MWwqAIBAArxL73UI+qOgq0YfaWkuhoRBCdPekz
- xmYeSBTYsowNQ8kujlzDBVE24DbTdgIea0MspO6U0Ji4ZNDwfXCM7oDPRd0vh+9VmawxkINr0R
- V/9N5ed8Pcj6vNGQAAAA=
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Michal Simek <michal.simek@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Vishal Sagar <vishal.sagar@amd.com>, 
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2155;
- i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=RfrIGaUBPnbxtPJtTaj/4+KTrkxzufzY4u5uqIdEyU8=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBl8BerpDiidFHriMiQ8qBqGpJ/sDPilBS3NJYJG
- asciSzP70WJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZfAXqwAKCRD6PaqMvJYe
- 9XhqD/4t9ODyal7897NogGZr9Qx6/BNvtuh6yDE22u9RP2D5IXxBkS+ZV2g2WrXcA1rbmBMMbhu
- AOoG7h9mMHSN/DpJA0pp4CWfIDKjjab12seg+YE8WeDWGLsQ/k2xHyvT2fGAIibAhDbrk86DbAd
- alu8NqJjZPjwR3GF1icpdIrlfgzony8SsFHMTFrEtDzJ1EQLH0bjJQCFOaOKpXJxNsgXXaJqwuq
- YZOHZ7XJjEORV5NOALJHtfqbex6Lybin0GpHcE+Yh87H01klt3NxLbSj+506N5l4q79eBZJljXP
- QKSmhMHr/U+ogKiGA+P9Xl4pKemmwyeobrj34Am3dS4V/DCqL6wWUjVfjbboEvv3H8mJ7myj9Gc
- aTVfmfXGPbP1FC+HLHLsDIwNc2VKncRJndl7CSQvlBfnqO3Md1wV1JmtJ5xpQ1JgOUlrgJGtIkx
- cJ6olat6TUBucN9Rr+Z07vwLzsuVz+0pjI5LuyjAfbV0/VT8SKJnBqFxFlzblp0vHtU8qZS8EOi
- zMT7kigXgLs+qa40HxcjnLoGV2Mhg5v8zlXy/DhMhBydBHcv5IZgVJx4ePbkoRR4aTbtRoRdhe5
- vVy0pbk1nx72atH/1BSaAARPKfUzZucy59HAGOevojuuWpqdSsduRGQcWA7tK9pXtjrdYYPiOWs
- xCIh9aNdVo6+3lA==
-X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Message-Id: <20240312-aspire1-ec-v4-4-bd8e3eea212f@trvn.ru>
+References: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
+In-Reply-To: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ Nikita Travkin <nikita@trvn.ru>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2209; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=3SdRLYZ3Z+9SbuVBto4NNdKldL11u55/Rfex0dOOF1E=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl8BVrccxopNDy05Gy0/m6i1aDHJfSPZjMCUERj
+ 2DmLQYPDhqJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfAVawAKCRBDHOzuKBm/
+ dYCHD/9gU6VDWMdigpmmBvodBpEXHEGimk/bDIpQeSkoResC6yw/CVJzdxaVVwdK8J2ZXybC34b
+ sZw8i8mBFwLDN2REtfMOQysJ8YEciKUbv6OKkls6Cpe52TFTLrFPJCbINDak6m8TCJ2NKcGuE/G
+ GmECsRnMNXEejm8z2nOWzWnLV9xT4u73IlozvzcDJOmice5PfXyUEjDEMC0gzjlyEWt97CqGGGW
+ dwPqcNisa61gZFA+D/Gl9JbUcELupfQt6wL4luY89RfMQ/aQLJlfzR7csLswIw5xSiVKRgjLKZY
+ oYNgMV3bdPQsPgmDXFpa8G1xE9NESwnR962w1Sq95JjpjlzRlEj5cmIp8c+xOQWF55zGTWwNFcO
+ TYugld5bEOgkxRU15ukWxT0tqJOfmSPYllhaL00VLQFb/ANwA8pwDdJ/sgu0iu7PFWrTR7kqxk0
+ uMS4KnqG8eHpKJUc04XfsOlKT8lTCaAIVBwC+wAP30aYF3obBeIP2hkd+S6O0yr1MrxwTV6oMqV
+ 06L0bWgub5xPvjpYcIN9z9EH3E1KGPxB68WcLZAoJCC+056XbNdj/oY6OhT/JO71n0I1HfQXLHS
+ uvaJpQfpdiSKmcFghl2CDvyTMw4+GeD0wckOy3V6XG779km/S0cPJRlG1UOc7X7VuPlgP4CLMul
+ 46ujk4mxtBANnHA==
+X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
+ fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-The driver creates a bridge, but never calls drm_bridge_add() when
-non-live input is used. This leaves the bridge's hpd_mutex
-uninitialized, leading to:
+The laptop contains an embedded controller that provides a set of
+features:
 
-WARNING: CPU: 0 PID: 9 at kernel/locking/mutex.c:582 __mutex_lock+0x708/0x840
+- Battery and charger monitoring
+- USB Type-C DP alt mode HPD monitoring
+- Lid status detection
+- Small amount of keyboard configuration*
 
-Add the bridge add & remove calls so that the bridge gets managed
-correctly.
+[*] The keyboard is handled by the same EC but it has a dedicated i2c
+bus and is already enabled. This port only provides fn key behavior
+configuration.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Fixes: 561671612394 ("drm: xlnx: zynqmp_dpsub: Add support for live video input")
+Add the EC to the device tree and describe the relationship between the
+EC-managed type-c port and the SoC DisplayPort.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
- drivers/gpu/drm/xlnx/zynqmp_dp.c    | 4 ++++
- drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 4 ----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts | 40 +++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index a0606fab0e22..9f750740dfb8 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -1761,6 +1761,8 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+index 5afcb8212f49..3f0d3e33894a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+@@ -255,7 +255,25 @@ &i2c2 {
+ 	clock-frequency = <400000>;
+ 	status = "okay";
  
- 	dpsub->dp = dp;
- 
-+	drm_bridge_add(dpsub->bridge);
+-	/* embedded-controller@76 */
++	embedded-controller@76 {
++		compatible = "acer,aspire1-ec";
++		reg = <0x76>;
 +
- 	dev_dbg(dp->dev, "ZynqMP DisplayPort Tx probed with %u lanes\n",
- 		dp->num_lanes);
- 
-@@ -1789,4 +1791,6 @@ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub)
- 
- 	zynqmp_dp_phy_exit(dp);
- 	zynqmp_dp_reset(dp, true);
++		interrupts-extended = <&tlmm 30 IRQ_TYPE_LEVEL_LOW>;
 +
-+	drm_bridge_remove(dpsub->bridge);
- }
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
-index 88eb33acd5f0..3933c4f1a44f 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
-@@ -260,8 +260,6 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
- 		ret = zynqmp_dpsub_drm_init(dpsub);
- 		if (ret)
- 			goto err_disp;
--	} else {
--		drm_bridge_add(dpsub->bridge);
- 	}
++		pinctrl-0 = <&ec_int_default>;
++		pinctrl-names = "default";
++
++		connector {
++			compatible = "usb-c-connector";
++
++			port {
++				ec_dp_in: endpoint {
++					remote-endpoint = <&mdss_dp_out>;
++				};
++			};
++		};
++	};
+ };
  
- 	dev_info(&pdev->dev, "ZynqMP DisplayPort Subsystem driver probed");
-@@ -288,8 +286,6 @@ static void zynqmp_dpsub_remove(struct platform_device *pdev)
+ &i2c4 {
+@@ -419,6 +437,19 @@ &mdss {
+ 	status = "okay";
+ };
  
- 	if (dpsub->drm)
- 		zynqmp_dpsub_drm_cleanup(dpsub);
--	else
--		drm_bridge_remove(dpsub->bridge);
++&mdss_dp {
++	data-lanes = <0 1>;
++
++	vdda-1p2-supply = <&vreg_l3c_1p2>;
++	vdda-0p9-supply = <&vreg_l4a_0p8>;
++
++	status = "okay";
++};
++
++&mdss_dp_out {
++	remote-endpoint = <&ec_dp_in>;
++};
++
+ &mdss_dsi0 {
+ 	vdda-supply = <&vreg_l3c_1p2>;
+ 	status = "okay";
+@@ -857,6 +888,13 @@ codec_irq_default: codec-irq-deault-state {
+ 		bias-disable;
+ 	};
  
- 	zynqmp_disp_remove(dpsub);
- 	zynqmp_dp_remove(dpsub);
++	ec_int_default: ec-int-default-state {
++		pins = "gpio30";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
+ 	edp_bridge_irq_default: edp-bridge-irq-default-state {
+ 		pins = "gpio11";
+ 		function = "gpio";
 
----
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
-change-id: 20240312-xilinx-dp-lock-fix-cf68f43a7bab
-
-Best regards,
 -- 
-Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+2.43.2
 
