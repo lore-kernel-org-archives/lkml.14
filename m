@@ -1,166 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE5F6997E;
-	Tue, 12 Mar 2024 13:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DCCF78298
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710249466; cv=none; b=Gp1/EnvxFFvlREGs/oAyN9IufrVAKCEnkkzk1AqvUtpTu5CG8jeo2uMQXc2j0N1bbX9ppDpOdjhu4X+eIuRAlfflvlRj5nIEiXvYxxLJqNGPVVchnJEdWzIlJfP1TEsGFlQ4elQ2zI4tDt7DVX5jPHgwkXAlN6slDGS90C8I7xg=
+	t=1710249499; cv=none; b=Igz47ulcb9gTFkrKCjuwOGXOVaGhL+tg8Mc6VIILHPyXScyW35rmiZTFva8pIOMg6gzrn5pgp9JpSPv6jxownOzHMV+C599B9duZUJeHCg41/YqFSB/xTrMB37Yjd2APPc29tLVMLzB1V/gl8rLy0/0yOwVOZ04gmc23gfLIPOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710249466; c=relaxed/simple;
-	bh=AA3vT42uXJUTEwQhKXY70OTOE0y5XchQ4pdvFf+D2J4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ahtqkF8ODKclxngUPIYTsVlOo3jmThWqJPcWVV/3q8a+doMvlt3xuRQCSf5136pia9gQzAQzYAxoIH0NExa+xNYMWO854nUm92dly3DEaH4KTK/rGM0gnpxDiYB3obI6luQd2v99bzWAJRqiYA465/xyTfXtMlas01U6xye6sXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4C3C43390;
-	Tue, 12 Mar 2024 13:17:46 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rk22q-00000001vJn-3HFz;
-	Tue, 12 Mar 2024 09:19:52 -0400
-Message-ID: <20240312131952.630922155@goodmis.org>
-User-Agent: quilt/0.67
-Date: Tue, 12 Mar 2024 09:19:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-Subject: [PATCH v2 1/2] ring-buffer: Fix full_waiters_pending in poll
-References: <20240312131919.314231457@goodmis.org>
+	s=arc-20240116; t=1710249499; c=relaxed/simple;
+	bh=5drlWpMH3WmAowsnVmEKhpqxAho8Tv6BCyVMktLzY68=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lu4SnH1fkrHVe3X/Cqhy7JAyxsn9I8E7ar95jB4rvhtpprg9ckq66f1FLSacyeTD3krOu341F51+1IzJfkMSWoO9WqF+7WSEnKfNgePSA0cul2FSKQewqpcTNkgCux7Byg9BG+9bmrMQXANbj26PspxxNCXkpmn9E5HzmT2E+FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 808EB1007;
+	Tue, 12 Mar 2024 06:18:53 -0700 (PDT)
+Received: from [10.57.11.232] (unknown [10.57.11.232])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A13863F762;
+	Tue, 12 Mar 2024 06:18:13 -0700 (PDT)
+Message-ID: <65f3016c-c060-4d74-ad0f-d1981d1c6eeb@arm.com>
+Date: Tue, 12 Mar 2024 14:18:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: simplify __calc_delta()
+Content-Language: en-US
+To: Dawei Li <daweilics@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org
+References: <20240306222838.15087-1-daweilics@gmail.com>
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <20240306222838.15087-1-daweilics@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hello Dawei,
 
-If a reader of the ring buffer is doing a poll, and waiting for the ring
-buffer to hit a specific watermark, there could be a case where it gets
-into an infinite ping-pong loop.
+On 3/6/24 23:28, Dawei Li wrote:
+> Based on how __calc_delta() is called now, the input parameter, weight
+> is always NICE_0_LOAD. I think we don't need it as an input parameter
+> now?
 
-The poll code has:
-
-  rbwork->full_waiters_pending = true;
-  if (!cpu_buffer->shortest_full ||
-      cpu_buffer->shortest_full > full)
-         cpu_buffer->shortest_full = full;
-
-The writer will see full_waiters_pending and check if the ring buffer is
-filled over the percentage of the shortest_full value. If it is, it calls
-an irq_work to wake up all the waiters.
-
-But the code could get into a circular loop:
-
-	CPU 0					CPU 1
-	-----					-----
- [ Poll ]
-   [ shortest_full = 0 ]
-   rbwork->full_waiters_pending = true;
-					  if (rbwork->full_waiters_pending &&
-					      [ buffer percent ] > shortest_full) {
-					         rbwork->wakeup_full = true;
-					         [ queue_irqwork ]
-
-   cpu_buffer->shortest_full = full;
-
-					  [ IRQ work ]
-					  if (rbwork->wakeup_full) {
-					        cpu_buffer->shortest_full = 0;
-					        wakeup poll waiters;
-  [woken]
-   if ([ buffer percent ] > full)
-      break;
-   rbwork->full_waiters_pending = true;
-					  if (rbwork->full_waiters_pending &&
-					      [ buffer percent ] > shortest_full) {
-					         rbwork->wakeup_full = true;
-					         [ queue_irqwork ]
-
-   cpu_buffer->shortest_full = full;
-
-					  [ IRQ work ]
-					  if (rbwork->wakeup_full) {
-					        cpu_buffer->shortest_full = 0;
-					        wakeup poll waiters;
-  [woken]
-
- [ Wash, rinse, repeat! ]
-
-In the poll, the shortest_full needs to be set before the
-full_pending_waiters, as once that is set, the writer will compare the
-current shortest_full (which is incorrect) to decide to call the irq_work,
-which will reset the shortest_full (expecting the readers to update it).
-
-Also move the setting of full_waiters_pending after the check if the ring
-buffer has the required percentage filled. There's no reason to tell the
-writer to wake up waiters if there are no waiters.
-
-Cc: stable@vger.kernel.org
-Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index aa332ace108b..adfe603a769b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -964,16 +964,32 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 		poll_wait(filp, &rbwork->full_waiters, poll_table);
- 
- 		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
--		rbwork->full_waiters_pending = true;
- 		if (!cpu_buffer->shortest_full ||
- 		    cpu_buffer->shortest_full > full)
- 			cpu_buffer->shortest_full = full;
- 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--	} else {
--		poll_wait(filp, &rbwork->waiters, poll_table);
--		rbwork->waiters_pending = true;
-+		if (full_hit(buffer, cpu, full))
-+			return EPOLLIN | EPOLLRDNORM;
-+		/*
-+		 * Only allow full_waiters_pending update to be seen after
-+		 * the shortest_full is set. If the writer sees the
-+		 * full_waiters_pending flag set, it will compare the
-+		 * amount in the ring buffer to shortest_full. If the amount
-+		 * in the ring buffer is greater than the shortest_full
-+		 * percent, it will call the irq_work handler to wake up
-+		 * this list. The irq_handler will reset shortest_full
-+		 * back to zero. That's done under the reader_lock, but
-+		 * the below smp_mb() makes sure that the update to
-+		 * full_waiters_pending doesn't leak up into the above.
-+		 */
-+		smp_mb();
-+		rbwork->full_waiters_pending = true;
-+		return 0;
- 	}
- 
-+	poll_wait(filp, &rbwork->waiters, poll_table);
-+	rbwork->waiters_pending = true;
-+
- 	/*
- 	 * There's a tight race between setting the waiters_pending and
- 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
-@@ -989,9 +1005,6 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 	 */
- 	smp_mb();
- 
--	if (full)
--		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
--
- 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
- 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
- 		return EPOLLIN | EPOLLRDNORM;
--- 
-2.43.0
+Maybe
+   5e963f2bd4654a202a8a05aa3a86cb0300b10e6c ("sched/fair: Commit to EEVDF")
+should be referenced to explain that the case where (weight =< lw.weight)
+doesn't exist anymore and that NICE_0_LOAD could be incorporated in
+__calc_delta() directly.
 
 
+Also I think indirect forms are preferred in general:
+"I think we don't need it as an input parameter now ?" ->
+"The 'weight' parameter doesn't seem to be required anymore"
+(same note for the whole commit message)
+
+> 
+> Also, when weight is always NICE_0_LOAD, the initial fact value is
+> always 2^10, and the first fact_hi will always be 0. Thus, we can get
+> rid of the first if bock.
+> 
+> The previous comment "(delta_exec * (weight * lw->inv_weight)) >>
+> WMULT_SHIFT" seems to be assuming that lw->weight * lw->inv_weight is
+> always (approximately) equal to 2^WMULT_SHIFT. However, when
+> CONFIG_64BIT is set, lw->weight * lw->inv_weight is (approximately)
+> equal to 2^WMULT_SHIFT * 2^10. What remains true for both CONFIG_32BIT
+> and CONFIG_64BIT is: scale_load_down(lw->weight) * lw->inv_weight is
+> (approximately) equal to 2^WMULT_SHIFT. (Correct me if I am wrong.)
+
+I think the comment is more about explaining that:
+   X * lw.weight
+equals:
+   X * lw->inv_weight >> WMULT_SHIFT
+
+Also, if CONFIG_64BIT is set, we should have:
+   weight / lw.weight == scale_load_down(lw->weight) * 2**10 * lw->inv_weight
+
+So IIUC, either both lines should be update, either none.
+(meaning that:
+   delta_exec * NICE_0_LOAD / lw->weight
+should be changed to
+   delta_exec * scale_load_down(NICE_0_LOAD) / lw->weight
+)
+
+I assume it's better to let the comment as is.
+
+
+> 
+> Also updated the comment for calc_delta_fair() to make it more
+> accurate.
+> 
+> Signed-off-by: Dawei Li <daweilics@gmail.com>
+> ---
+>   kernel/sched/fair.c | 29 ++++++++++-------------------
+>   1 file changed, 10 insertions(+), 19 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 6a16129f9a5c..c5cdb15f7d62 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -252,32 +252,23 @@ static void __update_inv_weight(struct load_weight *lw)
+>   }
+>   
+>   /*
+> - * delta_exec * weight / lw.weight
+> + * delta_exec * NICE_0_LOAD / lw->weight
+>    *   OR
+> - * (delta_exec * (weight * lw->inv_weight)) >> WMULT_SHIFT
+> + * (delta_exec * scale_load_down(NICE_0_LOAD) * lw->inv_weight) >> WMULT_SHIFT
+>    *
+> - * Either weight := NICE_0_LOAD and lw \e sched_prio_to_wmult[], in which case
+> - * we're guaranteed shift stays positive because inv_weight is guaranteed to
+> - * fit 32 bits, and NICE_0_LOAD gives another 10 bits; therefore shift >= 22.
+> - *
+> - * Or, weight =< lw.weight (because lw.weight is the runqueue weight), thus
+> - * weight/lw.weight <= 1, and therefore our shift will also be positive.
+> + * We're guaranteed shift stays positive because inv_weight is guaranteed to
+> + * fit 32 bits, and scale_load_down(NICE_0_LOAD) gives another 10 bits;
+> + * therefore shift >= 22.
+>    */
+> -static u64 __calc_delta(u64 delta_exec, unsigned long weight, struct load_weight *lw)
+> +static u64 __calc_delta(u64 delta_exec, struct load_weight *lw)
+>   {
+> -	u64 fact = scale_load_down(weight);
+> -	u32 fact_hi = (u32)(fact >> 32);
+> +	u64 fact = scale_load_down(NICE_0_LOAD);
+> +	int fact_hi;
+>   	int shift = WMULT_SHIFT;
+>   	int fs;
+
+NIT: maybe re-ordering the variables to have a reverse tree
+
+Otherwise, the patch looks good to me,
+Regards,
+Pierre
