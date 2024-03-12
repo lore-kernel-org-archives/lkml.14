@@ -1,113 +1,101 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F707B3F1;
-	Tue, 12 Mar 2024 14:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CECD1DFD8;
+	Tue, 12 Mar 2024 14:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710254643; cv=none; b=XLhNx0Cq4SAJegaJnzCQ2rHBo9THjH2H3MsEuG8UD//j+CWGrc1NRVIAF94Fn0lGSRZ8fTg2POCVQfl1a9kHXO0QGK2qE7W0WQPJY9v891w4hHq/1Fj5DsKQO5aNCPbPQnjmOBI6OoR8fc6ukmPXxbK3pk4CC+ij68L7y/tfFCc=
+	t=1710254666; cv=none; b=Zqg7t7CxhbdV6Z3QkrgZ7qaR+eKaS49T3A/gBuDvumvR8PpbGE91DgaWqzKN0RadjS46a/oK4jFyejs+jmGPeGhcwuII/2k5Xn98ScTvWobrAcN+VxoGzl3yZcgmiiPtsJNlBWWhinkoisIKOQ5E3j8I59KYIcVI850tU0SmlGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710254643; c=relaxed/simple;
-	bh=z/OxTf//2cT75VscnuKOF0GSS9o4iFxJeomSjM8XS5U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=u43+O3aMQUwF/nOMOHrgFRiZIJrigzam1tiDoroM7aSx19OhxmawC7wWk7qy3Uvx/BL3cE0PJopmZ40scL8MGzHvU/oWanEs78jmngBd7M+imcCv8Dxgq4woxk6iDeS5krf/udm1Bjbs5wNoZHyzISEooAXLYCRADlN5NdOS1/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZDucpGX; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710254666; c=relaxed/simple;
+	bh=Dy35dwPt2qxF2qUUrlFwaycsRiwdy9dn4pHsT5ZLSGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIaUPFdeapmKPx6WA4JrRXEXNB++Ndsga5Cu2CqmLHFoG1mx693F15FhyHgp6zyra3ENCM9dJdshIqFpxuAJnKVi6HBBZNFBX8g2EEZ6BegcEqbnoGv98RwmMtk3UpfnYzcea0AB16kLsRSvz/ptav9Hdj5z3woPE+vVN57u710=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aukJ/eNk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZDucpGX"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5e4f79007ffso2649369a12.2;
-        Tue, 12 Mar 2024 07:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710254641; x=1710859441; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IAHAahn2gh7td0YeB8OPDUS5WS8zqe3GQf6VxksElsA=;
-        b=XZDucpGXXtwwUUgAU9JO89hJnxObwv7TpEcOZXjo0AeFVB1Zhg148lhzorbLTI4bwb
-         REPN8BGEtnnF1e+ZmB1R5uCioIhTHwa03TuliAIdhNIg22ltPlAQ4VKudu7MJZd0SZ7o
-         zJDdPXif2uq7++91CBpoTl5xVbdj+NQUqz9jPlQqMyDP6LT5GmEdc8JlHWRGqIE24Ks2
-         br5lz1A4KZcgKkFajpmOpE/4i/fkdfguw4Pu//5nLV1Yk04ZYcroVWdIK7me64qRlcQv
-         nRPATEDf6UnfTLOOtHaCcTc+R2l/MOXSKe5UC/bmUGoSFOLlJlZ84Iv93kp8HIe2FYpG
-         714A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710254641; x=1710859441;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IAHAahn2gh7td0YeB8OPDUS5WS8zqe3GQf6VxksElsA=;
-        b=YH6Ryz9s/D7c4/FTiNddI76Qu7U2prH8Xr6XdOB9FrfgWUW1QxhHXBJwzibRmd3w9f
-         E07Io3+urwgt7iSVhb6ZfJHYr/zA5CBMOsAIKMjH00yfZcNmQpzE/LVFd7Y3PiQnwx2n
-         2cvh4qEiKAFyfkGKhf8K6mzhZRgkxdckqffSeJXzhIrxs2ktv9Cz+1FyWwszcwSZ4WVu
-         Ux9E614NC7ZnAmp5McFi+/fPK4vbcV4qHko3PcLNSs8euBQvf503IGq5bwsNU+0q12UI
-         BWJvmLeJQHwkMFXAD07pgLlZjeasGIEv5ZzZY0aQYzPNoCe1AkK+byJju6P5mHg2NY1C
-         aMnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEnzHVztC9HfdeIZdQlHAZoEmt7FFY9qUMCTe7//2yCGLQd8+rE6Pu560Q3IHwdqXPWsiOVclGifRR0r1s/xPytgnot6cMQvYPwA==
-X-Gm-Message-State: AOJu0YxK/B+MJ7z93DRE9yh/mDcb+jhntLYvBm3eBe5klcxZzq3ueWO3
-	Kqeu1o3gjh93gnnvrMoEf+k0oBqTILH7qd8xDczDBpz21EOifXu2RsOdfDF9ipiHo87ppntKXzJ
-	KoxGqFWhoZbov4l0Ip1J2FP5vWzCQ5OTTEA==
-X-Google-Smtp-Source: AGHT+IFz9rruN//Sui78rDGQ5KyyZ9SZcnXwk3yQehwwAM1KVK5RWWJl4U1cBO7fTMq/UeDeGIEK0FN8b1qNA7OgKYM=
-X-Received: by 2002:a17:90b:1e09:b0:29c:5767:f684 with SMTP id
- pg9-20020a17090b1e0900b0029c5767f684mr243630pjb.4.1710254641602; Tue, 12 Mar
- 2024 07:44:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aukJ/eNk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9E7C433C7;
+	Tue, 12 Mar 2024 14:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710254666;
+	bh=Dy35dwPt2qxF2qUUrlFwaycsRiwdy9dn4pHsT5ZLSGM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aukJ/eNkN+YxIpLAdDkVRaOAwmdrbNrNZgs82sjROJOwJ1cRhWzZAp3hKMU0o6by+
+	 ClTlHTyUvbdjvyY4/G74hRToq/cZ9BrgDhaB+HPsKPBThz5V0mnvS4Q4WgBQvcptpR
+	 04z6b6XP7us+6me/XmilaA8rQnRctidem5GuYEJRvHPnybkiiNXO4JEYbRUM4OiaPY
+	 UFJRlCI98zvgAzsZLe3qUDx3DzX1Q/Ugn7gqlwF7kxh6x+dvQaqjTZDbJmQj3umXD3
+	 1PXAX/9vH+gF3+GRdcEgLVCtkdJFbDDShjF9MVbGV0IHrKEFATopahqSygkBb4KvY3
+	 s3KPe9CIlkidg==
+Date: Tue, 12 Mar 2024 14:44:19 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev, linux-um@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com,
+	linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org,
+	"Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: Re: [PATCH 2/7] of: Create of_root if no dtb provided by firmware
+Message-ID: <e83b606a-e34e-423f-b26b-df745052d06b@sirena.org.uk>
+References: <20240217060843.GA16460@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <CAL_Jsq+Feu9NnzTNx=XU5vgHhibGAQXvkuTeWbpu8gJ3rVrzcw@mail.gmail.com>
+ <CAMuHMdUKa-KdWfYswEpFvj3RjQPM+ThhU85myfBGVkXxZqbHWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-Date: Tue, 12 Mar 2024 09:43:50 -0500
-Message-ID: <CALGdzuoubbra4xKOJcsyThdk5Y1BrAmZs==wbqjbkAgmKS39Aw@mail.gmail.com>
-Subject: [drivers/scsi] Question about `st_setup`
-To: Kai.Makisara@kolumbus.fi, jejb@linux.ibm.com, martin.petersen@oracle.com, 
-	linux-scsi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Zijie Zhao <zzjas98@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="A8PYQDEZ5U6Pm1op"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUKa-KdWfYswEpFvj3RjQPM+ThhU85myfBGVkXxZqbHWw@mail.gmail.com>
+X-Cookie: Oh, so there you are!
 
-Dear Linux Developers for SCSI Driver,
 
-We are curious about the functionality of `st_setup`
-(https://elixir.bootlin.com/linux/latest/source/drivers/scsi/st.c#L4102).
+--A8PYQDEZ5U6Pm1op
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-```
-static int __init st_setup(char *str)
-{
-  int i, len, ints[5];
-  char *stp;
+On Tue, Mar 12, 2024 at 03:41:32PM +0100, Geert Uytterhoeven wrote:
+> On Wed, Feb 21, 2024 at 3:06=E2=80=AFPM Rob Herring <robh+dt@kernel.org> =
+wrote:
 
-  stp = get_options(str, ARRAY_SIZE(ints), ints);
+>     static int __init regulator_init_complete(void)
+>     {
+>             /*
+>              * Since DT doesn't provide an idiomatic mechanism for
+>              * enabling full constraints and since it's much more natural
+>              * with DT to provide them just assume that a DT enabled
+>              * system has full constraints.
+>              */
+>             if (of_have_populated_dt())
+>                     has_full_constraints =3D true;
+>=20
+>             ...
+>     }
+>     late_initcall_sync(regulator_init_complete);
 
-  if (ints[0] > 0) {
-    for (i = 0; i < ints[0] && i < ARRAY_SIZE(parms); i++)
-    if (parms[i].val)
-      *parms[i].val = ints[i + 1];
-  }
-  ...
-}
-```
+> (The latter looks a bit futile, as have_full_constraints() already
+>  contains a check for of_have_populated_dt()?)
 
-For this function, we are trying to understand how it works but not
-sure whether it would be an out-of-bound read.
+Yes, it's duplicated and we should remove it.
 
-The length of both `ints` and `parms` is 5 (the latterdefined at
-https://elixir.bootlin.com/linux/latest/source/drivers/scsi/st.c#L125).
-Thus, when `ints[0]` is 5, we could assign `ints[5]`
-(out-of-bound-read) to `parms[4].val`. Based on our understanding of
-the `get_options` function
-(https://elixir.bootlin.com/linux/latest/source/lib/cmdline.c#L107),
-it could be possible that `ints[0] == 5`, where the first element of
-`ints` indicates the number of parsed options. Hence, it is possible
-to do
-a out-of-bound read once `debug_flag` is enabled (to pass `if
-(parms[i].val)`).
+--A8PYQDEZ5U6Pm1op
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please correct us if we miss some key prerequisites for this function
-or the data structure.
-Thanks in advance!
+-----BEGIN PGP SIGNATURE-----
 
-Based on our understanding, the possible fix could be
-```
-int i, len, ints[6];
-```
-which allocates `len(parms) + 1` for `ints`.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXwakIACgkQJNaLcl1U
+h9A8ewf+MxFaGvrtn8DK977EqCU2BEx8094DvO7eMo0nyAJUm2gxwqKrhgdxDEFY
+I0g6tj4LKJmyrLH4jH1T84U85aVm9il1PX4OUNyIHtHqrTvZuxonx1hbMfHWnq4d
+varya5+YeCMfo3B8heD4RSSmX4ewG6Jgb+IeDl/Jn8On2Pys75Sh1Bk8mbbunG+H
+pOK8gTFj5jOaR6JoX/gsoYsifocZ0s96AqUqmk+i7zxdX6qJhGDaD7azW/qhJAUv
++E/x/KzOuerVx8mX2drUIR9jk/s1+t3mgTJZKAYoGUDW2PwG9wPb8tqtofX2ghXU
+ZgSshLDLKjTalXEyonUkGEadKnNxmA==
+=/ZcU
+-----END PGP SIGNATURE-----
 
-Best,
-Chenyuan
+--A8PYQDEZ5U6Pm1op--
