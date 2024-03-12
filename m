@@ -1,138 +1,113 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8A758112
-	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AC96997E
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 13:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710248990; cv=none; b=ZWbluQLWPKNncBylF8a+R40dRTAmc1ms8xemkHgBvwlPpqcQTGXCEbxNeaxt4LHfb20SC4WSvhww0sa4JcM7sdhp+7lKvOKfMKV0vCJIazMkjQ5Ccq556RGCtDLTQ62rHcxAh6l5Og6KMUCst9GIyIzv3e1RN5gos9ThmaP9aIQ=
+	t=1710249139; cv=none; b=ggFh6Ds/XT/3n2qs+cf/M0Vc8UAhDN4b24TANbaYHGdQMr0tBEiqnNRa91EPmRhr1xACiGIGWvXdzhv+Ed9NLpu2C/ASwnV+7MD/PnYA82AoFoj9cxyEEA/dIJGOlJXrweuorgjXPGxeMulCmg/Ca7ECiZsVt80nadMyvRt6pKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710248990; c=relaxed/simple;
-	bh=z3Krd6PYBcsF/RiHX60uQhCJAD+W/Ot4T/9sQ/BX0mo=;
+	s=arc-20240116; t=1710249139; c=relaxed/simple;
+	bh=5rt+RWbBJPhAUl1uqDwh5UWlve/OPz4PeCvfGqj3MHQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEpYnmPY90NzAHy67s+GtaKpz1aHcsxHGx1oLNhMa/J3NpFLOGnZ60DYxGhup9YCvHBFiVQu4FRAdm+/U4QXGw4Ab/i/sDdVRZQSdBvtFjXa4+hZVfojA5WqvZJowIvg2nDg4axPZ8UptNI/2JgairY5QqAXbt7QhcGbMBZPsNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqJ5nOW1; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=dYgnm0lD2Zf7jhg+FAvyTii+0yUXQ1pnYPVuKW7aLJX7/vLkfngdyLpRoQZZkSRylcygo1GBEohooamkBvi1LFTs/EPUhzITdxEATlII0D+BcsSyJXyzDAlw5KHntOjYPZN2YUWf950xq4LLezs4zCOxLVpkTHtD8CNPqTaRUdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=AeF5oxQS; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqJ5nOW1"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcbc00f6c04so3773541276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 06:09:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="AeF5oxQS"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-609eb87a847so42020457b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 06:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710248988; x=1710853788; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1710249136; x=1710853936; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+48G+vRsg7+lgPK5qgS5JPtHJWZ7UC5Q8Af8HqedyCE=;
-        b=AqJ5nOW1DE7ZqU9Gf70IjT+GZCdq+OY8ObvzbqUWE/meC5rVIvRVDrbFyMCcNDytaD
-         N3OpiWtYms+5WPkFw5UeMGZp1BgECDQpSd+hxT54YcNDMnufeVzrhj1vxED2A5t6kVSU
-         xwhaO0+MDzaPQeoVuWlqi95mPRepZhDyB08JFSqZyIwzEEp+jcZocSCYal4aEe9dc2X4
-         J4SMDWdmm+YF/g3TDGu2fhwS+tYe2PsMJJBCgH38iMUxvAiQc0a9AK9K92NyyVEhiTG7
-         NRt5zAuW1P154xUt3rI+ipcPWbLM0xg2bLJfHDibfzBk/HfAKQ6zHKYpQJNkWFNnzdD9
-         FH2g==
+        bh=xGm6l1YRLh5BPGXSeJhTa5Xkczn4uT6yuT0rED+ytkk=;
+        b=AeF5oxQSugPKh8jPGo1deH2heQlPo67Gx8uPfkXw+A6XRCMxKrmhop4RTi2Raye9w5
+         td3/8L7cAv6COx2n55EwL5JReK1i4P5PPiYypoSIGkwLVHIPPS/nIssVhO6EvVoiSdwa
+         25PWyN9KMeoyTR/gJFW6FP+77dd1uhGAFDEy7I0P298m/ZrujwVNmzfBJ57RnEVJRnz7
+         hFIHzsvn0BzaDpDVS99DEsWFQFKYhVbuQt8C8bZjIr3opLAh5ipZEgkQMXlkanYGp1ue
+         yhcJEtkhHMAz7ALFS6U3xG0xIZj2H6Bi1chBbMLE5wbZkq+AccKzNCXCc5KD/mfWZoRg
+         cqCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710248988; x=1710853788;
+        d=1e100.net; s=20230601; t=1710249136; x=1710853936;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+48G+vRsg7+lgPK5qgS5JPtHJWZ7UC5Q8Af8HqedyCE=;
-        b=K11fbWYxFKhF0h6bFeoIcbqckujNUcodOgnkQouGwav/SUuG1d/SpmDJo6rX/C/SAr
-         HnDazFURftL/gCB/3SqWLxvCrf0rL4ldnYAkrTCMpTUa2b9v0NSf6VqqzrO7/FoMZgb6
-         uLBwt0IM7sXM7QQUErLwEtzR+PwTFqmF8tOVHRlTzLxbgyMMmMqX7liYmYKaLELtoE00
-         ZZb+17VIvI4xnYtstHY80UR2j8kEyqnOwt3MqN439mBUYuJjbhLjKBH6ceBVUjCbxLW8
-         fJskOmPrH74k8K5dPCXhGm4LR9rcBrOqUBmPXv0T9VqAxgUqvu5GrjspqdGZ7EchcjxX
-         WJFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhpcpTSCe2B1m7Ct/1RA37IqOQgdPWX0Dcymap6kOYBmjsxGygjNHkrkqGRvkIFIg6Dp2uhfoCIDXJm5B9KviqgXHTObkhrZ6SnCzM
-X-Gm-Message-State: AOJu0Yw5LCjD4tWNkzysyDbA3OaoXMSvIrgruBPmHKiEyIprzCnFSU+D
-	d2jewMVYG5668YNznv2RinhE1qrF4n+tBD+z0gYKQLIuam4g5HkAyOdD7+jQE0U9IciGKQmZu7c
-	f1D3Uxat0hDel69xGHWH2qThPO/s=
-X-Google-Smtp-Source: AGHT+IFnO0pN11NYUrGM946wzMKaXTqTxPNQY42/zJlOr91aUkRgRbcbVrsHkueI/v7rrSkhiWcUFRRT7bDYPw3TcS8=
-X-Received: by 2002:a25:f621:0:b0:dc6:d093:8622 with SMTP id
- t33-20020a25f621000000b00dc6d0938622mr6648021ybd.15.1710248987491; Tue, 12
- Mar 2024 06:09:47 -0700 (PDT)
+        bh=xGm6l1YRLh5BPGXSeJhTa5Xkczn4uT6yuT0rED+ytkk=;
+        b=vg01xDQzeXtMSg8QlI83xsY9K54BtIykZ9RgBlz3yQTuUXFQ1CW/0pwdlUsnZSHgG1
+         TH23OevS/9MRboRhLxJik8Hg94T3MsrBfYv7WDd4yyEUyyUiJoszNt5v2h1tICWUykEi
+         DTl+KzkYUQr9qITuoo14q/L27LpHbKy2U8Uzsxz8zcCKYVM7192Ct07SH5KGEOzZefcp
+         3lanzOtErAtQ1nEkSE8cpN48h9NUX1pM3qrZvykGQcKDrXT5yB9awn5fOAWm5Bvu+SJD
+         KGeqUwxTPUX0xFEqNO+J4bF8AddA+Vw/GnpSO6yfnyYSEL1XLsR3Zh/qHf/NAsbO4nV3
+         d4Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUkAQGVF2JCsyeLaToY+KpEBcGmVEviUkM19E1ZL/8+Ht+95Cd0DhZfOCXMwSEzOFlS7GKJS3jOrxPHc+4XZZEphwZRyxRSuiq6knSq
+X-Gm-Message-State: AOJu0YxW4K3drH6y05vkmXoDz1ntbS6bPJQlOGyM/6GYvgHJX1/LmRyM
+	a6L+3+bP9PAmMlmINygvyLGRtsmwtipU5MIhJovaEbdOcdoes9pk7vsScaPTMoElNR0pjT37W6L
+	oka+kO7mTIibr4pKuE2OzltnFX8uHpQw0RVKW
+X-Google-Smtp-Source: AGHT+IEdiOBkJ+adeSqv+rNybEPwNkGGa7iFCLcf94f4++BXPp1TK3JUSZqCbU2Yvqne0MvrzB+F7Mt8oGlgCeTEfL8=
+X-Received: by 2002:a05:6902:2841:b0:dcd:b806:7446 with SMTP id
+ ee1-20020a056902284100b00dcdb8067446mr6722695ybb.1.1710249136161; Tue, 12 Mar
+ 2024 06:12:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308074921.45752-1-ioworker0@gmail.com> <ef409d5e-5652-4fff-933c-49bda6d75018@redhat.com>
-In-Reply-To: <ef409d5e-5652-4fff-933c-49bda6d75018@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Tue, 12 Mar 2024 21:09:35 +0800
-Message-ID: <CAK1f24k_+qAqxKGMpKziouuds=PQ6kfKyQ8D3SYEyW7cQOAJWw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/khugepaged: reduce process visible downtime by
- pre-zeroing hugepage
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, mhocko@suse.com, zokeefe@google.com, 
-	shy828301@gmail.com, xiehuan09@gmail.com, songmuchun@bytedance.com, 
-	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1709768084-22539-1-git-send-email-wufan@linux.microsoft.com>
+ <1709768084-22539-16-git-send-email-wufan@linux.microsoft.com>
+ <20240312025712.GE1182@sol.localdomain> <20240312030712.GF1182@sol.localdomain>
+In-Reply-To: <20240312030712.GF1182@sol.localdomain>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 12 Mar 2024 09:12:05 -0400
+Message-ID: <CAHC9VhSSWNa1qwZrWtj-ERFjN9QKR7fz17yb9903P_a2k6ewaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v14 15/19] fsverity: consume builtin signature via LSM hook
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com, 
+	jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, axboe@kernel.dk, 
+	agk@redhat.com, snitzer@kernel.org, eparis@redhat.com, 
+	linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev, audit@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Deven Bowers <deven.desai@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey David,
-
-Thanks for taking time to review!
-
-On Tue, Mar 12, 2024 at 12:19=E2=80=AFAM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> On 08.03.24 08:49, Lance Yang wrote:
-> > The patch reduces the process visible downtime during hugepage
-> > collapse. This is achieved by pre-zeroing the hugepage before
-> > acquiring mmap_lock(write mode) if nr_pte_none >=3D 256, without
-> > affecting the efficiency of khugepaged.
+On Mon, Mar 11, 2024 at 11:07=E2=80=AFPM Eric Biggers <ebiggers@kernel.org>=
+ wrote:
+> On Mon, Mar 11, 2024 at 07:57:12PM -0700, Eric Biggers wrote:
 > >
-> > On an Intel Core i5 CPU, the process visible downtime during
-> > hugepage collapse is as follows:
+> > As I've said before, this commit message needs some work.  It currently=
+ doesn't
+> > say anything about what the patch actually does.
 > >
-> > | nr_ptes_none  | w/o __GFP_ZERO | w/ __GFP_ZERO  |  Change |
-> > --------------------------------------------------=E2=80=94----------
-> > |      511      |     233us      |      95us      |  -59.21%|
-> > |      384      |     376us      |     219us      |  -41.20%|
-> > |      256      |     421us      |     323us      |  -23.28%|
-> > |      128      |     523us      |     507us      |   -3.06%|
-> >
-> > Of course, alloc_charge_hpage() will take longer to run with
-> > the __GFP_ZERO flag.
-> >
-> > |       Func           | w/o __GFP_ZERO | w/ __GFP_ZERO |
-> > |----------------------|----------------|---------------|
-> > | alloc_charge_hpage   |      198us     |      295us    |
-> >
-> > But it's not a big deal because it doesn't impact the total
-> > time spent by khugepaged in collapsing a hugepage. In fact,
-> > it would decrease.
+> > BTW, please make sure you're Cc'ing the fsverity mailing list
+> > (fsverity@lists.linux.dev), not fscrypt (linux-fscrypt@vger.kernel.org)=
+.
 >
-> It does look sane to me and not overly complicated.
->
-> But, it's an optimization really only when we have quite a bunch of
-> pte_none(), possibly repeatedly so that it really makes a difference.
->
-> Usually, when we repeatedly collapse that many pte_none() we're just
-> wasting a lot of memory and should re-evaluate life choices :)
+> Also, I thought this patch was using a new LSM hook, but I now see that y=
+ou're
+> actually abusing the existing security_inode_setsecurity() LSM hook.  Cur=
+rently
+> that hook is called when an xattr is set.  I don't see any precedent for
+> overloading it for other purposes.
 
-Agreed! It seems that the default value of max_pte_none may be set too
-high, which could result in the memory wastage issue we're discussing.
+I'm not really bothered by this, and if it proves to be a problem in
+the future we can swap it for a new hook; we don't include the LSM
+in-kernel API in any stable API guarantees.
 
->
-> So my question is: do we really care about it that much that we care to
-> optimize?
+> This seems problematic, as it means that a
+> request to set an xattr with the name you chose ("fsverity.builtin-sig") =
+will be
+> interpreted by LSMs as the fsverity builtin signature.  A dedicated LSM h=
+ook may
+> be necessary to avoid issues with overloading the existing xattr hook lik=
+e this.
 
-IMO, although it may not be our main concern, reducing the impact of
-khugepaged on the process remains crucial. I think that users also prefer
-minimal interference from khugepaged.
+Would you be more comfortable if the name was in an IPE related space,
+for example something like "ipe.fsverity-sig"?
 
->
-> But again, LGTM.
-
-Thanks again for your time!
-
-Best,
-Lance
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+--=20
+paul-moore.com
