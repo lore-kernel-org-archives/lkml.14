@@ -1,150 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9006E944D;
-	Tue, 12 Mar 2024 02:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1350BA39;
+	Tue, 12 Mar 2024 02:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710212373; cv=none; b=CsYSrGkPCpVkM+9FtK6gKqE8KM4/PsmVILHAUxPYbY17PGpTDXP/KImbFXzRiemnhGX+xUJXkCPCjMq0pH+b0USKPZAVGqJ8qKn1v2DKYxizrfJ42zT9Dj48Av0XOclG1YNgNFG6484ZckOdDtlcBg4kmoTBL12NInsDOs1ZSR4=
+	t=1710212385; cv=none; b=Of6Mof1zshWBuWbFWV1G6KM9RCrYt2bKX+NB/MN8zh+03ZFKs+eqAKga/UHrF5z8jNp/ct3KPjVoEiBXtYeG2YA7SF3R6vvfmCoiVb6KmOo0/SbG99l/V1Hg7jP9VB1j3lIl7Fk8ppNG83cnZ33CtD5lsWHkYkFR2csdhfoIROM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710212373; c=relaxed/simple;
-	bh=Sxl6t66ITIwHPGNrR+W7/MelDwyA12T4A8C+abUZIWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BLEYZbLE3mH0shNGKIS+zIkCDPoFmifDqmGFFXN0Ux9FkTF6mZm7E/UOqGHYrgQCmlWdwxyGz4mv7YR7jx7jtfgAOQnzWqrCvzeVVJQgOQPqFdc6DCc96VXOZwAS6OdWwGujfkcwPm+uGKgeHlyn+SUXtDvg1X4Ur0AOiswjb9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DF2KIUKO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710212385; c=relaxed/simple;
+	bh=jCdBNatzGEdZ2CfTazqC7lWaSN8WBO9A2pZTJlA6Cgw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a2khZ6Hf1MrBq2bsLAZY0ij0KVkbCduQeIPPDeMj1iyviidZ1cLKgAai4RRwCzyYDHMQ0W034ByxucAmLIImCInwy8tWo7yf6KGWQxMlKptDM+PQ8qY1gg9GMpvcVEknAs9LVo2vb+xFOW8K6bnPQ4YzgD+C/XNwQeSFAgSyNAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pmFvsPsI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DF2KIUKO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710212372; x=1741748372;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Sxl6t66ITIwHPGNrR+W7/MelDwyA12T4A8C+abUZIWo=;
-  b=DF2KIUKOB8Uvqa/aC5mBi1HfheMz6twE4gJhm4nVPiilk/9C+68ripJ9
-   r6e7SIYQhXFCPKSR280EnDNlvxGqAY7LBmm92LpLQfYgbPGl5iXNhAwxC
-   Ny9bMNrQB4LD74R5SHSqvRgT2PzQL5ld8k82Z7ouCct8UpGCSYtSDYPfG
-   +2xoxDvoTeaP3GrDCzS9Q8sg3mNs5dKzs89lDg8G0cDiWqE+SN3f3aFh2
-   2fdLo7xnqWCEOSm86VtRXbIqpxk8DigQb/Hbb0K2XogzUZr/9tLIA+05U
-   SoOycbwSOmItwsPG8EgOjhQYIWy7lPz1ZSWNN4mkRvne2Gp8Ebklfthn/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="16047944"
-X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
-   d="scan'208";a="16047944"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 19:59:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,118,1708416000"; 
-   d="scan'208";a="42369466"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.125.242.247]) ([10.125.242.247])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 19:59:27 -0700
-Message-ID: <6d24f7b1-a271-43de-ba94-847a3c9e0d8c@linux.intel.com>
-Date: Tue, 12 Mar 2024 10:59:25 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pmFvsPsI"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42C2IuPR004529;
+	Tue, 12 Mar 2024 02:59:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=jtKpQuokls/6ATw0gnJnkxEntL0Z3Hy3xmSu/hjvtqM=; b=pm
+	FvsPsIZ/jl1X+GSICPsldV5KT1UkoT0+XX1qzS67SubXY9G/pM/nVkM1jJdawwAL
+	GVOmBz3RIKmNohZcHaqbUgtE7fjnhgohYkpRmtG+/I1GNmMGqzB9nmlxB4J5HRs6
+	ZYUcUN4VbKabJaAKZuV2gQ/V7kxloXifci9C0ExahA9IfKmlQwwm6KoxtPfgK+nO
+	O4t9twV3cjKOkpg+Y0rpPKoGAmUtr2cv20q5awgxd5gSPeE+AWkbcmYyQbKsvflu
+	+8ugfn7J+wQBq6/kD7hrtZ4hmV0I9dMYoymu2Kn5OMvJhVvgex9OwXp0Ra5FwAc2
+	IELUMqbiG2b1XMu9ZROQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wte5d01rq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 02:59:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42C2xd09028977
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 02:59:39 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 11 Mar 2024 19:59:33 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v3 0/2] update SM4450 pinctrl document
+Date: Tue, 12 Mar 2024 10:58:05 +0800
+Message-ID: <20240312025807.26075-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/16] KVM: x86/mmu: Exit to userspace with -EFAULT if
- private fault hits emulation
-To: "Gupta, Pankaj" <pankaj.gupta@amd.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>,
- Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>,
- David Matlack <dmatlack@google.com>
-References: <20240228024147.41573-1-seanjc@google.com>
- <20240228024147.41573-2-seanjc@google.com>
- <2441bd2a-a0b1-5184-bac8-28c94b151c93@amd.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <2441bd2a-a0b1-5184-bac8-28c94b151c93@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: IMHCGhf4FCpzxA6osyvFgY1vHman8jHb
+X-Proofpoint-GUID: IMHCGhf4FCpzxA6osyvFgY1vHman8jHb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_02,2024-03-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 suspectscore=0 mlxlogscore=787
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403120022
+
+Update compatible name, consolidate or remove functions to match with
+SM4450 driver.
+
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+
+v2 -> v3:
+   - update patche commit message for [PATCH v3 2/2]
+   - consolidate or remove some functions for match with SM4450 pinctrl
+     driver
+
+v1 -> v2:
+  - update patches commit message
+  - Remove excess Spaces
+
+previous discussion here:
+[1] v2: https://lore.kernel.org/linux-arm-msm/20240129092512.23602-1-quic_tengfan@quicinc.com/
+[2] v1: https://lore.kernel.org/linux-arm-msm/20240124023305.15755-1-quic_tengfan@quicinc.com/
+
+Tengfei Fan (2):
+  dt-bindings: pinctrl: qcom: update compatible name for match with
+    driver
+  dt-bindings: pinctrl: qcom: update functions to match with driver
+
+ .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    | 54 +++++++------------
+ 1 file changed, 19 insertions(+), 35 deletions(-)
 
 
-
-On 3/7/2024 8:52 PM, Gupta, Pankaj wrote:
->> Exit to userspace with -EFAULT / KVM_EXIT_MEMORY_FAULT if a private 
->> fault
->> triggers emulation of any kind, as KVM doesn't currently support 
->> emulating
->> access to guest private memory.  Practically speaking, private faults 
->> and
->> emulation are already mutually exclusive, but there are edge cases upon
->> edge cases where KVM can return RET_PF_EMULATE, and adding one last 
->> check
->
-> edge cases upon edge cases?
->
-> Just curious about the details of the edge cases scenarios?
-
-Same question out of curiosity.
-
->
->> to harden against weird, unexpected combinations is inexpensive.
->>
->> Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> ---
->>   arch/x86/kvm/mmu/mmu.c          |  8 --------
->>   arch/x86/kvm/mmu/mmu_internal.h | 13 +++++++++++++
->>   2 files changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->> index e4cc7f764980..e2fd74e06ff8 100644
->> --- a/arch/x86/kvm/mmu/mmu.c
->> +++ b/arch/x86/kvm/mmu/mmu.c
->> @@ -4309,14 +4309,6 @@ static inline u8 kvm_max_level_for_order(int 
->> order)
->>       return PG_LEVEL_4K;
->>   }
->>   -static void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
->> -                          struct kvm_page_fault *fault)
->> -{
->> -    kvm_prepare_memory_fault_exit(vcpu, fault->gfn << PAGE_SHIFT,
->> -                      PAGE_SIZE, fault->write, fault->exec,
->> -                      fault->is_private);
->> -}
->> -
->>   static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
->>                      struct kvm_page_fault *fault)
->>   {
->> diff --git a/arch/x86/kvm/mmu/mmu_internal.h 
->> b/arch/x86/kvm/mmu/mmu_internal.h
->> index 0669a8a668ca..0eea6c5a824d 100644
->> --- a/arch/x86/kvm/mmu/mmu_internal.h
->> +++ b/arch/x86/kvm/mmu/mmu_internal.h
->> @@ -279,6 +279,14 @@ enum {
->>       RET_PF_SPURIOUS,
->>   };
->>   +static inline void kvm_mmu_prepare_memory_fault_exit(struct 
->> kvm_vcpu *vcpu,
->> +                             struct kvm_page_fault *fault)
->> +{
->> +    kvm_prepare_memory_fault_exit(vcpu, fault->gfn << PAGE_SHIFT,
->> +                      PAGE_SIZE, fault->write, fault->exec,
->> +                      fault->is_private);
->> +}
->> +
->>   static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, 
->> gpa_t cr2_or_gpa,
->>                       u32 err, bool prefetch, int *emulation_type)
->>   {
->> @@ -320,6 +328,11 @@ static inline int kvm_mmu_do_page_fault(struct 
->> kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->>       else
->>           r = vcpu->arch.mmu->page_fault(vcpu, &fault);
->>   +    if (r == RET_PF_EMULATE && fault.is_private) {
->> +        kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
->> +        return -EFAULT;
->> +    }
->> +
->>       if (fault.write_fault_to_shadow_pgtable && emulation_type)
->>           *emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
->
->
+base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
+-- 
+2.17.1
 
