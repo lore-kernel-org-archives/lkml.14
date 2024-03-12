@@ -1,49 +1,47 @@
-Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11D44CDE0;
-	Tue, 12 Mar 2024 21:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.166.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3AB13B2BF;
+	Tue, 12 Mar 2024 21:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710279554; cv=none; b=EXwOpLp4knaiArh4dBR7OBXF4to6y403m1kB20skn5o9aVnjuRInqV+BPNvKGEVdcXgXJ/ixRp9FbqC0cpRVOfxXXQIjlHYOvxDvsOro2lf1ciHqN0w/CDdU1l0c0QB7cVCKaozHbHcOPaau3aLShDR9tKMX5Cka9E78x1AVq4c=
+	t=1710279612; cv=none; b=skk0tSoUnwwbXQt3FQhJIej53kRBs/XCqd6qXtZ/F76s0IGvRJ1bfkIL6ohBkToHaw6xoBCpYmIiJADa+1FMTGPjTCg+zkVJCLMehfmNGf3qHazE+4qHlzWXjyUGY+wfm1PGHOITmcyvPFw8LLdrvFc4APb7nh2prpK0ikcrVtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710279554; c=relaxed/simple;
-	bh=jCOUl/hgH4m5xXQ4Gf/fSkRvMuN269rszqvSe0P/8zE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ql2uXgWMDao/ejTiFbI5Zx7CkoeXZvPKgj5C+FohHfxdwEJss6oM4+t1uM73KiB57DIXBsjCjAapLDYR6OILUHMP7GGmIMmsmt8qTe8KQ0jK0XS4xgB1KH6z50Q2LFfD+cfz7dISWO8wDo6rPgWkNAaf5Ygkq8ZeyschnKVfe7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org; arc=none smtp.client-ip=140.77.166.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org
-Received: from localhost (localhost [127.0.0.1])
-	by sonata.ens-lyon.org (Postfix) with ESMTP id 70816A034B;
-	Tue, 12 Mar 2024 22:39:03 +0100 (CET)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-	by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lKQgqEeYEGbq; Tue, 12 Mar 2024 22:39:03 +0100 (CET)
-Received: from begin.home (aamiens-653-1-111-57.w83-192.abo.wanadoo.fr [83.192.234.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by sonata.ens-lyon.org (Postfix) with ESMTPSA id 1ECC4A02D1;
-	Tue, 12 Mar 2024 22:39:03 +0100 (CET)
-Received: from samy by begin.home with local (Exim 4.97)
-	(envelope-from <samuel.thibault@ens-lyon.org>)
-	id 1rk9pu-000000076so-2s5z;
-	Tue, 12 Mar 2024 22:39:02 +0100
-Date: Tue, 12 Mar 2024 22:39:02 +0100
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
-To: Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>,
-	Alexey Gladkov <legion@kernel.org>,
-	Jiry Slaby <jirislaby@kernel.org>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fbcon: Increase maximum font width x height to 64 x 64
-Message-ID: <20240312213902.3zvqaghlopjusv6m@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>,
-	Alexey Gladkov <legion@kernel.org>,
-	Jiry Slaby <jirislaby@kernel.org>, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1710279612; c=relaxed/simple;
+	bh=+80JYJzoe18PwUCOYAW7gnfaLZghFUWOhMTo6ihGcoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpjP0x49XVSMcYTlnw48EjGcrNyr7S1yZVqwCjcBlxDuBHgT6xOuqcATsADzEulBTA7kA2jRxxyDZYorTD7BfsuAa73UtKjiT0FqpuTGROridplL5HErGeCTSqEvtn2b0tuzrf2JTF2FD4ZDLSacwxRHZyvRug6FD7veQEOEJyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Tr2/bmlG; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Tr2/bmlG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=pB0npZBb02/Y7AXQyoSQVHyq17wriRhZ0GXXdXTPYXU=; b=Tr2/bmlGtLutH42IYRuYmfOZZy
+	+nc0B3WD8q8J/rMNBisjeLQBjUFU3EHvIDDJwrYYMqCXgvMJqQ4gZr6ElT321sVZyoq4gZBBEqW4i
+	RQa97YJ1CdlThAjWpELSF7yt9vE6NtS1pxwKZ2YAnXXVRIXeDGMhc1GjJk+WtjqBLoIk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rk9rT-00A570-D4; Tue, 12 Mar 2024 22:40:39 +0100
+Date: Tue, 12 Mar 2024 22:40:39 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ronnie.Kunin@microchip.com
+Cc: Raju.Lakkaraju@microchip.com, netdev@vger.kernel.org,
+	davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+	Bryan.Whitehead@microchip.com, richardcochran@gmail.com,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net 3/3] net: lan743x: Address problems with wake option
+ flags configuration sequences
+Message-ID: <fd22d022-cad4-489c-9861-36765dd98a87@lunn.ch>
+References: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
+ <20240226080934.46003-4-Raju.Lakkaraju@microchip.com>
+ <78d7e538-9fa0-490e-bcfb-0a5943ad80c9@lunn.ch>
+ <LV8PR11MB87008454A629EE15B9CE14099F272@LV8PR11MB8700.namprd11.prod.outlook.com>
+ <PH8PR11MB79656DCF7806D7390C7100DE95272@PH8PR11MB7965.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,93 +50,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <PH8PR11MB79656DCF7806D7390C7100DE95272@PH8PR11MB7965.namprd11.prod.outlook.com>
 
-This remains relatively simple by just enlarging integers.
+> I understand that the TI devices give the *impression* of supporting
+> both, but based on what I explained above, even if you accept
+> WAKE_MAGIC and WAKE_MAGICSEGURE on a set and report them both back
+> as enabled on a get; whatever behavior your hardware does will not
+> be fully compliant to both specs simultaneously anyway. I discussed
+> this with Raju and what we decided to do for our driver/device is
+> that if you pass both WAKE_MAGIC and WAKE_MAGICSEGURE flags to us we
+> will report them back as both being enabled in a subsequent get as
+> you suggested, but the behavior of our driver/hardware will be as if
+> you had only enabled WAKE_MAGIC.
 
-It wouldn't be that simple to get to the console's 64x128 maximum, as it would
-require 128b integers.
+So i agree having WAKE_MAGIC and WAKE_MAGICSECURE at the same time
+seems very odd. So i see no real problem limiting the driver to only
+one or the other. However, if the user does ask for both, i would say
+silently ignoring one is incorrect. You should return -EOPNOTUPP to
+make it clear you don't support both at the same time.
 
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+I would also say that silently ignore the Secure version is probably
+the worst choice. Things should be secure by default...
 
-Index: linux-6.4/drivers/video/fbdev/core/fbcon.c
-===================================================================
---- linux-6.4.orig/drivers/video/fbdev/core/fbcon.c
-+++ linux-6.4/drivers/video/fbdev/core/fbcon.c
-@@ -101,6 +101,9 @@ enum {
- 	FBCON_LOGO_DONTSHOW	= -3	/* do not show the logo */
- };
- 
-+#define FBCON_MAX_FONT_WIDTH	(sizeof(((struct fb_pixmap *) 0)->blit_x) * 8)
-+#define FBCON_MAX_FONT_HEIGHT	(sizeof(((struct fb_pixmap *) 0)->blit_y) * 8)
-+
- static struct fbcon_display fb_display[MAX_NR_CONSOLES];
- 
- struct fb_info *fbcon_registered_fb[FB_MAX];
-@@ -2485,12 +2488,12 @@ static int fbcon_set_font(struct vc_data
- 	    h > FBCON_SWAP(info->var.rotate, info->var.yres, info->var.xres))
- 		return -EINVAL;
- 
--	if (font->width > 32 || font->height > 32)
-+	if (font->width > FBCON_MAX_FONT_WIDTH || font->height > FBCON_MAX_FONT_HEIGHT)
- 		return -EINVAL;
- 
- 	/* Make sure drawing engine can handle the font */
--	if (!(info->pixmap.blit_x & BIT(font->width - 1)) ||
--	    !(info->pixmap.blit_y & BIT(font->height - 1)))
-+	if (!(info->pixmap.blit_x & BIT_ULL(font->width - 1)) ||
-+	    !(info->pixmap.blit_y & BIT_ULL(font->height - 1)))
- 		return -EINVAL;
- 
- 	/* Make sure driver can handle the font length */
-@@ -3084,8 +3087,8 @@ void fbcon_get_requirement(struct fb_inf
- 			vc = vc_cons[i].d;
- 			if (vc && vc->vc_mode == KD_TEXT &&
- 			    info->node == con2fb_map[i]) {
--				caps->x |= 1 << (vc->vc_font.width - 1);
--				caps->y |= 1 << (vc->vc_font.height - 1);
-+				caps->x |= 1ULL << (vc->vc_font.width - 1);
-+				caps->y |= 1ULL << (vc->vc_font.height - 1);
- 				charcnt = vc->vc_font.charcount;
- 				if (caps->len < charcnt)
- 					caps->len = charcnt;
-@@ -3096,8 +3099,8 @@ void fbcon_get_requirement(struct fb_inf
- 
- 		if (vc && vc->vc_mode == KD_TEXT &&
- 		    info->node == con2fb_map[fg_console]) {
--			caps->x = 1 << (vc->vc_font.width - 1);
--			caps->y = 1 << (vc->vc_font.height - 1);
-+			caps->x = 1ULL << (vc->vc_font.width - 1);
-+			caps->y = 1ULL << (vc->vc_font.height - 1);
- 			caps->len = vc->vc_font.charcount;
- 		}
- 	}
-Index: linux-6.4/include/linux/fb.h
-===================================================================
---- linux-6.4.orig/include/linux/fb.h
-+++ linux-6.4/include/linux/fb.h
-@@ -143,8 +143,8 @@ struct fb_event {
- };
- 
- struct fb_blit_caps {
--	u32 x;
--	u32 y;
-+	u64 x;
-+	u64 y;
- 	u32 len;
- 	u32 flags;
- };
-@@ -191,10 +191,10 @@ struct fb_pixmap {
- 	u32 scan_align;		/* alignment per scanline		*/
- 	u32 access_align;	/* alignment per read/write (bits)	*/
- 	u32 flags;		/* see FB_PIXMAP_*			*/
--	u32 blit_x;             /* supported bit block dimensions (1-32)*/
--	u32 blit_y;             /* Format: blit_x = 1 << (width - 1)    */
-+	u64 blit_x;             /* supported bit block dimensions (1-64)*/
-+	u64 blit_y;             /* Format: blit_x = 1 << (width - 1)    */
- 	                        /*         blit_y = 1 << (height - 1)   */
--	                        /* if 0, will be set to 0xffffffff (all)*/
-+	                        /* if 0, will be set to ~0ull (all)     */
- 	/* access methods */
- 	void (*writeio)(struct fb_info *info, void __iomem *dst, void *src, unsigned int size);
- 	void (*readio) (struct fb_info *info, void *dst, void __iomem *src, unsigned int size);
+     Andrew
