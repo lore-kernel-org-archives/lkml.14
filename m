@@ -1,241 +1,280 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069EF7829D;
-	Tue, 12 Mar 2024 10:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C1879DA2
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 10:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710237787; cv=none; b=lbesOfs1cSlScip5j/JZJQNaqWHve69w5QCfelPJhayf290FI2IgtN486TPuvpVdi16q1mgGE3hUcSya8jEVdjm8XbYjVorq06KKsAxkeal4KSVc1/Nc8E3569VvQbcF8YX+T/Hdcl3gEb2nl3xaduB0oFC0ssQvclJQkn8KtGI=
+	t=1710237811; cv=none; b=aKIjHHXN49J5tuf8I1zfQOoSyqqgS4rsc21frxyMj+6D/SLBM3Mw6szXaXnVBMwYayP9QOOtrYwIu1nS530fgOlxSpwiWd5SQnfA9kzxP2qJhNX1nXYDnfFpcKibN6FQo6XBQo8a0U0OJjXrQNIdrKAXlcGFE6nyDcsO7ZoXfZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710237787; c=relaxed/simple;
-	bh=249ZGn4BE9htNKBoj8llhjX2MzBSgpbivI7X+Y/yvVk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=URzmHevUVIVYczvZt+7YVi2ualXhBfbo9pAaY6hjUF9WnI7P2mxP8bjAtXZamaD0RZSbXTnLlbrjMsDrdmrx98Sk4SdIwdOFs48T7Zav0KSNRaSRwngK3mJrP+1qcZi6IBc8OyqcxQGRIfkxJEAvR/BQvXRZHFXCTOFz6bJv3ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A6JRylvm; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1710237811; c=relaxed/simple;
+	bh=DbcSmcTIJFR29lweI8AtpPtEE/MH4RA8MyskSm4u9lg=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=F7DpLrwbc7a7FR5yg6HyrhE6ePAJVXSkO6dDGQFzRjlyhYyLooaaZo5/Oeimq5NVc1Wt8SXTNDAoi5IRM4uxU/iOrnL/XxKZKB1ta0RyzFMx3uGMbtHYUTcxUX3kfl7UGFot8Te9xXG8M/N2XvHuvzt/N5PorLxw6Zmkn8NHnqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gj/i2jSd; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A6JRylvm"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42CA2b6c069610;
-	Tue, 12 Mar 2024 05:02:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710237757;
-	bh=02sImaHjoAV++OabbNTfByzAPJa8J1uHfv2lN7VFlkU=;
-	h=From:To:CC:Subject:Date;
-	b=A6JRylvmZzfKVmHSMBrxr3Vj3zu5Cie2TJXdYxv6F6t26aQpYyuht8apkHuXKKVBW
-	 BLsuEkWy4i4Jvf3nDjV3DzH2zvNKWtQ5iP5lNEoL9vCLyHpMxmzmvIRMxgHEjU/x44
-	 46HWPp+qECc8/v0Xh+83t5WijC3Y4jZy03RYLcGk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42CA2aSx080792
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 12 Mar 2024 05:02:37 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 12
- Mar 2024 05:02:36 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 12 Mar 2024 05:02:36 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42CA2ZE6075040;
-	Tue, 12 Mar 2024 05:02:36 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Chintan Vankar
-	<c-vankar@ti.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "Grygorii
- Strashko" <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>, "Roger
- Quadros" <rogerq@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-        "Eric
- Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH v2 1/3] net: ethernet: ti: am65-cpts: Enable PTP RX HW timestamp using CPTS FIFO
-Date: Tue, 12 Mar 2024 15:32:31 +0530
-Message-ID: <20240312100233.941763-1-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gj/i2jSd"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412f1961101so40342845e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 03:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710237806; x=1710842606; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6NBK9GZFZcA1mqhksqU9TzRXZJpQpDT2fBbPUtZjzY=;
+        b=gj/i2jSdnJjGhnZMJgjD/irGXqvu0njamlmF6D+AY223zvgj8njALaADf23EgOuZjk
+         TTNRRldDxmCNd9DNNSn7IvXraaQhXjBmIMB639Hkasy8r9AUAyHsYEpjQOixtksjFBfe
+         sKo7De9izcoqxJY+N9SEgzBzOnwRUCHqT5M7GjBDqjo1pGsv2fYGNraw5KqqZ3guIHr4
+         86BZJTokZLK1AnXN4N9Hvbd6jk/1jVN0ZxjkxPMLxl2aCzgfP0/MbE4CoY+VnRLDr+AU
+         u8FsZb/QpqyKVPh65QllE0eyAU3mvwbR5aGfgW/tRYNYugN8leRQGIZdaG7hR9GvP6VH
+         M8WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710237806; x=1710842606;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+6NBK9GZFZcA1mqhksqU9TzRXZJpQpDT2fBbPUtZjzY=;
+        b=Ye+2FEKFJhCJ0mgLp2xIQeZRW0KCbRFvtXU/ahlvR5ww5zI8Xycpx72+53HOsMzA/9
+         bd5K/YqjwtDV7Bk//Vpv/hYAlvCvREkclxubgaI5CLzbdjv9lmw1GNLVEMM6ATOWoCFD
+         bIPiCbQOvdbU5BfQMBPWyc/kfIwd4Ew8wUfDCCpcZKvt2hw9MyCIxIwNBNLLwQ4MVTfU
+         C4CLTq3Pyn1aMRZ8jjPswkGgNe0pKhRGcE4zffghiSuTbs6tqphR0S+c0+bJGBT2eXC6
+         Jg4vxBRnPLD4EVmsd1ripXGoz47S/5qIJNyQQ1uBA5z9gqgB05ebzJenePh+OeYHW5c/
+         KZZg==
+X-Forwarded-Encrypted: i=1; AJvYcCViCIWEtURtDEdpGDeDdwvbZblsP7/QXuvE8UEvp/vluXXFaSFscmlzOLIgL3pIs6k7aiiesUNOVNX44Hey0y0EYt1mSxrtg16WLScZ
+X-Gm-Message-State: AOJu0Yx5ZhuXuey6qMsyAxri1eU9X5eQi+K20dyGuBWIhY4fUVTi+Du5
+	5W3wAgjocmlQDsKry0qQEd1yWFJDV8dGjz7CwufzEELyJqFiylQ9Hj1QEj+1S5c=
+X-Google-Smtp-Source: AGHT+IFwmAwXZJLUTdK6OfZHgdYWyHu7gnRIhGHS72jZJ+Xk3H6cq0glt8xuBj/czyH8RrBJrrq57g==
+X-Received: by 2002:a05:600c:4f0f:b0:413:117e:fd4a with SMTP id l15-20020a05600c4f0f00b00413117efd4amr6520264wmq.3.1710237805350;
+        Tue, 12 Mar 2024 03:03:25 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:af7b:cf60:208b:83f4])
+        by smtp.gmail.com with ESMTPSA id h2-20020a056000000200b0033e433cb471sm8660214wrx.79.2024.03.12.03.03.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 03:03:24 -0700 (PDT)
+References: <20240312-basic_dt-v1-0-7f11df3a0896@amlogic.com>
+ <20240312-basic_dt-v1-3-7f11df3a0896@amlogic.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: xianwei.zhao@amlogic.com
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Jerome Brunet
+ <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 3/4] arm64: dts: add support for A4 based Amlogic BA400
+Date: Tue, 12 Mar 2024 10:55:46 +0100
+In-reply-to: <20240312-basic_dt-v1-3-7f11df3a0896@amlogic.com>
+Message-ID: <1jsf0vephv.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-CPTS module supports capturing timestamp for every packet it receives,
-add a new function named "am65_cpts_rx_find_ts()" to get the timestamp
-of received packets from CPTS FIFO.
 
-Add another function named "am65_cpts_rx_timestamp()" which internally
-calls "am65_cpts_rx_find_ts()" function and timestamps the received
-PTP packets.
+On Tue 12 Mar 2024 at 17:18, Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
 
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>
+> Amlogic A4 is an application processor designed for smart audio
+> and IoT applications.
+>
+> Add basic support for the A4 based Amlogic BA400 board, which describes
+> the following components: CPU, GIC, IRQ, Timer and UART.
+> These are capable of booting up into the serial console.
+>
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile               |  1 +
+>  .../boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts   | 43 ++++++++++
+>  arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 99 ++++++++++++++++++++++
+>  3 files changed, 143 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 1ab160bf928a..9a50ec11bb8d 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_MESON) += amlogic-a4-a113l2-ba400.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += amlogic-c3-c302x-aw409.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-an400.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-khadas-vim4.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts b/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts
+> new file mode 100644
+> index 000000000000..60f9f23858c6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "amlogic-a4.dtsi"
 
-Changes from v1 to v2:
-- Add skb_reset_mac_header() in am65_cpts_rx_timestamp() to configure
-  skb MAC header properties for packets which are to be timestamped.
+Could you describe how the a4 and a5 differs from each other ?
+The description given in the commit description is the same.
 
- drivers/net/ethernet/ti/am65-cpts.c | 89 +++++++++++++++++++++--------
- drivers/net/ethernet/ti/am65-cpts.h | 11 ++--
- 2 files changed, 72 insertions(+), 28 deletions(-)
+Beside the a53 vs a55, I'm not seeing much of a difference.
+Admittedly, there is not much yet but I wonder if a4 and a5 should have
+a common dtsi.
 
-diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index c66618d91c28..6c1d571c5e0b 100644
---- a/drivers/net/ethernet/ti/am65-cpts.c
-+++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -859,29 +859,6 @@ static long am65_cpts_ts_work(struct ptp_clock_info *ptp)
- 	return delay;
- }
- 
--/**
-- * am65_cpts_rx_enable - enable rx timestamping
-- * @cpts: cpts handle
-- * @en: enable
-- *
-- * This functions enables rx packets timestamping. The CPTS can timestamp all
-- * rx packets.
-- */
--void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
--{
--	u32 val;
--
--	mutex_lock(&cpts->ptp_clk_lock);
--	val = am65_cpts_read32(cpts, control);
--	if (en)
--		val |= AM65_CPTS_CONTROL_TSTAMP_EN;
--	else
--		val &= ~AM65_CPTS_CONTROL_TSTAMP_EN;
--	am65_cpts_write32(cpts, val, control);
--	mutex_unlock(&cpts->ptp_clk_lock);
--}
--EXPORT_SYMBOL_GPL(am65_cpts_rx_enable);
--
- static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
- {
- 	unsigned int ptp_class = ptp_classify_raw(skb);
-@@ -906,6 +883,72 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
- 	return 1;
- }
- 
-+static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, struct sk_buff *skb,
-+				int ev_type, u32 skb_mtype_seqid)
-+{
-+	struct list_head *this, *next;
-+	struct am65_cpts_event *event;
-+	unsigned long flags;
-+	u32 mtype_seqid;
-+	u64 ns = 0;
-+
-+	am65_cpts_fifo_read(cpts);
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_for_each_safe(this, next, &cpts->events) {
-+		event = list_entry(this, struct am65_cpts_event, list);
-+		if (time_after(jiffies, event->tmo)) {
-+			list_del_init(&event->list);
-+			list_add(&event->list, &cpts->pool);
-+			continue;
-+		}
-+
-+		mtype_seqid = event->event1 &
-+			      (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
-+			       AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
-+			       AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
-+
-+		if (mtype_seqid == skb_mtype_seqid) {
-+			ns = event->timestamp;
-+			list_del_init(&event->list);
-+			list_add(&event->list, &cpts->pool);
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+
-+	return ns;
-+}
-+
-+void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb)
-+{
-+	struct am65_cpts_skb_cb_data *skb_cb = (struct am65_cpts_skb_cb_data *)skb->cb;
-+	struct skb_shared_hwtstamps *ssh;
-+	int ret;
-+	u64 ns;
-+
-+	/* am65_cpts_rx_timestamp() is called before eth_type_trans(), so
-+	 * skb MAC Hdr properties are not configured yet. Hence need to
-+	 * reset skb MAC header here
-+	 */
-+	skb_reset_mac_header(skb);
-+	ret = am65_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
-+	if (!ret)
-+		return; /* if not PTP class packet */
-+
-+	skb_cb->skb_mtype_seqid |= (AM65_CPTS_EV_RX << AM65_CPTS_EVENT_1_EVENT_TYPE_SHIFT);
-+
-+	dev_dbg(cpts->dev, "%s mtype seqid %08x\n", __func__, skb_cb->skb_mtype_seqid);
-+
-+	ns = am65_cpts_find_rx_ts(cpts, skb, AM65_CPTS_EV_RX, skb_cb->skb_mtype_seqid);
-+	if (!ns)
-+		return;
-+
-+	ssh = skb_hwtstamps(skb);
-+	memset(ssh, 0, sizeof(*ssh));
-+	ssh->hwtstamp = ns_to_ktime(ns);
-+}
-+EXPORT_SYMBOL_GPL(am65_cpts_rx_timestamp);
-+
- /**
-  * am65_cpts_tx_timestamp - save tx packet for timestamping
-  * @cpts: cpts handle
-diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
-index 6e14df0be113..6099d772799d 100644
---- a/drivers/net/ethernet/ti/am65-cpts.h
-+++ b/drivers/net/ethernet/ti/am65-cpts.h
-@@ -22,9 +22,9 @@ void am65_cpts_release(struct am65_cpts *cpts);
- struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
- 				   struct device_node *node);
- int am65_cpts_phc_index(struct am65_cpts *cpts);
-+void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
--void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
- u64 am65_cpts_ns_gettime(struct am65_cpts *cpts);
- int am65_cpts_estf_enable(struct am65_cpts *cpts, int idx,
- 			  struct am65_cpts_estf_cfg *cfg);
-@@ -48,17 +48,18 @@ static inline int am65_cpts_phc_index(struct am65_cpts *cpts)
- 	return -1;
- }
- 
--static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
-+static inline void am65_cpts_rx_timestamp(struct am65_cpts *cpts,
- 					  struct sk_buff *skb)
- {
- }
- 
--static inline void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts,
--					       struct sk_buff *skb)
-+static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
-+					  struct sk_buff *skb)
- {
- }
- 
--static inline void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
-+static inline void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts,
-+					       struct sk_buff *skb)
- {
- }
- 
+> +
+> +/ {
+> +	model = "Amlogic A113L2 ba400 Development Board";
+> +	compatible = "amlogic,ba400","amlogic,a4";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uart_b;
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x40000000>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		/* 52 MiB reserved for ARM Trusted Firmware */
+
+That's a lot of memory to blindly reserve.
+Any chance we can stop doing that and have u-boot amend reserved memory
+zone based on the actual needs of the device ?
+
+> +		secmon_reserved:linux,secmon {
+> +			compatible = "shared-dma-pool";
+> +			no-map;
+> +			alignment = <0x0 0x400000>;
+> +			reg = <0x0 0x05000000 0x0 0x3400000>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart_b {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> new file mode 100644
+> index 000000000000..7e8745010b52
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> @@ -0,0 +1,99 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +/ {
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+
+Really ? still on the that old version ?
+
+> +		method = "smc";
+> +	};
+> +
+> +	xtal: xtal-clk {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "xtal";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		gic: interrupt-controller@fff01000 {
+> +			compatible = "arm,gic-400";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+> +			interrupt-controller;
+> +			reg = <0x0 0xfff01000 0 0x1000>,
+> +			      <0x0 0xfff02000 0 0x2000>,
+> +			      <0x0 0xfff04000 0 0x2000>,
+> +			      <0x0 0xfff06000 0 0x2000>;
+> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +		};
+> +
+> +		apb@fe000000 {
+> +			compatible = "simple-bus";
+> +			reg = <0x0 0xfe000000 0x0 0x480000>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x480000>;
+> +
+> +			uart_b: serial@7a000 {
+> +				compatible = "amlogic,meson-s4-uart",
+> +					     "amlogic,meson-ao-uart";
+> +				reg = <0x0 0x7a000 0x0 0x18>;
+> +				interrupts = <GIC_SPI 169 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&xtal>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+> +		};
+> +	};
+> +};
+
+
 -- 
-2.34.1
-
+Jerome
