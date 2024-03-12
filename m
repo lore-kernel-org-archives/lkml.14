@@ -1,213 +1,248 @@
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0DC78298;
-	Tue, 12 Mar 2024 14:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D758AD4;
+	Tue, 12 Mar 2024 14:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710252591; cv=none; b=npI5Jv31xthhe0ZwzTZsGKPU3DvpSF4uApRSgCSlPh/fly8Fe/h6XB7zxwqWHP7ehw4MjboUMovC1KlHMNJZNHkWwKwWt2826iqiPV/mhJG7cvVgC/twCkv6wWdqwXYHxC0/lZmMl7bvkgkibBsXfOyyeAsAItfls0SkYbf7iIg=
+	t=1710252708; cv=none; b=GRRMMs6HwdS2bwY6ZiO0YnqWJufcOhbmCy9mllSMrMs1YAVt4JM3m3ma0mlLXznyyGIshM5gSYIce5pFLDNTR6JJ7pi5uroefCNOCX6bntOwSHzIafPQBiuOmmJzcolbSjMBk5vAb2wNiSdHCVmUj+HDbJS1tijnS6C0bLwUo9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710252591; c=relaxed/simple;
-	bh=8P9bBzn3Aiha2NlQ/uegJyJ6edLvB2HNcbKt6Yo0QCA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=rUBmPx4eDz17w4RoUQyClVrAEclT213+SE4frAAYbQmKLljc2T6jvizpJN4heIpEdoVWjz55LpPh9LjdA1Hdk4TZ19DBsVN8yID0jJctlOKX5Aau844AyjlS8GRaa7GvQJcqnbyc+tFnDr5xnaWkuKSA+UxL9wkkgEBCv1pQlX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=QWjwyvsS; arc=none smtp.client-ip=194.87.146.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1710252708; c=relaxed/simple;
+	bh=hpk/qMl6bJ8R4kXVvpMSCJMeC9KLpt9ro1qhKIzk9r4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FtMLO9epZcYPx3e40JoRj/5+45XSe2WuyzvL4pEv9VWx4NuQin5erY+yc5jJqZRRoD7vwQHWrY2/iWXINL/djxWq5DuhvudNpuA+GqUov/qGknBJJVURx3xS+qxiurXGbph2hLsEpvK1OdTDgMVxetAWiakuIcoPU4pE3AbUFfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=K+/mmyJO; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="QWjwyvsS"
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id ADAF9408C7;
-	Tue, 12 Mar 2024 19:09:42 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1710252585; bh=8P9bBzn3Aiha2NlQ/uegJyJ6edLvB2HNcbKt6Yo0QCA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QWjwyvsS3OHgWeuVCVlmpOLn+PYcSzXv7QExbowRLcra89t3IzEpT3AyZzyNEW8ll
-	 76zOUsAGI5zoV1lMR1e8YKN0hl+4qjyoLPCWMAg90TEeR0I8o6Qw5JfviGREejVU6Z
-	 z6Kr+lDapyusG6nTdDEHK8CehBIiA+jbpJU+tD0p7ZoWltti0F9mkOZHud6kkwEXVt
-	 sUpFqq3qAKzdsX1pBU44Uns57Fa+Sp1KZNJAIvThV33Oib2I26gjTGJdIjXAQE3tuu
-	 lunauIGW3GHVZxhdKkGhVS/KrJLcxHLHQ93ViAts1twx6KVxsKq+hN2bsliZjcl5MH
-	 M1HJFyG9xPVgA==
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="K+/mmyJO"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1710252702; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=hMXHxPYE/bFxI+Al/MR6iqYqKg8ejsTGgWPkQD/Dibk=;
+	b=K+/mmyJO+ny/EUH679X5e7cHmsKxhjKV4r6U+o5FnEKlzL6cOvlLbgdaFXDHkIpoT6uJNLjmY59b18KmE2AyYzoJxu7CW2ETxOWOvtsf48wR0erpTfvEsql/9Y0wKn8XS90J9rEWnhT7Nn6ST89L1EUvNLU/25abEEqAZcyI5qI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W2MAPD._1710252700;
+Received: from 30.221.129.234(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W2MAPD._1710252700)
+          by smtp.aliyun-inc.com;
+          Tue, 12 Mar 2024 22:11:42 +0800
+Message-ID: <d8d657d4-c55b-44bd-a234-4b9c7cdad7cf@linux.alibaba.com>
+Date: Tue, 12 Mar 2024 22:11:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 12 Mar 2024 19:09:39 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] platform: arm64: Add Acer Aspire 1 embedded
- controller driver
-In-Reply-To: <104ae92c-e9ef-494e-b33e-351210c93846@linaro.org>
-References: <20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru>
- <20240312-aspire1-ec-v4-3-bd8e3eea212f@trvn.ru>
- <f62bbc98-12c1-48e1-8ebc-17dd5887026a@linaro.org>
- <84b4d83f3340402e98fe0e70afd085be@trvn.ru>
- <104ae92c-e9ef-494e-b33e-351210c93846@linaro.org>
-Message-ID: <a25602fa7e11322800d9430d353172b8@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 11/11] net/smc: implement DMB-merged
+ operations of loopback-ism
+To: Jan Karcher <jaka@linux.ibm.com>, wintera@linux.ibm.com,
+ twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+ agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20240307095536.29648-1-guwen@linux.alibaba.com>
+ <20240307095536.29648-12-guwen@linux.alibaba.com>
+ <36141145-6838-45eb-a6d6-1c052b6fb076@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <36141145-6838-45eb-a6d6-1c052b6fb076@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Bryan O'Donoghue писал(а) 12.03.2024 17:44:
-> On 12/03/2024 12:23, Nikita Travkin wrote:
->> Bryan O'Donoghue писал(а) 12.03.2024 16:58:
->>> On 12/03/2024 08:42, Nikita Travkin wrote:
->>>> Acer Aspire 1 is a Snapdragon 7c based laptop. It uses an embedded
->>>> controller to perform a set of various functions, such as:
->>>>
->>>> - Battery and charger monitoring;
->>>> - Keyboard layout control (i.e. fn_lock settings);
->>>> - USB Type-C DP alt mode HPD notifications;
->>>> - Laptop lid status.
->>>>
->>>> Unfortunately, while all this functionality is implemented in ACPI, it's
->>>> currently not possible to use ACPI to boot Linux on such Qualcomm
->>>> devices. To allow Linux to still support the features provided by EC,
->>>> this driver reimplments the relevant ACPI parts. This allows us to boot
->>>> the laptop with Device Tree and retain all the features.
->>>>
->>>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->>>> ---
->>>>    drivers/platform/arm64/Kconfig           |  16 +
->>>>    drivers/platform/arm64/Makefile          |   2 +
->>>>    drivers/platform/arm64/acer-aspire1-ec.c | 555 +++++++++++++++++++++++++++++++
->>>
->>> You should be listing yourself as a maintainer for a driver you contribute.
+
+
+On 2024/3/12 16:06, Jan Karcher wrote:
+> 
+> 
+> On 07/03/2024 10:55, Wen Gu wrote:
+>> This implements operations related to merging sndbuf with peer DMB in
+>> loopback-ism. The DMB won't be freed until no sndbuf is attached to it.
+> 
+> Hi Wen Gu,
+> 
+> while I'm still reviewing let me drop a lockdep finding.
+> 
 >>
->> I always believed that being in the AUTHOR() at the bottom of the driver
->> would guarantee me being in CC for patches, which so far worked great,
->> thus I was always hesitent adding extra entries in MAINTAINERS.
-> 
-> There's no such rule that I'm aware of there.
-> 
-> scripts/get_maintainer.pl won't list a driver author for the CC list
-> 
-> This is a substantial body of code, you should own it upstream.
-> 
-
-Hm, ack, will add an entry in MAINTAINERS for this.
-
->>>> +	case ASPIRE_EC_EVENT_FG_INF_CHG:
->>>> +		/* Notify (\_SB.I2C3.BAT1, 0x81) // Information Change */
->>>
->>> fallthrough;
->>>
+>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>> ---
+>>   net/smc/smc_loopback.c | 136 +++++++++++++++++++++++++++++++++++------
+>>   net/smc/smc_loopback.h |   3 +
+>>   2 files changed, 119 insertions(+), 20 deletions(-)
 >>
->> Hm I believe this would not warn since it's just two values for the same
->> code, just with an extra comment inbetween?
+>> diff --git a/net/smc/smc_loopback.c b/net/smc/smc_loopback.c
+>> index 6828e0ad3e90..7e772f3772de 100644
+>> --- a/net/smc/smc_loopback.c
+>> +++ b/net/smc/smc_loopback.c
 > 
-> True
->
+> [...]
+> 
+>> @@ -170,8 +249,22 @@ static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
+>>   {
+>>       struct smc_lo_dmb_node *rmb_node = NULL, *tmp_node;
+>>       struct smc_lo_dev *ldev = smcd->priv;
+>> -
+>> -    read_lock(&ldev->dmb_ht_lock);
+>> +    struct smc_connection *conn;
+>> +
+>> +    if (!sf)
+>> +        /* since sndbuf is merged with peer DMB, there is
+>> +         * no need to copy data from sndbuf to peer DMB.
+>> +         */
+>> +        return 0;
+>> +
+>> +    /* read_lock_bh() is used here just to make lockdep
+>> +     * happy, because spin_(un)lock_bh(&conn->send_lock) wraps
+>> +     * smc_lo_move_data() and if we use read_lock() here, lockdep
+>> +     * will complain about SOFTIRQ-safe -> SOFTIRQ-unsafe lock
+>> +     * order detected, but in fact ldev->dmb_ht_lock will never
+>> +     * be held in bh context.
+>> +     */
+>> +    read_lock_bh(&ldev->dmb_ht_lock);
+>>       hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_tok) {
+>>           if (tmp_node->token == dmb_tok) {
+>>               rmb_node = tmp_node;
+>> @@ -182,19 +275,14 @@ static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
+>>           read_unlock(&ldev->dmb_ht_lock);
+>>           return -EINVAL;
+>>       }
+>> -    read_unlock(&ldev->dmb_ht_lock);
+>> +    read_unlock_bh(&ldev->dmb_ht_lock);
+>>       memcpy((char *)rmb_node->cpu_addr + offset, data, size);
+>> -    if (sf) {
+>> -        struct smc_connection *conn =
+>> -            smcd->conn[rmb_node->sba_idx];
+>> -
+>> -        if (conn && !conn->killed)
+>> -            smcd_cdc_rx_handler(conn);
+>> -        else
+>> -            return -EPIPE;
+>> -    }
+>> +    conn = smcd->conn[rmb_node->sba_idx];
+>> +    if (!conn || conn->killed)
+>> +        return -EPIPE;
+>> +    smcd_cdc_rx_handler(conn);
+> 
+> [ 2385.528515] ============================================
+> [ 2385.528517] WARNING: possible recursive locking detected
+> [ 2385.528519] 6.8.0-loopback_ism-g30af186e8a18-dirty #12 Not tainted
+> [ 2385.528521] --------------------------------------------
+> [ 2385.528522] smcapp/51326 is trying to acquire lock:
+> [ 2385.528524] 000000018707a128 (&smc->conn.send_lock){+...}-{2:2}, at: smc_tx_sndbuf_nonempty+0xba/0x1c0 [smc]
+> [ 2385.528552]
+>                 but task is already holding lock:
+> [ 2385.528554] 0000000187078728 (&smc->conn.send_lock){+...}-{2:2}, at: smc_cdc_get_slot_and_msg_send+0x66/0xa0 [smc]
+> [ 2385.528568]
+>                 other info that might help us debug this:
+> [ 2385.528570]  Possible unsafe locking scenario:
+> 
+> [ 2385.528572]        CPU0
+> [ 2385.528573]        ----
+> [ 2385.528574]   lock(&smc->conn.send_lock);
+> [ 2385.528576]   lock(&smc->conn.send_lock);
+> [ 2385.528579]
+>                  *** DEADLOCK ***
+> 
+> [ 2385.528580]  May be due to missing lock nesting notation
+> 
+> [ 2385.528582] 3 locks held by smcapp/51326:
+> [ 2385.528584]  #0: 0000000187078378 (sk_lock-AF_SMC){+.+.}-{0:0}, at: smc_recvmsg+0x3c/0x2b0 [smc]
+> [ 2385.528598]  #1: 0000000187078728 (&smc->conn.send_lock){+...}-{2:2}, at: smc_cdc_get_slot_and_msg_send+0x66/0xa0 [smc]
+> [ 2385.528613]  #2: 0000000187079ce8 (slock-AF_SMC){+...}-{2:2}, at: smc_cdc_msg_recv+0x56/0xe0 [smc]
+> [ 2385.528627]
+>                 stack backtrace:
+> [ 2385.528660] CPU: 3 PID: 51326 Comm: smcapp Not tainted 6.8.0-loopback_ism-g30af186e8a18-dirty #12
+> [ 2385.528663] Hardware name: IBM 3906 M04 704 (LPAR)
+> [ 2385.528664] Call Trace:
+> [ 2385.528666]  [<000000012db60788>] dump_stack_lvl+0x90/0x120
+> [ 2385.528671]  [<000000012cc6d088>] validate_chain+0x560/0x960
+> [ 2385.528677]  [<000000012cc6f644>] __lock_acquire+0x654/0xd58
+> [ 2385.528680]  [<000000012cc70a04>] lock_acquire.part.0+0xec/0x260
+> [ 2385.528683]  [<000000012cc70c24>] lock_acquire+0xac/0x170
+> [ 2385.528687]  [<000000012dba4ccc>] _raw_spin_lock_bh+0x5c/0xb0
+> [ 2385.528690]  [<000003ff80453b32>] smc_tx_sndbuf_nonempty+0xba/0x1c0 [smc]
+> [ 2385.528702]  [<000003ff8045428a>] smc_tx_pending+0x32/0x60 [smc]
+> [ 2385.528712]  [<000003ff80451f02>] smc_cdc_msg_recv_action+0x3c2/0x528 [smc]
+> [ 2385.528723]  [<000003ff804520cc>] smc_cdc_msg_recv+0x64/0xe0 [smc]
+> [ 2385.528734]  [<000003ff80452a4c>] smcd_cdc_rx_handler+0x64/0x70 [smc]
+> [ 2385.528745]  [<000003ff80459f7e>] smc_lo_move_data+0xde/0x100 [smc]
+> [ 2385.528755]  [<000003ff804533e0>] smcd_tx_ism_write+0x68/0x90 [smc]
+> [ 2385.528766]  [<000003ff804528a4>] smcd_cdc_msg_send+0x74/0x118 [smc]
+> [ 2385.528776]  [<000003ff804529b8>] smc_cdc_get_slot_and_msg_send+0x70/0xa0 [smc]
+> [ 2385.528788]  [<000003ff804543ec>] smc_tx_consumer_update+0xe4/0x1b0 [smc]
+> [ 2385.528798]  [<000003ff8045458e>] smc_rx_update_consumer+0x86/0x170 [smc]
+> [ 2385.528809]  [<000003ff80455ba8>] smc_rx_recvmsg+0x3b8/0x6e8 [smc]
+> [ 2385.528820]  [<000003ff804388a4>] smc_recvmsg+0xdc/0x2b0 [smc]
+> [ 2385.528831]  [<000000012d8a6d58>] sock_recvmsg+0x70/0xb0
+> [ 2385.528837]  [<000000012d8aa0c8>] __sys_recvfrom+0xa8/0x128
+> [ 2385.528840]  [<000000012d8ab3ca>] __do_sys_socketcall+0x1ca/0x398
+> [ 2385.528844]  [<000000012db8d4c4>] __do_syscall+0x244/0x308
+> [ 2385.528847]  [<000000012dba6140>] system_call+0x70/0x98
+> [ 2385.528850] INFO: lockdep is turned off.
+> 
+> 
+> I did not investigate deeper, yet. Just an early heads up that there might be something broken.
+> 
 
-(Adding anyway given Ilpo also thinks it's better than not)
-
->>>> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->>>> +		val->intval = le16_to_cpu(ddat.voltage_now) * 1000;
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
->>>> +		val->intval = le16_to_cpu(sdat.voltage_design) * 1000;
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
->>>> +		val->intval = le16_to_cpu(ddat.capacity_now) * 1000;
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_CHARGE_FULL:
->>>> +		val->intval = le16_to_cpu(sdat.capacity_full) * 1000;
->>>> +		break;
->>>
->>> You could stick this "* 1000" stuff in a macro
->>>
->>
->> acpi/battery.c also explicitly sets the multiplier so I think it's the
->> "common" way to do this.
-> 
-> common != nice
-> 
-> Purely aesthetics but anyway consider decomposing the replication down.
->
-
-(Adding a macro for this)
-
->>>> +
->>>> +	case POWER_SUPPLY_PROP_CAPACITY:
->>>> +		val->intval = le16_to_cpu(ddat.capacity_now) * 100;
->>>> +		val->intval /= le16_to_cpu(sdat.capacity_full);
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
->>>> +		val->intval = (s16)le16_to_cpu(ddat.current_now) * 1000;
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_PRESENT:
->>>> +		val->intval = !!(ddat.flags & ASPIRE_EC_FG_FLAG_PRESENT);
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_SCOPE:
->>>> +		val->intval = POWER_SUPPLY_SCOPE_SYSTEM;
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_MODEL_NAME:
->>>> +		if (sdat.model_id - 1 < ARRAY_SIZE(aspire_ec_bat_psy_battery_model))
->>>> +			val->strval = aspire_ec_bat_psy_battery_model[sdat.model_id - 1];
->>>> +		else
->>>> +			val->strval = "Unknown";
->>>> +		break;
->>>> +
->>>> +	case POWER_SUPPLY_PROP_MANUFACTURER:
->>>> +		if (sdat.vendor_id - 3 < ARRAY_SIZE(aspire_ec_bat_psy_battery_vendor))
->>>> +			val->strval = aspire_ec_bat_psy_battery_vendor[sdat.vendor_id - 3];
->>>
->>> How does this -3 offset not underflow ?
->>>
->>
->> vendor_id here is unsigned so the if check would actually overflow,
->> though explaining that I guess it's better to be explicit there and let
->> the compiler optimize that check away anyway... I will update the if
->> condition with an extra (id >= 3).
-> 
-> What's the "3" about though, that's what's not jumping out at me here.
-> 
-
-Ah, well... the 3 comes from a big if/elseif table in the decompiled dsdt
-which starts at 3... I will add a small comment near it.
-
->>
->>> Seems a bit dodgy to me - can you add a comment to the code to explain ? Its not immediately obvious the -3 is OK.
->>>
->>> Also could you take an index instead of replicating the -value stepdown each time ?
->>>
->>> int myindex = sdat.model_id - 1;
->>>
->>> if (myindex < someconstraint)
->>> 	strval = somearry[myindex];
->>>
->>
->> I decided against adding a dedicated index variable since there is only
->> one actual use for each, so it's easy to see where it goes.
-> 
-> But you do it twice which is why I'm suggesting take an index and do it once.
-> 
-> Then add
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-
-Ack, given there is also >0, will add str_index variable for the offset
-index.
+Thank you for reminding, Jan. I think it is because that I used smcd_cdc_rx_handler(),
+which may acquire conn->send_lock, in smc_lo_move_data() where the send_lock has been
+held. I reproduced this issue and will fix it in v3.
 
 Thanks!
-Nikita
+
+> Thank you
+> - Jan
+> 
+> 
+>>       return 0;
+>>   }
+>> @@ -226,6 +314,9 @@ static const struct smcd_ops lo_ops = {
+>>       .query_remote_gid = smc_lo_query_rgid,
+>>       .register_dmb = smc_lo_register_dmb,
+>>       .unregister_dmb = smc_lo_unregister_dmb,
+>> +    .support_dmb_nocopy = smc_lo_support_dmb_nocopy,
+>> +    .attach_dmb = smc_lo_attach_dmb,
+>> +    .detach_dmb = smc_lo_detach_dmb,
+>>       .add_vlan_id = smc_lo_add_vlan_id,
+>>       .del_vlan_id = smc_lo_del_vlan_id,
+>>       .set_vlan_required = smc_lo_set_vlan_required,
+>> @@ -304,12 +395,17 @@ static int smc_lo_dev_init(struct smc_lo_dev *ldev)
+>>       smc_lo_generate_id(ldev);
+>>       rwlock_init(&ldev->dmb_ht_lock);
+>>       hash_init(ldev->dmb_ht);
+>> +    atomic_set(&ldev->dmb_cnt, 0);
+>> +    init_waitqueue_head(&ldev->ldev_release);
+>> +
+>>       return smcd_lo_register_dev(ldev);
+>>   }
+>>   static void smc_lo_dev_exit(struct smc_lo_dev *ldev)
+>>   {
+>>       smcd_lo_unregister_dev(ldev);
+>> +    if (atomic_read(&ldev->dmb_cnt))
+>> +        wait_event(ldev->ldev_release, !atomic_read(&ldev->dmb_cnt));
+>>   }
+>>   static void smc_lo_dev_release(struct device *dev)
+>> diff --git a/net/smc/smc_loopback.h b/net/smc/smc_loopback.h
+>> index 24ab9d747613..9156a6c37e65 100644
+>> --- a/net/smc/smc_loopback.h
+>> +++ b/net/smc/smc_loopback.h
+>> @@ -30,6 +30,7 @@ struct smc_lo_dmb_node {
+>>       u32 sba_idx;
+>>       void *cpu_addr;
+>>       dma_addr_t dma_addr;
+>> +    refcount_t refcnt;
+>>   };
+>>   struct smc_lo_dev {
+>> @@ -37,9 +38,11 @@ struct smc_lo_dev {
+>>       struct device dev;
+>>       u16 chid;
+>>       struct smcd_gid local_gid;
+>> +    atomic_t dmb_cnt;
+>>       rwlock_t dmb_ht_lock;
+>>       DECLARE_BITMAP(sba_idx_mask, SMC_LO_MAX_DMBS);
+>>       DECLARE_HASHTABLE(dmb_ht, SMC_LO_DMBS_HASH_BITS);
+>> +    wait_queue_head_t ldev_release;
+>>   };
+>>   #endif
