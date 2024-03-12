@@ -1,210 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9143E13B2BF;
-	Tue, 12 Mar 2024 21:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710279687; cv=fail; b=FKjD0zARYWDIuR9VViMLJXmNC/Xnvky1AB7P4y/WTqP9s/UK90zopjiWXevAfOBlbmFkWBgAYPbvoha5RQOk7PCLfuN4q3NlBovJHJXz99St04RxmSV+/I5nvXvklTJtwNbC0pvzgMbfTBxaX9rH7nrpr3Uu5VogguM7/llwhaY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710279687; c=relaxed/simple;
-	bh=yp1FsAIYMQg5mtWNuUPFteSRu7tKeRqYIk00S2yN9v0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HtDKuedbRmEMZq1xdEodeG3afkwecpzFQU3xm/H0eKJTq9KbyTYej4ZPciGd+3MXL0bHTgoi3SyuGzb5Pxajk/EJteORK5H9VkhU/hzHWTYM1lqB0ga2Krdbpk5cbtdeGZJQGELsh4+PoOThz1Q9Zvw7JnRZ8cuhHO2Ifbe1mTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=exWmKvuS; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0359613B2BF;
+	Tue, 12 Mar 2024 21:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710279763; cv=none; b=iu7nZl9M2RO50W9/ombIRB+chMoU7AneFbpYaeMQ/F/EOXjqtUUFU5tROFpCQjSPyhufEO9E+sqVVakHXhTqiK8gWgROnkd0g0TDbfedQwlMMC7C0aUPvu0AAze2MLbit+WGVTTtxUjpldkbi6wfOoXCVBokEBQJqVfSrMb5AnU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710279763; c=relaxed/simple;
+	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJ661UC9522zhw1rV28SqkUerTNuA8VTJUbpMauBsPcZuPRrqBaxiCmt6bYwRrEM4+Eqcnt3ZjfDPSF9uJ1axnavj/QDHdSoXL9V2/cj1YWuLPBtiZly6R+mF6QYutJqOYstLZHK/y/nhjSbei9qVdU0gi2XJWeIWHezHxltb3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0k2xDwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="exWmKvuS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710279685; x=1741815685;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=yp1FsAIYMQg5mtWNuUPFteSRu7tKeRqYIk00S2yN9v0=;
-  b=exWmKvuSu4QdM0FLeGf0FAy0OIFLRe+b4Vn4sfzBa3sV5iSRBGz7NaLp
-   wr428drluM1b47mBA5sa6V5B3FlkfQyGWkQUV+PlvVag1pnoIRvowDxwj
-   SgPCG6RvBl2Pr5xpDBrWKO6WhQYQa4z1BdCjUN/8aB2pX/xryHC6y/ErN
-   Yuf5cqGzSRi1O/5FdgU9Q5KGTrBS6pFcmJRS4NtfcHmjKPMhWElisHZ8D
-   mYKD+5/BS9mrpJ7j+rAW+ZU4RaKrb9zicZmUAmM7PcYWvOlBkjT/XrcVT
-   4cXW3GmqTM4zZVoG8bqig6AOm51Asoc58HIV9LuCgGFO2fhR55ru60pem
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8830794"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="8830794"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:41:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="12143287"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Mar 2024 14:41:24 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 12 Mar 2024 14:41:22 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 12 Mar 2024 14:41:22 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 12 Mar 2024 14:41:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EtzVBiuLFIpj9Wczlr2rsOFlpaSPlgz4VXEOlDkw7abijgYQmDNZ4ET8h/PCHahU4OgS/Z9QzUtLn39NpfymKuS4ZggdbkO9bvCRKpFXpYJeDsOBGl9wcdhcQXFCZCHggo75IJbqARmIRTiSC7BFs1GSpDjEcvcKY1XvYnecARQU+zg/ZOdr2eqCNBMudj0xvHKY9JdTl0uXs2R/NEROGNoLnqKDTUkfr6O81K8nklGjji/cEWWlltzGVctAwgCVyH22360JUY9jUpGZQr/nmCfr7ZRL6dnaYOsVdmNCR2jc8Zm1upkgb0kEGuwIOpkDX08GRJug+g84XCd6sYz0MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yp1FsAIYMQg5mtWNuUPFteSRu7tKeRqYIk00S2yN9v0=;
- b=aup16H9X1oA1SE9GzUyYwh8sQGPLw+aI14M7TrYcihRARp+mkF4/vSI6VwqkEH8iI13GhGu7Q4UpZW6ErGBqO8jGygkRZWgpau4UeS6Sx76cVKO9ao2qA54O1pODTbk07ADLAJgrB31AHAAilfZBVkAUg/XL8vZ5Dbp+nRlUx+bacyuN5hfYa8d0XxSUWfC5/59LjSI93Vl7T0aDEAHrvH2guG+0OVjyhR5WuUwrFHgDxX99gyT+BWk5w0ks6txXa8FDtuaw1cFQJE1ZTuQjjSHGOjzl2i82fMZHN9QgBdDyMOfePGxrphQEOnT/DCMseoAelsmtEPW6fyjxJy9swQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by DS0PR11MB8018.namprd11.prod.outlook.com (2603:10b6:8:116::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Tue, 12 Mar
- 2024 21:41:11 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7386.015; Tue, 12 Mar 2024
- 21:41:11 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "seanjc@google.com" <seanjc@google.com>
-CC: "dmatlack@google.com" <dmatlack@google.com>, "federico.parola@polito.it"
-	<federico.parola@polito.it>, "isaku.yamahata@gmail.com"
-	<isaku.yamahata@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"michael.roth@amd.com" <michael.roth@amd.com>, "Yamahata, Isaku"
-	<isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 6/8] KVM: x86: Implement kvm_arch_{,
- pre_}vcpu_map_memory()
-Thread-Topic: [RFC PATCH 6/8] KVM: x86: Implement kvm_arch_{,
- pre_}vcpu_map_memory()
-Thread-Index: AQHaa/6D7nn573Vr+E2nz60+bAfcD7EzPxoAgADdMoCAABx4gIAAezgA
-Date: Tue, 12 Mar 2024 21:41:11 +0000
-Message-ID: <3c840ebd9b14d7a9abe0a563e2b6847273369dcd.camel@intel.com>
-References: <cover.1709288671.git.isaku.yamahata@intel.com>
-	 <66a957f4ec4a8591d2ff2550686e361ec648b308.1709288671.git.isaku.yamahata@intel.com>
-	 <Ze-TJh0BBOWm9spT@google.com>
-	 <6b38d1ea3073cdda0f106313d9f0e032345b8b75.camel@intel.com>
-	 <ZfBkle1eZFfjPI8l@google.com>
-In-Reply-To: <ZfBkle1eZFfjPI8l@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|DS0PR11MB8018:EE_
-x-ms-office365-filtering-correlation-id: 11391cef-7dc8-43f8-1dde-08dc42dd225c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mr3KDsPAFFdJf7MeziofdSTIlnWkEfD6XKJOW3lTiUGx4V+VYRS13HNCYEqN7or1dRTi3tzmnmrycAsWPBl403c9pPTD86dTM7auO9syKKgH7aM01m+e+YlfqZWx2FqxlrNDYEH/gwL9Sj8tFFU9XVUJ8LJ6sWfD2i+aR7DOuCg9UMEPcgtzLcXGvuf2X/iH68q4WKAKRmbdD/Z8vHxSDOLyTgZBJXCXiIDEoDJo+iV6kpfKCsQYSFeN2dOZPK/xd4owHFB1gnd1SNLho9iFPncc8t1VdXUM3FWEEmdUay610F7ZKKrvH9GLg+XJxh8N8S/iDlTaBa+92+C8aDT08wTpwEJG8iyupzuu+XAX4dKhspoGTTh4HKG/n51DcYScZaqxQ61TFFgI+opkjfxeyMMShXwEeIyKapxciM4uoRZxX9JXz8sekfobLLQEqaoW049pK4bNnkqC1C+lGWQdQLWlhW6LS09JYz0JG28oEDUI04ads9G1tzyRHmhSfZRwb63CI4G8hIWVXZGGEVtT0v+WCgItZUYNuR/NnvB8i5c+U5RairDdVGKFueNmv1rThhD179Dyd859lTQwXnt0Lozevc/lrN29/P5usuyUA3+HBYA+ZKGqgn1cuBAjjtRbmpgjqhkefGVURcGQze5hR6sEuVijjyBf5kH1WWiR9IA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NmxQQS9YdDY0ZFhPbDRZNmszZDhMbHlPTDE5eFI0ZlZWZ05PZHRlQWxFNDZO?=
- =?utf-8?B?cmZnTEJBa0V2OFFzTFZxTEpOM2ZDSkFlOUQwWXFzTnZhTzA3R1NzWlMyS0NW?=
- =?utf-8?B?R1Vac1lmRE9JZDFOZGpRSFJwSXNRaDRMbzl4N1BsQzI1bXRJU29BWVlxb21n?=
- =?utf-8?B?and2YkxkRDFCN1VseEFYQ0ZORlJqY1dtbk56MFFkYWE0a1Y2ZFhzYlFzc3lS?=
- =?utf-8?B?dmtEU1l1K21LMWJlT0FtRkpMVTNwRXlXMS9JaTFwQzBMSS9uREJUbnVNR3Iz?=
- =?utf-8?B?Q2hkZzdFdEJYNVhvdGcxMXFpT0FZVFpxc25pUmQ0a0FLRzRoR2JXNHMva1h3?=
- =?utf-8?B?aHF3b1V0VGJ5aXo2OU55WkdFSXNKczh5SW9tNi94QmdHRlFmSGlsVkp3ODRM?=
- =?utf-8?B?c1pzK2ZnZmVGRENzMnZ4S29OUUpNQmZLN1Z3K3oweS8xZmx3Q3N1bGsvNUsr?=
- =?utf-8?B?VjBqSFJ1d0dxSjZGWnBSL3JrSEhTQklFMlAzY1d3aWNWZ01VVzZJa3lPdldx?=
- =?utf-8?B?eTUyM21TZEdUdGFEY001alF3N2lqL0RNTElnaXl3TEtqZUxKRUZZRUdlVndq?=
- =?utf-8?B?eFh4WUJYRjlzNDAvSEFOUDFqdCtUWFBVM2xQWitrcFlleHh0b2pRRGVJYThR?=
- =?utf-8?B?VXJOTDNQU0RpVmNLMThpaWdWeUhpMVRXb21pcWNLZ1VRUUZaNjNDek5vbFI0?=
- =?utf-8?B?NmQ3Qnh4MVgwSlphQXI2VkVsdVJwb1pldjBQWWtpUUg5Sit0YTdKd2RqaXpQ?=
- =?utf-8?B?MzgxbzFmek0rdk9DT3BZOGFHcEdrSW1PdFY0OGRmN2pwZlJuWGV5TGFZNG41?=
- =?utf-8?B?K3JXVnF2Y2phd3A2eDVjQ2FmeFlnRlg4ek10N01HelNBTmFOT1BaU3hseTFu?=
- =?utf-8?B?dysydElOSVJINHFPUS9pVWoxbTI1ZkQ0REF2WUxoMGdwaWsyc0pKL0xlaWhG?=
- =?utf-8?B?a3dqS1YzVllqMlZaeWI2Q2FuRHdKcUlHWW5WMnVwY0ZJci82SjZSTjVXYTM0?=
- =?utf-8?B?cjBRMTU2T3k2RG4vNExadENyOFNyUU9BV2JvUW1EUFAyUVZ4a3I5Rmw4L09h?=
- =?utf-8?B?WU9zU0x6NUlodGQyOVpMRDltZUZiRkRKNXV5a2FYeVVvQVhkNUk1dk0xTldW?=
- =?utf-8?B?YmRNaHJZV2lEOWhqbVI5WHhIZnRDYXF2VDBTa3kzNVNTMUJKOWo0Tm55RE9I?=
- =?utf-8?B?SGtxOTNIN3IxKzVJOU1WUVU1UWtpWTR5d3IwY0FoczlqZmlNNmpOVzh2OVJu?=
- =?utf-8?B?L0NIUnUvNkI5ejJtSGxpMU01UWZhWTJsYWY4TklvNlJJV2hJU3JPdHZNWFF6?=
- =?utf-8?B?R0lwVjNhQURLeDI3V0wrVkhVcVk0YUhUMkl4TFJxWFpGMjNsbnV6eUNWZkZx?=
- =?utf-8?B?bllXYUc4Zlk3TzVSZjNjL1RibEI0ZzM5SkttclhBODhHK1NJMUQ0NitPd1ZB?=
- =?utf-8?B?bG81WmhqMTZZVHNQUkN5T3VtTTFONG1xOEptd1Bsa2pWd3h4VVgrM0VvNlFr?=
- =?utf-8?B?ZWVpSzhLUzA5QU5tYm5XQ0pOMWNVYkNVVjFzL2w5RkFUejlSb0JuWllIeTRn?=
- =?utf-8?B?SnhZNStzeHhDZHlLQnh0L01WeFQxeUVUMjJGSWticDBKWjRIV1pOcW43WlZl?=
- =?utf-8?B?MFhwOHFEN2ZWeXlCNDlUcXNNK3NydWg0Z2xZNWVFdHE5T3JiVlVtcDN3TjEw?=
- =?utf-8?B?Y1lHV0h0WVNsdUpjMjByM1JnNWxsUFN1Q1d6bDU4elUxZmM3R01PQUtWRWNm?=
- =?utf-8?B?dnFrOEJtUFZ0aEdaQ0hYY0lzcFo0WElnYm43dGdoUzhKMWlDYmpvNHJLNkpO?=
- =?utf-8?B?ZENqUFl5YmRxbE9xLzdkSjNKY282VWx5VXpMd2hnZ1RHY0traElZQXpMMEY4?=
- =?utf-8?B?cHB6NmlXZHNua2RwWXR3YU9FQmNBVm9EWVBYbGdrSElYQ1JsQVorWDJzM3ZE?=
- =?utf-8?B?WDV0dEh1cVBHajArQkNVanEzdTNLR2xxcmQ5MnZVNHNrbHV1K29oOFJ0aTVG?=
- =?utf-8?B?NVh4MHJGSzgrZ0wwQUxrcVgzL0tXVFdIQzU3Zjl2WlErRGptQmVCREhHbGtR?=
- =?utf-8?B?dzhXNDlEck83cmVDdUZZc0VneDJKWnMyTFFyUWUxUGZ0VWtPQ1hTRlZPbEo0?=
- =?utf-8?B?b1JJRGViQ0ZxYjFoenJKMHg5U3NiNWdGdXkyVk1ReU1VNFFORkNDbmRoNHk5?=
- =?utf-8?B?TUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4BF04090E30CDA439C244EC955555E82@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0k2xDwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC695C433F1;
+	Tue, 12 Mar 2024 21:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710279762;
+	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y0k2xDwolymaumbjRTiV58xRgX4XLltojrHqEZrvlWwXAMHGRVmP3IEM3+SsqgWgc
+	 lXxgnVtINJC5uTFBwf8tBUDCLftr3SH/bNYay5OwncMKBhoo8HyBKXl2rQwm/2lMCX
+	 iIpy3IsbD+Saz7WuHu4dzMHTBUExBfgP7IvPTsTJoWgkgfZEn1fOmdlOjfMI5IjIac
+	 oEihZdonxJzRLz1wt9ZYG5HTChfYsXdy/5yoPfobZpG+esewEaKvXqOcFgVUzXeJWd
+	 QJKP7Cbnyv8afeEcQaDSlxstskuNXemnDRWGa2GQqq8Lk4rzGIDF8fZN0+bE3jTIOa
+	 maj7+y+Ubc13A==
+Date: Tue, 12 Mar 2024 18:42:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfDMTlTH2SdwlB9M@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11391cef-7dc8-43f8-1dde-08dc42dd225c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2024 21:41:11.0955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: P2nb05d3Vx2X5w/juroHKbHJGqiFbNvG/s+ge5Ybtz58FSPuhgbT90aVJYvMltZjJ5Zx0qKY+Cn7y3H+4EiD2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8018
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240312180814.3373778-1-bigeasy@linutronix.de>
 
-T24gVHVlLCAyMDI0LTAzLTEyIGF0IDA3OjIwIC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
-b3RlOg0KPiBPbiBUdWUsIE1hciAxMiwgMjAyNCwgS2FpIEh1YW5nIHdyb3RlOg0KPiA+ID4gV2Fp
-dC4gS1ZNIGRvZXNuJ3QgKm5lZWQqIHRvIGRvIFBBR0UuQUREIGZyb20gZGVlcCBpbiB0aGUgTU1V
-LiAgVGhlIG9ubHkgaW5wdXRzIHRvDQo+ID4gPiBQQUdFLkFERCBhcmUgdGhlIGdmbiwgcGZuLCB0
-ZHIgKHZtKSwgYW5kIHNvdXJjZS4gIFRoZSBTLUVQVCBzdHJ1Y3R1cmVzIG5lZWQgdG8gYmUNCj4g
-PiA+IHByZS1idWlsdCwgYnV0IHdoZW4gdGhleSBhcmUgYnVpbHQgaXMgaXJyZWxldmFudCwgc28g
-bG9uZyBhcyB0aGV5IGFyZSBpbiBwbGFjZQ0KPiA+ID4gYmVmb3JlIFBBR0UuQURELg0KPiA+ID4g
-DQo+ID4gPiBDcmF6eSBpZGVhLiAgRm9yIFREWCBTLUVQVCwgd2hhdCBpZiBLVk1fTUFQX01FTU9S
-WSBkb2VzIGFsbCBvZiB0aGUgU0VQVC5BREQgc3R1ZmYsDQo+ID4gPiB3aGljaCBkb2Vzbid0IGFm
-ZmVjdCB0aGUgbWVhc3VyZW1lbnQsIGFuZCBldmVuIGZpbGxzIGluIEtWTSdzIGNvcHkgb2YgdGhl
-IGxlYWYgRVBURSwgDQo+ID4gPiBidXQgdGR4X3NlcHRfc2V0X3ByaXZhdGVfc3B0ZSgpIGRvZXNu
-J3QgZG8gYW55dGhpbmcgaWYgdGhlIFREIGlzbid0IGZpbmFsaXplZD8NCj4gPiA+IA0KPiA+ID4g
-VGhlbiBLVk0gcHJvdmlkZXMgYSBkZWRpY2F0ZWQgVERYIGlvY3RsKCksIGkuZS4gd2hhdCBpcy93
-YXMgS1ZNX1REWF9JTklUX01FTV9SRUdJT04sDQo+ID4gPiB0byBkbyBQQUdFLkFERC4gIEtWTV9U
-RFhfSU5JVF9NRU1fUkVHSU9OIHdvdWxkbid0IG5lZWQgdG8gbWFwIGFueXRoaW5nLCBpdCB3b3Vs
-ZA0KPiA+ID4gc2ltcGx5IG5lZWQgdG8gdmVyaWZ5IHRoYXQgdGhlIHBmbiBmcm9tIGd1ZXN0X21l
-bWZkKCkgaXMgdGhlIHNhbWUgYXMgd2hhdCdzIGluDQo+ID4gPiB0aGUgVERQIE1NVS4NCj4gPiAN
-Cj4gPiBPbmUgc21hbGwgcXVlc3Rpb246DQo+ID4gDQo+ID4gV2hhdCBpZiB0aGUgbWVtb3J5IHJl
-Z2lvbiBwYXNzZWQgdG8gS1ZNX1REWF9JTklUX01FTV9SRUdJT04gaGFzbid0IGJlZW4gcHJlLQ0K
-PiA+IHBvcHVsYXRlZD8gIElmIHdlIHdhbnQgdG8gbWFrZSBLVk1fVERYX0lOSVRfTUVNX1JFR0lP
-TiB3b3JrIHdpdGggdGhlc2UgcmVnaW9ucywNCj4gPiB0aGVuIHdlIHN0aWxsIG5lZWQgdG8gZG8g
-dGhlIHJlYWwgbWFwLiAgT3Igd2UgY2FuIG1ha2UgS1ZNX1REWF9JTklUX01FTV9SRUdJT04NCj4g
-PiByZXR1cm4gZXJyb3Igd2hlbiBpdCBmaW5kcyB0aGUgcmVnaW9uIGhhc24ndCBiZWVuIHByZS1w
-b3B1bGF0ZWQ/DQo+IA0KPiBSZXR1cm4gYW4gZXJyb3IuICBJIGRvbid0IGxvdmUgdGhlIGlkZWEg
-b2YgYmxlZWRpbmcgc28gbWFueSBURFggZGV0YWlscyBpbnRvDQo+IHVzZXJzcGFjZSwgYnV0IEkn
-bSBwcmV0dHkgc3VyZSB0aGF0IHNoaXAgc2FpbGVkIGEgbG9uZywgbG9uZyB0aW1lIGFnby4NCg0K
-SW4gdGhpcyBjYXNlLCBJSVVDIHRoZSBLVk1fTUFQX01FTU9SWSBpb2N0bCgpIHdpbGwgYmUgbWFu
-ZGF0b3J5IGZvciBURFgNCihwcmVzdW1ibHkgYWxzbyBTTlApIGd1ZXN0cywgYnV0IF9vcHRpb25h
-bF8gZm9yIG90aGVyIFZNcy4gIE5vdCBzdXJlIHdoZXRoZXINCnRoaXMgaXMgaWRlYWwuDQoNCkFu
-ZCBqdXN0IHdhbnQgdG8gbWFrZSBzdXJlIEkgdW5kZXJzdGFuZCB0aGUgYmFja2dyb3VuZCBjb3Jy
-ZWN0bHk6DQoNClRoZSBLVk1fTUFQX01FTU9SWSBpb2N0bCgpIGlzIHN1cHBvc2VkIHRvIGJlIGdl
-bmVyaWMsIGFuZCBpdCBzaG91bGQgYmUgYWJsZSB0bw0KYmUgdXNlZCBieSBhbnkgVk0gYnV0IG5v
-dCBqdXN0IENvQ28gVk1zIChpbmNsdWRpbmcgU1dfUFJPVEVDVEVEIG9uZXMpPw0KDQpCdXQgaXQg
-aXMgb25seSBzdXBwb3NlZCB0byBiZSB1c2VkIGJ5IHRoZSBWTXMgd2hpY2ggdXNlIGd1ZXN0X21l
-bWZkKCk/ICBCZWNhdXNlDQpJSVVDIGZvciBub3JtYWwgVk1zIHVzaW5nIG1tYXAoKSB3ZSBhbHJl
-YWR5IGhhdmUgTUFQX1BPUFVMQVRFIGZvciB0aGlzIHB1cnBvc2UuDQoNCkxvb2tpbmcgYXQgWypd
-LCBpdCBkb2Vzbid0IHNheSB3aGF0IGtpbmQgb2YgVk0gdGhlIHNlbmRlciB3YXMgdHJ5aW5nIHRv
-IHVzZS4NCg0KVGhlcmVmb3JlIGNhbiB3ZSBpbnRlcnByZXQgS1ZNX01BUF9NRU1PUlkgaW9jdGwo
-KSBpcyBlZmZlY3RpdmVseSBmb3IgQ29DbyBWTXM/IA0KU1dfUFJPVEVDVEVEIFZNcyBjYW4gYWxz
-byB1c2UgZ3Vlc3RfbWVtZmQoKSwgYnV0IEkgYmVsaWV2ZSBub2JvZHkgaXMgZ29pbmcgdG8NCnVz
-ZSBpdCBzZXJpb3VzbHkuDQoNClsqXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvNjUyNjJl
-NjctNzg4NS05NzFhLTg5NmQtYWQ5YzBhNzYwOTA3QHBvbGl0by5pdC8NCg0KDQoNCg==
+On Tue, Mar 12, 2024 at 07:01:48PM +0100, Sebastian Andrzej Siewior wrote:
+> Hi,
+>=20
+> Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+> the signal gets delayed until event_sched_out() which then uses
+> task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+> signal is delivered with disabled preemption.
+>=20
+> While looking at this, I also stumbled upon __perf_pending_irq() which
+> requires disabled interrupts but this is not the case on PREEMPT_RT.
+>=20
+> This series aim to address both issues while not introducing a new issue
+> at the same time ;)
+> Any testing is appreciated.
+>=20
+> v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigea=
+sy@linutronix.de/
+>     - Marco pointed me to the testsuite that showed two problems:
+>       - Delayed task_work from NMI / missing events.
+>         Fixed by triggering dummy irq_work to enforce an interrupt for
+> 	the exit-to-userland path which checks task_work
+>       - Increased ref-count on clean up/ during exec.
+>         Mostly addressed by the former change. There is still a window
+> 	if the NMI occurs during execve(). This is addressed by removing
+> 	the task_work before free_event().
+>       The testsuite (remove_on_exec) fails sometimes if the event/
+>       SIGTRAP is sent before the sighandler is installed.
+
+Survives:
+
+[acme@nine perf_events]$ for x in {0..1000}; do (perf test sigtrap &); done
+
+And:
+
+[acme@nine perf_events]$ pwd
+/home/acme/git/linux/tools/testing/selftests/perf_events
+[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
+
+Nothing on dmesg.
+
+But:
+
+[acme@nine ~]$ pidof exec_child
+24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 242=
+60 24259 24258 24257 24256 24255 24254 24253 24252 24251 24250 24249 24248 =
+24247 24246 24245 24244 24243 24242 24241 24240 24239 24238 24237 24236 242=
+33 24232 24231 24230 24229 24228 24227 24226 24225 24224 24223 24220 24219 =
+24218 24217 24216 24215 24214 24213 24212 24211 24210 24209 24208 24207 242=
+06 24204 24203 24202 24201 24200 24199 24198 24197 24196 24195 24194 24192 =
+24191 24190 24189 24188 24187 24186 24185 24184 24183 24182 24181 24180 241=
+79 24178 24177 24176 24175 24174 24173 24172 24171 24170 24169 24168 24167 =
+24166 24165 24164 24163 24162 24161 24160 24159 24158 24157 24154 24153 241=
+52 24151 24150 24149 24148 24147 24146 24145 24144 24143 24142 24141 24140 =
+24139 24138 24137 24136 24135 24134 24133 24132 24131 24130 24129 24127 241=
+26 24125 24124 24123 24122 24121 24120 24119 24118 24117 24115 24114 24113 =
+24112 24111 24110 24109 24108 24107 24106 24105 24104 24103 24102 24101 241=
+00 24099 24098 24097 24096 24095 24094 24093 24092 24091 24090 24089 24088 =
+24087 24086 24085 24084 24083 24082 24081 24080 24076 24075 24074 24073 240=
+72 24071 24070 24069 24068 24067 24066 24065 24064 24063 24062 24061 24060 =
+24059 24058 24057 24056 24055 24054 24053 24052 24051 24049 24048 24047 240=
+46 24045 24044 24043 24042 24041 24040 24039 24037 24036 24035 24034 24033 =
+24032 24031 24030 24029 24028 24027 24026 24025 24024 24023 24022 24021 240=
+20 24019 24018 24017 24016 24015 24014 24013 24012 24011 24010 24009 24008 =
+24007 24006 24005 24004 24003 24002 23998 23997 23996 23995 23994 23993 239=
+92 23991 23990 23989 23988 23986 23985 23984 23983 23982 23981 23980 23979 =
+23978 23977 23976 23975 23974 23973 23972 23970 23969 23968 23967 23966 239=
+65 23964 23963 23962 23961 23960 23958 23957 23956 23955 23954 23953 23952 =
+23951 23950 23949 23948 23947 23946 23945 23944 23943 23942 23941 23940 239=
+39 23938 23937 23936 23935 23934 23933 23932 23931 23930 23929 23928 23927 =
+23926 23925 23924 23923 23919 23918 23917 23916 23915 23914 23913 23912 239=
+11 23910 23909 23907 23906 23905 23904 23903 23902 23901 23900 23899 23898 =
+23897 23896 23895 23894 23893 23891 23890 23889 23888 23887 23886 23885 238=
+84 23883 23882 23881 23879 23878 23877 23876 23875 23874 23873 23872 23871 =
+23870 23869 23867 23866 23865 23864 23863 23862 23858 23857 23856 23855 238=
+54 23853 23852 23851 23850 23849 23848 23847 23846 23845 23844 23843 23842 =
+23841 23840 23833 23832 23831 23830 23829 23828 23827 23826 23825 23824 238=
+23 23820 23819 23818 23817 23816 23815 23814 23813 23812 23811 23810 23809 =
+23808 23807 23806 23804 23803 23802 23801 23800 23799 23798 23797 23793 237=
+92 23791 23787 23786 23774 23773 23772 23771 23770 23769 23768 23767 23756 =
+23754 23751 23750 23749 23748 23747 23746 23743 23734 23733 23732 23731 237=
+30 23729 23728 23727 23726 23725 23724 23723 23722 23719 23716 23715 23684 =
+23668 23667 23666 23589 23574 23573 23526 23461 23396 23395 23375 23271 232=
+70 23266 23242 23241 23231 23214 23213 23210 23197 23196 23182 23181 23129 =
+23128 23046 22964
+[acme@nine ~]$
+
+[root@nine ~]# cat /proc/24263/stack
+[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+[root@nine ~]#
+
+[root@nine ~]# for a in `pidof exec_child` ; do cat /proc/$a/stack ; done |=
+ sort | uniq -c
+      1 [<0>] asm_common_interrupt+0x22/0x40
+    495 [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+      2 [<0>] asm_sysvec_reschedule_ipi+0x16/0x20
+    498 [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[root@nine ~]#
+
+[acme@nine ~]$ ps ax|grep exec_child| wc -l
+504
+[acme@nine ~]$ ps ax|grep exec_child| tail
+  24264 pts/0    R      0:04 exec_child
+  24265 pts/0    R      0:04 exec_child
+  24266 pts/0    R      0:04 exec_child
+  24267 pts/0    R      0:04 exec_child
+  24268 pts/0    R      0:04 exec_child
+  24269 pts/0    R      0:04 exec_child
+  24270 pts/0    R      0:04 exec_child
+  24271 pts/0    R      0:04 exec_child
+  24273 pts/0    R      0:04 exec_child
+  26704 pts/1    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine ~]$
+
+All in 'R' state.
+
+[root@nine ~]# killall exec_child
+exec_child: no process found
+[root@nine ~]# ps ax | grep exec_child | head -5
+  22964 pts/0    R      0:06 exec_child
+  23046 pts/0    R      0:05 exec_child
+  23128 pts/0    R      0:05 exec_child
+  23129 pts/0    R      0:05 exec_child
+  23181 pts/0    R      0:05 exec_child
+[root@nine ~]# kill 22964 23046 23128 23129 23181
+[root@nine ~]# ps ax | grep exec_child | head -5
+  23182 pts/0    R      0:06 exec_child
+  23196 pts/0    R      0:06 exec_child
+  23197 pts/0    R      0:06 exec_child
+  23210 pts/0    R      0:06 exec_child
+  23213 pts/0    R      0:06 exec_child
+[root@nine ~]#
+
+[root@nine ~]# kill `pidof exec_child`
+[root@nine ~]# ps ax | grep exec_child | head -5
+  26806 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[root@nine ~]#
+
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26816 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$ ./remove_on_exec=20
+TAP version 13
+1..4
+# Starting 4 tests from 1 test cases.
+#  RUN           remove_on_exec.fork_only ...
+#            OK  remove_on_exec.fork_only
+ok 1 remove_on_exec.fork_only
+#  RUN           remove_on_exec.fork_exec_then_enable ...
+#            OK  remove_on_exec.fork_exec_then_enable
+ok 2 remove_on_exec.fork_exec_then_enable
+#  RUN           remove_on_exec.enable_then_fork_exec ...
+*#            OK  remove_on_exec.enable_then_fork_exec
+ok 3 remove_on_exec.enable_then_fork_exec
+#  RUN           remove_on_exec.exec_stress ...
+*************************#            OK  remove_on_exec.exec_stress
+ok 4 remove_on_exec.exec_stress
+# PASSED: 4 / 4 tests passed.
+# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26858 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26860 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$=20
+
+[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
+<SNIP>
+
+While it runs I can see:
+
+[acme@nine ~]$ ps ax|grep exec_child
+  28627 pts/0    R      0:00 exec_child
+  28668 pts/0    R      0:00 exec_child
+  28744 pts/0    R      0:00 exec_child
+  28813 pts/0    R      0:00 exec_child
+  28912 pts/0    R      0:00 exec_child
+  29666 pts/1    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine ~]$
+
+at the end they disappeared, on this last run.
+
+But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
+we get all those exec_child running a seemingly eternal loop:
+
+[acme@nine ~]$ ps ax|grep exec_child|wc -l
+479
+[acme@nine ~]$ ps ax|grep exec_child|head
+  30143 pts/0    R      0:01 exec_child
+  30144 pts/0    R      0:01 exec_child
+  30145 pts/0    R      0:01 exec_child
+  30147 pts/0    R      0:01 exec_child
+  30150 pts/0    R      0:01 exec_child
+  30151 pts/0    R      0:01 exec_child
+  30153 pts/0    R      0:01 exec_child
+  30154 pts/0    R      0:01 exec_child
+  30155 pts/0    R      0:01 exec_child
+  30156 pts/0    R      0:01 exec_child
+[acme@nine ~]$ sudo cat /proc/30143/stack=20
+[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+[acme@nine ~]$
+
+[acme@nine perf_events]$ uptime
+ 18:36:17 up 16 min,  2 users,  load average: 460.01, 375.77, 240.59
+[acme@nine perf_events]$ uptime
+ 18:36:21 up 16 min,  2 users,  load average: 461.53, 377.49, 241.87
+[acme@nine perf_events]$ uptime
+ 18:36:24 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
+[acme@nine perf_events]$ uptime
+ 18:36:27 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
+[acme@nine perf_events]$
+
+- Arnaldo
