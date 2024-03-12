@@ -1,136 +1,202 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EF11842;
-	Tue, 12 Mar 2024 01:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6792186A
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 01:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710208305; cv=none; b=NCleHHT8yM8RMALE1pxk2D1d2uYWv5cMhIt2rmGhbkZooBw4+JDbG+7CtrBr+ZDXH6O3NE9bQmCAcsYcgk5sj8MtTIdMVeEp8d9pArZytWrUA8FxyVPtAgdIagkO1eBTBiyBZWYQMCFDi+lIYocRRQ7dQWeCL2AFujEJzmBhVOU=
+	t=1710208332; cv=none; b=Fk/WIA2Wc62cjuYzzP7scKO0Mk17+9NkK4Uwe8LX8GmpzhxwFBhvRQzJ3a8KdSm/ajn0Jt4t8ONJyHfL6MQmHKGiOteXt8rBnGvJTlmI2OOgsKqHlk6wKl+RFRCoIQyzCgJBG6yuemNmDAcK69ckgmOQcKO0qkeqkvUVxZEH/iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710208305; c=relaxed/simple;
-	bh=ArRWAWBpJ3etLudFkCPT+4Xfr92xcoH1FAZA3SWgHRw=;
+	s=arc-20240116; t=1710208332; c=relaxed/simple;
+	bh=/C4SK9kXKYQNf45av5o3S1f5YGsmIoxCw5/QDyf3ePc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SsQuyO5noBeFxxbL54bbWASVq4KfQ6afIIHyEqRNB/b21oPRAdPopmPVGEJ3ezXzW8wc3ENEJz7aTGXxEETnLpLLaW/zj/UvwkOpibbVIho/hCxdo9+AL+2j0MoPbYuvrGLhHPw9TY1ixpPoGQJ/4S+zeusju4wA9I+DApvpkYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+aNpiql; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=rajauX+NqbVY1Cf0YqKL/f29uRK8W4yj6l1SYyScNR32G7RramuzTg7adpG2Rpem9AMAhxx3UkgIw6Zkz1YKCdu4nt8CVwaPmL9fmO7g7DASng+ChxAtaEIf2H2pydJ66ixMX7ZAilEkaYTJAeDbq8/IyJMn6TlNuY0fUVJxoFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NP5qH1Zo; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+aNpiql"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33e6aca1ca9so4852836f8f.2;
-        Mon, 11 Mar 2024 18:51:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NP5qH1Zo"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-221a9e5484aso2370231fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2024 18:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710208302; x=1710813102; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1710208330; x=1710813130; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aKvBVych6YCWus4gRNHRR8iBtRNOaryODuyFk+IiwIg=;
-        b=X+aNpiqlfNLa15xtiizq7yUkjhhQo4D8wSaenGLmpd+ev87vyCI2kxuCeMDYdoKRVe
-         KPchzNkC3myzkZfIm3FIpxZokp4q0ReLKupbcTDHrSzZfByzl/2APvc+ZCDjLiKZiKWp
-         214mT4iWxeNyqlbfzs7a1JZk/ONNApUzoSDABYHiRbz0HIutVwGzwizR5u43ue+VBdnO
-         pJSWmoTSAdQyvPuelIac5XIc6gD3DWX4XsKzk3vDySlQXro6f4spNtn2Raa4UUBRBze8
-         Uv/X7n37vtP+njUwtIwKY5g3xxthPLYmTAnbyv7w5rBFVoDFfxvkuZY84iIWw6o5pLIo
-         SGDw==
+        bh=PUDWC2eUrOZ8C2ynRVAXHz0uE0sUzoNBRorpvOY+r94=;
+        b=NP5qH1ZoB9V5VQktagSRfQuQwZeJ81GHkvE1Dl+hzsqQN5JOJZ43jZuyzNJxK2e6gN
+         jUmnWDvMgFtsOw4jFH7eOJyZ9dvbBy8gE34AWlAB0gcOnlexOatUleWyeC+/QcQdM+TZ
+         IDWFAhkn3pXBAcqQbHpXI+ymNIaVQLtUiHZhxzi5t8Q13Ue+vS1PsZ2KDZxW2mWDJbfG
+         mPUULS9ydtxI4gurY2C2ui2IZdWWv849oVZRkHogyUPqV9zUOGy39URW72ZUGPk98IfH
+         El2rwwxgujngkZcGplSEDFYmTPDl2MHKt1ME6xP2lXWUn8Dqs0R8sDg2aEO3RNXUHNB1
+         4yKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710208302; x=1710813102;
+        d=1e100.net; s=20230601; t=1710208330; x=1710813130;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aKvBVych6YCWus4gRNHRR8iBtRNOaryODuyFk+IiwIg=;
-        b=u8ASxJILzAqdp1WWcwvux3KMCm8wF6l0mKskSDnFYwPEpg8rXntAEalwve3M0LW5xd
-         FFrDBdWmtIDESRRS2ojQQvR8qLiJ/ozDMIYYXaTr9Dy4uC3d4rdclt/bsEwXmIeJRC88
-         g7jvO+1wfRx9ouhH4vRULl1++GpjsaJ8nNpsTAc4So9WQzLU7TwRVD+5Iyjq3+nRiMcn
-         O+dwMl0l5BysXqihIbmD5sIyXFdaE6lo7hDbD6vYiWL3Ltt1BJF2lFUqk3nNRVkgF/Pq
-         bap0S6UMh2LuYCh6xE+27JcliUPgEv9zg8wnF6J9zahSLSmfdl4u8C7v7vzRqKvfLLAd
-         d8ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWha1hYlnBiTgL6iFwhKHpP+CutqMxriFR0fkFo5XC8edxEaH3I06Dd/LkhT3mE3qVQa7C+0LHvNkp6iU3wkizRmJkz3Nu6uNQJFSu9mUW9qIb9qZAdxzS0+0Bzcm3T2YF3nenIVroAPsDElOoF/51Hh/rF1AT8ImYTwD1718xJDKUs1ESPv+T5gokiNf8JHhjC8AwsZbrcP1u2dCnrfup2aIPGBq2QaG+J/dR8WBh2UW9TpU0SuTcEWvikKooJNpslCKOFfYiHbO1sr5yit5Crh+rWLuj6jp1E/g==
-X-Gm-Message-State: AOJu0YxtVb9s8WT3ZS+6mtGJUhht/J1hrYJ1V1uRl1Mf0ipmIa/jX1jk
-	V2gXL8s8ENYLDpiI3t3maZvRU+sV7ijSlZjuHZFL9PxVDqxmRCqba5CvQjddjq4G/ej/hBN4lX7
-	tXHrPVxEfg6m7NupwLtC6wncljXQ=
-X-Google-Smtp-Source: AGHT+IEB/YPizRPdSM8g0e75qq4Trwgwdg1LF6SZVgxJUmKpI+Q9QIjihr7HmFgR5GDbRJDy4Pav6rzymzHVBMyXxJg=
-X-Received: by 2002:adf:ea06:0:b0:33e:48f9:169d with SMTP id
- q6-20020adfea06000000b0033e48f9169dmr403840wrm.31.1710208301974; Mon, 11 Mar
- 2024 18:51:41 -0700 (PDT)
+        bh=PUDWC2eUrOZ8C2ynRVAXHz0uE0sUzoNBRorpvOY+r94=;
+        b=HSSMtmDyiAKXgKHtAhjQFkPoSEv4mFd1d6kbjEUSczmVlpdt5y3iV4TcY3U3ITzK6L
+         gJM+A3c/RV/LwVJDrzin/798mp/1YZGkKXL+8oVpxdSx7ebRvx/llEz001TVS8KpIvZh
+         gkx5vG9KpE8SOav6hinpot7FmkKEpsF2jeYT7XHK+a1Pi6TFAOgIWP2QRFVy18KrBb3Y
+         5Oy+EnYVCW6th3H26HcZO3TGxK3PCkWU4ndnW9DnbyuKrK8vwkdOboM4pdYIFXSPF9jj
+         OuHYfkJAGvWDkHMpS7ekeCgY5AQ1eWcLuQTLyh0/eZI4PERiXQN5rPP6ZbjNbcOqRdQy
+         xQLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBTT7/NVJ3dwTwlotTl6jLNMlMFfX5rfryXQ+0qX6526FqoSTKvnhSxDT38pRljj/N0t1drLWpEVhjYtoCz4vN/DAhmS1R0OBbzgb9
+X-Gm-Message-State: AOJu0YyLnU2CRNXwnEdH62xuM8PHIYZLv89fTEqZz5BQvSpG61NHGwCK
+	FR2NsAu8Y5UYM0r1Y2xRQp8Wkt7PohNXNNgJu3xqVaJmI16QxA8Q29AaePtUtMHqbKXeGlS2uDG
+	uYJIk7IymHEeiluvUrUT4rY0hEzP2dzYhHLqwfg==
+X-Google-Smtp-Source: AGHT+IEw/i3iZ/moT3hoOqVkA0QyZhJITAge4gritgZJGaa4ZUoskcP4axQtqW/tHQZK40PRLKgUppucovxI/Ur0GZ0=
+X-Received: by 2002:a05:6870:d182:b0:220:f92f:5bf7 with SMTP id
+ a2-20020a056870d18200b00220f92f5bf7mr8145573oac.50.1710208329733; Mon, 11 Mar
+ 2024 18:52:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com> <20240311093526.1010158-6-dongmenglong.8@bytedance.com>
-In-Reply-To: <20240311093526.1010158-6-dongmenglong.8@bytedance.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 11 Mar 2024 18:51:30 -0700
-Message-ID: <CAADnVQKw4HUbwvivysVBQPpA2MC2e56MwrvJy89qs8rx_ixOnw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 5/9] bpf: verifier: add btf to the function
- args of bpf_check_attach_target
-To: Menglong Dong <dongmenglong.8@bytedance.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+References: <20240229232211.161961-1-samuel.holland@sifive.com>
+ <20240229232211.161961-9-samuel.holland@sifive.com> <CAEEQ3w=8dVxO=qtW6_-SChLJ5No+7nGgf+1fXz0wSeBhb0Kk0A@mail.gmail.com>
+ <100d5414-11fa-4c47-9c35-51f5fad2d6e6@sifive.com>
+In-Reply-To: <100d5414-11fa-4c47-9c35-51f5fad2d6e6@sifive.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Tue, 12 Mar 2024 09:51:58 +0800
+Message-ID: <CAEEQ3wkosTxGowYj5oD4WE7-CvZJS2ui8T5mzoGXp4zSRTf-2w@mail.gmail.com>
+Subject: Re: [External] [PATCH v5 08/13] riscv: Avoid TLB flush loops when
+ affected by SiFive CIP-1200
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 2:35=E2=80=AFAM Menglong Dong
-<dongmenglong.8@bytedance.com> wrote:
->
-> Add target btf to the function args of bpf_check_attach_target(), then
-> the caller can specify the btf to check.
->
-> Signed-off-by: Menglong Dong <dongmenglong.8@bytedance.com>
-> ---
->  include/linux/bpf_verifier.h | 1 +
->  kernel/bpf/syscall.c         | 6 ++++--
->  kernel/bpf/trampoline.c      | 1 +
->  kernel/bpf/verifier.c        | 8 +++++---
->  4 files changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-> index 4b0f6600e499..6cb20efcfac3 100644
-> --- a/include/linux/bpf_verifier.h
-> +++ b/include/linux/bpf_verifier.h
-> @@ -811,6 +811,7 @@ static inline void bpf_trampoline_unpack_key(u64 key,=
- u32 *obj_id, u32 *btf_id)
->  int bpf_check_attach_target(struct bpf_verifier_log *log,
->                             const struct bpf_prog *prog,
->                             const struct bpf_prog *tgt_prog,
-> +                           struct btf *btf,
->                             u32 btf_id,
->                             struct bpf_attach_target_info *tgt_info);
->  void bpf_free_kfunc_btf_tab(struct bpf_kfunc_btf_tab *tab);
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index d1cd645ef9ac..6128c3131141 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -3401,9 +3401,11 @@ static int bpf_tracing_prog_attach(struct bpf_prog=
- *prog,
->                  * need a new trampoline and a check for compatibility
->                  */
->                 struct bpf_attach_target_info tgt_info =3D {};
-> +               struct btf *btf;
->
-> -               err =3D bpf_check_attach_target(NULL, prog, tgt_prog, btf=
-_id,
-> -                                             &tgt_info);
-> +               btf =3D tgt_prog ? tgt_prog->aux->btf : prog->aux->attach=
-_btf;
+H Samuel,
 
-I think it's better to keep this bit inside bpf_check_attach_target(),
-since a lot of other code in there is working with if (tgt_prog) ...
-so if the caller messes up passing tgt_prog->aux->btf with tgt_prog
-the bug will be difficult to debug.
+On Tue, Mar 12, 2024 at 8:36=E2=80=AFAM Samuel Holland
+<samuel.holland@sifive.com> wrote:
+>
+> Hi Yunhui,
+>
+> On 2024-02-29 8:48 PM, yunhui cui wrote:
+> > Hi Samuel,
+> >
+> > On Fri, Mar 1, 2024 at 7:22=E2=80=AFAM Samuel Holland <samuel.holland@s=
+ifive.com> wrote:
+> >>
+> >> Since implementations affected by SiFive errata CIP-1200 always use th=
+e
+> >> global variant of the sfence.vma instruction, they only need to execut=
+e
+> >> the instruction once. The range-based loop only hurts performance.
+> >>
+> >> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> >> ---
+> >>
+> >> (no changes since v4)
+> >>
+> >> Changes in v4:
+> >>  - Only set tlb_flush_all_threshold when CONFIG_MMU=3Dy.
+> >>
+> >> Changes in v3:
+> >>  - New patch for v3
+> >>
+> >>  arch/riscv/errata/sifive/errata.c | 5 +++++
+> >>  arch/riscv/include/asm/tlbflush.h | 2 ++
+> >>  arch/riscv/mm/tlbflush.c          | 2 +-
+> >>  3 files changed, 8 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/riscv/errata/sifive/errata.c b/arch/riscv/errata/sif=
+ive/errata.c
+> >> index 3d9a32d791f7..716cfedad3a2 100644
+> >> --- a/arch/riscv/errata/sifive/errata.c
+> >> +++ b/arch/riscv/errata/sifive/errata.c
+> >> @@ -42,6 +42,11 @@ static bool errata_cip_1200_check_func(unsigned lon=
+g  arch_id, unsigned long imp
+> >>                 return false;
+> >>         if ((impid & 0xffffff) > 0x200630 || impid =3D=3D 0x1200626)
+> >>                 return false;
+> >> +
+> >> +#ifdef CONFIG_MMU
+> >> +       tlb_flush_all_threshold =3D 0;
+> >> +#endif
+> >> +
+> >>         return true;
+> >>  }
+> >>
+> >> diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/as=
+m/tlbflush.h
+> >> index 463b615d7728..8e329721375b 100644
+> >> --- a/arch/riscv/include/asm/tlbflush.h
+> >> +++ b/arch/riscv/include/asm/tlbflush.h
+> >> @@ -66,6 +66,8 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_=
+unmap_batch *batch,
+> >>                                unsigned long uaddr);
+> >>  void arch_flush_tlb_batched_pending(struct mm_struct *mm);
+> >>  void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+> >> +
+> >> +extern unsigned long tlb_flush_all_threshold;
+> >>  #else /* CONFIG_MMU */
+> >>  #define local_flush_tlb_all()                  do { } while (0)
+> >>  #endif /* CONFIG_MMU */
+> >> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> >> index 365e0a0e4725..22870f213188 100644
+> >> --- a/arch/riscv/mm/tlbflush.c
+> >> +++ b/arch/riscv/mm/tlbflush.c
+> >> @@ -11,7 +11,7 @@
+> >>   * Flush entire TLB if number of entries to be flushed is greater
+> >>   * than the threshold below.
+> >>   */
+> >> -static unsigned long tlb_flush_all_threshold __read_mostly =3D 64;
+> >> +unsigned long tlb_flush_all_threshold __read_mostly =3D 64;
+> >>
+> >>  static void local_flush_tlb_range_threshold_asid(unsigned long start,
+> >>                                                  unsigned long size,
+> >> --
+> >> 2.43.1
+> >>
+> >
+> > If local_flush_tlb_all_asid() is used every time, more PTWs will be
+> > generated. Will such modifications definitely improve the overall
+> > performance?
+>
+> This change in this commit specifically applies to older SiFive SoCs with=
+ a bug
+> making single-page sfence.vma instructions unsafe to use. In this case, a=
+ single
+> call to local_flush_tlb_all_asid() is optimal, yes.
+Would it be more clear to add this content to the git commit
+description appropriately?
 
-> +               err =3D bpf_check_attach_target(NULL, prog, tgt_prog, btf=
-,
-> +                                             btf_id, &tgt_info);
+>
+> > Hi Alex, Samuel,
+> > The relationship between flush_xx_range_asid() and nr_ptes is
+> > basically linear growth (y=3Dkx +b), while flush_all_asid() has nothing
+> > to do with nr_ptes (y=3Dc).
+> > Some TLBs may do some optimization. The operation of flush all itself
+> > requires very few cycles, but there is a certain delay between
+> > consecutive flush all.
+> > The intersection of the two straight lines is the optimal solution of
+> > tlb_flush_all_threshold. In actual situations, continuous
+> > flush_all_asid will not occur. One problem caused by flush_all_asid()
+> > is that multiple flush entries require PTW, which causes greater
+> > latency.
+> > Therefore, the value of tlb_flush_all_threshold needs to be considered
+> > or quantified. Maybe doing local_flush_tlb_page_asid() based on the
+> > actual nr_ptes_in_range would give better overall performance.
+> > What do you think?
+>
+> Yes, this was something Alex brought up when adding this threshold, that =
+it
+> should be tuned for various scenarios. That still needs to be done. This =
+patch
+> just covers one specific case where we know the optimal answer due to an =
+erratum.
+>
+> Regards,
+> Samuel
+>
+
+Thanks,
+Yunhui
