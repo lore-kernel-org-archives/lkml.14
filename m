@@ -1,70 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF617C6D6;
-	Tue, 12 Mar 2024 15:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A987C6C8
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 15:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710258357; cv=none; b=dhBxhzmkD/wNaPrmMeH+6OYk4ttkwL5/2ScFBjS5Rj1e8SSeggxqYK2fciXmF8MnZZ8ZdEMeXDWrQmYVcXnLd9hT40Lf1hb6AJUYEF8MF3CXQ+nB6Sk5AG1FAbpfgBIzHH/fSxJdPQoA+UXiHAuglVfavH3kDFWcvruA+wdA7pA=
+	t=1710258448; cv=none; b=SHMhlqgw8fpOap/AN8zPN/fUzkufoYMcq+XmTEBVdMztXuOuj8Ta68sKwZWq8D32NwVpRoApj/EPniKz3/E8l4bbuovAJXH6eAVXQz/dkUmJLgGePtVArALbxFlV65LK9FivJovWFvLlRIFWEVB34TSDfCKOP1UhKEXhyQYYNac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710258357; c=relaxed/simple;
-	bh=YZABLRxVxCxF9aGGHVyLi1AfKTplDrrmVAnLthpELy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdiXV5Ooacn6Uk7ZALo5NRkiRZ+QaN24y4GgS27oL5XPs5EWMJXJDORd+8YNxFumXI5f7YepNa7kmTH++v7kTV6xNoCrwE8nIYwmluuqkzgx2ofkmlKIfsaDfPJBfoitykVXxMtfTx2o25yQVlmcuYUyZHK9qrG0GKxaSdPbMCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060BEC433F1;
-	Tue, 12 Mar 2024 15:45:55 +0000 (UTC)
-Date: Tue, 12 Mar 2024 11:48:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] ring-buffer: Reuse rb_watermark_hit() for the
- poll logic
-Message-ID: <20240312114801.4b12c1fa@gandalf.local.home>
-In-Reply-To: <20240313003842.207e83107633bef0c4a798b4@kernel.org>
-References: <20240312131919.314231457@goodmis.org>
-	<20240312131952.802267543@goodmis.org>
-	<20240313003842.207e83107633bef0c4a798b4@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710258448; c=relaxed/simple;
+	bh=d/S0Om5CP7kfBCh6KRIKk04Z6CFJhQl+MBCAURqIDMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=popnIWIb0i0D5rr2c73zdQDPBQ5I7oDCXde7gCjr4VvjVhT/1QcQKuJHCehvoIE3/M8baY4P71CVjTXV+qNsuYVhNPlO73f6H8Hx+cCuLAkbhqJy1PYz5vVDpgHp9KJ+hzl4JaCUOr6KEc5IeEpAqTX97XsSlvGq3/mCdkuNq9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O9yoOEgW; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O9yoOEgW"
+Date: Tue, 12 Mar 2024 08:47:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710258444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IBHh3k3RuYYlysG4vpKtI1L13MnMBvP8xcIit+nrqtY=;
+	b=O9yoOEgW8BhLzG2TDA19BQDFTvIiAOMlFuKlMxTj31EWLltBgp9M1mg2KDOdV6i1POGOOz
+	iKT4+h8XoCkn5X865U1ZnNivg1fzpmCZqJKpivy/6l/qV2eUmT/FIvLTdE9E2r3XlfwLP8
+	kYjxOFuqbx2cjyxgCx275UPlGHSvssI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Mostafa Saleh <smostafa@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] KVM: arm64: Add PSCI SYSTEM_OFF2 function for
+ hibernation
+Message-ID: <ZfB5BMfLHWhQXLZY@thinky-boi>
+References: <20240312135958.727765-1-dwmw2@infradead.org>
+ <20240312135958.727765-2-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240312135958.727765-2-dwmw2@infradead.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 13 Mar 2024 00:38:42 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi,
 
-> On Tue, 12 Mar 2024 09:19:21 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Mar 12, 2024 at 01:51:28PM +0000, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
 > 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > The check for knowing if the poll should wait or not is basically the
-> > exact same logic as rb_watermark_hit(). The only difference is that
-> > rb_watermark_hit() also handles the !full case. But for the full case, the
-> > logic is the same. Just call that instead of duplicating the code in
-> > ring_buffer_poll_wait().
-> >   
+> The PSCI v1.3 specification (alpha) adds support for a SYSTEM_OFF2 function
+> which is analogous to ACPI S4 state. This will allow hosting environments
+> to determine that a guest is hibernated rather than just powered off, and
+> ensure that they preserve the virtual environment appropriately to allow
+> the guest to resume safely (or bump the hardware_signature in the FACS to
+> trigger a clean reboot instead).
 > 
-> This changes a bit (e.g. adding pagebusy check) but basically that should
-> be there. And new version appears to be consistent between ring_buffer_wait()
-> and ring_buffer_poll_wait(). So looks good to me.
+> The beta version will be changed to say that PSCI_FEATURES returns a bit
+> mask of the supported hibernate types, which is implemented here.
 
-The pagebusy check is an optimization. As if it is true, it means the
-writer is still on the reader_page and there's no sub-buffers available. It
-just prevents having to do the calculation of the buffer-percentage filled
-(what's done by the full_hit() logic).
+Have you considered doing the PSCI implementation in userspace? The
+SMCCC filter [*] was added for this exact purpose. There are other
+features being done in userspace (e.g. vCPU hotplug) built on
+intercepting hypercalls, this seems to be a reasonable candidate too.
 
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
+[*] https://docs.kernel.org/virt/kvm/devices/vm.html#attribute-kvm-arm-vm-smccc-filter-w-o
 
-Thanks!
-
--- Steve
+-- 
+Thanks,
+Oliver
