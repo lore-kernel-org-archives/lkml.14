@@ -1,130 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66391448E4;
-	Tue, 12 Mar 2024 21:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61614534F
+	for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 21:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710279784; cv=none; b=IfD8OYTcgsgjhusz82PWWoRn8HGkT+C64ZO+awzbVibc3nrsk2PQ87Y0hBkfkaaR8e+3IE2Q7y4C6Vh2pYHJX68Rat9J74fUi5dKoatZFt2cxCHHHVHdQFXf91DhC+Dp4epvy3nR7EVUJJHXFwILZ/abjKBs1h3Hw+s0z8IOlhY=
+	t=1710279787; cv=none; b=u5WNgAm13bUqBndr32UokEY4QxTnWl/Hoh/xlxcSFxzHSXml4qjgUJhMDBS4Zo1PDAgZax8YAF03/9kOA9H3pgf/6Z5rUEW3B1BqQ6avVlFpCaF7vNq6stHeyCz8v10u7ql83g1adxRBToSI9Iqw2uW9xVYjEvDQB/kIhbkz4rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710279784; c=relaxed/simple;
-	bh=GSbgnTJVBeQv/h9+bAESzpdDd8n73V8fZiggfLH9y9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I3v0M3qtKKDc5Ri1TvP5V45WYwV/HUzGmrCTpvBbRV6lPl4aGJC4tD3EocuRP6Py9GYcps7RSirDd2XWk2WkYUuHHIN4kY/BgWU54Angl9obKt2xJB/u/APxE8RWxCc1fsPyEUqOrfeeCHcDWqyAIfaNUy7FyTFBOihgS3U8L0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YTf8A3i5; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTf8A3i5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710279783; x=1741815783;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GSbgnTJVBeQv/h9+bAESzpdDd8n73V8fZiggfLH9y9Y=;
-  b=YTf8A3i589IOru5fQXLpBqICtM2GiyUFzuEXrp7TmA4NfbXzgqWt5oXM
-   rcuIwsssB+clwAgdoUW2aEdfs+C2BQno5InDD7jzycOAHYKWUsQA6UA/H
-   gsmnUFhylPvWiDGXKCgTBUJx1xWODs5CbEiaVQ95Iv/o7OYlidprSC6XT
-   vykePAJKtCWNL8g2wWLBjKL1MAaAkxT6IF2UbZ9c9858aUoWdz7Q+jZfo
-   Eg/Dw1Oqzs6GOc3xofICc21X+wWSWitKz+ycIZZErVoYe/FKuF8C1pl4e
-   Sjxn/ACBzoo/gzZ5HNJQv/EoDhDIYv8ezKQwdRflXXOBENBvRC+C1FOSk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4884865"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="4884865"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:42:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="12280162"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:42:56 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	x86@kernel.org
-Cc: Shaopeng Tan <tan.shaopeng@fujitsu.com>,
-	James Morse <james.morse@arm.com>,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Drew Fustini <dfustini@baylibre.com>,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v16 8/9] x86/resctrl: Update documentation with Sub-NUMA cluster changes
-Date: Tue, 12 Mar 2024 14:42:46 -0700
-Message-ID: <20240312214247.91772-9-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240312214247.91772-1-tony.luck@intel.com>
-References: <20240312214247.91772-1-tony.luck@intel.com>
+	s=arc-20240116; t=1710279787; c=relaxed/simple;
+	bh=+ntyJa0Ew8nKgl61n+Nh2FH6rWw/YsnJ8ujp1FK4Ip4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZJh2g7IVtQazgObcuzBBOPzSZDDfl+7Qwp1oXOlzTNY4W+Xi8yV4B8LoBGBgmzE0nN6oeTvVX3SifGpPJ2QzjmWsK6nIRqwVmRRRRgeJHazo1vV/YGIaXxF+NVoHPOwthzuXon3gcFzdwC0ZMfY/ys4c/4/dESFz0q+NupR0gsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3666f119204so2992785ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 14:43:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710279784; x=1710884584;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPwkHRiTWni56jLRMYYCYOfrKQED61Y88uUu4x05NAw=;
+        b=p6cb6TzApwrETqV1guWSI/jWIpRo2RKGzQOj/7DaANnmwbra9pTCotkerqcleD30UO
+         b4cOSoylmqi1sKoO8vLfAM/nlY/eq42rqV3ay1Qh95xuu4p3bdBEfwLvXpCnO3VSMuo6
+         anevcHynYfhwqamkpYaxhncWW8pfL8vQDY560XME2j4khDGQ82KZjdWf9ejWhsLaQAU/
+         lB596BZ/3tfhiAYgQK+mtrFVp6X81xp63jlJSrlYiGbv0hngmpHmLaR93OfM7RpJ0F4l
+         flVYWPbRAFroz5Sphm+ZsLgl2hAfxRKLwae3UTiJ3hZYBCb9ZWwVsexrVO+v/xjtuHwU
+         D4bA==
+X-Forwarded-Encrypted: i=1; AJvYcCXg7gYFnDwiskuMwqnn6UHYgqcyiZdj6LXZZ4Nj2KePD3Wlsjex+KnLZj10CF1tNy7OS2+8JctPVE8PN1t1h4Qp4JCZ8y89QWo/WBBA
+X-Gm-Message-State: AOJu0YyP2vLDICrHJQdzyWAYkSG9OFqNJkD+9kSFxR3jzoM7RrLJtJeH
+	CegPNbkG+vGQz3fWwwU+EuAoHjRdrLsHNcg53Qa+Ok9wIz8Kwwymxq2TB2eKukF3Bc+cLKcyzzV
+	Ac4f6cDZXjxWu1L1Mt0m32zWQVwGSkoWvTk9AFb4WusrcG8Jg0MaB5UY=
+X-Google-Smtp-Source: AGHT+IFOpyNj3FNGoLTzOFEnZ+tR7pSAuEVi60fFlN8TuPJlT3LzUp25kdsOJOotvBru3ani52Sg/5sSOVe3e3YqU/YqtNadiw2j
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:b2c:b0:365:fe0a:b366 with SMTP id
+ e12-20020a056e020b2c00b00365fe0ab366mr42803ilu.1.1710279784538; Tue, 12 Mar
+ 2024 14:43:04 -0700 (PDT)
+Date: Tue, 12 Mar 2024 14:43:04 -0700
+In-Reply-To: <000000000000ac8cda0603cbb34c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000634c606137d8b99@google.com>
+Subject: Re: [syzbot] [btrfs?] kernel BUG in insert_state (2)
+From: syzbot <syzbot+d21c74a99c319e88007a@syzkaller.appspotmail.com>
+To: anand.jain@oracle.com, brauner@kernel.org, clm@fb.com, dsterba@suse.com, 
+	johannes.thumshirn@wdc.com, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-With Sub-NUMA Cluster mode enabled the scope of monitoring resources is
-per-NODE instead of per-L3 cache. Suffixes of directories with "L3" in
-their name refer to Sub-NUMA nodes instead of L3 cache ids.
+syzbot suspects this issue was fixed by commit:
 
-Users should be aware that SNC mode also affects the amount of L3 cache
-available for allocation within each SNC node.
+commit a1912f712188291f9d7d434fba155461f1ebef66
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Wed Nov 22 17:17:55 2023 +0000
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- Documentation/arch/x86/resctrl.rst | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+    btrfs: remove code for inode_cache and recovery mount options
 
-diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
-index a6279df64a9d..15f1cff6ee76 100644
---- a/Documentation/arch/x86/resctrl.rst
-+++ b/Documentation/arch/x86/resctrl.rst
-@@ -366,10 +366,10 @@ When control is enabled all CTRL_MON groups will also contain:
- When monitoring is enabled all MON groups will also contain:
- 
- "mon_data":
--	This contains a set of files organized by L3 domain and by
--	RDT event. E.g. on a system with two L3 domains there will
--	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
--	directories have one file per event (e.g. "llc_occupancy",
-+	This contains a set of files organized by L3 domain or by NUMA
-+	node (depending on whether Sub-NUMA Cluster (SNC) mode is disabled
-+	or enabled respectively) and by RDT event.  Each of these
-+	directories has one file per event (e.g. "llc_occupancy",
- 	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
- 	files provide a read out of the current value of the event for
- 	all tasks in the group. In CTRL_MON groups these files provide
-@@ -478,6 +478,23 @@ if non-contiguous 1s value is supported. On a system with a 20-bit mask
- each bit represents 5% of the capacity of the cache. You could partition
- the cache into four equal parts with masks: 0x1f, 0x3e0, 0x7c00, 0xf8000.
- 
-+Notes on Sub-NUMA Cluster mode
-+==============================
-+When SNC mode is enabled, Linux may load balance tasks between Sub-NUMA
-+nodes much more readily than between regular NUMA nodes since the CPUs
-+on Sub-NUMA nodes share the same L3 cache and the system may report
-+the NUMA distance between Sub-NUMA nodes with a lower value than used
-+for regular NUMA nodes.  Users who do not bind tasks to the CPUs of a
-+specific Sub-NUMA node must read the "llc_occupancy", "mbm_total_bytes",
-+and "mbm_local_bytes" for all Sub-NUMA nodes where the tasks may execute
-+to get the full view of traffic for which the tasks were the source.
-+
-+The cache allocation feature still provides the same number of
-+bits in a mask to control allocation into the L3 cache, but each
-+of those ways has its capacity reduced because the cache is divided
-+between the SNC nodes. The values reported in the resctrl
-+"size" files are adjusted accordingly.
-+
- Memory bandwidth Allocation and monitoring
- ==========================================
- 
--- 
-2.44.0
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14342f8e180000
+start commit:   f7757129e3de Merge tag 'v6.5-p3' of git://git.kernel.org/p..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1b32f62c755c3a9c
+dashboard link: https://syzkaller.appspot.com/bug?extid=d21c74a99c319e88007a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1202e640680000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e949f3a80000
 
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: btrfs: remove code for inode_cache and recovery mount options
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
