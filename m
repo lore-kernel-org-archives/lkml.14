@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE457148FF6;
-	Wed, 13 Mar 2024 16:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0405814939D;
+	Wed, 13 Mar 2024 16:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348200; cv=none; b=ZKKHwnNw7JN/7ebIbzjRFAoExAsAq7lC1ySa8P1rwoH97lplPfmECPRGi9rbkGeNo6cb3ozO2On/jQk7IwxrNVqJBHypAbmk9Fu/9i/4Bz+ORaGRdmqDLVH/fJvGnjZ1QWEitr/RKz6AKyhhS7p5qQhO8iZrQ0Tqmi5mSEWJVtU=
+	t=1710348203; cv=none; b=GC8pII98eQFABCMrA8FxrR67+gaaU4IqStBylPAT45ArTOQ6WToAmMHGD4RATSYwnMJZuax2CGzb6LbN9VQZA3TKsOLMblMHNt/1tREPED9hRew0Cf2zxqfxlPOW6AB5BwuDRn6vfyeXh6suetuN7R/UtZZ2lXPNmvFrh5lzF20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348200; c=relaxed/simple;
-	bh=tUKeK3rvwuNybJHsTZfWYGg+fGIv/4In9a6RGBZKds4=;
+	s=arc-20240116; t=1710348203; c=relaxed/simple;
+	bh=OkoS5TTcRGYuMZ6dkOhiY+0lat7Zn4j2ojDEj8rTdt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WYPzl9nX11cvKOgreWGrpVBrmsAYQxOCPxaRjEHkXSHfSugEcgiIGk2sQmBZZtsgaP5zqBkmDcgCaICGZ/nndlfM6raJJTfj1nAB60CiFSBSarN1maMP5MG70h/d7ZVuJbdt7jcoEYE2nEqhIZ995Ste/0LtOuQhDDzQvjg6Mvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUlYfEby; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z32vpEzDPrl0b/m4naoWWVXlh4lTaTbhJU8lair2Q2Q5bu8hSaOFL2le1Ed9F+EoX/eQRTqWAWLBaJYyXAtQQi2KPEhGPjHJR6SKY6J6ncyCCBkFqNOP2c/A3yTnFLe0oB+7Cswd1wLZ2jcwinHpqLT7uqZnQjHeTKFbI6Dj5sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf2FfqM7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUlYfEby"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2714C433C7;
-	Wed, 13 Mar 2024 16:43:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jf2FfqM7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA49C433C7;
+	Wed, 13 Mar 2024 16:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348200;
-	bh=tUKeK3rvwuNybJHsTZfWYGg+fGIv/4In9a6RGBZKds4=;
+	s=k20201202; t=1710348202;
+	bh=OkoS5TTcRGYuMZ6dkOhiY+0lat7Zn4j2ojDEj8rTdt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUlYfEbyE7BPZHvjo7hdUFAqh6CZrG1OaY54pkNsogPWMrQrSgJAu6W3nnAXzp3oB
-	 7XYWLWrUERPfbgK7HfHlZfMFGfmqfyMOV7S2tA4UHqvGv4i/gTTwm0OMyj53QVjvjY
-	 RlwhcKeyXm9nz/dX+UtWCGEpzewFa2g7jx7QKsmGK4g9SU1653ZoK4OEnz6aBdmYOQ
-	 galNhQCgXfn9qDbRl4NA1EjbYtD64gOgUwyFCt3Uyi6FYm3oRIrQQSk1WxJOpX2vAs
-	 IuEvaCQ45SXvJ8gmJThaNXDku+8AaA8stYnaPM1JDy5RUrLexMtXAJmfscm5wgRvvP
-	 u7Jc2r1iodMYg==
+	b=jf2FfqM7K19faHdtwg38p+9g+asEvN5tWv9xWh5G0Y/iBqk5xWCgMTFxpFfJQd1s8
+	 NXGdIDCUJPEnaeTMxI10377oh3BNMRIFgINlmaWQ+wNoNxnpJ0+34q8g0k57rLzj5X
+	 aPTx+feYjD2pB+3nPMFZbBlAjYcSr6MaAv2hX7Cn5FmjWbtlejWfUaviBt0g/ca3B+
+	 X3WMd02YxFzl0o4FLgJXGx5/NM0eA4R6z5Ymr6hv07a4DQHX6JX3I+e9LsmunTzKSv
+	 Qouz3lZPrANODGritMpY0aSA6dX6d2yKKlHnyUDG/3+Lce+UYA+Ajmw92cNQK61vrI
+	 qlM/TJPbGY9uw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Evan Quan <evan.quan@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 49/76] serial: max310x: use a separate regmap for each port
-Date: Wed, 13 Mar 2024 12:41:56 -0400
-Message-ID: <20240313164223.615640-50-sashal@kernel.org>
+Subject: [PATCH 5.15 51/76] drm/amd/pm: do not expose the API used internally only in kv_dpm.c
+Date: Wed, 13 Mar 2024 12:41:58 -0400
+Message-ID: <20240313164223.615640-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
 References: <20240313164223.615640-1-sashal@kernel.org>
@@ -55,241 +55,113 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 6ef281daf020592c219fa91780abc381c6c20db5 ]
+[ Upstream commit 28a31774b050261371953401e8072ae15200c91e ]
 
-The driver currently does manual register manipulation in
-multiple places to talk to a specific UART port.
+Move it to kv_dpm.c instead.
 
-In order to talk to a specific UART port over SPI, the bits U1
-and U0 of the register address can be set, as explained in the
-Command byte configuration section of the datasheet.
-
-Make this more elegant by creating regmaps for each UART port
-and setting the read_flag_mask and write_flag_mask
-accordingly.
-
-All communcations regarding global registers are done on UART
-port 0, so replace the global regmap entirely with the port 0
-regmap.
-
-Also, remove the 0x1f masks from reg_writeable(), reg_volatile()
-and reg_precious() methods, since setting the U1 and U0 bits of
-the register address happens inside the regmap core now.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-Link: https://lore.kernel.org/r/20220605144659.4169853-3-demonsingur@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Stable-dep-of: b35f8dbbce81 ("serial: max310x: prevent infinite while() loop in port startup")
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Stable-dep-of: 733025626866 ("drm/amdgpu: Reset IH OVERFLOW_CLEAR bit")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 68 +++++++++++++++++++-----------------
- 1 file changed, 36 insertions(+), 32 deletions(-)
+ drivers/gpu/drm/amd/pm/amdgpu_dpm.c       | 23 ---------------------
+ drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h   |  2 --
+ drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c | 25 ++++++++++++++++++++++-
+ 3 files changed, 24 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index c9032e300a586..d61e8a6bc99dd 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -262,6 +262,7 @@ struct max310x_one {
- 	struct work_struct	tx_work;
- 	struct work_struct	md_work;
- 	struct work_struct	rs_work;
-+	struct regmap		*regmap;
- 
- 	u8 rx_buf[MAX310X_FIFO_SIZE];
- };
-@@ -291,26 +292,26 @@ static DECLARE_BITMAP(max310x_lines, MAX310X_UART_NRMAX);
- 
- static u8 max310x_port_read(struct uart_port *port, u8 reg)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
- 	unsigned int val = 0;
- 
--	regmap_read(s->regmap, port->iobase + reg, &val);
-+	regmap_read(one->regmap, reg, &val);
- 
- 	return val;
+diff --git a/drivers/gpu/drm/amd/pm/amdgpu_dpm.c b/drivers/gpu/drm/amd/pm/amdgpu_dpm.c
+index a68496b3f9296..197ea6e263878 100644
+--- a/drivers/gpu/drm/amd/pm/amdgpu_dpm.c
++++ b/drivers/gpu/drm/amd/pm/amdgpu_dpm.c
+@@ -188,29 +188,6 @@ u32 amdgpu_dpm_get_vrefresh(struct amdgpu_device *adev)
+ 	return vrefresh;
  }
  
- static void max310x_port_write(struct uart_port *port, u8 reg, u8 val)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_write(s->regmap, port->iobase + reg, val);
-+	regmap_write(one->regmap, reg, val);
- }
- 
- static void max310x_port_update(struct uart_port *port, u8 reg, u8 mask, u8 val)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_update_bits(s->regmap, port->iobase + reg, mask, val);
-+	regmap_update_bits(one->regmap, reg, mask, val);
- }
- 
- static int max3107_detect(struct device *dev)
-@@ -449,7 +450,7 @@ static const struct max310x_devtype max14830_devtype = {
- 
- static bool max310x_reg_writeable(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_LSR_IRQSTS_REG:
- 	case MAX310X_SPCHR_IRQSTS_REG:
-@@ -466,7 +467,7 @@ static bool max310x_reg_writeable(struct device *dev, unsigned int reg)
- 
- static bool max310x_reg_volatile(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_RHR_REG:
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_LSR_IRQSTS_REG:
-@@ -488,7 +489,7 @@ static bool max310x_reg_volatile(struct device *dev, unsigned int reg)
- 
- static bool max310x_reg_precious(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_RHR_REG:
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_SPCHR_IRQSTS_REG:
-@@ -633,18 +634,16 @@ static s32 max310x_set_ref_clk(struct device *dev, struct max310x_port *s,
- 
- static void max310x_batch_write(struct uart_port *port, u8 *txbuf, unsigned int len)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
--	u8 reg = port->iobase + MAX310X_THR_REG;
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_raw_write(s->regmap, reg, txbuf, len);
-+	regmap_raw_write(one->regmap, MAX310X_THR_REG, txbuf, len);
- }
- 
- static void max310x_batch_read(struct uart_port *port, u8 *rxbuf, unsigned int len)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
--	u8 reg = port->iobase + MAX310X_RHR_REG;
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_raw_read(s->regmap, reg, rxbuf, len);
-+	regmap_raw_read(one->regmap, MAX310X_RHR_REG, rxbuf, len);
- }
- 
- static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
-@@ -1247,15 +1246,16 @@ static int max310x_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- #endif
- 
- static int max310x_probe(struct device *dev, const struct max310x_devtype *devtype,
--			 struct regmap *regmap, int irq)
-+			 struct regmap *regmaps[], int irq)
- {
- 	int i, ret, fmin, fmax, freq;
- 	struct max310x_port *s;
- 	s32 uartclk = 0;
- 	bool xtal;
- 
--	if (IS_ERR(regmap))
--		return PTR_ERR(regmap);
-+	for (i = 0; i < devtype->nr; i++)
-+		if (IS_ERR(regmaps[i]))
-+			return PTR_ERR(regmaps[i]);
- 
- 	/* Alloc port structure */
- 	s = devm_kzalloc(dev, struct_size(s, p, devtype->nr), GFP_KERNEL);
-@@ -1302,7 +1302,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		goto out_clk;
- 	}
- 
--	s->regmap = regmap;
-+	s->regmap = regmaps[0];
- 	s->devtype = devtype;
- 	dev_set_drvdata(dev, s);
- 
-@@ -1312,22 +1312,18 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		goto out_clk;
- 
- 	for (i = 0; i < devtype->nr; i++) {
--		unsigned int offs = i << 5;
+-bool amdgpu_is_internal_thermal_sensor(enum amdgpu_int_thermal_type sensor)
+-{
+-	switch (sensor) {
+-	case THERMAL_TYPE_RV6XX:
+-	case THERMAL_TYPE_RV770:
+-	case THERMAL_TYPE_EVERGREEN:
+-	case THERMAL_TYPE_SUMO:
+-	case THERMAL_TYPE_NI:
+-	case THERMAL_TYPE_SI:
+-	case THERMAL_TYPE_CI:
+-	case THERMAL_TYPE_KV:
+-		return true;
+-	case THERMAL_TYPE_ADT7473_WITH_INTERNAL:
+-	case THERMAL_TYPE_EMC2103_WITH_INTERNAL:
+-		return false; /* need special handling */
+-	case THERMAL_TYPE_NONE:
+-	case THERMAL_TYPE_EXTERNAL:
+-	case THERMAL_TYPE_EXTERNAL_GPIO:
+-	default:
+-		return false;
+-	}
+-}
 -
- 		/* Reset port */
--		regmap_write(s->regmap, MAX310X_MODE2_REG + offs,
-+		regmap_write(regmaps[i], MAX310X_MODE2_REG,
- 			     MAX310X_MODE2_RST_BIT);
- 		/* Clear port reset */
--		regmap_write(s->regmap, MAX310X_MODE2_REG + offs, 0);
-+		regmap_write(regmaps[i], MAX310X_MODE2_REG, 0);
+ union power_info {
+ 	struct _ATOM_POWERPLAY_INFO info;
+ 	struct _ATOM_POWERPLAY_INFO_V2 info_2;
+diff --git a/drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h b/drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h
+index 16e3f72d31b9f..a3f6caaec88c7 100644
+--- a/drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h
++++ b/drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h
+@@ -501,8 +501,6 @@ void amdgpu_dpm_get_active_displays(struct amdgpu_device *adev);
+ int amdgpu_dpm_read_sensor(struct amdgpu_device *adev, enum amd_pp_sensors sensor,
+ 			   void *data, uint32_t *size);
  
- 		/* Wait for port startup */
- 		do {
--			regmap_read(s->regmap,
--				    MAX310X_BRGDIVLSB_REG + offs, &ret);
-+			regmap_read(regmaps[i], MAX310X_BRGDIVLSB_REG, &ret);
- 		} while (ret != 0x01);
+-bool amdgpu_is_internal_thermal_sensor(enum amdgpu_int_thermal_type sensor);
+-
+ int amdgpu_get_platform_caps(struct amdgpu_device *adev);
  
--		regmap_write(s->regmap, MAX310X_MODE1_REG + offs,
--			     devtype->mode1);
-+		regmap_write(regmaps[i], MAX310X_MODE1_REG, devtype->mode1);
+ int amdgpu_parse_extended_power_table(struct amdgpu_device *adev);
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c b/drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c
+index 309c9f0b8f83a..b56854c03ead6 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c
+@@ -1256,6 +1256,29 @@ static void kv_dpm_enable_bapm(void *handle, bool enable)
  	}
- 
- 	uartclk = max310x_set_ref_clk(dev, s, freq, xtal);
-@@ -1355,11 +1351,13 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		s->p[i].port.fifosize	= MAX310X_FIFO_SIZE;
- 		s->p[i].port.flags	= UPF_FIXED_TYPE | UPF_LOW_LATENCY;
- 		s->p[i].port.iotype	= UPIO_PORT;
--		s->p[i].port.iobase	= i * 0x20;
-+		s->p[i].port.iobase	= i;
- 		s->p[i].port.membase	= (void __iomem *)~0;
- 		s->p[i].port.uartclk	= uartclk;
- 		s->p[i].port.rs485_config = max310x_rs485_config;
- 		s->p[i].port.ops	= &max310x_ops;
-+		s->p[i].regmap		= regmaps[i];
-+
- 		/* Disable all interrupts */
- 		max310x_port_write(&s->p[i].port, MAX310X_IRQEN_REG, 0);
- 		/* Clear IRQ status register */
-@@ -1456,6 +1454,7 @@ static struct regmap_config regcfg = {
- 	.val_bits = 8,
- 	.write_flag_mask = MAX310X_WRITE_BIT,
- 	.cache_type = REGCACHE_RBTREE,
-+	.max_register = MAX310X_REG_1F,
- 	.writeable_reg = max310x_reg_writeable,
- 	.volatile_reg = max310x_reg_volatile,
- 	.precious_reg = max310x_reg_precious,
-@@ -1465,7 +1464,8 @@ static struct regmap_config regcfg = {
- static int max310x_spi_probe(struct spi_device *spi)
- {
- 	const struct max310x_devtype *devtype;
--	struct regmap *regmap;
-+	struct regmap *regmaps[4];
-+	unsigned int i;
- 	int ret;
- 
- 	/* Setup SPI bus */
-@@ -1480,10 +1480,14 @@ static int max310x_spi_probe(struct spi_device *spi)
- 	if (!devtype)
- 		devtype = (struct max310x_devtype *)spi_get_device_id(spi)->driver_data;
- 
--	regcfg.max_register = devtype->nr * 0x20 - 1;
--	regmap = devm_regmap_init_spi(spi, &regcfg);
-+	for (i = 0; i < devtype->nr; i++) {
-+		u8 port_mask = i * 0x20;
-+		regcfg.read_flag_mask = port_mask;
-+		regcfg.write_flag_mask = port_mask | MAX310X_WRITE_BIT;
-+		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
-+	}
- 
--	return max310x_probe(&spi->dev, devtype, regmap, spi->irq);
-+	return max310x_probe(&spi->dev, devtype, regmaps, spi->irq);
  }
  
- static int max310x_spi_remove(struct spi_device *spi)
++static bool kv_is_internal_thermal_sensor(enum amdgpu_int_thermal_type sensor)
++{
++	switch (sensor) {
++	case THERMAL_TYPE_RV6XX:
++	case THERMAL_TYPE_RV770:
++	case THERMAL_TYPE_EVERGREEN:
++	case THERMAL_TYPE_SUMO:
++	case THERMAL_TYPE_NI:
++	case THERMAL_TYPE_SI:
++	case THERMAL_TYPE_CI:
++	case THERMAL_TYPE_KV:
++		return true;
++	case THERMAL_TYPE_ADT7473_WITH_INTERNAL:
++	case THERMAL_TYPE_EMC2103_WITH_INTERNAL:
++		return false; /* need special handling */
++	case THERMAL_TYPE_NONE:
++	case THERMAL_TYPE_EXTERNAL:
++	case THERMAL_TYPE_EXTERNAL_GPIO:
++	default:
++		return false;
++	}
++}
++
+ static int kv_dpm_enable(struct amdgpu_device *adev)
+ {
+ 	struct kv_power_info *pi = kv_get_pi(adev);
+@@ -1352,7 +1375,7 @@ static int kv_dpm_enable(struct amdgpu_device *adev)
+ 	}
+ 
+ 	if (adev->irq.installed &&
+-	    amdgpu_is_internal_thermal_sensor(adev->pm.int_thermal_type)) {
++	    kv_is_internal_thermal_sensor(adev->pm.int_thermal_type)) {
+ 		ret = kv_set_thermal_temperature_range(adev, KV_TEMP_RANGE_MIN, KV_TEMP_RANGE_MAX);
+ 		if (ret) {
+ 			DRM_ERROR("kv_set_thermal_temperature_range failed\n");
 -- 
 2.43.0
 
