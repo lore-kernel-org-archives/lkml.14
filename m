@@ -1,235 +1,259 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85C33F9C3;
-	Wed, 13 Mar 2024 11:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBBB3EA72;
+	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710329000; cv=none; b=BMbXTagCkgH3DrI5bzEBYghTWosrmK8vCiK451/atA7blV5OQibauqz8e+QG9TOUpwbFVDYNp8eaSNZypmHMdUOtobFAamk2O6VbeP0+5bS3UpgtPBVphwyJDLM4VENlfdTzTeqmsAahg4/rT+T68t9RAv119PC78WB3soHJ9oI=
+	t=1710329136; cv=none; b=crP1umV2vr3twZUIZn4wHiy/OxTiYpfcb4TCzx30lQYkOg/rIsDpOQkGwnf1HNM+uyeoTQuEYNDy3IsNzRmCbab3ojp24HS8a9A7++8mbJ94hpcRm4dskDZgCPJX4Hl6//OYeeGs1gM381tbj1gSGuE8yGQR/4b7DfafScKhiXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710329000; c=relaxed/simple;
-	bh=ky5paA1va6E/CB36kmKyUjj55I5Een4JO/KffX7kyUw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RBI8vZe81zhnAhnRcPRDo1Ojhhm/7XKe0b7dvV4C66v5cso9gofXt670quGIwWxEhQn02ikX3vMbEjDvnibTb6eqT0exRa+WFfxgySlPnmezSoATJIjjvSP3nAyX3l0ck4aQI7NOGGIIDNyCU5CjC7+bLOYmoQ4JuHaTmYVb/2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBd4F6Yz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710329136; c=relaxed/simple;
+	bh=LYcNh8f/VUH2gSW2953XdtfYjWbGSG8COCLwOqFU9ss=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ts0v3/PSqx1OrFjsaLmyS85NaWyXYKuW5WqBOXJBrFhxJBTSb1+0KE88/z9gTbHjxFvBS/wf1hTwIt1RCewQJAHVTuaraRZiFALCCb/CmjRg8gtwQ5d+7Q3qo8n74T3DexRhDoVwtFeXL62Vo+l1LkjI8r+GC0pmSXY9lPYrxUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbL5fwOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBd4F6Yz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB280C43142;
-	Wed, 13 Mar 2024 11:23:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbL5fwOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D208C433C7;
+	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710329000;
-	bh=ky5paA1va6E/CB36kmKyUjj55I5Een4JO/KffX7kyUw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fBd4F6YzojExJlnfzCYHDFtrR/a1ZSZmUkbTjObXd3K8AhMykeUsIoiXxW6pmSu4R
-	 1ScK2MPSbm3BqIdwYBu0eCZmJP+P+r+xNLfWtsFneiOeC2L8BY6oHE1lVwYi6/gqs3
-	 yANcB+zEVO6khJF/7W/gkb5jMFMq91QzOBneywVPWPp9E3ryWBRNx57HUjIa4OfAUz
-	 hKMdyha3G7KcKATqDCtadxLFa4gS8au6cHxFOxA71VUwIKGoThcaaW+iKPL5J78qKd
-	 8+oX6nBrhECAmqZG22RkOaTOgJm5FVwttpqsRwrYZCQksK08UIzmUfjLdWibmi2YcY
-	 5s/mrfR62XSqA==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Puranjay Mohan <puranjay12@gmail.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
- Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
- <jeeheng.sia@starfivetech.com>, Bj"orn T"opel <bjorn@rivosinc.com>, Song
- Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>, Al
- Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Andy Chiu <andy.chiu@sifive.com>
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-In-Reply-To: <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
-References: <20240306165904.108141-1-puranjay12@gmail.com>
- <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
-Date: Wed, 13 Mar 2024 12:23:06 +0100
-Message-ID: <8734suqsth.fsf@all.your.base.are.belong.to.us>
+	s=k20201202; t=1710329135;
+	bh=LYcNh8f/VUH2gSW2953XdtfYjWbGSG8COCLwOqFU9ss=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=UbL5fwOesmZxDjwGCadSLhlMetEzhhV4Sk6MRiBZPi7LHDafsiZ6rtdallYJqmKiM
+	 79yeNbQpI9PHxcxAoF7Etf1rVvKhH8EZ0hAXLqHgMBzVHs1vWpU2iuwGcDT3/uPDIv
+	 qbNYSTqmojPupxOpwiIC7PyLYq96LuxCM89+phSPRnLP57O/ViLtUG4b2o+OzwSJXl
+	 cSLK2aGj+Y1mT7eDUipud8VnAtU1K4RBjfW3lW58ZPteo1JsrpKl+iB7xQJSQ+Egul
+	 sZaN/0scE39HIUN15P74xpLI1w0J1c6lGwjAmtIghqbsXfpnk/AaJPjXQ0QpW4Myqg
+	 iMkw97lR19y+A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FCC54791;
+	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Wed, 13 Mar 2024 14:25:07 +0300
+Subject: [PATCH net] net: dsa: mt7530: prevent possible incorrect XTAL
+ frequency selection
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: =?utf-8?q?=3C20240313-for-netnext-mt7530-better-fix-xtal-frequen?=
+ =?utf-8?q?cy-v1-1-5a50df99f51a=40arinc9=2Ecom=3E?=
+X-B4-Tracking: v=1; b=H4sIABKN8WUC/x2NzQrCMBAGX6Xs2YX8WEt9FemhrV80oKluVkkpf
+ XeDx4FhZqMMich0bjYSfGOOS6pgDw3N9zHdwPFamZxxR+Ot47AIJ2hCUX5q13rDE1QhHGLhouO
+ Dg+D9QZpX9han0Pa9t12gmnwJqvXfXahWaNj3H5EuS5uDAAAA
+To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Landen Chao <Landen.Chao@mediatek.com>
+Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>, 
+ mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ Justin Swartz <justin.swartz@risingedge.co.za>, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710329122; l=6561;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=L64g+46HN+S29jthqvg493sRpkqBmVTreKHISDH47E8=;
+ b=QETKrDhCZGIxxkfvVHrUw+tUQmz/zGwkbwSTF7U2X5bdPBFZKtDOmY0SPiSsK98/qW7i0Kty1
+ Fo+cDhkeTl+DLsjd42I1KWahApVmEMICNgNOyCa7nk9iV2a8eGtGNzy
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
-Mark Rutland <mark.rutland@arm.com> writes:
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-> Hi Bjorn
->
-> (apologies, my corporate mail server has butchered your name here).
+On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
+value that represents the frequency of the crystal oscillator connected to
+the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
+ESW_P4_LED_0 pins, which is done right after reset is deasserted.
 
-Ha! That's the price I have to pay for carrying double-umlauts
-everywhere. Thanks for getting back with a really useful answer!
+  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
+  -----------------------------------------
+  0               0               Reserved
+  0               1               20MHz
+  1               0               40MHz
+  1               1               25MHz
 
->> On Arm64, CALL_OPS makes it possible to implement direct calls, while
->> only patching one BL instruction -- nice!
->
-> The key thing here isn't that we patch a single instruction (since we hav=
-e ot
-> patch the ops pointer too!); it's that we can safely patch either of the =
-ops
-> pointer or BL/NOP at any time while threads are concurrently executing.
+On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
+pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
+it's low.
 
-...which indeed is a very nice property!
+These pins are also used with LEDs, therefore, their state can be set to
+something other than the bootstrapping configuration. For example, a link
+may be established on port 3 before the DSA subdriver takes control of the
+switch which would set ESW_P3_LED_0 to high.
 
-> If you have a multi-instruction sequence, then threads can be preempted
-> mid-sequence, and it's very painful/complex to handle all of the races th=
-at
-> entails.
+Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
+described between reset assertion and deassertion. Some switch ICs in real
+life conditions cannot always have these pins set back to the bootstrapping
+configuration before reset deassertion in this amount of delay. This causes
+wrong crystal frequency to be selected which puts the switch in a
+nonfunctional state after reset deassertion.
 
-Oh yes. RISC-V is currently using auipc/jalr with stop_machine(), and
-also requires that preemtion is off. Unusable to put it blunt.
+The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
+by Justin Swartz.
 
-> For example, if your callsites use a sequence:
->
-> 	AUIPC <tmp>, <funcptr>
-> 	JALR <tmp2>, <funcptr>(<tmp>)
->
-> Using stop_machine() won't allow you to patch that safely as some threads
-> could be stuck mid-sequence, e.g.
->
-> 	AUIPC <tmp>, <funcptr>
-> 	[ preempted here ]
-> 	JALR <tmp2>, <funcptr>(<tmp>)
->
-> ... and you can't update the JALR to use a new funcptr immediate until th=
-ose
-> have completed the sequence.
->
-> There are ways around that, but they're complicated and/or expensive, e.g.
->
-> * Use a sequence of multiple patches, starting with replacing the JALR wi=
-th an
->   exception-generating instruction with a fixup handler, which is sort-of=
- what
->   x86 does with UD2. This may require multiple passes with
->   synchronize_rcu_tasks() to make sure all threads have seen the latest
->   instructions, and that cannot be done under stop_machine(), so if you n=
-eed
->   stop_machine() for CMODx reasons, you may need to use that several time=
-s with
->   intervening calls to synchronize_rcu_tasks().
->
-> * Have the patching logic manually go over each thread and fix up the pt_=
-regs
->   for the interrupted thread. This is pretty horrid since you could have =
-nested
->   exceptions and a task could have several pt_regs which might require
->   updating.
+With a cable from an active peer connected to port 3 before reset, an
+incorrect crystal frequency (0b11 = 25MHz) is selected:
 
-Yup, and both of these have rather unplesant overhead.
+                      [1]                  [3]     [5]
+                      :                    :       :
+              _____________________________         __________________
+ESW_P4_LED_0                               |_______|
+              _____________________________
+ESW_P3_LED_0                               |__________________________
 
-> The CALL_OPS approach is a bit easier to deal with as we can patch the
-> per-callsite pointer atomically, then we can (possibly) enable/disable the
-> callsite's branch, then wait for threads to drain once.=20
->
-> As a heads-up, there are some latent/generic issues with DYNAMIC_FTRACE
-> generally in this area (CALL_OPs happens to side-step those, but trampoli=
-ne
-> usage is currently affected):
->
->   https://lore.kernel.org/lkml/Zenx_Q0UiwMbSAdP@FVFF77S0Q05N/
->
-> ... I'm looking into fixing that at the moment, and it looks like that's =
-likely
-> to require some per-architecture changes.
->
->> On RISC-V we cannot use use the same ideas as Arm64 straight off,
->> because the range of jal (compare to BL) is simply too short (+/-1M).
->> So, on RISC-V we need to use a full auipc/jal pair (the text patching
->> story is another chapter, but let's leave that aside for now). Since we
->> have to patch multiple instructions, the cmodx situation doesn't really
->> improve with CALL_OPS.
->
-> The branch range thing is annoying, but I think this boils down to the sa=
-me
-> problem as arm64 has with needing a "MOV <tmp>, LR" instruction that we h=
-ave to
-> patch in once at boot time. You could do the same and patch in the AUIPC =
-once,
-> e.g. have
->
-> | 	NOP
-> | 	NOP=20
-> | func:
-> | 	AUIPC <tmp>, <common_ftrace_caller>
-> | 	JALR <tmp2>, <common_ftrace_caller>(<tmp>) // patched with NOP
->
-> ... which'd look very similar to arm64's sequence:
->
-> | 	NOP
-> | 	NOP
-> | func:
-> | 	MOV X9, LR
-> | 	BL ftrace_caller // patched with NOP
->
-> ... which I think means it *might* be better from a cmodx perspective?
->
->> Let's say that we continue building on your patch and implement direct
->> calls on CALL_OPS for RISC-V as well.
->>=20
->> From Florent's commit message for direct calls:
->>=20
->>   |    There are a few cases to distinguish:
->>   |    - If a direct call ops is the only one tracing a function:
->>   |      - If the direct called trampoline is within the reach of a BL
->>   |        instruction
->>   |         -> the ftrace patchsite jumps to the trampoline
->>   |      - Else
->>   |         -> the ftrace patchsite jumps to the ftrace_caller trampolin=
-e which
->>   |            reads the ops pointer in the patchsite and jumps to the d=
-irect
->>   |            call address stored in the ops
->>   |    - Else
->>   |      -> the ftrace patchsite jumps to the ftrace_caller trampoline a=
-nd its
->>   |         ops literal points to ftrace_list_ops so it iterates over all
->>   |         registered ftrace ops, including the direct call ops and cal=
-ls its
->>   |         call_direct_funcs handler which stores the direct called
->>   |         trampoline's address in the ftrace_regs and the ftrace_caller
->>   |         trampoline will return to that address instead of returning =
-to the
->>   |         traced function
->>=20
->> On RISC-V, where auipc/jalr is used, the direct called trampoline would
->> always be reachable, and then first Else-clause would never be entered.
->> This means the the performance for direct calls would be the same as the
->> one we have today (i.e. no regression!).
->>=20
->> RISC-V does like x86 does (-ish) -- patch multiple instructions, long
->> reach.
->>=20
->> Arm64 uses CALL_OPS and patch one instruction BL.
->>=20
->> Now, with this background in mind, compared to what we have today,
->> CALL_OPS would give us (again assuming we're using it for direct calls):
->>=20
->> * Better performance for tracer per-call (faster ops lookup) GOOD
->> * Larger text size (function alignment + extra nops) BAD
->> * Same direct call performance NEUTRAL
->> * Same complicated text patching required NEUTRAL
->
-> Is your current sequence safe for preemptible kernels (i.e. with PREEMPT_=
-FULL=3Dy
-> or PREEMPT_DYNAMIC=3Dy + "preempt=3Dfull" on the kernel cmdline) ?
+                       :                  : :     :
+                       :                  : [4]...:
+                       :                  :
+                       [2]................:
 
-It's very much not, and was in-fact presented by Andy (Cc) discussed at
-length at Plumbers two years back.
+[1] Reset is asserted.
+[2] Period of 1000 - 1100 usec.
+[3] Reset is deasserted.
+[4] Period of 315 usec. HWTRAP register is populated with incorrect
+    XTAL frequency.
+[5] Signals reflect the bootstrapped configuration.
 
-Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynamic
-trampolines changes quite a bit.
+Increase the delay between reset_control_assert() and
+reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
+gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
+ensures a higher possibility that the switch IC will have these pins back
+to the bootstrapping configuration before reset deassertion.
 
-The more I look at the pains of patching two instruction ("split
-immediates"), the better "patch data" + one insn patching look.
+With a cable from an active peer connected to port 3 before reset, the
+correct crystal frequency (0b10 = 40MHz) is selected:
 
-I which we had longer instructions, that could fit a 48b address or
-more! ;-)
+                      [1]        [2-1]     [3]     [5]
+                      :          :         :       :
+              _____________________________         __________________
+ESW_P4_LED_0                               |_______|
+              ___________________           _______
+ESW_P3_LED_0                     |_________|       |__________________
 
+                       :          :       : :     :
+                       :          [2-2]...: [4]...:
+                       [2]................:
 
-Again, thanks for a thought provoking reply!
-Bj=C3=B6rn
+[1] Reset is asserted.
+[2] Period of 5000 - 5100 usec.
+[2-1] ESW_P3_LED_0 goes low.
+[2-2] Remaining period of 5000 - 5100 usec.
+[3] Reset is deasserted.
+[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
+    XTAL frequency.
+[5] Signals reflect the bootstrapped configuration.
+
+ESW_P3_LED_0 low period before reset deassertion:
+
+              5000 usec
+            - 5100 usec
+    TEST     RESET HOLD
+       #         (usec)
+  ---------------------
+       1           5410
+       2           5440
+       3           4375
+       4           5490
+       5           5475
+       6           4335
+       7           4370
+       8           5435
+       9           4205
+      10           4335
+      11           3750
+      12           3170
+      13           4395
+      14           4375
+      15           3515
+      16           4335
+      17           4220
+      18           4175
+      19           4175
+      20           4350
+
+     Min           3170
+     Max           5490
+
+  Median       4342.500
+     Avg       4466.500
+
+Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
+Changing the state of pins via reset assertion is simpler and more
+efficient than doing so by setting the LED controller off.
+
+Reported-by: Justin Swartz <justin.swartz@risingedge.co.za>
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ drivers/net/dsa/mt7530.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 678b51f9cea6..6986f538a4d0 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2192,22 +2192,16 @@ mt7530_setup(struct dsa_switch *ds)
+ 		}
+ 	}
+ 
+-	/* Disable LEDs before reset to prevent the MT7530 sampling a
+-	 * potentially incorrect HT_XTAL_FSEL value.
+-	 */
+-	mt7530_write(priv, MT7530_LED_EN, 0);
+-	usleep_range(1000, 1100);
+-
+ 	/* Reset whole chip through gpio pin or memory-mapped registers for
+ 	 * different type of hardware
+ 	 */
+ 	if (priv->mcm) {
+ 		reset_control_assert(priv->rstc);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		reset_control_deassert(priv->rstc);
+ 	} else {
+ 		gpiod_set_value_cansleep(priv->reset, 0);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		gpiod_set_value_cansleep(priv->reset, 1);
+ 	}
+ 
+@@ -2420,11 +2414,11 @@ mt7531_setup(struct dsa_switch *ds)
+ 	 */
+ 	if (priv->mcm) {
+ 		reset_control_assert(priv->rstc);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		reset_control_deassert(priv->rstc);
+ 	} else {
+ 		gpiod_set_value_cansleep(priv->reset, 0);
+-		usleep_range(1000, 1100);
++		usleep_range(5000, 5100);
+ 		gpiod_set_value_cansleep(priv->reset, 1);
+ 	}
+ 
+
+---
+base-commit: d7d75124965aee23e5e4421d78376545cf070b0a
+change-id: 20240312-for-netnext-mt7530-better-fix-xtal-frequency-31e6f599317f
+
+Best regards,
+-- 
+Arınç ÜNAL <arinc.unal@arinc9.com>
+
