@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8346D1B5;
-	Wed, 13 Mar 2024 16:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29676E5E4;
+	Wed, 13 Mar 2024 16:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710347864; cv=none; b=e0SrJ1M6CWr8/jm5IQNr3tg5k1CLWS7KRiKdtemRhPUcyHr/w9WEBZZqieQig0SPz+F09OK5NfWPnTJi/9yfUZeflDTUC7bC3oiKDn937cAHVhm8OYFLNhywA+485oApPG10f5B8YYg6PyGc4mVuzUr481SO8OcpdDnRW61j0wk=
+	t=1710347866; cv=none; b=qnQvhVWQd+h7/iQMS8QymSV9ixuJlTD6xjYW9AbgL6oQNBvAo+2JkmDdc5DVKDK9C4wLGnbAzXWhL8opklmaGrD57/H7UEkapjHOTpAZHXdOGXexsBV6V1enq0mebWrcZUjTKFQ6mlxDi+pE2fyV6Dpi7/8L71WtyN1nFDbmP9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710347864; c=relaxed/simple;
-	bh=kolto2Jurltm4O2d84aCWETSNmbSu8O6ktjmxyJAh7Y=;
+	s=arc-20240116; t=1710347866; c=relaxed/simple;
+	bh=0349rCBtQHX3P/19UmozTqNz1mIKgWtcOTqH+LMfkwI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O54bjPhpdXCN+PchrXax98kwyQUZRplmaxHVuMaI56Ql1bCeHdFFVQTsPTd84jsduO4HBvWDHlP8mj2nQBOvdHtLew2TXcsNTFhhKXr5Ui5JiuoyaeYrzait9PeqdkLptwNOYsS2YJYIorVwI1t2ufO0py2xGqYDW0u332Pj1Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbo1e3sV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fBF8T0xNADyp/4weTId0ASeT3TuD5gXgUG81I76ogCet6aM6C3fzVlRLEno/IxxaAXMW+hR7HdUOTUq+6vjqI7r416LOA2zK0+rOhQjoxGd1VJOg7XukxZ1MpcvzIy40JhpOo5UBYv3Lbnc1qUh3vXhiNiCX3nuxTioZ7PexCCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnsvJboV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbo1e3sV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47166C433C7;
-	Wed, 13 Mar 2024 16:37:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnsvJboV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD19C433B2;
+	Wed, 13 Mar 2024 16:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710347864;
-	bh=kolto2Jurltm4O2d84aCWETSNmbSu8O6ktjmxyJAh7Y=;
+	s=k20201202; t=1710347866;
+	bh=0349rCBtQHX3P/19UmozTqNz1mIKgWtcOTqH+LMfkwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dbo1e3sVsKY+TzzpdLisNUOoof52vJ/LemoBvAqY13UkF5PAEJ95cYGfUbXd71uaD
-	 xjuTYFDME+nvBRRRGteEkfHxVToOckdHqNEJQueNC085mnwiTqjUM3p8CGVSjxD6Vg
-	 Kflz2rs0LRyj4dv2hU4Z3x9PHmfjeOHan8rMshU+qkpLD4r6jkYuiVnNE7+AvLyl9H
-	 euFNR3k9XFfQWKO2WwGaqnsbXBTShdy/CxpLRSWyTQxLDbPJxi4Vx0HWcIumt+NHEN
-	 uNHwrhPoavU5Al4+fgvQiQpPR2rW6F5Jg46PFC3iu6rjyqvliFY1vWciwt2mdsh0ie
-	 8Ij59sA7VzcYg==
+	b=JnsvJboVfSSS46YlXFdTgsb/Ahfi97bmq0KlyW5CJOv9WQ8gOLUNWIgM1t35PttnN
+	 mslc6XUXy8FGci9GlxkQ161rh1PM4TprUCxzxoixGfaYa5BllGXbpk0EnpnefqR+4w
+	 UJDmtdEHkFffKWrri28sx/wzX8qYFbKVqdZ8K98bjampgxfKx0oGYyI1m3JD0EmCwh
+	 q21q894omQc1vsTROaEXvLnw/AmC9OlONvxQnnrZxEZ8N5f/+QTmvW5XUu7vyEj0RS
+	 sOL0UJuylckKY5X+4A9a5MUKKNghJnifNIh1zu81IQrVfxHqg4CTbI3bLJbQY1Fy+N
+	 sZnSNd7gMU/CQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Florian Kauer <florian.kauer@linutronix.de>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Naama Meir <naamax.meir@linux.intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 27/60] igc: avoid returning frame twice in XDP_REDIRECT
-Date: Wed, 13 Mar 2024 12:36:34 -0400
-Message-ID: <20240313163707.615000-28-sashal@kernel.org>
+Subject: [PATCH 6.6 29/60] bpf: check bpf_func_state->callback_depth when pruning states
+Date: Wed, 13 Mar 2024 12:36:36 -0400
+Message-ID: <20240313163707.615000-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313163707.615000-1-sashal@kernel.org>
 References: <20240313163707.615000-1-sashal@kernel.org>
@@ -56,167 +55,123 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Florian Kauer <florian.kauer@linutronix.de>
+From: Eduard Zingerman <eddyz87@gmail.com>
 
-[ Upstream commit ef27f655b438bed4c83680e4f01e1cde2739854b ]
+[ Upstream commit e9a8e5a587ca55fec6c58e4881742705d45bee54 ]
 
-When a frame can not be transmitted in XDP_REDIRECT
-(e.g. due to a full queue), it is necessary to free
-it by calling xdp_return_frame_rx_napi.
+When comparing current and cached states verifier should consider
+bpf_func_state->callback_depth. Current state cannot be pruned against
+cached state, when current states has more iterations left compared to
+cached state. Current state has more iterations left when it's
+callback_depth is smaller.
 
-However, this is the responsibility of the caller of
-the ndo_xdp_xmit (see for example bq_xmit_all in
-kernel/bpf/devmap.c) and thus calling it inside
-igc_xdp_xmit (which is the ndo_xdp_xmit of the igc
-driver) as well will lead to memory corruption.
+Below is an example illustrating this bug, minimized from mailing list
+discussion [0] (assume that BPF_F_TEST_STATE_FREQ is set).
+The example is not a safe program: if loop_cb point (1) is followed by
+loop_cb point (2), then division by zero is possible at point (4).
 
-In fact, bq_xmit_all expects that it can return all
-frames after the last successfully transmitted one.
-Therefore, break for the first not transmitted frame,
-but do not call xdp_return_frame_rx_napi in igc_xdp_xmit.
-This is equally implemented in other Intel drivers
-such as the igb.
+    struct ctx {
+    	__u64 a;
+    	__u64 b;
+    	__u64 c;
+    };
 
-There are two alternatives to this that were rejected:
-1. Return num_frames as all the frames would have been
-   transmitted and release them inside igc_xdp_xmit.
-   While it might work technically, it is not what
-   the return value is meant to represent (i.e. the
-   number of SUCCESSFULLY transmitted packets).
-2. Rework kernel/bpf/devmap.c and all drivers to
-   support non-consecutively dropped packets.
-   Besides being complex, it likely has a negative
-   performance impact without a significant gain
-   since it is anyway unlikely that the next frame
-   can be transmitted if the previous one was dropped.
+    static void loop_cb(int i, struct ctx *ctx)
+    {
+    	/* assume that generated code is "fallthrough-first":
+    	 * if ... == 1 goto
+    	 * if ... == 2 goto
+    	 * <default>
+    	 */
+    	switch (bpf_get_prandom_u32()) {
+    	case 1:  /* 1 */ ctx->a = 42; return 0; break;
+    	case 2:  /* 2 */ ctx->b = 42; return 0; break;
+    	default: /* 3 */ ctx->c = 42; return 0; break;
+    	}
+    }
 
-The memory corruption can be reproduced with
-the following script which leads to a kernel panic
-after a few seconds.  It basically generates more
-traffic than a i225 NIC can transmit and pushes it
-via XDP_REDIRECT from a virtual interface to the
-physical interface where frames get dropped.
+    SEC("tc")
+    __failure
+    __flag(BPF_F_TEST_STATE_FREQ)
+    int test(struct __sk_buff *skb)
+    {
+    	struct ctx ctx = { 7, 7, 7 };
 
-   #!/bin/bash
-   INTERFACE=enp4s0
-   INTERFACE_IDX=`cat /sys/class/net/$INTERFACE/ifindex`
+    	bpf_loop(2, loop_cb, &ctx, 0);              /* 0 */
+    	/* assume generated checks are in-order: .a first */
+    	if (ctx.a == 42 && ctx.b == 42 && ctx.c == 7)
+    		asm volatile("r0 /= 0;":::"r0");    /* 4 */
+    	return 0;
+    }
 
-   sudo ip link add dev veth1 type veth peer name veth2
-   sudo ip link set up $INTERFACE
-   sudo ip link set up veth1
-   sudo ip link set up veth2
+Prior to this commit verifier built the following checkpoint tree for
+this example:
 
-   cat << EOF > redirect.bpf.c
+ .------------------------------------- Checkpoint / State name
+ |    .-------------------------------- Code point number
+ |    |   .---------------------------- Stack state {ctx.a,ctx.b,ctx.c}
+ |    |   |        .------------------- Callback depth in frame #0
+ v    v   v        v
+   - (0) {7P,7P,7},depth=0
+     - (3) {7P,7P,7},depth=1
+       - (0) {7P,7P,42},depth=1
+         - (3) {7P,7,42},depth=2
+           - (0) {7P,7,42},depth=2      loop terminates because of depth limit
+             - (4) {7P,7,42},depth=0    predicted false, ctx.a marked precise
+             - (6) exit
+(a)      - (2) {7P,7,42},depth=2
+           - (0) {7P,42,42},depth=2     loop terminates because of depth limit
+             - (4) {7P,42,42},depth=0   predicted false, ctx.a marked precise
+             - (6) exit
+(b)      - (1) {7P,7P,42},depth=2
+           - (0) {42P,7P,42},depth=2    loop terminates because of depth limit
+             - (4) {42P,7P,42},depth=0  predicted false, ctx.{a,b} marked precise
+             - (6) exit
+     - (2) {7P,7,7},depth=1             considered safe, pruned using checkpoint (a)
+(c)  - (1) {7P,7P,7},depth=1            considered safe, pruned using checkpoint (b)
 
-   SEC("prog")
-   int redirect(struct xdp_md *ctx)
-   {
-       return bpf_redirect($INTERFACE_IDX, 0);
-   }
+Here checkpoint (b) has callback_depth of 2, meaning that it would
+never reach state {42,42,7}.
+While checkpoint (c) has callback_depth of 1, and thus
+could yet explore the state {42,42,7} if not pruned prematurely.
+This commit makes forbids such premature pruning,
+allowing verifier to explore states sub-tree starting at (c):
 
-   char _license[] SEC("license") = "GPL";
-   EOF
-   clang -O2 -g -Wall -target bpf -c redirect.bpf.c -o redirect.bpf.o
-   sudo ip link set veth2 xdp obj redirect.bpf.o
+(c)  - (1) {7,7,7P},depth=1
+       - (0) {42P,7,7P},depth=1
+         ...
+         - (2) {42,7,7},depth=2
+           - (0) {42,42,7},depth=2      loop terminates because of depth limit
+             - (4) {42,42,7},depth=0    predicted true, ctx.{a,b,c} marked precise
+               - (5) division by zero
 
-   cat << EOF > pass.bpf.c
+[0] https://lore.kernel.org/bpf/9b251840-7cb8-4d17-bd23-1fc8071d8eef@linux.dev/
 
-   SEC("prog")
-   int pass(struct xdp_md *ctx)
-   {
-       return XDP_PASS;
-   }
-
-   char _license[] SEC("license") = "GPL";
-   EOF
-   clang -O2 -g -Wall -target bpf -c pass.bpf.c -o pass.bpf.o
-   sudo ip link set $INTERFACE xdp obj pass.bpf.o
-
-   cat << EOF > trafgen.cfg
-
-   {
-     /* Ethernet Header */
-     0xe8, 0x6a, 0x64, 0x41, 0xbf, 0x46,
-     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-     const16(ETH_P_IP),
-
-     /* IPv4 Header */
-     0b01000101, 0,   # IPv4 version, IHL, TOS
-     const16(1028),   # IPv4 total length (UDP length + 20 bytes (IP header))
-     const16(2),      # IPv4 ident
-     0b01000000, 0,   # IPv4 flags, fragmentation off
-     64,              # IPv4 TTL
-     17,              # Protocol UDP
-     csumip(14, 33),  # IPv4 checksum
-
-     /* UDP Header */
-     10,  0, 1, 1,    # IP Src - adapt as needed
-     10,  0, 1, 2,    # IP Dest - adapt as needed
-     const16(6666),   # UDP Src Port
-     const16(6666),   # UDP Dest Port
-     const16(1008),   # UDP length (UDP header 8 bytes + payload length)
-     csumudp(14, 34), # UDP checksum
-
-     /* Payload */
-     fill('W', 1000),
-   }
-   EOF
-
-   sudo trafgen -i trafgen.cfg -b3000MB -o veth1 --cpp
-
-Fixes: 4ff320361092 ("igc: Add support for XDP_REDIRECT action")
-Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
-Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Tested-by: Naama Meir <naamax.meir@linux.intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Fixes: bb124da69c47 ("bpf: keep track of max number of bpf_loop callback iterations")
+Suggested-by: Yonghong Song <yonghong.song@linux.dev>
+Signed-off-by: Eduard Zingerman <eddyz87@gmail.com>
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
+Link: https://lore.kernel.org/r/20240222154121.6991-2-eddyz87@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ kernel/bpf/verifier.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 98de34d0ce07e..e549ffca88e39 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -6489,7 +6489,7 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
- 	int cpu = smp_processor_id();
- 	struct netdev_queue *nq;
- 	struct igc_ring *ring;
--	int i, drops;
-+	int i, nxmit;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index a7901ed358a0f..396c4c66932f2 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -16238,6 +16238,9 @@ static bool func_states_equal(struct bpf_verifier_env *env, struct bpf_func_stat
+ {
+ 	int i;
  
- 	if (unlikely(!netif_carrier_ok(dev)))
- 		return -ENETDOWN;
-@@ -6505,16 +6505,15 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
- 	/* Avoid transmit queue timeout since we share it with the slow path */
- 	txq_trans_cond_update(nq);
- 
--	drops = 0;
-+	nxmit = 0;
- 	for (i = 0; i < num_frames; i++) {
- 		int err;
- 		struct xdp_frame *xdpf = frames[i];
- 
- 		err = igc_xdp_init_tx_descriptor(ring, xdpf);
--		if (err) {
--			xdp_return_frame_rx_napi(xdpf);
--			drops++;
--		}
-+		if (err)
-+			break;
-+		nxmit++;
- 	}
- 
- 	if (flags & XDP_XMIT_FLUSH)
-@@ -6522,7 +6521,7 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
- 
- 	__netif_tx_unlock(nq);
- 
--	return num_frames - drops;
-+	return nxmit;
- }
- 
- static void igc_trigger_rxtxq_interrupt(struct igc_adapter *adapter,
++	if (old->callback_depth > cur->callback_depth)
++		return false;
++
+ 	for (i = 0; i < MAX_BPF_REG; i++)
+ 		if (!regsafe(env, &old->regs[i], &cur->regs[i],
+ 			     &env->idmap_scratch, exact))
 -- 
 2.43.0
 
