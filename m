@@ -1,78 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20AC18EAD;
-	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFE61428A
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 08:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710318029; cv=none; b=metS2POgNe9e/xJ4P+KN6Xvm/j8OmSkfXpFvWXMZgt3KrgginoWlsTH8fWAgh30sG25hH1sB9ohOg2RZnetMOkVXJW+tm1oDa4Eq9DpPq7UCRgb1WiZ27kcf8h9mDG0UFJSyGltlMO9JsvOaWISfzcETrRCa/GdEDe45z03pvFY=
+	t=1710318356; cv=none; b=cx14gMD5J8M0P+OAR22Sl6oH67CZ2falP1X4y/amjcMaEKnkh38ZB2iQ7hpcfdCs25OOaQHwjcATK0ZAWUOEgDVL9mQ3DKafOG3qDnHvdxMy9pRO7NbBzHNpFceIWB5Jsoubf0yg/fIzIrRmypjm7IOYK7NN8XXhNNVH59D8fMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710318029; c=relaxed/simple;
-	bh=oUsOL6hxMKKQ73cx4GRRn7cptHqRBCUzVvGVhHwPBhM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=H8T0WLWVZY47HueCFrFHBQuK1Bk1IeqbN7mouYdIDfGgCopUB1xUgDJRWfKzBhQ75lmpOy+aZxMy/j3guWsiBILa+542c0Vru+cLrc71f6vi8n/0xHR1fhhW6iwUrD2nvJM+vQ66I5mCqoEAobNaOcVqELnuAufK8uoKtPUC+Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIwnd13/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710318356; c=relaxed/simple;
+	bh=b7Tnp/Yse8g4h03H59s1KXPCgkVcxgZsLUGUxUbjJxE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KUL3oxXtcyyRL9dO6ROFZiDZmXn9n4+CssCIMLFaQteyti4191ArbRrw74G/151+g+xLB31R2zCaB0w6NMopLPnvxAR5HhJq45GgiI3c6IdhgU9F7hqbCpX2pslJr/8m8U0Mk6FzuNCxar2ScdiGmkLHmHMUWAOz/QdQcELY8iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jy7pPcWB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kPllyf/N; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIwnd13/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D9C3C43394;
-	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710318029;
-	bh=oUsOL6hxMKKQ73cx4GRRn7cptHqRBCUzVvGVhHwPBhM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fIwnd13/YmSHEt7lU1Dn9wEomsuhuBGK+sCUhUOHlCM7WB4NAkQrzT+gSudkKVyjg
-	 1lYOW0QC16NeMglK8WjPrXeCFovQbAam+tPQb2JKTta8iLkAe8PivPsa5bWQoZebCC
-	 qq8szawNSmwjXRguzmfXZo/JEnLYHrzlH1WzURIMT5AFByprkc1kz+mOeh/TjJbmJE
-	 YDSCJeHMZbV8Y+BFcpESmekhIrcFXG6uXwtkRfyeEtWwSbA4UIgdaar9Eh/sksW8i/
-	 DqDaoWoxXEw3V62JCofs28Ej3w0lFXgbgOiAmuta+yUdF5DRKhzEdZP6LHJehP0fep
-	 6ixf/bA/65mdw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 56593D95054;
-	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jy7pPcWB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kPllyf/N"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710318352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qmDJo6fzPhBsNX/lp9m4dC3u9FOBCYDlZ4df3GKyEY=;
+	b=Jy7pPcWBk013DFJwQ3yEQ60pnAG5sQXoYL1Va1ljMEowzlVxHuzeuA7zW+x+/YKdc7IaXy
+	JV6b0tRnaZl5LLw+WAqKozdA0UuWMzHqYS1yt/CJcDhALEeKnnuxswujtUnRoyCg263MqP
+	5peXiJBkuBdbNu873c15iYFMtkmP4JOzdcb3TOhal3UnOBgnFYC1DsukIaWTi3RPTXMKsm
+	xiXOBLqMKATTifgdXLitIriA0pszaDowTuAQyDb0BgGMGQ7geY0bMrNyu6e6gW0fFWg0Zs
+	2TWKso8X2uQ/DmCNJtAOTtqSRXlABJbaOVdVm5gW57+TDlRhEDWy9cxViilABw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710318352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qmDJo6fzPhBsNX/lp9m4dC3u9FOBCYDlZ4df3GKyEY=;
+	b=kPllyf/NWwBadhYPR26w1HrFbuQ/COKEacMoWt9eN4o3RlwbVW32izhgAYCtOEA07lAFF2
+	X1yhR0VdSoAtwCCw==
+To: Frederic Weisbecker <frederic@kernel.org>, kernel test robot
+ <oliver.sang@intel.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+ ying.huang@intel.com, feng.tang@intel.com, fengwei.yin@intel.com
+Subject: Re: [tip:timers/core] [timers]  7ee9887703:
+  netperf.Throughput_Mbps -1.2% regression
+In-Reply-To: <ZfDr6qOaMVnyoB8W@pavilion.home>
+References: <202403011511.24defbbd-oliver.sang@intel.com>
+ <ZfDr6qOaMVnyoB8W@pavilion.home>
+Date: Wed, 13 Mar 2024 09:25:51 +0100
+Message-ID: <87y1amo7w0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [net PATCH] octeontx2-af: Use matching wake_up API variant in CGX
- command interface
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171031802935.29357.8241782552356760374.git-patchwork-notify@kernel.org>
-Date: Wed, 13 Mar 2024 08:20:29 +0000
-References: <20240312070622.844546-1-lcherian@marvell.com>
-In-Reply-To: <20240312070622.844546-1-lcherian@marvell.com>
-To: Linu Cherian <lcherian@marvell.com>
-Cc: davem@davemloft.net, sgoutham@marvell.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, gakula@marvell.com, hkelam@marvell.com,
- sbhatta@marvell.com, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, Mar 13 2024 at 00:57, Frederic Weisbecker wrote:
+> So I can reproduce. And after hours staring at traces I haven't really fo=
+und
+> the real cause of this. 1% difference is not always easy to track down.
+> But here are some sort of conclusion so far:
+>
+> _ There is an increase of ksoftirqd use (+13%) but if I boot with threadi=
+rqs
+>   before and after the patch (which means that ksoftirqd is used all the =
+time
+>   for softirq handling) I still see the performance regression. So this
+>   shouldn't play a role here.
+>
+> _ I suspected that timer migrators handling big queues of timers on behal=
+f of
+>   idle CPUs would delay NET_RX softirqs but it doesn't seem to be the cas=
+e. I
+>   don't see TIMER vector delaying NET_RX vector after the hierarchical pu=
+ll
+>   model, quite the opposite actually, they are less delayed overall.
+>
+> _ I suspected that timer migrators handling big queues would add scheduli=
+ng
+>   latency. But it doesn't seem to be the case. Quite the opposite again,
+>   surprisingly.
+>
+> _ I have observed that, in average, timers execute later with the hierarc=
+hical
+>   pull model. The following delta:
+>        time of callback execution - bucket_expiry
+>   is 3 times higher with the hierarchical pull model. Whether that plays =
+a role
+>   is unclear. It might still be interesting to investigate.
+>
+> _ The initial perf profile seem to suggest a big increase of task migrati=
+on. Is
+>   it the result of ping-pong wakeup? Does that play a role?
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Migration is not cheap. The interesting question is whether this is
+caused by remote timer expiry.
 
-On Tue, 12 Mar 2024 12:36:22 +0530 you wrote:
-> Use wake_up API instead of wake_up_interruptible, since
-> wait_event_timeout API is used for waiting on command completion.
-> 
-> Fixes: 1463f382f58d ("octeontx2-af: Add support for CGX link management")
-> Signed-off-by: Linu Cherian <lcherian@marvell.com>
-> Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
-> Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
-> 
-> [...]
+Looking at the perf data there are significant changes vs. idle too:
 
-Here is the summary with links:
-  - [net] octeontx2-af: Use matching wake_up API variant in CGX command interface
-    https://git.kernel.org/netdev/net/c/e642921dfeed
+    perf-profile.calltrace.cycles-pp.poll_idle.cpuidle_enter_state.cpuidle_=
+enter.cpuidle_idle_call.do_idle
+	 36.91 =C2=B1  2%     -12.6       24.32 =C2=B1 10%     -12.3       24.63 =
+=C2=B1  5%=20
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+That indicates that cpuidle is spending less time in idle polling, which
+means that wakeup latency increases. That obviously might be a result of
+the timer migration properties.
 
+Do you have traces (before and after) handy to share?
 
+Thanks,
+
+        tglx
