@@ -1,913 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2054.outbound.protection.outlook.com [40.107.237.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF754652F;
-	Wed, 13 Mar 2024 14:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340212; cv=none; b=Yv+a01E8843W7T+zQ+jm2DVpWu402IN1Nr2yqgPZQlwFjbhh4qWQ3n53ivCASW0AP68qEIyolc9hIQsh/WMv3lHt+lO6uW4mbz+96279iI49/HRtF+z1zrahfJbWIs2vE3Q1xrVQGrlp0i7XIAIuop3GSZQSsIo3BFaUFXIyquQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340212; c=relaxed/simple;
-	bh=NKCAnvn2GlfxmGaWc2Xki/TBiHErm1NzNh5kU3t7Iv4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CSbLbbC2VCjQfjlgezUQ9+/JrDksesY1YLth4kZ7Ab5jwj4anLRzqD6lAz9eArBI3JE6/auqOYk41Z69fbIP2JLUrD4b5rdJImaUlKRjVZYe9DjjHxBstJQvyT+gyzLnb1IXK2gaRBHLPB1vl7QQUMhBRkoYwzkLdsL0jxheDPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AnEnV5QH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF22F17C8;
+	Wed, 13 Mar 2024 14:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710340334; cv=fail; b=iHZzzXIawS4CZpxDcrabOUfJoxKmlJ8GBmpPNyIzRlcdNIWAP0og2uxFiHlUwylBIDmyJqIxszjt3tjD8ntrns4g2hZ3+h+73LpNMejlxXBgudUDTs+WUAWcMzXfmsQdMPbzirp2EYx/oGVpL+ILTNmNRsBSqaOf3YVWZe7VEug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710340334; c=relaxed/simple;
+	bh=ja1xLTXdQT6Bq8Zy77CF7IeiPxpIPFesIK75tw/bgNA=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oCun68zbSYmp/pXRw6U+9jafVsCSZay4XNdbHx2TrB3fx93PW2L4RNYvlauZ5GG8M1pF9Pf+CtMFZvsIrLVKDzmoeeGfzRA8qLt4H48f4iJjYdnSMa9GXorlprRNDJzANsEEBMWCAQ5wXXS+HUU0PfilpkVMwMgOhX721SQRs5E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aRlFN6SE; arc=fail smtp.client-ip=40.107.237.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AnEnV5QH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710340210; x=1741876210;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NKCAnvn2GlfxmGaWc2Xki/TBiHErm1NzNh5kU3t7Iv4=;
-  b=AnEnV5QHh37rOedXYz1YqzjkGNRx9hfMMxyf7ony+TOgxmFZqrt69xA2
-   Shkn5JRIEVbz3q/qT3vdO9r8+Yla57tnuxfrDiC4KSqNrXG+SeB2u0JGl
-   bzkpa/EXOQR16v3hsbpqOtAdI6dkSjR+alj3md5azMDijQ35t3NOc4GB5
-   8VH6trIvA6ZyPkqoUYzi9V5LfrEYokloMhIS1FcNlx+WW+ZKquHHuc49g
-   JTGjBVHmWSMJ15+kY/swJjmKtAqYXAy7JN+lfsJBxTkeEd2nlJan5+1/L
-   69SV/BnzTRT1juQInNjoBKAYQA4nBgJKgIJ2pdD705XehOEsAH7ZidUOw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5230961"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="5230961"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 07:30:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="42939914"
-Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 07:30:09 -0700
-Date: Wed, 13 Mar 2024 07:29:45 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
-To: "Colberg, Peter" <peter.colberg@intel.com>
-cc: "Wu, Hao" <hao.wu@intel.com>, "mdf@kernel.org" <mdf@kernel.org>, 
-    "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, 
-    "Xu, Yilun" <yilun.xu@intel.com>, "Rix, Tom" <trix@redhat.com>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "Ravuri, Ananda" <ananda.ravuri@intel.com>
-Subject: Re: [PATCH] fpga: add DFL driver for CXL Cache IP block
-In-Reply-To: <9b7cc086e984ea48fdaa7129f67f8ffe9aab519b.camel@intel.com>
-Message-ID: <alpine.DEB.2.22.394.2403130728260.290512@sj-4150-psse-sw-opae-dev2>
-References: <20240308172327.1970160-1-matthew.gerlach@linux.intel.com> <9b7cc086e984ea48fdaa7129f67f8ffe9aab519b.camel@intel.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aRlFN6SE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kZfX44BVkWVcAlWh7Er38j/cBThPdZESIy7YTlmgrRn54xCkJVR7gkmZPxAMeZyWdDo6rAlTuXRO54sQx2QvcXVStAU8EJpcksIp5HdXYqzI9b9i5hUiqTsoGWhYjtvdkFaTvOzeBMoH1rFhVoV4df5Cwf4o/Y5zNPxG0ReK5r5FEB9QaBHfY1x6E2s6Gl1WSDol56rHKkWzszqAlf45LXKjiylYcjmCjjzhvonu7r+WVYCoF4aiE9u2EKUBQC89rb3C8b497Zfj2B1QyE07wmNFRWL9fg66NgaMezVfllbF8nYwfg1LweiDEBxr6Pv062xysgqIcXE6ru6jXk544A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e1faW6ViDPneo1U3vvF72N4b8EclEcyfH8ZTIwgY/LM=;
+ b=d+Upk/CUYg0sDlY+uks1gBGn6THVpbo0FTFg6ggovz9sSSrtszA36HaC15Yz5ux/OO9s1H47azkLyNFzU0BbTp2DmDIbCYCP1Exl0viLemzdWjvZ9Jy7hPSlB/8W1ggmuJrWdivrZvDiRgWVEJXTeRnARV+3c5nJNvKE4PP+sfzFIELndJ99xS53O1NUsIRAMN+yNjuj0gzjrq86d8euaoMHd/EvQ8C74FYaeEwuVoLF8NhSjWen0L8p6xcroS359ILY2E2SocDU1PaOONb7IfzO4MyUSmkueUlkOb0Sm0WnxBzGLViTDyHxzfcKavkIELxXVsceftWJvIka84MktQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e1faW6ViDPneo1U3vvF72N4b8EclEcyfH8ZTIwgY/LM=;
+ b=aRlFN6SEegRdKYP0//J93m1fRANf/kzYoeriIqcSkRQlwkSruDdVcmhyBrKHWEyT1+ipaDlEC/H7MEyIV2dm/0g6xW9EPEinHsvGEghdp8DzsBZuyKb1h8Ju9auxaQPNGl6AD98+N7c4lDusE6oXqAqorT6XSSx1HWmCBZqzKIA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
+ by DS7PR12MB5813.namprd12.prod.outlook.com (2603:10b6:8:75::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Wed, 13 Mar
+ 2024 14:32:08 +0000
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::1032:4da5:7572:508]) by BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::1032:4da5:7572:508%5]) with mapi id 15.20.7386.017; Wed, 13 Mar 2024
+ 14:32:08 +0000
+Message-ID: <fd2a75f0-4baa-4d2b-b350-4f38da32c670@amd.com>
+Date: Wed, 13 Mar 2024 09:32:06 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] KVM:SVM: Flush cache only on CPUs running SEV guest
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: Zheyun Shen <szy0127@sjtu.edu.cn>, Sean Christopherson
+ <seanjc@google.com>, pbonzini <pbonzini@redhat.com>,
+ tglx <tglx@linutronix.de>
+Cc: kvm <kvm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+References: <980607740.5109383.1709777666996.JavaMail.zimbra@sjtu.edu.cn>
+ <90e5bdac-3b13-41bd-b1c1-981c35891f34@amd.com>
+Autocrypt: addr=thomas.lendacky@amd.com; keydata=
+ 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
+ vFkWitqCJg==
+In-Reply-To: <90e5bdac-3b13-41bd-b1c1-981c35891f34@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR04CA0177.namprd04.prod.outlook.com
+ (2603:10b6:806:125::32) To BL1PR12MB5732.namprd12.prod.outlook.com
+ (2603:10b6:208:387::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|DS7PR12MB5813:EE_
+X-MS-Office365-Filtering-Correlation-Id: 394e5fa2-37ae-4dea-237b-08dc436a5cd0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+35ijdTZOyL0ags7P6E+TPCTdjjR6GD2aoDDd7+//wYsL/VA2MOrDyIT/GA3GT+TtDo+Vb9QBTDxOGd3OO34uavBFk6rsWiiYFR6hx+dGVpoRZkJeORNp32jc84qV+K+OQ4PDDyLYw3CZK4KsqOa1QAZVTp20EenGQYVBX3VubprSF9qipl82y6mxU+ujXkC5wfUoRc/zC2smVQnD0iX010HmQ3WLr4ZpEU8l0/+zdKCkqqREIQHe/zIVfNsG7ZXQFycJDM8Dbd5OeAk7GzjIcwXN3cfaTJNT7IXN6b86tN2ZloVpcFZdGjrqrk1AmejEZA6098Wxk+4KSJpr37Chp57hunlNUFLqNaBgCpdcIqtT1YBlPTc9sJzeCVqGz5CKcCLq5ZBsNbjxj3DzrpiHpe8OZLalTVGYwq1mr/7ThI0baTX2lmESnp/enVMkjZvC3BIWfok8T0CmCt5ejr2LoTXlxqm4WOsI1/McsxopG/ZJVpteuebqFfjMQAsvSNo2SgRnbc3KwyayvlE0ixrFa4+hAlLFfd+yzlPjEzGSFVquLJoLDCc3N/TDv7wf8Zb1I/mnW5ADjdtdLUHqTwnPQVNLLQy5mUqhGUgl0BdYE68iS8D1cThIMzgPEW1yW/f/fhKNQlWSIjmZc0eiuttWvqCT+8/bX223vSiOxO0N7g=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZEk5M1hsR2JXUStySkh1cEcvVGk5M0haZE93ZlQxaTZhdHNhMko4SEM4M2x5?=
+ =?utf-8?B?VnpGbmZqWmU0cW1uc2I4UE5lRVBSRVZJbk9PS3FqVVRveWdUWU9BdTlmTjZ6?=
+ =?utf-8?B?Sko0L21rMXArV1piNGM0UkYxTmZ6ZmkwSDNETnovSGpqci9wVGgzTVJaN2M3?=
+ =?utf-8?B?dy90L3YvSjhDVG9acGpGYmRJczRnMXp5QnRlbGdTL2VGdVpaRlZ2QW1VcFR3?=
+ =?utf-8?B?N1RkWVduVXhuM0t1RHg0aUFDeTVFcEN5eTJldjVRQjdaMnlBb2tJTGhBaVhx?=
+ =?utf-8?B?alBQb1ZVdytJRHlPUnJFd3B0V1EwVUZnQzNWMFJ1eFg5NzM4YlVEYzJVajZU?=
+ =?utf-8?B?WUJSWTNLZU9yS2d3UzV2RUV5ckFybnVGd0JMY3ZCMlVlRmU2bTkvdU9CenRa?=
+ =?utf-8?B?c3UxVlRZYWpPUWlaZkUrVVpvSTFxZmphMnNCcDRyS0VqV20yM3V5T05vSjNy?=
+ =?utf-8?B?bTlWUjUvQmg0enByOTd4bTNzdlRjMzBhY2NQZHZ3dnhYMEFpbzI5VDBDMS8y?=
+ =?utf-8?B?VTFTa2sxbFg5SU5LK0pBenh5V0loajNsVFJoOTVOSnQxazNuUzFJVmFQb1hB?=
+ =?utf-8?B?ZUJ3YmdQdUt6bUl5dm1uRVBQN243L1ZtRHl4UW1vem1aRG9GQm8xMTdpNTFv?=
+ =?utf-8?B?K2JBdDQyUUJDRHZCUlpRVmUrc1E5dm54UDRxMUdYTGN1VzYvRUxxODVzcnU0?=
+ =?utf-8?B?YzNXWDNwc1crSVNIeFlibmU3eUsxM1F4Zi9tSEVlZGhXeU5RWHBtdlBscTVR?=
+ =?utf-8?B?aUtIcCtYYkQwd2tVL1dyTGZ2M2lyUmFYNW5uUFBSMys1bEd0eCs2NkEyc0g1?=
+ =?utf-8?B?S3h3allyWEdxdFlVaWlmOVphVGhrelI1Mnc2bFN5RjgzT2E1USszalZUWXFt?=
+ =?utf-8?B?bUZqS0YwYWtjdVgyS1RZQUhITU9MRUlSWDBuQmhGa2NXUHBZNi8vUVg4ZFAv?=
+ =?utf-8?B?NzU5WWlidVV1QStMYUlIeEtldGtGckx6R2FFY25Xd3orYWMxT1AzQ2hiQytx?=
+ =?utf-8?B?aUxLREpYdHFJRGRVcnFUNXNTT05lSDBLN1BmOTErWFNRWE8zR3NRMGNyOFBW?=
+ =?utf-8?B?WDc1T0dDcnd5b05ZSExYU0J5anNENGZRbGlyd0pMNVRrTkw5eGFXWWlEcjc5?=
+ =?utf-8?B?OUtENzZ1R0kwTUZSbkc2QzJGQU5MZE5jbm0yZDliY0NsRTJaZUdOWjdwNTNa?=
+ =?utf-8?B?UkswV0FrdUVLZndBa2N6clRiN2JLakhtVXN4YXhBS3JyT1pFb2FJV3F0SzNj?=
+ =?utf-8?B?eFRHbVJ1MjV5ZnJmTjJONGhnOHk0Y0NzQm1HQ0pxanBkNWdtdkwxRm9hMS8v?=
+ =?utf-8?B?aDA2Y0c0K21CRSs5bENSUEd4aFNvam9OTkYvc0RiMTNPSjN2UzVnUUp2L09k?=
+ =?utf-8?B?SnFja2NTMmRWNHJFV0xZMDlLbUJjRS8vYmhadEY3Q0t6OGxlb3AwTGpQczlj?=
+ =?utf-8?B?YkhsQzJVYm54VjNNaWgzTnJTWG1nL3lZMUJvZlU1ejcyNC8zTVd0elZZWk5K?=
+ =?utf-8?B?czJpQ2xRUmFMZG1pYnlsSVVNeHd4S1J2MTZ4cjQwRVAyZEM2TG1KZFJNczdO?=
+ =?utf-8?B?RFg2SnQvRXhTUVdSS0I2c1Yzem5QakhQRGRFUGVmTDRIWWZLU1ZIRnJUNmdq?=
+ =?utf-8?B?c0JKOTlBZlZYVkNBSzNlaHp1VDI5MzZydlRvWTk4YkhtbWNBRmE1YWEwSDUx?=
+ =?utf-8?B?WGthRWZCSXhoeFZadTcrWlFiYVhMWlpGV09EYkdXWWZ4S3d2T3ROejh3TlZo?=
+ =?utf-8?B?cmhCVlNzMmh2RGRlNWxFUm1Rb1dyQ2JjNUxxNkFnOXFhQ3RSQjQ0UXd1R0FS?=
+ =?utf-8?B?ODdPWU5YY295d1Z0U0w3RUxUNStzNFM5R0hNTnh5VjNLYzFZY0R6K3lCcnQ0?=
+ =?utf-8?B?THFOdCtmYWhvL1NyaHhoVTR2NWF4RElZOXpDRlNKZk1pY1R4SW15NlQxVERu?=
+ =?utf-8?B?czdjcmJOUVhrc2FvWFdkVDJLN1hjNVc5REZmV3JhK2FabnE5RXJVN1pOYWpF?=
+ =?utf-8?B?Z1NlNEx2TUFDc0R3dlZHR1NQQTlpM0xmeGYwR2MwQVA4aDRyUm1DT1MweHJ5?=
+ =?utf-8?B?L1VDdzV4NDAycko5V2dmdkpjK1YzZ3ZhTjdNV3lnVUxlSHV2VTF4RUJBcFZ6?=
+ =?utf-8?Q?5KQKTs7q5e3jOBTJ6JfkNtb6V?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 394e5fa2-37ae-4dea-237b-08dc436a5cd0
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 14:32:08.4110
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 94oXA4gLmPJt4QWR9pxhpzLmGmoL+yUL8duHlG7Xe9CF+oEJOur/pvZMzJvhg1KMjlibPgabijwx5FcVqgIgow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5813
+
+On 3/12/24 09:45, Tom Lendacky wrote:
+> On 3/6/24 20:14, Zheyun Shen wrote:
+>> On AMD CPUs without ensuring cache consistency, each memory page
+>> reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(),
+>> thereby affecting the performance of other programs on the host.
+>>
+>> Typically, an AMD server may have 128 cores or more, while the SEV guest
+>> might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
+>> to bind these 8 vCPUs to specific physical CPUs.
+>>
+>> Therefore, keeping a record of the physical core numbers each time a vCPU
+>> runs can help avoid flushing the cache for all CPUs every time.
+>>
+>> Since the usage of sev_flush_asids() isn't tied to a single VM, we just
+>> replace all wbinvd_on_all_cpus() with sev_do_wbinvd() except for that
+>> in sev_flush_asids().
+>>
+>> Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
+> 
+> I'm unable to launch my SEV or SEV-ES guests with this patch (haven't 
+> tried an SEV-SNP guest, yet). Qemu segfaults at launch.
+> 
+> I'll try to dig into what is happening, but not sure when I'll be able to 
+> do that at the moment.
+
+Looks like it's the use of get_cpu() without an associated put_cpu() when 
+setting the cpumask. I think what you really want to use is just the cpu 
+parameter that is passed into pre_sev_run().
 
 
+> 
 
-On Tue, 12 Mar 2024, Colberg, Peter wrote:
+>>   void sev_free_vcpu(struct kvm_vcpu *vcpu)
+>> @@ -2648,6 +2666,7 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu)
+>>       sd->sev_vmcbs[asid] = svm->vmcb;
+>>       svm->vmcb->control.tlb_ctl = TLB_CONTROL_FLUSH_ASID;
+>>       vmcb_mark_dirty(svm->vmcb, VMCB_ASID);
+>> +    cpumask_set_cpu(get_cpu(), sev_get_wbinvd_dirty_mask(svm->vcpu.kvm));
 
-> On Fri, 2024-03-08 at 09:23 -0800, Matthew Gerlach wrote:
->> From: Tim Whisonant <tim.whisonant@intel.com>
->>
->> Add a Device Feature List (DFL) driver for the
->> Intel CXL Cache IP block. The driver
->> provides a means of accessing the device MMIO and the
->> capability to pin buffers and program their physical
->> addresses into the HE-Cache registers. User interface
->> is exposed via /dev/dfl-cxl-cache.X as described in
->> include/uapi/linux/fpga-dfl.h.
->>
->> Signed-off-by: Tim Whisonant <tim.whisonant@intel.com>
->> Co-developed-by: Ananda Ravuri <ananda.ravuri@intel.com>
->> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->>  drivers/fpga/Kconfig          |  11 +
->>  drivers/fpga/Makefile         |   1 +
->>  drivers/fpga/dfl-cxl-cache.c  | 645 ++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/fpga-dfl.h |  98 ++++++
->>  4 files changed, 755 insertions(+)
->>  create mode 100644 drivers/fpga/dfl-cxl-cache.c
->>
->> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
->> index 2f689ac4ba3a..00931a3deebf 100644
->> --- a/drivers/fpga/Kconfig
->> +++ b/drivers/fpga/Kconfig
->> @@ -257,6 +257,17 @@ config FPGA_M10_BMC_SEC_UPDATE
->>  	  (BMC) and provides support for secure updates for the BMC image,
->>  	  the FPGA image, the Root Entry Hashes, etc.
->>
->> +config FPGA_DFL_CXL_CACHE
->> +	tristate "Intel CXL cache driver"
->> +	depends on DRM && FPGA_DFL
->> +	help
->> +	  This is the driver for CXL cache Accelerated Function Unit
->> +	  (AFU) which configures the IP and provides DMA buffer management
->> +	  to user space.
->> +
->> +	  To compile this driver as a module, chose M here: the
->> +	  module will be called dfl_cxl_cache.
->> +
->>  config FPGA_MGR_MICROCHIP_SPI
->>  	tristate "Microchip Polarfire SPI FPGA manager"
->>  	depends on SPI
->> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
->> index 352a2612623e..970902810845 100644
->> --- a/drivers/fpga/Makefile
->> +++ b/drivers/fpga/Makefile
->> @@ -55,6 +55,7 @@ obj-$(CONFIG_FPGA_DFL_NIOS_INTEL_PAC_N3000)	+= dfl-n3000-nios.o
->>
->>  # Drivers for FPGAs which implement DFL
->>  obj-$(CONFIG_FPGA_DFL_PCI)		+= dfl-pci.o
->> +obj-$(CONFIG_FPGA_DFL_CXL_CACHE)	+= dfl-cxl-cache.o
->>
->>  # KUnit tests
->>  obj-$(CONFIG_FPGA_KUNIT_TESTS)		+= tests/
->> diff --git a/drivers/fpga/dfl-cxl-cache.c b/drivers/fpga/dfl-cxl-cache.c
->> new file mode 100644
->> index 000000000000..ee2ae04ac058
->> --- /dev/null
->> +++ b/drivers/fpga/dfl-cxl-cache.c
->> @@ -0,0 +1,645 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * DFL device driver for Host Exerciser Cache private feature.
->> + *
->> + * Provides a means of accessing the device MMIO and the
->> + * capability to pin buffers and program their physical
->> + * addresses into the HE-Cache registers. User interface
->> + * is exposed via /dev/dfl-cxl-cache.X as described in
->> + * include/uapi/linux/fpga-dfl.h.
->> + *
->> + * Copyright (C) 2023 Intel Corporation, Inc.
->> + *
->> + * Authors:
->> + *   Tim Whisonant <tim.whisonant@intel.com>
->> + *   Ananda Ravuri <ananda.ravuri@intel.com>
->> + */
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/cdev.h>
->> +#include <linux/cleanup.h>
->> +#include <linux/container_of.h>
->> +#include <linux/dfl.h>
->> +#include <linux/errno.h>
->> +#include <linux/fpga-dfl.h>
->> +#include <linux/highmem.h>
->> +#include <linux/io.h>
->> +#include <linux/mmap_lock.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/pgtable.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/types.h>
->> +
->> +#include <drm/drm_cache.h>
->> +
->> +#define DFL_CXL_CACHE_DRIVER_NAME	"dfl-cxl-cache"
->> +#define FME_FEATURE_ID_CXL_CACHE	0x25
->> +
->> +struct dfl_cxl_cache_buffer_region {
->> +	struct rb_node node;
->> +	u32 flags;
->> +	u64 user_addr;
->> +	u64 length;
->> +	struct page **pages;
->> +	phys_addr_t phys;
->> +	u64 offset[DFL_ARRAY_MAX_SIZE];
->> +};
->> +
->> +struct dfl_cxl_cache {
->> +	struct cdev cdev;
->> +	struct dfl_device *ddev;
->> +	int id;
->> +	struct device *dev;
->> +	atomic_t opened;
->> +	void __iomem *mmio_base;
->> +	int mmio_size;
->> +	struct dfl_cxl_cache_region_info rinfo;
->> +	struct rb_root dma_regions;
->> +};
->> +
->> +static DEFINE_MUTEX(dfl_cxl_cache_class_lock);
->> +static struct class *dfl_cxl_cache_class;
->> +static dev_t dfl_cxl_cache_devt;
->> +static int dfl_cxl_cache_devices;
->> +
->> +static int dfl_cxl_cache_open(struct inode *inode, struct file *filp)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = container_of(inode->i_cdev, struct dfl_cxl_cache, cdev);
->> +
->> +	if (atomic_cmpxchg(&cxl_cache->opened, 0, 1))
->> +		return -EBUSY;
->> +
->> +	filp->private_data = cxl_cache;
->> +
->> +	return 0;
->> +}
->> +
->> +static long cxl_cache_ioctl_check_extension(struct dfl_cxl_cache *cxl_cache, unsigned long arg)
->> +{
->> +	/* No extension support for now */
->> +	return 0;
->> +}
->> +
->> +static long cxl_cache_ioctl_get_region_info(struct dfl_cxl_cache *cxl_cache, void __user *arg)
->> +{
->> +	struct dfl_cxl_cache_region_info rinfo;
->> +	unsigned long minsz;
->> +
->> +	minsz = offsetofend(struct dfl_cxl_cache_region_info, offset);
->> +	if (copy_from_user(&rinfo, arg, minsz))
->> +		return -EFAULT;
->> +
->> +	if (rinfo.argsz < minsz)
->> +		return -EINVAL;
->> +
->> +	rinfo.flags = cxl_cache->rinfo.flags;
->> +	rinfo.size = cxl_cache->rinfo.size;
->> +	rinfo.offset = cxl_cache->rinfo.offset;
->> +
->> +	if (copy_to_user(arg, &rinfo, sizeof(rinfo)))
->> +		return -EFAULT;
->> +
->> +	return 0;
->> +}
->> +
->> +static void cxl_cache_unpin_pages(struct device *dev, struct page ***pages, unsigned long length)
->> +{
->> +	const long npages = PFN_DOWN(length);
->> +
->> +	if (!*pages)
->> +		return;
->> +
->> +	unpin_user_pages(*pages, npages);
->> +	kfree(*pages);
->> +	*pages = NULL;
->> +	account_locked_vm(current->mm, npages, false);
->> +}
->> +
->> +static bool cxl_cache_check_continuous_pages(struct page **pages, unsigned long length)
->> +{
->> +	int i;
->> +	const int npages = PFN_DOWN(length);
->> +
->> +	for (i = 0; i < npages - 1; i++)
->> +		if (page_to_pfn(pages[i]) + 1 != page_to_pfn(pages[i + 1]))
->> +			return false;
->> +
->> +	return true;
->> +}
->> +
->> +static int cxl_cache_dma_pin_pages(struct dfl_cxl_cache *cxl_cache,
->> +				   struct dfl_cxl_cache_buffer_region *region)
->> +{
->> +	int ret, pinned;
->> +	unsigned int flags = FOLL_LONGTERM;
->> +	const int npages = PFN_DOWN(region->length);
->> +
->> +	ret = account_locked_vm(current->mm, npages, true);
->> +	if (ret) {
->> +		dev_err(cxl_cache->dev, "account_locked_vm() failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	region->pages = kcalloc(npages, sizeof(struct page *), GFP_KERNEL);
->> +	if (!region->pages) {
->> +		ret = -ENOMEM;
->> +		goto unlock_vm;
->> +	}
->> +
->> +	if (region->flags & DFL_CXL_BUFFER_MAP_WRITABLE)
->> +		flags |= FOLL_WRITE;
->> +
->> +	pinned = pin_user_pages_fast(region->user_addr, npages, flags, region->pages);
->> +	if (pinned == npages)
->> +		return 0;
->> +
->> +	ret = -EFAULT;
->> +	if (pinned > 0)
->> +		unpin_user_pages(region->pages, pinned);
->> +
->> +	kfree(region->pages);
->> +unlock_vm:
->> +	account_locked_vm(current->mm, npages, false);
->> +	return ret;
->> +}
->> +
->> +static void cxl_cache_dma_region_remove(struct dfl_cxl_cache *cxl_cache,
->> +					struct dfl_cxl_cache_buffer_region *region)
->> +{
->> +	rb_erase(&region->node, &cxl_cache->dma_regions);
->> +}
->> +
->> +static bool dma_region_check_user_addr(struct dfl_cxl_cache_buffer_region *region, u64 user_addr,
->> +				       u64 size)
->> +{
->> +	if (!size && region->user_addr != user_addr)
->> +		return false;
->> +
->> +	return (region->user_addr <= user_addr) &&
->> +		(region->length + region->user_addr >= user_addr + size);
->> +}
->> +
->> +static struct dfl_cxl_cache_buffer_region*
->> +cxl_cache_dma_region_find(struct dfl_cxl_cache *cxl_cache, u64 user_addr, u64 size)
->> +{
->> +	struct rb_node *node = cxl_cache->dma_regions.rb_node;
->> +
->> +	while (node) {
->> +		struct dfl_cxl_cache_buffer_region *region;
->> +
->> +		region = container_of(node, struct dfl_cxl_cache_buffer_region, node);
->> +
->> +		if (dma_region_check_user_addr(region, user_addr, size))
->> +			return region;
->> +
->> +		if (user_addr < region->user_addr)
->> +			node = node->rb_left;
->> +		else if (user_addr > region->user_addr)
->> +			node = node->rb_right;
->> +		else
->> +			break;
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +static int cxl_cache_dma_region_add(struct dfl_cxl_cache *cxl_cache,
->> +				    struct dfl_cxl_cache_buffer_region *region)
->> +{
->> +	struct rb_node **new, *parent = NULL;
->> +
->> +	new = &cxl_cache->dma_regions.rb_node;
->> +
->> +	while (*new) {
->> +		struct dfl_cxl_cache_buffer_region *this;
->> +
->> +		this = container_of(*new, struct dfl_cxl_cache_buffer_region, node);
->> +		parent = *new;
->> +
->> +		if (dma_region_check_user_addr(this, region->user_addr, region->length))
->> +			return -EEXIST;
->> +
->> +		if (region->user_addr < this->user_addr)
->> +			new = &((*new)->rb_left);
->> +		else if (region->user_addr > this->user_addr)
->> +			new = &((*new)->rb_right);
->> +		else
->> +			return -EEXIST;
->> +	}
->> +
->> +	rb_link_node(&region->node, parent, new);
->> +	rb_insert_color(&region->node, &cxl_cache->dma_regions);
->> +
->> +	return 0;
->> +}
->> +
->> +static void fixup_ptes(struct mm_struct *mm, unsigned long start, unsigned long end)
->> +{
->> +	unsigned long addr;
->> +	pgd_t *pgd;
->> +	p4d_t *p4d;
->> +	pud_t *pud;
->> +	pmd_t *pmd;
->> +	pte_t *pte;
->> +
->> +	for (addr = start; addr < end; addr += PAGE_SIZE) {
->> +		pgd = pgd_offset(mm, addr);
->> +		if (pgd_bad(*pgd) || pgd_none(*pgd))
->> +			continue;
->> +
->> +		p4d = p4d_offset(pgd, addr);
->> +		if (p4d_bad(*p4d) || p4d_none(*p4d))
->> +			continue;
->> +
->> +		pud = pud_offset(p4d, addr);
->> +		if (pud_bad(*pud) || pud_none(*pud))
->> +			continue;
->> +
->> +		pmd = pmd_offset(pud, addr);
->> +		if (pmd_bad(*pmd) || pmd_none(*pmd))
->> +			continue;
->> +
->> +		pte = pte_offset_kernel(pmd, addr);
->> +		if (!pte_none(*pte) && pte_present(*pte))
->> +			*pte = pte_wrprotect(*pte);
->> +	}
->> +}
->> +
->> +static long cxl_cache_set_region_read_only(struct dfl_cxl_cache *cxl_cache,
->> +					   struct dfl_cxl_cache_buffer_region *region)
->> +{
->> +	struct vm_area_struct *vma;
->> +	long ret = 0;
->> +
->> +	vma = vma_lookup(current->mm, region->user_addr);
->> +	if (IS_ERR(vma)) {
->> +		ret = PTR_ERR(vma);
->
-> As pointed out by Coverity, vma_lookup() returns NULL on error, not an
-> error pointer, resolved in downstream [1] commit 0eec35cdda2b2 ("fpga:
-> dfl-cxl-cache: fix check of return of vma_lookup()").
->
-> [1] https://github.com/OFS/linux-dfl/commit/0eec35cdda2b20991bbd7fa032f9cd12a0de6f5b
+Just use 'cpu' here....  ^
 
-Thanks for catching this. I will update in a v2 submission.
+When I do that I'm able to boot an SEV and SEV-ES guest.
 
->
->> +		dev_err(cxl_cache->dev, "vma_lookup() failed: %ld\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	mmap_write_lock(current->mm);
->> +
->> +	/* Mark the pages as non-cached and write-protected. */
->> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
->> +	vm_flags_clear(vma, VM_WRITE);
->> +
->> +	fixup_ptes(current->mm, vma->vm_start, vma->vm_end);
->> +
->> +	mmap_write_unlock(current->mm);
->> +
->> +	/* Flush all remaining cache entries. */
->> +	drm_clflush_virt_range(page_address(region->pages[0]), region->length);
->> +
->> +	return ret;
->> +}
->> +
->> +static long cxl_cache_ioctl_numa_buffer_map(struct dfl_cxl_cache *cxl_cache, void __user *arg)
->> +{
->> +	int i = 0;
->> +	unsigned long minsz = 0;
->> +	long ret = 0;
->> +	struct dfl_cxl_cache_buffer_map dma_map;
->> +	struct dfl_cxl_cache_buffer_region *region;
->> +
->> +	minsz = offsetofend(struct dfl_cxl_cache_buffer_map, csr_array);
->> +	if (copy_from_user(&dma_map, arg, minsz)) {
->> +		dev_err(cxl_cache->dev, "fails to copy from user space buffer\n");
->> +		return -EFAULT;
->> +	}
->> +	if (dma_map.argsz < minsz) {
->> +		dev_err(cxl_cache->dev, "invalid ioctl buffer size\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Check Inputs, only accept page-aligned user memory region with valid length */
->> +	if (!PAGE_ALIGNED(dma_map.user_addr) || !PAGE_ALIGNED(dma_map.length) ||
->> +	    !(dma_map.length)) {
->> +		dev_err(cxl_cache->dev, "length is not page-aligned or the length is zero\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Check overflow */
->> +	if (dma_map.user_addr + dma_map.length < dma_map.user_addr) {
->> +		dev_err(cxl_cache->dev, "dma buffer check overflow\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	region = kzalloc(sizeof(*region), GFP_KERNEL);
->> +	if (!region)
->> +		return -ENOMEM;
->> +
->> +	region->flags = dma_map.flags;
->> +	region->user_addr = dma_map.user_addr;
->> +	region->length = dma_map.length;
->> +
->> +	/* Pin the user memory region */
->> +	ret = cxl_cache_dma_pin_pages(cxl_cache, region);
->> +	if (ret) {
->> +		dev_err(cxl_cache->dev, "failed to pin pages\n");
->> +		goto free_region;
->> +	}
->> +
->> +	/* Only accept continuous pages, return error else */
->> +	if (!cxl_cache_check_continuous_pages(region->pages, region->length)) {
->> +		dev_err(cxl_cache->dev, "pages are not continuous\n");
->> +		ret = -EINVAL;
->> +		goto out_unpin_pages;
->> +	}
->> +
->> +	if (!(region->flags & DFL_CXL_BUFFER_MAP_WRITABLE)) {
->> +		ret = cxl_cache_set_region_read_only(cxl_cache, region);
->> +		if (ret)
->> +			goto out_unpin_pages;
->> +	}
->> +
->> +	ret = cxl_cache_dma_region_add(cxl_cache, region);
->> +	if (ret) {
->> +		dev_err(cxl_cache->dev, "failed to add dma region\n");
->> +		goto out_unpin_pages;
->> +	}
->> +
->> +	region->phys = page_to_phys(region->pages[0]);
->> +
->> +	for (i = 0; i < DFL_ARRAY_MAX_SIZE; i++) {
->> +		if (dma_map.csr_array[i] && dma_map.csr_array[i] < cxl_cache->rinfo.size)
->> +			writeq(region->phys, cxl_cache->mmio_base + dma_map.csr_array[i]);
->> +	}
->> +
->> +	return 0;
->> +
->> +out_unpin_pages:
->> +	cxl_cache_unpin_pages(cxl_cache->dev, &region->pages, region->length);
->> +free_region:
->> +	kfree(region);
->> +	return ret;
->> +}
->> +
->> +static long cxl_cache_ioctl_numa_buffer_unmap(struct dfl_cxl_cache *cxl_cache, void __user *arg)
->> +{
->> +	unsigned long minsz = 0;
->> +	long ret = 0;
->> +	int i = 0;
->> +	struct dfl_cxl_cache_buffer_unmap dma_unmap;
->> +	struct dfl_cxl_cache_buffer_region *region;
->> +
->> +	minsz = offsetofend(struct dfl_cxl_cache_buffer_unmap, csr_array);
->> +	if (copy_from_user(&dma_unmap, arg, minsz)) {
->> +		dev_err(cxl_cache->dev, "fails to copy from user space buffer\n");
->> +		return -EFAULT;
->> +	}
->> +	if (dma_unmap.argsz < minsz) {
->> +		dev_err(cxl_cache->dev, "invalid ioctl buffer size\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	region = cxl_cache_dma_region_find(cxl_cache, dma_unmap.user_addr, dma_unmap.length);
->> +	if (!region) {
->> +		dev_err(cxl_cache->dev, "fails to find buffer\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	cxl_cache_dma_region_remove(cxl_cache, region);
->> +	cxl_cache_unpin_pages(cxl_cache->dev, &region->pages, region->length);
->> +
->> +	for (i = 0; i < DFL_ARRAY_MAX_SIZE; i++) {
->> +		if (dma_unmap.csr_array[i] && dma_unmap.csr_array[i] < cxl_cache->rinfo.size)
->> +			writeq(0, cxl_cache->mmio_base + dma_unmap.csr_array[i]);
->> +	}
->> +
->> +	kfree(region);
->> +	return ret;
->> +}
->> +
->> +static long dfl_cxl_cache_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = filp->private_data;
->> +
->> +	switch (cmd) {
->> +	case DFL_FPGA_GET_API_VERSION:
->> +		return DFL_FPGA_GET_API_VERSION;
->> +	case DFL_FPGA_CHECK_EXTENSION:
->> +		return cxl_cache_ioctl_check_extension(cxl_cache, arg);
->> +	case DFL_CXL_CACHE_GET_REGION_INFO:
->> +		return cxl_cache_ioctl_get_region_info(cxl_cache, (void __user *)arg);
->> +	case DFL_CXL_CACHE_NUMA_BUFFER_MAP:
->> +		return cxl_cache_ioctl_numa_buffer_map(cxl_cache, (void __user *)arg);
->> +	case DFL_CXL_CACHE_NUMA_BUFFER_UNMAP:
->> +		return cxl_cache_ioctl_numa_buffer_unmap(cxl_cache, (void __user *)arg);
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static const struct vm_operations_struct cxl_cache_vma_ops = {
->> +#ifdef CONFIG_HAVE_IOREMAP_PROT
->> +	.access = generic_access_phys,
->> +#endif
->> +};
->> +
->> +static int dfl_cxl_cache_mmap(struct file *filp, struct vm_area_struct *vma)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = filp->private_data;
->> +	u64 size = vma->vm_end - vma->vm_start;
->> +	u64 offset;
->> +
->> +	if (!(vma->vm_flags & VM_SHARED))
->> +		return -EINVAL;
->> +
->> +	if (!(cxl_cache->rinfo.flags & DFL_CXL_CACHE_REGION_MMAP))
->> +		return -EINVAL;
->> +
->> +	if ((vma->vm_flags & VM_READ) && !(cxl_cache->rinfo.flags & DFL_CXL_CACHE_REGION_READ))
->> +		return -EPERM;
->> +
->> +	if ((vma->vm_flags & VM_WRITE) && !(cxl_cache->rinfo.flags & DFL_CXL_CACHE_REGION_WRITE))
->> +		return -EPERM;
->> +
->> +	offset = PFN_PHYS(vma->vm_pgoff);
->> +
->> +	/* Support debug access to the mapping */
->> +	vma->vm_ops = &cxl_cache_vma_ops;
->> +
->> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
->> +
->> +	return remap_pfn_range(vma, vma->vm_start,
->> +			       PFN_DOWN(cxl_cache->ddev->mmio_res.start +
->> +			       (offset - cxl_cache->rinfo.offset)),
->> +			       size, vma->vm_page_prot);
->> +}
->> +
->> +static void cxl_cache_dma_region_destroy(struct dfl_cxl_cache *cxl_cache)
->> +{
->> +	struct rb_node *node = rb_first(&cxl_cache->dma_regions);
->> +	struct dfl_cxl_cache_buffer_region *region;
->> +
->> +	while (node) {
->> +		region = container_of(node, struct dfl_cxl_cache_buffer_region, node);
->> +
->> +		rb_erase(node, &cxl_cache->dma_regions);
->> +
->> +		if (region->pages)
->> +			cxl_cache_unpin_pages(cxl_cache->dev, &region->pages, region->length);
->> +
->> +		node = rb_next(node);
->> +		kfree(region);
->> +	}
->> +}
->> +
->> +static int dfl_cxl_cache_release(struct inode *inode, struct file *filp)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = filp->private_data;
->> +
->> +	cxl_cache_dma_region_destroy(cxl_cache);
->> +	atomic_set(&cxl_cache->opened, 0);
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations dfl_cxl_cache_fops = {
->> +	.owner = THIS_MODULE,
->> +	.open = dfl_cxl_cache_open,
->> +	.release = dfl_cxl_cache_release,
->> +	.unlocked_ioctl = dfl_cxl_cache_ioctl,
->> +	.mmap = dfl_cxl_cache_mmap,
->> +};
->> +
->> +static void cxl_cache_dev_release(struct device *dev)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = dev_get_drvdata(dev);
->> +
->> +	cdev_del(&cxl_cache->cdev);
->> +}
->> +
->> +static void cxl_cache_chardev_uinit(struct dfl_cxl_cache *cxl_cache)
->> +{
->> +	device_destroy(dfl_cxl_cache_class,
->> +		       MKDEV(MAJOR(dfl_cxl_cache_devt), cxl_cache->id));
->> +}
->> +
->> +static int cxl_cache_chardev_init(struct dfl_cxl_cache *cxl_cache,
->> +				  struct dfl_device *ddev,
->> +				  void __iomem *mmio_base)
->> +{
->> +	int ret;
->> +
->> +	dev_set_drvdata(&ddev->dev, cxl_cache);
->> +	cxl_cache->ddev = ddev;
->> +	cxl_cache->mmio_base = mmio_base;
->> +	cxl_cache->id = dfl_cxl_cache_devices++;
->> +	cxl_cache->dma_regions = RB_ROOT;
->> +
->> +	cxl_cache->rinfo.argsz = sizeof(struct dfl_cxl_cache_region_info);
->> +	cxl_cache->rinfo.flags = DFL_CXL_CACHE_REGION_READ | DFL_CXL_CACHE_REGION_WRITE |
->> +			   DFL_CXL_CACHE_REGION_MMAP;
->> +	cxl_cache->rinfo.size = resource_size(&ddev->mmio_res);
->> +	cxl_cache->rinfo.offset = 0;
->> +
->> +	cxl_cache->dev = device_create(dfl_cxl_cache_class, &ddev->dev,
->> +				       MKDEV(MAJOR(dfl_cxl_cache_devt), cxl_cache->id),
->> +				       cxl_cache, DFL_CXL_CACHE_DRIVER_NAME ".%d",
->> +				       cxl_cache->id);
->> +
->> +	if (IS_ERR(cxl_cache->dev)) {
->> +		ret = PTR_ERR(cxl_cache->dev);
->> +		dev_err(&ddev->dev, "device_create failed: %d\n", ret);
->> +		cxl_cache->dev = NULL;
->> +		return ret;
->> +	}
->> +	cxl_cache->dev->release = cxl_cache_dev_release;
->> +
->> +	cdev_init(&cxl_cache->cdev, &dfl_cxl_cache_fops);
->> +	cxl_cache->cdev.owner = THIS_MODULE;
->> +	cxl_cache->cdev.ops = &dfl_cxl_cache_fops;
->> +
->> +	ret = cdev_add(&cxl_cache->cdev, cxl_cache->dev->devt, 1);
->> +	if (ret)
->> +		dev_err(cxl_cache->dev, "cdev_add failed: %d\n", ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int dfl_cxl_cache_probe(struct dfl_device *ddev)
->> +{
->> +	int ret = 0;
->> +	void __iomem *mmio_base;
->> +	struct dfl_cxl_cache *cxl_cache;
->> +
->> +	guard(mutex)(&dfl_cxl_cache_class_lock);
->> +
->> +	if (!dfl_cxl_cache_class) {
->> +		dfl_cxl_cache_class = class_create(DFL_CXL_CACHE_DRIVER_NAME);
->> +		if (IS_ERR(dfl_cxl_cache_class)) {
->> +			ret = PTR_ERR(dfl_cxl_cache_class);
->> +			dfl_cxl_cache_class = NULL;
->> +			dev_err_probe(&ddev->dev, ret, "class_create failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (!MAJOR(dfl_cxl_cache_devt)) {
->> +		ret = alloc_chrdev_region(&dfl_cxl_cache_devt, 0,
->> +					  MINORMASK,
->> +					  DFL_CXL_CACHE_DRIVER_NAME);
->> +		if (ret) {
->> +			dev_err_probe(&ddev->dev, ret, "alloc_chrdev_region failed\n");
->> +			dfl_cxl_cache_devt = MKDEV(0, 0);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	mmio_base = devm_ioremap_resource(&ddev->dev, &ddev->mmio_res);
->> +	if (IS_ERR(mmio_base))
->> +		return PTR_ERR(mmio_base);
->> +
->> +	cxl_cache = devm_kzalloc(&ddev->dev, sizeof(*cxl_cache), GFP_KERNEL);
->> +	if (!cxl_cache)
->> +		return -ENOMEM;
->> +
->> +	ret = cxl_cache_chardev_init(cxl_cache, ddev, mmio_base);
->> +	if (ret)
->> +		dev_err_probe(&ddev->dev, ret, "cxl_cache_chardev_init failed\n");
->> +
->> +	return ret;
->> +}
->> +
->> +static void dfl_cxl_cache_remove(struct dfl_device *ddev)
->> +{
->> +	struct dfl_cxl_cache *cxl_cache = dev_get_drvdata(&ddev->dev);
->> +
->> +	guard(mutex)(&dfl_cxl_cache_class_lock);
->> +	cxl_cache_chardev_uinit(cxl_cache);
->> +
->> +	if (dfl_cxl_cache_devices-- == 0) {
->> +		if (dfl_cxl_cache_class) {
->> +			class_destroy(dfl_cxl_cache_class);
->> +			dfl_cxl_cache_class = NULL;
->> +		}
->> +
->> +		if (MAJOR(dfl_cxl_cache_devt)) {
->> +			unregister_chrdev_region(dfl_cxl_cache_devt, MINORMASK);
->> +			dfl_cxl_cache_devt = MKDEV(0, 0);
->> +		}
->> +	}
->> +}
->> +
->> +static const struct dfl_device_id dfl_cxl_cache_ids[] = {
->> +	{ FME_ID, FME_FEATURE_ID_CXL_CACHE },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(dfl, dfl_cxl_cache_ids);
->> +
->> +static struct dfl_driver dfl_cxl_cache_driver = {
->> +	.drv	= {
->> +		.name	= DFL_CXL_CACHE_DRIVER_NAME,
->> +	},
->> +	.id_table = dfl_cxl_cache_ids,
->> +	.probe   = dfl_cxl_cache_probe,
->> +	.remove = dfl_cxl_cache_remove,
->> +};
->> +module_dfl_driver(dfl_cxl_cache_driver);
->> +
->> +MODULE_DESCRIPTION("DFL CXL Cache driver");
->> +MODULE_AUTHOR("Intel Corporation");
->> +MODULE_LICENSE("GPL");
->> diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
->> index 1621b077bf21..866f50b99eb6 100644
->> --- a/include/uapi/linux/fpga-dfl.h
->> +++ b/include/uapi/linux/fpga-dfl.h
->> @@ -31,6 +31,7 @@
->>  #define DFL_FPGA_BASE 0
->>  #define DFL_PORT_BASE 0x40
->>  #define DFL_FME_BASE 0x80
->> +#define DFL_CXL_CACHE_BASE 0xA0
->>
->>  /* Common IOCTLs for both FME and AFU file descriptor */
->>
->> @@ -276,4 +277,101 @@ struct dfl_fpga_fme_port_pr {
->>  					     DFL_FME_BASE + 4,	\
->>  					     struct dfl_fpga_irq_set)
->>
->> + /**
->> +  * DFL_CXL_CACHE_GET_REGION_INFO - _IOWR(DFL_FPGA_MAGIC, DFL_CXL_CACHE_BASE + 0,
->> +  *                                      struct dfl_cxl_cache_region_info)
->> +  *
->> +  * Retrieve information about a device memory region.
->> +  * Caller provides struct dfl_cxl_cache_region_info with flags.
->> +  * Driver returns the region info in other fields.
->> +  * Return: 0 on success, -errno on failure.
->> +  */
->> +
->
-> Nit: one space of indentation can be removed.
->
->> +#define DFL_CXL_CACHE_GET_REGION_INFO _IO(DFL_FPGA_MAGIC, DFL_CXL_CACHE_BASE + 0)
->> +
->> +  /**
->> +   * struct dfl_cxl_cache_region_info - CXL cache region information
->> +   * @argsz: structure length
->> +   * @flags: access permission
->> +   * @size: region size (bytes)
->> +   * @offset: region offset from start of device fd
->> +   *
->> +   * to retrieve  information about a device memory region
->> +   */
->
-> Nit: two spaces of indentation can be removed.
->
-> Thanks,
-> Peter
+I'll wait for the next version, in case there are other changes, before 
+running through our CI for more thorough testing than just a single boot.
 
-Thanks again. I will remove unneeded indentation.
+Thanks,
+Tom
 
->
->> +struct dfl_cxl_cache_region_info {
->> +	__u32 argsz;
->> +	__u32 flags;
->> +#define DFL_CXL_CACHE_REGION_READ	_BITUL(0)
->> +#define DFL_CXL_CACHE_REGION_WRITE	_BITUL(1)
->> +#define DFL_CXL_CACHE_REGION_MMAP	_BITUL(2)
->> +	__u64 size;
->> +	__u64 offset;
->> +};
->> +
->> +/**
->> + * DFL_CXL_CACHE_NUMA_BUFFER_MAP - _IOWR(DFL_FPGA_MAGIC, DFL_CXL_CACHE_BASE + 1,
->> + *                                      struct dfl_cxl_cache_buffer_map)
->> + *
->> + * Map the user memory per user_addr, length and numa node which are
->> + * provided by caller. The driver allocates memory on the numa node,
->> + * converts the user's virtual addressto a continuous physical address,
->> + * and writes the physical address to the cxl cache read/write address table CSR.
->> + *
->> + * This interface only accepts page-size aligned user memory for mapping.
->> + * Return: 0 on success, -errno on failure.
->> + */
->> +
->> +#define DFL_ARRAY_MAX_SIZE   0x10
->> +
->> +#define DFL_CXL_CACHE_NUMA_BUFFER_MAP    _IO(DFL_FPGA_MAGIC,  DFL_CXL_CACHE_BASE + 1)
->> +
->> +/**
->> + * struct dfl_cxl_cache_buffer_map - maps user address to physical address.
->> + * @argsz: structure length
->> + * @flags: flags
->> + * @user_addr: user mmap virtual address
->> + * @length: length of mapping (bytes)
->> + * @csr_array: array of region address offset
->> + *
->> + * maps user allocated virtual address to physical address.
->> + */
->> +struct dfl_cxl_cache_buffer_map {
->> +	__u32 argsz;
->> +#define DFL_CXL_BUFFER_MAP_WRITABLE	1
->> +	__u32 flags;
->> +	__u64 user_addr;
->> +	__u64 length;
->> +	__u64 csr_array[DFL_ARRAY_MAX_SIZE];
->> +};
->> +
->> +/**
->> + * DFL_CXL_CACHE_NUMA_BUFFER_UNMAP - _IOWR(DFL_FPGA_MAGIC, DFL_CXL_CACHE_BASE + 1,
->> + *                                      struct dfl_cxl_cache_buffer_unmap)
->> + *
->> + * Unmaps the user memory per user_addr and length which are provided by caller
->> + * The driver deletes the physical pages of the user address and writes a zero
->> + * to the read/write address table CSR.
->> + * Return: 0 on success, -errno on failure.
->> + */
->> +
->> +#define DFL_CXL_CACHE_NUMA_BUFFER_UNMAP  _IO(DFL_FPGA_MAGIC,  DFL_CXL_CACHE_BASE + 2)
->> +
->> +/**
->> + * struct dfl_cxl_cache_buffer_unmap - unmaps user allocated memory.
->> + * @argsz: structure length
->> + * @flags: flags
->> + * @user_addr: user mmap virtual address
->> + * @length: length of mapping (bytes)
->> + * @csr_array: array of region address offset
->> + *
->> + * unmaps user allocated memory.
->> + */
->> +struct dfl_cxl_cache_buffer_unmap {
->> +	__u32 argsz;
->> +	__u32 flags;
->> +	__u64 user_addr;
->> +	__u64 length;
->> +	__u64 csr_array[DFL_ARRAY_MAX_SIZE];
->> +};
->> +
->>  #endif /* _UAPI_LINUX_FPGA_DFL_H */
->
->
+>>   }
+>>   #define GHCB_SCRATCH_AREA_LIMIT        (16ULL * PAGE_SIZE)
