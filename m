@@ -1,123 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793651946B;
-	Wed, 13 Mar 2024 08:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20E318EB2;
+	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710317910; cv=none; b=ibMbPwqk4Rjh75H+MNil4HeLMdZz+EstgaEqFyEJGa9BLVxF1jbPkcjXs5FeoCrSI9dqegTaA03QYedIRkP7J8NGofdYCLkHUnXW0WmD/NoVjj2KSrVZv6PC9sas2+LjZM8QC1AxwDHUf7jV/6g1bxsW8QnbUNrjnEc+X7Ak7yI=
+	t=1710318029; cv=none; b=KqzdDbjf6rnNo4ey76+0FS3QDgYedAXcpNbRAUH6pjvl7daZzU5iP/qaIqxKKiILRwtMMutygCaMMlot5qOcS/9Ry7B0aYqGc3OXxiOcUl7EvjocgQ7sFdR1FYWw57AE5YTfyzpvxs/6/Q7zy8Q+0gUIWXFqsfTR2eA4k0zkIa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710317910; c=relaxed/simple;
-	bh=zE7IZcvHdDf3t51MnDNR20hcSgbHGaXRCq5k//ri3Dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/CpqescJNZVMXdiez7FtqYIv07ZEoxEL/7ANPvnp0ZM6PP8aX1W1n57RiZ93TiVeIVcgkDnlca3jldVkjC8+TMuWfrWTz6TJW8/Nf3GgXVjDKt2eEEDeaksfly/i13CSrSFHZt1+dW9ykhBNvwFkwXwO1TUXdtTDwVG7ruSJRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfvaO2p/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710318029; c=relaxed/simple;
+	bh=WHOuWjV3IDXUssQ4CoKMeiF90k47wssjsrGAJV5cu4U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=fHiEcN1YWYCUab3eLzolvu/JWCUN5mqrFqACODsCLRINIVs+KifNR7L4lL0RWMwHfIRyFccpqMGsbenYnpR58MYjAJGxfr8H3csFRPFCWLLfxiUl+K/wcIaSeMz0jrSycw54UaHkzAnFdO2dTW/t62Qt5qI4Qw34RjXib0c8Jm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d82jEuaD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfvaO2p/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1C0C433F1;
-	Wed, 13 Mar 2024 08:18:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d82jEuaD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6729AC43390;
+	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710317910;
-	bh=zE7IZcvHdDf3t51MnDNR20hcSgbHGaXRCq5k//ri3Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kfvaO2p/xA/6WQYMqWpUtHkwzvcv435FG1luuy0SdnIxrdLGbVbBn1xJkO86ckMdk
-	 ngqqHAzFfuK1K98SoFG4lRGOm45/HcSs58eq0NmXtEYaudEvOsjWBS7nZFaGjx9tEr
-	 4PBWv7NK1l8Q1718PUvdFR+0O9Jq9OrCuVvOArDJLbdEnRCX+uurBgu2Gh/x39ijev
-	 O9sjQebpCmyWLZBYdR2hCo4NwZ35Aboml0wzmJBlJ6yVxyEdyrnHGK9GWaIEAmwAWW
-	 tNXeLWq6Y662cuLDXmsz7LfduvXoz7JAbchyI1mW7Pk6xFHCYYxU6c+YXW0XanwQ4q
-	 H/ax0Le7rdWPg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rkJoq-000000007Vb-2jag;
-	Wed, 13 Mar 2024 09:18:36 +0100
-Date: Wed, 13 Mar 2024 09:18:36 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	dri-devel@lists.freedesktop.org, swboyd@chromium.org,
-	quic_jesszhan@quicinc.com, quic_parellan@quicinc.com,
-	quic_bjorande@quicinc.com, Rob Clark <robdclark@chromium.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dp: move link_ready out of HPD event thread
-Message-ID: <ZfFhXG5yd6O29spS@hovoldconsulting.com>
-References: <20240308214532.1404038-1-quic_abhinavk@quicinc.com>
- <ZfApxyVAJMK4bL8O@hovoldconsulting.com>
- <ZfCFsmNv62-KMkA6@hovoldconsulting.com>
- <ZfCKDGq9n9WG3Quj@hovoldconsulting.com>
- <8e125a99-543d-8328-a2a9-100e223e4faf@quicinc.com>
+	s=k20201202; t=1710318029;
+	bh=WHOuWjV3IDXUssQ4CoKMeiF90k47wssjsrGAJV5cu4U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=d82jEuaD7bVXGbzKBcPIN9ASyXJ7OV2fy2+f5U1fckbB2EWSLafi2wY0g1ZYn0kQz
+	 7Sz9Wp8GaYZ1B0ItYEbeT6NkNDE/JqR98d1hSK+GguXoS+L7wJ+cL6G1cTa/VjfwdI
+	 v+QQrsjQIKtWMT4YRp8YtIgtRgzLoppxFUd6glWG6XTms5nkwCDqfHpXdfXB/NPNg8
+	 6yWUSLnuNgqKL549fu2Ey3pjE93z9uhUIy+kEPj6+k+CbZuj8PlmGaHG3eT2xT+mAF
+	 78OHYsEsT9np91CfAk7NpNR5sRsB3gqfcwXViOTr99HTaVp6RyUE6dCQ5p21N+BNjH
+	 5dh5B9ObKRX3Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4D806D95060;
+	Wed, 13 Mar 2024 08:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e125a99-543d-8328-a2a9-100e223e4faf@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v5 1/2] soc: fsl: qbman: Always disable interrupts when
+ taking cgr_lock
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171031802931.29357.17308276522742025565.git-patchwork-notify@kernel.org>
+Date: Wed, 13 Mar 2024 08:20:29 +0000
+References: <20240311163830.12952-1-sean.anderson@linux.dev>
+In-Reply-To: <20240311163830.12952-1-sean.anderson@linux.dev>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, netdev@vger.kernel.org, vladimir.oltean@nxp.com,
+ christophe.leroy@csgroup.eu, roy.pledge@nxp.com,
+ linuxppc-dev@lists.ozlabs.org, madalin.bucur@nxp.com,
+ s.trumtrar@pengutronix.de, claudiu.manoil@nxp.com, leoyang.li@nxp.com,
+ oss@buserror.net, camelia.groza@nxp.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
 
-On Tue, Mar 12, 2024 at 10:39:46AM -0700, Abhinav Kumar wrote:
-> On 3/12/2024 9:59 AM, Johan Hovold wrote:
+Hello:
 
-> >> Heh. This is getting ridiculous. I just tried running with this patch
-> >> and it again breaks hotplug detect in a VT console and in X (where I
-> >> could enable a reconnected external display by running xrandr twice
-> >> before).
-> >>
-> >> So, please, do not apply this one.
-> > 
-> > To make things worse, I indeed also hit the reset when disconnecting
-> > after such a failed hotplug.
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-> Ack, I will hold off till I analyze your issues more which you have 
-> listed in separate replies. Especially about the spurious connect, I 
-> believe you are trying to mention that, by adding logs, you are able to 
-> delay the processing of a connect event to *make* it like a spurious 
-> one? In case, I got this part wrong, can you pls explain the spurious 
-> connect scenario again?
+On Mon, 11 Mar 2024 12:38:29 -0400 you wrote:
+> smp_call_function_single disables IRQs when executing the callback. To
+> prevent deadlocks, we must disable IRQs when taking cgr_lock elsewhere.
+> This is already done by qman_update_cgr and qman_delete_cgr; fix the
+> other lockers.
+> 
+> Fixes: 96f413f47677 ("soc/fsl/qbman: fix issue in qman_delete_cgr_safe()")
+> CC: stable@vger.kernel.org
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> Reviewed-by: Camelia Groza <camelia.groza@nxp.com>
+> Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> [...]
 
-No, I only mentioned the debug printks in passing as instrumentation
-like that may affect race conditions (but I'm also hitting the resets
-also with no printks in place).
+Here is the summary with links:
+  - [net,v5,1/2] soc: fsl: qbman: Always disable interrupts when taking cgr_lock
+    https://git.kernel.org/netdev/net/c/584c2a9184a3
+  - [net,v5,2/2] soc: fsl: qbman: Use raw spinlock for cgr_lock
+    https://git.kernel.org/netdev/net/c/fbec4e7fed89
 
-The spurious connect event comes directly from the pmic firmware, and
-even if we may optimise things by implementing some kind of debounce,
-the hotplug implementation needs to be robust enough to not kill the
-machine if such an event gets through.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Basically what I see is that during physical disconnect there can be
-multiple hpd notify events (e.g. connect, disconnect, connect):
 
-[  146.910195] usb 5-1: USB disconnect, device number 4
-[  146.931026] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 2
-[  146.934785] msm-dp-display ae98000.displayport-controller: dp_hpd_unplug_handle
-[  146.938114] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 1
-[  146.940245] [CONNECTOR:35:DP-2] status updated from disconnected to connected
-[  146.955193] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 0, status = 2
-
-And it is the spurious connect event while the link is being tore down
-that triggers the hotplug processing that leads to the reset.
-
-Similarly, I've seen spurious disconnect events while the plug in being
-inserted.
-
-> A short response on why this change was made is that commit can be 
-> issued by userspace or the fbdev client. So userspace involvement only 
-> makes commit happen from a different path. It would be incorrect to 
-> assume the issues from the earlier bug and the current one are different 
-> only because there was userspace involvement in that one and not this.
->
-> Because in the end, it manifests itself in the same way that 
-> atomic_enable() did not go through after an atomic_disable() and the 
-> next atomic_disable() crashes.
-
-Right, but your proposed fix would not actually fix anything and judging
-from the sparse commit message and diff itself it is clearly only meant
-to mitigate the case where user space is involved, which is *not* the
-case here.
-
-Johan
