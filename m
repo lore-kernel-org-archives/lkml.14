@@ -1,52 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA8D4CB35;
-	Wed, 13 Mar 2024 16:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0334D9F0;
+	Wed, 13 Mar 2024 16:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710347559; cv=none; b=manWFQuQ8LB/JJHNhplcv5Wh8YY05bq77TgWujC9jqDunEjMf8ixhsv2NK3JfA372W7bX5M2RHxZMNYItZJOGM7yqm3+gPfdPHAncArflPvBigsJ+40E1XwYIiZ4MsUPUzPi2H2OYf+bcWy1d/zCWU7u1Vd4jdzvwJrtdrSN8Ao=
+	t=1710347562; cv=none; b=snwuP/75mYpE+o5YbHAb/CCqQBi2S+i1nDoYVWf8AwLQ5Vh5FtlMSwyvR8Y6AMqaxfKNOFJqwaIAb+vnblMAn6pBTqLlj5I0wN2hq8wxgqzBDqNraVgAFc107Tzw4v+TpElPBpxXs38d2jSEZlVuHFy6PDwsyz8MGWvoGplAFws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710347559; c=relaxed/simple;
-	bh=fQnwX33ZCQHqnJhm9+cUZLKfhtJjbriKdpgxpBPD1gk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UqccZlZk2IqMLgKyNa9+ez+lr7G6+bBo460L5DVvdNfevMyhh1fDCl/ixbgGED2zmilk8DQ5YWx8178hskEwOyZwelTzPnWcpLbJixcU5d51UUrOZiJn9NIoaX0d/6UO543PWH88X3bmNM4brQvFv4d7sSLmnBfyGzl4jYzECnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJivEvZg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710347562; c=relaxed/simple;
+	bh=IGNLt7LksMqSz477acUIJclwQc6RWa1/h14SdnAgjFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Lk+1jvzamlHmvB6Zp1Bc7hxpX+1yOlXM2hNwi/CcH9VbnmlIwVATtpGVhP+2xtOje1i8LiBpVG5RaTrHHRvd++49tbpVTLtr3gMDiFkaxWLLZpdyAKBuJHqwqh1tI7hdMJT7X0GwkXv/2ks6lHVOOaKrAToXWpVlExtJOhp7BAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZpRugsN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJivEvZg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC8CC433C7;
-	Wed, 13 Mar 2024 16:32:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZpRugsN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E1EC43390;
+	Wed, 13 Mar 2024 16:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710347559;
-	bh=fQnwX33ZCQHqnJhm9+cUZLKfhtJjbriKdpgxpBPD1gk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VJivEvZgIv0gsAyksHN5SBuGrtTfK2n4FGixgLWctCkrh04AM3+x8F/79a6vYZY3r
-	 awngcyde4wc76rPJRf4C2I0a5/eYhOZLaTP8SSEnGHK6pR+4kaHgrZVUXfHBKxNlcb
-	 Pb/KWIOKb8aWKG0jMxZPOV1Mt4pOQ6r+HafviLAP62PQ9ZJeNCvYf52WoRNnjMhKlP
-	 27rIZ2A3EIGCWw1QjwG5CbmCrLJEWfBD2ur0dUK5Z+1Vaop32+t3NwKG2gPHdO3dtY
-	 bnXFQNwdPSLrSDjS3ivONJrXxGubSN99cZcnoquQ978ctMdd2csS6el99Idoh8327R
-	 SPblPRj7QXLrA==
+	s=k20201202; t=1710347561;
+	bh=IGNLt7LksMqSz477acUIJclwQc6RWa1/h14SdnAgjFk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gZpRugsNeUat4hQCopM4P5NpPM+H9zBKzBFpphsQCtdT7O5sQmNaF64l40IgXLRQU
+	 1TP04Q+tDyC0op7FBlKuy+kme0pXZYPPo0CrLgJhlflkJZ6eUHZPCvOdnynrf98Ban
+	 lsRq4uWoaopxSk6FblkarloJxPfquyxNrhZwf3t66mq8SXnhNkxREg1yiX0vxxCgPg
+	 ppRG1goe+XADhSAIS8/IO8cwQQ7++2Cut3dEcE6iTtxyb5BCM/HMNthCpg6SFTR+Cm
+	 zQm6sLh/GLtJ7owyp2EUEtTwr6SCWuq2tNJx+nlxTnL4M1cPH31jTdQITDwcluYHhQ
+	 7S4RJN52SN5Mg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de
-Subject: [PATCH 6.7 00/61] 6.7.10-rc1 review
-Date: Wed, 13 Mar 2024 12:31:35 -0400
-Message-ID: <20240313163236.613880-1-sashal@kernel.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 6.7 02/61] Documentation/hw-vuln: Add documentation for RFDS
+Date: Wed, 13 Mar 2024 12:31:37 -0400
+Message-ID: <20240313163236.613880-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240313163236.613880-1-sashal@kernel.org>
+References: <20240313163236.613880-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-6.7.y
@@ -57,248 +56,143 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-This is the start of the stable review cycle for the 6.7.10 release.
-There are 61 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+commit 4e42765d1be01111df0c0275bbaf1db1acef346e upstream.
 
-Responses should be made by Fri Mar 15 04:32:27 PM UTC 2024.
-Anything received after that time might be too late.
+Add the documentation for transient execution vulnerability Register
+File Data Sampling (RFDS) that affects Intel Atom CPUs.
 
-The whole patch series can be found in one patch at:
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.7.y&id2=v6.7.9
-or in the git tree and branch at:
-        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-and the diffstat can be found below.
-
-Thanks,
-Sasha
-
--------------
-Pseudo-Shortlog of commits:
-
-Aya Levin (1):
-  net/mlx5: Fix fw reporter diagnose output
-
-Daniel Borkmann (2):
-  xdp, bonding: Fix feature flags when there are no slave devs anymore
-  selftests/bpf: Fix up xdp bonding test wrt feature flags
-
-Eduard Zingerman (1):
-  bpf: check bpf_func_state->callback_depth when pruning states
-
-Edward Adam Davis (1):
-  net/rds: fix WARNING in rds_conn_connect_if_down
-
-Emeel Hakim (1):
-  net/mlx5e: Fix MACsec state loss upon state update in offload path
-
-Emil Tantilov (1):
-  idpf: disable local BH when scheduling napi for marker packets
-
-Eric Dumazet (2):
-  geneve: make sure to pull inner header in geneve_rx()
-  net/ipv6: avoid possible UAF in ip6_route_mpath_notify()
-
-Florian Kauer (1):
-  igc: avoid returning frame twice in XDP_REDIRECT
-
-Florian Westphal (1):
-  netfilter: nft_ct: fix l3num expectations with inet pseudo family
-
-Frank Li (3):
-  dt-bindings: dma: fsl-edma: Add fsl-edma.h to prevent hardcoding in
-    dts
-  dmaengine: fsl-edma: utilize common dt-binding header file
-  dmaengine: fsl-edma: correct max_segment_size setting
-
-Gao Xiang (1):
-  erofs: apply proper VMA alignment for memory mapped files on THP
-
-Gavin Li (1):
-  Revert "net/mlx5: Block entering switchdev mode with ns inconsistency"
-
-Guillaume Nault (1):
-  xfrm: Clear low order bits of ->flowi4_tos in decode_session4().
-
-Horatiu Vultur (1):
-  net: sparx5: Fix use after free inside sparx5_del_mact_entry
-
-Jacob Keller (2):
-  ice: replace ice_vf_recreate_vsi() with ice_vf_reconfig_vsi()
-  ice: virtchnl: stop pretending to support RSS over AQ or registers
-
-Jan Kara (1):
-  readahead: avoid multiple marked readahead pages
-
-Jason Xing (12):
-  netrom: Fix a data-race around sysctl_netrom_default_path_quality
-  netrom: Fix a data-race around
-    sysctl_netrom_obsolescence_count_initialiser
-  netrom: Fix data-races around sysctl_netrom_network_ttl_initialiser
-  netrom: Fix a data-race around sysctl_netrom_transport_timeout
-  netrom: Fix a data-race around sysctl_netrom_transport_maximum_tries
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_acknowledge_delay
-  netrom: Fix a data-race around sysctl_netrom_transport_busy_delay
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_requested_window_size
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_no_activity_timeout
-  netrom: Fix a data-race around sysctl_netrom_routing_control
-  netrom: Fix a data-race around sysctl_netrom_link_fails_count
-  netrom: Fix data-races around sysctl_net_busy_read
-
-Jianbo Liu (2):
-  net/mlx5: E-switch, Change flow rule destination checking
-  net/mlx5e: Change the warning when ignore_flow_level is not supported
-
-Lena Wang (1):
-  netfilter: nf_conntrack_h323: Add protection for bmp length out of
-    range
-
-Leon Romanovsky (1):
-  xfrm: Pass UDP encapsulation in TX packet offload
-
-Maciej Fijalkowski (3):
-  ixgbe: {dis, en}able irqs in ixgbe_txrx_ring_{dis, en}able
-  i40e: disable NAPI right after disabling irqs when handling xsk_pool
-  ice: reorder disabling IRQ and NAPI in ice_qp_dis
-
-Matthieu Baerts (NGI0) (1):
-  selftests: mptcp: decrease BW in simult flows
-
-Michal Schmidt (1):
-  ice: fix uninitialized dplls mutex usage
-
-Michal Swiatkowski (1):
-  ice: reconfig host after changing MSI-X on VF
-
-Moshe Shemesh (1):
-  net/mlx5: Check capability for fw_reset
-
-Oleg Nesterov (1):
-  exit: wait_task_zombie: kill the no longer necessary
-    spin_lock_irq(siglock)
-
-Oleksij Rempel (1):
-  net: lan78xx: fix runtime PM count underflow on link stop
-
-Pawan Gupta (4):
-  x86/mmio: Disable KVM mitigation when X86_FEATURE_CLEAR_CPU_BUF is set
-  Documentation/hw-vuln: Add documentation for RFDS
-  x86/rfds: Mitigate Register File Data Sampling (RFDS)
-  KVM/x86: Export RFDS_NO and RFDS_CLEAR to guests
-
-Rahul Rameshbabu (2):
-  net/mlx5e: Use a memory barrier to enforce PTP WQ xmit submission
-    tracking occurs after populating the metadata_map
-  net/mlx5e: Switch to using _bh variant of of spinlock API in port
-    timestamping NAPI poll context
-
-Rand Deeb (1):
-  net: ice: Fix potential NULL pointer dereference in
-    ice_bridge_setlink()
-
-Saeed Mahameed (1):
-  Revert "net/mlx5e: Check the number of elements before walk TC
-    rhashtable"
-
-Sasha Levin (1):
-  Linux 6.7.10-rc1
-
-Steven Rostedt (Google) (1):
-  tracing/net_sched: Fix tracepoints that save qdisc_dev() as a string
-
-Suren Baghdasaryan (1):
-  arch/arm/mm: fix major fault accounting when retrying under per-VMA
-    lock
-
-Tobias Jakobi (Compleo) (1):
-  net: dsa: microchip: fix register write order in ksz8_ind_write8()
-
-Toke Høiland-Jørgensen (1):
-  cpumap: Zero-initialise xdp_rxq_info struct before running XDP program
-
-Wang Kefeng (1):
-  ARM: 9328/1: mm: try VMA lock-based page fault handling first
-
-Yongzhi Liu (1):
-  net: pds_core: Fix possible double free in error handling path
-
- .../ABI/testing/sysfs-devices-system-cpu      |   1 +
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
  Documentation/admin-guide/hw-vuln/index.rst   |   1 +
  .../hw-vuln/reg-file-data-sampling.rst        | 104 ++++++++++++++++++
- .../admin-guide/kernel-parameters.txt         |  21 ++++
- Makefile                                      |   4 +-
- arch/arm/Kconfig                              |   1 +
- arch/arm/mm/fault.c                           |  32 ++++++
- arch/x86/Kconfig                              |  11 ++
- arch/x86/include/asm/cpufeatures.h            |   1 +
- arch/x86/include/asm/msr-index.h              |   8 ++
- arch/x86/kernel/cpu/bugs.c                    |  92 +++++++++++++++-
- arch/x86/kernel/cpu/common.c                  |  38 ++++++-
- arch/x86/kvm/x86.c                            |   5 +-
- drivers/base/cpu.c                            |   3 +
- drivers/dma/fsl-edma-common.h                 |   5 +-
- drivers/dma/fsl-edma-main.c                   |  21 ++--
- drivers/net/bonding/bond_main.c               |   2 +-
- drivers/net/dsa/microchip/ksz8795.c           |   4 +-
- drivers/net/ethernet/amd/pds_core/auxbus.c    |  12 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c   |   2 +-
- drivers/net/ethernet/intel/ice/ice_dpll.c     |   2 +-
- drivers/net/ethernet/intel/ice/ice_main.c     |   2 +
- drivers/net/ethernet/intel/ice/ice_sriov.c    |  33 ++----
- drivers/net/ethernet/intel/ice/ice_vf_lib.c   |  35 ++++--
- drivers/net/ethernet/intel/ice/ice_vf_lib.h   |   1 -
- .../ethernet/intel/ice/ice_vf_lib_private.h   |   1 +
- drivers/net/ethernet/intel/ice/ice_virtchnl.c |   9 +-
- .../intel/ice/ice_virtchnl_allowlist.c        |   2 -
- drivers/net/ethernet/intel/ice/ice_xsk.c      |   9 +-
- .../net/ethernet/intel/idpf/idpf_virtchnl.c   |   2 +
- drivers/net/ethernet/intel/igc/igc_main.c     |  13 +--
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  56 ++++++++--
- .../net/ethernet/mellanox/mlx5/core/devlink.c |   6 +
- .../net/ethernet/mellanox/mlx5/core/en/ptp.c  |  12 +-
- .../mellanox/mlx5/core/en/tc/post_act.c       |   2 +-
- .../mellanox/mlx5/core/en_accel/macsec.c      |  82 ++++++++------
- .../net/ethernet/mellanox/mlx5/core/en_tx.c   |   2 +
- .../mellanox/mlx5/core/esw/ipsec_fs.c         |   2 +-
- .../mellanox/mlx5/core/eswitch_offloads.c     |  46 +++-----
- .../ethernet/mellanox/mlx5/core/fw_reset.c    |  22 +++-
- .../net/ethernet/mellanox/mlx5/core/health.c  |   2 +-
- .../microchip/sparx5/sparx5_mactable.c        |   4 +-
- drivers/net/geneve.c                          |  18 ++-
- drivers/net/usb/lan78xx.c                     |   3 +-
- fs/erofs/data.c                               |   1 +
- include/dt-bindings/dma/fsl-edma.h            |  21 ++++
- include/linux/cpu.h                           |   2 +
- include/linux/mlx5/mlx5_ifc.h                 |   4 +-
- include/trace/events/qdisc.h                  |  20 ++--
- kernel/bpf/cpumap.c                           |   2 +-
- kernel/bpf/verifier.c                         |   3 +
- kernel/exit.c                                 |  10 +-
- mm/readahead.c                                |   4 +-
- net/ipv6/route.c                              |  21 ++--
- net/netfilter/nf_conntrack_h323_asn1.c        |   4 +
- net/netfilter/nft_ct.c                        |  11 +-
- net/netrom/af_netrom.c                        |  14 +--
- net/netrom/nr_dev.c                           |   2 +-
- net/netrom/nr_in.c                            |   6 +-
- net/netrom/nr_out.c                           |   2 +-
- net/netrom/nr_route.c                         |   8 +-
- net/netrom/nr_subr.c                          |   5 +-
- net/rds/rdma.c                                |   3 +
- net/rds/send.c                                |   6 +-
- net/xfrm/xfrm_device.c                        |   2 +-
- net/xfrm/xfrm_policy.c                        |   2 +-
- .../selftests/bpf/prog_tests/xdp_bonding.c    |   4 +-
- .../selftests/net/mptcp/simult_flows.sh       |   8 +-
- 68 files changed, 648 insertions(+), 251 deletions(-)
+ 2 files changed, 105 insertions(+)
  create mode 100644 Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
- create mode 100644 include/dt-bindings/dma/fsl-edma.h
 
+diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
+index de99caabf65a3..ff0b440ef2dc9 100644
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@ -21,3 +21,4 @@ are configurable at compile, boot or run time.
+    cross-thread-rsb
+    srso
+    gather_data_sampling
++   reg-file-data-sampling
+diff --git a/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
+new file mode 100644
+index 0000000000000..0585d02b9a6cb
+--- /dev/null
++++ b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
+@@ -0,0 +1,104 @@
++==================================
++Register File Data Sampling (RFDS)
++==================================
++
++Register File Data Sampling (RFDS) is a microarchitectural vulnerability that
++only affects Intel Atom parts(also branded as E-cores). RFDS may allow
++a malicious actor to infer data values previously used in floating point
++registers, vector registers, or integer registers. RFDS does not provide the
++ability to choose which data is inferred. CVE-2023-28746 is assigned to RFDS.
++
++Affected Processors
++===================
++Below is the list of affected Intel processors [#f1]_:
++
++   ===================  ============
++   Common name          Family_Model
++   ===================  ============
++   ATOM_GOLDMONT           06_5CH
++   ATOM_GOLDMONT_D         06_5FH
++   ATOM_GOLDMONT_PLUS      06_7AH
++   ATOM_TREMONT_D          06_86H
++   ATOM_TREMONT            06_96H
++   ALDERLAKE               06_97H
++   ALDERLAKE_L             06_9AH
++   ATOM_TREMONT_L          06_9CH
++   RAPTORLAKE              06_B7H
++   RAPTORLAKE_P            06_BAH
++   ATOM_GRACEMONT          06_BEH
++   RAPTORLAKE_S            06_BFH
++   ===================  ============
++
++As an exception to this table, Intel Xeon E family parts ALDERLAKE(06_97H) and
++RAPTORLAKE(06_B7H) codenamed Catlow are not affected. They are reported as
++vulnerable in Linux because they share the same family/model with an affected
++part. Unlike their affected counterparts, they do not enumerate RFDS_CLEAR or
++CPUID.HYBRID. This information could be used to distinguish between the
++affected and unaffected parts, but it is deemed not worth adding complexity as
++the reporting is fixed automatically when these parts enumerate RFDS_NO.
++
++Mitigation
++==========
++Intel released a microcode update that enables software to clear sensitive
++information using the VERW instruction. Like MDS, RFDS deploys the same
++mitigation strategy to force the CPU to clear the affected buffers before an
++attacker can extract the secrets. This is achieved by using the otherwise
++unused and obsolete VERW instruction in combination with a microcode update.
++The microcode clears the affected CPU buffers when the VERW instruction is
++executed.
++
++Mitigation points
++-----------------
++VERW is executed by the kernel before returning to user space, and by KVM
++before VMentry. None of the affected cores support SMT, so VERW is not required
++at C-state transitions.
++
++New bits in IA32_ARCH_CAPABILITIES
++----------------------------------
++Newer processors and microcode update on existing affected processors added new
++bits to IA32_ARCH_CAPABILITIES MSR. These bits can be used to enumerate
++vulnerability and mitigation capability:
++
++- Bit 27 - RFDS_NO - When set, processor is not affected by RFDS.
++- Bit 28 - RFDS_CLEAR - When set, processor is affected by RFDS, and has the
++  microcode that clears the affected buffers on VERW execution.
++
++Mitigation control on the kernel command line
++---------------------------------------------
++The kernel command line allows to control RFDS mitigation at boot time with the
++parameter "reg_file_data_sampling=". The valid arguments are:
++
++  ==========  =================================================================
++  on          If the CPU is vulnerable, enable mitigation; CPU buffer clearing
++              on exit to userspace and before entering a VM.
++  off         Disables mitigation.
++  ==========  =================================================================
++
++Mitigation default is selected by CONFIG_MITIGATION_RFDS.
++
++Mitigation status information
++-----------------------------
++The Linux kernel provides a sysfs interface to enumerate the current
++vulnerability status of the system: whether the system is vulnerable, and
++which mitigations are active. The relevant sysfs file is:
++
++	/sys/devices/system/cpu/vulnerabilities/reg_file_data_sampling
++
++The possible values in this file are:
++
++  .. list-table::
++
++     * - 'Not affected'
++       - The processor is not vulnerable
++     * - 'Vulnerable'
++       - The processor is vulnerable, but no mitigation enabled
++     * - 'Vulnerable: No microcode'
++       - The processor is vulnerable but microcode is not updated.
++     * - 'Mitigation: Clear Register File'
++       - The processor is vulnerable and the CPU buffer clearing mitigation is
++	 enabled.
++
++References
++----------
++.. [#f1] Affected Processors
++   https://www.intel.com/content/www/us/en/developer/topic-technology/software-security-guidance/processors-affected-consolidated-product-cpu-model.html
 -- 
 2.43.0
 
