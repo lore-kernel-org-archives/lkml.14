@@ -1,136 +1,212 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6339481BE;
-	Wed, 13 Mar 2024 15:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E7546BA6
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710344786; cv=none; b=CZaj1CmzMKdEYUMAM8Si5M+WtIRR2+iM/uyvbrrq/A0jHndozuUpv4hiBLJVOL8cHHDe6sTHQYjup1x7RXr/HGgPC4n9Setqk3txvPRLaAwii2Z2JHaKWCZ7d9r8xEZ0Ik/dDFA7aUtJ+3BWgoMzotsyi3HMvtK9Y9FQwI2SCHQ=
+	t=1710344870; cv=none; b=jqiYHWPcPwvJCz4N/KkJHZ6Xymz7YJA83ltYX+JcEaj2MMIhpUgiRpUHWUkTqHssipnZsV2M73T7Vuth5sG7eNy6CDmjBoG+siLgA5NDDk+0PU7TW2v7yrWD+Y2yJleS2P9Qy2qDDeQmzBiBpVYDnP/B/1rBdZ9Y7DcDa6W/YDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710344786; c=relaxed/simple;
-	bh=kbZTvKIUyKrKVMm68AL0IRPNR5dRypdr5syArylXTQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MjDPg4j9JfgcWA/0JsHLFLVTnquFoR5EDt4yp/WzhlSUXibLAVpbyJRxWrYZ5QT05LgLewYuhsQnvhfx7OJtXGLKTFV5FK+JVAXTSpK1AtPK4nCx9V4l9wX6un+u6DrjL8aaqvkogMWzCUYA/OeRYQwTPy7gQFiqoJYBKAR6zeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmGuABx4; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710344870; c=relaxed/simple;
+	bh=DXU7ph51IFvnFqSwDtmBTf5RGlHHgDbueVIPKluOaU8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A07UyIxGRL6pvjXQSYov3UypX/bxn5Rct1jLgjAcs9CVD2nHvcbVeP/LHMHIueU1QFlFn5y6bHVCLKgGglsKAVA8uZhl3Avm3uZ8PIymURM9lZKEPavUyOvZMtPwo5tdQUK3wSQKzwWn1osYVkV5LX/xBeCzwIyC7PCxXfwuDHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l+G/PNFS; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmGuABx4"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-474cb4bcd3dso480047137.2;
-        Wed, 13 Mar 2024 08:46:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l+G/PNFS"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1dd916d7d55so11418335ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 08:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710344784; x=1710949584; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+WwWvBD5JICifAC4LRXMA04LWk4FKdSKpZw2yIN4sdE=;
-        b=HmGuABx4O/wZG+k/PL/LrQeb2mH3ckkZfUO8aST2cJOP99FOyxTlTm/WufZi7T3W2K
-         L9ZL4HDC6tC58In+wHc+KuuHvMghPiWX8dajECeatG3XYtFZtyCtm/kKlMfXtC3IYEsf
-         p29ju9YNZdhE8w7Jx8k02gRC5ozzXHl0Gr9ePkRMSvGJN7V+qHHZ7FyWBWu8wtWfPDhh
-         B8nxZXnlw1/QKgV+fkauw8tSgNMKU/6T9gf6wAKdCBViZcO16hPWN1Y2/7bVSQtcjvej
-         D8nDTDAXYGY498fmgx3T7hKI8zAHhfolTz2qsHsq/dEdTSu+WNbfbblb9dm+vMfmtiG1
-         VXrA==
+        d=google.com; s=20230601; t=1710344869; x=1710949669; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e/Z6H8FJpqkR5eo4Ljxl8hO8FSLCWuqRj+smCk6ObEc=;
+        b=l+G/PNFSwp9RZZPCNF8SnQzJGaDxO/et1tiXBiyQ6KezckROFd2upWKeQKeNXK/kVd
+         LlyUhOI7jJTbdiLeWY8ILK/UJO3nzs/cOLMb53mZT0mDkcjgzsrUrU3sCg9tnVNN9q7q
+         6zmj6yCvBiU8wGJEVDciMjykfyHU8kGaJgkvSNuyF4SEgspOr8vIOStK02XEgww7cNsu
+         lgQ539GCoEg7jv/7G7Hc4WNOtW3+roxHAvo/XGFLpD0iSM/RubbStfnAtFBkm3E11uxy
+         TL/+CaTiJRXEqmJL7ghb6PW1HGgV7GLfjQw/ScTVA9OOU5/6bvzV9tFChOUmyBDcGPs5
+         /etw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710344784; x=1710949584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+WwWvBD5JICifAC4LRXMA04LWk4FKdSKpZw2yIN4sdE=;
-        b=L7D7YfqhNYhSe/vcd0pc0brkvwb91zAS0gMaHqHc8BkVZX/s/EdHcRMhHPF7KtvchM
-         CeiOHAbWB6MrZsxfqyz6SCuZO7JiPPZXpP849C4K+qkqyvcAXRA9xZtoKVSle06h1crX
-         Jn3hbw+Crfsn1I3nI2GMTBPXI9LjGD+BMpbtsaeQNkX/LWSnJ/JbuDLucWup/Un0wagf
-         zsE7AVW4c3gWzpJ+M5QgJdHPIjWLrK7UYoyQqPxT6+hJp/cM/BwQXlkoJTAAKHP69Ffp
-         zWIfCGINs3hxUnMOkugy9jtDk5iWJU9nzxIttPxLV2ddGABEFvm35n8p4Z3QOX/ukAP+
-         dKYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMN0zNz/sMd41nj9gu1Zcjnr4t5qO7ocP7jw6dLeQBa9QK7ByGEzobv1f1E3kenXgbjworXjgxP4gTzGoMouW1hGIXglab1ffz883yEl54BtQM/xku+CFQE24rij7S545KzhvI
-X-Gm-Message-State: AOJu0YykD1HD6uKLekvaujWMXFFmnfxvQ7tRicWGVfJQYjEo8AMxqDW9
-	7Wba19IbyfIQ0+Wevxm6e+uMQebKJIi+AE8SM6Sz3MTeQRDdKjpTZ4lh+OM1C5eK3azZB9lu2/d
-	xTnFpxAARbmNXIQq5HPEG2mJYc6G6TWiI1SbUM0D+
-X-Google-Smtp-Source: AGHT+IFGHRcrxRbJ7IkrOHJ9dEOBwd36JeW/1VRvpXj3t1+JiaWxKzxiSsLNwmCzWmgYo/CJd3XJFKFJb2MzqgPNSmE=
-X-Received: by 2002:a05:6102:227a:b0:472:e8a6:ad0 with SMTP id
- v26-20020a056102227a00b00472e8a60ad0mr251000vsd.18.1710344783671; Wed, 13 Mar
- 2024 08:46:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710344869; x=1710949669;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e/Z6H8FJpqkR5eo4Ljxl8hO8FSLCWuqRj+smCk6ObEc=;
+        b=Hjl5UnJHVCeKnkQnGc6/Xglno5hpLYr6OZjSGu/vFvp8qSCntTzk8YOA72/1/Bf6Fl
+         c9NxdJrvIF0+xstWieJyb+RPRN8zvDS3TF8TsLScRfcozFzcCay3BnGFPgDHkDAGtv+Q
+         KoNmGNDJZB5GnHUfIEdatmfJsNUUFDM4HpJDuhvLU8MPQ/VZOcaEgfu5WFN4eO9IUwqh
+         0JTS0poSfzGaVgUBHvEW1AuDZyYJo02rvnwzf3X0vzhDwhSYZWNlyL2tx/NG0pzTuWQ6
+         YRcnOME+qz4uoSizTaiqZRGrIL+BSTK2o7usryNY0oEs/ca+rf2n0E5KOaM7DjLUWkSe
+         /GPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQJ1rWoTiECL8R/nqr01Go4rzESvIQ8ROxSLVdwv/I71UMK1twvG3yQ3CfGfgcAgOu3Xz/9bClm55eZyiswY1JZxt0+IFn/pHBjpXL
+X-Gm-Message-State: AOJu0YzMXiFdQw5Bc/LSCTWpFhRl+3SCjsyP0OwomUOCHxks1b5z99RS
+	ZYaQXptN28b1yzHbsE6ewFDAzSeXF7hdkeH2sDyDkB0TCXSF172MmZ8AHKhsfhGE8UOrkq9eD3P
+	ufg==
+X-Google-Smtp-Source: AGHT+IGJ6RZ0IkgPXm+643N45QY0e2z6ADAKgdz99dpQRYWWh6VJ9xo8TROXQkD9DyMcWkMBuXFLtkFK0+w=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d4c4:b0:1dd:47b7:47f9 with SMTP id
+ o4-20020a170902d4c400b001dd47b747f9mr9378plg.11.1710344868617; Wed, 13 Mar
+ 2024 08:47:48 -0700 (PDT)
+Date: Wed, 13 Mar 2024 15:47:47 +0000
+In-Reply-To: <9e604f99-5b63-44d7-8476-00859dae1dc4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CGME20240313112706epcas1p2ee50d07f603422b0193f0b71bf1a75e6@epcas1p2.samsung.com>
- <20240313112620.1061463-1-s_min.jeong@samsung.com> <20240313112620.1061463-2-s_min.jeong@samsung.com>
-In-Reply-To: <20240313112620.1061463-2-s_min.jeong@samsung.com>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Wed, 13 Mar 2024 08:46:12 -0700
-Message-ID: <CACOAw_wvVbJD0cCHXsToQmda7oHm5dLG89e_PeWU4_Hy5ivKCw@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: truncate page cache before clearing
- flags when aborting atomic write
-To: Sunmin Jeong <s_min.jeong@samsung.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, daehojeong@google.com, 
-	linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240229025759.1187910-1-stevensd@google.com> <ZeCIX5Aw5s1L0YEh@infradead.org>
+ <CAD=HUj7fT2CVXLfi5mty0rSzpG_jK9fhcKYGQnTf_H8Hg-541Q@mail.gmail.com>
+ <72285e50-6ffc-4f24-b97b-8c381b1ddf8e@amd.com> <ZfGrS4QS_WhBWiDl@google.com>
+ <0b109bc4-ee4c-4f13-996f-b89fbee09c0b@amd.com> <ZfG801lYHRxlhZGT@google.com> <9e604f99-5b63-44d7-8476-00859dae1dc4@amd.com>
+Message-ID: <ZfHKoxVMcBAMqcSC@google.com>
+Subject: Re: [PATCH v11 0/8] KVM: allow mapping non-refcounted pages
+From: Sean Christopherson <seanjc@google.com>
+To: "Christian =?utf-8?B?S8O2bmln?=" <christian.koenig@amd.com>
+Cc: David Stevens <stevensd@chromium.org>, Christoph Hellwig <hch@infradead.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Isaku Yamahata <isaku.yamahata@gmail.com>, Zhi Wang <zhi.wang.linux@gmail.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
+On Wed, Mar 13, 2024, Christian K=C3=B6nig wrote:
+> Am 13.03.24 um 15:48 schrieb Sean Christopherson:
+> > On Wed, Mar 13, 2024, Christian K=C3=B6nig wrote:
+> > > Am 13.03.24 um 14:34 schrieb Sean Christopherson:
+> > > > What Christoph is objecting to is that, in this series, KVM is expl=
+icitly adding
+> > > > support for mapping non-compound (huge)pages into KVM guests.  Davi=
+d is arguing
+> > > > that Christoph's objection to _KVM_ adding support is unfair, becau=
+se the real
+> > > > problem is that the kernel already maps such pages into host usersp=
+ace.  I.e. if
+> > > > the userspace mapping ceases to exist, then there are no mappings f=
+or KVM to follow
+> > > > and propagate to KVM's stage-2 page tables.
+> > > And I have to agree with Christoph that this doesn't make much sense.=
+ KVM
+> > > should *never* map (huge) pages from VMAs marked with VM_PFNMAP into =
+KVM
+> > > guests in the first place.
+> > >=20
+> > > What it should do instead is to mirror the PFN from the host page tab=
+les
+> > > into the guest page tables.
+> > That's exactly what this series does.  Christoph is objecting to KVM pl=
+aying nice
+> > with non-compound hugepages, as he feels that such mappings should not =
+exist
+> > *anywhere*.
+>=20
+> Well Christoph is right those mappings shouldn't exists and they also don=
+'t
+> exists.
+>
+> What happens here is that a driver has allocated some contiguous memory t=
+o
+> do DMA with. And then some page table is pointing to a PFN inside that
+> memory because userspace needs to provide parameters for the DMA transfer=
+.
+>=20
+> This is *not* a mapping of a non-compound hugepage, it's simply a PTE
+> pointing to some PFN.=20
 
-On Wed, Mar 13, 2024 at 4:29=E2=80=AFAM Sunmin Jeong <s_min.jeong@samsung.c=
-om> wrote:
+Yes, I know.  And David knows.  By "such mappings" I did not mean "huge PMD=
+ mappings
+that point at non-compound pages", I meant "any mapping in the host userspa=
+ce
+VMAs and page tables that points at memory that is backed by a larger-than-=
+order-0,
+non-compound allocation".
+
+And even then, the whole larger-than-order-0 mapping is not something we on=
+ the
+KVM side care about, at all.  The _only_ new thing KVM is trying to do in t=
+his
+series is to allow mapping non-refcounted struct page memory into KVM guest=
+.
+Those details were brought up purely because they provide context on how/wh=
+y such
+non-refcounted pages exist.
+
+> It can trivially be that userspace only maps 4KiB of some 2MiB piece of
+> memory the driver has allocate.
 >
-> In f2fs_do_write_data_page, FI_ATOMIC_FILE flag selects the target inode
-> between the original inode and COW inode. When aborting atomic write and
-> writeback occur simultaneously, invalid data can be written to original
-> inode if the FI_ATOMIC_FILE flag is cleared meanwhile.
->
-> To prevent the problem, let's truncate all pages before clearing the flag
->
-> Atomic write thread              Writeback thread
->   f2fs_abort_atomic_write
->     clear_inode_flag(inode, FI_ATOMIC_FILE)
->                                   __writeback_single_inode
->                                     do_writepages
->                                       f2fs_do_write_data_page
->                                         - use dn of original inode
->     truncate_inode_pages_final
->
-> Fixes: 3db1de0e582c ("f2fs: change the current atomic write way")
-> Cc: stable@vger.kernel.org #v5.19+
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Reviewed-by: Yeongjin Gil <youngjin.gil@samsung.com>
-> Signed-off-by: Sunmin Jeong <s_min.jeong@samsung.com>
-> ---
->  fs/f2fs/segment.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 7901ede58113..7e47b8054413 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -192,6 +192,9 @@ void f2fs_abort_atomic_write(struct inode *inode, boo=
-l clean)
->         if (!f2fs_is_atomic_file(inode))
->                 return;
->
-> +       if (clean)
-> +               truncate_inode_pages_final(inode->i_mapping);
-> +
->         release_atomic_write_cnt(inode);
->         clear_inode_flag(inode, FI_ATOMIC_COMMITTED);
->         clear_inode_flag(inode, FI_ATOMIC_REPLACE);
-> @@ -201,7 +204,6 @@ void f2fs_abort_atomic_write(struct inode *inode, boo=
-l clean)
->         F2FS_I(inode)->atomic_write_task =3D NULL;
->
->         if (clean) {
-> -               truncate_inode_pages_final(inode->i_mapping);
->                 f2fs_i_size_write(inode, fi->original_i_size);
->                 fi->original_i_size =3D 0;
->         }
-> --
-> 2.25.1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> > I.e. Christoph is (implicitly) saying that instead of modifying KVM to =
+play nice,
+> > we should instead fix the TTM allocations.  And David pointed out that =
+that was
+> > tried and got NAK'd.
+>=20
+> Well as far as I can see Christoph rejects the complexity coming with the
+> approach of sometimes grabbing the reference and sometimes not.
+
+Unless I've wildly misread multiple threads, that is not Christoph's object=
+ion.
+From v9 (https://lore.kernel.org/all/ZRpiXsm7X6BFAU%2Fy@infradead.org):
+
+  On Sun, Oct 1, 2023 at 11:25=E2=80=AFPM Christoph Hellwig <hch@infradead.=
+org> wrote:
+  >
+  > On Fri, Sep 29, 2023 at 09:06:34AM -0700, Sean Christopherson wrote:
+  > > KVM needs to be aware of non-refcounted struct page memory no matter =
+what; see
+  > > CVE-2021-22543 and, commit f8be156be163 ("KVM: do not allow mapping v=
+alid but
+  > > non-reference-counted pages"). =C2=A0I don't think it makes any sense=
+ whatsoever to
+  > > remove that code and assume every driver in existence will do the rig=
+ht thing.
+  >
+  > Agreed.
+  >
+  > >
+  > > With the cleanups done, playing nice with non-refcounted paged instea=
+d of outright
+  > > rejecting them is a wash in terms of lines of code, complexity, and o=
+ngoing
+  > > maintenance cost.
+  >
+  > I tend to strongly disagree with that, though. =C2=A0We can't just let =
+these
+  > non-refcounted pages spread everywhere and instead need to fix their
+  > usage.
+
+> And I have to agree that this is extremely odd.
+
+Yes, it's odd and not ideal.  But with nested virtualization, KVM _must_ "m=
+ap"
+pfns directly into the guest via fields in the control structures that are
+consumed by hardware.  I.e. pfns are exposed to the guest in an "out-of-ban=
+d"
+structure that is NOT part of the stage-2 page tables.  And wiring those up=
+ to
+the MMU notifiers is extremely difficult for a variety of reasons[*].
+
+Because KVM doesn't control which pfns are mapped this way, KVM's compromis=
+e is
+to grab a reference to the struct page while the out-of-band mapping exists=
+, i.e.
+to pin the page to prevent use-after-free.  And KVM's historical ABI is to =
+support
+any refcounted page for these out-of-band mappings, regardless of whether t=
+he
+page was obtained by gup() or follow_pte().
+
+Thus, to support non-refouncted VM_PFNMAP pages without breaking existing u=
+serspace,
+KVM resorts to conditionally grabbing references and disllowing non-refcoun=
+ted
+pages from being inserted into the out-of-band mappings.
+
+But again, I don't think these details are relevant to Christoph's objectio=
+n.
+
+[*] https://lore.kernel.org/all/ZBEEQtmtNPaEqU1i@google.com
