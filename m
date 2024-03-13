@@ -1,68 +1,56 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AD450278;
-	Wed, 13 Mar 2024 19:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A035360DD6;
+	Wed, 13 Mar 2024 19:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357154; cv=none; b=RKpNG/ljish6dOtgydIPZMznzA6BuxGrZegkQmqoLE7gJidMPvptN9O8xzW2w94d9LPfDIZ19WqpACYqTr2Hn0VdeeBklUfP+Rc/WM9+4tBSO/3nZY0Pzh+etRyFrIrcUwzjB4CFpTSsLHM3py1aZVqD7iY0GxekETywsJIpSNg=
+	t=1710357206; cv=none; b=UvovGXnUL5BUy0GIQMU2Ra6vuo2lFlPbimIG2vli5Ri4ZGiskljBP1UakSQI22TKpvg+VRwK39KYApGW3LpTjN9QqcgYGkJVG4FANqu+BF+CCOfWfEc6tHU37gABdWdXiCzPDTSPFNtS1BoYhNrF1uJg75UEvzwmcziFBJkMWEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357154; c=relaxed/simple;
-	bh=ymKP3IS2cmfQeizc365gbXNTGJ8tjNwTUcgrrr5ZdkQ=;
+	s=arc-20240116; t=1710357206; c=relaxed/simple;
+	bh=Sbu7s5cRzT2+JBOIU5iBfi04JYiRAz5mbhHb5ik8btU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ccL4h50kXWiG4fqn8BPL90y1jCrqCYsNOGxbYFALLkBerCbSj4oYfsIRMueVlgWX1nw/0XQ/d5Rre04EfGEtEDVsYQ7J/L6lj5BsbCCahAwDRfqGinpWkRi3rlYATLBeWyoHHqOgtt2d5Jl+l8YQcVFY4mB9rrew8n55ayr/NGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=o3d4YVLf; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MuasFgveFoG8/K+PTd9K9srkyZ8gw7w/aTtSz1UFrTO3oUW0uSSukIzQwyo5VqvQyB2Ht4pmBwHEi4KBDhaQIps4RHtHUsiedFe0EkqvzJMwRybfRMZP+GHJVgN98mQK65b60SoRVRK5lxkaD/qD2bTVVRwupvUMbFvHTOu+9c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=hK2bScIl; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o3d4YVLf"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hK2bScIl"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Y7M7m8+z9Pxp+WtOGCbb1eIYlLSjTSrvSDU8UY51Iko=; b=o3d4YVLf5C9RxU4fFRGRhqJ8bh
-	lSpLcfO+WTl5BlF7HzhfXgpyEFMMReDhLco4YG6HVRf3nAc83qUBTS9hDA5fnMk7Jz8kHzSJY8Vhq
-	11V63o5qJfLinTCBh7aEoarX5LpDlZeqErxbuW1Cb6gTarsLaB7CljPOXwMX4ajZEuLhfrHaXJFdO
-	kV38rFQSgDOR0YH25ZUH+B9y4TNnl+YhIaNFHHZqmz1jp965FXP2Gax8lYem0HZ0hLL/HRbLemGpS
-	nczA0yvF9V50b8QtxWDLfbEsbZGJnq0NSkFDKDe6a+68mcXSEL6Jck+u1wSrze+hE7GRK06z6lZkX
-	S7PMNAfw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkU1V-000000064gw-2tQM;
-	Wed, 13 Mar 2024 19:12:21 +0000
-Date: Wed, 13 Mar 2024 19:12:21 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Andreas Hindborg <nmi@metaspace.dk>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-	Damien Le Moal <Damien.LeMoal@wdc.com>,
-	Hannes Reinecke <hare@suse.de>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Niklas Cassel <Niklas.Cassel@wdc.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yexuan Yang <1182282462@bupt.edu.cn>,
-	Sergio =?iso-8859-1?Q?Gonz=E1lez?= Collado <sergio.collado@gmail.com>,
-	Joel Granados <j.granados@samsung.com>,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 0/5] Rust block device driver API and null block
- driver
-Message-ID: <ZfH6lTDQygFd1hz-@casper.infradead.org>
-References: <20240313110515.70088-1-nmi@metaspace.dk>
- <855a006d-5afc-4f70-90a9-ec94c0414d4f@acm.org>
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=x+qZONr6YbvwJyGwyuaj5Ota3n6M4e55YF2EBPfxwwo=; b=hK2bScIlHaMdfudaOjJZfcJutS
+	PU5PIbzx8+T5vEIkwmy+4gF0ed/CXuNcmJzTOrUbR35VSj6WaFUcuhQOovb5Y0aeBYfORRM0uY9g+
+	y/2s/uLpzva+K3DDYq4pyZQG3lDU/i9zEHoNpiIxpAOR01bFjOEpAxOpV3r4I73i5CDJ4Y6Hwhlsx
+	urFtU5lHm+OkvVvM5dBY1CnjjTpNGFe0urPg15HCbiJhzEP+oLgblkfqPyFvIF4EF3o+AldcLO/D7
+	0CEJt4Ye/U5F3MxriJ/9hOAlZBZtPQhDfXHHbePR8rJJU9gKB2QZ5MaHafipvza0AuSZPScbEJ0Mv
+	JaKxmZGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51196)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rkU2C-000858-33;
+	Wed, 13 Mar 2024 19:13:05 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rkU28-0004j5-2D; Wed, 13 Mar 2024 19:13:00 +0000
+Date: Wed, 13 Mar 2024 19:12:59 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Nikita Kiryushin <kiryushin@ancud.ru>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: fix phy_read_poll_timeout argument type in
+ genphy_loopback
+Message-ID: <ZfH6u/njccckwT1K@shell.armlinux.org.uk>
+References: <>
+ <e2ef8067-bac7-45c1-96cf-1160625aef3d@ancud.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,27 +59,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <855a006d-5afc-4f70-90a9-ec94c0414d4f@acm.org>
+In-Reply-To: <e2ef8067-bac7-45c1-96cf-1160625aef3d@ancud.ru>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Mar 13, 2024 at 11:02:23AM -0700, Bart Van Assche wrote:
-> On 3/13/24 04:05, Andreas Hindborg wrote:
-> > This is the second version of the Rust block device driver API and the Rust null
-> > block driver. The context and motivation can be seen in cover letter of the RFC
-> > v1 [1]. If more context is required, a talk about this effort was recorded at
-> > LPC [2]. I hope to be able to discuss this series at LSF this year [3].
+On Wed, Mar 13, 2024 at 09:13:23PM +0300, Nikita Kiryushin wrote:
+> read_poll_timeout inside phy_read_poll_timeout can set val negative
+> in some cases (for example, __mdiobus_read inside phy_read can return
+> -EOPNOTSUPP).
 > 
-> Memory safety may land in C++ in the near future (see also
-> https://herbsutter.com/2024/03/). If memory-safe C++ or memory-safe C
-> would be adopted in the kernel, it would allow writing memory-safe
-> drivers without having to add complicated bindings between existing C
-> code and new Rust code. Please do not take this as personal criticism -
-> I appreciate the effort that has been spent on coming up with great
-> Rust bindings for the Linux kernel block layer.
+> Supposedly, commit 4ec732951702 ("net: phylib: fix
+> phy_read*_poll_timeout()")
+> should fix problems with wrong-signed vals, but I do not see how
+> as val is sent to phy_read as is and __val = phy_read (not val)
+> is checked for sign.
+> 
+> Change val type for signed to allow better error handling as done in other
+> phy_read_poll_timeout callers. This will not fix any error handling
+> by itself, but allows, for example, to modify cond with appropriate
+> sign check or check resulting val separately.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Fixes: 014068dcb5b1 ("net: phy: genphy_loopback: add link speed
+> configuration")
 
-You know, this reminds me of when I was at Intel working on NVMe.
-We had a product all ready to ship and a manager suggested that we delay
-shipping it until the SCSI-over-PCI standard was finished and ratified
-so that the same piece of silicon could support both.
+Fixes lines must not be wrapped.
 
-Fortunately, said manager was overruled, but it's a great example of
-how this kind of FUD can actually work.
+> Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+> ---
+>  drivers/net/phy/phy_device.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 8297ef681bf5..6c6ec9475709 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -2831,8 +2831,8 @@ EXPORT_SYMBOL(genphy_resume);
+>  int genphy_loopback(struct phy_device *phydev, bool enable)
+>  {
+>  	if (enable) {
+> -		u16 val, ctl = BMCR_LOOPBACK;
+> -		int ret;
+> +		u16 ctl = BMCR_LOOPBACK;
+> +		int ret, val;
+>   		ctl |= mii_bmcr_encode_fixed(phydev->speed, phydev->duplex);
+>  -- 2.34.1
+
+The patch seems broken - blank lines appear to be missing.
+
+I think the change itself is correct however - "val" passed into
+phy_read_poll_timeout() must be signed.
+
+Lastly, as you need to indicate which tree your patch is targetting,
+which is done via the subject line prefix. As this is in mainline, then
+[PATCH net] would be the correct prefix.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
