@@ -1,33 +1,34 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA4320DDB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA7F225AF
 	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 20:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710363391; cv=none; b=QM3Eaa33tXZpEC+Fw54xzZOf7TbyLL84aFuuQV7FozDFAq4KQ9BrUWNansDnuvAVo/Y0/6iSYPaV9n7TYQGdirgvlYFtV1ffCsIyeDxQgQsFmP+j9Un0MzDLy3v8oUyqEkzRTwPy7mOF+zd6kx9Oreei02D0BREpWn3r3dFcFVo=
+	t=1710363392; cv=none; b=eXwlHeN/EkdYYDMPrI3zkwv6vfxsNbJfKuVIj9fAKNC/KZ1yiW3wWLF0rulDejDaYQrfTrei2dlB8iW6ixVCeRwagvKFIi0Wp/HdPfi/8HSurMezNXOQ6r47MJHNu7jhAwwEJ1GS9/oWQtAGhf0qErq8BGonPg8L26mu95wsBy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710363391; c=relaxed/simple;
-	bh=ombC87M/jDfVGex2UxCohkXM5I06cdOhxPkknjHKUX4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b8zX3yIXjJ2x3drFUASXFHHp68x9tihdaIRpoUcHtVo6dDKCBf/HqKDSEINKkQMElrRFfJf45JuxHANivk/cnsQagtgka7LH/IT9FaU6WcprblfmOzSNcdHF+zgacFoJOmOMCvHEwh+pry3cu0vsfaTeZ3rqJntIJYLTaac1BTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=L0Be1V/F; arc=none smtp.client-ip=167.114.26.122
+	s=arc-20240116; t=1710363392; c=relaxed/simple;
+	bh=h7MYZvQ42ZrkU+g07VqiXmidevdYRk1IO5cCImEWhZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BytAXvOJgzSOXIe1Mfd6JyIQVshMoTakRyBdCBpqkOjSb3grnOSY8Hyg535FLv/Ol5boFb03BmcP3ZoXnBPSvn/VEtlwmEcGfiln4B9dSs7k3PPF0BAznutFaO8PfsRfwhoc7xf+e+jjy2PTWeP9mASknI7amHiVLMwoKJzW/gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=HmLkOYMo; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="L0Be1V/F"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HmLkOYMo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1710363381;
-	bh=ombC87M/jDfVGex2UxCohkXM5I06cdOhxPkknjHKUX4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=L0Be1V/F5E3uHHIK18kHDRKtGttorOPLvQ786BQ1vDLVwQAU05Ya82DAF7CFBXPVS
-	 HuQ+J1Y+UdsDAPfs7y4sXeCq3WhqkNVW0Q0d38ac0vdcJV6BMmm/1ZfkTSv7IGq897
-	 BgIh5p3CPtbV+bC8wKW/4nm5GHeDUisQs8dptfHBz93bMQ0iDlSJJTowz3R5niePJ4
-	 cBlmzbNd3BY8vz37TGu+zCsb1/lbkDkCpdAKhnXrA2wrCZHxcwYrZe8cUIDqzwvNcx
-	 frB9izs9s0woYijBIYQXGPtqZwswjaBLIufME2OgUboIHYqI9OdG4maLweULnokyTr
-	 w+YIp5+9m8ojg==
+	s=smtpout1; t=1710363382;
+	bh=h7MYZvQ42ZrkU+g07VqiXmidevdYRk1IO5cCImEWhZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HmLkOYMoEc4qLDE2XTDsTMz8UY18NWo/MBEJTqvVW3Cb/xxq0S3kPECJfD6RUsZ6R
+	 IQmMfVgOKHr9iTDlu1sO6CdtwQVBT6BCEuMHz7sij/MqxVtmDD7mxdRhkN8u2CFUbB
+	 ceRHdL6NLt4FLwLjPGeF0jMko57CsQwS8d1E14akCgtZCWmqIdBScECIWlnfpc+F+g
+	 eHFJ81OuMiO6u2P0KG4eEQpMdvHxbbFdZAo41uc7cQ3mvPbf1EstTdGwu6DyokLoGu
+	 xfng3mSXb2m5cWKYRwN5L1XGkARZsP43vqAUil3MJNSaODuGizgE5KXd8TgE8O/r/T
+	 Laa5xUi0G/JPg==
 Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Tw2qT3X1Dzjnn;
-	Wed, 13 Mar 2024 16:56:21 -0400 (EDT)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Tw2qV0tPyzjQk;
+	Wed, 13 Mar 2024 16:56:22 -0400 (EDT)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Peter Oskolkov <posk@google.com>
 Cc: linux-kernel@vger.kernel.org,
@@ -41,11 +42,14 @@ Cc: linux-kernel@vger.kernel.org,
 	Avi Kivity <avi@scylladb.com>,
 	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
 	Paul Mackerras <paulus@samba.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: [RFC PATCH 0/2] Introduce serialized smp_call_function APIs
-Date: Wed, 13 Mar 2024 16:56:20 -0400
-Message-Id: <20240313205622.2179659-1-mathieu.desnoyers@efficios.com>
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: [RFC PATCH 2/2] sched/membarrier: Use serialized smp_call_function APIs
+Date: Wed, 13 Mar 2024 16:56:22 -0400
+Message-Id: <20240313205622.2179659-3-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240313205622.2179659-1-mathieu.desnoyers@efficios.com>
+References: <20240313205622.2179659-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,26 +58,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-commit 944d5fe50f3f ("sched/membarrier: reduce the ability to hammer on sys_membarrier")
-introduces a mutex over all membarrier operations to reduce its ability
-to slow down the rest of the system.
+Use the serialized smp_call_function APIs to issue IPIs, thus limiting
+the rate at which IPIs can be generated for each CPU.
 
-This RFC series has two objectives:
+Limiting the rate of IPIs at the smp_call_function level ensures that
+various mechanisms cannot be combined to overwhelm a CPU with IPIs.
 
-1) Move this mutex to the smp_call_function APIs so other system calls
-   using smp_call_function IPIs are limited in the same way,
+This allows removing the IPI serialization mutex introduced by commit
+944d5fe50f3f ("sched/membarrier: reduce the ability to hammer on
+sys_membarrier"), which restores scaling of membarrier
+MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ targeting a specific CPU with
+MEMBARRIER_CMD_FLAG_CPU. This is used in Google tcmalloc for cross-CPU
+operations.
 
-2) Restore scalability of MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ with
-   MEMBARRIER_CMD_FLAG_CPU, which targets specific CPUs with IPIs.
-   This may or may not be useful, and I would welcome benchmarks from
-   users of this feature to figure out if this is worth it.
+[ I do not have numbers justifying the benefit of moving to a per-CPU
+  mutex for MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ targeting a specific
+  CPU. Perhaps Google folks using this have benchmarks that can provide
+  those numbers ? ]
 
-This series applies on top of v6.8.
-
-Thanks,
-
-Mathieu
-
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Boqun Feng <boqun.feng@gmail.com>
@@ -85,15 +89,96 @@ Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Paul Mackerras <paulus@samba.org>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Peter Oskolkov <posk@google.com>
+---
+ kernel/sched/membarrier.c | 24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-Mathieu Desnoyers (2):
-  smp: Implement serialized smp_call_function APIs
-  sched/membarrier: Use serialized smp_call_function APIs
-
- include/linux/smp.h       |  40 ++++++++++++++
- kernel/sched/membarrier.c |  24 +++------
- kernel/smp.c              | 106 +++++++++++++++++++++++++++++++++-----
- 3 files changed, 141 insertions(+), 29 deletions(-)
-
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index 4e715b9b278e..368afd35c1de 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -162,9 +162,6 @@
+ 	| MEMBARRIER_PRIVATE_EXPEDITED_RSEQ_BITMASK			\
+ 	| MEMBARRIER_CMD_GET_REGISTRATIONS)
+ 
+-static DEFINE_MUTEX(membarrier_ipi_mutex);
+-#define SERIALIZE_IPI() guard(mutex)(&membarrier_ipi_mutex)
+-
+ static void ipi_mb(void *info)
+ {
+ 	smp_mb();	/* IPIs should be serializing but paranoid. */
+@@ -262,7 +259,6 @@ static int membarrier_global_expedited(void)
+ 	if (!zalloc_cpumask_var(&tmpmask, GFP_KERNEL))
+ 		return -ENOMEM;
+ 
+-	SERIALIZE_IPI();
+ 	cpus_read_lock();
+ 	rcu_read_lock();
+ 	for_each_online_cpu(cpu) {
+@@ -295,9 +291,7 @@ static int membarrier_global_expedited(void)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	preempt_disable();
+-	smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
+-	preempt_enable();
++	smp_call_function_many_serialize(tmpmask, ipi_mb, NULL, 1);
+ 
+ 	free_cpumask_var(tmpmask);
+ 	cpus_read_unlock();
+@@ -351,7 +345,6 @@ static int membarrier_private_expedited(int flags, int cpu_id)
+ 	if (cpu_id < 0 && !zalloc_cpumask_var(&tmpmask, GFP_KERNEL))
+ 		return -ENOMEM;
+ 
+-	SERIALIZE_IPI();
+ 	cpus_read_lock();
+ 
+ 	if (cpu_id >= 0) {
+@@ -382,10 +375,10 @@ static int membarrier_private_expedited(int flags, int cpu_id)
+ 
+ 	if (cpu_id >= 0) {
+ 		/*
+-		 * smp_call_function_single() will call ipi_func() if cpu_id
+-		 * is the calling CPU.
++		 * smp_call_function_single_serialize() will call
++		 * ipi_func() if cpu_id is the calling CPU.
+ 		 */
+-		smp_call_function_single(cpu_id, ipi_func, NULL, 1);
++		smp_call_function_single_serialize(cpu_id, ipi_func, NULL, 1);
+ 	} else {
+ 		/*
+ 		 * For regular membarrier, we can save a few cycles by
+@@ -405,11 +398,9 @@ static int membarrier_private_expedited(int flags, int cpu_id)
+ 		 * rseq critical section.
+ 		 */
+ 		if (flags != MEMBARRIER_FLAG_SYNC_CORE) {
+-			preempt_disable();
+-			smp_call_function_many(tmpmask, ipi_func, NULL, true);
+-			preempt_enable();
++			smp_call_function_many_serialize(tmpmask, ipi_func, NULL, true);
+ 		} else {
+-			on_each_cpu_mask(tmpmask, ipi_func, NULL, true);
++			on_each_cpu_mask_serialize(tmpmask, ipi_func, NULL, true);
+ 		}
+ 	}
+ 
+@@ -465,7 +456,6 @@ static int sync_runqueues_membarrier_state(struct mm_struct *mm)
+ 	 * between threads which are users of @mm has its membarrier state
+ 	 * updated.
+ 	 */
+-	SERIALIZE_IPI();
+ 	cpus_read_lock();
+ 	rcu_read_lock();
+ 	for_each_online_cpu(cpu) {
+@@ -478,7 +468,7 @@ static int sync_runqueues_membarrier_state(struct mm_struct *mm)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	on_each_cpu_mask(tmpmask, ipi_sync_rq_state, mm, true);
++	on_each_cpu_mask_serialize(tmpmask, ipi_sync_rq_state, mm, true);
+ 
+ 	free_cpumask_var(tmpmask);
+ 	cpus_read_unlock();
 -- 
 2.39.2
+
