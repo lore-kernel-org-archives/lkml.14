@@ -1,89 +1,132 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF8818629
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A15C12E54;
+	Wed, 13 Mar 2024 06:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710312290; cv=none; b=Yzob2oiguPKd4lbQFmUDzR2Bj2PuaOY+DUHL1YdUTZvORrO9mH82qhIFOrGnnn3LeecoloZSNY7IsQjbXf4mKvhsbn2fWWacT8AElveBvQIPtlcUMXm3jrqLvF2eb2KQH3FZICVIvvQZ/ZNgbwJ+dlJtLkjX6RpfoMl0/UZWVOM=
+	t=1710312367; cv=none; b=H/yfz2EtZI3vPU/ZaUyHCzLUcPamsMJqjixpxppMBO17x/MV57K4bnRV6LYBtfaWT9NnI6MBHhgTE60EwKjAFID+JvVRCBxBVfkJfyPQVg8h1PyN31FOHV7AdAVZWErHdG05L70x+HNrrL178wXR8iKKWBPRUhoeKlOCZb3jC8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710312290; c=relaxed/simple;
-	bh=TM1rmGPrdfiR9PzrANbtrHezb6aRvvbEUO4pTe07UuY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=exYH2JRtB+T/kJ2GYsERYzY78a1T9ud52rG5sUT8CdFScUNZuJ521WP2DKQgq2Vzsp8SUCezYlkWw8YcmK+XhHX9HPmCocSwCmpod9EQT79WuozAMgG8qq075woL/HLEcslIkQ3tX77HiLZnXZ5qFCXpKp6le5X9k/sQT5wfpcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=BWs5pePU; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="BWs5pePU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NVhchdFlSqvatkPMxpndknNhXgMLZz8ISGeYtFhJ08M=;
-  b=BWs5pePUQTzKZefkGheXNpTzxeP2bN+cgUohLzdLR0KhAoDGkz4SEXUv
-   GqCB4oZpR23Rs1OilSThHVSvFVcTay0AyHZVEwn2POpQL31yInrjIh155
-   gC8TUfW/H5TbbUfgQegp2KbyM4JL/ZAtdRQWgCyNKl9z4hK6RR9RT6Vnc
-   E=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.07,119,1708383600"; 
-   d="scan'208";a="82007499"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 07:44:46 +0100
-Date: Wed, 13 Mar 2024 07:44:45 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Ayush Tiwari <ayushtiw0110@gmail.com>
-cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com, 
-    gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-    linux-staging@lists.linux.dev, outreachy@lists.linux.dev
-Subject: Re: [PATCH] staging: rtl8712: renaming tempVal to temp_val
-In-Reply-To: <ZfE4iDfGUyq/C9s4@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
-Message-ID: <alpine.DEB.2.22.394.2403130744040.3473@hadrien>
-References: <ZfE4iDfGUyq/C9s4@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1710312367; c=relaxed/simple;
+	bh=x6A3+YRDJy6D5VShC3JZYQD8PUTdLv32V7wLfBdaaNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F6ZqgQr18/WEH8RndzvYPa/xFMx5F/0UdaH19c2Ywb1dlpr/YNiBf64KxWz6goqMQV/52e99vT9t4qExfHohSjQqrBfp6F35wUEameAauVZXZPE/XCuffyqL5eMzzY5jHNlFDRRYHQk1d8FaY009ffi0RlVFOaCaC91vYPj+NdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
+X-QQ-mid: bizesmtp77t1710312238tb949ddw
+X-QQ-Originating-IP: YaSZ14Ejv+mg7px1aOgJ0ZyZYJFeibWVGBRXtzRN4OI=
+Received: from localhost.trustnetic.com ( [122.235.139.233])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 13 Mar 2024 14:43:56 +0800 (CST)
+X-QQ-SSF: 01400000000000E0E000000A0000000
+X-QQ-FEAT: qpc/lE38OU3h9Zfd7U7Xil0QlHB1aAbpq2g+HV8TDhkqW3lWCPyjoCxp0okWi
+	YLIeN7DLNozoLFIShVsqHhIlGfcAtdAFWARYjniXVp/HkSEK4YDK+uxSooBx6pXN2pYZlk+
+	xkwkRJ4TTW8i/HkkWe8ZG7PwpvHk0il3Fcq8CiIX30HEVgqwLbvAy1SwIiRi72m7ux+oYdL
+	x/1WSIhMM3wL25WT7fLkT/F+t9zInp/NEzGEF1QE+MurOTC5HvRLxJHq6CAqGk/BSTbNY3e
+	XqqUCjFsk1ziCMVMKQJhhg25io4D+VWBRZt+KBT3nxSaOe/4Pv6JJIGcfq8gjdsznLMzVy6
+	CWHOMFB0j2B9el3LuGeN3GG7OjJLc1UJj8jnujCokZ/JX5VEDyGgbuw/4GnkpberhB70MRV
+	p0KVRaeVUF8=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 13348156188099089633
+From: Duanqiang Wen <duanqiangwen@net-swift.com>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	linux@armlinux.org.uk,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
+Subject: [PATCH clk] clk: clkdev: add error messages for name exceeding maximum length
+Date: Wed, 13 Mar 2024 14:42:52 +0800
+Message-Id: <20240313064252.50233-1-duanqiangwen@net-swift.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
 
+if one device register clkdev with dev_id or con_id
+greater than maximum length, clkdev_create functions
+will not return err, but clk_find functions will not
+match the device, it's difficult to identify issues
+for developers.So add error messages for dev_id greater
+than 20 characters and con_id greater than 16 characters.
 
+Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
+---
+ drivers/clk/clk.c            |  6 ++++++
+ drivers/clk/clkdev.c         | 11 +++++++++++
+ include/linux/clk-provider.h |  1 +
+ 3 files changed, 18 insertions(+)
 
-On Wed, 13 Mar 2024, Ayush Tiwari wrote:
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 2253c154a824..10d3e0d93648 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -295,6 +295,12 @@ struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw)
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_get_parent);
+ 
++struct device *clk_hw_get_dev(const struct clk_hw *hw)
++{
++	return hw->core->dev;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_dev);
++
+ static struct clk_core *__clk_lookup_subtree(const char *name,
+ 					     struct clk_core *core)
+ {
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index ee37d0be6877..620dc1e80b48 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -158,6 +158,9 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
+ 	va_list ap)
+ {
+ 	struct clk_lookup_alloc *cla;
++	struct device *dev;
++
++	dev = clk_hw_get_dev(hw);
+ 
+ 	cla = kzalloc(sizeof(*cla), GFP_KERNEL);
+ 	if (!cla)
+@@ -165,11 +168,19 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
+ 
+ 	cla->cl.clk_hw = hw;
+ 	if (con_id) {
++		if (strlen(dev_fmt) >= MAX_CON_ID) {
++			pr_err("%s:con_id string cannot be greater than 16 characters\n", dev_fmt);
++			return NULL;
++		}
+ 		strscpy(cla->con_id, con_id, sizeof(cla->con_id));
+ 		cla->cl.con_id = cla->con_id;
+ 	}
+ 
+ 	if (dev_fmt) {
++		if (strlen(dev_fmt) >= MAX_DEV_ID) {
++			pr_err("%s:dev_id string cannot be greater than 20 characters\n", dev_fmt);
++			return NULL;
++		}
+ 		vscnprintf(cla->dev_id, sizeof(cla->dev_id), dev_fmt, ap);
+ 		cla->cl.dev_id = cla->dev_id;
+ 	}
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 1293c38ddb7f..88f3e3dde147 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -1318,6 +1318,7 @@ int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *new_parent);
+ unsigned int __clk_get_enable_count(struct clk *clk);
+ unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+ unsigned long clk_hw_get_flags(const struct clk_hw *hw);
++struct device *clk_hw_get_dev(const struct clk_hw *hw);
+ #define clk_hw_can_set_rate_parent(hw) \
+ 	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
+ 
+-- 
+2.27.0
 
-> Renaming variable tempVal to temp_val to address
-> checkpath warning 'Avoid Camelcase' and to
-
-Also, it's checkpatch, not checkpath.  And it should be "to address the
-checkpatch warning".
-
-julia
-
-> ensure adherence to coding style guidelines
->
-> Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
-> ---
->  drivers/staging/rtl8712/rtl8712_recv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
-> index a3c4713c59b3..7fb9dfaa7448 100644
-> --- a/drivers/staging/rtl8712/rtl8712_recv.c
-> +++ b/drivers/staging/rtl8712/rtl8712_recv.c
-> @@ -861,7 +861,7 @@ static void query_rx_phy_status(struct _adapter *padapter,
->  static void process_link_qual(struct _adapter *padapter,
->  			      union recv_frame *prframe)
->  {
-> -	u32	last_evm = 0, tmpVal;
-> +	u32	last_evm = 0, tmp_val;
->  	struct rx_pkt_attrib *pattrib;
->  	struct smooth_rssi_data *sqd = &padapter->recvpriv.signal_qual_data;
->
-> --
-> 2.40.1
->
->
->
