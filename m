@@ -1,102 +1,218 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B541A87
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338041; cv=none; b=FW5n2kJdalaw3ZVB69inNsyV1bHB9wJOZ0PtOGlG0HnGMoOcBGt/BtxB0SSmX3Jd405JoSYibee2ck01EoiC5TQ2TVi20VJNzdw32vJiTEeXMbC7V54e6MCxhAPMJzZNWOSqnOYqLUqx2HslPUsDz3sYr+e9vTH/Bu+x8uC2JSA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338041; c=relaxed/simple;
-	bh=1WvjdW9Mx5rCDs4ryRQnEBXl7hdJ86vv3Rwr2lWNiTU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c0/he0KE4tYsQGW6eF4e9GEiK3pW/KnI6Vp+DUZENHRK7QCBJUHi7egUrWHO2/MtiZoOlgxbrEyMrDquEBeLom3ULyKUtufAxQV4/7UxMUzG9Uoao9RSKe2Tfa/aCHGF5zyqxLK1oxqt3Hey7gWUGUTwyYzBvwfYqFADXZlfb/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z0AJ8SZx; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3D4502E;
+	Wed, 13 Mar 2024 13:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710338047; cv=fail; b=RVNkcHGSjN0ZrfEV5WyI6oTvpJ2G3vApfhfUv1ywg46/dr3QclbQO1P01bqeqjQ3BOOO3eQQLsEUIpnpqNcF3WngtyxrpF4DdQ9QaUg3jaI4kt0BCAzV38M8hQxD929MpYN4Z+5Rd49C16ZBaXhwoTwjN/eFmce/qmuK9/HBQ3k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710338047; c=relaxed/simple;
+	bh=Bwhd7pNfmg2VOcmHtUW3yJp22Ey6AsIkEQZMZSkbOvM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Gt7Xi5tMG9uAdnOie3bjWJy1zAntc4Z86ERnrb4NTBfbBpJeTVSYtdvqZfV3h9xhl7aakJRUD6B44i2jBlpLpfPIxPNoFuu8laA4FCsG4PBwbulQ/aOSUY0ehjJHOUghaW+hHEImihYxBAqC2dfdrIlZPWedpHzvw5O7UNoRUqM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NMVvKYG3; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z0AJ8SZx"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc49b00bdbso41494075ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710338039; x=1710942839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/heQt+Db0ehDtq1JCZPcwy70snmGl2Z1H+WOU5UmOPc=;
-        b=Z0AJ8SZxfVtjG/Fxm22gxUuyrKinQe3S6HmcMmxS04Bs/ME6jAyaoVDA7Q+loTYBOw
-         bq1nNr9nAbrgumD8Ltvs5vibW9VYe43OWi4Hg1kaFvWIbeYytq4dq/WzVTtZdSTxxZ6l
-         65A2XdzrrFSJ2LKkWv8NzyC/KM0CeVir4kuV0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710338039; x=1710942839;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/heQt+Db0ehDtq1JCZPcwy70snmGl2Z1H+WOU5UmOPc=;
-        b=AQ3z2hJx3dcpsP8oTcd0U1isviYcrYLpegPKMmE08+bZLwgMyKIr5f2yBQhuW8Os5+
-         TIE5bA73+45P1zPlD58hDkfqzIaIq95fC/4gty2yzHNmrBU8HMikZbQ9Smyrqoa2Qr44
-         rM+j7oaz0P5QvR7FiMjCqXJoWq5RUH4zHRW5JhLcqA4lsjXb1LXbxCY5Ooj0MwzbWxL7
-         Ox2BxgmeY4qTI6CI9r1UzDNCQajGkEFPMrIqYmmztLs1pjWFuHQxIgAp+/yY5PnpzYoH
-         EeHgJyNgXaOQHdo7CPqnJVOYoykpqZImVlxLHaA2utJHwTdSteRwFCNiJSQoBaflE/2X
-         So1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcKjTRpfdv/Hb8XKvSQjp4RhewStEguvUtdG46aWu8eQuSrkLWyOCis4apJkJKQBuVpIruD9fPv0o2NQM9OLpBi9+ttFKhDa8ms5fY
-X-Gm-Message-State: AOJu0Yy9vZE5YVpz4LLYgNnXW6zoBc1b9wUuf6HXd76+s7XK2PXsxsZr
-	2D2JodE8AH7Cc5UyDaZWNxgde9NK6nLljLK2/myr1sbIClOBJgZr6lQslmlCew==
-X-Google-Smtp-Source: AGHT+IE3PgaxgQ7zHkHAgGrWi0X7VbrllC27gi8LCOikz9dtE/g945xwEfsoOmxKeOZnqAPMvOWqew==
-X-Received: by 2002:a17:902:f544:b0:1dd:aa58:a648 with SMTP id h4-20020a170902f54400b001ddaa58a648mr8030088plf.43.1710338039452;
-        Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
-Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:3708:eea3:d1b4:2032])
-        by smtp.gmail.com with ESMTPSA id d16-20020a170902ced000b001d8aa88f59esm8632504plg.110.2024.03.13.06.53.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
-From: Pin-yen Lin <treapking@chromium.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	devicetree@vger.kernel.org,
-	Pin-yen Lin <treapking@chromium.org>
-Subject: [PATCH] arm64: dts: mediatek: mt8192-asurada: Update min voltage constraint for Vgpu
-Date: Wed, 13 Mar 2024 21:51:36 +0800
-Message-ID: <20240313135157.98989-1-treapking@chromium.org>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NMVvKYG3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710338046; x=1741874046;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=Bwhd7pNfmg2VOcmHtUW3yJp22Ey6AsIkEQZMZSkbOvM=;
+  b=NMVvKYG3ZTtCaC72m6Pt5stbBFgUUyybynZtP7q5YWUtsMO82O4uP39G
+   73aenaXlZqfVNhrOokF1W+ChpAlWY+PJd2sD6MKzyvpnyNKJaDePm77Cn
+   li6kwVpYA/BaPEEivpafKAKltCs0GOvYjeBKJhhAa9B0TpS8lO8xdnDOr
+   Eh7/4CgEF9eaxzuXtaWhc/MWVQD/JR3Kpv6/E16KMdqMYIXWJ0bd4lemk
+   jwnO1vnTe7jsGD1IubxJlqTVI3mq0bl5u8OsQYonqPwzJsy3+MxYqejm6
+   4PXP6tHY0URN0+XexIvBfp71wJJbCYIgZjl64iz/Srk6L8lySKVInp62G
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="15828435"
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="15828435"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 06:54:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="16530061"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Mar 2024 06:54:04 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 13 Mar 2024 06:54:03 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 13 Mar 2024 06:54:03 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 13 Mar 2024 06:54:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TRZEsyYJTJz4/R6zVkWJ+lMu/nwhJfiNwpXdiiv4/dZ/bigo81qq5meeXcj/mJ0rCThGDbMhU9WMrJ972vuNAgZUK+K8qQF32ZXjeSIrYv5yWG2BPdXGXv19OWgN3gxoAh/6Y62SsI74xtPiUF6GcLvlWaeSWUk3onqPCRrNpbPu1aWg+GjDrniLA90ggyW46tCT/WQtrg0FaOrbC878SQddDzQzLmYz4Gl6iqWB1XOxgte9c0fRNJ1PdYjgkg4ol3mrU+5zZOEkr4Q7TkTleMsP+FiPPTZaWF0mhL6UxW9bQ0MX+1B3YnX+uiCrZyqGgUhlhNnXJMJ/f9D/X0eYCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MyNc5pIk/5DTT67lscXdTC/VVJEPRTm46HF4WIF3qsc=;
+ b=RJq/k+EkL70PqkcZRasK5Ygs0F6z3Husidn/qGxWCr/McLGEMC8N9j/XULn9ANfIF6JXUGfri+NrsN3eqDy1Xvpr0f5Avc+TH28a+ryk4iphfCFjrSvNZYtUOZ3QGhVEaTLjr/mjP/jekW7Mm7gK4Ona9hntn/Z/pf7/aMbLwJulffGWCFgSvFIlT2LVAdlfX3QCHUrR073E9MuNbLZWSw8JYhs8L+zWcgtzh1nHSEz8t7uJ21+NXaO/4nqEmkiemiwXzYQHwGFHXxITu/nAYG6Cy1Q44LWAf0In17jE+O/yEaVs2039qtyITO/FbY7B6sTbuCEu3znd7QKPgQfZUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by SA1PR11MB8448.namprd11.prod.outlook.com (2603:10b6:806:3a3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.17; Wed, 13 Mar
+ 2024 13:54:01 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::6440:4b82:c32c:9eb7%5]) with mapi id 15.20.7386.017; Wed, 13 Mar 2024
+ 13:54:00 +0000
+Date: Wed, 13 Mar 2024 14:53:50 +0100
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: <linux-kselftest@vger.kernel.org>, Reinette Chatre
+	<reinette.chatre@intel.com>, Shuah Khan <shuah@kernel.org>, Babu Moger
+	<babu.moger@amd.com>, Fenghua Yu <fenghua.yu@intel.com>, LKML
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 08/13] selftests/resctrl: Add ->init() callback into
+ resctrl_val_param
+Message-ID: <7zhdrvbb2w2ytyhbr2pl22exkzktqhv4ykb5pht6wsefg3yfyz@72xhgz3uyawo>
+References: <20240311135230.7007-1-ilpo.jarvinen@linux.intel.com>
+ <20240311135230.7007-9-ilpo.jarvinen@linux.intel.com>
+ <zxrd5yzgtbet3d42c77ifgu5t2guyhwbz76zhk7zhrp6hnamrb@pl72dxisxax6>
+ <vzluzxmks6bqfszwoib72ufbanxucxk5xzilavp3wrwoh7fqxh@rugv6wcptofu>
+ <511bb602-e29d-0a2c-3076-81fdd5a5955f@linux.intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <511bb602-e29d-0a2c-3076-81fdd5a5955f@linux.intel.com>
+X-ClientProxiedBy: ZR2P278CA0030.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:46::20) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|SA1PR11MB8448:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d59b631-dc82-42c7-b4af-08dc43650956
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8Uh7QUYacqoqNWFGDZeASuOL9H6XZA7X+LbsEDOFRj4xTx3HIFYqgtvGwxB9J2Isr23WQ8foGdwO4XtIYZT7gmhJNeUqusr66udy5dEPVOPR3pC0ADhMMAtU2CdEczrUZjIXfO41hILYKlHKDIurtZCve2dkSycEYPVJDdur4UAbNXDs5VHyAsM9kngOiUaYPS0KIS6CDLVv5MOU+S7bojtz0T0+ISTpXKAzJtqGhj0H5YTYRPA1P/wQzQi4HpJA+w6GuEq05WHIZxaOaLbLz3H47s5a3B2RINeHhyT2hgIATmTJXIWt9JPqZf401q1TSNlpXAlG8cxNE6hNErIBfj8lwzAKvJQmG2R9ptVuElk8wTsm5paVZiHYuKHb7f6kefjKWH8hvJa0HtG0DUoOfrGWcaLvv4rPu46E0MYLF6geHtlgAsYJy84DBXFsUohCwzOBoqU1HTuvzaffdQoUL6SvT6vOafXss43qtPbyKYm2FDbcM2XygFWEiX+S5cIvMPMRTw3/sB6+1Sg/xFo5poDm3CClPYHaYaytOXXnnzWwTz4oaWOJvEZh32vGHNfH8sOY2+BIf0Wj+l/GjT/9Bfg+DrrRtVClsvpEFDyhAOw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?4WlFfTbTUz0m7rOvderSiGgZIRXeXA+21HetuoYjNqH6Yw4N5tiXqf+dFm?=
+ =?iso-8859-1?Q?XQlFJnhqLDx0cuS/4ptHXVp/Fp8D2n7qQFTdZF23il3dlMjQ7zfb7j/Mva?=
+ =?iso-8859-1?Q?JKOQdaRupPAO5ivivKk2vBOtPE9o03ZzcJv7cQRpJGNlGZBKZDqeZUuObq?=
+ =?iso-8859-1?Q?8HLgGQxD4wf32pzZXuCaGpkwH0AmA9jHv15aZf+0q64yt9gk7bW062rdby?=
+ =?iso-8859-1?Q?U4Cdlt1TJC4hCYNMRlF/auHCDFnFZKqezX/94vNNlcojqzK8X6kJi+0X6C?=
+ =?iso-8859-1?Q?/SKWER3S4lDO3/Ipu+ACQ/nuHDg/qHIkOiHLsNU8IOzuWyqQWgUzdj47qX?=
+ =?iso-8859-1?Q?w6l7Dvo5JTbo6WYpBM3y+gmJAwzLhXoNnfOEiMETU6amj9GtyQX7uQx5ct?=
+ =?iso-8859-1?Q?Bx51OmWV8APqZcUuWYZfPzeDc97dZDOxvglLm/Fzzxbz77wNFl+41cJMb7?=
+ =?iso-8859-1?Q?B15IC7KoClBnnSZ65hU/yeiH4c7jP1tpNLcn7tLF9P5rI18nFj7XtPNZYj?=
+ =?iso-8859-1?Q?p5oFfiIzoZgNmIi+BLrH4etwMCtuomK4WJBBLI/X92GrOnOiJS514ln5PH?=
+ =?iso-8859-1?Q?ieHrikqb1eJTBnW1Fm3KE03/3frdUITei6qRR3l1ywyPIB3DvDiZzpv/4s?=
+ =?iso-8859-1?Q?CscBAH5bUYDW7eZVP0nUPxsDjUClA9b8BIxluPT/5veLccr+iU6YxQAAqY?=
+ =?iso-8859-1?Q?k58b3i0Hnj46j2Ews+JsfUmKFmKYTpsVBkLUurkqSM/WFfcp7OlTYcmLCx?=
+ =?iso-8859-1?Q?jgk9aOWbIqiKk409jn2PYQsTGr8j3iagPb79CwcdqN2KJGI7fv3NSsIIFL?=
+ =?iso-8859-1?Q?7Gtbd8PmHqR/FjzMw9xf+jcDxVKg2SCmp49wQvo35Ly8aytjKVX7tJ77tO?=
+ =?iso-8859-1?Q?Vb+rTCFU7yaGr2f1ZLyxyzXa1HLg0G/z/B8Tb4Jdh7nfluGOuTE/KzUvAn?=
+ =?iso-8859-1?Q?WJ4KbsiafVPmB45g9rFKSJNno6nqvuq3SIe+pKalHmK5xPJa8QAJXYm0/z?=
+ =?iso-8859-1?Q?PBhoa9fIA0WhIGtDQdIxVyNMTfvX30toh7C88nvhPk7iSygCVIRPVzG7p2?=
+ =?iso-8859-1?Q?Km4MWwMGrx/RGB3iqX0Epp8VrLIw+MI6sEXOXWBT2c/zw83ilEo+qKTSm7?=
+ =?iso-8859-1?Q?LAnXszla9z7Pnx+p/v2khFnfh2oDbSnA93aVXP23/pr0ht3mlf3c5T4J4t?=
+ =?iso-8859-1?Q?N90o+ABgJOE2Qc5rkemV40Wogh1l9GcWcPzvfNqHPL/4m1NGa8LwrDcITc?=
+ =?iso-8859-1?Q?67btitp0KYABqrEqPPGe7okRhwRSfD3IQAuLdkZwp9VdYDuvySkxTlbGi0?=
+ =?iso-8859-1?Q?kHonPCAHYlp7eXqX5OU52k34h5yQgZAmG89mQmJikudrqlpEd1Gb2xjuj6?=
+ =?iso-8859-1?Q?sRMzSq2nD/lBm0oMATtzVs6vNwfn04fGxxiDfmEyU1io3G4kjQ7UHItUll?=
+ =?iso-8859-1?Q?BU0ZWMBndj4t7nT0hoPuXU7oceHnhCQNK5j6ocPwjnUfwHIKLZu/0yF7zw?=
+ =?iso-8859-1?Q?vtS0KwX0dtHOu6wxxgvm+k9Kg6OvPOXIUG+IyEzlQFbAtYEf1xOy0Q1pEn?=
+ =?iso-8859-1?Q?ybNf+u4KN/uuGEjeGKEgT0tUBv7r/zJSlN7V9ohj8Yo2+UGu6VdRq+V6Fq?=
+ =?iso-8859-1?Q?YEXFkODf2W5WP1W2c1AEsApKPaeWcXEwUxwZw0bx7wQ/3kQiJSmCAT+9o4?=
+ =?iso-8859-1?Q?pNEZEEhHmzzUiOldtnw=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d59b631-dc82-42c7-b4af-08dc43650956
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 13:54:00.8697
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TQHwnYY4tWB4i3DN4VLR78rbmT11bREOiC55OYWJzHKpDxD7P5FHac8jVCfEx3yln5MR14ZvvwFEVgmhjN7zQpRRLu2tsiY4AHUe5EZFJbY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8448
+X-OriginatorOrg: intel.com
 
-Although the minimum voltage listed on the GPU OPP table is 606250 uV,
-the actual requested voltage could be even lower when the MTK Smart
-Voltage Scaling (SVS) driver is enabled.
+On 2024-03-13 at 13:37:51 +0200, Ilpo Järvinen wrote:
+>On Wed, 13 Mar 2024, Maciej Wieczor-Retman wrote:
+>> On 2024-03-13 at 11:15:30 +0100, Maciej Wieczor-Retman wrote:
+>> >On 2024-03-11 at 15:52:25 +0200, Ilpo Järvinen wrote:
+>> >>diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
+>> >>index 241c0b129b58..e79eca9346f3 100644
+>> >>--- a/tools/testing/selftests/resctrl/cmt_test.c
+>> >>+++ b/tools/testing/selftests/resctrl/cmt_test.c
+>> >>@@ -16,6 +16,17 @@
+>> >> #define MAX_DIFF		2000000
+>> >> #define MAX_DIFF_PERCENT	15
+>> >> 
+>> >>+#define CON_MON_LCC_OCCUP_PATH		\
+>> >>+	"%s/%s/mon_groups/%s/mon_data/mon_L3_%02d/llc_occupancy"
+>> >>+
+>> >>+static int set_cmt_path(const struct resctrl_val_param *param, int domain_id)
+>> >>+{
+>> >>+	sprintf(llc_occup_path,	CON_MON_LCC_OCCUP_PATH,	RESCTRL_PATH,
+>> >>+		param->ctrlgrp, param->mongrp, domain_id);
+>> >>+
+>> >>+	return 0;
+>> >>+}
+>> >>+
+>> >
+>> >Is there an option to make this function (and the set_mbm_path()) global through
+>> >the resctrl.h?
+>> >
+>> >I'd like to use it in my SNC series [1] for looping over different nodes and
+>> >that requires changing the paths during the measure phase of the tests and that
+>> >part is currently in cache.c:measure_llc_resctrl().
+>> >
+>> >Or would you suggest some other way of changing these paths in cache?
+>> >
+>> 
+>> +forgot to add the link :b
+>> 
+>> [1] https://lore.kernel.org/all/cover.1709721159.git.maciej.wieczor-retman@intel.com/
+>
+>Perhaps ->init() should just prepare an array of filenames to read from 
+>to support SNC. That would keep the filename preparations out of the 
+>measurement period.
+>
+>It feels slightly hacky to have an array of files but I cannot think of 
+>anything else that would be cleaner and would not require creating the 
+>filenames during the actual test.
 
-Set the minimum voltage to 300000 uV because it's supported by the
-regulator.
+So the array of names would be a part of "struct resctrl_val_param"?
 
-Fixes: 3183cb62b033 ("arm64: dts: mediatek: asurada: Add SPMI regulators")
-Signed-off-by: Pin-yen Lin <treapking@chromium.org>
----
+It would have to be dynamically allocated too before running the tests.
 
- arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I kinda agree, creating filenames during measurements messes the whole
+separation idea between setup and measuring. And as you said there are like 4
+nodes max so not much memory would be wasted there.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-index 43d80334610a..5cc5100a7c40 100644
---- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-@@ -1448,7 +1448,7 @@ regulators {
- 			mt6315_7_vbuck1: vbuck1 {
- 				regulator-compatible = "vbuck1";
- 				regulator-name = "Vgpu";
--				regulator-min-microvolt = <606250>;
-+				regulator-min-microvolt = <300000>;
- 				regulator-max-microvolt = <800000>;
- 				regulator-enable-ramp-delay = <256>;
- 				regulator-allowed-modes = <0 1 2>;
+I can experiment with it and try to add it in my series - since it's much more
+tied to SNC. Unless you see it'd better fit here then that's fine with me too.
+
+>
+>
+>-- 
+> i.
+
+
 -- 
-2.44.0.278.ge034bb2e1d-goog
-
+Kind regards
+Maciej Wieczór-Retman
