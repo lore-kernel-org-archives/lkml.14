@@ -1,253 +1,166 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4EC1A38ED;
-	Wed, 13 Mar 2024 22:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82D159B56
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710369020; cv=none; b=X+IU4GVnA3JqQOaPlgQgtuhQgbrJrny8OEVJv73VyBmz1oj6zvFhljB0W+4rQGQZLBLrVfjOuj/h/3WXHdY8W6ZjCgE/zm3aopVvf8LqI5j8c8B7986/SsZ79x5y9jx1yrDcQo1g9yp9AXUm88KKIYpcHOqcFVwRIfdaHwhD9lY=
+	t=1710369048; cv=none; b=HUsTrf9cjHd1dlMYJt+4+1cHH+Fmbrurzcy28I17A9H4pMdMS+OSmUd0VIu6or8QyVN46oBuR8PxXVEBUJ90XmSnoESNgJHmtOdM1zl9OPNkCz8ikKXn0bWDbbJGyVZvgAdf4YX/bHnMkzFudAt90OLQU+q2+1IT0fWrEVccZGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710369020; c=relaxed/simple;
-	bh=CCIs2EhXWX9ha6OhlSM03eisveA0v/CDu7Xhq3qO7/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nrs0Sykpl/UI5rO/61OPCJCvS6zlAbzExbWgJQd2/WWq3H4FKCVtWIxMqf+lIc0wAOXi4KeP4ItVy7YnM9+2GQ14/Opx35v3SfPYiJHOUPJRvItb9yJi7n8norjapn+Xn5WhVPQGRDbHLzjituNFzMAtzmxJk6iBRUNP2qt75Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JxAR7SLr; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1710369048; c=relaxed/simple;
+	bh=1KgnKb3sBR6cbRrupoKHTHuK+ZNmuPGzeKCeruiGaoQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=elp0KepMdC+eIFxu/oY753fzjZpCJEtquqfLE5r1Vhj+8AHVWhXzgADJsUJZlx/bjRjM+AomvQWYV9IDpny//tB+ZiCAprru7oPH2God17EDGOxe2R1z5PvO9Vb9XNdr4EA82bRun0CJYY/M5Y9Pk2kAqhI8/F8BKorVfRHxpm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scylladb.com; spf=pass smtp.mailfrom=scylladb.com; dkim=pass (2048-bit key) header.d=scylladb.com header.i=@scylladb.com header.b=QX+p9dx5; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scylladb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scylladb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JxAR7SLr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1710369015;
-	bh=6Sc7A23YGrKfvDPxXLh29IDC/guj7D4h0krd4QzL1DA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JxAR7SLrFiXaB4tuxeUeSsxGfq835w9kPqkN+x4fe4NYU0PXmB5I2oiGhDHzD6N/T
-	 Zf6jw4U97alpslDuqE07jxT/RZF02fvzN6tB4Rhnm2WL0+NG19FQVSy9gKvWHyEbdl
-	 gwmKKuA7/3SKy5DOji8qSPYqt2N4ANdfFkPH9i5pPsoZzZIsJZw+HpgPhQRZwa8EXI
-	 clHWS6xY+ZBaE8yC4ujvTg9gbmtxzsxKffVppxZIVacc75TfBH8DiMi1mX74G+D/xZ
-	 +OvMeEMFKcIV4r8hbRYRi58w00nYCEK0ZmgVehWSBhLZTBTkiFTSutUm+ZO4jJahB0
-	 wmDFDJolO4+ww==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tw4vp0MVGz4wck;
-	Thu, 14 Mar 2024 09:30:14 +1100 (AEDT)
-Date: Thu, 14 Mar 2024 09:30:12 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Networking <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel
- Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the
- mm-stable tree
-Message-ID: <20240314093012.3dba692a@canb.auug.org.au>
-In-Reply-To: <20240313105117.699dc720@canb.auug.org.au>
-References: <20240307123619.159f1c4c@canb.auug.org.au>
-	<20240313105117.699dc720@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=scylladb.com header.i=@scylladb.com header.b="QX+p9dx5"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33e899ce9e3so212162f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=scylladb.com; s=google; t=1710369045; x=1710973845; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1KgnKb3sBR6cbRrupoKHTHuK+ZNmuPGzeKCeruiGaoQ=;
+        b=QX+p9dx5uY1Nl5DQ6aNA4ddZxztlwICqeyGylGMwaageC/DpQJCpQU1suokC46CepZ
+         hsjaJ5VnHwUXp8xAyxikYEUwcZH6hKDuxxsSeZHP/BF7iQAssGY21Eqs3jY4c/j7t+Nl
+         euPeOT6uqDTcxG50EQYU/cVcusAMNsO70rsUelLU2wiEw9JBqcYT/fJVdfCg/4gwTfbo
+         8w2l2RJL37NfV+eM7E74zhPHgQivTV3Gr3HQQCzVxtBZ97X/9TKwamkN37OLZ5fG0FQj
+         LNrgb/6goGTVYfdiQsUOKeneZhj3IAtmOC8Gx4u+iYFkpLDZFg/fBHSmLYSAstOzVM7D
+         Lm9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710369045; x=1710973845;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1KgnKb3sBR6cbRrupoKHTHuK+ZNmuPGzeKCeruiGaoQ=;
+        b=YH0Ax/BIzBeAqvwkccC2SVhGkOJwPz76BOCRB0HkEEMBaOrw5Ph4yOEAru2D9iwqYj
+         VMcMBvcmbq7pSpa6yYVvqlGP2XkwMemfd6/ieE9uTeLsK3JWNT9p3g3l1N6Bjyy168qv
+         Xjp+axNcX1jb8yTL5SVu+DOq2dy1SKA26vhOKIMVXeliqg4KXXYpbQ8n9NI4axZQLvkv
+         MOpwa7RHQLsOAINpto2op9wrNlJDpeIsqDTwjuslNomvWRFP4/CRuyB2Ck7lViJ7OEtJ
+         Xki9WAYFPCipc5kT/40Ce57mu2DdOOzte1dLKaK6+ExWYWmmBekLsCLwHaxRa/7oHjm1
+         LEXQ==
+X-Gm-Message-State: AOJu0YyKRP40CJf+swYi+EyMHUKCL1Gn+7vYaZwuOgIPmwDvBTFGfAMv
+	UBT1qQmtylK3B1CcbymLzMrCTY0mGPWOx0Vu4LPKkn0LP/5+F/dgW9wAM/yXIQqaJj7R/ZoVPaU
+	AWBJAT+4NsAGUhB4oFhgHAuLZmdJRLP+irVl1P8zKG7ug4AboU7O0urhLjbpn5YCulp6y+4PQ+W
+	JU/kqes+RFlZMIQ2IEvnJb3lwLPAhDAt2bssXd7Mo2sN17fYY1Wiur2WDGs6CyoNhtjm5zQOh4J
+	6V3R23eJyWgYnRnRZMS67HzGjy3StV06GJ0dH4TP/xO5zJNYs0K7RUC/zXusc1MO56VDeX/1MCF
+	dmAdUbFMUDahN+kmgpE+ILntYVgwu2aAwVPEUxImpj2sKgyRrL2HUwRaLJ4=
+X-Google-Smtp-Source: AGHT+IFWTDqmAKnxNbMvN1tvVrUrsJUBfbnhN00ItdbKhCgZV7me6wIEkibHvMXjnxNUT/IkJzesXA==
+X-Received: by 2002:a05:600c:3d88:b0:413:e531:5a47 with SMTP id bi8-20020a05600c3d8800b00413e5315a47mr100917wmb.4.1710368609711;
+        Wed, 13 Mar 2024 15:23:29 -0700 (PDT)
+Received: from avi.scylladb.com (system.cloudius-systems.com. [199.203.229.89])
+        by smtp.gmail.com with ESMTPSA id e10-20020a05600c4e4a00b0041316e91c99sm402607wmq.1.2024.03.13.15.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 15:23:29 -0700 (PDT)
+Message-ID: <dca2d74b4078a0c2488cefd9beeaeb819a5c7fc9.camel@scylladb.com>
+Subject: Re: [RFC PATCH 0/2] Introduce serialized smp_call_function APIs
+From: Avi Kivity <avi@scylladb.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Oskolkov
+	 <posk@google.com>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+ "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Andrew Hunter <ahh@google.com>,  Maged Michael
+ <maged.michael@gmail.com>, gromer@google.com, Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>,  Paul Mackerras <paulus@samba.org>, Michael
+ Ellerman <mpe@ellerman.id.au>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Date: Thu, 14 Mar 2024 00:23:27 +0200
+In-Reply-To: <6952b581-68d2-476b-9f7e-e9746c8c0473@efficios.com>
+References: <20240313205622.2179659-1-mathieu.desnoyers@efficios.com>
+	 <7c1860d783e0f317160069bf77d8fafdf01a9f97.camel@scylladb.com>
+	 <6952b581-68d2-476b-9f7e-e9746c8c0473@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/X.LwiEanwP1pFLelG86SM1D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-CLOUD-SEC-AV-Sent: true
+X-CLOUD-SEC-AV-Info: scylladb,google_mail,monitor
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
+X-CLOUD-SEC-AV-Sent: true
+X-CLOUD-SEC-AV-Info: scylla,google_mail,monitor
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 
---Sig_/X.LwiEanwP1pFLelG86SM1D
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 13 Mar 2024 10:51:17 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Thu, 7 Mar 2024 12:36:19 +1100 Stephen Rothwell <sfr@canb.auug.org.au>=
- wrote:
-> >=20
-> > Today's linux-next merge of the bpf-next tree got a conflict in:
-> >=20
-> >   mm/vmalloc.c
-> >=20
-> > between commit:
-> >=20
-> >   8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
-> >=20
-> > from the mm-stable tree and commit:
-> >=20
-> >   e6f798225a31 ("mm: Introduce VM_SPARSE kind and vm_area_[un]map_pages=
-().")
-> >=20
-> > from the bpf-next tree.
-> >=20
-> > I fixed it up (I think - see below) and can carry the fix as necessary.
-> > This is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
+On Wed, 2024-03-13 at 18:06 -0400, Mathieu Desnoyers wrote:
+> On 2024-03-13 17:14, Avi Kivity wrote:
+> > On Wed, 2024-03-13 at 16:56 -0400, Mathieu Desnoyers wrote:
+> > > commit 944d5fe50f3f ("sched/membarrier: reduce the ability to
+> > > hammer=20
+> > > on sys_membarrier")
+> > > introduces a mutex over all membarrier operations to reduce its
+> > > ability
+> > > to slow down the rest of the system.
+> > >=20
+> > > This RFC series has two objectives:
+> > >=20
+> > > 1) Move this mutex to the smp_call_function APIs so other system
+> > > calls
+> > > =C2=A0=C2=A0 using smp_call_function IPIs are limited in the same way=
+,
+> > >=20
+> > > 2) Restore scalability of MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+> > > with
+> > > =C2=A0=C2=A0 MEMBARRIER_CMD_FLAG_CPU, which targets specific CPUs wit=
+h
+> > > IPIs.
+> > > =C2=A0=C2=A0 This may or may not be useful, and I would welcome bench=
+marks
+> > > from
+> > > =C2=A0=C2=A0 users of this feature to figure out if this is worth it.
+> > >=20
+> > > This series applies on top of v6.8.
+> > >=20
 > >=20
 > >=20
-> > diff --cc mm/vmalloc.c
-> > index 25a8df497255,e5b8c70950bc..000000000000
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@@ -4755,81 -4423,70 +4820,84 @@@ static void show_numa_info(struct se=
-q_f
-> >  =20
-> >   static void show_purge_info(struct seq_file *m)
-> >   {
-> >  +	struct vmap_node *vn;
-> >   	struct vmap_area *va;
-> >  +	int i;
-> >  =20
-> >  -	spin_lock(&purge_vmap_area_lock);
-> >  -	list_for_each_entry(va, &purge_vmap_area_list, list) {
-> >  -		seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
-> >  -			(void *)va->va_start, (void *)va->va_end,
-> >  -			va->va_end - va->va_start);
-> >  -	}
-> >  -	spin_unlock(&purge_vmap_area_lock);
-> >  -}
-> >  +	for (i =3D 0; i < nr_vmap_nodes; i++) {
-> >  +		vn =3D &vmap_nodes[i];
-> >  =20
-> >  -static int s_show(struct seq_file *m, void *p)
-> >  -{
-> >  -	struct vmap_area *va;
-> >  -	struct vm_struct *v;
-> >  -
-> >  -	va =3D list_entry(p, struct vmap_area, list);
-> >  -
-> >  -	if (!va->vm) {
-> >  -		if (va->flags & VMAP_RAM)
-> >  -			seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
-> >  +		spin_lock(&vn->lazy.lock);
-> >  +		list_for_each_entry(va, &vn->lazy.head, list) {
-> >  +			seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
-> >   				(void *)va->va_start, (void *)va->va_end,
-> >   				va->va_end - va->va_start);
-> >  -
-> >  -		goto final;
-> >  +		}
-> >  +		spin_unlock(&vn->lazy.lock);
-> >   	}
-> >  +}
-> >  =20
-> >  -	v =3D va->vm;
-> >  +static int vmalloc_info_show(struct seq_file *m, void *p)
-> >  +{
-> >  +	struct vmap_node *vn;
-> >  +	struct vmap_area *va;
-> >  +	struct vm_struct *v;
-> >  +	int i;
-> >  =20
-> >  -	seq_printf(m, "0x%pK-0x%pK %7ld",
-> >  -		v->addr, v->addr + v->size, v->size);
-> >  +	for (i =3D 0; i < nr_vmap_nodes; i++) {
-> >  +		vn =3D &vmap_nodes[i];
-> >  =20
-> >  -	if (v->caller)
-> >  -		seq_printf(m, " %pS", v->caller);
-> >  +		spin_lock(&vn->busy.lock);
-> >  +		list_for_each_entry(va, &vn->busy.head, list) {
-> >  +			if (!va->vm) {
-> >  +				if (va->flags & VMAP_RAM)
-> >  +					seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
-> >  +						(void *)va->va_start, (void *)va->va_end,
-> >  +						va->va_end - va->va_start);
-> >  =20
-> >  -	if (v->nr_pages)
-> >  -		seq_printf(m, " pages=3D%d", v->nr_pages);
-> >  +				continue;
-> >  +			}
-> >  =20
-> >  -	if (v->phys_addr)
-> >  -		seq_printf(m, " phys=3D%pa", &v->phys_addr);
-> >  +			v =3D va->vm;
-> >  =20
-> >  -	if (v->flags & VM_IOREMAP)
-> >  -		seq_puts(m, " ioremap");
-> >  +			seq_printf(m, "0x%pK-0x%pK %7ld",
-> >  +				v->addr, v->addr + v->size, v->size);
-> >  =20
-> >  -	if (v->flags & VM_SPARSE)
-> >  -		seq_puts(m, " sparse");
-> >  +			if (v->caller)
-> >  +				seq_printf(m, " %pS", v->caller);
-> >  =20
-> >  -	if (v->flags & VM_ALLOC)
-> >  -		seq_puts(m, " vmalloc");
-> >  +			if (v->nr_pages)
-> >  +				seq_printf(m, " pages=3D%d", v->nr_pages);
-> >  =20
-> >  -	if (v->flags & VM_MAP)
-> >  -		seq_puts(m, " vmap");
-> >  +			if (v->phys_addr)
-> >  +				seq_printf(m, " phys=3D%pa", &v->phys_addr);
-> >  =20
-> >  -	if (v->flags & VM_USERMAP)
-> >  -		seq_puts(m, " user");
-> >  +			if (v->flags & VM_IOREMAP)
-> >  +				seq_puts(m, " ioremap");
-> >  =20
-> >  -	if (v->flags & VM_DMA_COHERENT)
-> >  -		seq_puts(m, " dma-coherent");
-> > ++			if (v->flags & VM_SPARSE)
-> > ++				seq_puts(m, " sparse");
-> > +=20
-> >  -	if (is_vmalloc_addr(v->pages))
-> >  -		seq_puts(m, " vpages");
-> >  +			if (v->flags & VM_ALLOC)
-> >  +				seq_puts(m, " vmalloc");
-> >  =20
-> >  -	show_numa_info(m, v);
-> >  -	seq_putc(m, '\n');
-> >  +			if (v->flags & VM_MAP)
-> >  +				seq_puts(m, " vmap");
-> >  +
-> >  +			if (v->flags & VM_USERMAP)
-> >  +				seq_puts(m, " user");
-> >  +
-> >  +			if (v->flags & VM_DMA_COHERENT)
-> >  +				seq_puts(m, " dma-coherent");
-> >  +
-> >  +			if (is_vmalloc_addr(v->pages))
-> >  +				seq_puts(m, " vpages");
-> >  +
-> >  +			show_numa_info(m, v);
-> >  +			seq_putc(m, '\n');
-> >  +		}
-> >  +		spin_unlock(&vn->busy.lock);
-> >  +	}
-> >  =20
-> >   	/*
-> >   	 * As a final step, dump "unpurged" areas. =20
+> > I see this doesn't restore scaling of
+> > MEMBARRIER_CMD_PRIVATE_EXPEDITED,=20
+> > which I use (and wasn't aware was broken).
 >=20
-> This is now a conflict between the net-next tree and the mm-stable tree.
+> It's mainly a mitigation for IPI Storming: CVE-2024-26602 disclosed
 
- ... and now a conflict between te mm-stable tree and Linus' tree.
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/X.LwiEanwP1pFLelG86SM1D
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Very interesting.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXyKPQACgkQAVBC80lX
-0GwlxQf/eCrMYHEYG7MSNkVQBOK/HNe6zEdclVJJ9hZMYItowVZn+cAtXqMfMl98
-XimL1lFZVTMWBTCvPTvVWcle8LDPDX/RymqePh2S/roMVI31uPKHV6YnA0zm86sn
-nkgsaJyiuRqHj0wQzAS+X5UUnOW1wYw9C1fEchCXLiFkzBoz3fJul/k7v0DvS5Zi
-iCRSvYDFAEE1wVf7DkWjZ5J2B0W/+fORMWzf8ljakfi4KH+HRTF6mpLlRPnKI7gw
-n1tc6lv3ZJsycrZf2h3D48jw8CQ1FwSdReWioCZZaq2fUH63318j3A4wiiOUm3DD
-KEs+PRyq44sMFcT18czjvkX9kL6iCA==
-=A/F9
------END PGP SIGNATURE-----
+> as part of [1].
+>=20
+> >=20
+> > I don't have comments on the patches, but do have ideas on how to
+> > work=20
+> > around the problem in Seastar. So this was a useful heads-up for
+> > me.
+>=20
+> Note that if you don't use membarrier private expedited too heavily,
+> you should not notice any difference. But nevertheless I would be
+> interested to hear about any regression on performance of real
+> workloads resulting from commit 944d5fe50f3f.
+>=20
 
---Sig_/X.LwiEanwP1pFLelG86SM1D--
+
+In fact I did observe the original text of 944d5fe50f3f ("On some
+systems, sys_membarrier can be very expensive, causing overall
+slowdowns for everything") to be true [1]. So rather than causing
+a regression, this commit made me fix a problem.
+
+The smp_call_function_many_cond() in [1] is very likely due to
+sys_membarrier, and it's slow since it's running on a virtual machine
+without posted interrupt virtualization. Usually we detect virtual
+machines and call membarrier() less frequently, but on that instance
+(AWS d3en) the detection failed and triggered that IPI storm.
+
+My fix is to just detect if there's a concurrent membarrier running and
+fall back to doing something else, I don't think it's generally
+applicable.
+
+[1] https://github.com/scylladb/scylladb/issues/17207
+
+
