@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CFF82D35;
-	Wed, 13 Mar 2024 17:04:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBA819C3FD;
+	Wed, 13 Mar 2024 17:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349483; cv=none; b=cPjcGhsdXxhdk5rUmkc/R+dwyueslqRQQhLBpEHPEVb86U569+oCXQdrybI3ga/g+fj3Flt5IbGESIofgmoPbdblRnxIjuOwBk4l8x1u3tajmIAgQZD4Hlr/aF7j8y3ZMcwfh72XfAF4h+Oiw3oOhaLie0rlOCc0YWNCwH2PikQ=
+	t=1710349486; cv=none; b=bkuROFDQT4xH6MVicuWR/SkK/fenzhn4ExhG6fJ2K5yYzRa56uh3U1m30rqQbAW+xxxUjUmKLoOa/V8fVaDruLbp2EX2zxAs9rqNBEauCaABHW8w2cWp6jBZU7wCxxLNSIxENJVVs6hum57gm+2tRC0XGvLnA3HZLf8rAmyvU4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349483; c=relaxed/simple;
-	bh=RaPHUakkFn5UQvvFtamKOIMEK/+a0IcQcmB68Nv9olI=;
+	s=arc-20240116; t=1710349486; c=relaxed/simple;
+	bh=3kgDSuFyXAW8sJnXODkw0rGdaC6EWFrWZog2gTwQNlc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LWWc886sGhoYeIog1D5uIL+pC+xKWlCQAfwJ9SOT8hMdPIyOKZSbJGCPAZxeos3TdntUM0VJw2m12oYo5lGulU3+5SxV7BkirRgJmzdcaVtVY8uOua1hq1wfz8C4wXJTCS/WPP0dIYWkhxIgF1/e9mYm+AhUd/dO/2POUu8XeYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+ejeySY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=udG8oKBdVoYV3blXdhaEe5iUqOpAKa6FVxhpeqDDiNXGC4ZsuVNAlg3rfFAjHW7YqDlFaFcNyGxHlwJ/J3kYEBNEyGJrRTKns2aw7UDrczze5S0+mfb57iy8z/pKkGqaForzUh4ScHPjIe0G3tMFLfJr23A7R/j3etBhzan6wwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLaKs0uR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+ejeySY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7FFC433C7;
-	Wed, 13 Mar 2024 17:04:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLaKs0uR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFDCC433F1;
+	Wed, 13 Mar 2024 17:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349483;
-	bh=RaPHUakkFn5UQvvFtamKOIMEK/+a0IcQcmB68Nv9olI=;
+	s=k20201202; t=1710349486;
+	bh=3kgDSuFyXAW8sJnXODkw0rGdaC6EWFrWZog2gTwQNlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n+ejeySY48tqByOZTkcIew3TXlxQ4KIzUfKEk5e+l97Iz0o8hWBkMlO4eEQViE3/P
-	 zluFv2jzQxKGgndEagvA7xhcpkp+BDCXA0K4by6uxKJ2KqciKIA8oxatsGdX5QAPUz
-	 DoJJOWMypHm/1J2Wr9ZsBmeX0NcASh81KJyM8DRrzmmEO9evveAW3pMtb01IdAOkcq
-	 7tGPAKhRuvAUU3qIqyrk2G7Z+o0O5vhzP0bdECuDyhpOXWlmyyR4lvvFIFLBGoMRiv
-	 kej4rvD1C5GvNRitXBeF3jaoLsv75C/7Z1pqvbzKpkSJTGDVbsvhlzhm6NH82cmDLC
-	 PBxAdNg/4ytyg==
+	b=YLaKs0uR6D4GIc87hEeLFfAsx4F/2ZeOeSucwIFFcOwZtb5r3E9frUCIm+evmamAx
+	 85fLnKJeWa+X5v8J3UdWW7ExWCEuw+mJSx4CrCli3E/Cq0/jLEREnaEIhdhtZnU3J0
+	 cKGWKna+4E1CahoZE/EpkcSVxMeYh/j1YZz0R95aqshc3PeVVRk1YP+3tcfCZ8IqbO
+	 k7isj4XjMvWTXD9ji0NA6RLC79X1iJtvcwTKaLhCoe7UyAfQ5NhiEuZ0iE1VuWB/nr
+	 Pepzi84Md0lxv4hjI2UW+tBVMxWqGCSzX/ozOpT4hZ1oHL93CJw7N9QAzyf9o9yZYT
+	 7PMwSJxEChh+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Efstathiades <john.efstathiades@pebblebay.com>,
+Cc: Li RongQing <lirongqing@baidu.com>,
+	Zhang Yu <zhangyu31@baidu.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/41] lan78xx: Fix partial packet errors on suspend/resume
-Date: Wed, 13 Mar 2024 13:03:58 -0400
-Message-ID: <20240313170435.616724-5-sashal@kernel.org>
+Subject: [PATCH 4.19 07/41] net: move definition of pcpu_lstats to header file
+Date: Wed, 13 Mar 2024 13:04:01 -0400
+Message-ID: <20240313170435.616724-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170435.616724-1-sashal@kernel.org>
 References: <20240313170435.616724-1-sashal@kernel.org>
@@ -54,453 +55,115 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Efstathiades <john.efstathiades@pebblebay.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit e1210fe63bf8b080edd0805240e90b81b6b069c1 ]
+[ Upstream commit 52bb6677d530d37055092d86b4eab69dce6c166a ]
 
-The MAC can get out of step with the internal packet FIFOs if the
-system goes to sleep when the link is active, especially at high
-data rates. This can result in partial frames in the packet FIFOs
-that in result in malformed frames being delivered to the host.
-This occurs because the driver does not enable/disable the internal
-packet FIFOs in step with the corresponding MAC data path. The
-following changes fix this problem.
+pcpu_lstats is defined in several files, so unify them as one
+and move to header file
 
-Update code that enables/disables the MAC receiver and transmitter
-to the more general Rx and Tx data path, where the data path in each
-direction consists of both the MAC function (Tx or Rx) and the
-corresponding packet FIFO.
-
-In the receive path the packet FIFO must be enabled before the MAC
-receiver but disabled after the MAC receiver.
-
-In the transmit path the opposite is true: the packet FIFO must be
-enabled after the MAC transmitter but disabled before the MAC
-transmitter.
-
-The packet FIFOs can be flushed safely once the corresponding data
-path is stopped.
-
-Signed-off-by: John Efstathiades <john.efstathiades@pebblebay.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: 1eecc7ab82c4 ("net: lan78xx: fix runtime PM count underflow on link stop")
+Stable-dep-of: 1ca1ba465e55 ("geneve: make sure to pull inner header in geneve_rx()")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 303 +++++++++++++++++++++++++-------------
- 1 file changed, 197 insertions(+), 106 deletions(-)
+ drivers/net/loopback.c    |  6 ------
+ drivers/net/nlmon.c       |  6 ------
+ drivers/net/vsockmon.c    | 14 ++++----------
+ include/linux/netdevice.h |  6 ++++++
+ 4 files changed, 10 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index a20aff073b865..4f80f672f3184 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -101,6 +101,12 @@
- /* statistic update interval (mSec) */
- #define STAT_UPDATE_TIMER		(1 * 1000)
+diff --git a/drivers/net/loopback.c b/drivers/net/loopback.c
+index 7863918592db9..954935a38f186 100644
+--- a/drivers/net/loopback.c
++++ b/drivers/net/loopback.c
+@@ -59,12 +59,6 @@
+ #include <net/net_namespace.h>
+ #include <linux/u64_stats_sync.h>
  
-+/* time to wait for MAC or FCT to stop (jiffies) */
-+#define HW_DISABLE_TIMEOUT		(HZ / 10)
-+
-+/* time to wait between polling MAC or FCT state (ms) */
-+#define HW_DISABLE_DELAY_MS		1
-+
- /* defines interrupts from interrupt EP */
- #define MAX_INT_EP			(32)
- #define INT_EP_INTEP			(31)
-@@ -490,6 +496,26 @@ static int lan78xx_write_reg(struct lan78xx_net *dev, u32 index, u32 data)
- 	return ret;
- }
+-struct pcpu_lstats {
+-	u64			packets;
+-	u64			bytes;
+-	struct u64_stats_sync	syncp;
+-};
+-
+ /* The higher levels take care of making this non-reentrant (it's
+  * called with bh's disabled).
+  */
+diff --git a/drivers/net/nlmon.c b/drivers/net/nlmon.c
+index 4b22955de1918..dd0db7534cb32 100644
+--- a/drivers/net/nlmon.c
++++ b/drivers/net/nlmon.c
+@@ -6,12 +6,6 @@
+ #include <linux/if_arp.h>
+ #include <net/rtnetlink.h>
  
-+static int lan78xx_update_reg(struct lan78xx_net *dev, u32 reg, u32 mask,
-+			      u32 data)
-+{
-+	int ret;
-+	u32 buf;
-+
-+	ret = lan78xx_read_reg(dev, reg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	buf &= ~mask;
-+	buf |= (mask & data);
-+
-+	ret = lan78xx_write_reg(dev, reg, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int lan78xx_read_stats(struct lan78xx_net *dev,
- 			      struct lan78xx_statstage *data)
+-struct pcpu_lstats {
+-	u64 packets;
+-	u64 bytes;
+-	struct u64_stats_sync syncp;
+-};
+-
+ static netdev_tx_t nlmon_xmit(struct sk_buff *skb, struct net_device *dev)
  {
-@@ -2480,6 +2506,156 @@ static void lan78xx_init_ltm(struct lan78xx_net *dev)
- 	lan78xx_write_reg(dev, LTM_INACTIVE1, regs[5]);
- }
+ 	int len = skb->len;
+diff --git a/drivers/net/vsockmon.c b/drivers/net/vsockmon.c
+index c28bdce14fd5e..7bad5c95551fd 100644
+--- a/drivers/net/vsockmon.c
++++ b/drivers/net/vsockmon.c
+@@ -11,12 +11,6 @@
+ #define DEFAULT_MTU (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + \
+ 		     sizeof(struct af_vsockmon_hdr))
  
-+static int lan78xx_start_hw(struct lan78xx_net *dev, u32 reg, u32 hw_enable)
-+{
-+	return lan78xx_update_reg(dev, reg, hw_enable, hw_enable);
-+}
-+
-+static int lan78xx_stop_hw(struct lan78xx_net *dev, u32 reg, u32 hw_enabled,
-+			   u32 hw_disabled)
-+{
-+	unsigned long timeout;
-+	bool stopped = true;
-+	int ret;
-+	u32 buf;
-+
-+	/* Stop the h/w block (if not already stopped) */
-+
-+	ret = lan78xx_read_reg(dev, reg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (buf & hw_enabled) {
-+		buf &= ~hw_enabled;
-+
-+		ret = lan78xx_write_reg(dev, reg, buf);
-+		if (ret < 0)
-+			return ret;
-+
-+		stopped = false;
-+		timeout = jiffies + HW_DISABLE_TIMEOUT;
-+		do  {
-+			ret = lan78xx_read_reg(dev, reg, &buf);
-+			if (ret < 0)
-+				return ret;
-+
-+			if (buf & hw_disabled)
-+				stopped = true;
-+			else
-+				msleep(HW_DISABLE_DELAY_MS);
-+		} while (!stopped && !time_after(jiffies, timeout));
-+	}
-+
-+	ret = stopped ? 0 : -ETIME;
-+
-+	return ret;
-+}
-+
-+static int lan78xx_flush_fifo(struct lan78xx_net *dev, u32 reg, u32 fifo_flush)
-+{
-+	return lan78xx_update_reg(dev, reg, fifo_flush, fifo_flush);
-+}
-+
-+static int lan78xx_start_tx_path(struct lan78xx_net *dev)
-+{
-+	int ret;
-+
-+	netif_dbg(dev, drv, dev->net, "start tx path");
-+
-+	/* Start the MAC transmitter */
-+
-+	ret = lan78xx_start_hw(dev, MAC_TX, MAC_TX_TXEN_);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Start the Tx FIFO */
-+
-+	ret = lan78xx_start_hw(dev, FCT_TX_CTL, FCT_TX_CTL_EN_);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int lan78xx_stop_tx_path(struct lan78xx_net *dev)
-+{
-+	int ret;
-+
-+	netif_dbg(dev, drv, dev->net, "stop tx path");
-+
-+	/* Stop the Tx FIFO */
-+
-+	ret = lan78xx_stop_hw(dev, FCT_TX_CTL, FCT_TX_CTL_EN_, FCT_TX_CTL_DIS_);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Stop the MAC transmitter */
-+
-+	ret = lan78xx_stop_hw(dev, MAC_TX, MAC_TX_TXEN_, MAC_TX_TXD_);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/* The caller must ensure the Tx path is stopped before calling
-+ * lan78xx_flush_tx_fifo().
-+ */
-+static int lan78xx_flush_tx_fifo(struct lan78xx_net *dev)
-+{
-+	return lan78xx_flush_fifo(dev, FCT_TX_CTL, FCT_TX_CTL_RST_);
-+}
-+
-+static int lan78xx_start_rx_path(struct lan78xx_net *dev)
-+{
-+	int ret;
-+
-+	netif_dbg(dev, drv, dev->net, "start rx path");
-+
-+	/* Start the Rx FIFO */
-+
-+	ret = lan78xx_start_hw(dev, FCT_RX_CTL, FCT_RX_CTL_EN_);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Start the MAC receiver*/
-+
-+	ret = lan78xx_start_hw(dev, MAC_RX, MAC_RX_RXEN_);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int lan78xx_stop_rx_path(struct lan78xx_net *dev)
-+{
-+	int ret;
-+
-+	netif_dbg(dev, drv, dev->net, "stop rx path");
-+
-+	/* Stop the MAC receiver */
-+
-+	ret = lan78xx_stop_hw(dev, MAC_RX, MAC_RX_RXEN_, MAC_RX_RXD_);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Stop the Rx FIFO */
-+
-+	ret = lan78xx_stop_hw(dev, FCT_RX_CTL, FCT_RX_CTL_EN_, FCT_RX_CTL_DIS_);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/* The caller must ensure the Rx path is stopped before calling
-+ * lan78xx_flush_rx_fifo().
-+ */
-+static int lan78xx_flush_rx_fifo(struct lan78xx_net *dev)
-+{
-+	return lan78xx_flush_fifo(dev, FCT_RX_CTL, FCT_RX_CTL_RST_);
-+}
-+
- static int lan78xx_reset(struct lan78xx_net *dev)
+-struct pcpu_lstats {
+-	u64 rx_packets;
+-	u64 rx_bytes;
+-	struct u64_stats_sync syncp;
+-};
+-
+ static int vsockmon_dev_init(struct net_device *dev)
  {
- 	struct lan78xx_priv *pdata = (struct lan78xx_priv *)(dev->data[0]);
-@@ -2671,23 +2847,7 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 	if (ret < 0)
- 		return ret;
+ 	dev->lstats = netdev_alloc_pcpu_stats(struct pcpu_lstats);
+@@ -56,8 +50,8 @@ static netdev_tx_t vsockmon_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	struct pcpu_lstats *stats = this_cpu_ptr(dev->lstats);
  
--	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf |= MAC_TX_TXEN_;
--
--	ret = lan78xx_write_reg(dev, MAC_TX, buf);
--	if (ret < 0)
--		return ret;
--
--	ret = lan78xx_read_reg(dev, FCT_TX_CTL, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf |= FCT_TX_CTL_EN_;
--
--	ret = lan78xx_write_reg(dev, FCT_TX_CTL, buf);
-+	ret = lan78xx_start_tx_path(dev);
- 	if (ret < 0)
- 		return ret;
+ 	u64_stats_update_begin(&stats->syncp);
+-	stats->rx_bytes += len;
+-	stats->rx_packets++;
++	stats->bytes += len;
++	stats->packets++;
+ 	u64_stats_update_end(&stats->syncp);
  
-@@ -2696,27 +2856,9 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 	if (ret < 0)
- 		return ret;
+ 	dev_kfree_skb(skb);
+@@ -80,8 +74,8 @@ vsockmon_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
  
--	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf |= MAC_RX_RXEN_;
--
--	ret = lan78xx_write_reg(dev, MAC_RX, buf);
--	if (ret < 0)
--		return ret;
-+	ret = lan78xx_start_rx_path(dev);
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&vstats->syncp);
+-			tbytes = vstats->rx_bytes;
+-			tpackets = vstats->rx_packets;
++			tbytes = vstats->bytes;
++			tpackets = vstats->packets;
+ 		} while (u64_stats_fetch_retry_irq(&vstats->syncp, start));
  
--	ret = lan78xx_read_reg(dev, FCT_RX_CTL, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf |= FCT_RX_CTL_EN_;
--
--	ret = lan78xx_write_reg(dev, FCT_RX_CTL, buf);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+	return ret;
- }
+ 		packets += tpackets;
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index ac87fcc4d44b4..89155d171b567 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2383,6 +2383,12 @@ struct pcpu_sw_netstats {
+ 	struct u64_stats_sync   syncp;
+ };
  
- static void lan78xx_init_stats(struct lan78xx_net *dev)
-@@ -3960,23 +4102,10 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- 	u16 crc;
- 	int ret;
- 
--	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+	ret = lan78xx_stop_tx_path(dev);
- 	if (ret < 0)
- 		return ret;
--
--	buf &= ~MAC_TX_TXEN_;
--
--	ret = lan78xx_write_reg(dev, MAC_TX, buf);
--	if (ret < 0)
--		return ret;
--
--	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf &= ~MAC_RX_RXEN_;
--
--	ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+	ret = lan78xx_stop_rx_path(dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -4153,17 +4282,9 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- 	if (ret < 0)
- 		return ret;
- 
--	lan78xx_read_reg(dev, MAC_RX, &buf);
--	if (ret < 0)
--		return ret;
-+	ret = lan78xx_start_rx_path(dev);
- 
--	buf |= MAC_RX_RXEN_;
--
--	lan78xx_write_reg(dev, MAC_RX, buf);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+	return ret;
- }
- 
- static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
-@@ -4189,24 +4310,17 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 			spin_unlock_irq(&dev->txq.lock);
- 		}
- 
--		/* stop TX & RX */
--		ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+		/* stop RX */
-+		ret = lan78xx_stop_rx_path(dev);
- 		if (ret < 0)
- 			return ret;
- 
--		buf &= ~MAC_TX_TXEN_;
--
--		ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+		ret = lan78xx_flush_rx_fifo(dev);
- 		if (ret < 0)
- 			return ret;
- 
--		ret = lan78xx_read_reg(dev, MAC_RX, &buf);
--		if (ret < 0)
--			return ret;
--
--		buf &= ~MAC_RX_RXEN_;
--
--		ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+		/* stop Tx */
-+		ret = lan78xx_stop_tx_path(dev);
- 		if (ret < 0)
- 			return ret;
- 
-@@ -4224,23 +4338,11 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 
- 		if (PMSG_IS_AUTO(message)) {
- 			/* auto suspend (selective suspend) */
--			ret = lan78xx_read_reg(dev, MAC_TX, &buf);
--			if (ret < 0)
--				return ret;
--
--			buf &= ~MAC_TX_TXEN_;
--
--			ret = lan78xx_write_reg(dev, MAC_TX, buf);
--			if (ret < 0)
--				return ret;
--
--			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+			ret = lan78xx_stop_tx_path(dev);
- 			if (ret < 0)
- 				return ret;
- 
--			buf &= ~MAC_RX_RXEN_;
--
--			ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+			ret = lan78xx_stop_rx_path(dev);
- 			if (ret < 0)
- 				return ret;
- 
-@@ -4292,13 +4394,7 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 			if (ret < 0)
- 				return ret;
- 
--			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
--			if (ret < 0)
--				return ret;
--
--			buf |= MAC_RX_RXEN_;
--
--			ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+			ret = lan78xx_start_rx_path(dev);
- 			if (ret < 0)
- 				return ret;
- 		} else {
-@@ -4323,7 +4419,6 @@ static int lan78xx_resume(struct usb_interface *intf)
- 	struct sk_buff *skb;
- 	struct urb *res;
- 	int ret;
--	u32 buf;
- 
- 	if (!timer_pending(&dev->stat_monitor)) {
- 		dev->delta = 1;
-@@ -4331,6 +4426,10 @@ static int lan78xx_resume(struct usb_interface *intf)
- 			  jiffies + STAT_UPDATE_TIMER);
- 	}
- 
-+	ret = lan78xx_flush_tx_fifo(dev);
-+	if (ret < 0)
-+		return ret;
++struct pcpu_lstats {
++	u64 packets;
++	u64 bytes;
++	struct u64_stats_sync syncp;
++};
 +
- 	if (!--dev->suspend_count) {
- 		/* resume interrupt URBs */
- 		if (dev->urb_intr && test_bit(EVENT_DEV_OPEN, &dev->flags)) {
-@@ -4390,17 +4489,9 @@ static int lan78xx_resume(struct usb_interface *intf)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
--	if (ret < 0)
--		return ret;
--
--	buf |= MAC_TX_TXEN_;
-+	ret = lan78xx_start_tx_path(dev);
- 
--	ret = lan78xx_write_reg(dev, MAC_TX, buf);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+	return ret;
- }
- 
- static int lan78xx_reset_resume(struct usb_interface *intf)
+ #define __netdev_alloc_pcpu_stats(type, gfp)				\
+ ({									\
+ 	typeof(type) __percpu *pcpu_stats = alloc_percpu_gfp(type, gfp);\
 -- 
 2.43.0
 
