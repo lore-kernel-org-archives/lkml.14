@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3458576C6C;
-	Wed, 13 Mar 2024 17:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CFF82D35;
+	Wed, 13 Mar 2024 17:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349485; cv=none; b=BCsnLb/yAvivxlajdE+IXlQNK+jGXu0SsqfotZtmi1aUDEBvstMEhwwEK/PoRAnL+V37WfJrt+QXIDLGwVwc2IaKzoHwterZvzqyMT+n+P4SOd+I7et032DjRnHtHQsamSdD7fh8OHYrluJwIV7wN3xAvZG/0jFgM64byWEPDX4=
+	t=1710349483; cv=none; b=cPjcGhsdXxhdk5rUmkc/R+dwyueslqRQQhLBpEHPEVb86U569+oCXQdrybI3ga/g+fj3Flt5IbGESIofgmoPbdblRnxIjuOwBk4l8x1u3tajmIAgQZD4Hlr/aF7j8y3ZMcwfh72XfAF4h+Oiw3oOhaLie0rlOCc0YWNCwH2PikQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349485; c=relaxed/simple;
-	bh=HUQ+MXANH31cbahW+pHKvOFfXu4pCED0Yv4yOw25CTI=;
+	s=arc-20240116; t=1710349483; c=relaxed/simple;
+	bh=RaPHUakkFn5UQvvFtamKOIMEK/+a0IcQcmB68Nv9olI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MFhIg0KQbGE5XxEoSSmWj+cT4yvlHWALQzxjFtKbXKFr897wiaUVd9ZiFEutJ0IosSiYtxSuf9G/OgMKcS7oBfrHDxYQHrzRke35aHbfd0o5eNw7G5xA9SEAdna1eAAChCme6c5lnkq80fzXpN+9wPp7IdzdabY3fOLru5Nx6VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITk4BccH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LWWc886sGhoYeIog1D5uIL+pC+xKWlCQAfwJ9SOT8hMdPIyOKZSbJGCPAZxeos3TdntUM0VJw2m12oYo5lGulU3+5SxV7BkirRgJmzdcaVtVY8uOua1hq1wfz8C4wXJTCS/WPP0dIYWkhxIgF1/e9mYm+AhUd/dO/2POUu8XeYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+ejeySY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITk4BccH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46B53C43390;
-	Wed, 13 Mar 2024 17:04:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+ejeySY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7FFC433C7;
+	Wed, 13 Mar 2024 17:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349485;
-	bh=HUQ+MXANH31cbahW+pHKvOFfXu4pCED0Yv4yOw25CTI=;
+	s=k20201202; t=1710349483;
+	bh=RaPHUakkFn5UQvvFtamKOIMEK/+a0IcQcmB68Nv9olI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ITk4BccHO8rucsDEqnF0erq0RsFF2wWh5JIiv99vDojjMkFf8mAaYCojwOpVC6eFe
-	 0oyWZ+29QQ5In2VK4gQuhazDXno/ZRuC4ZRbf2UM8HvNY0wS/d15EZy1UOMdh8si7Y
-	 CBk3vfM4nx+Q1UnAV0TvHRkQoHMpsM9kTIBJq8yQgWXbpXu/m4zp03j+SoqLDSIRYr
-	 N6xBvK9IVaxPGI57ZBc0TcJUEcqyTpikvZ+4sLqFxLNMRezOF9vGnXT5cH4ZV4oPIQ
-	 yzrZvdZsWq8sQiJr+V/uxWpx0IpkgsK5bqIRbt7WUja0Ja8D1znrlwAp6l59DIOYww
-	 p+dbjP4R3aPUg==
+	b=n+ejeySY48tqByOZTkcIew3TXlxQ4KIzUfKEk5e+l97Iz0o8hWBkMlO4eEQViE3/P
+	 zluFv2jzQxKGgndEagvA7xhcpkp+BDCXA0K4by6uxKJ2KqciKIA8oxatsGdX5QAPUz
+	 DoJJOWMypHm/1J2Wr9ZsBmeX0NcASh81KJyM8DRrzmmEO9evveAW3pMtb01IdAOkcq
+	 7tGPAKhRuvAUU3qIqyrk2G7Z+o0O5vhzP0bdECuDyhpOXWlmyyR4lvvFIFLBGoMRiv
+	 kej4rvD1C5GvNRitXBeF3jaoLsv75C/7Z1pqvbzKpkSJTGDVbsvhlzhm6NH82cmDLC
+	 PBxAdNg/4ytyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Jiri Pirko <jiri@nvidia.com>,
+Cc: John Efstathiades <john.efstathiades@pebblebay.com>,
 	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/41] net: lan78xx: fix runtime PM count underflow on link stop
-Date: Wed, 13 Mar 2024 13:04:00 -0400
-Message-ID: <20240313170435.616724-7-sashal@kernel.org>
+Subject: [PATCH 4.19 04/41] lan78xx: Fix partial packet errors on suspend/resume
+Date: Wed, 13 Mar 2024 13:03:58 -0400
+Message-ID: <20240313170435.616724-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170435.616724-1-sashal@kernel.org>
 References: <20240313170435.616724-1-sashal@kernel.org>
@@ -55,43 +54,453 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: John Efstathiades <john.efstathiades@pebblebay.com>
 
-[ Upstream commit 1eecc7ab82c42133b748e1895275942a054a7f67 ]
+[ Upstream commit e1210fe63bf8b080edd0805240e90b81b6b069c1 ]
 
-Current driver has some asymmetry in the runtime PM calls. On lan78xx_open()
-it will call usb_autopm_get() and unconditionally usb_autopm_put(). And
-on lan78xx_stop() it will call only usb_autopm_put(). So far, it was
-working only because this driver do not activate autosuspend by default,
-so it was visible only by warning "Runtime PM usage count underflow!".
+The MAC can get out of step with the internal packet FIFOs if the
+system goes to sleep when the link is active, especially at high
+data rates. This can result in partial frames in the packet FIFOs
+that in result in malformed frames being delivered to the host.
+This occurs because the driver does not enable/disable the internal
+packet FIFOs in step with the corresponding MAC data path. The
+following changes fix this problem.
 
-Since, with current driver, we can't use runtime PM with active link,
-execute lan78xx_open()->usb_autopm_put() only in error case. Otherwise,
-keep ref counting high as long as interface is open.
+Update code that enables/disables the MAC receiver and transmitter
+to the more general Rx and Tx data path, where the data path in each
+direction consists of both the MAC function (Tx or Rx) and the
+corresponding packet FIFO.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+In the receive path the packet FIFO must be enabled before the MAC
+receiver but disabled after the MAC receiver.
+
+In the transmit path the opposite is true: the packet FIFO must be
+enabled after the MAC transmitter but disabled before the MAC
+transmitter.
+
+The packet FIFOs can be flushed safely once the corresponding data
+path is stopped.
+
+Signed-off-by: John Efstathiades <john.efstathiades@pebblebay.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: 1eecc7ab82c4 ("net: lan78xx: fix runtime PM count underflow on link stop")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/usb/lan78xx.c | 303 +++++++++++++++++++++++++-------------
+ 1 file changed, 197 insertions(+), 106 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 52d1d922f6c5e..f56f45c924de0 100644
+index a20aff073b865..4f80f672f3184 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -2940,7 +2940,8 @@ static int lan78xx_open(struct net_device *net)
- done:
- 	mutex_unlock(&dev->dev_mutex);
+@@ -101,6 +101,12 @@
+ /* statistic update interval (mSec) */
+ #define STAT_UPDATE_TIMER		(1 * 1000)
  
--	usb_autopm_put_interface(dev->intf);
-+	if (ret < 0)
-+		usb_autopm_put_interface(dev->intf);
- 
++/* time to wait for MAC or FCT to stop (jiffies) */
++#define HW_DISABLE_TIMEOUT		(HZ / 10)
++
++/* time to wait between polling MAC or FCT state (ms) */
++#define HW_DISABLE_DELAY_MS		1
++
+ /* defines interrupts from interrupt EP */
+ #define MAX_INT_EP			(32)
+ #define INT_EP_INTEP			(31)
+@@ -490,6 +496,26 @@ static int lan78xx_write_reg(struct lan78xx_net *dev, u32 index, u32 data)
  	return ret;
  }
+ 
++static int lan78xx_update_reg(struct lan78xx_net *dev, u32 reg, u32 mask,
++			      u32 data)
++{
++	int ret;
++	u32 buf;
++
++	ret = lan78xx_read_reg(dev, reg, &buf);
++	if (ret < 0)
++		return ret;
++
++	buf &= ~mask;
++	buf |= (mask & data);
++
++	ret = lan78xx_write_reg(dev, reg, buf);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
+ static int lan78xx_read_stats(struct lan78xx_net *dev,
+ 			      struct lan78xx_statstage *data)
+ {
+@@ -2480,6 +2506,156 @@ static void lan78xx_init_ltm(struct lan78xx_net *dev)
+ 	lan78xx_write_reg(dev, LTM_INACTIVE1, regs[5]);
+ }
+ 
++static int lan78xx_start_hw(struct lan78xx_net *dev, u32 reg, u32 hw_enable)
++{
++	return lan78xx_update_reg(dev, reg, hw_enable, hw_enable);
++}
++
++static int lan78xx_stop_hw(struct lan78xx_net *dev, u32 reg, u32 hw_enabled,
++			   u32 hw_disabled)
++{
++	unsigned long timeout;
++	bool stopped = true;
++	int ret;
++	u32 buf;
++
++	/* Stop the h/w block (if not already stopped) */
++
++	ret = lan78xx_read_reg(dev, reg, &buf);
++	if (ret < 0)
++		return ret;
++
++	if (buf & hw_enabled) {
++		buf &= ~hw_enabled;
++
++		ret = lan78xx_write_reg(dev, reg, buf);
++		if (ret < 0)
++			return ret;
++
++		stopped = false;
++		timeout = jiffies + HW_DISABLE_TIMEOUT;
++		do  {
++			ret = lan78xx_read_reg(dev, reg, &buf);
++			if (ret < 0)
++				return ret;
++
++			if (buf & hw_disabled)
++				stopped = true;
++			else
++				msleep(HW_DISABLE_DELAY_MS);
++		} while (!stopped && !time_after(jiffies, timeout));
++	}
++
++	ret = stopped ? 0 : -ETIME;
++
++	return ret;
++}
++
++static int lan78xx_flush_fifo(struct lan78xx_net *dev, u32 reg, u32 fifo_flush)
++{
++	return lan78xx_update_reg(dev, reg, fifo_flush, fifo_flush);
++}
++
++static int lan78xx_start_tx_path(struct lan78xx_net *dev)
++{
++	int ret;
++
++	netif_dbg(dev, drv, dev->net, "start tx path");
++
++	/* Start the MAC transmitter */
++
++	ret = lan78xx_start_hw(dev, MAC_TX, MAC_TX_TXEN_);
++	if (ret < 0)
++		return ret;
++
++	/* Start the Tx FIFO */
++
++	ret = lan78xx_start_hw(dev, FCT_TX_CTL, FCT_TX_CTL_EN_);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int lan78xx_stop_tx_path(struct lan78xx_net *dev)
++{
++	int ret;
++
++	netif_dbg(dev, drv, dev->net, "stop tx path");
++
++	/* Stop the Tx FIFO */
++
++	ret = lan78xx_stop_hw(dev, FCT_TX_CTL, FCT_TX_CTL_EN_, FCT_TX_CTL_DIS_);
++	if (ret < 0)
++		return ret;
++
++	/* Stop the MAC transmitter */
++
++	ret = lan78xx_stop_hw(dev, MAC_TX, MAC_TX_TXEN_, MAC_TX_TXD_);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++/* The caller must ensure the Tx path is stopped before calling
++ * lan78xx_flush_tx_fifo().
++ */
++static int lan78xx_flush_tx_fifo(struct lan78xx_net *dev)
++{
++	return lan78xx_flush_fifo(dev, FCT_TX_CTL, FCT_TX_CTL_RST_);
++}
++
++static int lan78xx_start_rx_path(struct lan78xx_net *dev)
++{
++	int ret;
++
++	netif_dbg(dev, drv, dev->net, "start rx path");
++
++	/* Start the Rx FIFO */
++
++	ret = lan78xx_start_hw(dev, FCT_RX_CTL, FCT_RX_CTL_EN_);
++	if (ret < 0)
++		return ret;
++
++	/* Start the MAC receiver*/
++
++	ret = lan78xx_start_hw(dev, MAC_RX, MAC_RX_RXEN_);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int lan78xx_stop_rx_path(struct lan78xx_net *dev)
++{
++	int ret;
++
++	netif_dbg(dev, drv, dev->net, "stop rx path");
++
++	/* Stop the MAC receiver */
++
++	ret = lan78xx_stop_hw(dev, MAC_RX, MAC_RX_RXEN_, MAC_RX_RXD_);
++	if (ret < 0)
++		return ret;
++
++	/* Stop the Rx FIFO */
++
++	ret = lan78xx_stop_hw(dev, FCT_RX_CTL, FCT_RX_CTL_EN_, FCT_RX_CTL_DIS_);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++/* The caller must ensure the Rx path is stopped before calling
++ * lan78xx_flush_rx_fifo().
++ */
++static int lan78xx_flush_rx_fifo(struct lan78xx_net *dev)
++{
++	return lan78xx_flush_fifo(dev, FCT_RX_CTL, FCT_RX_CTL_RST_);
++}
++
+ static int lan78xx_reset(struct lan78xx_net *dev)
+ {
+ 	struct lan78xx_priv *pdata = (struct lan78xx_priv *)(dev->data[0]);
+@@ -2671,23 +2847,7 @@ static int lan78xx_reset(struct lan78xx_net *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf |= MAC_TX_TXEN_;
+-
+-	ret = lan78xx_write_reg(dev, MAC_TX, buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = lan78xx_read_reg(dev, FCT_TX_CTL, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf |= FCT_TX_CTL_EN_;
+-
+-	ret = lan78xx_write_reg(dev, FCT_TX_CTL, buf);
++	ret = lan78xx_start_tx_path(dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -2696,27 +2856,9 @@ static int lan78xx_reset(struct lan78xx_net *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf |= MAC_RX_RXEN_;
+-
+-	ret = lan78xx_write_reg(dev, MAC_RX, buf);
+-	if (ret < 0)
+-		return ret;
++	ret = lan78xx_start_rx_path(dev);
+ 
+-	ret = lan78xx_read_reg(dev, FCT_RX_CTL, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf |= FCT_RX_CTL_EN_;
+-
+-	ret = lan78xx_write_reg(dev, FCT_RX_CTL, buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++	return ret;
+ }
+ 
+ static void lan78xx_init_stats(struct lan78xx_net *dev)
+@@ -3960,23 +4102,10 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
+ 	u16 crc;
+ 	int ret;
+ 
+-	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
++	ret = lan78xx_stop_tx_path(dev);
+ 	if (ret < 0)
+ 		return ret;
+-
+-	buf &= ~MAC_TX_TXEN_;
+-
+-	ret = lan78xx_write_reg(dev, MAC_TX, buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf &= ~MAC_RX_RXEN_;
+-
+-	ret = lan78xx_write_reg(dev, MAC_RX, buf);
++	ret = lan78xx_stop_rx_path(dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -4153,17 +4282,9 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	lan78xx_read_reg(dev, MAC_RX, &buf);
+-	if (ret < 0)
+-		return ret;
++	ret = lan78xx_start_rx_path(dev);
+ 
+-	buf |= MAC_RX_RXEN_;
+-
+-	lan78xx_write_reg(dev, MAC_RX, buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++	return ret;
+ }
+ 
+ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
+@@ -4189,24 +4310,17 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
+ 			spin_unlock_irq(&dev->txq.lock);
+ 		}
+ 
+-		/* stop TX & RX */
+-		ret = lan78xx_read_reg(dev, MAC_TX, &buf);
++		/* stop RX */
++		ret = lan78xx_stop_rx_path(dev);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		buf &= ~MAC_TX_TXEN_;
+-
+-		ret = lan78xx_write_reg(dev, MAC_TX, buf);
++		ret = lan78xx_flush_rx_fifo(dev);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		ret = lan78xx_read_reg(dev, MAC_RX, &buf);
+-		if (ret < 0)
+-			return ret;
+-
+-		buf &= ~MAC_RX_RXEN_;
+-
+-		ret = lan78xx_write_reg(dev, MAC_RX, buf);
++		/* stop Tx */
++		ret = lan78xx_stop_tx_path(dev);
+ 		if (ret < 0)
+ 			return ret;
+ 
+@@ -4224,23 +4338,11 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
+ 
+ 		if (PMSG_IS_AUTO(message)) {
+ 			/* auto suspend (selective suspend) */
+-			ret = lan78xx_read_reg(dev, MAC_TX, &buf);
+-			if (ret < 0)
+-				return ret;
+-
+-			buf &= ~MAC_TX_TXEN_;
+-
+-			ret = lan78xx_write_reg(dev, MAC_TX, buf);
+-			if (ret < 0)
+-				return ret;
+-
+-			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
++			ret = lan78xx_stop_tx_path(dev);
+ 			if (ret < 0)
+ 				return ret;
+ 
+-			buf &= ~MAC_RX_RXEN_;
+-
+-			ret = lan78xx_write_reg(dev, MAC_RX, buf);
++			ret = lan78xx_stop_rx_path(dev);
+ 			if (ret < 0)
+ 				return ret;
+ 
+@@ -4292,13 +4394,7 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
+ 			if (ret < 0)
+ 				return ret;
+ 
+-			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
+-			if (ret < 0)
+-				return ret;
+-
+-			buf |= MAC_RX_RXEN_;
+-
+-			ret = lan78xx_write_reg(dev, MAC_RX, buf);
++			ret = lan78xx_start_rx_path(dev);
+ 			if (ret < 0)
+ 				return ret;
+ 		} else {
+@@ -4323,7 +4419,6 @@ static int lan78xx_resume(struct usb_interface *intf)
+ 	struct sk_buff *skb;
+ 	struct urb *res;
+ 	int ret;
+-	u32 buf;
+ 
+ 	if (!timer_pending(&dev->stat_monitor)) {
+ 		dev->delta = 1;
+@@ -4331,6 +4426,10 @@ static int lan78xx_resume(struct usb_interface *intf)
+ 			  jiffies + STAT_UPDATE_TIMER);
+ 	}
+ 
++	ret = lan78xx_flush_tx_fifo(dev);
++	if (ret < 0)
++		return ret;
++
+ 	if (!--dev->suspend_count) {
+ 		/* resume interrupt URBs */
+ 		if (dev->urb_intr && test_bit(EVENT_DEV_OPEN, &dev->flags)) {
+@@ -4390,17 +4489,9 @@ static int lan78xx_resume(struct usb_interface *intf)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	buf |= MAC_TX_TXEN_;
++	ret = lan78xx_start_tx_path(dev);
+ 
+-	ret = lan78xx_write_reg(dev, MAC_TX, buf);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++	return ret;
+ }
+ 
+ static int lan78xx_reset_resume(struct usb_interface *intf)
 -- 
 2.43.0
 
