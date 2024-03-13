@@ -1,120 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DA85644A
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233A0482D3
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710365475; cv=none; b=jB+uOw7WELD73fHoSWPrNmiXN7pfRfze+Vuy+yG6wS9fyaKNGJyuJRbbhZiw9PljLyVAzb6dWWYkXnmsBPNhb8QkkUh+xZ7fif7K5rHW9emik6oD39vflsI1ZQdRq4nEhoVoNVdE8sukQkg9ftmirhQ9l8Ir7wHqh1Opz7q/PXc=
+	t=1710365649; cv=none; b=ujuk6cdzRhKO5T36N4hncsrnWCf/1k0k3YmP17dPt3gmoEs7EynIsf0zadipZ4p1fegIz/6a8z3R8DUX/WgZlY3ANsZkx6KtLB7cIfgvoq1vWp6QJhTO8Pn7h8FRbhBqOC0TWZbI76T6i6xEFR1pP344RYlG3Fcx9XqbmCwaLLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710365475; c=relaxed/simple;
-	bh=C4SiVF7VAkuKfOAhkvM2NmHIdqvfL77sde5+3WxGz8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVRxsTwHackFuQLCGObWKLsuOLGe/5qi/3+83g+iAmN4LXpyHns58DUDj6AVv712ZE2sTKmIzxw2VfnYuZnrsYHjgA84AsrfmIdCVP4k+LkFF5ZBpAbyEMZDxHaujgPGWazArUFKIzBAuznfQZyIxC9IBT1VbHayFTwsAuQzjIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fRXPGmQQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710365649; c=relaxed/simple;
+	bh=tmwi7HCUv5E6K9GaTzK4Rvtzm2B7TOnk2EzPvCfnRvo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OjWZ/NrfVyeN5RJqYqzPJ89JahMNA7HEayjr3q2Ki2dD4GbiPZ3QpJeMU4rFMEyDEPtwOisMNAjzKCDszKe27YsOGm4RUufK82jizyHFsDpn1FsnpQH+c2OBbxElHjh4B0rPSmLGSSRfdjw2irU6BlOyyBxPoUzyw+NtmMxRU2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=u2DrJ+dd; arc=none smtp.client-ip=193.222.135.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fRXPGmQQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710365472;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zSHMA3F9Ys9+S9b2CLlCHNAI2GjKD9Vh5g00AYRvICU=;
-	b=fRXPGmQQzO10p4KXye30H6T33KEQMmVJfqy4V/7NyZr3lidw+bGj/dTyXJzvoKbwmumlL0
-	sxOuoHhqqSllsgYsfAqaAoOt84bHyO9+OTe5Hg1N3nwGVNdXxklLt1QbzONSKPWB05L+YL
-	I8h2KC7YwOeEwdF0s/ojxIavR+ALjDE=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-134-jSviFq-aPSi9QHj-6V6vfQ-1; Wed, 13 Mar 2024 17:31:10 -0400
-X-MC-Unique: jSviFq-aPSi9QHj-6V6vfQ-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-690c19ee50bso948116d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:31:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710365470; x=1710970270;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zSHMA3F9Ys9+S9b2CLlCHNAI2GjKD9Vh5g00AYRvICU=;
-        b=EI8jO/THmOwh+5KlE6Qxrio8g+EGnQiev6B5zWFDw4zdCJCl/aPsX6YlUVQWWdu6Hn
-         6m3D3deK1U1m8QaUly3/96qyOrHEE3FNmvOtRaSkiYAAGK9CVjsiR12HUkgZ9UN8ZWfM
-         WigX/AtuzrMSIBbMSx1qONuuIYfzzC8GFyHIqKJNG9fDuJqK9a2PqgH/l1CJ6SsEey2x
-         k9JoUwJFANVXFtkzo+qevSQ0k3JySAVVGPs+SFz4XEReir0UFe5WqUCnUBJ6zUyP10jJ
-         ICanLHCocxsjSlAJCiu8/mNGFqJgSg9zyx7FJiOK/P0dJid+p84M4FyuBuD3aE8vVaSr
-         CilQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWg9s+YFjDdcId7wonTbegJCiwg87YqO9docMed2q9TkvcBnKW3o+9sVqh1x7ZqSAz8B1jHunVehLUC5MFDJslOdz2i06MY9BIzqxNb
-X-Gm-Message-State: AOJu0Yz8V+ap/t6o0NFw9hl4NYM7TVp+nnmVNBVcQfL4XYBJYdT3p++6
-	yIA7hALJE67mGq54bh2CsgVSZywQ/CloN7ce9LuSaO7uZ73CWRiZj3aqyVlG+kHDMeYpMa+Cy3M
-	5lY9ZGdNMCEWCDQQlAIEjyTT8HLFIkHOgfbr71actO6+i1n/b3En7WXN4hxDrXblgaNWcVQ==
-X-Received: by 2002:a0c:eac3:0:b0:691:2524:2d87 with SMTP id y3-20020a0ceac3000000b0069125242d87mr2283295qvp.2.1710365469660;
-        Wed, 13 Mar 2024 14:31:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHsLh8aQhtPreOjP5bc4Hiwu2Giqo97Es+TwECM0aBYGuG0Rd6UIY+m2f6qoD6cxMewmR3UBA==
-X-Received: by 2002:a0c:eac3:0:b0:691:2524:2d87 with SMTP id y3-20020a0ceac3000000b0069125242d87mr2283267qvp.2.1710365469157;
-        Wed, 13 Mar 2024 14:31:09 -0700 (PDT)
-Received: from x1n.redhat.com ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id f7-20020a0562141d2700b00690f23c8605sm57087qvd.23.2024.03.13.14.31.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 14:31:08 -0700 (PDT)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	peterx@redhat.com,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	David Hildenbrand <david@redhat.com>
-Subject: [PATCH] mm/memory: Fix missing pte marker for !page on pte zaps
-Date: Wed, 13 Mar 2024 17:31:07 -0400
-Message-ID: <20240313213107.235067-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="u2DrJ+dd"
+Received: (wp-smtpd smtp.tlen.pl 47424 invoked from network); 13 Mar 2024 22:27:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1710365244; bh=P+T1+jdioJPyCe9xWgeWa/svjJ9wzIAuhwUCRiJJcBo=;
+          h=From:Subject:To:Cc;
+          b=u2DrJ+ddhMs+v1qEUdtvNnb5JFjkzEW+NqjHbA4unsBkfCNQuZbXp9wzfESaDI1/2
+           pbTqt0BQnhDluElE9NJBd/dQoB9ENYsK+3tNjgUfwwQeQzau9RG6RnLG3TIywT6nA5
+           rypTL05um8YK7PDXDbjcCCGDHP02XWoLd5l43w/c=
+Received: from aafi78.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.138.78])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <sashal@kernel.org>; 13 Mar 2024 22:27:24 +0100
+Message-ID: <ecb0b6a1-a8e7-4645-9a2c-56ada368f733@o2.pl>
+Date: Wed, 13 Mar 2024 22:27:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de
+References: <20240313163957.615276-1-sashal@kernel.org>
+ <73072bdd-590a-44b4-8e6d-34bd17073bb5@o2.pl>
+Content-Language: en-GB
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <73072bdd-590a-44b4-8e6d-34bd17073bb5@o2.pl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-WP-MailID: 3cd0a10e4ec2e6957735a7325fe5cf50
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [ofP0]                               
 
-From: Peter Xu <peterx@redhat.com>
+W dniu 13.03.2024 o 21:13, Mateusz Jończyk pisze:
+> W dniu 13.03.2024 o 17:38, Sasha Levin pisze:
+>> This is the start of the stable review cycle for the 6.1.82 release.
+>> There are 71 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Fri Mar 15 04:39:56 PM UTC 2024.
+>> Anything received after that time might be too late.
+>>
+>> The whole patch series can be found in one patch at:
+>>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.81
+>> or in the git tree and branch at:
+>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+>> and the diffstat can be found below.
+>>
+>> Thanks,
+>> Sasha
+>>
+> Hello,
+>
+> Kernel hangs during early boot. No console messages, nothing in pstore.
+>
+> Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU (Intel i3-7020U) and Ubuntu 20.04.
+>
+> This CPU is not affected by RFDS (at least according to the Kconfig message), so I have set
+>
+> CONFIG_MITIGATION_RFDS=n
+>
+> in Kconfig. I do not have any updated microcode (if any will be provided at all for this CPU).
+>
+> Greetings,
+>
+> Mateusz
+>
+I have tested with the following patches reverted:
 
-Commit 0cf18e839f64 of large folio zap work broke uffd-wp.  Now mm's uffd
-unit test "wp-unpopulated" will trigger this WARN_ON_ONCE().
+                [PATCH 6.1 43/71] x86/mmio: Disable KVM mitigation when X86_FEATURE_CLEAR_CPU_BUF is set
+                [PATCH 6.1 44/71] Documentation/hw-vuln: Add documentation for RFDS
+                [PATCH 6.1 45/71] x86/rfds: Mitigate Register File Data Sampling (RFDS)
+                [PATCH 6.1 46/71] KVM/x86: Export RFDS_NO and RFDS_CLEAR to guests
 
-The WARN_ON_ONCE() asserts that an VMA cannot be registered with
-userfaultfd-wp if it contains a !normal page, but it's actually possible.
-One example is an anonymous vma, register with uffd-wp, read anything will
-install a zero page.  Then when zap on it, this should trigger.
+and the kernel still doesn't boot.
 
-What's more, removing that WARN_ON_ONCE may not be enough either, because
-we should also not rely on "whether it's a normal page" to decide whether
-pte marker is needed.  For example, one can register wr-protect over some
-DAX regions to track writes when UFFD_FEATURE_WP_ASYNC enabled, in which
-case it can have page==NULL for a devmap but we may want to keep the marker
-around.
+I have realized that in Kconfig, I have CONFIG_DEBUG_PREEMPT enabled for some weird reason.
+I alsa have CONFIG_EARLY_PRINTK_USB_XDBC=y, which may cause error messages not to
+appear on screen (according to Kconfig description). Will test with both options disabled.
 
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: David Hildenbrand <david@redhat.com>
-Fixes: 0cf18e839f64 ("mm/memory: handle !page case in zap_present_pte() separately")
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/memory.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Greetings,
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f2bc6dd15eb8..904f70b99498 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1536,7 +1536,9 @@ static inline int zap_present_ptes(struct mmu_gather *tlb,
- 		ptep_get_and_clear_full(mm, addr, pte, tlb->fullmm);
- 		arch_check_zapped_pte(vma, ptent);
- 		tlb_remove_tlb_entry(tlb, pte, addr);
--		VM_WARN_ON_ONCE(userfaultfd_wp(vma));
-+		if (userfaultfd_pte_wp(vma, ptent))
-+			zap_install_uffd_wp_if_needed(vma, addr, pte, 1,
-+						      details, ptent);
- 		ksm_might_unmap_zero_page(mm, ptent);
- 		return 1;
- 	}
--- 
-2.44.0
+Mateusz
 
