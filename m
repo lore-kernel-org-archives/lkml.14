@@ -1,140 +1,209 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DDD18CEAF
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 16:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9713718DC8E;
+	Wed, 13 Mar 2024 16:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348480; cv=none; b=fca7gdFIedoCCxVR0yUiSwAe2jseI6oZxTooIvqcVWHl5v3r+g8tiHqrOoaNXi6b8S9j0mJfuFR5uPM+FF3iYXh7zbow2kwugI0AsteQ1dyu7ITuz7tqS9fjJmZOLrEHZ8IPcr1fqtZN8BmG0+yIe45p16chnnvWVLtx/sny5mA=
+	t=1710348481; cv=none; b=rgdL4BLVHv42MK7MssctMb5eQzrjOf5IeQzmmbY+99Ls7tUnzr7mePmT2esHi+78IOaLSDrSxUMvYWwK3TJ4uHztpYI7shJCFi8DqpHTfpi0kvB/3c0h7nImjWv5cdwt8eaegQo5aVAvtn4ddhnFRG4tfkeHe1TjNqGL7wFXgoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348480; c=relaxed/simple;
-	bh=OABrLHkuFcQXG/wDXLMHESQAG2PiCXNRa2hkf80/5kM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeRUFvx8h3gz8zO+4iEGaXSikJWL3P1/7T392jzKBSUtcjfvygHKJ5uAOMNAsAb8VsFcu16qnzUK5Z9SuU00F4VLoM4WqvDIXwewfxikwnZJo1wzlL4yQ0cI2kpV+WUCHyi2aqzp2ftHLlb0Snz4HyWNXIzR+L5UACN/yxtlk14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vdmrIvLo; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710348481; c=relaxed/simple;
+	bh=9lzwCHS6A32+VxdmU1FhUsZBTyFFxCDk4Ecv5s2kmnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QGdgJuxbkheS/Ln3MPLklhGiWdFSYlgQbsmwOyYxzjlQQaL9O8ADwzpJIe/gjm0kDlq3poaEl2DzXUyEc+veQPT644X/xKtnDn+73e0lGZHl15tHE5sPJtv0kYTo7OC2JyVTjIS+iw74noCxqQoBHXbRY1QpGFb/8xiZ4Lxj7Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbHrL0xi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vdmrIvLo"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-413ef6a4f4bso385915e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 09:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710348476; x=1710953276; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=aL2HNMMWYIQUqUiL5ub2nwsmZvrAMS79QvM7mKq9XnU=;
-        b=vdmrIvLoFbB3M2ouFxtTtZ2aeCQa97jVV+HlsAGIK25749y43OwpUTHNjOOBVEqyWI
-         XIplHh+EUuhBtcewR0UAe245ALospGqXynRD7kja6EGXMMNSn1P4rD/FzJw+ttSZPoMP
-         b5U/oFcacvwNwuvt2mpJ4CuZ2BmDPNxzElpqw9O+BzzCdvufcst4dT5C9M4kwEvILcGJ
-         IyMUDoPCuwvC3BxQ5xMtSOxiovvOFx8HHe4wMOFaXeqSOJl9i10xd9vVR2uN00CZJpWF
-         gdyqxrOMgf2JVqFW5lLJA9mhOLBKXOL3oEY9vxyFiWXyD/kCQ5v6rN5A8d22oVe0847D
-         No7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710348476; x=1710953276;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aL2HNMMWYIQUqUiL5ub2nwsmZvrAMS79QvM7mKq9XnU=;
-        b=W2M6mKIHCkgQ8MjFcvA7h7u+M2/0Zc/mxDicBUC4gKyb1i2x6a8ROENcZLlPkhdFK4
-         +GEQ6kAhPLk9YnkBFPMaWv5t3kFCnp4jFV6nC2XDcpBCvAA+pV3FGaAORtxfgq3k6gP0
-         xzLM2FmRFJPVn55ua59Gw4If3ZGr6fT/IKgPP8V8d+o++kiPj+gaET6Urn7AZC3BN22S
-         PHKoT1HgTEMJ9ygpvuW0UaXdCyoXJ8tFYr2/ZQ7CAwHNrZJ2PPsd/LytWL/iHkjX+j/i
-         SOgNORgRwn6VJa2CrQzJjKUtEsJvSft5KoOCg1jLx53sFCwXHqzBQpfLIrgPjC1oz4rK
-         5jDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBdHwK6P6oxQ4khIq1n8WiyBFp44wIw2G7YwUGBES1CFrs0dIqTCQaBPy1VQExvE6bOgAYwjIi2ZVUursEjDnTwsanlBQDW9fPGgHD
-X-Gm-Message-State: AOJu0YwsH5x+40EBefaXaaD3N1UyNwOptYOFfGM3xjLKihtWRotyC0Is
-	BdtPPkiDV5nD3AYWiupRnTMXJO3e/oO6xnpDY8v7Oe59I+cEwn/spkoxK/Tmt48=
-X-Google-Smtp-Source: AGHT+IH0kSLdw4SyxenHbvADWPBA+1/ymroD7wywet+sZrpLPA6tHINQFd4bvIKAxr345/cxFAIuQw==
-X-Received: by 2002:a05:600c:1f07:b0:413:1828:b8fe with SMTP id bd7-20020a05600c1f0700b004131828b8femr423510wmb.21.1710348476329;
-        Wed, 13 Mar 2024 09:47:56 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id fm26-20020a05600c0c1a00b00413ebdca679sm1679024wmb.37.2024.03.13.09.47.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Mar 2024 09:47:55 -0700 (PDT)
-Message-ID: <98c662ef-e6ef-4ef1-85df-6d8e3432101e@linaro.org>
-Date: Wed, 13 Mar 2024 17:47:53 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbHrL0xi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5644C43394;
+	Wed, 13 Mar 2024 16:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710348481;
+	bh=9lzwCHS6A32+VxdmU1FhUsZBTyFFxCDk4Ecv5s2kmnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jbHrL0xiGhLyDksWIfHoB3oKru/DusjKae7jC3lNf7OTuRcuW0S1Vgl01SPDNN/mn
+	 vcT1q4bQ+2DiEx17bx/tX4zDaz6kr7PtblvsrgHnjE7COksVYAEd80WkPAW4fBBvZb
+	 TdIiOMEp23LDTtIaoPAA7DcouyPs2kkVchV4J/6/Tc5JtJezuuDWQ4hr94vvVLUVBi
+	 H6UE5faV4gmQu+CVFjANknehv5BwyPw232BO4ZdrndxTRayUHkWvJ9lLSJhplCHFZm
+	 /vVm+EQx9wmJnC+FSWbL2KLHkLgaJyP+PA4wrY3hhb+u7wKOPSy3mPsfGqN3bMWh+H
+	 KgOHr1bKi476A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 70/73] serial: max310x: make accessing revision id interface-agnostic
+Date: Wed, 13 Mar 2024 12:46:37 -0400
+Message-ID: <20240313164640.616049-71-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
+References: <20240313164640.616049-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: crypto: ice: Document sc7280 inline
- crypto engine
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240313-sc7280-ice-v1-0-3fa089fb7a27@fairphone.com>
- <20240313-sc7280-ice-v1-1-3fa089fb7a27@fairphone.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240313-sc7280-ice-v1-1-3fa089fb7a27@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.213-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.10.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.10.213-rc1
+X-KernelTest-Deadline: 2024-03-15T16:46+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On 13/03/2024 13:53, Luca Weiss wrote:
-> Document the compatible used for the inline crypto engine found on
-> SC7280.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
+From: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+[ Upstream commit b3883ab5e95713e479f774ea68be275413e8e5b2 ]
 
-Best regards,
-Krzysztof
+SPI can only use 5 address bits, since one bit is reserved for
+specifying R/W and 2 bits are used to specify the UART port.
+To access registers that have addresses past 0x1F, an extended
+register space can be enabled by writing to the GlobalCommand
+register (address 0x1F).
+
+I2C uses 8 address bits. The R/W bit is placed in the slave
+address, and so is the UART port. Because of this, registers
+that have addresses higher than 0x1F can be accessed normally.
+
+To access the RevID register, on SPI, 0xCE must be written to
+the 0x1F address to enable the extended register space, after
+which the RevID register is accessible at address 0x5. 0xCD
+must be written to the 0x1F address to disable the extended
+register space.
+
+On I2C, the RevID register is accessible at address 0x25.
+
+Create an interface config struct, and add a method for
+toggling the extended register space and a member for the RevId
+register address. Implement these for SPI.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Link: https://lore.kernel.org/r/20220605144659.4169853-4-demonsingur@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Stable-dep-of: 3f42b142ea11 ("serial: max310x: fix IO data corruption in batched operations")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/serial/max310x.c | 40 +++++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index a09ec46e0310d..b90281ac54c85 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -72,7 +72,7 @@
+ #define MAX310X_GLOBALCMD_REG		MAX310X_REG_1F /* Global Command (WO) */
+ 
+ /* Extended registers */
+-#define MAX310X_REVID_EXTREG		MAX310X_REG_05 /* Revision ID */
++#define MAX310X_SPI_REVID_EXTREG	MAX310X_REG_05 /* Revision ID */
+ 
+ /* IRQ register bits */
+ #define MAX310X_IRQ_LSR_BIT		(1 << 0) /* LSR interrupt */
+@@ -253,6 +253,12 @@
+ #define MAX14830_BRGCFG_CLKDIS_BIT	(1 << 6) /* Clock Disable */
+ #define MAX14830_REV_ID			(0xb0)
+ 
++struct max310x_if_cfg {
++	int (*extended_reg_enable)(struct device *dev, bool enable);
++
++	unsigned int rev_id_reg;
++};
++
+ struct max310x_devtype {
+ 	char	name[9];
+ 	int	nr;
+@@ -275,6 +281,7 @@ struct max310x_one {
+ 
+ struct max310x_port {
+ 	const struct max310x_devtype *devtype;
++	const struct max310x_if_cfg *if_cfg;
+ 	struct regmap		*regmap;
+ 	struct clk		*clk;
+ #ifdef CONFIG_GPIOLIB
+@@ -364,13 +371,12 @@ static int max3109_detect(struct device *dev)
+ 	unsigned int val = 0;
+ 	int ret;
+ 
+-	ret = regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
+-			   MAX310X_EXTREG_ENBL);
++	ret = s->if_cfg->extended_reg_enable(dev, true);
+ 	if (ret)
+ 		return ret;
+ 
+-	regmap_read(s->regmap, MAX310X_REVID_EXTREG, &val);
+-	regmap_write(s->regmap, MAX310X_GLOBALCMD_REG, MAX310X_EXTREG_DSBL);
++	regmap_read(s->regmap, s->if_cfg->rev_id_reg, &val);
++	s->if_cfg->extended_reg_enable(dev, false);
+ 	if (((val & MAX310x_REV_MASK) != MAX3109_REV_ID)) {
+ 		dev_err(dev,
+ 			"%s ID 0x%02x does not match\n", s->devtype->name, val);
+@@ -395,13 +401,12 @@ static int max14830_detect(struct device *dev)
+ 	unsigned int val = 0;
+ 	int ret;
+ 
+-	ret = regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
+-			   MAX310X_EXTREG_ENBL);
++	ret = s->if_cfg->extended_reg_enable(dev, true);
+ 	if (ret)
+ 		return ret;
+ 	
+-	regmap_read(s->regmap, MAX310X_REVID_EXTREG, &val);
+-	regmap_write(s->regmap, MAX310X_GLOBALCMD_REG, MAX310X_EXTREG_DSBL);
++	regmap_read(s->regmap, s->if_cfg->rev_id_reg, &val);
++	s->if_cfg->extended_reg_enable(dev, false);
+ 	if (((val & MAX310x_REV_MASK) != MAX14830_REV_ID)) {
+ 		dev_err(dev,
+ 			"%s ID 0x%02x does not match\n", s->devtype->name, val);
+@@ -1250,6 +1255,7 @@ static int max310x_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ #endif
+ 
+ static int max310x_probe(struct device *dev, const struct max310x_devtype *devtype,
++			 const struct max310x_if_cfg *if_cfg,
+ 			 struct regmap *regmaps[], int irq)
+ {
+ 	int i, ret, fmin, fmax, freq;
+@@ -1313,6 +1319,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
+ 
+ 	s->regmap = regmaps[0];
+ 	s->devtype = devtype;
++	s->if_cfg = if_cfg;
+ 	dev_set_drvdata(dev, s);
+ 
+ 	/* Check device to ensure we are talking to what we expect */
+@@ -1482,6 +1489,19 @@ static struct regmap_config regcfg = {
+ };
+ 
+ #ifdef CONFIG_SPI_MASTER
++static int max310x_spi_extended_reg_enable(struct device *dev, bool enable)
++{
++	struct max310x_port *s = dev_get_drvdata(dev);
++
++	return regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
++			    enable ? MAX310X_EXTREG_ENBL : MAX310X_EXTREG_DSBL);
++}
++
++static const struct max310x_if_cfg __maybe_unused max310x_spi_if_cfg = {
++	.extended_reg_enable = max310x_spi_extended_reg_enable,
++	.rev_id_reg = MAX310X_SPI_REVID_EXTREG,
++};
++
+ static int max310x_spi_probe(struct spi_device *spi)
+ {
+ 	const struct max310x_devtype *devtype;
+@@ -1508,7 +1528,7 @@ static int max310x_spi_probe(struct spi_device *spi)
+ 		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
+ 	}
+ 
+-	return max310x_probe(&spi->dev, devtype, regmaps, spi->irq);
++	return max310x_probe(&spi->dev, devtype, &max310x_spi_if_cfg, regmaps, spi->irq);
+ }
+ 
+ static int max310x_spi_remove(struct spi_device *spi)
+-- 
+2.43.0
 
