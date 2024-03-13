@@ -1,115 +1,94 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAC47773;
-	Wed, 13 Mar 2024 15:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAD546441;
+	Wed, 13 Mar 2024 15:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710344134; cv=none; b=UVMjz7pe/mdqJm9D4Xq3D6SVRs7ikZGWK0+aE9rZb1zsM+lATJMRsWLcpsoCUL8jdxRsFjdjpx0c4I3PAh5b8DhEWMXBKtjL9rG0xrPP/u+nQOtOxmkSim2yQJeqX2UAYBME9BcDmS3tJ1O/yh34bIfPqIOp1ll19sunnVZz6oM=
+	t=1710344169; cv=none; b=o9fHmB1k8uu96f6Bn31DZ8Zv6gO9nDzlCzVRkZYt9ZPXXkaQ/2OTiIEfnygqroOZyfDbr6AWO0vIuAtA2pN1todpCgGcOkv9+78JWT1Ott+mOSYH2tOb3EIQ8gFRxTed7N8n8eG7+OzqwwDqduT8K449+iyo4oEtCoIVs4fRd3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710344134; c=relaxed/simple;
-	bh=jOQp4CryTW9XagCDuR6uUkkHla07BH/PK6sB2sD9gbA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARDc7POu4phEAToTs4f5nhPgOOYMtvkfn0dc9WgKLtDutanKygEAiaMG5SoJnovQm40djO8Afl4m8T/NfuW7XOqq5r2HAMIYCComGSysYGwZlSCCVmVNJQicozvnNLZ29+nsSZCWH2I/hOXSuZnO85WFgfyZy9y52Z/EPmBeHZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JsGryI05; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710344169; c=relaxed/simple;
+	bh=O7uOKiFVPAmuNg68j9at/KETUNZl0bI/kM2wWFUizh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ofcet0SfAQgZ92wBKK5ElPf0KVgpPZRdznlD5wPlWGKZ339QeWr4mhdq8BP5cVSeogzKaImrTMKSl4i+ze8a7SlGoIVddD026y1yS6Oc68wpseKFRQhV3MpWp5U5Hc7itNC9np5V5o93klKlZ/s/zWj3EsU40FK+rxGup5EMoKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=IU1f/G9R; arc=none smtp.client-ip=195.19.76.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JsGryI05"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42DAPHf3019208;
-	Wed, 13 Mar 2024 15:35:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:reply-to:references
-	:mime-version:content-type:in-reply-to; s=qcppdkim1; bh=d52KNA3q
-	0BZMEfgemsDgnZIe/xCWMrozSCni3qIL1PE=; b=JsGryI054YgtkJQmVj05IhF2
-	nNO2JpXzrj0y+U9pXCIWM5TGt057i8EktE24HO+6/jowwc+PDKQhfggTDYFlKegB
-	AZ8haHqr5iKoiONxG7KIpf0CNYmG2gFdKdDcam6LZ3nqPau6zS1rAQCvOv7H1jhQ
-	bhLRy3ys4L5Vy7ZnxhKSMazoGKtKIrUfX1L+sIBLHJLPA9jQFxGs/OwO6pTLXIAr
-	7Crnb83FayC3zxMA5dSwOWegVPyPSUVrEc2JvUv/ZYLxMJ9wRt49SJolH6tXSB1D
-	olR7vWQxGAXQVuhfTGhwc5OryOW7NAptdojYL2K0eL+yjgniwsXWPVZBNhImhw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wu815rys8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 15:35:16 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42DFZF03025574
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 15:35:15 GMT
-Received: from quicinc.com (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 13 Mar
- 2024 08:35:07 -0700
-Date: Wed, 13 Mar 2024 21:05:03 +0530
-From: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
-To: Elliot Berman <quic_eberman@quicinc.com>
-CC: Alex Elder <elder@linaro.org>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Murali Nalajal <quic_mnalajal@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Carl van Schaik
-	<quic_cvanscha@quicinc.com>,
-        Philip Derrin <quic_pderrin@quicinc.com>,
-        Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
-        Jonathan Corbet
-	<corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Fuad
- Tabba" <tabba@google.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Andrew
- Morton" <akpm@linux-foundation.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v17 16/35] gunyah: Add hypercalls for demand paging
-Message-ID: <20240313153503.GR440762@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
-References: <20240222-gunyah-v17-0-1e9da6763d38@quicinc.com>
- <20240222-gunyah-v17-16-1e9da6763d38@quicinc.com>
+	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="IU1f/G9R"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 59DD3DFBBDDDA;
+	Wed, 13 Mar 2024 18:35:53 +0300 (MSK)
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id zvWePlngsIes; Wed, 13 Mar 2024 18:35:53 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 1E113DFBBDDD8;
+	Wed, 13 Mar 2024 18:35:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 1E113DFBBDDD8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
+	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1710344153;
+	bh=Zn7e/vbnoFOlSvvvgW+KMY6UzRzOSfRxr3SxgN8pnw8=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=IU1f/G9RZN2S7tK1x8h2PbJgYIgunLztFCGVz3xYlPjo5EsMOz8WGDueB6FtjShra
+	 pVJ9O3TdAfeTwri4DZAfvuIwykJr+U5VfSo3bcO0ig9WCGG3ZjK7+m/KQRvA5ggIMZ
+	 dH2peLUAu3ij3EdFA6fwNjSFufoGhQN8ZS3W6TIDYf6XOMYQdgoM5lhq3B7xIQWnwn
+	 yRT2qFTeTU+LF7ViTQWVL9Ib3Ogs60GMM80DlbvZB5qZJ5JunHrOQ8t5vU/uXzbSp7
+	 YYru0aittpo6zRw+HLEyJBm0jvW3k0m17fNIgE6HdWErafvrwGSrLdg19EqQakxo2n
+	 qHXNL8oG2NwVg==
+X-Virus-Scanned: amavisd-new at rosalinux.ru
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id iMZCX_rECthx; Wed, 13 Mar 2024 18:35:53 +0300 (MSK)
+Received: from localhost.localdomain (unknown [62.217.186.174])
+	by mail.rosalinux.ru (Postfix) with ESMTPSA id D8557DFBBDDD7;
+	Wed, 13 Mar 2024 18:35:52 +0300 (MSK)
+From: Mikhail Lobanov <m.lobanov@rosalinux.ru>
+To: Raju Rangoju <rajur@chelsio.com>
+Cc: Mikhail Lobanov <m.lobanov@rosalinux.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	netdev@vger.kernel.org (open list:CXGB4 ETHERNET DRIVER (CXGB4)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] cxgb4: unnecessary check for 0 in the free_sge_txq_uld() function
+Date: Wed, 13 Mar 2024 11:34:36 -0400
+Message-ID: <20240313153437.124749-1-m.lobanov@rosalinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-In-Reply-To: <20240222-gunyah-v17-16-1e9da6763d38@quicinc.com>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mFx73PGakvisSNip6iUaO2FFTWeGcFAO
-X-Proofpoint-ORIG-GUID: mFx73PGakvisSNip6iUaO2FFTWeGcFAO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-13_09,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 malwarescore=0 mlxlogscore=512 suspectscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403130117
+Content-Transfer-Encoding: quoted-printable
 
-* Elliot Berman <quic_eberman@quicinc.com> [2024-02-22 15:16:39]:
+The free_sge_txq_old() function has an unnecessary txq check of 0.
+This check is not necessary, since the txq pointer is initialized by the
+uldtxq[i] address from the operation &txq_info->uldtxq[i], which ensures
+that txq is not equal to 0.
 
-> Three hypercalls are needed to support demand paging.
-> In create page mappings for a virtual machine's address space, memory
-> must be moved to a memory extent that is allowed to be mapped into that
-> address space. Memory extents are Gunyah's implementation of access
-> control. Once the memory is moved to the proper memory extent, the
-> memory can be mapped into the VM's address space. Implement the
-> bindings to perform those hypercalls.
-> 
-> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Reviewed-by: Srivatsa Vaddagiri <quic_svaddagiri@quicinc.com>
+Fixes: ab677ff4ad15 ("cxgb4: Allocate Tx queues dynamically")
+Signed-off-by: Mikhail Lobanov <m.lobanov@rosalinux.ru>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c b/drivers/net=
+/ethernet/chelsio/cxgb4/cxgb4_uld.c
+index 17faac715882..5c13bcb4550d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c
+@@ -406,7 +406,7 @@ free_sge_txq_uld(struct adapter *adap, struct sge_uld=
+_txq_info *txq_info)
+ 	for (i =3D 0; i < nq; i++) {
+ 		struct sge_uld_txq *txq =3D &txq_info->uldtxq[i];
+=20
+-		if (txq && txq->q.desc) {
++		if (txq->q.desc) {
+ 			tasklet_kill(&txq->qresume_tsk);
+ 			t4_ofld_eq_free(adap, adap->mbox, adap->pf, 0,
+ 					txq->q.cntxt_id);
+--=20
+2.43.0
+
