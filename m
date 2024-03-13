@@ -1,70 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8711A00CB;
-	Wed, 13 Mar 2024 17:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7E81A00D6;
+	Wed, 13 Mar 2024 17:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349503; cv=none; b=CIOCr4EuNkebqaq+L9mce1k9psKtkB32Rte0aOo0w9zcc7/dbTUX3dIdgkTzMvu5VA/cZG8OqaZvFaajGNiwETPUlWYVoue7tWfnNl4j9VDztRl/L+nKyx5C44xBb/Y2Y6HxaXN/LakMLRSXIe30O7vMZ7D2MnqPB0O91W+c09c=
+	t=1710349503; cv=none; b=X5pX97WZq6OUp9EFILmZ1yOduEfPK6lf3ICIl9PdlYFLCvosSJ6wbpLRl5o6RV6dfwbmq32IIkwLoYC1HTG6n8Hv7cH+zyA8oQKrYFe3NhCTISJa6T4gHGuIalCpZ/y5/AF6EWPgLjrwfyvuRk4ANjouGezUwt9tj77p+aB17fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710349503; c=relaxed/simple;
-	bh=3HkGt1kMjSGQ6a0wzmZyjXZ7wSJYIP5rRmWt5oIKzQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uvPAZCvf9HLG3eBGZuWMQ7rzSHxDeJIsbYNi8yGrsEyfb587EjnXvpYr/iiFk+U6abkKrpyFahsA8iE7txPbsPABp4XnpwFdUc0l0DFV6A+G/s6SP1bjmT73DdVYiYZw4HT26rt8J8KeWiW4+I5zDJlTP4gl0V8ea8WYuieW1Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCFsbMRE; arc=none smtp.client-ip=10.30.226.201
+	bh=X6w2Pz8ARSb0A9skWuMw16BLD+2NNQB0U/SaQuVm0WM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UcUmz7+RMO19gXeF3DC7H701UtPzLD9VOy8J8ivMxOiTgb6tWfeMmfZjxxH6m1xf9H7ngYTZYf4GQj4Tc5uOmWhleA7TKMdU7rQEPNsSNat694BAv12ktSHZvHSVrhdtlT9tq6GYyaevAwvBiJ5yiFXxl4moRO28XKBEcE1cU9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgAAF/HO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCFsbMRE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DDDC43394;
-	Wed, 13 Mar 2024 17:05:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgAAF/HO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74814C433F1;
+	Wed, 13 Mar 2024 17:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710349502;
-	bh=3HkGt1kMjSGQ6a0wzmZyjXZ7wSJYIP5rRmWt5oIKzQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YCFsbMREntqbQyxFW7IZHwDCiJSAzCRCm383ZTlUeeYOrFSJ0xMNbY4z8PHNty62j
-	 o+KHCHblGAauSmwSD22Ttvrf+uZ8NFu9paFkgN+L5Td6NieHZqA6E8ECnXN7zI3fFT
-	 AmmMaOMk6s1OQdXDDsDAt+wxfDBFgr/yZThBQsWVeuVnSjvlAGXJHph04vCygHygtU
-	 rqtK9I9KZDrEogvl9x/8xYVmbNHj+s/Y1o7PUrFsKeDVI4xCy5yMYh8USlNd+E276U
-	 s5a3qG8BWlmyaK30YksYT2iT348U7w1Sv7+YTXShbjrWJGk379hAFcvPRiFNEyVrH1
-	 o6JA806m9B6zw==
-Date: Wed, 13 Mar 2024 18:05:00 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: paulmck@kernel.org, joel@joelfernandes.org, josh@joshtriplett.org,
-	boqun.feng@gmail.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang1211@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, neeraj.upadhyay@kernel.org
-Subject: Re: [PATCH] rcu: Reduce synchronize_rcu() delays when all wait heads
- are in use
-Message-ID: <ZfHcvI54IrbQTjbP@localhost.localdomain>
-References: <20240313083228.233247-1-Neeraj.Upadhyay@amd.com>
- <ZfHDwPkPHulJHrD0@localhost.localdomain>
- <35e009c4-d52c-4b96-ba10-afa0be9dfd5e@amd.com>
+	bh=X6w2Pz8ARSb0A9skWuMw16BLD+2NNQB0U/SaQuVm0WM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EgAAF/HO+S5eNTOdDCaOu74CPTZymurPK4ln1HC6xvsR13/It1yFDwQMxs4gCicjn
+	 ZbpRFZ5dWSerQ+E9u3rWAh46MsQKOifK42Do2tQiwNjDboKpOmCYjcKaDSj0Uf+qJM
+	 pdnuZFcsb6ENxPLysOOtjtjX6qepYwqscMYxjHouqFzgwb6YkVJ+QUfD2Oi00H4Xgt
+	 vWkjYyZaAKbM/hPnZXktiN2YYa4ZnKcv3tuDmZP15W1CI+NINgrlfEu1pvrWYAocih
+	 8wyaIiLDqY//rtMb+DG0fsvi8wodLrpXQ6ZUB6rIHCqgZQd9Kpz/f9LRLxkKKaNrqo
+	 begJt+6+jsrKw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jason Xing <kernelxing@tencent.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 22/41] netrom: Fix a data-race around sysctl_netrom_link_fails_count
+Date: Wed, 13 Mar 2024 13:04:16 -0400
+Message-ID: <20240313170435.616724-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240313170435.616724-1-sashal@kernel.org>
+References: <20240313170435.616724-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.310-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.310-rc1
+X-KernelTest-Deadline: 2024-03-15T17:04+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <35e009c4-d52c-4b96-ba10-afa0be9dfd5e@amd.com>
 
-Le Wed, Mar 13, 2024 at 09:41:58PM +0530, Neeraj Upadhyay a écrit :
-> > Also there is a risk that this non-wait-head gets later assigned as
-> > rcu_state.srs_done_tail. And then this pending sr may not be completed
-> > until the next grace period calling rcu_sr_normal_gp_cleanup()? (Because
-> > the work doesn't take care of rcu_state.srs_done_tail itself). And then
-> > the delay can be arbitrary.
-> > 
-> 
-> That is correct. Only the first node suffers from deferred GP.
-> If there are large number of callbacks which got added after
-> last available wait head was queued, all those callbacks (except one)
-> can still have a GP assigned to them.
+From: Jason Xing <kernelxing@tencent.com>
 
-Oh and yes I missed the fact that you still reissue a GP while queueing
-a non wait-head as ->srs_wait_tail. That point looks good.
+[ Upstream commit bc76645ebdd01be9b9994dac39685a3d0f6f7985 ]
 
-Thanks.
+We need to protect the reader reading the sysctl value because the
+value can be changed concurrently.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Jason Xing <kernelxing@tencent.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netrom/nr_route.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index eb285b12977b7..744c19a7a469c 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -728,7 +728,7 @@ void nr_link_failed(ax25_cb *ax25, int reason)
+ 	nr_neigh->ax25 = NULL;
+ 	ax25_cb_put(ax25);
+ 
+-	if (++nr_neigh->failed < sysctl_netrom_link_fails_count) {
++	if (++nr_neigh->failed < READ_ONCE(sysctl_netrom_link_fails_count)) {
+ 		nr_neigh_put(nr_neigh);
+ 		return;
+ 	}
+-- 
+2.43.0
+
