@@ -1,259 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBBB3EA72;
-	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B0C3DBBA;
+	Wed, 13 Mar 2024 11:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710329136; cv=none; b=crP1umV2vr3twZUIZn4wHiy/OxTiYpfcb4TCzx30lQYkOg/rIsDpOQkGwnf1HNM+uyeoTQuEYNDy3IsNzRmCbab3ojp24HS8a9A7++8mbJ94hpcRm4dskDZgCPJX4Hl6//OYeeGs1gM381tbj1gSGuE8yGQR/4b7DfafScKhiXE=
+	t=1710329175; cv=none; b=rcBVXmjRVJF1IcbHNrOqTJwDo0QgiIVdJ3gFrAkFmz4OS79HwhxDfwQT3z5UW0n7lk+UQJ2GXotgd5jyaPmSmCPfJlwgXkMNsLb4KBDrqa+2CBXGp3v4UHN8cX1ld0nsftKJlVldzZMfP3TVhNqrltjlkioHc+sgMq9zNZZfEcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710329136; c=relaxed/simple;
-	bh=LYcNh8f/VUH2gSW2953XdtfYjWbGSG8COCLwOqFU9ss=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ts0v3/PSqx1OrFjsaLmyS85NaWyXYKuW5WqBOXJBrFhxJBTSb1+0KE88/z9gTbHjxFvBS/wf1hTwIt1RCewQJAHVTuaraRZiFALCCb/CmjRg8gtwQ5d+7Q3qo8n74T3DexRhDoVwtFeXL62Vo+l1LkjI8r+GC0pmSXY9lPYrxUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbL5fwOe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbL5fwOe"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D208C433C7;
-	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710329135;
-	bh=LYcNh8f/VUH2gSW2953XdtfYjWbGSG8COCLwOqFU9ss=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=UbL5fwOesmZxDjwGCadSLhlMetEzhhV4Sk6MRiBZPi7LHDafsiZ6rtdallYJqmKiM
-	 79yeNbQpI9PHxcxAoF7Etf1rVvKhH8EZ0hAXLqHgMBzVHs1vWpU2iuwGcDT3/uPDIv
-	 qbNYSTqmojPupxOpwiIC7PyLYq96LuxCM89+phSPRnLP57O/ViLtUG4b2o+OzwSJXl
-	 cSLK2aGj+Y1mT7eDUipud8VnAtU1K4RBjfW3lW58ZPteo1JsrpKl+iB7xQJSQ+Egul
-	 sZaN/0scE39HIUN15P74xpLI1w0J1c6lGwjAmtIghqbsXfpnk/AaJPjXQ0QpW4Myqg
-	 iMkw97lR19y+A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FCC54791;
-	Wed, 13 Mar 2024 11:25:35 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Wed, 13 Mar 2024 14:25:07 +0300
-Subject: [PATCH net] net: dsa: mt7530: prevent possible incorrect XTAL
- frequency selection
+	s=arc-20240116; t=1710329175; c=relaxed/simple;
+	bh=y3OqGf9cZrU1G2FvP2a7Qj2ptdbA5j3NjnjuWrWjlwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kpxVKQsSfa2x4F9wLhPS1Taakz3yhFMPvDP6yFl3sETrcEKvalN2xc/xr747NY9WoujWrQqlEej+UxTPytG9GIXP+WbZpOklTjgrDIwMYAZ0ubj4lv59Q/Z9685Ff817fDYwX2bKUKt5AzBZQbNDOU4gwYbxYjyXjHNkZpFO+1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A67731007;
+	Wed, 13 Mar 2024 04:26:49 -0700 (PDT)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B59A3F73F;
+	Wed, 13 Mar 2024 04:26:09 -0700 (PDT)
+Message-ID: <b24137db-62e8-2b60-7a8d-2a7f8ac7ba93@arm.com>
+Date: Wed, 13 Mar 2024 11:26:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: =?utf-8?q?=3C20240313-for-netnext-mt7530-better-fix-xtal-frequen?=
- =?utf-8?q?cy-v1-1-5a50df99f51a=40arinc9=2Ecom=3E?=
-X-B4-Tracking: v=1; b=H4sIABKN8WUC/x2NzQrCMBAGX6Xs2YX8WEt9FemhrV80oKluVkkpf
- XeDx4FhZqMMich0bjYSfGOOS6pgDw3N9zHdwPFamZxxR+Ot47AIJ2hCUX5q13rDE1QhHGLhouO
- Dg+D9QZpX9han0Pa9t12gmnwJqvXfXahWaNj3H5EuS5uDAAAA
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Landen Chao <Landen.Chao@mediatek.com>
-Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>, 
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Justin Swartz <justin.swartz@risingedge.co.za>, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710329122; l=6561;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=L64g+46HN+S29jthqvg493sRpkqBmVTreKHISDH47E8=;
- b=QETKrDhCZGIxxkfvVHrUw+tUQmz/zGwkbwSTF7U2X5bdPBFZKtDOmY0SPiSsK98/qW7i0Kty1
- Fo+cDhkeTl+DLsjd42I1KWahApVmEMICNgNOyCa7nk9iV2a8eGtGNzy
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 00/10] perf: Clean up common uncore boilerplate
+Content-Language: en-US
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, jialong.yang@shingroup.cn,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Will Deacon <will@kernel.org>
+References: <cover.1710257512.git.robin.murphy@arm.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <cover.1710257512.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-On MT7530, the HT_XTAL_FSEL field of the HWTRAP register stores a 2-bit
-value that represents the frequency of the crystal oscillator connected to
-the switch IC. The field is populated by the state of the ESW_P4_LED_0 and
-ESW_P4_LED_0 pins, which is done right after reset is deasserted.
 
-  ESW_P4_LED_0    ESW_P3_LED_0    Frequency
-  -----------------------------------------
-  0               0               Reserved
-  0               1               20MHz
-  1               0               40MHz
-  1               1               25MHz
+On 12/03/2024 17:34, Robin Murphy wrote:
+> Hi all,
+> 
+> Since this came up yet again recently, and it's an idea which has been
+> nagging me for years, I decided it was time to see how hard it really
+> would be to start shaving this yak. And it turns out to be refreshingly
+> simple - the core code has quietly become capable of doing most of what
+> we want, the one new functional addition is trivial (patch #2), and the
+> resulting largely-mechanical cleanup seems a pretty nice win.
+> 
+> This series is focused on drivers/perf/ as that's where most mess is
+> concentrated, but figured I'd include the arch/ patches as well since
+> they might be reasonable to land with the core changes, at least for x86
+> (FWIW I did also look at the powerpc drivers but they scared me and I
+> ran away; sorry). The remaining stragglers elsewhere around the tree I'd
+> come back to as a follow-up.
+> 
+> (And yes, I appreciate it's mid-merge-window already, but since I do
+> have a tree-wide rename proposed here, may as well give the discussion
+> a chance for a head start before -rc1...)
+> 
+> Thanks,
+> Robin.
+> 
+> 
+Reviewed-by: James Clark <james.clark@arm.com>
 
-On MT7531, the XTAL25 bit of the STRAP register stores this. The LAN0LED0
-pin is used to populate the bit. 25MHz when the pin is high, 40MHz when
-it's low.
-
-These pins are also used with LEDs, therefore, their state can be set to
-something other than the bootstrapping configuration. For example, a link
-may be established on port 3 before the DSA subdriver takes control of the
-switch which would set ESW_P3_LED_0 to high.
-
-Currently on mt7530_setup() and mt7531_setup(), 1000 - 1100 usec delay is
-described between reset assertion and deassertion. Some switch ICs in real
-life conditions cannot always have these pins set back to the bootstrapping
-configuration before reset deassertion in this amount of delay. This causes
-wrong crystal frequency to be selected which puts the switch in a
-nonfunctional state after reset deassertion.
-
-The tests below are conducted on an MT7530 with a 40MHz crystal oscillator
-by Justin Swartz.
-
-With a cable from an active peer connected to port 3 before reset, an
-incorrect crystal frequency (0b11 = 25MHz) is selected:
-
-                      [1]                  [3]     [5]
-                      :                    :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              _____________________________
-ESW_P3_LED_0                               |__________________________
-
-                       :                  : :     :
-                       :                  : [4]...:
-                       :                  :
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 1000 - 1100 usec.
-[3] Reset is deasserted.
-[4] Period of 315 usec. HWTRAP register is populated with incorrect
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-Increase the delay between reset_control_assert() and
-reset_control_deassert(), and gpiod_set_value_cansleep(priv->reset, 0) and
-gpiod_set_value_cansleep(priv->reset, 1) to 5000 - 5100 usec. This amount
-ensures a higher possibility that the switch IC will have these pins back
-to the bootstrapping configuration before reset deassertion.
-
-With a cable from an active peer connected to port 3 before reset, the
-correct crystal frequency (0b10 = 40MHz) is selected:
-
-                      [1]        [2-1]     [3]     [5]
-                      :          :         :       :
-              _____________________________         __________________
-ESW_P4_LED_0                               |_______|
-              ___________________           _______
-ESW_P3_LED_0                     |_________|       |__________________
-
-                       :          :       : :     :
-                       :          [2-2]...: [4]...:
-                       [2]................:
-
-[1] Reset is asserted.
-[2] Period of 5000 - 5100 usec.
-[2-1] ESW_P3_LED_0 goes low.
-[2-2] Remaining period of 5000 - 5100 usec.
-[3] Reset is deasserted.
-[4] Period of 310 usec. HWTRAP register is populated with bootstrapped
-    XTAL frequency.
-[5] Signals reflect the bootstrapped configuration.
-
-ESW_P3_LED_0 low period before reset deassertion:
-
-              5000 usec
-            - 5100 usec
-    TEST     RESET HOLD
-       #         (usec)
-  ---------------------
-       1           5410
-       2           5440
-       3           4375
-       4           5490
-       5           5475
-       6           4335
-       7           4370
-       8           5435
-       9           4205
-      10           4335
-      11           3750
-      12           3170
-      13           4395
-      14           4375
-      15           3515
-      16           4335
-      17           4220
-      18           4175
-      19           4175
-      20           4350
-
-     Min           3170
-     Max           5490
-
-  Median       4342.500
-     Avg       4466.500
-
-Revert commit 2920dd92b980 ("net: dsa: mt7530: disable LEDs before reset").
-Changing the state of pins via reset assertion is simpler and more
-efficient than doing so by setting the LED controller off.
-
-Reported-by: Justin Swartz <justin.swartz@risingedge.co.za>
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Fixes: c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 678b51f9cea6..6986f538a4d0 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2192,22 +2192,16 @@ mt7530_setup(struct dsa_switch *ds)
- 		}
- 	}
- 
--	/* Disable LEDs before reset to prevent the MT7530 sampling a
--	 * potentially incorrect HT_XTAL_FSEL value.
--	 */
--	mt7530_write(priv, MT7530_LED_EN, 0);
--	usleep_range(1000, 1100);
--
- 	/* Reset whole chip through gpio pin or memory-mapped registers for
- 	 * different type of hardware
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
- 
-@@ -2420,11 +2414,11 @@ mt7531_setup(struct dsa_switch *ds)
- 	 */
- 	if (priv->mcm) {
- 		reset_control_assert(priv->rstc);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		reset_control_deassert(priv->rstc);
- 	} else {
- 		gpiod_set_value_cansleep(priv->reset, 0);
--		usleep_range(1000, 1100);
-+		usleep_range(5000, 5100);
- 		gpiod_set_value_cansleep(priv->reset, 1);
- 	}
- 
-
----
-base-commit: d7d75124965aee23e5e4421d78376545cf070b0a
-change-id: 20240312-for-netnext-mt7530-better-fix-xtal-frequency-31e6f599317f
-
-Best regards,
--- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
-
+> Robin Murphy (10):
+>   perf/alibaba_uncore_drw: Use correct CPU affinity
+>   perf: Add capability for common event support
+>   drivers/perf: Use PERF_PMU_CAP_NO_COMMON_EVENTS
+>   perf: Rename PERF_PMU_CAP_NO_INTERRUPT
+>   drivers/perf: Use PERF_PMU_CAP_NO_SAMPLING consistently
+>   drivers/perf: Clean up redundant per-task checks
+>   perf: Define common uncore capabilities
+>   drivers/perf: Use common uncore capabilities
+>   x86: Use common uncore PMU capabilities
+>   ARM: Use common uncore PMU capabilities
+> 
+>  arch/arc/kernel/perf_event.c              |  2 +-
+>  arch/arm/mach-imx/mmdc.c                  | 16 +-------------
+>  arch/arm/mm/cache-l2x0-pmu.c              | 12 +---------
+>  arch/csky/kernel/perf_event.c             |  2 +-
+>  arch/powerpc/perf/8xx-pmu.c               |  2 +-
+>  arch/powerpc/perf/hv-24x7.c               |  2 +-
+>  arch/powerpc/perf/hv-gpci.c               |  2 +-
+>  arch/powerpc/platforms/pseries/papr_scm.c |  2 +-
+>  arch/s390/kernel/perf_cpum_cf.c           |  2 +-
+>  arch/sh/kernel/perf_event.c               |  2 +-
+>  arch/x86/events/amd/iommu.c               | 17 +-------------
+>  arch/x86/events/amd/power.c               | 10 +--------
+>  arch/x86/events/amd/uncore.c              | 12 +++-------
+>  arch/x86/events/core.c                    |  2 +-
+>  arch/x86/events/intel/cstate.c            | 16 +++-----------
+>  arch/x86/events/intel/uncore.c            | 11 +--------
+>  arch/x86/events/intel/uncore_snb.c        | 20 +++--------------
+>  arch/x86/events/msr.c                     |  9 +-------
+>  arch/x86/events/rapl.c                    |  9 +-------
+>  drivers/fpga/dfl-fme-perf.c               |  2 +-
+>  drivers/perf/alibaba_uncore_drw_pmu.c     | 27 +++--------------------
+>  drivers/perf/amlogic/meson_ddr_pmu_core.c | 11 +--------
+>  drivers/perf/arm-cci.c                    | 15 +------------
+>  drivers/perf/arm-ccn.c                    | 20 +----------------
+>  drivers/perf/arm-cmn.c                    | 10 +--------
+>  drivers/perf/arm_cspmu/arm_cspmu.c        | 27 ++---------------------
+>  drivers/perf/arm_dmc620_pmu.c             | 18 +--------------
+>  drivers/perf/arm_dsu_pmu.c                | 22 +-----------------
+>  drivers/perf/arm_pmu_platform.c           |  2 +-
+>  drivers/perf/arm_smmuv3_pmu.c             | 15 +------------
+>  drivers/perf/arm_spe_pmu.c                |  7 ++----
+>  drivers/perf/cxl_pmu.c                    |  8 +------
+>  drivers/perf/dwc_pcie_pmu.c               | 13 +----------
+>  drivers/perf/fsl_imx8_ddr_perf.c          | 13 +----------
+>  drivers/perf/fsl_imx9_ddr_perf.c          | 13 +----------
+>  drivers/perf/hisilicon/hisi_pcie_pmu.c    | 10 +--------
+>  drivers/perf/hisilicon/hisi_uncore_pmu.c  | 20 +----------------
+>  drivers/perf/hisilicon/hns3_pmu.c         |  9 +-------
+>  drivers/perf/marvell_cn10k_ddr_pmu.c      | 15 +------------
+>  drivers/perf/marvell_cn10k_tad_pmu.c      |  6 +----
+>  drivers/perf/qcom_l2_pmu.c                | 21 ++----------------
+>  drivers/perf/qcom_l3_pmu.c                | 21 +-----------------
+>  drivers/perf/riscv_pmu_sbi.c              |  2 +-
+>  drivers/perf/thunderx2_pmu.c              | 17 +-------------
+>  drivers/perf/xgene_pmu.c                  | 16 +-------------
+>  include/linux/perf_event.h                |  6 ++++-
+>  kernel/events/core.c                      |  7 +++++-
+>  47 files changed, 67 insertions(+), 456 deletions(-)
+> 
