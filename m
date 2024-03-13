@@ -1,265 +1,163 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B980134BE;
-	Wed, 13 Mar 2024 03:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030E711193;
+	Wed, 13 Mar 2024 03:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710302254; cv=none; b=Skq+RLWKbn9JD34ESVvsL9BRcnc/Vg6Any/bZBSDfLUQhySTXpQ/LdNzunhcxxZ+M14RRLR8RMaX9m2z4WoaGwGuGZiTZNxkS48dWDobiYKzCXpjDo9sIKV4Xlybip9QVPaY2C2KyOAn1MPvEV61HtfWK9OAZDATTs94C93aCsQ=
+	t=1710302269; cv=none; b=DH4QVK2mh+f60C+Z+L6b2a6JKByRNR2ZXhWV6JQqkWMstd+dm5NbZEa789pB2qyR2gCef3TRFPEDoscOX4Q0BrkOdp2kt9sdC4rMuuTRxMd1JHdSEmKptA4JlafzY+XN8S9E2AOpM0ZBE3yh0YwcI+ZpZLXhz8Epx2gJmJaOByg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710302254; c=relaxed/simple;
-	bh=wvsDcCz4V8ckm6Y5cmx24jz4vCItdVXP3OrMJQUAD+A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KYjDiMNCQPoyYBK/Ud6TTX9mnhJjexEY8vw9LXLFccW8wZ5Tn7Ah4AsLGBav73YFEWAc4fC2nlR0P51ug9gBelru3lITlEgaF3/HEhiyVSpZ34fT7DDZCDKIYw13obyfPRsf8TLSMcihncr6XIoXg4wq0p7kdKIRnK9PPbL3YnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZ0jq3ZY; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZ0jq3ZY"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-60a057b6601so42645377b3.2;
-        Tue, 12 Mar 2024 20:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710302252; x=1710907052; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bBNT1NwAXcdBlViFBBFgJVd26xGIToLjTiUG+Kqd4r4=;
-        b=MZ0jq3ZYaB7fx49bQ242mG353zU8JKh8VsbzorwkhKwuyoLKaEK14dtPhVD4nTEbSS
-         XoP1c5bvetXqN1m1/X5sEzn5HJ/8Gm1aRUFbJtUVuXpxAEfywM8aCEXe1fxElOHVlvES
-         /RUR8u+qeagEHXLo/+DhN+80tvKazfEQSfwjwp+gDd8WfcBOWZdv6Jmoqg2IX/eosJGL
-         8noTDiTrVHoc99xffvt2JgAtwbLxrmvhvuueHIqZHn2latx27OGPIQ+UGIldqmXgtFUI
-         /qsE+gEz/N2Tmijf+dxGAGcg+VpaemJQhoI6s61l5uFFvWMzzthjCZ4nk9r9tXiKfxIT
-         iYhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710302252; x=1710907052;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bBNT1NwAXcdBlViFBBFgJVd26xGIToLjTiUG+Kqd4r4=;
-        b=U7QnpNlqnZd++9947pceOpmCxHdaOM8KxZ7n9duM4Imu8z1Nx6MKoURM6DcpaTEvRV
-         MeaxYSW5PZ27ZZlnOKSjMhXBxPx2OyQ9PMlRMC5VRtkJgzPBmPAP/lXCp7BEu5ZYYvbb
-         Sf7bKi/ydWsasuVkVRHOmW51AlErNoMjGg2+QA+NmFzZUgIPy+6c/FEtXpCzTTFPsuaR
-         4CasvCktFwLBISH9Ds5etbPe7ACSl/FztqeI20CNJ8l+exqzBWnstLHjTI7IY6CSoKuS
-         ewA/98INSKOurVHOqocfuvi4LKJDSVoAPuzkdzODSrSUbnL5WYeAiAtpzztvbCANk5CH
-         V5+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXT4Bv/nl4oGHvktZ5cPArsxtpfCvXnQneD7fP3k/ovL81NIsM+23qGn63Qm/pnZHpUxuPO5HKAyL9OHBSJ3fZtMaKZLRabpngUPv3PJKycYdL2YWerpok0IZ3pLaH174PNulehUlTENXTWT1e2A9xWxad0QhwF42acHXJiSSMlOLEtR44=
-X-Gm-Message-State: AOJu0YwTQqhkr4V5xk0z8k5w9zl2IFytfoWE7Ef74gNIjWrLNamir8qG
-	7UQufM+CQZ5JsRZ9gC4Sxok/sNUnUlHSqoeX0IiMwi3JG3NadPlkzYl1VaEX
-X-Google-Smtp-Source: AGHT+IFeSx4vDBoy4d72XKzA4vxVgu7Fn7DUZSxchndF8QDvZkz7d+Ipebl1Cgwc8UXZs54swBsYXA==
-X-Received: by 2002:a81:770a:0:b0:60a:1b1:5f61 with SMTP id s10-20020a81770a000000b0060a01b15f61mr1465017ywc.35.1710302251945;
-        Tue, 12 Mar 2024 20:57:31 -0700 (PDT)
-Received: from a28aa0606c51.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id o17-20020a63fb11000000b005cd835182c5sm6721605pgh.79.2024.03.12.20.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 20:57:31 -0700 (PDT)
-From: Jacky Huang <ychuang570808@gmail.com>
-To: linus.walleij@linaro.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ychuang3@nuvoton.com,
-	schung@nuvoton.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 2/3] dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
-Date: Wed, 13 Mar 2024 03:57:18 +0000
-Message-Id: <20240313035719.768469-3-ychuang570808@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240313035719.768469-1-ychuang570808@gmail.com>
-References: <20240313035719.768469-1-ychuang570808@gmail.com>
+	s=arc-20240116; t=1710302269; c=relaxed/simple;
+	bh=xn9BaF+vY4E9A1GdYxDTCZbaTQ/pZd2l44gxSKuHeGE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=eAIbWN2VZ7HgmKvyZ+uoXO6uMtVTmeU+it+KgUo79ZWv023Er8bAukkOlwbosLYsPoVIbW1lqDhRXWfH4DYgIWNp8rXx6eZD3/ZgPIXlk1Vd5ej8GRV+V0mKij0PgYT5yc8SIqfrcCNcOUnTeJKyLN/mnQZAl7DcJbckt2tbXDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TvcB70xxZz1xqfx;
+	Wed, 13 Mar 2024 11:55:59 +0800 (CST)
+Received: from canpemm500008.china.huawei.com (unknown [7.192.105.151])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2010B1400FD;
+	Wed, 13 Mar 2024 11:57:44 +0800 (CST)
+Received: from [10.67.111.115] (10.67.111.115) by
+ canpemm500008.china.huawei.com (7.192.105.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 13 Mar 2024 11:57:43 +0800
+Message-ID: <8bfcacb1-b97a-8c54-7e41-f66df8ac32fd@huawei.com>
+Date: Wed, 13 Mar 2024 11:57:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+From: Yipeng Zou <zouyipeng@huawei.com>
+Subject: Re: [PATCH V3] cpufreq: Fix per-policy boost behavior on SoCs using
+ cpufreq_boost_set_sw
+To: Sibi Sankar <quic_sibis@quicinc.com>, <dietmar.eggemann@arm.com>,
+	<rafael@kernel.org>, <viresh.kumar@linaro.org>, <xuwei5@hisilicon.com>,
+	<zhanjie9@hisilicon.com>
+CC: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<quic_rgottimu@quicinc.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-pm@vger.kernel.org>, <d-gole@ti.com>
+References: <20240312103723.3469762-1-quic_sibis@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <20240312103723.3469762-1-quic_sibis@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500008.china.huawei.com (7.192.105.151)
 
-From: Jacky Huang <ychuang3@nuvoton.com>
+Hi,
 
-Add documentation to describe nuvoton ma35d1 pin control and GPIO.
+Oh, I just catch this issue too recently.
 
-Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+Also test this patch on my board and it's works fine to me.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-new file mode 100644
-index 000000000000..8b9ec263213f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-@@ -0,0 +1,163 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/nuvoton,ma35d1-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Nuvoton MA35D1 pin control and GPIO
-+
-+maintainers:
-+  - Shan-Chun Hung <schung@nuvoton.com>
-+  - Jacky Huang <ychuang3@nuvoton.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nuvoton,ma35d1-pinctrl
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  nuvoton,sys:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle of the system-management node.
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^gpio@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      gpio-controller: true
-+
-+      '#gpio-cells':
-+        const: 2
-+
-+      reg:
-+        maxItems: 1
-+
-+      clocks:
-+        maxItems: 1
-+
-+      interrupt-controller: true
-+
-+      '#interrupt-cells':
-+        const: 2
-+
-+      interrupts:
-+        description:
-+          The interrupt outputs to sysirq.
-+        maxItems: 1
-+
-+    required:
-+      - gpio-controller
-+      - '#gpio-cells'
-+      - reg
-+      - clocks
-+      - interrupt-controller
-+      - '#interrupt-cells'
-+      - interrupts
-+
-+  "^pin-[a-z0-9]+$":
-+    type: object
-+    description:
-+      A pinctrl node should contain at least one subnodes representing the
-+      pinctrl groups available on the machine. Each subnode will list the
-+      pins it needs, and how they should be configured, with regard to muxer
-+      configuration, pullups, drive strength, input enable/disable and input
-+      schmitt.
-+
-+    $ref: pincfg-node.yaml#
-+
-+    properties:
-+      power-source:
-+        description: |
-+          Valid arguments are described as below:
-+          0: power supply of 1.8V
-+          1: power supply of 3.3V
-+        enum: [0, 1]
-+
-+      drive-strength-microamp:
-+        oneOf:
-+          - enum: [ 2900, 4400, 5800, 7300, 8600, 10100, 11500, 13000 ]
-+            description: 1.8V I/O driving strength
-+          - enum: [ 17100, 25600, 34100, 42800, 48000, 56000, 77000, 82000 ]
-+            description: 3.3V I/O driving strength
-+
-+    unevaluatedProperties: false
-+
-+  "-grp$":
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    properties:
-+      nuvoton,pins:
-+        description:
-+          Each entry consists of 4 parameters and represents the mux and config
-+          setting for one pin.
-+        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+        minItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              maximum: 13
-+              description:
-+                Pin bank.
-+            - minimum: 0
-+              maximum: 15
-+              description:
-+                Pin bank index.
-+            - minimum: 0
-+              maximum: 15
-+              description:
-+                Mux 0 means GPIO and mux 1 to 15 means the specific device function.
-+
-+required:
-+  - compatible
-+  - nuvoton,sys
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
-+
-+    pinctrl@40040000 {
-+        compatible = "nuvoton,ma35d1-pinctrl";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        nuvoton,sys = <&sys>;
-+        ranges = <0 0x40040000 0xc00>;
-+
-+        gpio@0 {
-+            reg = <0x0 0x40>;
-+            interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&clk GPA_GATE>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+        };
-+
-+        uart-grp {
-+            uart11-pins {
-+                nuvoton,pins = <11 0 2>,
-+                               <11 1 2>,
-+                               <11 2 2>,
-+                               <11 3 2>;
-+                bias-disable;
-+                power-source = <1>;
-+            };
-+        };
-+    };
+Tested-by:Yipeng Zou <zouyipeng@huawei.com> <mailto:zouyipeng@huawei.com>
+
+Reviewed-by: Yipeng Zou <zouyipeng@huawei.com> <mailto:zouyipeng@huawei.com>
+
+在 2024/3/12 18:37, Sibi Sankar 写道:
+> In the existing code, per-policy flags doesn't have any impact i.e.
+> if cpufreq_driver boost is enabled and one or more of the per-policy
+> boost is disabled, the cpufreq driver will behave as if boost is
+> enabled. Fix this by incorporating per-policy boost flag in the policy->max
+> calculus used in cpufreq_frequency_table_cpuinfo and setting the default
+> per-policy boost to mirror the cpufreq_driver boost flag.
+>
+> Fixes: 218a06a79d9a ("cpufreq: Support per-policy performance boost")
+> Reported-by: Dietmar Eggemann<dietmar.eggemann@arm.com>
+> Reviewed-by: Viresh Kumar<viresh.kumar@linaro.org>
+> Reviewed-by: Dhruva Gole<d-gole@ti.com>
+> Signed-off-by: Sibi Sankar<quic_sibis@quicinc.com>
+> ---
+>
+> v3:
+> * Pickup Rbs.
+> * Simplify per-policy boost setting. [Viresh]
+>
+> v2:
+> * Enable per-policy boost flag in the core instead. [Viresh]
+> * Add more details regarding the bug. [Viresh]
+> * Drop cover-letter and patch 2.
+>
+> Logs reported-by Dietmar Eggemann:
+> https://lore.kernel.org/lkml/265e5f2c-9b45-420f-89b1-44369aeb8418@arm.com/
+>
+>   drivers/cpufreq/cpufreq.c    | 18 ++++++++++++------
+>   drivers/cpufreq/freq_table.c |  2 +-
+>   2 files changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index f6f8d7f450e7..66e10a19d76a 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -653,14 +653,16 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+>   	if (policy->boost_enabled == enable)
+>   		return count;
+>   
+> +	policy->boost_enabled = enable;
+> +
+>   	cpus_read_lock();
+>   	ret = cpufreq_driver->set_boost(policy, enable);
+>   	cpus_read_unlock();
+>   
+> -	if (ret)
+> +	if (ret) {
+> +		policy->boost_enabled = !policy->boost_enabled;
+>   		return ret;
+> -
+> -	policy->boost_enabled = enable;
+> +	}
+>   
+>   	return count;
+>   }
+> @@ -1428,6 +1430,9 @@ static int cpufreq_online(unsigned int cpu)
+>   			goto out_free_policy;
+>   		}
+>   
+> +		/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
+> +		policy->boost_enabled = cpufreq_boost_enabled() && policy_has_boost_freq(policy);
+> +
+>   		/*
+>   		 * The initialization has succeeded and the policy is online.
+>   		 * If there is a problem with its frequency table, take it
+> @@ -2769,11 +2774,12 @@ int cpufreq_boost_trigger_state(int state)
+>   
+>   	cpus_read_lock();
+>   	for_each_active_policy(policy) {
+> +		policy->boost_enabled = state;
+>   		ret = cpufreq_driver->set_boost(policy, state);
+> -		if (ret)
+> +		if (ret) {
+> +			policy->boost_enabled = !policy->boost_enabled;
+>   			goto err_reset_state;
+> -
+> -		policy->boost_enabled = state;
+> +		}
+>   	}
+>   	cpus_read_unlock();
+>   
+> diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
+> index c4d4643b6ca6..c17dc51a5a02 100644
+> --- a/drivers/cpufreq/freq_table.c
+> +++ b/drivers/cpufreq/freq_table.c
+> @@ -40,7 +40,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
+>   	cpufreq_for_each_valid_entry(pos, table) {
+>   		freq = pos->frequency;
+>   
+> -		if (!cpufreq_boost_enabled()
+> +		if ((!cpufreq_boost_enabled() || !policy->boost_enabled)
+>   		    && (pos->flags & CPUFREQ_BOOST_FREQ))
+>   			continue;
+>   
+
 -- 
-2.34.1
+Regards,
+Yipeng Zou
 
