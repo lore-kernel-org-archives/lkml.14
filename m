@@ -1,57 +1,57 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE633537F1
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F4254F8D
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338949; cv=none; b=HlksgNceUpUZPdE+jy5FN/Gj/1Wod0rCFZlpP8Ds7EqxzEfr2OFNTmE0MkEmArEbzphVjos9oDHs1c01+Z9fg3wpzcnV4L5Lu2nhBWQ4ljkb6JYhlGX3zU0JsC+iJPYpj+7ECfqjmHH/8VJlY6942TyQRPl7qn29ntHeT2e8+MY=
+	t=1710338952; cv=none; b=q0TG9Ow1lGVV4zbH7POph7cPm1laYBeJOZp0EmFstrO6Q5ByPdhi7ftZvyTYWUE755UbtQwVOd6AQ1z03Rjirw+ioHhwl0IqTL5CUCGKzLQOPb7+vlAUfbKwaQvgFHWwEdoJeMLnZk4bYBgRb4d26HYS0Ckukfv3KnS5r98KGj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338949; c=relaxed/simple;
-	bh=VqvyhpLImrEEWUqrm8LqdGsOX7rFQEk5APKWIx4SW5A=;
+	s=arc-20240116; t=1710338952; c=relaxed/simple;
+	bh=kVdZlNo+N/KnAT/Z2kOTskJN7eca2zSo5mLfoyTSMUY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jVQMYBScP8c4g/gVk6ZN0pZ+oXLtFCl6dh/01fgzILrGBWduQSNseT+dw0re9f7XyjNLw/1RPUqU4t1tzIQxNPkt9tNytIC3VijGNlYEwxmVFI3LTF4PffLOngQ+zuCdyRxaGo88LRrakbv/H8MFFtXgNWXPFnAK9IjIDHZCRfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dqcKrQG6; arc=none smtp.client-ip=209.85.218.43
+	 MIME-Version; b=fpjUd8GYpnrpyPwaYj7Ko6/gHdGmJZhrVbr25xCOznusESek8IejOi5YP0iA2YOhYzo93w/vGmsSP4L0tAdeMf/1OUhhNPUEbpo32IbIiWIyrGVtlqFJ8mD6v8RFPKdPo/U5JWIVmNYrwY9JdW/C3xXVTh+rcfN4iuKn/BIJFAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V30hA1Qa; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dqcKrQG6"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a44d084bfe1so646011066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:09:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V30hA1Qa"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-568307fe62eso7246721a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1710338945; x=1710943745; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1710338948; x=1710943748; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iC5hRkZE8XydpjuCjvZ54lBNe2FsAX8ONZyCD9caIGw=;
-        b=dqcKrQG6GZlDHC94DESDNEXdZQmYsLRUlYwlrISa96pHNcvKqVf6z8njAV/JZ3w0o5
-         jDRnQUGz8IepZRJ23228wV25B9jgsIx6S3Wl500SWVzNsBUa5ATtSUtsuPyzp6TIyNz6
-         EvS9U55Jd59c2gv1A7q7/y4yPwPIqIbUQygpcz2RFsZhwuQHm1sD8gPUa25zCatAN2Sh
-         fkWy1KoZvW1AboDh+reNltaEktPQPiK0SCmLK5bQZulr5HHkim/mVeSkHgazVOi/el1W
-         L0tUk8s+tQ7oWcyuMbauvGl9oB4r8SjXoBiaRWDf6leQrm38ZyPHE7FRwlJQ6AVgZmjQ
-         yYCQ==
+        bh=GZRpUUNRnIq77pI2eAogF8VwCXAgFL/1g3LqDmhWq/Q=;
+        b=V30hA1QaJl/pohCPP2spu8V8TnfLYQFGL9b5M9aaNJn6LFvmUsA9B6YAtWeBA/dpx7
+         Vgnay6FkJdGmznWb7C6LELOEq4djOfr/bORVf0z0Lxvu0kAS7Cbex0ToFx7BP9xlzq6k
+         qlA/e706OyPG50TN2g/FJltK6NmkIXaQX73OqD8brHKlAuiLXi9WJ8o6hO2YYNRZlmsu
+         wSxn5fxKAnwD/PE3LdxDv4R6qHoIaaO0niz0pt6dF4i9j/knuKyQHVj7G/zV1ypnEUgk
+         C3XfUud7yj/AAOhUJBRuXmLs/TXr8ohGaMa+eh4R7oxRIaViMGFTWwqKWiywZLvbkDuJ
+         BWLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710338945; x=1710943745;
+        d=1e100.net; s=20230601; t=1710338948; x=1710943748;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iC5hRkZE8XydpjuCjvZ54lBNe2FsAX8ONZyCD9caIGw=;
-        b=lJDDY40oOiYji/kg6a44aZ8ivccjVdYL/7+gk38vljkhgqynrZyjoxVusIM4NViOee
-         zgDbFExZFh99iz+dUT8i/9lkbXoaoWQL4F0Uy8WT+DOx41aFTj/bKf6YKKfPjo/6F7e8
-         bOEldW367Ggn9JzLFWNkNOS+tF9AMbSLHhNcX/XxCISuBNTOIt+EtmtpxAcM7j9VmML8
-         n7udvHOKDWzqjGt0VpQrL9OAov6eveG6jZulE9hiSNOC52RlIbDqob6VFR52wwv0Got+
-         Ou0YdZ6eld/1mpMfk1g2Qy3DUw1IyYqCMQmuSzBVb77RKJ75D9+iv3tQrpzDxG0sGf1H
-         7V2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUBs9UmYOuzOcAoPp3ltiwDVjDsnHzu6TXgn7Ce1V5qbQQeR1xAq8na0N2g1wpRYfeOFHzqRbMKGWxss4wZdMcTe9Prp1lv0kI+Jdha
-X-Gm-Message-State: AOJu0Yy8cNV5R8YcC+5bu3eLQQox9QyR8ksmIxGF1dg5sBidHf70HAfM
-	RAWH+87WP5UIY3AqnYVzB4/DqPSH23nr/aKLnJRnxv+78bXVaOo1uBtHBqAxAbk=
-X-Google-Smtp-Source: AGHT+IFyuIjwtvgpdhhj/173HsZkPpiyLzXxHYape6PR7U0HW2/2V4AAAxMeCUd7QbQujytsrNhvVg==
-X-Received: by 2002:a17:907:7e83:b0:a3e:792f:3955 with SMTP id qb3-20020a1709077e8300b00a3e792f3955mr3050129ejc.62.1710338945176;
-        Wed, 13 Mar 2024 07:09:05 -0700 (PDT)
+        bh=GZRpUUNRnIq77pI2eAogF8VwCXAgFL/1g3LqDmhWq/Q=;
+        b=duaVrwrFJ/JPH8iAq+sZFa4Dqtp3Py/m//kX3ooFMnHSuT+wTRkdLJjyMH+IpK6++h
+         khu4MciQZiqTQbPig6WqGReXL654jLxES29IDltv++MiR43HACVvtPo3UT3L8Iw1TmVG
+         510VrMQ/VHI42CSWZhZ0EMOEnrTdk9kEY4nRiBT0GOT402Fr6SGKTWsfs09Fn3mf0gpC
+         lHO27i0ivIYpQH6l3yoxgiZfpGvgv9/81mM91MQtnLMPn/UO4kuIKuuzNmAIIwXBmftM
+         K+xJ+pnuKI/JesRzlu+BKZGnLYU1sQLpKCwnmwv0LEbj7NtdeHX8Kmv3fnWVSSBPUpSN
+         6yPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyTN8i5/lb0+Ti2CtLMzSurj4XevbTrecS0Y/OfAjR22mckrw71fFML5S/YAY0sA8MJQMSHd9gvMaUTnWjyu/pl38Pk92BLAuEYLZd
+X-Gm-Message-State: AOJu0YxE4gcsGzIrRy/y/ADtFeXNHVBcPfZTYao1/fdGaATkf8hAfp2P
+	MEHF/OqGBvZj79XU4s7p/WnmWs3vhFDHzOio/hnVDqmOuqphlbDHBKuf830gDuc=
+X-Google-Smtp-Source: AGHT+IHXP//swNkKDNyDphpeA3YlUW8pirt81Yn5DGc/hQTDcD01ShGZgqiYGBU6e4PUzoyKglVJzQ==
+X-Received: by 2002:a17:907:1819:b0:a46:5941:8927 with SMTP id lg25-20020a170907181900b00a4659418927mr1199309ejc.68.1710338947965;
+        Wed, 13 Mar 2024 07:09:07 -0700 (PDT)
 Received: from localhost (host-82-56-173-172.retail.telecomitalia.it. [82.56.173.172])
-        by smtp.gmail.com with ESMTPSA id lg12-20020a170906f88c00b00a4432543b21sm4858324ejb.198.2024.03.13.07.09.04
+        by smtp.gmail.com with ESMTPSA id lf8-20020a170906ae4800b00a4657cad7e8sm701392ejb.127.2024.03.13.07.09.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 07:09:04 -0700 (PDT)
+        Wed, 13 Mar 2024 07:09:07 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -73,9 +73,9 @@ Cc: Phil Elwell <phil@raspberrypi.org>,
 	Stefan Wahren <stefan.wahren@i2se.com>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH v2 13/15] dt-bindings: dma: Added bcm2711-dma
-Date: Wed, 13 Mar 2024 15:08:38 +0100
-Message-ID: <346611b3ec6f47cb10e538d6cbe52056f535f965.1710226514.git.andrea.porta@suse.com>
+Subject: [PATCH v2 15/15] ARM: dts: bcm2711: add bcm2711-dma node
+Date: Wed, 13 Mar 2024 15:08:40 +0100
+Message-ID: <c1ef1ba7cd9153d607e6130277e560b139056fd9.1710226514.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1710226514.git.andrea.porta@suse.com>
 References: <cover.1710226514.git.andrea.porta@suse.com>
@@ -87,28 +87,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add BCM2711 dma engine compatible.
+BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
+to access the full 4GB of memory on a Pi 4. Adding a new node to make
+use of the DMA channels capable of 40 bit addressing.
 
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/broadcom/bcm2711.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
-index c9b9a5490826..4271a6fedf54 100644
---- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
-@@ -20,7 +20,9 @@ allOf:
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711.dtsi b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+index 22c7f1561344..d98e3cf0c569 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+@@ -552,6 +552,22 @@ scb {
+ 		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
+ 			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
  
- properties:
-   compatible:
--    const: brcm,bcm2835-dma
-+    enum:
-+      - brcm,bcm2835-dma
-+      - brcm,bcm2711-dma
- 
-   reg:
-     maxItems: 1
++		dma40: dma-controller@7e007b00 {
++			compatible = "brcm,bcm2711-dma";
++			reg = <0x0 0x7e007b00 0x400>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>, /* dma4 11 */
++				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>, /* dma4 12 */
++				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>, /* dma4 13 */
++				     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>; /* dma4 14 */
++			interrupt-names = "dma11",
++					  "dma12",
++					  "dma13",
++					  "dma14";
++			#dma-cells = <1>;
++			/* The VPU firmware uses DMA channel 11 for VCHIQ */
++			brcm,dma-channel-mask = <0x7000>;
++		};
++
+ 		pcie0: pcie@7d500000 {
+ 			compatible = "brcm,bcm2711-pcie";
+ 			reg = <0x0 0x7d500000 0x9310>;
 -- 
 2.35.3
 
