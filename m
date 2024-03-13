@@ -1,151 +1,98 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED055605D2;
-	Wed, 13 Mar 2024 18:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD2A605DE;
+	Wed, 13 Mar 2024 18:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710353624; cv=none; b=BTI0yEydDZIlv3jYFkRz9DaB+Pb1kJY8WCybRHo9R135rOUug5mlZQe4VFyTXHv6G5GvCS8BJx7j+Rby+zA6mus1O4E8XG9v49cOkzGx8w/fVYmJAnTF4uPrTiD2ggJ3sxtt7sIWw1IYObdLB4yqsRQwMCcxN6VEeSzjvQnEaxU=
+	t=1710353673; cv=none; b=NXyLQDAMbRPc1/Wy642Ute5XCIY1qGdVla4UVv1Ib4FoqSomClHlvcWrqA681+54WvvmZP/551ETtCjHVXSb/avDw+wc7ubQWEFh+QKjgaISsZZd3OD2YAEkUWt5B+ay7mIvIeFynSn7AGLdq30TFGKQj2R07FwO8zDj8j5XJHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710353624; c=relaxed/simple;
-	bh=XBZxd3/8sCA+mi0OAIV0bPCc+jlbGDc9ebO1Ccnfgsc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FkOCZMmJk5u/rdUTfCU4Ssc7IAtQVgZ1qyYVZFnZ3TR9eOwgRxNl5A25+HBmb9iy5l1wXGvfI96RQb3jFKhuriPayrKiPdy7Xoo2nQe4UmxEturFrJRO1BwvkMj/bmfsIy0SX+OUPVfpUjIKkxm2Ivy2Z5sXiZa8QseAZARipfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6c8823519so45366b3a.0;
-        Wed, 13 Mar 2024 11:13:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710353622; x=1710958422;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AhNbiGT3dBNYmyMqRR3v/dtfPCNBKZcqWH9p/BqTK+I=;
-        b=CgUE4E2mCdRsTNba2m0nytc7ejXmuUspdpOei20LUT/VNZsPZC12fH3jgQiUPSRY82
-         dvlnXCNp2xX1RXDjhpnvfiDCT4pYlX9phxsOKhKhfe53UjHrzqdperMTe8hzKp9ys4iA
-         wTAzzHrD3zhX4whypLxDw8sU4Q4sXomXhuU6/v+n8kHg9JsU/42F6W13KaiVErtJid+r
-         nxLuzps60BTC1HhfaOhnyb3Xrr/O9j/iFFb60Ao2URdTx5yPS3jFAdnoukyeFcY9wDao
-         SBBIeK0ZxbWpNLUY3w3RtdqiQdM2b3TZB+/e3scyiDm+hfNVHmT3yrCq47Fxzd8N4B+T
-         lZNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVw4ZjlQt2PGWMlPYuu+FYHI3LXcJ004S86LDNN+nqD0f2j47hTQkvnPM7D6aa1LEJ9cto7OvNybC5ov2a0wFpUoYmNFiF4SngLaLmoqsddb9bWckP+cc+/IIdWOe9zf09AGml1eiQV9w==
-X-Gm-Message-State: AOJu0YwhfnE5fsRCnKo/fcvoI9jL4c34nOuDs5Z0vJmrtFj7fHaMxTk6
-	rF/h4moOlz91kPaC5Rxf+0MGnRRpw8UNpSNt21ZEyACHN4AVS75AQJ9TpnA4pt0=
-X-Google-Smtp-Source: AGHT+IELRo71VU1XOT1Wc01eMxnOnWmDp4USZDRpckfAyyYTsbwl9N94X2uNVwLPh9u+c6vCkgVFkA==
-X-Received: by 2002:a62:d45b:0:b0:6e6:c61d:114c with SMTP id u27-20020a62d45b000000b006e6c61d114cmr597254pfl.0.1710353621740;
-        Wed, 13 Mar 2024 11:13:41 -0700 (PDT)
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com. [209.85.215.174])
-        by smtp.gmail.com with ESMTPSA id c13-20020a63350d000000b0059b2316be86sm8045119pga.46.2024.03.13.11.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Mar 2024 11:13:41 -0700 (PDT)
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so94822a12.1;
-        Wed, 13 Mar 2024 11:13:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXAZC0Mtbe+USFdxyTR1a5fxX67AoBFUT5Rz2oZyp8r09qUNEufhHAm1UVvXdpn0QS0vm+qaspXBaomIQPamPi8nEqtukQvBPcOu7pltkCX0pc/mRi43JeyUIxxilPiBV+aqlV5mgFjrw==
-X-Received: by 2002:a17:90a:9084:b0:29b:b854:db with SMTP id
- j4-20020a17090a908400b0029bb85400dbmr11208175pjo.27.1710353621055; Wed, 13
- Mar 2024 11:13:41 -0700 (PDT)
+	s=arc-20240116; t=1710353673; c=relaxed/simple;
+	bh=TNsbIG73NJ2s8kx6QAgm6sHZZACJCXrLFk+uu7waAMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QkQkQ05CVQaO99sgsrs23ZKAM8i9+/NhUnVSn5tlp/k7rawb0rrcv7nuQjaBFIb31cgfgX61cYoeMolWGjcFxclIWniXkfHf24bq4NDxJrJXLvJQVqfA8TTreBKYqGvni1PSGvK9hm+xoi+8y4g2/+dsKY3TW8pUNRwuKt5fvC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivF6CPGg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivF6CPGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6F9C433F1;
+	Wed, 13 Mar 2024 18:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710353671;
+	bh=TNsbIG73NJ2s8kx6QAgm6sHZZACJCXrLFk+uu7waAMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ivF6CPGgFPCX98z7CAELLpGZeuAFTB2HCZ+oVCegSk3BJ0eIiwidSX5m9sqRCtPzI
+	 wEnH5fsgQ75rFmoxFqJeEz3YAnpbD0DEQJgItbItHAB9ILD7qxhsn/GWMillLBsDc9
+	 ChA4i3IT4anWW7MYDYIdFhGibQ4peD34IHRct3XrQCkc4Kq6YLJVKDLcL5dNxGZkrF
+	 PZIdZW9vjIYMwnVnAtsFoh+IjsTeYrUJEzDWDmI8FLVOYeOKDb8NvacfrTxQLf2FOm
+	 yClXdfNOQotjOhPWjYDpZvxKe13oSvRicj27E12i/Sis7YrLzcfy9rYys/4AQ1ygyx
+	 ZhN3+jjiSXpGg==
+Date: Wed, 13 Mar 2024 15:14:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfHtBB5_-3RByE8p@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310010211.28653-1-andre.przywara@arm.com>
- <20240310010211.28653-3-andre.przywara@arm.com> <f203a0a3-9107-4290-a934-0f6736fe218a@sholland.org>
- <20240313173529.1f816404@donnerap.manchester.arm.com>
-In-Reply-To: <20240313173529.1f816404@donnerap.manchester.arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Thu, 14 Mar 2024 02:13:29 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65LgmYU_PZLU8KDSYhr76y=kPNboTsZ9mRkT=wBuYSdvA@mail.gmail.com>
-Message-ID: <CAGb2v65LgmYU_PZLU8KDSYhr76y=kPNboTsZ9mRkT=wBuYSdvA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: mfd: x-powers,axp152: document AXP717
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfHE9Ev5T3Lq7o34@x1>
 
-On Thu, Mar 14, 2024 at 1:35=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> On Mon, 11 Mar 2024 17:20:50 -0500
-> Samuel Holland <samuel@sholland.org> wrote:
->
-> Hi Samuel,
->
-> thanks for having a look!
->
-> > On 3/9/24 19:02, Andre Przywara wrote:
-> > > The X-Powers AXP717 is a PMIC used on some newer Allwinner devices.
-> > > Among quite some regulators it features the usual ADC/IRQ/power key
-> > > parts, plus a battery charger circuit, and some newly introduced USB
-> > > type-C circuitry.
-> >
-> > Do you plan to put the Type-C logic under a subnode, or should the
-> > Type-C connector node go directly under the PMIC node? Either way, the
-> > binding probably needs to be updated for that.
->
-> I haven't looked into this yet, so cannot say which way to go. I
-> definitely consider this some non-trivial task, so indeed wanted to push
-> this off to later.
-> For now there is a device (Anbernic RG35XX) with that PMIC, so we need at
-> least the regulators to unblock this. USB support is not critical for now=
-.
->
-> > > Like two other recent PMICs, it lacks the DC/DC converter PWM frequen=
-cy
-> > > control register, that rate is fixed here as well.
-> > >
-> > > Add the new compatible string, and add that to the list of PMICs with=
-out
-> > > the PWM frequency property.
-> > >
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/x-powers,axp152.ya=
-ml b/Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml
-> > > index 06f1779835a1e..b8e8db0d58e9c 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml
-> > > +++ b/Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml
-> > > @@ -83,6 +83,7 @@ allOf:
-> > >              enum:
-> > >                - x-powers,axp313a
-> > >                - x-powers,axp15060
-> > > +              - x-powers,axp717
-> > >
-> > >      then:
-> > >        properties:
-> > > @@ -99,6 +100,7 @@ properties:
-> > >            - x-powers,axp221
-> > >            - x-powers,axp223
-> > >            - x-powers,axp313a
-> > > +          - x-powers,axp717
-> > >            - x-powers,axp803
-> > >            - x-powers,axp806
-> > >            - x-powers,axp809
-> >
-> > The regulators patternProperties needs to be updated for the new boost
-> > regulator.
->
-> Ah, I indeed missed this one. I think the former PMICs had this
-> batter->VBUS boost regulator hidden, controlled entirely by the PMIC?
-> I will need to check if exposing this will present any surprises. I
-> guess this goes together with the USB-C support, to have role switching,
-> unless this appears on some device with just USB-A or micro-B.
-> I will check what it takes to add this one, the regulator itself looks
-> easy.
+On Wed, Mar 13, 2024 at 12:23:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Mar 13, 2024 at 03:35:27PM +0100, Marco Elver wrote:
+> > On Tue, 12 Mar 2024 at 19:08, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> > > Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+> > > the signal gets delayed until event_sched_out() which then uses
+> > > task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+> > > signal is delivered with disabled preemption.
+ 
+> > > While looking at this, I also stumbled upon __perf_pending_irq() which
+> > > requires disabled interrupts but this is not the case on PREEMPT_RT.
+ 
+> > > This series aim to address both issues while not introducing a new issue
+> > > at the same time ;)
+> > > Any testing is appreciated.
+ 
+> > > v1…v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigeasy@linutronix.de/
+> > >     - Marco pointed me to the testsuite that showed two problems:
+> > >       - Delayed task_work from NMI / missing events.
+> > >         Fixed by triggering dummy irq_work to enforce an interrupt for
+> > >         the exit-to-userland path which checks task_work
+> > >       - Increased ref-count on clean up/ during exec.
+> > >         Mostly addressed by the former change. There is still a window
+> > >         if the NMI occurs during execve(). This is addressed by removing
+> > >         the task_work before free_event().
+> > >       The testsuite (remove_on_exec) fails sometimes if the event/
+> > >       SIGTRAP is sent before the sighandler is installed.
+>  
+> > Tested-by: Marco Elver <elver@google.com>
+>  
+> > It does pass the tests in tools/testing/selftests/perf_events (non-RT
+> > kernel, lockdep enabled). But I do recall this being a particularly
+> > sharp corner of perf, so any additional testing and review here is
+> > useful.
 
-I don't think there was such a boost regulator on previous PMICs. It was
-just a passthrough, which is why on some boards such as the Cubietruck
-there is an external boost converter to put out 5V when just the battery
-is used.
+> Right, I'm testing with the full 'perf test' suite now.
 
-ChenYu
+'perf test' doesn't show any regression, now I'm running Vince Weaver's
+https://github.com/deater/perf_event_tests, storing the results with
+this patchset and then without, to do a diff, lets see...
+
+- Arnaldo
