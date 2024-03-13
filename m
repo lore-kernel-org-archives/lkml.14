@@ -1,171 +1,193 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476F63E49D
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5BF43AAF;
+	Wed, 13 Mar 2024 13:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710337469; cv=none; b=tLrFCmOIWhgJKIBmL5jaEmQj8soPLjPj9Aq+zme3mZRseqXI+vQHdSUszTlgTC0evG2jWLBSWxQHWNxR7CK9J8h3pZ2CkybyTxyp6bI3Mw/Nrj2bQLQgShw/wvFS93MYwNs75vo0d8NpAdTmfyaK72KNfLQC06xzSk3iD+B8B+4=
+	t=1710337502; cv=none; b=umCUVeldyYnvCwq3S6IMlbKMx+UBUbXslDXcsWiOMQo4rlWiA0TiY4IcpHrQfiNMkguXRNrLFo2DxGdMrPxp0kjQojVxFmNcJlgMLt3z/JhY5rHfZFT5zZeQcLE2NX4Pr6XWqDhxLB8qPcL4gZQQLbZbvI9yRFDFOxGwvmjQ6so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710337469; c=relaxed/simple;
-	bh=M2mFO+F0SITtuTaOxQT6J0gOG1XCkSqAKDgbIeQQ7J0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YOn1VlY1TyVgeYL7aDCwJywEYhDGljfGBt6Joy3+q4QsCVgivtSZJXHrok5YpWaTL//+VsqR6iFXEvU2RdhFbdoWGnsfS0n12XZU6A+sTvFSokvThNPEXh7KD0YCF7TDY3kaK/eXxeHTXtNnNadYGSVOVEHjzrdGQEKxoqaJa10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=KFsa4rZ9; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1710337502; c=relaxed/simple;
+	bh=VrDvKziGbkVXCGwa6UA7DRHxzR12jtWLeeoDQJ0I6oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3sA9O6eTh9WQqHNANi/VZUegbBXx0GgqR78P04ufMG4Z2sb2/TC0wYq72c0azVQQdRthqE+7gQuek/lbfvJzNpz7IK3vAIEzePecKdrRekyE1FqdN+WTKJa9fmyIVeghzPxSskfAMgNqttEt+1PepAnzw96jNJ+skz5c2/dWlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5cBLAAh+; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="KFsa4rZ9"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42efa84f7b5so6397081cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710337467; x=1710942267; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1unsI42A9OoozSRZhehZbbrOVDAXegi3ZIYJY1GY/YI=;
-        b=KFsa4rZ9fEhDiwR66/cbzWnOV+c3GQRwUyBBZw5AxJyBZpBjJV3aSVCZGYYpY7Nu9D
-         JhDA4MghvyPr9CfD5cBhoLeajWCAIXZfn4Zjkq5IPd1ba9ztJFPLN8I7LFZPURzvq2so
-         8YcBwoi7NKDHYQJvKD5AJLaEg5vRH812diR5yduI388L53o0/DTVgPDD4KIZQcxKk1dd
-         R33zRsvpQjLJ3+5n6i0+YLK5ukuqm0lbI1n9kKQw+bQX2gaf+zsdp5q3lpFc0EgUp9rJ
-         Z0AwGXKoqd12xi7uMbZpYNzPM4F6wyK1hqFvzajlHYTVHA3VLixMt/JYhGLSm9CaIikq
-         zSKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710337467; x=1710942267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1unsI42A9OoozSRZhehZbbrOVDAXegi3ZIYJY1GY/YI=;
-        b=Qn3exPsRdohgVQYYDmTf4SbX3UjG9ZrfwN+nsiGBgFGMQFir093t5V3oEQotjzkDEq
-         KR/SjYae7i6fBoiZN3r3nAylkGlKoQbw0KUGVGgNEQvQV83r1oUPl5aDV11gn6TLyvZg
-         qFWn1E19QcEvkmnUDDeDsLyRuawh2Qb87a/Cfs1Xvsdlv+cqpgf1EigovYUmzvrFZI/t
-         UXtqWP2RSYb8jYO2nZdx+N0MvAN5e3CeDBnsv2ju4PW31kebHibVGQqd9ceWDQb60jnQ
-         aYOkfbJ8vcA9IwWHjRya7Ay2GfuPQwwEJHaheVhHKvSYr9hm/3jcZ1i/45cgoQwbs/In
-         1WYQ==
-X-Gm-Message-State: AOJu0YzViCKjeNwaFXBeQb/BdwyS38kFZv1BTIhRX4gut3v0W+fqVI9l
-	GJ9iM9hMeOCPILzYb/isY+FsusiQ9r4T46CFZLqqy09WVizlW5sqSWWVLgyGfRw4DlEGs27DLfD
-	unSy7D+LuqTfew55+gbgO1vow+RP3MVQUy5DnYA==
-X-Google-Smtp-Source: AGHT+IE+LvF+pG53KH+24dZ0NQseSIenM5+QuAbESRPftegLLVAhNTGpcBbK43Nn7zGumkmtmUYhNMgvVTy85/c3XU4=
-X-Received: by 2002:a05:622a:1a26:b0:42e:f6c2:e68b with SMTP id
- f38-20020a05622a1a2600b0042ef6c2e68bmr4264866qtb.14.1710337467079; Wed, 13
- Mar 2024 06:44:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5cBLAAh+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710337499;
+	bh=VrDvKziGbkVXCGwa6UA7DRHxzR12jtWLeeoDQJ0I6oU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=5cBLAAh+64ylKAHP3XHFb/VKg/Zh4uf60TrrLXqZV5TlC5dllbM8od/kttPsUfbqq
+	 8KvlfcpV7A/SH87WxVPAcTTIx3hPPyOcoVX1Gf2TuLy1UTIS9eivi02CiPGt879mes
+	 UKmX0yycdsewfAONQaXmh/Irozzd9DW5pP3b+5Gvlf7tlKklEN1c3WiXuGiU98j/W+
+	 IyCQzu/si+fJVID394W9B31B89pEdVilSx61uu0UBOwZTH2A0A63tbx81GttYkAjdl
+	 JHIQmFebWnzwCdx240rSiQqnaHYk9AoNXyiAeIqlficSEII5RK/qDqlY/qT7zwEKHd
+	 FPN6DFLqrjAkw==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sebastianfricke)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A0BF33782079;
+	Wed, 13 Mar 2024 13:44:58 +0000 (UTC)
+Date: Wed, 13 Mar 2024 14:44:56 +0100
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: Yunfei Dong <yunfei.dong@mediatek.com>
+Cc: =?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Nathan Hebert <nhebert@chromium.org>,
+	Irui Wang <irui.wang@mediatek.com>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v3,2/2] media: mediatek: vcodec: adding lock to protect
+ encoder context list
+Message-ID: <20240313134456.7dov7dztcwsxr74d@basti-XPS-13-9310>
+References: <20240222092609.31382-1-yunfei.dong@mediatek.com>
+ <20240222092609.31382-3-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-12-pasha.tatashin@soleen.com> <87v85qo2fj.ffs@tglx>
-In-Reply-To: <87v85qo2fj.ffs@tglx>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 13 Mar 2024 09:43:50 -0400
-Message-ID: <CA+CK2bBgeK=rW3=RJSx8zxST8xnJ-VXSSYmKPVK9gHX3pxEWuQ@mail.gmail.com>
-Subject: Re: [RFC 11/14] x86: add support for Dynamic Kernel Stacks
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, hpa@zytor.com, 
-	jacob.jun.pan@linux.intel.com, jgg@ziepe.ca, jpoimboe@kernel.org, 
-	jroedel@suse.de, juri.lelli@redhat.com, kent.overstreet@linux.dev, 
-	kinseyho@google.com, kirill.shutemov@linux.intel.com, lstoakes@gmail.com, 
-	luto@kernel.org, mgorman@suse.de, mic@digikod.net, 
-	michael.christie@oracle.com, mingo@redhat.com, mjguzik@gmail.com, 
-	mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, pmladek@suse.com, 
-	rick.p.edgecombe@intel.com, rostedt@goodmis.org, surenb@google.com, 
-	urezki@gmail.com, vincent.guittot@linaro.org, vschneid@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240222092609.31382-3-yunfei.dong@mediatek.com>
 
-On Wed, Mar 13, 2024 at 6:23=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
+Hey Yunfei,
+
+On 22.02.2024 17:26, Yunfei Dong wrote:
+>The ctx_list will be deleted when scp getting unexpected behavior, then the
+>ctx_list->next will be NULL, the kernel driver maybe access NULL pointer in
+>function vpu_enc_ipi_handler when going through each context, then reboot.
 >
-> On Mon, Mar 11 2024 at 16:46, Pasha Tatashin wrote:
-> > @@ -413,6 +413,9 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
-> >       }
-> >  #endif
-> >
-> > +     if (dynamic_stack_fault(current, address))
-> > +             return;
-> > +
-> >       irqentry_nmi_enter(regs);
-> >       instrumentation_begin();
-> >       notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV)=
-;
-> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> > index d6375b3c633b..651c558b10eb 100644
-> > --- a/arch/x86/mm/fault.c
-> > +++ b/arch/x86/mm/fault.c
-> > @@ -1198,6 +1198,9 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned=
- long hw_error_code,
-> >       if (is_f00f_bug(regs, hw_error_code, address))
-> >               return;
-> >
-> > +     if (dynamic_stack_fault(current, address))
-> > +             return;
+>Need to add lock to protect the ctx_list to make sure the ctx_list->next isn't
+>NULL pointer.
+
+Can we reword this slightly to make it grammatically correct?
+
+My suggestion:
+```
+Add a lock for the ctx_list, to avoid accessing a NULL pointer within
+the `vpu_enc_ipi_handler` function, when the ctx_list has been deleted
+due to an unexpected behavior on the SCP IP block.
+```
+
+Greetings,
+Sebastian
+
 >
-> T1 schedules out with stack used close to the fault boundary.
+>Fixes: 1972e32431ed ("media: mediatek: vcodec: Fix possible invalid memory access for encoder")
+>Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+>---
+> .../platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c      | 4 ++--
+> .../platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c    | 5 +++++
+> .../platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h    | 2 ++
+> drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c | 2 ++
+> 4 files changed, 11 insertions(+), 2 deletions(-)
 >
->    switch_to(T2)
+>diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+>index 9a11a2c248045..8d578b6902148 100644
+>--- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+>+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+>@@ -73,12 +73,12 @@ static void mtk_vcodec_vpu_reset_enc_handler(void *priv)
 >
-> Now T1 schedules back in
+> 	dev_err(&dev->plat_dev->dev, "Watchdog timeout!!");
 >
->    switch_to(T1)
->      __switch_to_asm()
->         ...
->         switch_stacks()         <- SP on T1 stack
-> !        ...
-> !       jmp __switch_to()
-> !    __switch_to()
-> !       ...
-> !       raw_cpu_write(pcpu_hot.current_task, next_p);
+>-	mutex_lock(&dev->dev_mutex);
+>+	mutex_lock(&dev->dev_ctx_lock);
+> 	list_for_each_entry(ctx, &dev->ctx_list, list) {
+> 		ctx->state = MTK_STATE_ABORT;
+> 		mtk_v4l2_vdec_dbg(0, ctx, "[%d] Change to state MTK_STATE_ABORT", ctx->id);
+> 	}
+>-	mutex_unlock(&dev->dev_mutex);
+>+	mutex_unlock(&dev->dev_ctx_lock);
+> }
 >
-> After switching SP to T1's stack and up to the point where
-> pcpu_hot.current_task (aka current) is updated to T1 a stack fault will
-> invoke dynamic_stack_fault(T2, address) which will return false here:
+> static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
+>diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
+>index 5db2bf3db4c54..29524cd59ce8b 100644
+>--- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
+>+++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
+>@@ -177,7 +177,9 @@ static int fops_vcodec_open(struct file *file)
+> 	mtk_v4l2_venc_dbg(2, ctx, "Create instance [%d]@%p m2m_ctx=%p ",
+> 			  ctx->id, ctx, ctx->m2m_ctx);
 >
->         /* check if address is inside the kernel stack area */
->         stack =3D (unsigned long)tsk->stack;
->         if (address < stack || address >=3D stack + THREAD_SIZE)
->                 return false;
+>+	mutex_lock(&dev->dev_ctx_lock);
+> 	list_add(&ctx->list, &dev->ctx_list);
+>+	mutex_unlock(&dev->dev_ctx_lock);
 >
-> because T2's stack does obviously not cover the faulting address on T1's
-> stack. As a consequence double fault will panic the machine.
-
-Hi Thomas,
-
-Thank you, you are absolutely right, we can't trust "current" in the
-fault handler.
-
-We can change dynamic_stack_fault() to only accept fault_address as an
-argument, and let it determine the right task_struct pointer
-internally.
-
-Let's modify dynamic_stack_fault() to accept only the fault_address.
-It can then determine the correct task_struct pointer internally.
-
-Here's a potential solution that is fast, avoids locking, and ensures atomi=
-city:
-
-1. Kernel Stack VA Space
-Dedicate a virtual address range ([KSTACK_START_VA - KSTACK_END_VA])
-exclusively for kernel stacks. This simplifies validation of faulting
-addresses to be part of a stack.
-
-2. Finding the faulty task
-- Use ALIGN(fault_address, THREAD_SIZE) to calculate the end of the
-topmost stack page (since stack addresses are aligned to THREAD_SIZE).
-- Store the task_struct pointer as the last word on this topmost page,
-that is always present as it is a pre-allcated stack page.
-
-3. Stack Padding
-Increase padding to 8 bytes on x86_64 (TOP_OF_KERNEL_STACK_PADDING 8)
-to accommodate the task_struct pointer.
-
-Another issue that this race brings is that 3-pages per-cpu might not
-be enough, we might need up-to 6 pages: 3 to cover going-away task,
-and 3 to cover the new task.
-
-Pasha
+> 	mutex_unlock(&dev->dev_mutex);
+> 	mtk_v4l2_venc_dbg(0, ctx, "%s encoder [%d]", dev_name(&dev->plat_dev->dev),
+>@@ -212,7 +214,9 @@ static int fops_vcodec_release(struct file *file)
+> 	v4l2_fh_exit(&ctx->fh);
+> 	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
+>
+>+	mutex_lock(&dev->dev_ctx_lock);
+> 	list_del_init(&ctx->list);
+>+	mutex_unlock(&dev->dev_ctx_lock);
+> 	kfree(ctx);
+> 	mutex_unlock(&dev->dev_mutex);
+> 	return 0;
+>@@ -294,6 +298,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+>
+> 	mutex_init(&dev->enc_mutex);
+> 	mutex_init(&dev->dev_mutex);
+>+	mutex_init(&dev->dev_ctx_lock);
+> 	spin_lock_init(&dev->irqlock);
+>
+> 	snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name), "%s",
+>diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
+>index a042f607ed8d1..0bd85d0fb379a 100644
+>--- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
+>+++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
+>@@ -178,6 +178,7 @@ struct mtk_vcodec_enc_ctx {
+>  *
+>  * @enc_mutex: encoder hardware lock.
+>  * @dev_mutex: video_device lock
+>+ * @dev_ctx_lock: the lock of context list
+>  * @encode_workqueue: encode work queue
+>  *
+>  * @enc_irq: h264 encoder irq resource
+>@@ -205,6 +206,7 @@ struct mtk_vcodec_enc_dev {
+> 	/* encoder hardware mutex lock */
+> 	struct mutex enc_mutex;
+> 	struct mutex dev_mutex;
+>+	struct mutex dev_ctx_lock;
+> 	struct workqueue_struct *encode_workqueue;
+>
+> 	int enc_irq;
+>diff --git a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+>index 84ad1cc6ad171..51bb7ee141b9e 100644
+>--- a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+>+++ b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+>@@ -47,12 +47,14 @@ static bool vpu_enc_check_ap_inst(struct mtk_vcodec_enc_dev *enc_dev, struct ven
+> 	struct mtk_vcodec_enc_ctx *ctx;
+> 	int ret = false;
+>
+>+	mutex_lock(&enc_dev->dev_ctx_lock);
+> 	list_for_each_entry(ctx, &enc_dev->ctx_list, list) {
+> 		if (!IS_ERR_OR_NULL(ctx) && ctx->vpu_inst == vpu) {
+> 			ret = true;
+> 			break;
+> 		}
+> 	}
+>+	mutex_unlock(&enc_dev->dev_ctx_lock);
+>
+> 	return ret;
+> }
+>-- 
+>2.18.0
+>
+>
