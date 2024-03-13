@@ -1,74 +1,71 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E364C618;
-	Wed, 13 Mar 2024 11:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FBE3EA94
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710328179; cv=none; b=PuSiNCY2z0gCf+cM7H7ZXrBFeIQm8rn/YGiDZaQ6XnmSkZCZ15YkCenNZIiQUMSz41K0gAjoJCH8bUGt+WDdYxQgwQUmIDVqF15urn6XFTAtyao4a99ZroJq1RF4Mexv2LT1dnbkwf0yGuTrs2rJGtNBXvvcsyeDnxo5DSCyO2I=
+	t=1710328264; cv=none; b=jdLOHJVDhFUHcot9qXyedD9Ae4rwxgUYb1rAGydlg+r2E6/tL8dY04m6bDLhISLVfS+btvREAdV4FA4LxTfalTH5dj6Y2YMENapYleXBwzt8WbP02thy/sc3tQTW6S8ZIUD4NijLEQb984OCLYPOFErlfz46pyKrkkNWnAJ4HdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710328179; c=relaxed/simple;
-	bh=7E0FWu/tC3XQEAq8/VJphNgdP79HyVmJK+bjjlHyHHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=RCWNRya7DPFkfE1yRsu/Zu3nuuuVM2xpM83T8r6WWL+HY+0q6IgJuXv6jd563BPr0kgkX0RMS7kqZ2lthFSpDGRALHAGqYaVa3AjtBhgKKFi10Nc4InE9ZS8ZfYQY3Y9G67MeoDf6li43VDo2F4aT7xIP8Z9WqSQn2+czEmoqYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 40E6161E5FE04;
-	Wed, 13 Mar 2024 12:08:02 +0100 (CET)
-Message-ID: <6f2af609-e3fc-426b-a7ee-b83b859af09f@molgen.mpg.de>
-Date: Wed, 13 Mar 2024 12:08:01 +0100
+	s=arc-20240116; t=1710328264; c=relaxed/simple;
+	bh=krDBWLkCksHvcCVwuVZHOJZxILbXM8XQWz4eTUBRtws=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SQiH+poQD5jhZhYS2PPCfNex2LdbxYxjh8zxA79ATTQW6C3JcinNLgQkJjjRskztG3MFBCiZuD1AOGZfIkxbfRJhJkQVO54rohCQdKpDKj+6DkX5RWtr0q3JhXc3YII4VapoErJNRGJlHDumtyXsbp1hAU02OiHiFJtnmwEtpFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36677ca965aso4236695ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:11:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710328262; x=1710933062;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=og43RopSDbtIXOr5b/QeLC2pWLh0Ixgs+pA7WVJx5ec=;
+        b=osZpsARLuFfEPihEbhOlbcC2QLMAbCJIJbmpG2NcMTfO1LC+uzncOLEMix9CbqgOis
+         W4p4/C191SoG8gfkfTQe4b0GwcjOr5ougGi4o2g2Uug0hvcxvP5VhP7NfPExRlxD2ukO
+         vVEG0MvoCC0crnsRXM/Gu5SHKm/Mu6m6uF7hLrYMEhzF29zYOY9jEs57N5prfyYadzlN
+         kRjy7uB+DgCieokNJHo6FYKkcKrabhNCcKiay7CDtFWpnjl/3BKIFeop3fDau1K4LzRZ
+         5BC/kD5++ZRZQoQxfEl/AJSjxrcfexzcqRIqDmOLek2MeQb4aYvEdF+qf2gSsT7B6hDA
+         RTbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXLC7HoIxDXwF/CtPf+znokTb1zHcx66Ga0I5zgJ0r29aOUTIGFgoJTIrofFXE39v+d1Q/aGfVdRmp0R2lMa8jFofFGhZmga/hA51y
+X-Gm-Message-State: AOJu0YyTT9dkzMlkjcnUcBJsB8N8/weG/1K7TEaValAhVZ5Cv8JncszM
+	oqpqs2EfyAE6od2KVMUA3hlSEtx8EdcPqGg8VHjmHwsqu0DeNs5wJXh9AzYIMUWhV0hYUMyIHzB
+	VW5iGSLfKm1dqDsVAu/XJRkuWn2EHomYk2LMaOY/ujoo0Mfr1O/Cz0Wo=
+X-Google-Smtp-Source: AGHT+IFaPEtekJpvI19Rdgsih8mBDripRhpN/aYvFtOZCwZOz7KH171DUMzoli3mUYqTPnAJ0c4PIa3brACgehgGgTMmaDCgP4fK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: pinctrl-aspeed-g6: Fix register offset for
- pinconf of GPIOR-T
-Content-Language: en-US
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-References: <20240313092809.2596644-1-billy_tsai@aspeedtech.com>
-Cc: andrew@codeconstruct.com.au, linus.walleij@linaro.org, joel@jms.id.au,
- johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- BMC-SW@aspeedtech.com, Ricky_CX_Wu@wiwynn.com
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240313092809.2596644-1-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:214c:b0:365:26e3:6e60 with SMTP id
+ d12-20020a056e02214c00b0036526e36e60mr427700ilv.0.1710328262063; Wed, 13 Mar
+ 2024 04:11:02 -0700 (PDT)
+Date: Wed, 13 Mar 2024 04:11:02 -0700
+In-Reply-To: <20240313104628.2178-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000082883f061388d49e@google.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in __bpf_ringbuf_reserve
+From: syzbot <syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Dear Billy,
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Thank you very much for sending version 2.
+Reported-and-tested-by: syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com
 
+Tested on:
 
-Am 13.03.24 um 10:28 schrieb Billy Tsai:
-> The register offset to disable the internal pull-down of GPIOR~T is 0x630
-> instead of 0x620, as specified in the Ast2600 datasheet v15
-> The datasheet can download from the official Aspeed website.
+commit:         b0546776 Merge tag 'printk-for-6.9' of git://git.kerne..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d3a48a180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=850aaf14624dc0c6d366
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10a7ce1a180000
 
-(No need for another iteration for this, but “can be downloaded”.)
-
-> Fixes: 15711ba6ff19 ("pinctrl: aspeed-g6: Add AST2600 pinconf support")
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->   drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 34 +++++++++++-----------
->   1 file changed, 17 insertions(+), 17 deletions(-)
-
-[…]
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
+Note: testing is done by a robot and is best-effort only.
