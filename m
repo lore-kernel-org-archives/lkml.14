@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE3715AAAF;
-	Wed, 13 Mar 2024 16:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A345C15AAD9;
+	Wed, 13 Mar 2024 16:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348448; cv=none; b=oylQ3XnUnsPNo6uztJ6RrVPOAbuS8ctG4oYwOk9k/iyLWNurtkANH+f8muSe/8yH32zmJHtZpCYThlO4vcK0oc+QoiHwFzhhoGNRArmHrSEEY4rmzSb4KOtZDSSmUKj4Tx1Eul4zjBC3pSxrACxTIxJ6vhQnsSi0DQmV0zJGbMo=
+	t=1710348450; cv=none; b=Af/LkMfGNl7ueCiA+j8TvqFTOlDGgPy5l0pjYyfuDJeFz6qkGML7HIgGkpSuOzPwsHRg6jilkNj2gz7xhwND8nrpD9tT5bDTiGJnJRlyf0vSU+0NEuct8kYLJwXzv0eMUlEG/E5cgAXdUnNyG+XuY/YoNeLqvN5w/mQjHMvv2+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348448; c=relaxed/simple;
-	bh=ch2Ufytfvwceqf3EZkbNtVSDHUYAfgp6GehJEaHk/Jo=;
+	s=arc-20240116; t=1710348450; c=relaxed/simple;
+	bh=35fWejEZZKXvoDZx3BRorUFQb5CQmMP9lyAXTgMA5LI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=naK2n2O/rFDGAPzvx9jh2XSCM80uoSEd8TRz25NgA6w4yMIbD/AhVYyeRSAiplGNC0Jv329njIxa2YWs8gn2jyWhpJNlcm/cf2nZLw2PZ8e1x/DwGcPLLBGxDIxpakZZHtqIfMmUmVVnjAhQVxTsro5eNdEJvxQrukVu+5tHnEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJ96jB6+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QE0J9RzKz7u6Zz6nHjaNol0zf+zAh9hXtljBNFfSYJfOjebGi9dQEVitJo/K3WHOXgIK8b3He2iixxic7+ooTso15ZA0CRLQrIJ6IQwdyfutQaj1cJIK6VTh+pz6Iw4dR6SdpuwBUV0mh0WfjzTTnooH7CSY+kfyZm8HbdluMF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+Mq+JFR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJ96jB6+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1321C433C7;
-	Wed, 13 Mar 2024 16:47:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+Mq+JFR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE15BC433F1;
+	Wed, 13 Mar 2024 16:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348448;
-	bh=ch2Ufytfvwceqf3EZkbNtVSDHUYAfgp6GehJEaHk/Jo=;
+	s=k20201202; t=1710348450;
+	bh=35fWejEZZKXvoDZx3BRorUFQb5CQmMP9lyAXTgMA5LI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QJ96jB6++HH4JyTUzGDg6yjQs/Zq+81m3LIaYG1+v6ZBmAudfw04osx3YPKJa0JfM
-	 m22gm1cHxTtVJFzbcHmg2BRmh/42L01CjhuwUn070hhLfMUFL8mDxhEqDPBFMYAeEe
-	 UaQ5CLNtQfETC3wXqNqQDwjWUdgZYYsUVg0Lbp5vP+71b2YWjk4FNUldIV/2G5OCNE
-	 mfXJ2t8FNU81UHV6+NjTQn4dwa0OjohUa3v4i3kOUJ2Lk5RIP+S0/N14pKzOdcaqcJ
-	 pAs5BBDbZ46vWTaqtKBIAtBEwoahVY9EWD3AVEJMWOtZjRtEn1k+pVDWJ6Y4XUFteg
-	 NBP/6HvONHyuw==
+	b=C+Mq+JFRumLQlHx+esAqJA6Mx/vC5NEoYOkiM2VG53Ll7CiFe95Rv8V4fi6M+S9Vq
+	 IKRROMkYSqk7qhCNQkO1YaMsYbRzybeXdHha5OR1d3RNejc4+JM5QCxVfNzpT14Ud0
+	 BgWBjuOeXl0npTY6Y227d4b4S3pM8r7SeQgy37bS8QTBgwDI3WePvpt8wwgsUFSihD
+	 x0QOfvdxcNFnhxxPvSfYG2MHbSb0VfHH6OIa9gYD4JTFTEXNVlFuLY9CzKtKyaYOIq
+	 OI4ODXZeExo40K9UO1IbeiiYIrfkHolSe5gB+y5kNdkffRYPNz+vnilDYk1+dR8xjL
+	 YX780hf/dDdxA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Martin KaFai Lau <martin.lau@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 42/73] serial: max310x: use a separate regmap for each port
-Date: Wed, 13 Mar 2024 12:46:09 -0400
-Message-ID: <20240313164640.616049-43-sashal@kernel.org>
+Subject: [PATCH 5.10 44/73] net: Change sock_getsockopt() to take the sk ptr instead of the sock ptr
+Date: Wed, 13 Mar 2024 12:46:11 -0400
+Message-ID: <20240313164640.616049-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
 References: <20240313164640.616049-1-sashal@kernel.org>
@@ -55,241 +54,77 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+From: Martin KaFai Lau <martin.lau@kernel.org>
 
-[ Upstream commit 6ef281daf020592c219fa91780abc381c6c20db5 ]
+[ Upstream commit ba74a7608dc12fbbd8ea36e660087f08a81ef26a ]
 
-The driver currently does manual register manipulation in
-multiple places to talk to a specific UART port.
+A latter patch refactors bpf_getsockopt(SOL_SOCKET) with the
+sock_getsockopt() to avoid code duplication and code
+drift between the two duplicates.
 
-In order to talk to a specific UART port over SPI, the bits U1
-and U0 of the register address can be set, as explained in the
-Command byte configuration section of the datasheet.
+The current sock_getsockopt() takes sock ptr as the argument.
+The very first thing of this function is to get back the sk ptr
+by 'sk = sock->sk'.
 
-Make this more elegant by creating regmaps for each UART port
-and setting the read_flag_mask and write_flag_mask
-accordingly.
+bpf_getsockopt() could be called when the sk does not have
+the sock ptr created.  Meaning sk->sk_socket is NULL.  For example,
+when a passive tcp connection has just been established but has yet
+been accept()-ed.  Thus, it cannot use the sock_getsockopt(sk->sk_socket)
+or else it will pass a NULL ptr.
 
-All communcations regarding global registers are done on UART
-port 0, so replace the global regmap entirely with the port 0
-regmap.
+This patch moves all sock_getsockopt implementation to the newly
+added sk_getsockopt().  The new sk_getsockopt() takes a sk ptr
+and immediately gets the sock ptr by 'sock = sk->sk_socket'
 
-Also, remove the 0x1f masks from reg_writeable(), reg_volatile()
-and reg_precious() methods, since setting the U1 and U0 bits of
-the register address happens inside the regmap core now.
+The existing sock_getsockopt(sock) is changed to call
+sk_getsockopt(sock->sk).  All existing callers have both sock->sk
+and sk->sk_socket pointer.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-Link: https://lore.kernel.org/r/20220605144659.4169853-3-demonsingur@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Stable-dep-of: b35f8dbbce81 ("serial: max310x: prevent infinite while() loop in port startup")
+The latter patch will make bpf_getsockopt(SOL_SOCKET) call
+sk_getsockopt(sk) directly.  The bpf_getsockopt(SOL_SOCKET) does
+not use the optnames that require sk->sk_socket, so it will
+be safe.
+
+Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
+Link: https://lore.kernel.org/r/20220902002756.2887884-1-kafai@fb.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Stable-dep-of: 5a287d3d2b9d ("lsm: fix default return value of the socket_getpeersec_*() hooks")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 68 +++++++++++++++++++-----------------
- 1 file changed, 36 insertions(+), 32 deletions(-)
+ net/core/sock.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index c0fa4ad104774..80298a5714bcb 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -262,6 +262,7 @@ struct max310x_one {
- 	struct work_struct	tx_work;
- 	struct work_struct	md_work;
- 	struct work_struct	rs_work;
-+	struct regmap		*regmap;
- 
- 	u8 rx_buf[MAX310X_FIFO_SIZE];
- };
-@@ -291,26 +292,26 @@ static DECLARE_BITMAP(max310x_lines, MAX310X_UART_NRMAX);
- 
- static u8 max310x_port_read(struct uart_port *port, u8 reg)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
- 	unsigned int val = 0;
- 
--	regmap_read(s->regmap, port->iobase + reg, &val);
-+	regmap_read(one->regmap, reg, &val);
- 
- 	return val;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 769e969cd1dc5..95559d088a169 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1293,10 +1293,10 @@ static int groups_to_user(gid_t __user *dst, const struct group_info *src)
+ 	return 0;
  }
  
- static void max310x_port_write(struct uart_port *port, u8 reg, u8 val)
+-int sock_getsockopt(struct socket *sock, int level, int optname,
+-		    char __user *optval, int __user *optlen)
++static int sk_getsockopt(struct sock *sk, int level, int optname,
++			 char __user *optval, int __user *optlen)
  {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
+-	struct sock *sk = sock->sk;
++	struct socket *sock = sk->sk_socket;
  
--	regmap_write(s->regmap, port->iobase + reg, val);
-+	regmap_write(one->regmap, reg, val);
+ 	union {
+ 		int val;
+@@ -1633,6 +1633,12 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
+ 	return 0;
  }
  
- static void max310x_port_update(struct uart_port *port, u8 reg, u8 mask, u8 val)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_update_bits(s->regmap, port->iobase + reg, mask, val);
-+	regmap_update_bits(one->regmap, reg, mask, val);
- }
- 
- static int max3107_detect(struct device *dev)
-@@ -449,7 +450,7 @@ static const struct max310x_devtype max14830_devtype = {
- 
- static bool max310x_reg_writeable(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_LSR_IRQSTS_REG:
- 	case MAX310X_SPCHR_IRQSTS_REG:
-@@ -466,7 +467,7 @@ static bool max310x_reg_writeable(struct device *dev, unsigned int reg)
- 
- static bool max310x_reg_volatile(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_RHR_REG:
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_LSR_IRQSTS_REG:
-@@ -488,7 +489,7 @@ static bool max310x_reg_volatile(struct device *dev, unsigned int reg)
- 
- static bool max310x_reg_precious(struct device *dev, unsigned int reg)
- {
--	switch (reg & 0x1f) {
-+	switch (reg) {
- 	case MAX310X_RHR_REG:
- 	case MAX310X_IRQSTS_REG:
- 	case MAX310X_SPCHR_IRQSTS_REG:
-@@ -633,18 +634,16 @@ static s32 max310x_set_ref_clk(struct device *dev, struct max310x_port *s,
- 
- static void max310x_batch_write(struct uart_port *port, u8 *txbuf, unsigned int len)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
--	u8 reg = port->iobase + MAX310X_THR_REG;
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_raw_write(s->regmap, reg, txbuf, len);
-+	regmap_raw_write(one->regmap, MAX310X_THR_REG, txbuf, len);
- }
- 
- static void max310x_batch_read(struct uart_port *port, u8 *rxbuf, unsigned int len)
- {
--	struct max310x_port *s = dev_get_drvdata(port->dev);
--	u8 reg = port->iobase + MAX310X_RHR_REG;
-+	struct max310x_one *one = to_max310x_port(port);
- 
--	regmap_raw_read(s->regmap, reg, rxbuf, len);
-+	regmap_raw_read(one->regmap, MAX310X_RHR_REG, rxbuf, len);
- }
- 
- static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
-@@ -1247,15 +1246,16 @@ static int max310x_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- #endif
- 
- static int max310x_probe(struct device *dev, const struct max310x_devtype *devtype,
--			 struct regmap *regmap, int irq)
-+			 struct regmap *regmaps[], int irq)
- {
- 	int i, ret, fmin, fmax, freq;
- 	struct max310x_port *s;
- 	s32 uartclk = 0;
- 	bool xtal;
- 
--	if (IS_ERR(regmap))
--		return PTR_ERR(regmap);
-+	for (i = 0; i < devtype->nr; i++)
-+		if (IS_ERR(regmaps[i]))
-+			return PTR_ERR(regmaps[i]);
- 
- 	/* Alloc port structure */
- 	s = devm_kzalloc(dev, struct_size(s, p, devtype->nr), GFP_KERNEL);
-@@ -1306,7 +1306,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		goto out_clk;
- 	}
- 
--	s->regmap = regmap;
-+	s->regmap = regmaps[0];
- 	s->devtype = devtype;
- 	dev_set_drvdata(dev, s);
- 
-@@ -1316,22 +1316,18 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		goto out_clk;
- 
- 	for (i = 0; i < devtype->nr; i++) {
--		unsigned int offs = i << 5;
--
- 		/* Reset port */
--		regmap_write(s->regmap, MAX310X_MODE2_REG + offs,
-+		regmap_write(regmaps[i], MAX310X_MODE2_REG,
- 			     MAX310X_MODE2_RST_BIT);
- 		/* Clear port reset */
--		regmap_write(s->regmap, MAX310X_MODE2_REG + offs, 0);
-+		regmap_write(regmaps[i], MAX310X_MODE2_REG, 0);
- 
- 		/* Wait for port startup */
- 		do {
--			regmap_read(s->regmap,
--				    MAX310X_BRGDIVLSB_REG + offs, &ret);
-+			regmap_read(regmaps[i], MAX310X_BRGDIVLSB_REG, &ret);
- 		} while (ret != 0x01);
- 
--		regmap_write(s->regmap, MAX310X_MODE1_REG + offs,
--			     devtype->mode1);
-+		regmap_write(regmaps[i], MAX310X_MODE1_REG, devtype->mode1);
- 	}
- 
- 	uartclk = max310x_set_ref_clk(dev, s, freq, xtal);
-@@ -1359,11 +1355,13 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		s->p[i].port.fifosize	= MAX310X_FIFO_SIZE;
- 		s->p[i].port.flags	= UPF_FIXED_TYPE | UPF_LOW_LATENCY;
- 		s->p[i].port.iotype	= UPIO_PORT;
--		s->p[i].port.iobase	= i * 0x20;
-+		s->p[i].port.iobase	= i;
- 		s->p[i].port.membase	= (void __iomem *)~0;
- 		s->p[i].port.uartclk	= uartclk;
- 		s->p[i].port.rs485_config = max310x_rs485_config;
- 		s->p[i].port.ops	= &max310x_ops;
-+		s->p[i].regmap		= regmaps[i];
++int sock_getsockopt(struct socket *sock, int level, int optname,
++		    char __user *optval, int __user *optlen)
++{
++	return sk_getsockopt(sock->sk, level, optname, optval, optlen);
++}
 +
- 		/* Disable all interrupts */
- 		max310x_port_write(&s->p[i].port, MAX310X_IRQEN_REG, 0);
- 		/* Clear IRQ status register */
-@@ -1460,6 +1458,7 @@ static struct regmap_config regcfg = {
- 	.val_bits = 8,
- 	.write_flag_mask = MAX310X_WRITE_BIT,
- 	.cache_type = REGCACHE_RBTREE,
-+	.max_register = MAX310X_REG_1F,
- 	.writeable_reg = max310x_reg_writeable,
- 	.volatile_reg = max310x_reg_volatile,
- 	.precious_reg = max310x_reg_precious,
-@@ -1469,7 +1468,8 @@ static struct regmap_config regcfg = {
- static int max310x_spi_probe(struct spi_device *spi)
- {
- 	const struct max310x_devtype *devtype;
--	struct regmap *regmap;
-+	struct regmap *regmaps[4];
-+	unsigned int i;
- 	int ret;
- 
- 	/* Setup SPI bus */
-@@ -1484,10 +1484,14 @@ static int max310x_spi_probe(struct spi_device *spi)
- 	if (!devtype)
- 		devtype = (struct max310x_devtype *)spi_get_device_id(spi)->driver_data;
- 
--	regcfg.max_register = devtype->nr * 0x20 - 1;
--	regmap = devm_regmap_init_spi(spi, &regcfg);
-+	for (i = 0; i < devtype->nr; i++) {
-+		u8 port_mask = i * 0x20;
-+		regcfg.read_flag_mask = port_mask;
-+		regcfg.write_flag_mask = port_mask | MAX310X_WRITE_BIT;
-+		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
-+	}
- 
--	return max310x_probe(&spi->dev, devtype, regmap, spi->irq);
-+	return max310x_probe(&spi->dev, devtype, regmaps, spi->irq);
- }
- 
- static int max310x_spi_remove(struct spi_device *spi)
+ /*
+  * Initialize an sk_lock.
+  *
 -- 
 2.43.0
 
