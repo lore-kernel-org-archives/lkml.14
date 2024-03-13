@@ -1,22 +1,22 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD641E480
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B55D8E4
 	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 23:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710374139; cv=none; b=UeGiElnJqRYj6zo1LzfI/MQ8DzE3uw28IOLsgDP4Vp0oEjEkhyNn+GXhxIjS9hBZ+xJPjfx7Ngxe0vWW9GlJTjNIx9FjKSWUSOcMOL+wLWEJpsNVzFSUxfyznlRfDMeqnCJZaw5UO0V6eaJVCiU7gwYZlfDsmu0+URBdO2uV4RA=
+	t=1710374139; cv=none; b=o+THMhSSShI79D2xtycKQv6/DzWCRllyh3NSJ54ZiIA55+Q5UFgMZPo+jxRNhCzNkFWpHeLWq982pspxEZAvgQUnt8RwW3698fHiYCeT3dm9uWLWbp7N5EcyZxYucDbc5a4UHeFiOpK8trDn/l0/NGen4hzn1lnNUbnjcIFMvIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710374139; c=relaxed/simple;
-	bh=8D7jTV0xn/0mDBGlZq6fj5SKZW5PkOCJZRDVQD3dKCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K2jwMns45fD82YdLY1QDBWP5siZdsgTFH3OCRUXAqBCysYEQbVvjoOr49/jEZwonjmFYP0+LyYEIXRH9umIt/KT8C4v60wAg9F0NjXw1z9wBZRHpCZ9xrki0s+xfYEpvPjJe6ZLz34h+djEPfoF4WMDqrLGf59qLLstmVWzTTJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+	bh=k+1YhdyA6bA8FnqCXxwU7KWqjxoU2scZqrkAAb7HRG4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VjyacF/HbXj7Qc55DQ8GzprVCAp+qFbKWcwzMzeaEXoYUav2dWKd+KKJ/mUgR2L44JZ5zkl9fIw70f3e62POtESRZxg1C2jkMklTR4L/bnuBa0WCV8f7vtw4yYXJcMyEPb0Q0lwMtpqlGQSr/436EEPw9CYN83qkS1/M21jRtLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 06ec8550-e195-11ee-b972-005056bdfda7;
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id 06688e94-e195-11ee-abf4-005056bdd08f;
 	Thu, 14 Mar 2024 01:54:27 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
@@ -24,10 +24,9 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 04/11] pinctrl: aw9523: Make use of struct pinfunction and PINCTRL_PINFUNCTION()
-Date: Thu, 14 Mar 2024 01:52:07 +0200
-Message-ID: <20240313235422.180075-5-andy.shevchenko@gmail.com>
+Subject: [PATCH v1 03/11] pinctrl: aw9523: Always try both ports in aw9523_gpio_set_multiple()
+Date: Thu, 14 Mar 2024 01:52:06 +0200
+Message-ID: <20240313235422.180075-4-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240313235422.180075-1-andy.shevchenko@gmail.com>
 References: <20240313235422.180075-1-andy.shevchenko@gmail.com>
@@ -39,72 +38,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Since pin control provides a generic data type and a macro for
-the pin function definition, use them in the driver.
+The ports are equivalent from the user's point of view. Don't limit
+trying them both if writing to one fails.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-aw9523.c | 32 ++++++--------------------------
- 1 file changed, 6 insertions(+), 26 deletions(-)
+ drivers/pinctrl/pinctrl-aw9523.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index d93640a02d1d3..79916e6bf6f4e 100644
+index 65d523697b731..d93640a02d1d3 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -66,18 +66,6 @@ struct aw9523_irq {
- 	u16 cached_gpio;
- };
+@@ -653,7 +653,7 @@ static void aw9523_gpio_set_multiple(struct gpio_chip *chip,
+ 	struct aw9523 *awi = gpiochip_get_data(chip);
+ 	u8 mask_lo, mask_hi, bits_lo, bits_hi;
+ 	unsigned int reg;
+-	int ret = 0;
++	int ret;
  
--/*
-- * struct aw9523_pinmux - Pin mux params
-- * @name: Name of the mux
-- * @grps: Groups of the mux
-- * @num_grps: Number of groups (sizeof array grps)
-- */
--struct aw9523_pinmux {
--	const char *name;
--	const char * const *grps;
--	const u8 num_grps;
--};
--
- /*
-  * struct aw9523 - Main driver structure
-  * @dev: device handle
-@@ -158,17 +146,9 @@ static const char * const gpio_pwm_groups[] = {
- };
+ 	mask_lo = *mask & U8_MAX;
+ 	mask_hi = (*mask >> 8) & U8_MAX;
+@@ -663,10 +663,8 @@ static void aw9523_gpio_set_multiple(struct gpio_chip *chip,
+ 		bits_hi = (*bits >> 8) & U8_MAX;
  
- /* Warning: Do NOT reorder this array */
--static const struct aw9523_pinmux aw9523_pmx[] = {
--	{
--		.name = "pwm",
--		.grps = gpio_pwm_groups,
--		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
--	},
--	{
--		.name = "gpio",
--		.grps = gpio_pwm_groups,
--		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
--	},
-+static const struct pinfunction aw9523_pmx[] = {
-+	PINCTRL_PINFUNCTION("pwm", gpio_pwm_groups, ARRAY_SIZE(gpio_pwm_groups)),
-+	PINCTRL_PINFUNCTION("gpio", gpio_pwm_groups, ARRAY_SIZE(gpio_pwm_groups)),
- };
- 
- static int aw9523_pmx_get_funcs_count(struct pinctrl_dev *pctl)
-@@ -184,10 +164,10 @@ static const char *aw9523_pmx_get_fname(struct pinctrl_dev *pctl,
- 
- static int aw9523_pmx_get_groups(struct pinctrl_dev *pctl, unsigned int sel,
- 				 const char * const **groups,
--				 unsigned int * const num_groups)
-+				 unsigned int * const ngroups)
- {
--	*groups = aw9523_pmx[sel].grps;
--	*num_groups = aw9523_pmx[sel].num_grps;
-+	*groups = aw9523_pmx[sel].groups;
-+	*ngroups = aw9523_pmx[sel].ngrpoups;
- 	return 0;
+ 		ret = regmap_write_bits(awi->regmap, reg, mask_hi, bits_hi);
+-		if (ret) {
++		if (ret)
+ 			dev_warn(awi->dev, "Cannot write port1 out level\n");
+-			goto out;
+-		}
+ 	}
+ 	if (mask_lo) {
+ 		reg = AW9523_REG_OUT_STATE(0);
+@@ -675,7 +673,6 @@ static void aw9523_gpio_set_multiple(struct gpio_chip *chip,
+ 		if (ret)
+ 			dev_warn(awi->dev, "Cannot write port0 out level\n");
+ 	}
+-out:
+ 	mutex_unlock(&awi->i2c_lock);
  }
  
 -- 
