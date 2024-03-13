@@ -1,102 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C224CDE0;
-	Wed, 13 Mar 2024 20:13:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13E920DDB;
+	Wed, 13 Mar 2024 20:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710360795; cv=none; b=XyLwwOWT8yhf1bVvoDqUt+xXp+dOrlBK5ylPxGYeXJOblx+KLuuTgiVlmS3uyc0kMKl4fC2YQyAyw3YArTKBR/WXCCU+hqtb2AMKsxBkMJAPTGumG9CDjxg3e+AHa/36KtFXK2HQh7VnGl3NkoViNwQEJ63hSBIpJc1Hd9LCcCw=
+	t=1710360868; cv=none; b=QdxsyLoh55idINbHZBIz32RgYkIbQkvvOweRXXu0swlgymigysefpsCwQieJgof3/URZON7+18wM+N4QuxxwPWafgkm4exPnYHv7AX/OCx5wiixNg8mBfRQmseT9WId6fHq4A/RQIX1LZTaGXsumS+8WvTEaixbVo9LdolwjLek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710360795; c=relaxed/simple;
-	bh=c64cY2qgtziptw227hn4tBZzUV80RXRr2wvr31Rcm2I=;
+	s=arc-20240116; t=1710360868; c=relaxed/simple;
+	bh=oXOjkxjCY1EERAdvIUEGSViGaQO6PEQsL/XDFPsslKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6TLSbCFh6G3MGutcUv59vL3SD1jbvLKylH4h/TipKCK/iQPVrXwNnHwkjRjFHQdRpjzqYJQPepooMSDW97+uLzRSZl3f1Lw0pE88C1SMN+DJY7Z8EsgJNHCF3YFFrcCozprgN3Av9OpdnjjJzMxR2OJ6knywv4hTSKSV/raR1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBd6Rwno; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rp0ybqj7IbxOobFhVrj6LyOAIxwJ3arI5OizeE2u7LB3AhF6a/jzeB4oZ3APM/vAYZCOv+ph0L2RJdtSLQ1G6mVbVN1rbDZZSsUajmB7aCzAtev8TNGYh14jl6rAhnsZ4/PXTbg55iqYpVG4IYZqEF2IFtwDXscetTP+xuBwHas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obGjoR6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBd6Rwno"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63FEC433F1;
-	Wed, 13 Mar 2024 20:13:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obGjoR6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01ABEC433C7;
+	Wed, 13 Mar 2024 20:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710360795;
-	bh=c64cY2qgtziptw227hn4tBZzUV80RXRr2wvr31Rcm2I=;
+	s=k20201202; t=1710360868;
+	bh=oXOjkxjCY1EERAdvIUEGSViGaQO6PEQsL/XDFPsslKg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pBd6RwnokLPitlwriypZTz3KnoincvFjruThclF1F6u/abqvBZMOlhd2eVEU7qMOs
-	 PCqxeRJWHtMQ/YwZB24PrOyvAdqVC3Wlo2nIpLyUOCbGbzLL/RA+9cjGOdDcf5Tkxc
-	 PwKNrCyvK0EvTtS30vchOg7t3x5kh4faIjf1v0fFoSzgwyyxs9RddXMV/txBHRSg9S
-	 YlMgrT+x4mtgdyJECGtngFahtUMKZ4thGDpW/gla2CtN0KK+LPcaDXe0ieRuThAUpb
-	 7c4JaBhQi7xMLwycXhdJkz5Iy4mHCEJSymFT76T8omGMq5MxSAvVCK0LoqvT/hbzKr
-	 nAejlPyVNASuw==
-Date: Wed, 13 Mar 2024 16:13:13 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH 5.15 45/76] modpost: Add '.ltext' and '.ltext.*' to
- TEXT_SECTIONS
-Message-ID: <ZfII2Rrv452_5hrw@sashalap>
-References: <20240313164223.615640-1-sashal@kernel.org>
- <20240313164223.615640-46-sashal@kernel.org>
- <20240313171229.GA3064248@dev-arch.thelio-3990X>
+	b=obGjoR6BxJZzkcBNmz80kedIvmY/VgxroDPPwvwz23s96S3zXAS9NYxfqPmFVpv7i
+	 qlDiRBSEnT+G2ia5i8ApD29HYoI0xZQNkHKGqEIr+Wrhh7Rmeaves5JfU42kyxfXf2
+	 wpnacT/EHzZsINrZvsGk3OLNV1teeC6e21fc+bqia7nM+G985prgKXRmEF4U8mmbk0
+	 NKmTG2SNoM4pZRTTcpg7INB2TmkK6+pedDjXI+5dk0WToNjKn7+2f910vSeDQtxkFv
+	 m7wrQovvNHygIN8S0+cptJmAnVgMUselDCs4o1uarJ2i0ob5uzFE5MA63Jt5+MngGY
+	 N9yl8QXgfDyxw==
+Date: Wed, 13 Mar 2024 17:14:25 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfIJIfqeI9tWnnS5@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240313171229.GA3064248@dev-arch.thelio-3990X>
+In-Reply-To: <ZfIIqcmRlrxwUFTn@x1>
 
-On Wed, Mar 13, 2024 at 10:12:29AM -0700, Nathan Chancellor wrote:
->Hi Sasha,
->
->On Wed, Mar 13, 2024 at 12:41:52PM -0400, Sasha Levin wrote:
->> From: Nathan Chancellor <nathan@kernel.org>
->>
->> [ Upstream commit 397586506c3da005b9333ce5947ad01e8018a3be ]
->>
->> After the linked LLVM change, building ARCH=um defconfig results in a
->> segmentation fault in modpost. Prior to commit a23e7584ecf3 ("modpost:
->> unify 'sym' and 'to' in default_mismatch_handler()"), there was a
->> warning:
->>
->>   WARNING: modpost: vmlinux.o(__ex_table+0x88): Section mismatch in reference to the .ltext:(unknown)
->>   WARNING: modpost: The relocation at __ex_table+0x88 references
->>   section ".ltext" which is not in the list of
->>   authorized sections.  If you're adding a new section
->>   and/or if this reference is valid, add ".ltext" to the
->>   list of authorized sections to jump to on fault.
->>   This can be achieved by adding ".ltext" to
->>   OTHER_TEXT_SECTIONS in scripts/mod/modpost.c.
->>
->> The linked LLVM change moves global objects to the '.ltext' (and
->> '.ltext.*' with '-ffunction-sections') sections with '-mcmodel=large',
->> which ARCH=um uses. These sections should be handled just as '.text'
->> and '.text.*' are, so add them to TEXT_SECTIONS.
->>
->> Cc: stable@vger.kernel.org
->> Closes: https://github.com/ClangBuiltLinux/linux/issues/1981
->> Link: https://github.com/llvm/llvm-project/commit/4bf8a688956a759b7b6b8d94f42d25c13c7af130
->> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
->> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This causes a warning when building with HOSTCC=clang:
->
->  scripts/mod/modpost.c:1123:37: warning: excess elements in array initializer [-Wexcess-initializers]
->   1123 |         .good_tosec = {ALL_TEXT_SECTIONS , NULL},
->        |                                            ^~~~
->  .../lib/clang/17/include/stddef.h:89:16: note: expanded from macro 'NULL'
->     89 | #  define NULL ((void*)0)
->        |                ^~~~~~~~~~
->  1 warning generated.
->
->Same comment as on the other UML clang-18 patch, I do not think this is
->necessary right now in 5.15 and earlier. The other modpost patch can go
->as well, as it is only a prerequisite change.
+On Wed, Mar 13, 2024 at 05:12:25PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Mar 13, 2024 at 03:30:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Mar 13, 2024 at 03:14:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > 'perf test' doesn't show any regression, now I'm running Vince Weaver's
+> > > https://github.com/deater/perf_event_tests, storing the results with
+> > > this patchset and then without, to do a diff, lets see...
 
-Dropped, thanks!
+> > So things improved! I'll re-run to see if these results are stable...
+ 
+> tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> noticeable when running with/without the patch with Vince's regression
+> tests. So:
+ 
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
--- 
-Thanks,
-Sasha
+Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
+
+- Arnaldo
+ 
+> - Arnaldo
+> 
+> Further details:
+> 
+> Without the patch:
+> 
+> [root@nine perf_event_tests]# ./run_tests.sh | tee results.$(uname -r).new ; diff -u results.$(uname -r) results.$(uname -r).new
+> --- results.6.8.0-rc7-rt6	2024-03-13 15:26:37.923323518 -0300
+> +++ results.6.8.0-rc7-rt6.new	2024-03-13 15:32:43.983245095 -0300
+> @@ -296,7 +296,7 @@
+>    + tests/rdpmc/rdpmc_validation
+>      Testing if userspace rdpmc reads give expected results...  PASSED
+>    + tests/rdpmc/rdpmc_multiplexing
+> -    Testing if userspace rdpmc multiplexing works...           PASSED
+> +    Testing if userspace rdpmc multiplexing works...           FAILED
+>    + tests/rdpmc/rdpmc_reset
+>      Testing if resetting while using rdpmc works...            PASSED
+>    + tests/rdpmc/rdpmc_group
+> @@ -304,15 +304,15 @@
+>    + tests/rdpmc/rdpmc_attach
+>      Testing if rdpmc attach works...                           PASSED
+>    + tests/rdpmc/rdpmc_attach_cpu
+> -    Running on CPU 4
+> +    Running on CPU 0
+>  Testing if rdpmc behavior on attach CPU...                 PASSED
+>    + tests/rdpmc/rdpmc_attach_global_cpu
+> -    Running on CPU 6
+> +    Running on CPU 3
+>  Testing if rdpmc behavior on attach all procs on other CPU... FAILED
+>    + tests/rdpmc/rdpmc_attach_other_cpu
+> -    Measuring on CPU 5
+> -Running on CPU 6
+> -Measuring on CPU 5
+> +    Measuring on CPU 0
+> +Running on CPU 3
+> +Measuring on CPU 0
+>  Testing if rdpmc behavior on attach other CPU...           FAILED
+>    + tests/rdpmc/rdpmc_multiattach
+>      Testing if rdpmc multi-attach works...                     PASSED
+> 
+> A test flipped results.
+> 
+> Trying again with a more compact output:
+> 
+> [root@nine perf_event_tests]# ./run_tests.sh | tee results.$(uname -r).new ; diff -u results.$(uname -r) results.$(uname -r).new | grep ^[+-]
+> --- results.6.8.0-rc7-rt6	2024-03-13 15:26:37.923323518 -0300
+> +++ results.6.8.0-rc7-rt6.new	2024-03-13 17:06:34.944149451 -0300
+> -    Running on CPU 4
+> -Testing if rdpmc behavior on attach CPU...                 PASSED
+> -  + tests/rdpmc/rdpmc_attach_global_cpu
+> +Testing if rdpmc behavior on attach CPU...                 FAILED
+> +  + tests/rdpmc/rdpmc_attach_global_cpu
+> +    Running on CPU 0
+> -    Measuring on CPU 5
+> -Running on CPU 6
+> -Measuring on CPU 5
+> +    Measuring on CPU 7
+> +Running on CPU 1
+> +Measuring on CPU 7
+> [root@nine perf_event_tests]#
+> 
+> Since its that rdpmc that is now always failing without this patch
+> series, lets try using that .new as the new baseline:
+> 
+> [root@nine perf_event_tests]# ./run_tests.sh | tee results.$(uname -r).new2 ; diff -u results.$(uname -r).new results.$(uname -r).new2 | grep ^[+-]
+> --- results.6.8.0-rc7-rt6.new	2024-03-13 17:06:34.944149451 -0300
+> +++ results.6.8.0-rc7-rt6.new2	2024-03-13 17:08:41.438282558 -0300
+> -    Testing "branch-misses" generalized event...               FAILED
+> +    Testing "branch-misses" generalized event...               PASSED
+> -    Testing if userspace rdpmc multiplexing works...           PASSED
+> +    Testing if userspace rdpmc multiplexing works...           FAILED
+> -    Running on CPU 6
+> -Testing if rdpmc behavior on attach CPU...                 FAILED
+> +    Running on CPU 2
+> +Testing if rdpmc behavior on attach CPU...                 PASSED
+> -    Running on CPU 0
+> +    Running on CPU 2
+> -    Measuring on CPU 7
+> -Running on CPU 1
+> -Measuring on CPU 7
+> +    Measuring on CPU 2
+> +Running on CPU 0
+> +Measuring on CPU 2
+> [root@nine perf_event_tests]#
