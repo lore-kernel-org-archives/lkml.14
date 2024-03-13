@@ -1,153 +1,82 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71103481C2;
-	Wed, 13 Mar 2024 17:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864C47A6F;
+	Wed, 13 Mar 2024 17:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710351533; cv=none; b=VJDAWA1DM09peppBmNdpOPVbrFQAaSWvvB8AnKMhFvWmgsi24ueOns6Z6FU1j8In585Mtlw5WaupCzq5U8gjQ9mNR4LLSeTIdvSVFBrZb58fwJjujZ+ZTNlY+Jq/d/aU/H8XI112LQonai8wWlkp+svc0B8j9QC1gYNvnUGYbSU=
+	t=1710351617; cv=none; b=S2MLt9HfzJWFLXKZpBaJSS84VTOI9Z5sxK0HEo5k3VG7K9jYyzNdQkYjqU4lqnaytR/oe7zH9miW1tv1W/3Xtuo17VARBkvAM2/wX/rJnYWCqdlP1c6RPZmPgeDcdUbc4G1sL8+7E1zU+c1lFPNbvUPAvCrgBwi8jnWPKCnvfN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710351533; c=relaxed/simple;
-	bh=iT2EbtIiOSs+T3XVOk0ucGQQB0rgJHFWBYQuIY3ikcY=;
+	s=arc-20240116; t=1710351617; c=relaxed/simple;
+	bh=tUQlTIAd9zU8ZTFePqPCTyVR4NP6xLSNEMqxtaPHCVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6fbck+V67qzALht4ypfs4YS6ixIh+LX07pzJ8hSu8QH4dvgmq7Uwel0wbujQLADGFHKc/mPhhX8oeKJOPSvC567IruyR0zZqtzitemmaJ4M7WuxD4p3DvPrJh1BDuwGNoSHK8THopf/yjrgGnrEUibtS7/alFEn2l/Pq0CRP7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dqu768mf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=832EQJtb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dqu768mf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=832EQJtb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Od75+9okwmT5J7gxvpDQZAuPsK8mowv0N9vfNNzaYDU53G771jjcg+6kJpm4zSzNq/uJJ36WKSr1y7gfsWysYxSKh8JdvuJvtjaad/HmPxko/ngOeQ18Q6mfdQVvGXopkQ4EHLpXlY/IVdhG3kATHPcEQoZZhfd4EYuveojur5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6iOwws+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dqu768mf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="832EQJtb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dqu768mf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="832EQJtb"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3F8FD1F7DB;
-	Wed, 13 Mar 2024 17:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710351524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMHX7C1BrffE+lUVVYYRj2OqTJWgz3tHlk1+zoyfoP8=;
-	b=dqu768mf5iPEPwfo/ukXFQJBMhYb31aq3rO7+/lVl4HVLt/Z5Y5qqKrJBWQGoId0fhTKWA
-	6zIQO0qY/sgdLT64Xw6dzzPRUuk6K3koWpuRK5WqJ2Pt2DfVmEd0zAEsZG16nCjwG8I3cQ
-	Ytb12fy/D5hwgraP2lBsDUPUraFPats=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710351524;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMHX7C1BrffE+lUVVYYRj2OqTJWgz3tHlk1+zoyfoP8=;
-	b=832EQJtbK1RWV+Y9LTKVBumFeZcIhjeT0e45VbJiMaT+A1au8tMIdpvorlMJXYyqj57SzZ
-	EVJ/ahR0ziHKmbAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710351524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMHX7C1BrffE+lUVVYYRj2OqTJWgz3tHlk1+zoyfoP8=;
-	b=dqu768mf5iPEPwfo/ukXFQJBMhYb31aq3rO7+/lVl4HVLt/Z5Y5qqKrJBWQGoId0fhTKWA
-	6zIQO0qY/sgdLT64Xw6dzzPRUuk6K3koWpuRK5WqJ2Pt2DfVmEd0zAEsZG16nCjwG8I3cQ
-	Ytb12fy/D5hwgraP2lBsDUPUraFPats=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710351524;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMHX7C1BrffE+lUVVYYRj2OqTJWgz3tHlk1+zoyfoP8=;
-	b=832EQJtbK1RWV+Y9LTKVBumFeZcIhjeT0e45VbJiMaT+A1au8tMIdpvorlMJXYyqj57SzZ
-	EVJ/ahR0ziHKmbAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 329761397F;
-	Wed, 13 Mar 2024 17:38:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZJ1KDKTk8WXPIgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 13 Mar 2024 17:38:44 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C8D6FA07D9; Wed, 13 Mar 2024 18:38:43 +0100 (CET)
-Date: Wed, 13 Mar 2024 18:38:43 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+4fec87c399346da35903@syzkaller.appspotmail.com>
-Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, kch@nvidia.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	martin.petersen@oracle.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hfs?] INFO: task hung in hfs_mdb_commit
-Message-ID: <20240313173843.bhsvylbozi3kvcit@quack3>
-References: <000000000000aa9b7405f261a574@google.com>
- <0000000000007c7392061317a56f@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6iOwws+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F1DC433C7;
+	Wed, 13 Mar 2024 17:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710351616;
+	bh=tUQlTIAd9zU8ZTFePqPCTyVR4NP6xLSNEMqxtaPHCVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q6iOwws+UvSeGTEvnPdkAZG3XEUvuQB4ECG4wRyrKS+An6n3M77FvEnpNHHSsdoAS
+	 /5BZjTgZOCgtgbLeNI7wOQ6u2XY/V36QB+s/ILVm6AuD+muELOUfiD14tZkKAT0s76
+	 DqXLn4y5WimKWCx16tHn3Q+Pq4xC7qctexYlZew5whIOzgO3wIYUv4gq5s5H/ZhV8/
+	 mSr5tUkrcZtzIraVqLcugwzlb3Nm+68lS5JT/TE1kCMovJn3NeXAAa04Z/Po64HenO
+	 zcszU0/A1zMlXry0R8amFNwXHu/OqiApedYDz1VM6nbFKn1XDguWFK243EECFnL5rs
+	 N5vhUBMAjFFbQ==
+Date: Wed, 13 Mar 2024 17:40:12 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-spi@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi: Fix error code checking in spi_mem_exec_op()
+Message-ID: <7109907f-baf3-47e2-b33f-3403e1299176@sirena.org.uk>
+References: <20240313171050.3505620-1-florian.fainelli@broadcom.com>
+ <CZSSWP7A9UM7.1R20796VHLU0F@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c25yVvKkvrfIyDqD"
+Content-Disposition: inline
+In-Reply-To: <CZSSWP7A9UM7.1R20796VHLU0F@kernel.org>
+X-Cookie: It's later than you think.
+
+
+--c25yVvKkvrfIyDqD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000007c7392061317a56f@google.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=dqu768mf;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=832EQJtb
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.02 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.01)[46.51%];
-	 SUBJECT_HAS_QUESTION(0.00)[];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=d05dd66e2eb2c872];
-	 TAGGED_RCPT(0.00)[4fec87c399346da35903];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DWL_DNSWL_HI(-3.50)[suse.cz:dkim];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -2.02
-X-Rspamd-Queue-Id: 3F8FD1F7DB
-X-Spam-Flag: NO
 
-On Thu 07-03-24 12:09:01, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 6f861765464f43a71462d52026fbddfc858239a5
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Nov 1 17:43:10 2023 +0000
-> 
->     fs: Block writes to mounted block devices
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=126c98ea180000
-> start commit:   7475e51b8796 Merge tag 'net-6.7-rc2' of git://git.kernel.o..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d05dd66e2eb2c872
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4fec87c399346da35903
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1286c3c0e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121cc388e80000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
+On Wed, Mar 13, 2024 at 06:33:43PM +0100, Michael Walle wrote:
 
-Makes sense.
+> FWIW in next, there is commit
+> e63aef9c9121e ("spi: spi-mem: add statistics support to ->exec_op() calls")
+> that probably will conflict with this one.
 
-#syz fix: fs: Block writes to mounted block devices
+Indeed, this doesn't apply - please fix and resend.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+--c25yVvKkvrfIyDqD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXx5PsACgkQJNaLcl1U
+h9Bd8wf9HzT8NPFCZoqC/eQp75wLJM0cfYy8K/vUMHO0rL+TO73BxjhPZyI3Gg6y
+xzP9jD82bWE0R/TnGLx428Oo7aljdE2WO7WSD9Zx9qAybiY5zynO7OsvagDn4UwP
+kt7UuxYbZtIhYaFgQ/f9gh55nq1UKP3ihjfI6+8fP4xRCCMYISamwaJYFFZc4iA7
+rc8Fdi5TeNp516b9juF9j1fWkepm47TByTVtFg0S5xv9cgnl8J8Gkn2J8bDIORWE
+hx0t2Xr0GfuOOodaw7BT0j1gdUM/OJLSOc11lKy6Aeb+ZuHThY4MljEHSGG3vFTy
+SjatvA9NYwJMFZhpXZe2njCm7nvpZw==
+=b6ub
+-----END PGP SIGNATURE-----
+
+--c25yVvKkvrfIyDqD--
