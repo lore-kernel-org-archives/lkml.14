@@ -1,382 +1,247 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A537551C59;
-	Wed, 13 Mar 2024 20:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC9D51C49;
+	Wed, 13 Mar 2024 20:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710363499; cv=none; b=R5L9QEgEavLOO9POx4PrmYoppOdMqV8+0ss1hteIYHsTWoMk8VdMgMCz739zdEF5bay2NibPJT00lM/as/CYoUrTV/ul0a/wryKxDQ7ikueDCIfXUdAUxR77vAg8wijcCN/qJfxOz6jgjdCUm24vbznUux6EdVxg+BlLn3iqVZI=
+	t=1710363590; cv=none; b=fLUAJp/qcB2XkkJsgXVHiQDFKSX/CZrohpvUoIxYquyS8rtpUK/kVLRfVtgv2ajmVkAcosIfzktO0k/OMu0STusKJdwhjPt5NVFGJf4EVYF/zSSWUZw8+7E+elpsYC1vMXZKEE8OEhovtfPIqiV2/l/aKBPLcqNsJxQFAk0XbyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710363499; c=relaxed/simple;
-	bh=n3ystnCFLioUEiuBX0bYnYRZNcw9y9+eEiGhFvERGaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P0puY8pt9JVUNA9f7XVDIf5KosdvmEr9AnZrC3hRzA7n36Kazqo3WoZLwdOmrovxB+SMtJvWColm9vmx1kvycZfT3nnncNaJME4a86G9GJ/8QocQIxEe5LPwy6YFRWkH+uOwb5ICqLmJyDLdEvBu9DDgH4gRJbXV45Mcj59hjXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Px/APEVs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710363590; c=relaxed/simple;
+	bh=IpBbQz1srVKY5Qm8aYytCrr8UprLvXNWXUTAleoCung=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=A+FnrIbBeNxaPW1GGZZDVslZEGAfY/rFdikVlNMghw5HitRbOwCpQ0+6zLZ1jKC1twjv8FDsbrdUrn0OugJXwcvl0XKRSfXwiLaKpbF0j1PKfZ0Y2jbQt9VnvngFeRvxkP1vOE/xifhrEN4FJzJE9m9iZjP339rK8GMGaE5xElQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gK780mYb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Px/APEVs"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42DJ0WP6010066;
-	Wed, 13 Mar 2024 20:58:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=1SVjZHPn2LMUiJvbwnVdGN0yMMFEVh2zgdckZhhGaI8=;
- b=Px/APEVsiYN2VV1P1/vcCkmcgmU/VG9EUZjwrjqj0ewvAyq6oGQ2PM/u2D/7/+G5qRQE
- /PIV4SwuPK8IQWS8/huyXMpe0UsRl4a9/tYlZZkWqODSylPL+FvB+YMLYevs1Fhlick5
- HXWhR7Pi1w5ZU11O+vaP0FJJFhCa/Q0bjQjMwywCEkC/VJi2iwH8nIUT3QATW47fGwHk
- 09XMQu4NqOIZNClTHy1879JuCla8kYxDvUKxrfVr4F7xTO6/IaTTroVkIfMrPf8j2OQS
- i5vXFnfSWTZTxC+2CbYcp4H76CakurzlppU7FCVM+gdUAXt0l8UjDi1d7tt84eW+FB5a 6Q== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wug29k1pt-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gK780mYb"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42DKZsLh015392;
+	Wed, 13 Mar 2024 20:59:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=XV00hGXPiXdSW+Tmcv9hjeCk26huAFHGiu8ghIiwE8I=; b=gK
+	780mYbJRLaDctPqpw8vzG/i5ek39sPDQcn/mMgAmWXR6WccdkZSxws/StKCHg1XW
+	e+9BNyjWYbOptg87WiaisLQBjxgn0Xuc1tz+WWF8nrI3ZPfbFM8J8EsB36h7dWLr
+	4U0PvWHihh+i6J6SbRCVq1PzZaARrh1Tb3/w7veW3I/zCoM5pQ+ablfZdEx6fBqC
+	/miLUsnRqODeN8ZmIRvBBd7zFGw/Y2LCIR4NqypqL6yAIYi6Rv0pyZKCkteBPGrW
+	amCu4eWaujA5tIwFnyrblOcTHofPowvSFg+7bnjSD1o116yZquz9ewLysCi25hdf
+	OQrnd3LJOymeu0lQUmoQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wuapehecq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 20:58:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42DJ5Y1k020446;
-	Wed, 13 Mar 2024 20:58:15 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws3km8c0h-1
+	Wed, 13 Mar 2024 20:59:10 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42DKx9de028556
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 20:58:15 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42DKwBwX46530928
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Mar 2024 20:58:14 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A16EE5803F;
-	Wed, 13 Mar 2024 20:58:11 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 16A9158060;
-	Wed, 13 Mar 2024 20:58:11 +0000 (GMT)
-Received: from jason-laptop.ibmuc.com (unknown [9.61.59.128])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Mar 2024 20:58:10 +0000 (GMT)
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-To: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v3 4/5] s390/vfio-ap: Add write support to sysfs attr ap_config
-Date: Wed, 13 Mar 2024 16:58:06 -0400
-Message-ID: <20240313205807.30554-5-jjherne@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240313205807.30554-1-jjherne@linux.ibm.com>
-References: <20240313205807.30554-1-jjherne@linux.ibm.com>
+	Wed, 13 Mar 2024 20:59:09 GMT
+Received: from [10.110.34.216] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 13 Mar
+ 2024 13:59:05 -0700
+Message-ID: <02363fef-0b5e-4b6c-bad9-db924db230b9@quicinc.com>
+Date: Wed, 13 Mar 2024 13:59:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nl15GPELR37VgB1MWTr8V7-o6zxtlpCB
-X-Proofpoint-GUID: nl15GPELR37VgB1MWTr8V7-o6zxtlpCB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4] net: Re-use and set mono_delivery_time bit
+ for userspace tstamp packets
+Content-Language: en-US
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin KaFai Lau
+	<martin.lau@linux.dev>
+CC: <kernel@quicinc.com>, "David S. Miller" <davem@davemloft.net>,
+        "Eric
+ Dumazet" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        "Martin
+ KaFai Lau" <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel
+ Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii
+ Nakryiko <andrii@kernel.org>
+References: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
+ <2a4cb416-5d95-459d-8c1c-3fb225240363@linux.dev>
+ <65f16946cd33e_344ff1294fc@willemb.c.googlers.com.notmuch>
+ <28282905-065a-4233-a0a2-53aa9b85f381@linux.dev>
+ <65f2004e65802_3d1e792943e@willemb.c.googlers.com.notmuch>
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <65f2004e65802_3d1e792943e@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cagLZueLiRGKU9NIYl2gUFsOZ91zeEXO
+X-Proofpoint-GUID: cagLZueLiRGKU9NIYl2gUFsOZ91zeEXO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-13_09,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403130160
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403130161
 
-Allow writing a complete set of masks to ap_config. Doing so will
-cause the vfio-ap driver to replace the vfio-ap mediated device's
-matrix masks with the given set of masks. If the given state cannot
-be set, then no changes are made to the vfio-ap mediated device.
 
-The format of the data written to ap_config is as follows:
-{amask},{dmask},{cmask}\n
 
-\n is a newline character.
+On 3/13/2024 12:36 PM, Willem de Bruijn wrote:
+> Martin KaFai Lau wrote:
+>> On 3/13/24 1:52 AM, Willem de Bruijn wrote:
+>>> Martin KaFai Lau wrote:
+>>>> On 3/1/24 12:13 PM, Abhishek Chauhan wrote:
+>>>>> Bridge driver today has no support to forward the userspace timestamp
+>>>>> packets and ends up resetting the timestamp. ETF qdisc checks the
+>>>>> packet coming from userspace and encounters to be 0 thereby dropping
+>>>>> time sensitive packets. These changes will allow userspace timestamps
+>>>>> packets to be forwarded from the bridge to NIC drivers.
+>>>>>
+>>>>> Setting the same bit (mono_delivery_time) to avoid dropping of
+>>>>> userspace tstamp packets in the forwarding path.
+>>>>>
+>>>>> Existing functionality of mono_delivery_time remains unaltered here,
+>>>>> instead just extended with userspace tstamp support for bridge
+>>>>> forwarding path.
+>>>>
+>>>> The patch currently broke the bpf selftest test_tc_dtime:
+>>>> https://github.com/kernel-patches/bpf/actions/runs/8242487344/job/22541746675
+>>>>
+>>>> In particular, there is a uapi field __sk_buff->tstamp_type which currently has
+>>>> BPF_SKB_TSTAMP_DELIVERY_MONO to mean skb->tstamp has the MONO "delivery" time.
+>>>> BPF_SKB_TSTAMP_UNSPEC means everything else (this could be a rx timestamp at
+>>>> ingress or a delivery time set by user space).
+>>>>
+>>>> __sk_buff->tstamp_type depends on skb->mono_delivery_time which does not
+>>>> necessarily mean mono after this patch. I thought about fixing it on the bpf
+>>>> side such that reading __sk_buff->tstamp_type only returns
+>>>> BPF_SKB_TSTAMP_DELIVERY_MONO when the skb->mono_delivery_time is set and skb->sk
+>>>> is IPPROTO_TCP. However, it won't work because of bpf_skb_set_tstamp().
+>>>>
+>>>> There is a bpf helper, bpf_skb_set_tstamp(skb, tstamp,
+>>>> BPF_SKB_TSTAMP_DELIVERY_MONO). This helper changes both the skb->tstamp and the
+>>>> skb->mono_delivery_time. The expectation is this could change skb->tstamp in the
+>>>> ingress skb and redirect to egress sch_fq. It could also set a mono time to
+>>>> skb->tstamp where the udp sk->sk_clockid may not be necessary in mono and then
+>>>> bpf_redirect to egress sch_fq. When bpf_skb_set_tstamp(skb, tstamp,
+>>>> BPF_SKB_TSTAMP_DELIVERY_MONO) succeeds, reading __sk_buff->tstamp_type expects
+>>>> BPF_SKB_TSTAMP_DELIVERY_MONO also.
+>>>>
+>>>> I ran out of idea to solve this uapi breakage.
+>>>>
+>>>> I am afraid it may need to go back to v1 idea and use another bit
+>>>> (user_delivery_time) in the skb.
+>>>
+>>> Is the only conflict when bpf_skb_set_tstamp is called for an skb from
+>>> a socket with sk_clockid set (and thus SO_TXTIME called)?
+>>
+>> Right, because skb->mono_delivery_time does not mean skb->tstamp is mono now and 
+>> its interpretation depends on skb->sk->sk_clockid.
+>>
+>>> Interpreting skb->tstamp as mono if skb->mono_delivery_time is set and
+>>> skb->sk is NULL is fine. This is the ingress to egress redirect case.
+>>
+>> skb->sk == NULL is fine. I tried something like this in 
+>> bpf_convert_tstamp_type_read() for reading __sk_buff->tstamp_type:
+>>
+>> __sk_buff->tstamp_type is BPF_SKB_TSTAMP_DELIVERY_MONO when:
+>>
+>> 	skb->mono_delivery_time == 1 &&
+>> 	(!skb->sk ||
+>> 	 !sk_fullsock(skb->sk) /* tcp tw or req sk */ ||
+>> 	 skb->sk->sk_protocol == IPPROTO_TCP)
+>>
+>> Not a small bpf instruction addition to bpf_convert_tstamp_type_read() but doable.
+>>
+>>>
+>>> I don't see an immediate use for this BPF function on egress where it
+>>> would overwrite an SO_TXTIME timestamp and now skb->tstamp is mono,
+>>> but skb->sk != NULL and skb->sk->sk_clockid != CLOCK_MONOTONIC.
+>>
+>> The bpf prog may act as a traffic shaper that limits the bandwidth usage of all 
+>> outgoing packets (tcp/udp/...) by setting the mono EDT in skb->tstamp before 
+>> sending to the sch_fq.
+>>
+>> I currently also don't have a use case for skb->sk->sk_clockid != 
+>> CLOCK_MONOTONIC. However, it is something that bpf_skb_set_tstamp() can do now 
+>> before queuing to sch_fq.
+>>
+>> The container (in netns + veth) may use other sk_clockid/qdisc (e.g. sch_etf) 
+>> setup and the non mono skb->tstamp is not cleared now during dev_forward_skb() 
+>> between the veth pair.
+>>
+>>>
+>>> Perhaps bpf_skb_set_tstamp() can just fail if another delivery time is
+>>> already explicitly programmed?
+>>
+>> This will change the existing bpf_skb_set_tstamp() behavior, so probably not 
+>> acceptable.
+>>
+>>>
+>>>      skb->sk &&
+>>>      sock_flag(sk, SOCK_TXTIME) &&
+>>>      skb->sk->sk_clockid != CLOCK_MONOTONIC
+>>
+>>> Either that, or unset SOCK_TXTIME to make sk_clockid undefined and
+>>> fall back on interpreting as monotonic.
+>>
+>> Change sk->sk_flags in tc bpf prog? hmm... I am not sure this will work well also.
+>>
+>> sock_valbool_flag(SOCK_TXTIME) should require a lock_sock() to make changes. The 
+>> tc bpf prog cannot take the lock_sock, so bpf_skb_set_tstamp() currently only 
+>> changes skb and does not change skb->sk.
+>>
+>> I think changing sock_valbool_flag(SOCK_TXTIME) will also have a new user space 
+>> visible side effect. The sendmsg for cmsg with SCM_TXTIME will start failing 
+>> from looking at __sock_cmsg_send().
+>>
+>> There may be a short period of disconnect between what is in sk->sk_flags and 
+>> what is set in skb->tstamp. e.g. what if user space does setsockopt(SO_TXTIME) 
+>> again after skb->tstamp is set by bpf. This could be considered a small glitch 
+>> for some amount of skb(s) until the user space settled on setsockopt(SO_TXTIME).
+>>
+>> I think all this is crying for another bit in skb to mean user_delivery_time 
+>> (skb->tstamp depends on skb->sk->sk_clockid) while mono_delivery_time is the 
+>> mono time either set by kernel-tcp or bpf.
+> 
+> It does sound like the approach with least side effects.
+> 
+Martin and Willem , while we are discussing to use seperate bit per skb to check if its 
+SO_TXTIME from userspace or (rcv) timestamp . I came across two flags used in skbuff
+called in filter framework
+@tc_at_ingress: used within tc_classify to distinguish in/egress
+@from_ingress: packet was redirected from the ingress path
 
-amask, dmask, and cmask are masks identifying which adapters, domains,
-and control domains should be assigned to the mediated device.
+Since i believe the above testcase is based on redirecting from ingress to egress part
+why cant we use these already existing flags ? Please advice 
 
-The format of a mask is as follows:
-0xNN..NN
+I am not completely sure if we can use these flags to solve the bpf problem or not. 
+but considering the problem statment put forth by Willem stating that we are just adding 
+flags for every usecase and not keeping the design scalable for future needs. 
 
-Where NN..NN is 64 hexadecimal characters representing a 256-bit value.
-The leftmost (highest order) bit represents adapter/domain 0.
-
-For an example set of masks that represent your mdev's current
-configuration, simply cat ap_config.
-
-This attribute is intended to be used by an mdevctl callout script
-supporting the mdev type vfio_ap-passthrough to atomically update a
-vfio-ap mediated device's state.
-
-Signed-off-by: Jason J. Herne <jjherne@linux.ibm.com>
-Tested-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c     | 186 ++++++++++++++++++++++++--
- drivers/s390/crypto/vfio_ap_private.h |   6 +-
- 2 files changed, 176 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 1499c2181122..05b1d311b31f 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1119,20 +1119,29 @@ static void vfio_ap_mdev_unlink_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
--					    unsigned long apid)
-+static void vfio_ap_mdev_hot_unplug_adapters(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long *apids)
- {
- 	struct vfio_ap_queue *q, *tmpq;
- 	struct list_head qlist;
-+	unsigned long apid;
-+	bool apcb_update = false;
- 
- 	INIT_LIST_HEAD(&qlist);
--	vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, &qlist);
- 
--	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
--		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apid, apids, AP_DEVICES) {
-+		vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, &qlist);
-+
-+		if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
-+			clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
-+			apcb_update = true;
-+		}
- 	}
- 
-+	/* Only update apcb if needed to avoid impacting guest */
-+	if (apcb_update)
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+
- 	vfio_ap_mdev_reset_qlist(&qlist);
- 
- 	list_for_each_entry_safe(q, tmpq, &qlist, reset_qnode) {
-@@ -1141,6 +1150,16 @@ static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
-+static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apid)
-+{
-+	DECLARE_BITMAP(apids, AP_DEVICES);
-+
-+	bitmap_zero(apids, AP_DEVICES);
-+	set_bit_inv(apid, apids);
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, apids);
-+}
-+
- /**
-  * unassign_adapter_store - parses the APID from @buf and clears the
-  * corresponding bit in the mediated matrix device's APM
-@@ -1301,20 +1320,29 @@ static void vfio_ap_mdev_unlink_domain(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
--					   unsigned long apqi)
-+static void vfio_ap_mdev_hot_unplug_domains(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long *apqis)
- {
- 	struct vfio_ap_queue *q, *tmpq;
- 	struct list_head qlist;
-+	unsigned long apqi;
-+	bool apcb_update = false;
- 
- 	INIT_LIST_HEAD(&qlist);
--	vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, &qlist);
- 
--	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
--		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apqi, apqis, AP_DOMAINS) {
-+		vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, &qlist);
-+
-+		if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
-+			clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
-+			apcb_update = true;
-+		}
- 	}
- 
-+	/* Only update apcb if needed to avoid impacting guest */
-+	if (apcb_update)
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+
- 	vfio_ap_mdev_reset_qlist(&qlist);
- 
- 	list_for_each_entry_safe(q, tmpq, &qlist, reset_qnode) {
-@@ -1323,6 +1351,16 @@ static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
-+static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long apqi)
-+{
-+	DECLARE_BITMAP(apqis, AP_DOMAINS);
-+
-+	bitmap_zero(apqis, AP_DEVICES);
-+	set_bit_inv(apqi, apqis);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, apqis);
-+}
-+
- /**
-  * unassign_domain_store - parses the APQI from @buf and clears the
-  * corresponding bit in the mediated matrix device's AQM
-@@ -1590,10 +1628,132 @@ static ssize_t ap_config_show(struct device *dev, struct device_attribute *attr,
- 	return idx;
- }
- 
-+/* Number of characters needed for a complete hex mask representing the bits in ..  */
-+#define AP_DEVICES_STRLEN	(AP_DEVICES/4 + 3)
-+#define AP_DOMAINS_STRLEN	(AP_DOMAINS/4 + 3)
-+#define AP_CONFIG_STRLEN	(AP_DEVICES_STRLEN + 2 * AP_DOMAINS_STRLEN)
-+
-+static int parse_bitmap(char **strbufptr, unsigned long *bitmap, int nbits)
-+{
-+	char *curmask;
-+
-+	curmask = strsep(strbufptr, ",\n");
-+	if (!curmask)
-+		return -EINVAL;
-+
-+	bitmap_clear(bitmap, 0, nbits);
-+	return ap_hex2bitmap(curmask, bitmap, nbits);
-+}
-+
-+static int ap_matrix_overflow_check(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	unsigned long bit;
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.apm, AP_DEVICES) {
-+		if (bit > matrix_mdev->matrix.apm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.aqm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.aqm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.adm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.adm_max)
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ap_matrix_copy(struct ap_matrix *dst, struct ap_matrix *src)
-+{
-+	bitmap_copy(dst->apm, src->apm, AP_DEVICES);
-+	bitmap_copy(dst->aqm, src->aqm, AP_DOMAINS);
-+	bitmap_copy(dst->adm, src->adm, AP_DOMAINS);
-+}
-+
- static ssize_t ap_config_store(struct device *dev, struct device_attribute *attr,
- 			       const char *buf, size_t count)
- {
--	return count;
-+	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(dev);
-+	struct ap_matrix m_new, m_old, m_added, m_removed;
-+	DECLARE_BITMAP(apm_filtered, AP_DEVICES);
-+	unsigned long newbit;
-+	char *newbuf, *rest;
-+	int rc = count;
-+	bool do_update;
-+
-+	newbuf = rest = kstrndup(buf, AP_CONFIG_STRLEN, GFP_KERNEL);
-+	if (!newbuf)
-+		return -ENOMEM;
-+
-+	mutex_lock(&ap_perms_mutex);
-+	get_update_locks_for_mdev(matrix_mdev);
-+
-+	/* Save old state */
-+	ap_matrix_copy(&m_old, &matrix_mdev->matrix);
-+
-+	if (parse_bitmap(&rest, m_new.apm, AP_DEVICES) ||
-+	    parse_bitmap(&rest, m_new.aqm, AP_DOMAINS) ||
-+	    parse_bitmap(&rest, m_new.adm, AP_DOMAINS)) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	bitmap_andnot(m_removed.apm, m_old.apm, m_new.apm, AP_DEVICES);
-+	bitmap_andnot(m_removed.aqm, m_old.aqm, m_new.aqm, AP_DOMAINS);
-+	bitmap_andnot(m_added.apm, m_new.apm, m_old.apm, AP_DEVICES);
-+	bitmap_andnot(m_added.aqm, m_new.aqm, m_old.aqm, AP_DOMAINS);
-+
-+	/* Need new bitmaps in matrix_mdev for validation */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Ensure new state is valid, else undo new state */
-+	rc = vfio_ap_mdev_validate_masks(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = ap_matrix_overflow_check(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = count;
-+
-+	/* Need old bitmaps in matrix_mdev for unplug/unlink */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+
-+	/* Unlink removed adapters/domains */
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, m_removed.apm);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, m_removed.aqm);
-+
-+	/* Need new bitmaps in matrix_mdev for linking new adapters/domains */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Link newly added adapters */
-+	for_each_set_bit_inv(newbit, m_added.apm, AP_DEVICES)
-+		vfio_ap_mdev_link_adapter(matrix_mdev, newbit);
-+
-+	for_each_set_bit_inv(newbit, m_added.aqm, AP_DOMAINS)
-+		vfio_ap_mdev_link_domain(matrix_mdev, newbit);
-+
-+	/* filter resources not bound to vfio-ap */
-+	do_update = vfio_ap_mdev_filter_matrix(matrix_mdev, apm_filtered);
-+	do_update |= vfio_ap_mdev_filter_cdoms(matrix_mdev);
-+
-+	/* Apply changes to shadow apbc if things changed */
-+	if (do_update) {
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+		reset_queues_for_apids(matrix_mdev, apm_filtered);
-+	}
-+out:
-+	release_update_locks_for_mdev(matrix_mdev);
-+	mutex_unlock(&ap_perms_mutex);
-+	kfree(newbuf);
-+	return rc;
- }
- static DEVICE_ATTR_RW(ap_config);
- 
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 98d37aa27044..437a161c8659 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -75,11 +75,11 @@ extern struct ap_matrix_dev *matrix_dev;
-  */
- struct ap_matrix {
- 	unsigned long apm_max;
--	DECLARE_BITMAP(apm, 256);
-+	DECLARE_BITMAP(apm, AP_DEVICES);
- 	unsigned long aqm_max;
--	DECLARE_BITMAP(aqm, 256);
-+	DECLARE_BITMAP(aqm, AP_DOMAINS);
- 	unsigned long adm_max;
--	DECLARE_BITMAP(adm, 256);
-+	DECLARE_BITMAP(adm, AP_DOMAINS);
- };
- 
- /**
--- 
-2.41.0
-
+> If we're going to increase to two bits per skb, it's perhaps
+> better to just encode the (selected supported) CLOCK_ type, rather
+> than only supporting clockid through skb->sk->sk_clockid.
+> 
+> This BPF function is the analogue to SO_TXTIME. It is clearly
+> extensible to additional BPF_SKB_TSTAMP_DELIVERY_.. types. To
+> work with sch_etf, say.
+> 
+>> If we need to revert the 
+>> mono_delivery_time reuse patch later, we will need to revert the netdev patch 
+>> and the (to-be-made) bpf patch.
+> 
+> 
+>  
+> 
+> 
