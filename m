@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB36C13D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB5EC147
 	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 01:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710293430; cv=none; b=C+lYcmM7ooozNFGESde/aR6M40aHTnrYVR3HGxEo4FOycZJ18yJRi8FuSoY2ZrbTfS14eskSA2tQ0wsOSnHlJ22wWOwE8wO9l8TwJihNwLRLJkaYB+Yzbi8j+FxufS7zEmezdOLIIqFgrS4sFpi00PZvHpPBPiEX0ZBpIz6LBQQ=
+	t=1710293430; cv=none; b=oqAShtHusnT0HRqdGyC9JtF3oh1e4epbc+CWMO5toqJOpo9w4Kli+hGccvrvHDu9RAJI4D3N9n7+2pzu8wF7s/sntIYxkMmQ27oGo6Ujompkqxmpc9PWn/SmqvBV0EuX8wZ6rZnrBsPcQxSOiQKj0kDo6I3FcuMUQCeps6kjpsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710293430; c=relaxed/simple;
-	bh=h8pOeiSdPI8iajU4IaZNdfrgsdrTQVx5B+jm+TWhEWg=;
+	bh=7nZy9/vurPXr1lYbS/73LM5YtBWgmbZJ5YIqQSYtFnQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Jh41FTbsfVqPS3cEmLI+70KK+IlFstdNp1Dfb507B6Fx3d4c8vJuFeyeYKf6HP8BhUShlNWHJ+Mixp+MdjPcG4+c288EA3jD/SApHoGb0Bu8IFU8zX0ZDAxYT1xECRvrGyklXlfd5tBhIP1PBBEMrIrlEioHajc1ClS9yPYPlZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4PzfoP9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=au+QkNY3o5winbu3uxZuI6iBhBv6gIjEdenQ+oNE7imBuFUPy560XGRlVqv0xtuFULCHpZDruBJRIF+WuDt8WWBO0bMKXxIpUs7DisYBMP/LLuaKDI3FsD7n8lrTJSfm/9Syc68gvfcOEd4i83/QBeq9Apgq8Z/n+EYH7cZjXgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2Bga/YR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4PzfoP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 07E8CC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2Bga/YR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EF8F8C43390;
 	Wed, 13 Mar 2024 01:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710293430;
-	bh=h8pOeiSdPI8iajU4IaZNdfrgsdrTQVx5B+jm+TWhEWg=;
+	bh=7nZy9/vurPXr1lYbS/73LM5YtBWgmbZJ5YIqQSYtFnQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=L4PzfoP9Wo383wNbc5BDShHMAaUAteOMrpcRwlP9W+XkyacJQL7EAW8RvpSMUsl/i
-	 c33IceUb9vKGv2iwCwCzhNpKFiamzAO2Sn2i1yQna6ml9XsyXc4tJoFZ1f60so+w/X
-	 UsQzNXjM7/k3i4TaVWx6F946oaFNsi+tg4bMIoJ9uwy74exGV3ofvjwfpt8AuOkq7L
-	 aXqmOYP0vbXMn6e6RKxGWJigF4zcZf1leYFnXxx3nJ5miZJfoD8nvIi6IyKuzNalUA
-	 h+VMpMMLrH2AuA/dRFgjmRECxaXXwhCrZMV9w1PlOWk0oXSp98uWSq/w1F90EAdKi/
-	 axu5hHpZDF+ug==
+	b=J2Bga/YRp8sVgNGz4lcaA0QlE7hQfgHBNd3QdMB6cHyqXJqSEERoitbs2VSjHjt2E
+	 B6DsR5KTJKZ4CYuK80W3zg0cbAoJzQq9pm5Ygf03xmdcE0shLRvu1ZfJPghO3kwu/O
+	 iqEpTSN78NxwvVG2np+US9IIf2M0u6umaW5TXWs4wcq4+2kp9kA3fUkAyAUnDigX/T
+	 MUzjIO9ulbz7Z3PUHtsEQQ4WA4GS615T2XuY6H5W3afTxK8/Mc0BfClcu0bvF7KeUa
+	 7Xz2TPBAEr2857UYIqDypdiGvBdhMeSW2Z+/UDDzyo3HKt4ruEyqLd1vYO1aVlKyTP
+	 5If3Arl3uP5sQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D8054D84BAC;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D0540D95057;
 	Wed, 13 Mar 2024 01:30:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: zone: fix to remove pow2 check condition
- for zoned block device
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: prevent atomic write on pinned file
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171029342988.17296.17999527024833802144.git-patchwork-notify@kernel.org>
+ <171029342984.17296.1929429193688050018.git-patchwork-notify@kernel.org>
 Date: Wed, 13 Mar 2024 01:30:29 +0000
-References: <20240308035057.62660-1-chao@kernel.org>
-In-Reply-To: <20240308035057.62660-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, songfeng@oppo.com, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+References: <20240311235921.1832684-1-daeho43@gmail.com>
+In-Reply-To: <20240311235921.1832684-1-daeho43@gmail.com>
+To: Daeho Jeong <daeho43@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ kernel-team@android.com, daehojeong@google.com
 
 Hello:
 
-This patch was applied to jaegeuk/f2fs.git (dev)
+This series was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Fri,  8 Mar 2024 11:50:57 +0800 you wrote:
-> Commit 2e2c6e9b72ce ("f2fs: remove power-of-two limitation of zoned
-> device") missed to remove pow2 check condition in init_blkz_info(),
-> fix it.
+On Mon, 11 Mar 2024 16:59:19 -0700 you wrote:
+> From: Daeho Jeong <daehojeong@google.com>
 > 
-> Fixes: 2e2c6e9b72ce ("f2fs: remove power-of-two limitation of zoned device")
-> Signed-off-by: Feng Song <songfeng@oppo.com>
-> Signed-off-by: Yongpeng Yang <yangyongpeng1@oppo.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
+> Since atomic write way was changed to out-place-update, we should
+> prevent it on pinned files.
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: zone: fix to remove pow2 check condition for zoned block device
-    https://git.kernel.org/jaegeuk/f2fs/c/11bec96afbfb
+  - [f2fs-dev,1/2] f2fs: prevent atomic write on pinned file
+    https://git.kernel.org/jaegeuk/f2fs/c/c644af133283
+  - [f2fs-dev,2/2] f2fs: prevent writing without fallocate() for pinned files
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
