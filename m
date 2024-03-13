@@ -1,130 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776F63FB1C;
-	Wed, 13 Mar 2024 12:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83D73FB0F
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710331614; cv=none; b=XXXDpU5Wh5/zg/AXQfO6ttEm0EEoMX0hM3AHSd6RIv9Ta+ieJlF54jumEapcENKNmp3xescIkYHniDOabq8I8dcXKv8QBnDhewERP7yKJBd6jiogQyPwxvFKAoy9xNqrTf2ArLWHSAF7iA3A2o+TwJkEG4fVm6Mc6EszP6/IEZY=
+	t=1710331774; cv=none; b=McGxtpkoT8htIHKdd46wB6TrZzyVSNw3BOsEvhBal+l4rpyoPO4ZOv9mey382PZ62k9wlPtqU2bWLnHecRYa6JnlNDzV5gSvhBE54eiaNvm3Fg1roPsjntKnk7sihpfrxzMfUL39mxn+t3aoogERlyVGH0D2y2VznMByLAl2HDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710331614; c=relaxed/simple;
-	bh=M425A9spsJt2sc60u2h4SBdYauiKFkLuf2a5/almDhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BGCZxos2dWviDmH4uC7vEyI9DG9ROCXYrlfC6SpigEGFpS0QnY1JZbRYuH/PHuxuCuRRULLBtN+lMrjksHTSCTxe+JDexGRWB1Bs4poPf7jhP7CE0poZGwDCh38QN+6YzdCfBrDNhTmklDgz+4q+Dis/hfSPR/a1UaWSnrtsl50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=StyduBs2; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710331774; c=relaxed/simple;
+	bh=PaWJKUsVlyLQ/OT+v64+m7jQDF3xuZkRa2uz3Sn7OxQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=p32w/lsgmOUp2Dj9pOpbGvedxCai+nzTkIunAU32AcpgqSPTFkrZKdDtMiD4VcdL7vATj0qWmGJ6Em8vTCbVZQrupIRplOR+R+i781vWEHkA+d4nMQRCvkb4NQPoBOnJnBV74vdcCjyt8E/+B7FYGQL4f7SkYI6U38baUHooX+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dH8hHJWQ; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="StyduBs2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710331613; x=1741867613;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M425A9spsJt2sc60u2h4SBdYauiKFkLuf2a5/almDhY=;
-  b=StyduBs2bkVV/PgwKxmEW/FYiutthkBye8avcfcOkR0Ny8Ok8xgEg1p9
-   VokH0NtsML/3hvyeE/UiaTxK8iUP0Ux9LEL99ZzeQ5CqJVZU4LBmd19Ba
-   2ROfKMudXBqe9fEUxlAG6SMcn7EmyHkvN5RkNrz99s6FUabOLynuGAkVg
-   WH23apmd6l29Hi4wlk8Kqb5iQbecEsYDoNeH3H4cOV59kusQnqN3jocPv
-   kvtHr/RJRahhfYsz8T/+fdUwo3dfDwbx3YfgEA5n1zIRp2ha/dmC852M1
-   ZHM5f9elAl1o7iI+EYuWX1q1/Pe3Kx8YMAwCtIrsu0QGpT6t6vWLthEr8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="15724252"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="15724252"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 05:06:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="16498296"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 13 Mar 2024 05:06:47 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rkNNc-000CLb-2d;
-	Wed, 13 Mar 2024 12:06:44 +0000
-Date: Wed, 13 Mar 2024 20:05:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robin Murphy <robin.murphy@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, linux-perf-users@vger.kernel.org,
-	jialong.yang@shingroup.cn
-Subject: Re: [PATCH 04/10] perf: Rename PERF_PMU_CAP_NO_INTERRUPT
-Message-ID: <202403131930.sz1VjXDw-lkp@intel.com>
-References: <0999a39f0a068979dbcc6119380f63d706101b4f.1710257512.git.robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dH8hHJWQ"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a029c8e62so41993671cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 05:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710331771; x=1710936571; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fkFrCRZ7REzYM7HPzWkHOB/qAAg9L6SN2KGBi6tV2U8=;
+        b=dH8hHJWQTphkmvll8n04qLSgOH6UD1A5rEMG3lCbztiAMf2NJpUQZEDQQc8B+pxuic
+         R+M/ufkF2CUg0aF+M4bcBDrcmt3ll3+gZR8sdE8CrhwoNN7LYdaMXiZiNnViHMtCJIcg
+         V6YKE8gfIrN066Z5NGlovIfT8RuBmg7F++Qu5uVRBawQEW5XSRQ8ad5qQVoDW0nMuoeS
+         U48jQ5odB/8jqDEFh8rrahQfNGnT3IzOXWP8YypdlRv2qFLhVB/KMBLKurRT+xAkfE+4
+         rg3flKBVb4+D/5KzE5Y0oSWuM+ceJSgI0GMqy73GznzYvvs8tCG2SNNjq2YAcYQyLa7W
+         usWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710331771; x=1710936571;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fkFrCRZ7REzYM7HPzWkHOB/qAAg9L6SN2KGBi6tV2U8=;
+        b=rt/LE9zabSSWgLd5UFhihx+x6tp03odzDQLAftF3GMTAg7NU6pUBX13+WZUrWnfxm2
+         4bLUFRGJPb6DHNxGdnBD3Qq2HSKgNKAEFbdlo4iUUuBUXnNih1ZUWU43eqM5YH+9AcH0
+         p3ezedh/mUgjM+0KmtT/xX/ju4Ygt2NpZ5WmdGFFHo5p47WUaiF8IzcxPFbCovfi1ofu
+         L+BcC6GeqzAL2JfY+OLvu54EaqONNjCaUWUYwiaLra2+Rata15wd5UB5MND5FPkZieDR
+         d3XQSbLJeicmE65YfKLJYVYgbpow3qp7fUmZmGBChafVwbhN2NEMn9ImbjxTwbHtlrJT
+         F/Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXonDTCkZhh9lbzbgvunBxWw802OQ/JPjA+Zbr8gUXtJSfuVWy4Wj3FdY9Y1nCdtczhdYFulwoSyGp1suyn6Gr0n2KEQPf0lJLDNjj
+X-Gm-Message-State: AOJu0Yy+MHeiZG+zfSrwFyT73z1AB3xspiSrdYyYSPOGV60pq6Ld5S96
+	ZMsZ5hwowsYRfkk47g68fSu71i+eC/4uWFnyrf501iCr32MODn+FPK+yOEhbsQ==
+X-Google-Smtp-Source: AGHT+IHPxYLeojC3Nitb0DmAlBOP7LbnLK4ua+fvpOeNRBl6nokaZyXh6+ry66CSHzQIQg+NuA8cRw==
+X-Received: by 2002:ac8:5d93:0:b0:42d:ff64:edf with SMTP id d19-20020ac85d93000000b0042dff640edfmr16590169qtx.7.1710331771443;
+        Wed, 13 Mar 2024 05:09:31 -0700 (PDT)
+Received: from [127.0.1.1] ([117.213.99.94])
+        by smtp.gmail.com with ESMTPSA id c19-20020ac85193000000b0042f3098f410sm4773377qtn.48.2024.03.13.05.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 05:09:30 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Wed, 13 Mar 2024 17:39:22 +0530
+Subject: [PATCH] PCI: qcom: Implement shutdown() callback to properly reset
+ the endpoint devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0999a39f0a068979dbcc6119380f63d706101b4f.1710257512.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240313-pci-qcom-shutdown-v1-1-fb1515334bfa@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHGX8WUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDY0Nj3YLkTN3C5Pxc3eKM0pKU/PI83RQLMyNLC0MLM1MzAyWgvoKi1LT
+ MCrCZ0bG1tQDplwVAYwAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2023;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=PaWJKUsVlyLQ/OT+v64+m7jQDF3xuZkRa2uz3Sn7OxQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl8Zd3NreNMGV1X4mPgyzeV4pVF/YH7jniwvnhZ
+ kUQ7Nmn8cWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfGXdwAKCRBVnxHm/pHO
+ 9ZmjB/9LYaEXk/pWFVtsJAONhGfusM3PQ5aJyKzT/pwsoVwdaoJXRCI4mphSKlEr+AXmTPTsEfK
+ nVupmE5l1DMclwJEbhWgKGVE3EOs7tHWIjxkzX+Yc/ldJS9L8weqyoW4g3fDlljKxow0q9nT2V5
+ Vc8vPomJhwh2EEEmxftxXx7CiUycP8W5IDuB60PclK6tGa0TLWYSSuIdpEje3yGa0FRvVlC4yuy
+ qC1vgkeJpDR2J6/AbrNJxyTrP7by4Zu6PJjdjzk4EVlJOkn+rirka15APc4p01Au7jNqffSjdMG
+ yaiP7ssFZwRxuYohCAgmKMP/f5NDVhVV0yJ1VtQprVRrve9F
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Hi Robin,
+PCIe host controller drivers are supposed to properly reset the endpoint
+devices during host shutdown/reboot. Currently, Qcom driver doesn't do
+anything during host shutdown/reboot, resulting in both PERST# and refclk
+getting disabled at the same time. This prevents the endpoint device
+firmware to properly reset the state machine. Because, if the refclk is
+cutoff immediately along with PERST#, access to device specific registers
+within the endpoint will result in a firmware crash.
 
-kernel test robot noticed the following build errors:
+To address this issue, let's call qcom_pcie_host_deinit() inside the
+shutdown callback, that asserts PERST# and then cuts off the refclk with a
+delay of 1ms, thus allowing the endpoint device firmware to properly
+cleanup the state machine.
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on perf-tools/perf-tools linus/master v6.8 next-20240313]
-[cannot apply to acme/perf/core tip/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-alibaba_uncore_drw-Use-correct-CPU-affinity/20240313-013915
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/0999a39f0a068979dbcc6119380f63d706101b4f.1710257512.git.robin.murphy%40arm.com
-patch subject: [PATCH 04/10] perf: Rename PERF_PMU_CAP_NO_INTERRUPT
-config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20240313/202403131930.sz1VjXDw-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240313/202403131930.sz1VjXDw-lkp@intel.com/reproduce)
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 2ce2a3bd932b..41434bc4761a 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+ 	return 0;
+ }
+ 
++static void qcom_pcie_shutdown(struct platform_device *pdev)
++{
++	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
++
++	qcom_pcie_host_deinit(&pcie->pci->pp);
++}
++
+ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+@@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
+ 		.pm = &qcom_pcie_pm_ops,
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
++	.shutdown = qcom_pcie_shutdown,
+ };
+ builtin_platform_driver(qcom_pcie_driver);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403131930.sz1VjXDw-lkp@intel.com/
+---
+base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
+change-id: 20240313-pci-qcom-shutdown-d86298186560
 
-All errors (new ones prefixed by >>):
-
->> arch/x86/events/core.c:1815:46: error: expected ';' after expression
-    1815 |         pmu.capabilities |= PERF_PMU_CAP_NO_SAMPLING
-         |                                                     ^
-         |                                                     ;
-   1 error generated.
-
-
-vim +1815 arch/x86/events/core.c
-
-  1799	
-  1800	static void __init pmu_check_apic(void)
-  1801	{
-  1802		if (boot_cpu_has(X86_FEATURE_APIC))
-  1803			return;
-  1804	
-  1805		x86_pmu.apic = 0;
-  1806		pr_info("no APIC, boot with the \"lapic\" boot parameter to force-enable it.\n");
-  1807		pr_info("no hardware sampling interrupt available.\n");
-  1808	
-  1809		/*
-  1810		 * If we have a PMU initialized but no APIC
-  1811		 * interrupts, we cannot sample hardware
-  1812		 * events (user-space has to fall back and
-  1813		 * sample via a hrtimer based software event):
-  1814		 */
-> 1815		pmu.capabilities |= PERF_PMU_CAP_NO_SAMPLING
-  1816	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
