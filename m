@@ -1,82 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864C47A6F;
-	Wed, 13 Mar 2024 17:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EA94AEFD;
+	Wed, 13 Mar 2024 17:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710351617; cv=none; b=S2MLt9HfzJWFLXKZpBaJSS84VTOI9Z5sxK0HEo5k3VG7K9jYyzNdQkYjqU4lqnaytR/oe7zH9miW1tv1W/3Xtuo17VARBkvAM2/wX/rJnYWCqdlP1c6RPZmPgeDcdUbc4G1sL8+7E1zU+c1lFPNbvUPAvCrgBwi8jnWPKCnvfN8=
+	t=1710351617; cv=none; b=CLNYWq4AcOeyn3G1v5I8AhiUaBuCPzx6PFmDgUxXb/Bo6pUEfhCYb1Y+AN4A9h7LXNOIGeGRINumVgsKlGuKoTgTzc8gU00OGOuYQxutMKMQwdZTcCO5Tp2HErDxyeLHQJaHTczUJal/2YIh6pp4loxKl3q9qNndeYGFMfcREUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710351617; c=relaxed/simple;
-	bh=tUQlTIAd9zU8ZTFePqPCTyVR4NP6xLSNEMqxtaPHCVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Od75+9okwmT5J7gxvpDQZAuPsK8mowv0N9vfNNzaYDU53G771jjcg+6kJpm4zSzNq/uJJ36WKSr1y7gfsWysYxSKh8JdvuJvtjaad/HmPxko/ngOeQ18Q6mfdQVvGXopkQ4EHLpXlY/IVdhG3kATHPcEQoZZhfd4EYuveojur5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6iOwws+; arc=none smtp.client-ip=10.30.226.201
+	bh=Ns5xfy/sbPNx6F1ycRVcX57JMl8ewV0mTqKIsYm8wwo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LSBVLY4rpjgU/+St2q5p+To0HGfqO3LJhpLomqCOmYUe9fMec6L/akWlOJNEBkS76DA5fSMe8OMobyRVDLrBmLekFP/l03suURUbtiZMRy0WAxvgMua6X37cJdxBBHCp6manCSX54VzQ/iT1HQM/rXS6/Q431qU9CteOh/lzgKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MwEEFn8S; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6iOwws+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F1DC433C7;
-	Wed, 13 Mar 2024 17:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710351616;
-	bh=tUQlTIAd9zU8ZTFePqPCTyVR4NP6xLSNEMqxtaPHCVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q6iOwws+UvSeGTEvnPdkAZG3XEUvuQB4ECG4wRyrKS+An6n3M77FvEnpNHHSsdoAS
-	 /5BZjTgZOCgtgbLeNI7wOQ6u2XY/V36QB+s/ILVm6AuD+muELOUfiD14tZkKAT0s76
-	 DqXLn4y5WimKWCx16tHn3Q+Pq4xC7qctexYlZew5whIOzgO3wIYUv4gq5s5H/ZhV8/
-	 mSr5tUkrcZtzIraVqLcugwzlb3Nm+68lS5JT/TE1kCMovJn3NeXAAa04Z/Po64HenO
-	 zcszU0/A1zMlXry0R8amFNwXHu/OqiApedYDz1VM6nbFKn1XDguWFK243EECFnL5rs
-	 N5vhUBMAjFFbQ==
-Date: Wed, 13 Mar 2024 17:40:12 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-spi@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: Fix error code checking in spi_mem_exec_op()
-Message-ID: <7109907f-baf3-47e2-b33f-3403e1299176@sirena.org.uk>
-References: <20240313171050.3505620-1-florian.fainelli@broadcom.com>
- <CZSSWP7A9UM7.1R20796VHLU0F@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwEEFn8S"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513b16bb739so130663e87.3;
+        Wed, 13 Mar 2024 10:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710351614; x=1710956414; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zllk/wuhCWwtewos2WrOxr/iwLLxz8oG0dapHF1TNaE=;
+        b=MwEEFn8Sv5JP0waMzdNVx0AvStVvzs6ljrVcN6KXTMQtFFNUjP5wH/3H6+auvHN6Yx
+         hfSiWGTlf3ZMi4SyQNVrVaF27jEbv0S1wda5gEGEZtQ4WQpeiptutZWUYR4kRxVrfIG/
+         d3DL5axqc9nn6e1X3CAJVnUOctJcibozphS8iRmxv8P6Os+s87XTzV+wYcaLdwsO8D3v
+         xTOZNRqaUWr887aPwW9BCuJyDwtjuGVk0WccDfbUBXnI36N5LXZd2NbSrxhbScH6coEY
+         SL1qqLpjYMOdyCUiKK9eW4ZxS7C7XpfzmucwFal6x4+0pqEbQuGgepzI59Iotk2YCCtk
+         Rmrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710351614; x=1710956414;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zllk/wuhCWwtewos2WrOxr/iwLLxz8oG0dapHF1TNaE=;
+        b=dPNu/7u49d6Gz7Kr2tDo+yKz96i7TzRu7e4QDqulx1bqYO/qHW3Qntnu9lDJT8REIV
+         pd/Z6MsINc116WOQQnrORA+Sk7JfwPbT94/nu8E0TNpHSawiEziwXZvGTdl7SWwapdn6
+         TChtvtrFhbOrRLZjLuneYk6Dd6wNZCMMVMG6iH8PlPiQ+T2QwdR+FuU9vfL1tfPKtTUt
+         rvk0hJ7osb+EF7ybjPtV8HEY5hm4i+oTtsCeGXF9dqbJdJk3+R3bLdpOSxpKxF1XNLCE
+         LWXH9ePNhXuwpE3pU2LNBwavEiQox+tr+MbOAhtoqX50DCIgUdjbnLbdOMT0PjbfqVkn
+         mZZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUc3aYfWKDfyuyUv3VW9NrXY3tJD9G9fevbgovQT9tR2ZNJMjZGYfyUlFUIThAKqIELRXDpl47ArffqSxyt7DWu/MnBWsqi32qEIB8DN3KeTr0uHFxTOGSMgm/alnJ99bTuNHMP7d5/
+X-Gm-Message-State: AOJu0YyEVNclyq7yzAexiFmIFl7/doEqh/Gfi2mrqAdiHz9UUiJEbjh0
+	Jvge3rb4j9zUz3lAXK1syOaqDGouNMg2mFqki+AfVJ1CkedYZhe/X1nAwhqJtVkU49xT
+X-Google-Smtp-Source: AGHT+IFY53Z1HU32RMopggwHU72J4n/dn2jOLl4GM0poV8p1TlGKJR2+N1p1ls7fnUYeItcc28EGXA==
+X-Received: by 2002:a19:f815:0:b0:513:c0de:307b with SMTP id a21-20020a19f815000000b00513c0de307bmr3638430lff.28.1710351613371;
+        Wed, 13 Mar 2024 10:40:13 -0700 (PDT)
+Received: from localhost.localdomain ([2a04:ee41:82:7577:fa35:157e:1a40:3463])
+        by smtp.gmail.com with ESMTPSA id m17-20020a1709061ed100b00a449076d0dbsm5028215ejj.53.2024.03.13.10.40.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 10:40:12 -0700 (PDT)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	andriy.shevchenko@linux.intel.com,
+	ang.iglesiasg@gmail.com,
+	mazziesaccount@gmail.com,
+	ak@it-klinger.de,
+	petre.rodan@subdimension.ro,
+	linus.walleij@linaro.org,
+	phil@raspberrypi.com,
+	579lpy@gmail.com,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vasileios Amoiridis <vassilisamir@gmail.com>
+Subject: [PATCH v2 0/6] Series to add triggered buffer support to BMP280 driver
+Date: Wed, 13 Mar 2024 18:40:01 +0100
+Message-Id: <20240313174007.1934983-1-vassilisamir@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c25yVvKkvrfIyDqD"
-Content-Disposition: inline
-In-Reply-To: <CZSSWP7A9UM7.1R20796VHLU0F@kernel.org>
-X-Cookie: It's later than you think.
+Content-Transfer-Encoding: 8bit
 
+All the proposals were implemented, and 2 extra patches were added (Patch 2 and
+patch 4) in order to have better logical split between patches.
 
---c25yVvKkvrfIyDqD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes in v2:
 
-On Wed, Mar 13, 2024 at 06:33:43PM +0100, Michael Walle wrote:
+Patch 1: Sorted and removed headers as per request.
 
-> FWIW in next, there is commit
-> e63aef9c9121e ("spi: spi-mem: add statistics support to ->exec_op() calls")
-> that probably will conflict with this one.
+Patch 2: *NEW* Patch, adds coefficients for IIO units in the chip_info
+structure as per request, remove them from the read_* functions.
 
-Indeed, this doesn't apply - please fix and resend.
+Patch 3: Patch 2 of v1. Added RAW values as well, as per request.
 
---c25yVvKkvrfIyDqD
-Content-Type: application/pgp-signature; name="signature.asc"
+Patch 4: *NEW* Remove the temperature reading from inside read_* functions so
+the addition of a buffer for userspace is facilitated + make the code much more 
+intuitive.
 
------BEGIN PGP SIGNATURE-----
+Patch 5: Patch 3 of v1. No logical change, only minor typos as per request.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXx5PsACgkQJNaLcl1U
-h9Bd8wf9HzT8NPFCZoqC/eQp75wLJM0cfYy8K/vUMHO0rL+TO73BxjhPZyI3Gg6y
-xzP9jD82bWE0R/TnGLx428Oo7aljdE2WO7WSD9Zx9qAybiY5zynO7OsvagDn4UwP
-kt7UuxYbZtIhYaFgQ/f9gh55nq1UKP3ihjfI6+8fP4xRCCMYISamwaJYFFZc4iA7
-rc8Fdi5TeNp516b9juF9j1fWkepm47TByTVtFg0S5xv9cgnl8J8Gkn2J8bDIORWE
-hx0t2Xr0GfuOOodaw7BT0j1gdUM/OJLSOc11lKy6Aeb+ZuHThY4MljEHSGG3vFTy
-SjatvA9NYwJMFZhpXZe2njCm7nvpZw==
-=b6ub
------END PGP SIGNATURE-----
+Patch 6: Patch 4 of v1. Previous commits allowed for much cleaner approach as
+per request. Dropped filling of extra buffer in the read_* functions.
+Patch 4 allows to put extra buffer in the union of the chip_info and fill
+the buffer in the buffer_handler function.
 
---c25yVvKkvrfIyDqD--
+[1] https://lore.kernel.org/linux-iio/20240303165300.468011-1-vassilisamir@gmail.com
+
+Vasileios Amoiridis (6):
+  iio: pressure: BMP280 core driver headers sorting
+  iio: pressure: Simplify read_* functions
+  iio: pressure: add SCALE and RAW values for channels
+  iio: pressure: Simplify and make more clear temperature readings
+  iio: pressure: Add timestamp and scan_masks for BM280 driver
+  iio: pressure: Add triggered buffer support for BMP280 driver
+
+ drivers/iio/pressure/Kconfig       |   2 +
+ drivers/iio/pressure/bmp280-core.c | 431 +++++++++++++++++++++--------
+ drivers/iio/pressure/bmp280.h      |  18 +-
+ 3 files changed, 326 insertions(+), 125 deletions(-)
+
+-- 
+2.25.1
+
