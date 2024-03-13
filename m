@@ -1,154 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B915CDF3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7016F5D460;
 	Wed, 13 Mar 2024 16:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710347841; cv=none; b=i6cc6Gar3/sk2ow3z56kmnCFtPbWitfoMS/q66UFyi2IJWC0mstNufRNV062RIboHB4TQgAxcSM7NTm3p6bqA6L4yIrJ+TEPmopj1x/8dydSDARxzN0R4xo45VzKUBaeEW+YngR0lw3w5oZzEBYC18oYgFd8oRi1yZ0wUYj2eA0=
+	t=1710347841; cv=none; b=jnV4OHajy6eCbSVMUr9yfzxbqb26jLmk4ymdmWl8gARcYFtKTD0lbno4NwASSvZPQ1cyLk76gOzPdhxdaO1RbI5vOWPAXq05ixJWIy/WzOzOuhrtbJpXs1TuF2pujkXrvBbECCWnMKsBMy4mHrymstqmQgotJq9Ft0UdJ9XmW0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710347841; c=relaxed/simple;
-	bh=6IZSRF9oYx4o0Bu7gHaOZWPeDA5VBcMeB+M5ckdVeME=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kPFHYyVohiBnlLsQ9YJheJc43rgdl4LIxjrOmw/pWLVVpe826GwOHsukisG3+10FKFw8yVaDi6NldVQhK/QFlH8wtyQECAf6Z+7JTRMhnT9zSDzvNI0iffYHzKih/42I8bxHH5UrvxXoqqyTKPlaWQd2jbPQGpGbMqIcoyEvPwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kdk09B9A; arc=none smtp.client-ip=10.30.226.201
+	bh=KQvW4QLqr7rEMfi/hFQOWFcSE+Lk/YdZwM/sAdZU8Ec=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l/8xOwwi9p/siTm31mLL0hG1LdBEN7KccuMveJQNh3nDjvIDMpQvjOYdLf4PFEdrd3Vxn29MNWU4d3KHkcWWQH0vJjQypzDlzuDfMF13TWAUSsTEmfoUN7HmiF+ODi2VX8qpbp0V8PgN+dm0TDnrn00QDq+a7QWNbzIAkTD/vB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcFccfP0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kdk09B9A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA44C433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcFccfP0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E82C43394;
 	Wed, 13 Mar 2024 16:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710347840;
-	bh=6IZSRF9oYx4o0Bu7gHaOZWPeDA5VBcMeB+M5ckdVeME=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kdk09B9ALwy2TE8VqpYBdCSgUZeHB5wEiey18LHak2dIDIoBveXttG/WQQduu7KFA
-	 4JFOqtNGR9i948qm1YlbZbxYayr0fq2myygtS19NQQvL+kAvzquZdx8Dfl3TQd7ItO
-	 TKJ+gkJXUQvUT+7YPXMsvTFemP6X8F88eb1XKfmmvTGbyHlea6/btqa8RA8bO4oYuX
-	 F0kf/p1lvbLW+GUt1gE0SO2+4dQDcQxa9qXu7+W7mBceRpdajDzz6czrQgJdnT1IcT
-	 nNuJbFxcVCAZmRW36Elqdce3pHTlMSMkKxwMczT7MMvvoqsPi54St5XQ1n7x+IjFgU
-	 /1XSLFhvrBqOw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Byungchul Park <byungchul@sk.com>,
-	Hyeongtak Ji <hyeongtak.ji@sk.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 08/60] mm/vmscan: fix a bug calling wakeup_kswapd() with a wrong zone index
-Date: Wed, 13 Mar 2024 12:36:15 -0400
-Message-ID: <20240313163707.615000-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240313163707.615000-1-sashal@kernel.org>
-References: <20240313163707.615000-1-sashal@kernel.org>
+	s=k20201202; t=1710347841;
+	bh=KQvW4QLqr7rEMfi/hFQOWFcSE+Lk/YdZwM/sAdZU8Ec=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QcFccfP0iWyuyg7dmYSxeMED1MJH9zJ5I13qdTMpm9k+gBLWKyBb+9/mOB2KcfRh1
+	 dGhjb9W/4N+EdKcUS06eR55r9U0S8mzyfKb8b0WFux1jA6YamOwOIkVSc08H5Y0+ei
+	 5zYu2a2uLnMexXRWo1UTiwAn+gXmGL2KIdz73bUcJQ2fX61d8N7a9/by2Y7lSR4pHO
+	 QwFUlknS67JXAADwfnpFFhUX50hQhSq2q/rKT/TU++YuNB2FW18cOVde+ClYZbs2kW
+	 n40Y9/7SY5DtcSfsTJqg1PwTYbbfI0pqSU9J1AUR/mgG90A5sqpl8eknByDXrK8ooo
+	 UP3iMh+Rryv+w==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vc04_services: changen strncpy() to strscpy_pad()
+Date: Wed, 13 Mar 2024 17:36:56 +0100
+Message-Id: <20240313163712.224585-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.22-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.22-rc1
-X-KernelTest-Deadline: 2024-03-15T16:36+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Byungchul Park <byungchul@sk.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2774f256e7c0219e2b0a0894af1c76bdabc4f974 ]
+gcc-14 warns about this strncpy() that results in a non-terminated
+string for an overflow:
 
-With numa balancing on, when a numa system is running where a numa node
-doesn't have its local memory so it has no managed zones, the following
-oops has been observed.  It's because wakeup_kswapd() is called with a
-wrong zone index, -1.  Fixed it by checking the index before calling
-wakeup_kswapd().
+In file included from include/linux/string.h:369,
+                 from drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c:20:
+In function 'strncpy',
+    inlined from 'create_component' at drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c:940:2:
+include/linux/fortify-string.h:108:33: error: '__builtin_strncpy' specified bound 128 equals destination size [-Werror=stringop-truncation]
 
-> BUG: unable to handle page fault for address: 00000000000033f3
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: 0000 [#1] PREEMPT SMP NOPTI
-> CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
->    rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> Code: (omitted)
-> RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
-> ? __die
-> ? page_fault_oops
-> ? __pte_offset_map_lock
-> ? exc_page_fault
-> ? asm_exc_page_fault
-> ? wakeup_kswapd
-> migrate_misplaced_page
-> __handle_mm_fault
-> handle_mm_fault
-> do_user_addr_fault
-> exc_page_fault
-> asm_exc_page_fault
-> RIP: 0033:0x55b897ba0808
-> Code: (omitted)
-> RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
-> RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
-> RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
-> RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
-> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
->  </TASK>
+Change it to strscpy_pad(), which produces a properly terminated and
+zero-padded string.
 
-Link: https://lkml.kernel.org/r/20240216111502.79759-1-byungchul@sk.com
-Signed-off-by: Byungchul Park <byungchul@sk.com>
-Reported-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
-Fixes: c574bbe917036 ("NUMA balancing: optimize page placement for memory tiering system")
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- mm/migrate.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index e5f2f7243a659..d69b4556cc15f 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2515,6 +2515,14 @@ static int numamigrate_isolate_folio(pg_data_t *pgdat, struct folio *folio)
- 			if (managed_zone(pgdat->node_zones + z))
- 				break;
- 		}
-+
-+		/*
-+		 * If there are no managed zones, it should not proceed
-+		 * further.
-+		 */
-+		if (z < 0)
-+			return 0;
-+
- 		wakeup_kswapd(pgdat->node_zones + z, 0,
- 			      folio_order(folio), ZONE_MOVABLE);
- 		return 0;
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+index 258aa0e37f55..6ca5797aeae5 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+@@ -937,8 +937,8 @@ static int create_component(struct vchiq_mmal_instance *instance,
+ 	/* build component create message */
+ 	m.h.type = MMAL_MSG_TYPE_COMPONENT_CREATE;
+ 	m.u.component_create.client_component = component->client_component;
+-	strncpy(m.u.component_create.name, name,
+-		sizeof(m.u.component_create.name));
++	strscpy_pad(m.u.component_create.name, name,
++		    sizeof(m.u.component_create.name));
+ 
+ 	ret = send_synchronous_mmal_msg(instance, &m,
+ 					sizeof(m.u.component_create),
 -- 
-2.43.0
+2.39.2
 
