@@ -1,137 +1,93 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119807BB11;
-	Wed, 13 Mar 2024 17:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C1361688;
+	Wed, 13 Mar 2024 17:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710350034; cv=none; b=ePBNxK8DSfDwv5CLekJc2YZkN6rgeJvWjWdwc5ZHv2lKdNdKzVoIcAu0+huD/ve5+yeL2Tc6Al/45vy6d8AGgf3akggf8jqtwqIhRVta6pm+SzEvZuSXetTckJeWUkvInt5plgn6iUWxJoyfA+NhqJ9pNttlvxt6fbCnzWyykv0=
+	t=1710350069; cv=none; b=EV8+8rJqQibUruSkoDrkKyIhgeDATswBF5h5KfWnVcAqNDPV70LiTrHgJKU0VrsQpP+By9ZWn1Td9y6XlH7hLBJjPoPp9SnBDBvrJrwo2KRH/O64mevQ7d7d9wzYU5v0rzfiUe9yrhXanYA86XK8qsPrZMWAOfzfYl/t01pJbtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710350034; c=relaxed/simple;
-	bh=GUQXLTXTZ/RC3EIvgtVKiqNodwEKbwS4Cu2U8qXFU/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u8IuPHKfZ3k6qosQYp8noz9b3W2LQ4YEY7tpdWC0xxH3eU5bn3U42cespeDtX4TF40svG+NqI9w5DqdtXtXLJ95oz+VIgnzpzBeZhrUmXiRWm3Fa8cqbbNobbfAPZ1MVvIL7RjXqHaJ6hBaggNcIA5QA3O9f9pBgD7jNBUp/QAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=gaE78Dgv; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1710350069; c=relaxed/simple;
+	bh=2OTaIjGgDXofJxx9Ee7lWxiDlWCxWOuc2nGuNlCC90s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kwFZ7yzVZpjXiXFHD5Uued6ozEq4hiqlAUIJpG5Tcy4c85iYsQQFcyz5K6PUz5JQG9Z0JWZBPo6GXumPIif/0LEPbd1ItaNcvAN++62YZsRVpWNCQ4n1MAn1q0wcacFLRgWq7pKWHjcNqo6GCPbc1B0do/fnYWtldY9qr7ElLW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb6Y0o+m; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gaE78Dgv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PplELY1KFkbbainlrPdk4FaZv2dPnxhGL2R5dvxZJcc=; b=gaE78DgvKAJxF5LfQGZm9rbZnq
-	Z6g9f1MSGKltQmW+YWLoqsnkeGJUXUGPP1sjsV3PidbKBCS5V9wNQjTXOrlwwmwm5bbV/BxWMAr2x
-	sTjZF0F6PR9AYHWc9+auHzQVw4pZRi7IIZ5xMlKxmn9VcoawshgDsEDKz0zSmdCCE+ZXVUKwRHXLY
-	bdvmNEyOB6vNM01wor0GwCEy0QZ8WoBSHJ97KjFOXz7i368MBndTTPTtjn75tFwxUgqqU3n7bkAHc
-	6CzEW+lQ1fE9lpgzIG4VkIQ8bJ/vG3Egqoref58CZpLPcRcoFZWM9kQqNYrJ/5MPmamzjixkUvUvW
-	RHj+UJcA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45220)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rkSAf-0007y7-0R;
-	Wed, 13 Mar 2024 17:13:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rkSAX-0004eW-SY; Wed, 13 Mar 2024 17:13:33 +0000
-Date: Wed, 13 Mar 2024 17:13:33 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Christoph Lameter (Ampere)" <cl@linux.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <vireshk@kernel.org>, Will Deacon <will@kernel.org>,
-	Jonathan.Cameron@huawei.com, Matteo.Carlini@arm.com,
-	Valentin.Schneider@arm.com, akpm@linux-foundation.org,
-	anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>,
-	dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	robin.murphy@arm.com, vanshikonda@os.amperecomputing.com,
-	yang@os.amperecomputing.com, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3] ARM64: Dynamically allocate cpumasks and increase
- supported CPUs to 512
-Message-ID: <ZfHevcKpcb6i1fn5@shell.armlinux.org.uk>
-References: <37099a57-b655-3b3a-56d0-5f7fbd49d7db@gentwo.org>
- <CGME20240308140130eucas1p1259c805a0b6491ce2f69c6fca0264b1f@eucas1p1.samsung.com>
- <c1f2902d-cefc-4122-9b86-d1d32911f590@samsung.com>
- <Ze9TsQ-qVCZMazfI@arm.com>
- <9352f410-9dad-ac89-181a-b3cfc86176b8@linux.com>
- <bf1757ca-6d41-87e7-53dd-56146eef5693@linux.com>
- <ZfCXJRJSMK4tt_Cm@arm.com>
- <ZfG5oyrgGOkpHYD6@bogus>
- <432c1980-b00f-4b07-9e24-0bec52ccb5d6@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb6Y0o+m"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33e94c12f33so3412006f8f.3;
+        Wed, 13 Mar 2024 10:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710350066; x=1710954866; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v3lVNzpe3EGPa9RLkujrZt87SIOXgz2iKMU/KVgYcOI=;
+        b=kb6Y0o+mCqVBfDIKAuIONwDfExsgNZVY18qFzMEyWRM9hooOJ2AFO69tz1CmEFcS5l
+         +LkNxVoa/nBttVlkYsH64nwcQMKJWe/3VIfW+ZZwcGZ4r9h6+nuUvq7EgmG+TMivnEXW
+         wqvVD3nJJ9O08Z1Kq/GiEQrjzRTeFnDdbQi6jtE+0xAGy9Sdqv276vFVG5aHyMl0XXeD
+         Du/yixRpVvufk4NKbtPeL7MiyDz3f8zLuhVLawNyHgKuI6MVrN3EdqVXRe12y0hUSzF4
+         dYxs3cgmY7veXz9fH3F6Fk4dMbAq7uU9KOl4aXmw/j5BQdryYKRiUfzuzmGnS5AmBixs
+         cjfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710350066; x=1710954866;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v3lVNzpe3EGPa9RLkujrZt87SIOXgz2iKMU/KVgYcOI=;
+        b=S76QCpjSmRzfB2eghdg7elTguokjyct8CwPL7gKyeH3KVYUHVrtHU83eQFWIm7+nZh
+         b3Z+hbQll6OqR5CYypZWBDSmVd6LrV7FVfabcVJXc7QhwUer7/CY2mcKFGiqKoWQlWo8
+         /OCrpKfXo0gvAZPC6uR3ePM1ZiIyJXnQE71sNIYlQLa/yXFk3Cc+oz06Nglq69nd43SV
+         D2h+DFssw59h6IsJklFEAPOeDs8X8Hxahv3xPihUOzTFM9PexANHoPPxpMepTIjlWj7p
+         76xkJfw4QGRjSQBIw7pFjH4CibC4F8doXPiq4gpOhGlEM2Y7mmOW4/hngCWB/1yxjN8k
+         qJSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGh/aOIibJKD1HJcIlgcgdBM3Vh3yvJ4Oahe6zushYZlqNtFlWt0I59TBHDVrpvygWu58k5rAX/yZl7njeZICJ/u3cnAy405E6+nq3
+X-Gm-Message-State: AOJu0YxE/j8wQq3/uy9O1c8MKLKkSiUAz4jR9ltAumjVUxDjgfsMR2XX
+	x5oD56N8rYWzCNbua1fHdfqs/SPEUgo/4uqbA8h5KotOLKBC40eOeBl0WnGF
+X-Google-Smtp-Source: AGHT+IFVxS4gydSuP1Why/aTVAez1v+HgruO0HqIkhk62OgdvkGZMiY8ntdvY9LKbTc01gQlr8KBrw==
+X-Received: by 2002:a5d:5285:0:b0:33e:b719:8bee with SMTP id c5-20020a5d5285000000b0033eb7198beemr1419837wrv.53.1710350066163;
+        Wed, 13 Mar 2024 10:14:26 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id ba14-20020a0560001c0e00b0033e96fe9479sm8318396wrb.89.2024.03.13.10.14.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 10:14:25 -0700 (PDT)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>
+Cc: devicetree@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+ Chris Morgan <macromorgan@hotmail.com>, linux-kernel@vger.kernel.org,
+ linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 1/4] regulator: axp20x: fix typo-ed identifier
+Date: Wed, 13 Mar 2024 18:14:23 +0100
+Message-ID: <4901806.31r3eYUQgx@jernej-laptop>
+In-Reply-To: <20240310010211.28653-2-andre.przywara@arm.com>
+References:
+ <20240310010211.28653-1-andre.przywara@arm.com>
+ <20240310010211.28653-2-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <432c1980-b00f-4b07-9e24-0bec52ccb5d6@samsung.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 13, 2024 at 05:22:33PM +0100, Marek Szyprowski wrote:
-> On 13.03.2024 15:35, Sudeep Holla wrote:
-> > On Tue, Mar 12, 2024 at 05:55:49PM +0000, Catalin Marinas wrote:
-> >> On Tue, Mar 12, 2024 at 10:06:06AM -0700, Christoph Lameter (Ampere) wrote:
-> >>> On Mon, 11 Mar 2024, Christoph Lameter (Ampere) wrote:
-> >>>
-> >>>> This could be an issue in the ARM64 arch code itself where there maybe
-> >>>> an assumption elsewhere that a cpumask can always store up to NR_CPU
-> >>>> cpus and not only nr_cpu_ids as OFFSTACK does.
-> >>>>
-> >>>> How can I exercise the opp driver in order to recreate the problem?
-> >>>>
-> >>>> I assume the opp driver is ARM specific? x86 defaults to OFFSTACK so if
-> >>>> there is an issue with OFFSTACK in opp then it should fail with kernel
-> >>>> default configuration on that platform.
-> >>> I checked the ARM64 arch sources use of NR_CPUS and its all fine.
-> >>>
-> >>> Also verified in my testing logs that CONFIG_PM_OPP was set in all tests.
-> >>>
-> >>> No warnings in the kernel log during those tests.
-> >>>
-> >>> How to reproduce this?
-> >> I guess you need a platform with a dts that has an "operating-points-v2"
-> >> property. I don't have any around.
-> >>
-> >> Sudeep was trying to trigger this code path earlier, not sure where he
-> >> got to.
-> > I did try to trigger this on FVP by adding OPPs + some hacks to add dummy
-> > clock provider to successfully probe this driver. I couldn't hit the issue
-> > reported 🙁. It could be that with the hardware clock/regulator drivers, it
-> > take a different path in OPP core.
+Dne nedelja, 10. marec 2024 ob 02:02:08 CET je Andre Przywara napisal(a):
+> The registers to set the X-Powers AXP313 regulators are of course
+> "CONTROL" registers, not "CONRTOL" ones.
 > 
-> I can fully reproduce this issue on Khadas VIM3 and Odroid-N2 boards. 
-> Both Meson A311D SoC based.
+> Fix the typo in the header file and in its users. No functional change.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-So, if I'm reading the OPP code and the DTS* files for Khadas VIM3
-correctly, these use operating-points-v2, which is parsed by the opp
-layer.
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-If the opp layer is unable to parse any operating points, it should
-print "no supported OPPs" and remove the table (thereby preventing
-the code in question being reached.)
+Best regards,
+Jernej
 
-So, I wonder whether what you're seeing is a latent bug which is
-being tickled by the presence of the CPU masks being off-stack
-changing the kernel timing.
 
-I would suggest the printk debug approach may help here to see when
-the OPPs are begun to be parsed, when they're created etc and their
-timing relationship to being used. Given the suspicion, it's possible
-that the mere addition of printk() may "fix" the problem, which again
-would be another semi-useful data point.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
