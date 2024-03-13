@@ -1,143 +1,169 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0431C5B697
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2435B698;
+	Wed, 13 Mar 2024 22:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710370166; cv=none; b=bUhMHL7j+5rwxHnWPZL2PzUGlAjPI/XiubtV/Wvq+ZIBLnT1YbPJYNVTJH/hGMiGsT4nbAofRlvq/O1OXfaGZydDb0+mSVymTi1W074vxsVKkLYRDLtIdiTKNDrWuiFpb7IJwwyCAsqHzr40EtfA6PBUzqd/ahxpPLDd/4yPWLs=
+	t=1710370168; cv=none; b=NGvEnXEU/kXMjJsuTlRZUYmab5tGpL8Xz8S8pr/S4BRfFS/XlqhA6jg/FFlzsVJcRjC9twTNl/Scq89WCZFne6A09gPgPdkcczu0GafVieitHVeZR1hJIrmqwDzecsDkAADmjEN4XApCcbuYiVSr7Ji6kt560JpUuxXlW9YyNyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710370166; c=relaxed/simple;
-	bh=kQPlLLYuK9rGDu9iFj4vfuJRTUe5t6j7sL0t/2BVD8s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S1D24Z3HhUV7DX0QAIzd8XUGTVV0E5pNKsMqcGOm8jWCRVZBIl8swMtSMNLWGg3GqE3dbQB65pA3moH+eYSOML/09S1m89GwM00hvBqSpecy9CTCTSOoZP0kXDmbf0qEWiQ+GFAYLkeF32O8ODN0bkGkHi+RqdH/2DenBrnffJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=YUSkiYsX; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1710370168; c=relaxed/simple;
+	bh=nek76MaUd8CRieyJYFUDcAswrStRcG9fu+1l2HVMdP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fYfnfs00KJh2WyRGwC2bava4K30lFzap4N33Z4+hPi66AB4fHUUhh+aw3D9IAHpFNaRTEiQtDqlx3+ldBADAGEdUBvQQcDkpY6c1vhg8krI5QE3Tzb+cawnc0RSZNjNuxBzqTCE3vD7VfFiXR4m0xP2bLp3mSTKIhC+rOXfeHxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=sk+VCr55; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="YUSkiYsX"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7c8ceb9fb0fso9246839f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710370164; x=1710974964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kQPlLLYuK9rGDu9iFj4vfuJRTUe5t6j7sL0t/2BVD8s=;
-        b=YUSkiYsX75yXbpkLyU0s1DSqpWR70wHwYofCL2Ef9DY9vHKnF7L2TyoE1eK4wyiVPr
-         paqeTp6C8YXQ8RrVXL6X6SLafnuiO63o+9813Wdvccz8hiI0GCsdGRTkyU+UOQVXEfRe
-         4vdXmj7jaNA7DXZUrx31oszHLz9sp+dVnaTce4AYTEvzLrXu1QAVIaoFwDc+TpR3NQxb
-         fQrCMcABTrEunJOFQbj7ZdZOxIxkOAMICMPRqSmbSxqlTHBjbyIlJECQqgaiPACBFag7
-         LfH9Q2NV8Mo0JnJBQxgaueL+BYEK9g3jsvags1HHVjbm+3UopXkDY6Q47UhcwXDPpujC
-         ztPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710370164; x=1710974964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kQPlLLYuK9rGDu9iFj4vfuJRTUe5t6j7sL0t/2BVD8s=;
-        b=ZUMGu82PbrXRvgxtE2Fl9GOWYqYmgav8i2Mxgj9uw6EIl/3hJ1CmgPT+BveXyIgwqc
-         03VH8VdR/88/id1MnjXS4KmgRlmjorKM6eW/x4SGy96i7ol/dtUYoCXB1oS3ZbhEv3qe
-         Um5vKQ794RPFHoxFx5t+k7263tdFMrQAX0lhO/FMQR+lIvaqAy9g9AL8OdDxm8eNdxmb
-         k2DflqxmCfpqlIh4d8sJJrm0Mj7JHTkvnYzyVr6ZYkgK5/Ea9eGjkJz7btiRuq1XL/FR
-         78/Ki5n3dhB4sbJ0hchxkcLurfWmw2/KKj6R0x8PJIHNRNs5ygYZdSxBVyCypaLZ4YvN
-         9MxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvrBADjwJr+O8Lqlczov/zmA1A7jx6k9T+6DzbOQYRHS1UyTLVgYwd6drtKHEcKHa16mftbxIckt0b8HHkG2/QGIOtVyj26SkvVQq1
-X-Gm-Message-State: AOJu0YysHFGWX/PxVwnLTWhyedZNZ8ZJzP2SQvTyDONEnrLNw0hgbk1/
-	XlaDXuBkD61jjjJCPyrqD47tlk8jRk1497VpCDOY25a2h6aUk4wX3hE3CEEAcXSUGQwKSOnJpGS
-	d46GiloKB4xzCS92FyOPWO3GnyVRSZYnTSUVJm1E9Yqv6iD0sonA=
-X-Google-Smtp-Source: AGHT+IEE4G/qpX58EhUm1MonVHMQobSiJgTN5F+R/XDKRvfIgvrnS2HXR6msMnAV4g83xTteuIsqwqymEt+VSwymYE8=
-X-Received: by 2002:a81:7105:0:b0:608:13ee:8f3f with SMTP id
- m5-20020a817105000000b0060813ee8f3fmr15835ywc.27.1710369639489; Wed, 13 Mar
- 2024 15:40:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="sk+VCr55"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kYJ36KwNuXIC2GGEAAYTQQ0oqxpqcrzztRKyJVrIE0Q=; b=sk+VCr555q40ixk8RZjak6MGdB
+	xNSbxmXeiNdfD4M9K81A5l7erbg5g8sowpdIf9UuYLa9YNiqDslHqEDwHEwd0bCfMmb9zGgM9psBZ
+	VCWcxKuney282w/+oPe0NP8r+p7VTHEiWzLu7Y4NMtrviQ7O/UqIHx6+c8WxnU1PHYf45AcfRm4X/
+	NHnh/1feE4w2U1waB2Ccsj3esWPg+jJJLAm+qz7rTgmJK7aKNczFfDH3L3Ctqh9FsiMctSXehBVxB
+	JsSr3LJXt9gXVIkom7RJ8/awSlLnjP6BUs8Vqz8XZqcLl0CqxJwJiFoEmjyETiuHsUAB3N+K0YdOy
+	RKQhzI1g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34448)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rkXPQ-0008G0-12;
+	Wed, 13 Mar 2024 22:49:16 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rkXPK-0004rD-PW; Wed, 13 Mar 2024 22:49:10 +0000
+Date: Wed, 13 Mar 2024 22:49:10 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	paulmck@kernel.org, mingo@kernel.org, tglx@linutronix.de,
+	rcu@vger.kernel.org, neeraj.upadhyay@amd.com, urezki@gmail.com,
+	qiang.zhang1211@gmail.com, frederic@kernel.org,
+	bigeasy@linutronix.de, chenzhongjin@huawei.com,
+	yangjihong1@huawei.com, rostedt@goodmis.org,
+	Justin Chen <justin.chen@broadcom.com>
+Subject: Re: Unexplained long boot delays [Was Re: [GIT PULL] RCU changes for
+ v6.9]
+Message-ID: <ZfItZs756Bps2pFa@shell.armlinux.org.uk>
+References: <ZetHwrCb0KXE0xFI@tardis>
+ <4274be61-60bd-4e1e-9c16-26e6e5e06f65@gmail.com>
+ <ZfDEIs63EBIYBJIC@boqun-archlinux>
+ <c5f9c640-4c06-495e-9c7e-0c208b914fa7@gmail.com>
+ <CAHk-=wgP=9JxdOJ5oYtVO5yM6pFi5+3FPxfCQa4ezpagJuXq3g@mail.gmail.com>
+ <ZfDptafiK0jns050@boqun-archlinux>
+ <CAEXW_YRvz8xf-6hpwpYqS=YNa-xkn4CsuJzELJxOH_2FP+6ptQ@mail.gmail.com>
+ <2fb110ed-ba04-4320-9ef0-8766c9df5578@gmail.com>
+ <ZfIh33YAYkLaDeAS@shell.armlinux.org.uk>
+ <533151c9-afb5-453b-8014-9fbe7c3b26c2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220214558.3377482-1-souravpanda@google.com> <20240220214558.3377482-2-souravpanda@google.com>
-In-Reply-To: <20240220214558.3377482-2-souravpanda@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 13 Mar 2024 18:40:03 -0400
-Message-ID: <CA+CK2bAM4Xe7BT3TFZT-+3qQTFGgkYBiYY=oVkdqMN8gyJg_0g@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] mm: report per-page metadata information
-To: Sourav Panda <souravpanda@google.com>
-Cc: corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	akpm@linux-foundation.org, mike.kravetz@oracle.com, muchun.song@linux.dev, 
-	rppt@kernel.org, david@redhat.com, rdunlap@infradead.org, 
-	chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, 
-	bhelgaas@google.com, ivan@cloudflare.com, yosryahmed@google.com, 
-	hannes@cmpxchg.org, shakeelb@google.com, kirill.shutemov@linux.intel.com, 
-	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
-	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	willy@infradead.org, weixugc@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <533151c9-afb5-453b-8014-9fbe7c3b26c2@gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Feb 20, 2024 at 4:46=E2=80=AFPM Sourav Panda <souravpanda@google.co=
-m> wrote:
->
-> Adds two new per-node fields, namely nr_memmap and nr_memmap_boot,
-> to /sys/devices/system/node/nodeN/vmstat and a global Memmap field
-> to /proc/meminfo. This information can be used by users to see how
-> much memory is being used by per-page metadata, which can vary
-> depending on build configuration, machine architecture, and system
-> use.
->
-> Per-page metadata is the amount of memory that Linux needs in order to
-> manage memory at the page granularity. The majority of such memory is
-> used by "struct page" and "page_ext" data structures. In contrast to
-> most other memory consumption statistics, per-page metadata might not
-> be included in MemTotal. For example, MemTotal does not include memblock
-> allocations but includes buddy allocations. In this patch, exported
-> field nr_memmap in /sys/devices/system/node/nodeN/vmstat would
-> exclusively track buddy allocations while nr_memmap_boot would
-> exclusively track memblock allocations. Furthermore, Memmap in
-> /proc/meminfo would exclusively track buddy allocations allowing it to
-> be compared against MemTotal.
->
-> This memory depends on build configurations, machine architectures, and
-> the way system is used:
->
-> Build configuration may include extra fields into "struct page",
-> and enable / disable "page_ext"
-> Machine architecture defines base page sizes. For example 4K x86,
-> 8K SPARC, 64K ARM64 (optionally), etc. The per-page metadata
-> overhead is smaller on machines with larger page sizes.
-> System use can change per-page overhead by using vmemmap
-> optimizations with hugetlb pages, and emulated pmem devdax pages.
-> Also, boot parameters can determine whether page_ext is needed
-> to be allocated. This memory can be part of MemTotal or be outside
-> MemTotal depending on whether the memory was hot-plugged, booted with,
-> or hugetlb memory was returned back to the system.
->
-> Utility for userspace:
->
-> Application Optimization: Depending on the kernel version and command
-> line options, the kernel would relinquish a different number of pages
-> (that contain struct pages) when a hugetlb page is reserved (e.g., 0, 6
-> or 7 for a 2MB hugepage). The userspace application would want to know
-> the exact savings achieved through page metadata deallocation without
-> dealing with the intricacies of the kernel.
->
-> Observability: Struct page overhead can only be calculated on-paper at
-> boot time (e.g., 1.5% machine capacity). Beyond boot once hugepages are
-> reserved or memory is hotplugged, the computation becomes complex.
-> Per-page metrics will help explain part of the system memory overhead,
-> which shall help guide memory optimizations and memory cgroup sizing.
->
-> Debugging: Tracking the changes or absolute value in struct pages can
-> help detect anomalies as they can be correlated with other metrics in
-> the machine (e.g., memtotal, number of huge pages, etc).
->
-> page_ext overheads: Some kernel features such as page_owner
-> page_table_check that use page_ext can be optionally enabled via kernel
-> parameters. Having the total per-page metadata information helps users
-> precisely measure impact.
->
-> Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Sourav Panda <souravpanda@google.com>
+On Wed, Mar 13, 2024 at 03:04:26PM -0700, Florian Fainelli wrote:
+> On 3/13/24 14:59, Russell King (Oracle) wrote:
+> > On Wed, Mar 13, 2024 at 02:30:43PM -0700, Florian Fainelli wrote:
+> > > I will try to provide multiple answers for the sake of everyone having the
+> > > same context. Responding to Linus' specifically and his suggestion to use
+> > > "initcall_debug", this is what it gave me:
+> > > 
+> > > [    6.970669] ata1: SATA link down (SStatus 0 SControl 300)
+> > > [  166.136366] probe of unimac-mdio-0:01 returned 0 after 159216218 usecs
+> > > [  166.142931] unimac-mdio unimac-mdio.0: Broadcom UniMAC MDIO bus
+> > > [  166.148900] probe of unimac-mdio.0 returned 0 after 159243553 usecs
+> > > [  166.155820] probe of f0480000.ethernet returned 0 after 159258794 usecs
+> > > [  166.166427] ehci-brcm f0b00300.ehci_v2: EHCI Host Controller
+> > > 
+> > > Also got another occurrence happening resuming from suspend to DRAM with:
+> > > 
+> > > [   22.570667] brcmstb-dpfe 9932000.dpfe-cpu: PM: calling
+> > > platform_pm_resume+0x0/0x54 @ 1574, parent: rdb
+> > > [  181.643809] brcmstb-dpfe 9932000.dpfe-cpu: PM:
+> > > platform_pm_resume+0x0/0x54 returned 0 after 159073134 usecs
+> > > 
+> > > and also with the PCIe root complex driver:
+> > > 
+> > > [   18.266279] brcm-pcie f0460000.pcie: PM: calling
+> > > brcm_pcie_resume_noirq+0x0/0x164 @ 1597, parent: platform
+> > > [  177.457219] brcm-pcie f0460000.pcie: clkreq-mode set to default
+> > > [  177.457225] brcm-pcie f0460000.pcie: link up, 2.5 GT/s PCIe x1 (!SSC)
+> > > [  177.457231] brcm-pcie f0460000.pcie: PM: brcm_pcie_resume_noirq+0x0/0x164
+> > > returned 0 after 159190939 usecs
+> > > [  177.457257] pcieport 0000:00:00.0: PM: calling
+> > > pci_pm_resume_noirq+0x0/0x160 @ 33, parent: pci0000:00
+> > > 
+> > > Surprisingly those drivers are consistently reproducing the failures I am
+> > > seeing so at least this gave me a clue as to where the problem is.
+> > > 
+> > > There were no changes to drivers/net/ethernet/broadcom/genet/, the two
+> > > changes done to drivers/net/mdio/mdio-bcm-unimac.c are correct, especially
+> > > the read_poll_timeout() conversion is correct, we properly break out of the
+> > > loop. The initial delay looked like a good culprit for a little while, but
+> > > it is not used on the affected platforms because instead we provide a
+> > > callback and we have an interrupt to signal the completion of a MDIO
+> > > operation, therefore unimac_mdio_poll() is not used at all. Finally
+> > > drivers/memory/brcmstb_dpfe.c also received a single change which is not
+> > > functional here (.remove function change do return void).
+> > > 
+> > > I went back to a manual bisection and this time I believe that I have a more
+> > > plausible candidate with:
+> > > 
+> > > 7ee988770326fca440472200c3eb58935fe712f6 ("timers: Implement the
+> > > hierarchical pull model")
+> > 
+> > I haven't understood the code there yet, and how it would interact with
+> > arch code, but one thing that immediately jumps out to me is this:
+> > 
+> > "    As long as a CPU is busy it expires both local and global timers. When a
+> >      CPU goes idle it arms for the first expiring local timer."
+> > 
+> > So are local timers "armed" when they are enqueued while the cpu is
+> > "busy" during initialisation, and will they expire, and will that
+> > expiry be delivered in a timely manner?
+> > 
+> > If not, this commit is basically broken, and would be the cause of the
+> > issue you are seeing. For the mdio case, we're talking about 2ms
+> > polling. For the dpfe case, it looks like we're talking about 1ms
+> > sleeps. I'm guessing that these end up being local timers.
+> > 
+> > Looking at pcie-brcmstb, there's a 100ms msleep(), and then a polling
+> > for link up every 5ms - if the link was down and we msleep(5) I wonder
+> > if that's triggering the same issue.
+> > 
+> > Why that would manifest itself on 32-bit but not 64-bit Arm, I can't
+> > say. I would imagine that the same hardware timer driver is being used
+> > (may be worth checking DT.) The same should be true for the interrupt
+> > driver as well. There's been no changes in that code.
+> 
+> I just had it happen with ARM64 I was plagued by:
+> 
+> https://lore.kernel.org/lkml/87wmqrjg8n.fsf@somnus/T/
+> 
+> and my earlier bisections somehow did not have ARM64 fail, so I thought it
+> was immune but it fails with about the same failure rate as ARM 32-bit.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Okay, so if that's two architectures failing, it's probably not an
+architecture specific issue. It could still be a timer/interrupt driver
+issue though. It would be nice to have a reproducer on x86 which would
+confirm it.
+
+Do you know the frequency that the failure happens?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
