@@ -1,69 +1,72 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE1D53E3E
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373548790;
+	Wed, 13 Mar 2024 21:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710363690; cv=none; b=QSWauWGjt0WBjSRb9yJyLEluh7W20NpvGdmEw5xbClXplJWJT2+tYpuWHZqWFiLIFxP6Is0xgTGZL1Wjngc2n8ZzSRRKVLO0LpetsN7d1NYNrn6vcU1aDscaJTGp/gHMeqhTitwOOwM87Vv8yHok/5lFMz6DvVpQhJ5OmuSC+7Y=
+	t=1710363796; cv=none; b=j9KviomTfd2fQDJAfgou6BztGHVyldlC464JUk+ZwkZPR7KNyCdeZwr60RzC8IRJoP1/QVQFG+EXcrPhGaQwc1o/SjPEhoheIzxPsjnLeoEvaWrV91yBWh3I0Mb6PI4HKpeWleT/AX/Xj/lD6+HRY35lqXNkiSZEThJ7p4BXbsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710363690; c=relaxed/simple;
-	bh=lf0Ezrq6sV2vTi6Ku6PoBK22a4QkYPhDCEIeqxlzhyE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b5OPyFS1RvJQGIHmTdy3pI1m22U93QfzX6FBrVbv2/89pKB20oYxTWn7o65IypZZgvNyaKQs0DydywTAPnhbu68oWvP+SJ3n8GwnJtdMqP29HhuzlU3wC2X4Nv1RPck9AFGD9fOwmEqAup6xaap5zfdScJbxzo+Qmt4mV2Z0gC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXHAnEp2; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1710363796; c=relaxed/simple;
+	bh=ACHEgKTAg8x+dFZtHmiOZ6ed6ZmBbNNAKl8EfWjZ23w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FMAwItaHycHNny1fR1/Ray+vWC8Encf8q+g+0pcSIKe8QZS/OYI2mlQsZd8QdaNuHRSSpzSNARriQj5eP0TAP8Iq4Dh2cYioV1ng+JNoGg6Bz4ag8iWERrQ/BDj8txkBnNnn88/x6ibkEyg8qhDDbRokBI9GosYKFYcN6IeH26I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pv4xYCTN; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXHAnEp2"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e4d48a5823so275914b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:01:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pv4xYCTN"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e8b957a89so162213f8f.0;
+        Wed, 13 Mar 2024 14:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710363688; x=1710968488; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710363792; x=1710968592; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGhwISbVuL7Awql500VL3lEax8ufxO5GMx6PyydUNdU=;
-        b=RXHAnEp2F8ulXkExAdKwn9WwJD5xhb+zIeGdbgFFmP62OkdVFLG4N117xH/J4OLwCm
-         0SiMPTXMGB9c7SnOzfci9ifFU4JgSeKxw8ZoP/+56hV+FKMQXY7w8VGgwoomp0cL5IMj
-         QAgDA0/uGKl/vPuAsFaISBdhwsxeiIKo0pR86I6dN8U80UbqISEHB+5CBZs8pGJQthA9
-         mGufKqXL5K9UxOmhKzsd9xhsam4ytzdEZ0YwK42Xp6PHcV+FTAC4GnB54xksRwida1xg
-         1LeZuEV7Xqp1t2Eyx7EHG85XqYYT7SFGi6whVVvX6QNwqHYFWgMClGwuXz3egIOlT96b
-         Ipkg==
+        bh=tq4hB9Jc+RQGEXfo3JGmKPue/SQ5+ustCJP256hctDU=;
+        b=Pv4xYCTNMsagRTeGESdLh602XzXI5JzVcwz8k4DII3Zy2c52+An90eKH0riwJay2F9
+         mexQj49KoQwc51avqqSz6f4vcBOSGkUWgGB7mMA2z7+i91LQIhe3BpAsiWEmsodK4mRz
+         R+HMb4M0n8Bk2hCutouYiJScVr2it0AlZRRveTSDmDmajLxnkHw6jL/CShNrWw4jds9K
+         7llR9Soon2BJigq1ZBwDBNlhvRk2zk6SQdD/mOw3N6K5Px8QY9lG35ExyCYyDiG7neNS
+         TprBl7IM4H9t3O1pXI+O1nXz7NqvyGAaECMgis8b1uzejWd0n6mrIgZ2kw0fQj5SyAo1
+         BzCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710363688; x=1710968488;
+        d=1e100.net; s=20230601; t=1710363792; x=1710968592;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fGhwISbVuL7Awql500VL3lEax8ufxO5GMx6PyydUNdU=;
-        b=C8q964AvCqUuR5g0bHQzYxXNYaAXfz33XPEoOCqH0f//j7Qn6psPlzeoHhoaW/fyd5
-         Db0AXZWafOiW13qF+y3r/JzampdFC0oo1YNtxX3eE+ZEvuP6MYJ8Rha1PFh+N90TDYci
-         bB/PoO5PLM0SgXjxI2OWoVG5fiQdIJe5nBUG7K8oADa5XSpB/pLQjxIeb3mjBrUPTrat
-         D2eoAZYxHSFVV0qSjVqA5kDbqAxdjJV/Thl+dd0l2drhvITModDTLrRdKP6RuyyDB+Dx
-         s4xhVenVze1SpMy7MZc3MuBmz99bms3twuV5A1x7C8ZH+GhF2DeO75uqrGNYCWNTG7vh
-         G50w==
-X-Forwarded-Encrypted: i=1; AJvYcCVH+IpVN/UvKI6j9IpeGM551jfbTJ6bXRKxhU65gyZJpt6N3CK1cjC4FWP+09DuZt8uYu5fTHuMGgg6GmRfEeUVg6HXDmUeBXkh2hRX
-X-Gm-Message-State: AOJu0YyWY4hRlN787QEqi2uWF57I84bdRQaVGk7kKqLEIMuIV1iiAYTn
-	YKJ7a2h0MP2tdLmHWtcKfapWo2ycXC+L+pi9qPPTE0q5dtp/uy4BFyC6lzjO
-X-Google-Smtp-Source: AGHT+IEIgG//aMbW2AdxO5RyUy8gxUffjty+SyVJ0zda+1NFxzLGPPT2ihYW3PeYlZ4rBt+z9HxQDw==
-X-Received: by 2002:a05:6a20:d492:b0:1a3:2d9a:44dc with SMTP id im18-20020a056a20d49200b001a32d9a44dcmr81534pzb.50.1710363688016;
-        Wed, 13 Mar 2024 14:01:28 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f17-20020a17090ace1100b0029bed2dc95esm1825641pju.56.2024.03.13.14.01.26
+        bh=tq4hB9Jc+RQGEXfo3JGmKPue/SQ5+ustCJP256hctDU=;
+        b=IDapoNVVg9NeqWoWJLbOHzHKMWTUvOXP/q8RmYuvXsGlNqOtsrRV3V07w6EBCJyXxq
+         4NzTXderV0ivkfRXVZtXu8pXHYkPru2E64Pu18SuiaUDxjPzOejrZjJQAPhhrdFrf90f
+         KNyubwY8EKx3RuV+GTC/KBUwErgxyLohNM4J/EplfmQ5XXtONVsymH6QIm7ec6R0VyTb
+         z2Tzomrx2tK8mdCVCp9qq4MoKdvheOhvlBA//FHsxH5BKsfZN3TcP+NawxqhGj1pdK8/
+         W4Z4/b09F3cy3fvR4l1dKq0nzsq5n/36B0zxtQXgAKH3Afqh7iRehUmLnrbYcymuqy4K
+         1M8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXi4KDPUNZ9J6PayL4C9/FgDbauV8Wv1yTZ5piGKqIdRlF5YQ4/l6MhEBdk2bIAn6ozgDQN+8nl2uMISBY06y6oJttpOV+rCHSmzXPJBn/nV3HvdU6pWV3ZwA+HKjQucQBwui9BiH3A
+X-Gm-Message-State: AOJu0YzYNg4WAs9p94hOYRe8klzyKlhjzbbSVMdfNdxnPkE+x0OxX9gc
+	N6pO992wcNGBL3CqS2W+2d2Delj4UEu+bbeKTcg98SO3bBuhFcM5
+X-Google-Smtp-Source: AGHT+IFu4TelxqjAnGpxw9XNTbNBA19n/8DkVrVe8h754sX3c/i3QT50GNsGDIpqpSbb3P+DCJTECw==
+X-Received: by 2002:adf:f386:0:b0:33e:96c1:3da6 with SMTP id m6-20020adff386000000b0033e96c13da6mr2397535wro.65.1710363792111;
+        Wed, 13 Mar 2024 14:03:12 -0700 (PDT)
+Received: from localhost.localdomain (munkyhouse.force9.co.uk. [84.92.42.80])
+        by smtp.gmail.com with ESMTPSA id d16-20020adfa410000000b0033e87c6bcb2sm31712wra.8.2024.03.13.14.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 14:01:26 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: John Stultz <jstultz@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
+        Wed, 13 Mar 2024 14:03:11 -0700 (PDT)
+Sender: Adam Butcher <adam.jessaminenet@gmail.com>
+From: Adam Butcher <adam@jessamine.co.uk>
+To: broonie@kernel.org,
+	benjamin@bigler.one,
+	carlos.song@nxp.com,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org,
+	stefanmoring@gmail.com
+Cc: kernel@pengutronix.de,
+	linux-imx@nxp.com,
 	linux-kernel@vger.kernel.org,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH] kunit: time: Add faster unit test with shorter time range
-Date: Wed, 13 Mar 2024 14:01:24 -0700
-Message-Id: <20240313210124.2858729-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
+	linux-spi@vger.kernel.org,
+	adam@jessamine.co.uk
+Subject: [PATCH v2] spi: spi-imx: fix off-by-one in mx51 CPU mode burst length
+Date: Wed, 13 Mar 2024 20:58:19 +0000
+Message-ID: <20240313210258.5990-1-adam@jessamine.co.uk>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,83 +75,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit a547c4ce10bd ("kunit: time: Mark test as slow using test
-attributes") marked the time unit test as slow. This means it does not
-run anymore if slow tests are disabled. This reduces test coverage and
-is thus undesirable. At the same time, the test currently covers a range
-of 160,000 years, which has limited value.
+From: Adam Butcher <adam@jessamine.co.uk>
 
-Add additional test case covering a total range of 1,600 years. This test
-takes less than a second to run even on slow systems while still covering
-twice the leap year calculation range of 400 years around the center date.
-This test can run even with slow tests disabled.
+992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU mode")
+corrects three cases of setting the ECSPI burst length but erroneously
+leaves the in-range CPU case one bit to big (in that field a value of
+0 means 1 bit).  The effect was that transmissions that should have been
+8-bit bytes appeared as 9-bit causing failed communication with SPI
+devices.
 
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/all/20240201105451.507005-1-carlos.song@nxp.com/
+Link: https://lore.kernel.org/all/20240204091912.36488-1-carlos.song@nxp.com/
+Fixes: 992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU mode")
+Signed-off-by: Adam Butcher <adam@jessamine.co.uk>
 ---
- kernel/time/time_test.c | 35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/time/time_test.c b/kernel/time/time_test.c
-index 3e5d422dd15c..15c6f3a5e73c 100644
---- a/kernel/time/time_test.c
-+++ b/kernel/time/time_test.c
-@@ -47,18 +47,18 @@ static void advance_date(long *year, int *month, int *mday, int *yday)
- }
- 
- /*
-- * Checks every day in a 160000 years interval centered at 1970-01-01
-+ * Checks every day in a specified interval centered at 1970-01-01
-  * against the expected result.
-  */
--static void time64_to_tm_test_date_range(struct kunit *test)
-+static void time64_to_tm_test_date_range(struct kunit *test, int years)
- {
- 	/*
--	 * 80000 years	= (80000 / 400) * 400 years
--	 *		= (80000 / 400) * 146097 days
--	 *		= (80000 / 400) * 146097 * 86400 seconds
-+	 * years	= (years / 400) * 400 years
-+	 *		= (years / 400) * 146097 days
-+	 *		= (years / 400) * 146097 * 86400 seconds
- 	 */
--	time64_t total_secs = ((time64_t) 80000) / 400 * 146097 * 86400;
--	long year = 1970 - 80000;
-+	time64_t total_secs = ((time64_t) years) / 400 * 146097 * 86400;
-+	long year = 1970 - years;
- 	int month = 1;
- 	int mdday = 1;
- 	int yday = 0;
-@@ -85,8 +85,27 @@ static void time64_to_tm_test_date_range(struct kunit *test)
+This is a cleaned up version of my earlier emails after the mess webmail
+and I made of the previous re-address.  The patch itself is no different,
+but I've moved the discussion part here and sent with git send-email so
+hopefully no more issues.
+
+The original patch submission up to v4 (first link above) did not contain
+the bug that this patch fixes.  It was introduced in the v5 update (second
+link).
+
+---
+ drivers/spi/spi-imx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 7c1fcd5ed52f7..100552e6c56bc 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -743,8 +743,8 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+ 				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
+ 						<< MX51_ECSPI_CTRL_BL_OFFSET;
+ 			else
+-				ctrl |= spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
+-						BITS_PER_BYTE) * spi_imx->bits_per_word
++				ctrl |= (spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
++						BITS_PER_BYTE) * spi_imx->bits_per_word - 1)
+ 						<< MX51_ECSPI_CTRL_BL_OFFSET;
+ 		}
  	}
- }
- 
-+ /*
-+  * Checks every day in a 1600 years interval centered at 1970-01-01
-+  * against the expected result.
-+  */
-+static void time64_to_tm_test_date_range_1600(struct kunit *test)
-+{
-+	time64_to_tm_test_date_range(test, 800);
-+}
-+
-+ /*
-+  * Checks every day in a 160000 years interval centered at 1970-01-01
-+  * against the expected result.
-+  */
-+static void time64_to_tm_test_date_range_160000(struct kunit *test)
-+{
-+	time64_to_tm_test_date_range(test, 80000);
-+}
-+
- static struct kunit_case time_test_cases[] = {
--	KUNIT_CASE_SLOW(time64_to_tm_test_date_range),
-+	KUNIT_CASE(time64_to_tm_test_date_range_1600),
-+	KUNIT_CASE_SLOW(time64_to_tm_test_date_range_160000),
- 	{}
- };
- 
 -- 
-2.39.2
-
+2.43.0
