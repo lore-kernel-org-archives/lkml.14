@@ -1,144 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115B344C89
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D27446B4
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710342116; cv=none; b=aIA5wA4osnBZBEtsDBCnjOMo15f25MAtObsHl3N3d8Pl+hvoRUWLvH7WBXkHKDpONa+/LNfR/5sQziEtZuFBwXcCyv0N18BgU+unA/vtFGE6K9g6/kfkdQjikutPljAG87Sqy4QIbNIHNpewdcBJZ/nxScspq1OccYblG+4JWIs=
+	t=1710342143; cv=none; b=JqI2I5Zj+P3aSHMqTNUC0HVlP04mkJyNlNpv2w41VSiZwZwGsEfb/VYPVL8iI+3qOYXkBAgE7Sq3Xu0sROyYFckdg45rygIdQEScoNh5nCScpEm0p5anmMhFBjzQmAGKPWdR8OnWClGCd9Zmst05KrOi3MChVaGZImifGcO+3HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710342116; c=relaxed/simple;
-	bh=BhNCnyoTesqFmuls5ivViDYlow0aTT/P/P0basWLPJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bF6aEBLwekpoZzmrsRsbWFiV2jbDWaxEVbJoftEZEcWqfDGF5rVPAk5HZUn13Bx9ORHGrE1JKrJqMCaXQSxiy7NUEjJXbzgM5IO3W07s35a7tU2SsKDAyB9jwKHUseweyi2bVFtz4AbvkRKOKaHeKadufJEup2DqWp+X2ShUX38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWpXRcR+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710342143; c=relaxed/simple;
+	bh=OYHeCdoch8Nm4ywfv4eWB35vEDiCrEqFtw1Oyl2Qs58=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=joxRGVN8t0gH1nyeNHgx6Yaw+dK14LMImzF0Ut2kdnmTGtmdRZbkN9Cq4s0zHAwSU7JLPfNua6Dhn0v4B7uIyUWVBhh9S1/oo61VYBmz/7i8ICrOFMGANUeAkDfcuk8EgTNz/jgjol1E9KeH+ZYw0OEqVRULbMsoWS2sf97oifQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MboPjkNi; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWpXRcR+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710342114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7/9033pqa13lPK0uOMJ5/UDPzpYtNbRiAHnnfFJUj+Y=;
-	b=XWpXRcR+9BZVmE17yJza0IV9vi6OLjieC3lZX7W6oU0lGlljyH+0yDN1xNJ7os05T3VpLz
-	pBcOSoGoocqHAgOxWd8Fn9LAzcQ6e8ySdhs6p2xn8Ig23LzE8Yqj5GlbYxc6YlhXJimPhD
-	2OzUU6cwaazgE/yTDYH8BEuyqMhKdFg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-VCWrV8IyPD2kFbltAsmg9Q-1; Wed, 13 Mar 2024 11:01:49 -0400
-X-MC-Unique: VCWrV8IyPD2kFbltAsmg9Q-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33e6d36db5dso650591f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 08:01:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710342107; x=1710946907;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7/9033pqa13lPK0uOMJ5/UDPzpYtNbRiAHnnfFJUj+Y=;
-        b=cXwXWMyZgS6WisiWJ6jcuti5X14PCBzv9F5PMDo5dCPiRbcb0wCsKsCdDPjGX4ck3o
-         FSCnJjOE/5+vgLv1i9zeN7xL9VPtyp6vunO87inoWRRjgC76PZeb5iuKnRZ7Aw5+60UE
-         Z49NYZAn2K3fFYxywCJTq76QFSgpBkWKYjZN/KUY/QIugPqvrGMEWrv3QGIaS/2grsZN
-         i59sStydVp/GWoBzAVfFsFOHTYayU0aCe64BEvUHBFxz0dHmTNBtADpLWS2SEr8iV3Pb
-         Ict0k6uN9xNT1Tr9cLif2ZacgPYaOaDuR0FIO5xhqHfK1M17rH6Qppkenu8cEC5jK49K
-         /Ngg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfbImZ7s3roJWJypPrzcRrps9HEz6OXM2KB9umKL3zmPSP74cNivXnyJmYuCIjmaOiacHA5abCzOqLgDeJgdIcRB69jO98NU7d8Iqq
-X-Gm-Message-State: AOJu0Yy7WX7omXd99F9kH5DIcxJpfi1WEBnNGVo+E2stlXDYZZEaYvYP
-	YLMPyhd7+1Ga+EJTZKqW0Zctg5jIo6BvUp/D4q8nL8MqfzasXY2hS2+KEMPWNZU4aOvUC3hlEb3
-	DS0JkfDwYsKjNRec6LxA0eTJogkICoSLlL7iEZ/Mhw5Q1MVacYn/3Q9LG7Cg0Wmt/WuECVgrV2R
-	PF6p8/RCmmEF0gIAdd3wwnFFBD1UJWPhsjaItK
-X-Received: by 2002:adf:f549:0:b0:33e:8b95:b351 with SMTP id j9-20020adff549000000b0033e8b95b351mr1835664wrp.9.1710342107676;
-        Wed, 13 Mar 2024 08:01:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHXNDFO30abwoBORNfBCrv9tG6NnsBZaqMWC9sIknwfHHO03Tt2/WreaRj4i/D+RMnScfjJFx/ABZsxCaZHcLs=
-X-Received: by 2002:adf:f549:0:b0:33e:8b95:b351 with SMTP id
- j9-20020adff549000000b0033e8b95b351mr1835644wrp.9.1710342107333; Wed, 13 Mar
- 2024 08:01:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MboPjkNi"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42DDkCuK016065;
+	Wed, 13 Mar 2024 15:02:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=Qr/x9mWPGexA7zxG6Eg+5pVKBlygqLXncydSqd7r7jA=;
+ b=MboPjkNiY+j2gys2v11btmBBS39JJC2MTt5U5n9oAtOHR/gDZMqpPG9n9R2RXCA2Oo0M
+ 7+96oQ+fs6kUdD+seTo56/oHhSVfTah1fxUxu2/KMveFMhWcLmGaBsHSxcszQxuByCvA
+ mJd6v57HnqhegEXMEJk8zxzSQP8QQwTsUHuN+gBVI4mCw6ua5OFYTxPbEI5J2DIEvEJX
+ 1xt+BaoDmD2B26y4Oxoettws5V2srd2oB5kHGkhBYck2q83NOs3ROdZ6u/FXrv1476nn
+ cwxHMcmaSaIQLsfF0W83IZ39fD16SnafsMnOS5Ys1xXyA+hecqOvZRFo6ENAX1Ux4Nki zA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wud0msqw3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 15:02:03 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42DF04fr028780;
+	Wed, 13 Mar 2024 15:02:02 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wud0msqvs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 15:02:02 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42DEgaJB018621;
+	Wed, 13 Mar 2024 15:02:02 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ws4t262w8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 15:02:01 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42DF1up250725176
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Mar 2024 15:01:58 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 98FA32004D;
+	Wed, 13 Mar 2024 15:01:56 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EDDD520043;
+	Wed, 13 Mar 2024 15:01:53 +0000 (GMT)
+Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.ibm.com.com (unknown [9.43.39.162])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Mar 2024 15:01:53 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+Cc: sshegde@linux.ibm.com, dietmar.eggemann@arm.com, qyousef@layalina.io,
+        linux-kernel@vger.kernel.org, vschneid@redhat.com, qperret@google.com,
+        yu.c.chen@intel.com, srikar@linux.ibm.com, pierre.gondois@arm.com
+Subject: [PATCH 1/2] sched/fair: Check rd->overload value before update
+Date: Wed, 13 Mar 2024 20:31:32 +0530
+Message-Id: <20240313150133.1182298-2-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240313150133.1182298-1-sshegde@linux.ibm.com>
+References: <20240313150133.1182298-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313003739.3365845-1-mizhang@google.com> <DS0PR11MB63731F54EA26D14CF7D6A3FDDC2A2@DS0PR11MB6373.namprd11.prod.outlook.com>
- <ZfG7SgyqTTtqF3cw@google.com>
-In-Reply-To: <ZfG7SgyqTTtqF3cw@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 13 Mar 2024 16:01:34 +0100
-Message-ID: <CABgObfYfAS2DBaW71iUcQgua7K3VY4nz8krGYGxyBt1+7i193A@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86/pmu: Return correct value of IA32_PERF_CAPABILITIES
- for userspace after vCPU has run
-To: Sean Christopherson <seanjc@google.com>
-Cc: Wei W Wang <wei.w.wang@intel.com>, Mingwei Zhang <mizhang@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Aaron Lewis <aaronlewis@google.com>, 
-	Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: runK8kNDYGBk5WfLqfxsZCURQj-6dE2J
+X-Proofpoint-ORIG-GUID: PCqAQ3RuYAyK14ZyQQjdr0KpQ4RtoRXa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-13_09,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 suspectscore=0 mlxlogscore=608
+ phishscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403130111
 
-On Wed, Mar 13, 2024 at 3:42=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
-> We discussed this whole MSRs mess at PUCK this morning.  I forgot to hit =
-RECORD,
-> but Paolo took notes and will post them soon.
->
-> Going from memory, the plan is to:
->
->   1. Commit to, and document, that userspace must do KVM_SET_CPUID{,2} pr=
-ior to
->      KVM_SET_MSRS.
+Overload is an indicator used to inform if there is any rq in the root
+domain has 2 or more running tasks. Root domain is a global structure per
+cpuset island.
 
-Correct.
+Overload status is updated when adding a task to the runqueue.
+It is cleared in update_sd_lb_stats during load balance, if none of the
+rq has 2 or more running task. It is used during to newidle
+balance to see if its worth doing load balance. If it is set, then
+newidle balance will try aggressively to pull a task.
 
->   2. Go with roughly what I proposed in the CET thread (for unsupported M=
-SRS,
->      read 0 and drop writes of '0')[*].
+Since commit 630246a06ae2 ("sched/fair: Clean-up update_sg_lb_stats
+parameters"), overload is being updated unconditionally. The change in
+value of this depends on the workload. On typical workloads, it is
+likely that this value doesn't change often. Write causes the
+cacheline to be invalidated. This would cause true sharing when the same
+variable is accessed in newidle_balance. On large systems this would
+cause more CPU bus traffic.
 
-More precisely, read a sensible default value corresponding to
-"everything disabled", which generally speaking should be 0. And
-generally speaking, commit to:
-- allowing host_initiated reads independent of CPUID
-- allowing host_initiated writes of the same value that was read
-- blocking host_initiated writes of nonzero (or nondefault) values if
-the corresponding guest CPUID bit is clear
+Perf probes prove that actual change in value is less often. So it would
+be better to check the value before updating it. Detailed perf probes
+and annotation can be found in the cover letter. CPU bus traffic reduces
+with the patch.
 
-Right now some MSRs do not allow host initiated writes, for example
-MSR_KVM_* (check for calls to guest_pv_has), and the VMX MSRs.
+Fixes: 630246a06ae2 ("sched/fair: Clean-up update_sg_lb_stats parameters")
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Generally speaking we want to fix them, unless it's an unholy pain
-(for example the VMX capabilities MSRs are good candidates for pain,
-because they have some "must be 1" bits in bits 63:32).
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02d4d224b436..eeebadd7d9ae 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10621,7 +10621,8 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
 
-All this should be covered by selftests.
+ 	if (!env->sd->parent) {
+ 		/* update overload indicator if we are at root domain */
+-		WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
++		if (READ_ONCE(env->dst_rq->rd->overload) != (sg_status & SG_OVERLOAD))
++			WRITE_ONCE(env->dst_rq->rd->overload, sg_status & SG_OVERLOAD);
 
->   3. Add a quire for PERF_CAPABILITIES, ARCH_CAPABILITIES, and PLATFORM_I=
-NFO
->      (if quirk=3D=3Denabled, keep KVM's current behavior; if quirk=3D=3Dd=
-isabled, zero-
->       initialize the MSRs).
-
-More precisely, even if quirk=3D=3Denabled we will move the setting of a
-non-zero default value for the MSR from vCPU creation to
-KVM_SET_CPUID2, and only set a non-zero default value if the CPUID bit
-is set.
-
-Another small thing in my notes was to look at the duplication between
-emulated_msrs and msr_based_features_all_except_vmx. Right now
-MSR_AMD64_DE_CFG is the only one that is not in both and, probably not
-a coincidence, it's also the only one implemented only for one vendor.
-There's probably some opportunity for both cleanups and fixes. It
-looks like svm_has_emulated_msr(MSR_AMD64_DE_CFG) should return true
-for example.
-
-Paolo
-
-> With those pieces in place, KVM can simply check X86_FEATURE_PDCM for bot=
-h reads
-> and writes to PERF_CAPABILITIES, and the common userspace MSR handling wi=
-ll
-> convert "unsupported" to "success" as appropriate.
->
-> [*] https://lore.kernel.org/all/ZfDdS8rtVtyEr0UR@google.com
+ 		/* Update over-utilization (tipping point, U >= 0) indicator */
+ 		set_rd_overutilized_status(env->dst_rq->rd,
+--
+2.39.3
 
