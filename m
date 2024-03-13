@@ -1,118 +1,109 @@
-Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AB03EA72
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3403FE2E
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710330813; cv=none; b=Vl9UoxCwYbo+xFHuWlDfWWqV7g0tjQgkRScA5b1JttaOsjWjEwaeIVPzR6P0DYgIFlHXO8JScWi9/PFnzpuAFkTuPEq/rtOofITZeQLrkei5Bi0dHEheJARdPU3i/xqfcWU2FoBHuDiCC5lmB3h7V66hfOfuT3f0B01+tbCW2Hc=
+	t=1710330838; cv=none; b=sFw3lC3VzokN62GOV852kPnWw9mqwGVVSXAySOEwOil4RehBK3CkEKHUa6bPLUmlo0tKZi8vJeH9FzYXvOsZkHWtoavXisjVXOi0XnhxHj7U2viD1Xfy2PTDQRBq3PMHwO4hzZ9L7Afqlg9Qz+xASQff5ATWue7XusG7jsyMFt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710330813; c=relaxed/simple;
-	bh=6Y76AgpBre4SyVMFQz8Gz8vJ7A93p7tmbyD0hs1nla8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=rAGM9s3KTOlJPpwFp6ZXHywvtUBDvR7xBe+k6nwvcoqPACL557kjwMzZglDN0eGe3TEQ4jDfC0Tt2zf5ZwyIcq/RkFJ9BJXvfmmgkh8Zbxqhlh3wrS8HqTf7sOs8Sl57wy6RGLGlY/nx+Eo7nGDkLQih1KpPDITVRIN/t7RX2no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ZYnQM7p8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eZUqb3sU; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1710330838; c=relaxed/simple;
+	bh=xIq1Cxt6Ky1vqIZb7f65O3yalptD2xDs8qqjYFp1+30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cCGJZeXUXaJzbJgvJ5v53Ha4+vf+KEeAuwKiSgTf3pLzNeY9X3cSGE0HznxId0GUV0hWxUtSaOZEwwV1kCNWemgPTQNQIfGz1yGDDxAhoVo/Ju33w7rr46tZt0DyX1rN8F+Bf+yIsJXLAbmyevhu+kbytMEb2DLhzUU1KYMoCFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eGsun923; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ZYnQM7p8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eZUqb3sU"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id D6D621380134;
-	Wed, 13 Mar 2024 07:53:29 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 13 Mar 2024 07:53:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1710330809;
-	 x=1710417209; bh=gn0b2WKvEfTg/FZ9LXq190CVS7p5sTA5MQLvPVDkM3s=; b=
-	ZYnQM7p8x/dP3H+5hWC13tUah5T99wlcWE8gOwezOGhcibshahMJ5psB/nXpI11J
-	kjwEu3VUBPQfU5TCmCNMNFZGOcQ0xO3MDxzIK/2kd5Bo6v1BnO4AT5IqU3GO5iby
-	M27nshnCWSa7JyT6usf/0VIXG+DYDnrknzaYcyFg1oUXziIClTElvL71abMRpRDK
-	H7gvKtv4XpEedSnH0rBSy55tQUq/eQcmP+JqQV1ZiljN0N9r0IAlecQHVscQRSyt
-	GkCv31l1hX8AW6X4vgbIW5husbH5zCyFiTeXJQlDP0DNPveoTMD0rf1qwP+K/7k1
-	5VhecXmy3tGx5ZOVquwoNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710330809; x=
-	1710417209; bh=gn0b2WKvEfTg/FZ9LXq190CVS7p5sTA5MQLvPVDkM3s=; b=e
-	ZUqb3sUkme8YY7sunqMcd7kgqEWfeQZ4GfUpMMuwqPWi3qZC7uCjmrk3AUvXF5I6
-	sCzYembUcddX4rNT4jppC5CJa9geTUpG2MUT8Tt3jzLwTHlr9cl8wTfDl+BLYfS6
-	7IAxclCPexIrBG2BVnePeiPOFON5U34KRQEvpF6iAGRdrF1nimJbq1gKm8jgYWbJ
-	QapwtZ3LBd7JWtkrq7TQmYlb21d6CDah3Uf3FgZ8DyMW6jb/fhLiAXkUHkF77uWS
-	U1xrPo7H6Qu/ds46blGaA+7yIFSIWUzr5CzwupSlXBNEthYy//0L0cBEo25Iaf9a
-	wGDf9Xeuuux7gvDqb72VA==
-X-ME-Sender: <xms:uZPxZTU141cMxAzB1qC7B0IRPSUJwJG3UNsdiYYw8SRtDWUf4XWvXw>
-    <xme:uZPxZblhXdjQvRXBBwmSjLSK0xXK7OkgwgQ2ImSOV_QTSRzIRhgb1OK8kgux-9EuX
-    b2R_iw3t1KOaxewfi0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeehgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:uZPxZfYpe4EJPrxNTPVtS-AjAzTrDk7bd2mdHCVE-zQn1igwJ4sWHQ>
-    <xmx:uZPxZeVNzxCRcItYmAYR83vxJAjKHCOls9zlkWWdj1qZeq59iPhI4A>
-    <xmx:uZPxZdmsnwm7NkJDATBGK1wi7cn3sv_gkrMacb0qxQsLeW2P4sK2_w>
-    <xmx:uZPxZbcqOpW6nUb74efVXhKe6YWnhc2z9lhxGOnHcF3yDXRdmIL8fw>
-    <xmx:uZPxZf57wFFPJfrIxMya7jtFJn6lO-PNwRuFGUxiwAbWrwE71s4_pQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 46CCEB6008D; Wed, 13 Mar 2024 07:53:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eGsun923"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56878bb1abdso1986873a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710330835; x=1710935635; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ewxFmA1gMurqYMDR124wjxE1wehEAqBleVZNQFFIZcc=;
+        b=eGsun923FZ540v19rLujn/AG7Vw0mYm19ENd0Eo71iJVyJXbVpSDBoiRHA8e80qYyg
+         cAfQgoQpGh4S03pK8zHCLi2orEC0RKguwQQxjXSd12pNGnn3F5PMsli9MKgMeniqLHir
+         J+3km7ZnroJ9jrK3tUa481NOm40135mBopHSSuDpg3SxrserWrBMNOoDLn4AN77JBoeD
+         EfmipEYlt+yzSMZiqFRtzRZjFzPBC70ZWbH2vdPHROzxBkSAM4oPhZ3inaFgaGf2Swct
+         gRknU+uvetxgEmnU/lzwYJ776V6Jxy5liK74zLQBNGGpFXxhCAXD+cz1J7T2xxlIWkxX
+         +kYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710330835; x=1710935635;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ewxFmA1gMurqYMDR124wjxE1wehEAqBleVZNQFFIZcc=;
+        b=sHD7KW7MJs5DoZwPiY/mrDBSU9l1ZJPFm8qnOwJMWbcyXDh9xrB4cCo2t5c72pBMRM
+         NVN+sQkJEUXBRJxE4bWNBOcENLbomfeJpQIPHU9jI7cyxdF/9zjeQs/LLeZWjtp4aDKj
+         rkonhB3jZ5SFYsxe6/5U1VnpO4h98IB9zA9BEjLSMSqo8q2LFfgESfKDjRKgC+XAXj+W
+         dfvRgm2Lh2oZe0+5NwahX3yUg3mGcH+ihWGeNL9rNjHTDDEcE0PWUMicsxtDhb2ab63n
+         MBHFLPqipXlRnUV6G0fhx0Iy0hOfO7EjU9hzZReSvHRfduCv76pQcg9NKr71gM85z3H0
+         fFuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtndnp56g76GlU+f0lg9hNSpaY+dCCiYW+FSLBvMzmt8Ap71CzuerFfWtyuNNbqJLkJL0gRAGJ58w4GanLQ0B9yMAvmr7i5O4dgAJC
+X-Gm-Message-State: AOJu0YzObEBHILm9nbWAPeqTb6f+kEwXgc5vEVXDatauPydRc3t3Axbd
+	iL4TOqSBNiwRyEMrIazLnzdhs6lhLiEtQtOYkkbo2SWz2BCuqjbCh5Rj49Wh9bo=
+X-Google-Smtp-Source: AGHT+IEdOvbULeMh/tQVIie//HKNMWTJgx+FlUNx1CBPgE6UX1FJSdyGoL/SrVaj+FRhjtvqrCJm6g==
+X-Received: by 2002:a50:9e48:0:b0:566:ab45:e6c5 with SMTP id z66-20020a509e48000000b00566ab45e6c5mr3240410ede.28.1710330831292;
+        Wed, 13 Mar 2024 04:53:51 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id fg3-20020a056402548300b0056889f3cedfsm393582edb.55.2024.03.13.04.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 04:53:51 -0700 (PDT)
+Date: Wed, 13 Mar 2024 14:53:47 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Prasad Pandit <ppandit@redhat.com>
+Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+	rjui@broadcom.com, sbranden@broadcom.com,
+	linux-staging@lists.linux.dev, linux-rpi-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Prasad Pandit <pjp@fedoraproject.org>
+Subject: Re: [PATCH v2] staging: bcm2835-audio: add terminating new line to
+ Kconifg
+Message-ID: <3fcb3702-5af2-4b9f-a362-4f08ee626b14@moroto.mountain>
+References: <20240313091259.1413854-1-ppandit@redhat.com>
+ <0a1aa580-50b2-4657-8308-94bffb194aea@moroto.mountain>
+ <CAE8KmOzcD+__7xdC7tegbHO9HEP48s7=reA4j-tvqVDwzHr+8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <e0684202-6926-4bd1-86f6-2bb682524712@app.fastmail.com>
-In-Reply-To: <4f945f4a-ac29-3ef7-9e15-123962f2a0e9@huawei.com>
-References: <20240313084707.3292300-1-arnd@kernel.org>
- <4f945f4a-ac29-3ef7-9e15-123962f2a0e9@huawei.com>
-Date: Wed, 13 Mar 2024 12:53:08 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Zhihao Cheng" <chengzhihao1@huawei.com>,
- "Arnd Bergmann" <arnd@kernel.org>, "Richard Weinberger" <richard@nod.at>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Daniel Golle" <daniel@makrotopia.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: ubi: avoid expensive do_div() on 32-bit machines
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE8KmOzcD+__7xdC7tegbHO9HEP48s7=reA4j-tvqVDwzHr+8Q@mail.gmail.com>
 
-On Wed, Mar 13, 2024, at 12:29, Zhihao Cheng wrote:
-> =E5=9C=A8 2024/3/13 16:46, Arnd Bergmann =E5=86=99=E9=81=93:
->> From: Arnd Bergmann <arnd@arndb.de>
->>=20
->> The use of do_div() in ubi_nvmem_reg_read() makes calling it on
->> 32-bit machines rather expensive. Since the 'from' variable is
->> known to be a 32-bit quantity, it is clearly never needed and
->> can be optimized into a regular division operation.
->>=20
-> Do you meet a performance problem on a 32-bit machine? There are too=20
-> many places invoking do_div, why do you optimize this one?
-> Have you tested the influence on a x86_64 platform after this patch=20
-> applied? Looks like that do_div is more efficient in x86.
+On Wed, Mar 13, 2024 at 04:44:09PM +0530, Prasad Pandit wrote:
+> Hi,
+> 
+> On Wed, 13 Mar 2024 at 15:47, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > Why does this make a difference?  Is it just because it's annoying to
+> > cat a file that doesn't have a newline at the end?
+> 
+> * It's not just #PetPeeve. I'm trying to fix parsing errors reported
+> by the config-kernel tool[1], so that users can view all CONFIG
+> attributes without errors.
 
-This one was just introduced. The call site looks like a fast
-path and it caused a build regression that Daniel addressed with
-an suboptimal commit b8a77b9a5f9c ("mtd: ubi: fix NVMEM over
-UBI volumes on 32-bit systems").
+Huh.  The seems like a very nice program.  I've wanted a way to enable
+config items from command line for a long time.  I wasn't able to get it
+enable the CONFIG_NO_HZ_FULL.
 
-The way it usually goes is that someone adds an open-coded
-64-bit division that causes a link failure, which prompts
-the original developer to either rewrite the code to avoid
-the long division if possible, or add do_div() after showing
-that it is now performance critical, e.g. only called at
-probe time.
+~/config-kernel/configk -e NO_HZ_FULL  -c .config  .
 
-     Arnd
+I'm going Ack your patch because adding a newline is the correct thing
+but you should probably also change configk to handle that.
+
+> 
+> > I checked, and it's not a checkpatch warning.  Perhaps it should be though.
+> > KTODO: make checkpatch.pl warn about files that don't end in a newline
+> 
+> * I'll take a look at checkpatch.pl.
+
+It's not required.  The KTODO is just a shared todo list and anyone can
+add stuff to todo list or do it, but it's not mandatory at all.
+
+regards,
+dan carpenter
+
