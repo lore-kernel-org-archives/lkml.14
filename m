@@ -1,64 +1,62 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A6C168CD
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C46D5A4D8;
+	Wed, 13 Mar 2024 19:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710356582; cv=none; b=IuANpoL34t//+u6iMkxP6JechKCE/aDJYEiPZoXQVxjLOAikZQPm6AF/DP21U5n/U2tWc1RN6RT0k7c6yS7gfWDXxwMR4sn55YBux60IqHYYP3ijzNWNcV3hW2UuYzkpKHNqZ2YxPjK8tq0LhNhj8eSLQ/2Q+D4RK2DNtEDw0Zg=
+	t=1710356597; cv=none; b=VdQNoRw8vq1U4YlqzGUE37QZQLDpUcTd6e7EXMb6R7kIqxUQ6n+Jq8e70ece89UAE3PhABGWcooWJPKk1TGPI8Y4kojpOeL8iO8RgJUsYKyGECnFdnxXQsocC44yuSofknqabkpjZWdMx5HhVA2S4w5wjqZTeRdrnLs1TF6LqGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710356582; c=relaxed/simple;
-	bh=jyHu3DD33SQw40vH0ZcmNDRW4P3d+298/8SBjo+jPWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Jqf1iKNh/OPTB+g/ARsVbT5WokeJl5y7UBiVGwipz49/aCP53p1Aujlf7edMId3MOQcZaQ42AiB7yrg875m23jg2LnAiYzLvLVY6oB7lJmZx8AlUjlXzClGccxKbxkNilM/wxGHijg6EnEMkdua1ORWiwk15uvD8Ylx1dQS0FRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SjsVS+t6; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710356597; c=relaxed/simple;
+	bh=Y3asIHRcfcnUNu8RRFRQdtWj1CUUVV8XA2p1BBBkpdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcF8yDNUhJRGS6emZgGG3iksMAk6lczpO0bjB1Z2cMX9BJIXj4q8IaG16ytsNuAvxyQ5sL96GovPqNqa6nprMVCbk6OlRnandfB6FMASZyA2yCioKUCWv/z2sokLVBvpCr3xGLKlv5CHA4aQpxZzed+gSkrFU8Xgxv24aAPEewA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdjSVanR; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjsVS+t6"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dd59b95677so1403295ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710356581; x=1710961381; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=19x1Ac15rLwOqUkCkkNDCNMXVAzg+BltQMzrd17CHPE=;
-        b=SjsVS+t6HCguUULmLzrkj4cOnEj8nPo1wufRXDiANZIEmoWHsTJ5IMPq5w5080tNTy
-         vztZmh0AxQF1FXNq5WeNbglBHjcO7frITqNHKpERsbUX3EuE/5cboiOdKikhCWXmxloX
-         +ndb1t0ILAWrKkuh7pAd589WYUZ92vAnb8be8TVJQQYREZuvMGO0oHCJzwpynSPs6v8J
-         j78xltjaFcKxJa+fwMR4dQjVaXj+mijJETct7p6jEt1DAb5BhU0bYAk9mCS4z0irFzDC
-         Q3L30a01cdLXaJLqA7NjMKkzwQaA3z3Hh2RrdlfB3uN9g6U+s3xtnhK4YzotfoSxNLSc
-         +VYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710356581; x=1710961381;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=19x1Ac15rLwOqUkCkkNDCNMXVAzg+BltQMzrd17CHPE=;
-        b=CNc3+Y6urBmGJt1B5r7XbmgiKt9rCylvU/TY/sO5pKjNoYczDLZlg2ie/4ODAPDj2Y
-         I+mnmoqqTV1bb0vjdYrQBfEsLI+21BkSYZg+j87runPdkCw0/eZ1nkSI+gWcwYHYkqok
-         gNBnAVNttSox/NBYkq15pVOgma5p9A9eSGCCVa3FCnieN6dDjNKE3f7Kf7wztVrDnjHq
-         lzWiLA8Rqf5P65Z4d0q68wFtgDR7xYL+5z+OShngIditvDGkMwRDaYHVS17iFwRz3xt8
-         tp46Lm9r4fBuTB937WU147QK8ufY41fcUZySrM25eHv6/qTRhz56+xmVAJH9o376d+xk
-         q48Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX/qZhYmw6+WP+wOEO36IS+nJD5EXAns7CyZvK3/KG/PhhrXvMI7FtPlGt65ZwMnPbvQXt4Vv5dAgJXsfuu3lw+OF9REE6TTLaMgSxK
-X-Gm-Message-State: AOJu0YyYH9pYAS+0872LKbVJZAmFzHZcwoe0i7QW2W+Wf22EDfpQvY0F
-	UxFHPyJ1oXGnyZH4qliy1fosEclLyCyEoF/EQa2tfaQPnU5Y2O6H
-X-Google-Smtp-Source: AGHT+IE18sgOLbaW5DDx7QTLZxLjcsulic3sUQHOlLW/Qrfss+6U0Y8XhvyH1Tqv5XUVfxAjP3rZrw==
-X-Received: by 2002:a17:902:eb88:b0:1dc:1c81:1b19 with SMTP id q8-20020a170902eb8800b001dc1c811b19mr17280391plg.3.1710356580702;
-        Wed, 13 Mar 2024 12:03:00 -0700 (PDT)
-Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.67])
-        by smtp.gmail.com with ESMTPSA id d8-20020a170902cec800b001dd91af1f03sm7142853plg.200.2024.03.13.12.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 12:03:00 -0700 (PDT)
-Date: Thu, 14 Mar 2024 00:32:57 +0530
-From: Ayush Tiwari <ayushtiw0110@gmail.com>
-To: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Cc: outreachy@lists.linux.dev
-Subject: [PATCH] staging: greybus: add const type to struct kobj_type
- gb_audio_module_type
-Message-ID: <ZfH4YZ9qyK231T5l@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdjSVanR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710356596; x=1741892596;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y3asIHRcfcnUNu8RRFRQdtWj1CUUVV8XA2p1BBBkpdA=;
+  b=mdjSVanRt4TwDwd37BqoFcnNJoF8P9ZMxR47wYkwrxWK9xhrukwhMmab
+   kkPHeJVE6c8o2s1zc4bEkWANIw2HWtud5WtIX4mbUFEFcsngnn6OdLlRe
+   f2epTzKySAR1FUzVDxizUVuOXIEt7A9m4YrMHMIHE2gtphVcN8ekDERjJ
+   BOyOHSlClrooAWbdXDk9OYufP8qFTqx2/ygeXQ3tMVnN2pKn62EL9Ic+P
+   pHAgr1/OC6550PPhBi3zWN9BieWODCYUwBWuiZljV0GtQjWj4OXjDMZ+F
+   AtMF4gtLAESBhzo5eY98eSSpSIieGPFxDiWqLZ2OTEk/4+eGKrCkbw9xO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="15874085"
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="15874085"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 12:03:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="914439293"
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="914439293"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 12:03:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rkTsb-0000000CIiu-0a3O;
+	Wed, 13 Mar 2024 21:03:09 +0200
+Date: Wed, 13 Mar 2024 21:03:08 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
+	mazziesaccount@gmail.com, ak@it-klinger.de,
+	petre.rodan@subdimension.ro, linus.walleij@linaro.org,
+	phil@raspberrypi.com, 579lpy@gmail.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/6] iio: pressure: add SCALE and RAW values for
+ channels
+Message-ID: <ZfH4bET-HX0e3PO_@smile.fi.intel.com>
+References: <20240313174007.1934983-1-vassilisamir@gmail.com>
+ <20240313174007.1934983-4-vassilisamir@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,28 +65,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240313174007.1934983-4-vassilisamir@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add type qualifier const in struct kobj_type gb_audio_module_type to
-address checkpatch warning and conform to the kernel coding style.
+On Wed, Mar 13, 2024 at 06:40:04PM +0100, Vasileios Amoiridis wrote:
+> Add extra IIO_CHAN_INFO_SCALE and IIO_CHAN_INFO_RAW in order to be
+> able to calculate the processed value with standard userspace IIO
+> tools. Can be used for triggered buffers as well.
 
-Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
----
- drivers/staging/greybus/audio_manager_module.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/drivers/staging/greybus/audio_manager_module.c b/drivers/staging/greybus/audio_manager_module.c
-index 5f9dcbdbc191..4a4dfb42f50f 100644
---- a/drivers/staging/greybus/audio_manager_module.c
-+++ b/drivers/staging/greybus/audio_manager_module.c
-@@ -144,7 +144,7 @@ static struct attribute *gb_audio_module_default_attrs[] = {
- };
- ATTRIBUTE_GROUPS(gb_audio_module_default);
- 
--static struct kobj_type gb_audio_module_type = {
-+static const struct kobj_type gb_audio_module_type = {
- 	.sysfs_ops = &gb_audio_module_sysfs_ops,
- 	.release = gb_audio_module_release,
- 	.default_groups = gb_audio_module_default_groups,
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_HUMIDITYRELATIVE:
+> +			*val = data->chip_info->read_humid(data);
+> +			ret = IIO_VAL_INT;
+> +			break;
+> +		case IIO_PRESSURE:
+> +			*val = data->chip_info->read_press(data);
+> +			ret = IIO_VAL_INT;
+> +			break;
+> +		case IIO_TEMP:
+> +			*val = data->chip_info->read_temp(data);
+> +			ret = IIO_VAL_INT;
+> +			break;
+> +		default:
+> +			ret = -EINVAL;
+> +			break;
+
+Is it mutex that prevents us from returning here?
+If so, perhaps switching to use cleanup.h first?
+
+> +		}
+> +		break;
+
+
 -- 
-2.40.1
+With Best Regards,
+Andy Shevchenko
+
 
