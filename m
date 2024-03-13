@@ -1,52 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05C860DFB;
-	Wed, 13 Mar 2024 17:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7AF60EF7;
+	Wed, 13 Mar 2024 17:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349478; cv=none; b=qbyEaIM1fqqXXQOss2lt8Om40pYsD6U+WLd+HYwhxLykyboRIvq/aQuj7D+0fW7N4IK3Ldpn4kC2OFcnW87i7e4P+sWKOZApSS7R8wMAgGXYgDxVlUerW+hmWKucQlJrSgTNsTJADTIZD68UPoapuL3sDLUk75RFzvrgaQIvlFA=
+	t=1710349481; cv=none; b=TcutEnHc5Wya8QfIY1MK+qJrLZ27538hux7u59zTHmtknXd21VpUCwhwr8CK++Wwat7yl4Or/UEfppZxUdLgxYBgTwYTs4lJ0/G/1vSBWheyja/sbXLqt9sDg1Qqx/0W8kJZQx0dkmn2M/eDnGuHl+jNj446Zs3akNz20ikS8rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349478; c=relaxed/simple;
-	bh=NiYGXLVg9gxjtm8wiGDuM7Xp7yvCfG4vRt5gUIfl8h4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LQL2AV1vgUyc+pfwOf921on+JCiUT5uYm25w1Ft3QMDKsxE/VwpWCHgaY2jJ1QHHaPwyWW+pDodvRVn98oKLlnzHbFGTXGrwkCIcsRYIKGl2OrpO8I4/LD3+gBczBoz+Y0ijoD0EhROassoz00I56b5tfndDdQRFjrFp+MdIEpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RykeFtAo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710349481; c=relaxed/simple;
+	bh=4Abb+MVNgzXfSodg8DfPY0g6C3fckhgqfbQVzxu5Ytw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S/8cPZcO6GWIuvNyIR+/O/qA573uG+6fNfO2IRttfyUKzSLaeN8ub1FdRohnFFcyjcNfO8+0bSPYdMWg7r6sFiLnyaQLuwcA2YzLT0E0c72WbkuSzFgcIdSNh1RCLlmC4Mqeatvzy6CS72BpEZMGyu9BeiGdUMcOjjygqlf3uvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPNchxku; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RykeFtAo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D1CC433F1;
-	Wed, 13 Mar 2024 17:04:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPNchxku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BDAC433B2;
+	Wed, 13 Mar 2024 17:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349478;
-	bh=NiYGXLVg9gxjtm8wiGDuM7Xp7yvCfG4vRt5gUIfl8h4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RykeFtAoPAVeMItJO8YMBxNXL1RTVJdHp5AdSmfHOuWlUSBT3dX1hW+VNKoePTUhV
-	 mgCUewn/szn7bEJ6/XA9CXuz4qUb0V7Vob5X2fHbSoOMqfyA4ECFJbSmnlkOHt1S/u
-	 1LXogAoAz3dHgZ4sdAzV+M5vHAKiQEsyWoP2rMaKZUHuY4hUcleABEISrve+VgCjIn
-	 NUrB0nksxkH/w9hAUMPJncUAuVS9tpMMPFdUty1HuX8nIPmZ++Hlaye+tye64KxT39
-	 La+BU3hckTltHZ9bqV3C5lW0YQB+9OiweSQVwPDqLHowCkgZpH7q1DAoDwPXI6mXZp
-	 T6+031EWdgS6g==
+	s=k20201202; t=1710349480;
+	bh=4Abb+MVNgzXfSodg8DfPY0g6C3fckhgqfbQVzxu5Ytw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oPNchxku+GoDhA4XDJ56gIviws+FWrVoqyKzAD9ukAP6aELjkPnxJyKvhNlsBf9Jb
+	 tXdah/LU4bJubG+ES7TluI04LpgSfCN2zFW45Cl66K1SzM8yD/zV6nSrvLicQ6lDO5
+	 vYYpNPh9u5hYYeZVYPhH6QCUHzB6NIsUX3Kq9COBC7x0R1Z3v5gwvkA/rpqtNvZnRF
+	 5RNepV5fvdkE/nbX74gG1ImRxVjIw9vPgSZTlmBrnXZSQdalQnBAknutwkZblP2aYw
+	 Nx6dGR42Cls5T+YRR2ATdTayQCBxRGFvMp0KbXoPLmbu1ZIlTTnAXxt7vw7U6u36I1
+	 yAN17B04VVcIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de
-Subject: [PATCH 4.19 00/41] 4.19.310-rc1 review
-Date: Wed, 13 Mar 2024 13:03:54 -0400
-Message-ID: <20240313170435.616724-1-sashal@kernel.org>
+Cc: John Efstathiades <john.efstathiades@pebblebay.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/41] lan78xx: Fix white space and style issues
+Date: Wed, 13 Mar 2024 13:03:56 -0400
+Message-ID: <20240313170435.616724-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240313170435.616724-1-sashal@kernel.org>
+References: <20240313170435.616724-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.310-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.19.y
@@ -57,146 +54,253 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
+From: John Efstathiades <john.efstathiades@pebblebay.com>
 
-This is the start of the stable review cycle for the 4.19.310 release.
-There are 41 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+[ Upstream commit 9ceec7d33adf9647293f24d2fd9a055b89c63864 ]
 
-Responses should be made by Fri Mar 15 05:04:34 PM UTC 2024.
-Anything received after that time might be too late.
+Fix white space and code style issues identified by checkpatch.
 
-The whole patch series can be found in one patch at:
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-4.19.y&id2=v4.19.309
-or in the git tree and branch at:
-        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
+Signed-off-by: John Efstathiades <john.efstathiades@pebblebay.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Stable-dep-of: 1eecc7ab82c4 ("net: lan78xx: fix runtime PM count underflow on link stop")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/usb/lan78xx.c | 80 ++++++++++++++++++++-------------------
+ 1 file changed, 42 insertions(+), 38 deletions(-)
 
-Thanks,
-Sasha
-
--------------
-Pseudo-Shortlog of commits:
-
-Arnd Bergmann (1):
-  y2038: rusage: use __kernel_old_timeval
-
-Christophe Leroy (3):
-  tools/selftest/vm: allow choosing mem size and page size in
-    map_hugetlb
-  selftests/vm: fix display of page size in map_hugetlb
-  selftests/vm: fix map_hugetlb length used for testing read and write
-
-Dexuan Cui (1):
-  hv_netvsc: Make netvsc/VF binding check both MAC and serial number
-
-Edward Adam Davis (1):
-  net/rds: fix WARNING in rds_conn_connect_if_down
-
-Eric Dumazet (2):
-  geneve: make sure to pull inner header in geneve_rx()
-  net/ipv6: avoid possible UAF in ip6_route_mpath_notify()
-
-Fedor Pchelkin (1):
-  btrfs: ref-verify: free ref cache before clearing mount opt
-
-Ingo Molnar (1):
-  exit: Fix typo in comment: s/sub-theads/sub-threads
-
-Jason Xing (12):
-  netrom: Fix a data-race around sysctl_netrom_default_path_quality
-  netrom: Fix a data-race around
-    sysctl_netrom_obsolescence_count_initialiser
-  netrom: Fix data-races around sysctl_netrom_network_ttl_initialiser
-  netrom: Fix a data-race around sysctl_netrom_transport_timeout
-  netrom: Fix a data-race around sysctl_netrom_transport_maximum_tries
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_acknowledge_delay
-  netrom: Fix a data-race around sysctl_netrom_transport_busy_delay
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_requested_window_size
-  netrom: Fix a data-race around
-    sysctl_netrom_transport_no_activity_timeout
-  netrom: Fix a data-race around sysctl_netrom_routing_control
-  netrom: Fix a data-race around sysctl_netrom_link_fails_count
-  netrom: Fix data-races around sysctl_net_busy_read
-
-Johannes Berg (1):
-  um: allow not setting extra rpaths in the linux binary
-
-John Efstathiades (4):
-  lan78xx: Fix white space and style issues
-  lan78xx: Add missing return code checks
-  lan78xx: Fix partial packet errors on suspend/resume
-  lan78xx: Fix race conditions in suspend/resume handling
-
-Juhee Kang (1):
-  hv_netvsc: use netif_is_bond_master() instead of open code
-
-Lee Jones (1):
-  net: usb: lan78xx: Remove lots of set but unused 'ret' variables
-
-Lena Wang (1):
-  netfilter: nf_conntrack_h323: Add protection for bmp length out of
-    range
-
-Li RongQing (1):
-  net: move definition of pcpu_lstats to header file
-
-Nico Pache (1):
-  selftests: mm: fix map_hugetlb failure on 64K page size systems
-
-Oleg Nesterov (5):
-  getrusage: add the "signal_struct *sig" local variable
-  getrusage: move thread_group_cputime_adjusted() outside of
-    lock_task_sighand()
-  getrusage: use __for_each_thread()
-  getrusage: use sig->stats_lock rather than lock_task_sighand()
-  exit: wait_task_zombie: kill the no longer necessary
-    spin_lock_irq(siglock)
-
-Oleksij Rempel (1):
-  net: lan78xx: fix runtime PM count underflow on link stop
-
-Sasha Levin (1):
-  Linux 4.19.310-rc1
-
-Shradha Gupta (1):
-  hv_netvsc: Register VF in netvsc_probe if NET_DEVICE_REGISTER missed
-
-Werner Sembach (1):
-  Input: i8042 - fix strange behavior of touchpad on Clevo NS70PU
-
- Makefile                                 |   4 +-
- arch/alpha/kernel/osf_sys.c              |   2 +-
- arch/um/Kconfig                          |  13 +
- arch/um/Makefile                         |   3 +-
- arch/x86/Makefile.um                     |   2 +-
- drivers/input/serio/i8042-x86ia64io.h    |   6 +
- drivers/net/geneve.c                     |  18 +-
- drivers/net/hyperv/netvsc_drv.c          |  96 ++-
- drivers/net/loopback.c                   |   6 -
- drivers/net/nlmon.c                      |   6 -
- drivers/net/usb/lan78xx.c                | 966 +++++++++++++++++------
- drivers/net/vsockmon.c                   |  14 +-
- fs/btrfs/ref-verify.c                    |   6 +-
- include/linux/netdevice.h                |   6 +
- include/uapi/linux/resource.h            |   4 +-
- kernel/exit.c                            |  12 +-
- kernel/sys.c                             |  91 ++-
- net/ipv6/route.c                         |  21 +-
- net/netfilter/nf_conntrack_h323_asn1.c   |   4 +
- net/netrom/af_netrom.c                   |  14 +-
- net/netrom/nr_dev.c                      |   2 +-
- net/netrom/nr_in.c                       |   6 +-
- net/netrom/nr_out.c                      |   2 +-
- net/netrom/nr_route.c                    |   8 +-
- net/netrom/nr_subr.c                     |   5 +-
- net/rds/rdma.c                           |   3 +
- net/rds/send.c                           |   6 +-
- tools/testing/selftests/vm/map_hugetlb.c |  50 +-
- 28 files changed, 994 insertions(+), 382 deletions(-)
-
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 4d94af63cf190..2f4f85e03df2c 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -396,7 +396,7 @@ struct lan78xx_net {
+ 	struct usb_anchor	deferred;
+ 
+ 	struct mutex		phy_mutex; /* for phy access */
+-	unsigned		pipe_in, pipe_out, pipe_intr;
++	unsigned int		pipe_in, pipe_out, pipe_intr;
+ 
+ 	u32			hard_mtu;	/* count any extra framing */
+ 	size_t			rx_urb_size;	/* size for rx urbs */
+@@ -406,7 +406,7 @@ struct lan78xx_net {
+ 	wait_queue_head_t	*wait;
+ 	unsigned char		suspend_count;
+ 
+-	unsigned		maxpacket;
++	unsigned int		maxpacket;
+ 	struct timer_list	delay;
+ 	struct timer_list	stat_monitor;
+ 
+@@ -515,7 +515,7 @@ static int lan78xx_read_stats(struct lan78xx_net *dev,
+ 	if (likely(ret >= 0)) {
+ 		src = (u32 *)stats;
+ 		dst = (u32 *)data;
+-		for (i = 0; i < sizeof(*stats)/sizeof(u32); i++) {
++		for (i = 0; i < sizeof(*stats) / sizeof(u32); i++) {
+ 			le32_to_cpus(&src[i]);
+ 			dst[i] = src[i];
+ 		}
+@@ -529,10 +529,11 @@ static int lan78xx_read_stats(struct lan78xx_net *dev,
+ 	return ret;
+ }
+ 
+-#define check_counter_rollover(struct1, dev_stats, member) {	\
+-	if (struct1->member < dev_stats.saved.member)		\
+-		dev_stats.rollover_count.member++;		\
+-	}
++#define check_counter_rollover(struct1, dev_stats, member)		\
++	do {								\
++		if ((struct1)->member < (dev_stats).saved.member)	\
++			(dev_stats).rollover_count.member++;		\
++	} while (0)
+ 
+ static void lan78xx_check_stat_rollover(struct lan78xx_net *dev,
+ 					struct lan78xx_statstage *stats)
+@@ -858,9 +859,9 @@ static int lan78xx_read_raw_otp(struct lan78xx_net *dev, u32 offset,
+ 
+ 	for (i = 0; i < length; i++) {
+ 		lan78xx_write_reg(dev, OTP_ADDR1,
+-					((offset + i) >> 8) & OTP_ADDR1_15_11);
++				  ((offset + i) >> 8) & OTP_ADDR1_15_11);
+ 		lan78xx_write_reg(dev, OTP_ADDR2,
+-					((offset + i) & OTP_ADDR2_10_3));
++				  ((offset + i) & OTP_ADDR2_10_3));
+ 
+ 		lan78xx_write_reg(dev, OTP_FUNC_CMD, OTP_FUNC_CMD_READ_);
+ 		lan78xx_write_reg(dev, OTP_CMD_GO, OTP_CMD_GO_GO_);
+@@ -914,9 +915,9 @@ static int lan78xx_write_raw_otp(struct lan78xx_net *dev, u32 offset,
+ 
+ 	for (i = 0; i < length; i++) {
+ 		lan78xx_write_reg(dev, OTP_ADDR1,
+-					((offset + i) >> 8) & OTP_ADDR1_15_11);
++				  ((offset + i) >> 8) & OTP_ADDR1_15_11);
+ 		lan78xx_write_reg(dev, OTP_ADDR2,
+-					((offset + i) & OTP_ADDR2_10_3));
++				  ((offset + i) & OTP_ADDR2_10_3));
+ 		lan78xx_write_reg(dev, OTP_PRGM_DATA, data[i]);
+ 		lan78xx_write_reg(dev, OTP_TST_CMD, OTP_TST_CMD_PRGVRFY_);
+ 		lan78xx_write_reg(dev, OTP_CMD_GO, OTP_CMD_GO_GO_);
+@@ -973,7 +974,7 @@ static int lan78xx_dataport_wait_not_busy(struct lan78xx_net *dev)
+ 		usleep_range(40, 100);
+ 	}
+ 
+-	netdev_warn(dev->net, "lan78xx_dataport_wait_not_busy timed out");
++	netdev_warn(dev->net, "%s timed out", __func__);
+ 
+ 	return -EIO;
+ }
+@@ -986,7 +987,7 @@ static int lan78xx_dataport_write(struct lan78xx_net *dev, u32 ram_select,
+ 	int i, ret;
+ 
+ 	if (usb_autopm_get_interface(dev->intf) < 0)
+-			return 0;
++		return 0;
+ 
+ 	mutex_lock(&pdata->dataport_mutex);
+ 
+@@ -1059,9 +1060,9 @@ static void lan78xx_deferred_multicast_write(struct work_struct *param)
+ 	for (i = 1; i < NUM_OF_MAF; i++) {
+ 		lan78xx_write_reg(dev, MAF_HI(i), 0);
+ 		lan78xx_write_reg(dev, MAF_LO(i),
+-					pdata->pfilter_table[i][1]);
++				  pdata->pfilter_table[i][1]);
+ 		lan78xx_write_reg(dev, MAF_HI(i),
+-					pdata->pfilter_table[i][0]);
++				  pdata->pfilter_table[i][0]);
+ 	}
+ 
+ 	lan78xx_write_reg(dev, RFE_CTL, pdata->rfe_ctl);
+@@ -1080,11 +1081,12 @@ static void lan78xx_set_multicast(struct net_device *netdev)
+ 			    RFE_CTL_DA_PERFECT_ | RFE_CTL_MCAST_HASH_);
+ 
+ 	for (i = 0; i < DP_SEL_VHF_HASH_LEN; i++)
+-			pdata->mchash_table[i] = 0;
++		pdata->mchash_table[i] = 0;
++
+ 	/* pfilter_table[0] has own HW address */
+ 	for (i = 1; i < NUM_OF_MAF; i++) {
+-			pdata->pfilter_table[i][0] =
+-			pdata->pfilter_table[i][1] = 0;
++		pdata->pfilter_table[i][0] = 0;
++		pdata->pfilter_table[i][1] = 0;
+ 	}
+ 
+ 	pdata->rfe_ctl |= RFE_CTL_BCAST_EN_;
+@@ -1279,9 +1281,10 @@ static void lan78xx_status(struct lan78xx_net *dev, struct urb *urb)
+ 			generic_handle_irq(dev->domain_data.phyirq);
+ 			local_irq_enable();
+ 		}
+-	} else
++	} else {
+ 		netdev_warn(dev->net,
+ 			    "unexpected interrupt: 0x%08x\n", intdata);
++	}
+ }
+ 
+ static int lan78xx_ethtool_get_eeprom_len(struct net_device *netdev)
+@@ -1370,7 +1373,7 @@ static void lan78xx_get_wol(struct net_device *netdev,
+ 	struct lan78xx_priv *pdata = (struct lan78xx_priv *)(dev->data[0]);
+ 
+ 	if (usb_autopm_get_interface(dev->intf) < 0)
+-			return;
++		return;
+ 
+ 	ret = lan78xx_read_reg(dev, USB_CFG0, &buf);
+ 	if (unlikely(ret < 0)) {
+@@ -2027,7 +2030,7 @@ static int lan8835_fixup(struct phy_device *phydev)
+ 
+ 	/* RGMII MAC TXC Delay Enable */
+ 	lan78xx_write_reg(dev, MAC_RGMII_ID,
+-				MAC_RGMII_ID_TXC_DELAY_EN_);
++			  MAC_RGMII_ID_TXC_DELAY_EN_);
+ 
+ 	/* RGMII TX DLL Tune Adjust */
+ 	lan78xx_write_reg(dev, RGMII_TX_BYP_DLL, 0x3D00);
+@@ -3383,9 +3386,10 @@ static void lan78xx_tx_bh(struct lan78xx_net *dev)
+ 		if (skb)
+ 			dev_kfree_skb_any(skb);
+ 		usb_free_urb(urb);
+-	} else
++	} else {
+ 		netif_dbg(dev, tx_queued, dev->net,
+ 			  "> tx, len %d, type 0x%x\n", length, skb->protocol);
++	}
+ }
+ 
+ static void lan78xx_rx_bh(struct lan78xx_net *dev)
+@@ -3486,7 +3490,7 @@ static void lan78xx_delayedwork(struct work_struct *work)
+ 		unlink_urbs(dev, &dev->rxq);
+ 		status = usb_autopm_get_interface(dev->intf);
+ 		if (status < 0)
+-				goto fail_halt;
++			goto fail_halt;
+ 		status = usb_clear_halt(dev->udev, dev->pipe_in);
+ 		usb_autopm_put_interface(dev->intf);
+ 		if (status < 0 &&
+@@ -3659,8 +3663,8 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	struct net_device *netdev;
+ 	struct usb_device *udev;
+ 	int ret;
+-	unsigned maxp;
+-	unsigned period;
++	unsigned int maxp;
++	unsigned int period;
+ 	u8 *buf = NULL;
+ 
+ 	udev = interface_to_usbdev(intf);
+@@ -3892,10 +3896,10 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
+ 		/* set WUF_CFG & WUF_MASK for IPv4 Multicast */
+ 		crc = lan78xx_wakeframe_crc16(ipv4_multicast, 3);
+ 		lan78xx_write_reg(dev, WUF_CFG(mask_index),
+-					WUF_CFGX_EN_ |
+-					WUF_CFGX_TYPE_MCAST_ |
+-					(0 << WUF_CFGX_OFFSET_SHIFT_) |
+-					(crc & WUF_CFGX_CRC16_MASK_));
++				  WUF_CFGX_EN_ |
++				  WUF_CFGX_TYPE_MCAST_ |
++				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
++				  (crc & WUF_CFGX_CRC16_MASK_));
+ 
+ 		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 7);
+ 		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
+@@ -3906,10 +3910,10 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
+ 		/* for IPv6 Multicast */
+ 		crc = lan78xx_wakeframe_crc16(ipv6_multicast, 2);
+ 		lan78xx_write_reg(dev, WUF_CFG(mask_index),
+-					WUF_CFGX_EN_ |
+-					WUF_CFGX_TYPE_MCAST_ |
+-					(0 << WUF_CFGX_OFFSET_SHIFT_) |
+-					(crc & WUF_CFGX_CRC16_MASK_));
++				  WUF_CFGX_EN_ |
++				  WUF_CFGX_TYPE_MCAST_ |
++				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
++				  (crc & WUF_CFGX_CRC16_MASK_));
+ 
+ 		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 3);
+ 		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
+@@ -3936,10 +3940,10 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
+ 		 */
+ 		crc = lan78xx_wakeframe_crc16(arp_type, 2);
+ 		lan78xx_write_reg(dev, WUF_CFG(mask_index),
+-					WUF_CFGX_EN_ |
+-					WUF_CFGX_TYPE_ALL_ |
+-					(0 << WUF_CFGX_OFFSET_SHIFT_) |
+-					(crc & WUF_CFGX_CRC16_MASK_));
++				  WUF_CFGX_EN_ |
++				  WUF_CFGX_TYPE_ALL_ |
++				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
++				  (crc & WUF_CFGX_CRC16_MASK_));
+ 
+ 		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 0x3000);
+ 		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
+@@ -4087,7 +4091,7 @@ static int lan78xx_resume(struct usb_interface *intf)
+ 	if (!--dev->suspend_count) {
+ 		/* resume interrupt URBs */
+ 		if (dev->urb_intr && test_bit(EVENT_DEV_OPEN, &dev->flags))
+-				usb_submit_urb(dev->urb_intr, GFP_NOIO);
++			usb_submit_urb(dev->urb_intr, GFP_NOIO);
+ 
+ 		spin_lock_irq(&dev->txq.lock);
+ 		while ((res = usb_get_from_anchor(&dev->deferred))) {
 -- 
 2.43.0
 
