@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4518313F431;
-	Wed, 13 Mar 2024 16:42:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACCD63411;
+	Wed, 13 Mar 2024 16:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348176; cv=none; b=sCsbxFm1ubHdOb3Wxbi+GCrUnIuVbxw/rtd/rqsq05rqGDHQJCf5QT31rid/zbBjfO0HkcKzmEiQfN6tGRxUfEgGwhoisl9aFeC36kONlFbRlFvWBakE9l1xF92iBZeZmNshNMFyKSCYy5MQrQBSsvIOrTraLVEmFh87Vpa0+08=
+	t=1710348178; cv=none; b=AS85gysB+MeGRV2o4xlDi+BlDdaf8CYWUerVv/roiox/e2/92R1DjoVUlY0aqUqk2gKuOl3gt0TbA8Hsw8l0JCo6WyM1n09uTgR+9T1SoVHh/4jSSahCWiHwu6x7YAUnkNuRa8kroNNvA93R/WrAGzzGC1XH1Hk9T9AD/ZpPrP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348176; c=relaxed/simple;
-	bh=t9cB5tJirBxb/oPgBSz64yZsV3dGZtpPI1QZkEyTRRA=;
+	s=arc-20240116; t=1710348178; c=relaxed/simple;
+	bh=8IImuHKCDLLJHUSZxoAxes0ahPbeQ6kuN9+Djzi8mbM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TIdbwAhRi1gNS3lyIhaWECubxqKrWowiofxTRPbP+RmQ0iAVOrHJFKQDoXkYmfgnOxfUOuV5N8XaBpngVV25kJTNGIV4IJSTY4NY/szghwOPQ5EiBYZ9XnOl+7d0JpY97YJ2GAhIormYV9J0yL86sGR4FUvnaizCs+AkXih1qCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLAoBrj5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C+mw8t3zld3INY9+2BoGl9iQ7iySk4vI70gi38zPCmzxk/AhQVUY+WQ49NhwyokJlXrPWdQ7i1ZHGsgU+EB2e5AYQTmi0fqT3fyPgmFoHAcyiS9yrVTguxF72kc3JC6z2JMWLVyUrqQ/vvvmK2/IgINVGeyDFJ1xyhrcqh0U2zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozhXXXKV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLAoBrj5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C1EC433F1;
-	Wed, 13 Mar 2024 16:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozhXXXKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679CBC43394;
+	Wed, 13 Mar 2024 16:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348176;
-	bh=t9cB5tJirBxb/oPgBSz64yZsV3dGZtpPI1QZkEyTRRA=;
+	s=k20201202; t=1710348178;
+	bh=8IImuHKCDLLJHUSZxoAxes0ahPbeQ6kuN9+Djzi8mbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rLAoBrj5p4QOguTkykSVXFiJ7RCgawKCf1ElncdcmRVeMuCfS/uyGxJGcVN0gUG37
-	 SkWvc1gKxSgD+JSfxCr6CmXmONVUv2vLiizesuQ+OwXxQjQi/IGmrXxWfOVVXksCV/
-	 1ghYB23gmUUsvWsNRPova60Xpq6aBfNS6aPsvv1YUhrA6076K8ve2+APzQRFpL41X2
-	 a9lfFXuvulLkqgyvBgtacgtv1JXId1cTDDsUaFn7FomKfSjdOB19LgTsL3Tg4G/RMg
-	 KkZZHYYzY8HQ0qYk3BHHp0V+ZtgSnxzs0TS7BjMBhKgm1hVjLqsztE81QDBtyVHcpZ
-	 k0JyA4mtMehMg==
+	b=ozhXXXKV1C8BpwXSn0ggOnXbjReceswAeRKPdDvgd+Ciczr1Lz5+pbaw4/BIsN1qL
+	 3IAsFm5NN8t7D4ycnF2zSTcYzdei8y4tN50zzVwwtotd/Iy9qK7Bjt5kKv848UJ4Pa
+	 BYskbUntHgbLb3Kpn1lo642RWr9ZjRU/Y2hctx3mgz7W7ZtpOb/JffL8n4dIhHqosk
+	 /3ApWoYTVceBmSHRzwn/I/O8EKg2nNIqtFA1yChWrKDBeWzKblhXVVyoV+me6bfBFf
+	 nX9rjkevpNROZgPAUTvS5ignH1jwWdFk1+n9oJAxRYYjqPOZBT7ePHypHYcBHEdTcV
+	 9lNqRZibBNygA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jason Xing <kernelxing@tencent.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Takashi Iwai <tiwai@suse.de>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 27/76] netrom: Fix data-races around sysctl_net_busy_read
-Date: Wed, 13 Mar 2024 12:41:34 -0400
-Message-ID: <20240313164223.615640-28-sashal@kernel.org>
+Subject: [PATCH 5.15 29/76] ALSA: usb-audio: Clear fixed clock rate at closing EP
+Date: Wed, 13 Mar 2024 12:41:36 -0400
+Message-ID: <20240313164223.615640-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
 References: <20240313164223.615640-1-sashal@kernel.org>
@@ -54,66 +54,54 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Jason Xing <kernelxing@tencent.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit d380ce70058a4ccddc3e5f5c2063165dc07672c6 ]
+[ Upstream commit 809f44a0cc5ad4b1209467a6287f8ac0eb49d393 ]
 
-We need to protect the reader reading the sysctl value because the
-value can be changed concurrently.
+The recent commit c11117b634f4 ("ALSA: usb-audio: Refcount multiple
+accesses on the single clock") tries to manage the clock rate shared
+by several endpoints.  This was intended for avoiding the unmatched
+rate by a different endpoint, but unfortunately, it introduced a
+regression for PulseAudio and pipewire, too; those applications try to
+probe the multiple possible rates (44.1k and 48kHz) and setting up the
+normal rate fails but only the last rate is applied.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+The cause is that the last sample rate is still left to the clock
+reference even after closing the endpoint, and this value is still
+used at the next open.  It happens only when applications set up via
+PCM prepare but don't start/stop the stream; the rate is reset when
+the stream is stopped, but it's not cleared at close.
+
+This patch addresses the issue above, simply by clearing the rate set
+in the clock reference at the last close of each endpoint.
+
+Fixes: c11117b634f4 ("ALSA: usb-audio: Refcount multiple accesses on the single clock")
+Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/all/YxXIWv8dYmg1tnXP@zx2c4.com/
+Link: https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2620
+Link: https://lore.kernel.org/r/20220907100421.6443-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Stable-dep-of: 7822baa844a8 ("ALSA: usb-audio: add quirk for RODE NT-USB+")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netrom/af_netrom.c | 2 +-
- net/netrom/nr_in.c     | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ sound/usb/endpoint.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/netrom/af_netrom.c b/net/netrom/af_netrom.c
-index 376b6af431448..37d0bf6cab456 100644
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -954,7 +954,7 @@ int nr_rx_frame(struct sk_buff *skb, struct net_device *dev)
- 		 * G8PZT's Xrouter which is sending packets with command type 7
- 		 * as an extension of the protocol.
- 		 */
--		if (sysctl_netrom_reset_circuit &&
-+		if (READ_ONCE(sysctl_netrom_reset_circuit) &&
- 		    (frametype != NR_RESET || flags != 0))
- 			nr_transmit_reset(skb, 1);
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index 803053d4c9dbc..13c0264881499 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -932,6 +932,8 @@ void snd_usb_endpoint_close(struct snd_usb_audio *chip,
+ 		endpoint_set_interface(chip, ep, false);
  
-diff --git a/net/netrom/nr_in.c b/net/netrom/nr_in.c
-index 2f084b6f69d7e..97944db6b5ac6 100644
---- a/net/netrom/nr_in.c
-+++ b/net/netrom/nr_in.c
-@@ -97,7 +97,7 @@ static int nr_state1_machine(struct sock *sk, struct sk_buff *skb,
- 		break;
- 
- 	case NR_RESET:
--		if (sysctl_netrom_reset_circuit)
-+		if (READ_ONCE(sysctl_netrom_reset_circuit))
- 			nr_disconnect(sk, ECONNRESET);
- 		break;
- 
-@@ -128,7 +128,7 @@ static int nr_state2_machine(struct sock *sk, struct sk_buff *skb,
- 		break;
- 
- 	case NR_RESET:
--		if (sysctl_netrom_reset_circuit)
-+		if (READ_ONCE(sysctl_netrom_reset_circuit))
- 			nr_disconnect(sk, ECONNRESET);
- 		break;
- 
-@@ -262,7 +262,7 @@ static int nr_state3_machine(struct sock *sk, struct sk_buff *skb, int frametype
- 		break;
- 
- 	case NR_RESET:
--		if (sysctl_netrom_reset_circuit)
-+		if (READ_ONCE(sysctl_netrom_reset_circuit))
- 			nr_disconnect(sk, ECONNRESET);
- 		break;
- 
+ 	if (!--ep->opened) {
++		if (ep->clock_ref && !atomic_read(&ep->clock_ref->locked))
++			ep->clock_ref->rate = 0;
+ 		ep->iface = 0;
+ 		ep->altsetting = 0;
+ 		ep->cur_audiofmt = NULL;
 -- 
 2.43.0
 
