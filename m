@@ -1,108 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AD3210F8;
-	Wed, 13 Mar 2024 18:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E259556B64
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710356096; cv=none; b=alIlLmCsVmhjep9G6F/6/HaRN16O4y0Kw2sDo2ie1CTnc6F+YAI8CF91xiv/yIW/FJjC8EwH5AQLQSD7SOM2fRLBCC+EaYe1FXUFcW33gdHqW5nuZIk6XKCQIJfUTLTU1M7eH7HdfX1+BAJE+ksBnAWWnwhOv6ZNBzB34AILHp0=
+	t=1710356177; cv=none; b=Lg4HpbD72+qwoDkl70N+0q4rOUI9QLpV8SiXsmPO5vrAS3Znl7/AJxroBBf12N9A1fF8A+NLly4iwxxPkFnwxOs7eR7Q3gypn5Lbovyvcf8xXNFo5T9feNPLIaUTkNknBbr2gJVsDs20CodlF8pWE846LdUmXkI1RkfjgTjC0n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710356096; c=relaxed/simple;
-	bh=ZG1LuLekRiLfxzr/Jqbgw2nhEBHoB9a7CHQNHKlXSjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FPAKm3+c6G3DoX2ggHFNVFWOSNXXRWJ674K65G+6R3MunbIwaKe8+ypGqXUZKaE51BxAq/cbl/Byyokep2608nAcrCDw0QJYUGHxHwq/LHqaDClh8T6HvMDpFz7nMOY99J6f1xHvn1/hOsczzgxsAjXTH7xjFJhwNnTYZwUcVWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HyY4TDpC; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710356177; c=relaxed/simple;
+	bh=SQS+ov8yIW6DEKRzVTZuSjdygsQnSqtlsD90R8giz/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UC8z5Wqlci5LZdSPSQMw+FDY+wOCNPdqQlNGH+r8sMdRZzdC9eaZF8TBAHTodK3gvcDOGn4bTlyOjb7/59ThhPTCDoJqh3hDrB6qig8jD5yrK92fcmG7ykci5oJIvGtCHUQOVSR2Yxj8X97RB/r2BpAqqjiFPmh834gTMrHGA0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lNilWqOq; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HyY4TDpC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710356095; x=1741892095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZG1LuLekRiLfxzr/Jqbgw2nhEBHoB9a7CHQNHKlXSjA=;
-  b=HyY4TDpCBQz9e5NsE8v5i+JFFzk6UOIT2D/oclrMEMz3VbV8LPeryGNX
-   C5IgEyfHHr5y7ddzU89JJP3GVyutAupqoqdDOCaTdoLLr6e1jO1t+W3De
-   MaKvwWvKho0R42yIhmOeUK5wMl/7uZh0xl2Ke1BZGgzz522/XkxV3aiJS
-   ahWGh4m0aqQ+lpY6RMw95FIMcqnv+w+xU5N7a4WzBoJJtQaZRH++Z8L3J
-   pilG8AA7I6qf4aLafRCa7VPM2Xc5fDnQRIH4pI8la+Z3y43CkZ2sYTYQJ
-   zYaciv9vDdtoIwZSzAlfLsaVfedAKIPGikk+fsgzPdz1Za3n9gAbstAxH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="8965627"
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="8965627"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 11:54:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="914439124"
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="914439124"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 11:54:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rkTkV-0000000CIce-3mnc;
-	Wed, 13 Mar 2024 20:54:47 +0200
-Date: Wed, 13 Mar 2024 20:54:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
-	mazziesaccount@gmail.com, ak@it-klinger.de,
-	petre.rodan@subdimension.ro, linus.walleij@linaro.org,
-	phil@raspberrypi.com, 579lpy@gmail.com, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] iio: pressure: Add timestamp and scan_masks for
- BMP280 driver
-Message-ID: <ZfH2dxmSzcw1_3vt@smile.fi.intel.com>
-References: <20240313174007.1934983-1-vassilisamir@gmail.com>
- <20240313174007.1934983-6-vassilisamir@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lNilWqOq"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6b22af648so1067959b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710356175; x=1710960975; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5XAsXiIDC6OwZ+FdvxFgNYuLvw56oPhd3QbM/5nEMps=;
+        b=lNilWqOq79hDVuTSXdXMCtyCBN5Y44x1C3HI1ZG5tM+vaIi/TovEVpgV4HgpMyXMCq
+         rFfPx/UcBaonZNS+uqlgFkL8ha9R7ZOsPDz2gF848r/N/IoyVNZBBjYlJNIeSARrqWqu
+         AMpnOaqHZi3QhH9hVOU2sw6HRaSJmCE5Avrew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710356175; x=1710960975;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5XAsXiIDC6OwZ+FdvxFgNYuLvw56oPhd3QbM/5nEMps=;
+        b=w9yhaLTNKeh/oohUUBLALbv2KTmXHQvZrezS5TP3DEP7xEygHqcZ2vWL8XY0cyprpc
+         LNr2xXG3cTG61h/pQOb5Pj5rRlQCkLsan3kAwoRqKa6LkelCFt7hKgAGMoYXpZJQjED+
+         +iW4blfjg1apPMcdpSvDhDn53Aw949v8QJRhOG8ZmKe5gXB431lsEu67zP1rbPr4dy+I
+         gEcOlCD3oIMQ14niFlN+h+/jYYxVlvhMLi5H1E/PGXpnMjO1wgqUzvy9+QzyyUfp9Vr9
+         mv5fvm0ZP2BiBp3vmMP7wZ7w12Gkzt3auh4Kkee9WfwHHzn1o7DBMijLWYn6P9cORyDs
+         hr8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV38NyJU91jRa/Ugc4JfHj88PkOTEIzaZPgLLGFmHptdrn1ghc/UWBoUsVULz+qxYUF3Fyh4fgEqcQpipfgH6i581TEXU/45dlNXrZa
+X-Gm-Message-State: AOJu0YySo4Xc5mGoBQ5DceSZzI0+vvQNJHcpGd8sr0gFZY7ZH86XtIVS
+	qxKQDpLR803/3NIhJbJDlL26nUoN8yeLFVXCte8ZzIMA4aFa744dIGx3Y4w8oA==
+X-Google-Smtp-Source: AGHT+IGA4JGKwWWNLHCxq7izlVfvB2QGsE/36UJ5ZjuTNx2RCIULRNshQCd+NPhnH7MmJe3JVpwZYA==
+X-Received: by 2002:a05:6a20:12c5:b0:1a1:87b5:4b28 with SMTP id v5-20020a056a2012c500b001a187b54b28mr4995408pzg.0.1710356175280;
+        Wed, 13 Mar 2024 11:56:15 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z3-20020aa79903000000b006e6b959b636sm1615689pff.53.2024.03.13.11.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 11:56:14 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests/exec: execveat: Improve debug reporting
+Date: Wed, 13 Mar 2024 11:56:10 -0700
+Message-Id: <20240313185606.work.073-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313174007.1934983-6-vassilisamir@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1980; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=SQS+ov8yIW6DEKRzVTZuSjdygsQnSqtlsD90R8giz/g=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl8fbKt7Aicr2v1jL2D5Cbtq5T6AALRK5Ut0QjW
+ yJY662adQiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZfH2ygAKCRCJcvTf3G3A
+ JhdZEACO826i+YbxlErFkdeBoatgCSeytNdOJhvq9RSnhz1h6CSrIOdrAzqhfHWtRFO1b/4Q4k/
+ bfZpBWeYDrreNjcB4+axQl0dBlBLpcvZD/XhhZWF/q2qXA8G4R8sL+IQgxvbC1SfY43m4voENz/
+ S11w3mMf4mhfsGrUCfSLJXUhkRSrw/uqmjZ2/158F5SiTU+x8c2QpqpXfd5nujAZQcLQefx3oji
+ k68TQcM3f3oQeiAO0p011Bh9gHe92BSnjZB2Pfh3JJWeEOCOxR5/BEAQGF+Xwstsdc1gf5W2x47
+ maW249sTvbIujyJMudbFe6ADnOxYZzMxcNzsg8f7Xm67xyv/pUv3PMMisH/FC5a5xDuOcuM56NJ
+ M7qkV5lAuGdGpFWQgrZ9vrPqSWsnE/fl0u44X6E9CTRaboDIU0if+uAm24IYm/e4HaXu5L31l+1
+ 7OWMd0275j+zKuT5THdsQOMFsiP/Kl0jIChgbDt7IoViRJPOIsK2zLa6yzTrWCl85krYW/a2Gj5
+ YetE0h8hI10kXC8d/ynnF3syoaeTcRxOOd/CYVx6MfouycA3E5sMntsQGGqDvnxnQLh+ZoSDoaJ
+ zqDad87A49h4QoM2nZYN1m5WfK4xlatrRK0ZHnPBwQYV8X7BzT8LEGyHaT6OCqDmfVsCdSPNfE3
+ cjjEus9 TFgxnctA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 13, 2024 at 06:40:06PM +0100, Vasileios Amoiridis wrote:
-> The scan mask for the BME280 supports humidity measurement needs
-> to be distinguished from the rest in order for the timestamp to
-> be able to work. Scan masks are added for different combinations
-> of measurements. The temperature measurement is always needed for
-> pressure and humidity measurements.
+Children processes were reporting their status, duplicating the
+parent's. Remove that, and add some additional details about the test
+execution.
 
-(Just to make sure if you used --histogram diff algo when preparing the series)
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kselftest@vger.kernel.org
+---
+ tools/testing/selftests/exec/execveat.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-...
-
->  	{
-> -		.type = IIO_HUMIDITYRELATIVE,
-> +		.type = IIO_PRESSURE,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
->  				      BIT(IIO_CHAN_INFO_RAW) |
->  				      BIT(IIO_CHAN_INFO_SCALE) |
->  				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-> -		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
-> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
-
-Stray change
-
->  					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
-> +		.scan_index = 1,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 32,
-> +			.storagebits = 32,
-> +			.endianness = IIO_CPU,
-> +		},
->  	},
-
+diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
+index 0546ca24f2b2..6418ded40bdd 100644
+--- a/tools/testing/selftests/exec/execveat.c
++++ b/tools/testing/selftests/exec/execveat.c
+@@ -98,10 +98,9 @@ static int check_execveat_invoked_rc(int fd, const char *path, int flags,
+ 	if (child == 0) {
+ 		/* Child: do execveat(). */
+ 		rc = execveat_(fd, path, argv, envp, flags);
+-		ksft_print_msg("execveat() failed, rc=%d errno=%d (%s)\n",
++		ksft_print_msg("child execveat() failed, rc=%d errno=%d (%s)\n",
+ 			       rc, errno, strerror(errno));
+-		ksft_test_result_fail("%s\n", test_name);
+-		exit(1);  /* should not reach here */
++		exit(errno);
+ 	}
+ 	/* Parent: wait for & check child's exit status. */
+ 	rc = waitpid(child, &status, 0);
+@@ -226,11 +225,14 @@ static int check_execveat_pathmax(int root_dfd, const char *src, int is_script)
+ 	 * "If the command name is found, but it is not an executable utility,
+ 	 * the exit status shall be 126."), so allow either.
+ 	 */
+-	if (is_script)
++	if (is_script) {
++		ksft_print_msg("Invoke script via root_dfd and relative filename\n");
+ 		fail += check_execveat_invoked_rc(root_dfd, longpath + 1, 0,
+ 						  127, 126);
+-	else
++	} else {
++		ksft_print_msg("Invoke exec via root_dfd and relative filename\n");
+ 		fail += check_execveat(root_dfd, longpath + 1, 0);
++	}
+ 
+ 	return fail;
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
