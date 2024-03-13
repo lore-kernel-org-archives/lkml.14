@@ -1,57 +1,57 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2524D134
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017894F8B1
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338943; cv=none; b=G3btPkfVtnbV+3zHGfWHbBKukHnTHtr9nnk8clDxt0ouSgkxy1na2587+uPSzb984TbaxxiTLppENIRAqvrIEUq829IGLazomFum/ekX1928FEAhFc5fvzccG2vX8tKN/tsAk3kGrXAu9BkKykvbhiLS1znsqYeoVlsG7k23X7c=
+	t=1710338946; cv=none; b=rh3+JgxDHtAwdrmdQVlfEOTk852MXWfRNNLnlkpuoBxZo754kJhMCvqf8FgVl76CBeTIEvpDqy3g6zInXGXjkcIkv0jJVcWw/dDWgJjR2jtMk1B4pWJWWkmuOqy8dHUQu2hqrFG8J0dC7w+ifzKVPlqMwkyrqyhGzDBYIsWR+1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338943; c=relaxed/simple;
-	bh=cxjZSR8LRDYJ/W/QF37SUMynPidomrXSkI+hkRn0XJk=;
+	s=arc-20240116; t=1710338946; c=relaxed/simple;
+	bh=9UBZzqJurtY0u7fZf0OUMVFrBl93Pr0uetCSdgjkIi4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dfFP5MB21SH6XrgymHq4oXHv2hBOZgqItVDb2AQ1jNyNYzKF7MqueVi8zphc7Gtr3NEtDfhNe1aEBZNXgd8MrHnwT0D1rK8VBL6e0ApN2Xgv58fMLs46Na0f00UHaMKk/tto1xf6zwHU8KvapCHPHdkJnLW05/EzCPdgAGmtKS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CPdAylgc; arc=none smtp.client-ip=209.85.218.45
+	 MIME-Version; b=IZFkUdoirAW0/hYwf8MVIQt7gz1jDFlMpfi8cIJ7TOpV6R7sKg6d+GLcSRjrG0YXei+lUsZB/NMrEm/NZIGEHj8gVBG0g4mevnQcywRIHu7nUW43dgErWSXj831ygfL4fJrrPvOAvW69GRuUogSGlHGvAYWdy2QEIg80qHWS/3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Yskxdo81; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CPdAylgc"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a45c006ab82so145160966b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:09:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Yskxdo81"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a4645485da6so262790066b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1710338940; x=1710943740; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1710338942; x=1710943742; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2aA326qloufGfA/9FJeIrf9CjXOtqN0+M89y+6rWqCo=;
-        b=CPdAylgchuHZicfW3zJDNEgvIO3Z4iq+PaefWzT5AfmAnMWOP70oHgXi8J2rSqC6Xy
-         LOkp22dpQhEmSCs0Dl+CYVZWQ2NHMIHZbJT8TsH7pEFIWR2ixgTO2bk1eKe6fMeYu/2i
-         TIi+sAocolWuiVLCVD86rvJKm+ZxWtyiGNq2oTyxIqH/yo2vMI4rY5GsFzTLtbkWIsfd
-         fS72wQGVgv7Pbk2As6TEf2+XPZvElAtSggs+vxXc1oHFzG9azCwBLbOzorc7vd5g3aVh
-         GaQiC98UCZ4wwXnjopvQaKJ/8jc9Wif3eUsXu35u7vROZzfQCsUDoQ1n6BLWs6Nv6hC9
-         dqVg==
+        bh=9F0Go8/yyuHye8yt6k5vc23oD+JipLNS/6TGYAxgmkY=;
+        b=Yskxdo814Hx6Vpcvz0DpKkotdDA+kf3atgPONI2J3Gjpw+739QTFta39h/RfsdMRsv
+         iscEMGZpHulS+xOgpLSwbgC7adw/3KcREq6ATsFJV2TgHRuEhNgD4LvO52lIyra1AQ9B
+         F958Fs2Yo9JB/KlMrKWugdNyDh4SsTbtpqdRuGpCXvTCfHmarhcn4NNhi92IwS9OrXA5
+         9rGX2VJ+suIEa84uAu80FkwAJuXLzlS0dl+N+KfrNU7W8MBCc4CodaqKhkUwdBKT4A1l
+         enD0KjzFSk6Kl31Zi/PBTacJ9Ss4ShZGEvZY8G9XKpcQIkfjI+jn0/AL0tvoVrjCL5P8
+         dMHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710338940; x=1710943740;
+        d=1e100.net; s=20230601; t=1710338942; x=1710943742;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2aA326qloufGfA/9FJeIrf9CjXOtqN0+M89y+6rWqCo=;
-        b=rcHBPEkn8TW9GZu6qcoE4qFjeUM/p8dUUHu5DFva1sBCnPNykkFUdSQMm4i4HPgpBi
-         ULyIaN9IIozudASVf/H7xXtK9lUqCcqoNxoxsnli5OI+W57W/QCaj2niBBW84Ow/4RUU
-         yaBa8pCl3ZZZLyWyPpgr6zRQQ9VZTbVp8t6nazumd0ve57IZMomAjGEPTWp97ax40e5R
-         acckyBNodAhbEDjajTdgjpNthr/JjCoWiK4KkzTvBj4tAPlT6dFWHptEHhsm0AB97QGX
-         7DSUFontIqevFrGHX2VfJSZGeg55WvDdN72PRhsnZoVBJH6hulA3zEsBwyEtxb7nDdT2
-         /xNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBQsV30uNshaR01PpK8OUmaUCL+FMOHeYX/MI5JxnAtRI/l9BMBFgq04syTPogO1eDsXq7t5CFZ/pVWJLhwLINOTUp6XHokTgy0Wu8
-X-Gm-Message-State: AOJu0Ywu+BRxC11oVm4KWq6G49MdyJyNXutZc/U9Da+ld8xgtTctqjZJ
-	0dEXhA5e+CNBRTsb2HpNjJ4faVRzXf8e0uPchQpHlmSO+7499YtSTPTU2tBKK7U=
-X-Google-Smtp-Source: AGHT+IEctktss/OIn1LKfmqGYndGaQjoPtQ3Zxp8D5LODaIB3jm5ZeIbTiROFzeL2/JTnhkfLCvRuQ==
-X-Received: by 2002:a17:907:94c1:b0:a46:181f:c1c3 with SMTP id dn1-20020a17090794c100b00a46181fc1c3mr5229468ejc.70.1710338939952;
-        Wed, 13 Mar 2024 07:08:59 -0700 (PDT)
+        bh=9F0Go8/yyuHye8yt6k5vc23oD+JipLNS/6TGYAxgmkY=;
+        b=b/JH4LwzqSu6TOa20lUcoSmbziRFZjeu9IsZ+umJnTlljHLd7QPgfyOR/ZB8bxo9sh
+         j1qM9lCtu/pGLcZHTZdT6jRAHCS10iHiqxR4F7STaqgGsZ8rGlrMgB+Lt7h8npEefwIJ
+         uTq1YWsIrRr4IwUqYyG97WjBV4pOMJHPZeUSCDNkJRSFTkLmlbBnRsqGx/HjrKpbJeMK
+         7tWmS1K7hqkrcR3tLMZj5Pra65ja9fnPXjhxWDO8IKHu84U8jlJ9n8AQKFdBXgQ/tj5Y
+         fHnkx5hbZExUZPGzW/dnSYccwUfCEkunJ9us0JVEMuo/2FUjCg5OenH5+Nfp1bh6o7hG
+         U0Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4COXxsv4i3cGs5v8BKcQHGJfxiTUgzWVbA974KlPc+uNTWy8offYRH0w+8rMAZpFNJ0H5BVG2Kjqx8Hja0+moAeok6Dxh9uYCs64D
+X-Gm-Message-State: AOJu0YxQI9Pc/cmpS3ap2AoNmugnm9VxJTR4M8cDyg/gV5o1UOzUV5/c
+	5pI2Y3Kl2smt8tWa20QpZi5h8SPUsNAKCUMc0AFzr1MHWPcBrdJTq2YFewTs5Hk=
+X-Google-Smtp-Source: AGHT+IEGWqP8QxjwPa6JxODEFxxNSr59dthiRT8AGN4nj6MeDLalxq+7j6Caf6aztQx6EziAU4lTLw==
+X-Received: by 2002:a17:906:fb81:b0:a43:29e1:6db8 with SMTP id lr1-20020a170906fb8100b00a4329e16db8mr8168617ejb.9.1710338942448;
+        Wed, 13 Mar 2024 07:09:02 -0700 (PDT)
 Received: from localhost (host-82-56-173-172.retail.telecomitalia.it. [82.56.173.172])
-        by smtp.gmail.com with ESMTPSA id l23-20020a170906a41700b00a440ec600e3sm4885228ejz.121.2024.03.13.07.08.59
+        by smtp.gmail.com with ESMTPSA id t5-20020a170906064500b00a45ff821e09sm4778473ejb.150.2024.03.13.07.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 07:08:59 -0700 (PDT)
+        Wed, 13 Mar 2024 07:09:02 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -73,9 +73,9 @@ Cc: Phil Elwell <phil@raspberrypi.org>,
 	Stefan Wahren <stefan.wahren@i2se.com>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH v2 09/15] dmaengine: bcm2835: make address increment platform independent
-Date: Wed, 13 Mar 2024 15:08:34 +0100
-Message-ID: <0bf87ad0dc970c34199fd6bc6dbd19b47d382066.1710226514.git.andrea.porta@suse.com>
+Subject: [PATCH v2 11/15] dmaengine: bcm2835: pass dma_chan to generic functions
+Date: Wed, 13 Mar 2024 15:08:36 +0100
+Message-ID: <2dedf0428cbc5229ea563a571d297a64c8e09c03.1710226514.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1710226514.git.andrea.porta@suse.com>
 References: <cover.1710226514.git.andrea.porta@suse.com>
@@ -87,71 +87,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Actually the criteria to increment source & destination address doesn't
-based on platform specific bits. It's just the DMA transfer direction which
-is translated into the info bits. So introduce two new helper functions
-and get the rid of these platform specifics.
+In preparation to support more platforms pass the dma_chan to the
+generic functions. This provides access to the DMA device and possible
+platform specific data.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/dma/bcm2835-dma.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/dma/bcm2835-dma.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index b633c40142fe..6f896bb1a4fe 100644
+index 03d97312a3f8..88ae5d05402e 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -274,6 +274,24 @@ static u32 bcm2835_dma_prepare_cb_extra(struct bcm2835_chan *c,
- 	return result;
+@@ -308,13 +308,14 @@ static void bcm2835_dma_desc_free(struct virt_dma_desc *vd)
+ 	bcm2835_dma_free_cb_chain(container_of(vd, struct bcm2835_desc, vd));
  }
  
-+static inline bool need_src_incr(enum dma_transfer_direction direction)
-+{
-+	return direction != DMA_DEV_TO_MEM;
-+}
-+
-+static inline bool need_dst_incr(enum dma_transfer_direction direction)
-+{
-+	switch (direction) {
-+	case DMA_MEM_TO_MEM:
-+	case DMA_DEV_TO_MEM:
-+		return true;
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+
- static void bcm2835_dma_free_cb_chain(struct bcm2835_desc *desc)
+-static bool bcm2835_dma_create_cb_set_length(struct bcm2835_chan *chan,
++static bool bcm2835_dma_create_cb_set_length(struct dma_chan *chan,
+ 					     struct bcm2835_dma_cb *control_block,
+ 					     size_t len,
+ 					     size_t period_len,
+ 					     size_t *total_len)
  {
- 	size_t i;
-@@ -355,10 +373,8 @@ static inline size_t bcm2835_dma_count_frames_for_sg(struct bcm2835_chan *c,
-  * @cyclic:         it is a cyclic transfer
-  * @info:           the default info bits to apply per controlblock
-  * @frames:         number of controlblocks to allocate
-- * @src:            the src address to assign (if the S_INC bit is set
-- *                  in @info, then it gets incremented)
-- * @dst:            the dst address to assign (if the D_INC bit is set
-- *                  in @info, then it gets incremented)
-+ * @src:            the src address to assign
-+ * @dst:            the dst address to assign
-  * @buf_len:        the full buffer length (may also be 0)
-  * @period_len:     the period length when to apply @finalextrainfo
-  *                  in addition to the last transfer
-@@ -430,9 +446,9 @@ static struct bcm2835_desc *bcm2835_dma_create_cb_chain(
- 			d->cb_list[frame - 1].cb->next = cb_entry->paddr;
+-	size_t max_len = bcm2835_dma_max_frame_length(chan);
++	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
++	size_t max_len = bcm2835_dma_max_frame_length(c);
  
- 		/* update src and dst and length */
--		if (src && (info & BCM2835_DMA_S_INC))
-+		if (src && need_src_incr(direction))
- 			src += control_block->length;
--		if (dst && (info & BCM2835_DMA_D_INC))
-+		if (dst && need_dst_incr(direction))
- 			dst += control_block->length;
+ 	/* set the length taking lite-channel limitations into account */
+ 	control_block->length = min_t(u32, len, max_len);
+@@ -441,7 +442,7 @@ static struct bcm2835_desc *bcm2835_dma_create_cb_chain(
+ 		if (buf_len) {
+ 			/* calculate length honoring period_length */
+ 			if (bcm2835_dma_create_cb_set_length(
+-				c, control_block,
++				chan, control_block,
+ 				len, period_len, &total_len)) {
+ 				/* add extrainfo bits in info */
+ 				control_block->info |= extrainfo;
+@@ -508,8 +509,9 @@ static void bcm2835_dma_fill_cb_chain_with_sg(
+ 	}
+ }
  
- 		/* Length of total transfer */
+-static void bcm2835_dma_abort(struct bcm2835_chan *c)
++static void bcm2835_dma_abort(struct dma_chan *chan)
+ {
++	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	void __iomem *chan_base = c->chan_base;
+ 	long timeout = 100;
+ 
+@@ -550,8 +552,9 @@ static void bcm2835_dma_abort(struct bcm2835_chan *c)
+ 	writel(BCM2835_DMA_RESET, chan_base + BCM2835_DMA_CS);
+ }
+ 
+-static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
++static void bcm2835_dma_start_desc(struct dma_chan *chan)
+ {
++	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct virt_dma_desc *vd = vchan_next_desc(&c->vc);
+ 
+ 	if (!vd) {
+@@ -570,7 +573,8 @@ static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
+ 
+ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
+ {
+-	struct bcm2835_chan *c = data;
++	struct dma_chan *chan = data;
++	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	unsigned long flags;
+ 
+@@ -604,7 +608,7 @@ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
+ 			vchan_cyclic_callback(&d->vd);
+ 		} else if (!readl(c->chan_base + BCM2835_DMA_ADDR)) {
+ 			vchan_cookie_complete(&c->desc->vd);
+-			bcm2835_dma_start_desc(c);
++			bcm2835_dma_start_desc(chan);
+ 		}
+ 	}
+ 
+@@ -632,7 +636,7 @@ static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
+ 	}
+ 
+ 	return request_irq(c->irq_number, bcm2835_dma_callback,
+-			   c->irq_flags, "DMA IRQ", c);
++			   c->irq_flags, "DMA IRQ", chan);
+ }
+ 
+ static void bcm2835_dma_free_chan_resources(struct dma_chan *chan)
+@@ -721,7 +725,7 @@ static void bcm2835_dma_issue_pending(struct dma_chan *chan)
+ 
+ 	spin_lock_irqsave(&c->vc.lock, flags);
+ 	if (vchan_issue_pending(&c->vc) && !c->desc)
+-		bcm2835_dma_start_desc(c);
++		bcm2835_dma_start_desc(chan);
+ 
+ 	spin_unlock_irqrestore(&c->vc.lock, flags);
+ }
+@@ -885,7 +889,7 @@ static int bcm2835_dma_terminate_all(struct dma_chan *chan)
+ 	if (c->desc) {
+ 		vchan_terminate_vdesc(&c->desc->vd);
+ 		c->desc = NULL;
+-		bcm2835_dma_abort(c);
++		bcm2835_dma_abort(chan);
+ 	}
+ 
+ 	vchan_get_all_descriptors(&c->vc, &head);
 -- 
 2.35.3
 
