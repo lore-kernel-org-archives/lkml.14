@@ -1,63 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E87F12E5C
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA52A15AD0
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710303121; cv=none; b=Fc/JlDN/qt6gELat9JB7rAi4OjZyPnJ3soalh5ny5DHKhCakCTWJ0r3CfzfKxyuaR1LSQPxs1Tp7q9V9zqkD/y+9FVa0V2UhVF0i7eO3bsPtuIB4WVKmzRGC0dwE5bKeleMPU/VonLYJzd7T+j6bFBgbv6FAg642w5HiDDmT3Zo=
+	t=1710303128; cv=none; b=e5SJST31ZMakFbxIQEXUIX7ObjUGrUpoubYfcSEE0JWu63zLm/UbhP/INk1Yj+tSoEz8vuDpriW0bBxQW1onjigvTJXDP+vWYt/31iJGF/szH4e5Q9cnk+XSG7aYJ/FGonDDZwJqbwWNv4IhLlUuVx2iX0NhbM7hkIRuf1fU+Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710303121; c=relaxed/simple;
-	bh=vphBGAbNRYAS0ya7ch1JSh2Dwx8gexHZRYe7d0Z5HxU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=L+fV/xVke5A/OOc86Ng2IxND8Ut0vRAgYawI98btlTcol1oU3dHwakXkah4HeJtOlBzLtPnfQDUkHQZkjUcohn7wF8RA7KZbzHC/e5qH6EBuoRbYks0agbaC37G2F4iyOF1KwzOzPXbb9FJUEm7AEWxJHzBfztUhwVd88Vv9FvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZaCPw8j; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZaCPw8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2FC38C433F1;
-	Wed, 13 Mar 2024 04:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710303121;
-	bh=vphBGAbNRYAS0ya7ch1JSh2Dwx8gexHZRYe7d0Z5HxU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=UZaCPw8j5s1Qgxv74Hvs5QfLT5Q0TLRSk1Ry1a+/xcC8cJgVZsWn9JLT/mypgFd+r
-	 V9XAPAJEKn4PYLaqHyJ307Ef37WsPRX+MqCdP6aAl8B4WAlIUdqd9DQecnlr/IWGOf
-	 CdX0+v/+M2uE9nJIC5ZhFweLYEj9TSoCEea10a9tNOrp2zQcJk9vu4NKyEvHCKoRS3
-	 XUIuJpmdZBvCUqdFVWDz/wSm9/xll4MUDEZzFp9nawx6BM+De5NHUzMb0Aivjz2hUq
-	 ME3P3CY5QPRyvMYNbUyrCWY3THqb3NM2rUurMGYTn/1mgFgQ2v8+78coYp6d3C7NuF
-	 uKA5XMh04wNUw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1DE07D95054;
-	Wed, 13 Mar 2024 04:12:01 +0000 (UTC)
-Subject: Re: [GIT PULL] printk for 6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZfBswbsqObB4H73_@alley>
-References: <ZfBswbsqObB4H73_@alley>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZfBswbsqObB4H73_@alley>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.9
-X-PR-Tracked-Commit-Id: 7412dc6d55eed6b76180e40ac3601412ebde29bd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b0546776ad3f332e215cebc0b063ba4351971cca
-Message-Id: <171030312111.24236.15262035091384915588.pr-tracker-bot@kernel.org>
-Date: Wed, 13 Mar 2024 04:12:01 +0000
-To: Petr Mladek <pmladek@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Jan Kara <jack@suse.cz>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1710303128; c=relaxed/simple;
+	bh=m9EzkrvhnBGFjEynb0P7dNnLLLE/B+RI5XGgC6B+yrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uX4z1BbCn6/WIHq3CUPfJKQuFkJOpGb4R3/vB/BZVOrHcrnID6gZYItGcYVk7PZWuwC8b9LclLpS7T4GJHrudQskaMQIvKpdsbxDILnoTfRFW0VkD8xuWWA11tf3jfwihBpZL5+MkhLTRLt1ZkilvKx1KiRU4Qgs4adIDb6uVXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 42D4BEfm081099;
+	Wed, 13 Mar 2024 12:11:14 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TvcVG3CXdz2L0GYg;
+	Wed, 13 Mar 2024 12:09:58 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 13 Mar 2024 12:11:11 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <hongyu.jin@unisoc.com>
+Subject: [PATCH] f2fs: add REQ_TIME time update for some user behaviors
+Date: Wed, 13 Mar 2024 12:11:01 +0800
+Message-ID: <1710303061-16822-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 42D4BEfm081099
 
-The pull request you sent on Tue, 12 Mar 2024 15:54:57 +0100:
+some user behaviors requested filesystem operations, which
+will cause filesystem not idle.
+Meanwhile adjust f2fs_update_time(REQ_TIME) of
+f2fs_ioc_defragment to successful case.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.9
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+---
+ fs/f2fs/file.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b0546776ad3f332e215cebc0b063ba4351971cca
-
-Thank you!
-
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 4dfe38e..dac3836 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2784,7 +2784,6 @@ static int f2fs_ioc_defragment(struct file *filp, unsigned long arg)
+ 	err = f2fs_defragment_range(sbi, filp, &range);
+ 	mnt_drop_write_file(filp);
+ 
+-	f2fs_update_time(sbi, REQ_TIME);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -2792,6 +2791,7 @@ static int f2fs_ioc_defragment(struct file *filp, unsigned long arg)
+ 							sizeof(range)))
+ 		return -EFAULT;
+ 
++	f2fs_update_time(sbi, REQ_TIME);
+ 	return 0;
+ }
+ 
+@@ -3331,6 +3331,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ 	if (copy_from_user(&block_count, (void __user *)arg,
+ 			   sizeof(block_count)))
+ 		return -EFAULT;
++	f2fs_update_time(sbi, REQ_TIME);
+ 
+ 	return f2fs_resize_fs(filp, block_count);
+ }
+@@ -3424,6 +3425,7 @@ static int f2fs_ioc_setfslabel(struct file *filp, unsigned long arg)
+ 	f2fs_up_write(&sbi->sb_lock);
+ 
+ 	mnt_drop_write_file(filp);
++	f2fs_update_time(sbi, REQ_TIME);
+ out:
+ 	kfree(vbuf);
+ 	return err;
+@@ -3597,6 +3599,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+ 
+ 	filemap_invalidate_unlock(inode->i_mapping);
+ 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
++	f2fs_update_time(sbi, REQ_TIME);
+ out:
+ 	inode_unlock(inode);
+ 
+@@ -3766,6 +3769,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 		clear_inode_flag(inode, FI_COMPRESS_RELEASED);
+ 		inode_set_ctime_current(inode);
+ 		f2fs_mark_inode_dirty_sync(inode, true);
++		f2fs_update_time(sbi, REQ_TIME);
+ 	}
+ unlock_inode:
+ 	inode_unlock(inode);
+@@ -3964,6 +3968,7 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+ 	if (len)
+ 		ret = f2fs_secure_erase(prev_bdev, inode, prev_index,
+ 				prev_block, len, range.flags);
++	f2fs_update_time(sbi, REQ_TIME);
+ out:
+ 	filemap_invalidate_unlock(mapping);
+ 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+@@ -4173,6 +4178,7 @@ static int f2fs_ioc_decompress_file(struct file *filp)
+ 	if (ret)
+ 		f2fs_warn(sbi, "%s: The file might be partially decompressed (errno=%d). Please delete the file.",
+ 			  __func__, ret);
++	f2fs_update_time(sbi, REQ_TIME);
+ out:
+ 	inode_unlock(inode);
+ 	file_end_write(filp);
+@@ -4252,6 +4258,7 @@ static int f2fs_ioc_compress_file(struct file *filp)
+ 	if (ret)
+ 		f2fs_warn(sbi, "%s: The file might be partially compressed (errno=%d). Please delete the file.",
+ 			  __func__, ret);
++	f2fs_update_time(sbi, REQ_TIME);
+ out:
+ 	inode_unlock(inode);
+ 	file_end_write(filp);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+1.9.1
+
