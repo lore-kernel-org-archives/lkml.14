@@ -1,98 +1,166 @@
-Received: from relay.smtp-ext1.broadcom.com (unknown [192.19.166.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8C54C60C;
-	Wed, 13 Mar 2024 19:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326AA20DDB;
+	Wed, 13 Mar 2024 19:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710359806; cv=none; b=X1P9VhLca9MbnG9FFY/ORwEZCjDo45lfPtWWvShbq830FqmSIlo/BwTI2acqMZShzYjpOzeCV32Io14Blveg7NYhR554/e4vt4EShRAJWFVn71YDt2HST78szUFJdGtEF2MRThUvk4MtEiP116bLW5LVEKvtcxL5hLxpqYBiOX8=
+	t=1710359898; cv=none; b=ImeV9DvLjNvLogHLRbtuM7rC4SodVDX5svar8zu9BUVC6R6bVBaeivJxAH4SSnAhs4xlm9Y+piUG4PyuYFmtx6c8dzjXyr4vl9CDZj6K4l0NH/Ux3URsBaLq2bYp3sNZRwMJSihLFp2spVWTIs1Nd2dbXbyPYkSEARhiGcKmGUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710359806; c=relaxed/simple;
-	bh=3BD4gGhAqghzw6gpQVHVO4yadhEZRKKYCsiViAsbDhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S3vKyZuAjoEgrbf5okDH+g5Cr9ACQwBNbctJ4tL1D12K2Xw9CdsjE4dFQNDKpzIpFdvQnNzU4vvWaK4oSQEhMqnb3Haua+/5EY78b5EYGXnGaH7EOGHCUUQ0c7zzEhK1I12MB/GRMwNT1jXQdDjWoDqgSXW1M/okrb8fyQUKY8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=tUta5kxe; arc=none smtp.client-ip=192.19.166.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="tUta5kxe"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext1.broadcom.com (Postfix) with ESMTP id C325CC0029DF;
-	Wed, 13 Mar 2024 12:46:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext1.broadcom.com C325CC0029DF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1710359211;
-	bh=3BD4gGhAqghzw6gpQVHVO4yadhEZRKKYCsiViAsbDhM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tUta5kxe1gtE33JzJgGyTd5oeSmmxvUFDJwjpG12tNxx+xEM433oOsW88mKXz/bGq
-	 s8Ehaqk8Ijf3J4guH05GXDrZgV2bCWgDDTqU0P87YRyI16jJoKEoPVwGQdm7w9IVSz
-	 PMvjprG9LlKjJX7IbSjVInpl2qmeeRsfkGfzDZXQ=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 2521C18041CAC4;
-	Wed, 13 Mar 2024 12:46:50 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-spi@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] spi: Fix error code checking in spi_mem_exec_op()
-Date: Wed, 13 Mar 2024 12:45:30 -0700
-Message-Id: <20240313194530.3150446-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710359898; c=relaxed/simple;
+	bh=hhFq5IpzNKqt3vASlinqD/E0HbWm7PiMwUPQBESAj5I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TCwFzEsWezUjZH8fv04mi0bJZBH6+tuzneg2tUh/d9TyV63k2DOr3bljkaDqkByp17tATkVqlzrzLVRxisB6dFboc/TNdYJxoPuNVRuk+C1jrVxEtITX8GRAJKRJmsO+Rf5OoVdTi0oYB2QBuyO81qja0QHlhcHenGrbeeta6iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2219edd959dso74895fac.0;
+        Wed, 13 Mar 2024 12:58:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710359895; x=1710964695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NdP8F+x5j1lSl9Kjac5VCWtp2OKa5wXezFE2irQlxPY=;
+        b=a0Z04Dna8Gtl25EDeNATVlB59ubX0/tiAtYJlvgryvdokzvYz+eWuu+Z9AX4maeHoK
+         jOIQpFnt/SAADin7E6OCoqIzxTlwJ2vKMZUfcTeyUhbQc2UNv4sKPiQbIjYRhwRkf+Iq
+         pImL6fA8hCJkeInpdxDF+kq/Of+7MyvmC4rDAAleU/4teFrM9I/jhx+YmVUZ1Ov0uPWZ
+         OTkxVbL5o1AFBDm5vW5rM3V6MaCbb68z8ZWMDpqt8/bh+QzF6RVJv3FAq02mRqbmoQAi
+         gUcnhlL/5wZY6imdqWV4Zmz+nieWoBfYdTzwfk+5X2K9BrFb//AkSzOcg3uObKM+USwk
+         oHLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJZEg3ArUTE8aNv3QGGlmHEXzhlSuQQLiZ+3SZLyn8QoCs099nrjdYacb7++GoQJGzRlV4QwYEsXa1BU3ZPKM+Bdf5tR76AXu4Qo4aDJF8bkxs40D2QLu1unVCdxTU+lPpobspiwSJ/qAajyCcXbFV34wd/XsAcQBWKWaWgMXu0PFLuwmy
+X-Gm-Message-State: AOJu0Yx0LO+PUL8p6GQBHCHiWemX9Dni2XD+cDFgBaGbgaVPmNFVYaI4
+	c+6loQSWCa6RUZKrxT+Ds7TSuFF/bYOfigKdBRa2JCJ631axKYFExYNUVnLT2k1YdsF3MbCgzlo
+	vjI8rMg0NY/Aa2Xwt9+rM9UvWMl8=
+X-Google-Smtp-Source: AGHT+IEWlkP/2kfvt3B2rhZO97HkoSPYHA2GD7sErHQcZOV/0GMkTwiKtB++GlXS5E0yL2Z77yUf5VdyVQXQhFtovPU=
+X-Received: by 2002:a05:6871:3325:b0:221:cb1b:cc05 with SMTP id
+ nf37-20020a056871332500b00221cb1bcc05mr3047428oac.0.1710359895299; Wed, 13
+ Mar 2024 12:58:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240312103723.3469762-1-quic_sibis@quicinc.com>
+In-Reply-To: <20240312103723.3469762-1-quic_sibis@quicinc.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 13 Mar 2024 20:58:04 +0100
+Message-ID: <CAJZ5v0iLvq_4mNTTNw9eXZL4rG25jpRuWAKvY_7HZvLDRmGZNw@mail.gmail.com>
+Subject: Re: [PATCH V3] cpufreq: Fix per-policy boost behavior on SoCs using cpufreq_boost_set_sw
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: dietmar.eggemann@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
+	xuwei5@hisilicon.com, zhanjie9@hisilicon.com, sudeep.holla@arm.com, 
+	cristian.marussi@arm.com, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, quic_rgottimu@quicinc.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, d-gole@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After commit cff49d58f57e ("spi: Unify error codes by replacing -ENOTSUPP with
--EOPNOTSUPP"), our SPI NOR flashes would stop probing with the following
-visible in the kernel log:
+On Tue, Mar 12, 2024 at 11:37=E2=80=AFAM Sibi Sankar <quic_sibis@quicinc.co=
+m> wrote:
+>
+> In the existing code, per-policy flags doesn't have any impact i.e.
+> if cpufreq_driver boost is enabled and one or more of the per-policy
+> boost is disabled, the cpufreq driver will behave as if boost is
+> enabled. Fix this by incorporating per-policy boost flag in the policy->m=
+ax
+> calculus used in cpufreq_frequency_table_cpuinfo and setting the default
+> per-policy boost to mirror the cpufreq_driver boost flag.
+>
+> Fixes: 218a06a79d9a ("cpufreq: Support per-policy performance boost")
+> Reported-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> ---
+>
+> v3:
+> * Pickup Rbs.
+> * Simplify per-policy boost setting. [Viresh]
+>
+> v2:
+> * Enable per-policy boost flag in the core instead. [Viresh]
+> * Add more details regarding the bug. [Viresh]
+> * Drop cover-letter and patch 2.
+>
+> Logs reported-by Dietmar Eggemann:
+> https://lore.kernel.org/lkml/265e5f2c-9b45-420f-89b1-44369aeb8418@arm.com=
+/
+>
+>  drivers/cpufreq/cpufreq.c    | 18 ++++++++++++------
+>  drivers/cpufreq/freq_table.c |  2 +-
+>  2 files changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index f6f8d7f450e7..66e10a19d76a 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -653,14 +653,16 @@ static ssize_t store_local_boost(struct cpufreq_pol=
+icy *policy,
+>         if (policy->boost_enabled =3D=3D enable)
+>                 return count;
+>
+> +       policy->boost_enabled =3D enable;
+> +
+>         cpus_read_lock();
+>         ret =3D cpufreq_driver->set_boost(policy, enable);
+>         cpus_read_unlock();
+>
+> -       if (ret)
+> +       if (ret) {
+> +               policy->boost_enabled =3D !policy->boost_enabled;
+>                 return ret;
+> -
+> -       policy->boost_enabled =3D enable;
+> +       }
+>
+>         return count;
+>  }
+> @@ -1428,6 +1430,9 @@ static int cpufreq_online(unsigned int cpu)
+>                         goto out_free_policy;
+>                 }
+>
+> +               /* Let the per-policy boost flag mirror the cpufreq_drive=
+r boost during init */
+> +               policy->boost_enabled =3D cpufreq_boost_enabled() && poli=
+cy_has_boost_freq(policy);
+> +
+>                 /*
+>                  * The initialization has succeeded and the policy is onl=
+ine.
+>                  * If there is a problem with its frequency table, take i=
+t
+> @@ -2769,11 +2774,12 @@ int cpufreq_boost_trigger_state(int state)
+>
+>         cpus_read_lock();
+>         for_each_active_policy(policy) {
+> +               policy->boost_enabled =3D state;
+>                 ret =3D cpufreq_driver->set_boost(policy, state);
+> -               if (ret)
+> +               if (ret) {
+> +                       policy->boost_enabled =3D !policy->boost_enabled;
+>                         goto err_reset_state;
+> -
+> -               policy->boost_enabled =3D state;
+> +               }
+>         }
+>         cpus_read_unlock();
+>
+> diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
+> index c4d4643b6ca6..c17dc51a5a02 100644
+> --- a/drivers/cpufreq/freq_table.c
+> +++ b/drivers/cpufreq/freq_table.c
+> @@ -40,7 +40,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_poli=
+cy *policy,
+>         cpufreq_for_each_valid_entry(pos, table) {
+>                 freq =3D pos->frequency;
+>
+> -               if (!cpufreq_boost_enabled()
+> +               if ((!cpufreq_boost_enabled() || !policy->boost_enabled)
+>                     && (pos->flags & CPUFREQ_BOOST_FREQ))
+>                         continue;
+>
+> --
 
-[    2.196300] brcmstb_qspi f0440920.qspi: using bspi-mspi mode
-[    2.210295] spi-nor: probe of spi1.0 failed with error -95
-
-It turns out that the check in spi_mem_exec_op() was changed to check
-for -ENOTSUPP (old error code) or -EOPNOTSUPP (new error code), but this
-means that for drivers that were converted, the second condition is now
-true, and we stop falling through like we used to. Fix the error to
-check for neither error being neither -ENOTSUPP *nor* -EOPNOTSUPP.
-
-Fixes: cff49d58f57e ("spi: Unify error codes by replacing -ENOTSUPP with -EOPNOTSUPP")
-Reviewed-by: Michael Walle <mwalle@kernel.org>
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
-Changes in v2:
-
-- collected R-by tags from Michael and Pratyush
-- rebased against spi/for-next
-
- drivers/spi/spi-mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index c9d6d42a88f5..17b8baf749e6 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -382,7 +382,7 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 		 * read path) and expect the core to use the regular SPI
- 		 * interface in other cases.
- 		 */
--		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP) {
-+		if (!ret || (ret != -ENOTSUPP && ret != -EOPNOTSUPP)) {
- 			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
- 			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
- 
--- 
-2.34.1
-
+Applied as 6.9-rc material, thanks!
