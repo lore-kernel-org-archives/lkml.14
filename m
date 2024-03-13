@@ -1,162 +1,226 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11021006.outbound.protection.outlook.com [52.101.85.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A1C60869;
-	Wed, 13 Mar 2024 19:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357141; cv=none; b=AETp4T5u5v4jqHON+dRaETeSyOz5fSjmWjKIVIx4ByIh2jY0J/OIYmoF3xYo5/alfucxCXcZH0ukcWdUbFhddDprnIH99IcMmVNv0Tl15Sa8OIFIcFovfE9BIXjt0YJB0xSs3iDVts76cZxFMYBISCbX5+/tQ+r7leJ3Z0mkUuM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357141; c=relaxed/simple;
-	bh=hTfoqgr5I8nbMsecUcmRsIEjs7m0kEe+SvwfjmNPTL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o+c8kbjQDakpKI5AIFOUJYVIpg+KblPhfnRkS/zqacUmQxk3mPk6xXj3662cQJvZlsLAjs4aSriNLtCcB85VKM4u6+csgrjxRcF0BCOwR6aSSDS+zX01BI3FlZsu6Mbpu6SKDeg+1OlIZCBTeUQfsXvZXprOSoPtvthHXb5kFOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lMKDdus4; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F2160869;
+	Wed, 13 Mar 2024 19:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710357147; cv=fail; b=VCM/qN1UROltH+yvgapH1xaKp4b2fDRejphXPhrrP6m/KWetOPzsY1tNL8245n4NQpy2RfYe15P5sTtWGIrZr2c9NnRG4EPKrCMiZRCsuNSs+v6fvIq1s/4M4xkyEyNNv8olOl674IYH2VfSb+AUtVcdZ/yJJjJIzTGrkMlai8A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710357147; c=relaxed/simple;
+	bh=hNeCYPsRMSHf4VMHt4T7PbGzuN0us/3ABGbdFhyo8B4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rSs2gtUNELZFnIFSAFsyqrEdlSvN2uqTk/uiKppMQkeoTMAafPWs58z/VFQ5mEgnNhZzQfpsfsjp7gRb1V//l49i4lk2/yYmuRqZRzxwccEj9ORohp7zJCXJ/6S6Zdxg52qLleyDjkKyzamTezI2scjo21MBXy49JMHXn99a1L8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=A6OqNjPU; arc=fail smtp.client-ip=52.101.85.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lMKDdus4"
-Received: from [192.168.1.104] (unknown [103.251.226.70])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA0EA720;
-	Wed, 13 Mar 2024 20:11:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1710357115;
-	bh=hTfoqgr5I8nbMsecUcmRsIEjs7m0kEe+SvwfjmNPTL4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lMKDdus4yYsWv68nkNJjncIXF6yzNIPvugGvQPNeGzqqO5tAzVg5O5OWfhyLix7oi
-	 zVsnSroLgDnLIcXdN8M0bgW6IflBC/pjOoRQSA4RTsRgmY3fA9VR1aDnP9yUAEc7WS
-	 5EfNDHWrPAjoaf1/OJ98I33W6RMjpFk5GUE/tm9A=
-Message-ID: <99069f32-4bad-4cb9-aa03-4c06a596a248@ideasonboard.com>
-Date: Thu, 14 Mar 2024 00:42:08 +0530
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="A6OqNjPU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mcge/eOub5LM6F2OLFiq8PugXI7w9x6+3Xjh9i8v4Ws2qGSw4UcuYkaLDtYn3zKIF46jAJXXcCubVnUvipdcLnKkGSDDofTtDtqqjxpAk+nw4Tuuu27t0TffSlNP2Ev6G6B6DAJf2FHStAhKnDAmCpks+tTpaEQ80SKaKma2dilFzqRoIB6LEofYzupxuV0l5NTPjXfRRaySj4W5H1sLq3AGaEdH9SatUgYl3+OGiBsPo82CPOtaXtSSZBG9ZAbzD4eXjweueUTA4cvXZ63EbaP8nDbgrTlcE9YKdtCriAdBzHIchzPV6bYkMYFhUPeVm4JVVk3ABS1KRlevsEzs4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pb4si+r8Yu3u3IsPvEcFakXbnJfP63ThJDQY7pNei9o=;
+ b=Gx7ZWIE2Zd06/zKClCkxXOWp0ZdmoNmFOVs8x2zj3hB5+WsCY+9sMG96nMXEFF9HwAHzTT9Cpn/qtD3GcZSNKf+dVEptA6hQSfX4ydiBNBc9wstYDu0gLsjnp15PO/WktQ7ZKc9kR1O5QhZfsX+333tF9H2iWEA8SdL+Zz84eDDNsqPRl2CVTGVzWjJj7trI0XMgF/FXZtzEqIpdH46hOfP/tB0vUEuDAtljFIxJtjuSqzaI4ftR4178OcIZeXTfou5xFSSl6p2KAaU5EH9UUqpgz0kR9poSpDPqoOtM1VMslaXqGjrdA9fWbhspk1zlUwNdcjHFRjKX30Tome2+HQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pb4si+r8Yu3u3IsPvEcFakXbnJfP63ThJDQY7pNei9o=;
+ b=A6OqNjPUMt0noWSrM513J7UwYF3xJqVWsxiHzzZj4KzLTFdfg7g1iZnWuSwmda8MeGABGJ1YkY0A6myta/I1AECTew0YBxHflCpZhc6spmxirTFbcG3fOq6CLA2AeAHbO+z5UU7UTEpkIarJya7KVrrlfBGSJwnPShimIxo+GVI=
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
+ by PH0PR21MB3026.namprd21.prod.outlook.com (2603:10b6:510:d2::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.5; Wed, 13 Mar
+ 2024 19:12:23 +0000
+Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
+ ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7409.004; Wed, 13 Mar 2024
+ 19:12:23 +0000
+From: Long Li <longli@microsoft.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: Saurabh Singh Sengar <ssengar@microsoft.com>
+Subject: RE: [PATCH 4/6] tools: hv: Add vmbus_bufring
+Thread-Topic: [PATCH 4/6] tools: hv: Add vmbus_bufring
+Thread-Index: AQHaYcvMTJRAmQtKYEuIgdJTlJTrs7E2LsEQ
+Date: Wed, 13 Mar 2024 19:12:23 +0000
+Message-ID:
+ <SJ1PR21MB34578EF2FD0F5BA29D0CB95ECE2A2@SJ1PR21MB3457.namprd21.prod.outlook.com>
+References: <1708193020-14740-1-git-send-email-ssengar@linux.microsoft.com>
+ <1708193020-14740-5-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1708193020-14740-5-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|PH0PR21MB3026:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ MdJCDvv9dzZBIIWII3rjk7JgmLF6TRdfjPEag6CpuqwacEhB06+eT4DUGJvsv5nigNdDDQZYPKM2m9gCzfuMgw/e/xDAd9qDmgubrbZ9dqu+0BeUs1C1e5L8TlNYWmfdANzDkRUrKeBJ9PrErAKigiB5aA4en2gQio3GE84Jqa6h1uQoyCVKFmjiTMyH464zSx8MU0Z/99FV/o0Vd5zv17rVrDgOR6U8dTj53AvXuj8aQkXmmwuhUTEtFavZyI9VD5qwrmy7O3S9rx6s3BHgwwOBOGawMJSoZnkH+ervCWjyHPQc4DO8aE56FYBVVIDRKE8Ahh21690XG8GepdLmxMXGBn7o/JFrucoKKOd3vRSJfV4Mjecy4zzW5AnpH6XJhnku3QpaX6MSrmickI5/fPkVU1wqRginpQBObqRuGQCdERO38esoVoDqYk7wx6zj4BX4WZFa5dgls3wq99DPIfZG5MUtcf+m0JWo5ieH5TuPMhB+kFWIV04zcainLejsaqVo+e8YrT5pNM4RFnHuTQaShs3HkTGQVjjatMFoqsA7P0M1jnSt/Tz6ZMZzrwZ3SlPVSoyvXQUCszq+GmDkNNSmrEJ7bP3bHgQ5XCJMUMiUFOal+b/68NiPQpirucSqbsiLy9PJHVgLSjGzaUcHt/fLM8PmXkG7aAQnmEYJZL0=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?zRTdhH9lrGb49sZQOiiC7rPQ3vEjRhN8f21d5tjBYC5rMTnR/tFxvi+mPsZf?=
+ =?us-ascii?Q?xfZ8e0gCg4bFqOFnW+0XOiAyMtyjpNl+QeASP7lzdonTyfx+3jo1z/G7F9Xc?=
+ =?us-ascii?Q?Phjcn6boxf6kcTr+NiwZ60B1f+9T9FFrng241MldGM7z780znKe/z5iHyfvR?=
+ =?us-ascii?Q?bx5Klu3mrNUQAyXbKcaa6v4sHpf7xBzzliTEUaELWlBLKPOzTFQr3C9oybeN?=
+ =?us-ascii?Q?vjsYCN3vgeWGkQDJuc4dcrdU57VEgpJtSQB9E1XU3ySLuo5z/w01O6T7ePCj?=
+ =?us-ascii?Q?iBUjAv5IsXUng6e41M1b90KrQUusYAEX69n4gU8tIuMTTV6zUafQXcf+ElSO?=
+ =?us-ascii?Q?hTq1esYd7SzgtYaflY9GN2vPbjc4WpZWhb3r90czpEI4vw/lAQ4+w47/Wq5C?=
+ =?us-ascii?Q?O+sJgfOQfVxUc/tOpF5wi0eE6dRnldewr05lV42PkdDZ0c1xKqQo1RumQfvq?=
+ =?us-ascii?Q?jvM9UAd7J0jFj65RHo6p1aFzHj3PuUJG4MqJtroBaw127Xmv6lusZKxoQ2W2?=
+ =?us-ascii?Q?fKYY2nQeim+DadNdibgnGTBC44R9Z0VBFbi/Hj+0epitLq817vOGTgXbPcpX?=
+ =?us-ascii?Q?cWNDQF4LP1dSd4IH/MM2AK5i7bd/4FioxkafDytfCZjrQ7sVon6kk7ecoI6s?=
+ =?us-ascii?Q?uA2Mv8PshmUyoKVuaKz3g/SFoXq+Rafqya+LS8hxc1yOJw36WKmgUoy/a4I9?=
+ =?us-ascii?Q?WGx8Cu8IIQHL5iroM3JoyQ4shqZJ5k2AYgu/rZqRTgBSuGf+AKc+iSchgkwL?=
+ =?us-ascii?Q?nn4QNCWdMvL0GV7AbkQhiECUb0kPEhc4RmpV1YJX8p72DxMhviaPEmqtM6gz?=
+ =?us-ascii?Q?rGtxMTcZ3Uuxtx6bb/So/t+IN+NKTpfRcI4JfNwiAm32WraaUC8diCQ3Tf2o?=
+ =?us-ascii?Q?LG/xne3xlyduwXmfnl9JJ1OWt+VyxS6tYmEdap2f8kWANiHR0kFBpIrY9OKW?=
+ =?us-ascii?Q?awHsMdPPsSHB86ALYoe1wT0ZEL5er+l3W1ioej88Seu0OHiUtgimo46o3PRP?=
+ =?us-ascii?Q?J4KGlEnNTfaIL8ZKVba1akRA5zTrEUQTEBbdap4CXmJiE4WG5jMZSZArQiRm?=
+ =?us-ascii?Q?bKfJ8CS/4+iCEjmk1+IpHWZdX5/tYHWP5glGsFRFYeQR6sM90ng8zMwoC5bj?=
+ =?us-ascii?Q?75WpIOlxIFc1swqma2S7p2rEI5wvVeLW6PikUHCCXBaEPAhc1/CRVrtQW6Yy?=
+ =?us-ascii?Q?kPWg1OawocJ2OJA+gSgS/AnHlWDobRV2mr4hZRMbS0f5dMMOi8faT5itDVa3?=
+ =?us-ascii?Q?yl8D0NX4+q9EI3zh3W+YSTM2iapYUHqUF0HMl9ahpgPtwFxJhRZLpKhbi9A3?=
+ =?us-ascii?Q?FahEQkuv+nF6VOiwDkmarYSrqWDU+CWRsIJ/xybquAfHQKQnN0qttRPhZL+6?=
+ =?us-ascii?Q?l8yhlU/UyAAXbISGOwNtJhz1tR7D61+NMoBgEtOcEzz/AHQBP0XtzD5tPifs?=
+ =?us-ascii?Q?zEo9/5oxVKhACWFgZi6HPnsNs5378SFy1iPRKACoDQYI31hyR47yF9LWVMF5?=
+ =?us-ascii?Q?wdch6bpwxv4UICoZVcFbM69VTjzy4UAKKK59ZvnJK5Y3GyD8fC0EOGXkyGfp?=
+ =?us-ascii?Q?kgwBtnwXaDM0+VYRtZukGT1EqA0rctg4jclzdeqL?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mipi-csis: Emit V4L2_EVENT_FRAME_SYNC events
-To: Stefan Klug <stefan.klug@ideasonboard.com>,
- libcamera-devel@lists.libcamera.org, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Martin Kepplinger <martink@posteo.de>, Purism Kernel Team
- <kernel@puri.sm>, Fabio Estevam <festevam@gmail.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Rui Miguel Silva <rmfrfs@gmail.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- NXP Linux Team <linux-imx@nxp.com>
-References: <20240313153058.189684-1-stefan.klug@ideasonboard.com>
-Content-Language: en-US
-From: Umang Jain <umang.jain@ideasonboard.com>
-In-Reply-To: <20240313153058.189684-1-stefan.klug@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58a43b57-07a2-4af5-ee8a-08dc4391837e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2024 19:12:23.4603
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ngfyXcrZ/Bf6CL/m3eoVBeWCJ81jhWh3kNJ9Y/zQZCYEvjEDO+r49uqYemuMQdyHPIEALZ1sjIFpsvU051byBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB3026
 
-Hi Stefan,
-
-Thank you for the patch.
-
-On 13/03/24 9:00 pm, Stefan Klug wrote:
-> The Samsung CSIS Mipi receiver provides a start-of-frame interrupt and
-> a framecount register. As the CSI receiver is the hardware unit
-> that lies closest to the sensor, the frame counter is the best we can
-> get on these devices.
-> In case of the ISI available on the i.MX8 M Plus it is also the only
-> native start-of-frame signal available.
->
-> This patch exposes the sof interrupt and the framecount as
-> V4L2_EVENT_FRAME_SYNC event on the subdevice.
->
-> It was tested on a Debix-Som-A with a 6.8-rc4 kernel.
->
-> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
-> ---
->   drivers/media/platform/nxp/imx-mipi-csis.c | 34 +++++++++++++++++++++-
->   1 file changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
-> index db8ff5f5c4d3..caeb1622f741 100644
-> --- a/drivers/media/platform/nxp/imx-mipi-csis.c
-> +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-> @@ -30,6 +30,7 @@
->   
->   #include <media/v4l2-common.h>
->   #include <media/v4l2-device.h>
-> +#include <media/v4l2-event.h>
->   #include <media/v4l2-fwnode.h>
->   #include <media/v4l2-mc.h>
->   #include <media/v4l2-subdev.h>
-> @@ -742,6 +743,18 @@ static void mipi_csis_stop_stream(struct mipi_csis_device *csis)
->   	mipi_csis_system_enable(csis, false);
->   }
->   
-> +static void mipi_csis_queue_event_sof(struct mipi_csis_device *csis)
+> +
+> +#define	rte_compiler_barrier()	({ asm volatile ("" : : : "memory"); })
+> +
+> +#define	rte_smp_rwmb()		({ asm volatile ("" : : :
+> "memory"); })
+> +
+> +#define VMBUS_RQST_ERROR	0xFFFFFFFFFFFFFFFF
+> +#define ALIGN(val, align)	((typeof(val))((val) & (~((typeof(val))((align=
+) -
+> 1)))))
+> +
+> +void *vmbus_uio_map(int *fd, int size)
 > +{
-> +	struct v4l2_event event = {
-> +		.type = V4L2_EVENT_FRAME_SYNC,
-> +	};
+> +	void *map;
 > +
-> +	u32 frame = mipi_csis_read(csis, MIPI_CSIS_FRAME_COUNTER_CH(0));
-
-nit: variables declaration go at the start of function and then need to 
-be assigned.
-
-rest is pointed already on the thread. Otherwise LGTM,
-
-Reviewed-by: Umang Jain <umang.jain@ideasonboard.com>
-
-
-
+> +	map =3D mmap(NULL, 2 * size, PROT_READ | PROT_WRITE, MAP_SHARED,
+> *fd, 0);
+> +	if (map =3D=3D MAP_FAILED)
+> +		return NULL;
 > +
-> +	event.u.frame_sync.frame_sequence = frame;
-> +	v4l2_event_queue(csis->sd.devnode, &event);
+> +	return map;
 > +}
 > +
->   static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
->   {
->   	struct mipi_csis_device *csis = dev_id;
-> @@ -765,6 +778,10 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
->   				event->counter++;
->   		}
->   	}
+> +/* Increase bufring index by inc with wraparound */ static inline
+> +uint32_t vmbus_br_idxinc(uint32_t idx, uint32_t inc, uint32_t sz) {
+> +	idx +=3D inc;
+> +	if (idx >=3D sz)
+> +		idx -=3D sz;
 > +
-> +	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
-> +		mipi_csis_queue_event_sof(csis);
-> +
->   	spin_unlock_irqrestore(&csis->slock, flags);
->   
->   	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
-> @@ -1154,8 +1171,23 @@ static int mipi_csis_log_status(struct v4l2_subdev *sd)
->   	return 0;
->   }
->   
-> +static int mipi_csis_subscribe_event(struct v4l2_subdev *sd, struct v4l2_fh *fh,
-> +			       struct v4l2_event_subscription *sub)
-> +{
-> +	if (sub->type != V4L2_EVENT_FRAME_SYNC)
-> +		return -EINVAL;
-> +
-> +	/* V4L2_EVENT_FRAME_SYNC doesn't require an id, so zero should be set */
-> +	if (sub->id != 0)
-> +		return -EINVAL;
-> +
-> +	return v4l2_event_subscribe(fh, sub, 0, NULL);
+> +	return idx;
 > +}
 > +
->   static const struct v4l2_subdev_core_ops mipi_csis_core_ops = {
->   	.log_status	= mipi_csis_log_status,
-> +	.subscribe_event =  mipi_csis_subscribe_event,
-> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
->   };
->   
->   static const struct v4l2_subdev_video_ops mipi_csis_video_ops = {
-> @@ -1358,7 +1390,7 @@ static int mipi_csis_subdev_init(struct mipi_csis_device *csis)
->   	snprintf(sd->name, sizeof(sd->name), "csis-%s",
->   		 dev_name(csis->dev));
->   
-> -	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
->   	sd->ctrl_handler = NULL;
->   
->   	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+> +void vmbus_br_setup(struct vmbus_br *br, void *buf, unsigned int blen)
+> +{
+> +	br->vbr =3D buf;
+> +	br->windex =3D br->vbr->windex;
+> +	br->dsize =3D blen - sizeof(struct vmbus_bufring); }
+> +
+> +static inline __always_inline void
+> +rte_smp_mb(void)
+> +{
+> +	asm volatile("lock addl $0, -128(%%rsp); " ::: "memory"); }
+> +
+> +static inline int
+> +rte_atomic32_cmpset(volatile uint32_t *dst, uint32_t exp, uint32_t src)
+> +{
+> +	uint8_t res;
+> +
+> +	asm volatile("lock ; "
+> +		     "cmpxchgl %[src], %[dst];"
+> +		     "sete %[res];"
+> +		     : [res] "=3Da" (res),     /* output */
+> +		     [dst] "=3Dm" (*dst)
+> +		     : [src] "r" (src),      /* input */
+> +		     "a" (exp),
+> +		     "m" (*dst)
+> +		     : "memory");            /* no-clobber list */
+> +	return res;
+> +}
 
+Those helper functions (rte_*) are difficult to read for someone without DP=
+DK background. Can you add comments to those helper functions? Maybe just c=
+opy the comments over from DPDK.
+
+> +
+> +static inline uint32_t
+> +vmbus_txbr_copyto(const struct vmbus_br *tbr, uint32_t windex,
+> +		  const void *src0, uint32_t cplen)
+> +{
+> +	uint8_t *br_data =3D tbr->vbr->data;
+> +	uint32_t br_dsize =3D tbr->dsize;
+> +	const uint8_t *src =3D src0;
+> +
+> +	/* XXX use double mapping like Linux kernel? */
+> +	if (cplen > br_dsize - windex) {
+> +		uint32_t fraglen =3D br_dsize - windex;
+> +
+> +		/* Wrap-around detected */
+> +		memcpy(br_data + windex, src, fraglen);
+> +		memcpy(br_data, src + fraglen, cplen - fraglen);
+> +	} else {
+> +		memcpy(br_data + windex, src, cplen);
+> +	}
+> +
+> +	return vmbus_br_idxinc(windex, cplen, br_dsize); }
+> +
+> +/*
+> + * Write scattered channel packet to TX bufring.
+> + *
+> + * The offset of this channel packet is written as a 64bits value
+> + * immediately after this channel packet.
+> + *
+> + * The write goes through three stages:
+> + *  1. Reserve space in ring buffer for the new data.
+> + *     Writer atomically moves priv_write_index.
+> + *  2. Copy the new data into the ring.
+> + *  3. Update the tail of the ring (visible to host) that indicates
+> + *     next read location. Writer updates write_index
+> + */
+> +static int
+> +vmbus_txbr_write(struct vmbus_br *tbr, const struct iovec iov[], int iov=
+len,
+> +		 bool *need_sig)
+
+Do you need "need_sig"? It's probably not for non-network/storage devices.
