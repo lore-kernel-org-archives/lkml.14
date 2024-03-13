@@ -1,94 +1,152 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000942F2B;
-	Wed, 13 Mar 2024 01:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538838BE0
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 01:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710293916; cv=none; b=AVkgRKiE3z1JXyh9FtwCH6Jtank2o/jePQ3rC+jp26j5lkByCu2m5fq3Nx2N8rC/K7SuILATVFNKQS7pIG4cLQVPR8N1RgNjFmW3G2CH6GPgHI7dKMI12M1XJqVKGOQM++a8ERNWL5RxTtgGScxnsZIKFXeSA90QOZUnFjQEaRU=
+	t=1710294213; cv=none; b=DSzu5O7OBsSVh4/VbhzdIg3eT0UOmAik9YX20V2RcLVN5o1bbYAiGwPknqCC7ePyiRgVZs8+nLfLhyP6JYDyZnYNN2uZydLj0/3vkBAAjUG5nCN+0IEpijpF+xWH6W1JGrCHDtorQ/XUbIG5VspXfiF3acoLez7VIDfDR1t+g0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710293916; c=relaxed/simple;
-	bh=elyAwsBMhBT+fZx4cbo81a/ihT1pgtXSmCdhSQhxU5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NVW1JQdWSMVPlFZm3c6AM7ZghgkNnheUY18UjrYZNz4Vw/GT+lLo6jW1UBmrLmL1C7jWwEbpsWKroPlfLUUOHgej39naN5x8l9CekF2ZLILx/QxN+JwRLrdyRQgb0yd9Ni6n6OOmNzt5jiih3Kq8yP6z0Bf9Pp3jBTvCLF1l9uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AmhtsckY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1710294213; c=relaxed/simple;
+	bh=nGzwNSFqCK+2PcMauYM1XnrAB1EgS6IQVgcJdVAehw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sUaedUVMCBoj97AFtirtq9ki4w+7yx8qNaxpBVO+ZX3Up6Uv1H4b+Ga2ZaF9GVHzpmhZ/NycGP+kiI7HJKw64CzRJDVQdJhs7knovEjOGF7e4/4aKfuemQ9szblP51ZkYAhYJ5mccaPMIArYlyXFW2MIzN3vbtbnMneS0fy9/rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evq4UNiO; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AmhtsckY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=hq6ZayF5HIGEfSfJFdnv7uS9zlR+5nppIUmOOmY8mBU=; b=AmhtsckYWdqbEX3JDk+Uhn6jSo
-	EDz3UVDpRqqOAb/HPGcogJ823lqtFj+dXCt35FiRIFCCrE26YRijxNLAKovcxGhd6CGEYgjtcYy/8
-	X0PJnH8ogOwXxYNboJF/t6JEcBRooA2rqUWUwZWEmnrgKiwztK8wKRTT+z2LGC4AlOXkYYjVKsjSa
-	z4wNc20F6ICca4+Kgcnm9MYW1R1kf1GME94F0IWQ8ngdk3OHKJqsJS1N+Ix2H5y60q1W9+GBg2Wpc
-	Sr5z3trRCOJKrUplxUhopaz80sYGgIuSEiFYqHyw8NQgGjEMHuCWutRHjdMUtuTgUN8NxiI76GTKd
-	7bnNP2yA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkDZg-00000008SCx-3iG3;
-	Wed, 13 Mar 2024 01:38:32 +0000
-Date: Tue, 12 Mar 2024 18:38:32 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-modules@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Kees Cook <keescook@chromium.org>, mcgrof@kernel.org
-Subject: [GIT PULL] Modules changes for v6.9-rc1
-Message-ID: <ZfEDmCMBe2b6Eyky@bombadil.infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evq4UNiO"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2222c0462a9so603419fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 18:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710294211; x=1710899011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iql6IsYWjk5iivpy1BeQsKBgwnpQVKNqyu2rSOaZThE=;
+        b=evq4UNiOcQk1nNzWrJV07gONGcu6D2gDjQwO1CDoWPrimLzOOd3W9ViqxAQQSfg5Sb
+         3gvU6gtnURzE+S8Q0AnHjHOjhcid8fkt8J+/y4YTnbk3UFvCmRCeMHDqxTxR2Qv/bLL3
+         mkrDzFC8iFlw57gFtsQFnJjVZKsgfLSlMlIaltbbZHr+aaZI9q2M7HO5KGudvDR2D6zx
+         ykOHxYyNw38ijlihBRkYR5YQN3L04O+JykKHDAHIUv38PIGOaQKg0yCC5ODMCKB9sFmf
+         EZ+H5BO6KTtgKEpuG9su8xwv4sr7Hq3Z4lBVZk7NB6nDPXKVlQK6i1peMVoJ3NsCXs9J
+         4zzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710294211; x=1710899011;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iql6IsYWjk5iivpy1BeQsKBgwnpQVKNqyu2rSOaZThE=;
+        b=nrN543dj/0t7Ei7BcrigvEykxzY/4u5ECYoPDogrMyqmWWDDQ3+MQ/tyVKhcqQRgWg
+         jkpmvnjP8qwzrD6t/Qtd1SxoGOomJYV/K0NA2GliIZ0NdyqqphlBA1QyroGOAzH9brUI
+         35kcSNjZT/bnAY6w9evCFViLq6Nh6NnNVqFgk5aapypAyctohSzfpzuxbjYR3BZHqTbF
+         fbhrbiDTmRrJyUcmC5Iv2LOldyIpollIQcmvpPL5PgaAfpoHwLUC2RSkMN+3fspoTB4D
+         wjJU0PwrJ7zMGrEHw6/TAW2pVFL7KCbSIaOTU68ZO8G3fApqdG2FxSaoY7zE91yxtl0S
+         WDrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTPnOv7Ei63FV/l8f9RfYD3vEzfAVpnyEjGwowUy5721Q+FZcgFNd3XkZrnrHRwneScs3cMlZMYWDM+s2UhFYANY1xYZOcn5+2A2qx
+X-Gm-Message-State: AOJu0Yxf90c1PNyiM95zMOysNmSEMli4OknisBrfFIASlRzsv9rFmfBf
+	7PvxpBVsi8ZAPesPNCXCKZCa984POMOmSsyhJnu2soqrLoes1nZf
+X-Google-Smtp-Source: AGHT+IHtLSN7Msu6dOluJxqwI8VlzT8fmE1brIbyF10FXgr9t1Zd15rzyG2+Rp2o+h0+wU9efPVMJQ==
+X-Received: by 2002:a05:6870:a68f:b0:21e:459a:1fb6 with SMTP id i15-20020a056870a68f00b0021e459a1fb6mr11916342oam.23.1710294211305;
+        Tue, 12 Mar 2024 18:43:31 -0700 (PDT)
+Received: from pc-mac.company.local (014136220210.static.ctinets.com. [14.136.220.210])
+        by smtp.gmail.com with ESMTPSA id t125-20020a625f83000000b006e669357e83sm7020895pfb.189.2024.03.12.18.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 18:43:31 -0700 (PDT)
+From: Chunxin Zang <spring.cxz@gmail.com>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org
+Cc: dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Chunxin Zang <spring.cxz@gmail.com>
+Subject: [PATCH] sched/debug: Correctly print the title fields of runnable tasks
+Date: Wed, 13 Mar 2024 09:43:18 +0800
+Message-Id: <20240313014318.1971985-1-spring.cxz@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
+The title fields displayed for runnable tasks are now incorrect.
+like this:
 
-  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
+  runnable tasks:
+   S            task   PID         tree-key  switches  prio     wait-time             sum-exec        sum-sleep
+  -------------------------------------------------------------------------------------------------------------
+   Ikworker/R-rcu_g     4        -1.048576 E        -1.039924         0.750000         0.000000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   Ikworker/R-slub_     5        -1.048576 E        -1.039924         0.750000         0.000000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   Ikworker/R-netns     6        -1.048576 E        -1.039924         0.750000         0.000000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   I   kworker/0:0H     8       194.270371 E       194.304864         3.000000         0.016500         4   100         0.000000         0.016500         0.000000         0.000000 0 0 /
+   I    kworker/0:1     9     40954.080088 E     40957.028485         3.000000       132.979107      1516   120         0.000000       132.979107         0.000000         0.000000 0 0 /
+   Ikworker/R-mm_pe    11        -1.048576 E        -1.039924         0.750000         0.000000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   Ircu_tasks_kthre    12        -1.048576 E         0.298576         0.750000         0.000000         2   120         0.000000         0.000000         0.000000         0.000000 0 0 /
 
-are available in the Git repository at:
+The display information after fixing is as follows:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/ tags/modules-6.9-rc1
+  runnable tasks:
+   S            task   PID         tree-key E         deadline            slice  switches  prio        wait-time         sum-exec        sum-sleep        sum-block
+  -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+   S pool_workqueue_     3       115.900753 E       118.861289         3.000000         3   120         0.000000         0.039464         0.000000         0.000000 0 0 /
+   I kworker/R-rcu_g     4        -1.048576 E        -1.039924         0.750000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   I kworker/R-slub_     5        -1.048576 E        -1.039924         0.750000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   I kworker/R-netns     6        -1.048576 E        -1.039924         0.750000         2   100         0.000000         0.000000         0.000000         0.000000 0 0 /
+   I     kworker/0:0     7       391.218398 E       394.210989         3.000000         5   120         0.000000         0.016042         0.000000         0.000000 0 0 /
 
-for you to fetch changes up to d1909c0221739356f31c721de4743e7d219a56cc:
+Signed-off-by: Chunxin Zang <spring.cxz@gmail.com>
+---
+ kernel/sched/debug.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-  module: Don't ignore errors from set_memory_XX() (2024-02-16 11:30:43 -0800)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8d5d98a5834d..5359e724d270 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -575,17 +575,16 @@ static void
+ print_task(struct seq_file *m, struct rq *rq, struct task_struct *p)
+ {
+ 	if (task_current(rq, p))
+-		SEQ_printf(m, ">R");
++		SEQ_printf(m, ">R ");
+ 	else
+-		SEQ_printf(m, " %c", task_state_to_char(p));
++		SEQ_printf(m, " %c ", task_state_to_char(p));
+ 
+-	SEQ_printf(m, "%15s %5d %9Ld.%06ld %c %9Ld.%06ld %9Ld.%06ld %9Ld.%06ld %9Ld %5d ",
++	SEQ_printf(m, "%15s %5d %9lld.%06ld %c %9lld.%06ld %9lld.%06ld %9lld %5d ",
+ 		p->comm, task_pid_nr(p),
+ 		SPLIT_NS(p->se.vruntime),
+ 		entity_eligible(cfs_rq_of(&p->se), &p->se) ? 'E' : 'N',
+ 		SPLIT_NS(p->se.deadline),
+ 		SPLIT_NS(p->se.slice),
+-		SPLIT_NS(p->se.sum_exec_runtime),
+ 		(long long)(p->nvcsw + p->nivcsw),
+ 		p->prio);
+ 
+@@ -611,10 +610,12 @@ static void print_rq(struct seq_file *m, struct rq *rq, int rq_cpu)
+ 
+ 	SEQ_printf(m, "\n");
+ 	SEQ_printf(m, "runnable tasks:\n");
+-	SEQ_printf(m, " S            task   PID         tree-key  switches  prio"
+-		   "     wait-time             sum-exec        sum-sleep\n");
+-	SEQ_printf(m, "-------------------------------------------------------"
+-		   "------------------------------------------------------\n");
++	SEQ_printf(m, " S %15s %5s %16s %c %16s %16s %9s %5s %16s %16s %16s %16s\n",
++		   "task", "PID", "tree-key", 'E', "deadline", "slice",
++		   "switches", "prio", "wait-time", "sum-exec", "sum-sleep", "sum-block");
++	SEQ_printf(m, "---------------------------------------------------------------"
++		   "------------------------------------------------------------------"
++		   "--------------------------------\n");
+ 
+ 	rcu_read_lock();
+ 	for_each_process_thread(g, p) {
+-- 
+2.34.1
 
-----------------------------------------------------------------
-Modules changes for v6.9-rc1
-
-Christophe Leroy did most of the work on this release, first with a few
-cleanups on CONFIG_STRICT_KERNEL_RWX and ending with error handling for
-when set_memory_XX() can fail. This is part of a larger effort to clean
-up all these callers which can fail, modules is just part of it.
-
-This has been sitting on linux-next for about a month without issues.
-
-----------------------------------------------------------------
-Christophe Leroy (6):
-      module: Use set_memory_rox()
-      module: Change module_enable_{nx/x/ro}() to more explicit names
-      init: Declare rodata_enabled and mark_rodata_ro() at all time
-      modules: Remove #ifdef CONFIG_STRICT_MODULE_RWX around rodata_enabled
-      powerpc: Simplify strict_kernel_rwx_enabled()
-      module: Don't ignore errors from set_memory_XX()
-
-Randy Dunlap (1):
-      lib/test_kmod: fix kernel-doc warnings
-
- arch/powerpc/include/asm/mmu.h |  9 +-----
- include/linux/init.h           |  4 ---
- init/main.c                    | 21 +++++---------
- kernel/module/internal.h       |  6 ++--
- kernel/module/main.c           | 20 +++++++++++---
- kernel/module/strict_rwx.c     | 63 +++++++++++++++++++++++++++---------------
- lib/test_kmod.c                |  6 +++-
- 7 files changed, 73 insertions(+), 56 deletions(-)
