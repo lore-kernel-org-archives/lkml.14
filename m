@@ -1,259 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF8F59149
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68D054BCF
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710366512; cv=none; b=GPUNy5RsRpMTM59llNKMxhiSKzbe6G3E1ECJj93Hn3WitDz09owLmxSsLtqV2YvtvWWv6+fzyxdaD6ttaogQvykMjdVOfi+l4HMs0LTWu3RnIVmNs88PYigvDhpYnHp/u/yNsBVOeAxyn48o9a/KJMyPxPsYTtagEoCJnoFIuHQ=
+	t=1710366719; cv=none; b=XduGbOt2T84t1o/dQ7QY7Y/7dEYPUOFFjuYmd4NNi/ocUvazQMcAUGk+0RaNyzyIcI2q0YaaklUXxmzCZiAd4ELfPLf+QIXGXNSRiPgi0vee6GAPHbxnL4Ffk0hj9C8qk1wz2Qd+SINNPROb67utg/hy2il1ZIvbgpXT/pPyLPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710366512; c=relaxed/simple;
-	bh=yZg7KACacTfRKVN99nqgcSirQenTdaOsy/RJ0hCnIE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f189zkFI3bL2XKXTdd68k4fW7BVwCyLZr7c55MKb42snmi4vWpcXZjhWa1cFmsQewKOsebcrodQEljmdFWh40ptmfAY6DEk5lU70IjWI5kU4yU87CHsph/CoXBFBmASO0KaTHD5OOMlGb2RNISttpq1dfji5lSrOyQqGP56Ht4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C7F11007;
-	Wed, 13 Mar 2024 14:49:05 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D053A3F64C;
-	Wed, 13 Mar 2024 14:48:23 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:47:36 +0100
-From: Beata Michalska <beata.michalska@arm.com>
-To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
-	catalin.marinas@arm.com, vincent.guittot@linaro.org,
-	sumitg@nvidia.com, yang@os.amperecomputing.com,
-	lihuisong@huawei.com
-Subject: Re: [PATCH v3 2/3] arm64: Provide an AMU-based version of
- arch_freq_get_on_cpu
-Message-ID: <ZfIe-JpW-DnFZYxJ@arm.com>
-References: <20240312083431.3239989-1-beata.michalska@arm.com>
- <20240312083431.3239989-3-beata.michalska@arm.com>
- <q4pc63l43mtp56qim6s5riwu25cgvdqfchg7jbqhhcixkyqs7i@mlqqgd5hxnec>
+	s=arc-20240116; t=1710366719; c=relaxed/simple;
+	bh=hBdvIs25UMavbKrjHvaxFsQ76fNHP6pFUKDpTkxaYns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DHXETIcWsQIhrILTLNn56ES4bsQ42i7l8l/FVHXjGO9HWB7AUSMfqoIPvAe02HaLguDdIAXysk8fvf3DqPK603Hfa151R4G95x7lqhpur27ly/qypQz89ouN0abFhshvbEHocGBMUnLIfP3dj6RiIZBpl+EbnKrhGyaTU6szp80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FK1pQxy1; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FK1pQxy1"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so251627166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1710366716; x=1710971516; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QeGHZUugSwtILKFvBXuTtAPNxZwHhdb9r9cwhsNH7u8=;
+        b=FK1pQxy1FxeNpikCxTJ6sX6jx/F3rXGBlNB5S7Dq/biBbNMb0guHxET1e6b86gXLry
+         7DiukqQLtg2sMivqfNRUWt1LSMevWGCJeHAE4d+bY+1oYJwTb3bv0MDgQtpnZXNwGWnV
+         sXxL/W52SfIkwvgg4FzrYwMHQH2YCa2gYbQ98=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710366716; x=1710971516;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QeGHZUugSwtILKFvBXuTtAPNxZwHhdb9r9cwhsNH7u8=;
+        b=S7onsNY6hFVNcrQngpH8iUbPpT66Oskf4M33nrltp6GnRZZInaKwY5zJE5pmj5UOCf
+         SohVZQBFjuWI7iOhgwAv2Obcyk69xzTbhoVoP3ZF06ucxXFtdI3bqw9Td2QKRHtYHZhQ
+         fMQ59DerFIjRxe4vmalWCAI1C4FGENpSJLwgc9snwu7g055ZXaZtb7PeQ5i6KvXZo1n3
+         sEk1R9acwMO0JEIoanDAwkKc4YHzbXZ7KtNaEOfy4mIpkiQG/uCHwBtLOfXf+oX1d98I
+         9FHxiUTQp9w0RKATU9FLUtddwfcEQPXY6wcDIqmo4NzObt12boEiUSxBjTMkyw9JQ/KX
+         CM2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWgqIHJViKphnZ1gI9PiDzxdwhWNpvpwO0K0EnsLWrCt875vb0tpJRCpJ2imt8gLHKpv5bLHCL/1RPK98MxwZ+XNoVaby+bzRYZFtLl
+X-Gm-Message-State: AOJu0YzpdrFDbUCOzja+TwvcJZsealMjgQbc6EbsYsms8qTmP0WsCN3z
+	N3u1YOfYSvyclpnFja9s7ozKcodnYHQOhaHW5uGGkre9GTkHU49NHO+bOIQih2RgdJX90sFvrxo
+	EqumdLA==
+X-Google-Smtp-Source: AGHT+IG3qwSJaNAoDj4mckVauf0OSbfqZ1r9PZEpyMMUwYp6bckaVNgqJoJhMJhyPCA6rJ6RsaolzA==
+X-Received: by 2002:a17:907:c08b:b0:a45:a2cc:eb93 with SMTP id st11-20020a170907c08b00b00a45a2cceb93mr98500ejc.4.1710366715949;
+        Wed, 13 Mar 2024 14:51:55 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id q21-20020a1709066b1500b00a461e206c00sm44612ejr.20.2024.03.13.14.51.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Mar 2024 14:51:55 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a446b5a08f0so64095766b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:51:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXZIk0H/j0KbjYcpPAljiexyN9E0Kh/QJnmwSzRGqrjQ89/zCdwdj1Mf/JCIvQvDNT88U5fnXl1vMMEbeIH+E0D5tmRrqA5tcwlq8mQ
+X-Received: by 2002:a17:906:c0d4:b0:a44:52ec:b9e7 with SMTP id
+ bn20-20020a170906c0d400b00a4452ecb9e7mr20310ejb.16.1710366714711; Wed, 13 Mar
+ 2024 14:51:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <q4pc63l43mtp56qim6s5riwu25cgvdqfchg7jbqhhcixkyqs7i@mlqqgd5hxnec>
+References: <lfypw4vqq3rkohlh2iwhub3igjopdy26lfforfcjws2dfizk7d@32yk5dnemi4u>
+ <CAHk-=wg3djFJMeN3L_zx3P-6eN978Y1JTssxy81RhAbxB==L8Q@mail.gmail.com> <bqlnihgtaxv4gq2k6nah33hq7f3vk73x2sd6mlbdvxln2nbfu6@ypoukdqdqbtb>
+In-Reply-To: <bqlnihgtaxv4gq2k6nah33hq7f3vk73x2sd6mlbdvxln2nbfu6@ypoukdqdqbtb>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 13 Mar 2024 14:51:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whbgtooUErM9bOP2iWimndpkPLaPy1YZmbmHACU07h3Mw@mail.gmail.com>
+Message-ID: <CAHk-=whbgtooUErM9bOP2iWimndpkPLaPy1YZmbmHACU07h3Mw@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs updates for 6.9
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 12, 2024 at 07:12:37PM -0700, Vanshidhar Konda wrote:
-> On Tue, Mar 12, 2024 at 08:34:30AM +0000, Beata Michalska wrote:
-> > With the Frequency Invariance Engine (FIE) being already wired up with
-> > sched tick and making use of relevant (core counter and constant
-> > counter) AMU counters, getting the current frequency for a given CPU
-> > on supported platforms can be achieved by utilizing the frequency scale
-> > factor which reflects an average CPU frequency for the last tick period
-> > length.
-> > 
-> > The solution is partially based on APERF/MPERF implementation of
-> > arch_freq_get_on_cpu.
-> > 
-> > Suggested-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > ---
-> > arch/arm64/kernel/topology.c | 103 +++++++++++++++++++++++++++++++----
-> > 1 file changed, 92 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index 1a2c72f3e7f8..42cb19c31719 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -17,6 +17,8 @@
-> > #include <linux/cpufreq.h>
-> > #include <linux/init.h>
-> > #include <linux/percpu.h>
-> > +#include <linux/sched/isolation.h>
-> > +#include <linux/seqlock_types.h>
-> > 
-> > #include <asm/cpu.h>
-> > #include <asm/cputype.h>
-> > @@ -88,18 +90,31 @@ int __init parse_acpi_topology(void)
-> >  * initialized.
-> >  */
-> > static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
-> > -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-> > -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-> > static cpumask_var_t amu_fie_cpus;
-> > 
-> > +struct amu_cntr_sample {
-> > +	u64		arch_const_cycles_prev;
-> > +	u64		arch_core_cycles_prev;
-> > +	unsigned long	last_update;
-> > +	seqcount_t	seq;
-> > +};
-> > +
-> > +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_cntr_sample, cpu_amu_samples) = {
-> > +	.seq = SEQCNT_ZERO(cpu_amu_samples.seq)
-> > +};
-> > +
-> > void update_freq_counters_refs(void)
-> > {
-> > -	this_cpu_write(arch_core_cycles_prev, read_corecnt());
-> > -	this_cpu_write(arch_const_cycles_prev, read_constcnt());
-> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> > +
-> > +	amu_sample->arch_core_cycles_prev = read_corecnt();
-> > +	amu_sample->arch_const_cycles_prev = read_constcnt();
-> > }
-> > 
-> > static inline bool freq_counters_valid(int cpu)
-> > {
-> > +	struct amu_cntr_sample *amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> > 	if ((cpu >= nr_cpu_ids) || !cpumask_test_cpu(cpu, cpu_present_mask))
-> > 		return false;
-> > 
-> > @@ -108,8 +123,8 @@ static inline bool freq_counters_valid(int cpu)
-> > 		return false;
-> > 	}
-> > 
-> > -	if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
-> > -		     !per_cpu(arch_core_cycles_prev, cpu))) {
-> > +	if (unlikely(!amu_sample->arch_const_cycles_prev ||
-> > +		     !amu_sample->arch_core_cycles_prev)) {
-> > 		pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
-> > 		return false;
-> > 	}
-> > @@ -152,20 +167,27 @@ void freq_inv_set_max_ratio(int cpu, u64 max_rate)
-> > 
-> > static void amu_scale_freq_tick(void)
-> > {
-> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> > 	u64 prev_core_cnt, prev_const_cnt;
-> > 	u64 core_cnt, const_cnt, scale;
-> > 
-> > -	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +	prev_const_cnt = amu_sample->arch_const_cycles_prev;
-> > +	prev_core_cnt = amu_sample->arch_core_cycles_prev;
-> > +
-> > +	write_seqcount_begin(&amu_sample->seq);
-> > 
-> > 	update_freq_counters_refs();
-> > 
-> > -	const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -	core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +	const_cnt = amu_sample->arch_const_cycles_prev;
-> > +	core_cnt = amu_sample->arch_core_cycles_prev;
-> > 
-> > +	/*
-> > +	 * This should not happen unless the AMUs have been reset and the
-> > +	 * counter values have not been resroted - unlikely
-> 
-> /resroted/restored
-> 
-> > +	 */
-> > 	if (unlikely(core_cnt <= prev_core_cnt ||
-> > 		     const_cnt <= prev_const_cnt))
-> > -		return;
-> > +		goto leave;
-> > 
-> > 	/*
-> > 	 *	    /\core    arch_max_freq_scale
-> > @@ -182,6 +204,10 @@ static void amu_scale_freq_tick(void)
-> > 
-> > 	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
-> > 	this_cpu_write(arch_freq_scale, (unsigned long)scale);
-> > +
-> > +	amu_sample->last_update = jiffies;
-> > +leave:
-> > +	write_seqcount_end(&amu_sample->seq);
-> > }
-> > 
-> > static struct scale_freq_data amu_sfd = {
-> > @@ -189,6 +215,61 @@ static struct scale_freq_data amu_sfd = {
-> > 	.set_freq_scale = amu_scale_freq_tick,
-> > };
-> > 
-> > +#define AMU_SAMPLE_EXP_MS	20
-> > +
-> > +unsigned int arch_freq_get_on_cpu(int cpu)
-> > +{
-> > +	struct amu_cntr_sample *amu_sample;
-> > +	unsigned long last_update;
-> > +	unsigned int seq;
-> > +	unsigned int freq;
-> > +	u64 scale;
-> > +
-> > +	if (!cpumask_test_cpu(cpu, amu_fie_cpus) || !arch_scale_freq_ref(cpu))
-> > +		return 0;
-> > +
-> > +retry:
-> > +	amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> > +	do {
-> > +		seq = raw_read_seqcount_begin(&amu_sample->seq);
-> > +		last_update = amu_sample->last_update;
-> > +	} while (read_seqcount_retry(&amu_sample->seq, seq));
-> > +
-> > +	/*
-> > +	 * For those CPUs that are in full dynticks mode,
-> > +	 * and those that have not seen tick for a while
-> > +	 * try an alternative source for the counters (and thus freq scale),
-> > +	 * if available for given policy
-> > +	 */
-> > +	if (time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
-> > +		struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > +		int ref_cpu = nr_cpu_ids;
-> > +
-> > +		if (cpumask_intersects(housekeeping_cpumask(HK_TYPE_TICK),
-> > +				       policy->cpus))
-> > +			ref_cpu = cpumask_nth_and(cpu, policy->cpus,
-> > +						  housekeeping_cpumask(HK_TYPE_TICK));
-> > +
-> 
-> Could you help me understand why getting the frequency from another
-> housekeeping cpu would be a better than returning 0? Wouldn't different
-> CPUs in the HK_TYPE_TICK domain be running at independent frequencies?
-> May be adding this explanation to the patch commit message would help
-> people who look at this in the future?
+On Wed, 13 Mar 2024 at 14:34, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+>
+> I liked your MAD suggestion, but the catch was that we need an
+> exponentially weighted version,
 
-If the last AMU sample taken lost its assumed validity, we try another cpu within
-the same frequency domain, choosing housekeeping cpu as one that might have seen
-the tick within the last, assumed, 20ms. We stick to the cpus withn the same
-policy, and thus same frequency domain which means those cpus do operate at the
-same frequency. Now, in case of per-core dvfs this will bail out with '0' as the
-policy->cpus will contain single CPU. Having said that, this code is bogus as it
-does not handle needed wrapping in case currently considered cpu is the last one
-in this policy cpus mask - will send an update soon.
+The code for the weighted version literally doesn't change.
 
-I will also try to make the comment above  more readable.
+The variance value is different, but the difference between MAD and
+standard deviation is basically just a constant factor (which will be
+different for different distributions, but so what? Any _particular_
+case will have a particular distribution).
 
----
-BR
-Beata
-> 
-> Thanks,
-> Vanshi
-> 
-> > +		cpufreq_cpu_put(policy);
-> > +		if (ref_cpu >= nr_cpu_ids || ref_cpu == cpu)
-> > +			/* No alternative to pull info from */
-> > +			return 0;
-> > +		cpu = ref_cpu;
-> > +		goto retry;
-> > +	}
-> > +	/*
-> > +	 * Reversed computation to the one used to determine
-> > +	 * the arch_freq_scale value
-> > +	 * (see amu_scale_freq_tick for details)
-> > +	 */
-> > +	scale = arch_scale_freq_capacity(cpu);
-> > +	freq = scale * arch_scale_freq_ref(cpu);
-> > +	freq >>= SCHED_CAPACITY_SHIFT;
-> > +
-> > +	return freq;
-> > +}
-> > +
-> > static void amu_fie_setup(const struct cpumask *cpus)
-> > {
-> > 	int cpu;
-> > -- 
-> > 2.25.1
-> > 
+So why would a constant factor make _any_ difference for any
+exponential weighting?
+
+Anyway, feel free to keep your code in bcachefs.
+
+And maybe xfs even wants to copy that code. I don't care, it seems
+stupid, but that's a filesystem choice.
+
+But if we're making it a generic kernel library, it needs to be sane.
+Not making people do 64-bit square roots and 128-bit divides just for
+a random statistical element.
+
+              Linus
