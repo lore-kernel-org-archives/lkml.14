@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599814AD3F;
-	Wed, 13 Mar 2024 16:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9186C14BD5C;
+	Wed, 13 Mar 2024 16:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348213; cv=none; b=PD22/Bxi1/pZopX+hlZMXlM4i2bhXwTXx9a5KpNnP5HTtIvsdFV+psyA+yFmi4YBbtuMygDO6nfTIt7/KRrn8IZHKszwTSzMEoYpHAJsSX3QqnN+XWnoJbnDBvJY8jdr65fHm5KdzcoEBAy3pRvVM5IncUo52rqZ6kqqzLdkQIY=
+	t=1710348214; cv=none; b=TS/1xh0EqtsM9l7oRVyk+wWmym9HuqY37wJvqc2/Sk11iFdaPb++KZTLz8XpmeHC0pj3R7ISK91TW8lYsL3OVsrEdxdZYM7mddgKf5ewIHyLLYrB6NolqDEc79e7JwsNeCdL+SCnc1U2FKmmc9VH2k0gqvXvj+J6qq8Z1YT14HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348213; c=relaxed/simple;
-	bh=xWXNefaQZBQdWGtaZwmaLJIxt24HwXX91agyZD8u11Y=;
+	s=arc-20240116; t=1710348214; c=relaxed/simple;
+	bh=dBX5SGMYIABZbhEPwSAvjJkH193cy6hXRvYEI6b9Mqw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NshoR0LX6sE239jYs90G58dpYi3G+ZFNWlBN+/JyhLwatBnyKVDAeI6poaH4cPBEMlsYlFVbzbS4VtcD1wIKPWJdHEUPlcvj5tg9OvvjFxp0bx+FOZH+7GBG8Em7fyhXOxIZCt4eGJkEtzkfGYjz5XzvdKLlTRnAR9H0siRs4lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2F7ZTtG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ASuyNKu3IErx3y6lwYYKbu4j1F2BZWNIQnObkdl+YoXWaAGYN+i+yjdGMIwVMlwXJ2iPZNwuZc19GI97yg3KY4opj3wYrTUM9OQP0hmeivBW1PbMKgu4+pOQhn5ll1tgxBy4aPaSOlAbUof68yVgH1TQZf252TollbMeOecrFh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4bOOFP2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2F7ZTtG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68672C433F1;
-	Wed, 13 Mar 2024 16:43:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4bOOFP2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8629CC43390;
+	Wed, 13 Mar 2024 16:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348212;
-	bh=xWXNefaQZBQdWGtaZwmaLJIxt24HwXX91agyZD8u11Y=;
+	s=k20201202; t=1710348214;
+	bh=dBX5SGMYIABZbhEPwSAvjJkH193cy6hXRvYEI6b9Mqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b2F7ZTtGXi1HXtMmTOeSQt0s8qJBdKMM2ygvyFkrDCDZccgClqFjImR91PBv5IFcT
-	 iaB6t4CkYUNl9Ywnu0AwkUJkD/AWnrlvmy2DGWKlu4Q3YgoiDW37HzxoTRdDw2c05G
-	 I7gH75RiCDKDYIICubIAyYDVTKHal0wnph0+FY9rxJcNqa//BhGQDoHIgbCWIkcokX
-	 oAro/1yxG5p/rcSURHeaSA/URpINx7h6kMWGoNamh/k+I2YmDjJBaY6346oBNfGJbx
-	 8QFegkD1tHZHkc0/OPVEWLW1EJIIv+IR++i4i5FiFKiuIAGBmJiO5h4eCG1Jbc4ren
-	 vLbSddt8uyTkA==
+	b=r4bOOFP2owrkwu6tkcPpfxQkEwLaKajdVfFGG8hXZLbucDQ9cgG26ixfhJMWdWb8P
+	 GhA+mfxJcohK2pFrbjb+XaIkZo60HeX+MTAzjYrTKFmGfe+B1Nt++mD/9GTQSxmVdH
+	 19HV8F4wu0ZpCJGE5Ieh1LnNMNrAI1m2BzZdPuTm6+oXjkTjHDjo2MLfJoxQr+J04r
+	 DmN2MsOVKP20/2zI5/ciXa+IiM/NGqYO/4ZfK/0kvtT2YsP9rYir07g1OCxMravTqe
+	 3bLegTAX/OSgZr66skeEZpX6n3E4IGHWd/nl3MuWqW29rDtDc/lLmncCiXDZ24S9Uw
+	 S8bVdpx4i2XuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Dylan Hatch <dylanbhatch@google.com>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 59/76] drm/amd/display: Increase frame-larger-than for all display_mode_vba files
-Date: Wed, 13 Mar 2024 12:42:06 -0400
-Message-ID: <20240313164223.615640-60-sashal@kernel.org>
+Subject: [PATCH 5.15 61/76] getrusage: move thread_group_cputime_adjusted() outside of lock_task_sighand()
+Date: Wed, 13 Mar 2024 12:42:08 -0400
+Message-ID: <20240313164223.615640-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
 References: <20240313164223.615640-1-sashal@kernel.org>
@@ -54,67 +56,108 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit e63e35f0164c43fbc1adb481d6604f253b9f9667 ]
+[ Upstream commit daa694e4137571b4ebec330f9a9b4d54aa8b8089 ]
 
-After a recent change in LLVM, allmodconfig (which has CONFIG_KCSAN=y
-and CONFIG_WERROR=y enabled) has a few new instances of
--Wframe-larger-than for the mode support and system configuration
-functions:
+Patch series "getrusage: use sig->stats_lock", v2.
 
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20v2.c:3393:6: error: stack frame size (2144) exceeds limit (2048) in 'dml20v2_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
-   3393 | void dml20v2_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 error generated.
+This patch (of 2):
 
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:3520:6: error: stack frame size (2192) exceeds limit (2048) in 'dml21_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
-   3520 | void dml21_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 error generated.
+thread_group_cputime() does its own locking, we can safely shift
+thread_group_cputime_adjusted() which does another for_each_thread loop
+outside of ->siglock protected section.
 
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20.c:3286:6: error: stack frame size (2128) exceeds limit (2048) in 'dml20_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
-   3286 | void dml20_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 error generated.
+This is also preparation for the next patch which changes getrusage() to
+use stats_lock instead of siglock, thread_group_cputime() takes the same
+lock.  With the current implementation recursive read_seqbegin_or_lock()
+is fine, thread_group_cputime() can't enter the slow mode if the caller
+holds stats_lock, yet this looks more safe and better performance-wise.
 
-Without the sanitizers enabled, there are no warnings.
-
-This was the catalyst for commit 6740ec97bcdb ("drm/amd/display:
-Increase frame warning limit with KASAN or KCSAN in dml2") and that same
-change was made to dml in commit 5b750b22530f ("drm/amd/display:
-Increase frame warning limit with KASAN or KCSAN in dml") but the
-frame_warn_flag variable was not applied to all files. Do so now to
-clear up the warnings and make all these files consistent.
-
-Cc: stable@vger.kernel.org
-Closes: https://github.com/ClangBuiltLinux/linux/issue/1990
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lkml.kernel.org/r/20240122155023.GA26169@redhat.com
+Link: https://lkml.kernel.org/r/20240122155050.GA26205@redhat.com
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reported-by: Dylan Hatch <dylanbhatch@google.com>
+Tested-by: Dylan Hatch <dylanbhatch@google.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dml/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sys.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 93cc3086783fa..96e70832c7423 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -59,11 +59,11 @@ CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o := $(dml_ccflags)
- ifdef CONFIG_DRM_AMD_DC_DCN
- CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o := $(dml_ccflags)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/dcn20_fpu.o := $(dml_ccflags)
--CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags) $(frame_warn_flag)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
--CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o := $(dml_ccflags) $(frame_warn_flag)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o := $(dml_ccflags)
--CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o := $(dml_ccflags)
-+CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o := $(dml_ccflags) $(frame_warn_flag)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o := $(dml_ccflags)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn30/display_mode_vba_30.o := $(dml_ccflags) $(frame_warn_flag)
- CFLAGS_$(AMDDALPATH)/dc/dml/dcn30/display_rq_dlg_calc_30.o := $(dml_ccflags)
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 0298992c1eb9b..25f0c0697356b 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -1763,17 +1763,19 @@ void getrusage(struct task_struct *p, int who, struct rusage *r)
+ 	struct task_struct *t;
+ 	unsigned long flags;
+ 	u64 tgutime, tgstime, utime, stime;
+-	unsigned long maxrss = 0;
++	unsigned long maxrss;
++	struct mm_struct *mm;
+ 	struct signal_struct *sig = p->signal;
+ 
+-	memset((char *)r, 0, sizeof (*r));
++	memset(r, 0, sizeof(*r));
+ 	utime = stime = 0;
++	maxrss = 0;
+ 
+ 	if (who == RUSAGE_THREAD) {
+ 		task_cputime_adjusted(current, &utime, &stime);
+ 		accumulate_thread_rusage(p, r);
+ 		maxrss = sig->maxrss;
+-		goto out;
++		goto out_thread;
+ 	}
+ 
+ 	if (!lock_task_sighand(p, &flags))
+@@ -1797,9 +1799,6 @@ void getrusage(struct task_struct *p, int who, struct rusage *r)
+ 		fallthrough;
+ 
+ 	case RUSAGE_SELF:
+-		thread_group_cputime_adjusted(p, &tgutime, &tgstime);
+-		utime += tgutime;
+-		stime += tgstime;
+ 		r->ru_nvcsw += sig->nvcsw;
+ 		r->ru_nivcsw += sig->nivcsw;
+ 		r->ru_minflt += sig->min_flt;
+@@ -1819,19 +1818,24 @@ void getrusage(struct task_struct *p, int who, struct rusage *r)
+ 	}
+ 	unlock_task_sighand(p, &flags);
+ 
+-out:
+-	r->ru_utime = ns_to_kernel_old_timeval(utime);
+-	r->ru_stime = ns_to_kernel_old_timeval(stime);
++	if (who == RUSAGE_CHILDREN)
++		goto out_children;
+ 
+-	if (who != RUSAGE_CHILDREN) {
+-		struct mm_struct *mm = get_task_mm(p);
++	thread_group_cputime_adjusted(p, &tgutime, &tgstime);
++	utime += tgutime;
++	stime += tgstime;
+ 
+-		if (mm) {
+-			setmax_mm_hiwater_rss(&maxrss, mm);
+-			mmput(mm);
+-		}
++out_thread:
++	mm = get_task_mm(p);
++	if (mm) {
++		setmax_mm_hiwater_rss(&maxrss, mm);
++		mmput(mm);
+ 	}
++
++out_children:
+ 	r->ru_maxrss = maxrss * (PAGE_SIZE / 1024); /* convert pages to KBs */
++	r->ru_utime = ns_to_kernel_old_timeval(utime);
++	r->ru_stime = ns_to_kernel_old_timeval(stime);
+ }
+ 
+ SYSCALL_DEFINE2(getrusage, int, who, struct rusage __user *, ru)
 -- 
 2.43.0
 
