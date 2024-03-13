@@ -1,84 +1,135 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BE91B267;
-	Wed, 13 Mar 2024 08:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ADD1755A;
+	Wed, 13 Mar 2024 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710317444; cv=none; b=JMYeT8HUgeOEWLDYmvk+UMc3VEC9xLM+LqxTeORSh+hIRJ8k4ZXI33LaVKEym7oiFrN338KkJsveJg8rG69JE+u4N66Ur/94XgkX0WSVUS37karsBGQgpJNMRlmaO/8Eu28Gb1PaT1Td6tMvYrVX1WWv3cDo+lLd8fwgtPKcqQA=
+	t=1710317589; cv=none; b=MnOr85bzxjXj1jQZXPD+AisYL+vIC9IInye9i5PkmHpBN9g1ng+dAB7XnJcrjNUh3U5vY0xciP1jle+otXUb+Rfkwm8bMrFDE5P6jhXxzxUzb9fegyjNHBHhsP276X6OEo+tLhbODzjV2TGvauU+td6gs9vj0QvGkWfxPWe00Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710317444; c=relaxed/simple;
-	bh=AO4gYrFR5YhIPMlUJJE2gkuMghCgvYBgRr0xsk9NSfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DCdMpJ5EyTu0PaHzn6UD9m9Jzogql+N2d6MXKl2wMxxhpppIEQRNNytEFlabBhE4m/serg4YhI9ShrMMXISLKCpcoAIV56Jd53VVz95rSKMYPz216dB0ze2HVawO2lR45p8bMLaeJGMT08ZX4BnwvVdFYayFL+H5zy4jN4w+bAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid: bizesmtp87t1710317259tiv652if
-X-QQ-Originating-IP: 1vHP8eRVGrZlnDR2BorgL9IqCfsKxq2xqsWDaBZnZoQ=
-Received: from localhost.trustnetic.com ( [122.235.139.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 13 Mar 2024 16:07:37 +0800 (CST)
-X-QQ-SSF: 01400000000000E0E000000A0000000
-X-QQ-FEAT: CR3LFp2JE4n6i6hfLWy6jeqm55CI8Fwsjw6qaB7dOywOkPOXEED3zxN2HVRfE
-	o5+YAj2XeQeJB3qeFidSUuBpseJKGz/yuMT2BazJ7/H8mCXXVEecLqx7WSYo1B5DaQj/5tJ
-	O78cnoNSjZ3CHWvqNdILrVYkhAPhure7+uS45RHlVImfr46PUQrOBJA0+efeStWzyx8bSgg
-	5aQ/0v4KKTGTTbxiGvnYuzfp2nsAUTfnJXmxlVox9le5ZPFzfHWRJhkGzzfuoTDJb6xex15
-	4fr6bwsi0FUgE8ttBEIIPRIL9rrrF8lKbsdzZWDVLPXsw2iNJdG7SI6d1Tiw/2SmnFYuqpp
-	AEHHgkiGFjI2JFiUbea3325N2/IXNw1PvU5B0PBGdGPNEwEOKD0MO6lV5kvv3waBAqA4Xtp
-	WaLRXaPZwbgCx/U7zD+ssA==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 17129813797246797824
-From: Duanqiang Wen <duanqiangwen@net-swift.com>
-To: netdev@vger.kernel.org,
-	mengyuanlou@net-swift.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	maciej.fijalkowski@intel.com,
-	andrew@lunn.ch,
-	wangxiongfeng2@huawei.com,
-	linux-kernel@vger.kernel.org
-Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
-Subject: [PATCH] net: txgbe: fix clk_name exceed MAX_DEV_ID limits
-Date: Wed, 13 Mar 2024 16:06:34 +0800
-Message-Id: <20240313080634.459523-1-duanqiangwen@net-swift.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1710317589; c=relaxed/simple;
+	bh=tUuSOamMV4WydCgUMCgQyUEJgIyha1cE00JSbUEBgLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkV4/OP8xn/b/053YHZno9nea1e7zWbtfslAbFmeIhZD8ozp2P4N4w+oBcgajsZQBJ3pO10v/0LbIQJ+VyW6Vzmx+yMejZMg3d1CdR5tjYBWHlwIhc+qzdgSbQafOfWtass7qSIZzyF2F6HVHcsn8/Q0SsTIAfC57PHhusVey/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bDhckm8d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9mcgESd/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bDhckm8d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9mcgESd/"
+Date: Wed, 13 Mar 2024 09:13:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710317584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ghBbxv10Yx+PhzZT76BoMKiCE5Hea/IDnIEecFzQG0s=;
+	b=bDhckm8dgUj5r+TTLUf6hHq+frC9tCYE9Vh7d3Pnk31ugyDX1YpkeqZ1gdiIrGLw/BoThp
+	3cIqV3pIwFyJhO8MRKCDfZqaa5/N3VlHANaLMDTLIeijpQx6+x/LQXl5G9QTQC5hJsw3hv
+	SOD5QCLF9IZA4b/wih4/yuN/CBEj8LtdTplzojlH1IEpIe4q9DK4OwPfnakuzWDvp2x+rQ
+	23dAShmG/EghnDKaokywjOy6iVLGrvRF0MWMKW7fqByUV7+l3wp/fYAYcqFqOoFFptu/sp
+	6mqDQCR2APqOVStX5O1BoUXm58PW5tjUt1g0crB5RS2QThduxMgbsoy0mc3YZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710317584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ghBbxv10Yx+PhzZT76BoMKiCE5Hea/IDnIEecFzQG0s=;
+	b=9mcgESd/8meQye1/yvE06TsGjEeS/VwioA326OhcULvk/9NUl7usEuUkweobiIpwjgn6rc
+	V8bvyF3MVk3kDQAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <20240313081303.DClwQrvb@linutronix.de>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <ZfDMTlTH2SdwlB9M@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZfDMTlTH2SdwlB9M@x1>
 
-txgbe register clk which name is i2c_designware.pci_dev_id(),
-clk_name will be stored in clk_lookup_alloc. If PCIe bus number
-is larger than 0x39, clk_name size will be larger than 20 bytes.
-It exceeds clk_lookup_alloc MAX_DEV_ID limits. So the driver
-shortened clk_name.
+On 2024-03-12 18:42:38 [-0300], Arnaldo Carvalho de Melo wrote:
+=E2=80=A6
+> But:
+>=20
+> [acme@nine ~]$ pidof exec_child
+> 24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 2=
+4260 24259=20
+=E2=80=A6
 
-Fixes: b63f20485e43 ("net: txgbe: Register fixed rate clock")
-Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
----
- drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> [root@nine ~]# cat /proc/24263/stack
+> [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+> [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [root@nine ~]#
+=E2=80=A6
+> [acme@nine ~]$ ps ax|grep exec_child| wc -l
+> 504
+> [acme@nine ~]$ ps ax|grep exec_child| tail
+>   24264 pts/0    R      0:04 exec_child
+>   24265 pts/0    R      0:04 exec_child
+>   24266 pts/0    R      0:04 exec_child
+>   24267 pts/0    R      0:04 exec_child
+>   24268 pts/0    R      0:04 exec_child
+>   24269 pts/0    R      0:04 exec_child
+>   24270 pts/0    R      0:04 exec_child
+>   24271 pts/0    R      0:04 exec_child
+>   24273 pts/0    R      0:04 exec_child
+>   26704 pts/1    S+     0:00 grep --color=3Dauto exec_child
+> [acme@nine ~]$
+>=20
+> All in 'R' state.
+>=20
+> [root@nine ~]# killall exec_child
+> exec_child: no process found
+> [root@nine ~]# ps ax | grep exec_child | head -5
+>   22964 pts/0    R      0:06 exec_child
+>   23046 pts/0    R      0:05 exec_child
+>   23128 pts/0    R      0:05 exec_child
+>   23129 pts/0    R      0:05 exec_child
+>   23181 pts/0    R      0:05 exec_child
+> [root@nine ~]# kill 22964 23046 23128 23129 23181
+> [root@nine ~]# ps ax | grep exec_child | head -5
+>   23182 pts/0    R      0:06 exec_child
+>   23196 pts/0    R      0:06 exec_child
+>   23197 pts/0    R      0:06 exec_child
+>   23210 pts/0    R      0:06 exec_child
+>   23213 pts/0    R      0:06 exec_child
+> [root@nine ~]#
 
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-index 93295916b1d2..5b5d5e4310d1 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-@@ -571,7 +571,7 @@ static int txgbe_clock_register(struct txgbe *txgbe)
- 	char clk_name[32];
- 	struct clk *clk;
- 
--	snprintf(clk_name, sizeof(clk_name), "i2c_designware.%d",
-+	snprintf(clk_name, sizeof(clk_name), "i2c_dw.%d",
- 		 pci_dev_id(pdev));
- 
- 	clk = clk_register_fixed_rate(NULL, clk_name, NULL, 0, 156250000);
--- 
-2.27.0
+You can't kill them?
 
+> at the end they disappeared, on this last run.
+>=20
+> But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
+> we get all those exec_child running a seemingly eternal loop:
+
+Is this new or was it there? Is this VM or bare metal?
+
+One part I don't get: did you let it run or did you kill it?
+`exec_child' spins until a signal is received or the parent kills it. So
+it shouldn't remain there for ever. And my guess, that it is in spinning
+in userland and not in kernel.
+I tried it on bare metal and VM and couldn't reproduce this.
+=E2=80=A6
+>=20
+> - Arnaldo
+
+Sebastian
