@@ -1,108 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D536B50243;
-	Wed, 13 Mar 2024 20:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F03E225AF;
+	Wed, 13 Mar 2024 20:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710360732; cv=none; b=FGWrJ/NsQcU6ZWaYW9SGc7yv7DMvRodnYIjpk3NE8AOJqLpobO6mrvnz/AsJ6KtY7vDePwMX50eYkpcXtOthF1reNQ5yYxwM2j5J4/Af814KnqjjsUbMSZnWuNfyTdZrpgr/gVXHxCAYfv4TB8fdMw3aiyfmxwFakyXsmJduABQ=
+	t=1710360731; cv=none; b=knbnzCY8VMT1+6hbzRejxNX5dc28qz+FsOg7CLeTXdPP9QSWY/jh4B8hmhED1rUq39c2g0ZPhScNxNqPfs9++cBgxazdcWYaJGOl4yCSLuNx3xWPDC2tCOlZTkWyMMKHdGDXoxjEEiNmrTzHYk8cJmPUfVJtKXP6KnmMV3ZcIvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710360732; c=relaxed/simple;
-	bh=DoSvdQHEHpaTFMIhARnfPiNgrJvH1Ozx282n9iN1Boc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UEHvMzLk1OQ2fg/YnN4zkndK7c946d5l8oWAJoOCxBPdb6crhL0mbMN0ClYZygJwu6/nzCeRa+Po+7mvXNWlD1JUv0lORfKIrDCfrSzGj8Inx8qfCV9pHrywRTRgu3g5VubLJ4GlZ+2cw3ApmxIK6vPmNwN8V+RKbao17Pa+THM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8C4C433C7;
-	Wed, 13 Mar 2024 20:12:11 +0000 (UTC)
-Date: Wed, 13 Mar 2024 16:14:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- kernel test robot <lkp@intel.com>, llvm@lists.linux.dev
-Subject: Re: [PATCH] tracing: Use strcmp() in __assign_str() WARN_ON() check
-Message-ID: <20240313161420.3b668558@gandalf.local.home>
-In-Reply-To: <20240313134550.68a11319@gandalf.local.home>
-References: <20240312113002.00031668@gandalf.local.home>
-	<20240313165903.GA3021536@dev-arch.thelio-3990X>
-	<20240313134550.68a11319@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710360731; c=relaxed/simple;
+	bh=vxiSIG1jZQwlWtR6AV5q/3NgPvGpxmDe0qfJ03T7J/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ugvHWAn7wYkK6pouxzkfDHXmb464PSxAVf8JEetUepNvw/PAZcoiD9fxDh9LooOnRkQUueyg0MbBmVzE7bvd9f059qzt90AoYDWvSiNuM0GTxFOH1o4LxpiYQeILcKHg/lRFfix6G+roN9lNF/b9TgnVHNdg+GDrLuDeKcPdhIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uyO/mUu3; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uyO/mUu3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Xp82gEIbZeLnmlswzlNrQpFNfajF/0oeJJd0n1Kue3M=; b=uyO/mUu37qErfYKSWEqKd3wmSq
+	R92vQ0Yv/x3wGFeS61sdERP3c8R58AiQJcDKZWMDD2tYjU7aAfpuSODq8UsXekoI0N+bYq8lpWfoj
+	5mZtGQ4mTrXRiz83cgieU7Sw/vfr469Fi6WdYPCEebdmgUvvXdQsJhMbOrBqKgYnW6CI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rkUxr-00AGOu-Ik; Wed, 13 Mar 2024 21:12:39 +0100
+Date: Wed, 13 Mar 2024 21:12:39 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: David Woodhouse <dwmw2@infradead.org>,
+	Peter Hilber <peter.hilber@opensynergy.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	virtio-dev@lists.oasis-open.org,
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+	"virtio-comment@lists.oasis-open.org" <virtio-comment@lists.oasis-open.org>,
+	"Christopher S. Hall" <christopher.s.hall@intel.com>,
+	Jason Wang <jasowang@redhat.com>, John Stultz <jstultz@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	"Ridoux, Julien" <ridouxj@amazon.com>
+Subject: Re: [RFC PATCH v3 0/7] Add virtio_rtc module and related changes
+Message-ID: <04246331-e890-4c9a-95fb-9673580e6d30@lunn.ch>
+References: <204c6339-e80d-4a98-8d07-a11eeb729497@opensynergy.com>
+ <667c8d944ce9ea5c570b82b1858a70cc67b2f3e4.camel@infradead.org>
+ <f6940954-334a-458b-af32-f03d8efbe607@opensynergy.com>
+ <57704b2658e643fce30468dffd8c1477607f59fb.camel@infradead.org>
+ <d796d9a5-8eda-4528-a6d8-1c4eba24aa1e@opensynergy.com>
+ <202403131118010e7ed5bf@mail.local>
+ <dcd07f0b733a90ac3f3c43a4614967bbb3ef14ad.camel@infradead.org>
+ <20240313125813ec78d5a9@mail.local>
+ <96be7312f7bddaf06c690e082a8028fa8b511deb.camel@infradead.org>
+ <202403131450547f373268@mail.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202403131450547f373268@mail.local>
 
-On Wed, 13 Mar 2024 13:45:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+> As long as it doesn't behave differently from the other RTC, I'm fine
+> with this. This is important because I don't want to carry any special
+> infrastructure for this driver or to have to special case this driver
+> later on because it is incompatible with some evolution of the
+> subsystem.
 
-> Let me test to make sure that when src is a string "like this" that it does
-> the strcmp(). Otherwise, we may have to always do the strcmp(), which I
-> really would like to avoid.
+Maybe deliberately throw away all the sub-second accuracy when
+accessing the time via the RTC API? That helps to make it look like an
+RTC. And when doing the rounding, add a constant offset of 10ms to
+emulate the virtual i2c bus it is hanging off, like most RTCs?
 
-I added the below patch and enabled sched_switch and it triggered the
-warning (expected if it went the strcmp() path). I then changed it to be:
-
-#define __assign_str(dst, src)						\
-	do {								\
-		char *__str__ = __get_str(dst);				\
-		int __len__ = __get_dynamic_array_len(dst) - 1;		\
-		WARN_ON_ONCE(__builtin_constant_p(src) ?		\
-			     strcmp((src), __data_offsets.dst##_ptr_) :	\
--			     (src) != __data_offsets.dst##_ptr_);	\
-+			     (src) == __data_offsets.dst##_ptr_);	\
-		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
-		       EVENT_NULL_STR, __len__);			\
-		__str__[__len__] = '\0';				\
-	} while (0)
-
-And the sched_switch did not trigger (expected). So it seems that it should
-not be a problem.
-
-Note, I only tested this with gcc and not clang.
-
-But I guess there's also the case where we have:
-
-	__assign_str(str, field ? field : "NULL")
-
-But hopefully that's not an issue.
-
--- Steve
-
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index dbb01b4b7451..eaacd0c4e899 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -236,6 +236,7 @@ TRACE_EVENT(sched_switch,
- 		__array(	char,	next_comm,	TASK_COMM_LEN	)
- 		__field(	pid_t,	next_pid			)
- 		__field(	int,	next_prio			)
-+		__string( test, "this")
- 	),
- 
- 	TP_fast_assign(
-@@ -246,6 +247,7 @@ TRACE_EVENT(sched_switch,
- 		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- 		__entry->next_pid	= next->pid;
- 		__entry->next_prio	= next->prio;
-+		__assign_str(test, "this");
- 		/* XXX SCHED_DEADLINE */
- 	),
- 
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 83da83a0c14f..cf301c723fd0 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -36,7 +36,7 @@
- 		char *__str__ = __get_str(dst);				\
- 		int __len__ = __get_dynamic_array_len(dst) - 1;		\
- 		WARN_ON_ONCE(__builtin_constant_p(src) ?		\
--			     strcmp((src), __data_offsets.dst##_ptr_) :	\
-+			     !strcmp((src), __data_offsets.dst##_ptr_) :	\
- 			     (src) != __data_offsets.dst##_ptr_);	\
- 		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
- 		       EVENT_NULL_STR, __len__);			\
+	  Andrew
