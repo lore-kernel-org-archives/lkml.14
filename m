@@ -1,128 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D6043AA4
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABE83C39;
+	Wed, 13 Mar 2024 13:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336057; cv=none; b=V0Sxly6OMQ+CTDxx498tU0bk02qnuGPwQ4X5pqQwlZJG+xcQa1mflT77UuLrGLmQeHFsD2oNyFVg1rlC/aQtcifuB2l2VmmRCCARp75W8Jjm/0Q/IyFtqd1YXCd3wbfDkcSkB6bysDHBhPf1PZmqnS4MlVKcfdeEdTGNBElhAfw=
+	t=1710336245; cv=none; b=dtkrxqVBAhPU3+po+xtngVY9K/u/9YOPE1WukB6hfzlNEmLsJq5qBgjpPVO6ADxRvusfsZuPLpqKZTUiTBiJe1U6iwcueThvd4lneJooEcqZztMDNsxfmiR6nZqJp8DQy2AUU49PAdpYaN3N6X94K+EojJvrlPO2gXMIpj0CY/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336057; c=relaxed/simple;
-	bh=FaT4XGiP/1deYiwr6gMlT38Yu4UeP83mybH7QKeqj60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IO1YbIM9/IaJ+avjMGHE2t3vzi+aI9cakVaYuOpX/z0t+eTx3shIXdLuLtDYRv2jFlpOQ8BKZ4kgDJ3FvMZVf8lw6zOEk1xw4Vdp/jchzMUf6H9d4d8DU2aND7E8nrjLJnXKGBXERsylLVIRxoLMYkD0B3aYU2euokG/RLyuiD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZpnByxP3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710336245; c=relaxed/simple;
+	bh=yPqAe7ClhayYRrLN2CJq+cfkSc0n2HvZp2xKEfV+UR4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5KAQkHTKo0sI4LmCgzaR5SMSonPF/du4c6JtoJrfBTN/pfzZSKekRGVqq1UWjM7QP5d3b2bnPmOlfmjuTwHXQEZMd3lIbARtFwOvQOT7VlIEm9glMVCSGw13fCPj++xiOoU+Z106eT39izyhVLFsKfGrAM/M9A7zhTP7VjvE0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=WSrCbeXk; arc=none smtp.client-ip=195.19.76.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZpnByxP3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710336054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k9AU0bydAYPASchpnpF2gWjzciQAPMb4OtYaMryl0jc=;
-	b=ZpnByxP3a1EC3rLcm5WXjBNK/tJfzfH/o/KKkQyUqosfU0/LVDAwv7bza0Hn5ZzhB7D6Vo
-	PQVYI6HlcAWjkbY0JP7GBy7H0JJ9WvTO8Xw4lJAuPWzxVJQBrAAiti2XAUEHQUZJeH3qbW
-	/VlWV9FlqyxthVhMZfgIn0Gfgv9CmVI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-645-gV73DBrjPaWDGE1FfRfGdw-1; Wed, 13 Mar 2024 09:20:51 -0400
-X-MC-Unique: gV73DBrjPaWDGE1FfRfGdw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 96A17101CC63;
-	Wed, 13 Mar 2024 13:20:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.233])
-	by smtp.corp.redhat.com (Postfix) with SMTP id D189B2166B4F;
-	Wed, 13 Mar 2024 13:20:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 13 Mar 2024 14:19:29 +0100 (CET)
-Date: Wed, 13 Mar 2024 14:19:26 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 3/3] uprobes: add speculative lockless
- system-wide uprobe filter check
-Message-ID: <20240313131926.GA19986@redhat.com>
-References: <20240312210233.1941599-1-andrii@kernel.org>
- <20240312210233.1941599-4-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="WSrCbeXk"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 3E84FDFACF8A1;
+	Wed, 13 Mar 2024 16:23:45 +0300 (MSK)
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id H1TS0Fis9ARg; Wed, 13 Mar 2024 16:23:45 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id E9292DFACF89F;
+	Wed, 13 Mar 2024 16:23:44 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru E9292DFACF89F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
+	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1710336225;
+	bh=Q3mlrkprHQSqqe7ZzbpkZFoFX1OW7QRMBkhOjb+6+wk=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=WSrCbeXkAvXISeJK+KzWxdWYqFbr7juu33ozGTbEQ/MiuyQvMpNu9n2suLoizodtj
+	 19BROhwGoadIkh3xPdQBcVmiMtmkM+VzIgo8yaG3bJIg9jObsF0pBHqQEajmwVx6rq
+	 /H5yVc5YlMtP9aFqL+z3IsehxMWZrWXySKamnSlceKrRWHQSP6w4KwXhFRaFI7qimT
+	 UXigrPTQ/BuKkJWlA+z3aZCN7ZlWXI6egbEhS8q0q8PSOO2fKafpBUlmUZMdJS9agS
+	 CQ1xKsNuOM0lh9O74vhe8t1XjZ1xtiahR+Jq9WlV1NPYjgG4veybjLNNekvkfUyEM4
+	 f8lQ4cUN45a/A==
+X-Virus-Scanned: amavisd-new at rosalinux.ru
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id E4DEAnA0C_be; Wed, 13 Mar 2024 16:23:44 +0300 (MSK)
+Received: from localhost.localdomain (unknown [62.217.186.174])
+	by mail.rosalinux.ru (Postfix) with ESMTPSA id A8892DFACF8A1;
+	Wed, 13 Mar 2024 16:23:44 +0300 (MSK)
+From: Mikhail Lobanov <m.lobanov@rosalinux.ru>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: Mikhail Lobanov <m.lobanov@rosalinux.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-x25@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] x_25: Adding a null pointer dereference check to the x25_accept() function
+Date: Wed, 13 Mar 2024 09:22:08 -0400
+Message-ID: <20240313132214.48716-1-m.lobanov@rosalinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240312210233.1941599-4-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: quoted-printable
 
-I forgot everything about this code, plus it has changed a lot since
-I looked at it many years ago, but ...
+To avoid the problem of dereferencing the null pointer in the x25_accept(=
+)
+function, you need to add an additional check that the pointer skb is
+not equal to NULL.
 
-I think this change is fine but the changelog looks a bit confusing
-(overcomplicated) to me.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-On 03/12, Andrii Nakryiko wrote:
->
-> This patch adds a speculative check before grabbing that rwlock. If
-> nr_systemwide is non-zero, lock is skipped and event is passed through.
-> From examining existing logic it looks correct and safe to do. If
-> nr_systemwide is being modified under rwlock in parallel, we have to
-> consider basically just one important race condition: the case when
-> nr_systemwide is dropped from one to zero (from
-> trace_uprobe_filter_remove()) under filter->rwlock, but
-> uprobe_perf_filter() raced and saw it as >0.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Mikhail Lobanov <m.lobanov@rosalinux.ru>
+---
+ net/x25/af_x25.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Unless I am totally confused, there is nothing new. Even without
-this change trace_uprobe_filter_remove() can clear nr_systemwide
-right after uprobe_perf_filter() drops filter->rwlock.
-
-And of course, trace_uprobe_filter_add() can change nr_systemwide
-from 0 to 1. In this case uprobe_perf_func() can "wrongly" return
-UPROBE_HANDLER_REMOVE but we can't avoid this and afaics this is
-fine even if handler_chain() does unapply_uprobe(), uprobe_perf_open()
-will do uprobe_apply() after that, we can rely on ->register_rwsem.
-
-> In case we speculatively read nr_systemwide as zero, while it was
-> incremented in parallel, we'll proceed to grabbing filter->rwlock and
-> re-doing the check, this time in lock-protected and non-racy way.
-
-See above...
-
-
-So I think uprobe_perf_filter() needs filter->rwlock only to iterate
-the list, it can check nr_systemwide lockless and this means that you
-can also remove the same check in __uprobe_perf_filter(), other callers
-trace_uprobe_filter_add/remove check it themselves.
-
-
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -1351,6 +1351,10 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc,
->  	tu = container_of(uc, struct trace_uprobe, consumer);
->  	filter = tu->tp.event->filter;
->
-> +	/* speculative check */
-> +	if (READ_ONCE(filter->nr_systemwide))
-> +		return true;
-> +
->  	read_lock(&filter->rwlock);
->  	ret = __uprobe_perf_filter(filter, mm);
->  	read_unlock(&filter->rwlock);
-
-ACK,
-
-but see above. I think the changelog should be simplified and the
-filter->nr_systemwide check in __uprobe_perf_filter() should be
-removed. But I won't insist and perhaps I missed something...
-
-Oleg.
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index f7a7c7798c3b..91bc5994cef6 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -896,7 +896,7 @@ static int x25_accept(struct socket *sock, struct soc=
+ket *newsock, int flags,
+ 		goto out2;
+ 	skb =3D skb_dequeue(&sk->sk_receive_queue);
+ 	rc =3D -EINVAL;
+-	if (!skb->sk)
++	if (!skb || !skb->sk)
+ 		goto out2;
+ 	newsk		 =3D skb->sk;
+ 	sock_graft(newsk, newsock);
+--=20
+2.43.0
 
