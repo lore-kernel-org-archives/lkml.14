@@ -1,38 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00525664B3
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA05F664B7
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710351939; cv=none; b=rRknyPxu92gwMf1z4BVvyp3+OTrJ20ZtHwCUHZFl8u7Ckzr4+E7z0wWQ8f06AvU663igRlBMF0RKtQ6+rw+ysHebgea7+zLHbmnQ5zfwa2LWFmQuVufx/VYelTMME83qFLQoWVzONNqhAVC25ZMqeSr9oo6XmZTWMpdvhlPg1Bs=
+	t=1710351938; cv=none; b=QlTc9satkvAgI0nBrGfs68r3hGRT3lNGKIVl7D3r9SYSeIsEzUcIkoFwJbhOskZo4QMZEtqBNS8Fyt8JKzVbCWmhs8xSg7ky2ds4q0ZjnEY/C0swe1uWAqC2pPKoGNdC4IjouFjoCiHY+gm/G6+IXYyIekFDTgmxpkRChGLyZmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710351939; c=relaxed/simple;
-	bh=jQLWVvGHX0RwVHU0wEm+ZMMYBxMzOtg605EU0kzKs58=;
+	s=arc-20240116; t=1710351938; c=relaxed/simple;
+	bh=SrBB5KXz1QL9eQ48nY2Dv3KvNWc0/mA4SAe3dTkfyww=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ox+kAn+hb2z71gvOXrhjp6SvZkS2WHKi4GUKAeiIsKNHckkcdGozSO2MGbT+rVDSrcQzD1ak1cEGpOSU4SfSos74hRSdQJPC8x7VHamLPzl5BhUAmIrdg99+hYGzuUKtEofYva54IM29ZsslaIaSkfpbtTnWN8HKKaSmhsAtPpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RzvU2j9e; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=BMtYf9NTvpkpD5mmqsSb4b/xzV4sZr1J5aXJwO4l6Vz51qCxbXExzALKqEyD53rWDbOPmuERPxkQGOjeDcZYlK2YCe7NiGkkYR5TRH8Zkub0sptp9EbXfqxN9nWdfy4pBehU48uz2tDauyz73ESFQfuMRi+HxuIRQvw25EZ1N8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SY2r2Hz9; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RzvU2j9e"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D227B40006;
-	Wed, 13 Mar 2024 17:45:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SY2r2Hz9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8404140010;
+	Wed, 13 Mar 2024 17:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710351928;
+	t=1710351934;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hht86WDYBmmd5HJ0kBTByD9xXyq+2Qqfx093Hdq4g/E=;
-	b=RzvU2j9ednDvi05rgHjzsJqaAuVItoKYmuA3s5iUHB0uH8j0tdwfpVQC8PFfwBfJloIHMj
-	t7e1jdeV3JSOWespI/46pzDcKn7YBvuI7vKBfoGsWdSwfp8IAeMCNNNsREYlVMEoMu/Ruw
-	HWqzQ70IrlI67DFcn14chPcTpPBYdu3Ggzo8fgkjFsxM0+tAGMVtcRzvJ7JjYvuWFcecnl
-	50Z8Ix92JKo3RN24zKomQolYFY49UbXa0RjbvQoBWuyTK0Pf+hELtPhPwQKkKKCA2OE7LV
-	L36POivdLM6cyAujZ0PWvquYB+XN9lIKoZfc2Jqn9DhXOY+ohPab/ND+IfjBuA==
+	bh=topb8prnlkO3hDZ+MWbWhdCxAg3fNHcFeHR+nVEh9+s=;
+	b=SY2r2Hz9Fpc4yctZW8H2HFx6jYGVYRfJ7cCSJZSOBPqOHiGa2mSNDzVculX017Zkm4U5Uz
+	17TgvwfxAeukZUfQhDTBmGnRK9paQaEEkXIzI8k970c6lAJ/EcFsFukAMKWB17g/A6u/P4
+	U2UZx+FDGKoT88h1wNSAj8u02jIE676jAzdvnklL0oOz00BdKLZ0jOYzjZFqxTzzW0IZ8L
+	rWrbqpZXxQHMaNd58juxsJ/BBHmOuEsKMIBhZkO1V+jsfvskRQMfBYWElXrUfbR2/runKU
+	2EYPy9b2hrSQRHWxXK1D/S1UcolvLFmN/PXh+c94mFdGcYgA04oZXnoejg7OJA==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Wed, 13 Mar 2024 18:44:55 +0100
-Subject: [PATCH v5 01/16] drm/vkms: Code formatting
+Date: Wed, 13 Mar 2024 18:45:01 +0100
+Subject: [PATCH v5 07/16] drm/vkms: Update pixels accessor to support
+ packed and multi-plane formats.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240313-yuv-v5-1-e610cbd03f52@bootlin.com>
+Message-Id: <20240313-yuv-v5-7-e610cbd03f52@bootlin.com>
 References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
 In-Reply-To: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -57,133 +58,172 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4834;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7195;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=jQLWVvGHX0RwVHU0wEm+ZMMYBxMzOtg605EU0kzKs58=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl8eYySTdGDiGsC4TKrC39rnaeps9U2aZvyemtyyJ9
- PcfpYymJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZfHmMgAKCRAgrS7GWxAs4nSYEA
- CrP5hBlCAjtLqxs7yD1pwcwqDUzuT5hW3csVlGRQK1bDO6YSdgHwytECLDNTjBgPoPAJiPlH2N0pZq
- 8JsyJ5bmpaCnnGiVuwyBiAz/NOi99C5IHXB5NAWkU64AopcactmBc+qPyCHzFffTmg/ct5zUSXA3ou
- VX0cXn8vI4CTdIw/0095THcibqISo63Gp1DN3WQdoxXy01w3ihJEPIg/zgNKmR5FxW0q5b1sCfoA1e
- xSwKf9JMTQD/+LadNSOKfSmsSsVSfqrj68z9pCsqUo+/gjyyHRKgVd56HY1HPIDhO7Q/kCAqv/0WfX
- bX2G5xLWcrU7ynb0kgBJrX+1mfsr1FJhZo/muh7wj9NKjcYH0buvbRDQD/8dUU//eo3yYp+7NuT2Sn
- EXDBDAkRs7rmTb7xYg/Hh9SLylHU+BC3L5BDSs01H3YUmYIUtOXDtDMbxsu+ca/FAurmlITgvUYpR1
- qxWmGXPn+FF6x4qyZdobbnFirSCmD/wTRM7SWNnqH1+dZyxJ6gCkQD8lwr5hjdBm3y8IiVpHsEc7at
- L2syLfuUFTCU9+qaG5VdqcJX681DiQlrZ77dR70GLQ3UXuLFiBnP16o7qOIpEBKnzE75jXN/ycMHBF
- 46deNfHZ/5smVwB//BdBJRchTBelHhyjvTVN+T6DmpY+vZ8lGiBsHSJG5niw==
+ bh=SrBB5KXz1QL9eQ48nY2Dv3KvNWc0/mA4SAe3dTkfyww=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl8eYzeUgriFWBkcLj5STyEQDIjjz88wtpaeuxDI5s
+ RTMuI7eJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZfHmMwAKCRAgrS7GWxAs4taeD/
+ 95UOPYi6+vsQL5qaU93DnNr4j0t5/JVU7/tsZaiHaYlSNDu2yQtLinxqCdJi2sKxTYVsl8jLvczkCH
+ u7fyTqVfCQ3B0PNRK9fhOzvbPaJQ6ZQnzhSa8OoSVK73fx4I5VnLfxayg0cj8cCJhbonbKjSQP40Bv
+ yLYDO0N2/3xJQqMTGLrRViCwunfH/Ad0J1M6rVE3Vt1B2Vz6PYzTmG96QaIT4ie6WgsovBnUmqdduO
+ oyZSNo7oNhT++9O9KeD4FP+RVfbcwtr0BRdJiXndCVqYIsu7WmirP0zx3ff65SEq1Pt3ZcC6XeCy7q
+ WfJ+YczDlytylSG5kPRMo2cyUUnpob8f23skVGLyX86HvRyh8IGgYiXcL40dSzv63BkRY0QZhxhBZL
+ qbt5f4pwfsdojRR8TEf7X28CYYhmbvrP3O93GKLRCTb8Tl6mpmK6LawpfqUzM/1PM9a83vfm8M3d+c
+ kkdDfhnYaUg+tqa7bK9QpTz/e724gxJVrchU40nufbwz6T8xyoemnhzA1otzXeSP4vlF673zcOZSRW
+ V0598GUD2R6CpOY61ubP52CwZ76shhynqQpPKNExDnK8ex7HDOkdg5hpZ/IDPCO8bi6x8J3lgrgs0R
+ j9OfnyMY245cWwCnXVkIH6PF2S6G8/ueLqhurlL4COnh9gUezYJ1MpgluouQ==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Few no-op changes to remove double spaces and fix wrong alignments.
+Introduce the usage of block_h/block_w to compute the offset and the
+pointer of a pixel. The previous implementation was specialized for
+planes with block_h == block_w == 1. To avoid confusion and allow easier
+implementation of tiled formats. It also remove the usage of the
+deprecated format field `cpp`.
+
+Introduce the plane_index parameter to get an offset/pointer on a
+different plane.
 
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 10 +++++-----
- drivers/gpu/drm/vkms/vkms_crtc.c     |  6 ++----
- drivers/gpu/drm/vkms/vkms_drv.c      |  3 +--
- drivers/gpu/drm/vkms/vkms_plane.c    |  8 ++++----
- 4 files changed, 12 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/vkms/vkms_formats.c | 76 +++++++++++++++++++++++++------------
+ 1 file changed, 52 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index e7441b227b3c..c6d9b4a65809 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -96,7 +96,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
- 	s64 a_fp = drm_int2fixp(a);
- 	s64 b_fp = drm_int2fixp(b);
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index b2f8dfc26c35..649d75d05b1f 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -10,23 +10,43 @@
+ #include "vkms_formats.h"
  
--	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
-+	s64 delta = drm_fixp_mul(b_fp - a_fp, t);
- 
- 	return drm_fixp2int(a_fp + delta);
- }
-@@ -302,8 +302,8 @@ static int compose_active_planes(struct vkms_writeback_job *active_wb,
- void vkms_composer_worker(struct work_struct *work)
+ /**
+- * pixel_offset() - Get the offset of the pixel at coordinates x/y in the first plane
++ * packed_pixels_offset() - Get the offset of the block containing the pixel at coordinates x/y
+  *
+  * @frame_info: Buffer metadata
+  * @x: The x coordinate of the wanted pixel in the buffer
+  * @y: The y coordinate of the wanted pixel in the buffer
++ * @plane_index: The index of the plane to use
++ * @offset: The returned offset inside the buffer of the block
++ * @rem_x,@rem_y: The returned coordinate of the requested pixel in the block
+  *
+- * The caller must ensure that the framebuffer associated with this request uses a pixel format
+- * where block_h == block_w == 1.
+- * If this requirement is not fulfilled, the resulting offset can point to an other pixel or
+- * outside of the buffer.
++ * As some pixel formats store multiple pixels in a block (DRM_FORMAT_R* for example), some
++ * pixels are not individually addressable. This function return 3 values: the offset of the
++ * whole block, and the coordinate of the requested pixel inside this block.
++ * For example, if the format is DRM_FORMAT_R1 and the requested coordinate is 13,5, the offset
++ * will point to the byte 5*pitches + 13/8 (second byte of the 5th line), and the rem_x/rem_y
++ * coordinates will be (13 % 8, 5 % 1) = (5, 0)
++ *
++ * With this function, the caller just have to extract the correct pixel from the block.
+  */
+-static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
++static void packed_pixels_offset(const struct vkms_frame_info *frame_info, int x, int y,
++				 int plane_index, int *offset, int *rem_x, int *rem_y)
  {
- 	struct vkms_crtc_state *crtc_state = container_of(work,
--						struct vkms_crtc_state,
--						composer_work);
-+							  struct vkms_crtc_state,
-+							  composer_work);
- 	struct drm_crtc *crtc = crtc_state->base.crtc;
- 	struct vkms_writeback_job *active_wb = crtc_state->active_writeback;
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
-@@ -328,7 +328,7 @@ void vkms_composer_worker(struct work_struct *work)
- 		crtc_state->gamma_lut.base = (struct drm_color_lut *)crtc->state->gamma_lut->data;
- 		crtc_state->gamma_lut.lut_length =
- 			crtc->state->gamma_lut->length / sizeof(struct drm_color_lut);
--		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length  - 1);
-+		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length - 1);
- 		crtc_state->gamma_lut.channel_value2index_ratio = drm_fixp_div(max_lut_index_fp,
- 									       u16_max_fp);
+ 	struct drm_framebuffer *fb = frame_info->fb;
++	const struct drm_format_info *format = frame_info->fb->format;
++	/* Directly using x and y to multiply pitches and format->ccp is not sufficient because
++	 * in some formats a block can represent multiple pixels.
++	 *
++	 * Dividing x and y by the block size allows to extract the correct offset of the block
++	 * containing the pixel.
++	 */
  
-@@ -367,7 +367,7 @@ void vkms_composer_worker(struct work_struct *work)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+-	return fb->offsets[0] + (y * fb->pitches[0])
+-			      + (x * fb->format->cpp[0]);
++	int block_x = x / drm_format_info_block_width(format, plane_index);
++	int block_y = y / drm_format_info_block_height(format, plane_index);
++	*rem_x = x % drm_format_info_block_width(format, plane_index);
++	*rem_y = x % drm_format_info_block_height(format, plane_index);
++	*offset = fb->offsets[plane_index] +
++		  block_y * fb->pitches[plane_index] +
++		  block_x * format->char_per_block[plane_index];
  }
  
--static const char * const pipe_crc_sources[] = {"auto"};
-+static const char *const pipe_crc_sources[] = { "auto" };
+ /**
+@@ -36,30 +56,35 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
+  * @frame_info: Buffer metadata
+  * @x: The x(width) coordinate inside the plane
+  * @y: The y(height) coordinate inside the plane
++ * @plane_index: The index of the plane
++ * @addr: The returned pointer
++ * @rem_x,@rem_y: The returned coordinate of the requested pixel in the block
+  *
+- * Takes the information stored in the frame_info, a pair of coordinates, and
+- * returns the address of the first color channel.
+- * This function assumes the channels are packed together, i.e. a color channel
+- * comes immediately after another in the memory. And therefore, this function
+- * doesn't work for YUV with chroma subsampling (e.g. YUV420 and NV21).
++ * Takes the information stored in the frame_info, a pair of coordinates, and returns the address
++ * of the block containing this pixel and the pixel position inside this block.
+  *
+- * The caller must ensure that the framebuffer associated with this request uses a pixel format
+- * where block_h == block_w == 1, otherwise the returned pointer can be outside the buffer.
++ * See @packed_pixel_offset for details about rem_x/rem_y behavior.
+  */
+-static void *packed_pixels_addr(const struct vkms_frame_info *frame_info,
+-				int x, int y)
++static void packed_pixels_addr(const struct vkms_frame_info *frame_info,
++			       int x, int y, int plane_index, u8 **addr, int *rem_x,
++			       int *rem_y)
+ {
+-	size_t offset = pixel_offset(frame_info, x, y);
++	int offset;
  
- const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
- 					size_t *count)
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 61e500b8c9da..7586ae2e1dd3 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -191,8 +191,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
- 		return ret;
+-	return (u8 *)frame_info->map[0].vaddr + offset;
++	packed_pixels_offset(frame_info, x, y, plane_index, &offset, rem_x, rem_y);
++	*addr = (u8 *)frame_info->map[0].vaddr + offset;
+ }
  
- 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
--		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
--								  plane);
-+		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
- 		WARN_ON(!plane_state);
+-static void *get_packed_src_addr(const struct vkms_frame_info *frame_info, int y)
++static void *get_packed_src_addr(const struct vkms_frame_info *frame_info, int y,
++				 int plane_index)
+ {
+ 	int x_src = frame_info->src.x1 >> 16;
+ 	int y_src = y - frame_info->rotated.y1 + (frame_info->src.y1 >> 16);
++	u8 *addr;
++	int rem_x, rem_y;
  
- 		if (!plane_state->visible)
-@@ -208,8 +207,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+-	return packed_pixels_addr(frame_info, x_src, y_src);
++	packed_pixels_addr(frame_info, x_src, y_src, plane_index, &addr, &rem_x, &rem_y);
++	return addr;
+ }
  
- 	i = 0;
- 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
--		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
--								  plane);
-+		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, int x)
+@@ -168,14 +193,14 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ {
+ 	struct pixel_argb_u16 *out_pixels = stage_buffer->pixels;
+ 	struct vkms_frame_info *frame_info = plane->frame_info;
+-	u8 *src_pixels = get_packed_src_addr(frame_info, y);
++	u8 *src_pixels = get_packed_src_addr(frame_info, y, 0);
+ 	int limit = min_t(size_t, drm_rect_width(&frame_info->dst), stage_buffer->n_pixels);
  
- 		if (!plane_state->visible)
- 			continue;
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index dd0af086e7fa..83e6c9b9ff46 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -81,8 +81,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
- 	drm_atomic_helper_wait_for_flip_done(dev, old_state);
+ 	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->fb->format->cpp[0]) {
+ 		int x_pos = get_x_position(frame_info, limit, x);
  
- 	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i) {
--		struct vkms_crtc_state *vkms_state =
--			to_vkms_crtc_state(old_crtc_state);
-+		struct vkms_crtc_state *vkms_state = to_vkms_crtc_state(old_crtc_state);
+ 		if (drm_rotation_90_or_270(frame_info->rotation))
+-			src_pixels = get_packed_src_addr(frame_info, x + frame_info->rotated.y1)
++			src_pixels = get_packed_src_addr(frame_info, x + frame_info->rotated.y1, 0)
+ 				+ frame_info->fb->format->cpp[0] * y;
  
- 		flush_work(&vkms_state->composer_work);
- 	}
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index e5c625ab8e3e..5a8d295e65f2 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -117,10 +117,10 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
- 	drm_framebuffer_get(frame_info->fb);
- 	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
--						     DRM_MODE_ROTATE_90 |
--						     DRM_MODE_ROTATE_270 |
--						     DRM_MODE_REFLECT_X |
--						     DRM_MODE_REFLECT_Y);
-+									  DRM_MODE_ROTATE_90 |
-+									  DRM_MODE_ROTATE_270 |
-+									  DRM_MODE_REFLECT_X |
-+									  DRM_MODE_REFLECT_Y);
+ 		plane->pixel_read(src_pixels, &out_pixels[x_pos]);
+@@ -276,7 +301,10 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+ {
+ 	struct vkms_frame_info *frame_info = &wb->wb_frame_info;
+ 	int x_dst = frame_info->dst.x1;
+-	u8 *dst_pixels = packed_pixels_addr(frame_info, x_dst, y);
++	u8 *dst_pixels;
++	int rem_x, rem_y;
++
++	packed_pixels_addr(frame_info, x_dst, y, 0, &dst_pixels, &rem_x, &rem_y);
+ 	struct pixel_argb_u16 *in_pixels = src_buffer->pixels;
+ 	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
  
- 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
- 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
 
 -- 
 2.43.0
