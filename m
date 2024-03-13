@@ -1,101 +1,174 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from outgoing1.flk.host-h.net (outgoing1.flk.host-h.net [188.40.0.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CD4225AD;
-	Wed, 13 Mar 2024 13:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84683F9CC;
+	Wed, 13 Mar 2024 13:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710335556; cv=none; b=ZnZT9wlyFD4kMzg0pLEDqgh+klesV71azUVIEzJ3mUsjcbBX2rWMyfB1FK3htx21iqpvyxdutXoTJzUtiLXx7jydddyn4WkBLdGimVr+ihYtTHu36i6TVFT6AxS33u8DUAvf+ChteB9cuvQoeDEb10DfWpQ8EwzBcQTzAfugysU=
+	t=1710335600; cv=none; b=hYh0KTLMyUjFzqwZBpM2KUpXQZ1g7MfWAP1h5J/Elgm5pBQQnhQylsZJF2BgSpshrzkjvtzwr8sutvp4P60F1e9Gy4DKLSupiLVMlyrFXlDcBijz+yBk+aHb/kWS5X0BU0cy4Nf4WnF/HYUvDReuc0ackPgtCHVzaM2Ew8RmEnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710335556; c=relaxed/simple;
-	bh=EIddhXL/hBKW+RNALtuYnMmsP6DjsCPpVs48fZbzdJc=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=PsfCAjEdTcZrumNrjHxVN0S/iT1iIo4oHbW4SIUorx9fHcAiVs8jUkzbeTlWIP9Whr0KmnmN+Y4QH7IX10+YawyTT9E9T47MEqketnAUbJVUfSOgKzsPzAXSMtUHOQEf2EvDPtekSqJRE4G1kwRrkEgry9p0b+Y/UVog0ruefoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Qhza5gW+; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1710335600; c=relaxed/simple;
+	bh=Svatgyy6s+expfjhx9aXTHe/V9ApXxNo/O+rbKmjHC0=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=aaDAVFMJnp913r2xWCRJgzbnFTie2JeShTuM3zYCEMitz9TpbkTWIU4jfqAZplpVe542gdcXOEzv57xEkYWxafGQA7fmrLtUenTUkz/QC+P4yC6r1CzFY4UXi20nTQA1DbSevJbNevi9v1s7NJg6SqW2l7y3TSz+IMEqggMRogk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=UpJTz4tI; arc=none smtp.client-ip=188.40.0.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Qhza5gW+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1710335231; bh=RxP83Uir+gh2fkaF4ZBO/T3Fp1vZ98pgi+n34nEkhLA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Qhza5gW+BA1RHn7e4AZJoeT1gvAVNUNhuOBYca5Gl6/ODtZt4n80xVFWzzS6Qb934
-	 hb2WH1ZQhX0djNSu7s0dqN86NqSOeeSUSxYb7M+4YWYozNi5zjhefEx/8w53iwGAsc
-	 gonrtXLJGjN+CAxnovbM0oibQHSIcVvxwSOS2+w4=
-Received: from pek-lxu-l1.wrs.com ([2408:8409:ce0:12a0:a032:4bf1:303d:acae])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 1C02DA4B; Wed, 13 Mar 2024 21:07:00 +0800
-X-QQ-mid: xmsmtpt1710335220t7y7fak82
-Message-ID: <tencent_938637BC4BA674C576F366443D5336109609@qq.com>
-X-QQ-XMAILINFO: NY/MPejODIJVt9wmOCP3xvkfrWcMJLkYT8gKu08MBlRe0mNe0uhXafEkyPldnd
-	 GQTtqyKiUna8/LnsnoteWmoOX94MOUhnS/3R9QPPfBn5nlVLMfIc+6QTlM7wA1Pfv0z3WpOb0Yiy
-	 FuacueNFL2uIBd15V0jpe9FA/5iDElNlgcsQgFZHDJOMhgVLEwa12l2sQ2PMAxm9R0PvatuRuJS/
-	 52SRFMVC9OyrXyR9QXjVEBgaLksQ96PeyfpifzFhQnLnRDEQOjDyaJZD/hythMxUENSobt84DWp7
-	 TDXParTfw4YftWL9zanyo+fHFSaERrNymhQ5P6C86C0+ayZNk8D0Tv88y1/At1GHqjc4W1WyIMZd
-	 xd/3WyuxqLg1TIwLmDEMIkipJSItxU9Lr8xuFrbVPstaWLwK1uUQsffxcRjRJ1aBUTscQF8o85lp
-	 bLCZiAmSDSwZsLmVjuYr+tOGpVu3ukCWeySolvO7jzB7EkGrQvIwRA1ra0WvQx/0KBX4yA9yI3Ne
-	 M78BibzWtkhaIdhOlYMlYeB0pLfffpRIKgTnXkOrWQOLaAKGo6o+q7NiJkDP+u1lkC2aREB0nyi1
-	 Wu9cyXW1NqfCosp31Sb/v50bj7L/FIF8pXOGWthC6Kf1fI0x0m9HuuF0dBySPxcZ83KAkQzKrEtH
-	 pbI2LyQC/HowEtlMoJmy///ImQqfSPBmlHDuNwuqsZ1ujpR6wAjO7FDBbQDS4ZRqRqUxvDJaFmdU
-	 SuK7vHNYOA+KjEhmAdUEK7/qhS58dNO1E82nWDbDZn0EkAbqHAflBKCXokEXp9gAW5a05lHkHrgT
-	 ACh2Ycz/uYFKt64r1kMzKanqcxcYeXpAF1eG1zkChIqoSD42ECzPjMyWAZxfzTtIywQiirCmHQL3
-	 PttSrfA+dwcyixrL8M8cUcfe3Lsq5YE6DcnzD1thbngm2BkVT0RjxGbB/L6IVCwQ==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+9b5ec5ccf7234cc6cb86@syzkaller.appspotmail.com
-Cc: brauner@kernel.org,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	viro@zeniv.linux.org.uk
-Subject: [PATCH] libfs: fix warning in stashed_dentry_prune
-Date: Wed, 13 Mar 2024 21:07:00 +0800
-X-OQ-MSGID: <20240313130659.392488-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000003ea6ba0613882a96@google.com>
-References: <0000000000003ea6ba0613882a96@google.com>
+	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="UpJTz4tI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=risingedge.co.za; s=xneelo; h=Message-ID:References:In-Reply-To:Subject:Cc:
+	To:From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:reply-to:
+	sender:bcc; bh=rm25i0KtZLbroTKyEspxu/tszw9xx2JaRN6Tb/VjLTk=; b=UpJTz4tIlEks9c
+	9gfFCBYnltVlPj8VxOOHe+St66HK611KEWZ4dFVgP3FVHN5kqPz6dqUEQP3MpA+neQSSJCB7jZjcR
+	hcndA08uNj0cz/ZDGqsp+c7PVtAoJP/JHM+7VB2MwHkd9ukp1+qGhHw9+AihWzfk4sreSONHhdQYf
+	tdoUiXi8o8dm2FHi3LQZdFN8QjVoCh/2G+yJWnaCk0ECrrXjbx0PJrBvh14BXUKM1Id8DheshpigF
+	sccvOzkmfNIDaIPSNVG+NoSN//BEDfYfRgEUpuUaH6MM/FXJhmbjUlw0whrjseNcySzjBrZBBwzEU
+	7BvQsAu2PwEaSecTNKlg==;
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+	by antispam3-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1rkOPs-009hPe-5o; Wed, 13 Mar 2024 15:13:10 +0200
+Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
+	by www31.flk1.host-h.net with esmtpa (Exim 4.92)
+	(envelope-from <justin.swartz@risingedge.co.za>)
+	id 1rkOPm-0004Bl-Md; Wed, 13 Mar 2024 15:13:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date: Wed, 13 Mar 2024 15:13:02 +0200
+From: Justin Swartz <justin.swartz@risingedge.co.za>
+To: =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Florian
+ Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] net: dsa: mt7530: increase reset hold time
+In-Reply-To: <2640a495-97a0-4669-a53a-e367af956a78@arinc9.com>
+References: <f594a72a91d12f1d027a06962caa9750@risingedge.co.za>
+ <20240312192117.7789-1-justin.swartz@risingedge.co.za>
+ <bf0ed70f-e106-4a7f-a98c-de34658feb4d@arinc9.com>
+ <e6525cac666a033a5866465abb3e63f1@risingedge.co.za>
+ <2640a495-97a0-4669-a53a-e367af956a78@arinc9.com>
+Message-ID: <c4590e9519d0cd788d157a1e1510cc45@risingedge.co.za>
+X-Sender: justin.swartz@risingedge.co.za
+User-Agent: Roundcube Webmail/1.3.17
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.28)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+MZhNT4K8vCZjbDVN6pgqEPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
+ WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
+ 3T+KSG//gbuP7hnUK8NQdLwsVWKIv+fXqqb3FJ1Z7kkAIev0U9CKH/oA07tJunDPm536TODb5GPR
+ oyaaXp1VNA9dXvxV+mFktoWo3CKg4C3LDJ75vu2U4GT70q7ZqN/P49BncZ5XB7lfx9K88uL/WnJE
+ LAEP514Y/yfAEbrTclu3OeNcbACmFr3ts0d2E6vXySsvfMaT9Bjf4etJ827HW1/sdZ81dz6BqXHU
+ oYg+nmOeSIjjxA24TPuOyBrko5yKpcR03QEJ9DjWmjcfK/FpTD0spWG+rMYoj8CdNq4vLYsMDbt4
+ 2oUP1Ae/eGZl2OLANHAHEjHENEhX9cq65nsXPA0MIFDIPOMDW/6+MC+5Mq5RH9OoW0W22an/ubzj
+ InB/ImqScRfGyrhHVstPeAuxsRhUFJC4TtSvIahFt3uEpT0304dV2Yoz1SesQUA6bnjJZT6m9lal
+ 9vikoy50DqR3hu/rL5PGAoTDzn0QdoxFeruM0Uhu+WezSndkngXKk6QakCqMR7oihnVW8zB2Qi26
+ vkVALycwzSdeC1kd8cXa71WqOc72jXbRpMw6Agze1f399OurHEyYS7nq+EBNvgiWKNNSkdVDZOrL
+ 5kxgO94lq2025NSImfKeGaSpuwkt9kMFaoxOFH2cp4YsTYwGNGW12ki18UnPMs4VIrisX+dtrxYn
+ /0jYEvj5QBAPtzfeVlNHdCJmwgf0M7fnqgzRvCMiN68tcHQey84mBB4XoB473XOJmIRPynE3O7YZ
+ oFBs6I7QuC1BjGNT52hVLEr/9PrrMm81h6IAYzikeIJfw26MB/V1E5BP9Gv0xI1YXOxC1lZqyFpL
+ AwQr6muMti2YanICQnMITeB2fd0UyjU/MIq3Vtx6CgQGHtezYqxGMqsKjARq8PBC4qgGsfAERwCB
+ JFs7XjZYbJPBsmpIto2O4JO2fx1gIuNHgi11AwJSTGCrOFs22K1ZnDqAw3gLmOBPHazhChxq9nGW
+ aSi6bFHidB1VgzDzDZn/+QEiRQv+PVjjwa+Z5RFCOMTMctdsTl1csEqhToiNz8IDdfFYVDBYJee7
+ gx/u82RtU03xDHIlkkSyUq+ExD5pZzw0mVfWLKEgol9rYV4JEcNP1rJoln/cD8h/RIvkzXRTCYvX
+ WLQhlD92+1l+zHfJg1FMwntsduNBxKPaTpE5L8d4VqFy6yKUFQtzhTlGiGL9B5VjLKuX5+25ZPin
+ lEh3KIhZW8SlfcXdA5N+Yq1uy1j9IIDSVMZhrIoAWTF5tIdhy/UIEBYDcZg+Q8UhuRLyBn1+pvlH
+ hV6a5QjptwQBGybQyDQ2/GYwPjlMcE57ESN6G+kn87CtwPdB/10jfVNpDbYnXJdSRQj8460WHJib
+ IxmU2pb4i4DTkMZeMiNI9JSIyUbtnrlbG4BI8o81FOo91axhCaqPShJzgHH7y4ZfQxML
+X-Report-Abuse-To: spam@antispamquarantine.host-h.net
 
-Initialize d_fsdata in advance to avoid warnings when recycling dentry due to
-inode allocation failures.
+On 2024-03-13 14:06, Arınç ÜNAL wrote:
+> On 13.03.2024 14:52, Justin Swartz wrote:
+>> 
+>> On 2024-03-13 10:59, Arınç ÜNAL wrote:
+>>> This ship has sailed anyway. Now the changes the first patch did must 
+>>> be
+>>> reverted too. I will deal with this from now on, you can stop sending
+>>> patches regarding this.
+>> 
+>> At least if the first patch isn't reverted, the approach used is
+>> less likely to result in the problem occuring, IMHO.
+> 
+> I disagree that the previous approach is less likely to result in the
+> problem occurring. If you don't like the delay amount we agreed on, 
+> feel
+> free to express a higher amount.
 
-Fixes: 2558e3b23112 ("libfs: add stashed_dentry_prune()")
-Reported-and-tested-by: syzbot+9b5ec5ccf7234cc6cb86@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/libfs.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I created and tested a patch to entertain your input about what you
+thought could be a suitable hold period to address the problem, and it
+appeared to work. The criteria being that the crystal frequency 
+selection
+was correct over 20 tests.
 
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 0d14ae808fcf..67dc503272eb 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -2013,6 +2013,8 @@ static struct dentry *prepare_anon_dentry(struct dentry **stashed,
- 	if (!dentry)
- 		return ERR_PTR(-ENOMEM);
- 
-+	/* Store address of location where dentry's supposed to be stashed. */
-+	dentry->d_fsdata = stashed;
- 	inode = new_inode_pseudo(sb);
- 	if (!inode) {
- 		dput(dentry);
-@@ -2029,9 +2031,6 @@ static struct dentry *prepare_anon_dentry(struct dentry **stashed,
- 	WARN_ON_ONCE(!S_ISREG(inode->i_mode));
- 	WARN_ON_ONCE(!IS_IMMUTABLE(inode));
- 
--	/* Store address of location where dentry's supposed to be stashed. */
--	dentry->d_fsdata = stashed;
--
- 	/* @data is now owned by the fs */
- 	d_instantiate(dentry, inode);
- 	return dentry;
--- 
-2.43.0
+So if only the reset hold period is going to change, I'm good with what
+you had suggested: 5000 - 5100 usec.
 
+Ultimately the selection of this period should be guided by the timing
+information provided in a datasheet or design guide from the 
+manufacturer.
+
+If you, or anyone else, has such a document that provides this 
+information
+and is able to confirm or deny speculation about any/all timing periods
+related to reset, please do so.
+
+
+> I also disagree on introducing a solution that is in addition to 
+> another
+> solution, both of which fix the same problem.
+
+I'm not sure I understand why you say that. These patches were intended
+to be applied exclusively, or in other words: in isolation - not 
+together.
+
+Although if they were applied together, it wouldn't really matter.
+
+For the record, I've only continued to keep this thread alive in the
+hope that some solution to this problem will make it into mainline
+eventually.
+
+I don't care if it was my original patch, the subsequent patch, or a
+later patch provided by you or someone else. :)
+
+
+>> 
+>> The delay between deliberately switching the LEDs off, instead of
+>> only waiting on chip reset logic to handle that, and the reset
+>> assertion could be considered a "reset setup" period to complement
+>> the original reset hold period.
+>> 
+>> Increasing the hold period to what should be 5000 - 5100 usec,
+>> definitely made the problem go away my testing, but the previous
+>> approach is (if nothing else) more explicit in its intent.
+> 
+> I don't want any unnecessary complications on the code I'm maintaining. 
+> I
+> already gave a clear intent on the patch log that introduces a simpler 
+> and
+> more efficient approach, it doesn't need to be on the code.
+> 
+> Arınç
+
+
+Kind Regards
+Justin
