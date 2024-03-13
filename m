@@ -1,47 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9F82D600
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F02045978;
+	Wed, 13 Mar 2024 15:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710342960; cv=none; b=hfAaMYertip5VmO1QaIdL3JhME5Y+9ALnKSK800nvsmbCLX/vjGeSeSOTD7QyBfg81hGoMCk/9pxgAA0C1p8zcx/0e0k7U5TwvRjDNvWQhECVbqBORQZxFKcnDqE998Svlvfm8jIc3WMCzSCr/ZwDAGs6xxRWUPWtuUYYh/BFzE=
+	t=1710342982; cv=none; b=R3Qpf2asUOEQmjPdO5vt50u3KGS4myL2+0KHr300Oczxc84n39DydsBwpKAKnTzZWOqiI3uVBJadqI3+b7fH3fMPa2LkjlkVcuVxcGXf1VmkAGrtMwgd70UvT0lTak1pebGbyuCxWmH5PsMraKjTSw1jLxW3hO2PwZbWkvI6/0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710342960; c=relaxed/simple;
-	bh=wo+8XUVZ6ioK9G4Sp1j0QYOyDvxZDEEvuVlcXX0TV+U=;
+	s=arc-20240116; t=1710342982; c=relaxed/simple;
+	bh=RHS+XuMEn8kL1ufzPN0FvcSTJWpvFWqnB4jbHIZirIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t9SWE4DNdnpWiM9HPn8NLSl4M8ykTqIgb4dEilsyUG+lSuvBXocGsHMWmWjSX6fY/8cv8ML9Q8ebEfIwNmzAMTVdGaGfalWD6df1v+z6NDWxLg6Mv/4ZGn/cOK8oIqWceL70w/ViG8flWYhsKggg4bMw+EgjYIqL/Rndvu5+PqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SZbkr+3f; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=BkS765UUAYTcMnuP+YiXq6ZfZvihlzcxzlV3gML1VYWoPjtfh92FKMdFDCBBjkUfODMA7S3xxfM0bKOv+XO7gpcQrGqQ2WkHHIFqo2fk1unEEafj+r22uoqCWx04YmYHz9SgyU48Eph3+bw9pb1x7HeZxv4OOXhnJwpEGKoErKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m6b/4oU9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZbkr+3f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710342957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zitympJcMqQpZuvfBggEaIHiO0WpMlfnPdF8UjN+huc=;
-	b=SZbkr+3f+/9smXXv6f7M33GxFFDVdGzgaRgNt/U2LA4mTGqudaKft5uN/JVDqt98JpaksR
-	tc0tvRo20Qf+8gKWQkvwEHn2G6jOZT3I6hKYUmRArUil9GhfAwhxn/6PoukwXji0VzVKFf
-	BE/REcxO/ABD7vl4Smyu5Pb4Kt6IsCE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-HkdNa89aMmqpz2KCcnIf3g-1; Wed,
- 13 Mar 2024 11:15:54 -0400
-X-MC-Unique: HkdNa89aMmqpz2KCcnIf3g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8FDD43C0C8A1;
-	Wed, 13 Mar 2024 15:15:53 +0000 (UTC)
-Received: from [10.45.224.236] (unknown [10.45.224.236])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C0D213C23;
-	Wed, 13 Mar 2024 15:15:51 +0000 (UTC)
-Message-ID: <3f934c7b-867c-4550-93ea-4f567807fa98@redhat.com>
-Date: Wed, 13 Mar 2024 16:15:51 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m6b/4oU9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=InxoltL9Z3LnNnWLek5uQ3+ekEQtIQzIj0k2w89gXSA=; b=m6b/4oU9b3E8nRGPfFAJTwbL7J
+	bzx2OXiXiT9ReRp2PT5fKFiCmb7d6tOKEzPMhAgJtq3Wghd1DSWPRh4rHqkfXkK5oZbgditGpddNh
+	X07m4SalA4M/fEChjCHVswhGiXzXsfEWlKSPpSKHxcD+yW/yyz2FFYaUxoifweocsyGAiNCTP7XU0
+	WmcfKU2xKsRD9lobRLOsO13hgIi3xTsjKuvSPgoyPr9WnVxV3QDC877eAxNqfPT0D7Iz7dbwcc9sT
+	hN4BAVp9V24q5Dwjhy8oVN/MlAoIEWtiOcHEyfT9QZ31cn2NfWTDzgL4wTH8qcpWJbF4k1NNeKexD
+	d6lBwFXQ==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rkQL3-0000000AZWr-3Xv4;
+	Wed, 13 Mar 2024 15:16:17 +0000
+Message-ID: <544d7b9d-ef15-463f-a11c-9a3cca3a49ea@infradead.org>
+Date: Wed, 13 Mar 2024 08:16:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,53 +39,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] i40e: Enforce software interrupt during busy-poll
- exit
-To: Michal Schmidt <mschmidt@redhat.com>
-Cc: netdev@vger.kernel.org, pawel.chmielewski@intel.com,
- aleksandr.loktionov@intel.com, Hugo Ferreira <hferreir@redhat.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "moderated list:INTEL ETHERNET DRIVERS" <intel-wired-lan@lists.osuosl.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240313125457.19475-1-ivecera@redhat.com>
- <CADEbmW3NQ7SQpccOqTD=p_czpBbOY=41kS7krwx2ZEDmFfcgrg@mail.gmail.com>
+Subject: Re: [PATCH] afs: Revert "afs: Hide silly-rename files from userspace"
+To: David Howells <dhowells@redhat.com>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Markus Suvanto <markus.suvanto@gmail.com>
+Cc: Jeffrey Altman <jaltman@auristor.com>,
+ Christian Brauner <brauner@kernel.org>, linux-afs@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <3085695.1710328121@warthog.procyon.org.uk>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <CADEbmW3NQ7SQpccOqTD=p_czpBbOY=41kS7krwx2ZEDmFfcgrg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <3085695.1710328121@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
 
 
-On 13. 03. 24 14:47, Michal Schmidt wrote:
->> -/* a small macro to shorten up some long lines */
->> -#define INTREG I40E_PFINT_DYN_CTLN
->> +static inline u32 i40e_buildreg_swint(int type)
->> +{
->> +       u32 val;
->> +
->> +       /* 1. Enable the interrupt
->> +        * 2. Do not modify any ITR interval
->> +        * 3. Trigger a SW interrupt specified by type
->> +        */
->> +       val = I40E_PFINT_DYN_CTLN_INTENA_MASK |
->> +             I40E_PFINT_DYN_CTLN_ITR_INDX_MASK | /* set noitr */
->> +             I40E_PFINT_DYN_CTLN_SWINT_TRIG_MASK |
->> +             I40E_PFINT_DYN_CTLN_SW_ITR_INDX_ENA_MASK |
->> +             FIELD_PREP(I40E_PFINT_DYN_CTLN_SW_ITR_INDX_MASK, type);
->> +
->> +       return val;
->> +}
-> This function is called only from one place and with a constant
-> argument. Does it  really need to be a function, as opposed to a
-> constant? Or are you going to add more callers soon?
+On 3/13/24 04:08, David Howells wrote:
+>     
+> This reverts commit 57e9d49c54528c49b8bffe6d99d782ea051ea534.
+> 
+> This undoes the hiding of .__afsXXXX silly-rename files.  The problem with
+> hiding them is that rm can't then manually delete them.
+> 
+> This also reverts commit 5f7a07646655fb4108da527565dcdc80124b14c4 ("afs: Fix
+> endless loop in directory parsing") as that's a bugfix for the above.
+> 
+> Fixes: 57e9d49c5452 ("afs: Hide silly-rename files from userspace")
+> Reported-by: Markus Suvanto <markus.suvanto@gmail.com>
+> Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/008102html
 
-This can be reused also from i40e_force_wb() but I didn't want to make 
-such refactors in this fix. Lets do it later in -next.
+Not Found
 
-Ivan
+The requested URL was not found on this server.
 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Marc Dionne <marc.dionne@auristor.com>
+> cc: linux-afs@lists.infradead.org
+> ---
+>  fs/afs/dir.c |   10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+> index 8a67fc427e74..67afe68972d5 100644
+> --- a/fs/afs/dir.c
+> +++ b/fs/afs/dir.c
+> @@ -474,16 +474,6 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+>  			continue;
+>  		}
+>  
+> -		/* Don't expose silly rename entries to userspace. */
+> -		if (nlen > 6 &&
+> -		    dire->u.name[0] == '.' &&
+> -		    ctx->actor != afs_lookup_filldir &&
+> -		    ctx->actor != afs_lookup_one_filldir &&
+> -		    memcmp(dire->u.name, ".__afs", 6) == 0) {
+> -			ctx->pos = blkoff + next * sizeof(union afs_xdr_dirent);
+> -			continue;
+> -		}
+> -
+>  		/* found the next entry */
+>  		if (!dir_emit(ctx, dire->u.name, nlen,
+>  			      ntohl(dire->u.vnode),
+> 
+> 
+
+-- 
+#Randy
