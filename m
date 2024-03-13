@@ -1,118 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CE84C602;
-	Wed, 13 Mar 2024 22:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534B14691;
+	Wed, 13 Mar 2024 22:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710369307; cv=none; b=AM/g0natBh64sQexUlPCEJx7EhT1pQTzO+JFM1SMBhLhQ09Vm32mF9gXIcUb5/LpnNPpW2intf8k586hBGO+CZ+rDJY/xAKOoTTeMvn8q5f2jylcXs1a2KeW9R1HjdK7E60xTez06Xtf+iOxSM/uMB/ooeKAXmT206hBB60jtWw=
+	t=1710369404; cv=none; b=YWve5LGkTwT6tG0acb66htHsWmYi814v1goL7Y+AaKUYElW+YyR6SEnEb099iw1NpES8NDb08gI+OvIs2PahFKVAWyV5rQVdA6tYnIKiBdHnRpwtTo69rFyc8caqBOS5bXbQTbhbTHuoMoWMIpUnVDkIkwMuHT+7YaaqZRB/JF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710369307; c=relaxed/simple;
-	bh=zwcUoM/bxmu5V6pA+K99Z11qzxW5g/6XHdhxZM99p6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVzOzGipKa7hfx7QZOgJ2kK7qHl2mgUsbbO7e6Le6RikUsEbRaqAZfS838Bp492wm8gjELjOtpnvCjyhqMFISavI+LrGpU4+6ns8VVEadG6KF6/6JmMhU004QgqrD1eONALs5GBfn2xr/7tK2oTWv96ivdLDh2Lp24tppQnTz00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+wL/h4W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710369404; c=relaxed/simple;
+	bh=HoNiHyn2z/ceoZINAmLkTLotxgBXw6b3DpSALXSG1eE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wym1gbbS7U1Gqemd9s1BG26pqB09zSMrGX+zVNUH/K1zl2Dg5cRNMBO+8/GXe1ysKcUc8K4H5obdxwec/7uBMhetn1BoHeZ3TH5iwSKyLBE5PjqjEeEUd/eKMOyC2Hl4JX6Xbf/3Fn8gOGbHY+/Fc8pfnQU64Hzn9cIycLZlU2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYDuki+q; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+wL/h4W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5591EC433C7;
-	Wed, 13 Mar 2024 22:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710369307;
-	bh=zwcUoM/bxmu5V6pA+K99Z11qzxW5g/6XHdhxZM99p6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+wL/h4WGL5z8rc8BbZuwBG8fovddfSSTLwN5qQarza0kyDWfQg/eK2t9CtgWVmY0
-	 qmJZtVsJhx/+EKWgRwgvSGhXOd7VfkIiYW2gohWPAFTUVCcdyVKp5AdLhG4k85pXDR
-	 rxvbMwTAa66skpbgF4+K2pDN1h6mdFgJgw0rOWRStKeGNb7KKDmqG8c5cJX9rwi0O3
-	 houy1R5BzpsZWVHnoWYE1cKT2h3NZVC8bv0/g8he1NAy4ZIWSzv6EEIXtlDTkQB8t+
-	 DDN3XC/FIV3l14j90FIaYi/DmOw1cuhU0wNj/WnEYEMP1r9d0hMWqj+Uvlq3bAffSt
-	 FvnKHjXjBZ6EA==
-Date: Wed, 13 Mar 2024 23:35:03 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
-Message-ID: <ZfIqGP1V69LfYpgV@debian>
-References: <hxiq3upwxs3j5mc5arwlx4jriqm7fq5z54wroc4h4kqcq4gq7m@uwnoq2vnkhup>
- <ZeXzuWVmC9AnsECt@debian>
- <7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
- <ZehMWQ0LkemsTHAC@debian>
- <CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
- <ZehrtwSDQV-X7BXV@debian>
- <CAK1VsR3MsyphK+=rA7XcEigiSd6J_-QsVW+8hH1fU9xmRY3nGQ@mail.gmail.com>
- <CAK1VsR2zaCT3Bs1cwCEfLhAPXjwNk1byzNq5y32C736=hxqjoA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYDuki+q"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5685d46b199so503354a12.3;
+        Wed, 13 Mar 2024 15:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710369401; x=1710974201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1/rg6loiRVefnT/ad+BPRTM7wjwljQZZ0izBe/guu4=;
+        b=BYDuki+qzEz16KWhwZuMn9IVRsESp5VwOm/hSuSrqnCuvvuoqpyhBPrtwUhhEyYlry
+         i1MBh1X/OETIjRaRsl0wrQQFYZ98xw9ZccvD5ioLTZ/bK6RZ834IkTraryCJVETpWE42
+         4sw5KPz+NbDu7scfZg9FXGf2tWD76W7VK6biR+yMArbjNckVrxFeShtIRL2eTKGPbZ9I
+         sQ6a0AJgNfNLtwiYdap8kzYcx4QCXldEY4DElIJGR33s5u4bPoU7EQTdhUHme641aUcY
+         xAjHZ5naAzhiCkGSPpdtUshO5J366KRX+dVOBLa8A2MxsFOh8Z5Y2I+9pRIzjEv+tKCM
+         0rPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710369401; x=1710974201;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i1/rg6loiRVefnT/ad+BPRTM7wjwljQZZ0izBe/guu4=;
+        b=i+r8Eo7h7zR7uz342deSdTeJGfk1MeXJoiDiKtir7xdS/pHnbMwYYHm5UudJTY4R08
+         dr8/07t13LsROrvFcyCQohJDGZ0/br6/NDiUDwv+gwxN3v8wGqh1aN5/7fHclDJwYW+q
+         4nIcS1LTYcC5gfwnaL1gtBSDzo3YefMrQbk3o7tgch2+77SN4+pBpQEGml5WPJqFjD6z
+         bmctMGH141+FJCyRhaJgxIKWSHZcfvJdJ1wAn+B36wRntP5VUymUe3nq1LSmItxXBQsU
+         +5FAMILZNbK0ZrS+wRiT5y3rUVMPaJIgrHf2yWAcEpT1LNsqzy0nJlFWE8fIRit7qZj/
+         jQXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGc1LktP5BGJY8x7ryYOf3zH4PHqbbMeUMWEFMFwR4WEIwTFtOv3BW6O8RW20NRrQGFYrxA/kcU1NMaBr8QHw8AqJ6Jx6ziMNIPVDlio2BkPfe6dMCic7iQkpRpBzWYX6BsYDwJCZpGgaHlH0TmqJz0+WH6UWljLizn9yORQgk
+X-Gm-Message-State: AOJu0YzEQESzbS/6mlETRqDkE7ls8zT19d454LCLBK3T0KSLxWR7373k
+	PiILH38JLBvhYLTOhYVakEycNi+vNF6gOt3XIiJb2sjy1QZ7STGk
+X-Google-Smtp-Source: AGHT+IExQacc7OFEKg7kTWtl0PIi+BT2OE2qYBYhGday2AS1EvZCTPtJQ/90lGZfDHmQk1t4kSk3og==
+X-Received: by 2002:a17:907:d047:b0:a46:3aa2:d452 with SMTP id vb7-20020a170907d04700b00a463aa2d452mr6750954ejc.64.1710369401595;
+        Wed, 13 Mar 2024 15:36:41 -0700 (PDT)
+Received: from fedora.fritz.box (host-95-250-206-50.retail.telecomitalia.it. [95.250.206.50])
+        by smtp.gmail.com with ESMTPSA id dt22-20020a170906b79600b00a4669f6c2e2sm70366ejb.44.2024.03.13.15.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 15:36:41 -0700 (PDT)
+From: Francesco Valla <valla.francesco@gmail.com>
+To: Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: fabio@redaril.me,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Francesco Valla <valla.francesco@gmail.com>
+Subject: [RFC PATCH 0/1] Documentation: networking: document CAN ISO-TP
+Date: Wed, 13 Mar 2024 23:34:30 +0100
+Message-ID: <20240313223445.87170-1-valla.francesco@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lnpdUluPzO2RGSIw"
-Content-Disposition: inline
-In-Reply-To: <CAK1VsR2zaCT3Bs1cwCEfLhAPXjwNk1byzNq5y32C736=hxqjoA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+While the in-kernel ISO-TP stack is fully functional and easy to use, no
+documentation exists for it. This patch adds such documentation,
+containing the very basics of the protocol, the APIs and a basic
+example.
 
---lnpdUluPzO2RGSIw
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 Mar 2024 23:35:03 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
+Sending as RFC because my experience with the stack is as user and not
+as its developer, and also because it's my first kernel contribution.
 
-Hi Oliver,
+Thank you,
 
-On Wed, Mar 13, 2024 at 02:27:17PM -0400, Oliver Crumrine wrote:
-> > Hi Alex,
-> > I apologize for your repeated troubles with my test program.
-> > I have attached a video of myself using it in the method that I
-> > described to you. (I emailed you off-list as to avoid sending a 12
-> > MB video to the whole list)
-> >
-> > If you are using it in the same way that works for me, I don't know
-> > what the problem is. If I could've been clearer in my instructions, let
-> > me know for the future.
-> >
-> > Thanks,
-> > Oliver
->=20
-> Hi Alex,
-> Were you able to make any progress whatsoever with this test program?
+Francesco
 
-Sorry, I needed some rest this week.  I've been only attending easy
-threads.  I hope I can come back to it very soon.  :-)
+Francesco Valla (1):
+  Documentation: networking: document CAN ISO-TP
 
-Have a lovely night!
-Alex
+ Documentation/networking/index.rst |   1 +
+ Documentation/networking/isotp.rst | 347 +++++++++++++++++++++++++++++
+ 2 files changed, 348 insertions(+)
+ create mode 100644 Documentation/networking/isotp.rst
 
-> Thanks,
-> Oliver
->=20
+-- 
+2.44.0
 
---=20
-<https://www.alejandro-colomar.es/>
-Looking for a remote C programming job at the moment.
-
---lnpdUluPzO2RGSIw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmXyKhcACgkQnowa+77/
-2zLBBxAAnyugJdYJoniJjRZBKNzH44ibuFpiMBxecOHrYTqiYERS1Ljq5A80f6/R
-snkjZkoy1cH8xNzhCB397qErSZg4ibwPBBr2XHUQFR1oMxeAqHAyabF3LsK3agfF
-RyqGU7lHdh+WBSCGM6vfjd8lRtAlzE3fn1Zh4tdzORMcGVRZeWA1OGRBXt3Af5CQ
-VXzWWO784Xfoxv/OjgMYfCaILP7bsxfL7u3Bjfoeswv+ujKYtQ4lpz0wP8pUlWIL
-epT4bIAATo573BO8GJVFzFqEpwc1MjQ86Ju0XqJOrOjbtLh5sOxpMOguhkCOAaCU
-S2i3920l02Tc2JF9uZk9BvPOI058FMYNjaqV1qZ4KZ4WjyfQLXvHxkHHIaA9cdse
-7eOg7kbwxTHoy8wSMW2zNgh7asfmEGG//UScv/tW1l7EnvSG+HitFwYUVfnRx34e
-194l15YnC47LmeG41gooif2vdRVbt23zhb0cBRrTKe1ry1sgPKkc6b6pXpziwlfs
-DpwOMPxfEJpZ+0YRRfrB/QJmGgH0+gIeciEkFUuE3i2TSFRgBE4fKMsZlN56+9ib
-/8St+3tBR9FXWcMutjeWhiU+bXef7f1NBT0m1DEOlDRMzyL9HyHJklyrTAW/up60
-jiI8vDe5Pd6hUQ7HkEpocIFk/9hGf2TbxHNi7jT+5KeqMX0KRo8=
-=WFux
------END PGP SIGNATURE-----
-
---lnpdUluPzO2RGSIw--
