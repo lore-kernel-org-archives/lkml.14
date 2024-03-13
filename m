@@ -1,94 +1,122 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BA4111A9
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 05:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA09B14A8C;
+	Wed, 13 Mar 2024 05:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710307469; cv=none; b=W2Q3IEGk/hMYiB9woTaq8RbIPCm0IqxrOv2zyDm+9sJJYT+GNyIxy18iE3ymFSqNrkPMmUSOPoymxuHFabjvB++a+DWCMCVxvSQq+DzG42I2DvD/vX9C0H3Hehsm0IIenoN6r0bx6sjTTzi7kzBzOTFJvXDhysHdqdRZGqzsbns=
+	t=1710307539; cv=none; b=kyi5+TFl1phHy+KkqdspIyaDy+au/mYWM4Cyb+gsjI2AqoziAiL+uwBMcVjuHrFJ7uW526g73eYThdLOGniDMP+62vtGJwVpiiiik99h+oihdOurmr3CO9E8Wg1iqwXQVRElS7KI272PaueyVApAeeITByHc055l4I2kTHfpHMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710307469; c=relaxed/simple;
-	bh=qpIypB8WcF7kHWP8sQXT/y04bsj8awY5629fpJsi5bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J15AHRwlZyGMjSrEePw9312mA0qmaBEP8gXMqq6KAkW/z/O1VEqWiES9J9REcYmgHlA10VqOlThWVoEszeZe0O0qYoUfyoMxj9FkRnpK25MdbsXVFUkuszdSykRcTZxLDo+GF+JvbR4TJ9KIvk99F1iqlQS+ARAHbKrWQipxfP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2zBXd+A; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2zBXd+A"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dd97fd66cdso24388935ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 22:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710307467; x=1710912267; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G8Ujbc0uorKR7iJQIvU/pWAtBegJQ/IssHdTYPNNDzE=;
-        b=j2zBXd+AnVSXX6YAiT86gqvx1X+l7mCl9kgQXsLLwqzJiipHWFfZEI2bOexBh1ZtlD
-         bbP6em93dfIqmm7fCoC4Wom9tyTncbwI3V9DRGUDasnueOTFwAMY9vdpy21xlgGQYnY8
-         0GndyPi+Qv0jrvWnJ80vUdrRx6BKJF5jF7MCDOjIW+AUE8BhjGKtkNpfTbbRzKyUfD3S
-         UBhDky3R/+zfuQV5FWOb2pcApA+/lk82CoJU2O5JNmEgtUXgXuEeTN44vKs3Vc+ORwEm
-         0as8IqNNYlOovZeu6YvmsMvma5fwaXi4GlIa/ZVY0kxoEAhUnPs3ppWT4B7RuxRUGqp5
-         +69A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710307467; x=1710912267;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8Ujbc0uorKR7iJQIvU/pWAtBegJQ/IssHdTYPNNDzE=;
-        b=Br6Ct2VTsZhd+2eUjhb70+O5S6veJLOGn98/6ShzfWbzLXvPCBu9ZGzhr21tmQ9O5i
-         yaNjI4/G2Uw3TOj8xjt5KUbHXVfC1c0saitdFqFuLQTa4l+Qd+D0yv6K3L3XQe6O3WSQ
-         sdz6Ydt1Qz7hGOI4fnNJOkWvYB44+otNmr+pmn7BkKVtRPng2CtpS5QyR4qtxhtY117C
-         LqM1+BBlebs7KH6m4pKg/izzjjx3RQdBamJE6w7pKW7RdMERckRphISWLKaKHbe4WgC5
-         L/icpV0LF4kxRuwBuxJebhF+mbMLm/5aZhpNMR7iGEPMmnz7cJjjdadGYzgaOj9RLwAk
-         vEbg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6RpVNkR7jrUtHsxjTYNR1e5Tk08tMktgOBccGDB1irQA4/gcyHss8g2ZY3SMX6xMEhwSIMDy5gwX2/weS8aSwj6FesEk7xf4PyT26
-X-Gm-Message-State: AOJu0YxK54qNw7hx1k0m2GbLjimNzpfbgvqqJB9zrQ3HOkfhWIXYa0+h
-	KH2W7+WQyNVVnE2ff0HYNzLvywEeVlIErmY55W3U38XSf/olshf4
-X-Google-Smtp-Source: AGHT+IGF71tvtFMzeowtGndCZgs8bsvRaTbVptGpopMBIMFMaSEsFb17m5ypAyW3ZqI7ev9FO0xt8w==
-X-Received: by 2002:a17:902:d2c1:b0:1dd:a616:820a with SMTP id n1-20020a170902d2c100b001dda616820amr7108857plc.8.1710307466970;
-        Tue, 12 Mar 2024 22:24:26 -0700 (PDT)
-Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.67])
-        by smtp.gmail.com with ESMTPSA id ko13-20020a17090307cd00b001dcc7795524sm7673178plb.24.2024.03.12.22.24.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Mar 2024 22:24:26 -0700 (PDT)
-Date: Wed, 13 Mar 2024 10:54:24 +0530
-From: Ayush Tiwari <ayushtiw0110@gmail.com>
-To: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Cc: outreachy@lists.linux.dev
-Subject: [PATCH] staging: rtl8712: renaming tempVal to temp_val
-Message-ID: <ZfE4iDfGUyq/C9s4@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+	s=arc-20240116; t=1710307539; c=relaxed/simple;
+	bh=YXfZ10BkuFWjUsfJwrp1RslDVixhGygAPzHtAaUK/p4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i/EwuqpPbTtNUaB0rRl8/E7694sQkplawn3wqq0UkkhHRYFftqiDD2cs7IcR8aUijN1wgD6rCrSH6RCfuyHHIfwfobB+6gAouFWjGNklrggsCTrWGgw2mNmZOPux9MIiqM+Hj40UNF9lEDYiA3L/JUsU5+SAbc/fIMB7y2oFQxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 13 Mar
+ 2024 13:21:35 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 13 Mar 2024 13:20:27 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <andrew@codeconstruct.com.au>, <linus.walleij@linaro.org>,
+	<joel@jms.id.au>, <johnny_huang@aspeedtech.com>,
+	<linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>,
+	<Ricky_CX_Wu@wiwynn.com>
+Subject: [PATCH] pinctrl: pinctrl-aspeed-g6: Fix register offset.
+Date: Wed, 13 Mar 2024 13:20:27 +0800
+Message-ID: <20240313052027.1320489-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Renaming variable tempVal to temp_val to address
-checkpath warning 'Avoid Camelcase' and to
-ensure adherence to coding style guidelines
+The register offset to disable the internal pull-down of GPIOR~T is 0x630
+instead of 0x620.
 
-Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+Fixes: 15711ba6ff19 ("pinctrl: aspeed-g6: Add AST2600 pinconf support")
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- drivers/staging/rtl8712/rtl8712_recv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 34 +++++++++++-----------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
-index a3c4713c59b3..7fb9dfaa7448 100644
---- a/drivers/staging/rtl8712/rtl8712_recv.c
-+++ b/drivers/staging/rtl8712/rtl8712_recv.c
-@@ -861,7 +861,7 @@ static void query_rx_phy_status(struct _adapter *padapter,
- static void process_link_qual(struct _adapter *padapter,
- 			      union recv_frame *prframe)
- {
--	u32	last_evm = 0, tmpVal;
-+	u32	last_evm = 0, tmp_val;
- 	struct rx_pkt_attrib *pattrib;
- 	struct smooth_rssi_data *sqd = &padapter->recvpriv.signal_qual_data;
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index d376fa7114d1..029efe16f8cc 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -43,7 +43,7 @@
+ #define SCU614		0x614 /* Disable GPIO Internal Pull-Down #1 */
+ #define SCU618		0x618 /* Disable GPIO Internal Pull-Down #2 */
+ #define SCU61C		0x61c /* Disable GPIO Internal Pull-Down #3 */
+-#define SCU620		0x620 /* Disable GPIO Internal Pull-Down #4 */
++#define SCU630		0x630 /* Disable GPIO Internal Pull-Down #4 */
+ #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
+ #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
+ #define SCU690		0x690 /* Multi-function Pin Control #24 */
+@@ -2495,38 +2495,38 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
+ 	ASPEED_PULL_DOWN_PINCONF(D14, SCU61C, 0),
  
+ 	/* GPIOS7 */
+-	ASPEED_PULL_DOWN_PINCONF(T24, SCU620, 23),
++	ASPEED_PULL_DOWN_PINCONF(T24, SCU630, 23),
+ 	/* GPIOS6 */
+-	ASPEED_PULL_DOWN_PINCONF(P23, SCU620, 22),
++	ASPEED_PULL_DOWN_PINCONF(P23, SCU630, 22),
+ 	/* GPIOS5 */
+-	ASPEED_PULL_DOWN_PINCONF(P24, SCU620, 21),
++	ASPEED_PULL_DOWN_PINCONF(P24, SCU630, 21),
+ 	/* GPIOS4 */
+-	ASPEED_PULL_DOWN_PINCONF(R26, SCU620, 20),
++	ASPEED_PULL_DOWN_PINCONF(R26, SCU630, 20),
+ 	/* GPIOS3*/
+-	ASPEED_PULL_DOWN_PINCONF(R24, SCU620, 19),
++	ASPEED_PULL_DOWN_PINCONF(R24, SCU630, 19),
+ 	/* GPIOS2 */
+-	ASPEED_PULL_DOWN_PINCONF(T26, SCU620, 18),
++	ASPEED_PULL_DOWN_PINCONF(T26, SCU630, 18),
+ 	/* GPIOS1 */
+-	ASPEED_PULL_DOWN_PINCONF(T25, SCU620, 17),
++	ASPEED_PULL_DOWN_PINCONF(T25, SCU630, 17),
+ 	/* GPIOS0 */
+-	ASPEED_PULL_DOWN_PINCONF(R23, SCU620, 16),
++	ASPEED_PULL_DOWN_PINCONF(R23, SCU630, 16),
+ 
+ 	/* GPIOR7 */
+-	ASPEED_PULL_DOWN_PINCONF(U26, SCU620, 15),
++	ASPEED_PULL_DOWN_PINCONF(U26, SCU630, 15),
+ 	/* GPIOR6 */
+-	ASPEED_PULL_DOWN_PINCONF(W26, SCU620, 14),
++	ASPEED_PULL_DOWN_PINCONF(W26, SCU630, 14),
+ 	/* GPIOR5 */
+-	ASPEED_PULL_DOWN_PINCONF(T23, SCU620, 13),
++	ASPEED_PULL_DOWN_PINCONF(T23, SCU630, 13),
+ 	/* GPIOR4 */
+-	ASPEED_PULL_DOWN_PINCONF(U25, SCU620, 12),
++	ASPEED_PULL_DOWN_PINCONF(U25, SCU630, 12),
+ 	/* GPIOR3*/
+-	ASPEED_PULL_DOWN_PINCONF(V26, SCU620, 11),
++	ASPEED_PULL_DOWN_PINCONF(V26, SCU630, 11),
+ 	/* GPIOR2 */
+-	ASPEED_PULL_DOWN_PINCONF(V24, SCU620, 10),
++	ASPEED_PULL_DOWN_PINCONF(V24, SCU630, 10),
+ 	/* GPIOR1 */
+-	ASPEED_PULL_DOWN_PINCONF(U24, SCU620, 9),
++	ASPEED_PULL_DOWN_PINCONF(U24, SCU630, 9),
+ 	/* GPIOR0 */
+-	ASPEED_PULL_DOWN_PINCONF(V25, SCU620, 8),
++	ASPEED_PULL_DOWN_PINCONF(V25, SCU630, 8),
+ 
+ 	/* GPIOX7 */
+ 	ASPEED_PULL_DOWN_PINCONF(AB10, SCU634, 31),
 -- 
-2.40.1
+2.25.1
 
