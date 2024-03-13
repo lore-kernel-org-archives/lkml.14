@@ -1,94 +1,100 @@
-Received: from avasout-peh-001.plus.net (avasout-peh-001.plus.net [212.159.14.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D7869D2B
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.159.14.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977EB6A325
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710352998; cv=none; b=mmKveBveIJqmHUb7yFn9+3SikDnt5M3g97R28VV34KS3Oh7grbuQKvMU5uzUuIk0Vwp/Vg60N5xzN0uvjBktnSVMke3Nvfn7YN9kxxR6hOnsesP05SsTk/Khbbx1WMdD0uH5WvpoIHuOG6yLkoZTuDuTN6K275WPGCBo0ASREVs=
+	t=1710353271; cv=none; b=huGJVK9oEmyEmn3lEPajgH8I8j09VyyRm9zydOLU8QcOz+5pQSnccJBApr0VsTYreZItTwtgCcjn3DjwNERLMwjOY9tvAvwW+vk1m9+PrMd9S5vHmm9zzAw1UZgQKidIPpjQBwdAjN3rAL7V2PrrOh66Vko+9sADWHEgBbBJGTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710352998; c=relaxed/simple;
-	bh=Y2Z0/3xow7nPavZadbi94o6aySaUf4dO4/vQqQPCEIs=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:Message-ID; b=Wd5v/hKw3f07geTf7ghtqW52lykDskO3G7LDbxuBCBVj/99DAe23Ven66hS+k68Bi8AS2VnRT+N8C++A7FpA8xYgH5ZS3hQDJyxwJM+EgZ27TETcy+hE3zkXLnE77j4j/vAQNeK18ytaqg1U0EVkmkjAfoU4nTnL6TPHt87GmPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk; spf=none smtp.mailfrom=jessamine.co.uk; arc=none smtp.client-ip=212.159.14.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jessamine.co.uk
-Received: from webmail.plus.net ([84.93.237.82])
-	by smtp with ESMTPA
-	id kStYr8pPPcsBEkStZrac4p; Wed, 13 Mar 2024 18:00:05 +0000
-X-Clacks-Overhead: "GNU Terry Pratchett"
-X-CM-Score: 0.00
-X-CNFS-Analysis: v=2.4 cv=Go3h+V1C c=1 sm=1 tr=0 ts=65f1e9a5
- a=k49VtrWLZTL8DnM+6AvpWw==:117 a=8YZdF9bm7lDkcydB81w8Xw==:17
- a=vpjNtYboqT8A:10 a=kj9zAlcOel0A:10 a=K6JAEmCyrfEA:10 a=ZBkl__CYAAAA:8
- a=VwQbUJbxAAAA:8 a=8AirrxEcAAAA:8 a=_R0pZofXfCjbRRL6lAkA:9 a=CjuIK1q_8ugA:10
- a=d6WIyDdLbVARuAyufDlf:22 a=AjGcO6oz07-iQ99wixmX:22 a=ST-jHhOKWsTCqRlWije3:22
-X-AUTH: jessaminenet+adam@:2501
-Received: from munkyhouse.force9.co.uk ([84.92.42.80])
- by webmail.plus.net
- with HTTP (HTTP/1.1 POST); Wed, 13 Mar 2024 18:00:03 +0000
+	s=arc-20240116; t=1710353271; c=relaxed/simple;
+	bh=Uuplj9eaDOr9flWRmzj0THPm4GMMx7dTi3+SYBcmALw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ipVEdO/fKkv0BX8qvoSwpI9llJYzHXzZe5EavzUVXcR8JhJFaxMvJhEkgL/ScoDz0661/5tR8XqD38NMBVlEE02s6tB5AWKn0NVYEM1hM0OceSBwh1GqDlih4h3jdDhhgSC/9CHRmb/zdTShCFPa0MDESSixQHSHaIgQqqWWanU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MdeJFSNZ; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MdeJFSNZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5687feeb1feso123503a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710353268; x=1710958068; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oMXTFuaRy2/DahWa3k1XzhwntrhYB+tFZxVYLm3/Iu0=;
+        b=MdeJFSNZpxAufGtM6jEzn4aQIRpm55UG2FKp1Jk9noQIGEfl1cm9+O23Wr7ZJT9oFf
+         sCMlKstBTFPGfv3Q5FTpmT5W27Qhz0/qAncLWE3gCQTBEDVDyKBaDmIZs0eoS7iN5yJd
+         9Xnu1qreJf8OuHvUofmtaXgA40vKfhXz6RVXCqRNcMDU4Bxx6OYyhiMjpaRlcJ29nmR/
+         g414pfbMgaOLL6Fv5a4yQF4ykcRzPl8nzsThZCL8CGmrJsnQ1C7XwZF4YOXMzKl+i3xw
+         ESYWqsgd5SXelyWOvc1sE+Gs2W9LXeWTeNq9FXwsmmYfTZhQ9s13MhqLToJmHI4Glvuy
+         vHYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710353268; x=1710958068;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMXTFuaRy2/DahWa3k1XzhwntrhYB+tFZxVYLm3/Iu0=;
+        b=u2riYneU3jiasEdiboL6N9sPg9nPka3oDVjz9Z7KvC9QZT+TUio1hgREMqnIji3tSN
+         A36kKQC2DfJHK58bET1TGWbOCHZHlQccggK2U6Uq1p7ETnNyc2MrUpsT9vROTlzD4vSO
+         gx74dRD7iCbwjSv6fZbh1vDRcgeI9oQHgkLt/HGuHqaK+gbjmj7jlIQAVBiJOxPhO7k0
+         U6d+wMVlKVefLV/FhuEXa3WLYTARxXoDkpk0sqGBJ4XfKladE5asBEfV6DuKKKK+I4BZ
+         E1Jq/BqPBxj1mQEHDnqHIOyVh3BXgyUGmbLJ3L+Nw28MY4dL3YaRRRZX88MVe8frXcde
+         m19A==
+X-Forwarded-Encrypted: i=1; AJvYcCW1pc7cRGotD3GMq4OU7vyfFNCrew6v8MNOwxLRkvDH4IaUIrCJgn529MS5OeIR74M/iGxnqosF2KHYSXsXJJIHUkoq8z+fhqjs8anC
+X-Gm-Message-State: AOJu0YyBFSfjr/FOxEPdW4JmWRjt1xIZhi+MEgngs2UubVy54gFJKN72
+	kyB/0TwIAbL7tAp/bD9gDOFvl2XzKcwmTcd2NEsLnIUT0gk4zNXJpThdHzsw05Q=
+X-Google-Smtp-Source: AGHT+IEiATRc7GICOzHn/pmaYtsR17HXLdNvPrWgb7fWYxoAe+7+fLoFXGr/dxWbtiPy38J6/6/nCQ==
+X-Received: by 2002:a17:907:9918:b0:a45:d040:2a2f with SMTP id ka24-20020a170907991800b00a45d0402a2fmr7695229ejc.29.1710353267621;
+        Wed, 13 Mar 2024 11:07:47 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id h27-20020a170906399b00b00a3ce60b003asm5124787eje.176.2024.03.13.11.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 11:07:47 -0700 (PDT)
+Date: Wed, 13 Mar 2024 21:07:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vc04_services: fix information leak in
+ create_component()
+Message-ID: <2d972847-9ebd-481b-b6f9-af390f5aabd3@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Wed, 13 Mar 2024 18:00:03 +0000
-From: Adam Butcher <adam@jessamine.co.uk>
-To: Mark Brown <broonie@kernel.org>, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
- benjamin@bigler.one, stefanmoring@gmail.com, carlos.song@nxp.com
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: spi-imx: fix off-by-one in mx51 CPU mode burst length
-Message-ID: <30b2a315b36e1ee16c0217b32b95a605@jessamine.co.uk>
-X-Sender: adam@jessamine.co.uk
-User-Agent: Webmail
-X-CMAE-Envelope: MS4xfNAd/d3xNc7akxcdpSdbmEU52kI977HmdV1aqlg6KJKnoOaT4G+sI3vNrEtMFWSbhVBJRIRBEn+/Wo1KC+g66lB8X9VlIV8otAjltYiXk5DDt3e+Ulbi
- 6RgMTtrbXPWgtQLrX8VawJHw2fMMf9I5j4N5gZs8fn6+ZEsLXbuzeBtrv0eyJyG6qXlnu/CyOqslOLaKVw3bRHXWn8W9FVBViD4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
- From: Adam Butcher <adam@jessamine.co.uk>
+The m.u.component_create.pid field is for debugging and in the mainline
+kernel it's not used anything.  However, it still needs to be set to
+something to prevent disclosing uninitialized stack data.  Set it to
+zero.
 
-992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU mode")
-corrects three cases of setting the ECSPI burst length but erroneously
-leaves the in-range CPU case one bit to big (in that register a value of
-0 means 1 bit).  The effect was that transmissions that should have been
-8-bit bytes appeared as 9-bit causing failed communication with SPI
-devices.
-
-It seems the original patch submission up to v4 did not contain the bug.
-It was introduced in the v5 update.
-
-Link: 
-https://lore.kernel.org/all/20240201105451.507005-1-carlos.song@nxp.com/
-Link: 
-https://lore.kernel.org/all/20240204091912.36488-1-carlos.song@nxp.com/
-Fixes: 992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU 
-mode")
-Signed-off-by: Adam Butcher <adam@jessamine.co.uk>
+Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
-  drivers/spi/spi-imx.c | 4 ++--
-  1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 7c1fcd5ed52f7..100552e6c56bc 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -743,8 +743,8 @@ static int mx51_ecspi_prepare_transfer(struct 
-spi_imx_data *spi_imx,
-  				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
-  						<< MX51_ECSPI_CTRL_BL_OFFSET;
-  			else
--				ctrl |= spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
--						BITS_PER_BYTE) * spi_imx->bits_per_word
-+				ctrl |= (spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
-+						BITS_PER_BYTE) * spi_imx->bits_per_word - 1)
-  						<< MX51_ECSPI_CTRL_BL_OFFSET;
-  		}
-  	}
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+index 6ca5797aeae5..4c3684dd902e 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+@@ -939,6 +939,7 @@ static int create_component(struct vchiq_mmal_instance *instance,
+ 	m.u.component_create.client_component = component->client_component;
+ 	strscpy_pad(m.u.component_create.name, name,
+ 		    sizeof(m.u.component_create.name));
++	m.u.component_create.pid = 0;
+ 
+ 	ret = send_synchronous_mmal_msg(instance, &m,
+ 					sizeof(m.u.component_create),
 -- 
 2.43.0
-
 
