@@ -1,153 +1,102 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D5D3FB96;
-	Wed, 13 Mar 2024 13:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B541A87
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338022; cv=none; b=dczPnopUrW2W+Hdyjp3zeEE/9MsA/xYnPmsKyAdzYLqbhvFKqa5XWwn7cctklKGYdQiKRKCewb/JWNF4x0ABG/y2aEXH7yQmbuPPDHj9PLxSV1YM/PcOPJ/dscglHgCDLbOIJdwOruEDI7MtuwJagGAsI4npmeMsfMCLO2GQWtw=
+	t=1710338041; cv=none; b=FW5n2kJdalaw3ZVB69inNsyV1bHB9wJOZ0PtOGlG0HnGMoOcBGt/BtxB0SSmX3Jd405JoSYibee2ck01EoiC5TQ2TVi20VJNzdw32vJiTEeXMbC7V54e6MCxhAPMJzZNWOSqnOYqLUqx2HslPUsDz3sYr+e9vTH/Bu+x8uC2JSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338022; c=relaxed/simple;
-	bh=jOmLX9ygpmZOCRGB3UnwkgJ3dC6PNOA9d5iZ5hUwSno=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=eKDCQS7S5x12fVXR8zM25EyURfhjschq5FgEVO/5pIfluaT0CMaYxvuKDyAuxIf8DpoMYhNi0tDV23RynEbrqtgUoXoqHdSgnm5bfwPmFVPlsHr1T7KRbGaD5GUACRcVCOSdc+r90A8iOqkbyPorkfrA6WbUZZx2DMyOZFYE3zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yotsuba.nl; spf=pass smtp.mailfrom=yotsuba.nl; dkim=pass (2048-bit key) header.d=yotsuba.nl header.i=@yotsuba.nl header.b=Z4/lruuK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kTiGgZnV; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yotsuba.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yotsuba.nl
+	s=arc-20240116; t=1710338041; c=relaxed/simple;
+	bh=1WvjdW9Mx5rCDs4ryRQnEBXl7hdJ86vv3Rwr2lWNiTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c0/he0KE4tYsQGW6eF4e9GEiK3pW/KnI6Vp+DUZENHRK7QCBJUHi7egUrWHO2/MtiZoOlgxbrEyMrDquEBeLom3ULyKUtufAxQV4/7UxMUzG9Uoao9RSKe2Tfa/aCHGF5zyqxLK1oxqt3Hey7gWUGUTwyYzBvwfYqFADXZlfb/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z0AJ8SZx; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yotsuba.nl header.i=@yotsuba.nl header.b="Z4/lruuK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kTiGgZnV"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 9D0291800179;
-	Wed, 13 Mar 2024 09:53:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Wed, 13 Mar 2024 09:53:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yotsuba.nl; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1710338017;
-	 x=1710424417; bh=hlJNMnPDZ47iGewL2R5tNcfmY0Ncoyko7ICHGM78HtI=; b=
-	Z4/lruuKIlDPERzDJJKOi47zVhtM07JblQBSOg/x1KOj64WuSuVs+ZwEHwaNKVCE
-	PvBcH1atP8EzMsH/I6L2OHwOdyYiR6HRFlzeoGGNd5NlW/SeJhNPQH2Iw1QAuQNm
-	RJS61lGMLY30GfbbQHln0yu2wdF98lwH0mBFcvWBukALOhtk3IRRsLN+DlhYLjHb
-	qFWoVbjOlZobQTQ1ckABWDZNQun5//NhQuEBTAuMFWsYknHoGnf0ZFT9U+fmCMXa
-	GlqjxLkXHcbGBekRzD0L2djv+I9NlqUsdJBlIRe2uDaoh1rldsQqr4Zj4jfap52W
-	5DX7ELjKEykC6bxH2YHr6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710338017; x=
-	1710424417; bh=hlJNMnPDZ47iGewL2R5tNcfmY0Ncoyko7ICHGM78HtI=; b=k
-	TiGgZnVa9MBX8K1GO3PvlKjJz9UvRRqGLnzhq78PKh27BZ/2dI9Pgs79lzkADe8I
-	2vcCnYb2MeN5weAgd3MVepWVKXEusr/pp4iIojp9ZuwPA28wwoidFNbCbil2tJ20
-	gGitIXS7OgnUmK82WUTZ4lSDnagfJmxpmflL0gLzBL+GIRIDV5UrHYgl+ZuopMmv
-	A6MQRvGkjdmtHAJjyIetLUck8TruyNvZwdl/7X8k9+cDGzi1woMPhY3hg6VfecAf
-	j+ka1/UEkRnOqaQtIbjSg4l4X5FM1+S1Myrkg1G2jkd4FzZ7YXOdM8G5Zu0qgjEm
-	ld/xatpNm7BX7Akx5dn2w==
-X-ME-Sender: <xms:4K_xZTuBcXi8RVwvkv5ZCsJhwtiR80on4mi3EGDb-VqFBqOAXxFtvw>
-    <xme:4K_xZUckydZDVAk1OpUXsXCQYsnkbphL8ijyrGhuoCg5GW5YUonBQW86PExvY9yR_
-    3nNUiMl4IH8LkjA6RM>
-X-ME-Received: <xmr:4K_xZWyUECXhLI52dhlvPSPiee9Vy8FmhPZe1URMcCvSkOwS9srSdMbwlAyB43tcS_5BW1GxnYb8Swgho6US9EdCHLd3wrqlz9J1EEY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeehgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpegtggfuhfgjffevgffkfhfvofesthhqmhdthhdtjeenucfhrhhomhepofgrrhhk
-    uceomhgrrhhkseihohhtshhusggrrdhnlheqnecuggftrfgrthhtvghrnhephfffjeefje
-    eutedvjeekleduteettdehkeeugefgjedvgfevteffffeukefggedtnecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhkseihohhtshhusg
-    grrdhnlh
-X-ME-Proxy: <xmx:4K_xZSOm220sVy8E_uXhX_wepleI3WNqGeJ0ny-L4oB0PaJ2dRww_g>
-    <xmx:4K_xZT_zUNygdaO7A1-689aCqaHBF7N5jV0eADHaywsjbbJwwQZaTA>
-    <xmx:4K_xZSXI_OmVhTIZuBhxZls1nSwgrU6YUVL5kjcAIP6F7E--QNoNZg>
-    <xmx:4K_xZUcHLMdobRnn0h0j0_EkPupyAuDoPhxlsARFQvUPipztqo-GYw>
-    <xmx:4a_xZSUuGTJQgYIcedNWuZR87CNUwLq561iZq36G-QQhWnpTjkREfUdPXF8>
-Feedback-ID: i85e1472c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 13 Mar 2024 09:53:35 -0400 (EDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z0AJ8SZx"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc49b00bdbso41494075ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710338039; x=1710942839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/heQt+Db0ehDtq1JCZPcwy70snmGl2Z1H+WOU5UmOPc=;
+        b=Z0AJ8SZxfVtjG/Fxm22gxUuyrKinQe3S6HmcMmxS04Bs/ME6jAyaoVDA7Q+loTYBOw
+         bq1nNr9nAbrgumD8Ltvs5vibW9VYe43OWi4Hg1kaFvWIbeYytq4dq/WzVTtZdSTxxZ6l
+         65A2XdzrrFSJ2LKkWv8NzyC/KM0CeVir4kuV0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710338039; x=1710942839;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/heQt+Db0ehDtq1JCZPcwy70snmGl2Z1H+WOU5UmOPc=;
+        b=AQ3z2hJx3dcpsP8oTcd0U1isviYcrYLpegPKMmE08+bZLwgMyKIr5f2yBQhuW8Os5+
+         TIE5bA73+45P1zPlD58hDkfqzIaIq95fC/4gty2yzHNmrBU8HMikZbQ9Smyrqoa2Qr44
+         rM+j7oaz0P5QvR7FiMjCqXJoWq5RUH4zHRW5JhLcqA4lsjXb1LXbxCY5Ooj0MwzbWxL7
+         Ox2BxgmeY4qTI6CI9r1UzDNCQajGkEFPMrIqYmmztLs1pjWFuHQxIgAp+/yY5PnpzYoH
+         EeHgJyNgXaOQHdo7CPqnJVOYoykpqZImVlxLHaA2utJHwTdSteRwFCNiJSQoBaflE/2X
+         So1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUcKjTRpfdv/Hb8XKvSQjp4RhewStEguvUtdG46aWu8eQuSrkLWyOCis4apJkJKQBuVpIruD9fPv0o2NQM9OLpBi9+ttFKhDa8ms5fY
+X-Gm-Message-State: AOJu0Yy9vZE5YVpz4LLYgNnXW6zoBc1b9wUuf6HXd76+s7XK2PXsxsZr
+	2D2JodE8AH7Cc5UyDaZWNxgde9NK6nLljLK2/myr1sbIClOBJgZr6lQslmlCew==
+X-Google-Smtp-Source: AGHT+IE3PgaxgQ7zHkHAgGrWi0X7VbrllC27gi8LCOikz9dtE/g945xwEfsoOmxKeOZnqAPMvOWqew==
+X-Received: by 2002:a17:902:f544:b0:1dd:aa58:a648 with SMTP id h4-20020a170902f54400b001ddaa58a648mr8030088plf.43.1710338039452;
+        Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
+Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:3708:eea3:d1b4:2032])
+        by smtp.gmail.com with ESMTPSA id d16-20020a170902ced000b001d8aa88f59esm8632504plg.110.2024.03.13.06.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 06:53:59 -0700 (PDT)
+From: Pin-yen Lin <treapking@chromium.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
+	devicetree@vger.kernel.org,
+	Pin-yen Lin <treapking@chromium.org>
+Subject: [PATCH] arm64: dts: mediatek: mt8192-asurada: Update min voltage constraint for Vgpu
+Date: Wed, 13 Mar 2024 21:51:36 +0800
+Message-ID: <20240313135157.98989-1-treapking@chromium.org>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH] netpoll: support sending over raw IP interfaces
-From: Mark <mark@yotsuba.nl>
-In-Reply-To: <20240313133602.GA1263314@maili.marvell.com>
-Date: Wed, 13 Mar 2024 14:53:23 +0100
-Cc: netdev@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Breno Leitao <leitao@debian.org>,
- Ingo Molnar <mingo@redhat.com>,
- "David S. Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7C42FC4B-D803-4194-8FBB-19A432D37124@yotsuba.nl>
-References: <20240313124613.51399-1-mark@yotsuba.nl>
- <20240313133602.GA1263314@maili.marvell.com>
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ratheesh,
+Although the minimum voltage listed on the GPU OPP table is 606250 uV,
+the actual requested voltage could be even lower when the MTK Smart
+Voltage Scaling (SVS) driver is enabled.
 
-> Op 13 mrt 6 Reiwa, om 14:36 heeft Ratheesh Kannoth =
-<rkannoth@marvell.com> het volgende geschreven:
->=20
-> On 2024-03-13 at 18:16:13, Mark Cilissen (mark@yotsuba.nl) wrote:
->> [=E2=80=A6]
-> Taking an assumption based on dev=E2=80=99s lower layer does not look =
-to be good.
-> why not transmit packet from skb_network_header() in your driver (by =
-making
-> changes in your driver)
+Set the minimum voltage to 300000 uV because it's supported by the
+regulator.
 
-There=E2=80=99s two assumptions at play here:
-- The lower layer is ethernet: this has always been present in netpoll, =
-and is even
-  documented in netconsole.rst. This comment just mentions it because we =
-add a way
-  to bypass the assumption; it is not an assumption this patch adds to =
-the code.
-- hard_header_len=3D=3D0 means that there is no exposed link layer: this =
-is a rather
-  conservative assumption in my opinion, and is also mentioned in the =
-definition
-  of LL_RESERVED_SPACE:
+Fixes: 3183cb62b033 ("arm64: dts: mediatek: asurada: Add SPMI regulators")
+Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+---
 
-> * Alternative is:
-> *   dev->hard_header_len ? (dev->hard_header_len +
-> *                            (HH_DATA_MOD - 1)) & ~(HH_DATA_MOD - 1) : =
-0
+ arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  The same assumption is also made in more places in the core network =
-code, like af_packet:
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+index 43d80334610a..5cc5100a7c40 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+@@ -1448,7 +1448,7 @@ regulators {
+ 			mt6315_7_vbuck1: vbuck1 {
+ 				regulator-compatible = "vbuck1";
+ 				regulator-name = "Vgpu";
+-				regulator-min-microvolt = <606250>;
++				regulator-min-microvolt = <300000>;
+ 				regulator-max-microvolt = <800000>;
+ 				regulator-enable-ramp-delay = <256>;
+ 				regulator-allowed-modes = <0 1 2>;
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
->   - If the device has no dev->header_ops->create, there is no LL =
-header
->     visible above the device. In this case, its hard_header_len should =
-be 0.
->     The device may prepend its own header internally. In this case, =
-its
->     needed_headroom should be set to the space needed for it to add =
-its
->     internal header.
-
-I could change it to, like af_packet, check `dev->header_ops` instead if =
-that is preferred,
-but I don=E2=80=99t think that patching every single raw IP driver to =
-deal with skbs that managed
-to somehow have link layer data would be preferred here, especially =
-since netpoll is kind
-of a special case to begin with. I am open to suggestions and ideas, =
-though.
-
-> [=E2=80=A6]
-
-Thanks and regards,
-Mark=
