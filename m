@@ -1,38 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A863B67A04
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A77A66B57
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710351943; cv=none; b=YEWYPIjWNO1W7lFZ0Dr8GBJ75hKxKGTs9xCWLthWIfTrSCF7lA0RJ47vGF2jk376IbxOJFb3rKus1+6+UBPn9Ew1t+2wohKw4OT4SLVNmX6kZE8BNB8HjBcGMTFLgsjhYtzlIIGfA9kvs61MpBhDNXujP1xKa+twMLGnCP3nls4=
+	t=1710351942; cv=none; b=G8J+ZvWUQAfGU5pszZ03HpMIxTsuDE/d00GGfD8xo7i3XOMpBH193OgEXE1QwDPccxoqbOfI0MMhM0S2k9GIcZXHKD+rXTRHKkRNHOzYuITojiMnzqt5jmReUG3nNR4ppG5rmPAGMYNh/5noJHOeIhMMXH0hzJaj4fxIYW9fnQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710351943; c=relaxed/simple;
-	bh=WDAxkhzjtawKA8ibJoFIkQ/DkTdgQXrpylNOsCS8bTs=;
+	s=arc-20240116; t=1710351942; c=relaxed/simple;
+	bh=CsX4Bl/EEHcmw+Z+z88jdKEOU/WdC0wYmGUUTNJHiO0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cTuLuxyTxc9P9ilsgZ0GYigjImy9kOyjg3waxbBX1b2iMhJ6LC7fsmk1SQC91ndGd0hwKL3z85uc7NNMIE81ds8IB+XDRp/y9zbDCzWxn1tvfZZF3yBzzwbY8iDYsm9QWv0IF1GyEL0mQQU2f3q9T8ZjYLydqtkSPO+TJvgjYKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C17aOn2S; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=ogiChCuAt20wfwfBSjVpocyCUZOtQesZfjtEYQrD3aemDqgj5rAaQ+tqDLj9Z24lJdWz/IUewVnJZHPDQ9DGy6WmdRofggJBMVW5zc5wZMPo/mMWVUhLd+JfJlUUg3bt+39SivE/q3F16LhQoDePuVLF6r9coOsM4VjUVdRiD0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FW86Axai; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C17aOn2S"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 548B340003;
-	Wed, 13 Mar 2024 17:45:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FW86Axai"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 91CA14000F;
+	Wed, 13 Mar 2024 17:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710351940;
+	t=1710351933;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1mJQirOrh5uVlCQFN4AJsimww+6ayqe/xDiVoFk4V7I=;
-	b=C17aOn2SwmfUwqtxzCrK39wG/2jjP8yjS1HTKUdVG5VwmS+QkJF9R8k4HP12CqqtPLC+H9
-	CnKpdEbM61q9WcVM8hy4au9Dn+qTR3wYiU6iwf2sq78tD1zR5WTPgJLGCaM5YArxQdRI9x
-	CLhRRu/IJwQD3DarkM9mEYk7KvCHFR07MpTYl3sC7maz7LslCsoCDX2qvWSHIvw8wVxUJ0
-	uJpiHJNgvtxbvgHYv5cI3mIRcsMXdRCL1gawcGjCWUima1VA0snk4i8JNf6tHnY8Gw0o3a
-	nd3bDDNAxtF45pc3t2fw8c/b7xZF2cVc8N6yZT2Hj9OXdGuGHPsd6KKPku9CDQ==
+	bh=J5eNM0DhAMIgKT/kkCgWrA9s8H4fNzBpCgQ7okrYfr0=;
+	b=FW86Axai64pv208U0YOs8bwxLfeRvCLXuYQaGc+0j4vcP5PYIi1LnxQW5mLQ/lhIUgY4ZF
+	jZBCgpE/xUmgf/477wgcoiPYgbKmbpgp00ntlhoFZqVJaV5pqjRbjUC5PvfuCjlcUZNEOH
+	Uqbq8S5dpWKojQeMtTAQBS2+IdbOYvEFyHQR7JZ24NiKkMEuf+Xmh1x5GDADFFL3I22HFA
+	zOQ9mA9k6JGGSeK1j7zUORm+uZLa2Q9UcS7QUFUK7X/ipN7Py1l6dB3J1iLIB8AA1fvSY4
+	VsECNzRZEPGOG0mcxRgXGCztUoW9IEMRBf9AuiM4foFFnprUFRgxv97OFTNdEg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Wed, 13 Mar 2024 18:45:07 +0100
-Subject: [PATCH v5 13/16] drm/vkms: Drop YUV formats TODO
+Date: Wed, 13 Mar 2024 18:45:00 +0100
+Subject: [PATCH v5 06/16] drm/vkms: Use const for input pointers in
+ pixel_read an pixel_write functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240313-yuv-v5-13-e610cbd03f52@bootlin.com>
+Message-Id: <20240313-yuv-v5-6-e610cbd03f52@bootlin.com>
 References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
 In-Reply-To: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -57,49 +58,167 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=881;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6429;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=cRkkP1b8eceTuEm0QTSGTTTnDinaYzDjRJLok06bIiI=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl8eY0+z3WAhCy2IMeG8a1Zkre9wnYeZj8SIIpx9sY
- HczWmz6JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZfHmNAAKCRAgrS7GWxAs4jW4D/
- 4qAo1dZm2a0nRqQiHL6nTT0z4G5R7SoJRefwwbIQ9oLn/87s7B7lyyvNnZ5twDZHPD7NMALtU2x3R9
- hOyeInWO1ZcOa6ilo8NZjAZE2wUBkM8X1hDd0G4rV7cGNzxr6YvLNKm+sY7w3QZzQNuXOXmPc9k2z2
- 50WEb8f/NnXGZfg9lfTsyAxoAe5mgnPrarHmMNTGO0ji1z8tj5xY96Az9fTx68JH8lgFJ2zk4n7N3l
- Je0bDoz0U63X4Ir7MVm1QohDt6+GiKU+brYD20ldmdYd3AtOl2W0h59ExJi3CdfNm0DO2+uZkHUkDV
- l3ooPA7SqZ1D+//2ahX0s1e+5p0Lhhd5yomiOuaaFslehGHLXN/tqPi4j0xA8GWmOH/jLERJ3IP+Ie
- 7AZqUU3WUWIDliNwzqknwAKhhTHH2LaZOCUqArJBcZm4qWeghPZyGo5hAiFo3JCXg1ZBzdVE3yrgaQ
- sjxKUYvrHokeUUl9SlyMtNuJG3rcxH9iC9CaviRM9PCno3Egx3DGWw/AkE+nIAtCkIMjz5wSRkX0Xg
- aFH+3A23XZL+QIOC9kGmEsNrAEMR1FzKmvCyz0X2IO0i/hJO+bd67hexUth/y+Qb0jGzjtXL+cLEEI
- NjqwSNlAtd+XEQQYtS0BsuNjXjXCIMH0xUG3cPOjtPYzOZgtmPAnnnoPYjQw==
+ bh=CsX4Bl/EEHcmw+Z+z88jdKEOU/WdC0wYmGUUTNJHiO0=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl8eYzJmuhbk5UOvwem9mRZcBZgFRuaMALqEd0DVpz
+ 5Z9d8nuJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZfHmMwAKCRAgrS7GWxAs4iUmEA
+ CgpBgN8y/k8gzSXSZkY1+CFawep75UCzYQn52KNnsmIoh8Cxu0cvdis6uPF46OLUqtqZUlA4+DGVuw
+ sA8KfaDlCW7ahC/ZhcpOlkegV3V4ou17c1ERlnfywGkO1mgULKuiwEnRxmBmmKsjS9iolckuKias1y
+ fhE2kAVksA244hboNeeyAmB0EvEWNcJhLjL6f+98Rm7UdGws9jG/VsDHqjfp9GIgNUly33v5R59Cl2
+ steGyfvy1Wca8I7IgKhKO8GsAX6hbqmKEW7euYwi7GGK5Y3ej3LzK8FDCYwBna7pU7O/JK7IU//hmu
+ 3Ufvcu56MYJ96Klk1HwJ8806V+G/QB+OFhKqQhYJtfpTqYZ+9f+CHB1XMB69Qh1f500AYh0/AUZycA
+ 5v4lrJEVMQnnSUu4FtBLWsJlUwhkelqwN3i1163U3rgBG1z2d8sbfDTQKe/JipKILNIPKz1zPYXMXv
+ 8msXGST8+O6FA3GXW6o+XH5+FNiTxronLuEzF9W8Xn1L7HGCUVbzNB6wNcPiRNbQuWy727JvhuybSH
+ I74FWUOPpXlpDRBD0xT6VbFWwN136mpCQFW+/w3qNi9r0v0GjCWFSN2IYYrLbEamDcwn4v2GLNsdLs
+ r41SWd+Ma8tX9hHBberB5lRWSbterkLFcl/ZPU/r5iaixtBfmUVbh7ZAp8uA==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-From: Arthur Grillo <arthurgrillo@riseup.net>
+As the pixel_read and pixel_write function should never modify the input
+buffer, mark those pointers const.
 
-VKMS has support for YUV formats now. Remove the task from the TODO
-list.
-
-Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- Documentation/gpu/vkms.rst | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/vkms/vkms_drv.h     |  4 ++--
+ drivers/gpu/drm/vkms/vkms_formats.c | 24 ++++++++++++------------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-index ba04ac7c2167..13b866c3617c 100644
---- a/Documentation/gpu/vkms.rst
-+++ b/Documentation/gpu/vkms.rst
-@@ -122,8 +122,7 @@ There's lots of plane features we could add support for:
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index 4bfc62d26f08..3ead8b39af4a 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -61,7 +61,7 @@ struct line_buffer {
+  * @out_pixel: destination address to write the pixel
+  * @in_pixel: pixel to write
+  */
+-typedef void (*pixel_write_t)(u8 *out_pixel, struct pixel_argb_u16 *in_pixel);
++typedef void (*pixel_write_t)(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel);
  
- - Scaling.
+ struct vkms_writeback_job {
+ 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
+@@ -76,7 +76,7 @@ struct vkms_writeback_job {
+  * @in_pixel: Pointer to the pixel to read
+  * @out_pixel: Pointer to write the converted pixel
+  */
+-typedef void (*pixel_read_t)(u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
++typedef void (*pixel_read_t)(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
  
--- Additional buffer formats, especially YUV formats for video like NV12.
--  Low/high bpp RGB formats would also be interesting.
-+- Additional buffer formats. Low/high bpp RGB formats would be interesting.
+ /**
+  * vkms_plane_state - Driver specific plane state
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index b57d85b8b935..b2f8dfc26c35 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -76,7 +76,7 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
+  * They are used in the `vkms_compose_row` function to handle multiple formats.
+  */
  
- - Async updates (currently only possible on cursor plane using the legacy
-   cursor api).
+-static void ARGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void ARGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	/*
+ 	 * The 257 is the "conversion ratio". This number is obtained by the
+@@ -90,7 +90,7 @@ static void ARGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ 	out_pixel->b = (u16)in_pixel[0] * 257;
+ }
+ 
+-static void XRGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void XRGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	out_pixel->a = (u16)0xffff;
+ 	out_pixel->r = (u16)in_pixel[2] * 257;
+@@ -98,7 +98,7 @@ static void XRGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ 	out_pixel->b = (u16)in_pixel[0] * 257;
+ }
+ 
+-static void ARGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void ARGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	u16 *pixel = (u16 *)in_pixel;
+ 
+@@ -108,7 +108,7 @@ static void ARGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pi
+ 	out_pixel->b = le16_to_cpu(pixel[0]);
+ }
+ 
+-static void XRGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void XRGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	u16 *pixel = (u16 *)in_pixel;
+ 
+@@ -118,7 +118,7 @@ static void XRGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pi
+ 	out_pixel->b = le16_to_cpu(pixel[0]);
+ }
+ 
+-static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void RGB565_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	u16 *pixel = (u16 *)in_pixel;
+ 
+@@ -143,7 +143,7 @@ static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+  * It is used to avoid null pointer to be used as a function. In theory, this function should
+  * never be called, except if you found a bug in the driver/DRM core.
+  */
+-static void black_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++static void black_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ {
+ 	out_pixel->a = (u16)0xFFFF;
+ 	out_pixel->r = 0;
+@@ -189,7 +189,7 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+  * They are used in the `vkms_writeback_row` to convert and store a pixel from the src_buffer to
+  * the writeback buffer.
+  */
+-static void argb_u16_to_ARGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_ARGB8888(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {
+ 	/*
+ 	 * This sequence below is important because the format's byte order is
+@@ -207,7 +207,7 @@ static void argb_u16_to_ARGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+ 	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
+ }
+ 
+-static void argb_u16_to_XRGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_XRGB8888(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {
+ 	out_pixel[3] = 0xff;
+ 	out_pixel[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
+@@ -215,7 +215,7 @@ static void argb_u16_to_XRGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+ 	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
+ }
+ 
+-static void argb_u16_to_ARGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_ARGB16161616(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {
+ 	u16 *pixel = (u16 *)out_pixel;
+ 
+@@ -225,7 +225,7 @@ static void argb_u16_to_ARGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pi
+ 	pixel[0] = cpu_to_le16(in_pixel->b);
+ }
+ 
+-static void argb_u16_to_XRGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_XRGB16161616(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {
+ 	u16 *pixel = (u16 *)out_pixel;
+ 
+@@ -235,7 +235,7 @@ static void argb_u16_to_XRGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pi
+ 	pixel[0] = cpu_to_le16(in_pixel->b);
+ }
+ 
+-static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {
+ 	u16 *pixel = (u16 *)out_pixel;
+ 
+@@ -260,7 +260,7 @@ static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+  * It is used to avoid null pointer to be used as a function. In theory, this should never
+  * happen, except if there is a bug in the driver
+  */
+-static void argb_u16_to_nothing(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++static void argb_u16_to_nothing(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+ {}
+ 
+ /**
 
 -- 
 2.43.0
