@@ -1,41 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9771A2B9A;
-	Wed, 13 Mar 2024 17:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A73A76F01;
+	Wed, 13 Mar 2024 17:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349522; cv=none; b=qQhosPAe4zIKbtvHME3pShtCK/rpIGr2v63u96QpQEteuO+Fug6aRG7l3a3os7KOhKIm7edvwwSb3By9A8O5CXCgPNApr65O1PYmEd9LUylxec9GCjmO0kz3UU9Jy7xIl3VNbkaOdYXjX0aa0jm2EMx4GXyK8pju7dKK35hMHSQ=
+	t=1710349524; cv=none; b=qBIYrGCOurb20n09tNmH6AuYx0EjbqhFIm2XCjlKo5mEKDs30Hlt778mw8yPRUavByiOEq+SjIxXpRFhEYfFemjqekJUdmWXc1hNFQ0xk3Vqptb0lnmOmgW3emc3qYp0Ww0lb6e9bX/DgIfd7rxyLjrZtQH4KiZqGqlD8UuooHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349522; c=relaxed/simple;
-	bh=KVPCZ3dESDnwLDlBd1+N2FxfdsqEgtThOJFch8a0b0M=;
+	s=arc-20240116; t=1710349524; c=relaxed/simple;
+	bh=8pPanzqmda9HQRheRwuL+iwvrL5EGjFgJRManGKVxic=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H7rwaO24qqB3fuwKv8ZoFmWxGsAzRBgF4PBaSY3X9Dpt6SJR/NermMHCl26wiTzFLvd3MKPoqL9zGFolC9s6MqcU03gTVpkxxQvj27Wy60dU+XB1e29G1L3IFKhiQ/XwxPRinVYJaIuAXfePKMczSxk07O514znAN2+FOeoDQjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMOkcatR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=onvYeGZwZBGV6FXHLno5/GqXcl9gXnC3Q7uakTJwtUhilsaMVwFvtXR//5iDJ5JHxLbmrtkUYS9hDNWZ1RdGYCUsxFHl1bb/hoHhDIKlBlkIw58VavE2ATTgBteH/tCfZsuC7LWCPWRD2YzEl/c+YMpoWebthjP77TlcBppjwkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ2TFM26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMOkcatR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111E9C433C7;
-	Wed, 13 Mar 2024 17:05:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ2TFM26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60C6C433C7;
+	Wed, 13 Mar 2024 17:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349521;
-	bh=KVPCZ3dESDnwLDlBd1+N2FxfdsqEgtThOJFch8a0b0M=;
+	s=k20201202; t=1710349524;
+	bh=8pPanzqmda9HQRheRwuL+iwvrL5EGjFgJRManGKVxic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LMOkcatRsmwhYdOK2xW2zkznH76fz6BA0ROVgOhKZ9ffarrGqbFLsxooZn8IpIPdI
-	 DzfzKkNRNS0FMEKCWlMmYZf7cacrony3+eRUVT7gYMZIDELEn6k7wFma6m0/f3V/L6
-	 TTN0IOGqYg2LXeS/UHv/9cpovM+c/cDf1UjaZJ+fH7fEZoyhmQbTYedVKW/4Ka18dC
-	 o3ZfJfGMlHv0iRlmDL+blmnyZk0hrKrSFz+wRbQgWWS99pmwt7c2RGIcC3g/4ITiTp
-	 JJBok1bM5QAdN6E2+/lzdOzII25cnV6iTCdcUkObjAzUToD4InOLlmzg+x/KoDH5QO
-	 eXSn+ea1AtgyQ==
+	b=bZ2TFM26jcdkz1k+lDAKfnmk9brZ4Lpfyq+Dz1YQzK0epOsSHT8wShOAu8L37tJE4
+	 o5BVZbE3dFCltQBlmq1yhHuO64V7+4hAYBuqVwFSA3f2Riyp/rJgui/MJ4jYGIGNFo
+	 gm1kqvI0QtBWkDh1tGTPOe9HVKYUSHnmaRAi20+daEnmoe+yf/rmt+DmjPGzFqcIXa
+	 dc17s4qlMJiSFPsGUkX+1Hggqb3SuvKPGt5HUFMHoGXAGieOISPqtKZx3+Ktla0WEU
+	 Z0R3pCAcz2Q8Tomf1KvEoeC82eVEduDzXaPn6sguupNW07ToQeyLLk69+EwkxFb7z8
+	 Sf1L5Zb8IVqkw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/41] selftests/vm: fix display of page size in map_hugetlb
-Date: Wed, 13 Mar 2024 13:04:33 -0400
-Message-ID: <20240313170435.616724-40-sashal@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 41/41] Linux 4.19.310-rc1
+Date: Wed, 13 Mar 2024 13:04:35 -0400
+Message-ID: <20240313170435.616724-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170435.616724-1-sashal@kernel.org>
 References: <20240313170435.616724-1-sashal@kernel.org>
@@ -55,38 +52,26 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-[ Upstream commit 1ec882fc81e3177faf055877310dbdb0c68eb7db ]
-
-The displayed size is in bytes while the text says it is in kB.
-
-Shift it by 10 to really display kBytes.
-
-Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/e27481224564a93d14106e750de31189deaa8bc8.1598861977.git.christophe.leroy@csgroup.eu
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/vm/map_hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/vm/map_hugetlb.c b/tools/testing/selftests/vm/map_hugetlb.c
-index ab349c6db00d4..7b41cc6ecb0bf 100644
---- a/tools/testing/selftests/vm/map_hugetlb.c
-+++ b/tools/testing/selftests/vm/map_hugetlb.c
-@@ -90,7 +90,7 @@ int main(int argc, char **argv)
- 	}
+diff --git a/Makefile b/Makefile
+index 9648c95ee3201..2e45148cd10b2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 19
+-SUBLEVEL = 309
+-EXTRAVERSION =
++SUBLEVEL = 310
++EXTRAVERSION = -rc1
+ NAME = "People's Front"
  
- 	if (shift)
--		printf("%u kB hugepages\n", 1 << shift);
-+		printf("%u kB hugepages\n", 1 << (shift - 10));
- 	else
- 		printf("Default size hugepages\n");
- 	printf("Mapping %lu Mbytes\n", (unsigned long)length >> 20);
+ # *DOCUMENTATION*
 -- 
 2.43.0
 
