@@ -1,93 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302A51DFFC
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DB740BE1;
+	Wed, 13 Mar 2024 13:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710337134; cv=none; b=V/2XVGMJt6Ckwygz4RC1UYu4A1stdNW099IH0LcY7fq7M94gRj/1WyR/RTuNRJaDO4wgxdaGIag7TgSMq7GJanl2wJZIGXvqrBm+E7cSYQMffWZc3Y76u0fN9QRQ2wH8o+JCs8yYPETplOEfFsX0pNGwOWBtTAUwSSaYJogv+M8=
+	t=1710337158; cv=none; b=VqcnjVk4QqPM1j4rCQ6XdLmNTvIcGfOmopIgnL97DxqU3U7NCUsfA+E/CcDTJh3+96rqk/yCjJtRF+SwrcPOX/iuIf1ipVz7UX89RERLW5B6jKlJWueJ7Zw2Qax436TJWsTtbl0wVv92rOpcv/z/YZYvx5Ov8AO7nEhryH1Vtbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710337134; c=relaxed/simple;
-	bh=BOcy5v8jTDEf4Uwi1cewwmZO/FeGeMFiYXTFAhC4WZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5u9qaQaV0vRncyoy44+i/C5RtzWUIEU0Y6u2neYSOd7WKMOWeQU94g1ooEIDAbWG9sUgwjwyg20/vPaJ6Sf0LtwysojkOtkMvIFS7SENv/8MjHRl3eFbCT0phqQ3wYmPp+cuhRx16BjsqhbfakT5uxR5UhWmqfPohn4kwOvQhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dYlXAwbn; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710337158; c=relaxed/simple;
+	bh=vK73uYI8Vxy7OroeXl4DurknrQfBeM/0gM/pIFpXnz0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U4GYLkZRquokEnCedUmaIKHDyvinkIR9k/Q4EyEmKly3dbDW9YPpUAx/mi50XvxeFaGsCx1dSNKBS6gtpxwPB7lwnaAmLMfvUFuX+ODzr0tOr0zmurMLwNz7J0af1RC2FiB1r5CNYm6/VS1QB4OFoC0a04cPzFJq1kv3DnbVOlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UGZkqgQj; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dYlXAwbn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710337132; x=1741873132;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BOcy5v8jTDEf4Uwi1cewwmZO/FeGeMFiYXTFAhC4WZk=;
-  b=dYlXAwbnZ9NPMF757OQKEEqK2vB93PnHQxWm5ZvzNqou7syrWTq/HwE4
-   EQQPeBUCKAEjl+Grn04FXXm7SAVi0vsks7/uy6b4HSuVnDcZ+kergV14N
-   OEdI7e17tXpd1iUcJcIVlmlJIXKY2c8088wF/0n1lFppmTNwX4H0u5rQe
-   Vh1P9dUpoAhyZLCGy6xNeG25F7ccIw2NtjeI8/hgR4mJju/IUNgM1C00f
-   Oy+dr0yPk50qqQlWgfdISz2cO+qYQepO1EZiON5W6FYPAsyUrXDsQEq0P
-   NBQ6fEd5w7rtAAFaVyr/DaW8ukl0ibJenxkZgSiwV/JL0pPvBC/JS6Q2T
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5708196"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="5708196"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 06:38:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="937054147"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="937054147"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Mar 2024 06:38:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 18FE91057; Wed, 13 Mar 2024 15:38:46 +0200 (EET)
-Date: Wed, 13 Mar 2024 15:38:46 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] x86/mm: Fix LAM inconsistency during context
- switch
-Message-ID: <so22e3yeljtvz5axz2cgwtns3r5kimk43r65cognlazsgh4agz@zwdnsc266dw3>
-References: <20240312155641.4003683-1-yosryahmed@google.com>
- <20240312155641.4003683-2-yosryahmed@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UGZkqgQj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 13F651BF203;
+	Wed, 13 Mar 2024 13:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710337147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0Bicd0MobasMR69S0J0ZR+LESgqwadmjj5jzewTxOFc=;
+	b=UGZkqgQjBuQWRDSbsBJcj9tSbHmSSMqrrXGdSrV1lJakRo5Nw8r0HtMpq9VOIlFDARoY5d
+	dPuT/HoGEHXHC1tC6sRTUELctEwG0Od+JbwVkc3EdpaG0ol0SagF/UP3P8cbuPoN5lCyZ9
+	P2YjyZDketjsISPfMJdH8Y6cDdnQyW4TvZgYVVADEVGawQqxRe1bRJPRBto54I2mmTEy+f
+	f7WDHvLk5Uq2oh7mb+EJR33edrVrw0IZl+K0AiK7meN7l4x69/MDePS93fjCb7drmFy9ko
+	LG2Bxjd//mzqO5+Htz9zggoDh+u+jSvWvqCutClznq5K1eNelgTVjoTJ/1tUKw==
+Message-ID: <21ec269340a83f436bbf7a23a2be4289c88b70dd.camel@bootlin.com>
+Subject: Re: [PATCH net v3] net: macb: remove change_mtu callback
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Wed, 13 Mar 2024 14:39:05 +0100
+In-Reply-To: <20240311161727.629c0bab@kernel.org>
+References: <20240311154315.2575297-1-thomas.perrot@bootlin.com>
+	 <20240311161727.629c0bab@kernel.org>
+Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-ejHT/lGTQBdmCNEHSl5Q"
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240312155641.4003683-2-yosryahmed@google.com>
+X-GND-Sasl: thomas.perrot@bootlin.com
 
-On Tue, Mar 12, 2024 at 03:56:40PM +0000, Yosry Ahmed wrote:
-> LAM can only be enabled when a process is single-threaded.  But _kernel_
-> threads can temporarily use a single-threaded process's mm.  That means
-> that a context-switching kernel thread can race and observe the mm's LAM
-> metadata (mm->context.lam_cr3_mask) change.
-> 
-> The context switch code does two logical things with that metadata:
-> populate CR3 and populate 'cpu_tlbstate.lam'.  If it hits this race,
-> 'cpu_tlbstate.lam' and CR3 can end up out of sync.
-> 
-> This de-synchronization is currently harmless.  But it is confusing and
-> might lead to warnings or real bugs.
-> 
-> Update set_tlbstate_lam_mode() to take in the LAM mask and untag mask
-> instead of an mm_struct pointer, and while we are at it, rename it to
-> cpu_tlbstate_update_lam(). This should also make it clearer that we are
-> updating cpu_tlbstate. In switch_mm_irqs_off(), read the LAM mask once
-> and use it for both the cpu_tlbstate update and the CR3 update.
-> 
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+--=-ejHT/lGTQBdmCNEHSl5Q
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Hello,
+
+On Mon, 2024-03-11 at 16:17 -0700, Jakub Kicinski wrote:
+> On Mon, 11 Mar 2024 16:43:15 +0100 thomas.perrot@bootlin.com=C2=A0wrote:
+> > Because it doesn't allow MTU changes when the interface is up,
+> > although
+> > it is not necessary.
+> >=20
+> > This callback has been added to add in a first implementation of
+> > the Jumbo
+> > support [1],since it has been reworked and moved to the probe [2].
+> >=20
+> > With this patch the core will set the MTU, regardless of if the
+> > interface
+> > is up or not.
+> >=20
+> > [1] commit a5898ea09aad ("net: macb: Add change_mtu callback with
+> > =C2=A0=C2=A0=C2=A0 jumbo support")
+> > [2] commit 44770e1180de ("ethernet: use core min/max MTU checking")
+> >=20
+> > Fixes: 44770e1180de ("ethernet: use core min/max MTU checking")
+>=20
+> static void macb_init_rx_buffer_size(struct macb *bp, size_t size)
+> {
+> 	if (!macb_is_gem(bp)) {
+> 		bp->rx_buffer_size =3D MACB_RX_BUFFER_SIZE;
+> 	} else {
+> 		bp->rx_buffer_size =3D size;
+>=20
+> where size is:
+>=20
+> 	size_t bufsz =3D dev->mtu + ETH_HLEN + ETH_FCS_LEN +
+> NET_IP_ALIGN;
+>=20
+> I guess you tested this on a platform where !macb_is_gem(bp) ?
+
+Thank you for your review, indeed that won=E2=80=99t be correct on GEM in w=
+hen
+the MTU used to initialize the RX buffer is lower than the new MTU.
+
+So, I will suggest another patch with an acceptable solution.
+
+Kind regards,
+Thomas Perrot
+
+> Otherwise the buffer size seems to be based on MTU and the proposed
+> change won't be correct.
+
+--=20
+Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+
+--=-ejHT/lGTQBdmCNEHSl5Q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmXxrHkACgkQn8ALBXH+
+Cu0e2wv6A0yb8620vWwKOceSKAQ9PGXx6VVDpiEBk1S7Ga6L1FXgL6bYeXleE/t4
+MhfEXjGpeQEjIgCc0UPtWs3il9LsWiGla6sAJAs9wNCcckQiOkHUFPJdA/jM5OM3
++03DqH3ybJ0prSZYKPmwiDp/I7UivzsIY/TtY8wLabeyV7kSZTVNWRrxUB0Eo2ST
+zo156o/RINOH1uyo/M6v+3au3gpaag+mUUr9YTumTTMwusEo/sbVDaBnCrRIjz+r
+xSKdSyKnbvLoHp5ImCCBtWXAV4boNVrbKImnX/U056YYqgcMe9Fi+Uik0F7HZWgV
+m4ePL0F1X+eqcgET017IYuWhgMoZZe7hRSaRojJZiu4bLt/DGcaa/mAzyrA+Ry7r
+u+veh3PNbG9StWGhcDJ91TlOkEtVemFwoEaGfLAYbyjOxdZnCbKLDRJtzFQ79vyt
+VB3AKmtfvCNosRtOqOdYfCiJdK1tmzTJeUROYaphdJ7KvhRG4+qbpr0gEo9F2D9c
+RYDgFzPj
+=8JL7
+-----END PGP SIGNATURE-----
+
+--=-ejHT/lGTQBdmCNEHSl5Q--
