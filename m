@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2C514E2EA;
-	Wed, 13 Mar 2024 16:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F369564CF5;
+	Wed, 13 Mar 2024 16:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348226; cv=none; b=dYffSQ9MqNvZEiE2fY96cPYPfyCEJjp09Qphzk3BsXWuZ+fr62SQM5qo3yjc28n35hkRGvJs7/2oddKxySmBXyzyaO/ChksAITyGyXkt2W0x011wLaBXNZ28UG+1x1eMUS1Nzdfxt6ax02q8l17VOHxm9ulgA/niqaeD3Fl+F58=
+	t=1710348229; cv=none; b=hmDBDSYqYgOBrBv0GRH5mIclWInDxGp7cVm36yDeNUU78GfQnMnikvs6XJd+m1tPmYgJ3g+dhR4kEHOLkjAhY2FeeitJT8YosNyVKAu+BUq/V9zwjKQttImvfV8+Owi7xx0TyWFNDKywfLjqyt73J6Ka1DRGBSpA676NPnwrNk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348226; c=relaxed/simple;
-	bh=18U3/jqedjbpaw8g2u8F62gwbxSW7wd9fOj3ASax9Zg=;
+	s=arc-20240116; t=1710348229; c=relaxed/simple;
+	bh=FlAnfQi6O4H9BoJpowWiJxTJFnaB688i8rTR2c3Ha+Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lRhsNs8+rcl0fTUHD+roJ4PJkG0kbW8U87q3pnAgAzl4z5wloB5yOiqOouvLmn8t5chjZ3XYm8w3S0oljs5Z7+Bb+BSACRNxoJAkDtiMmoD+v9eMaU154wCGOSUbOu+2m/alWbcKBR4odJRKVS86xZ9/XayFUOK4J8p1maez7Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sldq3OI/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YCxdngG/RseYK8BYLJHwe1AzHgwSVBj/+OlvAa64ceVBk8R/9fBQRFGxUzquOsOr3lmu5vv+LlACqaP3h8Tfq1fW+AI41XdCuo1gD+xyU6ntc+vPRNTjZgSApD7hjCYCboJ7z/9q+UH5EWzXdxRZ6cx9cSNqTINUv1wxXF0XMzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBsxCuWp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sldq3OI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79794C43399;
-	Wed, 13 Mar 2024 16:43:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBsxCuWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E540C43399;
+	Wed, 13 Mar 2024 16:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348226;
-	bh=18U3/jqedjbpaw8g2u8F62gwbxSW7wd9fOj3ASax9Zg=;
+	s=k20201202; t=1710348228;
+	bh=FlAnfQi6O4H9BoJpowWiJxTJFnaB688i8rTR2c3Ha+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Sldq3OI/FKSMaFQBlRHDZLOWGk/GtliIdpQnrxcZtfXJ+WDLLgtub8gubx3Hvim5J
-	 eXM5gUsPUdeaSpDlKUnxzdrohMK3z7a0TGX9MjdMiCXMpnfdpozcYF7zU58+4fX7wx
-	 nZDkdGKGkwBYkmhtw0JdZk7TKHyW6TlV+zCP+RJIZiadSUAzFKWYmsv1PeHlY03QIt
-	 thpwCbWwfMGvEYCX7x3fpiEPYUHJ+jMm2OmBgZor6cDHbNXp1WJ1fFPMYnouv8hFnl
-	 slCpdKFo8sbdtcHTXkLFan5ji/fJNYRZG5zPqeZkUiGMfEodzGITTC/TEsTIK46Q5g
-	 VYu7M3KdhpqPQ==
+	b=VBsxCuWpBdeV0hlRU+z9YbbgEZ3NaW9kv0w1EoYQqC5e0BeKxRONRSyIsnJ8fWUO4
+	 KdRRbg9uFbUKNSyZfof5uFj69FvoAk/dVRKUKy/c8JJydFpFuRdzxiyDZTRPZr4g0K
+	 C0icF9yiu6aKXc7Ai2nZmW4QOnweKLjm7L2MSlmshy5PrSPypd76vPpagybvfMpYaF
+	 GNFBEcOh/PnpQF6pZJxnsRPBI8KMyiagKd4X6WToEHg3OWId9+bMMexEq61k0tb48b
+	 kq9wUf3STKl/ixSHhNRSPgx4NgwNGsHLDqVZoivY++t0EiH+YFniR0RYCmW20aMN/O
+	 DkCySvYjmtyqA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ansuel Smith <ansuelsmth@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 72/76] regmap: allow to define reg_update_bits for no bus configuration
-Date: Wed, 13 Mar 2024 12:42:19 -0400
-Message-ID: <20240313164223.615640-73-sashal@kernel.org>
+Subject: [PATCH 5.15 74/76] serial: max310x: make accessing revision id interface-agnostic
+Date: Wed, 13 Mar 2024 12:42:21 -0400
+Message-ID: <20240313164223.615640-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
 References: <20240313164223.615640-1-sashal@kernel.org>
@@ -54,63 +55,155 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Ansuel Smith <ansuelsmth@gmail.com>
+From: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
-[ Upstream commit 02d6fdecb9c38de19065f6bed8d5214556fd061d ]
+[ Upstream commit b3883ab5e95713e479f774ea68be275413e8e5b2 ]
 
-Some device requires a special handling for reg_update_bits and can't use
-the normal regmap read write logic. An example is when locking is
-handled by the device and rmw operations requires to do atomic operations.
-Allow to declare a dedicated function in regmap_config for
-reg_update_bits in no bus configuration.
+SPI can only use 5 address bits, since one bit is reserved for
+specifying R/W and 2 bits are used to specify the UART port.
+To access registers that have addresses past 0x1F, an extended
+register space can be enabled by writing to the GlobalCommand
+register (address 0x1F).
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Link: https://lore.kernel.org/r/20211104150040.1260-1-ansuelsmth@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+I2C uses 8 address bits. The R/W bit is placed in the slave
+address, and so is the UART port. Because of this, registers
+that have addresses higher than 0x1F can be accessed normally.
+
+To access the RevID register, on SPI, 0xCE must be written to
+the 0x1F address to enable the extended register space, after
+which the RevID register is accessible at address 0x5. 0xCD
+must be written to the 0x1F address to disable the extended
+register space.
+
+On I2C, the RevID register is accessible at address 0x25.
+
+Create an interface config struct, and add a method for
+toggling the extended register space and a member for the RevId
+register address. Implement these for SPI.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Link: https://lore.kernel.org/r/20220605144659.4169853-4-demonsingur@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Stable-dep-of: 3f42b142ea11 ("serial: max310x: fix IO data corruption in batched operations")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 1 +
- include/linux/regmap.h       | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/tty/serial/max310x.c | 40 +++++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 7621b54975b57..ab924127e0aef 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -877,6 +877,7 @@ struct regmap *__regmap_init(struct device *dev,
- 	if (!bus) {
- 		map->reg_read  = config->reg_read;
- 		map->reg_write = config->reg_write;
-+		map->reg_update_bits = config->reg_update_bits;
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index 41251fdf7c845..4299211183a74 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -72,7 +72,7 @@
+ #define MAX310X_GLOBALCMD_REG		MAX310X_REG_1F /* Global Command (WO) */
  
- 		map->defer_caching = false;
- 		goto skip_format_initialization;
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index e3c9a25a853a8..22652e5fbc380 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -290,6 +290,11 @@ typedef void (*regmap_unlock)(void *);
-  *		  read operation on a bus such as SPI, I2C, etc. Most of the
-  *		  devices do not need this.
-  * @reg_write:	  Same as above for writing.
-+ * @reg_update_bits: Optional callback that if filled will be used to perform
-+ *		     all the update_bits(rmw) operation. Should only be provided
-+ *		     if the function require special handling with lock and reg
-+ *		     handling and the operation cannot be represented as a simple
-+ *		     update_bits operation on a bus such as SPI, I2C, etc.
-  * @fast_io:	  Register IO is fast. Use a spinlock instead of a mutex
-  *	     	  to perform locking. This field is ignored if custom lock/unlock
-  *	     	  functions are used (see fields lock/unlock of struct regmap_config).
-@@ -372,6 +377,8 @@ struct regmap_config {
+ /* Extended registers */
+-#define MAX310X_REVID_EXTREG		MAX310X_REG_05 /* Revision ID */
++#define MAX310X_SPI_REVID_EXTREG	MAX310X_REG_05 /* Revision ID */
  
- 	int (*reg_read)(void *context, unsigned int reg, unsigned int *val);
- 	int (*reg_write)(void *context, unsigned int reg, unsigned int val);
-+	int (*reg_update_bits)(void *context, unsigned int reg,
-+			       unsigned int mask, unsigned int val);
+ /* IRQ register bits */
+ #define MAX310X_IRQ_LSR_BIT		(1 << 0) /* LSR interrupt */
+@@ -253,6 +253,12 @@
+ #define MAX14830_BRGCFG_CLKDIS_BIT	(1 << 6) /* Clock Disable */
+ #define MAX14830_REV_ID			(0xb0)
  
- 	bool fast_io;
++struct max310x_if_cfg {
++	int (*extended_reg_enable)(struct device *dev, bool enable);
++
++	unsigned int rev_id_reg;
++};
++
+ struct max310x_devtype {
+ 	char	name[9];
+ 	int	nr;
+@@ -275,6 +281,7 @@ struct max310x_one {
  
+ struct max310x_port {
+ 	const struct max310x_devtype *devtype;
++	const struct max310x_if_cfg *if_cfg;
+ 	struct regmap		*regmap;
+ 	struct clk		*clk;
+ #ifdef CONFIG_GPIOLIB
+@@ -364,13 +371,12 @@ static int max3109_detect(struct device *dev)
+ 	unsigned int val = 0;
+ 	int ret;
+ 
+-	ret = regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
+-			   MAX310X_EXTREG_ENBL);
++	ret = s->if_cfg->extended_reg_enable(dev, true);
+ 	if (ret)
+ 		return ret;
+ 
+-	regmap_read(s->regmap, MAX310X_REVID_EXTREG, &val);
+-	regmap_write(s->regmap, MAX310X_GLOBALCMD_REG, MAX310X_EXTREG_DSBL);
++	regmap_read(s->regmap, s->if_cfg->rev_id_reg, &val);
++	s->if_cfg->extended_reg_enable(dev, false);
+ 	if (((val & MAX310x_REV_MASK) != MAX3109_REV_ID)) {
+ 		dev_err(dev,
+ 			"%s ID 0x%02x does not match\n", s->devtype->name, val);
+@@ -395,13 +401,12 @@ static int max14830_detect(struct device *dev)
+ 	unsigned int val = 0;
+ 	int ret;
+ 
+-	ret = regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
+-			   MAX310X_EXTREG_ENBL);
++	ret = s->if_cfg->extended_reg_enable(dev, true);
+ 	if (ret)
+ 		return ret;
+ 	
+-	regmap_read(s->regmap, MAX310X_REVID_EXTREG, &val);
+-	regmap_write(s->regmap, MAX310X_GLOBALCMD_REG, MAX310X_EXTREG_DSBL);
++	regmap_read(s->regmap, s->if_cfg->rev_id_reg, &val);
++	s->if_cfg->extended_reg_enable(dev, false);
+ 	if (((val & MAX310x_REV_MASK) != MAX14830_REV_ID)) {
+ 		dev_err(dev,
+ 			"%s ID 0x%02x does not match\n", s->devtype->name, val);
+@@ -1250,6 +1255,7 @@ static int max310x_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ #endif
+ 
+ static int max310x_probe(struct device *dev, const struct max310x_devtype *devtype,
++			 const struct max310x_if_cfg *if_cfg,
+ 			 struct regmap *regmaps[], int irq)
+ {
+ 	int i, ret, fmin, fmax, freq;
+@@ -1308,6 +1314,7 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
+ 
+ 	s->regmap = regmaps[0];
+ 	s->devtype = devtype;
++	s->if_cfg = if_cfg;
+ 	dev_set_drvdata(dev, s);
+ 
+ 	/* Check device to ensure we are talking to what we expect */
+@@ -1477,6 +1484,19 @@ static struct regmap_config regcfg = {
+ };
+ 
+ #ifdef CONFIG_SPI_MASTER
++static int max310x_spi_extended_reg_enable(struct device *dev, bool enable)
++{
++	struct max310x_port *s = dev_get_drvdata(dev);
++
++	return regmap_write(s->regmap, MAX310X_GLOBALCMD_REG,
++			    enable ? MAX310X_EXTREG_ENBL : MAX310X_EXTREG_DSBL);
++}
++
++static const struct max310x_if_cfg __maybe_unused max310x_spi_if_cfg = {
++	.extended_reg_enable = max310x_spi_extended_reg_enable,
++	.rev_id_reg = MAX310X_SPI_REVID_EXTREG,
++};
++
+ static int max310x_spi_probe(struct spi_device *spi)
+ {
+ 	const struct max310x_devtype *devtype;
+@@ -1503,7 +1523,7 @@ static int max310x_spi_probe(struct spi_device *spi)
+ 		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
+ 	}
+ 
+-	return max310x_probe(&spi->dev, devtype, regmaps, spi->irq);
++	return max310x_probe(&spi->dev, devtype, &max310x_spi_if_cfg, regmaps, spi->irq);
+ }
+ 
+ static int max310x_spi_remove(struct spi_device *spi)
 -- 
 2.43.0
 
