@@ -1,232 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77CD10A25;
-	Wed, 13 Mar 2024 03:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7404CC147
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 03:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710299914; cv=none; b=Dge4Haqs49zOB2Jy1XBzNgCGoVKUYsOIG92hi64T/o6Zx4fqzpqWzjG5ZKVOiFIql8KOmK2wtrfDZeRf6/6THxPqdfVY9+c67J2t3bxh32vZbtWuPKrSuYFB6tm+hrjOD+GtDvVNWugEubPJ+T7Z5BIWMXYQhBl/LudmBLOfGgQ=
+	t=1710300131; cv=none; b=SPih/gKRw9p0Houc+ER634bTxMf/WTgWxcLUurxWGSys2MGc5xNACHLnfNmGZMtBrAwQ38lmpZRVCjE2KFDVoH+Q8o61fGsuWfW6lIp6vl3zdOzV/+BRdZeKxSS7DWRIeMNe5JycFTSafP4LByRq2lqkTZsHyiB4BwUoKClq5gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710299914; c=relaxed/simple;
-	bh=8czituh5hCJFJq1DdcSGtGzvsTslwyjFKKaYaWordUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=P9sHc5ekJ8dHMYLq6BNsO/nJ0g9MXj94TAOzmDSnRmIsQPq91YC+VS4g7YyeJh0WnbFehtkfUvc7V6zuZ1d/L6+cIcboazrPcpHVIcC2Eh0FCJ3IFU6K9OADhwV6cOCD/FEwkF0PZ2pF1ZMcaqV30KrpVs4kpYAVLfCScKfwa88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YXULuH6H; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710300131; c=relaxed/simple;
+	bh=WvRl61h3ByfZ0HysVdiQuStQNgkNDHIT84WHFO+RzTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JN+8TqMSG9J+cVuUVgQOkMKbymg7jCJnl4biA9Hi2o9rVIyOkU36BSzTYyNT6rR49UOTZ+wViLAWn91TfuxsEpY34Pcy0kkDtiA+mko0WGmxpMxpnl2iTz6/YuFNfbHUp8D5rwsrXOe6NndIMJ8JBqVK4IM4Hp9+7mtMxxxfgkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=D6R7ZJ6o; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YXULuH6H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710299912; x=1741835912;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=8czituh5hCJFJq1DdcSGtGzvsTslwyjFKKaYaWordUs=;
-  b=YXULuH6HfhHNqDEyHSSsZsKs16jH9qjEKGSqGZ2eX4ecG8UfWNueHb3H
-   0HjTKCRTbohyplxiMdIBkkym7Qab1gIL6N8KgDLsgztOcy5VLBFMz+fO8
-   yykyPR6XEcITj463gf3BFOtIfAlXXuRTrGHybuDQ4vCnPviLZ2iSHCMdb
-   XXulPvOhngwmIy3adS4SnpHExcYQFlA2bPxy4eK30E8CLbSGnz+qNjQiX
-   MIBbVBcDFscJT3yQ23x/BJ9sVkq2+3TDwvAiT5pGA3oWlG4DEgt7OrqzI
-   yu/aurg8lDHoISEOT4fRcallZzp5yD9vukTY3K1S2+iwV3ocbSfu9bMuL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5165771"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="5165771"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 20:18:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="11801221"
-Received: from hhutton-mobl1.amr.corp.intel.com (HELO [10.209.25.241]) ([10.209.25.241])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 20:18:31 -0700
-Message-ID: <78c0b107-1f3f-48e9-bccc-7d36c83bbfeb@linux.intel.com>
-Date: Tue, 12 Mar 2024 20:18:30 -0700
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="D6R7ZJ6o"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dd8f7d50c6so3677855ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 20:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1710300129; x=1710904929; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qrBUCaeV/dwaHFNXHKFwRp9ZoTbxAso4k6A0KIx30Kw=;
+        b=D6R7ZJ6op4dtE0foDJ91RypEUmJoE0bdR1AqhxjgCYkAzKYMziC46vQUymW0Xi4XVL
+         BkKH1bfxpfEe+liwrYMD17ZpDa3vrhXK6Wztk/0mp5sJkn78SWwz4DJ4Lg6LGA7OvUTo
+         e9rdjNBCpTjebxkbD7PZlLV9KLR4qn5mttG8x/nPiz8ZtXAZmGI+qxA41+XErytX6QX6
+         9NZIXgJChKuSmws6JgOYe6zT+eVH6cezV5ie6fzs/vhlcXG99cFSQ6wQT/WHvTNRWupl
+         5nImAWuOc5s+86NBt9+TIbAM9djraCg13K9ir4ujbIzl0gIJ1e+DIWHNalaqds1o/Nbr
+         wN+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710300129; x=1710904929;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qrBUCaeV/dwaHFNXHKFwRp9ZoTbxAso4k6A0KIx30Kw=;
+        b=MY070VHE6ruwx1g28YAWMGbLyC4KDpJENi75CDAJJNcoJ7TiyZnMycBOFo/BMWf3YN
+         lIfUNaRTeuNJn7wBlWyjgewD2DF/U7aj+FssLc0N/uiicLVimUelimIGSkBUmB9trpnn
+         8WAz1GyW9436pnQJf0dvfW0fat+182XdiyJWnHa/JQytUDKYwuKbLhl95EwVTyG/kDkS
+         lC54fkunyh0nXAzc3jrghce9Eee/lrYRw8JpRe/r8XXslh9gjLcE21xcrxqVFUn0ofD6
+         ZKbY9JNogR+ztNdclC0Tl/Zj4WhOzsQgQ+54ItSqiTDUxf8Zfv+BUUdSJoI94bsnkItd
+         tCpw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5s5MM9m2zpjv+VwVhtw6sUOcdUjExXD2hNxjZsmqNRDfRM6bVHSJ2H3VTC+P25GZ1LIMUthfVnpi6jqXNfLuEoP2BXN2TeQc5Nbpu
+X-Gm-Message-State: AOJu0YycC/dIBByyJgWLD57wSuOE/DDyc1zQ9WyqdKI9yQOZ0RNeyF/9
+	g7xQ7rqhKtNrdetn6nNkxtyPZIOJXs6yNt/OXljrtJPfrFsLZ0PC6sWY+0a4Tvg0Z7zpJXqkCb5
+	Nam0=
+X-Google-Smtp-Source: AGHT+IFKhNUh1ZNzl325ce9f/jj/4HvlL+NSmK1isj6lq+0XGv0m2rrdpwNhKz7ZPF9fQSmUeSmvTA==
+X-Received: by 2002:a17:903:1c3:b0:1dd:8a51:7b49 with SMTP id e3-20020a17090301c300b001dd8a517b49mr2048372plh.15.1710300128657;
+        Tue, 12 Mar 2024 20:22:08 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:733c:479a:4b7b:f77b])
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902ed1500b001d9a42f6183sm7466890pld.45.2024.03.12.20.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 20:22:08 -0700 (PDT)
+Date: Tue, 12 Mar 2024 20:22:06 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] riscv: Fix spurious errors from __get/put_kernel_nofault
+Message-ID: <ZfEb3tCCcXjAfgbU@ghost>
+References: <20240312022030.320789-1-samuel.holland@sifive.com>
+ <ZfEVNbt9AMeVJS0k@ghost>
+ <06ebe952-c872-4406-bcb9-00b0b892fb6c@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] platform/x86: add lenovo wmi camera button driver
-Content-Language: en-US
-To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20240313011359.835109-1-aichao@kylinos.cn>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240313011359.835109-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06ebe952-c872-4406-bcb9-00b0b892fb6c@sifive.com>
+
+On Tue, Mar 12, 2024 at 10:05:37PM -0500, Samuel Holland wrote:
+> On 2024-03-12 9:53 PM, Charlie Jenkins wrote:
+> > On Mon, Mar 11, 2024 at 07:19:13PM -0700, Samuel Holland wrote:
+> >> These macros did not initialize __kr_err, so they could fail even if
+> >> the access did not fault.
+> >>
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: d464118cdc41 ("riscv: implement __get_kernel_nofault and __put_user_nofault")
+> >> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> >> ---
+> >> Found while testing the unaligned access speed series[1]. The observed
+> >> behavior was that with RISCV_EFFICIENT_UNALIGNED_ACCESS=y, the
+> >> copy_from_kernel_nofault() in prepend_copy() failed every time when
+> >> filling out /proc/self/mounts, so all of the mount points were "xxx".
+> >>
+> >> I'm surprised this hasn't been seen before. For reference, I'm compiling
+> >> with clang 18.
+> >>
+> >> [1]: https://lore.kernel.org/linux-riscv/20240308-disable_misaligned_probe_config-v9-0-a388770ba0ce@rivosinc.com/
+> >>
+> >>  arch/riscv/include/asm/uaccess.h | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> >> index ec0cab9fbddd..72ec1d9bd3f3 100644
+> >> --- a/arch/riscv/include/asm/uaccess.h
+> >> +++ b/arch/riscv/include/asm/uaccess.h
+> >> @@ -319,7 +319,7 @@ unsigned long __must_check clear_user(void __user *to, unsigned long n)
+> >>  
+> >>  #define __get_kernel_nofault(dst, src, type, err_label)			\
+> >>  do {									\
+> >> -	long __kr_err;							\
+> >> +	long __kr_err = 0;						\
+> >>  									\
+> >>  	__get_user_nocheck(*((type *)(dst)), (type *)(src), __kr_err);	\
+> >>  	if (unlikely(__kr_err))						\
+> >> @@ -328,7 +328,7 @@ do {									\
+> >>  
+> >>  #define __put_kernel_nofault(dst, src, type, err_label)			\
+> >>  do {									\
+> >> -	long __kr_err;							\
+> >> +	long __kr_err = 0;						\
+> >>  									\
+> >>  	__put_user_nocheck(*((type *)(src)), (type *)(dst), __kr_err);	\
+> >>  	if (unlikely(__kr_err))						\
+> >> -- 
+> >> 2.43.1
+> >>
+> >>
+> >> _______________________________________________
+> >> linux-riscv mailing list
+> >> linux-riscv@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > 
+> > I am not able to reproduce this using Clang 18 with
+> > RISCV_EFFICIENT_UNALIGNED_ACCESS=y on 6.8. However I can see how this
+> > could be an issue.
+> > 
+> > Going down the rabbit hold of macros here, I end up at
+> > arch/riscv/include/asm/asm-extable.h where the register that hold 'err'
+> > is written into the __ex_table section:
+> > 
+> > #define EX_DATA_REG(reg, gpr)						\
+> > 	"((.L__gpr_num_" #gpr ") << " __stringify(EX_DATA_REG_##reg##_SHIFT) ")"
+> > 
+> > #define _ASM_EXTABLE_UACCESS_ERR_ZERO(insn, fixup, err, zero)		\
+> > 	__DEFINE_ASM_GPR_NUMS						\
+> > 	__ASM_EXTABLE_RAW(#insn, #fixup, 				\
+> > 			  __stringify(EX_TYPE_UACCESS_ERR_ZERO),	\
+> > 			  "("						\
+> > 			    EX_DATA_REG(ERR, err) " | "			\
+> > 			    EX_DATA_REG(ZERO, zero)			\
+> > 			  ")")
+> > 
+> > I am wondering if setting this value to zero solves the problem by
+> > hiding another issue. It seems like this shouldn't need to be
+> > initialized to zero, however I am lost as to how this extable setup
+> > works so perhaps this is the proper solution.
+> 
+> extable works by running the handler (selected by EX_TYPE_*) if some exception
+> occurs while executing that instruction -- see the calls to fixup_exception() in
+> fault.c and traps.c. If there is no exception, then the handler does not run,
+> and the err register is not written by ex_handler_uaccess_err_zero().
+
+Hmm okay I understand thank you for explaining that. It's interesting to
+me that in __get_user_asm 'err' is set as a read/write variable even
+though __get_user_asm doesn't write to it. However, it seems like
+changing it to a write-only variable the compiler incorrectly optimizes
+err, and the kernel fails to boot.
+
+> 
+> If you look at __get_user_asm(), you can see that the err register is not
+> touched by the assembly code at all -- the only reference to %0 is in the
+> extable entry. So if the macro that declares the error variable doesn't
+> initialize it, nothing will.
 
 
-On 3/12/24 6:13 PM, Ai Chao wrote:
-> Add lenovo generic wmi driver to support camera button.
-> The Camera button is a GPIO device. This driver receives ACPI notifyi
-/s/notifyi / notification.
-> when the camera button is switched on/off. This driver is used in
-> Lenovo A70, it is a Computer integrated machine.
->
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
-> v6: Modify SW_CAMERA_LENS_COVER to
-> KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
-> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-> v3: Remove lenovo_wmi_remove function.
-> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
->
->  drivers/platform/x86/Kconfig             | 12 +++
->  drivers/platform/x86/Makefile            |  1 +
->  drivers/platform/x86/lenovo-wmi-camera.c | 98 ++++++++++++++++++++++++
->  3 files changed, 111 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..9506a455b547 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->  	To compile this driver as a module, choose M here: the module
->  	will be called inspur-platform-profile.
->  
-> +config LENOVO_WMI_CAMERA
-> +	tristate "Lenovo WMI Camera Button driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	  This driver provides support for Lenovo camera button. The Camera
-> +	  button is a GPIO device. This driver receives ACPI notify when the
-> +	  camera button is switched on/off.
-Same as above.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called lenovo-wmi-camera.
-> +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
->  
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861e..217e94d7c877 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
->  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-> new file mode 100644
-> index 000000000000..fc2af7f48bc0
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Lenovo WMI Camera Button Driver
-> + *
-> + * Author: Ai Chao <aichao@kylinos.cn>
-> + * Copyright (C) 2024 KylinSoft Corporation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +	struct device *dev;
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 
-It looks like you are not using dev anywhere in the driver
-
-> +};
-> +
-> +enum {
-> +	SW_CAMERA_OFF	= 0,
-> +	SW_CAMERA_ON	= 1,
-> +};
-> +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	if (obj->type == ACPI_TYPE_BUFFER &&
-> +	    obj->buffer.pointer[0] <= SW_CAMERA_ON) {
-> +		/* obj->buffer.pointer[0] is camera mode:
-> +		 *      0 camera close
-> +		 *      1 camera open
-> +		 */
-> +		if (obj->buffer.pointer[0] == SW_CAMERA_ON) {
-> +			input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 1);
-> +			input_sync(priv->idev);
-> +			input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 0);
-> +		} else {
-> +			input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 1);
-> +			input_sync(priv->idev);
-> +			input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 0);
-> +		}
-> +		input_sync(priv->idev);
-> +	} else {
-> +		dev_dbg(&wdev->dev, "Bad response type %d or Bad camera mode %d\n",
-> +			obj->type, obj->buffer.pointer[0]);
-> +	}
-> +}
-> +
-> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct lenovo_wmi_priv *priv;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	priv->idev = devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name = "Lenovo WMI Camera Button";
-> +	priv->idev->phys = "wmi/input0";
-> +	priv->idev->id.bustype = BUS_HOST;
-> +	priv->idev->dev.parent = &wdev->dev;
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-> +
-> +	return input_register_device(priv->idev);
-> +}
-> +
-> +static const struct wmi_device_id lenovo_wmi_id_table[] = {
-> +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-> +	{  }
-> +};
-> +
-> +static struct wmi_driver lenovo_wmi_driver = {
-> +	.driver = {
-> +		.name = "lenovo-wmi-camera",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table = lenovo_wmi_id_table,
-> +	.no_singleton = true,
-> +	.probe = lenovo_wmi_probe,
-> +	.notify = lenovo_wmi_notify,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-> +MODULE_LICENSE("GPL");
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+> 
+> Compare __get_user() and __put_user() which do initialize their error variable.
+> 
+> Regards,
+> Samuel
+> 
