@@ -1,134 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5707859168;
-	Wed, 13 Mar 2024 21:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D58482D3;
+	Wed, 13 Mar 2024 21:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710366065; cv=none; b=WjXfr3J/6mNbyzLgdoFlKv1fhWO9IWYTwBtd0z7mgFNaM19moBtRpt0i4pas8XXC1vUGnu3i8Ig/d44R0qdOaQDa7qBPKlhoX28WnPLqK+k6gmw3X095phIKqow48F69eCna07hDsA2NIEwa5e3CH6O8rPgu+sahx4VJeqkhkqg=
+	t=1710366134; cv=none; b=er8oVcucqiTfZLiB7Px65CDmr2xAlV0lXLEG2mR9sOTNpUYWmzNDSouqeLOaaFVzHvJEUw1ajEBBKCy+aaeFoUqd0bk5H0lzxKsVqltFxeVtg+E13TvQ+7GO36hToVhHff+OIqhylhmDivF4r+XbHgmvpj88x8U86bvxXbwQAds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710366065; c=relaxed/simple;
-	bh=e9/aE3W+B9fWGEJ7kuuXfT+sZG0KdOCHiiwPjqy9t1M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZYHXgq/cdQe38bUkeNLgmmwUSeRTEacEGtGfpUueKXozTXed+RLbztdj0peT+A2PeF6LhBlDdLA/5+VzMojKRD9yJwClfJWC1F2Ck3bnG/z+ZqZZOmrXExFRVC85sDGeC07K4DWyO3DSEXrWfkXn3aOb+5UTi8BUtiBA7xOKpDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPWqatkV; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710366134; c=relaxed/simple;
+	bh=UDD6nJy5LKVxEcx74mHkfaNIhdaXsDmXdSdoWYD3tQk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QDrf3FBkMJLi0RdWyuYSUQlllBNTdJBngtW9kbeHvjXgEM0Heuo5otaZ27EbT8pz/QS29igcjXmfRIlhJko8zCRcGetStpsl64A6BZD86UNeLlJWT+vYJB7GrZEbLR0eEwIpb01WNy+wAJbioLRcEEbkty+rX23lFSDGdTH/cfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=lBtZkWGT; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPWqatkV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710366063; x=1741902063;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=e9/aE3W+B9fWGEJ7kuuXfT+sZG0KdOCHiiwPjqy9t1M=;
-  b=IPWqatkVU+/r4ouTQVHuxd3ShTgVyRats5ImrrkHS7H4BFn12JE49WVR
-   qV+GHIW0YUl9LjObFSDIJbGwvP5fQLR3jLhbrLvsPumMJ45/C8o7C4Z+G
-   EmuAXT93+pF/ylXaqh1tTUjDXg3cXLtW+mqOXcAceZADKuZI+h34IJNXH
-   X/KPTkeS04RO3tyJ8A63jQz9g0TJqqohYsml3BArlY1gGxI3/H6f/2SKN
-   +oAq3WVAsYCjKAR1CNetWiFI9jUo4dvp8WuYcXGwYa5tW/paI7HH9a/4Z
-   hYHV2vHnBpqr5U8IgGkdTUBBICM/+zSxKstCT3wlm0tYCRRdlVAIzdSGN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22678477"
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="22678477"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 14:41:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="12522193"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by orviesa007.jf.intel.com with ESMTP; 13 Mar 2024 14:41:02 -0700
-From: Fenghua Yu <fenghua.yu@intel.com>
-To: "Vinod Koul" <vkoul@kernel.org>,
-	"Dave Jiang" <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Terrence Xu <terrence.xu@intel.com>
-Subject: [PATCH] dmaengine: idxd: Fix oops during rmmod on single-CPU platforms
-Date: Wed, 13 Mar 2024 14:40:31 -0700
-Message-Id: <20240313214031.1658045-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="lBtZkWGT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=7GE8YcmRLknEbeV60EceEz8pJp5RGK6eT1a+sdWBOZA=; b=lBtZkWGTjFJERjPGsFBpoaPh+F
+	BezITbLRclMtDthJovP31Wd3yn2B4ehPO+oUBCp0Ok6HVlvi72fSsTBgAEzu/l0kcc/qKj10PvR8h
+	KN/7XpKUJzKGBLSQAuJ0XVcl93XTwRuwIJQUEkFoZefN6sp29TQIjU6CYUOFQtsmc+AWYKt1b+Blx
+	DVySp3cHDnCUyDP7LvhQqNxAEreimMhEPuBJZhzmd5E9yFYF3UlhPRIs2hjnJV9uolbPHl1/L04Bx
+	miB6gDD5jDbDblBwArZ/2KIEM9g/0+ilng/1ooqyf7mWhul1U+5wbS8wDBzjneuVjFdLRM1qeq289
+	g0cArwwg==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rkWM6-0006Pa-4U; Wed, 13 Mar 2024 22:41:46 +0100
+Received: from [178.197.249.11] (helo=linux.home)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rkWM5-000FqN-3u; Wed, 13 Mar 2024 22:41:45 +0100
+Subject: Re: [PATCH net-next v4] net: Re-use and set mono_delivery_time bit
+ for userspace tstamp packets
+To: Martin KaFai Lau <martin.lau@linux.dev>,
+ "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: kernel@quicinc.com, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
+ Martin KaFai Lau <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+References: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
+ <2a4cb416-5d95-459d-8c1c-3fb225240363@linux.dev>
+ <65f16946cd33e_344ff1294fc@willemb.c.googlers.com.notmuch>
+ <28282905-065a-4233-a0a2-53aa9b85f381@linux.dev>
+ <65f2004e65802_3d1e792943e@willemb.c.googlers.com.notmuch>
+ <02363fef-0b5e-4b6c-bad9-db924db230b9@quicinc.com>
+ <0a0f948a-ca0e-4241-8a21-e7c7fc2ea471@linux.dev>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <1e419a00-41cf-c760-7912-68b34b74f8d1@iogearbox.net>
+Date: Wed, 13 Mar 2024 22:41:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0a0f948a-ca0e-4241-8a21-e7c7fc2ea471@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27213/Wed Mar 13 09:26:34 2024)
 
-During the removal of the idxd driver, registered offline callback is
-invoked as part of the clean up process. However, on systems with only
-one CPU online, no valid target is available to migrate the
-perf context, resulting in a kernel oops:
+On 3/13/24 10:19 PM, Martin KaFai Lau wrote:
+> On 3/13/24 1:59 PM, Abhishek Chauhan (ABC) wrote:
+>>>> I think all this is crying for another bit in skb to mean user_delivery_time
+>>>> (skb->tstamp depends on skb->sk->sk_clockid) while mono_delivery_time is the
+>>>> mono time either set by kernel-tcp or bpf.
+>>>
+>>> It does sound like the approach with least side effects.
+>>>
+>> Martin and Willem , while we are discussing to use seperate bit per skb to check if its
+>> SO_TXTIME from userspace or (rcv) timestamp . I came across two flags used in skbuff
+>> called in filter framework
+>> @tc_at_ingress: used within tc_classify to distinguish in/egress
+>> @from_ingress: packet was redirected from the ingress path
+>>
+>> Since i believe the above testcase is based on redirecting from ingress to egress part
+>> why cant we use these already existing flags ? Please advice
+>>
+>> I am not completely sure if we can use these flags to solve the bpf problem or not.
+> 
+> I don't see how they are related. It can tell where a skb is at. It cannot tell what is in skb->tstamp.
 
-    BUG: unable to handle page fault for address: 000000000002a2b8
-    #PF: supervisor write access in kernel mode
-    #PF: error_code(0x0002) - not-present page
-    PGD 1470e1067 P4D 0 
-    Oops: 0002 [#1] PREEMPT SMP NOPTI
-    CPU: 0 PID: 20 Comm: cpuhp/0 Not tainted 6.8.0-rc6-dsa+ #57
-    Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.86B.2492.D03.2307181620 07/18/2023
-    RIP: 0010:mutex_lock+0x2e/0x50
-    ...
-    Call Trace:
-    <TASK>
-    __die+0x24/0x70
-    page_fault_oops+0x82/0x160
-    do_user_addr_fault+0x65/0x6b0
-    __pfx___rdmsr_safe_on_cpu+0x10/0x10
-    exc_page_fault+0x7d/0x170
-    asm_exc_page_fault+0x26/0x30
-    mutex_lock+0x2e/0x50
-    mutex_lock+0x1e/0x50
-    perf_pmu_migrate_context+0x87/0x1f0
-    perf_event_cpu_offline+0x76/0x90 [idxd]
-    cpuhp_invoke_callback+0xa2/0x4f0
-    __pfx_perf_event_cpu_offline+0x10/0x10 [idxd]
-    cpuhp_thread_fun+0x98/0x150
-    smpboot_thread_fn+0x27/0x260
-    smpboot_thread_fn+0x1af/0x260
-    __pfx_smpboot_thread_fn+0x10/0x10
-    kthread+0x103/0x140
-    __pfx_kthread+0x10/0x10
-    ret_from_fork+0x31/0x50
-    __pfx_kthread+0x10/0x10
-    ret_from_fork_asm+0x1b/0x30
-    <TASK>
-
-Fix the issue by preventing the migration of the perf context to an
-invalid target.
-
-Fixes: 81dd4d4d6178 ("dmaengine: idxd: Add IDXD performance monitor support")
-Reported-by: Terrence Xu <terrence.xu@intel.com>
-Tested-by: Terrence Xu <terrence.xu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- drivers/dma/idxd/perfmon.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-index fdda6d604262..5e94247e1ea7 100644
---- a/drivers/dma/idxd/perfmon.c
-+++ b/drivers/dma/idxd/perfmon.c
-@@ -528,14 +528,11 @@ static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
- 		return 0;
- 
- 	target = cpumask_any_but(cpu_online_mask, cpu);
--
- 	/* migrate events if there is a valid target */
--	if (target < nr_cpu_ids)
-+	if (target < nr_cpu_ids) {
- 		cpumask_set_cpu(target, &perfmon_dsa_cpu_mask);
--	else
--		target = -1;
--
--	perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
-+		perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
-+	}
- 
- 	return 0;
- }
--- 
-2.37.1
-
++1, if we go that route as per discussion, I'd also prefer clearly encoding delivery
+time clock base in skb to avoid ambiguity.
