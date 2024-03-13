@@ -1,224 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2374743AD1;
-	Wed, 13 Mar 2024 13:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F64E4174F;
+	Wed, 13 Mar 2024 13:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710337657; cv=none; b=AINy+U0xMkGJ+xtSRPqB+PKf5W5pkw1nU33L+ZwwTQrmojjb/3WTz8xRgD+b7K2sRn42lTHRPaY9/SK7TyS2DetHS2AXkzTKL+0YgXW7/2EiMGW8oiOnOiHrlsOUnI0AHVbAg+/rNwcY1XQEUmG6augLwTtbU8zVaQhRVd61FkQ=
+	t=1710337695; cv=none; b=DoIWb2Ry74SEPRERqyrTrE2sYw1GiigbNR4n+zPZlkJ5pzpgbFMYgilDDxg0G+i8ayl8WjUXaMo5Lgax+G7PN2Qq8pNvaMphXKbseZqMDH7xpRxjVr6Z7NFTqEC4E0Gv1hMlwQM5mSh1Xj+h3Cv+8NwIUdnEyYbf0oDMsgLhUVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710337657; c=relaxed/simple;
-	bh=Wm12Cwnnaqqxe6Rw9omoTYJwGYyRMYnkrihCLFB1dLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Vc11uJlUNQr2FZysI0D5yxBbafAh+SeHEJbIzy4W5FJLwcXTsDWECYW1sdFUP9VdX9QY/NFo5qgBdkW1NAyXMymHLwW6y3dL4qvoqg5SdQ+9oq8ZpNv48LfnQWt6gHbKIIbO6S2RbtTPezTK5wU8x6Zv9C5N19rP3IjzOSr016M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJ8VuGqZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710337695; c=relaxed/simple;
+	bh=YRfQD+t2dkUzHEULs3NlLIIcIZaaDOWzomGtk1FtK3Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UDY1sYNxeQgegoJdfQlLvDnuslnHVG/WeoY4QG/8YjO+R3TqwKvZZJRf881kdeL0Frzsx0ycOubjiVQ0hRxucZs/QCCy8StNZQnoxBE7MLIFDCBPT2I4g/87Z+2rh3LQk+jOe47xuxHYfI4zSIEY4orfLgvDeriSYzRASWfpzc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=oGfDetpX; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJ8VuGqZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117BBC43390;
-	Wed, 13 Mar 2024 13:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710337656;
-	bh=Wm12Cwnnaqqxe6Rw9omoTYJwGYyRMYnkrihCLFB1dLg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PJ8VuGqZqsRwlTYOY7+8sOgrmQ4V9EP9qdW+8lWd07EaQ40dhKJ45vzLMybMBBdBM
-	 W0x301+/QGXMPSnX+1SW3FtBu5vIiN6xCze+MuJLXGvX1WHvKa7skNGjVx63S1g3h5
-	 Mwdn5iL7BXY/WFmsnjDhC+IAQsnpxkBvyHThGYiW577rhpEIHHPAgbezLAwbzhNJpl
-	 Ny1dei9uxXxQXL/eEwvUsDGnYhvtjNMyYc1TeQ1zdYHix70ghVFu4LOeTZEJYTnCmD
-	 Daj7s1ktSQlpfo9aob5je8Z6zz+0b4V/pGf++TgUJzrsTz0cpFsBzzT0hLmIEux21f
-	 RqfnyXerwe5Fg==
-Date: Wed, 13 Mar 2024 10:47:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
- on RT.
-Message-ID: <ZfGudRl9-tB_TszO@x1>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oGfDetpX"
+X-UUID: 50dcf980e14011eeb8927bc1f75efef4-20240313
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=L4w20N+otfg7LwiYSgZBTvkCN/wv91X1s34i/ad5CCw=;
+	b=oGfDetpXML9V4gCa5zrrGvflXDfgBD950x4waeaDoTDUBe4hUAIU5I/ta2RUpqEJdxFb2Mt3vk5lJNDNKt5e1KiF3i4Oe5ZE9BACbRq1BaSyPkfrLuncWkNrr7eutK0gECQ+YRguwUBNj/QBJrvGsQyXuvulZjFHfkNCmS5Ycz0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:60f705f5-bd61-4bfa-ad4b-07ab2bc4ba90,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:31555c90-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 50dcf980e14011eeb8927bc1f75efef4-20240313
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <shiming.cheng@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1696624639; Wed, 13 Mar 2024 21:48:04 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 13 Mar 2024 21:48:01 +0800
+Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 13 Mar 2024 21:48:01 +0800
+From: Shiming Cheng <shiming.cheng@mediatek.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lena.wang@mediatek.com>, <shiming.cheng@mediatek.com>
+Subject: [PATCH net] udp: fix segmentation crash for untrusted source packet
+Date: Wed, 13 Mar 2024 21:34:02 +0800
+Message-ID: <20240313133402.9027-1-shiming.cheng@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZfGqCWzyVzyGQrAQ@x1>
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--0.036400-8.000000
+X-TMASE-MatchedRID: wpfAD6xEq/UmcsJib2IjaZyebS/i2xjjRf40pT7Zmv4AhmnHHeGnvd5N
+	RzJ0gz5Ho2jEjZ+uot2x/IsbGBsvcXHPBvSspzfjlUgQqGVMqmw+alo1+UETifgnJH5vm2+gE1H
+	sA1hANbFWqgnWQ924PABrzRY/wC05Z4gQbTRJ1T0poxDq3DugMkyQ5fRSh265DpCUEeEFm7B91D
+	unZtIaFuLzNWBegCW2wgn7iDBesS1YF3qW3Je6+3Cl2j/T96VWClrgwgRb4DTA1+j5xhROnF/E0
+	Qms4izZ9dXR8igG1pZpqUV/1/kckl6hsFytkdpyBzxJxdddetpD1vQ6Bk4NMYCE5xpCtDRTUbJF
+	yh4XXyqYo/TPOlMB4bCh3zE4wqa8wIE77PEBbml+3BndfXUhXQ==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--0.036400-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: EB00A10A7E0B78C7CD380D35C873753B8267A33E8C1FB10F0EF5AEE09A8965CE2000:8
+X-MTK: N
 
-On Wed, Mar 13, 2024 at 10:28:44AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Mar 13, 2024 at 09:13:03AM +0100, Sebastian Andrzej Siewior wrote:
-> > One part I don't get: did you let it run or did you kill it?
+Kernel exception is reported when making udp frag list segmentation.
+Backtrace is as below:
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/ipv4/udp_offload.c:229
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/ipv4/udp_offload.c:262
+features=features@entry=19, is_ipv6=false)
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/ipv4/udp_offload.c:289
+features=19)
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/ipv4/udp_offload.c:399
+features=19)
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/ipv4/af_inet.c:1418
+skb@entry=0x0, features=19, features@entry=0)
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/core/gso.c:53
+tx_path=<optimized out>)
+    at out/android15-6.6/kernel-6.6/kernel-6.6/net/core/gso.c:124
+
+This packet's frag list is null while gso_type is not 0. Then it is treated
+as a GRO-ed packet and sent to segment frag list. Function call path is
+udp_rcv_segment => config features value
+    __udpv4_gso_segment  => skb_gso_ok returns false. Here it should be
+                            true. Failed reason is features doesn't match
+                            gso_type.
+        __udp_gso_segment_list
+            skb_segment_list => packet is linear with skb->next = NULL
+            __udpv4_gso_segment_list_csum => use skb->next directly and
+                                             crash happens
+
+In rx-gro-list GRO-ed packet is set gso type as
+NETIF_F_GSO_UDP_L4 | NETIF_F_GSO_FRAGLIST in napi_gro_complete. In gso
+flow the features should also set them to match with gso_type. Or else it
+will always return false in skb_gso_ok. Then it can't discover the
+untrusted source packet and result crash in following function.
+
+Fixes: f2696099c6c6 ("udp: Avoid post-GRO UDP checksum recalculation")
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+---
+ include/net/udp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/udp.h b/include/net/udp.h
+index 488a6d2babcc..c87baa23b9da 100644
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -464,7 +464,7 @@ void udpv6_encap_enable(void);
+ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
+ 					      struct sk_buff *skb, bool ipv4)
+ {
+-	netdev_features_t features = NETIF_F_SG;
++	netdev_features_t features = NETIF_F_SG | NETIF_F_GSO_UDP_L4 | NETIF_F_GSO_FRAGLIST;
+ 	struct sk_buff *segs;
  
-> If I let them run they will finish and exit, no exec_child remains.
- 
-> If I instead try to stop the loop that goes on forking the 100 of them,
-> then the exec_child remain spinning.
- 
-> > `exec_child' spins until a signal is received or the parent kills it. So
- 
-> > it shouldn't remain there for ever. And my guess, that it is in spinning
-> > in userland and not in kernel.
- 
-> Checking that now:
+ 	/* Avoid csum recalculation by skb_segment unless userspace explicitly
+-- 
+2.18.0
 
-tldr; the tight loop, full details at the end.
-
-100.00  b6:   mov    signal_count,%eax
-              test   %eax,%eax
-            ↑ je     b6     
-
-remove_on_exec.c
-
-/* For exec'd child. */
-static void exec_child(void)
-{
-        struct sigaction action = {};
-        const int val = 42;
-
-        /* Set up sigtrap handler in case we erroneously receive a trap. */
-        action.sa_flags = SA_SIGINFO | SA_NODEFER;
-        action.sa_sigaction = sigtrap_handler;
-        sigemptyset(&action.sa_mask);
-        if (sigaction(SIGTRAP, &action, NULL))
-                _exit((perror("sigaction failed"), 1));
-
-        /* Signal parent that we're starting to spin. */
-        if (write(STDOUT_FILENO, &val, sizeof(int)) == -1)
-                _exit((perror("write failed"), 1));
-
-        /* Should hang here until killed. */
-        while (!signal_count);
-}
-
-So probably just a test needing to be a bit more polished?
-
-Seems like it, on a newer machine, faster, I managed to reproduce it on
-a non-RT kernel, with one exec_child remaining:
-
-  1.44  b6:   mov   signal_count,%eax
-              test  %eax,%eax
- 98.56      ↑ je    b6
-
-same tight loop:
-
-acme@x1:~/git/perf-tools-next/tools/testing/selftests/perf_events$ pidof exec_child
-722300
-acme@x1:~/git/perf-tools-next/tools/testing/selftests/perf_events$ ps ax|grep exec_child
- 722300 pts/2    R      4:08 exec_child
- 722502 pts/2    S+     0:00 grep --color=auto exec_child
-acme@x1:~/git/perf-tools-next/tools/testing/selftests/perf_events$
-
-- Arnaldo
-
-[root@nine ~]# perf record --call-graph dwarf -p 35785
-^C[ perf record: Woken up 48 times to write data ]
-[ perf record: Captured and wrote 12.120 MB perf.data (1503 samples) ]
-
-[root@nine ~]# ls -la perf.data
--rw-------. 1 root root 12720152 Mar 13 10:32 perf.data
-[root@nine ~]#
-[root@nine ~]# perf report --no-child --stdio
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 1K of event 'cycles:P'
-# Event count (approx.): 926018718
-#
-# Overhead  Command  Shared Object      Symbol                                
-# ........  .......  .................  ......................................
-#
-    98.48%  exe      remove_on_exec     [.] exec_child
-            |
-            ---exec_child
-               main
-               __libc_start_call_main
-               __libc_start_main@@GLIBC_2.34
-               _start
-
-     0.33%  exe      [kernel.kallsyms]  [k] arch_scale_freq_tick
-     0.13%  exe      [kernel.kallsyms]  [k] debug_smp_processor_id
-     0.13%  exe      [kernel.kallsyms]  [k] check_cpu_stall
-     0.13%  exe      [kernel.kallsyms]  [k] acct_account_cputime
-     0.13%  exe      [kernel.kallsyms]  [k] cpuacct_account_field
-     0.07%  exe      [kernel.kallsyms]  [k] preempt_count_add
-     0.07%  exe      [kernel.kallsyms]  [k] update_irq_load_avg
-     0.07%  exe      [kernel.kallsyms]  [k] cgroup_rstat_updated
-     0.07%  exe      [kernel.kallsyms]  [k] rcu_sched_clock_irq
-     0.07%  exe      [kernel.kallsyms]  [k] account_user_time
-     0.07%  exe      [kernel.kallsyms]  [k] __hrtimer_run_queues
-     0.07%  exe      [kernel.kallsyms]  [k] tick_nohz_highres_handler
-     0.07%  exe      [kernel.kallsyms]  [k] ktime_get_update_offsets_now
-     0.06%  exe      [kernel.kallsyms]  [k] __enqueue_entity
-     0.06%  exe      [kernel.kallsyms]  [k] tick_sched_handle
-     0.00%  exe      [kernel.kallsyms]  [k] __intel_pmu_enable_all.constprop.0
-
-
-#
-# (Tip: To show assembler sample contexts use perf record -b / perf script -F +brstackinsn --xed)
-#
-[root@nine ~]#
-
-[root@nine ~]# perf annotate --stdio2 exec_child 
-Samples: 1K of event 'cycles:P', 4000 Hz, Event count (approx.): 911943256, [percent: local period]
-exec_child() /home/acme/git/linux/tools/testing/selftests/perf_events/remove_on_exec
-Percent        
-               
-               
-            Disassembly of section .text:
-               
-            00000000004045cf <exec_child>:
-              push   %rbp   
-              mov    %rsp,%rbp
-              sub    $0xb0,%rsp
-              lea    -0xa0(%rbp),%rdx
-              mov    $0x0,%eax
-              mov    $0x13,%ecx
-              mov    %rdx,%rdi
-              rep    stos %rax,%es:(%rdi)
-              movl   $0x2a,-0xa4(%rbp)
-              movl   $0x40000004,-0x18(%rbp)
-              movq   $0x402a2e,-0xa0(%rbp)
-              lea    -0xa0(%rbp),%rax
-              add    $0x8,%rax
-              mov    %rax,%rdi
-            → callq  sigemptyset@plt
-              lea    -0xa0(%rbp),%rax
-              mov    $0x0,%edx
-              mov    %rax,%rsi
-              mov    $0x5,%edi
-            → callq  sigaction@plt
-              test   %eax,%eax
-            ↓ je     82     
-              mov    $0x4058af,%edi
-            → callq  perror@plt
-              mov    $0x1,%edi
-            → callq  _exit@plt
-        82:   lea    -0xa4(%rbp),%rax
-              mov    $0x4,%edx
-              mov    %rax,%rsi
-              mov    $0x1,%edi
-            → callq  write@plt
-              cmp    $0xffffffffffffffff,%rax
-            ↓ jne    b5     
-              mov    $0x4058c0,%edi
-            → callq  perror@plt
-              mov    $0x1,%edi
-            → callq  _exit@plt
-        b5:   nop           
-100.00  b6:   mov    signal_count,%eax
-              test   %eax,%eax
-            ↑ je     b6     
-              nop           
-              nop           
-              leaveq        
-            ← retq          
-[root@nine ~]#
