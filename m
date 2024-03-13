@@ -1,91 +1,63 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE7C818;
-	Wed, 13 Mar 2024 19:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77039210E9;
+	Wed, 13 Mar 2024 19:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710359563; cv=none; b=bfkfZT+tZQsNcS7yyiPdjryUSesA1X31IcxdYYyf5V2gi47rdw7nKNUMc1L/wDbxJEJjZW36/ZHgWF6sVglSCNX1wa9xMSoK5sxNeowmYt/IHRPm4sGztRp8Zdj/wtmmwBacQHQE4E755q7vBXg9+dNVTb68weOcqLa/NEqbMgQ=
+	t=1710359702; cv=none; b=fCoE66glVwDAqlONBGXMbWp/AjApc/9keNVBc+uBKL6MKw67BE584UOmCIAjw9mLIRxz0RK97X97aFP2rKgnDeL6+ajkNqKdlrIIutKUgYVyIfeVuubvEfHxJfMxK7e6Idn11uh15fEYqWhFoK7lCAau5wumjfU0PCQjoPjZ9Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710359563; c=relaxed/simple;
-	bh=3YzoVlwIF1iieFyYn1mdafpqQtsXqd13TNxdyyO8++o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rxPlq9TZr0ywfFlU+Lnj8mJ62iBAt6FzGQPdPkUrL5EXPSn3KO88XNr48bZ69AwIqDPEMRWN+w4YIsxYekbcHNladXNOjCjQ+wY3XRk/tMeHyZiZz9ULyDQNq7oyVTSYidZj7FC/hVSC7o7VYBCjthxODkj5dTpY0/d3OHIfaXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-220ce420472so64833fac.1;
-        Wed, 13 Mar 2024 12:52:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710359561; x=1710964361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zsyYxxDckIJsGNwJdIcBtryvdcdG19TdU6Mr0Ia8P1I=;
-        b=GnmaBG91JKqvVun/Wj0Gujr300fJxN8qWAEdjOkQDAjKBKXa5/2e0WdjR9hIWaG7/T
-         hHTN2kPmvqtOVJ4r9mD6fm7DPjPCH4g31/c30U1Ap+58rcgdgmw6R5omLraAHMO/v3i0
-         QJXZmKZ0M4m6D+F3imCk5N3zjB29PwZPrU+1zwVPbRgxczqPn2xGS6lPZKV6zIUmJgWc
-         ZSjNNFpwH71G+PowbVx4CN+XdvcT3Ff8HbfQv+mMa6gqbD36VgXRpewY3KSK9Sji32pi
-         C7b3Z4/IQ7Bt+udYDyiSFtGmGdt0FE99l0iz+pazolKmipBwO8ojTNiKN4VTj61eMIz1
-         OeAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmzpi+dgqGXqK+boeZq0XnILdyQLggBDCwerAnncaaPI+E715nQU8/TGeJEzRIqvnJ0D5Q0t4goalps/baeqDkFPh3zb7hsWVd01vFcBhJnYHD4cDX8LGsg6/c7DZnDR63DUSWtg4=
-X-Gm-Message-State: AOJu0Yw1WRCuFEI8LR+V+70rkRJvRnnYf8LBluQu3NOmpACmOtO+OzFC
-	nEkKiZZQsWD6YXonbH1YkG6GwDLzuQZDdz4ixkrOM4m5W5s9NibCcHtSR27xIQwB5OOqzhRltZg
-	e1pib8dzJMpJ2ZFbIlZkLWvgGUH0=
-X-Google-Smtp-Source: AGHT+IFFi8nzhAb8uM1LSe/79phBF1NaxMX14wQLkupvPGA94MBnJn0aLn6QlcT0KEarEt5KsA5p/KryJ4YyhfBZj1A=
-X-Received: by 2002:a05:6870:37d1:b0:221:bdc9:6a1d with SMTP id
- p17-20020a05687037d100b00221bdc96a1dmr2805997oai.2.1710359560806; Wed, 13 Mar
- 2024 12:52:40 -0700 (PDT)
+	s=arc-20240116; t=1710359702; c=relaxed/simple;
+	bh=j+U9E9lfJdvcOySZsZqHvCJpzYfOaJSbSsP89+NlbHc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:References:Cc:
+	 Subject:In-Reply-To; b=H72ibz9oLePnDKZ78wuAHIbNSpRXDmp3Xwl2ydND0Mhi7ATsu2wjyQW/reb5UgPMalAqxtiWviXn8ihN5wkXBOg7CuU1PYKAzHtmjOfwgkVhetGTA3qpelk+aC8MkX3HI+QGCF7nOZWi8HwmmtkbazgBmk6z7n4jAJRpEO9RxxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
+	serial F5FD910E8FE2121B897F7E55B84E351D
+	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
+	auth type TLS.CUNI
+Received: from localhost (koleje-wifi-0013.koleje.cuni.cz [78.128.191.13])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 42DJsD9Z080389
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Wed, 13 Mar 2024 20:54:15 +0100 (CET)
+	(envelope-from balejk@matfyz.cz)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240308224450.2327415-1-saravanak@google.com>
-In-Reply-To: <20240308224450.2327415-1-saravanak@google.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 13 Mar 2024 20:52:29 +0100
-Message-ID: <CAJZ5v0gn+FdDxsAtQj5d2CmBi+GpB0ATq+5QimGLAiovwOHCGQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: power: Fix typo in suspend and interrupts doc
-To: Saravana Kannan <saravanak@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	kernel-team@android.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 13 Mar 2024 20:54:44 +0100
+Message-Id: <CZSVWO3IDZ96.38O0P161Z99XU@matfyz.cz>
+To: "Johannes Berg" <johannes@sipsolutions.net>,
+        "James Prestwood"
+ <prestwoj@gmail.com>,
+        "Michael Yartys" <mail@yartys.no>
+From: "Karel Balej" <balejk@matfyz.cz>
+References: <005f998ec59e27633b1b99fdf929e40ccfd401c1.camel@sipsolutions.net>, <f2dcbe55-0f0e-4173-8e21-f899c6fc802a@gmail.com>, <NbWQKmrYDD20KKHeq9TMda2MJFE00-weepZGuSIRzO5BOgMlTbWBkDlNNweA2dhbvF8TK1F_cHbMxblLVNREZa1HZEFt9TVCkTB1jo_5ppc=@yartys.no>, <CZSHRUIJ4RKL.34T4EASV5DNJM@matfyz.cz>, <20231010212240.61637-1-dimitri.ledkov@canonical.com>
+Cc: <alexandre.torgue@foss.st.com>, <davem@davemloft.net>,
+        <dhowells@redhat.com>, <herbert@gondor.apana.org.au>,
+        <keyrings@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-modules@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <mcgrof@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <dimitri.ledkov@canonical.com>,
+        <iwd@lists.linux.dev>, <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Re: [PATCH] crypto: pkcs7: remove sha1 support
+In-Reply-To: <CZSHRUIJ4RKL.34T4EASV5DNJM@matfyz.cz>
 
-On Fri, Mar 8, 2024 at 11:45=E2=80=AFPM Saravana Kannan <saravanak@google.c=
-om> wrote:
->
-> Typos are bad. Fix them.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  Documentation/power/suspend-and-interrupts.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/power/suspend-and-interrupts.rst b/Documentati=
-on/power/suspend-and-interrupts.rst
-> index dfbace2f4600..f588feeecad0 100644
-> --- a/Documentation/power/suspend-and-interrupts.rst
-> +++ b/Documentation/power/suspend-and-interrupts.rst
-> @@ -78,7 +78,7 @@ handling the given IRQ as a system wakeup interrupt lin=
-e and disable_irq_wake()
->  turns that logic off.
->
->  Calling enable_irq_wake() causes suspend_device_irqs() to treat the give=
-n IRQ
-> -in a special way.  Namely, the IRQ remains enabled, by on the first inte=
-rrupt
-> +in a special way.  Namely, the IRQ remains enabled, but on the first int=
-errupt
->  it will be disabled, marked as pending and "suspended" so that it will b=
-e
->  re-enabled by resume_device_irqs() during the subsequent system resume. =
- Also
->  the PM core is notified about the event which causes the system suspend =
-in
-> --
+Thank you all for your feedback so far.
 
-Applied as 6.9-rc material, thanks!
+Since it seems that this really is a regression on the kernel side, let
+me add the appropriate list to Cc and tag this:
+
+#regzbot introduced: 16ab7cb5825f
+
+Best regards,
+K. B.
