@@ -1,81 +1,108 @@
-Received: from vm3.sequanux.org (static.68.236.76.144.clients.your-server.de [144.76.236.68])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7EB2E636;
-	Wed, 13 Mar 2024 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.236.68
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88030381D5
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 09:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710323469; cv=none; b=ldq98eeyR87LjEigRx2Dbm2GxYIoqoOF4KteH8DwiOpfLk97j+AZkn9CXeBcBaxy1ANxM+snH2OgrPL7bO11v3JiOUKsx90FziqetU0wJGAeb8VKykYaCs4iPx8M7jU8R+ldwLhFeUTOTyXqtIyYhbMenWZiYgEKcbXjH30ewG4=
+	t=1710323603; cv=none; b=UT5Wr9/Wwv4yECMVaRtM0PSfgsoec/z9l/MV0rYmg4tnqTPQFsWBUAjlWsf6U+pD5awUeF6kNel3+S63gcqt6Nn+dvgbAVeg7nAkrN09Vz9CYqzmIG3Dr6TAJz9J/u76z+Tx3H3G/8xVEQhMqbXBCu5Yw+u8PsCFnobxxUMP/3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710323469; c=relaxed/simple;
-	bh=uXuPE3VKA7NxuaIY5UcFuFsMWM4D2G9o+mMSlbTcRfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WwcrbJvaPiSKGjaoSv1IYnb753WYTg+39sblaI5scDhN9m5YGkhSDq9yetEZMRqyEd7vj9kvt9TsGPzxMp2nZPzOY7fRS4vU90Qr0KY9yM+eje3ipZj5Yl9QJnke+f6fv4FN+GJOPkk3sCMcayMfhetEncBLewMS1YdlFq7eADA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=seagate.com; spf=pass smtp.mailfrom=sequanux.org; arc=none smtp.client-ip=144.76.236.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=seagate.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sequanux.org
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by vm3.sequanux.org (Postfix) with ESMTP id C4572108B3E;
-	Wed, 13 Mar 2024 10:50:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
-Received: from vm3.sequanux.org ([127.0.0.1])
-	by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lBvAo3xPwqFl; Wed, 13 Mar 2024 10:49:55 +0100 (CET)
-Received: from localhost (88-167-49-193.subs.proxad.net [88.167.49.193])
-	by vm3.sequanux.org (Postfix) with ESMTPSA id 45F3A108ADB;
-	Wed, 13 Mar 2024 10:49:55 +0100 (CET)
-From: Simon Guinot <simon.guinot@seagate.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Maciej W . Rozycki" <macro@orcam.me.uk>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Simon Guinot <simon.guinot@seagate.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] PCI: fix link retrain status in pcie_wait_for_link_delay()
-Date: Wed, 13 Mar 2024 10:49:38 +0100
-Message-ID: <20240313094938.484113-1-simon.guinot@seagate.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1710323603; c=relaxed/simple;
+	bh=MHm9FFtBz7Eh6MOhx4kKxazsP44RUIvwo8+ERZRUVmw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sUWlmCfDFsC4SOq9NWqduG7Ia9esEGU9IZEwKI1J7z/CpoFNT7mCrs9QaBYq9GdEieaW+P+XDOA8yPSu7wb7YFQ5mxdoKyR5Y+E1KO5Fqv9SGM/mZF9wE73UBxiAqzIMclBYgTW3+JVcFG3c5CRxC0r/XS+1g6A3p2Gg7cG6rSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2CGP3/z; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2CGP3/z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710323601; x=1741859601;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=MHm9FFtBz7Eh6MOhx4kKxazsP44RUIvwo8+ERZRUVmw=;
+  b=i2CGP3/za5AN29FxTCKQDSok160K3hdnzH/TpyBi9oJNTQ9Yz2Iz+Tg4
+   ZmLXD6ImT/PsLRGMMmNntIV26TCC2d1O7sy2lEaXxgnXipP34U71ibNPc
+   R2CBIIlyLTbbZqctgazNDIZwqul3QWGomko4cIvi51GTkHk+DYxWgsya+
+   aYDH1tZTPse5mh9qcKezWd/udaRhbTq391qFe7CM2JXh4CqPakPEtbMm1
+   iJpIoH7aG1LPUFmFX+XgT+7Z62bRaLLWd8skn9/HEz6LVXCAw8t4EsSn/
+   vO/txO/Zcs0T4nO+uUTd2CSm1gFLc1jlGS3Zqq2/KpawbudZilLV3EEHK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5201263"
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="5201263"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 02:53:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="16436868"
+Received: from jbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.53.28])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 02:53:16 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Arnd Bergmann <arnd@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Radhakrishna Sripada <radhakrishna.sripada@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Imre Deak <imre.deak@intel.com>, Nirmoy
+ Das <nirmoy.das@intel.com>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: add intel_opregion_vbt_present() stub function
+In-Reply-To: <20240313084735.3305424-1-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240313084735.3305424-1-arnd@kernel.org>
+Date: Wed, 13 Mar 2024 11:53:14 +0200
+Message-ID: <87bk7isbjp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The current code in pcie_wait_for_link_delay() handles the value
-returned by pcie_failed_link_retrain() as an integer, expecting 0
-when the link has been successfully retrained. The issue is that
-pcie_failed_link_retrain() returns a boolean: "true" if the link
-has been successfully retrained and "false" otherwise. This leads
-pcie_wait_for_link_delay() to return an incorrect "active link"
-status when pcie_failed_link_retrain() is called.
+On Wed, 13 Mar 2024, Arnd Bergmann <arnd@kernel.org> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The newly added function is not available without CONFIG_ACPI, causing
+> a build failure:
+>
+> drivers/gpu/drm/i915/display/intel_bios.c:3424:24: error: implicit declaration of function 'intel_opregion_vbt_present'; did you mean 'intel_opregion_asle_present'? [-Werror=implicit-function-declaration]
+>
+> Add an empty stub in the same place as the other stubs.
+>
+> Fixes: 9d9bb71f3e11 ("drm/i915: Extract opregion vbt presence check")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This patch fixes the check of the value returned by
-pcie_failed_link_retrain() in pcie_wait_for_link_delay().
+Thanks, but just applied the identical [1].
 
-Note that this bug induces abnormal timeout delays when a PCI device
-is unplugged (around 60 seconds per bridge / secondary bus removed).
+BR,
+Jani.
 
-Cc: stable@vger.kernel.org
-Fixes: 1abb47390350 ("Merge branch 'pci/enumeration'")
-Signed-off-by: Simon Guinot <simon.guinot@seagate.com>
----
- drivers/pci/pci.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ccee56615f78..7ec91b4c5d03 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5101,9 +5101,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(20);
- 	rc = pcie_wait_for_link_status(pdev, false, active);
- 	if (active) {
--		if (rc)
--			rc = pcie_failed_link_retrain(pdev);
--		if (rc)
-+		if (rc && !pcie_failed_link_retrain(pdev))
- 			return false;
- 
- 		msleep(delay);
+[1] https://lore.kernel.org/r/20240312115757.683584-1-jani.nikula@intel.com
+
+> ---
+>  drivers/gpu/drm/i915/display/intel_opregion.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_opregion.h b/drivers/gpu/drm/i915/display/intel_opregion.h
+> index 63573c38d735..4b2b8e752632 100644
+> --- a/drivers/gpu/drm/i915/display/intel_opregion.h
+> +++ b/drivers/gpu/drm/i915/display/intel_opregion.h
+> @@ -120,6 +120,11 @@ intel_opregion_get_edid(struct intel_connector *connector)
+>  	return NULL;
+>  }
+>  
+> +static inline bool intel_opregion_vbt_present(struct drm_i915_private *i915)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline const void *
+>  intel_opregion_get_vbt(struct drm_i915_private *i915, size_t *size)
+>  {
+
 -- 
-2.43.0
-
+Jani Nikula, Intel
