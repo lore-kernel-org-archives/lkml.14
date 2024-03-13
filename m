@@ -1,63 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709E95EE8D
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806A3210E9;
+	Wed, 13 Mar 2024 19:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710358100; cv=none; b=Wc9Pq/3Oi0JuXIva/PFfoIunWCg3DsQWfbz1tWn992RGVfIpLniZVvPJdHlaateWV8zmINXIwQ4kSsmH7ewSyeipOiQ45xFvurxRltZ6tFC5YLWLdyo+JchTTsZsq1m+6jPkfT+k9X9MlG9MvMItNgABV1Wrb3qzph/ZW42rNY4=
+	t=1710358136; cv=none; b=NkJ/Jkc+9QQtC8MDWaU1oZ7VU4HHhnC+cEZb1TXBwT47kgW+zV/yKsonzz5ySV/XGPDC9Q6Dn0B+g1dAEDWJjqjaTDMP3sw2a7kI2sul7ZxyWQDzxBLKc6qI8L4TvEUyn2ZpfasNxDPTGx4/nlwBp2fGowwAGFaKIghBl5Mo0Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710358100; c=relaxed/simple;
-	bh=EL4IfTxTF0tER+aLT0V0ZdDYfNBQ/K7Mtw9kBOcFsAg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZpnGB/0omRHLnp9KMviiQUPNY2pkpMZHLL6TCzw+O7NAZ6PfPoaKJ1ILj+Mh+EacNgpqIpBkqS5QyTrxBQjxBgaj0FBNmftrJgxUh6darnVqGJfWfpBWs71uVluhV5HUiigV1fv/1EyuF9HswyFEhMSJAIE4GcR3kYttBotJg8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZK3xV5q5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710358136; c=relaxed/simple;
+	bh=jEX7xRWr5bS1ECghF4PJiW3looDCCj225HvMYgHcpM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1N8CgLi9ODBYlz3XEZSj33mOR1pHa4WlyzhEiUC+u5qGm7gbydGvOx66OB82NTSsMhrSl0skStgorPcrmBdHpJs6SUcKnukY7QfGb2dIkpfUb+8o6o0pcZ0gQXpgSX+0VUhyjC8B4elyR8U56n2LAYh3K1ofujg9ifjybwP9AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YODp69Yv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZK3xV5q5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0122DC43390;
-	Wed, 13 Mar 2024 19:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710358100;
-	bh=EL4IfTxTF0tER+aLT0V0ZdDYfNBQ/K7Mtw9kBOcFsAg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ZK3xV5q5lgEFPkHpB0Msg0PqT011IUExbOT+Hljx/yU4YTMuP2RrdhvqPwdo5Q9KV
-	 g1aLfzNsO+/zJmLp8tk0xOUS02dG6uvHYwbnPFCHsB+aUJ3Yr0aOLBkUENhLgWNOio
-	 pAeU7sNb9ukbHANp24GOhOvaLKNKexjKT5SiPiVcmFCRW/gYHpztpOSdIBvIujVyKn
-	 7Zodcpwbx9fQBR8TeVpNNVLRfuddOfBS3RUbymO49N7OeW7BEqCIBpPcc0geYwthyE
-	 eu0+FrJ2VjL0RxwLJRlnZal0DnqXxPDanVTbNJatVijDDJcnUdKVFP3crqUMkatRJm
-	 8vAQumNFrnfew==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E0E2ED95054;
-	Wed, 13 Mar 2024 19:28:19 +0000 (UTC)
-Subject: Re: [GIT PULL] regulator updates for v6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240311151308.0406CC433C7@smtp.kernel.org>
-References: <20240311151308.0406CC433C7@smtp.kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240311151308.0406CC433C7@smtp.kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v6.9
-X-PR-Tracked-Commit-Id: e6f0b08a036734552628ab788ecb528ca53814ab
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 21ac5a96513c6588c9a71bffa16d665675930a60
-Message-Id: <171035809991.9850.15332467526227106799.pr-tracker-bot@kernel.org>
-Date: Wed, 13 Mar 2024 19:28:19 +0000
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YODp69Yv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710358135; x=1741894135;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jEX7xRWr5bS1ECghF4PJiW3looDCCj225HvMYgHcpM4=;
+  b=YODp69YvPtwh9Y6RYowYz+P7pMCFNiBLIRflFe+mTW9RvaWBF+mbjJCx
+   HHFvOFqn3LNzuRTJJPif5U7C3EySBVjokdInT3dsomTNGXyZcK6KOr7o2
+   Dmii6yRptti7LubZMJeapTweQHLVUfnOtiDnxEs7PbggrTZDa3gm3mEin
+   2UF1tIhEDbUZXPqNKEHiT70+1ZjsCqt6fUnVJ0jH1+Cn4Pg2hF7vVz2Fe
+   D0SiVTQzhcKpqPpMQNMxCX0c2RD4tcKx/gJab+ZLyzlzKrCocNzY8MNZL
+   jktWl86XjJ4C40yy9iBOv7BBDS3Jf747QEHw9Ara3Y5Xo7v4JFqhqxC8H
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="15876370"
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="15876370"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 12:28:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="914439794"
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="914439794"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 12:28:50 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rkUHQ-0000000CJBn-0szT;
+	Wed, 13 Mar 2024 21:28:48 +0200
+Date: Wed, 13 Mar 2024 21:28:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, ang.iglesiasg@gmail.com,
+	mazziesaccount@gmail.com, ak@it-klinger.de,
+	petre.rodan@subdimension.ro, linus.walleij@linaro.org,
+	phil@raspberrypi.com, 579lpy@gmail.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] iio: pressure: Simplify read_* functions
+Message-ID: <ZfH-b2KWcU_8-Nmh@smile.fi.intel.com>
+References: <20240313174007.1934983-1-vassilisamir@gmail.com>
+ <20240313174007.1934983-3-vassilisamir@gmail.com>
+ <ZfH4IyeFTGFBKT4J@smile.fi.intel.com>
+ <20240313192245.GA1938985@vamoiridPC>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313192245.GA1938985@vamoiridPC>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The pull request you sent on Mon, 11 Mar 2024 15:12:58 +0000:
+On Wed, Mar 13, 2024 at 08:22:45PM +0100, Vasileios Amoiridis wrote:
+> On Wed, Mar 13, 2024 at 09:01:55PM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 13, 2024 at 06:40:03PM +0100, Vasileios Amoiridis wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v6.9
+...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/21ac5a96513c6588c9a71bffa16d665675930a60
+> > >  		case IIO_TEMP:
+> > > -			ret = data->chip_info->read_temp(data, val, val2);
+> > > +			ret = data->chip_info->read_temp(data);
+> > > +			*val = data->chip_info->temp_coeffs[0] * ret;
+> > > +			*val2 = data->chip_info->temp_coeffs[1];
+> > 
+> > > +			if (!strcmp(indio_dev->name, "bmp580"))
+> > > +				ret = IIO_VAL_FRACTIONAL_LOG2;
+> > > +			else
+> > > +				ret = IIO_VAL_FRACTIONAL;
+> > 
+> > I'm wondering if we may replace these strcmp():s by using enum and respective
+> > values in chip_info.
+> 
+> The whole problem starts from the fact that all these BMPxxx_CHIP_ID defines are
+> not unique for the respective BMPxxx device. You mean to add a new variable
+> that could store some enum values that would be the actual chip_info IDs? Like:
+> 
+> enum chip_info_ids = {
+> 	BMP085,
+> 	BMP180,
+> 	...
+> 	BMP580,
+> };
+> 
+> and later for every chip_info struct to use it like this:
+> 
+> const struct bmp280_chip_info bmpxxx_chip_info = {
+> 	...
+> 	.chip_info_id = BIT(BMPxxx),
 
-Thank you!
+No BIT(), but yes.
+
+> 	...
+> }
+> 
+> And in the read_raw() function to just use the test_bit() function in the same
+> way that is done with the test_bit() and avail_scan_mask to test for the
+> enabled channels?
+
+If BIT() is more suitable, than also yes.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+With Best Regards,
+Andy Shevchenko
+
+
