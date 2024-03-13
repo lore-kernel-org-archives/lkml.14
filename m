@@ -1,123 +1,120 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4566C41A80;
-	Wed, 13 Mar 2024 14:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C249146441
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710339434; cv=none; b=jwLOQq6SNtPJmH1mt4/p6QpcI//tsEQqUuewT67SenjCRvBQ8tbJcFVPd/Ky3DnO8iMqa2hd5+u3wk9lsifbC1j3Ukj2uBt8i0dRoIBEXKa457EnCet4sOnb4C7zHfF+m5fgxaSkS0WLYrggYOtvvydEGJsVnJKsD+7HqJblQJo=
+	t=1710339471; cv=none; b=ZPUMRA6ZenaMMiTryS0j6N/siDwGLO+9NQhcasrVkkPnMlFRyAoM4t0mMmIvKZKI2doDbWRWg/ar40wNmclevbSExO3U3AhCRpJuxWUkEc8tCYgFEugRLwaz63aAmpiTAyJ5WOQvJr2L8E14XKlK0JDSsN0KjGvzgiefnGEk9+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710339434; c=relaxed/simple;
-	bh=7LeOG2wNuxDjCRbEa+kiNhbHeBP3r4A3vvB0gv+OL1o=;
+	s=arc-20240116; t=1710339471; c=relaxed/simple;
+	bh=DI5UQKmJ6ci320U8du68tPIQjhz0EADiePzyf3FHvw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icaIFBTIbQqZG8qJIpZcW+Rgo+eGs5/p6BPM3zpHGeW1Vmg2n6gmSCPKgEDOoovq9MRDk0KZYg72LqZ25yVBbjFCcGx+NugaCrdAx65gXb/Iq47NtE7dhm4TU59Cu2FpCvV2eUaqM/3r54ki6YtJrR4F858pnNbjpJ0WE9qd0Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lSSQi3xc; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BaOc3aklsTu1Hgyw8KYiWWBqRpAqX4Lin/B6c5x19+AB3Nbh9X4CCS2N7xwl+RVbg2eQhJ4HXRyH9xvq+WeC603jbNemvuxYBOebJi5ACNIpkNA1TGf+doftAXifQbh9fbLb9P8kXJYATmwDf0a3bsTNFM2lioMurXRV8PnMheo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y3c6tY4n; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lSSQi3xc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710339431;
-	bh=7LeOG2wNuxDjCRbEa+kiNhbHeBP3r4A3vvB0gv+OL1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lSSQi3xcCksgyjMDBukyOvFXAqcj6zABeVftEMLPXBvAz3ZUF9aONImTVbkJL4mFq
-	 fSz1SeNylIwugM4ZgfGQ6o6/yFsnXJVIanSABL1R4XAGkfX0NCA99H4rZqBxQe2W6F
-	 ei7OplwH9OSwGDXVKvzzel5+BiJyICrp8R205slhxuB8xAfeqsV/0LrjEhiHMAIwNE
-	 VRaWQ+R+8W8oyfgNGlCFUjLtusKYFKcGmBPsfdkh/fehr1wfpplv7a6HBqan5n/u5i
-	 D8I8dmYOGAS2kG0swlvF7SXCxCYtgkoybq58Df8L6tUIK0YK0S9UL0HATzOgu8vO0S
-	 6REnjOzPiBQiA==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 820EE37820D4;
-	Wed, 13 Mar 2024 14:17:11 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 13DD81061C35; Wed, 13 Mar 2024 15:17:11 +0100 (CET)
-Date: Wed, 13 Mar 2024 15:17:11 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v1 1/1] net: stmmac: dwmac-rk: Remove unused of_gpio.h
-Message-ID: <mz55sv7refxxpf7krrbbu4etnim6z7kv4ksovg2vsoi5dzymub@hsi3qgqnzm3k>
-References: <20240313140057.2088667-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y3c6tY4n"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-513a08f2263so4264427e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710339468; x=1710944268; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DI5UQKmJ6ci320U8du68tPIQjhz0EADiePzyf3FHvw4=;
+        b=Y3c6tY4nc5ZcnIU7xal9B4x7B8tqM0ly+9JTLwWArNoqbBCpvbW/BWUgdES3O22yMC
+         2nmjpcDUgrxFjLHGrjbDhpuyCG9GfMaSYGNhoEErZDBqQ7Lrp10LFd8cCVXwL2+XEwP0
+         rzPCRkSJy5aE8hiihTlT0pUlzES4B31+ohj9h+v4RdtyWaxLcXPVfgrAki7xiTjGmcGi
+         AY/MtUFCdwl9tf2u4PTkAw3j/J6Z1Y3PizN2s14zZiEyR747ZuRDx6/rX1TwUTsiX4yP
+         Yjis24LyK2DqskLlTfFIWyIc/2cPooVswf+VDGstxpx+qr3HWWpg+cV+EbSLV9SnjRgI
+         CWTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710339468; x=1710944268;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DI5UQKmJ6ci320U8du68tPIQjhz0EADiePzyf3FHvw4=;
+        b=lEn2E8xrbGQ4oGpRPDI4k/v7uBZatgrYDYz29wFSXf/wevQT75rBA0g0iMX+ccXweR
+         PI/GtmhkjzgC/p2aY9X3q6Kj8UrQyo1jBmtD2PC6AfmwjKAUjsDLt4pX7ZvgKTfzyVza
+         oiHFf1nXnZdaX8/P6njlq3DkSRozi6LPg1wU/C174gAL+KlZby09o3ERlDL6PtQIg1vb
+         b2w0eyto7l929sdn/lzwbOVuqzxbCLqcLCYv8BdSCBkcJhDGwr7DjrXD5xmGfi7rUrUC
+         WqX9/UjIpXPm4+ev4qwHRmgmL3pysmicnWDXP00tsNO6JWPxgK45qIz7I1YZMiVZNIad
+         AZRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkcqtZd2Xwq/oqVvNVIGXfwEdtTc39BPfh4O+1eHmvxgswWdIB5XqPJOlyWV8HXsKdNA6NTPRI3OGtFQB9HIIxfLyl8yAtP/HmasTb
+X-Gm-Message-State: AOJu0Yz7lhdlaeOM7kwvXzITejahROCAumjWHVujnkF8kmHXpfNqomA7
+	I++J0bqmAuwiTECQTjsJklDRPIwvE52XyvxNZzEY4ouPfwrDJ7VffujNxQNaZxA=
+X-Google-Smtp-Source: AGHT+IFx+Ru8HLmNgnvlGtS2WaPtuNHppwpho5k+Bj3WbKN3ZgQ4vuHCgkqhvKsxNRYrcFFpxU5muw==
+X-Received: by 2002:a05:6512:3baa:b0:513:b102:7d93 with SMTP id g42-20020a0565123baa00b00513b1027d93mr7524047lfv.24.1710339467939;
+        Wed, 13 Mar 2024 07:17:47 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id v11-20020a05600c444b00b00412f016a151sm2492507wmn.9.2024.03.13.07.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 07:17:47 -0700 (PDT)
+Date: Wed, 13 Mar 2024 14:17:45 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Liuye <liu.yeC@h3c.com>
+Cc: "jason.wessel@windriver.com" <jason.wessel@windriver.com>,
+	"dianders@chromium.org" <dianders@chromium.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"kgdb-bugreport@lists.sourceforge.net" <kgdb-bugreport@lists.sourceforge.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiDnrZTlpI0=?= =?utf-8?Q?=3A?= [PATCH] kdb: Fix the deadlock
+ issue in KDB debugging.
+Message-ID: <20240313141745.GD202685@aspen.lan>
+References: <20240228025602.3087748-1-liu.yeC@h3c.com>
+ <20240228120516.GA22898@aspen.lan>
+ <8b41d34adaef4ddcacde2dd00d4e3541@h3c.com>
+ <20240301105931.GB5795@aspen.lan>
+ <2ea381e7407a49aaa0b08fa7d4ff62d3@h3c.com>
+ <20240312095756.GB202685@aspen.lan>
+ <06cfa3459ed848cf8f228997b983cf53@h3c.com>
+ <20240312102419.GC202685@aspen.lan>
+ <410a443612e8441cb729c640a0d606c6@h3c.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s4m5pnqu3w2utz3e"
-Content-Disposition: inline
-In-Reply-To: <20240313140057.2088667-1-andriy.shevchenko@linux.intel.com>
-
-
---s4m5pnqu3w2utz3e
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <410a443612e8441cb729c640a0d606c6@h3c.com>
 
-Hi,
+On Wed, Mar 13, 2024 at 01:22:17AM +0000, Liuye wrote:
+> >On Tue, Mar 12, 2024 at 10:04:54AM +0000, Liuye wrote:
+> >> >On Tue, Mar 12, 2024 at 08:37:11AM +0000, Liuye wrote:
+> >> >> I know that you said schedule_work is not NMI save, which is the
+> >> >> first issue. Perhaps it can be fixed using irq_work_queue. But
+> >> >> even if irq_work_queue is used to implement it, there will still
+> >> >> be a deadlock problem because slave cpu1 still has not released
+> >> >> the running queue lock of master CPU0.
+> >> >
+> >> >This doesn't sound right to me. Why do you think CPU1 won't
+> >> >release the run queue lock?
+> >>
+> >> In this example, CPU1 is waiting for CPU0 to release
+> >> dbg_slave_lock.
+> >
+> >That shouldn't be a problem. CPU0 will have released that lock by the
+> >time the irq work is dispatched.
+>
+> Release dbg_slave_lock in CPU0. Before that, shcedule_work needs to be
+> handled, and we are back to the previous issue.
 
-On Wed, Mar 13, 2024 at 04:00:57PM +0200, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it, simply remove the unused header.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+Sorry but I still don't understand what problem you think can happen
+here. What is wrong with calling schedule_work() from the IRQ work
+handler?
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Both irq_work_queue() and schedule_work() are calls to queue deferred
+work. It does not matter when the work is queued (providing we are lock
+safe). What matters is when the work is actually executed.
 
--- Sebastian
+Please can you describe the problem you think exists based on when the
+work is executed.
 
->  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net=
-/ethernet/stmicro/stmmac/dwmac-rk.c
-> index 382e8de1255d..7ae04d8d291c 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> @@ -12,10 +12,8 @@
->  #include <linux/clk.h>
->  #include <linux/phy.h>
->  #include <linux/of_net.h>
-> -#include <linux/gpio.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/delay.h>
-> --=20
-> 2.43.0.rc1.1.gbec44491f096
->=20
 
---s4m5pnqu3w2utz3e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmXxtV4ACgkQ2O7X88g7
-+ppV1A//fyQqXP+7uaMBcWR9nRq+3t4g6Z61t1qGl8setP/+tyCbdYlUZ7CWSBAq
-Kk/fxK5Jh9ChrPByBz8/kNmub2Qj/x0iHKyabQYcH9p0Ifon98pP+D/Cw5olXAIf
-e4uq/bKHwSPe8XnB9YSgseVci5CSqBzwoc+1pZkhi2zZwTskKq6jFar/KWDE6GiL
-1QdlO5JOojO6Iv+cJKtqSmZ0ebc6WvhDb25Kcz0bkNy2znTy0XZlpVZrHCFV0SXf
-6lDxoBN6vba7rVq+2RFnT6ieam+5L8unJGn0cnePHoWQX9yekrrZNMfdYDBZxIfj
-PdB4vVt8aQohtGRU0m36RfKiQEDGim61oji9NiHhLPt8yhWSK0kWPy5An5LfnyvS
-0HGkd5lKGYSlfTM71bt7YkAL1ixgJZ3iOzfe/J2KlpyarZMCskh2ycB+4vl0XJkS
-rC5OwSXtLF+/34mHJblKiMaKcIxrLX5Pssa/d+6EE8lfVTqlkZdPRipyPZUbdZ7r
-J+JibT3Yv5coDWAnkBBeB+P9rKj9CUXK2NHA9exN/3cKnYglBn2T8BC8XiaSVOWd
-ITDvFSs3fQjLjXtOB1UbA2nJHl8kVtifdQDTd0oXVnR6FuBp+I2lG2nLVhzeQ4NA
-+8ZdWZIhI0lxvN9xMHLS17MpnvBh/0iEUtPAlkN6/Z3kM1IAfk8=
-=bv+r
------END PGP SIGNATURE-----
-
---s4m5pnqu3w2utz3e--
+Daniel.
