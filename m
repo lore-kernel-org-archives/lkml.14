@@ -1,571 +1,244 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B615147A6A;
-	Wed, 13 Mar 2024 16:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710346024; cv=none; b=AkQYb7ARSU9WCesx21buY3Ez/j7W7sqjEcFIgE6lo/gQ1IxisG+zDzoyOVHHUSBnS9k+iJFJ6feHNZPQcY2PJmDTr2n+nM+TA2vMCfN/xIlCw97/i+KqUDleZnsXNVXzZdwIe8Dms/6RCFeIyNsTLJggJe/LsvHSUjmeDv3l/bM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710346024; c=relaxed/simple;
-	bh=oHYxs4wpvGELCXK2ZZSyiB7d6u/srXwJOQDgos8x3/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pcFs2kvjuIj9jHEaFx+PW+kgEy86IyvMNge7sSRxFIDpx/ryLG7sFjBnU7a2TyBYIPu9k5/JxIGKRks/D3/+BtSSIOJr/PREcill2kTEGZl/xQwMM8ULTZ1RVUoJ4n4v1XN1ZfBfgGeg5yqal4KgyywN9EHvqjNZX3LZkUb+ass=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LwYZ1ETe; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C03481C2;
+	Wed, 13 Mar 2024 16:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710346335; cv=fail; b=mXOrdqdD87188SSuln6CG4G3UmsQM6+dFwhVGOFamQeUbCUY2NhKAnQyE578v3Qi2JlhXT7ai8dm3kgtSrJTNtb/1GtSADLuaMSyNPRweTyeSFqYb7f+ezgaLkoUlICIzvUpRVStGXmWJm3dvv82f/2KoX3bok0XL7FAEc74GBU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710346335; c=relaxed/simple;
+	bh=sKCguQHUs09KUDZDeZNck88qw2BEZt55MnQKplntteE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UEZzud1crAf9hmETdduxsedukuGTzqhY7vTTmzPUpIKdpFuKQTee+F2ef16Nwqodi8sVT+QRg/q/CA4MD6JCVh+UywMm/DGvp0aK75QgMSJFFDCSx1lg5PlDQKCeplLi3dqtmlMzvY3RxcbHomTLMbw+GyI1EsXTHgU5QQfVUeE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2vgoljYY; arc=fail smtp.client-ip=40.107.243.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LwYZ1ETe"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42DG6aEu044289;
-	Wed, 13 Mar 2024 11:06:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710345996;
-	bh=mvsw783kFCwVBrTqjHsiRHijTHpXuhw5Ld54euZgAGg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=LwYZ1ETeTh98GKBsYV1Ah9DETHo3A1XWN4x6SYgVTfwye6Kjfpuuan91bsW5gCSa0
-	 Fub8nrFUKIo+pQIsa4Z4+HoeEJ7/eHG0owUl55u2nh/V7dupghN7alGy3+KDud+FBo
-	 ox1MD5VtGfNl44PFjPY9htoBoIYhH/tH/jNzA6S0=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42DG6aNW024231
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 13 Mar 2024 11:06:36 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 13
- Mar 2024 11:06:36 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 13 Mar 2024 11:06:36 -0500
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42DG6Vo9030346;
-	Wed, 13 Mar 2024 11:06:32 -0500
-Message-ID: <25a8fa0d-c64d-78ef-2818-e670def5178a@ti.com>
-Date: Wed, 13 Mar 2024 21:36:30 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2vgoljYY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W9lRqlOfPDwf1HM7U0G7ctZg5vtO16R9o5cUIBdk9dfFWUXs2M8mWlMm01zvWr38e7zLenLhxvKXmY5Tti1HKE4/guac57llunnGhToeuolJ7sil70vsa4+gr8X/inr47U5SL8qfmtiHVvDBWonK6uVVywAAadP9H0qqaNuE0nxNkwfmDTq1rj7LhUkBBuz8rgt6LIO43Gn4C9pyFFLCMJpUT0yXzKx3Q9PX1eTUzi3mMAIcnIWSeIT/GoFnuX1dWvyCTkE4OZQT3TLo7BKcyozooQDxtI2wBnumg0gHQ6wiy7+q3J0KjSsDsUSUKed9nO+KMYjdwCPyxY57zFwbkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IySCNzs8SImRkmD0HhRpqntHFFcS8EvomL8Zz9yzbCc=;
+ b=Sz7H5geEdWpEf5Ictb4ENsMt183USIA3Q4GtZ/2Ije6AvnqTvy8td1JbfpoN+Xi2S1iM5Rl5JSV7Qx8o/8BloB3Vh5/0EptUFAv/r68idAtiBXkYaJwhuPXupJ4nmQwoUmhrn0QmV+hCbQ4AK4JWpmuvifQkX9g87hzNXkbfJ09j/1z+GXauQUHRecsIF8KnpRgBr8vIQ+SV/dNZOC6pbms/f0pYX+XAkI0211gBVZX4z1AF9teov7/kOlg27hSpU2g+TfFjsHzdkkWBWxEW2z95hc71P9uUSWK909hQMuEdReKcWR73xLKSlDUJooMEBYMjcdWh3phbY7AKEbX6wQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IySCNzs8SImRkmD0HhRpqntHFFcS8EvomL8Zz9yzbCc=;
+ b=2vgoljYY6mVRYBDRPc24ICq/YkufbZs5GqLf432s/bJGB50WWqGjvdTeq/8ZfE8nXTAnO6H0kvDElF5bEdYXhs7CUBw0gmBidb2QZgegsMbyGjLVDCaAFp1Ba0XA/BBuoNxBPywyvKNZo0KWYnghpUe62FDaEHVy2w/c/A3GfbQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) by
+ SJ2PR12MB7846.namprd12.prod.outlook.com (2603:10b6:a03:4c9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.34; Wed, 13 Mar
+ 2024 16:12:08 +0000
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::1cea:ca41:bbe9:c22d]) by DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::1cea:ca41:bbe9:c22d%2]) with mapi id 15.20.7362.035; Wed, 13 Mar 2024
+ 16:12:08 +0000
+Message-ID: <35e009c4-d52c-4b96-ba10-afa0be9dfd5e@amd.com>
+Date: Wed, 13 Mar 2024 21:41:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rcu: Reduce synchronize_rcu() delays when all wait heads
+ are in use
+Content-Language: en-US
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: paulmck@kernel.org, joel@joelfernandes.org, josh@joshtriplett.org,
+ boqun.feng@gmail.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ jiangshanlai@gmail.com, qiang.zhang1211@gmail.com, rcu@vger.kernel.org,
+ linux-kernel@vger.kernel.org, neeraj.upadhyay@kernel.org
+References: <20240313083228.233247-1-Neeraj.Upadhyay@amd.com>
+ <ZfHDwPkPHulJHrD0@localhost.localdomain>
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In-Reply-To: <ZfHDwPkPHulJHrD0@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0100.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9b::22) To DS0PR12MB6608.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2] media: chips-media: wave5: Add hrtimer based polling
- support
-Content-Language: en-US
-To: Sebastian Fricke <sebastian.fricke@collabora.com>
-CC: <nas.chung@chipsnmedia.com>, <jackson.lee@chipsnmedia.com>,
-        <mchehab@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nm@ti.com>, <praneeth@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>
-References: <20240305160529.4152865-1-devarsht@ti.com>
- <20240308150217.5jy3roywvv2trd2f@basti-XPS-13-9310>
- <4d7f5ea2-35ad-0ec0-db6d-9a95c946534b@ti.com>
- <20240309121035.47xzxl2tdxoyyat6@basti-XPS-13-9310>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <20240309121035.47xzxl2tdxoyyat6@basti-XPS-13-9310>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6608:EE_|SJ2PR12MB7846:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3acafbd9-fcc8-4b0e-d223-08dc437854ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	MN/L3S0VSfV0JK2h8FjOg9Pzxjg46xAlc+KCxoBvH6uRBJdhYSyir77iGpuI3O8Rh1fqkpX3S71dgAF4503ShHK0Si2F6AuwdPlVxiXMUWj7X0pOezX2r8V1DO0XuBANSrRfe7nOt2FClDn67XSnTEDGqHaNO5rwRDAbqIOuJ+22BMzUR/S8k5nIRTwUHNoeYo+QHLtpUyHG//r2bYOLy20Xe2Rw0lEXW2R7JQj6VJ+4ZXRtF38/lyM6SXDrlHDOQfjTlzHr+jzHDidPGx6X3xFNQshJ6cHF/HAqFVk1wPujU2v4Dqgr4tPXWBlqu9UL7ihi/pUc0wjHvQOHlAA9h18TdinuriSiw7W0y3bcfjkvnyroMpq5r6y9v363HHaDof/+1oBSNhALyQs9TeW7ex8cNBiIeZHObh838mZaM0wEUlfPPXWa2/OSahKX/QWJgiKkEp3W3zblhUquxzRtvu61+PJBAYTqWKimHX2p1gG9PWLhR8hMhFK4jnCcvOi2LXAYT3i9P3PALPXiyk3dyUtR0v3Ak31oP4yXo2ngw8siZm/vARTbSjZGwGTrrvN3w0+8yyluTPL7UpGTcovQOR25xxy6qWZM/Rfp8ebinbRjFoRLrbs51BOnmIzILakHxFBilYxnnE2QwN7+snI202r/GFL/+6Sq3TH2ceABw6U=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6608.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d3E4TGJhOVJubW15R2RCemx6OGkrZXQwTkx0MUYza2VMTkF6VmVzTzY2V0Ry?=
+ =?utf-8?B?SGJ5TDJuZDRNOUNvTVBQZ1NOSURxRSt0MUhTNmFXcXN0MU5mTzJJSnpuRk8r?=
+ =?utf-8?B?Y3h5NG5WU1N2czZFam5ocVpYdlNWSG5iNHdjUUZ3U0NPQXBhL2tQL0pmS09t?=
+ =?utf-8?B?WE1hT1JCQ2M2SlhqejRuZHJHYzR4TC9sK3FsYVVBc1c3LzdCOERJQWZmbGw2?=
+ =?utf-8?B?VDFBeUNqT0RtZnlJQ3F1aWZGeGtBUmhvWS81NWd6UEE0T1BwR2pORmdyUWJs?=
+ =?utf-8?B?LzVDZktXRk0zbERKbWhCdEMxZ2h2RWRGQWNHckhhSEtQNlNCNXJNMUNJcVFz?=
+ =?utf-8?B?WVhDU2VoVHltRkdZeTdZTDFEaWxHWU85UlN4NTZGVmdIQ2NidmllMzB6OWFM?=
+ =?utf-8?B?QTBaejdab3RmSFcwZ3NwWWxIamlHaU1MbHA5NGZPUWhwWHFhZDd1ZWI4TFAw?=
+ =?utf-8?B?N0lLeUdzZlVKaGNBa3VlakNHKzhNRUQ3SWNXbFFvRE1nd2JBMTJHMi9hbWQr?=
+ =?utf-8?B?TEdwSnlrSC9JdTh5K0UxZ0JVMHk5WHpvdVo1VjJJSFNiWmM1NGZFV1ZYNjhh?=
+ =?utf-8?B?aTRPdWxmK2RoZXBIRUl3eDF3M3BHRElWYXE1YjgvRktWUnJwREJxbWJOUWNZ?=
+ =?utf-8?B?K0VjdDBxZEJMNFR3UG1IbWlrV2lqUnp1TGNTWndPOStlRFBLTndYOTIxZUdt?=
+ =?utf-8?B?OXdTK0IvYWowWXJqNzNDamtxWkJuY3daSi9CQUsrbGdsNWVZNjM0UTAxRlJl?=
+ =?utf-8?B?djlnZ0prY0wwbUZvb1RUTUd3NXFKR2ozb0ZDejhYTnVRQXJrcGNsVzVJVmxG?=
+ =?utf-8?B?K0h1RDNKSGFUK0o3aHkrWDh0WkE4WnhWRDFFeTBXS1BRSG9rZTZhRjFrbDFE?=
+ =?utf-8?B?anJHeXowc0toWGlNdDFNdG1GOHl5bUlzckg4Y2lNZVJVVVhDRS91TXpvOHZZ?=
+ =?utf-8?B?bjk4b2R1bHd1bWlna0FkK2ZCV3ZqQllINTZJd1VzZE9SSHBsVWRxVkc4Z0ZG?=
+ =?utf-8?B?c2F3WmVVY1dVeGZEc0Ivcm5KMUNMSEkrZXhjd3lrdWRuTUdhSE1qaXM3N3Qy?=
+ =?utf-8?B?RnRLYmIxMnJ5WXRESFhNVmV6dTdZM09pZHVGV29mMjJEcE9DMmlwMFNLMXJI?=
+ =?utf-8?B?c1pJVWxtUE10cy9JckNpQ0dRUmFRU3Q1SCtoM0FPUURGakhQdU9vNC9wbzgw?=
+ =?utf-8?B?dElDRGJiUEtvVUhwdXpXNE1EWXVzTDMwUUFOaVlMeWcrWTBKbVBHcXBPU1dp?=
+ =?utf-8?B?cmdpUjd3MVJteUdlbStVY2tGMUZML2tEV2lqR2dsOFhaalBZOTZHZlROV1R2?=
+ =?utf-8?B?K25pamVzWXE3TzhXdGM3aUpMb05ramNVcjVWUkN2N3ZndDlMUjlkZ0hnVFl1?=
+ =?utf-8?B?M3VseUhBOGQyaU5aakN6dTNPdThCTytVWnFNR0hIbnk5bUpGeTRvbTQzNStH?=
+ =?utf-8?B?Qitrd3lvcHpUdGoyM3ZHdEtQYjYvK2pRbUhSTmU3KzE3ZERoTWhKS3h6MGV6?=
+ =?utf-8?B?YXVtNjFQcU1oRnJzVEtmVjkyUmFydVlvME5seGRzTHZuTzJ6NHRFcUNReDlC?=
+ =?utf-8?B?Q0ErZUpVMXl6bkl3SFZ1WVFIQmxhSDRjWlI0UER1eVNCQ3MxekxYL1hQQzNS?=
+ =?utf-8?B?QjdhYzZUanl2NHBlTXJpNUhBazI1VVBqR1lLQW50YUtPQ3p1YVJMeFdOa2I4?=
+ =?utf-8?B?ZENUajBTb01iMkFrODBvU1h0WUZDcEVEdmRTdDBNZVFQQ2FzRDdoQzNsTVVN?=
+ =?utf-8?B?SmYxS0JyelVwMUI0NkFKRXdTQllSbmNkUHp6WkhIS1ViUSs2VDZXTGt1cFB4?=
+ =?utf-8?B?NlVvMU9GQVcwVFp5cXZ4bWM1NDg3VnRNL3B3QnNPWE1SNExuWDNuZXFwY1lq?=
+ =?utf-8?B?dWQrNk5yVmdRem5IZFllOGlpSStpMXVMME1oWW12czZackR0b3IyRDFtNjhu?=
+ =?utf-8?B?YzZESUhiTk5mcmxzYTRQRDB4RkdXUmhoUnVHMGxUbGd3REV5eTJaSjRHOFFs?=
+ =?utf-8?B?SnVOYlNVbi9CQnFzTzU5Wk5Ya1FHVEJpZUtCRUxSMml6dHlYM1d5c3d6dGFE?=
+ =?utf-8?B?Qi9BbzIyUERkOCtmSUpMRjNtYVhod0o3QzFiTk85TzRROUlDOWg0OWpubkhY?=
+ =?utf-8?Q?kwp3+t6PsYjj/5NxtAeintLtg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3acafbd9-fcc8-4b0e-d223-08dc437854ed
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6608.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 16:12:08.3506
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O6QjpBJesYeDMmjDiGp5bQ5Pf749GylyjwiOoOFoKw4ayCxR7UqDlJinjrzezALTqp+QPCaqltIriiIWZUClCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7846
 
-Hi Sebastian,
+Hi Frederic,
 
-On 09/03/24 17:40, Sebastian Fricke wrote:
-> Hey Devarsh,
+On 3/13/2024 8:48 PM, Frederic Weisbecker wrote:
+> Le Wed, Mar 13, 2024 at 02:02:28PM +0530, Neeraj Upadhyay a écrit :
+>> When all wait heads are in use, which can happen when
+>> rcu_sr_normal_gp_cleanup_work()'s callback processing
+>> is slow, any new synchronize_rcu() user's rcu_synchronize
+>> node's processing is deferred to future GP periods. This
+>> can result in long list of synchronize_rcu() invocations
+>> waiting for full grace period processing, which can delay
+>> freeing of memory. Mitigate this problem by using first
+>> node in the list as wait tail when all wait heads are in use.
+>> While methods to speed up callback processing would be needed
+>> to recover from this situation, allowing new nodes to complete
+>> their grace period can help prevent delays due to a fixed
+>> number of wait head nodes.
+>>
+>> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+>> ---
+>>  kernel/rcu/tree.c | 27 +++++++++++++--------------
+>>  1 file changed, 13 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+>> index 9fbb5ab57c84..bdccce1ed62f 100644
+>> --- a/kernel/rcu/tree.c
+>> +++ b/kernel/rcu/tree.c
+>> @@ -1470,14 +1470,11 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
+>>   * for this new grace period. Given that there are a fixed
+>>   * number of wait nodes, if all wait nodes are in use
+>>   * (which can happen when kworker callback processing
+>> - * is delayed) and additional grace period is requested.
+>> - * This means, a system is slow in processing callbacks.
+>> - *
+>> - * TODO: If a slow processing is detected, a first node
+>> - * in the llist should be used as a wait-tail for this
+>> - * grace period, therefore users which should wait due
+>> - * to a slow process are handled by _this_ grace period
+>> - * and not next.
+>> + * is delayed), first node in the llist is used as wait
+>> + * tail for this grace period. This means, the first node
+>> + * has to go through additional grace periods before it is
+>> + * part of the wait callbacks. This should be ok, as
+>> + * the system is slow in processing callbacks anyway.
+>>   *
+>>   * Below is an illustration of how the done and wait
+>>   * tail pointers move from one set of rcu_synchronize nodes
+>> @@ -1725,15 +1722,17 @@ static bool rcu_sr_normal_gp_init(void)
+>>  		return start_new_poll;
+>>  
+>>  	wait_head = rcu_sr_get_wait_head();
+>> -	if (!wait_head) {
+>> -		// Kick another GP to retry.
+>> +	if (wait_head) {
+>> +		/* Inject a wait-dummy-node. */
+>> +		llist_add(wait_head, &rcu_state.srs_next);
+>> +	} else {
+>> +		// Kick another GP for first node.
+>>  		start_new_poll = true;
+>> -		return start_new_poll;
+>> +		if (first == rcu_state.srs_done_tail)
+>> +			return start_new_poll;
+>> +		wait_head = first;
 > 
-> build testing found a small issue on your patches, see below ...
+> This means you're setting a non-wait-head as srs_wait_tail, right?
+> Doesn't it trigger the following warning in rcu_sr_normal_gp_cleanup():
+> 
+> 	WARN_ON_ONCE(!rcu_sr_is_wait_head(wait_tail));
 > 
 
-Thanks for picking this up. This was fixed in V3 [0]. As the change was minor,
-I just thought to check with you if you got chance to review this and if
-anything further is required from my side.
+Oh I missed it. Will fix it, thanks!
 
-Regards
-Devarsh
-
-
-[0] https://lore.kernel.org/all/20240310104827.665456-1-devarsht@ti.com/
-
-> On 08.03.2024 21:15, Devarsh Thakkar wrote:
->> Hi Sebastian,
->>
->> On 08/03/24 20:32, Sebastian Fricke wrote:
->>> Hey Devarsh,
->>>
->>> Alright, overall this looks good and it is tested, it is not my favorite
->>> solution but I don't want you to force doing something experimental just
->>> to satisfy my wish for a cleaner driver.
->>> I have opened a question on the mailing list:
->>> https://lkml.org/lkml/2024/3/8/785
->>> And then we (the media subsystem & irqchip subsystem) can develop a clean
->>> solution afterward, as this problem seems not to be limited to just this
->>> driver.
->>>
->>
->> Thanks for opening the thread. While fakeirq approach looked promising to me
->> in general, but w.r.t this scenario i.e. with codec supporting multi-instance
->> enc+dec, as mentioned in my previous responses [0], It would be good to
->> account for few design aspects downsides associated with fakeirq approach here
->> which I am summarizing below and which I feel should also be considered while
->> deciding/discussing :
->>
->> 1) Going by the current shared timer approach design (single polling thread
->> for all enc+dec instances), even with fakeirq approach, some part of code
->> related to instance tracking that is present in this patch would still need to
->> be there in VPU driver, as VPU driver only knows when the first instance is
->> launched, last instance is closed and VPU driver manages the synchronization
->> between all instances, so VPU driver would still need to signal to fakeirq
->> chip when it should start/stop polling based on the instance status info it
->> has.
->>
->> Now if there still requires code to be present in wave5 driver to signal
->> irqchip to start/stop polling, we are not achieving goal of code isolation as
->> desired with fakeirq chip driver, so it seems fakeirq scheme doesn't really
->> benefit the cause here then ?
->>
->>>  while the hardware (Wave5 Codec) actually always expects an interrupt line
->> to be present and the only reason why this isn't uphold is because the SoC has
->> a defect, causing the interrupt line to be disabled.
->>
->> 2) Yes I agree that patch was made mainly after the missing interrupt line
->> problem came but at least theoretically I don't think that could be the only
->> place where this patch could help. As shared in updated commit message [1], I
->> tend to think that this scheme may also be useful in general too (even if irq
->> is present) for non-realtime multi-instance VPU use-cases (for e.g 32
->> instances of VPU being run together) which produce loads of frequent frame
->> done irqs (if irq line is present) and where system is running already under
->> high interrupt load and switching to polling may help mitigate this as the
->> polling thread is shared across all the VPU instances.
->>
->> Just thought to share above two points if those could be considered as well
->> while weighing the solutions.
->>
->> [0] :
->> https://lore.kernel.org/all/367daea8-9412-757a-0ea1-e304249528a0@ti.com/
->> https://lore.kernel.org/all/47fe5d24-4331-a88c-5481-d60a3ae96efa@ti.com/
->>
->> [1] :
->> https://lore.kernel.org/all/20240305160529.4152865-1-devarsht@ti.com/
->>
->> Regards
->> Devarsh
->>
->>> Greetings,
->>> Sebastian
->>>
->>> On 05.03.2024 21:35, Devarsh Thakkar wrote:
->>>> Add support for starting a polling timer in case an interrupt is not
->>>> available. This helps to keep the VPU functional in SoCs such as AM62A,
->>>> where the hardware interrupt hookup may not be present due to an SoC errata
->>>> [1].
->>>>
->>>> The timer is shared across all instances of encoders and decoders and is
->>>> started when the first instance of an encoder or decoder is opened and
->>>> stopped when the last instance is closed, thus avoiding per instance
->>>> polling and saving CPU bandwidth. As VPU driver manages this instance
->>>> related tracking and synchronization, the aforementioned shared timer
->>>> related polling logic is implemented within the VPU driver itself. This
->>>> scheme may also be useful in general too (even if irq is present) for
->>>> non-realtime multi-instance VPU use-cases (for e.g 32 instances of VPU
->>>> being run together) where system is running already under high interrupt
->>>> load and switching to polling may help mitigate this as the polling thread
->>>> is shared across all the VPU instances.
->>>>
->>>> Hrtimer is chosen for polling here as it provides precise timing and
->>>> scheduling and the API seems better suited for periodic polling task such
->>>> as this.  As a general rule of thumb,
->>>>
->>>> Worst case latency with hrtimer = Actual latency (achievable with irq)
->>>>                                  + Polling interval
->>>>
->>>> NOTE (the meaning of terms used above is as follows):
->>>> - Latency: Time taken to process one frame
->>>> - Actual Latency : Time taken by hardware to process one frame and signal
->>>>  it to OS (i.e. if latency that was possible to achieve if irq line was
->>>> present)
->>>>
->>>> There is a trade-off between latency and CPU usage when deciding the value
->>>> for polling interval. With aggressive polling intervals (i.e. going with
->>>> even lesser values) the CPU usage increases although worst case latencies
->>>> get better. On the contrary, with greater polling intervals worst case
->>>> latencies will increase although the CPU usage will decrease.
->>>>
->>>> The 5ms offered a good balance between the two as we were able to reach
->>>> close to actual latencies (as achievable with irq) without incurring too
->>>> much of CPU as seen in below experiments and thus 5ms is chosen as default
->>>> polling interval.
->>>>
->>>> - 1x 640x480@25 Encoding using different hrtimer polling intervals [2]
->>>> - 4x 1080p30 Transcode (File->decode->encode->file) irq vs polling
->>>>  comparison [3]
->>>> - 1x 1080p Transcode (File->decode->encode->file) irq vs polling comparison
->>>>  [4]
->>>> - 1080p60 Streaming use-case irq vs polling comparison [5]
->>>> - 1x 1080p30 sanity decode and encode tests [6]
->>>>
->>>> The polling interval can also be changed using vpu_poll_interval module
->>>> param in case user want to change it as per their use-case requirement
->>>> keeping in mind above trade-off.
->>>>
->>>> Based on interrupt status, we use a worker thread to iterate over the
->>>> interrupt status for each instance and send completion event as being done
->>>> in irq thread function.
->>>>
->>>> Move the core functionality of the irq thread function to a separate
->>>> function wave5_vpu_handle_irq so that it can be used by both the worker
->>>> thread when using polling mode and irq thread when using interrupt mode.
->>>>
->>>> Protect the hrtimer access and instance list with device specific mutex
->>>> locks to avoid race conditions while different instances of encoder and
->>>> decoder are started together.
->>>>
->>>> [1] https://www.ti.com/lit/pdf/spruj16
->>>> (Ref: Section 4.2.3.3 Resets, Interrupts, and Clocks)
->>>> [2] https://gist.github.com/devarsht/ee9664d3403d1212ef477a027b71896c
->>>> [3] https://gist.github.com/devarsht/3a58b4f201430dfc61697c7e224e74c2
->>>> [4] https://gist.github.com/devarsht/a6480f1f2cbdf8dd694d698309d81fb0
->>>> [5] https://gist.github.com/devarsht/44aaa4322454e85e01a8d65ac47c5edb
->>>> [6] https://gist.github.com/devarsht/2f956bcc6152dba728ce08cebdcebe1d
->>>>
->>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>> Tested-by: Jackson Lee <jackson.lee@chipsnmedia.com>
->>>> ---
->>>> V2:
->>>> - Update commit message as suggested in review to give more context
->>>>  on design being chosen and analysis that was done to decide on same
->>>> - Add Tested-By
->>>> - Remove extra return variable declaration from wave5_vpu_release_device
->>>>
->>>> Range diff w.r.t v1 :
->>>> https://gist.github.com/devarsht/cd6bbb4ba90b0229be4718b7140ef924
->>>> ---
->>>> .../platform/chips-media/wave5/wave5-helper.c |  17 ++-
->>>> .../chips-media/wave5/wave5-vpu-dec.c         |  13 +-
->>>> .../chips-media/wave5/wave5-vpu-enc.c         |  13 +-
->>>> .../platform/chips-media/wave5/wave5-vpu.c    | 117 ++++++++++++------
->>>> .../platform/chips-media/wave5/wave5-vpuapi.h |   4 +
->>>> 5 files changed, 122 insertions(+), 42 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-helper.c
->>>> b/drivers/media/platform/chips-media/wave5/wave5-helper.c
->>>> index 8433ecab230c..0b1b5a11e15b 100644
->>>> --- a/drivers/media/platform/chips-media/wave5/wave5-helper.c
->>>> +++ b/drivers/media/platform/chips-media/wave5/wave5-helper.c
->>>> @@ -52,11 +52,12 @@ int wave5_vpu_release_device(struct file *filp,
->>>>                  char *name)
->>>> {
->>>>     struct vpu_instance *inst = wave5_to_vpu_inst(filp->private_data);
->>>> +    struct vpu_device *dev = inst->dev;
->>>> +    int ret;
+> Also there is a risk that this non-wait-head gets later assigned as
+> rcu_state.srs_done_tail. And then this pending sr may not be completed
+> until the next grace period calling rcu_sr_normal_gp_cleanup()? (Because
+> the work doesn't take care of rcu_state.srs_done_tail itself). And then
+> the delay can be arbitrary.
 > 
-> drivers/media/platform/chips-media/wave5/wave5-helper.c: In function
-> 'wave5_vpu_release_device':
-> drivers/media/platform/chips-media/wave5/wave5-helper.c:56:13: warning: 'ret'
-> may be used uninitialized [-Wmaybe-uninitialized]
->    56 |         int ret;
->       |
+
+That is correct. Only the first node suffers from deferred GP.
+If there are large number of callbacks which got added after
+last available wait head was queued, all those callbacks (except one)
+can still have a GP assigned to them.
+
+> And the next grace period completing this sr (that non-wait-head set
+> as rcu_state.srs_done_tail) and thus allowing its caller to wipe it out
+> of its stack may race with the cleanup work dereferencing it?
 > 
-> Greetings,
-> Sebastian
+
+This sr can only be completed when done tail moves to new node. Till
+then, it gets deferred continuously. So, we won't be entering into
+the situation where the sr processing is complete while done tail is pointing
+to it. Please correct me if I am missing something here.
+
+
+
+
+Thanks
+Neeraj
+
+> Thanks.
 > 
->>>>
->>>>     v4l2_m2m_ctx_release(inst->v4l2_fh.m2m_ctx);
->>>>     if (inst->state != VPU_INST_STATE_NONE) {
->>>>         u32 fail_res;
->>>> -        int ret;
->>>>
->>>>         ret = close_func(inst, &fail_res);
->>>>         if (fail_res == WAVE5_SYSERR_VPU_STILL_RUNNING) {
->>>> @@ -71,8 +72,20 @@ int wave5_vpu_release_device(struct file *filp,
->>>>     }
->>>>
->>>>     wave5_cleanup_instance(inst);
->>>> +    if (dev->irq < 0) {
->>>> +        ret = mutex_lock_interruptible(&dev->dev_lock);
->>>> +        if (ret)
->>>> +            return ret;
->>>>
->>>> -    return 0;
->>>> +        if (list_empty(&dev->instances)) {
->>>> +            dev_dbg(dev->dev, "Disabling the hrtimer\n");
->>>> +            hrtimer_cancel(&dev->hrtimer);
->>>> +        }
->>>> +
->>>> +        mutex_unlock(&dev->dev_lock);
->>>> +    }
->>>> +
->>>> +    return ret;
->>>> }
->>>>
->>>> int wave5_vpu_queue_init(void *priv, struct vb2_queue *src_vq, struct
->>>> vb2_queue *dst_vq,
->>>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
->>>> b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
->>>> index ef227af72348..c8624c681fa6 100644
->>>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
->>>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
->>>> @@ -1810,7 +1810,6 @@ static int wave5_vpu_open_dec(struct file *filp)
->>>>     v4l2_fh_add(&inst->v4l2_fh);
->>>>
->>>>     INIT_LIST_HEAD(&inst->list);
->>>> -    list_add_tail(&inst->list, &dev->instances);
->>>>
->>>>     inst->v4l2_m2m_dev = inst->dev->v4l2_m2m_dec_dev;
->>>>     inst->v4l2_fh.m2m_ctx =
->>>> @@ -1867,6 +1866,18 @@ static int wave5_vpu_open_dec(struct file *filp)
->>>>
->>>>     wave5_vdi_allocate_sram(inst->dev);
->>>>
->>>> +    ret = mutex_lock_interruptible(&dev->dev_lock);
->>>> +    if (ret)
->>>> +        goto cleanup_inst;
->>>> +
->>>> +    if (dev->irq < 0 && !hrtimer_active(&dev->hrtimer) &&
->>>> list_empty(&dev->instances))
->>>> +        hrtimer_start(&dev->hrtimer, ns_to_ktime(dev->vpu_poll_interval *
->>>> NSEC_PER_MSEC),
->>>> +                  HRTIMER_MODE_REL_PINNED);
->>>> +
->>>> +    list_add_tail(&inst->list, &dev->instances);
->>>> +
->>>> +    mutex_unlock(&dev->dev_lock);
->>>> +
->>>>     return 0;
->>>>
->>>> cleanup_inst:
->>>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
->>>> b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
->>>> index f29cfa3af94a..9e88424761b6 100644
->>>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
->>>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
->>>> @@ -1554,7 +1554,6 @@ static int wave5_vpu_open_enc(struct file *filp)
->>>>     v4l2_fh_add(&inst->v4l2_fh);
->>>>
->>>>     INIT_LIST_HEAD(&inst->list);
->>>> -    list_add_tail(&inst->list, &dev->instances);
->>>>
->>>>     inst->v4l2_m2m_dev = inst->dev->v4l2_m2m_enc_dev;
->>>>     inst->v4l2_fh.m2m_ctx =
->>>> @@ -1729,6 +1728,18 @@ static int wave5_vpu_open_enc(struct file *filp)
->>>>
->>>>     wave5_vdi_allocate_sram(inst->dev);
->>>>
->>>> +    ret = mutex_lock_interruptible(&dev->dev_lock);
->>>> +    if (ret)
->>>> +        goto cleanup_inst;
->>>> +
->>>> +    if (dev->irq < 0 && !hrtimer_active(&dev->hrtimer) &&
->>>> list_empty(&dev->instances))
->>>> +        hrtimer_start(&dev->hrtimer, ns_to_ktime(dev->vpu_poll_interval *
->>>> NSEC_PER_MSEC),
->>>> +                  HRTIMER_MODE_REL_PINNED);
->>>> +
->>>> +    list_add_tail(&inst->list, &dev->instances);
->>>> +
->>>> +    mutex_unlock(&dev->dev_lock);
->>>> +
->>>>     return 0;
->>>>
->>>> cleanup_inst:
->>>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
->>>> b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
->>>> index 0d90b5820bef..257c5e226129 100644
->>>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
->>>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
->>>> @@ -26,6 +26,9 @@ struct wave5_match_data {
->>>>     const char *fw_name;
->>>> };
->>>>
->>>> +static int vpu_poll_interval = 5;
->>>> +module_param(vpu_poll_interval, int, 0644);
->>>> +
->>>> int wave5_vpu_wait_interrupt(struct vpu_instance *inst, unsigned int timeout)
->>>> {
->>>>     int ret;
->>>> @@ -40,7 +43,7 @@ int wave5_vpu_wait_interrupt(struct vpu_instance *inst,
->>>> unsigned int timeout)
->>>>     return 0;
->>>> }
->>>>
->>>> -static irqreturn_t wave5_vpu_irq_thread(int irq, void *dev_id)
->>>> +static void wave5_vpu_handle_irq(void *dev_id)
->>>> {
->>>>     u32 seq_done;
->>>>     u32 cmd_done;
->>>> @@ -48,42 +51,67 @@ static irqreturn_t wave5_vpu_irq_thread(int irq, void
->>>> *dev_id)
->>>>     struct vpu_instance *inst;
->>>>     struct vpu_device *dev = dev_id;
->>>>
->>>> -    if (wave5_vdi_read_register(dev, W5_VPU_VPU_INT_STS)) {
->>>> -        irq_reason = wave5_vdi_read_register(dev, W5_VPU_VINT_REASON);
->>>> -        wave5_vdi_write_register(dev, W5_VPU_VINT_REASON_CLR, irq_reason);
->>>> -        wave5_vdi_write_register(dev, W5_VPU_VINT_CLEAR, 0x1);
->>>> -
->>>> -        list_for_each_entry(inst, &dev->instances, list) {
->>>> -            seq_done = wave5_vdi_read_register(dev,
->>>> W5_RET_SEQ_DONE_INSTANCE_INFO);
->>>> -            cmd_done = wave5_vdi_read_register(dev,
->>>> W5_RET_QUEUE_CMD_DONE_INST);
->>>> -
->>>> -            if (irq_reason & BIT(INT_WAVE5_INIT_SEQ) ||
->>>> -                irq_reason & BIT(INT_WAVE5_ENC_SET_PARAM)) {
->>>> -                if (seq_done & BIT(inst->id)) {
->>>> -                    seq_done &= ~BIT(inst->id);
->>>> -                    wave5_vdi_write_register(dev,
->>>> W5_RET_SEQ_DONE_INSTANCE_INFO,
->>>> -                                 seq_done);
->>>> -                    complete(&inst->irq_done);
->>>> -                }
->>>> +    irq_reason = wave5_vdi_read_register(dev, W5_VPU_VINT_REASON);
->>>> +    wave5_vdi_write_register(dev, W5_VPU_VINT_REASON_CLR, irq_reason);
->>>> +    wave5_vdi_write_register(dev, W5_VPU_VINT_CLEAR, 0x1);
->>>> +
->>>> +    list_for_each_entry(inst, &dev->instances, list) {
->>>> +        seq_done = wave5_vdi_read_register(dev,
->>>> W5_RET_SEQ_DONE_INSTANCE_INFO);
->>>> +        cmd_done = wave5_vdi_read_register(dev, W5_RET_QUEUE_CMD_DONE_INST);
->>>> +
->>>> +        if (irq_reason & BIT(INT_WAVE5_INIT_SEQ) ||
->>>> +            irq_reason & BIT(INT_WAVE5_ENC_SET_PARAM)) {
->>>> +            if (seq_done & BIT(inst->id)) {
->>>> +                seq_done &= ~BIT(inst->id);
->>>> +                wave5_vdi_write_register(dev, W5_RET_SEQ_DONE_INSTANCE_INFO,
->>>> +                             seq_done);
->>>> +                complete(&inst->irq_done);
->>>>             }
->>>> +        }
->>>>
->>>> -            if (irq_reason & BIT(INT_WAVE5_DEC_PIC) ||
->>>> -                irq_reason & BIT(INT_WAVE5_ENC_PIC)) {
->>>> -                if (cmd_done & BIT(inst->id)) {
->>>> -                    cmd_done &= ~BIT(inst->id);
->>>> -                    wave5_vdi_write_register(dev,
->>>> W5_RET_QUEUE_CMD_DONE_INST,
->>>> -                                 cmd_done);
->>>> -                    inst->ops->finish_process(inst);
->>>> -                }
->>>> +        if (irq_reason & BIT(INT_WAVE5_DEC_PIC) ||
->>>> +            irq_reason & BIT(INT_WAVE5_ENC_PIC)) {
->>>> +            if (cmd_done & BIT(inst->id)) {
->>>> +                cmd_done &= ~BIT(inst->id);
->>>> +                wave5_vdi_write_register(dev, W5_RET_QUEUE_CMD_DONE_INST,
->>>> +                             cmd_done);
->>>> +                inst->ops->finish_process(inst);
->>>>             }
->>>> -
->>>> -            wave5_vpu_clear_interrupt(inst, irq_reason);
->>>>         }
->>>> +
->>>> +        wave5_vpu_clear_interrupt(inst, irq_reason);
->>>>     }
->>>> +}
->>>> +
->>>> +static irqreturn_t wave5_vpu_irq_thread(int irq, void *dev_id)
->>>> +{
->>>> +    struct vpu_device *dev = dev_id;
->>>> +
->>>> +    if (wave5_vdi_read_register(dev, W5_VPU_VPU_INT_STS))
->>>> +        wave5_vpu_handle_irq(dev);
->>>>
->>>>     return IRQ_HANDLED;
->>>> }
->>>>
->>>> +static void wave5_vpu_irq_work_fn(struct kthread_work *work)
->>>> +{
->>>> +    struct vpu_device *dev = container_of(work, struct vpu_device, work);
->>>> +
->>>> +    if (wave5_vdi_read_register(dev, W5_VPU_VPU_INT_STS))
->>>> +        wave5_vpu_handle_irq(dev);
->>>> +}
->>>> +
->>>> +static enum hrtimer_restart wave5_vpu_timer_callback(struct hrtimer *timer)
->>>> +{
->>>> +    struct vpu_device *dev =
->>>> +            container_of(timer, struct vpu_device, hrtimer);
->>>> +
->>>> +    kthread_queue_work(dev->worker, &dev->work);
->>>> +    hrtimer_forward_now(timer, ns_to_ktime(vpu_poll_interval *
->>>> NSEC_PER_MSEC));
->>>> +
->>>> +    return HRTIMER_RESTART;
->>>> +}
->>>> +
->>>> static int wave5_vpu_load_firmware(struct device *dev, const char *fw_name,
->>>>                    u32 *revision)
->>>> {
->>>> @@ -209,16 +237,24 @@ static int wave5_vpu_probe(struct platform_device
->>>> *pdev)
->>>>
->>>>     dev->irq = platform_get_irq(pdev, 0);
->>>>     if (dev->irq < 0) {
->>>> -        dev_err(&pdev->dev, "failed to get irq resource\n");
->>>> -        ret = -ENXIO;
->>>> -        goto err_enc_unreg;
->>>> -    }
->>>> -
->>>> -    ret = devm_request_threaded_irq(&pdev->dev, dev->irq, NULL,
->>>> -                    wave5_vpu_irq_thread, IRQF_ONESHOT, "vpu_irq", dev);
->>>> -    if (ret) {
->>>> -        dev_err(&pdev->dev, "Register interrupt handler, fail: %d\n", ret);
->>>> -        goto err_enc_unreg;
->>>> +        dev_err(&pdev->dev, "failed to get irq resource, falling back to
->>>> polling\n");
->>>> +        hrtimer_init(&dev->hrtimer, CLOCK_MONOTONIC,
->>>> HRTIMER_MODE_REL_PINNED);
->>>> +        dev->hrtimer.function = &wave5_vpu_timer_callback;
->>>> +        dev->worker = kthread_create_worker(0, "vpu_irq_thread");
->>>> +        if (IS_ERR(dev->worker)) {
->>>> +            dev_err(&pdev->dev, "failed to create vpu irq worker\n");
->>>> +            ret = PTR_ERR(dev->worker);
->>>> +            goto err_vdi_release;
->>>> +        }
->>>> +        dev->vpu_poll_interval = vpu_poll_interval;
->>>> +        kthread_init_work(&dev->work, wave5_vpu_irq_work_fn);
->>>> +    } else {
->>>> +        ret = devm_request_threaded_irq(&pdev->dev, dev->irq, NULL,
->>>> +                        wave5_vpu_irq_thread, IRQF_ONESHOT, "vpu_irq", dev);
->>>> +        if (ret) {
->>>> +            dev_err(&pdev->dev, "Register interrupt handler, fail: %d\n",
->>>> ret);
->>>> +            goto err_enc_unreg;
->>>> +        }
->>>>     }
->>>>
->>>>     ret = wave5_vpu_load_firmware(&pdev->dev, match_data->fw_name,
->>>> &fw_revision);
->>>> @@ -254,6 +290,11 @@ static int wave5_vpu_remove(struct platform_device
->>>> *pdev)
->>>> {
->>>>     struct vpu_device *dev = dev_get_drvdata(&pdev->dev);
->>>>
->>>> +    if (dev->irq < 0) {
->>>> +        kthread_destroy_worker(dev->worker);
->>>> +        hrtimer_cancel(&dev->hrtimer);
->>>> +    }
->>>> +
->>>>     mutex_destroy(&dev->dev_lock);
->>>>     mutex_destroy(&dev->hw_lock);
->>>>     clk_bulk_disable_unprepare(dev->num_clks, dev->clks);
->>>> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
->>>> b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
->>>> index 352f6e904e50..edc50450ddb8 100644
->>>> --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
->>>> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
->>>> @@ -756,6 +756,10 @@ struct vpu_device {
->>>>     u32 product_code;
->>>>     struct ida inst_ida;
->>>>     struct clk_bulk_data *clks;
->>>> +    struct hrtimer hrtimer;
->>>> +    struct kthread_work work;
->>>> +    struct kthread_worker *worker;
->>>> +    int vpu_poll_interval;
->>>>     int num_clks;
->>>> };
->>>>
->>>> -- 
->>>> 2.39.1
->>>>
+> 
+> 
+>>  	}
+>>  
+>> -	/* Inject a wait-dummy-node. */
+>> -	llist_add(wait_head, &rcu_state.srs_next);
+>> -
+>>  	/*
+>>  	 * A waiting list of rcu_synchronize nodes should be empty on
+>>  	 * this step, since a GP-kthread, rcu_gp_init() -> gp_cleanup(),
+>> -- 
+>> 2.34.1
+>>
+>>
