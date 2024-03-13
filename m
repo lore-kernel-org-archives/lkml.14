@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E3B5EE7E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C385EE87
 	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710358100; cv=none; b=o0UjsXBS4kppRkw84pjmTrMRDzH2JOXm8X6RUmA0ibq3WUyvuQuQwFL5B8NogbwmmJ3VdL/GLDrqJMmHuHZZ4mtXnNEf3naf+U1paTySlS0gvc0klIb91LfCPZF7kDbeI+4cDOP1N69GSM2r06jbHFKcaQtPeIu8oCYpwwSnHIQ=
+	t=1710358100; cv=none; b=hrmpK33bxe5o0cJlt3dRzolFdMsv3ZZd4vcCMr2mgDpsbX2XTdIRigO4MZxY1A7l8tCrOH7xj5wFNVNGaHYCpN4aLRNvC3Ckv9vqG1DQZAPMsPLvX2Z6REDIR1pfIdCRrQQE515VBZuTqWnYv0rfvZqbBfUGpDmsq8vZ1++3UtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710358100; c=relaxed/simple;
-	bh=J+yhx8CDs0RjV5zrthtGqQh3sZHfR3DlyiCnFJoqLRo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qf+h2MckF4DrWJqG0XRfnkCWlQuW01VsqcFAcEwL71JSbEYtM8oK5BAw55leQoxKPAOH57xVVxtwObfBoGoBXJucfHSn3mkQd1H08gUKgX9TkmxYxTYnkZ0DTj7RzTKvnXuax6Vaglyi9qXbTob7PXDeYKv4uGNoJtcljRhbwXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8pJQgu6; arc=none smtp.client-ip=10.30.226.201
+	bh=7f+6y16Fkr7zMCvnShWdlSYd3kqwdfuKL3bfdCY8o9Q=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DQpljSvQhdvn6S3Cg3YKiBpQmThENK2R7KYBKffF4NZUdHFQsz67MQP8LEL9+MQX4BUknmDklFfkQEE/7I0PIPzI3c/MDDif8t/36r1fldRy4/nFTp/g+I+HE7U8PSz3PfYGHfe06I9KjEynguJrSlEGW/SeQynqLRcmzcU5w4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZjdpZGZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8pJQgu6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 88E9BC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZjdpZGZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BF4B3C433F1;
 	Wed, 13 Mar 2024 19:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710358099;
-	bh=J+yhx8CDs0RjV5zrthtGqQh3sZHfR3DlyiCnFJoqLRo=;
+	bh=7f+6y16Fkr7zMCvnShWdlSYd3kqwdfuKL3bfdCY8o9Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=u8pJQgu6P+unZ3AetKT63onvh/avsdO4B2tlOx8o5LuHv7xNV6WQu+0kJ7QFQVDp/
-	 YD2dCKbvjzENwy9UnGs42WicljolHcKEfyUcx4BlMQpgvSE59KwRlUSj52R9gvjPvH
-	 tip0L0mza7XfWRVLJmUpaFRPPtHfhn0Q2sK6sr/MQM+fkKPyWQQAeipgPdCJn+0bNQ
-	 28VD9lmKJSmuDojUlf7gBhFEO2S/XYT8/sPPDK0JHyYe1yMRkR7zaZdEgLpgH49O/H
-	 X1CIGJ/PZfYTUmcNAwRfgJLS+lJz5IMBVIx3zHUlMEIejQFk+NSkhZ3xcKa7tFuLfm
-	 tsgfSLzIPL1Vw==
+	b=cZjdpZGZy+wWieQN6hAd1R7+V8Ofpw7E6dA1JNL5VXJgc3gFR4JdYNUJlCrk+nNt+
+	 YdVw9njDWmhXS6mGupqYsaPFzRXNLKIfSKeK7JNb/dY3yzI/IDiJKNwWkzBtT/1miJ
+	 p0oMMRRWYY0HSEP0nyqFHLGrkPC3gWaXSV9CTo5HqBYi2J6NyhGskIcjFgBYe98htg
+	 UwPa/gB7fuRwO2d5RDpx6ANlgQaXcowCPfqUfEFKqMkk/tfHYAxgbgSvr3WF0VWneo
+	 0Z46T846yt8eUazLTQYF4BWPwXsJA8MGQUoQAEOwrwkP5enfcXn7qukjPgnSKXRlIH
+	 I63TYdrdF9g3A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 73E1AD9505F;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD17DD9505F;
 	Wed, 13 Mar 2024 19:28:19 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v6.9-rc1
+Subject: Re: [GIT PULL] regmap updates for v6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ebsgtolipefn2id5vvxxhga6de7gvatfmzvehu5fj5dxl45j7z@yp2jcj4njfht>
-References: <ebsgtolipefn2id5vvxxhga6de7gvatfmzvehu5fj5dxl45j7z@yp2jcj4njfht>
+In-Reply-To: <20240311151253.0E617C43390@smtp.kernel.org>
+References: <20240311151253.0E617C43390@smtp.kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ebsgtolipefn2id5vvxxhga6de7gvatfmzvehu5fj5dxl45j7z@yp2jcj4njfht>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.9-rc1
-X-PR-Tracked-Commit-Id: dd6c6d57ab61d496f6ff7d6ca38611062af142a1
+X-PR-Tracked-Message-Id: <20240311151253.0E617C43390@smtp.kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.9
+X-PR-Tracked-Commit-Id: bb92804ba2b6636e28db05f589a9a8ef62a07917
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aeb152910a7aecabde5c5f0477a08b397e94059c
-Message-Id: <171035809947.9850.13850214484637403368.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: b30f2db0b79055149ee115fb7b3c86add4d9596a
+Message-Id: <171035809970.9850.9024728513186886911.pr-tracker-bot@kernel.org>
 Date: Wed, 13 Mar 2024 19:28:19 +0000
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Dharma Balasubiramani <dharma.b@microchip.com>, Dong Aisheng <aisheng.dong@nxp.com>, Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Jerome Brunet <jbrunet@baylibre.com>, Raag Jadav <raag.jadav@intel.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 11 Mar 2024 10:16:04 +0100:
+The pull request you sent on Mon, 11 Mar 2024 15:12:40 +0000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.9-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aeb152910a7aecabde5c5f0477a08b397e94059c
+https://git.kernel.org/torvalds/c/b30f2db0b79055149ee115fb7b3c86add4d9596a
 
 Thank you!
 
