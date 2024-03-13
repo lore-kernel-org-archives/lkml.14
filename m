@@ -1,171 +1,95 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B4517C8;
-	Wed, 13 Mar 2024 14:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA19A2905;
+	Wed, 13 Mar 2024 14:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340514; cv=none; b=oINsbf0kwrqo0k6484JkRIZC+6Aym91t2KtRTqFNU0/oD/KmzTQGF6JZP+ZhSGQoWtjksowP5ea1g4flCkB53L4haj9B3LP/B4sdrP0pJwhSX5EKCzH2buccZd0LN7LUYFWYct09CCSqxNw9jf9S4mzWJDcm5zbXUi4ULf9z/QQ=
+	t=1710340525; cv=none; b=cpApWzwBf74KoAczTqRkMI7VjQkXVMnYau+cqDSOxyv2XampTwjl5MYPGxSDDPNGlPOh8GKNEyJwl8ieef97u5l0+qn9HzY2sHqWHQJJphuQk//pXwmlhjPag1nWzb5kSC+IGznp/REcxPMnkaIVhLRD4jnJtQYz1TBGzTo0tSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340514; c=relaxed/simple;
-	bh=7Ggb48mfmQd0gjOutcISKertiP5xCb7jo8IBrz/yYb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ELaSWbQXY/6gTGHr5gueBuWiOJXFHtM7SQ15p9n0R03j5gPkO/WpyqDvZ/IiQYzfScWbhKmx3WThXnrOJq8usqkjpHGCL10kRviAqzTPwFM5CGVULBFKRhg6vYJlRQeAsWWMBZDP9ugUGN6rioZuUILyECno8NI8GItTA8O6gA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ebqOZkqA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=orfYLnID; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YR/kwdkQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oK4wgZO5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ebqOZkqA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="orfYLnID";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YR/kwdkQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oK4wgZO5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DBFE521C8A;
-	Wed, 13 Mar 2024 14:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710340509; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
-	b=ebqOZkqAlbIlDLeZr4Wx03fKNo+nawtibfpLCg6+Q4I7xn3k08nxpk38v/9P/pN6HBlVLE
-	3oN18aptixVZ5j+P5h72hzEUzaXWZ656RUhLV1KaVn/ULJrY+obEL6+u6Z0V2ret8kxkwt
-	VHQD3v2is9dCEKZ3js1jUs5GFFcZTkw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710340509;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
-	b=orfYLnIDxWPQOxAfsZDtFE7rUGJ7oQQsqo0/Mtoyh5mM9gWh6I8HNu8RMZE5fyxkhzYb7o
-	+afMySU81XMXiDCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710340508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
-	b=YR/kwdkQ7oo6g7nxLjQEGunx8N1zRLdauP7333MQMKOmV37zmdpkCuHXpEOFHPrfAZFfGZ
-	X549edAXo2lu//nDJxpSA2Qvk5PQ3E2f5gkbvL0/6Fyudo9p+tRUWFD7Ec0mUZvV7263xF
-	b/I66AohdibWQLMZ4PTajURL7FkKLT8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710340508;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
-	b=oK4wgZO5wOrJ1EG1VHXjpbFCBihJFze1f72GbydqVyebG0uzplJ2FIO5uCcOLhU42giqBe
-	aQInfrj0PvfH4GCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8145F13977;
-	Wed, 13 Mar 2024 14:35:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WfP0Hpy58WX6YwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 13 Mar 2024 14:35:08 +0000
-Message-ID: <ef836dd3-0b65-485e-84a2-dd5cb9ecdff1@suse.cz>
-Date: Wed, 13 Mar 2024 15:35:53 +0100
+	s=arc-20240116; t=1710340525; c=relaxed/simple;
+	bh=yOQGShewM716dS+uPb9Z8lLXlUwt34drgeAVECPi7Bg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mqqjfTBuOt/H42BwIS7cDhCnAYn6m1MKGVyByGuAiBFkWtjUS1AonnHwXmIs2asPYb1Prkx563E0ONULLQ7upI5UhXkvTyWwi+s8nUi53+QjIsLy4qHgHNMQfp3q+LHXDS8IA95gVqwzVhLgkgtd51c2BZN9ex3BHYLoM1VHef4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37BEB1007;
+	Wed, 13 Mar 2024 07:35:58 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8CDC3F762;
+	Wed, 13 Mar 2024 07:35:17 -0700 (PDT)
+Date: Wed, 13 Mar 2024 14:35:15 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "Christoph Lameter (Ampere)" <cl@linux.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Will Deacon <will@kernel.org>,
+	Jonathan.Cameron@huawei.com, Matteo.Carlini@arm.com,
+	Valentin.Schneider@arm.com, akpm@linux-foundation.org,
+	anshuman.khandual@arm.com, Eric Mackay <eric.mackay@oracle.com>,
+	dave.kleikamp@oracle.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux@armlinux.org.uk, robin.murphy@arm.com,
+	vanshikonda@os.amperecomputing.com, yang@os.amperecomputing.com,
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3] ARM64: Dynamically allocate cpumasks and increase
+ supported CPUs to 512
+Message-ID: <ZfG5oyrgGOkpHYD6@bogus>
+References: <37099a57-b655-3b3a-56d0-5f7fbd49d7db@gentwo.org>
+ <CGME20240308140130eucas1p1259c805a0b6491ce2f69c6fca0264b1f@eucas1p1.samsung.com>
+ <c1f2902d-cefc-4122-9b86-d1d32911f590@samsung.com>
+ <Ze9TsQ-qVCZMazfI@arm.com>
+ <9352f410-9dad-ac89-181a-b3cfc86176b8@linux.com>
+ <bf1757ca-6d41-87e7-53dd-56146eef5693@linux.com>
+ <ZfCXJRJSMK4tt_Cm@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 15/37] lib: introduce early boot parameter to avoid
- page_ext memory overhead
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
- roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
- willy@infradead.org, liam.howlett@oracle.com,
- penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
- peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
- nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org,
- muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
- pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
- dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
- keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com,
- gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com,
- penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
- glider@google.com, elver@google.com, dvyukov@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com,
- rientjes@google.com, minchan@google.com, kaleshsingh@google.com,
- kernel-team@android.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-modules@vger.kernel.org,
- kasan-dev@googlegroups.com, cgroups@vger.kernel.org
-References: <20240306182440.2003814-1-surenb@google.com>
- <20240306182440.2003814-16-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240306182440.2003814-16-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-1.59 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 URIBL_BLOCKED(0.00)[suse.cz:email];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_GT_50(0.00)[75];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,nvidia.com,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -1.59
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfCXJRJSMK4tt_Cm@arm.com>
 
-On 3/6/24 19:24, Suren Baghdasaryan wrote:
-> The highest memory overhead from memory allocation profiling comes from
-> page_ext objects. This overhead exists even if the feature is disabled
-> but compiled-in. To avoid it, introduce an early boot parameter that
-> prevents page_ext object creation. The new boot parameter is a tri-state
-> with possible values of 0|1|never. When it is set to "never" the
-> memory allocation profiling support is disabled, and overhead is minimized
-> (currently no page_ext objects are allocated, in the future more overhead
-> might be eliminated). As a result we also lose ability to enable memory
-> allocation profiling at runtime (because there is no space to store
-> alloctag references). Runtime sysctrl becomes read-only if the early boot
-> parameter was set to "never". Note that the default value of this boot
-> parameter depends on the CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
-> configuration. When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n
-> the boot parameter is set to "never", therefore eliminating any overhead.
-> CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y results in boot parameter
-> being set to 1 (enabled). This allows distributions to avoid any overhead
-> by setting CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n config and
-> with no changes to the kernel command line.
-> We reuse sysctl.vm.mem_profiling boot parameter name in order to avoid
-> introducing yet another control. This change turns it into a tri-state
-> early boot parameter.
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+On Tue, Mar 12, 2024 at 05:55:49PM +0000, Catalin Marinas wrote:
+> On Tue, Mar 12, 2024 at 10:06:06AM -0700, Christoph Lameter (Ampere) wrote:
+> > On Mon, 11 Mar 2024, Christoph Lameter (Ampere) wrote:
+> >
+> > > This could be an issue in the ARM64 arch code itself where there maybe
+> > > an assumption elsewhere that a cpumask can always store up to NR_CPU
+> > > cpus and not only nr_cpu_ids as OFFSTACK does.
+> > >
+> > > How can I exercise the opp driver in order to recreate the problem?
+> > >
+> > > I assume the opp driver is ARM specific? x86 defaults to OFFSTACK so if
+> > > there is an issue with OFFSTACK in opp then it should fail with kernel
+> > > default configuration on that platform.
+> >
+> > I checked the ARM64 arch sources use of NR_CPUS and its all fine.
+> >
+> > Also verified in my testing logs that CONFIG_PM_OPP was set in all tests.
+> >
+> > No warnings in the kernel log during those tests.
+> >
+> > How to reproduce this?
+>
+> I guess you need a platform with a dts that has an "operating-points-v2"
+> property. I don't have any around.
+>
+> Sudeep was trying to trigger this code path earlier, not sure where he
+> got to.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I did try to trigger this on FVP by adding OPPs + some hacks to add dummy
+clock provider to successfully probe this driver. I couldn't hit the issue
+reported 🙁. It could be that with the hardware clock/regulator drivers, it
+take a different path in OPP core.
+
+--
+Regards,
+Sudeep
