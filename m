@@ -1,125 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10166290A;
-	Wed, 13 Mar 2024 14:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBEF43153;
+	Wed, 13 Mar 2024 14:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340577; cv=none; b=lIM8F4iw7d6eomWf8lL9/dz7BW0X1dkHzh3g1zfWo7vTqqcLXCOEMPo/x9Pfx2rQNWTzVVdGhLn1HYjBgJ9Yr+/MBXRS7wvBVbgKT176zNdlYQ8jG4lhf98nOQRoYwrJ6rKbEcHj6Ho2xTYiDF0864eT8ZHpxpgKVde5KWNYdk0=
+	t=1710340579; cv=none; b=uOZlfeX2uOPMFAdg5cZvV+COYL9urWbrcDtjzi0fCm2qayZmCMk/vzuc18cCMEqz+9KqEES3LGk4yQONrs0Nq+4rYU6Lh/uVXjdXo2YAmAhyI1qIjmb0lbXQk3bahyKEBmKCQBsDtqhLreTICOo9MPzP0Omii8u99CfN+Bf28TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340577; c=relaxed/simple;
-	bh=XFDXYmXdUS9RT2lDf6b0r0Sb31orMCrxt5jtIkbRWKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gtWU/utdAouDEUW/5g1K9SuiZgVbXbHlSlnSIyN6zebr8ufxZs7pxXaGluO0V1AIC9EWTSAiQrnlWBxF99cacrybZ+DQEzK9jE8PactcFXytzPPE1tkl4PpI5AIe8zxNL/Gug4ANuTI62uGBTxoMVX9NMbvMgRggKF0KcGC5Oc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEzqcJeG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEzqcJeG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A6CC433F1;
-	Wed, 13 Mar 2024 14:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710340576;
-	bh=XFDXYmXdUS9RT2lDf6b0r0Sb31orMCrxt5jtIkbRWKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZEzqcJeGxPPNYFIZRysA/arw8xKmCsgFAtuJNh6CcaGinac4jHPx0j8sRkhwKjbeG
-	 2K66SzJFHUpMdstY/bqu5mF7jniMbPjEs6OsS2AO+4KMoqx9Z00vF4N243TSn7RK//
-	 LDGvlE//xarvy1U0wLhCPnEWUMDbs+ySoXgXfs6LNUEisMlEYFpeELOwDhChL49fJc
-	 66pD5Fz0GtUEGh11BON/V1DjMBIYNy7WUCvoEh7Zw75IJFqYCGfoirAOHQcZdUBZ+w
-	 g4eAR37hfXwlKzswREpP7UkjTykH6a7nFsIOnZeEFHUXkyrxX6XZpXzUMExEOFyY50
-	 v7uwsn4hsoyvA==
-Date: Wed, 13 Mar 2024 09:36:14 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
- reset the endpoint devices
-Message-ID: <20240313143614.GA916555@bhelgaas>
+	s=arc-20240116; t=1710340579; c=relaxed/simple;
+	bh=4kSzgAPS7b/6Qy1T/egELO1W8cCxPyzCB5Q1Lg4QaMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q0sm555HRzleukaVCfxuQoFPIjI/ublbtirGPgtD1ifolbK6SXY6DIftsfHjUwSbr+0wxj5y1aRxvBCXhCD90orDa3zxoUwhKHnQqmO1q6NZA60Z0PK0Qbk+oFybiF2yLTXYlaDY9vVFFV6cDwM0+ikAao6LhUtJEgrkLuq8Vik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-220ce420472so2020689fac.1;
+        Wed, 13 Mar 2024 07:36:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710340577; x=1710945377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pZ/CrXQS2qKyBuyyZ5fVt7Tba0YRofaW6XNtwA1CrZ8=;
+        b=At77UDB6BvJhJyeWPTaTPx0Z6Wm2idEuuvnsDnwLrdXVh/GQHr50BsrrI5ui1lZyc8
+         Iw3kGJK5G2IRLv0ygy6iQUZ30SWlUqO35fBdbJkiLEhJ/o0lN7EHN0eADmh9zngqw7Jl
+         uLNWusqlqA2yMqgMpGoLiXQmTU+RAKu8/95doV+i+e/iJqfn1FWMp9EWby6xTq4DTLGv
+         UDlcv540Ihyphexv7EaCivPaPpruHh1/rAYBHPBmm+jXMty5eY+sErYhi0pSZlff7M+H
+         E6yXVxxKKcOt/x/ghV+DBbwrOzocRb5g+W0zvLsDZxWMy9nGxo7F1wnfFx5CZl2pYxJn
+         p5ag==
+X-Forwarded-Encrypted: i=1; AJvYcCU3DBJUgIDjWVoz3ahsBnodKC4AIMIzy5EnFAXZjvoKyxd4DQ82Btbw4snjm0cQQhaD3TnNdxwQ14oA/oQC17O9X3z3nIQaJwX8DBFZPC2977uZBHHQ/DznQU5L6yv+6EiZyT7qsfI=
+X-Gm-Message-State: AOJu0YxDtyKopF+8+jKgH2g3qGW8K3w4T64vApTOkiTNAa37UgnMuSK+
+	wHvYtdV+I/quNxwI0yfdqn6zE7yjL0N8qY1HzgJIqB2R+BfhwYHWLV7zaggSw3Sn8AsZgRdi/tI
+	NSeAQBwCau71B4j+s1nH8LWYeBpc=
+X-Google-Smtp-Source: AGHT+IGRTbUgJg5jv7tmdyyZlPs9zAb0SbQS9bjKIAxVdawQ+PEILrXDZWItUu1HzlmpTODLRIqLKHapDaN6Et3CeCg=
+X-Received: by 2002:a05:6871:3325:b0:221:cb1b:cc05 with SMTP id
+ nf37-20020a056871332500b00221cb1bcc05mr2134168oac.0.1710340577247; Wed, 13
+ Mar 2024 07:36:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313-pci-qcom-shutdown-v1-1-fb1515334bfa@linaro.org>
+References: <8f00bf23-47cb-4656-a326-6d8d1d0d10d6@linaro.org>
+In-Reply-To: <8f00bf23-47cb-4656-a326-6d8d1d0d10d6@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 13 Mar 2024 15:36:05 +0100
+Message-ID: <CAJZ5v0iSxZMPnCf3MSJMSLXhkfEmDWNVv2eq3PXSivZaYtLMFQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Thermal material for v6.9-rc1
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Frank Wunderlich <frank-w@public-files.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Fabio Estevam <festevam@denx.de>, Martin Botka <martin.botka@somainline.org>, 
+	Mark Brown <broonie@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
+	Konrad Dybcio <konrad.dybcio@somainline.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux PM mailing list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
-> PCIe host controller drivers are supposed to properly reset the endpoint
-> devices during host shutdown/reboot. Currently, Qcom driver doesn't do
-> anything during host shutdown/reboot, resulting in both PERST# and refclk
-> getting disabled at the same time. This prevents the endpoint device
-> firmware to properly reset the state machine. Because, if the refclk is
-> cutoff immediately along with PERST#, access to device specific registers
-> within the endpoint will result in a firmware crash.
-> 
-> To address this issue, let's call qcom_pcie_host_deinit() inside the
-> shutdown callback, that asserts PERST# and then cuts off the refclk with a
-> delay of 1ms, thus allowing the endpoint device firmware to properly
-> cleanup the state machine.
+Hi Daniel,
 
-I guess this 1ms delay is the PERST_DELAY_US hidden inside
-qcom_ep_reset_assert()?  I assume the refclk disable is done by
-clk_bulk_disable_unprepare()?
+On Wed, Mar 13, 2024 at 3:06=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Rafael,
+>
+> The following changes since commit dcb497ec993265dfc5fffa60b486c1ad353e9a=
+d5:
+>
+>    Merge branches 'thermal-core' and 'thermal-intel' (2024-03-07
+> 21:05:12 +0100)
+>
+> are available in the Git repository at:
+>
+>
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+> tags/thermal-v6.9-rc1
+>
+> for you to fetch changes up to 1828c1c17bb2adf3a3f26abc69cb3fe971eac0e4:
+>
+>    thermal/drivers/rcar_gen3: Add support for R-Car V4M (2024-03-11
+> 17:14:46 +0100)
+>
+> ----------------------------------------------------------------
+> - Fix memory leak in the error path at probe time in the Mediatek LVTS
+>    driver (Christophe Jaillet)
+>
+> - Fix control buffer enablement regression on Meditek MT7896 (Frank
+>    Wunderlich)
+>
+> - Drop spaces before TABs in different places: thermal-of, ST drivers
+>    and Makefile (Geert Uytterhoeven)
+>
+> - Adjust DT binding for NXP as fsl,tmu-range min/maxItems can vary
+>    among several SoC versions (Fabio Estevam)
+>
+> - Add support for H616 THS controller for the Sun8i platforms. Note
+>    that this change relies on another change in the SoC specific code
+>    which is included in this branch (Martin Botka)
+>
+> - Don't fail probe due to zone registration failure because there is
+>    no trip points defined in the DT (Mark Brown)
+>
+> - Support variable TMU array size for new platforms (Peng Fan)
+>
+> - Adjust the DT binding for thermal-of and make the polling time not
+>    required and assume it is zero when not found in the DT (Konrad
+>    Dybcio)
+>
+> - Add r8a779h0 support in both the DT and the driver (Geert Uytterhoeven)
+>
+> ----------------------------------------------------------------
+> Andre Przywara (3):
+>        soc: sunxi: sram: export register 0 for THS on H616
+>        thermal/drivers/sun8i: Explain unknown H6 register value
+>        thermal/drivers/sun8i: Add SRAM register access code
+>
+> Christophe JAILLET (1):
+>        thermal/drivers/mediatek/lvts_thermal: Fix a memory leak in an
+> error handling path
+>
+> Duy Nguyen (1):
+>        dt-bindings: thermal: rcar-gen3-thermal: Add r8a779h0 support
+>
+> Fabio Estevam (1):
+>        dt-bindings: thermal: qoriq-thermal: Adjust fsl,tmu-range
+> min/maxItems
+>
+> Frank Wunderlich (1):
+>        thermal/drivers/mediatek: Fix control buffer enablement on MT7896
+>
+> Geert Uytterhoeven (2):
+>        thermal: Drop spaces before TABs
+>        thermal/drivers/rcar_gen3: Add support for R-Car V4M
+>
+> Konrad Dybcio (2):
+>        dt-bindings: thermal-zones: Don't require polling-delay(-passive)
+>        thermal/of: Assume polling-delay(-passive) 0 when absent
+>
+> Maksim Kiselev (1):
+>        thermal/drivers/sun8i: Extend H6 calibration to support 4 sensors
+>
+> Mark Brown (1):
+>        thermal/drivers/sun8i: Don't fail probe due to zone registration
+> failure
+>
+> Martin Botka (2):
+>        dt-bindings: thermal: sun8i: Add H616 THS controller
+>        thermal/drivers/sun8i: Add support for H616 THS controller
+>
+> Peng Fan (1):
+>        thermal/drivers/qoriq: Fix getting tmu range
+>
+>   .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |  34 +++--
+>   .../devicetree/bindings/thermal/qoriq-thermal.yaml |   3 +-
+>   .../bindings/thermal/rcar-gen3-thermal.yaml        |   2 +
+>   .../devicetree/bindings/thermal/thermal-zones.yaml |   2 -
+>   drivers/soc/sunxi/sunxi_sram.c                     |  22 ++++
+>   drivers/thermal/Makefile                           |   2 +-
+>   drivers/thermal/mediatek/auxadc_thermal.c          |   3 +
+>   drivers/thermal/mediatek/lvts_thermal.c            |   4 +-
+>   drivers/thermal/qoriq_thermal.c                    |  12 +-
+>   drivers/thermal/rcar_gen3_thermal.c                |   4 +
+>   drivers/thermal/st/st_thermal.h                    |  18 +--
+>   drivers/thermal/st/st_thermal_memmap.c             |   2 +-
+>   drivers/thermal/sun8i_thermal.c                    | 139
+> +++++++++++++++++----
+>   drivers/thermal/thermal_of.c                       |  14 ++-
+>   14 files changed, 203 insertions(+), 58 deletions(-)
+>
+> --
 
-  #define PERST_DELAY_US 1000
-
-  qcom_pcie_shutdown
-    qcom_pcie_host_deinit
-      qcom_ep_reset_assert
-        gpiod_set_value_cansleep(pcie->reset, 1);
-        usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
-      phy_power_off(pcie->phy)
-      pcie->cfg->ops->deinit()
-        qcom_pcie_deinit_...
-          clk_bulk_disable_unprepare                         <--
-
-Is there a spec citation for this delay requirement?  If not, how do
-we know 1ms is enough for whatever the firmware needs to do?
-
-Do other drivers require similar changes?
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 2ce2a3bd932b..41434bc4761a 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->  	return 0;
->  }
->  
-> +static void qcom_pcie_shutdown(struct platform_device *pdev)
-> +{
-> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	qcom_pcie_host_deinit(&pcie->pci->pp);
-> +}
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
-> @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
->  		.pm = &qcom_pcie_pm_ops,
->  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->  	},
-> +	.shutdown = qcom_pcie_shutdown,
->  };
->  builtin_platform_driver(qcom_pcie_driver);
-> 
-> ---
-> base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
-> change-id: 20240313-pci-qcom-shutdown-d86298186560
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+Pulled, thanks!
