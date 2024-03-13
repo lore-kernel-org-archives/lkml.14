@@ -1,255 +1,196 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1D42570;
-	Wed, 13 Mar 2024 21:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710365246; cv=none; b=DpQ6WqLJ0j8zLPLELt2iQ/97hfyr6ixTJtUBrDC2rRuV7V4CmKtKT+kyPprN2Ed79azLyuA9Qx/reR+JaELTvuytNFclggaEFzD9qgJFGvLUxOq7lAUaXh5p+s8c+tdz+Gnzl5sVUGVlBbqHkKZNSHxMqQmP50J+FmFq3VgIHg4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710365246; c=relaxed/simple;
-	bh=ot3esw+CZKcE015U6qnW5vlDC5VqYsQQQxSQ7NPbAa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sV6SeOlx4GGtDVjbtHusaK/BuR+icd02mID44I3kwSdTeOjSCgf4nXj7/7guiBS1wJgg3EVodO8UdM5RaSsQ+rgrAdfMwZ/rVWPE+b1cFNxVpiD8mF6BjNLQOnsCKPjrOWgZs7MEZEr+kKA+qR7hs45b0N9KH7UnnvCbgWZPIPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NpIntYJk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D2352F7A;
+	Wed, 13 Mar 2024 21:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710365269; cv=fail; b=LvppFQpos63f7/PcvCn46jQyfS3T+9N/VuFfsRsEQVaRSc7E5je9kLmNN0+U2P5oleHqK0Xxg+46PkdUltxI8wyi7fdeNcKbNJ+jtR80RTdpyXOtPyPlWLltOrZX8ftRuWJA89ingugQogb+p2riABx1TKYI5ecGF9GoqxkKYVw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710365269; c=relaxed/simple;
+	bh=g/A7vvQRlEY1MYwW5kNgZ0IGsfDbzSos0le34mGNJ8A=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KbMzvoz6T5gWohITqw1GK8yg8vk128WtUVrX4KW8Icyq6VOuXOfHDDl3pR8y/XyzAe5DClxAbiSOn3AHdKdUG+pR/CMIt5WOP2q5YQIsQi3jP1/3iX699dpF5ZuXI4GR+9U4ovrOIuJCZKEUAdAsRRcBidWMFw7L75FyHW3XXLY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PalzTqyB; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FnTzcKcB; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NpIntYJk"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42DJb6lT012871;
-	Wed, 13 Mar 2024 21:27:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=1WXjF9gdw1yBrj1ie58W7up2JiG+1awEeF+/x8odAQM=; b=Np
-	IntYJkR8t6v7CDUN9yR4EhBnERAKNCzOCg0gHTThkDpt5oyJ9AgGjBSY3OiUuzAD
-	URqGeknaeorP1k2MYzAIdTRN6AV8eOqvw60tMSWS3bh3tcQ9Gu+ElmDahPDgd0v0
-	J0WLYOZAAOLwVl4KhamHDl/Kexvfhz0Ha527YMYyeq5cnYD7UDwMj1v/Vfk/6m+8
-	RM4wRE6s5qe5h10TBtmXPb1st3r5Pe3bXOhz7WGphASW3JuWlop9jKcUClfPQn1j
-	iVRQ1anZDNCXNRu9GCqmg9JQs5mv5FeJc1clKvz8lMNbyuW9z4qud52LvhB/N/sH
-	z3txB4lMvvyNYukj0E9A==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wuam5hf29-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 21:27:03 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42DLR2Nr023199
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 21:27:02 GMT
-Received: from [10.110.34.216] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 13 Mar
- 2024 14:26:58 -0700
-Message-ID: <e5da91bc-5827-4347-ab38-36c92ae2dfa2@quicinc.com>
-Date: Wed, 13 Mar 2024 14:26:57 -0700
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PalzTqyB";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FnTzcKcB"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42DKxNGj007099;
+	Wed, 13 Mar 2024 21:27:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=G17Yn8F94pJ9GW0RwcLRsCfim24i33JOXliH7vMtiIU=;
+ b=PalzTqyB/UBbwXyU4MbltCMSUixEvAxAacZ9n7LgX6IjueWT126AFyPWA7iW8tVeG5/7
+ MPFC5uDSMXRLnNUjxDkk0j2O7KfPluwPyNmSii/LxUVn+YdSXL00MPbanqOeTRylWkCS
+ d5Zx7dkFwhViQF6+kK+/zGcxjE02kSxS/Dfau/UIc9UdH8ALraS/tpm/juoZp8hJndrI
+ n19VZH6z564OGSDdph8qGIvUBE92XzzGMYf2R0kJvYLljPoQm8YpHizbblDa0bQnBKTH
+ 2dBlCshnV7p+ZBP6cpr/+Y8LWE1Nczhe8VwNXsQuclap7Jxs0RZqX4dDqjWEFoHh+d5Y kw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wrec2hy4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Mar 2024 21:27:42 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42DKg3W4037575;
+	Wed, 13 Mar 2024 21:27:41 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wre79fhqf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Mar 2024 21:27:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jbfwin+b15AH3E0ndjSiW/KpbmkDEUR3IyPErydr4d5hu/puFS8FFbDZx++CA6lrcaWmYp0Q0vMY42lYe5TiFdqldoIIWqxxu6cHA0zTQbzuk/m+Cd3BCvR5pocqhA3BY0/lhTdjhbGkiKALK0VD1Mk4XwkndGofQarpxSBVhYE7eTbWXPf4UHAhakRzYyPq8dp7JyL6quaVPnr/aukAHIKVaTzqZg5bVHIgv8ydEQ0wk5zGAlf6zu5DJ7EgyMTLkxPq/JJgibuQuL88b+4JdCOvI5dUozoEmeZQbdn3ga/V2VLbqvYge/zzMVyEk/6swKF81oq5D6iR3lm7Vggw/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G17Yn8F94pJ9GW0RwcLRsCfim24i33JOXliH7vMtiIU=;
+ b=cC2Su5C2jWY545/YCY7WD2XTgTzkG4Gxt5WKnDEkmdV0kEUjnGUIGfdhjtViwVI3JuftaFgm+Z5NBhUoM9jbIc7JWoxe3pvaArNJZZm0iJX5qZd/ESdNyd//JtYtSs6E7TACxn6sxkyrBzr1FZD/ynQZdfT2gdPwtKg+2y1Wt9W/HLifA8047gyQ/tWaknS4gJLuu8lwe4hnxUacJW/UDJOdgLVpkLcWVclmCuZquHHGHwgknk4lh8OZYqqz2RQYJ1OfBON1Pg63j91K5BwgopLJHbD+IqvB/NcKhPEctGSxs3rnrGS8N4p+584Hk1FXzeVRYKispG12GO4syGFpGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G17Yn8F94pJ9GW0RwcLRsCfim24i33JOXliH7vMtiIU=;
+ b=FnTzcKcBmT5Ti+f86WNymaa3eqBOTc+pwOc5xG9JmY3w++XWtQPRc+5GV57YmW9EUgSUVpEd1y++ha0b9zUK1ESFiuLuc+9wx9Dzw51aJ9qp40RdkYDW4Z8lRhtOjTOjp6XF15cq9iEAbrys0aptaLB9igLBfXNBqVMgq+JllOI=
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
+ by MN2PR10MB4189.namprd10.prod.outlook.com (2603:10b6:208:1de::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19; Wed, 13 Mar
+ 2024 21:27:39 +0000
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::8156:346:504:7c6f]) by BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::8156:346:504:7c6f%7]) with mapi id 15.20.7362.035; Wed, 13 Mar 2024
+ 21:27:39 +0000
+Message-ID: <d91a8363-df75-78a1-467e-878a04859ace@oracle.com>
+Date: Wed, 13 Mar 2024 14:27:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] KVM: x86/mmu: x86: Don't overflow lpage_info when
+ checking attributes
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "hao.p.peng@linux.intel.com" <hao.p.peng@linux.intel.com>,
+        "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240312173334.2484335-1-rick.p.edgecombe@intel.com>
+ <ccb21523-54b8-770a-bdac-c63f9c8080db@oracle.com>
+ <60d6242e12030c744ff88322b84d0aa586e2d43d.camel@intel.com>
+Content-Language: en-US
+From: Dongli Zhang <dongli.zhang@oracle.com>
+In-Reply-To: <60d6242e12030c744ff88322b84d0aa586e2d43d.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1P222CA0021.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::26) To BYAPR10MB2663.namprd10.prod.outlook.com
+ (2603:10b6:a02:a9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4] net: Re-use and set mono_delivery_time bit
- for userspace tstamp packets
-Content-Language: en-US
-To: Martin KaFai Lau <martin.lau@linux.dev>,
-        Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>
-CC: <kernel@quicinc.com>, "David S. Miller" <davem@davemloft.net>,
-        "Eric
- Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        "Martin
- KaFai Lau" <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel
- Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii
- Nakryiko <andrii@kernel.org>
-References: <20240301201348.2815102-1-quic_abchauha@quicinc.com>
- <2a4cb416-5d95-459d-8c1c-3fb225240363@linux.dev>
- <65f16946cd33e_344ff1294fc@willemb.c.googlers.com.notmuch>
- <28282905-065a-4233-a0a2-53aa9b85f381@linux.dev>
- <65f2004e65802_3d1e792943e@willemb.c.googlers.com.notmuch>
- <0dff8f05-e18d-47c8-9f19-351c44ea8624@linux.dev>
-From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
-In-Reply-To: <0dff8f05-e18d-47c8-9f19-351c44ea8624@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hGO3LT33jvoGvEpPwVTnmRx2zl7WJ7gW
-X-Proofpoint-ORIG-GUID: hGO3LT33jvoGvEpPwVTnmRx2zl7WJ7gW
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR10MB2663:EE_|MN2PR10MB4189:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1c64328-de2c-46dd-19d9-08dc43a4689f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	eNSQdEnJsq08WZITh2S3kgbtOC/REnzlmeWBumP/2x0CMl0DPK3n1QmNJOSJW+nFclkYP0CUAQJJUUqEiYHFXy5sHbkGVEO8O8dGbvODrM3ywZkSKlql42YPrgippepmtiRFxXPLShwZrpKGmPZWSRu9BfCvGESjSeRFfyHG7a9/EEMf3RWwCFC4oGY5UDNLRGx8ktFmPdAlAC5tfVyw7JdarYdLSrwB1QDMpPEd3e7gkNcXmLMxeauf1adiWA0I5vY1I+rzp5PjSk30f7I+jfnZfEl1aRwvpu9k7Am3nLdzP5Sg9IMLvE/MNaL9j5aWcDARqCx6uEAELXNcrhtHZdyyqY27vDGbwF5+MkLfQdP+bU/+pA5A7PJ2g1ljSiqNysOTebqkWOtHi2XgHmP+IwmAUHMMh+qkcQkhFwC8S8/aTiR0wxO9v7nXlQSW9GeHEnn7T0ckCwK0X77Eur8HUi0K/I7RKOFO1z6hKyb3z/fPpGluRJnlCxVr69GxnIH2H/eP4dOw5aP6H5asLDe/oFf5sHgfdsbXPC2iqgMO7riupqBAwFrhCU4Lg3z4larNLTy0YOz6lwX7sB42BuKa7AHDQs23ncGOmS4SF7K8LUPmULa6xCF9w3ZOyymTq4gAMn1UbVu5z3bHolyMcIgUp/zKnMvI2gd742/5zE88QRw=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?alpsUzZBemZtTDVtRkg3OEFGMUsyQjB0NmNoeFA3ZHdKdnQzYXVXMDFFUmQr?=
+ =?utf-8?B?dW1HMlAyeTlOckNacnExRlZaL1RhN2pvS1U1U0kreDdJRmJVWGpZQ0FKSUJa?=
+ =?utf-8?B?TGtIK2VqMkorZG1rRFFndE9qdCtXTnIrMitHeStIUldpWlpZWEFvVWMrNmtL?=
+ =?utf-8?B?VWhuYUE4MXFuc3BCM3Z1WDNUS3J0akJOOFdVU0VjYVBxcC9WZ3poY29LcGQ5?=
+ =?utf-8?B?ODBFdHBiQ29waHlUR3g3dG9zMG5mRDRZMjBOS1VMRVlIcTVzWjdJbEY0eFcv?=
+ =?utf-8?B?Z1lzblJFcUl6WVpEQnZ2ZDNhWm9WT3o0bS9rRDM0S2RURk1GLzJBR1JYeXlm?=
+ =?utf-8?B?cklzdDMxMXF4U2Z6RllnTWJsbndFOXFZMERPbmZsZk50ZVJhclJEOUVOTHFs?=
+ =?utf-8?B?UkdxbmFiRmZGTHJpSkxSZzNvUUlwYVpmbmJoMUZHc2tIK05EYWxSUTRBcW5O?=
+ =?utf-8?B?WFRsZEYxUE9KUWE5bC8rMXRWNnJOcFZWb3pxeGlBV1F1TkNqV3VOL0FHcVla?=
+ =?utf-8?B?UTdKbDJ1VktjOW11VmxZZUk3aitNMXM0c0QzQ3N1TFNpYUtxMFp2dWc0ZjUx?=
+ =?utf-8?B?MXhvM2JGRkZ2NzcyME1ZZjloWUZnZGlJaEo0REJhTXlGYnlLU1FRK2owclF1?=
+ =?utf-8?B?cDE1T0tXd25wSXJqVW5NQ2V2bXpJK0ZCQzVTOGk0YlNRZFBockZabXYvcHRW?=
+ =?utf-8?B?dkhLMWNRU2thbUVBN3JOTjAxTVBaRmRPOHpqSmpmaWdlZEd4RXNnYTd6UlZj?=
+ =?utf-8?B?UGFSTXU1VUUxTGxOaE5RVnR4WUtNNkE4Zm5EY0pxS2JOeEpiL2doTU5QZlI1?=
+ =?utf-8?B?SHc0UndkTUFYdk1xTWZVM1VJakZBcWltSm1xR2JBSVNGWmpBV0Noam5JOExo?=
+ =?utf-8?B?a3FuSVc4dm10SW5zNjBDdzhZZjdXbkpYNTF4a1B2UjhqcDArWi80dUJDdFlN?=
+ =?utf-8?B?V00zQ2VoblQ1TFlSQXRVcS9ScUVxRmFsOElKY3BlbXFtb1BubWpHM3RJWFRt?=
+ =?utf-8?B?cnlZSC9hYnk3alR1RUdWbU54MkpRSlI3SlEwUmZiVitmZTJKcTJoR1B6NXZr?=
+ =?utf-8?B?ZTdBaFFDUlBsL1VjSlM4T29uL1ZxQTdybXNzSFBYMWhwemxzY3Bob0w5YUVY?=
+ =?utf-8?B?WUliY3lYcHA5emI3cllCZVBLNW1wcE1kbVV1YUNsWEJCNlRCT2xsUWpXWEFi?=
+ =?utf-8?B?YkFuaDFrLzhtek0wSWJ4UW5ETUhIZ0JqWE9GOFhqWEVSbU1xVFpaMW9ISkRt?=
+ =?utf-8?B?ellFc2FBQkNYRXZ3M21IZzNDQnVEbnFxeWozN2o0WnNXajk4NklZOWowSFlV?=
+ =?utf-8?B?czRlSXlRT25rVGxEcnkrSmNXeXU4dEhUNW5SRVNLVlBGYm10RWRMeldubzIv?=
+ =?utf-8?B?ZmtUTWJpaytDVEMzQmlZMkhSaDh5RVdZcWhyUFBpRjlOT245K2U0MzlCSUND?=
+ =?utf-8?B?SlphKzJnMm1NQzljdlBUYmg1cXpETm9nOFdteXRPZzd4WG5pRWxkK2dJM0Ri?=
+ =?utf-8?B?TTRyUGZ6c3BiWkE2NUlFUEhQZEtjTmxySWpPNEs1VmIrTG1BTXpPWFd3SkpG?=
+ =?utf-8?B?NHNUc1l6SFVrTFF4VWozRmlFeHUwSU0rQk80Q0hHUVB6SE1lQ2tPWVFvUDFo?=
+ =?utf-8?B?SjZtMStLYmZEVWVFWURNOXRjN0thRllmUXVGaytPWnVSd1FuaFFoU0xHVytO?=
+ =?utf-8?B?Ull4QytzSDZHQklsN2xHcmUxemozZG1BVVdXeXQ4MjhPc2JocEJtaW5hOCtl?=
+ =?utf-8?B?MXhDZWwyQ0d6UGdQQXRPcU11SXpzQnlSSmJOVEt2NkxCRGIvTHpJbDhteE9t?=
+ =?utf-8?B?S2d4aFNoMFlTQWFUTUlob0pqZXRuZ1pqY1NGa0RMVDZtKzdkeVMySjVXeVpY?=
+ =?utf-8?B?V1BMT1dwcFlobWdFekZEWGRFMzhBUVhETUk1YytjUHNrUE1xQmlLaUFXakE2?=
+ =?utf-8?B?K2V1RExtdVdPZlByM3VEdXhtWlFPWXMxNjdnM2lFOTlxRWlpL254TENVbmhR?=
+ =?utf-8?B?SjhtYU9IWGd4NTNvaGRwUlRJcDRVR1VFVm9hVDVDMUNudWdwbFQxK1pqTUtx?=
+ =?utf-8?B?TUhyQ0VGQWJIVmxxVkFRS0NORmV3dnlsTnpTTVBuUVNNVXpxMklaSTNqSGkv?=
+ =?utf-8?Q?akAVSP9EYtd++IZDV0hb/sRMP?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	GZTrARDp4BuQc6+udYj3UCt0kdslIqYAIxyjSYlnBt1WMoUIxLGc6aHQ2vPH0lH2IfeFPZsTBTeumTOgDzTV0cG7Y9w1XsuJqdiqsgY8Y5uHmqgUcu9nFly5anmVzrzNNrTOCmiWN4VmHLYlLpNkwo6yIb1nzn7mmeINdZzwD2A07wDiJFVzxnKTZn+tciA1hrhu/mXC+rC/JB38F3iOqgVdIE+ZF0QPGXv/N2kj1kMdCJ12cXWJSK2DZkWvG8O06xjMrzPLHu0riMBxnVkPc/o1XEC5/xOzNjDNVrSUSP2Lba7AvA0Qv1EqK0l5gmr0ES88oeJS5952QSLFrmEIxFNZG118lYPv9BLft6sx7JhPs2hodOtZgNwHK5Uv7KvzZYQyHxJ87VF/7Pde+TDCRyrX+gjBHZSyVU58rUzmrT9VV3m+LLPogIazNdjzTcFxAnvpSYwmrn1KzjD5ZJ6MQQa6HXwy4lDZD30LnN6oCbNZZCyp17WvX0dK7l+DZDz0EqHIj3KtKCfJBycv/N+kfYZylf+K7sMplZ/oC5465z0u7qm3d2DxJfcbbUNMlc5lo7DL/Gm0BCZY/0+BrTtkKyM6hjR0Lq5UeSE6TzvmSg8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1c64328-de2c-46dd-19d9-08dc43a4689f
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 21:27:39.0673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tGgay8L9a2DnoyWBAmY+FDVdYj6+6mUAztY4nwW0doawdB99Rf1KRjaGImRrqThzQElckLzNe3+zL0YjtqIXPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4189
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-13_09,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- phishscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403130164
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403130164
+X-Proofpoint-ORIG-GUID: gLurLdo2Nqkl_gpb9NvR4fl6lHHnFuUH
+X-Proofpoint-GUID: gLurLdo2Nqkl_gpb9NvR4fl6lHHnFuUH
 
 
 
-On 3/13/2024 2:01 PM, Martin KaFai Lau wrote:
-> On 3/13/24 12:36 PM, Willem de Bruijn wrote:
->> Martin KaFai Lau wrote:
->>> On 3/13/24 1:52 AM, Willem de Bruijn wrote:
->>>> Martin KaFai Lau wrote:
->>>>> On 3/1/24 12:13 PM, Abhishek Chauhan wrote:
->>>>>> Bridge driver today has no support to forward the userspace timestamp
->>>>>> packets and ends up resetting the timestamp. ETF qdisc checks the
->>>>>> packet coming from userspace and encounters to be 0 thereby dropping
->>>>>> time sensitive packets. These changes will allow userspace timestamps
->>>>>> packets to be forwarded from the bridge to NIC drivers.
->>>>>>
->>>>>> Setting the same bit (mono_delivery_time) to avoid dropping of
->>>>>> userspace tstamp packets in the forwarding path.
->>>>>>
->>>>>> Existing functionality of mono_delivery_time remains unaltered here,
->>>>>> instead just extended with userspace tstamp support for bridge
->>>>>> forwarding path.
->>>>>
->>>>> The patch currently broke the bpf selftest test_tc_dtime:
->>>>> https://github.com/kernel-patches/bpf/actions/runs/8242487344/job/22541746675
->>>>>
->>>>> In particular, there is a uapi field __sk_buff->tstamp_type which currently has
->>>>> BPF_SKB_TSTAMP_DELIVERY_MONO to mean skb->tstamp has the MONO "delivery" time.
->>>>> BPF_SKB_TSTAMP_UNSPEC means everything else (this could be a rx timestamp at
->>>>> ingress or a delivery time set by user space).
->>>>>
->>>>> __sk_buff->tstamp_type depends on skb->mono_delivery_time which does not
->>>>> necessarily mean mono after this patch. I thought about fixing it on the bpf
->>>>> side such that reading __sk_buff->tstamp_type only returns
->>>>> BPF_SKB_TSTAMP_DELIVERY_MONO when the skb->mono_delivery_time is set and skb->sk
->>>>> is IPPROTO_TCP. However, it won't work because of bpf_skb_set_tstamp().
->>>>>
->>>>> There is a bpf helper, bpf_skb_set_tstamp(skb, tstamp,
->>>>> BPF_SKB_TSTAMP_DELIVERY_MONO). This helper changes both the skb->tstamp and the
->>>>> skb->mono_delivery_time. The expectation is this could change skb->tstamp in the
->>>>> ingress skb and redirect to egress sch_fq. It could also set a mono time to
->>>>> skb->tstamp where the udp sk->sk_clockid may not be necessary in mono and then
->>>>> bpf_redirect to egress sch_fq. When bpf_skb_set_tstamp(skb, tstamp,
->>>>> BPF_SKB_TSTAMP_DELIVERY_MONO) succeeds, reading __sk_buff->tstamp_type expects
->>>>> BPF_SKB_TSTAMP_DELIVERY_MONO also.
->>>>>
->>>>> I ran out of idea to solve this uapi breakage.
->>>>>
->>>>> I am afraid it may need to go back to v1 idea and use another bit
->>>>> (user_delivery_time) in the skb.
->>>>
->>>> Is the only conflict when bpf_skb_set_tstamp is called for an skb from
->>>> a socket with sk_clockid set (and thus SO_TXTIME called)?
->>>
->>> Right, because skb->mono_delivery_time does not mean skb->tstamp is mono now and
->>> its interpretation depends on skb->sk->sk_clockid.
->>>
->>>> Interpreting skb->tstamp as mono if skb->mono_delivery_time is set and
->>>> skb->sk is NULL is fine. This is the ingress to egress redirect case.
->>>
->>> skb->sk == NULL is fine. I tried something like this in
->>> bpf_convert_tstamp_type_read() for reading __sk_buff->tstamp_type:
->>>
->>> __sk_buff->tstamp_type is BPF_SKB_TSTAMP_DELIVERY_MONO when:
->>>
->>>     skb->mono_delivery_time == 1 &&
->>>     (!skb->sk ||
->>>      !sk_fullsock(skb->sk) /* tcp tw or req sk */ ||
->>>      skb->sk->sk_protocol == IPPROTO_TCP)
->>>
->>> Not a small bpf instruction addition to bpf_convert_tstamp_type_read() but doable.
->>>
->>>>
->>>> I don't see an immediate use for this BPF function on egress where it
->>>> would overwrite an SO_TXTIME timestamp and now skb->tstamp is mono,
->>>> but skb->sk != NULL and skb->sk->sk_clockid != CLOCK_MONOTONIC.
->>>
->>> The bpf prog may act as a traffic shaper that limits the bandwidth usage of all
->>> outgoing packets (tcp/udp/...) by setting the mono EDT in skb->tstamp before
->>> sending to the sch_fq.
->>>
->>> I currently also don't have a use case for skb->sk->sk_clockid !=
->>> CLOCK_MONOTONIC. However, it is something that bpf_skb_set_tstamp() can do now
->>> before queuing to sch_fq.
->>>
->>> The container (in netns + veth) may use other sk_clockid/qdisc (e.g. sch_etf)
->>> setup and the non mono skb->tstamp is not cleared now during dev_forward_skb()
->>> between the veth pair.
->>>
->>>>
->>>> Perhaps bpf_skb_set_tstamp() can just fail if another delivery time is
->>>> already explicitly programmed?
->>>
->>> This will change the existing bpf_skb_set_tstamp() behavior, so probably not
->>> acceptable.
->>>
->>>>
->>>>       skb->sk &&
->>>>       sock_flag(sk, SOCK_TXTIME) &&
->>>>       skb->sk->sk_clockid != CLOCK_MONOTONIC
->>>
->>>> Either that, or unset SOCK_TXTIME to make sk_clockid undefined and
->>>> fall back on interpreting as monotonic.
->>>
->>> Change sk->sk_flags in tc bpf prog? hmm... I am not sure this will work well also.
->>>
->>> sock_valbool_flag(SOCK_TXTIME) should require a lock_sock() to make changes. The
->>> tc bpf prog cannot take the lock_sock, so bpf_skb_set_tstamp() currently only
->>> changes skb and does not change skb->sk.
->>>
->>> I think changing sock_valbool_flag(SOCK_TXTIME) will also have a new user space
->>> visible side effect. The sendmsg for cmsg with SCM_TXTIME will start failing
->>> from looking at __sock_cmsg_send().
->>>
->>> There may be a short period of disconnect between what is in sk->sk_flags and
->>> what is set in skb->tstamp. e.g. what if user space does setsockopt(SO_TXTIME)
->>> again after skb->tstamp is set by bpf. This could be considered a small glitch
->>> for some amount of skb(s) until the user space settled on setsockopt(SO_TXTIME).
->>>
->>> I think all this is crying for another bit in skb to mean user_delivery_time
->>> (skb->tstamp depends on skb->sk->sk_clockid) while mono_delivery_time is the
->>> mono time either set by kernel-tcp or bpf.
+On 3/13/24 09:25, Edgecombe, Rick P wrote:
+> On Wed, 2024-03-13 at 02:49 -0700, Dongli Zhang wrote:
+>> The memslot id=10 has:
+>> - base_gfn=1048576
+>> - npages=1024
 >>
->> It does sound like the approach with least side effects.
+>> Therefore, "level - 1  will not contain an entry for each GFN at page
+>> size
+>> level". If aligned, we expect lpage_info[0] to have 512 elements.
 >>
->> If we're going to increase to two bits per skb, it's perhaps
->> better to just encode the (selected supported) CLOCK_ type, rather
->> than only supporting clockid through skb->sk->sk_clockid.
+>> 1GB: lpage_info[1] has 1 element
+>> 2MB: lpage_info[0] has 2 elemtnts
 > 
-> Good idea. May be starting with mono and tai (Abishek's use case?), only forward these two clocks and reset the skb->tstamp for others.
+> 1048576 GFN is 2MB aligned, 1024 pages is also 2MB aligned. There are
+> 512 4k pages in a 2MB huge page, so size of 2 for npages=1024 looks
+> right to me. One struct for each potential 2MB huge page in the range.
 > 
->>
->> This BPF function is the analogue to SO_TXTIME. It is clearly
->> extensible to additional BPF_SKB_TSTAMP_DELIVERY_.. types. To
->> work with sch_etf, say.
-> 
-> Yes, if there are bits in skb to describe the clock in the skb->tstamp, BPF_SKB_TSTAMP_DELIVERY_ can be extended to match it. It will be easier if the values in the skb bits is the same as the BPF_SKB_TSTAMP_DELIVERY_*.
-> 
-> The bpf_convert_tstamp_*() and the bpf_skb_set_tstamp helper will need changes to include the consideration of these two bits. I think we have mostly settled with the approach (thanks for the discussion!). Abhishek, not sure how much can be reused from this patch for the two bits apporach, do you want to revert the current patch first and then start from clean?
-> 
-Yes , I think since we have concluded the two bit .(Thanks for discussion again, Martin and Willem)
+> I think overall you are saying in this response that you didn't find
+> any problem in the analysis or fix. Is that correct?
 
-Here is what i will do from myside
-1. Revert the v4 patch :-  net: Re-use and set mono_delivery_time bit for userspace tstamp packets 
-2. Keep mono_delivery_time as ease 
-3. Add user_delivery_time as a new bitfield 
-4. Add BPF_SKB_TSTAMP_DELIVERY_TAI in the bpf.h for etf support
-5. do not reset the time if either mono_delivery_time or user_delivery_time is set. 
+I do not find any problem in the analysis or fix, except the same curiosity on
+KVM_LPAGE_MIXED_FLAG.
 
-Let me know if i have covered all the design details or add if i missed anything. 
+Thank you very much!
 
->>
->>> If we need to revert the
->>> mono_delivery_time reuse patch later, we will need to revert the netdev patch
->>> and the (to-be-made) bpf patch.
->>
->>
->>  
->>
-> 
+Dongli Zhang
