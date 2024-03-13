@@ -1,140 +1,123 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7805A4EF
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206785B683
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710352812; cv=none; b=A4vaF6hLmtX4w+i0TwCSrrEJuWMcGQBrXWG4zUDQSCxKYL1nOOstBbVYZ1acVzPwl9Tqhw6y9FgLLgYGqDxvLjypF+vZL+StoHapJsuTdtqpZikszE9LbJUM3L5EaBkd/xrYBRQkdic04jM7EGVodJWfhFa/bFTNDfZvR//R/dA=
+	t=1710352814; cv=none; b=jKwKLohqb1qG15oZHEQ0QuvGd4BurluwJIbVxhsXjMxRobx/m5X5N1oAPrsa8e6+VolHk4ZS+8wz9Sl6thcFxHH7+mVwpFCU12PFWMaQS9ZkIh8qzlX6tfJpSXdUORBRD1O3qpXP6aKB7yjYUds47gcgx38yBU9bEbYG3835k2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710352812; c=relaxed/simple;
-	bh=F42kIbIk/43SiWPpzXA3ztz6/BrGgO6AUNMOlP2miIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BLaA0trB+REUA+UdVrnOeLZoPA0CSJNkQcQZclzkBalK2d+4IphYYh9WMxBOoY/ShdIK5vruKzbl3CxeE3mBiWpuylWPoT6yZCvF2J3AeoNO0eL1Lleb2Z3cgiJ3/V8FZ0iFcz46WZGhc3gHchNrPIKM3/UZPFJdNq0pXdjOajg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITF+suKL; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710352814; c=relaxed/simple;
+	bh=YKzKrITuyy5m7/HqaXwYbEubXCsSUytOaJG/u/ZsNNc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TyBdEXLWAC2gQaC61oPXr199a59eVanvKVVFmfkTKy8fL20t12/XBgH+Ok9vtgvAmrXmCM3Vd4svij1Fvt9IXERiN98MwPowLgl/lFZzLO14AQ8qFdsrOZwXiN3BzItG/C7jrwTHYfSz7bgp1of9PQo8EevfAtxro0g30rDA0ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=mNvsk7lQ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITF+suKL"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d4548468edso1308681fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:00:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mNvsk7lQ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dddb160a37so686665ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710352809; x=1710957609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=derrcjnwSJJNCziG4NqwFO9vgc3iqv6k+AF2mT8DS9E=;
-        b=ITF+suKL8wpEvoGzTZGh3SNSZZBD+MWRXMY68e+xN8mlAOgcBNc7lBSE4I5YVqqBMk
-         Gb4kRti9JR+2e+K1F8W08xeXrRCw+TgwExac71x59Qsq12y9siNmwrQHJkvjmCDLzJRr
-         ncwbnZpRvVtu3mgQXg+pslAg5d7ZzzAE3Lhky7ftbhTsKosnCSNCBgMMsSY9v+8pWddh
-         NB0BAnbFCApKiY7Q7MGTqBBI+kMH8szTxMIvQKWQg+KsOD51rYBmcLWFXOps6aI9U73O
-         JqITJGZskfob4crDQw6iDcd6zc7vF9gXf1z2TeJEbbhSeeGclvfycPJ1WT70VVelOMnD
-         n+Sw==
+        d=sifive.com; s=google; t=1710352812; x=1710957612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dZTXOjAeT6pfaV7onHDV2gE4nP+owJ8waS/mbAbqu5c=;
+        b=mNvsk7lQZlCPrwZmcKU/Ek/O72Ikvo51o0y+wx1R5aVHTN2AwpI7RD+0OCsLtAqr4W
+         rzDIJKaOFHouGoUyVzI7lU19uiGdvZVG00vNvZFHmqehEzCOfX7jQXrPKviE2IdJp9va
+         SHGsALPA2IYAm/jkxHLS5QkOFBOtFWE9Pv50+BHi2/73g8cjsy6Hb42kQFI/H81Ww5tU
+         Ofv0PX3Lu24K4yLWd5lre+vtq6zDUt/xolIy9DJU+je2ga5CdOl2IQ4VlhzLmiLAgn+6
+         6J8VJ7Vo9zZRE0GEbV1ekiuiqUkNooJ4dXmhYytyS8RoaXI1XAAQrZ1cIR4KosaW9cGV
+         dQIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710352809; x=1710957609;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=derrcjnwSJJNCziG4NqwFO9vgc3iqv6k+AF2mT8DS9E=;
-        b=I19c3NCat59kTDR4u7FSKh4PurtaaVKJz1d3hiT7SKUiO9Rs4PtNbeQWH7eR0wEIKt
-         ONcc6hdmZmughRJuQujNHRgf4f2WQeGyiJTn3uU2mmUoesvLlnSsNxzZDUvpDLTDYBXW
-         bLDn5f30eTWJAG1jDUfa4FOROtvmV6S1SyuBVqe1VVSmTrrIxZGKGYewiuJeJy9TZ/Nb
-         cmUGRL90HFC9cFSvW8K9keoF0ShshqtRfh8xMKiql1qZ90nr7RFmNPY5CAkC/KtbuJX5
-         2y66Vw/ZznUCVqRJVXqtSxpYHU1MY5keAMgZ+LqR43xbwCrXkt9LJ/iJpXFfS36DiWCU
-         dwhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXykb6HcQsLbovOSF/WzvArNdeP8khIr70NCIj50KMUVe8V+aYCRn3/PvR10u0tt1xdSyRQhE6ZHHmo5YBDWj/NXidL+s5rW4JdJVMw
-X-Gm-Message-State: AOJu0YxjnhD0SJ1C/79/VBpWm6hZ3pJxdlUB53Urt/S+GbDEKPzl/WCr
-	OFjsZIiO5Eip2j7NeOGHzj9e2DDi7ZOl1joTF9t+y64MUU32Csfe
-X-Google-Smtp-Source: AGHT+IFqVBnwTErrJW1JlpTp+YoKswH61zcdqC+BG2gIwV2l620ZcdYjNYXIMOKYg6GGHWZ1uC27mg==
-X-Received: by 2002:ac2:4a70:0:b0:513:c9f5:cbf2 with SMTP id q16-20020ac24a70000000b00513c9f5cbf2mr1549904lfp.59.1710352808450;
-        Wed, 13 Mar 2024 11:00:08 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id bi15-20020a05600c3d8f00b00413ef6a6930sm287284wmb.17.2024.03.13.11.00.07
+        d=1e100.net; s=20230601; t=1710352812; x=1710957612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dZTXOjAeT6pfaV7onHDV2gE4nP+owJ8waS/mbAbqu5c=;
+        b=qzA6CznMhQmc0nhiQBdgCt0wVDF3magPQaygCS/2xCB89gM/FgYfggoIKFgFF2/lyT
+         2J5wOZLRi9R94BgOunTtGvjgHdRiUfnVcBWMxoMuZ3zxBYoiSbCTl3cYWAfclWGmnmIF
+         OU7l5++kvq3pygb1+ytxbREoPta3EO2sljyusTWk5mTT4wBSXkXhh5sQxBd82unZznDq
+         dh6iLfBRRNLVwgQvTQs1ubnmcOAQ0mk4MXDw484WiP150rOqEpKpKKUJmawVGUmYt8wC
+         5sLackthbsrheqzV/o3I5jAsWbgn7EqHUbjw7CCAujvJS1IoBShFmLOn/RjU47HNndOc
+         U6hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrwI8EmmnFZtWWUxB6WFGqOzH/jGhYhQGHK5oktCWrLiRIh1qAFArmi6CuIUAS5RFX9ReSfD23vefnuziVxhp+EaSsQT1Jjruanb3w
+X-Gm-Message-State: AOJu0Yw/eKGDZetWrxA0u6U/uz972Kj5PImxbWt89vtGx0zhgmYnDk6N
+	7Mw0NWeeB6KZYBHZa35we0usdZK2DkNXTTyP4THmE3kVMS85CmReFJCpcKM5uEA=
+X-Google-Smtp-Source: AGHT+IEprNdyiuonWqVfClrX/ImBIkqo5fEQz/6Uu30hIGFkzozJm4o58O8tbMTGqua91ovBM0emxA==
+X-Received: by 2002:a17:902:ac86:b0:1dc:4bf6:7eb4 with SMTP id h6-20020a170902ac8600b001dc4bf67eb4mr13452784plr.31.1710352812163;
+        Wed, 13 Mar 2024 11:00:12 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id jj14-20020a170903048e00b001dc30f13e6asm8912264plb.137.2024.03.13.11.00.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 11:00:07 -0700 (PDT)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: wens@csie.org, samuel@sholland.org, Kamil Kasperski <ressetkk@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] dts: arm64: sunxi: add initial support for t95 tv box
-Date: Wed, 13 Mar 2024 19:00:06 +0100
-Message-ID: <8344274.T7Z3S40VBb@jernej-laptop>
-In-Reply-To: <20240313173808.38d893b5@donnerap.manchester.arm.com>
-References:
- <20240311174750.6428-1-ressetkk@gmail.com>
- <13468418.uLZWGnKmhe@jernej-laptop>
- <20240313173808.38d893b5@donnerap.manchester.arm.com>
+        Wed, 13 Mar 2024 11:00:11 -0700 (PDT)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Yangyu Chen <cyy@cyyself.name>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
+Date: Wed, 13 Mar 2024 10:59:43 -0700
+Message-ID: <20240313180010.295747-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.43.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Dne sreda, 13. marec 2024 ob 18:38:08 CET je Andre Przywara napisal(a):
-> On Wed, 13 Mar 2024 18:25:14 +0100
-> Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
->=20
-> > Hi Kamil!
-> >=20
-> > Dne ponedeljek, 11. marec 2024 ob 18:47:47 CET je Kamil Kasperski napis=
-al(a):
-> > > T95 is a most commonly known for being a box with a pre-installed mal=
-ware.
-> > > It uses Allwinner H616 and comes with eMMC and DDR3 memory.
-> > > This device comes with two versions - one with AXP305 PMIC and anothe=
-r with AXP313 PMIC. =20
-> >=20
-> > I have this board and it always felt like a clone of X96 Mate, which is
-> > already supported in kernel, except for broken sd card detection. Would=
- it
-> > make sense to unify those two boards and just overwrite or update parts=
- here
-> > that are not the same?
->=20
-> I think the box you have is an older one, with the AXP305? IIUC, this is
-> about a newer revision with the AXP313. There are quite some differences
-> between the two PMICs, though it might still make sense to share the DTs,
-> see the OrangePi Zero[23].
+TASK_SIZE_MAX should be set to the largest userspace address under any
+runtime configuration. This optimizes the check in __access_ok(), which
+no longer needs to compute the current value of TASK_SIZE. It is still
+safe because addresses between TASK_SIZE and TASK_SIZE_MAX are invalid
+at the hardware level.
 
-Right, mine is with AXP305. It has "T95MAX v4.0" printed on PCB.
+This removes about half of the references to pgtable_l[45]_enabled.
 
-Kamil, does your board also have "MAX" mentioned somewhere?
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+---
 
-Best regards,
-Jernej
+ arch/riscv/include/asm/pgtable-64.h | 1 +
+ arch/riscv/include/asm/pgtable.h    | 1 +
+ 2 files changed, 2 insertions(+)
 
->=20
-> Cheers,
-> Andre
->=20
-> > > Kamil Kasperski (3):
-> > >   dt-bindings: vendor-prefixes: sunxi: add T95 to vendor-prefixes
-> > >   dt-bindings: arm: sunxi: add t95 compatible string to list of known
-> > >     boards
-> > >   dts: arm64: sunxi: add initial support for T95 AXP313 tv box
-> > >=20
-> > >  .../devicetree/bindings/arm/sunxi.yaml        |   5 +
-> > >  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
-> > >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
-> > >  .../dts/allwinner/sun50i-h616-t95-axp313.dts  | 138 ++++++++++++++++=
-++
-> > >  4 files changed, 146 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h616-t95-axp=
-313.dts
-> > >=20
-> > >  =20
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
->=20
->=20
-
-
-
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index b99bd66107a6..a677ef3c0fe2 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -17,6 +17,7 @@ extern bool pgtable_l5_enabled;
+ #define PGDIR_SHIFT_L4  39
+ #define PGDIR_SHIFT_L5  48
+ #define PGDIR_SIZE_L3   (_AC(1, UL) << PGDIR_SHIFT_L3)
++#define PGDIR_SIZE_L5   (_AC(1, UL) << PGDIR_SHIFT_L5)
+ 
+ #define PGDIR_SHIFT     (pgtable_l5_enabled ? PGDIR_SHIFT_L5 : \
+ 		(pgtable_l4_enabled ? PGDIR_SHIFT_L4 : PGDIR_SHIFT_L3))
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 6066822e7396..2032f8ac5fc5 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -867,6 +867,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+ #ifdef CONFIG_64BIT
+ #define TASK_SIZE_64	(PGDIR_SIZE * PTRS_PER_PGD / 2)
+ #define TASK_SIZE_MIN	(PGDIR_SIZE_L3 * PTRS_PER_PGD / 2)
++#define TASK_SIZE_MAX	(PGDIR_SIZE_L5 * PTRS_PER_PGD / 2)
+ 
+ #ifdef CONFIG_COMPAT
+ #define TASK_SIZE_32	(_AC(0x80000000, UL))
+-- 
+2.43.1
 
