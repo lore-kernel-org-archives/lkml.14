@@ -1,507 +1,259 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D47605CA
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF8F59149
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 21:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710366485; cv=none; b=EytS85nvBpc1E8JEhiiuF3aqeeTJjD+cBfJVjvY3PRsXbbwSvKcEwicuik7IRuXOq7jCbyEkISltA6TRcyjVDCv7LLWC2TQbROebwGBwY5tQMtMAzVaqmcxnACRuWIl/jsll4AAEkbmwaDnFKJI+C/epHlyP0/0VShqeeUZ3kW0=
+	t=1710366512; cv=none; b=GPUNy5RsRpMTM59llNKMxhiSKzbe6G3E1ECJj93Hn3WitDz09owLmxSsLtqV2YvtvWWv6+fzyxdaD6ttaogQvykMjdVOfi+l4HMs0LTWu3RnIVmNs88PYigvDhpYnHp/u/yNsBVOeAxyn48o9a/KJMyPxPsYTtagEoCJnoFIuHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710366485; c=relaxed/simple;
-	bh=O0+KZoNJkyqgkkBm880il/b9aGWCTEsuXpCU+/TiYmU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uvShPFDfzRAWsSy15kb02sPZrA3lAgXbtmvYVggWhwI26LpL0xo/nPKrg5bIo0Hah74OxT8z/ibjyQWyPfRS5nY1KIvP7/lmVTxsO96amFjoaTGE48EM8yqnccstKJZ242DaOlWJtcLJ++GD6AQStXaip6aFo2TZ8lW829N0kyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hh26JLPU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hh26JLPU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710366482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DmTR2+cqTF97dN4Qm56qtqK3b7/RsOHhzWGdzkuQ/Hs=;
-	b=Hh26JLPUXHdhK6UxauUg5nI3J/JCu5G+Fl+ofM6cvg0ji2+s0hNonEZYoUhOQXMaK7eFGl
-	osc2YfJd5sA1c5L2jMEoQ6TfQd2To5YWYrDhSZZOi3gI0l0KXql7H8WKDzWublGKNK+Pf6
-	bKtB5TvVjOp+n6BwHP/riGRes2MQKk0=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-445-xBYc9lleN_6PWfPrvR2l-g-1; Wed, 13 Mar 2024 17:47:40 -0400
-X-MC-Unique: xBYc9lleN_6PWfPrvR2l-g-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-690d3f5af86so1064236d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:47:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710366459; x=1710971259;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DmTR2+cqTF97dN4Qm56qtqK3b7/RsOHhzWGdzkuQ/Hs=;
-        b=BteuTIwL7ZWm0meXD8jCphwr5KtwD/TEyBHv/vldFpBK9Pz7bpBDqwAr58GkOpcSVn
-         m4R4QG60STWU05BFSEi05FOS6L2mlMM16EsODpHPHSsfNtMvKSnRFrnKQh0X1H+fDyul
-         9W9x64Q3FpXp9u0vE4Om+FnTBcZ3e4AY/MSjGCM70NTT8iPZK0HX2KFKo5SlIa39zVCT
-         mBBCKmLbw+jCq1eqa6Nk7GWnbq36fTN3SQMTixCtGCxpSOK9KeJP1QoUEiH61qiSd3+r
-         1ry+aiYlgsB0Uswij/jbDQiucGb9/2hhY4NEtMMxDaM9mlt6PU8l3JFdnL+ogC3zH2yM
-         5U0Q==
-X-Gm-Message-State: AOJu0Yx/UxiRM7XRK9oCswdRf1kM6881DocIRHOfi3/lN/IIyOc5iLcK
-	ny8M2c27/cP5IibJ3g2fptFqhq7u4Wa7YByRaQBMRHCi+8txdrpfavKbewesYRL+6ZDpxiExSuc
-	baiqol7SixD7E1cvuHMxb6ekdmJnuyk9ZrrnuZGqXjSeYb46WzUkCRsrnOqQem1B6MQ3ZeKccbb
-	NzmUlBzq1rbakoUhCF7r0se/LQzDTDnAE/G1BVaJ1zp/g=
-X-Received: by 2002:a05:6214:ca1:b0:690:ca31:f070 with SMTP id s1-20020a0562140ca100b00690ca31f070mr2870522qvs.2.1710366459386;
-        Wed, 13 Mar 2024 14:47:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdLotpPN70N9pbKC4tqKRd0G68xLINFQf3Gz4t7Rw+iAJ9v+Us3CvOjmBBrqx2DSseSMgKAw==
-X-Received: by 2002:a05:6214:ca1:b0:690:ca31:f070 with SMTP id s1-20020a0562140ca100b00690ca31f070mr2870497qvs.2.1710366458928;
-        Wed, 13 Mar 2024 14:47:38 -0700 (PDT)
-Received: from x1n.redhat.com ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id dv10-20020ad44eea000000b0069111c5cdd4sm60114qvb.100.2024.03.13.14.47.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 14:47:38 -0700 (PDT)
-From: peterx@redhat.com
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	Matthew Wilcox <willy@infradead.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	x86@kernel.org,
-	peterx@redhat.com,
-	Mike Rapoport <rppt@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	sparclinux@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 12/13] mm/treewide: Remove pXd_huge()
-Date: Wed, 13 Mar 2024 17:47:18 -0400
-Message-ID: <20240313214719.253873-13-peterx@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240313214719.253873-1-peterx@redhat.com>
-References: <20240313214719.253873-1-peterx@redhat.com>
+	s=arc-20240116; t=1710366512; c=relaxed/simple;
+	bh=yZg7KACacTfRKVN99nqgcSirQenTdaOsy/RJ0hCnIE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f189zkFI3bL2XKXTdd68k4fW7BVwCyLZr7c55MKb42snmi4vWpcXZjhWa1cFmsQewKOsebcrodQEljmdFWh40ptmfAY6DEk5lU70IjWI5kU4yU87CHsph/CoXBFBmASO0KaTHD5OOMlGb2RNISttpq1dfji5lSrOyQqGP56Ht4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C7F11007;
+	Wed, 13 Mar 2024 14:49:05 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D053A3F64C;
+	Wed, 13 Mar 2024 14:48:23 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:47:36 +0100
+From: Beata Michalska <beata.michalska@arm.com>
+To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
+	catalin.marinas@arm.com, vincent.guittot@linaro.org,
+	sumitg@nvidia.com, yang@os.amperecomputing.com,
+	lihuisong@huawei.com
+Subject: Re: [PATCH v3 2/3] arm64: Provide an AMU-based version of
+ arch_freq_get_on_cpu
+Message-ID: <ZfIe-JpW-DnFZYxJ@arm.com>
+References: <20240312083431.3239989-1-beata.michalska@arm.com>
+ <20240312083431.3239989-3-beata.michalska@arm.com>
+ <q4pc63l43mtp56qim6s5riwu25cgvdqfchg7jbqhhcixkyqs7i@mlqqgd5hxnec>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <q4pc63l43mtp56qim6s5riwu25cgvdqfchg7jbqhhcixkyqs7i@mlqqgd5hxnec>
 
-From: Peter Xu <peterx@redhat.com>
+On Tue, Mar 12, 2024 at 07:12:37PM -0700, Vanshidhar Konda wrote:
+> On Tue, Mar 12, 2024 at 08:34:30AM +0000, Beata Michalska wrote:
+> > With the Frequency Invariance Engine (FIE) being already wired up with
+> > sched tick and making use of relevant (core counter and constant
+> > counter) AMU counters, getting the current frequency for a given CPU
+> > on supported platforms can be achieved by utilizing the frequency scale
+> > factor which reflects an average CPU frequency for the last tick period
+> > length.
+> > 
+> > The solution is partially based on APERF/MPERF implementation of
+> > arch_freq_get_on_cpu.
+> > 
+> > Suggested-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > ---
+> > arch/arm64/kernel/topology.c | 103 +++++++++++++++++++++++++++++++----
+> > 1 file changed, 92 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > index 1a2c72f3e7f8..42cb19c31719 100644
+> > --- a/arch/arm64/kernel/topology.c
+> > +++ b/arch/arm64/kernel/topology.c
+> > @@ -17,6 +17,8 @@
+> > #include <linux/cpufreq.h>
+> > #include <linux/init.h>
+> > #include <linux/percpu.h>
+> > +#include <linux/sched/isolation.h>
+> > +#include <linux/seqlock_types.h>
+> > 
+> > #include <asm/cpu.h>
+> > #include <asm/cputype.h>
+> > @@ -88,18 +90,31 @@ int __init parse_acpi_topology(void)
+> >  * initialized.
+> >  */
+> > static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
+> > -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
+> > -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
+> > static cpumask_var_t amu_fie_cpus;
+> > 
+> > +struct amu_cntr_sample {
+> > +	u64		arch_const_cycles_prev;
+> > +	u64		arch_core_cycles_prev;
+> > +	unsigned long	last_update;
+> > +	seqcount_t	seq;
+> > +};
+> > +
+> > +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_cntr_sample, cpu_amu_samples) = {
+> > +	.seq = SEQCNT_ZERO(cpu_amu_samples.seq)
+> > +};
+> > +
+> > void update_freq_counters_refs(void)
+> > {
+> > -	this_cpu_write(arch_core_cycles_prev, read_corecnt());
+> > -	this_cpu_write(arch_const_cycles_prev, read_constcnt());
+> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
+> > +
+> > +	amu_sample->arch_core_cycles_prev = read_corecnt();
+> > +	amu_sample->arch_const_cycles_prev = read_constcnt();
+> > }
+> > 
+> > static inline bool freq_counters_valid(int cpu)
+> > {
+> > +	struct amu_cntr_sample *amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
+> > +
+> > 	if ((cpu >= nr_cpu_ids) || !cpumask_test_cpu(cpu, cpu_present_mask))
+> > 		return false;
+> > 
+> > @@ -108,8 +123,8 @@ static inline bool freq_counters_valid(int cpu)
+> > 		return false;
+> > 	}
+> > 
+> > -	if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
+> > -		     !per_cpu(arch_core_cycles_prev, cpu))) {
+> > +	if (unlikely(!amu_sample->arch_const_cycles_prev ||
+> > +		     !amu_sample->arch_core_cycles_prev)) {
+> > 		pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
+> > 		return false;
+> > 	}
+> > @@ -152,20 +167,27 @@ void freq_inv_set_max_ratio(int cpu, u64 max_rate)
+> > 
+> > static void amu_scale_freq_tick(void)
+> > {
+> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
+> > 	u64 prev_core_cnt, prev_const_cnt;
+> > 	u64 core_cnt, const_cnt, scale;
+> > 
+> > -	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
+> > -	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
+> > +	prev_const_cnt = amu_sample->arch_const_cycles_prev;
+> > +	prev_core_cnt = amu_sample->arch_core_cycles_prev;
+> > +
+> > +	write_seqcount_begin(&amu_sample->seq);
+> > 
+> > 	update_freq_counters_refs();
+> > 
+> > -	const_cnt = this_cpu_read(arch_const_cycles_prev);
+> > -	core_cnt = this_cpu_read(arch_core_cycles_prev);
+> > +	const_cnt = amu_sample->arch_const_cycles_prev;
+> > +	core_cnt = amu_sample->arch_core_cycles_prev;
+> > 
+> > +	/*
+> > +	 * This should not happen unless the AMUs have been reset and the
+> > +	 * counter values have not been resroted - unlikely
+> 
+> /resroted/restored
+> 
+> > +	 */
+> > 	if (unlikely(core_cnt <= prev_core_cnt ||
+> > 		     const_cnt <= prev_const_cnt))
+> > -		return;
+> > +		goto leave;
+> > 
+> > 	/*
+> > 	 *	    /\core    arch_max_freq_scale
+> > @@ -182,6 +204,10 @@ static void amu_scale_freq_tick(void)
+> > 
+> > 	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
+> > 	this_cpu_write(arch_freq_scale, (unsigned long)scale);
+> > +
+> > +	amu_sample->last_update = jiffies;
+> > +leave:
+> > +	write_seqcount_end(&amu_sample->seq);
+> > }
+> > 
+> > static struct scale_freq_data amu_sfd = {
+> > @@ -189,6 +215,61 @@ static struct scale_freq_data amu_sfd = {
+> > 	.set_freq_scale = amu_scale_freq_tick,
+> > };
+> > 
+> > +#define AMU_SAMPLE_EXP_MS	20
+> > +
+> > +unsigned int arch_freq_get_on_cpu(int cpu)
+> > +{
+> > +	struct amu_cntr_sample *amu_sample;
+> > +	unsigned long last_update;
+> > +	unsigned int seq;
+> > +	unsigned int freq;
+> > +	u64 scale;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, amu_fie_cpus) || !arch_scale_freq_ref(cpu))
+> > +		return 0;
+> > +
+> > +retry:
+> > +	amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
+> > +
+> > +	do {
+> > +		seq = raw_read_seqcount_begin(&amu_sample->seq);
+> > +		last_update = amu_sample->last_update;
+> > +	} while (read_seqcount_retry(&amu_sample->seq, seq));
+> > +
+> > +	/*
+> > +	 * For those CPUs that are in full dynticks mode,
+> > +	 * and those that have not seen tick for a while
+> > +	 * try an alternative source for the counters (and thus freq scale),
+> > +	 * if available for given policy
+> > +	 */
+> > +	if (time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
+> > +		struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> > +		int ref_cpu = nr_cpu_ids;
+> > +
+> > +		if (cpumask_intersects(housekeeping_cpumask(HK_TYPE_TICK),
+> > +				       policy->cpus))
+> > +			ref_cpu = cpumask_nth_and(cpu, policy->cpus,
+> > +						  housekeeping_cpumask(HK_TYPE_TICK));
+> > +
+> 
+> Could you help me understand why getting the frequency from another
+> housekeeping cpu would be a better than returning 0? Wouldn't different
+> CPUs in the HK_TYPE_TICK domain be running at independent frequencies?
+> May be adding this explanation to the patch commit message would help
+> people who look at this in the future?
 
-This API is not used anymore, drop it for the whole tree.
+If the last AMU sample taken lost its assumed validity, we try another cpu within
+the same frequency domain, choosing housekeeping cpu as one that might have seen
+the tick within the last, assumed, 20ms. We stick to the cpus withn the same
+policy, and thus same frequency domain which means those cpus do operate at the
+same frequency. Now, in case of per-core dvfs this will bail out with '0' as the
+policy->cpus will contain single CPU. Having said that, this code is bogus as it
+does not handle needed wrapping in case currently considered cpu is the last one
+in this policy cpus mask - will send an update soon.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
+I will also try to make the comment above  more readable.
+
 ---
- arch/arm/mm/Makefile                          |  1 -
- arch/arm/mm/hugetlbpage.c                     | 29 -------------------
- arch/arm64/mm/hugetlbpage.c                   | 10 -------
- arch/loongarch/mm/hugetlbpage.c               | 10 -------
- arch/mips/include/asm/pgtable-32.h            |  2 +-
- arch/mips/include/asm/pgtable-64.h            |  2 +-
- arch/mips/mm/hugetlbpage.c                    | 10 -------
- arch/parisc/mm/hugetlbpage.c                  | 11 -------
- .../include/asm/book3s/64/pgtable-4k.h        | 10 -------
- .../include/asm/book3s/64/pgtable-64k.h       | 25 ----------------
- arch/powerpc/include/asm/nohash/pgtable.h     | 10 -------
- arch/riscv/mm/hugetlbpage.c                   | 10 -------
- arch/s390/mm/hugetlbpage.c                    | 10 -------
- arch/sh/mm/hugetlbpage.c                      | 10 -------
- arch/sparc/mm/hugetlbpage.c                   | 10 -------
- arch/x86/mm/hugetlbpage.c                     | 16 ----------
- include/linux/hugetlb.h                       | 24 ---------------
- 17 files changed, 2 insertions(+), 198 deletions(-)
- delete mode 100644 arch/arm/mm/hugetlbpage.c
-
-diff --git a/arch/arm/mm/Makefile b/arch/arm/mm/Makefile
-index 71b858c9b10c..1779e12db085 100644
---- a/arch/arm/mm/Makefile
-+++ b/arch/arm/mm/Makefile
-@@ -21,7 +21,6 @@ KASAN_SANITIZE_physaddr.o	:= n
- obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
- 
- obj-$(CONFIG_ALIGNMENT_TRAP)	+= alignment.o
--obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_ARM_PV_FIXUP)	+= pv-fixup-asm.o
- 
- obj-$(CONFIG_CPU_ABRT_NOMMU)	+= abort-nommu.o
-diff --git a/arch/arm/mm/hugetlbpage.c b/arch/arm/mm/hugetlbpage.c
-deleted file mode 100644
-index c2fa643f6bb5..000000000000
---- a/arch/arm/mm/hugetlbpage.c
-+++ /dev/null
-@@ -1,29 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * arch/arm/mm/hugetlbpage.c
-- *
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * Based on arch/x86/include/asm/hugetlb.h and Bill Carson's patches
-- */
--
--#include <linux/init.h>
--#include <linux/fs.h>
--#include <linux/mm.h>
--#include <linux/hugetlb.h>
--#include <linux/pagemap.h>
--#include <linux/err.h>
--#include <linux/sysctl.h>
--#include <asm/mman.h>
--#include <asm/tlb.h>
--#include <asm/tlbflush.h>
--
--int pud_huge(pud_t pud)
--{
--	return 0;
--}
--
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index f494fc31201f..ca58210d6c07 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -79,16 +79,6 @@ bool arch_hugetlb_migration_supported(struct hstate *h)
- }
- #endif
- 
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
--
--int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
- static int find_num_contig(struct mm_struct *mm, unsigned long addr,
- 			   pte_t *ptep, size_t *pgsize)
- {
-diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
-index a4e78e74aa21..12222c56cb59 100644
---- a/arch/loongarch/mm/hugetlbpage.c
-+++ b/arch/loongarch/mm/hugetlbpage.c
-@@ -50,16 +50,6 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
- 	return (pte_t *) pmd;
- }
- 
--int pmd_huge(pmd_t pmd)
--{
--	return (pmd_val(pmd) & _PAGE_HUGE) != 0;
--}
--
--int pud_huge(pud_t pud)
--{
--	return (pud_val(pud) & _PAGE_HUGE) != 0;
--}
--
- uint64_t pmd_to_entrylo(unsigned long pmd_val)
- {
- 	uint64_t val;
-diff --git a/arch/mips/include/asm/pgtable-32.h b/arch/mips/include/asm/pgtable-32.h
-index 0e196650f4f4..92b7591aac2a 100644
---- a/arch/mips/include/asm/pgtable-32.h
-+++ b/arch/mips/include/asm/pgtable-32.h
-@@ -129,7 +129,7 @@ static inline int pmd_none(pmd_t pmd)
- static inline int pmd_bad(pmd_t pmd)
- {
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--	/* pmd_huge(pmd) but inline */
-+	/* pmd_leaf(pmd) but inline */
- 	if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
- 		return 0;
- #endif
-diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
-index 20ca48c1b606..7c28510b3768 100644
---- a/arch/mips/include/asm/pgtable-64.h
-+++ b/arch/mips/include/asm/pgtable-64.h
-@@ -245,7 +245,7 @@ static inline int pmd_none(pmd_t pmd)
- static inline int pmd_bad(pmd_t pmd)
- {
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--	/* pmd_huge(pmd) but inline */
-+	/* pmd_leaf(pmd) but inline */
- 	if (unlikely(pmd_val(pmd) & _PAGE_HUGE))
- 		return 0;
- #endif
-diff --git a/arch/mips/mm/hugetlbpage.c b/arch/mips/mm/hugetlbpage.c
-index 7eaff5b07873..0b9e15555b59 100644
---- a/arch/mips/mm/hugetlbpage.c
-+++ b/arch/mips/mm/hugetlbpage.c
-@@ -57,13 +57,3 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
- 	}
- 	return (pte_t *) pmd;
- }
--
--int pmd_huge(pmd_t pmd)
--{
--	return (pmd_val(pmd) & _PAGE_HUGE) != 0;
--}
--
--int pud_huge(pud_t pud)
--{
--	return (pud_val(pud) & _PAGE_HUGE) != 0;
--}
-diff --git a/arch/parisc/mm/hugetlbpage.c b/arch/parisc/mm/hugetlbpage.c
-index a9f7e21f6656..0356199bd9e7 100644
---- a/arch/parisc/mm/hugetlbpage.c
-+++ b/arch/parisc/mm/hugetlbpage.c
-@@ -180,14 +180,3 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 	}
- 	return changed;
- }
--
--
--int pmd_huge(pmd_t pmd)
--{
--	return 0;
--}
--
--int pud_huge(pud_t pud)
--{
--	return 0;
--}
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-index 92545981bb49..baf934578c3a 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-@@ -6,16 +6,6 @@
-  */
- #ifndef __ASSEMBLY__
- #ifdef CONFIG_HUGETLB_PAGE
--static inline int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
--
--static inline int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
- /*
-  * With radix , we have hugepage ptes in the pud and pmd entries. We don't
-  * need to setup hugepage directory for them. Our pte and page directory format
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-index 2fce3498b000..579a7153857f 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-@@ -4,31 +4,6 @@
- 
- #ifndef __ASSEMBLY__
- #ifdef CONFIG_HUGETLB_PAGE
--/*
-- * We have PGD_INDEX_SIZ = 12 and PTE_INDEX_SIZE = 8, so that we can have
-- * 16GB hugepage pte in PGD and 16MB hugepage pte at PMD;
-- *
-- * Defined in such a way that we can optimize away code block at build time
-- * if CONFIG_HUGETLB_PAGE=n.
-- *
-- * returns true for pmd migration entries, THP, devmap, hugetlb
-- * But compile time dependent on CONFIG_HUGETLB_PAGE
-- */
--static inline int pmd_huge(pmd_t pmd)
--{
--	/*
--	 * leaf pte for huge page
--	 */
--	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
--}
--
--static inline int pud_huge(pud_t pud)
--{
--	/*
--	 * leaf pte for huge page
--	 */
--	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
--}
- 
- /*
-  * With 64k page size, we have hugepage ptes in the pgd and pmd entries. We don't
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 427db14292c9..f5f39d4f03c8 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -351,16 +351,6 @@ static inline int hugepd_ok(hugepd_t hpd)
- #endif
- }
- 
--static inline int pmd_huge(pmd_t pmd)
--{
--	return 0;
--}
--
--static inline int pud_huge(pud_t pud)
--{
--	return 0;
--}
--
- #define is_hugepd(hpd)		(hugepd_ok(hpd))
- #endif
- 
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index 29c7606414d2..9a4bc4bd2a01 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -399,16 +399,6 @@ static bool is_napot_size(unsigned long size)
- 
- #endif /*CONFIG_RISCV_ISA_SVNAPOT*/
- 
--int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
--
- static bool __hugetlb_valid_size(unsigned long size)
- {
- 	if (size == HPAGE_SIZE)
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index c2e8242bd15d..ca43b6fce71c 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -233,16 +233,6 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 	return (pte_t *) pmdp;
- }
- 
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
--
--int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
- bool __init arch_hugetlb_valid_size(unsigned long size)
- {
- 	if (MACHINE_HAS_EDAT1 && size == PMD_SIZE)
-diff --git a/arch/sh/mm/hugetlbpage.c b/arch/sh/mm/hugetlbpage.c
-index 6cb0ad73dbb9..ff209b55285a 100644
---- a/arch/sh/mm/hugetlbpage.c
-+++ b/arch/sh/mm/hugetlbpage.c
-@@ -70,13 +70,3 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 
- 	return pte;
- }
--
--int pmd_huge(pmd_t pmd)
--{
--	return 0;
--}
--
--int pud_huge(pud_t pud)
--{
--	return 0;
--}
-diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
-index d31c2cec35c9..8ed5bdf95d25 100644
---- a/arch/sparc/mm/hugetlbpage.c
-+++ b/arch/sparc/mm/hugetlbpage.c
-@@ -407,16 +407,6 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
- 	return entry;
- }
- 
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);;
--}
--
--int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
- static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
- 			   unsigned long addr)
- {
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 8362953a24ce..dab6db288e5b 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -19,22 +19,6 @@
- #include <asm/tlbflush.h>
- #include <asm/elf.h>
- 
--/*
-- * pmd_huge() returns 1 if @pmd is hugetlb related entry.
-- */
--int pmd_huge(pmd_t pmd)
--{
--	return pmd_leaf(pmd);
--}
--
--/*
-- * pud_huge() returns 1 if @pud is hugetlb related entry.
-- */
--int pud_huge(pud_t pud)
--{
--	return pud_leaf(pud);
--}
--
- #ifdef CONFIG_HUGETLB_PAGE
- static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
- 		unsigned long addr, unsigned long len,
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 77b30a8c6076..300de33c6fde 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -272,13 +272,9 @@ void hugetlb_vma_unlock_write(struct vm_area_struct *vma);
- int hugetlb_vma_trylock_write(struct vm_area_struct *vma);
- void hugetlb_vma_assert_locked(struct vm_area_struct *vma);
- void hugetlb_vma_lock_release(struct kref *kref);
--
--int pmd_huge(pmd_t pmd);
--int pud_huge(pud_t pud);
- long hugetlb_change_protection(struct vm_area_struct *vma,
- 		unsigned long address, unsigned long end, pgprot_t newprot,
- 		unsigned long cp_flags);
--
- bool is_hugetlb_entry_migration(pte_t pte);
- bool is_hugetlb_entry_hwpoisoned(pte_t pte);
- void hugetlb_unshare_all_pmds(struct vm_area_struct *vma);
-@@ -399,16 +395,6 @@ static inline void hugetlb_vma_assert_locked(struct vm_area_struct *vma)
- {
- }
- 
--static inline int pmd_huge(pmd_t pmd)
--{
--	return 0;
--}
--
--static inline int pud_huge(pud_t pud)
--{
--	return 0;
--}
--
- static inline int is_hugepage_only_range(struct mm_struct *mm,
- 					unsigned long addr, unsigned long len)
- {
-@@ -493,16 +479,6 @@ static inline vm_fault_t hugetlb_fault(struct mm_struct *mm,
- static inline void hugetlb_unshare_all_pmds(struct vm_area_struct *vma) { }
- 
- #endif /* !CONFIG_HUGETLB_PAGE */
--/*
-- * hugepages at page global directory. If arch support
-- * hugepages at pgd level, they need to define this.
-- */
--#ifndef pgd_huge
--#define pgd_huge(x)	0
--#endif
--#ifndef p4d_huge
--#define p4d_huge(x)	0
--#endif
- 
- #ifndef pgd_write
- static inline int pgd_write(pgd_t pgd)
--- 
-2.44.0
-
+BR
+Beata
+> 
+> Thanks,
+> Vanshi
+> 
+> > +		cpufreq_cpu_put(policy);
+> > +		if (ref_cpu >= nr_cpu_ids || ref_cpu == cpu)
+> > +			/* No alternative to pull info from */
+> > +			return 0;
+> > +		cpu = ref_cpu;
+> > +		goto retry;
+> > +	}
+> > +	/*
+> > +	 * Reversed computation to the one used to determine
+> > +	 * the arch_freq_scale value
+> > +	 * (see amu_scale_freq_tick for details)
+> > +	 */
+> > +	scale = arch_scale_freq_capacity(cpu);
+> > +	freq = scale * arch_scale_freq_ref(cpu);
+> > +	freq >>= SCHED_CAPACITY_SHIFT;
+> > +
+> > +	return freq;
+> > +}
+> > +
+> > static void amu_fie_setup(const struct cpumask *cpus)
+> > {
+> > 	int cpu;
+> > -- 
+> > 2.25.1
+> > 
