@@ -1,84 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E07A60BB2;
-	Wed, 13 Mar 2024 18:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BA060BA7;
+	Wed, 13 Mar 2024 18:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710353953; cv=none; b=PdE7QYFVohsh3aOpN/uyEXWqbsVVjYpeF1L6GpY0T/JvsjUI6xFH/wBDPQfRFXmZcLNsd8yFYo0vy8hyZnD6/GRlbAw40bG0JEgsN8K+DhEgEP4k0O+zsP2At7DfdjZ6UvI7MvCeYr8o680HvHPUygjvUcJ2idyQ0Y9hjjXggAA=
+	t=1710353981; cv=none; b=f6tqVRM6EQX5hXvH8r/hCq4n0pHNcP+X1x7zwhB6cHxaiI7E6UIkru1g16pGllBjI0BKK7gyTJk5a+gP3+Ybsxmfhw1U95KVBGh5T9a0vh/L6y+BLFeWWwPhBkAPGxQrYzg7l0/NmVikK8+RZunecFghQ88wW2xj86Qydk2GgLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710353953; c=relaxed/simple;
-	bh=jcQ51BbBPMa4cDIwbdORtxDz4pgEYRzkZCsa/H28N1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJKKx0zVUYxn4M0Brgad6pjSoSARh7M25GC4hCTE0/Py6KwkvJ3Eenv7h8muBiiZmTMt6e2WC31XVS04Q9PjBnW1XY+akaqhiXK65NmmWcsZ1l3LpmQqrjZKWsy6wWk/A1c6Lgfd0SC+wZP7UXvY7HFJUjiJjUBXSRjP4apYgY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/dUXMnz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710353981; c=relaxed/simple;
+	bh=sFEx9EamTD3MBPAzuFxki6UN7ViktTDSTCqur/C/nLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aI+1t4uCmTesovAX2UriG9DIJudYDJEOGsBBtoM2MnxbwiuHEFwl3+eNmrwF0bq6DsbYxrIxDsLoyValubIEykrtwfHzwzVDoPTanaujgbv+KOV42gF9JEy37Itdot1ikAreYXgjHHODV1pjRsB8/d881FWPFW30cIuKwmGNY7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUvalIDA; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/dUXMnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F642C433C7;
-	Wed, 13 Mar 2024 18:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710353952;
-	bh=jcQ51BbBPMa4cDIwbdORtxDz4pgEYRzkZCsa/H28N1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J/dUXMnzuKsdgZGgLI2cg3PsYl4zc+t94S+hGf2obk79UtydDsaOkSTkpVoKQaV34
-	 xWeQ2m5kSrnNUBZdFa0+LfRRK3Bi6B0qontxBrPOZL43Ry/LHCZeSyPngaItsDp9l6
-	 dHCCuzOhP8NDA55cXZNXsnmJAgbfC71/L2lWJqmzLT8AaDJP8InPxAM6UJVTxSBjag
-	 QjtD4IS2q8Jl0htrHwHxYNslFkrn72fc/u5lCKPFluPQw5UAXK3UN4n3IVRYF9itjL
-	 SVy5BKPS++vJyuwYgzuIE3RRqQB1yjiggCNjaIgsOFaAZhAM1dy1h/e4LmHFrgbseh
-	 /hRPlWoAG0ATg==
-Date: Wed, 13 Mar 2024 18:19:07 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Adam Butcher <adam@jessamine.co.uk>
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	linux-imx@nxp.com, benjamin@bigler.one, stefanmoring@gmail.com,
-	carlos.song@nxp.com, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: spi-imx: fix off-by-one in mx51 CPU mode burst
- length
-Message-ID: <4879c575-7101-4c4a-9e23-0e4961d46b9b@sirena.org.uk>
-References: <30b2a315b36e1ee16c0217b32b95a605@jessamine.co.uk>
- <41a7e7e46baa40ce28ad0dcb2ee455df.squirrel@webmail.plus.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUvalIDA"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-413e93b0f54so994455e9.3;
+        Wed, 13 Mar 2024 11:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710353978; x=1710958778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwM77+n02Bo5Xptc9aWDNDUBbm1WtjmR5t0ZnrE2toM=;
+        b=CUvalIDAr9bzUHeArk/TuBNkWVDKUyS94fkraWRVT46WsKzM6qzztcx+OWJOmGeZHI
+         7WxkWGsOrsHEYvHrd2XLIRX1W/xO6ax1nPXBwjTy8uECvSXE72Y3MzjlXU3XJK1tEPv7
+         02iKI4/HP2bf+toxPe8rn8ogqvmuBa4P/CZeFl4zEXbsPBxbFIyYfCgnrFrgCtME9Y3u
+         C2N+NS9uHrcW4gc57wzD3qH29doX6ZoFI9a9JAVVIDAbv7uqibh+l4Zans9h/vZxn1Lp
+         4WqpclzpFAUriy5rYdcQcUB1RiEB78kywZ9B0j3jYAT1ZCu8iXRAQyFBCGDGQvGHaFNf
+         UsFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710353978; x=1710958778;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwM77+n02Bo5Xptc9aWDNDUBbm1WtjmR5t0ZnrE2toM=;
+        b=XMo5bW7p9Qeo+G1R8MppE7aiPrELmkyiaNdr1mq6R3P4PsXwZXu2chqiG7880fUUaC
+         qb3qqYuLJLdxGKf9ZfUZXmZavvu0ZuufC1rWzGiZIYs+LI/qeV0rRvtzE/6dp8G0IF1M
+         ucA7HSJ2DO70ilo3/AGdxPSFB+v5CMnY+TwzqB/RBgj8w2IxmiREYUcAxCkQzAfartKJ
+         nROZKuRm/PQJi6E1/ll9jjIy4rfIrYWGRYUjVkGc6M1+HyEHmjGmKQM7XFXuKSG/Zahn
+         fy+RNo9e0nWcu1NRBJi5SInL/BZTAvArmLCIx4YPP1B7Jk14Omkvds26+FzkReH5Ygdr
+         Ws3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXRm/5agFqcCixEdLWYYXEJVKDc4PvK2y5NTMxqmhXCDLdWjSBEnIJZCU2IJJOP1Wd/76xBbj+Pj8H+f6JOLNBIsgQ7OEHBt0/u8YFWfMc8dtUlEMcnfOU3IIERJFL/9/iFKue5LtSeiQ==
+X-Gm-Message-State: AOJu0Yzu6ZmAT/IJWkWPmI2ijJL1JGcV6FzEik3cIb+R9l9bBcBpnmnk
+	NPvR2DMMLcaYHkrtRbYErWm4bo48sq87ozXTL0pmVJOqK+VzvSjm
+X-Google-Smtp-Source: AGHT+IFlvx5P3FvCMw0RLTEExCoJ3AlezUzg/TACD26EKiNO9ZAOgIth5qkO0ze33vBplTbp7wq6XQ==
+X-Received: by 2002:a05:600c:45c8:b0:413:3890:25f4 with SMTP id s8-20020a05600c45c800b00413389025f4mr539775wmo.36.1710353977808;
+        Wed, 13 Mar 2024 11:19:37 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id q6-20020a05600c46c600b004132aa2f857sm3034508wmo.17.2024.03.13.11.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 11:19:37 -0700 (PDT)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>,
+ Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+ Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Frank Oltmanns <frank@oltmanns.dev>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ Frank Oltmanns <frank@oltmanns.dev>, Erico Nunes <nunes.erico@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: allwinner: a64: Run GPU at 432 MHz
+Date: Wed, 13 Mar 2024 19:19:35 +0100
+Message-ID: <1978377.usQuhbGJ8B@jernej-laptop>
+In-Reply-To: <20240310-pinephone-pll-fixes-v4-5-46fc80c83637@oltmanns.dev>
+References:
+ <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
+ <20240310-pinephone-pll-fixes-v4-5-46fc80c83637@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Fy8kL3rfaji1NWgs"
-Content-Disposition: inline
-In-Reply-To: <41a7e7e46baa40ce28ad0dcb2ee455df.squirrel@webmail.plus.net>
-X-Cookie: It's later than you think.
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+
+Dne nedelja, 10. marec 2024 ob 14:21:15 CET je Frank Oltmanns napisal(a):
+> The Allwinner A64's GPU has currently three operating points. However,
+> the BSP runs the GPU fixed at 432 MHz. In addition, at least one of the
+> devices using that SoC - the pinephone - shows unstabilities (see link)
+> that can be circumvented by running the GPU at a fixed rate.
+> 
+> Therefore, remove the other two operating points from the GPU OPP table,
+> so that the GPU runs at a fixed rate of 432 MHz.
+> 
+> Link: https://gitlab.com/postmarketOS/pmaports/-/issues/805
+> Acked-by: Erico Nunes <nunes.erico@gmail.com>
+> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
+
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 57ac18738c99..c810380aab6d 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -107,14 +107,6 @@ de: display-engine {
+>  	gpu_opp_table: opp-table-gpu {
+>  		compatible = "operating-points-v2";
+>  
+> -		opp-120000000 {
+> -			opp-hz = /bits/ 64 <120000000>;
+> -		};
+> -
+> -		opp-312000000 {
+> -			opp-hz = /bits/ 64 <312000000>;
+> -		};
+> -
+>  		opp-432000000 {
+>  			opp-hz = /bits/ 64 <432000000>;
+>  		};
+> 
+> 
 
 
---Fy8kL3rfaji1NWgs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 06:13:54PM -0000, Adam Butcher wrote:
-> From: Adam Butcher <adam@jessamine.co.uk>
->=20
-> [Apologies, rubbish mailer corrupted the previous re-addressed post]
 
-Please put administrative stuff like this after the --- so that it
-doesn't end up in the changelog.  Hopefully none of the tooling gets
-confused by having the same thing posted twice with two different
-contents...
-
---Fy8kL3rfaji1NWgs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXx7hoACgkQJNaLcl1U
-h9DbjAf8Dmlockcel5V/shGKmKzMCtwiM64jEm/LHQpgf3kK2LJVnrFENHX8sP0x
-8f1NmwNRJfvCJpaCq2VIj0KjFIkMXonti7e0zchsz9TAAetQq3osljH2lCQuaiYN
-Lil/iwKb5lrcYVEE8h7CXcu8WOK/bRX2PXUFvYVjTZ6FIQQk1yk7b6M5zyGn+oXM
-0oC2wcic/rNhE1siZpZHD3rlSCzt/HsdGxYlmPwDcWUr+ORYXYc5v+NOmV0iHwQ2
-dJTQkpbuTfDmz9GZT1eXEYInNaonNt3326QrJEgAvBsDK06dIt0hVYuUQAv7w6/W
-7+5MbzAaO7gVYvscSEC+HVe86C7ajQ==
-=4X+3
------END PGP SIGNATURE-----
-
---Fy8kL3rfaji1NWgs--
