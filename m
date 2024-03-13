@@ -1,132 +1,233 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A15C12E54;
-	Wed, 13 Mar 2024 06:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDAD1170A;
+	Wed, 13 Mar 2024 06:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710312367; cv=none; b=H/yfz2EtZI3vPU/ZaUyHCzLUcPamsMJqjixpxppMBO17x/MV57K4bnRV6LYBtfaWT9NnI6MBHhgTE60EwKjAFID+JvVRCBxBVfkJfyPQVg8h1PyN31FOHV7AdAVZWErHdG05L70x+HNrrL178wXR8iKKWBPRUhoeKlOCZb3jC8Q=
+	t=1710312706; cv=none; b=XiBoEZkzhHmP9yCm5qE80QHcQf5Hp54Ur0FRnzs/k6Q5yB2j4sLae2oOr3LKIW7uVu+nXISyKzFF4ZIJjJcjjfCuLXWmMLKr16HSBCVopN3YAjgo/2x2b5qXf3xH0LekrZ0y9lQTM0xC3FTD0FXspN3AMefftfCZGJdRJPCs58g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710312367; c=relaxed/simple;
-	bh=x6A3+YRDJy6D5VShC3JZYQD8PUTdLv32V7wLfBdaaNI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F6ZqgQr18/WEH8RndzvYPa/xFMx5F/0UdaH19c2Ywb1dlpr/YNiBf64KxWz6goqMQV/52e99vT9t4qExfHohSjQqrBfp6F35wUEameAauVZXZPE/XCuffyqL5eMzzY5jHNlFDRRYHQk1d8FaY009ffi0RlVFOaCaC91vYPj+NdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid: bizesmtp77t1710312238tb949ddw
-X-QQ-Originating-IP: YaSZ14Ejv+mg7px1aOgJ0ZyZYJFeibWVGBRXtzRN4OI=
-Received: from localhost.trustnetic.com ( [122.235.139.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 13 Mar 2024 14:43:56 +0800 (CST)
-X-QQ-SSF: 01400000000000E0E000000A0000000
-X-QQ-FEAT: qpc/lE38OU3h9Zfd7U7Xil0QlHB1aAbpq2g+HV8TDhkqW3lWCPyjoCxp0okWi
-	YLIeN7DLNozoLFIShVsqHhIlGfcAtdAFWARYjniXVp/HkSEK4YDK+uxSooBx6pXN2pYZlk+
-	xkwkRJ4TTW8i/HkkWe8ZG7PwpvHk0il3Fcq8CiIX30HEVgqwLbvAy1SwIiRi72m7ux+oYdL
-	x/1WSIhMM3wL25WT7fLkT/F+t9zInp/NEzGEF1QE+MurOTC5HvRLxJHq6CAqGk/BSTbNY3e
-	XqqUCjFsk1ziCMVMKQJhhg25io4D+VWBRZt+KBT3nxSaOe/4Pv6JJIGcfq8gjdsznLMzVy6
-	CWHOMFB0j2B9el3LuGeN3GG7OjJLc1UJj8jnujCokZ/JX5VEDyGgbuw/4GnkpberhB70MRV
-	p0KVRaeVUF8=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 13348156188099089633
-From: Duanqiang Wen <duanqiangwen@net-swift.com>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	linux@armlinux.org.uk,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
-Subject: [PATCH clk] clk: clkdev: add error messages for name exceeding maximum length
-Date: Wed, 13 Mar 2024 14:42:52 +0800
-Message-Id: <20240313064252.50233-1-duanqiangwen@net-swift.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1710312706; c=relaxed/simple;
+	bh=qV+who9BCOcvHst6HiD77hsq69Fk4GtrUpMmKKkjj00=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pYqRJ9HnYEnCjXGBFwVNfxO5zOrBvF/PLQ3MQ2ZuMhL1SAhZYH/kVe0W4ND3Am3r7yMV3FJeeNgF7YxiwkDZATaDHISCGTzNsoeeUHwEleVAMHig/Nt7404fuZrWYVWE6pyoRESLwHhutLvEA543z40RHHP21N41zJHG6dddDDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=km6Clk7q; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="km6Clk7q"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42D6pBSN009136;
+	Wed, 13 Mar 2024 01:51:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1710312671;
+	bh=rzD+EzX/k7d5q06olV4JiQMj7NEc0ZLvW6rR4gLdO+Q=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=km6Clk7qp/+sN3+TgPu6pY/9+6Y4NqK55vGuGGeuzCQE07yYflykG9/SNVsFWTjyK
+	 DHzTupyUxpiXmEFCei2+2g7Sg9HNbR+VcOrIuHFluhVAXESUuymUmH541bvrq171xZ
+	 ZmcuNa5Rvcr0NnqaOTr/IWF6QnHGy9odQ3zclXBQ=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42D6pBXi064923
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 13 Mar 2024 01:51:11 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 13
+ Mar 2024 01:51:10 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 13 Mar 2024 01:51:10 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42D6pAAW097772;
+	Wed, 13 Mar 2024 01:51:10 -0500
+Date: Wed, 13 Mar 2024 12:21:09 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
+	<tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Vignesh R
+	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik
+	<jmkrzyszt@gmail.com>,
+        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
+	<peda@axentia.se>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
+        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v4 18/18] PCI: j721e: Add suspend and resume support
+Message-ID: <e4fc0b47-6a7f-4cc5-bb69-77655f775486@ti.com>
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-if one device register clkdev with dev_id or con_id
-greater than maximum length, clkdev_create functions
-will not return err, but clk_find functions will not
-match the device, it's difficult to identify issues
-for developers.So add error messages for dev_id greater
-than 20 characters and con_id greater than 16 characters.
+On Mon, Mar 04, 2024 at 04:36:01PM +0100, Thomas Richard wrote:
+> From: Théo Lebrun <theo.lebrun@bootlin.com>
+> 
+> Add suspend and resume support. Only the rc mode is supported.
+> 
+> During the suspend stage PERST# is asserted, then deasserted during the
+> resume stage.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
----
- drivers/clk/clk.c            |  6 ++++++
- drivers/clk/clkdev.c         | 11 +++++++++++
- include/linux/clk-provider.h |  1 +
- 3 files changed, 18 insertions(+)
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 2253c154a824..10d3e0d93648 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -295,6 +295,12 @@ struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw)
- }
- EXPORT_SYMBOL_GPL(clk_hw_get_parent);
- 
-+struct device *clk_hw_get_dev(const struct clk_hw *hw)
-+{
-+	return hw->core->dev;
-+}
-+EXPORT_SYMBOL_GPL(clk_hw_get_dev);
-+
- static struct clk_core *__clk_lookup_subtree(const char *name,
- 					     struct clk_core *core)
- {
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index ee37d0be6877..620dc1e80b48 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -158,6 +158,9 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
- 	va_list ap)
- {
- 	struct clk_lookup_alloc *cla;
-+	struct device *dev;
-+
-+	dev = clk_hw_get_dev(hw);
- 
- 	cla = kzalloc(sizeof(*cla), GFP_KERNEL);
- 	if (!cla)
-@@ -165,11 +168,19 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
- 
- 	cla->cl.clk_hw = hw;
- 	if (con_id) {
-+		if (strlen(dev_fmt) >= MAX_CON_ID) {
-+			pr_err("%s:con_id string cannot be greater than 16 characters\n", dev_fmt);
-+			return NULL;
-+		}
- 		strscpy(cla->con_id, con_id, sizeof(cla->con_id));
- 		cla->cl.con_id = cla->con_id;
- 	}
- 
- 	if (dev_fmt) {
-+		if (strlen(dev_fmt) >= MAX_DEV_ID) {
-+			pr_err("%s:dev_id string cannot be greater than 20 characters\n", dev_fmt);
-+			return NULL;
-+		}
- 		vscnprintf(cla->dev_id, sizeof(cla->dev_id), dev_fmt, ap);
- 		cla->cl.dev_id = cla->dev_id;
- 	}
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 1293c38ddb7f..88f3e3dde147 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -1318,6 +1318,7 @@ int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *new_parent);
- unsigned int __clk_get_enable_count(struct clk *clk);
- unsigned long clk_hw_get_rate(const struct clk_hw *hw);
- unsigned long clk_hw_get_flags(const struct clk_hw *hw);
-+struct device *clk_hw_get_dev(const struct clk_hw *hw);
- #define clk_hw_can_set_rate_parent(hw) \
- 	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
- 
--- 
-2.27.0
+Regards,
+Siddharth.
 
+> ---
+>  drivers/pci/controller/cadence/pci-j721e.c | 86 ++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 9af4fd64c1f9..a1f1232e8ee5 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -7,6 +7,8 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/container_of.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/io.h>
+> @@ -22,6 +24,8 @@
+>  #include "../../pci.h"
+>  #include "pcie-cadence.h"
+>  
+> +#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
+> +
+>  #define ENABLE_REG_SYS_2	0x108
+>  #define STATUS_REG_SYS_2	0x508
+>  #define STATUS_CLR_REG_SYS_2	0x708
+> @@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
+>  	pm_runtime_disable(dev);
+>  }
+>  
+> +static int j721e_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (pcie->mode == PCI_MODE_RC) {
+> +		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+> +		clk_disable_unprepare(pcie->refclk);
+> +	}
+> +
+> +	cdns_pcie_disable_phy(pcie->cdns_pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static int j721e_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(dev);
+> +	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
+> +	int ret;
+> +
+> +	ret = j721e_pcie_ctrl_init(pcie);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	j721e_pcie_config_link_irq(pcie);
+> +
+> +	/*
+> +	 * This is not called explicitly in the probe, it is called by
+> +	 * cdns_pcie_init_phy().
+> +	 */
+> +	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (pcie->mode == PCI_MODE_RC) {
+> +		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
+> +
+> +		ret = clk_prepare_enable(pcie->refclk);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/*
+> +		 * "Power Sequencing and Reset Signal Timings" table in
+> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
+> +		 * indicates PERST# should be deasserted after minimum of 100us
+> +		 * once REFCLK is stable. The REFCLK to the connector in RC
+> +		 * mode is selected while enabling the PHY. So deassert PERST#
+> +		 * after 100 us.
+> +		 */
+> +		if (pcie->reset_gpio) {
+> +			fsleep(100);
+> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+> +		}
+> +
+> +		ret = cdns_pcie_host_link_setup(rc);
+> +		if (ret < 0) {
+> +			clk_disable_unprepare(pcie->refclk);
+> +			return ret;
+> +		}
+> +
+> +		/*
+> +		 * Reset internal status of BARs to force reinitialization in
+> +		 * cdns_pcie_host_init().
+> +		 */
+> +		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
+> +			rc->avail_ib_bar[bar] = true;
+> +
+> +		ret = cdns_pcie_host_init(rc);
+> +		if (ret) {
+> +			clk_disable_unprepare(pcie->refclk);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
+> +			       j721e_pcie_suspend_noirq,
+> +			       j721e_pcie_resume_noirq);
+> +
+>  static struct platform_driver j721e_pcie_driver = {
+>  	.probe  = j721e_pcie_probe,
+>  	.remove_new = j721e_pcie_remove,
+> @@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
+>  		.name	= "j721e-pcie",
+>  		.of_match_table = of_j721e_pcie_match,
+>  		.suppress_bind_attrs = true,
+> +		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
+>  	},
+>  };
+>  builtin_platform_driver(j721e_pcie_driver);
+> 
+> -- 
+> 2.39.2
+> 
+> 
