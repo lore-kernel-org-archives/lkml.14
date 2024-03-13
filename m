@@ -1,178 +1,306 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADE82905
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710341510; cv=fail; b=WVc1w6AyMhQLsKxmnAtaZfj0XxzklmIJHXk+EkMr26Xmkys9ZOeTLhvCYaQz1j3b0UEMZZDmeyqp/aUirm7BhR7Ef5Ps7R4w3sc1CuEnJIWOVFP7Ygld95Y5XcEFdWtw+W/Zywfpxrr/kWCQKOwc653tp2VR0ZxYxcTTzOy0Dxs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710341510; c=relaxed/simple;
-	bh=Zz37TzgdR79iTguik3SkH6+mYICrBe5a1bzBXUZdO9Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=k26b0VWVR55g2PTW0mL/6R+8SjJfkTsdiajewN2Hsc+xGezWKXXsXwQ5EcdzVh6q2CQz/XNa6jGlak+1yP5gtFn1cVcw6Snf3k+8S41jKfWxQ0DRh79yEjOBcbR6xjjZYq+sep5oodmq0yeWzvwooq+pb/T9KKUExOC/il4vaQw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jcCqIDSv; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E66446A2;
+	Wed, 13 Mar 2024 14:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710341563; cv=none; b=gU489fOL2gHTYZg3zGSLseZLL/t0SUuhe/7a0vh1VjweDgYlxhYJYg9uVy5AtrB1/NGh1TVj6WQ5pi6wlkdcJLHpMCd6u0XQhDV5W8Fdhj8hes1ImNBT/bXrh8W2S4LEOzJitFZvC2MWerkBsNgduZbXlkRP3nyeicFl76aoI7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710341563; c=relaxed/simple;
+	bh=wRUrD3Ulnv6bcx0ziZA5RH4Fr2ljhTZG8fdkWrlWbJU=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=oTaCV5fzcHLNsJIzbtoEKKBj7oCOGlfbQnRmyKGTG2q3aSUQDqg5k50xJ+Yw5rLbwFeMv3ju7n343vtSV8RAXY2wweRNVGBqOiTPXxlPORhI+I7E989kPY6yZkEaS5TB1GkLQIXQYHKZOcUyRBK/gHTq69pFySrEiepjUXHYCQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bVcu0QED; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jcCqIDSv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710341509; x=1741877509;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Zz37TzgdR79iTguik3SkH6+mYICrBe5a1bzBXUZdO9Q=;
-  b=jcCqIDSvelx8raaCA/jn7BdE4aWLaz4M2B6xlJJx7YirOoZ+JYGyYPV7
-   jrBsrAxiOdQxGzz6QW8W+8N7JHAI2cj82uSi2BGuEoqqmhHN1Br5/nD4t
-   HO0Lf+xxBzX9r+5uG4mGdAC2GZoKn8XodjQHbZBuGlAhpMrpq95o4Hmd3
-   f2xpJOwWMuwvndoCBfx676ddVnYRsoiMXs9ngbL+3RurPszmm3vyiW4QU
-   KbiBtJbqfX9k8/uaVG36gZ4DBuRo8GRZ3qHgrM017P2aV23juKoDnCMQx
-   mUpP55+P1UHDL8k0fBqGZFonsdgYwDFbqW3fNf4ns66PdHALWPvo5qqfR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5717038"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="5717038"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 07:51:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="11851064"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Mar 2024 07:51:48 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 13 Mar 2024 07:51:47 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 13 Mar 2024 07:51:47 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 13 Mar 2024 07:51:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CaMJ6JhKimU7jzzJVGDNBBaViBzjNp3Sg5hsSAnY1OOYZrIKcamrVAZDavnsb2C3Nq4Tag9Ta/1tvuctHnZg3pTJxfXGWczx0ua6LpH+/cMHMGcSe3e4wwjmr8OwoGAQ4g/KUAphpfYCEsvPTUssj53gP3K0y8h3++dnZXJT140ZB6A4fW5x/q3i3K08op0+YSDZ9HTdGshlE1l4ee/rUJErO5AMDVmMS5vlvH7AfBrfTUR29SGTQZ2DRG0Y9lV6TF4+gM2hnqUvPNKRSK0jPCkvB3ShbQhmMxmlYDffwfng0eJz6pAS2IYfVvlvUt65W4ozjxu5j0R8qPsq+T23mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zz37TzgdR79iTguik3SkH6+mYICrBe5a1bzBXUZdO9Q=;
- b=GJPCHmfF4rDFptCk+zla6Jx4Dm2cMoh4Y2LqeS6lBubMgAI5C/dbLPUkLuvk49gv/HUrLU601LmOy2xALqchIbSp2/bzdlg3ckV3vU9UDCcCopqS8fKAx0acCOGb2ENMXMjAg95XXjZAHsI4FiEB7o0lWAvYpPpPrp3SYUdgsU0tdpdork0I6xL6UlqF6GCtYCxQ2RbbuuNoLSOMxMYS34eoVIacc3IyL4HLJwV71B6kr9yeNz+unR4+KhV0+YaVnsDkw5Z9WnzUuREi33zBzO4cDQmbF6U9wOTJ618bxFx0wFY/XrSywokiE7xXMksyLgjyAV3huLD7hu8Jx8ONJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by CH3PR11MB7673.namprd11.prod.outlook.com (2603:10b6:610:126::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Wed, 13 Mar
- 2024 14:51:43 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::fc9e:b72f:eeb5:6c7b]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::fc9e:b72f:eeb5:6c7b%5]) with mapi id 15.20.7386.016; Wed, 13 Mar 2024
- 14:51:43 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "debug@rivosinc.com" <debug@rivosinc.com>, "luto@kernel.org"
-	<luto@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "broonie@kernel.org"
-	<broonie@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "bp@alien8.de" <bp@alien8.de>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "peterz@infradead.org"
-	<peterz@infradead.org>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 02/12] mm: Introduce arch_get_unmapped_area_vmflags()
-Thread-Topic: [PATCH v3 02/12] mm: Introduce arch_get_unmapped_area_vmflags()
-Thread-Index: AQHadMz59t1/4ENE0ES3XenXRq6QSLE1RNoAgAB9dwA=
-Date: Wed, 13 Mar 2024 14:51:43 +0000
-Message-ID: <dff7c527fc235a2b9493aaf38e0a4b8634374edf.camel@intel.com>
-References: <20240312222843.2505560-1-rick.p.edgecombe@intel.com>
-	 <20240312222843.2505560-3-rick.p.edgecombe@intel.com>
-	 <d8af66d6-4ba7-45f6-877c-e89627506551@csgroup.eu>
-In-Reply-To: <d8af66d6-4ba7-45f6-877c-e89627506551@csgroup.eu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|CH3PR11MB7673:EE_
-x-ms-office365-filtering-correlation-id: 5b5af1e3-a727-4a87-c91d-08dc436d1970
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uLL+XWY1O4bQE82/RLuwBHxps0z+EAetpj1YALrH3YyESGrlyTW5LFUKG0X/6RWQ4ib2sbMlnkRmdI2FrRl6aFY2AoVyxnJp6se7oAQrnk/RHW0JtTwSJ+oJZRxkbWV1W6MbCZeXsvj8bxzxP6F5Wtg9s9Q+lf4A316kKN4lQx6ncxfXv3h413SqX/FeafGPU8KKHa0YWTQHl9lEh71judJiyIFD7YdhJ/f0Duahw88h1Dx9F5Zli8yf0ZDeIFwZLwhzXXzQSi9oO+OkAZusOZoej4knlQpCzWCpstWOw6B4bPza8JfrigUcD9A0day1BIYs0ec0qtVQ9v7wWRXEktNIxMwUWhlwy4WphSrTAg8GlmJDSBbLdNtjm/k+C23/s7JNe/YXwXrwquAQ5Df2Au9uDeG3LTX2QDErJFR63Qul4unlzpYApS/dkJZPxjs9J7n96XKcajUA38kMrbZF+j3aBZX2v+vTWJjBpVuU+ufJQrePOCXSjvLumjflVFe4bDefQfWpBMe2jxmE+6nUqzU9re1wR6vhwCwi2EaCaEydH3Ji7AoTZqyAfk5vG9txMc9O3o5X3ObrprTAzjaLAscOD7BKYp1L6l1GBa5R7qvUaKVVEgxld2kAmVOBmHdfQeHCpVMTm78I5tndJyCw1frXPGcAD0hZqpitUFBApDB3QCsak1KwjCmvsMdlA6Cge9OqsChboeZE/1868cFVwQ1NGJDI+vl7XI1efNSaq5A=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(38070700009)(921011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UUNqL3VxK1ZYalNqR29nbnJkMmxZbENWdWhIa3p6Nzlja1FDM0gxMHBNbWVo?=
- =?utf-8?B?RkxJeFk1NC83akVTQWlYbDNvQ2FDY2ljSWRvNDkrdzBHbnJPYWZaVmFQSVh0?=
- =?utf-8?B?TzdLRFpyeTV2cHdnc3Y5SDlEVCtMeWh0eSt2Nlh5bmxrUmFFNW5RaUFjNldB?=
- =?utf-8?B?bmoyanczNnd3UUZRWXdWUEg5KzRmYXM0eGsvQ0hBajV0akxmZ29JTEIwTk9u?=
- =?utf-8?B?am16T1M2V3o0VkhhMjB3dGdqOUoyNTdzbkpPM1dmMG15Wkx0NXliZ1ZDTnVJ?=
- =?utf-8?B?SWptNnZCQzJoU2U5UzZzSXNHdGExd3YrdHBXYkx6MEFuSmJpOEVBYVlFUmxh?=
- =?utf-8?B?N08yZ3Rla2grWlFERGQvT2lwWm9kcmZZNFJYYVZIQWVUb0QzRW9XMlVZb2pO?=
- =?utf-8?B?SDBabnVvRGF1WHNSUGNVQlk1bTRJNTJCcmN1WEJTZEZaZkxlQkpFay9Pc0lz?=
- =?utf-8?B?a2Mybk9UcFZjazd0aUZLOTJiYkphaFgyTGdHK3RTZXNvSGdWeWtpM0dXVktN?=
- =?utf-8?B?SXk1Z1lBbHBmaTJneWl2QVk2a2VxWGg4U2JLYXhuc1VFNnpTV1ZZMEtJSit0?=
- =?utf-8?B?K1FnUk52eC9KZkZEeWxra0l4YTdZNitjT0Z2aDNvS3lSMlBadjRLYUY3dXRr?=
- =?utf-8?B?Tm1QRjVGdGpVdWx3MjBPamRTdXU5dHQvTG9MbjdjVnRvLzJNRVhvRFZiZVRu?=
- =?utf-8?B?S3J2UnQzakdZbGw0NUtMTG5RL2VhbEExdytWM0FSejl6VTFva2FoaTRGaldL?=
- =?utf-8?B?ZzkzM2tMbGo3ZHBaNFJETWRPSkp4WXhac2pKN2N4cmpYS2QvTFcwSzFjdFZq?=
- =?utf-8?B?OWEzVjRReGpLU2ZmdnpIMlBKRnE4Q3BQb2JEV28xc1ZSSEVTOUVnbk9wbGxp?=
- =?utf-8?B?elpPR3pML2JWRDRIbElQVFJ2ZmtNL3VnSjA4NXFDRFBqN05qckhBTnhhbmtB?=
- =?utf-8?B?bm0vTHBZM1J0RURVZUgyM1V3ODQ0aFpER2NBS05MVnp1TmgwdVBIdVdYV1Fl?=
- =?utf-8?B?SE9LZGRmaTJEODlVUU41ZmlqZ3R4Ulo2Z3I4VXpiaVRocWFTN0pQSEI0UHAw?=
- =?utf-8?B?NWdGNmxyYXlTUUdPSi9NSis5eVVzRlc0TkJuckdZRWxJZDQyVWtiOTVKODMx?=
- =?utf-8?B?Mmh1aDBHSFp1OTdhYnI3RFdyMmprNTR2RlNDTUxQRUtaQUZ2SUdWVDF4OGI4?=
- =?utf-8?B?aDBYbWx5emRvM3Zuby9TZnAxQXZSaW4xV1BXZVo2Vm5xNms1a2VvT3o4dzMw?=
- =?utf-8?B?bytVQTNPRjNUcm5tT1A3eCs2MHp0OUxoNFZ3OWtHT2h1K1QxcGRUMlhZMlJk?=
- =?utf-8?B?eldYRXp5UjBJbnRITWNtNVIyUG1ERmlWaTlFeW9CQU8wNkhZRDBVZWd4NmlO?=
- =?utf-8?B?bGJqdUdDbExmUjBKNVRjUCsyRUxBckNQb0hTSEJCVFQ3a1dFWUVFTW1wSTlm?=
- =?utf-8?B?MHpSM2YvSmhaVXAwV21TT2x5WitlMW9CSmg4WmdhNXV0b09EeEV2MWtzeTZK?=
- =?utf-8?B?TU1sTUZiaXJ5cjNENVBmRVNtTUtFT1pSSE9iQ2l3K2ZQSHFkT1RvbzFES0pt?=
- =?utf-8?B?MXNzTWttVWhUVnhXSmRVZG00MWppLzJkLzlvTWRtSDMrcnZxcW5wTzMzeUxK?=
- =?utf-8?B?STBSMWRYTXRGR0hPQTdmOGEyeG5xcWU5dy9MRzVwMS84cElBVGI1MUllZFhn?=
- =?utf-8?B?aVlNSzE0aklkRVpYakd0M1NGS0xla2s4dkZvOVBuaS8wNmtxQ2pNNDhPTnI1?=
- =?utf-8?B?K0FVM25nY1RVQ3V1SWFzMjE4ZEtFUitwemRFZXgzdDJsc20wSG5uUmxoQUIz?=
- =?utf-8?B?UU9ZWHBMNDRxNTBPUE5nS05YU1FkaEZwbnUvNy9UcHl2bWlDQVAyRmNmNnZ4?=
- =?utf-8?B?Z0o5My9kM0Foanl2ZEpTemxITGtXRVdwS2VWNmVVbk5FTkU0NnNIZGRIMUN0?=
- =?utf-8?B?T1UzdkNWR2tTTmNZNkdqUHpqUHcxdmNsZmdYRnJlUWhLay9SL0hmRTZUaTB2?=
- =?utf-8?B?dmFNdkNCaHRla1hMN2NVRjliUEZUMVhaZjdPeFRob3JzVVlPSkl6ZUUvQkRC?=
- =?utf-8?B?VGxrR0kxbEJZV1JjcDU1Qy84R0lDenFiM0pWcEdXamFDUmU0aWgrdnU5NlQ1?=
- =?utf-8?B?aXcvVjFZdzZCWFRGNk5ua1lRaGlkQkNVSFJ1T0E0SS8yaVMybHg0U0F0K0hl?=
- =?utf-8?Q?OLvLztJYMFszQ6BvzQPEJb4=3D?=
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bVcu0QED"
+Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3B408899;
+	Wed, 13 Mar 2024 15:52:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710341534;
+	bh=wRUrD3Ulnv6bcx0ziZA5RH4Fr2ljhTZG8fdkWrlWbJU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=bVcu0QEDufYyMVK7Xo5KAb7UXIYAhd3LtqeDokj1aLif44xic5jTSy4ap9wdwMkPm
+	 xrj/D3gnsIq9oM05vTT1QIVfLqfFPuv0mHo7oRGzg5fEeBHbOetMKVuCZVydEgZRdP
+	 80ev1jzT801ntAPTonmvMFNyqNKnOdeO/XeDIQlA=
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <75218F9BDED3334F97E581A832BE4C04@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b5af1e3-a727-4a87-c91d-08dc436d1970
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2024 14:51:43.6765
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PbyZQhgjugI91D6+9KlkHuruvhLS404eawckZD1hEFdY6jlf4oQfi0nIL4XGu0xHP6Nzb3EXxtyKLM5FnXCJeiKz/R8LosgOnlcexeVPcm0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7673
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240313070705.91140-3-umang.jain@ideasonboard.com>
+References: <20240313070705.91140-1-umang.jain@ideasonboard.com> <20240313070705.91140-3-umang.jain@ideasonboard.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: Add imx283 camera sensor driver
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, willl will <will@willwhang.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, tomi.valkeinen@ideasonboard.com, Umang Jain <umang.jain@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, Alain Volmat <alain.volmat@foss.st.com>, Paul Elder <paul.elder@ideasonboard.com>, Mehdi Djait <mehdi.djait@bootlin.com>, Bingbu Cao <bingbu.cao@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+To: Umang Jain <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org
+Date: Wed, 13 Mar 2024 14:52:34 +0000
+Message-ID: <171034155409.1011926.3990407129363039340@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
 
-T24gV2VkLCAyMDI0LTAzLTEzIGF0IDA3OjIyICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Og0KPiANCj4gUGxlYXNlLCBubyBuZXcgImV4dGVybiIsIHRoYXQncyBwb2ludGxlc3MgZm9yIGZ1
-bmN0aW9uIHByb3RvdHlwZXMgYW5kDQo+IG91dGRhdGUgY29kaW5nIHN0eWxlLiBDaGVja3BhdGNo
-IC0tc3RyaWN0IGlzIGxpa2VseSBwcm90ZXN0aW5nIGFib3V0DQo+IGl0Lg0KDQpJIHdhcyB0cnlp
-bmcgdG8gbWF0Y2ggdGhlIHN0eWxlIG9mIHRoZSBzdXJyb3VuZGluZyBjb2RlIGluIHRoZSBoZWFk
-ZXJzLg0KUHJldmlvdXMgZmVlZGJhY2sgd2FzIHRvIG5vdCBmaXggc29tZSBhbGlnbm1lbnQgYXMg
-d2VsbC7CoA0KDQpCdXQgdGhlIGV4dGVybiBpbiB0aGUgbW1hcC5jIGZpbGUgd2FzIGp1c3QgYSBt
-aXN0YWtlLiBJIGNhbiByZW1vdmUgdGhlDQpleHRlcm5zLg0K
+Hi Umang,
+
+Some corrections to make on the frame/mode timings below that we seem to
+have missed before.
+
+Quoting Umang Jain (2024-03-13 07:06:59)
+> From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>=20
+> Add a v4l2 subdevice driver for the Sony IMX283 image sensor.
+>=20
+> The IMX283 is a 20MP Diagonal 15.86 mm (Type 1) CMOS Image Sensor with
+> Square Pixel for Color Cameras.
+>=20
+> The following features are supported:
+> - Manual exposure an gain control support
+> - vblank/hblank/link freq control support
+> - Test pattern support control
+> - Arbitrary horizontal and vertical cropping
+> - Supported resolution:
+>   - 5472x3648 @ 20fps (SRGGB12)
+>   - 5472x3648 @ 25fps (SRGGB10)
+>   - 2736x1824 @ 50fps (SRGGB12)
+>=20
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> ---
+>  MAINTAINERS                |    1 +
+>  drivers/media/i2c/Kconfig  |   10 +
+>  drivers/media/i2c/Makefile |    1 +
+>  drivers/media/i2c/imx283.c | 1596 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 1608 insertions(+)
+>  create mode 100644 drivers/media/i2c/imx283.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32f790c3a5f9..8169f0e41293 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20375,6 +20375,7 @@ L:      linux-media@vger.kernel.org
+>  S:     Maintained
+>  T:     git git://linuxtv.org/media_tree.git
+>  F:     Documentation/devicetree/bindings/media/i2c/sony,imx283.yaml
+> +F:     drivers/media/i2c/imx283.c
+> =20
+>  SONY IMX290 SENSOR DRIVER
+>  M:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 4c3435921f19..2090b06b1827 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -153,6 +153,16 @@ config VIDEO_IMX274
+>           This is a V4L2 sensor driver for the Sony IMX274
+>           CMOS image sensor.
+> =20
+> +config VIDEO_IMX283
+> +       tristate "Sony IMX283 sensor support"
+> +       select V4L2_CCI_I2C
+> +       help
+> +         This is a V4L2 sensor driver for the Sony IMX283
+> +         CMOS image sensor.
+> +
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called imx283.
+> +
+>  config VIDEO_IMX290
+>         tristate "Sony IMX290 sensor support"
+>         select REGMAP_I2C
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index dfbe6448b549..0fbd81f9f420 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -48,6 +48,7 @@ obj-$(CONFIG_VIDEO_IMX214) +=3D imx214.o
+>  obj-$(CONFIG_VIDEO_IMX219) +=3D imx219.o
+>  obj-$(CONFIG_VIDEO_IMX258) +=3D imx258.o
+>  obj-$(CONFIG_VIDEO_IMX274) +=3D imx274.o
+> +obj-$(CONFIG_VIDEO_IMX283) +=3D imx283.o
+>  obj-$(CONFIG_VIDEO_IMX290) +=3D imx290.o
+>  obj-$(CONFIG_VIDEO_IMX296) +=3D imx296.o
+>  obj-$(CONFIG_VIDEO_IMX319) +=3D imx319.o
+> diff --git a/drivers/media/i2c/imx283.c b/drivers/media/i2c/imx283.c
+> new file mode 100644
+> index 000000000000..81fe2d4fd4d3
+> --- /dev/null
+> +++ b/drivers/media/i2c/imx283.c
+> @@ -0,0 +1,1596 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * V4L2 Support for the IMX283
+> + *
+> + * Diagonal 15.86 mm (Type 1) CMOS Image Sensor with Square Pixel for Co=
+lor
+> + * Cameras.
+> + *
+> + * Copyright (C) 2024 Ideas on Board Oy.
+> + *
+> + * Based on Sony IMX283 driver prepared by Will Whang
+> + *
+> + * Based on Sony imx477 camera driver
+> + * Copyright (C) 2019-2020 Raspberry Pi (Trading) Ltd
+> + */
+> +
+...
+> +/* Mode : resolution and related config values */
+> +struct imx283_mode {
+> +       unsigned int mode;
+> +
+> +       /* Bits per pixel */
+> +       unsigned int bpp;
+> +
+> +       /* Frame width */
+> +       unsigned int width;
+> +
+> +       /* Frame height */
+> +       unsigned int height;
+> +
+> +       /*
+> +        * Minimum horizontal timing in pixel-units
+> +        *
+> +        * Note that HMAX is written in 72MHz units, and the datasheet as=
+sumes a
+> +        * 720MHz link frequency. Convert datasheet values with the follo=
+wing:
+> +        *
+> +        * For 12 bpp modes (480Mbps) convert with:
+> +        *   hmax =3D [hmax in 72MHz units] * 480 / 72
+> +        *
+> +        * For 10 bpp modes (576Mbps) convert with:
+> +        *   hmax =3D [hmax in 72MHz units] * 576 / 72
+> +        */
+> +       u32 min_hmax;
+> +
+> +       /* minimum V-timing in lines */
+> +       u32 min_vmax;
+> +
+> +       /* default H-timing */
+> +       u32 default_hmax;
+> +
+> +       /* default V-timing */
+> +       u32 default_vmax;
+> +
+> +       /* minimum SHR */
+> +       u32 min_shr;
+> +
+> +       /*
+> +        * Per-mode vertical crop constants used to calculate values
+> +        * of IMX283REG_WIDCUT and IMX283_REG_VWINPOS.
+> +        */
+> +       u32 veff;
+> +       u32 vst;
+> +       u32 vct;
+> +
+> +       /* Horizontal and vertical binning ratio */
+> +       u8 hbin_ratio;
+> +       u8 vbin_ratio;
+> +
+> +       /* Optical Blanking */
+> +       u32 horizontal_ob;
+> +       u32 vertical_ob;
+> +
+> +       /* Analog crop rectangle. */
+> +       struct v4l2_rect crop;
+> +};
+...
+> +/* Mode configs */
+> +static const struct imx283_mode supported_modes_12bit[] =3D {
+> +       {
+> +               /* 20MPix 21.40 fps readout mode 0 */
+> +               .mode =3D IMX283_MODE_0,
+> +               .bpp =3D 12,
+> +               .width =3D 5472,
+> +               .height =3D 3648,
+> +               .min_hmax =3D 5914, /* 887 @ 480MHz/72MHz */
+> +               .min_vmax =3D 3793, /* Lines */
+> +
+> +               .veff =3D 3694,
+> +               .vst =3D 0,
+> +               .vct =3D 0,
+> +
+> +               .hbin_ratio =3D 1,
+> +               .vbin_ratio =3D 1,
+> +
+> +               /* 20.00 FPS */
+> +               .default_hmax =3D 6000, /* 900 @ 480MHz/72MHz */
+> +               .default_vmax =3D 4000,
+> +
+> +               .min_shr =3D 11,
+> +               .horizontal_ob =3D 96,
+> +               .vertical_ob =3D 16,
+> +               .crop =3D CENTERED_RECTANGLE(imx283_active_area, 5472, 36=
+48),
+> +       },
+> +       {
+> +               /*
+> +                * Readout mode 2 : 2/2 binned mode (2736x1824)
+> +                */
+> +               .mode =3D IMX283_MODE_2,
+> +               .bpp =3D 12,
+> +               .width =3D 2736,
+> +               .height =3D 1824,
+> +               .min_hmax =3D 1870, /* Pixels (362 * 360/72 + padding) */
+
+I believe this should be
+		.min_hmax =3D 2414, /* Pixels (362 * 480/72 + padding) */
+
+> +               .min_vmax =3D 3840, /* Lines */
+> +
+> +               /* 50.00 FPS */
+> +               .default_hmax =3D 1870, /* 362 @ 360MHz/72MHz */
+> +               .default_vmax =3D 3960,
+
+And for 50.00 FPS, these should be something like=20
+		.default_hmax =3D 2500, /* 375 @ 480/72 */
+		.default_vmax =3D 3840,
+
+> +
+> +               .veff =3D 1824,
+> +               .vst =3D 0,
+> +               .vct =3D 0,
+> +
+> +               .hbin_ratio =3D 2,
+> +               .vbin_ratio =3D 2,
+> +
+> +               .min_shr =3D 12,
+> +               .horizontal_ob =3D 48,
+> +               .vertical_ob =3D 4,
+> +
+> +               .crop =3D CENTERED_RECTANGLE(imx283_active_area, 5472, 36=
+48),
+> +       },
+> +};
+> +
+> +static const struct imx283_mode supported_modes_10bit[] =3D {
+> +       {
+> +               /* 20MPix 25.48 fps readout mode 1 */
+> +               .mode =3D IMX283_MODE_1,
+> +               .bpp =3D 10,
+> +               .width =3D 5472,
+> +               .height =3D 3648,
+> +               .min_hmax =3D 5960, /* 745 @ 576MHz / 72MHz */
+> +               .min_vmax =3D 3793,
+> +
+> +               /* 25.00 FPS */
+> +               .default_hmax =3D 1500, /* 750 @ 576MHz / 72MHz */
+
+This line has gone wrong somewhere. The default can't be lower than the
+min. I suspect it should be:
+
+			=3D 6000, /* 750 @ 576MHz / 72MHz */
+
+> +               .default_vmax =3D 3840,
+> +
+> +               .min_shr =3D 10,
+> +               .horizontal_ob =3D 96,
+> +               .vertical_ob =3D 16,
+> +               .crop =3D CENTERED_RECTANGLE(imx283_active_area, 5472, 36=
+48),
+> +       },
+> +};
+
+--
+Kieran
