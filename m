@@ -1,189 +1,75 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E3F43AD5
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB744369;
+	Wed, 13 Mar 2024 14:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338788; cv=none; b=Ucooo80zykZFc30sdgwvrjBtix6SYfmvXUAT+wy3UlBrtT8ngt6bSV33SPslirsq4ma+brmxOUctp2oDDZN54Pf1avwlvimi7f+jYYvLBkdrbBpW9B4nAD2RHLTUdjxhqskzCK0199Md1O3PFFhUCdBZ40PyE5iLHshn1gp6VHo=
+	t=1710338810; cv=none; b=dEX/NjBy6M8D+FFLFjrhQs/Ggj4irvsZuuxcy3RkvD6AIqNnEs/So472H5BVmHE/roTve7RaSeDRppEAbuYR6pM2GZ2HWngED+eWMPmYWjZS0ofJNTh/VWIuvFNPeuXTYaKw4thn36KffrM3gwjrEK/QDjUuLyOjexpvOQ35Z1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338788; c=relaxed/simple;
-	bh=dILn5Hndi6QvLrMyB/RNVJCWfu6T1Nm7fN4fplsjkac=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=fHNJfntep2PG0oq/KustxTlMj5fHGs93hL5k+G5ZBO2QxKoB75ZSXBuLwYhCLVdPgjcr3gnrQa6/ua7Zby9kbRf5KAR8u4KgWzSs5FrC95bvJkoLEkJ5ufA4ZmoYb5FfsxOteltt/uES83KNYJYaV/7BRmKGcEQCi+tF8z2cYdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qwALjHVr; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710338810; c=relaxed/simple;
+	bh=0jlutHs2yvu1tTSpSrKgQrXzPWCFfYo1yaC03lAmRJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hAO3XgaoNVBIVSWKYszKP3jRe4SJCn1mTRv/1VMnNhRyEUutCQWzJQdg7RTC6uVVrcOhW2ZWpzGQSEJqBzpdkG7mQz7BFfI8VGjeJbTs6Vm9E0HBLMA8yEDiSA+9SRQwxO7j1Y1mC6D6zmEiwNdoMjRWC7OuCLxl6syLjH91NC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2rHGejP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwALjHVr"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33e95b68b3eso3184105f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710338785; x=1710943585; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q0SucWULpAR7kwQjBV+IjlaMrkGCCyLEbqf0BnsbnwA=;
-        b=qwALjHVrl7rClkS1P6C/sPcJbtFpjgXzBMFBwBUcnigGbaW7XFU8LZqNQkO7pNeiV5
-         P2d+zQAQd8J38ui+iYSrhqrsT3bl4q4b5BV7dd66Da3N4DjmZY0oDwFaKBgFX56GOoef
-         /+uVj0UQ29COQCrrD+mP2IBvS0a/sdXHr6i7+sYaUlIlYdYzOduUX3lyopam/A6lvDJ3
-         KbBhnCLnKTbo946GJWO/t2UH6ANkj0MKDtxYrToS50ZVNdr+vDHXLTMLQWv00XegRqq6
-         /QyKg/qoDjrGcUatzUyZcrNlTozTTQygTGaF49g8zp6ta1K52wHJiUC4ayYd1yI9vDRv
-         6YNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710338785; x=1710943585;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q0SucWULpAR7kwQjBV+IjlaMrkGCCyLEbqf0BnsbnwA=;
-        b=vLShkLLrvtype/TEnq8v8Yw/CEjyL4hBTEZlnm65ZjbadyklSMvFUroLBqENpyuLkF
-         dwgmtlq+oA4x1avTj2wMg/ooiplTzvwl0mQ2l01rCpGYhFFjLXv48UxllgoLLGRFWy6n
-         xNzfXHMQKilSMlr4OluWISlcx8yB4M9YwCSsOFdedFwO9YQB6a4ogL0EQvtNmqW7BSnI
-         iaumoHAPNPqSGV3j7MHUnXSY1TC/KJi/cC7olZZxDgC5U1X43cqvwrBk3Ut/gDQLDjxd
-         XwwPRKQZeaHgM23bSaSnsOhziPgdILcy9FRkhAyYoKfu6Eco4AEKBjQio0uthVQfL5xV
-         hGrA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1cHyKMfNcq1iVOps+TT/wYwsnC7VrINZXkDJmEoE7NqfG6NV9mGHw0NGFLqunXymR4k4M7JCsfJHx/KqCVQbk9i5zex0GO1GbopKQ
-X-Gm-Message-State: AOJu0YzMeWWKlWOCa477dZEDNrknrOsLVIIyDUMlbLuAN88Z10F7yJYz
-	PR3sJXsy9n8UErsft0C/3/uoUI5lRoySYHdauYjPncJSFAkJvdXpUjILT3wBdB0=
-X-Google-Smtp-Source: AGHT+IHaK9tAlmweFTo+WHnVjQsXoGvjan+LgRuk7V5ZXDrSOlyqkZoO2eO4gJVT1XnMmiEzTFMFng==
-X-Received: by 2002:adf:ffc7:0:b0:33e:12a2:297f with SMTP id x7-20020adfffc7000000b0033e12a2297fmr1805870wrs.41.1710338785078;
-        Wed, 13 Mar 2024 07:06:25 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id bj26-20020a0560001e1a00b0033b66c2d61esm1993293wrb.48.2024.03.13.07.06.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Mar 2024 07:06:24 -0700 (PDT)
-Message-ID: <8f00bf23-47cb-4656-a326-6d8d1d0d10d6@linaro.org>
-Date: Wed, 13 Mar 2024 15:06:23 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2rHGejP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E71C433F1;
+	Wed, 13 Mar 2024 14:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710338809;
+	bh=0jlutHs2yvu1tTSpSrKgQrXzPWCFfYo1yaC03lAmRJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d2rHGejPC6zUe43HEHmolXuF+RGCmZkV3WlO/ezoNnheDMK4Ru0SNxL7xADNon3FG
+	 BYbtnxq1u0jdpg07fV4A0ULudqsvsuttjFGMwLDN0JAjIAjfi41XEjDfFpAnSQLnGz
+	 79VUBQ/GTfykN4HLG8lpZI9rrbIZJHWf0B+98jqX633EsbGzNo+XU2gTyETO1Gl0fu
+	 cpb/ZIirhxyV6+GC0B5yiM3T/HR6yGQuMZ6X/7x5j8Kn7WUwUMv5YhgDC48V6c5pw8
+	 wmCwVbmXMZILmfrEq4/9QQABTyq8uEwHWKnMzBtBSlMTUVLei7SPQg7M21LZ5lHPtZ
+	 uZ5l9by1bouIw==
+Date: Wed, 13 Mar 2024 11:06:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfGy9ggOIvtr_-cd@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <ZfDMTlTH2SdwlB9M@x1>
+ <20240313081303.DClwQrvb@linutronix.de>
+ <ZfGqCWzyVzyGQrAQ@x1>
+ <20240313134645.bO-XyxAM@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Frank Wunderlich <frank-w@public-files.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Fabio Estevam <festevam@denx.de>, Martin Botka
- <martin.botka@somainline.org>, Mark Brown <broonie@kernel.org>,
- Peng Fan <peng.fan@nxp.com>, Konrad Dybcio <konrad.dybcio@somainline.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux PM mailing list <linux-pm@vger.kernel.org>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [GIT PULL] Thermal material for v6.9-rc1
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313134645.bO-XyxAM@linutronix.de>
 
+On Wed, Mar 13, 2024 at 02:46:45PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2024-03-13 10:28:41 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > One part I don't get: did you let it run or did you kill it?
+> > 
+> > If I let them run they will finish and exit, no exec_child remains.
+> > 
+> > If I instead try to stop the loop that goes on forking the 100 of them,
+> > then the exec_child remain spinning.
+> 
+> Okay. So that problem only exists if you intervene. And you can
+> reproduce this odd behaviour with my patches but not without them,
+> right?
 
-Hi Rafael,
-
-The following changes since commit dcb497ec993265dfc5fffa60b486c1ad353e9ad5:
-
-   Merge branches 'thermal-core' and 'thermal-intel' (2024-03-07 
-21:05:12 +0100)
-
-are available in the Git repository at:
-
+See the next message, I managed to reproduce that behaviour in a non-RT
+kernel as well.
  
-ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git 
-tags/thermal-v6.9-rc1
-
-for you to fetch changes up to 1828c1c17bb2adf3a3f26abc69cb3fe971eac0e4:
-
-   thermal/drivers/rcar_gen3: Add support for R-Car V4M (2024-03-11 
-17:14:46 +0100)
-
-----------------------------------------------------------------
-- Fix memory leak in the error path at probe time in the Mediatek LVTS
-   driver (Christophe Jaillet)
-
-- Fix control buffer enablement regression on Meditek MT7896 (Frank
-   Wunderlich)
-
-- Drop spaces before TABs in different places: thermal-of, ST drivers
-   and Makefile (Geert Uytterhoeven)
-
-- Adjust DT binding for NXP as fsl,tmu-range min/maxItems can vary
-   among several SoC versions (Fabio Estevam)
-
-- Add support for H616 THS controller for the Sun8i platforms. Note
-   that this change relies on another change in the SoC specific code
-   which is included in this branch (Martin Botka)
-
-- Don't fail probe due to zone registration failure because there is
-   no trip points defined in the DT (Mark Brown)
-
-- Support variable TMU array size for new platforms (Peng Fan)
-
-- Adjust the DT binding for thermal-of and make the polling time not
-   required and assume it is zero when not found in the DT (Konrad
-   Dybcio)
-
-- Add r8a779h0 support in both the DT and the driver (Geert Uytterhoeven)
-
-----------------------------------------------------------------
-Andre Przywara (3):
-       soc: sunxi: sram: export register 0 for THS on H616
-       thermal/drivers/sun8i: Explain unknown H6 register value
-       thermal/drivers/sun8i: Add SRAM register access code
-
-Christophe JAILLET (1):
-       thermal/drivers/mediatek/lvts_thermal: Fix a memory leak in an 
-error handling path
-
-Duy Nguyen (1):
-       dt-bindings: thermal: rcar-gen3-thermal: Add r8a779h0 support
-
-Fabio Estevam (1):
-       dt-bindings: thermal: qoriq-thermal: Adjust fsl,tmu-range 
-min/maxItems
-
-Frank Wunderlich (1):
-       thermal/drivers/mediatek: Fix control buffer enablement on MT7896
-
-Geert Uytterhoeven (2):
-       thermal: Drop spaces before TABs
-       thermal/drivers/rcar_gen3: Add support for R-Car V4M
-
-Konrad Dybcio (2):
-       dt-bindings: thermal-zones: Don't require polling-delay(-passive)
-       thermal/of: Assume polling-delay(-passive) 0 when absent
-
-Maksim Kiselev (1):
-       thermal/drivers/sun8i: Extend H6 calibration to support 4 sensors
-
-Mark Brown (1):
-       thermal/drivers/sun8i: Don't fail probe due to zone registration 
-failure
-
-Martin Botka (2):
-       dt-bindings: thermal: sun8i: Add H616 THS controller
-       thermal/drivers/sun8i: Add support for H616 THS controller
-
-Peng Fan (1):
-       thermal/drivers/qoriq: Fix getting tmu range
-
-  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |  34 +++--
-  .../devicetree/bindings/thermal/qoriq-thermal.yaml |   3 +-
-  .../bindings/thermal/rcar-gen3-thermal.yaml        |   2 +
-  .../devicetree/bindings/thermal/thermal-zones.yaml |   2 -
-  drivers/soc/sunxi/sunxi_sram.c                     |  22 ++++
-  drivers/thermal/Makefile                           |   2 +-
-  drivers/thermal/mediatek/auxadc_thermal.c          |   3 +
-  drivers/thermal/mediatek/lvts_thermal.c            |   4 +-
-  drivers/thermal/qoriq_thermal.c                    |  12 +-
-  drivers/thermal/rcar_gen3_thermal.c                |   4 +
-  drivers/thermal/st/st_thermal.h                    |  18 +--
-  drivers/thermal/st/st_thermal_memmap.c             |   2 +-
-  drivers/thermal/sun8i_thermal.c                    | 139 
-+++++++++++++++++----
-  drivers/thermal/thermal_of.c                       |  14 ++-
-  14 files changed, 203 insertions(+), 58 deletions(-)
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+- Arnaldo
