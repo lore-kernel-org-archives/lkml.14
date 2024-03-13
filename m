@@ -1,119 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2B55A11A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FCD5A10F
 	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 16:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348592; cv=none; b=cFivHZWMv/GaWWZ22MJkQF277P0qJPGzpS00PC6T6YGqONw7sPj+SeDXJTwl+oPRKPAxMPWgpBQEZk+A2SiKSgoA14P41RJub7gWfoswlruc1yPZX8V6lhrmIUuWcSGqXSkDSKlS5ff36XTpOgbo1aGTusPkAkGP4kYxc3mc4jI=
+	t=1710348593; cv=none; b=SaycTAtosSt5o6sWLHOJb5c8dSug//ePLuD4yml2Bfb/tsVjW/TKKq/5wkxyGqfoKPztfts0Xo+1B6Ev0NSRKZtRfdMHUU87Nev+vgoJqCX0ajzAtQrCXbYMf+CF9FciHBqvAbd4HXGHwvPsgHWbW9K+nfhx8gZcLeqRr9v1JlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348592; c=relaxed/simple;
-	bh=VzkYuJhJxHAlsoBEWu8SsfwFLEo1Gz2XkJeX8uCY6dQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=skxYiCkvWOJRzNp/iswf15tRHAbiJ0w7NmQ3fpjvDGU09AQSjy+g6u73fRFMUM7OvLnScVxCDgipua1kyf0vFZdCQmccRUZj4hN49zoSWhtNYwPnJ0u1dnxlAY4P/Y6IWwtz+8/yCWm2lCNuVxoG31a+oEmnyjlA6n9ryEXEXFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JaRzCwMH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710348593; c=relaxed/simple;
+	bh=hPL3zw5JCqO9Uf0fSyTYE74YPTyUk0Giy5TIIbo6qF4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dt1AR5d7MWM4Vb4XFkSK7z1I8XdkbE0Vl0c0jQgaTRxTwD35KaaUCYleJA7Q6AZcZAgnYkya/29aAd1SJO0q7EXTlYKJonQbTEco4G7dOYK7AOTC63+vOGlxzj1Hm0DQVdslgWaYh8jzMj9uSOn2iD8tkxbWx/Dn5HhjWq1Hg7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XyIvhhVH; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JaRzCwMH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710348589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q2G67iTaaE7P6XAuMXpD/jw+pGFtD3L7nLatsyiWBEw=;
-	b=JaRzCwMHHM0mp2q2UM3DydGiuZrMwPuskPWan2lRmyeKXFLipBsgvwPNhpH99Pz2qucBbh
-	+yM4QxRGukJ2cNzz+Rzeo4l/KzBir+Oked8gCjuaons4BRhTAqzTS2eBm0QiquJ1xMQ8Wz
-	815rahexbU8oXK4dEWtXcpCRZtQdWMo=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-6chHg1SuNHyg8keOyRqVBA-1; Wed, 13 Mar 2024 12:49:47 -0400
-X-MC-Unique: 6chHg1SuNHyg8keOyRqVBA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-513b1027dd5so66113e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 09:49:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XyIvhhVH"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5682360e095so48318a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 09:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1710348589; x=1710953389; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QPkIANYlnqpJGOaQz5GtJSLehMlH+HibJAm6EUdPbkE=;
+        b=XyIvhhVHlKZYnacQWGKlDtD3CMP6ZTq6capZFpjAY18Bcr8SCaEdTKWnL8aPI/NMn4
+         yBLrKZOtaMRoRRMT31YTrY1kIDgpppyKPF0HDCGeGgFgNANk/1UGjvBkmUBfYxIh7o2B
+         4V8wmTWqq1ibX8iDzyxyu3q1eqD5OyZ7scSSvkS3dk3UG2rOXp+N+Trmc4yNMf/FLmzc
+         pE3feMENX4iueUAOP8WUmVUMX8sjvM7FoSL1h/a82D51MiAX6f0nAVcZP7GT+ktkc08F
+         w3rWI3rRqwUfnN7DYNnicnXJyGj9p+G2mMlb0bG5PPfwKdj2tzNanajJcFXWOgmpyyz1
+         BywA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710348586; x=1710953386;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q2G67iTaaE7P6XAuMXpD/jw+pGFtD3L7nLatsyiWBEw=;
-        b=H+JzVAsqtOCEZM32pVnXKxvvT4/gaLhOVQFCo6fSybNwnOoKRNIybK72JA1X69gtV/
-         1+t1T2j22HPInjlYHAkw83kchgGoeheQKee10JUv7hiovYqbre5AA7a6Z4NMVXy879s0
-         LvDvKfDr5yo6M0ixqhUyA2IHl/CnldghfO/ZV/Qe0E7Kk5n43+XIiGAHYUDU0RgbVT0H
-         nmFNPDW3HAyekOUlHzSbQqn1qiWuTffiR4UVNK8bCsSFIUd5bnPHqmqQRgcGMmLBeKN0
-         GOxsZbRfYeCKCX6/SokcBvVbAqBgfWJgsfUIzyToWmy1cIxxfrtti1Bdm8M0eRJf5vbK
-         JiQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIA9uy4qBAzUJsS5ZMI83IaPRlfsmCrHnOmMy2ai0c4CfFNBbeInxCeYn/j4AmjslkSinQ7rDlt1hzTiv0XV7scEcWqycuoagiar6C
-X-Gm-Message-State: AOJu0YynZgx5sJ6tSnLDkNay+dwnl+4B2KrCJBPqXKLmDJvj9K9YOxCc
-	8iUMY2fjJZ0yCX5KEbXpQII9Czu2IiKscFHJL4HoDpUKcEjDB85+x/wsdaMZCAMPQ90+VZOhoDr
-	xtkc32fuk7t8rb1g5zWUnfMPyjX8FI8xRk54e6QVe1Nnm0r+mUbX72Su0M+wm4smsmhypbEnuEQ
-	g3rqr/XPhQZ76uhvLaL5003WubextXK+Y6MCjn
-X-Received: by 2002:a05:6512:48cf:b0:513:c25b:8fe with SMTP id er15-20020a05651248cf00b00513c25b08femr3633374lfb.58.1710348586398;
-        Wed, 13 Mar 2024 09:49:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFecCVULiWKXEpUHHmxzAFehkHi4UGzzQMhebCu4KpJosY3gPTZT5VnVDgEMzok8/FmGbE0MAM+WicaEPuoM8s=
-X-Received: by 2002:a05:6512:48cf:b0:513:c25b:8fe with SMTP id
- er15-20020a05651248cf00b00513c25b08femr3633356lfb.58.1710348586028; Wed, 13
- Mar 2024 09:49:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710348589; x=1710953389;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QPkIANYlnqpJGOaQz5GtJSLehMlH+HibJAm6EUdPbkE=;
+        b=tx1doOfkkxHBpw86ATwovvxaWBqdlPrVBItspWkSF2+V1El9Libk5S98aYgqz3lTjT
+         PxI6WKT0DwvGiP/TmEhhK5YblP54CtBB2KbR7HkTU+kTF2kOLS9av3JiwccxqeVUiIYH
+         ZpZqDy0HVppVROYo2t45W4Hlvy0BL/RaXo7ZugRfZXPZpVzsm7HguLZGLNdtm1vpagNa
+         Yaitj7k10sl6vTl5zqI8n6a+s88Bs+Cu8pOnJSxD9BgQYNSaff05aQSSjRGRwETzfM6S
+         sD7SrozFtAaUpdVTqMB+/3IBHe19Knn9EkMOC0Ru/atbky4vMC3pp/7vVtv3yU6ZoElb
+         n26Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUGN0VITZjrkSwYDKlkxdTBqN7saAB/T/QuJJO3iAC0wQbL3O9K9KwVJWPP+na2jag9ANlyE3QbRp33CohUG69pKBTPR7qtem/Wd82S
+X-Gm-Message-State: AOJu0YwwBRSuht5i+T9hhfWE2GfxmDhJ1Jp42/AXDwTpkcBO7jKHwST9
+	3Yw5XZcSn7AQuOf74NUseSyKJZe7U7fnF9a/wGLZfIaIC62vME4v20uBeiF7ZkE=
+X-Google-Smtp-Source: AGHT+IGqIboO89JDdz68otiTxC7R5thbY+dJhwJvuyQri1Y0mW+DslANVakowZJW0e4mX3PczuljcA==
+X-Received: by 2002:a17:907:a644:b0:a46:134c:ae8c with SMTP id vu4-20020a170907a64400b00a46134cae8cmr9631602ejc.50.1710348588653;
+        Wed, 13 Mar 2024 09:49:48 -0700 (PDT)
+Received: from localhost (host-82-56-173-172.retail.telecomitalia.it. [82.56.173.172])
+        by smtp.gmail.com with ESMTPSA id bn23-20020a170906c0d700b00a462e4d7216sm2787595ejb.76.2024.03.13.09.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 09:49:48 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 13 Mar 2024 17:49:47 +0100
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Saenz Julienne <nsaenz@kernel.org>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	dave.stevenson@raspberrypi.com, Phil Elwell <phil@raspberrypi.org>,
+	Maxime Ripard <maxime@cerno.tech>,
+	Stefan Wahren <stefan.wahren@i2se.com>,
+	Dom Cobley <popcornmix@gmail.com>
+Subject: Re: [PATCH v2 01/15] dmaengine: bcm2835: Fix several spellos
+Message-ID: <ZfHZK8fb8m41t9UF@apocalypse>
+Mail-Followup-To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Saenz Julienne <nsaenz@kernel.org>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	dave.stevenson@raspberrypi.com, Phil Elwell <phil@raspberrypi.org>,
+	Maxime Ripard <maxime@cerno.tech>,
+	Stefan Wahren <stefan.wahren@i2se.com>,
+	Dom Cobley <popcornmix@gmail.com>
+References: <cover.1710226514.git.andrea.porta@suse.com>
+ <f57e15192166d696aca23804f8ac79dfe81fd399.1710226514.git.andrea.porta@suse.com>
+ <831fee14-387a-41d9-8dfc-e3ba09a140b1@broadcom.com>
+ <ZfHFiHdAeXgoNHNk@apocalypse>
+ <886b0def-7884-4780-8b7f-e29bf3d9ce7d@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313091259.1413854-1-ppandit@redhat.com> <0a1aa580-50b2-4657-8308-94bffb194aea@moroto.mountain>
- <CAE8KmOzcD+__7xdC7tegbHO9HEP48s7=reA4j-tvqVDwzHr+8Q@mail.gmail.com> <3fcb3702-5af2-4b9f-a362-4f08ee626b14@moroto.mountain>
-In-Reply-To: <3fcb3702-5af2-4b9f-a362-4f08ee626b14@moroto.mountain>
-From: Prasad Pandit <ppandit@redhat.com>
-Date: Wed, 13 Mar 2024 22:19:29 +0530
-Message-ID: <CAE8KmOxEyCHbCt=7PZi_xAnCdc2H3mFYYxBJ9YAq6imGmH6aJw@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: bcm2835-audio: add terminating new line to Kconifg
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-	linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, 
-	rjui@broadcom.com, sbranden@broadcom.com, linux-staging@lists.linux.dev, 
-	linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Prasad Pandit <pjp@fedoraproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <886b0def-7884-4780-8b7f-e29bf3d9ce7d@broadcom.com>
 
-Hello Dan,
+On 09:38 Wed 13 Mar     , Florian Fainelli wrote:
+> On 3/13/24 08:26, Andrea della Porta wrote:
+> > On 08:00 Wed 13 Mar     , Florian Fainelli wrote:
+> > > 
+> > > 
+> > > On 3/13/2024 7:08 AM, Andrea della Porta wrote:
+> > > > Fixed Codespell reported warnings about spelling and coding convention
+> > > > violations, among which there are also a couple potential operator
+> > > > precedence issue in macroes.
+> 
+> and s/macroes/macros/
 
-On Wed, 13 Mar 2024 at 17:24, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> I wasn't able to get it to enable the CONFIG_NO_HZ_FULL.
+right, sorry about that...
 
-* CONFIG_ prefix is not required.
+> 
+> > > > 
+> > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > 
+> > > There are no spelling errors being fixed in this commit, this is purely
+> > > stylistic and conforming to the Linux coding style guidelines.
+> > 
+> > -	/* detect a size missmatch */
+> > -	if (buf_len && (d->size != buf_len))
+> > +	/* detect a size mismatch */
+> > +	if (buf_len && d->size != buf_len)
+> > 
+> > Isn't 'missmatch' a spelling error? Maybe I can drop the word 'several', since it's
+> > indeed only one...
+> 
+> Can we agree this was easy to miss when 99% of the changes are stylistic?
+> The summary is that the commit subject and the message are not describing
+> what this patch is about.
+> -- 
+> Florian
+> 
 
-> ~/config-kernel/configk -e NO_HZ_FULL  -c .config  .
+I agree with you that I could've added '...and coding style fixes' to the subject
+(while also dropping 'several').  The comment seems fine enough though. Maybe
+you're suggesting to separate the patches into two, one dealing with spelling
+errors and the other with coding conventions?
 
-* This command works. It writes informatory logs to stderr. It helps
-to redirect stderr to a log file.
-Enable option:
-  NO_HZ_FULL
-    NO_HZ_COMMON
-      TICK_ONESHOT
-    RCU_NOCB_CPU
-    VIRT_CPU_ACCOUNTING_GEN
-      VIRT_CPU_ACCOUNTING
-      CONTEXT_TRACKING_USER
-        CONTEXT_TRACKING
-    IRQ_WORK
-    CPU_ISOLATION
-
-* To see enable/disable/toggle options in action, a command below
-(without -c .config) could make it easier perhaps.
-
-    $ ~/config-kernel/configk -e NO_HZ_FULL=[y/n/m]  <linux-directory>
- | less -r
-
-> I'm going Ack your patch because adding a newline is the correct thing
-> but you should probably also change configk to handle that.
-
-* ie. Handle files not terminating with a newline? There are not as
-many such files. Besides I agree having files terminate with a newline
-is good. It makes all lines/records of consistent format, otherwise
-the very last line/record becomes a special case.
-
-Thank you.
----
-  - Prasad
-
+Many thanks,
+Andrea
