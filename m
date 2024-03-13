@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8321586F4;
-	Wed, 13 Mar 2024 16:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9530A158D75;
+	Wed, 13 Mar 2024 16:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348442; cv=none; b=sXp+N8uzDurLfAjJsvMds6gOfhAVl7Ltckq6dlCj7BEmT/CwIV6HGAU8ArwTBoL3WUZCKAZk86HclDP+1wMxxnsJgA3XIDPh4G9SpfB0+j6ZDjcFFFUBE5104yQ2Dr73Q+2iRmKoRqfG2uNENKkkNOvaPyuAQwKvWtQW0cugaQI=
+	t=1710348443; cv=none; b=CWdDJkHwqdUlb+P+/576OX7ithJA7w96lepquigPLzeO3Gp/Se+yCWa6+hSYZBZs4vhmIee7eNOhEoI+ALYXUWe3FitWMaDP+FxtU4SoN7DUv0FLcWgT1xpvJT6jVm1hcnar/TgTxopx0xfolmw4zzLAbGM+rrELm7zoEs/Y7tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348442; c=relaxed/simple;
-	bh=BIM2AE8RAX0nv489/q+jkksa4sAawMGwrIiGDzfIUqE=;
+	s=arc-20240116; t=1710348443; c=relaxed/simple;
+	bh=EwYFc6u/vRmEQVBhKndW0cFn92ioVA9ZTpiDm23xcUs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O7/YuRPYfoHj+vDKcHxKMW8HB3Z491nnO/If/XGKCQWje8pOVw+/GfgGkOlAz9UPWcQdGYqwLjKQHzDEiGlkC6uHLqLevwL/Q5Qom74mvMVDk/a7aI6wgRYuNwpHAvawFj7n8A9c211aK0lY2nRepvqJL3RAfwhJ4OjKryPW95E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EDe0zf+z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AOeXlBgnHaeoXDZ0CedvioxXRu1cDBVKzweTXrmwbUui3ZwjpQN7am+WeTDJJKkun1ueQx5fLKRS+NnQfJTaeKKu1Mn3bqvf6chfklAAHBjpL5CluutaO9Bv4IATzVlr1kvq0LDw3fbO8Y4a8fitUKGSzPz3OqM+IljNw8Qq1dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4ahr/5C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EDe0zf+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A148C43394;
-	Wed, 13 Mar 2024 16:47:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4ahr/5C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7251BC433C7;
+	Wed, 13 Mar 2024 16:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348442;
-	bh=BIM2AE8RAX0nv489/q+jkksa4sAawMGwrIiGDzfIUqE=;
+	s=k20201202; t=1710348443;
+	bh=EwYFc6u/vRmEQVBhKndW0cFn92ioVA9ZTpiDm23xcUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EDe0zf+zyBQTOELTbSqlk4czSITlKYbP8Js+jZI+Jo+/j0tVv0//7J0hhT3EpzP4w
-	 SxUmckpfoxNTssW0vLzUt1dknNxyXecZ0p/y6fmiwehuxKJ8xKmzIDBUf6N1PPVkK/
-	 wuCl2U/XlKaTkDLQIZTpxidKsrtoewc7zBcHYz19oXIhVyw2UKNCTRteN9OvSWiM1c
-	 zrYnmzZQ2BkZ8XnyxUPSPvccmWQfYfqIejw8iCK2velI1IyivjTwLwBMdxsXXIKMBq
-	 yX9StxgjMYz2AX6pqpko5q6U3MporZe8moErwURxmamo7gnfpDAgcKzGemlwdUI5gZ
-	 IxZ1jzGlsqtAA==
+	b=P4ahr/5CoXYxhBzevLiigzC95ArZnJEWrxE960QIfn1E8oulRCDfdat1oga0AiOcB
+	 o7APPzCkmgaggf8aSpA0HrwDMnO23UbeppxY82MSz2CjcMQWA9HZqXFCNdHGd3SM80
+	 nAgedQ7Sq8fOt/N3ps6xpyRLMeXLYWiqtD8gEZ2ujaxEdGIGQBbw+MCCy1zzFPuma9
+	 Wiov/YAZB+dauO6irkKditKOMfMNaauEaKFewqc0YQP0ZDfn3wGUGgENHRJXK3voea
+	 ybJygIxZy10jKgfwgydeAimDWXT6gBetMfUTu0Hw0TneA/41I7YrABYq26dhmU14US
+	 R2azWwxZhyFWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
-	Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 36/73] xhci: handle isoc Babble and Buffer Overrun events properly
-Date: Wed, 13 Mar 2024 12:46:03 -0400
-Message-ID: <20240313164640.616049-37-sashal@kernel.org>
+Subject: [PATCH 5.10 37/73] serial: max310x: Use devm_clk_get_optional() to get the input clock
+Date: Wed, 13 Mar 2024 12:46:04 -0400
+Message-ID: <20240313164640.616049-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
 References: <20240313164640.616049-1-sashal@kernel.org>
@@ -55,55 +54,75 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Michal Pecio <michal.pecio@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-[ Upstream commit 7c4650ded49e5b88929ecbbb631efb8b0838e811 ]
+[ Upstream commit 974e454d6f96da0c0ab1b4115b92587dd9406f6a ]
 
-xHCI 4.9 explicitly forbids assuming that the xHC has released its
-ownership of a multi-TRB TD when it reports an error on one of the
-early TRBs. Yet the driver makes such assumption and releases the TD,
-allowing the remaining TRBs to be freed or overwritten by new TDs.
+Simplify the code which fetches the input clock by using
+devm_clk_get_optional(). If no input clock is present
+devm_clk_get_optional() will return NULL instead of an error
+which matches the behavior of the old code.
 
-The xHC should also report completion of the final TRB due to its IOC
-flag being set by us, regardless of prior errors. This event cannot
-be recognized if the TD has already been freed earlier, resulting in
-"Transfer event TRB DMA ptr not part of current TD" error message.
-
-Fix this by reusing the logic for processing isoc Transaction Errors.
-This also handles hosts which fail to report the final completion.
-
-Fix transfer length reporting on Babble errors. They may be caused by
-device malfunction, no guarantee that the buffer has been filled.
-
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20240125152737.2983959-5-mathias.nyman@linux.intel.com
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20201007084635.594991-2-andy.shevchenko@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Stable-dep-of: 8afa6c6decea ("serial: max310x: fail probe if clock crystal is unstable")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-ring.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/max310x.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 883cf477a70b9..4fa387e447f08 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -2262,9 +2262,13 @@ static int process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
- 	case COMP_BANDWIDTH_OVERRUN_ERROR:
- 		frame->status = -ECOMM;
- 		break;
--	case COMP_ISOCH_BUFFER_OVERRUN:
- 	case COMP_BABBLE_DETECTED_ERROR:
-+		sum_trbs_for_length = true;
-+		fallthrough;
-+	case COMP_ISOCH_BUFFER_OVERRUN:
- 		frame->status = -EOVERFLOW;
-+		if (ep_trb != td->last_trb)
-+			td->error_mid_td = true;
- 		break;
- 	case COMP_INCOMPATIBLE_DEVICE_ERROR:
- 	case COMP_STALL_ERROR:
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index 14537878f9855..8bf3c5ab59431 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -1265,7 +1265,6 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
+ 			 struct regmap *regmap, int irq)
+ {
+ 	int i, ret, fmin, fmax, freq, uartclk;
+-	struct clk *clk_osc, *clk_xtal;
+ 	struct max310x_port *s;
+ 	bool xtal = false;
+ 
+@@ -1279,23 +1278,24 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
+ 		return -ENOMEM;
+ 	}
+ 
+-	clk_osc = devm_clk_get(dev, "osc");
+-	clk_xtal = devm_clk_get(dev, "xtal");
+-	if (!IS_ERR(clk_osc)) {
+-		s->clk = clk_osc;
++	s->clk = devm_clk_get_optional(dev, "osc");
++	if (IS_ERR(s->clk))
++		return PTR_ERR(s->clk);
++	if (s->clk) {
+ 		fmin = 500000;
+ 		fmax = 35000000;
+-	} else if (!IS_ERR(clk_xtal)) {
+-		s->clk = clk_xtal;
+-		fmin = 1000000;
+-		fmax = 4000000;
+-		xtal = true;
+-	} else if (PTR_ERR(clk_osc) == -EPROBE_DEFER ||
+-		   PTR_ERR(clk_xtal) == -EPROBE_DEFER) {
+-		return -EPROBE_DEFER;
+ 	} else {
+-		dev_err(dev, "Cannot get clock\n");
+-		return -EINVAL;
++		s->clk = devm_clk_get_optional(dev, "xtal");
++		if (IS_ERR(s->clk))
++			return PTR_ERR(s->clk);
++		if (s->clk) {
++			fmin = 1000000;
++			fmax = 4000000;
++			xtal = true;
++		} else {
++			dev_err(dev, "Cannot get clock\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	ret = clk_prepare_enable(s->clk);
 -- 
 2.43.0
 
