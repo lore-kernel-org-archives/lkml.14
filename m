@@ -1,290 +1,207 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0B8664BD
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DCA664C2
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 17:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710351938; cv=none; b=I2jluCTVJC4GtSJCClVP+RqzgxTwHUtgjwzCcuRiWBSozxlDftBi3xwsm5SODjfbZnx6+KFSos3azox9ASkmexRzIJXhd5zJY/czMeMPia4MlyY9CmTxXpN5b+z5T48ijb290GJPBNliAFwlXExHzzqUp255m29u2NWwuRrIMgI=
+	t=1710351938; cv=none; b=m6hqteW8pBcw6NfarVg1WWnkysOpjNEKxWP0c7PlIduLb+Y55vXvvpw/e0XD0P+T531xcVycTKsx0DKlKyb6Em1GbJ6OFoUL6xqsrj056j3NSEvqgr0M0k09E5I7tlvhSyiQbfh2g7fZoTMg285bf2vGzXJc5he1y9cD7TPmpJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710351938; c=relaxed/simple;
-	bh=Mw0GRWWNFAX4jApUCq/E1GODOxaJYOd3gJt9W8nPisE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fYJi0DPAksVLvjaaCpGYn78XzMZJx47AmYmcq5BGh8cMregANc9wmksI2Fm9QKLEj7SW0Jlxyq8t/j/zvtmFwATRTQXqmrB1362VX9U0AxzQshFDpfJY7I0AVsrggrNmI920srLxL0GtAT8iTWy8sd18PRoDOORnqBthk0eyGHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YUBe9IrN; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=pxOhn2EfSKWQ5lPpE0DJ2zWbFD8yoNh+5KPvOGR8mWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=infELKqVZiHmLJqmPCc8gow1LN9XW9YsDx6LERKqMwzrwH36QfuIoM3EPR5IgLmnUFq0cRuANyX/tfWAgheTZqCkgUeKZnMYAp0g2DB+PDAnT6Mxx/DNYCMvOH+c1klxuzxBItKCpYfedvP8Ld2pc6OhGl0OdfS9tq7+NjtZC20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Xmmv/RyF; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YUBe9IrN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B703340003;
-	Wed, 13 Mar 2024 17:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710351927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sIA7nJwwGB6vEsSNOsGuHoNpvL2AY7FODXqPt0l5Iqg=;
-	b=YUBe9IrN1/nLzi/vvNNLk+lkREghD5INxs5xJgxCEORTJqM83kGbF3K8b3zMv0Nnoe4pYs
-	f3BgukCNV+gAaWX/bBAqKbpJ5HwH8qAJU0JkiuHq/RrkMywZqv4u1LM6DD086w+GatILmB
-	9utuzBx2KqM1lWiLowHgwqXNpVCQYnbYk80kNQbMMQ/2rZrRA0kj4Ma+znaJyAGYumrsRb
-	d07Mo6SpxvnN47flV4bqnfkbPyHi0GPCv7AkW7t0GN8BadYamCbNgeXdGfSBoHiAZiYiw4
-	3bR6NiGONooN3lhaImrZO8N+EOwvCl6uaQSpJQ4IHT+KcxrvK2vrVbc/aoGa1g==
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: [PATCH v5 00/16] drm/vkms: Reimplement line-per-line pixel
- conversion for plane reading
-Date: Wed, 13 Mar 2024 18:44:54 +0100
-Message-Id: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xmmv/RyF"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-690d75c73f4so855236d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 10:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1710351936; x=1710956736; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t2Eztt//ReBEkwS/i1c4Zw/kUXNHijzoRSKebT7XFEM=;
+        b=Xmmv/RyFjXirF+lxoujuc1Dt62eM4tbDCruBGZhG5eRl2geFUDQ6HG0yWg9d5zdpJB
+         TD20mK/eRd+JuNdSk4hs3cr0S95JkOSYX2J052M/5JCe+mSfXF+mfVqcUZ0TP/xPLAPQ
+         lJQyKI9sCaDJU11iTsrpJ2xzGdQfZnQ6eTJ+g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710351936; x=1710956736;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=t2Eztt//ReBEkwS/i1c4Zw/kUXNHijzoRSKebT7XFEM=;
+        b=pL+kjl8W0/xTpF3c2fh3X0VqjZM706VyyO4R0mgDhgDsEYeDCvQBpyXpDG/EWaBy37
+         qTEPYbraWwfzJSaz9Uzpj46WbpdK0DC7DQS6MHtfh+fl/DmjTVvwY/bl/GDYUSITnLm6
+         c/Et/chUiH2lMB5wXBtyOPKGczdBzRK+5VyHzG/0qUjGKtDedoxjfYFPkvCseAOYAlbX
+         t6fkfQWNm/oBIwDL5Rjygb2GfBG9NKYAvipsxQsYMfHo65gFtbb6FyfU+CkyShFvFBDV
+         vAR6UX0rk3SJlJbLRWHChc5sKGU2pZ8VFVtXTT1xsQbL/Sekch/evb8CsPKZSdlgo6Rl
+         4SNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWobAEb+XSn1z0fkDGJjagmehFqwIU4zaI9tKJPdrgvQCCn5rI45ts4VSvbHmpruJG1a7sMcC4D8FnPP/cFxAPCA7E3WrQMXl8s4DRi
+X-Gm-Message-State: AOJu0YxZtJJvPJYR6XdlowZIAHS4RFU8QSYPte+3Mjx0HehhanxF1OdN
+	MlACiES0/5Rw5prT090OGnRN3k+gzpgPtaFWn5uBcLdiHfBGg3mhqID1NMgOyg==
+X-Google-Smtp-Source: AGHT+IFae0juFFdoDJVPKCFGGafLQAkfxPoknvGvNkc57dEuYB8MMAgaK3/6nTiWISZ+DFPKgunDdQ==
+X-Received: by 2002:a0c:e205:0:b0:691:72a:bc0e with SMTP id q5-20020a0ce205000000b00691072abc0emr810314qvl.8.1710351935855;
+        Wed, 13 Mar 2024 10:45:35 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y25-20020a0c9a99000000b0068fa5e5c245sm5034629qvd.84.2024.03.13.10.45.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Mar 2024 10:45:35 -0700 (PDT)
+Message-ID: <2645c7c4-8140-4e2e-9ad6-faefc92b5873@broadcom.com>
+Date: Wed, 13 Mar 2024 10:45:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIABbm8WUC/2XNwW4CIRAG4FcxnEvDziBIT76H6QFYcEm20ICSG
- rPv3tE9qPH4/5nvnytroabQ2NfmymroqaWSKWw/NsxPNh8DTyNlBgKkADHwy7nzAVGPRoxmqxW
- jS2db4K7a7Ce6zed5pvK3hpj+7tOHb8pTaqdSL/dPfbi1r6N94IKjt6hVBK0Q9q6U05zypy8/7
- LbQ4UkBrgpIWatcgB1o5/S7wmelVoWkYlQKojBGju5dyYdCIVclSWl6Zf0uGG3wVS3L8g9Nqzz
- DTwEAAA==
-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
- Melissa Wen <melissa.srw@gmail.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net, 
- Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
- nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10384;
- i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=Mw0GRWWNFAX4jApUCq/E1GODOxaJYOd3gJt9W8nPisE=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl8eYyOzTGf6MYIrxrXfptqrBQlG8/hQrgZ2kcKnO5
- vJVrnlOJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZfHmMgAKCRAgrS7GWxAs4ibND/
- 4q0MCv1BgIDfl9iHW3veFRvO7jbsATRqTG+Eo+0qD3AxqExiAoAKV9UMmeZZPHesOOFN3RZK9q8Pfb
- OiFOxbNfiCvAi4Tax4ZGScLREBHYFqAfv4cyfddwvBKdVGrzei32zb1to8VYdZ++Jq7eyWK1nHGkW/
- Mgp7m2wCcm/WZHtUcRVVLcOyoshb9nZEgM2g9fL59uQCZ8tRXZf/4s1b4aU8YfDi8n+8q3Xv2e6Q4D
- C3TMSk3hzlrA05CsImDFG6AvZBYs58mNNkj6BQHiFuB5SdoOT8Z+9nrTcQBANCeRomczk2o/DC34CQ
- ik8haO85FV/vmI9LlZubjdaxTDrsJ2tbiztgPxdSNrWTJOZJkyGa7Uv5PBAnV7M4tS2OpBjiqQ8Rzl
- Tu1rc4SkE2KOIR+py5ZI1zEyd/GfqJJpAEq/meKAHxdeFS9wow9ue5JRas5hmU8aoB7TCpLZhzx+TB
- G+7QdJyUOUP+ZBS3WozLFHjHM68fsoFcv4JH20P6KIU9WkOk0I4Y0djOQbxii7lRnLHJpfLgYwKnT0
- B3OaIbKiqwK9hqGV/wRsgjWHJ/yhCEw9MBMBBPB46lt31prqAKvPPII0QLd9CbD/YH6UEuGM471nHE
- ROPKPuCnYT+r0urtah6TmKcn/72dxhLGD0Rcj+qU/6rDsnUs2wpqI91CyDjA==
-X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
- fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
-X-GND-Sasl: louis.chauvet@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: Fix error code checking in spi_mem_exec_op()
+To: Mark Brown <broonie@kernel.org>, Michael Walle <mwalle@kernel.org>
+Cc: linux-spi@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240313171050.3505620-1-florian.fainelli@broadcom.com>
+ <CZSSWP7A9UM7.1R20796VHLU0F@kernel.org>
+ <7109907f-baf3-47e2-b33f-3403e1299176@sirena.org.uk>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <7109907f-baf3-47e2-b33f-3403e1299176@sirena.org.uk>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000098974206138e572a"
 
-This patchset is the second version of [1]. It is almost a complete 
-rewrite to use a line-by-line algorithm for the composition.
+--00000000000098974206138e572a
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-During the development of this series Pekka and Arthur found an issue in 
-drm core. The YUV part of this series depend on the fix [9]. I'll let 
-Arthur extract it and submit a new independant patch.
+On 3/13/24 10:40, Mark Brown wrote:
+> On Wed, Mar 13, 2024 at 06:33:43PM +0100, Michael Walle wrote:
+> 
+>> FWIW in next, there is commit
+>> e63aef9c9121e ("spi: spi-mem: add statistics support to ->exec_op() calls")
+>> that probably will conflict with this one.
+> 
+> Indeed, this doesn't apply - please fix and resend.
 
-It can be divided in three parts:
-- PATCH 1 to 4: no functional change is intended, only some formatting and 
-  documenting (PATCH 2 is taken from [2])
-- PATCH 5 to 8: Some preparation work not directly related to the 
-  line-by-line algorithm
-- PATCH 10: main patch for this series, it reintroduce the 
-  line-by-line algorithm
-- PATCH 11 to 15: taken from Arthur's series [2], with sometimes 
-  adaptation to use the pixel-by-pixel algorithm.
-- PATCH 16: Introduce the support for DRM_FORMAT_R1/2/4/8
-
-The PATCH 10 aims to restore the line-by-line pixel reading algorithm. It 
-was introduced in 8ba1648567e2 ("drm: vkms: Refactor the plane composer to 
-accept new formats") but removed in 8ba1648567e2 ("drm: vkms: Refactor the 
-plane composer to accept new formats") in a over-simplification effort. 
-At this time, nobody noticed the performance impact of this commit. After 
-the first iteration of my series, poeple notice performance impact, and it 
-was the case. Pekka suggested to reimplement the line-by-line algorithm.
-
-Expiriments on my side shown great improvement for the line-by-line 
-algorithm, and the performances are the same as the original line-by-line 
-algorithm. I targeted my effort to make the code working for all the 
-rotations and translations. The usage of helpers from drm_rect_* avoid 
-reimplementing existing logic.
-
-The only "complex" part remaining is the clipping of the coordinate to 
-avoid reading/writing outside of src/dst. Thus I added a lot of comments 
-to help when someone will want to add some features (framebuffer resizing 
-for example).
-
-The YUV part is not mandatory for this series, but as my first effort was 
-to help the integration of YUV, I decided to rebase Arthur's series on 
-mine to help. I took [3], [4], [5] and [6] and adapted them to use the 
-line-by-line reading. They were also updated to use 32.32 fixed point 
-values for yuv conversion instead of 8.8 fixed points.
-
-The last patch of this series introduce DRM_FORMAT_R1/2/4/8 to show how 
-the PATCH 7/16 can be used to manage packed pixel formats.
-
-To properly test the rotation algorithm, I had to implement a new IGT 
-test [8]. This helped to found one issue in the YUV rotation algortihm.
-
-My series was mainly tested with:
-- kms_plane (for color conversions)
-- kms_rotation_crc (for a subset of rotation and formats)
-- kms_rotation (to test all rotation and formats combinations) [8]
-- kms_cursor_crc (for translations)
-The benchmark used to measure the improvment was done with:
-- kms_fb_stress
-
-[1]: https://lore.kernel.org/all/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-[2]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-0-952fcaa5a193@riseup.net/
-[3]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-3-952fcaa5a193@riseup.net/
-[4]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-5-952fcaa5a193@riseup.net/
-[5]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-6-952fcaa5a193@riseup.net/
-[6]: https://lore.kernel.org/all/20240110-vkms-yuv-v2-7-952fcaa5a193@riseup.net/
-[8]: https://lore.kernel.org/r/20240313-new_rotation-v2-0-6230fd5cae59@bootlin.com
-[9]: https://lore.kernel.org/dri-devel/20240306-louis-vkms-conv-v1-1-5bfe7d129fdd@riseup.net/
-
-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To: Melissa Wen <melissa.srw@gmail.com>
-To: Maíra Canal <mairacanal@riseup.net>
-To: Haneen Mohammed <hamohammed.sa@gmail.com>
-To: Daniel Vetter <daniel@ffwll.ch>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-To: David Airlie <airlied@gmail.com>
-To: arthurgrillo@riseup.net
-To: Jonathan Corbet <corbet@lwn.net>
-To: pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: jeremie.dautheribes@bootlin.com
-Cc: miquel.raynal@bootlin.com
-Cc: thomas.petazzoni@bootlin.com
-Cc: seanpaul@google.com
-Cc: marcheu@google.com
-Cc: nicolejadeyee@google.com
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-
-Note: after my changes, those tests seems to pass, so [7] may need 
-updating (I did not check, it was maybe already the case):
-- kms_cursor_legacy@flip-vs-cursor-atomic
-- kms_pipe_crc_basic@nonblocking-crc
-- kms_pipe_crc_basic@nonblocking-crc-frame-sequence
-- kms_writeback@writeback-pixel-formats
-- kms_writeback@writeback-invalid-parameters
-- kms_flip@flip-vs-absolute-wf_vblank-interruptible
-And those tests pass, I did not investigate why the runners fails:
-- kms_flip@flip-vs-expired-vblank-interruptible
-- kms_flip@flip-vs-expired-vblank
-- kms_flip@plain-flip-fb-recreate
-- kms_flip@plain-flip-fb-recreate-interruptible
-- kms_flip@plain-flip-ts-check-interruptible
-- kms_cursor_legacy@cursorA-vs-flipA-toggle
-- kms_pipe_crc_basic@nonblocking-crc
-- kms_prop_blob@invalid-get-prop
-- kms_flip@flip-vs-absolute-wf_vblank-interruptible
-- kms_invalid_mode@zero-hdisplay
-- kms_invalid_mode@bad-vtotal
-- kms_cursor_crc.* (everything is SUCCEED or SKIP, except for 
-  rapid_movement)
-
-[7]: https://lore.kernel.org/all/20240201065346.801038-1-vignesh.raman@collabora.com/
-
-Changes in v5:
-- All patches: fix some formatting issues
-- PATCH 4/16: Use the correct formatter for 4cc code
-- PATCH 7/16: Update the pixel accessors to also return the pixel position 
-  inside a block.
-- PATCH 8/16: Fix a temporary bug
-- PATCH 9/16: Update the get_step_1x1 to get_step_next_block and update 
-  the documentation
-- PATCH 10/16: Update to uses the new pixel accessors
-- PATCH 11/16: Update to use the new pixel accessors
-- PATCH 11/16: Fix a bug in the subsampling offset for inverted reading 
-  (right to left/bottom to top). Found by [8].
-- PATCH 11/16: Apply Arthur's modifications (comments, algorithm 
-  clarification)
-- PATCH 11/16: Use the correct formatter for 4cc code
-- PATCH 11/16: Update to use the new get_step_next_block
-- PATCH 14/16: Apply Arthur's modification (comments, compilation issue)
-- PATCH 15/16: Add Arthur's patch to explain the kunit tests
-- PATCH 16/16: Introduce DRM_FORMAT_R* support.
-- Link to v4: https://lore.kernel.org/r/20240304-yuv-v4-0-76beac8e9793@bootlin.com
-Changes in v4:
-- PATCH 3/14: Update comments for get_pixel_* functions
-- PATCH 4/14: Add WARN when trying to get unsupported pixel_* functions
-- PATCH 5/14: Create dummy pixel reader/writer to avoid NULL 
-  function pointers and kernel OOPS
-- PATCH 6/14: Added the usage of const pointers when needed
-- PATCH 7/14: Extraction of pixel accessors modification
-- PATCH 8/14: Extraction of the blending function modification
-- PATCH 9/14: Extraction of the pixel_read_direction enum
-- PATCH 10/14: Update direction_for_rotation documentation
-- PATCH 10/14: Rename conversion functions to be explicit
-- PATCH 10/14: Replace while(count) by while(out_pixel<end) in read_line 
-  callbacks. It avoid a new variable+addition in the composition hot path.
-- PATCH 11/14: Rename conversion functions to be explicit
-- PATCH 11/14: Update the documentation for get_subsampling_offset
-- PATCH 11/14: Add the matrix_conversion structure to remove a test from 
-  the hot path.
-- PATCH 11/14: Upadate matrix values to use 32.32 fixed floats for 
-  conversion
-- PATCH 12/14: Update commit message
-- PATCH 14/14: Change kunit expected value
-- Link to v3: https://lore.kernel.org/r/20240226-yuv-v3-0-ff662f0994db@bootlin.com
-Changes in v3:
-- Correction of remaining git-rebase artefacts
-- Added Pekka in copy of this patch
-- Link to v2: https://lore.kernel.org/r/20240223-yuv-v2-0-aa6be2827bb7@bootlin.com
-Changes in v2:
-- Rebased the series on top of drm-misc/drm-misc-net
-- Extract the typedef for pixel_read/pixel_write
-- Introduce the line-by-line algorithm per pixel format
-- Add some documentation for existing and new code
-- Port the series [1] to use line-by-line algorithm
-- Link to v1: https://lore.kernel.org/r/20240201-yuv-v1-0-3ca376f27632@bootlin.com
-
----
-Arthur Grillo (6):
-      drm/vkms: Use drm_frame directly
-      drm/vkms: Add YUV support
-      drm/vkms: Add range and encoding properties to the plane
-      drm/vkms: Drop YUV formats TODO
-      drm/vkms: Create KUnit tests for YUV conversions
-      drm/vkms: Add how to run the Kunit tests
-
-Louis Chauvet (10):
-      drm/vkms: Code formatting
-      drm/vkms: write/update the documentation for pixel conversion and pixel write functions
-      drm/vkms: Add typedef and documentation for pixel_read and pixel_write  functions
-      drm/vkms: Add dummy pixel_read/pixel_write callbacks to avoid NULL  pointers
-      drm/vkms: Use const for input pointers in pixel_read an pixel_write functions
-      drm/vkms: Update pixels accessor to support packed and multi-plane formats.
-      drm/vkms: Avoid computing blending limits inside pre_mul_alpha_blend
-      drm/vkms: Introduce pixel_read_direction enum
-      drm/vkms: Re-introduce line-per-line composition algorithm
-      drm/vkms: Add support for DRM_FORMAT_R*
-
- Documentation/gpu/vkms.rst                    |  14 +-
- drivers/gpu/drm/vkms/Kconfig                  |  15 +
- drivers/gpu/drm/vkms/Makefile                 |   1 +
- drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
- drivers/gpu/drm/vkms/tests/Makefile           |   3 +
- drivers/gpu/drm/vkms/tests/vkms_format_test.c | 230 ++++++
- drivers/gpu/drm/vkms/vkms_composer.c          | 244 +++++--
- drivers/gpu/drm/vkms/vkms_crtc.c              |   6 +-
- drivers/gpu/drm/vkms/vkms_drv.c               |   3 +-
- drivers/gpu/drm/vkms/vkms_drv.h               |  85 ++-
- drivers/gpu/drm/vkms/vkms_formats.c           | 983 ++++++++++++++++++++++----
- drivers/gpu/drm/vkms/vkms_formats.h           |  12 +-
- drivers/gpu/drm/vkms/vkms_plane.c             |  50 +-
- drivers/gpu/drm/vkms/vkms_writeback.c         |   5 -
- 14 files changed, 1440 insertions(+), 215 deletions(-)
----
-base-commit: ae4928daaf4d7b2012c97c9109f608fcf6c60df3
-change-id: 20240201-yuv-1337d90d9576
-
-Best regards,
+Will do, and will also strip the Change-Id tag that sneaked through.
 -- 
-Louis Chauvet <louis.chauvet@bootlin.com>
+Florian
 
+
+--00000000000098974206138e572a
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIPGbF5IIs+yngV1o
+sW6gcidnNK6Ef0JW30TIsgV4UDsAMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDMxMzE3NDUzNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDFGVT6mdpEKSIGrjA7z0UTvHrXPgnOuUH6
+sntYIiVOYDJ1AkRJhx25ElvkX83Pmya0vEXl463jz74/cVwkxrQDZyW82Y1h2IsfwslisciEYYEg
+cA43kUn2G4nCPsvTxdbdQKJoj1yGQcEFS4spui75fhU4JTWGMlOdyqqr0Og/SNrm+xIoNbf+5q/J
+V2SZVHyfW6LXbgtuAhxnOpTKEbtBxTHNM/9XtbRpBmGUbUQvIZ8tA3Cjn0CrnvNc/gKwUqxcCkqG
+LI7t/hGk6Ae7Vj33nacG3PhFDx3hnxjOofXLFC58YR5Y5tPGoyonLk+WS5+OBmZ5/nk7M/yQoN4/
+5iZM
+--00000000000098974206138e572a--
