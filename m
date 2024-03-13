@@ -1,117 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185CD4087C
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B2B45BF9
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710337164; cv=none; b=l/q5Y7q90R5lwOmX7zxGIQIoxkupS/s5tYx1CykQjQ2yY/lZfKzHPbMwsUJkYXA+SyQ0kCFPw7QiOoTlcpnCB48iux8kjq8ZoULyHe0gO0qWyzjvqEI0qaNG+1F1M3tXHf8Ey3nHOKwP/4qEfHbHG/AoYNuWedZA2Mex6tbCeaw=
+	t=1710337168; cv=none; b=M+9p4uZ/xY3F97eFtQ0BV49a+PRzwn2fw1XfC/xuErp+l3fSDhsBuNcHPVGohA6vRABStJwlh8UT/+gmcUDhjUxdkamjGdwVHQXksP36gOJ4OoVDDAjnN02Ojves168dwO4UVt+mZQm4vzXVUH31kbmPZp2ixBfz1yEk9+vvbB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710337164; c=relaxed/simple;
-	bh=Xhj8PeGA+xn3RlIFxAyzyjj2VoYDNowf7/GzR0mzkcI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=tylBnWUucYyJJyuGLai+Qwee8svm7YpVhBziAyof5CKsO5V97JIY7/5AkfGbwJnuqLevBDKatCDFPYtntFpl5RqEwg9mKHVzT0wmRDhlCgOHCbk73bwMMJQKGodVcDEa08Ch+Wp3pZS+G5ObtuN1YsIDE4xNDGT3FSe+jCYLQbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYgcaqBQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYgcaqBQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 669B3C43399;
-	Wed, 13 Mar 2024 13:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710337163;
-	bh=Xhj8PeGA+xn3RlIFxAyzyjj2VoYDNowf7/GzR0mzkcI=;
-	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=GYgcaqBQ3otWLI05Cxd8FbyYoePrktfKd0g+YxsNPY8VT57VOLfFEKRereujisEul
-	 AdsarZigeT6DDq7KWx5jHtIgG1460AeYRrDh7WkzrwtwaZm/oQkSwVRi008XilA+LN
-	 KZfdMOomVJlsXf2EOZ+gKhE1F3boucYUbnmGkEIPfyc9ckzcSPX+nt/JMoKw7uNwjz
-	 tJ/vllKjYHMRg5i4HoSkwgUuK6jGIxIHGzPz/bkzfXLhfEjDCjgX40MaANvWGGg+am
-	 IF1Q5N8t7BhRzJ3hgU1wIaNIVh26ZhhiUFILSRQ1NhsIRgHFYrtYsM7NSnbza1S8Rn
-	 TI0YVlIJA8UwA==
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 50DC9120006A;
-	Wed, 13 Mar 2024 09:39:22 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 13 Mar 2024 09:39:22 -0400
-X-ME-Sender: <xms:iazxZVjjBTP9gjRDwv5yMgdIsEgM9WQpwY9IO0jM1PczrBFbytnxPw>
-    <xme:iazxZaD42DClgIDIfbfUopTidRGiisdd-avVz6omhLD_TcpZP61fMvTdk-zJE2T9i
-    LqShiEbJigYyzM4LNk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeehgdehgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrf
-    grthhtvghrnhepvddttdffjeefgeeggfelfefggefhheeffefftefggfelgeduveevtefh
-    feejveeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedt
-    vdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrd
-    guvg
-X-ME-Proxy: <xmx:iazxZVH0oaZVp7GUugBinV1Qq5kQ5vD1wHyw-0dVDA0sRu-TzT3tFw>
-    <xmx:iazxZaQ4BTI4BBQPJTJp3WaNB36yjaBtIo9kiZuifrtf0xtuSbyGdw>
-    <xmx:iazxZSw6kKhhTEAu4420A52rgPsP3NZYuzFxWyAxBhT5YN_Eg2ZROQ>
-    <xmx:iazxZQ7pIqN8hcyrOrVE-Ittl22kGRrJ6sf5_OH_Uhxs-mgSpconcg>
-    <xmx:iqzxZdzq8bPaYCo2DJXhNoanwZ55mrNjLQQAU8JBrEmFYgf330-HfR7DFgk>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 47790B6008D; Wed, 13 Mar 2024 09:39:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	s=arc-20240116; t=1710337168; c=relaxed/simple;
+	bh=a3ZPpK/m61lmncjSx+iVNUY3ldiF9WNBx6q/qUG2r+c=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ViL3nPzo22SE9g8CbUGtqlKS7dSP9cprLqsax0GobkLB6JuSgpRwa8ZyWfqlTWIAZTr2/3QrGMpMeN5r9V9QMy5/TTMKoP9NXv6CWtMQ8kuARQSc3sN4HuP9ElAxk0AvI/IcZGDF9ywuGjwi9WZWPT/ROzlVT1tU/rxBC3jtqSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-366715a1eaaso18276785ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:39:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710337166; x=1710941966;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YimAWqpG5NnLwSN89T43J3b3s94fZqAt7khnYV4AVSs=;
+        b=ws53vfjq/TaCCb5lkUXeUTHwkNOmQBN4857w22cd4elBV4HU0d5RNPGhk+xdnCix7s
+         6o09agylNJQBfFzq8beAD5/mkJR5mbxBSkgmAZcC50LOcKEEIi0UsYbTzyUNNe8fdHcy
+         Cq9ymyCAHgKKWLvWwzrLEoG4T0eKLZOTq+soQAfXbjOmeyKefZ/GqopQT20jQN4YtbvN
+         h2awREFY1ckE5uB43sL0laxsrTOaxnlFZLpGwyJV2O82MWbLc3gDQgy5eASHG5q5uz+1
+         YzZ4kocvcNDQo96DBRo6ktOrBLplGSW3KOcTXbtA5NkcPV3NCh1AX9refzIQBPUjYoVE
+         RoHw==
+X-Gm-Message-State: AOJu0YwQ93v9FnI1808CG1xQmkqh+3L2h5hjeTeahP5y83o7YsLDJdLy
+	UPHwKYamWA+UZ2Be1Ylw3R3oGWm29VglHehG9TPi5kA4v4Ep23jlxmzlzfbFzQoXbvpOg+ZQ4jY
+	pMYfEHa387YmwDFaaXUaGQSKzGzlKN/yBao7l9jIxfcjSLya1f3FfImWUJw==
+X-Google-Smtp-Source: AGHT+IHzSJodTkAyNgs4WzD8bi/5MkDLk/MI58MMkAU8qjn9Z6yDWQrlRixUEif3uKzyIUJ4Gy6QfilqiVps1ybkE2NR+xPU9ygn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <21cd0f32-c94b-4b2b-8fa6-ebe12756b0c4@app.fastmail.com>
-In-Reply-To: <610231c3-c3ee-e543-1a8a-8e1098ee6a7c@huawei.com>
-References: <20240313084707.3292300-1-arnd@kernel.org>
- <4f945f4a-ac29-3ef7-9e15-123962f2a0e9@huawei.com>
- <e0684202-6926-4bd1-86f6-2bb682524712@app.fastmail.com>
- <1a12c8ed-0cb5-5650-24a2-84b021c444c3@huawei.com>
- <b08aaae4-8c69-47eb-9658-5f3f5c8e4056@app.fastmail.com>
- <610231c3-c3ee-e543-1a8a-8e1098ee6a7c@huawei.com>
-Date: Wed, 13 Mar 2024 14:39:01 +0100
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Zhihao Cheng" <chengzhihao1@huawei.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Richard Weinberger" <richard@nod.at>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Daniel Golle" <daniel@makrotopia.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: ubi: avoid expensive do_div() on 32-bit machines
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:1d88:b0:366:2f1c:2b98 with SMTP id
+ h8-20020a056e021d8800b003662f1c2b98mr244129ila.5.1710337166606; Wed, 13 Mar
+ 2024 06:39:26 -0700 (PDT)
+Date: Wed, 13 Mar 2024 06:39:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004316e406138ae7c4@google.com>
+Subject: [syzbot] Monthly media report (Mar 2024)
+From: syzbot <syzbot+list1be0a511b81c99ed573e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 13, 2024, at 14:29, Zhihao Cheng wrote:
-> =E5=9C=A8 2024/3/13 20:21, Arnd Bergmann =E5=86=99=E9=81=93:
->> On Wed, Mar 13, 2024, at 13:10, Zhihao Cheng wrote:
->>> =E5=9C=A8 2024/3/13 19:53, Arnd Bergmann =E5=86=99=E9=81=93:
->>>> On Wed, Mar 13, 2024, at 12:29, Zhihao Cheng wrote:
->>>>
->>>> The way it usually goes is that someone adds an open-coded
->>>> 64-bit division that causes a link failure, which prompts
->>> I'm a little confused, what kind of link failure? Could you show an =
-example?
->>=20
->> The open-coded 64-bit division without using do_div() shows up as
->>=20
->> x86_64-linux-ld: drivers/mtd/ubi/nvmem.o: in function `ubi_nvmem_reg_=
-read':
->> nvmem.c:(.text+0x10a): undefined reference to `__umoddi3'
->> x86_64-linux-ld: nvmem.c:(.text+0x11f): undefined reference to `__udi=
-vdi3'
->> x86_64-linux-ld: drivers/mtd/ubi/nvmem.o: in function `ubi_nvmem_reg_=
-read.cold':
->> nvmem.c:(.text.unlikely+0x2d): undefined reference to `__umoddi3'
->>  > The idea is that gcc expects __umoddi3 to be provided by libgcc,
->> but Linux intentionally leaves it out in order to catch accidental
->> 64-bit divisions.
->>=20
->
-> Thanks for explaination, which means that do_div is used for 64-bit=20
-> division to solve the link failure caused by missed libgcc. Since=20
-> parameter 'from' is u32, there is no need to invoke do_div on a 32-bit=20
-> platform, you just want to stop the wasting behavior on a 32-bit=20
-> platform. Do I understand right?
+Hello media maintainers/developers,
 
-Yes, correct.
+This is a 31-day syzbot report for the media subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/media
 
-      Arnd
+During the period, 3 new issues were detected and 0 were fixed.
+In total, 19 issues are still open and 85 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 2813    Yes   KMSAN: uninit-value in dib3000mb_attach (2)
+                  https://syzkaller.appspot.com/bug?extid=c88fc0ebe0d5935c70da
+<2> 864     Yes   general protection fault in ir_raw_event_store_with_filter
+                  https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
+<3> 134     Yes   inconsistent lock state in sync_timeline_debug_remove
+                  https://syzkaller.appspot.com/bug?extid=7dcd254b8987a29f6450
+<4> 119     Yes   inconsistent lock state in valid_state (2)
+                  https://syzkaller.appspot.com/bug?extid=a225ee3df7e7f9372dbe
+<5> 100     Yes   WARNING in media_create_pad_link
+                  https://syzkaller.appspot.com/bug?extid=dd320d114deb3f5bb79b
+<6> 88      Yes   WARNING in smsusb_start_streaming/usb_submit_urb
+                  https://syzkaller.appspot.com/bug?extid=12002a39b8c60510f8fb
+<7> 5       Yes   INFO: task hung in cec_claim_log_addrs
+                  https://syzkaller.appspot.com/bug?extid=116b65a23bc791ae49a6
+<8> 3       Yes   possible deadlock in vb2_video_unregister_device
+                  https://syzkaller.appspot.com/bug?extid=3b1d4b3d5f7a358bf9a9
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
