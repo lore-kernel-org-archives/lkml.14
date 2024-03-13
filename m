@@ -1,59 +1,59 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2ED4205A
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B043E487
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710335186; cv=none; b=RTTL3WXuLrX0qP+/XGADh/vS1NjA3dm/TkMRwOvK9FVef53aL68VLAHbK1hbK4n4rSmAIxbEPJtqqHxwc7fiORbTwxZB8GwHDgGsJyJnkEYDzOAGnE8Agtnpmop86GPQjLjIgQxc3eSso5hRubcsQHE9HnarvXL+O8u72HB+QbQ=
+	t=1710335233; cv=none; b=Yqr73jZ3ZwOMFaidz59AfmlvO4TyoXyIk6ILJRRI/oEmdV7/JWpUwB1T6/CWVUSYGRlgZjQMSN3Y/liYQWJeaxBPfTsY4kAjkqb+19nrP5/KS1vvwiONvb4Rd8j0W5/FAieNE5Uq+Yd2uIf1CqOVxBD0skRUS6dCfKQmVl+1mXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710335186; c=relaxed/simple;
-	bh=nu2TU/efmJVyyNzdPZmhd4lX/ZlvA6rNHIqxiz0oydA=;
+	s=arc-20240116; t=1710335233; c=relaxed/simple;
+	bh=AOENklKCQlzcOp8ThZzmspRg8sESxjS+RseYzxgGx7k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pt8vteNacpqbWO7TwETdLSb/ifE8GubZN8Ead7EHYnR8KInySWflAFT+mRjWlUlIUij6H9yRtirdAK4/zgWLopJ+0tOcP4Wj8f5d7uexLaVzooKrVy5nytmIaJlcqg8VzboKUlUGW9viS1W/gqxGzUCEEbntnU+SvQj2cQcjnCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kXsSJdn0; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:Content-Type; b=jBhzqtJjQgZW04kAEX079yCXjtKL1vRGfujV4vZ8CF8ptcUWZsT6QnZEWFOoZStd9w0RcYWJC/zIspGe+DZdc368zvMNC8/GZy1WKuQBGgFheXO2L0HxmD5Jf6Y32ogJ3VhDt/2rfXPRxxhkj2lGpP4Ue7Z865cMLZMEkRH6/9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R1fm8+l9; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kXsSJdn0"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-413ea2c7fcfso3244985e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:06:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1fm8+l9"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-413ebcf1315so2719705e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710335183; x=1710939983; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710335230; x=1710940030; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M4NpWuidE/6XLSodKBBeg9UI/bSbAFivtpB+E/WZivo=;
-        b=kXsSJdn0zpgvJUENwPnovJmkrcdx5f3wcKrVe4lE0UE12bVzHZFsTIJRc7NrABlacG
-         aeMm0EMsWXowzFEz0XvBHaPuBA0mDK+CDXBw/47084sDW1vhj5FXKI6RfIjU9jRcJyXz
-         /8m08C+dkq9AMGpPC01k+vXXL/tIIeefFOrmi9knkRxEvEGrs/GS5u0Rq7jQA+Ca7jTj
-         7QLvO8Jo5QRGfx2cLSJNBYB3GvGwz1s/nCuvT1t2fq+24rdeRPXyK054ntH0+HZTrNxv
-         vWSK8VvebUHHdYb5H/W24fPDJ4O5GriLn9U4AhUWBm35w4c3WkrKiqi85psGqjCiI/B6
-         U/7Q==
+        bh=0h1HJWTel+cUT0T3nBc4aPkZwYen93F3ipuXMLtZBk0=;
+        b=R1fm8+l9iHmFOk+qsI+dU8sysRumMqDffcqN9d6OnPRVXk+3YQOZSjunrXZBYLLcPu
+         KJ0jmLIKROv+tDap5yMehtdx36wyljejbAL33rYDRpD0CIqheHYDrDMckmBe4A0gDLgq
+         C0OUSQQcRvLsdiIUoifAc9cvw3xMvgaOcrs04CK76I5Al6JL4wY7+4DGOb5ry5itCLTT
+         r/aC3siRdlQtRooAQhV+bpn+hQm78o0ueZtr3u/vidRuTVGxb6zJPtItehbneN0lfWzh
+         pTZjBYTht9W2Uqf0Po+hncby0RWqccBPQuVZxp2FhJ/9w0fRpNqZlhxo17oJ3nQR9/V5
+         W9vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710335183; x=1710939983;
+        d=1e100.net; s=20230601; t=1710335230; x=1710940030;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4NpWuidE/6XLSodKBBeg9UI/bSbAFivtpB+E/WZivo=;
-        b=GOtTd1d1OlIPC2sZB9rqkwsKDXboI7gmEPOM1Qg1IvNFtNJlT4jvx9zI2kYuOdNge4
-         3OmL9uNSDwlUGt0OBv7KxZxpj1ayLPAOQfCjCKdBT3GyE8EPJrDJxmmUTsLZd0IRoBU8
-         RU0tfl4A0RQElvoPlHFCsqeLLIcns74MCpYwVTBTLC15hhWXcupytgwTUsXd3oSNHZ65
-         7fNbfUeu9//huMicFe8EgwozRKNRN7Mrhn7T7P8rakS+GmIWUh/2K9QZ5aisYDaDAuvb
-         rlaVZpObN1yK/xiqeNMKwglTt6WZORStU2HuzYUD1zVWoMYmmWZ03Q7YQBk3meSzeWfu
-         jagA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiF37pX9mcSPHNUkc3/xfv7ukyKefzwzCiNnJphRufymhNnSTjv1wPFYjL5trxef587GmOEgtykGh8rbZXbjJidtXIy9jyfiZ0DuPH
-X-Gm-Message-State: AOJu0YwUJlWJjtzdTyrhnTwpJ3VBFSRSPj6QhzYJ7rvQaGZOcdSTQW+w
-	vJprgwSJT3HP1EoIkOpJMHserlnk2WLA7emvZ1OZs73VKbZjTfLTzdxRLA3ug2s=
-X-Google-Smtp-Source: AGHT+IGa1okwKTE1e2wF6mpSHWKi5YQtwtGwhXyfrBB3D3LwsSoevUjXgSUkdVD+/wK963THVidm5Q==
-X-Received: by 2002:a05:600c:1c05:b0:412:fe95:b6c5 with SMTP id j5-20020a05600c1c0500b00412fe95b6c5mr3950944wms.7.1710335183472;
-        Wed, 13 Mar 2024 06:06:23 -0700 (PDT)
+        bh=0h1HJWTel+cUT0T3nBc4aPkZwYen93F3ipuXMLtZBk0=;
+        b=HnKFHpsC7mO1jN2HRdtF6AIrWVHwRuLJFqLmpcSNX3/3ZrCNokTTIIkZjmVDT0fHzw
+         JfPS4ZC1GLn9l71KFI1hyVDxlsVS89xn2VMRshk1LJWILckRT8Fji57lxV0uBc0FI8wz
+         0B8R6sZBMuQM5I5QO2/2V0jCYcPSAZM8i9hR836qGJgTF1flkYTcgSfmY6y73lF3vkoW
+         lgkYhOnSGg/FV4tpUWeCSbRZHjuaZ2oyZOhRzop3cnJuwtehxLk92dHd0N1vb9SWkY3J
+         3Uq0DbMRXACx7ICKE154CK9PwCoCz5u/fA5g4F3avVWtkcqU61XpL8tiUaXXCVTVitok
+         U+zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEoUryw9lpn+cZx0FrJn/hXs+pjXFvS0/e/jumHxUGP6NJUKCDguFWqpAkF4ogPyj6dV2el0yfexmoOkZ4TBp9+z2BmEgXySkdQO3Y
+X-Gm-Message-State: AOJu0YxMo6U6kECLyDGBNf8TSskWZWh9z7UIUFid/7C60tBlcz2IpzeW
+	icz5/8ps4lPCvG8Do4I39h6atka/UFv3Tu9gSpY+zJs7P5TenGcqW1EH5Eq5Oys=
+X-Google-Smtp-Source: AGHT+IGCNQQ+vVI9A+/mKULdTaoDGN4LOObKn8d9gfyev3ibpUqDcfmSUpsIWnmdEnjLU2rGKjCHpQ==
+X-Received: by 2002:a05:600c:3542:b0:412:ebce:4166 with SMTP id i2-20020a05600c354200b00412ebce4166mr8648709wmq.32.1710335230145;
+        Wed, 13 Mar 2024 06:07:10 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id l15-20020a05600012cf00b0033ce727e728sm11589432wrx.94.2024.03.13.06.06.21
+        by smtp.gmail.com with ESMTPSA id bg28-20020a05600c3c9c00b0041330d49604sm2287312wmb.45.2024.03.13.06.07.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Mar 2024 06:06:23 -0700 (PDT)
-Message-ID: <e2a98098-8ccd-4b8f-9a4b-1cbc0776a9c2@linaro.org>
-Date: Wed, 13 Mar 2024 14:06:20 +0100
+        Wed, 13 Mar 2024 06:07:09 -0700 (PDT)
+Message-ID: <f0961a18-ddb7-4bb9-aee6-c13f8a1dc020@linaro.org>
+Date: Wed, 13 Mar 2024 14:07:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,27 +61,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] dt-bindings: net: add new property st,ext-phyclk
- in documentation for stm32
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
+ board DTS
 Content-Language: en-US
-To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240307135957.303481-1-christophe.roullier@foss.st.com>
- <20240307135957.303481-3-christophe.roullier@foss.st.com>
- <578f421c-ca06-45d4-8380-8b2b423d4d47@linaro.org>
- <50ee6122-b160-48ea-8c44-1046b5907d7c@foss.st.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Sumit Garg <sumit.garg@linaro.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: andersson@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, stephan@gerhold.net,
+ caleb.connolly@linaro.org, neil.armstrong@linaro.org,
+ laetitia.mariottini@se.com, pascal.eberhard@se.com, abdou.saker@se.com,
+ jimmy.lalande@se.com, benjamin.missey@non.se.com,
+ daniel.thompson@linaro.org, linux-kernel@vger.kernel.org,
+ Jagdish Gediya <jagdish.gediya@linaro.org>
+References: <20240313123017.362570-1-sumit.garg@linaro.org>
+ <20240313123017.362570-4-sumit.garg@linaro.org>
+ <c0e10cbf-c6f3-4b0c-8616-983da2a40236@linaro.org>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -127,71 +122,20 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <50ee6122-b160-48ea-8c44-1046b5907d7c@foss.st.com>
+In-Reply-To: <c0e10cbf-c6f3-4b0c-8616-983da2a40236@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/03/2024 11:39, Christophe ROULLIER wrote:
+On 13/03/2024 14:04, Konrad Dybcio wrote:
 > 
-> On 3/8/24 09:28, Krzysztof Kozlowski wrote:
->> On 07/03/2024 14:59, Christophe Roullier wrote:
->>> Add property st,ext-phyclk to manage cases when PHY have no cristal/quartz
->>> This property can be used with RMII phy without cristal 50Mhz and when we
->>> want to select RCC clock instead of ETH_REF_CLK
->>> Can be used also with RGMII phy with no cristal and we select RCC clock
->>> instead of ETH_CLK125
->>>
->> Nothing improved here. You say you add new property (wrote it explicitly
->> in the subject), but where is it? Where is the user?
->>
->> I think we talked about this. Rob also asked quite clear:
->>
->>> That is obvious from the diff. What is not obvious is why we need a new
->>> property and what is the problem with the existing ones.
->> How did you solve it?
+>> +		led@5 {
+>> +			reg = <5>;
+>> +			label = "apq8016-hmibsc:green:wlan";
 > 
-> Hi,
+> These names look overly complicated.. s/apq8016-hmibsc://g?
 > 
-> I do not understand your questions.
 
-OK, I will clarify some questions, but are you sure that this question:
-"How did you solve it?"
-needs clarification?
-
-If so, then let me clarify:
-Rob pointed issue. How did you resolve Rob's comment? How did you
-address it? What changed in your patch, that Rob's comment should be
-considered as addressed/resolved/done?
-
-Now about my other question:
-"but where is it? Where is the user?"
-
-Your subject and commit message claim you add new property. This means
-such property was not existing so far in the Linux kernel. If you add
-new property in the binding, then I expect adding the user of that
-binding, thus my question: where is the user of that binding?
-
-> 
-> That I would like to do, it is property "st,ext-phyclk" was introduced 
-> in driver
-> 
-> "drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c" in 2020, and YAML 
-> was not updated at the time.
-
-Are you saying you document existing property or add a new one?
-
-> 
-> Goal of this patch it is to update YAML to avoid dtbs check issue if 
-> someone use this property :
-> 
->   dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb:
-> ethernet@5800a000: Unevaluated properties are not allowed
-> ('st,ext-phyclk' was unexpected)
-
-So DTS uses it?
-
-Are my questions now clear? BTW, I asked some of them before and you
-just sent the same patch, so looks like ignored my questions.
+It should be dropped entirely in fact. There is color and function.
 
 Best regards,
 Krzysztof
