@@ -1,108 +1,102 @@
-Received: from avasout-ptp-003.plus.net (avasout-ptp-003.plus.net [84.93.230.244])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6716CDA5
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 18:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.93.230.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5FA6087A;
+	Wed, 13 Mar 2024 18:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710353832; cv=none; b=rWu0HO+/LquT3TEkW19fH+zLMrcHWAuni3pTWiN9vfRr8mGgo+XC8//qU8ALXNwq4vz7VnZbvanqubhsWgDyaq5DwQ9ZUaH8tPFsCAx0eK8XJ3Y2YqNkUQGeF3WRqQMGs7tRK3cQPNFH8kaspb3KpYctyfnlPiH699cQraSUZps=
+	t=1710353830; cv=none; b=QiaBpo1ybKe3ws3iL7q+nRo94S81zzPkA8amfNdg7RYy7hYqbtVcdelMWqpXLOCY/Vzk7mjJURi2+fIOskB50jEiPTrsZvYQlWLm0x+EQx+s3Bl8kXxgKZjEcS9XY+wGDpQu+Dn3UUqzf/G1Rp0cafx4qVGPNlY1D9sel1FPJWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710353832; c=relaxed/simple;
-	bh=/ynVUGcijeIjfROVq7PRXn35lD8jorRFN6NALcKHW9M=;
-	h=Message-ID:In-Reply-To:References:Date:Subject:From:To:Cc:
-	 MIME-Version:Content-Type; b=ebGUOpZu4tZI/VcTz7iLcFrYdFIOb+bdqHzZ2Jga16kDiWjhrKbqM/d4V2RChK47xul/IPU0JvI5jmbmFMGRA95fivsbdefpyaHdBQ3i8PT/GfQiL2TL5+ZxIRZzG37PqoyoyMIrke74x4enXfC4bzfSx5mMqxKUvMESIQx+JKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk; spf=none smtp.mailfrom=jessamine.co.uk; arc=none smtp.client-ip=84.93.230.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jessamine.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jessamine.co.uk
-Received: from webmail07.plus.net ([84.93.237.82])
-	by smtp with ESMTP
-	id kT6wr5aKcKQLgkT6xr4ZkU; Wed, 13 Mar 2024 18:13:56 +0000
-X-Clacks-Overhead: "GNU Terry Pratchett"
-X-CM-Score: 0.00
-X-CNFS-Analysis: v=2.4 cv=JtdSr94C c=1 sm=1 tr=0 ts=65f1ece4
- a=k49VtrWLZTL8DnM+6AvpWw==:117 a=8YZdF9bm7lDkcydB81w8Xw==:17
- a=8nJEP1OIZ-IA:10 a=K6JAEmCyrfEA:10 a=ZBkl__CYAAAA:8 a=VwQbUJbxAAAA:8
- a=8AirrxEcAAAA:8 a=VdYuLKcatEhD6b8jxZQA:9 a=wPNLvfGTeEIA:10
- a=d6WIyDdLbVARuAyufDlf:22 a=AjGcO6oz07-iQ99wixmX:22 a=ST-jHhOKWsTCqRlWije3:22
-Received: from [127.0.0.1] (helo=webmail.plus.net)
-	by webmail07.plus.net with esmtp (Exim 4.89)
-	(envelope-from <adam@jessamine.co.uk>)
-	id 1rkT6w-0004xq-CB; Wed, 13 Mar 2024 18:13:54 +0000
-Received: from 84.92.42.80
-        (SquirrelMail authenticated user jessaminenet+adam)
-        by webmail.plus.net with HTTP;
-        Wed, 13 Mar 2024 18:13:54 -0000
-Message-ID: <41a7e7e46baa40ce28ad0dcb2ee455df.squirrel@webmail.plus.net>
-In-Reply-To: <30b2a315b36e1ee16c0217b32b95a605@jessamine.co.uk>
-References: <30b2a315b36e1ee16c0217b32b95a605@jessamine.co.uk>
-Date: Wed, 13 Mar 2024 18:13:54 -0000
-Subject: Re: [PATCH] spi: spi-imx: fix off-by-one in mx51 CPU mode burst
- length
-From: "Adam Butcher" <adam@jessamine.co.uk>
-To: "Mark Brown" <broonie@kernel.org>,
- shawnguo@kernel.org,
- s.hauer@pengutronix.de,
- kernel@pengutronix.de,
- linux-imx@nxp.com,
- benjamin@bigler.one,
- stefanmoring@gmail.com,
- carlos.song@nxp.com
-Cc: linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-User-Agent: SquirrelMail
+	s=arc-20240116; t=1710353830; c=relaxed/simple;
+	bh=lJ/3lSowUjOAXc/R3q4VoL3CPOs5whatKhHPsl1wyS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Pce9ulMPNVyhbgPu1HmiWM/G4OIS1Z/Ckxv6tONsRcZZGv4gGeQ14lNx9dKNqgrdboMILLnDP3FMkNx1831Kvnl8rxOhCd/PMqxZTiesp7MUHbZMZv6IdE9vOTMzd1yjeXam0DlQPelUdUIRGRbbhz12m2M7OYkVzzMZ4jFRRSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jUHSSKEu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jUHSSKEu"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42DHQSY8032501;
+	Wed, 13 Mar 2024 18:16:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=v5wjPJyxlyZSgw7QRNfZacYjQP379B5XDAXYyxrHWgs=; b=jU
+	HSSKEujd5ST8b01tUiDMG1O7g5X2v+xnubLImtNi7WfDCndpJ5rXjKVhTJ+OmFFE
+	3oUCfmRtyIFaMEUymVBNI0axtLJsKfJB/sGvxwFGBwSlYL5CiocXEkYP+TI0j0HW
+	cwgAHrwih4tZ2Slt2ONptz25D73MeRycR6yzKt99i3s7YKnv1TIH1TcsDdDvNXYc
+	iQ7v3UpLs84C+iPP1ioVWwnuq7kLFrYxY7YV9qcznp5wgQ3DMrdCKoMRE5fbsFXu
+	4Ll1QwCIo35W2siD5vYMWjzHjb+3i8gUnxUQpA8R6QnUB2/fFhjYWnKslKlmhVUf
+	wpb8qauhpeF2Y/NQsZQQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wu9xas35m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 18:16:56 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42DIGsBQ004907
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 18:16:55 GMT
+Received: from [10.110.70.168] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 13 Mar
+ 2024 11:16:50 -0700
+Message-ID: <2020929f-c9a5-1209-78cb-ca75db44a432@quicinc.com>
+Date: Wed, 13 Mar 2024 11:16:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
-X-CMAE-Envelope: MS4xfJ/HiBvFrqoc6yzrxa12l12e8Z9iHnxHbPSPCRKDs7g1raAnUiG/+3aDW4v9Qr7pj/zkjrfgjAj7eMVaqXweQufriTfeVj7UkX08FlQUEFTPkR7ncHGD
- mvq1PLNIIIrBraF1L0EwMjIqGy09R5iedDcn9nalQHbRbl9lrFv45khvM02Y0nsm8DluL1UEbW1PWBgrYe0CxOAPGw5En3qET0o=
-
-From: Adam Butcher <adam@jessamine.co.uk>
-
-[Apologies, rubbish mailer corrupted the previous re-addressed post]
-
-992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU mode")
-corrects three cases of setting the ECSPI burst length but erroneously
-leaves the in-range CPU case one bit to big (in that register a value of
-0 means 1 bit).  The effect was that transmissions that should have been
-8-bit bytes appeared as 9-bit causing failed communication with SPI
-devices.
-
-It seems the original patch submission up to v4 did not contain the bug.
-It was introduced in the v5 update.
-
-Link: https://lore.kernel.org/all/20240201105451.507005-1-carlos.song@nxp.com/
-Link: https://lore.kernel.org/all/20240204091912.36488-1-carlos.song@nxp.com/
-Fixes: 992e1211dc91 ("spi: imx: fix the burst length at DMA mode and CPU mode")
-Signed-off-by: Adam Butcher <adam@jessamine.co.uk>
----
- drivers/spi/spi-imx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 7c1fcd5ed52f7..100552e6c56bc 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -743,8 +743,8 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
- 				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 			else
--				ctrl |= spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
--						BITS_PER_BYTE) * spi_imx->bits_per_word
-+				ctrl |= (spi_imx->count / DIV_ROUND_UP(spi_imx->bits_per_word,
-+						BITS_PER_BYTE) * spi_imx->bits_per_word - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		}
- 	}
--- 
-2.43.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 2/2] drm/msm/dp: fix runtime PM leak on connect failure
+Content-Language: en-US
+To: Johan Hovold <johan+linaro@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        "Bjorn
+ Andersson" <quic_bjorande@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20240313164306.23133-1-johan+linaro@kernel.org>
+ <20240313164306.23133-3-johan+linaro@kernel.org>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20240313164306.23133-3-johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BNNegcXJxongtAGZIx1lIDE54NIYGZW8
+X-Proofpoint-GUID: BNNegcXJxongtAGZIx1lIDE54NIYGZW8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-13_09,2024-03-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2403130138
 
 
 
+On 3/13/2024 9:43 AM, Johan Hovold wrote:
+> Make sure to balance the runtime PM usage counter (and suspend) before
+> returning on connect failures (e.g. DPCD read failures after a spurious
+> connect event or if link training fails).
+> 
+> Fixes: 5814b8bf086a ("drm/msm/dp: incorporate pm_runtime framework into DP driver")
+> Cc: stable@vger.kernel.org      # 6.8
+> Cc: Kuogee Hsieh <quic_khsieh@quicinc.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
