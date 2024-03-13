@@ -1,383 +1,266 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C25179C5
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 01:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710294514; cv=none; b=IRe5v4GbEuMEQ3bZsOAGLF6wgIqAcpxuTldV6HhkJzSZA4yGH2Xp0Vmg/fLAqMrLnj+Jj4t9GkKw70vWPRD6BMuHNyel8+dCYcb0TKp6JKBo0/+i2g4hx1bIy0nZ3w7f7GUrAcwQveUkio16jeBkb48pm1bMr0ZE3t/7epyIu0s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710294514; c=relaxed/simple;
-	bh=c92qP+d07eBt96HVP0lkZ4RsU9g6JYwmN44tFCExclg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ioPo36oPkcMEmlXcvfEvIXos7lZ08ImfxHyUaciOy8zRgHiWSvKV9cY+MJ9AvPbR40vrVdy82b494wUxRRsEQEBTgfKFMnqbPzOFyAOkMzTjFXXQszLamyP9wDNaSYc3J/a7UtKvh6oNBtVsED14Hv3EAh05wCbak4/N9LrncNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YOBNuMQW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AB3D26D;
+	Wed, 13 Mar 2024 01:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710294528; cv=fail; b=XsxNLq+2lP0vXgW8QxJBLUF3JWuRjYDDcO+Mxnec+K7spLjsH1tzM0dO1FrwfU/nQ6t38IRrx5FnoWfFtGjLrPo4DkEsCI/fjrUywJZNDXxm1Atw536xqxTcU6IArOW4nxDm8yxI8OcOP9QzBMQrTFTg/S5xhLnQie5oFtbQKQo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710294528; c=relaxed/simple;
+	bh=wfKDqgTKeUiqxgUJ4lX2t4fTgcWlYB4C809/M41xx0M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=vErtqkZ8RNrUd0pEehoHiqFyKrhbmHC643EwpbVmN2ox6Hhu9xaRwBhN1A2/ucN9ctJLuWRswiN6yj0LevO49TZKWyUnIWIhU9b8EGiU939bjAFUwrUfgDLhk0R1/u1JAoSXaNM7rwXFfOya5gJceUNd0SCJDQPrFg5GOMwuJyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MSWeRuAR; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YOBNuMQW"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42D16FLe009969;
-	Wed, 13 Mar 2024 01:48:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=lvDevJgXzZHK+XAuqd2R8EtdQOr26ZP2QO5Xtddz0KA=;
- b=YOBNuMQWKm6Sl7lJnNjiNrPMHnb6nGkjpHEY58UajnzpJZS6uarS8BOk4Ir3FTWV303s
- ACoQ2zj93BnrjLkn0bu9C22nin+fDWSvbYxLxEs8R8g0GwCBurATPdhJjh0Z+LzMKLLr
- ZtVGB7BlXZV4NCrN2eV0N4KjOUojadOOpoy0alV6z3NMXwkDnfxTrjyYrTDLT+L3rjCt
- f31U5prTAdwOe3BpGI2E3d333dha4UnGAfsJaSzjsHI72fPD8dhqNoVDs2s0kd0oKTWB
- p7fdaGIRii0cu2JL6NgFnojs2CnQ5s3vfnIpcsK33WGzK429wKHGI74weofyaZ11naS5 3A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wu1au127q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 01:48:11 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42D1j7Tw030279;
-	Wed, 13 Mar 2024 01:48:11 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wu1au1267-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 01:48:10 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42CN67Yx018134;
-	Wed, 13 Mar 2024 01:41:27 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ws23tb3uj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 01:41:27 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42D1fN1O30867824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Mar 2024 01:41:25 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7395520043;
-	Wed, 13 Mar 2024 01:41:23 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E069920040;
-	Wed, 13 Mar 2024 01:41:22 +0000 (GMT)
-Received: from heavy (unknown [9.171.20.188])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 13 Mar 2024 01:41:22 +0000 (GMT)
-Date: Wed, 13 Mar 2024 02:41:21 +0100
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Changbin Du <changbin.du@huawei.com>, elver@google.com
-Cc: Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] kmsan: instrumentation recursion problems
-Message-ID: <czcb6tjpfu3ry5j6blzkhw5hg2thfkir7xkxholzqqpnv5pj4f@jtdhzoif5m2q>
-References: <20240308043448.masllzeqwht45d4j@M910t>
- <CANpmjNOc4Z6Qy_L3pjuW84BOxoiqXgLC1tWbJuZwRUZqs2ioMA@mail.gmail.com>
- <20240311093036.44txy57hvhevybsu@M910t>
- <20240311110223.nzsplk6a6lzxmzqi@M910t>
- <ndf5znadjpm4mcscns66bhcgvvykmcou3kjkqy54fcvgtvu7th@vpaomrytk4af>
-Content-Type: text/plain; charset=us-ascii
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MSWeRuAR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710294527; x=1741830527;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=wfKDqgTKeUiqxgUJ4lX2t4fTgcWlYB4C809/M41xx0M=;
+  b=MSWeRuARP/BAwPu1jny5Qo2ngWFtFY90e7vYH2bywa968ePrpnKScng9
+   fgw6MXC2OHL/wfuC5FbmYH0XZpVysi+N5nwkSmnwg097lTIg8yXcPAl3y
+   FwcPlljqUejivPC9beZTDJ6SxfafaBnrNspfh+V8/HCCW0jipey7jDChc
+   kmwh5GCdCLelOfZioi0jRX6m/PkXNzY8bL1aD7ckcLNrZaalxTrvuKsN6
+   i49HMVhm/gfgCgE4B/SdiZm4nzRczs2Y2ZeObwtIo1jiMwBJ7csBHpApV
+   g9tQtMa3tHX0YiIAqUGKoDYGqyRsHfdaWapl8BEGIZhT5ccb2xxqHlnLW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="22492247"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="22492247"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 18:48:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="16389131"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Mar 2024 18:48:47 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 12 Mar 2024 18:48:45 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 12 Mar 2024 18:48:45 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 12 Mar 2024 18:48:45 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 12 Mar 2024 18:48:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jWLw9Bi5vei90+mRyHsZwbvUCsYYGwmwxtiep0XPHvzLEsQUwU68XWW2kxChyPmkRusvXb6J4urq/vcBPORHLKY8oudjs4+DAkY3smYCbblSF1nTUOTyfo2meLHg4T0ZFz/6bB6BSHYC+q5c7deNOH+z+DLgmM2q01+cy8FYLdY3/M6u12Gf2v3oSahd2SQ+ikErPfk/xXaHPR2sDHwJ2Tm9WzC7mDNcdX1TLeIRCeb86awVzucwCEJbjuB114+9SDsX2HazznFfnyDI2uE5D//ZEQko5hwYx11UtNFGOUbTg9cufPhM8IvNpahwa3jSPQ3PRxXaM84y7f3mdA1LwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fir4yT50Swbo7ChUM3TDXkXOb1/kUiCNSp3EVw0G084=;
+ b=OMFx6+AvFuieH12qR3g1jPZ2b1QExuIbbMgABl6r0V2R8IraOFryHjsW95raun4af9EwSIfHTtuntp6iCM/JpXqXNYVghKoTR1Xsq8OsOGJ4y2AnarrvzO5soxZAugxEh2otOA2ZQELuxH2pPpZ4e7aOIfIXLmR2xA591RvDvCtd0TAmWMHh1FSr2KNNHs67G90rOdCFhNuydujGNZB20JJ5FtsMz1oTr3T8GIP+lGH9EBu4FABtLums45NQwTmOmy0gZ07/tpzoJnEJhxwxgGZpI58YP7cRgpOW55DKNZgZdXTCQBUetqxMESxZAfHA1sBOlbpjRK928Vx1QDxLNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ CYYPR11MB8357.namprd11.prod.outlook.com (2603:10b6:930:c5::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7386.16; Wed, 13 Mar 2024 01:48:43 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::55f1:8d0:2fa1:c7af]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::55f1:8d0:2fa1:c7af%5]) with mapi id 15.20.7386.016; Wed, 13 Mar 2024
+ 01:48:43 +0000
+Date: Wed, 13 Mar 2024 09:18:50 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>, <jgg@nvidia.com>
+CC: Kevin Tian <kevin.tian@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "rcu@vger.kernel.org"
+	<rcu@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Yiwei Zhang <zzyiwei@google.com>
+Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that
+ support self-snoop
+Message-ID: <ZfD++pl/3pvyi0xD@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20240309010929.1403984-1-seanjc@google.com>
+ <20240309010929.1403984-6-seanjc@google.com>
+ <Ze5bee/qJ41IESdk@yzhao56-desk.sh.intel.com>
+ <Ze-hC8NozVbOQQIT@google.com>
+ <BN9PR11MB527600EC915D668127B97E3C8C2B2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZfB9rzqOWmbaOeHd@google.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <ndf5znadjpm4mcscns66bhcgvvykmcou3kjkqy54fcvgtvu7th@vpaomrytk4af>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Rn6Ph5G0Y3Tx4t5XLA2Vl-9bR-jX3YyW
-X-Proofpoint-GUID: iF5gmBX_HbtGdM5hh3iUteh4JaUI99NA
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfB9rzqOWmbaOeHd@google.com>
+X-ClientProxiedBy: SI2PR01CA0023.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::17) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_14,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1015
- bulkscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403130012
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|CYYPR11MB8357:EE_
+X-MS-Office365-Filtering-Correlation-Id: cf88d365-7526-4963-5a07-08dc42ffb6ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XkzJ5/ww2GYoXGLAPSaq7HCx3lnR0X4rwY0ZGr/9vdQ50Tgfw6J+clGuSntF4jZjkz7aoDFCcS9K7ZaJcS41zdprZvw7/tA3HvR/PdGKk4uTMt3tjDtlQ/whYGWRw59rRiKkH6unx6/sJdisbMtsFYSz7dh/MySJHDhD/bg2R+3vTSBM7J4DuQHxJ/I5z7rvlMT7e3Rr+OBVQR6xGAdmFdNYy1CSl+Sg+IhaCH1J0OPnNzE0Aaeqq2DevjwsUYkHSDR9ioxNbKAQyCQLzYgPU32mJLDGVBPTPiR+zg6kJWiPShCUISjtCicPNnDjv1jOb1wjKiAlFDLEh404238yf7351wKffq48BWIVH+5kPQHkFX0bKSr1Qq4WW4QXmDtUUE9kkbp+Lsw0zh9uQsEtJeo5SpjnL3y6bqkvx/epJhxMI3IEPCxD1tCsX7byP2hCleCRL9QTXOHTEIRisaAvvF007FYWWYlwUGRO/08L2RLB3aws0Hr4AdALzY9x8mcYycP0nhYJOkcyJls3ka4vTNgijOX1ZFAf1WRK147Pj0mWsVtXlKSj+xCMjdDcpZ8CLN0fslg4h7tiXKOCjaclzHYbS7PuV8fghGRFcXE51Nq0T9aNujzYSrEbOGxT1fhi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VXpQcmRiZnlOZzVOdldvYjh6UERmTHFuTEFEU2F2ZjdRSWxadGpWUlZYUitq?=
+ =?utf-8?B?eFFXbllyMUVMRVEzMzVqeWhXeFlMMDN3TGhvUDVCajc4TlpxNWRpM3k2aExi?=
+ =?utf-8?B?cHQyd0pudzdlNy82OVJpQWtvSnRtOFRXUnRkZXVIMzZZQk1RbUdnWVgwTXla?=
+ =?utf-8?B?eG5QTkJBdVk4eDNxejJFVVM0dTdUSmVZRVVLdnFDdVFZK2RRSDZST1VPZlVr?=
+ =?utf-8?B?ZHJUZ2RQL2h0cVdwTXkwRTg2dThad3M1WkpTY2lBMlZoMFY4RnJBSFhjR2Zr?=
+ =?utf-8?B?MzRQZ1VkbURrb0w4LzB6aDlXT0I2QlUzQ1puanFXcmVxUGhyU1BNcGtiUUNj?=
+ =?utf-8?B?eko5WUR5SlFCaWljOG9HWG1nZ1gvekp6YjRxL05wR2xoOEpDUUJxM3A1ZmFa?=
+ =?utf-8?B?WGp4NGoxSDFET2M3VkpiUXpyTkR0TDlvVUF4RGlRbHFmMCthNVMwMFJVbE8r?=
+ =?utf-8?B?WXdVcXY0V2ZqRWJveitSOHYrbE1YVWNhYUE2M2k5aEJjTEMvNEZUd3IvTGZQ?=
+ =?utf-8?B?NzNMWWpzWWM3UU1Id2s2cTg0NWQ1ZDRJVzBNeFQwcEJ2QjlzSjNadFVOQU1U?=
+ =?utf-8?B?c09qV05MczJDbWtTNEZGM1FhRXJpNWpGbG5GVnlhN2VYSFFFVkVaWkc3V3Zq?=
+ =?utf-8?B?VlBRT1JHSTdUMGE2bU1VS3JvSklRWVl0aTJoeC85VVR4TzZUMmd0cWxZWDhk?=
+ =?utf-8?B?UkthMDUydW1pV0xpeEgwc21aQnJ3MXhZMG9ZeHh3cXd4YUtWVFpSaXZMNkkx?=
+ =?utf-8?B?ZW44WldFMWlsd1FXbGZNcFlQNzN3akJmcS9mWHp5dXptZFBla21LRFVyZzNW?=
+ =?utf-8?B?SkdKUFNPdFhKZVE4azJwMi9RT0gyK0dWODJJYTZSbG5iQUxXSm1vWEFsaGow?=
+ =?utf-8?B?SjRpYzYwZnhPMEcydVcxbm9kNEhGM3NnK0hLWU5IYTdNNnV6citsbFJvSzJH?=
+ =?utf-8?B?b2h0TE43dzVLc3JpcVhTZzFhVEhDVjhvZGRUVlViMG9PRjNjOFBPNHR6bHVw?=
+ =?utf-8?B?ekpEVUJaZnVvNFpLMVE1ZVNZMGFpd1VtRzRldi9lNEZ1UUcwbE5TaEkySVhE?=
+ =?utf-8?B?M3JyOTAzdUJqK0JpRjMzUFpDRXl0Y1VhQkExUGRYa0ZTUjlOT1BzbDRYY01r?=
+ =?utf-8?B?Vk9JM3RIUitaOWtXWmdrK05PTmluMjczWWZJNXdFdnIzYlpUUmJweUZaRk1j?=
+ =?utf-8?B?SzNoazFWcUZ5SmpSTUVnN2pSekQxUGdPNUFTKzdJWnM3ZWZzVmVTdWl6QjQv?=
+ =?utf-8?B?RGhCM2p4WFUycTJsQ3lNLzV1VWY5MzhiY2NrNFdhVTBHUUFNYnNOTnhUUnVi?=
+ =?utf-8?B?R21ZRDlnUElHRzN0dVUrNDZZbmxKY2pkYUZBOER5dEtZTVpWMmh5cXF4V0lx?=
+ =?utf-8?B?K2hGeU13a0xlUjhTb3FlTU4xbXdkQW52dnB1MW9xYmNqQ3lOS1hjeFh4aXNZ?=
+ =?utf-8?B?dHQ1Y2V1TUZtS0FsZXpsdXZ2TkhLQ0pQOWUvTWgrVnpjdDdaRVF4WWZhNVZU?=
+ =?utf-8?B?ZVgxNHJkR1ZpL1ZSM0hiTnR4QXBhdlJFcVRUL0k1UVFsbmJVTUxaWTlXMGF6?=
+ =?utf-8?B?ZzdLS3RvZlppR24rOWhrSWU0RjE4eENzdTJ2ckZUUTZoZlNkVEg3VlBKcTBr?=
+ =?utf-8?B?aHNaSDNHZ2U1dEdSMStSOVlBeWZpZzR0MUNETHJxeUplcWZHRGdaSTJaRlU5?=
+ =?utf-8?B?cG9ITUxnZ3NZUXZYUTM4YTZOTG5HYzY1ck43cCtpanBtYUxiYVNsM05zREJn?=
+ =?utf-8?B?M3VCWVRlSmo0aFNwaUlFN0lDeDhYdDZ5L2pCT3ZzS2lBVGsxTkRaNGoxRFJu?=
+ =?utf-8?B?dHBlaWtUQXdEbkJYTVFBajJncXhTUG8yMGtVbzNwd2dnUWE4OXpiQ2RiNm8y?=
+ =?utf-8?B?ZDJ3anlkRlRUeWprYzlhK3Jha0N0bkt3d05vNHdVS2trdTliRy9GbFJ3Zk9m?=
+ =?utf-8?B?ZldZUjdxaXNRMStIZVk1bElhRElkRnpYd0JOcFFIWGJYY3dEdTVXYnk2NUlv?=
+ =?utf-8?B?bnVMdzk2NXlPcEV1cElLL054Uno0c3FGMWRNblRQakRacXBWOTc4V0RTdXdi?=
+ =?utf-8?B?Yytnejl3UzJ5eS95QnV1WDMraTN3dVVDZVFZMzdmM3cyQm9uang5RXhCVnpa?=
+ =?utf-8?Q?zJZ6J76OFaFlzbrmC13k+4Ml1?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf88d365-7526-4963-5a07-08dc42ffb6ed
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 01:48:43.4192
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pfj+iCn6pcuOKcWkLUfzN0DteQ3wLTkVtRJ2CE7DgClS2qiKVZRl6rjbsTy8Z+rqwOUJiJYVfR99v8E3si/aDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8357
+X-OriginatorOrg: intel.com
 
-On Wed, Mar 13, 2024 at 12:52:33AM +0100, Ilya Leoshkevich wrote:
-> On Mon, Mar 11, 2024 at 07:02:23PM +0800, Changbin Du wrote:
-> > On Mon, Mar 11, 2024 at 05:30:36PM +0800, Changbin Du wrote:
-> > > On Fri, Mar 08, 2024 at 10:39:15AM +0100, Marco Elver wrote:
-> > > > On Fri, 8 Mar 2024 at 05:36, 'Changbin Du' via kasan-dev
-> > > > <kasan-dev@googlegroups.com> wrote:
-> > > > >
-> > > > > Hey, folks,
-> > > > > I found two instrumentation recursion issues on mainline kernel.
-> > > > >
-> > > > > 1. recur on preempt count.
-> > > > > __msan_metadata_ptr_for_load_4() -> kmsan_virt_addr_valid() -> preempt_disable() -> __msan_metadata_ptr_for_load_4()
-> > > > >
-> > > > > 2. recur in lockdep and rcu
-> > > > > __msan_metadata_ptr_for_load_4() -> kmsan_virt_addr_valid() -> pfn_valid() -> rcu_read_lock_sched() -> lock_acquire() -> rcu_is_watching() -> __msan_metadata_ptr_for_load_8()
-> > > > >
-> > > > >
-> > > > > Here is an unofficial fix, I don't know if it will generate false reports.
-> > > > >
-> > > > > $ git show
-> > > > > commit 7f0120b621c1cbb667822b0f7eb89f3c25868509 (HEAD -> master)
-> > > > > Author: Changbin Du <changbin.du@huawei.com>
-> > > > > Date:   Fri Mar 8 20:21:48 2024 +0800
-> > > > >
-> > > > >     kmsan: fix instrumentation recursions
-> > > > >
-> > > > >     Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > > > >
-> > > > > diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-> > > > > index 0db4093d17b8..ea925731fa40 100644
-> > > > > --- a/kernel/locking/Makefile
-> > > > > +++ b/kernel/locking/Makefile
-> > > > > @@ -7,6 +7,7 @@ obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
-> > > > >
-> > > > >  # Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
-> > > > >  KCSAN_SANITIZE_lockdep.o := n
-> > > > > +KMSAN_SANITIZE_lockdep.o := n
-> > > > 
-> > > > This does not result in false positives?
-> > > >
-> > This does result lots of false positives.
-> > 
-> > > I saw a lot of reports but seems not related to this.
+On Tue, Mar 12, 2024 at 09:07:11AM -0700, Sean Christopherson wrote:
+> On Tue, Mar 12, 2024, Kevin Tian wrote:
+> > > From: Sean Christopherson <seanjc@google.com>
+> > > Sent: Tuesday, March 12, 2024 8:26 AM
 > > > 
-> > > [    2.742743][    T0] BUG: KMSAN: uninit-value in unwind_next_frame+0x3729/0x48a0
-> > > [    2.744404][    T0]  unwind_next_frame+0x3729/0x48a0
-> > > [    2.745623][    T0]  arch_stack_walk+0x1d9/0x2a0
-> > > [    2.746838][    T0]  stack_trace_save+0xb8/0x100
-> > > [    2.747928][    T0]  set_track_prepare+0x88/0x120
-> > > [    2.749095][    T0]  __alloc_object+0x602/0xbe0
-> > > [    2.750200][    T0]  __create_object+0x3f/0x4e0
-> > > [    2.751332][    T0]  pcpu_alloc+0x1e18/0x2b00
-> > > [    2.752401][    T0]  mm_init+0x688/0xb20
-> > > [    2.753436][    T0]  mm_alloc+0xf4/0x180
-> > > [    2.754510][    T0]  poking_init+0x50/0x500
-> > > [    2.755594][    T0]  start_kernel+0x3b0/0xbf0
-> > > [    2.756724][    T0]  __pfx_reserve_bios_regions+0x0/0x10
-> > > [    2.758073][    T0]  x86_64_start_kernel+0x92/0xa0
-> > > [    2.759320][    T0]  secondary_startup_64_no_verify+0x176/0x17b
+> > > On Mon, Mar 11, 2024, Yan Zhao wrote:
+> > > > For the case of !static_cpu_has(X86_FEATURE_SELFSNOOP) &&
+> > > > kvm_arch_has_noncoherent_dma(vcpu->kvm), I think we at least should warn
+> > > > about unsafe before honoring guest memory type.
 > > > 
-> > Above reports are triggered by KMEMLEAK and KFENCE.
+> > > I don't think it gains us enough to offset the potential pain such a
+> > > message would bring.  Assuming the warning isn't outright ignored, the most
+> > > likely scenario is that the warning will cause random end users to worry
+> > > that the setup they've been running for years is broken, when in reality
+> > > it's probably just fine for their
+> > > use case.
 > > 
-> > Now with below fix, I was able to run kmsan kernel with:
-> >   CONFIG_DEBUG_KMEMLEAK=n
-> >   CONFIG_KFENCE=n
-> >   CONFIG_LOCKDEP=n
+> > Isn't the 'worry' necessary to allow end users evaluate whether "it's
+> > probably just fine for their use case"?
+> 
+> Realistically, outside of large scale deployments, no end user is going to be able
+> to make that evaluation, because practically speaking it requires someone with
+> quite low-level hardware knowledge to be able to make that judgment call.  And
+> counting by number of human end users (as opposed to number of VMs being run), I
+> am willing to bet that the overwhelming majority of KVM users aren't kernel or
+> systems engineers.
+> 
+> Understandably, users tend to be alarmed by (or suspicious of) new warnings that
+> show up.  E.g. see the ancient KVM_SET_TSS_ADDR pr_warn[*].  And recently, we had
+> an internal bug report filed against KVM because they observed a performance
+> regression when booting a KVM guest, and saw a new message about some CPU
+> vulnerability being mitigated on VM-Exit that showed up in their *guest* kernel.
+> 
+> In short, my concern is that adding a new pr_warn() will generate noise for end
+> users *and* for KVM developers/maintainers, because even if we phrase the message
+> to talk specifically about "untrusted workloads", the majority of affected users
+> will not have the necessary knowledge to make an informed decision.
+> 
+> [*] https://lore.kernel.org/all/f1afa6c0-cde2-ab8b-ea71-bfa62a45b956@tarent.de
+> 
+> > I saw the old comment already mentioned that doing so may lead to unexpected
+> > behaviors. But I'm not sure whether such code-level caveat has been visible
+> > enough to end users.
+>
+What about add a new module parameter to turn on honoring guest for
+non-coherent DMAs on CPUs without self-snoop?
+A previous example is VFIO's "allow_unsafe_interrupts" parameter.
+
+> Another point to consider: KVM is _always_ potentially broken on such CPUs, as
+> KVM forces WB for guest accesses.  I.e. KVM will create memory aliasing if the
+> host has guest memory mapped as non-WB in the PAT, without non-coherent DMA
+> exposed to the guest.
+In this case, memory aliasing may only lead to guest not function well, since
+guest is not using WC/UC (which can bypass host initialization data in cache).
+But if guest has any chance to read information not intended to it, I believe
+we need to fix it as well.
+
+
+> > > I would be quite surprised if there are people running untrusted workloads
+> > > on 10+ year old silicon *and* have passthrough devices and non-coherent
+> > > IOMMUs/DMA.
+What if the guest is a totally malicious one?
+Previously we trust the guest in the case of noncoherent DMA is because
+we believe a malicious guest will only meet data corruption and shoot his own
+foot.
+
+But as Jason raised the security problem in another mail thread [1],
+this will expose security hole if CPUs have no self-snoop. So, we need
+to fix it, right?
++ Jason, in case I didn't understand this problem correctly.
+
+[1] https://lore.kernel.org/all/20240108153818.GK50406@nvidia.com/
+
+> > this is probably true.
 > > 
-> > KMEMLEAK and KFENCE generate too many false positives in unwinding code.
-> > LOCKDEP still introduces instrumenting recursions.
+> > > And anyone exposing a device directly to an untrusted workload really
+> > > should have done their homework.
+> > 
+> > or they run trusted workloads which might be tampered by virus to
+> > exceed the scope of their homework. 😊
 > 
-> FWIW I see the same issue on s390, and the best I could come up with so
-> far was also disabling lockdep.
+> If a workload is being run in a KVM guest for host isolation/security purposes,
+> and a device was exposed to said workload, then I would firmly consider analyzing
+> the impact of a compromised guest to be part of their homework.
 > 
-> For KFENCE I have the following [1] though, maybe this will be helpful
-> to you as well?
+> > > And it's not like we're going to change KVM's historical behavior at this point.
+> > 
+> > I agree with your point of not breaking userspace. But still think a warning
+> > might be informative to let users evaluate their setup against a newly
+> > identified "unexpected behavior"  which has security implication beyond
+> > the guest, while the previous interpretation of "unexpected behavior" 
+> > might be that the guest can at most shoot its own foot...
 > 
-> [1] https://patchwork.kernel.org/project/linux-mm/patch/20231213233605.661251-17-iii@linux.ibm.com/
+> If this issue weren't limited to 10+ year old hardware, I would be more inclined
+> to add a message.  But at this point, realistically the only thing KVM would be
+> saying is "you're running old hardware, that might be unsafe in today's world".
 > 
-> [...]
-
-So, I tried to brute force the issue and came up with the following.
-The goal was to minimize the usage of __no_sanitize_memory in order to
-avoid false positives. I don't propose to commit this, I'm posting this
-to highlight the intermediate problems that need to be solved.
-
-
-
-From e3834f4e4ebe2596542a7464f8cc487e2c8e37c9 Mon Sep 17 00:00:00 2001
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-Date: Wed, 13 Mar 2024 01:18:22 +0100
-Subject: [PATCH] s390/kmsan: Fix lockdep recursion
-
-After commit 5ec8e8ea8b77 ("mm/sparsemem: fix race in accessing
-memory_section->usage"), an infinite mutual recursion between
-kmsan_get_metadata() and lock_acquire() arose.
-
-Teach lockdep recursion detection to handle it. The goal is to make
-lock_acquire() survive until lockdep_recursion_inc(). This requires
-solving a number of intermediate problems:
-
-0. Disable KMSAN checks in lock_acquire().
-
-1. lock_acquire() calls instrumented trace_lock_acquire().
-   Force inlining.
-
-2. trace_lock_acquire() calls instrumented cpu_online().
-   Force inlining.
-
-3: trace_lock_acquire() calls instrumented rcu_is_watching(), which in
-   turn calls instrumented __preempt_count_add().
-   Disable instrumentation in rcu_is_watching().
-   Disabling checks is not enough, because __preempt_count_add() would
-   call __msan_instrument_asm_store().
-   Force inlinining of __preempt_count_add().
-
-4: lock_acquire() inlines lockdep_enabled(), which inlines
-   __preempt_count_add(), which calls __msan_instrument_asm_store().
-   Don't inline lockdep_enabled() and disable KMSAN instrumentation in it.
-
-5: lock_acquire() calls check_flags(), which calls the instrumented
-   preempt_count().
-   Always inline preempt_count().
-
-6: lock_acquire() inlines lockdep_recursion_inc(), which needs to
-   update KMSAN metadata.
-   Do not inline lockdep_recursion_inc(), disable KMSAN instrumentation
-   in it.
-
-7: lock_acquire() calls instrumented lockdep_nmi().
-   Force inlining.
-
-With that, the KMSAN+lockdep kernel boots again, but unfortunately it
-is very slow.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- arch/s390/include/asm/preempt.h | 12 ++++++------
- include/linux/cpumask.h         |  2 +-
- include/linux/tracepoint.h      |  2 +-
- kernel/locking/lockdep.c        | 10 +++++++---
- kernel/rcu/tree.c               |  1 +
- 5 files changed, 16 insertions(+), 11 deletions(-)
-
-diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
-index bf15da0fedbc..225ce14bb0d6 100644
---- a/arch/s390/include/asm/preempt.h
-+++ b/arch/s390/include/asm/preempt.h
-@@ -12,7 +12,7 @@
- #define PREEMPT_NEED_RESCHED	0x80000000
- #define PREEMPT_ENABLED	(0 + PREEMPT_NEED_RESCHED)
- 
--static inline int preempt_count(void)
-+static __always_inline int preempt_count(void)
- {
- 	return READ_ONCE(S390_lowcore.preempt_count) & ~PREEMPT_NEED_RESCHED;
- }
-@@ -44,7 +44,7 @@ static inline bool test_preempt_need_resched(void)
- 	return !(READ_ONCE(S390_lowcore.preempt_count) & PREEMPT_NEED_RESCHED);
- }
- 
--static inline void __preempt_count_add(int val)
-+static __always_inline void __preempt_count_add(int val)
- {
- 	/*
- 	 * With some obscure config options and CONFIG_PROFILE_ALL_BRANCHES
-@@ -59,7 +59,7 @@ static inline void __preempt_count_add(int val)
- 	__atomic_add(val, &S390_lowcore.preempt_count);
- }
- 
--static inline void __preempt_count_sub(int val)
-+static __always_inline void __preempt_count_sub(int val)
- {
- 	__preempt_count_add(-val);
- }
-@@ -79,7 +79,7 @@ static inline bool should_resched(int preempt_offset)
- 
- #define PREEMPT_ENABLED	(0)
- 
--static inline int preempt_count(void)
-+static __always_inline int preempt_count(void)
- {
- 	return READ_ONCE(S390_lowcore.preempt_count);
- }
-@@ -102,12 +102,12 @@ static inline bool test_preempt_need_resched(void)
- 	return false;
- }
- 
--static inline void __preempt_count_add(int val)
-+static __always_inline void __preempt_count_add(int val)
- {
- 	S390_lowcore.preempt_count += val;
- }
- 
--static inline void __preempt_count_sub(int val)
-+static __always_inline void __preempt_count_sub(int val)
- {
- 	S390_lowcore.preempt_count -= val;
- }
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index cfb545841a2c..af6515e5def8 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -1099,7 +1099,7 @@ static __always_inline unsigned int num_online_cpus(void)
- #define num_present_cpus()	cpumask_weight(cpu_present_mask)
- #define num_active_cpus()	cpumask_weight(cpu_active_mask)
- 
--static inline bool cpu_online(unsigned int cpu)
-+static __always_inline bool cpu_online(unsigned int cpu)
- {
- 	return cpumask_test_cpu(cpu, cpu_online_mask);
- }
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 88c0ba623ee6..34bc35aa2f4b 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -252,7 +252,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	extern int __traceiter_##name(data_proto);			\
- 	DECLARE_STATIC_CALL(tp_func_##name, __traceiter_##name);	\
- 	extern struct tracepoint __tracepoint_##name;			\
--	static inline void trace_##name(proto)				\
-+	static __always_inline void trace_##name(proto)			\
- 	{								\
- 		if (static_key_false(&__tracepoint_##name.key))		\
- 			__DO_TRACE(name,				\
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..86244a7e8533 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -111,7 +111,8 @@ late_initcall(kernel_lockdep_sysctls_init);
- DEFINE_PER_CPU(unsigned int, lockdep_recursion);
- EXPORT_PER_CPU_SYMBOL_GPL(lockdep_recursion);
- 
--static __always_inline bool lockdep_enabled(void)
-+__no_sanitize_memory
-+static noinline bool lockdep_enabled(void)
- {
- 	if (!debug_locks)
- 		return false;
-@@ -457,7 +458,8 @@ void lockdep_init_task(struct task_struct *task)
- 	task->lockdep_recursion = 0;
- }
- 
--static __always_inline void lockdep_recursion_inc(void)
-+__no_sanitize_memory
-+static noinline void lockdep_recursion_inc(void)
- {
- 	__this_cpu_inc(lockdep_recursion);
- }
-@@ -5687,7 +5689,7 @@ static void verify_lock_unused(struct lockdep_map *lock, struct held_lock *hlock
- #endif
- }
- 
--static bool lockdep_nmi(void)
-+static __always_inline bool lockdep_nmi(void)
- {
- 	if (raw_cpu_read(lockdep_recursion))
- 		return false;
-@@ -5716,6 +5718,7 @@ EXPORT_SYMBOL_GPL(read_lock_is_recursive);
-  * We are not always called with irqs disabled - do that here,
-  * and also avoid lockdep recursion:
-  */
-+__no_kmsan_checks
- void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 			  int trylock, int read, int check,
- 			  struct lockdep_map *nest_lock, unsigned long ip)
-@@ -5758,6 +5761,7 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- }
- EXPORT_SYMBOL_GPL(lock_acquire);
- 
-+__no_kmsan_checks
- void lock_release(struct lockdep_map *lock, unsigned long ip)
- {
- 	unsigned long flags;
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d9642dd06c25..8c587627618e 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -692,6 +692,7 @@ static void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
-  * Make notrace because it can be called by the internal functions of
-  * ftrace, and making this notrace removes unnecessary recursion calls.
-  */
-+__no_sanitize_memory
- notrace bool rcu_is_watching(void)
- {
- 	bool ret;
--- 
-2.44.0
-
+> For users that care about security, we'd be telling them something they already
+> know (and if they don't know, they've got bigger problems).  And for everyone
+> else, it'd be scary noise without any meaningful benefit.
