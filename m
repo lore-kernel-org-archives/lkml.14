@@ -1,87 +1,134 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2C95787D;
-	Wed, 13 Mar 2024 21:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5707859168;
+	Wed, 13 Mar 2024 21:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710366062; cv=none; b=G970h5xWew6LXuw6ZTUklrCOUmlQw5mF8Mem+kjbi6FPU3PnaWs4D1oypwGFICxy+FYeoKzGpBDnS2znr58R1XuBG3yJlqU5CTLx6ksZsgn1UxNXIiuERlMIZA1BM+WXRQw4lTlz+X8f7E3rGa8W8MUQs51plxLnrcbyqrF3ojg=
+	t=1710366065; cv=none; b=WjXfr3J/6mNbyzLgdoFlKv1fhWO9IWYTwBtd0z7mgFNaM19moBtRpt0i4pas8XXC1vUGnu3i8Ig/d44R0qdOaQDa7qBPKlhoX28WnPLqK+k6gmw3X095phIKqow48F69eCna07hDsA2NIEwa5e3CH6O8rPgu+sahx4VJeqkhkqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710366062; c=relaxed/simple;
-	bh=SxqjRWGD7n9bBE3YoVgb8xa4tnyqzh6D/786Rf7k8zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Vw0zvTKb+z9vtfN8+ef3kxqoKA4x6zBoJxv+wF6o1zkNihzuF2vjyZADXlcKs4G5TaM8X9t0IU9JgZehheAtPfEv+1RQB56PRircOFequ5lwQqweutodxWsyPJOluOsfDyH1pc8qipH0H9tAFDYC+vVm18PBlUB/oWVDCmvSDU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=iJ88g9MY; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1710366065; c=relaxed/simple;
+	bh=e9/aE3W+B9fWGEJ7kuuXfT+sZG0KdOCHiiwPjqy9t1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZYHXgq/cdQe38bUkeNLgmmwUSeRTEacEGtGfpUueKXozTXed+RLbztdj0peT+A2PeF6LhBlDdLA/5+VzMojKRD9yJwClfJWC1F2Ck3bnG/z+ZqZZOmrXExFRVC85sDGeC07K4DWyO3DSEXrWfkXn3aOb+5UTi8BUtiBA7xOKpDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPWqatkV; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iJ88g9MY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1710366052;
-	bh=lN5s0tY5NPrhuMY9w//wlduHfMOojKurZ/wQGoi4/qA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=iJ88g9MYtWPNZT3FzVM2JeTaLbKHR1w7y3V/BgfGnVvycef5QgDOT0InPbJO7nZ5x
-	 R4sS2b6rck6WPj4jMjjCagofl9PwfelfuSM0o1YdB6Nq/mjN9OidnrDp6cb5GxrhU5
-	 LcG2xpop6aCSvx53B9rkETbiaWzxGj+vAXnyPnoyh+E4vi/ii4/b87JMBW5vU5/gDH
-	 ugkXwAtsRZfOcBVqRuh9Z5PWwxtHxVdskJa34tMCBFWo7P9UDVngD6crIQgWBxr74P
-	 fUSksAGWm/qxyUX+q1z0OEUTIa3wKViiAWyhhglnsFKza6Z6Trp9WzofKisT15rY2E
-	 DpSetuyPLcUBg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tw3pr1jYFz4wcR;
-	Thu, 14 Mar 2024 08:40:52 +1100 (AEDT)
-Date: Thu, 14 Mar 2024 08:40:50 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alasdair G Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the device-mapper tree
-Message-ID: <20240314084050.2fe3eb9f@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPWqatkV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710366063; x=1741902063;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=e9/aE3W+B9fWGEJ7kuuXfT+sZG0KdOCHiiwPjqy9t1M=;
+  b=IPWqatkVU+/r4ouTQVHuxd3ShTgVyRats5ImrrkHS7H4BFn12JE49WVR
+   qV+GHIW0YUl9LjObFSDIJbGwvP5fQLR3jLhbrLvsPumMJ45/C8o7C4Z+G
+   EmuAXT93+pF/ylXaqh1tTUjDXg3cXLtW+mqOXcAceZADKuZI+h34IJNXH
+   X/KPTkeS04RO3tyJ8A63jQz9g0TJqqohYsml3BArlY1gGxI3/H6f/2SKN
+   +oAq3WVAsYCjKAR1CNetWiFI9jUo4dvp8WuYcXGwYa5tW/paI7HH9a/4Z
+   hYHV2vHnBpqr5U8IgGkdTUBBICM/+zSxKstCT3wlm0tYCRRdlVAIzdSGN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22678477"
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="22678477"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 14:41:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
+   d="scan'208";a="12522193"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa007.jf.intel.com with ESMTP; 13 Mar 2024 14:41:02 -0700
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Terrence Xu <terrence.xu@intel.com>
+Subject: [PATCH] dmaengine: idxd: Fix oops during rmmod on single-CPU platforms
+Date: Wed, 13 Mar 2024 14:40:31 -0700
+Message-Id: <20240313214031.1658045-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pJoU3O.5n/8y8gkNX+fwP/D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/pJoU3O.5n/8y8gkNX+fwP/D
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+During the removal of the idxd driver, registered offline callback is
+invoked as part of the clean up process. However, on systems with only
+one CPU online, no valid target is available to migrate the
+perf context, resulting in a kernel oops:
 
-Hi all,
+    BUG: unable to handle page fault for address: 000000000002a2b8
+    #PF: supervisor write access in kernel mode
+    #PF: error_code(0x0002) - not-present page
+    PGD 1470e1067 P4D 0 
+    Oops: 0002 [#1] PREEMPT SMP NOPTI
+    CPU: 0 PID: 20 Comm: cpuhp/0 Not tainted 6.8.0-rc6-dsa+ #57
+    Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.86B.2492.D03.2307181620 07/18/2023
+    RIP: 0010:mutex_lock+0x2e/0x50
+    ...
+    Call Trace:
+    <TASK>
+    __die+0x24/0x70
+    page_fault_oops+0x82/0x160
+    do_user_addr_fault+0x65/0x6b0
+    __pfx___rdmsr_safe_on_cpu+0x10/0x10
+    exc_page_fault+0x7d/0x170
+    asm_exc_page_fault+0x26/0x30
+    mutex_lock+0x2e/0x50
+    mutex_lock+0x1e/0x50
+    perf_pmu_migrate_context+0x87/0x1f0
+    perf_event_cpu_offline+0x76/0x90 [idxd]
+    cpuhp_invoke_callback+0xa2/0x4f0
+    __pfx_perf_event_cpu_offline+0x10/0x10 [idxd]
+    cpuhp_thread_fun+0x98/0x150
+    smpboot_thread_fn+0x27/0x260
+    smpboot_thread_fn+0x1af/0x260
+    __pfx_smpboot_thread_fn+0x10/0x10
+    kthread+0x103/0x140
+    __pfx_kthread+0x10/0x10
+    ret_from_fork+0x31/0x50
+    __pfx_kthread+0x10/0x10
+    ret_from_fork_asm+0x1b/0x30
+    <TASK>
 
-The following commit is also in Linus Torvalds' tree as a different commit
-(but the same patch):
+Fix the issue by preventing the migration of the perf context to an
+invalid target.
 
-  2da6b3c1317e ("Revert "dm: use queue_limits_set"")
+Fixes: 81dd4d4d6178 ("dmaengine: idxd: Add IDXD performance monitor support")
+Reported-by: Terrence Xu <terrence.xu@intel.com>
+Tested-by: Terrence Xu <terrence.xu@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ drivers/dma/idxd/perfmon.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-This is commit
+diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
+index fdda6d604262..5e94247e1ea7 100644
+--- a/drivers/dma/idxd/perfmon.c
++++ b/drivers/dma/idxd/perfmon.c
+@@ -528,14 +528,11 @@ static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
+ 		return 0;
+ 
+ 	target = cpumask_any_but(cpu_online_mask, cpu);
+-
+ 	/* migrate events if there is a valid target */
+-	if (target < nr_cpu_ids)
++	if (target < nr_cpu_ids) {
+ 		cpumask_set_cpu(target, &perfmon_dsa_cpu_mask);
+-	else
+-		target = -1;
+-
+-	perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
++		perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.37.1
 
-  bff4b74625fe ("Revert "dm: use queue_limits_set"")
-
-in Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pJoU3O.5n/8y8gkNX+fwP/D
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXyHWIACgkQAVBC80lX
-0GxB9AgAlXOG0hFLt94qOV3Bk3GvL5y95/zN0VKxRnyAPwgJkSI2i/LAPe7osIu1
-JWOsM0a7ALIhnmrKuYeyy+/uW2mzX0UTTXW4QWrEtv2sOTfdYC7HL68AG7nNMloS
-P9axZWrNvoSdAU16Q2H61LOK9HoRhGPnSpcy54iAW+Q+zW7PQ5HZUNQiTBrlZP87
-7nsiv5OGHZNaxapkqtYA9H9i3Lr64jHoN6zg852/U2hmyfOKZFzFE22zivFgkQwg
-IL7dHccYvq2ZLEPJvhFTZECtJAlqSiAhS+T1O5IEJihbsaYjdpEtV7JsJd7qcBwC
-AT596DyRI8o3GuhE963MLsjnQ4F3GQ==
-=kuwA
------END PGP SIGNATURE-----
-
---Sig_/pJoU3O.5n/8y8gkNX+fwP/D--
