@@ -1,68 +1,82 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301F679DD;
-	Wed, 13 Mar 2024 19:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F6C1A38D7;
+	Wed, 13 Mar 2024 19:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710359085; cv=none; b=jJwawDDydHcStaEIatBrW6yyamGHb2TeNjaN7BuD51JTxB6iwOX1b4DZNg2/nlranDRHlKIDnhex6Y8Wm9ofv/26fD4mD+1mawwdBxOcIIinNCkQimwthz6g1abyvBkGzuw+Sl55R61LraYk/FS9G3bczBedTrbwJzGLP8UKsT0=
+	t=1710359224; cv=none; b=VtMX0KLNl7lATve152gg6cuQ11NeLl3EAaNpvINuvKKm+ZpikKLZTuMWvNGYysHL9CluqFNZZIL5X3xKl/Ij3kPbdtFgR97u67ytD+mPSonBtgsKukYfrnQPWzhNgfpYGWmZlDorNM2ZKi7Uii5rScvgkUXe/95rzfs4C7YrjRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710359085; c=relaxed/simple;
-	bh=xfzrj84MmcdTlfzKc7G9HIN3Vlh4qU4DUvE050cAj9Y=;
+	s=arc-20240116; t=1710359224; c=relaxed/simple;
+	bh=8nx1MMxE37CMP/FBmCmmcRTdwd9+RGwykYBsdXB2gIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjgFL9AxI7GGTzK8OW3RhvKGuIK9tAGwcYInGPOMjlUB/Ixz8sDLaTahlB+ian2uUCiQ7RJkA962tAh5BPoEJ1SR7zAQG+8Pw4Bl7sRGp4FOc93mx1OPe4cyMII3iq2DqDOu2kCkI/5+7UKV3dkO+lf/3t4/Frq6vIjLJIDFz2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1rkUWl-0002Gm-Th; Wed, 13 Mar 2024 20:44:39 +0100
-Date: Wed, 13 Mar 2024 20:44:39 +0100
-From: Florian Westphal <fw@strlen.de>
-To: Linus =?iso-8859-15?Q?L=FCssing?= <linus.luessing@c0d3.blue>
-Cc: Simon Horman <horms@kernel.org>, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Dietmar Maurer <dietmar@proxmox.com>,
-	Thomas Lamprecht <t.lamprecht@proxmox.com>,
-	Wolfgang Bumiller <w.bumiller@proxmox.com>,
-	Alexandre Derumier <aderumier@odiso.com>
-Subject: Re: [PATCH net] netfilter: conntrack: fix ct-state for ICMPv6
- Multicast Router Discovery
-Message-ID: <20240313194439.GA7400@breakpoint.cc>
-References: <20240306141805.17679-1-linus.luessing@c0d3.blue>
- <20240307101254.GL281974@kernel.org>
- <ZfIBQbPeP8SYc3jf@sellars>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bpfje1EiVaYcn1gw44aMVYO83EtHqXrQm2lXuE5yoyQUpOtGHrgcz97r4xTctpFb1EXBq+MAtAg+2E1A87Vzcj+t399xaj7KfA95stRrRDQOmY9YXl7bFxCBbUBggiGulkF6ehur1glV2Df4dmOk6ABsMoN1auHLOdGMnpTNokY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bepm2M7I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bepm2M7I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF186C433C7;
+	Wed, 13 Mar 2024 19:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710359224;
+	bh=8nx1MMxE37CMP/FBmCmmcRTdwd9+RGwykYBsdXB2gIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bepm2M7IEKVi2GgFwZHE4gWXbjwMXf8NGPcUV1rXvU8Hxh7tQSSf/wULrx/PXblx9
+	 fiLlfRtLzszwgwAt93v6d7hbJRlLCZ+bBwnuiECxxQbfJUcG+kghIFVHA8z/8WmLf4
+	 7CCZ1UAB0+0RGHbyKvpFVLlZuNczOYJ0YrfsbC+t2uTNpwibs1zUKgK7A7k9Hq5Lcj
+	 QHEpJhZJOLVbomZ2lYQ7xdqahPjuf9gxsqfcC+0l9LTrDg+WTgWnLsnQEWZ57OK83O
+	 so+cgsUq18Wktog7t2MX75UVkcRaQ3s/8iN9sZluzkJ8AcVQmTmH+ulTDiR9DG/B70
+	 9mS01ZFShn4Dw==
+Date: Wed, 13 Mar 2024 20:46:59 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
+	wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, quic_vdadhani@quicinc.com, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+Message-ID: <lnilroeg5c32fpqu2reg3s37qbymd37xnrrwcx4zw3bcc5lfe2@zd43lndyj657>
+References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
+ <a5oiihch2yqsosq337hogqzd3r4ldgfrzub4m6kofheh2k3qjv@wxageydv4q37>
+ <0971ac51-f823-4338-ba95-3ceced9d2a1c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZfIBQbPeP8SYc3jf@sellars>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0971ac51-f823-4338-ba95-3ceced9d2a1c@quicinc.com>
 
-Linus Lüssing <linus.luessing@c0d3.blue> wrote:
-> Also this related fix introduced in v2.6.29 should hint to the
-> age of this issue:
-> 
->   3f9007135c1d netfilter: nf_conntrack_ipv6: don't track ICMPv6 negotiation message
-> 
-> Which only picked/fixed a few ICMPv6 types but not ICMPv6 MRD
-> though.
-> 
-> tl;dr: for me this would be ok, if it were ok for others, too, that I
-> couldn't fully bisect to it in practice... :
-> 
-> Fixes: 9fb9cbb1082d ("[NETFILTER]: Add nf_conntrack subsystem.")
+Hi Mukesh,
 
-Thats fine, its clear that this is isn't a regression this way.
+> > > +	status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
+> > 
+> > This fails here:
+> > 
+> > drivers/i2c/busses/i2c-qcom-geni.c: In function 'i2c_gpi_cb_result':
+> > drivers/i2c/busses/i2c-qcom-geni.c:493:18: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+> >    493 |         status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
+> >        |                  ^~~~~~~~~
+> > cc1: all warnings being treated as errors
+> > 
+> > I will remove this patch from the i2c/i2c-host and we will need
+> > to wait for the next merge window to get this through.
+> > 
+> > Please submit v4 with the Cc list recommended by Wolfram.
+> > Submitted V4 patch. Let me wait for the dmaengine maintainers to sig off
+> too. Sorry for the trouble.
+
+Please, don't be sorry... when something goes wrong it's a shared
+responsibility.
+
+But fortunately nothing went really wrong here because Stephen
+cought it in time :-)
+
+I missed this failure because in the testing config the qcom-geni
+was missing.
+
+Thanks for the prompt fix!
+
+Andi
