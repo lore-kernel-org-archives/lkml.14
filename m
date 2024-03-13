@@ -1,48 +1,33 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EFE604C5;
-	Wed, 13 Mar 2024 19:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A1C60869;
+	Wed, 13 Mar 2024 19:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357130; cv=none; b=rGOhxDibwM3HSs3gpvuR6m/rLgOv/yeJagRUV/iFNhMLD1mvjGGPp+L7msqVf8wr4kwFsjicDoj7Fi032tYIKJbO3VSL5j4SH1/CWYgr2YIKCdDUCzM0wkI3oaFHcXuMJp+YO4KPGymyLL0hGcS5nNae1AOYOrKh/U+idfHtcno=
+	t=1710357141; cv=none; b=AETp4T5u5v4jqHON+dRaETeSyOz5fSjmWjKIVIx4ByIh2jY0J/OIYmoF3xYo5/alfucxCXcZH0ukcWdUbFhddDprnIH99IcMmVNv0Tl15Sa8OIFIcFovfE9BIXjt0YJB0xSs3iDVts76cZxFMYBISCbX5+/tQ+r7leJ3Z0mkUuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357130; c=relaxed/simple;
-	bh=i1sWYvJRR67mPoxsHtNcMGdTsNgujrMd6hvVpbLYz74=;
+	s=arc-20240116; t=1710357141; c=relaxed/simple;
+	bh=hTfoqgr5I8nbMsecUcmRsIEjs7m0kEe+SvwfjmNPTL4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sff3nckbcLZ7YbWoOY7bNEYwYIjUFVUAIoxy/Jg8kXUDDpDNRChEO2Smno5cvxnmMdB0lwfv2h/AEmvhoHTqi6VYre7aaNepQjBuMp307z/pHJfgt7V07JfzoygnR8ATv5m8iUHraujz9Sy79IYDHwqhyiiNeSP3gnOUR0EA1nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=R15hv2mC; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	 In-Reply-To:Content-Type; b=o+c8kbjQDakpKI5AIFOUJYVIpg+KblPhfnRkS/zqacUmQxk3mPk6xXj3662cQJvZlsLAjs4aSriNLtCcB85VKM4u6+csgrjxRcF0BCOwR6aSSDS+zX01BI3FlZsu6Mbpu6SKDeg+1OlIZCBTeUQfsXvZXprOSoPtvthHXb5kFOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lMKDdus4; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="R15hv2mC"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Tw0W63ZzRz6ClSr9;
-	Wed, 13 Mar 2024 19:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1710357113; x=1712949114; bh=35L+R0W2D8tp7YUdieD0FUY/
-	PiWMGSyPa2r6p64YId4=; b=R15hv2mCgKMSf2HTayPe5hejHC4E5N8a4yM4M9YX
-	IqB/0xusf+mTSKDES3Me+Qqt0pQr27rGGsQwTTn2j6ikk643vmT9p90RgDufN+Jv
-	wvkShwKwsLO6eHYn+6ZJVrZOGsdJS7zok9Sp8Hl7DrqL2WhwtmZa7pznVWcy+72q
-	/9u7F9ba0WuCL302Fo5wB7JHlq3dC+hgi6JEHdGj2GGqXVIHA19TIXccNuJBWB1E
-	zJ6M71FDuWoy+5cBD64C5kl56EZ7qBsIijZ+YvJZSXatHaCXbpWMpYG3iHlpQ4EZ
-	3Qf7YUZS0mB49aNU9Di3vqqcP0wyvuOGHui//WTUvXwifA==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id SCYItGCkl88g; Wed, 13 Mar 2024 19:11:53 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Tw0Vt6PD8z6ClTNc;
-	Wed, 13 Mar 2024 19:11:50 +0000 (UTC)
-Message-ID: <2212ce5f-940c-48aa-966d-2b4fa4a5ad8c@acm.org>
-Date: Wed, 13 Mar 2024 12:11:48 -0700
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lMKDdus4"
+Received: from [192.168.1.104] (unknown [103.251.226.70])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA0EA720;
+	Wed, 13 Mar 2024 20:11:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710357115;
+	bh=hTfoqgr5I8nbMsecUcmRsIEjs7m0kEe+SvwfjmNPTL4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lMKDdus4yYsWv68nkNJjncIXF6yzNIPvugGvQPNeGzqqO5tAzVg5O5OWfhyLix7oi
+	 zVsnSroLgDnLIcXdN8M0bgW6IflBC/pjOoRQSA4RTsRgmY3fA9VR1aDnP9yUAEc7WS
+	 5EfNDHWrPAjoaf1/OJ98I33W6RMjpFk5GUE/tm9A=
+Message-ID: <99069f32-4bad-4cb9-aa03-4c06a596a248@ideasonboard.com>
+Date: Thu, 14 Mar 2024 00:42:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,52 +35,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] Rust block device driver API and null block
- driver
+Subject: Re: [PATCH] mipi-csis: Emit V4L2_EVENT_FRAME_SYNC events
+To: Stefan Klug <stefan.klug@ideasonboard.com>,
+ libcamera-devel@lists.libcamera.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Martin Kepplinger <martink@posteo.de>, Purism Kernel Team
+ <kernel@puri.sm>, Fabio Estevam <festevam@gmail.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Rui Miguel Silva <rmfrfs@gmail.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ NXP Linux Team <linux-imx@nxp.com>
+References: <20240313153058.189684-1-stefan.klug@ideasonboard.com>
 Content-Language: en-US
-To: Andreas Hindborg <nmi@metaspace.dk>, Boqun Feng <boqun.feng@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Keith Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>,
- Hannes Reinecke <hare@suse.de>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Andreas Hindborg <a.hindborg@samsung.com>,
- Niklas Cassel <Niklas.Cassel@wdc.com>, Greg KH <gregkh@linuxfoundation.org>,
- Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>,
- Chaitanya Kulkarni <chaitanyak@nvidia.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>,
- =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
- Joel Granados <j.granados@samsung.com>,
- "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Daniel Gomez <da.gomez@samsung.com>, open list
- <linux-kernel@vger.kernel.org>,
- "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
- "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
- "gost.dev@samsung.com" <gost.dev@samsung.com>
-References: <20240313110515.70088-1-nmi@metaspace.dk>
- <855a006d-5afc-4f70-90a9-ec94c0414d4f@acm.org>
- <ZfHu48NGktOx_uhG@boqun-archlinux> <87r0get0no.fsf@metaspace.dk>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <87r0get0no.fsf@metaspace.dk>
+From: Umang Jain <umang.jain@ideasonboard.com>
+In-Reply-To: <20240313153058.189684-1-stefan.klug@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Stefan,
 
-On 3/13/24 12:03, Andreas Hindborg wrote:
-> I think it is great that people are starting to realize that bringing
-> memory safety to other systems languages is a good idea.
+Thank you for the patch.
 
-Totally agree :-)
+On 13/03/24 9:00 pm, Stefan Klug wrote:
+> The Samsung CSIS Mipi receiver provides a start-of-frame interrupt and
+> a framecount register. As the CSI receiver is the hardware unit
+> that lies closest to the sensor, the frame counter is the best we can
+> get on these devices.
+> In case of the ISI available on the i.MX8 M Plus it is also the only
+> native start-of-frame signal available.
+>
+> This patch exposes the sof interrupt and the framecount as
+> V4L2_EVENT_FRAME_SYNC event on the subdevice.
+>
+> It was tested on a Debix-Som-A with a 6.8-rc4 kernel.
+>
+> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+> ---
+>   drivers/media/platform/nxp/imx-mipi-csis.c | 34 +++++++++++++++++++++-
+>   1 file changed, 33 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
+> index db8ff5f5c4d3..caeb1622f741 100644
+> --- a/drivers/media/platform/nxp/imx-mipi-csis.c
+> +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
+> @@ -30,6 +30,7 @@
+>   
+>   #include <media/v4l2-common.h>
+>   #include <media/v4l2-device.h>
+> +#include <media/v4l2-event.h>
+>   #include <media/v4l2-fwnode.h>
+>   #include <media/v4l2-mc.h>
+>   #include <media/v4l2-subdev.h>
+> @@ -742,6 +743,18 @@ static void mipi_csis_stop_stream(struct mipi_csis_device *csis)
+>   	mipi_csis_system_enable(csis, false);
+>   }
+>   
+> +static void mipi_csis_queue_event_sof(struct mipi_csis_device *csis)
+> +{
+> +	struct v4l2_event event = {
+> +		.type = V4L2_EVENT_FRAME_SYNC,
+> +	};
+> +
+> +	u32 frame = mipi_csis_read(csis, MIPI_CSIS_FRAME_COUNTER_CH(0));
 
-> But from one person blogging about it to things being ready for
-> production is a long journey.
-In case you wouldn't be aware of this, Herb Sutter is not a random 
-blogger - he is the chair of the ISO C++ standards committee since 2002.
+nit: variables declaration go at the start of function and then need to 
+be assigned.
 
-Thanks,
+rest is pointed already on the thread. Otherwise LGTM,
 
-Bart.
+Reviewed-by: Umang Jain <umang.jain@ideasonboard.com>
+
+
+
+> +
+> +	event.u.frame_sync.frame_sequence = frame;
+> +	v4l2_event_queue(csis->sd.devnode, &event);
+> +}
+> +
+>   static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+>   {
+>   	struct mipi_csis_device *csis = dev_id;
+> @@ -765,6 +778,10 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+>   				event->counter++;
+>   		}
+>   	}
+> +
+> +	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
+> +		mipi_csis_queue_event_sof(csis);
+> +
+>   	spin_unlock_irqrestore(&csis->slock, flags);
+>   
+>   	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
+> @@ -1154,8 +1171,23 @@ static int mipi_csis_log_status(struct v4l2_subdev *sd)
+>   	return 0;
+>   }
+>   
+> +static int mipi_csis_subscribe_event(struct v4l2_subdev *sd, struct v4l2_fh *fh,
+> +			       struct v4l2_event_subscription *sub)
+> +{
+> +	if (sub->type != V4L2_EVENT_FRAME_SYNC)
+> +		return -EINVAL;
+> +
+> +	/* V4L2_EVENT_FRAME_SYNC doesn't require an id, so zero should be set */
+> +	if (sub->id != 0)
+> +		return -EINVAL;
+> +
+> +	return v4l2_event_subscribe(fh, sub, 0, NULL);
+> +}
+> +
+>   static const struct v4l2_subdev_core_ops mipi_csis_core_ops = {
+>   	.log_status	= mipi_csis_log_status,
+> +	.subscribe_event =  mipi_csis_subscribe_event,
+> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+>   };
+>   
+>   static const struct v4l2_subdev_video_ops mipi_csis_video_ops = {
+> @@ -1358,7 +1390,7 @@ static int mipi_csis_subdev_init(struct mipi_csis_device *csis)
+>   	snprintf(sd->name, sizeof(sd->name), "csis-%s",
+>   		 dev_name(csis->dev));
+>   
+> -	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
+>   	sd->ctrl_handler = NULL;
+>   
+>   	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
 
