@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000876BB29;
-	Wed, 13 Mar 2024 17:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207116CDAB;
+	Wed, 13 Mar 2024 17:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349338; cv=none; b=erfASS2oc8qPbnA5oN78kdUZWghqdi4eXUVAPyIpxEn+zxkSaVuqflP/vZAnbfNLWk8F2ypcHxHPcTfRzcHrPsvOoKbYGwg6H4rFQ8oU6MbtIdEdx4owIVFMiEKYiS54yd8oZWeTOwqmGAV+M8EBIhftrXfNtlXXrssbPTiiQWw=
+	t=1710349342; cv=none; b=uZATRU/u95/ZgLU3L1q5eJ7fND05D6rD58Qb2ndw1kP9loRkIJHBNookgfK5ppPkHWzudbWZ1I7VMRuF7df/UBW2l/SR//9ep13HC8OneqzjreoGsLIg/GNJo7OH+P6RWJck8SEDjmBqvrNbwulODU1mE5hONGDjCSE330+AidM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349338; c=relaxed/simple;
-	bh=3OaViw3XKk9PqsP6UStqzkBBicExCX4ohEYGEQ5aKbY=;
+	s=arc-20240116; t=1710349342; c=relaxed/simple;
+	bh=cWQoZ/ixV3hVg2WNrslNYjgiVqIN2MaF5McaEFWifIA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CEgVDF/s296MV4DI5U8Vq3S0PBv8QEhu3H9S6EhLcJ4H1xLng9tBvhts1ONZeLlCd0H5VqE6jg/4c5EwDtmGeGpgq55iDjU9V457hbTqhEe3ccP5n35yAwqIJSEiVo7D+NkOWNxJQbADS5YQCr68Mufq72VdjtekpaVDcmZiGQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhudX03f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C/ouv7QEyHx2NdS323vDH0gvLzFRBfxIfQZtGp1whnA/p1OVpUOu+ukEyKk9mKyziVxBL2dKm55S0/TJTJ7qb9QYXmGLZH864i8b9+5pmQLnkk3JT8kmKbGrmUxv0F3PziIk6rOvnZ+wfXgR7vEh2sZkRh2PgAKNxUkykdX0mSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=An8PePCi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhudX03f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C669EC3277B;
-	Wed, 13 Mar 2024 17:02:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="An8PePCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6FDC433C7;
+	Wed, 13 Mar 2024 17:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349337;
-	bh=3OaViw3XKk9PqsP6UStqzkBBicExCX4ohEYGEQ5aKbY=;
+	s=k20201202; t=1710349342;
+	bh=cWQoZ/ixV3hVg2WNrslNYjgiVqIN2MaF5McaEFWifIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qhudX03fWp5/7cCQpWcjDxRluB0vmxpgP9OkRIyGJy7G7Q+E9iTiNieZyGfyxTszi
-	 eJDqSA0lWvG4rLJTbB7oYD3vb0cYERdTvyzpPrr7uw7uB/w72xbayTurjEcZ1C/nFF
-	 AD1zSiJZTkUNfN8JJmq31OdigtIv5nAE/BHNqWXyklmuCWDLI/Nn/Sq4zzYHqeArmH
-	 8tQ1bjnbF4vdId+5BawNhvuWp0WozyNO8SBH/D+F9GvePV0qEV65hQxX0AxfuDOuE5
-	 P9mnnHjl7eJLFVfAV1AagGdUx7ay3HzGwk1nshl3EHeCxvyHMXx03sAv3nAIT019DS
-	 LIMvdcJWT6uQQ==
+	b=An8PePCiYUDxqU5uPYOE3NhIY5rjqmfELr3uFLoOPjFSL9oN7Y1Oce3ppFarjoCns
+	 4olJ9pdRiNDbifb4QuumIepoqSf0YT0Z1QpBiBjLjNyvsVCLnh6Yc0k/oyOvMRIm4f
+	 6WubWxle5KOIVVRMoDVQBjxz6W/D2/m70E8pZd1Yf5K2OVs2OZCFg/TaW6VYS8QGPE
+	 e/RqZ1mttuwtP3lkArP2+Iyf8DRhboWglpQNdu56iM4vfLi6oajE7VNh3x8sK1KCkr
+	 3k1P0+E46+ITHfXBlLzORURR2XxaCS4xwKgwwMmFWRttnEWPXN4D88aDvwfeTGQUTE
+	 SNas8US++BQyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: John Efstathiades <john.efstathiades@pebblebay.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Pavel Vazharov <pavel@x3me.net>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Chandan Kumar Rout <chandanx.rout@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 02/51] lan78xx: Add missing return code checks
-Date: Wed, 13 Mar 2024 13:01:23 -0400
-Message-ID: <20240313170212.616443-3-sashal@kernel.org>
+Subject: [PATCH 5.4 06/51] ixgbe: {dis, en}able irqs in ixgbe_txrx_ring_{dis, en}able
+Date: Wed, 13 Mar 2024 13:01:27 -0400
+Message-ID: <20240313170212.616443-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170212.616443-1-sashal@kernel.org>
 References: <20240313170212.616443-1-sashal@kernel.org>
@@ -54,774 +57,136 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: John Efstathiades <john.efstathiades@pebblebay.com>
+From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
 
-[ Upstream commit 3415f6baaddb9b39d7112247ab39ef3c700f882e ]
+[ Upstream commit cbf996f52c4e658b3fb4349a869a62fd2d4c3c1c ]
 
-There are many places in the driver where the return code from a
-function call is captured but without a subsequent test of the
-return code and appropriate action taken.
+Currently routines that are supposed to toggle state of ring pair do not
+take care of associated interrupt with queue vector that these rings
+belong to. This causes funky issues such as dead interface due to irq
+misconfiguration, as per Pavel's report from Closes: tag.
 
-This patch adds the missing return code tests and action. In most
-cases the action is an early exit from the calling function.
+Add a function responsible for disabling single IRQ in EIMC register and
+call this as a very first thing when disabling ring pair during xsk_pool
+setup. For enable let's reuse ixgbe_irq_enable_queues(). Besides this,
+disable/enable NAPI as first/last thing when dealing with closing or
+opening ring pair that xsk_pool is being configured on.
 
-The function lan78xx_set_suspend() was also updated to make it
-consistent with lan78xx_suspend().
-
-Signed-off-by: John Efstathiades <john.efstathiades@pebblebay.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: 1eecc7ab82c4 ("net: lan78xx: fix runtime PM count underflow on link stop")
+Reported-by: Pavel Vazharov <pavel@x3me.net>
+Closes: https://lore.kernel.org/netdev/CAJEV1ijxNyPTwASJER1bcZzS9nMoZJqfR86nu_3jFFVXzZQ4NA@mail.gmail.com/
+Fixes: 024aa5800f32 ("ixgbe: added Rx/Tx ring disable/enable functions")
+Signed-off-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
+Tested-by: Chandan Kumar Rout <chandanx.rout@intel.com> (A Contingent Worker at Intel)
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 399 +++++++++++++++++++++++++++++++-------
- 1 file changed, 333 insertions(+), 66 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 67c5787d749d8..372fca3bfc9a2 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1165,7 +1165,7 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
- 	/* clear LAN78xx interrupt status */
- 	ret = lan78xx_write_reg(dev, INT_STS, INT_STS_PHY_INT_);
- 	if (unlikely(ret < 0))
--		return -EIO;
-+		return ret;
- 
- 	mutex_lock(&phydev->lock);
- 	phy_read_status(phydev);
-@@ -1178,11 +1178,11 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
- 		/* reset MAC */
- 		ret = lan78xx_read_reg(dev, MAC_CR, &buf);
- 		if (unlikely(ret < 0))
--			return -EIO;
-+			return ret;
- 		buf |= MAC_CR_RST_;
- 		ret = lan78xx_write_reg(dev, MAC_CR, buf);
- 		if (unlikely(ret < 0))
--			return -EIO;
-+			return ret;
- 
- 		del_timer(&dev->stat_monitor);
- 	} else if (link && !dev->link_on) {
-@@ -1194,18 +1194,30 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
- 			if (ecmd.base.speed == 1000) {
- 				/* disable U2 */
- 				ret = lan78xx_read_reg(dev, USB_CFG1, &buf);
-+				if (ret < 0)
-+					return ret;
- 				buf &= ~USB_CFG1_DEV_U2_INIT_EN_;
- 				ret = lan78xx_write_reg(dev, USB_CFG1, buf);
-+				if (ret < 0)
-+					return ret;
- 				/* enable U1 */
- 				ret = lan78xx_read_reg(dev, USB_CFG1, &buf);
-+				if (ret < 0)
-+					return ret;
- 				buf |= USB_CFG1_DEV_U1_INIT_EN_;
- 				ret = lan78xx_write_reg(dev, USB_CFG1, buf);
-+				if (ret < 0)
-+					return ret;
- 			} else {
- 				/* enable U1 & U2 */
- 				ret = lan78xx_read_reg(dev, USB_CFG1, &buf);
-+				if (ret < 0)
-+					return ret;
- 				buf |= USB_CFG1_DEV_U2_INIT_EN_;
- 				buf |= USB_CFG1_DEV_U1_INIT_EN_;
- 				ret = lan78xx_write_reg(dev, USB_CFG1, buf);
-+				if (ret < 0)
-+					return ret;
- 			}
- 		}
- 
-@@ -1223,6 +1235,8 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
- 
- 		ret = lan78xx_update_flowcontrol(dev, ecmd.base.duplex, ladv,
- 						 radv);
-+		if (ret < 0)
-+			return ret;
- 
- 		if (!timer_pending(&dev->stat_monitor)) {
- 			dev->delta = 1;
-@@ -1233,7 +1247,7 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
- 		tasklet_schedule(&dev->bh);
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- /* some work can't be done in tasklets, so we use keventd
-@@ -2434,23 +2448,33 @@ static void lan78xx_init_ltm(struct lan78xx_net *dev)
- static int lan78xx_reset(struct lan78xx_net *dev)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 805aa9f53fc1f..3a188576f4c88 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2938,8 +2938,8 @@ static void ixgbe_check_lsc(struct ixgbe_adapter *adapter)
+ static inline void ixgbe_irq_enable_queues(struct ixgbe_adapter *adapter,
+ 					   u64 qmask)
  {
- 	struct lan78xx_priv *pdata = (struct lan78xx_priv *)(dev->data[0]);
--	u32 buf;
--	int ret = 0;
- 	unsigned long timeout;
-+	int ret;
-+	u32 buf;
- 	u8 sig;
+-	u32 mask;
+ 	struct ixgbe_hw *hw = &adapter->hw;
++	u32 mask;
  
- 	ret = lan78xx_read_reg(dev, HW_CFG, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= HW_CFG_LRST_;
-+
- 	ret = lan78xx_write_reg(dev, HW_CFG, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	timeout = jiffies + HZ;
- 	do {
- 		mdelay(1);
- 		ret = lan78xx_read_reg(dev, HW_CFG, &buf);
-+		if (ret < 0)
-+			return ret;
-+
- 		if (time_after(jiffies, timeout)) {
- 			netdev_warn(dev->net,
- 				    "timeout on completion of LiteReset");
--			return -EIO;
-+			ret = -ETIMEDOUT;
-+			return ret;
- 		}
- 	} while (buf & HW_CFG_LRST_);
- 
-@@ -2458,13 +2482,22 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 
- 	/* save DEVID for later usage */
- 	ret = lan78xx_read_reg(dev, ID_REV, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	dev->chipid = (buf & ID_REV_CHIP_ID_MASK_) >> 16;
- 	dev->chiprev = buf & ID_REV_CHIP_REV_MASK_;
- 
- 	/* Respond to the IN token with a NAK */
- 	ret = lan78xx_read_reg(dev, USB_CFG0, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= USB_CFG_BIR_;
-+
- 	ret = lan78xx_write_reg(dev, USB_CFG0, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Init LTM */
- 	lan78xx_init_ltm(dev);
-@@ -2487,53 +2520,105 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 	}
- 
- 	ret = lan78xx_write_reg(dev, BURST_CAP, buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = lan78xx_write_reg(dev, BULK_IN_DLY, DEFAULT_BULK_IN_DELAY);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, HW_CFG, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= HW_CFG_MEF_;
-+
- 	ret = lan78xx_write_reg(dev, HW_CFG, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, USB_CFG0, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= USB_CFG_BCE_;
-+
- 	ret = lan78xx_write_reg(dev, USB_CFG0, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* set FIFO sizes */
- 	buf = (MAX_RX_FIFO_SIZE - 512) / 512;
-+
- 	ret = lan78xx_write_reg(dev, FCT_RX_FIFO_END, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	buf = (MAX_TX_FIFO_SIZE - 512) / 512;
-+
- 	ret = lan78xx_write_reg(dev, FCT_TX_FIFO_END, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_write_reg(dev, INT_STS, INT_STS_CLEAR_ALL_);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = lan78xx_write_reg(dev, FLOW, 0);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = lan78xx_write_reg(dev, FCT_FLOW, 0);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Don't need rfe_ctl_lock during initialisation */
- 	ret = lan78xx_read_reg(dev, RFE_CTL, &pdata->rfe_ctl);
-+	if (ret < 0)
-+		return ret;
-+
- 	pdata->rfe_ctl |= RFE_CTL_BCAST_EN_ | RFE_CTL_DA_PERFECT_;
-+
- 	ret = lan78xx_write_reg(dev, RFE_CTL, pdata->rfe_ctl);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Enable or disable checksum offload engines */
--	lan78xx_set_features(dev->net, dev->net->features);
-+	ret = lan78xx_set_features(dev->net, dev->net->features);
-+	if (ret < 0)
-+		return ret;
- 
- 	lan78xx_set_multicast(dev->net);
- 
- 	/* reset PHY */
- 	ret = lan78xx_read_reg(dev, PMT_CTL, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= PMT_CTL_PHY_RST_;
-+
- 	ret = lan78xx_write_reg(dev, PMT_CTL, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	timeout = jiffies + HZ;
- 	do {
- 		mdelay(1);
- 		ret = lan78xx_read_reg(dev, PMT_CTL, &buf);
-+		if (ret < 0)
-+			return ret;
-+
- 		if (time_after(jiffies, timeout)) {
- 			netdev_warn(dev->net, "timeout waiting for PHY Reset");
--			return -EIO;
-+			ret = -ETIMEDOUT;
-+			return ret;
- 		}
- 	} while ((buf & PMT_CTL_PHY_RST_) || !(buf & PMT_CTL_READY_));
- 
- 	ret = lan78xx_read_reg(dev, MAC_CR, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* LAN7801 only has RGMII mode */
- 	if (dev->chipid == ID_REV_CHIP_ID_7801_)
- 		buf &= ~MAC_CR_GMII_EN_;
-@@ -2548,25 +2633,53 @@ static int lan78xx_reset(struct lan78xx_net *dev)
- 		}
- 	}
- 	ret = lan78xx_write_reg(dev, MAC_CR, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= MAC_TX_TXEN_;
-+
- 	ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, FCT_TX_CTL, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= FCT_TX_CTL_EN_;
-+
- 	ret = lan78xx_write_reg(dev, FCT_TX_CTL, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_set_rx_max_frame_length(dev,
- 					      dev->net->mtu + VLAN_ETH_HLEN);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= MAC_RX_RXEN_;
-+
- 	ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, FCT_RX_CTL, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= FCT_RX_CTL_EN_;
-+
- 	ret = lan78xx_write_reg(dev, FCT_RX_CTL, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	return 0;
- }
-@@ -2604,7 +2717,7 @@ static int lan78xx_open(struct net_device *net)
- 
- 	ret = usb_autopm_get_interface(dev->intf);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	phy_start(net->phydev);
- 
-@@ -2632,7 +2745,6 @@ static int lan78xx_open(struct net_device *net)
- done:
- 	usb_autopm_put_interface(dev->intf);
- 
--out:
- 	return ret;
+ 	switch (hw->mac.type) {
+ 	case ixgbe_mac_82598EB:
+@@ -10528,6 +10528,44 @@ static void ixgbe_reset_rxr_stats(struct ixgbe_ring *rx_ring)
+ 	memset(&rx_ring->rx_stats, 0, sizeof(rx_ring->rx_stats));
  }
  
-@@ -3796,35 +3908,62 @@ static u16 lan78xx_wakeframe_crc16(const u8 *buf, int len)
- 
- static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- {
--	u32 buf;
--	int mask_index;
--	u16 crc;
--	u32 temp_wucsr;
--	u32 temp_pmt_ctl;
- 	const u8 ipv4_multicast[3] = { 0x01, 0x00, 0x5E };
- 	const u8 ipv6_multicast[3] = { 0x33, 0x33 };
- 	const u8 arp_type[2] = { 0x08, 0x06 };
-+	u32 temp_pmt_ctl;
-+	int mask_index;
-+	u32 temp_wucsr;
-+	u32 buf;
-+	u16 crc;
-+	int ret;
++/**
++ * ixgbe_irq_disable_single - Disable single IRQ vector
++ * @adapter: adapter structure
++ * @ring: ring index
++ **/
++static void ixgbe_irq_disable_single(struct ixgbe_adapter *adapter, u32 ring)
++{
++	struct ixgbe_hw *hw = &adapter->hw;
++	u64 qmask = BIT_ULL(ring);
++	u32 mask;
 +
-+	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+	if (ret < 0)
-+		return ret;
- 
--	lan78xx_read_reg(dev, MAC_TX, &buf);
- 	buf &= ~MAC_TX_TXEN_;
--	lan78xx_write_reg(dev, MAC_TX, buf);
--	lan78xx_read_reg(dev, MAC_RX, &buf);
-+
-+	ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf &= ~MAC_RX_RXEN_;
--	lan78xx_write_reg(dev, MAC_RX, buf);
- 
--	lan78xx_write_reg(dev, WUCSR, 0);
--	lan78xx_write_reg(dev, WUCSR2, 0);
--	lan78xx_write_reg(dev, WK_SRC, 0xFFF1FF1FUL);
-+	ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = lan78xx_write_reg(dev, WUCSR, 0);
-+	if (ret < 0)
-+		return ret;
-+	ret = lan78xx_write_reg(dev, WUCSR2, 0);
-+	if (ret < 0)
-+		return ret;
-+	ret = lan78xx_write_reg(dev, WK_SRC, 0xFFF1FF1FUL);
-+	if (ret < 0)
-+		return ret;
- 
- 	temp_wucsr = 0;
- 
- 	temp_pmt_ctl = 0;
--	lan78xx_read_reg(dev, PMT_CTL, &temp_pmt_ctl);
-+
-+	ret = lan78xx_read_reg(dev, PMT_CTL, &temp_pmt_ctl);
-+	if (ret < 0)
-+		return ret;
-+
- 	temp_pmt_ctl &= ~PMT_CTL_RES_CLR_WKP_EN_;
- 	temp_pmt_ctl |= PMT_CTL_RES_CLR_WKP_STS_;
- 
--	for (mask_index = 0; mask_index < NUM_OF_WUF_CFG; mask_index++)
--		lan78xx_write_reg(dev, WUF_CFG(mask_index), 0);
-+	for (mask_index = 0; mask_index < NUM_OF_WUF_CFG; mask_index++) {
-+		ret = lan78xx_write_reg(dev, WUF_CFG(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
++	switch (adapter->hw.mac.type) {
++	case ixgbe_mac_82598EB:
++		mask = qmask & IXGBE_EIMC_RTX_QUEUE;
++		IXGBE_WRITE_REG(&adapter->hw, IXGBE_EIMC, mask);
++		break;
++	case ixgbe_mac_82599EB:
++	case ixgbe_mac_X540:
++	case ixgbe_mac_X550:
++	case ixgbe_mac_X550EM_x:
++	case ixgbe_mac_x550em_a:
++		mask = (qmask & 0xFFFFFFFF);
++		if (mask)
++			IXGBE_WRITE_REG(hw, IXGBE_EIMS_EX(0), mask);
++		mask = (qmask >> 32);
++		if (mask)
++			IXGBE_WRITE_REG(hw, IXGBE_EIMS_EX(1), mask);
++		break;
++	default:
++		break;
 +	}
++	IXGBE_WRITE_FLUSH(&adapter->hw);
++	if (adapter->flags & IXGBE_FLAG_MSIX_ENABLED)
++		synchronize_irq(adapter->msix_entries[ring].vector);
++	else
++		synchronize_irq(adapter->pdev->irq);
++}
++
+ /**
+  * ixgbe_txrx_ring_disable - Disable Rx/Tx/XDP Tx rings
+  * @adapter: adapter structure
+@@ -10544,6 +10582,11 @@ void ixgbe_txrx_ring_disable(struct ixgbe_adapter *adapter, int ring)
+ 	tx_ring = adapter->tx_ring[ring];
+ 	xdp_ring = adapter->xdp_ring[ring];
  
- 	mask_index = 0;
- 	if (wol & WAKE_PHY) {
-@@ -3853,30 +3992,52 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
++	ixgbe_irq_disable_single(adapter, ring);
++
++	/* Rx/Tx/XDP Tx share the same napi context. */
++	napi_disable(&rx_ring->q_vector->napi);
++
+ 	ixgbe_disable_txr(adapter, tx_ring);
+ 	if (xdp_ring)
+ 		ixgbe_disable_txr(adapter, xdp_ring);
+@@ -10552,9 +10595,6 @@ void ixgbe_txrx_ring_disable(struct ixgbe_adapter *adapter, int ring)
+ 	if (xdp_ring)
+ 		synchronize_rcu();
  
- 		/* set WUF_CFG & WUF_MASK for IPv4 Multicast */
- 		crc = lan78xx_wakeframe_crc16(ipv4_multicast, 3);
--		lan78xx_write_reg(dev, WUF_CFG(mask_index),
--				  WUF_CFGX_EN_ |
--				  WUF_CFGX_TYPE_MCAST_ |
--				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
--				  (crc & WUF_CFGX_CRC16_MASK_));
+-	/* Rx/Tx/XDP Tx share the same napi context. */
+-	napi_disable(&rx_ring->q_vector->napi);
 -
--		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 7);
--		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		ret = lan78xx_write_reg(dev, WUF_CFG(mask_index),
-+					WUF_CFGX_EN_ |
-+					WUF_CFGX_TYPE_MCAST_ |
-+					(0 << WUF_CFGX_OFFSET_SHIFT_) |
-+					(crc & WUF_CFGX_CRC16_MASK_));
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = lan78xx_write_reg(dev, WUF_MASK0(mask_index), 7);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+
- 		mask_index++;
+ 	ixgbe_clean_tx_ring(tx_ring);
+ 	if (xdp_ring)
+ 		ixgbe_clean_tx_ring(xdp_ring);
+@@ -10582,9 +10622,6 @@ void ixgbe_txrx_ring_enable(struct ixgbe_adapter *adapter, int ring)
+ 	tx_ring = adapter->tx_ring[ring];
+ 	xdp_ring = adapter->xdp_ring[ring];
  
- 		/* for IPv6 Multicast */
- 		crc = lan78xx_wakeframe_crc16(ipv6_multicast, 2);
--		lan78xx_write_reg(dev, WUF_CFG(mask_index),
--				  WUF_CFGX_EN_ |
--				  WUF_CFGX_TYPE_MCAST_ |
--				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
--				  (crc & WUF_CFGX_CRC16_MASK_));
+-	/* Rx/Tx/XDP Tx share the same napi context. */
+-	napi_enable(&rx_ring->q_vector->napi);
 -
--		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 3);
--		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		ret = lan78xx_write_reg(dev, WUF_CFG(mask_index),
-+					WUF_CFGX_EN_ |
-+					WUF_CFGX_TYPE_MCAST_ |
-+					(0 << WUF_CFGX_OFFSET_SHIFT_) |
-+					(crc & WUF_CFGX_CRC16_MASK_));
-+		if (ret < 0)
-+			return ret;
+ 	ixgbe_configure_tx_ring(adapter, tx_ring);
+ 	if (xdp_ring)
+ 		ixgbe_configure_tx_ring(adapter, xdp_ring);
+@@ -10593,6 +10630,11 @@ void ixgbe_txrx_ring_enable(struct ixgbe_adapter *adapter, int ring)
+ 	clear_bit(__IXGBE_TX_DISABLED, &tx_ring->state);
+ 	if (xdp_ring)
+ 		clear_bit(__IXGBE_TX_DISABLED, &xdp_ring->state);
 +
-+		ret = lan78xx_write_reg(dev, WUF_MASK0(mask_index), 3);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+
- 		mask_index++;
- 
- 		temp_pmt_ctl |= PMT_CTL_WOL_EN_;
-@@ -3897,16 +4058,27 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- 		 * for packettype (offset 12,13) = ARP (0x0806)
- 		 */
- 		crc = lan78xx_wakeframe_crc16(arp_type, 2);
--		lan78xx_write_reg(dev, WUF_CFG(mask_index),
--				  WUF_CFGX_EN_ |
--				  WUF_CFGX_TYPE_ALL_ |
--				  (0 << WUF_CFGX_OFFSET_SHIFT_) |
--				  (crc & WUF_CFGX_CRC16_MASK_));
--
--		lan78xx_write_reg(dev, WUF_MASK0(mask_index), 0x3000);
--		lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
--		lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		ret = lan78xx_write_reg(dev, WUF_CFG(mask_index),
-+					WUF_CFGX_EN_ |
-+					WUF_CFGX_TYPE_ALL_ |
-+					(0 << WUF_CFGX_OFFSET_SHIFT_) |
-+					(crc & WUF_CFGX_CRC16_MASK_));
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = lan78xx_write_reg(dev, WUF_MASK0(mask_index), 0x3000);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK1(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK2(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+		ret = lan78xx_write_reg(dev, WUF_MASK3(mask_index), 0);
-+		if (ret < 0)
-+			return ret;
-+
- 		mask_index++;
- 
- 		temp_pmt_ctl |= PMT_CTL_WOL_EN_;
-@@ -3914,7 +4086,9 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- 		temp_pmt_ctl |= PMT_CTL_SUS_MODE_0_;
- 	}
- 
--	lan78xx_write_reg(dev, WUCSR, temp_wucsr);
-+	ret = lan78xx_write_reg(dev, WUCSR, temp_wucsr);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* when multiple WOL bits are set */
- 	if (hweight_long((unsigned long)wol) > 1) {
-@@ -3922,16 +4096,30 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- 		temp_pmt_ctl &= ~PMT_CTL_SUS_MODE_MASK_;
- 		temp_pmt_ctl |= PMT_CTL_SUS_MODE_0_;
- 	}
--	lan78xx_write_reg(dev, PMT_CTL, temp_pmt_ctl);
-+	ret = lan78xx_write_reg(dev, PMT_CTL, temp_pmt_ctl);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* clear WUPS */
--	lan78xx_read_reg(dev, PMT_CTL, &buf);
-+	ret = lan78xx_read_reg(dev, PMT_CTL, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= PMT_CTL_WUPS_MASK_;
--	lan78xx_write_reg(dev, PMT_CTL, buf);
-+
-+	ret = lan78xx_write_reg(dev, PMT_CTL, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	lan78xx_read_reg(dev, MAC_RX, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= MAC_RX_RXEN_;
-+
- 	lan78xx_write_reg(dev, MAC_RX, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	return 0;
- }
-@@ -3939,7 +4127,6 @@ static int lan78xx_set_suspend(struct lan78xx_net *dev, u32 wol)
- static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- {
- 	struct lan78xx_net *dev = usb_get_intfdata(intf);
--	struct lan78xx_priv *pdata = (struct lan78xx_priv *)(dev->data[0]);
- 	u32 buf;
- 	int ret;
- 	int event;
-@@ -3962,11 +4149,24 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 
- 		/* stop TX & RX */
- 		ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+		if (ret < 0)
-+			return ret;
-+
- 		buf &= ~MAC_TX_TXEN_;
-+
- 		ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+		if (ret < 0)
-+			return ret;
-+
- 		ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+		if (ret < 0)
-+			return ret;
-+
- 		buf &= ~MAC_RX_RXEN_;
-+
- 		ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+		if (ret < 0)
-+			return ret;
- 
- 		/* empty out the rx and queues */
- 		netif_device_detach(dev->net);
-@@ -3983,25 +4183,50 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 		if (PMSG_IS_AUTO(message)) {
- 			/* auto suspend (selective suspend) */
- 			ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+			if (ret < 0)
-+				return ret;
-+
- 			buf &= ~MAC_TX_TXEN_;
-+
- 			ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+			if (ret < 0)
-+				return ret;
-+
- 			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+			if (ret < 0)
-+				return ret;
-+
- 			buf &= ~MAC_RX_RXEN_;
-+
- 			ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			ret = lan78xx_write_reg(dev, WUCSR, 0);
-+			if (ret < 0)
-+				return ret;
- 			ret = lan78xx_write_reg(dev, WUCSR2, 0);
-+			if (ret < 0)
-+				return ret;
- 			ret = lan78xx_write_reg(dev, WK_SRC, 0xFFF1FF1FUL);
-+			if (ret < 0)
-+				return ret;
- 
- 			/* set goodframe wakeup */
- 			ret = lan78xx_read_reg(dev, WUCSR, &buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			buf |= WUCSR_RFE_WAKE_EN_;
- 			buf |= WUCSR_STORE_WAKE_;
- 
- 			ret = lan78xx_write_reg(dev, WUCSR, buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			ret = lan78xx_read_reg(dev, PMT_CTL, &buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			buf &= ~PMT_CTL_RES_CLR_WKP_EN_;
- 			buf |= PMT_CTL_RES_CLR_WKP_STS_;
-@@ -4012,18 +4237,36 @@ static int lan78xx_suspend(struct usb_interface *intf, pm_message_t message)
- 			buf |= PMT_CTL_SUS_MODE_3_;
- 
- 			ret = lan78xx_write_reg(dev, PMT_CTL, buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			ret = lan78xx_read_reg(dev, PMT_CTL, &buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			buf |= PMT_CTL_WUPS_MASK_;
- 
- 			ret = lan78xx_write_reg(dev, PMT_CTL, buf);
-+			if (ret < 0)
-+				return ret;
- 
- 			ret = lan78xx_read_reg(dev, MAC_RX, &buf);
-+			if (ret < 0)
-+				return ret;
-+
- 			buf |= MAC_RX_RXEN_;
-+
- 			ret = lan78xx_write_reg(dev, MAC_RX, buf);
-+			if (ret < 0)
-+				return ret;
- 		} else {
--			lan78xx_set_suspend(dev, pdata->wol);
-+			struct lan78xx_priv *pdata;
-+
-+			pdata = (struct lan78xx_priv *)(dev->data[0]);
-+
-+			ret = lan78xx_set_suspend(dev, pdata->wol);
-+			if (ret < 0)
-+				return ret;
- 		}
- 	}
- 
-@@ -4048,8 +4291,11 @@ static int lan78xx_resume(struct usb_interface *intf)
- 
- 	if (!--dev->suspend_count) {
- 		/* resume interrupt URBs */
--		if (dev->urb_intr && test_bit(EVENT_DEV_OPEN, &dev->flags))
--			usb_submit_urb(dev->urb_intr, GFP_NOIO);
-+		if (dev->urb_intr && test_bit(EVENT_DEV_OPEN, &dev->flags)) {
-+			ret = usb_submit_urb(dev->urb_intr, GFP_NOIO);
-+			if (ret < 0)
-+				return ret;
-+		}
- 
- 		spin_lock_irq(&dev->txq.lock);
- 		while ((res = usb_get_from_anchor(&dev->deferred))) {
-@@ -4076,13 +4322,21 @@ static int lan78xx_resume(struct usb_interface *intf)
- 	}
- 
- 	ret = lan78xx_write_reg(dev, WUCSR2, 0);
-+	if (ret < 0)
-+		return ret;
- 	ret = lan78xx_write_reg(dev, WUCSR, 0);
-+	if (ret < 0)
-+		return ret;
- 	ret = lan78xx_write_reg(dev, WK_SRC, 0xFFF1FF1FUL);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_write_reg(dev, WUCSR2, WUCSR2_NS_RCD_ |
- 					     WUCSR2_ARP_RCD_ |
- 					     WUCSR2_IPV6_TCPSYN_RCD_ |
- 					     WUCSR2_IPV4_TCPSYN_RCD_);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_write_reg(dev, WUCSR, WUCSR_EEE_TX_WAKE_ |
- 					    WUCSR_EEE_RX_WAKE_ |
-@@ -4091,10 +4345,18 @@ static int lan78xx_resume(struct usb_interface *intf)
- 					    WUCSR_WUFR_ |
- 					    WUCSR_MPR_ |
- 					    WUCSR_BCST_FR_);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = lan78xx_read_reg(dev, MAC_TX, &buf);
-+	if (ret < 0)
-+		return ret;
-+
- 	buf |= MAC_TX_TXEN_;
-+
- 	ret = lan78xx_write_reg(dev, MAC_TX, buf);
-+	if (ret < 0)
-+		return ret;
- 
- 	return 0;
- }
-@@ -4102,12 +4364,17 @@ static int lan78xx_resume(struct usb_interface *intf)
- static int lan78xx_reset_resume(struct usb_interface *intf)
- {
- 	struct lan78xx_net *dev = usb_get_intfdata(intf);
-+	int ret;
- 
--	lan78xx_reset(dev);
-+	ret = lan78xx_reset(dev);
-+	if (ret < 0)
-+		return ret;
- 
- 	phy_start(dev->net->phydev);
- 
--	return lan78xx_resume(intf);
-+	ret = lan78xx_resume(intf);
-+
-+	return ret;
++	/* Rx/Tx/XDP Tx share the same napi context. */
++	napi_enable(&rx_ring->q_vector->napi);
++	ixgbe_irq_enable_queues(adapter, BIT_ULL(ring));
++	IXGBE_WRITE_FLUSH(&adapter->hw);
  }
  
- static const struct usb_device_id products[] = {
+ /**
 -- 
 2.43.0
 
