@@ -1,178 +1,150 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE4947F59
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77B04502C;
+	Wed, 13 Mar 2024 15:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710343895; cv=none; b=nPSOSOL1U62Vxvx8zVoNMAzlcH+xnXfcnk2b09P+3Zpv9Z6VLTPEEmdWIvPF8Ipf97uoaOJAO64+z6eAWeqQAeapS59nXYW170JsbCUTd8juSrusjNMmhFFVTJFw2QRy2SZKYkAFIWGTr9kInBSPIJvnVsF/GH19xzIB1L6Lyz0=
+	t=1710343943; cv=none; b=d6md1cLSE0ovuQ0uuxJLcqOm3IeZunQ07WQ1lNF6n0Trc7lNVHvwvaIEsLBDvkgd9+aHjWO3nbrB7+UhpqWOqU/HSTfU4Mi88z+DIBUBE310Jje96tI81kUqIv1gr+vkTR3fO3DRhgNkvN18cPwkNSQW0CMr/ubp8KoTA84GFxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710343895; c=relaxed/simple;
-	bh=Zq4RfZOjcqNtcLFUzAg0QuQxZvQrvC1IKPOXZvtCEr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CdGlPWUiRIyMbQ5T8Rpkt+m0BlgvuvmVauLOtr658Wmb4rdC6GhJd/QPhMqP3Rn43Ojez1fkJHrpMtTMKepo//p6OLjLyl6TwU20cBSM9xQSMZ2CmF648w7joaDBOwkx/m1Nb6U7CSuOz1cqTwBf6OBtKAr6QP4aAw/KXKwYLj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nHy1XTA7; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710343943; c=relaxed/simple;
+	bh=RYj/hTGFeOICAffBo+IOFSfUokMceJPXN3Xwefp5Ee4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BvdNqa07PRo2CfUtOas0fvRiL7q4QShf7HRbOZvWVJAiU1Yfu/YxyEM0MUVjEoSDrjHDkamq2rENGHbhelQpb+G4udgke16zKyijbnmypo0zPVQj2GMdEPPnYYSeULzXjJszjtw+ZpZFX2j0Hrc4ZSZJRlSB6VcVGctrxsqaBL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vKEYO3rz; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nHy1XTA7"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so1180180276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 08:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710343891; x=1710948691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JtMw74U66kmsHyXAV7bBZ7SbbkNSfFBApfqkzQBmCrI=;
-        b=nHy1XTA7EB89TkqAKPt3CSMUwffHkk/CAuX5IYEt3/EzeN/XRhGq2DKnf7K6hxBuX2
-         lizjW6ABzbMxvs9EVRQPfIEdfnzXbICsxanCJ313DaPFFsn3XgjJXutzC0m8X+uGp4Z5
-         Om3PINc9nBM2T9TOBrh3Fdfv+4E3X3TozhN1tc8/oU8w+/Zy+NQckLE5J7e2sPXxNlyr
-         Yg6YbyXesZbqI/nCi6EKIOgO914R0yfPTAzB91Id3Q95jZ4U6SQbdb1pjfCT0GK05Dcl
-         tPLny3Iv8ZJxV34iyTvblGo8lJ5DISojziQxMAi9f+np2LqJCj/YFpKveTEQzzcE0BjG
-         1ivg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710343891; x=1710948691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JtMw74U66kmsHyXAV7bBZ7SbbkNSfFBApfqkzQBmCrI=;
-        b=dgp7tvVNRK1Eiyx9M0GfioCEUt2VUoBpo4vK/lf2yPE0x9x8Xszy/5IRhVHrIYWbzy
-         iCpLWtDEj60UUuRCRLR1PwSZHRjxTWXjnw8MJwSNiLbeZjdn2HpRwr7pmqxFNObFdM8H
-         i7Nre8Q1BZMJTccJ2X+XqQDmkayIiUfG1PLxKc/VyRoDFIT+sHaV2t4z5JDpKuE7cxOf
-         ZTjPWB8FEhnZPUo39uZumXttgSYdLQHrMOZ+fFgUzll5kvAqwIHbuhhWg+ZMDTk3EPp5
-         v8yMVaE8e+96ZSVnVS0Xk+GrvRQRJ/IeA507NGRg9VAs0JPSTB7khzH+affu8rzcNOvS
-         BLPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuqRAXhGDJdfisPaJ71YuKqRt/LCyn34t6TBer9uNoPltumustUVFfqwzoVy4A3PPzkVXraLAXCB0ippMNiXlCKCtsuCKwz9Un0GLw
-X-Gm-Message-State: AOJu0Yzfcr05jRseovlq1nRVj0rfkhb5k/wO6FTUx4ZAUOz+EUdOCOQk
-	MSYHZd3xcHvtSLI02XEdPI0HJ3Tcu9bCWPkRJo7i2wiUBhyL3R4rXJwDrI4+bR37AWkVJ7ywbBV
-	9Ehj4lQVITHyiWApxOXmioEqOV5Vo8DRD5n1W
-X-Google-Smtp-Source: AGHT+IFt/OYhWjwqlxyr/Zyxfa6nHqBBNGn1lVwocwLdvQz8oj2Fnp7dsALCjpYCUrb0E7Elvx8ovXgew43c6K/l7cs=
-X-Received: by 2002:a5b:706:0:b0:dcb:abbc:f597 with SMTP id
- g6-20020a5b0706000000b00dcbabbcf597mr2798485ybq.54.1710343891190; Wed, 13 Mar
- 2024 08:31:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vKEYO3rz"
+Received: from jasper.fritz.box (unknown [IPv6:2a00:6020:448c:6c00:9b07:31b5:38e1:e957])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BBF51A8F;
+	Wed, 13 Mar 2024 16:31:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1710343917;
+	bh=RYj/hTGFeOICAffBo+IOFSfUokMceJPXN3Xwefp5Ee4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vKEYO3rzSe33FG42cJPkl0ClUEYxkAfR9ZnW4wrdK56dAsnXCEpeOmIf5k6JImSk3
+	 TK06yhx3ScUjKFrsHZJbiFV6CVzHVTbE4018kKNoISnJ48nxMgojTL2BIqVuLZTQsn
+	 QTxPOhHeCmU29xv7PCtcW3CjuD7uSYnaol0JUHXg=
+From: Stefan Klug <stefan.klug@ideasonboard.com>
+To: libcamera-devel@lists.libcamera.org,
+	linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Stefan Klug <stefan.klug@ideasonboard.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH] mipi-csis: Emit V4L2_EVENT_FRAME_SYNC events
+Date: Wed, 13 Mar 2024 16:30:58 +0100
+Message-Id: <20240313153058.189684-1-stefan.klug@ideasonboard.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306182440.2003814-1-surenb@google.com> <20240306182440.2003814-21-surenb@google.com>
- <ZfHAcVwJ6w9b1x0Z@casper.infradead.org>
-In-Reply-To: <ZfHAcVwJ6w9b1x0Z@casper.infradead.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 13 Mar 2024 15:31:18 +0000
-Message-ID: <CAJuCfpFf2xrCA_Rq_-e5HsDMqeS87p0b28PkK+wgWco17mxyDQ@mail.gmail.com>
-Subject: Re: [PATCH v5 20/37] mm: fix non-compound multi-order memory
- accounting in __free_pages
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
-	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
-	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
-	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 13, 2024 at 3:04=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Wed, Mar 06, 2024 at 10:24:18AM -0800, Suren Baghdasaryan wrote:
-> > When a non-compound multi-order page is freed, it is possible that a
-> > speculative reference keeps the page pinned. In this case we free all
-> > pages except for the first page, which will be freed later by the last
-> > put_page(). However put_page() ignores the order of the page being free=
-d,
-> > treating it as a 0-order page. This creates a memory accounting imbalan=
-ce
-> > because the pages freed in __free_pages() do not have their own alloc_t=
-ag
-> > and their memory was accounted to the first page. To fix this the first
-> > page should adjust its allocation size counter when "tail" pages are fr=
-eed.
->
-> It's not "ignored".  It's not available!
->
-> Better wording:
->
-> However the page passed to put_page() is indisinguishable from an
-> order-0 page, so it cannot do the accounting, just as it cannot free
-> the subsequent pages.  Do the accounting here, where we free the pages.
->
-> (I'm sure further improvements are possible)
->
-> > +static inline void pgalloc_tag_sub_bytes(struct alloc_tag *tag, unsign=
-ed int order)
-> > +{
-> > +     if (mem_alloc_profiling_enabled() && tag)
-> > +             this_cpu_sub(tag->counters->bytes, PAGE_SIZE << order);
-> > +}
->
-> This is a terribly named function.  And it's not even good for what we
-> want to use it for.
->
-> static inline void pgalloc_tag_sub_pages(struct alloc_tag *tag, unsigned =
-int nr)
-> {
->         if (mem_alloc_profiling_enabled() && tag)
->                 this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
-> }
->
-> > +++ b/mm/page_alloc.c
-> > @@ -4697,12 +4697,21 @@ void __free_pages(struct page *page, unsigned i=
-nt order)
-> >  {
-> >       /* get PageHead before we drop reference */
-> >       int head =3D PageHead(page);
-> > +     struct alloc_tag *tag =3D pgalloc_tag_get(page);
-> >
-> >       if (put_page_testzero(page))
-> >               free_the_page(page, order);
-> >       else if (!head)
-> > -             while (order-- > 0)
-> > +             while (order-- > 0) {
-> >                       free_the_page(page + (1 << order), order);
-> > +                     /*
-> > +                      * non-compound multi-order page accounts all all=
-ocations
-> > +                      * to the first page (just like compound one), th=
-erefore
-> > +                      * we need to adjust the allocation size of the f=
-irst
-> > +                      * page as its order is ignored when put_page() f=
-rees it.
-> > +                      */
-> > +                     pgalloc_tag_sub_bytes(tag, order);
->
-> -       else if (!head
-> +       else if (!head) {
-> +               pgalloc_tag_sub_pages(1 << order - 1);
->                 while (order-- > 0)
->                         free_the_page(page + (1 << order), order);
-> +       }
->
-> It doesn't need a comment, it's obvious what you're doing.
+The Samsung CSIS Mipi receiver provides a start-of-frame interrupt and
+a framecount register. As the CSI receiver is the hardware unit
+that lies closest to the sensor, the frame counter is the best we can
+get on these devices.
+In case of the ISI available on the i.MX8 M Plus it is also the only
+native start-of-frame signal available.
 
-All suggestions seem fine to me. I'll adjust the next version accordingly.
-Thanks for reviewing and the feedback!
+This patch exposes the sof interrupt and the framecount as
+V4L2_EVENT_FRAME_SYNC event on the subdevice.
 
->
+It was tested on a Debix-Som-A with a 6.8-rc4 kernel.
+
+Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
+---
+ drivers/media/platform/nxp/imx-mipi-csis.c | 34 +++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
+index db8ff5f5c4d3..caeb1622f741 100644
+--- a/drivers/media/platform/nxp/imx-mipi-csis.c
++++ b/drivers/media/platform/nxp/imx-mipi-csis.c
+@@ -30,6 +30,7 @@
+ 
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-event.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-mc.h>
+ #include <media/v4l2-subdev.h>
+@@ -742,6 +743,18 @@ static void mipi_csis_stop_stream(struct mipi_csis_device *csis)
+ 	mipi_csis_system_enable(csis, false);
+ }
+ 
++static void mipi_csis_queue_event_sof(struct mipi_csis_device *csis)
++{
++	struct v4l2_event event = {
++		.type = V4L2_EVENT_FRAME_SYNC,
++	};
++
++	u32 frame = mipi_csis_read(csis, MIPI_CSIS_FRAME_COUNTER_CH(0));
++
++	event.u.frame_sync.frame_sequence = frame;
++	v4l2_event_queue(csis->sd.devnode, &event);
++}
++
+ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+ {
+ 	struct mipi_csis_device *csis = dev_id;
+@@ -765,6 +778,10 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+ 				event->counter++;
+ 		}
+ 	}
++
++	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
++		mipi_csis_queue_event_sof(csis);
++
+ 	spin_unlock_irqrestore(&csis->slock, flags);
+ 
+ 	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
+@@ -1154,8 +1171,23 @@ static int mipi_csis_log_status(struct v4l2_subdev *sd)
+ 	return 0;
+ }
+ 
++static int mipi_csis_subscribe_event(struct v4l2_subdev *sd, struct v4l2_fh *fh,
++			       struct v4l2_event_subscription *sub)
++{
++	if (sub->type != V4L2_EVENT_FRAME_SYNC)
++		return -EINVAL;
++
++	/* V4L2_EVENT_FRAME_SYNC doesn't require an id, so zero should be set */
++	if (sub->id != 0)
++		return -EINVAL;
++
++	return v4l2_event_subscribe(fh, sub, 0, NULL);
++}
++
+ static const struct v4l2_subdev_core_ops mipi_csis_core_ops = {
+ 	.log_status	= mipi_csis_log_status,
++	.subscribe_event =  mipi_csis_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ };
+ 
+ static const struct v4l2_subdev_video_ops mipi_csis_video_ops = {
+@@ -1358,7 +1390,7 @@ static int mipi_csis_subdev_init(struct mipi_csis_device *csis)
+ 	snprintf(sd->name, sizeof(sd->name), "csis-%s",
+ 		 dev_name(csis->dev));
+ 
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
+ 	sd->ctrl_handler = NULL;
+ 
+ 	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+-- 
+2.40.1
+
