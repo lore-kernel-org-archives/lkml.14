@@ -1,104 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from comms.puri.sm (comms.puri.sm [159.203.221.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E58641C7F
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B449C4120B;
+	Wed, 13 Mar 2024 14:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.203.221.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338645; cv=none; b=RkBucvSs2E5RaC0XyyXnG1VdRZnCJ99h1FQKBY18GyPE13loLRbhtGCixds6/3Te63IJaey+67gx1GxTH3yK1ZDylFS5/hCAifEQOzoVXYJMk6rs1m4+8Khd2QSb6igSUAJZXGdQ3+gjDjMbG1yKOUvuuRy46XUxLSmzjK3w8JM=
+	t=1710338735; cv=none; b=fIrrDtKjhbcxdVASwO40j4TAv4IFxXvmuvBywuRUzNSNuUk2yY4N8DGL3lBqowxWR3eftB2ZYASjj4nJVLxGYWLfBCu0/3pttbOiHI71vXTpAHCoSgZzdMOsQpLox0ndNSJAS259PedkLXoT+ruCQWlr8lsZTg+5dGtgC2m5b2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338645; c=relaxed/simple;
-	bh=c6F26WYWOWPHGngG2bLzrx8m4VbcPQ7QBfWC8CH32Uc=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=Y3jHho7JPCrVY4fepS0bqA1+xb2d4i3kAhqIrJkxI/cPYk3+Zya/FWWyV14K/ANiVFvIsrlt2GZ1sVBY5cd4PsKIxVWO2rAuNjrB594IPEYKAFifrm0IlOI/zKWah4orYyWOHJaiPBmUN3DEvmFp+Xh6WTOFtJ+U6Po6kN2leug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWJQupRI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710338735; c=relaxed/simple;
+	bh=8qtHRFqFZ2rbe52sUD4by7YDRxEdBcPf5IDzrs6Gjqk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cSjWXsMG+ZJLiVpMl+BnoSfZVlEiFGsOaecf5EpPaidZeCO9Em3kilnsLiGg4z4cW18Nx6DnU/Luv8QyaW8g1F1dUZJbRbIFuqocmiXj4CK2n/BGYNg1apho72Yk6o6vsJmDgdjz6vr5TG5+jbv5G05Cu8SPKgyqwvsrjHPFHKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=puri.sm; spf=pass smtp.mailfrom=puri.sm; dkim=pass (2048-bit key) header.d=puri.sm header.i=@puri.sm header.b=skwZd2/F; arc=none smtp.client-ip=159.203.221.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=puri.sm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=puri.sm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWJQupRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FD8C433C7;
-	Wed, 13 Mar 2024 14:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710338645;
-	bh=c6F26WYWOWPHGngG2bLzrx8m4VbcPQ7QBfWC8CH32Uc=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=TWJQupRIoMDLYy8Z56ID/kiUfI6+tt/S/oJpr7erwMaWPJ+GlbRvRDuV7jZ+vNmW8
-	 L84D1juJ/mh9/OBoyiDYlxWn9t7oAQdGo/jRyJ/oRm1l1zEXBxecSCpPYkg9MAJ+pU
-	 64NHCHsaoggzD/OW+aAClUurZ7GUlNxJVHQ1pn3aSbQVAz3YYVf38VFf6tYwMpBubo
-	 NNGz+uzf7S+1MnHqZ0RVmVducRmBkaHBxNG6P3kZ1Pbq6MMEsoqieSyPGFkvX9lAHl
-	 /5Hli3BRxYj1+dtAo2U5BZ9jTfqNZQ7IV+ojXqvGlwvkJG3fsChRR95RPReU9TN6kb
-	 p8/TfJKxXmutQ==
-Content-Type: multipart/signed;
- boundary=fd774a84601503390b4d60fed6349c6cc9ccc01530323bbd271b951b5256;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Wed, 13 Mar 2024 15:03:52 +0100
-Message-Id: <CZSOG0WG0FAJ.23WQ5CB6Q8RIZ@kernel.org>
-Subject: Re: [PATCH 2/2] mtd: core: Don't fail mtd_device_parse_register()
- if OTP is unsupported
-Cc: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger"
- <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>,
- <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Mika
- Westerberg" <mika.westerberg@linux.intel.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Aapo Vienamo" <aapo.vienamo@linux.intel.com>
-X-Mailer: aerc 0.16.0
-References: <20240307130418.3131898-1-aapo.vienamo@linux.intel.com>
- <20240307130418.3131898-3-aapo.vienamo@linux.intel.com>
- <CZQZXAB2GOCY.12YVJ6CRGG26B@kernel.org>
- <xeqscncwirfaz77mtpcvkueo5xto7vis5khr3uwclcx4sfx6eb@35j3grcqrzo2>
- <CZSIHWU6IYXB.2DUCUUYFTAB2X@kernel.org>
- <lxl3zzgq4kgbgxkya2c6zyagcnrcyp2lzewu553mkmgdlooeca@m2wyltn7qpog>
-In-Reply-To: <lxl3zzgq4kgbgxkya2c6zyagcnrcyp2lzewu553mkmgdlooeca@m2wyltn7qpog>
+	dkim=pass (2048-bit key) header.d=puri.sm header.i=@puri.sm header.b="skwZd2/F"
+Received: from localhost (localhost [127.0.0.1])
+	by comms.puri.sm (Postfix) with ESMTP id 4B155E7CE6;
+	Wed, 13 Mar 2024 06:56:12 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+	by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UKUs71YCXFd8; Wed, 13 Mar 2024 06:56:11 -0700 (PDT)
+From: Jonathon Hall <jonathon.hall@puri.sm>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=puri.sm; s=comms;
+	t=1710338171; bh=8qtHRFqFZ2rbe52sUD4by7YDRxEdBcPf5IDzrs6Gjqk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=skwZd2/FqDgucBW9TVZI7DDHLSeEqLuS6GX+OxZWnbxS94J7b5xXqbyf4dB2LCC7t
+	 rkPNwVVnSTzp+Z4/DZNVjs8R4PtJ1KvjJGSf3p/p4RaVfmINKTtatBrXSmzzWB/mf9
+	 x8lPunfhdCNq7U39Eb8Nu0oZxfUTI1RmlHVNpvMt3JkxM6awOnjzG4k7Rwkm6vdQEB
+	 7xuvk1SeePRNVBruhxrcSNvXFXTUsQRIAm3OviQ2DTyXCJfjz6LFUWg/v76egWXC5L
+	 2E0CRRgWGybYV8g/A3DA+bxoWgdhJlAogbAFjhOKvYLW9SLs3OT+msma+0x8Nymt8K
+	 tJgmp+ZDJRI5w==
+To: linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	jani.nikula@linux.intel.com,
+	joonas.lahtinen@linux.intel.com,
+	rodrigo.viv@intel.com,
+	tursulin@ursulin.net
+Cc: Jonathon Hall <jonathon.hall@puri.sm>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/i915: Do not match JSL in ehl_combo_pll_div_frac_wa_needed()
+Date: Wed, 13 Mar 2024 09:54:25 -0400
+Message-Id: <20240313135424.3731410-1-jonathon.hall@puri.sm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---fd774a84601503390b4d60fed6349c6cc9ccc01530323bbd271b951b5256
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Since commit 0c65dc062611 ("drm/i915/jsl: s/JSL/JASPERLAKE for
+platform/subplatform defines"), boot freezes on a Jasper Lake tablet
+(Librem 11), usually with graphical corruption on the eDP display,
+but sometimes just a black screen.  This commit was included in 6.6 and
+later.
 
-Hi,
+That commit was intended to refactor EHL and JSL macros, but the change
+to ehl_combo_pll_div_frac_wa_needed() started matching JSL incorrectly
+when it was only intended to match EHL.
 
-On Wed Mar 13, 2024 at 2:59 PM CET, Aapo Vienamo wrote:
-> On Wed, Mar 13, 2024 at 10:24:13AM +0100, Michael Walle wrote:
-> > On Mon Mar 11, 2024 at 5:20 PM CET, Aapo Vienamo wrote:
-> > > On Mon, Mar 11, 2024 at 03:38:17PM +0100, Michael Walle wrote:
-> > > > Also, you'll print an error message for EOPNOTSUPP, although that i=
-s
-> > > > not really an error. Is that intended?=20
-> > >
-> > > Well, when we hit this, the functionality of the SPI memory itself is
-> > > degraded in the sense that the OTP functionality is not available. Wh=
-at
-> > > would you suggest?
-> >=20
-> > But it's not really an error, I mean, we are ignoring that one on
-> > purpose now :) I'd just guard it with "if (ret !=3D -EOPNOTSUPP)".
->
-> To clarify, are you suggesting a modification like this to the code at
-> the end of mtd_otp_nvmem_add()?
->
-> err:
-> 	nvmem_unregister(...);
-> 	if (ret !=3D EOPNOTSUPP)
-> 		return dev_err_probe(...);
-> 	return 0;
+It replaced:
+	return ((IS_PLATFORM(i915, INTEL_ELKHARTLAKE) &&
+		 IS_JSL_EHL_DISPLAY_STEP(i915, STEP_B0, STEP_FOREVER)) ||
+with:
+	return (((IS_ELKHARTLAKE(i915) || IS_JASPERLAKE(i915)) &&
+		 IS_DISPLAY_STEP(i915, STEP_B0, STEP_FOREVER)) ||
 
-Yes, either this variant, then you don't need to fix the caller or
-return EOPNOTSUPP but just don't print the message.
+Remove IS_JASPERLAKE() to fix the regression.
 
--michael
+Signed-off-by: Jonathon Hall <jonathon.hall@puri.sm>
+Cc: stable@vger.kernel.org
+---
+ drivers/gpu/drm/i915/display/intel_dpll_mgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---fd774a84601503390b4d60fed6349c6cc9ccc01530323bbd271b951b5256
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/gpu/drm/i915/display/intel_dpll_mgr.c b/drivers/gpu/drm/i915/display/intel_dpll_mgr.c
+index ef57dad1a9cb..57a97880dcb3 100644
+--- a/drivers/gpu/drm/i915/display/intel_dpll_mgr.c
++++ b/drivers/gpu/drm/i915/display/intel_dpll_mgr.c
+@@ -2509,7 +2509,7 @@ static void icl_wrpll_params_populate(struct skl_wrpll_params *params,
+ static bool
+ ehl_combo_pll_div_frac_wa_needed(struct drm_i915_private *i915)
+ {
+-	return (((IS_ELKHARTLAKE(i915) || IS_JASPERLAKE(i915)) &&
++	return ((IS_ELKHARTLAKE(i915) &&
+ 		 IS_DISPLAY_STEP(i915, STEP_B0, STEP_FOREVER)) ||
+ 		 IS_TIGERLAKE(i915) || IS_ALDERLAKE_S(i915) || IS_ALDERLAKE_P(i915)) &&
+ 		 i915->display.dpll.ref_clks.nssc == 38400;
+-- 
+2.39.2
 
------BEGIN PGP SIGNATURE-----
-
-iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZfGySBIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQzcodo7VsRvuZrgEArJM6xLpOYhTGbcQdQa1SJArVlp1t5IKr
-KPBIGGXA9cUA/iy1eF1dAKCAhY7cOF1DcpEEl6KNC17kS+2BT82oVJ4E
-=KvfU
------END PGP SIGNATURE-----
-
---fd774a84601503390b4d60fed6349c6cc9ccc01530323bbd271b951b5256--
