@@ -1,131 +1,114 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76594CB41
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 20:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175951EB31
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 20:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710361226; cv=none; b=YGP5mReYaA3C1W5bt+ksGPPUcTmX4U8E7a+2CNsVmSH6wEH5b+husGVS34nFnj03uzeXZiqlK0FToednjbysSn8jFS4NeGb1ZVKeuD+Qj/cg+YJ1u2t30jS6NW0/EWFHADVRuijllP8LfLOjxA3ZxctZLpum8MufoVT6qNAahDM=
+	t=1710361284; cv=none; b=BP2Z4S/II4bFwT5Ft9U/ZU3U5YUZLETHnVuY3nFli6ltftH1KNSAEu6widJ1eBWbGD5wEKHNkvAtWRwGGO6nam8wzxXJH5wlE3yxpqFK+tJqko4rqLwqf9goBv/xK9/jxfFPS1qqmHnBN1iaPeqgC5h7v5yosR5/+Bt2GHuZ5y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710361226; c=relaxed/simple;
-	bh=yicI1TvwLS3WvDGVedkRR+0YnKxvIdePq8hFAiUTtog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rf4T46Y45RXraPnvFAXaCPKDG6YcntqH5DSL8JM5qyWhMb2PxtQ/w5M8vbop7AMKe5MXVGDvwQ7ABv3NPQLol+tvl3z6WrCvanBKwfmbMD9z3sTcHL31Y2t7RGy1LCBque1CqgDVFeO/xMBd+wBEbUHtaOOYaCxF8EM2rxqoLk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=P+jK4Qg/; arc=none smtp.client-ip=193.222.135.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1710361284; c=relaxed/simple;
+	bh=oOyEKIiGSmzjQiNOPdNB5XQw7YmMhvSzVrGoUKGXIyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qz3OLKpD4m4yQi2G0btSlLVp4qVQ6QbsfG29f/o1O+ZAPrRstREjjPkRh+qGzAAtzvUA3rJeWC2bypvvgZB3xby1DC5CLFeemrbqlCxv+n8Lv91dF+jd9kHi0v7s/0Qaw66KQRP8Kdvu1G5KwkXgB5BAXyNY1t6s+IPLOPOX2Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S9sFh701; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="P+jK4Qg/"
-Received: (wp-smtpd smtp.tlen.pl 21230 invoked from network); 13 Mar 2024 21:13:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1710360821; bh=KgsUQ64fl96OKdnVRR/iiX+dNRUS1gl2wpUhF+3+wXo=;
-          h=Subject:To:Cc:From;
-          b=P+jK4Qg/W+aKoilWz6Pv7EXvLiBXsL8ANj4gHQJ+LNnIyuzqPOYUDqkGfbdkeUh6d
-           5rVKougTNXZNGD/WwENwBP32p0a4VytXUdwLdA0TKT9AsoccfSR+UJgAhQ+k29QYyi
-           gBqsSDvFQqsHJbK9uRfIZCGsiajvdbrOUuLR05ZQ=
-Received: from aafi78.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.138.78])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <sashal@kernel.org>; 13 Mar 2024 21:13:41 +0100
-Message-ID: <73072bdd-590a-44b4-8e6d-34bd17073bb5@o2.pl>
-Date: Wed, 13 Mar 2024 21:13:37 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9sFh701"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6b6f86975so219673b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710361282; x=1710966082; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f5rIAfqpydh71BAQAHKKmEpmcOuXzR2MU+9NEW5K4wU=;
+        b=S9sFh701tTEToKngqt9HjaqMjyZqpsI0hOQeqRXFqTtZs1N4fO4vvMjQdDz5HK5Gck
+         xYptNSyU/3Q1WLm7aLhuHZU9S1tEM1q4W+r/CsAPAxuJ46Yx967ReSLqAnteyqnHc7oi
+         JJIIxCp7VF+ZkMIv/CkbYRMkJ9+7jiwmDomiGHzhRp6RZfb5Z5qoa5l6s/P9QXil6JI3
+         2FqVTxfYqvUm1N7kzh+HMHhkQIEuZmUtUDaeXcXT4VA2NlbMPs+eSJk7IYfNnIJ76KuV
+         Zm6bPLRlC3JXsxPp1imiO7khRfu/TXABpxkTtxQAL7lG49GJwi84dyK8QtLNL3vrNyyj
+         oQtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710361282; x=1710966082;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f5rIAfqpydh71BAQAHKKmEpmcOuXzR2MU+9NEW5K4wU=;
+        b=HlJMKYCbd43RjfH+PVSRKZ434UXj+Mnet/f73yl1YPg5Y0rGRv/zu1uUw4SSHeYZzf
+         2HBauDngqd6oeTxa9PPAruiQxXCKP0VZn3lHqUZZey8A8NZP1wnq30b5JyOFdOijoaLI
+         SXwBazp1v9OANg2aaoDc5nk8f6jBoUHeRziG3O5noYw7MdjxK3aPmD1pUfHT5HHVZMv8
+         /I0jCVt3dBKeLcJQy/XbCnvJalkxRKPViAwkxOUvwblLsJWxt89FOCId8pq4LXLnw+jA
+         XrvkIvzIwNas/Sm9IzE8eEv/tSQKZE8PO3OYBnuqHWME8WVIqHzNMZIXcDk7KjQ7yXcq
+         MIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlKZ6DYDGoz4fvR+5njFOD0l/B9U75g46YKkUG4l8ILxAq/c+jLEl7wC3ZzqjrWOxsSUR/x8sbVmxLiJpGbY8GhfYN6mrYUS5PIEux
+X-Gm-Message-State: AOJu0Yxl7xtFx4khvzdH/jvvfQopt+RvOjnrbRiNwqYi7TVQNaPdF6z/
+	3RExLkkSeqHPu+Fnr/qxX4ym+JjzqQyFSsIQv7ch2WsAXCtnpbVisrJ49F+B
+X-Google-Smtp-Source: AGHT+IGljKtYvJULDDiFD9o2RAlMWuep1s/RYPhxAJMMOwkC5meL3QklUabIwE9Z6dhjV2nkMeIKhA==
+X-Received: by 2002:a05:6a00:8706:b0:6e6:bfb6:371 with SMTP id hj6-20020a056a00870600b006e6bfb60371mr1812208pfb.34.1710361282263;
+        Wed, 13 Mar 2024 13:21:22 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:2875])
+        by smtp.gmail.com with ESMTPSA id d193-20020a6336ca000000b005d553239b16sm46815pga.20.2024.03.13.13.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 13:21:21 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 13 Mar 2024 10:21:20 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Bug in sysfs_break_active_protection()
+Message-ID: <ZfIKwFSmw-ACj_jO@slm.duckdns.org>
+References: <CAEkJfYO6jRVC8Tfrd_R=cjO0hguhrV31fDPrLrNOOHocDkPoAA@mail.gmail.com>
+ <e9d710fc-eace-44de-b3cc-1117c3575ef7@rowland.harvard.edu>
+ <2024030428-graph-harmful-1597@gregkh>
+ <416a8311-c725-419a-8b22-74c80207347f@rowland.harvard.edu>
+ <9c2484f4-df62-4d23-97a2-55a160eba55f@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
-Content-Language: en-GB
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de
-References: <20240313163957.615276-1-sashal@kernel.org>
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <20240313163957.615276-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 0f2de46a27755d64749413778fc15654
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [sYNk]                               
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c2484f4-df62-4d23-97a2-55a160eba55f@rowland.harvard.edu>
 
-W dniu 13.03.2024 o 17:38, Sasha Levin pisze:
-> This is the start of the stable review cycle for the 6.1.82 release.
-> There are 71 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri Mar 15 04:39:56 PM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.81
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
->
-Hello,
+Sorry about late reply.
 
-Kernel hangs during early boot. No console messages, nothing in pstore.
+On Mon, Mar 04, 2024 at 02:17:27PM -0500, Alan Stern wrote:
+...
+> struct kernfs_node *sysfs_break_active_protection(struct kobject *kobj,
+> 						  const struct attribute *attr)
+> {
+> 	struct kernfs_node *kn;
+> 
+> 	kobject_get(kobj);
+> 	kn = kernfs_find_and_get(kobj->sd, attr->name);
+> 	if (kn)
+> 		kernfs_break_active_protection(kn);
+> 	return kn;
+> }
+...
+> If kn is NULL then the kobject_get(kobj) reference is never dropped.  
+> It looks like this could happen if two processes want to unregister the 
+> same kobject at the same time.
+> 
+> Shouldn't sysfs_break_active_protection() do this?
+> 
+> 	kobject_get(kobj);
+> 	kn = kernfs_find_and_get(kobj->sd, attr->name);
+> 	if (kn)
+> 		kernfs_break_active_protection(kn);
+> +	else
+> +		kobject_put(kobj);
+> 	return kn;
 
-Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU (Intel i3-7020U) and Ubuntu 20.04.
+Yeah, I think you're right. It's an obvious ref leak. Would you mind writing
+up a patch?
 
-This CPU is not affected by RFDS (at least according to the Kconfig message), so I have set
+Thank you.
 
-CONFIG_MITIGATION_RFDS=n
-
-in Kconfig. I do not have any updated microcode (if any will be provided at all for this CPU).
-
-Greetings,
-
-Mateusz
-
+-- 
+tejun
