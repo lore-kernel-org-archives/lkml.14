@@ -1,119 +1,186 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3641735894
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FAC35894;
+	Wed, 13 Mar 2024 13:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710337899; cv=none; b=BLL+kGOt/EmyakF1K9Ri9dpQndUyJBuv9uJbewmsTpTlaQDrFtonbE/uVPjfwKbD9e39oXv0aR6o9KNbKiY0KAMk+ovkLEfZKqn3cMbuN4FYTKCDlXI3JCz95/AkNkTJlIFPkRXwsAZfmUgpZuON2CYyIw0tZxOwft/rjHZEhlk=
+	t=1710337953; cv=none; b=NmM0KjRZWoX6F9Jc7YvCfLo60dOFDJn8zCK40jv3XbSS6Fvupk4lyjHqbhriVpyMj3XWvm1H5URw4OT+kuUGMToPPLpvfbMPSbvd25HrYYGC33ppCl2uBnKYSgKXRE2Oc7U87VIVplvMdudtK7VlTkG+mI3iL1Ltvuf8T6lpd/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710337899; c=relaxed/simple;
-	bh=XfodRi+g2MAHEbvaL6rJMGAilrpUe8XvghzMd8UayVI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HuY8psh92IpnALE9zWTPB0nVxpBrkIujfPq74D/FANW3NdZqzW0ZOUv/RWSp08xNUSPfJfhvq6w1M7z0G3sPtIZTst1ddNcXJa1XYy5u+579xSZ8NxBgzt2xwHUb2csr5OTKy8Vt6LEGzj06RDYzd1PDerpU/+n9WN4reftPN0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OgW22M8N; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IXlb1e7i; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1710337953; c=relaxed/simple;
+	bh=rHfsoLgtf5f5k5fyHTRd1g6+/B0CcY2M6+E3znEcWu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zuvt7qaCp/BJoq3m9Ai/zgHKKDocxK+Mqs4iQ5Hl0EXI1JQwh15yOo3wHcWGn1bbnMayUZeLPkAgdOOKrYGaN7oaJQN98ch3OclQTZUSaO8KoxKShFs9UiwHLz2NG1r/6kbk9BuH7mKR+KaGRSQPLwUeErzjJpK4QNrO2Ci0mM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Maisu8p+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IkYTQT/R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Maisu8p+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IkYTQT/R; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OgW22M8N";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IXlb1e7i"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 3788C13800C4;
-	Wed, 13 Mar 2024 09:51:36 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 13 Mar 2024 09:51:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1710337896;
-	 x=1710424296; bh=UF33/biTEk+qguK6UgC6G5DzkRWJpdJ3TPt8FCcXrto=; b=
-	OgW22M8NJ5eWiAaCNYCPbbSMKZhr3yN8z3+VjSy410ClcDv5i7z8CZsFaDgxqMn5
-	pgoV1h45tTvUOlsLK6zmDmWnmhbwUhH8SbtsZeazwUB8G+cDlST/vsqArttL47i5
-	trONPg+Tad2vw5CfbUWVr9GADXMHTmagizAsrQ1axinvklQHm4N4xwI6yMjNIo2n
-	ExZN+RNBI5BrlGPyjl20ep3Pl7oZXcAKn/rIsqD+LKaefX41v78jqPNseU3ElXn5
-	/aRSb1/sCw6hTrtK9WsvwFpJCmv9lemvfohH11UuKjTD13n45fg3spg8uyPmVdoC
-	2lX5AGTN0as5oG31/5c2HA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710337896; x=
-	1710424296; bh=UF33/biTEk+qguK6UgC6G5DzkRWJpdJ3TPt8FCcXrto=; b=I
-	Xlb1e7iaQ9sB1Gh28/aRIyf91fDvFf/FQU2hbkk1TWs/vZf9zgZBRlXH0giCrmwl
-	AR2wFmmdH5pSAOft9/cr+/dBRLbuHifafZY6IXWMkbPmDlk+6Xdb8P2Teqn6W5oo
-	/0r35KJjQAMJrH7gNwoEthHva3ciPgsEUx7LFBtRuUzQSRtkjpEmh1OINmZ0xkSW
-	NiEE+i5X+bLKaqRb8H5vc3gkzSFe9V0PubjJkun8C6bytlmW/RhQVH1Af6s4MO/C
-	02g/H7ynvqV4rDwnWXlLnymSQbXx5aivauR60MFg5JpVg1d+KVEi9vzlGvqy715o
-	7iS8tITxYSgvxUvZlOGvw==
-X-ME-Sender: <xms:Zq_xZQ6YcqwjbX8cpD0MWJwABF5FhoQCfz0XPLpIZTwgSDMUsEGw-w>
-    <xme:Zq_xZR5uRfpGHMkWAQJVg7LRVXt1T25X3Ko_sKnxI6xRV1Taw3y_05LtLN8ZSV3fQ
-    b0a-lrbFvfDRhqYw-0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjeehgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:Zq_xZfcuh2-c0LS5sXsSce9JHykwNIph3tccVuz6FZkoc6RzRgDJXg>
-    <xmx:Zq_xZVJVWLMuACqtXw0sbVnqj5o6tkC__Yac1SvW4jJChN8i4cQ5iQ>
-    <xmx:Zq_xZULEH7kh3YQyNbQ9-J13UCD_0iuxsp3AimTkgNUFq5YGDhfVYQ>
-    <xmx:Zq_xZWx4mAZXPvXa0uBBF6pyJaG5Q44Z17gyBwrv0TZftlpSRNF6BQ>
-    <xmx:aK_xZT_DS3-L1O6zcIQnJk9OmvxiXiV3CPLyEIhn9vUIgo6nXNUBIA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A6AD1B6008D; Wed, 13 Mar 2024 09:51:34 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Maisu8p+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IkYTQT/R";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Maisu8p+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IkYTQT/R"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 20D211F7D4;
+	Wed, 13 Mar 2024 13:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710337948; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFhbbMRYCJAgLqELLxWLqfsH3hbHEF1BH4hx+bhAMaM=;
+	b=Maisu8p+8VOLtYY3TrJkR6rfS5B+biJ+LLvd8LzgWVs36+MO0dIgBYONhiDpj9BO0wU7As
+	5WBYSK4zyJyrGYI8oVkWNfm29jvIUlPG3mv1SaFBB4ETsn/Low2VGH0rrgxV/8AONovAQG
+	lFNCUTxmHnFtwn6WdPREzN5h/FCJMs4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710337948;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFhbbMRYCJAgLqELLxWLqfsH3hbHEF1BH4hx+bhAMaM=;
+	b=IkYTQT/R3aiB5aD7xFbTOmZOArH9iK+B5x3LUVlKBuTsf4vF+4u7JaIoaAkSErym3uJ5X+
+	FaW3DBH6chjv6vDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710337948; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFhbbMRYCJAgLqELLxWLqfsH3hbHEF1BH4hx+bhAMaM=;
+	b=Maisu8p+8VOLtYY3TrJkR6rfS5B+biJ+LLvd8LzgWVs36+MO0dIgBYONhiDpj9BO0wU7As
+	5WBYSK4zyJyrGYI8oVkWNfm29jvIUlPG3mv1SaFBB4ETsn/Low2VGH0rrgxV/8AONovAQG
+	lFNCUTxmHnFtwn6WdPREzN5h/FCJMs4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710337948;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFhbbMRYCJAgLqELLxWLqfsH3hbHEF1BH4hx+bhAMaM=;
+	b=IkYTQT/R3aiB5aD7xFbTOmZOArH9iK+B5x3LUVlKBuTsf4vF+4u7JaIoaAkSErym3uJ5X+
+	FaW3DBH6chjv6vDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AAB161397F;
+	Wed, 13 Mar 2024 13:52:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id E5Z1KZuv8WWIVAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 13 Mar 2024 13:52:27 +0000
+Message-ID: <b4e5a48f-9a43-4f80-a3e7-75c04dba9a0f@suse.cz>
+Date: Wed, 13 Mar 2024 14:53:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1ee86ea9-fa91-4795-b5f8-2e57609ae65e@app.fastmail.com>
-In-Reply-To: <ecc5d070-a773-1180-b50c-59088b23695e@huawei.com>
-References: <20240313084707.3292300-1-arnd@kernel.org>
- <4f945f4a-ac29-3ef7-9e15-123962f2a0e9@huawei.com>
- <e0684202-6926-4bd1-86f6-2bb682524712@app.fastmail.com>
- <1a12c8ed-0cb5-5650-24a2-84b021c444c3@huawei.com>
- <b08aaae4-8c69-47eb-9658-5f3f5c8e4056@app.fastmail.com>
- <610231c3-c3ee-e543-1a8a-8e1098ee6a7c@huawei.com>
- <21cd0f32-c94b-4b2b-8fa6-ebe12756b0c4@app.fastmail.com>
- <ecc5d070-a773-1180-b50c-59088b23695e@huawei.com>
-Date: Wed, 13 Mar 2024 14:51:14 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Zhihao Cheng" <chengzhihao1@huawei.com>,
- "Arnd Bergmann" <arnd@kernel.org>, "Richard Weinberger" <richard@nod.at>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Daniel Golle" <daniel@makrotopia.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: ubi: avoid expensive do_div() on 32-bit machines
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/37] mm/slub: Mark slab_free_freelist_hook()
+ __always_inline
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org,
+ muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
+ pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
+ dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
+ keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com,
+ gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com,
+ penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
+ glider@google.com, elver@google.com, dvyukov@google.com,
+ shakeelb@google.com, songmuchun@bytedance.com, jbaron@akamai.com,
+ aliceryhl@google.com, rientjes@google.com, minchan@google.com,
+ kaleshsingh@google.com, kernel-team@android.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+References: <20240306182440.2003814-1-surenb@google.com>
+ <20240306182440.2003814-4-surenb@google.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240306182440.2003814-4-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Maisu8p+;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="IkYTQT/R"
+X-Spamd-Result: default: False [-1.77 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 URIBL_BLOCKED(0.00)[chromium.org:email,suse.cz:email,suse.cz:dkim,linux.dev:email,soleen.com:email];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 BAYES_HAM(-2.97)[99.88%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_GT_50(0.00)[76];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,nvidia.com,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: -1.77
+X-Rspamd-Queue-Id: 20D211F7D4
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Wed, Mar 13, 2024, at 14:43, Zhihao Cheng wrote:
-> =E5=9C=A8 2024/3/13 21:39, Arnd Bergmann =E5=86=99=E9=81=93:
->
->>> Thanks for explaination, which means that do_div is used for 64-bit
->>> division to solve the link failure caused by missed libgcc. Since
->>> parameter 'from' is u32, there is no need to invoke do_div on a 32-b=
-it
->>> platform, you just want to stop the wasting behavior on a 32-bit
->>> platform. Do I understand right?
->>=20
-> How do you find it? I mean there are so many types and many do_div=20
-> callers, do you have a static check tool?
+On 3/6/24 19:24, Suren Baghdasaryan wrote:
+> From: Kent Overstreet <kent.overstreet@linux.dev>
+> 
+> It seems we need to be more forceful with the compiler on this one.
+> This is done for performance reasons only.
+> 
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-I had a local fix with the same effect that I applied when
-the code originally broke, but had not gotten around to
-sending my fix.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-After b8a77b9a5f9c ("mtd: ubi: fix NVMEM over UBI volumes on
-32-bit systems") introduced a different workaround, I got the
-link error because I had removed the do_div().
-
-     Arnd
+> ---
+>  mm/slub.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 2ef88bbf56a3..0f3369f6188b 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -2121,9 +2121,9 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init)
+>  	return !kasan_slab_free(s, x, init);
+>  }
+>  
+> -static inline bool slab_free_freelist_hook(struct kmem_cache *s,
+> -					   void **head, void **tail,
+> -					   int *cnt)
+> +static __fastpath_inline
+> +bool slab_free_freelist_hook(struct kmem_cache *s, void **head, void **tail,
+> +			     int *cnt)
+>  {
+>  
+>  	void *object;
