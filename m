@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AB513774E;
-	Wed, 13 Mar 2024 16:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AFB13791A;
+	Wed, 13 Mar 2024 16:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348157; cv=none; b=GHk80/YxjAv3VRLqj6nNzd0LIPlJTfX2K3gQ+UcIqJdhVPMkMRI5A1n6jfP8oX52VassADza3hHqJKiy67YXcwE7r3DQ/HVQwRJW1McDPEAfsyzVaN15no6TBEl5d91WUKXREdL6BMTrMDJO0qxYP1lOS/y4RowaqiOBDu0M4p8=
+	t=1710348159; cv=none; b=N5cSpolQIPeG5q/BHBRGFa1pcc2Lp+4w2LmKT0Ti46FvhztbVed90X03kQ+TI9uLVbaBonE+sHjX2nbxfP/7KcT7xxmpV0/8IJNsjaONyj3f858eR7ItnrcrwFM6cY3rDu8qJg0cLE9k4gALqZWrMIpy5RhMD8Wm0TnB5T6PCoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348157; c=relaxed/simple;
-	bh=4FrnG+R/9EakgivZSNNtZb5j+1oO4df+JTS9AuAuvMY=;
+	s=arc-20240116; t=1710348159; c=relaxed/simple;
+	bh=fSzkZ1cPR6tfVQ5HUKnOSH0wQjQfYth45/o1vkdhC+U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SN6DMe1LRbvbpKqpWBsj/VX1ok7mLJfM4WmRRgTD2WbFZQpWRsL1w8p1lIdptJxlJra7dLFhiwiAtY46nvdkNwj7p1IAv2p/g7+qxMZCG/ydz6jMoF7uIAGrXftyMj9CsNklSCjDkb2WvIkFSMYoyxQqiv9yQfvbKMZBwhclgUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijlko+Zn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=pmt82xqwpcHKpnJPxEcj+NTvsfrunkEobS/Nl+q7ql5Qkm9R4JJ3fsSEjzPtDsfyGfX6z1D8gTkcna9b0fJhl0Ssgb3vEg9qkzfia4M+5EHTDVcU5eeu6U169WlPcxIfl8Tar76vIkxtl/fgyfypigETwcvhPn8rvwvuSgNatbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzQoALsT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijlko+Zn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70620C4160D;
-	Wed, 13 Mar 2024 16:42:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzQoALsT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F03C433F1;
+	Wed, 13 Mar 2024 16:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348157;
-	bh=4FrnG+R/9EakgivZSNNtZb5j+1oO4df+JTS9AuAuvMY=;
+	s=k20201202; t=1710348159;
+	bh=fSzkZ1cPR6tfVQ5HUKnOSH0wQjQfYth45/o1vkdhC+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ijlko+Zn8Oc0sPe4Isu8fhKfx6RqixVDkSeb4fnKvVypjIbM0nRjQgsobZCHscwAH
-	 NyVbDKH6M4UmQP37qxo9RhMd9Fgjkd4B3EAnEDdeUW0+W+crJTvQrs5LpoZfe5kpm4
-	 PsUQJJPcXOOnx5wsE2akN+9PVrKhyN0oggLpAm/c+2cPY6BvW9YEWZJqCYntshXMNV
-	 BpkMZKWwVqJs4ojzmg9H/v8UIyurbzXTI0mfmlLYEaAZ2tWrOUlw61CKpsTWMq6mo9
-	 szEcWliT1c7+XAZYuc8x5GQS39LKcSL2PN9rq7GbV8rCdUYmzC3wZxKSXbTDgn8xuA
-	 mSarRwCQuoXzg==
+	b=dzQoALsTuDfdzWB3sknNPHPbwRwlATWIPWjjqyI03UuUeugtu89y26iJsI9dkUfkH
+	 ThM2I2VLXUKxyIkpMOmsCDa1BxN6E4zJ0IjmJrbyOwMXFA3HrkZO8bcVDrRTA25xV4
+	 rhxNn1F/dpDKMj0HLqx9IaBt6r3SREXeTYK6GkE4J36vbFngHeZzmzPfgahf0OF5UU
+	 bEnbj2be1RfjoBDbOjpVW/FS9E9gAHgqYPWwRdKaGmgFtNB55xzxvjTE/2JARkx1mK
+	 yDqSMBa703RwBj9zt3gFyXaJx7In5NY5Axlh42x/N3V21dKjA6L9Fyom8g7LsIrhYU
+	 pO03LO9aolDKQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rand Deeb <rand.sec96@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	=?UTF-8?q?Tobias=20B=C3=B6hm?= <tobias@aibor.de>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 09/76] net: ice: Fix potential NULL pointer dereference in ice_bridge_setlink()
-Date: Wed, 13 Mar 2024 12:41:16 -0400
-Message-ID: <20240313164223.615640-10-sashal@kernel.org>
+Subject: [PATCH 5.15 11/76] cpumap: Zero-initialise xdp_rxq_info struct before running XDP program
+Date: Wed, 13 Mar 2024 12:41:18 -0400
+Message-ID: <20240313164223.615640-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
 References: <20240313164223.615640-1-sashal@kernel.org>
@@ -45,6 +45,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.152-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.15.y
@@ -55,37 +56,43 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rand Deeb <rand.sec96@gmail.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 06e456a05d669ca30b224b8ed962421770c1496c ]
+[ Upstream commit 2487007aa3b9fafbd2cb14068f49791ce1d7ede5 ]
 
-The function ice_bridge_setlink() may encounter a NULL pointer dereference
-if nlmsg_find_attr() returns NULL and br_spec is dereferenced subsequently
-in nla_for_each_nested(). To address this issue, add a check to ensure that
-br_spec is not NULL before proceeding with the nested attribute iteration.
+When running an XDP program that is attached to a cpumap entry, we don't
+initialise the xdp_rxq_info data structure being used in the xdp_buff
+that backs the XDP program invocation. Tobias noticed that this leads to
+random values being returned as the xdp_md->rx_queue_index value for XDP
+programs running in a cpumap.
 
-Fixes: b1edc14a3fbf ("ice: Implement ice_bridge_getlink and ice_bridge_setlink")
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+This means we're basically returning the contents of the uninitialised
+memory, which is bad. Fix this by zero-initialising the rxq data
+structure before running the XDP program.
+
+Fixes: 9216477449f3 ("bpf: cpumap: Add the possibility to attach an eBPF program to cpumap")
+Reported-by: Tobias Böhm <tobias@aibor.de>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/r/20240305213132.11955-1-toke@redhat.com
+Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/bpf/cpumap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index d4c29e2562a1c..3cc344d5228b6 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -6987,6 +6987,8 @@ ice_bridge_setlink(struct net_device *dev, struct nlmsghdr *nlh,
- 	pf_sw = pf->first_sw;
- 	/* find the attribute in the netlink message */
- 	br_spec = nlmsg_find_attr(nlh, sizeof(struct ifinfomsg), IFLA_AF_SPEC);
-+	if (!br_spec)
-+		return -EINVAL;
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index 8d1c4b3ee7604..f7de5b313cc5b 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -221,7 +221,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
+ 				    void **frames, int n,
+ 				    struct xdp_cpumap_stats *stats)
+ {
+-	struct xdp_rxq_info rxq;
++	struct xdp_rxq_info rxq = {};
+ 	struct xdp_buff xdp;
+ 	int i, nframes = 0;
  
- 	nla_for_each_nested(attr, br_spec, rem) {
- 		__u16 mode;
 -- 
 2.43.0
 
