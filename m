@@ -1,55 +1,57 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3FE433A0
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1833613FFB
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357120; cv=none; b=AaeSse9q7S8xBVxk4V7g8IXVGEkyQO+0adJExv/mZxcG6y5fQ7qIqnGeqYWlInLk4fEiULwMxTnbsFEcpTCOXeUbQtLhnc4cTtBeUo41o7j+20xJm8DuFji3yt2jjgAfn4+NKgC5WULvjUkM2B/KWtxaKdUuLLg/4Jhh4sekmGg=
+	t=1710357122; cv=none; b=cu0IL+bTR4tO/NgqwHjQ7ewLuI8we1yeYxMnLM+hwbfVCZeSGxb8kiWEulM/ftU+9gra3cGcd6ha3GrRaxTyJUSF5IZzDD7AWk3dV0Pw9NNGm+RaA7+LIH5yvP3K1pukkRPCyGO+eFBucpEkwGV1Gj3zv47KUsZ4jsWkDdRBPgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357120; c=relaxed/simple;
-	bh=xAZsAKH1ye0/03jXaOVbVO12tdFhb/vpC7941EDR4ew=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XTZXQxH2caUboQewpaSvY1eNJ5Eu968mCLLPOy7DJcBnjAW59k1EXZ0vNtWox9nxLeCk4x5daH5TAwUqHP7jhgw+DSPaEXHYrILZCI8x4ubZxBZKKtDfBb4ByQGH8doDuLFb9YOhbsrCY6d5siVADVPNmgnTuqMDPEf7cBdyfp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iXQcDHWH; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1710357122; c=relaxed/simple;
+	bh=xlZAvT3oSRLffXzzTPVHTuzaeuzyCQhhip1y6+yT3T0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ENQcXSN1qdSfhELtaePR2vzqgDSvFJdOdRktIpcrvmr14bZeRVdRlatIMNTxt9EB/2p+vUw7uujOP6c5AFL4cHnlIlVcf36KyBVLnumrWIOAwfsm669j+ELKYUN5ZLNuWbdHHdOhMSPhXzgszNCYjXdjaBe8SupnoBOSTHy13+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QwS524bA; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iXQcDHWH"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-413385f1a0dso1194805e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:11:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QwS524bA"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33e796cc90dso66702f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710357116; x=1710961916; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y/xj0UR1xz5ufUD59KROFNvtGcq3lEyrCKjuyydwu4E=;
-        b=iXQcDHWHsIg7eJVF/bJhsM4HKDbuyNm8bNieT3VGBlxxztrjDvqAZN7WyHGZYJlQuX
-         Z3lmhUMGMBVCed/IO1yptdN2a64zw7Ch+7mfBSbv7jM3X0c7Z1MjsXipT98fASX59Gjv
-         8VDyYElmzeO0DFRUMbtuD1Q5t2zTz+XA3bKSTbbcGwUNnYQJHQEdKXLhyCUzImqq1zIa
-         DLGu+nQBaTU7OCwb8L7aO7hecGumzGqrR2YyNgMQSw53SuFxCKK5nHYU1KaP61BWpIJX
-         TgDW0eKol+LbzwYOGeAz6/ijAwL9a1DRbXM8mBbWGGQN8Hu5eJY0dsmNz9EDGZfl4fb+
-         KB1w==
+        d=linaro.org; s=google; t=1710357117; x=1710961917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+Gq8f56qQF7inQ6M+LC43N65QB908sIMe3u6SShL4CU=;
+        b=QwS524bAn+gLdfDpPAMUZBiMgEipEfEj33+DRrLWRBjtL/iFB3DagMVCJ4gQvdpm/w
+         OERhE8PiujjpQfs6StypXpUR7lAddiLuSarfy5MEaf3fM0cJ4T+ZalBUVZ8eadfbyJ3S
+         e5tzZn/V6kYRBXzw0vULsT/wd8hvwbd2XuX+HyDYAGtR898TqJYYYDOH6tkFqrtsOzqG
+         sLliPel/Z0D7WzRwfPVLUEiJOQA+uj76rVMQLYF2tZA/uPkfr6Ji+EsWDrLwVscuyJUx
+         0+1JBPGK+vwBsKuLPXG0EWSvK+IfwGeTy51S7crYcyCyhf3YJjqIcBUgFkJ5kcDR037m
+         ppFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710357116; x=1710961916;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y/xj0UR1xz5ufUD59KROFNvtGcq3lEyrCKjuyydwu4E=;
-        b=Bg3EJNY95CI79vxI1V5jj+BrBnp2O5uwfvhWf52quLg7ALNiCB5d0G3BYW/dFzYmox
-         vxCINyejmHbEg4DJu8qK8MDNf5HbnFFHqPLVXzhbTNXrcL3b49t4J0bQ0klsspExRaO8
-         xwllOrjIvhp/lDGxwN/qYbPHw1vURRsPgywFnQqtFSdvjiuETSnQ3JjBtU7VZyIGZYpy
-         WtgVg2BKTDym0jGrQ8IGdadhDFFrMgu84vcQM1V8cWx5EIUOz2pSLCPG9tErNBwXviSJ
-         h1EMU4X28QGSIQ2vI+XLumAX65l+nP/PxKpYOHSjpP1KumbtjWcpmklKu3kUvozq+/U4
-         01Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKRXh3SNdC1kVnaT+ivporsAYiAlsW/GE3p73ezWi/4N2Z5STuhMNL1VAwm03f7HTgY4JWecXebIgsuEBvxXq/3BSipXC9GzMP0zZz
-X-Gm-Message-State: AOJu0YxZILRte4A4o+LptiU0z2uuZSE8cpG2hDyjhRdHAxsg8vZ4gB25
-	PbKytJvInXL7JHtnOvKATjmf8+NAZfoHilTGb++F7yF/iD3WLxIgRP7tMNZrSE8=
-X-Google-Smtp-Source: AGHT+IH2VT0d1ByDtOpBoLQo3BzOVY7nQo6ZUdI4WEGi/17EtI0Mk+fyuv0nHewFDS7fu99kUObjTw==
-X-Received: by 2002:a05:600c:4f0c:b0:413:1ad1:78e9 with SMTP id l12-20020a05600c4f0c00b004131ad178e9mr651714wmq.7.1710357115709;
-        Wed, 13 Mar 2024 12:11:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710357117; x=1710961917;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+Gq8f56qQF7inQ6M+LC43N65QB908sIMe3u6SShL4CU=;
+        b=FJgAG9AgCXIZlssP7paNVgfFoFvin8aMrbC9eVUFwKDGFDKdDX7H5x7IzkD91Zx9sF
+         m9ZeB4JCc9BwSHs9KZalRFZI1wm6J8QOy6m6OZyNGM+lzEDpIuWYdU/mmoGK50WnYsnQ
+         7xgU9QW3Ya6q4UJjwu6Kqkmbi40g9iJlIaMfrl9mePT8CZmhg5FBc0YWKcGLz5ahmlaT
+         4P/CrAjSvRQfh4HoiQBGDwImXmrkxD3fDJvU12gqZJn08SRL/0l92ROTQeQQ3kTlyTsf
+         PvjUCC3bxcu9/ggDDqz/fMDJ8ipx3z2WJ5CdieW9j+KT5nHPO3zHtUO0wOKsLHppCCai
+         P7yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTk6WCsW80vO3pBBMeofYwR/tLDLEQBLqLDY77L1Hs4uyl/VbQye8SZO9nwNB2NEBBlRGD56n4vA6pvNc0QevoYXiTOBGI5ISdkQ6b
+X-Gm-Message-State: AOJu0YyRigzpPLej2EY0HHDZXn5nHaiFhh5HB/ZxSrgaeqEb33AkK3mc
+	35gplCcprJd8XYPU5HtUkpzWRsjUMLezHo3fT4RLedRBF6a8Wk3AuTEuDB/5fXE=
+X-Google-Smtp-Source: AGHT+IHMllLxdRaZBf/lrlOMSjorl7Hp1BMgsl5yp7HaJo8pP+fvHbPMD7UndN35jKTHjIPr1a+Egw==
+X-Received: by 2002:adf:f305:0:b0:33e:7f5c:7a9c with SMTP id i5-20020adff305000000b0033e7f5c7a9cmr2456370wro.35.1710357117486;
+        Wed, 13 Mar 2024 12:11:57 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id a2-20020a05600c348200b00413ee7993f3sm990512wmq.40.2024.03.13.12.11.54
+        by smtp.gmail.com with ESMTPSA id a2-20020a05600c348200b00413ee7993f3sm990512wmq.40.2024.03.13.12.11.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 12:11:55 -0700 (PDT)
+        Wed, 13 Mar 2024 12:11:56 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -60,10 +62,12 @@ To: Rob Herring <robh@kernel.org>,
 	linux-samsung-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 1/2] ARM: dts: samsung: s5pv210: align onenand node name with bindings
-Date: Wed, 13 Mar 2024 20:11:47 +0100
-Message-Id: <20240313191148.21792-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 2/2] ARM: dts: samsung: s5pv210: correct onenand size-cells
+Date: Wed, 13 Mar 2024 20:11:48 +0100
+Message-Id: <20240313191148.21792-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240313191148.21792-1-krzysztof.kozlowski@linaro.org>
+References: <20240313191148.21792-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,9 +76,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bindings expect NAND controllers to match certain pattern:
+Children of NAND controllers have only chip select, so address without
+the size.  Correct size-cells as reported by dtbs_check:
 
-  s5pv210-fascinate4g.dtb: onenand@b0600000: $nodename:0: 'onenand@b0600000' does not match '^nand-controller(@.*)?'
+  s5pv210-galaxys.dtb: onenand@b0600000: #size-cells:0:0: 0 was expected
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
@@ -82,18 +87,18 @@ Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/samsung/s5pv210.dtsi b/arch/arm/boot/dts/samsung/s5pv210.dtsi
-index ed560c9a3aa1..23459430410f 100644
+index 23459430410f..9720573d84dc 100644
 --- a/arch/arm/boot/dts/samsung/s5pv210.dtsi
 +++ b/arch/arm/boot/dts/samsung/s5pv210.dtsi
-@@ -72,7 +72,7 @@ soc {
- 		#size-cells = <1>;
- 		ranges;
+@@ -82,7 +82,7 @@ onenand: nand-controller@b0600000 {
+ 			clocks = <&clocks CLK_NANDXL>, <&clocks DOUT_FLASH>;
+ 			clock-names = "bus", "onenand";
+ 			#address-cells = <1>;
+-			#size-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
  
--		onenand: onenand@b0600000 {
-+		onenand: nand-controller@b0600000 {
- 			compatible = "samsung,s5pv210-onenand";
- 			reg = <0xb0600000 0x2000>,
- 				<0xb0000000 0x20000>,
 -- 
 2.34.1
 
