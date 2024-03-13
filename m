@@ -1,144 +1,130 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A027F2260B
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 23:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DC92260B
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 23:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710373482; cv=none; b=mwf4Tye6zpD6/VmgWhrW0jLWSuj5fyCutMz6gOh7jd4Do5ltioeI6SkY7GhHBSC4pIm1LRy4cGYy2Mq7aA1/JXj6uAZEcGROVMj+MxzlqvWn3N60JUHy0cfh3f8FNUtNS8x0F9iHcWovMJSlDOj3ZyE5Iz2LyPPYH3isZb8Odhg=
+	t=1710373525; cv=none; b=p0kc/ABkD/Ui0yWl3NkHMcLok8lt4K84JrMXkfl5K8TmyExMKgZOHxb8r9cvAX+YDKijhqwAcfh3ZjBht67InLDO5nMhc5iDKrLGgv8MB1+AomdWDyvIxxFMP9vx9lDKWkAAOFc+GN01DAVaUyDkY0IBX+w6gNLYSr8lxUFkPXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710373482; c=relaxed/simple;
-	bh=HD34+N4HmuIBIUoDyYFlYqEAmxFkbtPrHj9GtqwLe3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6gISgvis4QOZ28OtMJH828nVKMOSJhHDw7K1mavPA6cdofxRdWNi3Fek92VRuQX9ZnpVO77m+p49oSSnLbYGtqey+yfhuSrTYhOcEA7OUNRhko/OkTGl1FZtVJ9NqueyHWQw5tqXw4BJyRRR4pErGIBR8fJQmFC+USP7WaJHNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B950LDTc; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710373525; c=relaxed/simple;
+	bh=LsBwd6LQWz93e63sSeME9mO0lntlFCjjQ3p83jw3hdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qp+vO29SAsqkTQ0w0h+FC7HxwSNSExe2ALfnXJri2sAMnOKrdKsPTg+u1+7ZI2ntN7k+HQlrsyoYiYSykyLeIgJTpyjMbAz1MTc3kvVuOG/PqV7jJhzP8tHLX616SXw4kGy0gEw4BxT4KshaOVaI8ptQSC8IxY8XgjHjhjugm78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G7+kmqZa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=URhlWJEy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T8GhfltE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3tYwZoGn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B950LDTc"
-Message-ID: <6da9dc9d-fad6-40f9-91d3-602f87397b47@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710373478;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G7+kmqZa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="URhlWJEy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T8GhfltE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3tYwZoGn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EE24D21C6C;
+	Wed, 13 Mar 2024 23:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710373522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MJIpyrb3PHRzKDP68+qCFyuGvH3roDNGt7412UBHY+c=;
-	b=B950LDTcgmmMuFK+GObDC0V29wtU0hoZPvbSOzgc1CLMnMcuZI0MtoxwnRDTGQOceS59vj
-	m2vD6+U7GGcXlqWM2fGP/KO6+0CZ+fPc0Cbarc2NDzp12oEaYhS5BzWDMde/d3nDqWvwEC
-	Hf8PpacFp90wzyjcTD5hzNB4t9xNrj0=
-Date: Wed, 13 Mar 2024 16:44:30 -0700
+	bh=3cJKNEamgKE8o2ZSAXqef3Ys0r2vec9y0IJ3iOWK2PI=;
+	b=G7+kmqZafck5XeVCeJlM2N7kdU0pP37YsQ1UVuNdtk6uuht5pwScJPPdy5K3OTbcKLxzKu
+	RXw04d0kZ3a50tnTNILDsp7LHLRqtLsZCGV+VGK6EZaTknDlgjMwFo5lq8IbCqQwkxkf2t
+	KcCa6+txLjxaV/mqv7ELcaWxbV7BNqw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710373522;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3cJKNEamgKE8o2ZSAXqef3Ys0r2vec9y0IJ3iOWK2PI=;
+	b=URhlWJEyQpyqs/lpXtMams/H/5e0i3ivOeFm3jJz/MM+ttLVJZEf6LgunVS/ijOVEYzAcT
+	BWckFA3qYyw6lyCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710373521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3cJKNEamgKE8o2ZSAXqef3Ys0r2vec9y0IJ3iOWK2PI=;
+	b=T8GhfltExy8NnQnVGfwEoE2EtvqBrpbun/Y11DYzwF1SGzDb+pgmDlMeCGDNaB8HH3lqo9
+	WRhtbLEO8s7EWsCtWRM2tbU4a1HNGjUIQSRtNw2MEOXcIBIa9zJB6c00Sr4GaMsW18xvNy
+	ZI3Wc5QXRw8XNPUT8vHATT9Nn7/I52s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710373521;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3cJKNEamgKE8o2ZSAXqef3Ys0r2vec9y0IJ3iOWK2PI=;
+	b=3tYwZoGnKoQzbR04xM+ISna2+YqNiqPlbJ3eaAUy8+Hxy0+4bYLpzkFFaDETo13MIRqC8L
+	/foxCg//xfeyPXBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 751181397F;
+	Wed, 13 Mar 2024 23:45:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 69AyGZE68mWtDQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 13 Mar 2024 23:45:21 +0000
+Date: Thu, 14 Mar 2024 00:46:40 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] mm,page_owner: Fix recursion
+Message-ID: <ZfI64Orls0Y6SWHF@localhost.localdomain>
+References: <20240313234245.18824-1-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] tools/testing/selftests/bpf/test_tc_tunnel.sh: Prevent
- client connect before server bind
-Content-Language: en-US
-To: Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc: Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrii Nakryiko <andrii@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <20240229140000.175274-1-alessandro.carminati@gmail.com>
- <fe323c90-bda3-4837-8daa-372073014446@linux.dev>
- <CAPp5cGR2gFtMh3jWHuFHXdHvLdq85j5qcMPh4EoiOv+JA_HYTw@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <CAPp5cGR2gFtMh3jWHuFHXdHvLdq85j5qcMPh4EoiOv+JA_HYTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240313234245.18824-1-osalvador@suse.de>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.29
+X-Spamd-Result: default: False [-3.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,suse.cz,google.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.99)[95.02%]
+X-Spam-Flag: NO
 
-On 3/10/24 1:45 AM, Alessandro Carminati wrote:
-> Hi Martin,
-> Thanks for the review.
-> 
-> Il giorno ven 8 mar 2024 alle ore 02:03 Martin KaFai Lau
-> <martin.lau@linux.dev> ha scritto:
->>
->> On 2/29/24 6:00 AM, Alessandro Carminati (Red Hat) wrote:
->>> In some systems, the netcat server can incur in delay to start listening.
->>> When this happens, the test can randomly fail in various points.
->>> This is an example error message:
->>>      # ip gre none gso
->>>      # encap 192.168.1.1 to 192.168.1.2, type gre, mac none len 2000
->>>      # test basic connectivity
->>>      # Ncat: Connection refused.
->>
->> This explained what is the issue. Please also explain how the patch solves it.
->>
-> The issue, as stated, depends on a race condition between the netcat client
-> and server. The test author addressed this problem using a sleep, which I
-> removed in this patch. To easily solve the issue, one could simply increase
-> the sleep duration. However, this patch opts to tackle the problem by
-> querying the /proc directory and verifying TCP binds at the specified port
-> before letting the client connect.
+On Thu, Mar 14, 2024 at 12:42:45AM +0100, Oscar Salvador wrote:
+> @@ -232,6 +241,7 @@ void __reset_page_owner(struct page *page, unsigned short order)
+>  	alloc_handle = page_owner->handle;
+>  
+>  	handle = save_stack(GFP_NOWAIT | __GFP_NOWARN);
+> +
+>  	for (i = 0; i < (1 << order); i++) {
 
-Please include this in the commit message.
+Sigh, a last-minute unnoticed change.
 
->>>
->>> Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail.com>
->>> ---
->>>    tools/testing/selftests/bpf/test_tc_tunnel.sh | 19 ++++++++++++++++++-
->>>    1 file changed, 18 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/testing/selftests/bpf/test_tc_tunnel.sh b/tools/testing/selftests/bpf/test_tc_tunnel.sh
->>> index 910044f08908..01c0f4b1a8c2 100755
->>> --- a/tools/testing/selftests/bpf/test_tc_tunnel.sh
->>> +++ b/tools/testing/selftests/bpf/test_tc_tunnel.sh
->>> @@ -72,7 +72,6 @@ cleanup() {
->>>    server_listen() {
->>>        ip netns exec "${ns2}" nc "${netcat_opt}" -l "${port}" > "${outfile}" &
->>>        server_pid=$!
->>> -     sleep 0.2
->>>    }
->>>
->>>    client_connect() {
->>> @@ -93,6 +92,22 @@ verify_data() {
->>>        fi
->>>    }
->>>
->>> +wait_for_port() {
->>> +     local digits=8
->>> +     local port2check=$(printf ":%04X" $1)
->>> +     local prot=$([ "$2" == "-6" ] && echo 6 && digits=32)
->>> +
->>> +     for i in $(seq 20); do
->>> +             if ip netns exec "${ns2}" cat /proc/net/tcp${prot} | \
->>> +                     sed -r 's/^[ \t]+[0-9]+: ([0-9A-F]{'${digits}'}:[0-9A-F]{4}) .*$/\1/' | \
->>> +                     grep -q "${port2check}"; then
->>
->> The idea is to check if there is socket listening on port 8888?
->>
->> May be something simpler like "ss -OHtl src :$1" instead?
-> Indeed, the aim is to ensure that the server is bound before the
-> client attempts to
-> connect by checking if socket is listening, and yes using 'ss' would be shorter.
-> However, I chose not to use 'ss' or 'netstat' to avoid adding new dependencies,
-> considering they are already many.
+@Andrew: Do you want me to send v2 fixing that up?
 
-ss should be in the same iproute package that "(ip) netns..." lives in also. The 
-above changes added sed and grep.
 
-Regardless, this external dependency will be all gone once moved to the 
-selftests/test_progs. The check-and-wait will be gone by creating a listen fd 
-instead of using "nc -l...". A simpler change such that people doing the future 
-test_progs migration will have an easier time.
-
->> The check-and-wait fix in this patch is fine to get your test environment going.
->>
->> Eventually, it will be good to see the test_tc_tunnel.sh test moved to
->> test_progs. The test_tc_tunnel.sh is not run by bpf CI and issue like this got
->> unnoticed. Some other "*.sh" tests have already been moved to test_progs.
-.>>
->>
-> Regards
-> Alessandro
-
+-- 
+Oscar Salvador
+SUSE Labs
