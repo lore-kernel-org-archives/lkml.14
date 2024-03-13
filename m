@@ -1,108 +1,108 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61B53D0BA
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 10:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5D6225AD;
+	Wed, 13 Mar 2024 10:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710326280; cv=none; b=c9VKaTygEzr3u48bVeeWDE4be1By9Y5dsX5lpchHjrEX57xjFQhcTDpupDUzC8206kzvKyU3/a2RVFQN4bf/w4cB51XP0lbLHmMJny7513q2rJaATP0qGq/CQCRXLTK6DQk+pXyy/t6DIjnQNtubhPcKcfXBbKtky+GuhGGb51A=
+	t=1710326402; cv=none; b=AZtOl/7yvLFMEvxaBv00+rYdTs8SPbITbfiQxtX26rL72oos3PgswZQUtcInpQxLa6CT8kAJmkn0CWvPKSOCMXmwbeAqIXEcRVAgtgXKnHtzt+st7dAirj3YUL63fbq6T/E4Uo2+f6Bl9rQoan/pNHckMENaTzVvHOmrQ5q0Sm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710326280; c=relaxed/simple;
-	bh=0Crvk+O/NT+NwUth/g+9ObKAqtKIfm1Zjikec2AEkw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PewTslnokgdnqjp4PABne3yPCKAnwxuLUOCTx18OKcKh4DFXVTKXBHhCSEBnijLmlhgwPoX9H7nNAdI0WCvXVU7zZ3F7o7PjsWx2/FOWQuGAuV0jHcXBCecxIXRd6wGGbq8cUMxvEmx9/FfSDbWJSfscm92VIRr3akKSW96XPPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rkLzU-0002kY-5D; Wed, 13 Mar 2024 11:37:44 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rkLzT-0065xh-AV; Wed, 13 Mar 2024 11:37:43 +0100
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 671E12A4015;
-	Wed, 13 Mar 2024 10:35:02 +0000 (UTC)
-Date: Wed, 13 Mar 2024 11:35:01 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: 
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Daniel Smolik <smolik@mydatex.cz>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	linux-can@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Regressions can bus with MCP2515 on sama5d3 connected over SPI
- stop working on kernel > 5.4.271
-Message-ID: <20240313-polio-jinx-bc5fd5df7c06-mkl@pengutronix.de>
-References: <2ede8f49-41f8-4d9a-83e4-ea5d4d1677fe@mydatex.cz>
- <a2e64be0-e07d-4c55-aba7-87c7e4c876e0@leemhuis.info>
- <734cf096-3769-4610-b72f-394c31a8d942@mydatex.cz>
- <91d8a6b6-6186-4aa0-8462-56b4751854e9@leemhuis.info>
- <6918321b-038d-40b9-8149-d535bf9d3d52@mydatex.cz>
- <5f69d6ee-a07a-42a9-a238-7dbe1f82cc3f@mydatex.cz>
- <3e46d70b-196d-45c7-bfdf-869c78cdc81f@leemhuis.info>
+	s=arc-20240116; t=1710326402; c=relaxed/simple;
+	bh=GVy6srAz078qzLw5TMfdLMD6yNhqmz1rV0HYo2eVM2c=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Wi8OW4GHrkZ6UHJ9x/qVjGAohw+lVkXZm2dEX5PsLAZJkOtBiKPVaR5uMuIPm71Mfcznwd2LV7eycP90wPGiJrgEFpg93Ptt64zo0MvPj73hKdJGw3JxUReFWLKgSPOvg6G2BZsVG7GHJdAvzuQhtnvJa2ARJeH+YtrwiHue53A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GMUkcPIQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ya0nWvyi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GMUkcPIQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ya0nWvyi"
+Date: Wed, 13 Mar 2024 10:39:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710326399;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PBDsqCIRae9oF8BdiuyyntcNynieeZ8JqhBB5Ca3FqM=;
+	b=GMUkcPIQ9uiMybbo6mew8GLuA3zzPorsGSZXElxQgBtkii8ax1VLLSMGeCBzjK0EveWaqv
+	NLpQSr8TulnF3xpVmKiBJiMEj+PHSI0NalUKxnk9/ADLmsLxtCwAcj/12ff/vc05qtoSu9
+	VeWJbHCnEF8CB42QDkdWudUpdC/qc0esdZxXvIfjCaxsdtN2POeph/ptO0JTILzvAWYSxn
+	ZA44xzjx6+soj7fmiqPuXSKXDDQpFzbDJYuNtsCp6CMDgsMvSnWHZVG7MwTMvbzYcu0BFg
+	jq2zlYrB9qWFUsr0N5WEKcSEkNPiZJWiJsVaTmR1Hbn2A9+spJ+od1+6rbEvBQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710326399;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PBDsqCIRae9oF8BdiuyyntcNynieeZ8JqhBB5Ca3FqM=;
+	b=ya0nWvyi8nG2S5fA5Ytg1dAeDoo3dvNwr3jWvVFHHk+6u64JzExEgn3L/txBpWXNVx1q0b
+	xS1LBiOW7CjB+gDQ==
+From: "tip-bot2 for Wei Yang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/vmlinux.lds.S: Take __START_KERNEL out
+ conditional definition
+Cc: Wei Yang <richard.weiyang@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240313075839.8321-5-richard.weiyang@gmail.com>
+References: <20240313075839.8321-5-richard.weiyang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="otfnytk53yd4iw6q"
-Content-Disposition: inline
-In-Reply-To: <3e46d70b-196d-45c7-bfdf-869c78cdc81f@leemhuis.info>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Message-ID: <171032639798.398.6782499590864932676.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/build branch of tip:
 
---otfnytk53yd4iw6q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     9b67ce2c121fbf11c0c7b6216c08200fda23c9af
+Gitweb:        https://git.kernel.org/tip/9b67ce2c121fbf11c0c7b6216c08200fda23c9af
+Author:        Wei Yang <richard.weiyang@gmail.com>
+AuthorDate:    Wed, 13 Mar 2024 07:58:39 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 13 Mar 2024 11:29:11 +01:00
 
-On 13.03.2024 10:16:47, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi! Mark and Manivannan, do you by chance have an idea what might be
-> wrong with Daniel's system or can point us in the direction of people
-> that might be able to help? See
-> https://lore.kernel.org/all/2ede8f49-41f8-4d9a-83e4-ea5d4d1677fe@mydatex.=
-cz/
-> for the initial report (but it is in the quote below, too).
+x86/vmlinux.lds.S: Take __START_KERNEL out conditional definition
 
-At the first glance the mcp251x.c changes between v5.4 and v5.5 look
-unrelated.
+If CONFIG_X86_32=y, the section start address is defined to be
+"LOAD_OFFSET + LOAD_PHYSICAL_ADDR", which is the same as
+__START_KERNEL_map.
 
-I try to find some time to setup bisecting on an imx6.
+Unify it with the 64-bit definition to simplify the code.
 
-Marc
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240313075839.8321-5-richard.weiyang@gmail.com
+---
+ arch/x86/kernel/vmlinux.lds.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---otfnytk53yd4iw6q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmXxgVIACgkQKDiiPnot
-vG+IeAf7Bhelumk2xhV4IKqc9flR1ST6KJhEvGywz0if2PM24w1u+zcZPwMbvs/0
-cEMJDpt52QdZ9Dzv7tutW8A45vp7g4YyGNS1WfSURw0/Hr41avRaSWyDMLU67W9M
-SNMI7tnGtE2AZ/rxWBiK+ZIx7PTLAnO9Oun5hbAKJCL17adIg3omBedMF2czvWQB
-BqbrgqmOA8tv3GJ456VZHCgmrjAxN9d8JHrlzNfHAKTn0YdUDMsdXQfVwNKQFA7s
-0K5PzTrgXkwBXJUOQsLDEJrlnD1REFrBVfhxbuE1XRVPOGsPWMOU9XWw1loWZrTb
-khCWcTc1WnzX9GoqhTWZQLbqm59JJg==
-=z8Cr
------END PGP SIGNATURE-----
-
---otfnytk53yd4iw6q--
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 88dcf93..a20409b 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -110,11 +110,10 @@ PHDRS {
+ 
+ SECTIONS
+ {
++	. = __START_KERNEL;
+ #ifdef CONFIG_X86_32
+-	. = LOAD_OFFSET + LOAD_PHYSICAL_ADDR;
+ 	phys_startup_32 = ABSOLUTE(startup_32 - LOAD_OFFSET);
+ #else
+-	. = __START_KERNEL;
+ 	phys_startup_64 = ABSOLUTE(startup_64 - LOAD_OFFSET);
+ #endif
+ 
