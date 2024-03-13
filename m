@@ -1,190 +1,160 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F250C3D56B;
-	Wed, 13 Mar 2024 10:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710325461; cv=fail; b=S2a7T3aovb1LmzLlr7QtsQGe3/pI8VlCDhCOwZ5NtkInjC5zAdKAXlp2K/9i5ZN7BnRiIupKOLCMCD2YR1q/vqHoMQT7i8IfYt9Aib/p3l3Axtu+ET4moD1oQ/L1PO3/rGKVGv7JNFwYZ3d+P8X4w/nozrsUHygVJaNAD3xWFcw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710325461; c=relaxed/simple;
-	bh=DUj820UV1QkUlLBBDlS5w5PHrDRtfz0R6c2x+kz236w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KzcqrGH3lkOG7NUSxTKRiKFkkGaf+iNUkBAirIlxuK+XO4On4xyoG2iqcvfxkUfOolH5g+WCAHBnn03rIMoKIl/cmtdB17pSqSNsK9CyrLLup6oTlWaNSNdtY2Ll+0Rzr6zg3x+U+t/0fUj/+xY591WFPaUWSWgEAlkMOrDcIKg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b=kAj6Uo1B; arc=fail smtp.client-ip=40.107.94.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3E3D6D;
+	Wed, 13 Mar 2024 10:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710325540; cv=none; b=hibGTxHCV7PVXm+gjIPYf2TbzmQpdpicqZ+PoWwiA8t50Kwbd8gHU3u3xBMeYrgYGKLqFTD3iGhMNbyi8PjWGoas/xV6sSUTpdjjC7Se7+RVQB1R7KKM6l/V+HvkuTIcoVIJHKttgBWMxxP36AOK9xzNjrejXB28QrN0YXSeOFc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710325540; c=relaxed/simple;
+	bh=RX9vDhe5EY/7G9bDxVAovHr6xzuu1Z8pn8UVJep2r6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cJm/8DUNQP63Q+NgTCqkBzo8+p9xDbOes02UGNPv+klsOuIh/mJcf91la+pW7gJn+rKjNlDZfbnrWaT4R1GNohy1Blwnp/XWz2OAY8s5whOyrp5vV9Q0CUe+0Z2G6YfjgZHoaZkJvreDYekkjSJqgmoL3Jvc7uZoGlcpwg5mivY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ix+1GjMh; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="kAj6Uo1B"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqPj17y+d49lIUCZQjUq59lwjeZZoPqMIluAIUVOjD9WBlG0jqFa7kpW8yMyX5IVPihY9abv0nKtFn15B9DIf3SubBmEmYCGm0e8KxuecONp+R4G4EKcqQXWZtJx/keo1aWiybRDLaTkORG/OW9bkCEo92BEze3uLYGxQM3lR55caxmkFCG7S96ZsthF3XWyU82ACYTXk5pMB1D7HGStPqMWzeMigs3KLRI8y6tkixAi4WtGOzWq5k8ROT67XA8SZhWM+Y5zyz4XyUBDQ7rG7EJhvLTmVkVFmk8WCyiVcMnaGG/l90SdlA10V+5OJqbBAqKfiTyZ3kHo7zhofNAjEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nIUdnfGq8Ak5YEUySXrbyvDHDJhRKCJl3uAqhiKtj4Q=;
- b=oFqOFENT6+8X+wFH4N9WogLKnIXdS/cJ6HiWadWGWxFQMuyIheUq7lOkFz4dUeJnalKEOZfuRx7AKNTu4vLteVY3otiqn4xR3oMy3anc6O2RlV8xAQfTRQbM4aAbQLAXnqfuGXaPVqSwG4ccWeYXgmibVERLcCor4O8hAw5TN1VKYKpQHao3vgtUnm6baiQHfWTQRovO4ySVBjCChLNUfXG3kcBDJAzxG/0fJYcvJhqLfeA2hFHlzJ5lb0pkLLBVGGiLnvdqZqRv22BMtGWuNwzQEyUlZrGuEMW2iNzep+eo5QmYUWcqAjZBoJD0aDECZDYRNCEG7iBjQbI4O9GHWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 121.100.38.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nIUdnfGq8Ak5YEUySXrbyvDHDJhRKCJl3uAqhiKtj4Q=;
- b=kAj6Uo1BTigR5sCWitB2yIPKphbv+SUCni96An8YJRLdqUK7wrqSyd0Lu79B8afiRocdI/i/69s40lhkyiS1PecyZsS/TMDcdjrMCQ+5e1Fn9KBKHHSxybjqoPuHCHTp2+wNtAUpALbDfKx9fgzbeMHNofVsWFbAGL5aq/9OpWc=
-Received: from CY5PR15CA0164.namprd15.prod.outlook.com (2603:10b6:930:81::6)
- by MN2PR13MB3806.namprd13.prod.outlook.com (2603:10b6:208:19e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Wed, 13 Mar
- 2024 10:24:16 +0000
-Received: from CY4PEPF0000EE32.namprd05.prod.outlook.com
- (2603:10b6:930:81:cafe::ee) by CY5PR15CA0164.outlook.office365.com
- (2603:10b6:930:81::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19 via Frontend
- Transport; Wed, 13 Mar 2024 10:24:16 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.198)
- smtp.mailfrom=sony.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=sony.com;
-Received-SPF: Fail (protection.outlook.com: domain of sony.com does not
- designate 121.100.38.198 as permitted sender)
- receiver=protection.outlook.com; client-ip=121.100.38.198;
- helo=gepdcl09.sg.gdce.sony.com.sg;
-Received: from gepdcl09.sg.gdce.sony.com.sg (121.100.38.198) by
- CY4PEPF0000EE32.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7386.12 via Frontend Transport; Wed, 13 Mar 2024 10:24:15 +0000
-Received: from gepdcl02.s.gdce.sony.com.sg (SGGDCSE1NS07.sony.com.sg [146.215.123.196])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 42DANjhD004377;
-	Wed, 13 Mar 2024 18:23:57 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl02.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 42DANi8d017452;
-	Wed, 13 Mar 2024 18:23:44 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 0A55F20C0698; Wed, 13 Mar 2024 15:47:20 +0530 (IST)
-Date: Wed, 13 Mar 2024 15:47:19 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: pmladek@suse.com, john.ogness@linutronix.de, corbet@lwn.net,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: rdunlap@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
-        daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com,
-        sreenath.vijayan@sony.com
-Subject: [PATCH v6 0/2] Add support to replay kernel log on consoles via sysrq
-Message-ID: <cover.1710220326.git.sreenath.vijayan@sony.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ix+1GjMh"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dd9066b7c3so6716485ad.2;
+        Wed, 13 Mar 2024 03:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710325538; x=1710930338; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YyqKpMvkzn2a0rZ5w5lLpASeVzXzMbzX+YLlhHTJc5w=;
+        b=ix+1GjMhbgGKGn9suepvilQrIXyvd1ODU6XcqU6U2ecJkJHy37v2cQyZRJNkTt3Xwg
+         9iRaDZslJjOIGMhifXQ0oY0KPL2KA/5QmmW7zTSJNUkwwZGqXZJgc7HaIlpS2R/FAxFC
+         RXwyyyxKw3SlPUmJCFdJVwqjGx66JZPwRX4oWJ+QctNGcyMbZfMcBSqbKs7BYf92ZcMj
+         +vqe9tehH3Oz4kdXiLuORsv9mRRrx23+Srg2NoshHjQE/1HbBVwfRXPWuWNefGQ260qo
+         8l92T6wqmHkStdF15X579OBcVgvmywTJTgzJRqDmbTgMfy5olhvJ74CJmWovjaPOYLzi
+         lxCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710325538; x=1710930338;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YyqKpMvkzn2a0rZ5w5lLpASeVzXzMbzX+YLlhHTJc5w=;
+        b=QlBV+fhG8KwjjQFxqEG5hxa2jO7CYFRXdQ4R02rstL+QDq4fgcd0t/Fdw07WhFAbp5
+         SCme6lYUlzAZRkMP4HXNCfBaUKqC0NCaTNxBrpxF/5cwMh0f+jNuemZIC6YgqeyS/EGR
+         QFFbZu/zzF3EqPF75HKYIdeMdcHgrEe/4rCoq+44u7nfubz6HxDMNoU/Z6E9SwXVMtrr
+         tB6bVuPx9zCHEnExDk94oAkFJrOjGuB6SDB5KTWzdffjAhkEggVKsbTgmp9tLxWo1/nx
+         odLJe1DsiHk4YvZUZ0qeQz4198c69J2iO/EiMCsKezq6vxlpNReiuWGtLIaJgLctvvr6
+         F0Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQAktm2jIM/rRZH1W9iq0JwQJhUZCp0HktVmDzEC45E/EnIeEZM7aTh7wN7l4CdDSQGDUScQtg7dPt1S+QB9z2WnNrScjtJv7PpSzyE/HbPIv3NGAs/JHvesVHm9mIh7zrWsEa3w1fMlOmfQiDLCPfccU8hgADpzLltgcUQZ91ZV0g3eo=
+X-Gm-Message-State: AOJu0YyKTkR/dz1ULfDBIiqMqZGI4eDhNHHDfvnG9OsZeImCYsOc7jm8
+	E8LSN0RpDATsy0Xug+/N4dPl2A9Z5Y92vYL/jCwwkAmBTBZlRxJ9fGrup9kA
+X-Google-Smtp-Source: AGHT+IHHcc6DDrTFijSpL/E3Pt1lEW0JVpOialvzsEg+4NWo1Bgccejlq3Cb1J1IfZtST3nVuip6Pg==
+X-Received: by 2002:a17:902:e748:b0:1dc:fc26:ad0a with SMTP id p8-20020a170902e74800b001dcfc26ad0amr7478914plf.1.1710325538001;
+        Wed, 13 Mar 2024 03:25:38 -0700 (PDT)
+Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id v7-20020a170903238700b001dd42bbb08asm8295705plh.253.2024.03.13.03.25.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Mar 2024 03:25:37 -0700 (PDT)
+Message-ID: <cb19954a-5f4e-4c39-8944-5f02d3221d79@gmail.com>
+Date: Wed, 13 Mar 2024 18:25:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE32:EE_|MN2PR13MB3806:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6de70ab3-fbd1-48f4-8cb3-08dc4347bc8e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4+b/OytEZ6P0CynZDoi8VLGzMBuJOCrFiJXnkRo2qMjKxCJ7mPoaolSaknX4fQSUtY+/2KX5FrOgQ174hc5kvEuWH1jYDqyAwl1jcLRdBVq9y6d0JpMNq6zoSRENn9+vBPTZUQZVRKWgJCFWFLfy9Ow2CoAXwzHNZD9FHrpW0VVaek8ZU4FEOdy+iN8pLKqiKfZsOMr3AXgnHIj8O1nu+ZGCLX6jratjgFImlSh5ksKjYwRQ8TSP4XwHjbIG5YeXiIuMEYdtBH9Uu39zjcRJNofvR9D8RbRkR4ZdiIGKVG9etn9vHDSqZSVz7nr98b+4Zhvo08RoI7P7sxPhGv6k/8XLVkd4Ly11n2eQx1eG7I1rMm5Qm6YwN1hjwlILRKgT8cy6LHDZktbYQTHBmtQV13wz/ojB4ycHKgsw/J2CvUVuGmKgAT4dB0h9OOzubTT2rvuCUZTSIaodhOzDhnaZSzpk++cOPsztR3o338tMw/9GG9j6TMqlPdX0Yt31eYfaPLI4IdigoUWHTI1Pu/s4oi1P3TcBNnN17tVODJFXc4B9KlVPlRcK59ujFrovld9iB9TiJZ+SaZR/h24AYI5bRT2ya7Z9KIi8FPmLwosYOmwtoX/sCjUrYYhWK2c/nE0rvQ0B3UkwHjsP8cCTQNfdwIKEG0pWntzZjaCB8EFSGfvNsdhdXb7vTIBNLmxq6E42BMBC0cCvCVRN+nJ2WNn+4w==
-X-Forefront-Antispam-Report:
-	CIP:121.100.38.198;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl09.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 10:24:15.8199
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6de70ab3-fbd1-48f4-8cb3-08dc4347bc8e
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.198];Helo=[gepdcl09.sg.gdce.sony.com.sg]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CY4PEPF0000EE32.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3806
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
+ driver
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20240313035719.768469-1-ychuang570808@gmail.com>
+ <20240313035719.768469-4-ychuang570808@gmail.com>
+ <5c555723-1731-40cc-b9be-a88ef617e09f@moroto.mountain>
+Content-Language: en-US
+From: Jacky Huang <ychuang570808@gmail.com>
+In-Reply-To: <5c555723-1731-40cc-b9be-a88ef617e09f@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-This patch series enables one to replay the kernel log messages
-in printk ring buffer on consoles via sysrq. This is useful to
-view the kernel messages when terminal is unresponsive to enter
-commands like dmesg and syslog services are also disabled,
-especially on embedded targets. Although debug features like
-kdb/kgdb already allow this, these debug configs should be
-enabled which is often not the case.
 
-In the first commit, a generic function console_replay_all()
-is added that replays the kernel log messages on consoles.
-To do this, code under CONSOLE_REPLAY_ALL mode in
-console_flush_on_panic() is taken out to a helper function
-__console_rewind_all() to set the console sequence number to
-oldest record in the printk buffer. This function can be called
-safely under console_lock(). console_replay_all() tries to get
-console subsystem lock using console_trylock() and if successful,
-calls __console_rewind_all() to reset the sequence number.
-Finally it calls console_unlock() which flushes out the contents
-of printk buffer to consoles. The console loglevel will determine
-which all kernel log messages are displayed.
+On 2024/3/13 下午 04:04, Dan Carpenter wrote:
+> On Wed, Mar 13, 2024 at 03:57:19AM +0000, Jacky Huang wrote:
+>> +static int ma35_gpiolib_register(struct platform_device *pdev, struct ma35_pinctrl *npctl)
+>> +{
+>> +	struct ma35_pin_ctrl *ctrl = npctl->ctrl;
+>> +	struct ma35_pin_bank *bank = ctrl->pin_banks;
+>> +	int ret;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+>> +		if (!bank->valid) {
+>> +			dev_warn(&pdev->dev, "bank %s is not valid\n",
+>> +				 bank->np->name);
+>> +			continue;
+>> +		}
+>> +		bank->irqtype = 0;
+>> +		bank->irqinten = 0;
+>> +		bank->chip.label = bank->name;
+>> +		bank->chip.of_gpio_n_cells = 2;
+>> +		bank->chip.parent = &pdev->dev;
+>> +		bank->chip.request = ma35_gpio_core_to_request;
+>> +		bank->chip.direction_input = ma35_gpio_core_direction_in;
+>> +		bank->chip.direction_output = ma35_gpio_core_direction_out;
+>> +		bank->chip.get = ma35_gpio_core_get;
+>> +		bank->chip.set = ma35_gpio_core_set;
+>> +		bank->chip.base = -1;
+>> +		bank->chip.ngpio = bank->nr_pins;
+>> +		bank->chip.can_sleep = false;
+>> +		spin_lock_init(&bank->lock);
+>> +
+>> +		if (bank->irq > 0) {
+>> +			struct gpio_irq_chip *girq;
+>> +
+>> +			girq = &bank->chip.irq;
+>> +			gpio_irq_chip_set_chip(girq, &ma35_gpio_irqchip);
+>> +			girq->parent_handler = ma35_irq_demux_intgroup;
+>> +			girq->num_parents = 1;
+>> +
+>> +			girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
+>> +						     GFP_KERNEL);
+>> +			if (!girq->parents)
+>> +				return -ENOMEM;
+> ret = -ENOMEM;
+> goto fail;
+>
+> regards,
+> dan carpenter
 
-In the second commit, code is added to call console_replay_all()
-from the sysrq key handler when sysrq+R is pressed. Document is
-also updated describing the use case and limitations.
+Thanks, I will fix it.
 
-Limitations:
-- User may have to press the key combination multiple times if
-console lock is not obtained at the time of key press.
-- If console lock owner is stuck, console_trylock() will fail
-continuously and messages won't be displayed.
+>> +
+>> +			girq->parents[0] = bank->irq;
+>> +			girq->default_type = IRQ_TYPE_NONE;
+>> +			girq->handler = handle_level_irq;
+>> +		}
+>> +
+>> +		ret = gpiochip_add_data(&bank->chip, bank);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "failed to register gpio_chip %s, error code: %d\n",
+>> +				bank->chip.label, ret);
+>> +			goto fail;
+>> +		}
+>> +	}
+>> +	return 0;
+>> +
+>> +fail:
+>> +	for (--i, --bank; i >= 0; --i, --bank) {
+>> +		if (!bank->valid)
+>> +			continue;
+>> +		gpiochip_remove(&bank->chip);
+>> +	}
+>> +	return ret;
+>> +}
 
-These limitations can be overcome once atomic consoles are
-available. Currently, it is best effort.
-
-Links to previous discussion:
-- https://lore.kernel.org/all/cover.1709277332.git.sreenath.vijayan@sony.com/T/#t
-- https://lore.kernel.org/all/ZcyWU0V6Kmq0Txqr@sony.com/T/#t
-- https://lore.kernel.org/all/cover.1705331453.git.sreenath.vijayan@sony.com/T/#t
-- https://lore.kernel.org/linux-serial/20231221133953.1507021-1-sreenath.vijayan@sony.com/
-
-Changelog:
-V5 -> V6:
-- added reference to sysrq[0-9] to change loglevel
-- fixed action_msg by using Replay instead of replay
-
-V4 -> V5:
-- renamed console_rewind_all() to __console_rewind_all()
-- modified comments for __console_rewind_all()
-- renamed dump_printk_buffer() to console_replay_all()
-- used sysrq+R instead of sysrq+D
-- removed workqueue based implementation and used console_trylock()
-
-V3 -> V4:
-- refactor code in console_flush_on_panic() under CONSOLE_REPLAY_ALL mode
-- add new function console_rewind_all()
-- use console_rewind_all() instead of ksmg_dump*() in dump_printk_buffer()
-
-V2 -> V3:
-- split the implementation into two commits
-- added function in printk.c to dump printk buffer to consoles
-- added Suggested-by tag
-- removed code to dump printk buffer from sysrq.c and called
-new function
-
-V1 -> V2:
-- modified kernel ring buffer to printk ring buffer
-- allocated buf dynamically to prevent stack frame size warnings
-- used buf of size 2048 to match PRINTK_MESSAGE_MAX and added comment
-
--- Sreenath
-
-Sreenath Vijayan (2):
-  printk: Add function to replay kernel log on consoles
-  tty/sysrq: Replay kernel log messages on consoles via sysrq
-
- Documentation/admin-guide/sysrq.rst |  9 ++++
- drivers/tty/sysrq.c                 | 13 ++++-
- include/linux/printk.h              |  4 ++
- kernel/printk/printk.c              | 77 ++++++++++++++++++++---------
- 4 files changed, 78 insertions(+), 25 deletions(-)
-
--- 
-2.25.1
+Best Regards,
+Jacky Huang
 
