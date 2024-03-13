@@ -1,49 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0134350A88;
-	Wed, 13 Mar 2024 16:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C649487BE;
+	Wed, 13 Mar 2024 16:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348149; cv=none; b=QA0O96Ze4HAJ3w9XWEZ4IUJbTgoVDUgo+hMT3Yk1A9Ik1BM2ziaSTh6tRKB3b2f4kWLjRlr9Gv4Dl5iocPwPjSMua95jZAS5wC46OrE61y6dUcD5FHDockIAf5av8DZv8AczsEhMwBT/KQBbvlW156csGvA687jknacCvDUOLgo=
+	t=1710348147; cv=none; b=gE+c3pzs2zppaPlfbeaKT7xy7AqkaGw0WPyccsqaRAFrXOMgucj442PMoYpdE8BFtD4CjY3VxM81DFxOm2gX5QODWA2JoK+av+VSRxuxJY87vesqtAg4XGQ008WyUZkRwdGkBhLYk3fyVtjh/UTavq/CjispP5jkYWpzzmeSJ2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348149; c=relaxed/simple;
-	bh=BKKvaSPOJcIzN9AKZ4t/6eH1vXhiFpdAhQlKssnCZxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaDbcuqk+qV4sNvbXYCAgpdBswYsXb4HogOR2D97RKgbXWP5rPtGCaV4HaaVNHzBgmI8X3nTFTSFoMYHMkHt8zHEDRLcBFRkuG7BeG9rFT7uO91PDoIEL1jLP77GB0qoh5bxGtLYTv0okJJ4HvmJo7esCoXTdpjzTkmAUVoG0o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CahHFGXW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710348147; c=relaxed/simple;
+	bh=napKNhmiE//2tME8lS2JMhMVc5Qw93Ik/cX1eE2IXlE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PIpIe/+Y9mOmF6o5evPEtJoarn8vTfvf9Jqgb3mwnSDbX2y5A9qZNns8Ie1LVOTm4MaNR4iT4e4kEP5FjMVQ2zWLXUsSkPOBjVtKMcJIDPJFgfOPL6q00q5ArCR1uL15ZeYVlDAa9g6PIWQ6Gd7OLfdqj5smUoVP9CRa8Pi1BOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA4PSNto; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CahHFGXW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F54FC43390;
-	Wed, 13 Mar 2024 16:42:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA4PSNto"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A217C433C7;
+	Wed, 13 Mar 2024 16:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348148;
-	bh=BKKvaSPOJcIzN9AKZ4t/6eH1vXhiFpdAhQlKssnCZxE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CahHFGXWtHcL18LsOZS2utOmDNW+yieTLJvMpSaT/6wqC/8HTMB1/2aTfT1FiR4dC
-	 8WTku8vWfOR+xptNQ4onOoIIuwNc4l/0UbXaSIkuE09Q/fQ+KwghKln+UfoE/kFH4B
-	 wYxacbZIR6/I6vYx6eDnGhVOjGJbHN8HEm+OpGGOoJDsEb8uxLMNAnWo/JVgkg+0ht
-	 aZW4Myt1nzp3aWeVEw7h8sNmolv8THsCYC2aYfdYrG7PNVlwwVoq5tHXJUSYSMgRO8
-	 jbwllfsFWUsdY36BRpqhICZHfXUDCbCaKxMXPgEoaGWhW0LqfqPcF8o13bAn5vrb3L
-	 xGesmZuznfTcQ==
+	s=k20201202; t=1710348146;
+	bh=napKNhmiE//2tME8lS2JMhMVc5Qw93Ik/cX1eE2IXlE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sA4PSNtobdSr092VgrwfM1wbW6t0VBlHvYjQI4sHALClCQX79Gx+8UoLf8mAGx5du
+	 TdVnUguxoj9tu+ouBumpjHtSkHrDA86qCqcC6popQ5LgU84RLPdVFxxXJA7aNYpcoo
+	 7u1RhM8mYvSx5lJuvwfj8NQBYuLuEasijiTXYvarhw86QU6Lsaz5tzq6NepenfPvt8
+	 FPCL+R8Qc+rAaj5P4QrJ0Wq6LBMDVUtx7YgT6ZmTzGAWRNCnDCfdze4rdfc4HOv5o5
+	 P3Gi/ju+0aUACdD3BnDp7pRrrdjyHaiW/bPxKvRd+Fy5bb0qWgjmnlptw5cJXUdWP7
+	 LfETwJvLtl8sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christophe Kerello <christophe.kerello@foss.st.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 02/76] mmc: mmci: stm32: fix DMA API overlapping mappings warning
-Date: Wed, 13 Mar 2024 12:41:09 -0400
-Message-ID: <20240313164223.615640-3-sashal@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de
+Subject: [PATCH 5.15 00/76] 5.15.152-rc1 review
+Date: Wed, 13 Mar 2024 12:41:07 -0400
+Message-ID: <20240313164223.615640-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
-References: <20240313164223.615640-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.152-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.15.y
@@ -54,109 +57,299 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christophe Kerello <christophe.kerello@foss.st.com>
 
-[ Upstream commit 6b1ba3f9040be5efc4396d86c9752cdc564730be ]
+This is the start of the stable review cycle for the 5.15.152 release.
+There are 76 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
+Responses should be made by Fri Mar 15 04:42:22 PM UTC 2024.
+Anything received after that time might be too late.
 
-DMA-API: mmci-pl18x 48220000.mmc: cacheline tracking EEXIST,
-overlapping mappings aren't supported
-WARNING: CPU: 1 PID: 51 at kernel/dma/debug.c:568
-add_dma_entry+0x234/0x2f4
-Modules linked in:
-CPU: 1 PID: 51 Comm: kworker/1:2 Not tainted 6.1.28 #1
-Hardware name: STMicroelectronics STM32MP257F-EV1 Evaluation Board (DT)
-Workqueue: events_freezable mmc_rescan
-Call trace:
-add_dma_entry+0x234/0x2f4
-debug_dma_map_sg+0x198/0x350
-__dma_map_sg_attrs+0xa0/0x110
-dma_map_sg_attrs+0x10/0x2c
-sdmmc_idma_prep_data+0x80/0xc0
-mmci_prep_data+0x38/0x84
-mmci_start_data+0x108/0x2dc
-mmci_request+0xe4/0x190
-__mmc_start_request+0x68/0x140
-mmc_start_request+0x94/0xc0
-mmc_wait_for_req+0x70/0x100
-mmc_send_tuning+0x108/0x1ac
-sdmmc_execute_tuning+0x14c/0x210
-mmc_execute_tuning+0x48/0xec
-mmc_sd_init_uhs_card.part.0+0x208/0x464
-mmc_sd_init_card+0x318/0x89c
-mmc_attach_sd+0xe4/0x180
-mmc_rescan+0x244/0x320
+The whole patch series can be found in one patch at:
+        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.15.y&id2=v5.15.151
+or in the git tree and branch at:
+        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+and the diffstat can be found below.
 
-DMA API debug brings to light leaking dma-mappings as dma_map_sg and
-dma_unmap_sg are not correctly balanced.
+Thanks,
+Sasha
 
-If an error occurs in mmci_cmd_irq function, only mmci_dma_error
-function is called and as this API is not managed on stm32 variant,
-dma_unmap_sg is never called in this error path.
+-------------
+Pseudo-Shortlog of commits:
 
-Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
-Fixes: 46b723dd867d ("mmc: mmci: add stm32 sdmmc variant")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20240207143951.938144-1-christophe.kerello@foss.st.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mmc/host/mmci_stm32_sdmmc.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Ansuel Smith (1):
+  regmap: allow to define reg_update_bits for no bus configuration
 
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index 11ae0cb479239..e3201a621870a 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -200,6 +200,8 @@ static int sdmmc_idma_start(struct mmci_host *host, unsigned int *datactrl)
- 	struct scatterlist *sg;
- 	int i;
- 
-+	host->dma_in_progress = true;
-+
- 	if (!host->variant->dma_lli || data->sg_len == 1 ||
- 	    idma->use_bounce_buffer) {
- 		u32 dma_addr;
-@@ -238,9 +240,30 @@ static int sdmmc_idma_start(struct mmci_host *host, unsigned int *datactrl)
- 	return 0;
- }
- 
-+static void sdmmc_idma_error(struct mmci_host *host)
-+{
-+	struct mmc_data *data = host->data;
-+	struct sdmmc_idma *idma = host->dma_priv;
-+
-+	if (!dma_inprogress(host))
-+		return;
-+
-+	writel_relaxed(0, host->base + MMCI_STM32_IDMACTRLR);
-+	host->dma_in_progress = false;
-+	data->host_cookie = 0;
-+
-+	if (!idma->use_bounce_buffer)
-+		dma_unmap_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
-+			     mmc_get_dma_dir(data));
-+}
-+
- static void sdmmc_idma_finalize(struct mmci_host *host, struct mmc_data *data)
- {
-+	if (!dma_inprogress(host))
-+		return;
-+
- 	writel_relaxed(0, host->base + MMCI_STM32_IDMACTRLR);
-+	host->dma_in_progress = false;
- 
- 	if (!data->host_cookie)
- 		sdmmc_idma_unprep_data(host, data, 0);
-@@ -566,6 +589,7 @@ static struct mmci_host_ops sdmmc_variant_ops = {
- 	.dma_setup = sdmmc_idma_setup,
- 	.dma_start = sdmmc_idma_start,
- 	.dma_finalize = sdmmc_idma_finalize,
-+	.dma_error = sdmmc_idma_error,
- 	.set_clkreg = mmci_sdmmc_set_clkreg,
- 	.set_pwrreg = mmci_sdmmc_set_pwrreg,
- 	.busy_complete = sdmmc_busy_complete,
+Christophe Kerello (1):
+  mmc: mmci: stm32: fix DMA API overlapping mappings warning
+
+Christos Skevis (1):
+  ALSA: usb-audio: Fix microphone sound on Nexigo webcam.
+
+Cosmin Tanislav (3):
+  serial: max310x: use regmap methods for SPI batch operations
+  serial: max310x: use a separate regmap for each port
+  serial: max310x: make accessing revision id interface-agnostic
+
+Edward Adam Davis (1):
+  net/rds: fix WARNING in rds_conn_connect_if_down
+
+Eric Dumazet (2):
+  geneve: make sure to pull inner header in geneve_rx()
+  net/ipv6: avoid possible UAF in ip6_route_mpath_notify()
+
+Evan Quan (1):
+  drm/amd/pm: do not expose the API used internally only in kv_dpm.c
+
+Florian Westphal (1):
+  netfilter: nft_ct: fix l3num expectations with inet pseudo family
+
+Friedrich Vock (1):
+  drm/amdgpu: Reset IH OVERFLOW_CLEAR bit
+
+Gao Xiang (1):
+  erofs: apply proper VMA alignment for memory mapped files on THP
+
+Horatiu Vultur (1):
+  net: sparx5: Fix use after free inside sparx5_del_mact_entry
+
+Hugo Villeneuve (1):
+  serial: max310x: prevent infinite while() loop in port startup
+
+Hui Zhou (1):
+  nfp: flower: add hardware offload check for post ct entry
+
+Ingo Molnar (1):
+  exit: Fix typo in comment: s/sub-theads/sub-threads
+
+Isabella Basso (1):
+  drm/amd/display: move calcs folder into DML
+
+Jan Kundrát (1):
+  serial: max310x: fix IO data corruption in batched operations
+
+Jaroslav Kysela (2):
+  ALSA: usb-audio: Add new quirk FIXED_RATE for JBL Quantum810 Wireless
+  ALSA: usb-audio: Always initialize fixed_rate in
+    snd_usb_find_implicit_fb_sync_format()
+
+Jason Xing (12):
+  netrom: Fix a data-race around sysctl_netrom_default_path_quality
+  netrom: Fix a data-race around
+    sysctl_netrom_obsolescence_count_initialiser
+  netrom: Fix data-races around sysctl_netrom_network_ttl_initialiser
+  netrom: Fix a data-race around sysctl_netrom_transport_timeout
+  netrom: Fix a data-race around sysctl_netrom_transport_maximum_tries
+  netrom: Fix a data-race around
+    sysctl_netrom_transport_acknowledge_delay
+  netrom: Fix a data-race around sysctl_netrom_transport_busy_delay
+  netrom: Fix a data-race around
+    sysctl_netrom_transport_requested_window_size
+  netrom: Fix a data-race around
+    sysctl_netrom_transport_no_activity_timeout
+  netrom: Fix a data-race around sysctl_netrom_routing_control
+  netrom: Fix a data-race around sysctl_netrom_link_fails_count
+  netrom: Fix data-races around sysctl_net_busy_read
+
+John Keeping (1):
+  ALSA: usb-audio: Add quirk for Tascam Model 12
+
+Juhee Kang (1):
+  hv_netvsc: use netif_is_bond_master() instead of open code
+
+Kees Cook (1):
+  proc: Use task_is_running() for wchan in /proc/$pid/stat
+
+Lena Wang (1):
+  netfilter: nf_conntrack_h323: Add protection for bmp length out of
+    range
+
+Maciej Fijalkowski (2):
+  ixgbe: {dis, en}able irqs in ixgbe_txrx_ring_{dis, en}able
+  i40e: disable NAPI right after disabling irqs when handling xsk_pool
+
+Magali Lemes (1):
+  drm/amd/display: remove DML Makefile duplicate lines
+
+Marek Vasut (1):
+  regmap: Add bulk read/write callbacks into regmap_config
+
+Mathias Nyman (1):
+  xhci: process isoc TD properly when there was a transaction error mid
+    TD.
+
+Matthieu Baerts (NGI0) (1):
+  selftests: mptcp: decrease BW in simult flows
+
+Michal Pecio (1):
+  xhci: handle isoc Babble and Buffer Overrun events properly
+
+Muhammad Usama Anjum (1):
+  selftests/mm: switch to bash from sh
+
+Nathan Chancellor (3):
+  modpost: Include '.text.*' in TEXT_SECTIONS
+  modpost: Add '.ltext' and '.ltext.*' to TEXT_SECTIONS
+  drm/amd/display: Increase frame-larger-than for all display_mode_vba
+    files
+
+Nico Pache (1):
+  selftests: mm: fix map_hugetlb failure on 64K page size systems
+
+Oleg Nesterov (6):
+  getrusage: add the "signal_struct *sig" local variable
+  getrusage: move thread_group_cputime_adjusted() outside of
+    lock_task_sighand()
+  getrusage: use __for_each_thread()
+  getrusage: use sig->stats_lock rather than lock_task_sighand()
+  fs/proc: do_task_stat: move thread_group_cputime_adjusted() outside of
+    lock_task_sighand()
+  exit: wait_task_zombie: kill the no longer necessary
+    spin_lock_irq(siglock)
+
+Oleksij Rempel (1):
+  net: lan78xx: fix runtime PM count underflow on link stop
+
+Qingqing Zhuo (1):
+  drm/amd/display: Re-arrange FPU code structure for dcn2x
+
+Rand Deeb (1):
+  net: ice: Fix potential NULL pointer dereference in
+    ice_bridge_setlink()
+
+Sasha Levin (1):
+  Linux 5.15.152-rc1
+
+Sean Young (1):
+  ALSA: usb-audio: add quirk for RODE NT-USB+
+
+Shradha Gupta (1):
+  hv_netvsc: Register VF in netvsc_probe if NET_DEVICE_REGISTER missed
+
+Srinivasan Shanmugam (1):
+  drm/amd/display: Fix uninitialized variable usage in core_link_
+    'read_dpcd() & write_dpcd()' functions
+
+Steven Rostedt (Google) (1):
+  tracing/net_sched: Fix tracepoints that save qdisc_dev() as a string
+
+Takashi Iwai (9):
+  ALSA: usb-audio: Refcount multiple accesses on the single clock
+  ALSA: usb-audio: Clear fixed clock rate at closing EP
+  ALSA: usb-audio: Split endpoint setups for hw_params and prepare
+    (take#2)
+  ALSA: usb-audio: Properly refcounting clock rate
+  ALSA: usb-audio: Apply mutex around snd_usb_endpoint_set_params()
+  ALSA: usb-audio: Correct the return code from
+    snd_usb_endpoint_set_params()
+  ALSA: usb-audio: Avoid superfluous endpoint setup
+  ALSA: usb-audio: Add FIXED_RATE quirk for JBL Quantum610 Wireless
+  ALSA: usb-audio: Sort quirk table entries
+
+Toke Høiland-Jørgensen (1):
+  cpumap: Zero-initialise xdp_rxq_info struct before running XDP program
+
+Wan Jiabing (1):
+  ALSA: usb-audio: Fix wrong kfree issue in snd_usb_endpoint_free_all
+
+Wentao Jia (1):
+  nfp: flower: add goto_chain_index for ct entry
+
+Yann Gautier (1):
+  mmc: mmci: stm32: use a buffer for unaligned DMA requests
+
+ Makefile                                      |   4 +-
+ drivers/base/regmap/internal.h                |   4 +
+ drivers/base/regmap/regmap.c                  |  77 ++++----
+ drivers/gpu/drm/amd/amdgpu/cik_ih.c           |   6 +
+ drivers/gpu/drm/amd/amdgpu/cz_ih.c            |   5 +
+ drivers/gpu/drm/amd/amdgpu/iceland_ih.c       |   5 +
+ drivers/gpu/drm/amd/amdgpu/navi10_ih.c        |   6 +
+ drivers/gpu/drm/amd/amdgpu/si_ih.c            |   6 +
+ drivers/gpu/drm/amd/amdgpu/tonga_ih.c         |   6 +
+ drivers/gpu/drm/amd/amdgpu/vega10_ih.c        |   6 +
+ drivers/gpu/drm/amd/amdgpu/vega20_ih.c        |   6 +
+ .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    |   2 +-
+ drivers/gpu/drm/amd/display/dc/Makefile       |   4 +-
+ drivers/gpu/drm/amd/display/dc/calcs/Makefile |  68 -------
+ .../drm/amd/display/dc/core/dc_link_dpcd.c    |   4 +-
+ .../drm/amd/display/dc/dcn20/dcn20_resource.c |   2 +-
+ .../drm/amd/display/dc/dcn21/dcn21_resource.c |   2 +-
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   |  22 ++-
+ .../amd/display/dc/{ => dml}/calcs/bw_fixed.c |   0
+ .../display/dc/{ => dml}/calcs/calcs_logger.h |   0
+ .../display/dc/{ => dml}/calcs/custom_float.c |   0
+ .../display/dc/{ => dml}/calcs/dce_calcs.c    |   0
+ .../dc/{ => dml}/calcs/dcn_calc_auto.c        |   0
+ .../dc/{ => dml}/calcs/dcn_calc_auto.h        |   0
+ .../dc/{ => dml}/calcs/dcn_calc_math.c        |   0
+ .../display/dc/{ => dml}/calcs/dcn_calcs.c    |   0
+ .../dml/{dcn2x/dcn2x.c => dcn20/dcn20_fpu.c}  |   2 +-
+ .../dml/{dcn2x/dcn2x.h => dcn20/dcn20_fpu.h}  |   6 +-
+ drivers/gpu/drm/amd/pm/amdgpu_dpm.c           |  23 ---
+ drivers/gpu/drm/amd/pm/inc/amdgpu_dpm.h       |   2 -
+ drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c     |  25 ++-
+ drivers/mmc/host/mmci_stm32_sdmmc.c           | 112 +++++++++--
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |   2 +-
+ drivers/net/ethernet/intel/ice/ice_main.c     |   2 +
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  56 +++++-
+ .../microchip/sparx5/sparx5_mactable.c        |   4 +-
+ .../ethernet/netronome/nfp/flower/conntrack.c |  28 ++-
+ .../ethernet/netronome/nfp/flower/conntrack.h |   2 +
+ drivers/net/geneve.c                          |  18 +-
+ drivers/net/hyperv/netvsc_drv.c               |  83 +++++---
+ drivers/net/usb/lan78xx.c                     |   3 +-
+ drivers/tty/serial/max310x.c                  | 151 +++++++++------
+ drivers/usb/host/xhci-ring.c                  |  80 ++++++--
+ drivers/usb/host/xhci.h                       |   1 +
+ fs/erofs/data.c                               |   1 +
+ fs/proc/array.c                               |  17 +-
+ include/linux/regmap.h                        |  19 ++
+ include/trace/events/qdisc.h                  |  20 +-
+ kernel/bpf/cpumap.c                           |   2 +-
+ kernel/exit.c                                 |  12 +-
+ kernel/sys.c                                  |  91 +++++----
+ net/ipv6/route.c                              |  21 +--
+ net/netfilter/nf_conntrack_h323_asn1.c        |   4 +
+ net/netfilter/nft_ct.c                        |  11 +-
+ net/netrom/af_netrom.c                        |  14 +-
+ net/netrom/nr_dev.c                           |   2 +-
+ net/netrom/nr_in.c                            |   6 +-
+ net/netrom/nr_out.c                           |   2 +-
+ net/netrom/nr_route.c                         |   8 +-
+ net/netrom/nr_subr.c                          |   5 +-
+ net/rds/rdma.c                                |   3 +
+ net/rds/send.c                                |   6 +-
+ scripts/mod/modpost.c                         |   7 +-
+ sound/usb/card.c                              |   1 +
+ sound/usb/card.h                              |   7 +-
+ sound/usb/endpoint.c                          | 177 +++++++++++++++---
+ sound/usb/endpoint.h                          |   9 +-
+ sound/usb/implicit.c                          |   9 +-
+ sound/usb/implicit.h                          |   2 +-
+ sound/usb/mixer.c                             |   7 +
+ sound/usb/pcm.c                               |  89 +++++----
+ sound/usb/pcm.h                               |   2 +
+ sound/usb/quirks.c                            |  30 ++-
+ sound/usb/usbaudio.h                          |   9 +
+ .../selftests/net/mptcp/simult_flows.sh       |   8 +-
+ .../selftests/vm/charge_reserved_hugetlb.sh   |   2 +-
+ tools/testing/selftests/vm/map_hugetlb.c      |   7 +
+ .../selftests/vm/write_hugetlb_memory.sh      |   2 +-
+ 78 files changed, 966 insertions(+), 481 deletions(-)
+ delete mode 100644 drivers/gpu/drm/amd/display/dc/calcs/Makefile
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/bw_fixed.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/calcs_logger.h (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/custom_float.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/dce_calcs.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/dcn_calc_auto.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/dcn_calc_auto.h (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/dcn_calc_math.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/{ => dml}/calcs/dcn_calcs.c (100%)
+ rename drivers/gpu/drm/amd/display/dc/dml/{dcn2x/dcn2x.c => dcn20/dcn20_fpu.c} (99%)
+ rename drivers/gpu/drm/amd/display/dc/dml/{dcn2x/dcn2x.h => dcn20/dcn20_fpu.h} (94%)
+
 -- 
 2.43.0
 
