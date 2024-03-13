@@ -1,71 +1,50 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F384AEC7;
-	Wed, 13 Mar 2024 19:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333FB50243;
+	Wed, 13 Mar 2024 19:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710359477; cv=none; b=ZvBAJ2zHR1fdphstxaLUlyxzQokPnYiAQRjP3g7sO2qEGeiTDEE2N/w15MjZW4BYerz+AG20EdQtCR4qL8WTvil4f24O5LfGyKjFR3WlaF39YIl3P1tTE/KzHei1TYPJnLnU05NKaipewSowk1MzJV7O6GVL08OMNEFW9Sq6AVQ=
+	t=1710359533; cv=none; b=ocodyFSPJgsoQ7gYZPsQm+azqSyQGV4h/tDZlQ+dBtwkrzdaDj9QoRCS9VUl1znT/eWH3Y/sDoVr9RvG08SevMgQ8EA1WGvG+t09ObmwkpGZg10LG2oKQKCd/ZP2ZKrzb0+wdk++CRhvRMiIcj3wje3KEy/Nh8okn4WbqS1FIXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710359477; c=relaxed/simple;
-	bh=Xnwo+DzSvFOSfVaLDCLc86ChPoxbfxtMcxSbaI6/hD0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNgMX2dPOEwv8xQQ26D2NY7REYA/39fG/ZbwYflpr7zUPbUiTBBCyy57A1wuPSc2h7ro4dSAveIIcNF4qpa6ObJKh1jk9QU1OBkNHL10C6RPcz/diXk8bgufuRvs7DzMdGrb+H3wPN8VYrmW4yYewNrDOhQjiik9UxSlPJfiDl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/JwIhze; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710359533; c=relaxed/simple;
+	bh=2ZkDECGgCzxUfGsarTHx62/lL7Cs0OVqL8S2PP9gs3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OTcDIRFdbx26PCmKyPDhimGqbZEJhG3dPWtpJ1aECy9ZRIVGQfT0WdCdu/bW89X56SKFcfL3w4Ov8ctxgdXLezBr0AloujAOTFDYx4YIW01xfuVBSY4AuiGlFfsLsV+mGMpCQVxWlQrcpvneaffEORawdmKEfgRFRY2ZJqks5hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Wteln205; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/JwIhze"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a46623ed901so29759566b.0;
-        Wed, 13 Mar 2024 12:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710359474; x=1710964274; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=auh595R//W28Gpao1Uu3VvAA76w9MD+VidzjUQx78lA=;
-        b=l/JwIhzehJWcq58UOI/35RaSUGf5//C1KzH52I/KRpcOoVpMx2W+4P1O0u4IumGSif
-         X/oR8e8K88PK4S3AEK+eeL+fWFV0kAn3Vz2RivCCW4CbcNNv33AqCTj3ChLBZZqpXK3Q
-         wzleZY3MP5GRZmaW/VWLi1C5zuLWF7gYlu1fqxF2u8hOQO6ijjVyE65dTp+MQzYKIBkq
-         Ph5a91ugWJoiCoDC6cWlWAKMGmfpCYoRiJWd4UBbZ5EdlCCQw04jDUIGYaCShIQrD/rz
-         O456rPVNDr5onXneqSweH1DOt6oyhwBkjZItA+QRnNYZgHq6dt0gZ7VcR8LGLPGAEoAB
-         66Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710359474; x=1710964274;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=auh595R//W28Gpao1Uu3VvAA76w9MD+VidzjUQx78lA=;
-        b=wNW9E83GENi2uT+zRQsiFHMGxg9Xez3EUX9/7kKvK5yGFnnTIo1UIOReDoVaaXIFQX
-         Vvg2zlay0uy9YmPSbWMF+pyle3CX1rlo9AYKl9n8sR+iziNrWdOLmJ7vTVB+O+KUk1QI
-         5oVD+aszukOQK21Nv4vFpBsz5cvpn1vP7feRWzd6DovixoXVCKmYj40WL8Lb0jL7thOB
-         zopKVVI2Dhv3V9UVrJkAXtlnOnSkPQgVycXo+Z669PwPMebVpV9tBeMsdzM0xvgpX7qz
-         v90wvMk6QuQtYOuLLPqkVY6li1BehqZT82o+Lag7MVd+sYRpwbUsxLPe54pHPrQQA3df
-         xM/A==
-X-Forwarded-Encrypted: i=1; AJvYcCW9lR618RRXehRRRJCEpJ9kxzfWaqd5PpyfJF9uvPP1UkczVpOwFRBnZbz3kdAJdhM7PMCkCVvcU5MXZ9JnAYyKPjD2gxYKJDLey+ZBg58RKyWtmSzH7Zluh3v1BYJG4lMFFYklD6Nb
-X-Gm-Message-State: AOJu0YxSdEsgj1LUK0a1YGOSy9ZgmFBtnHwaVdOBREcgWeVLFdnM/9kX
-	UjSneBr3NTuD7IHHjP3IWTKN14IAZr0BaBG9Ua9njlO3lhsSo/YK
-X-Google-Smtp-Source: AGHT+IHcxiPHPG+zx/cQSJztq+yvNF5MHiJattFwFU7RA3w5EaVD5xECZ/O7EJRTvhqzrD8NUrttvA==
-X-Received: by 2002:a17:906:6a22:b0:a46:2a79:6425 with SMTP id qw34-20020a1709066a2200b00a462a796425mr8048538ejc.22.1710359474025;
-        Wed, 13 Mar 2024 12:51:14 -0700 (PDT)
-Received: from vamoiridPC ([2a04:ee41:82:7577:fa35:157e:1a40:3463])
-        by smtp.gmail.com with ESMTPSA id bk2-20020a170906b0c200b00a44ef54b6b6sm5091061ejb.58.2024.03.13.12.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 12:51:13 -0700 (PDT)
-From: Vasileios Amoiridis <vassilisamir@gmail.com>
-X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
-Date: Wed, 13 Mar 2024 20:51:10 +0100
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, jic23@kernel.org,
-	lars@metafoo.de, ang.iglesiasg@gmail.com, mazziesaccount@gmail.com,
-	ak@it-klinger.de, petre.rodan@subdimension.ro,
-	linus.walleij@linaro.org, phil@raspberrypi.com, 579lpy@gmail.com,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] iio: pressure: add SCALE and RAW values for
- channels
-Message-ID: <20240313195110.GB1938985@vamoiridPC>
-References: <20240313174007.1934983-1-vassilisamir@gmail.com>
- <20240313174007.1934983-4-vassilisamir@gmail.com>
- <ZfH4bET-HX0e3PO_@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Wteln205"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=KjmiZg3EAJQ/7RoTwqomd7rnaA5S0FajGsdfSKsK+LI=; b=Wteln2055cbwnePEQiiE5RkPGW
+	BGbP4EIngHKXaoxI2XDXI/AfSmQx6qs8O616KuIqy8gKlkHGUB7U8r9PjGauF/bwK7+Fi+ukaC55R
+	eezoS5aL2c+RFePjdDoM/a1oqCKjeQiXyVZa6WMazXaSNOR6CxBp+D9BxsP5NipvgLhg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rkUeY-00AGIU-0m; Wed, 13 Mar 2024 20:52:42 +0100
+Date: Wed, 13 Mar 2024 20:52:42 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ronnie.Kunin@microchip.com, Raju.Lakkaraju@microchip.com,
+	netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, Bryan.Whitehead@microchip.com,
+	richardcochran@gmail.com, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net 3/3] net: lan743x: Address problems with wake option
+ flags configuration sequences
+Message-ID: <725e8182-50de-4469-9f87-fa58179f8922@lunn.ch>
+References: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
+ <20240226080934.46003-4-Raju.Lakkaraju@microchip.com>
+ <78d7e538-9fa0-490e-bcfb-0a5943ad80c9@lunn.ch>
+ <LV8PR11MB87008454A629EE15B9CE14099F272@LV8PR11MB8700.namprd11.prod.outlook.com>
+ <PH8PR11MB79656DCF7806D7390C7100DE95272@PH8PR11MB7965.namprd11.prod.outlook.com>
+ <fd22d022-cad4-489c-9861-36765dd98a87@lunn.ch>
+ <PH8PR11MB79655416A331370D3496854A952A2@PH8PR11MB7965.namprd11.prod.outlook.com>
+ <3e84e1c9-f680-47fa-aa59-615ce57b65da@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,53 +53,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZfH4bET-HX0e3PO_@smile.fi.intel.com>
+In-Reply-To: <3e84e1c9-f680-47fa-aa59-615ce57b65da@gmail.com>
 
-On Wed, Mar 13, 2024 at 09:03:08PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 13, 2024 at 06:40:04PM +0100, Vasileios Amoiridis wrote:
-> > Add extra IIO_CHAN_INFO_SCALE and IIO_CHAN_INFO_RAW in order to be
-> > able to calculate the processed value with standard userspace IIO
-> > tools. Can be used for triggered buffers as well.
-> 
-> ...
-> 
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		switch (chan->type) {
-> > +		case IIO_HUMIDITYRELATIVE:
-> > +			*val = data->chip_info->read_humid(data);
-> > +			ret = IIO_VAL_INT;
-> > +			break;
-> > +		case IIO_PRESSURE:
-> > +			*val = data->chip_info->read_press(data);
-> > +			ret = IIO_VAL_INT;
-> > +			break;
-> > +		case IIO_TEMP:
-> > +			*val = data->chip_info->read_temp(data);
-> > +			ret = IIO_VAL_INT;
-> > +			break;
-> > +		default:
-> > +			ret = -EINVAL;
-> > +			break;
-> 
-> Is it mutex that prevents us from returning here?
-> If so, perhaps switching to use cleanup.h first?
-> 
+So i think we need to agree on best practices for new drivers and
+document what that is, probably in both the ethtool man page and
+include/uapi/linux/ethtool.h
 
-I haven't seen cleanup.h used in any file and now that I searched,
-only 5-6 are including it. I am currently thinking if the mutex
-that already exists is really needed since most of the drivers
-don't have it + I feel like this is something that should be done
-by IIO, thus maybe it's not even needed here.
+* WAKE_MAGIC on its own is O.K.
+* WAKE_MAGICSECURE without WAKE_MAGIC is invalid. -EINVAL
+* WAKE_MAGIC + WAKE_MAGICSECURE means only secure magic WoL.
+* Each driver needs to enforce this, due to backwards compatibility.
+  Some may decide not to.
 
-> > +		}
-> > +		break;
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Can we agree on this?
 
-Best regards,
-Vasileios Amoiridis
+    Andrew
+
