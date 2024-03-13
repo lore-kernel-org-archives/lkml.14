@@ -1,311 +1,647 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAB443AA4
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C8D40BE1
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710334507; cv=none; b=jPVXnrkjkMo42U+wAjAHqOoZpJ5A0MFm4P1my4cTTd36bqLv0DW/XNWcr62yltFAUPjUaGuUCHy6NqzQSjnwOn6G3zSXMFGS/n59+1PqAiOFXOc5DQsArd6C7mPabGSehhnlfTPpDA/UOr4bXhD9l4rjUKGiVYhJzwA/u8eriPA=
+	t=1710334523; cv=none; b=QKMb3L4RMrV3FY04mryrWBq6gezkVsD8GYCIsAA9lpf7lsISqohYOWIJpFiUJO0+6hUmmz4ENPraToE4/liXdZOOaspKBLy2uUIaJED6z1MhpPLxXHHleN1ZuoHp2DsnfE4b7D8BVXpw7p1hkzwi1KqqneVtfQYNTSg1eAzMyVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710334507; c=relaxed/simple;
-	bh=sh7lOn799mdRNo9SNh2T7fssV2zC50KXVdJoi0KTXRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UXM+8D0fc7CBGF9Sv6MXbxbtjnd0B53mio5Ci97VMC7Klt8qGD0UU2ZHi7vBuQyQLGWvA+EhZW/zjX90ntePd7/ufAdM8pR5anytQkqxJLUWMy2Gz4WR9jWiilax/3fFugyksmiSt6iVpqfBpDpzDj+VurVDUKLXKJgbVtyJ+I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ETNJF+7D; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710334523; c=relaxed/simple;
+	bh=D4mS9TN5zAt9PduRmBJHsD8zFdc+S+TnC8IcjVKeU1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sgGfAibdbnRfBJm+NQN8bQ3x/kI4PZQ7oGBzB0DyMxcioU3Q2fLbt5OG2SpyEeqIpTov5TDUIEq1FWU1TsyL+dMojp1PKfYNivGkOC4t2J6xtmzcidGKVcn3sJQxkyK3JUJ9IeU7WQ7WNWnRVbaP99cmARSMGmtoWoLZ965e2mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rhOWS/5D; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ETNJF+7D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710334504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=h/UYi6EhK4kWHCiuuewAtpIQWiza2uvSvfzWNm0vBG0=;
-	b=ETNJF+7D+SQg4jkKpBn3nAqfKvi8nnI8Y/FTMrhvvEz0SiRIFE3oZaeKh+nKrgHLVkcXER
-	JP0VpbvfUTEry64YFYCVJZ1G+DPx3wiktzIe7pupgfvK8Tj9MP4jb781obOLuhhEur5VJs
-	vyNSRhgY7y6wEb7cju69yLl6BdUP1j4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-615-N9sYoLSWOzi0ey4wgDZ8yA-1; Wed, 13 Mar 2024 08:55:00 -0400
-X-MC-Unique: N9sYoLSWOzi0ey4wgDZ8yA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 33595101A56C;
-	Wed, 13 Mar 2024 12:55:00 +0000 (UTC)
-Received: from p1.luc.cera.cz (unknown [10.45.224.236])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 074503C22;
-	Wed, 13 Mar 2024 12:54:57 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: pawel.chmielewski@intel.com,
-	aleksandr.loktionov@intel.com,
-	mschmidt@redhat.com,
-	Hugo Ferreira <hferreir@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] i40e: Enforce software interrupt during busy-poll exit
-Date: Wed, 13 Mar 2024 13:54:56 +0100
-Message-ID: <20240313125457.19475-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhOWS/5D"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33e9def4a6dso2318067f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 05:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710334520; x=1710939320; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+J/zpBZ8gEqT6dCwGHbOxDJCcGLZPuDRO+od6X+T6jU=;
+        b=rhOWS/5DdaG0bsFqPjywsBU79lGYdgUtJ5FDsCQkT6XrfFFu079eFpuY5/PUJXgDKm
+         exmkwGRiJO4GtEiYzhxfkRgZz1wQfIqz5+BPHfKXvBtswEa3ZHnYPc/zKh1v7J0dTS40
+         SAD0xxpZtc1xcJTovL4lWo6kVfW8L1hoYSw5sIhCoN3sST+sC3ORkuwzgrsg/9a58VEe
+         ag41ah+dQ7Beo6grOCEzwm8EKb6ffKgfjITHrh8kZeCx9dtAMOe5h7KzcFyMCWmOgpM9
+         2jPEjDgo+lpns7QY2TjT8oY13H07FvRGTjRCzQR1R9TbUPe9qmCbAiNafJXXEnVhxfbU
+         10aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710334520; x=1710939320;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+J/zpBZ8gEqT6dCwGHbOxDJCcGLZPuDRO+od6X+T6jU=;
+        b=az3R5tLfKTYiDqOh/80NfhXQtVlcfjqBiu18sn/Bw1saaibrLRglexuPgy5kU/bRp6
+         vOUupOONC/DqCSpXp657QHqojIWQMhFAxZrVJ7CdWT7wdaBz14AO6APKyXFiwb5JYnJ8
+         Cp/OUijpn/eU+Mmyk/NbPO230jcWVhEf5jwKYTKAUKJ6sIpSOuRk9ekGi8JN/eWvIKI0
+         ETc+tLECsEI8fGTQtYcFzHeSIvZY00Y9aItEWrybHhgrdDUw763Qo0V7vmefe/EbmNhH
+         U1rMS4qlJq0h5AHev+R1T7UCq1chZqAKRsMbWSWc385fw5a//9JJ1doAE3j+7GBJGfFS
+         nc/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVsASjfr/pCOUpmg2CFtu3GvlkFNW+jo9E/bfGpQteIuS4Z4uhi4GeY/YQlkGUShJElpVxH587PWVchbgFMx+iyDg+bnO+QpJJcdWTv
+X-Gm-Message-State: AOJu0YwZCq0uJd/tnp8dmgO/Go6fhIVbaGY6I7QW727dpw6xwEeckwTl
+	OOXiLLQTT40FNp0conbcw7a19INg+8yMEy1+jrehOxM+lQOrLDAJhh5Tyndmuv0=
+X-Google-Smtp-Source: AGHT+IGJpufB+mAmtIm77WSxh0vHLrc2cwkNDwrb5NHAgIDazKK6MvSzqifcQKnXMOLUAWu0MH/EeQ==
+X-Received: by 2002:a5d:4248:0:b0:33d:1145:8787 with SMTP id s8-20020a5d4248000000b0033d11458787mr1422731wrr.25.1710334519696;
+        Wed, 13 Mar 2024 05:55:19 -0700 (PDT)
+Received: from [192.168.1.78] (host-92-17-96-232.as13285.net. [92.17.96.232])
+        by smtp.gmail.com with ESMTPSA id v9-20020a5d59c9000000b0033e22a7b3f8sm11602785wry.75.2024.03.13.05.55.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Mar 2024 05:55:19 -0700 (PDT)
+Message-ID: <80ad9093-c9cf-4b5a-94d0-78e966168ca7@linaro.org>
+Date: Wed, 13 Mar 2024 12:55:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
+ board DTS
+Content-Language: en-US
+To: Sumit Garg <sumit.garg@linaro.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, stephan@gerhold.net,
+ neil.armstrong@linaro.org, laetitia.mariottini@se.com,
+ pascal.eberhard@se.com, abdou.saker@se.com, jimmy.lalande@se.com,
+ benjamin.missey@non.se.com, daniel.thompson@linaro.org,
+ linux-kernel@vger.kernel.org, Jagdish Gediya <jagdish.gediya@linaro.org>
+References: <20240313123017.362570-1-sumit.garg@linaro.org>
+ <20240313123017.362570-4-sumit.garg@linaro.org>
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20240313123017.362570-4-sumit.garg@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-As for ice bug fixed by commit b7306b42beaf ("ice: manage interrupts
-during poll exit") I'm seeing the similar issue also with i40e driver.
+Hi Sumit,
 
-In certain situation when busy-loop is enabled together with adaptive
-coalescing, the driver occasionally miss that there are outstanding
-descriptors to clean when exiting busy poll.
+On 13/03/2024 12:30, Sumit Garg wrote:
+> Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
+> Box Core board based on the Qualcomm APQ8016E SoC.
+> 
+> Support for Schneider Electric HMIBSC. Features:
+> - Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
+> - 1GiB RAM
+> - 8GiB eMMC, SD slot
+> - WiFi and Bluetooth
+> - 2x Host, 1x Device USB port
+> - HDMI
+> - Discrete TPM2 chip over SPI
+> - USB ethernet adaptors (soldered)
+> 
+> Co-developed-by: Jagdish Gediya <jagdish.gediya@linaro.org>
+> Signed-off-by: Jagdish Gediya <jagdish.gediya@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Reviewed-by: Caleb Connolly <caleb.connolly@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../dts/qcom/apq8016-schneider-hmibsc.dts     | 519 ++++++++++++++++++
+>  2 files changed, 520 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 39889d5f8e12..ad55e52e950b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -5,6 +5,7 @@ apq8016-sbc-usb-host-dtbs	:= apq8016-sbc.dtb apq8016-sbc-usb-host.dtbo
+>  
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-usb-host.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3-camera-mezzanine.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-schneider-hmibsc.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8039-t2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8094-sony-xperia-kitakami-karin_windy.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+> new file mode 100644
+> index 000000000000..2f6d394feb87
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+> @@ -0,0 +1,519 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2024, Linaro Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "msm8916-pm8916.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+> +#include <dt-bindings/sound/apq8016-lpass.h>
+> +
+> +/ {
+> +	model = "Schneider Electric HMIBSC Board";
+> +	compatible = "schneider,apq8016-hmibsc", "qcom,apq8016";
+> +
+> +	aliases {
+> +		mmc0 = &sdhc_1; /* eMMC */
+> +		mmc1 = &sdhc_2; /* SD card */
+> +		serial0 = &blsp_uart1;
+> +		serial1 = &blsp_uart2;
+> +		usid0 = &pm8916_0;
+> +		i2c1 = &blsp_i2c6;
+> +		i2c3 = &blsp_i2c4;
+> +		i2c4 = &blsp_i2c3;
+> +		spi0 = &blsp_spi5;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0";
+> +	};
+> +
+> +	memory@80000000 {
+> +		reg = <0 0x80000000 0 0x40000000>;
+> +	};
+> +
+> +	reserved-memory {
+> +		ramoops@bff00000 {
+> +			compatible = "ramoops";
+> +			reg = <0x0 0xbff00000 0x0 0x100000>;
+> +
+> +			record-size = <0x20000>;
+> +			console-size = <0x20000>;
+> +			ftrace-size = <0x20000>;
+> +		};
+> +	};
+> +
+> +	usb2513 {
+> +		compatible = "smsc,usb3503";
+> +		reset-gpios = <&pm8916_gpios 1 GPIO_ACTIVE_LOW>;
+> +		initial-mode = <1>;
+> +	};
+> +
+> +	usb_id: usb-id {
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpios = <&tlmm 110 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb_id_default>;
+> +	};
+> +
+> +	hdmi-out {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con: endpoint {
+> +				remote-endpoint = <&adv7533_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&msm_key_volp_n_default>;
+> +
+> +		button {
+> +			label = "Volume Up";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpios = <&tlmm 107 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pm8916_mpps_leds>;
+> +
+> +		compatible = "gpio-leds";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		led@5 {
+> +			reg = <5>;
+> +			label = "apq8016-hmibsc:green:wlan";
+> +			function = LED_FUNCTION_WLAN;
+> +			color = <LED_COLOR_ID_YELLOW>;
+> +			gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "phy0tx";
+> +			default-state = "off";
+> +		};
+> +
+> +		led@6 {
+> +			reg = <6>;
+> +			label = "apq8016-hmibsc:yellow:bt";
+> +			function = LED_FUNCTION_BLUETOOTH;
+> +			color = <LED_COLOR_ID_BLUE>;
+> +			gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "bluetooth-power";
+> +			default-state = "off";
+> +		};
+> +	};
+> +};
+> +
+> +&blsp_i2c3 {
+> +	status = "okay";
+> +
+> +	eeprom@50 {
+> +		compatible = "atmel,24c32";
+> +		reg = <0x50>;
+> +	};
+> +};
+> +
+> +&blsp_i2c4 {
+> +	status = "okay";
+> +
+> +	adv_bridge: bridge@39 {
+> +		status = "okay";
+> +
+> +		compatible = "adi,adv7533";
+> +		reg = <0x39>;
+> +
+> +		interrupt-parent = <&tlmm>;
+> +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		adi,dsi-lanes = <4>;
+> +		clocks = <&rpmcc RPM_SMD_BB_CLK2>;
+> +		clock-names = "cec";
+> +
+> +		pd-gpios = <&tlmm 32 GPIO_ACTIVE_HIGH>;
+> +
+> +		avdd-supply = <&pm8916_l6>;
+> +		a2vdd-supply = <&pm8916_l6>;
+> +		dvdd-supply = <&pm8916_l6>;
+> +		pvdd-supply = <&pm8916_l6>;
+> +		v1p2-supply = <&pm8916_l6>;
+> +		v3p3-supply = <&pm8916_l17>;
+> +
+> +		pinctrl-names = "default","sleep";
+> +		pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
+> +		pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
+> +		#sound-dai-cells = <1>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				adv7533_in: endpoint {
+> +					remote-endpoint = <&mdss_dsi0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				adv7533_out: endpoint {
+> +					remote-endpoint = <&hdmi_con>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&blsp_i2c6 {
+> +	status = "okay";
+> +
+> +	rtc@30 {
+> +		compatible = "sii,s35390a";
+> +		reg = <0x30>;
+> +	};
+> +
+> +	eeprom@50 {
+> +		compatible = "atmel,24c256";
+> +		reg = <0x50>;
+> +	};
+> +};
+> +
+> +&blsp_spi5 {
+> +	status = "okay";
+> +	cs-gpios = <&tlmm 18 GPIO_ACTIVE_LOW>;
+> +
+> +	tpm@0 {
+> +		compatible = "tcg,tpm_tis-spi";
+> +		reg = <0>;
+> +		spi-max-frequency = <500000>;
+> +	};
+> +};
+> +
+> +&blsp_uart1 {
+> +	status = "okay";
+> +	label = "UART0";
+> +};
+> +
+> +&blsp_uart2 {
+> +	status = "okay";
+> +	label = "UART1";
+> +};
+> +
+> +&lpass {
+> +	status = "okay";
+> +};
+> +
+> +&mdss {
+> +	status = "okay";
+> +};
+> +
+> +&mdss_dsi0_out {
+> +	data-lanes = <0 1 2 3>;
+> +	remote-endpoint = <&adv7533_in>;
+> +};
+> +
+> +&pm8916_codec {
+> +	status = "okay";
+> +	qcom,mbhc-vthreshold-low = <75 150 237 450 500>;
+> +	qcom,mbhc-vthreshold-high = <75 150 237 450 500>;
+> +};
+> +
+> +&pm8916_resin {
+> +	status = "okay";
+> +	linux,code = <KEY_POWER>;
+> +};
+> +
+> +&pm8916_rpm_regulators {
+> +	pm8916_l17: l17 {
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +};
+> +
+> +&sdhc_1 {
+> +	status = "okay";
+> +};
+> +
+> +&sdhc_2 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
+> +	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
+> +
+> +	cd-gpios = <&tlmm 38 GPIO_ACTIVE_LOW>;
+> +};
+> +
+> +&sound {
+> +	status = "okay";
+> +
+> +	pinctrl-0 = <&cdc_pdm_default &sec_mi2s_default>;
+> +	pinctrl-1 = <&cdc_pdm_sleep &sec_mi2s_sleep>;
+> +	pinctrl-names = "default", "sleep";
+> +	model = "DB410c";
+> +	audio-routing =
+> +		"AMIC2", "MIC BIAS Internal2",
+> +		"AMIC3", "MIC BIAS External1";
+> +
+> +	quaternary-dai-link {
+> +		link-name = "ADV7533";
+> +		cpu {
+> +			sound-dai = <&lpass MI2S_QUATERNARY>;
+> +		};
+> +		codec {
+> +			sound-dai = <&adv_bridge 0>;
+> +		};
+> +	};
+> +
+> +	primary-dai-link {
+> +		link-name = "WCD";
+> +		cpu {
+> +			sound-dai = <&lpass MI2S_PRIMARY>;
+> +		};
+> +		codec {
+> +			sound-dai = <&lpass_codec 0>, <&pm8916_codec 0>;
+> +		};
+> +	};
+> +
+> +	tertiary-dai-link {
+> +		link-name = "WCD-Capture";
+> +		cpu {
+> +			sound-dai = <&lpass MI2S_TERTIARY>;
+> +		};
+> +		codec {
+> +			sound-dai = <&lpass_codec 1>, <&pm8916_codec 1>;
+> +		};
+> +	};
+> +};
+> +
+> +&usb {
+> +	status = "okay";
+> +	extcon = <&usb_id>, <&usb_id>;
+> +
+> +	pinctrl-names = "default", "device";
+> +	pinctrl-0 = <&usb_sw_sel_pm &usb_hub_reset_pm>;
+> +	pinctrl-1 = <&usb_sw_sel_pm_device &usb_hub_reset_pm_device>;
+> +};
+> +
+> +&usb_hs_phy {
+> +	extcon = <&usb_id>;
+> +};
+> +
+> +&wcnss {
+> +	status = "okay";
+> +	firmware-name = "qcom/apq8016/wcnss.mbn";
+> +};
+> +
+> +&wcnss_ctrl {
+> +	firmware-name = "qcom/apq8016/WCNSS_qcom_wlan_nv_sbc.bin";
+> +};
+> +
+> +&wcnss_iris {
+> +	compatible = "qcom,wcn3620";
+> +};
+> +
+> +&wcnss_mem {
+> +	status = "okay";
+> +};
+> +
+> +/* Enable CoreSight */
+> +&cti0 { status = "okay"; };
+> +&cti1 { status = "okay"; };
+> +&cti12 { status = "okay"; };
+> +&cti13 { status = "okay"; };
+> +&cti14 { status = "okay"; };
+> +&cti15 { status = "okay"; };
+> +&debug0 { status = "okay"; };
+> +&debug1 { status = "okay"; };
+> +&debug2 { status = "okay"; };
+> +&debug3 { status = "okay"; };
+> +&etf { status = "okay"; };
+> +&etm0 { status = "okay"; };
+> +&etm1 { status = "okay"; };
+> +&etm2 { status = "okay"; };
+> +&etm3 { status = "okay"; };
+> +&etr { status = "okay"; };
+> +&funnel0 { status = "okay"; };
+> +&funnel1 { status = "okay"; };
+> +&replicator { status = "okay"; };
+> +&stm { status = "okay"; };
+> +&tpiu { status = "okay"; };
+> +
+> +/*
+> + * 2mA drive strength is not enough when connecting multiple
+> + * I2C devices with different pull up resistors.
+> + */
+> +
+> +&blsp_i2c4_default {
+> +	drive-strength = <16>;
+> +};
+> +
+> +&blsp_i2c6_default {
+> +	drive-strength = <16>;
+> +};
+> +
+> +&tlmm {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_mux0_rs232_high &uart1_mux1_rs232_low>;
+> +
+> +	sdc2_cd_default: sdc2-cd-default-state {
+> +		pins = "gpio38";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +
+> +	usb_id_default: usb-id-default-state {
+> +		pins = "gpio110";
+> +		function = "gpio";
+> +
+> +		drive-strength = <8>;
+> +		bias-pull-up;
+> +	};
+> +
+> +	adv7533_int_active: adv533-int-active-state {
+> +		pins = "gpio31";
+> +		function = "gpio";
+> +
+> +		drive-strength = <16>;
+> +		bias-disable;
+> +	};
+> +
+> +	adv7533_int_suspend: adv7533-int-suspend-state {
+> +		pins = "gpio31";
+> +		function = "gpio";
+> +
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +
+> +	adv7533_switch_active: adv7533-switch-active-state {
+> +		pins = "gpio32";
+> +		function = "gpio";
+> +
+> +		drive-strength = <16>;
+> +		bias-disable;
+> +	};
+> +
+> +	adv7533_switch_suspend: adv7533-switch-suspend-state {
+> +		pins = "gpio32";
+> +		function = "gpio";
+> +
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +
+> +	msm_key_volp_n_default: msm-key-volp-n-default-state {
+> +		pins = "gpio107";
+> +		function = "gpio";
+> +
+> +		drive-strength = <8>;
+> +		bias-pull-up;
+> +	};
+> +
+> +	/*
+> +	 * UART1 being the debug console supports various modes of
+> +	 * operation (RS-232/485/422) controlled via GPIOs configured
+> +	 * mux as follows:
+> +	 *
+> +	 *   gpio100    gpio99    UART mode
+> +	 *   0          0         loopback
+> +	 *   0          1         RS-232
+> +	 *   1          0         RS-485
+> +	 *   1          1         RS-422
+> +	 *
+> +	 * The default mode configured here is RS-232 mode.
+> +	 */
+> +	uart1_mux0_rs232_high: uart1-mux0-rs232-state {
+> +		bootph-all;
+> +		pins = "gpio99";
+> +		function = "gpio";
+> +
+> +		drive-strength = <16>;
+> +		bias-disable;
+> +		output-high;
+> +	};
+> +
+> +	uart1_mux1_rs232_low: uart1-mux1-rs232-state {
+> +		bootph-all;
+> +		pins = "gpio100";
+> +		function = "gpio";
+> +
+> +		drive-strength = <16>;
+> +		bias-disable;
+> +		output-low;
+> +	};
+> +};
+> +
+> +&pm8916_gpios {
+> +	gpio-line-names =
+> +		"USB_HUB_RESET_N_PM",
+> +		"USB_SW_SEL_PM",
+> +		"NC",
+> +		"NC";
+> +
+> +	usb_hub_reset_pm: usb-hub-reset-pm-state {
+> +		pins = "gpio1";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +
+> +		input-disable;
+> +		output-high;
+> +	};
+> +
+> +	usb_hub_reset_pm_device: usb-hub-reset-pm-device-state {
+> +		pins = "gpio1";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +
+> +		output-low;
+> +	};
+> +
+> +	usb_sw_sel_pm: usb-sw-sel-pm-state {
+> +		pins = "gpio2";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +
+> +		power-source = <PM8916_GPIO_VPH>;
+> +		input-disable;
+> +		output-high;
+> +	};
+> +
+> +	usb_sw_sel_pm_device: usb-sw-sel-pm-device-state {
+> +		pins = "gpio2";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +
+> +		power-source = <PM8916_GPIO_VPH>;
+> +		input-disable;
+> +		output-low;
+> +	};
+> +};
+> +
+> +&pm8916_mpps {
+> +	gpio-line-names =
+> +		"NC",
+> +		"WLAN_LED_CTRL",
+> +		"BT_LED_CTRL",
+> +		"NC";
+> +
+> +	pm8916_mpps_leds: pm8916-mpps-state {
+> +		pins = "mpp2", "mpp3";
+> +		function = "digital";
+> +
+> +		output-low;
+> +	};
+> +};
+> +
+> +&blsp_uart1_default {
+> +	bootph-all;
+> +};
 
-Try to catch the remaining work by triggering a software interrupt
-when exiting busy poll. No extra interrupts will be generated when
-busy polling is not used.
-
-The issue was found when running sockperf ping-pong tcp test with
-adaptive coalescing and busy poll enabled (50 as value busy_pool
-and busy_read sysctl knobs) and results in huge latency spikes
-with more than 100000us.
-
-The fix is inspired from the ice driver and do the following:
-1) During napi poll exit in case of busy-poll (napo_complete_done()
-   returns false) this is recorded to q_vector that we were in busy
-   loop.
-2) In i40e_update_enable_itr()
-   - updates refreshed ITR intervals directly using PFINT_ITRN register
-   - if we are exiting ordinary poll then just enables the interrupt
-     using PFINT_DYN_CTLN
-   - if we are exiting busy poll then enables the interrupt and
-     additionally triggers an immediate software interrupt to catch any
-     pending clean-ups
-3) Reuses unused 3rd ITR (interrupt throttle) index and set it to
-   20K interrupts per second to limit the number of these sw interrupts.
-
-Test results
-============
-Prior:
-[root@dell-per640-07 net]# sockperf ping-pong -i 10.9.9.1 --tcp -m 1000 --mps=max -t 120
-sockperf: == version #3.10-no.git ==
-sockperf[CLIENT] send on:sockperf: using recvfrom() to block on socket(s)
-
-[ 0] IP = 10.9.9.1        PORT = 11111 # TCP
-sockperf: Warmup stage (sending a few dummy messages)...
-sockperf: Starting test...
-sockperf: Test end (interrupted by timer)
-sockperf: Test ended
-sockperf: [Total Run] RunTime=119.999 sec; Warm up time=400 msec; SentMessages=2438563; ReceivedMessages=2438562
-sockperf: ========= Printing statistics for Server No: 0
-sockperf: [Valid Duration] RunTime=119.549 sec; SentMessages=2429473; ReceivedMessages=2429473
-sockperf: ====> avg-latency=24.571 (std-dev=93.297, mean-ad=4.904, median-ad=1.510, siqr=1.063, cv=3.797, std-error=0.060, 99.0% ci=[24.417, 24.725])
-sockperf: # dropped messages = 0; # duplicated messages = 0; # out-of-order messages = 0
-sockperf: Summary: Latency is 24.571 usec
-sockperf: Total 2429473 observations; each percentile contains 24294.73 observations
-sockperf: ---> <MAX> observation = 103294.331
-sockperf: ---> percentile 99.999 =   45.633
-sockperf: ---> percentile 99.990 =   37.013
-sockperf: ---> percentile 99.900 =   35.910
-sockperf: ---> percentile 99.000 =   33.390
-sockperf: ---> percentile 90.000 =   28.626
-sockperf: ---> percentile 75.000 =   27.741
-sockperf: ---> percentile 50.000 =   26.743
-sockperf: ---> percentile 25.000 =   25.614
-sockperf: ---> <MIN> observation =   12.220
-
-After:
-[root@dell-per640-07 net]# sockperf ping-pong -i 10.9.9.1 --tcp -m 1000 --mps=max -t 120
-sockperf: == version #3.10-no.git ==
-sockperf[CLIENT] send on:sockperf: using recvfrom() to block on socket(s)
-
-[ 0] IP = 10.9.9.1        PORT = 11111 # TCP
-sockperf: Warmup stage (sending a few dummy messages)...
-sockperf: Starting test...
-sockperf: Test end (interrupted by timer)
-sockperf: Test ended
-sockperf: [Total Run] RunTime=119.999 sec; Warm up time=400 msec; SentMessages=2400055; ReceivedMessages=2400054
-sockperf: ========= Printing statistics for Server No: 0
-sockperf: [Valid Duration] RunTime=119.549 sec; SentMessages=2391186; ReceivedMessages=2391186
-sockperf: ====> avg-latency=24.965 (std-dev=5.934, mean-ad=4.642, median-ad=1.485, siqr=1.067, cv=0.238, std-error=0.004, 99.0% ci=[24.955, 24.975])
-sockperf: # dropped messages = 0; # duplicated messages = 0; # out-of-order messages = 0
-sockperf: Summary: Latency is 24.965 usec
-sockperf: Total 2391186 observations; each percentile contains 23911.86 observations
-sockperf: ---> <MAX> observation =  195.841
-sockperf: ---> percentile 99.999 =   45.026
-sockperf: ---> percentile 99.990 =   39.009
-sockperf: ---> percentile 99.900 =   35.922
-sockperf: ---> percentile 99.000 =   33.482
-sockperf: ---> percentile 90.000 =   28.902
-sockperf: ---> percentile 75.000 =   27.821
-sockperf: ---> percentile 50.000 =   26.860
-sockperf: ---> percentile 25.000 =   25.685
-sockperf: ---> <MIN> observation =   12.277
-
-Reported-by: Hugo Ferreira <hferreir@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/net/ethernet/intel/i40e/i40e.h        |  1 +
- drivers/net/ethernet/intel/i40e/i40e_main.c   |  6 +++
- .../net/ethernet/intel/i40e/i40e_register.h   |  2 +
- drivers/net/ethernet/intel/i40e/i40e_txrx.c   | 46 ++++++++++++++-----
- drivers/net/ethernet/intel/i40e/i40e_txrx.h   |  1 +
- 5 files changed, 45 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index 9b701615c7c6..4d2b05de6c63 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -908,6 +908,7 @@ struct i40e_q_vector {
- 	struct rcu_head rcu;	/* to avoid race with update stats on free */
- 	char name[I40E_INT_NAME_STR_LEN];
- 	bool arm_wb_state;
-+	bool in_busy_poll;
- 	int irq_num;		/* IRQ assigned to this q_vector */
- } ____cacheline_internodealigned_in_smp;
- 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 89a3401d20ab..1ea6d06b0acc 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -3915,6 +3915,12 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
- 		     q_vector->tx.target_itr >> 1);
- 		q_vector->tx.current_itr = q_vector->tx.target_itr;
- 
-+		/* Set ITR for software interrupts triggered after exiting
-+		 * busy-loop polling.
-+		 */
-+		wr32(hw, I40E_PFINT_ITRN(I40E_SW_ITR, vector - 1),
-+		     I40E_ITR_20K);
-+
- 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
- 		     i40e_intrl_usec_to_reg(vsi->int_rate_limit));
- 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_register.h b/drivers/net/ethernet/intel/i40e/i40e_register.h
-index 14ab642cafdb..baa6bb68bcf8 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_register.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e_register.h
-@@ -335,6 +335,8 @@
- #define I40E_PFINT_DYN_CTLN_INTERVAL_SHIFT 5
- #define I40E_PFINT_DYN_CTLN_SW_ITR_INDX_ENA_SHIFT 24
- #define I40E_PFINT_DYN_CTLN_SW_ITR_INDX_ENA_MASK I40E_MASK(0x1, I40E_PFINT_DYN_CTLN_SW_ITR_INDX_ENA_SHIFT)
-+#define I40E_PFINT_DYN_CTLN_SW_ITR_INDX_SHIFT 25
-+#define I40E_PFINT_DYN_CTLN_SW_ITR_INDX_MASK I40E_MASK(0x3, I40E_PFINT_DYN_CTLN_SW_ITR_INDX_SHIFT)
- #define I40E_PFINT_ICR0 0x00038780 /* Reset: CORER */
- #define I40E_PFINT_ICR0_INTEVENT_SHIFT 0
- #define I40E_PFINT_ICR0_INTEVENT_MASK I40E_MASK(0x1, I40E_PFINT_ICR0_INTEVENT_SHIFT)
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_txrx.c b/drivers/net/ethernet/intel/i40e/i40e_txrx.c
-index 0d7177083708..356c3140adf3 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_txrx.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_txrx.c
-@@ -2658,8 +2658,22 @@ static inline u32 i40e_buildreg_itr(const int type, u16 itr)
- 	return val;
- }
- 
--/* a small macro to shorten up some long lines */
--#define INTREG I40E_PFINT_DYN_CTLN
-+static inline u32 i40e_buildreg_swint(int type)
-+{
-+	u32 val;
-+
-+	/* 1. Enable the interrupt
-+	 * 2. Do not modify any ITR interval
-+	 * 3. Trigger a SW interrupt specified by type
-+	 */
-+	val = I40E_PFINT_DYN_CTLN_INTENA_MASK |
-+	      I40E_PFINT_DYN_CTLN_ITR_INDX_MASK | /* set noitr */
-+	      I40E_PFINT_DYN_CTLN_SWINT_TRIG_MASK |
-+	      I40E_PFINT_DYN_CTLN_SW_ITR_INDX_ENA_MASK |
-+	      FIELD_PREP(I40E_PFINT_DYN_CTLN_SW_ITR_INDX_MASK, type);
-+
-+	return val;
-+}
- 
- /* The act of updating the ITR will cause it to immediately trigger. In order
-  * to prevent this from throwing off adaptive update statistics we defer the
-@@ -2702,8 +2716,8 @@ static inline void i40e_update_enable_itr(struct i40e_vsi *vsi,
- 	 */
- 	if (q_vector->rx.target_itr < q_vector->rx.current_itr) {
- 		/* Rx ITR needs to be reduced, this is highest priority */
--		intval = i40e_buildreg_itr(I40E_RX_ITR,
--					   q_vector->rx.target_itr);
-+		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, q_vector->reg_idx),
-+		     q_vector->rx.target_itr >> 1);
- 		q_vector->rx.current_itr = q_vector->rx.target_itr;
- 		q_vector->itr_countdown = ITR_COUNTDOWN_START;
- 	} else if ((q_vector->tx.target_itr < q_vector->tx.current_itr) ||
-@@ -2712,25 +2726,33 @@ static inline void i40e_update_enable_itr(struct i40e_vsi *vsi,
- 		/* Tx ITR needs to be reduced, this is second priority
- 		 * Tx ITR needs to be increased more than Rx, fourth priority
- 		 */
--		intval = i40e_buildreg_itr(I40E_TX_ITR,
--					   q_vector->tx.target_itr);
-+		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, q_vector->reg_idx),
-+		     q_vector->tx.target_itr >> 1);
- 		q_vector->tx.current_itr = q_vector->tx.target_itr;
- 		q_vector->itr_countdown = ITR_COUNTDOWN_START;
- 	} else if (q_vector->rx.current_itr != q_vector->rx.target_itr) {
- 		/* Rx ITR needs to be increased, third priority */
--		intval = i40e_buildreg_itr(I40E_RX_ITR,
--					   q_vector->rx.target_itr);
-+		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, q_vector->reg_idx),
-+		     q_vector->rx.target_itr >> 1);
- 		q_vector->rx.current_itr = q_vector->rx.target_itr;
- 		q_vector->itr_countdown = ITR_COUNTDOWN_START;
- 	} else {
- 		/* No ITR update, lowest priority */
--		intval = i40e_buildreg_itr(I40E_ITR_NONE, 0);
- 		if (q_vector->itr_countdown)
- 			q_vector->itr_countdown--;
- 	}
- 
--	if (!test_bit(__I40E_VSI_DOWN, vsi->state))
--		wr32(hw, INTREG(q_vector->reg_idx), intval);
-+	/* Do not enable interrupt if VSI is down */
-+	if (test_bit(__I40E_VSI_DOWN, vsi->state))
-+		return;
-+
-+	if (!q_vector->in_busy_poll) {
-+		intval = i40e_buildreg_itr(I40E_ITR_NONE, 0);
-+	} else {
-+		q_vector->in_busy_poll = false;
-+		intval = i40e_buildreg_swint(I40E_SW_ITR);
-+	}
-+	wr32(hw, I40E_PFINT_DYN_CTLN(q_vector->reg_idx), intval);
- }
- 
- /**
-@@ -2845,6 +2867,8 @@ int i40e_napi_poll(struct napi_struct *napi, int budget)
- 	 */
- 	if (likely(napi_complete_done(napi, work_done)))
- 		i40e_update_enable_itr(vsi, q_vector);
-+	else
-+		q_vector->in_busy_poll = true;
- 
- 	return min(work_done, budget - 1);
- }
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_txrx.h b/drivers/net/ethernet/intel/i40e/i40e_txrx.h
-index abf15067eb5d..2cdc7de6301c 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_txrx.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e_txrx.h
-@@ -68,6 +68,7 @@ enum i40e_dyn_idx {
- /* these are indexes into ITRN registers */
- #define I40E_RX_ITR    I40E_IDX_ITR0
- #define I40E_TX_ITR    I40E_IDX_ITR1
-+#define I40E_SW_ITR    I40E_IDX_ITR2
- 
- /* Supported RSS offloads */
- #define I40E_DEFAULT_RSS_HENA ( \
 -- 
-2.43.0
-
+// Caleb (they/them)
