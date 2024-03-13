@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7787603A;
-	Wed, 13 Mar 2024 17:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18A576056;
+	Wed, 13 Mar 2024 17:02:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349368; cv=none; b=n4T2iinxTp5S1UA9HS7LBH7CGarRRpj14Cyq+W+yi+e0B+3xGVX6DkVeLxgk741zpwsudkphxUFdiksyHGD/YO+J8LeJacZN4TTFKBW5VJNCFvciiEI2dEzHwL7EOVC/+et+it89GQjJG5J99Bgzw26yqA5Ku3sNWwDVtqd82z4=
+	t=1710349370; cv=none; b=MNhZf+KmFN2/maQuXXHRLAjMbDtKT5z4sj38flhbqoYas2lLqVKMoGjyEn6P3LxX7bZpD2uQONaofU6eybC+1CaNCYDD5Prm5zr/3I/XzknLX3qQDyuwQolGBV+JOFJZoOY9ajgRES3FYieLidm10KfgtWaVqOv0iibqOQ71TQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349368; c=relaxed/simple;
-	bh=KDuy0YzyLASNQ/uakw1bHnxcMSwZEnqIfhITzteukvI=;
+	s=arc-20240116; t=1710349370; c=relaxed/simple;
+	bh=uB6Kmj+7UuWh5REtj+8LBvTzv9j9EamYzrZD7GF8gUU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nzHzWnkBgHtvzUTQG8ikeAfX7b+2gW9khtczQfcprVzsIV9xBw9001vUiZP7vfVzypCh1Ph471+dByTxgU5jLbx1nNXcHdKSres4yDzO59T6mMyhFWaMX+VunaWXCMtRXqmYKkp7KGREKY9gPgIJ6J9zc0mZXl3dum9IB+SooJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0nHxOMd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gtHBqyMXh2uwmHjHp2MkFXnNE4N8mHXQKPiIZAT3pazxSpVeT5xZKSR6LrJ+m6BMudPqjIT7X+ZuaBDwNOqSzXmunySNFQw1pUR4hz1+FdwhfEmsOA/nJOHgwmb5PT5+PZt96wEhTAYOe+o7jRenvzljMFPxjkYOhBnbPaKLMm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j29mcPaK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0nHxOMd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B1AC43390;
-	Wed, 13 Mar 2024 17:02:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j29mcPaK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090F5C433A6;
+	Wed, 13 Mar 2024 17:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349368;
-	bh=KDuy0YzyLASNQ/uakw1bHnxcMSwZEnqIfhITzteukvI=;
+	s=k20201202; t=1710349370;
+	bh=uB6Kmj+7UuWh5REtj+8LBvTzv9j9EamYzrZD7GF8gUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X0nHxOMdnlTZB48m8MAggLfOQUbgbJdodY6q4soPC5t8WYEXmL8sJ8GfNc7rKJt8E
-	 M2K1iQVPQEF31ronVZR7FR2m9mVxXzmWmw8yvqGkXDGgdY+6iHYP1WNzS65ShHyTUK
-	 Z0CgnaJrRDqMlziaO7QSyBd313vhZ37OrvJQP/yZ+lJUwyrfmKXiPpz71BLz7TDg5H
-	 cHWqD2khOjPe0oWzG9UZR5oCaAXUu13jd3TyukxBMSwpPN3DG1bbF5a8ECTIbmFbtP
-	 BiKzp8NVUIZRIM2H1IMDPhOdnhZXqkglTHT9VsUYtsR4fB3QgZrJGckbe2PC1Zx7gM
-	 X9zPAVQ1VQ3FQ==
+	b=j29mcPaKAAudEjHJUyV696fgLuBIfARL1MkeZpjQruP5oQaiFNayZou8Q1q+Y9T55
+	 Lom+8olPE2zxak9zBg/iuEcs9AtYVONSCw6X20xuRW2wlwYwe6b0Tk/BIzqgCnv7ZC
+	 3ABmRWo4j0uaVoT8IPUb7fyqs3uzKrtj1uJYOIXRWqw3OJQtJHUWGBm3QOPrunm3Zt
+	 VsUJz9LhtAke6cSAqAJg/eX15TiuWcDtJC9lW/iQspunJB9VDdMN0ADT6Gk1UdDkLL
+	 Qcgy3HqbSKuthk+eti5Z7LrC4vbLjDokhLPy0ScbJoW83KGEVunGzGny3IbZbDd4d9
+	 T1evblLoSA5gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
+Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 31/51] serial: max310x: use regmap methods for SPI batch operations
-Date: Wed, 13 Mar 2024 13:01:52 -0400
-Message-ID: <20240313170212.616443-32-sashal@kernel.org>
+Subject: [PATCH 5.4 33/51] serial: max310x: prevent infinite while() loop in port startup
+Date: Wed, 13 Mar 2024 13:01:54 -0400
+Message-ID: <20240313170212.616443-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170212.616443-1-sashal@kernel.org>
 References: <20240313170212.616443-1-sashal@kernel.org>
@@ -55,91 +54,74 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-[ Upstream commit 285e76fc049c4d32c772eea9460a7ef28a193802 ]
+[ Upstream commit b35f8dbbce818b02c730dc85133dc7754266e084 ]
 
-The SPI batch read/write operations can be implemented as simple
-regmap raw read and write, which will also try to do a gather
-write just as it is done here.
+If there is a problem after resetting a port, the do/while() loop that
+checks the default value of DIVLSB register may run forever and spam the
+I2C bus.
 
-Use the regmap raw read and write methods.
+Add a delay before each read of DIVLSB, and a maximum number of tries to
+prevent that situation from happening.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
-Link: https://lore.kernel.org/r/20220605144659.4169853-2-demonsingur@gmail.com
+Also fail probe if port reset is unsuccessful.
+
+Fixes: 10d8b34a4217 ("serial: max310x: Driver rework")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Link: https://lore.kernel.org/r/20240116213001.3691629-5-hugo@hugovil.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Stable-dep-of: b35f8dbbce81 ("serial: max310x: prevent infinite while() loop in port startup")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 36 ++++++++----------------------------
- 1 file changed, 8 insertions(+), 28 deletions(-)
+ drivers/tty/serial/max310x.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index 8d42c537ee5ea..c0fa4ad104774 100644
+index 80298a5714bcb..978d9d93127e5 100644
 --- a/drivers/tty/serial/max310x.c
 +++ b/drivers/tty/serial/max310x.c
-@@ -263,8 +263,6 @@ struct max310x_one {
- 	struct work_struct	md_work;
- 	struct work_struct	rs_work;
+@@ -235,6 +235,10 @@
+ #define MAX310x_REV_MASK		(0xf8)
+ #define MAX310X_WRITE_BIT		0x80
  
--	u8 wr_header;
--	u8 rd_header;
- 	u8 rx_buf[MAX310X_FIFO_SIZE];
- };
- #define to_max310x_port(_port) \
-@@ -635,32 +633,18 @@ static s32 max310x_set_ref_clk(struct device *dev, struct max310x_port *s,
- 
- static void max310x_batch_write(struct uart_port *port, u8 *txbuf, unsigned int len)
- {
--	struct max310x_one *one = to_max310x_port(port);
--	struct spi_transfer xfer[] = {
--		{
--			.tx_buf = &one->wr_header,
--			.len = sizeof(one->wr_header),
--		}, {
--			.tx_buf = txbuf,
--			.len = len,
--		}
--	};
--	spi_sync_transfer(to_spi_device(port->dev), xfer, ARRAY_SIZE(xfer));
-+	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	u8 reg = port->iobase + MAX310X_THR_REG;
++/* Port startup definitions */
++#define MAX310X_PORT_STARTUP_WAIT_RETRIES	20 /* Number of retries */
++#define MAX310X_PORT_STARTUP_WAIT_DELAY_MS	10 /* Delay between retries */
 +
-+	regmap_raw_write(s->regmap, reg, txbuf, len);
- }
+ /* Crystal-related definitions */
+ #define MAX310X_XTAL_WAIT_RETRIES	20 /* Number of retries */
+ #define MAX310X_XTAL_WAIT_DELAY_MS	10 /* Delay between retries */
+@@ -1316,6 +1320,9 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
+ 		goto out_clk;
  
- static void max310x_batch_read(struct uart_port *port, u8 *rxbuf, unsigned int len)
- {
--	struct max310x_one *one = to_max310x_port(port);
--	struct spi_transfer xfer[] = {
--		{
--			.tx_buf = &one->rd_header,
--			.len = sizeof(one->rd_header),
--		}, {
--			.rx_buf = rxbuf,
--			.len = len,
--		}
--	};
--	spi_sync_transfer(to_spi_device(port->dev), xfer, ARRAY_SIZE(xfer));
-+	struct max310x_port *s = dev_get_drvdata(port->dev);
-+	u8 reg = port->iobase + MAX310X_RHR_REG;
+ 	for (i = 0; i < devtype->nr; i++) {
++		bool started = false;
++		unsigned int try = 0, val = 0;
 +
-+	regmap_raw_read(s->regmap, reg, rxbuf, len);
- }
+ 		/* Reset port */
+ 		regmap_write(regmaps[i], MAX310X_MODE2_REG,
+ 			     MAX310X_MODE2_RST_BIT);
+@@ -1324,8 +1331,17 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
  
- static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
-@@ -1390,10 +1374,6 @@ static int max310x_probe(struct device *dev, const struct max310x_devtype *devty
- 		INIT_WORK(&s->p[i].md_work, max310x_md_proc);
- 		/* Initialize queue for changing RS485 mode */
- 		INIT_WORK(&s->p[i].rs_work, max310x_rs_proc);
--		/* Initialize SPI-transfer buffers */
--		s->p[i].wr_header = (s->p[i].port.iobase + MAX310X_THR_REG) |
--				    MAX310X_WRITE_BIT;
--		s->p[i].rd_header = (s->p[i].port.iobase + MAX310X_RHR_REG);
+ 		/* Wait for port startup */
+ 		do {
+-			regmap_read(regmaps[i], MAX310X_BRGDIVLSB_REG, &ret);
+-		} while (ret != 0x01);
++			msleep(MAX310X_PORT_STARTUP_WAIT_DELAY_MS);
++			regmap_read(regmaps[i], MAX310X_BRGDIVLSB_REG, &val);
++
++			if (val == 0x01)
++				started = true;
++		} while (!started && (++try < MAX310X_PORT_STARTUP_WAIT_RETRIES));
++
++		if (!started) {
++			ret = dev_err_probe(dev, -EAGAIN, "port reset failed\n");
++			goto out_uart;
++		}
  
- 		/* Register port */
- 		ret = uart_add_one_port(&max310x_uart, &s->p[i].port);
+ 		regmap_write(regmaps[i], MAX310X_MODE1_REG, devtype->mode1);
+ 	}
 -- 
 2.43.0
 
