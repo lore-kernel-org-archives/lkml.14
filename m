@@ -1,217 +1,198 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC2A9444;
-	Wed, 13 Mar 2024 01:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29488AD5D;
+	Wed, 13 Mar 2024 01:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710292459; cv=none; b=ds2eWJ/T3KmtmUHqA6vKxWYjGob4oZU7oCQhkJObCTsxP8xfbjMYnDy4iFTNmxZWODXYDJ2a4NvXC6Oj77W9VUD2cx36B7rTv7Io5Y259wwDctOIt1uLB8baWTyuG7xZwKctEvndJTwxn/E4W2mj6uBpexR0eMi/bc4iHHwnaNI=
+	t=1710292510; cv=none; b=KLz0OvSLTXUYEhAtHgfF6XDXiGDUl1AugkSCyulEQwCMs3w24D/b2KGeaUMFnLc7XRD6wcv3c7JJxiYZnNabG1lmqizFRMCSTQ7LaB9SqbSWw9JBRO8ARdsKSWB/fPOjAsojP+2orsj9MzDwWDqFtGaz6Hbj3bUyj4etL4h8e2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710292459; c=relaxed/simple;
-	bh=nfQVya1SfjvIIWiOwDqJgl+3Vd/ro0NsynnzkA+vcDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iayWY0F8znPWTYFI5ecAqHoHa4RMNXXGnFheH2dnLD3qQ8nzVBXI+Qx5/TYy2ZyZ5BfEnaaMIQrlpESPR6iTScAy6KyZoTedUWbwUlihwbtzYpM/Shx+metKquy06ryzWJQFP1TBDIsoxPvrm6I+/gYzDxusTkGBGFHGnOcsgjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: e9b13bb08fd846ec84b37e8bf20521fa-20240313
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:6bfcbf21-1856-4e01-973a-19f2a68045fd,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.37,REQID:6bfcbf21-1856-4e01-973a-19f2a68045fd,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6f543d0,CLOUDID:7659d2ff-c16b-4159-a099-3b9d0558e447,B
-	ulkID:2403130914090NL55WB5,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|66|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: e9b13bb08fd846ec84b37e8bf20521fa-20240313
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 267368829; Wed, 13 Mar 2024 09:14:06 +0800
-From: Ai Chao <aichao@kylinos.cn>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v6] platform/x86: add lenovo wmi camera button driver
-Date: Wed, 13 Mar 2024 09:13:59 +0800
-Message-Id: <20240313011359.835109-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1710292510; c=relaxed/simple;
+	bh=+QRCqzp0ciFdemrx2UvWgstgYpySVx7eiRr7gv+sQVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xbc0HD2Ob2RgVGfvqVxNj3IJs7ZIw1z0XEWWhw7D07O/DDi2s7IUa9FWAFucW/K3YsPBcy6lGXwDGsXQe0HLICclEi+ENO+IYAbJE5lPWkjE+0T0tJ0nztSz2TpeWASGrbrLIgGszrdtIdyPS/cv56Q8sKvLA2U1TRJir1yqoiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUslC19j; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUslC19j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710292508; x=1741828508;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+QRCqzp0ciFdemrx2UvWgstgYpySVx7eiRr7gv+sQVA=;
+  b=IUslC19j6Xb8VA67k/ItKOWXutCOSIsDo2LWRHSH0s/t5vcP2Q6LjopC
+   JDk1JOn6vO4GVwmxrSGdYni1r4MRJgIyDzC4fh3GJHgVI4ismJQd6DuoL
+   V1dhBJZp7CIRLMxfZ8SceCRjhRNp/yulkzywuDMn4euhkDKPYZK3XpWUL
+   dZ2OoVULClmSeucbVlDtzWwk3DAwOBLN3U9X7wm8r4F/k/vcB6MMOxGy4
+   7wvacn/8Vb7MAiwoOdrTKAxDACwlmAvqIiBxACMZl3iDjLavX3olxF+Eb
+   DfHgWISA+qHmp2GuqM74Ybtxqi0Re3HlKX7JW13U8UW1PYL63GkGlJvQH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4884643"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="4884643"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 18:15:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="11661987"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.127]) ([10.125.243.127])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 18:15:02 -0700
+Message-ID: <76a8a880-6c8f-4c4c-bd5d-da02206967ed@intel.com>
+Date: Wed, 13 Mar 2024 09:14:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] kvm/cpuid: set proper GuestPhysBits in
+ CPUID.0x80000008
+Content-Language: en-US
+To: Tao Su <tao1.su@linux.intel.com>, Gerd Hoffmann <kraxel@redhat.com>
+Cc: kvm@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>
+References: <20240311104118.284054-1-kraxel@redhat.com>
+ <20240311104118.284054-3-kraxel@redhat.com>
+ <ZfD8BrVOM9gaTudC@linux.bj.intel.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <ZfD8BrVOM9gaTudC@linux.bj.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add lenovo generic wmi driver to support camera button.
-The Camera button is a GPIO device. This driver receives ACPI notifyi
-when the camera button is switched on/off. This driver is used in
-Lenovo A70, it is a Computer integrated machine.
+On 3/13/2024 9:06 AM, Tao Su wrote:
+> On Mon, Mar 11, 2024 at 11:41:17AM +0100, Gerd Hoffmann wrote:
+>> The AMD APM (3.35) defines GuestPhysBits (EAX[23:16]) as:
+>>
+>>    Maximum guest physical address size in bits.  This number applies
+>>    only to guests using nested paging.  When this field is zero, refer
+>>    to the PhysAddrSize field for the maximum guest physical address size.
+>>
+>> Tom Lendacky confirmed that the purpose of GuestPhysBits is software use
+>> and KVM can use it as described below.  Hardware always returns zero
+>> here.
+>>
+>> Use the GuestPhysBits field to communicate the max addressable GPA to
+>> the guest.  Typically this is identical to the max effective GPA, except
+>> in case the CPU supports MAXPHYADDR > 48 but does not support 5-level
+>> TDP.
+>>
+>> GuestPhysBits is set only in case TDP is enabled, otherwise it is left
+>> at zero.
+>>
+>> GuestPhysBits will be used by the guest firmware to make sure resources
+>> like PCI bars are mapped into the addressable GPA.
+>>
+>> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+>> ---
+>>   arch/x86/kvm/mmu.h     |  2 ++
+>>   arch/x86/kvm/cpuid.c   | 31 +++++++++++++++++++++++++++++--
+>>   arch/x86/kvm/mmu/mmu.c |  5 +++++
+>>   3 files changed, 36 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+>> index 60f21bb4c27b..b410a227c601 100644
+>> --- a/arch/x86/kvm/mmu.h
+>> +++ b/arch/x86/kvm/mmu.h
+>> @@ -100,6 +100,8 @@ static inline u8 kvm_get_shadow_phys_bits(void)
+>>   	return boot_cpu_data.x86_phys_bits;
+>>   }
+>>   
+>> +u8 kvm_mmu_get_max_tdp_level(void);
+>> +
+>>   void kvm_mmu_set_mmio_spte_mask(u64 mmio_value, u64 mmio_mask, u64 access_mask);
+>>   void kvm_mmu_set_me_spte_mask(u64 me_value, u64 me_mask);
+>>   void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only);
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index c638b5fb2144..cd627dead9ce 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -1221,8 +1221,22 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>>   		entry->eax = entry->ebx = entry->ecx = 0;
+>>   		break;
+>>   	case 0x80000008: {
+>> +		/*
+>> +		 * GuestPhysAddrSize (EAX[23:16]) is intended for software
+>> +		 * use.
+>> +		 *
+>> +		 * KVM's ABI is to report the effective MAXPHYADDR for the
+>> +		 * guest in PhysAddrSize (phys_as), and the maximum
+>> +		 * *addressable* GPA in GuestPhysAddrSize (g_phys_as).
+>> +		 *
+>> +		 * GuestPhysAddrSize is valid if and only if TDP is enabled,
+>> +		 * in which case the max GPA that can be addressed by KVM may
+>> +		 * be less than the max GPA that can be legally generated by
+>> +		 * the guest, e.g. if MAXPHYADDR>48 but the CPU doesn't
+>> +		 * support 5-level TDP.
+>> +		 */
+>>   		unsigned int virt_as = max((entry->eax >> 8) & 0xff, 48U);
+>> -		unsigned int phys_as;
+>> +		unsigned int phys_as, g_phys_as;
+>>   
+>>   		if (!tdp_enabled) {
+>>   			/*
+>> @@ -1232,11 +1246,24 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>>   			 * for memory encryption affect shadow paging, too.
+>>   			 */
+>>   			phys_as = boot_cpu_data.x86_phys_bits;
+>> +			g_phys_as = 0;
+>>   		} else {
+>> +			/*
+>> +			 * If TDP is enabled, the effective guest MAXPHYADDR
+>> +			 * is the same as the raw bare metal MAXPHYADDR, as
+>> +			 * reductions to HPAs don't affect GPAs.  The max
+>> +			 * addressable GPA is the same as the max effective
+>> +			 * GPA, except that it's capped at 48 bits if 5-level
+>> +			 * TDP isn't supported (hardware processes bits 51:48
+>> +			 * only when walking the fifth level page table).
+>> +			 */
+>>   			phys_as = entry->eax & 0xff;
+>> +			g_phys_as = phys_as;
+>> +			if (kvm_mmu_get_max_tdp_level() < 5)
+>> +				g_phys_as = min(g_phys_as, 48);
+>>   		}
+>>   
+>> -		entry->eax = phys_as | (virt_as << 8);
+>> +		entry->eax = phys_as | (virt_as << 8) | (g_phys_as << 16);
+> 
+> When g_phys_as==phys_as, I would suggest advertising g_phys_as==0,
+> otherwise application can easily know whether it is in a VM, I’m
+> concerned this could be abused by application.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
-v6: Modify SW_CAMERA_LENS_COVER to
-KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
-v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-v3: Remove lenovo_wmi_remove function.
-v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+IMO, this should be protected by userspace VMM, e.g., QEMU to set actual 
+g_phys_as. On KVM side, KVM only reports the capability to userspace.
 
- drivers/platform/x86/Kconfig             | 12 +++
- drivers/platform/x86/Makefile            |  1 +
- drivers/platform/x86/lenovo-wmi-camera.c | 98 ++++++++++++++++++++++++
- 3 files changed, 111 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bdd302274b9a..9506a455b547 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
- 	To compile this driver as a module, choose M here: the module
- 	will be called inspur-platform-profile.
- 
-+config LENOVO_WMI_CAMERA
-+	tristate "Lenovo WMI Camera Button driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	  This driver provides support for Lenovo camera button. The Camera
-+	  button is a GPIO device. This driver receives ACPI notify when the
-+	  camera button is switched on/off.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called lenovo-wmi-camera.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1de432e8861e..217e94d7c877 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-+obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-new file mode 100644
-index 000000000000..fc2af7f48bc0
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-camera.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lenovo WMI Camera Button Driver
-+ *
-+ * Author: Ai Chao <aichao@kylinos.cn>
-+ * Copyright (C) 2024 KylinSoft Corporation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-+
-+struct lenovo_wmi_priv {
-+	struct input_dev *idev;
-+	struct device *dev;
-+};
-+
-+enum {
-+	SW_CAMERA_OFF	= 0,
-+	SW_CAMERA_ON	= 1,
-+};
-+
-+static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	if (obj->type == ACPI_TYPE_BUFFER &&
-+	    obj->buffer.pointer[0] <= SW_CAMERA_ON) {
-+		/* obj->buffer.pointer[0] is camera mode:
-+		 *      0 camera close
-+		 *      1 camera open
-+		 */
-+		if (obj->buffer.pointer[0] == SW_CAMERA_ON) {
-+			input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 1);
-+			input_sync(priv->idev);
-+			input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 0);
-+		} else {
-+			input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 1);
-+			input_sync(priv->idev);
-+			input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 0);
-+		}
-+		input_sync(priv->idev);
-+	} else {
-+		dev_dbg(&wdev->dev, "Bad response type %d or Bad camera mode %d\n",
-+			obj->type, obj->buffer.pointer[0]);
-+	}
-+}
-+
-+static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lenovo_wmi_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "Lenovo WMI Camera Button";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-+
-+	return input_register_device(priv->idev);
-+}
-+
-+static const struct wmi_device_id lenovo_wmi_id_table[] = {
-+	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver lenovo_wmi_driver = {
-+	.driver = {
-+		.name = "lenovo-wmi-camera",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lenovo_wmi_id_table,
-+	.no_singleton = true,
-+	.probe = lenovo_wmi_probe,
-+	.notify = lenovo_wmi_notify,
-+};
-+
-+module_wmi_driver(lenovo_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+>>   		entry->ecx &= ~(GENMASK(31, 16) | GENMASK(11, 8));
+>>   		entry->edx = 0;
+>>   		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
+>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+>> index 2d6cdeab1f8a..ffd32400fd8c 100644
+>> --- a/arch/x86/kvm/mmu/mmu.c
+>> +++ b/arch/x86/kvm/mmu/mmu.c
+>> @@ -5267,6 +5267,11 @@ static inline int kvm_mmu_get_tdp_level(struct kvm_vcpu *vcpu)
+>>   	return max_tdp_level;
+>>   }
+>>   
+>> +u8 kvm_mmu_get_max_tdp_level(void)
+>> +{
+>> +	return tdp_root_level ? tdp_root_level : max_tdp_level;
+>> +}
+>> +
+>>   static union kvm_mmu_page_role
+>>   kvm_calc_tdp_mmu_root_page_role(struct kvm_vcpu *vcpu,
+>>   				union kvm_cpu_role cpu_role)
+>> -- 
+>> 2.44.0
+>>
+>>
+> 
 
