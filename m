@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A2212CDAC;
-	Wed, 13 Mar 2024 16:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3F812E1CE;
+	Wed, 13 Mar 2024 16:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348068; cv=none; b=Yi+3c6jwggTitsXxB3baElHqN3LqH6yFibDjjKFfX4usuRufG5lQAieE2ndKpCws+jmEBGYsUCqz1yPc06RF6fws8JufeTIgexmvYL4zrSmnXn0KBVh9emeQd16YusUkSsoPQYJ4hXGCh9U//Cre0EJU3x3+F1UpGo5K2efZ2Zc=
+	t=1710348071; cv=none; b=jQIsARx6Zyd4ijAF75O0nACR7Go1WZvH96FZGvDA+5wAvjGY0O76dzCBDTPSB6QDJLgoja7DgEe6tYDLScZlFNDmC8Gqla2isi6skAo+KNYsLs2PZErSDyANG/Qfl3l4YXRnIItJJIemseiUu0pltNu5tkw8NFXMh6dvTNTsCU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348068; c=relaxed/simple;
-	bh=c2aIatCguzaQk8xaax3bneRSs0ZkDIlGzeM4Yi73sMg=;
+	s=arc-20240116; t=1710348071; c=relaxed/simple;
+	bh=FzwpHjy6WjmSc7qANlKnuOG3K9jOS54LN9DawrGFtp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaRhAA3T/ZHpNnUNrSWGGBIDLSgFnzOPZOrRREcIs11xG2ZSvgkqSo2JyOEHcIr3sSaq8AA97kM39MAsMtueNPWLaIicuxf2KxGJ8IIZZ+rfpOFn6tB3l7BiP7go1EH9JmkdG5bxwOOKnPQeJ+4Dt3wZWU7gFjXlpa9JnbyTsu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeDxtCCU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=STdAX/HAdzCuQn3GPoW7rUDsxTi7AOzsbDOCAE4ehy7NSkWT5AcHcv6Uyxnzn1s/gZWuKunobwc33JQ9EGhjMLOnBpF6ouLRkjIdrDwygN6dC4rgAJ5DS6oLCghcAgwJdKzzsci11FRtCxcNqDyrAweVObkbiPp3FSXDMBcOFG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0JX+tY9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeDxtCCU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A51C43394;
-	Wed, 13 Mar 2024 16:41:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0JX+tY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC391C433F1;
+	Wed, 13 Mar 2024 16:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348068;
-	bh=c2aIatCguzaQk8xaax3bneRSs0ZkDIlGzeM4Yi73sMg=;
+	s=k20201202; t=1710348070;
+	bh=FzwpHjy6WjmSc7qANlKnuOG3K9jOS54LN9DawrGFtp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jeDxtCCUpQBJTgFe4zu7KAAQ/AhfgiOg1ifmHIfhMXKTYJb+uS654Rh4kB0XsI8zK
-	 eaiZRSQ5i8+rsYjdDmiHe0tr46R2wDq8UQ5UTIeYgEPBAgAtfujd48s5ZKSuyjNQgu
-	 Q14AY/bIpqgOSMz5boZU0lfOu4319MyZQl6e+jQaGMnqu/H+GWlT8m3MX8SWc5JTCB
-	 QOJOn0sS280pHz8vJxuMyYD03nPp1AlIJRSRyyePDtvhkCyHxQPebPG1pXAnZaP2JY
-	 IzUVXr3TCqcvhgqf0wfGG6CJZrwyqaIELTQWIVbo6G9ZGDcNYODli5VY9kRyVXJrKR
-	 z8vlGFpEqF2eg==
+	b=n0JX+tY9OM2uP0kY+45bL839vEiY/9nlKxEt2c4tw/Q2BrWtgJ29IiAJqJ9flfPlb
+	 OUref2SlzXtWw9KpEWOljjQdXa5T1oTHq+1q511fkTkFw5SHKaWaUWdweo8Yo5ABwb
+	 AsOvM4FP4JrrsUWB2BIY/vsfjAOmKI29UfLLt6ScFk9vyKr7rbu/4NSH1Ez1fonBqa
+	 P8V/XQ+diuZbwvsGQTbKkWXhUnOZbHreuY8lWH+hYrYRnb7pSA+ZiJvAzKs0QoQ70s
+	 Wznm0YGrsI6etPMrA2rNOLiyLzLU+Uh6Euoddkk8hIXog7CTVLrdyLh5JTjG35LEz9
+	 adLV+4Z7OVVuw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andreas Herrmann <aherrmann@suse.de>,
-	Tejun Heo <tj@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Ma Hanghong <hanghong.ma@amd.com>,
+	Mark Broadworth <mark.broadworth@amd.com>,
+	Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 58/71] blk-rq-qos: store a gendisk instead of request_queue in struct rq_qos
-Date: Wed, 13 Mar 2024 12:39:44 -0400
-Message-ID: <20240313163957.615276-59-sashal@kernel.org>
+Subject: [PATCH 6.1 60/71] drm/amd/display: Wrong colorimetry workaround
+Date: Wed, 13 Mar 2024 12:39:46 -0400
+Message-ID: <20240313163957.615276-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313163957.615276-1-sashal@kernel.org>
 References: <20240313163957.615276-1-sashal@kernel.org>
@@ -56,281 +57,117 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ma Hanghong <hanghong.ma@amd.com>
 
-[ Upstream commit ba91c849fa50dbc6519cf7808177b3a9b7f6bc97 ]
+[ Upstream commit b1a98cf89a695d36c414653634ea7ba91b6e701f ]
 
-This is what about half of the users already want, and it's only going to
-grow more.
+[Why]
+For FreeSync HDR, native color space flag in AMD VSIF(BT.709) should be
+used when intepreting content and color space flag in VSC or AVI
+infoFrame should be ignored. However, it turned out some userspace
+application still use color flag in VSC or AVI infoFrame which is
+incorrect.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Andreas Herrmann <aherrmann@suse.de>
-Acked-by: Tejun Heo <tj@kernel.org>
-Link: https://lore.kernel.org/r/20230203150400.3199230-16-hch@lst.de
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: f814bdda774c ("blk-wbt: Fix detection of dirty-throttled tasks")
+[How]
+Transfer function is used when building the VSC and AVI infoFrame. Set
+colorimetry to BT.709 when all the following match:
+
+1. Pixel format is YCbCr;
+2. In FreeSync 2 HDR, color is COLOR_SPACE_2020_YCBCR;
+3. Transfer function is TRANSFER_FUNC_GAMMA_22;
+
+Tested-by: Mark Broadworth <mark.broadworth@amd.com>
+Reviewed-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Ma Hanghong <hanghong.ma@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Stable-dep-of: e6a7df96facd ("drm/amd/display: Fix MST Null Ptr for RV")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c     | 12 ++++++------
- block/blk-iolatency.c  | 14 +++++++-------
- block/blk-mq-debugfs.c | 10 ++++------
- block/blk-rq-qos.c     |  4 ++--
- block/blk-rq-qos.h     |  2 +-
- block/blk-wbt.c        | 16 +++++++---------
- 6 files changed, 27 insertions(+), 31 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c           | 5 ++++-
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c           | 6 ++++++
+ drivers/gpu/drm/amd/display/modules/inc/mod_info_packet.h   | 3 ++-
+ .../gpu/drm/amd/display/modules/info_packet/info_packet.c   | 6 +++++-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 78958c5bece08..ab5830ba23e0f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -670,7 +670,7 @@ static struct ioc *q_to_ioc(struct request_queue *q)
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index da16048bf1004..bea49befdcacc 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -5938,6 +5938,7 @@ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 	bool scale = dm_state ? (dm_state->scaling != RMX_OFF) : false;
+ 	int mode_refresh;
+ 	int preferred_refresh = 0;
++	enum color_transfer_func tf = TRANSFER_FUNC_UNKNOWN;
+ #if defined(CONFIG_DRM_AMD_DC_DCN)
+ 	struct dsc_dec_dpcd_caps dsc_caps;
+ #endif
+@@ -6071,7 +6072,9 @@ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 			if (stream->link->dpcd_caps.dprx_feature.bits.VSC_SDP_COLORIMETRY_SUPPORTED)
+ 				stream->use_vsc_sdp_for_colorimetry = true;
+ 		}
+-		mod_build_vsc_infopacket(stream, &stream->vsc_infopacket, stream->output_color_space);
++		if (stream->out_transfer_func->tf == TRANSFER_FUNCTION_GAMMA22)
++			tf = TRANSFER_FUNC_GAMMA_22;
++		mod_build_vsc_infopacket(stream, &stream->vsc_infopacket, stream->output_color_space, tf);
+ 		aconnector->psr_skip_count = AMDGPU_DM_PSR_ENTRY_DELAY;
  
- static const char __maybe_unused *ioc_name(struct ioc *ioc)
- {
--	struct gendisk *disk = ioc->rqos.q->disk;
-+	struct gendisk *disk = ioc->rqos.disk;
- 
- 	if (!disk)
- 		return "<unknown>";
-@@ -809,11 +809,11 @@ static int ioc_autop_idx(struct ioc *ioc)
- 	u64 now_ns;
- 
- 	/* rotational? */
--	if (!blk_queue_nonrot(ioc->rqos.q))
-+	if (!blk_queue_nonrot(ioc->rqos.disk->queue))
- 		return AUTOP_HDD;
- 
- 	/* handle SATA SSDs w/ broken NCQ */
--	if (blk_queue_depth(ioc->rqos.q) == 1)
-+	if (blk_queue_depth(ioc->rqos.disk->queue) == 1)
- 		return AUTOP_SSD_QD1;
- 
- 	/* use one of the normal ssd sets */
-@@ -2653,7 +2653,7 @@ static void ioc_rqos_throttle(struct rq_qos *rqos, struct bio *bio)
- 	if (use_debt) {
- 		iocg_incur_debt(iocg, abs_cost, &now);
- 		if (iocg_kick_delay(iocg, &now))
--			blkcg_schedule_throttle(rqos->q->disk,
-+			blkcg_schedule_throttle(rqos->disk,
- 					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
- 		iocg_unlock(iocg, ioc_locked, &flags);
- 		return;
-@@ -2754,7 +2754,7 @@ static void ioc_rqos_merge(struct rq_qos *rqos, struct request *rq,
- 	if (likely(!list_empty(&iocg->active_list))) {
- 		iocg_incur_debt(iocg, abs_cost, &now);
- 		if (iocg_kick_delay(iocg, &now))
--			blkcg_schedule_throttle(rqos->q->disk,
-+			blkcg_schedule_throttle(rqos->disk,
- 					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
- 	} else {
- 		iocg_commit_bio(iocg, bio, abs_cost, cost);
-@@ -2825,7 +2825,7 @@ static void ioc_rqos_exit(struct rq_qos *rqos)
- {
- 	struct ioc *ioc = rqos_to_ioc(rqos);
- 
--	blkcg_deactivate_policy(rqos->q, &blkcg_policy_iocost);
-+	blkcg_deactivate_policy(rqos->disk->queue, &blkcg_policy_iocost);
- 
- 	spin_lock_irq(&ioc->lock);
- 	ioc->running = IOC_STOP;
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index b0f8550f87cd2..268e6653b5a62 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -292,7 +292,7 @@ static void __blkcg_iolatency_throttle(struct rq_qos *rqos,
- 	unsigned use_delay = atomic_read(&lat_to_blkg(iolat)->use_delay);
- 
- 	if (use_delay)
--		blkcg_schedule_throttle(rqos->q->disk, use_memdelay);
-+		blkcg_schedule_throttle(rqos->disk, use_memdelay);
- 
- 	/*
- 	 * To avoid priority inversions we want to just take a slot if we are
-@@ -330,7 +330,7 @@ static void scale_cookie_change(struct blk_iolatency *blkiolat,
- 				struct child_latency_info *lat_info,
- 				bool up)
- {
--	unsigned long qd = blkiolat->rqos.q->nr_requests;
-+	unsigned long qd = blkiolat->rqos.disk->queue->nr_requests;
- 	unsigned long scale = scale_amount(qd, up);
- 	unsigned long old = atomic_read(&lat_info->scale_cookie);
- 	unsigned long max_scale = qd << 1;
-@@ -370,7 +370,7 @@ static void scale_cookie_change(struct blk_iolatency *blkiolat,
-  */
- static void scale_change(struct iolatency_grp *iolat, bool up)
- {
--	unsigned long qd = iolat->blkiolat->rqos.q->nr_requests;
-+	unsigned long qd = iolat->blkiolat->rqos.disk->queue->nr_requests;
- 	unsigned long scale = scale_amount(qd, up);
- 	unsigned long old = iolat->rq_depth.max_depth;
- 
-@@ -647,7 +647,7 @@ static void blkcg_iolatency_exit(struct rq_qos *rqos)
- 
- 	del_timer_sync(&blkiolat->timer);
- 	flush_work(&blkiolat->enable_work);
--	blkcg_deactivate_policy(rqos->q, &blkcg_policy_iolatency);
-+	blkcg_deactivate_policy(rqos->disk->queue, &blkcg_policy_iolatency);
- 	kfree(blkiolat);
- }
- 
-@@ -666,7 +666,7 @@ static void blkiolatency_timer_fn(struct timer_list *t)
- 
- 	rcu_read_lock();
- 	blkg_for_each_descendant_pre(blkg, pos_css,
--				     blkiolat->rqos.q->root_blkg) {
-+				     blkiolat->rqos.disk->queue->root_blkg) {
- 		struct iolatency_grp *iolat;
- 		struct child_latency_info *lat_info;
- 		unsigned long flags;
-@@ -750,9 +750,9 @@ static void blkiolatency_enable_work_fn(struct work_struct *work)
- 	 */
- 	enabled = atomic_read(&blkiolat->enable_cnt);
- 	if (enabled != blkiolat->enabled) {
--		blk_mq_freeze_queue(blkiolat->rqos.q);
-+		blk_mq_freeze_queue(blkiolat->rqos.disk->queue);
- 		blkiolat->enabled = enabled;
--		blk_mq_unfreeze_queue(blkiolat->rqos.q);
-+		blk_mq_unfreeze_queue(blkiolat->rqos.disk->queue);
  	}
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index 66923f51037a3..e2f80cd0ca8cb 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -3038,6 +3038,12 @@ static void set_avi_info_frame(
+ 		hdmi_info.bits.C0_C1   = COLORIMETRY_EXTENDED;
+ 	}
  
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index 7675e663df365..c152276736832 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -813,9 +813,9 @@ static const char *rq_qos_id_to_name(enum rq_qos_id id)
++	if (pixel_encoding && color_space == COLOR_SPACE_2020_YCBCR &&
++			stream->out_transfer_func->tf == TRANSFER_FUNCTION_GAMMA22) {
++		hdmi_info.bits.EC0_EC2 = 0;
++		hdmi_info.bits.C0_C1 = COLORIMETRY_ITU709;
++	}
++
+ 	/* TODO: un-hardcode aspect ratio */
+ 	aspect = stream->timing.aspect_ratio;
  
- void blk_mq_debugfs_unregister_rqos(struct rq_qos *rqos)
+diff --git a/drivers/gpu/drm/amd/display/modules/inc/mod_info_packet.h b/drivers/gpu/drm/amd/display/modules/inc/mod_info_packet.h
+index 1d8b746b02f24..edf5845f6a1f7 100644
+--- a/drivers/gpu/drm/amd/display/modules/inc/mod_info_packet.h
++++ b/drivers/gpu/drm/amd/display/modules/inc/mod_info_packet.h
+@@ -35,7 +35,8 @@ struct mod_vrr_params;
+ 
+ void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
+ 		struct dc_info_packet *info_packet,
+-		enum dc_color_space cs);
++		enum dc_color_space cs,
++		enum color_transfer_func tf);
+ 
+ void mod_build_hf_vsif_infopacket(const struct dc_stream_state *stream,
+ 		struct dc_info_packet *info_packet);
+diff --git a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+index 27ceba9d6d658..69691058ab898 100644
+--- a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
++++ b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+@@ -132,7 +132,8 @@ enum ColorimetryYCCDP {
+ 
+ void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
+ 		struct dc_info_packet *info_packet,
+-		enum dc_color_space cs)
++		enum dc_color_space cs,
++		enum color_transfer_func tf)
  {
--	lockdep_assert_held(&rqos->q->debugfs_mutex);
-+	lockdep_assert_held(&rqos->disk->queue->debugfs_mutex);
+ 	unsigned int vsc_packet_revision = vsc_packet_undefined;
+ 	unsigned int i;
+@@ -382,6 +383,9 @@ void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
+ 				colorimetryFormat = ColorimetryYCC_DP_AdobeYCC;
+ 			else if (cs == COLOR_SPACE_2020_YCBCR)
+ 				colorimetryFormat = ColorimetryYCC_DP_ITU2020YCbCr;
++
++			if (cs == COLOR_SPACE_2020_YCBCR && tf == TRANSFER_FUNC_GAMMA_22)
++				colorimetryFormat = ColorimetryYCC_DP_ITU709;
+ 			break;
  
--	if (!rqos->q->debugfs_dir)
-+	if (!rqos->disk->queue->debugfs_dir)
- 		return;
- 	debugfs_remove_recursive(rqos->debugfs_dir);
- 	rqos->debugfs_dir = NULL;
-@@ -823,7 +823,7 @@ void blk_mq_debugfs_unregister_rqos(struct rq_qos *rqos)
- 
- void blk_mq_debugfs_register_rqos(struct rq_qos *rqos)
- {
--	struct request_queue *q = rqos->q;
-+	struct request_queue *q = rqos->disk->queue;
- 	const char *dir_name = rq_qos_id_to_name(rqos->id);
- 
- 	lockdep_assert_held(&q->debugfs_mutex);
-@@ -835,9 +835,7 @@ void blk_mq_debugfs_register_rqos(struct rq_qos *rqos)
- 		q->rqos_debugfs_dir = debugfs_create_dir("rqos",
- 							 q->debugfs_dir);
- 
--	rqos->debugfs_dir = debugfs_create_dir(dir_name,
--					       rqos->q->rqos_debugfs_dir);
--
-+	rqos->debugfs_dir = debugfs_create_dir(dir_name, q->rqos_debugfs_dir);
- 	debugfs_create_files(rqos->debugfs_dir, rqos, rqos->ops->debugfs_attrs);
- }
- 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 8e83734cfe8db..d8cc820a365e3 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -300,7 +300,7 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
- {
- 	struct request_queue *q = disk->queue;
- 
--	rqos->q = q;
-+	rqos->disk = disk;
- 	rqos->id = id;
- 	rqos->ops = ops;
- 
-@@ -337,7 +337,7 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum rq_qos_id id,
- 
- void rq_qos_del(struct rq_qos *rqos)
- {
--	struct request_queue *q = rqos->q;
-+	struct request_queue *q = rqos->disk->queue;
- 	struct rq_qos **cur;
- 
- 	/*
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 2b7b668479f71..b02a1a3d33a89 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -26,7 +26,7 @@ struct rq_wait {
- 
- struct rq_qos {
- 	const struct rq_qos_ops *ops;
--	struct request_queue *q;
-+	struct gendisk *disk;
- 	enum rq_qos_id id;
- 	struct rq_qos *next;
- #ifdef CONFIG_BLK_DEBUG_FS
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index d9398347b08d8..e9206b1406e76 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -98,7 +98,7 @@ static void wb_timestamp(struct rq_wb *rwb, unsigned long *var)
-  */
- static bool wb_recent_wait(struct rq_wb *rwb)
- {
--	struct bdi_writeback *wb = &rwb->rqos.q->disk->bdi->wb;
-+	struct bdi_writeback *wb = &rwb->rqos.disk->bdi->wb;
- 
- 	return time_before(jiffies, wb->dirty_sleep + HZ);
- }
-@@ -235,7 +235,7 @@ enum {
- 
- static int latency_exceeded(struct rq_wb *rwb, struct blk_rq_stat *stat)
- {
--	struct backing_dev_info *bdi = rwb->rqos.q->disk->bdi;
-+	struct backing_dev_info *bdi = rwb->rqos.disk->bdi;
- 	struct rq_depth *rqd = &rwb->rq_depth;
- 	u64 thislat;
- 
-@@ -288,7 +288,7 @@ static int latency_exceeded(struct rq_wb *rwb, struct blk_rq_stat *stat)
- 
- static void rwb_trace_step(struct rq_wb *rwb, const char *msg)
- {
--	struct backing_dev_info *bdi = rwb->rqos.q->disk->bdi;
-+	struct backing_dev_info *bdi = rwb->rqos.disk->bdi;
- 	struct rq_depth *rqd = &rwb->rq_depth;
- 
- 	trace_wbt_step(bdi, msg, rqd->scale_step, rwb->cur_win_nsec,
-@@ -358,13 +358,12 @@ static void wb_timer_fn(struct blk_stat_callback *cb)
- 	unsigned int inflight = wbt_inflight(rwb);
- 	int status;
- 
--	if (!rwb->rqos.q->disk)
-+	if (!rwb->rqos.disk)
- 		return;
- 
- 	status = latency_exceeded(rwb, cb->stat);
- 
--	trace_wbt_timer(rwb->rqos.q->disk->bdi, status, rqd->scale_step,
--			inflight);
-+	trace_wbt_timer(rwb->rqos.disk->bdi, status, rqd->scale_step, inflight);
- 
- 	/*
- 	 * If we exceeded the latency target, step down. If we did not,
-@@ -689,16 +688,15 @@ static int wbt_data_dir(const struct request *rq)
- 
- static void wbt_queue_depth_changed(struct rq_qos *rqos)
- {
--	RQWB(rqos)->rq_depth.queue_depth = blk_queue_depth(rqos->q);
-+	RQWB(rqos)->rq_depth.queue_depth = blk_queue_depth(rqos->disk->queue);
- 	wbt_update_limits(RQWB(rqos));
- }
- 
- static void wbt_exit(struct rq_qos *rqos)
- {
- 	struct rq_wb *rwb = RQWB(rqos);
--	struct request_queue *q = rqos->q;
- 
--	blk_stat_remove_callback(q, rwb->cb);
-+	blk_stat_remove_callback(rqos->disk->queue, rwb->cb);
- 	blk_stat_free_callback(rwb->cb);
- 	kfree(rwb);
- }
+ 		default:
 -- 
 2.43.0
 
