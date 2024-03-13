@@ -1,16 +1,16 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE650446B6
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D27446BA0
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336475; cv=none; b=cP5gIekcfR4bMVNA+nbcdaoqOOZ65fhUy/TZs6fMt1o7dEvJY2A4Fcl3AVLYVMDHMdvzPwPRMn0+hxFoAlHNjL8BzN0Utxp2uQHCiqJcCsQfrgrCxTfh4F3JLYGVv6B1jNITt1Bb/GzkN16zyTLYPHvh1sggnmvboxDTvgB9+B0=
+	t=1710336476; cv=none; b=osIvCs/N8jMp2Q/FJG0V7ui/XeIwHJ55Y9fEXt43DOQVCLmggCyDNHylf4/V/MIECyeQHjtKdpgOwLCuxv/QLO+IgVBU77awWs7i1v5cLamxDSlGij5JCqDULnCrIoPmlma7U2eE6WEN1vqgFN28Wq3PDG0lT6JlaB1SCHBH9lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336475; c=relaxed/simple;
-	bh=VRJh0R+0013TbsoCeZulZdeuxp8wqDD5Jwio9im/E0c=;
+	s=arc-20240116; t=1710336476; c=relaxed/simple;
+	bh=KsqtE0RnoxxjoooDSevmuSJIEOTRdMJjG9AOWbmqlm0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kFK+6NJI5700keUmQCjZEjurcsOodFt4RAIdmiLbssxSWoxtZHN+iaNkEqtwbKu1rbFMRsLtD1af7qwv8lQpE9Mq1V/WrTClGJaG+P0Jfv4E4i2h8jn/U0jk0aVOyvFLBQbjYFkPQ5IzjDnZaKjabih5HN92MPB3gSrxuk2ZyeU=
+	 MIME-Version:Content-Type; b=oKS0hb8n7wWwNQWtUr2RDMPKjv+oqTXppgYsK1t7lwB3c+hKZ8ie95ntm7nOaybMIGx2Xl0qGiU2wh82npeXPRnjGwXLct8AO69hVdSqfz3X3eJ3uFMb24YjJlo2q5yLHg4bObQdn8iFd2MUzbF/46j4nEM6DD0Kh9MM4GVAX4Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrsz1SVFz4x1Y;
-	Thu, 14 Mar 2024 00:27:51 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrt00P8Zz4x1d;
+	Thu, 14 Mar 2024 00:27:52 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
 To: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <b4907cf4339bd086abc40430d91311436cb0c18e.1708078401.git.christophe.leroy@csgroup.eu>
-References: <b4907cf4339bd086abc40430d91311436cb0c18e.1708078401.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] powerpc/kprobes: Handle error returned by set_memory_rox()
-Message-Id: <171033598336.517247.65852176947279996.b4-ty@ellerman.id.au>
+In-Reply-To: <fbf74887dcf1f1ba9e1680fc3247cbb581b00662.1708078228.git.christophe.leroy@csgroup.eu>
+References: <fbf74887dcf1f1ba9e1680fc3247cbb581b00662.1708078228.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc: Use user_mode() macro when possible
+Message-Id: <171033598336.517247.12211842941297180348.b4-ty@ellerman.id.au>
 Date: Thu, 14 Mar 2024 00:19:43 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,16 +37,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Feb 2024 11:13:28 +0100, Christophe Leroy wrote:
-> set_memory_rox() can fail.
+On Fri, 16 Feb 2024 11:10:36 +0100, Christophe Leroy wrote:
+> There is a nice macro to check user mode.
 > 
-> In case it fails, free allocated memory and return NULL.
+> Use it instead of open coding anding with MSR_PR to increase
+> readability and avoid having to comment what that anding is for.
 > 
 > 
 
 Applied to powerpc/next.
 
-[1/1] powerpc/kprobes: Handle error returned by set_memory_rox()
-      https://git.kernel.org/powerpc/c/f7f18e30b468458b2611ca65d745b50edcda9f43
+[1/1] powerpc: Use user_mode() macro when possible
+      https://git.kernel.org/powerpc/c/d5835fb60bad641dbae64fe30c02f10857bf4647
 
 cheers
