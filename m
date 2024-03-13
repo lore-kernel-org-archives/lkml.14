@@ -1,16 +1,16 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE682446BA
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5453145010
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336474; cv=none; b=fjjIDbvg91QtTR+kN90m7R6COLCiAxuWa2FAAg2Vi4eQuydoiF0K6pAQwzsoYXedySAaA1uwrhkMHtN7Yh8vB855Y1bFid6TcEXZf+2k3l5+3AE2J1+bIOyqCVe8gRg9bJDYuJ9zxt2GbdHYc5KsDtHsOuDjljrLzokn8wCR3lM=
+	t=1710336475; cv=none; b=Hmv6MCBqaIw0gum7vWNq4K2WgtxUUyLbY/T6L7XXCyr2tr3Y+hInYkfLkTD20HCuPAmQGg/uEJXNfDpsup+1KwJOsCzCQIEEegcq4t413xj7ziohZvJTprlvfHGv+f5wPf3M2wck3DCrlw0a6tEirQpKOi9SEQpI+R4UcTUtWfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336474; c=relaxed/simple;
-	bh=eL1XsV0l4zMXTYVeb/MatWCX51BHyDz25GHRHJzUBgA=;
+	s=arc-20240116; t=1710336475; c=relaxed/simple;
+	bh=cJ+rQ4JlHxzBKTZwdGlaoR61MV5w43ulOU+XKZxbjHU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZDgfqu22NIcz3DLaGXZlFXvBi9mr/mxTEeOC9RnMPNYcFomj/pKyBxVkfKSd1gUv260CwV9zPra/GwBL+Z7acFOXh0GS4ohp8bEaLtY5T0L0GbVoamh3XpxsrDIKQUhlgOIFJXzTxR2IbJcyNtlftBkEh2ZzhGwWw7BXizS7TvM=
+	 MIME-Version:Content-Type; b=SunyAv9YUPB63xMD8wlH4bgup/vOd9YXBNUBMSo89qP5FD6nym/LYXZeAN4Dj8/jtqCY69ouWc7GSl/cKNf4pqhl4y1D9PkCjXg47r8SgGuCPi/DzWd4p2cYl8VkNatxGVZ9otLK+Z/W//s/V5fOC0B41wyaN7MwhDNSj7F5oGw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrsy5b40z4x1R;
-	Thu, 14 Mar 2024 00:27:50 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrsz4S0Kz4x1c;
+	Thu, 14 Mar 2024 00:27:51 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
 To: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <dc9a794f82ab62572d7d0be5cb4b8b27920a4f78.1708078316.git.christophe.leroy@csgroup.eu>
-References: <dc9a794f82ab62572d7d0be5cb4b8b27920a4f78.1708078316.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] powerpc: Implement set_memory_rox()
-Message-Id: <171033598336.517247.4075878005606513732.b4-ty@ellerman.id.au>
+In-Reply-To: <85a86e51b4ab26ce4b592984cc0a0851a3cc9479.1708076780.git.christophe.leroy@csgroup.eu>
+References: <85a86e51b4ab26ce4b592984cc0a0851a3cc9479.1708076780.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc/trace: Restrict hash_fault trace event to HASH MMU
+Message-Id: <171033598336.517247.1756148879387291088.b4-ty@ellerman.id.au>
 Date: Thu, 14 Mar 2024 00:19:43 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,19 +37,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Feb 2024 11:12:05 +0100, Christophe Leroy wrote:
-> Same as x86 and s390, add set_memory_rox() to avoid doing
-> one pass with set_memory_ro() and a second pass with set_memory_x().
+On Fri, 16 Feb 2024 10:46:43 +0100, Christophe Leroy wrote:
+> 'perf list' on powerpc 8xx shows an event named "1:hash_fault".
 > 
-> See commit 60463628c9e0 ("x86/mm: Implement native set_memory_rox()")
-> and commit 22e99fa56443 ("s390/mm: implement set_memory_rox()") for
-> more information.
+> This event is pointless because trace_hash_fault() is called only
+> from mm/book3s64/hash_utils.c
+> 
+> Only define it when CONFIG_PPC_64S_HASH_MMU is selected.
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc: Implement set_memory_rox()
-      https://git.kernel.org/powerpc/c/09ca1b11716f96461a4675eb0418d5cb97687389
+[1/1] powerpc/trace: Restrict hash_fault trace event to HASH MMU
+      https://git.kernel.org/powerpc/c/9e00743aba832f3f30ecb017d3345baf1f372140
 
 cheers
