@@ -1,71 +1,128 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C2D3B798
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D6043AA4
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336006; cv=none; b=aU+OMM6t/ogB6/NN3vo4W6eBvwd7u7Dp3qGil7FxSvCq1TRKjU+iJFKO17eqTFSJQbpswW0rnrfwEcp36lQVXzAsYUhqIm+NkgfLHhJ4CLOyocoXuP6jXPcZZBYMhY7xmqpawZQJ7kMWF28MBjF3fhwskEkeesfe6CahhOGOD6Q=
+	t=1710336057; cv=none; b=V0Sxly6OMQ+CTDxx498tU0bk02qnuGPwQ4X5pqQwlZJG+xcQa1mflT77UuLrGLmQeHFsD2oNyFVg1rlC/aQtcifuB2l2VmmRCCARp75W8Jjm/0Q/IyFtqd1YXCd3wbfDkcSkB6bysDHBhPf1PZmqnS4MlVKcfdeEdTGNBElhAfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336006; c=relaxed/simple;
-	bh=KpzxgYvCxU+Sru5HuHeZFBAc42cCg9CRe4AituRaDhQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ALlRzcZpSt0Hvp/Ybtad9e1Vs48ANtzZgd0Px2gKUB6KmrYVho3AwkI47hdOp2WDz25KlBHsaMnZBjnLLinvVIV0/hTfhzoEMS+rdG/WbyCFvfQw9yPFKpEgN5xBGvF3daQ9z7FmSVlFlTcqY1xD+fTBBIyb2IzTg9NzhsropeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3657cf730a0so57531255ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 06:20:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710336004; x=1710940804;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0258IwDfndZxyHoyXgigB04BgoMbnpe3maXG+nLqbrc=;
-        b=JPA6R9JJXjHSeYv4H6aEYTK3wwEoFINCYwmLimJN6JCKSUKMmAqhUIWa8gcskv2oth
-         KHWXGDoNcsIevIqz3IDbPzSBk9yCsE6nLTeWreD8fBYZ5fYbEgi9ZkFhc3PsbMWddlji
-         mvLZPUQTkO1SMvH1aq2AcF8sYM+lOxh0NXaU2Le7Jc2cfjbXAdaM5+OOJAYSFgeRoXfY
-         VnYYBrTm2li0Zd5rokNk1cuswvbzx1R71KRP5+fT+cgNQgyNKxqP7sWZQbaaghEZEZbM
-         9mdONpywcuBHfHpL+05uI17wm8cADBjUTA9a8+JWTEoX58fr0ZoGQ1h8R5qvLt/nMQXU
-         hgqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVh6OU86eSBFOH7aVbDJMTBgL4DkZ+3L65Uz2NHzJaE9z8x2DRpRrVo/TSHffhmE6NmxcXfvxR39Wk/wc+GSxf203HVGgV6A3AqNWbl
-X-Gm-Message-State: AOJu0Yz65228N7gHtGYrgJCMNaS09ht8+lEN3WbAxKp3LquAKyyKodIk
-	lqMEH8U4YFIP6x7K0U32YxvokQ4Qh0KC7fgF2kLEfOaUat3Neo4SkGnwwrc2+9B+08sKHj8PWR3
-	GXJ7BJ4otfi07u4acOX7lyLQBY3aEvRol1QVrVV8dxEvIwA3IHtiaPX4=
-X-Google-Smtp-Source: AGHT+IF6c5ud0nuXfdYE+zH8P+M3Rgr/YXfrvR348/gz6EBMooHpNDiPjNL59qB8ppsqvCbNGksSEdALPNONAi/7ysRJ8Vg019zK
+	s=arc-20240116; t=1710336057; c=relaxed/simple;
+	bh=FaT4XGiP/1deYiwr6gMlT38Yu4UeP83mybH7QKeqj60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IO1YbIM9/IaJ+avjMGHE2t3vzi+aI9cakVaYuOpX/z0t+eTx3shIXdLuLtDYRv2jFlpOQ8BKZ4kgDJ3FvMZVf8lw6zOEk1xw4Vdp/jchzMUf6H9d4d8DU2aND7E8nrjLJnXKGBXERsylLVIRxoLMYkD0B3aYU2euokG/RLyuiD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZpnByxP3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZpnByxP3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710336054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k9AU0bydAYPASchpnpF2gWjzciQAPMb4OtYaMryl0jc=;
+	b=ZpnByxP3a1EC3rLcm5WXjBNK/tJfzfH/o/KKkQyUqosfU0/LVDAwv7bza0Hn5ZzhB7D6Vo
+	PQVYI6HlcAWjkbY0JP7GBy7H0JJ9WvTO8Xw4lJAuPWzxVJQBrAAiti2XAUEHQUZJeH3qbW
+	/VlWV9FlqyxthVhMZfgIn0Gfgv9CmVI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-645-gV73DBrjPaWDGE1FfRfGdw-1; Wed, 13 Mar 2024 09:20:51 -0400
+X-MC-Unique: gV73DBrjPaWDGE1FfRfGdw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 96A17101CC63;
+	Wed, 13 Mar 2024 13:20:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.233])
+	by smtp.corp.redhat.com (Postfix) with SMTP id D189B2166B4F;
+	Wed, 13 Mar 2024 13:20:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 13 Mar 2024 14:19:29 +0100 (CET)
+Date: Wed, 13 Mar 2024 14:19:26 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 3/3] uprobes: add speculative lockless
+ system-wide uprobe filter check
+Message-ID: <20240313131926.GA19986@redhat.com>
+References: <20240312210233.1941599-1-andrii@kernel.org>
+ <20240312210233.1941599-4-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b24:b0:365:26e3:6e51 with SMTP id
- e4-20020a056e020b2400b0036526e36e51mr516457ilu.0.1710336004068; Wed, 13 Mar
- 2024 06:20:04 -0700 (PDT)
-Date: Wed, 13 Mar 2024 06:20:04 -0700
-In-Reply-To: <20240313124204.2356-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f82ad206138aa1c4@google.com>
-Subject: Re: [syzbot] [fs?] WARNING in stashed_dentry_prune
-From: syzbot <syzbot+9b5ec5ccf7234cc6cb86@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240312210233.1941599-4-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Hello,
+I forgot everything about this code, plus it has changed a lot since
+I looked at it many years ago, but ...
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I think this change is fine but the changelog looks a bit confusing
+(overcomplicated) to me.
 
-Reported-and-tested-by: syzbot+9b5ec5ccf7234cc6cb86@syzkaller.appspotmail.com
+On 03/12, Andrii Nakryiko wrote:
+>
+> This patch adds a speculative check before grabbing that rwlock. If
+> nr_systemwide is non-zero, lock is skipped and event is passed through.
+> From examining existing logic it looks correct and safe to do. If
+> nr_systemwide is being modified under rwlock in parallel, we have to
+> consider basically just one important race condition: the case when
+> nr_systemwide is dropped from one to zero (from
+> trace_uprobe_filter_remove()) under filter->rwlock, but
+> uprobe_perf_filter() raced and saw it as >0.
 
-Tested on:
+Unless I am totally confused, there is nothing new. Even without
+this change trace_uprobe_filter_remove() can clear nr_systemwide
+right after uprobe_perf_filter() drops filter->rwlock.
 
-commit:         b0546776 Merge tag 'printk-for-6.9' of git://git.kerne..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c7b951180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b5ec5ccf7234cc6cb86
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=108c8dae180000
+And of course, trace_uprobe_filter_add() can change nr_systemwide
+from 0 to 1. In this case uprobe_perf_func() can "wrongly" return
+UPROBE_HANDLER_REMOVE but we can't avoid this and afaics this is
+fine even if handler_chain() does unapply_uprobe(), uprobe_perf_open()
+will do uprobe_apply() after that, we can rely on ->register_rwsem.
 
-Note: testing is done by a robot and is best-effort only.
+> In case we speculatively read nr_systemwide as zero, while it was
+> incremented in parallel, we'll proceed to grabbing filter->rwlock and
+> re-doing the check, this time in lock-protected and non-racy way.
+
+See above...
+
+
+So I think uprobe_perf_filter() needs filter->rwlock only to iterate
+the list, it can check nr_systemwide lockless and this means that you
+can also remove the same check in __uprobe_perf_filter(), other callers
+trace_uprobe_filter_add/remove check it themselves.
+
+
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1351,6 +1351,10 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc,
+>  	tu = container_of(uc, struct trace_uprobe, consumer);
+>  	filter = tu->tp.event->filter;
+>
+> +	/* speculative check */
+> +	if (READ_ONCE(filter->nr_systemwide))
+> +		return true;
+> +
+>  	read_lock(&filter->rwlock);
+>  	ret = __uprobe_perf_filter(filter, mm);
+>  	read_unlock(&filter->rwlock);
+
+ACK,
+
+but see above. I think the changelog should be simplified and the
+filter->nr_systemwide check in __uprobe_perf_filter() should be
+removed. But I won't insist and perhaps I missed something...
+
+Oleg.
+
