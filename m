@@ -1,130 +1,82 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD759B7D;
-	Wed, 13 Mar 2024 22:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A69859B43
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710367795; cv=none; b=b+N7IOSA3V5nD9gUH+yZI109xRUN1JwGa0ldwNDsUdVK4Nbdb2pgmBwUtH9DGVJaxHWrcxhAB9IW7IwFY2BJqa3w+QtSTvZkWqgM9mY0rPBGBv85EWwCGab5A53vbfVDwfbks80b9GA2h3xvjaESWozPuUhoEMyEs/wBfAwlZtY=
+	t=1710367821; cv=none; b=iN+PJ4Nw4KEhAK1inqVcaPlYkZDHsoJQ/arKcydLgACfOlsGbsWSPrLlOrhDwSYYcaYp6tqFY/jfzNJ4BLiDL83gTa8yHi3e5q2CDtHXbEGl1MmmvwZMeJbvaajSGwGyap6/sFTAIBHOdGBYiQ802OnjxD2By4ljXGc50eZDaUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710367795; c=relaxed/simple;
-	bh=4hpePpaFTE6U7CK4ISiZbOEK8A4i2CFiX0UrbxY6QFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dBXugimgob9W+0BiscPQAYw9e1+2+9xHS5ZvcITCZ4dMP9kd/oGCaa7ksgy4gRgf/OHiSJXjkw5XpBHkyIDD1rqLfmEC+r3sTu/tuBWkRC7kvLvB8CS0HvKEGO5g+1rG16jeUaqQ2DgljgDgB8vxiLFq64swmFgIH8jh9W40ikY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kEkcr5TN; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710367821; c=relaxed/simple;
+	bh=G7WnWN0sS77GFvtJh/eSBeZOL2g3lWCyHdmf+zU/TvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NsbEyiYivZkhK93ADcUoc/0bJKGvLWD380h+NGu4pYiLM2jeYOHIGDqC+N51TxsNQG6237uW/5jdvGM/yfhhF5mMKmnWKeMtbdiFgyUKZ2CWJdq7x5yvvm15IeZHh4aAN1rZY/rUy7y77vyCG89nH6WF7gf1eQesDoDQxm+JCYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=mDIlLO93; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEkcr5TN"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7dbb7f8016eso758632241.1;
-        Wed, 13 Mar 2024 15:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710367793; x=1710972593; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=daWXvFeY9rVW7OCBrBWc6Xoloz3pKxS60zVN6U+OS54=;
-        b=kEkcr5TNNc952m2N/g0xoNSdz7HSN98Ky3GSKJelAIbRaP7A98nZBXyMvRCokBnmLY
-         5kUX1VPZTpRqwLyiJjJBNKBjXH94xmMNOpJ3OtJ/BZy/TaoH+hK6imfVeQW7+QoUqESg
-         JWvsvcsR6FHeP/TYNpsszeO2YQD/idkOlWrb0W1Nr9mG7ZvPCNMdEEwPv/y68Y8uMZoe
-         PFiCCs/llV5z6wQWPizyE8oM9A0RBSPxx9d9BxLaap7wd8I6VylbbzbLT6Uz/eg9M2mv
-         rBZS8cHcBuRn5MJx6rHmlDkkX+6uz+0ilpewklxUOpg8f+ixlytcfGFXZN5gYaWMgXNe
-         Oduw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710367793; x=1710972593;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=daWXvFeY9rVW7OCBrBWc6Xoloz3pKxS60zVN6U+OS54=;
-        b=pcKCjQdPHzVLw+7t+h9RnOM5P8pHj57mCo+UjNxDsL66t4b6BlFVYMZ1cQCkxdVsR1
-         bvqpJCUIY+P/ukhLbRTiwG/o3k4di50JI7kl3JoTQATgl2TO1nvQL5yKXwefasjo6fy1
-         l1Yd1gk0/Tc+ooLc3/z1z1PB8W/YaV2IhHNZtTpRZ/oRB0SRRHTnLcNhSIo5vrM88kQR
-         eH+RNvB/p2tGYp31oIDCQD0cxt6NxGaB52igHu+jwSFkQrK6lmZoCe0OZFKJOzDk9G+H
-         PXWUmBjSleMtM3SXJkcn8efd5M6NgIDdT+RGwzWb9Kwgagq8yvW7DOXouyAoUD+rf/vr
-         x9qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWgJK3DQixlX/eb+J+Gl82u2U9nW70vRSqmVNEkvn1EcI54FEo/HuIh3fy3nawkL+3DrruQlx13yHLigkD3JS74MfeNDK++le99Mw9bpx4yGEq4t7oLF42r/+iDfylVxBDYWZkuSvW+2uCcAWlPvw46c221Oh5jM7B0UTzIZASMNBiSgXqWNZzj9TxHVQq0qdJMAo7wHuL+gYncbI+Kkf7IvmogPfQwnw==
-X-Gm-Message-State: AOJu0Yz9vpXHSxiCXT9PYN+EyIUIPW3FJn+pQR79XQ3cAyw1kGntE7sg
-	Owef/3KGanCBEUuLUcSxwNLhODqJ+Bj2r9wevb06IxbdW9wOk7AbYAggrNyrP9bz7J2jmhtDoIN
-	oIxdKPcepM5286uFEzDD2LzLiZok=
-X-Google-Smtp-Source: AGHT+IHEH3fqCM6u2M1oBHOKBnOFhk9tpx1sgww/vfX8Gmw+JTdMXok3gn5hIEQvYF/wzB4BR7nx+Ps1ixoUwk8Ph18=
-X-Received: by 2002:a1f:f48d:0:b0:4d3:34f4:7e99 with SMTP id
- s135-20020a1ff48d000000b004d334f47e99mr118866vkh.0.1710367793051; Wed, 13 Mar
- 2024 15:09:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="mDIlLO93"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Tw4Sq2vKPz6Cl4Pd;
+	Wed, 13 Mar 2024 22:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1710367817; x=1712959818; bh=QQJMlgP56N7rXjX31zXaJf43
+	BsG8SkIAMHm4Wi+TRMk=; b=mDIlLO937fImNgwXd5PEtVK0N7LEYsg9eVCWEAQq
+	ZoEOrNcT+Fk//wYTY+GUyqihlXUPaGCc0rRQC4N3nQ7o4NxXm25jT+81e3XcexGk
+	uOuJNLjDEacsh7huMD8HWjuwLgX2vHUM6//ExfDGOfb1Gf+84r4eVxxyA8QPgRqn
+	0gfZmBU8sniEik+OE+2JZfuhgR7RcFC6nx7EkyjYNa9GQxWzp7mldNgnW0CqHPPO
+	LN1U4RrjSvVMjLttqlIHe4L5ULEI9OINV/HqkDI1hD8rCPf/sgroVKNHICxeKXfR
+	FgJ/dhgyY0frXWDtb7K9rcP6Vh1HkJvxsmcZy/Us5pEXXQ==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id V5FYab1wQ-Sh; Wed, 13 Mar 2024 22:10:17 +0000 (UTC)
+Received: from [100.96.154.173] (unknown [104.132.1.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Tw4Sn3b4Xz6ClL9N;
+	Wed, 13 Mar 2024 22:10:17 +0000 (UTC)
+Message-ID: <436fb309-1f6f-4279-8c33-121fd76a7129@acm.org>
+Date: Wed, 13 Mar 2024 15:10:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313083828.5048-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <619c6117-d9b2-4520-9138-311327b17a8e@linaro.org>
-In-Reply-To: <619c6117-d9b2-4520-9138-311327b17a8e@linaro.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 13 Mar 2024 22:08:32 +0000
-Message-ID: <CA+V-a8vicbBrnu__w=KubF3VfRte_v23pUumFEd7O3buSjOyPg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow
- 'input' and 'output-enable' properties
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: sysfs: Fix reference leak in
+ sysfs_break_active_protection()
+Content-Language: en-US
+To: Alan Stern <stern@rowland.harvard.edu>, Tejun Heo <tj@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Kernel development list <linux-kernel@vger.kernel.org>
+References: <CAEkJfYO6jRVC8Tfrd_R=cjO0hguhrV31fDPrLrNOOHocDkPoAA@mail.gmail.com>
+ <e9d710fc-eace-44de-b3cc-1117c3575ef7@rowland.harvard.edu>
+ <2024030428-graph-harmful-1597@gregkh>
+ <416a8311-c725-419a-8b22-74c80207347f@rowland.harvard.edu>
+ <9c2484f4-df62-4d23-97a2-55a160eba55f@rowland.harvard.edu>
+ <ZfIKwFSmw-ACj_jO@slm.duckdns.org>
+ <8a4d3f0f-c5e3-4b70-a188-0ca433f9e6f9@rowland.harvard.edu>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <8a4d3f0f-c5e3-4b70-a188-0ca433f9e6f9@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+On 3/13/24 14:43, Alan Stern wrote:
+> The sysfs_break_active_protection() routine has an obvious reference
+> leak in its error path.  If the call to kernfs_find_and_get() fails then
+> kn will be NULL, so the companion sysfs_unbreak_active_protection()
+> routine won't get called (and would only cause an access violation by
+> trying to dereference kn->parent if it was called).  As a result, the
+> reference to kobj acquired at the start of the function will never be
+> released.
+> 
+> Fix the leak by adding an explicit kobject_put() call when kn is NULL.
 
-Thank you for the review.
-
-On Wed, Mar 13, 2024 at 5:02=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 13/03/2024 09:38, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > On the RZ/G3S SMARC platform, the 'input' property is utilized in gpio-=
-hog
-> > nodes, and the 'output-enable' property is used for ETH0/1 TXC pins. Up=
-date
-> > the binding documentation to include these properties, addressing the
-> > following dtbs_check warnings:
-> >
-> > arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dtb: pinctrl@11030000: k=
-ey-1-gpio-hog: 'anyOf' conditional failed, one must be fixed:
-> >       'input' does not match any of the regexes: 'pinctrl-[0-9]+'
-> >       True is not of type 'object'
-> >       [[144, 1]] is not of type 'object'
-> >       ['key-1-gpio-irq'] is not of type 'object'
-> >       from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
-g2l-pinctrl.yaml#
-> >
-> > arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dtb: pinctrl@11030000: e=
-th0: 'anyOf' conditional failed, one must be fixed:
-> >       'mux', 'tx_ctl', 'txc' do not match any of the regexes: 'pinctrl-=
-[0-9]+'
-> >       'output-enable' does not match any of the regexes: 'pinctrl-[0-9]=
-+'
-> >       from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
-g2l-pinctrl.yaml#
-> >
->
-> In the future, please trim the error messages only to relevant parts, e.g=
-.
->
-> arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dtb: pinctrl@11030000: key=
--1-gpio-hog: 'anyOf' conditional failed, one must be fixed:
->         'input' does not match any of the regexes: 'pinctrl-[0-9]+'
->
-> Because all other four lines are really not helping.
->
-Sure I will keep that in mind.
-
-> Anyway, no need to resend just for that:
->
-Thanks.
-
-Cheers,
-Prabhakar
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
