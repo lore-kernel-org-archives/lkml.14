@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FAF6D1C6;
-	Wed, 13 Mar 2024 17:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A25A6E608;
+	Wed, 13 Mar 2024 17:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349344; cv=none; b=mMJ5MTK3/uKk6dAHuaKtBRIwrkFr2Yx+dFLKti9y1+domElTWTg+aA7fGofnT57Al7uha2Lk6TaqhqgigMFdlFKW0zhtAcoTS0FP49S9+lcOvdQji93h7BzGqCgO5+smN2QTf+FS2DYuZf1obZsImx9n7bG8hGXFFHXhvyacKAc=
+	t=1710349347; cv=none; b=OkgJSTieKK+xGqm7kNolGZjUkPk6OLHIVBLXX1f0KPyJGvM9RCjRfnTtJenTGw3PpL64YGQYsosh4nBTeVTi2ssrEyHI+/qk8Z8Pb0IaaA0Lt8r2ix8KzfTLg62RkRbA5JMqWqpPYBPPC3MpwBrj4EYTVnwfMz8yGLoJs+jXQv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349344; c=relaxed/simple;
-	bh=pAviTd0UtyjF9JP5n1tHJ0A7tM2Ujl89aL2cNqhWO7k=;
+	s=arc-20240116; t=1710349347; c=relaxed/simple;
+	bh=70jvzExLBCsoEbFcxQpov8Y71vAHjhcX7H6WjMqKrdQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HdtPiSU9PIzEvvTlYG3wUmwGedPJz/KOu64k659hBLFvNuUgffjMyMIaEItc6f2MafhaLrMWsELs4pMWI9Bs09N3wxOXoEikF+1NOZKbNtil9XizvoZVJKhs1wfBsgWVeFjO0gp/7aIjtZjkpuwK8cYqS/RoJIveF70R3PSmHyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UG4Drw5V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GqWy7/kue072vSZa32k/324zcbuh8kig27wJ3wA0mh9zB5CIyfv0Ouh+Nh0RNYZlHq8LCHCzwGK8wo7yE2F+hfhpe6yBex+vdrxpNx6HWlhMKPsYcjvXqPeWNMW0vGzcnacslFp6kcM01qRWcovvLqYwkmaYdMPV2vHfLc6+fGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqQ731hj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UG4Drw5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 710CEC433C7;
-	Wed, 13 Mar 2024 17:02:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqQ731hj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB44FC433B1;
+	Wed, 13 Mar 2024 17:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710349344;
-	bh=pAviTd0UtyjF9JP5n1tHJ0A7tM2Ujl89aL2cNqhWO7k=;
+	s=k20201202; t=1710349346;
+	bh=70jvzExLBCsoEbFcxQpov8Y71vAHjhcX7H6WjMqKrdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UG4Drw5VICw7VWCK7gzHQ0p07LZwe6LkzTGYxhonNLGDHO7Jfg93pieMmggvCa5HD
-	 uVGoGOY4/5k6WeoAMRKe+XQ0xH5FdGf1hrgqEKuGpBsvEUXa1ydqrpeOC4/9koIgaK
-	 ZCHZ8uPLVKTSO3Vr6uWjojDl+Xf52AXcPmVLuGemb0ftQaHrskNM2K3fNPVtXRUogR
-	 7WZwFq6J7IxHKNPr25IRLdmYvuVsnK2YKJWOXHbzHBpWn7Eogtj18cs74zH2/zqIq+
-	 kaWKFWxENLXQwL0aqHiGoO/VFazrKJRFGormSdJ/4D6um33ep/e7D1PSuUUyS9ACNa
-	 VAzU+biR4GrNw==
+	b=eqQ731hjuMDGUWDrqHlvx/qUFORvaS0cu4neeV4Hq+4j9Z9o4B4vykV6hbMJ+MJgg
+	 WRqkIRkjEL8kg4Ta2oJsX15MGhYsYDR1wBQDuDPXnuQp4l1XZhzFRgKhmlw2Qla5Hm
+	 CsoMgpkP8Bdct4ZVPYXns+hWU+jCYlRC6rnvMR1By7FMJbh/PfRJjujAOTURqRpAnM
+	 qEJispD5yF3lGfZARYYYP7UbEHz+I6jHnnUWKr5wTOVqTnwyAcYnTW62MHqhfyFkzV
+	 DuTtuz1GOYhWtY2bU/gUYUIMi3i7BqcTs1fCDm+yiY86mprLUMB/Q6tCS91xKlknBa
+	 GrZxDd2ibwvcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rand Deeb <rand.sec96@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 08/51] net: ice: Fix potential NULL pointer dereference in ice_bridge_setlink()
-Date: Wed, 13 Mar 2024 13:01:29 -0400
-Message-ID: <20240313170212.616443-9-sashal@kernel.org>
+Subject: [PATCH 5.4 10/51] net/rds: fix WARNING in rds_conn_connect_if_down
+Date: Wed, 13 Mar 2024 13:01:31 -0400
+Message-ID: <20240313170212.616443-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313170212.616443-1-sashal@kernel.org>
 References: <20240313170212.616443-1-sashal@kernel.org>
@@ -55,37 +55,55 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Rand Deeb <rand.sec96@gmail.com>
+From: Edward Adam Davis <eadavis@qq.com>
 
-[ Upstream commit 06e456a05d669ca30b224b8ed962421770c1496c ]
+[ Upstream commit c055fc00c07be1f0df7375ab0036cebd1106ed38 ]
 
-The function ice_bridge_setlink() may encounter a NULL pointer dereference
-if nlmsg_find_attr() returns NULL and br_spec is dereferenced subsequently
-in nla_for_each_nested(). To address this issue, add a check to ensure that
-br_spec is not NULL before proceeding with the nested attribute iteration.
+If connection isn't established yet, get_mr() will fail, trigger connection after
+get_mr().
 
-Fixes: b1edc14a3fbf ("ice: Implement ice_bridge_getlink and ice_bridge_setlink")
-Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Fixes: 584a8279a44a ("RDS: RDMA: return appropriate error on rdma map failures")
+Reported-and-tested-by: syzbot+d4faee732755bba9838e@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/rds/rdma.c | 3 +++
+ net/rds/send.c | 6 +-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 209ae96875849..cf1baae963de2 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -4594,6 +4594,8 @@ ice_bridge_setlink(struct net_device *dev, struct nlmsghdr *nlh,
- 	pf_sw = pf->first_sw;
- 	/* find the attribute in the netlink message */
- 	br_spec = nlmsg_find_attr(nlh, sizeof(struct ifinfomsg), IFLA_AF_SPEC);
-+	if (!br_spec)
-+		return -EINVAL;
+diff --git a/net/rds/rdma.c b/net/rds/rdma.c
+index 1c42a600fe7fa..dc0f7cf1917ff 100644
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -279,6 +279,9 @@ static int __rds_rdma_map(struct rds_sock *rs, struct rds_get_mr_args *args,
+ 			put_page(sg_page(&sg[i]));
+ 		kfree(sg);
+ 		ret = PTR_ERR(trans_private);
++		/* Trigger connection so that its ready for the next retry */
++		if (ret == -ENODEV)
++			rds_conn_connect_if_down(cp->cp_conn);
+ 		goto out;
+ 	}
  
- 	nla_for_each_nested(attr, br_spec, rem) {
- 		__u16 mode;
+diff --git a/net/rds/send.c b/net/rds/send.c
+index 68e2bdb08fd09..6c2c5667e3a39 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -1314,12 +1314,8 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 
+ 	/* Parse any control messages the user may have included. */
+ 	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr, &vct);
+-	if (ret) {
+-		/* Trigger connection so that its ready for the next retry */
+-		if (ret ==  -EAGAIN)
+-			rds_conn_connect_if_down(conn);
++	if (ret)
+ 		goto out;
+-	}
+ 
+ 	if (rm->rdma.op_active && !conn->c_trans->xmit_rdma) {
+ 		printk_ratelimited(KERN_NOTICE "rdma_op %p conn xmit_rdma %p\n",
 -- 
 2.43.0
 
