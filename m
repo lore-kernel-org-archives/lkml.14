@@ -1,176 +1,114 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBEF43153;
-	Wed, 13 Mar 2024 14:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F814A07;
+	Wed, 13 Mar 2024 14:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340579; cv=none; b=uOZlfeX2uOPMFAdg5cZvV+COYL9urWbrcDtjzi0fCm2qayZmCMk/vzuc18cCMEqz+9KqEES3LGk4yQONrs0Nq+4rYU6Lh/uVXjdXo2YAmAhyI1qIjmb0lbXQk3bahyKEBmKCQBsDtqhLreTICOo9MPzP0Omii8u99CfN+Bf28TM=
+	t=1710340615; cv=none; b=lGraK+qijlyPcSHMvPS0K8le/63rAFsBxgc2bI8K4VKE6GZ/b/p4QkYGOt/cvMZQhunmZySPzhiOtOFGtirxQzLtgyTMplPVN90czdnEr34mnVoJrPeOTnm5R46MQdW6YrpjgPeMhBKYvLRjvyA6vJhbA9Jttm16SCRIdSh5TGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340579; c=relaxed/simple;
-	bh=4kSzgAPS7b/6Qy1T/egELO1W8cCxPyzCB5Q1Lg4QaMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q0sm555HRzleukaVCfxuQoFPIjI/ublbtirGPgtD1ifolbK6SXY6DIftsfHjUwSbr+0wxj5y1aRxvBCXhCD90orDa3zxoUwhKHnQqmO1q6NZA60Z0PK0Qbk+oFybiF2yLTXYlaDY9vVFFV6cDwM0+ikAao6LhUtJEgrkLuq8Vik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-220ce420472so2020689fac.1;
-        Wed, 13 Mar 2024 07:36:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710340577; x=1710945377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pZ/CrXQS2qKyBuyyZ5fVt7Tba0YRofaW6XNtwA1CrZ8=;
-        b=At77UDB6BvJhJyeWPTaTPx0Z6Wm2idEuuvnsDnwLrdXVh/GQHr50BsrrI5ui1lZyc8
-         Iw3kGJK5G2IRLv0ygy6iQUZ30SWlUqO35fBdbJkiLEhJ/o0lN7EHN0eADmh9zngqw7Jl
-         uLNWusqlqA2yMqgMpGoLiXQmTU+RAKu8/95doV+i+e/iJqfn1FWMp9EWby6xTq4DTLGv
-         UDlcv540Ihyphexv7EaCivPaPpruHh1/rAYBHPBmm+jXMty5eY+sErYhi0pSZlff7M+H
-         E6yXVxxKKcOt/x/ghV+DBbwrOzocRb5g+W0zvLsDZxWMy9nGxo7F1wnfFx5CZl2pYxJn
-         p5ag==
-X-Forwarded-Encrypted: i=1; AJvYcCU3DBJUgIDjWVoz3ahsBnodKC4AIMIzy5EnFAXZjvoKyxd4DQ82Btbw4snjm0cQQhaD3TnNdxwQ14oA/oQC17O9X3z3nIQaJwX8DBFZPC2977uZBHHQ/DznQU5L6yv+6EiZyT7qsfI=
-X-Gm-Message-State: AOJu0YxDtyKopF+8+jKgH2g3qGW8K3w4T64vApTOkiTNAa37UgnMuSK+
-	wHvYtdV+I/quNxwI0yfdqn6zE7yjL0N8qY1HzgJIqB2R+BfhwYHWLV7zaggSw3Sn8AsZgRdi/tI
-	NSeAQBwCau71B4j+s1nH8LWYeBpc=
-X-Google-Smtp-Source: AGHT+IGRTbUgJg5jv7tmdyyZlPs9zAb0SbQS9bjKIAxVdawQ+PEILrXDZWItUu1HzlmpTODLRIqLKHapDaN6Et3CeCg=
-X-Received: by 2002:a05:6871:3325:b0:221:cb1b:cc05 with SMTP id
- nf37-20020a056871332500b00221cb1bcc05mr2134168oac.0.1710340577247; Wed, 13
- Mar 2024 07:36:17 -0700 (PDT)
+	s=arc-20240116; t=1710340615; c=relaxed/simple;
+	bh=aBISMkyzcuXC4tndXkf0VYcmI9kprzzcj/ehlqHMdAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrJxc8VdFGc0tfJXf3KQviAC2BKw5mQ3bkbX6pT2yuBOOXbc9CNtxX62X/xLdXRGFosMuDgRZGbUBDfRdlsv/AkM3pGQhwPF6U4BTb7NVvpEzf7hL7vTpIO55dYyYh3TnRt8hVVX7o6L1fvJt0osuoQsgsEqoZ4uknNANYUvRSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wV45Rr4v; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wV45Rr4v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710340612;
+	bh=aBISMkyzcuXC4tndXkf0VYcmI9kprzzcj/ehlqHMdAQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=wV45Rr4voGJHrKXICE5+Eye7hrS2Pjf//lLfPMsweUmrMtaGowHMg8I1ftEp0aoc6
+	 vVBZcOLf4o11Mg5tTnufw6SyfR0TmnYh7euYN5U/mbmh4D+veduK3L1cVcQzJtfwf8
+	 3xTrl9JpUKtiEXdqBnujwEENhAYfYbBGvY78+vuV4+LxRKjiguO64XhrhCNeecyRoN
+	 QZR3ZhhDixM01wErO5qokiWMlKaRyx4SfSpnoi9s4eVgvGyGB75R5QPDv7h5kpVTPk
+	 4auppMOqkpTTs4wsJ/OuuvWTViAs6wdbnrHFPzTu7gtp0SfvfQWyasvBTJhcjCEcls
+	 O/G14egc519mg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9A15437813C4;
+	Wed, 13 Mar 2024 14:36:51 +0000 (UTC)
+Message-ID: <d1bdf9a6-3082-4076-99de-e49d59843244@collabora.com>
+Date: Wed, 13 Mar 2024 15:36:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8f00bf23-47cb-4656-a326-6d8d1d0d10d6@linaro.org>
-In-Reply-To: <8f00bf23-47cb-4656-a326-6d8d1d0d10d6@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 13 Mar 2024 15:36:05 +0100
-Message-ID: <CAJZ5v0iSxZMPnCf3MSJMSLXhkfEmDWNVv2eq3PXSivZaYtLMFQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Thermal material for v6.9-rc1
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	Frank Wunderlich <frank-w@public-files.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Fabio Estevam <festevam@denx.de>, Martin Botka <martin.botka@somainline.org>, 
-	Mark Brown <broonie@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
-	Konrad Dybcio <konrad.dybcio@somainline.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux PM mailing list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8192-asurada: Update min voltage
+ constraint for Vgpu
+Content-Language: en-US
+To: Pin-yen Lin <treapking@chromium.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ devicetree@vger.kernel.org
+References: <20240313135157.98989-1-treapking@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240313135157.98989-1-treapking@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Daniel,
+Il 13/03/24 14:51, Pin-yen Lin ha scritto:
+> Although the minimum voltage listed on the GPU OPP table is 606250 uV,
+> the actual requested voltage could be even lower when the MTK Smart
+> Voltage Scaling (SVS) driver is enabled.
+> 
+> Set the minimum voltage to 300000 uV because it's supported by the
+> regulator.
+> 
+> Fixes: 3183cb62b033 ("arm64: dts: mediatek: asurada: Add SPMI regulators")
+> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
 
-On Wed, Mar 13, 2024 at 3:06=E2=80=AFPM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Rafael,
->
-> The following changes since commit dcb497ec993265dfc5fffa60b486c1ad353e9a=
-d5:
->
->    Merge branches 'thermal-core' and 'thermal-intel' (2024-03-07
-> 21:05:12 +0100)
->
-> are available in the Git repository at:
->
->
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
-> tags/thermal-v6.9-rc1
->
-> for you to fetch changes up to 1828c1c17bb2adf3a3f26abc69cb3fe971eac0e4:
->
->    thermal/drivers/rcar_gen3: Add support for R-Car V4M (2024-03-11
-> 17:14:46 +0100)
->
-> ----------------------------------------------------------------
-> - Fix memory leak in the error path at probe time in the Mediatek LVTS
->    driver (Christophe Jaillet)
->
-> - Fix control buffer enablement regression on Meditek MT7896 (Frank
->    Wunderlich)
->
-> - Drop spaces before TABs in different places: thermal-of, ST drivers
->    and Makefile (Geert Uytterhoeven)
->
-> - Adjust DT binding for NXP as fsl,tmu-range min/maxItems can vary
->    among several SoC versions (Fabio Estevam)
->
-> - Add support for H616 THS controller for the Sun8i platforms. Note
->    that this change relies on another change in the SoC specific code
->    which is included in this branch (Martin Botka)
->
-> - Don't fail probe due to zone registration failure because there is
->    no trip points defined in the DT (Mark Brown)
->
-> - Support variable TMU array size for new platforms (Peng Fan)
->
-> - Adjust the DT binding for thermal-of and make the polling time not
->    required and assume it is zero when not found in the DT (Konrad
->    Dybcio)
->
-> - Add r8a779h0 support in both the DT and the driver (Geert Uytterhoeven)
->
-> ----------------------------------------------------------------
-> Andre Przywara (3):
->        soc: sunxi: sram: export register 0 for THS on H616
->        thermal/drivers/sun8i: Explain unknown H6 register value
->        thermal/drivers/sun8i: Add SRAM register access code
->
-> Christophe JAILLET (1):
->        thermal/drivers/mediatek/lvts_thermal: Fix a memory leak in an
-> error handling path
->
-> Duy Nguyen (1):
->        dt-bindings: thermal: rcar-gen3-thermal: Add r8a779h0 support
->
-> Fabio Estevam (1):
->        dt-bindings: thermal: qoriq-thermal: Adjust fsl,tmu-range
-> min/maxItems
->
-> Frank Wunderlich (1):
->        thermal/drivers/mediatek: Fix control buffer enablement on MT7896
->
-> Geert Uytterhoeven (2):
->        thermal: Drop spaces before TABs
->        thermal/drivers/rcar_gen3: Add support for R-Car V4M
->
-> Konrad Dybcio (2):
->        dt-bindings: thermal-zones: Don't require polling-delay(-passive)
->        thermal/of: Assume polling-delay(-passive) 0 when absent
->
-> Maksim Kiselev (1):
->        thermal/drivers/sun8i: Extend H6 calibration to support 4 sensors
->
-> Mark Brown (1):
->        thermal/drivers/sun8i: Don't fail probe due to zone registration
-> failure
->
-> Martin Botka (2):
->        dt-bindings: thermal: sun8i: Add H616 THS controller
->        thermal/drivers/sun8i: Add support for H616 THS controller
->
-> Peng Fan (1):
->        thermal/drivers/qoriq: Fix getting tmu range
->
->   .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |  34 +++--
->   .../devicetree/bindings/thermal/qoriq-thermal.yaml |   3 +-
->   .../bindings/thermal/rcar-gen3-thermal.yaml        |   2 +
->   .../devicetree/bindings/thermal/thermal-zones.yaml |   2 -
->   drivers/soc/sunxi/sunxi_sram.c                     |  22 ++++
->   drivers/thermal/Makefile                           |   2 +-
->   drivers/thermal/mediatek/auxadc_thermal.c          |   3 +
->   drivers/thermal/mediatek/lvts_thermal.c            |   4 +-
->   drivers/thermal/qoriq_thermal.c                    |  12 +-
->   drivers/thermal/rcar_gen3_thermal.c                |   4 +
->   drivers/thermal/st/st_thermal.h                    |  18 +--
->   drivers/thermal/st/st_thermal_memmap.c             |   2 +-
->   drivers/thermal/sun8i_thermal.c                    | 139
-> +++++++++++++++++----
->   drivers/thermal/thermal_of.c                       |  14 ++-
->   14 files changed, 203 insertions(+), 58 deletions(-)
->
-> --
+Okay, that makes sense, I agree.
 
-Pulled, thanks!
+...but.
+
+The datasheet never mentions 0.3V as vmin - infact, it does mention that the
+vsel is selected as (0V +) 6250 * Vsel, but the brief spec says that for the
+standard configuration (in terms of HW), the Vmin is 0.4V and not 0.3.
+
+Reading through makes me think that it's not much about the buck providing an
+unstable output, but more about it starting to become inefficient under that
+value.
+
+This means that it is sensible to set, instead:
+
+	regulator-min-microvolt = <400000>;
+
+Also, this is repeated on multiple platforms: can you please perform the same
+change also on MT8183, MT8186 and MT8195?
+
+P.S.: For MT6358, the Vmin for VGPU is 0.5V :-)
+
+Cheers,
+Angelo
+
+> ---
+> 
+>   arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+> index 43d80334610a..5cc5100a7c40 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+> @@ -1448,7 +1448,7 @@ regulators {
+>   			mt6315_7_vbuck1: vbuck1 {
+>   				regulator-compatible = "vbuck1";
+>   				regulator-name = "Vgpu";
+> -				regulator-min-microvolt = <606250>;
+> +				regulator-min-microvolt = <300000>;
+>   				regulator-max-microvolt = <800000>;
+>   				regulator-enable-ramp-delay = <256>;
+>   				regulator-allowed-modes = <0 1 2>;
+
+
