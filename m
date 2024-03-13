@@ -1,79 +1,180 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4917046B83
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BB73F9E1;
+	Wed, 13 Mar 2024 13:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336591; cv=none; b=cw5YcHmk7T3eMFZa1FpUPK5M8xK81feYOA+vKcVariFJOeKUe4TXKsuH8wf9xClvchlWGVxPkR3xK+YLTZxgvVtbMTqIzPEpKtnZw/6PQ8jS9ja2hbfg8itWzxrvVZjRm+5S54iuYS6u2X4sxx9TEw+qH/JEUxvRg9pvfFYiBu0=
+	t=1710336802; cv=none; b=WCSx8CDEHf8Ztj7ZTeYo34MsV52zz1UfRdp6K2AwdgQ/WD/7oNZUq2s3J0J+Q1kGqE8RnqDSlcl4NHLWtH1Ed8V4acbNNcesv7HINsmbp+zHcrO696gJarCBtTO17YKkC+NN1mnC0pfnvU3ayfuThcUp3SqR9C7dXImV4TgQQyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336591; c=relaxed/simple;
-	bh=pdLDJC2piLf5zMosG1/TZ7MhDvUxHrIdoOhQ2pDEzgc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WyOHT42+bed3csqpgC3QgUiTH2GOCbtYT93SEpULh9C8fD2V37kTIDiCxGyAOMMRzL9fqMRxVk+8xZ0X0kD1DiC8w0axmqgAItw62Ja7ytozbeJzkc98b2jPBtcj9CmDSlxZJnOJDtb7VdL7qc54DIovBTu7/r3xdAEOGmlBoco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TvrsD1DMFz1Q9gw;
-	Wed, 13 Mar 2024 21:27:12 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id D5A3E140159;
-	Wed, 13 Mar 2024 21:29:39 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 13 Mar 2024 21:29:38 +0800
-Subject: Re: [PATCH] mtd: ubi: avoid expensive do_div() on 32-bit machines
-To: Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Richard
- Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, Daniel Golle <daniel@makrotopia.org>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240313084707.3292300-1-arnd@kernel.org>
- <4f945f4a-ac29-3ef7-9e15-123962f2a0e9@huawei.com>
- <e0684202-6926-4bd1-86f6-2bb682524712@app.fastmail.com>
- <1a12c8ed-0cb5-5650-24a2-84b021c444c3@huawei.com>
- <b08aaae4-8c69-47eb-9658-5f3f5c8e4056@app.fastmail.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <610231c3-c3ee-e543-1a8a-8e1098ee6a7c@huawei.com>
-Date: Wed, 13 Mar 2024 21:29:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1710336802; c=relaxed/simple;
+	bh=FKWbd19jalYEG55oF8LJjTSqih/yVNXlXY42nJdE2h8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Gtr4bLRg8fxaIdwjnn74lDh/TAzqSamdiFM4rAp7aC1BfscxBP40U+gGML155IWUGGxcfB+wctzx07hpkUi95xYIbv9wXMNqokmlzFh5zV8U9wlYEmokBzeXUJyfbFKhkuLwLS7GVMjM8hMWmGMQcTCAK5KL4+dTQWaN8YZzKSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E564EC433C7;
+	Wed, 13 Mar 2024 13:32:57 +0000 (UTC)
+Date: Wed, 13 Mar 2024 09:34:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta
+ <salil.mehta@huawei.com>, Jijie Shao <shaojijie@huawei.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yufeng Mo
+ <moyufeng@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH] net: hns3: tracing: fix hclgevf trace event strings
+Message-ID: <20240313093454.3909afe7@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b08aaae4-8c69-47eb-9658-5f3f5c8e4056@app.fastmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-在 2024/3/13 20:21, Arnd Bergmann 写道:
-> On Wed, Mar 13, 2024, at 13:10, Zhihao Cheng wrote:
->> 在 2024/3/13 19:53, Arnd Bergmann 写道:
->>> On Wed, Mar 13, 2024, at 12:29, Zhihao Cheng wrote:
->>>
->>> The way it usually goes is that someone adds an open-coded
->>> 64-bit division that causes a link failure, which prompts
->> I'm a little confused, what kind of link failure? Could you show an example?
-> 
-> The open-coded 64-bit division without using do_div() shows up as
-> 
-> x86_64-linux-ld: drivers/mtd/ubi/nvmem.o: in function `ubi_nvmem_reg_read':
-> nvmem.c:(.text+0x10a): undefined reference to `__umoddi3'
-> x86_64-linux-ld: nvmem.c:(.text+0x11f): undefined reference to `__udivdi3'
-> x86_64-linux-ld: drivers/mtd/ubi/nvmem.o: in function `ubi_nvmem_reg_read.cold':
-> nvmem.c:(.text.unlikely+0x2d): undefined reference to `__umoddi3'
->  > The idea is that gcc expects __umoddi3 to be provided by libgcc,
-> but Linux intentionally leaves it out in order to catch accidental
-> 64-bit divisions.
-> 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Thanks for explaination, which means that do_div is used for 64-bit 
-division to solve the link failure caused by missed libgcc. Since 
-parameter 'from' is u32, there is no need to invoke do_div on a 32-bit 
-platform, you just want to stop the wasting behavior on a 32-bit 
-platform. Do I understand right?
+[
+   Note, I need to take this patch through my tree, so I'm looking for acks.
+   This causes the build to fail when I add the __assign_str() check, which
+   I was about to push to Linus, but it breaks allmodconfig due to this err=
+or.
+]
+
+The __string() and __assign_str() helper macros of the TRACE_EVENT() macro
+are going through some optimizations where only the source string of
+__string() will be used and the __assign_str() source will be ignored and
+later removed.
+
+To make sure that there's no issues, a new check is added between the
+__string() src argument and the __assign_str() src argument that does a
+strcmp() to make sure they are the same string.
+
+The hclgevf trace events have:
+
+  __assign_str(devname, &hdev->nic.kinfo.netdev->name);
+
+Which triggers the warning:
+
+hclgevf_trace.h:34:39: error: passing argument 1 of =E2=80=98strcmp=E2=80=
+=99 from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+   34 |                 __assign_str(devname, &hdev->nic.kinfo.netdev->name=
+);
+ [..]
+arch/x86/include/asm/string_64.h:75:24: note: expected =E2=80=98const char =
+*=E2=80=99 but argument is of type =E2=80=98char (*)[16]=E2=80=99
+   75 | int strcmp(const char *cs, const char *ct);
+      |            ~~~~~~~~~~~~^~
+
+
+Because __assign_str() now has:
+
+	WARN_ON_ONCE(__builtin_constant_p(src) ?		\
+		     strcmp((src), __data_offsets.dst##_ptr_) :	\
+		     (src) !=3D __data_offsets.dst##_ptr_);	\
+
+The problem is the '&' on hdev->nic.kinfo.netdev->name. That's because
+that name is:
+
+	char			name[IFNAMSIZ]
+
+Where passing an address '&' of a char array is not compatible with strcmp(=
+).
+
+The '&' is not necessary, remove it.
+
+Fixes: d8355240cf8fb ("net: hns3: add trace event support for PF/VF mailbox=
+")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h  | 8 ++++----
+ .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h    | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h b/dri=
+vers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
+index 8510b88d4982..f3cd5a376eca 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
+@@ -24,7 +24,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
+ 		__field(u8, code)
+ 		__field(u8, subcode)
+ 		__string(pciname, pci_name(hdev->pdev))
+-		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
++		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
+ 		__array(u32, mbx_data, PF_GET_MBX_LEN)
+ 	),
+=20
+@@ -33,7 +33,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
+ 		__entry->code =3D req->msg.code;
+ 		__entry->subcode =3D req->msg.subcode;
+ 		__assign_str(pciname, pci_name(hdev->pdev));
+-		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
++		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
+ 		memcpy(__entry->mbx_data, req,
+ 		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
+ 	),
+@@ -56,7 +56,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
+ 		__field(u8, vfid)
+ 		__field(u16, code)
+ 		__string(pciname, pci_name(hdev->pdev))
+-		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
++		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
+ 		__array(u32, mbx_data, PF_SEND_MBX_LEN)
+ 	),
+=20
+@@ -64,7 +64,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
+ 		__entry->vfid =3D req->dest_vfid;
+ 		__entry->code =3D le16_to_cpu(req->msg.code);
+ 		__assign_str(pciname, pci_name(hdev->pdev));
+-		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
++		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
+ 		memcpy(__entry->mbx_data, req,
+ 		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
+ 	),
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h b/d=
+rivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+index 5d4895bb57a1..b259e95dd53c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+@@ -23,7 +23,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
+ 		__field(u8, vfid)
+ 		__field(u16, code)
+ 		__string(pciname, pci_name(hdev->pdev))
+-		__string(devname, &hdev->nic.kinfo.netdev->name)
++		__string(devname, hdev->nic.kinfo.netdev->name)
+ 		__array(u32, mbx_data, VF_GET_MBX_LEN)
+ 	),
+=20
+@@ -31,7 +31,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
+ 		__entry->vfid =3D req->dest_vfid;
+ 		__entry->code =3D le16_to_cpu(req->msg.code);
+ 		__assign_str(pciname, pci_name(hdev->pdev));
+-		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
++		__assign_str(devname, hdev->nic.kinfo.netdev->name);
+ 		memcpy(__entry->mbx_data, req,
+ 		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
+ 	),
+@@ -55,7 +55,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
+ 		__field(u8, code)
+ 		__field(u8, subcode)
+ 		__string(pciname, pci_name(hdev->pdev))
+-		__string(devname, &hdev->nic.kinfo.netdev->name)
++		__string(devname, hdev->nic.kinfo.netdev->name)
+ 		__array(u32, mbx_data, VF_SEND_MBX_LEN)
+ 	),
+=20
+@@ -64,7 +64,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
+ 		__entry->code =3D req->msg.code;
+ 		__entry->subcode =3D req->msg.subcode;
+ 		__assign_str(pciname, pci_name(hdev->pdev));
+-		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
++		__assign_str(devname, hdev->nic.kinfo.netdev->name);
+ 		memcpy(__entry->mbx_data, req,
+ 		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
+ 	),
+--=20
+2.43.0
+
