@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B256515D5A9;
-	Wed, 13 Mar 2024 16:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3676C57863;
+	Wed, 13 Mar 2024 16:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710348457; cv=none; b=AFZbLFCb2X2M2ouohYWnPyFcmw198yMKc3pOkTsKdqzesW+zQZgZ2bQehPxfsles+B6GDzLQ97NmD/sEN5q8jKnuS3H0X8IngaUtZnqj47KfNluKXfVduIAUIlBn+2wOEwMcGRKL1EcuuWdyO3sL0Gm/nVMYgkKOWp2iEueRlEY=
+	t=1710348460; cv=none; b=nf2TD1Z3lFYDHTDNJMcjEM1xKEYJMS0k+jKeIeqJIQvIOIg9hnnzXqTTwrzgLBwW4sLD3QGy76pGYh1n05OyX7drmlpwuXnJhT+6+Wl2UoVk18TS0uGM411g/xwFL2xJEPqrfe7oMByJOIXCP8NzV95UE+JsfP8eAvavuI+J6I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710348457; c=relaxed/simple;
-	bh=he7vDD0F7WTBM5sUNCP71TiC7WyKB9hFx2d1SuU2sR8=;
+	s=arc-20240116; t=1710348460; c=relaxed/simple;
+	bh=67joID66XQABK1cTcPNd6BUkVrz/MyGfrjRExWE0uTY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rnJVsHAVgLIUzRLFgOKE5vwI0ptYcJpK6wb4Q4JkwJ8N1Z8Kn6OaORqYPNAG51aPe9mhHbZyXCkFI06bn/mSkF9kvEdbUuIQbQIZDor5B40mfz9r2iRrfqH7laTUKh+u/8daDa+Y7KDwvmB5iE1hCbmTKbrcSek+YRSpoC/t95c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgDOTEr4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mtDcdkstvCWA3rTMV3+6xH4amznUjIEhFlVMcFdRPtm0kKnzMFzKyD7Zsk0olKo0Zr0O0ePwOf8rctsCCAKwwVK12bqpb3kuhfrW//SOLT39f3afQycaiXp2cCvAEoeNOzBIC3b7sBvLzfHOVI6aoMLO/Hj6MuiAC35L1nVbdzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OS0dhJy2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgDOTEr4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF09C433F1;
-	Wed, 13 Mar 2024 16:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OS0dhJy2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CB8C43390;
+	Wed, 13 Mar 2024 16:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710348457;
-	bh=he7vDD0F7WTBM5sUNCP71TiC7WyKB9hFx2d1SuU2sR8=;
+	s=k20201202; t=1710348460;
+	bh=67joID66XQABK1cTcPNd6BUkVrz/MyGfrjRExWE0uTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MgDOTEr4AzyTlbw+ZZoTdf07+dlAjVSD13ygwaSbFTiVs3Nl8G7Fr47+cjouG/hug
-	 9cCXywinTNnUS2qiWJ7UjD1/PFTuElpUcBsr8O3V4LaP+Zjmpa7/8XysTDw0H23Xcp
-	 y3OgbDsiJ7BIRgQ3NbdmmLqxNvcESK1OHuYOFZ5XO35aJWVeJ78Zm3uu4ADSklfnlM
-	 MUTK+MdgKJ7J1xjTn3ttSHO98DLrGQeA7pQfu4yirODEKlkHSPx2nEERXzdgHv3gjf
-	 7XcuTOvwlLpRBy3fHshXCLogdsuWL2p30NsYBbj07Ry6dJzlDdeYzUYpeZ1w/0ziCi
-	 3DO/A8zgX+5xA==
+	b=OS0dhJy2HGGEJCrlOpVTXQYwqP5ciHcaeOKC1llwkfW4FLF429+33p42bbKCavPzf
+	 eEe9epmfZQ9ygXyl0YMbPLX/QaejN3uVOON4DvdBC8YWd77xjJ9H1MHb/Ow8/orsRZ
+	 +lyOF2tVJ4mKNRKo9K3uja2c3958iBugtuqiaftZneTxgw7GoirFks/Z5vvohKVdw1
+	 4mjghSp4gxog2vK2X/XddtoyiF8J56p7C8xjg6+B5G3VqOVdwc5QdkCrMirWWBmC5s
+	 lDg9e8YmpomRaHAWl/hAEu3v3cI5QbY9LndX+taVKTLoQ2funhATyncNRbVtbkvtXA
+	 gEC1Rg8t8taLQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhang Yi <yi.zhang@huawei.com>,
-	Jan Kara <jack@suse.cz>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: Andres Beltran <lkmlabelt@gmail.com>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Wei Liu <wei.liu@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	netdev@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 50/73] ext4: convert to exclusive lock while inserting delalloc extents
-Date: Wed, 13 Mar 2024 12:46:17 -0400
-Message-ID: <20240313164640.616049-51-sashal@kernel.org>
+Subject: [PATCH 5.10 52/73] hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
+Date: Wed, 13 Mar 2024 12:46:19 -0400
+Message-ID: <20240313164640.616049-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
 References: <20240313164640.616049-1-sashal@kernel.org>
@@ -55,111 +59,163 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 
-From: Zhang Yi <yi.zhang@huawei.com>
+From: Andres Beltran <lkmlabelt@gmail.com>
 
-[ Upstream commit acf795dc161f3cf481db20f05db4250714e375e5 ]
+[ Upstream commit 4d18fcc95f50950a99bd940d4e61a983f91d267a ]
 
-ext4_da_map_blocks() only hold i_data_sem in shared mode and i_rwsem
-when inserting delalloc extents, it could be raced by another querying
-path of ext4_map_blocks() without i_rwsem, .e.g buffered read path.
-Suppose we buffered read a file containing just a hole, and without any
-cached extents tree, then it is raced by another delayed buffered write
-to the same area or the near area belongs to the same hole, and the new
-delalloc extent could be overwritten to a hole extent.
+Currently, pointers to guest memory are passed to Hyper-V as
+transaction IDs in netvsc. In the face of errors or malicious
+behavior in Hyper-V, netvsc should not expose or trust the transaction
+IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+use small integers generated by vmbus_requestor as requests
+(transaction) IDs.
 
- pread()                           pwrite()
-  filemap_read_folio()
-   ext4_mpage_readpages()
-    ext4_map_blocks()
-     down_read(i_data_sem)
-     ext4_ext_determine_hole()
-     //find hole
-     ext4_ext_put_gap_in_cache()
-      ext4_es_find_extent_range()
-      //no delalloc extent
-                                    ext4_da_map_blocks()
-                                     down_read(i_data_sem)
-                                     ext4_insert_delayed_block()
-                                     //insert delalloc extent
-      ext4_es_insert_extent()
-      //overwrite delalloc extent to hole
-
-This race could lead to inconsistent delalloc extents tree and
-incorrect reserved space counter. Fix this by converting to hold
-i_data_sem in exclusive mode when adding a new delalloc extent in
-ext4_da_map_blocks().
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Suggested-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20240127015825.1608160-3-yi.zhang@huaweicloud.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+Link: https://lore.kernel.org/r/20201109100402.8946-4-parri.andrea@gmail.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Stable-dep-of: 9cae43da9867 ("hv_netvsc: Register VF in netvsc_probe if NET_DEVICE_REGISTER missed")
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+ drivers/net/hyperv/hyperv_net.h   | 13 +++++++++++++
+ drivers/net/hyperv/netvsc.c       | 22 ++++++++++++++++------
+ drivers/net/hyperv/rndis_filter.c |  1 +
+ include/linux/hyperv.h            |  1 +
+ 4 files changed, 31 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 64162470a7e6c..8b48ed351c4b9 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1728,10 +1728,8 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 367878493e704..15652d7951f9e 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -847,6 +847,19 @@ struct nvsp_message {
  
- 	/* Lookup extent status tree firstly */
- 	if (ext4_es_lookup_extent(inode, iblock, NULL, &es)) {
--		if (ext4_es_is_hole(&es)) {
--			down_read(&EXT4_I(inode)->i_data_sem);
-+		if (ext4_es_is_hole(&es))
- 			goto add_delayed;
--		}
+ #define NETVSC_XDP_HDRM 256
  
- 		/*
- 		 * Delayed extent could be allocated by fallocate.
-@@ -1773,8 +1771,10 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
- 		retval = ext4_ext_map_blocks(NULL, inode, map, 0);
- 	else
- 		retval = ext4_ind_map_blocks(NULL, inode, map, 0);
--	if (retval < 0)
--		goto out_unlock;
-+	if (retval < 0) {
-+		up_read(&EXT4_I(inode)->i_data_sem);
-+		return retval;
-+	}
- 	if (retval > 0) {
- 		unsigned int status;
++#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
++				 sizeof(struct nvsp_message))
++#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
++
++/* Estimated requestor size:
++ * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
++ */
++static inline u32 netvsc_rqstor_size(unsigned long ringbytes)
++{
++	return ringbytes / NETVSC_MIN_OUT_MSG_SIZE +
++		ringbytes / NETVSC_MIN_IN_MSG_SIZE;
++}
++
+ #define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
+ 		(offsetof(struct vmtransfer_page_packet_header, ranges) + \
+ 		(rng_cnt) * sizeof(struct vmtransfer_page_range))
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 3eae31c0f97a6..c9b73a0448813 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -50,7 +50,7 @@ void netvsc_switch_datapath(struct net_device *ndev, bool vf)
  
-@@ -1790,24 +1790,21 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
- 				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
- 		ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
- 				      map->m_pblk, status);
--		goto out_unlock;
-+		up_read(&EXT4_I(inode)->i_data_sem);
-+		return retval;
- 	}
-+	up_read(&EXT4_I(inode)->i_data_sem);
- 
- add_delayed:
--	/*
--	 * XXX: __block_prepare_write() unmaps passed block,
--	 * is it OK?
--	 */
-+	down_write(&EXT4_I(inode)->i_data_sem);
- 	retval = ext4_insert_delayed_block(inode, map->m_lblk);
-+	up_write(&EXT4_I(inode)->i_data_sem);
- 	if (retval)
--		goto out_unlock;
-+		return retval;
- 
- 	map_bh(bh, inode->i_sb, invalid_block);
- 	set_buffer_new(bh);
- 	set_buffer_delay(bh);
--
--out_unlock:
--	up_read((&EXT4_I(inode)->i_data_sem));
- 	return retval;
+ 	vmbus_sendpacket(dev->channel, init_pkt,
+ 			       sizeof(struct nvsp_message),
+-			       (unsigned long)init_pkt,
++			       VMBUS_RQST_ID_NO_RESPONSE,
+ 			       VM_PKT_DATA_INBAND, 0);
  }
  
+@@ -163,7 +163,7 @@ static void netvsc_revoke_recv_buf(struct hv_device *device,
+ 		ret = vmbus_sendpacket(device->channel,
+ 				       revoke_packet,
+ 				       sizeof(struct nvsp_message),
+-				       (unsigned long)revoke_packet,
++				       VMBUS_RQST_ID_NO_RESPONSE,
+ 				       VM_PKT_DATA_INBAND, 0);
+ 		/* If the failure is because the channel is rescinded;
+ 		 * ignore the failure since we cannot send on a rescinded
+@@ -213,7 +213,7 @@ static void netvsc_revoke_send_buf(struct hv_device *device,
+ 		ret = vmbus_sendpacket(device->channel,
+ 				       revoke_packet,
+ 				       sizeof(struct nvsp_message),
+-				       (unsigned long)revoke_packet,
++				       VMBUS_RQST_ID_NO_RESPONSE,
+ 				       VM_PKT_DATA_INBAND, 0);
+ 
+ 		/* If the failure is because the channel is rescinded;
+@@ -557,7 +557,7 @@ static int negotiate_nvsp_ver(struct hv_device *device,
+ 
+ 	ret = vmbus_sendpacket(device->channel, init_packet,
+ 				sizeof(struct nvsp_message),
+-				(unsigned long)init_packet,
++				VMBUS_RQST_ID_NO_RESPONSE,
+ 				VM_PKT_DATA_INBAND, 0);
+ 
+ 	return ret;
+@@ -614,7 +614,7 @@ static int netvsc_connect_vsp(struct hv_device *device,
+ 	/* Send the init request */
+ 	ret = vmbus_sendpacket(device->channel, init_packet,
+ 				sizeof(struct nvsp_message),
+-				(unsigned long)init_packet,
++				VMBUS_RQST_ID_NO_RESPONSE,
+ 				VM_PKT_DATA_INBAND, 0);
+ 	if (ret != 0)
+ 		goto cleanup;
+@@ -698,10 +698,19 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
+ 				    const struct vmpacket_descriptor *desc,
+ 				    int budget)
+ {
+-	struct sk_buff *skb = (struct sk_buff *)(unsigned long)desc->trans_id;
+ 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
++	struct sk_buff *skb;
+ 	u16 q_idx = 0;
+ 	int queue_sends;
++	u64 cmd_rqst;
++
++	cmd_rqst = vmbus_request_addr(&channel->requestor, (u64)desc->trans_id);
++	if (cmd_rqst == VMBUS_RQST_ERROR) {
++		netdev_err(ndev, "Incorrect transaction id\n");
++		return;
++	}
++
++	skb = (struct sk_buff *)(unsigned long)cmd_rqst;
+ 
+ 	/* Notify the layer above us */
+ 	if (likely(skb)) {
+@@ -1530,6 +1539,7 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
+ 		       netvsc_poll, NAPI_POLL_WEIGHT);
+ 
+ 	/* Open the channel */
++	device->channel->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
+ 	ret = vmbus_open(device->channel, netvsc_ring_bytes,
+ 			 netvsc_ring_bytes,  NULL, 0,
+ 			 netvsc_channel_cb, net_device->chan_table);
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 90bc0008fa2fd..13f62950eeb9f 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1170,6 +1170,7 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
+ 	/* Set the channel before opening.*/
+ 	nvchan->channel = new_sc;
+ 
++	new_sc->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
+ 	ret = vmbus_open(new_sc, netvsc_ring_bytes,
+ 			 netvsc_ring_bytes, NULL, 0,
+ 			 netvsc_channel_cb, nvchan);
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 4cb65a79d92f6..2aaf450c8d800 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -779,6 +779,7 @@ struct vmbus_requestor {
+ 
+ #define VMBUS_NO_RQSTOR U64_MAX
+ #define VMBUS_RQST_ERROR (U64_MAX - 1)
++#define VMBUS_RQST_ID_NO_RESPONSE (U64_MAX - 2)
+ 
+ struct vmbus_device {
+ 	u16  dev_type;
 -- 
 2.43.0
 
