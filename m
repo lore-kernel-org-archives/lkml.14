@@ -1,220 +1,171 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19C94696
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 14:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B4517C8;
+	Wed, 13 Mar 2024 14:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340395; cv=none; b=C6iMdJYe9Rc8Ja4iURm4O4vpjX/gx0RH/vkLbTc1GzKt3jSc2aXyyxCN+U5p7+qF+vTy13jo8zdpWccvxoTfftGEx0p5pYNojG2XgQbrVWUv4BwHQRad5y1gEqB4+taSXmbOG5JQE/lGtv4BbLfZutAHPcfT5yYpNvqaTEvhC+Y=
+	t=1710340514; cv=none; b=oINsbf0kwrqo0k6484JkRIZC+6Aym91t2KtRTqFNU0/oD/KmzTQGF6JZP+ZhSGQoWtjksowP5ea1g4flCkB53L4haj9B3LP/B4sdrP0pJwhSX5EKCzH2buccZd0LN7LUYFWYct09CCSqxNw9jf9S4mzWJDcm5zbXUi4ULf9z/QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340395; c=relaxed/simple;
-	bh=EJQw2spgiDe18SYH9zz9HdonKRBjUkfcO0UXFy36YaU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXHjOGKJOKov1OLJQUqG+AllO3Om0uxkFWbY9W0p/Pl8PxqcpkR83GwvP8xGuRaXGa5/O2ItVJzy/BM07lVrPudHHUhF77JpXxBeG6u68u3iy+MEXwkvENyMQdQAJya2RkzwcVLmQHyVOf+GgHu4IxviLpq7Tn4DQiAi+Km728c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z1dchkgn; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1710340514; c=relaxed/simple;
+	bh=7Ggb48mfmQd0gjOutcISKertiP5xCb7jo8IBrz/yYb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ELaSWbQXY/6gTGHr5gueBuWiOJXFHtM7SQ15p9n0R03j5gPkO/WpyqDvZ/IiQYzfScWbhKmx3WThXnrOJq8usqkjpHGCL10kRviAqzTPwFM5CGVULBFKRhg6vYJlRQeAsWWMBZDP9ugUGN6rioZuUILyECno8NI8GItTA8O6gA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ebqOZkqA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=orfYLnID; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YR/kwdkQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oK4wgZO5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z1dchkgn"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso105952221fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 07:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1710340390; x=1710945190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=frZJGewZzeJ3uIeDRmngnvwGZFXy0aAqB4wzRWvuYFc=;
-        b=Z1dchkgnh7guU0VhT5i8Rt8m6rEQe2+vQAjwdhwOkohdBA60XaGbR0V02SmgZtkX4C
-         TDi+q9BC9NIWmsU4YCzJX+EilbNUjVz8KvHdveD6M2t777RVg4lse3fQI9LjQetHEsph
-         mX3LRwES8O5BszbWZ/6XRcnhyzuEwU7nr7S0a/TwXjnEcK3sswWMksaQTWofBthVfr1m
-         nzjPBHMVGOSgU/IYI0D3AHbjWPbBb34Bk7vIMy1CKDwfFDvwenv00wQyYy6DqO5Dqr4e
-         tu1a41Z1uK4vvsOz15zqhJ2TFub+EUOYzSBOlW58M1OfwffIym45wBQ5WLMwZp+XU40l
-         nhyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710340390; x=1710945190;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=frZJGewZzeJ3uIeDRmngnvwGZFXy0aAqB4wzRWvuYFc=;
-        b=NUbH8ICJnqLAVzRyCgp20BA6yF+68C1ye118Ie8PI0/7PaXQR5v/iLATur05K7X1VK
-         d0HDjQLVOAIyxs6IjhwI4hrAVvk+p/4SK4yCLI4H44SawYbN1eVdJP1kuZKwZhaiGOtt
-         lCfnGalHiGyy9iqAmsstYBKM/Umbjrx3H3cBRCWWXCTJJGxj9MtvWcXqiroOIhJaiGxK
-         GGa7wbjc+dRbfQP6hGxAkQuhOy/143TsM/3OJ/QcmbVGc7HMp8oouWkUKuCMXB6dyePY
-         0foRtmV2xGjYxEUzp71ysECyXSdriJDerMKe9/M+QW69Rg1Uy3fGdWjCElw7JIUAbO4A
-         ifMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYnVtVSeGJNISUbYDIgEXG0PTO6vaGf8Fcb/SbvRqw2en5HagZJEvmF6+/0AomRD+ZW9nA8/EhMNZbfFmgI1RW0hhiO870e7COUbm
-X-Gm-Message-State: AOJu0YwXzKInhufeVlG5R6xtbAXjmihRWVe7fvbMYz/Ghh52Tv5K8by6
-	5m835vYWwSzgXDRBGbfs0PFX9MgYtECySq4JPF4PLC91Z8F1k7MBJORACE787fk=
-X-Google-Smtp-Source: AGHT+IGc4/OG230i0WuTH+DEgo3X/n2bWgA2QDnELN/LQ+c+BqGPSX+yI/RIu0rb7SkOm+km48FmGA==
-X-Received: by 2002:a2e:8e89:0:b0:2d2:d449:6425 with SMTP id z9-20020a2e8e89000000b002d2d4496425mr8400526ljk.35.1710340389826;
-        Wed, 13 Mar 2024 07:33:09 -0700 (PDT)
-Received: from localhost (host-82-56-173-172.retail.telecomitalia.it. [82.56.173.172])
-        by smtp.gmail.com with ESMTPSA id lb13-20020a170906adcd00b00a46203a86basm3476615ejb.27.2024.03.13.07.33.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 07:33:09 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 13 Mar 2024 15:33:08 +0100
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Saenz Julienne <nsaenz@kernel.org>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/15] dmaengine: bcm2835: add BCM2711 40-bit DMA
- support
-Message-ID: <ZfG5JLkcj4r-1cGY@apocalypse>
-Mail-Followup-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Saenz Julienne <nsaenz@kernel.org>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1710226514.git.andrea.porta@suse.com>
- <CAPY8ntCcz7ysTq_78Rb8ohLLETTYZeoZ3DXdPFvDLAkPc9jPWw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ebqOZkqA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="orfYLnID";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YR/kwdkQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oK4wgZO5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DBFE521C8A;
+	Wed, 13 Mar 2024 14:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710340509; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
+	b=ebqOZkqAlbIlDLeZr4Wx03fKNo+nawtibfpLCg6+Q4I7xn3k08nxpk38v/9P/pN6HBlVLE
+	3oN18aptixVZ5j+P5h72hzEUzaXWZ656RUhLV1KaVn/ULJrY+obEL6+u6Z0V2ret8kxkwt
+	VHQD3v2is9dCEKZ3js1jUs5GFFcZTkw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710340509;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
+	b=orfYLnIDxWPQOxAfsZDtFE7rUGJ7oQQsqo0/Mtoyh5mM9gWh6I8HNu8RMZE5fyxkhzYb7o
+	+afMySU81XMXiDCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710340508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
+	b=YR/kwdkQ7oo6g7nxLjQEGunx8N1zRLdauP7333MQMKOmV37zmdpkCuHXpEOFHPrfAZFfGZ
+	X549edAXo2lu//nDJxpSA2Qvk5PQ3E2f5gkbvL0/6Fyudo9p+tRUWFD7Ec0mUZvV7263xF
+	b/I66AohdibWQLMZ4PTajURL7FkKLT8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710340508;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RSlYwqGCgMw8Oen4eBYJ9RLkQu5lewBFTm9qigzA78=;
+	b=oK4wgZO5wOrJ1EG1VHXjpbFCBihJFze1f72GbydqVyebG0uzplJ2FIO5uCcOLhU42giqBe
+	aQInfrj0PvfH4GCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8145F13977;
+	Wed, 13 Mar 2024 14:35:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WfP0Hpy58WX6YwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 13 Mar 2024 14:35:08 +0000
+Message-ID: <ef836dd3-0b65-485e-84a2-dd5cb9ecdff1@suse.cz>
+Date: Wed, 13 Mar 2024 15:35:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPY8ntCcz7ysTq_78Rb8ohLLETTYZeoZ3DXdPFvDLAkPc9jPWw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 15/37] lib: introduce early boot parameter to avoid
+ page_ext memory overhead
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org,
+ muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
+ pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
+ dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
+ keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com,
+ gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com,
+ penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
+ glider@google.com, elver@google.com, dvyukov@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com,
+ rientjes@google.com, minchan@google.com, kaleshsingh@google.com,
+ kernel-team@android.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+References: <20240306182440.2003814-1-surenb@google.com>
+ <20240306182440.2003814-16-surenb@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240306182440.2003814-16-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-1.59 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 URIBL_BLOCKED(0.00)[suse.cz:email];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_GT_50(0.00)[75];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,nvidia.com,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: -1.59
+X-Spam-Flag: NO
 
-On 17:16 Tue 12 Mar     , Dave Stevenson wrote:
-> Hi Andrea
+On 3/6/24 19:24, Suren Baghdasaryan wrote:
+> The highest memory overhead from memory allocation profiling comes from
+> page_ext objects. This overhead exists even if the feature is disabled
+> but compiled-in. To avoid it, introduce an early boot parameter that
+> prevents page_ext object creation. The new boot parameter is a tri-state
+> with possible values of 0|1|never. When it is set to "never" the
+> memory allocation profiling support is disabled, and overhead is minimized
+> (currently no page_ext objects are allocated, in the future more overhead
+> might be eliminated). As a result we also lose ability to enable memory
+> allocation profiling at runtime (because there is no space to store
+> alloctag references). Runtime sysctrl becomes read-only if the early boot
+> parameter was set to "never". Note that the default value of this boot
+> parameter depends on the CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+> configuration. When CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n
+> the boot parameter is set to "never", therefore eliminating any overhead.
+> CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=y results in boot parameter
+> being set to 1 (enabled). This allows distributions to avoid any overhead
+> by setting CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=n config and
+> with no changes to the kernel command line.
+> We reuse sysctl.vm.mem_profiling boot parameter name in order to avoid
+> introducing yet another control. This change turns it into a tri-state
+> early boot parameter.
 > 
-> On Tue, 12 Mar 2024 at 09:12, Andrea della Porta <andrea.porta@suse.com> wrote:
-> >
-> > * Spam *
-> > The BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
-> > to access the full 4GB of memory on a Pi 4.
-> > This patchset aims to update the dma engine for BCM* chipset with respect
-> > to current advancements in downstream vendor tree. In particular, it
-> > supports the BCM2711 DMA engine in terms of extended DMA addressing to 40 bit.
-> >
-> > Changes with respect to the first version (see [1]) of this patchset:
-> >
-> > * dropped support of the new BCM2712. It will be the focus of a subsequent
-> >   patch.
-> >
-> > * merged patchset from Stefan Wahren [2] to support newer chipset with a
-> >   platform agnostic design, while also retaining the new features added
-> >   from downstream [1], as follows:
-> >
-> >   - patches from 1 to 5 are preparatory, adding some features and bugfix
-> >     common to all chipsets.
-> >   - patches from 6 to 12 add hw abstraction
-> >   - patches 13 to 15 eventually add 40 bit and BCM2711 support
-> >
-> > * fixed a couple of bugs from [2] relative to address shifting on 40 bit
-> >   support specific code
-> >
-> > * added the relevant entries in the dts and DT binding that was missing
-> >   in the first patch
-> >
-> > * used FIELD_PREP() wherever appropriate as advised in [3]
-> >
-> > * of_match_node() has been replaced by the more generic device_get_match_data(),
-> >   as per [4]
-> >
-> > * fixed several errors and warnings from checkpatch
-> >
-> >
-> > Please note that there is still a pending discussion around here [5]:
-> > this patch still use the current approach (used in both downstream
-> > code and in Stefan's redesigned patchset) of getting the address as it is
-> > (dma_addr_t) and just add the relevant offset when needed (on 40 bit
-> > channel, see .addr_offset in struct bcm2835_dma_cfg). This is not
-> > optimal but still deemed as less hacky than using DMA internals (see
-> > [6]). As soon as there will be guidelines for [5] or dma_map_resource()
-> > will take care of dma_ranges, a subsequent patch will adjust accordingly.
-> >
-> > Since there is an ongoing effort from Dave Stevenson to upstream a
-> > patchset with similar goals, I'm adding him to the email loop in order
-> > seek for collaboration.
-> 
-> Please hold fire on these patches until we resolve the dma-ranges question.
-> If the dma-ranges are defined correctly, then the cb_offset is not
-> required as the mapping deals with it.
-> 
-> At present we have a mess with the 32bit DMA controllers, and need to
-> clean it up whilst still having old DT files work. Fixing it up also
-> requires fixing the DMA users (primarily MMC, SPI, and vc4 HDMI
-> audio), so will need some care over patch ordering to avoid
-> regressions.
-> If at all possible then I would like to avoid the same mess on the 40
-> bit controllers too.
->
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-I agree with you: I've just sent the entire patchset again for consistency since
-I had an unlucky issue with the internal imap server that results in the patchset to be
-splitted and to be *not* received by all intended recipients. I saw that you were
-one of those so I apologize for the inconvenience. I'll wait for any guidelines
-regarding dmap_map_resource() and how to proceed about that.
-
-Many thanks,
-Andrea
- 
-> Thanks
->   Dave
-> 
-> FWIW my work in progress branch is currently
-> https://github.com/6by9/linux/tree/mainline_2712_rp1_dma_vc4_rc5,
-> which includes my fixed up set of Stefan's patches, as well as all the
-> other patches that need working on for Pi5 support upstream.
-> 
-> > Many thanks,
-> >
-> > Andrea
-> >
-> > Links:
-> > [1] https://lore.kernel.org/linux-arm-kernel/cover.1706948717.git.andrea.porta@suse.com/
-> > [2] https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad71146c@i2se.com/T/
-> > [3] https://lore.kernel.org/linux-arm-kernel/YguMW8n1q0ZV5tKH@matsya/
-> > [4] https://lore.kernel.org/linux-arm-kernel/1e71c153-e482-409c-b229-9b9c0662b67e@arm.com/
-> > [5] https://lore.kernel.org/all/CAPY8ntByJYzSv0kTAc1kY0Dp=vwrzcA0oWiPpyg7x7_BQwGSnA@mail.gmail.com/
-> > [6] https://lkml.org/lkml/2024/2/5/1161
-> >
-> > Andrea della Porta (11):
-> >   dmaengine: bcm2835: Fix several spellos
-> >   dmaengine: bcm2835: Support common dma-channel-mask
-> >   dmaengine: bcm2835: move CB info generation into separate function
-> >   dmaengine: bcm2835: move CB final extra info generation into function
-> >   dmaengine: bcm2835: make address increment platform independent
-> >   dmaengine: bcm2385: drop info parameters
-> >   dmaengine: bcm2835: pass dma_chan to generic functions
-> >   dmaengine: bcm2835: introduce multi platform support
-> >   dt-bindings: dma: Added bcm2711-dma
-> >   dmaengine: bcm2835: Add BCM2711 40-bit DMA support
-> >   ARM: dts: bcm2711: add bcm2711-dma node
-> >
-> > Dom Cobley (2):
-> >   dmaengine: bcm2835: Support dma flags for multi-beat burst
-> >   dmaengine: bcm2835: Fixes for dma_abort
-> >
-> > Phil Elwell (2):
-> >   dmaengine: bcm2835: Add support for per-channel flags
-> >   dmaengine: bcm2835: Add NO_WAIT_RESP, DMA_WIDE_SOURCE and
-> >     DMA_WIDE_DEST flag
-> >
-> >  .../bindings/dma/brcm,bcm2835-dma.yaml        |    4 +-
-> >  arch/arm/boot/dts/broadcom/bcm2711.dtsi       |   16 +
-> >  drivers/dma/bcm2835-dma.c                     | 1084 +++++++++++++----
-> >  3 files changed, 892 insertions(+), 212 deletions(-)
-> >
-> > --
-> > 2.35.3
-> >
-> >
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
