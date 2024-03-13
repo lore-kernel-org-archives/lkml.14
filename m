@@ -1,57 +1,57 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754693F9C2
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F49D45BE7
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 11:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710327970; cv=none; b=mTVXMLgo6Y+R1N03kM4q+wjQHDUM8fz5Dkk9LKY+Yl+OlbTFOZfcn+9z/1E1zESXOomUYX9hzqjK9zx0v4R5+pdlj0+IOB+ZSjXxzGNyNV96+lyUjz6sFmlbn/w9qIMXgRvYkhbPMk8Dn4rz58+5Rhi9RWOWPJCFUgSg1wHfRYk=
+	t=1710327973; cv=none; b=RABZFX8ufqnTk+ErqptEG/tMu63hmqkpi9xoEQyxLScdj/FmS3BEKvllhwA2SfEpafy76kJJle1yu313V3IlYkE5EeyaMpw6k83mJlx843dTW1ECyrKQTBJYoV4y7pnFYuoohbKU3t3Io5uiI/kUQVZvi4Q8N6ICMgofmVBJ7Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710327970; c=relaxed/simple;
-	bh=xjQCJb4J7tMhqbOJEMnpM+ZXei9HK+wmDq2+xus48ZQ=;
+	s=arc-20240116; t=1710327973; c=relaxed/simple;
+	bh=5GbuDkx/t3ca+1vsJKcxunbH6qs63waeRLqj2MYB5Ro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C/KQdwVsT+hpZGHubJjyAOG47kqTYc06L2gumMHsJWTGWxaXqK2Iabg/WLgYM2IgEvDUOlPrpCGb+w1LNIby2LKjxFy2zJD5IEpkfgwkEiq2hcIFOzcUX40VBtTur/rWnxbbYGfRw6/fLVjckCv3NUuy7xXXHV4YRkod++pBcWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=0A3yRXY1; arc=none smtp.client-ip=209.85.218.49
+	 MIME-Version; b=m7QUBt2vsTPEqJz1VmBYC52oGvbKRcPl54MGpYKHezxNgSBhaknQb2+KH+B2wwPEubWM0Cskw0FGQPQI5R86ChuOjQIeaad1rbbgkgPkpIf2e6V6hKVo/Fc/uVWVNMjSW1359rqT9jVnKalhCH4BRNdT/sy4yCjeBrWQ6Rx/saQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=YMyqvaV/; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="0A3yRXY1"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a450615d1c4so130462266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:06:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="YMyqvaV/"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5683576ea18so6719347a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 04:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1710327966; x=1710932766; darn=vger.kernel.org;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1710327969; x=1710932769; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2I4BjeZBW5065VSFTPBsKa9SI4Ksu3+QBW/uFzCaABA=;
-        b=0A3yRXY1VMqCKvJ6Oe6xCSlecM4puPbyCfKKksLY9sMVEx29KhWIVrKAHBzgA7zsgy
-         sJ9CnvWD6+jnICpW+lhZRknTGK+z9TYQd+OzBM05W3957eg7KPMahmVpV6KgIVz6itU/
-         D25YRI54VRKFS8FIr+GsQpDK2hg7M68gxJm1Or6CMtSsXDeoOLT63CI1FxfP0VUoMvrb
-         RF+rd3IlgH7WQ5Lr/4g0oJMxuht8CQgbLYulzBcBu/M/DvtlIjEPD5CfVAhZiWqlbyBI
-         U7nGzWnq6eDsCx7hLhfuDSMuE47P3ztPLZIauGOpBGDA9BtlY+YbIBkYT/YKr/Cy1CHB
-         Elaw==
+        bh=02J+9loqch2JUjY1j89Pn56oCFWFFh5txriQBAftH6E=;
+        b=YMyqvaV/Iv9S0jEpsLdgxswKxB8JYgX1XANbrdRmBZIkCsi7b/mfoyCumU2FVpomz5
+         5IWzMZe3mC/DS/PypAX6TzxtaTySW7iqx1kPleAixDW0fatBuNQhsCUMYXPQdJwGUmgi
+         uFIgme1Y0OGg8tBpUXH19FGsUREWvxfYm1FWjLoZJlF1l0WYU2TVuFfTeG9gtBqU/6iK
+         Xl8JwkH55K5tuNS9rUaJ/KtRRxGX60bQ5TYktSkivhHKBY7z0zMb2IXjWLPIp36dLM6l
+         2KRH24Ftb0GpmY6Ia450eF5yOzwsVsvqsq3PsSN0iScRyNSnsPLo9gM+xoXSuzWe0Ncm
+         h9FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710327966; x=1710932766;
+        d=1e100.net; s=20230601; t=1710327969; x=1710932769;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2I4BjeZBW5065VSFTPBsKa9SI4Ksu3+QBW/uFzCaABA=;
-        b=iHexoju3b6czQ/NSpyzKeTk5KRYa09tg95QQHP5S8nXoVVgjVpbHQedOBT5mukgXd2
-         HPRx9AfPWyiObXUTnhrBA848RvuR+W24DOD02bb8uIMxSo1aVyvAAEYfD+74TonVoCqW
-         FVPhZEePhkj3PhawRbPSVJeX1nJBzOdNGfAS2vXHRxBcpRiCiZgO2w3RNBqqgNtBXbWh
-         +cohOMKfxPxzmE8doRAeZ6k8sVNjkXa5iCbXYkdDAiPR3RkwqrMWv1pLwH8XBRnQdJjU
-         RO5VYDwLTzPfOE+AZ1q2KMpvvI2KxUsi5OrIc+cPx4XZnWn1v+0TNlBSQaJQ0aNlgDdI
-         y7Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrT/5QiVFMyqjzqTXTWS7Xau9GnX4OogNA6lMBoC4rD7N8lwgdNHdePfow8mjI2AHgiM7MY2TKwo8uftgY69DUM44QJNG4mHjBkZ9q
-X-Gm-Message-State: AOJu0Yx4bOrLnmNi/AE9dcu5UNqKWckU3yq9aJk2eb9mf2NPhdJ19ISw
-	54+vT60aOBgR8eL5EC5Sov4DyJWg8e3VOuF29NU7Vihg/TsjiVq2iUD4z1rAqeM=
-X-Google-Smtp-Source: AGHT+IGOchPTEwVc1NP+20OHE3woXNtq7ZGAK95XOq6o/e/XnJ5OU4vtDQ9GpW7fyFG0Xs6V3WYxGw==
-X-Received: by 2002:a17:906:54c2:b0:a44:52ec:b9e7 with SMTP id c2-20020a17090654c200b00a4452ecb9e7mr1771157ejp.16.1710327965737;
-        Wed, 13 Mar 2024 04:06:05 -0700 (PDT)
+        bh=02J+9loqch2JUjY1j89Pn56oCFWFFh5txriQBAftH6E=;
+        b=CC+fB4T8Q8+7FXUiz/YB5O50iruJ+sbRUk3/ux7k4XwwMQWEA6GrLy+C4OSVzRUNCH
+         yybtTrz/8H8hT9I7spUpxDujgirmU3sMnFSw3thBtgFpgTkJeoDh3rQFCVB+ZQ94NF2Q
+         APXAYFVmm+qtYZfVG2qE4yKlbkEXZ6DqpTxwDhLXh4SURu1PrPzcv/LtPS/JPEx4CiYy
+         3j9Wc8FZZgTaJ/54MxCCPwiJhpQwfK9NGMpmlbuDCVpsStceBjSSLHlpbyIU0CqZf4pp
+         ZCAUTJGWYGWCvT2vyIA2pSAtGbcyQaxTmqqzVuk55QVLpL/gThwQ9y7x9G1Thvp5NQnO
+         WLjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPMRsqFUOKpXv6loKEo85GlkCIxw4o7h9ZiAYAVWho5Lsyvb1LOPJpBhxQ7P4m9BtQnj5HmU5v2JfzOu3i/hYfOMq7IK+VisM74iFy
+X-Gm-Message-State: AOJu0YwlIVfgb52O7eZoETIgMfU8HQXbrHCZE48yyvTxFfeq9arL4eWb
+	g+lpuVWhYXWYne6AF19vodkoI0PXiwI0Zlwmid3jNTr/axZdV4FoPl7jzcXtYLE=
+X-Google-Smtp-Source: AGHT+IEcThuL3vIoWtwKtXW9tSmz7xjNlpNKF5lpt2rzWBNXagbGz7lsNNxPgXrvJ1Nn9AxFGjtUgA==
+X-Received: by 2002:a17:907:972a:b0:a45:f4c2:38d7 with SMTP id jg42-20020a170907972a00b00a45f4c238d7mr8536226ejc.18.1710327969457;
+        Wed, 13 Mar 2024 04:06:09 -0700 (PDT)
 Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4623030893sm3173785ejb.126.2024.03.13.04.06.05
+        by smtp.gmail.com with ESMTPSA id jx15-20020a170907760f00b00a466591eaebsm55134ejc.194.2024.03.13.04.06.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 04:06:05 -0700 (PDT)
+        Wed, 13 Mar 2024 04:06:09 -0700 (PDT)
 From: Andreas Hindborg <nmi@metaspace.dk>
 To: Jens Axboe <axboe@kernel.dk>,
 	Christoph Hellwig <hch@lst.de>,
@@ -83,9 +83,9 @@ Cc: Andreas Hindborg <a.hindborg@samsung.com>,
 	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
 	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
 	"gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: [RFC PATCH 4/5] rust: block: add rnull, Rust null_blk implementation
-Date: Wed, 13 Mar 2024 12:05:11 +0100
-Message-ID: <20240313110515.70088-5-nmi@metaspace.dk>
+Subject: [RFC PATCH 2/5] rust: block: introduce `kernel::block::bio` module
+Date: Wed, 13 Mar 2024 12:05:09 +0100
+Message-ID: <20240313110515.70088-3-nmi@metaspace.dk>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240313110515.70088-1-nmi@metaspace.dk>
 References: <20240313110515.70088-1-nmi@metaspace.dk>
@@ -99,399 +99,471 @@ Content-Transfer-Encoding: 8bit
 
 From: Andreas Hindborg <a.hindborg@samsung.com>
 
+Add abstractions for working with `struct bio`.
+
 Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
 ---
- drivers/block/Kconfig  |   4 +
- drivers/block/Makefile |   3 +
- drivers/block/rnull.rs | 323 +++++++++++++++++++++++++++++++++++++++++
- rust/helpers.c         |   1 +
- scripts/Makefile.build |   2 +-
- 5 files changed, 332 insertions(+), 1 deletion(-)
- create mode 100644 drivers/block/rnull.rs
+ rust/kernel/block.rs            |   1 +
+ rust/kernel/block/bio.rs        | 112 +++++++++++++
+ rust/kernel/block/bio/vec.rs    | 279 ++++++++++++++++++++++++++++++++
+ rust/kernel/block/mq/request.rs |  22 +++
+ 4 files changed, 414 insertions(+)
+ create mode 100644 rust/kernel/block/bio.rs
+ create mode 100644 rust/kernel/block/bio/vec.rs
 
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 5b9d4aaebb81..fb877d4f8ddf 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -354,6 +354,10 @@ config VIRTIO_BLK
- 	  This is the virtual block driver for virtio.  It can be used with
-           QEMU based VMMs (like KVM or Xen).  Say Y or M.
+diff --git a/rust/kernel/block.rs b/rust/kernel/block.rs
+index 4c93317a568a..1797859551fd 100644
+--- a/rust/kernel/block.rs
++++ b/rust/kernel/block.rs
+@@ -2,4 +2,5 @@
  
-+config BLK_DEV_RUST_NULL
-+	tristate "Rust null block driver"
-+	depends on RUST
-+
- config BLK_DEV_RBD
- 	tristate "Rados block device (RBD)"
- 	depends on INET && BLOCK
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 101612cba303..1105a2d4fdcb 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -9,6 +9,9 @@
- # needed for trace events
- ccflags-y				+= -I$(src)
+ //! Types for working with the block layer
  
-+obj-$(CONFIG_BLK_DEV_RUST_NULL) += rnull_mod.o
-+rnull_mod-y := rnull.o
-+
- obj-$(CONFIG_MAC_FLOPPY)	+= swim3.o
- obj-$(CONFIG_BLK_DEV_SWIM)	+= swim_mod.o
- obj-$(CONFIG_BLK_DEV_FD)	+= floppy.o
-diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
++pub mod bio;
+ pub mod mq;
+diff --git a/rust/kernel/block/bio.rs b/rust/kernel/block/bio.rs
 new file mode 100644
-index 000000000000..05fef30e910c
+index 000000000000..0d4336cbe9c1
 --- /dev/null
-+++ b/drivers/block/rnull.rs
-@@ -0,0 +1,323 @@
++++ b/rust/kernel/block/bio.rs
+@@ -0,0 +1,112 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+//! This is a Rust implementation of the C null block driver.
++//! Types for working with the bio layer.
 +//!
-+//! Supported features:
++//! C header: [`include/linux/blk_types.h`](../../include/linux/blk_types.h)
++
++use core::fmt;
++use core::ptr::NonNull;
++
++mod vec;
++
++pub use vec::BioSegmentIterator;
++pub use vec::Segment;
++
++use crate::types::Opaque;
++
++/// A block device IO descriptor (`struct bio`)
++///
++/// # Invariants
++///
++/// Instances of this type is always reference counted. A call to
++/// `bindings::bio_get()` ensures that the instance is valid for read at least
++/// until a matching call to `bindings :bio_put()`.
++#[repr(transparent)]
++pub struct Bio(Opaque<bindings::bio>);
++
++impl Bio {
++    /// Returns an iterator over segments in this `Bio`. Does not consider
++    /// segments of other bios in this bio chain.
++    #[inline(always)]
++    pub fn segment_iter(&self) -> BioSegmentIterator<'_> {
++        BioSegmentIterator::new(self)
++    }
++
++    /// Get slice referencing the `bio_vec` array of this bio
++    #[inline(always)]
++    fn io_vec(&self) -> &[bindings::bio_vec] {
++        let this = self.0.get();
++
++        // SAFETY: By the type invariant of `Bio` and existence of `&self`,
++        // `this` is valid for read.
++        let io_vec = unsafe { (*this).bi_io_vec };
++
++        // SAFETY: By the type invariant of `Bio` and existence of `&self`,
++        // `this` is valid for read.
++        let length = unsafe { (*this).bi_vcnt };
++
++        // SAFETY: By C API contract, `io_vec` points to `length` consecutive
++        // and properly initialized `bio_vec` values. The array is properly
++        // aligned because it is #[repr(C)]. By C API contract and safety
++        // requirement of `from_raw()`, the elements of the `io_vec` array are
++        // not modified for the duration of the lifetime of `&self`
++        unsafe { core::slice::from_raw_parts(io_vec, length as usize) }
++    }
++
++    /// Return a copy of the `bvec_iter` for this `Bio`. This iterator always
++    /// indexes to a valid `bio_vec` entry.
++    #[inline(always)]
++    fn raw_iter(&self) -> bindings::bvec_iter {
++        // SAFETY: By the type invariant of `Bio` and existence of `&self`,
++        // `self` is valid for read.
++        unsafe { (*self.0.get()).bi_iter }
++    }
++
++    /// Get the next `Bio` in the chain
++    #[inline(always)]
++    fn next(&self) -> Option<&Self> {
++        // SAFETY: By the type invariant of `Bio` and existence of `&self`,
++        // `self` is valid for read.
++        let next = unsafe { (*self.0.get()).bi_next };
++        // SAFETY: By C API contract `bi_next` has nonzero reference count if it
++        // is not null, for at least the duration of the lifetime of &self.
++        unsafe { Self::from_raw(next) }
++    }
++
++    /// Create an instance of `Bio` from a raw pointer.
++    ///
++    /// # Safety
++    ///
++    /// If `ptr` is not null, caller must ensure positive refcount for the
++    /// pointee and immutability for the duration of the returned lifetime.
++    #[inline(always)]
++    pub(crate) unsafe fn from_raw<'a>(ptr: *mut bindings::bio) -> Option<&'a Self> {
++        Some(
++            // SAFETY: by the safety requirement of this funciton, `ptr` is
++            // valid for read for the duration of the returned lifetime
++            unsafe { &*NonNull::new(ptr)?.as_ptr().cast::<Bio>() },
++        )
++    }
++}
++
++impl core::fmt::Display for Bio {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        write!(f, "Bio({:?})", self.0.get())
++    }
++}
++
++/// An iterator over `Bio`
++pub struct BioIterator<'a> {
++    pub(crate) bio: Option<&'a Bio>,
++}
++
++impl<'a> core::iter::Iterator for BioIterator<'a> {
++    type Item = &'a Bio;
++
++    #[inline(always)]
++    fn next(&mut self) -> Option<&'a Bio> {
++        let current = self.bio.take()?;
++        self.bio = current.next();
++        Some(current)
++    }
++}
+diff --git a/rust/kernel/block/bio/vec.rs b/rust/kernel/block/bio/vec.rs
+new file mode 100644
+index 000000000000..b61380807f38
+--- /dev/null
++++ b/rust/kernel/block/bio/vec.rs
+@@ -0,0 +1,279 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Types for working with `struct bio_vec` IO vectors
 +//!
-+//! - optional memory backing
-+//! - blk-mq interface
-+//! - direct completion
-+//! - softirq completion
-+//! - timer completion
-+//!
-+//! The driver is configured at module load time by parameters
-+//! `param_memory_backed`, `param_capacity_mib`, `param_irq_mode` and
-+//! `param_completion_time_nsec!.
++//! C header: [`include/linux/bvec.h`](../../include/linux/bvec.h)
 +
-+use core::ops::Deref;
++use super::Bio;
++use crate::error::Result;
++use crate::folio::UniqueFolio;
++use crate::page::Page;
++use core::fmt;
++use core::mem::ManuallyDrop;
 +
-+use kernel::{
-+    bindings,
-+    block::{
-+        bio::Segment,
-+        mq::{self, GenDisk, Operations, RequestDataRef, TagSet},
-+    },
-+    error::Result,
-+    folio::*,
-+    hrtimer::{RawTimer, TimerCallback},
-+    new_mutex, pr_info,
-+    prelude::*,
-+    sync::{Arc, Mutex},
-+    types::{ARef, ForeignOwnable},
-+    xarray::XArray,
-+};
-+
-+use kernel::new_spinlock;
-+use kernel::CacheAligned;
-+use kernel::sync::SpinLock;
-+
-+module! {
-+    type: NullBlkModule,
-+    name: "rnull_mod",
-+    author: "Andreas Hindborg",
-+    license: "GPL v2",
-+    params: {
-+        param_memory_backed: bool {
-+            default: true,
-+            permissions: 0,
-+            description: "Use memory backing",
-+        },
-+        // Problems with pin_init when `irq_mode`
-+        param_irq_mode: u8 {
-+            default: 0,
-+            permissions: 0,
-+            description: "IRQ Mode (0: None, 1: Soft, 2: Timer)",
-+        },
-+        param_capacity_mib: u64 {
-+            default: 4096,
-+            permissions: 0,
-+            description: "Device capacity in MiB",
-+        },
-+        param_completion_time_nsec: u64 {
-+            default: 1_000_000,
-+            permissions: 0,
-+            description: "Completion time in nano seconds for timer mode",
-+        },
-+        param_block_size: u16 {
-+            default: 4096,
-+            permissions: 0,
-+            description: "Block size in bytes",
-+        },
-+    },
++/// A wrapper around a `strutct bio_vec` - a contiguous range of physical memory addresses
++///
++/// # Invariants
++///
++/// `bio_vec` must always be initialized and valid for read and write
++pub struct Segment<'a> {
++    bio_vec: bindings::bio_vec,
++    _marker: core::marker::PhantomData<&'a ()>,
 +}
 +
-+#[derive(Debug)]
-+enum IRQMode {
-+    None,
-+    Soft,
-+    Timer,
-+}
-+
-+impl TryFrom<u8> for IRQMode {
-+    type Error = kernel::error::Error;
-+
-+    fn try_from(value: u8) -> Result<Self> {
-+        match value {
-+            0 => Ok(Self::None),
-+            1 => Ok(Self::Soft),
-+            2 => Ok(Self::Timer),
-+            _ => Err(kernel::error::code::EINVAL),
-+        }
-+    }
-+}
-+
-+struct NullBlkModule {
-+    _disk: Pin<Box<Mutex<GenDisk<NullBlkDevice>>>>,
-+}
-+
-+fn add_disk(tagset: Arc<TagSet<NullBlkDevice>>) -> Result<GenDisk<NullBlkDevice>> {
-+    let block_size = *param_block_size.read();
-+    if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
-+        return Err(kernel::error::code::EINVAL);
++impl Segment<'_> {
++    /// Get he lenght of the segment in bytes
++    #[inline(always)]
++    pub fn len(&self) -> usize {
++        self.bio_vec.bv_len as usize
 +    }
 +
-+    let irq_mode = (*param_irq_mode.read()).try_into()?;
-+
-+    let queue_data = Box::pin_init(pin_init!(
-+        QueueData {
-+            tree <- TreeContainer::new(),
-+            completion_time_nsec: *param_completion_time_nsec.read(),
-+            irq_mode,
-+            memory_backed: *param_memory_backed.read(),
-+            block_size,
-+        }
-+    ))?;
-+
-+    let block_size = queue_data.block_size;
-+
-+    let mut disk = GenDisk::try_new(tagset, queue_data)?;
-+    disk.set_name(format_args!("rnullb{}", 0))?;
-+    disk.set_capacity_sectors(*param_capacity_mib.read() << 11);
-+    disk.set_queue_logical_block_size(block_size.into());
-+    disk.set_queue_physical_block_size(block_size.into());
-+    disk.set_rotational(false);
-+    Ok(disk)
-+}
-+
-+impl kernel::Module for NullBlkModule {
-+    fn init(_module: &'static ThisModule) -> Result<Self> {
-+        pr_info!("Rust null_blk loaded\n");
-+        let tagset = Arc::pin_init(TagSet::try_new(1, (), 256, 1))?;
-+        let disk = Box::pin_init(new_mutex!(add_disk(tagset)?, "nullb:disk"))?;
-+
-+        disk.lock().add()?;
-+
-+        Ok(Self { _disk: disk })
++    /// Returns true if the length of the segment is 0
++    #[inline(always)]
++    pub fn is_empty(&self) -> bool {
++        self.len() == 0
 +    }
-+}
 +
-+impl Drop for NullBlkModule {
-+    fn drop(&mut self) {
-+        pr_info!("Dropping rnullb\n");
++    /// Get the offset field of the `bio_vec`
++    #[inline(always)]
++    pub fn offset(&self) -> usize {
++        self.bio_vec.bv_offset as usize
 +    }
-+}
 +
-+struct NullBlkDevice;
++    /// Copy data of this segment into `folio`.
++    ///
++    /// Note: Disregards `self.offset()`
++    #[inline(always)]
++    pub fn copy_to_folio(&self, dst_folio: &mut UniqueFolio) -> Result {
++        // SAFETY: self.bio_vec is valid and thus bv_page must be a valid
++        // pointer to a `struct page`. We do not own the page, but we prevent
++        // drop by wrapping the `Page` in `ManuallyDrop`.
++        let src_page = ManuallyDrop::new(unsafe { Page::from_raw(self.bio_vec.bv_page) });
 +
-+type Tree = XArray<Box<UniqueFolio>>;
-+type TreeRef<'a> = &'a Tree;
++        src_page.with_slice_into_page(|src| {
++            dst_folio.with_slice_into_page_mut(0, |dst| {
++                dst.copy_from_slice(src);
++                Ok(())
++            })
++        })
++    }
 +
-+#[pin_data]
-+struct TreeContainer {
-+    // `XArray` is safe to use without a lock, as it applies internal locking.
-+    // However, there are two reasons to use an external lock: a) cache line
-+    // contention and b) we don't want to take the lock for each page we
-+    // process.
-+    //
-+    // A: The `XArray` lock (xa_lock) is located on the same cache line as the
-+    // xarray data pointer (xa_head). The effect of this arrangement is that
-+    // under heavy contention, we often get a cache miss when we try to follow
-+    // the data pointer after acquiring the lock. We would rather have consumers
-+    // spinning on another lock, so we do not get a miss on xa_head. This issue
-+    // can potentially be fixed by padding the C `struct xarray`.
-+    //
-+    // B: The current `XArray` Rust API requires that we take the `xa_lock` for
-+    // each `XArray` operation. This is very inefficient when the lock is
-+    // contended and we have many operations to perform. Eventually we should
-+    // update the `XArray` API to allow multiple tree operations under a single
-+    // lock acquisition. For now, serialize tree access with an external lock.
-+    #[pin]
-+    tree: CacheAligned<Tree>,
-+    #[pin]
-+    lock: CacheAligned<SpinLock<()>>,
-+}
++    /// Copy data to the page of this segment from `src`.
++    ///
++    /// Note: Disregards `self.offset()`
++    pub fn copy_from_folio(&mut self, src_folio: &UniqueFolio) -> Result {
++        // SAFETY: self.bio_vec is valid and thus bv_page must be a valid
++        // pointer to a `struct page`. We do not own the page, but we prevent
++        // drop by wrapping the `Page` in `ManuallyDrop`.
++        let mut dst_page = ManuallyDrop::new(unsafe { Page::from_raw(self.bio_vec.bv_page) });
 +
-+impl TreeContainer {
-+    fn new() -> impl PinInit<Self> {
-+        pin_init!(TreeContainer {
-+            tree <- CacheAligned::new_initializer(XArray::new(0)),
-+            lock <- CacheAligned::new_initializer(new_spinlock!((), "rnullb:mem")),
++        dst_page.with_slice_into_page_mut(|dst| {
++            src_folio.with_slice_into_page(0, |src| {
++                dst.copy_from_slice(src);
++                Ok(())
++            })
 +        })
 +    }
 +}
 +
-+#[pin_data]
-+struct QueueData {
-+    #[pin]
-+    tree: TreeContainer,
-+    completion_time_nsec: u64,
-+    irq_mode: IRQMode,
-+    memory_backed: bool,
-+    block_size: u16,
++impl core::fmt::Display for Segment<'_> {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        write!(
++            f,
++            "Segment {:?} len: {}",
++            self.bio_vec.bv_page, self.bio_vec.bv_len
++        )
++    }
 +}
 +
-+impl NullBlkDevice {
-+    #[inline(always)]
-+    fn write(tree: TreeRef<'_>, sector: usize, segment: &Segment<'_>) -> Result {
-+        let idx = sector >> bindings::PAGE_SECTORS_SHIFT;
++/// An iterator over `Segment`
++///
++/// # Invariants
++///
++/// If `iter.bi_size` > 0, `iter` must always index a valid `bio_vec` in `bio.io_vec()`.
++pub struct BioSegmentIterator<'a> {
++    bio: &'a Bio,
++    iter: bindings::bvec_iter,
++}
 +
-+        let mut folio = if let Some(page) = tree.get_locked(idx) {
-+            page
-+        } else {
-+            tree.set(idx, Box::try_new(Folio::try_new(0)?)?)?;
-+            tree.get_locked(idx).unwrap()
++impl<'a> BioSegmentIterator<'a> {
++    /// Creeate a new segemnt iterator for iterating the segments of `bio`. The
++    /// iterator starts at the beginning of `bio`.
++    #[inline(always)]
++    pub(crate) fn new(bio: &'a Bio) -> BioSegmentIterator<'_> {
++        // SAFETY: `bio.raw_iter()` returns an index that indexes into a valid
++        // `bio_vec` in `bio.io_vec()`.
++        Self {
++            bio,
++            iter: bio.raw_iter(),
++        }
++    }
++
++    // The accessors in this implementation block are modelled after C side
++    // macros and static functions `bvec_iter_*` and `mp_bvec_iter_*` from
++    // bvec.h.
++
++    /// Construct a `bio_vec` from the current iterator state.
++    ///
++    /// This will return a `bio_vec`of size <= PAGE_SIZE
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    unsafe fn io_vec(&self) -> bindings::bio_vec {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        unsafe {
++            bindings::bio_vec {
++                bv_page: self.page(),
++                bv_len: self.len(),
++                bv_offset: self.offset(),
++            }
++        }
++    }
++
++    /// Get the currently indexed `bio_vec` entry.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn bvec(&self) -> &bindings::bio_vec {
++        // SAFETY: By the safety requirement of this function and the type
++        // invariant of `Self`, `self.iter.bi_idx` indexes into a valid
++        // `bio_vec`
++        unsafe { self.bio.io_vec().get_unchecked(self.iter.bi_idx as usize) }
++    }
++
++    /// Get the currently indexed page, indexing into pages of order > 0.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn page(&self) -> *mut bindings::page {
++        // SAFETY: By C API contract, the following offset cannot exceed pages
++        // allocated to this bio.
++        unsafe { self.mp_page().add(self.mp_page_idx()) }
++    }
++
++    /// Get the remaining bytes in the current page. Never more than PAGE_SIZE.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn len(&self) -> u32 {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        unsafe { self.mp_len().min((bindings::PAGE_SIZE as u32) - self.offset()) }
++    }
++
++    /// Get the offset from the last page boundary in the currently indexed
++    /// `bio_vec` entry. Never more than PAGE_SIZE.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn offset(&self) -> u32 {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        unsafe { self.mp_offset() % (bindings::PAGE_SIZE as u32) }
++    }
++
++    /// Return the first page of the currently indexed `bio_vec` entry. This
++    /// might be a multi-page entry, meaning that page might have order > 0.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn mp_page(&self) -> *mut bindings::page {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        unsafe { self.bvec().bv_page }
++    }
++
++    /// Get the offset in whole pages into the currently indexed `bio_vec`. This
++    /// can be more than 0 is the page has order > 0.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn mp_page_idx(&self) -> usize {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        (unsafe { self.mp_offset() } / (bindings::PAGE_SIZE as u32)) as usize
++    }
++
++    /// Get the offset in the currently indexed `bio_vec` multi-page entry. This
++    /// can be more than `PAGE_SIZE` if the page has order > 0.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn mp_offset(&self) -> u32 {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        unsafe { self.bvec().bv_offset + self.iter.bi_bvec_done }
++    }
++
++    /// Get the number of remaining bytes for the currently indexed `bio_vec`
++    /// entry. Can be more than PAGE_SIZE for `bio_vec` entries with pages of
++    /// order > 0.
++    ///
++    /// # Safety
++    ///
++    /// Caller must ensure that `self.iter.bi_size` > 0 before calling this
++    /// method.
++    #[inline(always)]
++    unsafe fn mp_len(&self) -> u32 {
++        // SAFETY: By safety requirement of this function `self.iter.bi_size` is
++        // greater than 0.
++        self.iter
++            .bi_size
++            .min(unsafe { self.bvec().bv_len } - self.iter.bi_bvec_done)
++    }
++}
++
++impl<'a> core::iter::Iterator for BioSegmentIterator<'a> {
++    type Item = Segment<'a>;
++
++    #[inline(always)]
++    fn next(&mut self) -> Option<Self::Item> {
++        if self.iter.bi_size == 0 {
++            return None;
++        }
++
++        // SAFETY: We checked that `self.iter.bi_size` > 0 above.
++        let bio_vec_ret = unsafe { self.io_vec() };
++
++        // SAFETY: By existence of reference `&bio`, `bio.0` contains a valid
++        // `struct bio`. By type invariant of `BioSegmentItarator` `self.iter`
++        // indexes into a valid `bio_vec` entry. By C API contracit, `bv_len`
++        // does not exceed the size of the bio.
++        unsafe {
++            bindings::bio_advance_iter_single(
++                self.bio.0.get(),
++                &mut self.iter as *mut bindings::bvec_iter,
++                bio_vec_ret.bv_len,
++            )
 +        };
 +
-+        segment.copy_to_folio(&mut folio)?;
-+
-+        Ok(())
-+    }
-+
-+    #[inline(always)]
-+    fn read(tree: TreeRef<'_>, sector: usize, segment: &mut Segment<'_>) -> Result {
-+        let idx = sector >> bindings::PAGE_SECTORS_SHIFT;
-+
-+        if let Some(folio) = tree.get_locked(idx) {
-+            segment.copy_from_folio(folio.deref())?;
-+        }
-+
-+        Ok(())
-+    }
-+
-+    #[inline(never)]
-+    fn transfer(
-+        command: bindings::req_op,
-+        tree: TreeRef<'_>,
-+        sector: usize,
-+        segment: &mut Segment<'_>,
-+    ) -> Result {
-+        match command {
-+            bindings::req_op_REQ_OP_WRITE => Self::write(tree, sector, segment)?,
-+            bindings::req_op_REQ_OP_READ => Self::read(tree, sector, segment)?,
-+            _ => (),
-+        }
-+        Ok(())
-+    }
-+}
-+
-+#[pin_data]
-+struct Pdu {
-+    #[pin]
-+    timer: kernel::hrtimer::Timer<Self>,
-+}
-+
-+impl TimerCallback for Pdu {
-+    type Receiver = RequestDataRef<NullBlkDevice>;
-+
-+    fn run(this: Self::Receiver) {
-+        this.request().end_ok();
-+    }
-+}
-+
-+kernel::impl_has_timer! {
-+    impl HasTimer<Self> for Pdu { self.timer }
-+}
-+
-+#[vtable]
-+impl Operations for NullBlkDevice {
-+    type RequestData = Pdu;
-+    type RequestDataInit = impl PinInit<Pdu>;
-+    type QueueData = Pin<Box<QueueData>>;
-+    type HwData = ();
-+    type TagSetData = ();
-+
-+    fn new_request_data(
-+        _tagset_data: <Self::TagSetData as ForeignOwnable>::Borrowed<'_>,
-+    ) -> Self::RequestDataInit {
-+        pin_init!( Pdu {
-+            timer <- kernel::hrtimer::Timer::new(),
++        Some(Segment {
++            bio_vec: bio_vec_ret,
++            _marker: core::marker::PhantomData,
 +        })
 +    }
-+
-+    #[inline(always)]
-+    fn queue_rq(
-+        _hw_data: (),
-+        queue_data: &QueueData,
-+        rq: ARef<mq::Request<Self>>,
-+        _is_last: bool,
-+    ) -> Result {
-+        rq.start();
-+        if queue_data.memory_backed {
-+            let guard = queue_data.tree.lock.lock();
-+            let tree = queue_data.tree.tree.deref();
-+
-+            let mut sector = rq.sector();
-+            for bio in rq.bio_iter() {
-+                for mut segment in bio.segment_iter() {
-+                    Self::transfer(rq.command(), tree, sector, &mut segment)?;
-+                    sector += segment.len() >> bindings::SECTOR_SHIFT;
-+                }
-+            }
-+
-+            drop(guard);
-+        }
-+
-+
-+        match queue_data.irq_mode {
-+            IRQMode::None => rq.end_ok(),
-+            IRQMode::Soft => rq.complete(),
-+            IRQMode::Timer => {
-+                mq::Request::owned_data_ref(rq).schedule(queue_data.completion_time_nsec)
-+            }
-+        }
-+
-+        Ok(())
-+    }
-+
-+    fn commit_rqs(
-+        _hw_data: <Self::HwData as ForeignOwnable>::Borrowed<'_>,
-+        _queue_data: <Self::QueueData as ForeignOwnable>::Borrowed<'_>,
-+    ) {
-+    }
-+
-+    fn complete(rq: &mq::Request<Self>) {
-+        rq.end_ok();
-+    }
-+
-+    fn init_hctx(
-+        _tagset_data: <Self::TagSetData as ForeignOwnable>::Borrowed<'_>,
-+        _hctx_idx: u32,
-+    ) -> Result<Self::HwData> {
-+        Ok(())
-+    }
 +}
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 017fa90366e6..9c8976629e90 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -200,6 +200,7 @@ struct page *rust_helper_folio_page(struct folio *folio, size_t n)
- {
- 	return folio_page(folio, n);
- }
-+EXPORT_SYMBOL_GPL(rust_helper_folio_page);
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+index b4dacac5e091..cccffde45981 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -12,6 +12,9 @@
+ };
+ use core::{ffi::c_void, marker::PhantomData, ops::Deref};
  
- loff_t rust_helper_folio_pos(struct folio *folio)
- {
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index dae447a1ad30..f64be2310010 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -262,7 +262,7 @@ $(obj)/%.lst: $(src)/%.c FORCE
- # Compile Rust sources (.rs)
- # ---------------------------------------------------------------------------
++use crate::block::bio::Bio;
++use crate::block::bio::BioIterator;
++
+ /// A wrapper around a blk-mq `struct request`. This represents an IO request.
+ ///
+ /// # Invariants
+@@ -84,6 +87,25 @@ pub fn complete(&self) {
+         }
+     }
  
--rust_allowed_features := new_uninit,offset_of
-+rust_allowed_features := new_uninit,offset_of,allocator_api,impl_trait_in_assoc_type
- 
- # `--out-dir` is required to avoid temporaries being created by `rustc` in the
- # current working directory, which may be not accessible in the out-of-tree
++    /// Get a wrapper for the first Bio in this request
++    #[inline(always)]
++    pub fn bio(&self) -> Option<&Bio> {
++        // SAFETY: By type invariant of `Self`, `self.0` is valid and the deref
++        // is safe.
++        let ptr = unsafe { (*self.0.get()).bio };
++        // SAFETY: By C API contract, if `bio` is not null it will have a
++        // positive refcount at least for the duration of the lifetime of
++        // `&self`.
++        unsafe { Bio::from_raw(ptr) }
++    }
++
++    /// Get an iterator over all bio structurs in this request
++    #[inline(always)]
++    pub fn bio_iter(&self) -> BioIterator<'_> {
++        BioIterator { bio: self.bio() }
++    }
++
++    // TODO: Check if inline is still required for cross language LTO inlining into module
+     /// Get the target sector for the request
+     #[inline(always)]
+     pub fn sector(&self) -> usize {
 -- 
 2.44.0
 
