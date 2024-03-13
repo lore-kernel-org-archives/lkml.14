@@ -1,90 +1,115 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7CDAD25;
-	Wed, 13 Mar 2024 01:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17E0947A
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 01:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710292328; cv=none; b=mTfQI6WrHvUsQBGxCTD/CkMCUof0GxPy37TRJGd4kAVbvknOlZhqY/yFwjv0/kut/PvNDmwtg9EKFzP3Jq/9z4oJ8nm04DTg26UFpnDKsvtaJG+9WTsW0M4xtlTbFHtCRrKrcNFNJ/Gr9mZPba35UPIpkLHKbsKOKlqerqObHuw=
+	t=1710292456; cv=none; b=nIbBY2yPKF4wshpoJUgodMxYrSPbf6xmCWkkWgVhbMe1DIe3E6pY5nsv3VPH+rbSl7R60iOb7TZqyvEnc0UvJw4w5q+Y43VR/IzvxF+uGSYz+gOJggtdfnKzeO8JW0DcLl6USo9CDHrxePKrsRe/GzDk/rg9qlMZglylOEMMttA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710292328; c=relaxed/simple;
-	bh=Xp28m89tphCyPltHb8qKLxLSTrAyX5asPVVyb3lH2x0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HymwzaeHWhEKbQm8/8+tKIJLVAi/LFmeKGrgDJ8nutBQzkUJ4ICx+pAHkyUVVh6rP6MVxkH9qQ4aMfcU3Shs2tjENXotJGht+8CLQr1CjIvy5NGmCEa2KhMCVOdwaRWNPfmmJK/VujngIES5+z6yAR4VddwA2QVsYTtS6t6RQB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QkpHlH54; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1710292456; c=relaxed/simple;
+	bh=twMccmPlR7/SShgFg0AONE56vJVPPL3EBuKYw8SPbFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MgsMYUa2jLrM5XKpv7sl14PphszeiHtc76ePgxHGxiTkmR/T4su6caebNG6bJccjqpl2mp/RnPtnCfdzYDJ5xjiN125p2Vv/zmgoIgKBdYymDFj5IvuGE5lFu0r3R9EagtThnzR6jcaRE4xYSH3MBoWSqVb5T58WFeFCca8v7vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FDZNA8oD; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QkpHlH54"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TqsuPcIuwfxU9ldEwFf3ygLp9QwI+Zgl6lIFWmffSGY=; b=QkpHlH54vu6v6nxowOEc9SUX1P
-	T3yAi/Raw/XSW/yvq7uRUr1bykTohr5V2+bxSBvLrIJjJmBz3udi+FGJ9580Rnnocm69bKv3uKQ6L
-	mvUdzoLnmnsyKrnMgDq52Q+i/bWwhKarOuNyoWsIiWGVbFjBeWifz0VPQSmBoPf5L42pmyW3eGjKo
-	gs2Rc9kWA+dtJL+Q7NiXO3UutDJEUrb2c+zJgJ6nBQBPFrob5TNcn83UB6Jgeumyef4WgnymfAQkm
-	mDJJZ7b+2vm/JUD/I/cWBlGB9Canm99OJJGugZeVezqp6aksXgdvTBuYX/Kb7vh1cxazkuGYI45Bb
-	U9KHFr9w==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkDA5-00000008JYn-370X;
-	Wed, 13 Mar 2024 01:12:05 +0000
-Date: Tue, 12 Mar 2024 18:12:05 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Andrew Kanner <andrew.kanner@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mchehab@kernel.org
-Subject: Re: [PATCH v1] module.h: define __symbol_get_gpl() as a regular
- __symbol_get()
-Message-ID: <ZfD9ZdfCYVj9Qh-D@bombadil.infradead.org>
-References: <20240131190251.4668-1-andrew.kanner@gmail.com>
- <20240201052958.GA14943@lst.de>
- <65bb648c.190a0220.d431d.4f63@mx.google.com>
- <ZbvfYqIKKWkTWLf9@bombadil.infradead.org>
- <65cbe0ee.050a0220.1c11e.d156@mx.google.com>
- <ZfDWV227fOffscv7@bombadil.infradead.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FDZNA8oD"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-29bb3d62949so3317508a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2024 18:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1710292454; x=1710897254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=twMccmPlR7/SShgFg0AONE56vJVPPL3EBuKYw8SPbFI=;
+        b=FDZNA8oDu26c1b4Iq8kZpI5sjsgzWxN3M1q+oBqWsp+edkBILL0x/ka8+/nChjOnBo
+         cMYlOjrqOw6kEqUyIAMKHDstbnc8rFkNuM1rrWPxLO3KbA3p4Y++EQDbz8OKhAb5qja8
+         P/1+acCyx9guR3yh+MkS99mdDHrWjPTSgvwyMWYpSq15boCnFJ9P6M8RBXrnaibQe2qk
+         2BsCYF1COi08jt7I+YEdGO6oK2NjxCIwpkkFSRn8A/uCPUSF/O4d72djMV8nJFSKXwUQ
+         W8cPGSiSEhradaspEmLUBW3lkkxtC0OsA80J9lNQ/YWJOsOA1HqnRU1xV0YI5hVDMg7T
+         PbzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710292454; x=1710897254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=twMccmPlR7/SShgFg0AONE56vJVPPL3EBuKYw8SPbFI=;
+        b=SI6uNQqql2jsCYwEXxE5v+MX/lvkxS19PlIzasTAPHsl+X9gp1dPUQAGV92Vrh8NSE
+         DnDFvp0FOk8eBgDTgWlnutojj90Z4dgKAuBKQDINbs6ccO8OLxaovt9n9mwhpHdoWsV+
+         dfPMxvJQaIXGaDRZsMJP+3QVkduop+jDHKGI1SX5vOXPpbxC9j5kgTGfQ22pUYyU946U
+         OeMp37x7hkpxWwg7vd5BvDHnwBnPbKxl3SnDt6Ki+11473qZKupfn4Yc/y3VxR8xCfE0
+         41F1Cj24BtW0ipVThM72o6IlE2T9UGMhDBzD1Y64yDafmpa6EuZNaemsLP1nHA4hJPHj
+         uR2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVeO+xczJFmUoXvxfUwIqNYNR+yPqmyYxHeLyZ/2Zv1rQbuFTIo+afEAWq5fGJm0vCqeZf/o7D+jHiE7AowWbXTkbkrGRiOqAnoZztZ
+X-Gm-Message-State: AOJu0Yzt/zG4VOmf512dJw5oJuxHiZtFH7SLYxMwMWTU0XJM8KXgN//B
+	Ymb9zZFrwiaaqKOdxLb6/thkW4tJZ4M77Gf1toR0b7nDnWM03SNKl80S9CfVKkDPHx8gXMChGmp
+	lJgY902G5hUrYQHm2h/p2lYJbOfaj7722cynX8A==
+X-Google-Smtp-Source: AGHT+IFJ2nJztVxlcv7iF1fLo4e+81DiH9lck4a4XLEq2MMi6yrbHR+XGNXNfeaQ8LZdIPeyXdsLEIp10M0upU5dDak=
+X-Received: by 2002:a17:90a:bb0d:b0:29c:5ba3:890e with SMTP id
+ u13-20020a17090abb0d00b0029c5ba3890emr829001pjr.4.1710292454186; Tue, 12 Mar
+ 2024 18:14:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfDWV227fOffscv7@bombadil.infradead.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-9-dongmenglong.8@bytedance.com> <CAADnVQK+s3XgSYhpSdh7_9Qhq4DimmSO-D9d5+EsSZQMX4TxxA@mail.gmail.com>
+ <CALz3k9hZxsbUGoe5JoWpMEV0URykRwiKWLKZNj4nhvnXg3V=Zg@mail.gmail.com> <CAADnVQJ87Ov6ny2hj-0_WymGB3TeuEZu373EmqmRJqZv-8Ze_Q@mail.gmail.com>
+In-Reply-To: <CAADnVQJ87Ov6ny2hj-0_WymGB3TeuEZu373EmqmRJqZv-8Ze_Q@mail.gmail.com>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Wed, 13 Mar 2024 09:14:03 +0800
+Message-ID: <CALz3k9jf4Q7KJPes=omx5oBpEmoFNSvc=vp=D0hEa-51i7tc_A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 8/9] libbpf: add support for
+ the multi-link of tracing
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2024 at 03:25:27PM -0700, Luis Chamberlain wrote:
-> On Tue, Feb 13, 2024 at 02:10:45PM +0300, Andrew Kanner wrote:
-> > On Thu, Feb 01, 2024 at 10:13:54AM -0800, Luis Chamberlain wrote:
-> > > 
-> > > While you're at it, if you want to try it, you could see if you can
-> > > improve the situation more by looking at symbol_get() users that remain
-> > > and seeing if you can instead fix it with proper Kconfig dependency and
-> > > at build time. Then we can just remove it as well.
-> > > 
-> > >   Luis
-> > 
-> > Sorry for the late reply.
-> > 
-> > Luis, can you give more details of your idea? I re-read it once, then
-> > came back and still don't understand.
-> > 
-> > I see that there are ~10 users for symbol_get() currently. Do you want
-> > to stringify symbol names at build time to completely remove
-> > symbol_get() from module.h? Correct me if I'm wrong since using of a
-> > fuction which is not declared anywhere sounds confusing.
-> 
-> As an example look at the code and see if there's a sensible way to make
-> some calls built-in instead of part of the module, then the module can
-> have a kconfig builtin option, that adds to the built-in code which
-> means you don't need the symbol_get().
-> 
-> For some other pieces of code it may require other strategies.
+On Wed, Mar 13, 2024 at 12:12=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Mon, Mar 11, 2024 at 7:44=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <dong=
+menglong.8@bytedance.com> wrote:
+> >
+> > On Tue, Mar 12, 2024 at 9:56=E2=80=AFAM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > On Mon, Mar 11, 2024 at 2:35=E2=80=AFAM Menglong Dong
+> > > <dongmenglong.8@bytedance.com> wrote:
+[...]
+> > > Pls use glob_match the way [ku]probe multi are doing
+> > > instead of exact match.
+> >
+> > Hello,
+> >
+> > I'm a little suspecting the effect of glob_match. I seldom found
+> > the use case that the kernel functions which we want to trace
+> > have the same naming pattern. And the exact match seems more
+> > useful.
+> >
+> > Can we use both exact and glob match here?
+>
+> exact is a subset of glob_match.
+> Pls follow the pattern that[ku]probe multi established
+> in terms of user interface expectations.
 
-An example is FW_LOADER_USER_HELPER which is bool only, and is selected
-by users. It didn't use symbol_get() before, however its an example of
-how through Kconfig you can align requirements and define built-in
-components, even if they do come from a module.
-
-  Luis
+Okay!
