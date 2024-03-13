@@ -1,175 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A2160EF3;
-	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84EF22611
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357419; cv=none; b=G2SWrqTg+xNMc/ln/ZhuoUTbFJg/VFRv/VTItB9P5kUF+/PyF5wh/6zs8LI/I8i08yAplbLk2SueGflstgXIu5Y/BVjBLVbfyas/+mXyD+1fIE1NmmZl/M7/w9BPxzj+XhvoI+xTF/snepBrbCNsYQNeVBWwrfSy4xgvRfrQHB0=
+	t=1710357544; cv=none; b=kmE1VqXLQGDCwYSAQUKbWMmja3i7Rwgz7F8drJ45un4E31mezBkGZjtwYbRb8T728cEAhMof0zGBbUS87Tk9zhuEwPxtXJxg+sWIWbIz3j1NXuNaqt9xoBy4zEWTbTWOcPkVviZJD67W5v8FuxUiHnrGR1QuJ5RFkaiDgwDVSSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357419; c=relaxed/simple;
-	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=vAdbiRnusEQZy4mTejmexFJ+NxaK+eqEA8zTECO3C0pe5PuAzSYL8aXIYTxIdxFjG33/sBiitB5YvInov0naoFQIN41RZyVYg3C/DHvLa4ZPwlbkUgxH0OTUcZQNdKSYJZ3XIVtaxvRJOhP++/KEq7V3DXW3pKJlgddYq6qbRZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKDQifyU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710357544; c=relaxed/simple;
+	bh=bIUZn3aP0gfZBr2TfmWOdy8wk4pGXFbADHlpjXkL4XM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C3jISgLmsyylPAKFmUWl5YOJjMBPPqw3vdbgwVWLl5dfnBNkxzds8759yQse04RN0g0rMRPYwl8PWluyiCSiBWXDjP7N/IEC5/EWPjzHzrUwZEpI1eA9sCOO8qT+d3VRBQ0zAjJELO/enkM0I+fXI8YxARwWul9RSSigANMGcM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qHUsbeIX; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKDQifyU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36909C433F1;
-	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710357418;
-	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jKDQifyU0rvMEek2BTjl1rfmDHVhxbrZtxNt+R75OJbpwFngQosurN4NPqRe0ntre
-	 Ppg020gSZ7kp9o/qmRxK0UU7oU/ApwdgPCzUZVCpPpIItrpfaX1d2TojxiijfCjB96
-	 6olH/B/HSySQ+HMcm3t4//wY+N2CoAXpL+8GyyZ4DT8GkeLoAkjtclDTCxwlAh2FbS
-	 hZU+Z6ageWFTo9+3VTOTu0l+4vwMAlf5l/zPkpJ3AdDCSpgX9HapgcVhIEzQaXFA/N
-	 DM4f4HE99yWgsPdbKbxADncOypuYNjWzc544qiuZqw7EYGbhVP2TTo4uLYy7FhAskO
-	 RG7RYWYcpA3Rg==
-Date: Wed, 13 Mar 2024 14:16:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
- reset the endpoint devices
-Message-ID: <20240313191656.GA921158@bhelgaas>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHUsbeIX"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso115537276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 12:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710357542; x=1710962342; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NWiDzUL96PYX6KoSc2593RZofaceS0QVcGsXtgoFgXA=;
+        b=qHUsbeIX9fjZeadf6qPIg9HrtDL97qVRQb1DvOflxSxujLfuv6Bscn4iWz5ksGfnff
+         /2WmJN8zpCbaYfbJVpVByBt4qkoZinv9l/1VBD9rXMK2BLHFpN3vsbiyJHqsZpyegkk2
+         aWwfmANWOWb7b2nUloSRo7ozK8C/XuvvReirQH401Wr2zMYYs/H3edtaXUr0ndTpzXXA
+         AfYfAUfd4VTIGXpPUl3GIXW/MqCC+SYlVcienglIllweILeJ0YfPUHoE3prOvqN9I/NS
+         3gOlwYjxb8EaNsdUhrZurghLRS5eGY7/XvczdttRuZc2DQXudt8zOgkdlJoRy3FvyQu6
+         XHxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710357542; x=1710962342;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NWiDzUL96PYX6KoSc2593RZofaceS0QVcGsXtgoFgXA=;
+        b=Q3d1Q15kRWKwpL/SRNf8YvG+d56VgCqg9F4hh1TPaPHUFoJwHrGOfbZ/Tfv1al8zZb
+         5hg/wXT8KowcrL9QHpLEaUWvFM6q+hgfVlv8jQ5xEyBmJOrS4WljcM1MnyrOfvCMZl22
+         3okl/6iS4qUm5GrJkGsjpqim2MaY200qcENykiSnz2TztFcf6B4qf3ygI4YOys2ycpxE
+         5rn4M69FRGxMIMQYyc9Q7LotDQWVzI4c9rIK4rAiopaE1BMReJDJoI3OfPWZE8QZZFUz
+         TOcNU8PTaIWl2ZIXOg2dL3VcEG4JANnZAkGZU+6WjjT+f8nrFzyn5Cc8q8+squOKtv86
+         cHww==
+X-Forwarded-Encrypted: i=1; AJvYcCWasQKIGO/DQ+VoRPYT2e1sR+AkUMlz/DBguNu3rzbQPj+B6qLLX6vq7lIMJBj5b3th/wR9ZAUB+CqoCj13P/4xRp4W2d8l828QXO3u
+X-Gm-Message-State: AOJu0YyVQxLV3NMf3u6/b4EZE3d+k0yBGW7dffz600Hzimn8mD+ndrz4
+	ktuJSKi4992x3Z5JhB5NeawCWIRj1Gh1CGGp3vCGhJwx3WWW0KT8XJBqo7s+9ZWwx6jAhXZlCUK
+	gvBRpuqHsTsSVQo26p86bUQHkww0U7tfp3TpPEQ==
+X-Google-Smtp-Source: AGHT+IFU7XaSo3A/l8xJAAdcNlGfxW8d0srSAclXgekCo54a9GIxv2R5mYBAQ+dt89qG6I1CMDsau5GjmmEWzVp9z7E=
+X-Received: by 2002:a25:ac9a:0:b0:dc7:5a73:184e with SMTP id
+ x26-20020a25ac9a000000b00dc75a73184emr3449403ybi.14.1710357541837; Wed, 13
+ Mar 2024 12:19:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240313150242.GA2656@thinkpad>
+References: <20240313-videocc-sm8150-dt-node-v1-0-ae8ec3c822c2@quicinc.com> <20240313-videocc-sm8150-dt-node-v1-2-ae8ec3c822c2@quicinc.com>
+In-Reply-To: <20240313-videocc-sm8150-dt-node-v1-2-ae8ec3c822c2@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 13 Mar 2024 21:18:54 +0200
+Message-ID: <CAA8EJpqsQr2nfDbW1JRyBoNSemudgrpxCRYH1y0ayX2Wd2u=VQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] clk: qcom: videocc-sm8150: Add index based clk lookup
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>, 
+	Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 13, 2024 at 08:32:42PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Mar 13, 2024 at 09:36:14AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
-> > > PCIe host controller drivers are supposed to properly reset the endpoint
-> > > devices during host shutdown/reboot.
+On Wed, 13 Mar 2024 at 13:11, Satya Priya Kakitapalli
+<quic_skakitap@quicinc.com> wrote:
+>
+> Add support to look up for clocks using index instead of fw_name.
 
-Where does this requirement to reset endpoints during host shutdown
-come from?  My working assumption is that .shutdown() needs to stop
-DMA and interrupts, based on this old thread:
-https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
+Why? You are breaking compatibility with existing bindings.
+Also the commit message is incorrect. You are not _adding_ support.
+You are changing name-based lookup to index-based one.
 
-> > > Currently, Qcom driver doesn't do
-> > > anything during host shutdown/reboot, resulting in both PERST# and refclk
-> > > getting disabled at the same time. This prevents the endpoint device
-> > > firmware to properly reset the state machine. Because, if the refclk is
-> > > cutoff immediately along with PERST#, access to device specific registers
-> > > within the endpoint will result in a firmware crash.
+>
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+>  drivers/clk/qcom/videocc-sm8150.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/qcom/videocc-sm8150.c b/drivers/clk/qcom/videocc-sm8150.c
+> index a0329260157a..2b788a03c5ed 100644
+> --- a/drivers/clk/qcom/videocc-sm8150.c
+> +++ b/drivers/clk/qcom/videocc-sm8150.c
+> @@ -19,6 +19,10 @@
+>  #include "reset.h"
+>  #include "gdsc.h"
+>
+> +enum {
+> +       DT_BI_TCXO,
+> +};
+> +
+>  enum {
+>         P_BI_TCXO,
+>         P_VIDEO_PLL0_OUT_MAIN,
+> @@ -49,7 +53,7 @@ static struct clk_alpha_pll video_pll0 = {
+>                 .hw.init = &(struct clk_init_data){
+>                         .name = "video_pll0",
+>                         .parent_data = &(const struct clk_parent_data){
+> -                               .fw_name = "bi_tcxo",
+> +                               .index = DT_BI_TCXO,
+>                         },
+>                         .num_parents = 1,
+>                         .ops = &clk_alpha_pll_trion_ops,
+> @@ -63,7 +67,7 @@ static const struct parent_map video_cc_parent_map_0[] = {
+>  };
+>
+>  static const struct clk_parent_data video_cc_parent_data_0[] = {
+> -       { .fw_name = "bi_tcxo" },
+> +       { .index = DT_BI_TCXO },
+>         { .hw = &video_pll0.clkr.hw },
+>  };
+>
+>
+> --
+> 2.25.1
+>
+>
 
-Does "PERST# getting disabled" mean PERST# is asserted or deasserted?
 
-> > > To address this issue, let's call qcom_pcie_host_deinit() inside the
-> > > shutdown callback, that asserts PERST# and then cuts off the refclk with a
-> > > delay of 1ms, thus allowing the endpoint device firmware to properly
-> > > cleanup the state machine.
-
-This *adds* the qcom_pcie_shutdown() callback, right?
-
-> > I guess this 1ms delay is the PERST_DELAY_US hidden inside
-> > qcom_ep_reset_assert()?  I assume the refclk disable is done by
-> > clk_bulk_disable_unprepare()?
-> 
-> Yes to both.
-> 
-> >   #define PERST_DELAY_US 1000
-> > 
-> >   qcom_pcie_shutdown
-> >     qcom_pcie_host_deinit
-> >       qcom_ep_reset_assert
-> >         gpiod_set_value_cansleep(pcie->reset, 1);
-> >         usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
-> >       phy_power_off(pcie->phy)
-> >       pcie->cfg->ops->deinit()
-> >         qcom_pcie_deinit_...
-> >           clk_bulk_disable_unprepare                         <--
-> > 
-> > Is there a spec citation for this delay requirement?  If not, how do
-> > we know 1ms is enough for whatever the firmware needs to do?
-> 
-> Both PCIe base spec and Electromechanical spec only mentions Tperst,
-> which is the minimum time PERST# should remain asserted. But there
-> is no mention about the time, refclk should be active.
-
-I see Tperst mentioned in PCIe r6.0, sec 6.6.1, but AFAICS the value
-is only defined in PCIe CEM (r5.0, sec 2.9.2), which says 100us, and
-maybe other form factor specs.
-
-If PERST_DELAY_US is enforcing Tperst, why is it 1000us instead of
-100us?
-
-> So I used the existing delay post PERST# assert in the driver. I do
-> not know if that is enough for all the endpoints out in the wild,
-> but atleast satisfies the requirement of the endpoint I'm working on
-> (which is another Qcom SoC in EP mode).
-> 
-> We can change the delay if someone reports any issue with the
-> existing one.  Atleast, that's the best we could do in this
-> situation.
-
-I'm dubious about this.  If endpoints require a delay here to work
-properly, the spec should specify a minimum delay.  We can't make a
-reliable system based on "here's a guess and we'll update it if people
-report issues."  That makes me think this endpoint mode Qcom SoC
-dependency on a delay might itself be non spec-compliant.
-
-> > Do other drivers require similar changes?
-> 
-> Most likely yes, but that also depends on when the drivers are
-> cutting off the refclk. Not all drivers are implementing the
-> shutdown callback, and even few of the ones implementing, do not
-> assert PERST# since it is optional.
-
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 2ce2a3bd932b..41434bc4761a 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static void qcom_pcie_shutdown(struct platform_device *pdev)
-> > > +{
-> > > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> > > +
-> > > +	qcom_pcie_host_deinit(&pcie->pci->pp);
-> > > +}
-> > > +
-> > >  static const struct of_device_id qcom_pcie_match[] = {
-> > >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
-> > >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
-> > > @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
-> > >  		.pm = &qcom_pcie_pm_ops,
-> > >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> > >  	},
-> > > +	.shutdown = qcom_pcie_shutdown,
-> > >  };
-> > >  builtin_platform_driver(qcom_pcie_driver);
-> > > 
-> > > ---
-> > > base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
-> > > change-id: 20240313-pci-qcom-shutdown-d86298186560
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+-- 
+With best wishes
+Dmitry
