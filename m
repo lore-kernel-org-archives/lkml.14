@@ -1,169 +1,106 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC06212E73;
-	Wed, 13 Mar 2024 08:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710318790; cv=fail; b=nyKhCcXFNk8gzzrSuW1+wu+Wmho0Rl6/65E0HsaeXEjsE+J9rQDZ+dq9WX8u0qgk7UfD/DgzzeZ5LQ03ccdPZjAm8rI/wiwxqLyP4fY2U41Kyi+vUgT3T8HMrMv4Uq4NASpzb9wssMPOhPmuQHO9P9HFC827G/pb6cISJsVO4vE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710318790; c=relaxed/simple;
-	bh=NvW+145LWlV4PZl2q5JLFqWzRDfvufK0MoJPUZjvWbw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kwW8ToRXS3vtNcHmiGpKSzUUAUyhq1cYnBqH6gugzo+QKJB3U2TAjKJnBMxbhnOGtXxeyw4QcfJlCozuug26Q6xgjQnWBVdGRO0S9q7DYW3rSj4tvr0gcUmZxH0Z1FE7PnzjjcqB/LkIKKmIQj4reAAnW0klS28NEqkyllIXmqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ttSUDRzr; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB9818E12
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 08:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710318975; cv=none; b=DcauJ0NmBy3xa44dyr+tMriC5Ehnb24sgVn/+KpYLTc1KMqLeLsiwv+NL1xVrTH1W6gCZiz+LNLOuxdzx8VoydzIZlDaNi1auAYqv1NA8futocYh0FiscPoFQzj93xfQJ5i5w169xXTdN0/tUgPw7tH0J2rRuehwS8jzcHBmlMI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710318975; c=relaxed/simple;
+	bh=ZKFTwo1Q9pWn1usBlfixETaA1dMjEZjsNIV8Y37bvfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=taXLjc7AVPPuFE0F8Q1hclSrKAZTF+tCydPVubA/ZZ8pH+MZpoEPP/g5+L5uhRUL2yF4MH6I26yDqX6SspEgf2BLIy5Fdzq14HlG0VG0s1dQzxDQqVbVLj0DyDsJtqrXm6Osm0+myeY2iFBEkZHp4uacBglCR9o0oNS3GVcyJcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dmAoZyXR; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ttSUDRzr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bRkBd5tTvCPcmyEJ+NloJY/tCKg9P0/jP9AyVt+z/l9wIWU1xsLvoT1VhK25eJdT5cYIZMqRMIpWKYtLyKprOV7LsltAx9exHVm1mymDEo9fnoXFd9CZacGn5gof1R9A68HIxQLg6fH9+iEAEFlqoalxR6gTOGqrcD4/o3Wrf7ybwEZ4TkmiovLKpJddbebOmFO/aJVuIwrpvCPGfhPlwXSER2M5yMpvG2ntKdCFZATqN5g2vLLLy0YIulzuMn9bfUDT9MhFDmE5ezuQAV/P15XT0zEEmlbgI/kIauACa+aVNDws8elKQFD7aFCSSBhhw8fw88x8FY3vct7wI6dDGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ldWRukoH+7SyPPgBzcppriAAOMg+SYl8OqAdgXH0z0M=;
- b=UE2rIB2IKZNjHP4g7Mds/GgJYwYYucVGZGGMWUICdYtp7xkmp7XKBXHe8hmlE34bSLjV4ew4oRqrOxhlUmHYKGObllgkQD5b6Hd8apGWeCnQ5Kjl7bDPOk2iOPg4EpVTnZKtoI+ia8JYpsWNPMbnJf3kdCo8t3dP+Mw9MAg4o3xkbGNlR0/4UTMcRr6TUpXNUHxQtIzpwQ5quW5cedYOtI+dPTPoBVv3V2Gwtwc/dw/URcNHmqpudx5Jhm1fPL+Y27wwmdk/1wvHU4mVtiHhwS9fdhYXoDdOTon8SI3a7NarGEESxVOUYZI/62uclM5cxVOVkHVNYTR/RMhga53gSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ldWRukoH+7SyPPgBzcppriAAOMg+SYl8OqAdgXH0z0M=;
- b=ttSUDRzrTVmv5xzH7UA+q38q4rsAMJFqGSDUXeTAxN15VbYSzaYgDRSFABY98osZGoygVQvkiE/PcCaWTIW/pkP30dQ2gfaN+tZT/raa1v43qPpn2tK1trRYukPEWVzLj+/Rtp6n2xsllauevLtJ7rkwBmSL/9fyqXu5S3cYQ1I=
-Received: from SJ0PR03CA0151.namprd03.prod.outlook.com (2603:10b6:a03:338::6)
- by MW4PR12MB7118.namprd12.prod.outlook.com (2603:10b6:303:213::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Wed, 13 Mar
- 2024 08:33:06 +0000
-Received: from CO1PEPF000042A7.namprd03.prod.outlook.com
- (2603:10b6:a03:338:cafe::65) by SJ0PR03CA0151.outlook.office365.com
- (2603:10b6:a03:338::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36 via Frontend
- Transport; Wed, 13 Mar 2024 08:33:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000042A7.mail.protection.outlook.com (10.167.243.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7386.12 via Frontend Transport; Wed, 13 Mar 2024 08:33:06 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 13 Mar
- 2024 03:33:00 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <paulmck@kernel.org>, <frederic@kernel.org>, <joel@joelfernandes.org>,
-	<josh@joshtriplett.org>, <boqun.feng@gmail.com>, <rostedt@goodmis.org>,
-	<mathieu.desnoyers@efficios.com>, <jiangshanlai@gmail.com>,
-	<qiang.zhang1211@gmail.com>
-CC: <rcu@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<neeraj.upadhyay@kernel.org>, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Subject: [PATCH] rcu: Reduce synchronize_rcu() delays when all wait heads are in use
-Date: Wed, 13 Mar 2024 14:02:28 +0530
-Message-ID: <20240313083228.233247-1-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dmAoZyXR"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56847d9b002so5147220a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 01:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710318971; x=1710923771; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q56Iw2eMUPFwWk7xMQEduN6A9eWGEu2bI8Z2BeWf0vw=;
+        b=dmAoZyXROOPc4pjK8ucjMf/p1bo1ghKCA4u1KFsrl112sfkhnPJrNybDz4/pE37Tc2
+         55Jmw2GC+pjUKFqQrPiRCuLu/OoR5/fyirBMhRjLx3cxEaPVpcKPfpmXTVKz1BgisZMp
+         xvcNNYP3SiNR2VKfLJf/FL/4idCR53XsBD3zOPo7o3Wy8tlib0Ni8WUCjaYjPRzjsJtg
+         IN1qGTlUq/GaTNe6hzNdKCqFueh1DentHAj21sA3AZhbV+weuiYCxBf+3zDyOGPt7tFT
+         KpjYpKDXRc85D13hE315uk5oKe7jQ99Fd88drbAzkgyYCrT2BUbiBZBBchZJI0Oohpzd
+         wvOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710318971; x=1710923771;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q56Iw2eMUPFwWk7xMQEduN6A9eWGEu2bI8Z2BeWf0vw=;
+        b=rHbItVKiKoDMJrn3Q2NtvtVZW+xrV/gNH57TQ8kK71Me2Ji4yXDbz3NCvQRkFkVuEV
+         Ycj/A9hJG6nMTEwMGNUktFcR0bqrcHXBjpbS9lOINVCCCr1/8ds7MGINMMsBfRldCYvv
+         VIGJ5IyXzN+705VSXtOxR4pkGtHYs+/8PyNtYoiWzSHght4JIkCQchxcv2027zCYy4B8
+         CeI9koWY9tB55z9Zl5Tlg6MAtZP71Y+JLTEsykJQpvTXGHzZEeseYey4a7gwR8zIoNb0
+         l1+isFSENNcfPNqUO0xbhq+3jHY5+bLv1hYJd4X0U2W7DpXrz0y21xUVi37PGn63Dkhr
+         kL2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUSoyVmGhQqr8+IuafVYa0H2sPj8E9w8YcBLdSaqyGfElb3VzWYHUcVJgAYEiTG2t4LvqnnO09Uf5usiiMQMNuOYTDjRfkwG5pCA/ZX
+X-Gm-Message-State: AOJu0YyDBGB8tyx9qp8odWLRDMZ2bd9G/c8zPVGVrmKLMvcdA1fcna0X
+	+OpMxFpR9EoerDe1aX9QlgSYBC35/RslPfn3K6M2MfsPCteVr5pZvHMwRWzN3ig=
+X-Google-Smtp-Source: AGHT+IEWn6PnNJ4T6kFZ+BtXapbyNPTHkaA6jOJ7GecTTFtWOnLDtr8Pz7YoarT+gwdewJTDsNurCw==
+X-Received: by 2002:a50:d498:0:b0:568:797a:f2d with SMTP id s24-20020a50d498000000b00568797a0f2dmr1701644edi.27.1710318970930;
+        Wed, 13 Mar 2024 01:36:10 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id cq15-20020a056402220f00b0056761c83bdesm4774222edb.93.2024.03.13.01.36.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 01:36:10 -0700 (PDT)
+Date: Wed, 13 Mar 2024 11:36:07 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Ayush Tiwari <ayushtiw0110@gmail.com>, Larry.Finger@lwfinger.net,
+	florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	outreachy@lists.linux.dev
+Subject: Re: [PATCH v4] staging: rtl8712: rename tmpVal to pct_val
+Message-ID: <f4b889c8-9816-47e9-88e1-2acc9c169b8a@moroto.mountain>
+References: <ZfFfW/Flrlzb0+UI@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+ <2c63a094-6966-7679-2b23-58c057b451d8@inria.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A7:EE_|MW4PR12MB7118:EE_
-X-MS-Office365-Filtering-Correlation-Id: 479c8def-c4b5-4f99-05c7-08dc433834f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	oA6UdR+nbiKI0nyNfQAj9lnnG9LRvT7Gb6jWbQCTEc4GnKjJ2OXTHCFETeAxmM3mzsbfm92/3D+dm4r6IXHgrS5VGCPWpkqyeqNfDM1NJN5HXq1dgGbDhNrG4F2yvtPS+pHUtw0w5R6GmfIgtiY+KexkMXy4N2xEiW7Gd++Z+a0+cV2NWMafv56V86PldPou5wsdYGy7lHO+OOGic2Z2waNHI7o12/god7KjeQX5YGZ3dVXWL6bVHzhzj6MPpHVT53bCeQKKW6DbfxumkKiRiBRqPhheJEnn/c7RZn5EVpFwasAJThk1PCPYpNXB3ywFKHEcqd3G0/oD8YBgTCL22j8HemumdgYJrMw6FGJb8fuzgOB1vOvbJxadUrPFqQ5yX0bBSJWxGbMgPSy/e0afeqhQe0Em2cS1KX9/WW+yz2NQQW/objsZ4InRFRhDgUz+11sf+Q3f/5oVWeR6A3gMEHvgWprRbPAfyXuUS7g8I1qH5NNIYEZXjU7byeu9/e/kfhTqNFKo6kRqdOMM+CAU800cC2pa8ER0NprTdKbCjO+ea5AbyMWUCypBDnvXuK780V9Dgb+MAL6hRavqzNV+IBoF2cBkIGrg5NHTYK85GUbq0vFJJRXTjLe4ELWJha/FPnqXjOoAzs8z0dS3koOL/PgydO8ptd8s9Bt8pvPXosAQZ1p2SZwYsyOp7FVYgijrYy680eDHWZXmzgkdfSJ2zwWmMa5yB3yd7seOX9SicVvD6SyVG4DxrNpzs3mvCPIW
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(82310400014)(1800799015)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 08:33:06.4195
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 479c8def-c4b5-4f99-05c7-08dc433834f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042A7.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c63a094-6966-7679-2b23-58c057b451d8@inria.fr>
 
-When all wait heads are in use, which can happen when
-rcu_sr_normal_gp_cleanup_work()'s callback processing
-is slow, any new synchronize_rcu() user's rcu_synchronize
-node's processing is deferred to future GP periods. This
-can result in long list of synchronize_rcu() invocations
-waiting for full grace period processing, which can delay
-freeing of memory. Mitigate this problem by using first
-node in the list as wait tail when all wait heads are in use.
-While methods to speed up callback processing would be needed
-to recover from this situation, allowing new nodes to complete
-their grace period can help prevent delays due to a fixed
-number of wait head nodes.
+On Wed, Mar 13, 2024 at 09:18:08AM +0100, Julia Lawall wrote:
+> 
+> 
+> On Wed, 13 Mar 2024, Ayush Tiwari wrote:
+> 
+> > Rename local variable tmpVal to pct_val in function process_link_qual
+> > to give intuitive meaning to variable and match the common kernel
+> > coding style.
+> 
+> I don't think that the patch with the name avg_val was accepted, so this
+> patch has to replace tmpVal by pct_val, as you say in the subject line.
+> 
+> Also, the comment says:
+> 
+> /* <1> Showed on UI for user, in percentage. */
+> 
+> I still have the impression that the value calculated here is an average.
+> Total num is just incremented:
+> 
+> if (sqd->total_num++ >= PHY_LINKQUALITY_SLID_WIN_MAX)
+> 
+> while total_val is updated with a new value.
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
- kernel/rcu/tree.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+Oh, yeah.  My bad.  I misunderstood the comment.  The original value is
+in percent.  prframe->u.hdr.attrib.signal_qual.  It's set in
+query_rx_phy_status().
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9fbb5ab57c84..bdccce1ed62f 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1470,14 +1470,11 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
-  * for this new grace period. Given that there are a fixed
-  * number of wait nodes, if all wait nodes are in use
-  * (which can happen when kworker callback processing
-- * is delayed) and additional grace period is requested.
-- * This means, a system is slow in processing callbacks.
-- *
-- * TODO: If a slow processing is detected, a first node
-- * in the llist should be used as a wait-tail for this
-- * grace period, therefore users which should wait due
-- * to a slow process are handled by _this_ grace period
-- * and not next.
-+ * is delayed), first node in the llist is used as wait
-+ * tail for this grace period. This means, the first node
-+ * has to go through additional grace periods before it is
-+ * part of the wait callbacks. This should be ok, as
-+ * the system is slow in processing callbacks anyway.
-  *
-  * Below is an illustration of how the done and wait
-  * tail pointers move from one set of rcu_synchronize nodes
-@@ -1725,15 +1722,17 @@ static bool rcu_sr_normal_gp_init(void)
- 		return start_new_poll;
- 
- 	wait_head = rcu_sr_get_wait_head();
--	if (!wait_head) {
--		// Kick another GP to retry.
-+	if (wait_head) {
-+		/* Inject a wait-dummy-node. */
-+		llist_add(wait_head, &rcu_state.srs_next);
-+	} else {
-+		// Kick another GP for first node.
- 		start_new_poll = true;
--		return start_new_poll;
-+		if (first == rcu_state.srs_done_tail)
-+			return start_new_poll;
-+		wait_head = first;
- 	}
- 
--	/* Inject a wait-dummy-node. */
--	llist_add(wait_head, &rcu_state.srs_next);
--
- 	/*
- 	 * A waiting list of rcu_synchronize nodes should be empty on
- 	 * this step, since a GP-kthread, rcu_gp_init() -> gp_cleanup(),
--- 
-2.34.1
+Sorry about that.
+
+regards,
+dan carpenter
 
