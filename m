@@ -1,102 +1,131 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6160360881;
-	Wed, 13 Mar 2024 16:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44F160BBF;
+	Wed, 13 Mar 2024 16:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710347985; cv=none; b=RTEuWWDI+VJVD80zWPG9HBVyeq6xZnB79AUgvqksWovFc4g8t/oJEi/iV/Q3ObpST5Q2kmPFYdTIUvVgE6cYXIvQuB/+RChh+zEMEZD2xw343s0GsHjRNrQ4cJI0Y0MSPoXa6R4YEDtI6qojDhDPz7mw6ixeezOcy/vdQ1rGX10=
+	t=1710348001; cv=none; b=jMsRW0DvDrOsu9Y7fQsOEc5/L9Kbtj+OZMIZ/FHGDW/z5gQ0VOV51UQsaa7BGSVB8QxnaBpcnu4f8fm+RysbM3n3auk9Gyfh+be1l2wGBw62DXEeKYTFABz0Y8tNzBtjQ17X6sfP3pFRnOnCVrLdyzo+m6kxHJGD3VQ+d5a7eoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710347985; c=relaxed/simple;
-	bh=gBpHjSZpjDFXvuiIbpzC535LhD6ix8zxBIgTnu8tYLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O8FFTlGziLxYHOB1iNvGlWNOCfKmzq7PBbWWnmABioNB8upf0J1rs+jvT4+XtwUkgrMXe8rPzRtEy1PVdh5aZ0K4/J6FWb0uQwO0+y1C2e0K2l1/coOuIK4Nkato1MjwPZnW33nN0rBlqG3Ppjn2qupt1gvkj9Y3KU7Xt3xlJSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l0AvnPKj; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710348001; c=relaxed/simple;
+	bh=fetMmWKyXFJtuI4glze4+8J8cGiST54vLEbHQH2dG/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H/2xQxWkri3on6aPuH/DnHX18sPBsSNTm4/Osm6sUHzjQb8/pYkUGpz6lv0JQj991YYeLwG2iSTGrfPjVSPq5D0Dp9owA+jKme/SDRqtUJoJh5eLx+YcnYP9oHmbg711WiQRH79wUN558cNsxR4V4mrkupoPZN1IqkCYeZUIeq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML1mL0Hw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0AvnPKj"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-413ee4d4f64so424385e9.1;
-        Wed, 13 Mar 2024 09:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710347981; x=1710952781; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8F8neoasSZhR6V/DsTj5KFDld/PtQqmCaaEQYiHmneQ=;
-        b=l0AvnPKjQc5mLgsFwHjE8ova6jNYS54eKKnATUsfWE1mzW7eTgZPFCmqPV+R5RcZ9M
-         WK9+mU4pI4C8Ka0eN0SDuxzYq3utrZAD0T5gYTuz1MJp1snAbEZVUECgGtlkbzyTfHRj
-         VjnYrA+Jbfnw0GiicgNwftsKF2phTcU3IcyFfbEYQZAKicrE2coTOJOOUz7JAtIVoTJz
-         ynwOrutnYX98Xnnw2G+2sjtoJtSznG9pO3eNVcMAemKVps3S7r5HTjrIPzLgBtxjKmhq
-         Q5y6ucAJM0evEfiZgxs1hwMJoUtL9ETWNDU9GVQ3IjCb0jdv+fgKHHWDAHgV3JjvrfgU
-         nwLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710347981; x=1710952781;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8F8neoasSZhR6V/DsTj5KFDld/PtQqmCaaEQYiHmneQ=;
-        b=M0JWsI0TQWW9OEVdB/Q7dnKzA7NVX9D1VlPMakVdAA1wGjudtCzCjy2hpPX8eKqo+c
-         Nv194+ONNkpC5UISRZVhh7HkAZie3+Mxtrk3oUc1KFXRMvFyst47EhUV0hEa1JuUEC49
-         XSZRUGWK+TaQmMfkw5stnK5JgXGXhwpQs+KuViaiswHIx4sklQA7sw5dOREG+8b1DB87
-         EtanW0PbQG8b4Wa5CAppjl3CsAUYab4gCTXIfGq0F1EfAHe7Yme8c0i7IQq3l2oUYILx
-         4L31/GVDnqruXH6JPicKrsyKx/UZwN6e6xSsV3pj7WW9ebxN+TBZ15ijwjuWzZmjN+15
-         iBag==
-X-Forwarded-Encrypted: i=1; AJvYcCU4n+4sI/XOCsHt82SYHBSus09aTGe2tC9dUAHktCvg5TUXffxVrurlyYk+bqjUL8wqKAmtXbumtjRokrCa/NpeNsXmsN3LAlSNvN2p
-X-Gm-Message-State: AOJu0YxczSK9Nea1tztMBYwt8aeOnJKNYErI5StF7bnAlBD1CXjpuaY6
-	9mUEu+VR4QeFJIDgXATWCV6ISGlAciBcHisfgCYs8cywE6sc8Io4OpOeCcYD
-X-Google-Smtp-Source: AGHT+IE2uHk9GewV6px4YV+5kfONQ7dP8tNoZOCWOZPepd0bNIcgWH6EoE3nvjiS2DHqsfnZSXvCYQ==
-X-Received: by 2002:a05:600c:548f:b0:412:d149:254c with SMTP id iv15-20020a05600c548f00b00412d149254cmr392744wmb.17.1710347981195;
-        Wed, 13 Mar 2024 09:39:41 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id fl21-20020a05600c0b9500b00413320f795fsm2805025wmb.35.2024.03.13.09.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 09:39:40 -0700 (PDT)
-Date: Wed, 13 Mar 2024 16:39:39 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] OpenRISC updates for 6.9
-Message-ID: <ZfHWyzu2sVF6kno6@antec>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML1mL0Hw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1459C433C7;
+	Wed, 13 Mar 2024 16:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710348001;
+	bh=fetMmWKyXFJtuI4glze4+8J8cGiST54vLEbHQH2dG/s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ML1mL0HwFbqKNr1PPhBY5JqSw94yPHjsXT9IfxbWksgaDMgVrQxzq9HwbeBTlK73q
+	 SQKZMe77VU39NWh9h89X38bKsn2Szyd2CQ1R0wphIe4Q/71p/9Tcbu+G8XqMIivmMr
+	 ekhIHGIuzy/D3DHHFWqVpDhppC2BJHsqwz5J7N1537nFMhKQJkB0pejOrKaHo7YeKK
+	 w5sDuSyO4Ahkvv38ARHWlj9mWtoV3itYJtANk4nFYwQ6Am8G/LJOPHVv4AAAZFmwcb
+	 c61I3cf4WxnOXEHYZkI2qG4buH8P38G9U8mXbDktEer071O6PDsC8/OFad+dC2DQ/v
+	 5wWr+YxNX0yYw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Xiubo Li <xiubli@redhat.com>,
+	Patrick Donnelly <pdonnell@ibm.com>,
+	Venky Shankar <vshankar@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 01/71] ceph: switch to corrected encoding of max_xattr_size in mdsmap
+Date: Wed, 13 Mar 2024 12:38:47 -0400
+Message-ID: <20240313163957.615276-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240313163957.615276-1-sashal@kernel.org>
+References: <20240313163957.615276-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.82-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.1.82-rc1
+X-KernelTest-Deadline: 2024-03-15T16:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-Hello Linus,
+From: Xiubo Li <xiubli@redhat.com>
 
-Please consider for pull,
+[ Upstream commit 51d31149a88b5c5a8d2d33f06df93f6187a25b4c ]
 
-The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de0d:
+The addition of bal_rank_mask with encoding version 17 was merged
+into ceph.git in Oct 2022 and made it into v18.2.0 release normally.
+A few months later, the much delayed addition of max_xattr_size got
+merged, also with encoding version 17, placed before bal_rank_mask
+in the encoding -- but it didn't make v18.2.0 release.
 
-  Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
+The way this ended up being resolved on the MDS side is that
+bal_rank_mask will continue to be encoded in version 17 while
+max_xattr_size is now encoded in version 18.  This does mean that
+older kernels will misdecode version 17, but this is also true for
+v18.2.0 and v18.2.1 clients in userspace.
 
-are available in the Git repository at:
+The best we can do is backport this adjustment -- see ceph.git
+commit 78abfeaff27fee343fb664db633de5b221699a73 for details.
 
-  https://github.com/openrisc/linux.git tags/for-linus
+[ idryomov: changelog ]
 
-for you to fetch changes up to 7f1e2fc493480086fbb375f4f6d33cb93fc069d6:
+Cc: stable@vger.kernel.org
+Link: https://tracker.ceph.com/issues/64440
+Fixes: d93231a6bc8a ("ceph: prevent a client from exceeding the MDS maximum xattr size")
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Patrick Donnelly <pdonnell@ibm.com>
+Reviewed-by: Venky Shankar <vshankar@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ceph/mdsmap.c            | 7 ++++---
+ include/linux/ceph/mdsmap.h | 6 +++++-
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-  openrisc: Use asm-generic's version of fix_to_virt() & virt_to_fix() (2024-03-10 08:55:46 +0000)
+diff --git a/fs/ceph/mdsmap.c b/fs/ceph/mdsmap.c
+index 3fbabc98e1f70..4a089d70ebd07 100644
+--- a/fs/ceph/mdsmap.c
++++ b/fs/ceph/mdsmap.c
+@@ -379,10 +379,11 @@ struct ceph_mdsmap *ceph_mdsmap_decode(void **p, void *end, bool msgr2)
+ 		ceph_decode_skip_8(p, end, bad_ext);
+ 		/* required_client_features */
+ 		ceph_decode_skip_set(p, end, 64, bad_ext);
++		/* bal_rank_mask */
++		ceph_decode_skip_string(p, end, bad_ext);
++	}
++	if (mdsmap_ev >= 18) {
+ 		ceph_decode_64_safe(p, end, m->m_max_xattr_size, bad_ext);
+-	} else {
+-		/* This forces the usage of the (sync) SETXATTR Op */
+-		m->m_max_xattr_size = 0;
+ 	}
+ bad_ext:
+ 	dout("mdsmap_decode m_enabled: %d, m_damaged: %d, m_num_laggy: %d\n",
+diff --git a/include/linux/ceph/mdsmap.h b/include/linux/ceph/mdsmap.h
+index 4c3e0648dc277..fcc95bff72a57 100644
+--- a/include/linux/ceph/mdsmap.h
++++ b/include/linux/ceph/mdsmap.h
+@@ -25,7 +25,11 @@ struct ceph_mdsmap {
+ 	u32 m_session_timeout;          /* seconds */
+ 	u32 m_session_autoclose;        /* seconds */
+ 	u64 m_max_file_size;
+-	u64 m_max_xattr_size;		/* maximum size for xattrs blob */
++	/*
++	 * maximum size for xattrs blob.
++	 * Zeroed by default to force the usage of the (sync) SETXATTR Op.
++	 */
++	u64 m_max_xattr_size;
+ 	u32 m_max_mds;			/* expected up:active mds number */
+ 	u32 m_num_active_mds;		/* actual up:active mds number */
+ 	u32 possible_max_rank;		/* possible max rank index */
+-- 
+2.43.0
 
-----------------------------------------------------------------
-OpenRISC updates for 6.9
-
-Just a few cleanups and updates that were sent in:
-
- - Replace asm/fixmap.h with asm-generic version
- - Fix to move memblock setup up before it's used during init
-
-----------------------------------------------------------------
-Dawei Li (1):
-      openrisc: Use asm-generic's version of fix_to_virt() & virt_to_fix()
-
-Oreoluwa Babatunde (1):
-      openrisc: Call setup_memory() earlier in the init sequence
-
- arch/openrisc/include/asm/fixmap.h | 31 +------------------------------
- arch/openrisc/kernel/setup.c       |  6 +++---
- 2 files changed, 4 insertions(+), 33 deletions(-)
