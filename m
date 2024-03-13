@@ -1,16 +1,16 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5F3446A0
-	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D0446B4
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 13:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336474; cv=none; b=eiAKAGFnWYgBdNeTivP6NVcHREAt18ByZSpp73Sh0J3XiygXVJZH1cQNThH6aZlusPElvby8KqzHoKIYtk5R389H7umLuRHRYppMiynQLxWvDFlhb2W6ee9GDLEcqSrzJTiS89aa3VogvcNOp1fYPzAWuob8OWtxi0CasZMKMKk=
+	t=1710336474; cv=none; b=B083INA5z7GTBlFl92mfxDZmwZ9oqB4bhJgO5uA0jLrI5DAzALo5vUIdUlN7gobgoUfsPs2hfVwtrP0Ja6fEFvsEqxW51GTv7Xi9t4GNekDn8ibuiuT8FmiU5ZTsw32NTuR0V32yyZ3qIAKCwfpNupfBPWsov3CPlOp18PoPdKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710336474; c=relaxed/simple;
-	bh=fob+OCoD/ZqFHOa7b+XC+USdOxB3YpQjVsw9rSR/cMM=;
+	bh=IVoZ5Nk3c6TGvvv7OnFOEg0/tyh6L7IZfnEYAfEFQSs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RuyQ+Nhn4/4qUDaDFUv4+0fQwoXZ3NQA8lf6HktVVxVbaURt7s/dfqpHq+8VLAk9FthPAKo8z/FVfZToIdM8+lk8YSYWEBluooGDVWtrRZ6wmSa9lcsaK6M6t1+bOEbYIambSfbGvBapojH49CiERHV8M17qiaZg9bppas78+hI=
+	 MIME-Version:Content-Type; b=BAE65IpU7AmrM18Y8zXoQM6QXCQuOqBZHsRRQVoFqOo5snjJy5uUJwWRvoQ9Y7JnsAgGhfvaMHVRgqNhQnL/yzTwEpXk+KyWM1Nbrv7yvbaait7M90l51wBiGs7LrJcwO4xLQW1Cqm3s/mZCM4s7HHBtvX/n663zyRuA9iJeKgk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrsx46Rhz4x0q;
-	Thu, 14 Mar 2024 00:27:49 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tvrsy234rz4x1P;
+	Thu, 14 Mar 2024 00:27:50 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, Kunwu Chan <chentao@kylinos.cn>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240301085834.1512921-1-chentao@kylinos.cn>
-References: <20240301085834.1512921-1-chentao@kylinos.cn>
-Subject: Re: [PATCH v2] powerpc/mm: Code cleanup for __hash_page_thp
-Message-Id: <171033598344.517247.16630935060498918995.b4-ty@ellerman.id.au>
+To: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <3656d47c53bff577739dac536dbae31fff52f6d8.1708078640.git.christophe.leroy@csgroup.eu>
+References: <3656d47c53bff577739dac536dbae31fff52f6d8.1708078640.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH 1/2] powerpc: Refactor __kernel_map_pages()
+Message-Id: <171033598337.517247.16293947196038207498.b4-ty@ellerman.id.au>
 Date: Thu, 14 Mar 2024 00:19:43 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,20 +37,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 01 Mar 2024 16:58:34 +0800, Kunwu Chan wrote:
-> This part was commented from commit 6d492ecc6489
-> ("powerpc/THP: Add code to handle HPTE faults for hugepages")
-> in about 11 years before.
+On Fri, 16 Feb 2024 11:17:33 +0100, Christophe Leroy wrote:
+> __kernel_map_pages() is almost identical for PPC32 and RADIX.
 > 
-> If there are no plans to enable this part code in the future,
-> we can remove this dead code and replace with a comment
-> explaining what the dead code was trying to say.
+> Refactor it.
+> 
+> On PPC32 it is not needed for KFENCE, but to keep it simple
+> just make it similar to PPC64.
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/mm: Code cleanup for __hash_page_thp
-      https://git.kernel.org/powerpc/c/d9cf600ecb7b053345aa76c1988cf374260cfdaf
+[1/2] powerpc: Refactor __kernel_map_pages()
+      https://git.kernel.org/powerpc/c/3c8016e681c5e0f5f3ad15edb4569727cd32eaff
+[2/2] powerpc: Don't ignore errors from set_memory_{n}p() in __kernel_map_pages()
+      https://git.kernel.org/powerpc/c/9cbacb834b4afcb55eb8ac5115fa82fc7ede5c83
 
 cheers
