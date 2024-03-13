@@ -1,225 +1,255 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160031AAD4;
-	Wed, 13 Mar 2024 09:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D255E1B7EF
+	for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 09:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710320558; cv=none; b=QSUgsGzoy+bxRH0K0JjpTFyCOOEU6YDISJstXcgURoy/WuXtL1yJ9OQPto9XbAB2iZj4GOVM+ReSWkR7We6Odl8Wo/TCi0HaiNt0UZXHrnlsxVR2heLQDHV8VrUyANE6URa+y008jwwkzYl84bbtvsTCuGblLGGzR2mxrZhGFlo=
+	t=1710320591; cv=none; b=CsR2h8ht/yYLbHsrG6gg66rGm0kZ8v6mKl8n836E9ebOANQ23xYQSuMkCu3e/XAD/ENpagSgr0xHGHeSblKXjAuVf6FoixBbYghlpxDE4O0oLo+lifvdu4RMkPc0cYf7FuBFt0SZ5TE+dj9T1PFkaJ+YIkvGDpkQjAUZHwZpYW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710320558; c=relaxed/simple;
-	bh=W3MX+DIfQCMEinvY+Opj0jrGMavyNe+dauQPU3864bI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A96YDPwLw10+1tCW7yxIw5ksIyYHGu9t/t0a1GQS2WBJ1u6KEAA8xq2h0JXskMmaKWuFjB6zdnQtGy3EcxvpWaDCq/dJbC6ApgzyFWDjE2c7gHGhGDqGQ3CxZei16A53QPKZRJt2/hO0yPs1HwgOcUJNS2orpVp17Na555MQ5XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MycfQvPN; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MycfQvPN"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a465ddc2c09so33116366b.2;
-        Wed, 13 Mar 2024 02:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710320555; x=1710925355; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pJ4UuBVuPwsgjmRRNq5Hw3TTHQUgO9YD/ZhBcEygeF4=;
-        b=MycfQvPNlTtztGBYtxaqVsAeBZcylDt4GUTtO2WsaBNGxINQly8V183GnYRzHIAW3J
-         1fxezVdxFYbe3JGX+rhCZVNzbgA/+LtMKvAGzny4dx6eiOqDtitiUp3nVScbqXqD3ZoJ
-         Re+uJYo4OVfr3QkvJhH8e4zkMGhPsLKcxV017vvfL964MRb7DopnG83FwQzxJib14INX
-         OKr6+zYZBPfeHBOR41oyUrwbdwTOUGBR38qDqefRoETTVaW2i3FS5ORcfx0aE7MQtjkV
-         4s5p45bFrpx7Ruohn5MBXNw+L5cF7/NrfVWSlnHmOevMYLxypUMLgzAfcW3E44C/I/xs
-         9x7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710320555; x=1710925355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pJ4UuBVuPwsgjmRRNq5Hw3TTHQUgO9YD/ZhBcEygeF4=;
-        b=rT2T1WdoKFTw36BWZZfMy/X2u0J71w+AZszMtvXyfskhg07zFjJbuNaoijER45sXeP
-         VfmldoupapXTtTeJ5kg/rnzWo7M5DrAJD5pC2TzRhSL7FSg5z1LqZaW+cmUb2MJxrYcr
-         z8UTSpM2HqqCV4fqykBFjngNCTKpJwY6GUFjlZyiaC7JrEEHnhpjHUp3Wsay3NHJiHSV
-         rKjumApEqDo35gxXp+gi9wql4ImmGL3+hUgXpLrwGSC11nKyaEfjKNbOISBaf2RriPpc
-         bF8IzXwD/p3jFzQrC57OeBzEV+4lV188/WUnQc5VYTas0Ft4ptedveZxj0ONBaW83Xot
-         7mQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnZGn5wkKj6q125VYTFq0m1A753cSsP7yaxHmi8m8lrVY4eMz75x004PqAi4k4h+hciK136ak2Sm/ED8J4FOC6x2zhDt2qC/dzBfT3+9GvYc2XjJcxkbIHEvJ6XjEgcKZBJiU5Uvhs4A==
-X-Gm-Message-State: AOJu0YwdO+4c1Q2ZhwuUqBmeN46yGs7fgOdx+IER0cBHlMFcc2+bbvFV
-	QFZHhEGRBeYaBddfxD1naotnmY4pxulxwgxH83VVRFekKK0O8uYJTtET9lnFTtrqEv0nW+BMVc8
-	iug3oSYo75kKtE0SW4cKZgYhLw3g=
-X-Google-Smtp-Source: AGHT+IFXvMw4RamLq0PUCkT8uQyv+/driiRPj3QMgTtbNWQM+mzkMj3dQIEkEGmdmXFljDauf/6ZGQqw6/F+aWrlNLg=
-X-Received: by 2002:a17:906:6d4d:b0:a46:54c8:96f1 with SMTP id
- a13-20020a1709066d4d00b00a4654c896f1mr807025ejt.55.1710320555277; Wed, 13 Mar
- 2024 02:02:35 -0700 (PDT)
+	s=arc-20240116; t=1710320591; c=relaxed/simple;
+	bh=1pQVwjJBwqgCe/yuB/MJ6OvVL9YiCC6T1skVv3dt0Qg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rUo/tWEL54UwmTb35i/bhzDdchmLyc3fSa6JojJxo32vyAAvRd8SSQDTr27gdnRUra18B8yTHkNDL/pNPOKaPv/p5z4bGAmidqSr25FF37g6oc5fbWCk5pT5evNvvor6/ZSujxopOapPEca8J4kjousPp0gpye9UWboigDsiAas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D12C01007;
+	Wed, 13 Mar 2024 02:03:44 -0700 (PDT)
+Received: from [10.57.67.164] (unknown [10.57.67.164])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8C333F73F;
+	Wed, 13 Mar 2024 02:03:05 -0700 (PDT)
+Message-ID: <a75ec640-d025-45ee-b74d-305aaa3cc1ce@arm.com>
+Date: Wed, 13 Mar 2024 09:03:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313081425.2634-1-xingtong_wu@163.com> <20240313081425.2634-2-xingtong_wu@163.com>
-In-Reply-To: <20240313081425.2634-2-xingtong_wu@163.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 13 Mar 2024 11:01:59 +0200
-Message-ID: <CAHp75Vc_JEcVJA9GbsL5oespp6RHBRstTy8Jr9_pQvEkNh6owA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] leds: simatic-ipc-leds-gpio: add support for
- module BX-59A
-To: Xing Tong Wu <xingtong_wu@163.com>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	Xing Tong Wu <xingtong.wu@siemens.com>, Gerd Haeussler <gerd.haeussler.ext@siemens.com>, 
-	Tobias Schaffner <tobias.schaffner@siemens.com>, Henning Schild <henning@hennsch.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/6] mm: madvise: Avoid split during MADV_PAGEOUT and
+ MADV_COLD
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, Lance Yang <ioworker0@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>,
+ Michal Hocko <mhocko@suse.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-7-ryan.roberts@arm.com>
+ <CAGsJ_4wpjqRsn7ouO=Ut9oMBLSh803=XuSPX6gJ5nQ3jyqh3hQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4wpjqRsn7ouO=Ut9oMBLSh803=XuSPX6gJ5nQ3jyqh3hQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 13, 2024 at 10:15=E2=80=AFAM Xing Tong Wu <xingtong_wu@163.com>=
- wrote:
->
-> From: Xing Tong Wu <xingtong.wu@siemens.com>
->
-> This is used for the Siemens Simatic IPC BX-59A, which has its LEDs
-> connected to GPIOs provided by the Nuvoton NCT6126D.
+On 13/03/2024 07:19, Barry Song wrote:
+> On Tue, Mar 12, 2024 at 4:01 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> Rework madvise_cold_or_pageout_pte_range() to avoid splitting any large
+>> folio that is fully and contiguously mapped in the pageout/cold vm
+>> range. This change means that large folios will be maintained all the
+>> way to swap storage. This both improves performance during swap-out, by
+>> eliding the cost of splitting the folio, and sets us up nicely for
+>> maintaining the large folio when it is swapped back in (to be covered in
+>> a separate series).
+>>
+>> Folios that are not fully mapped in the target range are still split,
+>> but note that behavior is changed so that if the split fails for any
+>> reason (folio locked, shared, etc) we now leave it as is and move to the
+>> next pte in the range and continue work on the proceeding folios.
+>> Previously any failure of this sort would cause the entire operation to
+>> give up and no folios mapped at higher addresses were paged out or made
+>> cold. Given large folios are becoming more common, this old behavior
+>> would have likely lead to wasted opportunities.
+>>
+>> While we are at it, change the code that clears young from the ptes to
+>> use ptep_test_and_clear_young(), which is more efficent than
+>> get_and_clear/modify/set, especially for contpte mappings on arm64,
+>> where the old approach would require unfolding/refolding and the new
+>> approach can be done in place.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> 
+> This looks so much better than our initial RFC.
+> Thank you for your excellent work!
 
-FWIW, LGTM
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks - its a team effort - I had your PoC and David's previous batching work
+to use as a template.
 
-Although a couple of minor remarks below.
+> 
+>> ---
+>>  mm/madvise.c | 89 ++++++++++++++++++++++++++++++----------------------
+>>  1 file changed, 51 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 547dcd1f7a39..56c7ba7bd558 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -336,6 +336,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>         LIST_HEAD(folio_list);
+>>         bool pageout_anon_only_filter;
+>>         unsigned int batch_count = 0;
+>> +       int nr;
+>>
+>>         if (fatal_signal_pending(current))
+>>                 return -EINTR;
+>> @@ -423,7 +424,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>                 return 0;
+>>         flush_tlb_batched_pending(mm);
+>>         arch_enter_lazy_mmu_mode();
+>> -       for (; addr < end; pte++, addr += PAGE_SIZE) {
+>> +       for (; addr < end; pte += nr, addr += nr * PAGE_SIZE) {
+>> +               nr = 1;
+>>                 ptent = ptep_get(pte);
+>>
+>>                 if (++batch_count == SWAP_CLUSTER_MAX) {
+>> @@ -447,55 +449,66 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>                         continue;
+>>
+>>                 /*
+>> -                * Creating a THP page is expensive so split it only if we
+>> -                * are sure it's worth. Split it if we are only owner.
+>> +                * If we encounter a large folio, only split it if it is not
+>> +                * fully mapped within the range we are operating on. Otherwise
+>> +                * leave it as is so that it can be swapped out whole. If we
+>> +                * fail to split a folio, leave it in place and advance to the
+>> +                * next pte in the range.
+>>                  */
+>>                 if (folio_test_large(folio)) {
+>> -                       int err;
+>> -
+>> -                       if (folio_estimated_sharers(folio) > 1)
+>> -                               break;
+>> -                       if (pageout_anon_only_filter && !folio_test_anon(folio))
+>> -                               break;
+>> -                       if (!folio_trylock(folio))
+>> -                               break;
+>> -                       folio_get(folio);
+>> -                       arch_leave_lazy_mmu_mode();
+>> -                       pte_unmap_unlock(start_pte, ptl);
+>> -                       start_pte = NULL;
+>> -                       err = split_folio(folio);
+>> -                       folio_unlock(folio);
+>> -                       folio_put(folio);
+>> -                       if (err)
+>> -                               break;
+>> -                       start_pte = pte =
+>> -                               pte_offset_map_lock(mm, pmd, addr, &ptl);
+>> -                       if (!start_pte)
+>> -                               break;
+>> -                       arch_enter_lazy_mmu_mode();
+>> -                       pte--;
+>> -                       addr -= PAGE_SIZE;
+>> -                       continue;
+>> +                       const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
+>> +                                               FPB_IGNORE_SOFT_DIRTY;
+>> +                       int max_nr = (end - addr) / PAGE_SIZE;
+>> +
+>> +                       nr = folio_pte_batch(folio, addr, pte, ptent, max_nr,
+>> +                                            fpb_flags, NULL);
+> 
+> I wonder if we have a quick way to avoid folio_pte_batch() if users
+> are doing madvise() on a portion of a large folio.
 
-> Signed-off-by: Xing Tong Wu <xingtong.wu@siemens.com>
-> ---
->  .../leds/simple/simatic-ipc-leds-gpio-core.c  |  1 +
->  .../simple/simatic-ipc-leds-gpio-f7188x.c     | 53 ++++++++++++++++---
->  2 files changed, 48 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/l=
-eds/simple/simatic-ipc-leds-gpio-core.c
-> index 667ba1bc3a30..85003fd7f1aa 100644
-> --- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-> @@ -56,6 +56,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device =
-*pdev,
->         case SIMATIC_IPC_DEVICE_127E:
->         case SIMATIC_IPC_DEVICE_227G:
->         case SIMATIC_IPC_DEVICE_BX_21A:
-> +       case SIMATIC_IPC_DEVICE_BX_59A:
->                 break;
->         default:
->                 return -ENODEV;
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c b/drivers=
-/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-> index c7c3a1f986e6..08d8e580b4f1 100644
-> --- a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-> @@ -17,7 +17,12 @@
->
->  #include "simatic-ipc-leds-gpio.h"
->
-> -static struct gpiod_lookup_table simatic_ipc_led_gpio_table =3D {
-> +struct simatic_ipc_led_tables {
-> +       struct gpiod_lookup_table *led_lookup_table;
-> +       struct gpiod_lookup_table *led_lookup_table_extra;
-> +};
-> +
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g =3D {
->         .dev_id =3D "leds-gpio",
->         .table =3D {
->                 GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_=
-LOW),
-> @@ -30,7 +35,7 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_t=
-able =3D {
->         },
->  };
->
-> -static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra =3D {
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra_227g =
-=3D {
->         .dev_id =3D NULL, /* Filled during initialization */
->         .table =3D {
->                 GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_=
-HIGH),
-> @@ -39,16 +44,52 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio=
-_table_extra =3D {
->         },
->  };
->
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_bx_59a =3D {
-> +       .dev_id =3D "leds-gpio",
-> +       .table =3D {
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_=
-LOW),
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 1, GPIO_ACTIVE_=
-LOW),
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-5", 3, NULL, 2, GPIO_ACTIVE_=
-LOW),
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-5", 2, NULL, 3, GPIO_ACTIVE_=
-LOW),
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-7", 7, NULL, 4, GPIO_ACTIVE_=
-LOW),
-> +               GPIO_LOOKUP_IDX("gpio-f7188x-7", 4, NULL, 5, GPIO_ACTIVE_=
-LOW),
-> +               {} /* Terminating entry */
-> +       }
-> +};
-> +
->  static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pd=
-ev)
->  {
-> -       return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_ta=
-ble,
-> -                                          &simatic_ipc_led_gpio_table_ex=
-tra);
-> +       const struct simatic_ipc_platform *plat =3D dev_get_platdata(&pde=
-v->dev);
-> +       struct simatic_ipc_led_tables *led_tables;
-> +
-> +       led_tables =3D devm_kzalloc(&pdev->dev, sizeof(*led_tables), GFP_=
-KERNEL);
-> +       if (!led_tables)
-> +               return -ENOMEM;
+Good idea. Something like this?:
 
-You can make this smarter, i.e. only allocate memory after the switch
-case. But it might require additional code and variables which will be
-more churn. So, I'm fine with this approach.
+	if (pte_pfn(pte) == folio_pfn(folio)
+		nr = folio_pte_batch(folio, addr, pte, ptent, max_nr,
+				     fpb_flags, NULL);
 
-> +       switch (plat->devmode) {
-> +       case SIMATIC_IPC_DEVICE_227G:
-> +               led_tables->led_lookup_table =3D &simatic_ipc_led_gpio_ta=
-ble_227g;
-> +               led_tables->led_lookup_table_extra =3D &simatic_ipc_led_g=
-pio_table_extra_227g;
-> +               break;
-> +       case SIMATIC_IPC_DEVICE_BX_59A:
-> +               led_tables->led_lookup_table =3D &simatic_ipc_led_gpio_ta=
-ble_bx_59a;
-> +               break;
-> +       default:
-> +               return -ENODEV;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, led_tables);
-> +       return simatic_ipc_leds_gpio_probe(pdev, led_tables->led_lookup_t=
-able,
-> +                                          led_tables->led_lookup_table_e=
-xtra);
->  }
->
->  static void simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *=
-pdev)
->  {
-> -       simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
-> -                                    &simatic_ipc_led_gpio_table_extra);
+If we are not mapping the first page of the folio, then it can't be a full
+mapping, so no need to call folio_pte_batch(). Just split it.
 
-> +       struct simatic_ipc_led_tables *led_tables;
-> +       led_tables =3D platform_get_drvdata(pdev);
+> 
+>> +
+>> +                       if (nr < folio_nr_pages(folio)) {
+>> +                               int err;
+>> +
+>> +                               if (folio_estimated_sharers(folio) > 1)
+>> +                                       continue;
+>> +                               if (pageout_anon_only_filter && !folio_test_anon(folio))
+>> +                                       continue;
+>> +                               if (!folio_trylock(folio))
+>> +                                       continue;
+>> +                               folio_get(folio);
+>> +                               arch_leave_lazy_mmu_mode();
+>> +                               pte_unmap_unlock(start_pte, ptl);
+>> +                               start_pte = NULL;
+>> +                               err = split_folio(folio);
+>> +                               folio_unlock(folio);
+>> +                               folio_put(folio);
+>> +                               if (err)
+>> +                                       continue;
+>> +                               start_pte = pte =
+>> +                                       pte_offset_map_lock(mm, pmd, addr, &ptl);
+>> +                               if (!start_pte)
+>> +                                       break;
+>> +                               arch_enter_lazy_mmu_mode();
+>> +                               nr = 0;
+>> +                               continue;
+>> +                       }
+>>                 }
+>>
+>>                 /*
+>>                  * Do not interfere with other mappings of this folio and
+>> -                * non-LRU folio.
+>> +                * non-LRU folio. If we have a large folio at this point, we
+>> +                * know it is fully mapped so if its mapcount is the same as its
+>> +                * number of pages, it must be exclusive.
+>>                  */
+>> -               if (!folio_test_lru(folio) || folio_mapcount(folio) != 1)
+>> +               if (!folio_test_lru(folio) ||
+>> +                   folio_mapcount(folio) != folio_nr_pages(folio))
+>>                         continue;
+> 
+> This looks so perfect and is exactly what I wanted to achieve.
+> 
+>>
+>>                 if (pageout_anon_only_filter && !folio_test_anon(folio))
+>>                         continue;
+>>
+>> -               VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
+>> -
+>> -               if (!pageout && pte_young(ptent)) {
+>> -                       ptent = ptep_get_and_clear_full(mm, addr, pte,
+>> -                                                       tlb->fullmm);
+>> -                       ptent = pte_mkold(ptent);
+>> -                       set_pte_at(mm, addr, pte, ptent);
+>> -                       tlb_remove_tlb_entry(tlb, pte, addr);
+>> +               if (!pageout) {
+>> +                       for (; nr != 0; nr--, pte++, addr += PAGE_SIZE) {
+>> +                               if (ptep_test_and_clear_young(vma, addr, pte))
+>> +                                       tlb_remove_tlb_entry(tlb, pte, addr);
+>> +                       }
+> 
+> This looks so smart. if it is not pageout, we have increased pte
+> and addr here; so nr is 0 and we don't need to increase again in
+> for (; addr < end; pte += nr, addr += nr * PAGE_SIZE)
+> 
+> otherwise, nr won't be 0. so we will increase addr and
+> pte by nr.
 
-This can be done on a single line.
-
-> +       simatic_ipc_leds_gpio_remove(pdev, led_tables->led_lookup_table,
-> +                                    led_tables->led_lookup_table_extra);
->  }
->
->  static struct platform_driver simatic_ipc_led_gpio_driver =3D {
+Indeed. I'm hoping that Lance is able to follow a similar pattern for
+madvise_free_pte_range().
 
 
---=20
-With Best Regards,
-Andy Shevchenko
+> 
+> 
+>>                 }
+>>
+>>                 /*
+>> --
+>> 2.25.1
+>>
+> 
+> Overall, LGTM,
+> 
+> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
+
+Thanks!
+
+
