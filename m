@@ -1,203 +1,201 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFE04A0F
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FA2BA29;
+	Thu, 14 Mar 2024 02:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710382715; cv=none; b=DdpvQr+6SJtbaNCPhhim4c8KWtnGGQAY/iebbw+2mRztPWTgi11GqMHTWLCeT8vXFr2Y42CmZsNk3blNANBDyjmC5I3/Kq5QESsKf7r3YdsRVKXhpDfhW2ragD7P5IVoq9DQGItaxXYsv4B1Man//otQIQY/Q+GXGljp6KkSO1w=
+	t=1710382762; cv=none; b=n8ZZgA8cFLFnU+Hmex/VUB3C7HRZGIYHwyUocMY9GohnGH61dNL9OimJMYcTWBwOm7hH+dbUGZH6FXrIUAubgtnUCH14H7ry4NwqPmCNlZ+7nDpcYlL/tX5Y7NLcxj+eaMNlEmOQVw+ihtwKS1L/Gk9aPgQ2n8i2bVPYeRralkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710382715; c=relaxed/simple;
-	bh=g7vEnho4KgVqd3zIlFIhWB3dU3UC1oJopzBuAznghs0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jsr/42Tc78OMps/AuNalU9Ew14ZmwVXZM+NN7mbXHqopG11LBJcBvAaT2z0nLwd6RQL3rYg4KEAN37+wX2KTelH8+gj3aSRYHXXHM2p6PRFeJfIwlEo/E2o5mS6hCmX9QYlDEZ2RSv324O+HHlzzhqLB6YMk0Wq/gdCt1DOaGL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KUNWi+v1; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710382762; c=relaxed/simple;
+	bh=oWUuvZfUPQK6oEv2SNRdLnr1fSGZ2Navf8pKF44wuBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qjTwEFWThWBzpS5vMIrHy9W2ETU6gSyMOlKw3bnHFF5Z89i0lN9ZnnjhAFIhl+fk7KPrAbWwPATgcRjLnjJlatXxcjctH2OQvPA3XimGpQ8BWBE+rpyb+SwTezef1uqcQcIc6cWxoeOrvRnBssWmI3aF3dhoJV0Q4AgFqisKvc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bt53jStA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUNWi+v1"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5e152c757a5so259412a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 19:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710382713; x=1710987513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NMXxgYFB39c3JQb86pcYzX4ejK9UB61sydOSCe9B0SI=;
-        b=KUNWi+v16FOSGVjQIJz2I3O4Ua+xysDllewL/bJ4PLEgNIz8F5InacyakaalbBFmvx
-         ejXVfCyKiAXvfCZcrOzFlkrCF/5ESlGz9okbhYX7l8c3uXCvWeQ9sVrH1T4Kd1z/8PrT
-         Nr9qYOYsn/4FvKU+EA7630srBpkGZlR/fpiQg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710382713; x=1710987513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NMXxgYFB39c3JQb86pcYzX4ejK9UB61sydOSCe9B0SI=;
-        b=AX4+6rTPPfVrZOVwai7KhgSGbWfSZVZDxqBOPyx3GH2lsX+QSe1XzQm4mNCMSobZEY
-         WRKtDgkNRBjVHotj4Dot+ouAA9ZODLIAPr5kFBHtVFNvlpfYo0eSTtDfR8U79Q0Rsq3N
-         aBFSaE5gLY1h9VY4xB9lNT30+eZm/HZPXTl13R+BK0bpcUr0qLK4TdIILAIkZ9R47tPk
-         9j6WKpaE3jNckRd+PD6diCkRwQDngZcR4plWoDO+k3gcyqdFy8XRG6NXif8viEJ8QfuR
-         W5mpwNYBY2/CR6tjKpKf2o4vD6wLVUbMAovxZ+YZaaJW5oFxq11hg7gKsKRyburhtMzr
-         TOaw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5dWoDiOGP/+29k8ZRvxKCeY4dC21FDt+jUoICwupMxHJnZn09YtMG+9nd5g9K9f7KE2ZG1Be/ZjSfIYOlxHTdrdfctfc+ZOGaNdOC
-X-Gm-Message-State: AOJu0YwBnL43ia/FmcChVxcINyzlA36ybrWB2ooWxz4bC7lTeX7xWQcK
-	A8N9RIHAB6AvaJ6NZflGqlSKNwD422kTDoSd+GzUT2NLNYSuK7ug03kl3JsyWw==
-X-Google-Smtp-Source: AGHT+IEC8GLkKGjjgaPvX0/xnlGwn3qQtPhlBt8R9T5fCKZBAWzvZ9Yc2/prutcWFyDk7dnjBytK6g==
-X-Received: by 2002:a17:90a:f288:b0:29a:caf9:de64 with SMTP id fs8-20020a17090af28800b0029acaf9de64mr414882pjb.40.1710382713471;
-        Wed, 13 Mar 2024 19:18:33 -0700 (PDT)
-Received: from chromium.org ([118.149.82.233])
-        by smtp.gmail.com with ESMTPSA id o1-20020a17090aac0100b0029bc25f7181sm1993937pjq.54.2024.03.13.19.18.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 19:18:33 -0700 (PDT)
-From: Simon Glass <sjg@chromium.org>
-To: devicetree@vger.kernel.org
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-mtd@lists.infradead.org,
-	Simon Glass <sjg@chromium.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Richard Weinberger <richard@nod.at>,
-	Rob Herring <robh+dt@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/2] dt-bindings: mtd: fixed-partitions: Add alignment properties
-Date: Thu, 14 Mar 2024 15:17:54 +1300
-Message-Id: <20240314021754.84557-2-sjg@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240314021754.84557-1-sjg@chromium.org>
-References: <20240314021754.84557-1-sjg@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bt53jStA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96671C433F1;
+	Thu, 14 Mar 2024 02:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710382762;
+	bh=oWUuvZfUPQK6oEv2SNRdLnr1fSGZ2Navf8pKF44wuBQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bt53jStAim4HB6IcDu03MYHYMJ46PzUngLFBLd1oskRUuhq+UPXNBEQXlwlqcATb2
+	 pO/Rh27gNTPP3m/nQVRsUCmmJaXBqxKtOUgWOI2QnhDhoIBAtiNaebSdi1x+tRn11P
+	 UrDBYggUeiLL5JIxzttTUsQg2OVGcbqX3PhOrs54o3LbIQ0wRmvn0VX2c7A36ckn9x
+	 Qv+pPLcUjP355J4txuWdYKSk5eb0axbSHmNhT/bkD11ZjuZDhLGORWNJeeqWwp302c
+	 +HfaZ5mIfSQozoWmsOq0mhGhDrjhh3WpQYLMUCvCSsKgmj5PrnqDNAVxb/GsDUuTst
+	 Mb7RLvQpRhBHA==
+Message-ID: <cd89a151-76f6-4f73-a109-72e0a7b758d3@kernel.org>
+Date: Thu, 14 Mar 2024 10:19:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [f2fs-dev] [syzbot] [f2fs?] KASAN: slab-use-after-free Read in
+ f2fs_filemap_fault
+Content-Language: en-US
+To: Jaegeuk Kim <jaegeuk@kernel.org>, "hdanton@sina.com" <hdanton@sina.com>,
+ =?UTF-8?B?RWQgVHNhaSAo6JSh5a6X6LuSKQ==?= <Ed.Tsai@mediatek.com>
+Cc: =?UTF-8?B?Q2h1bi1IdW5nIFd1ICjlt6vpp7/lro8p?= <Chun-hung.Wu@mediatek.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ =?UTF-8?B?TGlnaHQgSHNpZWggKOisneaYjueHiCk=?= <Light.Hsieh@mediatek.com>,
+ "linux-f2fs-devel@lists.sourceforge.net"
+ <linux-f2fs-devel@lists.sourceforge.net>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ =?UTF-8?B?RnJlZGR5IEhzaW4gKOi+m+aBkuixkCk=?= <Freddy.Hsin@mediatek.com>
+References: <0000000000000b4e27060ef8694c@google.com>
+ <20240115120535.850-1-hdanton@sina.com>
+ <4bbab168407600a07e1a0921a1569c96e4a1df31.camel@mediatek.com>
+ <ZfEB3rPLQUjePNRz@google.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZfEB3rPLQUjePNRz@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add three properties for controlling alignment of partitions, aka
-'entries' in fixed-partition.
+On 2024/3/13 9:31, Jaegeuk Kim wrote:
+> On 03/12, Ed Tsai (蔡宗軒) wrote:
+>> On Mon, 2024-01-15 at 20:05 +0800, Hillf Danton wrote:
+>>>
+>>> ...
+>>>
+>>> --- x/fs/f2fs/file.c
+>>> +++ y/fs/f2fs/file.c
+>>> @@ -39,6 +39,7 @@
+>>>   static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>>>   {
+>>>          struct inode *inode = file_inode(vmf->vma->vm_file);
+>>> +       vm_flags_t flags = vmf->vma->vm_flags;
+>>>          vm_fault_t ret;
+>>>   
+>>>          ret = filemap_fault(vmf);
+>>> @@ -46,7 +47,7 @@ static vm_fault_t f2fs_filemap_fault(str
+>>>                  f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>>>                                          APP_MAPPED_READ_IO,
+>>> F2FS_BLKSIZE);
+>>>   
+>>> -       trace_f2fs_filemap_fault(inode, vmf->pgoff, vmf->vma-
+>>>> vm_flags, ret);
+>>> +       trace_f2fs_filemap_fault(inode, vmf->pgoff, flags, ret);
+>>>   
+>>>          return ret;
+>>>   }
+>>> --
+>>
+>> Hi Jaegeuk,
+>>
+>> We recently encountered this slabe-use-after-free issue in KASAN as
+>> well. Could you please review the patch above and merge it into f2fs?
+> 
+> Where is the patch?
 
-For now there is no explicit mention of hierarchy, so a 'section' is
-just the 'fixed-partitions' node.
+Hi, all,
 
-These new properties are inputs to the Binman packaging process, but are
-also needed if the firmware is repacked, to ensure that alignment
-constraints are not violated. Therefore they are provided as part of
-the schema.
+I'd like to fix this issue in 6.9-rc1, so I submitted a formal patch based on
+above code, and the patch has been tested by syzbot.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
+https://lore.kernel.org/linux-f2fs-devel/20240314020528.3051533-1-chao@kernel.org
 
-Changes in v7:
-- Drop patch 'Add binman compatible'
-- Put the alignment properties into the fixed-partition binding
+Hillf, may I change author of the patch to you? :)
 
-Changes in v6:
-- Correct schema-validation errors missed due to older dt-schema
-  (enum fix and reg addition)
+Thanks,
 
-Changes in v5:
-- Add value ranges
-- Consistently mention alignment must be power-of-2
-- Mention that alignment refers to bytes
-
-Changes in v2:
-- Fix 'a' typo in commit message
-
- .../bindings/mtd/partitions/partition.yaml    | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
-index 1ebe9e2347ea..3df12df06116 100644
---- a/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
-+++ b/Documentation/devicetree/bindings/mtd/partitions/partition.yaml
-@@ -57,6 +57,57 @@ properties:
-       user space from
-     type: boolean
- 
-+  align:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 0x80000000
-+    multipleOf: 2
-+    description:
-+      This sets the alignment of the entry in bytes.
-+
-+      The entry offset is adjusted so that the entry starts on an aligned
-+      boundary within the containing section or image. For example ‘align =
-+      <16>’ means that the entry will start on a 16-byte boundary. This may
-+      mean that padding is added before the entry. The padding is part of
-+      the containing section but is not included in the entry, meaning that
-+      an empty space may be created before the entry starts. Alignment
-+      must be a power of 2. If ‘align’ is not provided, no alignment is
-+      performed.
-+
-+  align-size:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 0x80000000
-+    multipleOf: 2
-+    description:
-+      This sets the alignment of the entry size in bytes. It must be a power
-+      of 2.
-+
-+      For example, to ensure that the size of an entry is a multiple of 64
-+      bytes, set this to 64. While this does not affect the contents of the
-+      entry within binman itself (the padding is performed only when its
-+      parent section is assembled), the end result is that the entry ends
-+      with the padding bytes, so may grow. If ‘align-size’ is not provided,
-+      no alignment is performed.
-+
-+  align-end:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 0x80000000
-+    multipleOf: 2
-+    description:
-+      This sets the alignment (in bytes) of the end of an entry with respect
-+      to the containing section. It must be a power of 2.
-+
-+      Some entries require that they end on an alignment boundary,
-+      regardless of where they start. This does not move the start of the
-+      entry, so the contents of the entry will still start at the beginning.
-+      But there may be padding at the end. While this does not affect the
-+      contents of the entry within binman itself (the padding is performed
-+      only when its parent section is assembled), the end result is that the
-+      entry ends with the padding bytes, so may grow. If ‘align-end’ is not
-+      provided, no alignment is performed.
-+
- if:
-   not:
-     required: [ reg ]
-@@ -67,3 +118,24 @@ then:
- 
- # This is a generic file other binding inherit from and extend
- additionalProperties: true
-+
-+examples:
-+  - |
-+    partitions {
-+        compatible = "fixed-partitions";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        partition@100000 {
-+            compatible = "u-boot";
-+            reg = <0x100000 0xf00000>;
-+            align-size = <0x1000>;
-+            align-end = <0x10000>;
-+        };
-+
-+        partition@200000 {
-+            compatible = "tfa-bl31";
-+            reg = <0x200000 0x100000>;
-+            align = <0x4000>;
-+        };
-+    };
--- 
-2.34.1
-
+> 
+>>
+>> Best,
+>> Ed
+>>
+>> ==================================================================
+>> [29195.369964][T31720] BUG: KASAN: slab-use-after-free in
+>> f2fs_filemap_fault+0x50/0xe0
+>> [29195.370971][T31720] Read at addr f7ffff80454ebde0 by task AsyncTask
+>> #11/31720
+>> [29195.371881][T31720] Pointer tag: [f7], memory tag: [f1]
+>> [29195.372549][T31720]
+>> [29195.372838][T31720] CPU: 2 PID: 31720 Comm: AsyncTask #11 Tainted:
+>> G        W  OE      6.6.17-android15-0-gcb5ba718a525 #1
+>> [29195.374862][T31720] Call trace:
+>> [29195.375268][T31720]  dump_backtrace+0xec/0x138
+>> [29195.375848][T31720]  show_stack+0x18/0x24
+>> [29195.376365][T31720]  dump_stack_lvl+0x50/0x6c
+>> [29195.376943][T31720]  print_report+0x1b0/0x714
+>> [29195.377520][T31720]  kasan_report+0xc4/0x124
+>> [29195.378076][T31720]  __do_kernel_fault+0xb8/0x26c
+>> [29195.378694][T31720]  do_bad_area+0x30/0xdc
+>> [29195.379226][T31720]  do_tag_check_fault+0x20/0x34
+>> [29195.379834][T31720]  do_mem_abort+0x58/0x104
+>> [29195.380388][T31720]  el1_abort+0x3c/0x5c
+>> [29195.380899][T31720]  el1h_64_sync_handler+0x54/0x90
+>> [29195.381529][T31720]  el1h_64_sync+0x68/0x6c
+>> [29195.382069][T31720]  f2fs_filemap_fault+0x50/0xe0
+>> [29195.382678][T31720]  __do_fault+0xc8/0xfc
+>> [29195.383209][T31720]  handle_mm_fault+0xb44/0x10c4
+>> [29195.383816][T31720]  do_page_fault+0x294/0x48c
+>> [29195.384395][T31720]  do_translation_fault+0x38/0x54
+>> [29195.385023][T31720]  do_mem_abort+0x58/0x104
+>> [29195.385577][T31720]  el0_da+0x44/0x78
+>> [29195.386057][T31720]  el0t_64_sync_handler+0x98/0xbc
+>> [29195.386688][T31720]  el0t_64_sync+0x1a8/0x1ac
+>> [29195.387249][T31720]
+>> [29195.387534][T31720] Allocated by task 14784:
+>> [29195.388085][T31720]  kasan_save_stack+0x40/0x70
+>> [29195.388672][T31720]  save_stack_info+0x34/0x128
+>> [29195.389259][T31720]  kasan_save_alloc_info+0x14/0x20
+>> [29195.389901][T31720]  __kasan_slab_alloc+0x168/0x174
+>> [29195.390530][T31720]  slab_post_alloc_hook+0x88/0x3a4
+>> [29195.391168][T31720]  kmem_cache_alloc+0x18c/0x2c8
+>> [29195.391771][T31720]  vm_area_alloc+0x2c/0xe8
+>> [29195.392327][T31720]  mmap_region+0x440/0xa94
+>> [29195.392888][T31720]  do_mmap+0x3d0/0x524
+>> [29195.393399][T31720]  vm_mmap_pgoff+0x1a0/0x1f8
+>> [29195.393980][T31720]  ksys_mmap_pgoff+0x78/0xf4
+>> [29195.394557][T31720]  __arm64_sys_mmap+0x34/0x44
+>> [29195.395138][T31720]  invoke_syscall+0x58/0x114
+>> [29195.395727][T31720]  el0_svc_common+0x80/0xe0
+>> [29195.396292][T31720]  do_el0_svc+0x1c/0x28
+>> [29195.396812][T31720]  el0_svc+0x38/0x68
+>> [29195.397302][T31720]  el0t_64_sync_handler+0x68/0xbc
+>> [29195.397932][T31720]  el0t_64_sync+0x1a8/0x1ac
+>> [29195.398492][T31720]
+>> [29195.398778][T31720] Freed by task 0:
+>> [29195.399240][T31720]  kasan_save_stack+0x40/0x70
+>> [29195.399825][T31720]  save_stack_info+0x34/0x128
+>> [29195.400412][T31720]  kasan_save_free_info+0x18/0x28
+>> [29195.401043][T31720]  ____kasan_slab_free+0x254/0x25c
+>> [29195.401682][T31720]  __kasan_slab_free+0x10/0x20
+>> [29195.402278][T31720]  slab_free_freelist_hook+0x174/0x1e0
+>> [29195.402961][T31720]  kmem_cache_free+0xc4/0x348
+>> [29195.403544][T31720]  __vm_area_free+0x84/0xa4
+>> [29195.404103][T31720]  vm_area_free_rcu_cb+0x10/0x20
+>> [29195.404719][T31720]  rcu_do_batch+0x214/0x720
+>> [29195.405284][T31720]  rcu_core+0x1b0/0x408
+>> [29195.405800][T31720]  rcu_core_si+0x10/0x20
+>> [29195.406348][T31720]  __do_softirq+0x120/0x3f4
+>> [29195.406907][T31720]
+>> [29195.407191][T31720] The buggy address belongs to the object at
+>> ffffff80454ebdc0
+>> [29195.407191][T31720]  which belongs to the cache vm_area_struct of
+>> size 176
+>> [29195.408978][T31720] The buggy address is located 32 bytes inside of
+>> [29195.408978][T31720]  176-byte region [ffffff80454ebdc0,
+>> ffffff80454ebe70)
+>> [29195.410625][T31720]
+>> [29195.410911][T31720] The buggy address belongs to the physical page:
+>> [29195.411709][T31720] page:0000000058f0f2f1 refcount:1 mapcount:0
+>> mapping:0000000000000000 index:0x0 pfn:0xc54eb
+>> [29195.412980][T31720] anon flags:
+>> 0x4000000000000800(slab|zone=1|kasantag=0x0)
+>> [29195.413880][T31720] page_type: 0xffffffff()
+>> [29195.414418][T31720] raw: 4000000000000800 f6ffff8002904500
+>> fffffffe076fc8c0 dead000000000007
+>> [29195.415488][T31720] raw: 0000000000000000 0000000000170017
+>> 00000001ffffffff 0000000000000000
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
