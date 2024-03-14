@@ -1,127 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BFE6FE0E;
-	Thu, 14 Mar 2024 14:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400936FE3C
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710426466; cv=none; b=eS5pB4ImN9QaNrXiElX7iGLyE0Vpkxve6VbyyQ7P9d9LT9qvkJA6yGd/VHW+V+rvqi5+j86/qqC0pYkYByhx4EiBpFcu5r3D17WCZG7N7bgG65dpxPNbrXzPKe3y13Hw0oVc1ktTx+AGdNk6LK6WypNcnzhACMP+YiEOZbWreH8=
+	t=1710426550; cv=none; b=d6rqbdcNdLr/u7dvFHTFDMErA/UOG/TAN1Zbs8+vB0F/CdGiZIeTwEziK4hrULFCU+62tFhnFdPhSCLZ4uT68Sk42I43X2SzK7xLWACqOHxURHpfdE6jEvZDDGLuwMDtzB67i0sB2MSVP/6MySYJa027TVzM5Y9oSMKNl2F3JV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710426466; c=relaxed/simple;
-	bh=QQT9AA2zZonsQUQxARfHUwH+9Hy/0C//Drq/MOzR3pg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sU28tDgfFBjuNU9zNyvV+bWkq1KVUnWknDz4HMUkXmDyUZNNqySaMCv9gBooEth3afk08BVwd7J5E99chAj8uWUqYF+ozhpxtN9MeU+GqvhHbM1zP2+Uh8CEx/dU+xOTwIg2exCL9yUkOWNVD1/3ZywK92Y/tuO7Z9NEAz9iucg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0086C433C7;
-	Thu, 14 Mar 2024 14:27:41 +0000 (UTC)
-From: Anton Altaparmakov <anton@tuxera.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-mm@kvack.org,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Anton Altaparmakov <anton@tuxera.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] x86/pm: Fix false positive kmemleak report in msr_build_context().
-Date: Thu, 14 Mar 2024 14:26:56 +0000
-Message-Id: <20240314142656.17699-1-anton@tuxera.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1710426550; c=relaxed/simple;
+	bh=8onVvCRHALH8Z0t909CHM3Iguu/cKn1N8VI/tYUI8ds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CkMOSEru/lTbfrjUNTzHHKC1B+FYP1tKij/ZlhG2SR9Y1FJtHLCuEweBHzYECqlr6Zrdc8Pug2mxGsFJUzbTdgZEXCmS5BFGX+HEpRIOn4AP4FZ8ntw1/1SZLNVtw/2Molq2GGX9oJ3V1xQdAN/ZndG5XceIujvZWuh8a53HKMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MeD9Q1Vj; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MeD9Q1Vj"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33e9ba0eadcso826383f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710426546; x=1711031346; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vbWbnFqFcxqkfsdDIzVbGRGYMN0ey69wKPUvvi1/HTk=;
+        b=MeD9Q1VjIM3IH7FyeOYXQWhRPJL4NxVikBUrLA4J3mNW/2AbuZSk79EAhPccuvm4iF
+         LZm08U2gBgnrPwWTehyTFeFJD8s0kPT7j/sSQflVPRdQLbCF1ihJG6PCKK8zrcFwu7eu
+         ozjVT1DLV40eGH/vnG7pIYEpJU67Gl3ykw3g/sQgexnn2zx8Kk901lLuq+3ZA0yYq2+u
+         Ec4/v05WT5yJdHXHrsZq8Y3iymtLdVVShGwZ+eUgubp6ApUK5+B/KNUHy+MN6oez0Fik
+         L/Bezk/0KfAOkQ/6zc/c+396Yat9sS3o6XulcMcxGUmJmVv5xdZGcxAJwHEiT6NdXxi9
+         b2tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710426546; x=1711031346;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vbWbnFqFcxqkfsdDIzVbGRGYMN0ey69wKPUvvi1/HTk=;
+        b=Fi6jg0W6Y5Pm3vlVWK55ZIRngdWGqUtVCiFW9iuz7z8912+jmMWLYvajd8HoDVJNnl
+         Pca8NvIzbIXADUyON0s2bOrJ83IS0PlIyOimmqjcb9jAAJkvmHYnb/LjvoO67oDSYi7K
+         hwkMbTwrrdJnk0JCHzRJldU8Dm5KECD9qXYrmVobbkg8tgm0Mxbo0x+3oiu5EHZd7cLD
+         3QSqj0u+tiqo+Ho69QE8s/wYrn2XWLEl4KRCnmxjUm7YOGXAEONkv466OfDd4GhrBZ9r
+         e0VRJ6gr91ITn6ANedQ/eVJcy8PaKOwdvGsoYDebeeJ9/I/MtYlyC0kDXNvID9ZnzZiq
+         lGxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBPi44XFcipypjMrMGeE+MjptqeM1JL6DG+M3k3qSwtCyRMfZqp2JpAwlteQZGzg5OeltZJaE4jTMkF0dq0v9bvehMIQmUSe+KXoLk
+X-Gm-Message-State: AOJu0Yx2OyQ/1tk6A3t2/WxfLqBPmny7nChG2ebQnYUkJMNp+9J4dwE6
+	PWudaZPnQGKnkOV8Hpg45+EAS9rTHtfeRz+jN8//WUC706iOOtzR/ywXRcKBCLs=
+X-Google-Smtp-Source: AGHT+IEFJC3eV05L1hTDs8HZhZF3XOgLBa8DjaxZxdayetOHeSCXloemj3z/yiRwlOTgnlYdqt77rQ==
+X-Received: by 2002:adf:e7ca:0:b0:33e:c9bd:c965 with SMTP id e10-20020adfe7ca000000b0033ec9bdc965mr1089990wrn.35.1710426546553;
+        Thu, 14 Mar 2024 07:29:06 -0700 (PDT)
+Received: from [192.168.1.78] (host-92-17-96-232.as13285.net. [92.17.96.232])
+        by smtp.gmail.com with ESMTPSA id q2-20020a05600000c200b0033dedd63382sm854067wrx.101.2024.03.14.07.29.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 07:29:06 -0700 (PDT)
+Message-ID: <9fdd04e8-cc7b-41e7-a099-055f39b3b462@linaro.org>
+Date: Thu, 14 Mar 2024 14:29:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: qcom: Update Devicetree
+ identifiers
+Content-Language: en-US
+To: Amrit Anand <quic_amrianan@quicinc.com>, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, agross@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, kernel@quicinc.com, peter.griffin@linaro.org,
+ linux-riscv@lists.infradead.org, chrome-platform@lists.linux.dev,
+ linux-mediatek@lists.infradead.org
+References: <1710418312-6559-1-git-send-email-quic_amrianan@quicinc.com>
+ <1710418312-6559-2-git-send-email-quic_amrianan@quicinc.com>
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <1710418312-6559-2-git-send-email-quic_amrianan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Since
 
-  7ee18d677989 ("x86/power: Make restore_processor_context() sane")
 
-kmemleak reports this issue:
+On 14/03/2024 12:11, Amrit Anand wrote:
+> Update existing documentation for qcom,msm-id (interchangeably:
+> qcom,soc-id) and qcom,board-id. Add support for qcom,pmic-id, qcom,oem-id
+> to support multi-DTB selection on Qualcomm's boards.
+> 
+> "qcom,soc-id", "qcom,board-id" and "qcom,pmic-id" are tuples of two 32-bit
+> values. The "qcom,oem-id" is a tuple of one 32-bit value.
+> Introduce macros to help generate SOC, board, PMIC and OEM identifiers.
+> QCOM_SOC_ID and QCOM_SOC_REVISION can be used to generate qcom,msm-id.
+> QCOM_BOARD_ID and QCOM_BOARD_SUBTYPE can be used to generate qcom,board-id.
+> QCOM_PMIC_SID and QCOM_PMIC_MODEL can be used to generate qcom,pmic-id.
+> QCOM_OEM_ID can be used to generate qcom,oem-id.
+> 
+> Add entries for different types of SoC, boards, DDR type, Boot device
+> type which are currently used by Qualcomm based bootloader.
+> 
+> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
+> ---
+>  include/dt-bindings/arm/qcom,ids.h | 86 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 77 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/dt-bindings/arm/qcom,ids.h b/include/dt-bindings/arm/qcom,ids.h
+> index f724834..dc24151 100644
+> --- a/include/dt-bindings/arm/qcom,ids.h
+> +++ b/include/dt-bindings/arm/qcom,ids.h
+> @@ -8,9 +8,14 @@
+>  #define _DT_BINDINGS_ARM_QCOM_IDS_H
+>  
+>  /*
+> - * The MSM chipset and hardware revision used by Qualcomm bootloaders, DTS for
+> - * older chipsets (qcom,msm-id) and in socinfo driver:
+> + * The MSM chipset ID (soc-id) used by Qualcomm bootloaders,
+> + * and in socinfo driver:
+> + * where, "a" indicates Qualcomm supported chipsets, example MSM8260, MSM8660 etc
+>   */
+> +
+> +#define QCOM_SOC_ID(a)  ((QCOM_ID_##a) && 0xffff)
 
-unreferenced object 0xf68241e0 (size 32):
-  comm "swapper/0", pid 1, jiffies 4294668610 (age 68.432s)
-  hex dump (first 32 bytes):
-    00 cc cc cc 29 10 01 c0 00 00 00 00 00 00 00 00  ....)...........
-    00 42 82 f6 cc cc cc cc cc cc cc cc cc cc cc cc  .B..............
-  backtrace:
-    [<461c1d50>] __kmem_cache_alloc_node+0x106/0x260
-    [<ea65e13b>] __kmalloc+0x54/0x160
-    [<c3858cd2>] msr_build_context.constprop.0+0x35/0x100
-    [<46635aff>] pm_check_save_msr+0x63/0x80
-    [<6b6bb938>] do_one_initcall+0x41/0x1f0
-    [<3f3add60>] kernel_init_freeable+0x199/0x1e8
-    [<3b538fde>] kernel_init+0x1a/0x110
-    [<938ae2b2>] ret_from_fork+0x1c/0x28
+How is QCOM_SOC_ID(SC7280) ever better than QCOM_ID_SC7280? What does
+this mask give you? It's going into a 32-bit field and not being OR'd
+with anything else...
+> +
+> +
+>  #define QCOM_ID_MSM8260			70
+>  #define QCOM_ID_MSM8660			71
+>  #define QCOM_ID_APQ8060			86
+> @@ -266,16 +271,79 @@
+>  #define QCOM_ID_IPQ5302			595
+>  #define QCOM_ID_IPQ5300			624
+>  
+> + /* The SOC revision used by Qualcomm bootloaders (soc-revision) */
+> +
+> +#define QCOM_SOC_REVISION(a)		(a & 0xff)
+> +
+>  /*
+> - * The board type and revision information, used by Qualcomm bootloaders and
+> - * DTS for older chipsets (qcom,board-id):
+> + * The board type and revision information (board-id), used by Qualcomm bootloaders
+> + * where, "a" indicates board type which can be either MTP, QRD etc
+>   */
+> +
+>  #define QCOM_BOARD_ID(a, major, minor) \
+> -	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | QCOM_BOARD_ID_##a)
+> +	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | ((QCOM_BOARD_ID_##a) & 0xff))
+> +
+> +#define QCOM_BOARD_ID_MTP		0x8
+> +#define QCOM_BOARD_ID_LIQUID		0x9
+> +#define QCOM_BOARD_ID_DRAGONBOARD	0xA
+> +#define QCOM_BOARD_ID_QRD		0x11
+This replaces the previous definition of QCOM_BOARD_ID_QRD which was
+decimal 11, now you're defining it as hex 0x11? I'm guessing this was a
+typo.
+> +#define QCOM_BOARD_ID_ADP		0x19
+> +#define QCOM_BOARD_ID_HDK		0x1F
+> +#define QCOM_BOARD_ID_ATP		0x21
+> +#define QCOM_BOARD_ID_IDP		0x22
+> +#define QCOM_BOARD_ID_SBC		0x24
+> +#define QCOM_BOARD_ID_QXR		0x26
+> +#define QCOM_BOARD_ID_X100		0x26
+> +#define QCOM_BOARD_ID_CRD		0x28
+> +
+> +/*
+> + * The platform subtype is used by Qualcomm bootloaders and
+> + * DTS (board-subtype)
+> + * where, "a" indicates boot device type, it can be EMMC,
+> + * UFS, NAND or OTHER (which can be used for default).
+> + * "b" indicates DDR type which can be 128MB, 256MB,
+> + * 512MB, 1024MB, 2048MB, 3072MB, 4096MB or ANY 
+> + * (which can be used for default).
+> + */
+> +#define QCOM_BOARD_SUBTYPE(a, b, SUBTYPE) \
+> +	(((QCOM_BOARD_BOOT_##a & 0xf) << 16) | ((QCOM_BOARD_DDRTYPE_##b & 0x7) << 8) | \
+> +	(SUBTYPE & 0xff))
+> +
+> +/* Board DDR Type where each value indicates higher limit */
+> +#define QCOM_BOARD_DDRTYPE_ANY		0x0
+> +#define QCOM_BOARD_DDRTYPE_128M		0x1
+> +#define QCOM_BOARD_DDRTYPE_256M		0x2
+> +#define QCOM_BOARD_DDRTYPE_512M		0x3
+> +#define QCOM_BOARD_DDRTYPE_1024M	0x4
+> +#define QCOM_BOARD_DDRTYPE_2048M	0x5
+> +#define QCOM_BOARD_DDRTYPE_3072M	0x6
+> +#define QCOM_BOARD_DDRTYPE_4096M	0x7
+>  
+> -#define QCOM_BOARD_ID_MTP			8
+> -#define QCOM_BOARD_ID_DRAGONBOARD		10
+> -#define QCOM_BOARD_ID_QRD			11
+> -#define QCOM_BOARD_ID_SBC			24
+> +/* Board Boot Device Type */
+> +#define QCOM_BOARD_BOOT_EMMC		0x0
+> +#define QCOM_BOARD_BOOT_UFS		0x1
+> +#define QCOM_BOARD_BOOT_NAND		0x2
+> +#define QCOM_BOARD_BOOT_OTHER		0x3
+> +
+> +/*
+> + * The PMIC slave id is used by Qualcomm bootloaders to
+> + * indicates which PMIC is attached (pmic-sid)
+> + */
+> +
+> +#define QCOM_PMIC_SID(a)		(a & 0xff)
+> +
+> +/*
+> + * The PMIC ID is used by Qualcomm bootloaders to describe the ID
+> + * of PMIC attached to bus described by SID (pmic-model)
+> + */
+> +
+> +#define QCOM_PMIC_MODEL(ID, major, minor) \
+> +	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | (ID & 0xff))
+> +
+> +/*
+> + * The OEM ID consists of 32 bit value to support OEM boards where they
+> + * have slight differences on top of Qualcomm's standard boards
+> + */
+> +#define QCOM_OEM_ID(a)		(a & 0xffffffff)
+>  
+>  #endif /* _DT_BINDINGS_ARM_QCOM_IDS_H */
 
-Reproducer:
-
-- Run rsync of whole kernel tree (multiple times if needed).
-- start a kmemleak scan
-- Note this is just an example: a lot of our internal tests hit these.
-
-The root cause is we expect the same as the equivalent fix in commit
-b0b592cf0836, i.e. the alignment within the packed struct saved_context
-which has everything unaligned as there is only "u16 gs;" at start of
-struct where in the past there were four u16 there thus aligning
-everything afterwards.  The issue is with the fact that Kmemleak only
-searches for pointers that are aligned (see how pointers are scanned in
-kmemleak.c) so when the struct members are not aligned it doesn't see
-them.
-
-Note we have picked this up on 5.4, 6.1 and 6.6 kernels but we expect it
-is the same on all kernels >= 4.15 as the commit 7ee18d677989 which
-changed from having four u16 to a single u16 at the start of the struct
-was introduced in 4.15.
-
-Fixes: 7ee18d677989 ("x86/power: Make restore_processor_context() sane")
-Signed-off-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/include/asm/suspend_32.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/suspend_32.h b/arch/x86/include/asm/suspend_32.h
-index a800abb1a992..d8416b3bf832 100644
---- a/arch/x86/include/asm/suspend_32.h
-+++ b/arch/x86/include/asm/suspend_32.h
-@@ -12,11 +12,6 @@
- 
- /* image of the saved processor state */
- struct saved_context {
--	/*
--	 * On x86_32, all segment registers except gs are saved at kernel
--	 * entry in pt_regs.
--	 */
--	u16 gs;
- 	unsigned long cr0, cr2, cr3, cr4;
- 	u64 misc_enable;
- 	struct saved_msrs saved_msrs;
-@@ -27,6 +22,11 @@ struct saved_context {
- 	unsigned long tr;
- 	unsigned long safety;
- 	unsigned long return_address;
-+	/*
-+	 * On x86_32, all segment registers except gs are saved at kernel
-+	 * entry in pt_regs.
-+	 */
-+	u16 gs;
- 	bool misc_enable_saved;
- } __attribute__((packed));
- 
 -- 
-2.39.3 (Apple Git-146)
-
+// Caleb (they/them)
