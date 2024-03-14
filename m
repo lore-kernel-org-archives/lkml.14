@@ -1,97 +1,174 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268471B48
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 17:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DD7745EF;
+	Thu, 14 Mar 2024 17:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710436561; cv=none; b=UZJ5FwXOYyEzd1YMjnIkRN9KaMoKWfcPWsJ+1f55rzA41wImbcWElpntem+J0strNcytFjjrDq4rBxGVZLsQ80hsOlVumEi3xpde+vZLUjCSUleUxAqKWk7Mchw9xNnykTN6sjXcOsrSEg6q/i4GUNl8Fy90fMJGtIRCdKsJQZw=
+	t=1710436573; cv=none; b=pa5eWWCTUVu23gIu9DLdzyelcGH3Rdm1Spjc+ExPpMzA7qTQbSxpnT4ofO1PC+fKVGud2yCg/OcnzAPTGIxZLgYKdvQai7IXBJDjmsP8u4hjkoATW3L+5MqQtmISZrzIG5JJic7o6/yRIIYStNaGPevFBvJu2HA2R5AOvLScq74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710436561; c=relaxed/simple;
-	bh=ASo+LDsMApRbUXPpMln5pwSC4HMvJj/Gm7MdWQsFt1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HDx6myBrfmhf9t59xe+EBwLUM7dNnUC/tyfCx2ce2EPL1FBf8vzwuf7RWIIaBnGNC8KoeEL9vkDF0OqSfbwvFHPJLszm6dkndLFnpEsfwLU8uveiOKUiPj9fiFbG1CyLEtL9OY6Bv8UKk9pQ6VUkWCvBwtz1vvm7fUhKHzezLkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=egBYLjzN; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1710436573; c=relaxed/simple;
+	bh=L79tdLUwzaaRgRXL97CbprC3UX8xdukYNWJfNJ9rn8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=eBmoVrhdHceeTiln6lyCinqE3bVDfq996CBG3VRinT4YLK99VnL1K/ar3uGeh3607Mr4uFXuNS8PTw4inT/hP6rfpCTCPQrJbTLfwqUY8204avPwyGdVzJURS7mhGENp4R3RFFBpd7SzKVEowT2uoM0UylC9mg0an/i43m3HP3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLCoITag; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="egBYLjzN"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so416866666b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1710436557; x=1711041357; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=95r3OCCclHMX2hfHWchTVWQ72JjnvU4/ijqwnCext1M=;
-        b=egBYLjzNyavAZpzF1XcRfh/wH6l+W99Ub6q5Kg2yw+Xz/DcKV2cQ2CxyMqRTBp90OI
-         av4A0Cqvvo8KLTXbOhR0M9BpfRUe0JyPRuche4MGPK7ag1IgvzozO5DGCWaYySItwKfp
-         1qwQNvDUPUFhQqiM1QT2ebx+AB8z003K6OzgI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710436557; x=1711041357;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=95r3OCCclHMX2hfHWchTVWQ72JjnvU4/ijqwnCext1M=;
-        b=uCTCenQ/SkzJGeCF1nVvVPGOHWla6tXgt6u7tWUOPiLCSRrCdJl4YIaXtwaDlWPiko
-         ZVP91SyLprVla6m36sOsKuozXAn0RyGm0goX9RY/r90saHfq65NcJOn0h40+IArL+xsd
-         EwsyK0x+Qu7ljcRyrGyE4GlADjluF5aut4rCsryw75U7ICTDcCIOPZjLor9sBh6cSxn9
-         uYg1wIgQ0d+hEb+YqYc1NrqvbeZyhyY9J0WcccHzsgC7o80opefss0RMH0Ta40yopuXq
-         NWDdpNEeCjP6s+TSlXwuumT4aIMP+BV7ny+T0T7Ca9gDmZ5r765RKnOPeBMRFx+LI4Up
-         hutQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhItwfmo12nG/4wZAGfxzbMGhRfBUS0Kv68Hb6kR9ZHC/fN9Y1yLzYozNRmDLUsSu7JupHLD9TIgF6ZVnO9sXzb/LRHiUxXyyQpQqs
-X-Gm-Message-State: AOJu0YzDQ5m/1xVTjFELRzaSM+OIhLgCvH9yh6fGqbF0MF4M+eVDlIW8
-	G2C8V9LrnpnMpdzF/eXJ3fitIso3af3bsfEZZmAy44kTzkH4wIiVWNJ34s4vGQhtNFgsOWckz7T
-	Q8kJd+g==
-X-Google-Smtp-Source: AGHT+IEfUhnGCsestabTPaNSm5KPFwjbov6qiAZLMP8gBYDrQGH4wBpREf3itT5YyEEfwO0E5VLm2Q==
-X-Received: by 2002:a17:906:6ca:b0:a46:6884:ebc3 with SMTP id v10-20020a17090606ca00b00a466884ebc3mr3049039ejb.35.1710436557456;
-        Thu, 14 Mar 2024 10:15:57 -0700 (PDT)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id bw9-20020a170906c1c900b00a4650ec48d0sm884247ejb.140.2024.03.14.10.15.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 10:15:57 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a466a256726so218087666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:15:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV5J7NMLcmarBUZXrg8BETYfLNxeTNLXJp2QcMI12LCLocoQ0hYHXBpYk+YWZCsJWCAq1hKCNFdTbtnWoWlSOsAPxlwV9Uly2+XAK81
-X-Received: by 2002:a17:907:1b0e:b0:a46:4ea8:9df5 with SMTP id
- mp14-20020a1709071b0e00b00a464ea89df5mr6915486ejc.5.1710436556101; Thu, 14
- Mar 2024 10:15:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLCoITag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C6BC433F1;
+	Thu, 14 Mar 2024 17:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710436573;
+	bh=L79tdLUwzaaRgRXL97CbprC3UX8xdukYNWJfNJ9rn8Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bLCoITag/SuEtTrsO/sMEjHd4BnWeVtJvXB6210xjO0cdkxYMA8vA1JIb6pEd2Kfy
+	 Id8hEuP4GShaNC+PpogaxARWBhxMId5O2Cie8lL7/14MzwoABw+v7vAtpZtvsqvwVm
+	 j+7ReyKeR/gEjByLQxpMlRsVYXDEGyGeHFdCK6t+sjpJtjaZP9s/5wAN9lzVmWJr7r
+	 pLa+CQidixlNP3GHezj2k/ubGEQYBhmB8PMTnGZbFPbhqQ4aFXAmuJp6RUqrSv3XnA
+	 050p8/o022AJfkYOdhHhi7dvoS2VTcsuMhDFAH55Xucdvzdz4Rqw4PKJtaUCOfiv+R
+	 zUf5Dv5K5Grxg==
+Date: Thu, 14 Mar 2024 12:16:11 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-edac@vger.kernel.org, Greg Rose <gvrose8192@gmail.com>,
+	Jeff Kirsher <tarbal@gmail.com>
+Subject: Re: [PATCH 2/4] PCI: Generalize TLP Header Log reading
+Message-ID: <20240314171611.GA958323@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <lfypw4vqq3rkohlh2iwhub3igjopdy26lfforfcjws2dfizk7d@32yk5dnemi4u>
- <CAHk-=wg3djFJMeN3L_zx3P-6eN978Y1JTssxy81RhAbxB==L8Q@mail.gmail.com>
- <bqlnihgtaxv4gq2k6nah33hq7f3vk73x2sd6mlbdvxln2nbfu6@ypoukdqdqbtb>
- <CAHk-=whbgtooUErM9bOP2iWimndpkPLaPy1YZmbmHACU07h3Mw@mail.gmail.com>
- <hbncybkxmlxqukxvfcxcnlc53nrna3hawykbovq3h3u5xpm7iy@6ay4wjnpuqs4> <4q5fetc7qwunhhvieuiubk3g3guc4mr4a5wfmn5u4ox6kyo4p7@olyanpabfvav>
-In-Reply-To: <4q5fetc7qwunhhvieuiubk3g3guc4mr4a5wfmn5u4ox6kyo4p7@olyanpabfvav>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 14 Mar 2024 10:15:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgaWNYqrH=DSMiKTtb0vO-9JZ8Vm7VQRT4=uprsaT0eMg@mail.gmail.com>
-Message-ID: <CAHk-=wgaWNYqrH=DSMiKTtb0vO-9JZ8Vm7VQRT4=uprsaT0eMg@mail.gmail.com>
-Subject: Re: [GIT PULL] bcachefs updates for 6.9
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-bcachefs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240206135717.8565-3-ilpo.jarvinen@linux.intel.com>
 
-On Wed, 13 Mar 2024 at 15:28, Kent Overstreet <kent.overstreet@linux.dev> wrote:
->
-> Sorry, you were talking about mean absolute deviation; that does work
-> here.
+[+cc Greg, Jeff -- ancient history, I know, sorry!]
 
-Yes, I meant mean, not median.
+On Tue, Feb 06, 2024 at 03:57:15PM +0200, Ilpo Järvinen wrote:
+> Both AER and DPC RP PIO provide TLP Header Log registers (PCIe r6.1
+> secs 7.8.4 & 7.9.14) to convey error diagnostics but the struct is
+> named after AER as the struct aer_header_log_regs. Also, not all places
+> that handle TLP Header Log use the struct and the struct members are
+> named individually.
+> 
+> Generalize the struct name and members, and use it consistently where
+> TLP Header Log is being handled so that a pcie_read_tlp_log() helper
+> can be easily added.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-But the confusion is my fault - I wrote MAD and then to "explain"
-that, I put "median" in my own email - so you read it right the first
-time, and it was just me being sloppy and confusing things.
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> index bd541527c8c7..5fdf37968b2d 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Copyright(c) 1999 - 2018 Intel Corporation. */
+>  
+> +#include <linux/aer.h>
+>  #include <linux/types.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -391,22 +392,6 @@ u16 ixgbe_read_pci_cfg_word(struct ixgbe_hw *hw, u32 reg)
+>  	return value;
+>  }
+>  
+> -#ifdef CONFIG_PCI_IOV
+> -static u32 ixgbe_read_pci_cfg_dword(struct ixgbe_hw *hw, u32 reg)
+> -{
+> -	struct ixgbe_adapter *adapter = hw->back;
+> -	u32 value;
+> -
+> -	if (ixgbe_removed(hw->hw_addr))
+> -		return IXGBE_FAILED_READ_CFG_DWORD;
+> -	pci_read_config_dword(adapter->pdev, reg, &value);
+> -	if (value == IXGBE_FAILED_READ_CFG_DWORD &&
+> -	    ixgbe_check_cfg_remove(hw, adapter->pdev))
+> -		return IXGBE_FAILED_READ_CFG_DWORD;
+> -	return value;
+> -}
+> -#endif /* CONFIG_PCI_IOV */
+> -
+>  void ixgbe_write_pci_cfg_word(struct ixgbe_hw *hw, u32 reg, u16 value)
+>  {
+>  	struct ixgbe_adapter *adapter = hw->back;
+> @@ -11332,8 +11317,8 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
+>  #ifdef CONFIG_PCI_IOV
+>  	struct ixgbe_hw *hw = &adapter->hw;
+>  	struct pci_dev *bdev, *vfdev;
+> -	u32 dw0, dw1, dw2, dw3;
+> -	int vf, pos;
+> +	struct pcie_tlp_log tlp_log;
+> +	int vf, pos, ret;
+>  	u16 req_id, pf_func;
+>  
+>  	if (adapter->hw.mac.type == ixgbe_mac_82598EB ||
+> @@ -11351,14 +11336,13 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
+>  	if (!pos)
+>  		goto skip_bad_vf_detection;
+>  
+> -	dw0 = ixgbe_read_pci_cfg_dword(hw, pos + PCI_ERR_HEADER_LOG);
+> -	dw1 = ixgbe_read_pci_cfg_dword(hw, pos + PCI_ERR_HEADER_LOG + 4);
+> -	dw2 = ixgbe_read_pci_cfg_dword(hw, pos + PCI_ERR_HEADER_LOG + 8);
+> -	dw3 = ixgbe_read_pci_cfg_dword(hw, pos + PCI_ERR_HEADER_LOG + 12);
+> -	if (ixgbe_removed(hw->hw_addr))
+> +	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG, &tlp_log);
+> +	if (ret < 0) {
+> +		ixgbe_check_cfg_remove(hw, pdev);
+>  		goto skip_bad_vf_detection;
+> +	}
+>  
+> -	req_id = dw1 >> 16;
+> +	req_id = tlp_log.dw[1] >> 16;
+>  	/* On the 82599 if bit 7 of the requestor ID is set then it's a VF */
+>  	if (!(req_id & 0x0080))
+>  		goto skip_bad_vf_detection;
+> @@ -11369,9 +11353,8 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
+>  
+>  		vf = FIELD_GET(0x7F, req_id);
+>  		e_dev_err("VF %d has caused a PCIe error\n", vf);
+> -		e_dev_err("TLP: dw0: %8.8x\tdw1: %8.8x\tdw2: "
+> -				"%8.8x\tdw3: %8.8x\n",
+> -		dw0, dw1, dw2, dw3);
+> +		e_dev_err("TLP: dw0: %8.8x\tdw1: %8.8x\tdw2: %8.8x\tdw3: %8.8x\n",
+> +			  tlp_log.dw[0], tlp_log.dw[1], tlp_log.dw[2], tlp_log.dw[3]);
+>  		switch (adapter->hw.mac.type) {
+>  		case ixgbe_mac_82599EB:
+>  			device_id = IXGBE_82599_VF_DEVICE_ID;
 
-They are both called MAD in their own contexts, and they are much too
-easy to confuse.
+The rest of this patch is headed for v6.10, but I dropped this ixgbe
+change for now.
 
-My bad,
+These TLP Log registers are generic, not device-specific, and if
+there's something lacking in the PCI core that leads to ixgbe reading
+and dumping them itself, I'd rather improve the PCI core so all
+drivers will benefit without having to add code like this.
 
-               Linus
+83c61fa97a7d ("ixgbe: Add protection from VF invalid target DMA") [1]
+added the ixgbe TLP Log dumping way back in v3.2 (2012).  It does do
+some device-specific VF checking and so on, but even back then, it
+looks like the PCI core would have dumped the log itself [2], so I
+don't know why we needed the extra dumping in ixgbe.
+
+So what I'd really like is to remove the TLP Log reading and printing
+from ixgbe completely, but keep the VF checking.
+
+Bjorn
+
+[1] https://git.kernel.org/linus/83c61fa97a7d
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aer/aerdrv_errprint.c?id=83c61fa97a7d#n181
