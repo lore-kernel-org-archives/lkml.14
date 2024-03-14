@@ -1,224 +1,300 @@
-Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E2823C464;
-	Thu, 14 Mar 2024 05:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.101.248.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92DB53D96E;
+	Thu, 14 Mar 2024 05:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395998; cv=none; b=euqaF1998KZfw3I2rH3V8iB36++kcbj9L1CZLeu330iNjRMZMPq8CCmX2J9IBNttdZIaHO36vPEA5jjn4pnUUYywdHVY7R3ztUviM9DiWknzPD6ZncJXDGZTeaQSihW9EiqM3zum2gyk65uVwSazczdQl+rRfbnShvSJp88zeec=
+	t=1710395998; cv=none; b=j6UXE2Zp1rsCDq/gGzoHVNr8uHNWjEQWSwnAxmzgYmEWztz/cndyjwgaO6M9eedJHFuN1LBXDe7W7COUn4MUcMR1yqyKD7at40lenQYp3kSpJ4yfkHd2UZAq/qhAZHZBg1Jqv5n3ZhijriJhsTqGRvNl0QIgzUohPOAjH2dqduI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710395998; c=relaxed/simple;
-	bh=1B4t1nZ+bMa1THF1ZkPv7BtvBPdoV1xxKH8iSMbROto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ncMvWKrjbNKXVRwF6rTYw2F+lb/qJpPGQIJeeXCx0lKoWJnIx1MNvu6DfKNwM6w6ux/UHumfrHIF+kQ6xj2pTMu7By1nmumuXj0ibCQG80FgT7Hz9iF/3brupayrp0bJuBBHiA4E9CLpTM3mu7QNUJGd/oT1AGtRfZYUj2Dw5Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=46.101.248.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.52])
-	by app1 (Coremail) with SMTP id HgEQrAAnXoIgkvJl6QLYAw--.37422S2;
-	Thu, 14 Mar 2024 13:58:56 +0800 (CST)
-Received: from [172.19.193.108] (unknown [10.12.190.56])
-	by gateway (Coremail) with SMTP id _____wCXkL8ckvJl0hP9AA--.49473S2;
-	Thu, 14 Mar 2024 13:58:53 +0800 (CST)
-Message-ID: <421183dd-73d4-43b1-bfb3-f7c7db7d82cb@hust.edu.cn>
-Date: Thu, 14 Mar 2024 13:58:51 +0800
+	bh=QLK/5CXW1EfkrfXw1uVJ/ZXCbbiy9q5FlbPbbmsu3aE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=olb/p2RBIIosd6ohflpHoYWeGvmoETMjRqmgu4andns48oyhzD4fb4yLHIMGNpvDu7NmDU2OQmpFkvoNI4khkSSgoxIZCmeBT4ZlIJ1qirxEjfMT20AQnsFEAU7bM32n63Liz5fXln/aLGxkat1cPBqFb7+qlKxmEzN+are0bRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FE5B1063;
+	Wed, 13 Mar 2024 23:00:32 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.53.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AB2203F73F;
+	Wed, 13 Mar 2024 22:59:51 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	suzuki.poulose@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH V7 08/11] coresight: tpiu: Move ACPI support from AMBA driver to platform driver
+Date: Thu, 14 Mar 2024 11:28:40 +0530
+Message-Id: <20240314055843.2625883-9-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs/zh_CN: Add dev-tools/ubsan Chinese translation
-To: Yanteng Si <siyanteng@loongson.cn>, Alex Shi <alexs@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Vegard Nossum <vegard.nossum@oracle.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20240302140058.1527765-1-dzm91@hust.edu.cn>
- <26730f76-871d-4a6d-8b16-ea3e52ef5357@loongson.cn>
-From: Dongliang Mu <dzm91@hust.edu.cn>
-In-Reply-To: <26730f76-871d-4a6d-8b16-ea3e52ef5357@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HgEQrAAnXoIgkvJl6QLYAw--.37422S2
-Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF1rCr1kGF15ArW7tw4UXFb_yoW7Kw15pr
-	n5KFWxGrW8JryrJr1UKF15JFyjyr18A3ZrJrn2qF1jqF1qkr1Yqr12qryqgr9rWrW8AFy7
-	JFnFgF42vr12k3DanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQYb7Iv0xC_tr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
-	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26F4j6r4UJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82
-	IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0Kg43UUUUU==
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-ping?
+Add support for the tpiu device in the platform driver, which can then be
+used on ACPI based platforms. This change would now allow runtime power
+management for ACPI based systems. The driver would try to enable the APB
+clock if available. But first this renames and then refactors tpiu_probe()
+and tpiu_remove(), making sure it can be used both for platform and AMBA
+drivers. This also moves pm_runtime_put() from tpiu_probe() to the callers.
+While here, this also sorts the included headers in alphabetic order.
 
-On 2024/3/6 17:15, Yanteng Si wrote:
->
-> 在 2024/3/2 22:00, Dongliang Mu 写道:
->> Translate dev-tools/ubsan.rst into Chinese, add it into
->> zh_CN/dev-tools/index.rst.
->>
->> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
->
-> Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
->
->
-> Thanks,
->
-> Yanteng
->
->> ---
->>   .../translations/zh_CN/dev-tools/index.rst    |  2 +-
->>   .../translations/zh_CN/dev-tools/ubsan.rst    | 91 +++++++++++++++++++
->>   2 files changed, 92 insertions(+), 1 deletion(-)
->>   create mode 100644 
->> Documentation/translations/zh_CN/dev-tools/ubsan.rst
->>
->> diff --git a/Documentation/translations/zh_CN/dev-tools/index.rst 
->> b/Documentation/translations/zh_CN/dev-tools/index.rst
->> index c2db3e566b1b..c4463f0750f0 100644
->> --- a/Documentation/translations/zh_CN/dev-tools/index.rst
->> +++ b/Documentation/translations/zh_CN/dev-tools/index.rst
->> @@ -22,13 +22,13 @@ 
->> Documentation/translations/zh_CN/dev-tools/testing-overview.rst
->>      sparse
->>      gcov
->>      kasan
->> +   ubsan
->>      gdb-kernel-debugging
->>
->>   Todolist:
->>
->>    - coccinelle
->>    - kcov
->> - - ubsan
->>    - kmemleak
->>    - kcsan
->>    - kfence
->> diff --git a/Documentation/translations/zh_CN/dev-tools/ubsan.rst 
->> b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
->> new file mode 100644
->> index 000000000000..2487696b3772
->> --- /dev/null
->> +++ b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
->> @@ -0,0 +1,91 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +.. include:: ../disclaimer-zh_CN.rst
->> +
->> +:Original: Documentation/dev-tools/ubsan.rst
->> +:Translator: Dongliang Mu <dzm91@hust.edu.cn>
->> +
->> +未定义行为消毒剂 - UBSAN
->> +====================================
->> +
->> +UBSAN是一种动态未定义行为检查工具。
->> +
->> +UBSAN使用编译时插桩捕捉未定义行为。编译器在可能导致未定义行为的操作前插入特定 
->>
->> +检测代码。如果检查失败，即检测到未定义行为，__ubsan_handle_* 
->> 函数将被调用打印
->> +错误信息。
->> +
->> +GCC自4.9.x [1_] （详见 ``-fsanitize=undefined`` 
->> 选项及其子选项）版本后引入这
->> +一特性。GCC 5.x 版本实现了更多检查器 [2_]。
->> +
->> +报告样例
->> +--------------
->> +
->> +::
->> +
->> + 
->> ================================================================================
->> +     UBSAN: Undefined behaviour in ../include/linux/bitops.h:110:33
->> +     shift exponent 32 is to large for 32-bit type 'unsigned int'
->> +     CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc1+ #26
->> +      0000000000000000 ffffffff82403cc8 ffffffff815e6cd6 
->> 0000000000000001
->> +      ffffffff82403cf8 ffffffff82403ce0 ffffffff8163a5ed 
->> 0000000000000020
->> +      ffffffff82403d78 ffffffff8163ac2b ffffffff815f0001 
->> 0000000000000002
->> +     Call Trace:
->> +      [<ffffffff815e6cd6>] dump_stack+0x45/0x5f
->> +      [<ffffffff8163a5ed>] ubsan_epilogue+0xd/0x40
->> +      [<ffffffff8163ac2b>] 
->> __ubsan_handle_shift_out_of_bounds+0xeb/0x130
->> +      [<ffffffff815f0001>] ? radix_tree_gang_lookup_slot+0x51/0x150
->> +      [<ffffffff8173c586>] _mix_pool_bytes+0x1e6/0x480
->> +      [<ffffffff83105653>] ? dmi_walk_early+0x48/0x5c
->> +      [<ffffffff8173c881>] add_device_randomness+0x61/0x130
->> +      [<ffffffff83105b35>] ? dmi_save_one_device+0xaa/0xaa
->> +      [<ffffffff83105653>] dmi_walk_early+0x48/0x5c
->> +      [<ffffffff831066ae>] dmi_scan_machine+0x278/0x4b4
->> +      [<ffffffff8111d58a>] ? vprintk_default+0x1a/0x20
->> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
->> +      [<ffffffff830b2240>] setup_arch+0x405/0xc2c
->> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
->> +      [<ffffffff830ae053>] start_kernel+0x83/0x49a
->> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
->> +      [<ffffffff830ad386>] x86_64_start_reservations+0x2a/0x2c
->> +      [<ffffffff830ad4f3>] x86_64_start_kernel+0x16b/0x17a
->> + 
->> ================================================================================
->> +
->> +用法
->> +-----
->> +
->> +使用如下内核配置启用UBSAN::
->> +
->> +    CONFIG_UBSAN=y
->> +
->> +使用如下内核配置检查整个内核::
->> +
->> +        CONFIG_UBSAN_SANITIZE_ALL=y
->> +
->> +为了在特定文件或目录启动代码插桩，需要在相应的内核Makefile中添加一行类似内容: 
->>
->> +
->> +- 单文件（如main.o）::
->> +
->> +    UBSAN_SANITIZE_main.o := y
->> +
->> +- 一个目录中的所有文件::
->> +
->> +    UBSAN_SANITIZE := y
->> +
->> +即使设置了``CONFIG_UBSAN_SANITIZE_ALL=y``，为了避免文件被插桩，可使用::
->> +
->> +  UBSAN_SANITIZE_main.o := n
->> +
->> +与::
->> +
->> +  UBSAN_SANITIZE := n
->> +
->> +未对齐的内存访问检测可通过开启独立选项 - CONFIG_UBSAN_ALIGNMENT 检测。
->> +该选项在支持未对齐访问的架构上(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS=y) 
->>
->> +默认为关闭。该选项仍可通过内核配置启用，但它将产生大量的UBSAN报告。
->> +
->> +参考文献
->> +----------
->> +
->> +.. _1: 
->> https://gcc.gnu.org/onlinedocs/gcc-4.9.0/gcc/Debugging-Options.html
->> +.. _2: https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html
->> +.. _3: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
->> -- 
->> 2.39.2
->>
->>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
+Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Changes in V7:
+
+- Dropped reduntant drvdata check in tpiu_platform_remove()
+- Sorted the headers in alphabetic order
+
+ drivers/acpi/arm64/amba.c                    |   1 -
+ drivers/hwtracing/coresight/coresight-tpiu.c | 117 ++++++++++++++++---
+ 2 files changed, 100 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
+index 587061b0fd2f..6d24a8f7914b 100644
+--- a/drivers/acpi/arm64/amba.c
++++ b/drivers/acpi/arm64/amba.c
+@@ -25,7 +25,6 @@ static const struct acpi_device_id amba_id_list[] = {
+ 	{"ARMHC501", 0}, /* ARM CoreSight ETR */
+ 	{"ARMHC502", 0}, /* ARM CoreSight STM */
+ 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
+-	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
+ 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
+ 	{"", 0},
+ };
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index 29024f880fda..6bf3039839c1 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -5,17 +5,19 @@
+  * Description: CoreSight Trace Port Interface Unit driver
+  */
+ 
++#include <linux/acpi.h>
++#include <linux/amba/bus.h>
+ #include <linux/atomic.h>
+-#include <linux/kernel.h>
+-#include <linux/init.h>
++#include <linux/clk.h>
++#include <linux/coresight.h>
+ #include <linux/device.h>
+-#include <linux/io.h>
+ #include <linux/err.h>
+-#include <linux/slab.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/coresight.h>
+-#include <linux/amba/bus.h>
+-#include <linux/clk.h>
++#include <linux/slab.h>
+ 
+ #include "coresight-priv.h"
+ 
+@@ -52,11 +54,13 @@ DEFINE_CORESIGHT_DEVLIST(tpiu_devs, "tpiu");
+ /*
+  * @base:	memory mapped base address for this component.
+  * @atclk:	optional clock for the core parts of the TPIU.
++ * @pclk:	APB clock if present, otherwise NULL
+  * @csdev:	component vitals needed by the framework.
+  */
+ struct tpiu_drvdata {
+ 	void __iomem		*base;
+ 	struct clk		*atclk;
++	struct clk		*pclk;
+ 	struct coresight_device	*csdev;
+ 	spinlock_t		spinlock;
+ };
+@@ -122,14 +126,12 @@ static const struct coresight_ops tpiu_cs_ops = {
+ 	.sink_ops	= &tpiu_sink_ops,
+ };
+ 
+-static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
++static int __tpiu_probe(struct device *dev, struct resource *res)
+ {
+ 	int ret;
+ 	void __iomem *base;
+-	struct device *dev = &adev->dev;
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct tpiu_drvdata *drvdata;
+-	struct resource *res = &adev->res;
+ 	struct coresight_desc desc = { 0 };
+ 
+ 	desc.name = coresight_alloc_device_name(&tpiu_devs, dev);
+@@ -142,12 +144,16 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	spin_lock_init(&drvdata->spinlock);
+ 
+-	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
++	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
+ 		if (ret)
+ 			return ret;
+ 	}
++
++	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
++	if (IS_ERR(drvdata->pclk))
++		return -ENODEV;
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	/* Validity for the resource is already checked by the AMBA core */
+@@ -173,21 +179,34 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.dev = dev;
+ 	drvdata->csdev = coresight_register(&desc);
+ 
+-	if (!IS_ERR(drvdata->csdev)) {
+-		pm_runtime_put(&adev->dev);
++	if (!IS_ERR(drvdata->csdev))
+ 		return 0;
+-	}
+ 
+ 	return PTR_ERR(drvdata->csdev);
+ }
+ 
+-static void tpiu_remove(struct amba_device *adev)
++static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
++{
++	int ret;
++
++	ret = __tpiu_probe(&adev->dev, &adev->res);
++	if (!ret)
++		pm_runtime_put(&adev->dev);
++	return ret;
++}
++
++static void __tpiu_remove(struct device *dev)
+ {
+-	struct tpiu_drvdata *drvdata = dev_get_drvdata(&adev->dev);
++	struct tpiu_drvdata *drvdata = dev_get_drvdata(dev);
+ 
+ 	coresight_unregister(drvdata->csdev);
+ }
+ 
++static void tpiu_remove(struct amba_device *adev)
++{
++	__tpiu_remove(&adev->dev);
++}
++
+ #ifdef CONFIG_PM
+ static int tpiu_runtime_suspend(struct device *dev)
+ {
+@@ -196,6 +215,8 @@ static int tpiu_runtime_suspend(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_disable_unprepare(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_disable_unprepare(drvdata->pclk);
+ 	return 0;
+ }
+ 
+@@ -206,6 +227,8 @@ static int tpiu_runtime_resume(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_prepare_enable(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_prepare_enable(drvdata->pclk);
+ 	return 0;
+ }
+ #endif
+@@ -245,7 +268,67 @@ static struct amba_driver tpiu_driver = {
+ 	.id_table	= tpiu_ids,
+ };
+ 
+-module_amba_driver(tpiu_driver);
++static int tpiu_platform_probe(struct platform_device *pdev)
++{
++	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	int ret;
++
++	pm_runtime_get_noresume(&pdev->dev);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
++	ret = __tpiu_probe(&pdev->dev, res);
++	pm_runtime_put(&pdev->dev);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int tpiu_platform_remove(struct platform_device *pdev)
++{
++	struct tpiu_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
++
++	if (WARN_ON(!drvdata))
++		return -ENODEV;
++
++	__tpiu_remove(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	if (!IS_ERR_OR_NULL(drvdata->pclk))
++		clk_put(drvdata->pclk);
++	return 0;
++}
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id tpiu_acpi_ids[] = {
++	{"ARMHC979", 0, 0, 0}, /* ARM CoreSight TPIU */
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, tpiu_acpi_ids);
++#endif
++
++static struct platform_driver tpiu_platform_driver = {
++	.probe	= tpiu_platform_probe,
++	.remove	= tpiu_platform_remove,
++	.driver = {
++		.name			= "coresight-tpiu-platform",
++		.acpi_match_table	= ACPI_PTR(tpiu_acpi_ids),
++		.suppress_bind_attrs	= true,
++		.pm			= &tpiu_dev_pm_ops,
++	},
++};
++
++static int __init tpiu_init(void)
++{
++	return coresight_init_driver("tpiu", &tpiu_driver, &tpiu_platform_driver);
++}
++
++static void __exit tpiu_exit(void)
++{
++	coresight_remove_driver(&tpiu_driver, &tpiu_platform_driver);
++}
++module_init(tpiu_init);
++module_exit(tpiu_exit);
+ 
+ MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
+ MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
+-- 
+2.25.1
 
