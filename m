@@ -1,56 +1,45 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FB75A4C0
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EF855C35;
+	Thu, 14 Mar 2024 13:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710421233; cv=none; b=HIrDf11uzSrpu0J8AKMV1XUyybQJ/Qmg8aPOdF5qJfT5blIJVblup0RMtaChLtcMRpAUQzMmypaeGNs7QeLTFeH70UezJxDcF1kWO+tAJ6T84ukv+VZJeonHyuoE6rICUf3fBnLfD1nohxh8act8MU3ItMX7W7vDvePt3Sd8y6E=
+	t=1710421325; cv=none; b=FBPC/6F2igJEbU5v42xD01qfVBGGSd0LW6KuKu1Vu4wREBWAZcyNf8OXEnl63V1zgkCon45uHaq1ow1OUn8pqKWCw5m61+hnz1Anft2Y55xY8I1IWwejHdxGaaHLGCtPo55OLot50ZYyPv9OQoWKY1Mpeg5uT3v6Y9xV4atFjps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710421233; c=relaxed/simple;
-	bh=8bUrUdU+6VJquHzgZu9WbDIaPZODPSId16QPDpUYmLo=;
+	s=arc-20240116; t=1710421325; c=relaxed/simple;
+	bh=qAQB9FK88epVTyF/LeZpqM5y5+oOyaphSDCBPPScblw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gUneLzQKuqLfRei5C4gTR5cj17iYzsYtApqTlp4lgTUEHCO/Zmf93LmXhSX/0DuSU/ZXt2tnHTz4YYpYCFx9WLA+JJtMmCdEhF5N3GdfW66JTCeKMORpIg7a4cUCgA+TIHT7PJzgHwN5IeESUNWUTklrbaShrm8bGHzYhrHRgbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=JHfqubGT; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fE5WO93139YKMV9SC9RcA1OdNbZH6272II5iJPXkN7jab6og4WjINCZxkZ9l8GRR+C+9JXdImW38p6vJkkIOaahKSb1Lr58qyi5LAtPlNSnzWWtEL6PYqodVZQitjrVuGWDk9PP1VF8uKabEzaKn10svztxUfJbp9d5AYuc2ge4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=T6V+5qj0; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="JHfqubGT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=trQ4EKn83QrD2+z7XaJSvsGGxWEhjeEliwwk733RxmM=; b=JHfqubGT3QGojn5WMy7E/xCknx
-	8DdNt7nPSctVPl2NMDs1EHFzJOPc0XZ/ddPIWDdNCbuwZxCvLOnMomTR99I7fWLAIn6ONlNKRjcOh
-	QdtzazEFUPFt7b5JCCcVAJBDGzI0L07uYOPKvE8eXmYGsiGrVT355IQpxdBaCepBsZPUC4ST1rb+k
-	kUCk5kJ49ungwqSX79qUpiRM3KCPyO3ip7aPEOxb6iO40V1zkvY5vaykdvmKxeE7Q7HdkXoHSoWZV
-	014bt8Ef7offCY73w2/F/OyP3zamekv1pFNItFIknQGlEu90N424rssBCzJW39kOo6O/sf+7VqUg5
-	BU3H6jQg==;
-Received: from [189.6.17.125] (helo=mail.igalia.com)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1rkkga-00ALk2-TP; Thu, 14 Mar 2024 13:59:53 +0100
-Date: Thu, 14 Mar 2024 09:59:39 -0300
-From: Melissa Wen <mwen@igalia.com>
-To: Arthur Grillo <arthurgrillo@riseup.net>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
-	Melissa Wen <melissa.srw@gmail.com>, =?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, 
-	Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi, 
-	Louis Chauvet <louis.chauvet@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com, 
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com, 
-	Pekka Paalanen <pekka.paalanen@collabora.com>
-Subject: Re: [PATCH 1/7] drm: Fix drm_fixp2int_round() making it add 0.5
-Message-ID: <nzce3m2okiqdd6iqj6ynymus64vjcpdep3jwqgs4uw3rvkvqkz@tz4i34w7b6es>
-References: <20240306-louis-vkms-conv-v1-0-5bfe7d129fdd@riseup.net>
- <20240306-louis-vkms-conv-v1-1-5bfe7d129fdd@riseup.net>
- <yyrvbqpmqplwtqfdsjkhzmx7wrk4h67kn5443bdou7c7uciouy@hac7zfxiff7t>
- <16f8867c-147a-4149-ba96-ae70f8eaf903@riseup.net>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T6V+5qj0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=EVli0OmFTuK34nwbOdblGGUn4WUi0rrQKbNKDtrDklk=; b=T6V+5qj0xaMOJrB2glYk53Eafv
+	n2/VR9Pnz79XXEteuAxtf0EDuQkLwDObzh8LzRLOh1FS4OF4dSJgvf7QgNMAnzAlaJnKDE2nvAbAE
+	CWrNAPdZzrStDUQ89uzZ8VNUnVwIJLv2lIv6bHeJGUXpQmvvKhu63CuORqIqeCb3L5UU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rkkiy-00AJtH-8f; Thu, 14 Mar 2024 14:02:20 +0100
+Date: Thu, 14 Mar 2024 14:02:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Alexandra Diupina <adiupina@astralinux.ru>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH] net: dsa: add return value check of genphy_read_status()
+Message-ID: <99631ba3-36f9-4eed-80d9-4a663ef46d80@lunn.ch>
+References: <20240314063008.11214-1-adiupina@astralinux.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,73 +48,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <16f8867c-147a-4149-ba96-ae70f8eaf903@riseup.net>
+In-Reply-To: <20240314063008.11214-1-adiupina@astralinux.ru>
 
-On 03/13, Arthur Grillo wrote:
-> 
-> 
-> On 12/03/24 15:27, Melissa Wen wrote:
-> > On 03/06, Arthur Grillo wrote:
-> >> As well noted by Pekka[1], the rounding of drm_fixp2int_round is wrong.
-> >> To round a number, you need to add 0.5 to the number and floor that,
-> >> drm_fixp2int_round() is adding 0.0000076. Make it add 0.5.
-> >>
-> >> [1]: https://lore.kernel.org/all/20240301135327.22efe0dd.pekka.paalanen@collabora.com/
-> >>
-> > Hi Arthur,
-> > 
-> > thanks for addressing this issue.
-> > 
-> > Please, add a fix tag to the commit that you are fixing, so we can
-> > easily backport. Might be this commit:
-> > https://cgit.freedesktop.org/drm/drm-misc/commit/drivers/gpu/drm/vkms?id=ab87f558dcfb2562c3497e89600dec798a446665
-> >> Suggested-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-> >> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> >> ---
-> >>  include/drm/drm_fixed.h | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-> >> index 0c9f917a4d4b..de3a79909ac9 100644
-> >> --- a/include/drm/drm_fixed.h
-> >> +++ b/include/drm/drm_fixed.h
-> >> @@ -90,7 +90,7 @@ static inline int drm_fixp2int(s64 a)
-> >>  
-> >>  static inline int drm_fixp2int_round(s64 a)
-> >>  {
-> >> -	return drm_fixp2int(a + (1 << (DRM_FIXED_POINT_HALF - 1)));
-> > Also, this is the only usage of DRM_FIXED_POINT_HALF. Can you also
-> > remove it as it won't be used anymore?
-> > 
-> >> +	return drm_fixp2int(a + DRM_FIXED_ONE / 2);
-> > Would this division be equivalent to just shifting 1ULL by 31 instead of
-> > 32 as done in DRM_FIXED_ONE?
-> 
-> Yes, but I think the division makes it easier to understand what is
-> going on.
+On Thu, Mar 14, 2024 at 09:30:08AM +0300, Alexandra Diupina wrote:
+> Need to check return value of genphy_read_status(),
+> because higher in the call hierarchy is the
+> dsa_register_switch() function,
+> which is used in various drivers.
 
-Right. I was thinking about slightly better performance, but I don't
-have any data. We can go with this since you consider more readable,
-anyway.
+I don't understand the commit message. Why is it important to
+dsa_register_switch()?
 
-Can you send another version addressing the other comments? Then I can
-cherry-pick and already apply the fix.
-
-Thanks,
-
-Melissa
-
-> 
-> Best Regards,
-> ~Arthur Grillo
-> 
-> > 
-> > Melissa
-> > 
-> >>  }
-> >>  
-> >>  static inline int drm_fixp2int_ceil(s64 a)
-> >>
-> >> -- 
-> >> 2.43.0
-> >>
+	Andrew
