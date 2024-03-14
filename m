@@ -1,147 +1,228 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC566E617
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 11:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AB719473
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 11:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710414909; cv=none; b=AxKs3CqgsRW1d+Y+wmzbn0Jtvfz5K9yRKz2ewkPN+FuD+h+pcXoXpeQr3fQ8SCHiVHkEilk7IHzsqRrYeUe9Yp9u8UsuMg/z0OekmvEGH+o5JkkwexrhvVvFf129rvqBQEfb54znMJf0RN0LWnoA3saOqPzJ0K+tlJZELoggAns=
+	t=1710415044; cv=none; b=f12iypZCPNGOLIFZh4BVZNKmGlixZ7zik6wAerYuEEonJNYoXywZ1Nk0mH+XSu305GiydsQBou0i1tuoLuK8rBQQTd3niHpEbfDhT8vi8R5W/ch+afW986hJgLmRR6wcO6QPcYWA35lgtMyixPNQAakjJS2fKfRwi9GmgtOYbIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710414909; c=relaxed/simple;
-	bh=MHPwaGe+JEy2PghaKynwl1tJuqHfhafULXPHJzyP8ys=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hPr/ilPq2Td7jBfgQSf75JxF+7wDmUb8+wg9TJFKgGjilXd5tbMXQSXlR0nTzPO8hIgdb4uPqVe+gGiMc9iQe+CkYVf1ELiOu3noQgFK8Npv2L38JjVgjUb000vvIiq7QIW5B0j39qYg+2HeuDx48Dse9DoEni7nXJ91NP4OrGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-609f359b7b1so10470837b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 04:15:07 -0700 (PDT)
+	s=arc-20240116; t=1710415044; c=relaxed/simple;
+	bh=6AB0v5jCGzQvB/gar0/+UXUmnAOeY8a1E1HcfqGV0c8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cdfvZZs9ZbsM/gqXasLqt3KO/hlbDHY4Bd60IWQ5/NtYRgCb0LQF9v1TG8kf0LoMC25dIkzbrB82UiaeszM52IGcC+eYUnp0U28He9JtAvvncSuzBR8/1T5G63kJrqXGMBa8ENFrcNCNId7XT6CTV5NKcXyQpHvv1IAZd4r/1N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c8ac4c3c22so56735439f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 04:17:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710414905; x=1711019705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AaxQeb/LOGJ+tXY7ROrISTEEvDtokZCLzq0Vp5ELGOY=;
-        b=JORK8pw7T1bTfMAgLI/0aEZ/BWR6FxCQkyHkV3ZeBSaaNwap8+aG9pihQlmALCjqic
-         BwZaAoiAU1Qg3dThG1bugxDSZcnOPrb35Z2m1JCOUeuG8YnzxOaHeQKqCW9PHUBjWrZR
-         Eknz7B/T/4keEsDvQqPgTAsmUkNBZFDVm3hGKpvzPZ5twI5bTkOa9K8E9vw4leNzSXDs
-         r52PzMFYtu35xn5ysrevjhzMaAuYw4a2E/0RLDRjhQ+u4thMyhHDU+1DhhuDRqeHoi/f
-         H64wlG/uDzN0z1r7rilW/iNZ/z2IPwqcFibaYqEJBygOTpy9NK5b8O2nTR2PBaIXZRkj
-         wKMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwG3vQlO2NCztEvf3iBda6HsIIadBbBCarWAkAgwENY0r/TENfgRHInN3mOKe2CAvkiizEQCehG5xKXLiBXdMo0LKFEPIW5rbHaqng
-X-Gm-Message-State: AOJu0Yxdb1FX4nPxZaLtjwkh7EOoYiktE10kZY3Stpr9sQJ2cWJSC5PM
-	eWLmpfMEA6cXmm9e+mxnRbusm4K+GX1PyWA9Ez4YdF+XXVCtAp7PhoG7rjmdRjY=
-X-Google-Smtp-Source: AGHT+IHlf7yjRfh3hwLDVCcES73+tXcnUssHVZ2jAsN57d38Fl9BJkzKxbkGf6fCmhmfHhkIwxqGWg==
-X-Received: by 2002:a81:6ccc:0:b0:60b:a592:724b with SMTP id h195-20020a816ccc000000b0060ba592724bmr1391981ywc.18.1710414905521;
-        Thu, 14 Mar 2024 04:15:05 -0700 (PDT)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id fj3-20020a05690c330300b00609f893ee94sm223467ywb.127.2024.03.14.04.15.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 04:15:04 -0700 (PDT)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-609f1f97864so9234757b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 04:15:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXk9Kd7hnMzhai6RYFrGmRKONv4q11Mgz3PqznF3oxBzQlhpoc9h+c1esNQc0XYzqxY/owdmeM4iU12iX8oBHc3uap4mi4j9DOu5UQ0
-X-Received: by 2002:a0d:e782:0:b0:609:fdf7:b443 with SMTP id
- q124-20020a0de782000000b00609fdf7b443mr1440372ywe.52.1710414904384; Thu, 14
- Mar 2024 04:15:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710415041; x=1711019841;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n3SqBHAySxd1B2DGXt3MWJOppfcwh7UiW1rbRo/WCxc=;
+        b=XPlS2qQG5qAcN1Nz5hmJ4KYw4TVPO4dD22JMsxxuOPSSewsMgYV6JH+eOM+/n5KK0B
+         /fkc9ma7wmbO3cQ5HOz527LtbzPib5jF44cM+J+9ayLendzr9CeG9rYN4Vlg42Tb+f71
+         o9EamCoJ9GYpDVCGShExtUZU0BIiuqfL8IApSQsN3V/McKDwqsAaa2/rc+c2YzR+Rskt
+         GHXDfbxMLjiE+7tDpBLj+XaQAg7i0d/EJUK9OPG4AjeFaVDxgaoN+OXBm0YsQffU0EUp
+         IKr2trY5L9nTRseWgMzJJVcBQ24d4rP7Flxum8SSTgnqpokorHz4em5PhgwMyqUirlX3
+         BjRA==
+X-Forwarded-Encrypted: i=1; AJvYcCU//L+0r2Bnn2zZwArOIN4+wjtND+tsKUOv+NnAwZMW+GbZdaPJhTDbPq2G+NivH2jv8pGlTGTbFKZlhrXYlFjiYJVIJ2G8Q8xS3Xv1
+X-Gm-Message-State: AOJu0Ywtl9+kOxlIjPmSkoPNiL3x9EODmBuzq6XIl42p2jBemVQP+azp
+	axR8BnTL+g6qxy1avjqMnhbc5P72aG8lpM20ii8QruiRrRihfyBKrPkCN0T+CwQtWu+vGmFGK2l
+	gWnBQd2nBGieuKSPKyA5XgWWhprwAh9BRIliraOkgsx/r3gRTab+5PsI=
+X-Google-Smtp-Source: AGHT+IFE3QIyveq7XYbXZuOyV98VccdnczMQ//USqqud0KpxKY/wr4lweFl2KHDNdvuZoPfJnBWzqwPYFgunnZoR5bqXHhR8dtSu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYvG9KE15PGNoLu+SBVyShe+u5HBLQ81+kK9Zop6u=ywmw@mail.gmail.com>
- <338c89bb-a70b-4f35-b71b-f974e90e3383@app.fastmail.com> <20240304-brawny-goshawk-of-sorcery-860cef@houat>
- <85b807289ff2400ea5887ced63655862@AcuMS.aculab.com> <CAMuHMdUuOnXVpocYU02Mx3_KrPow-=+WgLJqy_ku=AN52SvQiA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUuOnXVpocYU02Mx3_KrPow-=+WgLJqy_ku=AN52SvQiA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 14 Mar 2024 12:14:52 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXbmZyiy_Ca8eVQtwAhJ-_JsKEOpjrGehirWziPKbd=7g@mail.gmail.com>
-Message-ID: <CAMuHMdXbmZyiy_Ca8eVQtwAhJ-_JsKEOpjrGehirWziPKbd=7g@mail.gmail.com>
-Subject: Re: arm: ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko]
- undefined!
-To: David Laight <David.Laight@aculab.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	"linux-sunxi@lists.linux.dev" <linux-sunxi@lists.linux.dev>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>, Dave Airlie <airlied@redhat.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Ard Biesheuvel <ardb@kernel.org>
+X-Received: by 2002:a05:6638:378e:b0:476:d061:a34a with SMTP id
+ w14-20020a056638378e00b00476d061a34amr67300jal.6.1710415041756; Thu, 14 Mar
+ 2024 04:17:21 -0700 (PDT)
+Date: Thu, 14 Mar 2024 04:17:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fb929e06139d0879@google.com>
+Subject: [syzbot] [i2c?] KASAN: stack-out-of-bounds Write in i801_isr (3)
+From: syzbot <syzbot+554a57aa65b47aa16a47@syzkaller.appspotmail.com>
+To: andi.shyti@kernel.org, jdelvare@suse.com, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2024 at 10:27=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Sat, Mar 9, 2024 at 3:34=E2=80=AFPM David Laight <David.Laight@aculab.=
-com> wrote:
-> > From: Maxime Ripard
-> > > Sent: 04 March 2024 11:46
-> > >
-> > > On Mon, Mar 04, 2024 at 12:11:36PM +0100, Arnd Bergmann wrote:
-> > > > On Mon, Mar 4, 2024, at 09:07, Naresh Kamboju wrote:
-> > > > > The arm defconfig builds failed on today's Linux next tag next-20=
-240304.
-> > > > >
-> > > > > Build log:
-> > > > > ---------
-> > > > > ERROR: modpost: "__aeabi_uldivmod"
-> > > > > [drivers/gpu/drm/sun4i/sun4i-drm-hdmi.ko] undefined!
-> > > > >
-> > > >
-> > > > Apparently caused by the 64-bit division in 358e76fd613a
-> > > > ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid"):
-> > > >
-> > > >
-> > > > +static enum drm_mode_status
-> > > > +sun4i_hdmi_connector_clock_valid(const struct drm_connector *conne=
-ctor,
-> > > > +                                const struct drm_display_mode *mod=
-e,
-> > > > +                                unsigned long long clock)
-> > > >  {
-> > > > -       struct sun4i_hdmi *hdmi =3D drm_encoder_to_sun4i_hdmi(encod=
-er);
-> > > > -       unsigned long rate =3D mode->clock * 1000;
-> > > > -       unsigned long diff =3D rate / 200; /* +-0.5% allowed by HDM=
-I spec */
-> > > > +       const struct sun4i_hdmi *hdmi =3D drm_connector_to_sun4i_hd=
-mi(connector);
-> > > > +       unsigned long diff =3D clock / 200; /* +-0.5% allowed by HD=
-MI spec */
-> > > >         long rounded_rate;
-> > > >
-> > > > This used to be a 32-bit division. If the rate is never more than
-> > > > 4.2GHz, clock could be turned back into 'unsigned long' to avoid
-> > > > the expensive div_u64().
-> > >
-> > > I sent a fix for it this morning:
-> > > https://lore.kernel.org/r/20240304091225.366325-1-mripard@kernel.org
-> > >
-> > > The framework will pass an unsigned long long because HDMI character
-> > > rates can go up to 5.9GHz.
-> >
-> > You could do:
-> >         /* The max clock is 5.9GHz, split the divide */
-> >         u32 diff =3D (u32)(clock / 8) / (200/8);
->
-> +1, as the issue is still present in current next, as per the recent
-> nagging from the build bots.
+Hello,
 
-Oops, s/next/upstream/.
-Well, less 32-bit build testing for the next few days :-(
+syzbot found the following issue on:
 
-Gr{oetje,eeting}s,
+HEAD commit:    005f6f34bd47 Merge tag 'i2c-for-6.8-rc8' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b0d556180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9711c6169c49ef10
+dashboard link: https://syzkaller.appspot.com/bug?extid=554a57aa65b47aa16a47
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-                        Geert
+Unfortunately, I don't have any reproducer for this issue yet.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-005f6f34.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/8a1e40858f35/vmlinux-005f6f34.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9629bd1252c4/bzImage-005f6f34.xz
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+554a57aa65b47aa16a47@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: stack-out-of-bounds in i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:550 [inline]
+BUG: KASAN: stack-out-of-bounds in i801_isr drivers/i2c/busses/i2c-i801.c:617 [inline]
+BUG: KASAN: stack-out-of-bounds in i801_isr+0xcfe/0xd10 drivers/i2c/busses/i2c-i801.c:598
+Write of size 1 at addr ffffc900070dfd98 by task swapper/3/0
+
+CPU: 3 PID: 0 Comm: swapper/3 Not tainted 6.8.0-rc7-syzkaller-00238-g005f6f34bd47 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:550 [inline]
+ i801_isr drivers/i2c/busses/i2c-i801.c:617 [inline]
+ i801_isr+0xcfe/0xd10 drivers/i2c/busses/i2c-i801.c:598
+ __handle_irq_event_percpu+0x22a/0x750 kernel/irq/handle.c:158
+ handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
+ handle_irq_event+0xab/0x1e0 kernel/irq/handle.c:210
+ handle_fasteoi_irq+0x233/0xc20 kernel/irq/chip.c:720
+ generic_handle_irq_desc include/linux/irqdesc.h:161 [inline]
+ handle_irq arch/x86/kernel/irq.c:238 [inline]
+ __common_interrupt+0xde/0x250 arch/x86/kernel/irq.c:257
+ common_interrupt+0x52/0xd0 arch/x86/kernel/irq.c:247
+ asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:640
+RIP: 0010:__do_softirq+0x1e0/0x8e7 kernel/softirq.c:539
+Code: 89 44 24 18 44 88 74 24 3b 48 c7 c7 c0 59 0b 8b e8 65 31 fc ff 65 66 c7 05 73 ac 3b 75 00 00 e8 d6 47 ca f6 fb bb ff ff ff ff <49> c7 c6 c0 a0 40 8d 41 0f bc dc 83 c3 01 0f 85 a7 00 00 00 e9 70
+RSP: 0018:ffffc900008e8f30 EFLAGS: 00000206
+RAX: 00000000007499e4 RBX: 00000000ffffffff RCX: 1ffffffff1f3a679
+RDX: 0000000000000000 RSI: ffffffff8b0cb3c0 RDI: ffffffff8b6e9980
+RBP: 0000000100013d6f R08: 0000000000000001 R09: 0000000000000001
+R10: ffffffff8f9d6657 R11: 0000000000000000 R12: 0000000000000280
+R13: 000000000000000a R14: 0000000000000001 R15: 0000000000000000
+ invoke_softirq kernel/softirq.c:427 [inline]
+ __irq_exit_rcu kernel/softirq.c:632 [inline]
+ irq_exit_rcu+0xbb/0x120 kernel/softirq.c:644
+ sysvec_apic_timer_interrupt+0x95/0xb0 arch/x86/kernel/apic/apic.c:1076
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:649
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:37 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:72 [inline]
+RIP: 0010:default_idle+0xf/0x20 arch/x86/kernel/process.c:743
+Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d b3 5d 42 00 fb f4 <fa> c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
+RSP: 0018:ffffc90000187e08 EFLAGS: 00000246
+RAX: 00000000007499dd RBX: 0000000000000003 RCX: ffffffff8ac43eab
+RDX: 0000000000000000 RSI: ffffffff8b0cb3c0 RDI: ffffffff8b6e9980
+RBP: ffffed1002f51900 R08: 0000000000000001 R09: ffffed100d6a6ded
+R10: ffff88806b536f6b R11: 0000000000000000 R12: 0000000000000003
+R13: ffff888017a8c800 R14: ffffffff8f9d6650 R15: 0000000000000000
+ default_idle_call+0x69/0xa0 kernel/sched/idle.c:97
+ cpuidle_idle_call kernel/sched/idle.c:170 [inline]
+ do_idle+0x336/0x400 kernel/sched/idle.c:312
+ cpu_startup_entry+0x50/0x60 kernel/sched/idle.c:410
+ start_secondary+0x220/0x2b0 arch/x86/kernel/smpboot.c:336
+ secondary_startup_64_no_verify+0x170/0x17b
+ </TASK>
+
+The buggy address belongs to the virtual mapping at
+ [ffffc900070d8000, ffffc900070e1000) created by:
+ kernel_clone+0xfd/0x930 kernel/fork.c:2902
+
+The buggy address belongs to the physical page:
+page:ffffea0000c2b400 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x30ad0
+memcg:ffff88810914d102
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff ffff88810914d102
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x102dc2(GFP_HIGHUSER|__GFP_NOWARN|__GFP_ZERO), pid 11717, tgid 11717 (syz-executor.2), ts 1114592091976, free_ts 1114514350228
+ set_page_owner include/linux/page_owner.h:31 [inline]
+ post_alloc_hook+0x2d4/0x350 mm/page_alloc.c:1533
+ prep_new_page mm/page_alloc.c:1540 [inline]
+ get_page_from_freelist+0xa28/0x3780 mm/page_alloc.c:3311
+ __alloc_pages+0x22c/0x2430 mm/page_alloc.c:4569
+ alloc_pages_mpol+0x258/0x600 mm/mempolicy.c:2133
+ vm_area_alloc_pages mm/vmalloc.c:3063 [inline]
+ __vmalloc_area_node mm/vmalloc.c:3139 [inline]
+ __vmalloc_node_range+0xa6e/0x1540 mm/vmalloc.c:3320
+ alloc_thread_stack_node kernel/fork.c:307 [inline]
+ dup_task_struct kernel/fork.c:1112 [inline]
+ copy_process+0x150b/0x97b0 kernel/fork.c:2327
+ kernel_clone+0xfd/0x930 kernel/fork.c:2902
+ __do_sys_clone3+0x1f5/0x270 kernel/fork.c:3203
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd5/0x270 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+page last free pid 5219 tgid 5219 stack trace:
+ reset_page_owner include/linux/page_owner.h:24 [inline]
+ free_pages_prepare mm/page_alloc.c:1140 [inline]
+ free_unref_page_prepare+0x527/0xb10 mm/page_alloc.c:2346
+ free_unref_page+0x33/0x3c0 mm/page_alloc.c:2486
+ __folio_put_small mm/swap.c:106 [inline]
+ __folio_put+0xc3/0x110 mm/swap.c:129
+ folio_put include/linux/mm.h:1494 [inline]
+ put_page include/linux/mm.h:1563 [inline]
+ free_page_and_swap_cache+0x25a/0x2d0 mm/swap_state.c:304
+ __tlb_remove_table arch/x86/include/asm/tlb.h:34 [inline]
+ __tlb_remove_table_free mm/mmu_gather.c:154 [inline]
+ tlb_remove_table_rcu+0x89/0xe0 mm/mmu_gather.c:209
+ rcu_do_batch kernel/rcu/tree.c:2190 [inline]
+ rcu_core+0x819/0x1680 kernel/rcu/tree.c:2465
+ __do_softirq+0x21c/0x8e7 kernel/softirq.c:553
+
+Memory state around the buggy address:
+ ffffc900070dfc80: 00 00 00 00 f1 f1 f1 f1 f1 f1 00 00 00 00 00 00
+ ffffc900070dfd00: 00 00 00 f3 f3 f3 f3 f3 00 00 00 00 00 00 00 00
+>ffffc900070dfd80: 00 00 00 00 00 f1 f1 f1 f1 04 f3 f3 f3 00 00 00
+                            ^
+ ffffc900070dfe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
+ ffffc900070dfe80: f1 f1 00 f2 f2 f2 00 00 f3 f3 00 00 00 00 00 00
+==================================================================
+----------------
+Code disassembly (best guess):
+   0:	89 44 24 18          	mov    %eax,0x18(%rsp)
+   4:	44 88 74 24 3b       	mov    %r14b,0x3b(%rsp)
+   9:	48 c7 c7 c0 59 0b 8b 	mov    $0xffffffff8b0b59c0,%rdi
+  10:	e8 65 31 fc ff       	call   0xfffc317a
+  15:	65 66 c7 05 73 ac 3b 	movw   $0x0,%gs:0x753bac73(%rip)        # 0x753bac92
+  1c:	75 00 00
+  1f:	e8 d6 47 ca f6       	call   0xf6ca47fa
+  24:	fb                   	sti
+  25:	bb ff ff ff ff       	mov    $0xffffffff,%ebx
+* 2a:	49 c7 c6 c0 a0 40 8d 	mov    $0xffffffff8d40a0c0,%r14 <-- trapping instruction
+  31:	41 0f bc dc          	bsf    %r12d,%ebx
+  35:	83 c3 01             	add    $0x1,%ebx
+  38:	0f 85 a7 00 00 00    	jne    0xe5
+  3e:	e9                   	.byte 0xe9
+  3f:	70                   	.byte 0x70
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
