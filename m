@@ -1,143 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D66FE12;
-	Thu, 14 Mar 2024 12:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9576F09C;
+	Thu, 14 Mar 2024 12:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710418833; cv=none; b=ayeHBoypu3Zzf5RnqgYJAduM0CGevu8PZyOu9vm64No0aWeFQVj3HmXGGlRxzIO9xJWnpNs4CgIVJdkn3n8vARdiZA6PLee6+W9qA9Brs32CcPTYs+SwTLpvHyQPhC3RrIf33gYIpTCOnLJya8F6k428v0lv7/YYRqcSoWOfAhc=
+	t=1710418967; cv=none; b=KuKemCbBhioOjGN+qtVgId4EosnMcRtrlfc9nJdBXfJj4tQzD4iZ92r3kLcqQDwixYjA0zMEhI1lQ8ocHOjh8feU6pRIT8rzMnZ3crLsAbYnKDTrnTo1H9IuVNjEjwrSSOvJYpDulfRQ5hYGlLh0wVnraNCj45+XBGCwUClKdMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710418833; c=relaxed/simple;
-	bh=i5EDkw8J0JNnxVjPZWaIZE44QVEgnrAmclDKeQo2TNw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DoSeelK976aVsOOWFKHf2TDb42vp1GkDWAidh88NcOYpZwfrICH6zrK19jnbQT4AugvvN34xvj+NOXESgBKivqbB/aI320DOA9CwLjY+Y0ERNYsfoBvz6zu6d0odrC+uaF6Ei0gNyiJiJ4hUIKCZp0QHkD4mpRsPXJIxnx4jPaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuRj+wpn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710418967; c=relaxed/simple;
+	bh=uF11DoSFt961i+nkF6vLB5AG08D98tmA/0JbyoEeduA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=f54zdYlTTE16SC3O79KtSJQyZmxt773CSw1te9QSO0pdVkj6v/izMEY9lB77uvyg1xYd3KGBlfAAo0MAqq1Xf7Dne+RvduAHvvZdbOvG2TpVbWNogh0Tc7TpDu28X0GZvW2t8QiUy1MrVyQ9ewe1IgJPkmOuYS1HRxQcyefkojE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=UvBUPVua; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=UvBUPVua; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuRj+wpn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 778E2C43390;
-	Thu, 14 Mar 2024 12:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710418833;
-	bh=i5EDkw8J0JNnxVjPZWaIZE44QVEgnrAmclDKeQo2TNw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KuRj+wpnQOBxiXHfXnboOxKnAG1vLUyobhbk+NnGSQNhMu0+G7/itj/I/UnN8TmX1
-	 r0iA+4BVnDiPczK+WPo6Vp8czWcNNPnhTslBuOZk3L94TQIwQ+NmNV+1pQ/4LKnbug
-	 z/jiwm0YY6AUs0r0bvcNwxTyqgNQP4KsWgbBA4ZRCNrpzdFubE8baVDjHbQQsGlbUj
-	 I6M+FkMHylV/XG4UpQfpppChm/uIkW2Q1uSXdZ0qve1oi6uNV3uMMZtx9gH6QvNCLW
-	 wYog/IWnvC79ahPPy7mm7VCRRbWAL7pTJTkOK98/eENx3nzjlJxOSaxJqGJMT9n5gA
-	 1P4uJ2mhqrTeQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B2C54E69;
-	Thu, 14 Mar 2024 12:20:33 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Thu, 14 Mar 2024 15:20:05 +0300
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt7986: set PHY address of
- MT7531 switch to 0x1f
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UvBUPVua";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UvBUPVua"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1710418963;
+	bh=uF11DoSFt961i+nkF6vLB5AG08D98tmA/0JbyoEeduA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=UvBUPVuafM8nwhbmf+1Hg6nBV1/IyeoZtHbq1z8RHiZHxhwNuxkEsyH4HDtoxhgrg
+	 Y9nheLFZYYlBQlrR83z/myUdmiIr3pC+Iqvt9YLvosJx1bkdYh/ehBZGXqQJNwRrBD
+	 GlY+t+sdgsvvgIVhMOt0QDcmxgiDicffdr3iRrK8=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 96A7312861A8;
+	Thu, 14 Mar 2024 08:22:43 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id GuyOpsDknp7T; Thu, 14 Mar 2024 08:22:43 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1710418963;
+	bh=uF11DoSFt961i+nkF6vLB5AG08D98tmA/0JbyoEeduA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=UvBUPVuafM8nwhbmf+1Hg6nBV1/IyeoZtHbq1z8RHiZHxhwNuxkEsyH4HDtoxhgrg
+	 Y9nheLFZYYlBQlrR83z/myUdmiIr3pC+Iqvt9YLvosJx1bkdYh/ehBZGXqQJNwRrBD
+	 GlY+t+sdgsvvgIVhMOt0QDcmxgiDicffdr3iRrK8=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9F5BE12860BE;
+	Thu, 14 Mar 2024 08:22:41 -0400 (EDT)
+Message-ID: <7133628a2f45ad63e90c481387ed5b44906df54f.camel@HansenPartnership.com>
+Subject: Re: [REGRESSION] Re: [PATCH] crypto: pkcs7: remove sha1 support
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: James Prestwood <prestwoj@gmail.com>, Eric Biggers
+ <ebiggers@kernel.org>,  Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Karel Balej
+ <balejk@matfyz.cz>,  dimitri.ledkov@canonical.com,
+ alexandre.torgue@foss.st.com, davem@davemloft.net,  dhowells@redhat.com,
+ herbert@gondor.apana.org.au, keyrings@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, mcgrof@kernel.org, 
+ mcoquelin.stm32@gmail.com, linux-wireless@vger.kernel.org, 
+ netdev@vger.kernel.org, iwd@lists.linux.dev
+Date: Thu, 14 Mar 2024 08:22:38 -0400
+In-Reply-To: <a4d24b2c-7dbf-4354-9514-f8a253aac14b@gmail.com>
+References: <CZSHRUIJ4RKL.34T4EASV5DNJM@matfyz.cz>
+	 <005f998ec59e27633b1b99fdf929e40ccfd401c1.camel@sipsolutions.net>
+	 <f2dcbe55-0f0e-4173-8e21-f899c6fc802a@gmail.com>
+	 <20240313194423.GA1111@sol.localdomain>
+	 <b838e729-dc30-4e18-b928-c34c16b08606@gmail.com>
+	 <20240313202223.GB1111@sol.localdomain>
+	 <db86cba4-0e61-441d-8e66-405a13b61a3c@gmail.com>
+	 <20240313221043.GC1111@sol.localdomain>
+	 <f0492c92-1015-48e3-bfce-598c7a4843d1@quicinc.com>
+	 <20240313230611.GD1111@sol.localdomain>
+	 <a4d24b2c-7dbf-4354-9514-f8a253aac14b@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240314-for-mediatek-mt7531-phy-address-v1-2-52f58db01acd@arinc9.com>
-References:
- <20240314-for-mediatek-mt7531-phy-address-v1-0-52f58db01acd@arinc9.com>
-In-Reply-To:
- <20240314-for-mediatek-mt7531-phy-address-v1-0-52f58db01acd@arinc9.com>
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710418818; l=2408;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=3Ww8r+vuHO472C8O6lVAWVIAZqqVc9BzJEESUiXjrfw=;
- b=ch+WqWFMCK7xwGGCM+rf1LHcsAnov6PeLDo0fzddIBRaE4gDy3EI57pnL9LBvIVKQyFlpQ2na
- +CHc4n8p9UXCpiTCroG3EL68Fh8UrCNoLERPyRKsgM0hTALp8lep1O2
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Transfer-Encoding: 7bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Thu, 2024-03-14 at 04:52 -0700, James Prestwood wrote:
+> I'm also not entirely sure why this stuff continues to be removed
+> from the kernel. First MD4, then it got reverted, then this (now
+> reverted, thanks). Both cases there was not clear justification of
+> why it was  being removed.
 
-The MT7531 switch listens on PHY address 0x1f on an MDIO bus. I've got two
-findings that support this. There's no bootstrapping option to change the
-PHY address of the switch. The Linux driver hardcodes 0x1f as the PHY
-address of the switch. So the reg property on the device tree is currently
-ignored by the Linux driver.
+I think this is some misunderstanding of the NIST and FIPS requirements
+with regards to hashes, ciphers and bits of security.  The bottom line
+is that neither NIST nor FIPS requires the removal of the sha1
+algorithm at all.  Both of them still support it for HMAC (for now). 
+In addition, the FIPS requirement is only that you not *issue* sha1
+hashed signatures.  FIPS still allows you to verify legacy signatures
+with sha1 as the signing hash (for backwards compatibility reasons). 
+Enterprises with no legacy and no HMAC requirements *may* remove the
+hash, but it's not mandated.
 
-Therefore, describe the correct PHY address on boards that have this
-switch. This is already the case on all MT7986 boards here, so use
-hexadecimal numbering and align the switch node name with the reg value.
+So *removing* sha1 from the certificate code was the wrong thing to do.
+We should have configurably prevented using sha1 as the algorithm for
+new signatures but kept it for signature verification.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts | 4 ++--
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts             | 4 ++--
- arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts             | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Can we please get this sorted out before 2025, because next up is the
+FIPS requirement to move to at least 128 bits of security which will
+see RSA2048 deprecated in a similar way: We should refuse to issue
+RSA2048 signatures, but will still be allowed to verify them for legacy
+reasons.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-index e04b1c0c0ebb..2f92f8cfd8a3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-@@ -200,9 +200,9 @@ mdio: mdio-bus {
- };
- 
- &mdio {
--	switch: switch@31 {
-+	switch: switch@1f {
- 		compatible = "mediatek,mt7531";
--		reg = <31>;
-+		reg = <0x1f>;
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 		interrupts-extended = <&pio 66 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-index 5d8e3d3f6c20..47f75ece1872 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-@@ -84,9 +84,9 @@ mdio: mdio-bus {
- };
- 
- &mdio {
--	switch: switch@0 {
-+	switch: switch@1f {
- 		compatible = "mediatek,mt7531";
--		reg = <31>;
-+		reg = <0x1f>;
- 		reset-gpios = <&pio 5 0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-index 58f77d932429..5148a69f4729 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
-@@ -61,9 +61,9 @@ mdio: mdio-bus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		switch@0 {
-+		switch@1f {
- 			compatible = "mediatek,mt7531";
--			reg = <31>;
-+			reg = <0x1f>;
- 			reset-gpios = <&pio 5 0>;
- 
- 			ports {
+James
 
--- 
-2.40.1
+
 
