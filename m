@@ -1,107 +1,76 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+Received: from mx.msync.work (mx.msync.work [62.182.159.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8137B7483;
-	Thu, 14 Mar 2024 07:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD78FC09
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.182.159.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400213; cv=none; b=Gdo0xQDWrN3pZHFBpDXUs30Z9mUftuo5wMoq4TBiglx7jWHi7T4fpQ/bdP/fkvOy0O1kZfouHw7aDyUsAdBE2cNOTLDkIOxwEA0x6AGDtuGA818EORNlH2enGpNffrcOAs7hyHT2KO5d+3Vr640U2VJQRebSgUcb0B3GCZrtqpo=
+	t=1710400259; cv=none; b=l08IV9piAZHSLPrRt8Gh/6DZ+eMoE9yZ2191fYZRAjlCIgSYl7zUky1z8vw9wkM4jnVlpXNlLNdrcNWNKWedI99jVqgo42pxsq/6ZJcJaJXzAW4y9YLaeAxiKvlyyGggO47SGtEYWLl7uoSJYn+Mbt5eyrUnjGw8ibJw6K45TMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400213; c=relaxed/simple;
-	bh=jY6yOpE8g9BQVfVV2ZkfIkx2zon2uXer6mzsjaixt0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ObOhG8Dva6ug31qHDjzMSDO/W09F1tC+msK/3SO9kSLF3CmV6U/AX/jlQ6i8GIuSpaxJkxav56jIWqsBswozu9sRh14R6iXJZjD0I928iaOPdl6S9G7ZBG3Sl3HbAZv+VUS4HTdBD/WZH0SA2meaR+YDmWo32FeVr7s4Mz8z0GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=SPGjn6pM; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=ZSt6A1RC; arc=none smtp.client-ip=91.121.71.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1710400259; c=relaxed/simple;
+	bh=lBKWNCjz5XeMeeVLKV0cVIhl8GuROrhj8AxVnzf8uiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vd8ab28qLWGr7wvfiInxGUy5JVw77dOQ+KMwK6GhZL5OEo/DRjmDJ7yn4SDIQiB999A5LGNrOgAlNkQQEehf/5ppmowVNt5JJrYgE6ogpCZdRRbkksttlTlBiqyh3XApGcV5HBqaT0IMUGb+4VRHQwc79IGvFM0FEFsHAQL26xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=TocRm+yk; arc=none smtp.client-ip=62.182.159.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="SPGjn6pM";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="ZSt6A1RC"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id 208BFC01E; Thu, 14 Mar 2024 08:03:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1710399829; bh=3Vv06S8OE0qnROsAgEOpxSNvRHaMC9janhFTWckPh+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SPGjn6pMlC0hxjnvWiFi4yuaD+Me9YRaiEjz9yKlZpGf5xIY3UFHv9HuIxHvn2lRV
-	 O2EA/W3iOn0PCeRJM1QDD84hyagGsbkMQnwKZdzr2KCYPIj7ckxn+02hxXk9cjSJuU
-	 edujCM9iKpybgSYt0vtWd/LN3j+98Wyalxr7FINaGM/eIwZchvTbiBnzFoCEkKB+MA
-	 gpbHyodFgjgK/jXcX+lPVj6xwmeJqO87MXrNLXlYrX41dRAiRWbQgwZ+yuUjnVYlq0
-	 pRjwTZ8fcgMuF+7UzkV7RJI93miUCA/my7PTjYJ9M50L8Il3060HFybfJGQMFTmqSm
-	 6mOHSuZ1obGeQ==
-X-Spam-Level: 
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 60BE3C009;
-	Thu, 14 Mar 2024 08:03:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1710399828; bh=3Vv06S8OE0qnROsAgEOpxSNvRHaMC9janhFTWckPh+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZSt6A1RCFK9P6wi6S9jOhVJeqevRv7Q17lI9WJe8YB+JRF5p8Xgt13VR0Xc9lyIjo
-	 gTmHSwNLtYDoBNDzXg6Npv2A08heBSgw8XaZsnqOjBJ/CikiBHdKFRBuN+IuY28RLD
-	 gLb7co1SKnonFEL0mI9DUNQ/7CwcMC+BKJksVhRPvaiFLAljHF6VaaihN2qd/ZDwIZ
-	 ot9ffnxkrtzPl6IaxPAP+EJ1o8sDX3DzADndMapZQrZ4BMN4tocYJnr5oPdtZWiEcS
-	 EwvE6WWWCWe8Wz8rmA6uUIUKOUPSzAmkRZx/qaCfeni/m/aVx8gNNH86abLvgjTgtg
-	 F7YY4NYonuXYg==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id a2e2f42c;
-	Thu, 14 Mar 2024 07:03:40 +0000 (UTC)
-Date: Thu, 14 Mar 2024 16:03:25 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de
-Subject: Re: [PATCH 5.10 00/73] 5.10.213-rc1 review
-Message-ID: <ZfKhPaFngJTrTJyt@codewreck.org>
-References: <20240313164640.616049-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="TocRm+yk"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6BF1111E7BE;
+	Thu, 14 Mar 2024 07:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1710399888; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=hLJvt3Qp8v0w1uJwmrYsCccfbrCeUtcFvurCzwm/ryk=;
+	b=TocRm+ykLpsCPYqYE3T8hXjKqsA0qwqUm+Ix5gLl6uNOAbZB72Po7n33jRx7zTiORf7ShR
+	u3zi4USJSHrPz/Vsf+6hYo+g8TntR1ygN1Sj6KHURB9ecA5X+m73MQcz7RCi+SHIoS28Rr
+	+alHsA339XTBGZL8LJ+d2RpMdgibR7WN7pojCMP/UZjOZdrdo87hHVtN/r7iRWQRyXoEHp
+	s6K6YueDssjm+SktCobZ5m9J/gX1XyXpC6OVvv7JGWNpjA8GpgdKdlnJ6ihpaXjYTlBEfV
+	ffPjWWPMdbND5UbsRSL4Fu7mseRwps4ftLw+3e3Z+5yrPMAGSQKjR+k/DRzHag==
+From: Viacheslav Bocharov <adeep@lexina.in>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: [PATCH v3 3/4] soc: amlogic: meson-gx-socinfo: add new definition for Amlogic A113X package
+Date: Thu, 14 Mar 2024 09:59:53 +0300
+Message-ID: <20240314070433.4151931-4-adeep@lexina.in>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240314070433.4151931-1-adeep@lexina.in>
+References: <20240314070433.4151931-1-adeep@lexina.in>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Sasha Levin wrote on Wed, Mar 13, 2024 at 12:45:27PM -0400:
-> This is the start of the stable review cycle for the 5.10.213 release.
-> There are 73 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Add new definition for Amlogix A113X soc found in JetHub D1/D1+ devices.
 
-Thanks Sasha for submitting a stable rc review!
+Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
+---
+ drivers/soc/amlogic/meson-gx-socinfo-internal.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-If it's not too much trouble, would it be possible to have a different
-header in the 00 patch from the other patches for my mailbox?
-The mails Greg sends have the X-KernelTest-* headers (patch, tree,
-branch etc) only in the cover letter, while all the patches themselves
-only have 'X-stable: review' and 'X-Patchwork-Hint: ignore'
-
-I don't really care much what actual tags are on which as long as
-there's a way to differentiate that cover letter from the rest so I can
-redirect it to a mailbox I actually read to notice there's a new rc to
-test, without having all the patches unless I explicitly look for them.
-
-If it's difficult I'll add a regex on the subject for ' 00/' or
-something, I'd prefer matching only headers for robustness but just let
-me know.
-
-
-Didn't run into any problem with the patches themselves:
-
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.10.y&id2=v5.10.212
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-
-Tested 0a70dd1e1aa9 ("Linux 5.10.213-rc1") on:
-- arm i.MX6ULL (Armadillo 640)
-- arm64 i.MX8MP (Armadillo G4)
-
-No obvious regression in dmesg or basic tests:
-Tested-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
-
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo-internal.h b/drivers/soc/amlogic/meson-gx-socinfo-internal.h
+index 3ebb80972fc7..2028101bb9b2 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo-internal.h
++++ b/drivers/soc/amlogic/meson-gx-socinfo-internal.h
+@@ -78,6 +78,7 @@ static const struct meson_gx_package_id {
+ 	{ "962X", 0x24, 0x10, 0xf0 },
+ 	{ "962E", 0x24, 0x20, 0xf0 },
+ 	{ "A113X", 0x25, 0x37, 0xff },
++	{ "A113X", 0x25, 0x43, 0xff },
+ 	{ "A113D", 0x25, 0x22, 0xff },
+ 	{ "S905D2", 0x28, 0x10, 0xf0 },
+ 	{ "S905Y2", 0x28, 0x30, 0xf0 },
 -- 
-Dominique Martinet | Asmadeus
+2.43.2
+
