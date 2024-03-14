@@ -1,369 +1,216 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03516FE26
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB33A70CBE
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710425353; cv=none; b=WdMfODmOW3QB0GRudUbBAyXpk5z9IALa6sBvdhMTWYiGUI1ExxbSG9zSDAJR8810lt9/IR6xMsvfZInylZFlrs+AszhnRUFVxDwVbOAzOzywBROSa8+SOHlujpW5gozPC3ha5DPdnrXZknY7sWv4W2RxR6jyaPY1vRnhfX+TNco=
+	t=1710425362; cv=none; b=regtN9vHblFtBIQif7Lv3Nv0lzLAlCB+aWp5J2ZATmHUKkje83or4eYmdhG2CvsWXeFyzwptGfMojEzOC7myhPQloW4APOZztXqF1iiAtUTkVyN1omDwWIEUyfRz3eaG4wN7ae2jV2DIHzI32FzuwKlT3BdT3D7I3UOVirB2+FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710425353; c=relaxed/simple;
-	bh=uNdOS1xjkrgs2d2cxg5yFm1oDCCEwa3Muto4S4ZbWAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nRliTRBDLwIrYrsGln/6c+gVXyEqgqDhn7+HSAVHo5K8RP7v6ygQwWSCN4+7QiSBr++4zsEzWWrOU2ryn8rTzmIIquFSzyKWrKi/rVVArEimHcC6PWyDqpI5K7XQgnKZTDXS4/rAih3wjvZ/NSBzsppdoT4GkYiH8hC1azg3acU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=IUq7/lb3; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1710425362; c=relaxed/simple;
+	bh=y8brmKX45ZzZJPOYxXwPNDT83PMuCnG1y0vX9Gdz2Vo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fZd1WnWbr29us8AM4Xlv2lBvFQvxqCee3X7bS2aL1Sc5x4YFHoW20VjcDUNYdcAuq9RuiCnNnuNfj8QaNVAKlN2+lXu+lUpiUrPTwhygSzgTdmKC1X1sXM3auf3KFx3B1LAW9Qdw2lB56q/xbsh1g2tELZLobj1WdjbUFN6ol5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DqEtNZJk; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IUq7/lb3"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e972c8b67so263264f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:09:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DqEtNZJk"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5687ebddd8eso18161a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1710425349; x=1711030149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MTds7Ku0Y0zvROnkAd1fx4mLoDwEPxMJou4VP4zGo0A=;
-        b=IUq7/lb3Sgt9t3nvjjsSVI3BqlYlEn0LXEk7qBVZbRMcdn4A3DA1myImh6erDZNQKR
-         BP+RWvm7XvGcz9na6bBQcJP58LNQEGbMyas5PD17P2AP5rJUxNXyb4vhJIoHNjEeMzUY
-         OIsyQMqVFaak6BU1DZoe6y+782+okOkP45hTI=
+        d=google.com; s=20230601; t=1710425359; x=1711030159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S++Vf8oj18wvwMBuvc+mlbBQAzlNbzY5FSl7qh9lRe0=;
+        b=DqEtNZJkp1/VllCbaJClU7QnKAuRCzVzodEVB5UW5DyJQAvLDmwYHT1lajwe++Y248
+         lObbMYVac8ZpUJhPxR1TJsYn3yR3U9uHj4Rm7cq6sZpaUI60enCkL2ppkHZ914Lxm3nE
+         TvFPxyChGU4EGQS56UGu5WxWfvI736u2oRs3SArZ99F709sTJLoyyf53D/CuURR6M77Z
+         kV0t1LY4fLAVd0d86oiBQVzk9XvdDW68XDblt59nFCknK6mp/fnjhO6L92RB5G+JbBuf
+         cyN1RA7Z6rjH4uGqzPo90XWVWVQ0ws0vHUU9krxz9Jf35mLh69ASmZlmpqM2UFzL5E+i
+         SFhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710425349; x=1711030149;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTds7Ku0Y0zvROnkAd1fx4mLoDwEPxMJou4VP4zGo0A=;
-        b=jILA2CTaznlSLxKYSVQvOBI1tL5c1g+6QVrhbHwqbeKqhaVBKIKD6CUlBngDzqT2Vq
-         Y3ByZmy5KWldpaKNiHcihPgPhi6e2AknT88UdTF6SegeS/9zvRJ1GIYyXzoAkHXusplx
-         yTR7mBmBX29Z6ExGs16aEy8MPHqtrD2418lH4bH+P8a/rktgnVfGfxpASRqSz6aMF9hG
-         ui2SFOPjmI0yGau3tuIId0g7ufGQw79fV+vh40tF5wv8J42IWjdHjVhf/1FZAieGOsB9
-         TJviFArdBNcpGMrG139lczCKwF/6Pf7jVWIjjVgOfyttSxhLVq5tRrUOri+zLOGUk5fV
-         /hgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUITbvdYwVmrCXOi6fxtpnzoYmSUp9o3lQ28ckuyqRYvinU8vWlGEC2RfaGKUtmb/3BcY3dpwK1Me5mM7rJCnyvrxswKQHi/j+w61kY
-X-Gm-Message-State: AOJu0YwwSxyJ62NLzUhyKHm6ovi+q7LpTBTz6bDD1V+le1T23Fo6ocUw
-	aaxht3zbMuoM3JwRZmLoOcKuir4qqC+K2zj9PU0x3IX/Nga2ogFWgLxHclJVt3M=
-X-Google-Smtp-Source: AGHT+IEkDOQeLZzZYiLsR9q8/J5l47gcQmwzXWbQB4zXmpD6uvYlhNv+7u2b8F5SkGubDSvpWP1QDw==
-X-Received: by 2002:a05:600c:1e0a:b0:413:2ab0:873e with SMTP id ay10-20020a05600c1e0a00b004132ab0873emr26408wmb.3.1710425349040;
-        Thu, 14 Mar 2024 07:09:09 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05600016cf00b0033dc931eb06sm944331wrf.0.2024.03.14.07.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 07:09:08 -0700 (PDT)
-Date: Thu, 14 Mar 2024 15:09:06 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
-	DRI Development <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Daniel Vetter <daniel.vetter@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Lukas Wunner <lukas@wunner.de>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC] drm/panic: Add drm panic locking
-Message-ID: <ZfMFAse426sG8OEA@phenom.ffwll.local>
-Mail-Followup-To: Jocelyn Falempe <jfalempe@redhat.com>,
-	DRI Development <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Daniel Vetter <daniel.vetter@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Lukas Wunner <lukas@wunner.de>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>
-References: <20240301100516.2516297-1-daniel.vetter@ffwll.ch>
- <20240301103903.2538083-1-daniel.vetter@ffwll.ch>
- <78087e9b-533a-4d74-9ffe-8e4eb36e448a@redhat.com>
+        d=1e100.net; s=20230601; t=1710425359; x=1711030159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S++Vf8oj18wvwMBuvc+mlbBQAzlNbzY5FSl7qh9lRe0=;
+        b=g1OhB0egSFlMKj1IqcZPAY7XkX6CJfh9NnAHC6TWCW8x+6VOjIW+nUQx+sxCTHMMgK
+         d39hkqaHq0xjc6NXlBLTCag4M0x0iUD//sRUDB6V/PGYp00dr9o7tKrVaO1Y18z/Pca8
+         6xXQrDHWd8t8jCjGp6CLyeZpfyx2wGLHp3lTNCOf6nlnIbA+VTyfU7Lc55n6FKdu0C+c
+         RrLf/nrv0vPE43qoy3eBLwMaLm7hXPXBcVBpQR14zcRGpCSQJJxEAWiYz6BL7YWtQBWk
+         MrQHBAdOBeurHbpWcBtTaTlrUos93U9CBBlmOTK8N8AwG3s8KR5kIwCQrfhVtaRSHRSQ
+         3xfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUht4QGZjAdaj/7KCdi7yf2ZqqA4ryOqJ4tggQ+Zd8tk+r8vLWVStNey85Cuz9n1jPl49JrOfeFAkR590uy3bBwooiw+iFgO+Vsspsg
+X-Gm-Message-State: AOJu0YydKl6iI0weJEgfZp6F6L+mLSFswOKgrBIYjY+gqp4IZK2fX0Z1
+	d6F04ycX3aPOLbkXjUsjZh+Dzv83pJVdqqSsacvkrDSoiNvxNLmoWQLzXxRwEuicGFxthTdAFSN
+	nCD2xHE4lhR2NKPKvHTLdmCfNqlREpl1M1S63
+X-Google-Smtp-Source: AGHT+IH+se+0PsSWJE7nQhdmEzMtgt2vtyaI5+PFVgBg7GHI4NBbE+z+XhFAHu2Vr+EbOonNdUAtgVNJFjtrH1+MB10=
+X-Received: by 2002:a05:6402:7d2:b0:568:9aca:8ae6 with SMTP id
+ u18-20020a05640207d200b005689aca8ae6mr158286edy.4.1710425358794; Thu, 14 Mar
+ 2024 07:09:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78087e9b-533a-4d74-9ffe-8e4eb36e448a@redhat.com>
-X-Operating-System: Linux phenom 6.6.11-amd64 
+References: <00000000000058907006139f66b4@google.com>
+In-Reply-To: <00000000000058907006139f66b4@google.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 14 Mar 2024 15:09:05 +0100
+Message-ID: <CANn89i+Z7MfbkBLOv=p7KZ7=K1rKHO4P1OL5LYDCtBiyqsa9oQ@mail.gmail.com>
+Subject: Re: [syzbot] [net?] KCSAN: data-race in dev_queue_xmit_nit / packet_setsockopt
+To: syzbot <syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
+	willemdebruijn.kernel@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 01, 2024 at 02:03:12PM +0100, Jocelyn Falempe wrote:
-> Thanks for the patch.
-> 
-> I think it misses to initialize the lock, so we need to add a
-> raw_spin_lock_init() in the drm device initialization.
-> 
-> Also I'm wondering if it make sense to put that under the CONFIG_DRM_PANIC
-> flag, so that if you don't enable it, panic_lock() and panic_unlock() would
-> be no-op.
-> But that may not work if the driver uses this lock to protect some register
-> access.
+On Thu, Mar 14, 2024 at 3:06=E2=80=AFPM syzbot
+<syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://g=
+i..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11e6a90118000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D943916f31352d=
+d09
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dc669c1136495a2e=
+7c31f
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/6e7a2dd336dc/dis=
+k-480e035f.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/8cb00a02987d/vmlinu=
+x-480e035f.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/f325a1992de8/b=
+zImage-480e035f.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+c669c1136495a2e7c31f@syzkaller.appspotmail.com
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KCSAN: data-race in dev_queue_xmit_nit / packet_setsockopt
+>
+> write to 0xffff888107804542 of 1 bytes by task 22618 on cpu 0:
+>  packet_setsockopt+0xd83/0xfd0 net/packet/af_packet.c:4003
+>  do_sock_setsockopt net/socket.c:2311 [inline]
+>  __sys_setsockopt+0x1d8/0x250 net/socket.c:2334
+>  __do_sys_setsockopt net/socket.c:2343 [inline]
+>  __se_sys_setsockopt net/socket.c:2340 [inline]
+>  __x64_sys_setsockopt+0x66/0x80 net/socket.c:2340
+>  do_syscall_64+0xd3/0x1d0
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+>
+> read to 0xffff888107804542 of 1 bytes by task 27 on cpu 1:
+>  dev_queue_xmit_nit+0x82/0x620 net/core/dev.c:2248
+>  xmit_one net/core/dev.c:3527 [inline]
+>  dev_hard_start_xmit+0xcc/0x3f0 net/core/dev.c:3547
+>  __dev_queue_xmit+0xf24/0x1dd0 net/core/dev.c:4335
+>  dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+>  batadv_send_skb_packet+0x264/0x300 net/batman-adv/send.c:108
+>  batadv_send_broadcast_skb+0x24/0x30 net/batman-adv/send.c:127
+>  batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:392 [inline]
+>  batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:420 [inline]
+>  batadv_iv_send_outstanding_bat_ogm_packet+0x3f0/0x4b0 net/batman-adv/bat=
+_iv_ogm.c:1700
+>  process_one_work kernel/workqueue.c:3254 [inline]
+>  process_scheduled_works+0x465/0x990 kernel/workqueue.c:3335
+>  worker_thread+0x526/0x730 kernel/workqueue.c:3416
+>  kthread+0x1d1/0x210 kernel/kthread.c:388
+>  ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+>
+> value changed: 0x00 -> 0x01
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 27 Comm: kworker/u8:1 Tainted: G        W          6.8.0-syzk=
+aller-08073-g480e035fc4c7 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 02/29/2024
+> Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
 
-If we get drivers to use this for some of their own locking we have to
-keep it enabled unconditionally. Also I think locking that's only
-conditional on Kconfig is just a bit too suprising to be a good idea
-irrespective of this specific case.
--Sima
+I will submit this fix soon:
 
-> 
-> Best regards,
-> 
-> -- 
-> 
-> Jocelyn
-> 
-> On 01/03/2024 11:39, Daniel Vetter wrote:
-> > Rough sketch for the locking of drm panic printing code. The upshot of
-> > this approach is that we can pretty much entirely rely on the atomic
-> > commit flow, with the pair of raw_spin_lock/unlock providing any
-> > barriers we need, without having to create really big critical
-> > sections in code.
-> > 
-> > This also avoids the need that drivers must explicitly update the
-> > panic handler state, which they might forget to do, or not do
-> > consistently, and then we blow up in the worst possible times.
-> > 
-> > It is somewhat racy against a concurrent atomic update, and we might
-> > write into a buffer which the hardware will never display. But there's
-> > fundamentally no way to avoid that - if we do the panic state update
-> > explicitly after writing to the hardware, we might instead write to an
-> > old buffer that the user will barely ever see.
-> > 
-> > Note that an rcu protected deference of plane->state would give us the
-> > the same guarantees, but it has the downside that we then need to
-> > protect the plane state freeing functions with call_rcu too. Which
-> > would very widely impact a lot of code and therefore doesn't seem
-> > worth the complexity compared to a raw spinlock with very tiny
-> > critical sections. Plus rcu cannot be used to protect access to
-> > peek/poke registers anyway, so we'd still need it for those cases.
-> > 
-> > Peek/poke registers for vram access (or a gart pte reserved just for
-> > panic code) are also the reason I've gone with a per-device and not
-> > per-plane spinlock, since usually these things are global for the
-> > entire display. Going with per-plane locks would mean drivers for such
-> > hardware would need additional locks, which we don't want, since it
-> > deviates from the per-console takeoverlocks design.
-> > 
-> > Longer term it might be useful if the panic notifiers grow a bit more
-> > structure than just the absolute bare
-> > EXPORT_SYMBOL(panic_notifier_list) - somewhat aside, why is that not
-> > EXPORT_SYMBOL_GPL ... If panic notifiers would be more like console
-> > drivers with proper register/unregister interfaces we could perhaps
-> > reuse the very fancy console lock with all it's check and takeover
-> > semantics that John Ogness is developing to fix the console_lock mess.
-> > But for the initial cut of a drm panic printing support I don't think
-> > we need that, because the critical sections are extremely small and
-> > only happen once per display refresh. So generally just 60 tiny locked
-> > sections per second, which is nothing compared to a serial console
-> > running a 115kbaud doing really slow mmio writes for each byte. So for
-> > now the raw spintrylock in drm panic notifier callback should be good
-> > enough.
-> > 
-> > Another benefit of making panic notifiers more like full blown
-> > consoles (that are used in panics only) would be that we get the two
-> > stage design, where first all the safe outputs are used. And then the
-> > dangerous takeover tricks are deployed (where for display drivers we
-> > also might try to intercept any in-flight display buffer flips, which
-> > if we race and misprogram fifos and watermarks can hang the memory
-> > controller on some hw).
-> > 
-> > For context the actual implementation on the drm side is by Jocelyn
-> > and this patch is meant to be combined with the overall approach in
-> > v7 (v8 is a bit less flexible, which I think is the wrong direction):
-> > 
-> > https://lore.kernel.org/dri-devel/20240104160301.185915-1-jfalempe@redhat.com/
-> > 
-> > Note that the locking is very much not correct there, hence this
-> > separate rfc.
-> > 
-> > v2:
-> > - fix authorship, this was all my typing
-> > - some typo oopsies
-> > - link to the drm panic work by Jocelyn for context
-> > 
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Jocelyn Falempe <jfalempe@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: John Ogness <john.ogness@linutronix.de>
-> > Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > Cc: David Airlie <airlied@gmail.com>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > ---
-> >   drivers/gpu/drm/drm_atomic_helper.c |  3 +
-> >   include/drm/drm_mode_config.h       | 10 +++
-> >   include/drm/drm_panic.h             | 99 +++++++++++++++++++++++++++++
-> >   3 files changed, 112 insertions(+)
-> >   create mode 100644 include/drm/drm_panic.h
-> > 
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > index 40c2bd3e62e8..5a908c186037 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -38,6 +38,7 @@
-> >   #include <drm/drm_drv.h>
-> >   #include <drm/drm_framebuffer.h>
-> >   #include <drm/drm_gem_atomic_helper.h>
-> > +#include <drm/drm_panic.h>
-> >   #include <drm/drm_print.h>
-> >   #include <drm/drm_self_refresh_helper.h>
-> >   #include <drm/drm_vblank.h>
-> > @@ -3086,6 +3087,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
-> >   		}
-> >   	}
-> > +	drm_panic_lock(state->dev);
-> >   	for_each_oldnew_plane_in_state(state, plane, old_plane_state, new_plane_state, i) {
-> >   		WARN_ON(plane->state != old_plane_state);
-> > @@ -3095,6 +3097,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
-> >   		state->planes[i].state = old_plane_state;
-> >   		plane->state = new_plane_state;
-> >   	}
-> > +	drm_panic_unlock(state->dev);
-> >   	for_each_oldnew_private_obj_in_state(state, obj, old_obj_state, new_obj_state, i) {
-> >   		WARN_ON(obj->state != old_obj_state);
-> > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-> > index 973119a9176b..e79f1a557a22 100644
-> > --- a/include/drm/drm_mode_config.h
-> > +++ b/include/drm/drm_mode_config.h
-> > @@ -505,6 +505,16 @@ struct drm_mode_config {
-> >   	 */
-> >   	struct list_head plane_list;
-> > +	/**
-> > +	 * @panic_lock:
-> > +	 *
-> > +	 * Raw spinlock used to protect critical sections of code that access
-> > +	 * the display hardware or modeset software state, which the panic
-> > +	 * printing code must be protected against. See drm_panic_trylock(),
-> > +	 * drm_panic_lock() and drm_panic_unlock().
-> > +	 */
-> > +	struct raw_spinlock panic_lock;
-> > +
-> >   	/**
-> >   	 * @num_crtc:
-> >   	 *
-> > diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-> > new file mode 100644
-> > index 000000000000..f2135d03f1eb
-> > --- /dev/null
-> > +++ b/include/drm/drm_panic.h
-> > @@ -0,0 +1,99 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 or MIT */
-> > +#ifndef __DRM_PANIC_H__
-> > +#define __DRM_PANIC_H__
-> > +
-> > +#include <drm/drm_device.h>
-> > +/*
-> > + * Copyright (c) 2024 Intel
-> > + */
-> > +
-> > +/**
-> > + * drm_panic_trylock - try to enter the panic printing critical section
-> > + * @dev: struct drm_device
-> > + *
-> > + * This function must be called by any panic printing code. The panic printing
-> > + * attempt must be aborted if the trylock fails.
-> > + *
-> > + * Panic printing code can make the following assumptions while holding the
-> > + * panic lock:
-> > + *
-> > + * - Anything protected by drm_panic_lock() and drm_panic_unlock() pairs is safe
-> > + *   to access.
-> > + *
-> > + * - Furthermore the panic printing code only registers in drm_dev_unregister()
-> > + *   and gets removed in drm_dev_unregister(). This allows the panic code to
-> > + *   safely access any state which is invariant in between these two function
-> > + *   calls, like the list of planes drm_mode_config.plane_list or most of the
-> > + *   struct drm_plane structure.
-> > + *
-> > + * Specifically thanks to the protection around plane updates in
-> > + * drm_atomic_helper_swap_state() the following additional guarantees hold:
-> > + *
-> > + * - It is safe to deference the drm_plane.state pointer.
-> > + *
-> > + * - Anything in struct drm_plane_state or the driver's subclass thereof which
-> > + *   stays invariant after the atomic check code has finished is safe to access.
-> > + *   Specifically this includes the reference counted pointers to framebuffer
-> > + *   and buffer objects.
-> > + *
-> > + * - Anything set up by drm_plane_helper_funcs.fb_prepare and cleaned up
-> > + *   drm_plane_helper_funcs.fb_cleanup is safe to access, as long as it stays
-> > + *   invariant between these two calls. This also means that for drivers using
-> > + *   dynamic buffer management the framebuffer is pinned, and therefer all
-> > + *   relevant datastructures can be accessed without taking any further locks
-> > + *   (which would be impossible in panic context anyway).
-> > + *
-> > + * - Importantly, software and hardware state set up by
-> > + *   drm_plane_helper_funcs.begin_fb_access and
-> > + *   drm_plane_helper_funcs.end_fb_access is not safe to access.
-> > + *
-> > + * Drivers must not make any assumptions about the actual state of the hardware,
-> > + * unless they explicitly protected these hardware access with drm_panic_lock()
-> > + * and drm_panic_unlock().
-> > + *
-> > + * Returns:
-> > + *
-> > + * 0 when failing to acquire the raw spinlock, nonzero on success.
-> > + */
-> > +static inline int drm_panic_trylock(struct drm_device *dev)
-> > +{
-> > +	return raw_spin_trylock(&dev->mode_config.panic_lock);
-> > +}
-> > +
-> > +/**
-> > + * drm_panic_lock - protect panic printing relevant state
-> > + * @dev: struct drm_device
-> > + *
-> > + * This function must be called to protect software and hardware state that the
-> > + * panic printing code must be able to rely on. The protected sections must be
-> > + * as small as possible. Examples include:
-> > + *
-> > + * - Access to peek/poke or other similar registers, if that is the way the
-> > + *   driver prints the pixels into the scanout buffer at panic time.
-> > + *
-> > + * - Updates to pointers like drm_plane.state, allowing the panic handler to
-> > + *   safely deference these. This is done in drm_atomic_helper_swap_state().
-> > + *
-> > + * - An state that isn't invariant and that the driver must be able to access
-> > + *   during panic printing.
-> > + *
-> > + * Call drm_panic_unlock() to unlock the locked spinlock.
-> > + */
-> > +static inline void drm_panic_lock(struct drm_device *dev)
-> > +{
-> > +	return raw_spin_lock(&dev->mode_config.panic_lock);
-> > +}
-> > +
-> > +/**
-> > + * drm_panic_unlock - end of the panic printing critical section
-> > + * @dev: struct drm_device
-> > + *
-> > + * Unlocks the raw spinlock acquired by either drm_panic_lock() or
-> > + * drm_panic_trylock().
-> > + */
-> > +static inline void drm_panic_unlock(struct drm_device *dev)
-> > +{
-> > +	raw_spin_unlock(&dev->mode_config.panic_lock);
-> > +}
-> > +
-> > +#endif /* __DRM_PANIC_H__ */
-> 
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 0766a245816bdf70f6609dc7b6d694ae81e7a9e5..722787c3275527f1652ec98623f=
+61500ee753b45
+100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2245,7 +2245,7 @@ void dev_queue_xmit_nit(struct sk_buff *skb,
+struct net_device *dev)
+        rcu_read_lock();
+ again:
+        list_for_each_entry_rcu(ptype, ptype_list, list) {
+-               if (ptype->ignore_outgoing)
++               if (READ_ONCE(ptype->ignore_outgoing))
+                        continue;
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+                /* Never send packets back to the socket
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 61270826b9ac73e66f9011c3230d4668f0bf7c77..7cfc7d301508fcead214fbdb4e9=
+62b0553a17916
+100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4000,7 +4000,7 @@ packet_setsockopt(struct socket *sock, int
+level, int optname, sockptr_t optval,
+                if (val < 0 || val > 1)
+                        return -EINVAL;
+
+-               po->prot_hook.ignore_outgoing =3D !!val;
++               WRITE_ONCE(po->prot_hook.ignore_outgoing, !!val);
+                return 0;
+        }
+        case PACKET_TX_HAS_OFF:
+@@ -4134,7 +4134,7 @@ static int packet_getsockopt(struct socket
+*sock, int level, int optname,
+                       0);
+                break;
+        case PACKET_IGNORE_OUTGOING:
+-               val =3D po->prot_hook.ignore_outgoing;
++               val =3D READ_ONCE(po->prot_hook.ignore_outgoing);
+                break;
+        case PACKET_ROLLOVER_STATS:
+                if (!po->rollover)
