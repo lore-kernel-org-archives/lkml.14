@@ -1,143 +1,117 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0EC6BFB5;
-	Thu, 14 Mar 2024 10:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBE46BFB5
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710410589; cv=none; b=E5Qh/iku8byf698VmDbw2h/yZ4PfL+UgB1Fm+tC+kWZtaW+2p+K5LwgU5v7ocKtxLHawYpe9SDjuLLrsTlT4gV/JEfFbVyjZmG/QFdGCOkC9fgjdXI0zQI6D0h/YEUun89Ihh6knf39JpJXukWn10HifWl+c8CvYmmLzILehfVg=
+	t=1710410664; cv=none; b=IvsEWydC6Rlce3a5a1Cs+gPEoe36tfUs4yZg8HWJgS229sfTTP30y/Dyu2nkqn62VpNE8gtA4KNN2E/nqz927UnuIU+I5yWc6GJ4z7sfUVzg40ucWwtEKX56gHmuJ3JOqn/Yp7Jb5N5GgKUpjlWGd40D2m/TKrvo1Nb4oY66vQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710410589; c=relaxed/simple;
-	bh=7Te3YspK5rB2494WTdPhhCk43LasN8upRyD7Xd2ldfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SC+CeKfjQgJb2SSV7/Y35aIqqPC0mBqJ2uJyNoeGsxuD0Si0/kFGnF4N39oPVb8VE4Ax4plxZ6logTL+Qaw+sGujEk57fkG/RigPqQrLH59jlwF67xvhbcI6jHbJtni5beamzxtUas659aODV2dMySzMar1z/YFFQd6MmXpSqYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2vW0+MY3; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710410664; c=relaxed/simple;
+	bh=AFhsiaSN1eedmSccQpHaGcchUo0RMHyh4duqmQyuRlA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RTluTWifGl2IwYSQOYfdoqPQDWzycep6JTodww38RS9rU0196ww074hLP7qXbqbLYv8CWI18lA6/Ocrz7rpyRhmKD8ua7sOgrjo8cIu1ocNlNPr/vG8UWl9wUtMG0RYIgDzclM1L6e2FNwcobGq2KZYHsY0UUQEKUEHeJ/259TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=QKv1H+JN; arc=none smtp.client-ip=207.54.90.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2vW0+MY3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710410580;
-	bh=7Te3YspK5rB2494WTdPhhCk43LasN8upRyD7Xd2ldfk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=2vW0+MY3gziKQl7e8yqupDfds0LLNG44VwBCObMCrLlpAmnOJylOQRzfmda8N0ZUA
-	 nUDMWQsFnxXJ1WQ/BAK4C7TipPu2JeOXsWYCACkP2fLugMvGnEvwygTrIy4xqTux1I
-	 LtWpR7PJ5OkeWlvrFTCiOttl81g79vJBS/siV4apVmZ6DproUihLLeT+TZhGEvsXl4
-	 2n8HjfX21h0cYXlip4Eoq/hk/G8Fsc+2Ujr99aPB6deXZEZKnz9IoYadkB1aJwkCI3
-	 9G6uRt5Nt5YxmrNLcBB3+FhMDHZlO/XW079tGVELuogfahNZDKtxfSTDn8S2AWQg39
-	 6NYHUJKUNzQMw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9245937820A3;
-	Thu, 14 Mar 2024 10:02:59 +0000 (UTC)
-Message-ID: <63cdec54-8dd6-4f17-8256-bbb8cfe791be@collabora.com>
-Date: Thu, 14 Mar 2024 11:02:58 +0100
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="QKv1H+JN"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1710410662; x=1741946662;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AFhsiaSN1eedmSccQpHaGcchUo0RMHyh4duqmQyuRlA=;
+  b=QKv1H+JNxrW2oN7SNayuouXwo/zuDQwT3KrDw7HJQyRw0OMKwAhoTaFY
+   JQLn8XI4ep5cR8YTA16i+mdcnmxFA1QFEbfM64k4TSD+8mYJHBKwwKt5N
+   FL6sUvNCGlg8SkVv5TmeCJvJtLTuFBMiQKbliG2g4uayse3epPV8U6fvr
+   NqY5SkDB0iLHNzTqtdqwETCcZ2/xPvwMdPhFGxmo4hMJBLqjUaw999Xea
+   qFOcpNiJomW9iKYyEMUeecu1W0D8X1SrQ4EOAnJ18CcJCWm8L3BW8fq0G
+   Lygbwki3heY6hXyq4A2LphTiDU4ha5R54ywhBAruusqmB6epatWqqT29R
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="152241877"
+X-IronPort-AV: E=Sophos;i="6.07,125,1708354800"; 
+   d="scan'208";a="152241877"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 19:04:19 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 5E437D772F
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 19:04:17 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8B640DCCAD
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 19:04:16 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 2044B20099547
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 19:04:16 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.226.45])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id B30D11A006D;
+	Thu, 14 Mar 2024 18:04:15 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-kernel@vger.kernel.org
+Cc: Li Zhijian <lizhijian@fujitsu.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 2/2] clockevents: Convert sprintf/snprintf to sysfs_emit
+Date: Thu, 14 Mar 2024 18:04:02 +0800
+Message-Id: <20240314100402.1326582-2-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240314100402.1326582-1-lizhijian@fujitsu.com>
+References: <20240314100402.1326582-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mediatek: mt8192-asurada: Update min voltage
- constraint for Vgpu
-Content-Language: en-US
-To: Pin-yen Lin <treapking@google.com>
-Cc: Pin-yen Lin <treapking@chromium.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai
- <wenst@chromium.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- devicetree@vger.kernel.org
-References: <20240313135157.98989-1-treapking@chromium.org>
- <d1bdf9a6-3082-4076-99de-e49d59843244@collabora.com>
- <CAHwYsiqJBsQn73H+2VeB4N3GNH=0EZ4qznqWwYCBjt6+qwNhHw@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <CAHwYsiqJBsQn73H+2VeB4N3GNH=0EZ4qznqWwYCBjt6+qwNhHw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28250.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28250.006
+X-TMASE-Result: 10--6.201400-10.000000
+X-TMASE-MatchedRID: e6WPXQD7Ri84ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfDqO6/8R69QE8U
+	roFNOGp7a6aAZTOwtJmRloiW1Kgftd2ZdKe8BPbS/sUSFaCjTLxN8rmPQRlvK7oFQ8GRC1Prs1w
+	waYBQLgs9/vFVBxxqgB0XJlVTsEsboYY7KoErjW8ReM8i8p3vgEyQ5fRSh2656hUULKzHRgQLm6
+	NncNkETaGvCFqoKSwTgDLqnrRlXrbIDt27MLDp0t0H8LFZNFG7bkV4e2xSge7btc58sZd4JWtX0
+	+U6nf33BNN/GR02l6mieABoRFLqcl8I4oUq5Vga
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Il 14/03/24 10:59, Pin-yen Lin ha scritto:
-> Hi Angelo,
-> 
-> On Wed, Mar 13, 2024 at 10:36 PM AngeloGioacchino Del Regno <
-> angelogioacchino.delregno@collabora.com> wrote:
-> 
->> Il 13/03/24 14:51, Pin-yen Lin ha scritto:
->>> Although the minimum voltage listed on the GPU OPP table is 606250 uV,
->>> the actual requested voltage could be even lower when the MTK Smart
->>> Voltage Scaling (SVS) driver is enabled.
->>>
->>> Set the minimum voltage to 300000 uV because it's supported by the
->>> regulator.
->>>
->>> Fixes: 3183cb62b033 ("arm64: dts: mediatek: asurada: Add SPMI
->> regulators")
->>> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
->>
->> Okay, that makes sense, I agree.
->>
->> ...but.
->>
->> The datasheet never mentions 0.3V as vmin - infact, it does mention that
->> the
->> vsel is selected as (0V +) 6250 * Vsel, but the brief spec says that for
->> the
->> standard configuration (in terms of HW), the Vmin is 0.4V and not 0.3.
->>
->> Reading through makes me think that it's not much about the buck providing
->> an
->> unstable output, but more about it starting to become inefficient under
->> that
->> value.
->>
->> This means that it is sensible to set, instead:
->>
->>          regulator-min-microvolt = <400000>;
->>
->> Also, this is repeated on multiple platforms: can you please perform the
->> same
->> change also on MT8183, MT8186 and MT8195?
->>
->> P.S.: For MT6358, the Vmin for VGPU is 0.5V :-)
->>
-> 
-> Thanks for checking! I'll update the values on other platforms as well.
-> 
-> I assume that we also want to update other mt6315 nodes listing 300000 uV
-> as the min voltage, so I'll update them as well.
-> 
+Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+or sysfs_emit_at() when formatting the value to be returned to user space.
 
-Yes, didn't notice that, nice catch. Please do!
+coccinelle complains that there are still a couple of functions that use
+snprintf(). Convert them to sysfs_emit().
 
-Cheers,
-Angelo
+sprintf() will be converted as weel if they have.
 
->>
->>> ---
->>>
->>>    arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
->> b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
->>> index 43d80334610a..5cc5100a7c40 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
->>> @@ -1448,7 +1448,7 @@ regulators {
->>>                        mt6315_7_vbuck1: vbuck1 {
->>>                                regulator-compatible = "vbuck1";
->>>                                regulator-name = "Vgpu";
->>> -                             regulator-min-microvolt = <606250>;
->>> +                             regulator-min-microvolt = <300000>;
->>>                                regulator-max-microvolt = <800000>;
->>>                                regulator-enable-ramp-delay = <256>;
->>>                                regulator-allowed-modes = <0 1 2>;
->>
->>
->>
-> 
+Generally, this patch is generated by
+make coccicheck M=<path/to/file> MODE=patch \
+COCCI=scripts/coccinelle/api/device_attr_show.cocci
+
+No functional change intended
+
+CC: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
+Split them per subsystem so that the maintainer can review it easily
+[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
+---
+ kernel/time/clockevents.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
+index a7ca458cdd9c..60a6484831b1 100644
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -677,7 +677,7 @@ static ssize_t current_device_show(struct device *dev,
+ 	raw_spin_lock_irq(&clockevents_lock);
+ 	td = tick_get_tick_dev(dev);
+ 	if (td && td->evtdev)
+-		count = snprintf(buf, PAGE_SIZE, "%s\n", td->evtdev->name);
++		count = sysfs_emit(buf, "%s\n", td->evtdev->name);
+ 	raw_spin_unlock_irq(&clockevents_lock);
+ 	return count;
+ }
+-- 
+2.29.2
 
