@@ -1,102 +1,95 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6124574E21;
-	Thu, 14 Mar 2024 20:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF30763E8
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 20:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710449140; cv=none; b=cuRRx3fxvnNHvknIZCxe06TROYagTb5VEv+JVRu82TQyzeUg1NWBhmUhmrX/iLjqmzpNfAYVXdNJoskHI7y5MVDEnkuz6xV+a5Wylpx+iQO6X1Doo/7mf9m9aqb3QUAPRZ2xgue0g2lr/voaR0JIE4VDsxuEpKi2O+6ouv6SzIY=
+	t=1710449247; cv=none; b=VRwktrg5EqxDGZyvj/i6xqiWJkqIR3wgyHwZFQ1HehQmF8S1GFSFxgr3zwtJJ+hhSZSs9nK0M5B0IQtt0VkbetSJIknHBfamviT0GQsngTWGAlmVZiANkUGNPfmNiKz0v7XAla3TRk/zf21sFNozjrXr2PGUQUFexYx34hnmcjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710449140; c=relaxed/simple;
-	bh=/wT9frV/hX7PE8jYRX5Wx4I3/dpgvF58kgRs2lTo14o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BYoTFLmTbA7ftYSgmMd6/X2L6XWZ3l9P/I1aMwuVTpQGMmE+GeCbojENpGqUR3hsFLJ5TzVFSPMlBsno3WUkvmpyYaQhfArfRFDUM3jAGDRTe7AlIMe0GGnazivf6JNbs/SF7JlJbmJB/Rky/RTF11OmLPSnH8+LCQMvdRCns+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtShGde4; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710449247; c=relaxed/simple;
+	bh=du2WT+/IhUMepIGZbpvZTbMkHPvk1mSEq7tDbAeTApc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LuonG1b2JJPl8DLvdQIi+3b20A+bZaQf1wnyoh+cDu9trto1vXUX4UKqbZiLnUobQG/BtGrLXpx+VQHzyEh6C6EClrXlffgvWrZ1UvlcjotwhQTbNdYo4cYEgZFe7zPTMwkLy9yzEFmdP6GBUMqtVRX00rpLFX3hYdNwERotmqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rDOYjRtu; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtShGde4"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dd8dd198d0so10629355ad.3;
-        Thu, 14 Mar 2024 13:45:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rDOYjRtu"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-430a0d6c876so4883421cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:47:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710449138; x=1711053938; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xnMrBa1zsNDJ8SxKjGn0mlGSVNeZ/wwefGNUMZ4JI0c=;
-        b=GtShGde476bOdiXp18DjLo7oUmkqXwggsEfNunputQzVZnU32fULk93D9W/5Kcs3Xv
-         BoD2izfUpWqnBOgu3C1X8/J5zLhUHjFLnaypO6A1sSD/ir8qn8tzRBWrWEEsGgZvBsam
-         9XgZGVcfbjs2aeSW3RVRs87R4vt1mKV6lBU+F4kb20PYoqubVoDSjT+stOXJW1JyeUAR
-         hgwhI4W1BUsCJhJbdtIT9h6HLlB4y/fBVW3Ffw+i3EX0cVQ7MeOmfUj+1rki4+1WF4/P
-         m4MYpOXL2hX0mcJYOI+9BTVwVivVs953uAHUP3eEtPF8soJjas7ifwh46+Uwxl/aq3GJ
-         PdZg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710449244; x=1711054044; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EerKNIlRapC7GXPSamOoOowoFZGKR33EHS6GaKW+Uh8=;
+        b=rDOYjRtu2HmbUl4wLBzA5VoTOA36Y7b7QNRPp5Cy5B64Bri9SRmJLwsP6uAtt757W8
+         OWwYMMNO8wsp3Iv7UTvU8FYKsjcQ/MkHxuNBQJ9gr4HUiTDzw2O+GeUBFJEubxB0gUZz
+         LYVx1f09JYnT1GyIz9pHCxUsPPkHR448rYFRV7lpdKfElbWgSi+uao+6YvRSKdnTiH+X
+         nxJjtVovtD+3BUxwUxbg/kZgS52HQArw0gM9EwITChdlJkaxTP91kz5rtLcOr19hLzye
+         B/CP1lIlC3pb3gRr3OEF5XlN5NMvmLq3bwmr44q5EYgMBAY2F7v1LiLQLNuuu0xSaRhC
+         w6Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710449138; x=1711053938;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xnMrBa1zsNDJ8SxKjGn0mlGSVNeZ/wwefGNUMZ4JI0c=;
-        b=d1hqok4UTrMTLb+Cipey9GH54U/4LM09ptnCkOIBv7KAJBGqJ2SqDXBlQF+o9gQCFB
-         ozdAkf/YivdevmhlAaZBpUtSi+9X2ixAFnSiJXx00I72kCHpZUtjqzGRD7gdnvBMqc40
-         oHBDRsA9Dy5sLFuaOPYv6QGUqAVj9tp4c3p2eOnboUYOeSHQ69FPbpIs2SPlYsaCHZgV
-         0JPdOBJZ+hxY390irDQAHsly8O/op1kOBcAkQf0i4e2W9qh/Wg0K/8F0BH7rv2n6vMky
-         BuAEHu6fnGRN095PQjXzIMgsFyYycgGaAn6YLOJSbcN6PnwS+GyxP92wldAZdQW/bFvU
-         EOxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnk2rGkZcfbj6JNbwyNOTnrFRc0xdw2WUhGTbV3Elz55xlVgI5sytYtyrq3iYR+kXj3q/zg1124Vc+DBMOrxzdkGrODSDaioMCt6Wa5xFFBD6COagCEBISokbF4yyb+Zt2oSah
-X-Gm-Message-State: AOJu0YzY8JfluEgXl75sSOLsvACOqjQfDP1ZC7qBoElMs0okXk3edF9s
-	uInUHlcidzMclYWQl+fPoy2fT7AJoBiEOF7VUNX6SFCGiOdeZzzYm66qHoDbLUE=
-X-Google-Smtp-Source: AGHT+IFdldRN4ysuGqhWosfpH5e5PWI3G6+kz2OSNsUOGetxsFlTjgUiIcLuVLcJ1USKUW+GMx7hsA==
-X-Received: by 2002:a17:902:7488:b0:1de:dd0d:69e with SMTP id h8-20020a170902748800b001dedd0d069emr1291794pll.35.1710449138563;
-        Thu, 14 Mar 2024 13:45:38 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id ki3-20020a170903068300b001dd02f4c2casm2186991plb.164.2024.03.14.13.45.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 13:45:37 -0700 (PDT)
-Message-ID: <571febef-186e-45f3-a894-26a6c5d7116a@gmail.com>
-Date: Thu, 14 Mar 2024 13:45:36 -0700
+        d=1e100.net; s=20230601; t=1710449244; x=1711054044;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EerKNIlRapC7GXPSamOoOowoFZGKR33EHS6GaKW+Uh8=;
+        b=klmAXqyI+v8rt4DAMJwvpnGKjQAXGIo+PpA7qDj5YeAgoMFrrig5DBFgFlL3fH4gXk
+         KG/FJoWK49X8wgJxNJqW3UMF2ZBVRTtoAbn1DjK3sXwSl3DiJUlDwWltdz9RJb+XMzg6
+         Xot56xT2b6Mpo3vvGHs4DDAVDUcN3uSjokPY6LkLQkTNiTHaa4R+byS+l3imsHWkX8kR
+         1QyGXsHaZOCwhL9k/KGccgrNrYWhZh57hAFQZ+onJJRLCzZoV96h4jXq1IdWvBf9xSGk
+         UGIDe1JaZ5YsNZ+e5BtuW6FUcHVyBlGsHftaqopyJJAWl+rFV/iiv7igJeyxZI9aNqbf
+         ln/w==
+X-Gm-Message-State: AOJu0YwlbKQS6VTgEbbWGzTyYOJ/igXB1uxfM1L0bXtQzOoEDNS2jvC0
+	qf/gwCnFPEsPNvyUcR8fKmU/N9SNy4C4YzY0ZxszBzbtfZdSRO0eNAepmniae0w=
+X-Google-Smtp-Source: AGHT+IGl2GL5Qyuks42rePlMkrmMzfUZYkVbUfiyA5FKYet4juESL0lsdZbw/hVxxOgZbGAjHXjPOw==
+X-Received: by 2002:a05:622a:5488:b0:42e:b90c:cffb with SMTP id ep8-20020a05622a548800b0042eb90ccffbmr3186362qtb.51.1710449244321;
+        Thu, 14 Mar 2024 13:47:24 -0700 (PDT)
+Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id n16-20020ac86750000000b0042eef160b4dsm1165272qtp.76.2024.03.14.13.47.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 13:47:24 -0700 (PDT)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	tgamblin@baylibre.com,
+	dlechner@baylibre.com
+Subject: [PATCH 0/2] pwm: axi-pwmgen: Add support for v2 IP
+Date: Thu, 14 Mar 2024 16:47:20 -0400
+Message-ID: <20240314204722.1291993-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
-Content-Language: en-US
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de
-References: <20240313163957.615276-1-sashal@kernel.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240313163957.615276-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/13/24 09:38, Sasha Levin wrote:
-> 
-> This is the start of the stable review cycle for the 6.1.82 release.
-> There are 71 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri Mar 15 04:39:56 PM UTC 2024.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
->          https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.81
-> or in the git tree and branch at:
->          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> Thanks,
-> Sasha
+This adds support for v2 of axi-pwmgen, which allows for up to 16 PWM
+channels (instead of 4). The series was tested on actual hardware using
+a Zedboard. An oscilloscope was used to validate that the generated PWM
+signals matched the requested ones.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+This series depends on [1] that hasn't been picked up yet.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+[1]: https://lore.kernel.org/linux-pwm/20240301173343.1086332-1-tgamblin@baylibre.com/
+
+Trevor Gamblin (2):
+  dt-bindings: pwm: adi,axi-pwmgen: Add compatible for v2 IP
+  pwm: axi-pwmgen: support version 2.00.a
+
+ .../bindings/pwm/adi,axi-pwmgen.yaml          |  6 +-
+ drivers/pwm/pwm-axi-pwmgen.c                  | 62 +++++++++++++++----
+ 2 files changed, 53 insertions(+), 15 deletions(-)
+
 -- 
-Florian
+2.44.0
 
