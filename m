@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED6751C5F
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 23:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96AC36AFF
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 23:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458824; cv=none; b=br8I/3MEqUG1L0+Psb3rZnmtRjPfTgwKo2c5OMbfxmOt1uaHteD5mtfprUf0CCTNkMmUMRi2doypJ9EGDdnzU74WWzaXDFU4Ax3bpqGXddAaPGVxfmqlJ+zB0jgFAb1KAtOGRZn1flq6N7R+lhP9rOy3cbwg8hLm19E63gkFWdw=
+	t=1710458821; cv=none; b=Z89/zrCDpreXzlMBQ55gDUZ0UapUurQklfeCcuzdYuVI+PuJyTTppZ/XqAos1zIYDZOIoVP4toPj2EGm23lDVqt/NHfSYHIP2OZd7SNuFG5/PnzaPc4n2jZVip6ttLjECzwLZFJmsVlQHOejUEDOYqaieCk8/F4Rw61zQWYlskU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458824; c=relaxed/simple;
-	bh=UQIrurCe0zuaeY9y89rSu7jemDgb1Rydb7LX7x9KcOM=;
+	s=arc-20240116; t=1710458821; c=relaxed/simple;
+	bh=D+WfrkBBp99yYBPUAatEwEvzqSkPnXqYucgEnYnNGww=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=twfVdQVTTWUAeZr1k9zOrbuPSzyoe1JgJgvtVbYNsMTNeMRKuW7Iw1OWGCpjilTv/LcpL0PMjW+701p5GAzEKdWJz3/+FKJnk147FSKGuWjgcCDSEw9wggevIKY0ww4tiM0lvcj4EZv4bdUWV5S5hV7gdku2iuDXxQKAYVt19HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kd/u8TnO; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Bf3MiTJl7GmxUePKWc1hkp9wGKQd9pCkNsi7PZADauromr9Bj4BUMg7Obr+yD5V2a6FJP5thk+YYWra8wNCBZ+ex9dc2xtSPfdf98tM6gn0/TJjBxOGTZeufFEbU/H09u1jpFq69kHCr7lIEUY55hV6BoTaCS7WfeB2v7Lks4uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wuFBRr4v; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kd/u8TnO"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-29bad40eca2so1247582a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:27:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wuFBRr4v"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e6f0f0cde9so759004b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710458822; x=1711063622; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710458818; x=1711063618; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvANWFYN1jpIYLHOo6AYUHWQUhBZT4UdCnC51A9DHBc=;
-        b=kd/u8TnOapvbedi8gIOUCncUpN48bTQMar6D5tnU5L4OxT5pf3IQ7DjXpZgxiXhON/
-         rFecnyibFESwh3oI13531PHY4lslPuvQx2w5CM8XKe3nycfQetfFHT85hNVlOaEL5xaA
-         NTcG9qz8uf0lup64cUrlxycSaSsrkTrA5c5fhTKryDlhU8inrpdXPvzeXf6afR2T2VD3
-         X2BduE5bMeRf9JftLlvHqvL1EuJ17GP6EzqFlBA8Iwr4NPmLUnpz+wttaEn6/1ghh4GM
-         hq82SScFZ1iWPtykwRr29azS+xSpj9X2WIpVEkizYZdXFGWX5UNdwcUaHMzUIJVkONc+
-         VOsQ==
+        bh=TsmKqFE/J9A83H6EDT6TRyEjuTaABK26VwJK7nrcBoU=;
+        b=wuFBRr4vh97oTdGPIEyiPHa2XZIu0GjDUHFVIsLIHB5Z4rP4yoM3h/pi8qZGLzDnDr
+         soYigqN9POYGN2BA4/tnHVFZI1B6w3EF5qAkfxSArnVPojhL25FcBYxDyzm8UjRtN2t7
+         L590CXaeJE1bb1ovm0QDY+HfiYJ7CdLOQkNqFqXM8Ha+e4huzHjDqN1Sl6RJ3u2zlzmh
+         Kqf8bsXoUNWhoYGT1o6HoqFnFytQdegN53tb9VD5PU1N3rB9l4bgXO+/MuNWGV7TSb7q
+         0CZH3WBLKeWlJpJNzXdEgPCzFNOHb8mE4CgKb5YP40OJF5Y7xIzSrAbIEuFjiIVGzdZB
+         Nzow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710458822; x=1711063622;
+        d=1e100.net; s=20230601; t=1710458818; x=1711063618;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uvANWFYN1jpIYLHOo6AYUHWQUhBZT4UdCnC51A9DHBc=;
-        b=un3kFdeIsWiWLJSFZ77UsiddYy7tg+rUu2HhsQlZVpMjleQG2ULalABW1JYWhc0Q10
-         R+AFmym2FAl9yHJIi9d/icY01qU/ggX4sNsfDNtKGMR0IFfrlYkEytVWCQsV4N28zvVH
-         c+nSKebrDdIG9/v1ixCH+fWQ2DBK+mrHWUuYKZem52QIJROdHJoextJy7ah6czZbHXuD
-         gKIA+8NzGWNos1G8H4J6FXqfhULnjcKmXQsHK2uNZt1JFpE0qtSah/aWRKupIDVFw3aD
-         5M74u4ksipO2YJMskMe0eZZNFkkDUBVofedMCw49TJzhcLbz/3ZzKMjrD+Nvw7T8N687
-         phzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCWIyUQe0vBnkAKtqk9vBPmE95ptup+czx6QyW2T/ZLtdx4mOHpYBbFE97WuQ8oMqrRDWGZquKLPt8Lari0sgzDznH7kZ0f+IbcvAW
-X-Gm-Message-State: AOJu0Yyw36lHG/xvU7oCtk9nWJKHadrPdQczwxoD/1MPzkgNk5kANeGZ
-	ebGnRbsNcGii+s0lZPb/ems8MBcHFsJrGvjcykX1rb35jsYWcfvir6hgaCU/KeX2YweOtuFVJn2
-	MCg==
-X-Google-Smtp-Source: AGHT+IEmqFL1IXL1pIFLbyp7eKBr0s6FFOiXRR1g8DgzlSysrKWmAergLMAyluCim6XJlXtnyauxch/eeT4=
+        bh=TsmKqFE/J9A83H6EDT6TRyEjuTaABK26VwJK7nrcBoU=;
+        b=wRECN+zQlM1UBjvhFl0k4xwRg+M8pw5VT0rlcT9AnGN2vsh9u8ucazJTSdHMWpo0I6
+         svw6wl858cx/xgQYvrDyASX/lbjFJH2nSvfJTWm9j9kbVo9qufya6IuVQNGehSzh7+xZ
+         bWc1qXXLG754Q1XYDpk3m9oQNTEkuhJi+aQ4Nt1xusHqgvtHHOOgb8YyH3yuZJPs7MTb
+         WSnX4Bgq/dCyixoG/KyvIe8NaS3DcpbpdAsCY451xvSC8jJaFMkO/pJCvr9wviSLU9Dg
+         COciMuED/Lf8qA5c+dWqJvS36jGc7nTkD8ubqhP8V1gDpPMF65rhPNz37r9LhyRzjAkY
+         IakA==
+X-Forwarded-Encrypted: i=1; AJvYcCWS5C5nlkvAklgVEUEOcxyeaLtvzAAoOIO32piAhqgMY0PhL08t09zcEWBbZw2yajYza9qIXb8KyVZCTepbMX0nHUJ8no2+MuDlT/Tz
+X-Gm-Message-State: AOJu0YwxiDzrmKXfR+tJKvdQuQlMASgK51Y7ZnibSU/QzxlafYGe5OuO
+	DxGdi6JUDxAIkhUtMhBaDBSqeD+Ig8Ioa5RYn96CjLymwpKtkYOQYNm1J45h+Q+WSRrXi6KTX9d
+	hLQ==
+X-Google-Smtp-Source: AGHT+IFBRAp98Kaf3TiIsE4r32WtqT4agCopo0pqGopBcEZjWK/47YBG2CyXVRuM53LhPgF6dYrq8Z3S4cU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:b07:b0:29c:6d5f:a6a8 with SMTP id
- bf7-20020a17090b0b0700b0029c6d5fa6a8mr8117pjb.0.1710458822156; Thu, 14 Mar
- 2024 16:27:02 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:9298:b0:6e6:89b6:70e8 with SMTP id
+ jw24-20020a056a00929800b006e689b670e8mr143843pfb.3.1710458818396; Thu, 14 Mar
+ 2024 16:26:58 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 14 Mar 2024 16:26:31 -0700
+Date: Thu, 14 Mar 2024 16:26:29 -0700
 In-Reply-To: <20240314232637.2538648-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240314232637.2538648-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240314232637.2538648-13-seanjc@google.com>
-Subject: [PATCH 12/18] KVM: selftests: Allocate x86's GDT during VM creation
+Message-ID: <20240314232637.2538648-11-seanjc@google.com>
+Subject: [PATCH 10/18] KVM: selftests: Init IDT and exception handlers for all
+ VMs/vCPUs on x86
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Paolo Bonzini <pbonzini@redhat.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
@@ -76,38 +77,410 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Allocate the GDT during creation of non-barebones VMs instead of waiting
-until the first vCPU is created, as the whole point of non-barebones VMs
-is to be able to run vCPUs, i.e. the GDT is going to get allocated no
-matter what.
+Initialize the IDT and exception handlers for all non-barebones VMs and
+vCPUs on x86.  Forcing tests to manually configure the IDT just to save
+8KiB of memory is a terrible tradeoff, and also leads to weird tests
+(multiple tests have deliberately relied on shutdown to indicate success),
+and hard-to-debug failures, e.g. instead of a precise unexpected exception
+failure, tests see only shutdown.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/lib/x86_64/processor.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/testing/selftests/kvm/include/x86_64/processor.h    | 2 --
+ tools/testing/selftests/kvm/lib/x86_64/processor.c        | 8 ++++++--
+ tools/testing/selftests/kvm/x86_64/amx_test.c             | 2 --
+ tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c   | 2 --
+ tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c         | 2 --
+ tools/testing/selftests/kvm/x86_64/hyperv_features.c      | 6 ------
+ tools/testing/selftests/kvm/x86_64/hyperv_ipi.c           | 3 ---
+ tools/testing/selftests/kvm/x86_64/kvm_pv_test.c          | 3 ---
+ tools/testing/selftests/kvm/x86_64/monitor_mwait_test.c   | 3 ---
+ tools/testing/selftests/kvm/x86_64/platform_info_test.c   | 3 ---
+ tools/testing/selftests/kvm/x86_64/pmu_counters_test.c    | 3 ---
+ .../testing/selftests/kvm/x86_64/pmu_event_filter_test.c  | 6 ------
+ .../kvm/x86_64/smaller_maxphyaddr_emulation_test.c        | 3 ---
+ tools/testing/selftests/kvm/x86_64/svm_int_ctl_test.c     | 3 ---
+ .../selftests/kvm/x86_64/svm_nested_shutdown_test.c       | 3 ---
+ .../selftests/kvm/x86_64/svm_nested_soft_inject_test.c    | 3 ---
+ tools/testing/selftests/kvm/x86_64/ucna_injection_test.c  | 4 ----
+ .../selftests/kvm/x86_64/userspace_msr_exit_test.c        | 3 ---
+ .../kvm/x86_64/vmx_exception_with_invalid_guest_state.c   | 3 ---
+ tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c    | 3 ---
+ tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c       | 2 --
+ tools/testing/selftests/kvm/x86_64/xcr0_cpuid_test.c      | 3 ---
+ tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c      | 2 --
+ 23 files changed, 6 insertions(+), 69 deletions(-)
 
+diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+index d6ffe03c9d0b..4804abe00158 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/processor.h
++++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+@@ -1129,8 +1129,6 @@ struct idt_entry {
+ 	uint32_t offset2; uint32_t reserved;
+ };
+ 
+-void vm_init_descriptor_tables(struct kvm_vm *vm);
+-void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu);
+ void vm_install_exception_handler(struct kvm_vm *vm, int vector,
+ 			void (*handler)(struct ex_regs *));
+ 
 diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index f4046029f168..8547833ffa26 100644
+index d6bfe96a6a77..5813d93b2e7c 100644
 --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
 +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -518,9 +518,6 @@ vm_paddr_t addr_arch_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- 
- static void kvm_setup_gdt(struct kvm_vm *vm, struct kvm_dtable *dt)
- {
--	if (!vm->arch.gdt)
--		vm->arch.gdt = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
--
- 	dt->base = vm->arch.gdt;
- 	dt->limit = getpagesize() - 1;
+@@ -540,7 +540,7 @@ static void kvm_setup_tss_64bit(struct kvm_vm *vm, struct kvm_segment *segp,
+ 	kvm_seg_fill_gdt_64bit(vm, segp);
  }
-@@ -644,6 +641,7 @@ static void vm_init_descriptor_tables(struct kvm_vm *vm)
+ 
+-void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu)
++static void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_vm *vm = vcpu->vm;
+ 	struct kvm_sregs sregs;
+@@ -585,6 +585,8 @@ static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
+ 
+ 	sregs.cr3 = vm->pgd;
+ 	vcpu_sregs_set(vcpu, &sregs);
++
++	vcpu_init_descriptor_tables(vcpu);
+ }
+ 
+ static void set_idt_entry(struct kvm_vm *vm, int vector, unsigned long addr,
+@@ -638,7 +640,7 @@ void route_exception(struct ex_regs *regs)
+ 		     regs->vector, regs->rip);
+ }
+ 
+-void vm_init_descriptor_tables(struct kvm_vm *vm)
++static void vm_init_descriptor_tables(struct kvm_vm *vm)
+ {
  	extern void *idt_handlers;
  	int i;
+@@ -670,6 +672,8 @@ void assert_on_unhandled_exception(struct kvm_vcpu *vcpu)
+ void kvm_arch_vm_post_create(struct kvm_vm *vm)
+ {
+ 	vm_create_irqchip(vm);
++	vm_init_descriptor_tables(vm);
++
+ 	sync_global_to_guest(vm, host_cpu_is_intel);
+ 	sync_global_to_guest(vm, host_cpu_is_amd);
  
-+	vm->arch.gdt = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
- 	vm->arch.idt = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
- 	vm->handlers = __vm_vaddr_alloc_page(vm, MEM_REGION_DATA);
- 	/* Handlers have the same address in both address spaces.*/
+diff --git a/tools/testing/selftests/kvm/x86_64/amx_test.c b/tools/testing/selftests/kvm/x86_64/amx_test.c
+index eae521f050e0..ab6c31aee447 100644
+--- a/tools/testing/selftests/kvm/x86_64/amx_test.c
++++ b/tools/testing/selftests/kvm/x86_64/amx_test.c
+@@ -246,8 +246,6 @@ int main(int argc, char *argv[])
+ 	vcpu_regs_get(vcpu, &regs1);
+ 
+ 	/* Register #NM handler */
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+ 	vm_install_exception_handler(vm, NM_VECTOR, guest_nm_handler);
+ 
+ 	/* amx cfg for guest_code */
+diff --git a/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c b/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
+index f3c2239228b1..762628f7d4ba 100644
+--- a/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
++++ b/tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c
+@@ -110,8 +110,6 @@ static void test_fix_hypercall(struct kvm_vcpu *vcpu, bool disable_quirk)
+ {
+ 	struct kvm_vm *vm = vcpu->vm;
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+ 	vm_install_exception_handler(vcpu->vm, UD_VECTOR, guest_ud_handler);
+ 
+ 	if (disable_quirk)
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
+index 4c7257ecd2a6..4238691a755c 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
+@@ -258,8 +258,6 @@ int main(int argc, char *argv[])
+ 	vcpu_args_set(vcpu, 3, vmx_pages_gva, hv_pages_gva, addr_gva2gpa(vm, hcall_page));
+ 	vcpu_set_msr(vcpu, HV_X64_MSR_VP_INDEX, vcpu->id);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+ 	vm_install_exception_handler(vm, UD_VECTOR, guest_ud_handler);
+ 	vm_install_exception_handler(vm, NMI_VECTOR, guest_nmi_handler);
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_features.c b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
+index b923a285e96f..068e9c69710d 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_features.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
+@@ -156,9 +156,6 @@ static void guest_test_msrs_access(void)
+ 			vcpu_init_cpuid(vcpu, prev_cpuid);
+ 		}
+ 
+-		vm_init_descriptor_tables(vm);
+-		vcpu_init_descriptor_tables(vcpu);
+-
+ 		/* TODO: Make this entire test easier to maintain. */
+ 		if (stage >= 21)
+ 			vcpu_enable_cap(vcpu, KVM_CAP_HYPERV_SYNIC2, 0);
+@@ -532,9 +529,6 @@ static void guest_test_hcalls_access(void)
+ 	while (true) {
+ 		vm = vm_create_with_one_vcpu(&vcpu, guest_hcall);
+ 
+-		vm_init_descriptor_tables(vm);
+-		vcpu_init_descriptor_tables(vcpu);
+-
+ 		/* Hypercall input/output */
+ 		hcall_page = vm_vaddr_alloc_pages(vm, 2);
+ 		memset(addr_gva2hva(vm, hcall_page), 0x0, 2 * getpagesize());
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c b/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+index f1617762c22f..c6a03141cdaa 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+@@ -256,16 +256,13 @@ int main(int argc, char *argv[])
+ 	hcall_page = vm_vaddr_alloc_pages(vm, 2);
+ 	memset(addr_gva2hva(vm, hcall_page), 0x0, 2 * getpagesize());
+ 
+-	vm_init_descriptor_tables(vm);
+ 
+ 	vcpu[1] = vm_vcpu_add(vm, RECEIVER_VCPU_ID_1, receiver_code);
+-	vcpu_init_descriptor_tables(vcpu[1]);
+ 	vcpu_args_set(vcpu[1], 2, hcall_page, addr_gva2gpa(vm, hcall_page));
+ 	vcpu_set_msr(vcpu[1], HV_X64_MSR_VP_INDEX, RECEIVER_VCPU_ID_1);
+ 	vcpu_set_hv_cpuid(vcpu[1]);
+ 
+ 	vcpu[2] = vm_vcpu_add(vm, RECEIVER_VCPU_ID_2, receiver_code);
+-	vcpu_init_descriptor_tables(vcpu[2]);
+ 	vcpu_args_set(vcpu[2], 2, hcall_page, addr_gva2gpa(vm, hcall_page));
+ 	vcpu_set_msr(vcpu[2], HV_X64_MSR_VP_INDEX, RECEIVER_VCPU_ID_2);
+ 	vcpu_set_hv_cpuid(vcpu[2]);
+diff --git a/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c b/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
+index 9e2879af7c20..cef0bd80038b 100644
+--- a/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
++++ b/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
+@@ -146,9 +146,6 @@ int main(void)
+ 
+ 	vcpu_clear_cpuid_entry(vcpu, KVM_CPUID_FEATURES);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	enter_guest(vcpu);
+ 	kvm_vm_free(vm);
+ }
+diff --git a/tools/testing/selftests/kvm/x86_64/monitor_mwait_test.c b/tools/testing/selftests/kvm/x86_64/monitor_mwait_test.c
+index 853802641e1e..9c8445379d76 100644
+--- a/tools/testing/selftests/kvm/x86_64/monitor_mwait_test.c
++++ b/tools/testing/selftests/kvm/x86_64/monitor_mwait_test.c
+@@ -80,9 +80,6 @@ int main(int argc, char *argv[])
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 	vcpu_clear_cpuid_feature(vcpu, X86_FEATURE_MWAIT);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	while (1) {
+ 		vcpu_run(vcpu);
+ 		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+index 6300bb70f028..9cf2b9fbf459 100644
+--- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
++++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+@@ -51,9 +51,6 @@ int main(int argc, char *argv[])
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	msr_platform_info = vcpu_get_msr(vcpu, MSR_PLATFORM_INFO);
+ 	vcpu_set_msr(vcpu, MSR_PLATFORM_INFO,
+ 		     msr_platform_info | MSR_PLATFORM_INFO_MAX_TURBO_RATIO);
+diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+index 29609b52f8fa..ff6d21d148de 100644
+--- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
++++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+@@ -31,9 +31,6 @@ static struct kvm_vm *pmu_vm_create_with_one_vcpu(struct kvm_vcpu **vcpu,
+ 	struct kvm_vm *vm;
+ 
+ 	vm = vm_create_with_one_vcpu(vcpu, guest_code);
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(*vcpu);
+-
+ 	sync_global_to_guest(vm, kvm_pmu_version);
+ 	sync_global_to_guest(vm, is_forced_emulation_enabled);
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
+index 3c85d1ae9893..5cbe9d331acb 100644
+--- a/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
++++ b/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
+@@ -337,9 +337,6 @@ static void test_pmu_config_disable(void (*guest_code)(void))
+ 	vm_enable_cap(vm, KVM_CAP_PMU_CAPABILITY, KVM_PMU_CAP_DISABLE);
+ 
+ 	vcpu = vm_vcpu_add(vm, 0, guest_code);
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	TEST_ASSERT(!sanity_check_pmu(vcpu),
+ 		    "Guest should not be able to use disabled PMU.");
+ 
+@@ -876,9 +873,6 @@ int main(int argc, char *argv[])
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	TEST_REQUIRE(sanity_check_pmu(vcpu));
+ 
+ 	if (use_amd_pmu())
+diff --git a/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c b/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
+index 416207c38a17..0d682d6b76f1 100644
+--- a/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
++++ b/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
+@@ -60,9 +60,6 @@ int main(int argc, char *argv[])
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 	vcpu_args_set(vcpu, 1, kvm_is_tdp_enabled());
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vcpu_set_cpuid_property(vcpu, X86_PROPERTY_MAX_PHY_ADDR, MAXPHYADDR);
+ 
+ 	rc = kvm_check_cap(KVM_CAP_EXIT_ON_EMULATION_FAILURE);
+diff --git a/tools/testing/selftests/kvm/x86_64/svm_int_ctl_test.c b/tools/testing/selftests/kvm/x86_64/svm_int_ctl_test.c
+index 32bef39bec21..916e04248fbb 100644
+--- a/tools/testing/selftests/kvm/x86_64/svm_int_ctl_test.c
++++ b/tools/testing/selftests/kvm/x86_64/svm_int_ctl_test.c
+@@ -93,9 +93,6 @@ int main(int argc, char *argv[])
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vm_install_exception_handler(vm, VINTR_IRQ_NUMBER, vintr_irq_handler);
+ 	vm_install_exception_handler(vm, INTR_IRQ_NUMBER, intr_irq_handler);
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/svm_nested_shutdown_test.c b/tools/testing/selftests/kvm/x86_64/svm_nested_shutdown_test.c
+index f4a1137e04ab..00135cbba35e 100644
+--- a/tools/testing/selftests/kvm/x86_64/svm_nested_shutdown_test.c
++++ b/tools/testing/selftests/kvm/x86_64/svm_nested_shutdown_test.c
+@@ -48,9 +48,6 @@ int main(int argc, char *argv[])
+ 	TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SVM));
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vcpu_alloc_svm(vm, &svm_gva);
+ 
+ 	vcpu_args_set(vcpu, 2, svm_gva, vm->arch.idt);
+diff --git a/tools/testing/selftests/kvm/x86_64/svm_nested_soft_inject_test.c b/tools/testing/selftests/kvm/x86_64/svm_nested_soft_inject_test.c
+index 2478a9e50743..7b6481d6c0d3 100644
+--- a/tools/testing/selftests/kvm/x86_64/svm_nested_soft_inject_test.c
++++ b/tools/testing/selftests/kvm/x86_64/svm_nested_soft_inject_test.c
+@@ -152,9 +152,6 @@ static void run_test(bool is_nmi)
+ 
+ 	vm = vm_create_with_one_vcpu(&vcpu, l1_guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vm_install_exception_handler(vm, NMI_VECTOR, guest_nmi_handler);
+ 	vm_install_exception_handler(vm, BP_VECTOR, guest_bp_handler);
+ 	vm_install_exception_handler(vm, INT_NR, guest_int_handler);
+diff --git a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+index bc9be20f9600..6eeb5dd1e65c 100644
+--- a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
++++ b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+@@ -284,10 +284,6 @@ int main(int argc, char *argv[])
+ 	cmcidis_vcpu = create_vcpu_with_mce_cap(vm, 1, false, cmci_disabled_guest_code);
+ 	cmci_vcpu = create_vcpu_with_mce_cap(vm, 2, true, cmci_enabled_guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(ucna_vcpu);
+-	vcpu_init_descriptor_tables(cmcidis_vcpu);
+-	vcpu_init_descriptor_tables(cmci_vcpu);
+ 	vm_install_exception_handler(vm, CMCI_VECTOR, guest_cmci_handler);
+ 	vm_install_exception_handler(vm, GP_VECTOR, guest_gp_handler);
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c b/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
+index f4f61a2d2464..fffda40e286f 100644
+--- a/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
++++ b/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
+@@ -531,9 +531,6 @@ KVM_ONE_VCPU_TEST(user_msr, msr_filter_allow, guest_code_filter_allow)
+ 
+ 	vm_ioctl(vm, KVM_X86_SET_MSR_FILTER, &filter_allow);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vm_install_exception_handler(vm, GP_VECTOR, guest_gp_handler);
+ 
+ 	/* Process guest code userspace exits. */
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_exception_with_invalid_guest_state.c b/tools/testing/selftests/kvm/x86_64/vmx_exception_with_invalid_guest_state.c
+index fad3634fd9eb..3fd6eceab46f 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_exception_with_invalid_guest_state.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_exception_with_invalid_guest_state.c
+@@ -115,9 +115,6 @@ int main(int argc, char *argv[])
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 	get_set_sigalrm_vcpu(vcpu);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vm_install_exception_handler(vm, UD_VECTOR, guest_ud_handler);
+ 
+ 	/*
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c b/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
+index ea0cb3cae0f7..1b6e20e3a56d 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
+@@ -86,9 +86,6 @@ KVM_ONE_VCPU_TEST(vmx_pmu_caps, guest_wrmsr_perf_capabilities, guest_code)
+ 	struct ucall uc;
+ 	int r, i;
+ 
+-	vm_init_descriptor_tables(vcpu->vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	vcpu_set_msr(vcpu, MSR_IA32_PERF_CAPABILITIES, host_cap.capabilities);
+ 
+ 	vcpu_args_set(vcpu, 1, host_cap.capabilities);
+diff --git a/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c b/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
+index 725c206ba0b9..f51084061134 100644
+--- a/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
++++ b/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
+@@ -410,8 +410,6 @@ int main(int argc, char *argv[])
+ 
+ 	vm = vm_create_with_one_vcpu(&params[0].vcpu, halter_guest_code);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(params[0].vcpu);
+ 	vm_install_exception_handler(vm, IPI_VECTOR, guest_ipi_handler);
+ 
+ 	virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
+diff --git a/tools/testing/selftests/kvm/x86_64/xcr0_cpuid_test.c b/tools/testing/selftests/kvm/x86_64/xcr0_cpuid_test.c
+index 25a0b0db5c3c..95ce192d0753 100644
+--- a/tools/testing/selftests/kvm/x86_64/xcr0_cpuid_test.c
++++ b/tools/testing/selftests/kvm/x86_64/xcr0_cpuid_test.c
+@@ -109,9 +109,6 @@ int main(int argc, char *argv[])
+ 	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+ 	run = vcpu->run;
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+-
+ 	while (1) {
+ 		vcpu_run(vcpu);
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
+index d2ea0435f4f7..a7236f17dfd0 100644
+--- a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
++++ b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
+@@ -553,8 +553,6 @@ int main(int argc, char *argv[])
+ 	};
+ 	vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &vec);
+ 
+-	vm_init_descriptor_tables(vm);
+-	vcpu_init_descriptor_tables(vcpu);
+ 	vm_install_exception_handler(vm, EVTCHN_VECTOR, evtchn_handler);
+ 
+ 	if (do_runstate_tests) {
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
