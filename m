@@ -1,125 +1,272 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C9E376F2
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50501381D0;
+	Thu, 14 Mar 2024 05:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395987; cv=none; b=lCie7dUgbwEWSiC75TP/cjLCpxrfteiKl2GGQZgmhfTQmbCauDThlE1kN97oipSoKENlpCdD5cOeVRsSGIf6luNau7pCEAn/EtsebMbYHNTaVyBxh0tNJSEhJNNZAVF2As1pHYgWdi6Ju6pPxuhP7rW+Pz2YyXV0evyxBo0txs4=
+	t=1710395989; cv=none; b=N4r075um2rPmJWhrmAE+fek5Yi8V7UCwpjKbuZyQBBs+Gx5amwpXDLhC4FEzajSWohjguZZXVBE0kIHFlI82o6S0M+8bS6rmgrMpQ8XlfnMV5TwK95hospqpJSmxNgXvdPQ7RnqElUTV5XkpV+C2hs28JHA1lhZZymtDJoS7jsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395987; c=relaxed/simple;
-	bh=eF7ssQY3Gy21CwAhmYSgaNrkiuCVKaXgj6K+L8MWMqQ=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=GwfPGgZu7GsoMx7sYVUcGw5a/fFmMiBZZe/6/pE3xal3QIZLRmJjpWkjhJGeiYP6nES0SEVBs7bZTCgXTEhos2wAsd6ovhd7iqysf1nDGCf1J02gfwiQrQXhsbAq6C9euEXPpuAEkWh/5NPKoewHYZ1axVUPML23xSFeN4wJDPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1KwtR3TE; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1KwtR3TE"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc15b03287so719063276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710395985; x=1711000785; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N0sG6qEZhABASQQZa8hhsLFbDsdErIcnzVgtt+v1EnQ=;
-        b=1KwtR3TEbz2pSx9I9DDjVy11CEvYU64Rzy844tjN5ONp2k/nPVi/ktdpS4m8rtwHPL
-         2ikDADxVUISluJ/OFc6K0BcI96NW9UIW44bsXzAxoyl5vtHUOmqKFSMBbpe+TEHFpvYJ
-         CAkaz+z5l8j5llIEPhqunJtOvQkfyuT6uaWs/1O2dG4HPq3upTWoVekoz0LVHJ2lrfw0
-         vsZPFswO32sPmLWHScrVoY57VAE4kMSBpM4gSB+ezghihUP71fCYI33lJb7SFETl0Xvv
-         9gKW6MaPi4wbpgTjSrtdoB+45L6owFqb3xFVoe/ifg2bJyS33Xxzpws9OF/HieL7LKg7
-         YJzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710395985; x=1711000785;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N0sG6qEZhABASQQZa8hhsLFbDsdErIcnzVgtt+v1EnQ=;
-        b=kbFXXmggWeEruiCQAjv6lA4wO/b6RR0KUbIcfn565LhIStS7QVQGQKt6KLGW76bnBY
-         Rp9kmRVNRvrAken5dNkqjZ/AK9BaS2pOJTOMRlkg3o/MZbPMDCZtg75XuVUh73klx8jn
-         VmZHhog8JDCZw3v0Icuo1CHCjeCrFfZLmpx9GmaOgWwrYwbFoswUbzh51sRvkqTha7/e
-         Vd+qyVUN4zlhmOueGDwN8iiIyLv1sD8popr9z9PEtlrRK1l3QJVAk2WjXt5DroXRLHxv
-         9A8uuZl5uU8VUMp6v/sCNKaE4hSUSBpinvx5ll3kJnOu0ZxMzncqGb8ON8IHXEyFrKZ1
-         /poQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGHUuuASsi0KWX2YCQmZIwEMm5IKf9rv0EDyt2OM+sImHRBCjdXx6Pib8ZdaCk8V2DlCGgR0SjrEo3qRpMctmQaK1spYH3k2ay92WQ
-X-Gm-Message-State: AOJu0YwAY3X5JUnn5J/hE7t/mPPIpB/BjHJAvN2s+seCW03wYoDBvkka
-	2Lfm8jp02Z19moLHgpTC5wWM10S4cu3beBUoyLMMZ+M0fQBUhHrTw2ttT0vlXXjPViqFqitizQx
-	NhjKBzQ==
-X-Google-Smtp-Source: AGHT+IHL6Y/lYpr4DVd9H5tWZ6+PnYPxXSSQjocWmXv3H8ehp9WgmcYOHntDqL0eAQFrhyAS4KgtIKhOXyZC
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:1a46:b0:dc7:66ec:9038 with SMTP
- id cy6-20020a0569021a4600b00dc766ec9038mr20440ybb.1.1710395985568; Wed, 13
- Mar 2024 22:59:45 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:59:03 -0700
-In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
-Message-Id: <20240314055919.1979781-5-irogers@google.com>
+	s=arc-20240116; t=1710395989; c=relaxed/simple;
+	bh=nF1vib//JfS9VVM1KMJL7ziPCfj+3ZudKLaYfcABLc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=innDWgAYmhiA3bEfmuhatmt+zb+Lotv+2AvBbyJtBWcPW6G7PE32cwVW//NlLFSGARMiXlB4y5ROtrSSeheJrYMZi0CLSEg+H8giWbd9kGUGTnWMzhhpLOid1jA26ycM/eI/omCfuPqAdFN1NPsBIlFOCqi2M3B7wsFE8zse4nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF30E1063;
+	Wed, 13 Mar 2024 23:00:22 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.53.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8EC683F73F;
+	Wed, 13 Mar 2024 22:59:42 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	suzuki.poulose@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH V7 06/11] coresight: funnel: Move ACPI support from AMBA driver to platform driver
+Date: Thu, 14 Mar 2024 11:28:38 +0530
+Message-Id: <20240314055843.2625883-7-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240314055919.1979781-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 04/20] perf jevents: Add CheckPmu to see if a PMU is in
- loaded json events
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-CheckPmu can be used to determine if hybrid events are present,
-allowing for hybrid conditional metrics/events/pmus to be premised on
-the json files rather than hard coded tables.
+Add support for the dynamic funnel device in the platform driver, which can
+then be used on ACPI based platforms. This change would allow runtime power
+management for ACPI based systems.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+The driver would try to enable the APB clock if available. Also, rename the
+code to reflect the fact that it now handles both static and dynamic
+funnels. But first this refactors funnel_probe() making sure it can be used
+both for platform and AMBA drivers, by moving the pm_runtime_put() to the
+callers.
+
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
+Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- tools/perf/pmu-events/metric.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in V7:
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index 03312cd6d491..e1847cccfdb0 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -8,10 +8,12 @@ import re
- from enum import Enum
- from typing import Dict, List, Optional, Set, Tuple, Union
+- Dropped reduntant drvdata check in funnel_platform_remove()
+
+ drivers/acpi/arm64/amba.c                     |  1 -
+ .../hwtracing/coresight/coresight-funnel.c    | 72 ++++++++++++-------
+ 2 files changed, 48 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
+index 270f4e3819a2..afb6afb66967 100644
+--- a/drivers/acpi/arm64/amba.c
++++ b/drivers/acpi/arm64/amba.c
+@@ -28,7 +28,6 @@ static const struct acpi_device_id amba_id_list[] = {
+ 	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
+ 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
+ 	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
+-	{"ARMHC9FF", 0}, /* ARM CoreSight Dynamic Funnel */
+ 	{"", 0},
+ };
  
-+all_pmus = set()
- all_events = set()
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index ff3ea0670a5b..616735dc80a6 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -36,6 +36,7 @@ DEFINE_CORESIGHT_DEVLIST(funnel_devs, "funnel");
+  * struct funnel_drvdata - specifics associated to a funnel component
+  * @base:	memory mapped base address for this component.
+  * @atclk:	optional clock for the core parts of the funnel.
++ * @pclk:	APB clock if present, otherwise NULL
+  * @csdev:	component vitals needed by the framework.
+  * @priority:	port selection order.
+  * @spinlock:	serialize enable/disable operations.
+@@ -43,6 +44,7 @@ DEFINE_CORESIGHT_DEVLIST(funnel_devs, "funnel");
+ struct funnel_drvdata {
+ 	void __iomem		*base;
+ 	struct clk		*atclk;
++	struct clk		*pclk;
+ 	struct coresight_device	*csdev;
+ 	unsigned long		priority;
+ 	spinlock_t		spinlock;
+@@ -236,6 +238,10 @@ static int funnel_probe(struct device *dev, struct resource *res)
+ 			return ret;
+ 	}
  
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
-+  global all_pmus
-   global all_events
-   all_events = {
-       "context\-switches",
-@@ -24,12 +26,18 @@ def LoadEvents(directory: str) -> None:
-     filename = os.fsdecode(file)
-     if filename.endswith(".json"):
-       for x in json.load(open(f"{directory}/{filename}")):
-+        if "Unit" in x:
-+          all_pmus.add(x["Unit"])
-         if "EventName" in x:
-           all_events.add(x["EventName"])
-         elif "ArchStdEvent" in x:
-           all_events.add(x["ArchStdEvent"])
- 
- 
-+def CheckPmu(name: str) -> bool:
-+  return name in all_pmus
++	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
++	if (IS_ERR(drvdata->pclk))
++		return -ENODEV;
 +
+ 	/*
+ 	 * Map the device base for dynamic-funnel, which has been
+ 	 * validated by AMBA core.
+@@ -272,12 +278,13 @@ static int funnel_probe(struct device *dev, struct resource *res)
+ 		goto out_disable_clk;
+ 	}
+ 
+-	pm_runtime_put(dev);
+ 	ret = 0;
+ 
+ out_disable_clk:
+ 	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
+ 		clk_disable_unprepare(drvdata->atclk);
++	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_disable_unprepare(drvdata->pclk);
+ 	return ret;
+ }
+ 
+@@ -298,6 +305,9 @@ static int funnel_runtime_suspend(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_disable_unprepare(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_disable_unprepare(drvdata->pclk);
 +
- def CheckEvent(name: str) -> bool:
-   """Check the event name exists in the set of all loaded events"""
-   global all_events
+ 	return 0;
+ }
+ 
+@@ -308,6 +318,8 @@ static int funnel_runtime_resume(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_prepare_enable(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_prepare_enable(drvdata->pclk);
+ 	return 0;
+ }
+ #endif
+@@ -316,55 +328,61 @@ static const struct dev_pm_ops funnel_dev_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(funnel_runtime_suspend, funnel_runtime_resume, NULL)
+ };
+ 
+-static int static_funnel_probe(struct platform_device *pdev)
++static int funnel_platform_probe(struct platform_device *pdev)
+ {
++	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	int ret;
+ 
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	/* Static funnel do not have programming base */
+-	ret = funnel_probe(&pdev->dev, NULL);
+-
+-	if (ret) {
+-		pm_runtime_put_noidle(&pdev->dev);
++	ret = funnel_probe(&pdev->dev, res);
++	pm_runtime_put(&pdev->dev);
++	if (ret)
+ 		pm_runtime_disable(&pdev->dev);
+-	}
+ 
+ 	return ret;
+ }
+ 
+-static void static_funnel_remove(struct platform_device *pdev)
++static void funnel_platform_remove(struct platform_device *pdev)
+ {
++	struct funnel_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
++
++	if (WARN_ON(!drvdata))
++		return;
++
+ 	funnel_remove(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++	if (!IS_ERR_OR_NULL(drvdata->pclk))
++		clk_put(drvdata->pclk);
+ }
+ 
+-static const struct of_device_id static_funnel_match[] = {
++static const struct of_device_id funnel_match[] = {
+ 	{.compatible = "arm,coresight-static-funnel"},
+ 	{}
+ };
+ 
+-MODULE_DEVICE_TABLE(of, static_funnel_match);
++MODULE_DEVICE_TABLE(of, funnel_match);
+ 
+ #ifdef CONFIG_ACPI
+-static const struct acpi_device_id static_funnel_ids[] = {
+-	{"ARMHC9FE", 0, 0, 0},
++static const struct acpi_device_id funnel_acpi_ids[] = {
++	{"ARMHC9FE", 0, 0, 0}, /* ARM Coresight Static Funnel */
++	{"ARMHC9FF", 0, 0, 0}, /* ARM CoreSight Dynamic Funnel */
+ 	{},
+ };
+ 
+-MODULE_DEVICE_TABLE(acpi, static_funnel_ids);
++MODULE_DEVICE_TABLE(acpi, funnel_acpi_ids);
+ #endif
+ 
+-static struct platform_driver static_funnel_driver = {
+-	.probe          = static_funnel_probe,
+-	.remove_new      = static_funnel_remove,
+-	.driver         = {
+-		.name   = "coresight-static-funnel",
++static struct platform_driver funnel_driver = {
++	.probe		= funnel_platform_probe,
++	.remove_new	= funnel_platform_remove,
++	.driver		= {
++		.name   = "coresight-funnel",
+ 		/* THIS_MODULE is taken care of by platform_driver_register() */
+-		.of_match_table = static_funnel_match,
+-		.acpi_match_table = ACPI_PTR(static_funnel_ids),
++		.of_match_table = funnel_match,
++		.acpi_match_table = ACPI_PTR(funnel_acpi_ids),
+ 		.pm	= &funnel_dev_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
+@@ -373,7 +391,13 @@ static struct platform_driver static_funnel_driver = {
+ static int dynamic_funnel_probe(struct amba_device *adev,
+ 				const struct amba_id *id)
+ {
+-	return funnel_probe(&adev->dev, &adev->res);
++	int ret;
++
++	ret = funnel_probe(&adev->dev, &adev->res);
++	if (!ret)
++		pm_runtime_put(&adev->dev);
++
++	return ret;
+ }
+ 
+ static void dynamic_funnel_remove(struct amba_device *adev)
+@@ -410,12 +434,12 @@ static struct amba_driver dynamic_funnel_driver = {
+ 
+ static int __init funnel_init(void)
+ {
+-	return coresight_init_driver("funnel", &dynamic_funnel_driver, &static_funnel_driver);
++	return coresight_init_driver("funnel", &dynamic_funnel_driver, &funnel_driver);
+ }
+ 
+ static void __exit funnel_exit(void)
+ {
+-	coresight_remove_driver(&dynamic_funnel_driver, &static_funnel_driver);
++	coresight_remove_driver(&dynamic_funnel_driver, &funnel_driver);
+ }
+ 
+ module_init(funnel_init);
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.25.1
 
