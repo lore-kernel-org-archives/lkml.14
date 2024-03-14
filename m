@@ -1,128 +1,92 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9B36CDAA
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5686BFB3
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710407695; cv=none; b=JKozu8qhJ0pWbEvV/6HC8FTK1tW57FxT30Z4DSiCkP4yl1IE9ujsXub3NITF7h4xs5N1DXnFbv1gfVjc7tyXK+/Cn3Wtkr+ROgD2ZAysexkEHADS9uR50sqpLRb1BdlsUIBRpQ78tLdzXo2ZMdUzEq/zrqBRrNA46OqRnJ4rsLw=
+	t=1710407712; cv=none; b=qzv1rWNKTyJdUv7t7S803LgfOV1MlZOd1Lwu8P3HbT/hvOZ2LFNzX0rohRjyCm2BJ4q+WYqBT7F9vW4YkyyvsunZm+HNdZ27DD3+c9km/fz0gjH+1EAY4paNy5tYkog6xHas0bo2Tr5b3XT383JZTjEz+dGaZusW7RBtXY1z+mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710407695; c=relaxed/simple;
-	bh=+M6Ia1pC6W9VmZp+4ZgiLGoiDoNAJCIK6ngh7x2MqCo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YwYnuUxZTjfW7nNOD/V5N3mDavIAltjZ/NNXr+W39aSy4ih9OVAiusMJCokhJxlvFRe9z+R/vWyqGNlQ5yFmAfbTaOOqJ3GeykmvUr4IrhxzHkGu7tHBPGqSYyPZ7KGYXUnaSRcpljfn55E1Vhzky/oHfXoQpf0fF781hFj0nPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=ipJKBy2Z; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1710407712; c=relaxed/simple;
+	bh=lE/ZP5Tkvx9YY0FpPfk+sLpzNiYxoj91aWi14jou22k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VLxKI3c8aWlZdPb2NP84RRMiZWgfkRvhtN89++k3d0ihQpYBZB82lP6oAO5rAysLRzUeSLWfwd06mCnEa6o9nsDlQunPXnXwfZOfYMLTNG+GI5iINElqqjaXDfOUXjCH3yfewV5xMIM2tixWquP+TTG7SnH5cWrZPvcYAprKUsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ubFCNPhe; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="ipJKBy2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1710407693; x=1741943693;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+M6Ia1pC6W9VmZp+4ZgiLGoiDoNAJCIK6ngh7x2MqCo=;
-  b=ipJKBy2ZlFfTEN880MTmlco0LGqnibgWR3XIR5QI5yYei+A1atkiymF/
-   98woSHgkOa8AWBW5o5G5Uqvl+5UddOGfFey+yNdGrSzjH7IpSvUZmMNcP
-   3hG27D5uB73w8KmPqRqIJgIx4kh4Qtqu4a+dBaI1AlhXalThzrk+JLo+m
-   gHgY7RvZOs/52P5dyuXVhGUbSRPU7Jgbdnx6iEth4t9qnHhD+Bvv9sIhm
-   gnggp6JuTXyxsNYxG6B/q1tTSE9qVUZkCBiknoSayApTtO9Z2kghIFe4o
-   u6JgPt0W2EV9+zdRjPlODuuiaNkM6FRxPg8GCg9Fe34AbqoiDKugnCcnG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="152237945"
-X-IronPort-AV: E=Sophos;i="6.07,124,1708354800"; 
-   d="scan'208";a="152237945"
-Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 18:13:37 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id BD597FBD88
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:13:34 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 0B7933483D
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:13:34 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 9E2C16B4CF
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:13:33 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 44C671A006B;
-	Thu, 14 Mar 2024 17:13:33 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH] intel_th: Convert sprintf/snprintf to sysfs_emit
-Date: Thu, 14 Mar 2024 17:13:26 +0800
-Message-Id: <20240314091326.1323492-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ubFCNPhe"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-690c5d7851dso3811276d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710407708; x=1711012508; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lE/ZP5Tkvx9YY0FpPfk+sLpzNiYxoj91aWi14jou22k=;
+        b=ubFCNPheSIZ9cs6MaZxKWElEVqfL+s3kamjXeBCi5TL+nFgDVocsEf/N34w/gQXVeR
+         0LqK5N5L9cob0jrM+f06EPxadjMNgbXM10e4we3+v20YN4+oZzGSq809ILziIuLklVf3
+         MBm43VXX5DXR9vpuXWhLQJkZrcstImmNuzovBiJ6kUS7KGdNafB6ePLmas1Yg90DDG03
+         whRbVMEzHbrjEoARIstnlcsrPPjeL90l7fJUSi7+N1nlhc63QTNiYR/XCWHbWFoB4enw
+         T02PnMckcF/xjSPGoeMaeSN/Mx2E151p/NulWThbpZmFZgW6TqG22w6hjIaIO52cbznP
+         R02Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710407708; x=1711012508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lE/ZP5Tkvx9YY0FpPfk+sLpzNiYxoj91aWi14jou22k=;
+        b=b+KeSSzHLByP72AtFCtMQWS0S7rYS+dTgwmp+FjiiAelPX1EZKk1f7P5Ws9H4CKUvq
+         VfAQA5mEzJiuzYGy3fREZR0HvKZpE+YjTyNMOni3kUNyMdL99pmxrA0gzuZ/vNlhSg0i
+         xJTVrMg1l56mLMhxRW9w8c93wjqfhzphQYywu1VcqrPWoJEgN7TDGzm9qO5Tt7T09Sin
+         W3gPFgk+zXRgZW9n2iyT8rz2+QJyiCwzvH2rt4PoTalpHjvM8mPMDPiRsEXQLtBxZCUL
+         YZ66Hyf28kYBtMbRHtbWUU4wuQML5gGlb//wJKXUTeIkgXsHtorsjBTUfcQS7Qez3sNm
+         74Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCjRdTKzfl9Rd1zFPxVtGTNtbZQ39/WZqk1kKFgS9vij1TulvqvrmqGJ2At3oNUPCnzfucaUTt97jmc9V/oudEyk3WkD0RYUuZA9RD
+X-Gm-Message-State: AOJu0YwX24VLp8cWvNRkxPgeN7IwYQcauVkCBEf18GlUqGdDXLTmr4RX
+	CwKoHUApJmm9t7Kr9WCblI8I1O6c52oUI40ah0I0KVpHFxBj7gx6ZRMK/tcOPpPOp77GM7PcfPk
+	3r4+6yMSmyvNKmwpd6hPfSvYfBf6wyzrzWNFE
+X-Google-Smtp-Source: AGHT+IGfMznYIETWqpb1PprXePzqaigF18dojgQnMhgp1CmXhdyU8MIRSF4qLWE020QEL3knnSBFKCRcRErOBRLrkgE=
+X-Received: by 2002:ad4:53a6:0:b0:690:d719:d575 with SMTP id
+ j6-20020ad453a6000000b00690d719d575mr1324895qvv.43.1710407708463; Thu, 14 Mar
+ 2024 02:15:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28250.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28250.006
-X-TMASE-Result: 10--7.667100-10.000000
-X-TMASE-MatchedRID: ebEStOsB1eE4ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfDqO6/8R69QE8U
-	roFNOGp7a6aAZTOwtJmRloiW1Kgftd2ZdKe8BPbS/sUSFaCjTLxN8rmPQRlvK7oFQ8GRC1Prs1w
-	waYBQLgs9/vFVBxxqgB0XJlVTsEsboYY7KoErjW8ReM8i8p3vgEyQ5fRSh2656hUULKzHRgRjST
-	BlHEhAJovs2FqH/pE7hKK/bK+QypCR9GF2J2xqMxRFJJyf5BJeGEkIgdGU7nX6C0ePs7A07b4iO
-	wQQ4jNiGscX1rQ4Fn/mg7+nvJVJ8qbDNweYTUPQFW3EAdm/C5k=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+References: <20240313230713.987124-1-benno.lossin@proton.me>
+In-Reply-To: <20240313230713.987124-1-benno.lossin@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 14 Mar 2024 10:14:57 +0100
+Message-ID: <CAH5fLgjMkWxqTxZKt_w+V6X1qfUzosTbwMxDVXUmw_qTdzYP_A@mail.gmail.com>
+Subject: Re: [PATCH] rust: init: remove impl Zeroable for Infallible
+To: Benno Lossin <benno.lossin@proton.me>, Laine Taffin Altman <alexanderaltman@me.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, stable@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-or sysfs_emit_at() when formatting the value to be returned to user space.
+On Thu, Mar 14, 2024 at 12:09=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
+me> wrote:
+>
+> From: Laine Taffin Altman <alexanderaltman@me.com>
+>
+> It is not enough for a type to be a ZST to guarantee that zeroed memory
+> is a valid value for it; it must also be inhabited. Creating a value of
+> an uninhabited type, ZST or no, is immediate UB.
+> Thus remove the implementation of `Zeroable` for `Infallible`, since
+> that type is not inhabited.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 38cde0bd7b67 ("rust: init: add `Zeroable` trait and `init::zeroed`=
+ function")
+> Closes: https://github.com/Rust-for-Linux/pinned-init/pull/13
+> Signed-off-by: Laine Taffin Altman <alexanderaltman@me.com>
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
 
-coccinelle complains that there are still a couple of functions that use
-snprintf(). Convert them to sysfs_emit().
-
-sprintf() will be converted as weel if they have.
-
-Generally, this patch is generated by
-make coccicheck M=<path/to/file> MODE=patch \
-COCCI=scripts/coccinelle/api/device_attr_show.cocci
-
-No functional change intended
-
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
-Split them per subsystem so that the maintainer can review it easily
-[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
----
- drivers/hwtracing/intel_th/gth.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwtracing/intel_th/gth.c b/drivers/hwtracing/intel_th/gth.c
-index b3308934a687..3883f99fd5d5 100644
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -154,9 +154,9 @@ static ssize_t master_attr_show(struct device *dev,
- 	spin_unlock(&gth->gth_lock);
- 
- 	if (port >= 0)
--		count = snprintf(buf, PAGE_SIZE, "%x\n", port);
-+		count = sysfs_emit(buf, "%x\n", port);
- 	else
--		count = snprintf(buf, PAGE_SIZE, "disabled\n");
-+		count = sysfs_emit(buf, "disabled\n");
- 
- 	return count;
- }
-@@ -332,8 +332,8 @@ static ssize_t output_attr_show(struct device *dev,
- 	pm_runtime_get_sync(dev);
- 
- 	spin_lock(&gth->gth_lock);
--	count = snprintf(buf, PAGE_SIZE, "%x\n",
--			 gth_output_parm_get(gth, oa->port, oa->parm));
-+	count = sysfs_emit(buf, "%x\n",
-+			   gth_output_parm_get(gth, oa->port, oa->parm));
- 	spin_unlock(&gth->gth_lock);
- 
- 	pm_runtime_put(dev);
--- 
-2.29.2
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
