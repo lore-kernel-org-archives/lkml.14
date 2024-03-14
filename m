@@ -1,192 +1,183 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B996D5B200
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3455811C
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710422086; cv=none; b=Lwq88C3rRAUZLfN1UMzob/v3LiVXtVqQ8CsBnQ4Fn8/fQXn6gJb7msTQasdjASOCC3QdZw9cpv+dMZfdl4jm6WCAH66CBsVYaNrnVnLGcXU0sawJlh7VyO0uIFxZKSgkQWKF72FJTLUNlkNGTa3HJtHqMEpVePViuASONW3QR6s=
+	t=1710422149; cv=none; b=qvlYhOr+ZGZknbXlsXd9AJ3KpMwoE30k2alJ3sWvSJp8lw5k6eceA3Qsl0GOWtpF0HLTtpfAK8jBnlhkRUQHHYyH0Gjjo7hSs582WAqHTUzB1T0a/JEjq/jWaDVBjWWPk6ic1i4gZqoCfpi9p/ycPCT6XLuKUjfyQ0idBHLzT2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710422086; c=relaxed/simple;
-	bh=nzs6zCI1jdSZw5ilnOs66b3DiJ+Gf76pVPexRiRqK7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A3ev6ZFDjEd1YMOqNmPpmhQQhAkVWgIpVUoD1dVLEqu6z7QetOlCYEZBUtZQ/sTOjjiq20bT41DHEebqkpX/cWCIsCyKZXKkfGIWaku7mGk4Fhzm8kis59whOht27/CBByIcc8kw9AP5Sxg2qyer+cyF4g7BiwK5AT5yK8hbWNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mbExeOXW; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710422149; c=relaxed/simple;
+	bh=s8gbaIHHbTZrdVVOi4yZtKNS+S0vWwrzMEUqArhGGUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ng97iq/AEt6RqGSWHbpLGbxYk7hEFf6TIOkcOS1Nvpprm9v7nc0EjdlxW3un09To2bEnV2qJFSrguXbFBAMq9P7JDtipYaO3w/Wrte8wKcPZH9v2Oyjn63F5CZAU9hpv0lfO8kwzyLsIyYLr3jfyQE8XKgnIEOFlLmhDKH2fVKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjJdKRi8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mbExeOXW"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a068e26d8so10632377b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 06:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710422084; x=1711026884; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkD0KnYDjnqjUj1tphaFuRIzplXQwfgK5ojv6GksvlY=;
-        b=mbExeOXWboJjaCa3+MJDNvkDycW3WnS7LAgCFA+ETZWcjDuJUe01dOwfhbqJ8GHTiK
-         eUl4AT/2414JLugozU+NuTglKzUQm6h2NJqtadjwqSV/MV+G0BWcnQVfkEyYH5oOl3ad
-         jaBQvGr7jBp7Nv+5nIeesKqk5usYZfGNm7+A5skXqQaY1ZgOp+YFR+q3fnzmBMMR8kVf
-         fCYeWsH6BuljNTJxUm0Q+7tFKQgSoRjAtd9hKAvkPTlcyYiaD2QG6Dg0Y8zQqmPqfM24
-         sDkJVZninY99Nu/F+9dzUbpB5fcS977LehLkc/Ku4PJlgjTgD3Km4QK6Rl8FU7C2wg9M
-         1vpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710422084; x=1711026884;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fkD0KnYDjnqjUj1tphaFuRIzplXQwfgK5ojv6GksvlY=;
-        b=BnmarV8IiWJraiqj5kvb0HLizG/7qzULj4l+KGFEeQGqlE9VLnHIYJuwdLq6BMOgb4
-         HEwahjrl8hGgYzEzr2F2ki73kNt2wCTJOJyqhZdFCLOUyi22ZazSxmbSk4z7Bjzqbwtz
-         kQMNk08nIyLoDWd2v5fW9lAxKSr1xvyJrOeCH+MOZSaNXN2rJD2gBNbapAf37YFHfs5Z
-         LqP0Ntt4gzT3mFATZpEDirgmqMFh3FwX9giTnPkJ9DuenoowpCp3Oo3K8wjDlKvzQLWd
-         D4MhHy2aRnlJ6l6m08RdRc/gm+EFsCeLNhLHN7PjixhhGLtHDslfaQCoTRT0q5sWRRLH
-         +qaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFi4Z6QCDOr9GqKnp1kWhycXuUl1pmjRZl8WSrjnDixQ6NlNrpPtTSgrS5Hya4STQKIy58DRNuNbLCn7hk1J//9ZlkyJ74UmWGaShQ
-X-Gm-Message-State: AOJu0YxdOVxe6bv+hUjD9qOU9POxsN/KM/mnYYU/+xZ0jnhJ1QFTbSsi
-	6vMHokz5bZPq1v+Mu755r6egdLHO2hUq90EZJ5Q8cRsVAD5//uIVrUXkQ0vPcUY1AlClZtum3em
-	TK2VNXaHC5mtYgsndiV5yM//XGZg9ZySUQgtD9Q==
-X-Google-Smtp-Source: AGHT+IENdbs25prtdnXfRF19x+3DROxo9WIqwzwvi6gTNh98VdEaATL6yqgmxAYviMYew8QsBjhPAlhRMp6IcmuesAo=
-X-Received: by 2002:a05:690c:6f88:b0:60c:d56c:2c38 with SMTP id
- je8-20020a05690c6f8800b0060cd56c2c38mr341959ywb.7.1710422083691; Thu, 14 Mar
- 2024 06:14:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjJdKRi8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43875C433C7;
+	Thu, 14 Mar 2024 13:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710422149;
+	bh=s8gbaIHHbTZrdVVOi4yZtKNS+S0vWwrzMEUqArhGGUQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JjJdKRi8JxY+tyi+v8BDonWH4IxbfBPa2npy7aB036BQ2nGeEobBNny4/U67gouTH
+	 W8rQgvM2my0BP5KDkrydbYkSSOAyido2Q100QK3g1qdx3W5ZYNt6BPzbWhpitknlO2
+	 0TwJSjVNFdjvi+S8vFiksgXTV6xxg977FD8zUPTEjqXUY28AMmFDiZAvUMK+uylISw
+	 /tx4Ym9JDQeOz1Em0+Km8PUB7ybpXidA2yRZovBIwP/FMYXC7bbeS4NZyJFrS3VxMU
+	 2bdk60NkMaSqqPXraVQtzkwuAcBKuRX1ya8ULUbxlG2MkqxxbJHg06HB4nP7f5gA8j
+	 O4SslNwcXhSCQ==
+Date: Thu, 14 Mar 2024 21:02:38 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: cleger@rivosinc.com, lohr85@gmail.com, Conor Dooley <conor@kernel.org>,
+	samuel.holland@sifive.com, Paul Walmsley <paul.walmsley@sifive.com>,
+	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>, ajones@ventanamicro.com,
+	dlemoal@kernel.org, Bjorn Topel <bjorn@rivosinc.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
+Message-ID: <ZfL1buKdDI-p5b9X@xhacker>
+References: <a49546e8-6749-4458-98da-67fd37b7df18@rivosinc.com>
+ <mhng-a3b495e6-aca6-4137-a3c1-8fcacafd8596@palmer-ri-x1c9a>
+ <ZfLxip96o5MVjHAF@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313123017.362570-1-sumit.garg@linaro.org>
- <20240313123017.362570-4-sumit.garg@linaro.org> <4a0a8db7-a2bc-4c99-94b2-c13facbd1bef@linaro.org>
- <CAFA6WYPh5BS_Fpi6ksAC7bwoFEyqjj1Y3EahyQxCG9Pp=KDw=Q@mail.gmail.com>
- <9dc0415c-4138-4867-861a-38b45b636182@linaro.org> <CAFA6WYPFfL18acdZt6O-_=LWnH7J2MooDuf9cA3JCaQZdoLhVA@mail.gmail.com>
- <CAFA6WYNo73S5ROHCMK0ZQSiU0DDbuDadptmaPL+GPCocE0h-mA@mail.gmail.com>
-In-Reply-To: <CAFA6WYNo73S5ROHCMK0ZQSiU0DDbuDadptmaPL+GPCocE0h-mA@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 14 Mar 2024 15:14:32 +0200
-Message-ID: <CAA8EJpqxb39u=ShpcALa+M8Pj8fE-q2p6WzZA=HPLJ-47UH+qg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
- board DTS
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	stephan@gerhold.net, caleb.connolly@linaro.org, neil.armstrong@linaro.org, 
-	laetitia.mariottini@se.com, pascal.eberhard@se.com, abdou.saker@se.com, 
-	jimmy.lalande@se.com, benjamin.missey@non.se.com, daniel.thompson@linaro.org, 
-	linux-kernel@vger.kernel.org, Jagdish Gediya <jagdish.gediya@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfLxip96o5MVjHAF@xhacker>
 
-On Thu, 14 Mar 2024 at 11:37, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> On Thu, 14 Mar 2024 at 14:47, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > On Thu, 14 Mar 2024 at 14:00, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > >
-> > > >>> +
-> > > >>> +             compatible = "gpio-leds";
-> > > >>> +             #address-cells = <1>;
-> > > >>> +             #size-cells = <0>;
-> > > >>
-> > > >> That's not a bus.
-> > > >>
-> > > >> It does not look like you tested the DTS against bindings. Please run
-> > > >> `make dtbs_check W=1` (see
-> > > >> Documentation/devicetree/bindings/writing-schema.rst or
-> > > >> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-> > > >> for instructions).
-> > > >
-> > > > I assumed earlier that W=1 is sufficient for DT schema checks but it
-> > >
-> > > W=1 as in make? No, it is not. It's flag changing the build process.
-> > > dtbs_check is separate target.
-> > >
-> > > > looks like those are two different entities. However, I added these
-> > > > address and size cells properties only to get rid of warnings reported
-> > > > by W=1, see below:
-> > > >
-> > > > $ make qcom/apq8016-schneider-hmibsc.dtb W=1
-> > > >   DTC     arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb
-> > > > arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts:96.9-103.5:
-> > > > Warning (unit_address_vs_reg): /leds/led@5: node has a unit name, but
-> > > > no reg or ranges property
-> > > > arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts:105.9-112.5:
-> > > > Warning (unit_address_vs_reg): /leds/led@6: node has a unit name, but
-> > > > no reg or ranges property
-> > >
-> > > Wait, so you saw the warnings and ignored them?
-> >
-> > Sorry but you are ignoring what I am trying to say.
-> >
-> > > These are legitimate
-> > > warnings, although they don't give you full answer.
-> > >
-> > > > <snip>
-> > > >
-> > > > So it looks like W=1 is reporting false warnings and we should rather
-> > >
-> > > Warnings were true.
-> > >
-> >
-> > That's was my initial impression too and I fixed them via following diff:
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> > b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> > index 8f9cacf8de89..a366d3aff3c5 100644
-> > --- a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> > +++ b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> > @@ -92,8 +92,11 @@ leds {
-> >                 pinctrl-0 = <&pm8916_mpps_leds>;
-> >
-> >                 compatible = "gpio-leds";
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> >
-> >                 led@5 {
-> > +                       reg = <5>;
-> >                         label = "apq8016-hmibsc:green:wlan";
-> >                         function = LED_FUNCTION_WLAN;
-> >                         color = <LED_COLOR_ID_YELLOW>;
-> > @@ -103,6 +106,7 @@ led@5 {
-> >                 };
-> >
-> >                 led@6 {
-> > +                       reg = <6>;
-> >                         label = "apq8016-hmibsc:yellow:bt";
-> >                         function = LED_FUNCTION_BLUETOOTH;
-> >                         color = <LED_COLOR_ID_BLUE>;
-> >
-> > But it then broke dtbs_check.
->
-> See following breakage afterwards:
->
-> $ make qcom/apq8016-schneider-hmibsc.dtb dtbs_check
-> <snip>
-> /home/sumit/build/upstream/linux/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb:
-> leds: led@5: Unevaluated properties are not allowed ('reg' was
-> unexpected)
-> from schema $id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
-> /home/sumit/build/upstream/linux/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb:
-> leds: led@6: Unevaluated properties are not allowed ('reg' was
-> unexpected)
-> from schema $id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
-> /home/sumit/build/upstream/linux/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb:
-> leds: '#address-cells', '#size-cells' do not match any of the regexes:
-> '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-> <snip>
+On Thu, Mar 14, 2024 at 08:46:21PM +0800, Jisheng Zhang wrote:
+> On Tue, Feb 27, 2024 at 08:38:50AM -0800, Palmer Dabbelt wrote:
+> > On Tue, 27 Feb 2024 01:11:41 PST (-0800), cleger@rivosinc.com wrote:
+> > > 
+> > > 
+> > > On 26/02/2024 20:00, Charles Lohr wrote:
+> > > > WOAH! Please DO NOT deprecate NOMMU. I use the NOMMU build constantly
+> > > > and NOMMU Linux on RISC-V is the avenue used by many FPGA soft cores
+> > > > for Linux, as well as some limited systems.
+> > 
+> > OK.
+> > 
+> > I just build test this stuff, as I don't really have a use for it
+> > personally.  I figured if nobody's reporting bugs then probably it's broken
+> > and nobody's noticed because nobody's using it.
+> > 
+> > > > I get new copies of the kernel when there are releases and test them
+> > > > frequently to make sure everything is still working as expected.
+> > 
+> > I'd actually expected it to be broken, but I guess we managed to avoid
+> > screwing things up ;)
+> > 
+> > > > For us we just don't care about XIP. I mean if someone did push it
+> 
+> I don't care XIP either, and IMHO the XIP's maintenance effort is much
+> bigger than NOMMU(just check the various XIP_FIXUP* or CONFIG_XIP_KERNEL
+> macros around lowlevel pgtable.h, page.h). If we can remove XIP, the
+> code readability will be much better.
+> 
+> Or sending out a similar XIP deprecation patch to see whether there's
+> any complain ? ;)
+> 
+> > > > through to fruition, I'd also test and use it, but I urge you please
+> > > > do not deprecate this.  While it's sometimes needed a bit of a
+> 
+> +1 for urge the upstream please do not deprecate NOMMU.
+> 
+> Besides the soft(FPGA) core mentioned by Charles, here is another real
 
-That's because there is no addressing for gpio-leds. Just use names as
-led-5, led-6.
+And I'd like to write more about soft core: riscv is a free and open
+ISA, this make it really good for education, for simple riscv
+implementation or emulator. Once riscv IMA is implemented(even if MMU,
+cache, TLB stuff don't exist), it's not far away from making linux
+running on the FPGA or emulator. If the gain is larger than the maintenance
+effort, I'd like to urge keeping the NOMMU support.
 
->
-> > Are you aware of any other saner way to
-> > fix those warnings properly?
-> >
->
-> -Sumit
->
+Thanks a lot
 
-
--- 
-With best wishes
-Dmitry
+> usage case: As is known, Sophgo CV1800B platforms such as Milk Duo
+> contains two C906 core, one(a.k.a big core) with MMU another(a.k.a small
+> core)w/o MMU. The vendor sdk runs freertos on the small core, but it
+> doesn't prevent users to run other OS such as threadx, zephyr or nommu
+> linux on the small core. In fact, I sucessfully brought up nommu linux
+> on the small core. I didn't just send out the patches in time during this
+> dev window duo to my personal career reason(I spent the time on hunting
+> for a new job)
+> 
+> I plan to send out NOMMU related patches once 6.9-rc1 is out.
+> 
+> > > > creative build to get everything working, I've never needed to patch
+> > > > anything in the kernel beyond patching in a custom console for serial
+> > > > output.
+> > > > 
+> > > 
+> > > Hey Charles,
+> > > 
+> > > No worries, we actually did not expected NOMMU to have *so many* users.
+> > > I guess deprecating stuff is a good way to have immediate feedback ;).
+> > > Having FDPIC psABI to be merged upstream could also probably be a
+> > > positive point toward a better NOMMU support.
+> > 
+> > Ya, that's probably the right way to do it.  Touching anything in the psABI
+> > is pretty miserable, though, so I don't really want to force people to do
+> > it...
+> > 
+> > > > I am happy to discuss the possibility of me and or one of the other
+> > > > RISC-V soft (FPGA) core people stepping up to try to be more active,
+> > > > but so far we've just been very well serviced by the current NOMMU
+> > > > Linux setup.
+> > > 
+> > > It could probably be nice to have some feedback/Tested-by: from NOMMU
+> > > users for new releases then.
+> > 
+> > Having more upstream interaction from users is always appreciated, that's
+> > the best way to prove people are using the code.  If you guys have the time
+> > it'd be great to get this into some sort of CI, ideally running on some real
+> > platform.
+> 
+> As above, I'd also like to step up on the NOMMU stuff, at least test
+> nommu on milkv duo's small core. And can be seen from my git commit
+> histotry, I was active, and I belive I will still be active on riscv linux
+> kernel development.
+> 
+> > 
+> > > Thanks,
+> > > 
+> > > Clément
+> > > 
+> > > > 
+> > > > Charles
+> > > > 
+> > > > 
+> > > > On Mon, Feb 26, 2024 at 8:03 AM Conor Dooley <conor@kernel.org> wrote:
+> > > > > 
+> > > > > On Mon, Feb 26, 2024 at 04:25:24PM +0100, Clément Léger wrote:
+> > > > > > I guess I could also mark XIP as deprecated.
+> > > > > 
+> > > > > I'm not so sure, people recently added XIP support to QEMU (and sent
+> > > > > kernel fixes in December). XIP is also not nearly as much of a problem
+> > > > > to support, there's far less that it does differently, the main barrier
+> > > > > was the inability to test it which is no longer the case.
+> > > > > That said, XIP is gonna kill itself off I feel as it does not support
+> > > > > runtime patching and therefore is extremely limited on extensions, given
+> > > > > we use alternatives for all of that (although I suppose if someone has a
+> > > > > usecase they could make nasty macros worse and implement a compiletime
+> > > > > switch in the alternatives too).
+> > > > > 
+> > > > > Cheers,
+> > > > > Conor.
+> > > > > 
+> > > > > _______________________________________________
+> > > > > linux-riscv mailing list
+> > > > > linux-riscv@lists.infradead.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
