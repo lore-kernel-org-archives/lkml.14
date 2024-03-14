@@ -1,122 +1,481 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980AA6024E
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91001604AB
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710402588; cv=none; b=mA2HUMu8W2Uti8PzDF0r9Nk8vMXX9126iScDDmN5s9gVfmsZcPf5cW23UCzS/w4pEvdA07FbqKLPEpcXdXrQ9I1vTNHlJ78M/gsbxhWIW6itKmlhuFBIrrZx37qnz+bUplyZf2/c2NVrgPuxtr5KQGAj5zFWv+oPRaRN78HcNcg=
+	t=1710402594; cv=none; b=pEqhaPp05fNr5z6Pw5gXSDYACc+3vaqXCkg5Xfq9Qcaj6FPsTCHxnptHfAWiYRMa2JlBHrLgIl0Ad9NGe7aY/sVSmdIL6Hzzhc1+tiwTZuA0q7u9Q81u0cDYKHJxl2PDnE/CyPS6pRYbMmRcNlDipu8AbD1sGy2s43oo2TlQWXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710402588; c=relaxed/simple;
-	bh=au2T8EyQNZT1Y2JxCjARB4gUru0OlT7JfM1KnJZLoUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T6aqLO2EpzanbOLxnTPYHzMiZ1/VqvCU4jBEaoMTZYAEtQUoXrLOO5uIZxXuK2ma8RfabxvoPM+LTcSsyj0gzN9EcSyzxFnsDCzzC9R2sGcyBlT6PeFFePAWAGfxf5S8eYAjPiYxWdTjPqbMrsk01iUJ2t25cXkhZtFD/uZ2Gos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KXIZpCpt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710402594; c=relaxed/simple;
+	bh=S2uv0dCCbhiU2qhbMjneII/AXKnesPZEwsDKdaLNH1s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DzGrEbO2MFgPCUOJfhV7Lg2nBrJJx9ZbRAaBnzeA/YZUQW1vPA1SEKO7rKwRGgxV1M06mbCCHX6UIWCsJgZCu6B+QU5uScPw9/WD8eIDdqhbfA86EF1pLBQ1WyG/8VY6UcwGEdhp9/A3tIdhil41Yjy3UHrR4fA4SmqNBzgKdzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vr2vtfls; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXIZpCpt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710402585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4k25JO+YyOBDjJ6GZlIvWxzo6WAx4koWTCdtMZJqhv8=;
-	b=KXIZpCptlT1i3HI/UvLzNA2fwgtMs1SVDeSv27gMPsK/IEx5ktDaDeGI9CNUM3UcSxJR6s
-	R1sgftjfjEY6CSnPK1yvn7D+uLvd5+VV7VaFWZ79aRJNX18ovlT6eWFAph0txGDBQHqnfu
-	0N67j6Po/AmfFTPRagjXu4OSstYhX2I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-9gCeRlxeO9iXPE7lJWv7UA-1; Thu, 14 Mar 2024 03:49:42 -0400
-X-MC-Unique: 9gCeRlxeO9iXPE7lJWv7UA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 85AEF81A260;
-	Thu, 14 Mar 2024 07:49:42 +0000 (UTC)
-Received: from gshan-thinkpadx1nanogen2.remote.csb (unknown [10.64.136.81])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BA96B1121306;
-	Thu, 14 Mar 2024 07:49:39 +0000 (UTC)
-From: Gavin Shan <gshan@redhat.com>
-To: virtualization@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com,
-	yihyu@redhat.com,
-	shan.gavin@gmail.com
-Subject: [PATCH] virtio_ring: Fix the stale index in available ring
-Date: Thu, 14 Mar 2024 17:49:23 +1000
-Message-ID: <20240314074923.426688-1-gshan@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vr2vtfls"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dedb92e540so1904115ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710402592; x=1711007392; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l1IH4JXPyGY5G2M+FE3S5VV95kQawRh2XQdzV9wj3zI=;
+        b=vr2vtflsM3FYi13sFSUQNr/U0DPyyJR1RLRmGsZOaOZ4lKSV/aAO5mQJQEXtnjWJWe
+         5gGazVJuM5h255fX1qOPiPwUZBI8JSegnBSLhNSqiMbHHvEU7GKzPJIUSrRgJtmuJPK1
+         XqaQW+oh48iRMuAZzYKC0+6GLwCPi4qTzLgNF6IjsBnZU0gxBqdQd1vO3muPR+TrJu41
+         QUYnfJRzQQ3Vd6Oi5hzvyUDZBkYloMwa610I5CVb8lR4evmMxLdovyCl9b9NBIFjPz/q
+         IcrkN5POV14AN4PW49Yzt4+U8UrI7VYXtCFkeWvnVikdW8OqXPjCDhFqtmF9jDLYb5qJ
+         jPFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710402592; x=1711007392;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l1IH4JXPyGY5G2M+FE3S5VV95kQawRh2XQdzV9wj3zI=;
+        b=tQDv5Ybvoc9sGjOwgzGf71P6WnEQDC7vS47eMUtYgg9Y24UdVijx3EgMGQOTw9/i9B
+         APUeaUhbbljKjwlgYPlzAII+wAqHdviHPIvcnQMK1CLmlxIQj/NjSVMVS0B9I53rT1nT
+         QfrEgSrcyeKP1XQVjnHoGHuH/rXvRWWBZaLt6UmcEwAf2bsSQvtY56xyRuc0KGciMD8F
+         16d0RS6Ka+l5YzHhS8YtvCsj1yu2M4pSAFE1ncwA/CV/h2HDJsjAg3hKoWPjV3/yQ1pp
+         ASKpHvFGhL04EGkdWOILOiCKudtYmJNeVCfqNiLqOJm9pvLn9PlUdNMUzmdV9cCvLYuA
+         lkHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL01AU2ZedJv7efWDLfbh7nJfRqms25YSjUXcB/LU+1BKthfn627MYITMF31I1SPyKGzb0ktQ1UrOqZONdzfm31R+QQB6KZaDa8Pv4
+X-Gm-Message-State: AOJu0Yw28zgyHkreYPkRn1Nk350RCtjNtWLnNUZks/pCS1lxhBHZF7yZ
+	OP5B30NGpvY2/n4DgGIjCDtV6YYtewkgLC9pvs5SZVLoCH3F4e++lIojZK35pQ==
+X-Google-Smtp-Source: AGHT+IFRoWC/HPBrw71SlL9Xc8OJuqzWc/bBWuQ3n9WklxGo0g0LLQYqYMly7CUmrUvwsMMbUvTFSg==
+X-Received: by 2002:a17:902:da88:b0:1dd:d869:a237 with SMTP id j8-20020a170902da8800b001ddd869a237mr3907038plx.34.1710402591972;
+        Thu, 14 Mar 2024 00:49:51 -0700 (PDT)
+Received: from [127.0.1.1] ([117.207.30.211])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170903120900b001dd4fabf695sm946321plh.38.2024.03.14.00.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 00:49:51 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 14 Mar 2024 13:18:06 +0530
+Subject: [PATCH v10 8/8] PCI: dwc: ep: Remove "core_init_notifier" flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240314-pci-dbi-rework-v10-8-14a45c5a938e@linaro.org>
+References: <20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org>
+In-Reply-To: <20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=14106;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=S2uv0dCCbhiU2qhbMjneII/AXKnesPZEwsDKdaLNH1s=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl8qvEnjDMt0fC3AEek+ZebxmAkGUV98ktdKT4w
+ pi6cD4dXsCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfKrxAAKCRBVnxHm/pHO
+ 9fFvB/9dsE406HBVkYP7CnZHAv77sMSzBAPSzJevA0+uFWPuaqLWI2/rgpttPDfm7VTCgMtlqO9
+ SDsdL4oscB15r3Ei90fbPVvqC3TXfo1VksRWwqy9v9qA7FxckWmohHpQMRtlpYjtuKYpA6WvQP1
+ IyC8guMXbFB7QzE0gYC2A2Gjj5WvgMeaTa3l/mv9NxcZLaSjvKIJjEfzIs8OtTSnmA1FpYHTnhw
+ XUYk8Qgcob93j6ipCqK/4WFiVx53a3XJFwaP99oXxXEeE99NrY+EvG5ZzKMqIGRXGy2ZNFmEYbJ
+ PRVWoZjTVky5Iy+iRA5J5jPXu8uYuGyDDvN55z3bSLcmrKBx
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-The issue is reported by Yihuang Yu who have 'netperf' test on
-NVidia's grace-grace and grace-hopper machines. The 'netperf'
-client is started in the VM hosted by grace-hopper machine,
-while the 'netperf' server is running on grace-grace machine.
+"core_init_notifier" flag is set by the glue drivers requiring refclk from
+the host to complete the DWC core initialization. Also, those drivers will
+send a notification to the EPF drivers once the initialization is fully
+completed using the pci_epc_init_notify() API. Only then, the EPF drivers
+will start functioning.
 
-The VM is started with virtio-net and vhost has been enabled.
-We observe a error message spew from VM and then soft-lockup
-report. The error message indicates the data associated with
-the descriptor (index: 135) has been released, and the queue
-is marked as broken. It eventually leads to the endless effort
-to fetch free buffer (skb) in drivers/net/virtio_net.c::start_xmit()
-and soft-lockup. The stale index 135 is fetched from the available
-ring and published to the used ring by vhost, meaning we have
-disordred write to the available ring element and available index.
+For the rest of the drivers generating refclk locally, EPF drivers will
+start functioning post binding with them. EPF drivers rely on the
+'core_init_notifier' flag to differentiate between the drivers.
+Unfortunately, this creates two different flows for the EPF drivers.
 
-  /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64              \
-  -accel kvm -machine virt,gic-version=host                            \
-     :                                                                 \
-  -netdev tap,id=vnet0,vhost=on                                        \
-  -device virtio-net-pci,bus=pcie.8,netdev=vnet0,mac=52:54:00:f1:26:b0 \
+So to avoid that, let's get rid of the "core_init_notifier" flag and follow
+a single initialization flow for the EPF drivers. This is done by calling
+the dw_pcie_ep_init_notify() from all glue drivers after the completion of
+dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
+send the notification to the EPF drivers once the initialization is fully
+completed.
 
-  [   19.993158] virtio_net virtio1: output.0:id 135 is not a head!
+Only difference here is that, the drivers requiring refclk from host will
+send the notification once refclk is received, while others will send it
+during probe time itself.
 
-Fix the issue by replacing virtio_wmb(vq->weak_barriers) with stronger
-virtio_mb(false), equivalent to replaced 'dmb' by 'dsb' instruction on
-ARM64. It should work for other architectures, but performance loss is
-expected.
+But this also requires the EPC core driver to deliver the notification
+after EPF driver bind. Because, the glue driver can send the notification
+before the EPF drivers bind() and in those cases the EPF drivers will miss
+the event. To accommodate this, EPC core is now caching the state of the
+EPC initialization in 'init_complete' flag and pci-ep-cfs driver sends the
+notification to EPF drivers based on that after each EPF driver bind.
 
-Cc: stable@vger.kernel.org
-Reported-by: Yihuang Yu <yihyu@redhat.com>
-Signed-off-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/virtio/virtio_ring.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pci-dra7xx.c           |  2 ++
+ drivers/pci/controller/dwc/pci-imx6.c             |  2 ++
+ drivers/pci/controller/dwc/pci-keystone.c         |  2 ++
+ drivers/pci/controller/dwc/pci-layerscape-ep.c    |  2 ++
+ drivers/pci/controller/dwc/pcie-artpec6.c         |  2 ++
+ drivers/pci/controller/dwc/pcie-designware-plat.c |  2 ++
+ drivers/pci/controller/dwc/pcie-keembay.c         |  2 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c         |  1 -
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c       |  2 ++
+ drivers/pci/controller/dwc/pcie-tegra194.c        |  1 -
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  2 ++
+ drivers/pci/endpoint/functions/pci-epf-test.c     | 18 +++++-------------
+ drivers/pci/endpoint/pci-ep-cfs.c                 |  9 +++++++++
+ drivers/pci/endpoint/pci-epc-core.c               | 22 ++++++++++++++++++++++
+ include/linux/pci-epc.h                           |  7 ++++---
+ 15 files changed, 58 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 49299b1f9ec7..7d852811c912 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -687,9 +687,15 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
- 	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
- 	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 395042b29ffc..d2d17d37d3e0 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -474,6 +474,8 @@ static int dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+ 		return ret;
+ 	}
  
--	/* Descriptors and available array need to be set before we expose the
--	 * new available array entries. */
--	virtio_wmb(vq->weak_barriers);
-+	/*
-+	 * Descriptors and available array need to be set before we expose
-+	 * the new available array entries. virtio_wmb() should be enough
-+	 * to ensuere the order theoretically. However, a stronger barrier
-+	 * is needed by ARM64. Otherwise, the stale data can be observed
-+	 * by the host (vhost). A stronger barrier should work for other
-+	 * architectures, but performance loss is expected.
-+	 */
-+	virtio_mb(false);
- 	vq->split.avail_idx_shadow++;
- 	vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
- 						vq->split.avail_idx_shadow);
++	dw_pcie_ep_init_notify(ep);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index bfcafa440ddb..894b5de76e3a 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1144,6 +1144,8 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+ 		return ret;
+ 	}
+ 
++	dw_pcie_ep_init_notify(ep);
++
+ 	/* Start LTSSM. */
+ 	imx6_pcie_ltssm_enable(dev);
+ 
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 093dbb725e41..b7b30470b394 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1293,6 +1293,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
+ 			goto err_ep_init;
+ 		}
+ 
++		dw_pcie_ep_init_notify(&pci->ep);
++
+ 		break;
+ 	default:
+ 		dev_err(dev, "INVALID device type %d\n", mode);
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index b712fdd06549..c513598a46d7 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -283,6 +283,8 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	dw_pcie_ep_init_notify(&pci->ep);
++
+ 	return ls_pcie_ep_interrupt_init(pcie, pdev);
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+index a6095561db4a..a4630b92489b 100644
+--- a/drivers/pci/controller/dwc/pcie-artpec6.c
++++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+@@ -452,6 +452,8 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
+ 			return ret;
+ 		}
+ 
++		dw_pcie_ep_init_notify(&pci->ep);
++
+ 		break;
+ 	default:
+ 		dev_err(dev, "INVALID device type %d\n", artpec6_pcie->mode);
+diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+index ca9b22e654cd..8490c5d6ff9f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-plat.c
++++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+@@ -154,6 +154,8 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
+ 			dw_pcie_ep_deinit(&pci->ep);
+ 		}
+ 
++		dw_pcie_ep_init_notify(&pci->ep);
++
+ 		break;
+ 	default:
+ 		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
+diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
+index 250d6acf16dc..9fa9354a5f48 100644
+--- a/drivers/pci/controller/dwc/pcie-keembay.c
++++ b/drivers/pci/controller/dwc/pcie-keembay.c
+@@ -438,6 +438,8 @@ static int keembay_pcie_probe(struct platform_device *pdev)
+ 			return ret;
+ 		}
+ 
++		dw_pcie_ep_init_notify(&pci->ep);
++
+ 		break;
+ 	default:
+ 		dev_err(dev, "Invalid device type %d\n", pcie->mode);
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 3697b4a944cc..2fb8c15e7a91 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -775,7 +775,6 @@ static void qcom_pcie_ep_init_debugfs(struct qcom_pcie_ep *pcie_ep)
+ 
+ static const struct pci_epc_features qcom_pcie_epc_features = {
+ 	.linkup_notifier = true,
+-	.core_init_notifier = true,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
+ 	.align = SZ_4K,
+diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+index fb7c03639a53..0448928017f3 100644
+--- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
++++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+@@ -435,6 +435,8 @@ static int rcar_gen4_add_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
+ 		rcar_gen4_pcie_ep_deinit(rcar);
+ 	}
+ 
++	dw_pcie_ep_init_notify(ep);
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 264ee76bf008..e02deb31a72d 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -2006,7 +2006,6 @@ static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ static const struct pci_epc_features tegra_pcie_epc_features = {
+ 	.linkup_notifier = true,
+-	.core_init_notifier = true,
+ 	.msi_capable = false,
+ 	.msix_capable = false,
+ 	.reserved_bar = 1 << BAR_2 | 1 << BAR_3 | 1 << BAR_4 | 1 << BAR_5,
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+index 82ccaea089be..eb1d79fdb1f1 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+@@ -410,6 +410,8 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	dw_pcie_ep_init_notify(&priv->pci.ep);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 18c80002d3bd..fc0282b0d626 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -753,6 +753,7 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+ 	const struct pci_epc_features *epc_features;
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dev = &epf->dev;
++	bool linkup_notifier = false;
+ 	bool msix_capable = false;
+ 	bool msi_capable = true;
+ 	int ret;
+@@ -795,6 +796,10 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+ 		}
+ 	}
+ 
++	linkup_notifier = epc_features->linkup_notifier;
++	if (!linkup_notifier)
++		queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
++
+ 	return 0;
+ }
+ 
+@@ -901,8 +906,6 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+ 	const struct pci_epc_features *epc_features;
+ 	enum pci_barno test_reg_bar = BAR_0;
+ 	struct pci_epc *epc = epf->epc;
+-	bool linkup_notifier = false;
+-	bool core_init_notifier = false;
+ 
+ 	if (WARN_ON_ONCE(!epc))
+ 		return -EINVAL;
+@@ -913,8 +916,6 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	linkup_notifier = epc_features->linkup_notifier;
+-	core_init_notifier = epc_features->core_init_notifier;
+ 	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+ 	if (test_reg_bar < 0)
+ 		return -EINVAL;
+@@ -927,21 +928,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!core_init_notifier) {
+-		ret = pci_epf_test_core_init(epf);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	epf_test->dma_supported = true;
+ 
+ 	ret = pci_epf_test_init_dma_chan(epf_test);
+ 	if (ret)
+ 		epf_test->dma_supported = false;
+ 
+-	if (!linkup_notifier && !core_init_notifier)
+-		queue_work(kpcitest_workqueue, &epf_test->cmd_handler.work);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 0ea64e24ed61..3b21e28f9b59 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -64,6 +64,9 @@ static int pci_secondary_epc_epf_link(struct config_item *epf_item,
+ 		return ret;
+ 	}
+ 
++	/* Send any pending EPC initialization complete to the EPF driver */
++	pci_epc_notify_pending_init(epc, epf);
++
+ 	return 0;
+ }
+ 
+@@ -125,6 +128,9 @@ static int pci_primary_epc_epf_link(struct config_item *epf_item,
+ 		return ret;
+ 	}
+ 
++	/* Send any pending EPC initialization complete to the EPF driver */
++	pci_epc_notify_pending_init(epc, epf);
++
+ 	return 0;
+ }
+ 
+@@ -230,6 +236,9 @@ static int pci_epc_epf_link(struct config_item *epc_item,
+ 		return ret;
+ 	}
+ 
++	/* Send any pending EPC initialization complete to the EPF driver */
++	pci_epc_notify_pending_init(epc, epf);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index dcd4e66430c1..ba2ff037dfa6 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -753,10 +753,32 @@ void pci_epc_init_notify(struct pci_epc *epc)
+ 			epf->event_ops->core_init(epf);
+ 		mutex_unlock(&epf->lock);
+ 	}
++	epc->init_complete = true;
+ 	mutex_unlock(&epc->list_lock);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_init_notify);
+ 
++/**
++ * pci_epc_notify_pending_init() - Notify the pending EPC device initialization
++ *                                 complete to the EPF device
++ * @epc: the EPC device whose core initialization is pending to be notified
++ * @epf: the EPF device to be notified
++ *
++ * Invoke to notify the pending EPC device initialization complete to the EPF
++ * device. This is used to deliver the notification if the EPC initialization
++ * got completed before the EPF driver bind.
++ */
++void pci_epc_notify_pending_init(struct pci_epc *epc, struct pci_epf *epf)
++{
++	if (epc->init_complete) {
++		mutex_lock(&epf->lock);
++		if (epf->event_ops && epf->event_ops->core_init)
++			epf->event_ops->core_init(epf);
++		mutex_unlock(&epf->lock);
++	}
++}
++EXPORT_SYMBOL_GPL(pci_epc_notify_pending_init);
++
+ /**
+  * pci_epc_bme_notify() - Notify the EPF device that the EPC device has received
+  *			  the BME event from the Root complex
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 40ea18f5aa02..adee6dbe4e45 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -128,6 +128,8 @@ struct pci_epc_mem {
+  * @group: configfs group representing the PCI EPC device
+  * @lock: mutex to protect pci_epc ops
+  * @function_num_map: bitmap to manage physical function number
++ * @init_complete: flag to indicate whether the EPC initialization is complete
++ *                 or not
+  */
+ struct pci_epc {
+ 	struct device			dev;
+@@ -143,13 +145,12 @@ struct pci_epc {
+ 	/* mutex to protect against concurrent access of EP controller */
+ 	struct mutex			lock;
+ 	unsigned long			function_num_map;
++	bool				init_complete;
+ };
+ 
+ /**
+  * struct pci_epc_features - features supported by a EPC device per function
+  * @linkup_notifier: indicate if the EPC device can notify EPF driver on link up
+- * @core_init_notifier: indicate cores that can notify about their availability
+- *			for initialization
+  * @msi_capable: indicate if the endpoint function has MSI capability
+  * @msix_capable: indicate if the endpoint function has MSI-X capability
+  * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
+@@ -159,7 +160,6 @@ struct pci_epc {
+  */
+ struct pci_epc_features {
+ 	unsigned int	linkup_notifier : 1;
+-	unsigned int	core_init_notifier : 1;
+ 	unsigned int	msi_capable : 1;
+ 	unsigned int	msix_capable : 1;
+ 	u8	reserved_bar;
+@@ -198,6 +198,7 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ void pci_epc_linkup(struct pci_epc *epc);
+ void pci_epc_linkdown(struct pci_epc *epc);
+ void pci_epc_init_notify(struct pci_epc *epc);
++void pci_epc_notify_pending_init(struct pci_epc *epc, struct pci_epf *epf);
+ void pci_epc_bme_notify(struct pci_epc *epc);
+ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 			enum pci_epc_interface_type type);
+
 -- 
-2.44.0
+2.25.1
 
