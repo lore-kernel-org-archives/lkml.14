@@ -1,44 +1,44 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A2D21111;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B3022630;
 	Thu, 14 Mar 2024 23:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458595; cv=none; b=d3GFwLcFlbMD/iyE9a1r4LrWM5GBKkSZZiAljt7TpYFam84Bv+x6WaMT2cnrDs7hG3DcPVsVQEamvzNnl8W80AnzEU6+Kj9gWs9uizQf7al01+WL6sGGEwiTaJKOG2mmt1Sc1cgEfXnrWdrW1IjonljwIH00rXRuH6VWQj21bOo=
+	t=1710458596; cv=none; b=lcRWYQ504Vy5E4XK02PAw/HIhI7QeOEYwIJw8XgpsV2SxEh4j58X1kvokkyrbKWR5/xE236S1LwrZv3+H8qyw+356QaExETeGl2GfcDUOPQfZk9aTP9vQyenRwxUgH12InDIk3h+n18fq0d4O1uHWy01mA5j09wGaMYwU0bmRH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458595; c=relaxed/simple;
-	bh=yqiIwjG/S7XDJV/pa1WQy2erlDBpjOznaZZknYGr6Bk=;
+	s=arc-20240116; t=1710458596; c=relaxed/simple;
+	bh=PPaufu1U2yk2CH6X5UKjVc/X+cp8pDKq6JGff4Q4Ako=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cNklxgBI2YuaT3mJlsVQFuHgeZi+IakBhkDL6wugLqmayKqHhty84vvsBJ/7rZt8oIuwGAjB0GPfFdAOd7uhIYUKowrFHLTM62bPNEcDAJBSIzKl57GpFafS85POhfSKlsZDC37EwAnB7LlkM4p3cl9jgCZL6rU3GN1LZCkNIfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=F5+hAxaA; arc=none smtp.client-ip=37.18.73.165
+	 MIME-Version:Content-Type; b=pmZQXeK8+BUPGCjDQUw/zPUbNeKFGk02sRcf6U4CNuKIR8U2uXTk2T1Kdo9vJ8anchhxNrY1B/1R4+Ncm+DFhb7J0u8SOBrgOOTDooKlxNZxgk8mrwUZQIj47RD8ZXL7iyIP8hFkNNJGZ4GX/rzFa7BGOfUNrG9AMJLa5bmYlms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=u+Oz0ttF; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="F5+hAxaA"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 089C110001B;
-	Fri, 15 Mar 2024 02:23:08 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 089C110001B
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="u+Oz0ttF"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 4C680120017;
+	Fri, 15 Mar 2024 02:23:09 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4C680120017
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458588;
-	bh=KNZWo7RkvOeyvRwAeuVGN8+SUS+q1CnUsbKOy62L+dA=;
+	s=mail; t=1710458589;
+	bh=oHTYiFMvsDA2ptkBIAd/4iyJxp1yij69f1A6GAHpv/Y=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=F5+hAxaAuDoDnxTAqPYowmUkkX/zJKODl8ftawtc03dmmjCxhn8MTZVcYf4q6FgsS
-	 SHYEHSeJFJiglmOka3LVsX0BD9hxLA1CprfiPvvlo16P3uluxgV4X4L2jPEQn+RrMh
-	 BGCW+nQuaPxLoxyr2qyTMd8phuzS3lXBB4s5YAXoBpn5zlbTc6NE+k3M/uN9l8lrLK
-	 7+19l6E6fiYcj/t2+4es17KU8ajQtYABzmOlSKQJuNBjSQmQdXb1LRotSOgvD2HhdG
-	 Jyrt8MJoejggzhXQZRDOIaX+SUvE0v7uxSL7YVColylFONTEPvHrU0wX8y7LuVAYzD
-	 6nUconXFqKSBA==
+	b=u+Oz0ttF+z42jfxCb8bDWrwT8gKjMcS+SPtHlohHa5dn60NXyF1irW3it6wF6OGl4
+	 i4Lp0AkUL/bTG2KtJUzaKkRzm+usunGeByzIycDnIB3gHjsclUTwfnriUShwE3Tqdd
+	 s4fpCnU88rJGOOmf8WkIv0vToE9okHv7OeXnjdmxpFCP/fXTE49PyuIDtFFp68vu6l
+	 vJ4NH5Yy81j+hSvdNX8V3QSFnl+ze2CNuB1YP4ux6mD2k1/B3EKbyP5POZKbQ2W9Rr
+	 WbM8sLazBDjDKPqYrnjlaCVcJxSRZ8+ou2TMxGi99HKcW8zU08YrjHnkApKzgqyR6V
+	 DCSFLLW73a/ew==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:07 +0300 (MSK)
+	Fri, 15 Mar 2024 02:23:09 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:07 +0300
+ 15.2.1118.40; Fri, 15 Mar 2024 02:23:08 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -54,10 +54,10 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
-CC: <kernel@salutedevices.com>
-Subject: [PATCH 20/25] ASoC: dt-bindings: meson: axg-tdm-formatters: claim support of A1 SoC family
-Date: Fri, 15 Mar 2024 02:21:56 +0300
-Message-ID: <20240314232201.2102178-21-jan.dakinevich@salutedevices.com>
+CC: Dmitry Rokosov <ddrokosov@salutedevices.com>, <kernel@salutedevices.com>
+Subject: [PATCH 23/25] ASoC: meson: implement link-name optional property in meson card utils
+Date: Fri, 15 Mar 2024 02:21:59 +0300
+Message-ID: <20240314232201.2102178-24-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
@@ -88,47 +88,51 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-Add "amlogic,a1-tdmout" and "amlogic,a1-tdmin" compatible string aliases
-to "amlogic,sm1-tdmout" and "amlogic,sm1-tdmin" respectevely.
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
 
-Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+The 'link-name' property presents an optional DT feature that empowers
+users to customize the name associated with the DAI link and PCM stream.
+This functionality reflects the approach often employed in Qualcomm
+audio cards, providing enhanced flexibility in DAI naming conventions
+for improved system integration and userspace experience.
+
+It allows userspace program to easy determine PCM stream purpose, e.g.:
+    ~ # cat /proc/asound/pcm
+    00-00: speaker (*) :  : playback 1
+    00-01: mics (*) :  : capture 1
+    00-02: loopback (*) :  : capture 1
+
+The previous naming approach using auto-generated fe or be strings
+continues to be utilized as a fallback.
+
+Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 ---
- .../sound/amlogic,axg-tdm-formatters.yaml     | 22 ++++++++++++-------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ sound/soc/meson/meson-card-utils.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-index 719ca8fc98c7..154522488020 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-@@ -11,14 +11,20 @@ maintainers:
+diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
+index ed6c7e2f609c..7bae72905a9b 100644
+--- a/sound/soc/meson/meson-card-utils.c
++++ b/sound/soc/meson/meson-card-utils.c
+@@ -94,10 +94,14 @@ static int meson_card_set_link_name(struct snd_soc_card *card,
+ 				    struct device_node *node,
+ 				    const char *prefix)
+ {
+-	char *name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
+-				    prefix, node->full_name);
+-	if (!name)
+-		return -ENOMEM;
++	const char *name;
++
++	if (of_property_read_string(node, "link-name", &name)) {
++		name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
++				      prefix, node->full_name);
++		if (!name)
++			return -ENOMEM;
++	}
  
- properties:
-   compatible:
--    enum:
--      - amlogic,g12a-tdmout
--      - amlogic,sm1-tdmout
--      - amlogic,axg-tdmout
--      - amlogic,g12a-tdmin
--      - amlogic,sm1-tdmin
--      - amlogic,axg-tdmin
--
-+    oneOf:
-+      - enum:
-+          - amlogic,g12a-tdmout
-+          - amlogic,sm1-tdmout
-+          - amlogic,axg-tdmout
-+          - amlogic,g12a-tdmin
-+          - amlogic,sm1-tdmin
-+          - amlogic,axg-tdmin
-+      - items:
-+          - const: amlogic,a1-tdmout
-+          - const: amlogic,sm1-tdmout
-+      - items:
-+          - const: amlogic,a1-tdmin
-+          - const: amlogic,sm1-tdmin
-   clocks:
-     items:
-       - description: Peripheral clock
+ 	link->name = name;
+ 	link->stream_name = name;
 -- 
 2.34.1
 
