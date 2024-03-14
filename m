@@ -1,106 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0082DDDD;
-	Thu, 14 Mar 2024 00:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288907F;
+	Thu, 14 Mar 2024 00:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710374442; cv=none; b=TBGDpMpGE9PZ+M/+LsJjBPvTXP00sh9+oCyV+Dw3fh6WDetfAQ0bmsvmdw7+n92Zoik8FzV9Cj60R56yEJk8GpxG0diS0s/C9dHb5CiGc8xByH166l9+P1D5JWegFGqnN9MwbWRd8kwfc3uCrkK27vQgYiKe3V47QtOcj0cfAn4=
+	t=1710375386; cv=none; b=Hsbu/Yg/ZdrQVl+Ll3ayqf9FIb0medf0nASAHABR551gPRB/gFOwlXZf0em4d1fmWOlaghtvJBQR47QVEFa7CD/XTYnWpWYjTzaX+ymCAsYbemUV06u2J2uTIsCMOaCoqDv53QjeXNOBmigSvKB2ArBILSIfz337cbYnygMSaZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710374442; c=relaxed/simple;
-	bh=KOItflsOGNU21WvEz/74/Siz5rxBwRscFBQI5KDFz4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nNb6Iu6bwdPD5z81TGIS7aacUscN7KnZmhRLKJcliavX0/huJqSWf5TqDFHkOoBjZb/Ab+hctS6okeSLfdXhf1gwe9JSbIhjY5w4mXUelhoneSXvZwil+B6apR/v0TMCvhS6Iqu0szyBiFYTI3jhT3fFvDufYKbrJDL0KMlXb6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CmHFi9A7; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710375386; c=relaxed/simple;
+	bh=dOxJUDT9zNDA5U3eYyRohlYG5yAhqtjT6we4qhx17Zc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RxLgnAvUO776+YjvrRqZrxa0gzd5YHJJTwsC4V4vMo6YTEF4/VzbuO4CkQsUtBHqcdiHUWtvDUtKT5QBD6fME7JgmMypg7XFebd2S0+oVhke2aR3QXoNaVTgT6XNdVLk2AI+tE/LGHr7wiQOOghWK7IXKJVWoVomWWUuIFcJO2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JW/IA9dC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CmHFi9A7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710374441; x=1741910441;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KOItflsOGNU21WvEz/74/Siz5rxBwRscFBQI5KDFz4k=;
-  b=CmHFi9A7zCkgSJ6Liij5HweP+JHbKKtVMGBD50y2oHVVTqnjcK+l01On
-   kmYrNoi+fuW+9NYzScXZnj4wYia1PfIAOeL1h8tKbyXOarZPnnCzAbHVI
-   Kv569mHUkphQFVd+izI76kYNaVD1oKYnRdbSCkCq6vv/UN/8ey7DP/lZc
-   XwDCb0JmfTDIn332mQFgJSP6OO15l4driW8W7fGixcSGDK0NCzr+GXPIf
-   uoGSarFWhRqsRq5GUKRM+8JMw5l+eAMYtH8Sdf5xyj5Daiwyas9QzYLK5
-   c45qEQa8fc1LL/OgJ9yPCHXLlmNHSmvfSYbwhZsjLSWhsqkM0m+4ri0a8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="27646655"
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="27646655"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 17:00:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,123,1708416000"; 
-   d="scan'208";a="16793595"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 17:00:40 -0700
-Date: Wed, 13 Mar 2024 17:00:38 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: "Wang, Weilin" <weilin.wang@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>,
-	"Biggers, Caleb" <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v4 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-Message-ID: <ZfI-JqTZevIhEa3o@tassilo>
-References: <20240312234921.812685-1-weilin.wang@intel.com>
- <20240312234921.812685-3-weilin.wang@intel.com>
- <87le6nm20o.fsf@linux.intel.com>
- <CO6PR11MB56356A213DBE53535E9D802BEE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
- <87edcflzkr.fsf@linux.intel.com>
- <CO6PR11MB56351D1706A9C46D80982AECEE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
- <ZfHMYM3iWlsODtjP@tassilo>
- <CO6PR11MB5635D2EAC53C2CD2B36D4BF5EE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JW/IA9dC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AE1C433C7;
+	Thu, 14 Mar 2024 00:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710375385;
+	bh=dOxJUDT9zNDA5U3eYyRohlYG5yAhqtjT6we4qhx17Zc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JW/IA9dC/DlU5BhnKX4jtX2dcw5bjcs9eY8jvqoAb8A4BrcOu+b8t7c+ockNsd3J0
+	 LkCBJ/f6yfSK8n3zwDeZE3qBl03dohR/30wr0K4jva4ewHE57s71XS9dPB/iHtcWOo
+	 /rV7KqvcZotGP3B79k00hYMbSaxJyq9/vPzLufKQ2r3NFhahjwQ90WkjmzW8gz0KpO
+	 f/GmNyUHzR6cHjLkl2TwbhYwajKfdge59jm0AvqPizJKHa048cjLMS+i1Cgd5Di1Al
+	 RHtq2xmr+0EqLsZEUqEnXXbR/CKEJN97QVb0eKgCeX8an/UZjZ8UhHj7MVQf6evd6l
+	 3nfFr5f0WzAnQ==
+Date: Wed, 13 Mar 2024 17:16:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Halaney
+ <ahalaney@redhat.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Martin KaFai Lau <martin.lau@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Daniel Borkmann <daniel@iogearbox.net>,
+ kernel@quicinc.com
+Subject: Re: [PATCH net-next v1] Revert "net: Re-use and set
+ mono_delivery_time bit for userspace tstamp packets"
+Message-ID: <20240313171623.51ebb7bd@kernel.org>
+In-Reply-To: <20240313235003.1354814-1-quic_abchauha@quicinc.com>
+References: <20240313235003.1354814-1-quic_abchauha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO6PR11MB5635D2EAC53C2CD2B36D4BF5EE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> We could use -a -C and cgroup together. I think this could be a useful use case.
-> There could be other improvement to the implementation in next step. But I believe
+On Wed, 13 Mar 2024 16:50:03 -0700 Abhishek Chauhan wrote:
+> Subject: [PATCH net-next v1] Revert "net: Re-use and set mono_delivery_time bit for userspace tstamp packets"
+> Date: Wed, 13 Mar 2024 16:50:03 -0700
+> X-Mailer: git-send-email 2.25.1
+> 
+> This reverts commit 30bb896b98fce7d823a96fc02cd69be30384a5cc.
+> 
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
+> ---
+> Reason for revert - 
+> https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
 
-I don't know how you would improve it. A lot of the problems are fairly
-fundamental.
+> 1. Fallback to design proposed in version 1 to have a seperate user_delivery_time
+> bit 
+> 2. Keep mono_delivery_time as ease
+> 3. Add user_delivery_time as a new bitfield will be a seperate patch 
+> 4. do not reset the time if either mono_delivery_time or user_delivery_time is set
+> 5. we will need a user_delivery_time bit and use that to look at sk_clockid
 
-> current implementation could provide users the access to our new feature with 
-> accurate results 
-> and without adding too much overhead. 
+Could you please spell this out a bit more in the commit message and
+add the link as a:
 
-perf record increases the overhead a lot over a perf stat! Sampling
-is much more expensive than counting.
+Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
 
-That should be at least a order of magnitude difference.
-Another advantage of doing it separately.
+in the commit message rather than the "throw away notes" ?
 
-That will also make it inaccurate.
-
-Please do a proper implementation. This one is no good.
-
-You can likely reuse a lot of your code:
-
-- Add a perf calibrate to run the profile step separately that generates the JSON
-- Add a --metrics option to perf to read the resulting JSON
-- Add some mechanism to read a default JSON as fallback. I guess this
-one could be compiled in to avoid a dependency on an installed file.
-
--Andi
+(feel free to repost asap, without usual netdev's 24h)
+-- 
+pw-bot: cr
