@@ -1,78 +1,132 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AA86F523;
-	Thu, 14 Mar 2024 14:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023996F06E
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710425096; cv=none; b=rd+xLEZTeTw49vckdKdGDKcU8N0j7OHwYHoea7pk+CgkE60gr68abbw59nJf+MwuRTiicMBX6iDDjm5rLVV5VYkhY+XDEsUdy9EcOLA7u6xifJ5BEcR0gkBuPJqxJTsZL5c6GIRAS9kp/ww5TWaSR4dT0E4PAoJa6RUIlUPtZqo=
+	t=1710425191; cv=none; b=fR153wpCcdubz+MuUsqsP/wAEfyHhD+4om7SXkAFaS+AiSIuOYqcStvYPO0MyKXx3EWeYZkcGRIszdYCE87soD+T38JJjvwZXuLy7H3jA10A+JQVwMFbTHPk9ux/ZH7f+zJFLz8PS3PHpC5WaoahYa1Nl0avNUmBtPbcHocMDSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710425096; c=relaxed/simple;
-	bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RF7oALOBCy7fa7+LQ9QdaV/GIaiCswODP/jHpgASB/Dn7Sy6KyZlNQ0FgZwdNY4vVhgdA1J6JbdZDOWcbyAQYeh6UBSYcWtng1YF5TpZR2KBpJ1rMxDodov3xDHO5sGw8Z/nxG+fmV8df6JdkAvMKLkPJXUg94r9nUCPy1eCffc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FS92/yl5; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710425191; c=relaxed/simple;
+	bh=3RrxQwsPYe120Zt5iYWSs4Wx0/Yj8A3wGaxd24VEW2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCCZGu+zsnhoAk9XRxaUOG8x7tPRidQN/fLBTXxaWoQYzOm5deS0gkyxslo1TsDcSX3mvA3fbAW3lnxojNLdP5utvuOsQvJynrzCo34Pfeu4B8GW0fhKy6oZwtUHHsu25vXXhWoKlPrqMlAF8OhScfGOhMkEaCDoWto2vh8Rr3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=CuBTd2bY; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FS92/yl5"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-41324a16c9eso6183005e9.0;
-        Thu, 14 Mar 2024 07:04:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CuBTd2bY"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33e972c8b67so262346f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710425093; x=1711029893; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:mime-version:date:message-id:from:to:cc
+        d=ffwll.ch; s=google; t=1710425188; x=1711029988; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
-        b=FS92/yl52GPkd3NvW/OoEQV3QpyaDfDGob7l/ZYqOZTIDAsmfM3md3G59QoR7ENRM9
-         IRMkL9rP0OQAMbF/0UBuqyQjX7VyjrX+fPaZU4Vdp1pojJABzqdG5qaLQiGwExrePRvy
-         6Tvh2XmBYVvQ5HRLhvR9UgdeNAOeS6gdgrvn86DTJXKIh0NAw3WXRjPdA1xzeHhT8rh6
-         RWTSifM8o/oGIWp6imBkV8Hu+xKsrpV90qgMRM/Sb939j4VtsQFxa+0Tve85esXW16SQ
-         tJ+vCnjt77iwD3FvT4+d3tvIz0BoSLPXbp2ACJxHWoBtnmFLYUR3/9BD51ZN/eb4j0H2
-         F1Lw==
+        bh=P8pQ1l+MVwXlBnQJuFCGfCMOAeHIFtVSkzqeu2rgt2U=;
+        b=CuBTd2bYQdTmSH0P4JlXd5etfYQRDLd8FHpVyEcY4dL/LOP1uz1UayZLtnO75YR8k2
+         KD+iohSsHrTaKP2ku7A0ul9XIzksuIwhL7NPYc9w41QxaD/Gpxmla3oslBSO5hC6HuBy
+         22hvgz33kBVPGXaw6RfprsuBoOuk67PowJzZ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710425093; x=1711029893;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1710425188; x=1711029988;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
-        b=AQFNDR7MxLyqIS419APQLxEP8kkMCCziWHk5gC8oz7w2JyD2r8cwYhzGZeTsoqy8tR
-         7FiwiY9/aG8tZ1HtXKQ5nqFKfHxOqZ/8ghpAYAWIg830dvxCjEmWke/sP3kUZRIBswsP
-         A9yLsBEWxSKEia3RaO/InsRTVEkxEi5YW/jJH7xiWwxmpV/46M6kzYNSEtJUnZGvm0RY
-         /borDB/1mhFU9BYglMa45ovtmA0pak3qZnUpn7lo6xBfcRjP/1wAm8dcAwP4wtqjSuQN
-         3OXHDppeJ3pX6btXju9rwocCjGkuxiWLSyP89MNcWPlwAuddEJ2O8ksEuxaB3OHBw9ut
-         l16A==
-X-Forwarded-Encrypted: i=1; AJvYcCW5c1/AJoLYhGLTF0PJXO8FTOkGc2uTtnI2fg6iprqZ2YiGoWjFUX3vq8bmnK//2Pldfbms6A30DQV96pjrLUVxNmrNXE5Mzn5EWc324XF27yPYirHfomBiEgFdyE7+iUw58ET9
-X-Gm-Message-State: AOJu0YxK3CO0SKMbfr/w1K4YEwog62rD9XiVMcjmQPDHa2YQOkZh0uRI
-	VkMghDbqdWpJwdXK27ccj6is8XS2kkGEacEefPqn4V0EJ2g+SERD
-X-Google-Smtp-Source: AGHT+IHeRU/6m15vM3xUViFf4l1SIZIIT/mlJnGLHtC6ocHThn+bOAV74CF7OwdxqnWkLGGI0AmN2w==
-X-Received: by 2002:a05:600c:3506:b0:412:ea32:e7b0 with SMTP id h6-20020a05600c350600b00412ea32e7b0mr1398868wmq.40.1710425092579;
-        Thu, 14 Mar 2024 07:04:52 -0700 (PDT)
-Received: from localhost ([217.212.240.67])
-        by smtp.gmail.com with ESMTPSA id i9-20020a05600c354900b00413ef6826desm2566738wmq.4.2024.03.14.07.04.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 07:04:52 -0700 (PDT)
-Message-ID: <b90d127a-ec5a-4c24-8ddf-4c592dae28f1@gmail.com>
-Date: Thu, 14 Mar 2024 15:04:02 +0100
+        bh=P8pQ1l+MVwXlBnQJuFCGfCMOAeHIFtVSkzqeu2rgt2U=;
+        b=LF7hdAtoXDHCW/LAfaaz45+6Bc5de4YvQyFlM/1lyUDHNzfI3vKqXljWPiN9yxo4rP
+         Hx+Y7i0VWs1gh4AhNIszt2NTeaztpvriYsI4snMC8cWCZRIqlmN4tjuzj8mPLLCWQxLY
+         hYG13HRIuMS30Od0isE+pOJIuNoN2rMHpXmbVkgNyzQr9vG7cBsssDGDLQLsj1gGYBwm
+         Cc3+G1BXc2xrTxhgEzDnAY1k5WJ1VKvbPodExEu/Qk2I5FTDr6w7j2TFFDxaJgaGY3jf
+         dgYqJhv3Gn1pAUZ8bvFigSoa/ot+mnLnB197Ohx86/E9Ou3vXhSE3mCoq50onf/faeZ9
+         AAHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUobLReF9Si70+xEB8TJ4E0bQO9ZrfR6SxkfYyXBQ7eez+RtTenwTn3ubAel/RJI/vjgDLK1ZxYBKegnftoyUAKjlKdZ0k+X/c/sqwW
+X-Gm-Message-State: AOJu0YwjbzLBCvhy3h8C9nEXGt/PZTtbs7hCSmzorE8rQan//oFhhdIH
+	/2xnpAssMDwSxSSncISFvV1kq9bot94eLzII3DHHIwPW4NrLVyrDhHfDc30lFrA=
+X-Google-Smtp-Source: AGHT+IExxoAOUpYvXMrjNM7aEFoJfpTDSDysmUmnKGih3LPpSITnQuFjpS56zA1GupHQLuuj8OHUoA==
+X-Received: by 2002:a05:6000:4021:b0:33e:7077:4b57 with SMTP id cp33-20020a056000402100b0033e70774b57mr1890153wrb.1.1710425188089;
+        Thu, 14 Mar 2024 07:06:28 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id du18-20020a0560000d5200b0033b7ce8b496sm806034wrb.108.2024.03.14.07.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 07:06:27 -0700 (PDT)
+Date: Thu, 14 Mar 2024 15:06:25 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Daniel Vetter <daniel.vetter@intel.com>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Lukas Wunner <lukas@wunner.de>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC] drm/panic: Add drm panic locking
+Message-ID: <ZfMEYZZN2fd9FeEi@phenom.ffwll.local>
+Mail-Followup-To: John Ogness <john.ogness@linutronix.de>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Daniel Vetter <daniel.vetter@intel.com>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Lukas Wunner <lukas@wunner.de>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>
+References: <20240301100516.2516297-1-daniel.vetter@ffwll.ch>
+ <20240301103903.2538083-1-daniel.vetter@ffwll.ch>
+ <87o7bt6qpf.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next 2/4] net: dst_cache: add input_dst_cache API
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- dsahern@kernel.org, willemb@google.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240307171202.232684-1-leone4fernando@gmail.com>
- <20240307171202.232684-3-leone4fernando@gmail.com>
- <20240308195529.57b1a4fa@kernel.org>
-From: Leone Fernando <leone4fernando@gmail.com>
-In-Reply-To: <20240308195529.57b1a4fa@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o7bt6qpf.fsf@jogness.linutronix.de>
+X-Operating-System: Linux phenom 6.6.11-amd64 
 
-Thanks Jakub. I'll fix it and submit a v2.
-What do you think about the patch in general?
+On Tue, Mar 05, 2024 at 09:20:04AM +0106, John Ogness wrote:
+> Hi Daniel,
+> 
+> Great to see this moving forward!
+> 
+> On 2024-03-01, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> > But for the initial cut of a drm panic printing support I don't think
+> > we need that, because the critical sections are extremely small and
+> > only happen once per display refresh. So generally just 60 tiny locked
+> > sections per second, which is nothing compared to a serial console
+> > running a 115kbaud doing really slow mmio writes for each byte. So for
+> > now the raw spintrylock in drm panic notifier callback should be good
+> > enough.
+> 
+> Is there a reason you do not use the irqsave/irqrestore variants? By
+> leaving interrupts enabled, there is the risk that a panic from any
+> interrupt handler may block the drm panic handler.
+
+tbh I simply did not consider that could be useful. but yeah if we're
+unlucky and an interrupt happens in here and dies, the drm panic handler
+cannot run. And this code is definitely not hot enough to matter, the
+usual driver code for a plane flip does a few more irqsafe spinlocks on
+top. One more doesn't add anything I think, and I guess if it does we'll
+notice :-)
+
+Also irqsave makes drm_panic_lock/unlock a bit more widely useful to
+protect driver mmio access since then it also works from irq handlers.
+Means we have to pass irqflags around, but that sounds acceptable. So very
+much has my vote.
+-Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
