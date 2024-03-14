@@ -1,34 +1,59 @@
-Received: from mx.msync.work (mx.msync.work [62.182.159.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4715B696
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.182.159.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EB66EB6E
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710424777; cv=none; b=uji8d7ngq9G3iS7Iw1S13OA8mp4YFsRiILLcqpodmvMUFfIGdHTtIjOY2s9zwkXN6dsHpVjVwii6CU+gkNppIolGXXP/d/zlLol57FJne5BVCU2VL0Pks4HfIei+f8cBcVtcxGLXnDZI/zx1M7/BrdrcFoJhEUTzRHVHRjJdfvY=
+	t=1710424811; cv=none; b=jPWiHa75X2qp8NayuoAdRwY1CpQWEP6+bYznrNUTGwV1dM8V74aosZPy7i+qjooDcdMsOL7OERtS6lgul38WxjlH4LdpR15VpRNBTn7M196Zk9sqJ+nVubV44djegaFiu27Rhla16I4J5wpdeULRw2MUOV1SagmbT03XKepppCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710424777; c=relaxed/simple;
-	bh=nyFk1wBCVZIwINNr7Q2CQAh4CqvsfLS/MznOXQaQ+cQ=;
+	s=arc-20240116; t=1710424811; c=relaxed/simple;
+	bh=hIlmhR3AzpmS8Vgf5z1Vc+JUV312hQfTQ06lv4JjRys=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kn1lejJr0nH/wJIVzaQcdEz9+nosyM+/G7/tFyiEdGyD3gY1c6QIJU0SsTmwW8BwuuelcuLYZ5uJZcqhngIE5KU9Okd4qxHX/f7jtoiQGyNSTlMBFvcb9QkDSZXu3EWKkjJgCIk1joHtR/tZXBopG2xtuwTysUiQhe8y2tT5bnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=Md0swrBj; arc=none smtp.client-ip=62.182.159.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	 In-Reply-To:Content-Type; b=hAr8xq4CrDwthvvYw0cWYKgBx8TKcdbBYxAD4nZDMA2boQGptgwRBfiSludY4rESuja5tMD7o3ltdFhUbGWquXQpm9odrh4Qkibl2lrdtAvjG8wH5L33WTiDcBv5VMeSevuA7IqhxHVqdZKvSMoXV5bpOSFLyo5pw0wlankJTLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ri8Mz3cH; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="Md0swrBj"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4300111FF8E;
-	Thu, 14 Mar 2024 13:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1710424751; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references:autocrypt;
-	bh=YZ3rbrGjha02UD0mhfO3FCamNF+pYQ8Ho++Y52tVh1E=;
-	b=Md0swrBj3xps/eY4kwEchUDXfJz0FpK7fkri6MsvOE4gzA2MZ6ygs727fv3U4+fFHFf7Mc
-	abV1L2yzhxDdwhYV+g3+ca+usHS+dRCig5RNwkaFwtjoJLQqa0W+bTST3Kk3endYVoGP0n
-	S4kLFfQFm1Yty4SfCax4Dj6UhkJJCtlCyc/YGftn/b5U8IUt4S0Ku6xgmn6reigZgQu3um
-	SF7LEGYVa3EA3fdgvSH3d2+Qvg5l1wTnT0S3KUQ6gCkO2+VYTJ4drKr9RKjtgab8GkJJ7S
-	VOTDwxs+ImxmgS6R2sR+53v01oGq0mguMRk63aIVoJB2wVeXdhQ7YC+Ct3ImfA==
-Message-ID: <c0352b99-ca25-4357-bc26-470d802dbf71@lexina.in>
-Date: Thu, 14 Mar 2024 16:59:09 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ri8Mz3cH"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51331634948so1959698e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710424808; x=1711029608; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FxNLG3KW46YsRyLUDeirw2sQ0+ONikiBJMDP2FhU0UA=;
+        b=ri8Mz3cH4KNRQiNXdJLBe2OMCeyhWFnRIub4ycboIIJeBmxtYs3PPyqukoH1y5rAfC
+         ni2sSkNc10D4ioy96BjG6X5rAQBywoLV8gQ1kT12px8d3AqAyzoHZSaqaUZImtYGZOiV
+         H3hensV7O4fxyxNh/YQQb48kSg2sIAOhAEIp6F6QCuhFxPA6uKIjDl8QsjISaZgMT8Zz
+         i+o94YVumapeOZ/PMlAO4jWAd8KGRn3blVXDX9rkypCf0jVS6s8uUAfoxpSZFBrGZek9
+         Vw6YFYWUGT63QwYd4Gqx8J9NVbGLMEbbpu1GT5ijew/2JCdixKhsgrFNqz7ygMZKXBdC
+         qslQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710424808; x=1711029608;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FxNLG3KW46YsRyLUDeirw2sQ0+ONikiBJMDP2FhU0UA=;
+        b=jHjpBgT5cweUHiAvh9KTOjsSzz7B2nuqxFUp+c07a7cj77AtLOdILUTo5ureIt2r9H
+         GT7peErO3nG0DfgXZRgPRo9w6Wh5D9v6n+kZmzqSyn6XnFcB+0k1VFgcvd/xDPzwmcAR
+         EbZoQkqYtIkFWv/HwrPR+s4na/FePey5aucmylWe82QqiZkvTD16XSbBTJshKMRVnL9i
+         gbwuxHPwwdTHnFTCQLCUyV/l/fME0qPdheRDqzIuv2RueocFzNTKoWA5xt9QvHJBoYtY
+         2jNkMY/HpOo7C1GaUf5I4xKiTimIy94FyMb5ycy4s1I6Q3RMym8y2i30w8R5Exu7fxug
+         JA4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWXjRgPnR5ChQ3IgUhpJFZI6yr0s30euXSpPN5TFef5qxGi/zgcwezhp90l2Mn6BKkF6napVYpT9/C4FsZ+UXxPrzSkg6MfYJEXJCSX
+X-Gm-Message-State: AOJu0YxMT8OeFZkzr3QDdBtoqSGwGNKQX1kNW9fdjOG/mytdib93/1aQ
+	yvd//OEm8oRpF/PnfC4ggGu2j0KeN0w5fxWyQWmjnVNTw4FMBjc9DpgfkSCYSSg=
+X-Google-Smtp-Source: AGHT+IHue9gaD3zPtJZnyQCeG7GuQwFP18YfHf0KLTKt0TTAlkcgMAoYq0PpAFe1/h3NaSxXwr70dQ==
+X-Received: by 2002:a19:e056:0:b0:513:c5d1:a537 with SMTP id g22-20020a19e056000000b00513c5d1a537mr792222lfj.10.1710424808071;
+        Thu, 14 Mar 2024 07:00:08 -0700 (PDT)
+Received: from [172.30.204.13] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id a19-20020a19ca13000000b00513d10789easm263158lfg.180.2024.03.14.07.00.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 07:00:07 -0700 (PDT)
+Message-ID: <8affb3d8-6210-43e6-8cbb-de28bdcf326a@linaro.org>
+Date: Thu, 14 Mar 2024 15:00:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,108 +61,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic
- secure-monitor SoC Information driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-References: <20240314070433.4151931-1-adeep@lexina.in>
- <20240314070433.4151931-3-adeep@lexina.in>
- <111346d3-8357-4ca3-9249-a43ebc225fcb@linaro.org>
- <9292d2ee-138a-4a59-9c96-31c1b4473a4e@lexina.in>
- <df615536-8034-464a-8dba-c890b70edc1f@linaro.org>
-Content-Language: en-US, ru-RU
-From: Viacheslav <adeep@lexina.in>
-Autocrypt: addr=adeep@lexina.in; keydata=
- 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
-In-Reply-To: <df615536-8034-464a-8dba-c890b70edc1f@linaro.org>
+Subject: Re: [PATCH] clk: qcom: apss-ipq-pll: use stromer ops for IPQ5018 to
+ fix boot failure
+To: Gabor Juhos <j4g8y7@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240311-apss-ipq-pll-ipq5018-hang-v1-1-8ed42b7a904d@gmail.com>
+ <58f07908-127a-438d-84e2-e059f269859b@linaro.org>
+ <2b95a593-225e-47b1-8bda-03240eb0f81e@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <2b95a593-225e-47b1-8bda-03240eb0f81e@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
 
 
-14/03/2024 16.31, Krzysztof Kozlowski wrote:
-> On 14/03/2024 13:22, Viacheslav wrote:
->>> +
->>>> +	soc_dev_attr = devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
->>>> +				    GFP_KERNEL);
->>>> +	if (!soc_dev_attr)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	soc_dev_attr->serial_number = socinfo_get_chipid(&pdev->dev, fw, &socinfo);
->>>> +
->>>> +	soc_dev_attr->family = "Amlogic Meson";
->>>> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x:%x - %x:%x",
->>>> +					   socinfo.v1.major_id,
->>>> +					   socinfo.v1.chip_rev,
->>>> +					   socinfo.v1.pack_id,
->>>> +					   (socinfo.v1.reserved<<4) + socinfo.v1.layout_ver);
->>>> +	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s (%s)",
->>>> +					 socinfo_v1_to_soc_id(socinfo),
->>>> +					 socinfo_v1_to_package_id(socinfo));
->>>> +
->>>> +	soc_dev = soc_device_register(soc_dev_attr);
->>>> +
->>>> +
->>>> +	if (IS_ERR(soc_dev)) {
->>>> +		kfree(soc_dev_attr->revision);
->>>> +		kfree_const(soc_dev_attr->soc_id);
->>>> +		kfree(soc_dev_attr);
+On 3/14/24 14:50, Gabor Juhos wrote:
+> 2024. 03. 13. 19:36 keltezéssel, Konrad Dybcio írta:
+>>
+>>
+>> On 3/11/24 16:06, Gabor Juhos wrote:
+>>> Booting v6.8 results in a hang on various IPQ5018 based boards.
+>>> Investigating the problem showed that the hang happens when the
+>>> clk_alpha_pll_stromer_plus_set_rate() function tries to write
+>>> into the PLL_MODE register of the APSS PLL.
 >>>
->>> That's a double free. This was not tested.
+>>> Checking the downstream code revealed that it uses [1] stromer
+>>> specific operations for IPQ5018, whereas in the current code
+>>> the stromer plus specific operations are used.
+>>>
+>>> The ops in the 'ipq_pll_stromer_plus' clock definition can't be
+>>> changed since that is needed for IPQ5332, so add a new alpha pll
+>>> clock declaration which uses the correct stromer ops and use this
+>>> new clock for IPQ5018 to avoid the boot failure.
+>>>
+>>> 1.
+>>> https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.4/drivers/clk/qcom/apss-ipq5018.c#L67
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 50492f929486 ("clk: qcom: apss-ipq-pll: add support for IPQ5018")
+>>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+>>> ---
+>>> Based on v6.8.
+>>> ---
+>>>    drivers/clk/qcom/apss-ipq-pll.c | 20 +++++++++++++++++++-
+>>>    1 file changed, 19 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/clk/qcom/apss-ipq-pll.c b/drivers/clk/qcom/apss-ipq-pll.c
+>>> index 678b805f13d45..11f1ae59438f7 100644
+>>> --- a/drivers/clk/qcom/apss-ipq-pll.c
+>>> +++ b/drivers/clk/qcom/apss-ipq-pll.c
+>>> @@ -55,6 +55,24 @@ static struct clk_alpha_pll ipq_pll_huayra = {
+>>>        },
+>>>    };
+>>>    +static struct clk_alpha_pll ipq_pll_stromer = {
+>>> +    .offset = 0x0,
+>>> +    .regs = ipq_pll_offsets[CLK_ALPHA_PLL_TYPE_STROMER_PLUS],
 >>
->>
->> Please, describe the problem.
+>> CLK_ALPHA_PLL_TYPE_STROMER?
 > 
-> Test your code. What's the point of arguing over it if regular test
-> would show this?
+> I admit that using CLK_ALPHA_PLL_TYPE_STROMER would be less confusing. However
+> 'ipq_pll_offsets' array has no entry for that enum, and given the fact that the
+> CLK_ALPHA_PLL_TYPE_STROMER_PLUS entry uses the correct register offsets it makes
+>   little sense to add another entry with the same offsets.
 > 
->> I don't quite understand what the issue is:
->>
->> - kfree() releases memory allocated with kmalloc()
-> 
-> So point me where is kmalloc(). I don't see. I see only devm.
+> Although the 'clk_alpha_pll_regs' in clk-alpha-pll.c has an entry for
+> CLK_ALPHA_PLL_TYPE_STROMER, but the offsets defined there are not 'exactly' the
+> same as the ones defined locally in 'ipq_pll_offsets'. They will be identical if
+> [1] gets accepted but we are not there yet.
 
-I missed the point that devm_kzalloc is automatically freed. You are 
-right. Thanks!
+Oh, I completely overlooked that this driver has its own array.. Hm..
 
+I suppose it would make sense to rename these indices to IPQ_PLL_x to
+help avoid such confusion..
 
--- 
-Best regards
-Viacheslav
+Konrad
