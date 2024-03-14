@@ -1,217 +1,267 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115DCC8F3;
-	Thu, 14 Mar 2024 06:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710397538; cv=fail; b=J4nSpEeESv9NIYll3jEEO5ezm3QK5j0I7qzzbTrju/DGlHJRTELtcxGCfJVzv6vzjsnzL0qrTq9lI4vsUGXVMxa60gzSMkZIURbnnfwxrM910uBnwBxgHKAQCBwDwbN/00lmx1UK8ehxts9BsX5cxYyxA+sw6fpj11QCT7LPuvA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710397538; c=relaxed/simple;
-	bh=GM2APZvYheRKRInFIeoh9WcznM8xFkmOlhZHE/7AM24=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=dLHvgNcnUxwu7hbkIGXSDahY0hmczSNFxeHgb88k6RtE4REozdgPgyYd/0AUoawqfQYr7eF78hYmcOPycOqUoT7kmDcjfV3ktzWMik0uVhvWbyOEx74bhwN9S7/U2sn9oiFXPgTFZIFTDBWosnpnv//KQSvHnR4pGlsjn6Wrjuo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Iuhg8SSn; arc=fail smtp.client-ip=40.107.92.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B477D33F6;
+	Thu, 14 Mar 2024 06:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710397544; cv=none; b=c8uN+SWta7njx6QqLdAyoDj0peOI4wOTFth7pOmouzs2R37c2ggeVJBs2ZtkBtyt3igrUPFTiNn0mngCpTWcveo7mIfeuEHnD2+AR91d+ZUeQbd/zwDljLzqPUhNwKUR2x4sc+61T5pUnttYZmMfKdiLENL1NYikDbeoCApCLk4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710397544; c=relaxed/simple;
+	bh=P8M3al2TXWi7OrbIZG/+8S+siTvqvr3JesSMso9r9xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AI35y9J031quuLCZya4tlMjkf3f7DSwv9iqVdG7tqW8Dh/oEFDzMKRbruix12+wATtWtFAxilHTxczbsUDsiSu7CUhc1uwdHc95S7eXyuJkckr0Lt/Gl3RfTgfHIs9GPpoidvjrzXE65FOV28hp/sfUE6y8LGJCSK9zPfuBLzmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMZ4aHB/; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Iuhg8SSn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gXaPrcGt4Yihe0NJFeV6bdxi0B3mudTOi0+VCz6yzzzvbJTiO5dOB/e7XCMdoLBqu0D6enmO86j2MCLjzER/dVONZEX34p6eILuFUjZWPHLwwgI9Aqf9A8SmJ9qH505zgv6uXyd8BcbuVSG9KmBQNAWDMyimi0Btj3LjEH7VQyf6xzb81bzNeWp/Ap2TApjxOBkuOfS8p3bIK6RIxLGhvh/kKNIKlnMyFWgO1PTPUjQ8gJbe8qnpiGJU/4iS3eg3zDeVulXtvSxSYtrWwD49bA43h3oiGfuz2Bq8Mf8ceUf5tK2gakPBfk6q9m+rscS2HuWXrDfMQi02VfyztYoo1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jRjJ1alIFUENpX3pMk01BUQmdSzcYW1LLOKJoS3D6Cc=;
- b=iYcPeQZE4pqbCdS9BpKldMJnjFtGNBBT5E8COfGiK+BQHH0BZk4nBj4AEAsheN+z6hR7IIYYzlTBBsmDAe8l3hv5wlA8aBNKCuLVE5C+XsZ1o2kwwWjflBw0WlY0dAsZ6MlfZ42vFHXVC9pFXmj/Wprd62uXgnWVgYrhONjibXe9kysz9/N1ysFKTUVjkZww/EVUIGHXJe+2MuzM+TkAlNpMCrb95PqbqVIbG/ykq4iMVUh46vuOvgYtXbUrN03K2Zo0ST4cOfR2z8V1gryqG5FJ6drTvsw4jwbld5LWYVxXCwEnapb+mn/iFTxa5w1yMzlijoe1SJ3W1wGbKN98rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRjJ1alIFUENpX3pMk01BUQmdSzcYW1LLOKJoS3D6Cc=;
- b=Iuhg8SSnLxDcRuyi9/ppOPzks4glENy8dqLkt3TqnWXIUZsnF6L4FoU5NkMQuvtk0EtO2rWwUPP5l5HGSkf6czW5q9QZ5KHH2nbML94J8y16ZbDQ9mOyVKCWqy72yWFqMjBmnKesjTjKKEBV/AmpYOL7qJJVVTD1n5fDd7jeS/DMIg9i/V+tdDyTy5b+ezMaelmCA3xkNQJ9rvFm3aazS9OMPMsmQ9TgFR0umJ9MeWTaL8LRivc0oyGaH7Gh7yNAcv015tkom0QiU6FvfeUCDbxD66pXA7VswDXN5Ug7GSneebmjfeT6OkD7Afcfz/GeseoIljpYnZFLW6MkpFPBNQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by DM6PR12MB4122.namprd12.prod.outlook.com (2603:10b6:5:214::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Thu, 14 Mar
- 2024 06:25:33 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
- 06:25:33 +0000
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
- <20240309084440.299358-1-rrameshbabu@nvidia.com>
- <20240309084440.299358-7-rrameshbabu@nvidia.com>
- <20240312165544.75ced7e1@kernel.org> <87plvxbqwy.fsf@nvidia.com>
- <20240313174707.38a71c84@kernel.org>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
- alexandre.torgue@foss.st.com, andrew@lunn.ch, corbet@lwn.net,
- davem@davemloft.net, dtatulea@nvidia.com, edumazet@google.com,
- gal@nvidia.com, hkallweit1@gmail.com, jacob.e.keller@intel.com,
- jiri@resnulli.us, joabreu@synopsys.com, justinstitt@google.com,
- kory.maincent@bootlin.com, leon@kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, liuhangbin@gmail.com,
- maxime.chevallier@bootlin.com, netdev@vger.kernel.org, pabeni@redhat.com,
- paul.greenwalt@intel.com, przemyslaw.kitszel@intel.com,
- rdunlap@infradead.org, richardcochran@gmail.com, saeed@kernel.org,
- tariqt@nvidia.com, vadim.fedorenko@linux.dev, vladimir.oltean@nxp.com,
- wojciech.drewek@intel.com
-Subject: Re: [PATCH RFC v2 6/6] tools: ynl: ethtool.py: Output timestamping
- statistics from tsinfo-get operation
-Date: Wed, 13 Mar 2024 23:07:22 -0700
-In-reply-to: <20240313174707.38a71c84@kernel.org>
-Message-ID: <87ttl9fhyd.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0104.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::45) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMZ4aHB/"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a14d7f0e66so286984eaf.1;
+        Wed, 13 Mar 2024 23:25:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710397541; x=1711002341; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UjUnNqXyI+5ssZ3QF9wt/A+RQXIEGG+CNjU7FVUOLcc=;
+        b=eMZ4aHB/oTD1aKoSlHrP+K7rtLcQTfghcm5mOZTPF4r9nb2+zxaKHkICJcsyqB813Z
+         LqI09464BTW/YX9cMBO4b7zcX/P46IZlcJ/KhXnazAFBMe0KSxnF3sLIoWelUvNunq11
+         DdovlnAwlj+kDi3FYpJ8sZnlGTS6DwounYpnyQFV2HdGsz0WZptKMkwruEfkfH2GJ3dT
+         HJ7w95BolkuVXRL663WJU/gSB7hDbgIbtj6DpPjv7C8HaKItP8xQOM7iQk5B6JK/wW04
+         SWI63sjmF7dFsQyLFJR/3freM5Yc4dm5F2zwh6vetFt6Ujgp8Pnl0thv3WTfMoWpLgf2
+         BRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710397541; x=1711002341;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UjUnNqXyI+5ssZ3QF9wt/A+RQXIEGG+CNjU7FVUOLcc=;
+        b=PawK1aIg44IhYqC1RViWiBzVKUXmigfulmcRUJJETWerMKX+T3MPQ+bLRZ0cAcdv3i
+         H1CmksvjuanpoPB9z8p3gYwO+QkMASpDNEU+V1Lystka/+ZuH+CP/XtuvDxuXb7I08w3
+         ll+pV0bu79c3wPDqVmDaRx3/mcLZkrOOlFHNeImMBhZf4JzMFafs/VhTn+2sJRbJkUID
+         pj+NTrxnMGh/facJZonAcJYJQltXvHgwtz+WCn17PlLszR5CqKlk2p27GjlyxT4D79Ji
+         NhArJKtrmB/aS9LJINrrHNUHHDZFKRPHS4ZnRUygzMXGfgitGFArSNsdKZ4yD1kbE6VD
+         wGUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWy7WtEbnakv8BTBVvo3Soo6TYmm20ISdIL+2F375iDpebi630IL/4ai415dekDMCPZpmX26Bwv803c7PMLB+GBipd/5UMJD0+N+MU4GlQoy/Lw5U5HPhWQDpTujjHREv4Y85q9mmQJoHHvNV+7DGbHUl22dIZJwEpAvZgIbZKy3cWu/kF3KQ==
+X-Gm-Message-State: AOJu0YyYAnIJ7hlg8YWe2RL2CTvuMyvoT7pmM4yMp+uTVBKvWgP810jw
+	wqHkY7QgTFCbdsWzuZWQaymu3nklL1gbVGWQeK20KDMsfGncqZpn
+X-Google-Smtp-Source: AGHT+IEjFUx7UzLcy7o+O4qJTgP8mPbR2fSXTQWv1tuhiXqnlzBD1/tl8lSfGqw3dURDjiA9wNCZuA==
+X-Received: by 2002:a05:6359:7c25:b0:17b:ee6f:b6ae with SMTP id xm37-20020a0563597c2500b0017bee6fb6aemr1109250rwb.9.1710397541235;
+        Wed, 13 Mar 2024 23:25:41 -0700 (PDT)
+Received: from thinkpad ([117.213.99.94])
+        by smtp.gmail.com with ESMTPSA id b21-20020a63d315000000b005cf450e91d2sm684259pgg.52.2024.03.13.23.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 23:25:40 -0700 (PDT)
+Date: Thu, 14 Mar 2024 11:55:32 +0530
+From: Manivannan Sadhasivam <manisadhasivam.linux@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
+ reset the endpoint devices
+Message-ID: <20240314062532.GB4831@thinkpad>
+References: <20240313150242.GA2656@thinkpad>
+ <20240313191656.GA921158@bhelgaas>
+ <20240314053526.GA3575@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DM6PR12MB4122:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f4dfd92-9633-4377-af68-08dc43ef8db2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	5sdMCJidp8D9OzEVtgq4ehI0gr3VbofOTU6nB33vg+xQ54RyZg8sA3PlZ9dSeNCgewPien4hxQU+26ux/azisNjV7ViT3IVAL2L2ZiOEdzTSvf+8soTMuMsUqB1fs68BbunNlwbHxYUSINBwMjqK9zGufKLPTPwhOeGkXk4MJ0lFgKegYmz2k+gOr/4CFMDHxmwYP3NNlFrHtk9wZc7rX0mO7Lsdut6V4XW58UOtvLHG9I57smK0Je4P9vMx7zSsBie7pBkhL+LDJOy0MDWyebviv52l5apxvsLsqUNaNmkvI/U/unNzTnDc4z8NOek9PVkUdC2/TP46R8Pjp/0njX52mcXURBpAhd9P7aDYYaYSiFcOUfPcL0CWYZiAuSwi1dnBsHA49JAZv9Fsrpto403Cqfq8gaNnBcfUMVzSw9QzbX2l9IDU7fyZb2kgclk1coNlnZGONWLKJvzn+19JUAwMFmnL+xRUCPTIF55S48mDk8lg+UDp6+JV7ffDcmZNXFsvzh2QieCKzJaZD8GCYrYwR0HfwBod1Uj6/cUpB32CR2emZL/7ZQxA+Q4Yj1Cl/aGHuGoUzt8wp/wQBmJ8ulmHgT+sa/2stog1kgAmGrm6xb0Hs7BVTsaWc4vNu0HXt0tzwETwukIchm4Wx1hg6fxf9lncaRFQscK1F6lGYcY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XsPikQk1+d02kuwlVy0tZz3mqiPWRQaP8xOVmz5SUHQHE3P8XGzt5MgWwNA+?=
- =?us-ascii?Q?yFxIXWbQ6/9mNNZrBL+fXndJcRBq1FAdgeZuouubUWCPxIFgIYkYFE/Y6isd?=
- =?us-ascii?Q?6PhHx5rMnhx2LGUqD3KlRt3JeP+HkB5bJJpAdyQso5/nenrjmQic7JXwtqy6?=
- =?us-ascii?Q?ReRMuCQHdom5F/GzeuA3pJFzuW3+dobG/Bs24B2/NMcu5Hiy02zFUlcvsDAA?=
- =?us-ascii?Q?IuAB1Zb7hPjhm3zJ77CJx+16n8Bt4bFQMTCzmJa0BxcOh0D3A75GhL04k4b2?=
- =?us-ascii?Q?ZkmkDm90XapTH4NkOiAZ33HZhDSNYM07xcggjY005Rb3DtmwkDxhrNE5+XMm?=
- =?us-ascii?Q?/IDwvhWsDU+psQJ/ycfbvNcvsMA4rq3kwrZiTDdl/r7rgQX4qhFcqw0L/u9J?=
- =?us-ascii?Q?Vm8nj7l+tMmYh4H1PGSiUEXESflQTvVG9lnazUc0QrpmIcqM5ZJ9zLxGxF9k?=
- =?us-ascii?Q?QEb4jXRrHvszmIvXH4q/ABHZeqe6evr7yWmJZyabOufk77wjn38VGfy2xLjH?=
- =?us-ascii?Q?Zqqy92xPaPPrvA51C6CDJ1KT7SkgmRp8FCVefQ3H+TQ/i/4oGYIDLWrjvAmU?=
- =?us-ascii?Q?KN4Pa66LuxnnA+DR0j4mk7NubWAl8GPS83rvDbBtOt5TqN0SeJlrEUlLabCL?=
- =?us-ascii?Q?hvGsefIPF/fE175Qfnh+5bHFPECwripEUD7Za8XAMkjKn3EdJ92eOGFFEvrQ?=
- =?us-ascii?Q?GhKPZBH0nTeEJg1dCfg+Cu18gdKbsntpNY1mQMu3SSTsgVCKuK8nujRBvnQM?=
- =?us-ascii?Q?RVIULGbOjIohgll1nGtxeqJ93tq2ChbpN8iiD0wn/F+saFfj3TCxWKmtjfzm?=
- =?us-ascii?Q?5vxoWb+UXIisIa2sM1uX7WObd5RAG7uGthU6YCDFe29eeaPsBkZWF7vmvmOd?=
- =?us-ascii?Q?kbWoDLhe6vtueFE4ogDoNcThpThoYgPRQTTDzpDT1bIRZRqChzFdl6d0DKZs?=
- =?us-ascii?Q?DuHNBG24EF3rRZguKFzPL+qc9Z6AwQ78pFowwTXG3jKs2B3ntu0P05HFVkiD?=
- =?us-ascii?Q?t/557MQbfY6AiSk2/FZChZ8JU8tvhkOs2sCcZacT1sAOp5eg+Z73E02aWXWa?=
- =?us-ascii?Q?4aarLOU/L9pADQpJXRozyrjy4BCwqSXldXCRtA70TtN5g9yxnL9zdDunEeyW?=
- =?us-ascii?Q?h8+SfTZ+oEgtzuGowedINhV7Vdz/1OAGM9J+6F7axU7zzzTiiU1W7IgLf9ik?=
- =?us-ascii?Q?eTc9hhDwSm2AwshyYrRuBhB5E8iQErWJNmQH92YMvn5AftsVDfeb3iK9WqJg?=
- =?us-ascii?Q?zz/74O+ESVSamQXRuNd2lgF56tbxmtV+Fu+dvfBGf0ITuiM4UGm1SFLgWc+l?=
- =?us-ascii?Q?cbC2yewshXLj3N+tUAzfWPX963wGhjqafkIcnFm7LbaEyHDc30NX38h2QZk8?=
- =?us-ascii?Q?Nw1UGClwq1K5uW2fOEj+2Yyeq7Wg5tyd+GZgER4XEIDNzFqj7CYDWq51geZq?=
- =?us-ascii?Q?l1QvOBbfrPuv4z71R33GCATlh0748zknlptNMGy0gXA3aL98qqzAMfqvwuAK?=
- =?us-ascii?Q?Jk9OuoTH944bUXn+r3Cd+0/Jpyc04Zot1vqbU0aPmQOg6pU117LHJOZ54JY5?=
- =?us-ascii?Q?Ejxrf5Y+is6l5N9S3YkcA4MgyblxlUef6pV+0NwXouxd3cDtWlSn2Ai7dHFV?=
- =?us-ascii?Q?DA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f4dfd92-9633-4377-af68-08dc43ef8db2
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 06:25:33.4795
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3w05cClPe4/Q3tPoG/WjUUwZQ7OYjitUnHPMTEe8dKEWoaNafNBBaChzci6UhrEap67tAYl5Hbw26NAiAKXEUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4122
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240314053526.GA3575@thinkpad>
 
+On Thu, Mar 14, 2024 at 11:05:32AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 13, 2024 at 02:16:56PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Mar 13, 2024 at 08:32:42PM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, Mar 13, 2024 at 09:36:14AM -0500, Bjorn Helgaas wrote:
+> > > > On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
+> > > > > PCIe host controller drivers are supposed to properly reset the endpoint
+> > > > > devices during host shutdown/reboot.
+> > 
+> > Where does this requirement to reset endpoints during host shutdown
+> > come from?  My working assumption is that .shutdown() needs to stop
+> > DMA and interrupts, based on this old thread:
+> > https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
+> > 
+> 
+> Yes, it indeed need to stop DMA and interrupts since the endpoint is going to
+> a dormant state. But not everyone care about PERST# since it will be asserted
+> by the hw automaticallyt once the SoC goes to a powerdown state. That's what
+> happening even without this patch. Also, in most of the cases, during host
+> shutdown/reboot, the power to the endpoint will be cutoff and reapplied
+> (on reboot). So the endpoint will undergo cold boot and it would work as usual.
+> 
+> But, in some rare cases like the one I'm dealing with, power to the endpoint
+> device is not coming from the host. The endpoint here is another SoC that works
+> on its own. It just receives refclk from the host. So in this case, during host
+> shutdown/reboot, only PERST# will be asserted and refclk will be cutoff, but the
+> device will be kept powered on. Due to this, the device when it tries to
+> cleanup the state machine post PERST# assertion, it will crash because refclk
+> will be cutoff immediately.
+> 
+> And that is what being addressed with this patch.
+> 
+> I should admit that this issue is not very common and that's the reason no one
+> cared about it so far. Because, on PCs/Laptops, most likely the endpoint device
+> will be powercycled during reboot.
+> 
+> > > > > Currently, Qcom driver doesn't do
+> > > > > anything during host shutdown/reboot, resulting in both PERST# and refclk
+> > > > > getting disabled at the same time. This prevents the endpoint device
+> > > > > firmware to properly reset the state machine. Because, if the refclk is
+> > > > > cutoff immediately along with PERST#, access to device specific registers
+> > > > > within the endpoint will result in a firmware crash.
+> > 
+> > Does "PERST# getting disabled" mean PERST# is asserted or deasserted?
+> > 
+> 
+> PERST# assertion I meant. Will change the wording.
+> 
+> > > > > To address this issue, let's call qcom_pcie_host_deinit() inside the
+> > > > > shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> > > > > delay of 1ms, thus allowing the endpoint device firmware to properly
+> > > > > cleanup the state machine.
+> > 
+> > This *adds* the qcom_pcie_shutdown() callback, right?
+> > 
+> 
+> Yeah. Will make it explicit.
+> 
+> > > > I guess this 1ms delay is the PERST_DELAY_US hidden inside
+> > > > qcom_ep_reset_assert()?  I assume the refclk disable is done by
+> > > > clk_bulk_disable_unprepare()?
+> > > 
+> > > Yes to both.
+> > > 
+> > > >   #define PERST_DELAY_US 1000
+> > > > 
+> > > >   qcom_pcie_shutdown
+> > > >     qcom_pcie_host_deinit
+> > > >       qcom_ep_reset_assert
+> > > >         gpiod_set_value_cansleep(pcie->reset, 1);
+> > > >         usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
+> > > >       phy_power_off(pcie->phy)
+> > > >       pcie->cfg->ops->deinit()
+> > > >         qcom_pcie_deinit_...
+> > > >           clk_bulk_disable_unprepare                         <--
+> > > > 
+> > > > Is there a spec citation for this delay requirement?  If not, how do
+> > > > we know 1ms is enough for whatever the firmware needs to do?
+> > > 
+> > > Both PCIe base spec and Electromechanical spec only mentions Tperst,
+> > > which is the minimum time PERST# should remain asserted. But there
+> > > is no mention about the time, refclk should be active.
+> > 
+> > I see Tperst mentioned in PCIe r6.0, sec 6.6.1, but AFAICS the value
+> > is only defined in PCIe CEM (r5.0, sec 2.9.2), which says 100us, and
+> > maybe other form factor specs.
+> > 
+> 
+> I'm not 100% sure that Tperst represents the minimum time to keep refclk active.
+> 
+> > If PERST_DELAY_US is enforcing Tperst, why is it 1000us instead of
+> > 100us?
+> > 
+> 
+> As I said above, I'm not sure if PERST_DELAY_US corresponds to Tperst. It
+> predates my work on this driver, but I'll check internally.
+> 
 
-On Wed, 13 Mar, 2024 17:47:07 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
->
-> Ah, we're missing the enum definition and linking :S
->
-> I mean:
->
-> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-> index 197208f419dc..e1626c94d93b 100644
-> --- a/Documentation/netlink/specs/ethtool.yaml
-> +++ b/Documentation/netlink/specs/ethtool.yaml
-> @@ -16,6 +16,10 @@ doc: Partial family for Ethtool Netlink.
->      name: stringset
->      type: enum
->      entries: []
-> +  -
-> +    name: header-flags
-> +    type: flags
-> +    entries: [ compact-bitset, omit-reply, stats ]
+Ok, got the answer. This delay indeed corresponds to Tperst, but on Qcom
+platforms this delay was found to be not enough. So they increased it to 1000us.
+This shouldn't be an issue since PCIe spec mandates only minimum delay.
 
-I am running into some strange issues with this even after regenerating
-ynl generated/ by running make under tools/net/ynl/.
+But regarding the refclk active time, spec doesn't mandate any minimum time. And
+as I mentioned before, it could be due to not caring about the usecase.
 
-  Traceback (most recent call last):
-    File "/root/linux-ethtool-ts/./tools/net/ynl/ethtool.py", line 437, in <module>
-      main()
-    File "/root/linux-ethtool-ts/./tools/net/ynl/ethtool.py", line 333, in main
-      tsinfo = dumpit(ynl, args, 'tsinfo-get', req)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/root/linux-ethtool-ts/./tools/net/ynl/ethtool.py", line 91, in dumpit
-      reply = ynl.dump(op_name, { 'header': {} } | extra)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/root/linux-ethtool-ts/tools/net/ynl/lib/ynl.py", line 873, in dump
-      return self._op(method, vals, [], dump=True)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/root/linux-ethtool-ts/tools/net/ynl/lib/ynl.py", line 824, in _op
-      msg += self._add_attr(op.attr_set.name, name, value, search_attrs)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/root/linux-ethtool-ts/tools/net/ynl/lib/ynl.py", line 459, in _add_attr
-      attr_payload += self._add_attr(attr['nested-attributes'],
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/root/linux-ethtool-ts/tools/net/ynl/lib/ynl.py", line 481, in _add_attr
-      attr_payload = format.pack(int(value))
-                                ^^^^^^^^^^
-  TypeError: int() argument must be a string, a bytes-like object or a real number, not 'dict'
+- Mani
 
-What's your expectation for how the request structure would look like? I
-have tried the following.
+> > > So I used the existing delay post PERST# assert in the driver. I do
+> > > not know if that is enough for all the endpoints out in the wild,
+> > > but atleast satisfies the requirement of the endpoint I'm working on
+> > > (which is another Qcom SoC in EP mode).
+> > > 
+> > > We can change the delay if someone reports any issue with the
+> > > existing one.  Atleast, that's the best we could do in this
+> > > situation.
+> > 
+> > I'm dubious about this.  If endpoints require a delay here to work
+> > properly, the spec should specify a minimum delay.  We can't make a
+> > reliable system based on "here's a guess and we'll update it if people
+> > report issues."  That makes me think this endpoint mode Qcom SoC
+> > dependency on a delay might itself be non spec-compliant.
+> > 
+> 
+> I wouldn't say "non spec compliant", but a usecase not addressed properly in the
+> spec. This Chip to Chip usecase (connecting two SoCs over PCIe bus where one
+> acting as host and another as endpoint with their own power supply), is not very
+> popular IMO.
+> 
+> - Mani
+> 
+> > > > Do other drivers require similar changes?
+> > > 
+> > > Most likely yes, but that also depends on when the drivers are
+> > > cutting off the refclk. Not all drivers are implementing the
+> > > shutdown callback, and even few of the ones implementing, do not
+> > > assert PERST# since it is optional.
+> > 
+> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > index 2ce2a3bd932b..41434bc4761a 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > > +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> > > > > +{
+> > > > > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > > > > +
+> > > > > +	qcom_pcie_host_deinit(&pcie->pci->pp);
+> > > > > +}
+> > > > > +
+> > > > >  static const struct of_device_id qcom_pcie_match[] = {
+> > > > >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> > > > >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > > > > @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
+> > > > >  		.pm = &qcom_pcie_pm_ops,
+> > > > >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> > > > >  	},
+> > > > > +	.shutdown = qcom_pcie_shutdown,
+> > > > >  };
+> > > > >  builtin_platform_driver(qcom_pcie_driver);
+> > > > > 
+> > > > > ---
+> > > > > base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
+> > > > > change-id: 20240313-pci-qcom-shutdown-d86298186560
+> > > > > 
+> > > > > Best regards,
+> > > > > -- 
+> > > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > 
+> > > 
+> > > -- 
+> > > மணிவண்ணன் சதாசிவம்
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
-  if args.show_time_stamping:
-      req = {
-        'header': {
-          'flags': 'stats',
-        },
-      }
-
-  if args.show_time_stamping:
-      req = {
-        'header': {
-          'flags': {
-             'stats': True,
-          },
-        },
-      }
-
-I tried looking through the lib/ynl.py code, but I did not understand
-how the 'flags' type was specifically handled.
-
->  
->  attribute-sets:
->    -
-> @@ -30,6 +34,7 @@ doc: Partial family for Ethtool Netlink.
->        -
->          name: flags
->          type: u32
-> +        enum: header-flags
->  
->    -
->      name: bitset-bit
->
-> See if that works and feel free to post it with my suggested-by
-
---
-Thanks,
-
-Rahul Rameshbabu
+-- 
+மணிவண்ணன் சதாசிவம்
