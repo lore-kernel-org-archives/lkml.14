@@ -1,108 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1BC5C61C;
-	Thu, 14 Mar 2024 21:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9974C7604E;
+	Thu, 14 Mar 2024 21:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710451285; cv=none; b=XS5SmmEE8P2nJzPS9Hiry5Dle82oz5NjYvu10OPJhwotU/LnBoVxFTteDigP2DAVJQuKDHknwijyeUbH1uJXJ4KtfEUWCbkQjNjmtFQqNdg78TkkZCAmHpVuJ966h9bLXV2dvajU9oa4QwxuvJR0tjABhxTyOU7iJvD9pCAR2KM=
+	t=1710451286; cv=none; b=idlYsbqraI0z3aeXUXmNXBrIH8Nu+L3YRfZPKsuQjfYIrWFm3BkQvMnFiI4iltFdbnc/0AJRbMpJZOYNULpfk7L2rcPiaAKCgWkwUTiUjWvVX1kE2+BznFizOWFR3Gb/+awbXgQYp5euj+281dcgNxC6olyCHUKBMAwJJfiQcmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710451285; c=relaxed/simple;
-	bh=5iKYpVmwKtY3HKTze1MxAp6NLobKOmeF+sENxDioL7g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MTeyD+TML4KLZo6mp0JIqe+rhufSihx7GnVvO28JFFUFZm/7C0ZvZeeT3HK0wMh1gxaG8+N5yqu9p76tGTbndl1cRIM2BMIkkGLVLBrkBbF4S3Z9kBhz5pFu7NXTgHuobiGkvSqhPGmQHd5E1zNRkFAsbMqUu/JM5l8SYAqXXkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i3Uftnjg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DdiSTkk/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710451286; c=relaxed/simple;
+	bh=VTA1cvW0D1mdy4UByIqbD8SzUQ0WZ25CyYwNe72eg1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZxXlOOuJq/DPPunzGVYNN6Mzi5DsRpiLKxTto3e1y8K4u1JQNhiITiba/K0Z8SP6piTL+T5NB8A4l8/thYjB19jFzIOPKUzwgGWOvVYYqdeO/uGIZdT6pa/xdOlw7xO/8li3rZBPSde63dUS/TzOuDpSEld3orS+QhzmR7NFSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlwaLRSi; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i3Uftnjg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DdiSTkk/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710451282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5/b8mRvFsI4RID413+I6WKq1+9lG0aPqz7WOE4uPthI=;
-	b=i3UftnjgxpyCLN40bO5f19Ec09PlRCMerv4mnJIe0fiXepk/I8mnMHbH4jHBlVGKRWYaZZ
-	7WAC3p0zi4xm7TzcGDFToNq5tQaa3Kq2ANpiB1aVOxK2uCRTdH1PnELJT/ceRGHEcNDLcc
-	8BRjNM0ISeeop0gCj8hJ6qFfUGZ9Y8UB5PsO7iaF48RqdADo+DfAbYbcNBighMfq4InCZn
-	u6+BsVAGSHt/cmohXEpzJgB8cdJZt6KWVZGCQn4oGO+EdilDftsbYTd6bJizac6Grwm/9L
-	bo+soNCZLQlWEeZIye64lp3MRatIV9BYSQptvHMJ8I4punNloozdlZ16ALArCQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710451282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5/b8mRvFsI4RID413+I6WKq1+9lG0aPqz7WOE4uPthI=;
-	b=DdiSTkk/hs8gEDhVmlTOMoFtVgKuOY7rY9oFSKuiA+hw56BJiPsIYx5++iy9h04LzC/qHm
-	vGG26N5pU12NKOCQ==
-To: Florian Fainelli <f.fainelli@gmail.com>, Boqun Feng <boqun.feng@gmail.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>, "Russell King (Oracle)"
- <linux@armlinux.org.uk>, Joel Fernandes <joel@joelfernandes.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, paulmck@kernel.org, mingo@kernel.org,
- rcu@vger.kernel.org, neeraj.upadhyay@amd.com, urezki@gmail.com,
- qiang.zhang1211@gmail.com, bigeasy@linutronix.de, chenzhongjin@huawei.com,
- yangjihong1@huawei.com, rostedt@goodmis.org, Justin Chen
- <justin.chen@broadcom.com>
-Subject: Re: Unexplained long boot delays [Was Re: [GIT PULL] RCU changes
- for v6.9]
-In-Reply-To: <87v85olez3.ffs@tglx>
-References: <CAHk-=wgP=9JxdOJ5oYtVO5yM6pFi5+3FPxfCQa4ezpagJuXq3g@mail.gmail.com>
- <ZfDptafiK0jns050@boqun-archlinux>
- <CAEXW_YRvz8xf-6hpwpYqS=YNa-xkn4CsuJzELJxOH_2FP+6ptQ@mail.gmail.com>
- <2fb110ed-ba04-4320-9ef0-8766c9df5578@gmail.com>
- <ZfIh33YAYkLaDeAS@shell.armlinux.org.uk>
- <533151c9-afb5-453b-8014-9fbe7c3b26c2@gmail.com>
- <ZfIuRMo8oKbR08Af@lothringen>
- <f4a2a18c-1c81-4857-a3a0-d049ec5c79b3@gmail.com>
- <ZfLUU+XuQC7W79tf@lothringen>
- <d6c8e4fe-17bf-443d-a6f5-54470390e1fd@gmail.com>
- <ZfNHNvzpqf8DOZd8@boqun-archlinux>
- <de038bee-cecd-4e76-b0f4-5822b68e439d@gmail.com> <87v85olez3.ffs@tglx>
-Date: Thu, 14 Mar 2024 22:21:21 +0100
-Message-ID: <87sf0sldbi.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlwaLRSi"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dd9066b7c3so10196505ad.2;
+        Thu, 14 Mar 2024 14:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710451284; x=1711056084; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y7Kb/aDwmwhVYLJzC5a/6ReWiiRg5NdliMJgCY8nZjg=;
+        b=QlwaLRSiuHpaa+OC+Y1GS+NrH7MpH47thXZIidBPJjveZPSrFXQSVTGu5XJexOXUdF
+         cIKNHYR8kmTW7FzFSdE8/lUSUvQGsA9+bZ4Q6Sx7vDx9Q1HjB6QEhkaeSzgBAoBVgpOX
+         eqAx5z7F/po/uN7oAVdx9MT+dFQpwB2PNjQdBFMuGG8Hy5suQQ9CJq7HzofVJRobkLbm
+         PMKjxxUfuzYE35TWRasXENjwHqaCGnJ2UPCynPAC1/NF6pv7wCHeV6ydDBKzh2gCmb9W
+         A2qvO7ssBZ085pTfUHd46xF4oCK0/Gtb/J6yXN8JvjK+RJO/KVX0qs47GYlKUYEzPBIU
+         5E5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710451284; x=1711056084;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y7Kb/aDwmwhVYLJzC5a/6ReWiiRg5NdliMJgCY8nZjg=;
+        b=gxK58UW0TXDnOhl73XwHQPVu5Dyi5voKjO7B3yXfXJVxMUSN6aRAaqojFJoZoXs+ru
+         DxETi/nlQ7lSTPnaHi/03JA3k3rlk1MC4xmv0FJmuDhFYik4KNAGLQgV53J70TA8g3Hf
+         yp+cSzuPY9LgWYt8N6JWUtAlJAMefXVehC0WcUwZSj9XcI5kKIJxoMmNCHRHv/F4xtea
+         IMWM8mnIRFLVxhauJmUOEJW3E7id46SY+jiD6fK7FEDOcvfTmlMvT/c8LZ2dKIcn9rVU
+         941pVOiRqypfSwGGE8uIguY7itrT/ka5pr5PRST7H2vAESOvs+UimJOAeZCxhf87h1pP
+         mCxg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1PmhcmpDZMJrWwBxCRsRBK2MtmL88mjd7a5qpb7QPkas4/GF6Yi2TzkHyJ5qTPFWxbcDa5peMUTMKWW0eNVTFjXqPNLGQaai/GcR1skRa67ToKwkHE9vuDnnCvyiZG9yrEKIYAi8=
+X-Gm-Message-State: AOJu0YzjE8gRtkkLweLmHx/Ynpi7O7e3a0K5mPnsoBot13Jm2cEDwLp+
+	bS8XzRWzxXqEEGoXsUq8P3WGIeca4aVeoluEw/L9TodeoBo8ovrA9qmB/U2vr5gKTKHd
+X-Google-Smtp-Source: AGHT+IHVpsr+VhgvJ/d1rChR3i1RB34LGrhPAtsog3qFmZcJY38fED3RGalkwSM9T0TVMYYLdmpoUw==
+X-Received: by 2002:a17:902:904c:b0:1dd:abc6:7fc0 with SMTP id w12-20020a170902904c00b001ddabc67fc0mr2769898plz.65.1710451283879;
+        Thu, 14 Mar 2024 14:21:23 -0700 (PDT)
+Received: from localhost ([2408:8207:2572:7dc0:31a4:b729:4b7a:d450])
+        by smtp.gmail.com with ESMTPSA id z17-20020a170903409100b001dcb4ae9563sm2215917plc.33.2024.03.14.14.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 14:21:23 -0700 (PDT)
+From: Xin Wang <yw987194828@gmail.com>
+X-Google-Original-From: Xin Wang <yw987194828@163.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com,
+	io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xin Wang <yw987194828@163.com>
+Subject: [PATCH v2 0/1] io_uring: extract the function that checks the legitimacy of sq/cq entries
+Date: Fri, 15 Mar 2024 05:21:16 +0800
+Message-Id: <20240314212117.108464-1-yw987194828@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 14 2024 at 21:45, Thomas Gleixner wrote:
-> On Thu, Mar 14 2024 at 12:09, Florian Fainelli wrote:
->> https://gist.github.com/ffainelli/cb562c1a60ef8e0e69e7d42143c48e8f
->>
->> this one is does include the tmigr events. Thanks!
->
-> You need 8ca1836769d758e4fbf5851bb81e181c52193f5d too.
 
-So from the above trace it's clear where it goes south:
+Xin Wang (1):
+  It was really careless of me, earlier I wanted to keep the coding style
+  as close as possible to the rest of the code, so I looked for similar
+  code, e.g., line 4713 of kernel/trace/ring_buffer.c: if (ts && ! (*ts))
+  and line 1178 of ipc/shm.c: audit_ipc_obj(&(shp->shm_perm)). Now I removed
+  the brackets and it passes the checkpatch.pl script, thanks!
 
-[  236.318158]   <idle>-0         3..s.. 2928466us : tmigr_handle_remote: group=aecb05cb lvl=0
-[  236.326526]   <idle>-0         3d.s.. 2928467us : tmigr_handle_remote_cpu: cpu=0 parent=aecb05cb wakeup=9223372036854775807
-[  236.357809]   <idle>-0         3d.s.. 2928469us : tmigr_update_events: child=00000000 group=aecb05cb group_lvl=0 child_active=0 group_active=8 nextevt=3103000000 next_expiry=2934000000 child_evt_expiry=0 child_evtcpu=0
-
-[  236.377222]   <idle>-0         0dn... 2928471us : tmigr_cpu_active: cpu=0 parent=aecb05cb wakeup=9223372036854775807
-[  236.387765]   <idle>-0         0dn... 2928471us : tmigr_group_set_cpu_active: group=aecb05cb lvl=0 numa=0 active=9 migrator=8 parent=00000000 childmask=1
-
-[  236.401526]   <idle>-0         0d.... 2928477us : tmigr_update_events: child=00000000 group=aecb05cb group_lvl=0 child_active=0 group_active=8 nextevt=3103000000 next_expiry=2934000000 child_evt_expiry=0 child_evtcpu=0
-[  236.420940]   <idle>-0         0d.... 2928478us : tmigr_group_set_cpu_inactive: group=aecb05cb lvl=0 numa=0 active=8 migrator=8 parent=00000000 childmask=1
-[  236.434874]   <idle>-0         0d.... 2928478us : tmigr_cpu_idle: cpu=0 parent=aecb05cb nextevt=3103000000 wakeup=9223372036854775807
-
-[  236.446896]   <idle>-0         3d.... 2929469us : tmigr_group_set_cpu_inactive: group=aecb05cb lvl=0 numa=0 active=0 migrator=ff parent=00000000 childmask=8
-[  236.460916]   <idle>-0         3d.... 2929470us : tmigr_cpu_idle: cpu=3 parent=aecb05cb nextevt=9223372036854775807 wakeup=9223372036854775807
-[  236.473721]   <idle>-0         3d.... 2934471us : tmigr_cpu_new_timer_idle: cpu=3 parent=aecb05cb nextevt=9223372036854775807 wakeup=9223372036854775807
-
-CPU3 is the last active CPU and goes idle. So it should take care of the
-pending events, but it does not.
-
-This is the next trace entry where CPU0 magically comes back to life.
-
-[  236.487393]   <idle>-0         0d.s.. 162001359us : timer_cancel: timer=8c725d84
-
-8ca1836769d758e4fbf5851bb81e181c52193f5d is related, but dos not fully
-explain the fail. I haven't yet spotted where this goes into lala land.
+--
+2.25.1
