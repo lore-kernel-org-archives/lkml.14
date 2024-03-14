@@ -1,173 +1,138 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D60DDDA;
-	Thu, 14 Mar 2024 07:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B36BE559
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710399948; cv=none; b=VgbakND8kgnMwiLgtxihCzu5AYZsJYTfxuk5/91yDsKZU0FNgwzUER21Bqd7KwJGguETq9DQCMXv0ETBnDKRkXOxIZUokjYxlT3gLr29JmWwgCUBvgaDlbHQJO+Y840oufCaRXeLQQgswDqO2UsPL5rY0r/3zK6YbUvSqLniJso=
+	t=1710399991; cv=none; b=P9xYkWl7LImZrMiZZqhhbFalisJgHZbsSlL2VL7yRiOz20e7EchTymNicQXKwviTS8tYlAestJWkkzcKNX8Cs+TNR/LrdAmavqL8bAq6XjgDAvzTbok29Zrk4B65A9zZZSJ0zpJ/Eyu6AT85nc+P547jdkWfzn0lPo6y60t8dCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710399948; c=relaxed/simple;
-	bh=meFm6gJ6rQcS7XbiCaLAxoeO97GuJjt8lePHrnWPmmc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tmQ5AbZXiE9ifTKEqSrp1b8SnEeXKq0o1mLzWS/2d+YUk5j05dnDJ2Z9mpTi/WQ/BlbWoFNB+EIe+lnNvdrd3/vQNvaXgZ1KvoMQl0p6zXXPkNznFUgtEEWn9lh+Z4tQQFeI1Bnq0LyNNci6rPdyq9rJHTnO2MGwU7QN9FHJpLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YtKa+NbV; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1710399991; c=relaxed/simple;
+	bh=izHqxVUzGLnnW4w6MpjnqdI8BPYNvZ17o3iocQ0b9qk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QZQhIFmvVgoKUcGLKTV6xMcp8K+uSb3GCsH6CM177uxL+aWrRUntLyVQdrnsGk/7dHANMgzfAukyGiaO6c3OvjKSyfwRGWPwX/zeufOSOgHmK6fyesyxYdKedutA0OixLtD3g8awh6VHecKvO5aeqekNIk3TA0NwHmoMGL3W0GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oQ0fcmiF; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YtKa+NbV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xyteW
-	+zBpUUReYWHop0fBBorjNE1ZTTbK5LsFrcqirw=; b=YtKa+NbVIVOFSedf1MUmQ
-	8lvdZb/txODALcnKLxl0eZYYKM4oKl7yDXWDrlrlk8YDIbWtVktUNm8pi8uxfZO3
-	VXZXx7raPj376jiwIt4UYs+U+kNdoQOc92ycN+DQNruqAy++LDW7y3s4ZbCcndsj
-	i6DLcCQEUCF/W1bKFRsKCg=
-Received: from localhost.localdomain (unknown [39.144.138.226])
-	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wDn1yihofJlvcF6AA--.24464S2;
-	Thu, 14 Mar 2024 15:05:06 +0800 (CST)
-From: Xing Tong Wu <xingtong_wu@163.com>
-To: andy.shevchenko@gmail.com,
-	Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Xing Tong Wu <xingtong.wu@siemens.com>,
-	Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-	Tobias Schaffner <tobias.schaffner@siemens.com>,
-	Henning Schild <henning@hennsch.de>
-Subject: [PATCH v4] leds: simatic-ipc-leds-gpio: add support for module BX-59A
-Date: Thu, 14 Mar 2024 15:05:06 +0800
-Message-Id: <20240314070506.2384-1-xingtong_wu@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oQ0fcmiF"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-413e93b10bfso3761805e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710399987; x=1711004787; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uyTFEVNehRR5V4XWpSHKPbDPD3dX50qdrX5kLA29iAQ=;
+        b=oQ0fcmiF1m+3w9Ejj8fOMPjVKuQHYiiFcqkMhxDHR810FGrQDK966c47XIdmxl1d1T
+         WUKCiZ5S3shdQaEswelv6EV152IRExszfrSBDIlklw7DN7AMrmF6i2ShkuLuyBaPZE7J
+         u256ud1o47BEO9/X4ml3/p7Nwt8yeVFJAN3naNHX9On5oJRTm9bjvErYeoCy+CK1hZLR
+         0OT9ip3JK/rfAzrfemTZycevHbQN1jFF3Hfvz8uWNuL0iCKzk6IpLI2gMCAdYEgy3b/s
+         WPjMCgP3iDc+rKEl4OD0PRr/3SaMMq1c9xbkHsObQdbL0OaUyxSVLh20o3nQvPUY3vEq
+         0wew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710399987; x=1711004787;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uyTFEVNehRR5V4XWpSHKPbDPD3dX50qdrX5kLA29iAQ=;
+        b=Gd2lcmZoqRybuW+2dNg7WuGWheO1IPjAKgMGZSFzxumP0Qn7dzV8EkGtkR9NoJwuhZ
+         LrEfBYnTtERMLLMU6Qsj8CKPXpBEyz01UHMfBJ33vOC16LnXwpjkBn2oH1YFrMldnxGf
+         2rbu3sTnZGaYFwWpclSoKfAjTP/CGpHbmRwDfqw9pETxdExyjHw6SlhNvn6NBKuQcfwH
+         G/ERaoP6EPmX5fkSYaZ36CRqpZNXM12LnsZqvDREEF9GNFMT6sDyl+37ykU8MdB9qtor
+         /xx6CPgNUhrVcLDENUX3mFbX5HVS+1qhX+phkX/fR5pXcsdp7xti6lclStN9TYwSWRqV
+         FnSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJt09f7kf3SffzZaL52iRRaApB2StLGTuDsjM8MMMRI/pHsbACAyFrFTOPNRCHMjMGXJ8MhJ98k5LHoSEfD/VEO6ec/rI3tMf9FSp6
+X-Gm-Message-State: AOJu0Ywg78PbyXP2RZyI7fE2QiTtAV+h5tNLoa8INZ0c4Fb0qrh6TOMr
+	p4qoNpczuNzFRjqb8PlhpysZv/tjm8HyAID5/wLxR9D6d+DVhHtR3I1GuUUSJV8=
+X-Google-Smtp-Source: AGHT+IH4K+HmLZtz/WBexxc6jlaBxnwZHK5896HUPncVVb5eVfAQTy2fanIGHpf7CPYbCCk1kMqcSw==
+X-Received: by 2002:a05:600c:348d:b0:412:c811:b6a3 with SMTP id a13-20020a05600c348d00b00412c811b6a3mr1576127wmq.12.1710399986768;
+        Thu, 14 Mar 2024 00:06:26 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id bd7-20020a05600c1f0700b00413f3ca39easm599706wmb.5.2024.03.14.00.06.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 00:06:26 -0700 (PDT)
+Message-ID: <eb49c788-ad23-4cfc-98aa-ffc03d46009d@linaro.org>
+Date: Thu, 14 Mar 2024 08:06:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn1yihofJlvcF6AA--.24464S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXr1kurWUJw15Xr18JF1kZrb_yoWrKry7pF
-	9xJa9YkFW5XF1Dtr13GFW7Zas3uw4xKr97trZxGayYg3Wjvr10gFy7AFW3XFZ5J3ykuFnx
-	GF4rtFyj9r4kAwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jb0edUUUUU=
-X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/xtbB0geh0GWXwizc1QAAsx
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dt-bindings: qcom,i2c-cci: Fix OV7251 'data-lanes'
+ entries
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Loic Poulain <loic.poulain@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240311222605.1940826-1-robh@kernel.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240311222605.1940826-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Xing Tong Wu <xingtong.wu@siemens.com>
+On 11/03/2024 23:26, Rob Herring wrote:
+> The OV7251 sensor only has a single data lane, so 2 entries is not valid.
+> Fix this to be 1 entry as the schema specifies.
+> 
+> The schema validation doesn't catch this currently due to some limitations
+> in handling of arrays vs. matrices, but a fix is being worked on.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-This is used for the Siemens Simatic IPC BX-59A, which has its LEDs
-connected to GPIOs provided by the Nuvoton NCT6126D.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Xing Tong Wu <xingtong.wu@siemens.com>
----
-changes since v3:
- - Consolidate repetitive code into a single line.
-
-changes since v2:
- - Add a period to the end of the commit message.
- - Use specialized interfaces to get platform data and drvdata.
-
-changes since v1:
- - Creat a resource dynamically within the .probe() function to eliminate the use of global variables.
-
- .../leds/simple/simatic-ipc-leds-gpio-core.c  |  1 +
- .../simple/simatic-ipc-leds-gpio-f7188x.c     | 52 ++++++++++++++++---
- 2 files changed, 47 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-index 667ba1bc3a30..85003fd7f1aa 100644
---- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-@@ -56,6 +56,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
- 	case SIMATIC_IPC_DEVICE_127E:
- 	case SIMATIC_IPC_DEVICE_227G:
- 	case SIMATIC_IPC_DEVICE_BX_21A:
-+	case SIMATIC_IPC_DEVICE_BX_59A:
- 		break;
- 	default:
- 		return -ENODEV;
-diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-index c7c3a1f986e6..7a5018639aaf 100644
---- a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
-@@ -17,7 +17,12 @@
- 
- #include "simatic-ipc-leds-gpio.h"
- 
--static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-+struct simatic_ipc_led_tables {
-+	struct gpiod_lookup_table *led_lookup_table;
-+	struct gpiod_lookup_table *led_lookup_table_extra;
-+};
-+
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
- 	.dev_id = "leds-gpio",
- 	.table = {
- 		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-@@ -30,7 +35,7 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
- 	},
- };
- 
--static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra_227g = {
- 	.dev_id = NULL, /* Filled during initialization */
- 	.table = {
- 		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
-@@ -39,16 +44,51 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
- 	},
- };
- 
-+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_bx_59a = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 3, NULL, 2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 2, NULL, 3, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 7, NULL, 4, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 4, NULL, 5, GPIO_ACTIVE_LOW),
-+		{} /* Terminating entry */
-+	}
-+};
-+
- static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pdev)
- {
--	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
--					   &simatic_ipc_led_gpio_table_extra);
-+	const struct simatic_ipc_platform *plat = dev_get_platdata(&pdev->dev);
-+	struct simatic_ipc_led_tables *led_tables;
-+
-+	led_tables = devm_kzalloc(&pdev->dev, sizeof(*led_tables), GFP_KERNEL);
-+	if (!led_tables)
-+		return -ENOMEM;
-+
-+	switch (plat->devmode) {
-+	case SIMATIC_IPC_DEVICE_227G:
-+		led_tables->led_lookup_table = &simatic_ipc_led_gpio_table_227g;
-+		led_tables->led_lookup_table_extra = &simatic_ipc_led_gpio_table_extra_227g;
-+		break;
-+	case SIMATIC_IPC_DEVICE_BX_59A:
-+		led_tables->led_lookup_table = &simatic_ipc_led_gpio_table_bx_59a;
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	platform_set_drvdata(pdev, led_tables);
-+	return simatic_ipc_leds_gpio_probe(pdev, led_tables->led_lookup_table,
-+					   led_tables->led_lookup_table_extra);
- }
- 
- static void simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *pdev)
- {
--	simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
--				     &simatic_ipc_led_gpio_table_extra);
-+	struct simatic_ipc_led_tables *led_tables = platform_get_drvdata(pdev);
-+
-+	simatic_ipc_leds_gpio_remove(pdev, led_tables->led_lookup_table,
-+				     led_tables->led_lookup_table_extra);
- }
- 
- static struct platform_driver simatic_ipc_led_gpio_driver = {
--- 
-2.25.1
+Best regards,
+Krzysztof
 
