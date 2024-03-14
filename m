@@ -1,177 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB39357330;
-	Thu, 14 Mar 2024 10:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7975A0F8;
+	Thu, 14 Mar 2024 10:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412886; cv=none; b=DThuS4USoo2blfZCo81hjtHfrhG5Zmpvrv+1A1q72ow8fkXKRwEd7Qg/vSxiefRLLPUgoMDNK91kYrMk9Fl99yFt5qQQhcKPdaYH5dow+yWHxQWW4ulveF/Cp+uLCPUqYQs2VdJdRFQWSgAuva0C9QKDbZPuTugzsBLjlwgnvpk=
+	t=1710413184; cv=none; b=CgQB0QbUEAOn+5516S3eVV2Y7uTHYvbe3k8knqO9wDPoeY6f9BqPv2oTF3+UWd2ElAY37raS4nKAClTw5PCyp/xBt8vJCRt6mRXcnD+/yCrXptZ6sVMMVFU10Du1iF1F1TeVVhBKxfl+65gfx+u3R56cy+3dJHCganEkowwxBUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412886; c=relaxed/simple;
-	bh=pNpltflxZjDA6QCI1Rv/eDLe9R/vIWq7JdPTmYw6W6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V27/37asroIxT8F0dEkj3Fc1v36GlDiFqeXEYsTaTH3fVc1VH/lK581k+Lh1l1b/pJ74Qtgh+/K2ZpVih5pnyb5JF585EPdgKwpC7HZ1WLNwO03oq0tlf5C78dC9zFNsaonu2rBWN0PR6PHTOHzXx8/z2ExQhXoAVyVuauQA+vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfafA415; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710413184; c=relaxed/simple;
+	bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXgSfVHQ9x05qxkOhi13pOjihlTtEvPXzZNafCK59q7w4YAWyAkH4gfZgJwMCdC/sWTKscN2XXFoZmliZ0tJjtaFLVUAeNYJ3Qb5R186Lqnqln3XDtD5ELqLNC1y0/rmszAbDHjiNTH+UJ55aedRsFp5O3wZbjCzXCJVlg4vMCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KF6XUeDt; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfafA415"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30C7C433F1;
-	Thu, 14 Mar 2024 10:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710412886;
-	bh=pNpltflxZjDA6QCI1Rv/eDLe9R/vIWq7JdPTmYw6W6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rfafA41597asGDrPEHwvq+nl0GjUxvy0v5z0vIBQnK/fsIgvWOXAT+LGmyUZUxSSv
-	 DdcPVz1dJJyXLFacscB+Fa/SIbHuZ/tEGf1QvV4on4bjN33HE42drDw8V/HkP+Bj9w
-	 rsvlpYPmyKPxkRkBRx39cnUvoH3eqMmfEclTfe5lju7ZTx7I6xVypF2RFd3DGc7K1X
-	 U2Vd1YwTP39UhPaDkoNBxkG5a0MG6PjejI0D0Dcjs1ITjyqkNjm9Ow5kQbAtDyo+dd
-	 pWKejBm6WIl17NWhE/af60KK22X6itu4Z3PH9RHPsul2j9HP+0OvlNrl0RCHElXdpx
-	 M4cZcd+sKCNCQ==
-Date: Thu, 14 Mar 2024 11:41:23 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	paulmck@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-	rcu@vger.kernel.org, neeraj.upadhyay@amd.com, urezki@gmail.com,
-	qiang.zhang1211@gmail.com, bigeasy@linutronix.de,
-	chenzhongjin@huawei.com, yangjihong1@huawei.com,
-	rostedt@goodmis.org, Justin Chen <justin.chen@broadcom.com>
-Subject: Re: Unexplained long boot delays [Was Re: [GIT PULL] RCU changes for
- v6.9]
-Message-ID: <ZfLUU+XuQC7W79tf@lothringen>
-References: <ZfDEIs63EBIYBJIC@boqun-archlinux>
- <c5f9c640-4c06-495e-9c7e-0c208b914fa7@gmail.com>
- <CAHk-=wgP=9JxdOJ5oYtVO5yM6pFi5+3FPxfCQa4ezpagJuXq3g@mail.gmail.com>
- <ZfDptafiK0jns050@boqun-archlinux>
- <CAEXW_YRvz8xf-6hpwpYqS=YNa-xkn4CsuJzELJxOH_2FP+6ptQ@mail.gmail.com>
- <2fb110ed-ba04-4320-9ef0-8766c9df5578@gmail.com>
- <ZfIh33YAYkLaDeAS@shell.armlinux.org.uk>
- <533151c9-afb5-453b-8014-9fbe7c3b26c2@gmail.com>
- <ZfIuRMo8oKbR08Af@lothringen>
- <f4a2a18c-1c81-4857-a3a0-d049ec5c79b3@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF6XUeDt"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513c53ed3d8so1166096e87.3;
+        Thu, 14 Mar 2024 03:46:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710413181; x=1711017981; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+        b=KF6XUeDt++qu+gdEmPbPgS1WcAaDC/i5hvMEaIOAPU9dsv8z9g5z4p2kR7YNsWjVH9
+         5hV1riqNRanOfCGfDvsV4p6TN0BhU1/8iovbkmlqWlV8kUd0L63jQdeJVM7RmdW+uq9s
+         Vz9kzlztHQzI7+WdkkgIOlioM6TygI5eTg1IwbfyCBa6xqU6biGFkBG/HgEnqBehZnN0
+         +1Ib488TLu3VNHsDHasslUBTGyk9gtHGnjvQXTWPKV822fN7RyXzeT/POKpg70bfIXzX
+         0ZhMdYWAbj6l2cEA5UD/bKMeLkXcwUUkdggxJjKp4yayHVEvV/9ttKVNwo4LoM0JH9sK
+         pdZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710413181; x=1711017981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+        b=WJSat3xqfx+pESsdUsus9rW3bA33DWpeN3t5mFySRIKOy1PkSf0C3GGkVn15t5bGJn
+         OKPctbBwjD5ofEGIpBEm5Z9pUCCe6dUCOj8zuIFJpuHXQrDUkg3tGGzhDYvUc6WzCHAW
+         HNM520S6oQ+MfT9J4ktILGXP3PBT+w61OpPi2vAoKlOTuo2gpPZuxhCGxQm17cUy5GTc
+         DvdTDFgGozqoLbWmFVQeWSBYpITNaJvhw6Ujt/pLkQ5mWAY2TQs6lTSdJI0vzxIbDTW9
+         yuB8kTMkyuWduYYZalBweyd+ZNdV9+fDyL/bw9ndTSZ/6xRf/4Rng4EzWDNfxgMfAH4N
+         pFgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBqLymo3o2N6/z2DnwZUnCkXqWH/xctjQz7uCOxxDfHPlG3GpKEWq6sk2lTWSczNuAvMXmhi5GmBdqQ7CVj/pugbGiqcYtKw9ejLyAFz6QzEmc06O6lF/uq+/ZVZYwxiG87g4rwV6auhj9XQ+b
+X-Gm-Message-State: AOJu0Yw/V/7iP+RsCxwH7+53pRKxhcseR9PVRs0QE3zLAAwNwT4BcAFr
+	+0GODUoZfhokt6HLMNT+YY3HwXCwnGOhA+ZsdVHvtZ2zAyUUmcepDWuzcJuGm+zt3ze2TD5jv+T
+	tJOeSFMh+c5HXuqqkBGEuF6Lyrno=
+X-Google-Smtp-Source: AGHT+IHGe7qL489UBBQrSWBp+4/FcTTXyNvb4IcbV2nB6rNI2vsN7vBawglg3ZWbzqt8LH8y/i14Ba8kOJ8TZPelQ6E=
+X-Received: by 2002:a19:6914:0:b0:513:d101:b965 with SMTP id
+ e20-20020a196914000000b00513d101b965mr831706lfc.63.1710413180952; Thu, 14 Mar
+ 2024 03:46:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4a2a18c-1c81-4857-a3a0-d049ec5c79b3@gmail.com>
+References: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
+ <87cyrxm7ua.ffs@tglx>
+In-Reply-To: <87cyrxm7ua.ffs@tglx>
+From: Enlin Mu <enlinmu@gmail.com>
+Date: Thu, 14 Mar 2024 18:45:54 +0800
+Message-ID: <CAAfh-jOu0hG1hfWX9kL_gOXkSLXEVGNkddP-azO=pjNAKsRGhA@mail.gmail.com>
+Subject: Re: [PATCH] hrtimer:Add get_hrtimer_cpu_base()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Enlin Mu <enlin.mu@outlook.com>, linux-kernel@vger.kernel.org, enlin.mu@unisoc.com, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 08:44:07PM -0700, Florian Fainelli wrote:
-> 
-> 
-> On 3/13/2024 3:52 PM, Frederic Weisbecker wrote:
-> > On Wed, Mar 13, 2024 at 03:04:26PM -0700, Florian Fainelli wrote:
-> > > On 3/13/24 14:59, Russell King (Oracle) wrote:
-> > > > On Wed, Mar 13, 2024 at 02:30:43PM -0700, Florian Fainelli wrote:
-> > > > > I will try to provide multiple answers for the sake of everyone having the
-> > > > > same context. Responding to Linus' specifically and his suggestion to use
-> > > > > "initcall_debug", this is what it gave me:
-> > > > > 
-> > > > > [    6.970669] ata1: SATA link down (SStatus 0 SControl 300)
-> > > > > [  166.136366] probe of unimac-mdio-0:01 returned 0 after 159216218 usecs
-> > > > > [  166.142931] unimac-mdio unimac-mdio.0: Broadcom UniMAC MDIO bus
-> > > > > [  166.148900] probe of unimac-mdio.0 returned 0 after 159243553 usecs
-> > > > > [  166.155820] probe of f0480000.ethernet returned 0 after 159258794 usecs
-> > > > > [  166.166427] ehci-brcm f0b00300.ehci_v2: EHCI Host Controller
-> > > > > 
-> > > > > Also got another occurrence happening resuming from suspend to DRAM with:
-> > > > > 
-> > > > > [   22.570667] brcmstb-dpfe 9932000.dpfe-cpu: PM: calling
-> > > > > platform_pm_resume+0x0/0x54 @ 1574, parent: rdb
-> > > > > [  181.643809] brcmstb-dpfe 9932000.dpfe-cpu: PM:
-> > > > > platform_pm_resume+0x0/0x54 returned 0 after 159073134 usecs
-> > > > > 
-> > > > > and also with the PCIe root complex driver:
-> > > > > 
-> > > > > [   18.266279] brcm-pcie f0460000.pcie: PM: calling
-> > > > > brcm_pcie_resume_noirq+0x0/0x164 @ 1597, parent: platform
-> > > > > [  177.457219] brcm-pcie f0460000.pcie: clkreq-mode set to default
-> > > > > [  177.457225] brcm-pcie f0460000.pcie: link up, 2.5 GT/s PCIe x1 (!SSC)
-> > > > > [  177.457231] brcm-pcie f0460000.pcie: PM: brcm_pcie_resume_noirq+0x0/0x164
-> > > > > returned 0 after 159190939 usecs
-> > > > > [  177.457257] pcieport 0000:00:00.0: PM: calling
-> > > > > pci_pm_resume_noirq+0x0/0x160 @ 33, parent: pci0000:00
-> > > > > 
-> > > > > Surprisingly those drivers are consistently reproducing the failures I am
-> > > > > seeing so at least this gave me a clue as to where the problem is.
-> > > > > 
-> > > > > There were no changes to drivers/net/ethernet/broadcom/genet/, the two
-> > > > > changes done to drivers/net/mdio/mdio-bcm-unimac.c are correct, especially
-> > > > > the read_poll_timeout() conversion is correct, we properly break out of the
-> > > > > loop. The initial delay looked like a good culprit for a little while, but
-> > > > > it is not used on the affected platforms because instead we provide a
-> > > > > callback and we have an interrupt to signal the completion of a MDIO
-> > > > > operation, therefore unimac_mdio_poll() is not used at all. Finally
-> > > > > drivers/memory/brcmstb_dpfe.c also received a single change which is not
-> > > > > functional here (.remove function change do return void).
-> > > > > 
-> > > > > I went back to a manual bisection and this time I believe that I have a more
-> > > > > plausible candidate with:
-> > > > > 
-> > > > > 7ee988770326fca440472200c3eb58935fe712f6 ("timers: Implement the
-> > > > > hierarchical pull model")
-> > > > 
-> > > > I haven't understood the code there yet, and how it would interact with
-> > > > arch code, but one thing that immediately jumps out to me is this:
-> > > > 
-> > > > "    As long as a CPU is busy it expires both local and global timers. When a
-> > > >       CPU goes idle it arms for the first expiring local timer."
-> > > > 
-> > > > So are local timers "armed" when they are enqueued while the cpu is
-> > > > "busy" during initialisation, and will they expire, and will that
-> > > > expiry be delivered in a timely manner?
-> > > > 
-> > > > If not, this commit is basically broken, and would be the cause of the
-> > > > issue you are seeing. For the mdio case, we're talking about 2ms
-> > > > polling. For the dpfe case, it looks like we're talking about 1ms
-> > > > sleeps. I'm guessing that these end up being local timers.
-> > > > 
-> > > > Looking at pcie-brcmstb, there's a 100ms msleep(), and then a polling
-> > > > for link up every 5ms - if the link was down and we msleep(5) I wonder
-> > > > if that's triggering the same issue.
-> > > > 
-> > > > Why that would manifest itself on 32-bit but not 64-bit Arm, I can't
-> > > > say. I would imagine that the same hardware timer driver is being used
-> > > > (may be worth checking DT.) The same should be true for the interrupt
-> > > > driver as well. There's been no changes in that code.
-> > > 
-> > > I just had it happen with ARM64 I was plagued by:
-> > > 
-> > > https://lore.kernel.org/lkml/87wmqrjg8n.fsf@somnus/T/
-> > > 
-> > > and my earlier bisections somehow did not have ARM64 fail, so I thought it
-> > > was immune but it fails with about the same failure rate as ARM 32-bit.
-> > 
-> > Can you please boot with:
-> > 
-> >      trace_event=timer_migration,timer_start,timer_expire_entry,timer_cancel
-> > 
-> > And add the following and give us the resulting output in dmesg?
-> 
-> Here are two logs from two different systems that exposed the problem on
-> boot:
-> 
-> https://gist.github.com/ffainelli/f0834c52ef6320c9216d879ca29a4b81
-> https://gist.github.com/ffainelli/dc838883edb925a77d8eb34c0fe95be0
-
-Thanks! Unfortunately like Thomas pointed out, I'm missing the timer_migration
-events. My fault, can you retry with this syntax?
-
-	trace_event=timer_migration:*,timer_start,timer_expire_entry,timer_cancel
-
-Though it's fairly possible that timer migration is not enabled at this point
-as it's a late initcall. But we better not miss its traces otherwise.
-
-
-
-> thanks!
-> -- 
-> Florian
-> 
+Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2024=E5=B9=B43=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E5=9B=9B 18:22=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, Mar 13 2024 at 05:30, Enlin Mu wrote:
+> > From: Enlin Mu <enlin.mu@unisoc.com>
+> >
+> > On the Arm platform,arch_timer may occur irq strom,
+> > By using the next_timer of hrtimer_cpu_base, it is
+> > possible to quickly locate abnormal timers.
+> > As it is an out of tree modules,the function needs
+> > to be exproted.
+>
+> No. We are not exporting for out of tree code.
+Can you explain it?
