@@ -1,115 +1,99 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B4E17BA2;
-	Thu, 14 Mar 2024 07:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473AD5C61C
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400328; cv=none; b=PgRjb3YoOwRBn6fC++AAXkX71V+w6nqpj4NtARpUoxgklugEX1gAb/pKCskphmYh5iNASoyLPKrCqOh2bGVpzaqLvM+/BznP6zYsAdy8ea2KCiGSGqpEBYavZT9Dk80LIioUxGwXZxJ959BQukg8LAXYOmSu74qgjnaHCjXNne8=
+	t=1710400785; cv=none; b=F7ZtMaO4gyy34TVjzB2H/WJo6gKLayjqQsIiE5IFQH2bI8cda3McsiPxzi/rT4OKA6YQWfcJIkZWSfgeYuSHgO7Hr1mH/7f220BN6oS9g3sJnj45Jkff1Fv1SQdYduBzp0j5cpxibrrbfM2dHTbK1JjY4qQTBNb+RwNgJM7J1Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400328; c=relaxed/simple;
-	bh=M9/waeQYtjh2RVYctqjLxomU+TwqqnJNewvELUWzQTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ocw3rbXsPAQesjN0gO+uS4VvBzrxLod99z7EunGVSq4McE5a2ZDCTx7zk1seEUt9BXKaCVEITAB+kAXsQY5SkIS/SFfzPNR6or+jSBX+F6XFfat+HSLQR5+zs5SShxSV0TDg1NUf0oiDqm/E1tg2hwLlOu9uZF0lm7QbHtqeW9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=W7omPnN9; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1710400785; c=relaxed/simple;
+	bh=ojH9YgZdQsTdhM/5DOp0sR2SpKlzVwEvHTXac3BNoo4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MprnRJu+t3BYSxy8gBJrvIk62fnMjPIVHSIHpyeJRrgpYgBQRM5JDS9CaD2MpwoR6pssRBg1XW4+kJjW5rNt83m6fqcgSaQpu7Yo8bgNdFlTzn0WjEtTwjMZ6iFrie25BsXL0+W+BnBG0qnFNlsgeRQiq2AQ3biVBFIEFeut1tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dHIMVnJN; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W7omPnN9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F0D26FF803;
-	Thu, 14 Mar 2024 07:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710400324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H5VEjuuC5AnU2gJMo8TZ6MI2cdvYkDyizNf/LUfFzY0=;
-	b=W7omPnN9K0mk9NXpTw72bzIAJRdqYDOB4XIotsYwt1WH+u6qMlbVPLpEEZSwvEg4IDpL+7
-	IHFiXNXdg8+0UcUURrxWX5sGoedCEAnUOidpf4on92uFdvTigr6aXeXgl1F/96AULv/dJA
-	SYAGlgYzd7fLLdRQ4IwYv/Cy5K2IbS9qyup091Tge8INdmBbq1IlOTsJ4afqPAkfdN95NS
-	Y/2x1IN9g1IqaU2FYIop4+XeXeoAVnv9cFViYR2HEHYTsP+lTn1n2x3ZLaWCxvMeLa+G4w
-	X3XKQAWsYE/YaiUcD5zq0KbsQdKy26xMnJUIDN/Rn2KmkfoNajoaL+9T4U8FwA==
-Date: Thu, 14 Mar 2024 08:12:00 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yury Norov
- <yury.norov@gmail.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Andrew Lunn
- <andrew@lunn.ch>, Mark Brown <broonie@kernel.org>, Ratheesh Kannoth
- <rkannoth@marvell.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 1/5] net: wan: Add support for QMC HDLC
-Message-ID: <20240314081200.5af62fab@bootlin.com>
-In-Reply-To: <87ttl93f7i.fsf@mail.lhotse>
-References: <20240307113909.227375-1-herve.codina@bootlin.com>
-	<20240307113909.227375-2-herve.codina@bootlin.com>
-	<87ttl93f7i.fsf@mail.lhotse>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dHIMVnJN"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4d37e76a3dfso900450e0c.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710400782; x=1711005582; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ojH9YgZdQsTdhM/5DOp0sR2SpKlzVwEvHTXac3BNoo4=;
+        b=dHIMVnJNZyu9wR5geyJVPDj4comCj9wjcuOeFrKBDzqLgGw+CQBPZ1Rmihoo5GCkQk
+         gydtmwqK3bAyUQ83K7aML4v1hC9BZsKaZY0525UWagjZ8fsfJjDvJCfTzPWBJIkRmnUw
+         aqsxskaVNMTLF/3Z9nA5isBPT4u3Yq4jYupi2OgSKlS9m8HMCQRgUMFlHHuDSHNq1156
+         fe20i6sKg0KFcplI/SjlxLz5IVdQUpSXorjm5CgzoGPqRpdOLawFaN1HF8KKz8kq7kL1
+         bQm1n65uWSarY1LTrouE2yAnbqFw/ncMm7t62skCvSwOMTp5rQvjdSJYjYug/MnRNZrc
+         YT6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710400782; x=1711005582;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ojH9YgZdQsTdhM/5DOp0sR2SpKlzVwEvHTXac3BNoo4=;
+        b=I1ETg+D8cjvDxzZaSlDu9f3LRkpEsdxqmZrhJ/qT2VFP413hbBqnEoBwMVacEb8J+r
+         Kirl64m8t/OxBYocMcaR1ZW0gHuGyEzbOOA5hIhAvSlIHtLyjSAbaA4F4kQ+4kUldas4
+         MjI7q6axg9B/sihnIY9lGkKuU/BM4DJZvYPjSMT9b8PEvs1mCfK5eFl2b7AyU791fZuO
+         lIcNc9A2yBm2wl0ifcjXp9Dso0tGzouPzIPOmtn5C5vbixcMNW9ePI6xtZ6DB/rZkCBS
+         ANfM70gm+8yd2yB6MiZJg8OFmSlAI4NBUiPAwd1ZvjxgWRXZ51Ej6Whm0AB9+jBcEY1K
+         Q8dg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWl+oIEXI/Q1UZdHjO/0CJFCkkh4ARjncCbB/RZuP86fyqHuuqgPPmjuJT8+krNCrZZGlZl89YqRrU654xOfJgr1J5cxHnQON9m2I6
+X-Gm-Message-State: AOJu0YzGCllaHdlx39Tm4LGvBCL08paTYxEaO/SGCdINbsUKnEqZrHpc
+	TOPYmiJFVK/3BlhaZtLlUBDto6wztTzG/vNICekYXBb0KMfvsk9LdaM0I28BhP+0DHdpScVOmE0
+	4zcH3RGfBaIv/8TtDpmyIitFQ1dhHNmAVMFfd4g==
+X-Google-Smtp-Source: AGHT+IEu7MNUInwIY97dleYnWeWXfcA+5F5T/ApvKi6n0MwxHEqr/RR8abTAy2/zINbSlyHB23weCyfflgDg+RLDw2Y=
+X-Received: by 2002:a05:6122:1296:b0:4b9:e8bd:3b2 with SMTP id
+ i22-20020a056122129600b004b9e8bd03b2mr431224vkp.2.1710400782181; Thu, 14 Mar
+ 2024 00:19:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20240312170309.2546362-1-linux@roeck-us.net>
+In-Reply-To: <20240312170309.2546362-1-linux@roeck-us.net>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 14 Mar 2024 12:49:30 +0530
+Message-ID: <CA+G9fYsHhTLw3c1Eg-L6G3H2g7-mPf9zdR+hKDCV10RhHk5vhg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Add support for suppressing warning backtraces
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, 
+	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
+	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
+	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
+	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	loongarch@lists.linux.dev, netdev@lists.linux.dev, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Michael,
+On Tue, 12 Mar 2024 at 22:33, Guenter Roeck <linux@roeck-us.net> wrote:
 
-On Thu, 14 Mar 2024 10:05:37 +1100
-Michael Ellerman <mpe@ellerman.id.au> wrote:
+<trim>
 
-> Hi Herve,
-> 
-> Herve Codina <herve.codina@bootlin.com> writes:
-...
-> This breaks when building as a module (eg. ppc32_allmodconfig):
-> 
->   In file included from ../include/linux/device/driver.h:21,
->                    from ../include/linux/device.h:32,
->                    from ../include/linux/dma-mapping.h:8,
->                    from ../drivers/net/wan/fsl_qmc_hdlc.c:13:
->   ../drivers/net/wan/fsl_qmc_hdlc.c:405:25: error: ‘qmc_hdlc_driver’ undeclared here (not in a function); did you mean ‘qmc_hdlc_probe’?
->     405 | MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
->         |                         ^~~~~~~~~~~~~~~
-> 
-> 
-> IIUIC it should be pointing to the table, not the driver, so:
-> 
-> diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
-> index 5fd7ed325f5b..705c3681fb92 100644
-> --- a/drivers/net/wan/fsl_qmc_hdlc.c
-> +++ b/drivers/net/wan/fsl_qmc_hdlc.c
-> @@ -402,7 +402,7 @@ static const struct of_device_id qmc_hdlc_id_table[] = {
->         { .compatible = "fsl,qmc-hdlc" },
->         {} /* sentinel */
->  };
-> -MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
-> +MODULE_DEVICE_TABLE(of, qmc_hdlc_id_table);
-> 
->  static struct platform_driver qmc_hdlc_driver = {
->         .driver = {
-> 
-> 
-> Which then builds correctly.
+> This series is based on the RFC patch and subsequent discussion at
+> https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-4b08-ba81-d94f3b691c9a@moroto.mountain/
+> and offers a more comprehensive solution of the problem discussed there.
 
-My bad, I missed that one.
-I fully agree with your modification.
+Thanks for the patchset.
+This patch series applied on top of Linux next and tested.
 
-Do you want me to make a patch (copy/paste of your proposed modification)
-or do you plan to send the patch on your side ?
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Best regards,
-Hervé
 
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Linaro LKFT
+https://lkft.linaro.org
