@@ -1,56 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B005129CE3
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3361D6EB6E;
+	Thu, 14 Mar 2024 14:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710428272; cv=none; b=NF8ajsWXmS4/5UU8c9Au18Y40m3q5r81/jrKKJek0Dl2M1zzd+cZyMIZNa9GqD1unKm5HoBbsEPKfuD+/vGTuLanzZU/0U9eCLfQ9OLZUZ6j/UOlFtEywF1JHH4G8yKLmehMyHafY6V10SWs+SZtPlCFXe9jUBYRcH3ciGDS3Ig=
+	t=1710428368; cv=none; b=cGxAAM6WH4YgVEJgKAQRULgsJHAMO4N+zOP4DIz7+Ff61AEUVt1kh7j6K2LEi9fivhOTt9ah86OxCYj2Lz22Yjt+nCK/WzEz2d6rPDt4ZM1BIadxgUMWDCInSqvukyG34sLfv505BR62bjb3LyBN0lBfiqQiGKPCA1Zb2ikZMKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710428272; c=relaxed/simple;
-	bh=GiGl93VrTTcHdoR89IlFEwgp3me63640M18VdjKtCDQ=;
+	s=arc-20240116; t=1710428368; c=relaxed/simple;
+	bh=XJdEeratGaF+uMHUKGSH/y0MHkuF8kvwtElHPYuGgKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z3/Fn1TNQx5FmKSvRJGOc8xxRv3Y1DG4A7HOZ+s3/4a3QzpC/FyfhW3oe4jdwX20Ft3s4XZp0hPHhfq3n03gJiWm76g54eJ6bZm0EGy73bHS6+z1kAQO6y9PXAS7YAHCVyUPLmc7yIaSsQf7wovP11Y0Z6LuaBgEHfGy7hA6O4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MpEymUlu; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MpEymUlu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710428271; x=1741964271;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GiGl93VrTTcHdoR89IlFEwgp3me63640M18VdjKtCDQ=;
-  b=MpEymUluFVKTnaixJZ1yolGFgELCysuFNSDx0sFkdz2MPunMQV1LtaUV
-   teobgz+oJdOM4KpHwr46K0Q0iKbLWBiD9uGbM+yLE92VFY6OgvbQnbkiE
-   T51r2Ga40hjLnvz82fyj/OH1fBoHkGKo7jswmWbMEdr0nK8XclbL5hXxp
-   t2FG7zRtadS5qOcsasgc0T6YCnePuXFA3cbsYS4u9y1wIVeGicyaMTaXM
-   TD4aDlIICB51/3n9b8fWgpw4tZ/rKw7DHoXZwrgBVPoZ3nJFDCiJnnfOh
-   dpckzoyUYya9AJe+2XxBAdpEUFtzaEdAJWVOI5UllSrQjMJouF8DtSu/0
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="27721432"
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="27721432"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 07:57:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="49738178"
-Received: from jandre-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.214])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 07:57:49 -0700
-Date: Thu, 14 Mar 2024 07:57:48 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Ayush Tiwari <ayushtiw0110@gmail.com>, Larry.Finger@lwfinger.net,
-	florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	outreachy@lists.linux.dev
-Subject: Re: [PATCH] staging: greybus: add comment for mutex
-Message-ID: <ZfMQbIzZ6lKhxhkM@aschofie-mobl2>
-References: <ZfHuokO3pQXMOxcC@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
- <ZfJhtBrsL3elRve8@aschofie-mobl2>
- <41239f06-596e-4c17-95ed-4bf06ba9f9ec@moroto.mountain>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ac7InEbMYW/htteohwufrtaqnn6rSC9Q7S3xth3pzXjbsE1xwJRa21PjDtNCl4+jCc+349O7W+M8yROsF4XMHCLm3IVYd5878xMAtPVb7U3z55N+nEoYb4NVyFHTx5lhKctKXP4+t2YtOWPfhUjTg1pSMrc+9rm71999I+2R7k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 535281007;
+	Thu, 14 Mar 2024 08:00:01 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 147DD3F762;
+	Thu, 14 Mar 2024 07:59:22 -0700 (PDT)
+Date: Thu, 14 Mar 2024 14:59:20 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Rob Herring <robh+dt@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Drew.Reed@arm.com,
+	Adam.Johnston@arm.com, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Subject: Re: [PATCH 1/3] remoteproc: Add Arm remoteproc driver
+Message-ID: <ZfMQyJWTh15P7Ru3@bogus>
+References: <20240301164227.339208-2-abdellatif.elkhlifi@arm.com>
+ <ZeYWKVpeFm1+4mlT@p14s>
+ <20240307194026.GA355455@e130802.arm.com>
+ <CANLsYkzA20rQdTM6AOvFK=3o28GvcoRbckL=ri8RegHqyHaiCw@mail.gmail.com>
+ <20240311114442.GA82865@e130802.arm.com>
+ <CANLsYkwReJvB1UWvR5TwtSs-w_VqU45kDSUzuQ0k+waetEn6Yw@mail.gmail.com>
+ <20240312173252.GA38992@e130802.arm.com>
+ <ZfHTfNx4um8koTlY@p14s>
+ <20240313171756.GA82165@e130802.arm.com>
+ <ZfMPS+qn0lh5IrS7@p14s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,42 +51,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <41239f06-596e-4c17-95ed-4bf06ba9f9ec@moroto.mountain>
+In-Reply-To: <ZfMPS+qn0lh5IrS7@p14s>
 
-On Thu, Mar 14, 2024 at 10:37:29AM +0300, Dan Carpenter wrote:
-> On Wed, Mar 13, 2024 at 07:32:20PM -0700, Alison Schofield wrote:
-> > On Wed, Mar 13, 2024 at 11:51:22PM +0530, Ayush Tiwari wrote:
-> > > This patch adds descriptive comment to mutex within the struct
-> > > gbaudio_codec_info to clarify its intended use and to address
-> > > checkpatch checks.
-> > 
-> > Hi Ayush-
-> > 
-> > You may be right, but you need to convince your patch reviewers
-> > why your comment accurately describes this mutex.
-> > 
-> > That's always the ask with this kind of patch.
-> 
-> Heh.  Yeah.  The comment wasn't right in this case.  The lock has
-> nothing to do with registers or register access.
-> 
-> > 
-> > BTW - Don't start your commit log with 'This patch...'.
-> > 
-> 
-> Outreachy folk are a more particular about some of this stuff than I am.
-> Which is fine.  Could you do me a favor though?  Could you ack patches
-> once you're happy with them?
+On Thu, Mar 14, 2024 at 08:52:59AM -0600, Mathieu Poirier wrote:
+> On Wed, Mar 13, 2024 at 05:17:56PM +0000, Abdellatif El Khlifi wrote:
+> > Hi Mathieu,
+> >
+> > On Wed, Mar 13, 2024 at 10:25:32AM -0600, Mathieu Poirier wrote:
+> > > On Tue, Mar 12, 2024 at 05:32:52PM +0000, Abdellatif El Khlifi wrote:
+> > > > Hi Mathieu,
+> > > >
+> > > > On Tue, Mar 12, 2024 at 10:29:52AM -0600, Mathieu Poirier wrote:
+> > > > > > This is an initial patchset for allowing to turn on and off the remote processor.
+> > > > > > The FW is already loaded before the Corstone-1000 SoC is powered on and this
+> > > > > > is done through the FPGA board bootloader in case of the FPGA target. Or by the Corstone-1000 FVP model
+> > > > > > (emulator).
+> > > > > >
+> > > > > >From the above I take it that booting with a preloaded firmware is a
+> > > > > scenario that needs to be supported and not just a temporary stage.
+> > > >
+> > > > The current status of the Corstone-1000 SoC requires that there is
+> > > > a preloaded firmware for the external core. Preloading is done externally
+> > > > either through the FPGA bootloader or the emulator (FVP) before powering
+> > > > on the SoC.
+> > > >
+> > >
+> > > Ok
+> > >
+> > > > Corstone-1000 will be upgraded in a way that the A core running Linux is able
+> > > > to share memory with the remote core and also being able to access the remote
+> > > > core memory so Linux can copy the firmware to. This HW changes are still
+> > > > This is why this patchset is relying on a preloaded firmware. And it's the step 1
+> > > > of adding remoteproc support for Corstone.
+> > > >
+> > >
+> > > Ok, so there is a HW problem where A core and M core can't see each other's
+> > > memory, preventing the A core from copying the firmware image to the proper
+> > > location.
+> > >
+> > > When the HW is fixed, will there be a need to support scenarios where the
+> > > firmware image has been preloaded into memory?
+> >
+> > No, this scenario won't apply when we get the HW upgrade. No need for an
+> > external entity anymore. The firmware(s) will all be files in the linux filesystem.
+> >
+>
+> Very well.  I am willing to continue with this driver but it does so little that
+> I wonder if it wouldn't simply be better to move forward with upstreaming when
+> the HW is fixed.  The choice is yours.
+>
 
-Dan -
-Sure. In practice, the patches are often 'Reviewed-by' someone else
-by the time I get back around to it (thanks to the different time
-zones and plentiful reviewers) But I understand, I'll make it a 
-habit of at Ack'ing after I've asked for something to change.
-Alison
+I think Robin has raised few points that need clarification. I think it was
+done as part of DT binding patch. I share those concerns and I wanted to
+reaching to the same concerns by starting the questions I asked on corstone
+device tree changes.
 
-
-> 
-> regards,
-> dan carpenter
-> 
+--
+Regards,
+Sudeep
