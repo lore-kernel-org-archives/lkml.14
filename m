@@ -1,44 +1,44 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B311F9FE;
-	Thu, 14 Mar 2024 23:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0651078F;
+	Thu, 14 Mar 2024 23:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458586; cv=none; b=bEoGfXO1HMXzlkHlL0QFHysRbubJL/iYR2MOMOoeeMJQVKgsS/egAf0TLvkSK5cMweYiApDTbQ7qPRin+vw9YHjIFgXEwnnt88dp1kfdxDVNjjTQzr8mQZFRbZqUWycyrH/URYlQsouQiIoroJT1tnZ36dwIOfig8LyIRkn2cRk=
+	t=1710458587; cv=none; b=QXHsEf7NqxR7oD14+58CA46d3iMJlJKpgxJ9CippikK3nMXWEQ0bEr9BIHxC/unDHWXK2LGa4p646MWQ02pJN+Tf2xoEChkD+Je/mGqcXiv+LQIgNiLWPi60gZ8qMyb5oFNGB8S8AAJCjknNClMOsxHJ7tJblVKHKewndLuV+p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458586; c=relaxed/simple;
-	bh=IzEKonS3Rk9mP1viG+w4DpVU37kIVPLD3KQHL9qY338=;
+	s=arc-20240116; t=1710458587; c=relaxed/simple;
+	bh=NlhjMbIRX6gziG0rPwTAUYT+meYHkS7OcnqxPIk82EU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cKPwsMsy1eCl4QyEV+LORnySUY1H7ZziiXAZviS/UXASuHMBXXNm2YWyy9X/XBYOx+qGCgX3Zs5/40dzz0m2K6zewWRsDcotWE982hFy3+WrWjAJ1pssRIftt67F1wrEflMIE//ONsx66/Fgnc4DLlmDXW3OrOiYMCBMkbI+aUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Pnxk4JYQ; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=sW4plT3iUj2cXaX3nJP5M+EqQ5jYIv6z04kXchCNTrBZgSMNOqFT9KBytctEK25fQ6pRxdTK7FEp0X3VSPvFvUIhtnxfzAPoNe/aCCJ2UXtpCW479E8/GUZDKuwjTHoL01apRcUXY0dlXNenZm1rM7DBNker2sE7EqHs3sgH4Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=KikZPW0d; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Pnxk4JYQ"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id BFF02120005;
-	Fri, 15 Mar 2024 02:23:00 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru BFF02120005
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="KikZPW0d"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 77907100013;
+	Fri, 15 Mar 2024 02:23:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 77907100013
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458580;
-	bh=JVEInx1VsQ+k5oHrMWuJJb1gmeD/iUbSkd2IAOMDuc8=;
+	s=mail; t=1710458583;
+	bh=qtL8oCp2NzH1Oe5KPqHGKTnMcQ+tN5VZWW0A6Ttb2kk=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Pnxk4JYQBKVCYVvRS/2Brp3Ukypy7RKzgprVi0yh+stIP98DPYmv5GriGrKlsewzg
-	 3eXevzf8rSqB2LMWKc+LISmVwiqWdNiDdr+EfgZKhADZPTmuFZnHH4IzAdxe4bTaHD
-	 4YlOa3nz4MC9X2xzM5xvSihLRVnjnNGnIPSpniXSG1N35YIqAskEkbcRjr9Q7MMIRw
-	 nM3xaSeEKQgnG8lWaNUvWoEYd+fLsZUfLjRZ/T6inuQfXk5pcY9e9L6TUkEg+QX/w0
-	 vMStx9edszET+iCpoomFrDZh3fz96XwHjIMKdVHDZ1kd0/Ks1ZzRyNWb0PiH/rJTJU
-	 IjJsqsBvZNY9Q==
+	b=KikZPW0d/5d0txHuUd498Azvh+/Igak9XlsSIrt45mBoG59XE3fZ97CoCPDve46YI
+	 GkEzxOLCphTrYydT5sooWbN7EgSxYqtFu2PK3Kuxr79ghMTuikebH1gFoqiC9uIPgf
+	 EwTVeSBEi/M2I69uigWNcGGNDA7NL1DScha+NQU1Xhikex58FDe2RNpmmDyc/RVEIe
+	 4cjFQ6vtzeoAQughFhfgiCFs09ywMKvYeq0XACNBtbUhXhHviYAv5/WIfGWhO13vI0
+	 Xm6F+iFaVAfGcWKHWZUv/v9zFwqNx1e0tdnWb+MpRIXNJSbgLU2BoxM/VuPVp8rqqF
+	 F8CJwR/DfXmQg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:00 +0300 (MSK)
+	Fri, 15 Mar 2024 02:23:03 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:00 +0300
+ 15.2.1118.40; Fri, 15 Mar 2024 02:23:02 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -55,9 +55,9 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <kernel@salutedevices.com>
-Subject: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll' params
-Date: Fri, 15 Mar 2024 02:21:37 +0300
-Message-ID: <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+Subject: [PATCH 08/25] ASoC: dt-bindings: meson: g12a-toacodec: add support for A1 SoC family
+Date: Fri, 15 Mar 2024 02:21:44 +0300
+Message-ID: <20240314232201.2102178-9-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
@@ -88,41 +88,41 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-Existing values were insufficient to produce accurate clock for audio
-devices. New values are safe and most suitable to produce 48000Hz sample
-rate.
+Add "amlogic,t9015-a1" compatible string and new device tree phandle
+options.
 
 Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- drivers/clk/meson/a1-pll.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/sound/amlogic,g12a-toacodec.yaml     | 1 +
+ include/dt-bindings/sound/meson-g12a-toacodec.h              | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-index 4325e8a6a3ef..00e06d03445b 100644
---- a/drivers/clk/meson/a1-pll.c
-+++ b/drivers/clk/meson/a1-pll.c
-@@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+index 23f82bb89750..c47604aa590f 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+@@ -26,6 +26,7 @@ properties:
+       - items:
+           - enum:
+               - amlogic,sm1-toacodec
++              - amlogic,a1-toacodec
+           - const: amlogic,g12a-toacodec
  
--static const struct pll_mult_range hifi_pll_mult_range = {
--	.min = 32,
--	.max = 64,
-+static const struct pll_params_table hifi_pll_params_table[] = {
-+	PLL_PARAMS(128, 5),
-+	{ },
- };
+   reg:
+diff --git a/include/dt-bindings/sound/meson-g12a-toacodec.h b/include/dt-bindings/sound/meson-g12a-toacodec.h
+index 69d7a75592a2..f726e2c6064d 100644
+--- a/include/dt-bindings/sound/meson-g12a-toacodec.h
++++ b/include/dt-bindings/sound/meson-g12a-toacodec.h
+@@ -7,4 +7,9 @@
+ #define TOACODEC_IN_C	2
+ #define TOACODEC_OUT	3
  
- static const struct reg_sequence hifi_init_regs[] = {
-@@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
- 			.shift   = 6,
- 			.width   = 1,
- 		},
--		.range = &hifi_pll_mult_range,
-+		.table = hifi_pll_params_table,
- 		.init_regs = hifi_init_regs,
- 		.init_count = ARRAY_SIZE(hifi_init_regs),
- 	},
++#define TOACODEC_CAPTURE_OUT_A	4
++#define TOACODEC_CAPTURE_OUT_B	5
++#define TOACODEC_CAPTURE_OUT_C	6
++#define TOACODEC_CAPTURE_IN	7
++
+ #endif /* __DT_MESON_G12A_TOACODEC_H */
 -- 
 2.34.1
 
