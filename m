@@ -1,323 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0482C45C1C;
-	Thu, 14 Mar 2024 06:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D22171AB
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 06:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710396004; cv=none; b=M3J73996DcaGDw5EjdUel6RDsnoxfO5v+rHjLZXcPMUuK7xoDBEqkctXQfmu68QIZV+rcE0c7KVhzQi0Ne7RxdrDZ/2dP2ksTm04xSkxDJGyTOYGi7H4Fe1RLiSsr1PZjm9ADg0IrteDd1nwc6ysnK9kVo0nkWfujKSeSWG/9pI=
+	t=1710396005; cv=none; b=h7UAQgUmLq+uWn8gio8UHFpTe1cIuSb6VwANrBqhS4m6nZ/Tjm8KwNcFt/hAnEHpABoqDb4E9KsLaNa1S4t5OZjYyj9j16JAlPQYzKTamsHa2Y757vCKKUFcsIMVnqdS+XC659yZAcfrkpQ4QEVR5LNqTP2ekvVvRNiS2Qcw2KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710396004; c=relaxed/simple;
-	bh=P5LgDUlnvnfLLmsIDrpzx33t4tvIoYpbsPdAvXLTKxc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z/EFU7t+7JmwyvvO2dfAWWVJ54dponezaNA+bCNT/EbIG1Cuqwb6FsVhv0a0U+7VCmS958Ax8C4snwUUtxISx98yLKdVUwt90rQMeS0fz1nsZZDyCUZM2/hSTlL5yeOp02OsEpUm5jWfK/+IMt78j7UaFLe73Cpx8H5mx3o6//4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A39061007;
-	Wed, 13 Mar 2024 23:00:37 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 888403F73F;
-	Wed, 13 Mar 2024 22:59:56 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH V7 09/11] coresight: tmc: Move ACPI support from AMBA driver to platform driver
-Date: Thu, 14 Mar 2024 11:28:41 +0530
-Message-Id: <20240314055843.2625883-10-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1710396005; c=relaxed/simple;
+	bh=EoFQZBcR++BJQLNWKAmvS5P9iYM2cGSAT9IpU470kgI=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=VD9daeEHj78DyYBjZaMv9TgUuHPthpi97XKT3aUMUGJ5r1h04Na0202AgRbqd6uZwg/RKMkWZFrJdfThvbX07YlQr/GP24iAFr5hmfitvzRcQlhUohs9Y659IxbNm5kvZ+iUxAInQFHaot2WNEsDLP/hPIWOruU1WOZ+DpYoHPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WjW59jlT; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WjW59jlT"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a61b31993so11547117b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 23:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710396002; x=1711000802; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V2Jgedq1NZZPPT1/Dtc3WDNIcL7gv577kczHEe0Db7I=;
+        b=WjW59jlT/S+m5MRfXyMH1t2YBnAbv1z0kjwqTwag4v77T9TCZHfoeCMEVZQGHPwrGP
+         lrt2AK/19rHkAEN7dEh0+xU00YxjCZzGnMzoMcVo//4XNG7YDgGGEEi6QQV1DL5SdLaB
+         x0QrgUHC3stvxUsKmxqqFsOavz9X8sUsKN4KiLA9D8aeaiK2TtFZnNBAGOWIWYuf3+eI
+         +zU8oM9rhVAH7LizTxpqkvfrxswpx2b/XNBgySJgPbL5fA3iqUawdo3wmkALu1lgi3Ay
+         uT/09GBxu8+yZtBMx0HeK1iBm3W+it+Hpj2O/9nbq2/wukaFegZ/N2xqoYIv5P/PXHWL
+         Gz3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710396002; x=1711000802;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V2Jgedq1NZZPPT1/Dtc3WDNIcL7gv577kczHEe0Db7I=;
+        b=AY/CJzFMIoipATuHk2rSVT+jaFyfYgEyyqr4gK2n+p6tTNVQVPjMwrM211luo2NyRu
+         U4ULz8OE/3k8AfTlQaro6Wm5yL/EhIU0zeoB9UBUAK7aiB/y5KjSPmejFEjOJsUL8Ehv
+         51bTFT62hVKpzla7gfxQktu63IL1q0uRnyc/8gWzx614Q4mowhcunAOPFbexp2gEDfD7
+         iTe3PrbkB3HTYdE8f4VmDlqjMBCVQWIDEc2WyWkbm+NWmEyIYAO/WpxLlBOqmAJGpeGg
+         YiXsKUWXpoYue/K2l8vWMSEuyxpmY54LUdVvS+XUXqQycCRdrYLz4fzkgo0YtMps6lVu
+         PeSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqgqhN4yXen6t/BGjWQ7xFf4M5h95kOWMO2RBxKiMZpeh6dtcpIcrAXnU7O3iB+ErsOi8iWTCPDVa2xQMJ6Hb+UgHG554UcO11lItY
+X-Gm-Message-State: AOJu0YzLHFKJnJZWU4nJTGXSqPQdpDc+0IK1uTsWPbJTDY7ZNMuPWHmH
+	dOypTW4YpOym8fxZSm7GVMgrHwx/qoQ4Fc0rtb409cx6/wQMWUCiKiqwFxcAtTILYFCQ7yEBoCj
+	YiYV2DA==
+X-Google-Smtp-Source: AGHT+IFDQ+9xU0M+SjIFSslxASNCJrc5/k+6p6o3YihJ7av0y0N3jJIcNU/Crks/O9Qb/x+/ZtaBweQ5IYsJ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a0d:d808:0:b0:60b:998c:389f with SMTP id
+ a8-20020a0dd808000000b0060b998c389fmr179760ywe.10.1710396002262; Wed, 13 Mar
+ 2024 23:00:02 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:11 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 12/20] perf jevents: Add context switch metrics for Intel
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the tmc devices in the platform driver, which can then be
-used on ACPI based platforms. This change would now allow runtime power
-management for ACPI based systems. The driver would try to enable the APB
-clock if available. But first this renames and then refactors tmc_probe()
-and tmc_remove(), making sure it can be used both for platform and AMBA
-drivers. This also moves pm_runtime_put() from tmc_probe() to the callers.
+Metrics break down context switches for different kinds of
+instruction.
 
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
-Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes in V7:
+ tools/perf/pmu-events/intel_metrics.py | 55 ++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-- Dropped reduntant drvdata check in tmc_platform_remove()
-
- drivers/acpi/arm64/amba.c                     |   2 -
- .../hwtracing/coresight/coresight-tmc-core.c  | 140 ++++++++++++++++--
- drivers/hwtracing/coresight/coresight-tmc.h   |   2 +
- 3 files changed, 127 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
-index 6d24a8f7914b..d3c1defa7bc8 100644
---- a/drivers/acpi/arm64/amba.c
-+++ b/drivers/acpi/arm64/amba.c
-@@ -22,10 +22,8 @@
- static const struct acpi_device_id amba_id_list[] = {
- 	{"ARMH0061", 0}, /* PL061 GPIO Device */
- 	{"ARMH0330", 0}, /* ARM DMA Controller DMA-330 */
--	{"ARMHC501", 0}, /* ARM CoreSight ETR */
- 	{"ARMHC502", 0}, /* ARM CoreSight STM */
- 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
--	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
- 	{"", 0},
- };
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index d15f9ac05204..387981d58320 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -266,6 +266,60 @@ def IntelBr():
+                      description="breakdown of retired branch instructions")
  
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
-index 1a5ca65d8677..c9aaf3567565 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-core.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
-@@ -24,6 +24,8 @@
- #include <linux/of.h>
- #include <linux/coresight.h>
- #include <linux/amba/bus.h>
-+#include <linux/platform_device.h>
-+#include <linux/acpi.h>
  
- #include "coresight-priv.h"
- #include "coresight-tmc.h"
-@@ -444,24 +446,17 @@ static u32 tmc_etr_get_max_burst_size(struct device *dev)
- 	return burst_size;
- }
- 
--static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
-+static int __tmc_probe(struct device *dev, struct resource *res)
- {
- 	int ret = 0;
- 	u32 devid;
- 	void __iomem *base;
--	struct device *dev = &adev->dev;
- 	struct coresight_platform_data *pdata = NULL;
--	struct tmc_drvdata *drvdata;
--	struct resource *res = &adev->res;
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
- 	struct coresight_desc desc = { 0 };
- 	struct coresight_dev_list *dev_list = NULL;
- 
- 	ret = -ENOMEM;
--	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
--	if (!drvdata)
--		goto out;
--
--	dev_set_drvdata(dev, drvdata);
- 
- 	/* Validity for the resource is already checked by the AMBA core */
- 	base = devm_ioremap_resource(dev, res);
-@@ -536,7 +531,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
- 		ret = PTR_ERR(pdata);
- 		goto out;
- 	}
--	adev->dev.platform_data = pdata;
-+	dev->platform_data = pdata;
- 	desc.pdata = pdata;
- 
- 	drvdata->csdev = coresight_register(&desc);
-@@ -551,12 +546,27 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
- 	ret = misc_register(&drvdata->miscdev);
- 	if (ret)
- 		coresight_unregister(drvdata->csdev);
--	else
--		pm_runtime_put(&adev->dev);
- out:
- 	return ret;
- }
- 
-+static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
-+{
-+	struct tmc_drvdata *drvdata;
-+	int ret;
++def IntelCtxSw() -> MetricGroup:
++  cs = Event("context\-switches")
++  metrics = [
++      Metric("cs_rate", "Context switches per second", d_ratio(cs, interval_sec), "ctxsw/s")
++  ]
 +
-+	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
++  ev = Event("instructions")
++  metrics.append(Metric("cs_instr", "Instructions per context switch",
++                        d_ratio(ev, cs), "instr/cs"))
 +
-+	amba_set_drvdata(adev, drvdata);
-+	ret = __tmc_probe(&adev->dev, &adev->res);
-+	if (!ret)
-+		pm_runtime_put(&adev->dev);
++  ev = Event("cycles")
++  metrics.append(Metric("cs_cycles", "Cycles per context switch",
++                        d_ratio(ev, cs), "cycles/cs"))
 +
-+	return ret;
-+}
++  try:
++    ev = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
++    metrics.append(Metric("cs_loads", "Loads per context switch",
++                          d_ratio(ev, cs), "loads/cs"))
++  except:
++    pass
 +
- static void tmc_shutdown(struct amba_device *adev)
- {
- 	unsigned long flags;
-@@ -579,9 +589,9 @@ static void tmc_shutdown(struct amba_device *adev)
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- }
- 
--static void tmc_remove(struct amba_device *adev)
-+static void __tmc_remove(struct device *dev)
- {
--	struct tmc_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
- 
- 	/*
- 	 * Since misc_open() holds a refcount on the f_ops, which is
-@@ -592,6 +602,11 @@ static void tmc_remove(struct amba_device *adev)
- 	coresight_unregister(drvdata->csdev);
- }
- 
-+static void tmc_remove(struct amba_device *adev)
-+{
-+	__tmc_remove(&adev->dev);
-+}
++  try:
++    ev = Event("MEM_INST_RETIRED.ALL_STORES", "MEM_UOPS_RETIRED.ALL_STORES")
++    metrics.append(Metric("cs_stores", "Stores per context switch",
++                          d_ratio(ev, cs), "stores/cs"))
++  except:
++    pass
 +
- static const struct amba_id tmc_ids[] = {
- 	CS_AMBA_ID(0x000bb961),
- 	/* Coresight SoC 600 TMC-ETR/ETS */
-@@ -617,7 +632,102 @@ static struct amba_driver tmc_driver = {
- 	.id_table	= tmc_ids,
- };
- 
--module_amba_driver(tmc_driver);
-+static int tmc_platform_probe(struct platform_device *pdev)
-+{
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	struct tmc_drvdata *drvdata;
-+	int ret = 0;
++  try:
++    ev = Event("BR_INST_RETIRED.NEAR_TAKEN", "BR_INST_RETIRED.TAKEN_JCC")
++    metrics.append(Metric("cs_br_taken", "Branches taken per context switch",
++                          d_ratio(ev, cs), "br_taken/cs"))
++  except:
++    pass
 +
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
++  try:
++    l2_misses = (Event("L2_RQSTS.DEMAND_DATA_RD_MISS") +
++                 Event("L2_RQSTS.RFO_MISS") +
++                 Event("L2_RQSTS.CODE_RD_MISS"))
++    try:
++      l2_misses += Event("L2_RQSTS.HWPF_MISS", "L2_RQSTS.L2_PF_MISS", "L2_RQSTS.PF_MISS")
++    except:
++      pass
 +
-+	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
-+	if (IS_ERR(drvdata->pclk))
-+		return -ENODEV;
++    metrics.append(Metric("cs_l2_misses", "L2 misses per context switch",
++                          d_ratio(l2_misses, cs), "l2_misses/cs"))
++  except:
++    pass
 +
-+	dev_set_drvdata(&pdev->dev, drvdata);
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
++  return MetricGroup("cs", metrics,
++                     description = ("Number of context switches per second, instructions "
++                                    "retired & core cycles between context switches"))
 +
-+	ret = __tmc_probe(&pdev->dev, res);
-+	pm_runtime_put(&pdev->dev);
-+	if (ret)
-+		pm_runtime_disable(&pdev->dev);
 +
-+	return ret;
-+}
-+
-+static int tmc_platform_remove(struct platform_device *pdev)
-+{
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
-+
-+	if (WARN_ON(!drvdata))
-+		return -ENODEV;
-+
-+	__tmc_remove(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	if (!IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_put(drvdata->pclk);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int tmc_runtime_suspend(struct device *dev)
-+{
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
-+	return 0;
-+}
-+
-+static int tmc_runtime_resume(struct device *dev)
-+{
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_prepare_enable(drvdata->pclk);
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops tmc_dev_pm_ops = {
-+	SET_RUNTIME_PM_OPS(tmc_runtime_suspend, tmc_runtime_resume, NULL)
-+};
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id tmc_acpi_ids[] = {
-+	{"ARMHC501", 0, 0, 0}, /* ARM CoreSight ETR */
-+	{"ARMHC97C", 0, 0, 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, tmc_acpi_ids);
-+#endif
-+
-+static struct platform_driver tmc_platform_driver = {
-+	.probe	= tmc_platform_probe,
-+	.remove	= tmc_platform_remove,
-+	.driver	= {
-+		.name			= "coresight-tmc-platform",
-+		.acpi_match_table	= ACPI_PTR(tmc_acpi_ids),
-+		.suppress_bind_attrs	= true,
-+		.pm			= &tmc_dev_pm_ops,
-+	},
-+};
-+
-+static int __init tmc_init(void)
-+{
-+	return coresight_init_driver("tmc", &tmc_driver, &tmc_platform_driver);
-+}
-+
-+static void __exit tmc_exit(void)
-+{
-+	coresight_remove_driver(&tmc_driver, &tmc_platform_driver);
-+}
-+module_init(tmc_init);
-+module_exit(tmc_exit);
- 
- MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
- MODULE_DESCRIPTION("Arm CoreSight Trace Memory Controller driver");
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index cef979c897e6..c77763b49de0 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -166,6 +166,7 @@ struct etr_buf {
- 
- /**
-  * struct tmc_drvdata - specifics associated to an TMC component
-+ * @pclk:	APB clock if present, otherwise NULL
-  * @base:	memory mapped base address for this component.
-  * @csdev:	component vitals needed by the framework.
-  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
-@@ -189,6 +190,7 @@ struct etr_buf {
-  * @perf_buf:	PERF buffer for ETR.
-  */
- struct tmc_drvdata {
-+	struct clk		*pclk;
- 	void __iomem		*base;
- 	struct coresight_device	*csdev;
- 	struct miscdevice	miscdev;
+ def IntelIlp() -> MetricGroup:
+   tsc = Event("msr/tsc/")
+   c0 = Event("msr/mperf/")
+@@ -648,6 +702,7 @@ def main() -> None:
+       Smi(),
+       Tsx(),
+       IntelBr(),
++      IntelCtxSw(),
+       IntelIlp(),
+       IntelL2(),
+       IntelLdSt(),
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
