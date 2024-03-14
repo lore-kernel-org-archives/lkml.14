@@ -1,95 +1,63 @@
-Received: from bues.ch (bues.ch [80.190.117.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410CD1A38FB;
-	Thu, 14 Mar 2024 18:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.190.117.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB3B1A38FB;
+	Thu, 14 Mar 2024 18:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710441198; cv=none; b=JyfT5PDHtvrz209RLutCJLXpWevGuWj20by3RGhCKINIQbj+iHhKMNZTs/6K4pkZA9PHCC3ZR/rYlKpLIxjtl8aTYw0Og+BmBOzyUp9+Zu5VrSve9dQ1XoskHjCSTiS+w1x3XvVrtD5UThPvt5HEC33+0npaMd5F+bGV7N1+8eY=
+	t=1710441297; cv=none; b=ctjqf5udzvARO1t2iCgg82LvhB3uXrzV1+hVc28B2HspZIsDq90EJE0PBXfhzZIemLHdW3MRJcYAce5+Wm5aAXkq5dpKj3bdoPbyjreO9gY9IXpSJNb48YTGKPXkTCkHU91QNC4loGNx5NSy7cmne8+D6FEZOMlaCXeffwR2YUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710441198; c=relaxed/simple;
-	bh=G2QSNSLgALZNvK4haNKtoQw708Y7zVKOLHgKk+Y1/f0=;
+	s=arc-20240116; t=1710441297; c=relaxed/simple;
+	bh=/Vt9G3MB7vSqqQzVnMSe8pAnjzC1rvozbwallsCWSnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HcOVgvAxgq3ii3dsGr0ba027HgdTP+7syzFXCgY9AAARYU8yzsD3ndynwlknPvZSFDoa9xsiLcsCx3DTcK2ieA3Q/KWd38TT2kbxuvztHg9FGLj05zuRYFTtEklcBMZsPDVRYMphtyMe5wEXUWSFiMFZBTME+vo0B1e/AZgi2Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; arc=none smtp.client-ip=80.190.117.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
-Received: by bues.ch with esmtpsa (Exim 4.96)
-	(envelope-from <m@bues.ch>)
-	id 1rkpt2-0012GJ-0E;
-	Thu, 14 Mar 2024 19:33:03 +0100
-Date: Thu, 14 Mar 2024 19:32:15 +0100
-From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
- Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
- b43-dev@lists.infradead.org
-Subject: Re: [PATCH 2/3] net: b43: Convert sprintf/snprintf to sysfs_emit
-Message-ID: <20240314193215.74aac927@barney>
-In-Reply-To: <20240314094823.1324898-2-lizhijian@fujitsu.com>
-References: <20240314094823.1324898-1-lizhijian@fujitsu.com>
-	<20240314094823.1324898-2-lizhijian@fujitsu.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=ZBxNSwI5Mz6pwMxD8gGh4mS/IdnAoWnb08FgYOHBPRzrG2H5F8RSFfN80xqy6VbJHrx6RMLu3BGjR+pD0W9esvTJN/OabTY1T1eydEtuKfsp0WxGwiy3xAigIAZ2YaE5+VRGp1voCz3O4MaRKDVNU4bjl0d5h7KXfpMPypKu8ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+jUWnHd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+jUWnHd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A675BC433F1;
+	Thu, 14 Mar 2024 18:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710441297;
+	bh=/Vt9G3MB7vSqqQzVnMSe8pAnjzC1rvozbwallsCWSnA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=a+jUWnHdjSstOKo6slsJbBzqxJg2KgOYE/LzwCAW2IuXyAwhdvx47cUSqsngKZq3m
+	 RdvP9biRaZOiTnYAfdIQisCrNjHDVrLWVgv1wkwelsR6sr3Z0uYkf1eXfBCcWz6cDs
+	 UAxcE1R0Jk4GCLHj3EZ09u1xvmfbMC/UGNzu826vgCpSY9yVc0OXFgWq8ej0nNPZRH
+	 3h34o0IMd4TmrZJbD8Q4cBytN/Dsda9wO06QVg7pk1hhZ2QqkRT28Shj5Zkg2H25j1
+	 VVYx2NCdutNwOmdrD/Y1C9pMD5astVeTjJtFS9bfdqn2HOtrD2xpMV+hx1VlLPWbnv
+	 MiC7WP6z0ouew==
+Date: Thu, 14 Mar 2024 11:34:55 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mark Cilissen <mark@yotsuba.nl>
+Cc: netdev@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Eric
+ Dumazet <edumazet@google.com>, Breno Leitao <leitao@debian.org>, Ingo
+ Molnar <mingo@redhat.com>, "David S. Miller" <davem@davemloft.net>, Paolo
+ Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netpoll: support sending over raw IP interfaces
+Message-ID: <20240314113455.152cebc9@kernel.org>
+In-Reply-To: <20240313124613.51399-1-mark@yotsuba.nl>
+References: <20240313124613.51399-1-mark@yotsuba.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lQpcmYwR9PeRUh3dx42=9yH";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
---Sig_/lQpcmYwR9PeRUh3dx42=9yH
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, 13 Mar 2024 13:46:13 +0100 Mark Cilissen wrote:
+> Currently, netpoll only supports interfaces with an ethernet-compatible
+> link layer. Certain interfaces like SLIP do not have a link layer
+> on the network interface level at all and expect raw IP packets,
+> and could benefit from being supported by netpoll.
+> 
+> This commit adds support for such interfaces by using the network device's
+> `hard_header_len` field as an indication that no link layer is present.
+> If that is the case we simply skip adding the ethernet header, causing
+> a raw IP packet to be sent over the interface. This has been confirmed
+> to add netconsole support to at least SLIP and WireGuard interfaces.
 
-On Thu, 14 Mar 2024 17:48:22 +0800
-Li Zhijian <lizhijian@fujitsu.com> wrote:
-
->  	case B43legacy_INTERFMODE_NONE:
-> -		count =3D snprintf(buf, PAGE_SIZE, "0 (No Interference"
-> -				 " Mitigation)\n");
-> +		count =3D sysfs_emit(buf, "0 (No Interference" " Mitigation)\n");
->  		break;
-
->  	if (wldev->short_preamble)
-> -		count =3D snprintf(buf, PAGE_SIZE, "1 (Short Preamble"
-> -				 " enabled)\n");
-> +		count =3D sysfs_emit(buf, "1 (Short Preamble" " enabled)\n");
->  	else
-> -		count =3D snprintf(buf, PAGE_SIZE, "0 (Short Preamble"
-> -				 " disabled)\n");
-> +		count =3D sysfs_emit(buf, "0 (Short Preamble" " disabled)\n");
-> =20
-
-Please either leave the line break in place, or remove the string continuat=
-ion.
-
-
-
---=20
-Michael B=C3=BCsch
-https://bues.ch/
-
---Sig_/lQpcmYwR9PeRUh3dx42=9yH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmXzQq8ACgkQ9TK+HZCN
-iw4/lg/+JasVyWxAy739KHA2FtfgNev/rh0gwiIISYBJd72k164TItI6CoOK/vFE
-RaufsC77oYVzcIpuGitLAgyGnl0voXywJPnMSsce57eqqXnjeblJpXP2IWmpykGv
-2VBmXKY8SwwtOwjvYfRxCCT48n0uRNCtflLrbIlD5nVYVLDGwcDpFAz1Eas27vfy
-xHCf3FtCL5Hu0kC3y0Y0GZHTNRH/fOd8dVJ/6QBjRyB8i7f7FpTdRW8t9M8TJbW4
-FcfiVnisM8WgC5T4dTzsZ776EaUHsxHM2XV78oywcfEr/Shj8OOQGoIqbAj7oyRI
-4QgdMmQjJnTJkJVUpIxYxm+nUmGK8zz3HhNyX3dBTUi2wfidOSs2H2b8NI7VZLeB
-1FD3sc7CR7OQFhfsoDr6oDHNDug1ryun67hXK1AY+Qtr35Mz+C7l1YfiyzSKc8og
-bTJAyFsBttDjbMYsHqxY9PEKrmRC9ubZWAcfz6/6Ir9RC7SHh8WNrX8F7v3BIWxy
-N5BUVjjppQw5SiFgYUny1fNM1gHvzy9IScUIiv21zMb1ei02GmU4qw/pAe0oIKCP
-pQFV4BJhHtBgI7aL3vIXe2yYRO9fNdxt5h4TJ6ZWVD1QCFzKbC7MihxHCtLZakma
-nzc+UwY/uniy5LtQmwQirsrBr+5Zc2WSrVvziK2sD0tzYFRp9w0=
-=1+TG
------END PGP SIGNATURE-----
-
---Sig_/lQpcmYwR9PeRUh3dx42=9yH--
+Would be great if this could come with a simple selftest under
+tools/testing/selftests/net. Preferably using some simple tunnel
+device, rather than wg to limit tooling dependencies ;)
