@@ -1,145 +1,92 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98C66F06D
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 651066EB74;
+	Thu, 14 Mar 2024 14:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710425075; cv=none; b=H4P6MzAJ8w62qKaqVQqp+CxlTxF6qs7/DKvCUEiRlhJZ610yCC5hqOl+3m7khdX00SZ0mFnPqfLSLzdOQFEIxc66GZFVcAG6rFcc3zoWT4lWkddRweQSJDpfOwF2ZqlOGf6OjaqHu/FfdaOEAi+bo2A858eA9ESTLpDHag9QMBI=
+	t=1710425084; cv=none; b=T96qrrYPm2eD+UChNDnCJikMz+o4iSvcpaf2ALm74xksg8MOvE9ejGwG+ULjbrjwsjvIy415rLcgmfmb6+o0ebH5iOuMUdotDgvOXge15IQMEiMAMEUYHsLo90qoU6kfhqgeastdClohk95kFz+7yA9S+S6Nx1lJPPKCUvjiNoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710425075; c=relaxed/simple;
-	bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jkwWG59yzCNfBNkETtHsUH1NKfhRkqN2DSt2Mv5kUOS7b+MPzP2D+8ccfLHwO3rIECQGlDKTnfENJgK3ErYUfDu/LXcDskQvW0yw9CkqoRxlFLVl3/wyfHoZMgGswRL/HWqJdCvb9LS3LsUn7LPPI1hmMy0hdL4NmoAQe6M6PJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=p3mjRBYP; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="p3mjRBYP"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42ee2012bf0so7588361cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710425072; x=1711029872; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
-        b=p3mjRBYPhLUUdYAypUwm0kLzF2CS5qINen/EX/lmllYe9fBAJ2vTsLPa+uRR4ljjeU
-         trgDMBeXsw64talNInyxsNzE4tWpPNXRgnuleARZnPCg4q81rBSI7Cd77bN/i+p5kmaI
-         sFG9S/mOkegctQwCXe5YAszyB995JRLFMKEb+AOMDyYGAE41LOpfBZG6r1pff2JmyZEl
-         XCorfQqMDbE0T9d6fJyuKBAZMiqt5CBDmr8r9HdW+riytbPFuue+iMIlGIiFlUq03RzR
-         PTjPV0H5tmI4a2VHxjXyJBZIRtb5z3vGLMZQB2TBzLeKEGE1+eZJfxUjlcOD2Fip/590
-         iqdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710425072; x=1711029872;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
-        b=k4KOkmlv19zl3L33zFMcbaBxhofx7gTvr4ydVONTvFIeJA1gGDseEwnbGQDrMdy6ip
-         JVAOP3SbErqP8cOoeVapSmAuRGX+0C+hl+SKaOkhI9Vw3DywflXwbihU0gAzv/9CtQi1
-         aEPUfVtofzmcDkfdVExD3iFbAJpay+NCNP/PWJ/KtwoPAcBa8ol+PsffTEsi5yV07D8w
-         KAkrlqlVx6LWFOJOppemhGhj3DKeLvn9tz4qSxpn2S9x6Knx79ql9fLEVNmjeZl7BJ5J
-         IYnjCiqe05UFSbSITzEaKhy6dc960GxHnuowSIBdGRsvTK1sLTAfSnITTUjTQ3WSsVlx
-         l2nQ==
-X-Gm-Message-State: AOJu0YzQEmSUFYsIaE5y47n4SZFWDPvkndRs/Rw291cDIxx/RQyTB4he
-	fxmiZ9DlXYGzFkFJbVwcOaqqEhZzKJVB/imFJ6NBrnSb+nNFXHkrtg7+9GqiTC9qSVz5E65sJld
-	1sF32tMhgKTKUv9975qZema2pEHbDiv+OzgVVhQ==
-X-Google-Smtp-Source: AGHT+IF1WiEU4N3Z6Uqdf3j6rNjBbma5Y0Jff1HtPv863Egdopl6dhLMAJDdICC3crqwRhHV2ZHM33uBwxoDyrFBoss=
-X-Received: by 2002:a05:622a:1816:b0:42e:db75:3cf9 with SMTP id
- t22-20020a05622a181600b0042edb753cf9mr8873826qtc.27.1710425072462; Thu, 14
- Mar 2024 07:04:32 -0700 (PDT)
+	s=arc-20240116; t=1710425084; c=relaxed/simple;
+	bh=f53euNbOld+RaF4OHr1drOxSEZS1nlFkdLHaIZnNffM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e9y6M7Nxfd612HW6Axl1ty9KoppF2JsmKL1k8j0XIiOZVAq09GTQ5esUF5onjXGNmIvZSfPbWQcNK3Fus5q06oR/GE+Y4vB7MvJNfpyMcH2qHuwbO1ZAuV8sWGtYOvZdWw0F9GbB92xxtcenzCr7veTfffM/MIf/+KwCvsJXg3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B06E21007;
+	Thu, 14 Mar 2024 07:05:16 -0700 (PDT)
+Received: from e129166.arm.com (unknown [10.57.13.158])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D51443F762;
+	Thu, 14 Mar 2024 07:04:37 -0700 (PDT)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Cc: lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	sboyd@kernel.org,
+	nm@ti.com,
+	linux-samsung-soc@vger.kernel.org,
+	daniel.lezcano@linaro.org,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	krzysztof.kozlowski@linaro.org,
+	alim.akhtar@samsung.com,
+	m.szyprowski@samsung.com,
+	mhiramat@kernel.org
+Subject: [PATCH 0/4] Update Energy Model after chip binning adjusted voltages
+Date: Thu, 14 Mar 2024 14:04:17 +0000
+Message-Id: <20240314140421.3563571-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-12-pasha.tatashin@soleen.com> <87v85qo2fj.ffs@tglx>
- <CA+CK2bBgeK=rW3=RJSx8zxST8xnJ-VXSSYmKPVK9gHX3pxEWuQ@mail.gmail.com>
- <CA+CK2bAzJuCe06g_TEOh3B-hK+dXfUaGaOSTgzyxkN4zqpSU_A@mail.gmail.com> <87bk7inmah.ffs@tglx>
-In-Reply-To: <87bk7inmah.ffs@tglx>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 14 Mar 2024 10:03:55 -0400
-Message-ID: <CA+CK2bC=6GOkCOwJdhH25r-9hb1BQVoLK7LLAgpm2AKqdmStrg@mail.gmail.com>
-Subject: Re: [RFC 11/14] x86: add support for Dynamic Kernel Stacks
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, hpa@zytor.com, 
-	jacob.jun.pan@linux.intel.com, jgg@ziepe.ca, jpoimboe@kernel.org, 
-	jroedel@suse.de, juri.lelli@redhat.com, kent.overstreet@linux.dev, 
-	kinseyho@google.com, kirill.shutemov@linux.intel.com, lstoakes@gmail.com, 
-	luto@kernel.org, mgorman@suse.de, mic@digikod.net, 
-	michael.christie@oracle.com, mingo@redhat.com, mjguzik@gmail.com, 
-	mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, pmladek@suse.com, 
-	rick.p.edgecombe@intel.com, rostedt@goodmis.org, surenb@google.com, 
-	urezki@gmail.com, vincent.guittot@linaro.org, vschneid@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 13, 2024 at 12:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->
-> On Wed, Mar 13 2024 at 11:28, Pasha Tatashin wrote:
-> > On Wed, Mar 13, 2024 at 9:43=E2=80=AFAM Pasha Tatashin
-> > <pasha.tatashin@soleen.com> wrote:
-> >> Here's a potential solution that is fast, avoids locking, and ensures =
-atomicity:
-> >>
-> >> 1. Kernel Stack VA Space
-> >> Dedicate a virtual address range ([KSTACK_START_VA - KSTACK_END_VA])
-> >> exclusively for kernel stacks. This simplifies validation of faulting
-> >> addresses to be part of a stack.
-> >>
-> >> 2. Finding the faulty task
-> >> - Use ALIGN(fault_address, THREAD_SIZE) to calculate the end of the
-> >> topmost stack page (since stack addresses are aligned to THREAD_SIZE).
-> >> - Store the task_struct pointer as the last word on this topmost page,
-> >> that is always present as it is a pre-allcated stack page.
-> >>
-> >> 3. Stack Padding
-> >> Increase padding to 8 bytes on x86_64 (TOP_OF_KERNEL_STACK_PADDING 8)
-> >> to accommodate the task_struct pointer.
-> >
-> > Alternatively, do not even look-up the task_struct in
-> > dynamic_stack_fault(), but only install the mapping to the faulting
-> > address, store va in the per-cpu array, and handle the rest in
-> > dynamic_stack() during context switching. At that time spin locks can
-> > be taken, and we can do a find_vm_area(addr) call.
-> >
-> > This way, we would not need to modify TOP_OF_KERNEL_STACK_PADDING to
-> > keep task_struct in there.
->
-> Why not simply doing the 'current' update right next to the stack
-> switching in __switch_to_asm() which has no way of faulting.
->
-> That needs to validate whether anything uses current between the stack
-> switch and the place where current is updated today. I think nothing
-> should do so, but I would not be surprised either if it would be the
-> case. Such code would already today just work by chance I think,
->
-> That should not be hard to analyze and fixup if necessary.
->
-> So that's fixable, but I'm not really convinced that all of this is safe
-> and correct under all circumstances. That needs a lot more analysis than
-> just the trivial one I did for switch_to().
+Hi all,
 
-Agreed, if the current task pointer can be switched later, after loads
-and stores to the stack, that would be a better solution. I will
-incorporate this approach into my next version.
+This is a follow-up patch aiming to add EM modification due to chip binning.
+The first RFC and the discussion can be found here [1].
 
-I also concur that this proposal necessitates more rigorous analysis.
-This work remains in the investigative phase, where I am seeking a
-viable solution to the problem.
+It uses Exynos chip driver code as a 1st user. The EM framework has been
+extended to handle this use case easily, when the voltage has been changed
+after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power difference.
+According to that data in driver tables it could be up to ~29%.
 
-The core issue is that kernel stacks consume excessive memory for
-certain workloads. However, we cannot simply reduce their size, as
-this leads to machine crashes in the infrequent instances where stacks
-do run deep.
+This chip binning is applicable to a lot of SoCs, so the EM framework should
+make it easy to update. It uses the existing OPP and DT information to
+re-calculate the new power values.
 
-Thanks,
-Pasha
+
+Changes:
+v2:
+- exported the OPP calculation function from the OPP/OF so it can be
+  used from EM fwk (Viresh)
+- refactored EM updating function to re-use common code
+- added new EM function which can be used by chip device drivers which
+  modify the voltage in OPPs
+v1 is at [1]
+
+Regards,
+Lukasz Luba
+
+[1] https://lore.kernel.org/lkml/20231220110339.1065505-1-lukasz.luba@arm.com/
+
+Lukasz Luba (4):
+  OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
+  PM: EM: Change the em_adjust_new_capacity() to re-use code
+  PM: EM: Add em_dev_update_chip_binning()
+  soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
+
+ drivers/opp/of.c                 |  17 +++--
+ drivers/soc/samsung/exynos-asv.c |  11 +++-
+ include/linux/energy_model.h     |   5 ++
+ include/linux/pm_opp.h           |   8 +++
+ kernel/power/energy_model.c      | 109 +++++++++++++++++++++++++------
+ 5 files changed, 125 insertions(+), 25 deletions(-)
+
+-- 
+2.25.1
+
