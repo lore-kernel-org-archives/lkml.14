@@ -1,263 +1,166 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E48B111A2
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 23:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB84113FE7;
+	Thu, 14 Mar 2024 23:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710459517; cv=none; b=KoU1NMyMGBWn+13zELQxOIfxYfuJ+vHtqBTTbtR06zjzvRWV/LSIIoZY6JGaQ0VAN/u4oqPhywO+PNifCsQiLDd4KEtt9p1iUKW4b1BSMX006HFqru1ZqqfJvC6mrnZH0juUyYr0mXJHibrRcA3brHqBoRBgrhg+UQrWfH2J3K8=
+	t=1710459539; cv=none; b=Nv6m7LKbpHiTfU7SYeprMQLT3x/qrEKT4P6uOtsGb5bRwC9JJKzMnzU0AEjQVZd+rP/oqI1/uQD1CWZTjF1/L4k+xmSreoBaqurYtILR+A6oHwzDnmnf/XHC467zeMBkswJC6sosCIxyN27oEjW7oioE9Lgn5NpcXD7+95CEkno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710459517; c=relaxed/simple;
-	bh=b6hMDBOUHYVvp7TYHuvyzWx7CcPaqJ0juLMKBRJPNVM=;
+	s=arc-20240116; t=1710459539; c=relaxed/simple;
+	bh=ToO7+GC40SPPq/DJBkYHMz5VkP5cIZgxtl9+T1qyeNw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TInVQVRWL8mu7yNlNvz6/q9VtYBrnGw6It6dH5iU7Un4GpdCqoX7dEIYm6DPak0s4xV0OsIhp6cGuP94hfFDrfyzEeMyqlsh2ia+thwSh+Ai1TrpEm4PA8sCX5X4nrypqyjX14ryYvdSe2B+FT6f4AsgoHUhlsCbqYMoVVX777Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ObHhqVDy; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=FX4en9A/QOie8YbNpuWQN/z2ef0M8KeubaF9OiBzH7ymaaGPgdhX1XOqr4EHPpSUTHZZlky0dOtMQGih/pOC8Z8QLTjp++TWB2xEqOqx5ZeF7XU26Syr98VovRFh4fEXmgD0UTTocR9GFNhVDoMeELa2+AGH3S+NaY7iJCt06yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SowCYaPC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ObHhqVDy"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc74435c428so1394249276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710459514; x=1711064314; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2flT0SdHZ7q0eVlgQtj+A0ROMrjTL6rE3iscntdkYF0=;
-        b=ObHhqVDy7qFgf7goxV2+j6FsP+1CLJgwKtgMRHkB+O4dqGvdW8CaB8XrnZMSzV6rdm
-         oTvihuhwxXK+R+kzgyguxm/O4jhXSdh78Xn4y+O1o1DT6OclvrfdzESxITh75mE/pu3c
-         gwU8reQQgaedm6IAITfGgEBYXzK8S7KS7wXq4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710459514; x=1711064314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2flT0SdHZ7q0eVlgQtj+A0ROMrjTL6rE3iscntdkYF0=;
-        b=MEZelNXWN6nAv2Ylw9Z9VtwsmAcjPkRNaFrzIfayKRFyxGicOe8JWugPozDZGHf799
-         D1rrNn+EC1rWf/T2IZx+gJLtk1/CKj+jTzFGX2Q65ErH8rzTiKhTGYe8mdIziPwqQucs
-         9LS9dyjx0wHW8CX28qW3KJP9LbLIn4ule9FI3xjGlDOezMtUhj5tNrLMnfMj3d0PhKvV
-         q7cVQ3pGnNSw49nrJuSyMpf6nac2N9gAQYJ74jZL1lpJlORYzbmR4U0jnjNnvHcfhWLc
-         uNHW8FfvrjMqYRTopsCsrrIhrm5+UcE8cxAuhF/G56KqDmGVltvaarlnonNuOTosUzSN
-         A/1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3vGdqLamZKqD8MFRPqgIpwNq1zokbul3xrjcHkEv8O/IR1jz3l1KhSsruNK2PTKeObSyTCMddHVmgHs+LkXrcKZsLX+lg/g3Cxb4g
-X-Gm-Message-State: AOJu0YwnxNQScp0zmqE7Zmqbq7rLLkSyh7LIr1Xc5fnelj+2gIughfJi
-	Xwbhj9uKwFZh3jX9BjZhsxW2Pj34DvOiAfrYynuUXig+n7Qk2XNPVoW9ALLy2ZGJEi8uPEsweHI
-	=
-X-Google-Smtp-Source: AGHT+IGGINGgia8bWWht5gR1hRJ62zZWov50y3GXuln/Aj+3WcbCdJOl8GBP9+vZ8UgV6acXa8+rFw==
-X-Received: by 2002:a25:bfd1:0:b0:dc2:5553:ca12 with SMTP id q17-20020a25bfd1000000b00dc25553ca12mr3258592ybm.14.1710459514088;
-        Thu, 14 Mar 2024 16:38:34 -0700 (PDT)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com. [209.85.160.180])
-        by smtp.gmail.com with ESMTPSA id bp33-20020a05622a1ba100b0042f3ee1443csm1322247qtb.10.2024.03.14.16.38.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 16:38:33 -0700 (PDT)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-428405a0205so75111cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:38:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXZWMk3ZR2QNIui0LnPWOxmguY17F8Il7G7h6nRxsadLaG1RoHwk793xpqLXeeNoaqjYnr+grEnTQp1RsY7hj5QW9swsCXWBEvX/7OB
-X-Received: by 2002:a05:622a:1391:b0:430:a5ed:fccf with SMTP id
- o17-20020a05622a139100b00430a5edfccfmr263222qtk.28.1710459130165; Thu, 14 Mar
- 2024 16:32:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SowCYaPC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957B9C43601;
+	Thu, 14 Mar 2024 23:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710459538;
+	bh=ToO7+GC40SPPq/DJBkYHMz5VkP5cIZgxtl9+T1qyeNw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SowCYaPCOLjEnDgHQ2XC7R0LqG8iVH1tSpqaCRt02cjOZBaHctbbQFmzEqjRcvhmj
+	 i/Zv0c3M92heLQdOgfA7NRi08RATmBjbXeesA48ueQQzaTtz4oMZJC+BryGvTZ5lm3
+	 hO56AiCBUqrXAEan0fgh5ziDS9R32mi6gkiDZJxFX6Tr8T275Z2BSpkjdh5qiRIEDa
+	 /g22lzM98Iq3qxplKJI1PJDely87LNSOCGJT/fh/f8iXg2Z/v7lVh3UzAkWK6HdC8Z
+	 bvJhRgLIhynwbMDwZicreJqGkqeTdLFI23xGNjsyjPB+cNlOpR29hGWDtjed/bGmM8
+	 7bHtbgf2uwG1Q==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso19976631fa.3;
+        Thu, 14 Mar 2024 16:38:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWd2Px/Af6sDtDIT8cbm+QE6lgHKXyCWAQCf3vBqr8tyO8+A83j8fPqfatAzq+Ag/2pojYzm1AWZC60+oeOL/mkfrRaHWXYHVwDYLb1JCaBy1pb1RChTMzSoCCSbD9/Hh6FewnSjf+JaeyqVrtTZXtEZrRP+z0P5DhCqugdfBPeBsb7+wNFI5dz8df9kf4iLenMbUMbo9j2FmGL7p+cEuKYnikYyOmUFVhwvknmgSPLXAhREwx7PhAV8mTuR9UTq37e0FXoKHQwfqByE7+6GBt1pmmaEJx41LIWL7c=
+X-Gm-Message-State: AOJu0YxhxQM6KkgZsEklxfjW5qw2KmMnrPUoyl9vT+Le4EedwOsVwDeO
+	d8u/W51X0Z7sa1wwOfOfPwffsTtzDfYNQQ1+/aKnGGeJoniGAAAIFLIbcYajObokB4O3c5TcpdA
+	RHU6s4MximEJPvz2HYU3TJcLUZxE=
+X-Google-Smtp-Source: AGHT+IF2/ImKbZWGcxV6yAg7OxnoINqcxhfzgB5aBbVZi8+MbYBftvaXns5kzEnVc2lBbJ0XnQ1q0SLbGXlAKuS4j2k=
+X-Received: by 2002:a2e:9a8a:0:b0:2d2:3fac:5fdc with SMTP id
+ p10-20020a2e9a8a000000b002d23fac5fdcmr2171806lji.10.1710459536886; Thu, 14
+ Mar 2024 16:38:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313001345.2623074-1-dianders@chromium.org>
- <20240312171305.1.I16aff881c9fe82b5e0fc06ca312da017aa7b5b3e@changeid> <d6ac0328-3d3d-75bc-09b9-ed0190a6a8c5@quicinc.com>
-In-Reply-To: <d6ac0328-3d3d-75bc-09b9-ed0190a6a8c5@quicinc.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 14 Mar 2024 16:31:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XKc81S9M_Aem0fJhmCnFq458vFg3S-4aJNEvUCcQE3bQ@mail.gmail.com>
-Message-ID: <CAD=FV=XKc81S9M_Aem0fJhmCnFq458vFg3S-4aJNEvUCcQE3bQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/msm/dp: Avoid a long timeout for AUX transfer if
- nothing connected
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Guenter Roeck <groeck@chromium.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Sean Paul <sean@poorly.run>, 
-	Tanmay Shah <tanmay@codeaurora.org>, Vinod Polimera <quic_vpolimer@quicinc.com>, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <005f998ec59e27633b1b99fdf929e40ccfd401c1.camel@sipsolutions.net>
+ <f2dcbe55-0f0e-4173-8e21-f899c6fc802a@gmail.com> <20240313194423.GA1111@sol.localdomain>
+ <b838e729-dc30-4e18-b928-c34c16b08606@gmail.com> <20240313202223.GB1111@sol.localdomain>
+ <db86cba4-0e61-441d-8e66-405a13b61a3c@gmail.com> <20240313221043.GC1111@sol.localdomain>
+ <f0492c92-1015-48e3-bfce-598c7a4843d1@quicinc.com> <20240313230611.GD1111@sol.localdomain>
+ <a4d24b2c-7dbf-4354-9514-f8a253aac14b@gmail.com> <20240314202011.GB1132@sol.localdomain>
+In-Reply-To: <20240314202011.GB1132@sol.localdomain>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 15 Mar 2024 00:38:45 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGxxRs6Rkhevm9NSY6TaJUsOmF3UqdHUo=NRg9kQKtSBA@mail.gmail.com>
+Message-ID: <CAMj1kXGxxRs6Rkhevm9NSY6TaJUsOmF3UqdHUo=NRg9kQKtSBA@mail.gmail.com>
+Subject: Re: [REGRESSION] Re: [PATCH] crypto: pkcs7: remove sha1 support
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: James Prestwood <prestwoj@gmail.com>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Karel Balej <balejk@matfyz.cz>, 
+	dimitri.ledkov@canonical.com, alexandre.torgue@foss.st.com, 
+	davem@davemloft.net, dhowells@redhat.com, herbert@gondor.apana.org.au, 
+	keyrings@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	mcgrof@kernel.org, mcoquelin.stm32@gmail.com, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, iwd@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Mar 13, 2024 at 1:41=E2=80=AFPM Abhinav Kumar <quic_abhinavk@quicin=
-c.com> wrote:
+On Thu, 14 Mar 2024 at 21:20, Eric Biggers <ebiggers@kernel.org> wrote:
 >
->
->
-> On 3/12/2024 5:13 PM, Douglas Anderson wrote:
-> > As documented in the description of the transfer() function of
-> > "struct drm_dp_aux", the transfer() function can be called at any time
-> > regardless of the state of the DP port. Specifically if the kernel has
-> > the DP AUX character device enabled and userspace accesses
-> > "/dev/drm_dp_auxN" directly then the AUX transfer function will be
-> > called regardless of whether a DP device is connected.
+> On Thu, Mar 14, 2024 at 04:52:47AM -0700, James Prestwood wrote:
+> > IWD uses AF_ALG/keyctl for _all_ its crypto, cipher, and checksum needs.
+> > Anything that wifi requires as far as crypto goes IWD uses the kernel,
+> > except ECC is the only exception. The entire list of crypto requirements
+> > (for full support at least) for IWD is here:
 > >
+> > https://git.kernel.org/pub/scm/network/wireless/iwd.git/tree/tools/test_runner_kernel_config
 >
-> I do see
+> That's quite an extensive list, and it's not documented in the iwd README.
+> Don't you get bug reports from users who are running a kernel that's missing one
+> of those options?
 >
-> "
-> * Also note that this callback can be called no matter the
-> * state @dev is in and also no matter what state the panel is
-> * in. It's expected:
-> "
->
-> I understand about the host state that we need to allow the transfers by
-> powering on if the host was off.
->
-> But I wonder why we should allow the transfer if the sink is not
-> connected because it will anyway timeout.
-
-We shouldn't! That's what this patch is about. ;-)
-
-
-> Does it make sense to have get_hpd_status() from the aux dev and not
-> issue the transfers if the sink was not connected?
->
-> This is more of questioning the intent of drm_dp_helpers to allow
-> transfers without checking the sink status.
-
-It's a good question. I guess some of this just comes from the
-abstraction that we currently have.
-
-Thinking about this, the ideal would be to somehow query back to the
-"drm_connector" since it already has a "->detect" function. ...but we
-can't really do this since the AUX bus needs to be able to do
-transfers early before all the DRM components aren't initialized. This
-is, for instance, how the eDP panel code queries the EDID while being
-probed.
-
-We could consider adding a new callback to "struct drm_dp_aux" that
-would allow checking the HPD status, but it feels to me like this adds
-unneeded complexity. We'd be adding a callback that people need to
-think about just to avoid them adding an "if" statement to their AUX
-transfer routine. I'm not totally convinced.
-
-Interestingly, we actually _could_ use the infrastructure I just
-introduced in commit 8df1ddb5bf11 ("drm/dp: Don't attempt AUX
-transfers when eDP panels are not powered") here, at least if we're in
-the DP case and not the eDP case. When we're in the DP case there is
-no panel involved so the DP driver itself knows when things are
-"powered". For now I'm _not_ going to do this since it feels to me
-like the "if" test makes it clearer what's happening, but yell if you
-want me to change it.
-
-
-> > For eDP panels we have a special rule where we wait (with a 5 second
-> > timeout) for HPD to go high. This rule was important before all panels
-> > drivers were converted to call wait_hpd_asserted() and actually can be
-> > removed in a future commit.
+> > For KEYCTL_PKEY_* specifically we use it for all asymmetric crypto
+> > operations, (query), encrypt, decrypt, sign, verify.
 > >
-> > For external DP devices we never checked for HPD. That means that
-> > trying to access the DP AUX character device (AKA `hexdump -C
-> > /dev/drm_dp_auxN`) would very, very slowly timeout. Specifically on my
-> > system:
-> >    $ time hexdump -C /dev/drm_dp_aux0
-> >    hexdump: /dev/drm_dp_aux0: Connection timed out
-> >
-> >    real    0m8.200s
-> >
+> > I'll be honest, the AF_ALG/keyctl support in ELL was mostly done by the time
+> > I started working on IWD so I was not aware the documentation was so poor.
+> > That is an entirely separate issue than this IMO, and I'm happy to help with
+> > getting docs updated to include a proper list of supported features. In
+> > addition maybe some automated testing that gets run on kernel builds which
+> > actually exercises this API so it doesn't get accidentally get broken in the
+> > future? Docs/tests IMO are the proper "fix" here, not telling someone to
+> > stop using an API that has existed a long time.
 >
-> IIUC, we want to timeout faster by not bailing out if not connected right=
-?
-
-Correct. I can try to clarify the commit message for v2 to make this
-more obvious.
-
-
-> > Let's add a check for HPD to avoid the slow timeout. This matches
-> > what, for instance, the intel_dp_aux_xfer() function does when it
-> > calls intel_tc_port_connected_locked(). That call has a document by it
-> > explaining that it's important to avoid the long timeouts.
-> >
-> > Fixes: c943b4948b58 ("drm/msm/dp: add displayPort driver support")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >   drivers/gpu/drm/msm/dp/dp_aux.c     |  8 +++++++-
-> >   drivers/gpu/drm/msm/dp/dp_catalog.c | 10 ++++++++++
-> >   drivers/gpu/drm/msm/dp/dp_catalog.h |  1 +
-> >   3 files changed, 18 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c b/drivers/gpu/drm/msm/dp/d=
-p_aux.c
-> > index 03f4951c49f4..de0b0eabced9 100644
-> > --- a/drivers/gpu/drm/msm/dp/dp_aux.c
-> > +++ b/drivers/gpu/drm/msm/dp/dp_aux.c
-> > @@ -307,7 +307,8 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *d=
-p_aux,
-> >        * turned on the panel and then tried to do an AUX transfer. The =
-panel
-> >        * driver has no way of knowing when the panel is ready, so it's =
-up
-> >        * to us to wait. For DP we never get into this situation so let'=
-s
-> > -      * avoid ever doing the extra long wait for DP.
-> > +      * avoid ever doing the extra long wait for DP and just query HPD
-> > +      * directly.
-> >        */
-> >       if (aux->is_edp) {
-> >               ret =3D dp_catalog_aux_wait_for_hpd_connect_state(aux->ca=
-talog);
-> > @@ -315,6 +316,11 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *=
-dp_aux,
-> >                       DRM_DEBUG_DP("Panel not ready for aux transaction=
-s\n");
-> >                       goto exit;
-> >               }
-> > +     } else {
-> > +             if (!dp_catalog_aux_is_hpd_connected(aux->catalog)) {
-> > +                     ret =3D -ENXIO;
-> > +                     goto exit;
-> > +             }
-> >       }
-> >
-> >       dp_aux_update_offset_and_segment(aux, msg);
-> > diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/=
-dp/dp_catalog.c
-> > index 5142aeb705a4..93e2d413a1e7 100644
-> > --- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-> > +++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-> > @@ -266,6 +266,16 @@ int dp_catalog_aux_wait_for_hpd_connect_state(stru=
-ct dp_catalog *dp_catalog)
-> >                               2000, 500000);
-> >   }
-> >
-> > +bool dp_catalog_aux_is_hpd_connected(struct dp_catalog *dp_catalog)
-> > +{
-> > +     struct dp_catalog_private *catalog =3D container_of(dp_catalog,
-> > +                             struct dp_catalog_private, dp_catalog);
-> > +
-> > +     /* poll for hpd connected status every 2ms and timeout after 500m=
-s */
-> > +     return readl(catalog->io->dp_controller.aux.base + REG_DP_DP_HPD_=
-INT_STATUS) &
-> > +            DP_DP_HPD_STATE_STATUS_CONNECTED;
-> > +}
+> I looked into the history, and it seems the KEYCTL_PKEY_* APIs were added as a
+> collaboration between the iwd developers and the kernel keyrings maintainer.
+> So, as far as I can tell, it's not that the kernel had an existing API that iwd
+> started using.  It's that iwd got some APIs added to the kernel for themselves.
+> KEYCTL_PKEY_* don't seem to have been adopted elsewhere; Debian Code Search
+> doesn't return any notable results.  keyctl does provide a command-line
+> interface to them, but I can't find any users of the keyctl commands either.
 >
-> This method of checking HPD status works for devices which use internal
-> HPD block to control the HPD (like sc7180/sc7280) but not for devices
-> where HPD is controlled outside the MSM DP controller like sc8280xp,
-> sc835-/sm8450 etc etc which use pmic_glink and DP driver only receives
-> the hpd status using the dp_bridge_hpd_notify() callback.
+> Then, everyone disappeared and it got dumped on the next generation of kernel
+> developers, who often don't know that this API even exists.  And since the API
+> is also poorly specified and difficult to maintain (e.g., changing a seemingly
+> unrelated part of the kernel can break it), the results are predictable...  And
+> of course the only thing that breaks is iwd, since it's the only user.
 >
-> If we want to make this generic, we have to do something like:
+> It would be worth taking a step back and looking at the overall system
+> architecture here.  Is this the best way to ensure a reliable wireless
+> experience for Linux users?
 >
-> dp_hpd_unplug_handle() notifies the dp_aux.c module that status is
-> disconncted and we should bail out
+> Maybe it's time to admit that KEYCTL_PKEY_* was basically an experiment, and a
+> different direction (e.g. using OpenSSL) should be taken...
 >
-> dp_hpd_plug_handle() notifies dp_aux.c module that status is connected
-> again and we allow the aux transfers.
+> (Another issue with the kernel keyrings stuff is that provides a significant
+> attack surface for the kernel to be exploited.)
+>
+> If you do decide to continue with the status quo, it may be necessary for the
+> iwd developers to take a more active role in maintaining this API in order to
+> ensure it continues working properly for you.
+>
+> AF_ALG is on *slightly* firmer ground since it's been around for longer, is
+> properly part of the crypto subsystem, and has a few other users.  Unfortunately
+> it still suffers from the same issues though, just to a slightly lesser degree.
+>
 
-Ah, good point about devices where HPD comes from elsewhere. OK, using
-dp_hpd_plug_handle() and dp_hpd_unplug_handle() and having it notify
-"dp_aux.c" seems to work OK for the external DP case (at least the one
-on trogdor). It didn't work when I tested it on eDP but I can make
-this rule just for non-eDP since they don't have the same issues.
+We dropped MD4 because there are no users in the kernel. It is not the
+kernel's job to run code on behalf of user space if it does not
+require any privileges and can therefore execute in user space
+directly.
 
--Doug
+The fact that AF_ALG permits this is a huge oversight on the part of
+the kernel community, and a major maintenance burden. The point of
+AF_ALG was to expose hardware crypto accelerators (which are shared
+resources that /need/ to be managed by the kernel) to user space, and
+we inadvertently ended up allowing the kernel's pure-software
+algorithms to be used in the same way.
+
+The fact that we even added APIs to the kernel to accommodate iwd is
+even worse. It means system call overhead (which has become worse due
+to all the speculation mitigations) to execute some code that could
+execute in user space just as well, which is a bad idea for other
+reasons too (for instance, accelerated crypto that uses SIMD in the
+kernel disables preemption on many architectures, resulting in
+scheduling jitter)
+
+Note that in the case of iwd, it is unlikely that the use of AF_ALG
+could ever result in meaningful use of hardware accelerators: today's
+wireless interfaces don't use software crypto for the bulk of the data
+(i.e., the packets themselves) and the wireless key exchange protocols
+etc are unlikely to be supported in generic crypto accelerators, and
+even if they were, the latency would likely result in worse
+performance overall than a software implementation.
+
+So iwd's deliberate choice to use the kernel as a crypto library is
+severely misguided. I have made the same point 4 years ago when I
+replaced iwd's use of the kernel's ecb(arc4) code with a suitable
+software implementation (3 files changed, 53 insertions, 40
+deletions). Of course, replacing other algorithms will take more work
+than that, but it is the only sensible approach. We all know the cat
+is out of the bag when it comes to AF_ALG, and we simply have to
+retain all those broken algorithms as executable code at the kernel's
+privileged execution level, just in case some user space is still
+around that relies on it. But that doesn't mean we cannot be very
+clear about our preferred way forward.
