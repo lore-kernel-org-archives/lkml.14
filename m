@@ -1,313 +1,247 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 990083BB37;
-	Thu, 14 Mar 2024 05:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20113B29A
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395993; cv=none; b=bOOj9Cr6d0i18ptbDTaXoSIxTeFGKCdH3znXq5rAa0B6cpbCSvgz/nSySxiUAVgiv0ogjyrUV+Efw30udUAWZGnR6BR7BogodKVdH8fEAnWFQGS4iDP72UXBK0ouzEwiyOI4wHRQ8ZxUioqaNJfIKyYRbGTfC33/vU1+tZfgoC4=
+	t=1710395992; cv=none; b=QGqXfSMjNRrWtscx87vgp8V5E/dC6T3GJ6M4JOi3aSMq9Fl2wUqWtgBj/cmwgr02nMuZHSY9mCmCT0Q2SrsapAQgGTiDKmVZunbpm53FNO6G8LC5oHJeNIdWWwup0mQNoMZfHTWXeBrB5BHRQOiI4KPoAkPAGbsGMI4SkvCwNgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395993; c=relaxed/simple;
-	bh=/ynXK/wwo6vxgSvodH8Qphiw9crFmPIhTLqhJ1xqsnI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cUn5ODBN+KTxTy9m4dqyaYxjISsB0iwKgrBZD/e8STwTOSEwPyayPddWL0qKe+9z4Vj2TFJ/3EcYOMNj4C90j04x8EwVi66Koe8EIzVi4O6QFbffPNSa9NfiUDKee43A8AUDXFdZvBRJOyALlt4EYkMSZyz2NEiA0KbgPUet0Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 646A01007;
-	Wed, 13 Mar 2024 23:00:27 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 02F203F73F;
-	Wed, 13 Mar 2024 22:59:46 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH V7 07/11] coresight: catu: Move ACPI support from AMBA driver to platform driver
-Date: Thu, 14 Mar 2024 11:28:39 +0530
-Message-Id: <20240314055843.2625883-8-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1710395992; c=relaxed/simple;
+	bh=FRD4urmCzmXTmNozFD4Dr+8XpRmwK3qVFgHQ1nWF1hg=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=hDrATCognvGYzQpDwV2SghLeXbyBdlCVliQhbAqOg3O9hDR4fcr0lAkgXA2hCIeD6TRjKLR6anr80S1P3q6Vs5k+L98Ep0EC/IvumhhbISuxYmcKvbqwhFgMde5l4zwKlrnZtZ8748lGCsJin5+5OVNPE7LHF5t+EzO0giFHhcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PMlh6PXL; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMlh6PXL"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc647f65573so982558276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710395990; x=1711000790; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ILfM9APc2QmtUlfGAi2ySSBl9xHV6Dsl5aSOkdQM0Ig=;
+        b=PMlh6PXLWUrJEN7+T4OJ7/W8aW9fYRQz5QAy74V31AntWFlmQFhjzW7PDpa4NyQh7W
+         QPe2vGzFznRxfhIy/wezYn71kbbIzj6hqb2ca1KLeVR0fZll++GYumeSmUbAW/oWC780
+         BYYLaQOmWjDt7ifndkMUm7+0RnXN8xLSgIxpe4K27wO+LjZ25UJ3YtvDjc+SYxzs8f0B
+         t9AVKvmeqhtGVtUm73jmMVAD/ccJgMC74Zfu6wO+iN3lsvB9vrV0aNHoiBzN1SZWliFw
+         zfbhZsRGLMe6b51SE7X/EzmXA/8iYw6UTtNhtfeHU8JuXvCjhXvE6mi2+OaUhp82wj90
+         UYTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710395990; x=1711000790;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ILfM9APc2QmtUlfGAi2ySSBl9xHV6Dsl5aSOkdQM0Ig=;
+        b=M7Cg7ReneEi8MGSkIy0l9jR3CVEWJ0AettyFIBzNJ4yWLi4kxcCIk8GbwDk16pyaRG
+         plN++2TyE1+gEdKLuYOqDWp/Wf8oC0B08WRCdViq/Da+mc6xwJfFvuFLN3LL2s1nEdGf
+         xSd/Jyp8gt8jX/pCI7zUmS86x02xfhXd6xR8AoNsERwPIYL223Q1ljyLfaXLxzJz4Fc9
+         geRwXaZSPOIgOf+l96rhO8I1oGP4QIOy2apIaMYtOM4H9R1vJYqHZ0wgqvP9T6O2kxLH
+         o/9/8JFq7O8pcNuyTr+YyF3g+HFw0gcRzcYKmuaNFexwsiOHxlmQZu3Cac9egEOH7JcF
+         5WoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXr7sVMzrNCdWUbBQYBIW3TH/rtjK0ArCMYD2yyaGZhEKcHttpLlVjNYQeCP+VDXkT3JAMVT6vsOk4tPeOCY1L1OQ4yqaFh31BqbJAp
+X-Gm-Message-State: AOJu0Yxk7KSH87DUzJCtnuhcoDEQFSujosTqzllctlHRy+wPorrwQZAj
+	pVIv/xaR/4vQI8Nuu3KdqpPaH6ho0lxMxJ1d+5jsgeyw6BkW4CCM/b4dzQPX5aRtJ8rmHt7lFEk
+	79OFbgQ==
+X-Google-Smtp-Source: AGHT+IFpC7wmiwagj5y8cnwZSsboxN3EC3qcg38805ughEkS1bFKpFs0SIq5TZ9BGVGsPsTfIGRWURAoOFHS
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:160f:b0:dcd:25be:aefb with SMTP
+ id bw15-20020a056902160f00b00dcd25beaefbmr252248ybb.13.1710395990067; Wed, 13
+ Mar 2024 22:59:50 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:05 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 06/20] perf jevents: Add br metric group for branch
+ statistics on Intel
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the catu devices in a new platform driver, which can then
-be used on ACPI based platforms. This change would now allow runtime power
-management for ACPI based systems. The driver would try to enable the APB
-clock if available. But first this renames and then refactors catu_probe()
-and catu_remove(), making sure it can be used both for platform and AMBA
-drivers. This also moves pm_runtime_put() from catu_probe() to the callers.
+The br metric group for branches itself comprises metric groups for
+total, taken, conditional, fused and far metric groups using json
+events. Conditional taken and not taken metrics are specific to
+Icelake and later generations, so the presence of the event is used to
+determine whether the metric should exist.
 
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes in V7:
+ tools/perf/pmu-events/intel_metrics.py | 138 +++++++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
 
-- Dropped struct resource check before devm_ioremap_resource()
-- Dropped reduntant drvdata check in catu_platform_probe()
-- Dropped reduntant drvdata check in catu_platform_remove()
-- Sorted the headers in alphabetic order
-
- drivers/acpi/arm64/amba.c                    |   1 -
- drivers/hwtracing/coresight/coresight-catu.c | 138 ++++++++++++++++---
- drivers/hwtracing/coresight/coresight-catu.h |   1 +
- 3 files changed, 120 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
-index afb6afb66967..587061b0fd2f 100644
---- a/drivers/acpi/arm64/amba.c
-+++ b/drivers/acpi/arm64/amba.c
-@@ -27,7 +27,6 @@ static const struct acpi_device_id amba_id_list[] = {
- 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
- 	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
- 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
--	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
- 	{"", 0},
- };
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 58e243695f0a..09f7b7159e7c 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -123,6 +123,143 @@ def Tsx() -> Optional[MetricGroup]:
+   ], description="Breakdown of transactional memory statistics")
  
-diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-index 3949ded0d4fa..9712be6acd26 100644
---- a/drivers/hwtracing/coresight/coresight-catu.c
-+++ b/drivers/hwtracing/coresight/coresight-catu.c
-@@ -7,11 +7,13 @@
-  * Author: Suzuki K Poulose <suzuki.poulose@arm.com>
-  */
  
-+#include <linux/acpi.h>
- #include <linux/amba/bus.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/platform_device.h>
- #include <linux/slab.h>
++def IntelBr():
++  ins = Event("instructions")
++
++  def Total() -> MetricGroup:
++    br_all = Event ("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED.ANY")
++    br_m_all = Event("BR_MISP_RETIRED.ALL_BRANCHES",
++                     "BR_INST_RETIRED.MISPRED",
++                     "BR_MISP_EXEC.ANY")
++    br_clr = None
++    try:
++      br_clr = Event("BACLEARS.ANY", "BACLEARS.ALL")
++    except:
++      pass
++
++    br_r = d_ratio(br_all, interval_sec)
++    ins_r = d_ratio(ins, br_all)
++    misp_r = d_ratio(br_m_all, br_all)
++    clr_r = d_ratio(br_clr, interval_sec) if br_clr else None
++
++    return MetricGroup("br_total", [
++        Metric("br_total_retired",
++               "The number of branch instructions retired per second.", br_r,
++               "insn/s"),
++        Metric(
++            "br_total_mispred",
++            "The number of branch instructions retired, of any type, that were "
++            "not correctly predicted as a percentage of all branch instrucions.",
++            misp_r, "100%"),
++        Metric("br_total_insn_between_branches",
++               "The number of instructions divided by the number of branches.",
++               ins_r, "insn"),
++        Metric("br_total_insn_fe_resteers",
++               "The number of resync branches per second.", clr_r, "req/s"
++               ) if clr_r else None
++    ])
++
++  def Taken() -> MetricGroup:
++    br_all = Event("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED.ANY")
++    br_m_tk = None
++    try:
++      br_m_tk = Event("BR_MISP_RETIRED.NEAR_TAKEN",
++                      "BR_MISP_RETIRED.TAKEN_JCC",
++                      "BR_INST_RETIRED.MISPRED_TAKEN")
++    except:
++      pass
++    br_r = d_ratio(br_all, interval_sec)
++    ins_r = d_ratio(ins, br_all)
++    misp_r = d_ratio(br_m_tk, br_all) if br_m_tk else None
++    return MetricGroup("br_taken", [
++        Metric("br_taken_retired",
++               "The number of taken branches that were retired per second.",
++               br_r, "insn/s"),
++        Metric(
++            "br_taken_mispred",
++            "The number of retired taken branch instructions that were "
++            "mispredicted as a percentage of all taken branches.", misp_r,
++            "100%") if misp_r else None,
++        Metric(
++            "br_taken_insn_between_branches",
++            "The number of instructions divided by the number of taken branches.",
++            ins_r, "insn"),
++    ])
++
++  def Conditional() -> Optional[MetricGroup]:
++    try:
++      br_cond = Event("BR_INST_RETIRED.COND",
++                      "BR_INST_RETIRED.CONDITIONAL",
++                      "BR_INST_RETIRED.TAKEN_JCC")
++      br_m_cond = Event("BR_MISP_RETIRED.COND",
++                        "BR_MISP_RETIRED.CONDITIONAL",
++                        "BR_MISP_RETIRED.TAKEN_JCC")
++    except:
++      return None
++
++    br_cond_nt = None
++    br_m_cond_nt = None
++    try:
++      br_cond_nt = Event("BR_INST_RETIRED.COND_NTAKEN")
++      br_m_cond_nt = Event("BR_MISP_RETIRED.COND_NTAKEN")
++    except:
++      pass
++    br_r = d_ratio(br_cond, interval_sec)
++    ins_r = d_ratio(ins, br_cond)
++    misp_r = d_ratio(br_m_cond, br_cond)
++    taken_metrics = [
++        Metric("br_cond_retired", "Retired conditional branch instructions.",
++               br_r, "insn/s"),
++        Metric("br_cond_insn_between_branches",
++               "The number of instructions divided by the number of conditional "
++               "branches.", ins_r, "insn"),
++        Metric("br_cond_mispred",
++               "Retired conditional branch instructions mispredicted as a "
++               "percentage of all conditional branches.", misp_r, "100%"),
++    ]
++    if not br_m_cond_nt:
++      return MetricGroup("br_cond", taken_metrics)
++
++    br_r = d_ratio(br_cond_nt, interval_sec)
++    ins_r = d_ratio(ins, br_cond_nt)
++    misp_r = d_ratio(br_m_cond_nt, br_cond_nt)
++
++    not_taken_metrics = [
++        Metric("br_cond_retired", "Retired conditional not taken branch instructions.",
++               br_r, "insn/s"),
++        Metric("br_cond_insn_between_branches",
++               "The number of instructions divided by the number of not taken conditional "
++               "branches.", ins_r, "insn"),
++        Metric("br_cond_mispred",
++               "Retired not taken conditional branch instructions mispredicted as a "
++               "percentage of all not taken conditional branches.", misp_r, "100%"),
++    ]
++    return MetricGroup("br_cond", [
++        MetricGroup("br_cond_nt", not_taken_metrics),
++        MetricGroup("br_cond_tkn", taken_metrics),
++    ])
++
++  def Far() -> Optional[MetricGroup]:
++    try:
++      br_far = Event("BR_INST_RETIRED.FAR_BRANCH")
++    except:
++      return None
++
++    br_r = d_ratio(br_far, interval_sec)
++    ins_r = d_ratio(ins, br_far)
++    return MetricGroup("br_far", [
++        Metric("br_far_retired", "Retired far control transfers per second.",
++               br_r, "insn/s"),
++        Metric(
++            "br_far_insn_between_branches",
++            "The number of instructions divided by the number of far branches.",
++            ins_r, "insn"),
++    ])
++
++  return MetricGroup("br", [Total(), Taken(), Conditional(), Far()],
++                     description="breakdown of retired branch instructions")
++
++
+ def main() -> None:
+   global _args
  
- #include "coresight-catu.h"
-@@ -502,28 +504,20 @@ static const struct coresight_ops catu_ops = {
- 	.helper_ops = &catu_helper_ops,
- };
+@@ -150,6 +287,7 @@ def main() -> None:
+       Rapl(),
+       Smi(),
+       Tsx(),
++      IntelBr(),
+   ])
  
--static int catu_probe(struct amba_device *adev, const struct amba_id *id)
-+static int __catu_probe(struct device *dev, struct resource *res)
- {
- 	int ret = 0;
- 	u32 dma_mask;
--	struct catu_drvdata *drvdata;
-+	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
- 	struct coresight_desc catu_desc;
- 	struct coresight_platform_data *pdata = NULL;
--	struct device *dev = &adev->dev;
- 	void __iomem *base;
  
- 	catu_desc.name = coresight_alloc_device_name(&catu_devs, dev);
- 	if (!catu_desc.name)
- 		return -ENOMEM;
- 
--	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
--	if (!drvdata) {
--		ret = -ENOMEM;
--		goto out;
--	}
--
--	dev_set_drvdata(dev, drvdata);
--	base = devm_ioremap_resource(dev, &adev->res);
-+	base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(base)) {
- 		ret = PTR_ERR(base);
- 		goto out;
-@@ -567,19 +561,39 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
- 	drvdata->csdev = coresight_register(&catu_desc);
- 	if (IS_ERR(drvdata->csdev))
- 		ret = PTR_ERR(drvdata->csdev);
--	else
--		pm_runtime_put(&adev->dev);
- out:
- 	return ret;
- }
- 
--static void catu_remove(struct amba_device *adev)
-+static int catu_probe(struct amba_device *adev, const struct amba_id *id)
- {
--	struct catu_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-+	struct catu_drvdata *drvdata;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+
-+	amba_set_drvdata(adev, drvdata);
-+	ret = __catu_probe(&adev->dev, &adev->res);
-+	if (!ret)
-+		pm_runtime_put(&adev->dev);
-+
-+	return ret;
-+}
-+
-+static void __catu_remove(struct device *dev)
-+{
-+	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
- 
- 	coresight_unregister(drvdata->csdev);
- }
- 
-+static void catu_remove(struct amba_device *adev)
-+{
-+	__catu_remove(&adev->dev);
-+}
-+
- static struct amba_id catu_ids[] = {
- 	CS_AMBA_ID(0x000bb9ee),
- 	{},
-@@ -598,13 +612,99 @@ static struct amba_driver catu_driver = {
- 	.id_table			= catu_ids,
- };
- 
-+static int catu_platform_probe(struct platform_device *pdev)
-+{
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	struct catu_drvdata *drvdata;
-+	int ret = 0;
-+
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+
-+	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
-+	if (IS_ERR(drvdata->pclk))
-+		return -ENODEV;
-+
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	dev_set_drvdata(&pdev->dev, drvdata);
-+	ret = __catu_probe(&pdev->dev, res);
-+	pm_runtime_put(&pdev->dev);
-+	if (ret) {
-+		pm_runtime_disable(&pdev->dev);
-+		if (!IS_ERR_OR_NULL(drvdata->pclk))
-+			clk_put(drvdata->pclk);
-+	}
-+
-+	return ret;
-+}
-+
-+static int catu_platform_remove(struct platform_device *pdev)
-+{
-+	struct catu_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
-+
-+	if (WARN_ON(!drvdata))
-+		return -ENODEV;
-+
-+	__catu_remove(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	if (!IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_put(drvdata->pclk);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int catu_runtime_suspend(struct device *dev)
-+{
-+	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
-+	return 0;
-+}
-+
-+static int catu_runtime_resume(struct device *dev)
-+{
-+	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
-+
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_prepare_enable(drvdata->pclk);
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops catu_dev_pm_ops = {
-+	SET_RUNTIME_PM_OPS(catu_runtime_suspend, catu_runtime_resume, NULL)
-+};
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id catu_acpi_ids[] = {
-+	{"ARMHC9CA", 0, 0, 0}, /* ARM CoreSight CATU */
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, catu_acpi_ids);
-+#endif
-+
-+static struct platform_driver catu_platform_driver = {
-+	.probe	= catu_platform_probe,
-+	.remove	= catu_platform_remove,
-+	.driver	= {
-+		.name			= "coresight-catu-platform",
-+		.acpi_match_table	= ACPI_PTR(catu_acpi_ids),
-+		.suppress_bind_attrs	= true,
-+		.pm			= &catu_dev_pm_ops,
-+	},
-+};
-+
- static int __init catu_init(void)
- {
- 	int ret;
- 
--	ret = amba_driver_register(&catu_driver);
--	if (ret)
--		pr_info("Error registering catu driver\n");
-+	ret = coresight_init_driver("catu", &catu_driver, &catu_platform_driver);
- 	tmc_etr_set_catu_ops(&etr_catu_buf_ops);
- 	return ret;
- }
-@@ -612,7 +712,7 @@ static int __init catu_init(void)
- static void __exit catu_exit(void)
- {
- 	tmc_etr_remove_catu_ops();
--	amba_driver_unregister(&catu_driver);
-+	coresight_remove_driver(&catu_driver, &catu_platform_driver);
- }
- 
- module_init(catu_init);
-diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-index 442e034bbfba..141feac1c14b 100644
---- a/drivers/hwtracing/coresight/coresight-catu.h
-+++ b/drivers/hwtracing/coresight/coresight-catu.h
-@@ -61,6 +61,7 @@
- #define CATU_IRQEN_OFF		0x0
- 
- struct catu_drvdata {
-+	struct clk *pclk;
- 	void __iomem *base;
- 	struct coresight_device *csdev;
- 	int irq;
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
