@@ -1,99 +1,66 @@
-Received: from smtp-usa2.onexmail.com (smtp-usa2.onexmail.com [35.173.142.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50757E1;
-	Thu, 14 Mar 2024 02:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.173.142.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DB44A15;
+	Thu, 14 Mar 2024 02:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710384270; cv=none; b=GBgKcQg3vvFqOtqWR/pSvRJFRPG9budwnPZj/pKO0T+On1kZdMEuRK8Nqahm0eR4ewoY+tpzylvypY2F6awkri6Db6agriLZsOCxrEDXSYplmhZ7UhyFlr+5+fE99KrmJT2Xa8NgRmNxYVscCc+rWACv4jPineEmntws4O4HbII=
+	t=1710384298; cv=none; b=Dx/5Is+NK5chHimMvVv1mW2AgdvoabLkcLaAIPde61nrrg4TNOrrwiG/xu3bZdhTe7pk//vROSc9kgxmkCg08CTNHCxvSeE2ur1b3UsVjdh2i4bySiLvCZO7DwFwjQSSxQmgxbrxPDXieBfJFDPlUEc2RRv0GWXhFJl/HQlLbZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710384270; c=relaxed/simple;
-	bh=l8iu1FS1llWJp4Vcw9klrMoX1ziiITXm9GBj4WRdg48=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ik2NdzrQdsgrBJA/tAXN/Vp4Rixid3xnRUjVlfDDxzTKJdnRGNNEe24mKIdDBJyb2Zw2iTiCSozlglzJkSCGI02eFj82ST99fyXXsMfze3pbRfpSKNPoBzU4BOxkozwPvE2MA9hjKuP7SaeqeO5MkHF6X69enrOqoIM6e5H8o4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com; spf=pass smtp.mailfrom=net-swift.com; arc=none smtp.client-ip=35.173.142.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-swift.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-swift.com
-X-QQ-mid: bizesmtp75t1710384019tre3hm0f
-X-QQ-Originating-IP: kjtrMLjRWfwclM7ul6HM/HtMROnmPBRF+sD2mVJJjWE=
-Received: from localhost.trustnetic.com ( [122.235.245.139])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 14 Mar 2024 10:40:16 +0800 (CST)
-X-QQ-SSF: 01400000000000E0E000000A0000000
-X-QQ-FEAT: q+EIYT+FhZprz3u6HhqywydU8Ynlc6kZxkmUS4rmGnP3jBpMzr/kW7CaJG8e3
-	Q5sRMFpKLJPUV1dU/cnzYdEl+nuvJDIEew9twaNpD60vuy5yRdnw++GmkmYcaoW67ArFatj
-	HobfhqWSDec6297dwwheeMie3ZFlvocvII0RQbmDhygkZCCZgKxOhoMeqJeoO8QfOGUDAJh
-	82KkTYE4bVN8fzPIhie7IdlxDP2lSJz2FosUYJ+SnP24TWiU1GGcRKcqoG7JWuQ6GZLIb+K
-	5MZfR4nnYlDoalXKryGxQsQ3Yd6TQwODrDcHd79OJwtyESY5lzJUOaht5btfgMbouUsBqDS
-	wiGNdbm9ObckeQCQvXmlXIKdL7rmz+zaxad+vKYWpmnAahy8h+Gwijo1ZyQD69vR+cpM1rE
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 910203287647298116
-From: Duanqiang Wen <duanqiangwen@net-swift.com>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	linux@armlinux.org.uk,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Duanqiang Wen <duanqiangwen@net-swift.com>
-Subject: [PATCH clk v2] clk: clkdev: add error messages for name exceeding maximum length
-Date: Thu, 14 Mar 2024 10:39:09 +0800
-Message-Id: <20240314023909.871105-1-duanqiangwen@net-swift.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1710384298; c=relaxed/simple;
+	bh=zpXun0U0mFZ/WUOEpPGTdJhPFwQ4U8x7VrbLbI/AWA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJ6QBl9kM7oXDuA/flNJWy4TxynLqDGg7sNniAN5Ujsmn6qn9dWZp4FhoJEtwDuR+df1De08/SnPs13kaHbhj5IJvG04PMWqhBBmV8idA2SEPgW5Fyx/EHPjhoBRuHrMLHl+q+JmOK9f1nLSS0sGkkorq95X7Zj5Z8/sQG1mEy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6GmGRTb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6GmGRTb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5138C43390;
+	Thu, 14 Mar 2024 02:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710384297;
+	bh=zpXun0U0mFZ/WUOEpPGTdJhPFwQ4U8x7VrbLbI/AWA4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l6GmGRTbyXJJdKtz1LyMU27xPf3a/z6aD1uQr1wC1aF+JjxwBAJdbDKYgB5uF4uVu
+	 3cdOaujqXl/gECX9xruKvfOizQQdtWYyUdFXUnwC74hZON404bQ2bD51p+b4g41CIT
+	 TL2p3isPzv0CWifUSmfa+Ybre37gH7H/+epVxbmicbG0kCuu8Xqpl3qXmQGi9xeuCh
+	 FOlBb+PHsl/LDk4+1QCLGT+aEi9iAC2d449QHbEkzWzH44iSaDbbndIKQI06tM/zV1
+	 509VTTBFpJlh/RXCAkxFDsUwuNjCqFyu+/LIGqc/8giL4hwsCG7EqrZuyqIMLU2oYi
+	 kjwbNi+f6WXhA==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-221a4f9557dso309888fac.2;
+        Wed, 13 Mar 2024 19:44:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWb+9YBGhMAVUgy1oRFFJcbC0a57tNDQ8MhwSy2wp5YGHC3fY+K5Thalyer0kjw0D91CyTIj5qTiuN8JCYdD4YBceUVqsxTzBendtljMP2XEqcwBqq8S6e2YNKq5EWYadqPAtTJSMdIFgfSEPkbHAp42CJRdxkH7/ZKDNrVoqiQ8obOdmIRZJhgbQ==
+X-Gm-Message-State: AOJu0YypCnF2aAqVeBXMy4AldPIQDa0RV09velkbjsn6NGyXhh07u7ZW
+	ugzX7ZZALZq+wyIjrKZ66N1oTGF//Z0wlArhY0Y32tp4F26TL2EhlqUL/zrs428HPpd4ZQD1jnx
+	SFdfx37+3yG23Ie+oA/rWY/LvR5o=
+X-Google-Smtp-Source: AGHT+IHRMvUyXhaS/qB0en9fxIF3carecNgLcCingHznCZFEMFXIA3UgYdz7cmgz22K/LmOnmhqFQO0zQd8nsmdrUBI=
+X-Received: by 2002:a05:6870:910b:b0:221:bcde:29cc with SMTP id
+ o11-20020a056870910b00b00221bcde29ccmr680399oae.21.1710384296981; Wed, 13 Mar
+ 2024 19:44:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:net-swift.com:qybglogicsvrsz:qybglogicsvrsz3a-1
+References: <20240313091616.2266107-1-colin.i.king@gmail.com>
+In-Reply-To: <20240313091616.2266107-1-colin.i.king@gmail.com>
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Thu, 14 Mar 2024 11:44:45 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd-wa_K4APq3QCdf8Fp1Qx8-j9=3ub9e=kZrN2TS4U06GQ@mail.gmail.com>
+Message-ID: <CAKYAXd-wa_K4APq3QCdf8Fp1Qx8-j9=3ub9e=kZrN2TS4U06GQ@mail.gmail.com>
+Subject: Re: [PATCH][next] ksmbd: Fix spelling mistake "connction" -> "connection"
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-if one device register clkdev with dev_id or con_id
-greater than maximum length, clkdev_create functions
-will not return err, but clk_find functions will not
-match the device, it's difficult to identify issues
-for developers.So add error messages for dev_id greater
-than 20 characters and con_id greater than 16 characters.
-
-eg. clkdev_create(clk, NULL, "i2c_designware.16796")
-it will create clk_lookup with dev_id "i2c_designware.1679",
-because clk_name exceeds dev_id maximum, but clkdev_create not
-return err. when driver call clk_find functions, use "i2c_desig
-nware.16796" to find clk, it will return failed,but I don't know
-where the problem is. It took a long time to find the problem.
-
-Signed-off-by: Duanqiang Wen <duanqiangwen@net-swift.com>
----
- drivers/clk/clkdev.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index ee37d0be6877..2d24ea232dc7 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -165,11 +165,21 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
- 
- 	cla->cl.clk_hw = hw;
- 	if (con_id) {
-+		if (strlen(dev_fmt) >= MAX_CON_ID) {
-+			pr_err("%s:con_id cannot be greater than %d characters\n",
-+					dev_fmt, MAX_CON_ID);
-+			return NULL;
-+		}
- 		strscpy(cla->con_id, con_id, sizeof(cla->con_id));
- 		cla->cl.con_id = cla->con_id;
- 	}
- 
- 	if (dev_fmt) {
-+		if (strlen(dev_fmt) >= MAX_DEV_ID) {
-+			pr_err("%s:dev_id cannot be greater than %d characters\n",
-+					dev_fmt, MAX_DEV_ID);
-+			return NULL;
-+		}
- 		vscnprintf(cla->dev_id, sizeof(cla->dev_id), dev_fmt, ap);
- 		cla->cl.dev_id = cla->dev_id;
- 	}
--- 
-2.27.0
-
+2024=EB=85=84 3=EC=9B=94 13=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 6:16, C=
+olin Ian King <colin.i.king@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1=
+:
+>
+> There is a spelling mistake in a ksmbd_debug debug message. Fix it.
+Acked-by: Namjae Jeon <linkinjeon@kernel.org>
+Applied it to #ksmbd-for-next-next.
+Thanks for your patch!
