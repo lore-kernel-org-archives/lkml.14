@@ -1,101 +1,81 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C7C71B39
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E467571B4F;
+	Thu, 14 Mar 2024 15:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710430176; cv=none; b=VhgS0fNHvpt1Lj54tddEUjQx+JfkS+GL8iMJ4byY7ia2pSRz4rgYafd6hpbUiYB88EcDsbcxKg23CagiCZ2O2Ixn66ivGUDnIPxcD08yOImqWRteUfHXi70Y7t+wuxXcuFsKibVZ0HDlFLkcLaKV8SROOgn8UzdlQVXssFlHuws=
+	t=1710430190; cv=none; b=JU2SFbYCfHyiilh+tNQuv3/SIC72VcFAtMDzkgehtVaup6FYWEv2f4KQxcQO7JaBUlmL5nlAdl80bstB1MAFlhq4IXLmHDSQGF9j/6+kx1utNQzDrkrddi3QbdvUD1g6uAMa1N27CwgVLx8tziDZPkZSuMyIkdzJRsV8txS+0uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710430176; c=relaxed/simple;
-	bh=BK5vGjzgLHTG5Uy0fF+PO/iDPbQ/wrXrAZUSjAUJ9iw=;
+	s=arc-20240116; t=1710430190; c=relaxed/simple;
+	bh=sz4vtJtgjtxGimNuodR5Dts8e41V2G0abFSVNiYfOig=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PW0bOMt+q0oUYIsiJwTpGMkPXwHDZY/0QSmq1jddHI4r7gLi5efoTfiIHKhR6v7wY54MFFXVWQ8fn8NbJy7SbWSNEmNpgB/YuNI9OZDdlZGEuZWoE06Czrl35H5+mcobMFfoz2b8vY2P5UI75rX7n7BeeYkHzdIVLt62luQ4e9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n5glVOxG; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n5glVOxG"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-690b100da62so7918366d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710430171; x=1711034971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tuhQc5l9apEej2H4LOTY9yaoxPUBJy/wLmmpg/Pkruk=;
-        b=n5glVOxGsnctw/5jZnWEKcMdDcXqTWHRBa+sWfvNfJ+BO8d4+frFSRW/QA/2Qx3Ke9
-         hUJM+itue+MdCyOai+U8nHCVqLpmtrBA6Y58DQw8e2OLKuHDVhX0prB4IQzsK6qa/aa1
-         NJeQkjVjrrjdlINJwe2W6E3IJ39d4ZOE+Rh4Q=
+	 To:Cc:Content-Type; b=YuTDITw3ZzUAGMIe78Qs0EUOgWrU7RDlNblxGdy766wXZKVn+k4I7g4q2cA0mk28a8XRr+HHwy8e56rQlzleqGIyOORRcnIkCCmsGymUuShZQOVgjQZgEKrPwa0YfRypRzTk4RO7igXI6Edx3gwhl8NVvfpZwudGJzF07S7Uk4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-221d4c52759so92285fac.1;
+        Thu, 14 Mar 2024 08:29:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710430171; x=1711034971;
+        d=1e100.net; s=20230601; t=1710430188; x=1711034988;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tuhQc5l9apEej2H4LOTY9yaoxPUBJy/wLmmpg/Pkruk=;
-        b=a5O4rAKys7mTV9BbEWX9ZQSIi6Di2rJvOtAJUajR6xNG+yQ+krHTQO9U0bqBb88SbW
-         rGk5/CsE/q3ot8yYndxPQ8OE11mScBBd+cYiDXVznpjEm1Mxedn+s9jqs97VNYXN4BSV
-         AW4Xi2DU0QXqGpzkRAR7Qo3spdPMJx67IGzU5V5+XAn1vZhemFrJIJL2pb3hb7J+6eih
-         Bpv60YGCZNx4+wIxFhbN8pOVZmFIYIfeXOBME6yvT/wLqrOThTZn3tlouBYb2blq2Rbr
-         /1ipb2NGc2DqEW0tVRdSB7RRSpns65hg7rD/t19DbbJAxiCIdOEJrcsSCyze1eadpnzg
-         Y1ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWHH6l/CyXOKpj2cnCGidK0k27TylzZzlglwrMhX5TB2PIZfZuSiOFvj3rWq36UsciwyVO2KoHr3eM6yTF4HzAqYX4MwJIRD3HU5yCx
-X-Gm-Message-State: AOJu0Yyn8y+a+O525TUwvJ7DNqhl7od8xlfVOjYIJhGm3dOQXAgPBDdA
-	elgLoHsWMhlq53olE18JIGPSxTSkyzKNPszgoIlvLGsbV409XpehuzWP3AlidSE6ASqCNar79Yt
-	xSA==
-X-Google-Smtp-Source: AGHT+IEyhH92nJ8+0yKJ13z7VTQAtKhf6ZpwXpB3lh0j4RKQiQx/ruh8/h2qK4X2dP6t9c9PYOAujw==
-X-Received: by 2002:a05:6214:4c0a:b0:690:ae50:780b with SMTP id qh10-20020a0562144c0a00b00690ae50780bmr2006647qvb.34.1710430171449;
-        Thu, 14 Mar 2024 08:29:31 -0700 (PDT)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
-        by smtp.gmail.com with ESMTPSA id gi6-20020a056214248600b0069068161388sm576787qvb.131.2024.03.14.08.29.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 08:29:30 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-43095dcbee6so324231cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:29:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXQV3wnuxULHtyiCLAWqjZi2XyDReltfBtLKWFcN3/Tb71hbuo0F3rpIKEl/y1cWv5dIK+oJcsCcPhhhejzZf5OjeG8+BGar16xck2V
-X-Received: by 2002:ac8:474e:0:b0:430:90af:43c3 with SMTP id
- k14-20020ac8474e000000b0043090af43c3mr272846qtp.21.1710430169466; Thu, 14 Mar
- 2024 08:29:29 -0700 (PDT)
+        bh=sz4vtJtgjtxGimNuodR5Dts8e41V2G0abFSVNiYfOig=;
+        b=iTh112JXa3u+Utr0j1CTf/n5InCwSNN8pfXbetQmyaqpS0OWZYZYeVknKZWmvFjNrT
+         Zv77EqHFEvPrhTNy0AYfGOuVeOJIxyrBFEqTweeLAYetu8KDk/zBeWd08sf21MKcimPR
+         oQorpqWVL4Bpn+jf42Jti62HngOoa/G7adg48aqjx//9YUbj3yaJl4oIUyv8/f8fhG/X
+         IdkRvG+q3MGf7qugdGvgp6a1RQdp4kWQdD7K+odV7dHc4U0m7YtpTBMLsmE6AkqTmLho
+         I04TTPiLedsVjgaq5r7hSp5OMCjp8EdnxOBvfuzR8FZHra3Vjuv5obqeiHFk1pIRqOsR
+         CvYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCveDBQRAALR1y7VK/YFlk0aWTibIDUOQgZTKjG1Hft7bB/4klXkV8a+YlXEoRC0fviFrzr8n2B8djluT2UqiBQVwumNXqXnqczk7Y0dccaksQj4Q4DfIuZV1BSNvsevNSpiaO2XI=
+X-Gm-Message-State: AOJu0YzmYisNGvYpzVegzejQRBOCi97dYj/A4GldUx/K4GOg0XYaMaUJ
+	sNOyhKIfeGT7boi/tAdQoLWxzaKmaGoSKofZOB85+tEeF1hJw+pzoHEh4JF93PbdwDdePabAmUP
+	11rFiGB5Asi+OeOKu8Cq6ho+X+GQ=
+X-Google-Smtp-Source: AGHT+IGw1wzCrd+KShFy8gIzPHGgdEgl6nALTcZHtfMqpjOxXMESDUNLraIbxUslw88qM0F+kZ+0mj1dkWxYreVQGI0=
+X-Received: by 2002:a05:6871:5b11:b0:221:a151:7f3d with SMTP id
+ op17-20020a0568715b1100b00221a1517f3dmr2177153oac.2.1710430187943; Thu, 14
+ Mar 2024 08:29:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307093727.1978126-1-colin.i.king@gmail.com>
-In-Reply-To: <20240307093727.1978126-1-colin.i.king@gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 14 Mar 2024 08:29:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XQ5XBT4Jt6VUgVqxsn7NQZjDCTRFOFk5Fr+Fxkpv55SQ@mail.gmail.com>
-Message-ID: <CAD=FV=XQ5XBT4Jt6VUgVqxsn7NQZjDCTRFOFk5Fr+Fxkpv55SQ@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/msm: remove unused variable 'out'
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240314075429.1164810-1-d-gole@ti.com> <CAJZ5v0iUt+tudMV-rJ80GR6iNQVv06+054h0UyNgpEOUF6QLRQ@mail.gmail.com>
+ <20240314151846.u3r3eaklrl3hf7pi@dhruva>
+In-Reply-To: <20240314151846.u3r3eaklrl3hf7pi@dhruva>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 14 Mar 2024 16:29:36 +0100
+Message-ID: <CAJZ5v0gwkKa+AYgOwydzsKjo=_M56t88PwVo7R+fe-53abAdVw@mail.gmail.com>
+Subject: Re: [PATCH] PM: wakeup: Add a missing return case in init_wakeup
+To: Dhruva Gole <d-gole@ti.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Tony Lindgren <tony@atomide.com>, theo.lebrun@bootlin.com, 
+	Sibi Sankar <quic_sibis@quicinc.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ulf Hansson <ulf.hansson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Mar 14, 2024 at 4:18=E2=80=AFPM Dhruva Gole <d-gole@ti.com> wrote:
+>
+> Hi,
+>
+> On Mar 14, 2024 at 15:01:36 +0100, Rafael J. Wysocki wrote:
+> > On Thu, Mar 14, 2024 at 8:55=E2=80=AFAM Dhruva Gole <d-gole@ti.com> wro=
+te:
+> > >
+> > > The device_wakeup_disable call can return an error if no dev exists
+> > > however this was being ignored. Catch this return value and propagate=
+ it
+> > > onward in device_init_wakeup.
+> >
+> > Why does this matter to the callers of device_init_wakeup()?
+>
+> If atall !dev->power.can_wakeup then the caller should know something is
+> funny right?
 
-On Thu, Mar 7, 2024 at 1:37=E2=80=AFAM Colin Ian King <colin.i.king@gmail.c=
-om> wrote:
->
-> The variable out is being initialized and incremented but it is never
-> actually referenced in any other way. The variable is redundant and can
-> be removed.
->
-> Cleans up clang scan build warning:
-> drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: warning: variable
-> 'out' set but not used [-Wunused-but-set-variable]
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c | 3 ---
->  1 file changed, 3 deletions(-)
+What would the caller do with this information?
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
+They attempted to disable wakeup on a device that doesn't exist or is
+not wake-capable, and so what?
