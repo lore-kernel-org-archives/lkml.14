@@ -1,95 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B1E73522;
-	Thu, 14 Mar 2024 16:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D62399
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710432800; cv=none; b=Zwt0G4fLHXMstMLjsQ0bYtbvPcj1GnBZMUmpHpQaHQSxoVNzEHS8g/e0sT+rO0XaGyU0aLse02XJCJalHisShKRkcg9BHQPMpUHMdluZFPfeT7v3w8YwUtFMzC7YmWXa5LJ5JfPaCy40lrsM/aav8UrIrXGOpywm7stRsmaGbOU=
+	t=1710432977; cv=none; b=rsDO1solvFlWcRPddwuYSgz6cnUJpGkIQWNAIHGSPJXFuupTJmEZs9VhVX7d/K2e9a4eA/gZFNJTWeHoTvi4Lb3xCcrwm0l+51AL3R7qsxOfl9iS5Z4I1ueuwIX6+5RVZ1P63esbA+y+/qhy1gnuJPQxHhLK9hybiBVNcuk4PHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710432800; c=relaxed/simple;
-	bh=FbRU08K/6LuBlZvA1/pbpzTww+NMF1+gxxXYtSCDBds=;
+	s=arc-20240116; t=1710432977; c=relaxed/simple;
+	bh=U8AyetdLrhnWBQCfPFpv6tTgew9AS0AAM56e79RtgeM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLzkndiQapiyrhsmHsWuAiUFLmYh+UGZDenbaT3yvEccqY00ZHve5SDMyZbgeh9uu0wAkxh5pFRJVPpYOiuO8SGNv8TDqG6iNO5bYtxz6Oq3OmKY6Lm1mZBymGsLjRJN04vTE7teVn75xZeF8T0F0hn0lLF830+rXO7D9JiH6S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lDOc7R17; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VCm5ChSZfuYsNaqDkxtjOAFrlXcHwZtdh8Cw5U1ZwR0vKU5BvH3ZrsaqH+3+DWAj1iDVWkK1P7hQ9z58TEMJBcEZeTjCGKvL/31HUdsK6g5HOeN8Mh3ypo/9Sl3F9AWaxuCfxQDjceh3uuCXElmXj9P953z9x282wLcE9d4TH0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIHwkShn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lDOc7R17"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710432799; x=1741968799;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FbRU08K/6LuBlZvA1/pbpzTww+NMF1+gxxXYtSCDBds=;
-  b=lDOc7R173+2ab93Sp+uHFFeMN0bGeDqESEAb1sqMRg6YJmyoEgvK+kPb
-   A1lvaa+AavUf63/4ME5VMwsZTfT+j4Np3AwPVUbdnklyKPirN8GJ8srjp
-   88ADlscMAO6vtq64pzlL84bKYbNRjMThaH8emerl7+crBQjrpJ8QrONos
-   e2Px5xJpZqmxZ5kVTRpzmKNaOkdBqC4rzjY7OQEHfZNZeK+7OHv4Vgbyn
-   sSqx1tjBGZgKBy7qlVkUA/Vgubb+J3G9Am18suhOb/YGUf3RpUG7mdwVT
-   NHmEFcwLMUh3oD3I82m6u9LWY70xjmHs0AiXbqeDo92p9Z1/QCQa8RmQ2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="5864936"
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="5864936"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 09:13:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="16941066"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 09:13:17 -0700
-Date: Thu, 14 Mar 2024 09:13:17 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 019/130] KVM: x86: Add is_vm_type_supported callback
-Message-ID: <20240314161317.GN935089@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <6712a8a18abb033b1c32b9b6579ac297e3b00ab6.1708933498.git.isaku.yamahata@intel.com>
- <ZfK2FCApVeB0xbAk@chao-email>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIHwkShn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72B1C433F1;
+	Thu, 14 Mar 2024 16:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710432977;
+	bh=U8AyetdLrhnWBQCfPFpv6tTgew9AS0AAM56e79RtgeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PIHwkShnXphYqFArdN0hG3XJx0vwoeoLih4Bo5c9IFPa6h3zvCl9niRZeulLJKt71
+	 HrlmHYATceiLkvKZss3yUOaCmesxi4c0ry8fGaSRowDsATKyQI+sR+LeaIDlT2u+HC
+	 oigBQf5i3j4Qd0O/mhg3ZXAXBVjVixMRig2oXOPhoYwP9iemI0HyhJUbMbi8Nz+rUk
+	 gNWoB1ikRk2G7KKeJt+mhjqi1MrqR53m85A8E4GqnH89UgvUy8G+67U2pKScRTCwf4
+	 qNdJyKuvI79ST5R1khU7BNANNPIvGM2Vhv+fxYg1BVfzBpdc5A4jgJC9PxmqNI2z8j
+	 AJw9e3/zQ2bug==
+Date: Thu, 14 Mar 2024 09:16:15 -0700
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	syzbot+763afad57075d3f862f2@syzkaller.appspotmail.com,
+	Ed Tsai <Ed.Tsai@mediatek.com>, Hillf Danton <hdanton@sina.com>
+Subject: Re: [PATCH] f2fs: fix to avoid use-after-free issue in
+ f2fs_filemap_fault
+Message-ID: <ZfMiz67zynbEFBl9@google.com>
+References: <20240314020528.3051533-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZfK2FCApVeB0xbAk@chao-email>
+In-Reply-To: <20240314020528.3051533-1-chao@kernel.org>
 
-On Thu, Mar 14, 2024 at 04:32:20PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
-
-> >-static bool kvm_is_vm_type_supported(unsigned long type)
-> >+bool __kvm_is_vm_type_supported(unsigned long type)
-> > {
-> > 	return type == KVM_X86_DEFAULT_VM ||
-> > 	       (type == KVM_X86_SW_PROTECTED_VM &&
-> > 		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_enabled);
+On 03/14, Chao Yu wrote:
+> syzbot reports a f2fs bug as below:
 > 
-> maybe just do:
-> 	switch (type) {
-> 	case KVM_X86_DEFAULT_VM:
-> 		return true;
-> 	case KVM_X86_SW_PROTECTED_VM:
-> 		return IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_enabled;
-> 	default:
-> 		return static_call(kvm_x86_is_vm_type_supported)(type);
-> 	}
+> BUG: KASAN: slab-use-after-free in f2fs_filemap_fault+0xd1/0x2c0 fs/f2fs/file.c:49
+> Read of size 8 at addr ffff88807bb22680 by task syz-executor184/5058
 > 
-> There are two benefits
-> 1) switch/case improves readability a little.
-> 2) no need to expose __kvm_is_vm_type_supported()
+> CPU: 0 PID: 5058 Comm: syz-executor184 Not tainted 6.7.0-syzkaller-09928-g052d534373b7 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106
+>  print_address_description mm/kasan/report.c:377 [inline]
+>  print_report+0x163/0x540 mm/kasan/report.c:488
+>  kasan_report+0x142/0x170 mm/kasan/report.c:601
+>  f2fs_filemap_fault+0xd1/0x2c0 fs/f2fs/file.c:49
+>  __do_fault+0x131/0x450 mm/memory.c:4376
+>  do_shared_fault mm/memory.c:4798 [inline]
+>  do_fault mm/memory.c:4872 [inline]
+>  do_pte_missing mm/memory.c:3745 [inline]
+>  handle_pte_fault mm/memory.c:5144 [inline]
+>  __handle_mm_fault+0x23b7/0x72b0 mm/memory.c:5285
+>  handle_mm_fault+0x27e/0x770 mm/memory.c:5450
+>  do_user_addr_fault arch/x86/mm/fault.c:1364 [inline]
+>  handle_page_fault arch/x86/mm/fault.c:1507 [inline]
+>  exc_page_fault+0x456/0x870 arch/x86/mm/fault.c:1563
+>  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
+> 
+> The root cause is: in f2fs_filemap_fault(), vmf->vma may be not alive after
+> filemap_fault(), so it may cause use-after-free issue when accessing
+> vmf->vma->vm_flags in trace_f2fs_filemap_fault(). So it needs to keep vm_flags
+> in separated temporary variable for tracepoint use.
+> 
+> Fixes: 87f3afd366f7 ("f2fs: add tracepoint for f2fs_vm_page_mkwrite()")
+> Reported-and-tested-by: syzbot+763afad57075d3f862f2@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/lkml/000000000000e8222b060f00db3b@google.com
+> Cc: Ed Tsai <Ed.Tsai@mediatek.com>
+> Cc: Hillf Danton <hdanton@sina.com>
 
-The following[1] patch will supersede this patch. Will drop this patch.
+Suggested-by: Hillf Danton <hdanton@sina.com>
 
-[1] https://lore.kernel.org/kvm/20240226190344.787149-12-pbonzini@redhat.com/
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+I modified to "Suggested-by". Please let me know if this doesn't work.
+
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/file.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index a47c57e813bb..c19e55a3e50e 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -39,6 +39,7 @@
+>  static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  {
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+> +	vm_flags_t flags = vmf->vma->vm_flags;
+>  	vm_fault_t ret;
+>  
+>  	ret = filemap_fault(vmf);
+> @@ -46,7 +47,7 @@ static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  		f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>  					APP_MAPPED_READ_IO, F2FS_BLKSIZE);
+>  
+> -	trace_f2fs_filemap_fault(inode, vmf->pgoff, vmf->vma->vm_flags, ret);
+> +	trace_f2fs_filemap_fault(inode, vmf->pgoff, flags, ret);
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.40.1
