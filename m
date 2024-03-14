@@ -1,100 +1,188 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A516574297;
-	Thu, 14 Mar 2024 16:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670A46F524
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710434992; cv=none; b=nt2/MnnyUKPs3z8jRZ+hGxZmR2jnhRxw/Zk9wBzbY6k4MF6zDp/l9AI/EGHTf776MAC+VXX4oSgG+GyEnXPiQ/5sQ30aspiXqPL7YDdr3aPKE2wKGFIb4Zg2tsQUK3MObY2ZLzUNRnxbPI5yxH643+Rfc2dOtGkdC1A69N55qxg=
+	t=1710435055; cv=none; b=LjEFMa/mDoPEnC8vtPmZ62tlz7Ape/WcihkACiOipQhV44DUMgmRfjmNM87ARkl7hqBVyBFCoBK2YoBH9OA09VG7pvzmg+0K8L6GHtTV54AyT+Cc/SP3a1rdvQEk/WIPyLN3WqI7m9S3XQ9woclEJB1CV/y59har8B8XrHXQk9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710434992; c=relaxed/simple;
-	bh=77RGVau4t5+nCJcsSl+IWY9mY9TgXjNVDBPzWOsL7Oc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vn8kIQEMg2NFuuAPOcPfXbaj1sGyTEF5ZXrOS7Dzs77SzSHIsyCx29Q6WwFGBK2SA8Udsa1WDJo5vmyRyiqDyTgEx81xEFDANmT/oLTnerYyhG8TDuntioNLEFHcgSxf1DuRvLm9FDmklkkaio9DVOLu8yTu0C8T1LdbicSfgNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fMeg+X4Z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710435055; c=relaxed/simple;
+	bh=8/LHmabbFOa2irz28iyD2mUOsrRWs77lzjfbdo5vmdU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lAm9fAALas5EpSCSRTln57hLXZkrI3PSIiiUZn+Sate29tL5repECHI//NLu0DVF0sG0WKNZ8azSWJqtAmkSdPQkRhvsrlRSDizKFF0n1M/Z2/+C+wRYLTc/A9Nqpebco7SY/WqAuQX5uslT3lsrcDfJZBOYyf2Yfq09+vkicDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BaXBx30C; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fMeg+X4Z"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42ECt8TR020772;
-	Thu, 14 Mar 2024 16:49:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=L1eAnaiZBqkMn7bva+eCnIAzET7tl1WlG5vQ4gbJSPk=; b=fM
-	eg+X4ZuP7VBPIbi+PTue/ReWNL6Gsl88ooXnBa7JVZf9PE9ghFUb544baDCkrzfi
-	4A36waAHOkAP+veaoTf6kHD5QHTMQr7KKLVqAvMWRkcWZ4l+03QxXtnurrLtLl7D
-	DO4Fl388xc2qehbfTtiTtGFpe7vR1UHdx+IclIP8L2gXI1DJQH9ORizwqHJr1cDz
-	UKzCAnF++Coa7SKlKe11fTizyWVFgfA5B7uD+h2IGZ705sHaqq5eapWUisGnEdjX
-	98FMcq94QMwAd/WVoNWM14YNZSaTLRtaFrABTrs2cjTNH2ABO+HfxoHW+kxZOAVR
-	s/0QTsN9dAQpY5eON4wQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wv1njrjce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 16:49:47 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42EGnkSI028029
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 16:49:46 GMT
-Received: from [10.216.10.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 14 Mar
- 2024 09:49:43 -0700
-Message-ID: <3f80db1c-43ba-aafb-3f4d-f0e348808f52@quicinc.com>
-Date: Thu, 14 Mar 2024 22:19:40 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaXBx30C"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3122b70439so143086166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710435052; x=1711039852; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c2RYm1vaspI8Y3As/a7F8BfaRLfVKAt2m0ryDQAGWpA=;
+        b=BaXBx30CtIvml/n912HRmRM6fg2+M3Zq6FJAJws0OLnZD7QZUPsmSOzC/kRyARaHn3
+         NRYDM0CNA304G8uci0iyre46vwqNAl1u+2l2/Jc4QZ0nvpHYLCM63Y1TUf/oUsdgke1y
+         tIfLw2qLcdaotGVxl5hBIEQKWM+iOgaVSlYnnUzjBwVEhfQcvEtFPAd8CU4X+tm5cy5u
+         kkBaIU1Glb1PNFoViMsnG1EKVGtvPjLbSMy2yWaG54Oxk2Zd0hQ58CvUn4yKwAPpJCMm
+         dd6olkmKedrssacCt/dLGgUZfgt1REHdELTcd6PQIgNYH2HdpmXXxuKssplEGoTgpVdI
+         S3PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710435052; x=1711039852;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c2RYm1vaspI8Y3As/a7F8BfaRLfVKAt2m0ryDQAGWpA=;
+        b=wJlpf4K6E9OWoMi/YtymIEtcBNUqj0riSs0+TJDMqeEZgmEy4dR01sBXTRS+0LQspk
+         ynGFkMCqlQJ7El4x1KJ551hfiVDMPYc5sCwAlg1OYkMQL79gczZqA9W+gqx7aPqHlkTH
+         K4A1N2lQEYx0GCl8PrH91n4CuUhnsO6Mu6YiuYl3TH9+5r47IPNrsJcGcROzPltOP2wj
+         fIjZEJg42ulS7SxVM8owlFYv50G1Rwm9QijWRKsLBeEIWF5iMxuHWGucAqUZQ1tx2Cm6
+         gdSKxfLbmOM++oOZEWy8k6xHrqgy8a+Tvxn/2jNhpwKoeeoflwHKigfIV673ZZjtfB3S
+         oSTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgGZMkPJwm3Hmy2webAbr1BtzgulPXoi+ssT9P44rVIvj6YdTFCFnidz5wcHLg9Llse5Q+ovn7xhuc+XMXD7zRjRC3RPDV5un44hnI
+X-Gm-Message-State: AOJu0YxlHaPR4Wsn41D8HZSWMBrTBv+2PWr5jtbRmAX8bF05jlpjeDNQ
+	nulWA6Wp+OpGHsz84gjxnxcgUCsCp+PeXN6znYJ3mZQB/DBoSxpv
+X-Google-Smtp-Source: AGHT+IFJKP6hw9ITWzKnemudaDXluZtn2m9/KXcvFV7zOjEAbqJJ2r6ERXAFkSkgobY7+7st62Fj/w==
+X-Received: by 2002:a17:906:abcd:b0:a45:c8c8:7b99 with SMTP id kq13-20020a170906abcd00b00a45c8c87b99mr1326980ejb.31.1710435051518;
+        Thu, 14 Mar 2024 09:50:51 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id b26-20020a170906039a00b00a4547925e3asm875284eja.141.2024.03.14.09.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 09:50:51 -0700 (PDT)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Andre Przywara <andre.przywara@arm.com>,
+ Kamil Kasperski <ressetkk@gmail.com>
+Cc: wens@csie.org, samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] dts: arm64: sunxi: add initial support for t95 tv box
+Date: Thu, 14 Mar 2024 17:50:49 +0100
+Message-ID: <4331305.ejJDZkT8p0@jernej-laptop>
+In-Reply-To: <55eda2c6-1bca-463d-a908-1887543a47a5@gmail.com>
+References:
+ <20240311174750.6428-1-ressetkk@gmail.com> <8344274.T7Z3S40VBb@jernej-laptop>
+ <55eda2c6-1bca-463d-a908-1887543a47a5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 0/3] Add eFuse region for Qualcomm SoCs
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1709727995-19821-1-git-send-email-quic_mojha@quicinc.com>
- <40985e3c-9280-4035-9f01-4693cfd39235@linaro.org>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <40985e3c-9280-4035-9f01-4693cfd39235@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4iwqqpsrm7ZWbmAUqgcDbIprV8S3W76Z
-X-Proofpoint-GUID: 4iwqqpsrm7ZWbmAUqgcDbIprV8S3W76Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0 phishscore=0
- mlxlogscore=464 spamscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403140126
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Dne =C4=8Detrtek, 14. marec 2024 ob 01:19:28 CET je Kamil Kasperski napisal=
+(a):
+> Hi Jernej, Andre!
+
+Please no top posting as per rules.
+
+>=20
+> Thanks for the reply. My board has a name "H616-T95MAX-AXP313A-v3.0".
+
+Ok, we for sure need to integrate this somehow to compatible string, since
+there are at least two incompatible versions.
+
+>=20
+> I believe these boards are two different revisions and the one with=20
+> AXP313A is a newer one, besides incorrectly label as v3.0. Sharing=20
+> common configuration between boxes is also a good idea but for this=20
+> specific configuration I would be cautious. From my experience with this=
+=20
+> board the default configuration for X96 Mate is not working at all. I=20
+> suspect because of the PMIC and DRAM differences.
+>=20
+> Memory installed in X96 Mate is DDR3L and in mine T95 it's DDR3, hynix=20
+> H5TQ2G43BFR, that requires 1.5V to operate.
+
+PMIC is important difference, yes, but not DRAM. DDR3L is completely compat=
+ible
+with DDR3. It just additionally supports lower voltages. Additionally, Linux
+doesn't care about DRAM type and all. It's firmware responsibility to prope=
+rly
+initialize it.
+
+Best regards,
+Jernej
+
+>=20
+> The rest of configuration for both boards, like HDMI, MMC, EPHY and=20
+> audio codec seems to be the same across almost all H616-based boxes that=
+=20
+> I've researched.
+>=20
+>=20
+> Moreover please let me update the patches and send v2 that aligns with=20
+> mainline branch. I've incorrectly assumed to use sunxi fork instead of=20
+> master. Sorry!
+>=20
+> W dniu 13.03.2024 o 19:00, Jernej =C5=A0krabec pisze:
+> > Dne sreda, 13. marec 2024 ob 18:38:08 CET je Andre Przywara napisal(a):
+> >> On Wed, 13 Mar 2024 18:25:14 +0100
+> >> Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
+> >>
+> >>> Hi Kamil!
+> >>>
+> >>> Dne ponedeljek, 11. marec 2024 ob 18:47:47 CET je Kamil Kasperski nap=
+isal(a):
+> >>>> T95 is a most commonly known for being a box with a pre-installed ma=
+lware.
+> >>>> It uses Allwinner H616 and comes with eMMC and DDR3 memory.
+> >>>> This device comes with two versions - one with AXP305 PMIC and anoth=
+er with AXP313 PMIC.
+> >>> I have this board and it always felt like a clone of X96 Mate, which =
+is
+> >>> already supported in kernel, except for broken sd card detection. Wou=
+ld it
+> >>> make sense to unify those two boards and just overwrite or update par=
+ts here
+> >>> that are not the same?
+> >> I think the box you have is an older one, with the AXP305? IIUC, this =
+is
+> >> about a newer revision with the AXP313. There are quite some differenc=
+es
+> >> between the two PMICs, though it might still make sense to share the D=
+Ts,
+> >> see the OrangePi Zero[23].
+> > Right, mine is with AXP305. It has "T95MAX v4.0" printed on PCB.
+> >
+> > Kamil, does your board also have "MAX" mentioned somewhere?
+> >
+> > Best regards,
+> > Jernej
+> >
+> >> Cheers,
+> >> Andre
+> >>
+> >>>> Kamil Kasperski (3):
+> >>>>    dt-bindings: vendor-prefixes: sunxi: add T95 to vendor-prefixes
+> >>>>    dt-bindings: arm: sunxi: add t95 compatible string to list of kno=
+wn
+> >>>>      boards
+> >>>>    dts: arm64: sunxi: add initial support for T95 AXP313 tv box
+> >>>>
+> >>>>   .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+> >>>>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+> >>>>   arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >>>>   .../dts/allwinner/sun50i-h616-t95-axp313.dts  | 138 ++++++++++++++=
+++++
+> >>>>   4 files changed, 146 insertions(+)
+> >>>>   create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h616-t95-a=
+xp313.dts
+> >>>>
+> >>>>   =20
+> >>>
+> >>>
+> >>>
+> >>>
+> >>
+> >
+> >
+> >
+>=20
 
 
 
-On 3/6/2024 8:38 PM, Krzysztof Kozlowski wrote:
-> On 06/03/2024 13:26, Mukesh Ojha wrote:
->> This series is dependent on [1] for binding.
->>
-> 
-> Thanks for linking, that's good and explains a lot, but to clarify: No,
-> it does not depend. There is no dependency. This can be applied via
-> Qualcomm SoC.
 
-I see, thanks.
-
--Mukesh
-
-> 
-> Best regards,
-> Krzysztof
-> 
