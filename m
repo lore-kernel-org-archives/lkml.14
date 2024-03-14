@@ -1,112 +1,220 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A9A7175F
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A023E7173B
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710428865; cv=none; b=pU8kmqVk21IYYAqef7pQ8ktjWFNd6rKAjIfmi61QCS9nhfvwUfpoBjqLRzA6RIHvYQPz6dK+ggSShXO3lORz4FFBHWrpJ2GlgcICakcqB2N824CfxQBhpEjsR6LasGUw4GO5LCz5mvMCp+nfyD0y0C6wXlsL38b6RAGYQvhpg8s=
+	t=1710428878; cv=none; b=Nn3IwhmQA+prtZLNspQu0Om40+4zKbWyhYQ09qjGuE1egqDDvrembkEuWg7Zego+HxQVzcmqVURMYgp+uqN2MU1iFEaYDmg2nBiPMT6WlwTRJo8HVRSUdq9ShGI4bbWaW9Cr9MhQMJ//H4IhxOOsTV1Zk1mDpxirBW4z9rmKE4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710428865; c=relaxed/simple;
-	bh=WEbP5Ymsm7CA0K1XA6T79HjuqaRrt4H8r8f4yaqRpoM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bPdZ0KTk6vkc1cyQJ5fVOzcaX8l2YV58n0eVBynBAsTEC7LUnWeRhkI/aEldd7kqNWQKjhF1SoJWcnxBdnsIr0UodFFIHI/I3pmt8kHc9cnqxciPEab/PWJFNO+tgVivkQdWTsQsuJ1pwuySfq4W0VPLyRaeaIC7zL8cLrYT6eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R4+AFf5j; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1710428878; c=relaxed/simple;
+	bh=rrd1tcJTa6fdiPcMMDJwwu+7ne94Wx65en1cxUFdF6Q=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ckStP3+UV44wSFo1lIxeLPJWNp8kKA5sHIwv3aKyaiSz+iO/aWMqu2GPDpgGLVtQjBe6IvBq8QsH1GxyMJt3TJLyaul+Fsj1FalgVz4N/pXkqNpEBj4HWrM1KT7ighGiS6hFLG8n7SdZGvmDjOhWS5W1CWMMZ4R0+hoxSIxK76s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlbMeL+r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R4+AFf5j"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso726729a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710428863; x=1711033663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZjRCEDVOogXes/wPEF8GeSg53i9dySi15L5A1nUD1OU=;
-        b=R4+AFf5jEkmFwdD8bhrVomZt2cQtvJl/r8QWm1ww5Hb2AdKu7ze2Rep4xTOXMe8Rjr
-         wjBa5qnc0EKioSXgXI0gmR47TbaAPSOjChgTLgzDMFIyvUbRlXUybb3ivGWw4iiVBzL4
-         nPB+Kr/NXMQr2Vj7vBk+p2CS73SVbtTp5dHcf1uqWWhJYMCMmG2xgtVf/bkfFBiSkeDE
-         5iyV9YuMUgaBZv+dR28g7fxob3ZlW7cOXxdblRhtKL3sI2lGbQzVP+A8RPXYL+YeMO/8
-         rMc8FP3TyV/VU4yif8YnZohhKXc8AAlhT4yf7MgTDd4TA9LpS6KrzUU+u2x9TXQz0N5F
-         /e7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710428863; x=1711033663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZjRCEDVOogXes/wPEF8GeSg53i9dySi15L5A1nUD1OU=;
-        b=nsfUzaXOEl65kmnp6PM/I4hnpzC0euHzeHtG+E6MR5+8tm8wclEnEcxrzkORIhoVM7
-         rEAIpYg52gK8K2q33U+eRIegv5+HIzGFKQU+Jn5GZ7uMtFvWjqAGO12nGMnUFqfhXI92
-         XWIHBjlT+kv3XartvpeUZYCMSo0A5uhvOhIm5KGn3vNR8F4AsiCi18XD/JWItXLTrtxv
-         Hq36AYUim8ivPBr6H9Db0hn/rOpcWAITKM6u51aJdh19vh8TvbArq2FEk4zokJVsdMtk
-         YQAixbwmHXGrY8pvt/zWXdGfsVQ7YL47PSC+rm1e707aST1xDZ0R1shEg8DOtrPWtO+8
-         OGgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUp/DB0KaUhYQpPRLADKIVOMug9VWUOKktRNNItyugwQ9ZWLul+Pvt9OZsunIbvEm0Xe1w0fonrxCluIrWrBGeP+S4JBkKk5LKfllKe
-X-Gm-Message-State: AOJu0YwsHwLcTUfu+xYdue3AFqWPq2/coebpVQYuNVZQE/Vc3hKIudXf
-	ri+pKVfIwYv4L+8vPp3Sbjz1Pn3mJMQEGo+EdA3kQOxoCZk3b6lvQdELp2Qt9JA/3r4bPLFoNTS
-	RzVpgZyrnFQvvBq4fSiUwZ3FnUiCW0bPmpcNA3g==
-X-Google-Smtp-Source: AGHT+IFfiCFmv5DO0fVAcW+XIGXqdd9BcRmLG42EBJ+JcxMqvWXG3eAjxhCOv86M02IS4N2NO9e5fGuQIW9FlHgnXTg=
-X-Received: by 2002:a17:90a:6446:b0:29b:b28d:ac66 with SMTP id
- y6-20020a17090a644600b0029bb28dac66mr273173pjm.5.1710428863429; Thu, 14 Mar
- 2024 08:07:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlbMeL+r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0297EC433C7;
+	Thu, 14 Mar 2024 15:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710428878;
+	bh=rrd1tcJTa6fdiPcMMDJwwu+7ne94Wx65en1cxUFdF6Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YlbMeL+rYi2iIVw9YfppmnDip+Osv1MKsieHYb5lQ/OJPDEGzO0WhZBtWX+xx+CVL
+	 g/t+ksZNGB0joMHE8UUEmi5r2I726AY3ttCo6fX2oXzQQw/IOEDSX9OQIjErK2G7qI
+	 teb4ls0yw0+vmC+kwDDSbwNOn5evPY13SetgtuGk1vjsIsFbdqdSqeh6KRn0IZc6fm
+	 pbqHaWr/WsJNEiB5iLDkGWxJIzA/80HOc+asYQgARdCkI+1pi1zrxwWiIWI/LyB5HU
+	 Zxfcwo7ZtoCFdusqG7uVQSfGjxtvoZB/rwS1alrOHtUDPF9eYYl8kkm17JRHy+WyZR
+	 ekwPcH6SLmEVA==
+Date: Fri, 15 Mar 2024 00:07:53 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: cheung wall <zzqq0103.hey@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
+Subject: Re: BUG: unable to handle kernel paging request in
+ arch_adjust_kprobe_addr
+Message-Id: <20240315000753.a448251fce0291e041f76c13@kernel.org>
+In-Reply-To: <CAKHoSAs2rof6vQVBw_Lg_j3QNku0CANZR2qmy4eT7R5Lo8MFbg@mail.gmail.com>
+References: <CAKHoSAs2rof6vQVBw_Lg_j3QNku0CANZR2qmy4eT7R5Lo8MFbg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240313164640.616049-1-sashal@kernel.org> <ZfKhPaFngJTrTJyt@codewreck.org>
-In-Reply-To: <ZfKhPaFngJTrTJyt@codewreck.org>
-From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date: Thu, 14 Mar 2024 09:07:32 -0600
-Message-ID: <CAEUSe78qxBXpkKBv73w94g=ShBO8TteNvHds1NwMnfG98zZPUg@mail.gmail.com>
-Subject: Re: [PATCH 5.10 00/73] 5.10.213-rc1 review
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	pavel@denx.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello!
+Hi,
 
-On Thu, 14 Mar 2024 at 01:03, Dominique Martinet <asmadeus@codewreck.org> w=
-rote:
-> Sasha Levin wrote on Wed, Mar 13, 2024 at 12:45:27PM -0400:
-> > This is the start of the stable review cycle for the 5.10.213 release.
-> > There are 73 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
->
-> Thanks Sasha for submitting a stable rc review!
->
-> If it's not too much trouble, would it be possible to have a different
-> header in the 00 patch from the other patches for my mailbox?
-> The mails Greg sends have the X-KernelTest-* headers (patch, tree,
-> branch etc) only in the cover letter, while all the patches themselves
-> only have 'X-stable: review' and 'X-Patchwork-Hint: ignore'
->
-> I don't really care much what actual tags are on which as long as
-> there's a way to differentiate that cover letter from the rest so I can
-> redirect it to a mailbox I actually read to notice there's a new rc to
-> test, without having all the patches unless I explicitly look for them.
+Thanks for reporting the bug. I confirmed it and found a bug.
 
-I subscribe to this request. We ran into unexpected issues because all
-the emails in the series included the same headers as the cover.
+----
+/* If x86 supports IBT (ENDBR) it must be skipped. */
+kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
+                                         bool *on_func_entry)
+{
+        if (is_endbr(*(u32 *)addr)) {
+                          ^^^^^^^^^^^^^^^^^
+----
 
-> If it's difficult I'll add a regex on the subject for ' 00/' or
-> something, I'd prefer matching only headers for robustness but just let
-> me know.
+Actually, arch_adjust_kprobe_addr() is called before safety check of the
+address. So we should treat the @addr as unsafe address.
 
-That's what I ended up doing, and you know the saying: I had this
-problem and solved it via regexes, now I have two problems. :) FWIW,
-here's my "problem":
-  '^Subject: \[PATCH\ [456]\.[0-9]+\ 0[0]*\/'
+Let me fix that.
 
-Greetings!
+Thank you,
 
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+On Wed, 13 Mar 2024 10:14:09 +0800
+cheung wall <zzqq0103.hey@gmail.com> wrote:
+
+> Hello,
+> 
+> 
+> 
+> when using Healer to fuzz the latest Linux Kernel, the following crash
+> 
+> was triggered on:
+> 
+> 
+> 
+> HEAD commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a  (tag: v6.7)
+> 
+> git tree: upstream
+> 
+> console output:
+> *https://drive.google.com/file/d/15ygRHkG5dwbVMtPDCBx1FKhTULSlrXki/view?usp=drive_link*
+> <https://drive.google.com/file/d/15ygRHkG5dwbVMtPDCBx1FKhTULSlrXki/view?usp=drive_link>
+> 
+> kernel config:
+> *https://drive.google.com/file/d/1odoVJXVajqeUhF0bpFlv3ieTNwpgNdAl/view?usp=drive_link*
+> <https://drive.google.com/file/d/1odoVJXVajqeUhF0bpFlv3ieTNwpgNdAl/view?usp=drive_link>
+> 
+> C reproducer:
+> *https://drive.google.com/file/d/1hYKj4Xanb09-3gsIRq3ZLvEhkno49NtP/view?usp=drive_link*
+> <https://drive.google.com/file/d/1hYKj4Xanb09-3gsIRq3ZLvEhkno49NtP/view?usp=drive_link>
+> 
+> Syzlang reproducer:
+> https://drive.google.com/file/d/1YIN_c_-kT5De7-Z80nWImXyqW7rT2fPf/view?usp=drive_link
+> 
+> 
+> 
+> If you fix this issue, please add the following tag to the commit:
+> 
+> Reported-by: Qiang Zhang <*zzqq0103.hey@gmail.com* <zzqq0103.hey@gmail.com>>
+> 
+> *----------------------------------------------------------*
+> 
+> 
+> 
+> BUG: unable to handle page fault for address: ffffffff95003e80
+> audit: type=1400 audit(1710291918.880:7): avc:  denied  { open } for
+>  pid=298 comm="syz-executor372" scontext=system_u:system_r:kernel_t:s0
+> tcontext=system_u:system_r:kernel_t:s0 tclass=perf_event permissive=1
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 1c4a7067 P4D 1c4a7067 PUD 1c4a8063
+> audit: type=1400 audit(1710291918.880:8): avc:  denied  { kernel } for
+>  pid=298 comm="syz-executor372" scontext=system_u:system_r:kernel_t:s0
+> tcontext=system_u:system_r:kernel_t:s0 tclass=perf_event permissive=1
+> PMD 800fffffe29ff062
+> Oops: 0000 [#1] PREEMPT SMP KASAN PTI
+> CPU: 0 PID: 298 Comm: syz-executor372 Not tainted 6.7.0 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.13.0-1ubuntu1.1 04/01/2014
+> RIP: 0010:arch_adjust_kprobe_addr+0x42/0x180
+> arch/x86/kernel/kprobes/core.c:338
+> Code: 48 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 14 02 48 89
+> e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 09 01 00 00 <44> 8b 6d 00 41
+> 81 fd 66 0f 1f 00 74 18 e8 3c e5 30 00 41 81 e5 ff
+> RSP: 0018:ffff888112af7a68 EFLAGS: 00010246
+> RAX: 0000000000000003 RBX: 0000000000000000 RCX: ffffffff902cd938
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff95003e80
+> RBP: ffffffff95003e80 R08: ffff8881bec62da8 R09: ffffffff930000eb
+> R10: ffffffff906e4e58 R11: ffffffff92f009b3 R12: ffff888112af7b70
+> R13: ffff888107f5e258 R14: ffff88810124c6f0 R15: 0000000000000001
+> FS:  000055555555e880(0000) GS:ffff8881c0000000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff95003e80 CR3: 00000001036da005 CR4: 0000000000770ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  _kprobe_addr+0x10e/0x140 kernel/kprobes.c:1479
+>  register_kprobe+0xe0/0x15b0 kernel/kprobes.c:1622
+>  __register_trace_kprobe kernel/trace/trace_kprobe.c:510 [inline]
+>  __register_trace_kprobe+0x233/0x2a0 kernel/trace/trace_kprobe.c:478
+>  create_local_trace_kprobe+0x209/0x370 kernel/trace/trace_kprobe.c:1821
+>  perf_kprobe_init+0xed/0x1b0 kernel/trace/trace_event_perf.c:267
+>  perf_kprobe_event_init+0xcc/0x180 kernel/events/core.c:10334
+>  perf_try_init_event+0x10d/0x4e0 kernel/events/core.c:11650
+>  perf_init_event kernel/events/core.c:11720 [inline]
+>  perf_event_alloc kernel/events/core.c:12000 [inline]
+>  perf_event_alloc+0xded/0x3310 kernel/events/core.c:11866
+>  __do_sys_perf_event_open+0x328/0x1d50 kernel/events/core.c:12507
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0x43/0xf0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+> RIP: 0033:0x7f92060ecb4d
+> Code: 28 c3 e8 36 29 00 00 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fff2df5c268 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f92060ecb4d
+> RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000020001200
+> RBP: 00007f92060a6500 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00000000ffffffff R11: 0000000000000246 R12: 00007f92060a65a0
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>  </TASK>
+> Modules linked in:
+> CR2: ffffffff95003e80
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:arch_adjust_kprobe_addr+0x42/0x180
+> arch/x86/kernel/kprobes/core.c:338
+> Code: 48 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 14 02 48 89
+> e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 09 01 00 00 <44> 8b 6d 00 41
+> 81 fd 66 0f 1f 00 74 18 e8 3c e5 30 00 41 81 e5 ff
+> RSP: 0018:ffff888112af7a68 EFLAGS: 00010246
+> RAX: 0000000000000003 RBX: 0000000000000000 RCX: ffffffff902cd938
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff95003e80
+> RBP: ffffffff95003e80 R08: ffff8881bec62da8 R09: ffffffff930000eb
+> R10: ffffffff906e4e58 R11: ffffffff92f009b3 R12: ffff888112af7b70
+> R13: ffff888107f5e258 R14: ffff88810124c6f0 R15: 0000000000000001
+> FS:  000055555555e880(0000) GS:ffff8881c0000000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff95003e80 CR3: 00000001036da005 CR4: 0000000000770ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> note: syz-executor372[298] exited with irqs disabled
+> ----------------
+> Code disassembly (best guess):
+>    0: 48 89 ea             mov    %rbp,%rdx
+>    3: 48 b8 00 00 00 00 00 movabs $0xdffffc0000000000,%rax
+>    a: fc ff df
+>    d: 48 c1 ea 03           shr    $0x3,%rdx
+>   11: 0f b6 14 02           movzbl (%rdx,%rax,1),%edx
+>   15: 48 89 e8             mov    %rbp,%rax
+>   18: 83 e0 07             and    $0x7,%eax
+>   1b: 83 c0 03             add    $0x3,%eax
+>   1e: 38 d0                 cmp    %dl,%al
+>   20: 7c 08                 jl     0x2a
+>   22: 84 d2                 test   %dl,%dl
+>   24: 0f 85 09 01 00 00     jne    0x133
+> * 2a: 44 8b 6d 00           mov    0x0(%rbp),%r13d <-- trapping instruction
+>   2e: 41 81 fd 66 0f 1f 00 cmp    $0x1f0f66,%r13d
+>   35: 74 18                 je     0x4f
+>   37: e8 3c e5 30 00       callq  0x30e578
+>   3c: 41                   rex.B
+>   3d: 81                   .byte 0x81
+>   3e: e5 ff                 in     $0xff,%eax
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
