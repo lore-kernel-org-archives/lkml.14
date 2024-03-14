@@ -1,48 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356026E60E;
-	Thu, 14 Mar 2024 10:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954B06F06C
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710411321; cv=none; b=bUmE4tl88oCY5hvw8YknplNWJZipYXoTmp5yLbF/B6gqaJGXDIG6cWgJtMdRv4bjpV49jBCogtqqoRPxKEpA1pFC7QFjDB/YMgFn9g19sUSsfvS774Ppjm6JdcKoOZRPk3qQGxSTQyozJlCSZ1RHO+aHHZYJup7GUitusgmng70=
+	t=1710411333; cv=none; b=qciqk6dLUmnbbIDBPW7gN8qgRPLqfxgqAscRD2L5X8XjC7MhSndMFYSCp5zB7IPbTuEBJicFiXwR4PHiXT/zAuLoOOrI+fOD2WsUzbTnFtZIdzRqz0KJy3au2qplUC68btpd3fu9LfXYYBiwJ5kai/HWijy+CgC+mBZaqacGeHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710411321; c=relaxed/simple;
-	bh=gvWWFnoja/uQ4wxkGeFqleadvmNvo0/6Y5PqxYgqZyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uyQvrDo1pXTQnJqz3EpPcnb8B6x24OP5NrQaSOM1aGPro2dJ6kUfSu8tGebcV13AFTHf4FkP3u++X/tpVmCqZh+DaHsoLiRU1q4bzMyBqALnxiKbXtq9uCY1qE0moaARCtjUHynV/aRKQ8q16u1EbB1rsCgGngiDFr4vH+iggV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RZtsRSrR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710411333; c=relaxed/simple;
+	bh=ycsW7LzYI2X7GBwi/xPk4fdSIDiJftf7KAKOzrECOFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=soNBgzUxcaCG59qgUtGD9xZNbjbVA79T/S6h8Pwkot7A2Tmphdkts9GBF/a6vXWuONn0+Cy+NGlSj0WD8aZj3qbWlTRLVN+rx/6sME8klgmfKxRO6C4oxt7/j1CeI/q6AwW0VwU7jTujE0wxHEpwjB7AVeSsOpbMLG6nHbOdp4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fBYRvSHH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RZtsRSrR"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42E5Gv4I007740;
-	Thu, 14 Mar 2024 10:15:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=0uKg55Ve0ppdH9/LgTqLgn+XcTUF/8sUOQU6Y+kxKAM=; b=RZ
-	tsRSrRD3MIwk2XumzM+gSPjvL4PSNHFqGXsSFKLROB5BvKCNzD5NkVV/TJGA7OEj
-	mqHazOzbzglF/p+08Sgb3IXXhxuIbH2S7rfQHv7lDH+88BQMNWqrwNFnl33b1oj3
-	agsT0B0mpXtod6W+bnEJTNudLObp4uQt8A0Jl02YE8Z4IVzUIsCRYRc7IZIOg5pA
-	523nNTSlj59a2aTAl77zL834YXiAl2fpx6nnYGbwDvzXjQJQAxSO6+sxRkZodIi2
-	NhPT7DXmVF7iEA4Tl4mkpput/rAvMC6KOeXLrD4Vt1WV57FvAI3a37VPWif5M0P5
-	NIy+q4IiJSQk7d8YAcdw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wuruqrwub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 10:15:16 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42EAFDqa023164
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 10:15:14 GMT
-Received: from [10.239.29.49] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 14 Mar
- 2024 03:15:08 -0700
-Message-ID: <41889d0b-fe20-4fde-a71c-45d928ede11d@quicinc.com>
-Date: Thu, 14 Mar 2024 18:15:06 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBYRvSHH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710411330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t1Uxb+6viRMpNE9ltOLx40J6IZsgLFNrkQ0OvLIySyw=;
+	b=fBYRvSHHduQyqgVDQ+YLPHEK8PBQ3jzIAXxdtnruIvm4tgNzZBmykV0nvhbafst+cfcqnH
+	k/B+FjiT43O5ecwQZui85n6yFytJvXW4ofS2PVFnlXTTlkmVuTcK2IxPFNx1V4/hv7V/Te
+	s4n1LusnY6xnXblMEgAnQQZoFqvYiV0=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-Mo-HSep8MOmL2uJu3LsZyA-1; Thu, 14 Mar 2024 06:15:29 -0400
+X-MC-Unique: Mo-HSep8MOmL2uJu3LsZyA-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5dbddee3694so489889a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 03:15:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710411328; x=1711016128;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t1Uxb+6viRMpNE9ltOLx40J6IZsgLFNrkQ0OvLIySyw=;
+        b=epqwDHpZDeQG5o9P6tW3AXNjde9s7YFhdZQX+zkBPXn+opAHaJ0JksDICXPVvefOLU
+         ClrL05Iyi1Y0Isp75+iEvjZ2FBpGG3SuSxCXBl63C2ffGIbg+CyMHcKTOeF6vsYfn/oq
+         Ex+SCeYu8y9TRpuPcnynYcndxqpqDWiQLVGIMcWfjyOOLWf0kXDZbHG2eReD6ENhk33V
+         +Iz+uYa62jp9KpBmhZK1o4EBSAWiDInIvc/zxebjgu8HMloU12OROdpGbScTdS9yR0VY
+         tePxZWlegkL9PvvgIn/ekVIDGcnp07ilUP7sTFEuZObD2l90I4hremgYqKLnB2NOKqlO
+         xNqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9XJHUZySQcwV9//93JR4bHEeCaSWy1sRaLXfWhUh6p4+zMtkE3ZVANltq6Xuow0VCqdUKfW4YENqWrJeU9MsypVC9wYIo2dz3HVv1
+X-Gm-Message-State: AOJu0YxZYsmjBTlLa8yb0yZEguDBYqwY/KjBKVmMlKssfA50OnhVILEP
+	fh9m1BDOOFtyQMBBnXwz5+r3e0kiW7rpC5J4rc7VPTLY14rwkV3YwgpdG7P2m/Rdiq1C8TbhLae
+	vzeGGZ407cgFwGHrD1MCMNl0n+kcRd41BjsvssOkSdOKaUdmBDfBrGfq/eW5mUw==
+X-Received: by 2002:a17:902:ce87:b0:1dc:7101:58c0 with SMTP id f7-20020a170902ce8700b001dc710158c0mr7610153plg.22.1710411328139;
+        Thu, 14 Mar 2024 03:15:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBfGxwiSyPHkLnxtwxkJJyRl1lXhku6m/rd49AH3cwYX8QYQ0bzga29lt8nOAFDxAXNKvfIA==
+X-Received: by 2002:a17:902:ce87:b0:1dc:7101:58c0 with SMTP id f7-20020a170902ce8700b001dc710158c0mr7610128plg.22.1710411327738;
+        Thu, 14 Mar 2024 03:15:27 -0700 (PDT)
+Received: from [192.168.68.51] ([43.252.115.31])
+        by smtp.gmail.com with ESMTPSA id v2-20020a170903238200b001dc3c4e7a12sm1302622plh.14.2024.03.14.03.15.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 03:15:26 -0700 (PDT)
+Message-ID: <9b148de7-b687-4d10-b177-5608b8dc7046@redhat.com>
+Date: Thu, 14 Mar 2024 20:15:22 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,88 +67,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sm8650: Add three missing
- fastrpc-compute-cb nodes
+Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC: <quic_ekangupt@quicinc.com>, <kernel@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240314063334.31942-1-quic_lxu5@quicinc.com>
- <c7ac2b10-eee3-4269-85e4-a68d24c2337a@linaro.org>
- <88c32ccb-fadd-49e8-a8fc-76f93353d204@quicinc.com>
- <46e90e1f-1c93-4e88-b73c-94c165217d98@linaro.org>
-From: Ling Xu <quic_lxu5@quicinc.com>
-In-Reply-To: <46e90e1f-1c93-4e88-b73c-94c165217d98@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _KX1XI8PGm3nlyF5raEMMPEi0UoW3Iq2
-X-Proofpoint-GUID: _KX1XI8PGm3nlyF5raEMMPEi0UoW3Iq2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_08,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 impostorscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403140072
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ jasowang@redhat.com, xuanzhuo@linux.alibaba.com, yihyu@redhat.com,
+ shan.gavin@gmail.com
+References: <20240314074923.426688-1-gshan@redhat.com>
+ <20240314040443-mutt-send-email-mst@kernel.org>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20240314040443-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-在 2024/3/14 18:09, Krzysztof Kozlowski 写道:
-> On 14/03/2024 11:05, Ling Xu wrote:
->> 在 2024/3/14 14:55, Krzysztof Kozlowski 写道:
->>> On 14/03/2024 07:33, Ling Xu wrote:
->>>> Add three missing cDSP fastrpc compute-cb nodes for the SM8650 SoC.
->>>>
->>>> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
->>>> ---
->>>>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 29 ++++++++++++++++++++++++++++
->>>>  1 file changed, 29 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>>> index ba72d8f38420..c238ad1be0d4 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>>> @@ -5084,6 +5084,35 @@
->>>>  							 <&apps_smmu 0x19c8 0x0>;
->>>>  						dma-coherent;
->>>>  					};
->>>> +
->>>> +					/* note: secure cb9 in downstream */
->>>> +
->>>> +					compute-cb@10 {
->>>> +						compatible = "qcom,fastrpc-compute-cb";
->>>> +						reg = <12>;
->>>> +						iommus = <&apps_smmu 0x196C 0x0000>,
->>>> +							 <&apps_smmu 0x0C0C 0x0020>,
->>>> +							 <&apps_smmu 0x19CC 0x0000>;
->>>
->>> Lowercase hex. Please look at the code above, don't copy downstream
->>> code. This applies to all your work: don't send us downstream code, but
->>> clean it up from all of its problems.
->>>
->>> Best regards,
->>> Krzysztof
->>>
+On 3/14/24 18:05, Michael S. Tsirkin wrote:
+> On Thu, Mar 14, 2024 at 05:49:23PM +1000, Gavin Shan wrote:
+>> The issue is reported by Yihuang Yu who have 'netperf' test on
+>> NVidia's grace-grace and grace-hopper machines. The 'netperf'
+>> client is started in the VM hosted by grace-hopper machine,
+>> while the 'netperf' server is running on grace-grace machine.
 >>
->> Hi, sorry, do you mean that I should delete this line: /* note: secure cb9 in downstream */?
->> All I sent are upstream codes, I didn't copy cb9 here and I also see this commented line in sm8550.dtsi.
+>> The VM is started with virtio-net and vhost has been enabled.
+>> We observe a error message spew from VM and then soft-lockup
+>> report. The error message indicates the data associated with
+>> the descriptor (index: 135) has been released, and the queue
+>> is marked as broken. It eventually leads to the endless effort
+>> to fetch free buffer (skb) in drivers/net/virtio_net.c::start_xmit()
+>> and soft-lockup. The stale index 135 is fetched from the available
+>> ring and published to the used ring by vhost, meaning we have
+>> disordred write to the available ring element and available index.
+>>
+>>    /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64              \
+>>    -accel kvm -machine virt,gic-version=host                            \
+>>       :                                                                 \
+>>    -netdev tap,id=vnet0,vhost=on                                        \
+>>    -device virtio-net-pci,bus=pcie.8,netdev=vnet0,mac=52:54:00:f1:26:b0 \
+>>
+>>    [   19.993158] virtio_net virtio1: output.0:id 135 is not a head!
+>>
+>> Fix the issue by replacing virtio_wmb(vq->weak_barriers) with stronger
+>> virtio_mb(false), equivalent to replaced 'dmb' by 'dsb' instruction on
+>> ARM64. It should work for other architectures, but performance loss is
+>> expected.
+>>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Yihuang Yu <yihyu@redhat.com>
+>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>> ---
+>>   drivers/virtio/virtio_ring.c | 12 +++++++++---
+>>   1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+>> index 49299b1f9ec7..7d852811c912 100644
+>> --- a/drivers/virtio/virtio_ring.c
+>> +++ b/drivers/virtio/virtio_ring.c
+>> @@ -687,9 +687,15 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
+>>   	avail = vq->split.avail_idx_shadow & (vq->split.vring.num - 1);
+>>   	vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head);
+>>   
+>> -	/* Descriptors and available array need to be set before we expose the
+>> -	 * new available array entries. */
+>> -	virtio_wmb(vq->weak_barriers);
+>> +	/*
+>> +	 * Descriptors and available array need to be set before we expose
+>> +	 * the new available array entries. virtio_wmb() should be enough
+>> +	 * to ensuere the order theoretically. However, a stronger barrier
+>> +	 * is needed by ARM64. Otherwise, the stale data can be observed
+>> +	 * by the host (vhost). A stronger barrier should work for other
+>> +	 * architectures, but performance loss is expected.
+>> +	 */
+>> +	virtio_mb(false);
 > 
-> My comment was about the style. If you send "upstream codes", how could
-> you have there uppercase hex? It is even visible in the diff context
-> that it should be lowercase!
 > 
-> Best regards,
-> Krzysztof
+> I don't get what is going on here. Any explanation why virtio_wmb is not
+> enough besides "it does not work"?
 > 
-Sorry for that, I got it. Thanks for your comment.
--- 
-Thx and BRs,
-Ling Xu
+
+The change is replacing instruction "dmb" with "dsb". "dsb" is stronger barrier
+than "dmb" because "dsb" ensures that all memory accesses raised before this
+instruction is completed when the 'dsb' instruction completes. However, "dmb"
+doesn't guarantee the order of completion of the memory accesses.
+
+So 'vq->split.vring.avail->idx = cpu_to_virtio(_vq->vdev, vq->split.avail_idx_shadow)'
+can be completed before 'vq->split.vring.avail->ring[avail] = cpu_to_virtio16(_vq->vdev, head)'.
+The stronger barrier 'dsb' ensures the completion order as we expected.
+
+     virtio_wmb(true)         virt_mb(false)
+       virt_wmb                 mb
+         __smp_wmb               __mb
+           dmb(ishst)              dsb(sy)
+       
+
+Extraced from ARMv9 specificaton
+================================
+The DMB instruction is a memory barrier instruction that ensures the relative
+order of memory accesses before the barrier with memory accesses after the
+barrier. The DMB instruction _does not_ ensure the completion of any of the
+memory accesses for which it ensures relative order.
+
+A DSB instruction is a memory barrier that ensures that memory accesses that
+occur before the DSB instruction have __completed__ before the completion of
+the DSB instruction. In doing this, it acts as a stronger barrier than a DMB
+and all ordering that is created by a DMB with specific options is also generated
+by a DSB with the same options.
+
+>>   	vq->split.avail_idx_shadow++;
+>>   	vq->split.vring.avail->idx = cpu_to_virtio16(_vq->vdev,
+>>   						vq->split.avail_idx_shadow);
+>> -- 
+>> 2.44.0
+> 
+
+Thanks,
+Gavin
 
