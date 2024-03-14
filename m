@@ -1,44 +1,44 @@
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD59210E8;
-	Thu, 14 Mar 2024 23:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB74E182A3;
+	Thu, 14 Mar 2024 23:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458595; cv=none; b=aViEOscZd71BneCsxhUejJ7cwC5+2QtKzwQP9iizWGPRdBXbTyjUYcDMH+PstP+JMTCrZDXqOb5gBhorP1u3AeQwMN4plETyYkZxehE3R19q+FVgHczeE1pyN00ZriOTdqI/o1XdkTP6UCnyzncswrKmrX9r2sIj+rTEgU+h60c=
+	t=1710458593; cv=none; b=dF2p+wZ5YcycQtw2yvHFD2ewmrYu3HwKjIIdgbMJV2VPngZUePB1ajqubFJK6tDE3LfTiLwco3V3CyxmjIeCdIfKkxnhcz77HTkGrRYqSUJZSCP/7i6VwniLrz+Cxb48YE4cyirbGZwpMNIQ7mJ3+dMTZ67VtGK+upkHBX9AUF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458595; c=relaxed/simple;
-	bh=no/BaOcNF/CJFMCkCB326IrOeqdTQjbbbUPW7iPJHDY=;
+	s=arc-20240116; t=1710458593; c=relaxed/simple;
+	bh=ybkbzx+DIvWdFpyy8EDoKSIvtWeGkBDccrQr3+eS2DI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=esZclSHnz7ZgSkV20xY7qkT66X7aI0usHZhULdW090hEemHvclZTaZROqzZBiHgmxPTTBBGOp8NTnzB0fa6LfCebQDrf+gajzAqoVcevY3r0Mv8teGTYaeQPasV5kAm9r1lzoL2D4KUCh3VmqHY7AUA1CQ+88TGNP/VJcpUlRoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=XJMIhSsd; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=mwnQL878ePVJpcEO9mN9JYgGjSLaPwm5DaZb4n9oUQsgKZCgsXsihzRB15AEcCfcc2fxNEs5dH23G7/4mKRNXgMqJKMVuhYpRcSspvnwFZRxcdsjB5gzmkSAApPydLbz2CunRLV21rnaOSPZhilzAkOr+rPea05mkyEnoAfzB1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=pmWgkXaJ; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="XJMIhSsd"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="pmWgkXaJ"
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 5D8B8120016;
-	Fri, 15 Mar 2024 02:23:08 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5D8B8120016
+	by mx1.sberdevices.ru (Postfix) with ESMTP id C2A15120012;
+	Fri, 15 Mar 2024 02:23:06 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru C2A15120012
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458588;
-	bh=lfafaGrQIktQg/rWyr/aK5n5leCd1McAMyotoMmDk/s=;
+	s=mail; t=1710458586;
+	bh=9SRIX/FvqDap0SMfdebaXOrywr2NEUWz33l2V3WObDM=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=XJMIhSsdEN0VNh5LqWmllNaCWjm6KhGkX598dYM2LT2xyqTJXyNmOH1uARpOqQjrt
-	 Y0IBu4MjycToMERvuohkmj/9GVCf6w14ND/wh0LQagQpowKY1HCnDG0Fr0cuegaolg
-	 A7DsZZGsiEMIiRDTOCY1hh2RYFKhLyKnYJfmm14Vivg/01FKalrLfggCnTMI7f0qUi
-	 IWsnv/c7+XZVpCu+Zw4aIbqVDB0BI1ea3Me55Bklwk3kYvDVeWmKAuzTTzqAxwYk59
-	 nGB+UGsLjsJnbxQYPczYegFVjzx3iQHiUQ4vCp8FwgcShUTa1cLr7G5s192v2LTaJE
-	 xysw/Jg2nPMYw==
+	b=pmWgkXaJSxRnY2mr5czzY/iGGINaK0+pU7azMlmYipUFsMcwF9rY+yRy3nkG4tXhI
+	 h2emBkJj73eur4HHgzAvK2iDeQHORBbLT/QWiW7uzbkaIitQSQItPYflNW+VEYDcC6
+	 A1sdhRNU4DeQNrK/nbK9uBZKi3zcbleBIlZMg5Agrqd9GPCTR5FxoeibVlSu1gWReA
+	 U2RLXn7gdbNpy8fyHwxgfX1+y/ACrMsZ5Z8JMgVh/8cwK/OVYZvuYb5D/zT/5a+/i5
+	 rFFP+gp6rfElFV+4AgcN3FfjOGBGU1qaSo2zmQ8v5W5YTJBL8xcbMkVNffkNWsJeUb
+	 S+K2xl1zKyVEQ==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:08 +0300 (MSK)
+	Fri, 15 Mar 2024 02:23:06 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:07 +0300
+ 15.2.1118.40; Fri, 15 Mar 2024 02:23:06 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -55,9 +55,9 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <kernel@salutedevices.com>
-Subject: [PATCH 21/25] ASoC: dt-bindings: meson: axg-tdm-iface: claim support of A1 SoC family
-Date: Fri, 15 Mar 2024 02:21:57 +0300
-Message-ID: <20240314232201.2102178-22-jan.dakinevich@salutedevices.com>
+Subject: [PATCH 17/25] ASoC: dt-bindings: meson: axg-fifo: claim support of A1 SoC family
+Date: Fri, 15 Mar 2024 02:21:53 +0300
+Message-ID: <20240314232201.2102178-18-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
@@ -88,31 +88,33 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-Add "amlogic,a1-tdm-iface" compatible string alias to
-"amlogic,axg-tdm-iface".
+Add "amlogic,a1-toddr" and "amlogic,a1-frddr" compatible string aliases
+to "amlogic,sm1-toddr" and "amlogic,sm1-frddr" respectevely.
 
 Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- .../devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml    | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/sound/amlogic,axg-fifo.yaml       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
-index 45955d8a26d1..7c1af85b52b4 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
-@@ -14,7 +14,11 @@ allOf:
- 
- properties:
-   compatible:
--    const: amlogic,axg-tdm-iface
-+    oneOf:
-+      - const: amlogic,axg-tdm-iface
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
+index b1b48d683101..1e809c7c2179 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
+@@ -25,6 +25,14 @@ properties:
+               - amlogic,g12a-frddr
+               - amlogic,sm1-frddr
+           - const: amlogic,axg-frddr
 +      - items:
-+          - const: amlogic,a1-tdm-iface
-+          - const: amlogic,axg-tdm-iface
++          - const: amlogic,a1-toddr
++          - const: amlogic,sm1-toddr
++          - const: amlogic,axg-toddr
++      - items:
++          - const: amlogic,a1-frddr
++          - const: amlogic,sm1-frddr
++          - const: amlogic,axg-frddr
  
-   "#sound-dai-cells":
-     const: 0
+   reg:
+     maxItems: 1
 -- 
 2.34.1
 
