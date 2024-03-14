@@ -1,120 +1,298 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B85750263
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 06:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6991250A60;
+	Thu, 14 Mar 2024 06:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710396008; cv=none; b=sybr7sBPuBImYqVjeZKVwW7BaCyPYk9mmgzZiP7HeN4Jnpj691xt/skb6JtiuPODSQZrsu+VAOZCxJid8tIRSASX6KscRjjpUPOncSDK3z05E8jJRpcGvbpdIjfcZVDyp9QUmxiGHI+KpPuXpTpw1Ch/GQICHbYppPa/2D++FWY=
+	t=1710396009; cv=none; b=mm/lSklk6v6ZYkf2uYgizsQQrRULoVQizkrd6kJZxRvqIquVg+luU2LrcuKz5th8FKWQu8/dc3enKUSlnAJXWfyFtgiqrttBI6Z1flSnPR0OhYgAO8WSVx17dg9mMPq+rMUNLn0uE5l4F60qvrwJ06lcd1urH0txBe7670B4WgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710396008; c=relaxed/simple;
-	bh=gFhzpwFPHEzHqdpqsWr4rp9QKQBu1kI7PFwIsR9IC/k=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SaPP/pe9gnrfFzxzkU7YszpPA/wXSnV/RCRDz53nzP+hZDIdtSvAxfjZGt1CMOuhX9PCiFMgFaOD0uTwKEY7oj43ZNtVsl/KyVbHi8S5SS5M8QLuU6aM0IkWIOBD1eu08xZvh1QJScbwr+aLHr/zT4k0IJHPbuKKyDNTzzPzkzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RRrESQjJ; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RRrESQjJ"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc657e9bdc4so97709276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 23:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710396006; x=1711000806; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W7vxajjjO2isWih1cYJ4Ij+u5GgCOj0Bgjw8R4VQYtk=;
-        b=RRrESQjJ9NzRSA125Ua5W/OWa91CyFKJIrEyXF6GSv7Fu5Hxcb3RGndZXm44dwTt7P
-         HfqyTJKPOozeRjGUqHOcDKPpkeI5Ze7c/0SbSVyYVzk89iETYNHf/OTaxUDTOTf4AsMD
-         CARkAn/CN2S39WaVaYK1tzn1oSPAbMjkO438AwQ5qpUxDnX9/PqStDaMNnD8uaAvQPZY
-         Kvu7XK2I0PMmkK9dzqFnCZ1vhRMGyIEMTDDv0CE/D2PxQE1y96Sa5wHsPxrwz+5FRhBC
-         0HXpJ88V2gZ1TI67jdJMSt8SSYkP4afyw5dnwAxAZRPAlBy6KPpzC9BwEljmp5nkjURA
-         xnAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710396006; x=1711000806;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W7vxajjjO2isWih1cYJ4Ij+u5GgCOj0Bgjw8R4VQYtk=;
-        b=qZ1ooSbL1Wh2xHpSIKYr2aYLvaRYvNskU6KwaGR9sJLE5C3PfmTwmRZqKkQG1X4o54
-         q4069k13whIgwZapQoHDoV+r+IwnazjktZy8Lm++735TNbOkCAvjGaRCU8+gVAUplU1Y
-         OK+viFbbhZK+/Iln7BOX3Jq2gB/BTAzNwqeUDDov/EnGDshHn0l+UMRNTcDT9qdfSB3d
-         VL/rXX9KS1v/tyDWpVkXfHVUj7efxe21oqjM+M2NwowL3AucvMcjFw8yNTzWvwzW9EPK
-         XthPvX7AF9acvZxl/Facf7b1ObPCL267ZtbhGPvXMrYqHipRozZDNRwLgCNumiTgrsV8
-         T1bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVltfQFfuJlPApcMRgwvcGMdB9Qtd2J6+XJJa3CbYHtr00cmrdoXbdP1Fp5uH/NOh/1CLzquOmp9y9CBXGSef6CEs4Lfeqf8KK5bfEz
-X-Gm-Message-State: AOJu0YwpPl4xBVoJDWwtVcpvbbSU/mIRp5NzomKplpyMizIlOSvF+7kC
-	lXGVLVzNKjexIDCAbtxuKQLQzggBu21gVRurzYJnRV/h8KKaeth45apWARXQORCxFM9aGC3hnrx
-	9dk6HXg==
-X-Google-Smtp-Source: AGHT+IHNwiqaYfw65s265xd7PnGQZUyDGWFCZKVZD5ioEDmzy049uZNTjUPtWKfxBg9etYsZdXej7arVN+2D
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:e09:b0:dbd:73bd:e55a with SMTP id
- df9-20020a0569020e0900b00dbd73bde55amr27878ybb.4.1710396006451; Wed, 13 Mar
- 2024 23:00:06 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:59:13 -0700
-In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
-Message-Id: <20240314055919.1979781-15-irogers@google.com>
+	s=arc-20240116; t=1710396009; c=relaxed/simple;
+	bh=moazgtcuMucKciWmHM/NiV2lvzyaSuRx4XTjZfq4/fw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gW+ILBXa+8OfFk5h5n6AORkQtLaQRkskdbosnc8qQFXqzIupCIdt2nA1IrD7tyCq3vLg/oFxqI2MQIkl1Mnmc71Tt+fJv3yO0x88h/F74HbjRNMl/2skBTfbU8ZLbgK2sM1rvuRvjdX6hyTZGdJwMJOuE1C7kfy051PDc6rODDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C63C11007;
+	Wed, 13 Mar 2024 23:00:42 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.53.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E59F63F73F;
+	Wed, 13 Mar 2024 23:00:01 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	suzuki.poulose@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH V7 10/11] coresight: stm: Move ACPI support from AMBA driver to platform driver
+Date: Thu, 14 Mar 2024 11:28:42 +0530
+Message-Id: <20240314055843.2625883-11-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240314055919.1979781-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 14/20] perf jevents: Add Miss Level Parallelism (MLP)
- metric for Intel
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Number of outstanding load misses per cycle.
+Add support for the stm devices in the platform driver, which can then be
+used on ACPI based platforms. This change would now allow runtime power
+management for ACPI based systems. The driver would try to enable the APB
+clock if available. But first this renames and then refactors stm_probe()
+and stm_remove(), making sure it can be used both for platform and AMBA
+drivers. Also this moves pm_runtime_put() from stm_probe() to the callers.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
+Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Changes in V7:
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index da97a1781be7..6a864c0b863a 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -595,6 +595,20 @@ def IntelL2() -> Optional[MetricGroup]:
-   ], description = "L2 data cache analysis")
+- Dropped reduntant drvdata check in stm_platform_remove()
+
+ drivers/acpi/arm64/amba.c                   |   1 -
+ drivers/hwtracing/coresight/coresight-stm.c | 104 ++++++++++++++++++--
+ 2 files changed, 94 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
+index d3c1defa7bc8..bec0976541da 100644
+--- a/drivers/acpi/arm64/amba.c
++++ b/drivers/acpi/arm64/amba.c
+@@ -22,7 +22,6 @@
+ static const struct acpi_device_id amba_id_list[] = {
+ 	{"ARMH0061", 0}, /* PL061 GPIO Device */
+ 	{"ARMH0330", 0}, /* ARM DMA Controller DMA-330 */
+-	{"ARMHC502", 0}, /* ARM CoreSight STM */
+ 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
+ 	{"", 0},
+ };
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index 5ae24c33c846..cbf7f17556f8 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -29,6 +29,8 @@
+ #include <linux/perf_event.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/stm.h>
++#include <linux/platform_device.h>
++#include <linux/acpi.h>
  
+ #include "coresight-priv.h"
+ #include "coresight-trace-id.h"
+@@ -115,6 +117,7 @@ DEFINE_CORESIGHT_DEVLIST(stm_devs, "stm");
+  * struct stm_drvdata - specifics associated to an STM component
+  * @base:		memory mapped base address for this component.
+  * @atclk:		optional clock for the core parts of the STM.
++ * @pclk:		APB clock if present, otherwise NULL
+  * @csdev:		component vitals needed by the framework.
+  * @spinlock:		only one at a time pls.
+  * @chs:		the channels accociated to this STM.
+@@ -131,6 +134,7 @@ DEFINE_CORESIGHT_DEVLIST(stm_devs, "stm");
+ struct stm_drvdata {
+ 	void __iomem		*base;
+ 	struct clk		*atclk;
++	struct clk		*pclk;
+ 	struct coresight_device	*csdev;
+ 	spinlock_t		spinlock;
+ 	struct channel_space	chs;
+@@ -810,14 +814,12 @@ static char *stm_csdev_name(struct coresight_device *csdev)
+ 	return uci_data ? (char *)uci_data : "STM";
+ }
  
-+def IntelMlp() -> Optional[Metric]:
-+  try:
-+    l1d = Event("L1D_PEND_MISS.PENDING")
-+    l1dc = Event("L1D_PEND_MISS.PENDING_CYCLES")
-+  except:
-+    return None
-+
-+  l1dc = Select(l1dc / 2, Literal("#smt_on"), l1dc)
-+  ml = d_ratio(l1d, l1dc)
-+  return Metric("mlp",
-+                "Miss level parallelism - number of outstanding load misses per cycle (higher is better)",
-+                ml, "load_miss_pending/cycle")
-+
-+
- def IntelPorts() -> Optional[MetricGroup]:
-   pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
+-static int stm_probe(struct amba_device *adev, const struct amba_id *id)
++static int __stm_probe(struct device *dev, struct resource *res)
+ {
+ 	int ret, trace_id;
+ 	void __iomem *base;
+-	struct device *dev = &adev->dev;
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct stm_drvdata *drvdata;
+-	struct resource *res = &adev->res;
+ 	struct resource ch_res;
+ 	struct coresight_desc desc = { 0 };
  
-@@ -796,6 +810,7 @@ def main() -> None:
-       IntelIlp(),
-       IntelL2(),
-       IntelLdSt(),
-+      IntelMlp(),
-       IntelPorts(),
-       IntelSwpf(),
-   ])
+@@ -829,12 +831,16 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
++	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
+ 		if (ret)
+ 			return ret;
+ 	}
++
++	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
++	if (IS_ERR(drvdata->pclk))
++		return -ENODEV;
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	base = devm_ioremap_resource(dev, res);
+@@ -882,7 +888,7 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 		ret = PTR_ERR(pdata);
+ 		goto stm_unregister;
+ 	}
+-	adev->dev.platform_data = pdata;
++	dev->platform_data = pdata;
+ 
+ 	desc.type = CORESIGHT_DEV_TYPE_SOURCE;
+ 	desc.subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE;
+@@ -903,8 +909,6 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	}
+ 	drvdata->traceid = (u8)trace_id;
+ 
+-	pm_runtime_put(&adev->dev);
+-
+ 	dev_info(&drvdata->csdev->dev, "%s initialized\n",
+ 		 stm_csdev_name(drvdata->csdev));
+ 	return 0;
+@@ -917,9 +921,20 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	return ret;
+ }
+ 
+-static void stm_remove(struct amba_device *adev)
++static int stm_probe(struct amba_device *adev, const struct amba_id *id)
++{
++	int ret;
++
++	ret = __stm_probe(&adev->dev, &adev->res);
++	if (!ret)
++		pm_runtime_put(&adev->dev);
++
++	return ret;
++}
++
++static void __stm_remove(struct device *dev)
+ {
+-	struct stm_drvdata *drvdata = dev_get_drvdata(&adev->dev);
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev);
+ 
+ 	coresight_trace_id_put_system_id(drvdata->traceid);
+ 	coresight_unregister(drvdata->csdev);
+@@ -927,6 +942,11 @@ static void stm_remove(struct amba_device *adev)
+ 	stm_unregister_device(&drvdata->stm);
+ }
+ 
++static void stm_remove(struct amba_device *adev)
++{
++	__stm_remove(&adev->dev);
++}
++
+ #ifdef CONFIG_PM
+ static int stm_runtime_suspend(struct device *dev)
+ {
+@@ -935,6 +955,8 @@ static int stm_runtime_suspend(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_disable_unprepare(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_disable_unprepare(drvdata->pclk);
+ 	return 0;
+ }
+ 
+@@ -945,6 +967,8 @@ static int stm_runtime_resume(struct device *dev)
+ 	if (drvdata && !IS_ERR(drvdata->atclk))
+ 		clk_prepare_enable(drvdata->atclk);
+ 
++	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
++		clk_prepare_enable(drvdata->pclk);
+ 	return 0;
+ }
+ #endif
+@@ -973,7 +997,67 @@ static struct amba_driver stm_driver = {
+ 	.id_table	= stm_ids,
+ };
+ 
+-module_amba_driver(stm_driver);
++static int stm_platform_probe(struct platform_device *pdev)
++{
++	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	int ret = 0;
++
++	pm_runtime_get_noresume(&pdev->dev);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
++	ret = __stm_probe(&pdev->dev, res);
++	pm_runtime_put(&pdev->dev);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int stm_platform_remove(struct platform_device *pdev)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
++
++	if (WARN_ON(!drvdata))
++		return -ENODEV;
++
++	__stm_remove(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	if (!IS_ERR_OR_NULL(drvdata->pclk))
++		clk_put(drvdata->pclk);
++	return 0;
++}
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id stm_acpi_ids[] = {
++	{"ARMHC502", 0, 0, 0}, /* ARM CoreSight STM */
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, stm_acpi_ids);
++#endif
++
++static struct platform_driver stm_platform_driver = {
++	.probe	= stm_platform_probe,
++	.remove	= stm_platform_remove,
++	.driver	= {
++		.name			= "coresight-stm-platform",
++		.acpi_match_table	= ACPI_PTR(stm_acpi_ids),
++		.suppress_bind_attrs	= true,
++		.pm			= &stm_dev_pm_ops,
++	},
++};
++
++static int __init stm_init(void)
++{
++	return coresight_init_driver("stm", &stm_driver, &stm_platform_driver);
++}
++
++static void __exit stm_exit(void)
++{
++	coresight_remove_driver(&stm_driver, &stm_platform_driver);
++}
++module_init(stm_init);
++module_exit(stm_exit);
+ 
+ MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
+ MODULE_DESCRIPTION("Arm CoreSight System Trace Macrocell driver");
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.25.1
 
