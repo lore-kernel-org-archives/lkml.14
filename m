@@ -1,110 +1,120 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1774E09
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B84D76020
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710442503; cv=none; b=tHPAhOcTX7Y2GVQJEnas4S94o3UIJyNz4iR3U0tugpAyinrnZcca33XLKHROmwfV5BF8V/j0TYlxt87IYkzXxq42MUkOM+++Eg1eWQjyTIa/qgshKGRkxUkBXZ5PIjQt2m39rBIyvTrmAhzHhhNUwFZ0Dz+10SBxAD3ipVCU1yA=
+	t=1710442507; cv=none; b=oJh2pljGh4Wdl125qSMdJCu2AyBK23x2lxeteYw5U8NLIX3IRsA22tdCGiPoZ/HuZdEcecZNlh2jgqjHp92LVLxUgy025yemoe9z9bk7x3EFE3WmQx5oGnr4J7DwywOA8SNqDjJ+BqyFtAD2ILYg8fQ1dB5qZn/jrIHrkri/z1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710442503; c=relaxed/simple;
-	bh=MFdEORqspMm/N9RlMn5fTaPR58EUdK/aeU0l5TOmLDo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eKpb6H06jYHUaWuwOqWKS+HIdflJcrxpiqYep3e+nCUrn1/LFQEY5hs+H75pz+btl6D2NZKL4rJOMDwVp+NCWhIISi/njZpGEWPMfEQ4n45lsLL9qd1tWIoUg7y9W6f2+DGcVIsC+NXYzh+81Tk0mIp4L0ClfB3P5OPthOyOjAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f7PJ+qXM; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1710442507; c=relaxed/simple;
+	bh=g8+m6wVhn62/YB61tWYmVaCN82OA3SBWyU5t/Mgkl/s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=p+5ODj7MD6HU0En23xi1a2WBM6gDdC991N32eFrsXT9xykGz0sIW8bepVS5ief/4XCnQp9yFXTf7LjSUfMtUce2Xl+nRazZcg2GE7lK25gtCPs90ipwoH9/5iWLju5Dmqr1T81dswbezLXFOwxdAU/Ot/sg2Q+OJgW0YVB47gdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FonB+BZt; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f7PJ+qXM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6dbdcfd39so2217701276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 11:55:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FonB+BZt"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc58cddb50so1909491276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 11:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710442501; x=1711047301; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h4WDWsHDCvZpCR8WqPi8av5n4xNVj7Fxl1eqlGJ2Tas=;
-        b=f7PJ+qXMv7ly+D3nEIwSNtwg3+NAurmrAKs06sHMYAmszr7A2w0CyV1RKkyubtNyNB
-         4q4QaGcFWUVMRHRgXSVPn8zpppgs7HpvWuSLdXodu79BG5BgcVg3CIOgPtAfuzVqtpaq
-         Ej869Fy/S9Bnz4OQj8BE0PrtzybncxMCsHrH0B1kUVq75usUjDBXDxdcWRTUzfqmiM0X
-         35kAxHx1e41X9MrjlhcC7h9/zdl3FmqnzIv+2lCp1sammI8shguxA+G1BiTKXO+cf2Bt
-         tber7rlrADxjVDG0YG+Cf9AXXCB+kPimLRjlAJWvrFllVpxza4TdvPRoxAGVemOa3RVK
-         WUOQ==
+        d=google.com; s=20230601; t=1710442505; x=1711047305; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+Az/OLv9UsNduwOpIQqghv3e+Z9TgGHRylS0Lw0x08=;
+        b=FonB+BZtePmgYv5jIv+EUyqLqQ9398WDd1y6lA4H1jBd/Fc8hGwfUjoYIZrUyAKcMW
+         5HQFTdFENZ6vAwH2IPsrF9r+xc7qwZ0WQhMwqZRiz6uT1LtljZ3ayjDkgea+iHX8ln1O
+         IpE43p01lie9t3vBQADzwSlFT2Vqx5GbJiEK1V6kfxIVn8OiVCixXUke7lQe9ayBt/U+
+         v+z9INrzhpjbN6rEjeSemRw5mRBk0ZGryJ4t/p4Z+M6L5fb0WZdDvuh0UP3XOc+tmoGD
+         shAzyJSGRSW4dugK2Y8+bSnQA0vvuuujsebFMpN2uEqsp05zLFVyXpRD/msDob7sXkv6
+         m29A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710442501; x=1711047301;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h4WDWsHDCvZpCR8WqPi8av5n4xNVj7Fxl1eqlGJ2Tas=;
-        b=UAoSThMY/4/aRToa3jUQyiWyHy1OrGcJuOoxmm3wRi58VtTZMh0UeOzYYvAWBB8jEs
-         HDABUvnKNYiwMbk4leObNFkjQ5ugUrvvXbN/wL1cEUminsamTHUTmLxAqTj7oaoRCKY4
-         UCFkYFizp+NMu0gRP7mtNnWCYGFr5fiaxtvMd99MxOgMOsQJuyb74LSfitC9+64yRwYh
-         hj3QLzpyXgeACwUGr6FbSaZwQKFZnODvgWWPfWMy0rIMIN7OGdLrwlkvB7tLqZxF7IU2
-         0lJCWHtX4wvfseJ56WlZ9YRg1LJsqqXFKi3sLq20/O1cF5s9ZedZk6Owev28injg0j2B
-         EYog==
-X-Forwarded-Encrypted: i=1; AJvYcCUOzydA8V6Pi+ZeH7N11TGRFfjrrecOBNoqBB/OQk/IzV9H6CoLYBmZO6D0RMsAiOT2dikHGgujxRwynojoHXpHznUsopuNVjlpyJgA
-X-Gm-Message-State: AOJu0Yy0BntfU4KuxE0dZXx+oOmPC8VKApkGRlQyo2he7Ezx+ntIB/rT
-	LTZbs2APAUcWvdj+veGZ7wAXwLoJzN4hTAeJGPmuqfbUGl4uIltAWYRwoPv9JWif3OKwci7A/QW
-	Q8Q==
-X-Google-Smtp-Source: AGHT+IFSm4RhRIx0QXZ8OxfpsWijUgWYXTmtFB0hVLldiIhRPyFdnJKaLCsSUgStdv4wldRmubDOyukR16M=
+        d=1e100.net; s=20230601; t=1710442505; x=1711047305;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6+Az/OLv9UsNduwOpIQqghv3e+Z9TgGHRylS0Lw0x08=;
+        b=MzoXBkAjwb0Hk8Vag6InRg5yLjMOQK3hRXNedzA2GI6z+s3xvPCQjcCPvwf/WnArwx
+         Qvv3lobiZuomd9IumsefvyNPT0/QTMeq22yuOTlAON2/2uFGSW5PiQ+ahTwmyvlf3lx0
+         LzUxwqIGb2mqaA+VUJ5V7ZKKGgCIotSr8TgEofN+U22OKBS211+flCBB3eM4OtqnWSHr
+         B8kvjuLB87XUlFWtUWIC5RhLbvkn0YBKR00vF0Suwoe6+niOCHFN06ALOYJ0eM9epQGx
+         iAn4LB4oaTKP9Eo5DUsHwsTwer29syja/wzKs2NpT6vdqf30vMgAGsea10+Jwqr8Pz0B
+         O20A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwYe6JFWk3NdrgAgsrT1q2xKtI7wliCV1CZRU0D8TEyyP1cUwyYyLGaoTHc7QxKVsLFKxB1vLcOrgltyZVfYbdiVEeFiK8yxGvFSb5
+X-Gm-Message-State: AOJu0YwuUK+KbaFyWgp6/doRb675LTTVCzxk8wasmFYizIZNWfmynw1M
+	0YUOJbcEe1v/RWKg41ueolZkGj/sy759uiqzlWk6ayISyKBqMJLN61H808P/KB0mqHPxX1xlZwq
+	lMA==
+X-Google-Smtp-Source: AGHT+IEhmzPk/UcLVfOZhpWA1P7NVg8eJi7RqkeVDRHqMqz9dDS4VG4S19mrC8/iJZ2xuyNfKfSSOWHjSIU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:2408:b0:dc2:1f34:fac4 with SMTP id
- dr8-20020a056902240800b00dc21f34fac4mr3803ybb.2.1710442501355; Thu, 14 Mar
- 2024 11:55:01 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1b91:b0:dcc:6065:2b3d with SMTP id
+ ei17-20020a0569021b9100b00dcc60652b3dmr1781ybb.8.1710442505154; Thu, 14 Mar
+ 2024 11:55:05 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 14 Mar 2024 11:54:53 -0700
+Date: Thu, 14 Mar 2024 11:54:55 -0700
+In-Reply-To: <20240314185459.2439072-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240314185459.2439072-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240314185459.2439072-1-seanjc@google.com>
-Subject: [PATCH 0/5] KVM: selftests: Introduce vcpu_arch_put_guest()
+Message-ID: <20240314185459.2439072-3-seanjc@google.com>
+Subject: [PATCH 2/5] KVM: selftests: Provide an API for getting a random bool
+ from an RNG
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The end goal of this series is to add a regression test for commit
-910c57dfa4d1 ("KVM: x86: Mark target gfn of emulated atomic instruction
-as dirty"), *without* polluting the common dirty_log_test.c code with
-gory x86 details.
+Move memstress' random bool logic into common code to avoid reinventing
+the wheel for basic yes/no decisions.  Provide an outer wrapper to handle
+the basic/common case of just wanting a 50/50 chance of something
+happening.
 
-The regression test requires forcing KVM to emulate a guest atomic RMW
-access, which is done via a magic instruction prefix/opcode that is
-guarded by an off-by-default KVM module param.
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ tools/testing/selftests/kvm/include/test_util.h | 11 +++++++++++
+ tools/testing/selftests/kvm/lib/memstress.c     |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-To allow x86 to (a) detect the param, (b) shove in the unique instruction,
-and (c) do all of that conditionally so that selftests doesn't test _only_
-the forced emulation path, this series provides a pseudo-RNG instance for
-all tests, and a new arch hook for doing "interesting" guest writes
-(vcpu_arch_put_guest()).
-
-Tested on x86 and ARM, compile tested on s390 and RISC-V.
-
-Sean Christopherson (5):
-  KVM: selftests: Provide a global pseudo-RNG instance for all tests
-  KVM: selftests: Provide an API for getting a random bool from an RNG
-  KVM: selftests: Add global snapshot of
-    kvm_is_forced_emulation_enabled()
-  KVM: selftests: Add vcpu_arch_put_guest() to do writes from guest code
-  KVM: selftests: Randomly force emulation on x86 writes from guest code
-
- .../selftests/kvm/dirty_log_perf_test.c       |  9 ++++----
- tools/testing/selftests/kvm/dirty_log_test.c  | 22 ++++--------------
- .../selftests/kvm/include/kvm_util_base.h     |  3 +++
- .../testing/selftests/kvm/include/memstress.h |  1 -
- .../testing/selftests/kvm/include/test_util.h | 19 +++++++++++++++
- .../kvm/include/x86_64/kvm_util_arch.h        | 23 +++++++++++++++++++
- tools/testing/selftests/kvm/lib/kvm_util.c    |  9 ++++++++
- tools/testing/selftests/kvm/lib/memstress.c   | 10 ++------
- .../selftests/kvm/lib/x86_64/processor.c      |  3 +++
- .../selftests/kvm/x86_64/pmu_counters_test.c  |  3 ---
- .../kvm/x86_64/userspace_msr_exit_test.c      | 10 ++------
- .../selftests/kvm/x86_64/xen_shinfo_test.c    |  5 ++--
- 12 files changed, 72 insertions(+), 45 deletions(-)
-
-
-base-commit: e9a2bba476c8332ed547fce485c158d03b0b9659
+diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
+index 4b78fb7e539e..3e473058849f 100644
+--- a/tools/testing/selftests/kvm/include/test_util.h
++++ b/tools/testing/selftests/kvm/include/test_util.h
+@@ -97,6 +97,17 @@ extern struct guest_random_state guest_rng;
+ struct guest_random_state new_guest_random_state(uint32_t seed);
+ uint32_t guest_random_u32(struct guest_random_state *state);
+ 
++static inline bool __guest_random_bool(struct guest_random_state *state,
++				       uint8_t percent)
++{
++	return (guest_random_u32(state) % 100) < percent;
++}
++
++static inline bool guest_random_bool(struct guest_random_state *state)
++{
++	return __guest_random_bool(state, 50);
++}
++
+ static inline uint64_t guest_random_u64(struct guest_random_state *state)
+ {
+ 	return ((uint64_t)guest_random_u32(state) << 32) | guest_random_u32(state);
+diff --git a/tools/testing/selftests/kvm/lib/memstress.c b/tools/testing/selftests/kvm/lib/memstress.c
+index f8bfb4988368..2d49a5643b71 100644
+--- a/tools/testing/selftests/kvm/lib/memstress.c
++++ b/tools/testing/selftests/kvm/lib/memstress.c
+@@ -76,7 +76,7 @@ void memstress_guest_code(uint32_t vcpu_idx)
+ 
+ 			addr = gva + (page * args->guest_page_size);
+ 
+-			if (guest_random_u32(&rand_state) % 100 < args->write_percent)
++			if (__guest_random_bool(&rand_state, args->write_percent))
+ 				*(uint64_t *)addr = 0x0123456789ABCDEF;
+ 			else
+ 				READ_ONCE(*(uint64_t *)addr);
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
