@@ -1,123 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F883FE4;
-	Thu, 14 Mar 2024 03:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C395ABA50
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 03:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710388441; cv=none; b=d2scbxi50WkkobfEsixikx6b5armnANiIrOQNr4sEidINa3Kk6gYjG/MJbtdxFskxK9doInfcQI/R4PMD6PfUVvHeRUR4lFPujd5k5ioT8U4MEbo2O+fXxpOrq0BjDk2jUn9C1siEAnfDrVWzMWOQV/xQ303ASvKcILNmJoY1So=
+	t=1710388513; cv=none; b=aPNa71gz8oqcciDVYZ0jJwUWXJeq4dOsgU+TyNKK2WG+LuAge6Yk/GxEKaNCRKN0pRNik72/alQpOkyWNcCXvfhlm3x5YvfTf7IDqE/r7+ulpe1xCfCv1ad62GA9f9t5tlQLp1VUYpaa4pyXjKHvhkd1p2cn76S7lpbBNIxzU00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710388441; c=relaxed/simple;
-	bh=rcgMvEmq2ixSXP+IeYxrksDnBiZXb7HZ9xOUnpCsZkE=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ZK6R22wNQhO2QPSa2viSSvl2Z5LCB56XX4JRYYiSuiyMEerCfoaO54sZRN6CR5YBdqqqRWfyKuxFrNdiTp7MlYabLLClYoF94q9vORUAYDJjgVTjKIPu2YzTk9F+Tut4gKs4d8148GhHmEi+LPrqHAMpe2TjvWc4uMw7PeIxB2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbiWQZRa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710388513; c=relaxed/simple;
+	bh=cnowjd+g1/lhYd4a3gDndVTQ3z066ZB3OLRHAiHIK6k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A1yfY+iBUsK0iSbe4/ZMWsbiDgS0IpgAxhk9aYgZeDBdiMfrSzAv3Ystnvv2O12HZZ1l2L0s2IiieCS+hFaUB0ZSG17upSIyM8uldnoFbWTz6dsoAlpcM6tx1zZ5wIVg+pxTJHBk+OA1To0dL2tWIx9Z0J/WLhitmw15SulpNBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=dw/AcaWB; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbiWQZRa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F853C43390;
-	Thu, 14 Mar 2024 03:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710388440;
-	bh=rcgMvEmq2ixSXP+IeYxrksDnBiZXb7HZ9xOUnpCsZkE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=MbiWQZRakVgAofeGA4wacxNF3uc+0FIUDo5NOCA98EEofSdUtDcbQVDP9Ofg52eBt
-	 LyPkoLbsru/kJ9DwXlY45Hh+tezGiE9dyOpbgx4JhdqveuDQxINtB7uz3mjSPkqyON
-	 jsA1LBYy3dTIgqQZ364sUYFeSJh0VBxUBH4k1tL7fj5f6yLUPnx2Zk1FM9YdIFi5Py
-	 QfHDn0UqgaMpcKpJkb3DwcXrutH0q92PL/rcgw6u7hhz/Z83gJveGboK4GSV1UB5IG
-	 yRO4xFQGiFAtuSg4aroDJoZOZlYTboM7rjER3Y6Ei8k1qFt6U4eKO3Uz4BDRo9X7rY
-	 8h9WH2wKi8q6g==
-Date: Wed, 13 Mar 2024 21:53:59 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="dw/AcaWB"
+Received: from cwcc.thunk.org (pool-173-48-116-252.bstnma.fios.verizon.net [173.48.116.252])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 42E3snBJ003035
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Mar 2024 23:54:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1710388491; bh=kFeL3FwNojsbT7MVre4oV9xu3BLSFmfHbJAwwk8zl4I=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=dw/AcaWBFjCouyvhm/BUkiRI1rCFQ0LZ5bqNxVnFGUtpKOfOUHboBLSwZSic3ixoY
+	 DU+ywpVSlnwPLgvUegl39JKjwDyeEq9N0kc1N8tL4dzmkqVIp0NUDVmM1tWQgS3FAW
+	 w6JCpQqyCcvmjZbj4KCSBV3AZLYhTZKI37jsSJxxvVlLIGbHKyQqFtSpFmqpvFIWzi
+	 ffdRqH+lIOvEJ0QAlxhcdZCBS62g6mgky2TKTmir0oS5Mwi51lhiHJKhzdiOwCIUn9
+	 ErpLdGvPfIxhezXGWAtXFYDMAx/ashI+WHzxKTiASzMjjpNGwx1/6voXQ9E3469ZXL
+	 3Z/9RXkT30Mig==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id EDF7A15C027D; Wed, 13 Mar 2024 23:54:48 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wenchao Hao <haowenchao2@huawei.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, louhongxiang@huawei.com
+Subject: Re: [PATCH] ext4: remove unused parameter biop in ext4_issue_discard()
+Date: Wed, 13 Mar 2024 23:54:43 -0400
+Message-ID: <171038847842.855927.7814623611820545715.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240226081731.3224470-1-haowenchao2@huawei.com>
+References: <20240226081731.3224470-1-haowenchao2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Simon Glass <sjg@chromium.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
- Conor Dooley <conor+dt@kernel.org>, Richard Weinberger <richard@nod.at>, 
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
- Michael Walle <mwalle@kernel.org>, devicetree@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20240314021754.84557-1-sjg@chromium.org>
-References: <20240314021754.84557-1-sjg@chromium.org>
-Message-Id: <171038843809.1875072.5117887571496305012.robh@kernel.org>
-Subject: Re: [PATCH v7 1/2] dt-bindings: mtd: fixed-partition: Add binman
- compatibles
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
-On Thu, 14 Mar 2024 15:17:53 +1300, Simon Glass wrote:
-> Add two compatibles for binman entries, as a starting point for the
-> schema.
+On Mon, 26 Feb 2024 16:17:31 +0800, Wenchao Hao wrote:
+> all caller of ext4_issue_discard() would set biop to NULL since
+> 'commit 55cdd0af2bc5 ("ext4: get discard out of jbd2 commit kthread
+> contex")', it's unnecessary to keep this parameter any more.
 > 
-> Note that, after discussion on v2, we decided to keep the existing
-> meaning of label so as not to require changes to existing userspace
-> software when moving to use binman nodes to specify the firmware
-> layout.
-> 
-> Note also that, after discussion on v6, we decided to use the same
-> 'fixed-partition' schema for the binman features, so this version
-> adds a new 'binman.yaml' file providing the new compatibles to the
-> existing partition.yaml binding.
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> ---
-> 
-> Changes in v7:
-> - Adjust MAINTAINERS entry
-> - Put compatible strings into the 'fixed-partition' binding
-> 
-> Changes in v5:
-> - Add mention of why 'binman' is the vendor
-> - Drop  'select: false'
-> - Tidy up the compatible setings
-> - Use 'tfa-bl31' instead of 'atf-bl31'
-> 
-> Changes in v4:
-> - Correct selection of multiple compatible strings
-> 
-> Changes in v3:
-> - Drop fixed-partitions from the example
-> - Use compatible instead of label
-> 
-> Changes in v2:
-> - Use plain partition@xxx for the node name
-> 
->  .../bindings/mtd/partitions/binman.yaml       | 49 +++++++++++++++++++
->  MAINTAINERS                                   |  5 ++
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/binman.yaml
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Applied, thanks!
 
-yamllint warnings/errors:
+[1/1] ext4: remove unused parameter biop in ext4_issue_discard()
+      commit: 0efcd739fc07cefd5c54e202f66b4ea5def4776b
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/partitions/binman.example.dtb: partition@100000: Unevaluated properties are not allowed ('align-end', 'align-size' were unexpected)
-	from schema $id: http://devicetree.org/schemas/mtd/partitions/binman.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/partitions/binman.example.dtb: partition@200000: Unevaluated properties are not allowed ('align' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mtd/partitions/binman.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240314021754.84557-1-sjg@chromium.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
