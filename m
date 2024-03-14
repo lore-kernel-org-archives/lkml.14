@@ -1,153 +1,129 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AB176C63;
-	Thu, 14 Mar 2024 21:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFDA5C61C;
+	Thu, 14 Mar 2024 21:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710451292; cv=none; b=inAwotot/ReCsI4mKh1soV18u/9xnAHrZa1aeu5Ld/BhJYb0d0ZsBug9FHa8Q5CLN+OGQM6nUAFbibtddVhjjRvdU+5Ke8zefcoLQeLujwQ0+xEXbU5GzNhQrZVlZwiLwoUisufufXpXZW71ut/0U638QsQUtGJ+reQBh2oQD7A=
+	t=1710451362; cv=none; b=dSrzsfBSq/eb2tufmaMpBZGXuv11porFs7rTeJ8ecHr4Q9smbVJsR5mRwKWldaIAmw3nJtKjPEJjvqnUU7TVNZGTZwFoU7PFw1AOW0UTHOkClowKOlSrHVa2OE7Ww+y6wsvoRZDrOl6e8IYHsGabb6l0sdo9DOPmsv2V6owOej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710451292; c=relaxed/simple;
-	bh=Ef5/Ey0FsbDtHW5wtQ6HdF+C18tpOXHnlB3rr4fR2v4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GRsCRB+hX10RdIvUH0Oz9yX3zErZRPf1YB85QciB3By40qYtbV3D/5aVkaxVN6tDKbZb7E2n6lBZgyJuSrTvjKi896jftuqd6oYxM2kz07KprdnrsFitkP9JgH3uPspawktmbi0FOMDJ/5437+IWBt6MGziTqlTP608iwZxV2rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mppfw1Qu; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710451362; c=relaxed/simple;
+	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3TxehETkkln9f4jM4+qWDBaxXzojSLvW3/m3SLgXGWI8idwHxYRa1RLUr7mcOBsthPPq0pu1CJwhb2hqaycF9x/sXJvjGQNQEylfIbEpq8RMk8yzjW++mSNiAFsSeqyxKBRw0qBCi7nVT9nLEfpPySNte7UXSUmPvJZddVSEy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME+Sb6BD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mppfw1Qu"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6da202aa138so891936b3a.2;
-        Thu, 14 Mar 2024 14:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710451290; x=1711056090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIdjsnxO6N4MzycqZb/h5F1aroW4/yAYPUPnkFR/3H4=;
-        b=mppfw1QudHb4utR+xNsyoLeN69pFPysTxDb8IhFOCJDOGjOyLrIsC0IyprX3n1sxL5
-         9+L8Osv/cr0XBJiPAIZSN1uLrrk1f+EBIA946+wgPpfTxHRIzGBO7mLH0JqeYwRKQl5E
-         UC01aIxFDCHUlMdbjjSvPy87w2xcN+RF3eyFIkkSzbcgo+tsUlzVGO7Wrp5G7/rqNyza
-         XTsmhMiQm72e02JJmgUS4HpKkUDMMb5YVu2+uPkJZJ3w6rZgfMmEFqV6yztT9VNinDFw
-         n5dnPHgbRAHyx8X/mNwQaZeF1lin9voKzjo5C/OYzlS5zNnxyOSMlILZQxmNGY88zQGs
-         7zvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710451290; x=1711056090;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lIdjsnxO6N4MzycqZb/h5F1aroW4/yAYPUPnkFR/3H4=;
-        b=QdFkjkWQsvvNDDcyt9WIHQymplvJ9mJ6pFPmmEVrkfBnQGUvph2e2umw0c4J5efnx2
-         cKXMaRYBMa6Ape6OCtUTpIIO+fBl0gG3r9Gxa32+9SDyefcuKVddoyrfs4SOo/ccOlwY
-         DluNa1iRA8MMb7g/+FKJfHyUl0E+tATO197rVRqviYMzMjTRIg1mD3Z+lEj6fyEJmRPS
-         9sqMGGloA5lUxw+1++RnITRxHoqw9wOK92EL01hEd3Oxy1dAWAjWPWrCbK8drqBmhSJW
-         /W5s5AOfn4B0NoZUEKTZQwkHNQg2F3wX+xiPFyqgIvX7aWaCHyl8WFlz0z8KIBNZs+fm
-         8rHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXrZo38LtBjGhUbaJEqRkSi5KnK8MVbaJJXjjKn4l5uYTh3AlHND+zWKg2JJLBeXvNnBS00bd5+pAD9F3V9xw1DP17TMyQJ0KV8kkzCXpAevI9RaTs+WjK9G7GA8oMP6B7tPAdD/M=
-X-Gm-Message-State: AOJu0YxsJQs83hD3o5CEKtSFwEblJroUYPOTrlTGU2pHnyn/zAb1Zd7v
-	BZeK6YcoqmUnOAHy1ZhOE9ExNESJL+/klIQOpM/UXcu7317bLyRe
-X-Google-Smtp-Source: AGHT+IEdTeu5r/rtOOnJ55wjGudUVIpE6tR2ThyI1kBqfmVuxNiBVoZ6vxAY9udM6+LkUx8oMSpg3A==
-X-Received: by 2002:a05:6a20:8c9f:b0:1a0:f5b9:bd88 with SMTP id k31-20020a056a208c9f00b001a0f5b9bd88mr1243953pzh.55.1710451290522;
-        Thu, 14 Mar 2024 14:21:30 -0700 (PDT)
-Received: from localhost ([2408:8207:2572:7dc0:31a4:b729:4b7a:d450])
-        by smtp.gmail.com with ESMTPSA id p19-20020a056a000b5300b006e04ca18c2bsm1978280pfo.196.2024.03.14.14.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 14:21:30 -0700 (PDT)
-From: Xin Wang <yw987194828@gmail.com>
-X-Google-Original-From: Xin Wang <yw987194828@163.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xin Wang <yw987194828@163.com>,
-	Xin Wang <yw987194828@gmail.com>
-Subject: [PATCH v2 1/1] io_uring: extract the function that checks the legitimacy of sq/cq entries
-Date: Fri, 15 Mar 2024 05:21:17 +0800
-Message-Id: <20240314212117.108464-2-yw987194828@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314212117.108464-1-yw987194828@163.com>
-References: <20240314212117.108464-1-yw987194828@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME+Sb6BD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6FDC433F1;
+	Thu, 14 Mar 2024 21:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710451361;
+	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ME+Sb6BDJu10rxvJXW6AUg2TcwxVgYix6XDzJ4Roy/sPkqq/8HYVZpyskCfuDulPR
+	 nVndx/6RdRL8HnHw9vd+wJ+lz3wkIkQm+vPhFz7i2e7YgNZ49DjLJ7fZn6xyaARXxR
+	 eYaKDpPl3qFG0pZ5EKw5wx2PNnqXC8RGiJiJks3QPtkPsAnwZMrj7KLHSUdkWUc/MT
+	 jfaQIfnweLl1YZ4AlKZVDjwvuxViSUtyVUmT46MdibKgXYaGgN6PXNmwqEqUOcMBAC
+	 vJCLiladNTyBJSRIzk+sr6FlYxFzBn8TDWfevT7Iy4b87hyVl6giycA0LcFOsBTDcw
+	 t89L10ZLKPZcg==
+Date: Thu, 14 Mar 2024 18:22:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfNqnjdR-0YEsSnb@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
+ <ZfIJIfqeI9tWnnS5@x1>
+ <20240314091033.woaK8h83@linutronix.de>
+ <ZfMK_yTzxTQCMGZ1@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfMK_yTzxTQCMGZ1@x1>
 
-In the io_uring_create function, the sq_entries and cq_entries passed
-in by the user are examined. The checking logic is the same for both, so
-the common code can be extracted for reuse.
+On Thu, Mar 14, 2024 at 11:34:39AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> > > > noticeable when running with/without the patch with Vince's regression
+> > > > tests. So:
 
-Extract the common code as io_validate_entries function.
+> > > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Changes:
-V1->V2::
-  - Replace function name 'io_validate_entries' with 'io_validate_ring_entries'
-    to enhance readability.
-  - Removed unnecessary parentheses.
-  - Line Wrapping.
+> > > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
 
-====================
+> > Just to be clear: You revert your Tested-by because now you test this on
+> > torvalds/master but not because you reported a regression which I
+> > missed.
 
-Signed-off-by: Xin Wang <yw987194828@gmail.com>
----
- io_uring/io_uring.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+> You got it right. No regressions, the code is good, I just need to test
+> it a bit further, with torvalds/master, without PREEMPT_RT.
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index cd9a137ad6ce..4c3580229283 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -3819,6 +3819,19 @@ static struct file *io_uring_get_file(struct io_ring_ctx *ctx)
- 					 O_RDWR | O_CLOEXEC, NULL);
- }
- 
-+static bool io_validate_ring_entries(unsigned int *entries,
-+				     unsigned int max_entries, __u32 flags)
-+{
-+	if (!*entries)
-+		return false;
-+	if (*entries > max_entries) {
-+		if (!(flags & IORING_SETUP_CLAMP))
-+			return false;
-+		*entries = max_entries;
-+	}
-+	return true;
-+}
-+
- static __cold int io_uring_create(unsigned entries, struct io_uring_params *p,
- 				  struct io_uring_params __user *params)
- {
-@@ -3827,13 +3840,8 @@ static __cold int io_uring_create(unsigned entries, struct io_uring_params *p,
- 	struct file *file;
- 	int ret;
- 
--	if (!entries)
-+	if (!io_validate_ring_entries(&entries, IORING_MAX_ENTRIES, p->flags))
- 		return -EINVAL;
--	if (entries > IORING_MAX_ENTRIES) {
--		if (!(p->flags & IORING_SETUP_CLAMP))
--			return -EINVAL;
--		entries = IORING_MAX_ENTRIES;
--	}
- 
- 	if ((p->flags & IORING_SETUP_REGISTERED_FD_ONLY)
- 	    && !(p->flags & IORING_SETUP_NO_MMAP))
-@@ -3854,13 +3862,8 @@ static __cold int io_uring_create(unsigned entries, struct io_uring_params *p,
- 		 * to a power-of-two, if it isn't already. We do NOT impose
- 		 * any cq vs sq ring sizing.
- 		 */
--		if (!p->cq_entries)
-+		if (!io_validate_ring_entries(&p->cq_entries, IORING_MAX_CQ_ENTRIES, p->flags))
- 			return -EINVAL;
--		if (p->cq_entries > IORING_MAX_CQ_ENTRIES) {
--			if (!(p->flags & IORING_SETUP_CLAMP))
--				return -EINVAL;
--			p->cq_entries = IORING_MAX_CQ_ENTRIES;
--		}
- 		p->cq_entries = roundup_pow_of_two(p->cq_entries);
- 		if (p->cq_entries < p->sq_entries)
- 			return -EINVAL;
--- 
-2.25.1
+Tests performed, no regressions detected, same behaviour when killing
+the remove_on_exec selftests midway:
 
+[acme@nine perf_events]$ perf annotate --stdio2 exec_child | tail
+              mov    $0x1,%edi
+            → callq  _exit@plt
+        b5:   nop           
+100.00  b6:   mov    signal_count,%eax
+              test   %eax,%eax
+            ↑ je     b6     
+              nop           
+              nop           
+              leaveq        
+            ← retq          
+[acme@nine perf_events]$ pidof exec_child 
+28256 28249 28241 28240 28239 28236 28228 28226 28224 28223 28219 28215 28208 28207 28206 28205 28200 28188 28187 28186 28185 28169 28168 28167 28166 28155 28154 28153 28152 28140 28139 28138 28137 28124 28123 28122 28121 28111 28110 28109 28108 28094 28093 28092 28091 28080 28079 28078 28077 28064 28062 28061 28060 28048 28047 28046 28045 28030 28029 28028 28027 28012 28011 28010 28009 27998 27996 27994 27993 27982 27981 27979 27978 27966 27965 27962 27961 27952 27951 27949 27948 27934 27933 27932 27931 27920 27919 27918 27917 27906 27905 27903 27902 27888 27885 27883 27882
+[acme@nine perf_events]$
+
+[acme@nine linux]$ uname -a
+Linux nine 6.8.0-rc7.sebastian-rt6+ #2 SMP PREEMPT_RT Tue Mar 12 18:01:31 -03 2024 x86_64 x86_64 x86_64 GNU/Linux
+[acme@nine linux]$ perf probe -L perf_pending_disable
+<perf_pending_disable@/home/acme/git/linux/kernel/events/core.c:0>
+      0  static void perf_pending_disable(struct irq_work *entry)
+         {
+      2         struct perf_event *event = container_of(entry, struct perf_event, pending_disable_irq);
+                int rctx;
+         
+                /*
+                 * If we 'fail' here, that's OK, it means recursion is already disabled
+                 * and we won't recurse 'further'.
+                 */
+                rctx = perf_swevent_get_recursion_context();
+     10         __perf_pending_disable(event);
+     11         if (rctx >= 0)
+     12                 perf_swevent_put_recursion_context(rctx);
+         }
+         
+         static void perf_pending_irq(struct irq_work *entry)
+
+[acme@nine linux]$
+
+So I keep my:
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
