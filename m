@@ -1,239 +1,149 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04olkn2103.outbound.protection.outlook.com [40.92.47.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE9671B3C
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710430642; cv=none; b=Wlyj9frTWjJ7jDlWqoPzH73WAx/RaCGhPtreAVYUOW7hRYS5sDuSmQRFR2YzWAJQeFjVPtemiH08YYt5Av1zqnckIVxc/LsnAtXm72WfQ0jmFbLxMYDmvP8K7YdvcT5HMp8jvmxuhJ85WNgIq7LZdh1WlRKKp80Qj7rq/+TjSeU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710430642; c=relaxed/simple;
-	bh=SPVqWWkb2K1BrqMKLNhmlLdj/AUNuhYVfe1ThELFrb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MBy1ZB0eRfdfVE/6yHHsroMwync79srMNMMirfOFVvMW3SNlwyuLcZiZe1St1b4hSk5UuU4xgqykykdWd7rs636Km7EF9/Jhj14aPy8A0b32Il7gwviaBMW/tRK7pyiXFOB/1iNOaAqo0Shu1vhOFB1LxbikpuUwYMZWhz6nfUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wgWdlUBX; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2324B73161;
+	Thu, 14 Mar 2024 15:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.47.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710430647; cv=fail; b=Mx5dn+n0izO8JHg6FaAJwyCIM8Qk7PJpdyCuxHey8/0Y0RjMITWzu3Rr8J7Jqq3pyrNDq9eopbnAieJj/GEy9IDi5zHC7NAskSa/pmvJ+euIwMV+ojqIxc5L4pfhc1keGWc94c7krwQL44JqHfHyhKd5d+0f73fmYEFfp63tkBQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710430647; c=relaxed/simple;
+	bh=KGpu6XTESecw4acs1KGy93NGZNiEm/cWrqr/MsHfZl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ocqk1RkAET0PBxHmQTNNrD8z9vJiS6O+DaZ++CX8xsIoBlAVH6fbFhbJ/HuWgJuqUwSf4xU6CYP/tujQqcZVz6sCIyTfYDnSTXNLxP2Va9JpIy7dfi69IOjjBJdGv4syE487BSPv5oYdJD52olnJyrvdV4HtQzVnPB7UvgE6Enk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=Nolyqij3; arc=fail smtp.client-ip=40.92.47.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wgWdlUBX"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41312232c7aso13826685e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710430639; x=1711035439; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hrkk0iamSD3B9fHRkTsQ+4hlgt0dhGX0M+8WUe7tnlA=;
-        b=wgWdlUBXsccxOtxVCFkXBvwqfyrUkpYrBFV8/NRn9c4Sx/ViV1ESkKi7cPZKloRLQv
-         ZldV1CrT9jd83XXWG6NTinSdH9uSk5waqvs2YJRwgRP42q2lcRQ62SDg2GODppGUgKma
-         bxehDlOepfsWFFcKHyA5aC1l1K510vhy3DDLnaaOpab/5WEWCPiYbiiRibBJfwy2iVuF
-         OrASWTo1mNzGsfDcw/DwmQ8uNBQdg6VL7Uy/w4HqHQZC1/6+Z0sMcvQzijbLk8tqdQSy
-         NqxCmSNOTYGQ5vOpGSyrQsIr32cHZMfx49gxOvBUpOCE5ictLE8ljXst7W8BtuQKQo3T
-         D6iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710430639; x=1711035439;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hrkk0iamSD3B9fHRkTsQ+4hlgt0dhGX0M+8WUe7tnlA=;
-        b=KrSsSWH+AftvXDzR0eZYUFxpvf971UIAGG87C3Qdl8tkuKdyTiG1Ca+dVwu0NVOoeU
-         F9gg0syrdPjycO1wk2kmcMRQu83gdnVP6vXnDl1yWTBpmjreOlCDOXUaJbOpJQjxq1Xh
-         aMfUgildRYMeM/GYIoH7xHSK1N9rkGNuRD/oOj8uzfUxEl6sWy6LjZMNrITN8RQ7SZM6
-         6p37Nr9idwvrh+JGdTU5Zn5u05MagOTFmcb5/mio8L1UCRKAIdRLWbAikR23Rb9StqY4
-         1wtQcrXStZfPDKsTJNe3/td8j/DmIiFjm2mTgiJroWoAXbLztZ5DcHRgzdt0gWntyM+3
-         iTlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHvXTiQ7ww3Rc17xUf28ZJYXqcly2nHs9wV1nNIc4QK7xEQS3Kvvy/vwQIoi6COx3HrviXrMGOV1tY1Fxz6fJlH6erB38hKBwDrtfl
-X-Gm-Message-State: AOJu0YxtpQOD23+EMD4iIszTMeY+FuUokqriL3nUS7o5tSk8NHLcUH2V
-	UGSlIPmtrwx/NpQ5f3YZkGqt2MuCBo2eYEQfeHWAzGa8Z3qkzq5k9mseZkjQsG4=
-X-Google-Smtp-Source: AGHT+IFBgOSw9MnbY+rRKz5fxCP4xUmA4m909MnaxVuf1SVf2slvt1nzfZzf7+4/YmkGyAL28r0LeA==
-X-Received: by 2002:adf:a4c1:0:b0:33d:7ec9:f5d0 with SMTP id h1-20020adfa4c1000000b0033d7ec9f5d0mr1905835wrb.2.1710430639085;
-        Thu, 14 Mar 2024 08:37:19 -0700 (PDT)
-Received: from [192.168.1.78] (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05600016cf00b0033dc931eb06sm1112659wrf.0.2024.03.14.08.37.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 08:37:18 -0700 (PDT)
-Message-ID: <9b614c61-276d-45bf-8320-44b7358a3e19@linaro.org>
-Date: Thu, 14 Mar 2024 15:37:17 +0000
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="Nolyqij3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Iq/iFpu9M3+u/KFlXsr6T5uHbDtpkklMoM7A/HNn/gp7cuXbROJ3kgSQ42LQPKBikDILsYHgo2r+6XS8gzgPmvH3V2iK7oUptw6fIKbXgh6HDFsuoL23RA3Swg4lVd00Oe3gRGY99diwmwgkPaV2l92HsR+bC2AbJP8eTHK0x1T1MJTVexHHDcxWDmyON5+woHQFtRzQ+pdIlyiQ6e5GjA3VjHbK6brVXcNd21MGXtmodLhIq//Hghs6HlXB8reAiU857ochFjuKu+5qFg+diEfrrAmsXuovTFvTnjbaR+wpfnyEUOqltvlWJIPzdVuTv8Lfoc7NlCc/wjX/7W/Vew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xGPPzyxW99d6Lw7ezMhtXHhJX44cjofP8jGdKVcHmig=;
+ b=Wt50euCOOWfOuBtSMB70NnZ4blp22HUpb6QV4cp2Tn04DaSsZ2dxZSkVrJXJT+/i9twHewhXP2BEHyZWFjnIRc1Kukkb8duqA9w/WkolaghTDzxexQslZRJzHGujDbluABLmife/LVw3cIpr25McMaTir3qG+Ktq0ETVozWYBOOPf2P4/Q2fnfC8mMQXOudMac2upd86NLGYL32q3fPYKUM29pwXv/7OQNmbGfsW2NWUXD7zaIL1ocxVv4MBgfEIBbb3djYFOpvGieQ8d/ffpUEQpn5tpMM2xovYgaFBt5lLP7xw2zEeERwvJ1O3PhW4Srw3uvhhizw8xfv9y/jLlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xGPPzyxW99d6Lw7ezMhtXHhJX44cjofP8jGdKVcHmig=;
+ b=Nolyqij3fv3G0RMmLfZhBrAmVlx5sct3YDnfiJ5V9rmsRkPEG+SqGCVm2KITlvg6cBb+ukaul9q39KqWvFlCwjXVvSrVk6OGPi53fVOxv/stfLg0Oqcz9LdBr8VIE5DYCt8C/VfhKt4sDlAcxiln7VaP3CmJdMHLa+NJg2pmsNhHdPD3AAQR7RYMWkyuguqaoOiH88xTS7fQ4gaeKpo/dL6Zy84ellkCvudMGdwpi0zF2cILkvUEZdXf5rzHGIZZnDhJURz+MBiElI8hbdUGSAriOLMrdmRqg6P7kGUiGSKBy1gkX6UCrw2sAZVpenG51EXgQRABVcsEF2umb8RHLg==
+Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:1ac::6)
+ by PH7P220MB1063.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:31f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Thu, 14 Mar
+ 2024 15:37:22 +0000
+Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
+ ([fe80::57aa:102b:db4b:e05]) by LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
+ ([fe80::57aa:102b:db4b:e05%7]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
+ 15:37:22 +0000
+From: Min Li <lnimi@hotmail.com>
+To: richardcochran@gmail.com,
+	lee@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net-next v7 2/5] ptp: clockmatrix: set write phase timer to 0 when not in PCW mode
+Date: Thu, 14 Mar 2024 11:37:04 -0400
+Message-ID:
+ <LV3P220MB1202878508CD42D5E8CAA565A0292@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240314153707.31551-1-lnimi@hotmail.com>
+References: <20240314153707.31551-1-lnimi@hotmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [ZATv621bfdZ6bff+sBwAroxHwN5hCYN8]
+X-ClientProxiedBy: YQBPR0101CA0208.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:67::31) To LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:408:1ac::6)
+X-Microsoft-Original-Message-ID: <20240314153707.31551-2-lnimi@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
- board DTS
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Sumit Garg <sumit.garg@linaro.org>, Stephan Gerhold <stephan@gerhold.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- andersson@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, neil.armstrong@linaro.org, laetitia.mariottini@se.com,
- pascal.eberhard@se.com, abdou.saker@se.com, jimmy.lalande@se.com,
- benjamin.missey@non.se.com, daniel.thompson@linaro.org,
- linux-kernel@vger.kernel.org, Jagdish Gediya <jagdish.gediya@linaro.org>
-References: <20240313123017.362570-1-sumit.garg@linaro.org>
- <20240313123017.362570-4-sumit.garg@linaro.org>
- <c0e10cbf-c6f3-4b0c-8616-983da2a40236@linaro.org>
- <CAFA6WYNMjCaa0FKjNv6a8VFkco3=GBfgWNDuckGZdiZ9dGmHgg@mail.gmail.com>
- <d82ab1f8-e677-485f-9a6b-4115acfd7239@linaro.org>
- <CAFA6WYNSumyScax=GkN42GJOG56T3odF5Ed9A2i1nk_exCyGtA@mail.gmail.com>
- <ZfLUu6_Vq7MvG2G3@gerhold.net>
- <CAFA6WYPN2Bt7zvDyd+02jrsZJz0sFhkD_o4W+PvU=-VC4W5k=A@mail.gmail.com>
- <ZfL6hi0kfp9MXQ0H@gerhold.net>
- <CAFA6WYMa_0OMkjUdvhYtWZ9SvQx5bB8+YrBZN08BaDXXOtPPNQ@mail.gmail.com>
- <fb20d921-dabd-41dc-9f91-bde90e3b87be@linaro.org>
-From: Caleb Connolly <caleb.connolly@linaro.org>
-In-Reply-To: <fb20d921-dabd-41dc-9f91-bde90e3b87be@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3P220MB1202:EE_|PH7P220MB1063:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd011521-e712-4c1f-00e3-08dc443ca441
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4lceALnJy6GNIba0D/Fv6Tbfg1YyjOIjyWQHRfvU4ewxaLLoaQu6xj79+x+XamDWT8UkKIt0VTglfIvguCp636PgqPTcdl3saV+n03wXPDMXL+wEZ78QtIIvQmBqyz7DPaPVzy7Du+thU7dDaNIlToSIavoa19qC9z0VyBuc8/BXNv9cbu6LTbZg89T0UQQmKxGwBfpZ5nwis+q4CC+USaN43iZpJ3xB17mU62BnxO6QtRITLCu0rtdVi3vhDItZngtn2oJbWnhV35aNjCch9CMwWZnNrrGGol1A49nl9p8tS8Cu1n3lU+WE9WEiaZ+Jxvdp+FI/iye3YJGw13oxXUqId2ozk9y6AYI9G+TPbefP40Z7aYXPaXn5fovr3CMQtVjTXa3ubrTF0SheTvOwdE8vEKvf2sC5n2+s/raba57D/uKY1ubyDuRgR3vupeN5KteUYEfXtpaTB9G/t9IAckKrhN4FhNi+0cBjpOTmssrhV7PEXugZ9wStzvJLR6Ks+njjkv8SFgXXo48hrRbbfzv3Tm5xI2GMYI7exnSm03SpUFD0ddxJ1EcNwGg7SQJM
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zyJm+mfLdGC/jIjA6aLyYqjpUkD7aK7s0EqotVjp5QCS7rmmaFdQn+LErIfT?=
+ =?us-ascii?Q?hNmCJll6FeUtk5SifbUqLndS1TGwwh5rNOo4ypgSQmKBJ6tAWWr7SuMf1eKO?=
+ =?us-ascii?Q?Jr5QWYYRysVyT5v4eyXIZ4XN++mI1k8GJUCPq+cewSEyaPpHBe2QfWaC4+lU?=
+ =?us-ascii?Q?Ieax4tAeTKp+MdpTzyhmpyTom+rs95WSf5wtBJjygDWLxLzxLh5nDAfVG0QJ?=
+ =?us-ascii?Q?oHquf8vxFge4C2SDBvlAMONztdyveaHPYHyxEGHbz0Q1Xdup6lE3F02tc0IX?=
+ =?us-ascii?Q?bIl4/T9sTsG7hJvOYe/LZRdc8fg61VZdRM8OV9hWVG26iQptZ2p3ocGSmpCZ?=
+ =?us-ascii?Q?Xd/dwS8sSntQdBawyhco/lDDU9pIQjzwoxAvP4ZYt3nH1I+tRyIoS+XJAO/E?=
+ =?us-ascii?Q?qJajBsCoLQlBaggJywYcYIqQp3BRpsOCxXSeMMbMygtGuLkCqB1awVTKRDr4?=
+ =?us-ascii?Q?IExlZXuIoMFwDVsf103JttFu/cYRh8FbepoHlg5tXQ9DyCghUdALrslIt9Qk?=
+ =?us-ascii?Q?aaq1Q+No87C0xqsfX+U9E2FvNdN+OPNdv97oHzvodL2/joxNarnOhBPOKGQb?=
+ =?us-ascii?Q?xPv0p9csJn6pkGv9tDBktCV8amCVBVCjNO2f0gauMOuui1rpOKcEjHNkkncn?=
+ =?us-ascii?Q?dZE/9fhd85Y47ZD+F0CBiSxXyeLYmRyFkDenX5hsgajIuS0fpTPp+MdXBym+?=
+ =?us-ascii?Q?KcArEarjTEOtvYEf7XwX8aep6fsW90P+DiBF22zBvUwrpJMOekXYIDSBvi0h?=
+ =?us-ascii?Q?uO8+tuGJZHP+GQzGbLYpP0RzEXKJt4hMbUYSQkN+xyLrULkoXsT08zu62DQs?=
+ =?us-ascii?Q?Jh9VzghWGL6Hqrd/WJoSvPnnP7iGAw9jVK2pP/XtZfu6TutsNrA/8PqyqZkD?=
+ =?us-ascii?Q?LkoHHos9o1WVq0jEKY3NZ8MJ7tR8M8Qu1oyzxjSRxA02dXAG+e9JXYQSMcSM?=
+ =?us-ascii?Q?ePlQSYtfr1sCgahDBpyQUWTPXZNzLg7smD06evQYamOwRXGKoHN0djLFeLIR?=
+ =?us-ascii?Q?0oGy4Py+VIKIxHFk4ZPquoDEk2p7E3oIwv1eR/9PfPsNz75FGtAY3agdf4mA?=
+ =?us-ascii?Q?tgKFQ9rEQt92jdEZozzfx0qpa4O0pd55bvFL2kTonXNvCHjAXKjilOygQFDZ?=
+ =?us-ascii?Q?VozW6zRfxM6jSLr0E8g1ayiZIxufcZAX4MHY9ao8YJfn45c7fYw5yDHBZvaw?=
+ =?us-ascii?Q?h4d+7u9zwd5hdMlwSQClm4OC1cWeyCHRZ9zaj7iJPIE1m1kt8QBZXDQHblc?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3458f.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd011521-e712-4c1f-00e3-08dc443ca441
+X-MS-Exchange-CrossTenant-AuthSource: LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 15:37:22.7258
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7P220MB1063
 
+From: Min Li <min.li.xe@renesas.com>
 
+In order for phase pull-in to work, write phase timer shall be 0
+when not in write phase mode. Also Fix u8 -> u16, DPLL_WF_TIMER
+and DPLL_WP_TIMER are 2-byte registers
 
-On 14/03/2024 15:20, Konrad Dybcio wrote:
-> 
-> 
-> On 3/14/24 14:50, Sumit Garg wrote:
->> On Thu, 14 Mar 2024 at 18:54, Stephan Gerhold <stephan@gerhold.net>
->> wrote:
->>>
->>> On Thu, Mar 14, 2024 at 05:26:27PM +0530, Sumit Garg wrote:
->>>> On Thu, 14 Mar 2024 at 16:13, Stephan Gerhold <stephan@gerhold.net>
->>>> wrote:
->>>>> On Thu, Mar 14, 2024 at 03:02:31PM +0530, Sumit Garg wrote:
->>>>>> On Thu, 14 Mar 2024 at 14:48, Konrad Dybcio
->>>>>> <konrad.dybcio@linaro.org> wrote:
->>>>>>> On 3/14/24 10:04, Sumit Garg wrote:
->>>>>>>> On Wed, 13 Mar 2024 at 18:34, Konrad Dybcio
->>>>>>>> <konrad.dybcio@linaro.org> wrote:
->>>>>>>>> On 3/13/24 13:30, Sumit Garg wrote:
->>>>>>>>>> Add Schneider Electric HMIBSC board DTS. The HMIBSC board is
->>>>>>>>>> an IIoT Edge
->>>>>>>>>> Box Core board based on the Qualcomm APQ8016E SoC.
->>>>>>>>>>
->>>>>>>>>> Support for Schneider Electric HMIBSC. Features:
->>>>>>>>>> - Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno
->>>>>>>>>> 306)
->>>>>>>>>> - 1GiB RAM
->>>>>>>>>> - 8GiB eMMC, SD slot
->>>>>>>>>> - WiFi and Bluetooth
->>>>>>>>>> - 2x Host, 1x Device USB port
->>>>>>>>>> - HDMI
->>>>>>>>>> - Discrete TPM2 chip over SPI
->>>>>>>>>> - USB ethernet adaptors (soldered)
->>>>>>>>>>
->>>>>>>>>> Co-developed-by: Jagdish Gediya <jagdish.gediya@linaro.org>
->>>>>>>>>> Signed-off-by: Jagdish Gediya <jagdish.gediya@linaro.org>
->>>>>>>>>> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->>>>>>>>>> ---
->>>>>>>>>
->>>>>>>>> [...]
->>>>>>>>>
->>>>>>>>>> +     memory@80000000 {
->>>>>>>>>> +             reg = <0 0x80000000 0 0x40000000>;
->>>>>>>>>> +     };
->>>>>>>>>
->>>>>>>>> I'm not sure the entirety of DRAM is accessible..
->>>>>>>>>
->>>>>>>>> This override should be unnecessary, as bootloaders generally
->>>>>>>>> update
->>>>>>>>> the size field anyway.
->>>>>>>>
->>>>>>>> On this board, U-Boot is used as the first stage bootloader
->>>>>>>> (replacing
->>>>>>>> Little Kernel (LK), thanks to Stephan's work). And U-Boot consumes
->>>>>>>> memory range from DT as Linux does but doesn't require any
->>>>>>>> memory to
->>>>>>>> be reserved for U-Boot itself. So apart from reserved memory nodes
->>>>>>>> explicitly described in DT all the other DRAM regions are
->>>>>>>> accessible.
->>>>>>>
->>>>>>> Still, u-boot has code to fetch the size dynamically, no?
->>>>>>>
->>>>>>
->>>>>> No U-Boot being the first stage bootloader fetches size from DT which
->>>>>> is bundled into U-Boot binary.
->>>>>>
->>>>>
->>>>> Back when I added support for using U-Boot as first stage
->>>>> bootloader on
->>>>> DB410c the way it worked is that U-Boot used a fixed amount of DRAM
->>>>> (originally 968 MiB, later 1 GiB since I fixed this in commit
->>>>> 1d667227ea51 ("board: dragonboard410c: Fix PHYS_SDRAM_1_SIZE") [1]).
->>>>> When booting Linux, the Linux DT was dynamically patched with the
->>>>> right
->>>>> amount of DRAM (obtained from SMEM). So if you had e.g. a Geniatech
->>>>> DB4
->>>>> board with 2 GiB DRAM, U-Boot was only using 1 GiB of DRAM, but Linux
->>>>> later got the full 2 GiB patched into its DTB.
->>>>>
->>>>> I didn't have much time for testing U-Boot myself lately but a quick
->>>>> look at the recent changes suggest that Caleb accidentally removed
->>>>> that
->>>>> functionality in the recent cleanup. Specifically, the SMEM-based DRAM
->>>>> size detection was removed in commit 14868845db54 ("board:
->>>>> dragonboard410c: import board code from mach-snapdragon" [2]), the
->>>>> msm_fixup_memory() function does not seem to exist anymore now. :')
->>>>
->>>> Ah now I see the reasoning for that particular piece of code. Is SMEM
->>>> based approach the standardized way used by early stage boot-loaders
->>>> on other Qcom SoCs too?
->>>>
->>>
->>> It is definitely used on all the SoCs that were deployed with LK. I am
->>> not entirely sure about the newer ABL/UEFI-based ones. A quick look at
->>> the ABL source code suggests it is abstracted through an EFI protocol
->>> there (so we cannot see where the information comes from with just the
->>> open-source code). However, in my experience SMEM data structures are
->>> usually kept quite stable (or properly versioned), so it is quite likely
->>> that we could use this approach for all Qualcomm SoCs.
->>>
->>
->> If the SoCs which support this standardized way to dynamic discover
->> DRAM size via SMEM then why do we need to rely on DT at all for those
->> SoCs? Can't U-Boot and Linux have the same driver to fetch DRAM size
->> via SMEM? I am not sure if it's an appropriate way for U-Boot to fixup
->> DT when that information can be discovered dynamically.
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ drivers/ptp/ptp_clockmatrix.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-"standardized" I'm not so sure... But yes, smem does offer this. The
-definition in DT here is for U-Boot, ABL will always clobber it, and so
-does U-Boot before handing over to the kernel. Linux should never see
-this without a bootloader having looked at it.
-
-The reason I decided to hardcode this in DT for U-Boot is because SMEM
-currently relies on the driver model and isn't available early enough.
-
-Also admittedly I just wasn't that familiar with the U-Boot codebase. I
-just wanted to avoid hardcoding this in C code, and given that this was
-already supported for the "chainloading from ABL" usecase, just
-hardcoding the values was the obvious solution.
-
-I would definitely be open to revisiting this in U-Boot, having an SMEM
-framework that we could use without the driver model which would just
-take a base address and then let us interact with SMEM and populate the
-dram bank data would be a good improvement, and would let us avoid
-hardcoding the memory layout in DT. We'd just need to manually find the
-SMEM base address in the FDT as part of "dram_init_banksize()" and
-retrieve the data there.
-
-That all being said, I don't see any reason not to define the memory
-layout in DT, it's a hardware feature, DT describes the hardware. The
-whole "bootloader will fill this in" implies that the bootloader isn't
-also using DT as the source of truth, but now with U-Boot it actually
-is, so it's all the more important that DT be accurate ;P
-> 
-> You're mixing two things. Linux expects a devicetree where
-> /memory/reg[size]
-> is valid. Such driver should indeed be (re)implemented in u-boot to provide
-> this information.
-> 
-> As for linux, I am working on making Linux aware of the DDR capabilities
-> on Snapdragons, for other reasons, but it's on the back burner, as it
-> still needs some broad thinking about integrating it with the interested
-> consumers.. Bottom line is, Linux should be fed a devicetree with DRAM size
-> filled.
-> 
-> Konrad
-
+diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+index f8556627befa..d069b6e451ef 100644
+--- a/drivers/ptp/ptp_clockmatrix.c
++++ b/drivers/ptp/ptp_clockmatrix.c
+@@ -1396,6 +1396,20 @@ static int idtcm_set_pll_mode(struct idtcm_channel *channel,
+ 	struct idtcm *idtcm = channel->idtcm;
+ 	int err;
+ 	u8 dpll_mode;
++	u8 buf[2] = {0};
++
++	/* Setup WF/WP timer for phase pull-in to work correctly */
++	err = idtcm_write(idtcm, channel->dpll_n, DPLL_WF_TIMER,
++			  buf, sizeof(buf));
++	if (err)
++		return err;
++
++	if (mode == PLL_MODE_WRITE_PHASE)
++		buf[0] = 160;
++	err = idtcm_write(idtcm, channel->dpll_n, DPLL_WP_TIMER,
++			  buf, sizeof(buf));
++	if (err)
++		return err;
+ 
+ 	err = idtcm_read(idtcm, channel->dpll_n,
+ 			 IDTCM_FW_REG(idtcm->fw_ver, V520, DPLL_MODE),
 -- 
-// Caleb (they/them)
+2.39.2
+
