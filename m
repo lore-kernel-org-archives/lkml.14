@@ -1,158 +1,172 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2077.outbound.protection.outlook.com [40.107.7.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FF58F7A
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710394537; cv=none; b=TGPvQNHj24Xb8ogQ6IqrYhr1g0lhAo3DLGV5EVlndM3VHhQOrNmO9XvMPjG/8HqhFX6DKIUhyissZ4GchZAacB4zxEWvgmFiYalnf6RVL6pjmh9Qjx0sQR6ofReNr9S4NzyrUSc04SsPRsIt/Kfv84MwK/i8M1s/0Qad09fsFX8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710394537; c=relaxed/simple;
-	bh=xy+yihGYgmGmElHluWjV+klBZIrdr8SZjpVJJwUTbRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M9BbEztw1ENn2AMj4neWtsh11BTehJhNd7CacZf8vIxWX66LFB64xFzPlttVeAD9TCh+NwriIJ5ON/MEZfYhqeBjdyyhwyow49ORM9OGsbAI80OCoHamvU2eqZHkLnt/t6Y4pV/N2SbpYgt/55inZF0VRH7UHkibvnq5NE+zpJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nh+tgZg+; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916F1947B;
+	Thu, 14 Mar 2024 05:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710394855; cv=fail; b=gfku1mOJf/XHn+YYKDSy2QmXIf/12477sYjI9jDvOV2uSroWWI4KDwy8S0tMy5qXEebChdXrZJKojUMCQoH+G+qvEHCoC5vuphEoO7DFIKjFutSmNKYvsx+XL9WPX5yyGFjqD/aLVkEtFl/qRQB9Dd5HHXGp8RRF05RqJ3AK/qM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710394855; c=relaxed/simple;
+	bh=noEsJPxyJz7aEJvNIwrpW7GFv40MRG0nwZ0RaDroAOE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=adptLTFlGEemoildK54QhuTI2RT9RQglh8AL3vynPsVSo9CKDFyM06Ku96C3nK0DgbWR1eWRLkzgGWIoA+IOe5Y62HAQsyW2HOh65UgomYgWmY+XOZ/rfiBc6CecufPacrM+BR7VhSQ/H+j8dZllJn5GCMGYNxD+2lfyyidiics=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=aa1aYvWb; arc=fail smtp.client-ip=40.107.7.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nh+tgZg+"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36646d1c2b7so44965ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710394534; x=1710999334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eRDPxJVTHieOMR3Hi1d1OF7eIKdaIqrR5LQQJbNyQzY=;
-        b=Nh+tgZg+lhnywmiFpFav38vo/wDiDXwzTtJHxdkkOeW/7BEeI2t6kWWQPV0UYeKyfP
-         BwiOjCHhWvOGDQoeRMVdUwnUoN1gmA0EIrkrTut6vD6VIaCrEm4R92D2T1YTQV9PgMqa
-         sqLjD1aF9PJgUDBank0O1Vkk+KJb0fSN/QGqkCyHZI36EeSElW+oQi3C+aFfgYFV0ehx
-         E4wYLONf3c84wj6I2FPSaDpC3/vUWL07aoxDdH4u65rSNf8nIohDKsV0t7JGbjTtIlHG
-         Q/LrrS8xIUsBACIbHPXR2EXe1UXxZEaVwaN2POTPYWU1EX9kaA/GFyjx8Obd661HcLZ3
-         l8gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710394534; x=1710999334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eRDPxJVTHieOMR3Hi1d1OF7eIKdaIqrR5LQQJbNyQzY=;
-        b=AjGJeHVdAtLrJWgawnad+BWBgVpuEbwSTzceRAAmZ0CEN1uAYF0cGdy05VqAI2JN5K
-         FfReu8fp8z+iFJAV9PVdsEiIjcX3elYUY9GMwRE1lmciDQtwzEcbEscNTSch0tHN3n20
-         RTyti9HYw1S52LNdXW6EFfOaK2eCT3HmrG9yq+mI+//SQiznRCUOsLMNv9CQChtdUgPS
-         Xp9tZhl6DNov5wYIoseMxB7OWrwVrA3vXyyke4gwzRa4ZQVZl32un8iDyTckNr55539B
-         Lu8qJiRymO/QURn4/enbbhjinnu9fRXEmjdXa86TPczGtXCMbOSjMfeBwUgWEPcyqn2J
-         ryoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWi5S0PthzYbjmIk/s4549GQov212UzyylIHgUqLg5tU7+eYrIvXeAV0PT/f9jl4HdQ88ap4HC0oniqwPmlqBghbZ5OnUViD/sI1hBC
-X-Gm-Message-State: AOJu0YwNPG7jBorr/vjnNMrOXXVHzFbgwZwiH/7w9AER3RFUJQA9csb/
-	AYL/4rrz5WhIwNj2zNiSPCd13ogx4H93ohygrVFEY24BqZ+RZje0mm8OgtsW/Epzr1C1TMVoL75
-	Ja6Vn2dgD6HhtzLQ07vkIppIjLtUbh47nY+F5
-X-Google-Smtp-Source: AGHT+IEJSm5V0OXFp5NUsTIYQhAkR1uFtPgMbLi4oFiAtso/P8YCTZrbfl03711ANo1DPKkK9Dz22Hul1RM1t/ecGX8=
-X-Received: by 2002:a92:ca45:0:b0:366:796e:eb95 with SMTP id
- q5-20020a92ca45000000b00366796eeb95mr146084ilo.29.1710394534350; Wed, 13 Mar
- 2024 22:35:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aa1aYvWb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MfU040ZZwFH0nX5rFcHM80XW+gPjO/9CwSTdtxcuRnTLtkPNxBDpKI99+40X2QuhsY95HB6pLHuPjPdWIOHtfPbljfFO37Hxx4JClmFkR0OjTRqc5YFyyPzNd03hctTS1CbEA/A+2oLlhVXOXj3QRDs0cjIVoKAlzwfM9xkMm+ofHizWR9/Qw3Lwxo/CsqrTSjRCqFWmGG925W6bJMCUI3MfvuFdPuybE8smebPGZof8NFV59LIQc1VD1vVrlqZmLR3BFNknOQ9+ofxvpYm/ZtfV0oe75QM5e1oI4uSVty1Zovg9XRcoI2pm5+vmxFAgLYkR3hRPLrJYL9WTAaiN1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=noEsJPxyJz7aEJvNIwrpW7GFv40MRG0nwZ0RaDroAOE=;
+ b=eIO+vKZ6nQ4cNo/62oCQqoJykLItEHtxJwEg6xuCJUKtYICGhsQKTNsPDev+2qANw3Q2V2nXB80yHX4hxX/vTVuVqYKWGtkBm6ck7MMt83d3pDQXoi8jLE+kZ652VOvCdYvcZ2BwUHE5OczIHFPyXFu0tOidmWrGr/pcc0n3Ga+LbwIYV+Nuv0ynYJdlfn4UUbwQEt7U9/FwC8QrYzmtvMuM44qIIf72JU7q7tHQ41PLCOOZZ4vmqGTlWHRR6Lb0vRKZlcLivsVyyLMqg0wRW+7dwWJyUzKPJsmYW0rX9hV/13KaMir5srra6qX+M3zuqRcbWfw6jK5gbAImdLzEMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=noEsJPxyJz7aEJvNIwrpW7GFv40MRG0nwZ0RaDroAOE=;
+ b=aa1aYvWbgryQEvgnMwYlSkAhxx+jn5SeKN9UqODnDBcn1AWfqQxCVbDelocPd5sWxxHmziJr9tgjiVcydCGHKTu+UQLjmVUrZkksrAx7mr8k2/5vE6TUIPIJ6ATmekTtdXOuMraUfzlN0gmDPdf90X/9Sd7OO0yumYAo6NMTtmM=
+Received: from DB9PR04MB9377.eurprd04.prod.outlook.com (2603:10a6:10:36b::13)
+ by GV1PR04MB9133.eurprd04.prod.outlook.com (2603:10a6:150:24::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Thu, 14 Mar
+ 2024 05:40:47 +0000
+Received: from DB9PR04MB9377.eurprd04.prod.outlook.com
+ ([fe80::b3d4:17c4:91b7:101d]) by DB9PR04MB9377.eurprd04.prod.outlook.com
+ ([fe80::b3d4:17c4:91b7:101d%5]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
+ 05:40:47 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: Jacky Bai <ping.bai@nxp.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+	"broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org"
+	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
+	dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [PATCH v4 3/3] arm64: dts: imx93-11x11-evk: add pca9451a support
+Thread-Topic: [PATCH v4 3/3] arm64: dts: imx93-11x11-evk: add pca9451a support
+Thread-Index: AQHadb68BQqbsjtWwU+xgaNg9wK+j7E2mBkAgAAfRVA=
+Date: Thu, 14 Mar 2024 05:40:46 +0000
+Message-ID:
+ <DB9PR04MB9377986A098C6A1740A9BE52E1292@DB9PR04MB9377.eurprd04.prod.outlook.com>
+References: <20240314032923.2360248-1-joy.zou@nxp.com>
+ <20240314032923.2360248-4-joy.zou@nxp.com>
+ <ZfJyaFUxwMq20XMd@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZfJyaFUxwMq20XMd@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB9PR04MB9377:EE_|GV1PR04MB9133:EE_
+x-ms-office365-filtering-correlation-id: 71cb1047-c890-4fbc-ef93-08dc43e94c87
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ bZApyHsOoqmvQTsuAkc41QWqXgKyl7VuZXLeAh9xbWiUTaUdDbgOqVgtRSWWfjro+ubZxilnPn82Iu/U/GnPeL5CcNPSuH908LoU3xwP0bOt6UuqQHFC30OdfEBBt2gw5b69F1VrlvLmJZLPOHwkux0VmeA9OFf/pUfBHprupPOm9Ykmi/v4iNXPvlWktRiaa9Cew1oh5GKa6KhamXXYSay2VHb1mvZGplsLre8BTccpiSiWdQDE5x57BKyvIhy93hOEht71efjAhOlckMY+2bhxJ86CbKGOR9g1I2yos/Ho0T4QmYo8kUE7TdeGXbiC/WViwPzLz4r/5Ep0rXCOMBtjc56rL/5+JntBm+yc+4eSP44XI7em3yHxdhWmKoSrb5h+ClbZgNTq6Zr9y6vSiUexQ0ytUAZIfvCFKV/3pbxodTb9ZZjdH2rADbwk5CXoiiWDFuYt9APHnYVHx1x5bqyestVrudqIJAnwORCtEPScYvo0pQh3cAARvwvknlde/CFnK9/thm3Ka6ko8INaUVIm86fKAUVvlAS8bIdmLRnet/tB6UDU+2UyOpdkdFO95ogZ1J6N5v3H+GzEbsiSj/EHm79AOziyIhUE+rSh/tJil3VGfmjWjUwb7FiHjtpaUCBQsNaAHP58EmIcIxPFLoLghUYmA9frrLatfAyn1L7dRojiIODHrLRyf6NqHPMzXXwuZQZo33y4rRJa659QqXiHydU+Co8Di9SbUa2r2vI=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9377.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?VHBFMGJjVWtDZTdYc0NPOEVYd21odXZyYnFiRDNqYXJhVTdNdXRhVUttTnVk?=
+ =?gb2312?B?K1lMTVJsOXU1ZE5TZUljdWZtclErOFRmMFpEM2xHUGk1NXFCMTgvNVZPbHhn?=
+ =?gb2312?B?eUFzWXZTbkZYcDN2Y2pXR0lIWXNyWnRveGxDY1hYYUlZUCt0bkovS2RTUEQ4?=
+ =?gb2312?B?cUdGM2dpUWl3TEw3V2RTMHhYOW5iSkw0M0YyVURNRTgrbjZOaDkxNlN2djMy?=
+ =?gb2312?B?VS85MDJpbW1IeXR1akdWdGNqUE5BNFZzcGo5ck05b1hQdXFwNVd6RzlvYkpx?=
+ =?gb2312?B?QWJlallKZVNtRm9pa05Fc20rTTM1WHZKOTY1VlJLM294YnVIT2o2ckdxODBy?=
+ =?gb2312?B?WGlOQlBVeVFZU0xmMXY4TkF2QU9NbGlWMmlsT1VUbHE1elJnaENZUG9DRmFQ?=
+ =?gb2312?B?WnFmaE14RmU0ZGoxUjd3cncwbUNtT0QzOW1OcHloY0NkdUZOeDVabVZTaFBF?=
+ =?gb2312?B?MVdZWlF3QVF0Yk1JbU1CaWVJU2psTnY2UTl4c2o3RE9YQmE1TTRBTWc1UnZs?=
+ =?gb2312?B?V25HbkgvZzF4dHRsSEZHUlI0TGd6aXM5YllBQy9CK1VmdHdGSXYvQjVBUXdC?=
+ =?gb2312?B?ZEtjSlVEVUVBTUpydmpsckN3b3VEZVVUaVQ2NkxlOTE4bUxMR0ZydHo0TFNH?=
+ =?gb2312?B?Q3JQVjFxVVliSFFnMElHRklrc2Q1SDJ4TEdpVElONTVUa2NhMmtUbGJxR2Va?=
+ =?gb2312?B?dnI0MDAvZ21hbTA1NFhsUHdtYktBK1JCQ0o3MVVGRHZiVEZsVStsVEh0NHlU?=
+ =?gb2312?B?OThBOWRSMWtkREpZZUR1aGdOcXdaTVBJbWpTdDBKOXQ2bFRmSTNEcy8vZG5Y?=
+ =?gb2312?B?Zi9RZmxPNEV4bTdGOUd4OVNOSStIZ2RRc1A4ZWZFK1pva21oTk52VlgrenI5?=
+ =?gb2312?B?TkgraTFvdkFvdXhUM1hwTzloaVNuVHZjUEZNRVNYUk1PdlpyM2lNbXhzWGxZ?=
+ =?gb2312?B?bDFmdXB5MUQwU3AvbE96OXduUEEzWHROUlJheGcyeXZJeTJOQm1NTWNTQzFL?=
+ =?gb2312?B?d3ZEdlJpdWE1WTdKR01SMURLN0EwdncwVW0vZmVWY0JSNGc0QnNpS0s0aWNN?=
+ =?gb2312?B?b2I0RDdGQmh0V0o2QS9MOFVOczhMb203aFBrSlVmYWFPZENETXUyNjNHSG1k?=
+ =?gb2312?B?c2JTcVUzVWk5Mmc1TVJIa3Ezd05DTlZYaXFVaDE4NGRJYTB3NVVxYTBGcXgy?=
+ =?gb2312?B?TU9mdFpZeE0xVm5GTnlBTW5PL1JIRHBRU2c2WVZuYnlSMnRPYU5Mc1BkMytE?=
+ =?gb2312?B?S01ZUzd1TEFYQit1MVVGVnlwOU5Dc1NDeDV5ZjE3U2RhUktHN1ZuUVN5alE3?=
+ =?gb2312?B?Skh4dktGKzdWUmdTOURFSDdqOGFBb3VvOG94ckZDMkhEVE12OXJ5OGxrSkVD?=
+ =?gb2312?B?VUlzV0xidHByYzhmLzJveEFKSXBvZTRJaThmVnUxVi9HVE8vS01oeHlLZWho?=
+ =?gb2312?B?OVJQeXNRVnVZTjA1VEtORXlCYWFyQ1hkNHU0ZVVJZjR1V2hOMjNmY3J5VXdF?=
+ =?gb2312?B?MzJadFZnRDZpamNTM1E3bGxHNkJqMFZkUUdyRWVmemxKTXlyVmsyQlJ6Qkhj?=
+ =?gb2312?B?UDAwdzNrVXBWanpZT1BkUzM4c08vRzg0citHM3lCazArd0V5OHZIMkRvUi9k?=
+ =?gb2312?B?QXAvOGZZa2k2ZDB4d21WSDg5Ky84VHM5NWFRQ2ZXMkpQR2FSMFNHaTZ0QlRV?=
+ =?gb2312?B?YmhCVy9FODhJMUd1a2FhMFd0VTNHN09YRkhFZzBVOUZVQjdaZFFaNUZKaHNB?=
+ =?gb2312?B?VVpINmYyVmJGaUpyclNaNEFaVnRwM3pQUjlWYUYwR00rOXh1NmhhSzBwajAy?=
+ =?gb2312?B?RndleGtuMm9aUXhaMkhLMkFVTTk3ek9BcVNjYmc4OFRQbVdWQktvTjZZWFdp?=
+ =?gb2312?B?UkVCR29IWWtZS3NUa1lNY0JmRDJtL3dLcFBiTUJrZzRtbmppb2ZRK29kcWRH?=
+ =?gb2312?B?MGpoNFdZZDAvNDdTcFV2S0xyTHE4ZnM4QVd4aFl4eDFocGExa2grdFhvdFFt?=
+ =?gb2312?B?NXFObzRwQzdYemMyb3JUZEplRmtobkhnWHZ4U2JoZ0crSEN3blc3bVBwR2RP?=
+ =?gb2312?B?ZmNIRDlwbURjbGZzWlE2MWlGcW9XaU1aRGtiOExjRHFwcHk0T3g5a3lOVHdS?=
+ =?gb2312?Q?VbdY=3D?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302005950.2847058-1-irogers@google.com> <20240302005950.2847058-6-irogers@google.com>
- <CAM9d7cjVE=gH8A4zzsUFwLibgHy=3C71UnFe5SEu-RDFTOWkDw@mail.gmail.com>
-In-Reply-To: <CAM9d7cjVE=gH8A4zzsUFwLibgHy=3C71UnFe5SEu-RDFTOWkDw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 13 Mar 2024 22:35:20 -0700
-Message-ID: <CAP-5=fVqDEXHaoONKjsaMuDG5B-kH1zX01R3fg7QkYn83LHCiw@mail.gmail.com>
-Subject: Re: [PATCH v2 05/12] perf jevents: Support parsing negative exponents
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, James Clark <james.clark@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9377.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71cb1047-c890-4fbc-ef93-08dc43e94c87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 05:40:46.9743
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bV+L+8JXAeLfYYbuGT6sidBdH0iD8GRa0b7Rd1P/NElnRSVIjY1rV6cA2aUT7Ynu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9133
 
-On Tue, Mar 5, 2024 at 11:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Mar 1, 2024 at 5:00=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Support negative exponents when parsing from a json metric string by
-> > making the numbers after the 'e' optional in the 'Event' insertion fix
-> > up.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/pmu-events/metric.py      | 2 +-
-> >  tools/perf/pmu-events/metric_test.py | 4 ++++
-> >  2 files changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/me=
-tric.py
-> > index 847b614d40d5..31eea2f45152 100644
-> > --- a/tools/perf/pmu-events/metric.py
-> > +++ b/tools/perf/pmu-events/metric.py
-> > @@ -573,7 +573,7 @@ def ParsePerfJson(orig: str) -> Expression:
-> >    # a double by the Bison parser
-> >    py =3D re.sub(r'0Event\(r"[xX]([0-9a-fA-F]*)"\)', r'Event("0x\1")', =
-py)
-> >    # Convert accidentally converted scientific notation constants back
-> > -  py =3D re.sub(r'([0-9]+)Event\(r"(e[0-9]+)"\)', r'\1\2', py)
-> > +  py =3D re.sub(r'([0-9]+)Event\(r"(e[0-9]*)"\)', r'\1\2', py)
->
-> I don't understand how it can handle negative numbers.
-> Why isn't it like Event\(r"(e-?[0-9]+)"\) ?
-
-When something like 3e12 is converted at this point it would be:
-3Event("e12")
-and so this substitution remove the Event and puts it back to:
-3e12
-but it expects a number with the "e". For a negative exponent like 3e-12 we=
- get:
-3Event("e")-12
-and so there's no number and no substitution. Changing the + to a *
-means the number in the event next to the "e" becomes optional and so
-we match and remove the Event again.
-
-I'm wondering about having this be a bit more of a parser, but then it
-kind of defeats using Python's eval as being the parser.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
->
-> >    # Convert all the known keywords back from events to just the keywor=
-d
-> >    keywords =3D ['if', 'else', 'min', 'max', 'd_ratio', 'source_count',=
- 'has_event', 'strcmp_cpuid_str']
-> >    for kw in keywords:
-> > diff --git a/tools/perf/pmu-events/metric_test.py b/tools/perf/pmu-even=
-ts/metric_test.py
-> > index ee22ff43ddd7..8acfe4652b55 100755
-> > --- a/tools/perf/pmu-events/metric_test.py
-> > +++ b/tools/perf/pmu-events/metric_test.py
-> > @@ -61,6 +61,10 @@ class TestMetricExpressions(unittest.TestCase):
-> >      after =3D before
-> >      self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-> >
-> > +    before =3D r'a + 3e-12 + b'
-> > +    after =3D before
-> > +    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-> > +
-> >    def test_IfElseTests(self):
-> >      # if-else needs rewriting to Select and back.
-> >      before =3D r'Event1 if #smt_on else Event2'
-> > --
-> > 2.44.0.278.ge034bb2e1d-goog
-> >
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEZyYW5rIExpIDxmcmFuay5s
+aUBueHAuY29tPg0KPiBTZW50OiAyMDI0xOoz1MIxNMjVIDExOjQ0DQo+IFRvOiBKb3kgWm91IDxq
+b3kuem91QG54cC5jb20+DQo+IENjOiBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+OyBsZ2ly
+ZHdvb2RAZ21haWwuY29tOw0KPiBicm9vbmllQGtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9y
+Zzsga3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnOw0KPiBjb25vcitkdEBrZXJuZWwu
+b3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiBrZXJu
+ZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsgZGwtbGludXgtaW14DQo+IDxs
+aW51eC1pbXhAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7DQo+IGlteEBsaXN0cy5saW51eC5kZXYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAzLzNd
+IGFybTY0OiBkdHM6IGlteDkzLTExeDExLWV2azogYWRkIHBjYTk0NTFhDQo+IHN1cHBvcnQNCj4g
+DQo+IE9uIFRodSwgTWFyIDE0LCAyMDI0IGF0IDExOjI5OjIzQU0gKzA4MDAsIEpveSBab3Ugd3Jv
+dGU6DQo+ID4gU3VwcG9ydCBwY2E5NDUxYSBvbiBpbXg5My0xMXgxMS1ldmsuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBKb3kgWm91IDxqb3kuem91QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hh
+bmdlcyBpbiB2NDoNCj4gPiAxLiBtb2RpZnkgdGhlIGNvbW1lbnQgZm9yIHVTREhDIGJ1dCBub3Qg
+aTJjLg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiAxLiBtb2RpZnkgdGhlIHZvbHRhZ2Vz
+IGNvbnN0cmFpbnRzIGFjY29yZGluZyB0byB0aGUgaW14OTMgZGF0YXNoZWV0Lg0KPiA+IC0tLQ0K
+PiA+ICAuLi4vYm9vdC9kdHMvZnJlZXNjYWxlL2lteDkzLTExeDExLWV2ay5kdHMgICAgfCAxMTIN
+Cj4gKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9u
+cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2lteDkzLTExeDExLWV2ay5kdHMNCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
+bXg5My0xMXgxMS1ldmsuZHRzDQo+ID4gaW5kZXggOTkyMWVhMTNhYjQ4Li41OTc0MGRmYTA1NGMg
+MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OTMtMTF4
+MTEtZXZrLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDkz
+LTExeDExLWV2ay5kdHMNCj4gPiArDQo+ID4gKwlwY2FsNjUyNDogZ3Bpb0AyMiB7DQo+ID4gKwkJ
+Y29tcGF0aWJsZSA9ICJueHAscGNhbDY1MjQiOw0KPiA+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7DQo+ID4gKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX3BjYWw2NTI0PjsNCj4gPiArCQly
+ZWcgPSA8MHgyMj47DQo+ID4gKwkJZ3Bpby1jb250cm9sbGVyOw0KPiA+ICsJCSNncGlvLWNlbGxz
+ID0gPDI+Ow0KPiA+ICsJCWludGVycnVwdC1jb250cm9sbGVyOw0KPiA+ICsJCSNpbnRlcnJ1cHQt
+Y2VsbHMgPSA8Mj47DQo+ID4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+Ow0KPiA+ICsJ
+CWludGVycnVwdHMgPSA8MjcgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiArCX07DQo+IA0KPiBJ
+dCdkIGJldHRlciBvcmRlciBieSBhZGRyZXNzLiBncGlvQDIyIHNob3VsZCBiZWZvcmUgcG1pY0Ay
+NQ0KPiANCk9rYXksIHdpbGwgYWRqdXN0IHRoZSBncGlvQDIyIGxvY2F0aW9uIGluIG5leHQgdmVy
+c2lvbi4NClRoYW5rcyBmcmFuayENCkJSDQpKb3kgWm91DQo+IEZyYW5rDQo+IA0KDQo=
