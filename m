@@ -1,68 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A656E73526;
-	Thu, 14 Mar 2024 16:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4220F6F524
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710434911; cv=none; b=dar3/4VHmzFARhQchgByWr69C3L6RzV4U9OF9x3HBrwlj5iVqCauaowMTI+BDgYClCR7H96GdX7ZS/9slZNf1t7tG+pEsjJ4kbI6/+nXjdArEUPF/azsqj//aaGWcH7r91skmQbb/7818+i/gjK6UlQERl9Nc6OHMQR9bE1ZCJg=
+	t=1710434991; cv=none; b=AwUxUUzMKXvebtOYj4x08e/iUpX6oG5a18RDMMhHQiV+4UDCQYsrBlEs/kSAeKWWxaWdqoWlon6bfS/Q7MeZaZ8l9yTz3/tgWeqmuFbdo+s5Ok2/SlT5GOl52/W13AJTioY8THcL+5gjPXoE1inS4NYNBdGqSSkgmxWhIbq28F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710434911; c=relaxed/simple;
-	bh=61OWcJo8xpjNajI8IviQi0Oc5WE5ZxABZnArcdDNUDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idMvywmrnq/zCYQ/wwVT+Zyyrbbxt8YIAkDCbSkrB5TYErYm3B78M9tW5Q3OYEzzUb20xvFEmnz2UCOqY4o1i8BpZ1yFAU+AbcPeC32sLvLI165tiaR/eC7KG9GtITxLQAGVOLm6dSUxBTQ2Er8Yog3OraOTzVQL3Wlz3UJNVgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 067561007;
-	Thu, 14 Mar 2024 09:49:05 -0700 (PDT)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 698643F762;
-	Thu, 14 Mar 2024 09:48:26 -0700 (PDT)
-Date: Thu, 14 Mar 2024 16:48:24 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZfMqWP-t39SCvkA2@pluto>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+	s=arc-20240116; t=1710434991; c=relaxed/simple;
+	bh=HMdKN5sM1IyCSfxutBGFyEKQkzLdZNwLXUJ0eJnyRCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jdj9AZIadeLqS2ykM/8y7AJGCAFbpybpQatYRwOo+bK3dX7j9M1kFsMcDdNTUCE4uFGkh5uXeVAJO5ssuWVklZUK8jLKNlo0RTjdLUpZe/xiMULEUJCvfYXStzllrtwgStwCML5VmJXEUOyxyN2Z3aueJqf3gmeR4GBlr9Fe9/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=NK/YwC0X; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="NK/YwC0X"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-47657316341so143514137.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1710434987; x=1711039787; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErQ7GCVBpqdfPQB8lRuYnFXp3OiN8dCWDu5sVH1/RbQ=;
+        b=NK/YwC0XQT3V8AQ3Bfk68kKI+WfjrGJ4GL6sPxYhgwA0jDDAcW07+ZFhBA+h3e2gWc
+         jcTuUN/vg2fcfUbqTf1Ekq5R/ACZ31210uAm+neP3MTS9u0XRVRZFX8BnwX64BoS2yYk
+         4r00Q/xUX/HlVPe5xiltPlutge/Y1EZ+yeRgLziZPidvNBRfFtpSsQ4DsFJrn9kyKzdL
+         oUE6OM/mioNCxDm1+0+5PR7/eGWR/KOXYXo0SZVsW/abS/DFRLrec/ntSHl3oUOMoHCp
+         vbcmSGoc/vYPa7EYdBnGYf/INWn6vm4h7mR6TfjNcH2vwMILKreAg3CrCPPXN17PbNam
+         r2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710434987; x=1711039787;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ErQ7GCVBpqdfPQB8lRuYnFXp3OiN8dCWDu5sVH1/RbQ=;
+        b=gYBgHKyAKh9xxbNZJXVuic9V1dl2nPxtAhtFtHV8yj5CEq233qsrP7NfedOaTMOl9F
+         2zPkVw9oOSXieiG1rSPjMWEP0mQ7MnStq+jOPFVdPm6aUCMUl9iJg4I3wrEmaUv5LtTh
+         SrmveQPMaMJAKN/jAC4fKaM8u8Pant58hkLtzFU8PSyfCMsIRQXdqyYCUQNSaoTdbnx+
+         k9kCiyZFjnfBXiAhao9xR9qtEcX7oA+41p0Hn2yKN20Hqz+ED6Li39LBEiwsgUMAFOTD
+         ir3fLXj/ccY1q3D1O9TfQ4w+OG8K5EpjzPN1H4d7mwpTX0VpjdU1tEPTQZlHuzV0pGXo
+         6C4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzU7voMzEglUSWhSs1Zg42mBJ/qGwa6jeBg9cIgf4EQTAfadsiqucGUcfpAqggryL+KZnRNJ4VuMFf5fxWmcJpsMkL7i8JlFH09rO2
+X-Gm-Message-State: AOJu0YwHzv0ic6VqGbN/Zmhfb8a7uHg8hvjC0I1rF9t/P8A/uqrZtuDe
+	te7qFKHaIQz1T1oUpEkgHv6ngX5+GlxYCYX05CTBRoOX0JFWs9kyQOfMFM9XItV2X4fH55OClR/
+	u
+X-Google-Smtp-Source: AGHT+IGZcO5lkPzd5uloNC5+PMvKOX5RvPE+9LVF86FNI33jb/OI+AIjo11gwz8uBVAabmzwXSrNaw==
+X-Received: by 2002:a67:f78f:0:b0:474:c306:9062 with SMTP id j15-20020a67f78f000000b00474c3069062mr2578203vso.12.1710434986979;
+        Thu, 14 Mar 2024 09:49:46 -0700 (PDT)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id 5-20020a0562140d6500b0068f65b22b0fsm659336qvs.82.2024.03.14.09.49.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 09:49:46 -0700 (PDT)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nhat Pham <nphamcs@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Jann Horn <jannh@google.com>
+Subject: [PATCH] mm: cachestat: avoid bogus workingset test during swapping & invalidation races
+Date: Thu, 14 Mar 2024 12:49:41 -0400
+Message-ID: <20240314164941.580454-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
-> Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b,
-> is it ok to land this patchset?
-> 
+When cachestat against shmem races with swapping and invalidation, the
+shadow entry might not exist: swapout IO is still in progress and
+we're before __remove_mapping; or swapin/invalidation/swapoff has
+removed the shadow from swapcache after we saw a shmem swap entry.
 
-I'll have a look at this last version and a spin on my test setup.
+This will send a NULL to workingset_test_recent(). The latter purely
+operates on pointer bits, so it won't crash - node 0, memcg ID 0,
+eviction timestamp 0, etc. are all valid inputs - but it's a bogus
+test. In theory that could result in a false "recently evicted" count.
 
-...but has this V5 change at all since the Reviewed-by tags due to the
-latest spec changes ?
+Such a false positive wouldn't be the end of the world. But for code
+clarity and (future) robustness, be explicit about this case.
 
-...IOW does this V5 include the latest small bits spec-changes or those
-latest gpio-related spec-changes are just not needed at the level of the Linux
-pinctrl support as of now and can be added later on when a Linux gpio
-driver will be built on top of this ?
+Fixes: cf264e1329fb ("cachestat: implement cachestat syscall")
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/filemap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-Cristian
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 222adac7c9c5..a07c27df7eab 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -4199,6 +4199,9 @@ static void filemap_cachestat(struct address_space *mapping,
+ 				swp_entry_t swp = radix_to_swp_entry(folio);
+ 
+ 				shadow = get_shadow_from_swap_cache(swp);
++				/* can race with swapping & invalidation */
++				if (!shadow)
++					goto resched;
+ 			}
+ #endif
+ 			if (workingset_test_recent(shadow, true, &workingset))
+-- 
+2.44.0
+
