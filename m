@@ -1,155 +1,224 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B303D396
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E2823C464;
+	Thu, 14 Mar 2024 05:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.101.248.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395996; cv=none; b=fscIjAmceEcEw585pn6i3GFICzCsXtgzSa35+NmkWF3+/UhRa9KUxMJZXfcZiQfXh6zBJV20Fs1c/cTxQtM8jSNL30aKapGWM3zDuV1tyluB/141Xx1YZmXXjGI9CljZjyCppHiZdvPye0br03qYxnX+RoXJMgXUlxudNwS8hbc=
+	t=1710395998; cv=none; b=euqaF1998KZfw3I2rH3V8iB36++kcbj9L1CZLeu330iNjRMZMPq8CCmX2J9IBNttdZIaHO36vPEA5jjn4pnUUYywdHVY7R3ztUviM9DiWknzPD6ZncJXDGZTeaQSihW9EiqM3zum2gyk65uVwSazczdQl+rRfbnShvSJp88zeec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395996; c=relaxed/simple;
-	bh=1Qr2GggjPi/6cKOviasaXOdwphBzKolEl5/0BUkGD1s=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=trm0KK7e41IvEehanUGKix14Oc+kqm7sLYCoRrLe8+WFoFoDR3je83Xnw6Euv3aCIVyB/Odfp4ndQq4ItJjjSh/QqAHaMAXMsNfIsRVwuLPrPLVosVaTjxwgJm4vc5RqBcedD1VEy+z18u3Y2FHzrm3OSb/SSqHsiInvNrc4Cyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JSNs9+tY; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JSNs9+tY"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dce775fa8adso906787276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710395994; x=1711000794; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NE3dX9dz2CABEFOsw5CuUFowasd8wR4u7GmklzSvWhM=;
-        b=JSNs9+tY95CCkU3pejcP26dgu4kBgxLsz5vQ+G9c9nc0wXvYTvugDRscn2gshQSYCe
-         SlBm53EN2T8vQlBHUg3Wlh1vh3Bbmea7j3YpfUjir3xliH3cyb2Myy9llo6to64/NvFA
-         CIOG3qVPcRi3QbLIUCqySzOmpyOByhYsdh0NFlkLqLN/Fp762kJFq8WPG8xQSRcwXFK7
-         6Z9kg/R0DQeMxxhS7Yu5/Y4CusJnqQXCysO4FhRdNJObie+5PuTg+tO14E0Gl/lpfLVy
-         cUGL2l3Owgos6rUeu2l6e3RYA6YS4n5DIuxyZaHhtgu7FD+aw7fFoCYwSueztwQ5Lvjj
-         fBPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710395994; x=1711000794;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NE3dX9dz2CABEFOsw5CuUFowasd8wR4u7GmklzSvWhM=;
-        b=S/H/yQYFnpTmP3pUAOG6jDzib5iEDtDGJJhYiVvg0UpPR77zsrx8P6jv27Iz0bXYoA
-         pUaQNvtcmrOVGDd7Mjw2ydP6VorWZ81B+MeoZc9ljCrszrjKoxSrwSxoRrA9U78H/day
-         jEKpk7hoCbeeiWR4JknNYyoQ8y764hidP+QvqG2HU0B1jEOEAiTqsxMujS5jOexmC/Hq
-         u7X0ZLMVU+yfNC0dKbDc9aEhzVvE+p78v4k+u7ho2LdKqZ+dcYAkbpFt4OiX6ZV/ijSl
-         qQkiLnTTuYV2hD+4O/fX50PKhVbv3r2zfotuIv2akh7x1n/sb816EzAHVm+Dbnas7fPf
-         uh+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWGStd6InXU6z+nl6xvx4ZRT+WTD2d9GEBVkRMnla7anhalxivieCJMuMISwoENm4fxM3kzg5Rd6unJ72M7sOR7bNorS3OImKSLE4IQ
-X-Gm-Message-State: AOJu0YwGlm7Qn+f3sfI6ti3bpvtsKI7JHy2BizGdZDzIQUsDyC4GLeVy
-	z8lBD6xXksVIwqCIrTQ/enVlVmwn/Ug05QTsgyQ0zoQM3FxE4xVHMI3MtBitPl/d8lSr/M/8xya
-	AcNTulQ==
-X-Google-Smtp-Source: AGHT+IGL9I2AEtU9Gouc8KiH//2cnv3aSfUatRw9lJIZ+fLfFOIe54VbJ81T1fFUWjOlzTPpwFpI/IZ7Fpmt
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:247:b0:dcc:6065:2b3d with SMTP id
- k7-20020a056902024700b00dcc60652b3dmr211350ybs.8.1710395993876; Wed, 13 Mar
- 2024 22:59:53 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:59:07 -0700
-In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
-Message-Id: <20240314055919.1979781-9-irogers@google.com>
+	s=arc-20240116; t=1710395998; c=relaxed/simple;
+	bh=1B4t1nZ+bMa1THF1ZkPv7BtvBPdoV1xxKH8iSMbROto=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ncMvWKrjbNKXVRwF6rTYw2F+lb/qJpPGQIJeeXCx0lKoWJnIx1MNvu6DfKNwM6w6ux/UHumfrHIF+kQ6xj2pTMu7By1nmumuXj0ibCQG80FgT7Hz9iF/3brupayrp0bJuBBHiA4E9CLpTM3mu7QNUJGd/oT1AGtRfZYUj2Dw5Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=46.101.248.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrAAnXoIgkvJl6QLYAw--.37422S2;
+	Thu, 14 Mar 2024 13:58:56 +0800 (CST)
+Received: from [172.19.193.108] (unknown [10.12.190.56])
+	by gateway (Coremail) with SMTP id _____wCXkL8ckvJl0hP9AA--.49473S2;
+	Thu, 14 Mar 2024 13:58:53 +0800 (CST)
+Message-ID: <421183dd-73d4-43b1-bfb3-f7c7db7d82cb@hust.edu.cn>
+Date: Thu, 14 Mar 2024 13:58:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240314055919.1979781-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 08/20] perf jevents: Add ports metric group giving
- utilization on Intel
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs/zh_CN: Add dev-tools/ubsan Chinese translation
+To: Yanteng Si <siyanteng@loongson.cn>, Alex Shi <alexs@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20240302140058.1527765-1-dzm91@hust.edu.cn>
+ <26730f76-871d-4a6d-8b16-ea3e52ef5357@loongson.cn>
+From: Dongliang Mu <dzm91@hust.edu.cn>
+In-Reply-To: <26730f76-871d-4a6d-8b16-ea3e52ef5357@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrAAnXoIgkvJl6QLYAw--.37422S2
+Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW3WF1rCr1kGF15ArW7tw4UXFb_yoW7Kw15pr
+	n5KFWxGrW8JryrJr1UKF15JFyjyr18A3ZrJrn2qF1jqF1qkr1Yqr12qryqgr9rWrW8AFy7
+	JFnFgF42vr12k3DanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQYb7Iv0xC_tr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
+	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
+	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
+	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26F4j6r4UJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82
+	IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0Kg43UUUUU==
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-The ports metric group contains a metric for each port giving its
-utilization as a ratio of cycles. The metrics are created by looking
-for UOPS_DISPATCHED.PORT events.
+ping?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/intel_metrics.py | 32 ++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index b02d0c0c3793..b181574c9486 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -1,17 +1,23 @@
- #!/usr/bin/env python3
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
--                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
--                    MetricGroup, MetricRef, Select)
-+                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-+                    Metric, MetricGroup, MetricRef, Select)
- import argparse
- import json
- import math
- import os
-+import re
- from typing import Optional
- 
- # Global command line arguments.
- _args = None
- interval_sec = Event("duration_time")
-+core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
-+                    "CPU_CLK_UNHALTED.DISTRIBUTED",
-+                    "cycles")
-+# Number of CPU cycles scaled for SMT.
-+smt_cycles = Select(core_cycles / 2, Literal("#smt_on"), core_cycles)
- 
- def Idle() -> Metric:
-   cyc = Event("msr/mperf/")
-@@ -260,6 +266,27 @@ def IntelBr():
-                      description="breakdown of retired branch instructions")
- 
- 
-+def IntelPorts() -> Optional[MetricGroup]:
-+  pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
-+
-+  metrics = []
-+  for x in pipeline_events:
-+    if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["EventName"]):
-+      name = x["EventName"]
-+      port = re.search(r"(PORT_[0-9].*)", name).group(0).lower()
-+      if name.endswith("_CORE"):
-+        cyc = core_cycles
-+      else:
-+        cyc = smt_cycles
-+      metrics.append(Metric(port, f"{port} utilization (higher is better)",
-+                            d_ratio(Event(name), cyc), "100%"))
-+  if len(metrics) == 0:
-+    return None
-+
-+  return MetricGroup("ports", metrics, "functional unit (port) utilization -- "
-+                     "fraction of cycles each port is utilized (higher is better)")
-+
-+
- def IntelSwpf() -> Optional[MetricGroup]:
-   ins = Event("instructions")
-   try:
-@@ -352,6 +379,7 @@ def main() -> None:
-       Smi(),
-       Tsx(),
-       IntelBr(),
-+      IntelPorts(),
-       IntelSwpf(),
-   ])
- 
--- 
-2.44.0.278.ge034bb2e1d-goog
+On 2024/3/6 17:15, Yanteng Si wrote:
+>
+> 在 2024/3/2 22:00, Dongliang Mu 写道:
+>> Translate dev-tools/ubsan.rst into Chinese, add it into
+>> zh_CN/dev-tools/index.rst.
+>>
+>> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+>
+> Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+>
+>
+> Thanks,
+>
+> Yanteng
+>
+>> ---
+>>   .../translations/zh_CN/dev-tools/index.rst    |  2 +-
+>>   .../translations/zh_CN/dev-tools/ubsan.rst    | 91 +++++++++++++++++++
+>>   2 files changed, 92 insertions(+), 1 deletion(-)
+>>   create mode 100644 
+>> Documentation/translations/zh_CN/dev-tools/ubsan.rst
+>>
+>> diff --git a/Documentation/translations/zh_CN/dev-tools/index.rst 
+>> b/Documentation/translations/zh_CN/dev-tools/index.rst
+>> index c2db3e566b1b..c4463f0750f0 100644
+>> --- a/Documentation/translations/zh_CN/dev-tools/index.rst
+>> +++ b/Documentation/translations/zh_CN/dev-tools/index.rst
+>> @@ -22,13 +22,13 @@ 
+>> Documentation/translations/zh_CN/dev-tools/testing-overview.rst
+>>      sparse
+>>      gcov
+>>      kasan
+>> +   ubsan
+>>      gdb-kernel-debugging
+>>
+>>   Todolist:
+>>
+>>    - coccinelle
+>>    - kcov
+>> - - ubsan
+>>    - kmemleak
+>>    - kcsan
+>>    - kfence
+>> diff --git a/Documentation/translations/zh_CN/dev-tools/ubsan.rst 
+>> b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+>> new file mode 100644
+>> index 000000000000..2487696b3772
+>> --- /dev/null
+>> +++ b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+>> @@ -0,0 +1,91 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +.. include:: ../disclaimer-zh_CN.rst
+>> +
+>> +:Original: Documentation/dev-tools/ubsan.rst
+>> +:Translator: Dongliang Mu <dzm91@hust.edu.cn>
+>> +
+>> +未定义行为消毒剂 - UBSAN
+>> +====================================
+>> +
+>> +UBSAN是一种动态未定义行为检查工具。
+>> +
+>> +UBSAN使用编译时插桩捕捉未定义行为。编译器在可能导致未定义行为的操作前插入特定 
+>>
+>> +检测代码。如果检查失败，即检测到未定义行为，__ubsan_handle_* 
+>> 函数将被调用打印
+>> +错误信息。
+>> +
+>> +GCC自4.9.x [1_] （详见 ``-fsanitize=undefined`` 
+>> 选项及其子选项）版本后引入这
+>> +一特性。GCC 5.x 版本实现了更多检查器 [2_]。
+>> +
+>> +报告样例
+>> +--------------
+>> +
+>> +::
+>> +
+>> + 
+>> ================================================================================
+>> +     UBSAN: Undefined behaviour in ../include/linux/bitops.h:110:33
+>> +     shift exponent 32 is to large for 32-bit type 'unsigned int'
+>> +     CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc1+ #26
+>> +      0000000000000000 ffffffff82403cc8 ffffffff815e6cd6 
+>> 0000000000000001
+>> +      ffffffff82403cf8 ffffffff82403ce0 ffffffff8163a5ed 
+>> 0000000000000020
+>> +      ffffffff82403d78 ffffffff8163ac2b ffffffff815f0001 
+>> 0000000000000002
+>> +     Call Trace:
+>> +      [<ffffffff815e6cd6>] dump_stack+0x45/0x5f
+>> +      [<ffffffff8163a5ed>] ubsan_epilogue+0xd/0x40
+>> +      [<ffffffff8163ac2b>] 
+>> __ubsan_handle_shift_out_of_bounds+0xeb/0x130
+>> +      [<ffffffff815f0001>] ? radix_tree_gang_lookup_slot+0x51/0x150
+>> +      [<ffffffff8173c586>] _mix_pool_bytes+0x1e6/0x480
+>> +      [<ffffffff83105653>] ? dmi_walk_early+0x48/0x5c
+>> +      [<ffffffff8173c881>] add_device_randomness+0x61/0x130
+>> +      [<ffffffff83105b35>] ? dmi_save_one_device+0xaa/0xaa
+>> +      [<ffffffff83105653>] dmi_walk_early+0x48/0x5c
+>> +      [<ffffffff831066ae>] dmi_scan_machine+0x278/0x4b4
+>> +      [<ffffffff8111d58a>] ? vprintk_default+0x1a/0x20
+>> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
+>> +      [<ffffffff830b2240>] setup_arch+0x405/0xc2c
+>> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
+>> +      [<ffffffff830ae053>] start_kernel+0x83/0x49a
+>> +      [<ffffffff830ad120>] ? early_idt_handler_array+0x120/0x120
+>> +      [<ffffffff830ad386>] x86_64_start_reservations+0x2a/0x2c
+>> +      [<ffffffff830ad4f3>] x86_64_start_kernel+0x16b/0x17a
+>> + 
+>> ================================================================================
+>> +
+>> +用法
+>> +-----
+>> +
+>> +使用如下内核配置启用UBSAN::
+>> +
+>> +    CONFIG_UBSAN=y
+>> +
+>> +使用如下内核配置检查整个内核::
+>> +
+>> +        CONFIG_UBSAN_SANITIZE_ALL=y
+>> +
+>> +为了在特定文件或目录启动代码插桩，需要在相应的内核Makefile中添加一行类似内容: 
+>>
+>> +
+>> +- 单文件（如main.o）::
+>> +
+>> +    UBSAN_SANITIZE_main.o := y
+>> +
+>> +- 一个目录中的所有文件::
+>> +
+>> +    UBSAN_SANITIZE := y
+>> +
+>> +即使设置了``CONFIG_UBSAN_SANITIZE_ALL=y``，为了避免文件被插桩，可使用::
+>> +
+>> +  UBSAN_SANITIZE_main.o := n
+>> +
+>> +与::
+>> +
+>> +  UBSAN_SANITIZE := n
+>> +
+>> +未对齐的内存访问检测可通过开启独立选项 - CONFIG_UBSAN_ALIGNMENT 检测。
+>> +该选项在支持未对齐访问的架构上(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS=y) 
+>>
+>> +默认为关闭。该选项仍可通过内核配置启用，但它将产生大量的UBSAN报告。
+>> +
+>> +参考文献
+>> +----------
+>> +
+>> +.. _1: 
+>> https://gcc.gnu.org/onlinedocs/gcc-4.9.0/gcc/Debugging-Options.html
+>> +.. _2: https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html
+>> +.. _3: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+>> -- 
+>> 2.39.2
+>>
+>>
 
