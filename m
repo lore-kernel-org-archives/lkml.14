@@ -1,38 +1,55 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D403D75;
-	Thu, 14 Mar 2024 06:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4D34683;
+	Thu, 14 Mar 2024 06:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710398205; cv=none; b=RSji9eyl0A+wSm+z/4Hf7ufwHmtYFU+o7yeb8wxqUsRi+FpFtgtVmAQwtx2G61bT0YnYfZcaB5+KHKXSSqDGhPu6OG99OrnVtuIhhgmdcpk/mlLiWwj02ev1IAXMEhN18Jf0cWOpqLNUijfbgJ3Jge301huvGmYVMX7PeqNq994=
+	t=1710398250; cv=none; b=drjMfVl0bUbfc9jBwcqWmaw7hJdjWV1aY/lyFveCU2I4rSusEdHqY0peBIMWWQUTSUqS2ddTZjHRQ+kPc6DZZXyNwBFVHVSMTjqe4Hi9eTbOGLDN7Gfgjzjhif75/+3UL12yKLqcurLu6QulXrdULKZXMDTCESqKQReKE8ZEcbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710398205; c=relaxed/simple;
-	bh=zX99hBMYW1SD+MxJv3qVxndLjx1Q1X27Qhmz8T2Gi4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZnWRLVoRp5CSIQGKH9rY+AZMmwY68SuFN9LvkyCED9puWdqourYA94NH0UvY+hwauZu51vkEsbZgvzINt2zAjWqqoz3hsJ67JKwz9ZP0nWbUzeIh2JtW2ftBz3vFWRD2fajezx7eJW3IObmIrheRHPj5Vh+PfxE2FM7zVvCTVWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.236.129])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4TwHYp3sdBzyQc;
-	Thu, 14 Mar 2024 09:30:22 +0300 (MSK)
-From: Alexandra Diupina <adiupina@astralinux.ru>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alexandra Diupina <adiupina@astralinux.ru>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] net: dsa: add return value check of genphy_read_status()
-Date: Thu, 14 Mar 2024 09:30:08 +0300
-Message-Id: <20240314063008.11214-1-adiupina@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1710398250; c=relaxed/simple;
+	bh=rYAKy0YwJE5ci82WZQpxeGINJPlfTTccgMae34B3AWU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aGE7Pocu/F4GKabzyxp5RX7QkG78JSrBKaS+Jn/+nHD6amI84j3QIEe/iPTLqQ0ncUFWV08n4a2kcUHkwU3DHgiHGZy7C6D5OlHjYrLxPksRWl38MeBekf3woyAUResRZYmM2/7sW1M+duGlde7t+/nenCHOY2n1kgiqNRsl7ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 98ce9f10be844c369520d7c1404ded6f-20240314
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:e20e57c8-bb4e-4429-a4ac-d750caae4838,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:5
+X-CID-INFO: VERSION:1.1.37,REQID:e20e57c8-bb4e-4429-a4ac-d750caae4838,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-META: VersionHash:6f543d0,CLOUDID:f1ea7c81-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:2403141437215XVAHEKJ,BulkQuantity:0,Recheck:0,SF:44|66|38|24|17|19|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 98ce9f10be844c369520d7c1404ded6f-20240314
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 887291583; Thu, 14 Mar 2024 14:37:19 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	u.kleine-koenig@pengutronix.de,
+	mario.limonciello@amd.com,
+	jes965@nyu.edu,
+	alexbelm48@gmail.com,
+	onenowy@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v1] platform/x86: hp-wmi: use sysfs_emit() instead of sprintf()
+Date: Thu, 14 Mar 2024 14:37:03 +0800
+Message-Id: <20240314063703.315841-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,41 +57,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdefiedruddvleenucfrrghrrghmpehhvghloheprhgsthgrqdhmshhkqdhlthdqfedtvdeiledtrdgrshhtrhgrlhhinhhugidrrhhupdhinhgvthepuddtrddujeejrddvfeeirdduvdelmeehudejgeekpdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrughiuhhpihhnrgesrghsthhrrghlihhnuhigrdhruhdprhgtphhtthhopehfrdhfrghinhgvlhhlihesghhmrghilhdrtghomhdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnh
- gvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshhrvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhg
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12498327, Updated: 2024-Mar-14 04:41:39 UTC]
 
-Need to check return value of genphy_read_status(),
-because higher in the call hierarchy is the
-dsa_register_switch() function,
-which is used in various drivers.
+Follow the advice in Documentation/filesystems/sysfs.rst:
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 33615367f378 ("net: dsa: Support internal phy on 'cpu' port")
-Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
 ---
- net/dsa/port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/hp/hp-wmi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index c42dac87671b..c411f30bb5f6 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -1765,7 +1765,9 @@ static int dsa_shared_port_fixed_link_register_of(struct dsa_port *dp)
- 		mode = PHY_INTERFACE_MODE_NA;
- 	phydev->interface = mode;
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 630519c08617..5fa553023842 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -681,7 +681,7 @@ static ssize_t display_show(struct device *dev, struct device_attribute *attr,
  
--	genphy_read_status(phydev);
-+	err = genphy_read_status(phydev);
-+	if (err)
-+		return err;
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
  
- 	if (ds->ops->adjust_link)
- 		ds->ops->adjust_link(ds, port, phydev);
+ static ssize_t hddtemp_show(struct device *dev, struct device_attribute *attr,
+@@ -691,7 +691,7 @@ static ssize_t hddtemp_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
+@@ -701,7 +701,7 @@ static ssize_t als_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+@@ -711,7 +711,7 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
+@@ -721,7 +721,7 @@ static ssize_t tablet_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+@@ -732,7 +732,7 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	if (value < 0)
+ 		return value;
+-	return sprintf(buf, "0x%x\n", value);
++	return sysfs_emit(buf, "0x%x\n", value);
+ }
+ 
+ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
 -- 
-2.30.2
+2.25.1
 
