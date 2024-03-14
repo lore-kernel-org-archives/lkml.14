@@ -1,92 +1,167 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF195FEE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F9060ED0;
 	Thu, 14 Mar 2024 10:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412552; cv=none; b=gXoogXhZR9yuhVBU3Rtp+vSc7IoLv/pkiVZxfYGNpkrWXyP17x+ivh1PRL/VioQj23dU5LXBUAQkK/78S2aIiEDbAJ7D8Bu8M8KeZyetp87/ZSPKjcx7Mtpwd1VKzGYotpKMJ4EOHgEGzPVmnVvC6Wt/3f+RXq84Ql8J290J514=
+	t=1710412552; cv=none; b=ZiaAMjCd5JsdB7YNqxBdWnmOpJgsyEYWUHeKs19clwl5DQrw2TpDeCaleBUzdHpQw21AJZRm8xx+pd6/HAtR8uOurWujs9PSyQQjJ/w9Jr13U1DVRt6HtYoz4zXhYsc9IETjyvc6L7m0u6FIn05RMgzk50Tr0YjGPmkUiGmgLgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710412552; c=relaxed/simple;
-	bh=QReK/KWVzgQf557F87tkZ7/Pys1J7fmBggS/0JRuhqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EjHipPm+wN2dZZCJBh9uxNAk8Kb/NBqWDXo0+IODq22tFGVKIO6W9eq1r38OFIbhfKYkRgsNXtYZEztXq91hpo6vD21zX09a25hXONET6lCTcC5k4L9NZSSihAhB/POD5Ba6uCVKaq9cm5jB4ALf7dpxoJwoF7QKcX4iGeOODUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=r0aP0w+C; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=iVQmHZfRSgFp372oTb5qte+arj20Azd4hof81HMijXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+IochszdnbZfRIWMNznIyid5ekhx56irk9nMyN6Mnrg3zyCK0eMugIaY21yRkpotm/tuZKJZ8fsNTwAErlTkBjiVxN8NBAj4AUFgDCkKXz0ec67kDzqQ9B028Jtoxy6qElqJT/zssTayemqvgM0msURecwlGfo04ihyV/7KkIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JdnhuirQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4cSqTFJ+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JdnhuirQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4cSqTFJ+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="r0aP0w+C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710412548;
-	bh=QReK/KWVzgQf557F87tkZ7/Pys1J7fmBggS/0JRuhqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r0aP0w+C0idVItdhVePghwV+j80xy/2P7aDOE+0QbCvBNlu2+Ko/y3sxZRl3fnTDn
-	 xQdZ+b6v+etgrCxP+9t2TSIBkEuztj5seYouoiLGvgZhg8FjtMYV0ofcXYYtiWWwEJ
-	 mPMgqv+Br2q80+FdoaF1FL7tKowKKeLICE5OvrNNCiUu8rq8h3euGq+8WmblBdPAhX
-	 U67KMSrqvTTAGzNfT3tEqrvyqd2o7556Bm3Ex08B/7aHKoimYuHTdV8wHRZRjXq8FL
-	 enHq05yixx5b3mynSZRUqnnX8mTPJQlH0gahSBQ51MDWA1ch2eUYd6Bs5uA3FhjHxv
-	 ioPPCml0y53Tw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JdnhuirQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4cSqTFJ+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JdnhuirQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4cSqTFJ+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0C2A437820D9;
-	Thu, 14 Mar 2024 10:35:47 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	wenst@chromium.org,
-	jenneron@protonmail.com,
-	kernel@collabora.com
-Subject: [PATCH 1/2] dt-bindings: arm: mediatek: Add MT8195 HP Chromebook x360 13b-ca0002sa
-Date: Thu, 14 Mar 2024 11:34:59 +0100
-Message-ID: <20240314103500.93158-2-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240314103500.93158-1-angelogioacchino.delregno@collabora.com>
-References: <20240314103500.93158-1-angelogioacchino.delregno@collabora.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B33C11F844;
+	Thu, 14 Mar 2024 10:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+IbSwf0kLlVY+YSGAOOWzTXEUUs73aDovUc6HyI5Ht0=;
+	b=JdnhuirQrz06DyYXYlRHNT80qG53FDfvwEgjgor/f8Yowq3cham85um5vUJR0os1RFup4v
+	v+lPSA7yG2fGjEeKbIN3NIOytoTaJT/NPuZxJpWCbDCPCJa4zpw0IKHnadfG08XcmBusi1
+	t+lexVX5oFHnYeuICsd6ECfhUwTVxiQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412548;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+IbSwf0kLlVY+YSGAOOWzTXEUUs73aDovUc6HyI5Ht0=;
+	b=4cSqTFJ+6nZERUOZLOn3wjZH9wJ/hNZq4N/WUWY5XANLs2frwKc14DsxrkAGhZdJTGRY9o
+	XM/UQGjgqAv3AfCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+IbSwf0kLlVY+YSGAOOWzTXEUUs73aDovUc6HyI5Ht0=;
+	b=JdnhuirQrz06DyYXYlRHNT80qG53FDfvwEgjgor/f8Yowq3cham85um5vUJR0os1RFup4v
+	v+lPSA7yG2fGjEeKbIN3NIOytoTaJT/NPuZxJpWCbDCPCJa4zpw0IKHnadfG08XcmBusi1
+	t+lexVX5oFHnYeuICsd6ECfhUwTVxiQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412548;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+IbSwf0kLlVY+YSGAOOWzTXEUUs73aDovUc6HyI5Ht0=;
+	b=4cSqTFJ+6nZERUOZLOn3wjZH9wJ/hNZq4N/WUWY5XANLs2frwKc14DsxrkAGhZdJTGRY9o
+	XM/UQGjgqAv3AfCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A84E2139E7;
+	Thu, 14 Mar 2024 10:35:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id F1cVKQTT8mVFUQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 14 Mar 2024 10:35:48 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 65702A07D9; Thu, 14 Mar 2024 11:35:44 +0100 (CET)
+Date: Thu, 14 Mar 2024 11:35:44 +0100
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+	jack@suse.cz, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 8/9] ext4: set the type of max_zeroout to unsigned int
+ to avoid overflow
+Message-ID: <20240314103544.s37lbhwrkhwx6l3j@quack3>
+References: <20240227091148.178435-1-libaokun1@huawei.com>
+ <20240227091148.178435-9-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227091148.178435-9-libaokun1@huawei.com>
+X-Spamd-Bar: +
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=JdnhuirQ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4cSqTFJ+
+X-Spamd-Result: default: False [1.46 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 BAYES_HAM(-0.23)[72.66%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,suse.cz:dkim,huawei.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,linux.ibm.com,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: 1.46
+X-Spam-Level: *
+X-Rspamd-Queue-Id: B33C11F844
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Add the MT8195 Cherry platform's Dojo machine, a convertible design
-commercially known as the HP Chromebook x360 (13b-ca0002sa).
+On Tue 27-02-24 17:11:47, Baokun Li wrote:
+> The max_zeroout is of type int and the s_extent_max_zeroout_kb is of
+> type uint, and the s_extent_max_zeroout_kb can be freely modified via
+> the sysfs interface. When the block size is 1024, max_zeroout may
+> overflow, so declare it as unsigned int to avoid overflow.
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- Documentation/devicetree/bindings/arm/mediatek.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Indeed. The patch looks good. Feel free to add:
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index 09f9ffd3ff7b..5524b095bf3b 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -342,6 +342,14 @@ properties:
-           - const: google,tomato-rev3
-           - const: google,tomato
-           - const: mediatek,mt8195
-+      - description: HP Dojo sku1, 3, 5, 7 (HP Chromebook x360 13b-ca0002sa)
-+        items:
-+          - const: google,dojo-sku7
-+          - const: google,dojo-sku5
-+          - const: google,dojo-sku3
-+          - const: google,dojo-sku1
-+          - const: google,dojo
-+          - const: mediatek,mt8195
-       - items:
-           - enum:
-               - mediatek,mt8195-demo
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/extents.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index e57054bdc5fd..e067f2dd0335 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -3402,9 +3402,10 @@ static int ext4_ext_convert_to_initialized(handle_t *handle,
+>  	struct ext4_extent *ex, *abut_ex;
+>  	ext4_lblk_t ee_block, eof_block;
+>  	unsigned int ee_len, depth, map_len = map->m_len;
+> -	int allocated = 0, max_zeroout = 0;
+>  	int err = 0;
+>  	int split_flag = EXT4_EXT_DATA_VALID2;
+> +	int allocated = 0;
+> +	unsigned int max_zeroout = 0;
+>  
+>  	ext_debug(inode, "logical block %llu, max_blocks %u\n",
+>  		  (unsigned long long)map->m_lblk, map_len);
+> -- 
+> 2.31.1
+> 
 -- 
-2.44.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
