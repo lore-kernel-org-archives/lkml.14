@@ -1,198 +1,217 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C33E433AD
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA5D347C1;
+	Thu, 14 Mar 2024 10:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412369; cv=none; b=TPsDUO0Mk+tUINccbSUxQ+Dk7SYpbUpc6ax9zEyFRpyEfgDNpj1kW9K0H4XXYyg1wLmQ6D5rc7VxcgXxJ51tA8BwOMnno8turgXFjSIs2IH3JWZxNFsGswvTYcXwhVPdzta9CqWBCpL5epGj0IaMCK6W/1qsCfNd89sSH70U+rA=
+	t=1710412423; cv=none; b=du6Ybc82LhGEoefn2vQti1nxRLVTuMqgDNayxlbDQ+k1QbMoT75h0UdzDDPykVjU4BIsYErfVGzBIhvGhngJiF2LqQy+/lTTAVm+0oUzztjHXsuHkofJtPaNqqYwWXj1Poqm6wSagjFC5Ko/UGg14MlY8Xqzn43BVUwFgGWTn1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412369; c=relaxed/simple;
-	bh=T3CRS2D6IyxZhJqi3IevJf7S4LZx3430x8yV1L90zQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IkpazqUBqiXk8dwCNnglJQyzZ9Ls8ZhEYW/4of4XfNfI7KQJKgNgkHxwY8imFPXGwQuBXVTZCyTuHlFSnhbtcWOWQf8P0yvwqYzc0LjWHGi3y2zHHB74bogsv5bKbY+9r2ubmZ/2/1sA6AHw6dstvi2Ps/pnejMGdhVFJ6C6Jik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97036DA7;
-	Thu, 14 Mar 2024 03:33:21 -0700 (PDT)
-Received: from [10.57.10.233] (unknown [10.57.10.233])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6A053F73F;
-	Thu, 14 Mar 2024 03:32:40 -0700 (PDT)
-Message-ID: <672228a5-5b5b-4c32-9fd9-4e1b59c08dd2@arm.com>
-Date: Thu, 14 Mar 2024 11:32:34 +0100
+	s=arc-20240116; t=1710412423; c=relaxed/simple;
+	bh=ZXKLVIB1m0fSMuF1GTNUjKfPE6NFABLw1foqiZj2YMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iThAPp1TGG9zSjbPYdmel6KkSoFWV55JF25f92SdsCzbptNl1HNki0yhJLSmBXINwso1fkL8jsLs7gx4BM3+Bj9m8PUJvwVHt6MgCVITczZ7vO/NrT8RWt9JUg+4HNt+vQubqxsfJzb042lwv6nJ3XCjqc//Fg4Fs0dkDHYMJfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KDjgmz2G; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KZ2RI7x/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KDjgmz2G; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KZ2RI7x/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KDjgmz2G";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KZ2RI7x/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KDjgmz2G";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KZ2RI7x/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 294001F844;
+	Thu, 14 Mar 2024 10:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtzFSiIKEr1T7bBqncP2DqIClM8BRRVMKUwFlDjRNf0=;
+	b=KDjgmz2GObBi0/lk4omZm4RkqE+O06nXsYQ8LhDGZkUNY7n1DbBIIZM/EIF5z9RvWMQAHT
+	lcPxBTLw9L+JHS7jd/hB9iaUcK0PyHiQoOxyVhGc+NX5G/pcRCsZesos5f/ehdnXVvshSS
+	gNxBiRX+pzco4nZ45MXu+48LaUyo8/4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtzFSiIKEr1T7bBqncP2DqIClM8BRRVMKUwFlDjRNf0=;
+	b=KZ2RI7x/zy2eZPmN8ZGZAJmEGfLCPb43rzD+auIjwzI/Zy+g/wZfIS7WWTef9x4OAE4f6s
+	csXX+N0IUn0fivCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtzFSiIKEr1T7bBqncP2DqIClM8BRRVMKUwFlDjRNf0=;
+	b=KDjgmz2GObBi0/lk4omZm4RkqE+O06nXsYQ8LhDGZkUNY7n1DbBIIZM/EIF5z9RvWMQAHT
+	lcPxBTLw9L+JHS7jd/hB9iaUcK0PyHiQoOxyVhGc+NX5G/pcRCsZesos5f/ehdnXVvshSS
+	gNxBiRX+pzco4nZ45MXu+48LaUyo8/4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtzFSiIKEr1T7bBqncP2DqIClM8BRRVMKUwFlDjRNf0=;
+	b=KZ2RI7x/zy2eZPmN8ZGZAJmEGfLCPb43rzD+auIjwzI/Zy+g/wZfIS7WWTef9x4OAE4f6s
+	csXX+N0IUn0fivCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 136B7139E7;
+	Thu, 14 Mar 2024 10:33:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cGq4BIPS8mWJUAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 14 Mar 2024 10:33:39 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C26E0A07D9; Thu, 14 Mar 2024 11:33:34 +0100 (CET)
+Date: Thu, 14 Mar 2024 11:33:34 +0100
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+	jack@suse.cz, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 6/9] ext4: add positive int attr pointer to avoid
+ sysfs variables overflow
+Message-ID: <20240314103334.pvfgvw4dw7a27unb@quack3>
+References: <20240227091148.178435-1-libaokun1@huawei.com>
+ <20240227091148.178435-7-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched: Improve rq selection for a blocked task when its
- affinity changes
-Content-Language: en-US
-To: Ze Gao <zegao2021@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Mel Gorman <mgorman@suse.de>, Juri Lelli <juri.lelli@redhat.com>,
- Ingo Molnar <mingo@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ben Segall <bsegall@google.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Valentin Schneider <vschneid@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ze Gao <zegao@tencent.com>
-References: <20240313085817.48892-1-zegao@tencent.com>
- <d43ed111-085b-432b-ad5b-433d5031fad1@arm.com>
- <CAD8CoPAC0ti2=mAbP5GMN6ZidZnPV-Antf7KrjwPtEnE7gYOdg@mail.gmail.com>
- <CAD8CoPCAU0OnE9R-usnyggRO5BZe3ey5=JOK8Waf3pvs7uQTtQ@mail.gmail.com>
-From: Pierre Gondois <pierre.gondois@arm.com>
-In-Reply-To: <CAD8CoPCAU0OnE9R-usnyggRO5BZe3ey5=JOK8Waf3pvs7uQTtQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227091148.178435-7-libaokun1@huawei.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-1.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,huawei.com:email,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,linux.ibm.com,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: -1.10
+X-Spam-Flag: NO
 
-
-
-On 3/14/24 04:49, Ze Gao wrote:
-> On Thu, Mar 14, 2024 at 10:59 AM Ze Gao <zegao2021@gmail.com> wrote:
->>
->> On Wed, Mar 13, 2024 at 11:16 PM Pierre Gondois <pierre.gondois@arm.com> wrote:
->>>
->>> Hello Ze,
->>>
->>> I am running stress-ng with the following command:
->>>     stress-ng -c 1 -l 10 &
->>> and migrating the process with:
->>>     taskset -pc [cpus] [pid]
->>>
->>> The thread seems to be migrated via:
->>> sched_setaffinity
->>>     \-__sched_setaffinity()
->>>       \-__set_cpus_allowed_ptr()
->>>         \-__set_cpus_allowed_ptr_locked()
->>>           \- [1]
->>
->>
->>
->>> [1]
->>> /*
->>>    * Picking a ~random cpu helps in cases where we are changing affinity
->>>    * for groups of tasks (ie. cpuset), so that load balancing is not
->>>    * immediately required to distribute the tasks within their new mask.
->>>    */
->>> dest_cpu = cpumask_any_and_distribute(cpu_valid_mask, ctx->new_mask);
->>>
->>> So it seems the destination CPU chosen among the new CPU affinity mask is done
->>> here, by picking a random CPU in the mask.
->>
->> IIUC, this is for running/queued/waking tasks instead of blocked tasks.
->>
->> Am I missing something obvious here?
-
-Not at all, I just didn't tested the patch on a blocked task as you said.
-
->>
->>> Checking the cpus_ptr in select_idle_sibling() might be useful in other cases,
->>> but I think the experiment doesn't show that. Maybe a another small tweak could
->>
->> The experiment is used to illustrate that the status quo does not do well
->> but has to rely on select_fallback_rq() to choose a cpu for a woken task
->> which turns out to be a bad choice since it's already monopolized by a
->> cpu bound task, that is why a second migration happens with the help
->> of the load balancer.
+On Tue 27-02-24 17:11:45, Baokun Li wrote:
+> The following variables controlled by the sysfs interface are of type
+> int and are normally used in the range [0, INT_MAX], but are declared as
+> attr_pointer_ui, and thus may be set to values that exceed INT_MAX and
+> result in overflows to get negative values.
 > 
-> Btw, perf alone does not show obvious results here, you need some
-> other observability tools to make sure the migration is not initiated by
-> __set_cpus_allowed_ptr_locked (i.e., for running tasks). I achieve this
-> by directly adding some tracepoints to both select_fallback_rq() and
-> select_idle_sibling().
-
-FWIW, I could effectively reproduce the issue described in the commit message, so:
-Tested-by: Pierre Gondois <pierre.gondois@arm.com>
-
-Regards,
-Pierre
-
+>   err_ratelimit_burst
+>   msg_ratelimit_burst
+>   warning_ratelimit_burst
+>   err_ratelimit_interval_ms
+>   msg_ratelimit_interval_ms
+>   warning_ratelimit_interval_ms
 > 
-> Regards,
->          -- Ze
+> Therefore, we add attr_pointer_pi (aka positive int attr pointer) with a
+> value range of 0-INT_MAX to avoid overflow.
 > 
->> Actually, we can reuse the same reasons for doing so as in
->>
->>      commit 46a87b3851f0("sched/core: Distribute tasks within affinity masks")
->>
->>> be done at [1] instead ?
->>
->> As for blocked tasks, check out what is commented on set_task_cpu() and
->> select_task_rq(), since we never call set_task_cpu() on blocked tasks which
->> in turn, we have no way to change p->wake_cpu to dest_cpu being randomly
->> chosen here, so when it's woken up, it still needs to go through the
->> select_task_rq() process using the outdated p->wake_cpu.
->>
->>
->> Thanks,
->>          -- Ze
->>
->>> Regards,
->>> Pierre
->>>
->>> On 3/13/24 09:58, Ze Gao wrote:
->>>> We observered select_idle_sibling() is likely to return the *target* cpu
->>>> early which is likely to be the previous cpu this task is running on even
->>>> when it's actually not within the affinity list newly set, from where after
->>>> we can only rely on select_fallback_rq() to choose one for us at its will
->>>> (the first valid mostly for now).
->>>>
->>>> However, the one chosen by select_fallback_rq() is highly likely not a
->>>> good enough candidate, sometimes it has to rely on load balancer to kick
->>>> in to place itself to a better cpu, which adds one or more unnecessary
->>>> migrations in no doubt. For example, this is what I get when I move task
->>>> 3964 to cpu 23-24 where cpu 23 has a cpu bound work pinned already:
->>>>
->>>>           swapper       0 [013]   959.791829: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=13 dest_cpu=23
->>>> kworker/24:2-mm    1014 [024]   959.806148: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=23 dest_cpu=24
->>>>
->>>> The thing is we can actually do better if we do checks early and take more
->>>> advantages of the *target* in select_idle_sibling(). That is, we continue
->>>> the idle cpu selection if *target* fails the test of cpumask_test_cpu(
->>>> *target*, p->cpus_ptr). By doing so, we are likely to pick a good candidate,
->>>> especially when the newly allowed cpu set shares some cpu resources with
->>>> *target*.
->>>>
->>>> And with this change, we clearly see the improvement when I move task 3964
->>>> to cpu 25-26 where cpu 25 has a cpu bound work pinned already.
->>>>
->>>>           swapper       0 [027]  4249.204658: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=27 dest_cpu=26
->>>>
->>>> Note we do the same check for *prev* in select_idle_sibling() as well.
->>>>
->>>> Signed-off-by: Ze Gao <zegao@tencent.com>
->>>> ---
->>>>    kernel/sched/fair.c | 13 ++++++++-----
->>>>    1 file changed, 8 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index 533547e3c90a..9ef6e74c6b2a 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -7511,16 +7511,19 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->>>>         */
->>>>        lockdep_assert_irqs_disabled();
->>>>
->>>> -     if ((available_idle_cpu(target) || sched_idle_cpu(target)) &&
->>>> -         asym_fits_cpu(task_util, util_min, util_max, target))
->>>> +     if (cpumask_test_cpu(target, p->cpus_ptr) &&
->>>> +             (available_idle_cpu(target) || sched_idle_cpu(target)) &&
->>>> +             asym_fits_cpu(task_util, util_min, util_max, target))
->>>>                return target;
->>>>
->>>>        /*
->>>>         * If the previous CPU is cache affine and idle, don't be stupid:
->>>>         */
->>>> -     if (prev != target && cpus_share_cache(prev, target) &&
->>>> -         (available_idle_cpu(prev) || sched_idle_cpu(prev)) &&
->>>> -         asym_fits_cpu(task_util, util_min, util_max, prev)) {
->>>> +     if (cpumask_test_cpu(prev, p->cpus_ptr) &&
->>>> +             prev != target &&
->>>> +             cpus_share_cache(prev, target) &&
->>>> +             (available_idle_cpu(prev) || sched_idle_cpu(prev)) &&
->>>> +             asym_fits_cpu(task_util, util_min, util_max, prev)) {
->>>>
->>>>                if (!static_branch_unlikely(&sched_cluster_active) ||
->>>>                    cpus_share_resources(prev, target))
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/sysfs.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
+> index 8e0473169458..ddb54608ca2e 100644
+> --- a/fs/ext4/sysfs.c
+> +++ b/fs/ext4/sysfs.c
+> @@ -32,6 +32,7 @@ typedef enum {
+>  	attr_clusters_in_group,
+>  	attr_mb_order,
+>  	attr_feature,
+> +	attr_pointer_pi,
+>  	attr_pointer_ui,
+>  	attr_pointer_ul,
+>  	attr_pointer_u64,
+> @@ -180,6 +181,9 @@ static struct ext4_attr ext4_attr_##_name = {			\
+>  #define EXT4_RO_ATTR_ES_STRING(_name,_elname,_size)			\
+>  	EXT4_ATTR_STRING(_name, 0444, _size, ext4_super_block, _elname)
+>  
+> +#define EXT4_RW_ATTR_SBI_PI(_name,_elname)      \
+> +	EXT4_ATTR_OFFSET(_name, 0644, pointer_pi, ext4_sb_info, _elname)
+> +
+>  #define EXT4_RW_ATTR_SBI_UI(_name,_elname)	\
+>  	EXT4_ATTR_OFFSET(_name, 0644, pointer_ui, ext4_sb_info, _elname)
+>  
+> @@ -222,12 +226,12 @@ EXT4_RW_ATTR_SBI_UI(mb_stream_req, s_mb_stream_request);
+>  EXT4_RW_ATTR_SBI_UI(mb_max_linear_groups, s_mb_max_linear_groups);
+>  EXT4_RW_ATTR_SBI_UI(extent_max_zeroout_kb, s_extent_max_zeroout_kb);
+>  EXT4_ATTR(trigger_fs_error, 0200, trigger_test_error);
+> -EXT4_RW_ATTR_SBI_UI(err_ratelimit_interval_ms, s_err_ratelimit_state.interval);
+> -EXT4_RW_ATTR_SBI_UI(err_ratelimit_burst, s_err_ratelimit_state.burst);
+> -EXT4_RW_ATTR_SBI_UI(warning_ratelimit_interval_ms, s_warning_ratelimit_state.interval);
+> -EXT4_RW_ATTR_SBI_UI(warning_ratelimit_burst, s_warning_ratelimit_state.burst);
+> -EXT4_RW_ATTR_SBI_UI(msg_ratelimit_interval_ms, s_msg_ratelimit_state.interval);
+> -EXT4_RW_ATTR_SBI_UI(msg_ratelimit_burst, s_msg_ratelimit_state.burst);
+> +EXT4_RW_ATTR_SBI_PI(err_ratelimit_interval_ms, s_err_ratelimit_state.interval);
+> +EXT4_RW_ATTR_SBI_PI(err_ratelimit_burst, s_err_ratelimit_state.burst);
+> +EXT4_RW_ATTR_SBI_PI(warning_ratelimit_interval_ms, s_warning_ratelimit_state.interval);
+> +EXT4_RW_ATTR_SBI_PI(warning_ratelimit_burst, s_warning_ratelimit_state.burst);
+> +EXT4_RW_ATTR_SBI_PI(msg_ratelimit_interval_ms, s_msg_ratelimit_state.interval);
+> +EXT4_RW_ATTR_SBI_PI(msg_ratelimit_burst, s_msg_ratelimit_state.burst);
+>  #ifdef CONFIG_EXT4_DEBUG
+>  EXT4_RW_ATTR_SBI_UL(simulate_fail, s_simulate_fail);
+>  #endif
+> @@ -382,6 +386,7 @@ static ssize_t ext4_generic_attr_show(struct ext4_attr *a,
+>  	case attr_inode_readahead:
+>  	case attr_clusters_in_group:
+>  	case attr_mb_order:
+> +	case attr_pointer_pi:
+>  	case attr_pointer_ui:
+>  		if (a->attr_ptr == ptr_ext4_super_block_offset)
+>  			return sysfs_emit(buf, "%u\n", le32_to_cpup(ptr));
+> @@ -452,6 +457,14 @@ static ssize_t ext4_generic_attr_store(struct ext4_attr *a,
+>  		return 0;
+>  
+>  	switch (a->attr_id) {
+> +	case attr_pointer_pi:
+> +		ret = kstrtouint(skip_spaces(buf), 0, &t);
+> +		if (ret)
+> +			return ret;
+> +		if ((int)t < 0)
+> +			return -EINVAL;
+> +		*((unsigned int *) ptr) = t;
+> +		return len;
+>  	case attr_pointer_ui:
+>  		ret = kstrtouint(skip_spaces(buf), 0, &t);
+>  		if (ret)
+> -- 
+> 2.31.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
