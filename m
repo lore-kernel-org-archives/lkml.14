@@ -1,176 +1,89 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.82])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7E75DF26;
-	Thu, 14 Mar 2024 10:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710413722; cv=pass; b=QjdrAcOujlDH6QM+GDArudxPLJQoBjswAV2y8dI0iejzVgcdZ357OVjW5SL3KEpaRqV6VWzzhkM2ULplIogm7dUiFDD4+aacjI1SqzzjhmVPzzlCbwCcvMyTf292otZ6htK6zsVFS4J3p576j57vZALIfpJExrXiqCT22/JT6Q0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710413722; c=relaxed/simple;
-	bh=5Mlh1dcRnKpNeVMcrPE+wtgDR6dHD0xA/6rSNkR/WPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXH5pasBN5OrtY5vYDr5FMM3f93Nd3FFp8yGIQmNukm3DjB8SkJDU3n0eBZeYPAdsmVdm212/uw7rfOzmx9Ft1ntjOnfaNUe/SUJbHWd+5tDAMt38nqAeHmIwn3Rj60ATV/LAg2r0adiN7BFZdJ2JpYzQfVytyMz1xobPp+zrVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=WxhAGRs4; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=obhki2np; arc=pass smtp.client-ip=85.215.255.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0DD5DF26
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710413744; cv=none; b=ePjE7L7Qd63zTEHc0n5Lc7LmONzCXls/M/eZKdjlfkg0kYMJE4rC9rwCq6KB3N7Dq7p+TqcMTUFu9yzTdda65VjyDYT9l/JWwpeRJR0UKxYdvkGY4SWRm4Nb7GvJRMSGVKutfw0agK1dgmSx4RCgDerrp9D9iIYTwH72NJ7ZbfI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710413744; c=relaxed/simple;
+	bh=ww+Q4Z3TN7Zkf8AUEmHnJJZgYQfS+2qGhI9YQcA66HU=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=UXmvVX6VTOT2a0Z45lRFTPdiF7AF9f7EBJcA3BsmoZY9DN7MTfOQ9Bq7UF4VDnKUBErioZBOfCFbInaycxtBuGIyBXjhVsBhfoRJQKMHR2xydOWf7MJebYtuWID50wmb38HgaU4Si7S1J79qClrcmql9sGSvZ7oRMNkVWQQFZW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EHLBZJ7G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="WxhAGRs4";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="obhki2np"
-ARC-Seal: i=1; a=rsa-sha256; t=1710412989; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=gRH3y8Wad4o19BgEy7gsZdoGwhESoodVPrUJEbP6IJz3S46XWqY6uIKeYXVQA6DxpN
-    pjnL5QHq96KBxyyaTbRmjjk0ovd+hT1wqaMOj6GIzJzn0cZq0qWNxJ0i9OFI6Ipi+3Nq
-    QUUmeT4WlH2/EE4k6FI6q0g7ZDwUm9E7YJn68nvPU7M2/NdIg07oNVkRAJEDX59iGPJZ
-    6hZNGoPmR7TZzkeWKXunRRTAEieIYia656y652o10u/aMjD/7eCHY+V1mhwYgPJHA395
-    6GxC5lSH52UP5ujzPjK4LxxxzArTSQ5g+NgH8ImBHCdx9lYbi6uWRdz+GlxpYGUoTSU4
-    NsGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1710412989;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=Ryy163wa7Qo8B3Bx14jA3mQ/ycTYjqbynQbd8t6adXs=;
-    b=kgUnNGLF0f7Moc+6/rwpARmOYUaBHuKsduQH3PbAnVuPf78VDpSlpIFIltFI7vqmvF
-    JG4eH/O/zGDo9/V6vcMBFH7UNCkp6UJaBL9pvIZwN1nzAMt4dkBq95R6O1+Ad/qqfg1N
-    JIfVS8/sO5Rb9Ogi3TVDZFCwdyhyA5e++Ma3hp6FeJpAhVy4EuvJmFGz4FKmEpmpsolR
-    TSbYEAJm42M28dc8QMgY7WaDXxiXUafIr+pOoqxABtNUKxjf7zxgym71NssDPOUcC6cC
-    kqMN4nduv7/O6+t9Qw+iFrd1EfPnmPm1Lq3nC7ACGeTR6RwZi8vc2Jpn9CczvlkIcDHH
-    /zGg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1710412989;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=Ryy163wa7Qo8B3Bx14jA3mQ/ycTYjqbynQbd8t6adXs=;
-    b=WxhAGRs4hiAgJnjfr3zwcw1BblYInnEOBtqPUkGRzVOdokUPP58WVNJpXkx4SYAYPL
-    A5J5iulpmKWFlPaoIWGGGEkDauvj3F9wwfbA/iCXjqlkMwqd/ki9Lse7w+Q5FW9jXVUE
-    ULz8gXJz+j9lHNwOPJQJR6P8TyES7kKQ17+9TxAclbJaEKgh3H2W8gNSS4fG7iFBy19U
-    rMtdRGV4nWVqmyzHpfF6gqvkBmU39TLA7uqovpaoWJ1SyeyoUDfpIFUbDTeyhq9nYV9t
-    IlO3zIAY6QE6KKAXLFLQUkVCQDtbAKvItoFV86MTTk06yWrPQ8Q7ohBKqNJ4YD8rajWu
-    DTlw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1710412989;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=Ryy163wa7Qo8B3Bx14jA3mQ/ycTYjqbynQbd8t6adXs=;
-    b=obhki2npfVLWqKBHiwN9sMlUoGuBG0oVOw3DifkqpK8YhTjC9QRuqJU0rochmKF/H/
-    EOjlXpi9okJF0WH/FIBA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4peA8p+L1A=="
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 50.2.2 DYNA|AUTH)
-    with ESMTPSA id Rf2ecd02EAh83Ub
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 14 Mar 2024 11:43:08 +0100 (CET)
-Date: Thu, 14 Mar 2024 11:43:07 +0100
-From: Stephan Gerhold <stephan@gerhold.net>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, andersson@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, caleb.connolly@linaro.org,
-	neil.armstrong@linaro.org, laetitia.mariottini@se.com,
-	pascal.eberhard@se.com, abdou.saker@se.com, jimmy.lalande@se.com,
-	benjamin.missey@non.se.com, daniel.thompson@linaro.org,
-	linux-kernel@vger.kernel.org,
-	Jagdish Gediya <jagdish.gediya@linaro.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
- board DTS
-Message-ID: <ZfLUu6_Vq7MvG2G3@gerhold.net>
-References: <20240313123017.362570-1-sumit.garg@linaro.org>
- <20240313123017.362570-4-sumit.garg@linaro.org>
- <c0e10cbf-c6f3-4b0c-8616-983da2a40236@linaro.org>
- <CAFA6WYNMjCaa0FKjNv6a8VFkco3=GBfgWNDuckGZdiZ9dGmHgg@mail.gmail.com>
- <d82ab1f8-e677-485f-9a6b-4115acfd7239@linaro.org>
- <CAFA6WYNSumyScax=GkN42GJOG56T3odF5Ed9A2i1nk_exCyGtA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EHLBZJ7G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710413742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2gzZJrL9co+94ItPuR1/5KXAlp4bS/UQfJI3lmQi3hg=;
+	b=EHLBZJ7G6YEgS5Qdc4B9uKQ5o9xChWUQn5CiFL0OKd1EQKbI9+2VrNRufxnnN3W7lz4bQn
+	T7hJdjKtXiXJAsak29CsibZHQfZ1lKVj8W5CxhWq/6k/kRM2qrK1JMuJAIr8wTdk7xbkyu
+	2fRcqOXwH8MQ1DtpIP8EUkxkNw/zhhM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-118-mMtlPRr8PrWZv3wqqdl8xw-1; Thu, 14 Mar 2024 06:55:40 -0400
+X-MC-Unique: mMtlPRr8PrWZv3wqqdl8xw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AB07E101A588;
+	Thu, 14 Mar 2024 10:55:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.10])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 95F5E111E3F3;
+	Thu, 14 Mar 2024 10:55:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <544d7b9d-ef15-463f-a11c-9a3cca3a49ea@infradead.org>
+References: <544d7b9d-ef15-463f-a11c-9a3cca3a49ea@infradead.org> <3085695.1710328121@warthog.procyon.org.uk>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
+    Markus Suvanto <markus.suvanto@gmail.com>,
+    Jeffrey Altman <jaltman@auristor.com>,
+    Christian Brauner <brauner@kernel.org>,
+    linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs: Revert "afs: Hide silly-rename files from userspace"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYNSumyScax=GkN42GJOG56T3odF5Ed9A2i1nk_exCyGtA@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3341491.1710413737.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 14 Mar 2024 10:55:37 +0000
+Message-ID: <3341492.1710413737@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Thu, Mar 14, 2024 at 03:02:31PM +0530, Sumit Garg wrote:
-> On Thu, 14 Mar 2024 at 14:48, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> > On 3/14/24 10:04, Sumit Garg wrote:
-> > > On Wed, 13 Mar 2024 at 18:34, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> > >> On 3/13/24 13:30, Sumit Garg wrote:
-> > >>> Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
-> > >>> Box Core board based on the Qualcomm APQ8016E SoC.
-> > >>>
-> > >>> Support for Schneider Electric HMIBSC. Features:
-> > >>> - Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
-> > >>> - 1GiB RAM
-> > >>> - 8GiB eMMC, SD slot
-> > >>> - WiFi and Bluetooth
-> > >>> - 2x Host, 1x Device USB port
-> > >>> - HDMI
-> > >>> - Discrete TPM2 chip over SPI
-> > >>> - USB ethernet adaptors (soldered)
-> > >>>
-> > >>> Co-developed-by: Jagdish Gediya <jagdish.gediya@linaro.org>
-> > >>> Signed-off-by: Jagdish Gediya <jagdish.gediya@linaro.org>
-> > >>> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > >>> ---
-> > >>
-> > >> [...]
-> > >>
-> > >>> +     memory@80000000 {
-> > >>> +             reg = <0 0x80000000 0 0x40000000>;
-> > >>> +     };
-> > >>
-> > >> I'm not sure the entirety of DRAM is accessible..
-> > >>
-> > >> This override should be unnecessary, as bootloaders generally update
-> > >> the size field anyway.
-> > >
-> > > On this board, U-Boot is used as the first stage bootloader (replacing
-> > > Little Kernel (LK), thanks to Stephan's work). And U-Boot consumes
-> > > memory range from DT as Linux does but doesn't require any memory to
-> > > be reserved for U-Boot itself. So apart from reserved memory nodes
-> > > explicitly described in DT all the other DRAM regions are accessible.
-> >
-> > Still, u-boot has code to fetch the size dynamically, no?
-> >
-> 
-> No U-Boot being the first stage bootloader fetches size from DT which
-> is bundled into U-Boot binary.
-> 
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Back when I added support for using U-Boot as first stage bootloader on
-DB410c the way it worked is that U-Boot used a fixed amount of DRAM
-(originally 968 MiB, later 1 GiB since I fixed this in commit
-1d667227ea51 ("board: dragonboard410c: Fix PHYS_SDRAM_1_SIZE") [1]).
-When booting Linux, the Linux DT was dynamically patched with the right
-amount of DRAM (obtained from SMEM). So if you had e.g. a Geniatech DB4
-board with 2 GiB DRAM, U-Boot was only using 1 GiB of DRAM, but Linux
-later got the full 2 GiB patched into its DTB.
+> > Link: https://lists.infradead.org/pipermail/linux-afs/2024-February/00=
+8102html
+> =
 
-I didn't have much time for testing U-Boot myself lately but a quick
-look at the recent changes suggest that Caleb accidentally removed that
-functionality in the recent cleanup. Specifically, the SMEM-based DRAM
-size detection was removed in commit 14868845db54 ("board:
-dragonboard410c: import board code from mach-snapdragon" [2]), the
-msm_fixup_memory() function does not seem to exist anymore now. :')
+> Not Found
+> =
 
-Also, the DRAM size is now always taken from the DT (which is probably
-better than the previous hardcoded size in the U-Boot board code).
+> The requested URL was not found on this server.
 
-I think we should bring the dynamic DRAM size detection back, because
-there are quite some boards available with varying DRAM size. Restoring
-msm_fixup_memory() would likely be easiest, I guess the ideal solution
-would be to parse SMEM in U-Boot's dram_init() function so even U-Boot
-has the correct amount of DRAM to work with.
+Erm.  Not sure how you came by that.  You lost a dot somehow.  It's in the
+original submission:
 
-Thanks,
-Stephan
+https://lore.kernel.org/linux-fsdevel/3085695.1710328121@warthog.procyon.o=
+rg.uk/
 
-[1]: https://source.denx.de/u-boot/u-boot/-/commit/1d667227ea512537b8453abeb49abbf19a1a18e8
-[2]: https://source.denx.de/u-boot/u-boot/-/commit/14868845db54b4f64701977385dc9a6e951e4139
+David
+
