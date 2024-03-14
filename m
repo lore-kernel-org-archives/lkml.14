@@ -1,57 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1898829428
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 23:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1646B4F613
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 23:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458818; cv=none; b=QT+P84JjyGeudJqVG4N69wVISRQgQdsCYGB8O56RsmVdUUt7gY/EtVRhpPSvK+EwMQ1s4oaEFXDNP4gad6Tl0DU5pLSSnXeEDVBr8uFNnONU+5hEwz264xDe8eT/nWATl4JBAfrfKdLJDVCFyFM0HcdsHDZzY8wNlQTLbfuHKmM=
+	t=1710458822; cv=none; b=NB68Feqq4nR++GSHb4Lw7rXuHMhEGhSG9WxE7wigvMhh1ulLxbn5dCTN8/81fSZ2grieyybmH7G64NHQstZbCYkyNMWyP/H3mCwVcJGixPxbVeRvKyJTDUTrH/uPC2XivlD2HmSDWsPu1d8nlNVGtXT7C/x7I5OYeTSF1Y2Hido=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458818; c=relaxed/simple;
-	bh=o49cGQaFGV2lqCGlt41zmvUnsUxiYRWJVSbJwfYRFlM=;
+	s=arc-20240116; t=1710458822; c=relaxed/simple;
+	bh=AqTYa7MHtMGSvPyMPSqX9mCVN3CkOd0u5L3U2bv1DqM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=V0t9lFs6AFXfPkwdMf680fYFr3rZtISm65jrlN91EFyt6q2z9gwcOnPqqVLjBCjhlVjZcrO8hMwuUqxA9lgwComyG4OOGUcf2rYCnoIuFh+ohBjajbvu1E3h9ZOyHeLheAeSRmlRv8L6Gg774zC0twkz4Rql5ZJjCAfNKldx8FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vzbz7azS; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=Xo2guBwpgIkDKS7Fec9bYKmROZpiAbzpVNSWiAZUaLiF2/1ezZCdH8IEuP2TNrPO0ABG9EIcRwfd5z7hhYJc2u53bvvSB+WGK5nfD5lY1isXqj1glbUmK1n5YChPefhwnRVpUapr0iBnpjKLhmHWE5aGmWefPWD1amDhUmu7SA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b/TOSVnV; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vzbz7azS"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1dda34bf052so14569855ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:26:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b/TOSVnV"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc743cc50a6so2110071276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710458816; x=1711063616; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710458820; x=1711063620; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=pTVZRdXyCVTnuQGgLheWcCsaF7bim4F1PK5VbaXQ+t0=;
-        b=Vzbz7azSdWAECY3/f9td/ZB9C0I5KLZtFHpys5R31pciTd4riUy0It6QEH8PqFYETl
-         toaGEnvc322SQ8bVrLu3UvYSJJCL957+e2uXNkduoqUt9PhDwFeBQpjezCHrQvKkYPcM
-         rst7FdqOvxa7yW1VboqJZkXWySV4bBTphasFJQmfKk5vB+ZAFqV35POtdwwBevJH7Enj
-         VvrhGYRHZJ9E+jodxVCq++/bIl74NfLQ4zRNrQhJSHcJFifBnVK5ryb0dC+BRxoqs+fj
-         aa30aVd82R0W+i7HC2lt1Kjh2O9eTuQ4tTX+zrI1WSnB7WgqwDaCVTpXf/D0rMBj0G5H
-         sv1A==
+        bh=j/j/mb3JtyoyPDhLhkSAITq95aQFSMlle8Dlg66amAk=;
+        b=b/TOSVnVnpVC4rqCCy8xH/0ZGckMu9PxCPpI8uDHGF/0A7MjJQWj0n0gW2xB8yTIcF
+         ufYT6JhmdccVkQNF+lTR/m6zqg+gKebs93eE/lE5wpgn3ZNOjPJNQkg1JmubxcZFG6gl
+         IaxPIU5rL4TyqaToixLk1hLBebnam87pLwcAvdY2XUC7xCCgdS+kIsBjZRtyDFgWrrdg
+         bhuCvsrdDZVGqRYi/EPlS4k4B5q8XS7hCf0cPFaxkW9mRLLiF6uY8BUfdDXUbUWy5Bo5
+         QQQpjA3tEdQZ3iWfnoORwr5/TRv/kZScDsl3q6d2317eJtb+J9WmXZZV4smHXrIkOcR9
+         WrAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710458816; x=1711063616;
+        d=1e100.net; s=20230601; t=1710458820; x=1711063620;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pTVZRdXyCVTnuQGgLheWcCsaF7bim4F1PK5VbaXQ+t0=;
-        b=QS4oTNpDvPlv6OBvmKuHibhQ8ZUoGgo9ce+VN+01uZlxGcu2LQcvuTu9BHji27Yi+b
-         9hj8so/67cdypBFbWs1h2xNn162urHHGQFzivhCgjFmz4b20w2dzIyccosxL2ei3svc5
-         YBKC40zk+yNXakJ7K0aaqj137ind6ZgTCzLAfCcJtp1LDIyQT1dG4o9hMsfVWAS+ST1O
-         pJD16YksLHMIZtFDQyKC/yq6rU7xMngh6li+wd1hoT59uVHLxRyxn7eb3sJQY/sPYiCV
-         c7pfdVqhYE8dvJxdzcytAXRNQhvXwPHNIPSN2373l9ztKoWQNCnhHOdbW3EIMQOyzUu1
-         +5kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEMrLKiaVQgRhwFr7oBcmf8/GmusAE8Zis5EI6Y1ONEZamOBBYdZNnvv3tZGdYVkdonLuiABzB6Ms7kyglmEaOQdjs93AHwH7ko+8x
-X-Gm-Message-State: AOJu0YzaQg+nhZNw/RKsBuToSxFQU415OQxYhjaB0QI8n7c2z9P9eLc0
-	bvyAOgzkahTBBtW1P+J+GVvuXaslLF/ye+auZBEB3KaUNPh9KUWEEYI0yAxfQRvXpnmroinb9jP
-	Ayg==
-X-Google-Smtp-Source: AGHT+IH7S37OXvdlnB5BIBxBCKNBsO+Ay6MTHPEIT19iC3iZ0sD1f7oPcvL0HSDVvR5Ys+olPa2yoMgb6k0=
+        bh=j/j/mb3JtyoyPDhLhkSAITq95aQFSMlle8Dlg66amAk=;
+        b=AmDXztW/YZ2TQuS0lViLSaX/S9er1gk7sBnnRiBc+fe7r7qPkt1Dq/1l8Z09GLbQuB
+         yRH9UkKKJ1w2ogguPWFvxomDwKbcqre9exaE4YU3+n70TvqF8NHf9INOyOroYVp+uBKI
+         ekygykLit9rVpxFMGnk/DBmsZVaaiBlFoPmGpr7aeTwwpDyuFsJ2gLq1P12S/FkFtWoz
+         eM7A/28d+Y2ElalSQGFLHeLjPzowPaq3fGUqHqhIZS1IfK+UkhJg5amSrjp7ZD7CDeOE
+         iylPBIfUmtdt2UovzXF2jhjHtuHuIajo38tlbRdmYjne0n+J824ZYlkC3LtOdo7PPIYL
+         6HCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDI4lWAvwdFvGtDFuhHwKeiDPCFb8x/MyGpOUBKQeDMZH4ElCzP5LQGM3qjqmMfJPRW29oCfKccTq6+BApo1eOJHLUzESZ021a+QFJ
+X-Gm-Message-State: AOJu0Yx2157ShHMDQke3gY80ToPTs/KsInb/GzcN7nnf+rZSt+4gA+RS
+	tPQQq5YJWJ5YM3APW9t6GbbiME27fk/Ya/GayiQB9bEPmxNBIeuWIX5RBpb1XnymmAXiSvtzpIT
+	8DQ==
+X-Google-Smtp-Source: AGHT+IEgFldUzAavXJ42YJM5+Q6BHlgBbuisK5vIFOhA5ma+0WFPVDRLg0oxmN/Zi21+BucUmJd5KHT651s=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:d4ca:b0:1dd:a324:30b5 with SMTP id
- o10-20020a170902d4ca00b001dda32430b5mr9294plg.9.1710458816466; Thu, 14 Mar
- 2024 16:26:56 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:72e:b0:dcc:94b7:a7a3 with SMTP id
+ l14-20020a056902072e00b00dcc94b7a7a3mr183110ybt.12.1710458820208; Thu, 14 Mar
+ 2024 16:27:00 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 14 Mar 2024 16:26:28 -0700
+Date: Thu, 14 Mar 2024 16:26:30 -0700
 In-Reply-To: <20240314232637.2538648-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240314232637.2538648-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Message-ID: <20240314232637.2538648-10-seanjc@google.com>
-Subject: [PATCH 09/18] KVM: selftests: Rename x86's vcpu_setup() to vcpu_init_sregs()
+Message-ID: <20240314232637.2538648-12-seanjc@google.com>
+Subject: [PATCH 11/18] KVM: selftests: Map x86's exception_handlers at VM
+ creation, not vCPU setup
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Paolo Bonzini <pbonzini@redhat.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
@@ -76,38 +77,35 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename vcpu_setup() to be more descriptive and precise, there is a whole
-lot of "setup" that is done for a vCPU that isn't in said helper.
-
-No functional change intended.
+Map x86's exception handlers at VM creation, not vCPU setup, as the
+mapping is per-VM, i.e. doesn't need to be (re)done for every vCPU.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/lib/x86_64/processor.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/lib/x86_64/processor.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 3640d3290f0a..d6bfe96a6a77 100644
+index 5813d93b2e7c..f4046029f168 100644
 --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
 +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -555,7 +555,7 @@ void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu)
- 	*(vm_vaddr_t *)addr_gva2hva(vm, (vm_vaddr_t)(&exception_handlers)) = vm->handlers;
+@@ -552,7 +552,6 @@ static void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu)
+ 	sregs.gdt.limit = getpagesize() - 1;
+ 	kvm_seg_set_kernel_data_64bit(NULL, DEFAULT_DATA_SELECTOR, &sregs.gs);
+ 	vcpu_sregs_set(vcpu, &sregs);
+-	*(vm_vaddr_t *)addr_gva2hva(vm, (vm_vaddr_t)(&exception_handlers)) = vm->handlers;
  }
  
--static void vcpu_setup(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
-+static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
- {
- 	struct kvm_sregs sregs;
+ static void vcpu_init_sregs(struct kvm_vm *vm, struct kvm_vcpu *vcpu)
+@@ -651,6 +650,8 @@ static void vm_init_descriptor_tables(struct kvm_vm *vm)
+ 	for (i = 0; i < NUM_INTERRUPTS; i++)
+ 		set_idt_entry(vm, i, (unsigned long)(&idt_handlers)[i], 0,
+ 			DEFAULT_CODE_SELECTOR);
++
++	*(vm_vaddr_t *)addr_gva2hva(vm, (vm_vaddr_t)(&exception_handlers)) = vm->handlers;
+ }
  
-@@ -716,7 +716,7 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
- 
- 	vcpu = __vm_vcpu_add(vm, vcpu_id);
- 	vcpu_init_cpuid(vcpu, kvm_get_supported_cpuid());
--	vcpu_setup(vm, vcpu);
-+	vcpu_init_sregs(vm, vcpu);
- 
- 	/* Setup guest general purpose registers */
- 	vcpu_regs_get(vcpu, &regs);
+ void vm_install_exception_handler(struct kvm_vm *vm, int vector,
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
