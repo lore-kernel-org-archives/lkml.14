@@ -1,44 +1,44 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1E9101EE;
-	Thu, 14 Mar 2024 23:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443C817C6B;
+	Thu, 14 Mar 2024 23:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458588; cv=none; b=TZ8/gyzD8uwyTdDqXMAHLAG+qlOYDjBwJz4uL55PNIEWVY+IAJ3t3E3xntbrZfE8n2nS+hKT7ZcBnV9xD1sTLekajEft1I4zR3qmBSeXKRYA5D3CTHzeLislILTKTif3Kbp4bDoaITxvFM/E7Y+raQb8Nfdh6BADK2BDyEldcQg=
+	t=1710458591; cv=none; b=Bum/2fUj6PjmgV6TcuN3c7F9f/kWJduOyM89UjprY0F9suqHGdbcfxKg9nOoQPkW0P0y+Qbt1exUs8vFZlCwiG2V0Q9F4DEo3BN9BaqbG2hUZKiZO5DEgZ8rwI8kJ92+ALcTVZ/w2MPaKHK8qsEX73vumwlPlKH974Mj8wS5dq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458588; c=relaxed/simple;
-	bh=CYjDlu0wAmdaaE/J1UWkMbf/VGuAdWr8vnMTUgta4nE=;
+	s=arc-20240116; t=1710458591; c=relaxed/simple;
+	bh=vOpsU+RwIj3w9yooQxGGCn6GlyI3xrVC6F9/0wiwm0Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DnWExcgphSy0VdJKDCsZuyxaxfQ35DNaORc0MhvUJqPS4RWE6pkKiFSdByg3rC9rGUgBrnnnKBHhE6+xpaT9lfJUwSahiuvZBVMoG1k98fCWnADl8eEa3eDwVM/BudDfhns/PTplwGGpQfd/xqRZGG+p27xdQuseuG5ZsBVrb5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=hrDhTGiu; arc=none smtp.client-ip=37.18.73.165
+	 MIME-Version:Content-Type; b=kAWZII5SxF58BJq5HOb+ANsjUmecCBODUlUuh1WAiEkq1ozF2MizZUdXtHBE2MYIfbUr7KAsLSebzcpiDBkWM0JQmlKQsWgePLx/auWGStKr7tv/EjxvWGS0/4wrwsB5V19L+QV2BA4pAMyyB+eJ13364pYMDNN0nLvZfQ2WIIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=lJyiaIG7; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="hrDhTGiu"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id B6C68100012;
-	Fri, 15 Mar 2024 02:23:02 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B6C68100012
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="lJyiaIG7"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 7040812000F;
+	Fri, 15 Mar 2024 02:23:05 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 7040812000F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458582;
-	bh=ZhogNEU/Na3xqXM1WWl9FN/I/9we0zKI0ixb5HC5af4=;
+	s=mail; t=1710458585;
+	bh=2cBR28wVZklCa3JtuvaLhuQxNHULlRMlAPctj547VaE=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=hrDhTGiu+gMBnJyqOgTpqyBbo6ebwt7ezBaP7pXW2tDvw8jLq8iXKJJ1zespi5ger
-	 vJDTjz5/mubEnva+1j0c07AlqFijW0luBiKopgrx8+7jmwvHrnq8wVr42ed7AAA/ja
-	 4yMF+EUzmvOPlxTtwOEX16aaZEWxPfB32iqu05xSLW1WlmLmenvuNxQBdytX9n3jLO
-	 mYJOv62PHxw50ylBS9DYD/VjMtadC38bNwXJjNk0EenyL0dRVHBV7t+DswY1P1tt5D
-	 aEGsLWgjp5etHyJMwtlYU+bvXvFMGiuPhtmxn21DxZNyMh80OobBxmnXc0mUtVKxJI
-	 6X27KUaeJAu+w==
+	b=lJyiaIG7Obr3iLBxwIftnXPeNahwwUvur85TVU78ksmi1EVVWRm8IR4E3csbjWaAE
+	 eycZPWK5ACP16VFhBICUZHxgIA4sA/e98Qq+D7RpaTp0aYMvKl59OAdzEW/MfWRy06
+	 JqTx893XZebdUVXOOtlgQHVRXjr5865MLO6lXv91VLoz5iQd/AkuP1tLsuOOixdmAy
+	 JBaDOVcUtEZ7kDpLIS/s33pad1FxplwHXAF8Y10LRy6eFIg592EUkNThaYojS2aVYP
+	 JJdK/VigObTBukuXw6DJXfSWpWcyQ3WA7ET1B476yTzvPzKXS5Iwi2S0bscb/bE4me
+	 JITunxjVLzjLg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:02 +0300 (MSK)
+	Fri, 15 Mar 2024 02:23:05 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:02 +0300
+ 15.2.1118.40; Fri, 15 Mar 2024 02:23:04 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -55,9 +55,9 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <kernel@salutedevices.com>
-Subject: [PATCH 06/25] ASoC: meson: g12a-toacodec: fix "Lane Select" width
-Date: Fri, 15 Mar 2024 02:21:42 +0300
-Message-ID: <20240314232201.2102178-7-jan.dakinevich@salutedevices.com>
+Subject: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document 'sysrate' property
+Date: Fri, 15 Mar 2024 02:21:49 +0300
+Message-ID: <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
@@ -88,32 +88,28 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-For both G12A and SM1 the width of "Lane Select" should be 2, not 3.
-Otherwise, it overlaps with "Source".
+This option allow to redefine the rate of DSP system clock.
 
 Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- sound/soc/meson/g12a-toacodec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
-index 531bb8707a3e..b92de2235627 100644
---- a/sound/soc/meson/g12a-toacodec.c
-+++ b/sound/soc/meson/g12a-toacodec.c
-@@ -229,11 +229,11 @@ static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
- };
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+index df21dd72fc65..d2f23a59a6b6 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+@@ -40,6 +40,10 @@ properties:
+   resets:
+     maxItems: 1
  
- static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
--	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
-+	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 2, 0),
- };
- 
- static const struct snd_kcontrol_new sm1_toacodec_controls[] = {
--	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 3, 0),
-+	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 2, 0),
- };
- 
- static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
++  sysrate:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: redefine rate of DSP system clock
++
+ required:
+   - compatible
+   - reg
 -- 
 2.34.1
 
