@@ -1,300 +1,263 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92DB53D96E;
-	Thu, 14 Mar 2024 05:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37713D982
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395998; cv=none; b=j6UXE2Zp1rsCDq/gGzoHVNr8uHNWjEQWSwnAxmzgYmEWztz/cndyjwgaO6M9eedJHFuN1LBXDe7W7COUn4MUcMR1yqyKD7at40lenQYp3kSpJ4yfkHd2UZAq/qhAZHZBg1Jqv5n3ZhijriJhsTqGRvNl0QIgzUohPOAjH2dqduI=
+	t=1710395998; cv=none; b=PKpDY/X+kPufTZXI4GrO/04C0jCpSwZ+4+ZX4C2JhDlR5glqjvvJ35OZ+YoKxwzW7yOdEuZf3h7180is643i2HixJGCSwmuJZrz+zXkprkfWyi+kPPXsxAQcTRP+9v7AFQpzrcN62lPGz5aB5zkYT/sN+mk9X/2A15LhSpXkpYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710395998; c=relaxed/simple;
-	bh=QLK/5CXW1EfkrfXw1uVJ/ZXCbbiy9q5FlbPbbmsu3aE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=olb/p2RBIIosd6ohflpHoYWeGvmoETMjRqmgu4andns48oyhzD4fb4yLHIMGNpvDu7NmDU2OQmpFkvoNI4khkSSgoxIZCmeBT4ZlIJ1qirxEjfMT20AQnsFEAU7bM32n63Liz5fXln/aLGxkat1cPBqFb7+qlKxmEzN+are0bRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FE5B1063;
-	Wed, 13 Mar 2024 23:00:32 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AB2203F73F;
-	Wed, 13 Mar 2024 22:59:51 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH V7 08/11] coresight: tpiu: Move ACPI support from AMBA driver to platform driver
-Date: Thu, 14 Mar 2024 11:28:40 +0530
-Message-Id: <20240314055843.2625883-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	bh=EtOcDq2NMAnbcBBlUMbyBdHDOVr9dglo32PTwlIWv3o=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=GpcbXqR7XKLprQ8vWChdwvaGcbL3kOZM7Lcp5+DVdULDfsrCNehpqaKIKCwitYYqqAjvE1zCu4PLmEYe3UpyZ5dtu/Sy7LHfsxZA/OwOeW4YQEAFt3hBtLDFhicAVTdeCm/uu0y6JzXa9VBnVpnrbsimMinwLhl4dDGZJ1erm8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wunVpgEW; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wunVpgEW"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a08eb0956so9977237b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710395996; x=1711000796; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3ab3oVKFyb7WmXtlReQGTt2ckvC2KNs0Fz6mOW8a1Ns=;
+        b=wunVpgEWtzcYKh3uE8ej26ZQNU/NIovsPimVkkvvgd5Jz3rIT46th3eZh+KbIAxpeM
+         ceS9phCvlKU50tF3Rfpk3JPUYLGyG46fTevhxAH1DLRUu3VWVvbJpQG8uo4GnjcBQoio
+         xJ/vxBsCm0sjvD7af/GpDAitIjw4Au7NWuLhe206QujwlfnoGQVOA1Or4I4XvJK49qXc
+         OIwZiUBS6WRADOeUh2eomHbgpti8BBPQDMXRGjUXHLxuLmfjaZgZW6qWCMTuzCSOxZGg
+         cWEvR+lNMlvOMCbGytb2LDQ+9aUIHZmdGD8s6EfswB3X3AI/HcXTNdDbzGW7wkYmOk6u
+         fnYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710395996; x=1711000796;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ab3oVKFyb7WmXtlReQGTt2ckvC2KNs0Fz6mOW8a1Ns=;
+        b=qDmKVB0xTBW18AgIFdePI+aRwglfNAU8xpsgvjm6fpKCtXtU78WCXm32RKcUjnxBV6
+         EL79fcAvtJpCdnL8FcwkZ6p7+mqb9Uw4CdncppHAOBJMsgb427KjKwIVgctT08RHpjcz
+         mk8sG1h3Ol7JnIbaCCvEqGV3TUJwIIAlanDQvqU25LzktXdR8COOBW0x/wHrnVCWTwJW
+         leqDJ+AX5HL2WdVWiGNBQ6yc+GflBEukJ31aHvgbPksVJ3jO1/XiV5rp99otXgjoA+cv
+         I6HRWPA7EMmkv6Qs4l5q8eQHXnuCVY/0g3yEP9JBQU8x+1lPpSVOmNiF+2m0PXqcGV8R
+         b2uw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbepCnIOlcZhm6tme6TKNNKnxTiP2XW+F313leSge8yo3ZHLn7i0uglju+KhcgAmfHDpiRy9mtrBHpBzhcDVHACMB5KhaqUgqd4Z5N
+X-Gm-Message-State: AOJu0YxxrNY/i8/vnojuiCBeqfjbjiGGzZ1C89YdkBM7IajgYVmPoMMO
+	CpDeb8WRY4JsWUt1XAFOJOZNIcdU5f2QrB4OO5zpeflAwq8VkmYpHaicSG882I7uGlkZiFbdl08
+	DzBKkBg==
+X-Google-Smtp-Source: AGHT+IHkvYJkQtyDL36LoaqZSsrHz4Bkvp45OCVN90/foiDSZQ23PNnkVZLA/DGJYTkB+Z1kG/gkiaT5M/YD
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:240e:b0:dc2:5273:53f9 with SMTP
+ id dr14-20020a056902240e00b00dc2527353f9mr34374ybb.1.1710395995841; Wed, 13
+ Mar 2024 22:59:55 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:08 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 09/20] perf jevents: Add L2 metrics for Intel
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the tpiu device in the platform driver, which can then be
-used on ACPI based platforms. This change would now allow runtime power
-management for ACPI based systems. The driver would try to enable the APB
-clock if available. But first this renames and then refactors tpiu_probe()
-and tpiu_remove(), making sure it can be used both for platform and AMBA
-drivers. This also moves pm_runtime_put() from tpiu_probe() to the callers.
-While here, this also sorts the included headers in alphabetic order.
+Give a breakdown of various L2 counters as metrics, including totals,
+reads, hardware prefetcher, RFO, code and evictions.
 
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
-Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes in V7:
+ tools/perf/pmu-events/intel_metrics.py | 158 +++++++++++++++++++++++++
+ 1 file changed, 158 insertions(+)
 
-- Dropped reduntant drvdata check in tpiu_platform_remove()
-- Sorted the headers in alphabetic order
-
- drivers/acpi/arm64/amba.c                    |   1 -
- drivers/hwtracing/coresight/coresight-tpiu.c | 117 ++++++++++++++++---
- 2 files changed, 100 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
-index 587061b0fd2f..6d24a8f7914b 100644
---- a/drivers/acpi/arm64/amba.c
-+++ b/drivers/acpi/arm64/amba.c
-@@ -25,7 +25,6 @@ static const struct acpi_device_id amba_id_list[] = {
- 	{"ARMHC501", 0}, /* ARM CoreSight ETR */
- 	{"ARMHC502", 0}, /* ARM CoreSight STM */
- 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
--	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
- 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
- 	{"", 0},
- };
-diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-index 29024f880fda..6bf3039839c1 100644
---- a/drivers/hwtracing/coresight/coresight-tpiu.c
-+++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-@@ -5,17 +5,19 @@
-  * Description: CoreSight Trace Port Interface Unit driver
-  */
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index b181574c9486..9ef30e5d3e25 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -266,6 +266,163 @@ def IntelBr():
+                      description="breakdown of retired branch instructions")
  
-+#include <linux/acpi.h>
-+#include <linux/amba/bus.h>
- #include <linux/atomic.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
-+#include <linux/clk.h>
-+#include <linux/coresight.h>
- #include <linux/device.h>
--#include <linux/io.h>
- #include <linux/err.h>
--#include <linux/slab.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
--#include <linux/coresight.h>
--#include <linux/amba/bus.h>
--#include <linux/clk.h>
-+#include <linux/slab.h>
  
- #include "coresight-priv.h"
- 
-@@ -52,11 +54,13 @@ DEFINE_CORESIGHT_DEVLIST(tpiu_devs, "tpiu");
- /*
-  * @base:	memory mapped base address for this component.
-  * @atclk:	optional clock for the core parts of the TPIU.
-+ * @pclk:	APB clock if present, otherwise NULL
-  * @csdev:	component vitals needed by the framework.
-  */
- struct tpiu_drvdata {
- 	void __iomem		*base;
- 	struct clk		*atclk;
-+	struct clk		*pclk;
- 	struct coresight_device	*csdev;
- 	spinlock_t		spinlock;
- };
-@@ -122,14 +126,12 @@ static const struct coresight_ops tpiu_cs_ops = {
- 	.sink_ops	= &tpiu_sink_ops,
- };
- 
--static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
-+static int __tpiu_probe(struct device *dev, struct resource *res)
- {
- 	int ret;
- 	void __iomem *base;
--	struct device *dev = &adev->dev;
- 	struct coresight_platform_data *pdata = NULL;
- 	struct tpiu_drvdata *drvdata;
--	struct resource *res = &adev->res;
- 	struct coresight_desc desc = { 0 };
- 
- 	desc.name = coresight_alloc_device_name(&tpiu_devs, dev);
-@@ -142,12 +144,16 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
- 
- 	spin_lock_init(&drvdata->spinlock);
- 
--	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
-+	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
- 	if (!IS_ERR(drvdata->atclk)) {
- 		ret = clk_prepare_enable(drvdata->atclk);
- 		if (ret)
- 			return ret;
- 	}
++def IntelL2() -> Optional[MetricGroup]:
++  try:
++    DC_HIT = Event("L2_RQSTS.DEMAND_DATA_RD_HIT")
++  except:
++    return None
++  try:
++    DC_MISS = Event("L2_RQSTS.DEMAND_DATA_RD_MISS")
++    l2_dmnd_miss = DC_MISS
++    l2_dmnd_rd_all = DC_MISS + DC_HIT
++  except:
++    DC_ALL = Event("L2_RQSTS.ALL_DEMAND_DATA_RD")
++    l2_dmnd_miss = DC_ALL - DC_HIT
++    l2_dmnd_rd_all = DC_ALL
++  l2_dmnd_mrate = d_ratio(l2_dmnd_miss, interval_sec)
++  l2_dmnd_rrate = d_ratio(l2_dmnd_rd_all, interval_sec)
 +
-+	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
-+	if (IS_ERR(drvdata->pclk))
-+		return -ENODEV;
- 	dev_set_drvdata(dev, drvdata);
++  DC_PFH = None
++  DC_PFM = None
++  l2_pf_all = None
++  l2_pf_mrate = None
++  l2_pf_rrate = None
++  try:
++    DC_PFH = Event("L2_RQSTS.PF_HIT")
++    DC_PFM = Event("L2_RQSTS.PF_MISS")
++    l2_pf_all = DC_PFH + DC_PFM
++    l2_pf_mrate = d_ratio(DC_PFM, interval_sec)
++    l2_pf_rrate = d_ratio(l2_pf_all, interval_sec)
++  except:
++    pass
++
++  DC_RFOH = Event("L2_RQSTS.RFO_HIT")
++  DC_RFOM = Event("L2_RQSTS.RFO_MISS")
++  l2_rfo_all = DC_RFOH + DC_RFOM
++  l2_rfo_mrate  = d_ratio(DC_RFOM, interval_sec)
++  l2_rfo_rrate  = d_ratio(l2_rfo_all, interval_sec)
++
++  DC_CH = Event("L2_RQSTS.CODE_RD_HIT")
++  DC_CM = Event("L2_RQSTS.CODE_RD_MISS")
++  DC_IN = Event("L2_LINES_IN.ALL")
++  DC_OUT_NS = None
++  DC_OUT_S = None
++  l2_lines_out = None
++  l2_out_rate = None
++  wbn = None
++  isd = None
++  try:
++    DC_OUT_NS = Event("L2_LINES_OUT.NON_SILENT",
++                      "L2_LINES_OUT.DEMAND_DIRTY",
++                      "L2_LINES_IN.S")
++    DC_OUT_S = Event("L2_LINES_OUT.SILENT",
++                     "L2_LINES_OUT.DEMAND_CLEAN",
++                     "L2_LINES_IN.I")
++    if DC_OUT_S.name == "L2_LINES_OUT.SILENT" and (
++        args.model.startswith("skylake") or
++        args.model == "cascadelakex"):
++      DC_OUT_S.name = "L2_LINES_OUT.SILENT/any/"
++    # bring is back to per-CPU
++    l2_s  = Select(DC_OUT_S / 2, Literal("#smt_on"), DC_OUT_S)
++    l2_ns = DC_OUT_NS
++    l2_lines_out = l2_s + l2_ns;
++    l2_out_rate = d_ratio(l2_lines_out, interval_sec);
++    nlr = max(l2_ns - DC_WB_U - DC_WB_D, 0)
++    wbn = d_ratio(nlr, interval_sec)
++    isd = d_ratio(l2_s, interval_sec)
++  except:
++    pass
++  DC_OUT_U = None
++  l2_pf_useless = None
++  l2_useless_rate = None
++  try:
++    DC_OUT_U = Event("L2_LINES_OUT.USELESS_HWPF")
++    l2_pf_useless = DC_OUT_U
++    l2_useless_rate = d_ratio(l2_pf_useless, interval_sec)
++  except:
++    pass
++  DC_WB_U = None
++  DC_WB_D = None
++  wbu = None
++  wbd = None
++  try:
++    DC_WB_U = Event("IDI_MISC.WB_UPGRADE")
++    DC_WB_D = Event("IDI_MISC.WB_DOWNGRADE")
++    wbu = d_ratio(DC_WB_U, interval_sec)
++    wbd = d_ratio(DC_WB_D, interval_sec)
++  except:
++    pass
++
++  l2_lines_in = DC_IN
++  l2_code_all = DC_CH + DC_CM
++  l2_code_rate = d_ratio(l2_code_all, interval_sec)
++  l2_code_miss_rate = d_ratio(DC_CM, interval_sec)
++  l2_in_rate = d_ratio(l2_lines_in, interval_sec)
++
++  return MetricGroup("l2", [
++    MetricGroup("l2_totals", [
++      Metric("l2_totals_in", "L2 cache total in per second",
++             l2_in_rate, "In/s"),
++      Metric("l2_totals_out", "L2 cache total out per second",
++             l2_out_rate, "Out/s") if l2_out_rate else None,
++    ]),
++    MetricGroup("l2_rd", [
++      Metric("l2_rd_hits", "L2 cache data read hits",
++             d_ratio(DC_HIT, l2_dmnd_rd_all), "100%"),
++      Metric("l2_rd_hits", "L2 cache data read hits",
++             d_ratio(l2_dmnd_miss, l2_dmnd_rd_all), "100%"),
++      Metric("l2_rd_requests", "L2 cache data read requests per second",
++             l2_dmnd_rrate, "requests/s"),
++      Metric("l2_rd_misses", "L2 cache data read misses per second",
++             l2_dmnd_mrate, "misses/s"),
++    ]),
++    MetricGroup("l2_hwpf", [
++      Metric("l2_hwpf_hits", "L2 cache hardware prefetcher hits",
++             d_ratio(DC_PFH, l2_pf_all), "100%"),
++      Metric("l2_hwpf_misses", "L2 cache hardware prefetcher misses",
++             d_ratio(DC_PFM, l2_pf_all), "100%"),
++      Metric("l2_hwpf_useless", "L2 cache hardware prefetcher useless prefetches per second",
++             l2_useless_rate, "100%") if l2_useless_rate else None,
++      Metric("l2_hwpf_requests", "L2 cache hardware prefetcher requests per second",
++             l2_pf_rrate, "100%"),
++      Metric("l2_hwpf_misses", "L2 cache hardware prefetcher misses per second",
++             l2_pf_mrate, "100%"),
++    ]) if DC_PFH else None,
++    MetricGroup("l2_rfo", [
++      Metric("l2_rfo_hits", "L2 cache request for ownership (RFO) hits",
++             d_ratio(DC_RFOH, l2_rfo_all), "100%"),
++      Metric("l2_rfo_misses", "L2 cache request for ownership (RFO) misses",
++             d_ratio(DC_RFOM, l2_rfo_all), "100%"),
++      Metric("l2_rfo_requests", "L2 cache request for ownership (RFO) requests per second",
++             l2_rfo_rrate, "requests/s"),
++      Metric("l2_rfo_misses", "L2 cache request for ownership (RFO) misses per second",
++             l2_rfo_mrate, "misses/s"),
++    ]),
++    MetricGroup("l2_code", [
++      Metric("l2_code_hits", "L2 cache code hits",
++             d_ratio(DC_CH, l2_code_all), "100%"),
++      Metric("l2_code_misses", "L2 cache code misses",
++             d_ratio(DC_CM, l2_code_all), "100%"),
++      Metric("l2_code_requests", "L2 cache code requests per second",
++             l2_code_rate, "requests/s"),
++      Metric("l2_code_misses", "L2 cache code misses per second",
++             l2_code_miss_rate, "misses/s"),
++    ]),
++    MetricGroup("l2_evict", [
++      MetricGroup("l2_evict_mef_lines", [
++        Metric("l2_evict_mef_lines_l3_hot_lru", "L2 evictions M/E/F lines L3 hot LRU per second",
++               wbu, "HotLRU/s") if wbu else None,
++        Metric("l2_evict_mef_lines_l3_norm_lru", "L2 evictions M/E/F lines L3 normal LRU per second",
++               wbn, "NormLRU/s") if wbn else None,
++        Metric("l2_evict_mef_lines_dropped", "L2 evictions M/E/F lines dropped per second",
++               wbd, "dropped/s") if wbd else None,
++        Metric("l2_evict_is_lines_dropped", "L2 evictions I/S lines dropped per second",
++               isd, "dropped/s") if isd else None,
++      ]),
++    ]),
++  ], description = "L2 data cache analysis")
++
++
+ def IntelPorts() -> Optional[MetricGroup]:
+   pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
  
- 	/* Validity for the resource is already checked by the AMBA core */
-@@ -173,21 +179,34 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
- 	desc.dev = dev;
- 	drvdata->csdev = coresight_register(&desc);
- 
--	if (!IS_ERR(drvdata->csdev)) {
--		pm_runtime_put(&adev->dev);
-+	if (!IS_ERR(drvdata->csdev))
- 		return 0;
--	}
- 
- 	return PTR_ERR(drvdata->csdev);
- }
- 
--static void tpiu_remove(struct amba_device *adev)
-+static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
-+{
-+	int ret;
-+
-+	ret = __tpiu_probe(&adev->dev, &adev->res);
-+	if (!ret)
-+		pm_runtime_put(&adev->dev);
-+	return ret;
-+}
-+
-+static void __tpiu_remove(struct device *dev)
- {
--	struct tpiu_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-+	struct tpiu_drvdata *drvdata = dev_get_drvdata(dev);
- 
- 	coresight_unregister(drvdata->csdev);
- }
- 
-+static void tpiu_remove(struct amba_device *adev)
-+{
-+	__tpiu_remove(&adev->dev);
-+}
-+
- #ifdef CONFIG_PM
- static int tpiu_runtime_suspend(struct device *dev)
- {
-@@ -196,6 +215,8 @@ static int tpiu_runtime_suspend(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
- 
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
- 	return 0;
- }
- 
-@@ -206,6 +227,8 @@ static int tpiu_runtime_resume(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_prepare_enable(drvdata->atclk);
- 
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_prepare_enable(drvdata->pclk);
- 	return 0;
- }
- #endif
-@@ -245,7 +268,67 @@ static struct amba_driver tpiu_driver = {
- 	.id_table	= tpiu_ids,
- };
- 
--module_amba_driver(tpiu_driver);
-+static int tpiu_platform_probe(struct platform_device *pdev)
-+{
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	int ret;
-+
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = __tpiu_probe(&pdev->dev, res);
-+	pm_runtime_put(&pdev->dev);
-+	if (ret)
-+		pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int tpiu_platform_remove(struct platform_device *pdev)
-+{
-+	struct tpiu_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
-+
-+	if (WARN_ON(!drvdata))
-+		return -ENODEV;
-+
-+	__tpiu_remove(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	if (!IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_put(drvdata->pclk);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id tpiu_acpi_ids[] = {
-+	{"ARMHC979", 0, 0, 0}, /* ARM CoreSight TPIU */
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, tpiu_acpi_ids);
-+#endif
-+
-+static struct platform_driver tpiu_platform_driver = {
-+	.probe	= tpiu_platform_probe,
-+	.remove	= tpiu_platform_remove,
-+	.driver = {
-+		.name			= "coresight-tpiu-platform",
-+		.acpi_match_table	= ACPI_PTR(tpiu_acpi_ids),
-+		.suppress_bind_attrs	= true,
-+		.pm			= &tpiu_dev_pm_ops,
-+	},
-+};
-+
-+static int __init tpiu_init(void)
-+{
-+	return coresight_init_driver("tpiu", &tpiu_driver, &tpiu_platform_driver);
-+}
-+
-+static void __exit tpiu_exit(void)
-+{
-+	coresight_remove_driver(&tpiu_driver, &tpiu_platform_driver);
-+}
-+module_init(tpiu_init);
-+module_exit(tpiu_exit);
- 
- MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
- MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
+@@ -379,6 +536,7 @@ def main() -> None:
+       Smi(),
+       Tsx(),
+       IntelBr(),
++      IntelL2(),
+       IntelPorts(),
+       IntelSwpf(),
+   ])
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
