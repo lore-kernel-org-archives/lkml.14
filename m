@@ -1,127 +1,173 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5BB7174A;
-	Thu, 14 Mar 2024 15:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121985D75D;
+	Thu, 14 Mar 2024 15:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710428461; cv=none; b=UnPdIBJ7SKTH9ZSSvoVLh78N4QZg0WXI1LPTVC1tCVuC2a+Fm67iHe520OfLeZkn2THZ1kC8EZJzOQGfRlDZ9b1S04wx8+Kd5c5OtWYGePK+uwUDYlkqxPvNQlRC8by+GxayVzjvau2/VJ33LkItx5vqCARVCfB60WY8BQVobHM=
+	t=1710428523; cv=none; b=PDus+Tk+YjYt94VplUXPnLdpIgsh1PR00zJB7cJYIkky44IOkhq2eRNOlboeV0eTrBWKbpeHP6KflkHApmxCz3e139rQBB5MOLkWoGYiJXZp40ZAVL3Zlc4wGdOGFWJBw5xQGHPpZXqrUu+2Zk34flzaojJYbcEpmp8KLoLSGL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710428461; c=relaxed/simple;
-	bh=Z2q6L5bDOTV52pQYpq4xIuEGVItpC1A8IOEPTT7B0N4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CBnJFxVgU60mGql8Hex1yQOXZTB2qReCckGFKoQPn5LminuLjBrdvPnC8sBsVb/cxhd7tyhp+C5u6RGlNtMCoUVWuQQ12uQ/l1jQbW6Vajk5I6TKLU66rigY2k8S8Ym9S5XxTladsN572H05tMF7d67TX8NXX8+QfTWDnUHXEKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=NHNbP/sL; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=K1Ut0wJP reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1710428523; c=relaxed/simple;
+	bh=M6nhtT/evAJaEm9Lfp2nSLULi/q0+AGWGYq3q98wPSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExAEgEpP72s5xS3EpKsSRyFXbwaFE2ZgGcBINu6lPlw0SDWTzuOQFxEB4MIk4MgerUuv8/K/CCzaqipQmqD2tFbU+ZlgEI8qWZxjaSFCIjNgDa+/TrLJ7APqYJeoNsVVNws86dFg4JCiFGyUMtfMAVzy+02JTXgSOiM08QAh7d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRtU3Red; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="NHNbP/sL";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="K1Ut0wJP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1710428459; x=1741964459;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0GJAuHPiTFLqrorYeW+QRM2ROXrH5HYvFbiD+vQXabw=;
-  b=NHNbP/sLxwWIvqPW0+IWl/G1ctS3O9PoNDv+rtkv9Z3W4Hv32ZTmYmyD
-   ZfXM8+dCwvx+ElhiJBw9IM+p1taKS7LLo5FOuqXzqRTe+a4HvE+AKnCHu
-   evisz/GVNqHlM3ljSU/136/h15RsyZ/N2gf67KiepNGQceVDmVdODFqzs
-   9OgCn7WBO2gXNZxsJhK9b9mOx1fSaexlqbegRBIou16rEmieytV20iS5z
-   p8PqMObjxEpxIbOlLkPCwzkeNL8XrEEpP4HXYT9nV5j5nNzoEPxiMof7n
-   rsZ0qw4SX54j2gtzAngxHG5CQnmSSmulRxXzZjZCwAxqLGVMTLZVpOK/W
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.07,125,1708383600"; 
-   d="scan'208";a="35916708"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 14 Mar 2024 16:00:57 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7C60716E9E5;
-	Thu, 14 Mar 2024 16:00:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1710428452; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=0GJAuHPiTFLqrorYeW+QRM2ROXrH5HYvFbiD+vQXabw=;
-	b=K1Ut0wJPt9lUDfhNsqYEzGXv7UGeV+VMXA1DCGkx06nGwygmtJebkrEDUDaesNgqjXyLah
-	t/APkuvErrjc+C0IsywUZZHgmHRItQnEBhlHBv/p+4PvS1u6OxU2K+pz6YL/urrFAXXJai
-	4ugXm5E3kUi6X8mF90RaC1RRpKOb6zwUS6VnLy4gPNFOrzRZGJGt7wwWxIJL1wiEmcRaxF
-	1MHijXXmLn1OQZty97kgZpK6IhlQwKMblavlAK4k1ZAh0m8HwOxyJ+9+cpo9KFQb99sUyv
-	r3UQD+vpSKkxFqP7boq++WQgGTxi4Cu/blINU8DUsg/7Ix+CIYkzcZJAQ4KGPg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux@ew.tq-group.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] ARM: dts: imx6ul: tqma6ul + mba6ulx: Fix pinctrl node names
-Date: Thu, 14 Mar 2024 16:00:53 +0100
-Message-Id: <20240314150054.2957840-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRtU3Red"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B709C433C7;
+	Thu, 14 Mar 2024 15:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710428522;
+	bh=M6nhtT/evAJaEm9Lfp2nSLULi/q0+AGWGYq3q98wPSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GRtU3RedkF+6bGv6rzD962qdrdCPt5XDgiXEplTNKVxkNx+BIuJnWhNCE1d7fglx6
+	 mD3/UhHdcLJkAegeGIp8aMtrgg1f0b/y3UcqWwJZgrDfVLPpuqICk/x/OHh10mfWf9
+	 9YsckKa2LEMMFO1+nFohOEHh+n7JxokMvrZ7AY1lPZ93C5+da+53H8uiN9lkIsn/mG
+	 PbIjyh8D25M/ryqLm3+qk7RRQZ75o0LR1Q14YeW1VbwFKaB6HUyEob0DHjjeglxh26
+	 cOsiuXf/CpzhFvKk1cwkdBdstXFvCjaK7r6v+TsM8RvqXnl/V2kmn1OvsPAOnwiReg
+	 I0c47dK/Lzi0A==
+Date: Thu, 14 Mar 2024 16:02:00 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
+	linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Kees Cook <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, 
+	David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	loongarch@lists.linux.dev, netdev@lists.linux.dev
+Subject: Re: [PATCH 00/14] Add support for suppressing warning backtraces
+Message-ID: <20240314-victorious-chupacabra-of-management-baa5c4@houat>
+References: <20240312170309.2546362-1-linux@roeck-us.net>
+ <CAMuHMdUkvagJVEfnhq=Nx2jnmdS0Ax+zy1CvyN0k7k1EwUpu+g@mail.gmail.com>
+ <6d9269c0-bd38-4965-a454-4358e0a182e3@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nbx7v4z25kdu2nok"
+Content-Disposition: inline
+In-Reply-To: <6d9269c0-bd38-4965-a454-4358e0a182e3@roeck-us.net>
 
-imx6ul pinctrl nodes end with 'grp'. Fix node names.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi | 2 +-
- arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi               | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+--nbx7v4z25kdu2nok
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-index 57e647fc3237..f04c6f71f538 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-tqma6ul-common.dtsi
-@@ -202,7 +202,7 @@ MX6UL_PAD_UART2_RX_DATA__GPIO1_IO21	0x4001b8b0
- 		>;
- 	};
- 
--	pinctrl_pmic: pmic {
-+	pinctrl_pmic: grp {
- 		fsl,pins = <
- 			/* PMIC irq */
- 			MX6UL_PAD_CSI_DATA03__GPIO4_IO24	0x1b099
-diff --git a/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi b/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-index e78d0a7d8cd2..5258ef81e6c7 100644
---- a/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/mba6ulx.dtsi
-@@ -505,7 +505,7 @@ MX6UL_PAD_CSI_HSYNC__UART6_DCE_CTS	0x1b0b1
- 		>;
- 	};
- 
--	pinctrl_uart6dte: uart6dte {
-+	pinctrl_uart6dte: uart6dtegrp {
- 		fsl,pins = <
- 			MX6UL_PAD_CSI_PIXCLK__UART6_DTE_TX	0x1b0b1
- 			MX6UL_PAD_CSI_MCLK__UART6_DTE_RX	0x1b0b1
-@@ -537,7 +537,7 @@ MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x0001b099
- 		>;
- 	};
- 
--	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
- 		fsl,pins = <
- 			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x00017069
- 			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x000170b9
-@@ -552,7 +552,7 @@ MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x0001b099
- 		>;
- 	};
- 
--	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
- 		fsl,pins = <
- 			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x00017069
- 			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x000170f9
--- 
-2.34.1
+On Thu, Mar 14, 2024 at 07:37:13AM -0700, Guenter Roeck wrote:
+> On 3/14/24 06:36, Geert Uytterhoeven wrote:
+> > Hi G=C3=BCnter,
+> >=20
+> > On Tue, Mar 12, 2024 at 6:03=E2=80=AFPM Guenter Roeck <linux@roeck-us.n=
+et> wrote:
+> > > Some unit tests intentionally trigger warning backtraces by passing b=
+ad
+> > > parameters to kernel API functions. Such unit tests typically check t=
+he
+> > > return value from such calls, not the existence of the warning backtr=
+ace.
+> > >=20
+> > > Such intentionally generated warning backtraces are neither desirable
+> > > nor useful for a number of reasons.
+> > > - They can result in overlooked real problems.
+> > > - A warning that suddenly starts to show up in unit tests needs to be
+> > >    investigated and has to be marked to be ignored, for example by
+> > >    adjusting filter scripts. Such filters are ad-hoc because there is
+> > >    no real standard format for warnings. On top of that, such filter
+> > >    scripts would require constant maintenance.
+> > >=20
+> > > One option to address problem would be to add messages such as "expec=
+ted
+> > > warning backtraces start / end here" to the kernel log.  However, that
+> > > would again require filter scripts, it might result in missing real
+> > > problematic warning backtraces triggered while the test is running, a=
+nd
+> > > the irrelevant backtrace(s) would still clog the kernel log.
+> > >=20
+> > > Solve the problem by providing a means to identify and suppress speci=
+fic
+> > > warning backtraces while executing test code. Support suppressing mul=
+tiple
+> > > backtraces while at the same time limiting changes to generic code to=
+ the
+> > > absolute minimum. Architecture specific changes are kept at minimum by
+> > > retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
+> > > CONFIG_KUNIT are enabled.
+> > >=20
+> > > The first patch of the series introduces the necessary infrastructure.
+> > > The second patch introduces support for counting suppressed backtrace=
+s.
+> > > This capability is used in patch three to implement unit tests.
+> > > Patch four documents the new API.
+> > > The next two patches add support for suppressing backtraces in drm_re=
+ct
+> > > and dev_addr_lists unit tests. These patches are intended to serve as
+> > > examples for the use of the functionality introduced with this series.
+> > > The remaining patches implement the necessary changes for all
+> > > architectures with GENERIC_BUG support.
+> >=20
+> > Thanks for your series!
+> >=20
+> > I gave it a try on m68k, just running backtrace-suppression-test,
+> > and that seems to work fine.
+> >=20
+> > > Design note:
+> > >    Function pointers are only added to the __bug_table section if both
+> > >    CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBOSE are enabled to avoid image
+> > >    size increases if CONFIG_KUNIT=3Dn. There would be some benefits to
+> > >    adding those pointers all the time (reduced complexity, ability to
+> > >    display function names in BUG/WARNING messages). That change, if
+> > >    desired, can be made later.
+> >=20
+> > Unfortunately this also increases kernel size in the CONFIG_KUNIT=3Dm
+> > case (ca. 80 KiB for atari_defconfig), making it less attractive to have
+> > kunit and all tests enabled as modules in my standard kernel.
+> >=20
+>=20
+> Good point. Indeed, it does. I wanted to avoid adding a configuration opt=
+ion,
+> but maybe I should add it after all. How about something like this ?
+>=20
+> +config KUNIT_SUPPRESS_BACKTRACE
+> +       bool "KUnit - Enable backtrace suppression"
+> +       default y
+> +       help
+> +         Enable backtrace suppression for KUnit. If enabled, backtraces
+> +         generated intentionally by KUnit tests can be suppressed. Disab=
+le
+> +         to reduce kernel image size if image size is more important than
+> +         suppression of backtraces generated by KUnit tests.
+> +
 
+How are tests using that API supposed to handle it then?
+
+Select the config option or put an ifdef?
+
+If the former, we end up in the same situation than without the symbol.
+If the latter, we end up in a similar situation than disabling KUNIT
+entirely, with some tests not being run which is just terrible.
+
+Maxime
+
+--nbx7v4z25kdu2nok
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZfMRZwAKCRDj7w1vZxhR
+xZe7AQCF0lwXl8k+ok+x1wLmfAsWf12MJtiFkJfF2M8fieBWywEA7IBXKWN1hKUp
+6rSvzAgaLFB/0eisZYO9FXDq5sROGw0=
+=qLwX
+-----END PGP SIGNATURE-----
+
+--nbx7v4z25kdu2nok--
