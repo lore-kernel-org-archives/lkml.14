@@ -1,235 +1,227 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2052.outbound.protection.outlook.com [40.107.8.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A1F51C3B;
-	Thu, 14 Mar 2024 12:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710419422; cv=none; b=iQscH1Fmqq67viaUtbwiYLFQ6iLa0jt2T9ak4jnjeg3OZPDwj2DfHPbOc/ag23LPeU1UM/OxR9BQg+p1jrIwpvurBcHREddiCDW9NGLIZjERI+IZt5irz3IfJMotPzgUijl1brmmwmrRrxwydjsjZGH4Cgh6w8RlMuorq+zgJ4k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710419422; c=relaxed/simple;
-	bh=n8ezrz5jd7hNUPzPgsVZBIi28zC+AadwmySdaTgNUGI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AzMGzN7lZ2ALhjlyRxcezBjcA4Rjwh9Luz+zgjPcOujmZzw3F+mQBQIz0fcVkNVHgkQdUYiM5Vj5EorYBmJ5htM60cJvY1Cfoad8IL9uyU3OEY0VTUdv4k6qNtuQvp6Xfu0IN1auEem2g3w/2IWAPvHpx48Rl3r2Ncar6SHWpTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=oAd5lpuV; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220895811C;
+	Thu, 14 Mar 2024 12:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710419424; cv=fail; b=BGUDX3teTWbj53GoiGbFr1JTjaCrtG1VGfvu6qj5YYbsvMA79GjzJEQfofMH6XauHm3q6871bdpr8kQwOUGK4oSPUpO/oU6Xwe+ouvXTI1IEFgypWqGZwMaASsciDHU3GsiGFyZyIOrR+iMc72Sq+H0oXcnvVITqJxdcLqB/ruo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710419424; c=relaxed/simple;
+	bh=9ezhpjSLokBafLtgwQqdFILJFqGTTkFuxSU9L/18f44=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Mej/epQyM0QR0cINPQ4ifA6TtJcZlii7X+fFvtKgI32Pd4YAE97oXLId0VIVt/D12R1mCFyW3Cqh7sBuStiLxFjwae4u/1C3M0eTNAwziyLYDF0djzLI3kSw20jCimEBGny03u1IgfNF4LgeBfxari48+UGhQ7QtVcNbruoGWTI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=hess4h/P; arc=fail smtp.client-ip=40.107.8.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oAd5lpuV"
-X-UUID: 9b3950fae1fe11eeb8927bc1f75efef4-20240314
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=7sVPRU24+3K0BIlXmBK+0H+MuH8ajVpk1w0ATKvuubY=;
-	b=oAd5lpuVcfNIc+JaWLMBZmRozzS7maBQ3uVXSLosnMUxRzBo2iK+u5bWGqB8hxGhNPvFrDuQqAO0REI2vZMeU6ny2r/+gSUm+Gs3bKLwnuIjs69zFoouWNJcd7sUqXVDyPrtcDzo1SJ+Rb+hQ5/RwNFOz+ZUV9fKoPzYTp9Rfrw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:56cbe2b4-c9f2-43ef-bdf7-8ed2d2823afd,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-55
-X-CID-META: VersionHash:6f543d0,CLOUDID:9d52e5ff-c16b-4159-a099-3b9d0558e447,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
-	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: 9b3950fae1fe11eeb8927bc1f75efef4-20240314
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1780625510; Thu, 14 Mar 2024 20:30:13 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 14 Mar 2024 20:30:11 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 14 Mar 2024 20:30:11 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>, Irui Wang
-	<irui.wang@mediatek.com>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, "Yunfei
- Dong" <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v4,1/2] media: mediatek: vcodec: adding lock to protect decoder context list
-Date: Thu, 14 Mar 2024 20:30:08 +0800
-Message-ID: <20240314123009.20205-2-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314123009.20205-1-yunfei.dong@mediatek.com>
-References: <20240314123009.20205-1-yunfei.dong@mediatek.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hess4h/P"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2aA4E2QVC1UvHvCJ4j2F5RrW5dzKDfo13lt2/gqr7PSQwR1QymwPcgeo6Z/nASggP9RPBUCOwaF3zSVqj2vGFV0hQ1yKT1kZA431WSPMVwZEj8PcYU0LwHjtPQxNVRqhhAPEK+ijd0JCopZUO2yq2AgJXjUS0LeNoJOTNVxcM/rvBD4fECAOiMGxTDOq4lqwpri7PyolKXqva+OqoklM7KBCDnMi7Blu2aIs1alkfsaT0s/h+ygzEBo/Sim8Qovn2ZI69fQwnn6fQ5aLViqewk1pq6nG4r4rrKk0R97Yq6wWjD24mxS4T1R2wKVNkMefbxH7u+2iSv8RDhoOssNOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eX5vJWfbv2JrNR0gmb3ZZOYhCTXn2kqXbyBEVfNUkFw=;
+ b=NXTCwuCTBk8IvCrQJ+IWphtkkcEoxxcNshOzMWRtlgrzKRkZ4Fz/Th3aRJARGCl0P9wdIav1f4M8CsJxDHhoscGDK61ZQCpv16yhsn2e2cDFtWd5TayHfLIR04w8qXSjK0mcalaq33Olsib12cNsuOjdDQMzav4CEt3oMS6HZwRg+cyj4qFpGqxBVOsJIhR+tYiRE404XH0CPuC4JNnEe0Zxsx0ciAjzeFuU4uNqtZgZryubVwh5nmm7QpALq2oRh85pVPUE174tyEQhea7REMGBHqRBuvvEel3Om6i+dTr7oThkPQ7CXaBW51SceWyZKhLAIcBdtNwqtAmpqNu4VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eX5vJWfbv2JrNR0gmb3ZZOYhCTXn2kqXbyBEVfNUkFw=;
+ b=hess4h/PX1OPRiclNRYyVhv53C0paYlFhX/gNw1PPL9r0eni9jGPGloCsk+7eB8SMycuUtVg8t52MkcrajGVRahCmvQRQ/LiqCcoE0luAo9atuQ2+/vBZzrEwSMFYSJz5Hld/xoGbWi5eU8s7BPrpVxi/yCB/gp83Kx1+wgo4Uo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by DBBPR04MB7708.eurprd04.prod.outlook.com (2603:10a6:10:20d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Thu, 14 Mar
+ 2024 12:30:18 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::467c:e0d8:4d23:b87c]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::467c:e0d8:4d23:b87c%6]) with mapi id 15.20.7362.035; Thu, 14 Mar 2024
+ 12:30:18 +0000
+From: Neeraj Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: amitkumar.karwar@nxp.com,
+	rohit.fule@nxp.com,
+	sherry.sun@nxp.com,
+	LnxRevLi@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	linux-kernel@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org
+Subject: [PATCH v1 1/1] Bluetooth: btnxpuart: Add handling for boot-signature timeout errors
+Date: Thu, 14 Mar 2024 17:59:52 +0530
+Message-Id: <20240314122952.1867-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.33.0.windows.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA0PR01CA0040.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:81::9) To AS4PR04MB9692.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.355500-8.000000
-X-TMASE-MatchedRID: uIXscqjWAPlQs1SN7/4/IMnlbo5l7mGFIaVkFIrQFhuCsBeCv8CM/QOH
-	les/nBwn30jMKEtbXpdRvuieHBZsv5AbpTKt/Q8otOGPzYU8VIINmmuV06qWFslgi/vLS272hds
-	WDb3rmc33wq3Amcn18gpmvwgMv6TJKgsbwct+M19jVtAwIy+afvjiOl7CtwVh31GU/N5W5BAiiF
-	Ii+xQv728mJ6Jsq2mt5IJAD6OA/XPTLBkSptG5BBIRh9wkXSlFCt59Uh3p/NXjsTquy0JRiwVj/
-	b97sBMuntyiDz2y+JOYOsnXI2BT/1xxDx5qbkR9FEUknJ/kEl6tIWznhjjBtfoLR4+zsDTtKNd/
-	i50Eigz93/4flH1+CWvIkJyN2fOMixNA84MA+ns5A9DRE/8a/lZca9RSYo/b
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.355500-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	290735E1FE6CD8F36369DE9F616204A90BDF2F733ECCD5A1346E7B6D0078CCBC2000:8
-X-MTK: N
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|DBBPR04MB7708:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08ed5aae-b8bf-44f3-7f2b-08dc44228228
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	QuX6SJVxDRPk1Z7GQkDWlATWg+pcqpAVSIWncrvcBGWbBR69nilC/Ko4ta6Wses0ofPGuoj/0Qm5wgSn7SsxJOVV5T+CW5g8astEVSiMbSvz7Lmw0XEN2Xs6QBQzB1LiyYBlBI335jxAwdq6UPJhn3NFyLrHf1MGJKk0NKpLf36d3GuvGXFCttH3/w8hfrrfmyaJL+aa9ZKoa8/YO24vsF6gv9Fuw3fPXooN9tS7Gk/d1DafobWx4NcelvtkYzoVlfiR6/TQSx07oyhWUXWFRGe0DtQQPWIKHUmZA0WOh+/l6Laf1w9GxfORzM6v/VJaCELLZFcxaJm/KcR8kkIjK5jg+Ix5iiOi3Xdf3IGGlIxQTKmmN4cCMQchnO6J86uLY4tirb7GX+4/dLJvaTswqDg2d9KrdQDBpzbqEy/qxzm9aLCdrba1nvd6y/XLIQkWhwTOnEmoV6ix+j9o6Yy/yx/PD51NV/tyzjNnnzN5MRREkDEQBYuCu5IXDecytYcn/Z/vsgq5LxPldvNFFHDZBdgzf3Oe7QJ1A2tze5JvE6Bs19scxa1WN58YiYgynC1GmUPbcHreobglkjgedOodBG7V/J54J624F265gwXxoXd5euFt66S5LiJQsPdyAREMREJeMnHkUNUpUNMRmvAjWAiCNVGewInhX6VYlISpNcUB4AG9ULr9Wj1A/gaEWtsfGkF0AM0ATRfrqVAy2vyVNQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rv3KfY4FMZ7KeB9XTY942T12CsR0KJGiXWKqJEtiFn2XvY+3pp009Ka8JRL6?=
+ =?us-ascii?Q?eYcO0v2fzQQyILJR4vtAhWa9jyOPk0zJIp0bhMD5Zq1OEEzOnTs+XJIVIxP1?=
+ =?us-ascii?Q?Nff4irBnDGIHG3CP7rYf292rmRJkfouQB99r/gTjhzMo/GZx06JP22BZkyfv?=
+ =?us-ascii?Q?rNZmHcyLsvRqKfROA9sovScltVuncu/NOzrETF201ddVqfWBjSGDeVIeZHdp?=
+ =?us-ascii?Q?islHQYBO9B7bWhn2huVR1Xaso3uxrqMxiS02mCkjFjSFCh5ENZu0NQM27CvA?=
+ =?us-ascii?Q?cPRSZBJs7NSxipM5ySKKGfdDZu/xaRXqq7FrBY1ZuIs1CEEk59OqkTtp4B+e?=
+ =?us-ascii?Q?2vl23Sh2nQ+pUh13JFXWc6cLVhzXuKiCX9V7agT0CegFNJrcjVjy9z9B0Lvp?=
+ =?us-ascii?Q?NjxJ8HKs618+lFlNGwYzhvSj0dLundfKCx5V2uYP8ZswgT7cHRq7tbcQRYuY?=
+ =?us-ascii?Q?N2poysMVwkUXrhtrDyBTxFv1DJiBIL4A5PSt39LZVnTo1TTY6CJUHeTeY6Ip?=
+ =?us-ascii?Q?EZC5o0diyRg3LQ7l8/LZjP98+0LpL/+E7pagXRRv0mdxMk00FaXn4VTamkWm?=
+ =?us-ascii?Q?Trha+cz8FLe9vAqpTc+vX4vxDhuAYvBZ/eqd8TpD/DUjUR/sBQMuCEaYoKY1?=
+ =?us-ascii?Q?4pAGexQsYDkW/fxNP9793UqlXx+O2J0sQmbG0hP13t6P6yEjqfaDv0PgKvWA?=
+ =?us-ascii?Q?ETHrBKVaLMivMb8JDo+ZT9EavEDmYFo3ldkMiStor+CCTaBJsepO4bgCpaU5?=
+ =?us-ascii?Q?VmmiI66wWq+0f8W33neINUoheg7M7OxibNucaG2/zDNFUJZft+gl+Qw87Kag?=
+ =?us-ascii?Q?r6koj1Z9pkMYfP/sjbO2tEcZF/623+a7QDWvFjmjIiB8Ph6ylNKEXHhl721T?=
+ =?us-ascii?Q?IKRD/+5GDWqkSUyP4eVOtQfelJYFj7vipUkdwvXn1tra4qpvvcuAYEvSfY3P?=
+ =?us-ascii?Q?/B6aF2FXt90y7J7FZm46pk8O2hcVpWHuyDEuv8gxBrmXpOmpbKwYeO4Ut12U?=
+ =?us-ascii?Q?0V3vo6Q/+D4WnctstQgGwHLByuEfxWNx1ewGNSnrrrU2ECDDECbCUdCELW6f?=
+ =?us-ascii?Q?S46dtcWzL3q6/YEnRbe8dDuR9Mt+yanQ29LVMzQln3Qhsggahm3iEtB/bvz0?=
+ =?us-ascii?Q?hW4eHT9TCL/NxFf106g0kMe7t6l4f6ys/TQQsXRnFJqCLKG8/hiT9x7z/4R8?=
+ =?us-ascii?Q?F+AWkUuc0TBaX7SmDM1BifpyOs/IDdLn0w8QlUtp7R26Ez0ik9+U8eKIHSO0?=
+ =?us-ascii?Q?ovoaM+2H9l+qRidGFteVDIdv09Z9ZeIOdlT09ClIVGzNHVjpZGDlSvsbWbdX?=
+ =?us-ascii?Q?ej50m5q8CN0eVtCvZFeco3UWxN7iFRGWEhvMIZRV3EuSPen/mKZl3N8YycwO?=
+ =?us-ascii?Q?Njzxq7bD2w/oaiJ893FZOD5ALWZDqGfVBhlzbDC0U7Zttdfrta+1y0rNuXXE?=
+ =?us-ascii?Q?QNOFWhs+hHTT/3/cA/zI0eZFUsJia3UUGVlfLcvILU/5agFaByVK3nhGbSFn?=
+ =?us-ascii?Q?808O/EPYvsqMt3Es/E5oWY/qPc+fgSkVipjwaygLZGs6ca14zV+Nh4mkFeha?=
+ =?us-ascii?Q?0tR/4HQk2ahif7UviHTDihdHTyv9D8foMYEIYjixXu35Lk0J2q65H25FAn1r?=
+ =?us-ascii?Q?Ig=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08ed5aae-b8bf-44f3-7f2b-08dc44228228
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 12:30:18.6388
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6lruC4fAhFZtk76WJdea551m/ckxXXXKDsVG7WxGKhncstAtw2Y7hqdUGXfNd/FVMt0bCzQ4TckG/hwd6LxlFsiphRcG59zve7EArXpOcjU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7708
 
-Add a lock for the ctx_list, to avoid accessing a NULL pointer
-within the 'vpu_dec_ipi_handler' fucntion when the ctx_list has
-been deleted due to an unexpected behavior on the SCP IP block.
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 
-Hardware name: Google juniper sku16 board (DT)
-pstate: 20400005 (nzCv daif +PAN -UAO -TCO BTYPE=--)
-pc : vpu_dec_ipi_handler+0x58/0x1f8 [mtk_vcodec_dec]
-lr : scp_ipi_handler+0xd0/0x194 [mtk_scp]
-sp : ffffffc0131dbbd0
-x29: ffffffc0131dbbd0 x28: 0000000000000000
-x27: ffffff9bb277f348 x26: ffffff9bb242ad00
-x25: ffffffd2d440d3b8 x24: ffffffd2a13ff1d4
-x23: ffffff9bb7fe85a0 x22: ffffffc0133fbdb0
-x21: 0000000000000010 x20: ffffff9b050ea328
-x19: ffffffc0131dbc08 x18: 0000000000001000
-x17: 0000000000000000 x16: ffffffd2d461c6e0
-x15: 0000000000000242 x14: 000000000000018f
-x13: 000000000000004d x12: 0000000000000000
-x11: 0000000000000001 x10: fffffffffffffff0
-x9 : ffffff9bb6e793a8 x8 : 0000000000000000
-x7 : 0000000000000000 x6 : 000000000000003f
-x5 : 0000000000000040 x4 : fffffffffffffff0
-x3 : 0000000000000020 x2 : ffffff9bb6e79080
-x1 : 0000000000000010 x0 : ffffffc0131dbc08
-Call trace:
-vpu_dec_ipi_handler+0x58/0x1f8 [mtk_vcodec_dec (HASH:6c3f 2)]
-scp_ipi_handler+0xd0/0x194 [mtk_scp (HASH:7046 3)]
-mt8183_scp_irq_handler+0x44/0x88 [mtk_scp (HASH:7046 3)]
-scp_irq_handler+0x48/0x90 [mtk_scp (HASH:7046 3)]
-irq_thread_fn+0x38/0x94
-irq_thread+0x100/0x1c0
-kthread+0x140/0x1fc
-ret_from_fork+0x10/0x30
-Code: 54000088 f94ca50a eb14015f 54000060 (f9400108)
----[ end trace ace43ce36cbd5c93 ]---
-Kernel panic - not syncing: Oops: Fatal exception
-SMP: stopping secondary CPUs
-Kernel Offset: 0x12c4000000 from 0xffffffc010000000
-PHYS_OFFSET: 0xffffffe580000000
-CPU features: 0x08240002,2188200c
-Memory Limit: none
+This handles the timeout errors seen in the bootloader signatures during
+FW download.
 
-Fixes: 655b86e52eac ("media: mediatek: vcodec: Fix possible invalid memory access for decoder")
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+When the bootloader does not receive a response packet from the host
+within a specific time, it adds an error code to the bootloader
+signature while requesting for the FW chunk from the same offset.
+
+The host is expected to clear this error code with a NAK, and reply to
+only those bootloader signatures which have error code 0.
+
+This error handling is valid for data_req bootloader signatures for V3
+and future bootloader versions.
+
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 ---
- .../platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c      | 4 ++--
- .../platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c    | 5 +++++
- .../platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h    | 2 ++
- drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c | 2 ++
- 4 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btnxpuart.c | 46 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-index 9f6e4b59455d..9a11a2c24804 100644
---- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-@@ -58,12 +58,12 @@ static void mtk_vcodec_vpu_reset_dec_handler(void *priv)
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index 0b93c2ff29e4..2018513fb961 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -187,6 +187,10 @@ struct btnxpuart_dev {
+ #define NXP_NAK_V3		0x7b
+ #define NXP_CRC_ERROR_V3	0x7c
  
- 	dev_err(&dev->plat_dev->dev, "Watchdog timeout!!");
++#define NXP_ACK_RX_TIMEOUT	0x0002
++#define NXP_HDR_RX_TIMEOUT	0x0003
++#define NXP_DATA_RX_TIMEOUT	0x0004
++
+ #define HDR_LEN			16
  
--	mutex_lock(&dev->dev_mutex);
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_for_each_entry(ctx, &dev->ctx_list, list) {
- 		ctx->state = MTK_STATE_ABORT;
- 		mtk_v4l2_vdec_dbg(0, ctx, "[%d] Change to state MTK_STATE_ABORT", ctx->id);
- 	}
--	mutex_unlock(&dev->dev_mutex);
-+	mutex_unlock(&dev->dev_ctx_lock);
- }
+ #define NXP_RECV_CHIP_VER_V1 \
+@@ -277,6 +281,12 @@ struct nxp_bootloader_cmd {
+ 	__be32 crc;
+ } __packed;
  
- static void mtk_vcodec_vpu_reset_enc_handler(void *priv)
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-index f47c98faf068..2073781ccadb 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-@@ -268,7 +268,9 @@ static int fops_vcodec_open(struct file *file)
++struct nxp_v3_rx_timeout_nak {
++	u8 nak;
++	__le32 offset;
++	u8 crc;
++} __packed;
++
+ static u8 crc8_table[CRC8_TABLE_SIZE];
  
- 	ctx->dev->vdec_pdata->init_vdec_params(ctx);
- 
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_add(&ctx->list, &dev->ctx_list);
-+	mutex_unlock(&dev->dev_ctx_lock);
- 	mtk_vcodec_dbgfs_create(ctx);
- 
- 	mutex_unlock(&dev->dev_mutex);
-@@ -311,7 +313,9 @@ static int fops_vcodec_release(struct file *file)
- 	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
- 
- 	mtk_vcodec_dbgfs_remove(dev, ctx->id);
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_del_init(&ctx->list);
-+	mutex_unlock(&dev->dev_ctx_lock);
- 	kfree(ctx);
- 	mutex_unlock(&dev->dev_mutex);
+ /* Default configurations */
+@@ -899,6 +909,32 @@ static int nxp_recv_chip_ver_v3(struct hci_dev *hdev, struct sk_buff *skb)
  	return 0;
-@@ -404,6 +408,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	for (i = 0; i < MTK_VDEC_HW_MAX; i++)
- 		mutex_init(&dev->dec_mutex[i]);
- 	mutex_init(&dev->dev_mutex);
-+	mutex_init(&dev->dev_ctx_lock);
- 	spin_lock_init(&dev->irqlock);
- 
- 	snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name), "%s",
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-index 849b89dd205c..85b2c0d3d8bc 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-@@ -241,6 +241,7 @@ struct mtk_vcodec_dec_ctx {
-  *
-  * @dec_mutex: decoder hardware lock
-  * @dev_mutex: video_device lock
-+ * @dev_ctx_lock: the lock of context list
-  * @decode_workqueue: decode work queue
-  *
-  * @irqlock: protect data access by irq handler and work thread
-@@ -282,6 +283,7 @@ struct mtk_vcodec_dec_dev {
- 	/* decoder hardware mutex lock */
- 	struct mutex dec_mutex[MTK_VDEC_HW_MAX];
- 	struct mutex dev_mutex;
-+	struct mutex dev_ctx_lock;
- 	struct workqueue_struct *decode_workqueue;
- 
- 	spinlock_t irqlock;
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
-index 82e57ae983d5..da6be556727b 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
-@@ -77,12 +77,14 @@ static bool vpu_dec_check_ap_inst(struct mtk_vcodec_dec_dev *dec_dev, struct vde
- 	struct mtk_vcodec_dec_ctx *ctx;
- 	int ret = false;
- 
-+	mutex_lock(&dec_dev->dev_ctx_lock);
- 	list_for_each_entry(ctx, &dec_dev->ctx_list, list) {
- 		if (!IS_ERR_OR_NULL(ctx) && ctx->vpu_inst == vpu) {
- 			ret = true;
- 			break;
- 		}
- 	}
-+	mutex_unlock(&dec_dev->dev_ctx_lock);
- 
- 	return ret;
  }
+ 
++static void nxp_handle_fw_dnld_error(struct hci_dev *hdev, struct v3_data_req *req)
++{
++	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
++	__u32 offset = __le32_to_cpu(req->offset);
++	__u16 err = __le16_to_cpu(req->error);
++	struct nxp_v3_rx_timeout_nak nak_tx_buf;
++
++	switch (err) {
++	case NXP_ACK_RX_TIMEOUT:
++	case NXP_HDR_RX_TIMEOUT:
++	case NXP_DATA_RX_TIMEOUT:
++		nak_tx_buf.nak = NXP_NAK_V3;
++		nak_tx_buf.offset = __cpu_to_le32(offset);
++		nak_tx_buf.crc = crc8(crc8_table, (u8 *)&nak_tx_buf,
++				      sizeof(nak_tx_buf) - 1, 0xff);
++		serdev_device_write_buf(nxpdev->serdev, (u8 *)&nak_tx_buf,
++					sizeof(nak_tx_buf));
++		break;
++	default:
++		bt_dev_dbg(hdev, "Unknown bootloader error: %d", err);
++		break;
++
++	}
++
++}
++
+ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
+@@ -913,7 +949,12 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
+ 	if (!req || !nxpdev->fw)
+ 		goto free_skb;
+ 
+-	nxp_send_ack(NXP_ACK_V3, hdev);
++	if (!req->error) {
++		nxp_send_ack(NXP_ACK_V3, hdev);
++	} else {
++		nxp_handle_fw_dnld_error(hdev, req);
++		goto free_skb;
++	}
+ 
+ 	len = __le16_to_cpu(req->len);
+ 
+@@ -940,9 +981,6 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
+ 		wake_up_interruptible(&nxpdev->fw_dnld_done_wait_q);
+ 		goto free_skb;
+ 	}
+-	if (req->error)
+-		bt_dev_dbg(hdev, "FW Download received err 0x%02x from chip",
+-			   req->error);
+ 
+ 	offset = __le32_to_cpu(req->offset);
+ 	if (offset < nxpdev->fw_v3_offset_correction) {
 -- 
-2.18.0
+2.34.1
 
