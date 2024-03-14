@@ -1,92 +1,155 @@
-Received: from relay163.nicmail.ru (relay163.nicmail.ru [91.189.117.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2214617588;
-	Thu, 14 Mar 2024 11:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C356EB5A;
+	Thu, 14 Mar 2024 11:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710416647; cv=none; b=gCk79OL53kcL+NRC1DNXwyfmFLZQh16hZNYxZaq/0fFskbwUJtq06je2eKX5ofoU2Kh5eNcaf2wYkpp9C0Y3ulJl+DQ0jJqVgKjNBIb3sXsvg6NG7XrT2uUM2rVSaP2hEB9dlR9yjuZiILXMgV3hWA/lK6B+yD6YI3wesrI9KBU=
+	t=1710416680; cv=none; b=avzYttuzeD46JXwejhSToRpdY6VFZI6SdRvq6nFLgQpbMowgu8iEQ+9PPBBmmfOpxpHz7WuvSXKDOz96s93aN+8zQiHivJjlkfK2UXtYCPGEi4tt41YhKXfDF8AoNaY/IylhJG7AHA6rlyfg/fI1FxtUIPwxLBKPp5Y+Bk6Qjlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710416647; c=relaxed/simple;
-	bh=vCqx9xc2aCUVJ6wl9bag1zhUxchc7u8nmzyYAREAqNY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
-	 In-Reply-To:Content-Type; b=Z3TMcqu0+Xr7KdjKF1c9oxNmCrjfZLwISIeW027Pfmf8kwDupBk6eFZ+c6FMHpw3evoI7oLR3qYRJWZWRiqNTV+D8nFLRCQdEUYVNfVeugd1gxp6T87pZuBIP6rKSBLAyWtIYtKFoeep8uw35YfMQfn9V9gZ9glwIG3jJybh+GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
-Received: from [10.28.138.149] (port=30558 helo=[192.168.95.111])
-	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
-	(envelope-from <kiryushin@ancud.ru>)
-	id 1rkj3j-00077G-Ba;
-	Thu, 14 Mar 2024 14:15:40 +0300
-Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO [192.168.95.111])
-	by incarp1102.mail.hosting.nic.ru (Exim 5.55)
-	with id 1rkj3j-006bkS-1f;
-	Thu, 14 Mar 2024 14:15:39 +0300
-Message-ID: <031a0fe6-79dc-464b-b8d9-946f75971378@ancud.ru>
-Date: Thu, 14 Mar 2024 14:15:37 +0300
+	s=arc-20240116; t=1710416680; c=relaxed/simple;
+	bh=TMWaCaNdKcZfFp8MnbDL1SKq1jvkk6APqOXhg7PSgSw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JHvOvSybS94cvL2puuww5dhuLWBL3Vs7LTw8rsF+dxeu4xMbECXW/VYBLX73e4pbSRmi8fsJl5q8K0DioS005rGIPyTjwobZx8tpF/ZYFkriTsmN9IqfZqyEnDQMUsA7GeEdF25acr7b09QnqaCK2E2yykDOEzgdIVIC857FkwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BNWYGX01; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BNWYGX01"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710416676;
+	bh=TMWaCaNdKcZfFp8MnbDL1SKq1jvkk6APqOXhg7PSgSw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BNWYGX01jFRH8bWoL0vO651nUjmKFz2hSvXBLujiSKEy2m39n7xfzyP/4wk2n12jg
+	 Aj3mMzvBc/8DJXuCfK/F6Wh+5sB1nGi9fxCt53wBRvT4q+NayIOgZR1nr/VzDWGci8
+	 Vz/P7axr51RL6W1UNUT2JjyWqosTUvMK6vg82VjgNb1ceo6Omyngg7SsKPAmiz2Val
+	 pm71yRUQjuEI8Y4gfaNhaVGT1HvCni8Gp1LufkuY0obNTgOJ6Kc6+yAfiElf5Iz3OC
+	 7uMC2xp7ybgRQDhKZGvvAoIPS9cf02E5nBn2PN0v4fxQv1TB64qFG2wtezajZ0AoW4
+	 ggIrCn2TUlMCw==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CB0883781F8E;
+	Thu, 14 Mar 2024 11:44:33 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Shuah Khan <shuah@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Binbin Wu <binbin.wu@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Weihong Zhang <weihong.zhang@intel.com>,
+	angquan yu <angquan21@gmail.com>
+Cc: kernel@collabora.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] selftests: x86: skip the tests if prerequisites aren't fulfilled
+Date: Thu, 14 Mar 2024 16:44:53 +0500
+Message-Id: <20240314114502.466806-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Nikita Kiryushin <kiryushin@ancud.ru>
-Subject: [PATCH net] net: phy: fix phy_read_poll_timeout argument type in
- genphy_loopback
-References: <>
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-In-Reply-To: <>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MS-Exchange-Organization-SCL: -1
+Content-Transfer-Encoding: 8bit
 
+Skip instead of failing when prerequisite conditions aren't fulfilled,
+such as invalid xstate values etc. This patch would make the tests show
+as skip when run by:
+  make -C tools/testing/selftests/ TARGETS=x86 run_tests
 
-read_poll_timeout inside phy_read_poll_timeout can set val negative
-in some cases (for example, __mdiobus_read inside phy_read can return
--EOPNOTSUPP).
+  ...
+  # timeout set to 45
+  # selftests: x86: amx_64
+  # # xstate cpuid: invalid tile data size/offset: 0/0
+  ok 42 selftests: x86: amx_64 # SKIP
+  # timeout set to 45
+  # selftests: x86: lam_64
+  # # Unsupported LAM feature!
+  ok 43 selftests: x86: lam_64 # SKIP
+  ...
 
-Supposedly, commit 4ec732951702 ("net: phylib: fix phy_read*_poll_timeout()")
-should fix problems with wrong-signed vals, but I do not see how
-as val is sent to phy_read as is and __val = phy_read (not val)
-is checked for sign.
-
-Change val type for signed to allow better error handling as done in other
-phy_read_poll_timeout callers. This will not fix any error handling
-by itself, but allows, for example, to modify cond with appropriate
-sign check or check resulting val separately.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 014068dcb5b1 ("net: phy: genphy_loopback: add link speed configuration")
-Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+Cc: Chang S. Bae <chang.seok.bae@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
-  drivers/net/phy/phy_device.c | 4 ++--
-  1 file changed, 2 insertions(+), 2 deletions(-)
+Changes since v1:
+- Use arch_prctl to check if amx is supported
+---
+ tools/testing/selftests/x86/amx.c | 27 ++++++++++-----------------
+ tools/testing/selftests/x86/lam.c |  2 +-
+ 2 files changed, 11 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 8297ef681bf5..6c6ec9475709 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2831,8 +2831,8 @@ EXPORT_SYMBOL(genphy_resume);
-  int genphy_loopback(struct phy_device *phydev, bool enable)
-  {
-  	if (enable) {
--		u16 val, ctl = BMCR_LOOPBACK;
--		int ret;
-+		u16 ctl = BMCR_LOOPBACK;
-+		int ret, val;
-  
-  		ctl |= mii_bmcr_encode_fixed(phydev->speed, phydev->duplex);
-  
+diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
+index d884fd69dd510..95aad6d8849be 100644
+--- a/tools/testing/selftests/x86/amx.c
++++ b/tools/testing/selftests/x86/amx.c
+@@ -103,21 +103,6 @@ static void clearhandler(int sig)
+ 
+ #define CPUID_LEAF1_ECX_XSAVE_MASK	(1 << 26)
+ #define CPUID_LEAF1_ECX_OSXSAVE_MASK	(1 << 27)
+-static inline void check_cpuid_xsave(void)
+-{
+-	uint32_t eax, ebx, ecx, edx;
+-
+-	/*
+-	 * CPUID.1:ECX.XSAVE[bit 26] enumerates general
+-	 * support for the XSAVE feature set, including
+-	 * XGETBV.
+-	 */
+-	__cpuid_count(1, 0, eax, ebx, ecx, edx);
+-	if (!(ecx & CPUID_LEAF1_ECX_XSAVE_MASK))
+-		fatal_error("cpuid: no CPU xsave support");
+-	if (!(ecx & CPUID_LEAF1_ECX_OSXSAVE_MASK))
+-		fatal_error("cpuid: no OS xsave support");
+-}
+ 
+ static uint32_t xbuf_size;
+ 
+@@ -350,6 +335,7 @@ enum expected_result { FAIL_EXPECTED, SUCCESS_EXPECTED };
+ 
+ /* arch_prctl() and sigaltstack() test */
+ 
++#define ARCH_GET_XCOMP_SUPP	0x1021
+ #define ARCH_GET_XCOMP_PERM	0x1022
+ #define ARCH_REQ_XCOMP_PERM	0x1023
+ 
+@@ -928,8 +914,15 @@ static void test_ptrace(void)
+ 
+ int main(void)
+ {
+-	/* Check hardware availability at first */
+-	check_cpuid_xsave();
++	unsigned long features;
++	long rc;
++
++	rc = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_SUPP, &features);
++	if (rc || (features & XFEATURE_MASK_XTILE) != XFEATURE_MASK_XTILE) {
++		ksft_print_msg("no AMX support\n");
++		return KSFT_SKIP;
++	}
++
+ 	check_cpuid_xtiledata();
+ 
+ 	init_stashed_xsave();
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 215b8150b7cca..c0f016f45ee17 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -1183,7 +1183,7 @@ int main(int argc, char **argv)
+ 
+ 	if (!cpu_has_lam()) {
+ 		ksft_print_msg("Unsupported LAM feature!\n");
+-		return -1;
++		return KSFT_SKIP;
+ 	}
+ 
+ 	while ((c = getopt(argc, argv, "ht:")) != -1) {
 -- 
-2.34.1
+2.39.2
 
