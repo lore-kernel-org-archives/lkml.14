@@ -1,30 +1,32 @@
 Received: from mx.msync.work (mx.msync.work [62.182.159.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C75FBF7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224ABFC0B
 	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.182.159.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400259; cv=none; b=FqZgjhGkK6BglE7fIgwjCQfX7AlcEf9BrbzuXpeDEZNUlc4s/nh/RxuoYhmL43hRZKx0F+zIeRp/ltp1c9KVtRqvvNrC8xk8Tv8l2DQbFe+l585IxuswOdi6IL5Azn3M9B/ulltqFYZwwBVrMuXqh7T4QSR86885mSBJd/oOJYg=
+	t=1710400259; cv=none; b=efK+YzHBmI7JVuCMg0BHBcwf5JKztR7bEHUhp6Xm7o9hEdF72Ds0MGFLRj6S/EHLW1NK3OMe43iNJ6kvg0TzSzw3PN3aelk4JygJhh7MxQpTqfUlzKAWmiebwmA/oAbcYTwdy4ErRWiq/Na9DCUqB2ZDhga+RHa4pCVbpp25dII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710400259; c=relaxed/simple;
-	bh=J5fy2QNYqbmy1GDrr9KCAuYk5FFXqkKZa/AcUOAuZ54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I4fXFtAhR9cZmoX2Ti+0coQwKrIz/2x20WrWZVvX3DYIv120kohtPK6AmMk8X6e/4FT/HLay0kUZUeigOoJxM4pmRQqsWB2SI0mcmtDncW+Jj8PIzDCHNa3EXCjnorZowpoBh5ucyQvT4PPZqZ3KslDptYSIlQEke1JmGzAATTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=EDV4Yyt0; arc=none smtp.client-ip=62.182.159.68
+	bh=M+mo9Y0CHfPVQLKoZETkdBfevQ2LMWQyIi/HAshdRT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ocFWJ8BeVAUfdOIGENNP54qJ5HTSoudU5+w4Y/8AfcMOubmVu9JSohM5C8AiuDYC8KQK0OTgoKHCQT8cgaroJlHUIZ9+diogYTv/vOvlQjjPbLMGVPvQ3ULZeYLTrOmg3mDx/DgbX/YjtVMDaXZZU+dql+jGMliKtiITH7jKgrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=Rp2t59M0; arc=none smtp.client-ip=62.182.159.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="EDV4Yyt0"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3201411E7BD;
-	Thu, 14 Mar 2024 07:04:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="Rp2t59M0"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C8EDC11E7C2;
+	Thu, 14 Mar 2024 07:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1710399885; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=oxxuQS6Ry6UcPPQ8PM8osrRnE4TBooDMROhtJ6NbQOc=;
-	b=EDV4Yyt0/0NKKea2i69S38pCAK/svEvZUSezcqBBkThP4Dk+YAx73fKk6J7oDmKBwboT18
-	vLwO3Z/Ckz7u9aerEg17kr7XzNqyi5RSzRZ90iVqnNRfXDdB8vO9xW6lcXy6g04Wa4J8gH
-	IP2MbTzSo6jpsmqO45LR8xqXnTjZ+gy6yH3lKLl0T6UIPcci7ggscdBkaAO/wQH8Pmsr+T
-	jnduqP4BaID7TvpEzTtQsLpgefhNHaLs0+yaRxBQUGQ081T+W8r0I0gnEdQ2x8GHGH48cU
-	qm7xbusyDJU0GnzGena0y1YErxHT+MB1Azm/AKfg7uOXlOj9ima11mcCoPoiKQ==
+	t=1710399889; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=+UBrzMeNJuIEWIdnDs+QZQBlvEK3sk7AsllHTSelVpQ=;
+	b=Rp2t59M0Qujo1GwlJ32wph7no0rX6TCkCwukSBJZWzL+ncrlZML490GAKp84KPEvAT4Kb3
+	pzNPoG8iNj/QQiIfoU/DPYfrx7mGkPQaGZwAlJIH41zJBIGE1NPwdaO0o2p5Ac2eDnPcvK
+	tXv8OZubEydNYZhg6tI0w4psoSc+KZvxgmM6mDrpumuT1/zSatItfTP2mAiLSISAjg0v/T
+	AEazh+AEBgaAK8tz59nb/aouIQUmy8Fbs5liIHVMEXtcYOhc8aTH+roakaAAh8joN4CSL3
+	mHok3shQyrT4RS1c9C5Jd+FUE/dUmkjB+sJOjliSSRKSZD8fNN2eNNdbUD/r+g==
 From: Viacheslav Bocharov <adeep@lexina.in>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
 	Kevin Hilman <khilman@baylibre.com>,
@@ -35,10 +37,12 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
 	linux-amlogic@lists.infradead.org
 Cc: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v3 0/4] soc: amlogic: add new meson-gx-socinfo-sm driver
-Date: Thu, 14 Mar 2024 09:59:50 +0300
-Message-ID: <20240314070433.4151931-1-adeep@lexina.in>
+Subject: [PATCH v3 4/4] arm64: dts: meson: add dts links to secure-monitor for soc driver in a1, axg, gx, g12
+Date: Thu, 14 Mar 2024 09:59:54 +0300
+Message-ID: <20240314070433.4151931-5-adeep@lexina.in>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240314070433.4151931-1-adeep@lexina.in>
+References: <20240314070433.4151931-1-adeep@lexina.in>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,68 +52,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The Amlogic Meson SoC Secure Monitor implements a call to retrieve an
-unique SoC ID starting from the GX Family and all new families.
-But GX-family chips (e.g. GXB, GXL and newer) supports also 128-bit
-chip ID. 128-bit chip ID consists 32-bit SoC version and 96-bit OTP data.
+Add links to secure-monitor in soc driver section for A1, AXG, GX, G12
+Amlogic family for use with meson-socinfo-sm driver.
 
-This is next attempt to publish data from the Amlogic secure monitor
-chipid call. After discussions with Neil Armstrong, it was decided to
-publish the chipid call results through the soc driver. Since
-soc_device_match cannot wait for the soc driver to load, and the secure
-monitor calls in turn depend on the sm driver, it was necessary to create
-a new driver rather than expand an existing one.
-
-In the patches, in addition to writing the driver:
-- convert commonly used structures and functions of the meson-gx-socinfo
-driver to a header file.
-- add secure-monitor references for amlogic,meson-gx-ao-secure sections
-in dts files of the a1, axg, g12, gx families.
-
-
+Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
 ---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi         | 1 +
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi         | 1 +
+ 4 files changed, 4 insertions(+)
 
-Changes 
- v2 [1] -> v3:
- - rebase
- - update dependency in Kconfig for MESON_GX_SOCINFO_SM
- - add links to secure-monitor in soc driver sections for A1, AXG, GX, G12
-
- v1 [2] -> v2:
- - create cpu_id structure for socinfo variable
- - create meson_sm_chip_id for result of sm call
- - remove shared functions
- - move from funcs for bit operations to C bit fields
-
-Links:
- - [1] https://lore.kernel.org/linux-arm-kernel/20240221143654.544444-1-adeep@lexina.in/
- - [2] https://lore.kernel.org/linux-arm-kernel/202311242104.RjBPI3uI-lkp@intel.com/T/
-
-
-Viacheslav Bocharov (4):
-  soc: amlogic: meson-gx-socinfo: move common code to header file
-  soc: amlogic: meson-gx-socinfo-sm: Add Amlogic secure-monitor SoC
-    Information driver
-  soc: amlogic: meson-gx-socinfo: add new definition for Amlogic A113X
-    package
-  arm64: dts: meson: add dts links to secure-monitor for soc driver in
-    a1, axg, gx, g12
-
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   1 +
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   1 +
- .../boot/dts/amlogic/meson-g12-common.dtsi    |   1 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   1 +
- drivers/soc/amlogic/Kconfig                   |  10 +
- drivers/soc/amlogic/Makefile                  |   1 +
- .../soc/amlogic/meson-gx-socinfo-internal.h   | 121 +++++++++++
- drivers/soc/amlogic/meson-gx-socinfo-sm.c     | 192 ++++++++++++++++++
- drivers/soc/amlogic/meson-gx-socinfo.c        | 136 ++-----------
- 9 files changed, 342 insertions(+), 122 deletions(-)
- create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-internal.h
- create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-sm.c
-
-
-base-commit: 480e035fc4c714fb5536e64ab9db04fedc89e910
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index c03e207ea6c5..d47f056117fc 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -407,6 +407,7 @@ hwrng: rng@5118 {
+ 			sec_AO: ao-secure@5a20 {
+ 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
+ 				reg = <0x0 0x5a20 0x0 0x140>;
++				secure-monitor = <&sm>;
+ 				amlogic,has-chip-id;
+ 			};
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 6d12b760b90f..45791ec6694a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1689,6 +1689,7 @@ mux {
+ 			sec_AO: ao-secure@140 {
+ 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
+ 				reg = <0x0 0x140 0x0 0x140>;
++				secure-monitor = <&sm>;
+ 				amlogic,has-chip-id;
+ 			};
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 9d5eab6595d0..a8c1c72543b7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -2026,6 +2026,7 @@ cec_AO: cec@100 {
+ 			sec_AO: ao-secure@140 {
+ 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
+ 				reg = <0x0 0x140 0x0 0x140>;
++				secure-monitor = <&sm>;
+ 				amlogic,has-chip-id;
+ 			};
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 2673f0dbafe7..656e08b3d872 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -471,6 +471,7 @@ cec_AO: cec@100 {
+ 			sec_AO: ao-secure@140 {
+ 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
+ 				reg = <0x0 0x140 0x0 0x140>;
++				secure-monitor = <&sm>;
+ 				amlogic,has-chip-id;
+ 			};
+ 
 -- 
 2.43.2
 
