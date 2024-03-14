@@ -1,137 +1,185 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211611BDE0
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2500225DF;
+	Thu, 14 Mar 2024 05:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395953; cv=none; b=iibiSOpliBLqUxkXAbM2GhlEIu4eQZmdtqnAH42w4pX2U6MSJeX83knE55r/KLpiJ0SMsTIi6x9mz6fRy9SpHijjUzFUKjYtXwUWFyGxnU5o0/3oQxLT1eFwql9F9d6PQk9B3VmG1SlozLQUsghX+mnnCRULENCRK8ALGY49NkA=
+	t=1710395958; cv=none; b=oIGclBXsCswtIpkiH12t68xedOvx2Adn1UnlHcKXdBJl0R2GOBwwuEvljZ+bGqfSSOTFN28IijKQvDtlr6FUMVSPggxYAW3bCQ5zE4LcumHs9qcW6hsWth+y0C/FLfCZlqkC8Su4aKo+iT5/onYQhnii0ojkldmLPHRHRFwMWIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395953; c=relaxed/simple;
-	bh=Mk3XQlHLZxdVodcrzm+PODwSYBMgkZqVt9gXIE7aW2I=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=pCm3SDYQ6Kfokq9Hs0on4N2MikIs4Bb0GZ+8KBnyOPZ11bSGuZzFy+HuRE9S6jgcq07AC6kN62mYpKxgLSLZ/SXxw/WbkyYjOkZC1REJqj2r4251Hd8U20gjVqsV/VxirJmkL/VHVDUsrKMtbxMtccyLBhwANV9ATiHk+rcUVzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q3Me8htA; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3Me8htA"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ad239f8fso10660217b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710395951; x=1711000751; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xSBh0lB+a23+39fFaPjg8zQM/Im9uFNXguVDinAnXbc=;
-        b=Q3Me8htAcgDEJEuqazatt0G3Rlq7GsKxRDIeFW0dTzEQfeqVVWA72NvbSLXFhqSXXj
-         O2o+rPXJKuOaBpK9pwDk5/7k7/mc7l6YM9fL+4Ih+5KDYgwBCwQF1BB51REA2TYOkIN1
-         bGYLLKYjvQO9N5CZ61AwyULuiZCKG1n8d7C9II3FrL9JN3Ub0spAXefYGrtDvIYuTYeD
-         UY4mIgSzwyGO7lBP0oVnNMek3l7+M49LrhB+7BRws094d7Kx3xHKsU9Gj7gz/1BDBScE
-         kYpDAeKO3oCAU1bwTtv9BPOENT5lfFJUyN7EMvl/E/jk4MXV36Nty8XiUs5D23b3lg8t
-         CPcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710395951; x=1711000751;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xSBh0lB+a23+39fFaPjg8zQM/Im9uFNXguVDinAnXbc=;
-        b=XEdZagZbTNliN9nTuE8dvk+56r9dsURxiA31UNHP/AXKDyHl0o3rQJ5ti9b+HzoQnX
-         l7Wc4XVfYaBZ04Dgr49CTr8voGsBL1FBY20NWBWziSpHXZVoj3HGnGpDkJATOELUQZl8
-         ONLZdZUd3PS/lq1ylTw9ckHciAxI+kFoXCIqaHuM+Xrgt74M0i712YeHVD5jNeNuok7g
-         DdD9gfJYu76BTqROCOF6vgp3l0Dh/vDCickODDHSv3AS0EUZL8rFc/MUOEy+rhWn5e7K
-         s5O3HHw4yXct5guTmJvhF4yvRBnyaum8vXnaLgdx9JI4H558ikAQt7Y3E/T1ZfLPbQXD
-         4pfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsDfAdD4STyaRZNRQSOaXVsjEZn7MeNWA8scQj9ljWLD8+i1rURpRCWZs+AE8b6vZbKc+lhpzaK+I5ygwTaDjsWtG0aeLzMYZptqIX
-X-Gm-Message-State: AOJu0YxTCB1S2UQ98Vl4RhtpIaqfP2ripZp36QLI8JiNfhR7Si55I/li
-	8F6rJzkqT+2HE9A+fjPS4BIqyXaNrQ7G+YS08iO/XJ7pa1telCsT42F02Kg90KHikggBeNdChDN
-	LZ90tDg==
-X-Google-Smtp-Source: AGHT+IGz/WcD1pwUVpDjsHmi87+odVdNlep/ZH4vaPqLNRuRB0bMnFJncve4GNCavNVSJJbYCIMFntlCkmwb
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a25:9285:0:b0:dc6:dfc6:4207 with SMTP id
- y5-20020a259285000000b00dc6dfc64207mr211031ybl.10.1710395950986; Wed, 13 Mar
- 2024 22:59:10 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:58:39 -0700
-In-Reply-To: <20240314055839.1975063-1-irogers@google.com>
-Message-Id: <20240314055839.1975063-13-irogers@google.com>
+	s=arc-20240116; t=1710395958; c=relaxed/simple;
+	bh=quWS6cw1enbHEk2BECL7cUiJ3SY/cvDTU5at8NgkBYg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bLO8Kz2Rwg3n32V27xL+65SDp+1alzosAizfQO+m3CXZqGOqdHVrtP0aXixRscUgYAalQ/EVfRNyE7aPDtlNhBxkrLRnLTi8yMaf2OqQOdeA0deNvHS5iB9r8Ro4jWU0K3o3iRyeyQc4jnJ9LLg2IPNfRcXzQHj6uHrA7VTK36U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 907691007;
+	Wed, 13 Mar 2024 22:59:51 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.53.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 10A633F73F;
+	Wed, 13 Mar 2024 22:59:09 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	suzuki.poulose@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH V7 00/11] coresight: Move remaining AMBA ACPI devices into platform driver
+Date: Thu, 14 Mar 2024 11:28:32 +0530
+Message-Id: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240314055839.1975063-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 12/12] perf jevents: Add context switch metrics for AMD
-From: Ian Rogers <irogers@google.com>
-To: Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Metrics break down context switches for different kinds of
-instruction.
+This moves remaining AMBA ACPI devices into respective platform drivers for
+enabling ACPI based power management support. This series applies on latest
+coresight next. This series has been built, and boot tested on a DT based
+(RB5) and ACPI supported coresight platform (N1SDP).
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/amd_metrics.py | 32 ++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (amba_other_acpi_migration_v7)
 
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index bf5c4ffa53e9..bc70743c2f11 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -120,6 +120,37 @@ def AmdBr():
-                      description="breakdown of retired branch instructions")
- 
- 
-+def AmdCtxSw() -> MetricGroup:
-+  cs = Event("context\-switches")
-+  metrics = [
-+      Metric("cs_rate", "Context switches per second", d_ratio(cs, interval_sec), "ctxsw/s")
-+  ]
-+
-+  ev = Event("instructions")
-+  metrics.append(Metric("cs_instr", "Instructions per context switch",
-+                        d_ratio(ev, cs), "instr/cs"))
-+
-+  ev = Event("cycles")
-+  metrics.append(Metric("cs_cycles", "Cycles per context switch",
-+                        d_ratio(ev, cs), "cycles/cs"))
-+
-+  ev = Event("ls_dispatch.ld_dispatch")
-+  metrics.append(Metric("cs_loads", "Loads per context switch",
-+                          d_ratio(ev, cs), "loads/cs"))
-+
-+  ev = Event("ls_dispatch.store_dispatch")
-+  metrics.append(Metric("cs_stores", "Stores per context switch",
-+                        d_ratio(ev, cs), "stores/cs"))
-+
-+  ev = Event("ex_ret_brn_tkn")
-+  metrics.append(Metric("cs_br_taken", "Branches taken per context switch",
-+                        d_ratio(ev, cs), "br_taken/cs"))
-+
-+  return MetricGroup("cs", metrics,
-+                     description = ("Number of context switches per second, instructions "
-+                                    "retired & core cycles between context switches"))
-+
-+
- def AmdIlp() -> MetricGroup:
-     tsc = Event("msr/tsc/")
-     c0 = Event("msr/mperf/")
-@@ -613,6 +644,7 @@ def main() -> None:
- 
-   all_metrics = MetricGroup("", [
-       AmdBr(),
-+      AmdCtxSw(),
-       AmdIlp(),
-       AmdDtlb(),
-       AmdItlb(),
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+
+Changes in V7:
+
+- Dropped reduntant 'drvdata' check in following functions
+  replicator_platform_remove()
+  funnel_platform_remove()
+  tpiu_platform_remove()
+  tmc_platform_remove()
+  catu_platform_remove()
+  catu_platform_probe()
+  debug_platform_remove()
+  debug_platform_probe()
+- Dropped struct resource check before devm_ioremap_resource()
+- Sorted the headers in alphabetic order
+
+Changes in V6:
+
+https://lore.kernel.org/all/20240312102318.2285165-1-anshuman.khandual@arm.com/
+
+- Dropped Jame's RB tag from [PATCH 3/11]
+- Added clk_disable_unprepare() for pclk in replicator_probe() error path
+- Added clk_disable_unprepare() for pclk in funnel_probe() error path
+- Added clk_put() for pclk in catu_platform_probe() error path
+- Added clk_put() for pclk in debug_platform_probe() error path
+- Added WARN_ON(!drvdata) check in replicator_platform_remove()
+- Added WARN_ON(!drvdata) check in funnel_platform_remove()
+- Added WARN_ON(!drvdata) check in catu_platform_remove()
+- Added WARN_ON(!drvdata) check in tpiu_platform_remove()
+- Added WARN_ON(!drvdata) check in tmc_platform_remove()
+- Added WARN_ON(!drvdata) check in stm_platform_remove()
+- Added WARN_ON(!drvdata) check in debug_platform_remove()
+- Added additional elements for all acpi_device_id[] updates
+
+Changes in V5:
+
+https://lore.kernel.org/all/20240222082142.3663983-1-anshuman.khandual@arm.com/
+
+- Used table->mask to filter out bits from pid in coresight_get_uci_data_from_amba()
+- Dropped custom masks such as STM_AMBA_MASK and TMC_AMBA_MASK
+- Modified tmc_etr_setup_caps() to accept struct csdev_access argument
+- Reverted back tmc_etr_setup_caps() call site position in tmc_probe()
+- Changed replicator and funnel devices to use the new helpers earlier in series
+- Updated the commit messages regarding xxx_probe() refactoring and renaming
+
+Changes in V4:
+
+https://lore.kernel.org/all/20240123054608.1790189-1-anshuman.khandual@arm.com/
+
+- Fixed PM imbalance in etm4_probe() error path with pm_runtime_disable()
+- Restored back the pm_runtime_disable() on platform probe error paths
+  in replicator, funnel, catu, tpiu, tmc and stm devices
+- Dropped dev_caps argument from __tmc_probe()
+- Changed xxxx_platform_remove() for platform_driver->remove_new() callback
+
+Changes in V3:
+
+https://lore.kernel.org/all/20231208053939.42901-1-anshuman.khandual@arm.com/
+
+- Split coresight_init_driver/remove_driver() helpers into a separate patch
+- Added 'drvdata->pclk' comments in replicator, funnel, tpiu, tmc, and stm devices
+- Updated funnel, and replicator drivers to use these new helpers
+- Check for drvdata instead of drvdata->pclk in suspend and resume paths in catu,
+  tmc and debug devices
+- Added patch to extract device name from AMBA pid based table lookup for stm
+- Added patch to extract device properties from AMBA pid based table look for tmc
+- Dropped pm_runtime_put() from common __probe() functions
+- Handled pm_runtime_put() in AMBA driver in success path
+- Handled pm_runtime_put() in platform driver in both success and error paths
+
+Changes in V2:
+
+https://lore.kernel.org/all/20231201062053.1268492-1-anshuman.khandual@arm.com/
+
+- Dropped redundant devm_ioremap_resource() hunk from tmc_platform_probe()
+- Defined coresight_[init|remove]_driver() for both AMBA/platform drivers
+- Changed catu, tmc, tpiu, stm and debug coresight drivers to use the new
+  helpers avoiding build issues arising from module_amba_driver(), and
+  module_platform_driver() being on the same file
+
+Changes in V1:
+
+https://lore.kernel.org/all/20231027072943.3418997-1-anshuman.khandual@arm.com/
+
+- Replaced all IS_ERR() instances with IS_ERR_OR_NULL() as per Suzuki
+
+Changes in RFC:
+
+https://lore.kernel.org/all/20230921042040.1334641-1-anshuman.khandual@arm.com/
+
+Anshuman Khandual (11):
+  coresight: etm4x: Fix unbalanced pm_runtime_enable()
+  coresight: stm: Extract device name from AMBA pid based table lookup
+  coresight: tmc: Extract device properties from AMBA pid based table lookup
+  coresight: Add helpers registering/removing both AMBA and platform drivers
+  coresight: replicator: Move ACPI support from AMBA driver to platform driver
+  coresight: funnel: Move ACPI support from AMBA driver to platform driver
+  coresight: catu: Move ACPI support from AMBA driver to platform driver
+  coresight: tpiu: Move ACPI support from AMBA driver to platform driver
+  coresight: tmc: Move ACPI support from AMBA driver to platform driver
+  coresight: stm: Move ACPI support from AMBA driver to platform driver
+  coresight: debug: Move ACPI support from AMBA driver to platform driver
+
+ drivers/acpi/arm64/amba.c                     |   8 -
+ drivers/hwtracing/coresight/coresight-catu.c  | 138 +++++++++++++---
+ drivers/hwtracing/coresight/coresight-catu.h  |   1 +
+ drivers/hwtracing/coresight/coresight-core.c  |  29 ++++
+ .../hwtracing/coresight/coresight-cpu-debug.c | 138 ++++++++++++++--
+ .../coresight/coresight-etm4x-core.c          |   3 +
+ .../hwtracing/coresight/coresight-funnel.c    |  87 +++++-----
+ drivers/hwtracing/coresight/coresight-priv.h  |  10 ++
+ .../coresight/coresight-replicator.c          |  82 +++++-----
+ drivers/hwtracing/coresight/coresight-stm.c   | 116 +++++++++++--
+ .../hwtracing/coresight/coresight-tmc-core.c  | 154 +++++++++++++++---
+ drivers/hwtracing/coresight/coresight-tmc.h   |   2 +
+ drivers/hwtracing/coresight/coresight-tpiu.c  | 117 +++++++++++--
+ include/linux/coresight.h                     |   7 +
+ 14 files changed, 726 insertions(+), 166 deletions(-)
+
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.25.1
 
