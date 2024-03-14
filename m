@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539357175F;
-	Thu, 14 Mar 2024 15:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009AE71B3D;
+	Thu, 14 Mar 2024 15:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710430357; cv=none; b=QYo22JxYcvi6FKOT91FI1hTIvlrcTbK/v4GD9yMqibHooDN0xGa/Izups/GGZeVSDLTx/mNdzTKwiR66fO1P1BovqvU9p9O5Z2ojkoDbPOKBvVISJs6ANp5rXwrImDZoCpWPLfy+qhiJyWcRcLAEVI6f6fp7bGpANYgW+uLdd1Q=
+	t=1710430358; cv=none; b=JoTaZb751EYHCfgs9z96WRlRhLsKxF539Ql2Q23R7nCqXWDS4XChtAa6aYNf/V+Nh9Fv7Z2JyLhuSYzib0JsOGm7B4u6rGEIY328NP17LtzCDensnDtTir5cO/YvLJpDYkaNqt1eSUdv72r8bXKslkDOJltXUWu4B0NbCjqs7Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710430357; c=relaxed/simple;
-	bh=kghUcSURPBJoB0fmxL1r0Y9N1XZdT/r3cDKOOvYVX9w=;
+	s=arc-20240116; t=1710430358; c=relaxed/simple;
+	bh=qivh6TydDKfcZbVPYc7spMw2cRqVCzEb9YVNhr43HUY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HxjJl80ydDvHSUmf1KFtmgNmmXcCI37bD299bXlcFr1LIRyRQozgOxE0HbrWP2UDuhVc1fzgeuENcEFgjtmI5KHx4raErqqgJ9HHX11WaKidMWL0KoDosTboCn3k9IdM+viUGn0FqmVAon+xwNuGdHNWJinBG44xyfY410ET/gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j/kf/jVr; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=liMxT0q8YIodmiyv96FtjsvAbDRNHjpFnRfzeREV8YS0b+vnC+UeolvOcMWGgQ8G/ZLU9zUZ38aFlXO6iia/t3cwawZcmh7Noj9FkJeURTu26x3TQBT7ZF+V/y4GpLtrzc74iCDHo9hFUlin86oTYeDN+HOWQjwSm4fxBXQQlfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=skQ3eSMA; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j/kf/jVr"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="skQ3eSMA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710430353;
-	bh=kghUcSURPBJoB0fmxL1r0Y9N1XZdT/r3cDKOOvYVX9w=;
+	s=mail; t=1710430355;
+	bh=qivh6TydDKfcZbVPYc7spMw2cRqVCzEb9YVNhr43HUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j/kf/jVrjp7W2NII/rxpmOhKm8oAJ5alSNrSLUM1dPrOPrGAS9lTzjBU+b+uSFPjD
-	 GlBl1UPD2sunY0CLxTT1nDRnzFPZNu5LlQEVa7hIBMIMMr+FSaMrncG1yxa/lWfmUx
-	 L1njzmWkj7eIN/SiUc4GmfGbdTwaI2EJq7zhswG+BgmDtTuFx3PzYXeF1A1TjjSSET
-	 KHEigPFabFHa0zuVgHEIYXuFJNFmnvW0t5/f6xoBZJsiPNCORrBR0ddFFYlvtVgmWg
-	 M4R8uBrYqPOzbPZ4XrbnJ/OHIRaV06ImJaavEaRwCdvg+Nchsd44/ldZqYJ0w5hqQr
-	 P5eTgB4Hd2kjg==
+	b=skQ3eSMAXzuXhHKCUz0EJJybjE9cehdLr00xV0RTimHvr10PXRK1D4ZWbNlaWilKV
+	 9P1raRucv9swWQ9KoPju8oAPf/sAw4/9/bEQllpueFb58McYx8CgMjPUiJBJMJjmBp
+	 tYXGT4xi6JcGM/0lmwapjepEqOdgOihd0qGKMgnqtu01TMeJahhVXqEC+6/jNnE4Rv
+	 v2dtiG7N0786AElgrzhESIQ+ktAVVtfqX1J1wR8n5IMxsEB54Io/28vZWPU2qzoBwp
+	 zXZo1Ttpr7gFIB31az/955kYixHy9o/Kk6/bnV5Y3X0VMkgyTRUOWRcfD8bErcpw9k
+	 bw9x+OgOvq8/A==
 Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4B30037820F5;
-	Thu, 14 Mar 2024 15:32:33 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C613337820F8;
+	Thu, 14 Mar 2024 15:32:34 +0000 (UTC)
 From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 To: mchehab@kernel.org,
 	tfiga@chromium.org,
@@ -46,9 +46,9 @@ Cc: linux-media@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	kernel@collabora.com,
 	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v21 1/9] media: videobuf2: Update vb2_is_busy() logic
-Date: Thu, 14 Mar 2024 16:32:18 +0100
-Message-Id: <20240314153226.197445-2-benjamin.gaignard@collabora.com>
+Subject: [PATCH v21 3/9] media: test-drivers: Set REQBUFS minimum number of buffers
+Date: Thu, 14 Mar 2024 16:32:20 +0100
+Message-Id: <20240314153226.197445-4-benjamin.gaignard@collabora.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240314153226.197445-1-benjamin.gaignard@collabora.com>
 References: <20240314153226.197445-1-benjamin.gaignard@collabora.com>
@@ -60,86 +60,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Do not rely on the number of allocated buffers to know if the
-queue is busy but on a flag set when at least one buffer has been allocated
-by REQBUFS or CREATE_BUFS ioctl.
-The flag is reset when REQBUFS is called with count = 0 or the file
-handle is closed.
-This is needed because remove buffers feature will be able to remove
-all the buffers from a queue while streaming so relying on the number
-of allocated buffers in the queue won't be possible.
+Instead of using 'min_queued_buffers' field to specify the
+minimum number of buffers to be allocated when calling REQBUF
+use 'min_reqbufs_allocation' field which is dedicated to this
+purpose.
+
+While at it rename vivid_create_queue() parameter.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 ---
- drivers/media/common/videobuf2/videobuf2-core.c | 4 ++++
- include/media/videobuf2-core.h                  | 4 +++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/media/test-drivers/vimc/vimc-capture.c | 2 +-
+ drivers/media/test-drivers/vivid/vivid-core.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index b6bf8f232f48..d8b3c04cb3b5 100644
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -854,6 +854,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- 		__vb2_queue_free(q, q_num_bufs);
- 		mutex_unlock(&q->mmap_lock);
+diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
+index 2a2d19d23bab..97693561f1e4 100644
+--- a/drivers/media/test-drivers/vimc/vimc-capture.c
++++ b/drivers/media/test-drivers/vimc/vimc-capture.c
+@@ -432,7 +432,7 @@ static struct vimc_ent_device *vimc_capture_add(struct vimc_device *vimc,
+ 	q->mem_ops = vimc_allocator == VIMC_ALLOCATOR_DMA_CONTIG
+ 		   ? &vb2_dma_contig_memops : &vb2_vmalloc_memops;
+ 	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+-	q->min_queued_buffers = 2;
++	q->min_reqbufs_allocation = 2;
+ 	q->lock = &vcapture->lock;
+ 	q->dev = v4l2_dev->dev;
  
-+		q->is_busy = 0;
- 		/*
- 		 * In case of REQBUFS(0) return immediately without calling
- 		 * driver's queue_setup() callback and allocating resources.
-@@ -966,6 +967,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- 	 */
- 	*count = allocated_buffers;
- 	q->waiting_for_buffers = !q->is_output;
-+	q->is_busy = 1;
- 
- 	return 0;
- 
-@@ -1091,6 +1093,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
- 	 * to the userspace.
- 	 */
- 	*count = allocated_buffers;
-+	q->is_busy = 1;
- 
- 	return 0;
- 
-@@ -2555,6 +2558,7 @@ void vb2_core_queue_release(struct vb2_queue *q)
- 	__vb2_queue_free(q, vb2_get_num_buffers(q));
- 	kfree(q->bufs);
- 	q->bufs = NULL;
-+	q->is_busy = 0;
- 	mutex_unlock(&q->mmap_lock);
- }
- EXPORT_SYMBOL_GPL(vb2_core_queue_release);
-diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-index 8b86996b2719..667bf9ee1101 100644
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -582,6 +582,7 @@ struct vb2_buf_ops {
-  *		released. Used to prevent destroying the queue by other threads.
-  * @is_multiplanar: set if buffer type is multiplanar
-  * @is_output:	set if buffer type is output
-+ * @is_busy:	set if at least one buffer has been allocated at some time.
-  * @copy_timestamp: set if vb2-core should set timestamps
-  * @last_buffer_dequeued: used in poll() and DQBUF to immediately return if the
-  *		last decoded buffer was already dequeued. Set for capture queues
-@@ -647,6 +648,7 @@ struct vb2_queue {
- 	unsigned int			waiting_in_dqbuf:1;
- 	unsigned int			is_multiplanar:1;
- 	unsigned int			is_output:1;
-+	unsigned int			is_busy:1;
- 	unsigned int			copy_timestamp:1;
- 	unsigned int			last_buffer_dequeued:1;
- 
-@@ -1166,7 +1168,7 @@ static inline unsigned int vb2_get_num_buffers(struct vb2_queue *q)
-  */
- static inline bool vb2_is_busy(struct vb2_queue *q)
+diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+index 159c72cbb5bf..11b8520d9f57 100644
+--- a/drivers/media/test-drivers/vivid/vivid-core.c
++++ b/drivers/media/test-drivers/vivid/vivid-core.c
+@@ -861,7 +861,7 @@ static const struct media_device_ops vivid_media_ops = {
+ static int vivid_create_queue(struct vivid_dev *dev,
+ 			      struct vb2_queue *q,
+ 			      u32 buf_type,
+-			      unsigned int min_queued_buffers,
++			      unsigned int min_reqbufs_allocation,
+ 			      const struct vb2_ops *ops)
  {
--	return vb2_get_num_buffers(q) > 0;
-+	return !!q->is_busy;
- }
- 
- /**
+ 	if (buf_type == V4L2_BUF_TYPE_VIDEO_CAPTURE && dev->multiplanar)
+@@ -898,7 +898,7 @@ static int vivid_create_queue(struct vivid_dev *dev,
+ 	q->mem_ops = allocators[dev->inst] == 1 ? &vb2_dma_contig_memops :
+ 						  &vb2_vmalloc_memops;
+ 	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+-	q->min_queued_buffers = supports_requests[dev->inst] ? 0 : min_queued_buffers;
++	q->min_reqbufs_allocation = min_reqbufs_allocation;
+ 	q->lock = &dev->mutex;
+ 	q->dev = dev->v4l2_dev.dev;
+ 	q->supports_requests = supports_requests[dev->inst];
 -- 
 2.40.1
 
