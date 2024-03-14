@@ -1,46 +1,45 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979B95C617;
-	Thu, 14 Mar 2024 07:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88506FB5;
+	Thu, 14 Mar 2024 07:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400904; cv=none; b=HZT4ldDMfcynJRrWkchJ3m+ROt3f801T15/pqeRfiIvxgfqOTfJACd5np6O5BaxZoLkAxIgDh53M2dlSjLrfODx9WEM8QWDm9WzhaO/9tEKhOrkkTHqbgYXWSwPdNhZkjjregtIbiTicutxqPfu0Rojt6lf01AvvZ2kUD9QvWmw=
+	t=1710400912; cv=none; b=WxQoc84DDsJjT/NF/awd/yWyK6XAzPIRb79F3n7PM7V/54EpIFN2XpXsxuq/XYg4rwMPHGlAvt1lww+DGUi38IhKV74Mvr2isMNiH+hl1sgOYGRZBNABX0o8121YKsAF1CgVO/i4ydQAwAPTDZTu1rx8htbQgiUBxVUZnNcrJbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400904; c=relaxed/simple;
-	bh=iU0P/pPN0hf8+78Gl8OOHKQuX55sbJAVM462l+Xpo/Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RKQC8CVEoEFuRUc5YrrTjOzo2A2aS/PGvrXpyntgyZ6kbnks3FKxrUcq1bx2vr+Q/bATD4WYxca61p425MI4Agzm32c2obkI/B7BIkKPXJdn6EvfV6NhD0e6t3o8Vd5lX69OQVP70FQE7XN52enMQITYhG1OpYmgXDmlQ4Bxi8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bRyq7DCD; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1710400912; c=relaxed/simple;
+	bh=ccHcqSZqrWHjYm6IvFnlj2uvZd1bVYq//MUBZilUvvE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XXpRIXBRBqHCH6QrglYDi0zHfbUjQ99+ilEOvS63pllQJz7dZuuTeD3ASnMXy3tPNVrARptQb4M1HYOI94zoHIcQONL/I0wL8BipbfDrZ/JG8YN++TezeqaL2q01qJWdLEJpBmOMV35l5YX3Uc6QX4NI1qkfDLLlPoqDl6VfFLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hoFwd0qR; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bRyq7DCD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hoFwd0qR"
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LYf0024881;
-	Thu, 14 Mar 2024 02:21:34 -0500
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LWhp021096;
+	Thu, 14 Mar 2024 02:21:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710400894;
-	bh=N/r4yeeJCniqbNU4n+Oorp8eaNGK16nfzVidvodlDqk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=bRyq7DCDn0g9KARh85f4Q2tuRmfoJC+59UP5Pnm641jgkvef3ZYCS64G+RHmN6NNU
-	 kY7QzbpgkbTlfp6K2/9z7DIO7Am4uBCGhVPZ8CemRaBKlteVLjTrxGpWjEgwXBic3P
-	 SkxQmEeFTph2L21iYCNIhY/Rla7IIuV9n9dRimjE=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42E7LY3h021688
+	s=ti-com-17Q1; t=1710400892;
+	bh=FcoX7xACm0C1orkfdYLpksQ6GDrWcw1v4XBWKblj6aE=;
+	h=From:To:CC:Subject:Date;
+	b=hoFwd0qRrkujocVtDEidzEbAzz2Ly1IGAPu61kJNMe5pQNyj4eKt8ls4Yd4QWuHEi
+	 Svzmc7WEcYeHgcoFVOI8mTLxY4Wbu2ZaLvXzf0wEzK0qjlaT3uZ6TBuJVgTqtouB8p
+	 IbhJmqHW9ZxTRayloC3TzQi0NfGeT6hHMdGFZOYY=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42E7LWSl021663
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 14 Mar 2024 02:21:34 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 14 Mar 2024 02:21:32 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 14
- Mar 2024 02:21:33 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2024 02:21:32 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 14 Mar 2024 02:21:33 -0500
+ Frontend Transport; Thu, 14 Mar 2024 02:21:32 -0500
 Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LWc3120529;
-	Thu, 14 Mar 2024 02:21:33 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LVQW120513;
+	Thu, 14 Mar 2024 02:21:32 -0500
 From: Chintan Vankar <c-vankar@ti.com>
 To: Conor Dooley <conor+dt@kernel.org>,
         Krzysztof Kozlowski
@@ -54,12 +53,10 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <srk@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
         Chintan Vankar
 	<c-vankar@ti.com>
-Subject: [PATCH v5 1/5] arm64: dts: ti: k3-j784s4-evm: Add alias for MCU CPSW2G
-Date: Thu, 14 Mar 2024 12:51:25 +0530
-Message-ID: <20240314072129.1520475-2-c-vankar@ti.com>
+Subject: [PATCH v5 0/5] Add CPSW2G and CPSW9G nodes for J784S4
+Date: Thu, 14 Mar 2024 12:51:24 +0530
+Message-ID: <20240314072129.1520475-1-c-vankar@ti.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240314072129.1520475-1-c-vankar@ti.com>
-References: <20240314072129.1520475-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,26 +67,46 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add alias for the MCU CPSW2G port to enable Linux to fetch MAC Address
-for the port directly from U-Boot.
+This series adds device-tree nodes for CPSW2G and CPSW9G instance
+of the CPSW Ethernet Switch on TI's J784S4 SoC. Additionally,
+two device-tree overlays are also added:
+1. QSGMII mode with the CPSW9G instance via the ENET EXPANSION 1
+   connector.
+2. USXGMII mode with MAC Ports 1 and 2 of the CPSW9G instance via
+   ENET EXPANSION 1 and 2 connectors, configured in fixed-link
+   mode of operation at 5Gbps link speed.
 
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 1 +
- 1 file changed, 1 insertion(+)
+Link to v4:
+https://lore.kernel.org/r/20240131101441.1362409-1-c-vankar@ti.com/
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index 81fd7afac8c5..1f390c22844e 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -27,6 +27,7 @@ aliases {
- 		mmc1 = &main_sdhci1;
- 		i2c0 = &wkup_i2c0;
- 		i2c3 = &main_i2c0;
-+		ethernet0 = &mcu_cpsw_port1;
- 	};
- 
- 	memory@80000000 {
+Changes from v4 to v5:
+1. Removed Patch at:
+   https://lore.kernel.org/r/20240131101441.1362409-2-c-vankar@ti.com/
+   from this version as it is posted as a separate patch at:
+   https://lore.kernel.org/r/20240213080348.248916-1-s-vadapalli@ti.com/
+2. Disabled node "main_cpsw1_mdio" in k3-j784s4-main.dtsi and enabled it
+   in k3-j784s4-evm.dts.
+
+Chintan Vankar (1):
+  arm64: dts: ti: k3-j784s4-evm: Add alias for MCU CPSW2G
+
+Siddharth Vadapalli (4):
+  arm64: dts: ti: k3-j784s4-main: Add CPSW2G and CPSW9G nodes
+  arm64: dts: ti: k3-j784s4-evm: Enable Main CPSW2G node and add aliases
+    for it
+  arm64: dts: ti: k3-j784s4: Add overlay to enable QSGMII mode with
+    CPSW9G
+  arm64: dts: ti: k3-j784s4: Add overlay for dual port USXGMII mode
+
+ arch/arm64/boot/dts/ti/Makefile               |  11 +-
+ .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 147 ++++++++++++++
+ .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   |  81 ++++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  51 +++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 187 ++++++++++++++++++
+ 5 files changed, 476 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
+
 -- 
 2.34.1
 
