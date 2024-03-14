@@ -1,61 +1,59 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27776F06D;
-	Thu, 14 Mar 2024 13:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3125B5DD;
+	Thu, 14 Mar 2024 13:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710424237; cv=none; b=aKYcgDWOzY10EIwTpJWxgd2rns2wPwgPG4xiEOLTrlT5Xwa320K3Y6OVvkG6xM/tEte5ovmlkSUhDQFbPwZU+YQ245fNWOocIXaG6Da1FKNEUNTPsYGt4eVEPpFTObB8Y4octeUEhVApTUfhXf/7/bZEUubMgpeoLgsxUrzQQl8=
+	t=1710424377; cv=none; b=TvqIoMPoiKFT3OzNFLB+bg6Y+MWXvh5afSh8DAmtcFf0Rq2PZvoeNQnMMlKYvbKRrI1A3sU74KAy4ZH7OKv0hAjgzpc0M4OWm5sqnZUZDXid4dYE7Uo+JwYuQGUE6hvHmkcgOHu7bmzrjkz3BgmAIqwiqmk+9ayIUw8JkElWMw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710424237; c=relaxed/simple;
-	bh=UNpaCeBcqmNNLkvnpntDc2rky0tZJ6yDsYV4YuKGPjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PMASxGgDpaseg9QspLq/KkI/v4iS6xFZ6Pwf88J4TnYWulTUSORpkcBe5hdqTqL6P+jNktW2sfJyln9RsTuMlB1nZSGWjRgRMs+Wi5/Cge8823psu7gOulaQvzxaw/8+CWzv2jZq9nUJCumJHqZJ3fT9kN8qg3mdkFTHOSSNEHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZ1LCZZL; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1710424377; c=relaxed/simple;
+	bh=dzagUUNASVzuZpjkvZI9csv9wyIfQ6jRNw4sLWIkiEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T1+1pPKX0uvfyHDhkIdXKuwBz4vNoxGlZPYGdCH7AcBTEt0WSHR/REy43Yxypr+lm2JV18ZQAFR1QlqzQEVBzJSTPu7akQWHLevm1BPyBly8h191Xrd7vAdFsdePlvYHcMUaEEpYW0iyOBERFMfnsxYVb3EWnle4iXRm6Wc9yHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0ga1FK5; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZ1LCZZL"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6ce174d45so573295b3a.3;
-        Thu, 14 Mar 2024 06:50:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0ga1FK5"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33e9dfd343fso569477f8f.0;
+        Thu, 14 Mar 2024 06:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710424235; x=1711029035; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+        d=gmail.com; s=20230601; t=1710424374; x=1711029174; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=vJp1W1BFyCTx9D6QxoVL4qIYyK7cv5fVEs0PxaztKc8=;
-        b=OZ1LCZZLlN+N8hsWBbtt+J5W4UhydFWAtZiZEAzTnYatUc9ngrEc0nyMr9CroFrWxU
-         iU4RPrCyQhLbvyot2GRYton0z/Cw0M4XJ4GG7bZE70/nkBjkYY2ISDGFid1ef1iHw/Y3
-         dAjzmkobuBSSYM6puZi4QrVRgp0idil6Q3Dbl/Wo5gecHiyZoTpd2Qd9orYNf90ZVLpd
-         isgy11Iuv+1rEy4u590t4ee9+Zzi8c6BzokISx7Y6AFrXRBML5IdogZ2Dkedg3ar8aEC
-         eou8GpfvbSQQVy0dh+GIm50yopt5eqYXZZvWTXfY7CBrAJg4L6d9JLfh3vPvmIHbKkkp
-         m5gQ==
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xIl4vzYLu7H92myngevMJEPjqZCqCBPhgfD/SqnC3pE=;
+        b=K0ga1FK5wV5hXkvHxoqzBM0QrCO55eO4zlvCthw1aRUnOSOwY+kUIdguKXRIFzrWOn
+         zrnIPUMYR4/9877vssF/EjLpQ46yA4xwRlDovwIsyTSyb84jClNdVuuHO0B/NAxEE1CD
+         mvtu1I3FrLfWdFt8LtH1XsmE5RQMp27mjG1REOLBKYXqkYpAa283KA633ipQSxPUWvQ7
+         EsFtbdI4RDj5XLgIviVb40Er+ihF1LIYe7QmhdRebC3ZVVNiADHAMurNznGwovX5WDeo
+         Uwm1Y6EPqJ+xNSSDuPFKvTOGunGW5bF/mWy4bN9biYa7gJUvCgadwAyADMCqvubtjCZ3
+         U+AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710424235; x=1711029035;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+        d=1e100.net; s=20230601; t=1710424374; x=1711029174;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vJp1W1BFyCTx9D6QxoVL4qIYyK7cv5fVEs0PxaztKc8=;
-        b=gFql1a8W0YoiqHox+VxrDJwEibQ4n5O1HXEGoY0v9ySWdOqiQh0hjLaCh4st6ZbMo8
-         tuhoZqSneDfFmeDubnx7HEVYgXCikYh6TmKWj0H9J/4z7TCOk/Hy2yT/6RC+RQdlFpKz
-         wcbeqnJtzFCjQeSzcPmjdNgudoRZfOfyMa5aAGV3COumQKaRoQDqMgpSGjTGKUDT5KWW
-         2+t77v8JSQvangbhR3sjNtfyflujCE0UDxaBlpuV4otZCL/oWNyOggcUJwTFfuhY80g8
-         l46Igwqlp5SpofiXRawbgBrSYLSsamWLNHTKKeVz3IMvObq4wPE3LX91WBOsQi9W2DIz
-         MB2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXXVj18yaz4irk1+W4xONlgk1YTaNvlknrid4rD/vWWU0ql231hm5Nz4iZVXIESR+gZTl2WOiIPTtP0BIBildPJcdPbYFy2/HtPXmK0ZEWIyyyBd/IN2+M8QKR2hKpXU10j7mJsQ75EPB+y0A0=
-X-Gm-Message-State: AOJu0Yx1hUyht9Wy77+wj9/2zAOhrg8EUCdLsBffRaVylCY7S7yEWsSN
-	MQfBaJPGIpKF++AIrQXbehVkFIuYxtBPy7qKP/UqiKwxzKZilutq
-X-Google-Smtp-Source: AGHT+IFq8jao80Z/Ja9nZTGJGiEkdtmFrTaFi4uMIFzA/6Pv9cSD9FIUcGJ0KTKKK317fxG8FaUKAQ==
-X-Received: by 2002:aa7:8881:0:b0:6e6:9fe2:e902 with SMTP id z1-20020aa78881000000b006e69fe2e902mr1931527pfe.20.1710424234932;
-        Thu, 14 Mar 2024 06:50:34 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ks1-20020a056a004b8100b006e6cc458206sm1439506pfb.175.2024.03.14.06.50.28
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xIl4vzYLu7H92myngevMJEPjqZCqCBPhgfD/SqnC3pE=;
+        b=K+fVqaiRhr3yvm0Xxy7Lw//NkEqV1IxVsDaJUSJBRpUQ4JKc65ccZKCO+C/HdIBxaZ
+         Av6O43tggVYi5SMiZtRWmWvXHtfq4GwAw7TstfjaggDZxscRjkA2oyhVRDSJ3/f5x+zn
+         Ofk1COsUX7NEVUHitI7zXy/ZvKsgxcDqUmc/OjntrXzVN2Css4iBAIZyhIZGKEN5UYyu
+         pxoVyHhZM35im0WBQ2hBNdtNJD/4vhIGTvYG691WaP+e7jIX9YUh5yxZ87Jgwwa7H+e+
+         Q6U6W+Zl1vNL72wKchbDosKK8EE7qB78ghr6n+33sfdJcGnurzbukuSddt+NytB/Bn3V
+         +WJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiypvQOV37qVw7XqvqGY0DrP4buHfO6Knp1Tz9HuSXct3u9lGB4U8aep0fCsv1kHVhLuvhdnusy18HgvV4nh4gvLA6bU9AmYSi+oKAhXsQYFvNEWDBswMl98LzXCSkV6YAd21SlDT0LTT1y88y2ZrR4Pp+y+LAe/jsGaVj5Ofg
+X-Gm-Message-State: AOJu0Yylig2ckHmxtjroVC7JdN+hzKnnsbXmOfwX1fPF1GvRUFR8g6IM
+	4bKT4b1TOkcFfqNRRYUrFQ3YC7sGsyaRo7QECVSwquOwAUXm/hig
+X-Google-Smtp-Source: AGHT+IFf+kJk7xGcSVahe5u1ec7CBmGtIvekV5cmZjqxXpV9hnuLTiOLG8wA4rCJG7svPg7uDZ5MIg==
+X-Received: by 2002:a5d:68cb:0:b0:33e:4590:8bd8 with SMTP id p11-20020a5d68cb000000b0033e45908bd8mr1060606wrw.60.1710424374339;
+        Thu, 14 Mar 2024 06:52:54 -0700 (PDT)
+Received: from [192.168.20.170] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.gmail.com with ESMTPSA id az9-20020adfe189000000b0033e43756d11sm857939wrb.85.2024.03.14.06.52.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 06:50:29 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <257fa47f-f1de-49ec-9ebf-c33d4de736e1@roeck-us.net>
-Date: Thu, 14 Mar 2024 06:50:27 -0700
+        Thu, 14 Mar 2024 06:52:53 -0700 (PDT)
+Message-ID: <4f18053b-9e64-4437-8bdf-18e68b4835d9@gmail.com>
+Date: Thu, 14 Mar 2024 14:52:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,118 +61,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] drivers: watchdog: ast2600 support bootstatus
-Content-Language: en-US
-To: Peter Yin <peteryin.openbmc@gmail.com>, patrick@stwcx.xyz,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20240314065744.1182701-1-peteryin.openbmc@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240314065744.1182701-1-peteryin.openbmc@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] clk: qcom: apss-ipq-pll: use stromer ops for IPQ5018 to
+ fix boot failure
+Content-Language: hu
+To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240311-apss-ipq-pll-ipq5018-hang-v1-1-8ed42b7a904d@gmail.com>
+ <219f3eeba68fd0542d4954205c35bafa.sboyd@kernel.org>
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <219f3eeba68fd0542d4954205c35bafa.sboyd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 3/13/24 23:57, Peter Yin wrote:
-> Add WDIOF_EXTERN1 bootstatus in ast2600
+Hi Stephen,
+
+2024. 03. 13. 23:57 keltezéssel, Stephen Boyd írta:
+> Quoting Gabor Juhos (2024-03-11 08:06:36)
+>> diff --git a/drivers/clk/qcom/apss-ipq-pll.c b/drivers/clk/qcom/apss-ipq-pll.c
+>> index 678b805f13d45..11f1ae59438f7 100644
+>> --- a/drivers/clk/qcom/apss-ipq-pll.c
+>> +++ b/drivers/clk/qcom/apss-ipq-pll.c
+>> @@ -55,6 +55,24 @@ static struct clk_alpha_pll ipq_pll_huayra = {
+>>         },
+>>  };
+>>  
+>> +static struct clk_alpha_pll ipq_pll_stromer = {
+>> +       .offset = 0x0,
+>> +       .regs = ipq_pll_offsets[CLK_ALPHA_PLL_TYPE_STROMER_PLUS],
+>> +       .flags = SUPPORTS_DYNAMIC_UPDATE,
+>> +       .clkr = {
+>> +               .enable_reg = 0x0,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
 > 
+> const?
 
-This does a bit more than that because it replaces
-WDIOF_CARDRESET with WDIOF_EXTERN1 for ast2600.
+You are right, I will add it in the next version.
 
-> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
-> ---
-> Change log:
-> 
-> v1
->    - Patch 0001 - Add WDIOF_EXTERN1 bootstatus
-> ---
->   drivers/watchdog/aspeed_wdt.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-> index b4773a6aaf8c..8adadd394be6 100644
-> --- a/drivers/watchdog/aspeed_wdt.c
-> +++ b/drivers/watchdog/aspeed_wdt.c
-> @@ -81,6 +81,7 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
->   #define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
->   #define WDT_RESET_MASK1		0x1c
->   #define WDT_RESET_MASK2		0x20
-> +#define   WDT_EVENT_COUNTER_MASK       (0xFFF << 8)
->   
->   /*
->    * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-> @@ -459,8 +460,17 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
->   	}
->   
->   	status = readl(wdt->base + WDT_TIMEOUT_STATUS);/BOOT_SECON
-> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
-> -		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-> +
-> +	if (of_device_is_compatible(np, "aspeed,ast2600-wdt")) {
-> +		if (status & WDT_EVENT_COUNTER_MASK) {
-> +			/*
-> +			 * Reset cause by WatchDog
-> +			 */
-> +			wdt->wdd.bootstatus |= WDIOF_EXTERN1;
-> +		}
-> +	} else {
-> +		if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
-> +			wdt->wdd.bootstatus = WDIOF_CARDRESET;
->   
->   		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
->   		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
-
-This check is now unnecessary since it matches the else case.
-
-Either case, it needs to be explained why WDIOF_CARDRESET ("Card previously
-reset the CPU") is replaced by WDIOF_EXTERN1 ("External relay 1") for ast2600,
-and why WDT_TIMEOUT_STATUS_BOOT_SECONDARY does not apply for ast2600 but
-(status & WDT_EVENT_COUNTER_MASK) does.
-
-Guenter
-
+Thanks,
+Gabor
