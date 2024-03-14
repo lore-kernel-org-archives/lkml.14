@@ -1,119 +1,206 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745D710962
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF3110979;
+	Thu, 14 Mar 2024 05:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395978; cv=none; b=gJLvVlKr46eprSly6hrv/6NnKrhYZGJ8x3bixG0Y1806DSTXaYRWw6PaV0D/X9F21I6VGWwv66wxHQP3AWmL2rrAOGh0XpG75X5PR8uK2NB2su9gXTAftoigwU6km/lA/Y+LkiGuC4+Ke6qPnVA7fsnws4LVRpxG8ZOh4YdR29g=
+	t=1710395980; cv=none; b=kPTK7jJWlFLhoIIJmvFHyWkoznvjnIgRpiDvZ5xvGEe6GO4CkqSCtDAUKj2ns/vVHllmEGZ1Lhj1d0bfQKptJ4oOa8N1Xw/Aajp2Kr2YKN5es0MOgIS/XbypVsmMk9s3HuydzF/C/iIGs7U/Ru5o8H+TrH9qbA3ac0WR3/3d8JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395978; c=relaxed/simple;
-	bh=LyYWkoBF0P1c0DOJICMXfmzvr8RS4ew644VymSLO8fA=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ckl+MuI68ssdHeTY4zHAtn7Gpg3SDhcDtZczBI7E3pTR7xumE2gaBj+drP+GjofE23n6IJR4hUp28/+YvFFecf8asc2spExh3+ebpz4YYjcBtZ3/HpRwo8C7nxiMSOB9ieI4+HZPtun4flQPnsaf3i5rrGWu99Razweqnua4yEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ACyDRM0e; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ACyDRM0e"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso651678276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710395976; x=1711000776; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mYqX63qH2QI08KtgPVfUX9rzA4k+k/gYXO7veJ+nMnQ=;
-        b=ACyDRM0e02e2SgqyWcd9BfpqF1kMGRSxKNjiJHRwErhEtuonpns9rYfyjBGeE6xug/
-         5P9tdmDuIng0orDjaLi869wOqV/sy4c/RsfEBnEZZfhU4vSX9saYbqXLv06GeMjZskKa
-         BT73C6uvCXGeNTJzS1oo4FH3MP0XJWt1178Ma3vqv4LbFoP7UhNeb9LSmAcQVpTZdFyy
-         O2kyAIZlxtW7cxpzrEcg9ZXyYbbCFuHojmk4X/uJ5fQJ8N8dGF2YbSQTU92/UKm7xD6R
-         Ov6eUNCwbDZuZ2apIxU1Bbel9bI4r7FZdsi8AM23BBoPy5m915Fe5n6ZVhlWhmAZ5wCz
-         1niA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710395976; x=1711000776;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mYqX63qH2QI08KtgPVfUX9rzA4k+k/gYXO7veJ+nMnQ=;
-        b=e85uYvqJBFh8FuAOfNHc7a6amdgeoU5WJRbjA5iNaSOxIi5x4jjwokwXh0bnTh+H6g
-         Z3mAJf+5r3GLlXBhXrz7tCAaOpPUF360duDkJrQqn0Sl334j64QzvS7n5WFvCqjGNweg
-         5fvFqORBayn4nShXXzchasvcnVeQ6viFVGP7fzrt7Fy6ht3GUIj9BvFti8zdXssodEv/
-         I9sxYJiVzwGKiFvjULCS/5oRBKEqc6iI7RR2H3PDP+AohXAqhNm/hMX8RC7iWIePHi8y
-         qXZSz546gFWG1Q6TFOAYj1g2FUjDHrzxXgFkwRqw8JiToMpJPIknZAkXXpZH1Pdp9B7E
-         CPDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZpeBJqckiWy6T2bISht5GoB93h9948wGTU0uQ6GJtfEj8NN3r5BLDnS+Cn3MMIh9OvKg136zqhMhvGeiZ30BDxJLcm8+SHCfBKBuq
-X-Gm-Message-State: AOJu0Yw6e9RQoMKY22WhchU1tBRUwdNjKHLP0Cl1wOSa8GplFZlPxuYu
-	IGoO9UJiAguSOM/kb6nu7QxfT6fRXnYVADN0Brw7BldIumAV6znIsHsN5tqzTribdY79PbdcpS2
-	FpqK/HQ==
-X-Google-Smtp-Source: AGHT+IFBVRs2U0wkLF7xsLHWNZwSFSKC6tIGeoNNo9vmrHamsC+zOe3HgJ6keKdUYtHfpNieEtLOLv0MgajX
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:220e:b0:dcb:bc80:8333 with SMTP
- id dm14-20020a056902220e00b00dcbbc808333mr212152ybb.13.1710395976722; Wed, 13
- Mar 2024 22:59:36 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:58:59 -0700
-Message-Id: <20240314055919.1979781-1-irogers@google.com>
+	s=arc-20240116; t=1710395980; c=relaxed/simple;
+	bh=OpLaZbtp+WBO3m+PzveXLptrfgHrJ/P+34zDvkbnGLY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nQ2h2hR8AZzAQ6od5/GQI3cJo+GRW+Z7Xb3vSJc5bcb1JvoQhHWa4hDapBex7+PtZPHGjjzHEYJYbS4tghaQ4vS86hquA0cK87RGv8sfvKXxJEXJ2r5T4xfI4lya1h5FD0QS7Pf65sBViqO4PRo5FDN8bz5h086F+QDilJtXXSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FBDB1007;
+	Wed, 13 Mar 2024 23:00:13 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.53.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 004B03F73F;
+	Wed, 13 Mar 2024 22:59:31 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	suzuki.poulose@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Leo Yan <leo.yan@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH V7 04/11] coresight: Add helpers registering/removing both AMBA and platform drivers
+Date: Thu, 14 Mar 2024 11:28:36 +0530
+Message-Id: <20240314055843.2625883-5-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 00/20] Python generated Intel metrics
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Generate nineteen sets of additional metrics for Intel. Rapl and Idle
-metrics aren't specific to Intel but are placed here for ease and
-convenience. Smi and tsx metrics are added so they can be dropped from
-the per model json files. There are four uncore sets of metrics and
-eleven core metrics. Add a CheckPmu function to metric to simplify
-detecting the presence of hybrid PMUs in events.
+This adds two different helpers i.e coresight_init_driver()/remove_driver()
+enabling coresight devices to register or remove AMBA and platform drivers.
+This changes replicator and funnel devices to use above new helpers.
 
-The patches should be applied on top of:
-https://lore.kernel.org/lkml/20240314055051.1960527-1-irogers@google.com/
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: coresight@lists.linaro.org
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-core.c  | 29 +++++++++++++++++++
+ .../hwtracing/coresight/coresight-funnel.c    | 19 ++----------
+ .../coresight/coresight-replicator.c          | 20 ++-----------
+ include/linux/coresight.h                     |  7 +++++
+ 4 files changed, 41 insertions(+), 34 deletions(-)
 
-v3. Swap tsx and CheckPMU patches that were in the wrong order. Some
-    minor code cleanup changes. Drop reference to merged fix for
-    umasks/occ_sel in PCU events and for cstate metrics.
-v2. Drop the cycles breakdown in favor of having it as a common
-    metric, spelling and other improvements suggested by Kan Liang
-    <kan.liang@linux.intel.com>.
-
-Ian Rogers (20):
-  perf jevents: Add RAPL metrics for all Intel models
-  perf jevents: Add idle metric for Intel models
-  perf jevents: Add smi metric group for Intel models
-  perf jevents: Add CheckPmu to see if a PMU is in loaded json events
-  perf jevents: Add tsx metric group for Intel models
-  perf jevents: Add br metric group for branch statistics on Intel
-  perf jevents: Add software prefetch (swpf) metric group for Intel
-  perf jevents: Add ports metric group giving utilization on Intel
-  perf jevents: Add L2 metrics for Intel
-  perf jevents: Add load store breakdown metrics ldst for Intel
-  perf jevents: Add ILP metrics for Intel
-  perf jevents: Add context switch metrics for Intel
-  perf jevents: Add FPU metrics for Intel
-  perf jevents: Add Miss Level Parallelism (MLP) metric for Intel
-  perf jevents: Add mem_bw metric for Intel
-  perf jevents: Add local/remote "mem" breakdown metrics for Intel
-  perf jevents: Add dir breakdown metrics for Intel
-  perf jevents: Add C-State metrics from the PCU PMU for Intel
-  perf jevents: Add local/remote miss latency metrics for Intel
-  perf jevents: Add upi_bw metric for Intel
-
- tools/perf/pmu-events/intel_metrics.py | 1022 +++++++++++++++++++++++-
- tools/perf/pmu-events/metric.py        |    8 +
- 2 files changed, 1027 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index b83613e34289..9fc6f6b863e0 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -1398,6 +1398,35 @@ static void __exit coresight_exit(void)
+ module_init(coresight_init);
+ module_exit(coresight_exit);
+ 
++int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
++			  struct platform_driver *pdev_drv)
++{
++	int ret;
++
++	ret = amba_driver_register(amba_drv);
++	if (ret) {
++		pr_err("%s: error registering AMBA driver\n", drv);
++		return ret;
++	}
++
++	ret = platform_driver_register(pdev_drv);
++	if (!ret)
++		return 0;
++
++	pr_err("%s: error registering platform driver\n", drv);
++	amba_driver_unregister(amba_drv);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(coresight_init_driver);
++
++void coresight_remove_driver(struct amba_driver *amba_drv,
++			     struct platform_driver *pdev_drv)
++{
++	amba_driver_unregister(amba_drv);
++	platform_driver_unregister(pdev_drv);
++}
++EXPORT_SYMBOL_GPL(coresight_remove_driver);
++
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
+ MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index ef1a0abfee4e..ff3ea0670a5b 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -410,27 +410,12 @@ static struct amba_driver dynamic_funnel_driver = {
+ 
+ static int __init funnel_init(void)
+ {
+-	int ret;
+-
+-	ret = platform_driver_register(&static_funnel_driver);
+-	if (ret) {
+-		pr_info("Error registering platform driver\n");
+-		return ret;
+-	}
+-
+-	ret = amba_driver_register(&dynamic_funnel_driver);
+-	if (ret) {
+-		pr_info("Error registering amba driver\n");
+-		platform_driver_unregister(&static_funnel_driver);
+-	}
+-
+-	return ret;
++	return coresight_init_driver("funnel", &dynamic_funnel_driver, &static_funnel_driver);
+ }
+ 
+ static void __exit funnel_exit(void)
+ {
+-	platform_driver_unregister(&static_funnel_driver);
+-	amba_driver_unregister(&dynamic_funnel_driver);
++	coresight_remove_driver(&dynamic_funnel_driver, &static_funnel_driver);
+ }
+ 
+ module_init(funnel_init);
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 73452d9dc13b..ddb530a8436f 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -416,27 +416,13 @@ static struct amba_driver dynamic_replicator_driver = {
+ 
+ static int __init replicator_init(void)
+ {
+-	int ret;
+-
+-	ret = platform_driver_register(&static_replicator_driver);
+-	if (ret) {
+-		pr_info("Error registering platform driver\n");
+-		return ret;
+-	}
+-
+-	ret = amba_driver_register(&dynamic_replicator_driver);
+-	if (ret) {
+-		pr_info("Error registering amba driver\n");
+-		platform_driver_unregister(&static_replicator_driver);
+-	}
+-
+-	return ret;
++	return coresight_init_driver("replicator", &dynamic_replicator_driver,
++				     &static_replicator_driver);
+ }
+ 
+ static void __exit replicator_exit(void)
+ {
+-	platform_driver_unregister(&static_replicator_driver);
+-	amba_driver_unregister(&dynamic_replicator_driver);
++	coresight_remove_driver(&dynamic_replicator_driver, &static_replicator_driver);
+ }
+ 
+ module_init(replicator_init);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 5f288d475490..653f1712eb77 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -12,6 +12,8 @@
+ #include <linux/io.h>
+ #include <linux/perf_event.h>
+ #include <linux/sched.h>
++#include <linux/amba/bus.h>
++#include <linux/platform_device.h>
+ 
+ /* Peripheral id registers (0xFD0-0xFEC) */
+ #define CORESIGHT_PERIPHIDR4	0xfd0
+@@ -658,4 +660,9 @@ coresight_find_output_type(struct coresight_platform_data *pdata,
+ 			   enum coresight_dev_type type,
+ 			   union coresight_dev_subtype subtype);
+ 
++int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
++			  struct platform_driver *pdev_drv);
++
++void coresight_remove_driver(struct amba_driver *amba_drv,
++			     struct platform_driver *pdev_drv);
+ #endif		/* _LINUX_COREISGHT_H */
 -- 
-2.44.0.278.ge034bb2e1d-goog
+2.25.1
 
