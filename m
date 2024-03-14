@@ -1,117 +1,112 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B8F1A38FC;
-	Thu, 14 Mar 2024 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A411A38FC
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 10:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412673; cv=none; b=ZAAeDC2jC0eBETaA/pCXKNdqrHvSqfapIN1f/LdSUT9OiA4yb+bTwEETff5RqFOp0mOmbjgHh1rgaNU08nXCay4ResCoKwxUNr39lSDyxe2kiUGdjk+oobNufrSMUPS7itBJcR6ug+fVOdjGcDmBK8wReibyqHmpI9qO/xhXTxw=
+	t=1710412799; cv=none; b=gcFeJvbssuGPej55EY3kGwiekwU22+T3KJQoycoc/JJjdewU4p9dl+NKmOOgg0JRnaQVzaWbVXGmYNsOcHQpgwiUf5QDlwlhRLCDnBVKboEFUkjQNFepSBKNvRsAm1m195MYnjlMYdEP+EKTiafRkhe8CO+9H5Z7XC8n+zOl1b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412673; c=relaxed/simple;
-	bh=vzCmVzgk1A2WbwK3W/30teVzlmAUHDmYtHZ6Lsqwgus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ngl/mKJ8mlCS0ar4AEMaJ2j7hOMe2/71GMoLhJvpBLEremgcGFp33kQNlDHEohbzv672QgNpKOk/4jk5fm3jGZjLFNAWx8tmKZvsy9GrxxOMC/pF0uVgON7TvPsuPV2/mV7b98X3nyS/xuOfCiM/QtitJNydUQDgdBryo+9EBNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STny6/aL; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710412799; c=relaxed/simple;
+	bh=WA/d7U+qMBdpAtL/JkS2HGf9X4mCPAEE0NoMZUmak6M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=irN99MOg/h4jAaq5Ecw4tUMrSJ/SjuLjyol3aTmTA7xk25kTlc7S8vod9wd5QK4dCt9cYG/7HpuT7fCQyYookwvQKx/7kXqRK3wpvdzhjjTynHloThMgQcsdQ1UPH8U3bSRYchZu3MnnKBDd7HgrWhk++ODnJ+KSKLIY/AeTsDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MSw8VGoo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STny6/aL"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a44f2d894b7so75867566b.1;
-        Thu, 14 Mar 2024 03:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710412670; x=1711017470; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vzCmVzgk1A2WbwK3W/30teVzlmAUHDmYtHZ6Lsqwgus=;
-        b=STny6/aLVovMkFh8CXRIQiuhDHZXeqT5mWtcEljggGUSCWlerOfF3Jbg9a6K5dBJKE
-         OYpYCrip3uTNFiDCzdWgiXN3sQ4n9RVfHgdB7XC7Yn/VNIxj58s2smG48+x3R7KEA/LA
-         5RW0AD9L0CaiqP1TOWijbCtCqkpW9ty24EHiaS6c62jOp+zeyeynUMM9x8ksOK14qu6Q
-         5b/7BUv7a4aYg179YBHWErA8MoJwbLoSf8KLFaWZx/eosSotLPaV+kq20Jc8X3JiFD0z
-         OvYZibli2HWJLx7A0US3bLSiCeOLkLrUXvaHDfK2PeMMdBDfWjt+rzyDPjx/ArGa/74J
-         mGMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710412670; x=1711017470;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vzCmVzgk1A2WbwK3W/30teVzlmAUHDmYtHZ6Lsqwgus=;
-        b=mziI605Gc/bQH8+2iKmfle3P85Q/h1tSAP8ZWiUf7PHE/FvXDlJxtJKtpymSzc6yno
-         i5PvS6uTPMPt8dmhXI5OF6XhANFDaMjIuR7QcwqFETHHZfKE7uPNOhEhnHCk0oQz0i2J
-         jBG1iBFwf2PtZz5cKCZAAqsPP+2h3sus9Y2URbiMV4WhbCTAaPtzxL0Lp/+9qi5/JSyN
-         0evwPGmNpLFyProOcTTIfcP6l9EZEPh+9I8aGxHTPwW2JokX2BfD/ELWNDbwmbqvXM2V
-         hnZUBfvuxTmX8hfJXiuOuWbMp3Up6oTvzjyAW3YtB2nFJ8CHAuuTP/F0KhywugDaAvQV
-         wHew==
-X-Forwarded-Encrypted: i=1; AJvYcCWyXIysNQqRwMm6YXCqBTuE/dDKllHPJ7MFMcWtYZswC/BaQkCFME4yk36HL7bH7DHdjM0nGA6LDJNArkt91YyFvi22QPchymQ/JdNf0NlIRBvb1lPUf/d5N3SrRPkPfoQKRoKg7fFdjA==
-X-Gm-Message-State: AOJu0Yw1SoQ1DWsFqYCTpqxdx0DBZ1X+watcIcODx2t5/FiQ4SKSKqIM
-	kk0bBEN4S5hSIhYj/UKVl/+9scGXRj0MWZiIj1SRy0UKHzvEdiCt1y4jPojpre+BnyeWo5HJ1r1
-	I0WBxQBQy8/bANxPlrsrL6QL1DGg=
-X-Google-Smtp-Source: AGHT+IHAgDyqVH7oGwixukT7CSGFbdDnW4TvuHEXAOyVQ/qRpBYbBxUZXwiLPNDdK50Y8a0SeFDblV5Sbfrs/AuuR+0=
-X-Received: by 2002:a17:906:5801:b0:a46:614f:f2be with SMTP id
- m1-20020a170906580100b00a46614ff2bemr899128ejq.28.1710412670199; Thu, 14 Mar
- 2024 03:37:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MSw8VGoo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710412797;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h1t6v9xZW/pkiF5v9nyuhZFPcP+Pb9Nu3++MFe0FI4s=;
+	b=MSw8VGoowUqdf2PIWFzqWYaqXnoUqmxZTGa6u1UMsw7vuIx7eKi6II3JYTFhfTTEDv9Crr
+	3AKXlO21odCDnrkCih0stR0XQG8LOnSJSxvrSIQqztwb5UVLG9gIH0j7VdqL+uUlGZsrMh
+	5ZWNqyN/J0MKvVxwOuE6aNI3evpx6+o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-204-Nvm8_iUWOYO1Tcub9tdI1Q-1; Thu, 14 Mar 2024 06:39:55 -0400
+X-MC-Unique: Nvm8_iUWOYO1Tcub9tdI1Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 03F2784B061;
+	Thu, 14 Mar 2024 10:39:55 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 459FF16A9C;
+	Thu, 14 Mar 2024 10:39:50 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	jirislaby@kernel.org,
+	akpm@linux-foundation.org,
+	joe@perches.com,
+	dyoung@redhat.com,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH] kexec: fix the unexpected kexec_dprintk() macro
+Date: Thu, 14 Mar 2024 18:39:47 +0800
+Message-ID: <20240314103947.717991-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314084531.1935545-1-gnstark@salutedevices.com>
-In-Reply-To: <20240314084531.1935545-1-gnstark@salutedevices.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 14 Mar 2024 12:37:13 +0200
-Message-ID: <CAHp75VdM9GkogkeffY+0rwU3r2iWeTZ8-aj901MLteUmRfcLOA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] devm_led_classdev_register() usage problem
-To: George Stark <gnstark@salutedevices.com>
-Cc: pavel@ucw.cz, lee@kernel.org, vadimp@nvidia.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, hdegoede@redhat.com, 
-	mazziesaccount@gmail.com, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, longman@redhat.com, boqun.feng@gmail.com, 
-	nikitos.tr@gmail.com, marek.behun@nic.cz, kabel@kernel.org, 
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kernel@salutedevices.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Thu, Mar 14, 2024 at 10:46=E2=80=AFAM George Stark <gnstark@salutedevice=
-s.com> wrote:
->
-> This patch series fixes the problem of devm_led_classdev_register misusin=
-g.
->
-> The basic problem is described in [1]. Shortly when devm_led_classdev_reg=
-ister()
-> is used then led_classdev_unregister() called after driver's remove() cal=
-lback.
-> led_classdev_unregister() calls driver's brightness_set callback and that=
- callback
-> may use resources which were destroyed already in driver's remove().
->
-> After discussion with maintainers [2] [3] we decided:
-> 1) don't touch led subsytem core code and don't remove led_set_brightness=
-() from it
+Jiri reported that the current kexec_dprintk() always prints out
+debugging message whenever kexec/kdmmp loading is triggered. That is
+not wanted. The debugging message is supposed to be printed out when
+'kexec -s -d' is specified for kexec/kdump loading.
 
-subsystem
+After investigating, the reason is the current kexec_dprintk() takes
+printk(KERN_INFO) or printk(KERN_DEBUG) depending on whether '-d' is
+specified. However, distros usually have defaulg log level like below:
 
-> but fix drivers
-> 2) don't use devm_led_classdev_unregister
->
-> So the solution is to use devm wrappers for all resources
-> driver's brightness_set() depends on. And introduce dedicated devm wrappe=
-r
-> for mutex as it's often used resource.
+ [~]# cat /proc/sys/kernel/printk
+ 7	 4	1	7
 
-The leds related changes (except the last one) LGTM, hence FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-(for patches 2-8)
+So, even though '-d' is not specified, printk(KERN_DEBUG) also always
+prints out. I thought printk(KERN_DEBUG) is equal to pr_debug(), it's
+not.
 
-> [1] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b@sal=
-utedevices.com/T/
-> [2] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b@sal=
-utedevices.com/T/#mc132b9b350fa51931b4fcfe14705d9f06e91421f
-> [3] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b@sal=
-utedevices.com/T/#mdbf572a85c33f869a553caf986b6228bb65c8383
+Fix it by changing to use pr_info() and pr_debug() instead which are
+expected to work.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: https://lore.kernel.org/all/4c775fca-5def-4a2d-8437-7130b02722a2@kernel.org
+---
+ include/linux/kexec.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 400cb6c02176..09688e681bf7 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -502,10 +502,13 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ 
+ extern bool kexec_file_dbg_print;
+ 
+-#define kexec_dprintk(fmt, ...)					\
+-	printk("%s" fmt,					\
+-	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
+-	       ##__VA_ARGS__)
++#define kexec_dprintk(fmt, args...)				\
++	do {							\
++		if (kexec_file_dbg_print)			\
++			pr_info(fmt, ##args);			\
++		else						\
++			pr_debug(fmt, ##args);			\
++	} while (0)
+ 
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+-- 
+2.41.0
+
