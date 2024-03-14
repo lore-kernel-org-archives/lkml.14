@@ -1,70 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67CE6FE08
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052FE6FE0F
 	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710426083; cv=none; b=CTSnqket8/36jmU93DPfFL4dAfy8IYIXeN6XKnXgamtz6BcPSn+sEEUxmvoOAYWiymxVk/8uQAC1IlUG+ug+UGG6gPQusPqflW73dr1KkKNtxcBH/A+SFsGfLezIwak8+ZKEfUkLiowRrOSaQMKfms3x9uO/ST6MCtrwz8tgfBk=
+	t=1710426084; cv=none; b=IViWT315Df1YquE01todT/S987sa4r1PDjgdyODAGkD779xt4EEZeBpjcSMSCYuUBm4jpdzK2xWYjOddFXNqYUB/PLn6W65UNzHg8H8kc6G4lFLKZZU2o0LY/MQGTzhl2h+yd45+BHA1vRHHW1QB3T5KxEgnHi/eqQ3kwPyyHyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710426083; c=relaxed/simple;
-	bh=1mgfHqHQOprRRjv3C2vVXdcd3tAm4IP5r+GoRG3Tj08=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=RjAJF71GAdfgw7samkzgsSAupK3lA3WwprbNDg8IFy1hyZ5kDT6VFz4pFe7cP5bTLjwhYBinlS7Sp/B04SL5zsd8HQcQdiGVuWaLf+/ge5mUEMYDZB3xR2h4Jd0TFXE3Of/S/rzldRytX1dgjQIUGj1e5pNw0LkWMAhCGAa4URA=
+	s=arc-20240116; t=1710426084; c=relaxed/simple;
+	bh=QL6JFa2A3kh9PwqYA8gfLfmL2FQ7h1al6AGFkd/Ktr0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=PjhtHHDjFdItvX1XJH691F/NBg1RW/PeRWjcsvo2JE6dtupS22gOg28zSikv/pEv5Wi2H6MtWFqTLSFPv+YJ9VWorVN4PEFKm5LxAWB1mZze3PzHpycJy9RKMf7UkmpzF0Wt1OYZhcvPx1DvmsJ/p2Uam4yPZncbuTVtWxHuI94=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B9DC433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D321C43390;
 	Thu, 14 Mar 2024 14:21:23 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rklza-00000002dcU-2p5l;
-	Thu, 14 Mar 2024 10:23:34 -0400
-Message-ID: <20240314142301.170713485@goodmis.org>
+	id 1rklzb-00000002ddU-00K4;
+	Thu, 14 Mar 2024 10:23:35 -0400
+Message-ID: <20240314142334.863961009@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 14 Mar 2024 10:23:01 -0400
+Date: Thu, 14 Mar 2024 10:23:03 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 0/8] tracing: Final updates for 6.9
+ Andrew Morton <akpm@linux-foundation.org>,
+ Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [for-next][PATCH 2/8] tracefs: Remove SLAB_MEM_SPREAD flag usage
+References: <20240314142301.170713485@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Chengming Zhou <zhouchengming@bytedance.com>
+
+The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+its usage so we can delete it from slab. No functional change.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240224135206.830300-1-chengming.zhou@linux.dev
+
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index d65ffad4c327..5545e6bf7d26 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -731,7 +731,6 @@ static int __init tracefs_init(void)
+ 	tracefs_inode_cachep = kmem_cache_create("tracefs_inode_cache",
+ 						 sizeof(struct tracefs_inode),
+ 						 0, (SLAB_RECLAIM_ACCOUNT|
+-						     SLAB_MEM_SPREAD|
+ 						     SLAB_ACCOUNT),
+ 						 init_once);
+ 	if (!tracefs_inode_cachep)
+-- 
+2.43.0
 
 
-Chengming Zhou (1):
-      tracefs: Remove SLAB_MEM_SPREAD flag usage
-
-Huang Yiwei (1):
-      tracing: Support to dump instance traces by ftrace_dump_on_oops
-
-Steven Rostedt (Google) (4):
-      tracepoints: Use WARN() and not WARN_ON() for warnings
-      ring-buffer: Have mmapped ring buffer keep track of missed events
-      net: hns3: tracing: fix hclgevf trace event strings
-      tracing: Use strcmp() in __assign_str() WARN_ON() check
-
-Thorsten Blum (1):
-      tracing: Use div64_u64() instead of do_div()
-
-linke li (1):
-      ring-buffer: use READ_ONCE() to read cpu_buffer->commit_page in concurrent environment
-
-----
- Documentation/admin-guide/kernel-parameters.txt    |  26 +++-
- Documentation/admin-guide/sysctl/kernel.rst        |  30 +++-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_trace.h   |   8 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h |   8 +-
- fs/tracefs/inode.c                                 |   1 -
- include/linux/ftrace.h                             |   4 +-
- include/linux/kernel.h                             |   1 +
- include/linux/tracepoint.h                         |   6 +-
- include/trace/stages/stage6_event_callback.h       |   4 +-
- kernel/sysctl.c                                    |   4 +-
- kernel/trace/ring_buffer.c                         |  55 +++++++-
- kernel/trace/trace.c                               | 156 +++++++++++++++------
- kernel/trace/trace_benchmark.c                     |   5 +-
- kernel/trace/trace_selftest.c                      |   2 +-
- 14 files changed, 233 insertions(+), 77 deletions(-)
