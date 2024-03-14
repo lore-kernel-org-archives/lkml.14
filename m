@@ -1,89 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6383E6F53E;
-	Thu, 14 Mar 2024 14:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98C66F06D
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 14:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710425049; cv=none; b=gd5mn7N33Cj9d9asRa7RaAhh1pxCEbolxYU0L9v+cm1MFPXWy+2QfBEwbdRzt/FbEHJdPUMfnECqkW9dJbjHSHgJfbeKEWSY1/azyG4UZMa0VMBSbMExKe2F18SIBvXME1hUsx+axDs24LmUXJjQL3VSUgSitoC5rc1w8iRQzFI=
+	t=1710425075; cv=none; b=H4P6MzAJ8w62qKaqVQqp+CxlTxF6qs7/DKvCUEiRlhJZ610yCC5hqOl+3m7khdX00SZ0mFnPqfLSLzdOQFEIxc66GZFVcAG6rFcc3zoWT4lWkddRweQSJDpfOwF2ZqlOGf6OjaqHu/FfdaOEAi+bo2A858eA9ESTLpDHag9QMBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710425049; c=relaxed/simple;
-	bh=0X+kWZ/rrmB+DdmZpVU62eypuVla4+LyNk+iXvCgaxo=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r2XnRgftmpVgYX/bLOG2drpEpBefUMiRB6jFnvY4EtVJ5CvIfpLxHCJ0j/FKPkh8vI+Yh3SusZfOXbKoawFgQQh8rixim+/yjJOgiq21vlxv2l0ntptbcgtxaT0afCjLe6hyeYLkxJXLsxK3c1jj28ZjGaFO98NK0SE6VtmOw0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl4QjPcb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710425075; c=relaxed/simple;
+	bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jkwWG59yzCNfBNkETtHsUH1NKfhRkqN2DSt2Mv5kUOS7b+MPzP2D+8ccfLHwO3rIECQGlDKTnfENJgK3ErYUfDu/LXcDskQvW0yw9CkqoRxlFLVl3/wyfHoZMgGswRL/HWqJdCvb9LS3LsUn7LPPI1hmMy0hdL4NmoAQe6M6PJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=p3mjRBYP; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl4QjPcb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A1CC43390;
-	Thu, 14 Mar 2024 14:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710425049;
-	bh=0X+kWZ/rrmB+DdmZpVU62eypuVla4+LyNk+iXvCgaxo=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=Dl4QjPcbYkzLYOaehB2v8TzcILbP14cQGdkGhhd/IZs+ODP7ODBQvD0l5o5Z8fWhM
-	 IqTFy3F1DZRczesId7u6wSdMXak3SXtNbyfB9EHQJ602O3Vi0oBd5e+8PVQHg75vf7
-	 SWvepJ9iVvDXPIf/t1z13J39YviBy1rJjRL68/4Mj2Acx6pm/7mxRbLNlAqdBctCmL
-	 zt1FnsM6v2WkhU5cdJsLtWp8ZjFkjx31EwpowZ/pu7rQOkXkJ1c8qAsaajp/3L+Voa
-	 ALOtCX3WAcF/sM5fuDSKrsE4NfVQF0fIjXO9kwAnPkz5TAYbnWuy9J3Qz//b0ZhjQY
-	 PQS+GFUpcUKBg==
-Date: Thu, 14 Mar 2024 14:04:05 +0000
-From: Mark Brown <broonie@kernel.org>
-To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Miquel Raynal <miquel.raynal@bootlin.com>, yen-mei.goh@keysight.com,
-	koon-kee.lie@keysight.com, jeremie.dautheribes@bootlin.com
-Subject: Re: [PATCH v2 0/3] Add multi mode support for omap-mcspi
-Message-ID: <89ce73c5-eaab-42ae-aa2c-01003f04eb2c@sirena.org.uk>
-References: <20240223-spi-omap2-mcspi-multi-mode-v2-0-afe94476b9c3@bootlin.com>
- <ZfMCHjR2jR-24vTC@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="p3mjRBYP"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42ee2012bf0so7588361cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710425072; x=1711029872; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
+        b=p3mjRBYPhLUUdYAypUwm0kLzF2CS5qINen/EX/lmllYe9fBAJ2vTsLPa+uRR4ljjeU
+         trgDMBeXsw64talNInyxsNzE4tWpPNXRgnuleARZnPCg4q81rBSI7Cd77bN/i+p5kmaI
+         sFG9S/mOkegctQwCXe5YAszyB995JRLFMKEb+AOMDyYGAE41LOpfBZG6r1pff2JmyZEl
+         XCorfQqMDbE0T9d6fJyuKBAZMiqt5CBDmr8r9HdW+riytbPFuue+iMIlGIiFlUq03RzR
+         PTjPV0H5tmI4a2VHxjXyJBZIRtb5z3vGLMZQB2TBzLeKEGE1+eZJfxUjlcOD2Fip/590
+         iqdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710425072; x=1711029872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hmgq8CAaz4Ke0Zq2nDCvEYSHRExJjsASTSq1J5x5BSo=;
+        b=k4KOkmlv19zl3L33zFMcbaBxhofx7gTvr4ydVONTvFIeJA1gGDseEwnbGQDrMdy6ip
+         JVAOP3SbErqP8cOoeVapSmAuRGX+0C+hl+SKaOkhI9Vw3DywflXwbihU0gAzv/9CtQi1
+         aEPUfVtofzmcDkfdVExD3iFbAJpay+NCNP/PWJ/KtwoPAcBa8ol+PsffTEsi5yV07D8w
+         KAkrlqlVx6LWFOJOppemhGhj3DKeLvn9tz4qSxpn2S9x6Knx79ql9fLEVNmjeZl7BJ5J
+         IYnjCiqe05UFSbSITzEaKhy6dc960GxHnuowSIBdGRsvTK1sLTAfSnITTUjTQ3WSsVlx
+         l2nQ==
+X-Gm-Message-State: AOJu0YzQEmSUFYsIaE5y47n4SZFWDPvkndRs/Rw291cDIxx/RQyTB4he
+	fxmiZ9DlXYGzFkFJbVwcOaqqEhZzKJVB/imFJ6NBrnSb+nNFXHkrtg7+9GqiTC9qSVz5E65sJld
+	1sF32tMhgKTKUv9975qZema2pEHbDiv+OzgVVhQ==
+X-Google-Smtp-Source: AGHT+IF1WiEU4N3Z6Uqdf3j6rNjBbma5Y0Jff1HtPv863Egdopl6dhLMAJDdICC3crqwRhHV2ZHM33uBwxoDyrFBoss=
+X-Received: by 2002:a05:622a:1816:b0:42e:db75:3cf9 with SMTP id
+ t22-20020a05622a181600b0042edb753cf9mr8873826qtc.27.1710425072462; Thu, 14
+ Mar 2024 07:04:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ncr8zWx/7TU0eqMX"
-Content-Disposition: inline
-In-Reply-To: <ZfMCHjR2jR-24vTC@localhost.localdomain>
-X-Cookie: WYSIWYG:
-
-
---ncr8zWx/7TU0eqMX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
+ <20240311164638.2015063-12-pasha.tatashin@soleen.com> <87v85qo2fj.ffs@tglx>
+ <CA+CK2bBgeK=rW3=RJSx8zxST8xnJ-VXSSYmKPVK9gHX3pxEWuQ@mail.gmail.com>
+ <CA+CK2bAzJuCe06g_TEOh3B-hK+dXfUaGaOSTgzyxkN4zqpSU_A@mail.gmail.com> <87bk7inmah.ffs@tglx>
+In-Reply-To: <87bk7inmah.ffs@tglx>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 14 Mar 2024 10:03:55 -0400
+Message-ID: <CA+CK2bC=6GOkCOwJdhH25r-9hb1BQVoLK7LLAgpm2AKqdmStrg@mail.gmail.com>
+Subject: Re: [RFC 11/14] x86: add support for Dynamic Kernel Stacks
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
+	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
+	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
+	hca@linux.ibm.com, hch@infradead.org, hpa@zytor.com, 
+	jacob.jun.pan@linux.intel.com, jgg@ziepe.ca, jpoimboe@kernel.org, 
+	jroedel@suse.de, juri.lelli@redhat.com, kent.overstreet@linux.dev, 
+	kinseyho@google.com, kirill.shutemov@linux.intel.com, lstoakes@gmail.com, 
+	luto@kernel.org, mgorman@suse.de, mic@digikod.net, 
+	michael.christie@oracle.com, mingo@redhat.com, mjguzik@gmail.com, 
+	mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, pmladek@suse.com, 
+	rick.p.edgecombe@intel.com, rostedt@goodmis.org, surenb@google.com, 
+	urezki@gmail.com, vincent.guittot@linaro.org, vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2024 at 02:56:46PM +0100, Louis Chauvet wrote:
-> Hello Mark,
->=20
-> Given how far we already are in the current cycle I suppose this series=
-=20
-> will only be considered after -rc1, will you want me to re-send or will=
-=20
-> it stay on your stack? I know some maintainers prefer contributors to=20
-> re-send and others don't, so let met know what suits best your workflow.
+On Wed, Mar 13, 2024 at 12:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> On Wed, Mar 13 2024 at 11:28, Pasha Tatashin wrote:
+> > On Wed, Mar 13, 2024 at 9:43=E2=80=AFAM Pasha Tatashin
+> > <pasha.tatashin@soleen.com> wrote:
+> >> Here's a potential solution that is fast, avoids locking, and ensures =
+atomicity:
+> >>
+> >> 1. Kernel Stack VA Space
+> >> Dedicate a virtual address range ([KSTACK_START_VA - KSTACK_END_VA])
+> >> exclusively for kernel stacks. This simplifies validation of faulting
+> >> addresses to be part of a stack.
+> >>
+> >> 2. Finding the faulty task
+> >> - Use ALIGN(fault_address, THREAD_SIZE) to calculate the end of the
+> >> topmost stack page (since stack addresses are aligned to THREAD_SIZE).
+> >> - Store the task_struct pointer as the last word on this topmost page,
+> >> that is always present as it is a pre-allcated stack page.
+> >>
+> >> 3. Stack Padding
+> >> Increase padding to 8 bytes on x86_64 (TOP_OF_KERNEL_STACK_PADDING 8)
+> >> to accommodate the task_struct pointer.
+> >
+> > Alternatively, do not even look-up the task_struct in
+> > dynamic_stack_fault(), but only install the mapping to the faulting
+> > address, store va in the per-cpu array, and handle the rest in
+> > dynamic_stack() during context switching. At that time spin locks can
+> > be taken, and we can do a find_vm_area(addr) call.
+> >
+> > This way, we would not need to modify TOP_OF_KERNEL_STACK_PADDING to
+> > keep task_struct in there.
+>
+> Why not simply doing the 'current' update right next to the stack
+> switching in __switch_to_asm() which has no way of faulting.
+>
+> That needs to validate whether anything uses current between the stack
+> switch and the place where current is updated today. I think nothing
+> should do so, but I would not be surprised either if it would be the
+> case. Such code would already today just work by chance I think,
+>
+> That should not be hard to analyze and fixup if necessary.
+>
+> So that's fixable, but I'm not really convinced that all of this is safe
+> and correct under all circumstances. That needs a lot more analysis than
+> just the trivial one I did for switch_to().
 
-No need to resend.
+Agreed, if the current task pointer can be switched later, after loads
+and stores to the stack, that would be a better solution. I will
+incorporate this approach into my next version.
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+I also concur that this proposal necessitates more rigorous analysis.
+This work remains in the investigative phase, where I am seeking a
+viable solution to the problem.
 
---ncr8zWx/7TU0eqMX
-Content-Type: application/pgp-signature; name="signature.asc"
+The core issue is that kernel stacks consume excessive memory for
+certain workloads. However, we cannot simply reduce their size, as
+this leads to machine crashes in the infrequent instances where stacks
+do run deep.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXzA9QACgkQJNaLcl1U
-h9CkrAf/a60ysAQalgL69U45xTVzqxSejNIIoVVSXqGI98oNhPO8fwzxj/aq8uXX
-kEj7PJaX0ca5xmBVyowdVidxzzXZ8RvojkHZza3SWBJCbjlJkvHZ7SrtdOZ9IOc1
-8M18sSazEJDokelTgRv8ComuYmGDdMCEfOqdk7kp2/CDwH90oe1p6JYyQ9pS4r79
-xwCtx5vfHmQMDayBSMyep0Yn2i4HVOPL4BpBsiM/wZbBqRZax/lxyt6wK/+SzFJ0
-rtneYEER0dDN2yXAFVCwzWv109V6CWSMk18kZOCJWCyuEL66f9PaHuK85bSHVXMh
-N0NqXHLevI9fwoGI4nELvaaBAUfZgQ==
-=3y/L
------END PGP SIGNATURE-----
-
---ncr8zWx/7TU0eqMX--
+Thanks,
+Pasha
