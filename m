@@ -1,81 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E06347C1;
-	Thu, 14 Mar 2024 10:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDED3347C1;
+	Thu, 14 Mar 2024 10:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412505; cv=none; b=YpjmaS76p3KYQ3noYPJF64G+zxaTohHlNz4QDpappZaaX+xPOUDl6QRp0XKotrhXBrBEArPbpDuuxaHBoiiiO0fhFD/kZ8fdWsrJB+XVfymBqTFWvuy5Cc1jMU3BRH8eMmyxaoQxBQHEWzTMxdz3yNy1oGWLEtHTmrwfv79zFtA=
+	t=1710412533; cv=none; b=h3MGvGtwmbmK2KADknLb/V64TN7YiGtXb7BLmCzobRcKc8KFjCiyOz0XHtXvRQ8ZIVJ0SFREbNKv+5m+ORwAWN8jiKQWo6FV53oZhu64CyTdAEtlMVdhxVrN5DHXIn2RQCpLwgSGr3Z6BbU+e7OcU4qBmUuVaKuYRXx1i6sAKZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412505; c=relaxed/simple;
-	bh=Hgh3vqIzWxqRwj99BTgkEyg/C7Qp+Y8i8zd0DBoV0s4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dSoXmPAe4/2nHRYRneACFn+E9kWhBK4VtfW09DxG9H7xwVPkOnEXCPADJIP3lw5IBbFlLxohOZdyiLpaZGdypHksSUPnWpYOpAG8ygIn/VwcuS5KYrNfS0ZQk219ra9ZohsWAkh6f6w00T2qUbzdI/kznjhi1/GI2i9/9USGeq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHqFn20q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710412533; c=relaxed/simple;
+	bh=xUT+z5aPzLoK1XBR0CtD7lRZ7iP+OijvRC1vgfB2c3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WN+oVyaf/9BlNoNLIlx7zAU6+6t9KbPaRJg5lq4rvRpwQllwlvkXAp3SbM7B0wKvqlwT0EkB+IM4qx1GJg08lGCFPp42E5Y3LHC9oKM3ojXW/c818UDDwo3KTItszSgh+MgZlXNx2FBg2FQA8OfyteWbUWoG3oUSD0dtT9GtC0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avKzZCgq; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHqFn20q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 267A9C433C7;
-	Thu, 14 Mar 2024 10:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710412504;
-	bh=Hgh3vqIzWxqRwj99BTgkEyg/C7Qp+Y8i8zd0DBoV0s4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QHqFn20qzFzCc3m9XfQtjPCP8ChhpEfXDlzVqGaAq47X45+NtjjXk/uAzTEYBhAXx
-	 DvWcywyLjDORNUYnc90svStElyasG9rDj8NFgIBcmApxxoIkUxhQpORosFnqVAWmMj
-	 whzkLD6oN71LZMFvA6Q38imkZoQIRO/rtyduiUUTsduulq1UnJdeiNtcrxaYfjCOnp
-	 JvJcsCQ6jDE8Mj0A+FIfshIXXEjiIAWxD+JFpq6uGbbxfsLsK7RJyhgVfsEMqGdRlY
-	 MEAUFK2AxCgTpmFLRuOVL9rcE6xzFwMPukiGGvsw3G1d1NZFWNu+NPEkJYEo1hg08Q
-	 +xmlAYrfH0woA==
-Message-ID: <9049ab55-7be4-4cc8-b2f2-2cc355f0bc8e@kernel.org>
-Date: Thu, 14 Mar 2024 18:34:59 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avKzZCgq"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a466a256726so146374566b.1;
+        Thu, 14 Mar 2024 03:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710412530; x=1711017330; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xUT+z5aPzLoK1XBR0CtD7lRZ7iP+OijvRC1vgfB2c3M=;
+        b=avKzZCgq3uWI40OvufjlPKyjvxzt70i0JvtttZ19X3jxcMZ/au8oouj/f52xUN1ru9
+         wfAJkvbfR6wHIPBFhWXNrRGnAwvv+pDl/xkvNZGQFgtymep56H+tt0Jr/gT26u86KIYY
+         Ar+eFZfHLek3Im7nQqzGU9sh8tcgJgnMeUfmIE8rT3cyRR+mKGa/7mt63sSUkvszDC1c
+         lOw98ZH8ZLjva/mofUwNzAAM7vEEIYa5LltbU6H2Hv7ZC6BJSIK9hO8gU7uWmrnnaRyX
+         gZVBD1sa0oy+GRyg9dwxHk+bZM4BQPKB0uoAORN/x4ufCKZjVWGGODbMkbT7MljoNNPa
+         4+Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710412530; x=1711017330;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xUT+z5aPzLoK1XBR0CtD7lRZ7iP+OijvRC1vgfB2c3M=;
+        b=AQsk7jMJ0R2glxPngvp8aUr/scK26XT9LPiWsPPEWSu+Et7KvQmymXoKTq+YY4Pa4O
+         Q1SektZhfbIf87nVAr/3hN3YxLcHKu2yYWbdZcSPBB7nmeq8J1J7pruKF2Yhi0kt5Wvm
+         byWgN3bYFq1voObmF3xvn5NIpjvcsBGqkq60WwPg33la+x472U/xZP8zu9eime3xIP5G
+         Fg+e9A2Ir2BPtt5/H2RhYQOs3LkExL6zE+DBE7M3PE30mMqfSpKNdO9VebCSB3a+H1F6
+         7LPgWSK2LqvxltzO4/UV89qnmWo+jIHIfWWmeD0op7e8wUz20eRvnBAU50cYC18OIf/k
+         tU3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUQQMZYnPBtJ2F/gHT1m/BIFo1kOVjNO+3Rbt/uEA0+PZ4R04mRCvHpOx6Es2Gu9LsQsqVo2/OOzSe/Y+9qN31KX7KTEQF5FNfCzXoLh8w9xgOsn++6pddhXjftX+XejtEqVLABLpQyag==
+X-Gm-Message-State: AOJu0Yx9rm9T0GFCiLbxWVItkLU2x+1Fs86SSlKMfVGeKIEXQvUsbATs
+	00pvG5aZ/vN+kHrXu0pialFFoAWax3An2UUk+CpYzOyeVw20PhCxd4xCHNOeAzvw9AC/AvHXJly
+	mOEB5hhCl4Ghk68jRHophkmAfZsg=
+X-Google-Smtp-Source: AGHT+IFnq0Pgx23scikKTP17lOnZUwgeSw196b+FB/RuP2T0OiI6iGiC9TdnME85WIwCtzKA0WA7uZJMZKfaiv1Soro=
+X-Received: by 2002:a17:906:5acf:b0:a46:1cbd:c2c4 with SMTP id
+ x15-20020a1709065acf00b00a461cbdc2c4mr1170808ejs.26.1710412530221; Thu, 14
+ Mar 2024 03:35:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] f2fs: mark inode dirty for FI_ATOMIC_COMMITTED flag
-Content-Language: en-US
-To: Sunmin Jeong <s_min.jeong@samsung.com>, jaegeuk@kernel.org,
- daehojeong@google.com
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>,
- Yeongjin Gil <youngjin.gil@samsung.com>
-References: <CGME20240313112650epcas1p3e65fdc5f6df18a4f700fa62bb5480b28@epcas1p3.samsung.com>
- <20240313112620.1061463-1-s_min.jeong@samsung.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240313112620.1061463-1-s_min.jeong@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240314084531.1935545-1-gnstark@salutedevices.com> <20240314084531.1935545-10-gnstark@salutedevices.com>
+In-Reply-To: <20240314084531.1935545-10-gnstark@salutedevices.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 14 Mar 2024 12:34:54 +0200
+Message-ID: <CAHp75VfGRNo4hvKV7caQE6i2rHVncOjxDv3-b9oGrpK-uDEBRw@mail.gmail.com>
+Subject: Re: [PATCH v6 9/9] leds: powernv: use LED_RETAIN_AT_SHUTDOWN flag for leds
+To: George Stark <gnstark@salutedevices.com>
+Cc: pavel@ucw.cz, lee@kernel.org, vadimp@nvidia.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, hdegoede@redhat.com, 
+	mazziesaccount@gmail.com, peterz@infradead.org, mingo@redhat.com, 
+	will@kernel.org, longman@redhat.com, boqun.feng@gmail.com, 
+	nikitos.tr@gmail.com, marek.behun@nic.cz, kabel@kernel.org, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kernel@salutedevices.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/3/13 19:26, Sunmin Jeong wrote:
-> In f2fs_update_inode, i_size of the atomic file isn't updated until
-> FI_ATOMIC_COMMITTED flag is set. When committing atomic write right
-> after the writeback of the inode, i_size of the raw inode will not be
-> updated. It can cause the atomicity corruption due to a mismatch between
-> old file size and new data.
-> 
-> To prevent the problem, let's mark inode dirty for FI_ATOMIC_COMMITTED
-> 
-> Atomic write thread                   Writeback thread
->                                          __writeback_single_inode
->                                            write_inode
->                                              f2fs_update_inode
->                                                - skip i_size update
->    f2fs_ioc_commit_atomic_write
->      f2fs_commit_atomic_write
->        set_inode_flag(inode, FI_ATOMIC_COMMITTED)
->      f2fs_do_sync_file
->        f2fs_fsync_node_pages
->          - skip f2fs_update_inode since the inode is clean
-> 
-> Fixes: 3db1de0e582c ("f2fs: change the current atomic write way")
-> Cc: stable@vger.kernel.org #v5.19+
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Reviewed-by: Yeongjin Gil <youngjin.gil@samsung.com>
-> Signed-off-by: Sunmin Jeong <s_min.jeong@samsung.com>
+On Thu, Mar 14, 2024 at 10:46=E2=80=AFAM George Stark <gnstark@salutedevice=
+s.com> wrote:
+>
+> This driver wants to keep its LEDs state after module is removed
+> and implemented it in its own way. LED subsystem supports dedicated
+> flag LED_RETAIN_AT_SHUTDOWN for the same purpose so use the flag
+> instead of custom implementation.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+So, this change is not related to the main purpose of the series...
 
-Thanks,
+--=20
+With Best Regards,
+Andy Shevchenko
