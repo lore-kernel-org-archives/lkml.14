@@ -1,107 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486EF59168;
-	Thu, 14 Mar 2024 13:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB6D5BAFC;
+	Thu, 14 Mar 2024 13:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710423311; cv=none; b=AIHuHTxplo+q7T5DLK0/f0oWDzRLfgsqLMQUxpQNmDxoPyzsxnEfmS9/kdswPOSY/qKwafy27QqKkfVZTdhX/YJ0zUJ/oxMMMPHWnTvSEnfVeKY/e3st4jOhRuT26uelEGCupD9NMCDhXsG3e2HLasz9a+fQnu3BRvp1UxHcvFA=
+	t=1710423329; cv=none; b=cvdhBeI1yziNcrT/cbi01xHhjQLfOOZStzwqz4ppt/Jxoz2lGhcWm0c4UHnqqlvCPv45UmciIZTZsyq3efBf7fEw9bd05b2CvUSHBJteR0QMxk+mv27Id5NF29UWKkplb74Xg4U0H+Ab0a2LPHSxoSJitEIKudeZmyXNWYcAtuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710423311; c=relaxed/simple;
-	bh=7MInMHtoGdehrIAJNogrxHccX5NMyWPQEacFTK2okTo=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=nK4eEX5iWRSX71ikw/s0xajBbFaA/nahimaU4M0Ia9/ZM+5c9jFOOB+fj4rZkef42Fgq9wg+ITJTwhGkOFu5rkHcgxJFEbHVJWwIqXdstmwMwrmN3UfW89IyxwFCjTNZHA1fy0lqvqR48wXFBGzgD/B22+lVcHZWP1spGHGPVbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LucOsMCK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710423329; c=relaxed/simple;
+	bh=ZBWof+Ltt0YZVUZlvq3aDlNQeUR35EM6F2BhEIiTShs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hf5iAFtSgLvLHIp3lgY3/yX9fSg6fnf4n2bOJpZ9/ZXMt0BJAxWwKJ3wS+qnhzM2Li3gT1ukkkXPI7hCZI8K0Ye+dVIVcr+LsRbkqCBmFmG2CJtxHmEa8TRgZtUf8wh2JOOKOQSCvW+eJJ68peYBCW3mGsDqfphafo/faQFJaqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRVIonD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LucOsMCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997ECC433F1;
-	Thu, 14 Mar 2024 13:35:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRVIonD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B373C433F1;
+	Thu, 14 Mar 2024 13:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710423309;
-	bh=7MInMHtoGdehrIAJNogrxHccX5NMyWPQEacFTK2okTo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=LucOsMCKeLSixnva7ujYgxBrWw8Fb0J0XZmNy0PpGV6FvzJ2ZXLrxheRdhy+iPvUw
-	 r96bOg4gCn1STEXXyQpdpJyqJR62RB0rOgBEVzw2bhsvBJf6mW8qdRVKGbLqZZHTkU
-	 w85u8/WmhOZRiMGilPXWUbFbNoOq7S8u8YXlgJldYh9Dt384hUTREo3P2h6hHQ9O27
-	 CmGsNTDRrlhCqhU9tNoNm4BLisK4GxLj+7eSEPyNh14ToY/s+JsukbO7nvQklGos5L
-	 W1v0ucBQBg6peZSLQ8nWKsZhMBx5guUIdNJilF/y2FrqRDbn7/eBylLiFsZ9QHzuG2
-	 neUHNxe0b2SpQ==
-Date: Thu, 14 Mar 2024 07:35:08 -0600
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	s=k20201202; t=1710423328;
+	bh=ZBWof+Ltt0YZVUZlvq3aDlNQeUR35EM6F2BhEIiTShs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JRVIonD2xnshphJrR5rqhbwcw0eOUMESaatovZUH9sDSpvGQbin0wBU4uAMHTWJEj
+	 f1Oexrv6hwMnyR+WpJ58EplFnlx0uAPXTAxALM6baI1ZRrsTURV6G48Ifuw8i5+Fsb
+	 D09Vu5My4j8R2jbYQeOxKdaY3I36Z4/LJU1xfDb4PwxhgLJryGIqnSgeC7xqh9teC8
+	 HKgSrYGtgvU43qvCNCdi7VKrqPj7POop0ojiOT/dCZtENEnAjm3bCVrM8yoQYfyNAJ
+	 vl4+ZWi/WTkWm//+rzVGA8LevtVQr3EKDEH3PNMaLhqnXPrIrZndnpt4AWJwRadKi8
+	 SQmm4LKuZbHxw==
+Date: Thu, 14 Mar 2024 13:35:23 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Haixu Cui <quic_haixcui@quicinc.com>
+Cc: Harald Mommer <Harald.Mommer@opensynergy.com>,
+	virtio-dev@lists.oasis-open.org,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ztu@quicinc.com,
+	Matti Moell <Matti.Moell@opensynergy.com>,
+	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>
+Subject: Re: [PATCH v2 3/3] virtio-spi: Add virtio SPI driver.
+Message-ID: <741fb34d-f94f-49ca-8f98-a59993d2f8aa@sirena.org.uk>
+References: <20240304154342.44021-1-Harald.Mommer@opensynergy.com>
+ <20240304154342.44021-4-Harald.Mommer@opensynergy.com>
+ <4ca0392d-a9c0-477f-99a6-4245230e6d9a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Amrit Anand <quic_amrianan@quicinc.com>
-Cc: konrad.dybcio@linaro.org, linux-riscv@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- kernel@quicinc.com, conor+dt@kernel.org, agross@kernel.org, 
- devicetree@vger.kernel.org, caleb.connolly@linaro.org, 
- chrome-platform@lists.linux.dev, andersson@kernel.org, 
- linux-kernel@vger.kernel.org, peter.griffin@linaro.org, 
- krzysztof.kozlowski+dt@linaro.org
-In-Reply-To: <1710418312-6559-3-git-send-email-quic_amrianan@quicinc.com>
-References: <1710418312-6559-1-git-send-email-quic_amrianan@quicinc.com>
- <1710418312-6559-3-git-send-email-quic_amrianan@quicinc.com>
-Message-Id: <171042330739.2706595.14845037469137084350.robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: qcom: Update DT bindings for
- multiple DT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kYeBDGM67pMmD88l"
+Content-Disposition: inline
+In-Reply-To: <4ca0392d-a9c0-477f-99a6-4245230e6d9a@quicinc.com>
+X-Cookie: WYSIWYG:
 
 
-On Thu, 14 Mar 2024 17:41:52 +0530, Amrit Anand wrote:
-> Qualcomm produces a lot of "unique" boards with slight differences in
-> SoC's and board's configuration. For eg, there can be SM8150v1 on MTPv1,
-> SM8150v1 on MTPv2, SM8150v2 on MTPv2, SM8150v2 on MTPv2 with a different
-> PMIC, SM8150v2 with no modem support and so on. For instance, suppose we
-> have 3 SoC, each with 4 boards supported, along with 2 PMIC support for
-> each case which would lead to total of 24 DTB files. Along with these
-> configurations, OEMs may also add certain additional board variants. Thus
-> a mechanism is required to pick the correct DTB for the corresponding board.
-> 
-> Introduce mechanism to select required DTB using newly introduced device
-> tree properties "board-id" and "board-id-type". "board-id" will contain
-> the list of values of "qcom,soc-id", "qcom,board-id", "qcom,pmic-id" or
-> "qcom,oem-id". "board-id-types" contains the type of parameter which is
-> entered. It can be either "qcom,soc-id", "qcom,board-id", "qcom,pmic-id"
-> or "qcom,oem-id".
-> 
-> Qualcomm based bootloader will use these properties to pick the best
-> matched DTB to boot the device with.
-> 
-> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 90 +++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
-> 
+--kYeBDGM67pMmD88l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+On Thu, Mar 14, 2024 at 05:17:50PM +0800, Haixu Cui wrote:
+>=20
+> Hello,
+>=20
+>     Please refer to my comments in virtio_spi_probe function.
+>=20
+> On 3/4/2024 11:43 PM, Harald Mommer wrote:
+> > From: Harald Mommer <harald.mommer@opensynergy.com>
+> >=20
+> > This is the virtio SPI Linux kernel driver.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/arm/qcom.yaml:1159:8: [warning] wrong indentation: expected 6 but found 7 (indentation)
-./Documentation/devicetree/bindings/arm/qcom.yaml:1162:8: [warning] wrong indentation: expected 6 but found 7 (indentation)
-./Documentation/devicetree/bindings/arm/qcom.yaml:1165:15: [warning] wrong indentation: expected 13 but found 14 (indentation)
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-dtschema/dtc warnings/errors:
+--kYeBDGM67pMmD88l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-doc reference errors (make refcheckdocs):
+-----BEGIN PGP SIGNATURE-----
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1710418312-6559-3-git-send-email-quic_amrianan@quicinc.com
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXy/RoACgkQJNaLcl1U
+h9BjaQf7BiSr5NdqpFYcyxO3IJATI/zRyOCorULXlam1aLwtl9xCPaELrbtQF0AX
+zv1hc5JjEeKf6yIUU8S8HR4F3LjG2RXur8Ro2YxkS/GepJdYAbHPdFQVele/9X2k
+/5idDQLGLg9qJ47ciQ+4NO9kO7ajAbvG5ROsg18NQ7qVx5H+OhGOasoPXNXRnhRJ
+2r2eIwLqyvsM38ePCUoxzivJ4+LtnZ49xk5diNt7kgwjpA0w8xdc652renuOVzrl
+4XbS/NLww2wYNZ/Urj82ov3Yaj7OX/MBBiOzfAx6BFIqlLFSFD/E14unCVWyE+vF
+ZFoAi8eQXg/onZmFnaDZKBYJjo/zUQ==
+=YmiI
+-----END PGP SIGNATURE-----
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--kYeBDGM67pMmD88l--
