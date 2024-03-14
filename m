@@ -1,238 +1,150 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B893773519
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710432980; cv=fail; b=pwtTh0JDFz1W3wmzUZCBJofE2eZSWPS/PLlfnOyhHlo7b/CzGxUrpTG3RIps59PavUZAc6jwvDbgWH4BTmUDe8DOhRCnnlTNtenWO7Hk+eIpS8kdrXDHyo8RTR6Sc1CglwsbS5oqzwRKGUNgp8umhIFwSjlSNnFTL4B3zG6nrM8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710432980; c=relaxed/simple;
-	bh=9+fe+AUyYqV99grHVwRfhQjj8Pzu0lTVvokP998yJJo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=N+44/jXj020TA5BrgzLWVwcJfBDWNk7/jSjOnZht965CD7JUoZONvLQ7zstmHpN/OCsujVYH8fiJ+qjHRKCNel+LRLZsiBFOmXm0AsQxMpB13pg94qX8wGAsdJpNGqLFgRgv08cODFvmb2t6vDK/Ca+DFN9b3f3b3tnYwgyyk6s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Uia3ku2s; arc=fail smtp.client-ip=40.107.236.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0017350F
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710433038; cv=none; b=uExFZNrfE5wAqrILWngBo+LhFcjEYx+rU+gYRlAymz82tbqgmlRAX7/3mNBpoRt+41XTrws13pBOd8rc4DLkbafzUphJ2aJQUK7kmbF9MMt7U0bd3EnbZwhHxgNjiCIz0qVmKa8wx40GdNv+zYLhnh7Elz6G7ia2g+oFAlnoFbo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710433038; c=relaxed/simple;
+	bh=sz96ucSlpxY0fStS++TYywmUfo9RtayZN4KhGhuC0tg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sgHH/pn8sltiBV/rIUUqm5rL9abIeO05FYNNf14hk7gonCRBxzpt5vPq69vRxXzodvwWEYi8iqudaCCp5X3bJH+8ggX0S45DCJEYpJBl6veWpEIBWU5sUIaLAcVyGMD0ezwme4wEPZSAiBp6By73+msuWOWgVuIxjEHu5jH9wuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r6o4tyn2; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Uia3ku2s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n/jrZ20upEHXjm43h8guctQKhCD3E86vLqLsVPzg83U/q6zMP7RxF5R4yfXU3RNa2aE2/KqxQLBibju6ndW6f/6P2FQHaurdDbKPsBzMhvH2gJHmYPEEG4KVNeVTb//zG66eEWvLCburVX0AVBUsABV82XF2uRa70zlS6YTI+H+Tzd2QvYHhdZHJdYbzQj9tzhwHH7TIL4hy2Vsz0rJDRTXWjDl96vyl6CNdcSlbvSvZ+FROKHtUxBkmrLode8H678av+2nEa2tQkqZUFjprg3fKxtKdyBdf+wiSQG/Zz9vaqtFbFtnevK6UXzKvCqll3H8oJm7WDyb04T+lCtIcag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MCjxNV2koQpnqRFnbLAJs5Hi7EdmfOiFjfI2vU3Hzls=;
- b=KkBLKryEnMqlrvUScoO3MqttxEFbrgDAUMpN3n9YzCJB+VZo+DlfcLBT41gGjE3tjYvgJ5O6Gx8vOwnZH9+XBcT2p/HvLCdT75fWkJzbJTeoYN9Q+GOH/uHVqL3BjB7NObwN0HIImjWpKhRod0cI3o7RgXDCkvXRBZ0MuhDYVborXxXBTtkkaRu/dgoDKWPjliBH/MVLWFC4KlqZ6evEigEWqvTRDxEFEPHqFGxjGqcneYOVfSUjFDG3kufdhap7lctIrYTOzdnFvr4D2HZbnxSOY9cvcE+8Ilwd8V/TrRx31qdJrQe3fIgZZbD6hZi3oUTXvdJQjeU+lMcP9SP8jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MCjxNV2koQpnqRFnbLAJs5Hi7EdmfOiFjfI2vU3Hzls=;
- b=Uia3ku2s/7bV/EhDBnUw+06fSsZRnCL71GgPTxICcO3TEMMohpvPscEZAiZKorrERjKTZDvRSB9q6n3PbRtGu4BOFCPzbQJqYi2EHprrIMWC/vNWRuE7EaL4k7mqbZIkThTnTNLpaZa4CAN5w1Q4Mi5k7ZiWWLxkjECRmTtsdw8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5596.namprd12.prod.outlook.com (2603:10b6:510:136::13)
- by SA1PR12MB5659.namprd12.prod.outlook.com (2603:10b6:806:236::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.41; Thu, 14 Mar
- 2024 16:16:15 +0000
-Received: from PH7PR12MB5596.namprd12.prod.outlook.com
- ([fe80::6974:3875:ed0:7033]) by PH7PR12MB5596.namprd12.prod.outlook.com
- ([fe80::6974:3875:ed0:7033%3]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
- 16:16:15 +0000
-Message-ID: <32aad098-9392-4899-9839-1beaedcac8b8@amd.com>
-Date: Thu, 14 Mar 2024 21:46:05 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/amdgpu: add the IP information of the soc
-Content-Language: en-US
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Sunil Khatri <sunil.khatri@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Shashank Sharma <shashank.sharma@amd.com>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240312124148.257067-1-sunil.khatri@amd.com>
- <CADnq5_O-cyDkNLznZpvnZtz15Mi1_rkigirG80BmYJprP_udnw@mail.gmail.com>
- <59cf081e-5924-42b5-a3f1-de8b012f09d1@amd.com>
- <CADnq5_N0H75UU2aFTAkqUrdGxKPxBQUnodsH-bcpS-ZUqgUb3A@mail.gmail.com>
-From: "Khatri, Sunil" <sukhatri@amd.com>
-In-Reply-To: <CADnq5_N0H75UU2aFTAkqUrdGxKPxBQUnodsH-bcpS-ZUqgUb3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0095.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:27::10) To PH7PR12MB5596.namprd12.prod.outlook.com
- (2603:10b6:510:136::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r6o4tyn2"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so1572938276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710433035; x=1711037835; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U+ZIbp6HNyG0E4TQ0X2k6SxB0un7ns3x5HKX2GIis+s=;
+        b=r6o4tyn2xo+spYXEmnzz7UVtLuygO3Ova90EuzqeZDrpT2TxMh+Mx6UnLANuKtzlQF
+         NwdQ2aUzOguD23vyMbk6QuDKyKNO36qD4FkvF/B99kCxlChPqiSTGOiwSMo4bbhAvlF8
+         xvSAeOToB7JDgqZf/cA66tkKb8OMy5k2nFzsJaRMaBVxcdB+AW7Fqem427AVsz6Lfqkb
+         GaJcHhQ5yStX7jXnuWnNGdeQdFVK/Z/bxobaQHtvdxOJJlyvz0OxrILlUWovwADQSnmU
+         0SZ81u4xdx1P2T8TToNFmrY9O6an5i6xqVD/Xr8MNDmFQuX7/DHFp4ZlUK0mWHT8N8ns
+         WCzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710433035; x=1711037835;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U+ZIbp6HNyG0E4TQ0X2k6SxB0un7ns3x5HKX2GIis+s=;
+        b=OBLDX3RPfGDBtMyxcW7hxMFnP7gnPyiwUKq2OghhK87TyFaMfbe0LOdL4o+4Qd5eJ4
+         QugQ2fK0caUjobXRJ34t4E352HKzDRDn9xlfN0CsN8jAyAnaX8bSrO4xebjfNT2X7z6o
+         edG/FIAwDIbBoYV+67rxhmfy5nv9z1D6Ku8ifMUbq3lYpasotL5Xkq0tLJdLHNLiIYwK
+         Zfi617rOfZvJUJyhEqOoYQDU3muj8dFH1KzbJ8D++FHmEUNn/cqvXgjXyoWTVftVmBI7
+         vWNC5grVMaC/PT2xw7QHGGEUtqVbbWiRhNtRGRiW/irnJ4ndEMFPCapev3zIlz5YP+/l
+         HsIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnX4Kf2mK71j6/gzwYc7Cl5c0q5WW+TqdZx3oUMsP07pThcSB5F8TkO45QfFCK6r+kLB4jjh6XHZQGYinDqU5IfIEhpGbinHZVZ0BU
+X-Gm-Message-State: AOJu0YwrNdUR/WIMcKgLrlFTbHdGhIu1eQq42NKPNnukhkH+RCO9sfZA
+	rnYVB+PK+s9NXW8YF3Tj8Pi6RW0iSi8sXNXEr7C1FA3XISltXb5B5yfLcwhBFVz05Lvxso7KLoF
+	Epg==
+X-Google-Smtp-Source: AGHT+IFj6zsz6UprtwwuVeWzWxsr2V9qe7+sAPM1bdWCJoRKSwnUj5UGCGfLBihDdD5DId2z6mWdKFp6P1E=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2783:b0:dc7:48ce:d17f with SMTP id
+ eb3-20020a056902278300b00dc748ced17fmr615498ybb.10.1710433035389; Thu, 14 Mar
+ 2024 09:17:15 -0700 (PDT)
+Date: Thu, 14 Mar 2024 09:17:13 -0700
+In-Reply-To: <CAD=HUj5k+N+zrv-Yybj6K3EvfYpfGNf-Ab+ov5Jv+Zopf-LJ+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5596:EE_|SA1PR12MB5659:EE_
-X-MS-Office365-Filtering-Correlation-Id: df11bc1a-7536-48bc-94ec-08dc444212d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WlNZgeDIaP8V7+A6jZNkgFujPqThWeOdIubislMpz4OR46O0kXpSuvYFXJav/gcOYG2G05cALc6KH04F34NT1vduL5+Q2urmnWabAmJOG47mLfQf+CZLQ10biMH03gG1C9XN3H/pABJK0Y32rOzX0LNDGWWYsLbQJtYeE7neutFPYXITmTRevaZ/ekNp/z8xTWIy75XfaLwhjKCEqEec1v4q/JRNZIZMb8aByEC3VoMvz266px3/NzxbqN7eHsJM7gcCAdbaNpdGIUQCQh+QEVaEoGbusQ275Ugt4a/QXPalY7MjBB2e5qOcIEMTvJvvOocv9YCSSefg4UcHba2EJACSH/cllK87KQfuZYNWS+KzJMJIKey14epeTZuOSQmMSp2M0k7uglXR13r/tLSHWL+ggaATsGZX7gQxcP3qFQ8NzO49Rd91c0iqCO4gdgd+KbRfKIAh29CiJVe9l6rFucfLY0gXCpGI1IvqDqcnDqXAYO7VPo4thhaAHqu7Vl9FOUJn9UvzQu3ogWs/bGnjYMcAy3MdPmuIm/xA/L4x7Keg2PgPPWyR7ZqDDCsESqDJndrqNiXyfrZRI9m9YO0OqG2ZVE14n+wtrF9YtPCarshAoZTWiTMwXmSat1qV3GuM8ONUwrQw2Lgv6AV+xa7JvZeVw8zWG+5LlKVasOqSqoU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5596.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzlEZHhRRjBTTG5BZmFwYWZzUnpUNkFuQUx0RVZoUTN5QlBUV3JlM0d4ZEp6?=
- =?utf-8?B?VEQzU0ZmaGRYK2JZZU44emlIc0RtOFJ0ZnN2Q3ZBcHV0QXRKUXpuSm96TzE5?=
- =?utf-8?B?UFZ6UXNSczdZc0ZkQ0VoQ0RDcUFoMDhnbmtNZWNYQzE4d01XeVFlbnBhZC9r?=
- =?utf-8?B?NzBqTHpCQXE0dkdrK0RNQXhLVUFMdTR2cFUvaERQaEVOanpXVzEzNU5SZ1k1?=
- =?utf-8?B?eDNhSVNUeHRjSkMrcE9lWmo0SmxPajliOGxTQllFQ20zeU9BLzQ1alNCb2I0?=
- =?utf-8?B?cndWaWFFdE14ZmtmVHN4djl4WGJtOUdnYjZhUGpSc1orUGd1T3M3eDFzS2dv?=
- =?utf-8?B?blBpVW10RDdnSWh1VzNlOWhGc2pZOXhGQ1czUG9XOEZENGtGYlE1R05SRTND?=
- =?utf-8?B?TnVkSUtrVldvVkJqbHpsQ0E3bGQ3ZDY1enRSNnVnSzVIU01CRDRXK1o1STVM?=
- =?utf-8?B?cHNUUzFIVDBoWndsck5taTNrN2RNVVRUWXhIVTdFc0RTOTZ2eHNXTVJqVXFM?=
- =?utf-8?B?bVJCSEdhWWZvRVlQY0FEbE5Cd1RGaTZMOTdhRHEvR2hZa0xIQXh1YnI3OFhG?=
- =?utf-8?B?MHB6OUdjdlcxQ3VkN1EvVG5mTlFSSmVLMm1TVTMxUktJbllQeEE2ai9jTHRa?=
- =?utf-8?B?OG81WkY4Umh2SXljYUdiWnJ2Uld1aFV2N2poT2ZYbGV5bHY5SWJ2WVE4YlV1?=
- =?utf-8?B?ZTByMVhLenRmTkVxcEVEeWVVSlVoMGhOYWxWMFdKeElsQUdTNTJxSnlGYVhs?=
- =?utf-8?B?Y2U3M0hESG5XVWJGeFNTMmlrUnA1K1hmbGI2cHJmWXdiT3lZZDFHbEpRcGRY?=
- =?utf-8?B?NXBkNngvVTNaM1BFdHFsd3ZEMTV3Y1QxRWRwMENvRGJzRlpqNmQ2TUxoY2px?=
- =?utf-8?B?TWh5MmVZdHNabEdieUxDS3U2QU15SUtOMmdQeWFUSkJLblcyTVlQL3Jzb2Zp?=
- =?utf-8?B?SVpaVzY4K2ZyM0xOYXg2S2NSNEEwaUVsUSsxUkNYZjA3K3d3UGN4WGgxYU5y?=
- =?utf-8?B?VHFvdkhWaytMcHY1MWtSN2xTRk5kTHM2MGtvVHJhOGxia1Q1ZVZQZ1B2V0pp?=
- =?utf-8?B?N0x1RHQ2NGZtMmo3TmV0ZXlhZVV3Y2M0SzJpWDJraWxKOFpPdXlNU3ZESHQw?=
- =?utf-8?B?MzRLVUM3QzNRVUR5cnNneUhOSXB5UEYzbW5OdzNLR2tmUi9yOWVqc1dTVjli?=
- =?utf-8?B?VWQ2Wmc1MmhFL1Fhc1pFQ0xtb3h6dUZtVkxDdXlMQW9aN3REVzlJN2thK0lM?=
- =?utf-8?B?QU5tcXRnSndybHhyOW9FaFhXdjl1My9PcitPMDBQWHNOUHovNnhkMmdCNlo0?=
- =?utf-8?B?UjJnZDJIdWxkYURqNFJMTnIzOWdkVUhIVGxLR2RMbi9QZ09wS05Fb0VHY1ox?=
- =?utf-8?B?NDhoN3JqUEdKRWp6dU41Q1ZVdnVNR2RHYUVEdUViSVUwQVhwRm9YVk01NmZ3?=
- =?utf-8?B?cS9zb2R2MzFnYUQ2ZnZ4Q0thWDF4QjlPWktjYzJQeVZDTEVxcmtvM3J5MEF1?=
- =?utf-8?B?c0V5blhSbzFBQUR4NGo3VDd2TU1wVXJxSW8zOEFoampFbm1uWURZaEhDZ0FO?=
- =?utf-8?B?bGFBbkJsa1lEbllIdFpIWFpHS3lhY2RWNEdmNmxDT2VBY01xMXRxVklKU1hn?=
- =?utf-8?B?OXkvd1VUYXhoSHBnQmVwcE1XbFZVRGhpVEFPSWNCdjhmK3FpWHNoeCttLzJr?=
- =?utf-8?B?ZlBzbGhyN2pRMVAxOU9OZkVpdjM0MTVIbHUwMldCRDNkczIrN3EzZjMwNU95?=
- =?utf-8?B?MnZNY0JJWGNWM1A4L2tFdmRQaGpuNHRMcDBhTDZWRGwwalR6dldxMENrdmxS?=
- =?utf-8?B?VWIvTlVTRTlWcG1HUXg4QThRZGx2ZmtWb0d6UUNwRDZxNDBhUXZxc1hBMVdP?=
- =?utf-8?B?cHRPd2J1RHloR0lxRnIvZkxaU0hvMFVVRE1abFRMZW1VVW5qMkNjY2dnUW9O?=
- =?utf-8?B?VncvbjFmb0tNSFQrZFgvUEN2MkZJakdvQVkrZGZ2UGZ2U2ZDa3ZKNlRzakZM?=
- =?utf-8?B?R2t3YVhpdVlLZVorWTE1eGJpcjVjaU5TZ09mRzVzMWdJdlNsT3U5MjdlUkdr?=
- =?utf-8?B?WTBZQ1dlMmZhUDJUWHRqYWhVV1pxUHl2TVpleDVTMGFIb1NoV2F0YXZHRTY1?=
- =?utf-8?Q?OgdRilFVeSgkNvB0FwKblsvfr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df11bc1a-7536-48bc-94ec-08dc444212d3
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5596.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 16:16:15.5784
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x/7d7OKSt4QwDgscJVR50QJ5KkBIlZpMqkdM69itqRLJao2Jbv+poRjlKRDIiSZH6Kalt1F+7oW8CngNBvUWLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5659
+Mime-Version: 1.0
+References: <ZfGrS4QS_WhBWiDl@google.com> <0b109bc4-ee4c-4f13-996f-b89fbee09c0b@amd.com>
+ <ZfG801lYHRxlhZGT@google.com> <9e604f99-5b63-44d7-8476-00859dae1dc4@amd.com>
+ <ZfHKoxVMcBAMqcSC@google.com> <93df19f9-6dab-41fc-bbcd-b108e52ff50b@amd.com>
+ <ZfHhqzKVZeOxXMnx@google.com> <c84fcf0a-f944-4908-b7f6-a1b66a66a6bc@amd.com>
+ <d2a95b5c-4c93-47b1-bb5b-ef71370be287@amd.com> <CAD=HUj5k+N+zrv-Yybj6K3EvfYpfGNf-Ab+ov5Jv+Zopf-LJ+g@mail.gmail.com>
+Message-ID: <ZfMjCXZWuUD76r_5@google.com>
+Subject: Re: [PATCH v11 0/8] KVM: allow mapping non-refcounted pages
+From: Sean Christopherson <seanjc@google.com>
+To: David Stevens <stevensd@chromium.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Isaku Yamahata <isaku.yamahata@gmail.com>, Zhi Wang <zhi.wang.linux@gmail.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
+-Christ{oph,ian} to avoid creating more noise...
 
-On 3/14/2024 8:12 PM, Alex Deucher wrote:
-> On Thu, Mar 14, 2024 at 1:44 AM Khatri, Sunil <sukhatri@amd.com> wrote:
->>
->> On 3/14/2024 1:58 AM, Alex Deucher wrote:
->>> On Tue, Mar 12, 2024 at 8:41 AM Sunil Khatri <sunil.khatri@amd.com> wrote:
->>>> Add all the IP's information on a SOC to the
->>>> devcoredump.
->>>>
->>>> Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
->>>> ---
->>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c | 19 +++++++++++++++++++
->>>>    1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
->>>> index a0dbccad2f53..611fdb90a1fc 100644
->>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
->>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c
->>>> @@ -196,6 +196,25 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
->>>>                              coredump->reset_task_info.process_name,
->>>>                              coredump->reset_task_info.pid);
->>>>
->>>> +       /* GPU IP's information of the SOC */
->>>> +       if (coredump->adev) {
->>>> +               drm_printf(&p, "\nIP Information\n");
->>>> +               drm_printf(&p, "SOC Family: %d\n", coredump->adev->family);
->>>> +               drm_printf(&p, "SOC Revision id: %d\n", coredump->adev->rev_id);
->>>> +
->>>> +               for (int i = 0; i < coredump->adev->num_ip_blocks; i++) {
->>>> +                       struct amdgpu_ip_block *ip =
->>>> +                               &coredump->adev->ip_blocks[i];
->>>> +                       drm_printf(&p, "IP type: %d IP name: %s\n",
->>>> +                                  ip->version->type,
->>>> +                                  ip->version->funcs->name);
->>>> +                       drm_printf(&p, "IP version: (%d,%d,%d)\n\n",
->>>> +                                  ip->version->major,
->>>> +                                  ip->version->minor,
->>>> +                                  ip->version->rev);
->>>> +               }
->>>> +       }
->>> I think the IP discovery table would be more useful.  Either walk the
->>> adev->ip_versions structure, or just include the IP discovery binary.
->> I did explore the adev->ip_versions and if i just go through the array
->> it doesn't give any useful information directly.
->> There are no ways to find directly from adev->ip_versions below things
->> until i also reparse the discovery binary again like done the discovery
->> amdgpu_discovery_reg_base_init and walk through the headers of various
->> ips using discovery binary.
->> a. Which IP is available on soc or not.
->> b. How many instances are there
->> Also i again have to change back to major, minor and rev convention for
->> this information to be useful. I am exploring it more if i find some
->> other information i will update.
->>
->> adev->ip_block[] is derived from ip discovery only for each block which
->> is there on the SOC, so we are not reading information which isnt
->> applicable for the soc. We have name , type and version no of the IPs
->> available on the soc. If you want i could add no of instances of each IP
->> too if you think that's useful information here. Could you share what
->> information is missing in this approach so i can include that.
-> I was hoping to get the actual IP versions for the IPs from IP
-> discovery rather than the versions from the ip_block array.  The
-> latter are common so you can end up with the same version used across
-> a wide variety of chips (e.g., all gfx10.x based chips use the same
-> gfx 10 IP code even if the actual IP version is different for most of
-> the chips).
-Got it. let me check how to get it could be done rightly.
->
->> For dumping the IP discovery binary, i dont understand how that
->> information would be useful directly and needs to be decoded like we are
->> doing in discovery init. Please correct me if my understanding is wrong
->> here.
-> It's probably not a high priority, I was just thinking it might be
-> useful to have in case there ended up being some problem related to
-> the IP discovery table on some boards.  E.g., we'd know that all
-> boards with a certain harvest config seem to align with a reported
-> problem.  Similar for vbios.  It's more for telemetry.  E.g., all the
-> boards reporting some problem have a particular powerplay config or
-> whatever.
-I got it.
-But two points of contention here in my understanding. The dump works 
-only where there is reset and not sure if it could be used very early in 
-development of not. Second point is that devcoredump is 4096 
-bytes/4Kbyte of memory where we are dumping all the information. Not 
-sure if that could be increased but it might not be enough if we are 
-planning to dump all to it.
+On Thu, Mar 14, 2024, David Stevens wrote:
+> Because of that, the specific type of pfns that don't work right now are
+> pfn_valid() && !PG_Reserved && !page_ref_count() - what I called the
+> non-refcounted pages in a bad choice of words. If that's correct, then
+> perhaps this series should go a little bit further in modifying
+> hva_to_pfn_remapped, but it isn't fundamentally wrong.
 
-Another point is since we have sysfs/debugfs/info ioctl etc information 
-available. We should sort out what really is helpful in debugging GPU 
-hang and that's added in devcore.
+Loosely related to all of this, I have a mildly ambitious idea.  Well, one mildly
+ambitious idea, and one crazy ambitious idea.  Crazy ambitious idea first...
 
-Regards
-Sunil
+Something we (GCE side of Google) have been eyeballing is adding support for huge
+VM_PFNMAP memory, e.g. for mapping large amounts of device (a.k.a. GPU) memory
+into guests using hugepages.  One of the hiccups is that follow_pte() doesn't play
+nice with hugepages, at all, e.g. even has a "VM_BUG_ON(pmd_trans_huge(*pmd))".
+Teaching follow_pte() to play nice with hugepage probably is doing, but making
+sure all existing users are aware, maybe not so much.
 
->
-> Alex
->
->
->>> Alex
->>>
->>>> +
->>>>           if (coredump->ring) {
->>>>                   drm_printf(&p, "\nRing timed out details\n");
->>>>                   drm_printf(&p, "IP Type: %d Ring Name: %s\n",
->>>> --
->>>> 2.34.1
->>>>
+My first (half baked, crazy ambitious) idea is to move away from follow_pte() and
+get_user_page_fast_only() for mmu_notifier-aware lookups, i.e. that don't need
+to grab references, and replace them with a new converged API that locklessly walks
+host userspace page tables, and grabs the hugepage size along the way, e.g. so that
+arch code wouldn't have to do a second walk of the page tables just to get the
+hugepage size.
+
+In other words, for the common case (mmu_notifier integration, no reference needed),
+route hva_to_pfn_fast() into the new API and walk the userspace page tables (probably
+only for write faults, to avoid CoW compliciations) before doing anything else.
+
+Uses of hva_to_pfn() that need to get a reference to the struct page couldn't be
+converted, e.g. when stuffing physical addresses into the VMCS for nested virtualization.
+But for everything else, grabbing a reference is a non-goal, i.e. actually "getting"
+a user page is wasted effort and actively gets in the way.
+
+I was initially hoping we could go super simple and use something like x86's
+host_pfn_mapping_level(), but there are too many edge cases in gup() that need to
+be respected, e.g. to avoid mapping memfd_secret pages into KVM guests.  I.e. the
+API would need to be a formal mm-owned thing, not some homebrewed KVM implementation.
+
+I can't tell if the payoff would be big enough to justify the effort involved, i.e.
+having a single unified API for grabbing PFNs from the primary MMU might just be a
+pie-in-the-sky type idea.
+
+My second, less ambitious idea: the previously linked LWN[*] article about the
+writeback issues reminded me of something that has bugged me for a long time.  IIUC,
+getting a writable mapping from the primary MMU marks the page/folio dirty, and that
+page/folio stays dirty until the data is written back and the mapping is made read-only.
+And because KVM is tapped into the mmu_notifiers, KVM will be notified *before* the
+RW=>RO conversion completes, i.e. before the page/folio is marked clean.
+
+I _think_ that means that calling kvm_set_page_dirty() when zapping a SPTE (or
+dropping any mmu_notifier-aware mapping) is completely unnecessary.  If that is the
+case, _and_ we can weasel our way out of calling kvm_set_page_accessed() too, then
+with FOLL_GET plumbed into hva_to_pfn(), we can:
+
+  - Drop kvm_{set,release}_pfn_{accessed,dirty}(), because all callers of hva_to_pfn()
+    that aren't tied into mmu_notifiers, i.e. aren't guaranteed to drop mappings
+    before the page/folio is cleaned, will *know* that they hold a refcounted struct
+    page.
+
+  - Skip "KVM: x86/mmu: Track if sptes refer to refcounted pages" entirely, because
+    KVM never needs to know if a SPTE points at a refcounted page.
+
+In other words, double down on immediately doing put_page() after gup() if FOLL_GET
+isn't specified, and naturally make all KVM MMUs compatible with pfn_valid() PFNs
+that are acquired by follow_pte().
+
+I suspect we can simply mark pages as access when a page is retrieved from the primary
+MMU, as marking a page accessed when its *removed* from the guest is rather nonsensical.
+E.g. if a page is mapped into the guest for a long time and it gets swapped out, marking
+the page accessed when KVM drops its SPTEs in response to the swap adds no value.  And
+through the mmu_notifiers, KVM already plays nice with setups that use idle page
+tracking to make reclaim decisions.
+
+[*] https://lwn.net/Articles/930667
