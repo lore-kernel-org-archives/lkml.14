@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F407581E;
-	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABE376055
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710440434; cv=none; b=bcrGJQ9tZktvk22iCqIdSsgI44vyU9MCVeRoa4yTusCiu67aHlVwrWWVj1CsR4r5Bz39fF3m5Wst5fZ4r8gg43d0GFqVENWGrZvWINtfN652VPHkxl7eJ5rJxj+S56PAv90SmPHSMyxb4oIif+yMxSEf4kLZLOy5v8LByIBdfZQ=
+	t=1710440435; cv=none; b=XANtFTPCeUt/MNGEWq+j3Zp3lBVomEtRQOQ6Uo9XGvKX6ShogMyw7oM0+RtIXnI2fs+kRCeiWSaLlOaoXakmiadv0cvTUMUe2Gj7QuYtGY/jvItDCkD15JLy/H+PAmVsC9+qRYxcFsR4nm4qeb4HyDYpdpvQJABw8YK+8YagKbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710440434; c=relaxed/simple;
-	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=E/9qZY5RqkMaUsy6j0UwAOwvWcawHI37rFujcp2P7+d3Fj/DWgFp1jTxVBQf/zc0VbIwSrQzpozgDOScQy4ljPp2T+G2n+czDDqGs9TIygzRF4KTDRkYi/trt2vRh4EzF0pfyQ/FW/WaszUy/gEb7A+P5CTtrc2M6oXn9GxrWAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na9a34pi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710440435; c=relaxed/simple;
+	bh=KSrAuQoGIps5yOBZIU4Jh/OBSCzI6O3JFr76XJsKAbY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=pj2NVZgH4BJNtW6/WFD//JwI0Sdz9f0KI4gX+K8OjPpLQbGOUZiHH7OgQgiiLl2eu6fo/ouB68Oh63fV4yKWQP4jEYZUDdE9+ZIIaJ6SVUi5gUaIMSM2q2CaS3tXuqdY6u+skovl+fNcqdpXzoabQ35zNSHcuvar4/Sr2Vfvgaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuwYFdS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na9a34pi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2862CC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuwYFdS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 981B1C43141;
 	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710440434;
-	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
+	bh=KSrAuQoGIps5yOBZIU4Jh/OBSCzI6O3JFr76XJsKAbY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=na9a34pin0xQj2UeBUMMV7xe8NY8YFJB1VERDBJPGgb/mChCDu1ouT7lVuYvbNiJf
-	 rmXMBjtmDujZduOLWGKSH6bLgqRD+MppbSKiTp9La1dAz7IdXBihL93Ez4UiLAGaBW
-	 /7ntbDMVuNh7hzHn1uUUee9bGqqeo3uRHwOQ7bHK9y+33WUjCpVEa1Sqmx5PpL6Ldt
-	 CKjGmj1A6IEgDLgrF22XJ89B47WRxl+XZ6za6UmwsZDn3UxLMP4wSWkoECeqUBsJ7e
-	 wEOLOnRxTyM51ztUAFn08HouEzSdowMxpZTxB5lRxvaIh2qhZccAibxJ7C/3rNiu/3
-	 OQeit156YG93w==
+	b=IuwYFdS/OykD1VtYfg5wjyefGXlebsKi4MSSWq19lzKe8SIsIyH1M6f6PR4ABFvGK
+	 JROxMot5xT/h919AHYdKwX4BQblEVehHJH2DRChXSLPT8KAthhTivat+iepxaMI6o7
+	 7kE9ePuxEPlFMN2FLCHBqpnOY+Hdp2+1KboqiDf6Nl4ejjI7si521q9/GWguXKwFZD
+	 UVF1Ht+dLEFrC/SixjdHqiC3eNJZ8DKYzujv7mIay+PG1kqHvbPncr+mD1sDzyXDFI
+	 hNP+8xEkKxGFgBFhbZ2YdDo9mwrYg6gjy23lSI5vN1urtcXo3briNVaCRaim0ev8g2
+	 Zdbj8k/8tpXTw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1DFC2D84BAA;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8EA9ED84BAA;
 	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control changes for v6.9
+Subject: Re: [GIT PULL] Backlight for v6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
-References: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
+In-Reply-To: <20240314143847.GN1522089@google.com>
+References: <20240314143847.GN1522089@google.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
-X-PR-Tracked-Commit-Id: fa63587f94a77a49b53274dc0fd1ea41dfde5966
+X-PR-Tracked-Message-Id: <20240314143847.GN1522089@google.com>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-next-6.9
+X-PR-Tracked-Commit-Id: 78334c343bef528b911da83a6b041d15a1a72efb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a3df5d5422b4edfcfe658d5057e7e059571e32ce
-Message-Id: <171044043411.24196.17256053826707694115.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 8403ce70be339d462892a2b935ae30ee52416f92
+Message-Id: <171044043457.24196.18050108187448276762.pr-tracker-bot@kernel.org>
 Date: Thu, 14 Mar 2024 18:20:34 +0000
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Lee Jones <lee@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 13 Mar 2024 23:24:14 +0100:
+The pull request you sent on Thu, 14 Mar 2024 14:38:47 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-next-6.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a3df5d5422b4edfcfe658d5057e7e059571e32ce
+https://git.kernel.org/torvalds/c/8403ce70be339d462892a2b935ae30ee52416f92
 
 Thank you!
 
