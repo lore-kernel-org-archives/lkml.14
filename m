@@ -1,107 +1,95 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617E75C61C
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979B95C617;
+	Thu, 14 Mar 2024 07:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400793; cv=none; b=LbQBlEyN+EA4V3iDE0yIWcY/mdO6OgViXosmpJq4diI9qUF8t7xWPfUfFSca4i6FkJ5k8XbqUXILo9I9fGqODMwPy8SiduluoaueAW1lhG71yU3JxKBmJ9b1RC64bSSpGte1e5lb3A3+1pOwkN1x6J4oaPGT6I340sqtD57cv6c=
+	t=1710400904; cv=none; b=HZT4ldDMfcynJRrWkchJ3m+ROt3f801T15/pqeRfiIvxgfqOTfJACd5np6O5BaxZoLkAxIgDh53M2dlSjLrfODx9WEM8QWDm9WzhaO/9tEKhOrkkTHqbgYXWSwPdNhZkjjregtIbiTicutxqPfu0Rojt6lf01AvvZ2kUD9QvWmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400793; c=relaxed/simple;
-	bh=0M2cm1Jc/VWt/XHwW7EsdJ2bfFGKjawM2McxQYObnbY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oH2SwYzkFvhttBKRcS+I8OvG4f//l6iDbmLJE39dW+7r+5gSlJwOOBuYTrVnjE8D7j9em8Ol5mFRHnBs+eXYQtQ8YAiUZYA+Tb8nkvSfyMYg6jWoCgRoFLFYtkuqgpZJB5Rk5nsTog1YqPtbglOnDSPWSuwU2LJ3ePX0Ch7H5s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=obQF8Otv; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1710400904; c=relaxed/simple;
+	bh=iU0P/pPN0hf8+78Gl8OOHKQuX55sbJAVM462l+Xpo/Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RKQC8CVEoEFuRUc5YrrTjOzo2A2aS/PGvrXpyntgyZ6kbnks3FKxrUcq1bx2vr+Q/bATD4WYxca61p425MI4Agzm32c2obkI/B7BIkKPXJdn6EvfV6NhD0e6t3o8Vd5lX69OQVP70FQE7XN52enMQITYhG1OpYmgXDmlQ4Bxi8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bRyq7DCD; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="obQF8Otv"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710400788; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=4VyEpQvKnzsnbyb4g0kdtIVt+NLI3n4kn6UGAi3EzQw=;
-	b=obQF8OtvyLgn6rupQl7YTWHf8HXuFUiZlEFZfeLzds9l7qH+6eOiA8H5iIE2pJETSQs8TIX6iOUxuyjFHzWVe9tc+1NaKTijvoUe//+aRxUV1xdH2WLgnReFt9qdlqhUEF0lxNt3NanL8+VgCqPIPomAjW5TK8gbRlKRgg1DXwA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W2RhI75_1710400786;
-Received: from 30.97.56.71(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W2RhI75_1710400786)
-          by smtp.aliyun-inc.com;
-          Thu, 14 Mar 2024 15:19:47 +0800
-Message-ID: <ea5d5bb6-32a5-4161-95cd-3dc916576bf7@linux.alibaba.com>
-Date: Thu, 14 Mar 2024 15:19:45 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bRyq7DCD"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LYf0024881;
+	Thu, 14 Mar 2024 02:21:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1710400894;
+	bh=N/r4yeeJCniqbNU4n+Oorp8eaNGK16nfzVidvodlDqk=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=bRyq7DCDn0g9KARh85f4Q2tuRmfoJC+59UP5Pnm641jgkvef3ZYCS64G+RHmN6NNU
+	 kY7QzbpgkbTlfp6K2/9z7DIO7Am4uBCGhVPZ8CemRaBKlteVLjTrxGpWjEgwXBic3P
+	 SkxQmEeFTph2L21iYCNIhY/Rla7IIuV9n9dRimjE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42E7LY3h021688
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 14 Mar 2024 02:21:34 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 14
+ Mar 2024 02:21:33 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 14 Mar 2024 02:21:33 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42E7LWc3120529;
+	Thu, 14 Mar 2024 02:21:33 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <s-vadapalli@ti.com>,
+        <srk@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
+        Chintan Vankar
+	<c-vankar@ti.com>
+Subject: [PATCH v5 1/5] arm64: dts: ti: k3-j784s4-evm: Add alias for MCU CPSW2G
+Date: Thu, 14 Mar 2024 12:51:25 +0530
+Message-ID: <20240314072129.1520475-2-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240314072129.1520475-1-c-vankar@ti.com>
+References: <20240314072129.1520475-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] mm/compaction: add and use
- for_each_populated_zone_pgdat() helper
-To: Luis Chamberlain <mcgrof@kernel.org>, akpm@linux-foundation.org,
- jhubbard@nvidia.com, vbabka@suse.cz, mgorman@suse.de, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, dave@stgolabs.net, p.raghav@samsung.com,
- da.gomez@samsung.com
-References: <20240314005436.2962962-1-mcgrof@kernel.org>
- <20240314005436.2962962-3-mcgrof@kernel.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240314005436.2962962-3-mcgrof@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Add alias for the MCU CPSW2G port to enable Linux to fetch MAC Address
+for the port directly from U-Boot.
 
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2024/3/14 08:54, Luis Chamberlain wrote:
-> We can just wrap most of the work done on fragmentation_score_node()
-> into a pgdat helper for populated zones. Add the helper and use it.
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->   include/linux/mmzone.h | 8 ++++++++
->   mm/compaction.c        | 9 ++-------
->   2 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index a497f189d988..1fd74c7100ec 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1597,6 +1597,14 @@ extern struct zone *next_zone(struct zone *zone);
->   			; /* do nothing */		\
->   		else
->   
-> +#define for_each_populated_zone_pgdat(zone, pgdat)	\
-> +	for (zone = pgdat->node_zones;			\
-> +	     zone;					\
-> +	     zone = next_zone(zone))			\
-> +		if (!populated_zone(zone))		\
-> +			; /* do nothing */		\
-> +		else
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index 81fd7afac8c5..1f390c22844e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -27,6 +27,7 @@ aliases {
+ 		mmc1 = &main_sdhci1;
+ 		i2c0 = &wkup_i2c0;
+ 		i2c3 = &main_i2c0;
++		ethernet0 = &mcu_cpsw_port1;
+ 	};
+ 
+ 	memory@80000000 {
+-- 
+2.34.1
 
-I think this will break the original logics, since the next_zone() will 
-iterate over all memory zones, instead of only the memory zones of the 
-specified node.
-
->   static inline struct zone *zonelist_zone(struct zoneref *zoneref)
->   {
->   	return zoneref->zone;
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index b961db601df4..023a09d0786d 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -2151,16 +2151,11 @@ static unsigned int fragmentation_score_zone_weighted(struct zone *zone)
->   static unsigned int fragmentation_score_node(pg_data_t *pgdat)
->   {
->   	unsigned int score = 0;
-> +	struct zone *zone;
->   	int zoneid;
->   
-> -	for (zoneid = 0; zoneid < MAX_NR_ZONES; zoneid++) {
-> -		struct zone *zone;
-> -
-> -		zone = &pgdat->node_zones[zoneid];
-> -		if (!populated_zone(zone))
-> -			continue;
-> +	for_each_populated_zone_pgdat(zone, pgdat)
->   		score += fragmentation_score_zone_weighted(zone);
-> -	}
->   
->   	return score;
->   }
