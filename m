@@ -1,230 +1,169 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27F06EB45;
-	Thu, 14 Mar 2024 10:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994336E60E;
+	Thu, 14 Mar 2024 10:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412553; cv=none; b=gCIzNqMtytKQ25B5ysHIsWBOMQ4IJgqT/2dUe6aqArzdkSEyEezADnLCqD5J5P90SfCCBamphDGlS82PBl6Gnt+hqf5a+HEnBBqX9uFYWLOv2ayJTI9e05C6vEA9U3B6WHCL9r/JThLSGe4YMcN7dKZH5wYIZM3zMt+oNXH1v3U=
+	t=1710412599; cv=none; b=VF9j2WSbfff1MQfXtwgj6eOye+082D4EEsQG1VFbHDVNOvfiAXbtt6jGG3AxUJufy4Le9nA15XHRagRxBy+o66YmMzMpWEz0C6JK1ENkDPb8QZqxUccgzDg1FoaFUSjC13jMrbWzsvCb29rqc/9YJa8SWg2Dm5iPogs5WLrbcgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412553; c=relaxed/simple;
-	bh=PAcMexfqwBWbLZd/LVY9KnzueSvjkoUiTVkXsqRNZvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=phQEse3tueZu5idpAIR8BRD1DK97gloPA+A9A5ALeFacLaIaQMgqnqJsVlxPAYMyDQgaqhqaRal9XXu2FZlcHoZBX/ItpyXvUSwiaXKm5QQUq9IVOgjBZSjchFEMjDYxFkR4e6YkJerlDnfEbvP/QKA5rio+ddrEUwdkaPEuy98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=s4aPRkEn; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710412599; c=relaxed/simple;
+	bh=1sS4yvOcb7hSA7Oyqs+qwUa88zrXGRNvu3sd6wcwUGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3E74dPLerD2cuMWQrERaooDd6ETlHgthVHyR3W0gh4MFuiDwMJsgN37xvrbq4UhuClHGvxCSVBuUSM48+tYnYmUClOWjGTBTd7d45NW64ZFujwuvGLkSI+SFqyrz4sz4HFmKDH1eeKfS/T3tp8+gc+yCN7F/YA25wPLcElARzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n+iGl1O1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=BZx7Ptrm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n+iGl1O1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=BZx7Ptrm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="s4aPRkEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710412550;
-	bh=PAcMexfqwBWbLZd/LVY9KnzueSvjkoUiTVkXsqRNZvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s4aPRkEnoi0FIACES1g3GTlSgksGqTvqAD/tWr/IY2YO+y6MCcO4INqTGjn/27bTa
-	 oxrYzRPK5lAJrU69bwizZE7cF/fhWX/P8QbyYahyS20gK5XTqdJyirtDOy14PXCb6l
-	 zesuUDIVssdWiowwq6YM/BiIayU8G5pJRRXLtNO28Hvmlb8xGL5bUsL9UzkSyS3t2p
-	 C/nGyQUMzqNgXiD22swGkwixeWBV0ygdnd/dqz2T4bO/m/La2K54um6U1D+oysFvyJ
-	 oesf7JkBXB9qJ9qAgzIKGxrt+LsV3WrYao0VE+KSHZ0cYzckD2qn+FhYt/t8/7L6W2
-	 1MLh4CMY0baMQ==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n+iGl1O1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BZx7Ptrm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n+iGl1O1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BZx7Ptrm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 23EEE37820F5;
-	Thu, 14 Mar 2024 10:35:49 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	wenst@chromium.org,
-	jenneron@protonmail.com,
-	kernel@collabora.com
-Subject: [PATCH 2/2] arm64: mediatek: mt8195-cherry: Introduce the MT8195 Dojo Chromebook
-Date: Thu, 14 Mar 2024 11:35:00 +0100
-Message-ID: <20240314103500.93158-3-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240314103500.93158-1-angelogioacchino.delregno@collabora.com>
-References: <20240314103500.93158-1-angelogioacchino.delregno@collabora.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C86901F844;
+	Thu, 14 Mar 2024 10:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzkPi+J20GY+iWispN8Baja2fey3TzNDuqaBoZINMIs=;
+	b=n+iGl1O1xirGbyvvdt90aEoXk3rtEYZ5gy2QLwhAhPul92xXJzLU5v6pgHqAnsmGA/NgKT
+	zj3xg3RMFsc6l8FC8r/dGwpEf/mTHlXXr9qgBeYcKPD5kYFsshmO/bMtmlqyptkl/m5iyk
+	07yl/b4pdzluHnsGrmi6Fz8evDPaHB4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412595;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzkPi+J20GY+iWispN8Baja2fey3TzNDuqaBoZINMIs=;
+	b=BZx7PtrmSVomVzzTr3ZAqL/8ZuFG2QZ82olCE9m9hhl/+dcvVK5VyHt5kdIrEj+debdwaw
+	i9GhKvSff7X4thBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710412595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzkPi+J20GY+iWispN8Baja2fey3TzNDuqaBoZINMIs=;
+	b=n+iGl1O1xirGbyvvdt90aEoXk3rtEYZ5gy2QLwhAhPul92xXJzLU5v6pgHqAnsmGA/NgKT
+	zj3xg3RMFsc6l8FC8r/dGwpEf/mTHlXXr9qgBeYcKPD5kYFsshmO/bMtmlqyptkl/m5iyk
+	07yl/b4pdzluHnsGrmi6Fz8evDPaHB4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710412595;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzkPi+J20GY+iWispN8Baja2fey3TzNDuqaBoZINMIs=;
+	b=BZx7PtrmSVomVzzTr3ZAqL/8ZuFG2QZ82olCE9m9hhl/+dcvVK5VyHt5kdIrEj+debdwaw
+	i9GhKvSff7X4thBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD66D139E7;
+	Thu, 14 Mar 2024 10:36:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s6A8LjPT8mWQUQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 14 Mar 2024 10:36:35 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 78B70A07D9; Thu, 14 Mar 2024 11:36:35 +0100 (CET)
+Date: Thu, 14 Mar 2024 11:36:35 +0100
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+	jack@suse.cz, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 9/9] ext4: clean up s_mb_rb_lock to fix build warnings
+ with C=1
+Message-ID: <20240314103635.fp2jab2ayfkph4td@quack3>
+References: <20240227091148.178435-1-libaokun1@huawei.com>
+ <20240227091148.178435-10-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227091148.178435-10-libaokun1@huawei.com>
+X-Spamd-Bar: +
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=n+iGl1O1;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=BZx7Ptrm
+X-Spamd-Result: default: False [1.69 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 URIBL_BLOCKED(0.00)[huawei.com:email,suse.com:email,suse.cz:email,suse.cz:dkim];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-0.00)[11.28%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,suse.cz:email,suse.cz:dkim,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,linux.ibm.com,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Score: 1.69
+X-Spam-Level: *
+X-Rspamd-Queue-Id: C86901F844
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Add a devicetree for the Cherry Dojo (HP Chromebook x360 13b-ca0002sa)
-convertible type machine.
+On Tue 27-02-24 17:11:48, Baokun Li wrote:
+> Running sparse (make C=1) on mballoc.c we get the following warning:
+> 
+>  fs/ext4/mballoc.c:3194:13: warning: context imbalance in
+>   'ext4_mb_seq_structs_summary_start' - wrong count at exit
+> 
+> This is because __acquires(&EXT4_SB(sb)->s_mb_rb_lock) was called in
+> ext4_mb_seq_structs_summary_start(), but s_mb_rb_lock was removed in commit
+> 83e80a6e3543 ("ext4: use buckets for cr 1 block scan instead of rbtree"),
+> so remove the __acquires to silence the warning.
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-Differences with the already supported Tomato machines include:
- - Different speaker amplifiers (Dual MAX98380, one per channel)
- - I2C Touchscreen is on a different address (though still a HID device)
- - Has NVMe storage on the PCIe0 controller
- - Slightly different keyboard top row keymap
+Looks good. Feel free to add:
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- arch/arm64/boot/dts/mediatek/Makefile         |   1 +
- .../dts/mediatek/mt8195-cherry-dojo-r1.dts    | 114 ++++++++++++++++++
- .../boot/dts/mediatek/mt8195-cherry.dtsi      |   5 +
- 3 files changed, 120 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dts
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 37b4ca3a87c9..91853402e0da 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -69,6 +69,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-hayato-r5-sku2.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-spherion-r0.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-spherion-r4.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-dojo-r1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-tomato-r1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-tomato-r2.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-tomato-r3.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dts
-new file mode 100644
-index 000000000000..b3f86179bfff
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dts
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2022 MediaTek Inc.
-+ */
-+/dts-v1/;
-+#include "mt8195-cherry.dtsi"
-+
-+/ {
-+	model = "HP Dojo (sku 1, 3, 5, 7) board";
-+	chassis-type = "convertible";
-+	compatible = "google,dojo-sku7", "google,dojo-sku5",
-+		     "google,dojo-sku3", "google,dojo-sku1",
-+		     "google,dojo", "mediatek,mt8195";
-+};
-+
-+&audio_codec {
-+	compatible = "realtek,rt5682s";
-+	realtek,amic-delay-ms = <250>;
-+};
-+
-+&i2c2 {
-+	spk_r_amp: amplifier@38 {
-+		compatible = "maxim,max98390";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 100 GPIO_ACTIVE_LOW>;
-+		sound-name-prefix = "Right";
-+		#sound-dai-cells = <0>;
-+	};
-+
-+	spk_l_amp: amplifier@39 {
-+		compatible = "maxim,max98390";
-+		reg = <0x39>;
-+		sound-name-prefix = "Left";
-+		#sound-dai-cells = <0>;
-+	};
-+};
-+
-+&i2c4 {
-+	touchscreen@15 {
-+		compatible = "hid-over-i2c";
-+		reg = <0x15>;
-+		hid-descr-addr = <0x0001>;
-+		interrupts-extended = <&pio 92 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchscreen_pins>;
-+		post-power-on-delay-ms = <10>;
-+		vdd-supply = <&pp3300_s3>;
-+	};
-+};
-+
-+&keyboard_controller {
-+	linux,keymap = <
-+		CROS_STD_MAIN_KEYMAP
-+
-+		MATRIX_KEY(0x00, 0x02, KEY_BACK)
-+		MATRIX_KEY(0x03, 0x02, KEY_REFRESH)
-+		MATRIX_KEY(0x02, 0x02, KEY_ZOOM)
-+		MATRIX_KEY(0x01, 0x02, KEY_SCALE)
-+		MATRIX_KEY(0x03, 0x04, KEY_SYSRQ)
-+		MATRIX_KEY(0x02, 0x04, KEY_BRIGHTNESSDOWN)
-+		MATRIX_KEY(0x01, 0x04, KEY_BRIGHTNESSUP)
-+		MATRIX_KEY(0x02, 0x09, KEY_KBDILLUMTOGGLE)
-+		MATRIX_KEY(0x01, 0x09, KEY_PLAYPAUSE)
-+		MATRIX_KEY(0x00, 0x04, KEY_MICMUTE)
-+		MATRIX_KEY(0x00, 0x01, KEY_MUTE)
-+		MATRIX_KEY(0x01, 0x05, KEY_VOLUMEDOWN)
-+		MATRIX_KEY(0x03, 0x05, KEY_VOLUMEUP)
-+	>;
-+};
-+
-+&pcie0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_pins_default>;
-+	status = "okay";
-+};
-+
-+&pciephy {
-+	status = "okay";
-+};
-+
-+&pio_default {
-+	pins-low-power-hdmi-disable {
-+		pinmux = <PINMUX_GPIO31__FUNC_GPIO31>,
-+			 <PINMUX_GPIO32__FUNC_GPIO32>,
-+			 <PINMUX_GPIO33__FUNC_GPIO33>,
-+			 <PINMUX_GPIO34__FUNC_GPIO34>,
-+			 <PINMUX_GPIO35__FUNC_GPIO35>;
-+		input-enable;
-+		bias-pull-down;
-+	};
-+};
-+
-+&sound {
-+	compatible = "mediatek,mt8195_mt6359_max98390_rt5682";
-+	model = "m8195_m98390_5682s";
-+
-+	audio-routing =
-+		"Headphone", "HPOL",
-+		"Headphone", "HPOR",
-+		"IN1P", "Headset Mic",
-+		"Right Spk", "Right BE_OUT",
-+		"Left Spk", "Left BE_OUT";
-+
-+	spk-playback-dai-link {
-+		codec {
-+			sound-dai = <&spk_r_amp>, <&spk_l_amp>;
-+		};
-+	};
-+};
-+
-+&spk_amplifier {
-+	/* Disable RT1019P, not present on Dojo */
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-index 843771078794..86d283ffe807 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-@@ -1404,6 +1404,11 @@ MATRIX_KEY(0x01, 0x04, 0)	/* T7 */
- 		MATRIX_KEY(0x02, 0x09, 0)	/* T8 */
- 		MATRIX_KEY(0x01, 0x09, 0)	/* T9 */
- 		MATRIX_KEY(0x00, 0x04, 0)	/* T10 */
-+
-+		/* T11 to T13 are present only on Dojo */
-+		MATRIX_KEY(0x00, 0x01, 0)	/* T11 */
-+		MATRIX_KEY(0x01, 0x05, 0)	/* T12 */
-+		MATRIX_KEY(0x03, 0x05, 0)	/* T13 */
- 	>;
- 
- 	linux,keymap = <
+								Honza
+
+> ---
+>  fs/ext4/mballoc.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 7ad089df2408..7ae8e04d6ef4 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -3192,7 +3192,6 @@ int ext4_seq_mb_stats_show(struct seq_file *seq, void *offset)
+>  }
+>  
+>  static void *ext4_mb_seq_structs_summary_start(struct seq_file *seq, loff_t *pos)
+> -__acquires(&EXT4_SB(sb)->s_mb_rb_lock)
+>  {
+>  	struct super_block *sb = pde_data(file_inode(seq->file));
+>  	unsigned long position;
+> -- 
+> 2.31.1
+> 
 -- 
-2.44.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
