@@ -1,375 +1,279 @@
-Received: from mx.msync.work (mx.msync.work [62.182.159.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CC7FC05
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.182.159.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED0317BA0
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400261; cv=none; b=oPYPfQXHGb/Qn6P36iaiLFIBuD/wND0ScTMXC+F//v+c7urbBFQjtQ8Mqhjzv7Bq0uGa8NNLdmhNZzWnM1YmjAH+T54zXm8n5XHHyE+h03NSuYpctmepw5QViUjn8kT6zBfr9Hmq+SbySa1+su8LFqcs77E3TheMLbJRi0zo5hw=
+	t=1710400326; cv=none; b=pKAlwd6Gz+A0+8DRSeqFsMAvjEdfo1zJZS9Dd6o5YcoyrzoHDUJnfmPA+rKWAZqezISD6Hjz+vaHIOnaSmGe2FGJe7STDLt6DCLdBdrAFsjCjKYviFXAwMylFr3di5xVYgYHQ3CleruWN5v98gODKjj1Ky/BEi40PuXNhPGTrlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400261; c=relaxed/simple;
-	bh=GWKuSrTWmIS6pThKyUYmnhONhinJfOqFlZ9/TygxLVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wc4yMNLqlYseii0Dc93R9I+jm+9EU7mTm0O5vy1CEYDlqkvXQnfWG4023P54Z+hWrQNsdHWey3Lag4/Snj3ShL1Ly858pfzK2fc3RNOM0FB/TySjj8R+lt/yjqRf/o598lEWZ70x9ZKhVhfIgPZOnzTsi82GQWjapkZxNUzl84E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=YUYigs8X; arc=none smtp.client-ip=62.182.159.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	s=arc-20240116; t=1710400326; c=relaxed/simple;
+	bh=BPrV9jTl3t9cZJ9doXOoiYwziihg/zLAKhGnYVrtRAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMNIEauaOyBvhcQr5BD43ZN1oai1hivayM16KwyDFKQvPWFn9nknxzu6W1xryG7y1ILvJSvOoN9JZi56DeIDr7hhQF4VotPfZHFOYku3zf3+mDjFJru8au2FIcKeEtMwWV2gf0JSnB26CRNbDadV1BYWbJG5rS2VYxrlvFuylVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OdyZVyja; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="YUYigs8X"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7B6DC11E88B;
-	Thu, 14 Mar 2024 07:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1710399887; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=GEQArPt1kn/Khi/Y6aFVKGpGzNy0MfkExrWMzBfSx18=;
-	b=YUYigs8XxcrfutRhhvYyYa32DNKhhlNl4Y55dN5qDsljcj3jP1hXw/JgDSABfM4V02EF/L
-	gJaIcBdewYXmDek2Xv0wx55JL8urYYkmrNTaNbKU7d7mMPxyQjG9ISMGfLa9uL5vJVsEqI
-	t82UgJZ6tqLTJqpVCS3Up3cy1UX1HpoK2k1qSVqgbZNejw0tDE5Jr98fbwYtLGbXc7cAI7
-	4DvuPtjzvztV5DnrPh3jhYyMkV2NzXg8wPgmKh909pVzjsTGEIDNWkllZI6v8Pb8q1gH+m
-	M+u3Qo0cFXfjfZzIs8VuUXoQpMqNskCS7w0rAAk2bo0o3JdFCHCWup72Awxf9w==
-From: Viacheslav Bocharov <adeep@lexina.in>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v3 1/4] soc: amlogic: meson-gx-socinfo: move common code to header file
-Date: Thu, 14 Mar 2024 09:59:51 +0300
-Message-ID: <20240314070433.4151931-2-adeep@lexina.in>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240314070433.4151931-1-adeep@lexina.in>
-References: <20240314070433.4151931-1-adeep@lexina.in>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OdyZVyja"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-512b3b04995so658457e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710400322; x=1711005122; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0w6EcVUBOZCiyEEemWiI1OO3Qe7bW7Ap5u/rGycFcww=;
+        b=OdyZVyjaxDEpiu/CHvcciXoyBlhDA9B3mg7p/IP6mSFg53u6m8A0wLHoom/UaM3nry
+         ri0u4Q2st4375mnldpaF3UfbCC60x0t4jv2tfp+8GDdOMLJqtGgWbqDdjYkf2DyPQQtv
+         ewzZXdFuj7cd4hM5kXHIsGq3A2me5SLYOon+CdYbZMrrGtEdm08M6FbAAX1q/pQ7qt20
+         KB3yIRSq4/DqKXey080lbkoFSyySjBLBFXkhVlQuzN8t1m1b3PEZlXOPUUQC8ZH32kpi
+         Ff+oyxxi+PY64Tx+VTxI/q0pi0m/GGrXgkjs9BSuOfnNuKL11ZPs5FqSoIWVYTYbwILI
+         eAYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710400322; x=1711005122;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0w6EcVUBOZCiyEEemWiI1OO3Qe7bW7Ap5u/rGycFcww=;
+        b=DUHmhodsa5ycYECuSFv16Tqva8Xs9xEwrVONgvin8ne5HnCo5TaGOwDGZXw+QcyIdO
+         9oJQh0xOIKR6CpQiTJ4BTSzqukMdelfqdZu5Btejida6rdfLHvGL9qxFrYjbOrj/C7WE
+         QGJjv8pL8Zujmia1WTh1F+ZuIY5NemzJ2KE6WAeITAQCg55YDKRUeW34KBpoiZrMVoIy
+         Z/hfvHstRsGgn8O339sNS/1FfJ0TrcGJr8/piOnE7pgjV0xlWzvnFk2XKz9ln4RtWUcx
+         DZtNKugznHNH4v1mTkLoVBUWZ0sR3upWs4F3nPxRkIykojWjUgbqt2GrFnziuNJMjOri
+         rBLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPXc3GOij532b+gLSzH9NBg270N/C0bTyRLHy7xLF3FjlhANt3lUpgsCv5amkKydPHaOAEGydgi76EUHCVpkpexJ2FK4lkCtbCgccg
+X-Gm-Message-State: AOJu0YyIbHQBJOR5Bi8w6/3H/K1fbGCt5JoD1ZiFfON704PI7WE5oKqC
+	ZHlBEb8bmVQsMx6ZevYc9jTAvxzyZSIK/puRQbiyObrJDkfMS4AWZc/UlHOR3V4=
+X-Google-Smtp-Source: AGHT+IHHuCXjlVqAPvOo3pvV9QnVZxcjFxB2DpUD+aYnuMg71L6L87M4W2YiwTyvB+SMgQbh548/JA==
+X-Received: by 2002:ac2:5d48:0:b0:513:c996:84c3 with SMTP id w8-20020ac25d48000000b00513c99684c3mr433591lfd.53.1710400322275;
+        Thu, 14 Mar 2024 00:12:02 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id s19-20020a195e13000000b00513c1fecb6esm155297lfb.173.2024.03.14.00.11.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 00:12:01 -0700 (PDT)
+Message-ID: <111346d3-8357-4ca3-9249-a43ebc225fcb@linaro.org>
+Date: Thu, 14 Mar 2024 08:11:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] soc: amlogic: meson-gx-socinfo-sm: Add Amlogic
+ secure-monitor SoC Information driver
+Content-Language: en-US
+To: Viacheslav Bocharov <adeep@lexina.in>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+References: <20240314070433.4151931-1-adeep@lexina.in>
+ <20240314070433.4151931-3-adeep@lexina.in>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240314070433.4151931-3-adeep@lexina.in>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Move common constants and inline functions from meson-gx-socinfo driver
-to header file. Create new structures for store meson64 cpu_id and chip_id.
+On 14/03/2024 07:59, Viacheslav Bocharov wrote:
+> Amlogic SoCs have a SoC information secure-monitor call for SoC type,
+> package type, revision information and chipid.
+> This patchs adds support for secure-monitor call decoding and exposing
+> with the SoC bus infrastructure in addition to the previous SoC
+> Information driver.
+> 
+> Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
+> ---
+>  drivers/soc/amlogic/Kconfig               |  10 ++
+>  drivers/soc/amlogic/Makefile              |   1 +
+>  drivers/soc/amlogic/meson-gx-socinfo-sm.c | 192 ++++++++++++++++++++++
+>  3 files changed, 203 insertions(+)
+>  create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-sm.c
+> 
+> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+> index d08e398bdad4..82fc77ca3b4b 100644
+> --- a/drivers/soc/amlogic/Kconfig
+> +++ b/drivers/soc/amlogic/Kconfig
+> @@ -26,6 +26,16 @@ config MESON_GX_SOCINFO
+>  	  Say yes to support decoding of Amlogic Meson GX SoC family
+>  	  information about the type, package and version.
+>  
+> +config MESON_GX_SOCINFO_SM
+> +	bool "Amlogic Meson GX SoC Information driver via Secure Monitor"
+> +	depends on (ARM64 && ARCH_MESON || COMPILE_TEST) && MESON_SM=y
+> +	default ARCH_MESON && MESON_SM
+> +	select SOC_BUS
+> +	help
+> +	  Say yes to support decoding of Amlogic Meson GX SoC family
+> +	  information about the type, package and version via secure
+> +	  monitor call.
+> +
 
-Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
----
- .../soc/amlogic/meson-gx-socinfo-internal.h   | 120 ++++++++++++++++
- drivers/soc/amlogic/meson-gx-socinfo.c        | 136 ++----------------
- 2 files changed, 134 insertions(+), 122 deletions(-)
- create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-internal.h
+I wonder, why do you need socinfo driver per each SoC? Usually it is one
+or two per entire arch.
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo-internal.h b/drivers/soc/amlogic/meson-gx-socinfo-internal.h
-new file mode 100644
-index 000000000000..3ebb80972fc7
---- /dev/null
-+++ b/drivers/soc/amlogic/meson-gx-socinfo-internal.h
-@@ -0,0 +1,120 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (c) 2017 BayLibre, SAS
-+ * Copyright (c) 2024 JetHome
-+ * Author: Neil Armstrong <neil.armstrong@linaro.org>
-+ * Author: Viacheslav Bocharov <adeep@lexina.in>
-+ *
-+ */
-+
-+#ifndef _MESON_GX_SOCINFO_INTERNAL_H_
-+#define _MESON_GX_SOCINFO_INTERNAL_H_
-+
-+#include <linux/types.h>
-+
-+#define AO_SEC_SD_CFG8		0xe0
-+#define AO_SEC_SOCINFO_OFFSET	AO_SEC_SD_CFG8
-+
-+union meson_cpu_id {
-+	struct { // cpu_id v1
-+		u32 layout_ver:4;
-+		u32 reserved:4;
-+		u32 chip_rev:8;
-+		u32 pack_id:8;
-+		u32 major_id:8;
-+	} v1;
-+	struct { // cpu_id v2
-+		u32 major_id:8;
-+		u32 chip_rev:8;
-+		u32 pack_id:8;
-+		u32 reserved:4;
-+		u32 layout_ver:4;
-+	} v2;
-+	u32	raw;
-+};
-+
-+struct meson_sm_chip_id {
-+	u32 version;
-+	union meson_cpu_id cpu_id;
-+	u8 serial[12];
-+};
-+
-+static const struct meson_gx_soc_id {
-+	const char *name;
-+	unsigned int id;
-+} soc_ids[] = {
-+	{ "GXBB", 0x1f },
-+	{ "GXTVBB", 0x20 },
-+	{ "GXL", 0x21 },
-+	{ "GXM", 0x22 },
-+	{ "TXL", 0x23 },
-+	{ "TXLX", 0x24 },
-+	{ "AXG", 0x25 },
-+	{ "GXLX", 0x26 },
-+	{ "TXHD", 0x27 },
-+	{ "G12A", 0x28 },
-+	{ "G12B", 0x29 },
-+	{ "SM1", 0x2b },
-+	{ "A1", 0x2c },
-+};
-+
-+static const struct meson_gx_package_id {
-+	const char *name;
-+	unsigned int major_id;
-+	unsigned int pack_id;
-+	unsigned int pack_mask;
-+} soc_packages[] = {
-+	{ "S905", 0x1f, 0, 0x20 }, /* pack_id != 0x20 */
-+	{ "S905H", 0x1f, 0x3, 0xf }, /* pack_id & 0xf == 0x3 */
-+	{ "S905M", 0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
-+	{ "S905D", 0x21, 0, 0xf0 },
-+	{ "S905X", 0x21, 0x80, 0xf0 },
-+	{ "S905W", 0x21, 0xa0, 0xf0 },
-+	{ "S905L", 0x21, 0xc0, 0xf0 },
-+	{ "S905M2", 0x21, 0xe0, 0xf0 },
-+	{ "S805X", 0x21, 0x30, 0xf0 },
-+	{ "S805Y", 0x21, 0xb0, 0xf0 },
-+	{ "S912", 0x22, 0, 0x0 }, /* Only S912 is known for GXM */
-+	{ "962X", 0x24, 0x10, 0xf0 },
-+	{ "962E", 0x24, 0x20, 0xf0 },
-+	{ "A113X", 0x25, 0x37, 0xff },
-+	{ "A113D", 0x25, 0x22, 0xff },
-+	{ "S905D2", 0x28, 0x10, 0xf0 },
-+	{ "S905Y2", 0x28, 0x30, 0xf0 },
-+	{ "S905X2", 0x28, 0x40, 0xf0 },
-+	{ "A311D", 0x29, 0x10, 0xf0 },
-+	{ "S922X", 0x29, 0x40, 0xf0 },
-+	{ "S905D3", 0x2b, 0x4, 0xf5 },
-+	{ "S905X3", 0x2b, 0x5, 0xf5 },
-+	{ "S905X3", 0x2b, 0x10, 0x3f },
-+	{ "S905D3", 0x2b, 0x30, 0x3f },
-+	{ "A113L", 0x2c, 0x0, 0xf8 },
-+};
-+
-+static inline const char *socinfo_v1_to_package_id(union meson_cpu_id socinfo)
-+{
-+	int i;
-+
-+	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
-+		if (soc_packages[i].major_id == socinfo.v1.major_id &&
-+		    soc_packages[i].pack_id ==
-+				(socinfo.v1.pack_id & soc_packages[i].pack_mask))
-+			return soc_packages[i].name;
-+	}
-+
-+	return "Unknown";
-+}
-+
-+static inline const char *socinfo_v1_to_soc_id(union meson_cpu_id socinfo)
-+{
-+	int i;
-+
-+	for (i = 0 ; i < ARRAY_SIZE(soc_ids) ; ++i) {
-+		if (soc_ids[i].id == socinfo.v1.major_id)
-+			return soc_ids[i].name;
-+	}
-+
-+	return "Unknown";
-+}
-+
-+#endif /* _MESON_GX_SOCINFO_INTERNAL_H_ */
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 6abb730344ab..006f3b09940d 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -12,118 +12,10 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/sys_soc.h>
--#include <linux/bitfield.h>
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
- 
--#define AO_SEC_SD_CFG8		0xe0
--#define AO_SEC_SOCINFO_OFFSET	AO_SEC_SD_CFG8
--
--#define SOCINFO_MAJOR	GENMASK(31, 24)
--#define SOCINFO_PACK	GENMASK(23, 16)
--#define SOCINFO_MINOR	GENMASK(15, 8)
--#define SOCINFO_MISC	GENMASK(7, 0)
--
--static const struct meson_gx_soc_id {
--	const char *name;
--	unsigned int id;
--} soc_ids[] = {
--	{ "GXBB", 0x1f },
--	{ "GXTVBB", 0x20 },
--	{ "GXL", 0x21 },
--	{ "GXM", 0x22 },
--	{ "TXL", 0x23 },
--	{ "TXLX", 0x24 },
--	{ "AXG", 0x25 },
--	{ "GXLX", 0x26 },
--	{ "TXHD", 0x27 },
--	{ "G12A", 0x28 },
--	{ "G12B", 0x29 },
--	{ "SM1", 0x2b },
--	{ "A1", 0x2c },
--};
--
--static const struct meson_gx_package_id {
--	const char *name;
--	unsigned int major_id;
--	unsigned int pack_id;
--	unsigned int pack_mask;
--} soc_packages[] = {
--	{ "S905", 0x1f, 0, 0x20 }, /* pack_id != 0x20 */
--	{ "S905H", 0x1f, 0x3, 0xf }, /* pack_id & 0xf == 0x3 */
--	{ "S905M", 0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
--	{ "S905D", 0x21, 0, 0xf0 },
--	{ "S905X", 0x21, 0x80, 0xf0 },
--	{ "S905W", 0x21, 0xa0, 0xf0 },
--	{ "S905L", 0x21, 0xc0, 0xf0 },
--	{ "S905M2", 0x21, 0xe0, 0xf0 },
--	{ "S805X", 0x21, 0x30, 0xf0 },
--	{ "S805Y", 0x21, 0xb0, 0xf0 },
--	{ "S912", 0x22, 0, 0x0 }, /* Only S912 is known for GXM */
--	{ "962X", 0x24, 0x10, 0xf0 },
--	{ "962E", 0x24, 0x20, 0xf0 },
--	{ "A113X", 0x25, 0x37, 0xff },
--	{ "A113D", 0x25, 0x22, 0xff },
--	{ "S905D2", 0x28, 0x10, 0xf0 },
--	{ "S905Y2", 0x28, 0x30, 0xf0 },
--	{ "S905X2", 0x28, 0x40, 0xf0 },
--	{ "A311D", 0x29, 0x10, 0xf0 },
--	{ "S922X", 0x29, 0x40, 0xf0 },
--	{ "S905D3", 0x2b, 0x4, 0xf5 },
--	{ "S905X3", 0x2b, 0x5, 0xf5 },
--	{ "S905X3", 0x2b, 0x10, 0x3f },
--	{ "S905D3", 0x2b, 0x30, 0x3f },
--	{ "A113L", 0x2c, 0x0, 0xf8 },
--};
--
--static inline unsigned int socinfo_to_major(u32 socinfo)
--{
--	return FIELD_GET(SOCINFO_MAJOR, socinfo);
--}
--
--static inline unsigned int socinfo_to_minor(u32 socinfo)
--{
--	return FIELD_GET(SOCINFO_MINOR, socinfo);
--}
--
--static inline unsigned int socinfo_to_pack(u32 socinfo)
--{
--	return FIELD_GET(SOCINFO_PACK, socinfo);
--}
--
--static inline unsigned int socinfo_to_misc(u32 socinfo)
--{
--	return FIELD_GET(SOCINFO_MISC, socinfo);
--}
--
--static const char *socinfo_to_package_id(u32 socinfo)
--{
--	unsigned int pack = socinfo_to_pack(socinfo);
--	unsigned int major = socinfo_to_major(socinfo);
--	int i;
--
--	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
--		if (soc_packages[i].major_id == major &&
--		    soc_packages[i].pack_id ==
--				(pack & soc_packages[i].pack_mask))
--			return soc_packages[i].name;
--	}
--
--	return "Unknown";
--}
--
--static const char *socinfo_to_soc_id(u32 socinfo)
--{
--	unsigned int id = socinfo_to_major(socinfo);
--	int i;
--
--	for (i = 0 ; i < ARRAY_SIZE(soc_ids) ; ++i) {
--		if (soc_ids[i].id == id)
--			return soc_ids[i].name;
--	}
--
--	return "Unknown";
--}
-+#include "meson-gx-socinfo-internal.h"
- 
- static int __init meson_gx_socinfo_init(void)
- {
-@@ -131,7 +23,7 @@ static int __init meson_gx_socinfo_init(void)
- 	struct soc_device *soc_dev;
- 	struct device_node *np;
- 	struct regmap *regmap;
--	unsigned int socinfo;
-+	union meson_cpu_id socinfo;
- 	struct device *dev;
- 	int ret;
- 
-@@ -160,11 +52,11 @@ static int __init meson_gx_socinfo_init(void)
- 		return -ENODEV;
- 	}
- 
--	ret = regmap_read(regmap, AO_SEC_SOCINFO_OFFSET, &socinfo);
-+	ret = regmap_read(regmap, AO_SEC_SOCINFO_OFFSET, &socinfo.raw);
- 	if (ret < 0)
- 		return ret;
- 
--	if (!socinfo) {
-+	if (!socinfo.raw) {
- 		pr_err("%s: invalid chipid value\n", __func__);
- 		return -EINVAL;
- 	}
-@@ -175,13 +67,13 @@ static int __init meson_gx_socinfo_init(void)
- 
- 	soc_dev_attr->family = "Amlogic Meson";
- 	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x:%x - %x:%x",
--					   socinfo_to_major(socinfo),
--					   socinfo_to_minor(socinfo),
--					   socinfo_to_pack(socinfo),
--					   socinfo_to_misc(socinfo));
-+					   socinfo.v1.major_id,
-+					   socinfo.v1.chip_rev,
-+					   socinfo.v1.pack_id,
-+					   (socinfo.v1.reserved<<4) + socinfo.v1.layout_ver);
- 	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s (%s)",
--					 socinfo_to_soc_id(socinfo),
--					 socinfo_to_package_id(socinfo));
-+					 socinfo_v1_to_soc_id(socinfo),
-+					 socinfo_v1_to_package_id(socinfo));
- 
- 	soc_dev = soc_device_register(soc_dev_attr);
- 	if (IS_ERR(soc_dev)) {
-@@ -194,10 +86,10 @@ static int __init meson_gx_socinfo_init(void)
- 
- 	dev_info(dev, "Amlogic Meson %s Revision %x:%x (%x:%x) Detected\n",
- 			soc_dev_attr->soc_id,
--			socinfo_to_major(socinfo),
--			socinfo_to_minor(socinfo),
--			socinfo_to_pack(socinfo),
--			socinfo_to_misc(socinfo));
-+			socinfo.v1.major_id,
-+			socinfo.v1.chip_rev,
-+			socinfo.v1.pack_id,
-+			(socinfo.v1.reserved<<4) + socinfo.v1.layout_ver);
- 
- 	return 0;
- }
--- 
-2.43.2
+> +
+> +static int meson_gx_socinfo_sm_probe(struct platform_device *pdev)
+> +{
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	struct soc_device *soc_dev;
+> +	struct device_node *sm_np;
+> +	struct meson_sm_firmware *fw;
+> +	struct regmap *regmap;
+> +	union meson_cpu_id socinfo;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	/* check if chip-id is available */
+> +	if (!of_property_read_bool(pdev->dev.of_node, "amlogic,has-chip-id"))
+> +		return -ENODEV;
+> +
+> +	/* node should be a syscon */
+> +	regmap = syscon_node_to_regmap(pdev->dev.of_node);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&pdev->dev, "failed to get regmap\n");
+
+Syntax is:
+
+return dev_err_probe()
+
+> +		return -ENODEV;
+
+Anyway wrong return code, use the real one you got.
+
+> +	}
+> +
+> +	sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+> +	if (!sm_np) {
+> +		dev_err(&pdev->dev, "no secure-monitor node found\n");
+> +		return -ENODEV;
+
+-EINVAL
+
+> +	}
+> +
+> +	fw = meson_sm_get(sm_np);
+> +	of_node_put(sm_np);
+> +	if (!fw) {
+> +		dev_info(&pdev->dev, "secure-monitor device not ready, probe later\n");
+
+No, you never print messages on deferred probe.
+
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	ret = regmap_read(regmap, AO_SEC_SOCINFO_OFFSET, &socinfo.raw);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (!socinfo.raw) {
+> +		dev_err(&pdev->dev, "invalid regmap chipid value\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	soc_dev_attr = devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
+> +				    GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +
+> +	soc_dev_attr->serial_number = socinfo_get_chipid(&pdev->dev, fw, &socinfo);
+> +
+> +	soc_dev_attr->family = "Amlogic Meson";
+> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x:%x - %x:%x",
+> +					   socinfo.v1.major_id,
+> +					   socinfo.v1.chip_rev,
+> +					   socinfo.v1.pack_id,
+> +					   (socinfo.v1.reserved<<4) + socinfo.v1.layout_ver);
+> +	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s (%s)",
+> +					 socinfo_v1_to_soc_id(socinfo),
+> +					 socinfo_v1_to_package_id(socinfo));
+> +
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +
+> +
+> +	if (IS_ERR(soc_dev)) {
+> +		kfree(soc_dev_attr->revision);
+> +		kfree_const(soc_dev_attr->soc_id);
+> +		kfree(soc_dev_attr);
+
+That's a double free. This was not tested.
+
+> +		return PTR_ERR(soc_dev);
+> +	}
+> +
+> +	dev = soc_device_to_device(soc_dev);
+> +	platform_set_drvdata(pdev, soc_dev);
+> +
+> +	dev_info(dev, "Amlogic Meson %s Revision %x:%x (%x:%x) Detected (SM)\n",
+> +			soc_dev_attr->soc_id,
+> +			socinfo.v1.major_id,
+> +			socinfo.v1.chip_rev,
+> +			socinfo.v1.pack_id,
+> +			(socinfo.v1.reserved<<4) + socinfo.v1.layout_ver);
+> +
+> +	return PTR_ERR_OR_ZERO(dev);
+> +}
+> +
+> +
+> +static int meson_gx_socinfo_sm_remove(struct platform_device *pdev)
+> +{
+> +	struct soc_device *soc_dev = platform_get_drvdata(pdev);
+> +
+> +	soc_device_unregister(soc_dev);
+
+If you free the memory in probe() error path, why you did not decide to
+free it here as well? It is symmetrical, so this should make you wonder
+- error path is wrong.
+
+
+Best regards,
+Krzysztof
 
