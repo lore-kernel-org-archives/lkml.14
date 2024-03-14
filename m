@@ -1,97 +1,78 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0360F74BE8
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 19:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8EF74E21
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 20:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710446296; cv=none; b=agembbyKMRkLXwV7ssbhq6aIYgqintTp9G02aFIi7NIZYXP5rZO9dO42rQNrCA3laROvU8WlYYmlMIG62Ooy0DuD9441np2pXb3nVF9viA0FDvDhMAenIkiS5g5XnPCO60hrgB1nhk7XWv5jUVD/lIHeQI5nCVggFB5gxcCl3ek=
+	t=1710446480; cv=none; b=pJV1UY+OEBtnmRAfQP+mEVtPADNmYELzNlXHE9Nb33yaRvdKnVFV71boMmaSn1VEDFgB7RtWsmtQHkSmvcTpEneD4o3F0w4MJmc+/KB3s4cdjPROMLQZBLjzpiu8GNBIO5hnw+dgEzaZLwZwrvng2lwKswwtDc2kbb30S5d/86c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710446296; c=relaxed/simple;
-	bh=ugj0vHZKjR6F1bjQ9vhOfG0FkNHs9CzAqkH2ydkQokM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJQeYqNCZ/GXsGPb8JjcmEUFXuKx3mL5R5mH6ezk/kG5XCRWvBDdAY/nnJzQ8fdO2RmYMAP+i4c204Lb/NBYD07a9/KCkHMIZVj50sG2R8s2RYC5/5u+T+NcqOq3RaiCA7EZTD8g6wVphDiZOUZfgGKymYi51wcxBiiV8G5NEi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=shkAhrn4; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710446480; c=relaxed/simple;
+	bh=WzR9A6+jj11uhMDYOlAcj90m7WoEANKKgh8cf4FoQ+w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TFFoJn9lmMCgpQ2YktWls86ZHTu6oM9WS9gmhmJ7zmGNtGCXRXRdgqNLQDnuTpQmoTg4Sl1XXLoyBVjWuAw6Iv8DdGf9aKOFANhgE+HW6x/1dhw6BTXIUl51FBjUcjSHLF1fyi6l3IC0OlW9mEgv5ikuojs1X9ZEj7mPmcUx5g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kRnS3UAz; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="shkAhrn4"
-Date: Thu, 14 Mar 2024 15:58:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710446292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0bOLhFjMAf0PlBTMvDVYA/bwx6DlzT/WdrltAs6p8IE=;
-	b=shkAhrn4sqSQ4emlsGGQjXl6L4IV7dKfTie67wpSZvJ0iZsoIDMbQKsIvrMqEu9/1S91ts
-	wsWfCG9OHLAACjaTkpJJ3s1U/ez6ohf3Imo0FL49eQ3T/hlMpFK3yXiQYmcd84F/Y+CUtm
-	89tjlDc5nTNYPgC5KnZXw1zB5kk71YM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, jacob.jun.pan@linux.intel.com, jgg@ziepe.ca, 
-	jpoimboe@kernel.org, jroedel@suse.de, juri.lelli@redhat.com, kinseyho@google.com, 
-	kirill.shutemov@linux.intel.com, lstoakes@gmail.com, luto@kernel.org, mgorman@suse.de, 
-	mic@digikod.net, michael.christie@oracle.com, mingo@redhat.com, mjguzik@gmail.com, 
-	mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, pmladek@suse.com, 
-	rick.p.edgecombe@intel.com, rostedt@goodmis.org, surenb@google.com, tglx@linutronix.de, 
-	urezki@gmail.com, vincent.guittot@linaro.org, vschneid@redhat.com
-Subject: Re: [RFC 00/14] Dynamic Kernel Stacks
-Message-ID: <lkf36cacg2fyy2et424jghci3irtz55gzytt56bcwzbmw372ju@acpa7mtfihfb>
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <2cb8f02d-f21e-45d2-afe2-d1c6225240f3@zytor.com>
- <ZfNTSjfE_w50Otnz@casper.infradead.org>
- <2qp4uegb4kqkryihqyo6v3fzoc2nysuhltc535kxnh6ozpo5ni@isilzw7nth42>
- <ZfNWojLB7qjjB0Zw@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kRnS3UAz"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso1042382a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 13:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710446479; x=1711051279; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i6pCffNMKzoDGTKw4n/6Ob9IQM84n1hQBuu01Y8Xtu8=;
+        b=kRnS3UAzYvTCDTuL+ZsA6ZKqmr6IUmn0Tj9tBmvXZjJ3f5Z4jxZs2CDxp3NH1w+c9d
+         Zb/Amox4Ha5XID6baLZGDveztJCA4Kp1OIek5hosVsxpcV8zf0Jd/QTU0fpY3WnUYURY
+         yS7oAd1pOxiKJt6ll6KnWQKNztLItGpKq0EamoXK58C6+Jm7k/h4nyAwf2qQWNrjV+u0
+         qgsX1WWEO6gLEIHoGBrS4nd617UXjy0mMkAlDVqwDbfAz7TIKvQgZtl0PyjyWpOoH4YT
+         6QN4iQBN+0GuK/kxRm2HRWbYFWnVNn2K8oKBeAPARfeHuRftNySbJyFigp3Y2vRrnvMS
+         JjPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710446479; x=1711051279;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i6pCffNMKzoDGTKw4n/6Ob9IQM84n1hQBuu01Y8Xtu8=;
+        b=HqdFDhnipeS1y8Lu/iKgj93nKGqT/NVxQmAJ0Je35DVEgqSXS7+elmLAhTN3lem3Zi
+         mG8MPauadxXW+r+CafKgse/YSTu/t2Y1V3AatYBbrTgfzJ7pGTf/Wu2S88nfMFW6B+ub
+         fGjn1BLz0iaBLnKOgRQqEpAEejwAwTtqqwlRArXBacvnzqnj+ftV2PiUs/0XgkwPfOwR
+         /Mxem5XIZRNtetbuvM72r37dcz6Yc58YS5iOPrIxZZFSpWpbAsgtF5TF600LL3A/iWVE
+         ctw+TiLAkqB/Rmiiqn3t1qSgj5VMvlT0UU/FOrTXBU0NZH+Lhd6MD4if47HHYqMy+1R0
+         Cp7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXijzRcqVnCuYfbWOyeOGfgqk1TEacXNNja3OaHs2jJTpo3I+QGZ0iGtaDxcjyF85Fr2HnDTqaf9gUiKzkE3bufJlp+X1argxol2NgW
+X-Gm-Message-State: AOJu0Yy2wCq8O5uxcsmxWADJMtL8FEpPo/+jdyFpUZwFPlTUqlBl82Ic
+	Q5YSccioBUWD16RQXDzy3M+1/5jty0kw4K5bJzCkJ+2nXHKE9jmq2x4SybBfkfvL2g==
+X-Google-Smtp-Source: AGHT+IFKfU2NA2q8Rlp50xG0jix20Rw9KJIZR9SH6PcuXiddyRxwquv/7vX3A/fr9QnaaO/eg3bUAzQ=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:a63:fd43:0:b0:5dc:aa2a:7766 with SMTP id
+ m3-20020a63fd43000000b005dcaa2a7766mr8215pgj.2.1710446478832; Thu, 14 Mar
+ 2024 13:01:18 -0700 (PDT)
+Date: Thu, 14 Mar 2024 13:01:17 -0700
+In-Reply-To: <20240314122533.419754-1-liucong2@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfNWojLB7qjjB0Zw@casper.infradead.org>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <20240314122533.419754-1-liucong2@kylinos.cn>
+Message-ID: <ZfNXjd1ML2WJwOKX@google.com>
+Subject: Re: [PATCH] tools/Makefile: Remove cgroup target
+From: Stanislav Fomichev <sdf@google.com>
+To: Cong Liu <liucong2@kylinos.cn>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Dmitry Rokosov <ddrokosov@salutedevices.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Mar 14, 2024 at 07:57:22PM +0000, Matthew Wilcox wrote:
-> On Thu, Mar 14, 2024 at 03:53:39PM -0400, Kent Overstreet wrote:
-> > On Thu, Mar 14, 2024 at 07:43:06PM +0000, Matthew Wilcox wrote:
-> > > On Tue, Mar 12, 2024 at 10:18:10AM -0700, H. Peter Anvin wrote:
-> > > > Second, non-dynamic kernel memory is one of the core design decisions in
-> > > > Linux from early on. This means there are lot of deeply embedded assumptions
-> > > > which would have to be untangled.
-> > > 
-> > > I think there are other ways of getting the benefit that Pasha is seeking
-> > > without moving to dynamically allocated kernel memory.  One icky thing
-> > > that XFS does is punt work over to a kernel thread in order to use more
-> > > stack!  That breaks a number of things including lockdep (because the
-> > > kernel thread doesn't own the lock, the thread waiting for the kernel
-> > > thread owns the lock).
-> > > 
-> > > If we had segmented stacks, XFS could say "I need at least 6kB of stack",
-> > > and if less than that was available, we could allocate a temporary
-> > > stack and switch to it.  I suspect Google would also be able to use this
-> > > API for their rare cases when they need more than 8kB of kernel stack.
-> > > Who knows, we might all be able to use such a thing.
-> > > 
-> > > I'd been thinking about this from the point of view of allocating more
-> > > stack elsewhere in kernel space, but combining what Pasha has done here
-> > > with this idea might lead to a hybrid approach that works better; allocate
-> > > 32kB of vmap space per kernel thread, put 12kB of memory at the top of it,
-> > > rely on people using this "I need more stack" API correctly, and free the
-> > > excess pages on return to userspace.  No complicated "switch stacks" API
-> > > needed, just an "ensure we have at least N bytes of stack remaining" API.
-> > 
-> > Why would we need an "I need more stack" API? Pasha's approach seems
-> > like everything we need for what you're talking about.
+On 03/14, Cong Liu wrote:
+> The tools/cgroup directory no longer contains a Makefile.  This patch
+> updates the top-level tools/Makefile to remove references to building
+> and installing cgroup components. This change reflects the current
+> structure of the tools directory and fixes the build failure when
+> building tools in the top-level directory.
 > 
-> Because double faults are hard, possibly impossible, and the FRED approach
-> Peter described has extra overhead?  This was all described up-thread.
+> Fixes: 60433a9d038d ("samples: introduce new samples subdir for cgroup")
 
-*nod*
+nit: is it worth it to have a fixes tag here? Doesn't looks like it's
+a backport candidate..
