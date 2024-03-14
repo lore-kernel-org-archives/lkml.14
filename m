@@ -1,155 +1,179 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE3576049;
-	Thu, 14 Mar 2024 20:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710447454; cv=fail; b=aRb0fJxZb35ocKqy9QcYoU7CSIFMn+9DUWwVTY8H/TltlAhZoWTSGvLY/XZ+NLdjPd+UGqD1/yBQzlWS/8xZTLbDubjgrbVT6OwdI1t/QxfjxRlSmCNzyBDjogIXlJ+tj8I2QwnVDsmn0n8czlwW8p3lklomjDDOOx8MNchkIfA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710447454; c=relaxed/simple;
-	bh=TDmqtiHnulGSuvzSj66/9EXajL8lP4NM7FQW8GXYcX4=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=u5Rsm+TI1G4CdQzp8KIikzohMAXYoVGN/8NMwRHhATubxwnZGRkA1iJUtG1ur52c79D/Luc7XM3ratLQQmPnFvIDWXYZXzXdszGYrz8MJpFVsn8iOSOPa0O9qGzTLIrpknvD26PPKbtCa2J8KGrHIId9YfYqn0RjB2FDkkvYTN0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QhrfEAfg; arc=fail smtp.client-ip=40.107.237.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833AA2A1C7;
+	Thu, 14 Mar 2024 20:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710447563; cv=none; b=qHxMXfpLs+sDat1QUznVQhgHVEYPxuq0bqkor3s0Ai1HthPbNfjSRM7zxV6Bq6NO9rybgBjUXoJxc081l2w4DY10NuQx+MqaDa9JsSFTbXH+/3Uf58f4aEdKsS70IYnqa9IgV2+wd+GRz4bnTwXYKVZRbSH1WXwFyDKkYTiKP6U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710447563; c=relaxed/simple;
+	bh=JHyl/KzE3UVf7c1HemLBzMYh2tUmE6uiuV5f5ZzDrCs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JATpKM2/5AbdrwqtHE6HT+bIE1hD9PbP02q2Dr6eEE/wFejZ9PF96eEzxN/KV5ivK/CwqjNerSZKkWYBOwdkDZQQgNEz0oj1nMwrGsqkb+iuPyEn+PfBdJHm+23HkkOFU/GXs6sA//xnI7vSIbNea2OUMq2696QFjwfdBN35dzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=J1Cs67a4; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QhrfEAfg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kd+I0A2G2w5qduG8xSYU8KeME37qE6lHI7J05NqCOPUgqW0QqHYeF3Uwf9UPTraoxoC7uslYryqcFMALE0rT7m+p69t1dX9vPe9E8AjfQbGid4K50QUUt2InY3deSxzCwdUS1oGErP7FPixkF8yU7Wo8iQEv8571fj/YlIr+ZiCSErRJ+/G7rVJ5KDlCeZw+9IiFQPh+V6B9AoQ+1E2S1SNdoqb/x0WHLJM+7hSefpZPUP37aaVO5ZDUPy3KIePvvJIPM8o/VXg6NXM+8Bo97jZQOxwGyRJpEm0umH4+8DOfrRgj59Z2Yvaqo7RDr9VOWEfYsL4pnMhAG3cCIDM2WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p5ryQkP+i8+9AXuobEiyUgAUU0gjatbAX1T4QCeUpaA=;
- b=VO7Hd7FFJhNIlEibS6QwssXVtunbDrO8GY0WBl72WeGF+2OGgJG4p7F5v+iwpWDFaoNkEC2MpCZ2FkCElS1rkH8vD1dHjsAlwVAIAxHFB5t5ETRFZaxcGU3eHTKbZzDAGKGQM+XvVLys2CETuUHmFh8R9qPR8wBoxzTbKu/F0av4v1NsDcsdbDjS+g3tGNoutx++7pOlaxv/5e34TvnFJXcd6E3hopQsuX8UMcslkkNz1CLdmeZwIVlUtFyJ79o+huw7sB7yYlvllCkRjoJDA7ylV9K+gaGYRVXQO28hMl0Vo5ykOOF3AO84bqsJoq73Clz6KaTdzfQNaHyL+97udA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p5ryQkP+i8+9AXuobEiyUgAUU0gjatbAX1T4QCeUpaA=;
- b=QhrfEAfg/VNkVv6dBxzxYQzDzpEg0AfzNq61JrUm0KvorY8RGZ1QHG1KVuzY+H1ZEbMm8oXBnN+LHGswFMBhb/ktUUx5SWbQNfKaLxCpsqUkWWgP2rwgd74FIvybfUZFmttReAVW/EU3kyeQk+/wvWzK3cHCg1OA1RmiFkhVq8aO4nD2XnRa39KBeSWEgJ0oX4L4p5YxkRwFI5U0iSKv7fQG7Yzb/Q0PmXfedTy/fOt9od1UcomD62UHtWgwOBoUKfAfwixE4uDfK4ykY2ycQ6wj5/ZH5DAQO+M4xaCtFSqo0blclUomCaeqoZbaSBQWnucesPtsHLumM/y2fgPxRA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by MW6PR12MB8833.namprd12.prod.outlook.com (2603:10b6:303:23f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Thu, 14 Mar
- 2024 20:17:24 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
- 20:17:23 +0000
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
- <20240309084440.299358-1-rrameshbabu@nvidia.com>
- <20240309084440.299358-2-rrameshbabu@nvidia.com>
- <20240312165346.14ec1941@kernel.org> <87v85ovj4d.fsf@nvidia.com>
- <20240314105943.7bc6f2ef@kernel.org> <87jzm4vejp.fsf@nvidia.com>
- <20240314120647.58a07d94@kernel.org>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
- alexandre.torgue@foss.st.com, andrew@lunn.ch, corbet@lwn.net,
- davem@davemloft.net, dtatulea@nvidia.com, edumazet@google.com,
- gal@nvidia.com, hkallweit1@gmail.com, jacob.e.keller@intel.com,
- jiri@resnulli.us, joabreu@synopsys.com, justinstitt@google.com,
- kory.maincent@bootlin.com, leon@kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, liuhangbin@gmail.com,
- maxime.chevallier@bootlin.com, netdev@vger.kernel.org, pabeni@redhat.com,
- paul.greenwalt@intel.com, przemyslaw.kitszel@intel.com,
- rdunlap@infradead.org, richardcochran@gmail.com, saeed@kernel.org,
- tariqt@nvidia.com, vadim.fedorenko@linux.dev, vladimir.oltean@nxp.com,
- wojciech.drewek@intel.com
-Subject: Re: [PATCH RFC v2 1/6] ethtool: add interface to read Tx hardware
- timestamping statistics
-Date: Thu, 14 Mar 2024 13:16:42 -0700
-In-reply-to: <20240314120647.58a07d94@kernel.org>
-Message-ID: <877ci4va99.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0045.namprd07.prod.outlook.com
- (2603:10b6:a03:60::22) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="J1Cs67a4"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id B0236120008;
+	Thu, 14 Mar 2024 23:19:16 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B0236120008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710447556;
+	bh=TIopjX9JsFChW/Sn1tGpd/8lUgeh5NxQ6ZHfgAAkmD4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=J1Cs67a4f7grZInNTHO4X5XtJdvq3QROxfnZ7OWp6bX2ulB3RypVi6dEpJkv2cjEu
+	 r6hxukx40WE4rC2My6hhFGehfBVkps7hWj3+5RavAEkZ+M0hDy8y5vK6gOtcEw4nKt
+	 R6WKPFkL9gD3ziRxCbag+zG9S+CPQyvympNpOPt+XnHQji+pVW9oHPoHkWOLig+TuM
+	 a4h+hxqrwJ0FgCyrpyk4oyv/D+zTMFy1GoQbXe2/vVLLQRKvsV2x5R367N/Pm/cTrM
+	 AT8CBIND3kLpkHTMCUYrwjI8MuUgOsrHkxP4pa7qNaWMRKPcEBUmzhlTjfOth4Qyo9
+	 NydDgNKCwC/QA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 14 Mar 2024 23:19:16 +0300 (MSK)
+Received: from work.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 14 Mar 2024 23:19:16 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <andy.shevchenko@gmail.com>, <pavel@ucw.cz>, <lee@kernel.org>,
+	<vadimp@nvidia.com>, <christophe.leroy@csgroup.eu>, <hdegoede@redhat.com>,
+	<mazziesaccount@gmail.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<will@kernel.org>, <longman@redhat.com>, <boqun.feng@gmail.com>,
+	<nikitos.tr@gmail.com>, <marek.behun@nic.cz>, <kabel@kernel.org>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>
+Subject: [PATCH v7 1/8] locking/mutex: introduce devm_mutex_init()
+Date: Thu, 14 Mar 2024 23:18:49 +0300
+Message-ID: <20240314201856.1991899-2-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314201856.1991899-1-gnstark@salutedevices.com>
+References: <20240314201856.1991899-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|MW6PR12MB8833:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb782a34-fb98-40a2-39ab-08dc4463c2a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FXno3a/7kDhTju7MjK/eZsorWK4g4HLZ0olg2xOZe8KMrcnnY8mPA3yTBGGn8sdqT0rhGWHHBjRut3fZlJbxH5blzdhe1wbY/bSMc4SjenBcFM7c/kZYLa2r1nEXxvOpp6C5GXZvJrxBkpYj1R+0KSv2RZerEdg4576RbV9MKFrFo27z6/j4fUDcvsltSEd6/wpc+K6/Kgi3UBRiTuH0Y34trZztC3hpdktjdqiB9xYZxPjgRnaT6Bi3BBa5plW5OJdqFrB8EQNCf0VEWjeyVG/ssjNTZzrVr9TYqrC5eRhPM/bYF7oyTOh9NI6fqvHRLJEdBg0zuUtAYyBMnrzpK8fcR5kjHAqcSLFidPJZm7H7JW17RVui/7jd4X/6jn1piGxbkZ2o04MHLgWIDYwXPQgthhft168sgcK9f2smRa6I7dBBmNACC0TSKMrKpYR1kD2OtfHah49v2jcR10DVDLzdYjd8mARR6SBk2QiJbc0cqRcgNJOSDtTekmFj8gToBHhRwfsOFBFGLPxVz5tiOoxRPT66vZG1ePhQasjRXnHztF9meIxVy+bQzS2ggKokpE/wZncdY99O3fasi4q7/K5mPVZELKLs+7Vrn4ggu3ji6eEaXBamIo1OHG+6TO17E972zEvBZ0mBgh7r4X5lBMn2rSTyoZx0T3vXj+5w4rw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4kQIOyf9U6EeqwfJK6bm6j7M3jTlON6RZErPKp68Av/cM9B8bPrhRGiKmpBl?=
- =?us-ascii?Q?AFKOWO8ug66GlZWTyCKf4taxJkZPQWthRkUBmxwHx//Y7rYuXxp1riu8e93n?=
- =?us-ascii?Q?DWr/ztU+Boa1H0KBsEovG8tRjpz0oD6DVDD51iB7x0XbOmmoIJxo5Xdp8XSa?=
- =?us-ascii?Q?nj04rbZVNP0L4STiBlaZLUkmrwjb8/hY1GznvF50akDePFUHaUaceH64kXLS?=
- =?us-ascii?Q?EWL1PBHbJQhsSZLKCnMOdQlZCZ/E2tAAULa9KkithOnGoebBU3NTuW0XGNMk?=
- =?us-ascii?Q?HcT41BwOlnq+4IoUtxouDvB8Cq4ans0IV2pFsdy2QMIaMWB+/f9A4BzGo2PP?=
- =?us-ascii?Q?hyp6tYEnKtpneRYH/wzlJArKLQxpaTIXYegVB9M4OIjY/fhaU0CZX5GVxK6c?=
- =?us-ascii?Q?LQ/RBDKQNOjEYwt73ABH5d/GkBZUCLe2/Jh4Nl+rfH9G3L1ouzOqP1thG713?=
- =?us-ascii?Q?G28Ge/Ol7MaUG76xKGIqVqr34yYTH2lbrGD/xts785ATIbI/AL1GJtCx48Kh?=
- =?us-ascii?Q?jGRXaPg3vDpRI3I7mC7XP3Kmktt+8HXqv2oNmB3rBSKk7JA17KQxcmYO+lra?=
- =?us-ascii?Q?WbcvbSNnDKSY+OarSnGSr6lLFPAuAsW1lr78ac92erqp+JRjP5SH9vffDSKE?=
- =?us-ascii?Q?QRi3X0RFU2pSk3ujY85kLV7RmWhf3cAfDGRX1aRuuYg/KYK9PvVvF70PQMJz?=
- =?us-ascii?Q?fUYsuProY1tOsjvPvDAgZSJ4cBGZGajue0iSue4Tb8Srnj6WayOkA6zOTLC9?=
- =?us-ascii?Q?2nkFXfje5nCXD0nujs643xJbf+onx1Lx9ZT+O5kpfoZ0KnnjkkhwVjtlSXOC?=
- =?us-ascii?Q?DFs4Fzf2PLW+q5caVcFIIoY1bFi/1pRciUKg1dOW0dOjwq5Hi6zXAWAji5ax?=
- =?us-ascii?Q?0mMl8BGaTEA9oDTn815A4KDbCn/HadXiFtmKPjiz1ssrs1BuckILjMSvMveC?=
- =?us-ascii?Q?60xdCJrcuUEVq77NRdIQ1vaEKE/6+46pzR7NUa30Oj4cK32ynTXXrudgCGOt?=
- =?us-ascii?Q?CPZu9q75KggT1Ikwvro3TDa+Yw4C3fyGbe5W78j2ndpV+fuIVU2Nmfi4fIGT?=
- =?us-ascii?Q?0TkM24YU5ZiHcNXiVvMDaxAZAeegKtPkgAjpDHnEhgSdJW8sqtyH/DPv1unU?=
- =?us-ascii?Q?M/qyAILFeF1/1tXEWeWNkHvrxrOeSI5aZ2PTYpJOyhhYYNzdg2MRGWUNEczX?=
- =?us-ascii?Q?0BPIHtQ7JHecf6weLxeZW5u6OlKL4GE8vkSLozPMeNaUWuQ5LnefuVdBaMuu?=
- =?us-ascii?Q?iLoo6VdVUKR+0XXyrsh1X9R8uwHmB//qTZ9mGFKhZS+2JZZDpWiWv1uu8551?=
- =?us-ascii?Q?XtRBL4clP8B0lz4NO6ZOms6zv+cuWSZesaL3KRDAMCbG2TThC0nRDX2zJxEd?=
- =?us-ascii?Q?sl3in5zwk/Ys3YisAimpYJzdnb+cSkH2Q5VRL4568LFFpSt92IiWGsIRjK4H?=
- =?us-ascii?Q?61Si4YK67pwqkCWlbSMcjWw/Px9t+AmtdeV46lyZS5tqhHuibHXC4S+bgiNb?=
- =?us-ascii?Q?irhMeEzISweJfuhJtq21bLSltQ1+W0QBTksFcd0CE/yoDPHMRAb8krb/GIXt?=
- =?us-ascii?Q?6w7aYXslzd1D0RzsfgFJJnpJjpz51dWyfS4Oj6b0y4+TvREAVyKD4fSoPhhb?=
- =?us-ascii?Q?WA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb782a34-fb98-40a2-39ab-08dc4463c2a2
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 20:17:23.8820
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rE+ZHF4ZzdyvAlxx5u/pQASZ6ibFAxMRZ4oPDqC+eQTWyw4VBS35BONHaYdJn8SBYjcbRwZ95Wbc5VWspwrrZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8833
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
+Using of devm API leads to a certain order of releasing resources.
+So all dependent resources which are not devm-wrapped should be deleted
+with respect to devm-release order. Mutex is one of such objects that
+often is bound to other resources and has no own devm wrapping.
+Since mutex_destroy() actually does nothing in non-debug builds
+frequently calling mutex_destroy() is just ignored which is safe for now
+but wrong formally and can lead to a problem if mutex_destroy() will be
+extended so introduce devm_mutex_init().
 
-On Thu, 14 Mar, 2024 12:06:47 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
-> On Thu, 14 Mar 2024 11:43:07 -0700 Rahul Rameshbabu wrote:
->> > I don't understand.
->> > Are you sure you changef the kernel to use uint, rebuilt and
->> > there is no ETHTOOL_A_TS_STAT_PAD anywhere, anymore?  
->> 
->> Sorry, I was not as clear as I could have been with my last reply. I did
->> leave ETHTOOL_A_TS_STAT_PAD in when I tested (intentionally). I was
->> trying to mimic other ethtool stats implementations, but you are saying
->> that in general there is no need for this padding (which I agree with)
->> and I can remove that unnecessary offset. It'll be different from the
->> existing stats, but I am ok with that.
->
-> Yes, the small divergence is fine - uint is pretty recent addition.
+Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Marek Behún <kabel@kernel.org>
+Acked-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/mutex.h        | 27 +++++++++++++++++++++++++++
+ kernel/locking/mutex-debug.c | 11 +++++++++++
+ 2 files changed, 38 insertions(+)
 
-Yes, the uint suggestion is great since we no longer need to depend on
-the padding. Thanks for the feedback. Accounted for in my patches.
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 67edc4ca2bee..a561c629d89f 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -22,6 +22,8 @@
+ #include <linux/cleanup.h>
+ #include <linux/mutex_types.h>
+ 
++struct device;
++
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define __DEP_MAP_MUTEX_INITIALIZER(lockname)			\
+ 		, .dep_map = {					\
+@@ -117,6 +119,31 @@ do {							\
+ } while (0)
+ #endif /* CONFIG_PREEMPT_RT */
+ 
++#ifdef CONFIG_DEBUG_MUTEXES
++
++int __devm_mutex_init(struct device *dev, struct mutex *lock);
++
++#else
++
++static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
++{
++	/*
++	 * When CONFIG_DEBUG_MUTEXES is off mutex_destroy() is just a nop so
++	 * no really need to register it in the devm subsystem.
++	 */
++	return 0;
++}
++
++#endif
++
++#define devm_mutex_init(dev, mutex)			\
++({							\
++	typeof(mutex) mutex_ = (mutex);			\
++							\
++	mutex_init(mutex_);				\
++	__devm_mutex_init(dev, mutex_);			\
++})
++
+ /*
+  * See kernel/locking/mutex.c for detailed documentation of these APIs.
+  * Also see Documentation/locking/mutex-design.rst.
+diff --git a/kernel/locking/mutex-debug.c b/kernel/locking/mutex-debug.c
+index bc8abb8549d2..f7e848defd50 100644
+--- a/kernel/locking/mutex-debug.c
++++ b/kernel/locking/mutex-debug.c
+@@ -12,6 +12,7 @@
+  */
+ #include <linux/mutex.h>
+ #include <linux/delay.h>
++#include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/poison.h>
+ #include <linux/sched.h>
+@@ -89,6 +90,16 @@ void debug_mutex_init(struct mutex *lock, const char *name,
+ 	lock->magic = lock;
+ }
+ 
++static void devm_mutex_release(void *res)
++{
++	mutex_destroy(res);
++}
++
++int __devm_mutex_init(struct device *dev, struct mutex *lock)
++{
++	return devm_add_action_or_reset(dev, devm_mutex_release, lock);
++}
++
+ /***
+  * mutex_destroy - mark a mutex unusable
+  * @lock: the mutex to be destroyed
+-- 
+2.25.1
 
---
-Thanks,
-
-Rahul Rameshbabu
