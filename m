@@ -1,142 +1,246 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63978EEC4
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C106CDBA
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710408561; cv=none; b=ZUfJRD5FUhl6EUrMNwxhvpDYqozLcwduMN+J2Hovku/aOHb30fCZ6S2klu+WI4vdZ9FoIj8SG100mLUiuUgy8VtDZuOgYOQWJkcnwgXeH1SZI7IT3uiZJo5my6LYbnmgruLTu4Zn8tXPCHeD5oQDeKdP72iQWDESp0vguR3F9HA=
+	t=1710408686; cv=none; b=dqyomlvxPQzxYDNGdcxI7QYc2xDG8VeesOzOMNjYe+VDwJGGYBulwJRMZZZDoANR+/KiYuwKqDX7772C7h6ZRRa0NL38WHgG2vUsIhdYCfWb2kdNPX9qaQKxr3voS9JxGbkQZp2VUbsEjyef1GX6nuYHy5t8zyAep0onEp9nP24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710408561; c=relaxed/simple;
-	bh=L8+rKuW0TUaSjATe3UMHZdyq8FKWrVImRUolwSRExj0=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=Py3r1IEtHK5k4ltVokeQKjaEhH+onCDgTU5ysDXZQyAjvyeCa6m6bG5jF5s3KDklsl9MdIrZi8gmhQRz41T/ps4bWTNjEz9Kd1LGbNgp5HMsd3s3IaTV56gmSXWGagWC0Icz9eoMBcbC+CunG6ZVCHXeVkmyv+hhX3NgH7X+Q2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pi7KCbCj; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pi7KCbCj"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-413f2f3e5b5so1729175e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710408557; x=1711013357; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=YVpA2JX+fzlp/qRr3hVbu2IFpulUsmSIfEJZSoktU3E=;
-        b=pi7KCbCjN/+qfCALO71Gwwg/VMH86MqviELxLuV73FFEoYwLiU5mY3Ru/UN8Nrpbv9
-         SiAJgK7PvYlJ/Nb6oDmBeCJY86CIQvuHC8X+dMoxNN+Tud4Z+1m0x4KXm1pfGoW6zhHB
-         yoe8OYm76Mcuwwz8r8nrYnnabPtZ1QUWbY6IXwMhI53l8TUo0y3fo4JsIYbOwHWO9Dfn
-         ikfoGNggrtlFEYiOVnIweJkMo6udjxH+V8kLkJs8R26aPV1KwAZ+1daVLELDcUb1PY2/
-         zZ/B5/eaqfruUIggyUCHMux9zm1se/5PPb+z5K2MqumM+NWI3FhaR6w5zjELClWr5WUm
-         GIQw==
+	s=arc-20240116; t=1710408686; c=relaxed/simple;
+	bh=hMKxZ5S7+ZBl00klWulG1PpgRzwMfKsTjpUQ7uBdNrM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=h6wThAKxiJwHP95up+P/WEdfaQsNI+ZVc0xPKAwV72x9H8exh4C/FKrCQdPa2SKh9NRzr+cBaS8ABYjBk1LNM/P0Da2VaD5PGCgVUxUeB4R+TbckklmB1Jlki7owCNdFcelXxreqEuSUnLopTY0ek0PuhaT1jsvnYvxz4JOVGfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3667d966d40so6843925ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:31:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710408557; x=1711013357;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YVpA2JX+fzlp/qRr3hVbu2IFpulUsmSIfEJZSoktU3E=;
-        b=MdDihnN2HVfERFMA1ZvajHJIyoWVkHWkXrDxU2KCiKDNyNTmt45Phw/MMuvFmsICkR
-         rjmh5+Td0LA1hAYzGo0g2hD1uoRh7JKGzaLvJptizYT7GRuWLwr8XP7GLL/cCuU2psfn
-         TSYtwgzK3T88+52oVBVF7kjCIctfNdwK7O3ZBwtVFZopnRRZ4OW8lqA3djIYd2BAyAhn
-         a2QtsWOUXknk9O5ot6iesCquUd9OovsAYQ1XFPocXIEydNxgkMYkqS+rR7yWCIplozfA
-         NDEc3q1nQ4XyzRw6+2YxUcqweXEoaPt1Ed2RqSCkiiho7iCQoLTqyaIFp1rW6Ohn+2Kb
-         Q9bA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqdk/WrQ16aRMLX050VcceU431BRjpNXqRx9sqOvjHKxzATZ+Mhegee+MZZUhzjq3yu7vCv9v3DOLILcP/HOU3uMmOzON17INTFA5O
-X-Gm-Message-State: AOJu0YyFpexLKZyiyGaP+fGzj6NQwDRGpGm7/XysvWaRFbTfpWnZbGEv
-	Q96/jjRWnpMflecXmLR/r+9rMnddcvQbZ+ujz8pMKkML9VAm+ynR6K7KRmE97J0=
-X-Google-Smtp-Source: AGHT+IFhNZ2TtpDUXtz09eVcfKUHcjWWWpUtXTeEmJ8m3au/jqm3KhAMcAZOfzORToIXAGGCUCJhrw==
-X-Received: by 2002:a05:600c:4fce:b0:413:2e2b:bad2 with SMTP id o14-20020a05600c4fce00b004132e2bbad2mr929596wmq.5.1710408556468;
-        Thu, 14 Mar 2024 02:29:16 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:cd51:5f38:3a35:2e03])
-        by smtp.gmail.com with ESMTPSA id r21-20020a05600c35d500b004126afe04f6sm5047088wmq.32.2024.03.14.02.29.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 02:29:16 -0700 (PDT)
-References: <20240312-basic_dt-v1-0-7f11df3a0896@amlogic.com>
- <20240312-basic_dt-v1-3-7f11df3a0896@amlogic.com>
- <1jsf0vephv.fsf@starbuckisacylon.baylibre.com>
- <9a38fd52-5eea-468d-bd7c-29a505503268@amlogic.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman
- <khilman@baylibre.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 3/4] arm64: dts: add support for A4 based Amlogic BA400
-Date: Thu, 14 Mar 2024 10:26:26 +0100
-In-reply-to: <9a38fd52-5eea-468d-bd7c-29a505503268@amlogic.com>
-Message-ID: <1jcyrxi2l0.fsf@starbuckisacylon.baylibre.com>
+        d=1e100.net; s=20230601; t=1710408684; x=1711013484;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gll4Ztt7M0UGElLQXVLWEpzqDUUYuPg1P4YvKq0ZUe4=;
+        b=TSubcBgPhpeditRF2CBtgvTT+fg814R+9AJkH/RKYgoRjKRn+wiBfZHiuchDLsoA9s
+         2O6WUoAOVs0CNQR7CzyEbaEv0KtYI/pbpfidXfwsmLpn/v86ZPj9y+NYffYR7FyIJx1Q
+         IiSQTtbVjG9MxT8n9RmZaO5rKH6ea4L21kb3RbhLrnqT8gffBm7xwpKn9LVwL4/UEF5U
+         vORwP6HJoBTqDRABLlGOuLoJcNodu3WoB+fL+111lBIVq5AidIWY3Qhc/2lXLcYPMQ/h
+         5IpkmxgP+V9GYwscLu5/L7wvkmLG1xiguLkZ8nsTmjWfE21v1L6/TSr9zp9Q25lxXKVg
+         TXGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpG+9aAmrOuu3lh9bpfseqer+U9M0//dmG8B4WEYD/1QmOWS7LnOqyi1fNr9Ue3sqNVUsIkZ04+/SpqMSZiKL9aTtau1VdhRxT420y
+X-Gm-Message-State: AOJu0Yw7ltFVcWfpZJCgMPU9xfanYSRfCr5sd8nJ/Mv1NEXVD9vq1YXs
+	vVsyZIBpe6DJVj2D3jgtamv4lUePsLBKzZ4rgcjfe3bihMW5zU3YiaZvZ99U2ME5cEHmUbyNFAb
+	yFpFjeLYBl26pt+bRrPSwtRCoCClEgtuy9hOrtjOKFbduceL53j5lATU=
+X-Google-Smtp-Source: AGHT+IFWrX0NsTpryB9bD1F2qhaXzg46a4KylBy4kxp5SE7W9VCzIsXMjDXE7FqQt8+Z7CjpAYUbV4X8T41mS8EPgv+ku+Ex28YU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:12e7:b0:366:725b:57a5 with SMTP id
+ l7-20020a056e0212e700b00366725b57a5mr15747iln.3.1710408684433; Thu, 14 Mar
+ 2024 02:31:24 -0700 (PDT)
+Date: Thu, 14 Mar 2024 02:31:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e826906139b8e88@google.com>
+Subject: [syzbot] [xfs?] possible deadlock in xfs_ilock
+From: syzbot <syzbot+d247769793ec169e4bf9@syzkaller.appspotmail.com>
+To: chandan.babu@oracle.com, djwong@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    e5e038b7ae9d Merge tag 'fs_for_v6.9-rc1' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1276d246180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ce8d253b68e67fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=d247769793ec169e4bf9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-e5e038b7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/82ab7eda09bc/vmlinux-e5e038b7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/bda17336e65d/bzImage-e5e038b7.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d247769793ec169e4bf9@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.8.0-syzkaller-06619-ge5e038b7ae9d #0 Not tainted
+------------------------------------------------------
+kswapd1/112 is trying to acquire lock:
+ffff88804a8f6d98 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_ilock+0x2ef/0x3e0 fs/xfs/xfs_inode.c:206
+
+but task is already holding lock:
+ffffffff8d92fb40 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0x15f/0x1a90 mm/vmscan.c:6774
+
+which lock already depends on the new lock.
 
 
-On Thu 14 Mar 2024 at 16:08, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
+the existing dependency chain (in reverse order) is:
 
->>> +
->>> +#include "amlogic-a4.dtsi"
->> Could you describe how the a4 and a5 differs from each other ?
->> The description given in the commit description is the same.
->> Beside the a53 vs a55, I'm not seeing much of a difference.
->> Admittedly, there is not much yet but I wonder if a4 and a5 should have
->> a common dtsi.
->> 
-> They are mostly the same, A5 include HiFi-DSP and NPU, but A4 is not. And
-> some peripheral modules are different, such as SPI and Ehernet phy.
->
-> I would like to wait for the follow-on chips to come out before considering
-> a merger with common dtsi file.
->
+-> #2 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:3692 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:3706
+       might_alloc include/linux/sched/mm.h:303 [inline]
+       slab_pre_alloc_hook mm/slub.c:3746 [inline]
+       slab_alloc_node mm/slub.c:3827 [inline]
+       kmem_cache_alloc+0x4f/0x320 mm/slub.c:3852
+       radix_tree_node_alloc.constprop.0+0x7c/0x350 lib/radix-tree.c:276
+       radix_tree_extend+0x1a2/0x4d0 lib/radix-tree.c:425
+       __radix_tree_create lib/radix-tree.c:613 [inline]
+       radix_tree_insert+0x499/0x630 lib/radix-tree.c:712
+       xfs_qm_dqget_cache_insert.constprop.0+0x38/0x2c0 fs/xfs/xfs_dquot.c:826
+       xfs_qm_dqget+0x182/0x4a0 fs/xfs/xfs_dquot.c:901
+       xfs_qm_vop_dqalloc+0x49a/0xe10 fs/xfs/xfs_qm.c:1755
+       xfs_setattr_nonsize+0x8ca/0xca0 fs/xfs/xfs_iops.c:707
+       xfs_vn_setattr+0x209/0x260 fs/xfs/xfs_iops.c:1027
+       notify_change+0x742/0x11c0 fs/attr.c:497
+       chown_common+0x598/0x660 fs/open.c:790
+       do_fchownat+0x1af/0x210 fs/open.c:821
+       ksys_lchown include/linux/syscalls.h:1243 [inline]
+       __do_sys_lchown16 kernel/uid16.c:30 [inline]
+       __se_sys_lchown16 kernel/uid16.c:28 [inline]
+       __ia32_sys_lchown16+0xe6/0x120 kernel/uid16.c:28
+       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
+       __do_fast_syscall_32+0x7a/0x120 arch/x86/entry/common.c:321
+       do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:346
+       entry_SYSENTER_compat_after_hwframe+0x7a/0x84
 
-No, Please do it now. There is no reason for the community to review the
-same thing twice if the SoCs are "mostly the same".
+-> #1 (&qinf->qi_tree_lock){+.+.}-{3:3}:
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
+       xfs_qm_dqget_cache_lookup+0x66/0x820 fs/xfs/xfs_dquot.c:784
+       xfs_qm_dqget_inode+0x1e7/0x6d0 fs/xfs/xfs_dquot.c:986
+       xfs_qm_dqattach_one+0x26f/0x530 fs/xfs/xfs_qm.c:278
+       xfs_qm_dqattach_locked+0x1c6/0x2d0 fs/xfs/xfs_qm.c:337
+       xfs_qm_vop_dqalloc+0x344/0xe10 fs/xfs/xfs_qm.c:1710
+       xfs_setattr_nonsize+0x8ca/0xca0 fs/xfs/xfs_iops.c:707
+       xfs_vn_setattr+0x209/0x260 fs/xfs/xfs_iops.c:1027
+       notify_change+0x742/0x11c0 fs/attr.c:497
+       chown_common+0x598/0x660 fs/open.c:790
+       do_fchownat+0x1af/0x210 fs/open.c:821
+       ksys_lchown include/linux/syscalls.h:1243 [inline]
+       __do_sys_lchown16 kernel/uid16.c:30 [inline]
+       __se_sys_lchown16 kernel/uid16.c:28 [inline]
+       __ia32_sys_lchown16+0xe6/0x120 kernel/uid16.c:28
+       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
+       __do_fast_syscall_32+0x7a/0x120 arch/x86/entry/common.c:321
+       do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:346
+       entry_SYSENTER_compat_after_hwframe+0x7a/0x84
 
->>> +
->>> +/ {
->>> +     model = "Amlogic A113L2 ba400 Development Board";
->>> +     compatible = "amlogic,ba400","amlogic,a4";
->>> +     interrupt-parent = <&gic>;
->>> +     #address-cells = <2>;
->>> +     #size-cells = <2>;
->>> +
->>> +     aliases {
->>> +             serial0 = &uart_b;
->>> +     };
->>> +
->>> +     memory@0 {
->>> +             device_type = "memory";
->>> +             reg = <0x0 0x0 0x0 0x40000000>;
->>> +     };
->>> +
->>> +     reserved-memory {
->>> +             #address-cells = <2>;
->>> +             #size-cells = <2>;
->>> +             ranges;
->>> +
->>> +             /* 52 MiB reserved for ARM Trusted Firmware */
->> That's a lot of memory to blindly reserve.
->> Any chance we can stop doing that and have u-boot amend reserved memory
->> zone based on the actual needs of the device ?
-> Yes. U-boot will change size of reserved memory base on actual usage.
+-> #0 (&xfs_dir_ilock_class){++++}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain kernel/locking/lockdep.c:3869 [inline]
+       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
+       lock_acquire kernel/locking/lockdep.c:5754 [inline]
+       lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
+       down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
+       xfs_ilock+0x2ef/0x3e0 fs/xfs/xfs_inode.c:206
+       xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
+       xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
+       xfs_icwalk_ag+0xca6/0x1740 fs/xfs/xfs_icache.c:1713
+       xfs_icwalk+0x57/0x100 fs/xfs/xfs_icache.c:1762
+       xfs_reclaim_inodes_nr+0x182/0x250 fs/xfs/xfs_icache.c:1011
+       super_cache_scan+0x409/0x550 fs/super.c:227
+       do_shrink_slab+0x44f/0x1160 mm/shrinker.c:435
+       shrink_slab+0x18a/0x1310 mm/shrinker.c:662
+       shrink_one+0x493/0x7b0 mm/vmscan.c:4767
+       shrink_many mm/vmscan.c:4828 [inline]
+       lru_gen_shrink_node mm/vmscan.c:4929 [inline]
+       shrink_node+0x2191/0x3770 mm/vmscan.c:5888
+       kswapd_shrink_node mm/vmscan.c:6696 [inline]
+       balance_pgdat+0x9d0/0x1a90 mm/vmscan.c:6886
+       kswapd+0x5c1/0xc10 mm/vmscan.c:7146
+       kthread+0x2c1/0x3a0 kernel/kthread.c:388
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
 
-Then u-boot should add (not change) the memory if necessary.
-Please drop this.
+other info that might help us debug this:
 
->> 
->>> +             secmon_reserved:linux,secmon {
->>> +                     compatible = "shared-dma-pool";
->>> +                     no-map;
->>> +                     alignment = <0x0 0x400000>;
->>> +                     reg = <0x0 0x05000000 0x0 0x3400000>;
->>> +             };
->>> +     };
->>> +};
->>> +
+Chain exists of:
+  &xfs_dir_ilock_class --> &qinf->qi_tree_lock --> fs_reclaim
 
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(fs_reclaim);
+                               lock(&qinf->qi_tree_lock);
+                               lock(fs_reclaim);
+  lock(&xfs_dir_ilock_class);
+
+ *** DEADLOCK ***
+
+2 locks held by kswapd1/112:
+ #0: ffffffff8d92fb40 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0x15f/0x1a90 mm/vmscan.c:6774
+ #1: ffff8880680100e0 (&type->s_umount_key#81){++++}-{3:3}, at: super_trylock_shared fs/super.c:561 [inline]
+ #1: ffff8880680100e0 (&type->s_umount_key#81){++++}-{3:3}, at: super_cache_scan+0x96/0x550 fs/super.c:196
+
+stack backtrace:
+CPU: 2 PID: 112 Comm: kswapd1 Not tainted 6.8.0-syzkaller-06619-ge5e038b7ae9d #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain kernel/locking/lockdep.c:3869 [inline]
+ __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
+ down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
+ xfs_ilock+0x2ef/0x3e0 fs/xfs/xfs_inode.c:206
+ xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
+ xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
+ xfs_icwalk_ag+0xca6/0x1740 fs/xfs/xfs_icache.c:1713
+ xfs_icwalk+0x57/0x100 fs/xfs/xfs_icache.c:1762
+ xfs_reclaim_inodes_nr+0x182/0x250 fs/xfs/xfs_icache.c:1011
+ super_cache_scan+0x409/0x550 fs/super.c:227
+ do_shrink_slab+0x44f/0x1160 mm/shrinker.c:435
+ shrink_slab+0x18a/0x1310 mm/shrinker.c:662
+ shrink_one+0x493/0x7b0 mm/vmscan.c:4767
+ shrink_many mm/vmscan.c:4828 [inline]
+ lru_gen_shrink_node mm/vmscan.c:4929 [inline]
+ shrink_node+0x2191/0x3770 mm/vmscan.c:5888
+ kswapd_shrink_node mm/vmscan.c:6696 [inline]
+ balance_pgdat+0x9d0/0x1a90 mm/vmscan.c:6886
+ kswapd+0x5c1/0xc10 mm/vmscan.c:7146
+ kthread+0x2c1/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
