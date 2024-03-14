@@ -1,198 +1,391 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9158623;
-	Thu, 14 Mar 2024 22:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710455870; cv=fail; b=fH0oPl4jyA4YUyV4uxn+Q7oLw2gTxBqbtEgTMwR0UTi1kRCxOM+U+fVEdI2CCuAtpMsWuRSI0l2mJAogGYDcYl8Xw4J7hI1IUOL+z3zZKIDm4RF9bY2NjUZVRcaNcJZD21WyA7OkexgfI+NgCgwelTWwDkG2ixI9KlHKrgaOE1U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710455870; c=relaxed/simple;
-	bh=dZ22ndMT1yWb0yuxlgj3ld/9MvFp3H2faJMQUM3KGGo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=e7Z3tT+SeJAlKVZnUI7MJGTkTiegVGxwI777Xg/882ykZJXoRgFeo7JMD9AN+42G9hxhGBoVpgxZiR1nHhcd9efbUS5Sbu8FxuazzmgbT3CC/A6d6wBIxWwewqze66rDEVvW64qgVFIUrPYuNGLJDP/tZcllq/tYjB+HlBfn46w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iYtn2H4X; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZJ5YU+i7; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FADFC15
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 22:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710455873; cv=none; b=lK4H2HDmbCW7yfRSkUgZ/DOgDaaceOcuSjQo4xAR9mxi4zp8z5zcWfaEi/a++8e3k0sYR66843iQ22gNS5mrqTSO7WnFz5V+G/UBiK/NFsof3pTTjTDMcxtchAO+iRKHQoblOBxodCrIeCTLbKD4TZVqZlZ/vhCcX5ws+TgAFhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710455873; c=relaxed/simple;
+	bh=0RW01zh10iot+vDUgIci/vUldGmz44XOD84zNB9SgKY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Wg0tx3oPKVKP879GnSILRzFlqjrlUwH0SZqTgLZkNMyVR5M+wRwElGLuFrSDEXIYZldEksKD2AiBSX+/Ciz+/c/QAIoI/l3l85HzlrY2XYZIBpGbUOHgqr0I9MmfLCgwO/iRnGD9ZMVVs7S4M6IKBHZ1eFh6GGsUJXE9wl/Ekfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=JaVtjs3o; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iYtn2H4X";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZJ5YU+i7"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42ELDX6R016328;
-	Thu, 14 Mar 2024 22:37:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=dZ22ndMT1yWb0yuxlgj3ld/9MvFp3H2faJMQUM3KGGo=;
- b=iYtn2H4XGQOfAQdq5ThDPQpCUCnS3j42GcJNwtngCqRhpKcWmSn+er7L9IHaPd91G4EY
- 91xtXHESzC4V/ZSjxHU83R4Do95KuPAHlZV98yLLyddvnz7fIi8p7QZlKft6HQSYQayt
- QD+5diBSzug66KSQmhdRmQueQKft93xhi8JS30qRHwC/oBK1Rt941VMus6YbAR2LYcG/
- +lR8ysPdolAN2sz/32atReiw9IIvM46TdOGJr5yHLDARnaiba9lCM9efiq4MkAXFhnYE
- bUFKBiB3WkBxV0JXA8mBN+FQNDVEJnF7y7mgO6TNrEETh4FK0V1tTVgFqDRovrKqsvBR dQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wv0absdae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Mar 2024 22:37:33 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42ELKodl028567;
-	Thu, 14 Mar 2024 22:37:32 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wre7b4b45-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Mar 2024 22:37:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bQh9LBUinulG1L/UxaDE++Fu+2//ryvMmC5hK/sJxMGN3huynVKPLddigvTbAORcw0swdA/ZptC2ldqcBREjrcrsCvMe5lMn3PYJE11gPZa/krYgyTkoQ8jd1Y7TWzAlHRWlBf3Ww5MHbwzTofyVbs0R1hqVA83ll0raC858j/r+/r00ujGS/YKcYxmw51ynklLeT3ybILXQqLVapwq6e41cdFrwKOYR8W98A6TRjTICSzt5q9E/bdbfdRdKPpMDA0pLe2nahrrD3sum/ChxefI2HHYJ8GRgH/C9CUNfRsa3zZcvnZfnMGnfbOHP2B7HLcD9oSufTsJ5aNQz4GTpAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dZ22ndMT1yWb0yuxlgj3ld/9MvFp3H2faJMQUM3KGGo=;
- b=hdMXlIPxLoAZzpr97umJRKNr/Ed1fD94awqEmrYLjx4yYcM9oKMkk0E+6B8Pst+inwSjy4cPNK0XnUydn95QEWfHcyS+6SNoGmgw9XE8LGL5a2INW7djsO+hy9s3aYAMkDKMnxY7LOMM+tyKiLI4nSCHCkw6N/Vi8lkVjP07+VegTP1CGWzB7BvbGmm/p+rxH0+fG+b6Ty/5vs/N0z56cCIo4BmjmL3Euv+mtWH7pFVa/bjvwAVDh60RIxP/WsPH25Yh7MoNJZ9HuI9foK/3kryr1tGkAvZS+OjQYhUFi03x6tTmvNVliq4TDtie12KwGsEK+vgVrKASksZwfRcmIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="JaVtjs3o"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68f41af71ebso10918066d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dZ22ndMT1yWb0yuxlgj3ld/9MvFp3H2faJMQUM3KGGo=;
- b=ZJ5YU+i7Ms1xy9fLMVqtrG3/4dPdux8Lxutd976xift2NpRrASHvPxtkdWIWISuMkyksBSMerfmdX2kyundT4G9hvNLxGGkieHnbgIyTgwrFl3ha1x+C6kq63MVhmo3S6JGOG0Ed2wB7q0Uktbltwt3N1OxdQr1Qw/uvLviS4nU=
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by CY5PR10MB6144.namprd10.prod.outlook.com (2603:10b6:930:34::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 14 Mar
- 2024 22:37:29 +0000
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::fe4e:ebf3:2157:7f36]) by BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::fe4e:ebf3:2157:7f36%4]) with mapi id 15.20.7362.035; Thu, 14 Mar 2024
- 22:37:29 +0000
-From: Allison Henderson <allison.henderson@oracle.com>
-To: "michal.kubiak@intel.com" <michal.kubiak@intel.com>,
-        "woni9911@gmail.com"
-	<woni9911@gmail.com>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rds-devel@oss.oracle.com"
-	<rds-devel@oss.oracle.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "threeearcat@gmail.com" <threeearcat@gmail.com>
-Subject: Re: [PATCH net] rds: introduce acquire/release ordering in
- acquire/release_in_xmit()
-Thread-Topic: [PATCH net] rds: introduce acquire/release ordering in
- acquire/release_in_xmit()
-Thread-Index: AQHadgHMgGAJTd0I20K2atNq6wza2LE3H+0AgAC0cgA=
-Date: Thu, 14 Mar 2024 22:37:29 +0000
-Message-ID: <4997357157f5735d07efdc7cd45388bd32375e5c.camel@oracle.com>
-References: <ZfLdv5DZvBg0wajJ@libra05>
-	 <ZfLkyiTssYD8wmVl@localhost.localdomain>
-In-Reply-To: <ZfLkyiTssYD8wmVl@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.4-0ubuntu2 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR10MB4306:EE_|CY5PR10MB6144:EE_
-x-ms-office365-filtering-correlation-id: 8796a371-b24b-4eb3-342c-08dc447754e6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- DAubBwbrJTK2FyVAhQV2eKktL041oZcUq8I56sFjGNBLo8Zpqt3A4HHKGLWuyKmNkMBFm4O8xYyh8x8KP3vWNRk/xD4JpzfS9ZuOBIBukcqmgsz3HJg/iJtpEDmreADLl8rZo4oT8KLuGVH1lxbwoLsNxjj9EDMrKwfj2fRTGKFTcr8vqIDBHyhp7S4T9hJxzCuvFuiH3auE468JEeVyPBaQVDwgRrW5uhzOBpU4GMq/O8Mukpdb4O0k12jhA6Kd98iwLRnvnrtirqHfXXMRZ/9ovJVq43dW4/gE0TB16Er0TrbyR5Iy6Jm0cpUr2z8rCHrTU8SbC2xFQWahmTq4gxNH2y5XQuIv45Q6hHPpTkQWIN3HYNn6w7WkBFpDhfEQGgrwSHib6bBBdHbBqzP0qdQDcY2H6770if61SEWvYSeUTcS7g+riDdjA+pvEupLb0CD2rv1sAYBUF/5eGnhfa3PC3pQoX9KSWViSQBHfz1WmdCQ8Gd+Isx4Mal32CNfBwAPlti24FllLZrAo5AAClMxR0Zd/Gz65YLG+kg7nIrcLUO2HJcqhVSBMhY0c2CbmxiOeUypVFvJKczpHfP70zpMSLLBvP/Ubj2BRcCky3F+mYet6CxYas26MloEBL7cTvR/IvB3aiSLzeV+YbaP6ZkoyW6XwhuqEPywmnW7kDhnTosaUpgbEj5lhR1PvAwahubTsh3lptpGv27nBaQJqB4JJVR8lIrPfC8wZ4Yf8g2Y=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?NmdDRDBNQThDRUhaYTNhS21zMGtqaVMrb2tEcHRHcWlNRmVQL1h2VjFNL3RF?=
- =?utf-8?B?Q1NCd0lxWlptNFZrOGVnbUtTZjJQSWRNeEI2aS9XS3BsZnI3U0VON3FIZmhJ?=
- =?utf-8?B?eU5yN3lVTTZJYXpWd2N2WVNsNk5GYU02SmtBT0x4NGNnbWF5MmJmYnA0N2JP?=
- =?utf-8?B?VDVZa0JTb3REdU1VOGFFK0VqTW5vTnNZd1lyUEJHWjFyc2F1eXIrSWFhU1Nk?=
- =?utf-8?B?RWtORFJxTGtUMUlSWTE0dUxSR0RmVXZVRGxMdmp6NjBZcjRvNWtsYlRFS1ho?=
- =?utf-8?B?TDVHM3FQb1dueHNyaXdBRGVLcXFVN01OK2pod1JpdEdyaGcvQlYyN09UYndQ?=
- =?utf-8?B?UzI0azRQMkpVOFNXVWlxd21rblZ3a0RjaFhaTGY5WVAvTHl3Tzl2WlRFeEhK?=
- =?utf-8?B?V3lTZGtWVldXaXh1M25NR1VRbUNQeG9JaDJURVRrUGNRaHBjVjM2WTJrcW9i?=
- =?utf-8?B?ME9IYzFrN0NMSGZBbW9QK2Z6dENtS0N2eENIdUxnVndxSkZaSjZtRzdhNndT?=
- =?utf-8?B?Z25TWkJURHl5QlUwMXBiK0ZHZElwU3U1OFlBMzB0d1cyeHllSWtpMTB4TTVT?=
- =?utf-8?B?TXc1dFRFSHR6REluRmlOelVkVW9jN2FTN3g2ZjhYZHpxeEU1ZUdvaTlIOGxM?=
- =?utf-8?B?aWtxTXZaaXBZMEs2R3VMYjZPcnlhQ0lzbytpQkg5RC9NSVR3TWNFVUZDaGxi?=
- =?utf-8?B?WTRLbi90RGRKbE1YbEJqNnNYT2xJMGdCM0tYYXBVaUkyNSt3SjBESjU0aGxh?=
- =?utf-8?B?ZkJhZ1E3MmplZUdEeW0wQUs3RVpxbjJPTkxubFVjOCtob3dPYlBXVzhOUnIr?=
- =?utf-8?B?THBoMlo0MEVDQjJlOWdHVWVXQ0JZb2VtU3ozUnFFbzFzM3YvTG5zR1BMdzBN?=
- =?utf-8?B?Z3Jybk5Ya0c4RWtZZ2NIMHRSUE1HTjl1Y216bDdtUDdZcGtlaFlwVzRmNXdq?=
- =?utf-8?B?UkJMNGxZRDRPNnRzWUJXMkUvcXk3YUNCRkdBRlg0L1J1NmpsalJOWnhCS1g5?=
- =?utf-8?B?cm5SN3pMQ3EwdnhubkJmcFNCeDdramhJbGNMeEVrT2ZNL2JQZm90V0orS1Iw?=
- =?utf-8?B?cEpxcEVTbVBxVldsUzlUQ2dtMWlkL29YNzhWUlVhTXJTV2JXMXJHVkdNbUJv?=
- =?utf-8?B?ZlV0VTVPWkZHYXYzMHFDTVl1QzJuaXlzMmpZNGNTeU5HbTkzcHIwbFZQN1FB?=
- =?utf-8?B?K0h1dXpETlcwMWZQZTc4dC91YzlBckd6NFllbTNFMnR3MlppUENOb3NDMERI?=
- =?utf-8?B?TDgvRFk2aFBkdjNpWksyd3NuNVR1d3AxajBOWmlNenJLc2VTeHpWMVRjZC93?=
- =?utf-8?B?TzZRdCtIaGxiWk9lelRxenk5SFQrUHg0SHAzTWNBT2I4OVNWUksxVnNkZlho?=
- =?utf-8?B?enppanFaaGo0aDJuOEpCbkJxTFNUL1M5NXUra1pUbVNwZm9TWWhRb2dBUWFa?=
- =?utf-8?B?aW9wRWtVeGZLVWxzQzI5Yjl2WHFNYWE4V0FvTE5TaTZ1THgyajFwZTVHc1lS?=
- =?utf-8?B?VTJYR0FmU1RaR2tDaVpGRlZ6Q3ZCK2VXbjRtaXQ2ZTZoZ2hCcGg0NWpHSUEr?=
- =?utf-8?B?c0xkZHJGMnIxZk14cVIyWnJJcnM2QmJ2ZmJya3RWWXEvSktzODB1WDNaWDl5?=
- =?utf-8?B?RnVsZkRTUi9qbXgrTU1IWFJ6VktOM0diUGR2Y08rOVVrWHl6dlkzS1hKRG5o?=
- =?utf-8?B?Snh0QXJlRFM2QjFyTkJFczd0dlAydmVhdmVJZ1o4c1RFUG5STHlMY1RIOWNK?=
- =?utf-8?B?bzRHVTNzbjVIbmM5aU1vd3FXZXVlQ0JuQjRZWkMvTUF0UFA3YktvT01xdmU5?=
- =?utf-8?B?czBPK1JudGw1cnhXTmtGVDB4US8rMU1CSUI0WWJKa2ErS0VCWDRmc08zY2ln?=
- =?utf-8?B?YXdYMVhNK1hkMkZmQVg0VnBhWEtLSEFBN0xuQjVudGhqd2I4REd3WkVEeDRy?=
- =?utf-8?B?YUlBQjhlL1lERmx5clB3bzB3bTgyTDN4WlFmSG9Renk4SG4vdHpib1UvWTA3?=
- =?utf-8?B?SmxrdXQvd2ExL0JZcURwVUVuWlNMQzZjRVprZWU0WTdPc2w5Y0I5MFRzcVlC?=
- =?utf-8?B?WTFHWnM5QnM3eCsvenZGOUJBUk9Nd0J6N2JLbDRVSmdWek1yS0hFd242SGwy?=
- =?utf-8?B?UVFOdlk1a3VidFBmR1RRK2xHQVZNU2JaTGdZdWNpTkNxY0FIdEtPL0U5UHNV?=
- =?utf-8?B?Ymc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DCD7CBD25D8FFE40A773CA245B62EB2D@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=iwanders.net; s=google; t=1710455870; x=1711060670; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wqIiAcmTY4cspT0Jt4o+nhnGAAsDHgZvUq8qIGKZuZU=;
+        b=JaVtjs3oIQQ8nCt8CiKRJ4UAxewAeAkfKBRSgD5wsBG7DQjyi0jIPSmWOd17VrWxdR
+         WxTcTNpOnNWFhv687xKBRVF4bbIzf7Ni17YFQqzY8pPU5bYmEMeRJV7ptAPMVWw9T1rP
+         rtq6XCmP95szh5ucRZBMRBWLucw3VLNeInnBU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710455870; x=1711060670;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wqIiAcmTY4cspT0Jt4o+nhnGAAsDHgZvUq8qIGKZuZU=;
+        b=eEj6OVU5woko3QbvPBELEyuzlDXp02JIvR7MJSNSvS/oMOEigrsK2g8lU/P3/sZLxK
+         SxCffTiOZzNIqGyocHUU/uAewMyrIJyQZX09PXkl0ydv8spC/ruoza9QrHXr0fbwNmh3
+         Bw7RZz4gxljtrcU8ohlKxpMfSIuULz4rBBo4JJzrdfxYgCLE+gPtDcwpSGc2AgVDeKEL
+         CadILrPCbUBVvawoZMFMkeLNjABWYyUIHEMlld47WXhY4fN1pjeWJIz/MKWkizpsFtD5
+         jKuNwHubLkIUPnPwS9pimiutGSUnaGlx/hYIqN/Eyl3JHe+pQLIgqvncWjkZRiiX/v5a
+         HHvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkLRmud5PxETrEp4ce7A2DckA5zucvNMQoym/eOxx1U2S4xLJ08Pd79gqwIZND5ZPa8mPX7/X5EF0dX7OoRY+Z1/rF49d+TNKufnlz
+X-Gm-Message-State: AOJu0Yzs6DVQF3f/5swdDqBo186biJULrnIgfBu+btujaOK/eSW5+PsS
+	Yw3NooZO61JrqwZbuTqf8khEF3kyNGnzTfS0fee5KXiJPe6GNzUnh2SiRPRi2L4=
+X-Google-Smtp-Source: AGHT+IELRZEJXRJEM9OhDOqs7vv1seGF83v0kHpV0Yyv7acfPE7jxvgsLpgdNTkegVEX0Y8xD3ACxg==
+X-Received: by 2002:ad4:45a9:0:b0:691:72a:bc0e with SMTP id y9-20020ad445a9000000b00691072abc0emr3595460qvu.8.1710455867699;
+        Thu, 14 Mar 2024 15:37:47 -0700 (PDT)
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id de33-20020a05620a372100b00789dd526bc7sm826447qkb.129.2024.03.14.15.37.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 15:37:46 -0700 (PDT)
+From: Ivor Wanders <ivor@iwanders.net>
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ivor Wanders <ivor@iwanders.net>
+Subject: [PATCH v2 1/1] platform/surface: platform_profile: add fan profile switching
+Date: Thu, 14 Mar 2024 18:37:33 -0400
+Message-Id: <20240314223733.6236-2-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240314223733.6236-1-ivor@iwanders.net>
+References: <20240314223733.6236-1-ivor@iwanders.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	FqUTN5f5y5yjtLbi2CaVtmdIqesXhbOX2hUwm4rytu/+0QVoTZjDHlZMRFWXMQozW1ew99ApBziimqRY82UFR+oEr2hHm0Vq72x0zI3ozCPkgIfwpY2nlG1sGxUbbDv/qgTHPqy0Du5ln7jldQaMP7plXKRp0CM0Icon0XmMuN2QxewYd3UuVWbxjT2hYsq9GMghGXPKC/og3B0i/a5Bv97dao/SZTeX5OF+htzkzdSxeKPFcn5hrD9MNC+HEBt7z9xwRLbEbZfeqZ6eNWZO9tFngkbZbZ9hMeQHgcFV6l9ptrp51Bndd6/5qvYsVmyeQvCwGxHz6zpKba3NPGGJhcxB73AG4ucEU18L+ym10zpAdz+ROKpPXifm3KL71ums7L1ACIFM8GkcAa2dPcDrzw8K7TgRwlBNKOFnL5Bpd8lokN8sKg9WKZu6tcyWXWGuY/1PPUcOdoZpYk52QVIJJKX7qgyPlynxVdgWvi3wL3/pKQm5Z/x1Qsxb1Jy4iPgFwonbmrHrRhzMC/bhg/SpiDkq3gzEW9SyMvpu8qHOqATpI5632mjLvcLkVnZcHOo4uhtOJg1J6DzOXoIyy1toKZxoiuOUTeXhw5BUyY5sPTc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8796a371-b24b-4eb3-342c-08dc447754e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 22:37:29.5597
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fCokuSr56zTfqDu6bbHJSFl7NvT8pTUzzcnMz+kqEXHIEHTUgbHYYyczOsxCvQQwsYIQymH3aUp0IaLSwmEgMw11E0lUkQq3mx9+NDiCf6w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6144
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 phishscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403140173
-X-Proofpoint-ORIG-GUID: GWJIXVIAWEpo5apPws27m-KPBPM0PA-B
-X-Proofpoint-GUID: GWJIXVIAWEpo5apPws27m-KPBPM0PA-B
 
-T24gVGh1LCAyMDI0LTAzLTE0IGF0IDEyOjUxICswMTAwLCBNaWNoYWwgS3ViaWFrIHdyb3RlOg0K
-PiBPbiBUaHUsIE1hciAxNCwgMjAyNCBhdCAwODoyMTozNVBNICswOTAwLCBZZXdvbiBDaG9pIHdy
-b3RlOg0KPiA+IGFjcXVpcmUvcmVsZWFzZV9pbl94bWl0KCkgd29yayBhcyBiaXQgbG9jayBpbiBy
-ZHNfc2VuZF94bWl0KCksIHNvDQo+ID4gdGhleQ0KPiA+IGFyZSBleHBlY3RlZCB0byBlbnN1cmUg
-YWNxdWlyZS9yZWxlYXNlIG1lbW9yeSBvcmRlcmluZyBzZW1hbnRpY3MuDQo+ID4gSG93ZXZlciwg
-dGVzdF9hbmRfc2V0X2JpdC9jbGVhcl9iaXQoKSBkb24ndCBpbXBseSBzdWNoIHNlbWFudGljcywN
-Cj4gPiBvbg0KPiA+IHRvcCBvZiB0aGlzLCBmb2xsb3dpbmcgc21wX21iX19hZnRlcl9hdG9taWMo
-KSBkb2VzIG5vdCBndWFyYW50ZWUNCj4gPiByZWxlYXNlDQo+ID4gb3JkZXJpbmcgKG1lbW9yeSBi
-YXJyaWVyIGFjdHVhbGx5IHNob3VsZCBiZSBwbGFjZWQgYmVmb3JlDQo+ID4gY2xlYXJfYml0KCkp
-Lg0KPiA+IA0KPiA+IEluc3RlYWQsIHdlIHVzZSBjbGVhcl9iaXRfdW5sb2NrL3Rlc3RfYW5kX3Nl
-dF9iaXRfbG9jaygpIGhlcmUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWWV3b24gQ2hvaSA8
-d29uaTk5MTFAZ21haWwuY29tPg0KPiANCj4gTWlzc2luZyAiRml4ZXMiIHRhZyBmb3IgdGhlIHBh
-dGNoIGFkZHJlc3NlZCB0byB0aGUgIm5ldCIgdHJlZS4NCj4gDQo+IFRoYW5rcywNCj4gTWljaGFs
-DQoNClllcywgSSB0aGluayBpdCBuZWVkczoNCg0KRml4ZXM6IDFmOWVjZDdlYWNmZCAoIlJEUzog
-UGFzcyByZHNfY29ubl9wYXRoIHRvIHJkc19zZW5kX3htaXQoKSIpDQoNClNpbmNlIHRoYXQgaXMg
-dGhlIGxhc3QgcGF0Y2ggdG8gbW9kaWZ5IHRoZSBhZmZlY3RlZCBjb2RlLiAgT3RoZXIgdGhhbg0K
-dGhhdCBJIHRoaW5rIHRoZSBwYXRjaCBsb29rcyBnb29kLiAgV2l0aCB0aGUgdGFnIGZpeGVkLCB5
-b3UgY2FuIGFkZCBteQ0KcnZiOg0KDQpSZXZpZXdlZC1ieTogQWxsaXNvbiBIZW5kZXJzb24gPGFs
-bGlzb24uaGVuZGVyc29uQG9yYWNsZS5jb20+DQo+IA0KDQo=
+Change naming from tmp to platform profile to clarify the module may
+interact with both the TMP and FAN subystems. Add functionality that
+switches the fan profile when the platform profile is changed when
+a fan is present.
+
+Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+Link: https://github.com/linux-surface/kernel/pull/145
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+Changes in v2:
+  - Added link entry to commit message.
+  - Use u8 instead of char for the argument of __sam_fan_profile_set.
+  - Made profile and profile_le variable const.
+---
+---
+ .../surface/surface_aggregator_registry.c     | 36 +++++---
+ .../surface/surface_platform_profile.c        | 88 ++++++++++++++++---
+ 2 files changed, 100 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index 035d6b4105cd..79e52eddabd0 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -68,12 +68,26 @@ static const struct software_node ssam_node_bat_sb3base = {
+ 	.parent = &ssam_node_hub_base,
+ };
+ 
+-/* Platform profile / performance-mode device. */
+-static const struct software_node ssam_node_tmp_pprof = {
++/* Platform profile / performance-mode device without a fan. */
++static const struct software_node ssam_node_tmp_perf_profile = {
+ 	.name = "ssam:01:03:01:00:01",
+ 	.parent = &ssam_node_root,
+ };
+ 
++/* Platform profile / performance-mode device with a fan, such that
++ * the fan controller profile can also be switched.
++ */
++static const struct property_entry ssam_node_tmp_perf_profile_has_fan[] = {
++	PROPERTY_ENTRY_BOOL("has_fan"),
++	{ }
++};
++
++static const struct software_node ssam_node_tmp_perf_profile_with_fan = {
++	.name = "ssam:01:03:01:00:01",
++	.parent = &ssam_node_root,
++	.properties = ssam_node_tmp_perf_profile_has_fan,
++};
++
+ /* Fan speed function. */
+ static const struct software_node ssam_node_fan_speed = {
+ 	.name = "ssam:01:05:01:01:01",
+@@ -208,7 +222,7 @@ static const struct software_node ssam_node_pos_tablet_switch = {
+  */
+ static const struct software_node *ssam_node_group_gen5[] = {
+ 	&ssam_node_root,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	NULL,
+ };
+ 
+@@ -219,7 +233,7 @@ static const struct software_node *ssam_node_group_sb3[] = {
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+ 	&ssam_node_bat_sb3base,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	&ssam_node_bas_dtx,
+ 	&ssam_node_hid_base_keyboard,
+ 	&ssam_node_hid_base_touchpad,
+@@ -233,7 +247,7 @@ static const struct software_node *ssam_node_group_sl3[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	&ssam_node_hid_main_keyboard,
+ 	&ssam_node_hid_main_touchpad,
+ 	&ssam_node_hid_main_iid5,
+@@ -245,7 +259,7 @@ static const struct software_node *ssam_node_group_sl5[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	&ssam_node_hid_main_keyboard,
+ 	&ssam_node_hid_main_touchpad,
+ 	&ssam_node_hid_main_iid5,
+@@ -258,7 +272,7 @@ static const struct software_node *ssam_node_group_sls[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	&ssam_node_pos_tablet_switch,
+ 	&ssam_node_hid_sam_keyboard,
+ 	&ssam_node_hid_sam_penstash,
+@@ -274,7 +288,7 @@ static const struct software_node *ssam_node_group_slg1[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	NULL,
+ };
+ 
+@@ -283,7 +297,7 @@ static const struct software_node *ssam_node_group_sp7[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	NULL,
+ };
+ 
+@@ -293,7 +307,7 @@ static const struct software_node *ssam_node_group_sp8[] = {
+ 	&ssam_node_hub_kip,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile,
+ 	&ssam_node_kip_tablet_switch,
+ 	&ssam_node_hid_kip_keyboard,
+ 	&ssam_node_hid_kip_penstash,
+@@ -310,7 +324,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
+ 	&ssam_node_hub_kip,
+ 	&ssam_node_bat_ac,
+ 	&ssam_node_bat_main,
+-	&ssam_node_tmp_pprof,
++	&ssam_node_tmp_perf_profile_with_fan,
+ 	&ssam_node_fan_speed,
+ 	&ssam_node_pos_tablet_switch,
+ 	&ssam_node_hid_kip_keyboard,
+diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
+index a5a3941b3f43..3de864bc6610 100644
+--- a/drivers/platform/surface/surface_platform_profile.c
++++ b/drivers/platform/surface/surface_platform_profile.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Surface Platform Profile / Performance Mode driver for Surface System
+- * Aggregator Module (thermal subsystem).
++ * Aggregator Module (thermal and fan subsystem).
+  *
+  * Copyright (C) 2021-2022 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+@@ -14,6 +14,7 @@
+ 
+ #include <linux/surface_aggregator/device.h>
+ 
++// Enum for the platform performance profile sent to the TMP module.
+ enum ssam_tmp_profile {
+ 	SSAM_TMP_PROFILE_NORMAL             = 1,
+ 	SSAM_TMP_PROFILE_BATTERY_SAVER      = 2,
+@@ -21,15 +22,26 @@ enum ssam_tmp_profile {
+ 	SSAM_TMP_PROFILE_BEST_PERFORMANCE   = 4,
+ };
+ 
++// Enum for the fan profile sent to the FAN module. This fan profile is
++// only sent to the EC if the 'has_fan' property is set. The integers are
++// not a typo, they differ from the performance profile indices.
++enum ssam_fan_profile {
++	SSAM_FAN_PROFILE_NORMAL             = 2,
++	SSAM_FAN_PROFILE_BATTERY_SAVER      = 1,
++	SSAM_FAN_PROFILE_BETTER_PERFORMANCE = 3,
++	SSAM_FAN_PROFILE_BEST_PERFORMANCE   = 4,
++};
++
+ struct ssam_tmp_profile_info {
+ 	__le32 profile;
+ 	__le16 unknown1;
+ 	__le16 unknown2;
+ } __packed;
+ 
+-struct ssam_tmp_profile_device {
++struct ssam_platform_profile_device {
+ 	struct ssam_device *sdev;
+ 	struct platform_profile_handler handler;
++	bool has_fan;
+ };
+ 
+ SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_tmp_profile_get, struct ssam_tmp_profile_info, {
+@@ -42,6 +54,13 @@ SSAM_DEFINE_SYNC_REQUEST_CL_W(__ssam_tmp_profile_set, __le32, {
+ 	.command_id      = 0x03,
+ });
+ 
++SSAM_DEFINE_SYNC_REQUEST_W(__ssam_fan_profile_set, u8, {
++	.target_category = SSAM_SSH_TC_FAN,
++	.target_id = SSAM_SSH_TID_SAM,
++	.command_id = 0x0e,
++	.instance_id = 0x01,
++});
++
+ static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile *p)
+ {
+ 	struct ssam_tmp_profile_info info;
+@@ -57,12 +76,19 @@ static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile
+ 
+ static int ssam_tmp_profile_set(struct ssam_device *sdev, enum ssam_tmp_profile p)
+ {
+-	__le32 profile_le = cpu_to_le32(p);
++	const __le32 profile_le = cpu_to_le32(p);
+ 
+ 	return ssam_retry(__ssam_tmp_profile_set, sdev, &profile_le);
+ }
+ 
+-static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
++static int ssam_fan_profile_set(struct ssam_device *sdev, enum ssam_fan_profile p)
++{
++	const u8 profile = p;
++
++	return ssam_retry(__ssam_fan_profile_set, sdev->ctrl, &profile);
++}
++
++static int convert_ssam_tmp_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
+ {
+ 	switch (p) {
+ 	case SSAM_TMP_PROFILE_NORMAL:
+@@ -83,7 +109,8 @@ static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profi
+ 	}
+ }
+ 
+-static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profile_option p)
++
++static int convert_profile_to_ssam_tmp(struct ssam_device *sdev, enum platform_profile_option p)
+ {
+ 	switch (p) {
+ 	case PLATFORM_PROFILE_LOW_POWER:
+@@ -105,20 +132,42 @@ static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profi
+ 	}
+ }
+ 
++static int convert_profile_to_ssam_fan(struct ssam_device *sdev, enum platform_profile_option p)
++{
++	switch (p) {
++	case PLATFORM_PROFILE_LOW_POWER:
++		return SSAM_FAN_PROFILE_BATTERY_SAVER;
++
++	case PLATFORM_PROFILE_BALANCED:
++		return SSAM_FAN_PROFILE_NORMAL;
++
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
++		return SSAM_FAN_PROFILE_BETTER_PERFORMANCE;
++
++	case PLATFORM_PROFILE_PERFORMANCE:
++		return SSAM_FAN_PROFILE_BEST_PERFORMANCE;
++
++	default:
++		/* This should have already been caught by platform_profile_store(). */
++		WARN(true, "unsupported platform profile");
++		return -EOPNOTSUPP;
++	}
++}
++
+ static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
+ 				     enum platform_profile_option *profile)
+ {
+-	struct ssam_tmp_profile_device *tpd;
++	struct ssam_platform_profile_device *tpd;
+ 	enum ssam_tmp_profile tp;
+ 	int status;
+ 
+-	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
++	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
+ 
+ 	status = ssam_tmp_profile_get(tpd->sdev, &tp);
+ 	if (status)
+ 		return status;
+ 
+-	status = convert_ssam_to_profile(tpd->sdev, tp);
++	status = convert_ssam_tmp_to_profile(tpd->sdev, tp);
+ 	if (status < 0)
+ 		return status;
+ 
+@@ -129,21 +178,32 @@ static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
+ static int ssam_platform_profile_set(struct platform_profile_handler *pprof,
+ 				     enum platform_profile_option profile)
+ {
+-	struct ssam_tmp_profile_device *tpd;
++	struct ssam_platform_profile_device *tpd;
+ 	int tp;
+ 
+-	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
++	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
++
++	tp = convert_profile_to_ssam_tmp(tpd->sdev, profile);
++	if (tp < 0)
++		return tp;
+ 
+-	tp = convert_profile_to_ssam(tpd->sdev, profile);
++	tp = ssam_tmp_profile_set(tpd->sdev, tp);
+ 	if (tp < 0)
+ 		return tp;
+ 
+-	return ssam_tmp_profile_set(tpd->sdev, tp);
++	if (tpd->has_fan) {
++		tp = convert_profile_to_ssam_fan(tpd->sdev, profile);
++		if (tp < 0)
++			return tp;
++		tp = ssam_fan_profile_set(tpd->sdev, tp);
++	}
++
++	return tp;
+ }
+ 
+ static int surface_platform_profile_probe(struct ssam_device *sdev)
+ {
+-	struct ssam_tmp_profile_device *tpd;
++	struct ssam_platform_profile_device *tpd;
+ 
+ 	tpd = devm_kzalloc(&sdev->dev, sizeof(*tpd), GFP_KERNEL);
+ 	if (!tpd)
+@@ -154,6 +214,8 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
+ 	tpd->handler.profile_get = ssam_platform_profile_get;
+ 	tpd->handler.profile_set = ssam_platform_profile_set;
+ 
++	tpd->has_fan = device_property_read_bool(&sdev->dev, "has_fan");
++
+ 	set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
+-- 
+2.17.1
+
