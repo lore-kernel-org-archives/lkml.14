@@ -1,133 +1,81 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33741347C1;
-	Thu, 14 Mar 2024 10:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E06347C1;
+	Thu, 14 Mar 2024 10:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710412429; cv=none; b=PoJt8cOGpeZPXj6NhieQ9I3El2+m/if4D5puaw8xe5i0HiKup0tTLn48UkQAiLjQjAyCHKs6LTkkoRSbwWAvUru7oR1JwazTlZZRyKDRYovaby/TF0bQGvV15s8vStp9LsRHZUMdjKjpr5xJS5ux0s/o26iTWy9IrNO5O/IZKWc=
+	t=1710412505; cv=none; b=YpjmaS76p3KYQ3noYPJF64G+zxaTohHlNz4QDpappZaaX+xPOUDl6QRp0XKotrhXBrBEArPbpDuuxaHBoiiiO0fhFD/kZ8fdWsrJB+XVfymBqTFWvuy5Cc1jMU3BRH8eMmyxaoQxBQHEWzTMxdz3yNy1oGWLEtHTmrwfv79zFtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710412429; c=relaxed/simple;
-	bh=iZDy04kALp0HO9vpw+exKughW0nV83r8fp9t6svxXyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gh/OZlsJRyN8HZdCreaobwsmojDwrlMWSnWwBrZCTvBkv3VaIxLMtN/RKmYxcOGsfBj61JK9PDB+DuPIZA68h/OLXtRaU6m8rVEsNZPc3JDDP2T/6gnILwMEvDn6BFivKnZs+L+u7iPwJPb1wskxxSaGxCpS22ZzGKiekieJ660=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IV1LJ3Gi; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710412505; c=relaxed/simple;
+	bh=Hgh3vqIzWxqRwj99BTgkEyg/C7Qp+Y8i8zd0DBoV0s4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSoXmPAe4/2nHRYRneACFn+E9kWhBK4VtfW09DxG9H7xwVPkOnEXCPADJIP3lw5IBbFlLxohOZdyiLpaZGdypHksSUPnWpYOpAG8ygIn/VwcuS5KYrNfS0ZQk219ra9ZohsWAkh6f6w00T2qUbzdI/kznjhi1/GI2i9/9USGeq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHqFn20q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IV1LJ3Gi"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a450bedffdfso84418166b.3;
-        Thu, 14 Mar 2024 03:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710412426; x=1711017226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jue9nUfRRiSlNQWu5LcHhmk+uFTWQIyCfZh4ap/Abso=;
-        b=IV1LJ3GihvXKYAysjrRNN812n2VHu6P4gAxZCVosMBx3NFbJXxAubv1LB3EZkQkNbQ
-         HzZvtwpQAvN5Om5AbS65xCg42qgRTncW2icvdsFwGhwu3q9JxP06GUL0rakASNyu5t5V
-         vKlDrMMbmaoTavAUdX6i1PWaAmuiKvco6upFTsyG29UbKFFc2/wpZSp0Ctu3nA35NfB8
-         wC+Ss9A+SI5+WWMpFClu4r1Y/G8bk81SBStYMzL8SBerLlqVI13qc0POgrQdSvfbBs/z
-         nxtiY5DSYKmwPkBjqwpJm8eJ7pu7LH1NAXcrMppjr+VgcFk+1QUfD/hfpz71rCBikly+
-         msDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710412426; x=1711017226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jue9nUfRRiSlNQWu5LcHhmk+uFTWQIyCfZh4ap/Abso=;
-        b=YEOiq71JkhlJPSSrh2gvAd6izWic/wT77Idx3rkoM6QrJWGqLGtuA0PbsxpS5/vl8n
-         2fR9xEFmcl8hsX4s6H198147VXkHXUmiuy4CpFClswpukH0bE6gac4QBfIdhMkr0KN4E
-         +/WQ0+nmU1Ixq9GcomTKMkUCP5BX6TEEnkPdAksb60gnsHXvvarmDV6vSJ471O3rSKR5
-         krjtuA9gNcbDJ6HNg+XNE77IFPwpuMidvIRioCDKgIaCZjbEaK8Z7Fd06qdTJP+NhQiV
-         B0qsNsCq3YGZ1QoLHAJw20HlKjflqd0kLCTv6Y3mECPVUZeajlWbb1k/KBEAYBpuT9SU
-         0l/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXYR5gocCfB7479BRJ7OaDxRg5ssZ7Ssu0Kc8YrcxmwVO5gseYOzSFt24Tu3FIsGRnWEIKLmkHe/mikE9VeaI6iclF14DLEagA1wWncP5LJ0ouZcXPphdlHTLEraqUV0WaEDyZtAbDNhA==
-X-Gm-Message-State: AOJu0Yy1Yb9aomsCoiz7a9tvmkNbO/KT/BAw6+JcJmILJs9Bk/K6iVZa
-	yLSicyF+VLS3e+A73VQEXTC35RQvgpUKhwA9N5zK8oNDF3E3m7jnxTO8gNyYmfTrDoT+134WYw1
-	OLtexhr+WrTcyAkLe9VBVPLA65O8=
-X-Google-Smtp-Source: AGHT+IH8HWWnhtzc44YalKwroFKYB1nvrYJZ4DjNqdGPigNqIr2X3HYd15E33bbNFvnnosUzFyxAXDmeUagTjt+Dz5g=
-X-Received: by 2002:a17:906:3752:b0:a44:8fa9:d36f with SMTP id
- e18-20020a170906375200b00a448fa9d36fmr927863ejc.41.1710412426337; Thu, 14 Mar
- 2024 03:33:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHqFn20q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 267A9C433C7;
+	Thu, 14 Mar 2024 10:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710412504;
+	bh=Hgh3vqIzWxqRwj99BTgkEyg/C7Qp+Y8i8zd0DBoV0s4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QHqFn20qzFzCc3m9XfQtjPCP8ChhpEfXDlzVqGaAq47X45+NtjjXk/uAzTEYBhAXx
+	 DvWcywyLjDORNUYnc90svStElyasG9rDj8NFgIBcmApxxoIkUxhQpORosFnqVAWmMj
+	 whzkLD6oN71LZMFvA6Q38imkZoQIRO/rtyduiUUTsduulq1UnJdeiNtcrxaYfjCOnp
+	 JvJcsCQ6jDE8Mj0A+FIfshIXXEjiIAWxD+JFpq6uGbbxfsLsK7RJyhgVfsEMqGdRlY
+	 MEAUFK2AxCgTpmFLRuOVL9rcE6xzFwMPukiGGvsw3G1d1NZFWNu+NPEkJYEo1hg08Q
+	 +xmlAYrfH0woA==
+Message-ID: <9049ab55-7be4-4cc8-b2f2-2cc355f0bc8e@kernel.org>
+Date: Thu, 14 Mar 2024 18:34:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314084531.1935545-1-gnstark@salutedevices.com> <20240314084531.1935545-2-gnstark@salutedevices.com>
-In-Reply-To: <20240314084531.1935545-2-gnstark@salutedevices.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 14 Mar 2024 12:33:09 +0200
-Message-ID: <CAHp75VeHsSvs5eUC2eUTCLJLKNcoPShXoH3fmA0J4GUQTMV1LA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/9] locking/mutex: introduce devm_mutex_init
-To: George Stark <gnstark@salutedevices.com>
-Cc: pavel@ucw.cz, lee@kernel.org, vadimp@nvidia.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, hdegoede@redhat.com, 
-	mazziesaccount@gmail.com, peterz@infradead.org, mingo@redhat.com, 
-	will@kernel.org, longman@redhat.com, boqun.feng@gmail.com, 
-	nikitos.tr@gmail.com, marek.behun@nic.cz, kabel@kernel.org, 
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kernel@salutedevices.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] f2fs: mark inode dirty for FI_ATOMIC_COMMITTED flag
+Content-Language: en-US
+To: Sunmin Jeong <s_min.jeong@samsung.com>, jaegeuk@kernel.org,
+ daehojeong@google.com
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>,
+ Yeongjin Gil <youngjin.gil@samsung.com>
+References: <CGME20240313112650epcas1p3e65fdc5f6df18a4f700fa62bb5480b28@epcas1p3.samsung.com>
+ <20240313112620.1061463-1-s_min.jeong@samsung.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240313112620.1061463-1-s_min.jeong@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 14, 2024 at 10:46=E2=80=AFAM George Stark <gnstark@salutedevice=
-s.com> wrote:
->
-> Using of devm API leads to a certain order of releasing resources.
-> So all dependent resources which are not devm-wrapped should be deleted
-> with respect to devm-release order. Mutex is one of such objects that
-> often is bound to other resources and has no own devm wrapping.
-> Since mutex_destroy() actually does nothing in non-debug builds
-> frequently calling mutex_destroy() is just ignored which is safe for now
-> but wrong formally and can lead to a problem if mutex_destroy() will be
-> extended so introduce devm_mutex_init()
+On 2024/3/13 19:26, Sunmin Jeong wrote:
+> In f2fs_update_inode, i_size of the atomic file isn't updated until
+> FI_ATOMIC_COMMITTED flag is set. When committing atomic write right
+> after the writeback of the inode, i_size of the raw inode will not be
+> updated. It can cause the atomicity corruption due to a mismatch between
+> old file size and new data.
+> 
+> To prevent the problem, let's mark inode dirty for FI_ATOMIC_COMMITTED
+> 
+> Atomic write thread                   Writeback thread
+>                                          __writeback_single_inode
+>                                            write_inode
+>                                              f2fs_update_inode
+>                                                - skip i_size update
+>    f2fs_ioc_commit_atomic_write
+>      f2fs_commit_atomic_write
+>        set_inode_flag(inode, FI_ATOMIC_COMMITTED)
+>      f2fs_do_sync_file
+>        f2fs_fsync_node_pages
+>          - skip f2fs_update_inode since the inode is clean
+> 
+> Fixes: 3db1de0e582c ("f2fs: change the current atomic write way")
+> Cc: stable@vger.kernel.org #v5.19+
+> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+> Reviewed-by: Yeongjin Gil <youngjin.gil@samsung.com>
+> Signed-off-by: Sunmin Jeong <s_min.jeong@samsung.com>
 
-Missing period at the end.
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-....
-
-> Suggested by-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-Needs properly spelled tag.
-
-...
-
-> +static inline int __devm_mutex_init(struct device *dev, struct mutex *lo=
-ck)
-> +{
-> +       /*
-> +        * When CONFIG_DEBUG_MUTEXES is off mutex_destroy is just a nop s=
-o
-
-mutex_destroy()
-
-> +        * no really need to register it in devm subsystem.
-
-in the devm
-
-> +        */
-> +       return 0;
-> +}
-
-...
-
-> @@ -19,6 +19,7 @@
->  #include <linux/kallsyms.h>
->  #include <linux/interrupt.h>
->  #include <linux/debug_locks.h>
-> +#include <linux/device.h>
-
-Without seeing much context can't say if there is a better (more
-ordered) place to squeeze a new header to. Please, check.
-
-...
-
-After addressing the above comments
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
