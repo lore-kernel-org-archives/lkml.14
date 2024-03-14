@@ -1,230 +1,110 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D95C433D4
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3215B5B3
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 08:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710405602; cv=none; b=BFSAvzK+jJdLavruDPLup6jeKSdULnC0Ao/xPtTWW085gxvzy3T7OZ272/MpKW7bxKR3/7u81NcUfcem+UHRQdZydpnMj0yqz9jvT8qebvsoN7O02Iyt11kMdKW+EGPp0BhHAot3MIfR4kxdAN+oSykdCj7klh2zxSgUkbtvSEY=
+	t=1710405753; cv=none; b=gfNhOenCuFVY6giVHiUVRJIzcoW/vSbZ/+MoSKy+niRp17cNcWLm2JnkgoqwOqg6fi+6X5G323UIevrvsa8Cj8bpGXGjPOZy5+ml+IhweD7ZgZPBLWCEq1GCnNEMZKLLCkFMQC1dRdRTGQStha9VXMzk2isU/+G8dsZktxh8mSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710405602; c=relaxed/simple;
-	bh=hXBkc2lnJyVmaqMJ7BzFl8A8231c++GoATT9FbJj3YY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T09oZq1t/cInw5ulavJEbgQ/Ie4uIJWst/pGg4KM3p4dA8TBzDKfWx2huRupQlctJFU/RwThGW7AmtFj0v5d7gjw9oMFhBPaj0377oOaIQ5iiYEm6Zau7oNUmdOc8PkUAhaShWIGJoAfHPCzKaNXfdBhakfGAgKcQzfMWaOj+8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 42E8dQ2t042813;
-	Thu, 14 Mar 2024 16:39:26 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TwLPF1QZbz2L2Bvr;
-	Thu, 14 Mar 2024 16:38:09 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 14 Mar 2024 16:39:24 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [PATCH] mm: fix a race scenario in folio_isolate_lru
-Date: Thu, 14 Mar 2024 16:39:21 +0800
-Message-ID: <20240314083921.1146937-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1710405753; c=relaxed/simple;
+	bh=t+RewDLamWAHMrg+3ln/QPQ9cqYlQ0kzaDhyZsJynB0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KNiH9RwBM+pkqthJ3KRHIL3PxMlZ3GiArPLzmv7G1zKckXw9MwnKvsp8DMztEWxOG2sqjBr8A7Kuc6Qc2oVMgFXFVwyjlsBn/E/57JpsrVpGp1cV0ES2Ua+DoSEQb9pKB8BJf4/JFW+5lIetongpki1cdvxAHU/hWYzhYQkty4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IqE2nXnH; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqE2nXnH"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33e70d71756so1065602f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 01:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710405750; x=1711010550; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=t+RewDLamWAHMrg+3ln/QPQ9cqYlQ0kzaDhyZsJynB0=;
+        b=IqE2nXnHv5f4IYG5IZiyJWlLuo+bsCEHhafgJ+9BptFE3TQjySGofxBQ5Pj+7CXAPN
+         xHUlhX3AzW/rVvDRSu2OgszCejNcXIcDHXTOuZlRn3HMWHCfUeXvYgeFjHQw064HcFSC
+         RBDzx2Y13EBNZNxAC9wbNblKEoqjzhUocRnvjyhjb80AgDVYgLjEfLXBc47w6LWlSQbU
+         D7a1cMxrEtkLs9scGtaqpmsa4pqPG25/SAl/cXbKzzs0WCYVmPGD+2HrqiBCKJlVKpbx
+         cqbKG/GcgID6zW1SGWv6OqPukc2iZT5Hr/2/W+A5r8H/oB7q5RkqoGDA62tG7vLfz/Kg
+         1HAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710405750; x=1711010550;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+RewDLamWAHMrg+3ln/QPQ9cqYlQ0kzaDhyZsJynB0=;
+        b=SXQpnwYYUGSJdvOjQ9/XQzaY1C3bvJ0bmpTi9myG5P6cEhWnV77328JtwBvJW6rZKd
+         GxPCQRDj3Vp7a+mpvWM+tJf8meRn7a42h8T2dSEH1b/mLrVBSUIRIcJyQa4lJlXNR7EZ
+         4ObZLsvVlzwCniCEwbglLQr1GjXyRbJO0AO0Ds1CLGYmcLRKn8HMaqiUblsz3tboeQYj
+         by0sGtSNWMhfRkprZhK2OTanS4SLf9bB6YhMk+JVI7D039I3w58dCkXGlrwITsHWZDY4
+         y0nDTp2hMZimaixaShoXWh66Jjtcn6ETLk4UhxZ6n9poiAjZKkVXPRKXDQGb4IE+WbDW
+         G0oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVP+eO/7e1q9Sj+t/aO/QSCC2NTcrawOdDGh7JUtlQ87DMAZ8UsFu14694er/UK1XBk9ahboolL7ZQXqSYIdZFRNXy7RcjqLQRvmyXw
+X-Gm-Message-State: AOJu0Yzoc/zAAJzyxdsrIs5gMhZdE5G21QYiWF5aYyYdJZ+xKA4gKhSL
+	tWdfweN8om30alYbrOz5OvfJ3CaV2KSWvkSOsuc+L8Hi6OXV4ScJ
+X-Google-Smtp-Source: AGHT+IEBcVWVFLr1B4Rx0huyUVfFAYckB81wUe3geHmWYTUVzUCKbrfYsyeGLHGDPnyd2uF+Wgtuxg==
+X-Received: by 2002:adf:e6c1:0:b0:33e:7bac:7b18 with SMTP id y1-20020adfe6c1000000b0033e7bac7b18mr896819wrm.5.1710405749946;
+        Thu, 14 Mar 2024 01:42:29 -0700 (PDT)
+Received: from giga-mm-1.home ([2a02:1210:8690:9300:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id f10-20020adffcca000000b0033d640c8942sm221081wrs.10.2024.03.14.01.42.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 01:42:29 -0700 (PDT)
+Message-ID: <cf6624d65f313bf5e94f25866d4473e9bc0f6aae.camel@gmail.com>
+Subject: Re: [PATCH v8 02/38] ARM: ep93xx: add regmap aux_dev
+From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To: nikita.shubin@maquefel.me, Linus Walleij <linus.walleij@linaro.org>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>,
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org,
+ Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 14 Mar 2024 09:42:37 +0100
+In-Reply-To: <20240226-ep93xx-v8-2-3136dca7238f@maquefel.me>
+References: <20240226-ep93xx-v8-0-3136dca7238f@maquefel.me>
+	 <20240226-ep93xx-v8-2-3136dca7238f@maquefel.me>
+Autocrypt: addr=alexander.sverdlin@gmail.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 42E8dQ2t042813
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Hi Nikita,
 
-Panic[1] reported which is caused by lruvec->list break. Fix the race
-between folio_isolate_lru and release_pages.
+On Mon, 2024-02-26 at 10:29 +0300, Nikita Shubin via B4 Relay wrote:
+> The following driver's should be instantiated by ep93xx syscon driver:
+>=20
+> - reboot
+> - pinctrl
+> - clock
+>=20
+> They all require access to DEVCFG register with a shared lock held, to
+> avoid conflict writing to swlocked parts of DEVCFG.
+>=20
+> Provide common resources such as base, regmap and spinlock via auxiliary
+> bus framework.
+>=20
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
-race condition:
-release_pages could meet a non-refered folio which escaped from being
-deleted from LRU but add to another list_head
-  #0 folio_isolate_lru          #1 release_pages
-  if (folio_test_clear_lru())
-                                   if (folio_put_testzero())
-                                   if (!folio_test_lru())
-                                    <failed to delete folio from LRU>
-    folio_get(folio)
-                                       list_add(&folio->lru,)
-    list_del(&folio->lru,)
+I've applied the whole series onto ef6069f3f6577b2e5bdf223d2f6d09f23bed8c6c
+and tested GPIOs, SPI, DMA, sound on EDB9302, looks good to me:
 
-fix action 1:
-have folio_get prior to folio_test_clear_lru is not enough as there
-could be concurrent folio_put(filemap_remove_folios) to make
-release_pages pass refcnt check and failed in delete from LRU
+Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 
-  #0 folio_isolate_lru          #1 release_pages
-  folio_get(folio)
-  if (folio_test_clear_lru())
-                                   if (folio_put_testzero())
-                                   if (!folio_test_lru())
-                                    <failed to delete folio from LRU>
-                                       list_add(&folio->lru,)
-    list_del(&folio->lru,)
+> ---
+> =C2=A0include/linux/soc/cirrus/ep93xx.h | 26 ++++++++++++++++++++++++++
+> =C2=A01 file changed, 26 insertions(+)
 
-fix action 2:
-folio_test_clear_lru should be considered as part of critical section of
-lruvec which require be within lruvec->lock.
-
-  #0 folio_isolate_lru          #1 release_pages
-  spin_lock(lruvec->lock)
-  folio_get(folio)
-  if (folio_test_clear_lru())
-    list_del(&folio->lru,)
-    <delete folio from LRU>
-  spin_unlock(lruvec->lock)        spin_lock(lruvec->lock)
-                                   if (folio_put_testzero())
-                                   if (!folio_test_lru())
-                                       list_add(&folio->lru,)
-
-[1]
-[   37.562326] pc : __list_del_entry_valid_or_report+0xec/0xf0
-[   37.562344] lr : __list_del_entry_valid_or_report+0xec/0xf0
-[   37.562351] sp : ffffffc085953990
-[   37.562355] x29: ffffffc0859539d0 x28: ffffffc082144000 x27: 000000000000000f
-[   37.562367] x26: 000000000000000d x25: 000000000000000d x24: 00000000ffffffff
-[   37.562377] x23: ffffffc085953a08 x22: ffffff8080389000 x21: ffffff8080389000
-[   37.562388] x20: fffffffe05c54180 x19: ffffffc085953b30 x18: ffffffc085989098
-[   37.562399] x17: 20747562202c3838 x16: ffffffffffffffff x15: 0000000000000004
-[   37.562409] x14: ffffff8176980000 x13: 0000000000007fff x12: 0000000000000003
-[   37.562420] x11: 00000000ffff7fff x10: ffffffc0820f51c4 x9 : 53b71233d5d50e00
-[   37.562431] x8 : 53b71233d5d50e00 x7 : ffffffc081161ff0 x6 : 0000000000000000
-[   37.562441] x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
-[   37.562451] x2 : ffffff817f2c4178 x1 : ffffff817f2b71c8 x0 : 000000000000006d
-[   37.562461] Call trace:
-[   37.562465]  __list_del_entry_valid_or_report+0xec/0xf0
-[   37.562472]  release_pages+0x410/0x4c0
-[   37.562482]  __folio_batch_release+0x34/0x4c
-[   37.562490]  truncate_inode_pages_range+0x368/0x63c
-[   37.562497]  truncate_inode_pages+0x14/0x24
-[   37.562504]  blkdev_flush_mapping+0x60/0x120
-[   37.562513]  blkdev_put+0x114/0x298
-[   37.562520]  blkdev_release+0x28/0x40
-[   37.562526]  __fput+0xf8/0x2a8
-[   37.562533]  ____fput+0x10/0x20
-[   37.562539]  task_work_run+0xc4/0xec
-[   37.562546]  do_exit+0x32c/0xa3c
-[   37.562554]  do_group_exit+0x98/0x9c
-[   37.562561]  __arm64_sys_exit_group+0x18/0x1c
-[   37.562568]  invoke_syscall+0x58/0x114
-[   37.562575]  el0_svc_common+0xac/0xe0
-[   37.562582]  do_el0_svc+0x1c/0x28
-[   37.562588]  el0_svc+0x50/0xe4
-[   37.562593]  el0t_64_sync_handler+0x68/0xbc
-[   37.562599]  el0t_64_sync+0x1a8/0x1ac
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
- mm/swap.c   | 25 +++++++++++++++++--------
- mm/vmscan.c | 25 +++++++++++++++++++------
- 2 files changed, 36 insertions(+), 14 deletions(-)
-
-diff --git a/mm/swap.c b/mm/swap.c
-index cd8f0150ba3a..287cf7379927 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -968,6 +968,7 @@ void release_pages(release_pages_arg arg, int nr)
- 
- 	for (i = 0; i < nr; i++) {
- 		struct folio *folio;
-+		struct lruvec *prev_lruvec;
- 
- 		/* Turn any of the argument types into a folio */
- 		folio = page_folio(encoded_page_ptr(encoded[i]));
-@@ -996,9 +997,24 @@ void release_pages(release_pages_arg arg, int nr)
- 				free_zone_device_page(&folio->page);
- 			continue;
- 		}
-+		/*
-+		 * lruvec->lock need to be prior to folio_put_testzero to
-+		 * prevent race with folio_isolate_lru
-+		 */
-+		prev_lruvec = lruvec;
-+		lruvec = folio_lruvec_relock_irqsave(folio, lruvec,
-+				&flags);
-+
-+		if (prev_lruvec != lruvec)
-+			lock_batch = 0;
- 
--		if (!folio_put_testzero(folio))
-+		if (!folio_put_testzero(folio)) {
-+			if (lruvec) {
-+				unlock_page_lruvec_irqrestore(lruvec, flags);
-+				lruvec = NULL;
-+			}
- 			continue;
-+		}
- 
- 		if (folio_test_large(folio)) {
- 			if (lruvec) {
-@@ -1010,13 +1026,6 @@ void release_pages(release_pages_arg arg, int nr)
- 		}
- 
- 		if (folio_test_lru(folio)) {
--			struct lruvec *prev_lruvec = lruvec;
--
--			lruvec = folio_lruvec_relock_irqsave(folio, lruvec,
--									&flags);
--			if (prev_lruvec != lruvec)
--				lock_batch = 0;
--
- 			lruvec_del_folio(lruvec, folio);
- 			__folio_clear_lru_flags(folio);
- 		}
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 4255619a1a31..13a4a716c67a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1721,18 +1721,31 @@ static unsigned long isolate_lru_folios(unsigned long nr_to_scan,
- bool folio_isolate_lru(struct folio *folio)
- {
- 	bool ret = false;
-+	struct lruvec *lruvec;
- 
- 	VM_BUG_ON_FOLIO(!folio_ref_count(folio), folio);
- 
--	if (folio_test_clear_lru(folio)) {
--		struct lruvec *lruvec;
-+	/*
-+	 * The folio_get needs to be prior to clear lru for list integrity.
-+	 * Otherwise:
-+	 *   #0  folio_isolate_lru	      #1 release_pages
-+	 *   if (folio_test_clear_lru())
-+	 *				      if (folio_put_testzero())
-+	 *				      if (!folio_test_lru())
-+	 *				       <failed to del folio from LRU>
-+	 *     folio_get(folio)
-+	 *                                        list_add(&folio->lru,)
-+	 *     list_del(&folio->lru,)
-+	 */
-+	lruvec = folio_lruvec_lock_irq(folio);
-+	folio_get(folio);
- 
--		folio_get(folio);
--		lruvec = folio_lruvec_lock_irq(folio);
-+	if (folio_test_clear_lru(folio)) {
- 		lruvec_del_folio(lruvec, folio);
--		unlock_page_lruvec_irq(lruvec);
- 		ret = true;
--	}
-+	} else
-+		folio_put(folio);
-+	unlock_page_lruvec_irq(lruvec);
- 
- 	return ret;
- }
--- 
-2.25.1
+--=20
+Alexander Sverdlin.
 
