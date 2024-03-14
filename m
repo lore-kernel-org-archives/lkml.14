@@ -1,272 +1,173 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50501381D0;
-	Thu, 14 Mar 2024 05:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAA339AE1
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395989; cv=none; b=N4r075um2rPmJWhrmAE+fek5Yi8V7UCwpjKbuZyQBBs+Gx5amwpXDLhC4FEzajSWohjguZZXVBE0kIHFlI82o6S0M+8bS6rmgrMpQ8XlfnMV5TwK95hospqpJSmxNgXvdPQ7RnqElUTV5XkpV+C2hs28JHA1lhZZymtDJoS7jsU=
+	t=1710395990; cv=none; b=GK4gOwRmWSswDuH48cgRdQ6dahmdTFtkSO5KntSQMnt7wJ8ILWUT66jiBztgFHhpHBO41eX9pV2Tl/HWUQyrbzXmpJ0GWwZ5PpcgC4ck6f20GSjWTgqfSt6dJ8NoOxaqeXS8VIKM2y9DDMxKh16AibIj/dOpLQN7nN0n+Htik+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395989; c=relaxed/simple;
-	bh=nF1vib//JfS9VVM1KMJL7ziPCfj+3ZudKLaYfcABLc0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=innDWgAYmhiA3bEfmuhatmt+zb+Lotv+2AvBbyJtBWcPW6G7PE32cwVW//NlLFSGARMiXlB4y5ROtrSSeheJrYMZi0CLSEg+H8giWbd9kGUGTnWMzhhpLOid1jA26ycM/eI/omCfuPqAdFN1NPsBIlFOCqi2M3B7wsFE8zse4nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF30E1063;
-	Wed, 13 Mar 2024 23:00:22 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8EC683F73F;
-	Wed, 13 Mar 2024 22:59:42 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH V7 06/11] coresight: funnel: Move ACPI support from AMBA driver to platform driver
-Date: Thu, 14 Mar 2024 11:28:38 +0530
-Message-Id: <20240314055843.2625883-7-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1710395990; c=relaxed/simple;
+	bh=ezts1SNNXZNxj9LhQuYH/wsj+Q9nYnkcvRFPOrQH5NU=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=VRbbQpLjXE4QsQRmVXSH1YVhZcPrBDW48zm4c/MFUkqnmQAA+iCPY6CE91vqKsXAOuADGVLhJjLxOw2jsTJS5PpeajU3h6ewiO/3mk0vZXJb0V1YSO6EYO+CcbO3hshBmPEG2C6VrVnaxLXPtgxAgLFcTmDuz3BTsckfz4bwiXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Ijfrqof; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Ijfrqof"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-609f2920b53so10456237b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710395988; x=1711000788; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wc6YXjrCOCpyJhvEJp6tDQdGSaY//cGMnlBPtpOLWG8=;
+        b=4IjfrqofBkyItL+StkrOLepM6fJXlYqAi/Gcv68JYrW+QIGLigm7hYjcKBkcyrkXuT
+         Pw3PIowx1U9NykU6KnvFbrBnjOllxxa4TByuVt0kDUt5qEjL3DWB7L9tLYICspx1CcL1
+         0uDCtNuAYlEize0osqOZ5hQUmkhfDv7pluqpJPoLv3zXCnaEHTrD0+0NJGMGRc/HfenA
+         J1SLh5mz9mw9iAHyrJgfjN5SPQq9JGBixt6vKwV4ElOPV/N6Ekcfg5bJXUwDUdUoTRXI
+         7Hi2sag6sNciQwMllKbAOtt5MZlv9coJvOROYawXhWQpDQ0RWeaASxkt3x9/2uwGCwbJ
+         w1TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710395988; x=1711000788;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wc6YXjrCOCpyJhvEJp6tDQdGSaY//cGMnlBPtpOLWG8=;
+        b=mvA+2yya6nGg5w15ImeJfhWiqb4x3LfovUwNApZt0TIl4CznjLywmHfTZZx5UdQPe7
+         QkmaMtmPa4mJJ5evcE49nSnlv6rcC+Wq9qx21o6lTlQkA4A4wFBncRW0vuG4jiQehr+/
+         IFfehQ1uha3jhBmv4/d1wvdyZYY7Kg803JqbKTynzTc6BqzkSh5QffhPlBHvTrfRLBgE
+         unqpiByCXliPowKo7v1PCV48EtzZUanT/UzSdcBYF4IdvBpP5DwW1fRZMJIpeyJlDND4
+         zWcMlmV7PauUjHBmMDQBJ53546DLxWLAxs+E/7xAx0V3FT5UAsvWPT9exiEeqsuMUi73
+         YRwA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2nb8V3rXt07nEZEi8e1ke/6LWa9DpULpq7meawdBnCTQpShSBHLuYZ3lhMNZd9X7Bqwl0Qxk2BW3CGBcv+vghNCRbqGffTtyrLtQ6
+X-Gm-Message-State: AOJu0Yy/6dWEsM2D8zI2awNz0jYT2FTc34k5vwBCZjMhe43+sPCVA6RC
+	KFyuz7axExB3RNYu6F4QTKvllEJNkO0RObQFfhcCg6YhkMggDRpaMJjUYjOnx7WsXn4K4TEEd61
+	S8Hq1EA==
+X-Google-Smtp-Source: AGHT+IEOxKPeWAIPaad3vDYh4PJ0xM4XujFoN/8aPaMrp250cr+Ezt/hXSmH49NAvHShMRe7EKsrv+g3X0FM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:2301:b0:dc7:865b:22c6 with SMTP
+ id do1-20020a056902230100b00dc7865b22c6mr34277ybb.8.1710395987985; Wed, 13
+ Mar 2024 22:59:47 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:04 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 05/20] perf jevents: Add tsx metric group for Intel models
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the dynamic funnel device in the platform driver, which can
-then be used on ACPI based platforms. This change would allow runtime power
-management for ACPI based systems.
+Allow duplicated metric to be dropped from json files. Detect when TSX
+is supported by a model by using the json events, use sysfs events at
+runtime as hypervisors, etc. may disable TSX.
 
-The driver would try to enable the APB clock if available. Also, rename the
-code to reflect the fact that it now handles both static and dynamic
-funnels. But first this refactors funnel_probe() making sure it can be used
-both for platform and AMBA drivers, by moving the pm_runtime_put() to the
-callers.
+Add CheckPmu to metric to determine if which PMUs have been associated
+with the loaded events.
 
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
-Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes in V7:
+ tools/perf/pmu-events/intel_metrics.py | 52 +++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-- Dropped reduntant drvdata check in funnel_platform_remove()
-
- drivers/acpi/arm64/amba.c                     |  1 -
- .../hwtracing/coresight/coresight-funnel.c    | 72 ++++++++++++-------
- 2 files changed, 48 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
-index 270f4e3819a2..afb6afb66967 100644
---- a/drivers/acpi/arm64/amba.c
-+++ b/drivers/acpi/arm64/amba.c
-@@ -28,7 +28,6 @@ static const struct acpi_device_id amba_id_list[] = {
- 	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
- 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
- 	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
--	{"ARMHC9FF", 0}, /* ARM CoreSight Dynamic Funnel */
- 	{"", 0},
- };
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index f34b4230a4ee..58e243695f0a 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1,12 +1,13 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+-from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
++from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
+                     JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+                     MetricGroup, MetricRef, Select)
+ import argparse
+ import json
+ import math
+ import os
++from typing import Optional
  
-diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-index ff3ea0670a5b..616735dc80a6 100644
---- a/drivers/hwtracing/coresight/coresight-funnel.c
-+++ b/drivers/hwtracing/coresight/coresight-funnel.c
-@@ -36,6 +36,7 @@ DEFINE_CORESIGHT_DEVLIST(funnel_devs, "funnel");
-  * struct funnel_drvdata - specifics associated to a funnel component
-  * @base:	memory mapped base address for this component.
-  * @atclk:	optional clock for the core parts of the funnel.
-+ * @pclk:	APB clock if present, otherwise NULL
-  * @csdev:	component vitals needed by the framework.
-  * @priority:	port selection order.
-  * @spinlock:	serialize enable/disable operations.
-@@ -43,6 +44,7 @@ DEFINE_CORESIGHT_DEVLIST(funnel_devs, "funnel");
- struct funnel_drvdata {
- 	void __iomem		*base;
- 	struct clk		*atclk;
-+	struct clk		*pclk;
- 	struct coresight_device	*csdev;
- 	unsigned long		priority;
- 	spinlock_t		spinlock;
-@@ -236,6 +238,10 @@ static int funnel_probe(struct device *dev, struct resource *res)
- 			return ret;
- 	}
+ # Global command line arguments.
+ _args = None
+@@ -74,6 +75,54 @@ def Smi() -> MetricGroup:
+     ], description = 'System Management Interrupt metrics')
  
-+	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
-+	if (IS_ERR(drvdata->pclk))
-+		return -ENODEV;
+ 
++def Tsx() -> Optional[MetricGroup]:
++  pmu = "cpu_core" if CheckPmu("cpu_core") else "cpu"
++  cycles = Event('cycles')
++  cycles_in_tx = Event(f'{pmu}/cycles\-t/')
++  cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
++  try:
++    # Test if the tsx event is present in the json, prefer the
++    # sysfs version so that we can detect its presence at runtime.
++    transaction_start = Event("RTM_RETIRED.START")
++    transaction_start = Event(f'{pmu}/tx\-start/')
++  except:
++    return None
 +
- 	/*
- 	 * Map the device base for dynamic-funnel, which has been
- 	 * validated by AMBA core.
-@@ -272,12 +278,13 @@ static int funnel_probe(struct device *dev, struct resource *res)
- 		goto out_disable_clk;
- 	}
- 
--	pm_runtime_put(dev);
- 	ret = 0;
- 
- out_disable_clk:
- 	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
-+	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
- 	return ret;
- }
- 
-@@ -298,6 +305,9 @@ static int funnel_runtime_suspend(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
- 
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
++  elision_start = None
++  try:
++    # Elision start isn't supported by all models, but we'll not
++    # generate the tsx_cycles_per_elision metric in that
++    # case. Again, prefer the sysfs encoding of the event.
++    elision_start = Event("HLE_RETIRED.START")
++    elision_start = Event(f'{pmu}/el\-start/')
++  except:
++    pass
 +
- 	return 0;
- }
- 
-@@ -308,6 +318,8 @@ static int funnel_runtime_resume(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_prepare_enable(drvdata->atclk);
- 
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_prepare_enable(drvdata->pclk);
- 	return 0;
- }
- #endif
-@@ -316,55 +328,61 @@ static const struct dev_pm_ops funnel_dev_pm_ops = {
- 	SET_RUNTIME_PM_OPS(funnel_runtime_suspend, funnel_runtime_resume, NULL)
- };
- 
--static int static_funnel_probe(struct platform_device *pdev)
-+static int funnel_platform_probe(struct platform_device *pdev)
- {
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	int ret;
- 
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
--	/* Static funnel do not have programming base */
--	ret = funnel_probe(&pdev->dev, NULL);
--
--	if (ret) {
--		pm_runtime_put_noidle(&pdev->dev);
-+	ret = funnel_probe(&pdev->dev, res);
-+	pm_runtime_put(&pdev->dev);
-+	if (ret)
- 		pm_runtime_disable(&pdev->dev);
--	}
- 
- 	return ret;
- }
- 
--static void static_funnel_remove(struct platform_device *pdev)
-+static void funnel_platform_remove(struct platform_device *pdev)
- {
-+	struct funnel_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
++  return MetricGroup('transaction', [
++      Metric('tsx_transactional_cycles',
++             'Percentage of cycles within a transaction region.',
++             Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
++             '100%'),
++      Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
++             Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
++                    has_event(cycles_in_tx),
++                    0),
++             '100%'),
++      Metric('tsx_cycles_per_transaction',
++             'Number of cycles within a transaction divided by the number of transactions.',
++             Select(cycles_in_tx / transaction_start,
++                    has_event(cycles_in_tx),
++                    0),
++             "cycles / transaction"),
++      Metric('tsx_cycles_per_elision',
++             'Number of cycles within a transaction divided by the number of elisions.',
++             Select(cycles_in_tx / elision_start,
++                    has_event(elision_start),
++                    0),
++             "cycles / elision") if elision_start else None,
++  ], description="Breakdown of transactional memory statistics")
 +
-+	if (WARN_ON(!drvdata))
-+		return;
 +
- 	funnel_remove(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+	if (!IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_put(drvdata->pclk);
- }
+ def main() -> None:
+   global _args
  
--static const struct of_device_id static_funnel_match[] = {
-+static const struct of_device_id funnel_match[] = {
- 	{.compatible = "arm,coresight-static-funnel"},
- 	{}
- };
+@@ -100,6 +149,7 @@ def main() -> None:
+       Idle(),
+       Rapl(),
+       Smi(),
++      Tsx(),
+   ])
  
--MODULE_DEVICE_TABLE(of, static_funnel_match);
-+MODULE_DEVICE_TABLE(of, funnel_match);
  
- #ifdef CONFIG_ACPI
--static const struct acpi_device_id static_funnel_ids[] = {
--	{"ARMHC9FE", 0, 0, 0},
-+static const struct acpi_device_id funnel_acpi_ids[] = {
-+	{"ARMHC9FE", 0, 0, 0}, /* ARM Coresight Static Funnel */
-+	{"ARMHC9FF", 0, 0, 0}, /* ARM CoreSight Dynamic Funnel */
- 	{},
- };
- 
--MODULE_DEVICE_TABLE(acpi, static_funnel_ids);
-+MODULE_DEVICE_TABLE(acpi, funnel_acpi_ids);
- #endif
- 
--static struct platform_driver static_funnel_driver = {
--	.probe          = static_funnel_probe,
--	.remove_new      = static_funnel_remove,
--	.driver         = {
--		.name   = "coresight-static-funnel",
-+static struct platform_driver funnel_driver = {
-+	.probe		= funnel_platform_probe,
-+	.remove_new	= funnel_platform_remove,
-+	.driver		= {
-+		.name   = "coresight-funnel",
- 		/* THIS_MODULE is taken care of by platform_driver_register() */
--		.of_match_table = static_funnel_match,
--		.acpi_match_table = ACPI_PTR(static_funnel_ids),
-+		.of_match_table = funnel_match,
-+		.acpi_match_table = ACPI_PTR(funnel_acpi_ids),
- 		.pm	= &funnel_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
-@@ -373,7 +391,13 @@ static struct platform_driver static_funnel_driver = {
- static int dynamic_funnel_probe(struct amba_device *adev,
- 				const struct amba_id *id)
- {
--	return funnel_probe(&adev->dev, &adev->res);
-+	int ret;
-+
-+	ret = funnel_probe(&adev->dev, &adev->res);
-+	if (!ret)
-+		pm_runtime_put(&adev->dev);
-+
-+	return ret;
- }
- 
- static void dynamic_funnel_remove(struct amba_device *adev)
-@@ -410,12 +434,12 @@ static struct amba_driver dynamic_funnel_driver = {
- 
- static int __init funnel_init(void)
- {
--	return coresight_init_driver("funnel", &dynamic_funnel_driver, &static_funnel_driver);
-+	return coresight_init_driver("funnel", &dynamic_funnel_driver, &funnel_driver);
- }
- 
- static void __exit funnel_exit(void)
- {
--	coresight_remove_driver(&dynamic_funnel_driver, &static_funnel_driver);
-+	coresight_remove_driver(&dynamic_funnel_driver, &funnel_driver);
- }
- 
- module_init(funnel_init);
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
