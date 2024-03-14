@@ -1,391 +1,149 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FADFC15
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 22:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD3DBE62
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 22:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710455873; cv=none; b=lK4H2HDmbCW7yfRSkUgZ/DOgDaaceOcuSjQo4xAR9mxi4zp8z5zcWfaEi/a++8e3k0sYR66843iQ22gNS5mrqTSO7WnFz5V+G/UBiK/NFsof3pTTjTDMcxtchAO+iRKHQoblOBxodCrIeCTLbKD4TZVqZlZ/vhCcX5ws+TgAFhY=
+	t=1710456058; cv=none; b=szjDQFKEWIlcecb6BDbvmDCxHicL9LcSDGQCNqJt/bFRykvZGjENmuH85Ko0IEJiv/t5GXHX8731yrUNA1NMXzjieDI5LcNgDbboE/b3elOp0h4s8MdfpmPjYwjvP23sLvfqHVaeXr+OpgebJBJR66GM8KMMPXutr9/uz5VonWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710455873; c=relaxed/simple;
-	bh=0RW01zh10iot+vDUgIci/vUldGmz44XOD84zNB9SgKY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Wg0tx3oPKVKP879GnSILRzFlqjrlUwH0SZqTgLZkNMyVR5M+wRwElGLuFrSDEXIYZldEksKD2AiBSX+/Ciz+/c/QAIoI/l3l85HzlrY2XYZIBpGbUOHgqr0I9MmfLCgwO/iRnGD9ZMVVs7S4M6IKBHZ1eFh6GGsUJXE9wl/Ekfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=JaVtjs3o; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	s=arc-20240116; t=1710456058; c=relaxed/simple;
+	bh=NXSsCunqHmPTbfFf2oyWdUfXJxYPElOJwoRBAwDhicE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hw4vgXtYLesUtMVaqPXjrJIT7jxHYTUeZfT3C0yN25j74uaoFuYK0PlcyFBJi0jx39nBE+GJg9ibsyWhW9uvQRYABYdz/+bGOHTYZb+U1SXMwkbD6vsUyBbwfWZjFmG6SMbhsZ2y4i+JPd4qF5f9lFbEeeAf7LFT/aGH6Yc01lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uSjoLIYA; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="JaVtjs3o"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68f41af71ebso10918066d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:37:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uSjoLIYA"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6c9f6e654so295205b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:40:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1710455870; x=1711060670; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wqIiAcmTY4cspT0Jt4o+nhnGAAsDHgZvUq8qIGKZuZU=;
-        b=JaVtjs3oIQQ8nCt8CiKRJ4UAxewAeAkfKBRSgD5wsBG7DQjyi0jIPSmWOd17VrWxdR
-         WxTcTNpOnNWFhv687xKBRVF4bbIzf7Ni17YFQqzY8pPU5bYmEMeRJV7ptAPMVWw9T1rP
-         rtq6XCmP95szh5ucRZBMRBWLucw3VLNeInnBU=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1710456056; x=1711060856; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MG0ZxSxwkpwszjQtH3EW4CVH6bqHDbV18Vis5JdehwA=;
+        b=uSjoLIYAsA08wA7Zt+teJ4k3yY3OPjCcR8v8czWoyY39aeq8/Ne2e9ruP67gZSJPEm
+         cJrnF5SnaU5jdrq6ntXOYz6SEu1ok2XEOKD7pwRMPLyec203EwQyP3JyJ+lVDyot0LAf
+         ZPXD0CIy8lvjLGoB102r5+zPg+g003S20Brp0Cp7F0Y5OKsLP5sW83140zRZeSeXPNKJ
+         WjBaB55tUvwV6dNWxgU4XOsKYXR+jiz3zBIW6EeVX4aTJvigdncvT6o7XxJAkuJj+skc
+         kodrGSmqqMFu2numsQ3VAnXbDhYdXvYlKw2uM9HNCrRDXfE34gEGcUvhNjTsBt8PZ1W3
+         TVlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710455870; x=1711060670;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
+        d=1e100.net; s=20230601; t=1710456056; x=1711060856;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wqIiAcmTY4cspT0Jt4o+nhnGAAsDHgZvUq8qIGKZuZU=;
-        b=eEj6OVU5woko3QbvPBELEyuzlDXp02JIvR7MJSNSvS/oMOEigrsK2g8lU/P3/sZLxK
-         SxCffTiOZzNIqGyocHUU/uAewMyrIJyQZX09PXkl0ydv8spC/ruoza9QrHXr0fbwNmh3
-         Bw7RZz4gxljtrcU8ohlKxpMfSIuULz4rBBo4JJzrdfxYgCLE+gPtDcwpSGc2AgVDeKEL
-         CadILrPCbUBVvawoZMFMkeLNjABWYyUIHEMlld47WXhY4fN1pjeWJIz/MKWkizpsFtD5
-         jKuNwHubLkIUPnPwS9pimiutGSUnaGlx/hYIqN/Eyl3JHe+pQLIgqvncWjkZRiiX/v5a
-         HHvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkLRmud5PxETrEp4ce7A2DckA5zucvNMQoym/eOxx1U2S4xLJ08Pd79gqwIZND5ZPa8mPX7/X5EF0dX7OoRY+Z1/rF49d+TNKufnlz
-X-Gm-Message-State: AOJu0Yzs6DVQF3f/5swdDqBo186biJULrnIgfBu+btujaOK/eSW5+PsS
-	Yw3NooZO61JrqwZbuTqf8khEF3kyNGnzTfS0fee5KXiJPe6GNzUnh2SiRPRi2L4=
-X-Google-Smtp-Source: AGHT+IELRZEJXRJEM9OhDOqs7vv1seGF83v0kHpV0Yyv7acfPE7jxvgsLpgdNTkegVEX0Y8xD3ACxg==
-X-Received: by 2002:ad4:45a9:0:b0:691:72a:bc0e with SMTP id y9-20020ad445a9000000b00691072abc0emr3595460qvu.8.1710455867699;
-        Thu, 14 Mar 2024 15:37:47 -0700 (PDT)
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id de33-20020a05620a372100b00789dd526bc7sm826447qkb.129.2024.03.14.15.37.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 15:37:46 -0700 (PDT)
-From: Ivor Wanders <ivor@iwanders.net>
-To: Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ivor Wanders <ivor@iwanders.net>
-Subject: [PATCH v2 1/1] platform/surface: platform_profile: add fan profile switching
-Date: Thu, 14 Mar 2024 18:37:33 -0400
-Message-Id: <20240314223733.6236-2-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240314223733.6236-1-ivor@iwanders.net>
-References: <20240314223733.6236-1-ivor@iwanders.net>
+        bh=MG0ZxSxwkpwszjQtH3EW4CVH6bqHDbV18Vis5JdehwA=;
+        b=pKPIikuR9B5T69Z9cM2TIgtio1hHiZuD4t8BDa8gn7tCvXAOw1C03qwWRchqD6EWpp
+         a9DAAeT5UZmYV85Gr+tufnfohgoT3tQaTr5NmeQ90GqBfMVAxRw35IEjcFxCH1bJaKfR
+         zSGqne3aOPiZnqt5llhWtSBt7iX2YeZLLlIAQUqY1L1wxyaQpn8YnCKMjLQKx95ocjqM
+         sp/VqyRrWTy+Kd0sALbluD+cmQQ0lgoKu6JcWoiL5htaWoxY7Lzk3EvkYtCsRUOTBGkX
+         Cguge8L1Wi0K01ckDB5QyY6zw2tDAN2/9C3khcSJARN2nIQXOF46oah3WoxjFg5k0bah
+         OLNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXY2atbKDV6aWyNpTrrbM+OBP9pxc1zxJS9wIXia33/oNxzRq6GPASAatzi5lGBSaO5EA5hq1JI+YTiPlbtyqwsPFs31abR2LDjg4TU
+X-Gm-Message-State: AOJu0YyQtgXY5r4feB5JrmWedrnqSD44ZJDyw1Ot6yblLcke4gjLDCsB
+	TxktvXMrT23t52bPYnav2MMMxeYrxHSx/jruF6oxZKKcjbLZiINroUPXCzcqh9c=
+X-Google-Smtp-Source: AGHT+IGmzVHnggzMjRdOQbO7C7VMVvlqyXn5EzqCSSl3W6KcB/g0N89RbCBlT9bw91P9sOmCXf/rpQ==
+X-Received: by 2002:a17:902:ce91:b0:1dc:df03:ad86 with SMTP id f17-20020a170902ce9100b001dcdf03ad86mr1528988plg.2.1710456055617;
+        Thu, 14 Mar 2024 15:40:55 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id y17-20020a170903011100b001db5b39635dsm2250263plc.277.2024.03.14.15.40.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 15:40:54 -0700 (PDT)
+Message-ID: <267b0000-fba0-4dcf-945d-72b8ca4704c8@kernel.dk>
+Date: Thu, 14 Mar 2024 16:40:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
+Content-Language: en-US
+To: Sasha Levin <sashal@kernel.org>
+Cc: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Christoph Hellwig <hch@lst.de>, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ Andreas Herrmann <aherrmann@suse.de>, Tejun Heo <tj@kernel.org>
+References: <20240313163957.615276-1-sashal@kernel.org>
+ <73072bdd-590a-44b4-8e6d-34bd17073bb5@o2.pl>
+ <ecb0b6a1-a8e7-4645-9a2c-56ada368f733@o2.pl>
+ <ba297ed4-a74a-4786-a303-ce617b2de09b@o2.pl>
+ <38563683-300a-487b-81c6-b2ea4dbb925c@kernel.dk> <ZfN7wtnVeb9vOL1H@sashalap>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZfN7wtnVeb9vOL1H@sashalap>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Change naming from tmp to platform profile to clarify the module may
-interact with both the TMP and FAN subystems. Add functionality that
-switches the fan profile when the platform profile is changed when
-a fan is present.
+On 3/14/24 4:35 PM, Sasha Levin wrote:
+> On Thu, Mar 14, 2024 at 04:04:59PM -0600, Jens Axboe wrote:
+>> On 3/14/24 3:12 PM, Mateusz Jo?czyk wrote:
+>>> W dniu 13.03.2024 o 22:27, Mateusz Jo?czyk pisze:
+>>>> W dniu 13.03.2024 o 21:13, Mateusz Jo?czyk pisze:
+>>>>> W dniu 13.03.2024 o 17:38, Sasha Levin pisze:
+>>>>>> This is the start of the stable review cycle for the 6.1.82 release.
+>>>>>> There are 71 patches in this series, all will be posted as a response
+>>>>>> to this one.  If anyone has any issues with these being applied, please
+>>>>>> let me know.
+>>>>>>
+>>>>>> Responses should be made by Fri Mar 15 04:39:56 PM UTC 2024.
+>>>>>> Anything received after that time might be too late.
+>>>>>>
+>>>>>> The whole patch series can be found in one patch at:
+>>>>>>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.81
+>>>>>> or in the git tree and branch at:
+>>>>>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+>>>>>> and the diffstat can be found below.
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Sasha
+>>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> Kernel hangs during early boot. No console messages, nothing in pstore.
+>>>>>
+>>>>> Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU (Intel i3-7020U) and Ubuntu 20.04.
+>>>>>
+>>>>> This CPU is not affected by RFDS (at least according to the Kconfig message), so I have set
+>>>>>
+>>>>> CONFIG_MITIGATION_RFDS=n
+>>>>>
+>>>>> in Kconfig. I do not have any updated microcode (if any will be provided at all for this CPU).
+>>>>>
+>>>>> Greetings,
+>>>>>
+>>>>> Mateusz
+>>>>>
+>>>> [snip]
+>>>
+>>> Bisected down to
+>>>
+>>> commit d3d517a95e83a7d89e1ff511da1a0a31c9234155
+>>> Author: Christoph Hellwig <hch@lst.de>
+>>> Date:   Fri Feb 3 16:03:54 2023 +0100
+>>>
+>>>     blk-rq-qos: make rq_qos_add and rq_qos_del more useful
+>>
+>> Do you have:
+>>
+>> commit e33b93650fc5364f773985a3e961e24349330d97
+>> Author: Breno Leitao <leitao@debian.org>
+>> Date:   Tue Feb 28 03:16:54 2023 -0800
+>>
+>>    blk-iocost: Pass gendisk to ioc_refresh_params
+>>
+>> in there?
+> 
+> It's not in the 6.1 tree, do we need it?
 
-Signed-off-by: Ivor Wanders <ivor@iwanders.net>
-Link: https://github.com/linux-surface/kernel/pull/145
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
----
-Changes in v2:
-  - Added link entry to commit message.
-  - Use u8 instead of char for the argument of __sam_fan_profile_set.
-  - Made profile and profile_le variable const.
----
----
- .../surface/surface_aggregator_registry.c     | 36 +++++---
- .../surface/surface_platform_profile.c        | 88 ++++++++++++++++---
- 2 files changed, 100 insertions(+), 24 deletions(-)
+If the bisected commit is in there, then yes we need it. It's marked as
+fixes that, so puzzled why it isn't in there?
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 035d6b4105cd..79e52eddabd0 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -68,12 +68,26 @@ static const struct software_node ssam_node_bat_sb3base = {
- 	.parent = &ssam_node_hub_base,
- };
- 
--/* Platform profile / performance-mode device. */
--static const struct software_node ssam_node_tmp_pprof = {
-+/* Platform profile / performance-mode device without a fan. */
-+static const struct software_node ssam_node_tmp_perf_profile = {
- 	.name = "ssam:01:03:01:00:01",
- 	.parent = &ssam_node_root,
- };
- 
-+/* Platform profile / performance-mode device with a fan, such that
-+ * the fan controller profile can also be switched.
-+ */
-+static const struct property_entry ssam_node_tmp_perf_profile_has_fan[] = {
-+	PROPERTY_ENTRY_BOOL("has_fan"),
-+	{ }
-+};
-+
-+static const struct software_node ssam_node_tmp_perf_profile_with_fan = {
-+	.name = "ssam:01:03:01:00:01",
-+	.parent = &ssam_node_root,
-+	.properties = ssam_node_tmp_perf_profile_has_fan,
-+};
-+
- /* Fan speed function. */
- static const struct software_node ssam_node_fan_speed = {
- 	.name = "ssam:01:05:01:01:01",
-@@ -208,7 +222,7 @@ static const struct software_node ssam_node_pos_tablet_switch = {
-  */
- static const struct software_node *ssam_node_group_gen5[] = {
- 	&ssam_node_root,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	NULL,
- };
- 
-@@ -219,7 +233,7 @@ static const struct software_node *ssam_node_group_sb3[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_bat_sb3base,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	&ssam_node_bas_dtx,
- 	&ssam_node_hid_base_keyboard,
- 	&ssam_node_hid_base_touchpad,
-@@ -233,7 +247,7 @@ static const struct software_node *ssam_node_group_sl3[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	&ssam_node_hid_main_keyboard,
- 	&ssam_node_hid_main_touchpad,
- 	&ssam_node_hid_main_iid5,
-@@ -245,7 +259,7 @@ static const struct software_node *ssam_node_group_sl5[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	&ssam_node_hid_main_keyboard,
- 	&ssam_node_hid_main_touchpad,
- 	&ssam_node_hid_main_iid5,
-@@ -258,7 +272,7 @@ static const struct software_node *ssam_node_group_sls[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	&ssam_node_pos_tablet_switch,
- 	&ssam_node_hid_sam_keyboard,
- 	&ssam_node_hid_sam_penstash,
-@@ -274,7 +288,7 @@ static const struct software_node *ssam_node_group_slg1[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	NULL,
- };
- 
-@@ -283,7 +297,7 @@ static const struct software_node *ssam_node_group_sp7[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	NULL,
- };
- 
-@@ -293,7 +307,7 @@ static const struct software_node *ssam_node_group_sp8[] = {
- 	&ssam_node_hub_kip,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile,
- 	&ssam_node_kip_tablet_switch,
- 	&ssam_node_hid_kip_keyboard,
- 	&ssam_node_hid_kip_penstash,
-@@ -310,7 +324,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
- 	&ssam_node_hub_kip,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
--	&ssam_node_tmp_pprof,
-+	&ssam_node_tmp_perf_profile_with_fan,
- 	&ssam_node_fan_speed,
- 	&ssam_node_pos_tablet_switch,
- 	&ssam_node_hid_kip_keyboard,
-diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-index a5a3941b3f43..3de864bc6610 100644
---- a/drivers/platform/surface/surface_platform_profile.c
-+++ b/drivers/platform/surface/surface_platform_profile.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-  * Surface Platform Profile / Performance Mode driver for Surface System
-- * Aggregator Module (thermal subsystem).
-+ * Aggregator Module (thermal and fan subsystem).
-  *
-  * Copyright (C) 2021-2022 Maximilian Luz <luzmaximilian@gmail.com>
-  */
-@@ -14,6 +14,7 @@
- 
- #include <linux/surface_aggregator/device.h>
- 
-+// Enum for the platform performance profile sent to the TMP module.
- enum ssam_tmp_profile {
- 	SSAM_TMP_PROFILE_NORMAL             = 1,
- 	SSAM_TMP_PROFILE_BATTERY_SAVER      = 2,
-@@ -21,15 +22,26 @@ enum ssam_tmp_profile {
- 	SSAM_TMP_PROFILE_BEST_PERFORMANCE   = 4,
- };
- 
-+// Enum for the fan profile sent to the FAN module. This fan profile is
-+// only sent to the EC if the 'has_fan' property is set. The integers are
-+// not a typo, they differ from the performance profile indices.
-+enum ssam_fan_profile {
-+	SSAM_FAN_PROFILE_NORMAL             = 2,
-+	SSAM_FAN_PROFILE_BATTERY_SAVER      = 1,
-+	SSAM_FAN_PROFILE_BETTER_PERFORMANCE = 3,
-+	SSAM_FAN_PROFILE_BEST_PERFORMANCE   = 4,
-+};
-+
- struct ssam_tmp_profile_info {
- 	__le32 profile;
- 	__le16 unknown1;
- 	__le16 unknown2;
- } __packed;
- 
--struct ssam_tmp_profile_device {
-+struct ssam_platform_profile_device {
- 	struct ssam_device *sdev;
- 	struct platform_profile_handler handler;
-+	bool has_fan;
- };
- 
- SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_tmp_profile_get, struct ssam_tmp_profile_info, {
-@@ -42,6 +54,13 @@ SSAM_DEFINE_SYNC_REQUEST_CL_W(__ssam_tmp_profile_set, __le32, {
- 	.command_id      = 0x03,
- });
- 
-+SSAM_DEFINE_SYNC_REQUEST_W(__ssam_fan_profile_set, u8, {
-+	.target_category = SSAM_SSH_TC_FAN,
-+	.target_id = SSAM_SSH_TID_SAM,
-+	.command_id = 0x0e,
-+	.instance_id = 0x01,
-+});
-+
- static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile *p)
- {
- 	struct ssam_tmp_profile_info info;
-@@ -57,12 +76,19 @@ static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile
- 
- static int ssam_tmp_profile_set(struct ssam_device *sdev, enum ssam_tmp_profile p)
- {
--	__le32 profile_le = cpu_to_le32(p);
-+	const __le32 profile_le = cpu_to_le32(p);
- 
- 	return ssam_retry(__ssam_tmp_profile_set, sdev, &profile_le);
- }
- 
--static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
-+static int ssam_fan_profile_set(struct ssam_device *sdev, enum ssam_fan_profile p)
-+{
-+	const u8 profile = p;
-+
-+	return ssam_retry(__ssam_fan_profile_set, sdev->ctrl, &profile);
-+}
-+
-+static int convert_ssam_tmp_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
- {
- 	switch (p) {
- 	case SSAM_TMP_PROFILE_NORMAL:
-@@ -83,7 +109,8 @@ static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profi
- 	}
- }
- 
--static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profile_option p)
-+
-+static int convert_profile_to_ssam_tmp(struct ssam_device *sdev, enum platform_profile_option p)
- {
- 	switch (p) {
- 	case PLATFORM_PROFILE_LOW_POWER:
-@@ -105,20 +132,42 @@ static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profi
- 	}
- }
- 
-+static int convert_profile_to_ssam_fan(struct ssam_device *sdev, enum platform_profile_option p)
-+{
-+	switch (p) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		return SSAM_FAN_PROFILE_BATTERY_SAVER;
-+
-+	case PLATFORM_PROFILE_BALANCED:
-+		return SSAM_FAN_PROFILE_NORMAL;
-+
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		return SSAM_FAN_PROFILE_BETTER_PERFORMANCE;
-+
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		return SSAM_FAN_PROFILE_BEST_PERFORMANCE;
-+
-+	default:
-+		/* This should have already been caught by platform_profile_store(). */
-+		WARN(true, "unsupported platform profile");
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
- 				     enum platform_profile_option *profile)
- {
--	struct ssam_tmp_profile_device *tpd;
-+	struct ssam_platform_profile_device *tpd;
- 	enum ssam_tmp_profile tp;
- 	int status;
- 
--	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-+	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
- 
- 	status = ssam_tmp_profile_get(tpd->sdev, &tp);
- 	if (status)
- 		return status;
- 
--	status = convert_ssam_to_profile(tpd->sdev, tp);
-+	status = convert_ssam_tmp_to_profile(tpd->sdev, tp);
- 	if (status < 0)
- 		return status;
- 
-@@ -129,21 +178,32 @@ static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
- static int ssam_platform_profile_set(struct platform_profile_handler *pprof,
- 				     enum platform_profile_option profile)
- {
--	struct ssam_tmp_profile_device *tpd;
-+	struct ssam_platform_profile_device *tpd;
- 	int tp;
- 
--	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-+	tpd = container_of(pprof, struct ssam_platform_profile_device, handler);
-+
-+	tp = convert_profile_to_ssam_tmp(tpd->sdev, profile);
-+	if (tp < 0)
-+		return tp;
- 
--	tp = convert_profile_to_ssam(tpd->sdev, profile);
-+	tp = ssam_tmp_profile_set(tpd->sdev, tp);
- 	if (tp < 0)
- 		return tp;
- 
--	return ssam_tmp_profile_set(tpd->sdev, tp);
-+	if (tpd->has_fan) {
-+		tp = convert_profile_to_ssam_fan(tpd->sdev, profile);
-+		if (tp < 0)
-+			return tp;
-+		tp = ssam_fan_profile_set(tpd->sdev, tp);
-+	}
-+
-+	return tp;
- }
- 
- static int surface_platform_profile_probe(struct ssam_device *sdev)
- {
--	struct ssam_tmp_profile_device *tpd;
-+	struct ssam_platform_profile_device *tpd;
- 
- 	tpd = devm_kzalloc(&sdev->dev, sizeof(*tpd), GFP_KERNEL);
- 	if (!tpd)
-@@ -154,6 +214,8 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
- 	tpd->handler.profile_get = ssam_platform_profile_get;
- 	tpd->handler.profile_set = ssam_platform_profile_set;
- 
-+	tpd->has_fan = device_property_read_bool(&sdev->dev, "has_fan");
-+
- 	set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
 -- 
-2.17.1
+Jens Axboe
 
