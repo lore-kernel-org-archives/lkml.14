@@ -1,62 +1,92 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EF855C35;
-	Thu, 14 Mar 2024 13:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5F59B52;
+	Thu, 14 Mar 2024 13:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710421325; cv=none; b=FBPC/6F2igJEbU5v42xD01qfVBGGSd0LW6KuKu1Vu4wREBWAZcyNf8OXEnl63V1zgkCon45uHaq1ow1OUn8pqKWCw5m61+hnz1Anft2Y55xY8I1IWwejHdxGaaHLGCtPo55OLot50ZYyPv9OQoWKY1Mpeg5uT3v6Y9xV4atFjps=
+	t=1710421346; cv=none; b=BGeIaoWKMLbLMkoN76mRZhABtnBJ1oR2XLZn35K7kjjs4z3BnRmf4NvVapZIJGKxUPjh6QrlM7Zq+hZN26rnFmDnaJbu+hSUfrNDQNQ8Md4EXlGh6u5Nhok/CCCCkfteq0K7N1X7ZAdbFvPGBqfaD7a8cYubFAtkjCv6iwG15N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710421325; c=relaxed/simple;
-	bh=qAQB9FK88epVTyF/LeZpqM5y5+oOyaphSDCBPPScblw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fE5WO93139YKMV9SC9RcA1OdNbZH6272II5iJPXkN7jab6og4WjINCZxkZ9l8GRR+C+9JXdImW38p6vJkkIOaahKSb1Lr58qyi5LAtPlNSnzWWtEL6PYqodVZQitjrVuGWDk9PP1VF8uKabEzaKn10svztxUfJbp9d5AYuc2ge4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=T6V+5qj0; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1710421346; c=relaxed/simple;
+	bh=84bbEjvBlJ/24wVknFCROidZyrV2FJtAwZcxO3xPYs8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P1J6INgROV8xP8Slgwv032sm9jest1senUvrffZo8E/u48zJBBbUXKIQu3A3XOXCQtolQ9CLwMEbkiQqSezurxp8+bDuTCoWQaxZKk1Yk9ozZYs+Bk/80EbSnf2RWIdTSOvCvkIM2X/hcUrhjKgu0Xww8aq3WcQeVgWnFjtC/vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cU4lGv+a; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T6V+5qj0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=EVli0OmFTuK34nwbOdblGGUn4WUi0rrQKbNKDtrDklk=; b=T6V+5qj0xaMOJrB2glYk53Eafv
-	n2/VR9Pnz79XXEteuAxtf0EDuQkLwDObzh8LzRLOh1FS4OF4dSJgvf7QgNMAnzAlaJnKDE2nvAbAE
-	CWrNAPdZzrStDUQ89uzZ8VNUnVwIJLv2lIv6bHeJGUXpQmvvKhu63CuORqIqeCb3L5UU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rkkiy-00AJtH-8f; Thu, 14 Mar 2024 14:02:20 +0100
-Date: Thu, 14 Mar 2024 14:02:20 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexandra Diupina <adiupina@astralinux.ru>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] net: dsa: add return value check of genphy_read_status()
-Message-ID: <99631ba3-36f9-4eed-80d9-4a663ef46d80@lunn.ch>
-References: <20240314063008.11214-1-adiupina@astralinux.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cU4lGv+a"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dedb92e540so3822205ad.0;
+        Thu, 14 Mar 2024 06:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710421345; x=1711026145; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rlsLkZ2heubivONDblGycl3wo6hHBEpYjO72QZ11wxU=;
+        b=cU4lGv+aRHgkow4dCb+WziD1dlHKg2oIqh09T5xBgXPgitD8gHtHXdGXnE+uFjY6uP
+         6QTk7StvHdmuz9RzMZ03gAc+7Tvfh3AQR49jNOfl/Tz9q1T55l1UAznMmmhjdo6BNo5X
+         cRuR+tVGskElZ0YgDMqAmZiA+rwM73uJShyO6c2uULsmnEyLLixvoGL/Yl/ZnXvMxo6k
+         PKPMnMRxe3hKWXkCvO4Lv2kLq6S08JIUFQOvCEoWlZiZwRXKpc3qYTVazjwqBrIo+aNT
+         Lr1m5kTMUbyDnVGe3kSedNjndE04jbiBkos0zV27ovfd5EsbsuFWLcszthBtUsf5ZyBD
+         zS1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710421345; x=1711026145;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rlsLkZ2heubivONDblGycl3wo6hHBEpYjO72QZ11wxU=;
+        b=bIbkVk8G18V8mGLMwuEaQytOjvjshPLcskIzYEDp64wVyyI6mWfU3PLtrOAhVIi5TT
+         vGme03CuFTobYg8kh8aexh3R5jRNprcL95Q2nsYMn4TsA3m0oHZyzsi7JkST0vu4vNYi
+         RpSNLuVAIGaYHlZr1D0lc7ZyJSYbllo/fbXFCz+j+tN/zfA3LidgmBMh9MNHJ7yFkcAS
+         V8zY2EHZggb14mhlNT9zg7wGH9HHhEiLX/UJypdXE25wUP9B0wIYpAoXXnG9MRE9gUw8
+         pjNnMro2SHmbUnaFLHhT6d+GU50ScU9mIL3+2KL3esfPqAjvO4+vpZmeItJX3SKBunOD
+         m9eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWz5XowwnnWgwk1KMtZ94S7uGeqs1WLLbfmobIvUakfDzar2L+rRrauInXo80ZSoI3KFht+RQ1EMpLHNUCneHFxfZFBrlbDkXzeiIODbOKe+AFLTHSNRJvRKD8HkzefgTtlJFW6
+X-Gm-Message-State: AOJu0Yyuui2klku061pemwMzhdS3iiBnS+ab1frfJeVmRBp4niP2QA8T
+	mxdCXnIc69qIA0AJDXWfajdYj8Wy6sUEOMaX+k1vktN9TCGksG7kuCSkHpKlBoTGtSujaUe0VhG
+	R7qajE8POrH/21Y/yCmpWra6w7lo=
+X-Google-Smtp-Source: AGHT+IHrZbDmNwRLArFfEalJLerPRZlrSgqbWY6ZoxUILhYTVEuZ7C4bocg1wvQ4xim/PI56zkz2GgOQbqQfPdZPwk8=
+X-Received: by 2002:a17:903:2292:b0:1dd:aaab:7e67 with SMTP id
+ b18-20020a170903229200b001ddaaab7e67mr2743377plh.30.1710421344898; Thu, 14
+ Mar 2024 06:02:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240314063008.11214-1-adiupina@astralinux.ru>
+References: <20240313163019.613705-1-sashal@kernel.org> <ZfKzpiF4l7eRUq0d@archie.me>
+In-Reply-To: <ZfKzpiF4l7eRUq0d@archie.me>
+From: Luna Jernberg <droidbittin@gmail.com>
+Date: Thu, 14 Mar 2024 14:02:12 +0100
+Message-ID: <CADo9pHirYZG2xoJm60ohEgp_5jQRtVa27R3Tt8jozV00QBZgXQ@mail.gmail.com>
+Subject: Re: [PATCH 6.8 0/5] 6.8.1-rc1 review
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 14, 2024 at 09:30:08AM +0300, Alexandra Diupina wrote:
-> Need to check return value of genphy_read_status(),
-> because higher in the call hierarchy is the
-> dsa_register_switch() function,
-> which is used in various drivers.
+Works fine on my Arch Linux desktop with model name    : AMD Ryzen 5
+5600 6-Core Processor
 
-I don't understand the commit message. Why is it important to
-dsa_register_switch()?
+Tested-by: Luna Jernberg <droidbittin@gmail.com>
 
-	Andrew
+Den tors 14 mars 2024 kl 09:22 skrev Bagas Sanjaya <bagasdotme@gmail.com>:
+>
+> On Wed, Mar 13, 2024 at 12:30:14PM -0400, Sasha Levin wrote:
+> >
+> > This is the start of the stable review cycle for the 6.8.1 release.
+> > There are 5 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+>
+> Successfully compiled and installed the kernel on my computer (Acer
+> Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
+>
+> Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+>
+> --
+> An old man doll... just what I always wanted! - Clara
