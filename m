@@ -1,81 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD6C5D47F;
-	Thu, 14 Mar 2024 07:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933ED5DF2E
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710402530; cv=none; b=aWPGrGhiOBhpPopXtJw4TdGLfBtEnRZ8THkGTjw0tWdRIucQ/YTmCCjXJcGZ4bTKCpni+6Xzij0GGFIBbhzOFV1Nk3/4sKO2rsKiolH+FBV0MjVVqA7PrEwR9JM1ngHQ67/yyNoZc41MLkBelw+Ca6/vJpN60rZfXqukYT+fESs=
+	t=1710402533; cv=none; b=rMueNvOZm6HCeCuOv7TjzFpuMX+KbVlN2WPSJnEZCHEWb4WMFa0oBXtAkmIafQ+rtFIYNwxLQqyW9L4k6/lj3DCdXsVbY2Dq+ilOIQSofDJug5KCN4ahChs0/mvh3olNyykZjcakuQYKj+Z2wTrLPfR2XpPjxIvJoLyl0MHVS0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710402530; c=relaxed/simple;
-	bh=F9FJ272hRWLSxHq8Ly87eevMmmeFD+m/E2C43x/bm7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n26TygfGKTimSIjynVddUN44jV11JLyTT6UxB6tTIqbXnXWsbox9wIpbWHS1brtjm5iCysLRXQu4ZWs2iBpUm6LUfY8m6k5ma4RGsoskgP7i5iHjNoWM2B+MyrEYNZ3LhXwUYFm126lHNSjshUWoogVCKOYuwdPVj5H/da7Zgq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTUJwV4g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710402533; c=relaxed/simple;
+	bh=qPJ16p8Nd0ufuHPNNhiWpoB7/WLrRfNhrK4O8P0gaT8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AGdJ59I/n3xR/MLik+wSv/1mw+4Dti1Iy/tQ5aG1JS9LaoZCkGgwc9WK93XS3EvkeFqT9dy5KCpbgHpOlgOZGokyOleqfxjTR1i6to1yI4PnF+f9LbRwTaqYc5GmGJD+M7x7K6OsShbGNs5ywUQ6LBdwSjGMyP5zuXhp97vlqAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AIk6P3YB; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTUJwV4g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2636BC433F1;
-	Thu, 14 Mar 2024 07:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710402530;
-	bh=F9FJ272hRWLSxHq8Ly87eevMmmeFD+m/E2C43x/bm7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LTUJwV4gSBnUIbY57lAFi3z74adpgcOcpoWgJz+yXbscJyJGVsdzNCjV15f9c/hLf
-	 0WAOY1iM7Gbo0dArK1L2ngk/P1Y1NrUFCNUrvvg7fbRmwLt3hotUToV+jospv8/3fG
-	 QAtgMEEtFzSx6ZdEaRHMJpZVq+trY3h0uxDGcN7J3LHMbw56MqVpJm8wYnJvhvhwyb
-	 1rZNuMtIf49gc7dzJhNQC0DlVd8lhyzuldkMR+4IIyaCFlDFS33coLzVGH49dBAK6+
-	 3W1FpjRhOA9lBtrR0C646x3KCYQRUqFBx0Oo7UKFMlEQ+tqK6vZdTtod/lvrTNVl6O
-	 gelZqlqtQZSHw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rkfph-00000000869-3TZL;
-	Thu, 14 Mar 2024 08:48:57 +0100
-Date: Thu, 14 Mar 2024 08:48:57 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Ayush Tiwari <ayushtiw0110@gmail.com>
-Cc: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, outreachy@lists.linux.dev
-Subject: Re: [PATCH] staging: greybus: add comment for mutex
-Message-ID: <ZfKr6Tnq3QYg3ZQC@hovoldconsulting.com>
-References: <ZfHuokO3pQXMOxcC@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AIk6P3YB"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dddbe47ac1so6150565ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710402531; x=1711007331; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qDNJWarj7cajVCQS29vifUUVp7XsRM4vIgwi+SOVNU8=;
+        b=AIk6P3YBHvdShqxO/BlZmX0W2/in19zdd7icsbWVseeSsjnzFpMkZS5UjYA5icpIXJ
+         xc4RIDpq9pHsTva5xDSUOz2p52PiPN3wsktr4wFqkFUI1VNetZUEKOi5PP8tOL7bqcQK
+         g50Q6qrRc+0jhIFdG4d5b/9AYguZawXrr96beXcadfA92W06jBHCwB2AC5iqEccpp3rD
+         uGBDgrCDjqPX5xjrbH8jlX6DQx1J9cpIi1M2KVvXr3OyZMjxSLrC8OHFzvWOrBPDM/ai
+         tMqXytOH7ocoPd+QlMlxUTrIUobb2dndjTAMJjZQ7TlOQ2EW47NP4NzR1iT5UyU5vQZN
+         I4Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710402531; x=1711007331;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qDNJWarj7cajVCQS29vifUUVp7XsRM4vIgwi+SOVNU8=;
+        b=UqWJJt76R/FF46vzZBvXtV9kM1ZMp2NmgHijt0l+ICjsKud3b8eLZnCL3fNtLjZmSH
+         X7b3MdPE2psF+NDPBn7cxRf7eZgdy1QLXMxGBs6KV+Ih0Y6A8TmQaEir1B/dvWrCrQ9J
+         Tlk89ogEqhG0jxdMioUwz1oJWv1KNS+M0hlQUQatpjCptEL9IlSQvvkRsK41d0oFFn/g
+         dmxfLKmovWJP93ILrSYgB6/zSpccOmIxHpFDOUxibCJPFV4NF4q2hvYItlikqJz5RGc1
+         6w1qwGsfCND6fdRHfCIzooiWQzm+WIQAUaXgQfaCmd7JHjL7narYJYmBfw4n0kCipo/g
+         Pd3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4dXEl8nho4PI2DO0d0ui70Rw2+VXNJSGXdOTaSS6fjRUkWRopgo4zRs+M+Bek+vWsVyr3GbvuiBrM7eW0VJMsPbsZhNqDt5JDRCp9
+X-Gm-Message-State: AOJu0Ywg4LwaqAyMQ8xjebeyca4u3jsQXyLsBV+qdoTvDy1q0d5FWJI/
+	+nGCkP+6F0LIc+XJIG3Hg7nWp17F0S59Wthz1elD/7e5SEx4MxbWjXY54NgJGQ==
+X-Google-Smtp-Source: AGHT+IE+D+W4BbyrX9NyG1q6Rj2Sh+I9VNq6AY/ZFKmdLwL1NVSvv0GdClSZ4XxH4cu8/H1IShZoOQ==
+X-Received: by 2002:a17:902:ce87:b0:1dc:7101:58c0 with SMTP id f7-20020a170902ce8700b001dc710158c0mr7191731plg.22.1710402530826;
+        Thu, 14 Mar 2024 00:48:50 -0700 (PDT)
+Received: from [127.0.1.1] ([117.207.30.211])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170903120900b001dd4fabf695sm946321plh.38.2024.03.14.00.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 00:48:50 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 14 Mar 2024 13:18:00 +0530
+Subject: [PATCH v10 2/8] PCI: dwc: ep: Add Kernel-doc comments for APIs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfHuokO3pQXMOxcC@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240314-pci-dbi-rework-v10-2-14a45c5a938e@linaro.org>
+References: <20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org>
+In-Reply-To: <20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5340;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=qPJ16p8Nd0ufuHPNNhiWpoB7/WLrRfNhrK4O8P0gaT8=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl8qvCQlfusmHtkRqGvWtKmvyeNKM+C65NCODwx
+ bK1ZJh/eceJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZfKrwgAKCRBVnxHm/pHO
+ 9R9mB/0b5JWO1eadebdGxANbD0K6A2DGRS/f4+rNu6AbMSY8rwWT+Rj8n6ht/VsnDI6VWJmv5cX
+ yyARqUDjVGCDiwA/WEqpipsBgWFfmMPluBZ7e313bEIF6adquxVluGL+FlU+9NJXU0ha0t4YgRn
+ 9VH3H8MoUSfbdLCcXahGcpBTMxnlx8m7yrS4tej9kAujUK5tPDywHhdg8gn4pZg/M1MI7glJL9a
+ vSPoK2fdg/MPOJCldMqPq+am2+yZoov6soeWnweojr6oCW21TL7C16aPWL4qdc+T6qcAG4lRiFQ
+ tqSy+G8Yrx4g3s1k+wA/Dld6ZVrPR3ec6Vw0cyTjrJj7B0QD
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-On Wed, Mar 13, 2024 at 11:51:22PM +0530, Ayush Tiwari wrote:
-> This patch adds descriptive comment to mutex within the struct
-> gbaudio_codec_info to clarify its intended use and to address
-> checkpatch checks.
-> 
-> Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
-> ---
->  drivers/staging/greybus/audio_codec.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/greybus/audio_codec.h b/drivers/staging/greybus/audio_codec.h
-> index f3f7a7ec6be4..1f97d4fb16cd 100644
-> --- a/drivers/staging/greybus/audio_codec.h
-> +++ b/drivers/staging/greybus/audio_codec.h
-> @@ -71,6 +71,7 @@ struct gbaudio_codec_info {
->  	/* to maintain runtime stream params for each DAI */
->  	struct list_head dai_list;
->  	struct mutex lock;
-> +	/* Lock to protect register access */
->	struct mutex register_mutex;
+All of the APIs are missing the Kernel-doc comments. Hence, add them.
 
-No, please, don't send these kind of patches.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 78 +++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-It's one thing thing to learn how to create and send a patch upstream by
-removing or adding some white space here and there to drivers in
-staging, but the above is not the kind of changes that people unfamiliar
-with the code in question should be adding (and the comment in this case
-adds no value at all).
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index c05304eabb89..d7e8f2dda6ce 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -14,6 +14,10 @@
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ 
++/**
++ * dw_pcie_ep_linkup - Notify EPF drivers about link up event
++ * @ep: DWC EP device
++ */
+ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+ {
+ 	struct pci_epc *epc = ep->epc;
+@@ -22,6 +26,11 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+ 
++/**
++ * dw_pcie_ep_init_notify - Notify EPF drivers about EPC initialization
++ *			    complete
++ * @ep: DWC EP device
++ */
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+ {
+ 	struct pci_epc *epc = ep->epc;
+@@ -30,6 +39,14 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+ 
++/**
++ * dw_pcie_ep_get_func_from_ep - Get the struct dw_pcie_ep_func corresponding to
++ *				 the endpoint function
++ * @ep: DWC EP device
++ * @func_no: Function number of the endpoint device
++ *
++ * Return: struct dw_pcie_ep_func if success, NULL otherwise.
++ */
+ struct dw_pcie_ep_func *
+ dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+ {
+@@ -60,6 +77,11 @@ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+ }
+ 
++/**
++ * dw_pcie_ep_reset_bar - Reset endpoint BAR
++ * @pci: DWC PCI device
++ * @bar: BAR number of the endpoint
++ */
+ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ {
+ 	u8 func_no, funcs;
+@@ -439,6 +461,13 @@ static const struct pci_epc_ops epc_ops = {
+ 	.get_features		= dw_pcie_ep_get_features,
+ };
+ 
++/**
++ * dw_pcie_ep_raise_intx_irq - Raise INTx IRQ to the host
++ * @ep: DWC EP device
++ * @func_no: Function number of the endpoint
++ *
++ * Return: 0 if success, errono otherwise.
++ */
+ int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+@@ -450,6 +479,14 @@ int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
+ 
++/**
++ * dw_pcie_ep_raise_msi_irq - Raise MSI IRQ to the host
++ * @ep: DWC EP device
++ * @func_no: Function number of the endpoint
++ * @interrupt_num: Interrupt number to be raised
++ *
++ * Return: 0 if success, errono otherwise.
++ */
+ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num)
+ {
+@@ -498,6 +535,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_msi_irq);
+ 
++/**
++ * dw_pcie_ep_raise_msix_irq_doorbell - Raise MSIX to the host using Doorbell
++ *					method
++ * @ep: DWC EP device
++ * @func_no: Function number of the endpoint device
++ * @interrupt_num: Interrupt number to be raised
++ *
++ * Return: 0 if success, errno otherwise.
++ */
+ int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+ 				       u16 interrupt_num)
+ {
+@@ -517,6 +563,14 @@ int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++/**
++ * dw_pcie_ep_raise_msix_irq - Raise MSIX to the host
++ * @ep: DWC EP device
++ * @func_no: Function number of the endpoint device
++ * @interrupt_num: Interrupt number to be raised
++ *
++ * Return: 0 if success, errno otherwise.
++ */
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			      u16 interrupt_num)
+ {
+@@ -564,6 +618,13 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++/**
++ * dw_pcie_ep_exit - Deinitialize the endpoint device
++ * @ep: DWC EP device
++ *
++ * Deinitialize the endpoint device. EPC device is not destroyed since that will
++ * taken care by Devres.
++ */
+ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+@@ -599,6 +660,14 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+ 	return 0;
+ }
+ 
++/**
++ * dw_pcie_ep_init_complete - Complete DWC EP initialization
++ * @ep: DWC EP device
++ *
++ * Complete the initialization of the registers (CSRs) specific to DWC EP. This
++ * API should be called only when the endpoint receives an active refclk (either
++ * from host or generated locally).
++ */
+ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+@@ -716,6 +785,15 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+ 
++/**
++ * dw_pcie_ep_init - Initialize the endpoint device
++ * @ep: DWC EP device
++ *
++ * Initialize the endpoint device. Allocate resources and create the EPC
++ * device with the endpoint framework.
++ *
++ * Return: 0 if success, errno otherwise.
++ */
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+ 	int ret;
 
-Johan
+-- 
+2.25.1
+
