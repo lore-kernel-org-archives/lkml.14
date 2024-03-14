@@ -1,79 +1,150 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DA86CDD7;
-	Thu, 14 Mar 2024 11:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35E46EB76
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 11:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710415622; cv=none; b=os1C0NkHzNlZD9wv8TGK4Eebzaq/5JEJVNk+h5pW5H/yp+K3bTOO/JPljDpGtN+jjOQArr9Hdligy6oI+kZHliaKTDPBfxQavb7Bfk8jowwLr9h/RgomdZFA+2RgQeLCjGdnOWtsogOBP6DxDcCzsxPib85J9yhpp5ACm5sRPbM=
+	t=1710415624; cv=none; b=VFwrIVhPONcywHk/4pRyjv46n+DFm89d+oymVvSDSH5NXk5uP5QJ3m1gZZtMxzgKKDz8b08kffaKrft17dPkS/ivGzrYX/XUjeIv8Trd4JMXJ/qltj3DIgWabDbeYrwfFEdPMktSsQzd6w1RvZQ3isjGsOv4hNf6KwsOeVFpyCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710415622; c=relaxed/simple;
-	bh=Pfd2z0WcwpHP46x04wMSW5dBhXIY/2MfqS+g3TP/9Sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0yTYRQjtnfHshBti3p29+hm67Q7rnfREn8V0Ng3wLYNOe0l5pTvTyKlFJdi8ZIBzpolVeKLwX1G8aRa0VRth8yUT3mmejFUug8GtoKq5TfmfSzwbAUGNqApoR4m5uU184SG18jOIprov+aQyyQbEdNhUWQg2qkttSdFhd/WpKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1rkjEZ-0006nC-0U; Thu, 14 Mar 2024 12:26:51 +0100
-Date: Thu, 14 Mar 2024 12:26:50 +0100
-From: Florian Westphal <fw@strlen.de>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>, xingwei lee <xrivendell7@gmail.com>,
-	pabeni@redhat.com, davem@davemloft.net, kuba@kernel.org,
-	linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, ralf@linux-mips.org,
-	syzkaller-bugs@googlegroups.com, samsun1006219@gmail.com
-Subject: Re: KASAN: slab-use-after-free Read in ip_finish_output
-Message-ID: <20240314112650.GE1038@breakpoint.cc>
-References: <CABOYnLwtfAxS7WoMw-1_uxVe3EYajXRuzZfwaQEk0+7m6-B+ug@mail.gmail.com>
- <CANn89i+qLwyPLztPt6Mavjimyv0H_UihVVNfJXWLjcwrqOudTw@mail.gmail.com>
- <20240306103632.GC4420@breakpoint.cc>
- <CANn89iLe0KGjbSim5Qxxr6o0AjJVs7-h79UvMMXKOgGKQUosiA@mail.gmail.com>
- <20240312132107.GA1529@breakpoint.cc>
- <CANn89iLkDwnZdBY8CwkrQwCk2o7EAM9J1sv+uxU1tjKb=VB=Ag@mail.gmail.com>
+	s=arc-20240116; t=1710415624; c=relaxed/simple;
+	bh=NZQktpdrtfs7qW27jx8uDV2H4cOGOdMPNZEZKyZNqn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A3a3Bd5cXzbIRLCgp0WWuWveKjlR9Xdg7tYlb9OJVgIIQGQPDBZHYNs7AF2qBqnwyDhRgfMGPVJB0jbgTd10hYnWj2n4oNRoshrvOvossnbZ92pxcYr3q92UY8pXGoEHNVfuBBNW9pH7iKRKuL/XN0ubjNS6nEarm+RQGE9q1Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e02Lk7fr; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e02Lk7fr"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51320ca689aso1032462e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 04:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710415621; x=1711020421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RqhAHkzb4BHsXhRmp42tjCgM0t0AB1g5Lp7YtW1X1vg=;
+        b=e02Lk7frLO8mGFG2llXaOzkBKU7MbQLlhs3kBLmkjjbWK7ISkzfHp9TNSZNSHDw684
+         g7i0y8ZNhCoXeL1UiJG9DSUJkl2+W4b7VEgrNu2RE9l9zHiDjiWf1k2uapEA6S5kJjn+
+         MFAEudv5fm5ZUTqsyTESSK2JWTCccGsYFGqmuljv+UQYfLeGSUD+XNl0WO7eOpseOpgB
+         YIw/AGMtGdQ4MeEX0TmEvqwcOjqZGJA25h1h4e+3idxe9tvmgA6Te44UFdPKA5qRuIyl
+         fNds+KudlkYqd3v8AC9cTw+uvSgj42YnwnTAXVyLtXGUdObi2WikMURQiktU6jL6tvDm
+         slVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710415621; x=1711020421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RqhAHkzb4BHsXhRmp42tjCgM0t0AB1g5Lp7YtW1X1vg=;
+        b=eNHR8VInYH3VQ8P9fDWoO7OOhqQcWO54OI6rMQ9oIYSE/Folvx1qJ2bQCjIbG8mQj+
+         J0rOoJRtUGOMnbA2sUiyiNepI66GQykRDZ/PsaUibPps07CKTNUEQGhBSO3h5p0mkZb2
+         wpTTq2M5iz2leBwJnXcG/o8EHRs0tXN7j3DReCWsQ6PPHqZi6iu/qNbrkY8cuoziF7m/
+         joPIKy63Ck4BdiLVtzrqfDL+7eqEeEfU/apO3eVflYLxOGF0oF3MTO0wjMtAK2gH/Xx/
+         7iF2mUVzxDDBvQEdYRNNWEc8qPNghrNvxDpcL3tlsmuD3gouCVfVmoISCACT42kg9mDS
+         iYDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLLhNdyJcNIqNnIo7qtCm83n5F+nUPQBte7CB4gdDmY5lsPqdjc4XcY+aHYwymjcJsNtskwjTgsShUsLFiHJaPDvqeiJY7QE85ZQr+
+X-Gm-Message-State: AOJu0Yx2lnYlBubw9BZrCbGG+xHjvxVmU6TndbRClYRf+N9GeIhoDS3v
+	ukwTYomH9/XE1AVkBIZBCrFBjlGptFaslouw8/VOOFOYfZZlxpv4qzu/fGQzPXA=
+X-Google-Smtp-Source: AGHT+IFiOaTUBm/dmApeywx7C2FjUTaLu385b2URTg8PSx1WzFj+iIemPcjjAzN72x90SEFH8nsUrg==
+X-Received: by 2002:a19:8c47:0:b0:513:b062:98c4 with SMTP id i7-20020a198c47000000b00513b06298c4mr950278lfj.11.1710415621009;
+        Thu, 14 Mar 2024 04:27:01 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id j16-20020adfe510000000b0033e42ab5114sm560922wrm.2.2024.03.14.04.26.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 04:27:00 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: apq8016-sbc: correct GPIO LEDs node names
+Date: Thu, 14 Mar 2024 12:26:57 +0100
+Message-Id: <20240314112657.167006-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iLkDwnZdBY8CwkrQwCk2o7EAM9J1sv+uxU1tjKb=VB=Ag@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-Eric Dumazet <edumazet@google.com> wrote:
-> Thanks for taking a look Florian.
-> 
-> Perhaps not messing with truesize at all would help ?
->
-> Something based on this POC :
-> 
->                 spin_lock(&qp->q.lock);
-> +               if (!qp->q.sk) {
-> +                       struct sock *sk = skb->sk;
-> 
-> +                       if (sk && refcount_inc_not_zero(&sk->sk_refcnt))
-> +                               qp->q.sk = sk;
+Individual LEDs in a GPIO LEDs device node are not addressable, thus
+unit address is not correct.
 
-Unfortunetely I did not get this to work.
+dtc is also not happy:
 
-sk_refcnt is 0.  sk is kept alive by sock_wfree destructor.
+  Warning (unit_address_vs_reg): /leds/led@5: node has a unit name, but no reg or ranges property
 
-I don't know how to recover from this, refcnt cannot be "repaired"
-anymore.
+Reported-by: Sumit Garg <sumit.garg@linaro.org>
+Closes: https://lore.kernel.org/all/CAFA6WYNRwF7GqhBk2B7i-deT3aLxNQckhnOasjip2TYm4HZgAw@mail.gmail.com/
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-I could artificially inflate sk_wmem counter by 1, to prevent release,
-but that needs yet another sock_wfree-like destructor.
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
+index 9ffad7d1f2b6..aba08424aa38 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
+@@ -91,7 +91,7 @@ leds {
+ 
+ 		compatible = "gpio-leds";
+ 
+-		led@1 {
++		led-1 {
+ 			label = "apq8016-sbc:green:user1";
+ 			function = LED_FUNCTION_HEARTBEAT;
+ 			color = <LED_COLOR_ID_GREEN>;
+@@ -100,7 +100,7 @@ led@1 {
+ 			default-state = "off";
+ 		};
+ 
+-		led@2 {
++		led-2 {
+ 			label = "apq8016-sbc:green:user2";
+ 			function = LED_FUNCTION_DISK_ACTIVITY;
+ 			color = <LED_COLOR_ID_GREEN>;
+@@ -109,7 +109,7 @@ led@2 {
+ 			default-state = "off";
+ 		};
+ 
+-		led@3 {
++		led-3 {
+ 			label = "apq8016-sbc:green:user3";
+ 			function = LED_FUNCTION_DISK_ACTIVITY;
+ 			color = <LED_COLOR_ID_GREEN>;
+@@ -118,7 +118,7 @@ led@3 {
+ 			default-state = "off";
+ 		};
+ 
+-		led@4 {
++		led-4 {
+ 			label = "apq8016-sbc:green:user4";
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
+@@ -127,7 +127,7 @@ led@4 {
+ 			default-state = "off";
+ 		};
+ 
+-		led@5 {
++		led-5 {
+ 			label = "apq8016-sbc:yellow:wlan";
+ 			function = LED_FUNCTION_WLAN;
+ 			color = <LED_COLOR_ID_YELLOW>;
+@@ -136,7 +136,7 @@ led@5 {
+ 			default-state = "off";
+ 		};
+ 
+-		led@6 {
++		led-6 {
+ 			label = "apq8016-sbc:blue:bt";
+ 			function = LED_FUNCTION_BLUETOOTH;
+ 			color = <LED_COLOR_ID_BLUE>;
+-- 
+2.34.1
 
-I'm already not sure how this existing scheme works, there are
-multiple places that check for skb->destructor == sock_wfree,
-yet we have is_skb_wmem helper that checks __sock_wfree and tcp_wfree.
-
-Removing defrag from output seems like best option, but it will
-surely break some scenarios.
-
-Or, I could just fail reasm if sk refcount is already 0, that would
-likely work too?
