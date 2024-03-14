@@ -1,126 +1,101 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D01F6CDC0
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451396CDB4
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710408306; cv=none; b=KJ9jIWk7IiqICvLEcw4FPjqIFmDVLIioyOjL7XSZcRpWdPUl69mrEt9F8gH60YOU3KsNxlsSAji58Bykmx1igp9a9FUmiEKZNhHAnKFYdtzNJiqqKIijQUY7oyMkVcRJsOYazPVxrO7tCjN3rHV9OFlrqk3zBJc3w4h1x8GbDJ4=
+	t=1710408343; cv=none; b=ObTcXYcT3EBEegboqt3U2PCdU7D9m5Y+0JjrsudxQr2iUBTU0XpBHUrsMPIVLVdRz1nDCeLHN+FWQXGYjeBVoGIHMGcDpSSFR9+qp/5pZWgr3nHZYS+VxM8NPUJwQR7yz0sFelnlcVtpkfsiik4LvWMYiZdmt4LK45zwwOCoOWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710408306; c=relaxed/simple;
-	bh=6tIt0rGYr3xffVSMMPnAuHzPxCWu+NZvjW36OSif+RY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DR4h22UmTDobW0lPHR4yzdE/iSdB8nZMMM9GsweBvXy9ZUBx9TavZyNqibT+VdD3uPwUcdTWn9/v7E7ObaO6UPx9ukX3RZq2CICTLPZ7x8K6U3rjoJlgOSXF2KbmXeyWWi2AayyA3PB8qccNN0vXnUz1qpQW75XDXjj3wk8pFQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8JR2Lfe; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710408343; c=relaxed/simple;
+	bh=fgonNeMf/o/pRXS7JivunfUA0eISBue8LuSCTAtdblU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iEimkWFKMqN+XzSLJmyjj0lsV+usT7coj/iE5cJuLbaCduzL3VXzb0QAxNUgaqTmUpySid/xndLonwyozpKqQ26uf4C/W9Z8OM0JeIYzx5So535V2lNQClIhTso6rYOrFbWf9ic78BhGThf4gkGQt1ftq6GRgh/xhrFAFfpf5qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ugfOSjof; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8JR2Lfe"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-783045e88a6so52184185a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:25:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ugfOSjof"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso8556341fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710408304; x=1711013104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ocCihU80Xv40gzd79kv18kcNVazvWx00n3HGC6M1AO0=;
-        b=L8JR2Lfe4xdc1AKMK620t6lsbDvLNgOkiPzYAl1gUjIgjYXifExiq+g1szLpy15JCG
-         kQTn33ZhNVEYYBh4NvVkvmdPo/Tr4ShfVV7+jF42wGBl8TKGV0jynGymJeSvrmEgtJUE
-         yGTi9dicaChPvPqffJKYcIqHkVBITJqpTT1PiaqOHY1bxw5AwzHhDka/Y/j2CqGfquAX
-         OGwPczRIfgOgZGTIKMi8lpXXhOEQ9vnbrKiJH661cvfoCrlfS5/PbxFpynXZJglT3SeQ
-         5qNr1YGqgbGoQlgGyQJ03Sb+w3GUvKXOIwYbzpwgt6LVTRjKMELjU+6d5W9EnVAzdDtM
-         DpBw==
+        d=linaro.org; s=google; t=1710408339; x=1711013139; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S8d+4q0CAgInaiDlbX468rkRXDY2d+JUTnc6y78NLvE=;
+        b=ugfOSjofDJujBPI1gmKRaPhrsuxOqhHTqr4q3LHgvK4A2hwC3ud3Y8Em3/0oT2vmvm
+         JVyk0xSJSc8xmDaWek9sCFSSAHEFYYjvHpqsSQ4EfjwFnuovflIFhxUq3RHnlZimLXVB
+         ZECa3QYuHiTJQl2sCM8zlsdXbkHzxoDH8RDYidsp2XHLhLgNQHBsDUfh6QauuLxPBdXn
+         cOPbQ8B5nZES+sXyGIdQgVxm/y3WBken1yyze4Q5XdDUXISuCqxa0JFN6SDrXRlusNeC
+         xvfVQyR0jQuI8gF1dw/q8Ua2Dn9gPPH6FXgmwsffSdno9NH5w+TXuwI8kCe9nAB6m17m
+         i4tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710408304; x=1711013104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ocCihU80Xv40gzd79kv18kcNVazvWx00n3HGC6M1AO0=;
-        b=wH9JEl1bALFENFKveXAfW2DIHxeJbWWA8l+YtNhDj25wq0utRyiif2Hn0jXGqZBawN
-         Q7jOhw9C/hWgo3uC64lEoCtPBbgYI5eGf+vXWdg/9pqemwcYhbl9yR0XGDhw1EH8qn6/
-         QQ1U2+nTQN20qlxt0hGGX722sSrrdhizdcwoS5sKOIRy3O3eetzHlMRDI23IeTfdHD/d
-         50FoGj7/IC0U1GqYNRC31MmF+5aDSPAaObl49yKPU10QA96t0+57mx33tEHUHYvdTs5h
-         tYeis+mCAuGIYbqsj20ZD2XOruJ7oGJ6A5J3kjuHL6pEpTSEtAZsKpH9QVYr74MxA0dH
-         4WUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfvkSvK+wzdmQcfo/lnCzx80Yoh/b0ajv134qRcjWhGZQdQ3WLGHipVqZVHcjfYEZ78i2Z8rNd5CEAo0U8rnUwg4+rrPYuQ9t3Zqn5
-X-Gm-Message-State: AOJu0YwffB9MqX7H0pX543voWJCbTvEuNsBsy+ia7dPscZcSnOBc9Pdi
-	SjXG69q9fmqdPS/DOUG/kwk97/3FvREiJqU+fPsxMIoYkifhx5JPNHbx5DO4SbEt8eBaEMsDuGD
-	yJWy1M2Iuud1oSGb21EoDR8U/zwo=
-X-Google-Smtp-Source: AGHT+IFwd0hzTsYhw29iN2nwcK1sLtRv9RFdHPdubmJUBwzbzsvkBwHQn/1zikC66NLG0Z9cQD77SclDmWUhTSyctQk=
-X-Received: by 2002:ad4:4e70:0:b0:690:b66b:c43c with SMTP id
- ec16-20020ad44e70000000b00690b66bc43cmr126685qvb.24.1710408303975; Thu, 14
- Mar 2024 02:25:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710408339; x=1711013139;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S8d+4q0CAgInaiDlbX468rkRXDY2d+JUTnc6y78NLvE=;
+        b=xIVLCf/080UzEdH6qD90deDQ6QLfveKcDaAaqJS96YwcqikRjW9dNiJEC5/x/CG6Gx
+         8HZ9T+ydQa2HQ+LaGvIyw3zoBoZEA/K4gQAd/g61Ac1gax/yDmQ4YYD1W7D8++FUG4lO
+         EeuX7wFYG/pMNKOTXCCxFCX2hGeSYBMko3nBKrdn0+jcxUJUlZP/ldcX67hALz2JHFr9
+         b2rakJa5cycHSIvlK9+P7kGTCtOrt26+Ea1bwjC6+dC5kqR35VZF+o7ifLpEf52Oqgzu
+         vVwqlNORNJauS7UJVsBCbSlihQNxNSDJLu+ThH1L9IEJmUt58ZbW+iiGQinegTyxMzsz
+         UPFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfJXRrh81tkSgKWaTfZsdV8yVGXOHo85QA+Y1vK84ttEUz5krx7TRRRsj1h3y0+LtGKSH5YywUwAxCfCxDshH1fAWke5CyNgw8MK07
+X-Gm-Message-State: AOJu0YxQ/5sXjlpMOSy3wzOgXphhC5LaSZgP0L41zuDYirSTPKV7Gn6B
+	/0nyNCpyPJ41wRgPQfdWFUjWq5av9xtmeV3o70wf3Wk4DxJkf1vGr4UultUwhUg=
+X-Google-Smtp-Source: AGHT+IFBBk4rux63ZSQC8J/phAe2l+ZN2bujZdh2Zao6JevEjXLO5PGu9I+qsB6H3c6vIOUM1vmoAg==
+X-Received: by 2002:a2e:b0e6:0:b0:2d4:24c5:a35e with SMTP id h6-20020a2eb0e6000000b002d424c5a35emr698266ljl.29.1710408339520;
+        Thu, 14 Mar 2024 02:25:39 -0700 (PDT)
+Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id v19-20020a2e9f53000000b002d2697570fcsm56937ljk.93.2024.03.14.02.25.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 02:25:39 -0700 (PDT)
+Message-ID: <9eaedb7a-f417-43a7-9728-1ba89f4b2151@linaro.org>
+Date: Thu, 14 Mar 2024 10:25:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312-zswap-xarray-v6-1-1b82027d7082@kernel.org>
-In-Reply-To: <20240312-zswap-xarray-v6-1-1b82027d7082@kernel.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Thu, 14 Mar 2024 16:24:53 +0700
-Message-ID: <CAKEwX=Nd0kAJCbzNtLHbg6Wz53QY8+uA4d-3dvi_PY9xNX-5Tw@mail.gmail.com>
-Subject: Re: [PATCH v6] zswap: replace RB tree with xarray
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Yosry Ahmed <yosryahmed@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, Barry Song <v-songbaohua@oppo.com>, 
-	Barry Song <baohua@kernel.org>, Chengming Zhou <chengming.zhou@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8650: fix usb interrupts properties
+Content-Language: en-US
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Krishna Kurapati <quic_kriskura@quicinc.com>
+References: <20240314-topic-sm8650-upstream-usb-dt-irq-fix-v1-1-ea8ab2051869@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240314-topic-sm8650-upstream-usb-dt-irq-fix-v1-1-ea8ab2051869@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 13, 2024 at 12:31=E2=80=AFAM Chris Li <chrisl@kernel.org> wrote=
-:
->
-> Very deep RB tree requires rebalance at times. That
-> contributes to the zswap fault latencies. Xarray does not
-> need to perform tree rebalance. Replacing RB tree to xarray
-> can have some small performance gain.
->
-> One small difference is that xarray insert might fail with
-> ENOMEM, while RB tree insert does not allocate additional
-> memory.
->
-> The zswap_entry size will reduce a bit due to removing the
-> RB node, which has two pointers and a color field. Xarray
-> store the pointer in the xarray tree rather than the
-> zswap_entry. Every entry has one pointer from the xarray
-> tree. Overall, switching to xarray should save some memory,
-> if the swap entries are densely packed.
->
-> Notice the zswap_rb_search and zswap_rb_insert always
-> followed by zswap_rb_erase. Use xa_erase and xa_store
-> directly. That saves one tree lookup as well.
->
-> Remove zswap_invalidate_entry due to no need to call
-> zswap_rb_erase any more. Use zswap_free_entry instead.
->
-> The "struct zswap_tree" has been replaced by "struct xarray".
-> The tree spin lock has transferred to the xarray lock.
->
-> Run the kernel build testing 10 times for each version, averages:
-> (memory.max=3D2GB, zswap shrinker and writeback enabled,
-> one 50GB swapfile, 24 HT core, 32 jobs)
->
-> mm-9a0181a3710eb             xarray v5
-> user       3532.385                     3535.658
-> sys        536.231                      530.083
-> real       200.431                      200.176
->
+
+
+On 3/14/24 09:53, Neil Armstrong wrote:
+> Update the usb interrupts properties to fix the following
+> bindings check errors:
+> usb@a6f8800: interrupt-names:0: 'pwr_event' was expected
+>          from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> usb@a6f8800: interrupt-names:1: 'hs_phy_irq' was expected
+> 	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> usb@a6f8800: interrupt-names:2: 'dp_hs_phy_irq' was expected
+>          from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> usb@a6f8800: interrupt-names:3: 'dm_hs_phy_irq' was expected
+>          from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> usb@a6f8800: interrupt-names: ['hs_phy_irq', 'ss_phy_irq', 'dm_hs_phy_irq', 'dp_hs_phy_irq'] is too short
+>          from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+> 
+> Cc: Krishna Kurapati <quic_kriskura@quicinc.com>
+> Fixes: 10e024671295 ("arm64: dts: qcom: sm8650: add interconnect dependent device nodes")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
-> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
-> Acked-by: Yosry Ahmed <yosryahmed@google.com>
-> Signed-off-by: Chris Li <chrisl@kernel.org>
 
-Apologies for the delayed review :)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-LGTM FWIW. Looks like you're sending a fixlet to address Johannes'
-comments, but I assume it won't change too much, so feel free to
-include:
-
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+Konrad
