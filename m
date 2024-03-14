@@ -1,220 +1,246 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A023E7173B
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 15:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AC2DDD9;
+	Thu, 14 Mar 2024 15:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710428878; cv=none; b=Nn3IwhmQA+prtZLNspQu0Om40+4zKbWyhYQ09qjGuE1egqDDvrembkEuWg7Zego+HxQVzcmqVURMYgp+uqN2MU1iFEaYDmg2nBiPMT6WlwTRJo8HVRSUdq9ShGI4bbWaW9Cr9MhQMJ//H4IhxOOsTV1Zk1mDpxirBW4z9rmKE4Q=
+	t=1710429015; cv=none; b=Q/BAcO3EniwNAzmtG3wq5eDB2dbElApQdOPTTlI8gclLG60vOdMmxBTUjyqAYRfHY90x/5LvqbMWArc3Qka3G7LZMA83Mv5hE3zdpyi7nB+ItcN0OcgaAxqKmby3mzzP3fr8jBrww2oB/hyr/apkU3Gawd2RmdGoqp06yh21/g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710428878; c=relaxed/simple;
-	bh=rrd1tcJTa6fdiPcMMDJwwu+7ne94Wx65en1cxUFdF6Q=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ckStP3+UV44wSFo1lIxeLPJWNp8kKA5sHIwv3aKyaiSz+iO/aWMqu2GPDpgGLVtQjBe6IvBq8QsH1GxyMJt3TJLyaul+Fsj1FalgVz4N/pXkqNpEBj4HWrM1KT7ighGiS6hFLG8n7SdZGvmDjOhWS5W1CWMMZ4R0+hoxSIxK76s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlbMeL+r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710429015; c=relaxed/simple;
+	bh=GFkZJWB9Ya9MH81kTy8tv+kqzJ5IRFkWv+lbxOaNeP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eff16N+hiQrg8K6NmKDUxLodwGUySiLWoeKD51pjWUWE9XK74a87sY9HEr1wKcxGZ7+qIOxcmbdO8cZ6RaHLHyJvGsLuTZCK8ukLF+JVfOU/0RqVvy+7tqwIzi+ZHBCPCDDu3j8dXTK5jSxG08rRYZQJ8ki4H8vtwSkf+JepJHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BInPB5u0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlbMeL+r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0297EC433C7;
-	Thu, 14 Mar 2024 15:07:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BInPB5u0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 410DBC433C7;
+	Thu, 14 Mar 2024 15:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710428878;
-	bh=rrd1tcJTa6fdiPcMMDJwwu+7ne94Wx65en1cxUFdF6Q=;
+	s=k20201202; t=1710429015;
+	bh=GFkZJWB9Ya9MH81kTy8tv+kqzJ5IRFkWv+lbxOaNeP0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YlbMeL+rYi2iIVw9YfppmnDip+Osv1MKsieHYb5lQ/OJPDEGzO0WhZBtWX+xx+CVL
-	 g/t+ksZNGB0joMHE8UUEmi5r2I726AY3ttCo6fX2oXzQQw/IOEDSX9OQIjErK2G7qI
-	 teb4ls0yw0+vmC+kwDDSbwNOn5evPY13SetgtuGk1vjsIsFbdqdSqeh6KRn0IZc6fm
-	 pbqHaWr/WsJNEiB5iLDkGWxJIzA/80HOc+asYQgARdCkI+1pi1zrxwWiIWI/LyB5HU
-	 Zxfcwo7ZtoCFdusqG7uVQSfGjxtvoZB/rwS1alrOHtUDPF9eYYl8kkm17JRHy+WyZR
-	 ekwPcH6SLmEVA==
-Date: Fri, 15 Mar 2024 00:07:53 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: cheung wall <zzqq0103.hey@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: BUG: unable to handle kernel paging request in
- arch_adjust_kprobe_addr
-Message-Id: <20240315000753.a448251fce0291e041f76c13@kernel.org>
-In-Reply-To: <CAKHoSAs2rof6vQVBw_Lg_j3QNku0CANZR2qmy4eT7R5Lo8MFbg@mail.gmail.com>
-References: <CAKHoSAs2rof6vQVBw_Lg_j3QNku0CANZR2qmy4eT7R5Lo8MFbg@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=BInPB5u0KRxHSzzuHXV9AYJG649a6SgDCUiadtq5iZjFNeNkONh0acf5QvryLzEmQ
+	 nkopOwsubpUXu4/gov6AR+ht5InbRxMc+iptjiOq6i9kcPSkwr6OxshscCZ2pYPHF/
+	 qqhc5NoLlM/AZxrLeKr7U3tdMS8c3Eq+Z+6SZwzYr77LiXBow32ntUTfoYDy8Q1Jdc
+	 bHSPyybYQL+uD0g+L9LJtVKthVyeyIg7kBkSB01LukZ3ZI29xNs4A/3l2ZHT3x8dyT
+	 nTb07ZAi5J/3eSbYyeuLHXikpaJYE2jpkfn8d3m4hYbmfZpIBidcBXCNwtdtEwzgHg
+	 pVh7iAP49h7QA==
+Date: Thu, 14 Mar 2024 15:09:59 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, linus.walleij@linaro.org,
+ phil@raspberrypi.com, 579lpy@gmail.com, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] iio: pressure: Simplify and make more clear
+ temperature readings
+Message-ID: <20240314150959.585367b5@jic23-huawei>
+In-Reply-To: <20240313174007.1934983-5-vassilisamir@gmail.com>
+References: <20240313174007.1934983-1-vassilisamir@gmail.com>
+	<20240313174007.1934983-5-vassilisamir@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 13 Mar 2024 18:40:05 +0100
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-Thanks for reporting the bug. I confirmed it and found a bug.
+> The read_press/read_humid functions need the updated t_fine value
+> in order to calculate the current pressure/humidity. Temperature
+> reads should be removed from the read_press/read_humid functions
+> and should be placed in the oneshot captures before the pressure
+> and humidity reads. This makes the code more intuitive.
+> 
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
 
-----
-/* If x86 supports IBT (ENDBR) it must be skipped. */
-kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
-                                         bool *on_func_entry)
+To me this makes the use of these calls less obvious than they were
+previously.  The calls are made close to where t_fine is used and
+don't have to go via the indirection of chip_info.
+
+So I disagree. I think this change makes the code a lot less
+clear.
+
+The only improvement I can readily see would be to move the
+temperature read into the compensation functions themselves, possibly
+removing t_fine from data and having a function that reads everything
+relevant to computing it directly but doesn't do the maths to get
+a temperature reading.  That can be reused in bmp280_compensate_temp()
+
+Something along lines of.
+
+static s32 bmp280_calc_tfine(struct bmp280_calib *calib, s32 adc_temp) 
 {
-        if (is_endbr(*(u32 *)addr)) {
-                          ^^^^^^^^^^^^^^^^^
-----
+	s32 var1, var2;
 
-Actually, arch_adjust_kprobe_addr() is called before safety check of the
-address. So we should treat the @addr as unsafe address.
+	var1 = (((adc_temp >> 3) - ((s32)calib->T1 << 1)) *
+		((s32)calib->T2)) >> 11;
+	var2 = (((((adc_temp >> 4) - ((s32)calib->T1)) *
+		  ((adc_temp >> 4) - ((s32)calib->T1))) >> 12) *
+		((s32)calib->T3)) >> 14;
+	return var1 + var2;
+}
 
-Let me fix that.
+static int bmp280_read_temp_raw(struct bmp280_data *data,
+			    	s32 *raw)
+{
+	s32 adc_temp;
+	int ret;
 
-Thank you,
+	ret = regmap_bulk_read(data->regmap, BMP280_REG_TEMP_MSB,
+			       data->buf, sizeof(data->buf));
+	if (ret < 0) {
+		dev_err(data->dev, "failed to read temperature\n");
+		return ret;
+	}
 
+	adc_temp = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(data->buf));
+	if (adc_temp == BMP280_TEMP_SKIPPED) {
+		/* reading was skipped */
+		dev_err(data->dev, "reading temperature skipped\n");
+		return -EIO;
+	}
+	*raw = adc_temp;
 
-On Wed, 13 Mar 2024 10:14:09 +0800
-cheung wall <zzqq0103.hey@gmail.com> wrote:
+	return 0;
+}
+static int bmp280_get_t_fine(.., s32 *t_fine)
+{
+	s32 adc_temp, comp_temp;
+	s32 t_fine;
+	int ret;
 
-> Hello,
-> 
-> 
-> 
-> when using Healer to fuzz the latest Linux Kernel, the following crash
-> 
-> was triggered on:
-> 
-> 
-> 
-> HEAD commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a  (tag: v6.7)
-> 
-> git tree: upstream
-> 
-> console output:
-> *https://drive.google.com/file/d/15ygRHkG5dwbVMtPDCBx1FKhTULSlrXki/view?usp=drive_link*
-> <https://drive.google.com/file/d/15ygRHkG5dwbVMtPDCBx1FKhTULSlrXki/view?usp=drive_link>
-> 
-> kernel config:
-> *https://drive.google.com/file/d/1odoVJXVajqeUhF0bpFlv3ieTNwpgNdAl/view?usp=drive_link*
-> <https://drive.google.com/file/d/1odoVJXVajqeUhF0bpFlv3ieTNwpgNdAl/view?usp=drive_link>
-> 
-> C reproducer:
-> *https://drive.google.com/file/d/1hYKj4Xanb09-3gsIRq3ZLvEhkno49NtP/view?usp=drive_link*
-> <https://drive.google.com/file/d/1hYKj4Xanb09-3gsIRq3ZLvEhkno49NtP/view?usp=drive_link>
-> 
-> Syzlang reproducer:
-> https://drive.google.com/file/d/1YIN_c_-kT5De7-Z80nWImXyqW7rT2fPf/view?usp=drive_link
-> 
-> 
-> 
-> If you fix this issue, please add the following tag to the commit:
-> 
-> Reported-by: Qiang Zhang <*zzqq0103.hey@gmail.com* <zzqq0103.hey@gmail.com>>
-> 
-> *----------------------------------------------------------*
-> 
-> 
-> 
-> BUG: unable to handle page fault for address: ffffffff95003e80
-> audit: type=1400 audit(1710291918.880:7): avc:  denied  { open } for
->  pid=298 comm="syz-executor372" scontext=system_u:system_r:kernel_t:s0
-> tcontext=system_u:system_r:kernel_t:s0 tclass=perf_event permissive=1
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 1c4a7067 P4D 1c4a7067 PUD 1c4a8063
-> audit: type=1400 audit(1710291918.880:8): avc:  denied  { kernel } for
->  pid=298 comm="syz-executor372" scontext=system_u:system_r:kernel_t:s0
-> tcontext=system_u:system_r:kernel_t:s0 tclass=perf_event permissive=1
-> PMD 800fffffe29ff062
-> Oops: 0000 [#1] PREEMPT SMP KASAN PTI
-> CPU: 0 PID: 298 Comm: syz-executor372 Not tainted 6.7.0 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.13.0-1ubuntu1.1 04/01/2014
-> RIP: 0010:arch_adjust_kprobe_addr+0x42/0x180
-> arch/x86/kernel/kprobes/core.c:338
-> Code: 48 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 14 02 48 89
-> e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 09 01 00 00 <44> 8b 6d 00 41
-> 81 fd 66 0f 1f 00 74 18 e8 3c e5 30 00 41 81 e5 ff
-> RSP: 0018:ffff888112af7a68 EFLAGS: 00010246
-> RAX: 0000000000000003 RBX: 0000000000000000 RCX: ffffffff902cd938
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff95003e80
-> RBP: ffffffff95003e80 R08: ffff8881bec62da8 R09: ffffffff930000eb
-> R10: ffffffff906e4e58 R11: ffffffff92f009b3 R12: ffff888112af7b70
-> R13: ffff888107f5e258 R14: ffff88810124c6f0 R15: 0000000000000001
-> FS:  000055555555e880(0000) GS:ffff8881c0000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff95003e80 CR3: 00000001036da005 CR4: 0000000000770ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  _kprobe_addr+0x10e/0x140 kernel/kprobes.c:1479
->  register_kprobe+0xe0/0x15b0 kernel/kprobes.c:1622
->  __register_trace_kprobe kernel/trace/trace_kprobe.c:510 [inline]
->  __register_trace_kprobe+0x233/0x2a0 kernel/trace/trace_kprobe.c:478
->  create_local_trace_kprobe+0x209/0x370 kernel/trace/trace_kprobe.c:1821
->  perf_kprobe_init+0xed/0x1b0 kernel/trace/trace_event_perf.c:267
->  perf_kprobe_event_init+0xcc/0x180 kernel/events/core.c:10334
->  perf_try_init_event+0x10d/0x4e0 kernel/events/core.c:11650
->  perf_init_event kernel/events/core.c:11720 [inline]
->  perf_event_alloc kernel/events/core.c:12000 [inline]
->  perf_event_alloc+0xded/0x3310 kernel/events/core.c:11866
->  __do_sys_perf_event_open+0x328/0x1d50 kernel/events/core.c:12507
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x43/0xf0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> RIP: 0033:0x7f92060ecb4d
-> Code: 28 c3 e8 36 29 00 00 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fff2df5c268 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f92060ecb4d
-> RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000020001200
-> RBP: 00007f92060a6500 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00000000ffffffff R11: 0000000000000246 R12: 00007f92060a65a0
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
->  </TASK>
-> Modules linked in:
-> CR2: ffffffff95003e80
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:arch_adjust_kprobe_addr+0x42/0x180
-> arch/x86/kernel/kprobes/core.c:338
-> Code: 48 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 14 02 48 89
-> e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 09 01 00 00 <44> 8b 6d 00 41
-> 81 fd 66 0f 1f 00 74 18 e8 3c e5 30 00 41 81 e5 ff
-> RSP: 0018:ffff888112af7a68 EFLAGS: 00010246
-> RAX: 0000000000000003 RBX: 0000000000000000 RCX: ffffffff902cd938
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff95003e80
-> RBP: ffffffff95003e80 R08: ffff8881bec62da8 R09: ffffffff930000eb
-> R10: ffffffff906e4e58 R11: ffffffff92f009b3 R12: ffff888112af7b70
-> R13: ffff888107f5e258 R14: ffff88810124c6f0 R15: 0000000000000001
-> FS:  000055555555e880(0000) GS:ffff8881c0000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff95003e80 CR3: 00000001036da005 CR4: 0000000000770ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> note: syz-executor372[298] exited with irqs disabled
-> ----------------
-> Code disassembly (best guess):
->    0: 48 89 ea             mov    %rbp,%rdx
->    3: 48 b8 00 00 00 00 00 movabs $0xdffffc0000000000,%rax
->    a: fc ff df
->    d: 48 c1 ea 03           shr    $0x3,%rdx
->   11: 0f b6 14 02           movzbl (%rdx,%rax,1),%edx
->   15: 48 89 e8             mov    %rbp,%rax
->   18: 83 e0 07             and    $0x7,%eax
->   1b: 83 c0 03             add    $0x3,%eax
->   1e: 38 d0                 cmp    %dl,%al
->   20: 7c 08                 jl     0x2a
->   22: 84 d2                 test   %dl,%dl
->   24: 0f 85 09 01 00 00     jne    0x133
-> * 2a: 44 8b 6d 00           mov    0x0(%rbp),%r13d <-- trapping instruction
->   2e: 41 81 fd 66 0f 1f 00 cmp    $0x1f0f66,%r13d
->   35: 74 18                 je     0x4f
->   37: e8 3c e5 30 00       callq  0x30e578
->   3c: 41                   rex.B
->   3d: 81                   .byte 0x81
->   3e: e5 ff                 in     $0xff,%eax
+	ret = bmp280_read_temp_raw(data, &adc_temp;
+	if (ret)
+		return ret;
+
+	*t_fine = bmp280_calc_tfine(&data->calib.bmp280, adc_temp);
+	return 0;
+}
+
+static int bmp280_read_temp(struct bmp280_data *data, s32 *temp)
+{
+	int ret;
+	s32 t_fine;
+
+	ret = bmp280_get_t_fine(data, &t_fine);
+	if (ret)
+		return ret;
+
+	*temp = (t_fine * 5 + 128) / 256;
+//division rather than shift as then it's obvious what the 128 is there for
+	return 0;
+}
+
+Now you have a nice function to get you t_fine which is all you want in some
+of these paths.  Call it directly where it is needed instead of as
+a side effect of a temperature read.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> ---
+>  drivers/iio/pressure/bmp280-core.c | 38 ++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index 6d7734f867bc..377e90d9e5a2 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -404,11 +404,6 @@ static u32 bmp280_read_press(struct bmp280_data *data)
+>  	s32 adc_press;
+>  	int ret;
+>  
+> -	/* Read and compensate temperature so we get a reading of t_fine. */
+> -	ret = bmp280_read_temp(data);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
+>  			       data->buf, sizeof(data->buf));
+>  	if (ret < 0) {
+> @@ -433,11 +428,6 @@ static u32 bmp280_read_humid(struct bmp280_data *data)
+>  	s32 adc_humidity;
+>  	int ret;
+>  
+> -	/* Read and compensate temperature so we get a reading of t_fine. */
+> -	ret = bmp280_read_temp(data);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	ret = regmap_bulk_read(data->regmap, BMP280_REG_HUMIDITY_MSB,
+>  			       &data->be16, sizeof(data->be16));
+>  	if (ret < 0) {
+> @@ -470,12 +460,21 @@ static int bmp280_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_PROCESSED:
+>  		switch (chan->type) {
+>  		case IIO_HUMIDITYRELATIVE:
+> +			/* Read temperature to update the t_fine value */
+> +			data->chip_info->read_temp(data);
+>  			ret = data->chip_info->read_humid(data);
+>  			*val = data->chip_info->humid_coeffs[0] * ret;
+>  			*val2 = data->chip_info->humid_coeffs[1];
+>  			ret = IIO_VAL_FRACTIONAL;
+>  			break;
+>  		case IIO_PRESSURE:
+> +			/*
+> +			 * Read temperature to update the t_fine value.
+> +			 * BMP5xx devices do this in hardware, so skip it.
+> +			 */
+> +			if (strcmp(indio_dev->name, "bmp580"))
+> +				data->chip_info->read_temp(data);
+> +
+>  			ret = data->chip_info->read_press(data);
+>  			*val = data->chip_info->press_coeffs[0] * ret;
+>  			*val2 = data->chip_info->press_coeffs[1];
+> @@ -500,10 +499,19 @@ static int bmp280_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_RAW:
+>  		switch (chan->type) {
+>  		case IIO_HUMIDITYRELATIVE:
+> +			/* Read temperature to update the t_fine value */
+> +			data->chip_info->read_temp(data);
+>  			*val = data->chip_info->read_humid(data);
+>  			ret = IIO_VAL_INT;
+>  			break;
+>  		case IIO_PRESSURE:
+> +			/*
+> +			 * Read temperature to update the t_fine value.
+> +			 * BMP5xx devices do this in hardware, so skip it.
+> +			 */
+> +			if (strcmp(indio_dev->name, "bmp580"))
+> +				data->chip_info->read_temp(data);
+> +
+>  			*val = data->chip_info->read_press(data);
+>  			ret = IIO_VAL_INT;
+>  			break;
+> @@ -1092,11 +1100,6 @@ static u32 bmp380_read_press(struct bmp280_data *data)
+>  	s32 adc_press;
+>  	int ret;
+>  
+> -	/* Read and compensate for temperature so we get a reading of t_fine */
+> -	ret = bmp380_read_temp(data);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
+>  			       data->buf, sizeof(data->buf));
+>  	if (ret) {
+> @@ -2009,11 +2012,6 @@ static u32 bmp180_read_press(struct bmp280_data *data)
+>  	s32 adc_press;
+>  	int ret;
+>  
+> -	/* Read and compensate temperature so we get a reading of t_fine. */
+> -	ret = bmp180_read_temp(data);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = bmp180_read_adc_press(data, &adc_press);
+>  	if (ret)
+>  		return ret;
+
