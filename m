@@ -1,179 +1,153 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7149B6BB56;
-	Thu, 14 Mar 2024 08:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF196BB46;
+	Thu, 14 Mar 2024 08:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710405962; cv=none; b=GxDjYO2JI4Omj2N1HvNt+oQ/O0tQUHp7YKBK9KMLgcQeJNe26RWXUtkpU9VDvWyYokCMxRRTnceDspEXeqbLyLObfpE5hqFeznykAY/hxfVhnaV2XkFpgE+IkmJv4QeM3NenlBRC65tQuyCBt6ef0kwU1iXRF+gJbXenHtEbHmc=
+	t=1710405979; cv=none; b=DSb2u6hx44wlGbmkyGthPKJbUdJQS84Efc+La543PR/Ks1yDk2B4/vbaYRiruN6r3k5FqlqCoPx0yKzCQvhrG1R15LNPVm4IPRLgnY4EukSqew8zKj7ze9WVNRTamjiTLankxMiw5MWkj0GEjPXto89uvKkpY0+hFXStvj/3yd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710405962; c=relaxed/simple;
-	bh=almCwjmSv496A0+vWnZxh1TFaAh0w7CwD+k7Lrgi7wI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nsmzj68ireqGdSjgKvYBBQEnUyTuPr6UvJVBGt+XGn+Efv82Urm0733EWt6BpvhzvSOrkdCCUAfOUYLbI5GZUB+cfOzTQmItdzqdBhBqOKpWGjt9evGUqxMJJJvkXsgceVX+63PaxGwdYachZEgPd0MVy2Yu1ht+awlGQq2vl3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oDk/vc0b; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710405979; c=relaxed/simple;
+	bh=ZhwIqYSkHeid7IzpzPz46BYX4vhv51LDlh8l+Z+depo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oHlDrx1/IKM2Ur+8BqV5fD3fHr72d8DMFx8mQ5B7E4pubxC35/g2c/67S+OJW6CklKlu7yHTAzJ5kJBmAgYCYGdEmDbD5/t38vUNspwiVQE61qpahdyitHCJ2QIyyC4SrYEVgt8kMCkdUm2ok4TElOr6P4AzesyK8bwG+RsU51Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=llg9699W; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oDk/vc0b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710405958;
-	bh=almCwjmSv496A0+vWnZxh1TFaAh0w7CwD+k7Lrgi7wI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=oDk/vc0blI7okKBLO9A0oTSunqnhzePRCYgUgOmyPF8x64FWLiSeX9OrA7SiG2FiR
-	 N39hU/RnAuAXo0aq8Ea1h3KniOSz+xg+zGmwxYnWM1SWbZThkkLvnZyTIzGJ8MhcZE
-	 KreRcvBx5IPkzXqAgrbxeRBxZyRaEAZkjOmaqLJ3n7cQeCtyb5DdH9gJF83pSRtp2w
-	 maDyLVw7HKtOjJ6okijVA6ONhbSx2UUcm4229CMpq1DOamH7F82kZSUfvCm8A6WTdR
-	 8y379o+j/9mALxEhUbaqY8WF018oB8ObMPdJH2z1/dt3W/gbQ3rE3JRZgonxmec/O8
-	 eUdNzBgE1nesw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="llg9699W"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 9C1EE100017;
+	Thu, 14 Mar 2024 11:46:14 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9C1EE100017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710405974;
+	bh=UKhnHyf3Q15t1sWab7Ng1cV9QPOXCfl6k9inzlZSB1c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=llg9699W2rj5jl7v8yvCPkzJKdUhJpldOk6JTJwKKcOidKi6wgSTIZfXHTxDvt10F
+	 GvDRhAcEDAcj55+arFTzbJHLpMRtGGvHVku7AyzTwtiIohc8OQiVARs4qhzcfwHNWX
+	 fDT8X3G+CQJK5AEi+icnfhCWbenJaozvYAoDDkmyiiibtCbIIaHaq3+/8JVoyhZjL0
+	 MhZKF0np04TVDbMB8+IoDcEOoR7dmLSESFAEEtPUjk3rB3piPI/rKAQmpJ2Mno+fRu
+	 /DmTy1ObF3/BpHT+EYC+/Hjz+PvHK09CX7ExRiJ9Mx8OYGpMMyTsG7OPc7IMQiMFDY
+	 7R+SarmqMTygg==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 05465378105A;
-	Thu, 14 Mar 2024 08:45:54 +0000 (UTC)
-Message-ID: <07e2e91b-7b0d-4810-a2a1-ed4654ecafb4@collabora.com>
-Date: Thu, 14 Mar 2024 13:46:22 +0500
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 14 Mar 2024 11:46:14 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 14 Mar 2024 11:46:14 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <andy.shevchenko@gmail.com>, <pavel@ucw.cz>, <lee@kernel.org>,
+	<vadimp@nvidia.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<christophe.leroy@csgroup.eu>, <hdegoede@redhat.com>,
+	<mazziesaccount@gmail.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<will@kernel.org>, <longman@redhat.com>, <boqun.feng@gmail.com>,
+	<nikitos.tr@gmail.com>, <marek.behun@nic.cz>, <kabel@kernel.org>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <kernel@salutedevices.com>, George Stark
+	<gnstark@salutedevices.com>
+Subject: [PATCH v6 4/9] leds: lp3952: use devm API to cleanup module's resources
+Date: Thu, 14 Mar 2024 11:45:26 +0300
+Message-ID: <20240314084531.1935545-5-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240314084531.1935545-1-gnstark@salutedevices.com>
+References: <20240314084531.1935545-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Anshuman.Khandual@arm.com
-Subject: Re: [PATCH v2 12/12] selftests/mm: virtual_address_range: conform to
- TAP format output
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- Shuah Khan <shuah@kernel.org>
-References: <20240202113119.2047740-1-usama.anjum@collabora.com>
- <20240202113119.2047740-13-usama.anjum@collabora.com>
- <12b0aa90-3b4f-4fb0-b4df-c677f496cb09@arm.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <12b0aa90-3b4f-4fb0-b4df-c677f496cb09@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 3/14/24 10:00 AM, Dev Jain wrote:
-> 
-> On 2/2/24 17:01, Muhammad Usama Anjum wrote:
->> Conform the layout, informational and status messages to TAP. No
->> functional change is intended other than the layout of output messages.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>   .../selftests/mm/virtual_address_range.c      | 44 +++++++++----------
->>   1 file changed, 22 insertions(+), 22 deletions(-)
->>
->> diff --git a/tools/testing/selftests/mm/virtual_address_range.c
->> b/tools/testing/selftests/mm/virtual_address_range.c
->> index bae0ceaf95b13..7bcf8d48256a6 100644
->> --- a/tools/testing/selftests/mm/virtual_address_range.c
->> +++ b/tools/testing/selftests/mm/virtual_address_range.c
->> @@ -12,6 +12,7 @@
->>   #include <errno.h>
->>   #include <sys/mman.h>
->>   #include <sys/time.h>
->> +#include "../kselftest.h"
->>     /*
->>    * Maximum address range mapped with a single mmap()
->> @@ -68,23 +69,15 @@ static char *hind_addr(void)
->>       return (char *) (1UL << bits);
->>   }
->>   -static int validate_addr(char *ptr, int high_addr)
->> +static void validate_addr(char *ptr, int high_addr)
->>   {
->>       unsigned long addr = (unsigned long) ptr;
->>   -    if (high_addr) {
->> -        if (addr < HIGH_ADDR_MARK) {
->> -            printf("Bad address %lx\n", addr);
->> -            return 1;
->> -        }
->> -        return 0;
->> -    }
->> +    if (high_addr && addr < HIGH_ADDR_MARK)
->> +        ksft_exit_fail_msg("Bad address %lx\n", addr);
->>   -    if (addr > HIGH_ADDR_MARK) {
->> -        printf("Bad address %lx\n", addr);
->> -        return 1;
->> -    }
->> -    return 0;
->> +    if (addr > HIGH_ADDR_MARK)
->> +        ksft_exit_fail_msg("Bad address %lx\n", addr);
->>   }
->>     static int validate_lower_address_hint(void)
->> @@ -107,23 +100,29 @@ int main(int argc, char *argv[])
->>       char *hint;
->>       unsigned long i, lchunks, hchunks;
->>   +    ksft_print_header();
->> +    ksft_set_plan(1);
->> +
->>       for (i = 0; i < NR_CHUNKS_LOW; i++) {
->>           ptr[i] = mmap(NULL, MAP_CHUNK_SIZE, PROT_READ | PROT_WRITE,
->>                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->>             if (ptr[i] == MAP_FAILED) {
->> -            if (validate_lower_address_hint())
->> -                return 1;
->> +            if (validate_lower_address_hint()) {
->> +                ksft_test_result_skip("Memory constraint not fulfilled\n");
->> +                ksft_finished();
->> +            }
-> 
-> Hi,
-> 
-> When validate_lower_address_hint() returns 1, it implies that despite
-> filling the lower
-> 
-> range, mmap succeeded. IMHO, ksft_exit_fail_msg() should be used instead,
-> with a
-> 
-> more descriptive message indicating that the memory was unexpectedly
-> allocated.
-Can you fire up a patch for this? Otherwise I'll get back to it next week.
+In this driver LEDs are registered using devm_led_classdev_register()
+so they are automatically unregistered after module's remove() is done.
+led_classdev_unregister() calls module's led_set_brightness() to turn off
+the LEDs and that callback uses resources which were destroyed already
+in module's remove() so use devm API instead of remove().
+Also drop explicit turning LEDs off from remove() due to they will be off
+anyway by led_classdev_unregister().
 
-> 
-> 
-> Regards
-> 
-> Dev
-> 
->>               break;
->>           }
->>   -        if (validate_addr(ptr[i], 0))
->> -            return 1;
->> +        validate_addr(ptr[i], 0);
->>       }
->>       lchunks = i;
->>       hptr = (char **) calloc(NR_CHUNKS_HIGH, sizeof(char *));
->> -    if (hptr == NULL)
->> -        return 1;
->> +    if (hptr == NULL) {
->> +        ksft_test_result_skip("Memory constraint not fulfilled\n");
->> +        ksft_finished();
->> +    }
->>         for (i = 0; i < NR_CHUNKS_HIGH; i++) {
->>           hint = hind_addr();
->> @@ -133,8 +132,7 @@ int main(int argc, char *argv[])
->>           if (hptr[i] == MAP_FAILED)
->>               break;
->>   -        if (validate_addr(hptr[i], 1))
->> -            return 1;
->> +        validate_addr(hptr[i], 1);
->>       }
->>       hchunks = i;
->>   @@ -145,5 +143,7 @@ int main(int argc, char *argv[])
->>           munmap(hptr[i], MAP_CHUNK_SIZE);
->>         free(hptr);
->> -    return 0;
->> +
->> +    ksft_test_result_pass("Test\n");
->> +    ksft_finished();
->>   }
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+---
+ drivers/leds/leds-lp3952.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/leds/leds-lp3952.c b/drivers/leds/leds-lp3952.c
+index 5d18bbfd1f23..e24bfe686312 100644
+--- a/drivers/leds/leds-lp3952.c
++++ b/drivers/leds/leds-lp3952.c
+@@ -207,6 +207,13 @@ static const struct regmap_config lp3952_regmap = {
+ 	.cache_type = REGCACHE_MAPLE,
+ };
+ 
++static void gpio_set_low_action(void *data)
++{
++	struct lp3952_led_array *priv = (struct lp3952_led_array *)data;
++
++	gpiod_set_value(priv->enable_gpio, 0);
++}
++
+ static int lp3952_probe(struct i2c_client *client)
+ {
+ 	int status;
+@@ -226,6 +233,10 @@ static int lp3952_probe(struct i2c_client *client)
+ 		return status;
+ 	}
+ 
++	status = devm_add_action(&client->dev, gpio_set_low_action, priv);
++	if (status)
++		return status;
++
+ 	priv->regmap = devm_regmap_init_i2c(client, &lp3952_regmap);
+ 	if (IS_ERR(priv->regmap)) {
+ 		int err = PTR_ERR(priv->regmap);
+@@ -254,15 +265,6 @@ static int lp3952_probe(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static void lp3952_remove(struct i2c_client *client)
+-{
+-	struct lp3952_led_array *priv;
+-
+-	priv = i2c_get_clientdata(client);
+-	lp3952_on_off(priv, LP3952_LED_ALL, false);
+-	gpiod_set_value(priv->enable_gpio, 0);
+-}
+-
+ static const struct i2c_device_id lp3952_id[] = {
+ 	{LP3952_NAME, 0},
+ 	{}
+@@ -274,7 +276,6 @@ static struct i2c_driver lp3952_i2c_driver = {
+ 			.name = LP3952_NAME,
+ 	},
+ 	.probe = lp3952_probe,
+-	.remove = lp3952_remove,
+ 	.id_table = lp3952_id,
+ };
+ 
 -- 
-BR,
-Muhammad Usama Anjum
+2.25.1
+
