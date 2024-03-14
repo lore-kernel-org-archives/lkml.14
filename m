@@ -1,44 +1,44 @@
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443C817C6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DDE17BB7;
 	Thu, 14 Mar 2024 23:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458591; cv=none; b=Bum/2fUj6PjmgV6TcuN3c7F9f/kWJduOyM89UjprY0F9suqHGdbcfxKg9nOoQPkW0P0y+Qbt1exUs8vFZlCwiG2V0Q9F4DEo3BN9BaqbG2hUZKiZO5DEgZ8rwI8kJ92+ALcTVZ/w2MPaKHK8qsEX73vumwlPlKH974Mj8wS5dq4=
+	t=1710458591; cv=none; b=ngghi4Q7ZX2U7BGQYjZ6onqEaBMCrmJBhAQNupOMtvc9btMPniO0DS2n7DHXe36LDS9cxkt8rVmHgdRxt0JtgCxTr27M1elceXkM0ZprRp3P+U0FiMkReYGG4y4TqzVaMILmO7fz1JaPdwC2fN0eaZXjvRwu4Rg7/aQ55MX5Q70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710458591; c=relaxed/simple;
-	bh=vOpsU+RwIj3w9yooQxGGCn6GlyI3xrVC6F9/0wiwm0Q=;
+	bh=TY/FEYhqFh969ciLYcfm0iAfwLhssq1zr79rdix8om0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kAWZII5SxF58BJq5HOb+ANsjUmecCBODUlUuh1WAiEkq1ozF2MizZUdXtHBE2MYIfbUr7KAsLSebzcpiDBkWM0JQmlKQsWgePLx/auWGStKr7tv/EjxvWGS0/4wrwsB5V19L+QV2BA4pAMyyB+eJ13364pYMDNN0nLvZfQ2WIIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=lJyiaIG7; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=i2mkMKi2pgKHYWfeDtyTd43FzhIOro83KsasdMFs0eut68Tf+LoqJCpjRFYPlFB5htzJr3e1/mQsimNipZ1Y6oOrJQbFcIyEedN5pry3Po4fr7EZtYS9KWTnMWnZT1PmZlZueCDaUSMJ9DD5dqVmZJl/42JXGQmZ+hyPj6qRZNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=O4MfZMzY; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="lJyiaIG7"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="O4MfZMzY"
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 7040812000F;
-	Fri, 15 Mar 2024 02:23:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 7040812000F
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 8295D12000E;
+	Fri, 15 Mar 2024 02:23:04 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8295D12000E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458585;
-	bh=2cBR28wVZklCa3JtuvaLhuQxNHULlRMlAPctj547VaE=;
+	s=mail; t=1710458584;
+	bh=MKV8dYg/6Fpl3cJydqZngZg7p1L9JdS0YLCOIXerNeo=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=lJyiaIG7Obr3iLBxwIftnXPeNahwwUvur85TVU78ksmi1EVVWRm8IR4E3csbjWaAE
-	 eycZPWK5ACP16VFhBICUZHxgIA4sA/e98Qq+D7RpaTp0aYMvKl59OAdzEW/MfWRy06
-	 JqTx893XZebdUVXOOtlgQHVRXjr5865MLO6lXv91VLoz5iQd/AkuP1tLsuOOixdmAy
-	 JBaDOVcUtEZ7kDpLIS/s33pad1FxplwHXAF8Y10LRy6eFIg592EUkNThaYojS2aVYP
-	 JJdK/VigObTBukuXw6DJXfSWpWcyQ3WA7ET1B476yTzvPzKXS5Iwi2S0bscb/bE4me
-	 JITunxjVLzjLg==
+	b=O4MfZMzYv+M3u9n7G1rmDQtlFIIaZ5K04MNTtTE7VQKgCp/fve7zjyOjllODWdmTA
+	 pwvGI/q3NDv7C32vI7KdXIL3WhGw+AfEjaIke7oLLCuJ7/IBn5jMxx6S4xtdOYdAbS
+	 s1bFmuptdbG65FNfYxdQ6NGY3Meg8r01CZe/FOJmp1tODBTnjOINHQBPgotGQiya70
+	 H+WxxYcGY9i+kOMK2BVt8cst1IBcPWJ9XrqCXFEXv9dD5UKEf4J1G6f4mcKQg41WP3
+	 AcSoJsiIxdYayNeGPrmCmLYtEoTJ18GiyCZI2yqDDONrjSM9wyJVYKpshlI6b+FqbC
+	 HAgMmOy5fiTQQ==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:05 +0300 (MSK)
+	Fri, 15 Mar 2024 02:23:04 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:04 +0300
+ 15.2.1118.40; Fri, 15 Mar 2024 02:23:03 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
@@ -55,9 +55,9 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
 	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <kernel@salutedevices.com>
-Subject: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document 'sysrate' property
-Date: Fri, 15 Mar 2024 02:21:49 +0300
-Message-ID: <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
+Subject: [PATCH 11/25] ASoC: dt-bindings: meson: t9015: add support for A1 SoC family
+Date: Fri, 15 Mar 2024 02:21:47 +0300
+Message-ID: <20240314232201.2102178-12-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
@@ -88,28 +88,28 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-This option allow to redefine the rate of DSP system clock.
+Add "amlogic,t9015-a1" compatible string.
 
 Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/sound/amlogic,t9015.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
-index df21dd72fc65..d2f23a59a6b6 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
-@@ -40,6 +40,10 @@ properties:
-   resets:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,t9015.yaml b/Documentation/devicetree/bindings/sound/amlogic,t9015.yaml
+index 5f5cccdbeb34..ee8bd57dbcf9 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,t9015.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,t9015.yaml
+@@ -21,7 +21,9 @@ properties:
  
-+  sysrate:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: redefine rate of DSP system clock
-+
- required:
-   - compatible
-   - reg
+   compatible:
+     items:
+-      - const: amlogic,t9015
++      - enum:
++          - amlogic,t9015
++          - amlogic,t9015-a1
+ 
+   clocks:
+     items:
 -- 
 2.34.1
 
