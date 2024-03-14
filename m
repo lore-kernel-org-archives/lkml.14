@@ -1,206 +1,155 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF3110979;
-	Thu, 14 Mar 2024 05:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE72113FFC
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395980; cv=none; b=kPTK7jJWlFLhoIIJmvFHyWkoznvjnIgRpiDvZ5xvGEe6GO4CkqSCtDAUKj2ns/vVHllmEGZ1Lhj1d0bfQKptJ4oOa8N1Xw/Aajp2Kr2YKN5es0MOgIS/XbypVsmMk9s3HuydzF/C/iIGs7U/Ru5o8H+TrH9qbA3ac0WR3/3d8JI=
+	t=1710395981; cv=none; b=sgwCSSRBqRl8ADYKSP6y+h7kgsuCWZagXKlgOIv5b8RfHCq1DT9ueCEiepDQe7HOdjJGSxnw9POIkn3fi7cZyXMmPqgHc/OVfepMiBUHoyYx3djEZNAKuKpygwr8QFZ5tOedq695xhNzKYO6O3XiVu09oQDk6KP1ipoKb2HG/C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395980; c=relaxed/simple;
-	bh=OpLaZbtp+WBO3m+PzveXLptrfgHrJ/P+34zDvkbnGLY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nQ2h2hR8AZzAQ6od5/GQI3cJo+GRW+Z7Xb3vSJc5bcb1JvoQhHWa4hDapBex7+PtZPHGjjzHEYJYbS4tghaQ4vS86hquA0cK87RGv8sfvKXxJEXJ2r5T4xfI4lya1h5FD0QS7Pf65sBViqO4PRo5FDN8bz5h086F+QDilJtXXSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FBDB1007;
-	Wed, 13 Mar 2024 23:00:13 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 004B03F73F;
-	Wed, 13 Mar 2024 22:59:31 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Leo Yan <leo.yan@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH V7 04/11] coresight: Add helpers registering/removing both AMBA and platform drivers
-Date: Thu, 14 Mar 2024 11:28:36 +0530
-Message-Id: <20240314055843.2625883-5-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1710395981; c=relaxed/simple;
+	bh=RoaV1PGHpB7iF+mzzYLJ0/v6xXT6l3SZAuzH3D8tIYE=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=J2NVYUmWGYWgvAHa366atl5imkjjdW/nKmBKQBw5Ywxax4XqAMTsHh+Qf2EcQGyau6/iklUr4w2U6LeVB10mpK32OMK330okMq6VD0oDBCqdnWJ2vvwIOMH5UkBF9H6RAdq06iHDgxLlTsntg4rr93aF1vLOcGzvAkhDNfERv8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eMQKKVpm; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eMQKKVpm"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a0a5bf550so12016977b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710395979; x=1711000779; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dpyhD4Js3wJeDTz3uN0UEDz2T8BCDX/cFh8ndCI6xOc=;
+        b=eMQKKVpmarxTCEqfJ5/+YdsflY/IyFOviGs99c2eH4IB8SDWOboxbZpunqMwZnpseF
+         CO9ARn1xaKLftS8zAJKWoyssx6NZdpTa0WaZOz8vAcUuStsbCPnmLDI18bf9DB7Gc5bI
+         SOimIugGT8lDELYYX0TCYfCoWEw+BY+KzA4PTysL1o4oklUbimKeEtWaQasdM1u+0/qc
+         i4XMTzEmWz3vMtt8hbmR2VMA6Y7MOoRUfDfeRKVLkP6H+TpIM8Es+kTE6eNpVPwQLSdd
+         eZ+4fmjqTRbdObNfS8nyIZAyoZQaZAXSJ2U/G1HP3HgJoOFYUmIQ47A4ssh7TVc/vKaG
+         wung==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710395979; x=1711000779;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpyhD4Js3wJeDTz3uN0UEDz2T8BCDX/cFh8ndCI6xOc=;
+        b=K90kT6PSXzI4QJfUcvm73c9K3LZYuzDpkzbM3d+nx8zNER6462ven6J1NVtpvrcqRf
+         5iTa0EmZYf/nJ9e2pxJIwnQyqhRCR60XZ47xJ3MEFwckNpto4IGIyvDkDVU6xzhMeWpI
+         xtND50pOJbqQo0LfHTZCdWNdrpk6b4XECdQRPrNg8EaJ24pT3fGM3uJu18tU+DWUZhKw
+         5IBoQeIlv0i0kegI7ViPJqGgrt2OJhKbBfqBsi62QRYIuqg5DV3k3NIhtlxvIofC0ZuL
+         0FVxjxHiNto1UZCWTi/K0nNe839GSMfG/wnL3ayFKba2ui10ldtA6lRv0H4W/ICjLVcu
+         MsBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaOsyoDRc25giPY29Vyizewr1KkMjB7XuZzjrfuLBBVxhn9Xebu4qbdvNy5dZelFJa6S5OjR0kh5MwsdUPS1gg/QMmD9jpnBn4kJF3
+X-Gm-Message-State: AOJu0YyZioqPyHMFYjc4I7Fd1xlhbe4KnQCgta7j5+IMo59DZXOrYXnO
+	UmcxNR65pLnW9xHcp4qsnChqMQvSnY9bTQy3X2ffPJXdkMsLYgjVEYDl/UsGyfZPYidl9Dmz1kg
+	RmM8g/g==
+X-Google-Smtp-Source: AGHT+IG1J4Jc5hyWHjED6a03IGV2XHl621GM4AHi1LarrkTaUZeYHjyI667L69+bKaCy3v7R4rM9qXfHQnlj
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a05:690c:a15:b0:60c:ca8a:4c10 with SMTP id
+ cg21-20020a05690c0a1500b0060cca8a4c10mr172343ywb.2.1710395978939; Wed, 13 Mar
+ 2024 22:59:38 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:00 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 01/20] perf jevents: Add RAPL metrics for all Intel models
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This adds two different helpers i.e coresight_init_driver()/remove_driver()
-enabling coresight devices to register or remove AMBA and platform drivers.
-This changes replicator and funnel devices to use above new helpers.
+Add a 'cpu_power' metric group that computes the power consumption
+from RAPL events if they are present.
 
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- drivers/hwtracing/coresight/coresight-core.c  | 29 +++++++++++++++++++
- .../hwtracing/coresight/coresight-funnel.c    | 19 ++----------
- .../coresight/coresight-replicator.c          | 20 ++-----------
- include/linux/coresight.h                     |  7 +++++
- 4 files changed, 41 insertions(+), 34 deletions(-)
+ tools/perf/pmu-events/intel_metrics.py | 45 ++++++++++++++++++++++++--
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index b83613e34289..9fc6f6b863e0 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1398,6 +1398,35 @@ static void __exit coresight_exit(void)
- module_init(coresight_init);
- module_exit(coresight_exit);
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 04a19d05c6c1..58e23eb48312 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1,13 +1,49 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+-from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+-                    MetricGroup)
++from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
++                    LoadEvents, Metric, MetricGroup, Select)
+ import argparse
+ import json
++import math
+ import os
  
-+int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
-+			  struct platform_driver *pdev_drv)
-+{
-+	int ret;
+ # Global command line arguments.
+ _args = None
++interval_sec = Event("duration_time")
 +
-+	ret = amba_driver_register(amba_drv);
-+	if (ret) {
-+		pr_err("%s: error registering AMBA driver\n", drv);
-+		return ret;
-+	}
++def Rapl() -> MetricGroup:
++  """Processor power consumption estimate.
 +
-+	ret = platform_driver_register(pdev_drv);
-+	if (!ret)
-+		return 0;
++  Use events from the running average power limit (RAPL) driver.
++  """
++  # Watts = joules/second
++  pkg = Event("power/energy\-pkg/")
++  cond_pkg = Select(pkg, has_event(pkg), math.nan)
++  cores = Event("power/energy\-cores/")
++  cond_cores = Select(cores, has_event(cores), math.nan)
++  ram = Event("power/energy\-ram/")
++  cond_ram = Select(ram, has_event(ram), math.nan)
++  gpu = Event("power/energy\-gpu/")
++  cond_gpu = Select(gpu, has_event(gpu), math.nan)
++  psys = Event("power/energy\-psys/")
++  cond_psys = Select(psys, has_event(psys), math.nan)
++  scale = 2.3283064365386962890625e-10
++  metrics = [
++      Metric("cpu_power_pkg", "",
++             d_ratio(cond_pkg * scale, interval_sec), "Watts"),
++      Metric("cpu_power_cores", "",
++             d_ratio(cond_cores * scale, interval_sec), "Watts"),
++      Metric("cpu_power_ram", "",
++             d_ratio(cond_ram * scale, interval_sec), "Watts"),
++      Metric("cpu_power_gpu", "",
++             d_ratio(cond_gpu * scale, interval_sec), "Watts"),
++      Metric("cpu_power_psys", "",
++             d_ratio(cond_psys * scale, interval_sec), "Watts"),
++  ]
 +
-+	pr_err("%s: error registering platform driver\n", drv);
-+	amba_driver_unregister(amba_drv);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(coresight_init_driver);
++  return MetricGroup("cpu_power", metrics,
++                     description="Running Average Power Limit (RAPL) power consumption estimates")
 +
-+void coresight_remove_driver(struct amba_driver *amba_drv,
-+			     struct platform_driver *pdev_drv)
-+{
-+	amba_driver_unregister(amba_drv);
-+	platform_driver_unregister(pdev_drv);
-+}
-+EXPORT_SYMBOL_GPL(coresight_remove_driver);
+ 
+ def main() -> None:
+   global _args
+@@ -31,7 +67,10 @@ def main() -> None:
+   directory = f"{_args.events_path}/x86/{_args.model}/"
+   LoadEvents(directory)
+ 
+-  all_metrics = MetricGroup("",[])
++  all_metrics = MetricGroup("", [
++      Rapl(),
++  ])
 +
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
- MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
-diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-index ef1a0abfee4e..ff3ea0670a5b 100644
---- a/drivers/hwtracing/coresight/coresight-funnel.c
-+++ b/drivers/hwtracing/coresight/coresight-funnel.c
-@@ -410,27 +410,12 @@ static struct amba_driver dynamic_funnel_driver = {
  
- static int __init funnel_init(void)
- {
--	int ret;
--
--	ret = platform_driver_register(&static_funnel_driver);
--	if (ret) {
--		pr_info("Error registering platform driver\n");
--		return ret;
--	}
--
--	ret = amba_driver_register(&dynamic_funnel_driver);
--	if (ret) {
--		pr_info("Error registering amba driver\n");
--		platform_driver_unregister(&static_funnel_driver);
--	}
--
--	return ret;
-+	return coresight_init_driver("funnel", &dynamic_funnel_driver, &static_funnel_driver);
- }
- 
- static void __exit funnel_exit(void)
- {
--	platform_driver_unregister(&static_funnel_driver);
--	amba_driver_unregister(&dynamic_funnel_driver);
-+	coresight_remove_driver(&dynamic_funnel_driver, &static_funnel_driver);
- }
- 
- module_init(funnel_init);
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index 73452d9dc13b..ddb530a8436f 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -416,27 +416,13 @@ static struct amba_driver dynamic_replicator_driver = {
- 
- static int __init replicator_init(void)
- {
--	int ret;
--
--	ret = platform_driver_register(&static_replicator_driver);
--	if (ret) {
--		pr_info("Error registering platform driver\n");
--		return ret;
--	}
--
--	ret = amba_driver_register(&dynamic_replicator_driver);
--	if (ret) {
--		pr_info("Error registering amba driver\n");
--		platform_driver_unregister(&static_replicator_driver);
--	}
--
--	return ret;
-+	return coresight_init_driver("replicator", &dynamic_replicator_driver,
-+				     &static_replicator_driver);
- }
- 
- static void __exit replicator_exit(void)
- {
--	platform_driver_unregister(&static_replicator_driver);
--	amba_driver_unregister(&dynamic_replicator_driver);
-+	coresight_remove_driver(&dynamic_replicator_driver, &static_replicator_driver);
- }
- 
- module_init(replicator_init);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 5f288d475490..653f1712eb77 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -12,6 +12,8 @@
- #include <linux/io.h>
- #include <linux/perf_event.h>
- #include <linux/sched.h>
-+#include <linux/amba/bus.h>
-+#include <linux/platform_device.h>
- 
- /* Peripheral id registers (0xFD0-0xFEC) */
- #define CORESIGHT_PERIPHIDR4	0xfd0
-@@ -658,4 +660,9 @@ coresight_find_output_type(struct coresight_platform_data *pdata,
- 			   enum coresight_dev_type type,
- 			   union coresight_dev_subtype subtype);
- 
-+int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
-+			  struct platform_driver *pdev_drv);
-+
-+void coresight_remove_driver(struct amba_driver *amba_drv,
-+			     struct platform_driver *pdev_drv);
- #endif		/* _LINUX_COREISGHT_H */
+   if _args.metricgroups:
+     print(JsonEncodeMetricGroupDescriptions(all_metrics))
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
