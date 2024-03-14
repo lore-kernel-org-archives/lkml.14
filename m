@@ -1,99 +1,188 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B546CDB5;
-	Thu, 14 Mar 2024 11:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC146EB6D;
+	Thu, 14 Mar 2024 11:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710416794; cv=none; b=iIN24LQye2RSA343vlmRsFFNoK0ExmUXG63nLrqwyKgPwNuVqyRlsiTOYrsG1KCNuLfLkylV7hmrKYITg7Q3yMdtvqYmXVrvZgC/dENjXzFuTOlYrtlJeMp3cd8XqXD4GWWk/OAdOR3ryv7IzKmYIjN/qhYkcUZRupkbBseHzZ0=
+	t=1710416927; cv=none; b=mEZAOY4V58FKAm3sUNz1AjhK6SD63nWe6ROfvx6QvZZIH7K+5Wsydry/c7i3/VQWv1iBEj+8cfr73AInzTlQtHymNz2NtRCFh2eXrz3mpTRD5vSv/Z+SfLV+SzDl7PuIP1ES2kngAgCLil0/p5+YiWXK2jgT7xyFRTXEhPzu6a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710416794; c=relaxed/simple;
-	bh=rVTxIlZr2M2YjqUYASLlemClSium3xGafvHFP+A9HQs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sfvdjlSPBMf7FfSLPJr2Ut2vwMm9i/HD1Wsg5L0Np7LwWJf3dYIEjQjtvtPyFnKTlqITWNg7agVLot5vkP1I3gyMZqFrdOfGFCzmnspDNfraOEy1DWlAHiWXD9odggea0TAUKz96JLMH77bcGOfZJXim+EkJqvVxHBoVoIgrCpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oyy3UeWM; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oyy3UeWM"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dca3951ad9so6232095ad.3;
-        Thu, 14 Mar 2024 04:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710416792; x=1711021592; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+tI7UckBN1Yi/o12xXlz3XnxJFT8If6wGyJEhsz06Y=;
-        b=Oyy3UeWMoSMyhvFmzP0uPLWjWaaFkJsU14jhqz7SXGQYLxUasncHDzn4Dr+xyM76aG
-         843wf+VXPuxDhRpDNkVa+8Blbq01mFcrqY79l1ifseBn9S2eRy/uGxF9b/MpLZzAe1mq
-         +2iMv7Ga8rlJQ3HepcmLOA6e206DuRyvCDFXkZxZsur75386BhSSYVanPsX+jXKS4Pgf
-         vSlmc6ju7llYhREInX3H+wBGx7Oyy0N0c+OmZpJrmjzFAQ1BNuRZOwotEk35oEA3I5V0
-         N9IIiNjlUGKJtq4YPaHMqZXazyLxpMB/xDpjWXcYaAb4jQGaU0MD3kING6ZW4Yngg3fT
-         IeGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710416792; x=1711021592;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y+tI7UckBN1Yi/o12xXlz3XnxJFT8If6wGyJEhsz06Y=;
-        b=AjbqmyfmAuZu/9sGPP9veNWs/30KHbHQjS1Tv+WDlxOj17N5Zpah8ko67X2W3am7dO
-         LJcIcl/lLuKuamHi5hK0Nt9HzhOVYJWnQmBbg+jedUPbvEdjT1R2FjNZfR58+yFOJsZd
-         gxMNWlVBdsjoNtqaQG4ADvYimCM+AxLViJyRClndU2BZ7D8d3ppnwQB4wPy86oXqO/80
-         Pep4USZUyrnbsFXU+We4IfIm1LI3733xtcBTWxZGunw2DPaNoYEAhzto1VmaQQUUFETE
-         eGGUcNw8D6qcTXbmi6QooINieUFfuo2np6sjv83yangix5inuhGb7cWfEwxKti+dB9uZ
-         fGaA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0lb0X4P8hHIOfYbXMhBalkAJg/Fos+l4n8DUghAc/GnnD7mdo6D09wLjTTcKhUbn448eaNYLM6WK7KRjyL+6rTw7EWncx
-X-Gm-Message-State: AOJu0Yzmj7dijE97bCFEYA3TUIP5U1EGHxVXkp3t6bWv6HDnB7SCKwwF
-	b4QI8jBlcPZfb21bjDWON+Q+CqVHeG1nxGrJyg/NGeJBuy0BfcA+JSKPbPUTl22zafqDy982al/
-	Tf7BymB9mB8/lZhZR/mGA3kI9UkOKfFhgbqI=
-X-Google-Smtp-Source: AGHT+IGHyawOdgJYjSHQOhXi4DF5Jy4M2SYs2DZzAYrxbM0K5I68X/OYe4bEOjL17S8s3G8n47I6kAJ9iCGKl3ebcLY=
-X-Received: by 2002:a17:90b:790:b0:29d:e6a2:9b3 with SMTP id
- l16-20020a17090b079000b0029de6a209b3mr75881pjz.23.1710416792500; Thu, 14 Mar
- 2024 04:46:32 -0700 (PDT)
+	s=arc-20240116; t=1710416927; c=relaxed/simple;
+	bh=7ZiBPpdN/pRir9iGW2WDn9wd7ox5+ZWpl5rz4L8hPpM=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HhNVcJuuK4QcruPysEGwnrJxJkIO/bEKUCZ1/pofYyJymEBZm9D2Lh05xnK8PI15L/wsu2M6JSUywL7LWgpMYo8rYmuJtnwARXZzIuEda8EQv0pV+QZjrvh8J2rqOaL3/quEghVIWK749GaaVJxj7IiWNAw4zRCE6RxeFhgdIrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TwQb24vv0z1xrD5;
+	Thu, 14 Mar 2024 19:46:54 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 18715180061;
+	Thu, 14 Mar 2024 19:48:41 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 14 Mar 2024 19:48:40 +0800
+Message-ID: <da60f9b8-0ea7-4580-ab45-f294801605f9@huawei.com>
+Date: Thu, 14 Mar 2024 19:48:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313163019.613705-1-sashal@kernel.org> <20240313163019.613705-6-sashal@kernel.org>
-In-Reply-To: <20240313163019.613705-6-sashal@kernel.org>
-From: Luna Jernberg <droidbittin@gmail.com>
-Date: Thu, 14 Mar 2024 12:46:20 +0100
-Message-ID: <CADo9pHis6n7FAtyTUhC0nO8wDaQGT1NzkJk11VcrEzQmG29wvw@mail.gmail.com>
-Subject: Re: [PATCH 6.8 5/5] Linux 6.8.1-rc1
-To: Sasha Levin <sashal@kernel.org>, Luna Jernberg <droidbittin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil
+ Mehta <salil.mehta@huawei.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Yufeng Mo <moyufeng@huawei.com>, Huazhong Tan
+	<tanhuazhong@huawei.com>
+Subject: Re: [PATCH] net: hns3: tracing: fix hclgevf trace event strings
+To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, netdev
+	<netdev@vger.kernel.org>
+References: <20240313093454.3909afe7@gandalf.local.home>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20240313093454.3909afe7@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-Hey!
+Reviewed-by: Jijie Shao<shaojijie@huawei.com>
 
-Wondering where you have uploaded this? can't find it at
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/
-but maybe i am looking in the wrong place and or are blind ?
-
-Den ons 13 mars 2024 kl 17:31 skrev Sasha Levin <sashal@kernel.org>:
+on 2024/3/13 21:34, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 >
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> [
+>     Note, I need to take this patch through my tree, so I'm looking for acks.
+>     This causes the build to fail when I add the __assign_str() check, which
+>     I was about to push to Linus, but it breaks allmodconfig due to this error.
+> ]
+>
+> The __string() and __assign_str() helper macros of the TRACE_EVENT() macro
+> are going through some optimizations where only the source string of
+> __string() will be used and the __assign_str() source will be ignored and
+> later removed.
+>
+> To make sure that there's no issues, a new check is added between the
+> __string() src argument and the __assign_str() src argument that does a
+> strcmp() to make sure they are the same string.
+>
+> The hclgevf trace events have:
+>
+>    __assign_str(devname, &hdev->nic.kinfo.netdev->name);
+>
+> Which triggers the warning:
+>
+> hclgevf_trace.h:34:39: error: passing argument 1 of ‘strcmp’ from incompatible pointer type [-Werror=incompatible-pointer-types]
+>     34 |                 __assign_str(devname, &hdev->nic.kinfo.netdev->name);
+>   [..]
+> arch/x86/include/asm/string_64.h:75:24: note: expected ‘const char *’ but argument is of type ‘char (*)[16]’
+>     75 | int strcmp(const char *cs, const char *ct);
+>        |            ~~~~~~~~~~~~^~
+>
+>
+> Because __assign_str() now has:
+>
+> 	WARN_ON_ONCE(__builtin_constant_p(src) ?		\
+> 		     strcmp((src), __data_offsets.dst##_ptr_) :	\
+> 		     (src) != __data_offsets.dst##_ptr_);	\
+>
+> The problem is the '&' on hdev->nic.kinfo.netdev->name. That's because
+> that name is:
+>
+> 	char			name[IFNAMSIZ]
+>
+> Where passing an address '&' of a char array is not compatible with strcmp().
+>
+> The '&' is not necessary, remove it.
+>
+> Fixes: d8355240cf8fb ("net: hns3: add trace event support for PF/VF mailbox")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>   drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h  | 8 ++++----
+>   .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h    | 8 ++++----
+>   2 files changed, 8 insertions(+), 8 deletions(-)
 >
-> diff --git a/Makefile b/Makefile
-> index c7ee53f4bf044..dd0b283998d00 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1,8 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  VERSION = 6
->  PATCHLEVEL = 8
-> -SUBLEVEL = 0
-> -EXTRAVERSION =
-> +SUBLEVEL = 1
-> +EXTRAVERSION = -rc1
->  NAME = Hurr durr I'ma ninja sloth
->
->  # *DOCUMENTATION*
-> --
-> 2.43.0
->
->
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
+> index 8510b88d4982..f3cd5a376eca 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
+> @@ -24,7 +24,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
+>   		__field(u8, code)
+>   		__field(u8, subcode)
+>   		__string(pciname, pci_name(hdev->pdev))
+> -		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
+> +		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
+>   		__array(u32, mbx_data, PF_GET_MBX_LEN)
+>   	),
+>   
+> @@ -33,7 +33,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
+>   		__entry->code = req->msg.code;
+>   		__entry->subcode = req->msg.subcode;
+>   		__assign_str(pciname, pci_name(hdev->pdev));
+> -		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
+> +		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
+>   		memcpy(__entry->mbx_data, req,
+>   		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
+>   	),
+> @@ -56,7 +56,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
+>   		__field(u8, vfid)
+>   		__field(u16, code)
+>   		__string(pciname, pci_name(hdev->pdev))
+> -		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
+> +		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
+>   		__array(u32, mbx_data, PF_SEND_MBX_LEN)
+>   	),
+>   
+> @@ -64,7 +64,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
+>   		__entry->vfid = req->dest_vfid;
+>   		__entry->code = le16_to_cpu(req->msg.code);
+>   		__assign_str(pciname, pci_name(hdev->pdev));
+> -		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
+> +		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
+>   		memcpy(__entry->mbx_data, req,
+>   		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
+>   	),
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+> index 5d4895bb57a1..b259e95dd53c 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
+> @@ -23,7 +23,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
+>   		__field(u8, vfid)
+>   		__field(u16, code)
+>   		__string(pciname, pci_name(hdev->pdev))
+> -		__string(devname, &hdev->nic.kinfo.netdev->name)
+> +		__string(devname, hdev->nic.kinfo.netdev->name)
+>   		__array(u32, mbx_data, VF_GET_MBX_LEN)
+>   	),
+>   
+> @@ -31,7 +31,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
+>   		__entry->vfid = req->dest_vfid;
+>   		__entry->code = le16_to_cpu(req->msg.code);
+>   		__assign_str(pciname, pci_name(hdev->pdev));
+> -		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
+> +		__assign_str(devname, hdev->nic.kinfo.netdev->name);
+>   		memcpy(__entry->mbx_data, req,
+>   		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
+>   	),
+> @@ -55,7 +55,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
+>   		__field(u8, code)
+>   		__field(u8, subcode)
+>   		__string(pciname, pci_name(hdev->pdev))
+> -		__string(devname, &hdev->nic.kinfo.netdev->name)
+> +		__string(devname, hdev->nic.kinfo.netdev->name)
+>   		__array(u32, mbx_data, VF_SEND_MBX_LEN)
+>   	),
+>   
+> @@ -64,7 +64,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
+>   		__entry->code = req->msg.code;
+>   		__entry->subcode = req->msg.subcode;
+>   		__assign_str(pciname, pci_name(hdev->pdev));
+> -		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
+> +		__assign_str(devname, hdev->nic.kinfo.netdev->name);
+>   		memcpy(__entry->mbx_data, req,
+>   		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
+>   	),
