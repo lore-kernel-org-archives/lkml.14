@@ -1,84 +1,80 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2DFDDAD
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668BE5677
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 07:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710399867; cv=none; b=rDovBkpxfnuR1AoJzybEp+c9SunB4OBWU5SNQe0xnOaOnLYzEzCsbgExM88lQAKf22uZ6Dd6GP2xeNeHpM2/LrRipFOkd40wr09fdv0rUWeD+ZX3mjv0m3vf4kHyrjJisNWTETxskxt1Jb/D4ANICgcTgytPVQUqqTKlAvqMwq4=
+	t=1710399944; cv=none; b=oAT00+zVUEneuvRBxix0QGhQSvjmkIhRuGurzRGdd8UL3xr5bSSqHfit+NuGhZcqM0wnp3ZzNkGNcNSuk/eFDMeqIZVX3kORV7O0r7fpckb2KPn9xjzAark8sRyoJkdQcvylffS9I5diE33gsM3+TtQBhwQabNhjSut4ARGgGpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710399867; c=relaxed/simple;
-	bh=ESA+BAU7x6gm8T930yqItEQ7MXJmuXARJY+Dy9dipeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lOExd5Qv5EQ+zHYllrXvoBPpHRChpxdu6aIfR6izPypMh5p/Hagg5WRng+rWOc4gV7CY5bKCjxxSYgI5V1AJXrY6qUKw5w3bVM8dXBNgHgkHXabZgtms2iM7WOkoaEGpiGI1RmUq1zt5hd61G6eYwqTPyNAu6cr/yMG5VnL00IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wAeheVaZ; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1710399944; c=relaxed/simple;
+	bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rRdCCCc+hH7C0vNXHn5biQeFSsGUfCuuWsRJvMgmHKArXBGj8pmnHv4/bJ7vTvoaVGP6MhxJrRfzxFzQYtFVQZGLgCu6zHuUROFKKQ0cyY33CKuf0C2AH+kG0Zn6rsuhFmKzwIbxObo2ru85nCF0D3xgR2qChHE9/+iJ89GTeZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XnvOjuOQ; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wAeheVaZ"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-413f2682975so1552405e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:04:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XnvOjuOQ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512e39226efso637483e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 00:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710399864; x=1711004664; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=guS8/Cyciijzh6TTeyIVTuVDEBzzzQx5jtXor9e0bWk=;
-        b=wAeheVaZRfFm5c8Ue7jM3V7LComF8lwiFOD6+kRL4+T+9Zq8mnJj7w9OHpENDnH83E
-         HaD5NcZ334fE1OwYxkhF4ld3mw+PV1b27ke+hZnquVKa01luY92kMUo5zVclpWma8VaG
-         /Bi2xA7VzHAr8Do+5YFwNqi6qtRw25a5w0z5d8Ca8Gyp5z54hmyXHmmWQiQ2QX4o5PKe
-         JgZu/3SoYXjeiejsjCm+uWMYRlyyQmb0QdMmXPK2R3FRGzv9OKXYlpuKemKdFJ1DG0op
-         b5hdI08Byw4kNO65j67CfFGaUMNRmn+ewQhnM7uFn3+qonnL6ZgdYyJMoL4+iIKUJBFD
-         0ByA==
+        d=linaro.org; s=google; t=1710399940; x=1711004740; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+        b=XnvOjuOQMO5rm41/7v74x9amXbVw0dW/3YFEO0qvJ8bWUHLzMHs5G0O+oPeMsdYsXu
+         kverySlewD4RBgA3+pDrlZIT3NzSN9b3jAkhkrNM1WONHCj5sRlEoQ5UvLkc/mNQX6EH
+         Pj4yPjoDVNRDMzXOMm7JggdrGRmqhioakRxkHAHzo4m/SdcsRQkjghHZtBMFTmMoY7Xy
+         Tf8knEZnacMzVYRqkHA6VEKc5rdSE74/GU1UjISZEUKQfnVvFuM+CfjsX1Bq0MhPTIFY
+         9mxGFQwOyAGWE62aisMX106Cp1epRD5yj55HLeMjwVDp1vjwpT2JHprbs0y35r/LDDkF
+         W02Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710399864; x=1711004664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=guS8/Cyciijzh6TTeyIVTuVDEBzzzQx5jtXor9e0bWk=;
-        b=fPTuZJnMx+VY9CMeoKNg48wpqwqu//tRh/sEuEPYSyY08RdXS7W0Rv8MPumB7JwYg1
-         rj+yILo0HxAJR+ORcTHrl7uHy0eFPG/nL36i1N9wK33brSrcI9rw1QvybSoQoDge1gye
-         Md0GGZKuRlz7HrVH4F/lWbiRa5b49kcSg39Q0SBA0w8eYBrvs+dc98/Qn4eb8FWEnFPw
-         dfhHEW9tGM2sBFkffK70FTCZcsbxHS9+Cb9mKWOvmNnytmxLW4pCj7Hw7MeQvILu1EO+
-         qRmYDiOI2ONBVXLEiZa1Q5A1a4RBKtafNW5533BqC6RdrY8g6DmrtCiGzdmc9yCc2JhR
-         Riuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKiJ3QLsRne3g2BI4QzQ/5GgG83z7bsoDZgIu3ecc/byLFqZuMWUk1m0Vhx0zNtYRr4FUMFtkYwO/sgW0DIaCmPNHBA8wI9jCohARq
-X-Gm-Message-State: AOJu0Yx6tiDkNbndgPZy9p0+tONHnivGpsLCmDO6tr9dV3ypGtPwrq8L
-	071MlyHH7OQU842EEhNIB40KmvPWTKBvXjLzmlIs9XfYWO3Iyh0UuGL7XvHXKjMUNLuvBRVJeh3
-	E
-X-Google-Smtp-Source: AGHT+IHujeMOrjOWKV3UzAfwlbNTOdDVlpE4Du2VK/oHCZTRFcL7kCbrTG3u3YZsCnhX8+4UA0nayw==
-X-Received: by 2002:a05:600c:19c9:b0:413:1f65:ec19 with SMTP id u9-20020a05600c19c900b004131f65ec19mr647448wmq.37.1710399864190;
-        Thu, 14 Mar 2024 00:04:24 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05600c468d00b004130fef5134sm4616393wmo.11.2024.03.14.00.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 00:04:23 -0700 (PDT)
-Date: Thu, 14 Mar 2024 10:04:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/11] pinctrl: aw9523: number of cleanups
-Message-ID: <18668ee1-7d0a-48cb-bef4-1d310b030837@moroto.mountain>
-References: <20240313235422.180075-1-andy.shevchenko@gmail.com>
+        d=1e100.net; s=20230601; t=1710399940; x=1711004740;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+        b=NsrgSP+XlAVcOQl11oBVZ4t8/0YWkRTDLvLWkZkHwgsPF8wnSGJ3gfyEfHZATTshzo
+         ChWbfX0n7A0Dn3R4TAZ+V4QuEm2xRQMfwd/8imEoQ8Dl6Kw7BK5XxAqzV5OHY8tiGax1
+         dv0f6D80iwFwFUaRv26Q/APbZZkwgBLmlmtUK1dORsxslq4jDA/YgUGcxPFO6COQDeHr
+         wF7dliT8QmRSZzv/eUbkPffkTxpqUqILiUw+Fnxdyd6zzNm0cAGquX4VBJsRwHgx4g/a
+         5y/X/f29jN/xjgoe5NYzPnW/AiE+mPBHtRlxvR5+DPyNo8zebrMDMMf+CLeyWcV6humI
+         woSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDdqL7DoHT9ezlBBI7sz1f4dnpvCfHU2M8OqPWM8gascdbUHfCxNZpY8eXjrZGV9xwgLbxLGcdB33rlHVkw2wA5F6ukqTiJCPqYNbd
+X-Gm-Message-State: AOJu0YwrnwrCnY6iwhp5IB04e+s+FNj8GWEVehpddS00ue64OeSLl6aG
+	5MUb/sfvht0u5DuoNlNfVQic5oY6U3DuXqlJHMQBcH90HQW9P8OooeIsgwvCqbc=
+X-Google-Smtp-Source: AGHT+IF6AKlpHi/SbY50G3BjSHsIPRHiOFvTYICSs7fONjFyEnVxxF2SrMSlne0E/phDX1Sflk2yAw==
+X-Received: by 2002:a19:741a:0:b0:513:5c68:9646 with SMTP id v26-20020a19741a000000b005135c689646mr484483lfe.43.1710399940587;
+        Thu, 14 Mar 2024 00:05:40 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.252])
+        by smtp.gmail.com with ESMTPSA id hg23-20020a170906f35700b00a4380e85e5csm391461ejb.202.2024.03.14.00.05.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 00:05:40 -0700 (PDT)
+Message-ID: <a9c3ebb0-2ea2-47f6-b630-7f661d0bf33f@linaro.org>
+Date: Thu, 14 Mar 2024 07:05:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313235422.180075-1-andy.shevchenko@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] spi: Fix error code checking in spi_mem_exec_op()
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ linux-spi@vger.kernel.org
+Cc: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Michael Walle <michael@walle.cc>,
+ "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240313194530.3150446-1-florian.fainelli@broadcom.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240313194530.3150446-1-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 14, 2024 at 01:52:03AM +0200, Andy Shevchenko wrote:
-> Just noticed that the newly introduced driver has some leftovers or unneeded
-> customisation. Hence this series. It may (or may not :-) be sent as an update
-> after v6.9-rc1 for v6.9 cycle, but TBH there is nothing functional critical.
-> 
-
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-regards,
-dan carpenter
-
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
