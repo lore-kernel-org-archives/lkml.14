@@ -1,88 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC2673181
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 16:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23786FE36;
+	Thu, 14 Mar 2024 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710432032; cv=none; b=qSLB5Azk0fJ+3VuFoRXA7/xX0EnTbklbfqjp0RDFk6xPW7TJRUsuyLtXw6oXtd2jcd0+XGNQnzh2aCq8PlzRzSsGyLgK/R8/fIIRkRMW5AwYJvKDqKK+goeh4HqFDtmKJ94kNpdWwhJciCDvO5nlc/Iwbpql9JcFU/DD4N1JdbI=
+	t=1710432090; cv=none; b=RM686ThBNewat3cji75y3Eo5hQN7Nc3o9O+HE2ihUlcbu0yEO8rY4QoFV96JaxhJeTbUQOVRNBCjnNxpSIgJgYH+RROTTdFm6XHGiHTuf5cpa/Z6HA1IyOO8EfDkyVNUFJdcF6g/yOBRpzF2b+A/e8MiAzZCbyr0zEGIrY9oJY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710432032; c=relaxed/simple;
-	bh=7QjiuBQBRyT+9k4iTSOFxeijm4WCgkFheISPv0kW21k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UEDfYggGD2A4kAc2DEjvmx/R5qUhpwmjP+fjfG6pX91wZMg+IvKyxJTfpUi19j4TybPPpC6RKnfE5Ds/zmf9a+umbJin1ht86bLYcJ3P9k/twusfwpCy2fFjmLqbD20emdTsMXmBxFeZpMdRJo0CZUXtb7B583LziuU6RSdNI5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a+NbZ9mQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a+NbZ9mQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710432029;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QjiuBQBRyT+9k4iTSOFxeijm4WCgkFheISPv0kW21k=;
-	b=a+NbZ9mQVyrL+wm/YiPDjqALwRDIXpyXbJxPE7ubpajZv0KpjQI/1Kd8Kbf7aATjF8w8Ye
-	JgbaNK4lsJ6Iogviva99mw8gLf1+qYR21jnW56CAxNIOJaLM0TXX4MRMw+b9CbjxGArWqd
-	n/xY9FWOE6Eh/GdQpO/6uNhnUQprlPY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-yWhzMBIeN826XPS1AxCOQA-1; Thu, 14 Mar 2024 12:00:25 -0400
-X-MC-Unique: yWhzMBIeN826XPS1AxCOQA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40e40126031so5844415e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 09:00:25 -0700 (PDT)
+	s=arc-20240116; t=1710432090; c=relaxed/simple;
+	bh=HmW2u3GIQSTHJ1TrNNSxc9z4hL7mtGt+q2u0TcftYuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gOdPRF+kuwrVa7VtEj/XHeU7TfqXxeop5LFwyDbOrx5jK0BhNCEnHyeKxmmYhQobVpU/44YpZ8dczIYvNNYYIv6i7GYTSkvJGb3mQSP9GIRwjBCZcU3EoleRomkPqDGWq0gvnljyZfTivsaioqXc/m8/nARHS6xMPPoMOPkiGtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a1d2cac52aso440732eaf.0;
+        Thu, 14 Mar 2024 09:01:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710432024; x=1711036824;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7QjiuBQBRyT+9k4iTSOFxeijm4WCgkFheISPv0kW21k=;
-        b=QKdjBJBU9C0MnS1pbdh+s2sCycviypsniq9DcRcazQMilBo7gwHdIcf51cnfUP/Yin
-         CnXqiUBV9+B9NhfeSk7XpBxOmLeJxZDfpGvmYb4bbaFB33oWu0c7mzzgFVOXBaQAA+6M
-         zgW99Ied1wEQt6dCSD9kQvCtkeWjVU54PUKatcJafa5jcRpGfhpIQhxLPm8toFIJHgGE
-         pj6NyMunDBwpFrKzUE0pdOibORwNfjnGaXEsEIt/KegDSljfFKk9J6RqwvpRuOEiuFj4
-         WghNHap9MIEAqE+48Msd6IHE0AXfeCiWGCo0RsvNYGaH276jm3T6Z/7nCaZZnDz+SPII
-         0Sow==
-X-Forwarded-Encrypted: i=1; AJvYcCXsNwk2TXqefgpndlDNCCtpyZDw6WpMsyBGcd3H45lgbNFt/Wue8QtadKAfzNsx2MWMQC/NxHvcZ+4Iu/eyllkdAYNNbYSRLirrfox6
-X-Gm-Message-State: AOJu0YwTyRbeo96RnRGC++VBTs83Jz6wlW+2VUGJFJ86Bl4yjw3rtcI6
-	a/K/idN/B5kriwMpnj4se39ZBfjiLry00VkIyEfcREScz5MGM18+vQzzcW4WR6q8PNfCw8exL2z
-	JgC0ovTyyARuBaLxb8teQ0OR64o64XXVQgRKyev4y+7W0ocI6i2UaHs8HWiyiAQ==
-X-Received: by 2002:a05:600c:450f:b0:413:286c:4fc0 with SMTP id t15-20020a05600c450f00b00413286c4fc0mr315570wmo.34.1710432024057;
-        Thu, 14 Mar 2024 09:00:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2tOqao4TMwOT3g3Hy6m0Z9ITRUlzMpqp4+Nsd+qQNSxpdMyyiCnfDrSmoUMHir24grTWrwQ==
-X-Received: by 2002:a05:600c:450f:b0:413:286c:4fc0 with SMTP id t15-20020a05600c450f00b00413286c4fc0mr315551wmo.34.1710432023735;
-        Thu, 14 Mar 2024 09:00:23 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id q13-20020a05600c46cd00b00412e5f32591sm2761945wmo.28.2024.03.14.09.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 09:00:23 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Maxim Moskalets <maximmosk4@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
- Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot
- de Oliveira <bristot@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Maxim Moskalets <Maxim.Moskalets@kaspersky.com>
-Subject: Re: [PATCH] kernel/sched: use seq_putc instead of seq_puts
-In-Reply-To: <20240303110500.15239-1-Maxim.Moskalets@kaspersky.com>
-References: <20240303110500.15239-1-Maxim.Moskalets@kaspersky.com>
-Date: Thu, 14 Mar 2024 17:00:22 +0100
-Message-ID: <xhsmho7bgdcrt.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1710432087; x=1711036887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BTOcgaYCUNY/ogvH5Tg7ITSO8qkwxO1+5t0UgNhF1l0=;
+        b=jjWlZNt77gkxQIYrXUD28JloL+R1vCEhG0NfLv52ClxIRL8LVswrgb6SA2WtptwIHz
+         2NmdN8W+cM3UxMP4uMLF1QfCNSwVHN/MFJwudEhCdEa9GDze8zyQ2g+3UZ5K433qRAT2
+         axfR3MaLY+NrWGC11TN92823yKzkCj/tDvJ10Ef7Ork6RpkofNnJWNcl6Lf2qjrFtDMa
+         gXNSMCU6rpabu7B366O/GrTnvbNE9UcnJj3EZdNEqrHgGokhBi+p7RWThCltpsgN0Y9q
+         6/0UtG2z15ru166mBgxx/U44nCpJzQ0WroiesgeFCyiBXTUp79cx7n/7t37PARffdC/I
+         gm8w==
+X-Forwarded-Encrypted: i=1; AJvYcCW6zfhYXKC4gikae//3p4nQoxbDLp27uL0hHaOXRNPju6z+XKRvvkGHLJydkHENR8hXaGE4B52j+DDq7shdyFPRMFWgGUVkoJaRLOc81rTUnd6JeKNCgHSx+GN9La77iBkyef3QX3wKn7QEkAx+xpwdIVIP2MaXa4d5rbkW66mBoNPwa0Bi7GAnaZxFg/i4E6LqfeoM9q8TEy8R8IzJMRDIw1MEH3iO
+X-Gm-Message-State: AOJu0YzCos4kpETrGqwTVsju5b+oR2XxTqb0QjrXajAmnKE62AE+ZJN7
+	qTeq528GWySm4aX2/0B3vXSCiEYMbkxhHQovRCHr+nJnoU0Ax7T484W1SJy6428=
+X-Google-Smtp-Source: AGHT+IEZILcfMVY7xGnIe6o5ngyaj2dT5WSPFxxw2/gzQJVKkE4mpHvGl7PnABo6WIFo3pl5+HnLCQ==
+X-Received: by 2002:a4a:6c1d:0:b0:5a1:1e5e:1fd0 with SMTP id q29-20020a4a6c1d000000b005a11e5e1fd0mr967684ooc.2.1710432087268;
+        Thu, 14 Mar 2024 09:01:27 -0700 (PDT)
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com. [209.85.161.43])
+        by smtp.gmail.com with ESMTPSA id cg16-20020a056820099000b005a46c933653sm77080oob.1.2024.03.14.09.01.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 09:01:27 -0700 (PDT)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a1d2cac52aso440723eaf.0;
+        Thu, 14 Mar 2024 09:01:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1SFBGnzKFHjdzOheosdjM07eMqFgnD80j8NiPa+b6G/bgf6o3M/Fn9amiUhWzUYWBJ/7srulYBHROo7lyg4pl7v51ej4qITPkySPmXqvYFgCjXJX7m+xXd5w879o4pTDye7YXUUsO7AM8ov6sVEKmQ90D+94PSfiylsVGL47kAAL6pJtxS4ODgxXTIT+l5qQxm9bsnukUEg3kdSrixSZtd8oZz0nR
+X-Received: by 2002:a05:6358:938f:b0:17c:1e44:a49a with SMTP id
+ h15-20020a056358938f00b0017c1e44a49amr2367976rwb.1.1710432086791; Thu, 14 Mar
+ 2024 09:01:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240307140728.190184-1-claudiu.beznea.uj@bp.renesas.com> <20240307140728.190184-8-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240307140728.190184-8-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 14 Mar 2024 17:01:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXQ=m2BJ3Tjt0m8Q_H6dLh62sXjd2EMBTc+kuAwtc5B7A@mail.gmail.com>
+Message-ID: <CAMuHMdXQ=m2BJ3Tjt0m8Q_H6dLh62sXjd2EMBTc+kuAwtc5B7A@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] clk: renesas: r9a08g045: Add support for power domains
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03/03/24 14:05, Maxim Moskalets wrote:
-> Using seq_putc for newline characters is faster and more appropriate
-> than seq_puts, since only one character is passed and there is no need
-> to use a more powerful and less fast function
+On Thu, Mar 7, 2024 at 3:07=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> w=
+rote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
+> Instantiate power domains for the currently enabled IPs of R9A08G045 SoC.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Change in v2:
+> - used DEF_REG_CONF() to describe register offests and bits
+> - updated MSTOP bitmask for ddr domain
+> - updated MSTOP config for oftde_ddr
+> - kept the same description for gic as the CPG_BUS_ACPU_MSTOP register
+>   documentation in the latest HW manual version is wrong and it will be
+>   fixed; proper description for GIC is located in "Registers for Module
+>   Standby Mode" table
+> - haven't added watchdog domain (was missing in v1, too, by mistake) as
+>   the watchdog restart handler will fail w/o patch [1]; with this pm doma=
+in
+>   support the watchdog will fail to probe; not sure what is the best
+>   option until [1] will be integrated
+>
+> [1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240228=
+083253.2640997-10-claudiu.beznea.uj@bp.renesas.com
 
-Why not, but then why not do this treewide? A quick grep shows ~340 such
-sites. That makes for a fairly easy coccinelle patch.
+I guess we'll have to wait until that dependency is integrated,
+or use an immutable branch?
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
