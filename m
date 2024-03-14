@@ -1,102 +1,157 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEF95CDD0;
-	Thu, 14 Mar 2024 07:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7620B5CDD0;
+	Thu, 14 Mar 2024 07:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710402961; cv=none; b=CTTlMGuDICfyFoSMfqDesOs4FIwA6A7ES9V1ZrQWZKY+ew89mCOu+uwnFdzlk81UlTPNwfAhhk+rVmnb4yQhupctBIhFEF0e91HK0lNZHmaCnwFBzQLNsutUA1kKsrhZr7y6Oq2DPpTuQ6JU3IAtWTpFvF9eaYU4rPASYSvn/yw=
+	t=1710403080; cv=none; b=UM9nFDWnkkZ5FwXTkxsLnVCFWd+hQ6knS4j5zNm+e9ZUZzD56Ob53e4F3emFVM5PCtIEDmhb9uOs9e7hBu04qjsU7VOFRwo+22kD0q6i5pHWNLI55v+QYkqoF1mzdT7X8uYVsbh8WhVoo8GWKSugh54/Uox4ALKC1tjws6BBZQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710402961; c=relaxed/simple;
-	bh=+gCNw/gViVCA4efaztjNveTgU74u33JPDfPh4UoRLWY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iZinvHcxgk1ueNmepBNc0AdHdzT3GSyBccyLikggYgz5Mt17sNJ/HlrQfR7IT/zTiM4Iqlc8zoEt57rdqmfq7YjLRtKqZp5iP90svscl//LRBYugStK3E4JUCwIuQw9uU4zYB5dujUzNknMJxNNCq8ig6H6E6pfAqax9ulJqVJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PSs45KsS; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PSs45KsS"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42E7tnpA073082;
-	Thu, 14 Mar 2024 02:55:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710402949;
-	bh=2zejXuullfxzo5V55VCYT5B8ajO6/eBhyQJAMGV39No=;
-	h=From:To:CC:Subject:Date;
-	b=PSs45KsSNTb4r/V0Y/otu/98Dn4rxaZLbcw49OAZX0Dz9HVXk3ex6akI6+UG3uFbz
-	 z6ErwpdG0WVdZq8iReDgKRKHDzt3AMCFV87L2GzGIBQU60D2iyMwa2821SH7MCmSm0
-	 nvPbIQ0GsmKQ3E1RKTIZ/vljh+ui5slPf15UNZ1g=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42E7tnEM114984
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 14 Mar 2024 02:55:49 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 14
- Mar 2024 02:55:49 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 14 Mar 2024 02:55:49 -0500
-Received: from dhruva.dhcp.ti.com (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42E7tj9B029562;
-	Thu, 14 Mar 2024 02:55:46 -0500
-From: Dhruva Gole <d-gole@ti.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Tony Lindgren <tony@atomide.com>, <theo.lebrun@bootlin.com>,
-        Sibi Sankar
-	<quic_sibis@quicinc.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dhruva Gole
-	<d-gole@ti.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH] PM: wakeup: Add a missing return case in init_wakeup
-Date: Thu, 14 Mar 2024 13:24:30 +0530
-Message-ID: <20240314075429.1164810-1-d-gole@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710403080; c=relaxed/simple;
+	bh=GdqPCgNgGmabZKEFpqVELT68B4Ci/C3EGXs0bq1Jxn0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BR8fLGSuZssgWH/23WXU0GWHn1P6ZbVe5x+x99/L7qSKLbcC+hB/7xKiySql/xqzjVEwoOBSksp6Lwh3fCDR0rixEcvPeM0XGIFIPEy7vohRJ/x/2mCRwpbqK6kEjN4vr6I1Tko6huhMWAggai3Zbox4StgN/vspkshCgRrjR50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60cbcd04de9so7169477b3.2;
+        Thu, 14 Mar 2024 00:57:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710403077; x=1711007877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+kd7vHFr5fszcwgfp701zhW6bd0WPIDQKlsKOb1KQCg=;
+        b=lMe1DXW0WrWCpubE+3C5xY2IzSQ5NIFMB7yJcy59XNxNtiDWhS0IWkIi6OA4wlyEmo
+         OTAU5X8PnJV0CvNID0DZRildiKvxEtlA2bswMzMeD41ITtgS8VYVOumGb1FW8khYCY5H
+         CD3EnTR32pSlPBREkANXiLGilv+J9HREZ0EqDcaRORGgfMDfIofVBT9A0BYMjKAT+ISM
+         pe7fqRjPnhx0nXJE7oO1a4W4Ftk3ydAHG+NCB6jELOykInahVpfJ7vSpfaPKRCbtJIGv
+         Rkeqk8MwJdAeeNnSEDkuoDU03UCHqdVGtTWVRxLItH682hKUm4/TUdGGlApLp06e4bKK
+         dcVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyBq0dQZjHir8vdPngXIiQvW1JHCxsS06B4J19EXPL/2dKM/XP4R2MiFK4808Iz+t1APlMaiHfH3w6MUhUvmPpsqcW2zMGG2KH/wnGVgkChpZb/2iVwSsCfBPM8DOhNEMcRLW9Zo1LDgfRcTq2h3YhnEDUsbQwUoZTyWZQ3g+JgYWdYY5JZMQL/mKNOAiTaLZhbnvvVBVtxir4+XD90ufpDgKMHajHdsdLDXY/p1dlYkFvVJbtJ24kzqtDZ3KAglQqMZjOX9yLC8V6KNo2Ay5nlveOm2LgnQ==
+X-Gm-Message-State: AOJu0YxMtpFprSlsV82qvRMyPBygDyBXNtrI15NkZjNTYOYwqZimq0Bz
+	5Zh/h6IEj6NW3Jq7bP4E4CFCLkaH3liwo/J5iQQX/3eLbIXW+mVpq1QsJOgVQF0=
+X-Google-Smtp-Source: AGHT+IEZFYhzEtoQw3tAL/5lmIa7kFpXxibw5TyrBGKAQ/5uRwdUFocJWz6+3q1/7sg0ctuSNtoK7g==
+X-Received: by 2002:a81:6fc5:0:b0:608:2b27:9e6d with SMTP id k188-20020a816fc5000000b006082b279e6dmr938672ywc.28.1710403077438;
+        Thu, 14 Mar 2024 00:57:57 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id m85-20020a0dca58000000b00607ad76d855sm175127ywd.67.2024.03.14.00.57.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 00:57:57 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-60a15449303so8187117b3.0;
+        Thu, 14 Mar 2024 00:57:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVhnKJQSoKtCulOFOpM2dzulvMxAbkZTvxcVLriv6WivpmxhG87fYEFsewjpRhaPDI28/z65+qxHDXVXJWwMwsk8c1OSvY4MFgxPYtZJTnPQgo5ZUEBXHZlwV6vWlh01qQYKnVYWpETC2XCfiu0hUB2/aLJ4tZtc0agGynKH0+fCCB9y/WXywXojV2/mJuBZfd6qdJ04mCaKcpXlRKoVKYtl2qn/eo0jGutHXW1p4s6RC3SPtc/4i730Rc8RdBFCzUJccb99ul55gE2PfMbj4406QSUA6YAIg==
+X-Received: by 2002:a0d:ea4c:0:b0:609:239a:d0fc with SMTP id
+ t73-20020a0dea4c000000b00609239ad0fcmr990474ywe.38.1710403077141; Thu, 14 Mar
+ 2024 00:57:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240312170309.2546362-1-linux@roeck-us.net> <20240312170309.2546362-12-linux@roeck-us.net>
+In-Reply-To: <20240312170309.2546362-12-linux@roeck-us.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 14 Mar 2024 08:57:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXHKfd8agPGx+MjvC4cjW5F6DEeVec3Moe-=LLkrT3CXQ@mail.gmail.com>
+Message-ID: <CAMuHMdXHKfd8agPGx+MjvC4cjW5F6DEeVec3Moe-=LLkrT3CXQ@mail.gmail.com>
+Subject: Re: [PATCH 11/14] s390: Add support for suppressing warning backtraces
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, 
+	Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, 
+	Arthur Grillo <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
+	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
+	kunit-dev@googlegroups.com, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	loongarch@lists.linux.dev, netdev@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The device_wakeup_disable call can return an error if no dev exists
-however this was being ignored. Catch this return value and propagate it
-onward in device_init_wakeup.
+Hi G=C3=BCnter,
 
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
----
- include/linux/pm_wakeup.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On Tue, Mar 12, 2024 at 6:06=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+> Add name of functions triggering warning backtraces to the __bug_table
+> object section to enable support for suppressing WARNING backtraces.
+>
+> To limit image size impact, the pointer to the function name is only adde=
+d
+> to the __bug_table section if both CONFIG_KUNIT and CONFIG_DEBUG_BUGVERBO=
+SE
+> are enabled. Otherwise, the __func__ assembly parameter is replaced with =
+a
+> (dummy) NULL parameter to avoid an image size increase due to unused
+> __func__ entries (this is necessary because __func__ is not a define but =
+a
+> virtual variable).
+>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index 6eb9adaef52b..64c7db35e693 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -232,14 +232,15 @@ static inline void pm_wakeup_hard_event(struct device *dev)
-  */
- static inline int device_init_wakeup(struct device *dev, bool enable)
- {
-+	int ret;
- 	if (enable) {
- 		device_set_wakeup_capable(dev, true);
--		return device_wakeup_enable(dev);
-+		ret = device_wakeup_enable(dev);
- 	} else {
--		device_wakeup_disable(dev);
-+		ret = device_wakeup_disable(dev);
- 		device_set_wakeup_capable(dev, false);
--		return 0;
- 	}
-+	return ret;
- }
- 
- #endif /* _LINUX_PM_WAKEUP_H */
+Thanks for your patch!
 
-base-commit: 9bb9b28d0568991b1d63e66fe75afa5f97ad1156
--- 
-2.34.1
+> --- a/arch/s390/include/asm/bug.h
+> +++ b/arch/s390/include/asm/bug.h
+> @@ -8,19 +8,30 @@
+>
+>  #ifdef CONFIG_DEBUG_BUGVERBOSE
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +# define HAVE_BUG_FUNCTION
+> +# define __BUG_FUNC_PTR        "       .long   %0-.\n"
+> +# define __BUG_FUNC    __func__
+> +#else
+> +# define __BUG_FUNC_PTR
+> +# define __BUG_FUNC    NULL
+> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> +
+>  #define __EMIT_BUG(x) do {                                     \
+>         asm_inline volatile(                                    \
+>                 "0:     mc      0,0\n"                          \
+>                 ".section .rodata.str,\"aMS\",@progbits,1\n"    \
+>                 "1:     .asciz  \""__FILE__"\"\n"               \
+>                 ".previous\n"                                   \
+> -               ".section __bug_table,\"awM\",@progbits,%2\n"   \
+> +               ".section __bug_table,\"awM\",@progbits,%3\n"   \
 
+This change conflicts with commit 3938490e78f443fb ("s390/bug:
+remove entry size from __bug_table section") in linus/master.
+I guess it should just be dropped?
+
+>                 "2:     .long   0b-.\n"                         \
+>                 "       .long   1b-.\n"                         \
+> -               "       .short  %0,%1\n"                        \
+> -               "       .org    2b+%2\n"                        \
+> +               __BUG_FUNC_PTR                                  \
+> +               "       .short  %1,%2\n"                        \
+> +               "       .org    2b+%3\n"                        \
+>                 ".previous\n"                                   \
+> -               : : "i" (__LINE__),                             \
+> +               : : "i" (__BUG_FUNC),                           \
+> +                   "i" (__LINE__),                             \
+>                     "i" (x),                                    \
+>                     "i" (sizeof(struct bug_entry)));            \
+>  } while (0)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
