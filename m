@@ -1,275 +1,132 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF3E29D08;
-	Thu, 14 Mar 2024 05:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D2214A8E
+	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 05:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710395984; cv=none; b=RipxrgNwZ8i9FGLin1P2lC3AmZt3cZtswv8g81ahDk+tVIpzPsh31Pxx1reVEb+PeI4Me+laCh7s5/0PqQLR4jbmeAs/uyu7/kGUg5DpDs/S+WGqA+gAYiqtNRDoiK+QLAeaimJI+e2j4NTiqEXuGuj3ZTIhNtjnOZ8YrQo+7bE=
+	t=1710395985; cv=none; b=h1XuNCRwwLdIqhAS62NELwyKg5LuqzKfClcn7Ae6wEiwRJDdcTNwf4O9XkvgOlpKTKbN94cKkU+VhRsElarsepTWbb/LeKi9zwO0U+cPcMe/RHUwK1QhtCvIv3digvht/lS+iAuPaS4ONqsVzRmCaUUoRkyQBIwzDlAi3LBPGKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710395984; c=relaxed/simple;
-	bh=8kZrv0u3dACNbA+vTrk6lYYD2VkNaZMoR56AK0Eg5uI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KHvMfYJqC+5yFZhpiZHyDYjzn3e7b0KGMeG3d9seXzm07R8tyHXza2uPKbQCkFxlcKjZo4FisvPSCYjr7WRAw1pazsaA9H8Af24gth5Og68jcynwajW7qRLUcYW1YeZ86PPjZ6DGv2MgE7uHZjlnNwltDksPCmSjhdiFhc14R60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53E4E1007;
-	Wed, 13 Mar 2024 23:00:18 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.53.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D62DF3F73F;
-	Wed, 13 Mar 2024 22:59:37 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	suzuki.poulose@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH V7 05/11] coresight: replicator: Move ACPI support from AMBA driver to platform driver
-Date: Thu, 14 Mar 2024 11:28:37 +0530
-Message-Id: <20240314055843.2625883-6-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314055843.2625883-1-anshuman.khandual@arm.com>
-References: <20240314055843.2625883-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1710395985; c=relaxed/simple;
+	bh=cCSe3xBYHq317mfPy7MagbKNpW1UoVS0ABuezkShy9Q=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=XLIecPJoEiM6inUFz0zxheu3GMsxSHUu2wukcjXeG2ZR9se6XyWegW5+7VuftaTzw9VTFIu2qrzFi+pIRDbfQlozeXJxeVrIBNLqWZOUp2sG9q+kgCJxxUVfv8ck4xeM/qyUV01yvJxBFI7CIyz+8zih4Twc/h08jS2P7JxhwrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pStV3YOV; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pStV3YOV"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc746178515so895917276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2024 22:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710395983; x=1711000783; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+veiSuaqo+0WmGFGd8SW73u7DHqxbnCf8x6yupKtD1s=;
+        b=pStV3YOVX8Jcbj3uaMoU5XRlXBHKihx9wOOx6KtDZgAYLOehiP8IPJG+GmxDAXKgbb
+         Q6I/Dpp74X4KvDnin9qHeKZMRDhwdmgWMY6dXxZ6D/zZiNJjckk1CUA/AKCezp1bWrA5
+         4yWBrasyqV9j9a+rlHVO9cuHT5HiGXOGXUjZ9rORXUjsXPMOVTukmg2HITF9TanZ8LYt
+         jhVWfJtvLujFx/9TM/FcJ3UfQcv32d798xFTHFc5/tj18XoXMDfFrupb6NL6mwRvk5fn
+         /xsUvfNuAAACgGvxWtstZivRgxtHagb8EPwPUq+NQM2bIZpfl2hBrhBxWu48XQUQU7/v
+         VSJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710395983; x=1711000783;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+veiSuaqo+0WmGFGd8SW73u7DHqxbnCf8x6yupKtD1s=;
+        b=V96b1JNfW7+OijF6ta7if3LRuabeDZwkpKmTO+8xwuziS/w2cUqIzWSwatskCW026Q
+         Ple57JNhw3BUJBlXgS3/i4ydiT2QktNgPhPC4Yc9XSSkT8G+FpkG1uPDG/Dqaqsktu9D
+         WHzmnjgqpZNuX5MgjYxZAeYue695YaM79OXaDRNnkACmY/ErYxFBvowRW/UYa0YU04gx
+         U4/iFT7I9OvqrckurnZLfjsRttgjuu+CgYKaop4uUnTXCybqOgUvn7BvBoNJa3RQvlaC
+         gYUPIv1CVWWeyF6rHnIH1qOtsu/q4omDj1JLjA/g8NSFVpqMkiGHHYes2CYZyImbnTl8
+         VlZA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1pqLspplSqdiW/NMwNklldXEYEPoUMA0wqfOEHperFCWlbA/8t8VDb7uxYZrx6UHslVvp0JsNRTKmnl1gMoCn6yP/db+0wHcN7L/W
+X-Gm-Message-State: AOJu0Yw3h9QqU9WgkNc5Sly3L873bM6AB9O1VpMzjtgohwq8Wpg+5/Yz
+	Wk67HFsdE7wDQ//nhRro1D2cCC9pVZp33dKEU553SDlWbvnKN32WQhRsokqsioPw3ERoRhoT7Z/
+	WMmImlw==
+X-Google-Smtp-Source: AGHT+IEzFwG3kjeE10nJw0pr6EwNRZ5U8tke7krs3iomuop09QzxhoLt+T1Qb3x2zno97wzCFNTWUvdibRro
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:2181:b0:dc7:49a9:6666 with SMTP
+ id dl1-20020a056902218100b00dc749a96666mr255019ybb.3.1710395983180; Wed, 13
+ Mar 2024 22:59:43 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:02 -0700
+In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
+Message-Id: <20240314055919.1979781-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240314055919.1979781-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 03/20] perf jevents: Add smi metric group for Intel models
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the dynamic replicator device in the platform driver, which
-can then be used on ACPI based platforms. This change would now allow
-runtime power management for replicator devices on ACPI based systems.
+Allow duplicated metric to be dropped from json files.
 
-The driver would try to enable the APB clock if available. Also, rename the
-code to reflect the fact that it now handles both static and dynamic
-replicators. But first this refactors replicator_probe() making sure it can
-be used both for platform and AMBA drivers, by moving the pm_runtime_put()
-to the callers.
-
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
-Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes in V7:
+ tools/perf/pmu-events/intel_metrics.py | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-- Dropped reduntant drvdata check in replicator_platform_remove()
-
- drivers/acpi/arm64/amba.c                     |  1 -
- .../coresight/coresight-replicator.c          | 68 ++++++++++++-------
- 2 files changed, 45 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
-index 171b5c2c7edd..270f4e3819a2 100644
---- a/drivers/acpi/arm64/amba.c
-+++ b/drivers/acpi/arm64/amba.c
-@@ -27,7 +27,6 @@ static const struct acpi_device_id amba_id_list[] = {
- 	{"ARMHC503", 0}, /* ARM CoreSight Debug */
- 	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
- 	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
--	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
- 	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
- 	{"ARMHC9FF", 0}, /* ARM CoreSight Dynamic Funnel */
- 	{"", 0},
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index ddb530a8436f..87e590cf1678 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -31,6 +31,7 @@ DEFINE_CORESIGHT_DEVLIST(replicator_devs, "replicator");
-  * @base:	memory mapped base address for this component. Also indicates
-  *		whether this one is programmable or not.
-  * @atclk:	optional clock for the core parts of the replicator.
-+ * @pclk:	APB clock if present, otherwise NULL
-  * @csdev:	component vitals needed by the framework
-  * @spinlock:	serialize enable/disable operations.
-  * @check_idfilter_val: check if the context is lost upon clock removal.
-@@ -38,6 +39,7 @@ DEFINE_CORESIGHT_DEVLIST(replicator_devs, "replicator");
- struct replicator_drvdata {
- 	void __iomem		*base;
- 	struct clk		*atclk;
-+	struct clk		*pclk;
- 	struct coresight_device	*csdev;
- 	spinlock_t		spinlock;
- 	bool			check_idfilter_val;
-@@ -243,6 +245,10 @@ static int replicator_probe(struct device *dev, struct resource *res)
- 			return ret;
- 	}
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index f875eb844c78..f34b4230a4ee 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+ from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
+                     JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+-                    MetricGroup, Select)
++                    MetricGroup, MetricRef, Select)
+ import argparse
+ import json
+ import math
+@@ -56,6 +56,24 @@ def Rapl() -> MetricGroup:
+                      description="Running Average Power Limit (RAPL) power consumption estimates")
  
-+	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
-+	if (IS_ERR(drvdata->pclk))
-+		return -ENODEV;
+ 
++def Smi() -> MetricGroup:
++    aperf = Event('msr/aperf/')
++    cycles = Event('cycles')
++    smi_num = Event('msr/smi/')
++    smi_cycles = Select(Select((aperf - cycles) / aperf, smi_num > 0, 0),
++                        has_event(aperf),
++                        0)
++    return MetricGroup('smi', [
++        Metric('smi_num', 'Number of SMI interrupts.',
++               Select(smi_num, has_event(smi_num), 0), 'SMI#'),
++        # Note, the smi_cycles "Event" is really a reference to the metric.
++        Metric('smi_cycles',
++               'Percentage of cycles spent in System Management Interrupts. '
++               'Requires /sys/devices/cpu/freeze_on_smi to be 1.',
++               smi_cycles, '100%', threshold=(MetricRef('smi_cycles') > 0.10))
++    ], description = 'System Management Interrupt metrics')
 +
- 	/*
- 	 * Map the device base for dynamic-replicator, which has been
- 	 * validated by AMBA core
-@@ -285,11 +291,12 @@ static int replicator_probe(struct device *dev, struct resource *res)
- 	}
- 
- 	replicator_reset(drvdata);
--	pm_runtime_put(dev);
- 
- out_disable_clk:
- 	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
-+	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
- 	return ret;
- }
- 
-@@ -301,29 +308,34 @@ static int replicator_remove(struct device *dev)
- 	return 0;
- }
- 
--static int static_replicator_probe(struct platform_device *pdev)
-+static int replicator_platform_probe(struct platform_device *pdev)
- {
-+	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	int ret;
- 
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
--	/* Static replicators do not have programming base */
--	ret = replicator_probe(&pdev->dev, NULL);
--
--	if (ret) {
--		pm_runtime_put_noidle(&pdev->dev);
-+	ret = replicator_probe(&pdev->dev, res);
-+	pm_runtime_put(&pdev->dev);
-+	if (ret)
- 		pm_runtime_disable(&pdev->dev);
--	}
- 
- 	return ret;
- }
- 
--static void static_replicator_remove(struct platform_device *pdev)
-+static void replicator_platform_remove(struct platform_device *pdev)
- {
-+	struct replicator_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
 +
-+	if (WARN_ON(!drvdata))
-+		return;
-+
- 	replicator_remove(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+	if (!IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_put(drvdata->pclk);
- }
+ def main() -> None:
+   global _args
  
- #ifdef CONFIG_PM
-@@ -334,6 +346,8 @@ static int replicator_runtime_suspend(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_disable_unprepare(drvdata->atclk);
+@@ -81,6 +99,7 @@ def main() -> None:
+   all_metrics = MetricGroup("", [
+       Idle(),
+       Rapl(),
++      Smi(),
+   ])
  
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_disable_unprepare(drvdata->pclk);
- 	return 0;
- }
  
-@@ -344,6 +358,8 @@ static int replicator_runtime_resume(struct device *dev)
- 	if (drvdata && !IS_ERR(drvdata->atclk))
- 		clk_prepare_enable(drvdata->atclk);
- 
-+	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-+		clk_prepare_enable(drvdata->pclk);
- 	return 0;
- }
- #endif
-@@ -353,31 +369,32 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
- 			   replicator_runtime_resume, NULL)
- };
- 
--static const struct of_device_id static_replicator_match[] = {
-+static const struct of_device_id replicator_match[] = {
- 	{.compatible = "arm,coresight-replicator"},
- 	{.compatible = "arm,coresight-static-replicator"},
- 	{}
- };
- 
--MODULE_DEVICE_TABLE(of, static_replicator_match);
-+MODULE_DEVICE_TABLE(of, replicator_match);
- 
- #ifdef CONFIG_ACPI
--static const struct acpi_device_id static_replicator_acpi_ids[] = {
-+static const struct acpi_device_id replicator_acpi_ids[] = {
- 	{"ARMHC985", 0, 0, 0}, /* ARM CoreSight Static Replicator */
-+	{"ARMHC98D", 0, 0, 0}, /* ARM CoreSight Dynamic Replicator */
- 	{}
- };
- 
--MODULE_DEVICE_TABLE(acpi, static_replicator_acpi_ids);
-+MODULE_DEVICE_TABLE(acpi, replicator_acpi_ids);
- #endif
- 
--static struct platform_driver static_replicator_driver = {
--	.probe          = static_replicator_probe,
--	.remove_new     = static_replicator_remove,
-+static struct platform_driver replicator_driver = {
-+	.probe          = replicator_platform_probe,
-+	.remove_new     = replicator_platform_remove,
- 	.driver         = {
--		.name   = "coresight-static-replicator",
-+		.name   = "coresight-replicator",
- 		/* THIS_MODULE is taken care of by platform_driver_register() */
--		.of_match_table = of_match_ptr(static_replicator_match),
--		.acpi_match_table = ACPI_PTR(static_replicator_acpi_ids),
-+		.of_match_table = of_match_ptr(replicator_match),
-+		.acpi_match_table = ACPI_PTR(replicator_acpi_ids),
- 		.pm	= &replicator_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
-@@ -386,7 +403,13 @@ static struct platform_driver static_replicator_driver = {
- static int dynamic_replicator_probe(struct amba_device *adev,
- 				    const struct amba_id *id)
- {
--	return replicator_probe(&adev->dev, &adev->res);
-+	int ret;
-+
-+	ret = replicator_probe(&adev->dev, &adev->res);
-+	if (!ret)
-+		pm_runtime_put(&adev->dev);
-+
-+	return ret;
- }
- 
- static void dynamic_replicator_remove(struct amba_device *adev)
-@@ -416,13 +439,12 @@ static struct amba_driver dynamic_replicator_driver = {
- 
- static int __init replicator_init(void)
- {
--	return coresight_init_driver("replicator", &dynamic_replicator_driver,
--				     &static_replicator_driver);
-+	return coresight_init_driver("replicator", &dynamic_replicator_driver, &replicator_driver);
- }
- 
- static void __exit replicator_exit(void)
- {
--	coresight_remove_driver(&dynamic_replicator_driver, &static_replicator_driver);
-+	coresight_remove_driver(&dynamic_replicator_driver, &replicator_driver);
- }
- 
- module_init(replicator_init);
 -- 
-2.25.1
+2.44.0.278.ge034bb2e1d-goog
 
