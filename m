@@ -1,100 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F666FE1E;
-	Thu, 14 Mar 2024 14:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AA86F523;
+	Thu, 14 Mar 2024 14:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710425096; cv=none; b=EynTQ8UAC4B+u3bCVnkbRG3+O3iIw2EW8dzVwSWWCGuGztGwkQXqlLEzoaOsNe4adYTnjOez92gKsP5YGXlCJyPM7VkaiRRSc6f8IVEJqXF/Z4M070RQuWe/zzfeRz3a/2ufFU8F/xb8Jr4LNyuzrJ+yOeBFFdv/lrXAzcjrA8A=
+	t=1710425096; cv=none; b=rd+xLEZTeTw49vckdKdGDKcU8N0j7OHwYHoea7pk+CgkE60gr68abbw59nJf+MwuRTiicMBX6iDDjm5rLVV5VYkhY+XDEsUdy9EcOLA7u6xifJ5BEcR0gkBuPJqxJTsZL5c6GIRAS9kp/ww5TWaSR4dT0E4PAoJa6RUIlUPtZqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710425096; c=relaxed/simple;
-	bh=mzHk+OCGnE2cjK/GID6NafKHM6xvW+nmtg17CRUaB+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B2k5BU0YNIGxbRVoAygt3HuKUn9Tu9rT0H2Wm8I+pbMTVv3nptJHnq60Cnp8J7p689evomKtAmD3tjtKwKAiLU/ekIDqSqvooRo8VGW/wakycjpattZNu6XTV/+rdjWKajBNda+DF/RFtNORekav26dNaufA54U0d0N71Y4awjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 340A61063;
-	Thu, 14 Mar 2024 07:05:29 -0700 (PDT)
-Received: from e129166.arm.com (unknown [10.57.13.158])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4D8253F762;
-	Thu, 14 Mar 2024 07:04:50 -0700 (PDT)
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	sboyd@kernel.org,
-	nm@ti.com,
-	linux-samsung-soc@vger.kernel.org,
-	daniel.lezcano@linaro.org,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	krzysztof.kozlowski@linaro.org,
-	alim.akhtar@samsung.com,
-	m.szyprowski@samsung.com,
-	mhiramat@kernel.org
-Subject: [PATCH 4/4] soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
-Date: Thu, 14 Mar 2024 14:04:21 +0000
-Message-Id: <20240314140421.3563571-5-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240314140421.3563571-1-lukasz.luba@arm.com>
-References: <20240314140421.3563571-1-lukasz.luba@arm.com>
+	bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RF7oALOBCy7fa7+LQ9QdaV/GIaiCswODP/jHpgASB/Dn7Sy6KyZlNQ0FgZwdNY4vVhgdA1J6JbdZDOWcbyAQYeh6UBSYcWtng1YF5TpZR2KBpJ1rMxDodov3xDHO5sGw8Z/nxG+fmV8df6JdkAvMKLkPJXUg94r9nUCPy1eCffc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FS92/yl5; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FS92/yl5"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-41324a16c9eso6183005e9.0;
+        Thu, 14 Mar 2024 07:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710425093; x=1711029893; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
+        b=FS92/yl52GPkd3NvW/OoEQV3QpyaDfDGob7l/ZYqOZTIDAsmfM3md3G59QoR7ENRM9
+         IRMkL9rP0OQAMbF/0UBuqyQjX7VyjrX+fPaZU4Vdp1pojJABzqdG5qaLQiGwExrePRvy
+         6Tvh2XmBYVvQ5HRLhvR9UgdeNAOeS6gdgrvn86DTJXKIh0NAw3WXRjPdA1xzeHhT8rh6
+         RWTSifM8o/oGIWp6imBkV8Hu+xKsrpV90qgMRM/Sb939j4VtsQFxa+0Tve85esXW16SQ
+         tJ+vCnjt77iwD3FvT4+d3tvIz0BoSLPXbp2ACJxHWoBtnmFLYUR3/9BD51ZN/eb4j0H2
+         F1Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710425093; x=1711029893;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ITZ3dKpgcqMVgeYuP89fUJum5q0GYjDW5jqXG2GngTM=;
+        b=AQFNDR7MxLyqIS419APQLxEP8kkMCCziWHk5gC8oz7w2JyD2r8cwYhzGZeTsoqy8tR
+         7FiwiY9/aG8tZ1HtXKQ5nqFKfHxOqZ/8ghpAYAWIg830dvxCjEmWke/sP3kUZRIBswsP
+         A9yLsBEWxSKEia3RaO/InsRTVEkxEi5YW/jJH7xiWwxmpV/46M6kzYNSEtJUnZGvm0RY
+         /borDB/1mhFU9BYglMa45ovtmA0pak3qZnUpn7lo6xBfcRjP/1wAm8dcAwP4wtqjSuQN
+         3OXHDppeJ3pX6btXju9rwocCjGkuxiWLSyP89MNcWPlwAuddEJ2O8ksEuxaB3OHBw9ut
+         l16A==
+X-Forwarded-Encrypted: i=1; AJvYcCW5c1/AJoLYhGLTF0PJXO8FTOkGc2uTtnI2fg6iprqZ2YiGoWjFUX3vq8bmnK//2Pldfbms6A30DQV96pjrLUVxNmrNXE5Mzn5EWc324XF27yPYirHfomBiEgFdyE7+iUw58ET9
+X-Gm-Message-State: AOJu0YxK3CO0SKMbfr/w1K4YEwog62rD9XiVMcjmQPDHa2YQOkZh0uRI
+	VkMghDbqdWpJwdXK27ccj6is8XS2kkGEacEefPqn4V0EJ2g+SERD
+X-Google-Smtp-Source: AGHT+IHeRU/6m15vM3xUViFf4l1SIZIIT/mlJnGLHtC6ocHThn+bOAV74CF7OwdxqnWkLGGI0AmN2w==
+X-Received: by 2002:a05:600c:3506:b0:412:ea32:e7b0 with SMTP id h6-20020a05600c350600b00412ea32e7b0mr1398868wmq.40.1710425092579;
+        Thu, 14 Mar 2024 07:04:52 -0700 (PDT)
+Received: from localhost ([217.212.240.67])
+        by smtp.gmail.com with ESMTPSA id i9-20020a05600c354900b00413ef6826desm2566738wmq.4.2024.03.14.07.04.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 07:04:52 -0700 (PDT)
+Message-ID: <b90d127a-ec5a-4c24-8ddf-4c592dae28f1@gmail.com>
+Date: Thu, 14 Mar 2024 15:04:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 2/4] net: dst_cache: add input_dst_cache API
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ dsahern@kernel.org, willemb@google.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240307171202.232684-1-leone4fernando@gmail.com>
+ <20240307171202.232684-3-leone4fernando@gmail.com>
+ <20240308195529.57b1a4fa@kernel.org>
+From: Leone Fernando <leone4fernando@gmail.com>
+In-Reply-To: <20240308195529.57b1a4fa@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When the voltage for OPPs is adjusted there is a need to also update
-Energy Model framework. The EM data contains power values which depend
-on voltage values. The EM structure is used for thermal (IPA governor)
-and in scheduler task placement (EAS) so it should reflect the real HW
-model as best as possible to operate properly.
-
-Based on data on Exynos5422 ASV tables the maximum power difference might
-be ~29%. An Odroid-XU4 (with a random sample SoC in this chip lottery)
-showed power difference for some OPPs ~20%. Therefore, it's worth to
-update the EM.
-
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/soc/samsung/exynos-asv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
-index d60af8acc3916..bd6bb2cab2cd8 100644
---- a/drivers/soc/samsung/exynos-asv.c
-+++ b/drivers/soc/samsung/exynos-asv.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/cpu.h>
- #include <linux/device.h>
-+#include <linux/energy_model.h>
- #include <linux/errno.h>
- #include <linux/of.h>
- #include <linux/pm_opp.h>
-@@ -97,9 +98,17 @@ static int exynos_asv_update_opps(struct exynos_asv *asv)
- 			last_opp_table = opp_table;
- 
- 			ret = exynos_asv_update_cpu_opps(asv, cpu);
--			if (ret < 0)
-+			if (!ret) {
-+				/*
-+				 * When the voltage for OPPs successfully
-+				 * changed, update the EM power values to
-+				 * reflect the reality and not use stale data
-+				 */
-+				em_dev_update_chip_binning(cpu);
-+			} else {
- 				dev_err(asv->dev, "Couldn't udate OPPs for cpu%d\n",
- 					cpuid);
-+			}
- 		}
- 
- 		dev_pm_opp_put_opp_table(opp_table);
--- 
-2.25.1
-
+Thanks Jakub. I'll fix it and submit a v2.
+What do you think about the patch in general?
