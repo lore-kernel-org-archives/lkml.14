@@ -1,142 +1,86 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD21D60ED0;
-	Thu, 14 Mar 2024 11:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272C60ED0;
+	Thu, 14 Mar 2024 11:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710417345; cv=none; b=E3Qj67x7XNryAWDxOodlATur6HZ8me96rGmZSRiZdhp4vp3DtZwJgDs2ar71loqPnxjdRawpVT60ymrCvsFMoafLw10PAKF13c38qnsxvRLHHNSqyTSjy9O31D5pkM1q4L1FQdFtNP+V4JMC0NMgb3F4Ijk6QoLDt+L8ckeuN78=
+	t=1710417351; cv=none; b=BFKkf/I+7oWPlx6acmXUt8okdGrqvngOSuznwRCzLZSS9qqcitug0IYZ7TNMppgA5MSWlXwI7dcIwLrFiKRjOjd9noeBfs9OtTRdeFs5UkcNPkjVMjlpaOI9Q8u++l2uU0hdkM3N9X+h7f2/1IIBDSw4iy673Bsy+p6N2xTpzOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710417345; c=relaxed/simple;
-	bh=1JjhfL7FcQqnuhY7jT5WcbVKksVOcdGMYehx/+c0rr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lk0CEgHKDnOq68XLOGvD1FwgPAJLeauiwwh2t+6z4cmVWGaAEnhBN3w8YhA/x9PWOqYghrMxC8DuPr5kHfK0zf71aEpL/CphDvG1Ak6/GyJvyQ1KnM8xMQ1+BIyqCGTui0iIi+nnw03vCfssB2JIUQvgFI3PHgidVBIdxNjYcro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fLZxSUsE; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710417351; c=relaxed/simple;
+	bh=oDf0a0JXbai2/BaU9j5kpEvaONUbaKix1QFd5DKkUMs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qTmToyf0LekAq4tFr4hrB8E5hG4/6R3P+l6GPgx3k7+S+TbT8cn+t42lY5F/pJbW4ASsGlqEXyWWok0e6cNA+sw6WPDXJCX3plbb2aisE5q1IHXwdW18+vxJ7SU34JVmmPhwSviQYuAAAHQo+D/pGCH3jHDBTJKph7PhPEL4MBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CV1EkFKI; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fLZxSUsE"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42EBlHeF003175;
-	Thu, 14 Mar 2024 11:55:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=xHYEL1lRKfbbIXWWI4DDnPg/kjBT2P/MRCov2Y8zLH8=;
- b=fLZxSUsEBoXmkeDkU8mPLsAfh2icRZ2876jBMfL+otAhwyDmMh4PC6eDEeSMhVBWEmR1
- HRsnr/jBlZVGHIrW+eyRrSf7plYqFZ/QFvMwqrMYVdFVEznkOdh1fvsU+n8GwH+RamuU
- WuV0DjSecMAYrcK7hmyx0ztcS/2ZcrgRLg/fQMw1vAjnd3lwYATXvfVmk/6ufTVWsrm7
- WqQuKV3bL4jVXnyF70gG8hj2TtfI12QXzauXFf4sErUuu8WExF8KuGY647mKsAvj9aIN
- ylVV51qsgbhlKGrafDjtahYIO1kmJQOQcp/AKZeOybaK0CrturiT5HZEz6a8ksfZJsio zA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wv0ntr22n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 11:55:23 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42EBtNpD019215;
-	Thu, 14 Mar 2024 11:55:23 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wv0ntr1ve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 11:55:23 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42E90Yas015501;
-	Thu, 14 Mar 2024 11:46:59 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws2g04t67-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 11:46:59 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42EBktXE30146886
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Mar 2024 11:46:57 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE70020043;
-	Thu, 14 Mar 2024 11:46:55 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D84D20040;
-	Thu, 14 Mar 2024 11:46:55 +0000 (GMT)
-Received: from DESKTOP-2CCOB1S. (unknown [9.171.201.209])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 14 Mar 2024 11:46:55 +0000 (GMT)
-Date: Thu, 14 Mar 2024 12:46:54 +0100
-From: Tobias Huschle <huschle@linux.ibm.com>
-To: Luis Machado <luis.machado@arm.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        Abel Wu <wuyun.abel@bytedance.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux.dev, netdev@vger.kernel.org,
-        nd <nd@arm.com>
-Subject: Re: EEVDF/vhost regression (bisected to 86bfbb7ce4f6 sched/fair: Add
- lag based placement)
-Message-ID: <ZfLjrgn5rlPOD5Xa@DESKTOP-2CCOB1S.>
-References: <25485.123121307454100283@us-mta-18.us.mimecast.lan>
- <20231213094854-mutt-send-email-mst@kernel.org>
- <20231214021328-mutt-send-email-mst@kernel.org>
- <92916.124010808133201076@us-mta-622.us.mimecast.lan>
- <20240121134311-mutt-send-email-mst@kernel.org>
- <07974.124020102385100135@us-mta-501.us.mimecast.lan>
- <20240201030341-mutt-send-email-mst@kernel.org>
- <89460.124020106474400877@us-mta-475.us.mimecast.lan>
- <20240311130446-mutt-send-email-mst@kernel.org>
- <cf813f92-9806-4449-b099-1bb2bd492b3c@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf813f92-9806-4449-b099-1bb2bd492b3c@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4WG_DbRUNjYH5LKbYYHh4Hj_rurXdFYU
-X-Proofpoint-GUID: yN8qJr39mIg58TjVoNIARvWEO-oed-Kd
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CV1EkFKI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710417350; x=1741953350;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=oDf0a0JXbai2/BaU9j5kpEvaONUbaKix1QFd5DKkUMs=;
+  b=CV1EkFKIDEOqzrxFaZPeg5R275Z42caixOyKAgRlQNejsP66qe8hdh5i
+   pZ0z8/ew6cA0aktl3rtny7vZ8bZE1Arzuem1qkroy7TDT74HvQC/Juz4b
+   vNRBaJ4P9oOA3rifbR7FbxmRqQYRmD6TQFac97MfcJz3cf+G3j2Btx6qJ
+   yIUfaWpmu5d/90bUlX9XL/sICJNtT+vXzOfesfrylp05HuNdn2Fk7S1tW
+   RIUJw6OPuvC6TVPd49vrpeQYn70bife5mXSOHIECzyWT2oWdqLpNyub3L
+   I1IO8AJlAip2AtKuWS39JaoJKHgiUUQq0DS+ffbDh7hjQwjWXficr8fqX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="16681102"
+X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
+   d="scan'208";a="16681102"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 04:55:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
+   d="scan'208";a="17002742"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.8])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 04:55:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 14 Mar 2024 13:55:39 +0200 (EET)
+To: Ai Chao <aichao@kylinos.cn>
+cc: Hans de Goede <hdegoede@redhat.com>, u.kleine-koenig@pengutronix.de, 
+    mario.limonciello@amd.com, jes965@nyu.edu, alexbelm48@gmail.com, 
+    onenowy@gmail.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] platform/x86: hp-wmi: use sysfs_emit() instead of
+ sprintf()
+In-Reply-To: <20240314063703.315841-1-aichao@kylinos.cn>
+Message-ID: <ae3ade7d-ca88-e2a5-aba5-9574e16e59c0@linux.intel.com>
+References: <20240314063703.315841-1-aichao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_10,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 adultscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403140085
+Content-Type: multipart/mixed; BOUNDARY="8323328-1489743920-1710417238=:1017"
+Content-ID: <54061eef-325c-57e0-9635-5d60be3f0669@linux.intel.com>
 
-On Tue, Mar 12, 2024 at 09:45:57AM +0000, Luis Machado wrote:
-> On 3/11/24 17:05, Michael S. Tsirkin wrote:
-> > 
-> > Are we going anywhere with this btw?
-> > 
-> >
-> 
-> I think Tobias had a couple other threads related to this, with other potential fixes:
-> 
-> https://lore.kernel.org/lkml/20240228161018.14253-1-huschle@linux.ibm.com/
-> 
-> https://lore.kernel.org/lkml/20240228161023.14310-1-huschle@linux.ibm.com/
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Sorry, Michael, should have provided those threads here as well.
+--8323328-1489743920-1710417238=:1017
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e59bddc6-0a36-8616-72b7-3fb4b7f7870b@linux.intel.com>
 
-The more I look into this issue, the more things to ponder upon I find.
-It seems like this issue can (maybe) be fixed on the scheduler side after all.
+On Thu, 14 Mar 2024, Ai Chao wrote:
 
-The root cause of this regression remains that the mentioned kworker gets
-a negative lag value and is therefore not elligible to run on wake up.
-This negative lag is potentially assigned incorrectly. But I'm not sure yet.
+> Follow the advice in Documentation/filesystems/sysfs.rst:
+> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+> the value to be returned to user space.
+>=20
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
 
-Anytime I find something that can address the symptom, there is a potential
-root cause on another level, and I would like to avoid to just address a
-symptom to fix the issue, wheras it would be better to find the actual
-root cause.
+Thanks.
 
-I would nevertheless still argue, that vhost relies rather heavily on the fact
-that the kworker gets scheduled on wake up everytime. But I don't have a 
-proposal at hand that accounts for potential side effects if opting for
-explicitly initiating a schedule.
-Maybe the assumption, that said kworker should always be selected on wake 
-up is valid. In that case the explicit schedule would merely be a safety 
-net.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-I will let you know if something comes up on the scheduler side. There are
-some more ideas on my side how this could be approached.
+--=20
+ i.
+--8323328-1489743920-1710417238=:1017--
