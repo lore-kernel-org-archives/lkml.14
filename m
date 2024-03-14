@@ -1,142 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2121.outbound.protection.partner.outlook.cn [139.219.17.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4168BE5
-	for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 02:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108D6BA29;
+	Thu, 14 Mar 2024 02:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.121
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710383588; cv=fail; b=Fz6UiX7gy9KVeWSDobFD/8yBeDJgD3/J1lzrNkpgxa3/6Djs7mpIb96zz60GlwFPAD0JAmnzyJj1qCa8elU+WhVTxpwtaMYmCVn7KKXmyGc7bbhiSlMfEm6SgxVB2WcPShf1JfmUTl/awmNGYEgvGPLJCkm4Vw8gK0gBSkHloOM=
+	t=1710383628; cv=fail; b=d1CmhHupkB580cuufsj4vTBmx3hB56ePdCZvovrX66ZAGpPFtzkPQjR0rxB/i2cCEru2MsA3Icfr6hmOWMQWB6fZErLXRia2286lIFRZch72cT14tybxhiJurfYlzpXKVI13uHNCQreLA2gAgNQusZCbA+swdmb6QLW6E2xey1c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710383588; c=relaxed/simple;
-	bh=i/+P56aNfAQJT+nofBFZkD9Yl5wfsSBCgEhC+LvqYFE=;
+	s=arc-20240116; t=1710383628; c=relaxed/simple;
+	bh=FQgwnVfdk2HXjrAg6c5cXwYIbkvhP/8B5U5fRZDbomY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=psx19NPt8lo3c73hHTVUIPOdr8xVfeD3pdDTrmqsTb1CYc+DMUykg0+s5O8IplIHPu7wT6DbjNg+uGuqDcbzwgB5yr17cslu4jrFf/y2HbmC2KsThADWW5b9uVdjHs7enrQ3hFHmgZQPurVJ4ESiLfkyNm3SumbWvhJ56qGB1yk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnj5zFOm; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnj5zFOm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710383586; x=1741919586;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=i/+P56aNfAQJT+nofBFZkD9Yl5wfsSBCgEhC+LvqYFE=;
-  b=dnj5zFOm5kbleV9RFpj8wH9cyrBHFgxBH4Si4StVx13UN8o/Mok1oXu+
-   DWTvSjcYpFe+6z/vwyDLUX+HUmYrClwNCjCkcvcE57CdpmGHiZaDL9cq6
-   Ikw4DvvWVU+Kfi7nXeHXFhWKkEXMQw2GXjvZXhXTzHr1TpoIMhBglIT4f
-   E9i2Zhb1sk61vx+/qac8/fhA9YVVPBdpWz6kobFdjBx3ubCZouOmwGISs
-   kzuCAbra2jnrQJd2oDEj4Ju3kS0EKRzJBRPr+TzN4/L1+Bk11PBY68Wd6
-   aGCjyziLI9A5tpP5bg3z7qcyX+UnaEA0RLXHtKk4CZScE9X0q7MZ6W+ok
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="9001430"
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="9001430"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 19:33:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="16789961"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Mar 2024 19:33:06 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 13 Mar 2024 19:33:05 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 13 Mar 2024 19:33:04 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 13 Mar 2024 19:33:04 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 13 Mar 2024 19:32:59 -0700
+	 Content-Type:MIME-Version; b=LMHl/VxV0Se4X5hNqtU56SSTsrjKD6QXq1EsI6qkLhr4aL7yhWOY/LlmRcxAqL2eZ7GBCU7G2z6zDTSSLJLilBioOO0n9DIEgkTGMw9j5QKsL8I9fA0cSQhnXJGCZdWBB4Nqzw1K4jFAKWfbVA0EslQhl9exTMRh5n5lthOHDXc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aRHe/tmA2nMmrKp8ff7x8cUEN9pCJxQv2oYaxlylDwEeiI2dBRbbfR2FOSCxssYidHPgERH/n0Fip4M4OXE6nddnl2vIJIOvXBiB7Mc67cYabELqFDTTMw9PUgJv+glNWDmslLFFwuraFUFMa72GK2a0D7B2d7syHPmFH9G4BtWAwEqhvpisxOvDuyWLWRJn1P53C4aiSK3y+fQ1qZY6qrnWLNtCZjEC64bDpV9uAxpBc7PieNJav+auN/rXBjF/bl0otT1dUNCHnz6sL9TkkwmPFmCz/LRAj+9zs10F9i3Bu6bWEwM12wKgRGfawtpYCfxiEHGAIQjxam313Y0orw==
+ b=BeRyNiAN5uiZBCcZ1a7cffZMhr0Zkfcz+Xk+oJ5mzeViLFEhVA2aZUg3kBcVIKwP2ovKRRrZMZ15w5psdNT5n+tlFSVfjmRrOX/T3w5ar4yeuyWar+oqLJ0sl03rtTnpIY4b+lcnv3UysMh42j9Yd7WiuManO9Rs213wx/vzkxKZbQCG3jOwjO+TvFIaaGiDddNIfzJ6l0O7H5Sj69Vmb+kMPrxWxg+qo1Mai9QUdgZYHNQgpgRh6azm1+kl+dAGFPriFXWX1jknIFkvmWzJCIIUcP7YJlgxY+KbNkCm+9m5GmRi1Zpmrj8ll9vI00/jRh3LhxIXBQinFIcuWpMWVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=121xbhs73+8MGAr/fy/Z5AOBycSxhAf0ckHT9IEXQEs=;
- b=JgtXcfiu+LEf2GQD6s2i6U3XucPNAAps6gzP6ce+wPJYkJ4Ty0RagCzyghAkf9ux2W0u3jCfb1/LIaW0DgGpesRqfomLA9dDya4d5YNfRa1Ao4oX97aiT7ioDOfi6IGnKq9zKBjT1e8tf0Es8XE+Zu2af407y+0ndEqLOtC4VNvBe0m0goCUjly9zV3hMNzYOKs5w7FI3c6vnDbRlUioylo6a8v+ydf8cDi51F0iDFTPDL/eSWhgJNuicJO+x+o9adVr2ElQ5dt8q1Qhx/g7gg+pFZgtaCJERdTT4qstmSxjeSL8hEiG+tc58Nceko+sOmL1ygXrdAXAxr8H9nMoLw==
+ bh=jwLiPWQwcgK6rSvSVwieAp2WWhrt2spZRSv/c2OuFS4=;
+ b=Ma5BD0mFUzY6/bgzDCNwz25Qcyc/KRS4aJX50OfjIGv9YhKv810HMbmAkeoz82DW1ff7xIr5ewTzI3jknJQCWeNskOlhAdcbcKgw/yw2bmvQVZNWa6a+IHO+l5fDWnKLrSSTWwPqW0Vl93RJJk2T8w6MnClhQYohP38z5/7qpGTYUvuv4BRN6a9shsUpXUJh1xL+TEc4n0z/N8XmrgKZJICl8fYVNR2hKuPzwlfQKSgrh0fg7VZN8haoXiSo0ya22Lh1nWl6O0jvmmZKB+D20qUuXBtDzA5u7um/60Y6qZKYKHBleSRZUw3+ni5fGX3Y6NYEtK0WiS84Osq5a6FFzw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com (2603:10b6:8:12::16) by
- LV8PR11MB8461.namprd11.prod.outlook.com (2603:10b6:408:1e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.18; Thu, 14 Mar
- 2024 02:32:57 +0000
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::7cad:cb8a:117e:9f96]) by DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::7cad:cb8a:117e:9f96%4]) with mapi id 15.20.7386.015; Thu, 14 Mar 2024
- 02:32:57 +0000
-From: "Wang, Xiao W" <xiao.w.wang@intel.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "aou@eecs.berkeley.edu"
-	<aou@eecs.berkeley.edu>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
-	"conor.dooley@microchip.com" <conor.dooley@microchip.com>, "heiko@sntech.de"
-	<heiko@sntech.de>, "david.laight@aculab.com" <david.laight@aculab.com>, "Li,
- Haicheng" <haicheng.li@intel.com>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] riscv: Optimize crc32 with Zbc extension
-Thread-Topic: [PATCH v3] riscv: Optimize crc32 with Zbc extension
-Thread-Index: AQHadPUZgJSwa1OZEUm5ETdeu7ZVobE2Rs0AgAA0pQA=
-Date: Thu, 14 Mar 2024 02:32:57 +0000
-Message-ID: <DM8PR11MB57514B86A2C1AA40973AF705B8292@DM8PR11MB5751.namprd11.prod.outlook.com>
-References: <20240313032139.3763427-1-xiao.w.wang@intel.com>
- <ZfIs5ND0S08N2zLd@ghost>
-In-Reply-To: <ZfIs5ND0S08N2zLd@ghost>
-Accept-Language: en-US
-Content-Language: en-US
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::13) by ZQ0PR01MB0951.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:e::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.44; Thu, 14 Mar
+ 2024 02:18:39 +0000
+Received: from ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
+ ([fe80::142:2325:a426:2bfa]) by ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
+ ([fe80::142:2325:a426:2bfa%6]) with mapi id 15.20.7386.016; Thu, 14 Mar 2024
+ 02:18:38 +0000
+From: Kevin Xie <kevin.xie@starfivetech.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Palmer Dabbelt
+	<palmer@dabbelt.com>
+CC: Minda Chen <minda.chen@starfivetech.com>, Conor Dooley <conor@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "daire.mcnamara@microchip.com"
+	<daire.mcnamara@microchip.com>, "emil.renner.berthing@canonical.com"
+	<emil.renner.berthing@canonical.com>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>, Mason Huo <mason.huo@starfivetech.com>, Leyfoon Tan
+	<leyfoon.tan@starfivetech.com>
+Subject: Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
+ workaround to host drivers.
+Thread-Topic: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
+ workaround to host drivers.
+Thread-Index: AQHaaWi+d9assvQENEqJ5rz8wQxEZrEhb4yAgAZ7cgCAAW1+gIANQI1Q
+Date: Thu, 14 Mar 2024 02:18:38 +0000
+Message-ID:
+ <ZQ0PR01MB0981BC562E837B232B419AC28229A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
+References: <ZeCd+xqE6x2ZFtJN@lpieralisi>
+ <mhng-87e7ef5a-d60b-4057-960d-41bc901b6c7f@palmer-ri-x1c9>
+ <ZedAn8IC+Mpm4Sqz@lpieralisi>
+In-Reply-To: <ZedAn8IC+Mpm4Sqz@lpieralisi>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5751:EE_|LV8PR11MB8461:EE_
-x-ms-office365-filtering-correlation-id: 84e76c87-5c2f-41e0-0758-08dc43cf0f2b
+x-ms-traffictypediagnostic: ZQ0PR01MB0981:EE_|ZQ0PR01MB0951:EE_
+x-ms-office365-filtering-correlation-id: 2f929a8b-40aa-430c-e8a8-08dc43cd0f96
 x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uXJ0BpTnD2Iaw3a0NNs410F2dpavWchh103bHus4xHBowVwbd3rq2P9449LEWQiPTHW00xVjvhYwY1HJ4JwKGq7JttTrNV7x/+EeXMrAZh2i9DvbxUJoAlTsjNXrg+KXJxNdn44WamKziqHTtZxDxynzOGbs6TweBFR44jYp0qOge975U7sE6X/R+EybRVMpzfr5aX9CAkBjE5XRdpP+hBVIu2S6I31Nm34i2NUjyIkMzZmSgYFZdzhO5rMLJcANL8n8lQDhGzeqJwrLOBAdT56pvNABP6U34ChOHOLCm8b0xXiijRLiYteV1xn47mZRNLNEp86zQi4nl8j48jdzymehzVwXMUFTh73VbdhIDiPcpzWW13N+NkHitXnQNRdqzo48T+mB5ttXy6lcQAgsnjivS+UMhY/j4vZ3/zr7U5/IYIsim+DM3of2TGnsvn5ToR48kLgt2hHuaKHM3MMUhEGyi6AA4OdphOmfpOWEkRA/67QPz/z5jTM6vocz/1S3qEitkpD9VPZRa8lrloqF+6l2z7RPYUt2B0FV4rtQGlUX7tBSgt859LoGdY1mxzNc9/yuLr5nVtMRFxUmtquXIJb1kKzJP2e6BjZI8x6C9TLBn9hIk0WXku/IIb51FnugSgLelPQGkcMCM7mc1C87jVWJ2cZFFHiTX7C39/AyEutOP0IWSKYSAkuWwSM5yyeJB5aCO44eoCa11Fssse48Tw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5751.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info:
+ zWfr/2+ym2W9ngOrFASO0n5amEC/afW57Zbo78L5dBjOEuS6q+4NW0Zes6H3qHZhZLdpXHmG262ZQLsRwtMpmtiqchpBDmKGTMhSDEohhgy2g1ezctwSx4BDWBWZ4O23P//AmmEb444efluoRG7Smfao2t86pW8UE/iRuhDSd80tOONIwaxSOs1kOcNWq0xND+jpep+XWmLKzq4oSrVVrsR9jhOBNjo2zq8pKLvJAwtOS+zm+9pvBxdxN2kS47pl7XAAVcOWf3mBua3HSf6bS2ArXQiGc790ImdvYjPH1w9oieXZtUYE6XU8uPWVZn0K+LQjq032ju0qpEaU5vmbIt1f6uJGiJOnCHDOUHDtFgA8n4KYXtklbT3nak2mmelEW6kEQKjqmi48QHaQyNz+czayc3Jmcnr1G5CdeMJNpP5Fip5JlhrfVbIsgiTbvrSdl3fxQQfFLV/mgLrwUto/uGXQN4F/kTYGZFsO/x4n8wgcVoBLA2qlYH/rcPaPcB13lTeWOIEfr4aucNiL3Y0fVnGOIVkWJ3pshpLvu55UZkUCjwjrgfHiXHvMfOPkHouX3qKV4A5cpGJbubKmOlcrtRwW/29cWuia3uiCveixVKZeG2HEZQP5s99CJzfkIrH4
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?68L1vz0S6IkMZuwoCBS4n7R4SLbjF4mlIJ2aXc8iCzbboSBJI41fAy20?=
- =?Windows-1252?Q?srB6i0/7wWu0jaGRlsWIzacCZ3Pe621Mez6S7xzvT5u0jtK0rqtfWfa0?=
- =?Windows-1252?Q?i8kp9TbYeghhU9UslfJ2BVYLYLNZyjf9vfhx9M6S51iJzAqGaLcqtQPN?=
- =?Windows-1252?Q?95boH4TXF6Gjgv55uFGaxi7CF5C9EHq1L7IzngB+PAEd4JMjiNHBSwn3?=
- =?Windows-1252?Q?AWKUwFpWWtMlqGBAU6rHOOPwT/PrIS495PP1bo8VyrUSiM0u1RILf85f?=
- =?Windows-1252?Q?yHd+468R2OFbiyLFq2lV0WmHkZMhoxF72ZCKyd8akWC6ADJSOZMRHRPp?=
- =?Windows-1252?Q?fMc5zOc9BD/ZhTZcSRAgPobglaAtMQ2PlPiSwEuhgFOg4YcsEAguJyHR?=
- =?Windows-1252?Q?8BXdPX/DnuDSPAFl9kEMXpIVe78nnrJuxE8IR0J6jKTX8r0e4qowk5F3?=
- =?Windows-1252?Q?/LFmvgFiKtOL1BoN1w2rTj6YhBJRzOudgKTJ2REA9Pna6gxLTYplk8CD?=
- =?Windows-1252?Q?gO3NiKv82xLY1jufbsL6aRwKM7V9+f8jWiTTe6FAW3nkS6zh9u8y0j/R?=
- =?Windows-1252?Q?Hm3jY53YnNVNayLwcKdeQ9N5qhVW3ot9DnNbspqQqp8bWpfL6ShIqasi?=
- =?Windows-1252?Q?YxVNzUlTLOiX66KSWy4/ZcOqNNUQwZANiFpWdsccDMG4jR/VEab+hlND?=
- =?Windows-1252?Q?8OZqR4/XsTe2N7wW/sByww3s+tkFc10i0Jz+wWsXjEcZVr6PAjPRxpGu?=
- =?Windows-1252?Q?jh5Kti9/FC2uRAtzJSuUjjYdytuCFKeEerhazmgnxVt1j2DpdncwrenN?=
- =?Windows-1252?Q?neYDspu4RPjV8SugZFdMpRqN7bTpqbboa9O1CaJYfyCjO2/TCvtLBZl9?=
- =?Windows-1252?Q?fHMxYE9ThHgV4DkBuyTWxFp2Kno115141u1aE2gpXz+yoN/O03gymEZO?=
- =?Windows-1252?Q?ljYPSFXux0fBbm7E91wSR9y4lviJJkwXz3iYDmEtw3Iw/lKnHcKLTc2s?=
- =?Windows-1252?Q?wBs1OJ95Qm6CvWrr8ndY21F56cTFEPq44wSYBZLG63iptGCUrEY1Gp7p?=
- =?Windows-1252?Q?coa4YLaN+ZKS1Y1EqqalcWaH0enGXvpJ85qE79Yk1fcBE2eKrcdq6aX5?=
- =?Windows-1252?Q?IJwWW9mtmjsPdY+ex9cqaw6jkuBYI1mo1vvZr15Gl53qs6svkc5Umdzd?=
- =?Windows-1252?Q?3IMD8qCohWHfSTxok+ANLD57xB5RBsguEmZvTzWYXc9yKxywsjRZNwNL?=
- =?Windows-1252?Q?rZiarS0RZSXbOuZ5Et86KLgRLflEKPzArpmijgzHoW90TCKqMs5N4z2h?=
- =?Windows-1252?Q?VCKFyUjeYKZocWkkCHqtjGgJ7XRSASOWzALYXJPUk/gMMz3MYCqivTk5?=
- =?Windows-1252?Q?KeXZxAwLgnIcF08hnM2ED9HVXNVE7pqpfFlYRHjtoQ6QcFWlXpXIBtrs?=
- =?Windows-1252?Q?VVLF5F/ahzG1VbAAoWORDuFBglpdcWKA0G7EuSGgRnyNKJCTiq4LCbib?=
- =?Windows-1252?Q?vQIUpvp97ihFT47qLYvEjIIgWhzsA9S8HsYvAV75OT0X5zw4rlV+MdSC?=
- =?Windows-1252?Q?CV3Fjo68ThusKv6868UWyuFJTee5DCZ7kCTu6LYtn0ezVpmGqgXBVx3Q?=
- =?Windows-1252?Q?6pesFEpGWL0wWmAQrqy0UUiDVHhesOcBgLfKAuSZcUQd+hm4BaOhRcz8?=
- =?Windows-1252?Q?UokgVa5XjamcCgHln8pJdiIO9HX9Scyl?=
-Content-Type: text/plain; charset="Windows-1252"
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?rMyDIno4Duk50p10/MIH4SfhsN2BpkdY4jBw1gD+3fgDXkhnf7YH/ptqP5ka?=
+ =?us-ascii?Q?7qczLu/NepfyGLt3uaAfluUIJXOWaa88k0DjDUGVXYTh0yHkXUXR1HxjnwTm?=
+ =?us-ascii?Q?EKIsEMdRIezS24Y6n/alcIiOVbxpPmsaphw4KyTfa3Ck5M7Uu03lVZx4GYx+?=
+ =?us-ascii?Q?zFhXs901LgS8oGWSW+c5n4ygKALvc1ycUCUrV40/g6rUmtLzxj6MdC22OBJq?=
+ =?us-ascii?Q?R0kv8fH1zeGqceXWUg0RXTJrcMggiYMYMWrDjNydxNicuWWxABPedU9LtCFP?=
+ =?us-ascii?Q?u6ZcsroPsA8440CtrcANj0pIM3CrkEO02xjVBIWuO1tyXbk3wFB/CH8mx7BY?=
+ =?us-ascii?Q?y6B/n/N2NJ8qJfnw1AOzvAKfXqsPffT1HBI56QynIrIwZsQ2v3D/Aue1oTB6?=
+ =?us-ascii?Q?+ggzex+SxzW1NNyjyxoxQA5FvzrD6AuE6WJnEpG3glg/AHXTNreW88XjTtHz?=
+ =?us-ascii?Q?ZBykfEdIO+b142vYNOSLLF62oJo+fM2YsmPyUcBfOrbdseqpmKDZ+GhgbXlE?=
+ =?us-ascii?Q?/+MHggiF42gpwtsIgWY77icJxecIKD4DdCAr+OM0uRAEMA5gmF12s/NE/TSP?=
+ =?us-ascii?Q?GwWsLRNKt1doGca5i7a6yqvRANcc1iFsPpAH+w6sEwy36Sj9oYLm0u7LzN3T?=
+ =?us-ascii?Q?2M2bMOAKOQ70NAUjw5w9U93eXIqHguwoex8aHYYw/pNvqEqn2nBRp5E77gJm?=
+ =?us-ascii?Q?8Fa5VxFGNqowyJMdM7Ij18djOQ3J7fxGxQDIDvSLUOJT67McxuSS+i58Fp4i?=
+ =?us-ascii?Q?/7jkVzlokFcJ6SW4g/b1QVV2Xk4chIONRd6vn3kR+sIPHO/yCR6CHhkTEkEW?=
+ =?us-ascii?Q?33wpYUUo8twIexVjnvZKa/wAV1skpAh16LGxiY+hhWmVFQZ8jfybDC/bRf8b?=
+ =?us-ascii?Q?sif0gpZvt75ddv5GiDVHRXjvrhq4HJKUpgq0+VN/aKWZct6TW6MgTWme/v9g?=
+ =?us-ascii?Q?5rmxgvlG4KHaH4Ptlq7pagJoVZnhn2ZzV7D9tUo/ClcFM97THdwWsQqmro3Q?=
+ =?us-ascii?Q?aditfftYmDdshDUfswRjfy1hDB9c/rF1Fi4GrGWPuel25SjRpl0qxI+UWty5?=
+ =?us-ascii?Q?SuYiqTvdDmMApO7PmjYoXxg8vI1J+NFovUNZtJ18ruy+qwTXbB8bL+y/CGF+?=
+ =?us-ascii?Q?Mp4PyXfFxWVSuLDBFRHuuaeR+nWQ4cukCMD+Ams504rDQRyc6Az824Fi5uRb?=
+ =?us-ascii?Q?KFp9uYvXWktv7ZD/PGQC0jreUvT6yyX2r5c2zk959jXgTTpiY0p37Fagsmgo?=
+ =?us-ascii?Q?td/y9ddebnOlGCOwamujgfiRdQ9YJfQFAkAaZhVk4c9CQShyPW88GMMpg2sI?=
+ =?us-ascii?Q?FC2B1roCbHqBRZzkYZOh325TZmHAetL2O/Hm3XyRk7v8w2rapu8Gd/zB74+B?=
+ =?us-ascii?Q?9uftRnF00qxdV3Ey3EBRZCQvpFAB2EJ62eFj3LbS0/rcb9OsYKNCsUjR56mc?=
+ =?us-ascii?Q?3h7giALZ7tgR/OLFdOccAnEZHxIJFa61AT/TuSp6Z1zt5A0FcDcs6GKLPK95?=
+ =?us-ascii?Q?AiSOyXqd35dGWfXsIZMFkYp1Pn8UCyDH2UJTtOozeUAqLOoVBIb9YhSuwIGm?=
+ =?us-ascii?Q?S1zt+swcTyDj0CHGndhJizXVPXk+AcuVjxIWMx37?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -144,252 +114,190 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: starfivetech.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5751.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84e76c87-5c2f-41e0-0758-08dc43cf0f2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 02:32:57.1261
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f929a8b-40aa-430c-e8a8-08dc43cd0f96
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 02:18:38.8619
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i68r9x1N9QR3Qrx6HqmOkUBSdIO+npDkHxrvG6CANe+J3yw6cZCSNC+ZhHaJy9ExDJTfmmAEBfc+y/Ygih3XDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8461
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-userprincipalname: AShm9DQ4Zs94PD+i5SEh0WnLPwQhxqfZtEU7OctnurZ9zg/7wJ8Od56gMpZbS4kOXobL08+jZ8EAAgITtFLm2Kx03iNfE3c5zlNCbdQ+tpw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0951
 
-
-
-> -----Original Message-----
-> From: Charlie Jenkins <charlie@rivosinc.com>
-> Sent: Thursday, March 14, 2024 6:47 AM
-> To: Wang, Xiao W <xiao.w.wang@intel.com>
-> Cc: paul.walmsley@sifive.com; palmer@dabbelt.com;
-> aou@eecs.berkeley.edu; ajones@ventanamicro.com;
-> conor.dooley@microchip.com; heiko@sntech.de; david.laight@aculab.com;
-> Li, Haicheng <haicheng.li@intel.com>; linux-riscv@lists.infradead.org; li=
-nux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] riscv: Optimize crc32 with Zbc extension
+> Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
+> workaround to host drivers.
 >=20
-> On Wed, Mar 13, 2024 at 11:21:39AM +0800, Xiao Wang wrote:
-> > As suggested by the B-ext spec, the Zbc (carry-less multiplication)
-> > instructions can be used to accelerate CRC calculations. Currently, the
-> > crc32 is the most widely used crc function inside kernel, so this patch
-> > focuses on the optimization of just the crc32 APIs.
-> >
-> > Compared with the current table-lookup based optimization, Zbc based
-> > optimization can also achieve large stride during CRC calculation loop,
-> > meantime, it avoids the memory access latency of the table-lookup based
-> > implementation and it reduces memory footprint.
-> >
-> > If Zbc feature is not supported in a runtime environment, then the
-> > table-lookup based implementation would serve as fallback via alternati=
-ve
-> > mechanism.
-> >
-> > By inspecting the vmlinux built by gcc v12.2.0 with default optimizatio=
-n
-> > level (-O2), we can see below instruction count change for each 8-byte
-> > stride in the CRC32 loop:
-> >
-> > rv64: crc32_be (54->31), crc32_le (54->13), __crc32c_le (54->13)
-> > rv32: crc32_be (50->32), crc32_le (50->16), __crc32c_le (50->16)
->=20
-> Even though this loop is optimized, there are a lot of other
-> instructions being executed else where for these tests. When running the
-> test-case in QEMU with ZBC enabled, I get these results:
->=20
-> [    0.353444] crc32: CRC_LE_BITS =3D 64, CRC_BE BITS =3D 64
-> [    0.353470] crc32: self tests passed, processed 225944 bytes in 204470=
-0
-> nsec
-> [    0.354098] crc32c: CRC_LE_BITS =3D 64
-> [    0.354114] crc32c: self tests passed, processed 112972 bytes in 28900=
-0
-> nsec
-> [    0.387204] crc32_combine: 8373 self tests passed
-> [    0.419881] crc32c_combine: 8373 self tests passed
->=20
-> Then when running with ZBC disabled I get:
->=20
-> [    0.351331] crc32: CRC_LE_BITS =3D 64, CRC_BE BITS =3D 64
-> [    0.351359] crc32: self tests passed, processed 225944 bytes in 567500
-> nsec
-> [    0.352071] crc32c: CRC_LE_BITS =3D 64
-> [    0.352090] crc32c: self tests passed, processed 112972 bytes in 28990=
-0
-> nsec
-> [    0.385395] crc32_combine: 8373 self tests passed
-> [    0.418180] crc32c_combine: 8373 self tests passed
->=20
-> This is QEMU so it's not a perfect representation of hardware, but being
-> 4 times slower with ZBC seems suspicious. I ran these tests numerous
-> times and got similar results. Do you know why these tests would perform
-> 4 times better without ZBC?
-
-ZBC instruction' functionality is relatively more complex, so QEMU tcg uses=
- the
-helper function mechanism to emulate these ZBC instructions. Helper functio=
-n
-gets called for each ZBC instruction within tcg JIT code, which is ineffici=
-ent. I see
-similar issue about the Vector extension, the optimized RVV implementation =
-runs
-actually much slower than the scalar implementation on QEMU tcg.
-
->=20
-> >
-> > The compile target CPU is little endian, extra effort is needed for byt=
+> On Mon, Mar 04, 2024 at 10:08:06AM -0800, Palmer Dabbelt wrote:
+> > On Thu, 29 Feb 2024 07:08:43 PST (-0800), lpieralisi@kernel.org wrote:
+> > > On Tue, Feb 27, 2024 at 06:35:21PM +0800, Minda Chen wrote:
+> > > > From: Kevin Xie <kevin.xie@starfivetech.com>
+> > > >
+> > > > As the Starfive JH7110 hardware can't keep two inbound post write
+> > > > in order all the time, such as MSI messages and NVMe completions.
+> > > > If the NVMe completion update later than the MSI, an NVMe IRQ handl=
 e
-> > swapping for the crc32_be API, thus, the instruction count change is no=
-t
-> > as significant as that in the *_le cases.
+> will miss.
+> > >
+> > > Please explain what the problem is and what "NVMe completions" means
+> > > given that you are talking about posted writes.
+
+Sorry, we made a casual conclusion here.
+Not any two of inbound post requests can`t be kept in order in JH7110 SoC,=
+=20
+the only one case we found is NVMe completions with MSI interrupts.
+To be more precise, they are the pending status in nvme_completion struct a=
+nd
+nvme_irq handler in nvme/host/pci.c.
+
+We have shown the original workaround patch before:
+https://lore.kernel.org/lkml/CAJM55Z9HtBSyCq7rDEDFdw644pOWCKJfPqhmi3SD1x6p3=
+g2SLQ@mail.gmail.com/
+We put it in our github branch and works fine for a long time.
+Looking forward to better advices from someone familiar with NVMe drivers.
+
+> > >
+> > > If you have a link to an erratum write-up it would certainly help.
 > >
-> > This patch is tested on QEMU VM with the kernel CRC32 selftest for both
-> > rv64 and rv32.
+
+That`s not a certain hardware issue with existing erratum, and we are doing
+more investigation for it in these days.
+
+The next version we will skip this workaround patch, and then summit separa=
+te
+patch (with erratum) for the fix after more debug on the issue.
+
+> > I think we really need to see that errata document.  Our formal memory
+> > model doesn't account for device interactions so it's possible there's
+> > just some arch fence we can make stronger in order to get things
+> > ordered again -- we've had similar problems with some other RISC-V
+> > chips, and while it ends up being slow at least it's correct.
 > >
-> > Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
-> > ---
-> > v3:
-> > - Use Zbc to handle also the data head and tail bytes, instead of calli=
-ng
-> >   fallback function.
-> > - Misc changes due to the new design.
+> > > This looks completely broken to me, if the controller can't
+> > > guarantee PCIe transactions ordering it is toast, there is not even
+> > > a point considering mainline merging.
 > >
-> > v2:
-> > - Fix sparse warnings about type casting. (lkp)
-> > - Add info about instruction count change in commit log. (Andrew)
-> > - Use the min() helper from linux/minmax.h. (Andrew)
-> > - Use "#if __riscv_xlen =3D=3D 64" macro check to differentiate rv64 an=
-d rv32.
-> (Andrew)
-> > - Line up several macro values by tab. (Andrew)
-> > - Make poly_qt as "unsigned long" to unify the code for rv64 and rv32.
-> (David)
-> > - Fix the style of comment wing. (Andrew)
-> > - Add function wrappers for the asm code for the *_le cases. (Andrew)
-> > ---
-> >  arch/riscv/Kconfig      |  23 ++++
-> >  arch/riscv/lib/Makefile |   1 +
-> >  arch/riscv/lib/crc32.c  | 294
-
-[...]
-> > +static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const=
- *p,
-> > +					  size_t len, u32 poly,
-> > +					  unsigned long poly_qt,
-> > +					  fallback crc_fb)
-> > +{
-> > +	size_t offset, head_len, tail_len;
-> > +	unsigned long const *p_ul;
-> > +	unsigned long s;
-> > +
-> > +	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> > I wouldn't be at all surprised if that's the case.  Without some
+> > concrete ISA mechanisms here we're sort of just stuck hoping the SOC
+> > vendors do the right thing, which is always terrifying.
+> >
+> > I'm not really a PCIe person so this is all a bit vague, but IIRC we
+> > had a bunch of possible PCIe ordering violations in the SiFive memory
+> > system back when I was there and we never really got a scheme for
+> > making sure things were correct.
+> >
+> > So I think we really do need to see that errata document to know
+> > what's possible here.  Folks have been able to come up with clever
+> > solutions to these problems before, maybe we'll get lucky again.
+> >
+> > > > As a workaround, we will wait a while before going to the generic
+> > > > handle here.
+> > > >
+> > > > Verified with NVMe SSD, USB SSD, R8169 NIC.
+> > > > The performance are stable and even higher after this patch.
+> > >
+> > > I assume this is a joke even though it does not make me laugh.
+> >
+> > So you're new to RISC-V, then?  It gets way worse than this ;)
 >=20
-> This needs to be changed to be asm goto:
+> To me this is just a PCI controller driver, arch does not matter.
 >=20
-> 4356e9f841f7f ("work around gcc bugs with 'asm goto' with outputs")
+> What annoyed me is that we really can't state that this patch improves
+> performance, sorry, the patch itself is not acceptable, let's try not to =
+rub it in :)
 >=20
 
-Thanks for the pointer. Will change it.
+I'm sorry, the description here is confusing too.
+The performance is compared with the version that hasn't been fixed.
+It is reasonable that we can get stable performance when NVMe SSD works
+without any timeouts, but that doesn't means it can improve the performance
+for any other platform.
 
-> > +				      RISCV_ISA_EXT_ZBC, 1)
-> > +			  : : : : legacy);
-> > +
-> > +	/* Handle the unaligned head. */
-> > +	offset =3D (unsigned long)p & OFFSET_MASK;
-> > +	if (offset && len) {
+Thank you for your comments, Lorenzo & Palmer.
+Kevin.
+
+> Please post an erratum write-up and we shall see what can be done.
 >=20
-> If len is 0 nothing in the function seems like it will modify crc. Is the=
-re
-> a reason to not break out immediately if len is 0?
+> Thanks,
+> Lorenzo
 >=20
-
-Yeah, if len is 0, then crc won't be modified.
-Normally in scenarios like hash value calculation and packets CRC check,
-the "len" can hardly be zero. And software usually avoids unaligned buf
-addr, which means the "offset" here mostly is false.
-
-So if we add a "len =3D=3D 0" check at the beginning of this function, it w=
-ill
-introduce a branch overhead for the most cases.
-
-> > +		head_len =3D min(STEP - offset, len);
-> > +		crc =3D crc32_le_unaligned(crc, p, head_len, poly, poly_qt);
-> > +		p +=3D head_len;
-> > +		len -=3D head_len;
-> > +	}
-> > +
-> > +	tail_len =3D len & OFFSET_MASK;
-> > +	len =3D len >> STEP_ORDER;
-> > +	p_ul =3D (unsigned long const *)p;
-> > +
-> > +	for (int i =3D 0; i < len; i++) {
-> > +		s =3D crc32_le_prep(crc, p_ul);
-> > +		crc =3D crc32_le_zbc(s, poly, poly_qt);
-> > +		p_ul++;
-> > +	}
-> > +
-> > +	/* Handle the tail bytes. */
-> > +	p =3D (unsigned char const *)p_ul;
-> > +	if (tail_len)
-> > +		crc =3D crc32_le_unaligned(crc, p, tail_len, poly, poly_qt);
-> > +
-> > +	return crc;
-> > +
-> > +legacy:
-> > +	return crc_fb(crc, p, len);
-> > +}
-> > +
-> > +u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len)
-> > +{
-> > +	return crc32_le_generic(crc, p, len, CRC32_POLY_LE,
-> CRC32_POLY_QT_LE,
-> > +				crc32_le_base);
-> > +}
-> > +
-> > +u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len)
-> > +{
-> > +	return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
-> > +				CRC32C_POLY_QT_LE, __crc32c_le_base);
-> > +}
-> > +
-> > +static inline u32 crc32_be_unaligned(u32 crc, unsigned char const *p,
-> > +				     size_t len)
-> > +{
-> > +	size_t bits =3D len * 8;
-> > +	unsigned long s =3D 0;
-> > +	u32 crc_low =3D 0;
-> > +
-> > +	s =3D 0;
-> > +	for (int i =3D 0; i < len; i++)
-> > +		s =3D *p++ | (s << 8);
-> > +
-> > +	if (__riscv_xlen =3D=3D 32 || len < sizeof(u32)) {
-> > +		s ^=3D crc >> (32 - bits);
-> > +		crc_low =3D crc << bits;
-> > +	} else {
-> > +		s ^=3D (unsigned long)crc << (bits - 32);
-> > +	}
-> > +
-> > +	crc =3D crc32_be_zbc(s);
-> > +	crc ^=3D crc_low;
-> > +
-> > +	return crc;
-> > +}
-> > +
-> > +u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len)
-> > +{
-> > +	size_t offset, head_len, tail_len;
-> > +	unsigned long const *p_ul;
-> > +	unsigned long s;
-> > +
-> > +	asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
->=20
-> Same here
->=20
-
-Will change it.
-
-Thanks for the comments.
--Xiao
-
+> > > Thanks,
+> > > Lorenzo
+> > >
+> > > >
+> > > > Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
+> > > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> > > > ---
+> > > >  drivers/pci/controller/plda/pcie-plda-host.c | 12 ++++++++++++
+> > > >  drivers/pci/controller/plda/pcie-plda.h      |  1 +
+> > > >  drivers/pci/controller/plda/pcie-starfive.c  |  1 +
+> > > >  3 files changed, 14 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > index a18923d7cea6..9e077ddf45c0 100644
+> > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > @@ -13,6 +13,7 @@
+> > > >  #include <linux/msi.h>
+> > > >  #include <linux/pci_regs.h>
+> > > >  #include <linux/pci-ecam.h>
+> > > > +#include <linux/delay.h>
+> > > >
+> > > >  #include "pcie-plda.h"
+> > > >
+> > > > @@ -44,6 +45,17 @@ static void plda_handle_msi(struct irq_desc *des=
+c)
+> > > >  			       bridge_base_addr + ISTATUS_LOCAL);
+> > > >  		status =3D readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+> > > >  		for_each_set_bit(bit, &status, msi->num_vectors) {
+> > > > +			/*
+> > > > +			 * As the Starfive JH7110 hardware can't keep two
+> > > > +			 * inbound post write in order all the time, such as
+> > > > +			 * MSI messages and NVMe completions.
+> > > > +			 * If the NVMe completion update later than the MSI,
+> > > > +			 * an NVMe IRQ handle will miss.
+> > > > +			 * As a workaround, we will wait a while before
+> > > > +			 * going to the generic handle here.
+> > > > +			 */
+> > > > +			if (port->msi_quirk_delay_us)
+> > > > +				udelay(port->msi_quirk_delay_us);
+> > > >  			ret =3D generic_handle_domain_irq(msi->dev_domain, bit);
+> > > >  			if (ret)
+> > > >  				dev_err_ratelimited(dev, "bad MSI IRQ %d\n", diff --git
+> > > > a/drivers/pci/controller/plda/pcie-plda.h
+> > > > b/drivers/pci/controller/plda/pcie-plda.h
+> > > > index 04e385758a2f..feccf285dfe8 100644
+> > > > --- a/drivers/pci/controller/plda/pcie-plda.h
+> > > > +++ b/drivers/pci/controller/plda/pcie-plda.h
+> > > > @@ -186,6 +186,7 @@ struct plda_pcie_rp {
+> > > >  	int msi_irq;
+> > > >  	int intx_irq;
+> > > >  	int num_events;
+> > > > +	u16 msi_quirk_delay_us;
+> > > >  };
+> > > >
+> > > >  struct plda_event {
+> > > > diff --git a/drivers/pci/controller/plda/pcie-starfive.c
+> > > > b/drivers/pci/controller/plda/pcie-starfive.c
+> > > > index 9bb9f0e29565..5cfc30572b7f 100644
+> > > > --- a/drivers/pci/controller/plda/pcie-starfive.c
+> > > > +++ b/drivers/pci/controller/plda/pcie-starfive.c
+> > > > @@ -391,6 +391,7 @@ static int starfive_pcie_probe(struct
+> > > > platform_device *pdev)
+> > > >
+> > > >  	plda->host_ops =3D &sf_host_ops;
+> > > >  	plda->num_events =3D PLDA_MAX_EVENT_NUM;
+> > > > +	plda->msi_quirk_delay_us =3D 1;
+> > > >  	/* mask doorbell event */
+> > > >  	plda->events_bitmap =3D GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
+> > > >  			     & ~BIT(PLDA_AXI_DOORBELL)
+> > > > --
+> > > > 2.17.1
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-riscv mailing list
+> > > > linux-riscv@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
