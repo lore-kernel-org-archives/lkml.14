@@ -1,82 +1,137 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B2810940;
-	Thu, 14 Mar 2024 07:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E349610E;
+	Thu, 14 Mar 2024 07:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710400068; cv=none; b=czla5nqsmCPNkHLSnZZ5AaVVzVGSMJIj+3pHK+dHugMrgDPgHYZhY5+IfXyditamrYY0hi82JS3gOL5F/s/mApXfV7kh+I63rC8U2q/FzjNHO0mEmRV2URKcLphuyxrU/MoFSP941Wy1dET6KfUUMWIGgrFzr964hal+GTk1qGo=
+	t=1710400104; cv=none; b=UEMgPgN4JzSrqfyY3iwGtKtf2ZYicR4za0AsDp1plnf7Rby8KIE4ngawAjll7zfCUsLFBtsmVwwSwd5lDbpfum2nr+U+NcE8bVPQq/WGpXFl7ywGIfIyenTdD42Gy/OppprMeL2nZ2jY58BwxRqJ9pYzeMyfiHVlpZg3Hn1pNPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710400068; c=relaxed/simple;
-	bh=GhZ4JGryEcBc3CgKPGPXBJTWzLIzMYIYCJ6K0FhnlV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rG3Nit/M7hM5EGf4EiDynY3ShAHPtAiJe/asEE/zhOrYvfL2lo08vJPpo1BYUqmTQ+8Yi0ptukIsgLY62y0L294FerOBOxyb+wDUrll/Rs4SrVWLgKw216XSWBgNRk/6a6YTU8Q0eu5bGRiosLUVEoWMFA773SNxws7Q8Kg++BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GU9UNOaW; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GU9UNOaW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8C62F240004;
-	Thu, 14 Mar 2024 07:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710400057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rEneWH/7DzaC3oT0COEpJUbF2WmAIFv5/EWar3lyv94=;
-	b=GU9UNOaWkEqPxYo+/L3HhEZjNqQWXp8ibG1PjS1pmSEF/K067MuCXuiB2YG/ekL+89DMCN
-	1mpOPonyCkMnvOEXotQOhyFyQLPuiYZ9jkqRRQlg327pPIZBg5owwqsa2XESZ4Fhccq/cE
-	hz+8XtxtQjy7XyD5Q3ELqcZvZ0jhH3GvkDH+y3Hh/NXqVGTwSHueDMJPn30iaZVCJhYYzC
-	9GUwPaJD5nD29InB4tE4oM+O4bXcx9KV3H0WwS611CNMnC2Xas6LAxvsNvkD74WuVgaNCL
-	kFla+kdTxcDlrz6Z0Sz5MdpmuB+AvVwcHq3lIA+MYfOV/vQR/nWZIaDF3J7Liw==
-Date: Thu, 14 Mar 2024 08:07:35 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: linux-spi@vger.kernel.org, Michael Walle <mwalle@kernel.org>, Pratyush
- Yadav <pratyush@kernel.org>, Mark Brown <broonie@kernel.org>, Michael Walle
- <michael@walle.cc>, "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH v2] spi: Fix error code checking in spi_mem_exec_op()
-Message-ID: <20240314080735.5fe5b405@xps-13>
-In-Reply-To: <20240313194530.3150446-1-florian.fainelli@broadcom.com>
-References: <20240313194530.3150446-1-florian.fainelli@broadcom.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710400104; c=relaxed/simple;
+	bh=VHQmqpvBmzUmxKyyeewCBIRvDYNSD5Sb7pCTFIjAXyw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AcSp/9MdygN+H3vM7x6bIjsTZyR0K+W4qh1uaAAtUIteqlhiVoTwOcCxJ0s+SqwOSMYO2Ekyxq/t6dhmh1DGdSU3xCSW6z9AVDeSCfK54FlGrseXMQlzpihpColaxDQmtezzHze5UFLFHn38yQASjTq7p3RRGnfy3IlaM8e9wy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 42E76L3B099275;
+	Thu, 14 Mar 2024 15:06:21 +0800 (GMT-8)
+	(envelope-from liu.yeC@h3c.com)
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
+	by mail.maildlp.com (Postfix) with ESMTP id 582D3200BBEB;
+	Thu, 14 Mar 2024 15:07:53 +0800 (CST)
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
+ DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.27; Thu, 14 Mar 2024 15:06:22 +0800
+Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
+ by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
+ mapi id 15.02.1258.027; Thu, 14 Mar 2024 15:06:22 +0800
+From: Liuye <liu.yeC@h3c.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+CC: "jason.wessel@windriver.com" <jason.wessel@windriver.com>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>,
+        "jirislaby@kernel.org" <jirislaby@kernel.org>,
+        "kgdb-bugreport@lists.sourceforge.net"
+	<kgdb-bugreport@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org"
+	<linux-serial@vger.kernel.org>
+Subject: =?gb2312?B?tPC4tDogtPC4tDogtPC4tDogtPC4tDogtPC4tDogW1BBVENIXSBrZGI6IEZp?=
+ =?gb2312?Q?x_the_deadlock_issue_in_KDB_debugging.?=
+Thread-Topic: =?gb2312?B?tPC4tDogtPC4tDogtPC4tDogtPC4tDogW1BBVENIXSBrZGI6IEZpeCB0aGUg?=
+ =?gb2312?Q?deadlock_issue_in_KDB_debugging.?=
+Thread-Index: AQHaafG3YC/Li+j42kau1FDQhHr2m7EfIsgAgAMadaD///fWgIAJrHcQgAeL+QCAAIb8YP//gGOAgAGAGvCAAFNzgIABn6DQ
+Date: Thu, 14 Mar 2024 07:06:22 +0000
+Message-ID: <56ed54fd241c462189d2d030ad51eac6@h3c.com>
+References: <20240228025602.3087748-1-liu.yeC@h3c.com>
+ <20240228120516.GA22898@aspen.lan> <8b41d34adaef4ddcacde2dd00d4e3541@h3c.com>
+ <20240301105931.GB5795@aspen.lan> <2ea381e7407a49aaa0b08fa7d4ff62d3@h3c.com>
+ <20240312095756.GB202685@aspen.lan>
+ <06cfa3459ed848cf8f228997b983cf53@h3c.com>
+ <20240312102419.GC202685@aspen.lan>
+ <410a443612e8441cb729c640a0d606c6@h3c.com>
+ <20240313141745.GD202685@aspen.lan>
+In-Reply-To: <20240313141745.GD202685@aspen.lan>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-sender-location: DAG2
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: miquel.raynal@bootlin.com
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 42E76L3B099275
 
-Hi Florian,
-
-florian.fainelli@broadcom.com wrote on Wed, 13 Mar 2024 12:45:30 -0700:
-
-> After commit cff49d58f57e ("spi: Unify error codes by replacing -ENOTSUPP with
-> -EOPNOTSUPP"), our SPI NOR flashes would stop probing with the following
-> visible in the kernel log:
-> 
-> [    2.196300] brcmstb_qspi f0440920.qspi: using bspi-mspi mode
-> [    2.210295] spi-nor: probe of spi1.0 failed with error -95
-> 
-> It turns out that the check in spi_mem_exec_op() was changed to check
-> for -ENOTSUPP (old error code) or -EOPNOTSUPP (new error code), but this
-> means that for drivers that were converted, the second condition is now
-> true, and we stop falling through like we used to. Fix the error to
-> check for neither error being neither -ENOTSUPP *nor* -EOPNOTSUPP.
-> 
-> Fixes: cff49d58f57e ("spi: Unify error codes by replacing -ENOTSUPP with -EOPNOTSUPP")
-> Reviewed-by: Michael Walle <mwalle@kernel.org>
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-
-Thanks for the fix!
-
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
+Pk9uIFdlZCwgTWFyIDEzLCAyMDI0IGF0IDAxOjIyOjE3QU0gKzAwMDAsIExpdXllIHdyb3RlOg0K
+Pj4gPk9uIFR1ZSwgTWFyIDEyLCAyMDI0IGF0IDEwOjA0OjU0QU0gKzAwMDAsIExpdXllIHdyb3Rl
+Og0KPj4gPj4gPk9uIFR1ZSwgTWFyIDEyLCAyMDI0IGF0IDA4OjM3OjExQU0gKzAwMDAsIExpdXll
+IHdyb3RlOg0KPj4gPj4gPj4gSSBrbm93IHRoYXQgeW91IHNhaWQgc2NoZWR1bGVfd29yayBpcyBu
+b3QgTk1JIHNhdmUsIHdoaWNoIGlzIHRoZSANCj4+ID4+ID4+IGZpcnN0IGlzc3VlLiBQZXJoYXBz
+IGl0IGNhbiBiZSBmaXhlZCB1c2luZyBpcnFfd29ya19xdWV1ZS4gQnV0IA0KPj4gPj4gPj4gZXZl
+biBpZiBpcnFfd29ya19xdWV1ZSBpcyB1c2VkIHRvIGltcGxlbWVudCBpdCwgdGhlcmUgd2lsbCBz
+dGlsbCANCj4+ID4+ID4+IGJlIGEgZGVhZGxvY2sgcHJvYmxlbSBiZWNhdXNlIHNsYXZlIGNwdTEg
+c3RpbGwgaGFzIG5vdCByZWxlYXNlZCANCj4+ID4+ID4+IHRoZSBydW5uaW5nIHF1ZXVlIGxvY2sg
+b2YgbWFzdGVyIENQVTAuDQo+PiA+PiA+DQo+PiA+PiA+VGhpcyBkb2Vzbid0IHNvdW5kIHJpZ2h0
+IHRvIG1lLiBXaHkgZG8geW91IHRoaW5rIENQVTEgd29uJ3QgDQo+PiA+PiA+cmVsZWFzZSB0aGUg
+cnVuIHF1ZXVlIGxvY2s/DQo+PiA+Pg0KPj4gPj4gSW4gdGhpcyBleGFtcGxlLCBDUFUxIGlzIHdh
+aXRpbmcgZm9yIENQVTAgdG8gcmVsZWFzZSANCj4+ID4+IGRiZ19zbGF2ZV9sb2NrLg0KPj4gPg0K
+Pj4gPlRoYXQgc2hvdWxkbid0IGJlIGEgcHJvYmxlbS4gQ1BVMCB3aWxsIGhhdmUgcmVsZWFzZWQg
+dGhhdCBsb2NrIGJ5IHRoZSANCj4+ID50aW1lIHRoZSBpcnEgd29yayBpcyBkaXNwYXRjaGVkLg0K
+Pj4NCj4+IFJlbGVhc2UgZGJnX3NsYXZlX2xvY2sgaW4gQ1BVMC4gQmVmb3JlIHRoYXQsIHNoY2Vk
+dWxlX3dvcmsgbmVlZHMgdG8gYmUgDQo+PiBoYW5kbGVkLCBhbmQgd2UgYXJlIGJhY2sgdG8gdGhl
+IHByZXZpb3VzIGlzc3VlLg0KPg0KPlNvcnJ5IGJ1dCBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQg
+d2hhdCBwcm9ibGVtIHlvdSB0aGluayBjYW4gaGFwcGVuIGhlcmUuIFdoYXQgaXMgd3Jvbmcgd2l0
+aCBjYWxsaW5nIHNjaGVkdWxlX3dvcmsoKSBmcm9tIHRoZSBJUlEgd29yayBoYW5kbGVyPw0KPg0K
+PkJvdGggaXJxX3dvcmtfcXVldWUoKSBhbmQgc2NoZWR1bGVfd29yaygpIGFyZSBjYWxscyB0byBx
+dWV1ZSBkZWZlcnJlZCB3b3JrLiBJdCBkb2VzIG5vdCBtYXR0ZXIgd2hlbiB0aGUgd29yayBpcyBx
+dWV1ZWQgKHByb3ZpZGluZyB3ZSBhcmUgbG9jayBzYWZlKS4gV2hhdCBtYXR0ZXJzIGlzIHdoZW4g
+dGhlIHdvcmsgaXMgYWN0dWFsbHkgZXhlY3V0ZWQuDQo+DQo+UGxlYXNlIGNhbiB5b3UgZGVzY3Jp
+YmUgdGhlIHByb2JsZW0geW91IHRoaW5rIGV4aXN0cyBiYXNlZCBvbiB3aGVuIHRoZSB3b3JrIGlz
+IGV4ZWN1dGVkLg0KDQpDUFUwIGVudGVycyB0aGUgS0RCIHByb2Nlc3Mgd2hlbiBwcm9jZXNzaW5n
+IHNlcmlhbCBwb3J0IGludGVycnVwdHMgYW5kIHRyaWdnZXJzIGFuIElQSSAoTk1JKSB0byBvdGhl
+ciBDUFVzLiANCkFmdGVyIGVudGVyaW5nIGEgc3RhYmxlIHN0YXRlLCBDUFUwIGlzIGluIGludGVy
+cnVwdCBjb250ZXh0LCB3aGlsZSBvdGhlciBDUFVzIGFyZSBpbiBOTUkgY29udGV4dC4gDQpCZWZv
+cmUgb3RoZXIgQ1BVcyBlbnRlciBOTUkgY29udGV4dCwgdGhlcmUgaXMgYSBjaGFuY2UgdG8gb2J0
+YWluIHRoZSBydW5uaW5nIHF1ZXVlIG9mIENQVTAuIA0KQXQgdGhpcyB0aW1lLCB3aGVuIENQVTAg
+aXMgcHJvY2Vzc2luZyBrZ2Rib2NfcmVzdG9yZV9pbnB1dCwgY2FsbGluZyBzY2hlZHVsZV93b3Jr
+LCBuZWVkX21vcmVfd29ya2VyIGhlcmUgZGV0ZXJtaW5lcyB0aGUgY2hhbmNlIHRvIHdha2UgdXAg
+cHJvY2Vzc2VzIG9uIHN5c3RlbV93cS4gDQpUaGlzIHdpbGwgY2F1c2UgQ1BVMCB0byBhY3F1aXJl
+IHRoZSBydW5uaW5nIHF1ZXVlIGxvY2sgb2YgdGhpcyBjb3JlLCB3aGljaCBpcyBoZWxkIGJ5IG90
+aGVyIENQVXMuIA0KYnV0IG90aGVyIENQVXMgYXJlIHN0aWxsIGluIE5NSSBjb250ZXh0IGFuZCBo
+YXZlIG5vdCBleGl0ZWQgYmVjYXVzZSB3YWl0aW5nIGZvciBDUFUwIHRvIHJlbGVhc2UgdGhlIGRi
+Z19zbGF2ZV9sb2NrIGFmdGVyIHNjaGVkdWxlX3dvcmsuDQoNCkFmdGVyIHRoaW5raW5nIGFib3V0
+IGl0LCB0aGUgcHJvYmxlbSBpcyBub3Qgd2hldGhlciBzY2hlZHVsZV93b3JrIGlzIE5NSSBzYWZl
+LCBidXQgdGhhdCBwcm9jZXNzZXMgb24gc3lzdGVtX3dxIHNob3VsZCBub3QgYmUgYXdha2VuZWQg
+aW1tZWRpYXRlbHkgd2hlbiBzY2hlZHVsZV93b3JrIGlzIGNhbGxlZC4gDQpJIHJlcGxhY2VkIHNj
+aGVkdWxlX3dvcmsgd2l0aCBzY2hlZHVsZV9kZWxheWVkX3dvcmssIGFuZCB0aGlzIHNvbHZlZCBt
+eSBwcm9ibGVtLg0KDQpUaGUgbmV3IHBhdGNoIGlzIGFzIGZvbGxvd3M6DQoNCkluZGV4OiBkcml2
+ZXJzL3R0eS9zZXJpYWwva2dkYm9jLmMNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCi0tLSBkcml2ZXJzL3R0eS9zZXJp
+YWwva2dkYm9jLmMgKHJldmlzaW9uIDU3ODYyKQ0KKysrIGRyaXZlcnMvdHR5L3NlcmlhbC9rZ2Ri
+b2MuYyAod29ya2luZyBjb3B5KQ0KQEAgLTkyLDEyICs5MiwxMiBAQA0KICAgICAgICBtdXRleF91
+bmxvY2soJmtnZGJvY19yZXNldF9tdXRleCk7DQogfQ0KDQotc3RhdGljIERFQ0xBUkVfV09SSyhr
+Z2Rib2NfcmVzdG9yZV9pbnB1dF93b3JrLCBrZ2Rib2NfcmVzdG9yZV9pbnB1dF9oZWxwZXIpOw0K
+K3N0YXRpYyBERUNMQVJFX0RFTEFZRURfV09SSyhrZ2Rib2NfcmVzdG9yZV9pbnB1dF93b3JrLCBr
+Z2Rib2NfcmVzdG9yZV9pbnB1dF9oZWxwZXIpOw0KDQogc3RhdGljIHZvaWQga2dkYm9jX3Jlc3Rv
+cmVfaW5wdXQodm9pZCkNCiB7DQogICAgICAgIGlmIChsaWtlbHkoc3lzdGVtX3N0YXRlID09IFNZ
+U1RFTV9SVU5OSU5HKSkNCi0gICAgICAgICAgICAgICBzY2hlZHVsZV93b3JrKCZrZ2Rib2NfcmVz
+dG9yZV9pbnB1dF93b3JrKTsNCisgICAgICAgICAgICAgICBzY2hlZHVsZV9kZWxheWVkX3dvcmso
+JmtnZGJvY19yZXN0b3JlX2lucHV0X3dvcmssMipIWik7DQogfQ0KDQogc3RhdGljIGludCBrZ2Ri
+b2NfcmVnaXN0ZXJfa2JkKGNoYXIgKipjcHRyKQ0KQEAgLTEyOCw3ICsxMjgsNyBAQA0KICAgICAg
+ICAgICAgICAgICAgICAgICAgaS0tOw0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgfQ0KLSAg
+ICAgICBmbHVzaF93b3JrKCZrZ2Rib2NfcmVzdG9yZV9pbnB1dF93b3JrKTsNCisgICAgICAgZmx1
+c2hfZGVsYXllZF93b3JrKCZrZ2Rib2NfcmVzdG9yZV9pbnB1dF93b3JrKTsNCiB9DQogI2Vsc2Ug
+LyogISBDT05GSUdfS0RCX0tFWUJPQVJEICovDQogI2RlZmluZSBrZ2Rib2NfcmVnaXN0ZXJfa2Jk
+KHgpIDANCg==
