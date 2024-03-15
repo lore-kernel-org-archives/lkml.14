@@ -1,100 +1,108 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1056637167;
-	Fri, 15 Mar 2024 14:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F44A28E31
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 14:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710511937; cv=none; b=I9cHPRsXJuXbkEUzlUYHwxG/7oj8gcvV1SfQd+YhWkTwXzNQSiX7CMPOW9V9sVceveNUga6yp58B+HpF59Kqx0w3m7EMKti6EcN9FQF9+uXmHJVzLmoS59JGYEUtSlFzAUCZ6zxIXF/K0uO0N7XRXYrwFOFmT/fxfah+A0M6/Xg=
+	t=1710512376; cv=none; b=dX0y9tsKJw6C/KnGeVG2ylm5yAr7PsGC52XSgFhojiC9g2SS5CUVFmLqoTE4kAe6TbK6mhNHfjPv/kqg2wwOeq3P3suKwldXBZ7r6VvDWCvhSc7KLOTq3VkIzC2rUFbUHUexYZTE74jw33ZKKEhMh3zTnTwBZReNnTs0AMYPZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710511937; c=relaxed/simple;
-	bh=lDggbsGVPM1jhhJN1V2iUjTn/te3NkJhRIw7wWD1fBw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E/SkCXJa/rKSEGZlmLFE5agDU+U0tmEQFAElyCmAe2hK0FUTyrjmws8UCGROTw9GivrcT0OSJhgP7vF0ydx5eDxnyqU1YRNavP5uVFDjZkQQpOzn1j2cstje7HFqx/K/GspUEUNf4nR9JS1Iw7z0rgu7LHoMrllmKf/GL5NR1oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=yFl2fyCm; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1710512376; c=relaxed/simple;
+	bh=0Pc/THBqWx+ITIiBxPEFl4/7az1HUvbjHA/bsKIC7/8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hx/k4dtGVHzEPg9G3M2hZ4RuGUaXGAH0LlmtsEbjLkMKxkEIITRjEhaPYtsgpMEtJClRF15PM8DKk7d4gx6q6E2z8GREu1iTE1I8TTj8wd7zWeALXn8xCgkfUehkqEvr4qvZGWgjKGWa2qkNSWyMxlWt0Fa1YxPv4M4XhfNRSLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=P9AovEa4; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="yFl2fyCm"
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="P9AovEa4"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=PyFfX2uCch2/EAvx8/2qfWz35TKluRnYnWc6BnNUd0I=;
-	t=1710511935; x=1711721535; b=yFl2fyCmK7OeTFI4awpLGOED4bf6dhznOM8Pl5YG0rEzNxd
-	CBNYd1pG6fHq36KF61FgiPMEEWATPF3c9E0mmU+2lxWHLUpCgtsTlRkXn9mWYEGfMVr1X+lqjWH2w
-	XzvL+7vGCH3REdt2qHCv8knwr4YnIEqcJhlKUVgx/ZTDNnXB//YJoQLfbmNMayiEojLO28K6pNBus
-	pwuIkJs/x4gCvkfgHswdRnHc/7Zp90uNIui7lZrcPpMA4ReCEDaaTuFgcQ+9B+GueHKTabFlFjI7n
-	BlW6VbcL5VxOP4a0YUK8Rz1oq+82eAAWm4Jb3kWiWrz3mRllLZMpgtoh7GHmMq4Q==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rl7r8-00000000LJF-0jgH;
-	Fri, 15 Mar 2024 14:44:18 +0100
-Message-ID: <66994d628df70a5ff535908efc16568d3a5a4c80.camel@sipsolutions.net>
-Subject: Re: [RFC PATCH v3 0/2] rust: crates in other kernel directories
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Miguel Ojeda
- <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida
- Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
- <gary@garyguo.net>, =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Date: Fri, 15 Mar 2024 14:44:16 +0100
-In-Reply-To: <20231104211213.225891-1-yakoyoku@gmail.com>
-References: <20231104211213.225891-1-yakoyoku@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=eicCXfRMj0HqboV6DQdhIV7VLLlwcoV4+0bYeQUIqo0=; b=P9AovEa4l44Sgo/c95yscj3mQh
+	+8C5tbsuR7rsLR1j56fsy3X2a7fPMWASs+2cSqZUxJJ/XTcQ+/dEzL1uxmX/koQ6FiNWzJJG+aWYz
+	l7ZPRoWdNTmhGIXh46Ao5QFAS5tLPTF8qZVqylj58olmIC1B1JjFLuyCp1/5e1HzdgAjNgnttex2K
+	CLjatNmvcsLaajSSgOMcVmLwv7nQaOin2UlDMPx6mo+CuSneRjmQRkCJSufL+qG57s9anHxRupfT4
+	mrv3PuD0UHDzMrP3wf8Bb5aNhEeZ7v6kIy3FiSmuwNWfDNWxqdbiREtl83Q9X4qunkyd0aPMT8izO
+	2aFrhM+A==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rl7wP-000PHK-Mw; Fri, 15 Mar 2024 14:49:45 +0100
+Received: from [178.197.249.11] (helo=linux.home)
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rl7wP-0037bz-0s;
+	Fri, 15 Mar 2024 14:49:45 +0100
+Subject: Re: [PATCH] MAINTAINERS: Update email address for Quentin Monnet
+To: qmo@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+References: <20240315133606.65971-1-qmo@kernel.org>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <38a00cd0-b7fb-8006-9fb8-2c19f37c170a@iogearbox.net>
+Date: Fri, 15 Mar 2024 14:49:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+In-Reply-To: <20240315133606.65971-1-qmo@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27215/Fri Mar 15 09:31:18 2024)
 
-Hi,
+On 3/15/24 2:36 PM, qmo@kernel.org wrote:
+> From: Quentin Monnet <qmo@kernel.org>
+> 
+> With Isovalent being acquired by Cisco, I expect my related email
+> address to disappear sooner or later. Update my email entries in
+> MAINTAINERS and .mailmap with my kernel.org address instead.
+> 
+> Signed-off-by: Quentin Monnet <qmo@kernel.org>
 
-So I realize this is an old patch, but I didn't find another version,
-and discussions seemed ongoing at least a month ago. I also came across
-it pretty randomly.
+I'll queue it up via bpf, thanks!
 
-Anyway, question:
+> ---
+>   .mailmap    | 3 ++-
+>   MAINTAINERS | 2 +-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/.mailmap b/.mailmap
+> index 2216b5d5c84e..02cd23b76eda 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -497,7 +497,8 @@ Prasad Sodagudi <quic_psodagud@quicinc.com> <psodagud@codeaurora.org>
+>   Punit Agrawal <punitagrawal@gmail.com> <punit.agrawal@arm.com>
+>   Qais Yousef <qyousef@layalina.io> <qais.yousef@imgtec.com>
+>   Qais Yousef <qyousef@layalina.io> <qais.yousef@arm.com>
+> -Quentin Monnet <quentin@isovalent.com> <quentin.monnet@netronome.com>
+> +Quentin Monnet <qmo@kernel.org> <quentin.monnet@netronome.com>
+> +Quentin Monnet <qmo@kernel.org> <quentin@isovalent.com>
+>   Quentin Perret <qperret@qperret.net> <quentin.perret@arm.com>
+>   Rafael J. Wysocki <rjw@rjwysocki.net> <rjw@sisk.pl>
+>   Rajeev Nandan <quic_rajeevny@quicinc.com> <rajeevny@codeaurora.org>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 76b3714710c2..02dadb5de58b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3967,7 +3967,7 @@ F:	kernel/bpf/bpf_lru*
+>   F:	kernel/bpf/cgroup.c
+>   
+>   BPF [TOOLING] (bpftool)
+> -M:	Quentin Monnet <quentin@isovalent.com>
+> +M:	Quentin Monnet <qmo@kernel.org>
+>   L:	bpf@vger.kernel.org
+>   S:	Maintained
+>   F:	kernel/bpf/disasm.*
+> 
 
-> If you want to use a crate with your Rust module just add a `rust-libs`
-> variable in your Makefile with a value of the relative directory of
-> said crate plus its name, e.g.
->=20
->     # Link with the foo crate
->     rust-libs +=3D ../path/to/foo
-
-Should this perhaps be relative to the kernel's root dir instead?=C2=A0
-
-If I'm reading this correctly, then a hypothetical rust wireless driver
-that lives in
-
-  drivers/net/wireless/<vendor>/<name>/
-
-using some wireless rust infrastructure would probably end up with
-something like
-
-  rust-libs +=3D ../../../../../net/mac80211/rust/
-
-or whatever, which seems rather odd vs.
-
-  rust-libs +=3D net/mac80211/rust/
-
-Seems to me that chances are that subsystems/drivers that have rust
-infrastructure will not necessarily have them close to each other, like
-in this example?
-
-You have this in the sample too:
-
-+rust-libs					:=3D ../../drivers/usb/core/usb
-
-but it's less pronounced since it's just samples/rust/ :)
-
-johannes
