@@ -1,133 +1,136 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1379B1755A;
-	Fri, 15 Mar 2024 09:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C215B175A5
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710493532; cv=none; b=u6M5uZTBGDwqoQQu9eAL5mckdL7dhvNSMdEueRzUoDpNVXVbvSh6ypNvj/uxuJ4bBjGG97mfmLv3qNCWbuNEYPeYzGdclbQ6Ih2e4fDE0J4YixljSty/gJMrg9oe53zLxT5Me5O7hjsoVNm8feEM8OFPCIK96iR9doWmyQYiq1I=
+	t=1710493569; cv=none; b=g2tLHZregscZhKP1UPE2s6hoicQuX3Iic3UVWFy8VSfY5W09Vv6VVgAjZErlxXRBGq/wpwgxjqwrYDjO5KQE+1JxFUhCxUeyALRtmj7mdBq24sOMr1iOXJH1AKGYl/IqQdXIUC4/Ew48S4PpNTl6vbqLZx2PUa5LOS2pD95szlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710493532; c=relaxed/simple;
-	bh=9Wr/WHl5jjd+r6BC9zDAQHL3m+G4K5aBLL3K0PtAJ/o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vf8eKw7xUu1kSeg0sOCoNN8AMfwfnqV5FvCyAmW8M+WIhPkNoNJvQGBe7Vw3yrzci21inOhuQPT3tAWEYB25qqnHrSEsYFFBZ34pisJ5Eh6lkmRUWHsomq6YuQXj+RqI+ISPafiI5+2oulXzT+8q3OUmrizPTUrqR48qh1JIxSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A16aS3m7; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710493569; c=relaxed/simple;
+	bh=VYYch6XeureEVUpN2Mw2LknizCfpr7ksjmijCa7rU1g=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=rLC1ZtKKQz/w3rWWZq3TKUV/zuLWA/i5C2TumbCg0h0Xb7Lp86/fB4jZMTKwYXZb5yfz95WUDpHm37VO1P1ubAipr8ot0jMQyPkHbP5PrKJ5NHSIaeNOXFvAxzJbrrEGz/UEqv25E5nf26LToGrvsYR2ISu2WsiKXH5BLxAk6BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uxb9xEco; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A16aS3m7"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a45f257b81fso230892466b.0;
-        Fri, 15 Mar 2024 02:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uxb9xEco"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412e784060cso17594445e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 02:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710493529; x=1711098329; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TxeRvHu/Cn5xVdouc/KQm2ZkL4m6+rAgdA+KuVZtW9A=;
-        b=A16aS3m77cz0owKtcZeMkgX9IgM7lQ7hzebQO2HHFTUr+OHCnupJkPPh2/XOsafodO
-         lWtaxPbgL1cOnXgNCHIDTf6ShRmhwp+PO3pUGhFByIBNn7c3hOmHwQGGAsHBrPz/vzqF
-         +w7fE+UPDGk3CY9aPtVuMgyhRibynP54Rg5blntNsv8DCwmmJFUhU6q3FL8CXiFnkbHE
-         6gbTa2wDP/HU1+WF8XamGLR0+1MZcgJUlAHDPWYwDnyjIcIpHQi58Zn7yIu6gjYgi1kQ
-         61ONPfdzrJ4a7wV9KisVEDHNkuFgCT7op4VTnxqqEckzPgtvI1f1+CqyhQz+IGUT1GTj
-         apjA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710493565; x=1711098365; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZpMSBa9vXitkcuu7vgMM3w3/yA6IqPigK2dGLCTN5uc=;
+        b=uxb9xEcoW06sfo43xA0iTAYPNc/sHcZzFzBdFoMm+3EOzpxR7jYZ/onGi6nNR8uU/v
+         hl02w0ZJJNgsZcO+8zUMT/ZhxT7Ey0uKjCJnmqRq86yVfuKsQntH3/BKSW6mbMMDPDIs
+         9t6UgkeVK8jQ72uKve4rd1X8oaBEKaVXA+ZkyDOoQYuNXEMneLNEABWHxQUjJBbEpGzY
+         /I+RhDbrsHd9aCGoUaVegA21Y7cErzy+NM5ghfysg2RlnChMoeDwYEyHATPnBBGLmnCL
+         5izbvTWkvXkmUI63aC40YFTXBmYB/uzsyes0oRGna1aEKGa7wfOsaTouDqyBioAxPrT0
+         WaDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710493529; x=1711098329;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TxeRvHu/Cn5xVdouc/KQm2ZkL4m6+rAgdA+KuVZtW9A=;
-        b=VrujilUKcRd1N3Zw3rsDG7ZhDN7XgYjG/kIYaQISvG6lTReQpmoEjyT8L/Vfks/ACr
-         +cvwL4UafM/sk1OBVJvjbm2oLmcKNZWlZTtOVyaoogxFGxAAL09g8nDGCHluM56emdp6
-         aZv1weF4I4465Is1paETWZSTiAlcKd+JIYhqp5J8QmvCBLvV+lyD3onhmniNZpBKXhzi
-         vZ+nKQP+0yyeXpxi4/vQAAv6WPgw5sZ/ZIuyVWmHoh+x65jdWbD5vAM1GSL7swNb2+zZ
-         RTUxJKGPzBy655yqTTN2BY/E9bc+OPy1nQMe1fixFv1gM6qNbXl1bnOwAUFFWFOVBk1p
-         0asg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEgKDJfs8yC/dOVP3uyQxDuSPv2W5/sAx3kMTofU7kgDl6tsZPJ9tjJxNcDyrVnArqlFRLR6UxbVQjjNtnAiW9v/JKevkkBK3C/ONvH3l91j1NkQmSTeLQLliMRtIncjqtkTwOfDGQ
-X-Gm-Message-State: AOJu0Yw98Mgo7yd9xBkBYVC8ypmPr+xI0GnnDK6H90bZL+a2Si+CvTP8
-	4FJk49SrYQZMWCMd1fpg1Nqf137K9fEgAEJVWIreemBIjsZS76Ye
-X-Google-Smtp-Source: AGHT+IGB2COdTYW4uDyufoSziJPEzTPjjGdlCx1qqcqrkvp10SASXDI5BR5O4vj6BoDuUeBr6psKQg==
-X-Received: by 2002:a17:906:8406:b0:a46:7384:3233 with SMTP id n6-20020a170906840600b00a4673843233mr2416679ejx.57.1710493529117;
-        Fri, 15 Mar 2024 02:05:29 -0700 (PDT)
-Received: from vamoirid-EDL-PC ([2001:1458:202:121::101:4e8c])
-        by smtp.gmail.com with ESMTPSA id jz8-20020a17090775e800b00a461d2a3374sm1495608ejc.47.2024.03.15.02.05.28
+        d=1e100.net; s=20230601; t=1710493565; x=1711098365;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZpMSBa9vXitkcuu7vgMM3w3/yA6IqPigK2dGLCTN5uc=;
+        b=QXFxVcS9K25oNITgJshKmz/CVt23P9Y7azbjoDSJYl1sqAbsvpWJ5POxrUIB0GWbim
+         8Yg2tYoEWERrLiNdCylQ4N8xCYOWFTCO27pYDetY5bcgC0yBE6sI5HGB5CrhOyqnlSdg
+         zNjF30QmyQDBWBV9Fy/BXlUu/OI5MrvJMuWN4x3YM/Qn5xj4SeBilXhQozcdoxrkijAt
+         U4s/ac77SbEZbevasmJj1LSo8OYUL4c6bKOboZsAcRdGWSKAL0xNpYofjxK4FFCNS5+m
+         RrAb8iq4hjMlIJ7CSBOGmpR69z/cFBRBc2GNMe1Js8ftPBumDwiTqH/bHkLfvnh5Wfj0
+         qmvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWh+YS3+rnSt5i9KTJ5jltwzJ6uHMaQuMr17mrWYOrk38sEcpcgdkGrlSD3zbxS95MXKd9vuLCEYMqcGv/HmH9NO6eZ0P+e6/73dK4A
+X-Gm-Message-State: AOJu0Yz6F9puCZA711o3YZdHhw35bV2q4dzk94+GiMI+7RSKKOetYuK6
+	PxxLLqc4cTwrwASVOuIt0K8zRuL8kBn/3G6M9aHlv5RL5pw/mOLkSculIXOx3Ec=
+X-Google-Smtp-Source: AGHT+IGv2qeT4+XV+fkhSqD7rZTLCUTw8RubHWgYTp3yu9LMq3zgewNkauR43y7qOB4OhUkwae7l8g==
+X-Received: by 2002:a05:600c:4f11:b0:414:37f:2798 with SMTP id l17-20020a05600c4f1100b00414037f2798mr483210wmq.6.1710493564904;
+        Fri, 15 Mar 2024 02:06:04 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:8151:4d0a:14d8:1124])
+        by smtp.gmail.com with ESMTPSA id fj6-20020a05600c0c8600b00414024b2f49sm900044wmb.0.2024.03.15.02.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 02:05:28 -0700 (PDT)
-From: Vasileios Amoiridis <vassilisamir@gmail.com>
-X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoirid-edl-pc>
-Date: Fri, 15 Mar 2024 10:05:26 +0100
-To: Angel Iglesias <ang.iglesiasg@gmail.com>
-Cc: Vasileios Amoiridis <vassilisamir@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>, lars@metafoo.de,
-	andriy.shevchenko@linux.intel.com, mazziesaccount@gmail.com,
-	ak@it-klinger.de, petre.rodan@subdimension.ro,
-	linus.walleij@linaro.org, phil@raspberrypi.com, 579lpy@gmail.com,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] iio: pressure: Simplify and make more clear
- temperature readings
-Message-ID: <ZfQPVlqv7A3zxExl@vamoirid-EDL-PC>
-References: <20240313174007.1934983-1-vassilisamir@gmail.com>
- <20240313174007.1934983-5-vassilisamir@gmail.com>
- <20240314150959.585367b5@jic23-huawei>
- <20240314201718.GD1964894@vamoiridPC>
- <46389801aeb20f18affed86d979aff7a62cf36d5.camel@gmail.com>
+        Fri, 15 Mar 2024 02:06:04 -0700 (PDT)
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
+ <jbrunet@baylibre.com>, Michael  Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob  Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
+ Hilman <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ kernel@salutedevices.com
+Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
+ params
+Date: Fri, 15 Mar 2024 09:58:50 +0100
+In-reply-to: <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+Message-ID: <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46389801aeb20f18affed86d979aff7a62cf36d5.camel@gmail.com>
+Content-Type: text/plain
 
-On Fri, Mar 15, 2024 at 12:22:50AM +0100, Angel Iglesias wrote:
-> On Thu, 2024-03-14 at 21:17 +0100, Vasileios Amoiridis wrote:
-> > On Thu, Mar 14, 2024 at 03:09:59PM +0000, Jonathan Cameron wrote:
-> > > On Wed, 13 Mar 2024 18:40:05 +0100
-> > > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
-> > > 
-> > > > The read_press/read_humid functions need the updated t_fine value
-> > > > in order to calculate the current pressure/humidity. Temperature
-> > > > reads should be removed from the read_press/read_humid functions
-> > > > and should be placed in the oneshot captures before the pressure
-> > > > and humidity reads. This makes the code more intuitive.
-> > > > 
-> > > > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
-> > > 
-> > > To me this makes the use of these calls less obvious than they were
-> > > previously.  The calls are made close to where t_fine is used and
-> > > don't have to go via the indirection of chip_info.
-> > > 
-> > > So I disagree. I think this change makes the code a lot less
-> > > clear.
-> > > 
-> > 
-> > This was mainly driven by the fact that I wanted to avoid reading
-> > the temperature 3 times in case temp, press and humid are enabled
-> > and there are consecutive buffer readings. But thank you for the
-> > proposal I really appreciate it!
-> > 
-> 
-> Hi, just a side note reflecting on this. Depending on your sampling frequency
-> and registers data shadowing, to avoid compensating with different samples
-> between readings, we should be doing burst readings to get a bundle of the
-> temperature+pressure and/or humidity.
-> On the bmp/bme280 and bmp380 this can be done as registers are contiguous on the
-> memory. On the bmp580 this is not a problem as the values are already
-> compensated, you`ll get always the latest reading.
-> 
-> Kind regard,
-> Angel
 
-Hi Angel,
+On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
 
-Thank you for pointing this out! Indeed that's true but I noticed that this is not
-the case for the BMP{085/180} devices. I just feel that some changes might make
-data acquisition/processing faster for a device (like the one you proposed) but
-it might make the code much more unreadable and unmaintanable. I will try and
-see if something could be done in that sense but I feel that keeping it simple will
-be good for everyone!
+> Existing values were insufficient to produce accurate clock for audio
+> devices. New values are safe and most suitable to produce 48000Hz sample
+> rate.
 
-Cheers,
-Vasilis
+The hifi pll is not about 48k only. I see no reason to restrict the PLL
+to a single setting.
+
+You've provided no justification why the PLL driver can't reach the same
+setting for 48k. The setting below is just the crude part. the fine
+tuning is done done with the frac parameter so I doubt this provides a
+more accurate rate.
+
+>
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+> ---
+>  drivers/clk/meson/a1-pll.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
+> index 4325e8a6a3ef..00e06d03445b 100644
+> --- a/drivers/clk/meson/a1-pll.c
+> +++ b/drivers/clk/meson/a1-pll.c
+> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
+>  	},
+>  };
+>  
+> -static const struct pll_mult_range hifi_pll_mult_range = {
+> -	.min = 32,
+> -	.max = 64,
+> +static const struct pll_params_table hifi_pll_params_table[] = {
+> +	PLL_PARAMS(128, 5),
+> +	{ },
+>  };
+>  
+>  static const struct reg_sequence hifi_init_regs[] = {
+> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
+>  			.shift   = 6,
+>  			.width   = 1,
+>  		},
+> -		.range = &hifi_pll_mult_range,
+> +		.table = hifi_pll_params_table,
+>  		.init_regs = hifi_init_regs,
+>  		.init_count = ARRAY_SIZE(hifi_init_regs),
+>  	},
+
+
+-- 
+Jerome
