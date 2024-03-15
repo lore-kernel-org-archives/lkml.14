@@ -1,96 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bumble.maple.relay.mailchannels.net (bumble.maple.relay.mailchannels.net [23.83.214.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6046487B5;
-	Fri, 15 Mar 2024 14:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710513905; cv=none; b=RaHlV50ODyKx0R3v4hOO9GGCtEJlbvp1Elrpo9Jksn5vJl2p9RNDG63MLD/jbT+WvayRMJT2KJRdGSdFe08Tg2+BvqSSW/8AJNunSOD9KKZSYQ9t/jKOPBEB6lmtLE6/qxmBvWueEfCEd97jWnVM2T4k99iLPnRBSC+vhFIWfBk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710513905; c=relaxed/simple;
-	bh=pHSHMrnqR0ZCUlfOmkPFExxeq+HQHfhP88ZBOTpK7+U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YNqxOdDpu5N5/ynQcyLx5R6YIfi4MFo2WxyVtK4wEvtvtXZA4x/yEKuYt5Ss7CWVclNwm8/iyq3f9193uarRMastLCsb3GLmUJWCw0SshoXeGzaDsgrSyZ0YUtZAn1nN9YSyobvIS5C2l0WPtXtQSrbmlBpONxx80FGheIfX/AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5L7FB7Z; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C736381BB
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 14:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710513926; cv=pass; b=u20LFN/TqqbgI1B5gdJtdful+ciPBOKCAuhBvTFr8mFKbF1pN210eA8XnsGHSuVZ2hp4AsOIDzSRvbxyqlum40LNZ+Xm3qDTdhDyfc0v5MVZmc72edKCbeH/PcBZRRs+z7eYg59JzkRDYg3LHQMoJotvggnSVngJsrM6I/Zd8NQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710513926; c=relaxed/simple;
+	bh=UPOVduM4KWXTPI0rPFyER2ipUUmq2vfrHT/ySZHihgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YW3PLezRFr4hStBpUaXoed6RrRH2SwBAVulx34kTt3zGnlzrppQY14FkgMoJx7bnnnIAVJy7EMLK5Lv65WSAGIVUtbYdzW4y/z/WsiuZr5UFsKP+lbdWwhTYP2/zirxZyFRg6nWTTgF5Z2xcyyDcvWyRXizC9EifE/KVb7qedls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=eFFMsEf+; arc=pass smtp.client-ip=23.83.214.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5L7FB7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF12C433C7;
-	Fri, 15 Mar 2024 14:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710513905;
-	bh=pHSHMrnqR0ZCUlfOmkPFExxeq+HQHfhP88ZBOTpK7+U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=k5L7FB7ZPJtTBZL1lfjZb4NkQC98oCeF4hiesYmJWVwHzkLUHvfqxpwCFRRn2kLr7
-	 3Sk8riGIe8rYazkDUkbaNk3wjmXBYybetTp0iyIw9JJLxusH2eLYFaz/mgxoMPsB9x
-	 1BWcqe83XsD5fzeHuS9DJS6AT/jdyfLPXPCHCzJFylPJudi6QXWDGLIQx/atyOkaZO
-	 nknUIiRPIm2cPbsmqTVMaro3/xY32t/CTKgJFeMpjZkN7tdW8vWW3pyP0wHs5ghMmH
-	 /NulkRAvne/o8lYJak4oHcXaZHWRVjibwsJkNHxqMV4UiWftOhisHeEUNYT0KJnH/R
-	 mw2QeyKmdVDtQ==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Fri, 15 Mar 2024 15:44:44 +0100
-Subject: [PATCH v4 7/7] HID: bpf: allow to use bpf_timer_set_sleepable_cb()
- in tracing callbacks.
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="eFFMsEf+"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 31426101E2F;
+	Fri, 15 Mar 2024 14:36:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a228.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 72A04101254;
+	Fri, 15 Mar 2024 14:36:51 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1710513411; a=rsa-sha256;
+	cv=none;
+	b=JbyjpatXgTKNLtkEW0A6UGqVR1AYYKoNhwnrHYWSpRZO6+fCVToCnYvMYwDfH55IIeZpy8
+	wY8czThXwztQTeRt+NjChcVhVvuBRwPMgUcHa/DLjL0A3Yn5glRF+GOf2BOXZTCI+f49Al
+	raR1FtgDOYIMndvaoNsBbqcUOPVX2Cd6kzCBzDPS9SGm6ssbikBEu3N3qVBLmk/q0IEmX0
+	npa/YcqPzTGLEnuwYN0zGrBQObDL+7YOwTI2jFU00Sy8oVT2Xj+rl2YWPbHzho6lMIyiV9
+	3rAvwhY+CBDpMhSCU7cDLtGo7rV9sPKOMvaku38oMtB7yxqdGuj7rVoeJrbWnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1710513411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=UPOVduM4KWXTPI0rPFyER2ipUUmq2vfrHT/ySZHihgU=;
+	b=iYay3OJibjfIpEVN8ZJtv7slcUoaWZ9cXtckU2/t82IZL/8SA+Ey05vLtehstWtNjUiNmM
+	f7c9BX2XCZjZa5wrMnryLmvJZRBFvU+5ntHyZxFitFn8bwJvybxaqySeA7U3Z3dq1wwec5
+	XrbZBLAXkBBwHGHj7xg/mPzaIkQOK2E6PhvzDx7mToGX44xPzt7mtxURcZ1/Z3PF/dbe4J
+	LIi1I8Pzdvb1oL09pJTvKbHv1sX5h8f/GxVrMBvyg4hZCvtlsX3fTypKtOoTWM+UigriRA
+	zDTA641yE9kDa7w3CJt0b3Oey22DHOz75pUmv/25uNbRwoeAZWnc6lkIvCrLSA==
+ARC-Authentication-Results: i=1;
+	rspamd-5f6b6bd7ff-zmxd5;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Sponge-Trade: 13037ad42b6beed6_1710513411878_3166923847
+X-MC-Loop-Signature: 1710513411877:3438096717
+X-MC-Ingress-Time: 1710513411877
+Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.105.100.41 (trex/6.9.2);
+	Fri, 15 Mar 2024 14:36:51 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4Tx6Jf5kvrz1S;
+	Fri, 15 Mar 2024 07:36:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1710513411;
+	bh=UPOVduM4KWXTPI0rPFyER2ipUUmq2vfrHT/ySZHihgU=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=eFFMsEf+zCLCBQQCwfMIDZllHaEjAVVhef+RKDMYsx6NWsyjFuRFLDXnaShsPDP5M
+	 QdiD+hvOLWoyIVbFEeyvg0hKrySq8FJ/txIQ9zHSiBoZ7UDyR2qeeG+kXPYC/QQ6cV
+	 6lV9976qOLyRPFwXwwCKsb7cjZcmCjtj9ajBYfUASfwQpLaYVk3R3V/ZLooegUXddz
+	 oQmK4ZotlNQ8sSzGyajr122BnIIik53laSXwTa5azp/4K7v/JOIB2jmXA3ll1g7ocy
+	 8BCEKQlkRD/AqTxQ20S8hR2kz4pWsd5yIJvsKj0AiZWgOWfiGGKkztr8lLbKexCzDg
+	 ZfHoQincNKN6w==
+Date: Fri, 15 Mar 2024 07:36:47 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: akpm@linux-foundation.org, jhubbard@nvidia.com, vbabka@suse.cz,
+	mgorman@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	p.raghav@samsung.com, da.gomez@samsung.com
+Subject: Re: [PATCH 3/3] mm/vmstat: simplfy extfrag_show_print with
+ fragmentation_index()
+Message-ID: <20240315143647.nr6hrtgoejwphh5c@offworld>
+Mail-Followup-To: Luis Chamberlain <mcgrof@kernel.org>,
+	akpm@linux-foundation.org, jhubbard@nvidia.com, vbabka@suse.cz,
+	mgorman@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	p.raghav@samsung.com, da.gomez@samsung.com
+References: <20240314005436.2962962-1-mcgrof@kernel.org>
+ <20240314005436.2962962-4-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240315-b4-hid-bpf-new-funcs-v4-7-079c282469d3@kernel.org>
-References: <20240315-b4-hid-bpf-new-funcs-v4-0-079c282469d3@kernel.org>
-In-Reply-To: <20240315-b4-hid-bpf-new-funcs-v4-0-079c282469d3@kernel.org>
-To: Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710513885; l=1287;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=pHSHMrnqR0ZCUlfOmkPFExxeq+HQHfhP88ZBOTpK7+U=;
- b=neXHs6HmauwDcYyxZkB2zyEGDGkjjsb/jB2ZqXOyT2E7aR7xhzlaptJaXq5rkpXzM0p9yQoUE
- 2jmWyF+kMQFBp22CSeJfCS4DRsYQJC8xJunXMCcIiD+QUwgS+VGwPxv
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240314005436.2962962-4-mcgrof@kernel.org>
+User-Agent: NeoMutt/20220429
 
-Export the sleepable kfuncs we have on HID-BPF in tracing bpf programs,
-but with the condition of being used in a sleepable context.
-This allows to use the bpf_timer when used in a sleepable context
-through bpf_timer_set_sleepable_cb() and initiate work from a device event.
+On Wed, 13 Mar 2024, Luis Chamberlain wrote:
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+>fragmentation_index() already uses the stack for the struct contig_page_info,
+>so just use that and enhance the documentation for fragmentation_index().
+>
 
----
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-no changes in v4
-
-no changes in v3
-
-new in v2
----
- drivers/hid/bpf/hid_bpf_dispatch.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid_bpf_dispatch.c
-index e1a650f4a626..e27c2ffb4f60 100644
---- a/drivers/hid/bpf/hid_bpf_dispatch.c
-+++ b/drivers/hid/bpf/hid_bpf_dispatch.c
-@@ -544,6 +544,11 @@ __bpf_kfunc_end_defs();
-  */
- BTF_KFUNCS_START(hid_bpf_kfunc_ids)
- BTF_ID_FLAGS(func, hid_bpf_get_data, KF_RET_NULL)
-+BTF_ID_FLAGS(func, hid_bpf_allocate_context, KF_ACQUIRE | KF_RET_NULL | KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, hid_bpf_release_context, KF_RELEASE | KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, hid_bpf_hw_request, KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, hid_bpf_hw_output_report, KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, hid_bpf_input_report, KF_SLEEPABLE)
- BTF_KFUNCS_END(hid_bpf_kfunc_ids)
- 
- static const struct btf_kfunc_id_set hid_bpf_kfunc_set = {
-
--- 
-2.44.0
-
+>Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
