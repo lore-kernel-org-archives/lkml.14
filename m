@@ -1,163 +1,110 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E05C28DB5
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 12:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A011A27E;
+	Fri, 15 Mar 2024 12:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710506806; cv=none; b=NURRGop2HSymL+MR8VWojJHjXGNblv+hjRKVrZzTAj2NBLMLHR+ssu0iTeTv/BAfQ9uDwI99duVfSzd7dZsxTW8GFTl+uBr8Wg7BJBh5Kw2cPlWKvnjqPHjFCVPM8bWRsTEzpPzWQHJ4qEz29iBQc8qEpmqi0M40r24bHXB4aT4=
+	t=1710507035; cv=none; b=cW8VRpfibzoinNMffTud/4OBNVW+32cIW5R+hU1wD8J4sHS61CtwvUo36UND+noatf2J2P5TO+RbyU8zg0DIL7oj7r0ouh0nQbRWzrWBRcjy1EeYXzBgO2/D08/bXRniuTZJOaZ1C2HBAMvkgHxYLcgBxDTDGRVVRb3NNSa4pWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710506806; c=relaxed/simple;
-	bh=hB8oK/5XlyqfQU8m5HzAPGAAkaEN7H/T9Hy28QbhaJ4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nDegnyCG01Q/n7DPM/8Yn1iigD2KW+qw437vTXOg9SfxRurYyAcqbT6mJazvRf7MHNb1BUkrziGE0mV3kdXevYi/CNO9AW2nw2gl1wKz5suFMHigGSEVBLdDEfSUlDrju1k04AfI3SPECTWzxZGuiuSW7zjLMt8HMr3qsj6PgBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=tRJTmdfu; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="tRJTmdfu"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-413f8f5541eso8886695e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 05:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1710506802; x=1711111602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kx9d4AYyT6utH8rhaCIhMxw7irDgaTXcHKpwOBwjTHs=;
-        b=tRJTmdfuPmCivpM6dGfWpFo8WvOXjW3TdmZnACkB8EIJ1+GegSP2b3Bl525JgcOA4Z
-         xECGeYQAm9bcOniB0uwS6TQC+xYGd85hQyw7u73r8pEM6mzvoLPeiVNxWFbsmeyqz4ay
-         JV0K1UOwiEakhbUo+YL00SfhdeQrnhUariToxO+0r2K8NVLH4gg+JttaMEUeH7w+2dla
-         xXcEtnYQ5HQFl42ZuGo7Yo/uep42k3m25ixlan0LZK/Rx0pUkfQVK7m5Zf8ffMFAt79V
-         uU/jf86AyInIrahXFku5RgsnH4Uax51Je16NwYsSAktnlY5T+4uy1MHkt/2ubt33CdGQ
-         PNoA==
+	s=arc-20240116; t=1710507035; c=relaxed/simple;
+	bh=yZ++9mZRTWnQ7uIb+cIR8++iDrMUYgLLXOi3IXYJ0Qc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F2BWjx3ImodXWzvzXh4yrerHjFGdjvli3eiHW6gwQKOm8fgFQeqMV1la6nRpHfYDZUZt96FEtwqIucH+uDKUz1p5xSMnOmlouRcKqRmsKsXojyGmYTkyifwXM9HbCqkN6uGxh7B3FGjl7wdL6vuyvpp1hAgLU12LonwrpqnCCGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-609f1f97864so21898917b3.0;
+        Fri, 15 Mar 2024 05:50:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710506802; x=1711111602;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Kx9d4AYyT6utH8rhaCIhMxw7irDgaTXcHKpwOBwjTHs=;
-        b=MLi8VxMVu6o5PHErj2YSKYPEYsiP1OlLNx4oTC6ScrgcjwYXFQjByirPyCMJm+DDTD
-         P9HZBwJftfbBJgbTVptXG+l54xmsrWrnvuY+xgE5EmmM5eNBZCM9J5PQCsZB+XuOSMoj
-         JC+qXJQQD2hBX9y0hlZQtaTJxEgjjzfIf2VHZA15dvZLt1jNBNRQHaiYS1ir4n1m7yil
-         SXXLglELkWKcr/IN/cSPyKuILi90JI5vpujWaoGrdP0XfDqy3Xh3Bekl1Gp4j8HkfDfR
-         TNBzTzBwdRKr+Le1ZPk/b3I36pGKxXjPk+hygOOYlOaUsTxIM5RIGgHj8X6MgDkYO0ST
-         OQpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXS9qYizX5v39tDsae4FhqsACpIUPtiPear8WClPfFohX1VTHcG5UbgqqEDalgXq9eeRQEDc/fOgguzyEP6cR6IhNzoRxsVpmSOzcyT
-X-Gm-Message-State: AOJu0YzA7sNvhEQCxINIYurdNavdF5TKkzG90KAmN9OJRaxsKoTFc8JG
-	hKtjw9ltvYGEgJAgi+bzBzVn7iTewIqrX1QC+z1sG6LF4BHhnnpiLZUVG2tvZkM=
-X-Google-Smtp-Source: AGHT+IHzHryvy+XKoDE8f2x1YmS2YdHacbOh+fS/Wum7//zeltKmmmsFfRAAIsN0rqJ6s/WmkhYYYw==
-X-Received: by 2002:a05:600c:4ed4:b0:414:37f:276f with SMTP id g20-20020a05600c4ed400b00414037f276fmr718232wmq.22.1710506801605;
-        Fri, 15 Mar 2024 05:46:41 -0700 (PDT)
-Received: from localhost ([147.161.155.79])
-        by smtp.gmail.com with ESMTPSA id j3-20020a05600c1c0300b004131310a29fsm5815498wms.15.2024.03.15.05.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 05:46:41 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,  Jens Axboe
- <axboe@kernel.dk>,  Keith Busch <kbusch@kernel.org>,  Boqun Feng
- <boqun.feng@gmail.com>,  Christoph Hellwig <hch@lst.de>,  Damien Le Moal
- <Damien.LeMoal@wdc.com>,  Bart Van Assche <bvanassche@acm.org>,  Hannes
- Reinecke <hare@suse.de>,  "linux-block@vger.kernel.org"
- <linux-block@vger.kernel.org>,  Andreas Hindborg <a.hindborg@samsung.com>,
-  Wedson Almeida Filho <wedsonaf@gmail.com>,  Niklas Cassel
- <Niklas.Cassel@wdc.com>,  Greg KH <gregkh@linuxfoundation.org>,  Matthew
- Wilcox <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,  Alex
- Gaynor <alex.gaynor@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>,  Benno Lossin <benno.lossin@proton.me>,
-  Alice Ryhl <aliceryhl@google.com>,  Chaitanya Kulkarni
- <chaitanyak@nvidia.com>,  Luis Chamberlain <mcgrof@kernel.org>,  Yexuan
- Yang <1182282462@bupt.edu.cn>,  Sergio =?utf-8?Q?Gonz=C3=A1lez?= Collado
- <sergio.collado@gmail.com>,  Joel Granados <j.granados@samsung.com>,
-  "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,  Daniel Gomez
- <da.gomez@samsung.com>,  open list <linux-kernel@vger.kernel.org>,
-  "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-  "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-  "gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 1/5] rust: block: introduce `kernel::block::mq` module
-In-Reply-To: <ZfQ8Wz9gMqsN02Mv@fedora> (Ming Lei's message of "Fri, 15 Mar
-	2024 20:17:31 +0800")
-References: <20240313110515.70088-1-nmi@metaspace.dk>
-	<20240313110515.70088-2-nmi@metaspace.dk> <ZfI8-14RUqGqoRd-@boqun-archlinux>
-	<87il1ptck0.fsf@metaspace.dk>
-	<CANiq72mzBe2npLo=CVR=ShyMuDmr0+TW4Gy0coPFQOBQZ_VnwQ@mail.gmail.com>
-	<87plvwsjn5.fsf@metaspace.dk>
-	<CANiq72neNUL1m0AbY78eXWJMov4fgjnNcQ_16SoT=ikJ3K7bZQ@mail.gmail.com>
-	<8734ssrkxd.fsf@metaspace.dk> <ZfQ8Wz9gMqsN02Mv@fedora>
-User-Agent: mu4e 1.12.0; emacs 29.2
-Date: Fri, 15 Mar 2024 13:46:30 +0100
-Message-ID: <87o7bfr7bt.fsf@metaspace.dk>
+        d=1e100.net; s=20230601; t=1710507031; x=1711111831;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ivoZmxEALrbzayodyx4CCgfm5Q7S/PrGQ+I3gRQIWs4=;
+        b=hQeeEis/7psoi1MTnQ7CtjUJWh99AUg2JxS7UQ5N5UiqxE42fgrR5TFgNpnKgVDwHr
+         NXSueefiD7dw9ajUkl9/B7HaniqsKdchPYPNki9Cf0Hk4beB9tCIsa69AxZ0eMRi++PN
+         8OVPYNCdeE/UjKPmBFA6BIgrDwfIIkr9kSo7+yfpF6PoJJg2xF1yp2pPe8DrhTHEzy98
+         Hhni6KSjm5tQJACGfFi7d0WwclDBtZ/O/cqHEvCDL6x5PbntZyj3+7BmuKwHwPM2XyTw
+         Ft6S5AZHIyIkbfqyUNpuax96vLUrAWpkCC4PnxfVh3rtdSP+dDDLGHOHXteiMvhooyJ2
+         c+9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXMZeBVAEueuWXYC/AWLdYvFXd0G8z12fXjxGwgmRfkqPM3/lSYWVk5XC9/Hu5L0+/cChD0TCaIVcvFNxJw4nLlpUFrx5/YQ+n15KHTFnGpV1Sc7uY8jq8V5ocPW/2EDsM0PaLF8NRDKfRcTnzpUKksk5Ro8uov3DXCsL1HDhUIRP+VPhu7jig0jifmaBDwi3f6ZyMPr16jQNrFsH9RC6eaMCRU85Ul
+X-Gm-Message-State: AOJu0Yz/PCaGZJxUx4DC2FDNy0ZBokpqs+AOaLale5xL+4SlL88abohf
+	aG0XrJD6j7MbHFZftfdk1lDX8vYK9eUspN7CTqrwouaurp9AanBABdiSdCMyDC4=
+X-Google-Smtp-Source: AGHT+IEmS8g2iNeBgyEDXZk2Osy4xNh80oEvdvKlte5F2t6hpD+If6DD3+7RcwGtAw19BciKPC86yg==
+X-Received: by 2002:a25:cec8:0:b0:dcc:e187:6ceb with SMTP id x191-20020a25cec8000000b00dcce1876cebmr4836884ybe.17.1710507031406;
+        Fri, 15 Mar 2024 05:50:31 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id c14-20020a25a2ce000000b00dcda3959006sm671960ybn.33.2024.03.15.05.50.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Mar 2024 05:50:30 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-609f359b7b1so24140967b3.1;
+        Fri, 15 Mar 2024 05:50:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiosd1+enT/pyUgGY28LlMefvfiGVCrPdqmaUqMwfp77KeaMY9u1HwvzTcsRYqayhftZ8DwnqlRXbIv6yIo67z0xFFapvBHz4tOgEVUXXbRzDE4aTjIFOgrY87zkydfHMzVMnccSdatK7N/XZizos3Tx8fRx8IQ5pyM7H+IRkQMFMuAemGTHAgytbbfmesGTZN8dc24qx3X+ChKlhVfOudf/2eXe6i
+X-Received: by 2002:a0d:ce81:0:b0:60b:87c4:2e2 with SMTP id
+ q123-20020a0dce81000000b0060b87c402e2mr4717269ywd.5.1710507030599; Fri, 15
+ Mar 2024 05:50:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240315103033.141226-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240315103033.141226-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240315103033.141226-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 15 Mar 2024 13:50:18 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW_WBaGjYmU_RnMnq2T7PeEafAZqyP9Md9g0VUKzgrecQ@mail.gmail.com>
+Message-ID: <CAMuHMdW_WBaGjYmU_RnMnq2T7PeEafAZqyP9Md9g0VUKzgrecQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Fri, Mar 15, 2024 at 08:52:46AM +0100, Andreas Hindborg wrote:
->> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> writes:
->>=20
->> > On Thu, Mar 14, 2024 at 8:23=E2=80=AFPM Andreas Hindborg <nmi@metaspac=
-e.dk> wrote:
->> >>
->> >> The way the current code compiles, <kernel::block::mq::Request as
->> >> kernel::types::AlwaysRefCounted>::dec_ref` is inlined into the `rnull`
->> >> module. A relocation for `rust_helper_blk_mq_free_request_internal`
->> >> appears in `rnull_mod.ko`. I didn't test it yet, but if
->> >> `__blk_mq_free_request` (or the helper) is not exported, I don't think
->> >> this would be possible?
->> >
->> > Yeah, something needs to be exported since there is a generic
->> > involved, but even if you want to go the route of exporting only a
->> > different symbol, you would still want to put it in the C header so
->> > that you don't get the C missing declaration warning and so that we
->> > don't have to write the declaration manually in the helper.
->>=20
->> That is what I did:
->>=20
->> @@ -703,6 +703,7 @@ int blk_mq_alloc_sq_tag_set(struct blk_mq_tag_set *s=
-et,
->>  		unsigned int set_flags);
->>  void blk_mq_free_tag_set(struct blk_mq_tag_set *set);
->>=20=20
->> +void __blk_mq_free_request(struct request *rq);
->>  void blk_mq_free_request(struct request *rq);
->>  int blk_rq_poll(struct request *rq, struct io_comp_batch *iob,
->>  		unsigned int poll_flags);
+On Fri, Mar 15, 2024 at 11:31=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Can you explain in detail why one block layer internal helper is
-> called into rnull driver directly? It never happens in C driver code.
+> Document support for the I2C Bus Interface (RIIC) available in the
+> Renesas RZ/V2H(P) (R9A09G057) SoC.
+>
+> The RIIC interface in the Renesas RZ/V2H(P) differs from RZ/A in a
+> couple of ways:
+> - Register offsets for the RZ/V2H(P) SoC differ from those of the
+>   RZ/A SoC.
+> - RZ/V2H register access is limited to 8-bit, whereas RZ/A supports
+>   8/16/32-bit.
+> - RZ/V2H has bit differences in the slave address register.
+>
+> To accommodate these differences in the existing driver, a new compatible
+> string "renesas,riic-r9a09g057" is added.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> - Used a const for V2H SoC instead of enum in items list
 
-It is not the rust null block driver that calls this symbol directly. It
-is called by the Rust block device driver API. But because of inlining,
-the symbol is referenced from the loadable object.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The reason we have to call this symbol directly is to ensure proper
-lifetime of the `struct request`. For example in C, when a driver
-converts a tag to a request, the developer makes sure to only ask for
-requests which are outstanding in the driver. In Rust, for the API to be
-sound, we must ensure that the developer cannot write safe code that
-obtains a reference to a request that is not owned by the driver.
+Gr{oetje,eeting}s,
 
-A similar issue exists in the null block driver when timer completions
-are enabled. If the request is cancelled and the timer fires after the
-request has been recycled, there is a problem because the timer holds a
-reference to the request private data area.
+                        Geert
 
-To that end, I use the `atomic_t ref` field of the C `struct request`
-and implement the `AlwaysRefCounted` Rust trait for the request type.
-This is a smart pointer that owns a reference to the pointee. In this
-way, the request is not freed and recycled until the smart pointer is
-dropped. But if the smart pointer holds the last reference when it is
-dropped, it must be able to free the request, and hence it has to call
-`__blk_mq_free_request`.
 
-We could tag the function with `#[inline(never)]`, but that would impact
-performance.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Best regards,
-Andreas
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
