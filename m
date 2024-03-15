@@ -1,97 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C171B7EA
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671821B960
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710500114; cv=none; b=sB9psUxIS4HiFhx4zvUCVgK2AZ55EFrdAqWcxXGSo12U3ZSzP+Dgzp8ji0A2tIalypNpI8pxPVLjyRHJLIJSKMLFxoaD1gxxXH6WkVX6j4jn+Q/ERazmrzmx2B3FwJkNZWZ9LZ8xueRkI0J6vM3EJ8Cei7B55It+5CSv3zDGDZ4=
+	t=1710500122; cv=none; b=q8b2ASTTGETLnEhyMFhI0/78Kn+dW33NekF+GYaZNIfQmanrWzGq02f3/Zr7pBzK/oSaxBlZE7cwhJhgrBwrwF0CDSSxun6bViF3zSBX4jd6UaX7Py6fSqR6LuxuK6Xm2fPc1FoeiipK/3tI6/L6MChAN433O++g+qlQXwHXh/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710500114; c=relaxed/simple;
-	bh=egKFcFy18uI/dVjWoyZvuW3VcQWXWF1qul2r340oNl0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=T8ehgNyE8NgFd4YM7GQsYOW0p2sn16H9UBkynGw0zZXLRuq8Ka2gxtNNx9OPHxrPew1t9lVcdhJJ7hzqYgO1SJxgnmnRpGeGKenEJ6vCi0TH25wKAs+yM/npwncNPPDkUD/JM0ENBHMh7jbI1Md41qcnkUGBj414H6VX6IkSuPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NSOlEfkO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSOlEfkO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710500112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WKnajArjwdqkW9mul8mVcKUVfLxGaXnxMQu51jtLd0s=;
-	b=NSOlEfkOJkWYSZFK4TXL6QW6bzIZNoTwaDmk2KihS0kRepk5MxLiq3SXE/u6oEheVUZdqS
-	DjBSTC+1vNLrk8cdsqDskDZr4+CcFXGxXtKZvL82adGWPofLYrjJr7GejaygGMlY8ae9oS
-	3UqwJWrnYXRvzRkAqgyKfwOMtRRqYRk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495--O4F-DR8Na-mU1jF5OHwsA-1; Fri, 15 Mar 2024 06:55:08 -0400
-X-MC-Unique: -O4F-DR8Na-mU1jF5OHwsA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C8513851780;
-	Fri, 15 Mar 2024 10:55:07 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A8484492BD0;
-	Fri, 15 Mar 2024 10:55:07 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] selftests: kvm: remove meaningless assignments in Makefiles
-Date: Fri, 15 Mar 2024 06:55:07 -0400
-Message-Id: <20240315105507.2519851-1-pbonzini@redhat.com>
+	s=arc-20240116; t=1710500122; c=relaxed/simple;
+	bh=7l16go4HlTlmkmb7nNzK3ps56IPRMeTS+78pgRjsfgY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f/ckq5kpgE/ljjB/zSy1HbD/93X/TdQsBm+g2wQfYKMMFRiRfq4gCZF8F9qd6lJ40ZuKRjNmDOo00j0upLwuXZnLURPF/hv6EGQfMIsZMemyUoN7tXpAh6uWmZEjZfSVEp0Ab9gV677JAFQFM4yk/yXPAG27FphAgju0BeKZbWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB7A8C15;
+	Fri, 15 Mar 2024 03:55:53 -0700 (PDT)
+Received: from [10.57.69.160] (unknown [10.57.69.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026733F762;
+	Fri, 15 Mar 2024 03:55:15 -0700 (PDT)
+Message-ID: <b8b3d0d9-7764-4fc4-b848-c02dd06fccc6@arm.com>
+Date: Fri, 15 Mar 2024 10:55:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/6] mm: madvise: Avoid split during MADV_PAGEOUT and
+ MADV_COLD
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-7-ryan.roberts@arm.com>
+ <ffeee7da-e625-40dc-8da8-b70e4e6ef935@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ffeee7da-e625-40dc-8da8-b70e4e6ef935@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-$(shell ...) expands to the output of the command. It expands to the
-empty string when the command does not print anything to stdout.
-Hence, $(shell mkdir ...) is sufficient and does not need any
-variable assignment in front of it.
+On 15/03/2024 10:35, David Hildenbrand wrote:
+>> -        if (!pageout && pte_young(ptent)) {
+>> -            ptent = ptep_get_and_clear_full(mm, addr, pte,
+>> -                            tlb->fullmm);
+>> -            ptent = pte_mkold(ptent);
+>> -            set_pte_at(mm, addr, pte, ptent);
+>> -            tlb_remove_tlb_entry(tlb, pte, addr);
+>> +        if (!pageout) {
+>> +            for (; nr != 0; nr--, pte++, addr += PAGE_SIZE) {
+>> +                if (ptep_test_and_clear_young(vma, addr, pte))
+>> +                    tlb_remove_tlb_entry(tlb, pte, addr);
+>> +            }
+>>           }
+> 
+> 
+> The following might turn out a bit nicer: Make folio_pte_batch() collect
+> "any_young", then doing something like we do with "any_writable" in the fork()
+> case:
+> 
+> ...
+>     nr = folio_pte_batch(folio, addr, pte, ptent, max_nr,
+>                  fpb_flags, NULL, any_young);
+>     if (any_young)
+>         pte_mkyoung(ptent)
+> ...
+> 
+> if (!pageout && pte_young(ptent)) {
+>     mkold_full_ptes(mm, addr, pte, nr, tlb->fullmm);
+>     tlb_remove_tlb_entries(tlb, pte, nr, addr);
+> }
+> 
 
-Commit c2bd08ba20a5 ("treewide: remove meaningless assignments in
-Makefiles", 2024-02-23) did this to all of tools/ but ignored in-flight
-changes to tools/testing/selftests/kvm/Makefile, so reapply the change.
+I thought about that but decided that it would be better to only TLBI the actual
+entries that were young. Although looking at tlb_remove_tlb_entry() I see that
+it just maintains a range between the lowest and highest address, so this won't
+actually make any difference.
 
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 19f5710bb456..741c7dc16afc 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -277,7 +277,7 @@ TEST_DEP_FILES += $(patsubst %.o, %.d, $(LIBKVM_OBJS))
- TEST_DEP_FILES += $(patsubst %.o, %.d, $(SPLIT_TEST_GEN_OBJ))
- -include $(TEST_DEP_FILES)
- 
--x := $(shell mkdir -p $(sort $(OUTPUT)/$(ARCH_DIR) $(dir $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ))))
-+$(shell mkdir -p $(sort $(OUTPUT)/$(ARCH_DIR) $(dir $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ))))
- 
- $(filter-out $(SPLIT_TEST_GEN_PROGS), $(TEST_GEN_PROGS)) \
- $(TEST_GEN_PROGS_EXTENDED): %: %.o
-@@ -309,7 +309,7 @@ $(LIBKVM_S_OBJ): $(OUTPUT)/%.o: %.S $(GEN_HDRS)
- $(LIBKVM_STRING_OBJ): $(OUTPUT)/%.o: %.c
- 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c -ffreestanding $< -o $@
- 
--x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
-+$(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
- $(SPLIT_TEST_GEN_OBJ): $(GEN_HDRS)
- $(TEST_GEN_PROGS): $(LIBKVM_OBJS)
- $(TEST_GEN_PROGS_EXTENDED): $(LIBKVM_OBJS)
--- 
-2.39.1
-
+So, yes, this will be a nice improvement, and also prevent the O(n^2) pte reads
+for the contpte case. I'll change in the next version.
