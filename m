@@ -1,102 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 307964CB2B;
-	Fri, 15 Mar 2024 17:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CFF4CB55;
+	Fri, 15 Mar 2024 17:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710523603; cv=none; b=YflbCD5D3GMSEBC7M2mQPJBfg9P73rIZaJFiKGMYlBXNjckfd3c0mhSY7l6o6vVdUVVZTyioX4dym2RTscTNM4m/MgzULmlM5xyCVV0KuqZ1y1UF1bCeSePeLQmKjvBnxb4+B524ADZXbhJAQGdNmQ4cy534/gkqkPAa+ikftho=
+	t=1710523604; cv=none; b=P2ZEEt1l7qGqiGmcbrgo8PRa7nedhmU3UC72Ohave3yeSwviBF9VO2qSF9qnPd/iQPaZ84NeBps/6zZz4Nu8Rg6LNNjFoXB49e8e1GlgbGu2XdMqubOY0FOfh2Mpqe6Rbkc7TdJAbeERINV7Eqg0AlnH4A98dRbsEEK2iMEeIQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710523603; c=relaxed/simple;
-	bh=kppvzE8hmVDe4CqcOZjfH/zMBxgvlpknYDUEUNtJmLY=;
+	s=arc-20240116; t=1710523604; c=relaxed/simple;
+	bh=b0NPVoRfXgblGxVCKQfzT2OEWtrPIrXoAQnfrFqKt10=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KVF+RGib7EdTjItXo3RNZ9QfL3Le6HpddXeAVlmWq7PaapksTx7PeK0EdPSs+/tR5sw4tKwg+NZp9K4edzBXalhy/NYb3rAr+C8W0Sx/Qm8MIr2RVDVd2Id51Qo9huLdt66CLgoV8gTiHK1k7eLNzYTcoah9op5jJoUp3t6Prow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B4AC15;
-	Fri, 15 Mar 2024 10:27:15 -0700 (PDT)
-Received: from bogus (unknown [10.57.81.245])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2A323F762;
-	Fri, 15 Mar 2024 10:26:35 -0700 (PDT)
-Date: Fri, 15 Mar 2024 17:26:32 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Maulik Shah <quic_mkshah@quicinc.com>, andersson@kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>, ulf.hansson@linaro.org,
-	swboyd@chromium.org, wingers@google.com, daniel.lezcano@linaro.org,
-	rafael@kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	jwerner@chromium.org, quic_lsrao@quicinc.com,
-	quic_rjendra@quicinc.com, devicetree@vger.kernel.org,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Rob Clark <robdclark@chromium.org>
-Subject: Re: [RESEND v4 3/3] arm64: dts: qcom: sc7280: Add power-domains for
- cpuidle states
-Message-ID: <20240315172632.6zxwj4enq4tddbb3@bogus>
-References: <20230703085555.30285-1-quic_mkshah@quicinc.com>
- <20230703085555.30285-4-quic_mkshah@quicinc.com>
- <CAD=FV=XWH+Eoa9XjDns--NSDTZHeUwTdrX_r_QZhSPpbZNwz+w@mail.gmail.com>
- <20240315152431.sckqhc6ri63blf2g@bogus>
- <CAD=FV=UD1nuxryvWH=Mi7E+QzMoa7xCHebY0DtZCAVmEW3ZeAg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBFargpL9gNgfJvNiwwx7jhxl9X36vTsi/hdY0WhsZau89/wdM/qV0CVwrKLtw1JmK0DXyS+DM5VYhsl2DAEYgZZcrm40cwiVLoweGLlabWyZNx5qvyfSmyB/WjPPaVo0ePxnVFFrX1AnTY6VKVIW5waiL/PA8iSegkH/VAONi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bp4OKRwl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bp4OKRwl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60598C433C7;
+	Fri, 15 Mar 2024 17:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710523603;
+	bh=b0NPVoRfXgblGxVCKQfzT2OEWtrPIrXoAQnfrFqKt10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bp4OKRwlby5YQT52s4vye+yeKgE8iovOoAuuNQxzS551d8W2aDpmMmSiLvH27hv2W
+	 5xI0s31RCpBrsbKeDvSbMW/V4B5ZMKKlyOOd8xhfSddg567dS+MBH4+Y/c/oYh6ZXM
+	 lLKO0kQ2twUimmlPqhuP7FGLgSk0oEMzoXyM9rY3u/l9nxCEOUssiAFrcNk1Or7FEB
+	 yizi9Ex+SutWy0bcIYOD5rx3ZvOZOEmKKgIAEWcrNX4XTodnrF45+Ap2kDjTUhgWfq
+	 lUSw11rj+UK17zIMtmI09ha6S5RD9plEOfk+6jOV8YqyGEUglJ4Lweff4yahlEX61t
+	 ob0wCHkTWEpEw==
+Date: Fri, 15 Mar 2024 11:26:41 -0600
+From: Rob Herring <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Abel Vesa <abelvesa@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-clk@vger.kernel.org,
+	imx@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v4 3/6] dt-bindindgs: clock: nxp: support i.MX95 Display
+ Master CSR module
+Message-ID: <20240315172641.GB1506658-robh@kernel.org>
+References: <20240314-imx95-blk-ctl-v4-0-d23de23b6ff2@nxp.com>
+ <20240314-imx95-blk-ctl-v4-3-d23de23b6ff2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=UD1nuxryvWH=Mi7E+QzMoa7xCHebY0DtZCAVmEW3ZeAg@mail.gmail.com>
+In-Reply-To: <20240314-imx95-blk-ctl-v4-3-d23de23b6ff2@nxp.com>
 
-On Fri, Mar 15, 2024 at 10:12:12AM -0700, Doug Anderson wrote:
-> Hi,
+On Thu, Mar 14, 2024 at 09:25:12PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> On Fri, Mar 15, 2024 at 8:24 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Thu, Mar 14, 2024 at 04:20:59PM -0700, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Mon, Jul 3, 2023 at 1:56 AM Maulik Shah <quic_mkshah@quicinc.com> wrote:
-> > > >
-> > > > Add power-domains for cpuidle states to use psci os-initiated idle states.
-> > > >
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/sc7280.dtsi | 98 +++++++++++++++++++++-------
-> > > >  1 file changed, 73 insertions(+), 25 deletions(-)
-> > >
-> > > FWIW, I dug up an old sc7280-herobrine board to test some other change
-> > > and found it no longer booted. :( I bisected it and this is the change
-> > > that breaks it. Specifically, I can make mainline boot with:
-> > >
-> > > git revert --no-edit db5d137e81bc # arm64: dts: qcom: sc7280: Update
-> > > domain-idle-states for cluster sleep
-> > > git revert --no-edit 7925ca85e956 # arm64: dts: qcom: sc7280: Add
-> > > power-domains for cpuidle states
-> > >
-> >
-> > IIRC, this could be issue with psci firmware. There were some known
-> > issues which were discussed few years back but I am not aware of the
-> > details and if/how it is applicable here.
-> >
-> > Not sure if you are getting any logs during the boot, if you do have
-> > worth look at logs related to PSCI/OSI/Idle/...
+> i.MX95 DISPLAY_MASTER_CSR includes registers to control DSI clock settings,
+> clock gating, and pixel link select. Add dt-binding for it.
 > 
-> Given that the new firmware fixes it I'm going to say it's not worth
-> looking into any longer.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../clock/nxp,imx95-display-master-csr.yaml        | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,imx95-display-master-csr.yaml b/Documentation/devicetree/bindings/clock/nxp,imx95-display-master-csr.yaml
+> new file mode 100644
+> index 000000000000..ed0ec3a24d09
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,imx95-display-master-csr.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/nxp,imx95-display-master-csr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX95 Display Master Block Control
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: nxp,imx95-display-master-csr
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +    description:
+> +      The clock consumer should specify the desired clock by having the clock
+> +      ID in its "clocks" phandle cell. See
+> +      include/dt-bindings/clock/nxp,imx95-clock.h
 
-But it would be good to know if that is the exact reason, see if it can
-be upgraded, or else we can disable them by default. The bootloader or
-something else can detect the f/w version and enable them so that the
-board with old f/w(if can't be upgraded) can still be used.
-
-Otherwise it is a regression IMO.
-
--- 
-Regards,
-Sudeep
+Forget this header changes here?
