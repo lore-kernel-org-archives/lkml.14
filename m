@@ -1,81 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20263F9F4;
-	Fri, 15 Mar 2024 15:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7D03D97F;
+	Fri, 15 Mar 2024 15:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710516903; cv=none; b=mk1lcQ+qi6uBRXIDkYWsNbpM9DJuBuFkFGrknbAQNg7FOn+gOCMcvtqE5J8gVO0g/v6TKf/hUntO7/g0Cqck3RNIPkZHDen16Eu05JGOorhym3wMkYkSq+hVYyy2RptUN0Zd/ZyFgG2VB/+mDYH2EfXhlyGTR79H/aMUY43FkBc=
+	t=1710517100; cv=none; b=K/PLCvZsnLdQ55SjtWxjbpnh4agNcOvOlhi6Kql9JEH/lu+Y9juj5WBVvHkXj51YVq48FtCINHpZuKwfF7Q8SIChCKkRk/no6XbyvayNB9YfZdPNemj5a1T41GPtdC/IgsXQVqGjZWhJRVlD9mykCu02U7b2LbPJQFj60y3TDbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710516903; c=relaxed/simple;
-	bh=kMvE945U6tZvf5khr6Zgk0+4AmsFWiLJKJFA3XanMDY=;
+	s=arc-20240116; t=1710517100; c=relaxed/simple;
+	bh=Yv7GWG66L6MKS+tklPfllW5x0ebZyHWQk2w657IjuTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiXaRY94wbn1AxpBZnGF+sgK9+iGL/1IDkWyJMtAWt3liJlSkrUKt3GdZ3rXZ9LYS8gPXfpMil5KZzKJGvQx3BTbCbrHIRghk5dG9JuKFZHWjofVed1roVy+Rd6noILn96m48eRFNcYcdL4XZAXIIwRzB3Zs1wQkDn8HyV9ceNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGxd6Yh9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTUb/c5dZaVAtzuDuI9e9esX38HTY0SJ86QLbWzNEKUgjsp7mfYmMmQjjLfS86/GgBSBvsKDjd29zp2hV89lpwKaxTJHX/2R00sa96YZZN1hJkRrG4mTriyB2w2igA2C6jO9BV1Ey4eW5wsNUQkk4/dQm9jHDx0ypogXYDDeQ2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ru4fDqPw; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGxd6Yh9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A00C43390;
-	Fri, 15 Mar 2024 15:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710516903;
-	bh=kMvE945U6tZvf5khr6Zgk0+4AmsFWiLJKJFA3XanMDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oGxd6Yh93OoOgar07GpQnyRiGlV5FsLGb53T7JYs5zqkg1kaksZWhP+O2Sgwi5jSo
-	 viqqkeL74blcV69t45uvIXnZiSBpvLwF9CLvAZws7OWmalWkaKTuHedBe7ewBFd4S2
-	 qPSSy/lgwbV81B+8WMbUalgzaidP7BinvrrckJN/kUMj8dDsEULwEzeOrINg7xdvP+
-	 mmma5ll5yib10JW9sLJXT9IT+tXSSU/48pY3CS8ig5ZlxASs5kE4XDiFg6IBvHqe8l
-	 DYLQYWNx4UcAHS086S6bmTzXrT69i86zaF/JT++NfTma/HkZMqQb57Igz3jD2MnFYX
-	 qdU/oDVF4ZmCg==
-Date: Fri, 15 Mar 2024 15:34:58 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de
-Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
-Message-ID: <fdcb4083-d18b-41ef-a29b-ab1f9fb8bae2@sirena.org.uk>
-References: <20240313163957.615276-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ru4fDqPw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710517098; x=1742053098;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yv7GWG66L6MKS+tklPfllW5x0ebZyHWQk2w657IjuTI=;
+  b=Ru4fDqPw8Qu6EaQ6WXebbZ+6QQmgH3jndCIKOWSLc1c0+NaTHbQ3Y7rN
+   Ke+oU3IDkF3o6ygSWzDufdU1XggYMxjgoKyJZUTa4VNajrrREDtRFZgat
+   nWNTW4Xs6Np/Aq+xgkcmIpIsg1ZKK06WhZtUpqF3Eca/SfCJ3kjb8PDQc
+   5+6u6fosgNG3L5m/3xvI7BraEedrkO0VPwyQsDdRioakzpvle4n0AmkDS
+   vjhwjgqygQ0xY+CIK2qPtEZzya51NZKC/DGy3j/xGWKZ/tzK4CGTyUWto
+   3Eq7imZXrAkLfuzNCVQ4AToN/rMcq/sR9K1VCbbeG119FeCn+cSrMEU7b
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="9225829"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="9225829"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 08:38:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="13115050"
+Received: from liuzhao-optiplex-7080.sh.intel.com (HELO localhost) ([10.239.160.36])
+  by orviesa006.jf.intel.com with ESMTP; 15 Mar 2024 08:38:14 -0700
+Date: Fri, 15 Mar 2024 23:52:04 +0800
+From: Zhao Liu <zhao1.liu@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Shan Kang <shan.kang@intel.com>,
+	Kai Huang <kai.huang@intel.com>, Xin Li <xin3.li@intel.com>
+Subject: Re: [PATCH v6 9/9] KVM: nVMX: Use macros and #defines in
+ vmx_restore_vmx_misc()
+Message-ID: <ZfRupNB+eFNQC9l2@intel.com>
+References: <20240309012725.1409949-1-seanjc@google.com>
+ <20240309012725.1409949-10-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gY9Vlt8Iv6TUAL0x"
-Content-Disposition: inline
-In-Reply-To: <20240313163957.615276-1-sashal@kernel.org>
-X-Cookie: Best if used before date on carton.
-
-
---gY9Vlt8Iv6TUAL0x
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240309012725.1409949-10-seanjc@google.com>
 
-On Wed, Mar 13, 2024 at 12:38:46PM -0400, Sasha Levin wrote:
->=20
-> This is the start of the stable review cycle for the 6.1.82 release.
-> There are 71 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Mar 08, 2024 at 05:27:25PM -0800, Sean Christopherson wrote:
+> Date: Fri,  8 Mar 2024 17:27:25 -0800
+> From: Sean Christopherson <seanjc@google.com>
+> Subject: [PATCH v6 9/9] KVM: nVMX: Use macros and #defines in
+>  vmx_restore_vmx_misc()
+> X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+> 
+> From: Xin Li <xin3.li@intel.com>
+> 
+> Use macros in vmx_restore_vmx_misc() instead of open coding everything
+> using BIT_ULL() and GENMASK_ULL().  Opportunistically split feature bits
+> and reserved bits into separate variables, and add a comment explaining
+> the subset logic (it's not immediately obvious that the set of feature
+> bits is NOT the set of _supported_ feature bits).
+> 
+> Cc: Shan Kang <shan.kang@intel.com>
+> Cc: Kai Huang <kai.huang@intel.com>
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> [sean: split to separate patch, write changelog, drop #defines]
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
+> 
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Zhao Liu <zhao1.liu@intel.com>
 
---gY9Vlt8Iv6TUAL0x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0aqEACgkQJNaLcl1U
-h9AwnQf9Hc6tXCghN0tarwwvf7pVi9DpywhHHyde9n2pzebQ+JHnOyG+d0JUJeOD
-/Az0uk7WwQQxzVCCBnTAOCC0CN7uNvHHTs+Ox0N6USUsyTK1GudedYI6Qxs6e5ds
-VDc46bXBcAptk9EX+fUEeWA3HHEe+orileF1nRT44ve+d68J/oGO9tdDCa0yGVoL
-AXH0l60MweRSoYnjAJidhIJ0jaWzKs4TSkMld6ZkUl9a6rzssIHaOBShr694tpxM
-kOwWrKJQ5NB4IhPg03DV1OT34kQ0Pn7VWpUuDN6iRvevIgIS5tRMPUac5Dsa4xKn
-BQTwIlyHLd0SAb+22dXkokCa5J+HzQ==
-=LXLx
------END PGP SIGNATURE-----
-
---gY9Vlt8Iv6TUAL0x--
