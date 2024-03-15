@@ -1,32 +1,32 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94D05A4D5
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 23:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE425B5C0
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 23:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710544175; cv=none; b=lWhtRdd6mc2j7abnoVPyiGauF8rIACMWsmWaj8kL7xj+7lhDfWQQ2Ksz0qCSA5K8ecPg8IWGrbAixP7VQ3jI28YefpCM4NLbX0u0tfGFCrOrlrEtjasH9J52u0FG2r+l3Kr/y7GU9TuqCMLwn1r5LCtUJjapi9hQmmSfkK6V74Q=
+	t=1710544178; cv=none; b=JyOwy08hNXpe8/HmlqJXI92+1Bl6nEQ2KZy2chDxf9HP4/ra7+YCwz4FqAKxkoCtCMEsYpRUF01j7mneTIWu/iFtRUycHuSo//IDaVDOjFTR2OL3QvMwMnsneGL4a1CYcj4vH2A7fOlVFZnxh7pG9jQ82AXzbBwtGHSb5hI3zAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710544175; c=relaxed/simple;
-	bh=W1v5F0BWjUcXEzaN4Uw2sMp+nMFJwXxu31hI5lhNfK4=;
+	s=arc-20240116; t=1710544178; c=relaxed/simple;
+	bh=h4cojU8kwWfz/UTtLKse1V3hNWYPjNuN24lw+Cpjhno=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=koYfrssRRLXbxP3/qpV50cmNSk9ysCxR3/D3XM5WTWzIFPpTY6dUBiSnp9Q8/fbfDArt+jmQEbn7SmwG1cd21Zmq+Lw31wfylUqEVRue7lzC7115VYOihV2jbhjwGy4lJ+cYgVBSd82ddGyHCpf2zwo80Irltc95MsKv8nSBsh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sCTuaiSC; arc=none smtp.client-ip=95.215.58.183
+	 MIME-Version; b=fIJEyuRI5+RuG4IA8fElcFUOoqRCT8rkFi/4QXqu5K+1kFeNpNqkAPbxUWljxjJIwm+CXnK4ysDbOZGwUefTC4olS+Aq8Uxw7pAzoys7t3XQgtHJkqdwyKtvqWpOgLn6aIODMJqI+jW8iq9FAw5IYRbA4L4pDge0Kpn8itVwCzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tTOCd92z; arc=none smtp.client-ip=95.215.58.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sCTuaiSC"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tTOCd92z"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710544169;
+	t=1710544174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x3+PPHKFdpXChJ2kv+csEq7dgWK3ohjxhbsPdG1wSL8=;
-	b=sCTuaiSCAibV4U3YanvC1CP7RQ4P/1K1uVl4TF+QK3DoU//lK/I48pIMz7ptYb/yNP48IV
-	1EGWc9lPRUdMfu7SNC87Rl5ZkIedou7jEXCMxqE3IHEIhcF6SexqcRCgcOwl/I0QqPYYuF
-	FnBDtEn2cPx1zIM/RQVpgv64myIUmRo=
+	bh=2iCejvqA5IbzASiXQE6xrf0mIzF3OuUDUKlOJcBerFY=;
+	b=tTOCd92zqEXX69LmQS9XAiZrEQdbzzyrOmbVeN3kSGIjYq/h/7Vz38DXpQE72l7TTNH8cC
+	2+SgkUQBW8h2oQ2tM+N9gEo393sCF4tto1OlQOcdFOrUagGkmLIm9UF45kodIDTnJy3nsU
+	7UoG7DkoiKNQpGH0z4W00x/+zHpRBY4=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -39,9 +39,9 @@ Cc: David Airlie <airlied@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	Daniel Vetter <daniel@ffwll.ch>,
 	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH 3/6] drm: zynqmp_dp: Add locking
-Date: Fri, 15 Mar 2024 19:09:13 -0400
-Message-Id: <20240315230916.1759060-4-sean.anderson@linux.dev>
+Subject: [PATCH 5/6] drm: zynqmp_dp: Optionally ignore DPCD errors
+Date: Fri, 15 Mar 2024 19:09:15 -0400
+Message-Id: <20240315230916.1759060-6-sean.anderson@linux.dev>
 In-Reply-To: <20240315230916.1759060-1-sean.anderson@linux.dev>
 References: <20240315230916.1759060-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -53,192 +53,133 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add some locking, since none is provided by the drm subsystem. This will
-prevent the IRQ/workers/bridge API calls from stepping on each other's
-toes.
+When testing, it's convenient to be able to ignore DPCD errors if there
+is test equipment which can't emulate a DPRX connected to the output.
+Add some (currently-unused) options to ignore these errors and just
+reconfigure our internal registers as we usually would.
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 59 +++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 37 ++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index 8635b5673386..d2dee58e7bf2 100644
+index 24043847dab4..040f7b88ee51 100644
 --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
 +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -279,6 +279,7 @@ struct zynqmp_dp_config {
-  * @dpsub: Display subsystem
-  * @iomem: device I/O memory for register access
-  * @reset: reset controller
-+ * @lock: Mutex protecting this struct and register access (but not AUX)
-  * @irq: irq
-  * @bridge: DRM bridge for the DP encoder
-  * @next_bridge: The downstream bridge
-@@ -299,6 +300,7 @@ struct zynqmp_dp {
- 	struct zynqmp_dpsub *dpsub;
- 	void __iomem *iomem;
- 	struct reset_control *reset;
-+	struct mutex lock;
- 	int irq;
- 
- 	struct drm_bridge bridge;
-@@ -308,7 +310,7 @@ struct zynqmp_dp {
- 	struct drm_dp_aux aux;
- 	struct phy *phy[ZYNQMP_DP_MAX_LANES];
- 	u8 num_lanes;
--	struct delayed_work hpd_work;
-+	struct delayed_work hpd_work, hpd_irq_work;
- 	enum drm_connector_status status;
- 	bool enabled;
- 
-@@ -1371,8 +1373,10 @@ zynqmp_dp_bridge_mode_valid(struct drm_bridge *bridge,
- 	}
- 
- 	/* Check with link rate and lane count */
-+	mutex_lock(&dp->lock);
- 	rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
- 				  dp->link_config.max_lanes, dp->config.bpp);
-+	mutex_unlock(&dp->lock);
- 	if (mode->clock > rate) {
- 		dev_dbg(dp->dev, "filtered mode %s for high pixel rate\n",
- 			mode->name);
-@@ -1399,6 +1403,7 @@ static void zynqmp_dp_bridge_atomic_enable(struct drm_bridge *bridge,
- 
- 	pm_runtime_get_sync(dp->dev);
- 
-+	mutex_lock(&dp->lock);
- 	zynqmp_dp_disp_enable(dp, old_bridge_state);
- 
- 	/*
-@@ -1459,6 +1464,7 @@ static void zynqmp_dp_bridge_atomic_enable(struct drm_bridge *bridge,
- 	zynqmp_dp_write(dp, ZYNQMP_DP_SOFTWARE_RESET,
- 			ZYNQMP_DP_SOFTWARE_RESET_ALL);
- 	zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_ENABLE, 1);
-+	mutex_unlock(&dp->lock);
- }
- 
- static void zynqmp_dp_bridge_atomic_disable(struct drm_bridge *bridge,
-@@ -1466,6 +1472,7 @@ static void zynqmp_dp_bridge_atomic_disable(struct drm_bridge *bridge,
+@@ -628,6 +628,7 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
+  * zynqmp_dp_update_vs_emph - Update the training values
+  * @dp: DisplayPort IP core structure
+  * @train_set: A set of training values
++ * @ignore_dpcd: Ignore DPCD errors
+  *
+  * Update the training values based on the request from sink. The mapped values
+  * are predefined, and values(vs, pe, pc) are from the device manual.
+@@ -635,15 +636,19 @@ static void zynqmp_dp_adjust_train(struct zynqmp_dp *dp,
+  * Return: 0 if vs and emph are updated successfully, or the error code returned
+  * by drm_dp_dpcd_write().
+  */
+-static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp, u8 *train_set)
++static int zynqmp_dp_update_vs_emph(struct zynqmp_dp *dp, u8 *train_set,
++				    bool ignore_dpcd)
  {
- 	struct zynqmp_dp *dp = bridge_to_dp(bridge);
- 
-+	mutex_lock(&dp->lock);
- 	dp->enabled = false;
- 	cancel_delayed_work(&dp->hpd_work);
- 	zynqmp_dp_write(dp, ZYNQMP_DP_MAIN_STREAM_ENABLE, 0);
-@@ -1476,6 +1483,7 @@ static void zynqmp_dp_bridge_atomic_disable(struct drm_bridge *bridge,
- 		zynqmp_dp_write(dp, ZYNQMP_DP_TX_AUDIO_CONTROL, 0);
- 
- 	zynqmp_dp_disp_disable(dp, old_bridge_state);
-+	mutex_unlock(&dp->lock);
- 
- 	pm_runtime_put_sync(dp->dev);
- }
-@@ -1518,6 +1526,8 @@ static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *brid
- 	u32 state, i;
+ 	unsigned int i;
  	int ret;
  
-+	mutex_lock(&dp->lock);
-+
- 	/*
- 	 * This is from heuristic. It takes some delay (ex, 100 ~ 500 msec) to
- 	 * get the HPD signal with some monitors.
-@@ -1545,11 +1555,13 @@ static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *brid
- 					       dp->num_lanes);
+ 	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set,
+ 				dp->mode.lane_cnt);
+-	if (ret < 0)
+-		return ret;
++	if (ret < 0) {
++		if (!ignore_dpcd)
++			return ret;
++		dev_warn(dp->dev, "failed to update vs/emph\n");
++	}
  
- 		dp->status = connector_status_connected;
-+		mutex_unlock(&dp->lock);
- 		return connector_status_connected;
+ 	for (i = 0; i < dp->mode.lane_cnt; i++) {
+ 		u32 reg = ZYNQMP_DP_SUB_TX_PHY_PRECURSOR_LANE_0 + i * 4;
+@@ -692,7 +697,7 @@ static int zynqmp_dp_link_train_cr(struct zynqmp_dp *dp)
+ 	 * So, This loop should exit before 512 iterations
+ 	 */
+ 	for (max_tries = 0; max_tries < 512; max_tries++) {
+-		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
++		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set, false);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -757,7 +762,7 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
+ 		return ret;
+ 
+ 	for (tries = 0; tries < DP_MAX_TRAINING_TRIES; tries++) {
+-		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set);
++		ret = zynqmp_dp_update_vs_emph(dp, dp->train_set, false);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -785,11 +790,12 @@ static int zynqmp_dp_link_train_ce(struct zynqmp_dp *dp)
+  * @lane_cnt: The number of lanes to use
+  * @enhanced: Use enhanced framing
+  * @downspread: Enable spread-spectrum clocking
++ * @ignore_dpcd: Ignore DPCD errors; useful for testing
+  *
+  * Return: 0 on success, or -errno on failure
+  */
+ static int zynqmp_dp_setup(struct zynqmp_dp *dp, u8 bw_code, u8 lane_cnt,
+-			   bool enhanced, bool downspread)
++			   bool enhanced, bool downspread, bool ignore_dpcd)
+ {
+ 	u32 reg;
+ 	u8 aux_lane_cnt = lane_cnt;
+@@ -812,21 +818,24 @@ static int zynqmp_dp_setup(struct zynqmp_dp *dp, u8 bw_code, u8 lane_cnt,
+ 
+ 	ret = drm_dp_dpcd_writeb(&dp->aux, DP_LANE_COUNT_SET, aux_lane_cnt);
+ 	if (ret < 0) {
+-		dev_err(dp->dev, "failed to set lane count\n");
+-		return ret;
++		dev_warn(dp->dev, "failed to set lane count\n");
++		if (!ignore_dpcd)
++			return ret;
  	}
  
- disconnected:
- 	dp->status = connector_status_disconnected;
-+	mutex_unlock(&dp->lock);
- 	return connector_status_disconnected;
- }
+ 	ret = drm_dp_dpcd_writeb(&dp->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+ 				 DP_SET_ANSI_8B10B);
+ 	if (ret < 0) {
+-		dev_err(dp->dev, "failed to set ANSI 8B/10B encoding\n");
+-		return ret;
++		dev_warn(dp->dev, "failed to set ANSI 8B/10B encoding\n");
++		if (!ignore_dpcd)
++			return ret;
+ 	}
  
-@@ -1611,6 +1623,29 @@ static void zynqmp_dp_hpd_work_func(struct work_struct *work)
- 	drm_bridge_hpd_notify(&dp->bridge, status);
- }
+ 	ret = drm_dp_dpcd_writeb(&dp->aux, DP_LINK_BW_SET, bw_code);
+ 	if (ret < 0) {
+-		dev_err(dp->dev, "failed to set DP bandwidth\n");
+-		return ret;
++		dev_warn(dp->dev, "failed to set DP bandwidth\n");
++		if (!ignore_dpcd)
++			return ret;
+ 	}
  
-+static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
-+{
-+	struct zynqmp_dp *dp = container_of(work, struct zynqmp_dp,
-+					    hpd_irq_work.work);
-+	u8 status[DP_LINK_STATUS_SIZE + 2];
-+	int err;
-+
-+	mutex_lock(&dp->lock);
-+	err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
-+			       DP_LINK_STATUS_SIZE + 2);
-+	if (err < 0) {
-+		dev_dbg_ratelimited(dp->dev,
-+				    "could not read sink status: %d\n", err);
-+	} else {
-+		if (status[4] & DP_LINK_STATUS_UPDATED ||
-+		    !drm_dp_clock_recovery_ok(&status[2], dp->mode.lane_cnt) ||
-+		    !drm_dp_channel_eq_ok(&status[2], dp->mode.lane_cnt)) {
-+			zynqmp_dp_train_loop(dp);
-+		}
-+	}
-+	mutex_unlock(&dp->lock);
-+}
-+
- static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
- {
- 	struct zynqmp_dp *dp = (struct zynqmp_dp *)data;
-@@ -1635,23 +1670,9 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
- 	if (status & ZYNQMP_DP_INT_HPD_EVENT)
- 		schedule_delayed_work(&dp->hpd_work, 0);
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_LINK_BW_SET, bw_code);
+@@ -860,7 +869,7 @@ static int zynqmp_dp_train(struct zynqmp_dp *dp)
  
--	if (status & ZYNQMP_DP_INT_HPD_IRQ) {
--		int ret;
--		u8 status[DP_LINK_STATUS_SIZE + 2];
-+	if (status & ZYNQMP_DP_INT_HPD_IRQ)
-+		schedule_delayed_work(&dp->hpd_irq_work, 0);
+ 	ret = zynqmp_dp_setup(dp, dp->mode.bw_code, dp->mode.lane_cnt,
+ 			      drm_dp_enhanced_frame_cap(dp->dpcd),
+-			      dp->dpcd[3] & 0x1);
++			      dp->dpcd[3] & 0x1, false);
+ 	if (ret)
+ 		return ret;
  
--		ret = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
--				       DP_LINK_STATUS_SIZE + 2);
--		if (ret < 0)
--			goto handled;
--
--		if (status[4] & DP_LINK_STATUS_UPDATED ||
--		    !drm_dp_clock_recovery_ok(&status[2], dp->mode.lane_cnt) ||
--		    !drm_dp_channel_eq_ok(&status[2], dp->mode.lane_cnt)) {
--			zynqmp_dp_train_loop(dp);
--		}
--	}
--
--handled:
- 	return IRQ_HANDLED;
- }
- 
-@@ -1674,8 +1695,10 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
- 	dp->dev = &pdev->dev;
- 	dp->dpsub = dpsub;
- 	dp->status = connector_status_disconnected;
-+	mutex_init(&dp->lock);
- 
- 	INIT_DELAYED_WORK(&dp->hpd_work, zynqmp_dp_hpd_work_func);
-+	INIT_DELAYED_WORK(&dp->hpd_irq_work, zynqmp_dp_hpd_irq_work_func);
- 
- 	/* Acquire all resources (IOMEM, IRQ and PHYs). */
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dp");
-@@ -1775,6 +1798,7 @@ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub)
- 	zynqmp_dp_write(dp, ZYNQMP_DP_INT_DS, ZYNQMP_DP_INT_ALL);
- 	disable_irq(dp->irq);
- 
-+	cancel_delayed_work_sync(&dp->hpd_irq_work);
- 	cancel_delayed_work_sync(&dp->hpd_work);
- 
- 	zynqmp_dp_write(dp, ZYNQMP_DP_TRANSMITTER_ENABLE, 0);
-@@ -1782,4 +1806,5 @@ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub)
- 
- 	zynqmp_dp_phy_exit(dp);
- 	zynqmp_dp_reset(dp, true);
-+	mutex_destroy(&dp->lock);
- }
+@@ -877,7 +886,7 @@ static int zynqmp_dp_train(struct zynqmp_dp *dp)
+ 	ret = drm_dp_dpcd_writeb(&dp->aux, DP_TRAINING_PATTERN_SET,
+ 				 DP_TRAINING_PATTERN_DISABLE);
+ 	if (ret < 0) {
+-		dev_err(dp->dev, "failed to disable training pattern\n");
++		dev_warn(dp->dev, "failed to disable training pattern\n");
+ 		return ret;
+ 	}
+ 	zynqmp_dp_write(dp, ZYNQMP_DP_TRAINING_PATTERN_SET,
 -- 
 2.35.1.1320.gc452695387.dirty
 
