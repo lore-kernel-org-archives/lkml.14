@@ -1,137 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5281547A67;
-	Fri, 15 Mar 2024 18:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43E71B810;
+	Fri, 15 Mar 2024 18:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710526184; cv=none; b=a6jPdaINAbekcf5x+1HGXLzyj6hQJbyz7FR6MdfMWAPFwyX6JvUvPmvCBMMMn5Cfjan8nAVszYyDhW7Uh8VXztaoPIkyCvURLo9n7M/Ms0jotCyKXryW4tKkFUM9jiNF28rbdK6VfmxAgeodwnb6YDSZSDgXhCSidx0sN/e+YOE=
+	t=1710526245; cv=none; b=M6nxZ0FF/+/5ZgYTQBRxgUBt5ClyGglOLub2lsp0c2QH1ku4jLG494bCS77TnI5gyn7fs+yHxjEHC8gv1V7IT2nBpiNkGNK28ueK/946pMM27vL1hV7cuERX40Ldf5/3VZBGPfdG6QzDF5mNKwEBsRubDZWOT/M+lTbX/rsaBAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710526184; c=relaxed/simple;
-	bh=x6mPWzzOIcq52zQTpLZRzif+g0BzSJp99JTQQBpC4RM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyUj7jvURVahpnSFdbLgS1GxyYD69ayNGFJrbPy3gLqnDz8Rxs9bs6w98k+D3+yn+n5Z/zJFwJPPH7F4i5qiw+NWKmWVldmG9bDqdEgqTWh9+/LuXMcTSBnegxAMrgBZnaIyHF17OFlyMk34upT5Mxw6PODNTWCRZQ3ZgZeKRVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LP7lO3v7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710526245; c=relaxed/simple;
+	bh=qP8nHFMJofHjWsKPWlJWonj+i8kGEwps7Wxqod3/LYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nblBjGYFC9GrASyImke+ymuJOYd3P2VVNVrAsng9wqahATFW2M4E5rObPzxwZXejzuo5u0HrLTxPQp8AqvtpFm2XlpNNUXeFjpexAaizze/UMPSwU5lHJBGIO4d5hu4/yg0jIipsfiBaBcvYIDpAwBJfb3wsob/UEX2fankOkg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=BZpOY7Gf; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LP7lO3v7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26DA4C433C7;
-	Fri, 15 Mar 2024 18:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710526183;
-	bh=x6mPWzzOIcq52zQTpLZRzif+g0BzSJp99JTQQBpC4RM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LP7lO3v7SLFArBHGkZnqr/WWlQC5EYqftdFmiJa5SjCoY3384X/Veh3ZFIdCs8SUz
-	 +cI2iFwKcYJypwRBRdV/WcySvENlDSUeaiRSlZKWiMECZD348RLwJmT/fE2Iepdufq
-	 9+6wFdhv0g4XDxuVMnFPjl+YiK6Hlcu3IOyogbc8ErrW69BXbHmb774NTEJEWpCWXM
-	 BGExTxabKZgkOm1W+a6eoOC6YriioAaIG9hMSEJXClKrrntbVETLAiWshxB1c8HdTZ
-	 livm/OTLPh68pYn9w6Ht16o2xMiyQvGoYVuNrW/EK4LMBphc80Dc3ZJgAoHKlyeAtJ
-	 MySJxHLT2uVqA==
-Date: Fri, 15 Mar 2024 18:09:36 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	Nicolas Belin <nbelin@baylibre.com>
-Subject: Re: [PATCH 12/18] ASoC: codecs: mt6357: add MT6357 codec
-Message-ID: <31e2135c-fed5-499e-894b-a8f0cc2744bb@sirena.org.uk>
-References: <20240226-audio-i350-v1-0-4fa1cea1667f@baylibre.com>
- <20240226-audio-i350-v1-12-4fa1cea1667f@baylibre.com>
- <9891855d-2284-42e4-9d3a-35ba406540e8@sirena.org.uk>
- <c441a132-b16b-4244-a712-8971c902d4d7@baylibre.com>
- <ff3d2db1-697b-42c6-a0f2-74276e9fc098@sirena.org.uk>
- <dda0e6ba-4538-47a0-95e9-6adcfd4169a7@baylibre.com>
- <0d31ffb2-9df5-4c3e-a728-902b71a1a713@sirena.org.uk>
- <fd53a0e7-fa70-4c0d-b578-393183487335@baylibre.com>
- <0a41b498-5cca-4487-a0e0-0df749f6e796@sirena.org.uk>
- <a9ad625a-c6fd-44f1-8776-aa5d54b448ae@baylibre.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BZpOY7Gf"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-513dbb5a1f9so996466e87.2;
+        Fri, 15 Mar 2024 11:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1710526240; x=1711131040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uZ0fcTtTD0fe4SyWRrePksxxOrhm45+SyvujsTCShkE=;
+        b=BZpOY7Gfxc0fq5sCCAMJNife7+wlXKE5RxnxURWpuSrqQd8HGMwmnzcpiGwRw6grru
+         f0D+x1HDGuuGtrYNd/Mb3eAYoGtxcJSizrH9By5B39nWAr6a32RHrKDoGORoWSlezNeL
+         SN0Ha4YCHPFucob969rsICHJSbdPfnFIb+RAsXoxeR5bcBNqEh9BqvHww1S3puBhB4Hi
+         1JY5jrGdytjM8LPsOK7qMLuW0sE9wEncLeE4KVihFmZllU0C0284Z9/xXmtb/MJSwdXT
+         nk/VrMVp3aG5QogGiFhUWvWR8hZE8Bgu8LUViBw9caS0AIp2vw/dnGEZ9yGoWP0wRaJd
+         p8vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710526240; x=1711131040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uZ0fcTtTD0fe4SyWRrePksxxOrhm45+SyvujsTCShkE=;
+        b=Ij8FE/aUNhpCXw9QZqL7hOkRtwusZzIlIhau0qqLwtHJUPog7oNUggPwtcC4SsdnKY
+         Vay0jPaaFDkKcl4sXdLYDrHy+xETHNhg6tsAJRRIgHgfLEFm/Wa4+xN3GHjtsl9iVnnu
+         x3XTDfHgDbyVbfOs5JF80vVXTd3lqwrs1na53odaHs10MVOyF0vu1Tqvdg6DLztL7/L3
+         V03gqOHwsc1BMWVTF4zZl+4r/wDWJAQnvQTSwn54MPvsvRgJZdaCCtNc4b/NejM843Hf
+         oIg/gneAyhJdDPbkYj3YiQXVvp7MA0/dOiopi27NOLdVu8oMlMHBgTzCd2KOfIGHnhNI
+         BhOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGmhyByAx3lDcMhrvuRWGCTdxKEhR/vsEh5bHHJUk28T7s21BNaOFX49Hr1YL79cfGYvrcmxxt2bTj3IRHmSBjbTgkWO2S72DGScNJ2/oLlI8FXmzW3WDX2vi5tstlj2oCPn1Do6y+xJUe3aeh948J8brw/TD6NM78e8I/KjeVJmOr6Z0=
+X-Gm-Message-State: AOJu0YwRMDMfrqO5YYZ84PVCDSJjCEtu8lUMY2kqJ6NJyKKf/HO7QtAo
+	FY1ygImY3AyCTAVVtrXU719xBjluCaPOZ4FSMTrP28uJTShFF9Ij6qb8vP/cT3WHAQ==
+X-Google-Smtp-Source: AGHT+IEmiwrd4RrzijlKpRPRn/2mZElzaqpXLjQrJS1Vo5fvprxZg222wGzTFeFiS5qSlSXAJenLSA==
+X-Received: by 2002:a19:3850:0:b0:513:c757:33d9 with SMTP id d16-20020a193850000000b00513c75733d9mr3931656lfj.53.1710526239712;
+        Fri, 15 Mar 2024 11:10:39 -0700 (PDT)
+Received: from ddev.DebianHome (dynamic-095-119-217-226.95.119.pool.telefonica.de. [95.119.217.226])
+        by smtp.gmail.com with ESMTPSA id jx11-20020a170906ca4b00b00a46937bc44esm510480ejb.135.2024.03.15.11.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 11:10:39 -0700 (PDT)
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+To: linux-security-module@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Khadija Kamran <kamrankhadijadj@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Alfred Piccioni <alpic@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [RFC PATCH 2/2] selinux: wire up new execstack LSM hook
+Date: Fri, 15 Mar 2024 19:08:47 +0100
+Message-ID: <20240315181032.645161-1-cgzones@googlemail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MkhxNCSSCKe3PKpY"
-Content-Disposition: inline
-In-Reply-To: <a9ad625a-c6fd-44f1-8776-aa5d54b448ae@baylibre.com>
-X-Cookie: A well-known friend is a treasure.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Perform a process { execstack } check unless virtual memory is marked
+executable by default.
 
---MkhxNCSSCKe3PKpY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ security/selinux/hooks.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-On Fri, Mar 15, 2024 at 06:36:19PM +0100, Alexandre Mergnat wrote:
-> On 15/03/2024 16:15, Mark Brown wrote:
-> > On Fri, Mar 15, 2024 at 04:05:21PM +0100, Alexandre Mergnat wrote:
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index a0fde0641f77..daf901916836 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -113,6 +113,8 @@ struct selinux_state selinux_state;
+ /* SECMARK reference count */
+ static atomic_t selinux_secmark_refcount = ATOMIC_INIT(0);
+ 
++static int default_noexec __ro_after_init;
++
+ #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
+ static int selinux_enforcing_boot __initdata;
+ 
+@@ -2221,6 +2223,18 @@ static int selinux_vm_enough_memory(struct mm_struct *mm, long pages)
+ 	return cap_sys_admin;
+ }
+ 
++static int selinux_vm_execstack(void)
++{
++	u32 sid;
++
++	if (!default_noexec)
++		return 0;
++
++	sid = current_sid();
++	return avc_has_perm(sid, sid, SECCLASS_PROCESS,
++			    PROCESS__EXECSTACK, NULL);
++}
++
+ /* binprm security operations */
+ 
+ static u32 ptrace_parent_sid(void)
+@@ -3767,8 +3781,6 @@ static int selinux_file_ioctl_compat(struct file *file, unsigned int cmd,
+ 	return selinux_file_ioctl(file, cmd, arg);
+ }
+ 
+-static int default_noexec __ro_after_init;
+-
+ static int file_map_prot_check(struct file *file, unsigned long prot, int shared)
+ {
+ 	const struct cred *cred = current_cred();
+@@ -7120,6 +7132,7 @@ static struct security_hook_list selinux_hooks[] __ro_after_init = {
+ 	LSM_HOOK_INIT(quota_on, selinux_quota_on),
+ 	LSM_HOOK_INIT(syslog, selinux_syslog),
+ 	LSM_HOOK_INIT(vm_enough_memory, selinux_vm_enough_memory),
++	LSM_HOOK_INIT(vm_execstack, selinux_vm_execstack),
+ 
+ 	LSM_HOOK_INIT(netlink_send, selinux_netlink_send),
+ 
+-- 
+2.43.0
 
-> > > > In the register.  You only need to reset the gain to -40dB at the start
-> > > > of the ramp.
-
-> > > Sorry but I don't understand your logic, I'm not able to implement it...
-> > > If I'm at -10dB and doing a ramp to reach -40dB, next time I will read the
-> > > register the value will be -40dB.
-
-> > After we've done the ramp and turned the amplifier off we can just
-> > restore the desired value?  The hardware is not going to care what the
-> > volume is while it's not enabled.
-
-> If you do that, HP will be enabled at the saved gain, and after that you
-> will do the ramp. To avoid pop, the driver should be rewrite to:
-
-So reset the volume to -40dB prior to turning the amplifier on...
-
->   Read gain in the reg and save it locally
->   Set -40dB in the reg
->   Enable HP
->   Do ramp
-
-...as you yourself suggest?
-
-> > > AFAII from the comment in the code, it's done to avoid the "pop noises".
-
-> > Yes, that's the usual reason to ramp gains.  Though if you've just
-> > copied the code without checking that it's needed it's possible that
-> > this is something that's been fixed in current hardware.
-
-> I did the test at 24dB with and without the "pop filter". Isn't big but I
-> ear the pop at the start of the record without the "pop filter".
-
-OK, it probably is still doing something then.
-
-> To be clear, the algo/behavior of this code is an implementation based on
-> the 6k+ lines downstream code for this specific audio codec. But the
-> shape/style is based on upstreamed drivers like mt6358.c.
-
-The Mediatek code has a bunch of issues, I wouldn't read too much into
-something being present in the code.
-
---MkhxNCSSCKe3PKpY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0jt8ACgkQJNaLcl1U
-h9DFzwf/WTFtub1WzGQHyCilLQ/Dm90Crp+NDTyCh8eMRG7+3o9uBhwqnKdBT2kY
-L9SAw/PR7zx+h3fGbCczOH9SGtZZy0FJkMTfEOYGED7E5hRFt0wfdNBqn1nn1hpz
-d2GXkXcliq2bP+FOw5tDJpNMHwYAnxCVmjqcl/tCInIBwKB0JVPXVZV+gf+/KTDi
-6UnFIQRExgRYPJt26pzWejqhRZl9KyKxKxORmnWAOvNU4tBIymSqZopFOqs4rvOT
-/byiicLBLKQ5VKr9IxIyd8+yMN1nuv0Sd2FjcGd5tcyWdItJ5ivV2AS4yIx8XtQh
-8BypOaepYix1QitTk/6SKwVIQZbT3w==
-=oa8d
------END PGP SIGNATURE-----
-
---MkhxNCSSCKe3PKpY--
