@@ -1,245 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DB48BEC;
-	Fri, 15 Mar 2024 19:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710530675; cv=fail; b=FVOsNgKOawDASwZXs3gsTXjlpfhLWKXuWwttydzNqdvsEZlj9s4eLv3zhoVifzZKtThWvS9+XGJHkGke8zq7jQvzTrzkqFCAoOSTx8VV0Xo1WMxFbCxfqB1LyLGm4lpvzCpw7bjbt4cHgbKXFzhAdXXxhd4GMGrlEmVj8W600TI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710530675; c=relaxed/simple;
-	bh=ZMqOeBFXTFemSg+QXF/6KGbdD/FqxIGzBeu0jFfoNjk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mR0ewZu/LBxrXMnOXdGwEQ58VCLNTmW7KpcVp6M0GRw/SInlTUmtwphglyakGr3mpqHc97qtZUQIjDV+gGnU+Rr6jKy6DhHsGjX0+2HxZLAPFaEmytLAhDrqZ/qVf5H4R4zGjzjGZYxS6vYoegeh/AE1n8GG4whac5A+1CpQpQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSUO5ZcU; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDA750A6D
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 19:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710531172; cv=none; b=bOcFiaL//dmDbQ0uOF1tbHibVS/uh3nojdzGA9QqvYHRXynVq3ESMZ1wOHY/JgaNnSj8iNlbM9ixUcrNxb9JzWZ5VL6gM5jkSJTG91mW83yL3MWiAlhXGGtPDCMvzswPcmyUnXNfWHJO44hoQkvGCdPCgFcv+bKK4VP0dtMvV6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710531172; c=relaxed/simple;
+	bh=pKKwHfqh3YUCqYEBlH2odUpP9Q8hxI9QVcN1yt4KpTs=;
+	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
+	 MIME-Version:Content-Type; b=RHdn9IbP0KEtPzmYDp0H491Rfn8MI9jPlvLl7N+23f3r4nQ22rG81QGkYKxfHobO6paGLIiKX+zR90H1olNLbF0rYZnefdP66q329Icsi6rrxWLOT6w3GXgPymPfd7tiaOTm5HyovYa0Kw/3YJej5GWrrZiE3QLp7t9kfUtpfGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=1OYkPe9S; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSUO5ZcU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710530672; x=1742066672;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ZMqOeBFXTFemSg+QXF/6KGbdD/FqxIGzBeu0jFfoNjk=;
-  b=GSUO5ZcUOXuyZhRLvnJVM67SiuHGk/lyBaMm8Z6xb0v4pIUuP+iM5zpT
-   BX5r3RQ0JccxcSY3KF4yTxi/qFXtb7vJ+8JFlEhrg4Z5NLweVITPFB+5Q
-   7h9A7hxXgeA/Q5YeaY6ldGedyY4FpG/tGgIucpB2mxLSr24DQrK5aZXJc
-   n4LKnaqyMkup/TiNwrQnET25lptEVdZV5pPnQu22+QTW6aKPhVGXsc0sN
-   qFWvyawJY5BVHaIGyvlHdz95UcIK5Uj7lJD1gEPq1h4Nr2ppEDmSF7pmL
-   8Aa65NZM29YKlgj3AbENxzwGC88LYbF6xSXVXl54qogU7prsRr3ncgTwP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="22879569"
-X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
-   d="scan'208";a="22879569"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 12:24:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
-   d="scan'208";a="13403483"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Mar 2024 12:24:31 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 15 Mar 2024 12:24:30 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 15 Mar 2024 12:24:30 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 15 Mar 2024 12:24:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WwBegR05DPBAaSEd6A8JOuySmzqBbFzHo9Jv2PTIitPt6yF8Og14to0fnE12nM2RAXVBjiBcqV3KJPTk7vFkVvCm64OanWKZbV8wXygh9/5C8GKD4Vxfig4NMDiwDo25vukeFSmz4qUW8K1MQBDk82AgJLYoxS3SeWfd6dYO8CdzHl/REgyAkkyU3TexLMJeR2C7GM7h+O8wTlLxnr/M5BF8Q1K98tPN+5dKOxfVgtjedSJqigG/etpjjul/ef0mqjHbidj68/2+um6sjf507JkydRbv3wmrme0o9YVAHKtnClH5MMNmSb7H/RV+wPmUzaIuqBZ8z1Y+NozXi2JhYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/JwHqTG8nUWiAJtctdjgMykVW+uKlg9ZWn1FBeio74g=;
- b=jdZLVdDJdw32grOrj2aFmdia+0P6SCGwUzZaxMT6cSukE+q9SZ0lTCedzl+i+8Caa7fqeF/YKmqr4UnNBpzKv3GpBJKN6YTZkRUOWH20tZ21ORmGhZVxg8bl6BCkucsyWGm3purPamJTQAOM0t1+YxW5CBn/cYIivdutlWpWPKJJxioGDVfEw3HtRiTH2DaUpmfYMezmQ0D/qnsXhoSwZFd+Y8D/DGc5xgo7GiLRt627lTEB3SYgxDmcsEPtXjamjPzkcKwiSeDY9pWx+zcX+DeQNV0QbhQAO98BhdqivdXH1tVhEKu4ERhqwL0QPx3EbyQ2kCbAUXo2KHNZMnWgvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MW5PR11MB5810.namprd11.prod.outlook.com (2603:10b6:303:192::22)
- by DM4PR11MB6384.namprd11.prod.outlook.com (2603:10b6:8:8a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23; Fri, 15 Mar
- 2024 19:24:16 +0000
-Received: from MW5PR11MB5810.namprd11.prod.outlook.com
- ([fe80::85d1:70d8:4c39:4599]) by MW5PR11MB5810.namprd11.prod.outlook.com
- ([fe80::85d1:70d8:4c39:4599%6]) with mapi id 15.20.7386.016; Fri, 15 Mar 2024
- 19:24:16 +0000
-Message-ID: <c9285318-affc-4d45-ba9b-40e3a86be68b@intel.com>
-Date: Fri, 15 Mar 2024 20:24:11 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: CVE-2023-52605: ACPI: extlog: fix NULL pointer dereference check
-To: Lee Jones <lee@kernel.org>, Prarit Bhargava <prarit@redhat.com>
-CC: Vegard Nossum <vegard.nossum@oracle.com>, <cve@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cve-announce@vger.kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>
-References: <2024030647-CVE-2023-52605-292a@gregkh>
- <e4906091-598e-4d21-9e8d-4cb088855d6f@oracle.com>
- <7591f33e-d64f-49c5-b7c8-deda2b6f0fde@redhat.com>
- <20240314110110.GL1522089@google.com>
-Content-Language: en-US
-From: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-In-Reply-To: <20240314110110.GL1522089@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: WA2P291CA0005.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1e::11) To MW5PR11MB5810.namprd11.prod.outlook.com
- (2603:10b6:303:192::22)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="1OYkPe9S"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id lBO8rznqzuh6slDGpruwwF; Fri, 15 Mar 2024 19:31:12 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id lDGorEqiHgwhXlDGprl9Qp; Fri, 15 Mar 2024 19:31:11 +0000
+X-Authority-Analysis: v=2.4 cv=c8atQw9l c=1 sm=1 tr=0 ts=65f4a1ff
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
+ a=xNf9USuDAAAA:8 a=Wm32gphqw-RrVpKniOMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=SEwjQc04WA-l_NiBhQ7s:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NXd2+RxvpOA7cP2feHN9hBOgV7boYbrHkdSTU++A/Pg=; b=1OYkPe9Siv35tOj1D34ujAqG5G
+	o849Wjq1yUSeVU4GDGdIlDXsxEkIhv5+P2LJZdtK9BriW9t3cb3GD1xaZcd2VzLyhaSdbwxyp3teT
+	1Yg0Tn5Zym/B0cm0T2fwqomjmWYVWSV/2XNxeM/Ytp0WRaioS2zMHG8GlnhNLcw7egD7WSRgDxGEX
+	BrVPc/CBdC9qUsihJPuWdGVmWGLTag7g6NoZL6qja1HfzJs7xUwy4XrH315HOKwH1UjhnAnre4hDZ
+	sWvftxe3UImbfKe9bSU6jWeoZ5nT7lx4jy5ZF8nQo6A+wCtjbPesHPNgBtY+JLEzB5nnSmMR6ddYD
+	0RoHt/2A==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:51212 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1rlDGm-003CEI-35;
+	Fri, 15 Mar 2024 13:31:09 -0600
+Subject: Re: [PATCH 6.1 00/71] 6.1.82-rc1 review
+To: Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Cc: =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Christoph Hellwig <hch@lst.de>, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ Andreas Herrmann <aherrmann@suse.de>, Tejun Heo <tj@kernel.org>
+References: <20240313163957.615276-1-sashal@kernel.org>
+ <73072bdd-590a-44b4-8e6d-34bd17073bb5@o2.pl>
+ <ecb0b6a1-a8e7-4645-9a2c-56ada368f733@o2.pl>
+ <ba297ed4-a74a-4786-a303-ce617b2de09b@o2.pl>
+ <38563683-300a-487b-81c6-b2ea4dbb925c@kernel.dk> <ZfN7wtnVeb9vOL1H@sashalap>
+ <267b0000-fba0-4dcf-945d-72b8ca4704c8@kernel.dk> <ZfQ7wRX06R-d3X7F@sashalap>
+ <ZfReb38_gCrKno7A@sashalap> <e03d0f75-b9bc-4f60-9824-d827df840425@kernel.dk>
+In-Reply-To: <e03d0f75-b9bc-4f60-9824-d827df840425@kernel.dk>
+From: Ron Economos <re@w6rz.net>
+Message-ID: <5660e38b-a60c-b79b-46a8-8236c073ad5c@w6rz.net>
+Date: Fri, 15 Mar 2024 12:31:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW5PR11MB5810:EE_|DM4PR11MB6384:EE_
-X-MS-Office365-Filtering-Correlation-Id: 636aede4-7737-482e-542e-08dc45258141
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0bnMSFRY+XN6JCR11S0MS7hhotoWUU8PtATbn39kLYdmZKiZKuweUCmsub6kz+mUPw60PeNZRL8C3JbytiRo0sytbkke8xShDA7fvg3ikcB52pgdj2RqYhDR4Nc/f3vptiFM3l/socW7rx4gwhqjQ0oHiM4Rgl2bLQ4qlutOYukpIyy6wBz0J0A8AMxzL13LN8C+z3iXv1eYZGYlRj40HLwSkM0+W/Jo0ztrHnjHn4XzrvMcyeh4F7eRQwk5KVbWFcwiZTpnyTTiECjypVvhcOSobp86wNhEdnIhKb4ockmvXyO7QoIpjtzSNYCcswYrIpGTj0rliIjLY46FnEtKDRrsiWVCnZD1UR0dz2hRFot+85Yb1h9B+U9K4Gb6e33OA8QJckb8TcTHIetxrW1wODL7Yv/2+lz0hGH+45nLush+wcieww4+nsxDeqAg2RlInYgpwN+BhsriCQEu8Y3NlixGE7uX1k1qLFpduEQhAXRkliwJuz2lN5xiXBVRxURtD8ZFSMzvt9oBoOTBgB9dMzmHkrY35Kyi8mpd/5bA9pMvT/PtVX2cB8btV645tUoI5hqKlCQgmaATLc3bB4sOjAPb1xDDVteBactoZNVwoxZp9ACEd+UeAv0BewJLlhT8mULJAY+RTzNTFAji+WaCbQaG3AIiy8i5sxRd6mkxtjI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5810.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RUVFYnBXQWxnNSt2RTRVQjEreC9MTzJyd1F1QmJTb1JlYjFoN09ybW1wN1RW?=
- =?utf-8?B?eUxCZ3NIeWh6aC9Da3FtZnBHTzFYcVMwTUczSVYxblNJK2NaaVU3eXR3OEI0?=
- =?utf-8?B?eFV4Rmg0azRqZUU3MGFiU1pGSC9wc3hFUlAyL0tlRkJVZFVuL1hTOG1IN2h2?=
- =?utf-8?B?N3RNcW1aY1NWeG50NjlwTlZLVGg3RFlCcnhDZ09OTjBwQnFRTk02cm9POWpt?=
- =?utf-8?B?S2d4ZlFuNzFpUWhsTmxLMjlpeEtseUFSVCtGZk5hOVV1ZmFydC9IdHRudGhn?=
- =?utf-8?B?WWlpK2pLdHVDeXlFT21YQUJ2MzQ5TGJ3WUpxUmFkSEM5ZFZSL29zeEhwUnpt?=
- =?utf-8?B?RzlJa3h0Rjgvc1doekxYUGZqNkxUNFViNU1EekR1RU16OHFVSlRhWFhDWTFx?=
- =?utf-8?B?Mytwdk1vTzBxcHlybWx5NE1uVjFkcUs5bkJSNGljem5hT0w3Y0VKcGh4R0d0?=
- =?utf-8?B?RVpmM2F2Mzk3SzdkOHU3c3VFQ1BrSVRYWjQyMTI4d3BYYVlaZGRHVithYjZT?=
- =?utf-8?B?T1JHVGlaYy9YbXFQY1pWYm15V2RibGNyN3o0UmhYU3MzMnZPVmhkYk52UU5N?=
- =?utf-8?B?NExhVExDVDZUa0RpSlhOL01laEkxM1ZmaURiblhMSlhxSWhzS2JwcUNwaEtx?=
- =?utf-8?B?T2VFRFdSTmNueHhsZk15a3k2QTNmMFhMYmRHb1pZcUlDMVM2Z2M5TU5HZHlB?=
- =?utf-8?B?SjdrTVBtdHdPcXNPQnpHMmFtcWFYaVVhTC9ZY2paSmpVSWNUY3pwcUZ0WFN2?=
- =?utf-8?B?VzNKYy9rNWsyNzlSQ1dGNFRYd3k2dWREdUV6UFBuQThYbTgyTk5GU0ZYMHVh?=
- =?utf-8?B?ekVnbC81ekcvbkVZUk9SbUlXYUZVc3dwc2ROb21FdkRPMTUycitPUUE0L0cv?=
- =?utf-8?B?QkVaalllWGxiNndXYkhzSkhld2xjQWtJN2J6S2pseUhMcVIreVF3WTFOQXVq?=
- =?utf-8?B?UGR2WXZLMExBZkdYNWRaVW1pdm9Da1hjcW50WGhNb25MVVhpbHh1bDVXd1lB?=
- =?utf-8?B?K1czbUV2eDA5MlV3TUhXQzhnSEJlWjhmQWxkNkh1ekFJdnFQbElFc2QyL1cr?=
- =?utf-8?B?UUVTOVpJN2JYTU9DZU9sZlFrSitDeG1YOW8zVnBoSXRvdjNpSi94U2pnY3ZJ?=
- =?utf-8?B?ZmVNcnRCR0hVVzUyN0RYRWxUNVNyOHg4Mk9BNlZHaWVmOHEycU1nejFUaHZm?=
- =?utf-8?B?UU8vZEp0SXNZQit4YTJ1SkVzbllPN2R5U3F1NHNpTHQ3Rm1Ka0hBd2dsN2ZP?=
- =?utf-8?B?N29FZGxYNmRuQkhTQzZoVDRTeXhicHJiNlBtKy9TZUhJU01mYWNyY0Ntbkln?=
- =?utf-8?B?OWs3SStHeFlCY25tVXBkMjRNK3NHc09jK1UzSmZHWEIyc3c1TkM1RExqZlFk?=
- =?utf-8?B?M1dUZ1c4aTJJRk04SlczZlRVbzRvOHFsWG9ESlNKR0NCaVNQVHcvMzB0dzlI?=
- =?utf-8?B?aFY3ZjVubzBlWmt4d1lBZFlmTy8zd0FsSE1zWnhpZTJKcGVmYjl5a1JHcFF1?=
- =?utf-8?B?cTM1N2ZSQ0ZXYW5FY3VIQWJyV1Q2TEU3N3ZvNTJ6VkFGRklBZzFqY1VOS01p?=
- =?utf-8?B?QUNUNTBQNXRTbDBMK1hENVpmOGdUN0w5WkRSbGo0T25xeUxrZnMrVDNSUzB4?=
- =?utf-8?B?UEJYakJESkVtcWRLdU1DV3BMSEZ5ME4vZldhQXJSbjJvUktCaU14bENmRHRG?=
- =?utf-8?B?bEhkNnZuT0VRc3hSRzRETmY1N3phcFhDYnpPb3ZoaFUrRW5IcU03K3cyRjI1?=
- =?utf-8?B?SjlTUGVTcy9ZMFlFaHgvMGFqczJkdkhKUHFNbURXNG9zaWpMM3ZiTm9ZTXh6?=
- =?utf-8?B?NzU4ZXBmU1JrdkNBbmt2RXFDazFFVDk3QjFlYzd5OUgrNGloOXYxdlozUGVG?=
- =?utf-8?B?bDVtN2dsVnBZVkxhZFlZMnYwV3YydjhRbTVJRnBONXo0Q2tnU0xheFUvaC9O?=
- =?utf-8?B?VW9QTlhjQkk1L2pQUmZHOTlVbXNwcmRBbHZaaEprV1VJeUJONjRWNmtQZjQw?=
- =?utf-8?B?eHBHN1BQZXFkMHpId0JTSGxwOGd1NjcrTWZKaTBLclNHYVNZR1dRT1ArSHJx?=
- =?utf-8?B?SjNROW91U1FSM25CQ3JQMnRwVW9VZ0tvSFpYZi9ZaDIzT0Y0QmhuSm8rTWpi?=
- =?utf-8?B?U3BULzkwYjVPRDNGQ3hMSEFtVnBhQmZDOTY3cExZdHo4WmcyMkUyMWxVeWtx?=
- =?utf-8?B?bVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 636aede4-7737-482e-542e-08dc45258141
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5810.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 19:24:16.7463
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2LbPxiBxynzJTunUqALJoHnNo7dMn/kuK03u6f1O4+kivD8+du0JZlUvHgTXrIC0rsdZQ2/Qqul/1sX036uwrhLrliR31H/qABWP7o2DR54=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6384
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1rlDGm-003CEI-35
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:51212
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 4
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIHJak7/PjzoF59BvTozWgaYPYpLwSV1ID4YCZBkpK01VMjXqhU9UsY7xfpgSkAFGARNR56Rw+WPwW1WuqG8L3pAF5pzRKTUth0QHdRH9ABHBxTkxvmS
+ XoNJyZarB4ICqZt0XIk7bwLMl7/OK+EHtduyqU9fd1EdVUeOz3hSxN2usdRQ1sQMeLd7/LhbWHT+PrePvAGb7uTg8oGjrmzrAFo=
 
-On 3/14/2024 12:01 PM, Lee Jones wrote:
-> On Mon, 11 Mar 2024, Prarit Bhargava wrote:
+On 3/15/24 7:49 AM, Jens Axboe wrote:
+> On 3/15/24 8:42 AM, Sasha Levin wrote:
+>> On Fri, Mar 15, 2024 at 08:14:57AM -0400, Sasha Levin wrote:
+>>> On Thu, Mar 14, 2024 at 04:40:53PM -0600, Jens Axboe wrote:
+>>>> On 3/14/24 4:35 PM, Sasha Levin wrote:
+>>>>> On Thu, Mar 14, 2024 at 04:04:59PM -0600, Jens Axboe wrote:
+>>>>>> On 3/14/24 3:12 PM, Mateusz Jo?czyk wrote:
+>>>>>>> W dniu 13.03.2024 o 22:27, Mateusz Jo?czyk pisze:
+>>>>>>>> W dniu 13.03.2024 o 21:13, Mateusz Jo?czyk pisze:
+>>>>>>>>> W dniu 13.03.2024 o 17:38, Sasha Levin pisze:
+>>>>>>>>>> This is the start of the stable review cycle for the 6.1.82 release.
+>>>>>>>>>> There are 71 patches in this series, all will be posted as a response
+>>>>>>>>>> to this one.  If anyone has any issues with these being applied, please
+>>>>>>>>>> let me know.
+>>>>>>>>>>
+>>>>>>>>>> Responses should be made by Fri Mar 15 04:39:56 PM UTC 2024.
+>>>>>>>>>> Anything received after that time might be too late.
+>>>>>>>>>>
+>>>>>>>>>> The whole patch series can be found in one patch at:
+>>>>>>>>>>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.81
+>>>>>>>>>> or in the git tree and branch at:
+>>>>>>>>>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+>>>>>>>>>> and the diffstat can be found below.
+>>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Sasha
+>>>>>>>>>>
+>>>>>>>>> Hello,
+>>>>>>>>>
+>>>>>>>>> Kernel hangs during early boot. No console messages, nothing in pstore.
+>>>>>>>>>
+>>>>>>>>> Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU (Intel i3-7020U) and Ubuntu 20.04.
+>>>>>>>>>
+>>>>>>>>> This CPU is not affected by RFDS (at least according to the Kconfig message), so I have set
+>>>>>>>>>
+>>>>>>>>> CONFIG_MITIGATION_RFDS=n
+>>>>>>>>>
+>>>>>>>>> in Kconfig. I do not have any updated microcode (if any will be provided at all for this CPU).
+>>>>>>>>>
+>>>>>>>>> Greetings,
+>>>>>>>>>
+>>>>>>>>> Mateusz
+>>>>>>>>>
+>>>>>>>> [snip]
+>>>>>>> Bisected down to
+>>>>>>>
+>>>>>>> commit d3d517a95e83a7d89e1ff511da1a0a31c9234155
+>>>>>>> Author: Christoph Hellwig <hch@lst.de>
+>>>>>>> Date:   Fri Feb 3 16:03:54 2023 +0100
+>>>>>>>
+>>>>>>>     blk-rq-qos: make rq_qos_add and rq_qos_del more useful
+>>>>>> Do you have:
+>>>>>>
+>>>>>> commit e33b93650fc5364f773985a3e961e24349330d97
+>>>>>> Author: Breno Leitao <leitao@debian.org>
+>>>>>> Date:   Tue Feb 28 03:16:54 2023 -0800
+>>>>>>
+>>>>>>    blk-iocost: Pass gendisk to ioc_refresh_params
+>>>>>>
+>>>>>> in there?
+>>>>> It's not in the 6.1 tree, do we need it?
+>>>> If the bisected commit is in there, then yes we need it. It's marked as
+>>>> fixes that, so puzzled why it isn't in there?
+>>> Sorry, I take it back - both e33b93650fc5 ("blk-iocost: Pass gendisk to
+>>> ioc_refresh_params") and d3d517a95e83 ("blk-rq-qos: make rq_qos_add and
+>>> rq_qos_del more useful") are currently in the 6.1 tree.
+> I didn't see e33b93650fc5 in there, but maybe it was part of the series
+> that this is about.
 >
->> On 3/10/24 04:10, Vegard Nossum wrote:
->>> (Added author/maintainer to Cc)
->>>
->>> On 06/03/2024 07:46, Greg Kroah-Hartman wrote:
->>>> Description
->>>> ===========
->>>>
->>>> In the Linux kernel, the following vulnerability has been resolved:
->>>>
->>>> ACPI: extlog: fix NULL pointer dereference check
->>>>
->>>> The gcc plugin -fanalyzer [1] tries to detect various
->>>> patterns of incorrect behaviour.  The tool reports:
->>>>
->>>> drivers/acpi/acpi_extlog.c: In function ‘extlog_exit’:
->>>> drivers/acpi/acpi_extlog.c:307:12: warning: check of
->>>> ‘extlog_l1_addr’ for NULL after already dereferencing it
->>>> [-Wanalyzer-deref-before-check]
->>>>       |
->>>>       |  306 |         ((struct extlog_l1_head
->>>> *)extlog_l1_addr)->flags &= ~FLAG_OS_OPTIN;
->>>>       |      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
->>>>       |      |                                                  |
->>>>       |      |                                                  (1)
->>>> pointer ‘extlog_l1_addr’ is dereferenced here
->>>>       |  307 |         if (extlog_l1_addr)
->>>>       |      |            ~
->>>>       |      |            |
->>>>       |      |            (2) pointer ‘extlog_l1_addr’ is checked for
->>>> NULL here but it was already dereferenced at (1)
->>>>       |
->>>>
->>>> Fix the NULL pointer dereference check in extlog_exit().
->>>>
->>>> The Linux kernel CVE team has assigned CVE-2023-52605 to this issue.
->>> This code is in an __exit function:
->>>
->>> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
->>> index e120a96e1eaee..193147769146e 100644
->>> --- a/drivers/acpi/acpi_extlog.c
->>> +++ b/drivers/acpi/acpi_extlog.c
->>> @@ -303,9 +303,10 @@ err:
->>>    static void __exit extlog_exit(void)
->>>    {
->>>        mce_unregister_decode_chain(&extlog_mce_dec);
->>> -    ((struct extlog_l1_head *)extlog_l1_addr)->flags &= ~FLAG_OS_OPTIN;
->>> -    if (extlog_l1_addr)
->>> +    if (extlog_l1_addr) {
->>> +        ((struct extlog_l1_head *)extlog_l1_addr)->flags &=
->>> ~FLAG_OS_OPTIN;
->>>            acpi_os_unmap_iomem(extlog_l1_addr, l1_size);
->>> +    }
->>>        if (elog_addr)
->>>            acpi_os_unmap_iomem(elog_addr, elog_size);
->>>        release_mem_region(elog_base, elog_size);
->>>
->>> This can only run when you unload a module, which is a privileged
->>> operation (restricted to CAP_SYS_MODULE).
->>>
->>> Moreover, extlog_l1_addr is only ever assigned in the corresponding
->>> module init function, and it looks like it will never be NULL if the
->>> module was loaded successfully, at least on a recent mainline kernel.
->>>
->>> Since the module exit won't be called unless module init succeeded, I
->>> don't see a way to trigger this bug. Is this a vulnerability?
->>>
->> This is certainly not a CVE.
+>> I'll go ahead and drop the backport of f814bdda774c ("blk-wbt: Fix
+>> detection of dirty-throttled tasks") as well as the dependencies (which
+>> is where this issue bisected to), and all follow-up fixes.
 >>
->>> It might be better to just delete the NULL check altogether.
->>>
->>> As usual, I could be wrong...
->>>
->> When I made this code change I thought the same thing: Perhaps it's better
->> to remove the NULL check given the status of the code.  I assumed that the
->> check was there as a failsafe on unload.
-> If Rafael agrees with you both, I'd be happy to revoke its CVE status.
+>> We can revisit this for the next release.
+> Sounds reasonable.
+>
+Seeing this on RISC-V also. Here's the oops.
 
-I do agree with the analysis above, sorry for the delay.
-
-Thanks,
-
-Rafael
-
+[    2.030135] Unable to handle kernel NULL pointer dereference at 
+virtual address 0000000000000050
+[    2.038233] Oops [#1]
+[    2.040420] Modules linked in:
+[    2.043461] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.1.82-rc1 #2
+[    2.049717] Hardware name: SiFive HiFive Unmatched A00 (DT)
+[    2.055276] epc : wbt_queue_depth_changed+0x18/0xb6
+[    2.060138]  ra : wbt_init+0x118/0x198
+[    2.063871] epc : ffffffff8050e942 ra : ffffffff8050f16e sp : 
+ffffffd880087c80
+[    2.071087]  gp : ffffffff81a3e3a8 tp : ffffffd87ffe8d40 t0 : 
+ffffffdbfed53668
+[    2.078294]  t1 : 0000000000000000 t2 : 0000000000000000 s0 : 
+ffffffd880087ca0
+[    2.085507]  s1 : ffffffd8800fa458 a0 : ffffffd8800fa458 a1 : 
+ffffffff813442a8
+[    2.092714]  a2 : ffffffff81b148e0 a3 : 00000000001e8480 a4 : 
+0000000000000000
+[    2.099923]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 
+0000000000000000
+[    2.107131]  s2 : ffffffd88086a800 s3 : ffffffd880870000 s4 : 
+ffffffd8808702c0
+[    2.114340]  s5 : ffffffd880870088 s6 : ffffffd8808702a0 s7 : 
+ffffffff80e6d580
+[    2.121550]  s8 : 0000000000000008 s9 : ffffffff80c00106 s10: 
+0000000000000000
+[    2.128759]  s11: 0000000000000000 t3 : 0000000000000000 t4 : 
+0000000000000000
+[    2.135967]  t5 : 0000000000000000 t6 : 0000000000000000
+[    2.141264] status: 0000000200000120 badaddr: 0000000000000050 cause: 
+000000000000000d
+[    2.149171] [<ffffffff8050e942>] wbt_queue_depth_changed+0x18/0xb6
+[    2.155337] [<ffffffff8050f16e>] wbt_init+0x118/0x198
+[    2.160371] [<ffffffff8050f25a>] wbt_enable_default+0x6c/0x90
+[    2.166104] [<ffffffff804d7822>] blk_register_queue+0x17c/0x1b2
+[    2.172012] [<ffffffff804ec420>] device_add_disk+0x1f6/0x36c
+[    2.177657] [<ffffffff806c3e7a>] loop_add+0x2a0/0x31a
+[    2.182696] [<ffffffff80c36452>] loop_init+0x10c/0x138
+[    2.187819] [<ffffffff8000293e>] do_one_initcall+0x5a/0x1e2
+[    2.193381] [<ffffffff80c018c2>] kernel_init_freeable+0x28c/0x308
+[    2.199460] [<ffffffff80af7e0c>] kernel_init+0x32/0x16e
+[    2.204669] [<ffffffff80003ed4>] ret_from_exception+0x0/0x16
+[    2.210372] ---[ end trace 0000000000000000 ]---
+[    2.214956] Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b
+[    2.222572] SMP: stopping secondary CPUs
+[    2.226493] ---[ end Kernel panic - not syncing: Attempted to kill 
+init! exitcode=0x0000000b ]---
 
