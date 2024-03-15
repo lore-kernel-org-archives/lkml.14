@@ -1,38 +1,38 @@
 Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4012E2CCD3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1382CCAD;
 	Fri, 15 Mar 2024 13:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710510718; cv=none; b=u52+6o4jbbYgxBualcZNO4hExq2rB73ZKhTnx8cRBkkFR+V/NKi5Utc1Cf0gdumNHfLWVFK9rZ9Zp1n9PN1+z5t/fEFRL8xEwGKeAU7LPL3wXjakAhByQY1yiZBZX6l/6xCxBngUgkTjMtG0L5DZcQF1+sBy2q7bkI3FHXHyPbw=
+	t=1710510718; cv=none; b=QCu7/SbTZ0o9jNFQMr4h0yP21duPkxywui9e8Uah6Fi6RZW7UWas8gBlmIMgYWDmyQuEfQPbsKnDegsVpLqgik8vauzvEUCOytKFspwfvOEk5uFc1oF2hlH67Gy1OqAVyQ33aviygDxWTdHMCXNSXtdJGL10OSu9EdBvHYbCYyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710510718; c=relaxed/simple;
-	bh=uGoPq4Lf85uKEfAzB8xxk9zWPd3pSWdJbpTAl7yAUrg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EudAYEIGBbNIHWW4vjNBHxJAPkehHIKh8c6Ss7N+sDErNKeGf8aGFTTA+JrWybAa5dg4/bpr7Bw3+roV95r7TAO5SkyDwglEVrrrPv9dkoonFd/FgeYWhke7DUAP4DK3KP9nEhoo2orS2aUGGLwMxhrQ3csBNp3lWzNsrK4XA3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=OXjMap49; arc=none smtp.client-ip=194.87.146.52
+	bh=JrN770EdBryMxnh0Oh99guIP9VQQameiq0rHefV8pac=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DyN7+c6m2cCUv4qBFL4tQFwP9PSN6nTdLgkqaq5AHeebN//TJc/NgvHFoqRR7Oe2FiEcFAMC1lAwBEJVECCRPhbIS8NaA7AGRX0RKbtHPMP4gn5YHYm7SjnmVOAFI9VnRc+db8/Z83ThMT7SDvjgmr1Q7p6gmrJe8+SV2PI9rW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=VMsQ+k1v; arc=none smtp.client-ip=194.87.146.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="OXjMap49"
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="VMsQ+k1v"
 Received: from authenticated-user (box.trvn.ru [194.87.146.52])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 4906341DD5;
-	Fri, 15 Mar 2024 18:51:34 +0500 (+05)
+	by box.trvn.ru (Postfix) with ESMTPSA id E1B7F41EF2;
+	Fri, 15 Mar 2024 18:51:36 +0500 (+05)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1710510695; bh=uGoPq4Lf85uKEfAzB8xxk9zWPd3pSWdJbpTAl7yAUrg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=OXjMap49spoJcRB3dzyVrDybyiR7NERozfq6yrdtP19I3NGN7qr6/wBJR7xvpuera
-	 I6JfjNZF4YXqX3YrZrrgehQ0Y49+6y+Olfn4P7aOaKV71AWxh45t3qILUTdn0jVHnh
-	 t1JCoIlpeCRWUw4GHDp3LlPxyfw5pFKXqZ2rXUEyJG2grD5gwfOkUfg1g0DFRjdrqn
-	 b0ITCKY5g/r1gtBgWkahCXKZdqpE9vMAx0/+FNGSiLZP3J4+ij9t1kpzCzWMzif+NC
-	 NdU2kkHS734IKnC73ZeMgIsrkkrQnrhMx/7GmeLBkv4Qv2iGSXJxMzPY4HpR/X0V4g
-	 tKHXXWUJhyL6w==
+	t=1710510697; bh=JrN770EdBryMxnh0Oh99guIP9VQQameiq0rHefV8pac=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=VMsQ+k1vmGItKQ5U6NmGqU2qDSQIF0phX2FNowWTobMMazdW9FkciUuNHGIKxRg/G
+	 fXihIuE0CBY1G/Q+FnpohDUeFBQlbm2FGpWfzI5IrQDimhujpnO4KDQQkC8v4pXcRh
+	 HEjWwxgwqfWzAenyuhBLK6SaKXJblDuJg0E/3K4NE0Eo9yfxrIICmeANy7pKFK3ZWu
+	 pK8R9bR3iW42dG7Z9RAXRU//1x0JUqKZ2XwrYBDP/DRM4GBbhs+VxKCMxXufyHyYIT
+	 1gjxrqOZqo7o3gI4K1M8tmpLD1gDTfAyyKVd6EZoS2+WMC1jFid1pJKM67QYJT8VXF
+	 OMDtcJt25uHmQ==
 From: Nikita Travkin <nikita@trvn.ru>
-Subject: [PATCH v5 0/4] platform: arm64: Acer Aspire 1 embedded controller
-Date: Fri, 15 Mar 2024 18:51:14 +0500
-Message-Id: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru>
+Date: Fri, 15 Mar 2024 18:51:16 +0500
+Subject: [PATCH v5 2/4] platform: Add ARM64 platform directory
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +40,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFJS9GUC/13OQQ6CMBCF4auYrq2ZmQIVV97DuBjKqN2gabXRG
- O5uISGAy9fk+ztfFSV4ieqw+aogyUd/7/IotxvlbtxdRfs2b0VABgkqzfHhg6AWp6vGtOTYIVt
- SGTyCXPx7jJ3Oed98fN7DZ2wnHF6njF1mEmrQDdeCjsgC2OMzpG4XXmqIJFpApBWkDB0XdSkMb
- NmtoZlgAUSwgiZDINegqTM3uIbFDM3fj8VwarsXI8L5mssM+77/AekGzBxNAQAA
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240315-aspire1-ec-v5-2-f93381deff39@trvn.ru>
+References: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru>
+In-Reply-To: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru>
 To: Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
  Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
@@ -56,93 +55,127 @@ To: Hans de Goede <hdegoede@redhat.com>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2862; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=uGoPq4Lf85uKEfAzB8xxk9zWPd3pSWdJbpTAl7yAUrg=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl9FJiRaeXOTyjLMezkAVJzcxIuMN6Gtx9AbBpm
- GqMsPPDys2JAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfRSYgAKCRBDHOzuKBm/
- dSmlEACBYiTVFRcFAL6rqEAM4cPXAfwQ8h6wt628Wk4S299uN3blayxYAjIjfPpmcuvXjjmHS/y
- ks/ruGOIxY1F7rGfll8fiFckI2gBkxZ57JH17Fnh0B1PTWwlxPYnDy3+7fHQ5UXDZRTt5l2htll
- 2PauxmG44DaLhxqI+08odWQcFxaUxz6xyMSeIadaDWi9gXvvJGRgOp6MDgBZWaq1iAqyH45nQZI
- sePYWYTUSD8ifcsX2tPejVAGBG+6Bd77U5OFHFsQwLyj3CsprwCve03G1oBzVVbffvGMDjgz9CO
- dVPL7cvzvzhB3WBR6zMLNxEZbH4T7p5LQqTzcpyG0IkO84zexf7UpQDd7pLchH9wj56ij5H3nE6
- dOB0qeB8zFFQT65UCZnAVCmL9H3fGOpMpKAPdrC0RI+r6k6vfpmbHXt/SmTFBc8rZh1kHos313O
- IKSFGuSxkV/K+Uc8MoFCwSwR0omMFFVGhU4y4rQJedaBTHoV8Jfm/w2xRfbR8Ikuzz6+BzYGwmf
- aTV7Tj25ScV4AD2bQ5xlDhRHVPR+GsGU4nGUHUcDR28rCyOb+7py08gBo0weLi6zwMdpcd4NRvp
- XLiLrYafelAyf3AbFJ1NQhfCwYi213zpjnI2iR0hH79HKJbIX1r0HbVytXEzmL6n32xw+ivVxT2
- 7l+TELQDWGkHXfQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3905; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=JrN770EdBryMxnh0Oh99guIP9VQQameiq0rHefV8pac=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBl9FJmunF3ZxQvDUhdFk9TYCpzrVtq7859rIaxQ
+ GwZk1aqj/2JAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZfRSZgAKCRBDHOzuKBm/
+ daiQEACNmmQYzv5oErLKVrAkzVYSfPoM5fJvDuVkkKvxaZA/sOhyjGdkLbuMn1lya8NRzfRWtvC
+ 6OgqWbY8L2lhqmd+N78tzmB6jl22BorP1PSKz/5jscOJiCT3sMuMFHOgwumPEYxqL6Jv22xVXIE
+ MD1Fyy7wYDi04qRoo87GEisXIukrvrw1y0XoOBAKDxAnl53r2/ga+slmjYqQJQ8gRcVIJkXtlpf
+ kvx69Ruje0wrQTlFukRyAiDw67UoUno8Tdp2Oqp4SRVb+TJB1t4G9y+WVS3wbrxXK0aDxYrypjZ
+ 20khUkQnE3lFCB/GZTOb/ms90TA7RXwt4ZdxdioS6b6oAJP+EZH/fB+iu/GqVdu6PUfCN8BoI1I
+ vXLd5+DQaO2Qrz3TtHe5jARrI2GE4NM4Mm68APwCpjDiG9kcUhkmdLHJacdJhqLXjYll2Jlilzg
+ RzJjKjPNwBfgNd5gvwoFo6S9zKxvcGzdkngc2c+BGk8bVtPXF2BEI1MEtT3sov0x59AiWdcMB6X
+ 3WR1W0bTwHAAvV5a/ievw6612IqKZE1g4G9YaDpB07JQ6vA4zNitJ+NG4W7va2Q2aKq5IFa0AIG
+ gXMTfLtlHSvsE80TfLi3m759tkEZgYIspjvX/mzTKo1hnPSKjH6mC/VUfq8gq1SX8rS4DBKnysQ
+ ILD2vTNsuJffK7A==
 X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
  fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-The laptop contains an embedded controller that provides a set of
-features:
+Some ARM64 based laptops and computers require vendor/board specific
+drivers for their embedded controllers. Even though usually the most
+important functionality of those devices is implemented inside ACPI,
+unfortunately Linux doesn't currently have great support for ACPI on
+platforms like Qualcomm Snapdragon that are used in most ARM64 laptops
+today. Instead Linux relies on Device Tree for Qualcomm based devices
+and it's significantly easier to reimplement the EC functionality in
+a dedicated driver than to make use of ACPI code.
 
-- Battery and charger monitoring
-- USB Type-C DP alt mode HPD monitoring
-- Lid status detection
-- Small amount of keyboard configuration*
+This commit introduces a new platform/arm64 subdirectory to give a
+place to such drivers for EC-like devices.
 
-[*] The keyboard is handled by the same EC but it has a dedicated i2c
-bus and is already enabled. This port only provides fn key behavior
-configuration.
-
-Unfortunately, while all this functionality is implemented in ACPI, it's
-currently not possible to use ACPI to boot Linux on such Qualcomm
-devices. Thus this series implements and enables a new driver that
-provides support for the EC features.
-
-The EC would be one of the last pieces to get almost full support for the
-Acer Aspire 1 laptop in the upstream Linux kernel.
-
-This series is similar to the EC driver for Lenovo Yoga C630, proposed
-in [1] but seemingly never followed up...
-
-[1] https://lore.kernel.org/all/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
+A new MAINTAINERS entry is added for this directory. Patches to files in
+this directory will be taken up by the platform-drivers-x86 team (i.e.
+Hans de Goede and Ilpo Järvinen) with additional review from Bryan
+O'Donoghue to represent ARM64 maintainers.
 
 Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
-Changes in v5:
-- Various cleanups (Bryan, Ilpo)
-- Add Bryan as Reviewer for platform/arm64 (Bryan, Ilpo)
-- Link to v4: https://lore.kernel.org/r/20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru
+ MAINTAINERS                     | 10 ++++++++++
+ drivers/platform/Kconfig        |  2 ++
+ drivers/platform/Makefile       |  1 +
+ drivers/platform/arm64/Kconfig  | 19 +++++++++++++++++++
+ drivers/platform/arm64/Makefile |  6 ++++++
+ 5 files changed, 38 insertions(+)
 
-Changes in v4:
-- Move to platform/arm64 (Sebastian, Hans)
-- Drop fn mode dt property (Rob)
-- Add fn_lock attribute in sysfs (Rob)
-- Report psy present correctly (Sebastian)
-- Link to v3: https://lore.kernel.org/r/20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 76b3714710c2..186338451099 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3050,6 +3050,16 @@ F:	drivers/mmc/host/sdhci-of-arasan.c
+ N:	zynq
+ N:	xilinx
+ 
++ARM64 PLATFORM DRIVERS
++M:	Hans de Goede <hdegoede@redhat.com>
++M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
++R:	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++Q:	https://patchwork.kernel.org/project/platform-driver-x86/list/
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
++F:	drivers/platform/arm64/
++
+ ARM64 PORT (AARCH64 ARCHITECTURE)
+ M:	Catalin Marinas <catalin.marinas@arm.com>
+ M:	Will Deacon <will@kernel.org>
+diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+index 868b20361769..81a298517df2 100644
+--- a/drivers/platform/Kconfig
++++ b/drivers/platform/Kconfig
+@@ -14,3 +14,5 @@ source "drivers/platform/olpc/Kconfig"
+ source "drivers/platform/surface/Kconfig"
+ 
+ source "drivers/platform/x86/Kconfig"
++
++source "drivers/platform/arm64/Kconfig"
+diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+index 41640172975a..fbbe4f77aa5d 100644
+--- a/drivers/platform/Makefile
++++ b/drivers/platform/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_OLPC_EC)		+= olpc/
+ obj-$(CONFIG_GOLDFISH)		+= goldfish/
+ obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+ obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
++obj-$(CONFIG_ARM64)		+= arm64/
+diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+new file mode 100644
+index 000000000000..644b83ede093
+--- /dev/null
++++ b/drivers/platform/arm64/Kconfig
+@@ -0,0 +1,19 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# EC-like Drivers for aarch64 based devices.
++#
++
++menuconfig ARM64_PLATFORM_DEVICES
++	bool "ARM64 Platform-Specific Device Drivers"
++	depends on ARM64 || COMPILE_TEST
++	default y
++	help
++	  Say Y here to get to see options for platform-specific device drivers
++	  for arm64 based devices, primarily EC-like device drivers.
++	  This option alone does not add any kernel code.
++
++	  If you say N, all options in this submenu will be skipped and disabled.
++
++if ARM64_PLATFORM_DEVICES
++
++endif # ARM64_PLATFORM_DEVICES
+diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+new file mode 100644
+index 000000000000..f91cdc7155e2
+--- /dev/null
++++ b/drivers/platform/arm64/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Makefile for linux/drivers/platform/arm64
++#
++# This dir should only include drivers for EC-like devices.
++#
 
-Changes in v3:
-- Supress warning on few no-op events.
-- Invert the fn key behavior (Rob, Conor)
-- Link to v2: https://lore.kernel.org/r/20231212-aspire1-ec-v2-0-ca495ea0a7ac@trvn.ru
-
-Changes in v2:
-- Drop incorrectly allowed reg in the ec connector binding (Krzysztof)
-- Minor style changes (Konrad)
-- Link to v1: https://lore.kernel.org/r/20231207-aspire1-ec-v1-0-ba9e1c227007@trvn.ru
-
----
-Nikita Travkin (4):
-      dt-bindings: platform: Add Acer Aspire 1 EC
-      platform: Add ARM64 platform directory
-      platform: arm64: Add Acer Aspire 1 embedded controller driver
-      arm64: dts: qcom: acer-aspire1: Add embedded controller
-
- .../bindings/platform/acer,aspire1-ec.yaml         |  60 +++
- MAINTAINERS                                        |  16 +
- arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts   |  40 +-
- drivers/platform/Kconfig                           |   2 +
- drivers/platform/Makefile                          |   1 +
- drivers/platform/arm64/Kconfig                     |  35 ++
- drivers/platform/arm64/Makefile                    |   8 +
- drivers/platform/arm64/acer-aspire1-ec.c           | 562 +++++++++++++++++++++
- 8 files changed, 723 insertions(+), 1 deletion(-)
----
-base-commit: a1e7655b77e3391b58ac28256789ea45b1685abb
-change-id: 20231206-aspire1-ec-6b3d2cac1a72
-
-Best regards,
 -- 
-Nikita Travkin <nikita@trvn.ru>
+2.44.0
 
