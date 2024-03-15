@@ -1,123 +1,170 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D992C188;
-	Fri, 15 Mar 2024 13:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCFE36AED
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 13:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710508037; cv=none; b=uq28esz8R6TGNL3UEZX3do2Q3szF6XV1XHFvml+jqpYOEYuvGpzQVnQX+5yQd2ChD05TI06NxILtjRn4LnWKRRutVB8AWqwLQDnqcBMZUaf/opB/UZlu6Q//QmD4DVQJbhofFk5XStKFIepdaIj5yL3IdX3FK7VXf5PxuEO4+Yc=
+	t=1710508069; cv=none; b=K+kbqjZIpjKp2RmBsfs/02c6Uu5sOgJw48ZMxtG8I6tqSEqnV6rNHqdxRXSOIeODxvz6MvU9ubzPc8mcXO+vmwpyU4/hhFl13lGeeqnuXFi8F+RrgeYqKoRPksn5iUD9Wt64ri5AHgUMC/gVZlMeKvvqiyJzu9j/EVIQu/aySh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710508037; c=relaxed/simple;
-	bh=Qr9kR+Tt4+oAHDpJT35SdyDEr+xQzbZe41wY5knNfiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfHwSV9t+UtURBOaPxIA6V3WxJl6pPW5UUjkdR5kfR9Nd5NXPXn0GW2AI0tXUWmPZ03r72JlnE2h09QEzaSUDMIRz3J+O3CbNl33h7QaelWYH2q9PwbnjPwZrm5JcSWWIsFEemKxV0/PQkgXYX1f/BBbRNVzEgfcLiIC5FNw0jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60a3c48e70fso22545027b3.1;
-        Fri, 15 Mar 2024 06:07:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710508033; x=1711112833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9rOBEjwt94At0KX8hgZNX+vcy5XFgHmof560QYmcvh4=;
-        b=Hh6JbI3Uwdk+w81qSOWsVR8DcPEs2Hk+tXl8ZAlEDULNVsSB+tI/+AEoTr0MUnIkzF
-         sQ+KGAMQ0ZHUMqAq3etA3hPEmmQjsfpMJiTGqjE4wXrT49aJlPtTGMp7f4DxBZ1dt4Tm
-         bvT7TJY1pi/4Q52UE020brblra6BybFC5jQasCcmcaJD1KVMmmVp8wnAbmYvzTQbLGXb
-         f9QAIujaKniKJPj+d/BegW0Hihuo4QRjQt0FZoXzXOyMT2YMJY85SJT+abBgsGnKX44+
-         yMIU2nak0BJY9GAl1eMXkaooVRzEHuPCYHX27T3f+mMVjtE7nWsunwhFbku5cc9zlVSI
-         RNKA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+LktzYowSfgNv3uWHIGTk0RIHGXzz+cgUgIcbWchFwN5+N1pKA1Sti7V3GUpDB57yt8WEXj/ruCscYP+0oCeodr4a7rvxXnGc3ZiCGLJMVWYcIgdyV1M4I2PKbZT2YbJKR+4LoALcfMqVtX7a/wt21Wcf7LG3hGemYOD1hmsUYbxn6U43AdBKraeEvUdbPNyt9hDy/XJpm/83r/1sZshXfkYgc9XP
-X-Gm-Message-State: AOJu0YwaBkv8ZeAic3i1UvixA0eXHuIImjfEP+XsT9z+bP1YQH+ArLlf
-	K1PS2gKvg5nRhMzvlZi2p4mf1iZhwWL+RGn+Ct0HEunz/C/I4ZvIVHU6LFY+Agg=
-X-Google-Smtp-Source: AGHT+IHseiZ8JEXQOMz0qVOIe8N7n8O00B9o3p6fq2bgWAEUvsnsNCT3hieEku4PYcrTrBEgzdBOBQ==
-X-Received: by 2002:a25:be52:0:b0:dc6:c32f:6126 with SMTP id d18-20020a25be52000000b00dc6c32f6126mr4454505ybm.22.1710508033364;
-        Fri, 15 Mar 2024 06:07:13 -0700 (PDT)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id g13-20020a25ef0d000000b00dc2310abe8bsm674914ybd.38.2024.03.15.06.07.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 06:07:13 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-609fb0450d8so21908067b3.0;
-        Fri, 15 Mar 2024 06:07:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXZwhsxCBi0FxtZ8KOy0RIIwWpLrFVz/+VOjRgo7siVFbb8lbZ9SrTFqGDzW+m6jijdNagMW2ta/jm6Q12qnPjmgH49VMJsyMUZ6/lRAZitOTFi12zHfc433uNc++xWDukF7FE3z4TB3p7OiBtji3UV90UQ9CzQEF2HaRcK95YyunC7po+IwsUoamRGoj7VCGoPt4jcve8pqLjIu5cSXKK6PX/EEwTm
-X-Received: by 2002:a5b:24c:0:b0:dcd:b034:b504 with SMTP id
- g12-20020a5b024c000000b00dcdb034b504mr4405291ybp.27.1710508032362; Fri, 15
- Mar 2024 06:07:12 -0700 (PDT)
+	s=arc-20240116; t=1710508069; c=relaxed/simple;
+	bh=mSohghLDJbp7142TrJKBKFeVxl4X6hCtsSehtNibEsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fqcYVXn2O32W82EXpt+nlo7kzDbWmJOPj2qiPyV9KQKw7zS359QU7IgvihbHDcTMs2EWbCYO9XNHHCBIk04pF6zA1LTYTsWHCyvUogvGKPL8oac0eS5S5X8S0EaP8yp4GFP5G4id9qjHXgjqeIIl66kQe8WQD39TYs8XQEnP/74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UOnbzokV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yqgsxWh4; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UOnbzokV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yqgsxWh4; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UOnbzokV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yqgsxWh4";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UOnbzokV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yqgsxWh4"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 879881FB63;
+	Fri, 15 Mar 2024 13:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710508065; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UNb4nW2xcC1S94ZTnXVVn5Q1xi4EnOrvKCc0jSiOkq4=;
+	b=UOnbzokVpaISeHhqtQu7ppsFLwcFl+UAfZyMYUt/+B98tl1wHEyZNnIlS42ZEhjGd87XNb
+	PAWbFqH/cvMcoXtpY3a5BcJ7OxDqcsyQO1b1rPlttp7DrSDAgTke46qzPcvboa4/f33n9f
+	IvSK4R9XvvkERRDKBd3xuiLhTjUu9h0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710508065;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UNb4nW2xcC1S94ZTnXVVn5Q1xi4EnOrvKCc0jSiOkq4=;
+	b=yqgsxWh4wuRpVXb6X+sty568bStfsC/RERcqFnyydjWWv6Kj67cCkABvD8fGbeAnTND9Ai
+	GPfyPfEDhWaTf6Cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1710508065; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UNb4nW2xcC1S94ZTnXVVn5Q1xi4EnOrvKCc0jSiOkq4=;
+	b=UOnbzokVpaISeHhqtQu7ppsFLwcFl+UAfZyMYUt/+B98tl1wHEyZNnIlS42ZEhjGd87XNb
+	PAWbFqH/cvMcoXtpY3a5BcJ7OxDqcsyQO1b1rPlttp7DrSDAgTke46qzPcvboa4/f33n9f
+	IvSK4R9XvvkERRDKBd3xuiLhTjUu9h0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1710508065;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UNb4nW2xcC1S94ZTnXVVn5Q1xi4EnOrvKCc0jSiOkq4=;
+	b=yqgsxWh4wuRpVXb6X+sty568bStfsC/RERcqFnyydjWWv6Kj67cCkABvD8fGbeAnTND9Ai
+	GPfyPfEDhWaTf6Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 748A51368C;
+	Fri, 15 Mar 2024 13:07:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id bd4ZHCFI9GXQIwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 15 Mar 2024 13:07:45 +0000
+Message-ID: <3bd30334-0a46-4050-930f-7f606a72b3e7@suse.cz>
+Date: Fri, 15 Mar 2024 14:07:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315103033.141226-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240315103033.141226-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240315103033.141226-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 15 Mar 2024 14:07:00 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXyiS0tPnoQdQML9EvZtzyELt8bMP07+-xV3E5BjaFWKQ@mail.gmail.com>
-Message-ID: <CAMuHMdXyiS0tPnoQdQML9EvZtzyELt8bMP07+-xV3E5BjaFWKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] i2c: riic: Pass register offsets and chip details
- as OF data
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm,page_owner: Fix recursion
+Content-Language: en-US
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Michal Hocko <mhocko@suse.com>, Marco Elver <elver@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>,
+ Alexander Potapenko <glider@google.com>
+References: <20240313234245.18824-1-osalvador@suse.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240313234245.18824-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -5.03
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-5.03 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_HI(-3.50)[suse.cz:dkim];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-0.03)[55.66%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UOnbzokV;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=yqgsxWh4
+X-Rspamd-Queue-Id: 879881FB63
 
-On Fri, Mar 15, 2024 at 11:31=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> With an increasing number of SoCs reusing this driver, each with slight
-> variations in the RIIC IP, it becomes necessary to support passing these
-> details as OF data. This approach simplifies the extension of the driver
-> for other SoCs.
->
-> This patch lays the groundwork for adding support for the Renesas RZ/V2H
-> SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 3/14/24 00:42, Oscar Salvador wrote:
+> Prior to 217b2119b9e2 ("mm,page_owner: implement the tracking of the stacks count")
+> the only place where page_owner could potentially go into recursion due to
+> its need of allocating more memory was in save_stack(), which ends up calling
+> into stackdepot code with the possibility of allocating memory.
+> 
+> We made sure to guard against that by signaling that the current task was
+> already in page_owner code, so in case a recursion attempt was made, we
+> could catch that and return dummy_handle.
+> 
+> After above commit, a new place in page_owner code was introduced where we
+> could allocate memory, meaning we could go into recursion would we take that
+> path.
+> 
+> Make sure to signal that we are in page_owner in that codepath as well.
+> Move the guard code into two helpers {un}set_current_in_page_owner()
+> and use them prior to calling in the two functions that might allocate
+> memory.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Fixes: 217b2119b9e2 ("mm,page_owner: implement the tracking of the stacks count")
 > ---
-> v1->v2
-> - Dropped family from struct riic_of_data
-> - Included RIIC_REG_END in enum list as flexible array member
->   in a struct with no named members is not allowed
+>  mm/page_owner.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> @@ -292,7 +302,9 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
+>  		return;
+>  	__set_page_owner_handle(page_ext, handle, order, gfp_mask);
+>  	page_ext_put(page_ext);
+> +	set_current_in_page_owner();
+>  	inc_stack_record_count(handle, gfp_mask);
+> +	unset_current_in_page_owner();
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This is because of the kmalloc() in add_stack_record_to_list() right? Why
+not wrap just that then?
 
-> --- a/drivers/i2c/busses/i2c-riic.c
-> +++ b/drivers/i2c/busses/i2c-riic.c
-> @@ -453,6 +461,8 @@ static int riic_i2c_probe(struct platform_device *pde=
-v)
->                 }
->         }
->
-> +       riic->info =3D of_device_get_match_data(&pdev->dev);
+>  }
+>  
+>  void __set_page_owner_migrate_reason(struct page *page, int reason)
 
-This is fine, as all in-tree users use DT (Linux does not support
-sh7752/sh7753, which seem to use the same RIIC variant as RZ/V2H).
-
-> +
->         adap =3D &riic->adapter;
->         i2c_set_adapdata(adap, riic);
->         strscpy(adap->name, "Renesas RIIC adapter", sizeof(adap->name));
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
