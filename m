@@ -1,105 +1,294 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DDD15E88
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E6C17592
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710490604; cv=none; b=PUrhzd/ni5kAvslSRnTfT2OGHCo1WywEBS1NkfEuMaMPgrgbPL0rMFwsSu6Q5zh4sYMxntLrLlZ93LrPn9SoVlfeQmUCyPPTsmMJzdVqmLmAsPt4XSz4QLOpmwwW5YyNm3z3//nS+qezx/WSx4pcbLoy93msz+bYigCGdD/gBi0=
+	t=1710490647; cv=none; b=WnHp8GpO4Q6Z7fuA3OCX3Ha30KVgKGF5iXyid8/0bWPoVrNPmuLRd02ZRNDfgKOFZuG2hM7hTE02rtFmiktl+1yuIjhh6FLHJnwb8u4GzkfRT+Hmlu9QTErPtwuufRKpNID/GMeOQmGnoLOv18JwAWyDTz0QWpnTsKAJSGiY9QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710490604; c=relaxed/simple;
-	bh=G3LXo/8SAPK1qMap7q7cDulVLMuCk5g6x5WEmLjyGwA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dgQmcGt+EaJka2pTiOkjNJZsQ3ukCfGx/B6n+aysOH9mjfQSNR4v5X+Cf01ietyIstir59agKi8OvjkpL62ZNArCtOCKpRYjwElMKLDHcZD4/SmP6j53perNqSsbbwaLbhfLVLWo0LZk46iOJ+6i/hibVfbYBRbb/QzF7GXt6ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=JqQvmBGC; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+	s=arc-20240116; t=1710490647; c=relaxed/simple;
+	bh=3Veip/OxCnGKCQ+Abe6TiS3hdoh9knWDIAqJQrDZQBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nt+jo6LcpTfnNlbQNfA7RD+RwB8UXDGub2XxoxxM2paXyXzywwsHuRtNe5PqSaJtQffJx0gPKNOI4wpWIk0xNnT1jmkc+TXqRThoVKKKYyOFBeiGpKfTNZY+bXZBQPxjXhBYOCIIvnGSPMRaS39CzVu/nmeZnKFr4fEhrEnIrUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BnLnF6jp; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="JqQvmBGC"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5687feeb1feso2069936a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 01:16:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BnLnF6jp"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29c52a90417so1337356a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 01:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1710490600; x=1711095400; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G3LXo/8SAPK1qMap7q7cDulVLMuCk5g6x5WEmLjyGwA=;
-        b=JqQvmBGC84yhzO7ANXvhDbUV9lL95F4ySMxh/FXyCOv/UB5QBIBL1QmNLi+KEUbev4
-         XJ0QbmSeYaBDhCA+nfqAtH8xt5Y7m3TmelTJ01pQQX79KhzHOurXWs34y0d4Xk0cReZc
-         nQV3MYyrhEik/+r1dN9BhZNY1Q4bXH0ktIbT/QruxnULyCrPb9NEFVz+PL6TzcQFERUC
-         zbwGNhoFaiPeRseTBN5z5Q5ttUTCFH3ODM3E/G+kjzFVrS/yATQKSp2JblBmZeyntgsJ
-         TeCIO1fnah58GaoSPFGoDBL1W3WUQmXiy3WLzTTNhMnrv9zSz33ONI8pSO/QRxy96kDK
-         gD2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710490600; x=1711095400;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1710490644; x=1711095444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G3LXo/8SAPK1qMap7q7cDulVLMuCk5g6x5WEmLjyGwA=;
-        b=In+6dWGFUUJhhKMVQ91b22JF2NxRaLCmpvW86sN/G2ABui2ZpAbCxchGtX/VEKN+rU
-         DOEAUr0rRfcygfn4t+vlXx/1qD5qnqwyE0DwitxFn84fJe+2zPsp2Pa1A0oKNolUkdMs
-         3g5pzlV0WqVeQhL130g/VER0J52W2MCLk+VljJMrLbX7tmvnLGBG0VD6ayYlA1wDknIj
-         cQp6QJF3EbY6a8toycMwExyznLMkbeo6oNYrwHqJVpeDe0zGtiel+Ulmux4CcJYp5q8b
-         +8tL0aviI257KrG9hXY3nN6InyYg28AF0kgHg03EM1TrBFPaFdSTQ1TgWgtXLta0Eo7/
-         /15A==
-X-Forwarded-Encrypted: i=1; AJvYcCVp3h3RGDZlerg3A+Z8NYFXzHG6E0qFVNK+VnIQEYDxcPVjcqx30DgCU3Ln00ZnIu+ArG84xNUaYBF5oL5xiL/oKSKQKZrTLZD9xPYW
-X-Gm-Message-State: AOJu0YxE1ZOx+suRAVgFXRaY3pr3WRe1/Jo03W44p8jbHeUEJWIB40cn
-	12bD0kbWU+KHb+bV7YM/t4uyGkQJFWI9sEFcZvscDJd88wEMIAoCRVn9uS/Q+3o=
-X-Google-Smtp-Source: AGHT+IG7Iq8e4QX5tNKzGQjmTkOhzLhVMQZNEC1/svRFC11/pvZWvj4VBzkScAqS1k2USSm5kMesMQ==
-X-Received: by 2002:a05:6402:28c9:b0:568:9e92:2847 with SMTP id ef9-20020a05640228c900b005689e922847mr2213502edb.40.1710490599758;
-        Fri, 15 Mar 2024 01:16:39 -0700 (PDT)
-Received: from localhost ([194.62.217.2])
-        by smtp.gmail.com with ESMTPSA id q12-20020a056402248c00b005676dc74568sm1451876eda.92.2024.03.15.01.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 01:16:39 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>,  Andreas Hindborg
- <a.hindborg@samsung.com>,  akpm@linux-foundation.org,
-  alex.gaynor@gmail.com,  arnd@arndb.de,  arve@android.com,
-  benno.lossin@proton.me,  bjorn3_gh@protonmail.com,  boqun.feng@gmail.com,
-  brauner@kernel.org,  cmllamas@google.com,  gary@garyguo.net,
-  gregkh@linuxfoundation.org,  joel@joelfernandes.org,
-  keescook@chromium.org,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  maco@android.com,  ojeda@kernel.org,
-  rust-for-linux@vger.kernel.org,  surenb@google.com,  tkjos@android.com,
-  viro@zeniv.linux.org.uk,  wedsonaf@gmail.com
-Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
-In-Reply-To: <20240311105056.122734-1-aliceryhl@google.com> (Alice Ryhl's
-	message of "Mon, 11 Mar 2024 10:50:56 +0000")
-References: <20240311-alice-mm-v3-4-cdf7b3a2049c@google.com>
-	<20240311105056.122734-1-aliceryhl@google.com>
-User-Agent: mu4e 1.12.0; emacs 29.2
-Date: Fri, 15 Mar 2024 09:16:32 +0100
-Message-ID: <87ttl7rjtr.fsf@metaspace.dk>
+        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
+        b=BnLnF6jpTf0M3GTFjcSWetvSvIQOQ369PIgwF3aG0VASfibFMiCxnhy8vtyqhOsjyx
+         4iCua5b7xLUAUwDsGjXK/pp/XgXWUnBG6c/CKGhyio9pC/GzFGLP2/VFJWSe+yw6/QC2
+         SLs4tMFzW1MrA6ts1TTFeTkDa7eHXNIoux2jcNUZcTWqGHBe6mTwr32HfYOFkkZcXOe2
+         z2RVX0Hq5om3SYzgJ9iR3RM98+/Fv0UMU7l6EP5buU4YPD8LDhyAIISras9vEeQp4wfc
+         3SPkE0rovMXGjiRmz7PzUbWxW1Z1HmnSlwKnklK6x/rX5v3TAVv47PoG9ldtlB1sAHTd
+         tnGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710490644; x=1711095444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
+        b=NDUCMhvAsydF7W3g60wQ21wO+V9gBbjWuI8l9QS21ALXqW3ChIcnfMkaZyX4wC+r46
+         ylwrOenBfnaDip4msbfPev9UIYmaaVwSTKs1bpIZSoEEtWjXSLpDPxUXiaG81nGTGKIJ
+         zjRMozO1X0LwYXweyPco8A/1z79v36ohrLcQZumUDAATsczS5RVnXFbDHnxKVDEC73Da
+         PdV3V3LeDUrAO216gKAEUpA9MTOBwDHplg/zZXdvDve+rGIPWeY96AYkg9VYevl+T+s4
+         sfSiOJEW4Ov0HsAr+Tqz7EgPH8tIr4NpWp0iJUUm7YMGOdyePqSLxzDbEKRy28vQvvhk
+         ULUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVq3M4tWbJXYiFKYTahxbI9PJsbExE0y7nc3h50aeeaTkifIrMS9xdPnRTgdg4qSGcXqp5kOmnjKkLnAL6gd0y+VZiArBA0Xy6ErFb
+X-Gm-Message-State: AOJu0YybAhDzOZ3CecZa3zxD8xAd12fGzrRv0AWLimJiD40lz82Mm5cD
+	CIBXMAnvLL+Fjf0ikg/X2JX75P1knX1YUyEhjM9aCmtJIGhqwxLwVXDAMquS/mlNaqk+X/Yt6j1
+	cCJUDA6hG66IZUt2PAHiZRSKEhLefUsEAur7wbw==
+X-Google-Smtp-Source: AGHT+IH6WVj2QW6HVMnPZetJyxE6GBO3ARfmDCsMA75RFQoJ7vWKBd9vtLcWlAX1Fz+oArSrbQ03zFV2IWXrG37YkmE=
+X-Received: by 2002:a17:90a:fa18:b0:29c:735:a758 with SMTP id
+ cm24-20020a17090afa1800b0029c0735a758mr6401475pjb.19.1710490643623; Fri, 15
+ Mar 2024 01:17:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com> <ZfKY6E8xhSgzYL1I@krava>
+In-Reply-To: <ZfKY6E8xhSgzYL1I@krava>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Fri, 15 Mar 2024 16:17:12 +0800
+Message-ID: <CALz3k9jM0eqgw1=RKQPFpn8nk4MZRadEC3ge0kRutfvN2WVbwg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Alice Ryhl <aliceryhl@google.com> writes:
-
-> Alice Ryhl <aliceryhl@google.com> writes:
+On Thu, Mar 14, 2024 at 2:29=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> Andreas Hindborg: I recall you mentioning that you also needed an
-> abstraction for pages. To what extent do these abstractions fit your
-> needs? Which gfp flags do you need?
+> On Wed, Mar 13, 2024 at 05:25:35PM -0700, Alexei Starovoitov wrote:
+> > On Tue, Mar 12, 2024 at 6:53=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <do=
+ngmenglong.8@bytedance.com> wrote:
+> > >
+> > > On Wed, Mar 13, 2024 at 12:42=E2=80=AFAM Alexei Starovoitov
+> > > <alexei.starovoitov@gmail.com> wrote:
+> > > >
+> > > > On Mon, Mar 11, 2024 at 7:42=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3=
+ <dongmenglong.8@bytedance.com> wrote:
+> > > > >
+> > > [......]
+> > > >
+> > > > I see.
+> > > > I thought you're sharing the trampoline across attachments.
+> > > > (since bpf prog is the same).
+> > >
+> > > That seems to be a good idea, which I hadn't thought before.
+> > >
+> > > > But above approach cannot possibly work with a shared trampoline.
+> > > > You need to create individual trampoline for all attachment
+> > > > and point them to single bpf prog.
+> > > >
+> > > > tbh I'm less excited about this feature now, since sharing
+> > > > the prog across different attachments is nice, but it won't scale
+> > > > to thousands of attachments.
+> > > > I assumed that there will be a single trampoline with max(argno)
+> > > > across attachments and attach/detach will scale to thousands.
+> > > >
+> > > > With individual trampoline this will work for up to a hundred
+> > > > attachments max.
+> > >
+> > > What does "a hundred attachments max" means? Can't I
+> > > trace thousands of kernel functions with a bpf program of
+> > > tracing multi-link?
+> >
+> > I mean what time does it take to attach one program
+> > to 100 fentry-s ?
+> > What is the time for 1k and for 10k ?
+> >
+> > The kprobe multi test attaches to pretty much all funcs in
+> > /sys/kernel/tracing/available_filter_functions
+> > and it's fast enough to run in test_progs on every commit in bpf CI.
+> > See get_syms() in prog_tests/kprobe_multi_test.c
+> >
+> > Can this new multi fentry do that?
+> > and at what speed?
+> > The answer will decide how applicable this api is going to be.
+> > Generating different trampolines for every attach point
+> > is an approach as well. Pls benchmark it too.
+> >
+> > > >
+> > > > Let's step back.
+> > > > What is the exact use case you're trying to solve?
+> > > > Not an artificial one as selftest in patch 9, but the real use case=
+?
+> > >
+> > > I have a tool, which is used to diagnose network problems,
+> > > and its name is "nettrace". It will trace many kernel functions, whos=
+e
+> > > function args contain "skb", like this:
+> > >
+> > > ./nettrace -p icmp
+> > > begin trace...
+> > > ***************** ffff889be8fbd500,ffff889be8fbcd00 ***************
+> > > [1272349.614564] [dev_gro_receive     ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614579] [__netif_receive_skb_core] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614585] [ip_rcv              ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614592] [ip_rcv_core         ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614599] [skb_clone           ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614616] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614629] [nft_do_chain        ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614635] [ip_rcv_finish       ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614643] [ip_route_input_slow ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614647] [fib_validate_source ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614652] [ip_local_deliver    ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614658] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614663] [ip_local_deliver_finish] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614666] [icmp_rcv            ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614671] [icmp_echo           ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614675] [icmp_reply          ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614715] [consume_skb         ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614722] [packet_rcv          ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > > [1272349.614725] [consume_skb         ] ICMP: 169.254.128.15 ->
+> > > 172.27.0.6 ping request, seq: 48220
+> > >
+> > > For now, I have to create a bpf program for every kernel
+> > > function that I want to trace, which is up to 200.
+> > >
+> > > With this multi-link, I only need to create 5 bpf program,
+> > > like this:
+> > >
+> > > int BPF_PROG(trace_skb_1, struct *skb);
+> > > int BPF_PROG(trace_skb_2, u64 arg0, struct *skb);
+> > > int BPF_PROG(trace_skb_3, u64 arg0, u64 arg1, struct *skb);
+> > > int BPF_PROG(trace_skb_4, u64 arg0, u64 arg1, u64 arg2, struct *skb);
+> > > int BPF_PROG(trace_skb_5, u64 arg0, u64 arg1, u64 arg2, u64 arg3, str=
+uct *skb);
+> > >
+> > > Then, I can attach trace_skb_1 to all the kernel functions that
+> > > I want to trace and whose first arg is skb; attach trace_skb_2 to ker=
+nel
+> > > functions whose 2nd arg is skb, etc.
+> > >
+> > > Or, I can create only one bpf program and store the index
+> > > of skb to the attachment cookie, and attach this program to all
+> > > the kernel functions that I want to trace.
+> > >
+> > > This is my use case. With the multi-link, now I only have
+> > > 1 bpf program, 1 bpf link, 200 trampolines, instead of 200
+> > > bpf programs, 200 bpf link and 200 trampolines.
+> >
+> > I see. The use case makes sense to me.
+> > Andrii's retsnoop is used to do similar thing before kprobe multi was
+> > introduced.
+> >
+> > > The shared trampoline you mentioned seems to be a
+> > > wonderful idea, which can make the 200 trampolines
+> > > to one. Let me have a look, we create a trampoline and
+> > > record the max args count of all the target functions, let's
+> > > mark it as arg_count.
+> > >
+> > > During generating the trampoline, we assume that the
+> > > function args count is arg_count. During attaching, we
+> > > check the consistency of all the target functions, just like
+> > > what we do now.
+> >
+> > For one trampoline to handle all attach points we might
+> > need some arch support, but we can start simple.
+> > Make btf_func_model with MAX_BPF_FUNC_REG_ARGS
+> > by calling btf_distill_func_proto() with func=3D=3DNULL.
+> > And use that to build a trampoline.
+> >
+> > The challenge is how to use minimal number of trampolines
+> > when bpf_progA is attached for func1, func2, func3
+> > and bpf_progB is attached to func3, func4, func5.
+> > We'd still need 3 trampolines:
+> > for func[12] to call bpf_progA,
+> > for func3 to call bpf_progA and bpf_progB,
+> > for func[45] to call bpf_progB.
+> >
+> > Jiri was trying to solve it in the past. His slides from LPC:
+> > https://lpc.events/event/16/contributions/1350/attachments/1033/1983/pl=
+umbers.pdf
+> >
+> > Pls study them and his prior patchsets to avoid stepping on the same ra=
+kes.
 >
+> yep, I refrained from commenting not to take you down the same path
+> I did, but if you insist.. ;-)
+>
+> I managed to forgot almost all of it, but the IIRC the main pain point
+> was that at some point I had to split existing trampoline which caused
+> the whole trampolines management and error paths to become a mess
+>
+> I tried to explain things in [1] changelog and the latest patchset is in =
+[0]
+>
+> feel free to use/take anything, but I advice strongly against it ;-)
+> please let me know if I can help
 
-I based the block device driver API and null block driver series on v1
-of this patch and v3 should still be good for that. The null block
-driver uses `Page` indirectly through `UniqueFolio` with `GFP_KERNEL`
-alloc flags. I do not need to customize the flags outside of that.
+I have to say that I have not gone far enough to encounter
+this problem, and I didn't dig enough to be aware of the
+complexity.
 
-As an aside, I added methods to safely operate on the page contents [1].
-`kernel::block::vec::Segment` indirectly uses this to move data to and
-from pages [2].
+I suspect that I can't overcome this challenge. The only thing that
+I thought when I hear about the "shared trampoline" is to fallback
+and not use the shared trampoline for the kernel functions who
+already have a trampoline.
 
-Best regards,
-Andreas
+Anyway, let's have a try on it, based on your research.
 
+Thanks!
+Menglong Dong
 
-[1] https://github.com/metaspace/linux/commit/e88f4dc928233fcedcb0afec40be9bc2f8f74e3b
-[2] https://lore.kernel.org/rust-for-linux/87y1akso83.fsf@metaspace.dk/T/#me6497ec69544efd21908f1acc6b3a1ab8b148ba0
+>
+> jirka
+>
+>
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=
+=3Dbpf/batch
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit=
+/?h=3Dbpf/batch&id=3D52a1d4acdf55df41e99ca2cea51865e6821036ce
