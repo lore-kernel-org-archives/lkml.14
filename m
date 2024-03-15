@@ -1,173 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A5D1AAC4
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4922A18EB3;
+	Fri, 15 Mar 2024 11:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710501889; cv=none; b=Oyxvw8+dzaxEZEt/GeXVMBjhKWYE12xDBMAA0fJhMYLyaY7HlnN2N5vulTLtYy9sgdjC316s1QZJ4GZD2JGEHUc/nHZ4B2FsXY/p5PjkQn1n0Mje14sLbsbLVeU/AFubY7+01OfmC6eQZVDzcZf4FVS6Zn5Xe2T1UUQI7XO/YpE=
+	t=1710502079; cv=none; b=jFV3cjDPikd8eZ4RvuZVNrogRPoT2ecimnG79KiNM96OzgYns4TxMtDi8sgjuFK6Xu2P4J5Ek0STK0fveBfoDiksl/NzisYMCi0g3G2o/4qp3TNZAJeCyGxNir5hUVuvdPVlWWg/vAQ86gf/54ZUsHA5eWQxGgILmBwBD8RfUUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710501889; c=relaxed/simple;
-	bh=Fw3gXm5GXjZxZ4JPw0DW5hTXqGv9wxu9zz3x6N9pKEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxcK6xszGJexCmoYpOKxgSjBgyBCqGbPRy0Y1AtOEM1OasEoqvqYmx7cKkW62j3X8QWBzjv5FLmMQ7Qf/OZ9EbWn0Mt+sRV7cTXGvwAdlMog1eMNE5FbsHvc4Ffm8E3EN0IiEhSFHWp4NQKJ5iN5Q4qcu4J7ji3Um2XfZtGLc5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LqE8+0Fn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710502079; c=relaxed/simple;
+	bh=cMBm2ZUDvv/FeHjU9MT1L6ylkEfHxwGT+Fdb6DMTg3U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ShFP/CAw/L0qYj7Gcl6nkoOKnSuakTDe8r+xc8bGI94/LBqA8/GlNdIikAhGVDNqpPKEQ323IzYK4gCrXrWaNSK8HGpD+GlUs1XEWBOSz1dhtng9REQtYhojQKD/cwWS5w572SPfSnbEhj8yz3Shjxjhq0N1jRGPDPlrGaw5+L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hbu9H1td; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LqE8+0Fn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710501886;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hbu9H1td"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 218EDE0004;
+	Fri, 15 Mar 2024 11:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710502074;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E5BzWgrmdgiGxq+PlZflG+BHDXAH3VOatC+yV3V4Mnk=;
-	b=LqE8+0FnLPIGae3x7zI0v1EJ5WswsvKPs2OGxi806Lqlja5I/TrEOdP5rXS+ZDGSFqeXRD
-	XM/Bc3vhXSwEDLjnfv6aDH1epGTCt3zkQcl5w2Ay3d3to982743x8KuRlLTHy//BSbQ8U/
-	7glDbPOhGBkEq4Ri8hA6DbIpr0HEuTs=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-660-lH8_J2gjOMOiEoqxStw_Zg-1; Fri, 15 Mar 2024 07:24:45 -0400
-X-MC-Unique: lH8_J2gjOMOiEoqxStw_Zg-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6e6a1625e4bso2266690b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 04:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710501884; x=1711106684;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E5BzWgrmdgiGxq+PlZflG+BHDXAH3VOatC+yV3V4Mnk=;
-        b=fC17Uj420Px28nwK1+vkxW14snmODl/jYN8v/CGCcoRvR+97HuEt78epm9jDN04peD
-         mt1KQ7F+xQTDZzjBk+x6IgKp2O343llw2UK1AJClq43aK0df2SyTGK8QGt4zOPsQMQma
-         g4PWS5oVcxIO7Boibtw+dcLs+CGqGaF3VZDHRXEFp6sSF2DE0ynNLA0B5Qm6nAKyMPt8
-         Gq4Cm0hR8P/IfefLnFEviIqnEjihyzRoiuUJH9m8oQVdjZ0UWO6jjxGZBEyr+kXs9i9A
-         FLzj7pQ634XzW9KjZvGlT8/DXeK94vlt6n0Rf2u6F+T/0hNEaT5i7fnEhzSeGL5gwCkv
-         oTew==
-X-Forwarded-Encrypted: i=1; AJvYcCUaSV9vyifzVE5U2RdrBN0LbZKBLLfDJ8nOKdbuCvf7kLbRC6n1VCtX1zFd8pnaTPgq0vBk6RDNQ/71xzwQfCGEye9j5ghKGG+0iC8L
-X-Gm-Message-State: AOJu0YyPfXT07eQLTNZHmLW+MhGB9nFCv5NH0dJa/fFiS+WuodDHN1x/
-	uA8w35d/4B0I214zfWg5Mab4wpyjetd+ILrgeHRNclkKzov+V/zWDMI0UdOEo0JjC+sTOyOfo7P
-	odKxrLvyZzSxxzkYN4yY4V/OXlNqgTZFyN0+UpvCXNwdE9kekLf4SXMea+5le/w==
-X-Received: by 2002:a05:6a00:b96:b0:6e3:b1b3:139f with SMTP id g22-20020a056a000b9600b006e3b1b3139fmr3397437pfj.17.1710501883981;
-        Fri, 15 Mar 2024 04:24:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFv6UByGgC+juEfECmFf0FkqYVVrr5jER7l/udV8Oy/Bm8qarOlLsSpAREhnDHVoTzcBzZzsg==
-X-Received: by 2002:a05:6a00:b96:b0:6e3:b1b3:139f with SMTP id g22-20020a056a000b9600b006e3b1b3139fmr3397425pfj.17.1710501883695;
-        Fri, 15 Mar 2024 04:24:43 -0700 (PDT)
-Received: from [192.168.68.51] ([43.252.115.31])
-        by smtp.gmail.com with ESMTPSA id kt2-20020a056a004ba200b006e6233563cesm3131483pfb.218.2024.03.15.04.24.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 04:24:43 -0700 (PDT)
-Message-ID: <66e12633-b2d6-4b9a-9103-bb79770fcafa@redhat.com>
-Date: Fri, 15 Mar 2024 21:24:36 +1000
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yKwrXtvxj8TEZrcKF8i8hnVKSrTEOPd44rgLaggpYn8=;
+	b=Hbu9H1tdUnGCCxaS50Hbpsn1zVwsI8XeVjXTg81w6ZplrhN1WxMKpPRos8LILwVed0L63B
+	PiW4Zy8L6nEbXD0+3psh3ELfndG3HbMMd/c2hzFfAcbSTDg0BpjNddu7dBxFqP8Hv6gxCL
+	7x4t8xFtmvjwsYrZxLiuBwtxC1fg7lFCv/CF6/7kuoynStldNWHo9EYaZibQSZiGbDpcuJ
+	y5CaZDVJqaVhSqV4Tdj2L6iIYrir+5froFdjZQ56Ue3zxIylI0vla324frDvmOjFNo8AEH
+	QVJTO/rxL7cFSxlqOoNcyfx1GOu+ZNJWDWbk+pSsLQaAVHysLIr5BrNT1KuKNA==
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com,
+	christophercordahi@nanometrics.ca
+Subject: [PATCH 00/13] ASoC: ti: davinci-i2s: Add features to McBSP driver
+Date: Fri, 15 Mar 2024 12:27:32 +0100
+Message-ID: <20240315112745.63230-1-bastien.curutchet@bootlin.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio_ring: Fix the stale index in available ring
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- jasowang@redhat.com, xuanzhuo@linux.alibaba.com, yihyu@redhat.com,
- shan.gavin@gmail.com, Will Deacon <will@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org, mochs@nvidia.com
-References: <20240314074923.426688-1-gshan@redhat.com>
- <20240314040443-mutt-send-email-mst@kernel.org>
- <9b148de7-b687-4d10-b177-5608b8dc7046@redhat.com>
- <20240314074216-mutt-send-email-mst@kernel.org>
- <23dc6d00-6a57-4ddf-8611-f3c6f6a8e43c@redhat.com>
- <20240314085630-mutt-send-email-mst@kernel.org>
- <63002c24-8117-458f-84c7-fa4f7acd8cc6@redhat.com>
- <20240315065318-mutt-send-email-mst@kernel.org>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240315065318-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
+This series aims to add some features to McBSP driver.
 
-On 3/15/24 21:05, Michael S. Tsirkin wrote:
-> On Fri, Mar 15, 2024 at 08:45:10PM +1000, Gavin Shan wrote:
->>>> Yes, I guess smp_wmb() ('dmb') is buggy on NVidia's grace-hopper platform. I tried
->> to reproduce it with my own driver where one thread writes to the shared buffer
->> and another thread reads from the buffer. I don't hit the out-of-order issue so
->> far.
-> 
-> Make sure the 2 areas you are accessing are in different cache lines.
-> 
+Convert bindings from .txt to .yaml.
+Add possibility to use an external clock as sample rate generator's
+input.
+Add handling of new formats (TDM, S24_LE, BP_FC).
+Add optional properties in DT:
+ - ti,enable-sync-err  : Enable the detection of unexpected frame pulses
+ - ti,disable-free-run : Disable the free-running mode where McBSP drives
+                         serial clocks during emulation halt
+ - ti,drive-dx 	       : Outputs a chosen pattern on DX pin during
+                         capture streams.
 
-Yes, I already put those 2 areas to separate cache lines.
+This has been tested on a platform designed off of the DAVINCI/OMAP-L138
+connected to 3 daisy-chained AD7767. An external clock drives the
+sample rate generator through the CLKS pin.
+The hardware I have only allowed me to test acquisition side of McBSP.
+It is connected to a 6 channels TDM and acts as Bit clock provider and
+Frame clock consumer.
 
-> 
->> My driver may be not correct somewhere and I will update if I can reproduce
->> the issue with my driver in the future.
-> 
-> Then maybe your change is just making virtio slower and masks the bug
-> that is actually elsewhere?
-> 
-> You don't really need a driver. Here's a simple test: without barriers
-> assertion will fail. With barriers it will not.
-> (Warning: didn't bother testing too much, could be buggy.
-> 
-> ---
-> 
-> #include <pthread.h>
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <assert.h>
-> 
-> #define FIRST values[0]
-> #define SECOND values[64]
-> 
-> volatile int values[100] = {};
-> 
-> void* writer_thread(void* arg) {
-> 	while (1) {
-> 	FIRST++;
-> 	// NEED smp_wmb here
-         __asm__ volatile("dmb ishst" : : : "memory");
-> 	SECOND++;
-> 	}
-> }
-> 
-> void* reader_thread(void* arg) {
->      while (1) {
-> 	int first = FIRST;
-> 	// NEED smp_rmb here
-         __asm__ volatile("dmb ishld" : : : "memory");
-> 	int second = SECOND;
-> 	assert(first - second == 1 || first - second == 0);
->      }
-> }
-> 
-> int main() {
->      pthread_t writer, reader;
-> 
->      pthread_create(&writer, NULL, writer_thread, NULL);
->      pthread_create(&reader, NULL, reader_thread, NULL);
-> 
->      pthread_join(writer, NULL);
->      pthread_join(reader, NULL);
-> 
->      return 0;
-> }
-> 
+Bastien Curutchet (13):
+  ASoC: dt-bindings: davinci-mcbsp: convert McBSP bindings to yaml
+    schema
+  ASoC: dt-bindings: davinci-mcbsp: Add new properties
+  ASoC: ti: davinci-i2s: Remove the unused clk_input_pin attribute
+  ASoC: ti: davinci-i2s: Replace dev_err with dev_err_probe
+  ASoC: ti: davinci-i2s: Use external clock to drive sample rate
+    generator
+  ASoC: ti: davinci-i2s: Delete unnecessary assignment
+  ASoC: ti: davinci-i2s: Add TDM support
+  ASoC: ti: davinci-i2s: Add handling of BP_FC format
+  ASoC: ti: davinci-i2s: Enable unexpected frame pulses detection
+  ASoC: ti: davinci-i2s: Make free-running mode optional
+  ASoC: ti: davinci-i2s: Add S24_LE to supported formats
+  ASoC: dt-bindings: davinic-mcbsp: Add the 'ti,drive-dx' property
+  ASoC: ti: davinci-i2s: Opitonally drive DX pin during capture streams
 
-Had a quick test on NVidia's grace-hopper and Ampere's CPUs. I hit
-the assert on both of them. After replacing 'dmb' with 'dsb', I can
-hit assert on both of them too. I need to look at the code closely.
+ .../bindings/sound/davinci-mcbsp.txt          |  50 ---
+ .../bindings/sound/davinci-mcbsp.yaml         | 119 +++++++
+ include/linux/platform_data/davinci_asp.h     |  15 -
+ sound/soc/ti/davinci-i2s.c                    | 333 ++++++++++++++----
+ 4 files changed, 376 insertions(+), 141 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml
 
-[root@virt-mtcollins-02 test]# ./a
-a: a.c:26: reader_thread: Assertion `first - second == 1 || first - second == 0' failed.
-Aborted (core dumped)
-
-[root@nvidia-grace-hopper-05 test]# ./a
-a: a.c:26: reader_thread: Assertion `first - second == 1 || first - second == 0' failed.
-Aborted (core dumped)
-
-Thanks,
-Gavin
+-- 
+2.43.2
 
