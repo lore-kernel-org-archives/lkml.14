@@ -1,148 +1,343 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D751759F
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7BB17C66;
+	Fri, 15 Mar 2024 09:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710495589; cv=none; b=dIyya6f9MjoG2dC8AiPNaS0tdMb5gNk9p74ypHXLMqon+fFvDF/Ud6vzn44csI7ZjAriVC/qS0DFo56PAeetMZjo8NsPDuX9d8+0tR25obWNT/gxoCoZ9HgoNy3ArVsQ18+NPjPFTg5NSGf8oDh4qSovIkIrUQ4mcAb4Apsanhg=
+	t=1710495618; cv=none; b=QUqmTV/rsG4IXrGV4S5zT4I8z/wmsbhHdoe+EKeP6Q+5tLfAGDCQvROZ1Y6rfeqKL2AH+3iUwGCFgwkqh4eJXVfBk2SIaK5axQ0uY0qzpHFnSXtEsVglVHNzw6wGQloKPF2Yidp/6xBVs6yHD5Vt9DLbTNmb7wMKHeW6xmSTjIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710495589; c=relaxed/simple;
-	bh=J8ElAc5vWbxiOARtFToRBrhnfwqtndNYCZKY+Hxo2Sw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p3PH1pB4zMv+xVEW/MfVC3iAOqFrfk4ZEWF4u49bUqDNGYWnVMZaRJrzaqohmzSBXUvVshc3vG+WsLoFtP5MzwFQXRcsOimfpMrbbel0b7nWjiup7gXpWQ5/R4n0GeMiHDoNbz6NzcMoopo96/S9ZlJzXAHM+IG/Z6d4KcWXOgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=C3aFG4x4; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="C3aFG4x4"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710495578; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=CckLzddbXrBA7tLsEPMXeJY8BUpksVSkSO2q/7+hZh8=;
-	b=C3aFG4x4tNEvGPHs1KxnXwdn/ijgYtHBcxTkoe6NKiiY6DWl/YP8qacGSBe/2Qq7ydeT8N4OdaAwNUsP/LRS/AcFrEY5PzCp+nJqQV7f2fWGc6tEIvgB3y8XGwj1NT7AsGWkgVtTKPU7UAAxUmwFgiUfl8JmIzMSWJOEP8EIeWg=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W2W4c5I_1710495576;
-Received: from 30.97.56.65(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W2W4c5I_1710495576)
-          by smtp.aliyun-inc.com;
-          Fri, 15 Mar 2024 17:39:37 +0800
-Message-ID: <f65a6c7c-7dc6-4d57-9b65-a15a978d0d52@linux.alibaba.com>
-Date: Fri, 15 Mar 2024 17:39:36 +0800
+	s=arc-20240116; t=1710495618; c=relaxed/simple;
+	bh=ZHbeVLAfHZiTs4/exux7+KBrM0d/3hISjFMRW/i22Q8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SCh2kSNNdKX2WzbmPq9hJBE4aTyh+erG1kWrQzFNl68uNHeAVrTrDpCoe/V8bm0Ev9ZjomFBZZLEEoclkSdnRSzuHREjaZPon4PEgIMefMF2dWyq4EyLdcmC89s4R7h5lwyIRhbNEfT1sXnNKr8u2GcwsZ4IwTa7YJiz/p7kl+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TwzgR2Wszz1h2TD;
+	Fri, 15 Mar 2024 17:37:39 +0800 (CST)
+Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 236C4180062;
+	Fri, 15 Mar 2024 17:40:08 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 15 Mar 2024 17:40:07 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>
+CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
+Subject: [PATCH for-next] RDMA/hns: Support DSCP
+Date: Fri, 15 Mar 2024 17:35:51 +0800
+Message-ID: <20240315093551.1650088-1-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] mm/compaction: add and use
- for_each_populated_zone_pgdat() helper
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: akpm@linux-foundation.org, jhubbard@nvidia.com, vbabka@suse.cz,
- mgorman@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- dave@stgolabs.net, p.raghav@samsung.com, da.gomez@samsung.com
-References: <20240314005436.2962962-1-mcgrof@kernel.org>
- <20240314005436.2962962-3-mcgrof@kernel.org>
- <ea5d5bb6-32a5-4161-95cd-3dc916576bf7@linux.alibaba.com>
- <ZfPe22p9U8PiRB0W@bombadil.infradead.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <ZfPe22p9U8PiRB0W@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500006.china.huawei.com (7.221.188.68)
 
+Add support for DSCP configuration. For DSCP, get dscp-prio mapping
+via hns3 nic driver api .get_dscp_prio() and fill the SL (in WQE for
+UD or in QPC for RC) with the priority value. The prio-tc mapping is
+configured to HW by hns3 nic driver. HW will select a corresponding
+TC according to SL and the prio-tc mapping.
 
+Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+---
+ drivers/infiniband/hw/hns/hns_roce_ah.c     | 32 +++++---
+ drivers/infiniband/hw/hns/hns_roce_device.h |  6 ++
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 86 ++++++++++++++++-----
+ drivers/infiniband/hw/hns/hns_roce_qp.c     | 13 ++++
+ include/uapi/rdma/hns-abi.h                 |  9 ++-
+ 5 files changed, 117 insertions(+), 29 deletions(-)
 
-On 2024/3/15 13:38, Luis Chamberlain wrote:
-> On Thu, Mar 14, 2024 at 03:19:45PM +0800, Baolin Wang wrote:
->>
->>
->> On 2024/3/14 08:54, Luis Chamberlain wrote:
->>> We can just wrap most of the work done on fragmentation_score_node()
->>> into a pgdat helper for populated zones. Add the helper and use it.
->>>
->>> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
->>> ---
->>>    include/linux/mmzone.h | 8 ++++++++
->>>    mm/compaction.c        | 9 ++-------
->>>    2 files changed, 10 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->>> index a497f189d988..1fd74c7100ec 100644
->>> --- a/include/linux/mmzone.h
->>> +++ b/include/linux/mmzone.h
->>> @@ -1597,6 +1597,14 @@ extern struct zone *next_zone(struct zone *zone);
->>>    			; /* do nothing */		\
->>>    		else
->>> +#define for_each_populated_zone_pgdat(zone, pgdat)	\
->>> +	for (zone = pgdat->node_zones;			\
->>> +	     zone;					\
->>> +	     zone = next_zone(zone))			\
->>> +		if (!populated_zone(zone))		\
->>> +			; /* do nothing */		\
->>> +		else
->>
->> I think this will break the original logics, since the next_zone() will
->> iterate over all memory zones, instead of only the memory zones of the
->> specified node.
-> 
-> Definitely, thanks, so we'd need something like this in addition:
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 34b729fc751b..bd11d33ea14d 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1568,6 +1568,7 @@ static inline struct pglist_data *NODE_DATA(int nid)
->   extern struct pglist_data *first_online_pgdat(void);
->   extern struct pglist_data *next_online_pgdat(struct pglist_data *pgdat);
->   extern struct zone *next_zone(struct zone *zone);
-> +extern struct zone *next_zone_pgdat(struct zone *zone, struct pglist_data *pgdat);
->   
->   /**
->    * for_each_online_pgdat - helper macro to iterate over all online nodes
-> @@ -1600,7 +1601,7 @@ extern struct zone *next_zone(struct zone *zone);
->   #define for_each_populated_zone_pgdat(zone, pgdat)	\
->   	for (zone = pgdat->node_zones;			\
->   	     zone;					\
-> -	     zone = next_zone(zone))			\
-> +	     zone = next_zone_pgdat(zone, pgdat))	\
->   		if (!populated_zone(zone))		\
->   			; /* do nothing */		\
->   		else
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 015126803017..96434f6fc1ad 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -2152,7 +2152,6 @@ static unsigned int fragmentation_score_node(pg_data_t *pgdat)
->   {
->   	unsigned int score = 0;
->   	struct zone *zone;
-> -	int zoneid;
->   
->   	for_each_populated_zone_pgdat(zone, pgdat)
->   		score += fragmentation_score_zone_weighted(zone);
-> diff --git a/mm/mmzone.c b/mm/mmzone.c
-> index c01896eca736..043a6dc16c05 100644
-> --- a/mm/mmzone.c
-> +++ b/mm/mmzone.c
-> @@ -43,6 +43,18 @@ struct zone *next_zone(struct zone *zone)
->   	return zone;
->   }
->   
-> +/*
-> + * next_zone_pgdat - helper magic for for_each_zone() per node
-> + */
-> +struct zone *next_zone_pgdat(struct zone *zone, struct pglist_data *pgdat)
-> +{
-> +	if (!zone || !pgdat)
-> +		return NULL;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_ah.c b/drivers/infiniband/hw/hns/hns_roce_ah.c
+index b4209b6aed8d..91f7fe0f3235 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_ah.c
++++ b/drivers/infiniband/hw/hns/hns_roce_ah.c
+@@ -59,8 +59,11 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibah->device);
+ 	struct hns_roce_ib_create_ah_resp resp = {};
+ 	struct hns_roce_ah *ah = to_hr_ah(ibah);
+-	int ret = 0;
++	u8 tclass = get_tclass(grh);
++	u8 priority = 0;
++	u8 tc_mode = 0;
+ 	u32 max_sl;
++	int ret;
+ 
+ 	if (hr_dev->pci_dev->revision == PCI_REVISION_ID_HIP08 && udata)
+ 		return -EOPNOTSUPP;
+@@ -74,16 +77,23 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+ 	ah->av.hop_limit = grh->hop_limit;
+ 	ah->av.flowlabel = grh->flow_label;
+ 	ah->av.udp_sport = get_ah_udp_sport(ah_attr);
+-	ah->av.tclass = get_tclass(grh);
+-
+-	ah->av.sl = rdma_ah_get_sl(ah_attr);
+-	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
+-	if (unlikely(ah->av.sl > max_sl)) {
+-		ibdev_err_ratelimited(&hr_dev->ib_dev,
+-				      "failed to set sl, sl (%u) shouldn't be larger than %u.\n",
+-				      ah->av.sl, max_sl);
++	ah->av.tclass = tclass;
++
++	ret = hr_dev->hw->get_dscp(hr_dev, tclass, &tc_mode, &priority);
++	if (ret == -EOPNOTSUPP)
++		ret = 0;
++
++	if (ret && grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
++		return ret;
++
++	if (tc_mode == HNAE3_TC_MAP_MODE_DSCP &&
++	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
++		ah->av.sl = priority;
++	else
++		ah->av.sl = rdma_ah_get_sl(ah_attr);
++
++	if (!check_sl_valid(hr_dev, ah->av.sl))
+ 		return -EINVAL;
+-	}
+ 
+ 	memcpy(ah->av.dgid, grh->dgid.raw, HNS_ROCE_GID_SIZE);
+ 	memcpy(ah->av.mac, ah_attr->roce.dmac, ETH_ALEN);
+@@ -99,6 +109,8 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+ 	}
+ 
+ 	if (udata) {
++		resp.priority = ah->av.sl;
++		resp.tc_mode = tc_mode;
+ 		memcpy(resp.dmac, ah_attr->roce.dmac, ETH_ALEN);
+ 		ret = ib_copy_to_udata(udata, &resp,
+ 				       min(udata->outlen, sizeof(resp)));
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index c3cbd0a494bf..78b4d19ff848 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -645,6 +645,8 @@ struct hns_roce_qp {
+ 	struct hns_user_mmap_entry *dwqe_mmap_entry;
+ 	u32			config;
+ 	enum hns_roce_cong_type	cong_type;
++	u8			tc_mode;
++	u8			priority;
+ };
+ 
+ struct hns_roce_ib_iboe {
+@@ -950,6 +952,8 @@ struct hns_roce_hw {
+ 	int (*query_sccc)(struct hns_roce_dev *hr_dev, u32 qpn, void *buffer);
+ 	int (*query_hw_counter)(struct hns_roce_dev *hr_dev,
+ 				u64 *stats, u32 port, int *hw_counters);
++	int (*get_dscp)(struct hns_roce_dev *hr_dev, u8 dscp,
++			u8 *tc_mode, u8 *priority);
+ 	const struct ib_device_ops *hns_roce_dev_ops;
+ 	const struct ib_device_ops *hns_roce_dev_srq_ops;
+ };
+@@ -1292,4 +1296,6 @@ struct hns_user_mmap_entry *
+ hns_roce_user_mmap_entry_insert(struct ib_ucontext *ucontext, u64 address,
+ 				size_t length,
+ 				enum hns_roce_mmap_type mmap_type);
++bool check_sl_valid(struct hns_roce_dev *hr_dev, u8 sl);
++
+ #endif /* _HNS_ROCE_DEVICE_H */
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index ba7ae792d279..4de463e787d4 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -443,10 +443,6 @@ static int fill_ud_av(struct hns_roce_v2_ud_send_wqe *ud_sq_wqe,
+ 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_HOPLIMIT, ah->av.hop_limit);
+ 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_TCLASS, ah->av.tclass);
+ 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_FLOW_LABEL, ah->av.flowlabel);
+-
+-	if (WARN_ON(ah->av.sl > MAX_SERVICE_LEVEL))
+-		return -EINVAL;
+-
+ 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_SL, ah->av.sl);
+ 
+ 	ud_sq_wqe->sgid_index = ah->av.gid_index;
+@@ -4828,6 +4824,70 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
+ 	return 0;
+ }
+ 
++static int hns_roce_hw_v2_get_dscp(struct hns_roce_dev *hr_dev, u8 dscp,
++				   u8 *tc_mode, u8 *priority)
++{
++	struct hns_roce_v2_priv *priv = hr_dev->priv;
++	struct hnae3_handle *handle = priv->handle;
++	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
++
++	if (!ops->get_dscp_prio)
++		return -EOPNOTSUPP;
++
++	return ops->get_dscp_prio(handle, dscp, tc_mode, priority);
++}
++
++bool check_sl_valid(struct hns_roce_dev *hr_dev, u8 sl)
++{
++	u32 max_sl;
++
++	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
++	if (unlikely(sl > max_sl)) {
++		ibdev_err_ratelimited(&hr_dev->ib_dev,
++				      "failed to set SL(%u). Shouldn't be larger than %u.\n",
++				      sl, max_sl);
++		return false;
++	}
++
++	return true;
++}
++
++static int hns_roce_set_sl(struct ib_qp *ibqp,
++			   const struct ib_qp_attr *attr,
++			   struct hns_roce_v2_qp_context *context,
++			   struct hns_roce_v2_qp_context *qpc_mask)
++{
++	const struct ib_global_route *grh = rdma_ah_read_grh(&attr->ah_attr);
++	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
++	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
++	struct ib_device *ibdev = &hr_dev->ib_dev;
++	u32 sl_num;
++	int ret;
++
++	ret = hns_roce_hw_v2_get_dscp(hr_dev, get_tclass(&attr->ah_attr.grh),
++				      &hr_qp->tc_mode, &hr_qp->priority);
++	if (ret && ret != -EOPNOTSUPP &&
++	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP) {
++		ibdev_err_ratelimited(ibdev,
++				      "failed to get dscp, ret = %d.\n", ret);
++		return ret;
++	}
++
++	if (hr_qp->tc_mode == HNAE3_TC_MAP_MODE_DSCP &&
++	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
++		hr_qp->sl = hr_qp->priority;
++	else
++		hr_qp->sl = rdma_ah_get_sl(&attr->ah_attr);
++
++	if (!check_sl_valid(hr_dev, hr_qp->sl))
++		return -EINVAL;
++
++	hr_reg_write(context, QPC_SL, hr_qp->sl);
++	hr_reg_clear(qpc_mask, QPC_SL);
++
++	return 0;
++}
++
+ static int hns_roce_v2_set_path(struct ib_qp *ibqp,
+ 				const struct ib_qp_attr *attr,
+ 				int attr_mask,
+@@ -4843,25 +4903,18 @@ static int hns_roce_v2_set_path(struct ib_qp *ibqp,
+ 	int is_roce_protocol;
+ 	u16 vlan_id = 0xffff;
+ 	bool is_udp = false;
+-	u32 max_sl;
+ 	u8 ib_port;
+ 	u8 hr_port;
+ 	int ret;
+ 
+-	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
+-	if (unlikely(sl > max_sl)) {
+-		ibdev_err_ratelimited(ibdev,
+-				      "failed to fill QPC, sl (%u) shouldn't be larger than %u.\n",
+-				      sl, max_sl);
+-		return -EINVAL;
+-	}
+-
+ 	/*
+ 	 * If free_mr_en of qp is set, it means that this qp comes from
+ 	 * free mr. This qp will perform the loopback operation.
+ 	 * In the loopback scenario, only sl needs to be set.
+ 	 */
+ 	if (hr_qp->free_mr_en) {
++		if (!check_sl_valid(hr_dev, sl))
++			return -EINVAL;
+ 		hr_reg_write(context, QPC_SL, sl);
+ 		hr_reg_clear(qpc_mask, QPC_SL);
+ 		hr_qp->sl = sl;
+@@ -4931,11 +4984,7 @@ static int hns_roce_v2_set_path(struct ib_qp *ibqp,
+ 	memcpy(context->dgid, grh->dgid.raw, sizeof(grh->dgid.raw));
+ 	memset(qpc_mask->dgid, 0, sizeof(grh->dgid.raw));
+ 
+-	hr_qp->sl = sl;
+-	hr_reg_write(context, QPC_SL, hr_qp->sl);
+-	hr_reg_clear(qpc_mask, QPC_SL);
+-
+-	return 0;
++	return  hns_roce_set_sl(ibqp, attr, context, qpc_mask);
+ }
+ 
+ static bool check_qp_state(enum ib_qp_state cur_state,
+@@ -6735,6 +6784,7 @@ static const struct hns_roce_hw hns_roce_hw_v2 = {
+ 	.query_srqc = hns_roce_v2_query_srqc,
+ 	.query_sccc = hns_roce_v2_query_sccc,
+ 	.query_hw_counter = hns_roce_hw_v2_query_counter,
++	.get_dscp = hns_roce_hw_v2_get_dscp,
+ 	.hns_roce_dev_ops = &hns_roce_v2_dev_ops,
+ 	.hns_roce_dev_srq_ops = &hns_roce_v2_dev_srq_ops,
+ };
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index f35a66325d9a..697230f964b1 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -1386,6 +1386,7 @@ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
+ 		       int attr_mask, struct ib_udata *udata)
+ {
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
++	struct hns_roce_ib_modify_qp_resp resp = {};
+ 	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
+ 	enum ib_qp_state cur_state, new_state;
+ 	int ret = -EINVAL;
+@@ -1427,6 +1428,18 @@ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
+ 
+ 	ret = hr_dev->hw->modify_qp(ibqp, attr, attr_mask, cur_state,
+ 				    new_state, udata);
++	if (ret)
++		goto out;
++
++	if (udata && udata->outlen) {
++		resp.tc_mode = hr_qp->tc_mode;
++		resp.priority = hr_qp->sl;
++		ret = ib_copy_to_udata(udata, &resp,
++				       min(udata->outlen, sizeof(resp)));
++		if (ret)
++			ibdev_err_ratelimited(&hr_dev->ib_dev,
++					      "failed to copy modify qp resp.\n");
++	}
+ 
+ out:
+ 	mutex_unlock(&hr_qp->mutex);
+diff --git a/include/uapi/rdma/hns-abi.h b/include/uapi/rdma/hns-abi.h
+index 158670da2b2a..94e861870e27 100644
+--- a/include/uapi/rdma/hns-abi.h
++++ b/include/uapi/rdma/hns-abi.h
+@@ -109,6 +109,12 @@ struct hns_roce_ib_create_qp_resp {
+ 	__aligned_u64 dwqe_mmap_key;
+ };
+ 
++struct hns_roce_ib_modify_qp_resp {
++	__u8	tc_mode;
++	__u8	priority;
++	__u8	reserved[6];
++};
++
+ enum {
+ 	HNS_ROCE_EXSGE_FLAGS = 1 << 0,
+ 	HNS_ROCE_RQ_INLINE_FLAGS = 1 << 1,
+@@ -143,7 +149,8 @@ struct hns_roce_ib_alloc_pd_resp {
+ 
+ struct hns_roce_ib_create_ah_resp {
+ 	__u8 dmac[6];
+-	__u8 reserved[2];
++	__u8 priority;
++	__u8 tc_mode;
+ };
+ 
+ #endif /* HNS_ABI_USER_H */
+-- 
+2.30.0
 
-Seems unnecessary, you already accessed them before calling 
-next_zone_pgdat(). Otherwise, looks good to me.
-
-> +	if (zone < pgdat->node_zones + MAX_NR_ZONES - 1)
-> +		return ++zone;
-> +	return NULL;
-> +}
-> +
->   static inline int zref_in_nodemask(struct zoneref *zref, nodemask_t *nodes)
->   {
->   #ifdef CONFIG_NUMA
