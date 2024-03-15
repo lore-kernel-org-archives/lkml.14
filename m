@@ -1,156 +1,123 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF7419BA2
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D2D1B7E1
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710501512; cv=none; b=NJd3c810vBkkz0Y3cPLJik2Ls2AiJzGwJE+8Wx9V3S8McoX9n2M+JBRObdtO24b9xEDib6SuE/8VIddjcxs9zinavBlz22ssor6G1YSQ2UNd/9pjTLlstexNgJJX7w2OuNvKfYMLE1s2+Sk7PlB3RrdpClPkGXOJeH5tt/xTz3s=
+	t=1710501567; cv=none; b=KCR4VjBVdSP90R9fHObN5gTKcxDipE2NCiBWJjOiGF0ItNtLFpcofVfmE4bfiPOvTBI9tC3b+WjQ+9OsELFFIdYyi6ANjD73/Yj4p4DtWzFLx5B/7PrhGwU0YoAIuJznnpySurE1Oy4969DFtKwtne008+uhVei1Obp+sjqnr4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710501512; c=relaxed/simple;
-	bh=3jAxlkMS2UWb35oBck4irZ8AXTG1g/crD+E/7tbIdFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NP1EkV6QjQLtjF1vuBq6UGUiGA6glmLARHMguywBrHg0U0oCd3RlVwWBpDXEo/qle1M1gnTiPn0YmNdFSHUe7wYIn4Ge6tg4bjOSrOj8dBCayYdf9bHy01rsw/eWvqOrn4NnjLSccx7dSMuYXaCMx7us8ixLWq441/V7c7veG08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wOCFsgeA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710501567; c=relaxed/simple;
+	bh=Y/BQv7bz1TuPZ2XSnLradRyziOsAUzK0nrATY2jo7EY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lW1gwz0i1skOmeF02rulejURlWqixfdYXckZ6ukVc/RidlxNI58y+aEiThW+B48ZzFJVhvmrWEW8vwr0ZjQ13B62d1uQ3k4q19d90Q/YzyaqUdqO+oPRA5ttkJz10+tIPAt1ZAA6Nwqk8+ZlrRDoYDs704G+AYgKMBhsYpQN2R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+pLQ5aY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wOCFsgeA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710501509;
-	bh=3jAxlkMS2UWb35oBck4irZ8AXTG1g/crD+E/7tbIdFo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=wOCFsgeAbfgoyN81XVt5eyBvSartapUpl06usVO450bohkUaTdtmLXLk7GR9J3LrI
-	 WRhvtfnUACBEHFVwT/lFW33jWeZO5ZojLljvka9yzUm+0YhQhfUQHRYVyAbQpjNr9U
-	 4kCNVfXgl8w4sAey6ccVW3MfW8IssAm0jOX2rTVJPKfpiXviwOF44tK5+rQnnKht7J
-	 DvgYsGrGwRvyUu6wI3ZHh6kGLBAWVPRcgXmZZJwHs2f8nvS/4GjavdtnP+Jt0KpF7U
-	 4rg7xGBGAyPaRFiLpMbg7vEoPFqmYwCm/FiSqKtzC1qXETkIZcEct2wgbKIWXmxJ10
-	 vOsWbaMwSqihA==
-Received: from [100.66.96.193] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1D762378105A;
-	Fri, 15 Mar 2024 11:18:24 +0000 (UTC)
-Message-ID: <f53c716d-6d11-13f6-0ecf-ec02f4debcfa@collabora.com>
-Date: Fri, 15 Mar 2024 16:48:23 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+pLQ5aY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42BAAC433F1;
+	Fri, 15 Mar 2024 11:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710501567;
+	bh=Y/BQv7bz1TuPZ2XSnLradRyziOsAUzK0nrATY2jo7EY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=o+pLQ5aYxZ0b9jyEeIAes48zOFg+N/UY+9nl6l71skWBNLViPm5iPoKqdGXoT1DJ8
+	 EML/CEWWMRygwJJEJ+KiRSwswf356H86FEHXfRTJEBcHx5LbNdMZiWY3rqNYVBqoz1
+	 JQsQLXGk9vi12h5ZuPTX6MU80gZ/xXsknpLA6in7C8AzA+aYInRqjj4a4HmqJKfLgW
+	 UwgnbSLKgqI00IulljqNLmgtz22ZrRimYdWI3vT/LRgfREoMbC1t2XJFnXhHtAXfxn
+	 nR3UaNkTl31i5WlPPivis4kE9Xe9s+HtfyGEneWcHlQq7XIM2NDCR1P2pJzjOpJD6K
+	 7zII9ZGb+hTZA==
+Date: Fri, 15 Mar 2024 16:49:20 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: Soundwire updates for v6.9
+Message-ID: <ZfQuuDU8DDxdU9y8@matsya>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 09/11] drm/ci: rockchip: Refactor existing rockchip
- jobs
-Content-Language: en-US
-To: Helen Koike <helen.koike@collabora.com>, dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- emma@anholt.net, robdclark@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com,
- melissa.srw@gmail.com, mairacanal@riseup.net, mcanal@igalia.com,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240306030649.60269-1-vignesh.raman@collabora.com>
- <20240306030649.60269-10-vignesh.raman@collabora.com>
- <098d2345-df99-4ad2-bc1c-9641662ed9bd@collabora.com>
-From: Vignesh Raman <vignesh.raman@collabora.com>
-In-Reply-To: <098d2345-df99-4ad2-bc1c-9641662ed9bd@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="G97PEePqAOkNECFV"
+Content-Disposition: inline
 
-Hi Helen,
 
-On 07/03/24 19:32, Helen Koike wrote:
-> 
-> 
-> On 06/03/2024 00:06, Vignesh Raman wrote:
->> For rockchip rk3288 and rk3399, the display driver is rockchip.
->> Currently, in drm-ci for rockchip, only the display driver is
->> tested. Refactor the existing rockchip jobs so that gpu driver
->> testing jobs can be added later and update xfails accordingly.
->>
->> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
->> ---
->>
->> v2:
->>    - Refactor the patch to rename job to indicate display driver testing,
->>      rename the existing xfail files.
->>
->> v3:
->>    - Add the job name in GPU_VERSION and use it for xfail file names
->>      instead of using DRIVER_NAME. Also update xfails.
->>
->> v4:
->>    - Remove the display suffix in job and rename xfails accordingly.
->>      Remove the change adding job name in GPU_VERSION.
->>
->> ---
->>   drivers/gpu/drm/ci/test.yml                   | 36 ++++++++----
->>   .../drm/ci/xfails/rockchip-rk3288-fails.txt   | 58 ++++++-------------
->>   .../drm/ci/xfails/rockchip-rk3288-flakes.txt  | 20 +++++++
->>   .../drm/ci/xfails/rockchip-rk3288-skips.txt   | 54 ++---------------
->>   .../drm/ci/xfails/rockchip-rk3399-fails.txt   | 38 ++++++------
->>   .../drm/ci/xfails/rockchip-rk3399-flakes.txt  | 28 +++++++--
->>   .../drm/ci/xfails/rockchip-rk3399-skips.txt   |  5 +-
->>   7 files changed, 110 insertions(+), 129 deletions(-)
->>   create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-flakes.txt
->>
->> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
->> index 6ae6398b3d88..831e580e6dfd 100644
->> --- a/drivers/gpu/drm/ci/test.yml
->> +++ b/drivers/gpu/drm/ci/test.yml
->> @@ -153,33 +153,45 @@ msm:sdm845:
->>     script:
->>       - ./install/bare-metal/cros-servo.sh
->> -rockchip:rk3288:
->> -  extends:
->> -    - .lava-igt:arm32
->> +.rockchip:
->>     stage: rockchip
->>     variables:
->> -    DRIVER_NAME: rockchip
-> 
-> Looks like it make sense to keep DRIVER_NAME here, no?
-> 
->> -    DEVICE_TYPE: rk3288-veyron-jaq
->>       DTB: ${DEVICE_TYPE}
->>       BOOT_METHOD: depthcharge
->> +
->> +.rk3288:
->> +  extends:
->> +    - .lava-igt:arm32
->> +    - .rockchip
-> 
-> Maybe, instead of extending .rockchip here, make .rockchip tied to the 
-> DRIVER_NAME and .rk3288 tied to the GPU_VERSION, and on rockchip:rk3288 
-> you can extend both .rockchip and .rk3288, what do you think?
-> So rockchip:rk3399 you can extend .rockchip and .rk3399.
-> 
-> and in the panfrost one you can have a .panfrost (that can extend 
-> .rockchip if they are the same definition).
-> 
-> I feel it becomes less confusing, what do you think?
-> 
-> I would even add some prefix or suffix to make it less confusing, like 
-> .driver-rockchip and .gpu-rk3288 for instance, making it a bit more 
-> intuitive and helping our future selves :)
+--G97PEePqAOkNECFV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the suggestion. This can be done. Should we do it only
-for rockchip jobs or others also (meson, mediatek) ?
+Hello Linus,
 
-> 
->> +  variables:
->> +    DEVICE_TYPE: rk3288-veyron-jaq
->>       KERNEL_IMAGE_TYPE: "zimage"
->> -    GPU_VERSION: rk3288
-> 
-> Looks like it make sense to keep GPU_VERSION here, no? Same comment for 
-> .rk3399.
-Yes, will fix this.
+Please pull to receive this quite small update for soundwire subsystem.
 
-Regards,
-Vignesh
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
+undwire-6.9-rc1
+
+for you to fetch changes up to e17aae16acf53938deb4b7702aa4f6cee2c4a073:
+
+  soundwire: Use snd_soc_substream_to_rtd() to obtain rtd (2024-03-03 19:29=
+:28 +0530)
+
+----------------------------------------------------------------
+soundwire updates for 6.9
+
+ - Constify sdw_bus and sdw_master_type objects
+ - use of rtd helper for better code
+ - intel aux device remove redundant assignment
+
+----------------------------------------------------------------
+Cezary Rojewski (1):
+      soundwire: Use snd_soc_substream_to_rtd() to obtain rtd
+
+Colin Ian King (1):
+      soundwire: intel_auxdevice: remove redundant assignment to variable l=
+ink_flags
+
+Krzysztof Kozlowski (1):
+      soundwire: stream: add missing const to Documentation
+
+Ricardo B. Marliere (2):
+      soundwire: bus_type: make sdw_bus_type const
+      soundwire: constify the struct device_type usage
+
+ Documentation/driver-api/soundwire/stream.rst | 4 ++--
+ drivers/soundwire/bus_type.c                  | 2 +-
+ drivers/soundwire/intel_auxdevice.c           | 2 --
+ drivers/soundwire/master.c                    | 2 +-
+ drivers/soundwire/slave.c                     | 2 +-
+ drivers/soundwire/stream.c                    | 6 +++---
+ include/linux/soundwire/sdw_type.h            | 6 +++---
+ 7 files changed, 11 insertions(+), 13 deletions(-)
+
+--=20
+~Vinod
+
+--G97PEePqAOkNECFV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmX0LrgACgkQfBQHDyUj
+g0e/eRAAxKxtlMyM1Do8CmR6QX4PAZr1t7Nz/+V5atIQq0LH2yKPYCBq6TbYJSyU
+2/PRuD3Or4UWsrmHm42Q8pqCnPB9LrDVAeJx8dqW3TFGs4x9nmF0bZwmb0oKghSW
+uwWXJ66/AhQ6jTV6Z46ysWB9/nQDkcPKroJRIYEHgFVpDCwCM4ZgVzlTnZteMzCx
+NPQVRm6s2kfHqCp75ltpTxrupVXPNtCP8jBcL0uS9LxRfkh+B/BA0XHqTKw3lYz2
+j1NmRTgzMVgN5YPy5e+71GSZakJaQ6+5r/jBrLjYjGJuMZK6hB2gweX+5pZvjMdY
+9fQnJS2eagOOfiFrVYQrbZvvf6Zf+2uw6dYKuJFa9UeJXsG7enxmkel9xP+WSq5S
+s4Emyh2lSSsd4QWfT8u+KOnlcfg9zGYdgJ1YNH74sVhSVW25cziQ8ddn1XA1yg8k
+dWMqCt24H6apNtDxG6QVBue/QYTtVx+A5IQPSfInVVRFhTgp0/+d74uyD+6V/oAb
+TkMrnSixG3TXmb4isHd1ewg5pbot1Ji8L2yLgjf03FjDMMWL3AQSUv6AuLopbQpx
+0r7VJf8hmZd86Sy5Ph3f7FbdpTvjNxnew3P+wi6MZMakaKpdNjKX095x/EI8HnuR
+0ZRx6SoVecsKJ1ZOZIERIcVtfo5hEbTik9aGwZgzAACAwptpKUM=
+=QzSU
+-----END PGP SIGNATURE-----
+
+--G97PEePqAOkNECFV--
