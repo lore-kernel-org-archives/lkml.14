@@ -1,132 +1,212 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5561B941;
-	Fri, 15 Mar 2024 10:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806841C2AF;
+	Fri, 15 Mar 2024 10:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710498700; cv=none; b=UfAbxMbCMQZrsZEPjog8/VzQqw8I9h83U21z6mfEgC3coOATUHXUuhKHmlZIml6wAAJ0o6duboa3f29iWViawLjA5ftkxWgWsrMt/ZXW1nbGkX1EN21uacqf/ZB2uzVuoY/jwWnAEcTuOeOUjDmWsnXOYNS7gEu2NYtJUkU5lu8=
+	t=1710498719; cv=none; b=THFr87eVoGoUAbEZLGXSdlJU1alFxCjza+laYuWRgWl96TUr/1Wwnv3Qj/gldcBAVkT4tO/nwMOa4+YXw6vE++pBgIXcnFr24MZAV5gLRpaNOkJC92xSpjV8N5RvqTUqv4VsAjlkrF7ci/FOZJ4sWvTzgfSUAXchV1hX48lQsSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710498700; c=relaxed/simple;
-	bh=lRdqpTT0gh2WtHqWtaq0VJmI8rtEhSLoMt9GWGgjokU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nt30VvA4Cx2C5nIbmlQe/5C7c7OwKLV5DIzLDI4K/anuXVHLr6LXof1EKx/9yYNuxKs7uWtAUDVphSRzA2L7FsgpNEK26Oa0L/f2eQOIm7lWhDOMfGKhkwDVEs/2fRc4fdCVaacLMZVeVaU6iVAG2m5Rbv3QMzai6QCxTu3+mFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvbZYSn6; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1710498719; c=relaxed/simple;
+	bh=zfiUBLeK+PtZG4A+qL9jArSHbLnJbmxDpCXiIS0qrUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p4jPWADaJJxPCP4McoW2P3BzsQjosSfLKcod/etbC+/J3xnNgZp8/GC7rNGNlPjjYiO1/C5AykIWRsFTyDa3ydAP6KUG+kjiP9c9nmMJxLk/+ElNwG0CJiqLS6sqFK8wt7xxFfPZeK78RKjdV9M0ZyeEN+IDEbbigukuerm9AHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAFEdedN; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvbZYSn6"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-414037e9acdso1373245e9.1;
-        Fri, 15 Mar 2024 03:31:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAFEdedN"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d48ba4d5ecso3671741fa.1;
+        Fri, 15 Mar 2024 03:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710498697; x=1711103497; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1710498716; x=1711103516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CckpNQcaclBaLWHE4esIu6A7ypiEpjVfV/EelIKw3g8=;
-        b=EvbZYSn6h9lgNKXlmyPhhkg7F+jCKjeoIr/Zy3hG1+rq90r6YEiqmEDhdTP4Eo2R5+
-         U9+uCwY+EQlUyXbPc2o1ISJmhwj+AIS1C8tvIX1XbL/zr/78G3YfpGgSGkRJ0ybgYnFE
-         /qI72i8/l5UEnq2/0pMvJhhillHUBsQvZjxeEgYGBFZYKZIGFKvwRY46dGfQZnryxYjJ
-         gqZxYIuBGKfBswe8xt+sHk6s1uuPVwScG2xdl2hc5/P3AmOniujkBwJ7Wys8FXFJcfgu
-         pI/6uPSQ/bGWOaKGlDexQ7+MDGdzAA2hjKl5XzRsYhjcclGvuWYvIZFz8BNqprMjVKVm
-         s0Eg==
+        bh=NkgvVj4VQnM0U5OLYxoLZxYfZKzb6GHR+JPP7Dvj7ys=;
+        b=mAFEdedNPm2iIYUyQmSqU+j5sg5ops36pys5XuegzilsQ3BUawDfADBSfqWtWqTGcL
+         hYnhWHXQLVyLg76n6JhetfQaNGpNrS+1SsJtVs7eLNJ8BwNpk0YoUhjtlv1wYauL/v0z
+         KujjuSXnOw8V7ZzVZo34Hu5Ll7ueTGZ0Zz/Sj2B1b5lUzm2D2KCiHukNbqHSDtq0T4UK
+         xf/wSWVjGPpI0QEsuNCR+vN4cMwMpAQmhPNtE3qPsMHHKqdIgfsbviaqwbdEKLaRMWZi
+         UhMRpyrPDpc8p0f6hNgFjYY/3bOM7qgy5FCTrbMc6NYUTzJCYBhWbuchgghcrNd7cKB5
+         b0Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710498697; x=1711103497;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710498716; x=1711103516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CckpNQcaclBaLWHE4esIu6A7ypiEpjVfV/EelIKw3g8=;
-        b=AkcpaVN2VHQ6SDhBbvaJUWZ0XkieDTlx2iW18UZNymsmzddq8pb1zMHdD4a210DXJa
-         ZgbIHSO08xH0TEAR42hHmNuQvqxcO4zY5B8Rabx/PZ+FFIvZam+u6aJrCMbVt4z9ZZc7
-         4hlvg6IC0UG0fdkOR+qyB/C3d7pIgipVglOa/3a0ouLIrAWg928RuNPDNnf4kRYitEtp
-         +8V/WnICTEHRyclqm3LDNS0atqntWUixSmxLqY/I5Rt9IJtR6oM9vYFO8egjj2Ika5Pe
-         tDYbLJwnHHonHRIH3VLYXgk0FgVjvgb90XGrNRS+FZZmL6mAPCICG08CdBsXiHwVWuSZ
-         CXsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXU3s80mGSpF6wXlbha6BLTNf5OEvkOP2ObsdAHJetNFN7tnN3ndGQNNlbRCuFM8Ffy+fIJEnT7EqIrFbfDL5b4KK0ukqiLrr1SUD5XYtOCgrM1zn2uKf74PjXRnrh1irv0NftGzbHRkYNOBXbdvVgkiKHL9njnATVhWIfoQIOMcc7P5Q==
-X-Gm-Message-State: AOJu0Yy+7fxwgG9igEUD54VcjLOg1TO9iG7QBNrfPQNKBWNAfw2VQKiW
-	44e27ut1cVmQ4tdwTFZBIr3+CDo/3cfNs8kcOC9TurdV1qBiqQed
-X-Google-Smtp-Source: AGHT+IGHdpZ3MrSAR8C+LtQYj0s4PZhbJXP8cthDm4G5cDLoC6N21cKw5gg26nHFO/y1GLUSHk5d8A==
-X-Received: by 2002:a05:600c:5187:b0:413:f1d7:ee09 with SMTP id fa7-20020a05600c518700b00413f1d7ee09mr4194825wmb.15.1710498696399;
-        Fri, 15 Mar 2024 03:31:36 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:ae92:6adf:5cb6:274c])
-        by smtp.gmail.com with ESMTPSA id l19-20020a05600c4f1300b004130378fb77sm8676549wmq.6.2024.03.15.03.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 03:31:34 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 4/4] i2c: riic: Add support for R9A09G057 SoC
-Date: Fri, 15 Mar 2024 10:30:33 +0000
-Message-Id: <20240315103033.141226-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240315103033.141226-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240315103033.141226-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=NkgvVj4VQnM0U5OLYxoLZxYfZKzb6GHR+JPP7Dvj7ys=;
+        b=vIkX6eXQLkLryOrFspdLcAfjTXvDvfHapZJQFFWBdr96S8bzsgCAq5MnkrHU0Bb61m
+         0tpCicTpQobUI/WnmRbD00zrsPdogCQ2bGbCzg045uk37cAOP/jg4VsItcPfijFVjEVC
+         o2N3nrgGF8naLocRVLbAO8TOWbWzI/yBb97XklaxiABsA3l65dRxSn/Xkp0gIB9J3kPs
+         JPmUNvhXls/oI+c6J1iefI7xcmCsSdQPGeHP/dN3wbTIME9Itr4hZgncfpGwLGijcnPS
+         7fQGADGZc5Goe4Tfxh4MszIXDTqpnm7zewmBQQkY4bE04sU2CIjC3q1RhpXBdONugK/5
+         YU8g==
+X-Forwarded-Encrypted: i=1; AJvYcCU9HCDb43hhWwhOtvF/QZGLBpdZuGw4XOzXLhJvBLshgCqMryDN+mcwLsx9+JiF3aF9pAxWy/gErQKz4GFmbCsjG4dfeeiHocxPm0KZ+paGCV5hD3RJhwa9559Qlztbe0z3
+X-Gm-Message-State: AOJu0YyXsAMeuNF4nsLpYhJ7wfk4ou5hrFSDO9KEjMPDgiGAS1kjOHV1
+	zjHoxo9VhCTYHTo9G6/xoD/Vq9e3iS1BysgvybGuKE5XMoBjSJKuJo3gGlpHossGsnX7BqlLeAE
+	i+FTG5NztHtGwPsQeGSFEQOf1HuE=
+X-Google-Smtp-Source: AGHT+IFoe+KXjZBP9/D8N3JpUzEHl/Z5odV3mFyPV9Zy3sD3yWRo9tM+wc9McbZUNoKbgm7mMP8EYEvEMzIK16e3ZO4=
+X-Received: by 2002:a2e:8904:0:b0:2d4:8a62:bd4f with SMTP id
+ d4-20020a2e8904000000b002d48a62bd4fmr491248lji.3.1710498715148; Fri, 15 Mar
+ 2024 03:31:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240314150003.123020-1-puranjay12@gmail.com> <20240314150003.123020-2-puranjay12@gmail.com>
+ <CAP01T75tG5tXqRJsMn6iU1xvmEqeuTg=ja=LUPqqXkrJiYL2XQ@mail.gmail.com>
+ <mb61pfrwsohx5.fsf@gmail.com> <CAADnVQ+vAuP1UuFf6tY64AmHBqk4FjRY7DwEjKXwWUaczubDcg@mail.gmail.com>
+In-Reply-To: <CAADnVQ+vAuP1UuFf6tY64AmHBqk4FjRY7DwEjKXwWUaczubDcg@mail.gmail.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 15 Mar 2024 11:31:44 +0100
+Message-ID: <CANk7y0g0i=9U89kdpZARKgf5MnKy4dM1m5zDjo=3LSAwaDEcYg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Add arm64 JIT support for PROBE_MEM32
+ pseudo instructions.
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Zi Shen Lim <zlim.lnx@gmail.com>, Xu Kuohai <xukuohai@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Mar 14, 2024 at 6:21=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Thu, Mar 14, 2024 at 10:13=E2=80=AFAM Puranjay Mohan <puranjay12@gmail=
+.com> wrote:
+> >
+> > Kumar Kartikeya Dwivedi <memxor@gmail.com> writes:
+> >
+> > > On Thu, 14 Mar 2024 at 16:00, Puranjay Mohan <puranjay12@gmail.com> w=
+rote:
+> > >>
+> > >> Add support for [LDX | STX | ST], PROBE_MEM32, [B | H | W | DW]
+> > >> instructions.  They are similar to PROBE_MEM instructions with the
+> > >> following differences:
+> > >> - PROBE_MEM32 supports store.
+> > >> - PROBE_MEM32 relies on the verifier to clear upper 32-bit of the
+> > >>   src/dst register
+> > >> - PROBE_MEM32 adds 64-bit kern_vm_start address (which is stored in =
+R28
+> > >>   in the prologue). Due to bpf_arena constructions such R28 + reg +
+> > >>   off16 access is guaranteed to be within arena virtual range, so no
+> > >>   address check at run-time.
+> > >> - PROBE_MEM32 allows STX and ST. If they fault the store is a nop. W=
+hen
+> > >>   LDX faults the destination register is zeroed.
+> > >>
+> > >> To support these on arm64, we do tmp2 =3D R28 + src/dst reg and then=
+ use
+> > >> tmp2 as the new src/dst register. This allows us to reuse most of th=
+e
+> > >> code for normal [LDX | STX | ST].
+> > >>
+> > >> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> > >> ---
+> > >
+> > > Hi Alexei,
+> > > Puranjay and I were discussing this stuff off list and noticed that
+> > > atomic instructions are not handled.
+> > > It turns out that will cause a kernel crash right now because the
+> > > 32-bit offset into arena will be dereferenced directly.
+> > >
+> > > e.g. something like this:
+> > >
+> > > @@ -55,6 +56,7 @@ int arena_list_add(void *ctx)
+> > >                 test_val++;
+> > >                 n->value =3D i;
+> > >                 arena_sum +=3D i;
+> > > +               __sync_fetch_and_add(&arena_sum, 0);
+> > >                 list_add_head(&n->node, list_head);
+> > >         }
+> > >  #else
+> > >
+> > > I will try to prepare a fix for the x86 JIT. Puranjay will do the sam=
+e
+> > > for his set.
+> >
+> > Yes, testing the change mentioned by Kumar on ARM64 causes a crashes as=
+ well:
+> >
+> > bpf_testmod: loading out-of-tree module taints kernel.
+> >  bpf_testmod: module verification failed: signature and/or required key=
+ missing - tainting kernel
+> >  Unable to handle kernel NULL pointer dereference at virtual address 00=
+00000000000010
+> >  Mem abort info:
+> >    ESR =3D 0x0000000096000006
+> >    EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> >    SET =3D 0, FnV =3D 0
+> >    EA =3D 0, S1PTW =3D 0
+> >    FSC =3D 0x06: level 2 translation fault
+> >  Data abort info:
+> >    ISV =3D 0, ISS =3D 0x00000006, ISS2 =3D 0x00000000
+> >    CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+> >    GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> >  user pgtable: 4k pages, 48-bit VAs, pgdp=3D00000004043cc000
+> >  [0000000000000010] pgd=3D0800000410d8f003, p4d=3D0800000410d8f003, pud=
+=3D0800000405972003, pmd=3D0000000000000000
+> >  Internal error: Oops: 0000000096000006 [#1] SMP
+> >  Modules linked in: bpf_testmod(OE) nls_ascii nls_cp437 sunrpc vfat fat=
+ aes_ce_blk aes_ce_cipher ghash_ce sha1_ce button sch_fq_codel dm_mod dax c=
+onfigfs dmi_sysfs sha2_ce sha256_arm64 efivarfs
+> >  CPU: 8 PID: 5631 Comm: test_progs Tainted: G           OE      6.8.0+ =
+#2
+> >  Hardware name: Amazon EC2 c6g.16xlarge/, BIOS 1.0 11/1/2018
+> >  pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> >  pc : bpf_prog_8771c336cb6a18eb_arena_list_add+0x204/0x2b8
+> >  lr : bpf_prog_8771c336cb6a18eb_arena_list_add+0x144/0x2b8
+> >  sp : ffff80008b84bc30
+> >  x29: ffff80008b84bca0 x28: ffff8000a5008000 x27: ffff80008b84bc38
+> >  x26: 0000000000000000 x25: ffff80008b84bc60 x24: 0000000000000000
+> >  x23: 0000000000000000 x22: 0000000000000058 x21: 0000000000000838
+> >  x20: 0000000000000000 x19: 0000000100001fe0 x18: 0000000000000000
+> >  x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffcc66d2c8
+> >  x14: 0000000000000000 x13: 0000000000000000 x12: 000000000004058c
+> >  x11: ffff8000a5008010 x10: 00000000ffffffff x9 : 00000000000002cf
+> >  x8 : ffff800082ff4ab8 x7 : 0000000100001000 x6 : 0000000000000001
+> >  x5 : 0000000010e5e3fd x4 : 000000003619b978 x3 : 0000000000000010
+> >  x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000001fe0
+> >  Call trace:
+> >   bpf_prog_8771c336cb6a18eb_arena_list_add+0x204/0x2b8
+> >   bpf_prog_test_run_syscall+0x100/0x340
+> >   __sys_bpf+0x8e8/0xa20
+> >   __arm64_sys_bpf+0x2c/0x48
+> >   invoke_syscall+0x50/0x128
+> >   el0_svc_common.constprop.0+0x48/0xf8
+> >   do_el0_svc+0x28/0x40
+> >   el0_svc+0x58/0x190
+> >   el0t_64_sync_handler+0x13c/0x158
+> >   el0t_64_sync+0x1a8/0x1b0
+> >  Code: 8b010042 8b1c006b f9000162 d2800001 (f821307f)
+> >  ---[ end trace 0000000000000000 ]---
+> >  Kernel panic - not syncing: Oops: Fatal exception
+> >  SMP: stopping secondary CPUs
+> >  Kernel Offset: disabled
+> >  CPU features: 0x0,00000120,7002014a,21407a0b
+> >  Memory Limit: none
+> >  Rebooting in 5 seconds..
+> >
+> > I will send v2 with the arm64 JIT fix, but I guess verifier has to be m=
+odified
+> > as well to add BPF_PROBE_MEM32 to atomic instructions.
+>
+> The JIT and the verifier changes for atomics might be too big.
+> Let's disable atomics in arena in the verifier for now.
+> Pls send a patch.
 
-Extend the RIIC driver to support the RZ/V2H(P) ("R9A09G057") SoC. It
-accomplishes this by appending the compatible string list and passing
-the RZ/V2H-specific OF data.
+As atomics are disabled in the Arena now, this series will not require
+any changes.
+Looking forward to the reviews.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v1->v2
-- Dropped setting family
----
- drivers/i2c/busses/i2c-riic.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
-index 3ae2d5c2f85a..861b244d5118 100644
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -523,8 +523,25 @@ static const struct riic_of_data riic_rz_a_info = {
- 	},
- };
- 
-+static const struct riic_of_data riic_rz_v2h_info = {
-+	.regs = {
-+		[RIIC_ICCR1] = 0x00,
-+		[RIIC_ICCR2] = 0x01,
-+		[RIIC_ICMR1] = 0x02,
-+		[RIIC_ICMR3] = 0x04,
-+		[RIIC_ICSER] = 0x06,
-+		[RIIC_ICIER] = 0x07,
-+		[RIIC_ICSR2] = 0x09,
-+		[RIIC_ICBRL] = 0x10,
-+		[RIIC_ICBRH] = 0x11,
-+		[RIIC_ICDRT] = 0x12,
-+		[RIIC_ICDRR] = 0x13,
-+	},
-+};
-+
- static const struct of_device_id riic_i2c_dt_ids[] = {
- 	{ .compatible = "renesas,riic-rz", .data = &riic_rz_a_info },
-+	{ .compatible = "renesas,riic-r9a09g057", .data = &riic_rz_v2h_info },
- 	{ /* Sentinel */ },
- };
- 
--- 
-2.34.1
-
+Thanks,
+Puranjay
