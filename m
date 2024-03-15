@@ -1,94 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7D03D97F;
-	Fri, 15 Mar 2024 15:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33ED3D96E;
+	Fri, 15 Mar 2024 15:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710517100; cv=none; b=K/PLCvZsnLdQ55SjtWxjbpnh4agNcOvOlhi6Kql9JEH/lu+Y9juj5WBVvHkXj51YVq48FtCINHpZuKwfF7Q8SIChCKkRk/no6XbyvayNB9YfZdPNemj5a1T41GPtdC/IgsXQVqGjZWhJRVlD9mykCu02U7b2LbPJQFj60y3TDbI=
+	t=1710517253; cv=none; b=Dqy6es4I7rQSUvNGV25FsHq7fHx6m/xzL/usXUCW7vTQVqGkiBSXs49mIF4DgQReMFuT6Fn/xxXT4bFg/0B3lBD2aKe7NPi5TVdRaL5ClH6jUI+XLoa344R1wBF9RVTq9LvXjwLORLt3Mp3dkJnwD7hl4OYjFv2F3uop6GN/ZGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710517100; c=relaxed/simple;
-	bh=Yv7GWG66L6MKS+tklPfllW5x0ebZyHWQk2w657IjuTI=;
+	s=arc-20240116; t=1710517253; c=relaxed/simple;
+	bh=MJf2y2Zflcqhg26B6IegM18VqfaNaUfxtegMhDQiyhI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTUb/c5dZaVAtzuDuI9e9esX38HTY0SJ86QLbWzNEKUgjsp7mfYmMmQjjLfS86/GgBSBvsKDjd29zp2hV89lpwKaxTJHX/2R00sa96YZZN1hJkRrG4mTriyB2w2igA2C6jO9BV1Ey4eW5wsNUQkk4/dQm9jHDx0ypogXYDDeQ2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ru4fDqPw; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=h45azVX2/XCS7sVmUaUIcdEomIMMxANtvGiQsgcJfil3l305cZy5WaOkGUGolnVRfQVCHWstOpbqvwRqtArTNxR4m2bunhaS+RIoeKiy74oXjs+VgJ/Xx2yxNWWs/IIYJenQXC0GMg59Bje5HYd+P4OSsJ9FY+OM7y/pkDRleK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYTGh0QP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ru4fDqPw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710517098; x=1742053098;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Yv7GWG66L6MKS+tklPfllW5x0ebZyHWQk2w657IjuTI=;
-  b=Ru4fDqPw8Qu6EaQ6WXebbZ+6QQmgH3jndCIKOWSLc1c0+NaTHbQ3Y7rN
-   Ke+oU3IDkF3o6ygSWzDufdU1XggYMxjgoKyJZUTa4VNajrrREDtRFZgat
-   nWNTW4Xs6Np/Aq+xgkcmIpIsg1ZKK06WhZtUpqF3Eca/SfCJ3kjb8PDQc
-   5+6u6fosgNG3L5m/3xvI7BraEedrkO0VPwyQsDdRioakzpvle4n0AmkDS
-   vjhwjgqygQ0xY+CIK2qPtEZzya51NZKC/DGy3j/xGWKZ/tzK4CGTyUWto
-   3Eq7imZXrAkLfuzNCVQ4AToN/rMcq/sR9K1VCbbeG119FeCn+cSrMEU7b
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="9225829"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="9225829"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 08:38:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="13115050"
-Received: from liuzhao-optiplex-7080.sh.intel.com (HELO localhost) ([10.239.160.36])
-  by orviesa006.jf.intel.com with ESMTP; 15 Mar 2024 08:38:14 -0700
-Date: Fri, 15 Mar 2024 23:52:04 +0800
-From: Zhao Liu <zhao1.liu@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Shan Kang <shan.kang@intel.com>,
-	Kai Huang <kai.huang@intel.com>, Xin Li <xin3.li@intel.com>
-Subject: Re: [PATCH v6 9/9] KVM: nVMX: Use macros and #defines in
- vmx_restore_vmx_misc()
-Message-ID: <ZfRupNB+eFNQC9l2@intel.com>
-References: <20240309012725.1409949-1-seanjc@google.com>
- <20240309012725.1409949-10-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYTGh0QP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C7D5C433C7;
+	Fri, 15 Mar 2024 15:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710517253;
+	bh=MJf2y2Zflcqhg26B6IegM18VqfaNaUfxtegMhDQiyhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UYTGh0QPfCsOWoz6oSpcjVtDYmsHpsLV/sge952M6zG4BJdWah+Lhkp0nEPN4q18o
+	 Tjl7kAu1o9R1ZXDmz1cSh5kcxFZCveIeQRWt/OgP6TMNgmuLLCqOC6SwogucaN4WZV
+	 pg9kZUl4YOVT0TpR5RfgblBR8Lp7qmL9E/iktw0aqXhrJNliKxYQYBsUz5QDkRYhQt
+	 jEyG75X9YqGQAYimcISHtL8Xe17Yar8No2H4ZCTy0O/Cb3FW9NtpC1Nx3RnhihUDXV
+	 LrjQHO5HiUiiPFltz/R8k+ejdsMz52oUWramKhHrYOX1g5LFbG9YUYL6JXvN++b7ep
+	 hjTJU8y9piIwg==
+Date: Fri, 15 Mar 2024 15:40:46 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de
+Subject: Re: [PATCH 6.7 00/61] 6.7.10-rc1 review
+Message-ID: <a4c3ee1e-6941-4426-87b9-c5bf3a58d8de@sirena.org.uk>
+References: <20240313163236.613880-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bdjzHhYfbtfWjhuh"
+Content-Disposition: inline
+In-Reply-To: <20240313163236.613880-1-sashal@kernel.org>
+X-Cookie: news: gotcha
+
+
+--bdjzHhYfbtfWjhuh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240309012725.1409949-10-seanjc@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 08, 2024 at 05:27:25PM -0800, Sean Christopherson wrote:
-> Date: Fri,  8 Mar 2024 17:27:25 -0800
-> From: Sean Christopherson <seanjc@google.com>
-> Subject: [PATCH v6 9/9] KVM: nVMX: Use macros and #defines in
->  vmx_restore_vmx_misc()
-> X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-> 
-> From: Xin Li <xin3.li@intel.com>
-> 
-> Use macros in vmx_restore_vmx_misc() instead of open coding everything
-> using BIT_ULL() and GENMASK_ULL().  Opportunistically split feature bits
-> and reserved bits into separate variables, and add a comment explaining
-> the subset logic (it's not immediately obvious that the set of feature
-> bits is NOT the set of _supported_ feature bits).
-> 
-> Cc: Shan Kang <shan.kang@intel.com>
-> Cc: Kai Huang <kai.huang@intel.com>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-> [sean: split to separate patch, write changelog, drop #defines]
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 27 ++++++++++++++++++++-------
->  1 file changed, 20 insertions(+), 7 deletions(-)
-> 
+On Wed, Mar 13, 2024 at 12:31:35PM -0400, Sasha Levin wrote:
+>=20
+> This is the start of the stable review cycle for the 6.7.10 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Reviewed-by: Zhao Liu <zhao1.liu@intel.com>
+Tested-by: Mark Brown <broonie@kernel.org>
 
+--bdjzHhYfbtfWjhuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0a/0ACgkQJNaLcl1U
+h9BJSQf9GVyzjI/ct6OiwzPHRdu2znNkxKV2Xz6+XvWxd2E945c52mMrEM9rLr5p
+vLQS32l92PC86THfAaYfPRMhTrImLig7ptjTlx4vUr98w21MBzjOQfNHAA72WlXn
+MVrNHam491F+nTZ37CeiywiBa8kpPVRTaXwaLw1zW6PfFHtnB5mq7v1gWbh5aMzv
+zaajz58u2VruXvthEyQ9zGadh5F4Ecq2SasKgLmRsVn8skBj3A6kjU/A3OHJRMMj
+KcqM0tyT/hD2j1HtoXN8wNVmTejZNjL8Z3JjBEh5QSB4LmIH9AMisUSAPFANv2Fr
+Q2AYV8zpvKsG1nFD3WyHCqgBbHHViQ==
+=4mH/
+-----END PGP SIGNATURE-----
+
+--bdjzHhYfbtfWjhuh--
