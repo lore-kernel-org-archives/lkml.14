@@ -1,78 +1,68 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4332A1B7E1;
-	Fri, 15 Mar 2024 11:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5471B809;
+	Fri, 15 Mar 2024 11:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710502741; cv=none; b=pjOuI7u4gVZifmoaTNV0oK/mWk8iquHe/ySDvFcP14hOi2dbl3t2NPyVacW6sBnEyRIv1zXCCxoCip2+pWQyZuxt2yiSyfKSvyQz5yoURBX/lduNmfJ7pXPWq5MN7+9m58XNdy75Z62/L/RWfXlDQklIAi3Gh11P8/B6BnUYDSQ=
+	t=1710502742; cv=none; b=Zc9FWNM9JG/l5TlokHr+GCk8dWQc3+4RKIrlUUPnQRhoEwFH2NkP6rcrR7s0qLYL8mcqE9CpanW9EmfEO+bt6pbHtrA01t9Vz2RbdA5MJijpaCl1MElcM30WHnoWhEtOZ1WTXOA4yNa+gA7dl1Rk2IhrgN96W10MKaYdVqC6Ulk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710502741; c=relaxed/simple;
-	bh=YhK/jnk1sN0Eu2k73vdEasVnkAA21VPShol4SbhmQDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AigQL+p0k9xR64d7kScCl9sY/XShtfoyniyE0HcHQNI4ap1dvUMmQG2lH6PL4MI3h3r4TP4tepeWkHdyLFKkgO0XSFGnhr5NGX1EGZ7AH63bpUrUD8J/TvHLqfQeX0Muye8zOC9/tccoaOzG4EPgPviJqUUWDUcXKdCry4ONHR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=KUfLwR3Y; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1710502742; c=relaxed/simple;
+	bh=orpFgHvtrDbE/5GCfbNJ/7zDDiGgsLl9lSdt61UsgGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BdHfMitR0LNHwxAjQhufM9KTdugpgueZMBNkM4yokRnFMyPfgSZQgV63jpWVW/ZrdR/9CSKaywYQlMWsBdbpeED9TRM1QoBxCKL57mCs/DM0oAj6XaSsrB04h14Bd+LUOX7adLXnWvnYvBNkoGYd/lBmq/lZHhEHyiAiDhccGhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=I9tCSUPS; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KUfLwR3Y"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-568a3292916so1984175a12.1;
-        Fri, 15 Mar 2024 04:38:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="I9tCSUPS"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a449c5411e1so260277266b.1;
+        Fri, 15 Mar 2024 04:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1710502738; x=1711107538; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ret+NQ/Tw5LK56vjyJDNxqW8M+4jtEPqZMI9umR9cCI=;
-        b=KUfLwR3YydJAheGuADHmPCFzOmeuutYh+cPx3pAcCH1JXoYknT4HVT9fGpGQHhLJDi
-         olBOT21+QWtaOksGCZZ8CHd6EMVD8QEJg4918AHNhf2I62E5flo7lL4zqJRsMDU7tSkI
-         /KjLHhFQ3LP3wzTAq9iTpNJKHaTZeFHWPLaYFzQS6+mtrg4S3DEG2suKfDmG7En7mxhc
-         Yll27I7dKJujo45T8mZwgFHw8iEAhJm92aNa3iQzb/IFiwXvwqqCsR/8Pw6SplacDztV
-         N+9d6NozKyapLVifsnOheV49lTQZGZjObh9/llKi/FIhSOFBYJdC+nf5erbPQW8rhuao
-         V40Q==
+        d=googlemail.com; s=20230601; t=1710502739; x=1711107539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O1vRUl7sstn1m+3KlSoNBU6wq9u3nGCzm/f05r+8MPQ=;
+        b=I9tCSUPSLrU3mzcXMuvKCPvVjauFgTujP/14p+2/cRE7vz9xI7guiPQ6z3w4kCMsLC
+         jc28esjZEs4SwZeplSokvBsMjw1dfHKd4wRtndVDGEaDnHAryezLKaozlJQz49OpN024
+         LvGqyeByyy3ELRqrTMbfpzhCCaiKyZdmh0huPbvjd7y0cXqxcKsY8+jYVRCc3BHYuv3Y
+         /8svInMbSGimZgnsFHxwg6sHB5/GH0YwndiTCBIalOYLrzKxKK9PGB6+XqtPFqXCarAf
+         aLshiUSYIGPClfX7NY/Oqrccc12FpSlsYEKzYDvI1c8ohtK1HNQJ3ZtnhnwcKmjIK73w
+         vapw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710502738; x=1711107538;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ret+NQ/Tw5LK56vjyJDNxqW8M+4jtEPqZMI9umR9cCI=;
-        b=er0RKIzF0IcU+kWC90ZhsiiCBSbhUkp2gA5VaqtcF2On1rKBtbSs1mQqtkmD0zvV1Y
-         cqxNAKCjrWRra/Zo1WagShjBECx7tJsGMbm8s0e+iJkhu+AJug6VbHmLMF9iyirBqIjr
-         ueeon/g/EYndS3y1pM5Efjjw0eAvybhA23DNVaaVrLDjSrT1PWVvxUZRL3pD0TA5vH5M
-         PNSjCrjt69l2mMZBqcEOVpLgFlAkoTp6YSkYnWj49PGME05TccHUqiuI8obX0/LqDfcV
-         9z/ZcA/jd03Mmq637BbxTxK0p9koyNzLR705XgJ+QbgocOaoa9/PF0hUMev6jNXvpfUg
-         y7EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTWCZDE67T9IvmI0YS4CbbuhFeKCMu6uUu1Zg9qo+Z8onEHrZknnbxYsBA+Pbs5O3h2UVy5ZIAdhCyc+QqDYjPvsp77hQ4qYAIU6kb91XS6xVeH9MzljrD0ODBA8UsYfRULFOKuFhVXwyX1n4+qDo8H0DqxqozFaUC1A==
-X-Gm-Message-State: AOJu0Ywzp54EqvzcF+2uV6FJxeco5CfEWjSddoxAOHAJXAk1QRjZ7rAs
-	ZQshyNSg7RA1BJS464uoBN4fZqaPA7dXXo75oGC8IzDJQUKBAWDAKKSqAO/B++3GPQ==
-X-Google-Smtp-Source: AGHT+IHxB7FB377TOoio0unYbfIwnkxt4g5n3Z4MDqCqa7L7No5w/MvY3FrF55UMKEirChoiUMRGJg==
-X-Received: by 2002:a05:6402:530a:b0:568:797a:f2d with SMTP id eo10-20020a056402530a00b00568797a0f2dmr2968341edb.27.1710502737191;
-        Fri, 15 Mar 2024 04:38:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710502739; x=1711107539;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O1vRUl7sstn1m+3KlSoNBU6wq9u3nGCzm/f05r+8MPQ=;
+        b=j4pjfXV+EUzeJpM8j1W13nMvRTm7lYMmwO4EyxU6/pkZW1FTLdt6GOY+5krTCZ6u+T
+         2cV2a9d/Sp1RxW1ZfueLyLFjJ1Q6omWDo7HF/b0yYyZH88cC7LWVRkjVSLa5KGThsw9c
+         otis+9JAy+6FQryThbZ8fo9KlEgoblhyXVnJW6TkTrsZpdnu9IXyHpttKhvQD8JeG9V8
+         Rc4SkGJMNiegNQrYUIiKhb5LU1xHVHGXxUVMwFXPutdSjbxxJEwxpzlApjE99fYP58dK
+         2SU+NF0v2QJswW2y/Wy53XAuw/DGyuGmse303uHoOXpDUhPZC6pknE7zXu4X5v9/3Oa0
+         L+cw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4NQK8iC54Und3P8CHCYsXlbe3MDfbAffh8uCQnn4/OW7OC4wISDXpCcX0XEkg2aiN8bT88InijviJvSXyvfWcR+l4ZuqsU7dOGBF9O8GUDur3SEFpFIS3zJ6ybvKdQnof
+X-Gm-Message-State: AOJu0YzFpzn0ptcUGO/RFfUxFC1Fpyj81r6muaVa+4tbmAcXzaoosmPu
+	XxzxmjcKUB3T/NR5E5vitzDJ8lL10RHltUohBQqUnxYdNdfocT4GvVH/90p7zZH6vw==
+X-Google-Smtp-Source: AGHT+IHnTSUzMhQj8J4CoLtxGIEjCQa5J7Xvsgz1J7EvqPwTz4uTZ1RAxz7js99wxdjPzIEbgYwVKA==
+X-Received: by 2002:a17:906:b80b:b0:a46:7ccc:44a with SMTP id dv11-20020a170906b80b00b00a467ccc044amr1914855ejb.14.1710502738897;
+        Fri, 15 Mar 2024 04:38:58 -0700 (PDT)
 Received: from ddev.DebianHome (dynamic-095-119-217-226.95.119.pool.telefonica.de. [95.119.217.226])
-        by smtp.gmail.com with ESMTPSA id fg3-20020a056402548300b005682f47aea7sm1610024edb.94.2024.03.15.04.38.56
+        by smtp.gmail.com with ESMTPSA id fg3-20020a056402548300b005682f47aea7sm1610024edb.94.2024.03.15.04.38.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 04:38:56 -0700 (PDT)
+        Fri, 15 Mar 2024 04:38:58 -0700 (PDT)
 From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
 To: linux-security-module@vger.kernel.org
-Cc: linux-block@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>,
-	John Johansen <john.johansen@canonical.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Khadija Kamran <kamrankhadijadj@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Serge Hallyn <serge@hallyn.com>,
 	linux-kernel@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
-	selinux@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [PATCH 01/10] capability: introduce new capable flag CAP_OPT_NOAUDIT_ONDENY
-Date: Fri, 15 Mar 2024 12:37:22 +0100
-Message-ID: <20240315113828.258005-1-cgzones@googlemail.com>
+Subject: [PATCH 03/10] capability: use new capable_any functionality
+Date: Fri, 15 Mar 2024 12:37:24 +0100
+Message-ID: <20240315113828.258005-3-cgzones@googlemail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240315113828.258005-1-cgzones@googlemail.com>
+References: <20240315113828.258005-1-cgzones@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,104 +72,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Introduce a new capable flag, CAP_OPT_NOAUDIT_ONDENY, to not generate
-an audit event if the requested capability is not granted.  This will be
-used in a new capable_any() functionality to reduce the number of
-necessary capable calls.
+Use the new added capable_any function in appropriate cases, where a
+task is required to have any of two capabilities.
 
-Handle the flag accordingly in AppArmor and SELinux.
-
-CC: linux-block@vger.kernel.org
-Suggested-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
 ---
-v5:
-   rename flag to CAP_OPT_NOAUDIT_ONDENY, suggested by Serge:
-     https://lore.kernel.org/all/20230606190013.GA640488@mail.hallyn.com/
+v3:
+  - rename to capable_any()
+  - simplify checkpoint_restore_ns_capable()
 ---
- include/linux/security.h       |  2 ++
- security/apparmor/capability.c |  8 +++++---
- security/selinux/hooks.c       | 14 ++++++++------
- 3 files changed, 15 insertions(+), 9 deletions(-)
+ include/linux/capability.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 41a8f667bdfa..c60cae78ff8b 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -70,6 +70,8 @@ struct lsm_ctx;
- #define CAP_OPT_NOAUDIT BIT(1)
- /* If capable is being called by a setid function */
- #define CAP_OPT_INSETID BIT(2)
-+/* If capable should audit the security request for authorized requests only */
-+#define CAP_OPT_NOAUDIT_ONDENY BIT(3)
- 
- /* LSM Agnostic defines for security_sb_set_mnt_opts() flags */
- #define SECURITY_LSM_NATIVE_LABELS	1
-diff --git a/security/apparmor/capability.c b/security/apparmor/capability.c
-index 9934df16c843..08c9c9a0fc19 100644
---- a/security/apparmor/capability.c
-+++ b/security/apparmor/capability.c
-@@ -108,7 +108,8 @@ static int audit_caps(struct apparmor_audit_data *ad, struct aa_profile *profile
-  * profile_capable - test if profile allows use of capability @cap
-  * @profile: profile being enforced    (NOT NULL, NOT unconfined)
-  * @cap: capability to test if allowed
-- * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
-+ * @opts: CAP_OPT_NOAUDIT/CAP_OPT_NOAUDIT_ONDENY bit determines whether audit
-+ *	record is generated
-  * @ad: audit data (MAY BE NULL indicating no auditing)
-  *
-  * Returns: 0 if allowed else -EPERM
-@@ -126,7 +127,7 @@ static int profile_capable(struct aa_profile *profile, int cap,
- 	else
- 		error = -EPERM;
- 
--	if (opts & CAP_OPT_NOAUDIT) {
-+	if ((opts & CAP_OPT_NOAUDIT) || ((opts & CAP_OPT_NOAUDIT_ONDENY) && error)) {
- 		if (!COMPLAIN_MODE(profile))
- 			return error;
- 		/* audit the cap request in complain mode but note that it
-@@ -143,7 +144,8 @@ static int profile_capable(struct aa_profile *profile, int cap,
-  * @subj_cred: cred we are testing capability against
-  * @label: label being tested for capability (NOT NULL)
-  * @cap: capability to be tested
-- * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
-+ * @opts: CAP_OPT_NOAUDIT/CAP_OPT_NOAUDIT_ONDENY bit determines whether audit
-+ *	record is generated
-  *
-  * Look up capability in profile capability set.
-  *
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3448454c82d0..1a2c7c1a89be 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1624,7 +1624,7 @@ static int cred_has_capability(const struct cred *cred,
- 	u16 sclass;
- 	u32 sid = cred_sid(cred);
- 	u32 av = CAP_TO_MASK(cap);
--	int rc;
-+	int rc, rc2;
- 
- 	ad.type = LSM_AUDIT_DATA_CAP;
- 	ad.u.cap = cap;
-@@ -1643,11 +1643,13 @@ static int cred_has_capability(const struct cred *cred,
- 	}
- 
- 	rc = avc_has_perm_noaudit(sid, sid, sclass, av, 0, &avd);
--	if (!(opts & CAP_OPT_NOAUDIT)) {
--		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
--		if (rc2)
--			return rc2;
--	}
-+	if ((opts & CAP_OPT_NOAUDIT) || ((opts & CAP_OPT_NOAUDIT_ONDENY) && rc))
-+		return rc;
-+
-+	rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
-+	if (rc2)
-+		return rc2;
-+
- 	return rc;
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index eeb958440656..4db0ffb47271 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -204,18 +204,17 @@ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns,
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
+ static inline bool perfmon_capable(void)
+ {
+-	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
++	return capable_any(CAP_PERFMON, CAP_SYS_ADMIN);
  }
  
+ static inline bool bpf_capable(void)
+ {
+-	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
++	return capable_any(CAP_BPF, CAP_SYS_ADMIN);
+ }
+ 
+ static inline bool checkpoint_restore_ns_capable(struct user_namespace *ns)
+ {
+-	return ns_capable(ns, CAP_CHECKPOINT_RESTORE) ||
+-		ns_capable(ns, CAP_SYS_ADMIN);
++	return ns_capable_any(ns, CAP_CHECKPOINT_RESTORE, CAP_SYS_ADMIN);
+ }
+ 
+ /* audit system wants to get cap info from files as well */
 -- 
 2.43.0
 
