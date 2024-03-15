@@ -1,146 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DE553383;
-	Fri, 15 Mar 2024 16:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F5335478B;
+	Fri, 15 Mar 2024 16:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710521597; cv=none; b=GxF64s2MEkDKAlJCLRRSJ9O7HmVmCh/rvjozEUe3nPLxITrvTucjw7LaAuc3A1kPOo7qH4XP9yWW74z1g4CuJszrOKiKIX22U+bThLBENlt/o+AReiITw0V1kF+dbEt64eMB/T6+9I7Qh+Oh67i6NCcPYvUwh+fPrMnhZDwBbGc=
+	t=1710521603; cv=none; b=sGdBu0jeIBcGyQXUjYvLLv8dBIilyA8BUwmUg4FwoTWwBahVP2bHnc6VZVbh4jVUJwHp89YicR5Wbj5gjlmy3Skca8OLhUXsas1vEKUwY02mzmKtWkJ05UBODUs4efW/NaeDQ0JtUk/+I5fEd8utakf+XtWqY4cyJeiH0ez7pYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710521597; c=relaxed/simple;
-	bh=fKwiuKl53KobzjbKSb1MXdgcO5uYAnMu6jBhF4A2PpI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dRvo652+pvgffeAqghjyTai9nqlgCXD82TX++JQAaqQYpIvj8aTE/RuKXhgABJ/KGXU0Mu1vZZAUMWghOGadOTLYrLsSfq7+631JHplKlsefn/zIxbEBKpUC4eq/wpKAJ7Z61yp81aWg+qnkakAQxeAXV7hVYumO93X6vYJE8Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g11P8Vlm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g11P8Vlm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A520CC4166A;
-	Fri, 15 Mar 2024 16:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710521596;
-	bh=fKwiuKl53KobzjbKSb1MXdgcO5uYAnMu6jBhF4A2PpI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g11P8Vlm2QTCw1CH+0YoJtXmCt+YyoAw2XSXSSmPSO+8uzsTW2Vvu9hzzwBraEYJp
-	 eeQ8X1IXqvmNKGcBNgRCV4Vj8gS7pERvhzS14SVld3HYTeWjZV0h3qLmmluZmsrmL0
-	 lqkZdL0GWfZsXLbs8bQuufw03lN7aDpSS1mjc7Sejie7mIbAScfPRDyrsa3B3ZVZqx
-	 /WwsawQl6/lBGsFlZe6Dh/jOJS5Kmh8P8yCsQmomMt6OsfIjE8ymc1mqKTOuqtmxix
-	 /Jh6A6vl0GZvHzqQ+vRQ/+nng7bZKnPBdXD9K3lmVPWwiHHjPjTmGJtAPQ9i46pCEC
-	 JQrfg/IMuZx6Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 15 Mar 2024 12:52:54 -0400
-Subject: [PATCH RFC 03/24] vfs: add try_break_deleg calls for parents to
- vfs_{link,rename,unlink}
+	s=arc-20240116; t=1710521603; c=relaxed/simple;
+	bh=quOxwG7GF78bsqXhXIFaqgiZCtCviVlc+c2l1XriIXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aaiHM/RDmKgPkTmpwu3iudvKYmt9ksqjmFobUVqKuyGHxbebKIPEQHa33GArUyXyKFt1CzQSFaG3wwudnoLnVQxGVW4d0BsAE5RL+zAyRvebIVH2BS2eL/j6nO+F1ePQxGHr2uWLtG/9HL39EK1E26Vds23sxgpIJQ0D/d42o+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BD90C15;
+	Fri, 15 Mar 2024 09:53:54 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83CF33F762;
+	Fri, 15 Mar 2024 09:53:16 -0700 (PDT)
+Date: Fri, 15 Mar 2024 16:53:10 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZfR89rdzRymY1Ovx@pluto>
+References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+ <ZfMqWP-t39SCvkA2@pluto>
+ <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240315-dir-deleg-v1-3-a1d6209a3654@kernel.org>
-References: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
-In-Reply-To: <20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, 
- Paulo Alcantara <pc@manguebit.com>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Miklos Szeredi <miklos@szeredi.hu>, 
- Amir Goldstein <amir73il@gmail.com>, Namjae Jeon <linkinjeon@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, netfs@lists.linux.dev, 
- ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
- netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1924; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=fKwiuKl53KobzjbKSb1MXdgcO5uYAnMu6jBhF4A2PpI=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBl9HzsfnDeU1npZ9UPd6x10BjoUFU4+T+gGmHrG
- pQmiDL15LCJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZfR87AAKCRAADmhBGVaC
- FSfZD/sHqk1hYBvTn5PMwdUn2UqE4oW7xjGgxauc2340L4WCReb3aBWqjBHXlnJp4KFoJlCF8/R
- CY4BOYfemuI1eHF7hDnuLNdqA5T9SIspmGjKDBnpFYsbwN5w/+iG14qbGkbvib7PJwIa+BVHoIW
- 7X5C6Ymhe9esmQ6Jxa15ZznmII+UCZsOIfEOtEvoWtKlGccvKkYnCsJQUPUvW/pkku6z+HAxT4a
- Q0Av79s8GFcU+Bk1DaU7AILv3sLz0zDECwM57TaUxfIFr5epPFmYDI/f8m6+ArFd94UeQJL69bH
- PvhGPth7Pssc0zFSqcLs+A3vLPGlvMHaYXoxW35roYab4rjwke4CKmujzgVT92JZRTdzj7XdPOX
- lg6fYZBJqgOuNGCeEHu1TAK+caqKJht7/zNrChpMFUp6zzKJDbJldLplPSsNcbpBB6iax3fXGxF
- Uklmy8p7Ebz0AJjGGASCaBr/vbIhTzZbNvNjHsfTuHMB4r9anPCTlqCoDOTVOk9nm285gZItuib
- 41cdQBAXvpZKsFhcJcsYjUuwZnO8ex9gSI5V6FiRb0uiugwr+vRmU65EDYxhcYHwRFCdjtA+68G
- iGtvhqN4sQA8lQhNYQd9ZAvMfqeC5X8PPEC9EAs4Kf/i+RTl6sThgvMpbizXcaA4TO+HpExKJUa
- Qlqa4vWYaEEsB5w==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-In order to add directory delegation support, we need to break
-delegations on the parent whenever there is going to be a change in the
-directory.
+On Fri, Mar 15, 2024 at 12:31:51AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+> > protocol basic support
+> > 
+> > On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
+> > > Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b, is
+> > > it ok to land this patchset?
+> > >
+> > 
+> > I'll have a look at this last version and a spin on my test setup.
+> > 
+> > ...but has this V5 change at all since the Reviewed-by tags due to the latest
+> > spec changes ?
+> 
+> The tags are same as V4. I only did a rebase, no more changes.
+> > 
 
-vfs_link, vfs_unlink, and vfs_rename all have existing delegation break
-handling for the children in the rename. Add the necessary calls for
-breaking delegations in the parent(s) as well.
+Ok.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/namei.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+> > ...IOW does this V5 include the latest small bits spec-changes or those latest
+> > gpio-related spec-changes are just not needed at the level of the Linux pinctrl
+> > support as of now and can be added later on when a Linux gpio driver will be
+> > built on top of this ?
+> 
+> In my current test, I no need the gpio related changes, so I would add that later
+> if you are ok.
+> 
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 9342fa6a38c2..56d3ebed7bac 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -4332,6 +4332,9 @@ int vfs_unlink(struct mnt_idmap *idmap, struct inode *dir,
- 	else {
- 		error = security_inode_unlink(dir, dentry);
- 		if (!error) {
-+			error = try_break_deleg(dir, delegated_inode);
-+			if (error)
-+				goto out;
- 			error = try_break_deleg(target, delegated_inode);
- 			if (error)
- 				goto out;
-@@ -4603,9 +4606,12 @@ int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
- 	else if (max_links && inode->i_nlink >= max_links)
- 		error = -EMLINK;
- 	else {
--		error = try_break_deleg(inode, delegated_inode);
--		if (!error)
--			error = dir->i_op->link(old_dentry, dir, new_dentry);
-+		error = try_break_deleg(dir, delegated_inode);
-+		if (!error) {
-+			error = try_break_deleg(inode, delegated_inode);
-+			if (!error)
-+				error = dir->i_op->link(old_dentry, dir, new_dentry);
-+		}
- 	}
- 
- 	if (!error && (inode->i_state & I_LINKABLE)) {
-@@ -4870,6 +4876,14 @@ int vfs_rename(struct renamedata *rd)
- 		    old_dir->i_nlink >= max_links)
- 			goto out;
- 	}
-+	error = try_break_deleg(old_dir, delegated_inode);
-+	if (error)
-+		goto out;
-+	if (new_dir != old_dir) {
-+		error = try_break_deleg(new_dir, delegated_inode);
-+		if (error)
-+			goto out;
-+	}
- 	if (!is_dir) {
- 		error = try_break_deleg(source, delegated_inode);
- 		if (error)
+I COULD have agreed with this, since AFAIK there is currently an effort to
+add support for GPIO on top of SCMI Pinctrl BUT not in Linux, so no reason to
+block this series for gpio-related missing features, that should only be additions
+not breaking backward compatibility...
 
--- 
-2.44.0
+....BUT, I've just wrapped my head again around the latest public release
+of v3.2 spec (which has gone through so many changes and additions that
+I had lost track O_o) AND beside the above mentioned GPIO changes there
+are indeed also BREAKING changes around the commands PINCTRL_SETTINGS_GET and
+PINCTRL_SETTINGS_CONFIGURE (which were the old PINCTRL_CONFIG_GET/SET),
+that now also get/set the selected function: so that, at the end the payload
+itself of those commands/replies has also changed IN SIZE, so the driver needs
+definitely to be updated (and whatever you use to test on the backend server too,
+if you want to test this...)
+
+I think these changes (which I forgot being there) were in since last month, so
+already V4 was broken in these regards (which I have not looked at)
+
+I'll leave some comments along the series and test all of this again next week...
+...since too many things has changed and I want to re-verify all on my side.
+
+Thanks,
+Cristian
 
