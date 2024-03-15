@@ -1,87 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8B618B14;
-	Fri, 15 Mar 2024 10:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C004C18EA5;
+	Fri, 15 Mar 2024 10:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710499229; cv=none; b=tG5mZ17OV7/ReWZtwAKcXScrwksAR9nSIi6zAg9NC0iLI7EdFnmPcKdus1Cc47QleFB3XIRYwT2m1L/X6TuAkxFW2Trv1UcX87pCE6rvPaXuxGGI5Zg1NMorjwpHMt7SnqVT+XW0R7ImZhJ/9yAbI4z7JK4m6Kq1OcNqVTdH4Pg=
+	t=1710499396; cv=none; b=eNhdRe/Mei+iIfxyyCIdZYeF+Mc8W0KN0wqEsriNwFnXXfnVHrdPxzeioh+9b2II9xHC5CBkJG1RYf2owapXLPxwbFry+aYKucn1BQYMdK4poKdt/qrVuiifQQzn6QbAe5GVt+4at8al7/hMeeZt1UdtoCJzcAfqU2oGjyoAifI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710499229; c=relaxed/simple;
-	bh=k4abZ3gj2MM2yAAU6UY4yVMKK/pLuf/l7Nrl9jCTX4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0D4QHHLmpb11AGKv/0XwRSDEjrYOgVBoXOy5qlfz+FI0KeQOs8/9SE8BYcnT+0J1AZ2pLdwKkb5kuzYfpMjGnrufSpZJjLa3K2wW4JOGHlVNiMuHBu4PN6V3GFwLUmvV9xA+D4A4GiiAjhos0U3ZcCqYIJCga1BcjmADqE08KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2tRegHu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2tRegHu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7C2C433F1;
-	Fri, 15 Mar 2024 10:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710499228;
-	bh=k4abZ3gj2MM2yAAU6UY4yVMKK/pLuf/l7Nrl9jCTX4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I2tRegHu9vnYnl//zqIhm6uWtA7CY+pLO6K9mjX5jzGg82ixLKOtNEy64nANIGru1
-	 EMuST6BwKfmvnohAJZ5qeBEcM8pIjtwfNYBTnclX4jhccRpFWudcNPimOcfsA7KzvO
-	 fyCQYXtwq7tPuxN7DOj6BAI+JFRZpDa04TMqaJpwCq1V65WMus1b7a8cl2uQWp6ovv
-	 yhwpqKXAyLNsPfwZHiJTmaUxfKJXjCIgM61a/BKgZu+2JilPKnnx3Qz32epXogxCSa
-	 R/N4BIbsSgzcF/JFwvo/pbcVGzM197paYsiCF4PcCqYIIByZ0gbu3sTm/2YE1Ou1xi
-	 uZRhOppOyhyPg==
-Date: Fri, 15 Mar 2024 11:40:25 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-Subject: Re: [GIT PULL] i2c-host changes for v6.9 - part 2
-Message-ID: <ZfQlmbAKzFf5dNyw@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
-References: <xhohtljc7lvguz6inuqgwwzw7b752q3noa3umiqebfraxedco7@3yw2ea2eibjo>
+	s=arc-20240116; t=1710499396; c=relaxed/simple;
+	bh=KPZfPSs9Bh7Me+VVKS8w0NBe//T6pt9pxKaa8aeHkKg=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=UbLx2I1ktG+SSDDoQUfPVeHOw8zlpQ5JYjzhJX4rJ3BspU/dysWBxbo7gtvmeuma9/2UQbNykzilkgCxOKE5bjMHJ/FWuNvILgnSPJq2bvEzUvfA2gSo29XhREh8wzp0N6Kxg80JL4d8pOvIYyukATjjNAUNVw7JBmsogp+k0RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 29EC63782083;
+	Fri, 15 Mar 2024 10:43:12 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240313164223.615640-1-sashal@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240313164223.615640-1-sashal@kernel.org>
+Date: Fri, 15 Mar 2024 10:43:11 +0000
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>, "Gustavo Padovan" <gustavo.padovan@collabora.com>
+To: "Sasha Levin" <sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="28lVfv9tFe50XtpU"
-Content-Disposition: inline
-In-Reply-To: <xhohtljc7lvguz6inuqgwwzw7b752q3noa3umiqebfraxedco7@3yw2ea2eibjo>
+Message-ID: <1fb18d-65f42600-6b-4a825480@259324147>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E15?= 00/76] 
+ =?utf-8?q?5=2E15=2E152-rc1?= review
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
+On Wednesday, March 13, 2024 22:11 IST, Sasha Levin <sashal@kernel.org>=
+ wrote:
 
---28lVfv9tFe50XtpU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>=20
+> This is the start of the stable review cycle for the 5.15.152 release=
+.
+> There are 76 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Fri Mar 15 04:42:22 PM UTC 2024.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
+stable-rc.git/patch/?id=3Dlinux-5.15.y&id2=3Dv5.15.151
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>=20
 
+KernelCI report for stable-rc/linux-5.15.y for this week.
 
-> Time for a new, last-minute pull request.
+## stable-rc HEAD for linux-5.15.y:
+Date: 2024-03-13
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3D97877abed2af926040ddc1dc8d68d11b73e44e42
 
-Thanks. I just sent out the first pull request. I'll wait until it is
-upstream before pulling this one. Cheers!
+## Build failures:
+No build failures seen for the stable-rc/linux-5.15.y commit head \o/
 
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-5.15.y commit hea=
+d \o/
 
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
---28lVfv9tFe50XtpU
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Shreeya Patel
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmX0JZkACgkQFA3kzBSg
-KbanURAAozYhGT6EIGjfxnd/tK84BskqH6vKgAFAo8ieKveFUFTRi2p2EsZQd+UR
-2nDA5LKptjpniHbmrZxdI6WMxJwVAdPx9qrB9Vw782WJns00OyqorcYD8cYsae+G
-6H9rAQetC8uvHfl2D5x33ZzmJjr71BYTDzX7z2gPdn8b1iQ5FYXMxABuQMda5LVp
-sQso/dMJjhbdEU0bpUl7+hREOEeSfRhb1U7TIQgXBI+TbgaPSzr2YqQ6J16yZYxM
-0DuIRvkE+wiTIeDOaHwP8g39nl9C3iJlI8X2uP4XXuk2JCcptQwfkLTZrctuu5i/
-rOohQoqyhnLKsyoDvxUZML33IQsT3MF230Lu82c1qoZSRdoj7TvmZm9CgZVxz9n3
-LNJmWHto++1VBV6vXzQ7GjcADUmznZrugOH21t/IVmtNaz7dhetDo02K5llbm6ld
-C/tJjJnP1OiUzrL9EsWSHvgL9DbkyIxMCpBKlmtaPbDY9F1EU59UeqWEkHm8ochU
-LkeiVbM10jgpcSzTOydUYR1col1LuIkeTHDFt0qsunz+AdepO1y3ZDYQpkNlbdMh
-EOzkShJdOtj7sF/qYCaRZfn7Zzamq1CQrWJ1EHJvk7S5DHMkBoaqjDgFvP1ufgGv
-8btRrZdkDZ8iXiyR0X/pSYIJjLpc/jSe3ahvGuiMS0zZEs9beJ4=
-=2uhj
------END PGP SIGNATURE-----
-
---28lVfv9tFe50XtpU--
