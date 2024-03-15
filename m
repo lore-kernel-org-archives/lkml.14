@@ -1,289 +1,255 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25485823D;
-	Fri, 15 Mar 2024 22:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B3C54745
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 22:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710541738; cv=none; b=Gn8HvVL2ZvMCKljX8cD0/PzimTsdKi36w5claYzDnKmrFbi273QZqgVUf/lvyW3aB6w19fPgOaKB7PsFnCuRUj3v/zAGBN9ykUai0qGQUFMtiSf25MnUhMSaYZj8hUwd75b+Z0agaX9lC4YuCa0ZY5djvW1pVQudE3N4r7+aV3g=
+	t=1710541799; cv=none; b=E47yozipEz20F7rBdObIqajYYwP3RtBFdDibJX1j6KhtILNXIGmtFfKUbc2Tgfkwv3VPC42VCgV+1jx2AFyPyamgJQZ99zzPFptj0stYZLJHIFYB41Sxd6UsulNOGz76lVQPaM95hsM3yhhjms7u78+okEjdAfkc3OuNMubv+UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710541738; c=relaxed/simple;
-	bh=IqZyr9amdKBauEhJdHCTkXE0YnirulZCw9rxMBb0SnY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CHph4fm819SBcXSeU27sLoFLHzSSy5tluQHsIhM3cKjk1oXHDtKi+e/T45q2/XxkumgMXQ7XYxPy2B5zgAm5Q8lLGXgDx0opeZZOb3xs+rjcwNJETsxMWT6TBB04AlMBpP+yIA7vY2HW6zoHx9iWN6ndqmvuJy3FiPxYRYUC3Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F21+zhgN; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710541799; c=relaxed/simple;
+	bh=abZbN+dtmzMeEI+wi27JDUEzPkv7xsNWz/ht4MJdi+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OFChJ3Je330+f2apFhmrIqj9Y6Sv7AoArxV+xeVx5uKGXVeb3y9+pCR8PKV94uHHLO8NkHewtv6X88sBkHmMrK5JkHWETEDC9FVI/UlGvAAlD8SZHFJDR25vj9YPHGVKzcul/IhVb2h9mqzwjoA9/9pc4heKPTJnu1ixwA//Vsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MbG9gn1S; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F21+zhgN"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d4886a1cb4so18504671fa.0;
-        Fri, 15 Mar 2024 15:28:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MbG9gn1S"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e5d1e95481so1092295a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 15:29:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710541733; x=1711146533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=302kqphgnvloT7tRflp5vmAeTFbHsjR2zeOi1oIAOPs=;
-        b=F21+zhgNlX5H7ccq0+w9Ls+ITrIglt7glaIZ4nSnNfpbAdjPDf4s52whkCp4Fa+/m+
-         Stu7EjszmCj/ZYQWG2dBgV1Eq1A56zn2qRrDle4D4kMvfezhz1iR61LC8PEL9BckLjqP
-         MTMcJThUXnjp1nhAtV3l8n/euaHQcm+ILK0SJFtf3D9ortXRKLiQ7vU/Cx5TcSTk5lni
-         pquinVCXYpx+RZYI6+hKwqcuP3LtPQ9MP8eJKeh4fg2/1cxwXk6YDt3SjmsO/JU5rHjL
-         EJIYG0cfU04kai17dUNNNVj7ikhu7xtnfScTJclublUlb7sl8vw8a6boFwj9UMHZQqGp
-         g2WA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710541794; x=1711146594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCusZO289RmxKRApmPUsapIonaCtegZudach7X7xosU=;
+        b=MbG9gn1SiH/zNBJyDhuwa4f+87ah1KZZZePUyjO7tdoRiET65RUS5qmLrIT2VdwwRd
+         y5Kko5ror9ww5c0pR1pD5Ys2RHpWDcKVYVZ7ghfsAvA2YdO+KC7ZUnwN3R5I6R3FwZ/3
+         Yku6oN7MS3hGMKRNQVEgwpwWHfPlHyJmPWVe+zUdOnu6C6TUkKtIbSImWDVJUtchUFE+
+         1+mUfDdXltK3bI3hNR+mHLvYZZ9rGBKWFq72jPZIaOe9Ueh4w6dXuydybVhsaphp1PlT
+         1vGh5zz/PcAqNVCdVweynwgS4/jqy1soQkTsrJCJNgkaXP3FOBmxugQCJTnwb1MBIZHa
+         SmfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710541733; x=1711146533;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=302kqphgnvloT7tRflp5vmAeTFbHsjR2zeOi1oIAOPs=;
-        b=jZ0sQr1lvDn/lOAQYXB8LsycLg2PuBEIUK/g+ZEZ+XppMXgrR+YA+3vX1+Pp495PhJ
-         7JtzKKNBvoLQqHL3AkvM1vO6Sni6AUImWmaDIuJAjkSJ3iinkrzvUX///XUF7l1pOWM8
-         CyD3bgchps30T8WOj90CeQLKhfq5MH+s16oRaCh/t0C4NtKkeDsygEE2bAas4fjQEKKE
-         2gbum4CAaxR0QRFJ9Swg5BBO3tI3GahLZV6EJ6vqdoL5peN0pahBijihb9F4GsHz2t1m
-         Dl179vP0yqpvGJvwsyJibIIM+PtsCUR6GzDsYY6DYDGgV9otthAmfBV2DTnm1ysvAXj+
-         Tc/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWwTD+5sJLI7dBoUzbrUFi3qJ7fDHUkFi0pYvUAH9dtaHTDdmFAEiyty/bQjZi1RD2f4yvSs0n0rdNLduPadDzgaIyRzGhjvm9jZCHFiFz+CYtrKoOJhBru58YFfqAW4DPh4S1TCenSrGcLzlofdIAWPEaielq2Iyu08ALIaYjyG2LSYRq9lDprnFJingrSdaqXjvijw5pWLbWOtA==
-X-Gm-Message-State: AOJu0YwQ1UTiist6GidX4yhIqCSJlkOfxm7wdSBToCSuJAahdu5H3UPP
-	P0H+mJMsYdbI/NboiBSjrhAUFGxrFoaNlCZJIlaA6AAPj6Gr0Wnv
-X-Google-Smtp-Source: AGHT+IHcjRin3ixKrRDCEXWR1NTp6DqzyykF1/dJQj9Pfcg3SJc4VnuWq0HeLh8Kw0lcnJE/ychySA==
-X-Received: by 2002:a2e:b81a:0:b0:2d2:cb43:bc86 with SMTP id u26-20020a2eb81a000000b002d2cb43bc86mr3340739ljo.45.1710541732845;
-        Fri, 15 Mar 2024 15:28:52 -0700 (PDT)
-Received: from bhlegrsu.conti.de ([2a02:908:2525:6ea0::f845])
-        by smtp.googlemail.com with ESMTPSA id el9-20020a056402360900b005684173e413sm2039833edb.72.2024.03.15.15.28.50
+        d=1e100.net; s=20230601; t=1710541794; x=1711146594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RCusZO289RmxKRApmPUsapIonaCtegZudach7X7xosU=;
+        b=KcR8oUvrKb821pBUmWkAsU1u49eUhSTPtSzLFe6I3CG2wd36Db9gADEcapXtrv1YEO
+         D372eY31oQFHsQHPFT5rGlbc2QDv2MMGRdXazrD8EpIwW5s/Z+Hgt1yCWFp/ECQnD2O4
+         R5Sd1BsKNdQyWzMXLyMaflWKXDdDK7YoWbwCot71NmzOufyawk0ZgbOPD9/umRzpIeeV
+         48DUuL8gUJepfB002pY+ii/piFbu/UgAHCwxHOPci+A92+ZowTPk1M8EgZNearMDIN3k
+         OIeDC1JvQIm7bHHWXSd7PjuuS8eV9igYf0c9R1JCxnYTMhfmGP5hY1UQEJrlXZPNBnlx
+         k14Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXz5/wQd1pXqx90HSZ/6/kijvUCrcRPUblAY5Hu4lnITcTDmk/4tGlOan3ltFw5aAzl33gRd2sTBr12/h+G2O6jyhFlmid0Tz0XmMqS
+X-Gm-Message-State: AOJu0YxsMWFNnzuyaMDyfSwGTb0Eo2on8g8t13BFhQ0LmGNIZvgRs92D
+	i0eMXKXMls7T+c0mqsGqjeGfQHALBa3ceEsfjNFSTlJ474U1SYgWnKE7r0qoavY=
+X-Google-Smtp-Source: AGHT+IEW5gN9sbph3kxFIGZdgJVjd6G6qZOWmV9uVNfp7feJ4DfK+CdJShaF1xYaFe+rCRb6NtgQuA==
+X-Received: by 2002:a9d:7acb:0:b0:6e4:fa90:2549 with SMTP id m11-20020a9d7acb000000b006e4fa902549mr6850500otn.8.1710541793960;
+        Fri, 15 Mar 2024 15:29:53 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id t28-20020a05683022fc00b006e67ef12d07sm227721otc.27.2024.03.15.15.29.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 15:28:52 -0700 (PDT)
-From: Wadim Mueller <wafgo01@gmail.com>
-To: 
-Cc: Wadim Mueller <wafgo01@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Chester Lin <chester62515@gmail.com>,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Matthias Brugger <mbrugger@suse.com>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Johannes Zink <j.zink@pengutronix.de>,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Swee Leong Ching <leong.ching.swee@intel.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
+        Fri, 15 Mar 2024 15:29:52 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: Mark Brown <broonie@kernel.org>,
+	Ryan Wanner <ryan.wanner@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: David Lechner <dlechner@baylibre.com>,
+	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-clk@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: net: add schema for NXP S32 dwmac glue driver
-Date: Fri, 15 Mar 2024 23:27:49 +0100
-Message-Id: <20240315222754.22366-4-wafgo01@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240315222754.22366-1-wafgo01@gmail.com>
-References: <20240315222754.22366-1-wafgo01@gmail.com>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] spi: remove struct spi_message::is_dma_mapped
+Date: Fri, 15 Mar 2024 17:29:43 -0500
+Message-ID: <20240315-spi-remove-is_dma_mapped-v1-1-ca876f9de1c5@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-Add DT binding schema documentation for the NXP S32 dwmac glue driver. This documentation is based on the patchset originally provided by Chester Lin [1]. This commit is a re-send of [2] and [3].
+There are no more users of the deprecated is_dma_mapped in struct
+spi_message so it can be removed.
 
-[1] https://patchwork.kernel.org/project/netdevbpf/patch/20221031101052.14956-6-clin@suse.com/#25068228
-[2] https://lore.kernel.org/lkml/20221031101052.14956-1-clin@suse.com/T/#me96c28bd0536de276dee941469ea084d51b42244
-[3] https://lore.kernel.org/lkml/20221031101052.14956-1-clin@suse.com/T/#m887a1b34e612f8dc0d5b718e4d6834c083f1e245
+References in documentation and comments are also removed.
 
-Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
+A few similar checks if xfer->tx_dma or xfer->rx_dma are not NULL are
+also removed since these are now guaranteed to be NULL because they
+were previously set only if is_dma_mapped was true.
+
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- .../bindings/net/nxp,s32-dwmac.yaml           | 130 ++++++++++++++++++
- .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +-
- 2 files changed, 133 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
+ Documentation/spi/pxa2xx.rst      |  3 ---
+ Documentation/spi/spi-summary.rst |  4 ----
+ drivers/spi/spi-atmel.c           |  8 ++------
+ drivers/spi/spi-pxa2xx.c          | 10 ----------
+ drivers/spi/spi.c                 |  7 -------
+ include/linux/spi/spi.h           | 11 +++--------
+ 6 files changed, 5 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml b/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
-new file mode 100644
-index 000000000000..0fbca6ce7d60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
-@@ -0,0 +1,130 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/net/nxp,s32-dwmac.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: NXP S32 DWMAC Ethernet controller
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - nxp,s32-dwmac
-+  required:
-+    - compatible
-+
-+allOf:
-+  - $ref: "snps,dwmac.yaml#"
-+
-+properties:
-+  compatible:
-+    contains:
-+      enum:
-+        - nxp,s32-dwmac
-+
-+  reg:
-+    items:
-+      - description: Main GMAC registers
-+      - description: S32 MAC control registers
-+
-+  dma-coherent:
-+    description:
-+      Declares GMAC device as DMA coherent
-+
-+  clocks:
-+    items:
-+      - description: Main GMAC clock
-+      - description: Peripheral registers clock
-+      - description: Transmit SGMII clock
-+      - description: Transmit RGMII clock
-+      - description: Transmit RMII clock
-+      - description: Transmit MII clock
-+      - description: Receive SGMII clock
-+      - description: Receive RGMII clock
-+      - description: Receive RMII clock
-+      - description: Receive MII clock
-+      - description:
-+          PTP reference clock. This clock is used for programming the
-+          Timestamp Addend Register. If not passed then the system
-+          clock will be used.
-+
-+  clock-names:
-+    items:
-+      - const: stmmaceth
-+      - const: pclk
-+      - const: tx_sgmii
-+      - const: tx_rgmii
-+      - const: tx_rmii
-+      - const: tx_mii
-+      - const: rx_sgmii
-+      - const: rx_rgmii
-+      - const: rx_rmii
-+      - const: rx_mii
-+      - const: ptp_ref
-+
-+  tx-fifo-depth:
-+    const: 20480
-+
-+  rx-fifo-depth:
-+    const: 20480
-+
-+required:
-+  - compatible
-+  - reg
-+  - tx-fifo-depth
-+  - rx-fifo-depth
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/nxp,s32-scmi-clock.h>
-+
-+    soc {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      gmac0: ethernet@4033c000 {
-+        compatible = "nxp,s32-dwmac";
-+        reg = <0x4033c000 0x2000>, /* gmac IP */
-+              <0x4007C004 0x4>;    /* S32 CTRL_STS reg */
-+        interrupt-parent = <&gic>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "macirq";
-+        phy-mode = "rgmii-id";
-+        tx-fifo-depth = <20480>;
-+        rx-fifo-depth = <20480>;
-+        dma-coherent;
-+        clocks = <&clks S32_SCMI_CLK_GMAC0_AXI>,
-+                 <&clks S32_SCMI_CLK_GMAC0_AXI>,
-+                 <&clks S32_SCMI_CLK_GMAC0_TX_SGMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_TX_RGMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_TX_RMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_TX_MII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_RX_SGMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_RX_RGMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_RX_RMII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_RX_MII>,
-+                 <&clks S32_SCMI_CLK_GMAC0_TS>;
-+        clock-names = "stmmaceth", "pclk",
-+                      "tx_sgmii", "tx_rgmii", "tx_rmii", "tx_mii",
-+                      "rx_sgmii", "rx_rgmii", "rx_rmii", "rx_mii",
-+                      "ptp_ref";
-+
-+        gmac0_mdio: mdio {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          compatible = "snps,dwmac-mdio";
-+
-+          ethernet-phy@1 {
-+            reg = <0x01>;
-+          };
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 5c2769dc689a..e5bf61347b66 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -66,6 +66,7 @@ properties:
-         - ingenic,x2000-mac
-         - loongson,ls2k-dwmac
-         - loongson,ls7a-dwmac
-+        - nxp,s32-dwmac
-         - qcom,qcs404-ethqos
-         - qcom,sa8775p-ethqos
-         - qcom,sc8280xp-ethqos
-@@ -117,7 +118,7 @@ properties:
+diff --git a/Documentation/spi/pxa2xx.rst b/Documentation/spi/pxa2xx.rst
+index 19479b801826..43e0b758803a 100644
+--- a/Documentation/spi/pxa2xx.rst
++++ b/Documentation/spi/pxa2xx.rst
+@@ -194,9 +194,6 @@ The following logic is used to determine the type of I/O to be used on
+ a per "spi_transfer" basis::
  
-   clocks:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 11
-     additionalItems: true
-     items:
-       - description: GMAC main clock
-@@ -129,7 +130,7 @@ properties:
+   if spi_message.len > 65536 then
+-	if spi_message.is_dma_mapped or rx_dma_buf != 0 or tx_dma_buf != 0 then
+-		reject premapped transfers
+-
+ 	print "rate limited" warning
+ 	use PIO transfers
  
-   clock-names:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 11
-     additionalItems: true
-     contains:
-       enum:
--- 
-2.25.1
+diff --git a/Documentation/spi/spi-summary.rst b/Documentation/spi/spi-summary.rst
+index 546de37d6caf..f7f8b1573f25 100644
+--- a/Documentation/spi/spi-summary.rst
++++ b/Documentation/spi/spi-summary.rst
+@@ -419,10 +419,6 @@ any more such messages.
+     to make extra copies unless the hardware requires it (e.g. working
+     around hardware errata that force the use of bounce buffering).
+ 
+-    If standard dma_map_single() handling of these buffers is inappropriate,
+-    you can use spi_message.is_dma_mapped to tell the controller driver
+-    that you've already provided the relevant DMA addresses.
+-
+   - The basic I/O primitive is spi_async().  Async requests may be
+     issued in any context (irq handler, task, etc) and completion
+     is reported using a callback provided with the message.
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index bad34998454a..b62f57390d8f 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -987,8 +987,6 @@ static void atmel_spi_pdc_next_xfer(struct spi_controller *host,
+  * For DMA, tx_buf/tx_dma have the same relationship as rx_buf/rx_dma:
+  *  - The buffer is either valid for CPU access, else NULL
+  *  - If the buffer is valid, so is its DMA address
+- *
+- * This driver manages the dma address unless message->is_dma_mapped.
+  */
+ static int
+ atmel_spi_dma_map_xfer(struct atmel_spi *as, struct spi_transfer *xfer)
+@@ -1374,8 +1372,7 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
+ 	 * DMA map early, for performance (empties dcache ASAP) and
+ 	 * better fault reporting.
+ 	 */
+-	if ((!host->cur_msg->is_dma_mapped)
+-		&& as->use_pdc) {
++	if (as->use_pdc) {
+ 		if (atmel_spi_dma_map_xfer(as, xfer) < 0)
+ 			return -ENOMEM;
+ 	}
+@@ -1454,8 +1451,7 @@ static int atmel_spi_one_transfer(struct spi_controller *host,
+ 		}
+ 	}
+ 
+-	if (!host->cur_msg->is_dma_mapped
+-		&& as->use_pdc)
++	if (as->use_pdc)
+ 		atmel_spi_dma_unmap_xfer(host, xfer);
+ 
+ 	if (as->use_pdc)
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index f2a856f6a99e..ddc534cdea5a 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -959,16 +959,6 @@ static int pxa2xx_spi_transfer_one(struct spi_controller *controller,
+ 
+ 	/* Check if we can DMA this transfer */
+ 	if (transfer->len > MAX_DMA_LEN && chip->enable_dma) {
+-
+-		/* Reject already-mapped transfers; PIO won't always work */
+-		if (message->is_dma_mapped
+-				|| transfer->rx_dma || transfer->tx_dma) {
+-			dev_err(&spi->dev,
+-				"Mapped transfer length of %u is greater than %d\n",
+-				transfer->len, MAX_DMA_LEN);
+-			return -EINVAL;
+-		}
+-
+ 		/* Warn ... we force this to PIO mode */
+ 		dev_warn_ratelimited(&spi->dev,
+ 				     "DMA disabled for transfer length %u greater than %d\n",
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index ff75838c1b5d..a2f01116ba09 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3709,9 +3709,6 @@ static int __spi_split_transfer_maxsize(struct spi_controller *ctlr,
+ 	 * to the same values as *xferp, so tx_buf, rx_buf and len
+ 	 * are all identical (as well as most others)
+ 	 * so we just have to fix up len and the pointers.
+-	 *
+-	 * This also includes support for the depreciated
+-	 * spi_message.is_dma_mapped interface.
+ 	 */
+ 
+ 	/*
+@@ -3725,12 +3722,8 @@ static int __spi_split_transfer_maxsize(struct spi_controller *ctlr,
+ 		/* Update rx_buf, tx_buf and DMA */
+ 		if (xfers[i].rx_buf)
+ 			xfers[i].rx_buf += offset;
+-		if (xfers[i].rx_dma)
+-			xfers[i].rx_dma += offset;
+ 		if (xfers[i].tx_buf)
+ 			xfers[i].tx_buf += offset;
+-		if (xfers[i].tx_dma)
+-			xfers[i].tx_dma += offset;
+ 
+ 		/* Update length */
+ 		xfers[i].len = min(maxsize, xfers[i].len - offset);
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index b05d5a87c313..45ed125c0db0 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -957,8 +957,8 @@ struct spi_res {
+  * struct spi_transfer - a read/write buffer pair
+  * @tx_buf: data to be written (DMA-safe memory), or NULL
+  * @rx_buf: data to be read (DMA-safe memory), or NULL
+- * @tx_dma: DMA address of tx_buf, if @spi_message.is_dma_mapped
+- * @rx_dma: DMA address of rx_buf, if @spi_message.is_dma_mapped
++ * @tx_dma: DMA address of tx_buf, currently not for client use
++ * @rx_dma: DMA address of rx_buf, currently not for client use
+  * @tx_nbits: number of bits used for writing. If 0 the default
+  *      (SPI_NBITS_SINGLE) is used.
+  * @rx_nbits: number of bits used for reading. If 0 the default
+@@ -1068,8 +1068,7 @@ struct spi_transfer {
+ 	/*
+ 	 * It's okay if tx_buf == rx_buf (right?).
+ 	 * For MicroWire, one buffer must be NULL.
+-	 * Buffers must work with dma_*map_single() calls, unless
+-	 * spi_message.is_dma_mapped reports a pre-existing mapping.
++	 * Buffers must work with dma_*map_single() calls.
+ 	 */
+ 	const void	*tx_buf;
+ 	void		*rx_buf;
+@@ -1113,8 +1112,6 @@ struct spi_transfer {
+  * struct spi_message - one multi-segment SPI transaction
+  * @transfers: list of transfer segments in this transaction
+  * @spi: SPI device to which the transaction is queued
+- * @is_dma_mapped: if true, the caller provided both DMA and CPU virtual
+- *	addresses for each transfer buffer
+  * @pre_optimized: peripheral driver pre-optimized the message
+  * @optimized: the message is in the optimized state
+  * @prepared: spi_prepare_message was called for the this message
+@@ -1148,8 +1145,6 @@ struct spi_message {
+ 
+ 	struct spi_device	*spi;
+ 
+-	unsigned		is_dma_mapped:1;
+-
+ 	/* spi_optimize_message() was called for this message */
+ 	bool			pre_optimized;
+ 	/* __spi_optimize_message() was called for this message */
 
+---
+base-commit: 593c0afc18da08bbb79c7af2a6668884987958f6
+change-id: 20240315-spi-remove-is_dma_mapped-ac067635662e
