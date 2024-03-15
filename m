@@ -1,120 +1,106 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032917C6A;
-	Fri, 15 Mar 2024 10:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D8A1B59D
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710499751; cv=none; b=YLSH3I94TcXTw8XAY8rlkU0W9cVU0OCQa1BEYCQzxPI6v2f9l0KSQiTBB7jBxIhC8FBEFiSqU6Ixn7+MhFkY9AhcHu3EQYBPXuHlp5moHZ/HrrgH0xL3h2uoGl6MjVDx0U8bpl+3IL8IZsKYwC8VcvuQJJOk1DRk64GhdtTXpSM=
+	t=1710499770; cv=none; b=j2Y1kF83nXNEL8mtUgUGwC78bCRLT1d+GTVU1Asgd+WppUyQNve3atD2KVDpsqCbaKHrYm+HdKwjHEYOoix9IOig8HNeXBs4QqIiQqxMLqj2i6DqmrQaAHr4DWZOZuxxGDJGJlUgC2S04ksijv4IMaj0HD1lkENsUyEAngkIwYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710499751; c=relaxed/simple;
-	bh=jivNuqXQZCWLHn2VX0XziwfCEypg4DNg5PJ4X9qRCeI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IUtIVbb6O4ox/p/wfXSNz8qcV32ciXQ7pgUy7q0x1R3m3DlrH5fMUpRsCI9YczBknX2UMCMy/IeE72AWRL1lh4/r38D94oxTNmHO8GwuBGq8wstTg93JDfHGsSKIILXtE5E0+ubtDe4PRvWP6++Eg5d8hg+QNT7Ef4pWk9UBaVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 15 Mar
- 2024 13:33:49 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: David Howells <dhowells@redhat.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
-	Jarkko Sakkinen <jarkko@kernel.org>, Andrew Zaborowski
-	<andrew.zaborowski@intel.com>
-CC: Roman Smirnov <r.smirnov@omp.ru>, <keyrings@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH] KEYS: prevent NULL pointer dereference in find_asymmetric_key()
-Date: Fri, 15 Mar 2024 13:33:20 +0300
-Message-ID: <20240315103320.18754-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710499770; c=relaxed/simple;
+	bh=zWIzkz2a8WN8xkBFFysmUJVqxR7TWEnCjfwryFytUEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XuZh/B9EzUynXkNlYYx7JwyVtYFacnjnrGDjtk6bsl1MoaZW/OuxWCG9hrHh8lMQKYW20jhhDAtySY2bS6X0p90BAXNgKbKOKDdM+p/kqwkTD+CFKGyoNwJIvmBwT5G7ezCXv8HfySl2GlcO2leXPDhtjxfHBFJ8aRMGQqakabM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E58DC15;
+	Fri, 15 Mar 2024 03:49:57 -0700 (PDT)
+Received: from [10.57.69.160] (unknown [10.57.69.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E9D23F762;
+	Fri, 15 Mar 2024 03:49:19 -0700 (PDT)
+Message-ID: <1db242d3-5ff1-4ef5-b20a-578a317fa859@arm.com>
+Date: Fri, 15 Mar 2024 10:49:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] mm: vmscan: Avoid split during shrink_folio_list()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-6-ryan.roberts@arm.com>
+ <d8086108-05e7-4765-a6f5-dfb85fb44b90@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <d8086108-05e7-4765-a6f5-dfb85fb44b90@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/15/2024 10:13:53
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 184188 [Mar 15 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 10 0.3.10
- 53c821b925e16276b831986eabc71d60ab82ee60
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2;78.37.41.175:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/15/2024 10:18:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/15/2024 6:29:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-With the current code, in case all NULLs are passed in id_{0,1,2},
-the kernel will first print out a WARNING and then have an oops
-because id_2 gets dereferenced anyway.
-Note that WARN_ON() is also considered harmful by Greg Kroah-
-Hartman since it causes the Android kernels to panic as they
-get booted with the panic_on_warn option.
+On 15/03/2024 10:43, David Hildenbrand wrote:
+> On 11.03.24 16:00, Ryan Roberts wrote:
+>> Now that swap supports storing all mTHP sizes, avoid splitting large
+>> folios before swap-out. This benefits performance of the swap-out path
+>> by eliding split_folio_to_list(), which is expensive, and also sets us
+>> up for swapping in large folios in a future series.
+>>
+>> If the folio is partially mapped, we continue to split it since we want
+>> to avoid the extra IO overhead and storage of writing out pages
+>> uneccessarily.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>   mm/vmscan.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index cf7d4cf47f1a..0ebec99e04c6 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1222,11 +1222,12 @@ static unsigned int shrink_folio_list(struct list_head
+>> *folio_list,
+>>                       if (!can_split_folio(folio, NULL))
+>>                           goto activate_locked;
+>>                       /*
+>> -                     * Split folios without a PMD map right
+>> -                     * away. Chances are some or all of the
+>> -                     * tail pages can be freed without IO.
+>> +                     * Split partially mapped folios map
+>> +                     * right away. Chances are some or all
+>> +                     * of the tail pages can be freed
+>> +                     * without IO.
+>>                        */
+>> -                    if (!folio_entire_mapcount(folio) &&
+>> +                    if (!list_empty(&folio->_deferred_list) &&
+>>                           split_folio_to_list(folio,
+>>                                   folio_list))
+>>                           goto activate_locked;
+> 
+> Not sure if we might have to annotate that with data_race().
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+I asked that exact question to Matthew in another context bt didn't get a
+response. There are examples of checking if the deferred list is empty with and
+without data_race() in the code base. But list_empty() is implemented like this:
 
-Fixes: 7d30198ee24f ("keys: X.509 public key issuer lookup without AKID")
-Suggested-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- crypto/asymmetric_keys/asymmetric_type.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+static inline int list_empty(const struct list_head *head)
+{
+	return READ_ONCE(head->next) == head;
+}
 
-diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
-index a5da8ccd353e..f5cbd6ff14e2 100644
---- a/crypto/asymmetric_keys/asymmetric_type.c
-+++ b/crypto/asymmetric_keys/asymmetric_type.c
-@@ -60,17 +60,17 @@ struct key *find_asymmetric_key(struct key *keyring,
- 	char *req, *p;
- 	int len;
- 
--	WARN_ON(!id_0 && !id_1 && !id_2);
--
- 	if (id_0) {
- 		lookup = id_0->data;
- 		len = id_0->len;
- 	} else if (id_1) {
- 		lookup = id_1->data;
- 		len = id_1->len;
--	} else {
-+	} else if (id_2) {
- 		lookup = id_2->data;
- 		len = id_2->len;
-+	} else {
-+		return ERR_PTR(-EINVAL);
- 	}
- 
- 	/* Construct an identifier "id:<keyid>". */
--- 
-2.34.1
+So I assumed the READ_ONCE() makes everything safe without a lock? Perhaps not
+sufficient for KCSAN?
 
+
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
+
+Thanks!
