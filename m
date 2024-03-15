@@ -1,136 +1,146 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B06354F84
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 22:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9037154F84;
+	Fri, 15 Mar 2024 22:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710541699; cv=none; b=dvwuoGN+hwxbp0ok+Yx5n4VhRng3cNvl/v2l9FMqzM5a6w9rCfBs+VptYc3QCd+t/IJdtnSeKejBjIae24DlOmS0M0+HocejMDh2z2CQzIOXFh9leoDuOYQRhw508WOnUxvMz8ITR2Is/GDrPz6PSyGeL6xCD0GCHlFR7x/1gFs=
+	t=1710541714; cv=none; b=pGhqENxicpodVh4jvW6umfYdRgxEB1g3k7PhIkFwfAtdzIMgv8QUGGaDjXh/GKNt7Og0PjaJH/A5TejH+srd8g4+Kds7moFyVTGnXxxlfaJs8fwYfCNbiRVJBDz4OhVdvxdqoehNfiQT6JqD8lgKwCvNHb+ZzNqTDztEmgQrWRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710541699; c=relaxed/simple;
-	bh=gJ0G0ulTts/YnxVTHfudMlUZoq9ceBixQWWHLnY2QnE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PTq2QZEwGwFw2N3xU7i+Bh9l+UfBBzUbdhggt1Zj7lCy1Vg2RHobMbnsNZL6IPxvebZPnr9h5kzrOgeyWYfnkg4AL9nJRpjW1jTgmYP9uE8UkXqrew9W95p9Epa4kd1Hy5kel9pwiOpyV9OyfuZMIO7Kwz1yVJ8OsA9HoBcs/gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cbf1ea053cso132894939f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 15:28:16 -0700 (PDT)
+	s=arc-20240116; t=1710541714; c=relaxed/simple;
+	bh=zsuC/t+XdTuI/DjTEsIPVcUIbRmD9P+ZPy8rJ5VJJMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZwedTSKHFIN4rNmpc1j3q9TCAdGf/4PwJU+FxVSNQaXKYoiH+DFy+0jsRLi+rvyooYs81hjyGQrAAWx+/Cuw639YZ5pM0XuKRSlX8geZjnJLk0fc1wRYFKe7rCJGyrMPB82SXHRn21EoPHROp4v58CgpviebhpB4so67pnISlvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UW76ZLRK; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW76ZLRK"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5688eaf1165so3907151a12.1;
+        Fri, 15 Mar 2024 15:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710541709; x=1711146509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VKMrVBH/fNSeezyhVeqSE7P3QRxBY9UAa0c3DLVNqYA=;
+        b=UW76ZLRKNL7o/We0EqD4hyFsLnDpLI48gmx5e0+OpeO182dfVJo/0vkeCGFVaHZkgk
+         f63klHAGXagZ6WEUUeMJZ9zQCY7CwotQ61wr8Tn3EONRIwtdGdJrSZdywnLFhLPLCwnb
+         YxphRPfH7g/8dT0k8U4AeaCiRzrptL16N9xRKQS2Xw0GYV5EqyEGh+AukH9DoZdcBPJP
+         V7Rn/EnAv4dAJ0qd6NYJzhB8K5sS25+Adt1vePYsmjmPWUAGNxjm9wcVBEU1TgqSQ2ES
+         9Pqx9nJYsDjC+NW+PTKDKvuSt6GEssvXVVY88u+VHR8eXDugZ32gkr2hPzQ83IdKWsTr
+         Rbhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710541695; x=1711146495;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AwXHKD0a4yfnFfWwYpSTyJLpYXi203ujvcaAn1vhbic=;
-        b=W8WDoDJs2akhldz99rDsNhG7ci+SSk3i+pQlNf5lD0P0iDBS8pZ4dOmkPEAUHjoE0z
-         cLmQ2INXXWO2l3WdIMHpyVPrBP16AUbEWdCY7dYC3JHd4JG9ese7d7gDy+xtLtg4qYj1
-         UehrFmJ/mQsfwvvtAC8cPzcxMoCUPI5UNsi5ondMSxyrQKufhyJbON/O+HcTkynYAT93
-         P3barzYB28iUiHav1kB++EZmbqiP9YYI1HSiLp4KrEKBybQ7eZt4VBsNPQxPqwEhEZak
-         P0ogoJhlu3FTiZDkGqnCv0gzrAxN+yvhgPun+hee21Lr/nq04A9aLuKYKLmpY/Yhxq/S
-         MLbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiilcKjB95EMrzgYSrovfA3r/wUg6ip5+4Zuk1046CabaxDVTubYkOy9fyjGdk+sPc1AgWz0HtU11W0SRWECHrNhH9/Zvq9oo9kcO4
-X-Gm-Message-State: AOJu0YzODbVx5biYKjTKARVoaTjRBIHF4i3a08kNI6hGWyh+xAnWcOR1
-	9RjiyyS1jk6cbsOjbXLkiUXHirP3K0kndhPsQpdA7bUTj1trWeuCkWtt7hGAUKJgVrYusRn/EHl
-	AzsbFRo3fwDTKaBrlMJr0UlM3wlNx0UKwrEOphQrUat3aam7N/jcLi+4=
-X-Google-Smtp-Source: AGHT+IG0TqbeP+foZgrAAq6tzEZ5s6A4ruiRAfl8gtgMmF+4uHccNW5jO0jeP0irEV0PSRKdHpD4ybLdSqeW3YCdiBujgl9YVfTD
+        d=1e100.net; s=20230601; t=1710541709; x=1711146509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VKMrVBH/fNSeezyhVeqSE7P3QRxBY9UAa0c3DLVNqYA=;
+        b=Pv5gPvCiDj5LeOr6w4EzUdigptXSJLr3wxmvMN9FkZUHYNFc4vJn6N4eaiofYIzqxZ
+         NmYAxILzbNrZibBKZHEI7jhIADRQPYbWFjD/wx9dA170P7pmYBG4TvOcWRcu+qKc3Cqu
+         QqfJ0z4WWDVDMrD0BeGIBsVT7f+Xy9WcZsPM6Ie4Yeeoh27KGwX2EMh/y5ZDAHQah8L9
+         aNwtOs2r6X73Ni9oKAoOdbUETx4pNeZkkiJAZFpyP+hGyLb5RhOl1Grd9DhgB2N27zMf
+         Js3z0+0FLTdDGesOtchoNpKvTFRG+Wcy82SjZFmGk0v1XXdg9vjfGm19m4V69sfHRvsX
+         KBJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWFvyQIYug/yLY/xkBv0zQ/Qkjw8QhcE6D//Utp2uSeloAXI/AaQp7Ery/MTGh7DrhInMi+EOQ8ehWjQFcbdEKLulOPQvXXoiY0p0oNAfRzZ68ypGfAHBdIAtRBiE8N6RyH8PhKKbBE1J+RFi7I/VGh7mOLYFPSN1CD1d7fmEcbCJzpIv80YA6zmLL8HsFiLfv8HMdGF0MudU1Dw==
+X-Gm-Message-State: AOJu0YytRePbdtRLH2eif01A5PkpMfov+NHKrd2Ygg+tZ5ay+Qw6jADO
+	7yy1S0QHAMWIgboxLWL0Pq9/MCjm/h+J2qmDa5B2tYh2MNlgpd/S
+X-Google-Smtp-Source: AGHT+IHMiOXqAu3IOFZbWybq/E7AHBFjYPqnN6JICZlEg0O6rLl7kC8XY7jGhpfuWwf3jwEHz5Vu5g==
+X-Received: by 2002:aa7:d792:0:b0:568:231e:31dd with SMTP id s18-20020aa7d792000000b00568231e31ddmr4054551edq.30.1710541708964;
+        Fri, 15 Mar 2024 15:28:28 -0700 (PDT)
+Received: from bhlegrsu.conti.de ([2a02:908:2525:6ea0::f845])
+        by smtp.googlemail.com with ESMTPSA id el9-20020a056402360900b005684173e413sm2039833edb.72.2024.03.15.15.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 15:28:27 -0700 (PDT)
+From: Wadim Mueller <wafgo01@gmail.com>
+To: 
+Cc: Wadim Mueller <wafgo01@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Chester Lin <chester62515@gmail.com>,
+	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+	Matthias Brugger <mbrugger@suse.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Shenwei Wang <shenwei.wang@nxp.com>,
+	Johannes Zink <j.zink@pengutronix.de>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Swee Leong Ching <leong.ching.swee@intel.com>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-clk@vger.kernel.org
+Subject: [PATCH 0/3] NXP S32G3 SoC initial bring-up
+Date: Fri, 15 Mar 2024 23:27:46 +0100
+Message-Id: <20240315222754.22366-1-wafgo01@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1653:b0:477:e8a:5719 with SMTP id
- a19-20020a056638165300b004770e8a5719mr302395jat.0.1710541695656; Fri, 15 Mar
- 2024 15:28:15 -0700 (PDT)
-Date: Fri, 15 Mar 2024 15:28:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000024b0820613ba8647@google.com>
-Subject: [syzbot] [io-uring?] KMSAN: uninit-value in io_sendrecv_fail
-From: syzbot <syzbot+f8e9a371388aa62ecab4@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This series brings up initial support for the NXP S32G3 SoC (8 x cortex-a53), used on the S32G-VNP-RDB3 board [1].
 
-syzbot found the following issue on:
+The following features are supported in this initial port:
 
-HEAD commit:    8ede842f669b Merge tag 'rust-6.9' of https://github.com/Ru..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=138f0ad6180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a271c5dca0ff14df
-dashboard link: https://syzkaller.appspot.com/bug?extid=f8e9a371388aa62ecab4
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b4a6fa180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a59799180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/af1cd47b84ef/disk-8ede842f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/be9297712c37/vmlinux-8ede842f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c569fb33468d/bzImage-8ede842f.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f8e9a371388aa62ecab4@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in io_sendrecv_fail+0x91/0x1e0 io_uring/net.c:1334
- io_sendrecv_fail+0x91/0x1e0 io_uring/net.c:1334
- io_req_defer_failed+0x3bd/0x610 io_uring/io_uring.c:1050
- io_queue_sqe_fallback+0x1e3/0x280 io_uring/io_uring.c:2126
- io_submit_fail_init+0x4e1/0x790 io_uring/io_uring.c:2304
- io_submit_sqes+0x19cd/0x2fb0 io_uring/io_uring.c:2480
- __do_sys_io_uring_enter io_uring/io_uring.c:3656 [inline]
- __se_sys_io_uring_enter+0x409/0x43e0 io_uring/io_uring.c:3591
- __x64_sys_io_uring_enter+0x11b/0x1a0 io_uring/io_uring.c:3591
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was created at:
- __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4592
- __alloc_pages_node include/linux/gfp.h:238 [inline]
- alloc_pages_node include/linux/gfp.h:261 [inline]
- alloc_slab_page mm/slub.c:2190 [inline]
- allocate_slab mm/slub.c:2354 [inline]
- new_slab+0x2d7/0x1400 mm/slub.c:2407
- ___slab_alloc+0x16b5/0x3970 mm/slub.c:3540
- __kmem_cache_alloc_bulk mm/slub.c:4574 [inline]
- kmem_cache_alloc_bulk+0x52a/0x1440 mm/slub.c:4648
- __io_alloc_req_refill+0x248/0x780 io_uring/io_uring.c:1101
- io_alloc_req io_uring/io_uring.h:405 [inline]
- io_submit_sqes+0xaa1/0x2fb0 io_uring/io_uring.c:2469
- __do_sys_io_uring_enter io_uring/io_uring.c:3656 [inline]
- __se_sys_io_uring_enter+0x409/0x43e0 io_uring/io_uring.c:3591
- __x64_sys_io_uring_enter+0x11b/0x1a0 io_uring/io_uring.c:3591
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-CPU: 1 PID: 5021 Comm: syz-executor425 Not tainted 6.8.0-syzkaller-00648-g8ede842f669b #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-=====================================================
+  Devicetree for the S32G-VNP-RDB3 
+  UART (fsl-linflexuart) with earlycon support
+  SDHC: fsl-imx-esdhc (SD/eMMC)
+  Ethernet: synopsys gmac/stmac. This is based on a patch series provided by Chester Lin in [2]
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+[1] https://www.nxp.com/design/design-center/designs/s32g3-vehicle-networking-reference-design:S32G-VNP-RDB3
+[2] https://patchwork.kernel.org/project/netdevbpf/patch/20221031101052.14956-6-clin@suse.com/#25068228
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Wadim Mueller (3):
+  arm64: dts: S32G3: Introduce device trees for S32G-VNP-RDB3
+  net: stmmac: Add NXP S32 SoC family support
+  dt-bindings: net: add schema for NXP S32 dwmac glue driver
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+ .../bindings/net/nxp,s32-dwmac.yaml           | 130 +++++++
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +-
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ arch/arm64/boot/dts/freescale/s32g3.dtsi      | 352 ++++++++++++++++++
+ .../boot/dts/freescale/s32g399a-rdb3.dts      |  57 +++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  12 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   3 +
+ .../net/ethernet/stmicro/stmmac/dwmac-s32.c   | 313 ++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |   9 +
+ .../net/ethernet/stmicro/stmmac/dwmac4_dma.h  |   3 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |   5 +
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   7 +
+ .../dt-bindings/clock/nxp,s32-scmi-clock.h    | 158 ++++++++
+ include/linux/stmmac.h                        |   9 +
+ 15 files changed, 1063 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
+ create mode 100644 arch/arm64/boot/dts/freescale/s32g3.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
+ create mode 100644 include/dt-bindings/clock/nxp,s32-scmi-clock.h
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-- 
+2.25.1
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
