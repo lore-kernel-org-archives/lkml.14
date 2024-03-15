@@ -1,72 +1,121 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B240E4654D
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 16:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EF73BB28;
+	Fri, 15 Mar 2024 16:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710521195; cv=none; b=P/mXi0w3fjSCb9c4PLHfdq2ZRBIKFZt26Qmu/sDQzbeyxqcwZE6joOW7teI5F8/jyxMskf7+hcWX2I++/XUSNwCvlzPKTsXVCWGxIZ8rIraTsluD369I6F7CYh8suVUmQ6o+voijM9wImkMU513dEC4aCzjKB2AWvIYY4xG4J0g=
+	t=1710521207; cv=none; b=UbczALTBgVnkyBvssE5vZb3h9JvEoF8X73JGSpcmL+6Xu4yhFVETwjslaQtKSdH7h3YDwIm6cy4UBZlQKADyrZJ/jW/2ojdONTOsxpLkZjJ3KqQFnqyVClH7j9YGgmdo9IU/LccJsTCv6WTJdbHAperBwAJHdF/Kx+hcBZgyxSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710521195; c=relaxed/simple;
-	bh=7r/guup6gq63ysvWIpmrTJ2Z/ZX0MkaNzjep6pE6Cv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gAQEOQefS5LxhELSPb9giMF5f4QF9OEVuOtGIO6rYX1BGIBkvUKYu7LPSTEIuJ9YLwNMtwQ+8/aKFx7tnYZrBGDsUBpVSTv2MMKFdLJi+VVaHJR00coXa/Y6Q2+ECF6J+cftTtEOS2SJk7vz+4Kp3BnPYw6dZScVEltxEOyByVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Y8Wtl+d1; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1710521207; c=relaxed/simple;
+	bh=3g09VzP14HL3LpuYq61SGTlbF9K14tVeVxGuc0vMR3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CqrMDNI2jWY31NFC4dFplyef22kchWyXtVd1tR1FBHHb3r0jlQ+1B+AQ/qO2c4vVhbT9+uTy3hM8ZsJyXS7OyjnIPGewTd5CqrpsyNQtbmEAwRO7zWLPtOduKjkYof+T6TTBzNXDbl33bFlc3FC9AsVRtsq1DcoP6BOE3zz/v3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esJ8xRYY; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Y8Wtl+d1"
-Received: from cwcc.thunk.org (pool-173-48-116-252.bstnma.fios.verizon.net [173.48.116.252])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 42FGjppu026032
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Mar 2024 12:45:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1710521153; bh=PJckWANlFb0272VsNdOUMV4l5mzBM543zgeS+z8pMNY=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=Y8Wtl+d1zafwyh9EK+nl0WIQlt+a5zDPXzWmrGBUgQ/y784PbkKcfhtSqnNIdVAsk
-	 qyimJ1lh6zbuIA/GualkF+BLBvnzINI5OWBabz+fL1MidCcscO8Pkw5F3gc1Yx0q/5
-	 NhsQZ+k0DcQX/p/IYi6nyyLrgxDSlXDf6Df4Y3GOHiL9bPe2WlvLjQp1aJ1iTSjJd8
-	 c4LQNNc6Siw+19fx9/Bde3bhmOdGsYncaB28KvPAUx14RVKXoNmuDRm8iSjtc97c82
-	 Pn5wgLmCrTxtNV6g/vqbkrDWDVi80azXTmhT0oylrjl6eSZk5X9QGkSArEiRvdnZzN
-	 e9XBY+kvUK1Mw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id D6AA515C0C93; Fri, 15 Mar 2024 12:45:50 -0400 (EDT)
-Date: Fri, 15 Mar 2024 12:45:50 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org
-Subject: Re: [PATCH 3/3] ext4: Add support for FS_IOC_GETFSSYSFSPATH
-Message-ID: <20240315164550.GD324770@mit.edu>
-References: <20240315035308.3563511-1-kent.overstreet@linux.dev>
- <20240315035308.3563511-4-kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esJ8xRYY"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dcab44747bso15856605ad.1;
+        Fri, 15 Mar 2024 09:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710521205; x=1711126005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4++5UV9ZvHpUQeROXztwV98cFhFDCUy45AERunpkiTA=;
+        b=esJ8xRYY7fg2QzXf9sa5aqu9eUOptWD+MxjkA/tbdnwFQPVw2WEzNA/hTreyIFcQXZ
+         lSVXsQ7eNyBZAx+4kddCBK5YPl6Uzk9mL9LIAOUVHEOGrxBbzlDlpng6kt0j/8yNpiER
+         hb4Yms2VEvAC6/dvk+UNEzycoHKFUXRDDeT6G5g8D0UWDWZ+AtHW8bOBE/Ct3yfoevSm
+         KVYLIz3cDPWy13Awlv+Jh0fkqP0xlyOjzWPAlNg1X943PifX5NI5aHRAFs9BJFnQGZHR
+         20nIe0nqeycMTReJxLz7/QaWKVqBvrBWYEB0JO6L3Yg5AvPoBpasTfiHUW9Vt+5YILeq
+         IQsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710521205; x=1711126005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4++5UV9ZvHpUQeROXztwV98cFhFDCUy45AERunpkiTA=;
+        b=Y1gRoBrZ4bjHZmLm0O8ohIz9wqPg7TuUz3aPvhOEO82Q/ZrCuU1LFazEOX1dMQdob3
+         Q7lnyDCjwG/srEnmopoQiNA4hl2JwUJQYTbKiVxV3uMfRv/P3Df3CJi8S2qi0C1PeVf1
+         rAGSklCxw8us1CqFOeqr5+lwBRHDrAW5XeXe5TZhr6Xdrz/PgR21BBJ1UJzIzJn4WEBH
+         h4mCAgMCs/35Cvs5S9KJqCPZm/swEP0gtbwSrT07rbQLN/1KYZSFlQGvhgTSH75YjfiQ
+         VPRi8cuGV3TesLuojF7yQ5E4HeoVCLlD8MjqZAAvEO9AUXETAe9uFwxdy3qz0HUNW8UM
+         tXsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYFFq4LdszCh/zOfNWG5QB7rMXULql3wavq8kPAvnB3RVXAP9kAF/I5QuVeCLpqfiaUuDIH2PUcsUffR7st4fY7MA8YHC/PmUQc6othTJSG4uwt5noGf4d22/QoCZhWE+
+X-Gm-Message-State: AOJu0YywFQXksLfBvFL8ck2xh/7RktZPnkHShw7H9xmwM1SD6cDlr5uQ
+	NHVpgWbX3Op/z4Jch44nFAk7fQbQ0Yt+IoRZC7lQRB67oScg6PXTmNWjZ70au0DZfj1ZcNah1iO
+	M79l6qJmC4EOGv2uXgfdY2A3TYSA=
+X-Google-Smtp-Source: AGHT+IGMoIsUO9ll4nNE0OZacMHWcN3oOBh4spXquRzu5/ktY6OjNKr3zWGrgrMK1aRQIm9atbHeM1iC4xdvcGsennE=
+X-Received: by 2002:a17:903:24e:b0:1dd:b728:b890 with SMTP id
+ j14-20020a170903024e00b001ddb728b890mr6824453plh.18.1710521204777; Fri, 15
+ Mar 2024 09:46:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315035308.3563511-4-kent.overstreet@linux.dev>
+References: <20240315113828.258005-1-cgzones@googlemail.com> <20240315113828.258005-3-cgzones@googlemail.com>
+In-Reply-To: <20240315113828.258005-3-cgzones@googlemail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 15 Mar 2024 09:46:32 -0700
+Message-ID: <CAEf4BzZvaWeFZFzonh_0pmhnRtm0AJdQPi7DYU1LpNytD6zHpQ@mail.gmail.com>
+Subject: Re: [PATCH 03/10] capability: use new capable_any functionality
+To: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Cc: linux-security-module@vger.kernel.org, Serge Hallyn <serge@hallyn.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2024 at 11:53:02PM -0400, Kent Overstreet wrote:
-> the new sysfs path ioctl lets us get the /sys/fs/ path for a given
-> filesystem in a fs agnostic way, potentially nudging us towards
-> standarizing some of our reporting.
-> 
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -5346,6 +5346,7 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->  	sb->s_quota_types = QTYPE_MASK_USR | QTYPE_MASK_GRP | QTYPE_MASK_PRJ;
->  #endif
->  	super_set_uuid(sb, es->s_uuid, sizeof(es->s_uuid));
-> +	super_set_sysfs_name_bdev(sb);
+On Fri, Mar 15, 2024 at 4:39=E2=80=AFAM Christian G=C3=B6ttsche
+<cgzones@googlemail.com> wrote:
+>
+> Use the new added capable_any function in appropriate cases, where a
+> task is required to have any of two capabilities.
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> ---
+> v3:
+>   - rename to capable_any()
+>   - simplify checkpoint_restore_ns_capable()
+> ---
+>  include/linux/capability.h | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
 
-Should we perhaps be hoisting this call up to the VFS layer, so that
-all file systems would benefit?
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-					- Ted
+> diff --git a/include/linux/capability.h b/include/linux/capability.h
+> index eeb958440656..4db0ffb47271 100644
+> --- a/include/linux/capability.h
+> +++ b/include/linux/capability.h
+> @@ -204,18 +204,17 @@ extern bool file_ns_capable(const struct file *file=
+, struct user_namespace *ns,
+>  extern bool ptracer_capable(struct task_struct *tsk, struct user_namespa=
+ce *ns);
+>  static inline bool perfmon_capable(void)
+>  {
+> -       return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
+> +       return capable_any(CAP_PERFMON, CAP_SYS_ADMIN);
+>  }
+>
+>  static inline bool bpf_capable(void)
+>  {
+> -       return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
+> +       return capable_any(CAP_BPF, CAP_SYS_ADMIN);
+>  }
+>
+>  static inline bool checkpoint_restore_ns_capable(struct user_namespace *=
+ns)
+>  {
+> -       return ns_capable(ns, CAP_CHECKPOINT_RESTORE) ||
+> -               ns_capable(ns, CAP_SYS_ADMIN);
+> +       return ns_capable_any(ns, CAP_CHECKPOINT_RESTORE, CAP_SYS_ADMIN);
+>  }
+>
+>  /* audit system wants to get cap info from files as well */
+> --
+> 2.43.0
+>
+>
