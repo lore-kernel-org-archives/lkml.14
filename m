@@ -1,81 +1,120 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3217C6A;
-	Fri, 15 Mar 2024 10:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032917C6A;
+	Fri, 15 Mar 2024 10:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710499737; cv=none; b=AVc///dyD9o4arcX0oKbnd/kYiZvh9L1FAzmZDTTVIKT/ql/rRFeLiJJwM+1HeCr2+ay1UMRuOh8Aai20uS9WyZT5xm67UtDSn+p12weJ3GexHV56GZe5Erbz9giecow066ulUhLB32SM2Z/UoCIcIN6DYzHIz8XI4dUjLzJHkk=
+	t=1710499751; cv=none; b=YLSH3I94TcXTw8XAY8rlkU0W9cVU0OCQa1BEYCQzxPI6v2f9l0KSQiTBB7jBxIhC8FBEFiSqU6Ixn7+MhFkY9AhcHu3EQYBPXuHlp5moHZ/HrrgH0xL3h2uoGl6MjVDx0U8bpl+3IL8IZsKYwC8VcvuQJJOk1DRk64GhdtTXpSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710499737; c=relaxed/simple;
-	bh=R7GjhKviLkpXMF0CKnNF4FoimW5GhqDP2JTJ0azwgoY=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=QpB/VfmsQnajk+Mur1iT678am1oOvCeCwOULy/zWbqp2UxKFMgpwz6ATApajy6FJOut7I46qirvrh0NXshSoE0QlP53JbjPZQbUHRCuKiZC98K75wvYEEYjCqVSwkWlkdtUQEodws+CII3GhgEu0V/Ejey62OZH4xeCunQ0J82A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 2AD903782083;
-	Fri, 15 Mar 2024 10:48:53 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240313164640.616049-1-sashal@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240313164640.616049-1-sashal@kernel.org>
-Date: Fri, 15 Mar 2024 10:48:52 +0000
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>, "Gustavo Padovan" <gustavo.padovan@collabora.com>
-To: "Sasha Levin" <sashal@kernel.org>
+	s=arc-20240116; t=1710499751; c=relaxed/simple;
+	bh=jivNuqXQZCWLHn2VX0XziwfCEypg4DNg5PJ4X9qRCeI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IUtIVbb6O4ox/p/wfXSNz8qcV32ciXQ7pgUy7q0x1R3m3DlrH5fMUpRsCI9YczBknX2UMCMy/IeE72AWRL1lh4/r38D94oxTNmHO8GwuBGq8wstTg93JDfHGsSKIILXtE5E0+ubtDe4PRvWP6++Eg5d8hg+QNT7Ef4pWk9UBaVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from localhost.localdomain (78.37.41.175) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 15 Mar
+ 2024 13:33:49 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: David Howells <dhowells@redhat.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Andrew Zaborowski
+	<andrew.zaborowski@intel.com>
+CC: Roman Smirnov <r.smirnov@omp.ru>, <keyrings@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH] KEYS: prevent NULL pointer dereference in find_asymmetric_key()
+Date: Fri, 15 Mar 2024 13:33:20 +0300
+Message-ID: <20240315103320.18754-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1faa5f-65f42780-55-41e48800@256342251>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E10?= 00/73] 
- =?utf-8?q?5=2E10=2E213-rc1?= review
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/15/2024 10:13:53
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 184188 [Mar 15 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 10 0.3.10
+ 53c821b925e16276b831986eabc71d60ab82ee60
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2;78.37.41.175:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 78.37.41.175
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/15/2024 10:18:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/15/2024 6:29:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Wednesday, March 13, 2024 22:15 IST, Sasha Levin <sashal@kernel.org>=
- wrote:
+With the current code, in case all NULLs are passed in id_{0,1,2},
+the kernel will first print out a WARNING and then have an oops
+because id_2 gets dereferenced anyway.
+Note that WARN_ON() is also considered harmful by Greg Kroah-
+Hartman since it causes the Android kernels to panic as they
+get booted with the panic_on_warn option.
 
->=20
-> This is the start of the stable review cycle for the 5.10.213 release=
-.
-> There are 73 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Fri Mar 15 04:46:39 PM UTC 2024.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
-stable-rc.git/patch/?id=3Dlinux-5.10.y&id2=3Dv5.10.212
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-rc.git linux-5.10.y
-> and the diffstat can be found below.
->=20
+Found by Linux Verification Center (linuxtesting.org) with Svace.
 
-KernelCI report for stable-rc/linux-5.10.y for this week.
+Fixes: 7d30198ee24f ("keys: X.509 public key issuer lookup without AKID")
+Suggested-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+---
+ crypto/asymmetric_keys/asymmetric_type.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-## stable-rc HEAD for linux-5.10.y:
-Date: 2024-03-13
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3D0a70dd1e1aa9dfe25d4647f86675dc6dac41631e
-
-## Build failures:
-No build failures seen for the stable-rc/linux-5.10.y commit head \o/
-
-## Boot failures:
-No **new** boot failures seen for the stable-rc/linux-5.10.y commit hea=
-d \o/
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-Shreeya Patel
+diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
+index a5da8ccd353e..f5cbd6ff14e2 100644
+--- a/crypto/asymmetric_keys/asymmetric_type.c
++++ b/crypto/asymmetric_keys/asymmetric_type.c
+@@ -60,17 +60,17 @@ struct key *find_asymmetric_key(struct key *keyring,
+ 	char *req, *p;
+ 	int len;
+ 
+-	WARN_ON(!id_0 && !id_1 && !id_2);
+-
+ 	if (id_0) {
+ 		lookup = id_0->data;
+ 		len = id_0->len;
+ 	} else if (id_1) {
+ 		lookup = id_1->data;
+ 		len = id_1->len;
+-	} else {
++	} else if (id_2) {
+ 		lookup = id_2->data;
+ 		len = id_2->len;
++	} else {
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	/* Construct an identifier "id:<keyid>". */
+-- 
+2.34.1
 
