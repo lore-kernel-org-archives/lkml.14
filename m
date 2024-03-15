@@ -1,130 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE4B12B6C;
-	Fri, 15 Mar 2024 05:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E46D14008
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 05:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710481848; cv=none; b=hX3XG8fuJKnizSSehWgRjPnKDTUi4b2a3+bEepWW0kE1UO7+fKkw44u5JgPGxC8FDnLoujbfAqN2/WEsKR8qjmDrgxidcZErxuRhFA5XL2uGjOU09mR0T+MSxG7owmomJPKSw75sZLnX6iFARHE3rLkj4zfr7SGFsk0SLXHdmHU=
+	t=1710481858; cv=none; b=kxWTesrElD+1Gu1FJ4MqP42VmEiSt0whhXFxoVngK+t/VDdvLgIC05BOsHHrLuPcqI4GjKv+fH+NiWmP1mzKnw9rrdpdJC+tH1jexYJubafxLiuQLC5zBvT0up1FJ7xKHA5/tmtk7Uw4yrsmoZaA6e7WNCbGW4YL2MoVziR3wB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710481848; c=relaxed/simple;
-	bh=S0iZ55C9l1m73RLehXEmJUqcuecM8ZpLpZ+1VMipxEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iLAY6zAVtm/TIB2UxQpY+FrqFR34MHw7sfClmjbN3pkn4qAnlio9oCF5rlIU/PnxaO222o0R8cFF2oZuI+aY2EJs+8EKFLJOQSsdTg1T7GN0EJv7AGC8tehihVSXqpcau5cfYAsExqgJ2VHuBOxznUHHIlf9Lzh8MpOqUqozDgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fkqJJJwX; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710481858; c=relaxed/simple;
+	bh=YLMCpkGftwnRvP6OHcJwPra4ldTcLEUhhhD1EiB/Hpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9wGf0JtHHa38y0XxQdh4eaCgx+pgFbBM9q3RLs+1LvtmMw3r/E1sAGM7y32jvQUpKXEbnK1ISSVWED+AliV4llDGUQfYys98+u+qWq7idFd9slFqsz2NDQIHKDzGByhwZvANK3uCGDGz95kD91F5NuLAgNqpgHMS/BgGusJu44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fFCJlLyI; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fkqJJJwX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710481847; x=1742017847;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=S0iZ55C9l1m73RLehXEmJUqcuecM8ZpLpZ+1VMipxEQ=;
-  b=fkqJJJwXvlaVl0FT8YL7aiQ5q3jF1xKTUpEJItAvwm9WuygOw4t5caw7
-   SfKhgF/gb0f2xpGpk+ue/IATpPBk3kexrMnEmQ4gC0BvHAbXJMEubdBMQ
-   zn1H3Pw8uPd9BSnvCRNDw8v0BSimvqJzrwo44EFJH04ESJYpoWeFYueI1
-   zhnFxfRBTDMnmNehZnqZqXEZ7STSOMmD41CV8Q6pjUQ2rTHGv1MFjxAyi
-   vB8mMwYPA8r6hl8c0t1r7JAuNkoRRaKfOpbKjzW+x7pAw4oCcoDZLhsjN
-   +3mSRm/wpFwk5iZtEANBXfQxg2v8gJ1nPMZsJ+JAWbObZzHnbOZBJWf+2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="9118242"
-X-IronPort-AV: E=Sophos;i="6.07,127,1708416000"; 
-   d="scan'208";a="9118242"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 22:50:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,127,1708416000"; 
-   d="scan'208";a="17284036"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.127]) ([10.125.243.127])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 22:50:42 -0700
-Message-ID: <0f20ffa7-63ac-4af2-8293-447dcae45eb7@intel.com>
-Date: Fri, 15 Mar 2024 13:50:38 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fFCJlLyI"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6aa5c5a6fso1876813b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 22:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710481856; x=1711086656; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=doJoUmDIAXOFTyNTaIXiWO8CVSFB4RTU/SEwZDIiXeg=;
+        b=fFCJlLyI9y2LbcNd29RzxR/ogw28Z/Y0e1QleKdDYTw9L2ksNU3eOgrPRogFnCnQev
+         77M7CQIccKCGKwKZE0KkE9jD2sraUeAYCL5ECTpwbC2NXEIh1H4ilFClgYlnPK3uLYZ5
+         jaJ5kcrtBU+qXWjq7Ipc4GRC6jBX7N63XG8IJ3yNSgRRguLp9dBckI0CNWR7VeayaNfu
+         G/QjmpAD4vt3BrFVHF63/Gi3ByC2Lxxc5SGm9Uzj5I94oP+KG5LGzEj4jalU4FS9zA/u
+         yLTotKm3JPv0yU5d7BHUZjBOZuaws9TaGn8OS2GRniPxljn16dQjQKvU31RfmLNb6By5
+         u+tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710481856; x=1711086656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=doJoUmDIAXOFTyNTaIXiWO8CVSFB4RTU/SEwZDIiXeg=;
+        b=UeCXhq7i6O8PcFJetKOshSPS7tCK3qTHd1InyzI1LvCBBc4XEcj8WS6s7yEWyytgup
+         Cm3lGZWsew5cUq61e8PQWMv9pTx45+J958EMiZZXaE8B7nT+ID7S4Eay7EIZ1DrXBeHf
+         0V9IYBusPgQif+jsHJP24c+jdgsjLAa9ozj++ETNgsP0D2wEW1I/sAfqik1tCFc+6QBw
+         8Itabzxmmp0e9Vp1y4jwhtDmJCdlgKzgdWcN6zZerUFWOU0T3jJgpygdhnYt8nGtOE8j
+         nU4y7zyagtXxb3K9IptQXNowq6uI66DiT5TNjyThOY4iKUGcIrijHSqyA1ehqhTYhRNc
+         1dtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyq/cBw2khOADHxPZX3gf3Gk5cRE9N/KD6P0w95ALru2GnOTXFCwb0+wkKlfoCQyFPeTjwTyk4vHjPVENq8/RngnpxfoH4KpQpeWI+
+X-Gm-Message-State: AOJu0YxzJsJLS7Zml8qfxz/T+zOUPLebGIZPFYrApnFxhAP7MtmH8LUQ
+	8HHEoYUliRC6v3otKwNgkU94xKPbiegmfywDgzNpX9phdIEgih8OaQ56tuZn66Y=
+X-Google-Smtp-Source: AGHT+IF8TBbL8ijQ19uOHux5h2xhr4W6B21SMrX6Qo49YKppD/YPhBVhbmfkzvgyqyFW6yizrp9NlQ==
+X-Received: by 2002:a05:6a20:8e02:b0:1a3:13e5:5200 with SMTP id y2-20020a056a208e0200b001a313e55200mr4910274pzj.14.1710481856364;
+        Thu, 14 Mar 2024 22:50:56 -0700 (PDT)
+Received: from localhost ([122.172.85.206])
+        by smtp.gmail.com with ESMTPSA id l23-20020a17090a3f1700b0029bce05b7dfsm2166577pjc.32.2024.03.14.22.50.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 22:50:55 -0700 (PDT)
+Date: Fri, 15 Mar 2024 11:20:54 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, rafael@kernel.org,
+	morten.rasmussen@arm.com, dietmar.eggemann@arm.com,
+	lukasz.luba@arm.com, sboyd@kernel.org, d-gole@ti.com,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mdtipton@quicinc.com,
+	linux-arm-msm@vger.kernel.org, nm@ti.com
+Subject: Re: [PATCH V4 0/2] cpufreq: scmi: Add boost frequency support
+Message-ID: <20240315055054.wbhi7456j4ph7mbn@vireshk-i7>
+References: <20240312094726.3438322-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 034/130] KVM: TDX: Get system-wide info about TDX
- module on initialization
-Content-Language: en-US
-To: "Huang, Kai" <kai.huang@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>
-Cc: "Zhang, Tina" <tina.zhang@intel.com>, "Yuan, Hang" <hang.yuan@intel.com>,
- "seanjc@google.com" <seanjc@google.com>, "Chen, Bo2" <chen.bo@intel.com>,
- "sagis@google.com" <sagis@google.com>,
- "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
- "Aktas, Erdem" <erdemaktas@google.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <eaa2c1e23971f058e5921681b0b84d7ea7d38dc1.1708933498.git.isaku.yamahata@intel.com>
- <e88e5448-e354-4ec6-b7de-93dd8f7786b5@intel.com>
- <15a13c5d-df88-46cf-8d88-2c8b94ff41ff@intel.com>
- <aa1ed4c118177e3e341eebccecac3b07bf75a47d.camel@intel.com>
- <10c41a88-d692-4ff5-a0c3-ae13a06a055c@intel.com>
- <078ed2b1c3681c6c0ada9106d481d2f7d964815a.camel@intel.com>
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <078ed2b1c3681c6c0ada9106d481d2f7d964815a.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240312094726.3438322-1-quic_sibis@quicinc.com>
 
-On 3/15/2024 1:39 PM, Huang, Kai wrote:
-> On Fri, 2024-03-15 at 13:11 +0800, Li, Xiaoyao wrote:
->>> Here is what Isaku can do using the current API:
->>>
->>>   	u64 num_cpuid_config;
->>   >
->>>
->>>   	...
->>>
->>>   	tdx_sys_metadata_field_read(NUM_CPUID_CONFIG, &num_cpuid_config);
->>>
->>>   	tdx_info = kzalloc(calculate_tdx_info_size(num_cpuid_config), ...);
->>>
->>>   	tdx_info->num_cpuid_config = num_cpuid_config;
->>
->> Dosen't num_cpuid_config serve as temporary variable in some sense?
-> 
-> You need it, regardless whether it is u64 or u16.
-> 
->>
->> For this case, it needs to be used for calculating the size of tdx_info.
->> So we have to have it. But it's not the common case.
->>
->> E.g., if we have another non-u64 field (e.g., field_x) in tdx_info, we
->> cannot to read it via
->>
->> 	tdx_sys_metadata_field_read(FIELD_X_ID, &tdx_info->field_x);
->>
->> we have to use a temporary u64 variable.
-> 
-> Let me repeat below in my _previous_ reply:
-> 
-> "
-> One example that the current tdx_sys_metadata_field_read() doesn't quite fit is
-> you have something like this:
-> 
-> 	struct {
-> 		u16 whatever;
-> 		...
-> 	} st;
-> 
-> 	tdx_sys_metadata_field_read(FIELD_ID_WHATEVER, &st.whatever);
-> 
-> But for this use case you are not supposed to use tdx_sys_metadata_field_read(),
-> but use tdx_sys_metadata_read() which has a mapping provided anyway.
-> "
+On 12-03-24, 15:17, Sibi Sankar wrote:
+> This series adds provision to mark dynamic opps as turbo capable and adds
+> boost frequency support to the scmi cpufreq driver.
 
-tdx_sys_metadata_read() is too complicated for just reading one field.
+Applied. Thanks.
 
-Caller needs to prepare a one-item size array of "struct 
-tdx_metadata_field_mapping" and pass the correct offset.
-
-> So sorry I am not seeing a real example from you.
-> 
-
+-- 
+viresh
