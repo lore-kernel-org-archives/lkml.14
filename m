@@ -1,155 +1,219 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69E11BC2C
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0332118E02
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710500148; cv=none; b=krVofW7M+nmQgWX7Rec5rRvXks+eSw/d9NnAH8pzAQ3SvLN9u1Gd8HfOOh/v6rnMfJnu5e1xcEoj1uIkyHZSF2tHKQrslFdyC+pOGJ1Nf1OfotXA/Z7lW4FzUpAhi7mpfTN5WuWLziRfz4v04i7T3qhevbVwFTbsLnBDK13FvPQ=
+	t=1710500273; cv=none; b=W/dCYPGyGBUfLypoJEvzLibopwMieAOAsskG405EhE6cZZKN07/xrS6mTFmS4fnkJKvT4N949b1vqBss8gmLo5EPi5QwPRuDaxA50fJTYTO93Sj48Apa51hfrD6RLTMj/9jYT+t7z4q8BOJFZFvQ7jKT+hop+BlhO6p/Rk14mMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710500148; c=relaxed/simple;
-	bh=gKHklsfF2gox13da7B8q8n6TDTbEdarDO5cbu28yMxc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vDW2Y/T9O2R15GyDszi7VAHF95E82zzf4cxSkv1Hb8l6Zj4WZrd8Y9FBN2HGrl6tMY5SKbyWA0DXRTuGX3oY2TYCPEilxubUS7Ttc8wzWTOFuZ08ex5wZ3LHG2hB+T9i4t9KWAp7ve8+9OteBH3MTowOz/0WVSDAt0G7/LcNBTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=chSEqUNx; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chSEqUNx"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-60a3c48e70fso21247167b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 03:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710500146; x=1711104946; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYCVB7vuASjmLwIHPiyxNRZapV4SHyBblFxELE1dC1U=;
-        b=chSEqUNxoaFiGa5ivgsGoFfAX9NRw9sBPQlCwTGbp86pz8IhQGbYQzvWlTW2I/z516
-         McMxoFVxHbE4TW5b3+k/9di3rOte1D3Hp+ocXMWRmTjYfgkfKG+WbqaE0Q/QbRQt4OIc
-         ECsPWWSHYBccfVfruIMTJsSjaeBZxNldtNbobKE6g0PDNzLWwAfjvS5EjuZArb+NpRdH
-         duMYCx1q0yRHMfqO3Sm3AYjesOW5sd4GI6q+ivaxiuio+lH0qwAZZVRYIbgu7oKXo1PJ
-         0cvwj+aTY1f4x7AqpMuFJi6dgnzPstUygqXug/v5iKnbnGhXP8t7jYcryf5Wiob4DeMG
-         wiYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710500146; x=1711104946;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aYCVB7vuASjmLwIHPiyxNRZapV4SHyBblFxELE1dC1U=;
-        b=dmpdAh8KrthzewtBKvG7RZAFrjWyyZOCqa2qk59HYXVau/o5kkLr7Dc7SmwJ6uR1nR
-         mkHJS+gk1P15ncu85Gl0wG4XmH5xKUH3PxRivHXoHecArHM7ODxoVKo83Foqpi9jIFdx
-         lgWwU/Q+ElJlM/0ECmYVhwrgUSnC4QjS7yg8u+y9h0BzhaU9L+prW4ZGaF7tKGk5ugX0
-         +irmlFJ61lP1pETxPyYOOJISpwdQSfsgp/42aVb/UaCMoZOHP2S8xtiT2c27joNSOUGU
-         M5NTjlKs+nXz5w70f6pMS+T2r0GFVi6Pbq8tu1fBDY3CGN01+66cgUhFkFMpwT0X8Jgd
-         bNmw==
-X-Gm-Message-State: AOJu0YxNmFf3oROr3UM/EuMSQNDClyt1OxdREPEvr4G1B6IoN83jePWX
-	oMQI0PHqY/7AqNeFOW7ZRV19SpLh2EBXJs4CMMRa/JKMzKQ+mk2k15bXLti4nlFsBDHDzAg2Ytj
-	yjt0/5KAzFaLeVRbLmzl4sJlHIyzLW3Ou6NrARA==
-X-Google-Smtp-Source: AGHT+IEzehH2Yynt/EG5y4VxYs6FaPKWMrio4WVEdwJ7MoEI0eL7E+yiQcbwFj15WntgERZ8J5uQ0goEuQvfH5QlLNA=
-X-Received: by 2002:a25:2e47:0:b0:dcc:4cdc:e98e with SMTP id
- b7-20020a252e47000000b00dcc4cdce98emr4286555ybn.5.1710500145700; Fri, 15 Mar
- 2024 03:55:45 -0700 (PDT)
+	s=arc-20240116; t=1710500273; c=relaxed/simple;
+	bh=1aiyF0/x+T+SS07nzEDYgrQV2Q7jpEGhZTYThVJZ8Nc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uhucnYZlrsnm23XTYjn4kONwTvn/NaKP3v56mHGUqVvINarAfTB7j2vm89d3FLTf2s02OIEv66nmTx1ScwJ9jWEZKDbN7g5QabEb0n7BTpK7nQNr7uvi3zIjEQjjU/gMCxwADOLICfKgEPXh7cupknqYGH1HOHSyOneRcvddy8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80A23C15;
+	Fri, 15 Mar 2024 03:58:25 -0700 (PDT)
+Received: from [10.57.69.160] (unknown [10.57.69.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C71683F762;
+	Fri, 15 Mar 2024 03:57:45 -0700 (PDT)
+Message-ID: <76c16222-78fd-4d96-b9f7-13264bb37747@arm.com>
+Date: Fri, 15 Mar 2024 10:57:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314141440.3305802-1-serghox@gmail.com>
-In-Reply-To: <20240314141440.3305802-1-serghox@gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 15 Mar 2024 11:55:09 +0100
-Message-ID: <CAPDyKFrP1XgJo_zDDunpzb6g8QWo4k3Ye1dJCWBGVvhdprCCkg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] mmc: sdhci-of-dwcmshc: Add CQE support
-To: Sergey Khimich <serghox@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Jyan Chou <jyanchou@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 2/5] mm: swap: introduce swap_nr_free() for batched
+ swap_free()
+Content-Language: en-GB
+To: Chuanhua Han <chuanhuahan@gmail.com>
+Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, chengming.zhou@linux.dev, chrisl@kernel.org,
+ david@redhat.com, hannes@cmpxchg.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mhocko@suse.com, nphamcs@gmail.com, shy828301@gmail.com,
+ steven.price@arm.com, surenb@google.com, wangkefeng.wang@huawei.com,
+ willy@infradead.org, xiang@kernel.org, ying.huang@intel.com,
+ yosryahmed@google.com, yuzhao@google.com, Chuanhua Han
+ <hanchuanhua@oppo.com>, Barry Song <v-songbaohua@oppo.com>
+References: <20240304081348.197341-1-21cnbao@gmail.com>
+ <20240304081348.197341-3-21cnbao@gmail.com>
+ <499a60c6-eeb8-4bbd-8563-9717c0d2e43d@arm.com>
+ <CANzGp4+kSxc_JbOsOcvm6vXfu2KORaqqGyuKK_eJwCLTK5X__Q@mail.gmail.com>
+ <716bb29c-d2a2-4eef-b300-b037f08f458f@arm.com>
+ <CANzGp4KC4ucxJv_h2CZCgLUZ=x8J5sp4i46C02Gx9ddvF3sKrg@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CANzGp4KC4ucxJv_h2CZCgLUZ=x8J5sp4i46C02Gx9ddvF3sKrg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 14 Mar 2024 at 15:14, Sergey Khimich <serghox@gmail.com> wrote:
->
-> Hello!
->
-> This is implementation of SDHCI CQE support for sdhci-of-dwcmshc driver.
-> For enabling CQE support just set 'supports-cqe' in your DevTree file
-> for appropriate mmc node.
->
-> Also, while implementing CQE support for the driver, I faced with a problem
-> which I will describe below.
-> According to the IP block documentation CQE works only with "AMDA-2 only"
-> mode which is activated only with v4 mode enabled. I see in dwcmshc_probe()
-> function that v4 mode gets enabled only for 'sdhci_dwcmshc_bf3_pdata'
-> platform data.
->
-> So my question is: is it correct to enable v4 mode for all platform data
-> if 'SDHCI_CAN_64BIT_V4' bit is set in hw?
->
-> Because I`m afraid that enabling v4 mode for some platforms could break
-> them down. On the other hand, if host controller says that it can do v4
-> (caps & SDHCI_CAN_64BIT_V4), lets do v4 or disable it manualy by some
-> quirk. Anyway - RFC.
->
+On 15/03/2024 08:34, Chuanhua Han wrote:
+> Ryan Roberts <ryan.roberts@arm.com> 于2024年3月14日周四 21:43写道：
+>>
+>> On 14/03/2024 13:12, Chuanhua Han wrote:
+>>> Ryan Roberts <ryan.roberts@arm.com> 于2024年3月12日周二 02:51写道：
+>>>>
+>>>> On 04/03/2024 08:13, Barry Song wrote:
+>>>>> From: Chuanhua Han <hanchuanhua@oppo.com>
+>>>>>
+>>>>> While swapping in a large folio, we need to free swaps related to the whole
+>>>>> folio. To avoid frequently acquiring and releasing swap locks, it is better
+>>>>> to introduce an API for batched free.
+>>>>>
+>>>>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+>>>>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>>>> ---
+>>>>>  include/linux/swap.h |  6 ++++++
+>>>>>  mm/swapfile.c        | 35 +++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 41 insertions(+)
+>>>>>
+>>>>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+>>>>> index 2955f7a78d8d..d6ab27929458 100644
+>>>>> --- a/include/linux/swap.h
+>>>>> +++ b/include/linux/swap.h
+>>>>> @@ -481,6 +481,7 @@ extern void swap_shmem_alloc(swp_entry_t);
+>>>>>  extern int swap_duplicate(swp_entry_t);
+>>>>>  extern int swapcache_prepare(swp_entry_t);
+>>>>>  extern void swap_free(swp_entry_t);
+>>>>> +extern void swap_nr_free(swp_entry_t entry, int nr_pages);
+>>>>
+>>>> nit: In my swap-out v4 series, I've created a batched version of
+>>>> free_swap_and_cache() and called it free_swap_and_cache_nr(). Perhaps it is
+>>>> preferable to align the naming schemes - i.e. call this swap_free_nr(). Your
+>>>> scheme doesn't really work when applied to free_swap_and_cache().
+>>> Thanks for your suggestions, and for the next version, we'll see which
+>>> package is more appropriate!
+>>>>
+>>>>>  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+>>>>>  extern int free_swap_and_cache(swp_entry_t);
+>>>>>  int swap_type_of(dev_t device, sector_t offset);
+>>>>> @@ -561,6 +562,11 @@ static inline void swap_free(swp_entry_t swp)
+>>>>>  {
+>>>>>  }
+>>>>>
+>>>>> +void swap_nr_free(swp_entry_t entry, int nr_pages)
+>>>>> +{
+>>>>> +
+>>>>> +}
+>>>>> +
+>>>>>  static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
+>>>>>  {
+>>>>>  }
+>>>>> diff --git a/mm/swapfile.c b/mm/swapfile.c
+>>>>> index 3f594be83b58..244106998a69 100644
+>>>>> --- a/mm/swapfile.c
+>>>>> +++ b/mm/swapfile.c
+>>>>> @@ -1341,6 +1341,41 @@ void swap_free(swp_entry_t entry)
+>>>>>               __swap_entry_free(p, entry);
+>>>>>  }
+>>>>>
+>>>>> +/*
+>>>>> + * Called after swapping in a large folio, batched free swap entries
+>>>>> + * for this large folio, entry should be for the first subpage and
+>>>>> + * its offset is aligned with nr_pages
+>>>>> + */
+>>>>> +void swap_nr_free(swp_entry_t entry, int nr_pages)
+>>>>> +{
+>>>>> +     int i;
+>>>>> +     struct swap_cluster_info *ci;
+>>>>> +     struct swap_info_struct *p;
+>>>>> +     unsigned type = swp_type(entry);
+>>>>
+>>>> nit: checkpatch.py will complain about bare "unsigned", preferring "unsigned
+>>>> int" or at least it did for me when I did something similar in my swap-out patch
+>>>> set.
+>>> Gee, thanks for pointing that out!
+>>>>
+>>>>> +     unsigned long offset = swp_offset(entry);
+>>>>> +     DECLARE_BITMAP(usage, SWAPFILE_CLUSTER) = { 0 };
+>>>>
+>>>> I don't love this, as it could blow the stack if SWAPFILE_CLUSTER ever
+>>>> increases. But the only other way I can think of is to explicitly loop over
+>>>> fixed size chunks, and that's not much better.
+>>> Is it possible to save kernel stack better by using bit_map here?  If
+>>> SWAPFILE_CLUSTER=512, we consume only (512/64)*8= 64 bytes.
+>>
+>> I'm not sure I've understood what you are saying? You're already using
+>> DECLARE_BITMAP(), so its already consuming 64 bytes if SWAPFILE_CLUSTER=512, no?
+>>
+>> I actually did a bad job of trying to express a couple of different points:
+>>
+>> - Are there any configurations today where SWAPFILE_CLUSTER > 512? I'm not sure.
+>> Certainly not for arm64, but not sure about other architectures. For example if
+>> an arch had 64K pages with 8192 entries per THP and supports SWAP_THP, that's 1K
+>> for the bitmap, which is now looking pretty big for the stack.
+> I agree with you.The current bit_map grows linearly with the
+> SWAPFILE_CLUSTER, which may cause the kernel stack to swell.
+> I need to think of a way to save more memory .
+>>
+>> - Would it be better to decouple stack usage from SWAPFILE_CLUSTER and instead
+>> define a fixed stack size (e.g. 64 bytes -> 512 entries). Then free the range of
+>> entries in batches no bigger than this size. This approach could also allow
+>> removing the constraint that the range has to be aligned and fit in a single
+>> cluster. Personally I think an approach like this would be much more robust, in
+>> return for a tiny bit more complexity.
+> Because we cannot determine how many swap entries a cluster has in an
+> architecture or a configuration, we do not know how large the variable
+> needs to be defined？
 
-We have just updated the bouncing addresses in MAINTAINERS for Asutosh
-Das and Ritesh Harjani, that also helps maintain cqhci. Would you mind
-re-submitting to allow them to have a look at this too?
-Asutosh Das <quic_asutoshd@quicinc.com>
-Ritesh Harjani <ritesh.list@gmail.com>
+My point is that we could define a fixed size, then loop through the passed in
+range, operating on batches of that fixed size. You could even take into
+consideration the cluster boundaries so that you take the correct lock for every
+batch and can drop the "must be naturally aligned, must be no bigger than
+cluster size" constraint.
 
-Kind regards
-Uffe
 
->
-> v2:
->  - Added dwcmshc specific cqe_disable hook to prevent losing
->    in-flight cmd when an ioctl is issued and cqe_disable is called;
->
->  - Added processing 128Mb boundary for the host memory data buffer size
->    and the data buffer. For implementing this processing an extra
->    callback is added to the struct 'sdhci_ops'.
->
->  - Fixed typo.
->
-> v3:
->  - Fix warning reported by kernel test robot:
->         | Reported-by: kernel test robot <lkp@intel.com>
->         | Closes: https://lore.kernel.org/oe-kbuild-all/202309270807.VoVn81m6-lkp@intel.com/
->         | Closes: https://lore.kernel.org/oe-kbuild-all/202309300806.dcR19kcE-lkp@intel.com/
->
-> v4:
->  - Data reset moved to custom driver tuning hook.
->  - Removed unnecessary dwcmshc_sdhci_cqe_disable() func
->  - Removed unnecessary dwcmshc_cqhci_set_tran_desc. Export and use
->    cqhci_set_tran_desc() instead.
->  - Provide a hook for cqhci_set_tran_desc() instead of cqhci_prep_tran_desc().
->  - Fix typo: int_clok_disable --> int_clock_disable
->
-> v5:
->  - Fix warning reported by kernel test robot:
->         | Reported-by: kernel test robot <lkp@intel.com>
->         | Closes: https://lore.kernel.org/oe-kbuild-all/202312301130.itEZhhI5-lkp@intel.com/
->
-> v6:
->  - Rebase to master branch
->  - Fix typo;
->  - Fix double blank line;
->  - Add cqhci_suspend() and cqhci_resume() functions
->    to support mmc suspend-to-ram (s2r);
->  - Move reading DWCMSHC_P_VENDOR_AREA2 register under "supports-cqe"
->    condition as not all IPs have that register;
->  - Remove sdhci V4 mode from the list of prerequisites to init cqhci.
->
->
-> Sergey Khimich (2):
->   mmc: cqhci: Add cqhci set_tran_desc() callback
->   mmc: sdhci-of-dwcmshc: Implement SDHCI CQE support
->
->  drivers/mmc/host/Kconfig            |   1 +
->  drivers/mmc/host/cqhci-core.c       |  11 +-
->  drivers/mmc/host/cqhci.h            |   4 +
->  drivers/mmc/host/sdhci-of-dwcmshc.c | 188 +++++++++++++++++++++++++++-
->  4 files changed, 199 insertions(+), 5 deletions(-)
->
-> --
-> 2.30.2
->
+>>
+>>>>
+>>>>> +
+>>>>> +     /* all swap entries are within a cluster for mTHP */
+>>>>> +     VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUSTER);
+>>>>> +
+>>>>> +     if (nr_pages == 1) {
+>>>>> +             swap_free(entry);
+>>>>> +             return;
+>>>>> +     }
+>>>>> +
+>>>>> +     p = _swap_info_get(entry);
+>>>>
+>>>> You need to handle this returning NULL, like swap_free() does.
+>>> Yes, you're right! We did forget to judge NULL here.
+>>>>
+>>>>> +
+>>>>> +     ci = lock_cluster(p, offset);
+>>>>
+>>>> The existing swap_free() calls lock_cluster_or_swap_info(). So if swap is backed
+>>>> by rotating media, and clusters are not in use, it will lock the whole swap
+>>>> info. But your new version only calls lock_cluster() which won't lock anything
+>>>> if clusters are not in use. So I think this is a locking bug.
+>>> Again, you're right, it's bug!
+>>>>
+>>>>> +     for (i = 0; i < nr_pages; i++) {
+>>>>> +             if (__swap_entry_free_locked(p, offset + i, 1))
+>>>>> +                     __bitmap_set(usage, i, 1);
+>>>>> +     }
+>>>>> +     unlock_cluster(ci);
+>>>>> +
+>>>>> +     for_each_clear_bit(i, usage, nr_pages)
+>>>>> +             free_swap_slot(swp_entry(type, offset + i));
+>>>>> +}
+>>>>> +
+>>>>>  /*
+>>>>>   * Called after dropping swapcache to decrease refcnt to swap entries.
+>>>>>   */
+>>>>
+>>>> Thanks,
+>>>> Ryan
+>>>>
+>>>>
+>>>
+>>>
+>>
+> 
+> 
+
