@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9B414A98;
-	Fri, 15 Mar 2024 08:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA408EEC4;
+	Fri, 15 Mar 2024 08:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710490045; cv=none; b=G1H4mNXesQ09nhKCYhoG4cwua3SYoGLOewCb2M/js40Uhi1xiKEB2zuXylrKHhK45JrgWiRXspp8GSz8atXcO8Ri7xWvBPpPD2QCHs4fGH4LhvkySoCZ9bvk5S726B2as9vpAIe2nvc6IjWpom8rFUXdI4SYPTSysQhCpOcnlbw=
+	t=1710490046; cv=none; b=UPLVFIdDfBR5VJrwy9Dkhdn3dkU7WMVILHoIsk/rSfCMBZhJOdvwZecpQxG0tTyUWOzyrJhBkvt4ECgHACQ0Khj8qxYEsRQGbpt7z3xWcNRVdslzvnP52qqdgDStzS8NKwa/XGfLePzWDCxwpPCtIhbzkFy5eTW2NTCs2aKwvaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710490045; c=relaxed/simple;
-	bh=iOkFdHt0DdQA9EQ6zNgxtJ4hAyolVqwXSAyLav29ceU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OSMUsaHri5d6zyO5VjFm/P4s+o4ZhGl3SdcgSAA8HQvDBc1ottg3jtryM8GHgFUj5XKKe9/oHNCDZCiM1yoLJFwUi34OHmoDoN+dWrkM5YQ71huPmojYq3IqzWRapeei1C0IjiQjHrQwn2k9k17bIbcVswg6IxRiPg+jqPeBieE=
+	s=arc-20240116; t=1710490046; c=relaxed/simple;
+	bh=yS/ThWdcky27h+yGYrh7nmkWzopcZ9gUz7yXOHT971M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QWr+PIpxvIVmuqDzSTNKBx0o+bHS7GaOYSAGI5CTfVXHww2oRA1XqEupg7TvIyae5mCkGuQxMRKJQdxy7vkrC/7XiLI4Bv9urW5puKGLPV0jVXr7JuAA6fBbWjLWmvPYeTiHdz8mDSZLm2zP86kCPZvPOP5Dp6bWSSNywvYum+Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axz+uzAfRlQWUZAA--.61294S3;
+	by gateway (Coremail) with SMTP id _____8CxWOizAfRlMmUZAA--.41703S3;
 	Fri, 15 Mar 2024 16:07:15 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6uAfRl4MZaAA--.41676S6;
-	Fri, 15 Mar 2024 16:07:15 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6uAfRl4MZaAA--.41676S2;
+	Fri, 15 Mar 2024 16:07:10 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Tianrui Zhao <zhaotianrui@loongson.cn>,
@@ -29,12 +28,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
 	kvm@vger.kernel.org
-Subject: [PATCH v7 4/7] LoongArch: KVM: Add vcpu search support from physical cpuid
-Date: Fri, 15 Mar 2024 16:07:07 +0800
-Message-Id: <20240315080710.2812974-5-maobibo@loongson.cn>
+Subject: [PATCH v7 0/7] LoongArch: Add pv ipi support on LoongArch VM
+Date: Fri, 15 Mar 2024 16:07:03 +0800
+Message-Id: <20240315080710.2812974-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240315080710.2812974-1-maobibo@loongson.cn>
-References: <20240315080710.2812974-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,259 +39,140 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx_c6uAfRl4MZaAA--.41676S6
+X-CM-TRANSID:AQAAf8Cx_c6uAfRl4MZaAA--.41676S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WrWrKr4xGw1fAr45Kw4DGFX_yoW3Jw48pF
-	ZF9wsxXr4rGr17G348tw4kurZI9rWvgw1SvasIgay3Ar1qqr98XrZYkryUAF98Jw1ruF4I
-	qF1fJ3W5uFW0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xw17Gw4xGF15Kr4fWFW8KrX_yoW7XF1fpF
+	WUurn3Wr4kGr93Awnxtas3ur98Jw4xG3yaq3WayrW8CrW2qFyUZr48Kr98Aas5Jws3JFW0
+	qF1rGw1Yg3WDAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UN6p9UUUUU=
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU14v3UUUUUU==
 
-Physical cpuid is used for interrupt routing for irqchips such as
-ipi/msi/extioi interrupt controller. And physical cpuid is stored
-at CSR register LOONGARCH_CSR_CPUID, it can not be changed once vcpu
-is created and physical cpuid of two vcpus cannot be the same.
+On physical machine, ipi HW uses IOCSR registers, however there is trap
+into hypervisor when vcpu accesses IOCSR registers if system is in VM
+mode. SWI is a interrupt mechanism like SGI on ARM, software can send
+interrupt to CPU, only that on LoongArch SWI can only be sent to local CPU
+now. So SWI can not used for IPI on real HW system, however it can be used
+on VM when combined with hypercall method. IPI can be sent with hypercall
+method and SWI interrupt is injected to vcpu, vcpu can treat SWI
+interrupt as IPI.
 
-Different irqchips have different size declaration about physical cpuid,
-max cpuid value for CSR LOONGARCH_CSR_CPUID on 3A5000 is 512, max cpuid
-supported by IPI hardware is 1024, 256 for extioi irqchip, and 65536
-for MSI irqchip.
+With PV IPI supported, there is one trap with IPI sending, however with IPI
+receiving there is no trap. with IOCSR HW ipi method, there will be one
+trap with IPI sending and two trap with ipi receiving.
 
-The smallest value from all interrupt controllers is selected now,
-and the max cpuid size is defines as 256 by KVM which comes from
-extioi irqchip.
+Also IPI multicast support is added for VM, the idea comes from x86 PV ipi.
+IPI can be sent to 128 vcpus in one time. With IPI multicast support, trap
+will be reduced greatly.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Here is the microbenchmarck data with "perf bench futex wake" testcase on
+3C5000 single-way machine, there are 16 cpus on 3C5000 single-way machine,
+VM has 16 vcpus also. The benchmark data is ms time unit to wakeup 16
+threads, the performance is better if data is smaller.
+
+physical machine                     0.0176 ms
+VM original                          0.1140 ms
+VM with pv ipi patch                 0.0481 ms
+
+It passes to boot with 128/256 vcpus, and passes to run runltp command
+with package ltp-20230516.
+
 ---
- arch/loongarch/include/asm/kvm_host.h | 26 ++++++++
- arch/loongarch/include/asm/kvm_vcpu.h |  1 +
- arch/loongarch/kvm/vcpu.c             | 93 ++++++++++++++++++++++++++-
- arch/loongarch/kvm/vm.c               | 11 ++++
- 4 files changed, 130 insertions(+), 1 deletion(-)
+Change in v7:
+  1. Refine LoongArch virt document by review comments.
+  2. Add function kvm_read_reg()/kvm_write_reg() in hypercall emulation,
+and later it can be used for other trap emulations.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 2d62f7b0d377..3ba16ef1fe69 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -64,6 +64,30 @@ struct kvm_world_switch {
- 
- #define MAX_PGTABLE_LEVELS	4
- 
-+/*
-+ * Physical cpu id is used for interrupt routing, there are different
-+ * definitions about physical cpuid on different hardwares.
-+ *  For LOONGARCH_CSR_CPUID register, max cpuid size if 512
-+ *  For IPI HW, max dest CPUID size 1024
-+ *  For extioi interrupt controller, max dest CPUID size is 256
-+ *  For MSI interrupt controller, max supported CPUID size is 65536
-+ *
-+ * Currently max CPUID is defined as 256 for KVM hypervisor, in future
-+ * it will be expanded to 4096, including 16 packages at most. And every
-+ * package supports at most 256 vcpus
-+ */
-+#define KVM_MAX_PHYID		256
-+
-+struct kvm_phyid_info {
-+	struct kvm_vcpu	*vcpu;
-+	bool		enabled;
-+};
-+
-+struct kvm_phyid_map {
-+	int max_phyid;
-+	struct kvm_phyid_info phys_map[KVM_MAX_PHYID];
-+};
-+
- struct kvm_arch {
- 	/* Guest physical mm */
- 	kvm_pte_t *pgd;
-@@ -71,6 +95,8 @@ struct kvm_arch {
- 	unsigned long invalid_ptes[MAX_PGTABLE_LEVELS];
- 	unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
- 	unsigned int  root_level;
-+	spinlock_t    phyid_map_lock;
-+	struct kvm_phyid_map  *phyid_map;
- 
- 	s64 time_offset;
- 	struct kvm_context __percpu *vmcs;
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index 0cb4fdb8a9b5..9f53950959da 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -81,6 +81,7 @@ void kvm_save_timer(struct kvm_vcpu *vcpu);
- void kvm_restore_timer(struct kvm_vcpu *vcpu);
- 
- int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq);
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid);
- 
- /*
-  * Loongarch KVM guest interrupt handling
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 36106922b5d7..a1a1dc4a3cf2 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -274,6 +274,95 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
- 	return 0;
- }
- 
-+static inline int kvm_set_cpuid(struct kvm_vcpu *vcpu, u64 val)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	if (val >= KVM_MAX_PHYID)
-+		return -EINVAL;
-+
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	map = vcpu->kvm->arch.phyid_map;
-+	spin_lock(&vcpu->kvm->arch.phyid_map_lock);
-+	if (map->phys_map[cpuid].enabled) {
-+		/*
-+		 * Cpuid is already set before
-+		 * Forbid changing different cpuid at runtime
-+		 */
-+		if (cpuid != val) {
-+			/*
-+			 * Cpuid 0 is initial value for vcpu, maybe invalid
-+			 * unset value for vcpu
-+			 */
-+			if (cpuid) {
-+				spin_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+				return -EINVAL;
-+			}
-+		} else {
-+			 /* Discard duplicated cpuid set */
-+			spin_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+			return 0;
-+		}
-+	}
-+
-+	if (map->phys_map[val].enabled) {
-+		/*
-+		 * New cpuid is already set with other vcpu
-+		 * Forbid sharing the same cpuid between different vcpus
-+		 */
-+		if (map->phys_map[val].vcpu != vcpu) {
-+			spin_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+			return -EINVAL;
-+		}
-+
-+		/* Discard duplicated cpuid set operation*/
-+		spin_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+		return 0;
-+	}
-+
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, val);
-+	map->phys_map[val].enabled	= true;
-+	map->phys_map[val].vcpu		= vcpu;
-+	if (map->max_phyid < val)
-+		map->max_phyid = val;
-+	spin_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+	return 0;
-+}
-+
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
-+{
-+	struct kvm_phyid_map  *map;
-+
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return NULL;
-+
-+	map = kvm->arch.phyid_map;
-+	if (map->phys_map[cpuid].enabled)
-+		return map->phys_map[cpuid].vcpu;
-+
-+	return NULL;
-+}
-+
-+static inline void kvm_drop_cpuid(struct kvm_vcpu *vcpu)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	map = vcpu->kvm->arch.phyid_map;
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return;
-+
-+	if (map->phys_map[cpuid].enabled) {
-+		map->phys_map[cpuid].vcpu = NULL;
-+		map->phys_map[cpuid].enabled = false;
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, 0);
-+	}
-+}
-+
- static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- {
- 	int ret = 0, gintc;
-@@ -291,7 +380,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- 		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
- 
- 		return ret;
--	}
-+	} else if (id == LOONGARCH_CSR_CPUID)
-+		return kvm_set_cpuid(vcpu, val);
- 
- 	kvm_write_sw_gcsr(csr, id, val);
- 
-@@ -924,6 +1014,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	hrtimer_cancel(&vcpu->arch.swtimer);
- 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
- 	kfree(vcpu->arch.csr);
-+	kvm_drop_cpuid(vcpu);
- 
- 	/*
- 	 * If the vCPU is freed and reused as another vCPU, we don't want the
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 0a37f6fa8f2d..6006a28653ad 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -30,6 +30,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	if (!kvm->arch.pgd)
- 		return -ENOMEM;
- 
-+	kvm->arch.phyid_map = kvzalloc(sizeof(struct kvm_phyid_map),
-+				GFP_KERNEL_ACCOUNT);
-+	if (!kvm->arch.phyid_map) {
-+		free_page((unsigned long)kvm->arch.pgd);
-+		kvm->arch.pgd = NULL;
-+		return -ENOMEM;
-+	}
-+
- 	kvm_init_vmcs(kvm);
- 	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
- 	kvm->arch.root_level = CONFIG_PGTABLE_LEVELS - 1;
-@@ -44,6 +52,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	for (i = 0; i <= kvm->arch.root_level; i++)
- 		kvm->arch.pte_shifts[i] = PAGE_SHIFT + i * (PAGE_SHIFT - 3);
- 
-+	spin_lock_init(&kvm->arch.phyid_map_lock);
- 	return 0;
- }
- 
-@@ -51,7 +60,9 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- {
- 	kvm_destroy_vcpus(kvm);
- 	free_page((unsigned long)kvm->arch.pgd);
-+	kvfree(kvm->arch.phyid_map);
- 	kvm->arch.pgd = NULL;
-+	kvm->arch.phyid_map = NULL;
- }
- 
- int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+Change in V6:
+  1. Add privilege checking when emulating cpucfg at index 0x4000000 --
+0x400000FF, return 0 if not executed at kernel mode.
+  2. Add document about LoongArch pv ipi with new creatly directory
+Documentation/virt/kvm/loongarch/
+  3. Fix pv ipi handling in kvm backend function kvm_pv_send_ipi(),
+where min should plus BITS_PER_LONG with second bitmap, otherwise
+VM with more than 64 vpus fails to boot.
+  4. Adjust patch order and code refine with review comments.
+
+Change in V5:
+  1. Refresh function/macro name from review comments.
+
+Change in V4:
+  1. Modfiy pv ipi hook function name call_func_ipi() and
+call_func_single_ipi() with send_ipi_mask()/send_ipi_single(), since pv
+ipi is used for both remote function call and reschedule notification.
+  2. Refresh changelog.
+
+Change in V3:
+  1. Add 128 vcpu ipi multicast support like x86
+  2. Change cpucfg base address from 0x10000000 to 0x40000000, in order
+to avoid confliction with future hw usage
+  3. Adjust patch order in this patchset, move patch
+Refine-ipi-ops-on-LoongArch-platform to the first one.
+
+Change in V2:
+  1. Add hw cpuid map support since ipi routing uses hw cpuid
+  2. Refine changelog description
+  3. Add hypercall statistic support for vcpu
+  4. Set percpu pv ipi message buffer aligned with cacheline
+  5. Refine pv ipi send logic, do not send ipi message with if there is
+pending ipi message.
+---
+Bibo Mao (7):
+  LoongArch/smp: Refine some ipi functions on LoongArch platform
+  LoongArch: KVM: Add hypercall instruction emulation support
+  LoongArch: KVM: Add cpucfg area for kvm hypervisor
+  LoongArch: KVM: Add vcpu search support from physical cpuid
+  LoongArch: KVM: Add pv ipi support on kvm side
+  LoongArch: Add pv ipi support on guest kernel side
+  Documentation: KVM: Add hypercall for LoongArch
+
+ Documentation/virt/kvm/index.rst              |   1 +
+ .../virt/kvm/loongarch/hypercalls.rst         |  82 +++++++++
+ Documentation/virt/kvm/loongarch/index.rst    |  10 ++
+ arch/loongarch/Kconfig                        |   9 +
+ arch/loongarch/include/asm/Kbuild             |   1 -
+ arch/loongarch/include/asm/hardirq.h          |   5 +
+ arch/loongarch/include/asm/inst.h             |   1 +
+ arch/loongarch/include/asm/irq.h              |  10 +-
+ arch/loongarch/include/asm/kvm_host.h         |  27 +++
+ arch/loongarch/include/asm/kvm_para.h         | 155 ++++++++++++++++++
+ arch/loongarch/include/asm/kvm_vcpu.h         |  11 ++
+ arch/loongarch/include/asm/loongarch.h        |  11 ++
+ arch/loongarch/include/asm/paravirt.h         |  27 +++
+ .../include/asm/paravirt_api_clock.h          |   1 +
+ arch/loongarch/include/asm/smp.h              |  31 ++--
+ arch/loongarch/include/uapi/asm/Kbuild        |   2 -
+ arch/loongarch/kernel/Makefile                |   1 +
+ arch/loongarch/kernel/irq.c                   |  24 +--
+ arch/loongarch/kernel/paravirt.c              | 151 +++++++++++++++++
+ arch/loongarch/kernel/perf_event.c            |  14 +-
+ arch/loongarch/kernel/smp.c                   |  62 ++++---
+ arch/loongarch/kernel/time.c                  |  12 +-
+ arch/loongarch/kvm/exit.c                     | 141 ++++++++++++++--
+ arch/loongarch/kvm/vcpu.c                     |  94 ++++++++++-
+ arch/loongarch/kvm/vm.c                       |  11 ++
+ 25 files changed, 792 insertions(+), 102 deletions(-)
+ create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+ create mode 100644 Documentation/virt/kvm/loongarch/index.rst
+ create mode 100644 arch/loongarch/include/asm/kvm_para.h
+ create mode 100644 arch/loongarch/include/asm/paravirt.h
+ create mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/loongarch/include/uapi/asm/Kbuild
+ create mode 100644 arch/loongarch/kernel/paravirt.c
+
+
+base-commit: 480e035fc4c714fb5536e64ab9db04fedc89e910
 -- 
 2.39.3
 
