@@ -1,343 +1,202 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7BB17C66;
-	Fri, 15 Mar 2024 09:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CA517C66;
+	Fri, 15 Mar 2024 09:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710495618; cv=none; b=QUqmTV/rsG4IXrGV4S5zT4I8z/wmsbhHdoe+EKeP6Q+5tLfAGDCQvROZ1Y6rfeqKL2AH+3iUwGCFgwkqh4eJXVfBk2SIaK5axQ0uY0qzpHFnSXtEsVglVHNzw6wGQloKPF2Yidp/6xBVs6yHD5Vt9DLbTNmb7wMKHeW6xmSTjIc=
+	t=1710495891; cv=none; b=T3SitfioplTDTX3+haVT3zNyDJtTH2f6xRdF3huunmWsma4McvwzBtDwL69GUKof2wf4sUjKYANDN4dbfbMtlJlzAr/ndulSiU38FInfablLiQDhhvC6iMgNlMHtPfU1RJ9/3un5qIqUPANABnhG1K1/3/h85qXiPbQH8Kcp5k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710495618; c=relaxed/simple;
-	bh=ZHbeVLAfHZiTs4/exux7+KBrM0d/3hISjFMRW/i22Q8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SCh2kSNNdKX2WzbmPq9hJBE4aTyh+erG1kWrQzFNl68uNHeAVrTrDpCoe/V8bm0Ev9ZjomFBZZLEEoclkSdnRSzuHREjaZPon4PEgIMefMF2dWyq4EyLdcmC89s4R7h5lwyIRhbNEfT1sXnNKr8u2GcwsZ4IwTa7YJiz/p7kl+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TwzgR2Wszz1h2TD;
-	Fri, 15 Mar 2024 17:37:39 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 236C4180062;
-	Fri, 15 Mar 2024 17:40:08 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 15 Mar 2024 17:40:07 +0800
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-To: <jgg@ziepe.ca>, <leon@kernel.org>
-CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
-Subject: [PATCH for-next] RDMA/hns: Support DSCP
-Date: Fri, 15 Mar 2024 17:35:51 +0800
-Message-ID: <20240315093551.1650088-1-huangjunxian6@hisilicon.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1710495891; c=relaxed/simple;
+	bh=0jGDH/dyYXZFXjOFk/pyfPSGUV4a9lho+ZbGA9PHzts=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tEzZHTYNK6Q2M9Gpiv0nJ4DG7i0qu7SVWmsh65dfyftFKjBcOW0F58P8MFqRSTCm3ijD1bimSXgWopblL15A2qJTDsK5s3hXJM8pR1Q4l5qV+7dDvsWlAKRGrrIv/DPUKqMzNL3YtzfZAv82/SrmzzhbGyj14l5LjdC7Zny3Ljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rl47B-00031f-00; Fri, 15 Mar 2024 10:44:37 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id DFC75C0267; Fri, 15 Mar 2024 10:44:28 +0100 (CET)
+Date: Fri, 15 Mar 2024 10:44:28 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: torvalds@linux-foundation.org
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MIPS changes for v6.9
+Message-ID: <ZfQYfNzwx/4WeGKT@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500006.china.huawei.com (7.221.188.68)
 
-Add support for DSCP configuration. For DSCP, get dscp-prio mapping
-via hns3 nic driver api .get_dscp_prio() and fill the SL (in WQE for
-UD or in QPC for RC) with the priority value. The prio-tc mapping is
-configured to HW by hns3 nic driver. HW will select a corresponding
-TC according to SL and the prio-tc mapping.
+The following changes since commit b401b621758e46812da61fa58a67c3fd8d91de0d:
 
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
----
- drivers/infiniband/hw/hns/hns_roce_ah.c     | 32 +++++---
- drivers/infiniband/hw/hns/hns_roce_device.h |  6 ++
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 86 ++++++++++++++++-----
- drivers/infiniband/hw/hns/hns_roce_qp.c     | 13 ++++
- include/uapi/rdma/hns-abi.h                 |  9 ++-
- 5 files changed, 117 insertions(+), 29 deletions(-)
+  Linux 6.8-rc5 (2024-02-18 12:56:25 -0800)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_ah.c b/drivers/infiniband/hw/hns/hns_roce_ah.c
-index b4209b6aed8d..91f7fe0f3235 100644
---- a/drivers/infiniband/hw/hns/hns_roce_ah.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_ah.c
-@@ -59,8 +59,11 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibah->device);
- 	struct hns_roce_ib_create_ah_resp resp = {};
- 	struct hns_roce_ah *ah = to_hr_ah(ibah);
--	int ret = 0;
-+	u8 tclass = get_tclass(grh);
-+	u8 priority = 0;
-+	u8 tc_mode = 0;
- 	u32 max_sl;
-+	int ret;
- 
- 	if (hr_dev->pci_dev->revision == PCI_REVISION_ID_HIP08 && udata)
- 		return -EOPNOTSUPP;
-@@ -74,16 +77,23 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
- 	ah->av.hop_limit = grh->hop_limit;
- 	ah->av.flowlabel = grh->flow_label;
- 	ah->av.udp_sport = get_ah_udp_sport(ah_attr);
--	ah->av.tclass = get_tclass(grh);
--
--	ah->av.sl = rdma_ah_get_sl(ah_attr);
--	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
--	if (unlikely(ah->av.sl > max_sl)) {
--		ibdev_err_ratelimited(&hr_dev->ib_dev,
--				      "failed to set sl, sl (%u) shouldn't be larger than %u.\n",
--				      ah->av.sl, max_sl);
-+	ah->av.tclass = tclass;
-+
-+	ret = hr_dev->hw->get_dscp(hr_dev, tclass, &tc_mode, &priority);
-+	if (ret == -EOPNOTSUPP)
-+		ret = 0;
-+
-+	if (ret && grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
-+		return ret;
-+
-+	if (tc_mode == HNAE3_TC_MAP_MODE_DSCP &&
-+	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
-+		ah->av.sl = priority;
-+	else
-+		ah->av.sl = rdma_ah_get_sl(ah_attr);
-+
-+	if (!check_sl_valid(hr_dev, ah->av.sl))
- 		return -EINVAL;
--	}
- 
- 	memcpy(ah->av.dgid, grh->dgid.raw, HNS_ROCE_GID_SIZE);
- 	memcpy(ah->av.mac, ah_attr->roce.dmac, ETH_ALEN);
-@@ -99,6 +109,8 @@ int hns_roce_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
- 	}
- 
- 	if (udata) {
-+		resp.priority = ah->av.sl;
-+		resp.tc_mode = tc_mode;
- 		memcpy(resp.dmac, ah_attr->roce.dmac, ETH_ALEN);
- 		ret = ib_copy_to_udata(udata, &resp,
- 				       min(udata->outlen, sizeof(resp)));
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index c3cbd0a494bf..78b4d19ff848 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -645,6 +645,8 @@ struct hns_roce_qp {
- 	struct hns_user_mmap_entry *dwqe_mmap_entry;
- 	u32			config;
- 	enum hns_roce_cong_type	cong_type;
-+	u8			tc_mode;
-+	u8			priority;
- };
- 
- struct hns_roce_ib_iboe {
-@@ -950,6 +952,8 @@ struct hns_roce_hw {
- 	int (*query_sccc)(struct hns_roce_dev *hr_dev, u32 qpn, void *buffer);
- 	int (*query_hw_counter)(struct hns_roce_dev *hr_dev,
- 				u64 *stats, u32 port, int *hw_counters);
-+	int (*get_dscp)(struct hns_roce_dev *hr_dev, u8 dscp,
-+			u8 *tc_mode, u8 *priority);
- 	const struct ib_device_ops *hns_roce_dev_ops;
- 	const struct ib_device_ops *hns_roce_dev_srq_ops;
- };
-@@ -1292,4 +1296,6 @@ struct hns_user_mmap_entry *
- hns_roce_user_mmap_entry_insert(struct ib_ucontext *ucontext, u64 address,
- 				size_t length,
- 				enum hns_roce_mmap_type mmap_type);
-+bool check_sl_valid(struct hns_roce_dev *hr_dev, u8 sl);
-+
- #endif /* _HNS_ROCE_DEVICE_H */
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index ba7ae792d279..4de463e787d4 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -443,10 +443,6 @@ static int fill_ud_av(struct hns_roce_v2_ud_send_wqe *ud_sq_wqe,
- 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_HOPLIMIT, ah->av.hop_limit);
- 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_TCLASS, ah->av.tclass);
- 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_FLOW_LABEL, ah->av.flowlabel);
--
--	if (WARN_ON(ah->av.sl > MAX_SERVICE_LEVEL))
--		return -EINVAL;
--
- 	hr_reg_write(ud_sq_wqe, UD_SEND_WQE_SL, ah->av.sl);
- 
- 	ud_sq_wqe->sgid_index = ah->av.gid_index;
-@@ -4828,6 +4824,70 @@ static int fill_cong_field(struct ib_qp *ibqp, const struct ib_qp_attr *attr,
- 	return 0;
- }
- 
-+static int hns_roce_hw_v2_get_dscp(struct hns_roce_dev *hr_dev, u8 dscp,
-+				   u8 *tc_mode, u8 *priority)
-+{
-+	struct hns_roce_v2_priv *priv = hr_dev->priv;
-+	struct hnae3_handle *handle = priv->handle;
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+
-+	if (!ops->get_dscp_prio)
-+		return -EOPNOTSUPP;
-+
-+	return ops->get_dscp_prio(handle, dscp, tc_mode, priority);
-+}
-+
-+bool check_sl_valid(struct hns_roce_dev *hr_dev, u8 sl)
-+{
-+	u32 max_sl;
-+
-+	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
-+	if (unlikely(sl > max_sl)) {
-+		ibdev_err_ratelimited(&hr_dev->ib_dev,
-+				      "failed to set SL(%u). Shouldn't be larger than %u.\n",
-+				      sl, max_sl);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int hns_roce_set_sl(struct ib_qp *ibqp,
-+			   const struct ib_qp_attr *attr,
-+			   struct hns_roce_v2_qp_context *context,
-+			   struct hns_roce_v2_qp_context *qpc_mask)
-+{
-+	const struct ib_global_route *grh = rdma_ah_read_grh(&attr->ah_attr);
-+	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-+	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
-+	struct ib_device *ibdev = &hr_dev->ib_dev;
-+	u32 sl_num;
-+	int ret;
-+
-+	ret = hns_roce_hw_v2_get_dscp(hr_dev, get_tclass(&attr->ah_attr.grh),
-+				      &hr_qp->tc_mode, &hr_qp->priority);
-+	if (ret && ret != -EOPNOTSUPP &&
-+	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP) {
-+		ibdev_err_ratelimited(ibdev,
-+				      "failed to get dscp, ret = %d.\n", ret);
-+		return ret;
-+	}
-+
-+	if (hr_qp->tc_mode == HNAE3_TC_MAP_MODE_DSCP &&
-+	    grh->sgid_attr->gid_type == IB_GID_TYPE_ROCE_UDP_ENCAP)
-+		hr_qp->sl = hr_qp->priority;
-+	else
-+		hr_qp->sl = rdma_ah_get_sl(&attr->ah_attr);
-+
-+	if (!check_sl_valid(hr_dev, hr_qp->sl))
-+		return -EINVAL;
-+
-+	hr_reg_write(context, QPC_SL, hr_qp->sl);
-+	hr_reg_clear(qpc_mask, QPC_SL);
-+
-+	return 0;
-+}
-+
- static int hns_roce_v2_set_path(struct ib_qp *ibqp,
- 				const struct ib_qp_attr *attr,
- 				int attr_mask,
-@@ -4843,25 +4903,18 @@ static int hns_roce_v2_set_path(struct ib_qp *ibqp,
- 	int is_roce_protocol;
- 	u16 vlan_id = 0xffff;
- 	bool is_udp = false;
--	u32 max_sl;
- 	u8 ib_port;
- 	u8 hr_port;
- 	int ret;
- 
--	max_sl = min_t(u32, MAX_SERVICE_LEVEL, hr_dev->caps.sl_num - 1);
--	if (unlikely(sl > max_sl)) {
--		ibdev_err_ratelimited(ibdev,
--				      "failed to fill QPC, sl (%u) shouldn't be larger than %u.\n",
--				      sl, max_sl);
--		return -EINVAL;
--	}
--
- 	/*
- 	 * If free_mr_en of qp is set, it means that this qp comes from
- 	 * free mr. This qp will perform the loopback operation.
- 	 * In the loopback scenario, only sl needs to be set.
- 	 */
- 	if (hr_qp->free_mr_en) {
-+		if (!check_sl_valid(hr_dev, sl))
-+			return -EINVAL;
- 		hr_reg_write(context, QPC_SL, sl);
- 		hr_reg_clear(qpc_mask, QPC_SL);
- 		hr_qp->sl = sl;
-@@ -4931,11 +4984,7 @@ static int hns_roce_v2_set_path(struct ib_qp *ibqp,
- 	memcpy(context->dgid, grh->dgid.raw, sizeof(grh->dgid.raw));
- 	memset(qpc_mask->dgid, 0, sizeof(grh->dgid.raw));
- 
--	hr_qp->sl = sl;
--	hr_reg_write(context, QPC_SL, hr_qp->sl);
--	hr_reg_clear(qpc_mask, QPC_SL);
--
--	return 0;
-+	return  hns_roce_set_sl(ibqp, attr, context, qpc_mask);
- }
- 
- static bool check_qp_state(enum ib_qp_state cur_state,
-@@ -6735,6 +6784,7 @@ static const struct hns_roce_hw hns_roce_hw_v2 = {
- 	.query_srqc = hns_roce_v2_query_srqc,
- 	.query_sccc = hns_roce_v2_query_sccc,
- 	.query_hw_counter = hns_roce_hw_v2_query_counter,
-+	.get_dscp = hns_roce_hw_v2_get_dscp,
- 	.hns_roce_dev_ops = &hns_roce_v2_dev_ops,
- 	.hns_roce_dev_srq_ops = &hns_roce_v2_dev_srq_ops,
- };
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index f35a66325d9a..697230f964b1 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -1386,6 +1386,7 @@ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
- 		       int attr_mask, struct ib_udata *udata)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
-+	struct hns_roce_ib_modify_qp_resp resp = {};
- 	struct hns_roce_qp *hr_qp = to_hr_qp(ibqp);
- 	enum ib_qp_state cur_state, new_state;
- 	int ret = -EINVAL;
-@@ -1427,6 +1428,18 @@ int hns_roce_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
- 
- 	ret = hr_dev->hw->modify_qp(ibqp, attr, attr_mask, cur_state,
- 				    new_state, udata);
-+	if (ret)
-+		goto out;
-+
-+	if (udata && udata->outlen) {
-+		resp.tc_mode = hr_qp->tc_mode;
-+		resp.priority = hr_qp->sl;
-+		ret = ib_copy_to_udata(udata, &resp,
-+				       min(udata->outlen, sizeof(resp)));
-+		if (ret)
-+			ibdev_err_ratelimited(&hr_dev->ib_dev,
-+					      "failed to copy modify qp resp.\n");
-+	}
- 
- out:
- 	mutex_unlock(&hr_qp->mutex);
-diff --git a/include/uapi/rdma/hns-abi.h b/include/uapi/rdma/hns-abi.h
-index 158670da2b2a..94e861870e27 100644
---- a/include/uapi/rdma/hns-abi.h
-+++ b/include/uapi/rdma/hns-abi.h
-@@ -109,6 +109,12 @@ struct hns_roce_ib_create_qp_resp {
- 	__aligned_u64 dwqe_mmap_key;
- };
- 
-+struct hns_roce_ib_modify_qp_resp {
-+	__u8	tc_mode;
-+	__u8	priority;
-+	__u8	reserved[6];
-+};
-+
- enum {
- 	HNS_ROCE_EXSGE_FLAGS = 1 << 0,
- 	HNS_ROCE_RQ_INLINE_FLAGS = 1 << 1,
-@@ -143,7 +149,8 @@ struct hns_roce_ib_alloc_pd_resp {
- 
- struct hns_roce_ib_create_ah_resp {
- 	__u8 dmac[6];
--	__u8 reserved[2];
-+	__u8 priority;
-+	__u8 tc_mode;
- };
- 
- #endif /* HNS_ABI_USER_H */
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_6.9
+
+for you to fetch changes up to 732932220078f6312f3ef57c17523d3d7f995655:
+
+  mips: cm: Convert __mips_cm_phys_base() to weak function (2024-03-11 14:02:15 +0100)
+
+----------------------------------------------------------------
+- added support for Mobileye SoCs
+- unified GPR/CP0 regs handling for uasm
+- cleanups and fixes
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      MIPS: ralink: Remove unused of_gpio.h
+      MIPS: ralink: Don't use "proxy" headers
+
+Erick Archer (1):
+      MIPS: Alchemy: Use kcalloc() instead of kzalloc()
+
+Gregory CLEMENT (12):
+      MIPS: spaces: Define a couple of handy macros
+      MIPS: traps: Give more explanations if ebase doesn't belong to KSEG0
+      MIPS: cps-vec: Use macros for 64bits access
+      dt-bindings: Add vendor prefix for Mobileye Vision Technologies Ltd.
+      dt-bindings: mips: cpus: Sort the entries
+      dt-bindings: mips: cpu: Add I-Class I6500 Multiprocessor Core
+      dt-bindings: mips: Add bindings for Mobileye SoCs
+      MIPS: mobileye: Add EyeQ5 dtsi
+      MIPS: mobileye: Add EPM5 device tree
+      MIPS: Share generic kernel code with other architecture
+      MIPS: Add support for Mobileye EyeQ5
+      MAINTAINERS: Add entry for Mobileye MIPS SoCs
+
+Ilpo Järvinen (4):
+      MIPS: lantiq: Remove unused function pointer variables
+      MIPS: ath79: Don't return PCIBIOS_* code from pcibios_enable_device()
+      MIPS: PCI: Return PCIBIOS_* from tx4927_pci_config_read/write()
+      MIPS: TXx9: Use PCI_SET_ERROR_RESPONSE()
+
+Jiapeng Chong (1):
+      bus: bt1-apb: Remove duplicate include
+
+Jiaxun Yang (19):
+      MIPS: Unify define of CP0 registers for uasm code
+      MIPS: regdefs.h: Guard all defines with __ASSEMBLY__
+      MIPS: regdefs.h: Define a set of register numbers
+      MIPS: traps: Use GPR number macros
+      MIPS: page: Use GPR number macros
+      MIPS: tlbex: Use GPR number macros
+      MIPS: kvm/entry: Use GPR number macros
+      MIPS: pm-cps: Use GPR number macros
+      MIPS: Fix set_uncached_handler for ebase in XKPHYS
+      MIPS: Allows relocation exception vectors everywhere
+      MIPS: Probe toolchain support of -msym32
+      MIPS: Remove cc-option checks for -march=octeon
+      MIPS: Fallback CPU -march flag to ISA level if unsupported
+      MIPS: BMIPS: Drop unnecessary assembler flag
+      MIPS: Loongson64: test for -march=loongson3a cflag
+      MIPS: Limit MIPS_MT_SMP support by ISA reversion
+      MIPS: Implement microMIPS MT ASE helpers
+      MIPS: mipsregs: Set proper ISA level for virt extensions
+      MIPS: mipsregs: Parse fp and sp register by name in parse_r
+
+Justin Swartz (4):
+      mips: dts: ralink: mt7621: associate uart1_pins with serial0
+      mips: dts: ralink: mt7621: reorder serial0 properties
+      mips: dts: ralink: mt7621: add serial1 and serial2 nodes
+      mips: dts: ralink: mt7621: add cell count properties to usb
+
+Lukas Bulwahn (1):
+      MAINTAINERS: remove entry to non-existing file in MOBILEYE MIPS SOCS
+
+Masahiro Yamada (1):
+      MIPS: move unselectable entries out of the "CPU type" choice
+
+Ricardo B. Marliere (6):
+      mips: sgi-ip22: make gio_bus_type const
+      mips: txx9: make txx9_sramc_subsys const
+      tc: make tc_bus_type const
+      mips: bus: make mips_cdmm_bustype const
+      mips: mt: make mt_class constant
+      mips: sibyte: make tb_class constant
+
+Serge Semin (5):
+      MAINTAINERS: Add maintainer for MIPS Baikal-T1 platform code
+      mips: zboot: Fix "no previous prototype" build warning
+      tty: mips_ejtag_fdc: Fix passing incompatible pointer type warning
+      mips: cm: Convert __mips_cm_l2sync_phys_base() to weak function
+      mips: cm: Convert __mips_cm_phys_base() to weak function
+
+ Documentation/devicetree/bindings/mips/cpus.yaml   |  13 +-
+ .../devicetree/bindings/mips/mobileye.yaml         |  32 ++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ MAINTAINERS                                        |  22 ++
+ arch/mips/Kbuild                                   |   1 +
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  | 138 +++++--
+ arch/mips/Makefile                                 |  46 ++-
+ arch/mips/alchemy/common/clock.c                   |   2 +-
+ arch/mips/boot/compressed/uart-16550.c             |   2 +
+ arch/mips/boot/compressed/uart-alchemy.c           |   2 +
+ arch/mips/boot/compressed/uart-prom.c              |   2 +
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/mobileye/Makefile               |   4 +
+ arch/mips/boot/dts/mobileye/eyeq5-epm5.dts         |  23 ++
+ .../mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi | 292 ++++++++++++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             | 124 ++++++
+ arch/mips/boot/dts/ralink/mt7621.dtsi              |  47 +++
+ arch/mips/configs/eyeq5_defconfig                  | 108 ++++++
+ arch/mips/generic/Makefile                         |   6 +-
+ arch/mips/include/asm/addrspace.h                  |   5 +
+ arch/mips/include/asm/asmmacro.h                   |  22 +-
+ arch/mips/include/asm/cdmm.h                       |   2 +-
+ arch/mips/include/asm/mach-generic/spaces.h        |   4 +
+ arch/mips/include/asm/mips-cm.h                    |  21 +-
+ arch/mips/include/asm/mips_mt.h                    |   2 +-
+ arch/mips/include/asm/mipsmtregs.h                 | 256 +++++++-----
+ arch/mips/include/asm/mipsregs.h                   | 278 ++++++++++---
+ arch/mips/include/asm/regdef.h                     |  91 +++++
+ arch/mips/include/asm/smp-cps.h                    |   9 +-
+ arch/mips/kernel/cps-vec.S                         |  54 +--
+ arch/mips/kernel/mips-cm.c                         |  10 +-
+ arch/mips/kernel/mips-mt.c                         |  14 +-
+ arch/mips/kernel/pm-cps.c                          | 134 +++----
+ arch/mips/kernel/rtlx-mt.c                         |   8 +-
+ arch/mips/kernel/smp-cps.c                         | 141 +++++--
+ arch/mips/kernel/traps.c                           |  13 +-
+ arch/mips/kernel/vpe-mt.c                          |   4 +-
+ arch/mips/kvm/entry.c                              | 431 +++++++++------------
+ arch/mips/mm/page.c                                | 202 +++++-----
+ arch/mips/mm/tlbex.c                               | 214 +++++-----
+ arch/mips/mobileye/Makefile                        |   1 +
+ arch/mips/mobileye/Platform                        |  15 +
+ arch/mips/mobileye/board-epm5.its.S                |  24 ++
+ arch/mips/mobileye/vmlinux.its.S                   |  32 ++
+ arch/mips/pci/fixup-ath79.c                        |   2 +-
+ arch/mips/pci/fixup-lantiq.c                       |   9 -
+ arch/mips/pci/ops-tx4927.c                         |  18 +-
+ arch/mips/ralink/timer.c                           |  11 +-
+ arch/mips/sgi-ip22/ip22-gio.c                      |   4 +-
+ arch/mips/sibyte/common/sb_tbprof.c                |  21 +-
+ arch/mips/txx9/generic/setup.c                     |   2 +-
+ drivers/bus/bt1-apb.c                              |   1 -
+ drivers/bus/mips_cdmm.c                            |   2 +-
+ drivers/tc/tc-driver.c                             |   2 +-
+ drivers/tty/mips_ejtag_fdc.c                       |   2 +-
+ include/linux/tc.h                                 |   2 +-
+ 57 files changed, 2010 insertions(+), 921 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/mobileye.yaml
+ create mode 100644 arch/mips/boot/dts/mobileye/Makefile
+ create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
+ create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
+ create mode 100644 arch/mips/boot/dts/mobileye/eyeq5.dtsi
+ create mode 100644 arch/mips/configs/eyeq5_defconfig
+ create mode 100644 arch/mips/mobileye/Makefile
+ create mode 100644 arch/mips/mobileye/Platform
+ create mode 100644 arch/mips/mobileye/board-epm5.its.S
+ create mode 100644 arch/mips/mobileye/vmlinux.its.S
+
 -- 
-2.30.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
