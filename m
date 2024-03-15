@@ -1,82 +1,243 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49844642A
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 17:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F645C1C
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 17:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710523568; cv=none; b=V7nxLM3WFzTh5xDK1A/cL4DrPkgy++KKzVZSydiQl8W3YfAPygSRaPQWwHn/Qz59Q+kNCtWs94L8HpPDx4Cxp3w3z0pnL2uxKNe7aleAfU6QDrzhB9b3e+RCP6RS9jLRQqo6hRwWcTZINRsTrSIkHaC6zJKZwc+Kx9P++dm+U4M=
+	t=1710523594; cv=none; b=iDiDUmiDonQzN+9ClwDhGptnHegJsbZVFjGnhxNQ/htq1jyYEy6Ga7+8XZfqRZoUv2p6X3CvyjzhbG4F6LvUX1GTmcmvIUCm7a+c8RuATat7OPSgMXlBErfTrciGlTRtexLnc05dBDzrCssbtJ8su8BxfFUAttpuoZxnMTvOX/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710523568; c=relaxed/simple;
-	bh=cFTdYcax5gRdWhzgeNIJ1mjhAy6vbDir1d7YavE2RGk=;
+	s=arc-20240116; t=1710523594; c=relaxed/simple;
+	bh=8+iEamvYNnnhpAwMYtEnj73QOL5hzW4CCiMAPDnH9Yo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oIHx+1t1tYHfWySfSsLOTTyI6gNM7tQNu56vaTqBSZV96j43P1VZZRfqJOEaLxf63Vq3DE8NpnTid2jElb/Vjio/bw0uxKIh+DJkcYH1cm7NYVcUpec2L/n6xnqYuDbcElQqFGrNCVLoraDyKydDmaq+drZrOn2VIiin9QMFVWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BYf/YMrU; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=RkpdckMWSS6iT8ZvGivUMNAtfcDTCLKXHO9FRL3xbhSH9lXYVQkRkLHJZfGOmVAejgxNjAPUX7sJM+DmhKZNV3EZdvigePVxnUbsFclwMmcubQpHmC1yl5nlyxAqzDARxatdBG7J1FPUKTDan8t6mIUzjr5E7Ugyn3ZHQCf+iC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eJLiuupd; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sdf.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BYf/YMrU"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1dd916d7d55so19993975ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:26:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJLiuupd"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e6b6de7383so2033286b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710523566; x=1711128366; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710523592; x=1711128392; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hvVwcEiJwAJ+sbhcH9TeiA0j2HoTmMi1pHT6QVcoQQY=;
-        b=BYf/YMrUfmPrwO+TKfdeVk8e9+2FR2CJj3IHxzYPbWxrAXn4sX3YoXLBKxFNAhvaTH
-         V6zPOsxtAzKai77boYNETzcnP3A1LNirQZPXTuSeOmods7mv8LBNZvi1ErNq91JghmgD
-         2LbZP9WBh1t1M5XNyuRV0D8bL7IlpuHQCxvIExvO5U1h1tZEKOyLk9ez6tGZJFIM4n6h
-         klQysXxlgRn8IyrcncF7DHzvP9jW7OrtsLmowHa1b0XvGtzmvi0+4H3A5t6IX/Js3eOy
-         mOfpxKjOH8ZU9d5XQKHSBTc7R3Nb6bDZq3Ru7Ro7zv5N8LwvzR00fkeWtjOs1jFaaO7j
-         lzwA==
+        bh=SBPud4Qyt0c6+W4f+FotFxIkibCaGt2ovKebQi1WSxI=;
+        b=eJLiuupdk9NiAkiUN7nohpdfgxViM6iewe9RuyZJKHClUqWSBf6H2zON+DqJSB1oK2
+         sfRcH0DF9cze8sY/phWI+qZd9TBav5OvQukWtY8HLWqG+Dn/hDDPZO2TNMXADnw0D1+J
+         NBhBimJihPZNTpTOGOv/gT/AnoSkwbj8MTNlxXAyESiJpWD3f9GZUhi+BtF4f8AqnsaC
+         WfAa6+dH1VRjeQaVVc7OlQmtpbYRu/xK/CMqF0g9BPnSVZTkb40pdnGwVGdtSb2IH1Lv
+         A+V0KkiIbWB/+aAHjvLe2jSuVZ8W0Lxh2A4/ZvRs2RA1OXcQKPnnY0zp6JeJu+h5puIT
+         M8wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710523566; x=1711128366;
+        d=1e100.net; s=20230601; t=1710523592; x=1711128392;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hvVwcEiJwAJ+sbhcH9TeiA0j2HoTmMi1pHT6QVcoQQY=;
-        b=J/BIXgVkBU3K4F0239OQgWV7WgJA8U1R9K1xgkN/MFWimyyGzssdGK2G9Gm5cHXwXz
-         eu92Aowg42iaveYrmm48tSyYc1oRRSVlYoHJY8FHnd+yT2rzHDEEcS2ukw0fTouVAayf
-         IDt+5XI4XMCehsmzOLmr8ADOIAmp4cgmtgdC5uzrszhce5uD0VjdNTgR+KfMm1VIlAj0
-         FcWV/UCpem+/RZ1UdnPqNVcz/f8hFDDK85zR04XEMeIvdrgPchhTaizbP1xA2tWsaNy9
-         jmVH8iGvE/rzzvMoopOz/05r5sIyBOoJmtRHRDl9NUl9MbIwfIR60CKMSk3R/XAm/qec
-         M09A==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ8unGGacm4bz5BVH44ONn4fXh86cLyV453Oqzaev5OSs+InEPpyQjxKqO+MZUZA/Cc47EDbPiq0gl6brxQNS2/D4I8SJppISMIxuC
-X-Gm-Message-State: AOJu0Yya7UJjIdaAyHg56xj8pR1n05HXpKdneHwTPGaiym4II1gqK7iP
-	4GcpwTOHlND0XryYpeiO0zsJuumsfh3ui3ItpFk7MBUMJANsBVEz3kNIFyCOuC6uDw==
-X-Google-Smtp-Source: AGHT+IG7rbyBC8cmSfSgM1ZPt/64xcQzRHRYJmtaC9Fz4S0LeyUtL6P76VYLMAsrIGzOhoP6Sg/8mug=
-X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
- (user=sdf job=sendgmr) by 2002:a17:902:e5c7:b0:1dd:dbf6:57de with SMTP id
- u7-20020a170902e5c700b001dddbf657demr46533plf.12.1710523566056; Fri, 15 Mar
- 2024 10:26:06 -0700 (PDT)
-Date: Fri, 15 Mar 2024 10:26:04 -0700
-In-Reply-To: <20240315012249.439639-1-liucong2@kylinos.cn>
+        bh=SBPud4Qyt0c6+W4f+FotFxIkibCaGt2ovKebQi1WSxI=;
+        b=pceTqKU0ipyvjiuGwlYh5XJcBWzO9CfFaxUXlDMUlpLoN6ZX33cRWQJGpgNlVntGLb
+         1XMCUczx/MkJTlyBxGFXW6fOMzmfnXn6pxwhkuyVOMA3TmahxdiqsnnKB6vzYjzVEDnA
+         ZxNe7nVhLpeeK6NYLcP8KTsHldQ6J5FykxtX66PXir6C2Qz28Xd5IPKyi8pnyYhjmgKL
+         PEXgI/2ccAhvDNPyVREeZ7yUsnO2xEHuiGmsNk1kH/AahqtDtzKLblFo5gI/40A7rVP4
+         3eGOekyhKi5HG1T/SeczP57DKmIYzpqi4OBrzbi760k2sMDtnbXIZRwd4vB86UqvJAQk
+         D8/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXS3P23jhyGW29500qJ8n6+f0HT1Xch2VsqY6A8hmXWLxtNXR+k/S2wkczGBNq9FQPsk/PuWHgqy5Ppq+cvPVj8Ij0ICaxXvqt8tkz6
+X-Gm-Message-State: AOJu0Yz/1QOTnX+dNrrvqec2EgNdCcKQC1bfDG7hZIoWEFhYu+svDHga
+	5KJhTMkUS15J15AlkrYN2Pf8Ldm0C3fzbmxZd+vNHDDh4tNBWbBuXfDlAHn32MTcnbqO5yXGA/u
+	9ww==
+X-Google-Smtp-Source: AGHT+IGoF3GpjQW71lpjD5bgySALm0aszQEi6sZCjZGA77NimyDJoIgOSWabefxIH0uquY+9NJsNKNN47Xw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:3d15:b0:6e6:97c8:4ea2 with SMTP id
+ lo21-20020a056a003d1500b006e697c84ea2mr205752pfb.0.1710523591938; Fri, 15 Mar
+ 2024 10:26:31 -0700 (PDT)
+Date: Fri, 15 Mar 2024 10:26:30 -0700
+In-Reply-To: <dbaa6b1a6c4ebb1400be5f7099b4b9e3b54431bb.1708933498.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <ZfNXjd1ML2WJwOKX@google.com> <20240315012249.439639-1-liucong2@kylinos.cn>
-Message-ID: <ZfSErGdSKDnMpPzd@google.com>
-Subject: Re: [PATCH v2] tools/Makefile: Remove cgroup target
-From: Stanislav Fomichev <sdf@google.com>
-To: Cong Liu <liucong2@kylinos.cn>
-Cc: akpm@linux-foundation.org, bpf@vger.kernel.org, 
-	ddrokosov@salutedevices.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+References: <cover.1708933498.git.isaku.yamahata@intel.com> <dbaa6b1a6c4ebb1400be5f7099b4b9e3b54431bb.1708933498.git.isaku.yamahata@intel.com>
+Message-ID: <ZfSExlemFMKjBtZb@google.com>
+Subject: Re: [PATCH v19 078/130] KVM: TDX: Implement TDX vcpu enter/exit path
+From: Sean Christopherson <seanjc@google.com>
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, 
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, 
+	hang.yuan@intel.com, tina.zhang@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 03/15, Cong Liu wrote:
-> The tools/cgroup directory no longer contains a Makefile.  This patch
-> updates the top-level tools/Makefile to remove references to building
-> and installing cgroup components. This change reflects the current
-> structure of the tools directory and fixes the build failure when
-> building tools in the top-level directory.
-> 
-> linux/tools$ make cgroup
->   DESCEND cgroup
-> make[1]: *** No targets specified and no makefile found.  Stop.
-> make: *** [Makefile:73: cgroup] Error 2
-> 
-> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
+On Mon, Feb 26, 2024, isaku.yamahata@intel.com wrote:
+> +static noinstr void tdx_vcpu_enter_exit(struct vcpu_tdx *tdx)
+> +{
+> +	struct tdx_module_args args;
+> +
+> +	/*
+> +	 * Avoid section mismatch with to_tdx() with KVM_VM_BUG().  The caller
+> +	 * should call to_tdx().
 
-Acked-by: Stanislav Fomichev <sdf@google.com>
+C'mon.  I don't think it's unreasonable to expect that at least one of the many
+people working on TDX would figure out why to_vmx() is __always_inline.
+
+> +	 */
+> +	struct kvm_vcpu *vcpu = &tdx->vcpu;
+> +
+> +	guest_state_enter_irqoff();
+> +
+> +	/*
+> +	 * TODO: optimization:
+> +	 * - Eliminate copy between args and vcpu->arch.regs.
+> +	 * - copyin/copyout registers only if (tdx->tdvmvall.regs_mask != 0)
+> +	 *   which means TDG.VP.VMCALL.
+> +	 */
+> +	args = (struct tdx_module_args) {
+> +		.rcx = tdx->tdvpr_pa,
+> +#define REG(reg, REG)	.reg = vcpu->arch.regs[VCPU_REGS_ ## REG]
+
+Organizing tdx_module_args's registers by volatile vs. non-volatile is asinine.
+This code should not need to exist.
+
+> +	WARN_ON_ONCE(!kvm_rebooting &&
+> +		     (tdx->exit_reason.full & TDX_SW_ERROR) == TDX_SW_ERROR);
+> +
+> +	guest_state_exit_irqoff();
+> +}
+> +
+> +fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> +
+> +	if (unlikely(!tdx->initialized))
+> +		return -EINVAL;
+> +	if (unlikely(vcpu->kvm->vm_bugged)) {
+> +		tdx->exit_reason.full = TDX_NON_RECOVERABLE_VCPU;
+> +		return EXIT_FASTPATH_NONE;
+> +	}
+> +
+> +	trace_kvm_entry(vcpu);
+> +
+> +	tdx_vcpu_enter_exit(tdx);
+> +
+> +	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+> +	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+> +
+> +	return EXIT_FASTPATH_NONE;
+> +}
+> +
+>  void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
+>  {
+>  	WARN_ON_ONCE(root_hpa & ~PAGE_MASK);
+> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+> index d822e790e3e5..81d301fbe638 100644
+> --- a/arch/x86/kvm/vmx/tdx.h
+> +++ b/arch/x86/kvm/vmx/tdx.h
+> @@ -27,6 +27,37 @@ struct kvm_tdx {
+>  	struct page *source_page;
+>  };
+>  
+> +union tdx_exit_reason {
+> +	struct {
+> +		/* 31:0 mirror the VMX Exit Reason format */
+
+Then use "union vmx_exit_reason", having to maintain duplicate copies of the same
+union is not something I want to do.
+
+I'm honestly not even convinced that "union tdx_exit_reason" needs to exist.  I
+added vmx_exit_reason because we kept having bugs where KVM would fail to strip
+bits 31:16, and because nested VMX needs to stuff failed_vmentry, but I don't
+see a similar need for TDX.
+
+I would even go so far as to say the vcpu_tdx field shouldn't be exit_reason,
+and instead should be "return_code" or something.  E.g. if the TDX module refuses
+to run the vCPU, there's no VM-Enter and thus no VM-Exit (unless you count the
+SEAMCALL itself, har har).  Ditto for #GP or #UD on the SEAMCALL (or any other
+reason that generates TDX_SW_ERROR).
+
+Ugh, I'm doubling down on that suggesting.  This:
+
+	WARN_ON_ONCE(!kvm_rebooting &&
+		     (tdx->vp_enter_ret & TDX_SW_ERROR) == TDX_SW_ERROR);
+
+	if ((u16)tdx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
+	    is_nmi(tdexit_intr_info(vcpu))) {
+		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+		vmx_do_nmi_irqoff();
+		kvm_after_interrupt(vcpu);
+	}
+
+is heinous.  If there's an error that leaves bits 15:0 zero, KVM will synthesize
+a spurious NMI.  I don't know whether or not that can happen, but it's not
+something that should even be possible in KVM, i.e. the exit reason should be
+processed if and only if KVM *knows* there was a sane VM-Exit from non-root mode.
+
+tdx_vcpu_run() has a similar issue, though it's probably benign.  If there's an
+error in bits 15:0 that happens to collide with EXIT_REASON_TDCALL, weird things
+will happen.
+
+	if (tdx->exit_reason.basic == EXIT_REASON_TDCALL)
+		tdx->tdvmcall.rcx = vcpu->arch.regs[VCPU_REGS_RCX];
+	else
+		tdx->tdvmcall.rcx = 0;
+
+I vote for something like the below, with much more robust checking of vp_enter_ret
+before it's converted to a VMX exit reason.
+
+static __always_inline union vmx_exit_reason tdexit_exit_reason(struct kvm_vcpu *vcpu)
+{
+	return (u32)vcpu->vp_enter_ret;
+}
+
+diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+index af3a2b8afee8..b9b40b2eaccb 100644
+--- a/arch/x86/kvm/vmx/tdx.h
++++ b/arch/x86/kvm/vmx/tdx.h
+@@ -43,37 +43,6 @@ struct kvm_tdx {
+        struct page *source_page;
+ };
+ 
+-union tdx_exit_reason {
+-       struct {
+-               /* 31:0 mirror the VMX Exit Reason format */
+-               u64 basic               : 16;
+-               u64 reserved16          : 1;
+-               u64 reserved17          : 1;
+-               u64 reserved18          : 1;
+-               u64 reserved19          : 1;
+-               u64 reserved20          : 1;
+-               u64 reserved21          : 1;
+-               u64 reserved22          : 1;
+-               u64 reserved23          : 1;
+-               u64 reserved24          : 1;
+-               u64 reserved25          : 1;
+-               u64 bus_lock_detected   : 1;
+-               u64 enclave_mode        : 1;
+-               u64 smi_pending_mtf     : 1;
+-               u64 smi_from_vmx_root   : 1;
+-               u64 reserved30          : 1;
+-               u64 failed_vmentry      : 1;
+-
+-               /* 63:32 are TDX specific */
+-               u64 details_l1          : 8;
+-               u64 class               : 8;
+-               u64 reserved61_48       : 14;
+-               u64 non_recoverable     : 1;
+-               u64 error               : 1;
+-       };
+-       u64 full;
+-};
+-
+ struct vcpu_tdx {
+        struct kvm_vcpu vcpu;
+ 
+@@ -103,7 +72,8 @@ struct vcpu_tdx {
+                };
+                u64 rcx;
+        } tdvmcall;
+-       union tdx_exit_reason exit_reason;
++
++       u64 vp_enter_ret;
+ 
+        bool initialized;
+ 
+
