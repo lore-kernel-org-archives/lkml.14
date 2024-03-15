@@ -1,38 +1,59 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31DE4CB28;
-	Fri, 15 Mar 2024 17:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE16D4F1FE;
+	Fri, 15 Mar 2024 17:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710523604; cv=none; b=bwmEMjISyVTaoE5Yx6FEQjcQCLDtjbLx/QxHdPuNZJQn8QAtcTa8y6rsRZuLHABCAn+ZxR7zVkhgwotS5PeKHkAPEWT90Q1i8UOpPbZiIpRezwfFgnrp26f9kaC3hg1IoyvI94SI8cBj5/e9l9M8HvjKSR4rUmN3EBg+91Ne0H8=
+	t=1710523606; cv=none; b=OELYjUkBJyglt8EplrtQggg7soOy0QWQaCYk42w4iWK0HglOkAQxiPNwT37mLhaMIRkP1RtNlMWMrwDziTCqGejADZMEV5ZD64Av73r1wYWB5r2/rkLOtVDhBobsEsKnaymNdodSWhFOsUK/jwR9tZBHhtAxCSuc1fmDZLnyDC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710523604; c=relaxed/simple;
-	bh=ygRI23C6RBYWrQ/EPvkkuPXFb+etv39kxODn1idD9Zk=;
+	s=arc-20240116; t=1710523606; c=relaxed/simple;
+	bh=EQA2djWLQXyJSOIGBXwtzlxj242KSY9IKWiQtTkyAk8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R6ha3+CqSF4ps+RLG9aJFCYH1qaEhtdquGYV5ykiXBeu7/tJmLaQsL+UlMWTB3OUNz243A90ckghBOVMQA0vRbO5S/q2VCAglNXeVr/pEBKmjOMmwYXJODlqxkrojgdXcvALQ7ncLgiiYUuoEwQbsAasxVak0EKMkUBub5r/qWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Y9SYMkth; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=L1CocVxusd6Tl9zdi+ZvAuPm3Djvl09jzyEvOpmz7MENAFWwUS65A4PQPPbrCDisAS7UCdX0ndpq6/DIECQHHFVYKIOFDFxBBgykE3o69bqsurTfoOYbJgAWS85YHKCvF+HPtv5fh3qAc/x3pAwVV9em24y0DPMCVWmXj+DyDK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ar5rYbNw; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Y9SYMkth"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1710523590; x=1711128390; i=w_armin@gmx.de;
-	bh=3sTic/dN2Y9HOneaJCdXm9WF6RW0UjLBsv+KEhE/fGw=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Y9SYMkth4P+i9FgCSgSUU9yONP830s39QbQda3MQFgNs1btN0dim774cfKiclwrG
-	 T84sHL1h1n1T55Jcm3fX5oU/PtFT1xE7EA9HzKXHEOOmdM5APdLs4FlvwcgF0pxzQ
-	 SaEIPfHMpe+ahH80ledWN/0ZN20YLAA6iG6IQhZ3J/Zp7WwJ/iyABAlkCt/FqYYSJ
-	 NNJ5rW4nx4X58KgHFbLzSY/5IuXimD2M0CVyaZz0RTKMLoIbb4HXR1oXBG6XDVfW5
-	 TuyV2ZK9GWoMCCi7uHVwRT4mXRy3xyuDnjOIa9hG8ikkZooyayn3KY6OSpd5925BB
-	 Zkh9SiXOiNHLacVy0w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N3siA-1qlYCE1YMC-00zrVn; Fri, 15
- Mar 2024 18:26:30 +0100
-Message-ID: <a2db8f76-d0c3-402e-9fb0-13f36c848607@gmx.de>
-Date: Fri, 15 Mar 2024 18:26:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar5rYbNw"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e6f69e850bso1105027b3a.0;
+        Fri, 15 Mar 2024 10:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710523604; x=1711128404; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+sFjzuy7J8+w4dLV9YzHH2z7RTnEErpYFzircSGu8BM=;
+        b=ar5rYbNwMsOMpZeZZjJXrVJNhUSKhY9475vVrLg0j7u8nvbbaq544729SCj8uQxFCw
+         IpHzMWlw4MojAX8qQI0XLHppyVeC05ImIHSnh+dBLMIhd4mH6KTQi8/Gu9Jd+XhlOuco
+         /WYpCw69mjdrlPwrtmT9nIosebyXRw8K2oxDuanWLviqZh8FzWbOJRaOfdNuoXOR7Ppq
+         U/zY3L+/W1XDapNk3CTyDOWFcFYtIGZMOO97+grujVWwFl8eGCDc5q4vNfQMRVe4q6h6
+         xZaaCVRj8y4yS8eZdN0APZ+ZxOrB6agyUM+88Y7rNUd/sKFvJSSm3eHcin7AmHFALX+W
+         M45A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710523604; x=1711128404;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+sFjzuy7J8+w4dLV9YzHH2z7RTnEErpYFzircSGu8BM=;
+        b=snTm15Za/y4t7ve9PhZHVeMve4KRkH44agDJ2tMD6KakRMcbRje2QCNfuRZhXcp/Cp
+         kBrVTCY+hbt9emA/L5LE29BmijtqDKLW5Fb1z2qLwtchC6ohXrtCJlfiWhua9jhEOsTr
+         9kg8S4RbHbf3mJMldxQb7gFDQZPHQwpK+ntQM0HUeXwqfES69FmpM2cuByzzfze6zs+j
+         NwVCAXY2fWEX2XcUMr5zyseyLKtJl1QgCeTe7v7IKfTdL1DcYx7FJcdQTHsKw4IO1olF
+         DlIG3b+acR2GShsi/sSRgESV+oOIXmxfX8P55W2Phw/dpkjqHTT523G2zC8IH16BrZBL
+         bAWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXZarGd0mWcodxgF/vw6bGqWFPEG4ya3GFZuRbLMr618wJfmqTcFbq0uMf8Azo7vYmR8b3eCYwjDFsLeNXtFfImp0zEljD2PXYuw1Pt2FnqM22B0ivuEeUXW3e9Ic28Y8oaYx0tTkcZQ==
+X-Gm-Message-State: AOJu0YwjV7B3GsiFRk61EAvlNpgCTA0UopkdFbxED8RoiRjtlKzxLzq4
+	WHXDg21Qls2mKLRjtt3zE0CXMP/wb3nw80s07LkEfPqdZzSiHNhql6e8yakEBDk=
+X-Google-Smtp-Source: AGHT+IHx/Wktm2Eb4y94uYXrvycgK5Kv6k+ctHSA/s0OkYBbqKkOFZouLwcUIzdhckigvdF9YUlN0w==
+X-Received: by 2002:a05:6a20:e10c:b0:1a1:847f:8fa0 with SMTP id kr12-20020a056a20e10c00b001a1847f8fa0mr7087522pzb.15.1710523604178;
+        Fri, 15 Mar 2024 10:26:44 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id t188-20020a625fc5000000b006e6f8e9ab6asm1706458pfb.15.2024.03.15.10.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Mar 2024 10:26:43 -0700 (PDT)
+Message-ID: <94e3d09a-e6a4-4808-bc29-3f494b65e170@gmail.com>
+Date: Fri, 15 Mar 2024 10:26:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,209 +61,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] platform/x86: add lenovo wmi camera button driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ai Chao <aichao@kylinos.cn>
-Cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org
-References: <20240314050319.171816-1-aichao@kylinos.cn>
- <d7c2de21-50f9-4602-abd0-b83ecbc3f42f@gmx.de>
- <62b54638-92eb-52e1-d4ad-074963771157@linux.intel.com>
+Subject: Re: [PATCH 1/2] arm64: dts: mediatek: mt7622: set PHY address of
+ MT7531 switch to 0x1f
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <62b54638-92eb-52e1-d4ad-074963771157@linux.intel.com>
+To: arinc.unal@arinc9.com, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240314-for-mediatek-mt7531-phy-address-v1-0-52f58db01acd@arinc9.com>
+ <20240314-for-mediatek-mt7531-phy-address-v1-1-52f58db01acd@arinc9.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240314-for-mediatek-mt7531-phy-address-v1-1-52f58db01acd@arinc9.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BReRoI1r0SUu0SLWBo2NeaaQaUGdwd40G5tqaIleZJDUjghS5u1
- ftsMtTWZQ2EsUFgU3fvXgtxnibKnDcX8sxUrg3sxtkmAyRMhO/k18Bop/YvcI8/ZV1+eufy
- wql8ZI7/JdmNTSEPyT3Vnn1P4zG31KcmU132whpKqF7hRRgOC3Joc3T11ay+HNoAJ+ty/Zi
- Bp8JYRfaL3iJgGdOhM5XQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:87JozaQszNc=;p5OmE38unKw1/dDvL3/uB/XtT/c
- 2IZDMcaSww5LFPh67I8j/tSrIJdBXHZPRkCjLT76ltR5THwjf89zFmN1vb5fpHIwjUwKyrJJl
- K5fnjxu4Ay3ERpylmqnFRLjlgLyEawg78reOZszyLCYBJDL2wnGl602hrKd5u7/JuxxCmpzQC
- wEIu+VLJn9jOQZ9LJQkKUDyYI6Wb7jbhCRWnmnljJhGOQ5ZbsDxeTn8BIfBhx8yOxU5NJh13T
- m010Jgq2H1TRKJXB9Ws4+HxIZnvJoNlky8V6BHLSSue3fW+leFfOhZWDD+dsx9Gi/zbw5ovVx
- uAvs0SjuSiC7eF4GiAWQ9MEqLn1AhLGfWYa6pl2NLXFQ2nTEsNIExYBlgFWHCLd91jXYErnBH
- FHEQcvg2C/BFq+cmDrSfVH2XDXPYEuaVK/jpBNfKa3+D/IQ521sOf4zH1qhl+AOBA2dNjG7OU
- rmL/hU2+WQwBroeqeyaCSCRgjsx5eWwsSQeoJXMb/IM8drWkvl/sRw/wJbVd7KJed0GdAHK0o
- BfQYnGdiCCLsBnFbTBnpQce+rYOwfPPjzzupJdORlpD0I8RoYwKkhzX0ayAWrrF9XWi0C5Vpv
- BLwnTqX1S6fGOmLhz4KOBNuPj2nLCJZPZs1YyYVNha9mPlaVpZsx+wm8kb4z87vXVf1BYRTpL
- uzxB7WOVlp8sugHFwEUsXJFayIVCTZAzBtkTtRoVWeJdROYER4yAd7Y2baJCwnE7KgDxl2Jns
- znD74YrPJi2H8pFVUmuKNdsFyh5D4ab4EaKdpaeE2+48xS7Z8WbxE8BjsUq/RVv4CVbTmADAV
- +fukKamJVCaOrGqYlgfI73AUPio5cXooD29hb244olS38=
+Content-Transfer-Encoding: 8bit
 
-Am 15.03.24 um 12:51 schrieb Ilpo J=C3=A4rvinen:
+On 3/14/24 05:20, Arınç ÜNAL via B4 Relay wrote:
+> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> The MT7531 switch listens on PHY address 0x1f on an MDIO bus. I've got two
+> findings that support this. There's no bootstrapping option to change the
+> PHY address of the switch. The Linux driver hardcodes 0x1f as the PHY
+> address of the switch. So the reg property on the device tree is currently
+> ignored by the Linux driver.
+> 
+> Therefore, describe the correct PHY address on boards that have this
+> switch.
 
-> On Thu, 14 Mar 2024, Armin Wolf wrote:
->
->> Am 14.03.24 um 06:03 schrieb Ai Chao:
->>
->>> Add lenovo generic wmi driver to support camera button.
->>> The Camera button is a GPIO device. This driver receives ACPI notifyi
->>> when the camera button is switched on/off. This driver is used in
->>> Lenovo A70, it is a Computer integrated machine.
->>>
->>> Signed-off-by: Ai Chao <aichao@kylinos.cn>
->>> ---
->>> v8: Dev_deb convert to dev_err.
->>> v7: Add dev_dbg and remove unused dev in struct.
->>> v6: Modify SW_CAMERA_LENS_COVER to
->>> KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
->>> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_C=
-OVER.
->>> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct
->>> lenovo_wmi_priv.
->>> v3: Remove lenovo_wmi_remove function.
->>> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
->>>
->>>    drivers/platform/x86/Kconfig             |  12 +++
->>>    drivers/platform/x86/Makefile            |   1 +
->>>    drivers/platform/x86/lenovo-wmi-camera.c | 108 ++++++++++++++++++++=
-+++
->>>    3 files changed, 121 insertions(+)
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->>>
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
-ig
->>> index bdd302274b9a..9506a455b547 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->>>    	To compile this driver as a module, choose M here: the module
->>>    	will be called inspur-platform-profile.
->>>
->>> +config LENOVO_WMI_CAMERA
->>> +	tristate "Lenovo WMI Camera Button driver"
->>> +	depends on ACPI_WMI
->>> +	depends on INPUT
->>> +	help
->>> +	  This driver provides support for Lenovo camera button. The Camera
->>> +	  button is a GPIO device. This driver receives ACPI notify when the
->>> +	  camera button is switched on/off.
->>> +
->>> +	  To compile this driver as a module, choose M here: the module
->>> +	  will be called lenovo-wmi-camera.
->>> +
->>>    source "drivers/platform/x86/x86-android-tablets/Kconfig"
->>>
->>>    config FW_ATTR_CLASS
->>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Make=
-file
->>> index 1de432e8861e..217e94d7c877 100644
->>> --- a/drivers/platform/x86/Makefile
->>> +++ b/drivers/platform/x86/Makefile
->>> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
->>>    obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
->>>    obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->>>    obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
->>> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
->>>
->>>    # Intel
->>>    obj-y				+=3D intel/
->>> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c
->>> b/drivers/platform/x86/lenovo-wmi-camera.c
->>> new file mode 100644
->>> index 000000000000..f83e3ccd9189
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
->>> @@ -0,0 +1,108 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Lenovo WMI Camera Button Driver
->>> + *
->>> + * Author: Ai Chao <aichao@kylinos.cn>
->>> + * Copyright (C) 2024 KylinSoft Corporation.
->>> + */
->>> +
->>> +#include <linux/acpi.h>
->>> +#include <linux/device.h>
->>> +#include <linux/input.h>
->>> +#include <linux/module.h>
->>> +#include <linux/wmi.h>
->>> +
->>> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID
->>> "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
->>> +
->>> +struct lenovo_wmi_priv {
->>> +	struct input_dev *idev;
->>> +};
->>> +
->>> +enum {
->>> +	SW_CAMERA_OFF	=3D 0,
->>> +	SW_CAMERA_ON	=3D 1,
->>> +};
->>> +
->>> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_obj=
-ect
->>> *obj)
->>> +{
->>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
->>> +	u8 camera_mode;
->>> +
->>> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
->>> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
->>> +		return;
->>> +	}
->>> +
->>> +	if (obj->buffer.length !=3D 1) {
->>> +		dev_err(&wdev->dev, "Invalid buffer length %u\n",
->>> obj->buffer.length);
->>> +		return;
->>> +	}
->>> +
->>> +	/* obj->buffer.pointer[0] is camera mode:
->>> +	 *      0 camera close
->>> +	 *      1 camera open
->>> +	 */
->>> +	camera_mode =3D obj->buffer.pointer[0];
->>> +	if (camera_mode > SW_CAMERA_ON) {
->>> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
->>> +		return;
->>> +	}
->>> +
->>> +	if (camera_mode =3D=3D SW_CAMERA_ON) {
->>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 1);
->>> +		input_sync(priv->idev);
->>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 0);
->>> +	} else {
->>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 1);
->>> +		input_sync(priv->idev);
->>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 0);
->>> +	}
-> While not exactly wrong the if seems unnecessary, you could do:
->
-> 	unsigned int keycode;
->
-> 	...
->
-> 	keycode =3D camera_mode =3D=3D SW_CAMERA_ON ? KEY_CAMERA_ACCESS_ENABLE =
-:
-> 						KEY_CAMERA_ACCESS_DISABLE;
->
-> 	input_report_key(priv->idev, keycode, 1);
-> 	input_sync(priv->idev);
-> 	input_report_key(priv->idev, keycode, 0);
->>> +	input_sync(priv->idev);
->>> +}
-> Armin,
->
-> I tried to figure out the concurrency rules for the WMI notify handler b=
-ut
-> came up basically nothing. I suppose it boils down on ACPI notify handli=
-ng
-> and I couldn't find useful documentation about that either. :-/
->
-> Could you perhaps add this information into WMI documentation?
+Can we call it a pseudo PHY to use a similar terminology as what is done 
+through drivers/net/dsa/{bcm_sf2,b53}*?
 
-As far as i know, the ACPI notify handlers can be scheduled concurrently o=
-n all CPUs,
-see https://lore.kernel.org/all/7617703.EvYhyI6sBW@kreacher/ for details.
+This is not a real PHY as in it has no actual transceiver/digital signal 
+processing logic, this is a piece of logic that snoops for MDIO 
+transactions at that specific address and lets you access the switch's 
+internal register as if it was a MDIO device.
 
-I will add a short note about this to the WMI driver guide which i plan to=
- upstream
-soon (after the EC handler stuff is finished).
-
-Thanks,
-Armin Wolf
+LGTM otherwise!
+-- 
+Florian
 
