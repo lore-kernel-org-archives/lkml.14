@@ -1,155 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14211F94B;
-	Fri, 15 Mar 2024 18:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E248350A6D;
+	Fri, 15 Mar 2024 18:57:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710529000; cv=none; b=lwjt/Jy0+5dGwPlgG4EZna46I012luTwqQw34f7HS9r7VjkBHA8ICk4WZM//MXiAVMLnKGrmg6HiIt90ICnerwdRB4YvYatBk03GITEXTNDodH1zs/1/ahtybvkEMzqGKxBYLKTEj1sMI0WoArxPcFqDP+D6v+WFJTgKuC1RI/g=
+	t=1710529044; cv=none; b=EE/jls1K6wrk+/ELqD57MVgCLutdYrAxNhLuSOFsyi+U4worbs3Mhd6oIC+c7Tg3KE7ny9KTXrA9RgrPXqOrb5UNkYm7FuD/aqPEWG8D3i6kD8Y8K067+fFr+PSMvwdZagmGPzohD+PgqqOIC76QvuID+mcche0+vgiQ+xt4j4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710529000; c=relaxed/simple;
-	bh=dPjJRTej2L6vDTjZl0tMzl13uN4xNcrNG6FfSYbLkUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gbgWYu1tQTr+4APJ/Mt1Q7VqBI/xrxObHQ4iPu2FU+Z8q/U27v74OBF7tWuR45t7VIh1XrWHduHq8wzodcMJPGA38BXLBSWQxL1y9AZSz1KnUuAQ8jwNLXDjEa/TKpjdtteVknkVYCNtsTo2ntGPsS+2PYOLWDv9cCFD0MC6Wqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31DA5C433C7;
-	Fri, 15 Mar 2024 18:56:39 +0000 (UTC)
-Date: Fri, 15 Mar 2024 14:58:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: TP_printk() bug with %c, and more?
-Message-ID: <20240315145852.46125ac5@gandalf.local.home>
-In-Reply-To: <20240315190312.2bd6a198@booty>
-References: <20240315174900.14418f22@booty>
-	<20240315132146.29edf416@gandalf.local.home>
-	<20240315190312.2bd6a198@booty>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710529044; c=relaxed/simple;
+	bh=MQsyypS81JO76TfEPPZx9mOuORO7zteKR/F9MRkApbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pjXmKLUWguPZm8WfWoB19fPQDwxTUgvrKhWP2HLrrAyIOs/M0nal2OYqF0WTykxSRJDVFhABg92nYmhwnpKl0GtSBrD7b+0TWm/cNqJUG2dBk/lKuoiR9sKNd5tAX1FzSNQaM5FWHXD75q2VuUYj964gg+w24GRA1r2+e4IcOfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goldx2yJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goldx2yJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FDEC433C7;
+	Fri, 15 Mar 2024 18:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710529043;
+	bh=MQsyypS81JO76TfEPPZx9mOuORO7zteKR/F9MRkApbg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=goldx2yJFjCUs/tDH4ECoNUJmkjO2nceZWOQXLpByToYgd8WxWDWTMvFxxyCN+pUt
+	 /0dNRNQZ5y9gh4ttjUB9R+4KwLHghUc0M42NH3NiDzspPJmqI3PDABthrQtaFOdqrZ
+	 kyEVsm9WzgW2IUpAgHHgFHlUH8YEIhlLWLdHN8acKIVhr3BDu0EKGzbc3GwaeBfM2/
+	 NhO/sDGAA6GsJ1TT6Z/DhiZpNBpeI5avctj+BhMFR9Eas+jW7VR+L/KKr/+/CTdhKO
+	 ja5/+adYMLXaMOdC2Z+Cv7UdY2NKm4+CfDCV41gs0CqNBhSDkY3c7eAMnpShwOEJiY
+	 74O3zZd3cmKVg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	gregkh@linuxfoundation.org
+Subject: Linux 6.1.82
+Date: Fri, 15 Mar 2024 14:57:20 -0400
+Message-ID: <20240315185721.1842266-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 15 Mar 2024 19:03:12 +0100
-Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-> > > 
-> > > I've come across an unexpected behaviour in the kernel tracing
-> > > infrastructure that looks like a bug, or maybe two.
-> > > 
-> > > Cc-ing ASoC maintainers for as it appeared using ASoC traces, but it
-> > > does not look ASoC-specific.
-> > > 
-> > > It all started when using this trace-cmd sequence on an ARM64 board
-> > > running a mainline 6.8.0-rc7 kernel:
-> > > 
-> > >   trace-cmd record -e snd_soc_dapm_path ./my-play
-> > >   trace-cmd report
-> > > 
-> > > While this produces perfectly valid traces for other asoc events,
-> > > the snd_soc_dapm_path produces:
-> > > 
-> > >   snd_soc_dapm_path:    >c<* MIC1_EN <- (direct) <-
-> > > 
-> > > instead of the expected:
-> > > 
-> > >   snd_soc_dapm_path:    *MIC1 <- (direct) <- MIC1_EN
-> > > 
-> > > The originating macro is:
-> > > 
-> > > 	TP_printk("%c%s %s %s %s %s",
-> > > 		(int) __entry->path_node &&
-> > > 		(int) __entry->path_connect ? '*' : ' ',
-> > > 		__get_str(wname), DAPM_ARROW(__entry->path_dir),
-> > > 		__get_str(pname), DAPM_ARROW(__entry->path_dir),
-> > > 		__get_str(pnname))
-> > > 
-> > > It appears as if the %c placeholder always produces the three ">c<"
-> > > characters, the '*' or ' ' char is printed as the first %s, all the
-> > > other strings are shifted right by one position and the last string is
-> > > never printed.
-> > > 
-> > > On my x86_64 laptop running the default Ubuntu kernel (6.5) I'm able to
-> > > trace a few events having a '%c' in their TP_printk() macros and the
-> > > result is:
-> > > 
-> > >   intel_pipe_update_start: dev 0000:00:02.0, pipe >c<, frame=1,
-> > >   scanline=107856, min=2208, max=2154
-> > >     
-> > 
-> > What does /sys/kernel/tracing/trace show?  
-> 
-> It is correct:
-> 
->    intel_pipe_update_start: dev 0000:00:02.0, pipe B, frame=377644, scanline=1466, min=2154, max=2159
-> 
-> > If that's fine, then the bug is in libtraceevent and not the kernel.
-> > 
-> > I'm testing it out now, and I see %c not being processed properly by
-> > libtraceevent. I'll take a deeper look.  
-> 
-> Thanks.
-> 
-> > > originating from:
-> > > 
-> > >   TP_printk("dev %s, pipe %c, frame=%u, scanline=%u, min=%u, max=%u",
-> > > 
-> > > Here it looks like the %c produced ">c<" again, but apparently without
-> > > any shifting.
-> > > 
-> > > Back on the ARM64 board I found a couple interesting clues.
-> > > 
-> > > First, using the <debugfs>/tracing/ interface instead of trace-cmd, I'm
-> > > getting correctly formatted strings:
-> > > 
-> > > trace-cmd: snd_soc_dapm_path: >c<* HPOUT_L -> (direct) ->
-> > > debugfs:   snd_soc_dapm_path: *HPOUT_L <- (direct) <- HPOUT_POP_SOUND_L
-> > > 
-> > > Notice the arrows pointing to the opposite direction though. The correct
-> > > arrow is the one in the debugfs run.  
-> 
-> This other issue appears a separate bug however.
+I'm announcing the release of the 6.1.82 kernel.
 
-Can you make user you have the latest libtraceevent from:
+All users of the 6.1 kernel series must upgrade.
 
-   git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git
+The updated 6.1.y git tree can be found at:
+        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.1.y
+and can be browsed at the normal kernel.org git web browser:
+        https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-And apply this patch.
 
 Thanks,
+Sasha
 
--- Steve
+- ------------
 
-diff --git a/src/event-parse.c b/src/event-parse.c
-index d607556..61b0966 100644
---- a/src/event-parse.c
-+++ b/src/event-parse.c
-@@ -3732,8 +3732,19 @@ process_arg_token(struct tep_event *event, struct tep_print_arg *arg,
- 		arg->atom.atom = atom;
- 		break;
- 
--	case TEP_EVENT_DQUOTE:
- 	case TEP_EVENT_SQUOTE:
-+		arg->type = TEP_PRINT_ATOM;
-+		/* Make characters into numbers */
-+		if (asprintf(&arg->atom.atom, "%d", token[0]) < 0) {
-+			free_token(token);
-+			*tok = NULL;
-+			arg->atom.atom = NULL;
-+			return TEP_EVENT_ERROR;
-+		}
-+		free_token(token);
-+		type = read_token_item(event->tep, &token);
-+		break;
-+	case TEP_EVENT_DQUOTE:
- 		arg->type = TEP_PRINT_ATOM;
- 		arg->atom.atom = token;
- 		type = read_token_item(event->tep, &token);
+
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAmX0mg8ACgkQ3qZv95d3
+LNzr0xAAsq7KbI+iOpJ1QUuNbFVKuk5d4BrzhtVTe0GwwriKWPO1Hz8/7OuKyORr
+OmiWYs3rT6daI0n2lAhlF9o4u8A30n8Vu6EVcUklNOjZULH1kzLjwHFg48moKc9c
+Dieio0QAkkjkF3SfSghUI3/CjhLhmQqAcvXawkYEEG+SUIpXLWnJ5iSf4Gf88SvK
+GV9Kr4Y0fdZZ+5hCxo8BurIsnDCjewu6PLaMSfUbkMEsH8YQkjjo4Owvidx2UwJZ
+AohRB3/xjpZd3kzEeWo/l+GkQyxBSV0BpDvyTHl/vEepm1G1469Fw+movBFFGOgX
+lo6Mac387PpJAsTZfuG8w/HUBd/Qsqr3Ypr3K6bEvD7I0zJXwRZLfpedaoKz43yQ
+nAGDJ/RXJdqhW+N95sEtvJm5HSCErZqup6qHUx7pht1Z+QQrgSt7GjPFGSV6w90v
+ZAW77AZND3xlt746hbz2sXBxlMB7N9yy6rMN0ON6QDzj9RZhQUCBePqdOPXgZkU4
+ics5pqXbFtK6mAXgHWK97IXaFEcxjgjJiaKiNNcPrUq0wveANzfYB/5oaXhNph+c
+cmcL+/OpekamoA4MB90BQ3l/PfzaBofuYBLMjhGBBi/da18H0KdRbR7pWqDwI2iY
+tF0FuT9EsirSITxXu5LCcQJYPY8FmQXeVs1CjlrRd7m7Ev0nRSo=
+=0dE0
+-----END PGP SIGNATURE-----
