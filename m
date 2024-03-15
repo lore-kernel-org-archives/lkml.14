@@ -1,255 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6466B14A81
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3D914A9D;
+	Fri, 15 Mar 2024 08:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710490005; cv=none; b=ZTYVtpEkBhHBGKxLnH5KRtbTReOuNQf+86Gq/FhDkQx6qfVZQk13utZAaKITx2AyVycNi/PGv+BG3hpLTq/jBp6a0hGU6sXmyuziEqMZOte3g7arVIzbAXNfKWBQDFxEmqX8Hk7CpDHQzh5SEqF75t3qGJt6qUDsb8cdCYUHM0E=
+	t=1710490045; cv=none; b=hr5LWeMLOAGBwQs/DmuZpmM1svUNT5R06rIcQ1bfPMRmO7k+onexfmBEmcLSMyPyN3ZVA2v4NxjMcBqEJSNMZdLwnCKLEC1494G3Mt10Us13Xb5fCVNchJkvBLmsrfBHFtorN4/KYbzVq6NUjeRVHfUZbfyerU0wh3g3pUFx6eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710490005; c=relaxed/simple;
-	bh=5JjXqE38u0wCIujr+4TRlsMSuwAm9YX6+YLBWQQO298=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RQdzqMTEdh1vriSAUAumEz9kR+LpmU/k5lktlwbIwZwIpFxF74nZHMXBzpyWLAB+mXKyzBzFEqu90FSmH6x6dTkQmaNXIFNxdZ3EAFCjQWH4TNWvluk221VZOCXWHO50PdKq7xW9rlElZM38IGy26QjbJH58tOkcuxmtY4n7JLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSHLSHYN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSHLSHYN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6FCC43601
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710490004;
-	bh=5JjXqE38u0wCIujr+4TRlsMSuwAm9YX6+YLBWQQO298=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oSHLSHYNGzylGeM5jnKKBPjreaWnn09LLn6wJZqiB/E/ke/G8sBe566FNVRNegpWB
-	 fK2SAmCZazT8j9XYxrJm0zvvIlviHrN9lLIaVYOsvH29P7RGuH/92L51HJd2+b6E1c
-	 v9VaEwrDoG5PvWUWhmhQNm8j1fXVgrCl2lyurcNFv/BsSQMkXMUjLr3K9pPSjDu/Sw
-	 SRLO3mYuOqSZ2Zg5TLJcynMPZ3AEm2SpGplxa2wBOrztM++oGBsWG2XCrLevhSWNiB
-	 W8ChQlwGcZuGgeHtajANJOaiavnkSdkfSDfV8CnYszKevg9EjmDcYpCYEV0NJrT17h
-	 S2zspi5QwiHyw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d4541bf57eso23315281fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 01:06:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9Nlf1APXUcjoGeUdWnRll4SEyl36orxU2fCA2e5cPX4r2F+ZcTFpuHd4uKCX8QyfN2+HrrbbHBLzEkyzHqeTwBZY31d0v6pjVggGC
-X-Gm-Message-State: AOJu0Yy2oGEHMd4aXdF6+0nSxvsgAriFdI18a0Hqp/TGS4twEHLiIaqd
-	5iVDfM89FCNsw2NrzGV3B/uOt4j8iiWts7bq0eeQ7MMRfpfgC2kD2e09UKI/xj1fs8OVkGLVSHB
-	7u3SDTfdQN3wtF+wS4RRW41z9ztY=
-X-Google-Smtp-Source: AGHT+IFc1FAwEp/Ie3iwJRtFwE551q+JfGcABAQzn89RhJdhgQgQNKNmApZYs2m5wSh8ve2nmrWUuEcL2OonYiSHE7I=
-X-Received: by 2002:a2e:90ce:0:b0:2d4:67e3:aa47 with SMTP id
- o14-20020a2e90ce000000b002d467e3aa47mr2640997ljg.48.1710490003010; Fri, 15
- Mar 2024 01:06:43 -0700 (PDT)
+	s=arc-20240116; t=1710490045; c=relaxed/simple;
+	bh=jL1Y5Rf0DpIO2PgtH24jYFKN2AV9dJqQDRYDr/6rsUw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ggU9urG2hHViFoF9q2CcT//1KwtMjkPj/rvBq4WJlsYNfm/dsUuwQRhvBpbNKdtOOOLt7dkKSM6GeMKP8O9/4aguzpUWSAbjs6gHm8iTrfNLmjRwsjNEL4KJixwzGrIouhozoGu3yaWhVPRtnFfMKwOkPbm/0CYbdsugS7tw5LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxTOm0AfRlQ2UZAA--.51407S3;
+	Fri, 15 Mar 2024 16:07:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c6uAfRl4MZaAA--.41676S5;
+	Fri, 15 Mar 2024 16:07:14 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Juergen Gross <jgross@suse.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: [PATCH v7 3/7] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+Date: Fri, 15 Mar 2024 16:07:06 +0800
+Message-Id: <20240315080710.2812974-4-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240315080710.2812974-1-maobibo@loongson.cn>
+References: <20240315080710.2812974-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315063154.696633-1-liuyuntao12@huawei.com>
-In-Reply-To: <20240315063154.696633-1-liuyuntao12@huawei.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 15 Mar 2024 09:06:31 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH+FaddHV5--kqB_wVgw_M682MvchPB1BoCuDuA6vVyvg@mail.gmail.com>
-Message-ID: <CAMj1kXH+FaddHV5--kqB_wVgw_M682MvchPB1BoCuDuA6vVyvg@mail.gmail.com>
-Subject: Re: [PATCH-next v3] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-To: Yuntao Liu <liuyuntao12@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	arnd@arndb.de, geert@linux-m68k.org, linux@armlinux.org.uk, afd@ti.com, 
-	akpm@linux-foundation.org, kirill.shutemov@linux.intel.com, 
-	geert+renesas@glider.be, corbet@lwn.net, rppt@kernel.org, robh@kernel.org, 
-	tglx@linutronix.de, linus.walleij@linaro.org, maskray@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx_c6uAfRl4MZaAA--.41676S5
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGr13ZF15ZryftrW5WF48uFX_yoWrWF17pF
+	Z3urykWr48GryfA39rtrZ8Ww15uF4kGr12qFW3J3yUCF4UXryrAr4vkrWDAFyDKws5C3WI
+	qF15tr1aqF4DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1q6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jODGOUUUUU=
 
-On Fri, 15 Mar 2024 at 07:37, Yuntao Liu <liuyuntao12@huawei.com> wrote:
->
-> The current arm32 architecture does not yet support the
-> HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
-> embedded scenarios, and enabling this feature would be beneficial for
-> reducing the size of the kernel image.
->
-> In order to make this work, we keep the necessary tables by annotating
-> them with KEEP, also it requires further changes to linker script to KEEP
-> some tables and wildcard compiler generated sections into the right place.
-> When using ld.lld for linking, the KEEP keyword is not recognized within
-> the OVERLAY command, Ard proposed a concise method to solve this problem.
->
-> It boots normally with defconfig, vexpress_defconfig and tinyconfig.
-> The size comparison of zImage is as follows:
-> defconfig       vexpress_defconfig      tinyconfig
-> 5137712         5138024                 424192          no dce
-> 5032560         4997824                 298384          dce
-> 2.0%            2.7%                    29.7%           shrink
->
-> When using smaller config file, there is a significant reduction in the
-> size of the zImage.
->
-> We also tested this patch on a commercially available single-board
-> computer, and the comparison is as follows:
-> a15eb_config
-> 2161384         no dce
-> 2092240         dce
-> 3.2%            shrink
->
-> The zImage size has been reduced by approximately 3.2%, which is 70KB on
-> 2.1M.
->
-> Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
-> Tested-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v3:
->    - A better way to KEEP .vectors section for ld.lld linking.
->
-> v2:
->    - Support config XIP_KERNEL.
->    - Support LLVM compilation.
->    - https://lore.kernel.org/all/20240307151231.654025-1-liuyuntao12@huawei.com/
->
-> v1: https://lore.kernel.org/all/20240220081527.23408-1-liuyuntao12@huawei.com/
-> ---
->  arch/arm/Kconfig                       | 1 +
->  arch/arm/boot/compressed/vmlinux.lds.S | 6 +++++-
->  arch/arm/include/asm/vmlinux.lds.h     | 2 +-
->  arch/arm/kernel/entry-armv.S           | 3 +++
->  arch/arm/kernel/vmlinux-xip.lds.S      | 4 ++--
->  arch/arm/kernel/vmlinux.lds.S          | 6 +++---
->  6 files changed, 15 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index b14aed3a17ab..45f25f6e7a62 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -114,6 +114,7 @@ config ARM
->         select HAVE_KERNEL_XZ
->         select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
->         select HAVE_KRETPROBES if HAVE_KPROBES
-> +       select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
->         select HAVE_OPTPROBES if !THUMB2_KERNEL
-> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-> index 3fcb3e62dc56..affd30714f01 100644
-> --- a/arch/arm/boot/compressed/vmlinux.lds.S
-> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
-> @@ -89,7 +89,11 @@ SECTIONS
->       * The EFI stub always executes from RAM, and runs strictly before the
->       * decompressor, so we can make an exception for its r/w data, and keep it
->       */
-> +#ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-> +    *(.data.* .bss.*)
-> +#else
->      *(.data.efistub .bss.efistub)
-> +#endif
->      __pecoff_data_end = .;
->
+Instruction cpucfg can be used to get processor features. And there
+is trap exception when it is executed in VM mode, and also it is
+to provide cpu features to VM. On real hardware cpucfg area 0 - 20
+is used.  Here one specified area 0x40000000 -- 0x400000ff is used
+for KVM hypervisor to privide PV features, and the area can be extended
+for other hypervisors in future. This area will never be used for
+real HW, it is only used by software.
 
-This is still not right.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/inst.h      |  1 +
+ arch/loongarch/include/asm/loongarch.h | 10 +++++
+ arch/loongarch/kvm/exit.c              | 59 +++++++++++++++++++-------
+ 3 files changed, 54 insertions(+), 16 deletions(-)
 
-Can you just add -fno-data-sections to cflags-$(CONFIG_ARM) in
-drivers/firmware/efi/libstub/Makefile?
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index d8f637f9e400..ad120f924905 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -67,6 +67,7 @@ enum reg2_op {
+ 	revhd_op	= 0x11,
+ 	extwh_op	= 0x16,
+ 	extwb_op	= 0x17,
++	cpucfg_op	= 0x1b,
+ 	iocsrrdb_op     = 0x19200,
+ 	iocsrrdh_op     = 0x19201,
+ 	iocsrrdw_op     = 0x19202,
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 46366e783c84..a1d22e8b6f94 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -158,6 +158,16 @@
+ #define  CPUCFG48_VFPU_CG		BIT(2)
+ #define  CPUCFG48_RAM_CG		BIT(3)
+ 
++/*
++ * cpucfg index area: 0x40000000 -- 0x400000ff
++ * SW emulation for KVM hypervirsor
++ */
++#define CPUCFG_KVM_BASE			0x40000000UL
++#define CPUCFG_KVM_SIZE			0x100
++#define CPUCFG_KVM_SIG			CPUCFG_KVM_BASE
++#define  KVM_SIGNATURE			"KVM\0"
++#define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
++
+ #ifndef __ASSEMBLY__
+ 
+ /* CSR */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 923bbca9bd22..a8d3b652d3ea 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -206,10 +206,50 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 	return EMULATE_DONE;
+ }
+ 
+-static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
++static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+ {
+ 	int rd, rj;
+ 	unsigned int index;
++	unsigned long plv;
++
++	rd = inst.reg2_format.rd;
++	rj = inst.reg2_format.rj;
++	++vcpu->stat.cpucfg_exits;
++	index = vcpu->arch.gprs[rj];
++
++	/*
++	 * By LoongArch Reference Manual 2.2.10.5
++	 * Return value is 0 for undefined cpucfg index
++	 *
++	 * Disable preemption since hw gcsr is accessed
++	 */
++	preempt_disable();
++	plv = kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD) >> CSR_CRMD_PLV_SHIFT;
++	switch (index) {
++	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
++		vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
++		break;
++	case CPUCFG_KVM_SIG:
++		/*
++		 * Cpucfg emulation between 0x40000000 -- 0x400000ff
++		 * Return value with 0 if executed in user mode
++		 */
++		if ((plv & CSR_CRMD_PLV) == PLV_KERN)
++			vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
++		else
++			vcpu->arch.gprs[rd] = 0;
++		break;
++	default:
++		vcpu->arch.gprs[rd] = 0;
++		break;
++	}
++
++	preempt_enable();
++	return EMULATE_DONE;
++}
++
++static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
++{
+ 	unsigned long curr_pc;
+ 	larch_inst inst;
+ 	enum emulation_result er = EMULATE_DONE;
+@@ -224,21 +264,8 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+ 	er = EMULATE_FAIL;
+ 	switch (((inst.word >> 24) & 0xff)) {
+ 	case 0x0: /* CPUCFG GSPR */
+-		if (inst.reg2_format.opcode == 0x1B) {
+-			rd = inst.reg2_format.rd;
+-			rj = inst.reg2_format.rj;
+-			++vcpu->stat.cpucfg_exits;
+-			index = vcpu->arch.gprs[rj];
+-			er = EMULATE_DONE;
+-			/*
+-			 * By LoongArch Reference Manual 2.2.10.5
+-			 * return value is 0 for undefined cpucfg index
+-			 */
+-			if (index < KVM_MAX_CPUCFG_REGS)
+-				vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
+-			else
+-				vcpu->arch.gprs[rd] = 0;
+-		}
++		if (inst.reg2_format.opcode == cpucfg_op)
++			er = kvm_emu_cpucfg(vcpu, inst);
+ 		break;
+ 	case 0x4: /* CSR{RD,WR,XCHG} GSPR */
+ 		er = kvm_handle_csr(vcpu, inst);
+-- 
+2.39.3
 
-
->      /*
-> @@ -125,7 +129,7 @@ SECTIONS
->
->    . = BSS_START;
->    __bss_start = .;
-> -  .bss                 : { *(.bss) }
-> +  .bss                 : { *(.bss .bss.*) }
->    _end = .;
->
->    . = ALIGN(8);                /* the stack must be 64-bit aligned */
-> diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-> index 4c8632d5c432..d60f6e83a9f7 100644
-> --- a/arch/arm/include/asm/vmlinux.lds.h
-> +++ b/arch/arm/include/asm/vmlinux.lds.h
-> @@ -42,7 +42,7 @@
->  #define PROC_INFO                                                      \
->                 . = ALIGN(4);                                           \
->                 __proc_info_begin = .;                                  \
-> -               *(.proc.info.init)                                      \
-> +               KEEP(*(.proc.info.init))                                \
->                 __proc_info_end = .;
->
->  #define IDMAP_TEXT                                                     \
-> diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-> index 6150a716828c..f01d23a220e6 100644
-> --- a/arch/arm/kernel/entry-armv.S
-> +++ b/arch/arm/kernel/entry-armv.S
-> @@ -1065,6 +1065,7 @@ vector_addrexcptn:
->         .globl  vector_fiq
->
->         .section .vectors, "ax", %progbits
-> +       .reloc  .text, R_ARM_NONE, .
->         W(b)    vector_rst
->         W(b)    vector_und
->  ARM(   .reloc  ., R_ARM_LDR_PC_G0, .L__vector_swi              )
-> @@ -1078,6 +1079,7 @@ THUMB(    .reloc  ., R_ARM_THM_PC12, .L__vector_swi               )
->
->  #ifdef CONFIG_HARDEN_BRANCH_HISTORY
->         .section .vectors.bhb.loop8, "ax", %progbits
-> +       .reloc  .text, R_ARM_NONE, .
->         W(b)    vector_rst
->         W(b)    vector_bhb_loop8_und
->  ARM(   .reloc  ., R_ARM_LDR_PC_G0, .L__vector_bhb_loop8_swi    )
-> @@ -1090,6 +1092,7 @@ THUMB(    .reloc  ., R_ARM_THM_PC12, .L__vector_bhb_loop8_swi     )
->         W(b)    vector_bhb_loop8_fiq
->
->         .section .vectors.bhb.bpiall, "ax", %progbits
-> +       .reloc  .text, R_ARM_NONE, .
->         W(b)    vector_rst
->         W(b)    vector_bhb_bpiall_und
->  ARM(   .reloc  ., R_ARM_LDR_PC_G0, .L__vector_bhb_bpiall_swi   )
-> diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
-> index c16d196b5aad..5eddb75a7174 100644
-> --- a/arch/arm/kernel/vmlinux-xip.lds.S
-> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
-> @@ -63,7 +63,7 @@ SECTIONS
->         . = ALIGN(4);
->         __ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
->                 __start___ex_table = .;
-> -               ARM_MMU_KEEP(*(__ex_table))
-> +               ARM_MMU_KEEP(KEEP(*(__ex_table)))
->                 __stop___ex_table = .;
->         }
->
-> @@ -83,7 +83,7 @@ SECTIONS
->         }
->         .init.arch.info : {
->                 __arch_info_begin = .;
-> -               *(.arch.info.init)
-> +               KEEP(*(.arch.info.init))
->                 __arch_info_end = .;
->         }
->         .init.tagtable : {
-> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-> index bd9127c4b451..de373c6c2ae8 100644
-> --- a/arch/arm/kernel/vmlinux.lds.S
-> +++ b/arch/arm/kernel/vmlinux.lds.S
-> @@ -74,7 +74,7 @@ SECTIONS
->         . = ALIGN(4);
->         __ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
->                 __start___ex_table = .;
-> -               ARM_MMU_KEEP(*(__ex_table))
-> +               ARM_MMU_KEEP(KEEP(*(__ex_table)))
->                 __stop___ex_table = .;
->         }
->
-> @@ -99,7 +99,7 @@ SECTIONS
->         }
->         .init.arch.info : {
->                 __arch_info_begin = .;
-> -               *(.arch.info.init)
-> +               KEEP(*(.arch.info.init))
->                 __arch_info_end = .;
->         }
->         .init.tagtable : {
-> @@ -116,7 +116,7 @@ SECTIONS
->  #endif
->         .init.pv_table : {
->                 __pv_table_begin = .;
-> -               *(.pv_table)
-> +               KEEP(*(.pv_table))
->                 __pv_table_end = .;
->         }
->
-> --
-> 2.34.1
->
