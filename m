@@ -1,101 +1,123 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ABE1758B
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E931B17736
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710494104; cv=none; b=XUtPsPiqr92Levp1Htr4Zy3+BwDfurN8OULf0jQUSDuzZf9AS5TRL5wrpWVF4oQFddtIE55UoadrS/GP8uo4FPHWp9dXlOVW2Wq7wWIJsGz0NWGf2qd1Fb7H6no/fJ04PwW3cD8/1JhJ3En9zOMolxgvYAONWUTMX7AJ5z5mkmM=
+	t=1710494127; cv=none; b=Pv8UvGXKV0s7O7VGQtdyXhrHDrtb84QCoo8X0lGEPE4qbjDq1zyugaVdsUjNbL5Kd/DPfeieUIZ3pYIzHcZ16LWVuqdGs7oF0s9jcYRPA3rYkczDJkuJxIMAsCLSnyE16SxsZ+adSIakbHHeqFBzK9YtMXg++sXwZkrBSQvJF50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710494104; c=relaxed/simple;
-	bh=s8YNiJQqowuZf+XZsxxS/0ZQiWZPcjTmWHxl7bNoeXQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mVNOywDhZ+V53wk5K/YbkGzz8WVr/ia66mmqPHoYi6MYAC8T0yj9JjOOUcc2MoeMz0tB5XoYjbz1rBMF447HXermwYs4I3ZPAR17qkiTeQbmrernXVpz9aLmnpX9CdVg2SBpih3Wl3Cs58u0OuKmwN6nZPBooy09Mq3mhTpG3E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JIm6ayZn; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710494127; c=relaxed/simple;
+	bh=acrQ5oOzFvIptP0m55ggct7J15MBntUB7Hgt+FmRFRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z7hbgdOwF5xI3+S8t/Qop51CMhSRkR2HTl0Ck3C94DunAAIvClGHhPZaKIbV20XUu/LYGozxKXBVHZIpEwZHZ89T4MAOuHySnProtVbDmMKfvISooFVnl0hSsDKSz2gKHwq0Dr8ps5cUxnqYIQKRAdYPO6eNfDzuVpZbayrBvj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j7CQdFq4; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIm6ayZn"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-568ac71eedaso215383a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 02:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710494101; x=1711098901; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QsvIcmB6q11qBlE1k9pcuOdnVgySpwfRcM8NSNvHquc=;
-        b=JIm6ayZny4KvPavVJFZLSebpnen8vJ56idetkiB+02VoCgWKgpi/o0DJQa/4Pl7q1s
-         5G45zfYhpD0STV8z8nktdCaIc99cEtBGjHYCKS/HyO7s+iGgaqMUzUzV/2vYZgoG65tt
-         R7/MY+P7tKdODiuORjtUjNvgUzB7I9e6XK6Wci9eXNvA8O2WoDpRGjoQOZyIzZFsG5h+
-         uo4wpuoRp571nNlYVWsQC3Xbcf21WpS+XH3Ljn4DYy93S6jhfNm5HhfIb+8XYKKot/jG
-         S3vbGmNHcn7vvG2J7qpDZ/JWStMS1IVEh/bnR0eF/Q07+d2DXTgNaYLJXcCIEZY7tQ3e
-         gXxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710494101; x=1711098901;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QsvIcmB6q11qBlE1k9pcuOdnVgySpwfRcM8NSNvHquc=;
-        b=w6g039cfK8ms2AnP82a9UB+vPl6jwaMmWPfiNRnqim+fj9JAJUHWE/cjcDRCqgqXFk
-         Wgk/ICTKvBVN+EvuLNNPB974qkEDNagjtnf4YyvHRqWjrMHXElZWtwF/j8LEf+sIkAEa
-         DCJhHv5NBOEejwyDaW00xgBIqFOXeibLDk7xwqxReJ8a+reOfPkrCrFY+482r2vSQ9qc
-         mdUxttaMBxODI1r491REx2PZ+d8FLodikh8oGxZIwnpb/0XJfPZVZv6Vp5W+Y/t28f05
-         Y2zCwyaA5weiSXlbTp5G5hweY9LbLtf+G/DrszyKnqlM4xcH0AsZ5OwYLLLxsw24wQJ+
-         FY3Q==
-X-Gm-Message-State: AOJu0YylO0vxzMnlwi3aIi6lQj74tAoK2E6gndGYuMGglZcuFW6HMg6a
-	ulN/ErTHwlLuIHAHKZrRMw1YclgSXCXJTz6vvsPaTT5Io7gEo/VnScRRddjGL6k=
-X-Google-Smtp-Source: AGHT+IFVn+QKlOWff5qOU3QNlE3EL84E5qMXfzbrDjk9BTg4nPfsVr4HqVnj7DzLykUOQrsrPQMeAA==
-X-Received: by 2002:a17:906:3097:b0:a3f:1250:5c3e with SMTP id 23-20020a170906309700b00a3f12505c3emr2574061ejv.0.1710494100715;
-        Fri, 15 Mar 2024 02:15:00 -0700 (PDT)
-Received: from localhost.localdomain ([87.201.87.115])
-        by smtp.gmail.com with ESMTPSA id qk26-20020a170906d9da00b00a45bb14b1a5sm1505836ejb.89.2024.03.15.02.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 02:15:00 -0700 (PDT)
-From: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: dxu@dxuuu.xyz,
-	dmitrii.bundin.a@gmail.com,
-	vmalik@redhat.com,
-	ast@kernel.org,
-	andrii@kernel.org,
-	ndesaulniers@google.com
-Subject: [PATCH] tools/resolve_btfids: Include linux/types.h
-Date: Fri, 15 Mar 2024 12:14:34 +0300
-Message-Id: <20240315091434.10622-1-dmitrii.bundin.a@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j7CQdFq4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1710494124;
+	bh=acrQ5oOzFvIptP0m55ggct7J15MBntUB7Hgt+FmRFRg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j7CQdFq496EcdadWXv01UmcL6cPMnEne0Ve8NgUX6EIsZfO28poLm/zYFElsRmg8r
+	 L02tS8PomCFcYDO2g/Fpm6YlBqVX/p3IqIaxspuWPkGOYg1N1bGS+r6vAxDsKVKg+e
+	 xiDOpoNn6GD1INtI2opCCnng8fin2PPXPROdpsqeOZhWLzYqRG/i+eHB+mYljXN4CE
+	 sBKniqwVIkFU3vB2+zdfX0ICiRTuEItOr+lnz/V2pFkMZrcCk4q5rvTxNqt5uvNxXJ
+	 AewYrKTKhrLaqm9vCBSfDpgEFOzbsvh9u3hyfcFeMqChvHglqGLhJr0cKE8r+7M/1i
+	 pTRd13IOCOfWg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 36ED137820FD;
+	Fri, 15 Mar 2024 09:15:23 +0000 (UTC)
+Message-ID: <d295a448-1b50-47be-92a2-770501c83e18@collabora.com>
+Date: Fri, 15 Mar 2024 10:15:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mediatek: dsi: Correct calculation formula of PHY Timing
+To: Shuijing Li <shuijing.li@mediatek.com>, chunkuang.hu@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ matthias.bgg@gmail.com, jitao.shi@mediatek.com
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240315072945.19502-1-shuijing.li@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240315072945.19502-1-shuijing.li@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When compiling the kernel there's no type definition for u32 within the
-translation unit causing compilation errors of the following format:
+Il 15/03/24 08:29, Shuijing Li ha scritto:
+> This patch correct calculation formula of PHY timing.
+> Make actual phy timing more accurate.
+> 
 
-btf_ids.h:7:2: error: unknown type name ‘u32’
+More accurate in which cases? By how much? On which SoC(s)?
 
-To avoid such errors it's possible to include the common header file
-linux/types.h containing the required definition.
+I agree about those changes if those are improving the PHY timing, but
+can you please document what's going on?
 
-Signed-off-by: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
----
- tools/include/linux/btf_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks,
+Angelo
 
-diff --git a/tools/include/linux/btf_ids.h b/tools/include/linux/btf_ids.h
-index 72535f00572f..7969607efe0d 100644
---- a/tools/include/linux/btf_ids.h
-+++ b/tools/include/linux/btf_ids.h
-@@ -3,6 +3,8 @@
- #ifndef _LINUX_BTF_IDS_H
- #define _LINUX_BTF_IDS_H
- 
-+#include <linux/types.h>
-+
- struct btf_id_set {
- 	u32 cnt;
- 	u32 ids[];
--- 
-2.17.1
+> Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
+> ---
+>   drivers/gpu/drm/mediatek/mtk_dsi.c | 33 +++++++++++++++---------------
+>   1 file changed, 17 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index a2fdfc8ddb15..d1bd7d671880 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -235,22 +235,23 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+>   	u32 data_rate_mhz = DIV_ROUND_UP(dsi->data_rate, 1000000);
+>   	struct mtk_phy_timing *timing = &dsi->phy_timing;
+>   
+> -	timing->lpx = (60 * data_rate_mhz / (8 * 1000)) + 1;
+> -	timing->da_hs_prepare = (80 * data_rate_mhz + 4 * 1000) / 8000;
+> -	timing->da_hs_zero = (170 * data_rate_mhz + 10 * 1000) / 8000 + 1 -
+> -			     timing->da_hs_prepare;
+> -	timing->da_hs_trail = timing->da_hs_prepare + 1;
+> -
+> -	timing->ta_go = 4 * timing->lpx - 2;
+> -	timing->ta_sure = timing->lpx + 2;
+> -	timing->ta_get = 4 * timing->lpx;
+> -	timing->da_hs_exit = 2 * timing->lpx + 1;
+> -
+> -	timing->clk_hs_prepare = 70 * data_rate_mhz / (8 * 1000);
+> -	timing->clk_hs_post = timing->clk_hs_prepare + 8;
+> -	timing->clk_hs_trail = timing->clk_hs_prepare;
+> -	timing->clk_hs_zero = timing->clk_hs_trail * 4;
+> -	timing->clk_hs_exit = 2 * timing->clk_hs_trail;
+> +	timing->lpx = (80 * data_rate_mhz / (8 * 1000)) + 1;
+> +	timing->da_hs_prepare = (59 * data_rate_mhz + 4 * 1000) / 8000 + 1;
+> +	timing->da_hs_zero = (163 * data_rate_mhz + 11 * 1000) / 8000 + 1 -
+> +		timing->da_hs_prepare;
+> +	timing->da_hs_trail = (78 * data_rate_mhz + 7 * 1000) / 8000 + 1;
+> +
+> +	timing->ta_go = 4 * timing->lpx;
+> +	timing->ta_sure = 3 * timing->lpx / 2;
+> +	timing->ta_get = 5 * timing->lpx;
+> +	timing->da_hs_exit = (118 * data_rate_mhz / (8 * 1000)) + 1;
+> +
+> +	timing->clk_hs_prepare = (57 * data_rate_mhz / (8 * 1000)) + 1;
+> +	timing->clk_hs_post = (65 * data_rate_mhz + 53 * 1000) / 8000 + 1;
+> +	timing->clk_hs_trail = (78 * data_rate_mhz + 7 * 1000) / 8000 + 1;
+> +	timing->clk_hs_zero = (330 * data_rate_mhz / (8 * 1000)) + 1 -
+> +		timing->clk_hs_prepare;
+> +	timing->clk_hs_exit = (118 * data_rate_mhz / (8 * 1000)) + 1;
+>   
+>   	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+>   		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+
+
 
