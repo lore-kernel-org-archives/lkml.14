@@ -1,206 +1,305 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412851BC2C
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4991BC4D;
+	Fri, 15 Mar 2024 11:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710503337; cv=none; b=LTeOxBHd8f4T+YuBm7vhPtevhq0L/u/DsXjVaNcM++AitB/R8O2+X7Z8f4jOSs2iw1FoyeQ6VTuXsF4fEosRyiDLXGkLp1Ug/bCOfw1zIjlvxmuTZyVOVRrKQBnhBQFAVQekSjTZiikRwkds1LM3TrUjFWYCJZdWw9bvpu50WkA=
+	t=1710503439; cv=none; b=mDC0ZES/SU0szFxnV9ZTcir1hTFx2shOWQBow0wwA5XQk/Ll5YrFbawyT/X/7bpMmLKZXrbraogUOqjbpLxFqgMfvmp0hnmQyOy0ortEEI8NTN/ROd3MBCdQaAAcilxCVyWxQs42ub+hkcMFebg0oF856bo1FF/Mt8RlFwT77x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710503337; c=relaxed/simple;
-	bh=7rNJOrm1QFjVhtTF12lZNiWHY0qmF8UDaoRfwz45z+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gEhG7l/S8j7y1pRwjKdEy/Ri/s5lytW5YGP8PWSI/ZLCdODRqiWHKGsKGSSyhYsJihGc+Ynz2JZhXjl/0iFHXSHRgkssCMBfMkN0tTMflrRwTufL9iW+BpmP1udU2cC+NChEasYBmhVef7BRPdJlH2DAJXz7fGuwaP2ZZawfVtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Tx2Yt4m8rz1vwMH;
-	Fri, 15 Mar 2024 19:48:02 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2F861A0172;
-	Fri, 15 Mar 2024 19:48:46 +0800 (CST)
-Received: from [10.67.109.211] (10.67.109.211) by
- dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 15 Mar 2024 19:48:46 +0800
-Message-ID: <b3e3f664-f8ad-41d7-b8d5-3c83818ff489@huawei.com>
-Date: Fri, 15 Mar 2024 19:48:46 +0800
+	s=arc-20240116; t=1710503439; c=relaxed/simple;
+	bh=5me4MpQUzHBIAyZZmzqVKhBXLOvXSeBvU6Zqe0D70Mk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aLiXGxmHb5B3Y35c/GTYMgbX773KJ+VMM9mgtvruXXk0aF6c2PRgPLxvLtT+IFVLCP3qTi1bEPgfRQNsQLRJyLM5WzXbe2FLSSIYMtaXo5iWujIiw1416GP5I1h3L+055fnGllWoy3bYwd8rpw06XM6EosktiASOw/mppSdnKf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSKfMvxD; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSKfMvxD"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-568a5e15ae8so1657687a12.0;
+        Fri, 15 Mar 2024 04:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710503436; x=1711108236; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vRgmGDbr9L2V3Xbw1VXsP1cW1O/+83SnI0SSy+HlJx4=;
+        b=WSKfMvxDXqtVo8QT3jVD9h5+ieGxyG2euElTMr98pWA4U8QnnOmspaLZ/9gsWgk9fd
+         /45fgtoZZHtvz1wiVb4AlRW08lRRQJoi+MGAmh0Pm2ulgLtSF4aK67j687jvST4aw/aj
+         yqRXo4SHw0lrRceOUJpyeIxbxveDdRESNQj2Sq2QHN7FW/Yrp4Q1CB1koryWCR1f76jB
+         AwNNxFV9ZgZcDbFWrgGlX4R/wkoGMtnZQssBykrvAYXvJxizcgSuy2oCGwxt0La+dhWu
+         uLIOXqcHRg6lddX9hr6xTpbj6cTf/s6CnXvYiw1Wv0cbc3Hqmv/Fb9UBiq0BdVXeTODT
+         +hOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710503436; x=1711108236;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vRgmGDbr9L2V3Xbw1VXsP1cW1O/+83SnI0SSy+HlJx4=;
+        b=g5lW5wRmOhWLHypY13ka6C4+XY+m85CU6mjcwfzq+WjgXGw2Vh8yQZcfc0SpjAZM2M
+         lJmj9+evWN+XMz8dX2rdE/tfeDFd+7EvolaK07zLr5LI75ljACF0t/jTndb0FeVprqkt
+         5G8xgtsYXy+qVPa0ovE2GDzqsyM5Q8d+vcCMSS2NW1x1sx6yi8LDkljcpylzNqsois89
+         1foFbnI6SQSRztxAIehSTIOgMTJRVE/w0sgC/5+g8kyc0hQprL6YULOmPpT72VQK4yLc
+         8t0D29PMojf7I8JugBgmt9q2x66oKo80n+YODCkd13IaeWQllfitjUU0pXyLPlduf9n8
+         BV2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdkodsTJLZpG8QJvHRzk13fFwYRp9pDLb7Y+aidwrtZgz116c2ZTOg4vRLDRdSdoH/0zLnhB5890Px5V64gSFnrw/UxlLb/Bv0WIieh3+hMPiDcmzXMvkYUcUP+uUy9WrRIWG0mw==
+X-Gm-Message-State: AOJu0Yxk6Me96p87tdh7z/5l4htMfOuKHAw9sAoCWcbCbIlwz1bYbQd0
+	ZkJh6lSgLfvv8wvVVlz/Mqq+cKqro2Fhcy3lmcrxOYFeTC682Kfu
+X-Google-Smtp-Source: AGHT+IFEFByoovbYhj/9o6d4RldFJLNtIRiP4vqehi8OtR8upquQ/pPaWuhTwxiyHTaggdoAj8+SGg==
+X-Received: by 2002:a17:906:9c8e:b0:a46:66c6:2d5a with SMTP id fj14-20020a1709069c8e00b00a4666c62d5amr3740897ejc.54.1710503436014;
+        Fri, 15 Mar 2024 04:50:36 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
+        by smtp.gmail.com with ESMTPSA id v10-20020a170906338a00b00a4679ce135dsm1122962eja.216.2024.03.15.04.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 04:50:35 -0700 (PDT)
+Message-ID: <9e05b15d086c57ea94b410b6bf72a6d22a9550b9.camel@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: axi-pwmgen: support version 2.00.a
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de, 
+ michael.hennerich@analog.com, nuno.sa@analog.com,
+ devicetree@vger.kernel.org,  robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ dlechner@baylibre.com
+Date: Fri, 15 Mar 2024 12:54:03 +0100
+In-Reply-To: <20240314204722.1291993-3-tgamblin@baylibre.com>
+References: <20240314204722.1291993-1-tgamblin@baylibre.com>
+	 <20240314204722.1291993-3-tgamblin@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH-next v3] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<arnd@arndb.de>, <geert@linux-m68k.org>, <linux@armlinux.org.uk>,
-	<afd@ti.com>, <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
-	<geert+renesas@glider.be>, <corbet@lwn.net>, <rppt@kernel.org>,
-	<robh@kernel.org>, <tglx@linutronix.de>, <linus.walleij@linaro.org>,
-	<maskray@google.com>
-References: <20240315063154.696633-1-liuyuntao12@huawei.com>
- <CAMj1kXH+FaddHV5--kqB_wVgw_M682MvchPB1BoCuDuA6vVyvg@mail.gmail.com>
- <d7a1996f-f558-4cea-b8ca-eb071d02c6d4@huawei.com>
- <CAMj1kXHP-M7hTsCmorgzvDiPB1jRXHciJrXjJR82zmkxUTD-5Q@mail.gmail.com>
-From: "liuyuntao (F)" <liuyuntao12@huawei.com>
-In-Reply-To: <CAMj1kXHP-M7hTsCmorgzvDiPB1jRXHciJrXjJR82zmkxUTD-5Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd100004.china.huawei.com (7.185.36.20)
 
+On Thu, 2024-03-14 at 16:47 -0400, Trevor Gamblin wrote:
+> This adds support for the AXI PWMGEN v2 IP block. This version is
+> nearly identical to v1 other than it supports up to 16 channels instead
+> of 4 and a few of the memory mapped registers have moved.
+>=20
+> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+> ---
 
+LGTM
 
-On 2024/3/15 18:46, Ard Biesheuvel wrote:
-> On Fri, 15 Mar 2024 at 11:23, liuyuntao (F) <liuyuntao12@huawei.com> wrote:
->>
->>
->>
->> On 2024/3/15 16:06, Ard Biesheuvel wrote:
->>> On Fri, 15 Mar 2024 at 07:37, Yuntao Liu <liuyuntao12@huawei.com> wrote:
->>>>
->>>> The current arm32 architecture does not yet support the
->>>> HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
->>>> embedded scenarios, and enabling this feature would be beneficial for
->>>> reducing the size of the kernel image.
->>>>
->>>> In order to make this work, we keep the necessary tables by annotating
->>>> them with KEEP, also it requires further changes to linker script to KEEP
->>>> some tables and wildcard compiler generated sections into the right place.
->>>> When using ld.lld for linking, the KEEP keyword is not recognized within
->>>> the OVERLAY command, Ard proposed a concise method to solve this problem.
->>>>
->>>> It boots normally with defconfig, vexpress_defconfig and tinyconfig.
->>>> The size comparison of zImage is as follows:
->>>> defconfig       vexpress_defconfig      tinyconfig
->>>> 5137712         5138024                 424192          no dce
->>>> 5032560         4997824                 298384          dce
->>>> 2.0%            2.7%                    29.7%           shrink
->>>>
->>>> When using smaller config file, there is a significant reduction in the
->>>> size of the zImage.
->>>>
->>>> We also tested this patch on a commercially available single-board
->>>> computer, and the comparison is as follows:
->>>> a15eb_config
->>>> 2161384         no dce
->>>> 2092240         dce
->>>> 3.2%            shrink
->>>>
->>>> The zImage size has been reduced by approximately 3.2%, which is 70KB on
->>>> 2.1M.
->>>>
->>>> Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
->>>> Tested-by: Arnd Bergmann <arnd@arndb.de>
->>>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->>>> ---
->>>> v3:
->>>>      - A better way to KEEP .vectors section for ld.lld linking.
->>>>
->>>> v2:
->>>>      - Support config XIP_KERNEL.
->>>>      - Support LLVM compilation.
->>>>      - https://lore.kernel.org/all/20240307151231.654025-1-liuyuntao12@huawei.com/
->>>>
->>>> v1: https://lore.kernel.org/all/20240220081527.23408-1-liuyuntao12@huawei.com/
->>>> ---
->>>>    arch/arm/Kconfig                       | 1 +
->>>>    arch/arm/boot/compressed/vmlinux.lds.S | 6 +++++-
->>>>    arch/arm/include/asm/vmlinux.lds.h     | 2 +-
->>>>    arch/arm/kernel/entry-armv.S           | 3 +++
->>>>    arch/arm/kernel/vmlinux-xip.lds.S      | 4 ++--
->>>>    arch/arm/kernel/vmlinux.lds.S          | 6 +++---
->>>>    6 files changed, 15 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->>>> index b14aed3a17ab..45f25f6e7a62 100644
->>>> --- a/arch/arm/Kconfig
->>>> +++ b/arch/arm/Kconfig
->>>> @@ -114,6 +114,7 @@ config ARM
->>>>           select HAVE_KERNEL_XZ
->>>>           select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
->>>>           select HAVE_KRETPROBES if HAVE_KPROBES
->>>> +       select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
->>>>           select HAVE_MOD_ARCH_SPECIFIC
->>>>           select HAVE_NMI
->>>>           select HAVE_OPTPROBES if !THUMB2_KERNEL
->>>> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
->>>> index 3fcb3e62dc56..affd30714f01 100644
->>>> --- a/arch/arm/boot/compressed/vmlinux.lds.S
->>>> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
->>>> @@ -89,7 +89,11 @@ SECTIONS
->>>>         * The EFI stub always executes from RAM, and runs strictly before the
->>>>         * decompressor, so we can make an exception for its r/w data, and keep it
->>>>         */
->>>> +#ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
->>>> +    *(.data.* .bss.*)
->>>> +#else
->>>>        *(.data.efistub .bss.efistub)
->>>> +#endif
->>>>        __pecoff_data_end = .;
->>>>
->>>
->>> This is still not right.
->>>
->>> Can you just add -fno-data-sections to cflags-$(CONFIG_ARM) in
->>> drivers/firmware/efi/libstub/Makefile?
->>>
->>
->> I rebuild kernel in such way:
->> --- a/drivers/firmware/efi/libstub/Makefile
->> +++ b/drivers/firmware/efi/libstub/Makefile
->> @@ -28,6 +28,7 @@ cflags-$(CONFIG_ARM)          += -DEFI_HAVE_STRLEN
->> -DEFI_HAVE_STRNLEN \
->>                                      -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
->>                                      -DEFI_HAVE_STRCMP -fno-builtin -fpic \
->>                                      $(call cc-option,-mno-single-pic-base)
->> +cflags-$(CONFIG_ARM)           += -fno-data-sections
->>    cflags-$(CONFIG_RISCV)         += -fpic -DNO_ALTERNATIVE -mno-relax
->>    cflags-$(CONFIG_LOONGARCH)     += -fpi
->> but I am still encountering this error:
->> arm-linux-gnueabi-ld: warning: orphan section `.data.efi_loglevel' from
->> `drivers/firmware/efi/libstub/printk.stub.o' being placed in section
->> `.data.efi_loglevel'
->> arm-linux-gnueabi-ld: warning: orphan section `.data.screen_info_guid'
->> from `drivers/firmware/efi/libstub/screen_info.stub.o' being placed in
->> section `.data.screen_info_guid'
->> arm-linux-gnueabi-ld: warning: orphan section `.data.cpu_state_guid'
->> from `drivers/firmware/efi/libstub/arm32-stub.stub.o' being placed in
->> section `.data.cpu_state_guid'
->> arm-linux-gnueabi-ld: warning: orphan section `.data.efi_nokaslr' from
->> `drivers/firmware/efi/libstub/efi-stub-helper.stub.o' being placed in
->> section `.data.efi_nokaslr'
->> arm-linux-gnueabi-ld: error: zImage file size is incorrect
->>
->> I am puzzled because I could not find any option named
->> -fno-data-sections for GCC.
->>
-> 
-> How about
-> 
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -28,6 +28,7 @@
->                                     -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
->                                     -DEFI_HAVE_STRCMP -fno-builtin -fpic \
->                                     $(call cc-option,-mno-single-pic-base)
-> +cflags-$(CONFIG_ARM)           := $(filter-out -fdata-sections, $(CFLAGS-y))
->   cflags-$(CONFIG_RISCV)         += -fpic -DNO_ALTERNATIVE -mno-relax
->   cflags-$(CONFIG_LOONGARCH)     += -fpie
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Another error:
-cannot initialize array of ‘short unsigned int’ from a string literal 
-with type array of ‘unsigned int’
-  17 | static const efi_char16_t shim_MokSBState_name[] = L"MokSBStateRT";
-
-I checked the cflags-y variable, and the -fshort-wchar option does 
-exist.cflags-y = -std=gnu11 -fshort-wchar -funsigned-char -fno-common 
-   -fno-PIE -fno-strict-aliasing ...
-
-
-
+> =C2=A0drivers/pwm/pwm-axi-pwmgen.c | 62 ++++++++++++++++++++++++++++-----=
+---
+> =C2=A01 file changed, 49 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index 0c8f7f893a21..539625c404ac 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -32,16 +32,25 @@
+> =C2=A0#define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
+> =C2=A0#define AXI_PWMGEN_REG_CONFIG		0x10
+> =C2=A0#define AXI_PWMGEN_REG_NPWM		0x14
+> -#define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (12 * (ch)))
+> -#define AXI_PWMGEN_CHX_DUTY(ch)		(0x44 + (12 * (ch)))
+> -#define AXI_PWMGEN_CHX_OFFSET(ch)	(0x48 + (12 * (ch)))
+> +#define AXI_PWMGEN_CHX_PERIOD(v, ch)	((v)->period_base + (v)->ch_step *
+> (ch))
+> +#define AXI_PWMGEN_CHX_DUTY(v, ch)	((v)->duty_base + (v)->ch_step *
+> (ch))
+> +#define AXI_PWMGEN_CHX_OFFSET(v, ch)	((v)->offset_base + (v)->ch_step *
+> (ch))
+> =C2=A0#define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification =
+number
+> to test during setup */
+> =C2=A0#define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
+> =C2=A0#define AXI_PWMGEN_RESET		BIT(0)
+> =C2=A0
+> +struct axi_pwm_variant {
+> +	u8 period_base;
+> +	u8 duty_base;
+> +	u8 offset_base;
+> +	u8 major_version;
+> +	u8 ch_step;
+> +};
+> +
+> =C2=A0struct axi_pwmgen_ddata {
+> =C2=A0	struct regmap *regmap;
+> =C2=A0	unsigned long clk_rate_hz;
+> +	const struct axi_pwm_variant *variant;
+> =C2=A0};
+> =C2=A0
+> =C2=A0static const struct regmap_config axi_pwmgen_regmap_config =3D {
+> @@ -50,12 +59,30 @@ static const struct regmap_config axi_pwmgen_regmap_c=
+onfig
+> =3D {
+> =C2=A0	.val_bits =3D 32,
+> =C2=A0};
+> =C2=A0
+> +static const struct axi_pwm_variant pwmgen_1_00_variant =3D {
+> +	.period_base =3D 0x40,
+> +	.duty_base =3D 0x44,
+> +	.offset_base =3D 0x48,
+> +	.major_version =3D 1,
+> +	.ch_step =3D 12,
+> +};
+> +
+> +static const struct axi_pwm_variant pwmgen_2_00_variant =3D {
+> +	.period_base =3D 0x40,
+> +	.duty_base =3D 0x80,
+> +	.offset_base =3D 0xC0,
+> +	.major_version =3D 2,
+> +	.ch_step =3D 4,
+> +};
+> +
+> +
+> =C2=A0static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> =C2=A0			=C2=A0=C2=A0=C2=A0 const struct pwm_state *state)
+> =C2=A0{
+> =C2=A0	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> =C2=A0	unsigned int ch =3D pwm->hwpwm;
+> =C2=A0	struct regmap *regmap =3D ddata->regmap;
+> +	const struct axi_pwm_variant *variant =3D ddata->variant;
+> =C2=A0	u64 period_cnt, duty_cnt;
+> =C2=A0	int ret;
+> =C2=A0
+> @@ -70,7 +97,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, stru=
+ct
+> pwm_device *pwm,
+> =C2=A0		if (period_cnt =3D=3D 0)
+> =C2=A0			return -EINVAL;
+> =C2=A0
+> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch),
+> period_cnt);
+> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant,
+> ch), period_cnt);
+> =C2=A0		if (ret)
+> =C2=A0			return ret;
+> =C2=A0
+> @@ -78,15 +105,15 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, s=
+truct
+> pwm_device *pwm,
+> =C2=A0		if (duty_cnt > UINT_MAX)
+> =C2=A0			duty_cnt =3D UINT_MAX;
+> =C2=A0
+> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch),
+> duty_cnt);
+> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch),
+> duty_cnt);
+> =C2=A0		if (ret)
+> =C2=A0			return ret;
+> =C2=A0	} else {
+> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
+> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant,
+> ch), 0);
+> =C2=A0		if (ret)
+> =C2=A0			return ret;
+> =C2=A0
+> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
+> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch),
+> 0);
+> =C2=A0		if (ret)
+> =C2=A0			return ret;
+> =C2=A0	}
+> @@ -99,11 +126,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chi=
+p,
+> struct pwm_device *pwm,
+> =C2=A0{
+> =C2=A0	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> =C2=A0	struct regmap *regmap =3D ddata->regmap;
+> +	const struct axi_pwm_variant *variant =3D ddata->variant;
+> =C2=A0	unsigned int ch =3D pwm->hwpwm;
+> =C2=A0	u32 cnt;
+> =C2=A0	int ret;
+> =C2=A0
+> -	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
+> +	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), &cnt);
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+> =C2=A0
+> @@ -111,7 +139,7 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip=
+,
+> struct pwm_device *pwm,
+> =C2=A0
+> =C2=A0	state->period =3D DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata-
+> >clk_rate_hz);
+> =C2=A0
+> -	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
+> +	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), &cnt);
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+> =C2=A0
+> @@ -127,7 +155,8 @@ static const struct pwm_ops axi_pwmgen_pwm_ops =3D {
+> =C2=A0	.get_state =3D axi_pwmgen_get_state,
+> =C2=A0};
+> =C2=A0
+> -static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
+> +static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev,=
+=20
+> +			=C2=A0=C2=A0=C2=A0 const struct axi_pwm_variant *variant)
+> =C2=A0{
+> =C2=A0	int ret;
+> =C2=A0	u32 val;
+> @@ -146,7 +175,7 @@ static int axi_pwmgen_setup(struct regmap *regmap, st=
+ruct
+> device *dev)
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+> =C2=A0
+> -	if (ADI_AXI_PCORE_VER_MAJOR(val) !=3D 1) {
+> +	if (ADI_AXI_PCORE_VER_MAJOR(val) !=3D variant->major_version) {
+> =C2=A0		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral
+> version %u.%u.%u\n",
+> =C2=A0			ADI_AXI_PCORE_VER_MAJOR(val),
+> =C2=A0			ADI_AXI_PCORE_VER_MINOR(val),
+> @@ -178,9 +207,14 @@ static int axi_pwmgen_probe(struct platform_device *=
+pdev)
+> =C2=A0	struct pwm_chip *chip;
+> =C2=A0	struct axi_pwmgen_ddata *ddata;
+> =C2=A0	struct clk *clk;
+> +	const struct axi_pwm_variant *variant;
+> =C2=A0	void __iomem *io_base;
+> =C2=A0	int ret;
+> =C2=A0
+> +	variant =3D device_get_match_data(dev);
+> +	if (!variant)
+> +		return -EINVAL;
+> +
+> =C2=A0	io_base =3D devm_platform_ioremap_resource(pdev, 0);
+> =C2=A0	if (IS_ERR(io_base))
+> =C2=A0		return PTR_ERR(io_base);
+> @@ -190,7 +224,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
+dev)
+> =C2=A0		return dev_err_probe(dev, PTR_ERR(regmap),
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to init register map\n");
+> =C2=A0
+> -	ret =3D axi_pwmgen_setup(regmap, dev);
+> +	ret =3D axi_pwmgen_setup(regmap, dev, variant);
+> =C2=A0	if (ret < 0)
+> =C2=A0		return ret;
+> =C2=A0
+> @@ -199,6 +233,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
+dev)
+> =C2=A0		return PTR_ERR(chip);
+> =C2=A0	ddata =3D pwmchip_get_drvdata(chip);
+> =C2=A0	ddata->regmap =3D regmap;
+> +	ddata->variant =3D variant;
+> =C2=A0
+> =C2=A0	clk =3D devm_clk_get_enabled(dev, NULL);
+> =C2=A0	if (IS_ERR(clk))
+> @@ -224,7 +259,8 @@ static int axi_pwmgen_probe(struct platform_device *p=
+dev)
+> =C2=A0}
+> =C2=A0
+> =C2=A0static const struct of_device_id axi_pwmgen_ids[] =3D {
+> -	{ .compatible =3D "adi,axi-pwmgen-1.00.a" },
+> +	{ .compatible =3D "adi,axi-pwmgen-1.00.a", .data =3D &pwmgen_1_00_varia=
+nt
+> },
+> +	{ .compatible =3D "adi,axi-pwmgen-2.00.a", .data =3D &pwmgen_2_00_varia=
+nt
+> },
+> =C2=A0	{ }
+> =C2=A0};
+> =C2=A0MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
 
