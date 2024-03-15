@@ -1,62 +1,100 @@
-Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC0617592;
-	Fri, 15 Mar 2024 09:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F375A17592;
+	Fri, 15 Mar 2024 09:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710493637; cv=none; b=RKeXz+eDyTxBIYeggi/69vF+q0KPSW7ryKjz6uWbjAGGjmcfpeb9OeoET2/vZ6AkjSElBoAVtQFhT4NXeQyepad07P9MFH9eNznFBVuGiTjeYmfk+BOjxqn5WPYTy0Pqi0sGh9BK1/fHAV4mp/bKlys2JmUIQ3XNC72uyWT3MkA=
+	t=1710493774; cv=none; b=W9VeZ8EijcQSFVXnfAkGtnanZjBTpf2k9QqHpuO6vVRaXuHA/Y/CL0hLUcaPPClGc3Hv0GhwBGnLdqPkhTEieVrZKXNXnDXZyWs3r9raMqYaI3O7q6p7L9b0o1rjXcE+3KTaakKv3yhQN0HcuuHHyQPLz2/rIOZ8XsPkbZmsPT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710493637; c=relaxed/simple;
-	bh=JWeCD2B59pOaqgxOz/mvycvc8QuBPva2uaoQkjvv+bw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AZXRCYKVWbRfgJidBYwjqWKFbKzpLEsWpB7iHmFL4KXcVUASQsD64U3w3RMMMiTzFUzXg4xmMFZjYDyrA0VOG1sib0oD22cDMDTRTz0aENjBTrSogHBIQRBw1LuPGnjyUwze/SOLXs/ZtrhumIDjhRlRMWDfheX+ctQqWYMjvq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id E54608C0853;
-	Fri, 15 Mar 2024 09:57:34 +0100 (CET)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kent Overstreet <kent.overstreet@linux.dev>
-Subject:
- Re: bcachefs: do not run 6.7: upgrade to 6.8 immediately if you have a multi
- device fs
-Date: Fri, 15 Mar 2024 09:57:34 +0100
-Message-ID: <12416320.O9o76ZdvQC@lichtvoll.de>
-In-Reply-To: <muwlfryvafsskt2l2hgv3szwzjfn7cswmmnoka6zlpz2bxj6lh@ugceww4kv3jr>
-References: <muwlfryvafsskt2l2hgv3szwzjfn7cswmmnoka6zlpz2bxj6lh@ugceww4kv3jr>
+	s=arc-20240116; t=1710493774; c=relaxed/simple;
+	bh=6eRLO1ilpanWKc8ZBdMe29fHVLUp4DyMn0BYswI+o5w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oa5bjzwaEz/cvLKzF+p4TVoOZOvxJDb8NB/pUqQswkXrikgN9kEvjLJaOK2Pk8nMdfZ0/ykdVEqeS+leHWoXZ/rHHKULBQGGl9dDug7CrThvkB4861JioO13LEFjQFgHDf0RjOSJvI3Yo1RdJdYKBamIZD2xah7EHc2rKyUaB78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ifi3cfvD; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ifi3cfvD"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41402466fb8so1249545e9.0;
+        Fri, 15 Mar 2024 02:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710493771; x=1711098571; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rGxpqeVYITmqsu8ISYbdggA8wEernvQ3qM2whpST9xA=;
+        b=Ifi3cfvDlHII7RLFiX09LCo+XQ1W+zEZQF0Qor/hPSUT/ZqKW8JTpXuil6BilGsFA5
+         w63X7mrJBLNigZ5QC+WVeuj7tb815Nfza34iYVrZVUwr03G7+tpHSJRh4YD/unWU/ong
+         +oTsaLOf9l2ObqeDcJHtsjf3XWthL9KOmzWWm5XW7ISe6+VTrEy5bjNT2EDZu3JKiP6I
+         zqYGcIct+EhezyDd6iKI04VbciII8BX+EhUXb3ysP0ck6lPLZNCt3h9rBB9LebGdIdOw
+         O7FVOb/jCD0vLfhsPXJVX7asndejYB/bLy3xJioq2hpOcrBAYswzG9bJTdHNo99bo5m6
+         rcUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710493771; x=1711098571;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rGxpqeVYITmqsu8ISYbdggA8wEernvQ3qM2whpST9xA=;
+        b=QitB/T75yB9MlN+r/4S/ThDkjVeKwv2ikN0EEFF5jSRfdupLUutKOEp3lkt6/fCpZZ
+         yX/6sc8X3tzySHDKONeZuOkrEV7JdjP6mWWarW/QHjHpgoM9UlUzsgWitw779EUx31ei
+         mEBccmaQ0/N2o6nSJWktWHndU8fFcLi+mkXhc0rZtCxya8X0bKbeVBX0FfjvgXVEwleR
+         mGozJa9b6zMlDYrCpO4JMLzVJUmAoejT7faXPH4UUfie2i07cqRmQ5dy1l4dJ4905zAC
+         rQOoKX21c3mN5ZqP9yEHCew9cm/sWR49E4fBecFo3xdrQG+Y9DljKRHS40kuGLDnAcAM
+         Oc4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ+bWmOgQdMBeMj9WPG2HTq1v7/GWhqfSV35PFoqAhiLSbRe2N8KdkjydDP72+FmvmqtqiydT7Xf2LVelyzg/OE8+ZpKQLsNmB+jWi
+X-Gm-Message-State: AOJu0Yz0pXhIi2aN602tsgbIPyAu4Ts0DMTfHbOw+WJh27cgAXDjIjrU
+	/97YahgrFm1ovPi3en5BMaqN+iUfWuAcDZdb7J0zpcXRCnSHNGL4ag+CX2qyqWs=
+X-Google-Smtp-Source: AGHT+IH4hfq7wKhnrhc38RUmnv/6x309HrRcxXSHxhQRObiDiRWGWskNZ5S1CEfcYDXBUw1fO9QhWA==
+X-Received: by 2002:a05:600c:4f07:b0:413:1139:3bec with SMTP id l7-20020a05600c4f0700b0041311393becmr2890485wmq.35.1710493771112;
+        Fri, 15 Mar 2024 02:09:31 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id bi10-20020a05600c3d8a00b00414009768b0sm1499649wmb.33.2024.03.15.02.09.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 02:09:30 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Ben Skeggs <bskeggs@redhat.com>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau/gr/gf100: Remove second semicolon
+Date: Fri, 15 Mar 2024 09:09:30 +0000
+Message-Id: <20240315090930.2429958-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Kent, hi.
+There is a statement with two semicolons. Remove the second one, it
+is redundant.
 
-Kent Overstreet - 15.03.24, 05:41:09 CET:
-> there's a bug in 6.7 with filesystems that are mid upgrade and then get
-> downgraded not getting marked in the superblock as downgraded, and this
-> translates to a really horrific bug in splitbrain detection when the old
-> version isn't updating member sequence nmubers and you go back to the
-> new version - this results in every device being kicked out of the fs.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I take it that single device BCacheFS filesystems can be upgraded just fine?
-
-I can also recreate and repopulate once I upgraded to 6.8. Still waiting a 
-bit.
-
-Best.
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c
+index 986e8d547c94..060c74a80eb1 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c
+@@ -420,7 +420,7 @@ gf100_gr_chan_new(struct nvkm_gr *base, struct nvkm_chan *fifoch,
+ 			return ret;
+ 	} else {
+ 		ret = nvkm_memory_map(gr->attrib_cb, 0, chan->vmm, chan->attrib_cb,
+-				      &args, sizeof(args));;
++				      &args, sizeof(args));
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
-Martin
-
+2.39.2
 
