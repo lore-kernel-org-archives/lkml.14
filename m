@@ -1,82 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DEB1946C;
-	Fri, 15 Mar 2024 15:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43CC1946C;
+	Fri, 15 Mar 2024 15:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710516876; cv=none; b=eRKt3lV+07R/sZzbz+qO0qtwAEoIYRNXp6uqogoiDZ3tomxc/iVX2ok71Hho9tP6g7ZuprVWbTnqhcpuNUcEIqUgzwVRRA3QxcoxIT0ksNFJ/EPcusvb0iXoJTFwtJFvQG3EQgrs7PTfNMRw98gFOIbA+xNxAOf8xMxs5HIDPMA=
+	t=1710516902; cv=none; b=AmYL81HOMzrKOCIatYRejR62LBy/bVAmtoy8aPtQ2vldqgf0XrJRmsRCMhNgfFgmch/Nek//QIPBfdOkVdOphzxl86SJ5gQG82dr7fLUFlNdeO7RfA/hwBfKZBaVjMddw6ho+nNc7ikjU9K1zxvV/yx7zAjRpsRwWgASGQyK7fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710516876; c=relaxed/simple;
-	bh=kloGycDSopUOMJZAJlHEKTFM7/I+pN2yYqHLiFNx4vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=glW19IG2JUK8SfNnO0VX2mrdIh3Dnt/NGNj2VTDYR/aDW1n05lwO17wQwx9L/wHp+kJb+lvSFZeQSfnRToQqHAv8WgS+bxuwmPjuw02ZCwyLqK/CqQSxlXjxaBgB6vrGpWqMlbv5yHukns3Ep42//WmuxAO3dueDg4pPjoXstYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R1JqKkC4; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710516902; c=relaxed/simple;
+	bh=4Mbh4wTN4l0acjOafVieNblPuAn3MVy3J0dwXOH+nZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YZSbxRVuUdLz4YOJx+Ns+JYp+XXZwlHI/z/M70aDvFht0MWWocwDaud1pCXhqz1lBKRfg24sMR+Jom2mUKnQyCBIC1n7gOkZeLskPneG5MT1g7q9jdOLkoQLF24SBJ0OwMF/x1uTCM0/ODO3FJ8HChvFCu1BGBAlxz4K1FQqRV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIFGOt9W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R1JqKkC4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710516875; x=1742052875;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kloGycDSopUOMJZAJlHEKTFM7/I+pN2yYqHLiFNx4vc=;
-  b=R1JqKkC43ZhZpRsbnQIKz4Xp0CPsLEnY+BFEFIUs77vfzBIuUUIjWcFf
-   ixmH2RjVv0T+5rPkX1AhmrH7FwkeMpoyThTfIoyd1LLJYwpgkEPY2xFe3
-   fCkNi4vIZVHJd3u4ATD2/qe/1WXy1/V0+lgWCqW/SWKnL3UGIA3hoV8LF
-   /xIRX2Ovj2wwZutJWUfLv6PeOGle1czcaXc6V86xRMtqURxk65/PmQlbU
-   Urd5K5OJZv8gHZNcXHGqnfpQtua/u3kqhCTTKAMLP57QfWSbqEsqadGIK
-   F619K5WNhaFoCI9syEiQkK8dAXxYDQqBMNxQvi9iR0VEEQENMYJjzh8Q2
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="5257549"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="5257549"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 08:34:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="937057705"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="937057705"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2024 08:34:32 -0700
-Message-ID: <2a3ab595-80b2-fd4a-8748-c823fa5ec098@linux.intel.com>
-Date: Fri, 15 Mar 2024 17:36:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIFGOt9W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67D6C433C7;
+	Fri, 15 Mar 2024 15:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710516901;
+	bh=4Mbh4wTN4l0acjOafVieNblPuAn3MVy3J0dwXOH+nZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oIFGOt9WEi+rs8n9L6/eU7bjSyoSBJYpWft4q74RdYzXL1f762aaNvFOvraBL/y3k
+	 +7LT6mlQUWzv2PNrGRxp5BcWkWX+ueV0RU6UQagANB/49Ppkx3P28D2NYdB+OW8Ybz
+	 XpQBZfrNVFxSFIzITonzQsLJzRwdJzeY9Il7MQL5CCuElvxbagWeNZr9VLwizu3Jm0
+	 FDI41R0/OzGUAUCifShbVo/AaD5tuuxjw30B2ompS2wWU8W64E++Z9cufxUlxMAB+P
+	 JPrUuOiqVukCWxkdqzA0iPoJuhg7vFrdio6NLmiMyJlIgN1qxllbcB2CjUQO8gc80h
+	 8X0NWrh7E7HTw==
+Date: Fri, 15 Mar 2024 15:34:58 +0000
+From: Eric Van Hensbergen <ericvh@kernel.org>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Colin Ian King <colin.i.king@gmail.com>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	v9fs@lists.linux.dev, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] fs/9p: remove redundant pointer v9ses
+Message-ID: <ZfRqohX3x7q2p952@1149290c588b>
+References: <20240229222250.351322-1-colin.i.king@gmail.com>
+ <ZeXFqt1NDp9sdz7n@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH] usb: usb-acpi: fix uninitialized variable in
- usb_acpi_get_connect_type()
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <fdd4f94d-fb8c-44a0-9472-3485a567caca@moroto.mountain>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <fdd4f94d-fb8c-44a0-9472-3485a567caca@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeXFqt1NDp9sdz7n@codewreck.org>
 
-On 15.3.2024 17.21, Dan Carpenter wrote:
-> The "pld" pointer is uninitialized if acpi_get_physical_device_location()
-> fails.  Initialize it to NULL.
+On Mon, Mar 04, 2024 at 09:59:22PM +0900, Dominique Martinet wrote:
+> Colin Ian King wrote on Thu, Feb 29, 2024 at 10:22:50PM +0000:
+> > Pointer v9ses is being assigned the value from the return of inlined
+> > function v9fs_inode2v9ses (which just returns inode->i_sb->s_fs_info).
+> > The pointer is not used after the assignment, so the variable is
+> > redundant and can be removed.
+> > 
+> > Cleans up clang scan warnings such as:
+> > fs/9p/vfs_inode_dotl.c:300:28: warning: variable 'v9ses' set but not
+> > used [-Wunused-but-set-variable]
 > 
-> Fixes: f3ac348e6e04 ("usb: usb-acpi: Set port connect type of not connectable ports correctly")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
+> Thanks for the patch!
+> 
+> Eric, this appears to be for your -next tree as it doesn't build on
+> master -- didn't notice the [next] in the subject line until I tried...
+> (I've just build-checked on your tree and it appears correct there)
+> 
+> > 
+> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> 
+> Reviewed-by: Dominique Martinet <asmadeus@codewreck.org>
+> 
+> -- 
+> Dominique
 
-I sent a similar patch a week ago, just before merge window opened.
-looks like it didn't make it.
+Pulled into my for-next tree, will try to get into a part-2 pull
+request.  Thanks.
 
-https://lore.kernel.org/linux-usb/20240308113425.1144689-1-mathias.nyman@linux.intel.com/
-
-Thanks
-Mathias
-
+   -eric
