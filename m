@@ -1,207 +1,195 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793534F898
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 18:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD8D44C77
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 18:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710527338; cv=none; b=pwp/ucMRWY5T1LtXD3KmaPXU33xY093vBWUYJMlw8o15Bf2QFc6hL+N5yOCZ9RcUkHNfiQOz5zfAmX3lAI7LRdQxaHiVe3Mt3E5Ok+vpPp7UDeYuuvLgldIe1Kij8lwP4Y4sM+hbFSYt9Scd7IhXr0S0sz8KA7LBX8xbmYmzsu4=
+	t=1710527379; cv=none; b=aqMQ8UkGn3exc++IeyiD0YZoUK0FNy1N68JSFaBHC/rGEnezbALYXTMvvQs0uw4Zr82wWMIaIT7Ia7bInT8ry2trePuctjV0xKY504rOV8tFh6LBDhGHwZs8d/rKDiV8cB3p8cq2oezoFV33LaXoMRVUmU1rSzSmCCNc6IpmF9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710527338; c=relaxed/simple;
-	bh=ttV9IS7mXHSV0ZtQpCibNPetdR35dyL3P7pVFnt1Rd8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U2XfHcvvc7kPr8XfA7a3QFTeV26KqlXq7qvHEzyypOJCXFcGK0Crf0cqBXtdq+BimqKGDdE2K+wYvK/5K43gbzsWxx6xZ6Wc2M9t3kn9OJV5Okn029vHqlRk6v67MBV4Q5xu/joj6RrC3M7svVVW2tH7zoVq8XVlJ13u35Df5Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netflix.com; spf=pass smtp.mailfrom=netflix.com; dkim=pass (1024-bit key) header.d=netflix.com header.i=@netflix.com header.b=D8K8IlPE; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netflix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netflix.com
+	s=arc-20240116; t=1710527379; c=relaxed/simple;
+	bh=KUHOP8ehexowNIEsOotntCAdUefMeTgT8ndPqIvacRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVNXD0ySfGIcoDFFsz2LnOowl81+UbZLpaGKpZYaZwCbWpxwedCeKYDmqq/hLmT2sif6RTChP9n84iFDptbytEuuKQAxF29m5LXFn7ZIUwnvGA3EhkJlmqgCRK2yFtCp35BCRa9miF72kh9lcC/8llLbdBWiJqq18uktTmthwVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3hLQDDI+; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netflix.com header.i=@netflix.com header.b="D8K8IlPE"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c7476a11e0so101503639f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3hLQDDI+"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e6ce174d45so1927473b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netflix.com; s=google; t=1710527334; x=1711132134; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KfZxqGfm794szzm6SQbZFvEP7H7WQ+NfmahR3rYMEb4=;
-        b=D8K8IlPEXZOu25BFtPybWQ2xEAuj/EIu06ufGthSon+K2097ecUOUzfCT54KET6HPI
-         6XmQblr8Ka3KZRTJtt0kk4Qz+I9+qzNu500tjNatmCefiE5BZKzs2lS0UAt2PMOCMxdo
-         gsBHM2q0VEGN+D/I4vpTJh5TZ7pPhJfc+zfJQ=
+        d=google.com; s=20230601; t=1710527376; x=1711132176; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8Yx8GBGZtm8giG+I86hNAaIO2ye/1iwJfeXfUGn8W+g=;
+        b=3hLQDDI+eEN3UTYekutR7sByJhxPou0i4tE2YGyQVOIZHWDIIHm4Zw7hynNsICviyr
+         zlKN76yJ3PiWSPj7NiT1q65DGOXLcovhqrKNS7Veb9FfdV+0zZ8P57O3iNLvqWYURdQq
+         IBuAd6069dIf4ZQh44QOO7ToDMXrhnYgflh+g67Kti/ohCcbiB8pfeKkxQs0ODMWQl7A
+         /2b+r8EgyK7cvFoPV2voZr8WxXUk6U6Q9fEUg9/9PMiau8ThgSvjM1YNWvq2rx4BeAbg
+         sSpRlSJGTDO9oRMfSAeuYg5J2HtpDf7chDJ7TRgpxcfPg/iwKSe++QghZysiop9LaG3C
+         IZkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710527334; x=1711132134;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KfZxqGfm794szzm6SQbZFvEP7H7WQ+NfmahR3rYMEb4=;
-        b=fYcFUeqQyHYMIIUZ1Rm0yeZ2GlQAXCE7jw6nM+af2wY99GzN2sn0LZcsniVffxIFEN
-         zEfRW3Z8HXzZi/0GrTkuo3hDOgKETpqH6nOwCZZ0BdQJksfGdp6SpIyN/VNyxjSyntm/
-         rx20dqqZEvEgFK0DDfOP7gCu7n04XbzGQwrN+ouNvRDxoyWYodXvXY+iMg5SjvB1Wbtk
-         qcdpvF3CRCf34vkXngmYNFtwn0iyjzrsVNgHHfXoVhLvgpx1G4Ag70Et3gQ3Ba8UHRPE
-         1Q8JCrewHfUPpTVb3tTITRVqTv+O/YXeSdQDwXZ7hCh3+SI+v3EAINlcfj1Q+ir22Ee2
-         HVxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfRyGTBcTjSXcDRUsZk+oklTcIFU/l78DZe5GS88FrEyYyoJuR1+C7raz1AUBX44SSw6oqsM65EC30V0WQgM4xe3uqpZA8CzpLRKXM
-X-Gm-Message-State: AOJu0YwFDAXzKZ5fF0UHOZTn7Abu0tOdHi7I521llBQRuhHDsXPJaLSi
-	1CT0aJWng2RwT2j0ULCUuq91LWujXJc2MZHgcKKGt2d/p0ZVZ36Z/aDt3m8v6ms=
-X-Google-Smtp-Source: AGHT+IHT56pFwD1DPWvseGf1YhKPgQoet77lNXaEyjmj1UMSb6H2RIBWlwfZ3LdWLPAnX9PdX7qxJA==
-X-Received: by 2002:a05:6602:4914:b0:7cb:dd4a:428d with SMTP id ef20-20020a056602491400b007cbdd4a428dmr3749532iob.10.1710527334615;
-        Fri, 15 Mar 2024 11:28:54 -0700 (PDT)
-Received: from localhost ([2601:285:8700:8f20:c760:7c0b:344d:cd33])
-        by smtp.gmail.com with UTF8SMTPSA id j1-20020a02a681000000b00476e0c80ec6sm864616jam.93.2024.03.15.11.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 11:28:54 -0700 (PDT)
-From: Jose Fernandez <josef@netflix.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Jose Fernandez <josef@netflix.com>,
-	Tycho Andersen <tycho@tycho.pizza>
-Subject: [PATCH bpf-next 2/2] selftests/bpf: add selftest for btf_task_get_cgroup_id
-Date: Fri, 15 Mar 2024 12:28:04 -0600
-Message-Id: <20240315182804.216081-2-josef@netflix.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240315182804.216081-1-josef@netflix.com>
-References: <20240315182804.216081-1-josef@netflix.com>
+        d=1e100.net; s=20230601; t=1710527376; x=1711132176;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Yx8GBGZtm8giG+I86hNAaIO2ye/1iwJfeXfUGn8W+g=;
+        b=jlGIabG7QA6qF09RX2uAX8a/y+WjGejuYPOTo8h32NAa97tB79Ga+W1NoU1PdzaM78
+         ipuSyUG63IEOaaoH2jzR+o8imFlXKANIuGmEH6/5N5or+o77IAgdKXnFXn0xP21jA37b
+         t/wSKXp48lunGnllvt+8aA9ZpIF2fBbUX2P9DK8c1d7jRiv7yw/wZojJ5S2nGuLqHqlC
+         pGcniHO2xcOw6BgCPwB9Q424twufL8k+6Ef7p6iPhUBw+2/Es9AhmGqxbhrpnV4IcCmJ
+         NXmQSPnY9uGx5vjOaGNQomaBbex0BMfxU9BGqge0gdQLoWdHTNL4lc6sMAZ0J4hwEYAo
+         T1Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfBfIpHvWHMR45xJTQ1gI7xxraUsKhPwRwAv5M4zLpA0JiADtEy8R5HiGzlgpXzPY078y0zdDL++gf8RCdzwzhcGVvPyfbHBuI3HX3
+X-Gm-Message-State: AOJu0YzmKLzK4GK00MZCPpmIjSAOr71dYRqbZWyEuwavH9b9jn4h2Teb
+	ObxgQjcY+qycU/vEFIv1xTiQsFC/oF2n4ybfZ2fsUdh/9QK/vqHKpCOtn/14dg==
+X-Google-Smtp-Source: AGHT+IHf+8j7zKnvwbaJH/TUrJOU+u8aCZhENiidgnodEi0/+PKq1PeMhJI52e2EQ4QfYyAqDADIhg==
+X-Received: by 2002:a05:6a00:3d0d:b0:6e6:9f29:fc43 with SMTP id lo13-20020a056a003d0d00b006e69f29fc43mr7068182pfb.12.1710527375893;
+        Fri, 15 Mar 2024 11:29:35 -0700 (PDT)
+Received: from google.com (61.139.125.34.bc.googleusercontent.com. [34.125.139.61])
+        by smtp.gmail.com with ESMTPSA id dr23-20020a056a020fd700b005d67862799asm2480674pgb.44.2024.03.15.11.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 11:29:33 -0700 (PDT)
+Date: Fri, 15 Mar 2024 11:29:27 -0700
+From: David Matlack <dmatlack@google.com>
+To: syzbot <syzbot+900d58a45dcaab9e4821@syzkaller.appspotmail.com>
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
+	pbonzini@redhat.com, seanjc@google.com,
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org,
+	vipinsh@google.com
+Subject: Re: [syzbot] [kvm?] WARNING in clear_dirty_gfn_range
+Message-ID: <ZfSTh4bLuAMlF6Er@google.com>
+References: <000000000000c6526f06137f18cc@google.com>
+ <CALzav=euH_n9WXG29CFd10urh85O4Mw2L=StEizVmh27CYzrtQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=euH_n9WXG29CFd10urh85O4Mw2L=StEizVmh27CYzrtQ@mail.gmail.com>
 
-This patch adds a selftest for the `bpf_task_get_cgroup_id` kfunc. The
-test focuses on the use case of obtaining the cgroup ID of the previous
-task in a `sched_switch` tracepoint.
+On 2024-03-15 11:07 AM, David Matlack wrote:
+> On Tue, Mar 12, 2024 at 4:34 PM syzbot
+> <syzbot+900d58a45dcaab9e4821@syzkaller.appspotmail.com> wrote:
+> >
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 1 PID: 5165 at arch/x86/kvm/mmu/tdp_mmu.c:1526 clear_dirty_gfn_range+0x3d6/0x540 arch/x86/kvm/mmu/tdp_mmu.c:1526
+> > Modules linked in:
+> > CPU: 1 PID: 5165 Comm: syz-executor417 Not tainted 6.8.0-syzkaller-01185-g855684c7d938 #0
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> > RIP: 0010:clear_dirty_gfn_range+0x3d6/0x540 arch/x86/kvm/mmu/tdp_mmu.c:1526
+> > Call Trace:
+> >  <TASK>
+> >  kvm_tdp_mmu_clear_dirty_slot+0x24f/0x2e0 arch/x86/kvm/mmu/tdp_mmu.c:1557
+> >  kvm_mmu_slot_leaf_clear_dirty+0x38b/0x490 arch/x86/kvm/mmu/mmu.c:6783
+> >  kvm_mmu_slot_apply_flags arch/x86/kvm/x86.c:12962 [inline]
+> >  kvm_arch_commit_memory_region+0x299/0x490 arch/x86/kvm/x86.c:13031
+> >  kvm_commit_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:1751 [inline]
+> >  kvm_set_memslot+0x4d3/0x13e0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1994
+> >  __kvm_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:2129 [inline]
+> >  __kvm_set_memory_region+0xdbc/0x1520 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2020
+> >  kvm_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:2150 [inline]
+> >  kvm_vm_ioctl_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:2162 [inline]
+> >  kvm_vm_ioctl+0x151c/0x3e20 arch/x86/kvm/../../../virt/kvm/kvm_main.c:5152
+> 
+> The reproducer uses nested virtualization to launch an L2 with EPT
+> disabled. This creates a TDP MMU root with role.guest_mode=1, which
+> triggers the WARN_ON() in kvm_tdp_mmu_clear_dirty_slot() because
+> kvm_mmu_page_ad_need_write_protect() returns false whenever PML is
+> enabled and the shadow page role.guest_mode=1.
+> 
+> If I'm reading prepare_vmcs02_constant_state() correctly, we always
+> disable PML when running in L2. So when enable_pml=1 and L2 runs with
+> EPT disabled we are blind to dirty tracking L2 accesses.
 
-The selftest involves creating a test cgroup, attaching a BPF program
-that utilizes the `bpf_task_get_cgroup_id` during a `sched_switch`
-tracepoint, and validating that the obtained cgroup ID for the previous
-task matches the expected cgroup ID.
++Vipin
 
-task_get_cgroup_id:OK
-Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+I believe this was introduced by 6.4 commit 5982a5392663 ("KVM: x86/mmu:
+Use kvm_ad_enabled() to determine if TDP MMU SPTEs need wrprot").
 
-Signed-off-by: Jose Fernandez <josef@netflix.com>
-Reviewed-by: Tycho Andersen <tycho@tycho.pizza>
----
- .../bpf/prog_tests/task_get_cgroup_id.c       | 58 +++++++++++++++++++
- .../bpf/progs/test_task_get_cgroup_id.c       | 30 ++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/task_get_cgroup_id.c
- create mode 100644 tools/testing/selftests/bpf/progs/test_task_get_cgroup_id.c
+I see two options to fix:
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/task_get_cgroup_id.c b/tools/testing/selftests/bpf/prog_tests/task_get_cgroup_id.c
-new file mode 100644
-index 000000000000..b8c4551195d3
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/task_get_cgroup_id.c
-@@ -0,0 +1,58 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright 2024 Netflix, Inc.
-+
-+#include <test_progs.h>
-+#include <cgroup_helpers.h>
-+#include "test_task_get_cgroup_id.skel.h"
-+#include <unistd.h>
-+
-+#define TEST_CGROUP "/test-task-get-cgroup-id/"
-+
-+void test_task_get_cgroup_id(void)
+  1. Allow PML to be enabled when L2 is running with EPT is disabled.
+  2. Fix the TDP MMU logic to write-protect role.guest_mode=1 SPTEs.
+
+(1.) sounds more complicated and will require more testing. (2.) is
+quite simple since an entire TDP MMU tree is either guest_mode=0 or
+guest_mode=1.
+
+Example fix (fixes syzbot repro but otherwise untested):
+
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 6ae19b4ee5b1..eb6fb8d9c00c 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -1498,6 +1498,24 @@ void kvm_tdp_mmu_try_split_huge_pages(struct kvm *kvm,
+ 	}
+ }
+ 
++static inline u64 tdp_mmu_dirty_bit(struct kvm_mmu_page *root, bool force_wrprot)
 +{
-+	struct test_task_get_cgroup_id *skel;
-+	int err, fd;
-+	pid_t pid;
-+	__u64 cgroup_id, expected_cgroup_id;
-+	const struct timespec req = {
-+		.tv_sec = 1,
-+		.tv_nsec = 0,
-+	};
++	if (force_wrprot || kvm_mmu_page_ad_need_write_protect(root) || !kvm_ad_enabled())
++		return PT_WRITABLE_MASK;
 +
-+	fd = test__join_cgroup(TEST_CGROUP);
-+	if (!ASSERT_OK(fd < 0, "test_join_cgroup_TEST_CGROUP"))
-+		return;
-+
-+	skel = test_task_get_cgroup_id__open();
-+	if (!ASSERT_OK_PTR(skel, "test_task_get_cgroup_id__open"))
-+		goto cleanup;
-+
-+	err = test_task_get_cgroup_id__load(skel);
-+	if (!ASSERT_OK(err, "test_task_get_cgroup_id__load"))
-+		goto cleanup;
-+
-+	err = test_task_get_cgroup_id__attach(skel);
-+	if (!ASSERT_OK(err, "test_task_get_cgroup_id__attach"))
-+		goto cleanup;
-+
-+	pid = getpid();
-+	expected_cgroup_id = get_cgroup_id(TEST_CGROUP);
-+	if (!ASSERT_GT(expected_cgroup_id, 0, "get_cgroup_id"))
-+		goto cleanup;
-+
-+	/* Trigger nanosleep to enter the sched_switch tracepoint */
-+	/* The previous task should be this process */
-+	syscall(__NR_nanosleep, &req, NULL);
-+
-+	err = bpf_map_lookup_elem(bpf_map__fd(skel->maps.pid_to_cgid_map), &pid,
-+				  &cgroup_id);
-+
-+	if (!ASSERT_OK(err, "bpf_map_lookup_elem"))
-+		goto cleanup;
-+
-+	ASSERT_EQ(cgroup_id, expected_cgroup_id, "cgroup_id");
-+
-+cleanup:
-+	test_task_get_cgroup_id__destroy(skel);
-+	close(fd);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_task_get_cgroup_id.c b/tools/testing/selftests/bpf/progs/test_task_get_cgroup_id.c
-new file mode 100644
-index 000000000000..7e6bc008970f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/test_task_get_cgroup_id.c
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright 2024 Netflix, Inc.
-+
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+u64 bpf_task_get_cgroup_id(struct task_struct *task) __ksym;
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(max_entries, 4096);
-+	__type(key, __u32);
-+	__type(value, __u64);
-+} pid_to_cgid_map SEC(".maps");
-+
-+SEC("tp_btf/sched_switch")
-+int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev,
-+	     struct task_struct *next)
-+{
-+	u32 pid = prev->pid;
-+	u64 cgroup_id;
-+
-+	cgroup_id = bpf_task_get_cgroup_id(prev);
-+	bpf_map_update_elem(&pid_to_cgid_map, &pid, &cgroup_id, BPF_ANY);
-+
-+	return 0;
++	return shadow_dirty_mask;
 +}
 +
-+char _license[] SEC("license") = "GPL";
--- 
-2.40.1
-
++static inline bool tdp_mmu_dirty_bit_invalid_for_spte(struct tdp_iter *iter, u64 dbit)
++{
++	/*
++	 * The decision of whether to clear the D-bit or W-bit is made based on
++	 * the root, as all TDP MMU SPTEs within a root should require the same
++	 * modifications. This check ensures that is actually the case.
++	 */
++	return dbit == shadow_dirty_mask && spte_ad_need_write_protect(iter->old_spte);
++}
++
+ /*
+  * Clear the dirty status of all the SPTEs mapping GFNs in the memslot. If
+  * AD bits are enabled, this will involve clearing the dirty bit on each SPTE.
+@@ -1508,7 +1526,7 @@ void kvm_tdp_mmu_try_split_huge_pages(struct kvm *kvm,
+ static bool clear_dirty_gfn_range(struct kvm *kvm, struct kvm_mmu_page *root,
+ 			   gfn_t start, gfn_t end)
+ {
+-	u64 dbit = kvm_ad_enabled() ? shadow_dirty_mask : PT_WRITABLE_MASK;
++	u64 dbit = tdp_mmu_dirty_bit(root, false);
+ 	struct tdp_iter iter;
+ 	bool spte_set = false;
+ 
+@@ -1523,8 +1541,7 @@ static bool clear_dirty_gfn_range(struct kvm *kvm, struct kvm_mmu_page *root,
+ 		if (tdp_mmu_iter_cond_resched(kvm, &iter, false, true))
+ 			continue;
+ 
+-		KVM_MMU_WARN_ON(kvm_ad_enabled() &&
+-				spte_ad_need_write_protect(iter.old_spte));
++		KVM_MMU_WARN_ON(tdp_mmu_dirty_bit_invalid_for_spte(&iter, dbit));
+ 
+ 		if (!(iter.old_spte & dbit))
+ 			continue;
+@@ -1570,8 +1587,7 @@ bool kvm_tdp_mmu_clear_dirty_slot(struct kvm *kvm,
+ static void clear_dirty_pt_masked(struct kvm *kvm, struct kvm_mmu_page *root,
+ 				  gfn_t gfn, unsigned long mask, bool wrprot)
+ {
+-	u64 dbit = (wrprot || !kvm_ad_enabled()) ? PT_WRITABLE_MASK :
+-						   shadow_dirty_mask;
++	u64 dbit = tdp_mmu_dirty_bit(root, wrprot);
+ 	struct tdp_iter iter;
+ 
+ 	lockdep_assert_held_write(&kvm->mmu_lock);
+@@ -1583,8 +1599,7 @@ static void clear_dirty_pt_masked(struct kvm *kvm, struct kvm_mmu_page *root,
+ 		if (!mask)
+ 			break;
+ 
+-		KVM_MMU_WARN_ON(kvm_ad_enabled() &&
+-				spte_ad_need_write_protect(iter.old_spte));
++		KVM_MMU_WARN_ON(tdp_mmu_dirty_bit_invalid_for_spte(&iter, dbit));
+ 
+ 		if (iter.level > PG_LEVEL_4K ||
+ 		    !(mask & (1UL << (iter.gfn - gfn))))
