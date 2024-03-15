@@ -1,172 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF31799D;
-	Fri, 15 Mar 2024 09:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E452217C6F;
+	Fri, 15 Mar 2024 09:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710494923; cv=none; b=AgLxNULnba71ZLY9gfgp7KKey30OZEL8cMSpi9UETBG+W+5I6LxZkwQ0nXs71dbUg6ObvE9XqR+arCPX/YcECc67r3AIe/7qSw3IUErgr+F3J7oseJZSLEWS0IB9MnyLFwXJ6YzTr1DPTphdHxgBnSFO0Boop1oLGaqTPC39S30=
+	t=1710494925; cv=none; b=q+d8mZ1zi+xs5Tx8vC9aeB8kzrMeOu7/4zA28v8OtD38Ng+n82Qa+J7mXB6I6clpZ03jUjebzUqgY4YBhBepo1L3KwhrvzKcLu6/3Ueg+w8rtBbdJOGh/1RGWWS/yjev0blVXqEbvkv60nJZasBsTE7nCrolIW09w74Ziog1YkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710494923; c=relaxed/simple;
-	bh=Jw1py/JdYhpsbyL85xC8WpCBa6kvGQQhAkylKoj7qcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xb1E5//mdhMJx9S1CAzzSKuBTOh3wN/SsKXUuBEWREF0dYPd9hE6YPstBNdMG4bKCK/m6rE8x0EHw3Sx9dNMqh4VW4Ak3TlolmArsGDGNy4j8vQpbot6z4C05Q9rWAXdBxNqBughbL2UB4UBjh5jdGceinNjijyNE0Qbg6n1sks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UI4O34qY; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710494925; c=relaxed/simple;
+	bh=0M+s6FikwHhrPesVLy1FInqzB+lvAfTTtTj2bJfLm5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Qe2NB8R5X45E53rcmBmnaLqrHF/Z/OKLWw+6hAv1AfTFmniXdADpXhs4MTXujCrJZTo4TpJuphsnZn4pDn9yWm2gliR+C56uDL+pOTbJt4XMCyF+tFZeBPTTV7nPa7MUaTYRXGmuh+WlPIr8CeQwsCOMtvkG7zu8jnrplQESbNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WA6i7aap; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UI4O34qY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710494921; x=1742030921;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Jw1py/JdYhpsbyL85xC8WpCBa6kvGQQhAkylKoj7qcM=;
-  b=UI4O34qYxhklY71jQniQFVxB4TgYlJkJmVP2WnWTCFZ3uGK1xxk3MlUA
-   5G5O8tdnGfb+5B3N5HbJ/39Xe4Ddy9pBTbiqAY1PnRv6S4x9AxvJDmo6A
-   V623zUncoAnNw0k30QV6Now4o0m/imm3na4RYB0wkAnmmlfyr+eiLtGJR
-   6RYJkf6xoQaxvxS6s332PnR+4/ubuUy6ynrDkvtysUUiWM2woKtP6pK5A
-   0QtO/jPfuFOaOjg089LXluxIqPxUr5I9Pb95UCUHyj/o5Bgi+OVaGiGcZ
-   MKd8F/jSZzGRGumk50l4Pwa+y/FsIPHI6wJTeMrt5BTuQCYzI9cqu3R+8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="22874660"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="22874660"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 02:28:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="43509447"
-Received: from chaop.bj.intel.com (HELO localhost) ([10.240.193.80])
-  by orviesa002.jf.intel.com with ESMTP; 15 Mar 2024 02:28:38 -0700
-Date: Fri, 15 Mar 2024 17:14:13 +0800
-From: Chao Peng <chao.p.peng@linux.intel.com>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: seanjc@google.com, pbonzini@redhat.com, isaku.yamahata@intel.com,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: x86/mmu: x86: Don't overflow lpage_info when
- checking attributes
-Message-ID: <20240315091413.GA221655@chaop.bj.intel.com>
-Reply-To: Chao Peng <chao.p.peng@linux.intel.com>
-References: <20240314212902.2762507-1-rick.p.edgecombe@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WA6i7aap"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6ca3fc613so1738323b3a.3;
+        Fri, 15 Mar 2024 02:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710494923; x=1711099723; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4iUpnvg2lJInUyXSwQRwOqYpvq0Q7ZeBFhxpnTWBCyk=;
+        b=WA6i7aaplKL/fvIc4g+Hf68jjpeykHGFqgV1f9yvZ5bUGJgJ12/pSyEjBoKuLEaqk6
+         nddOEfNGlvlVOkXZ9bzTEteZEj3Oadn2o2ESdu3zKAACYQTMyChWiNxGgSIngs7ymMS8
+         8+WkghRDvR/VHslXXTjSz0ckoHDNku+YeevcLCzwNKLUe4e3UWYeZFBaVuoJDzCL7/1X
+         yaio9T5YwLlU3dmF+gNxtWxxWhpbtoP7gCI68+ptnEneag45tteysbaieGXnWA1A4LdD
+         14hOd6BpIwnGYOPepwdZDLWyBv8gGmlbjiGkGJkEDU2bOieHQE5YQ3011/UhpeW5dKQp
+         PxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710494923; x=1711099723;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4iUpnvg2lJInUyXSwQRwOqYpvq0Q7ZeBFhxpnTWBCyk=;
+        b=HITg7ZMZwuFGB8bEhK0lMQfO73mNZXhVRV7xsKQgZBns09rFgGe39eAv0Cv6cLn6JX
+         nERbLQxmsSzc8jStiSuRuDPeLGKd/g1ZqfXjfxQXbZCsbUvKsttcGIzoWtKk209weQsk
+         5rmXA8RNmIpZgjC4vz54kFUP+I/ijFrcTBP96z5+HoxNLLw0ZIC7JyHIawhD78b8nuZp
+         JAIH2Y+gEnNALioJHizChgD3jjhJ/YOVDnTo0JaKlM5VRU7HTo4sKmyzDS8mS0nh4k7G
+         IV8gfKUAnb9PP7YdPgVCpzCl8k5rOxI928nbPWbEq31Qi1xBEN6y6KjA3NJRiVvUsXjQ
+         viQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmNI+1psvaAXRrFMcxNLbGM2x8gT6+AbZ/ixyL3/zLzS6zl/VLlwOEO0tBHA9vIQVkF8Ib8EwtA17xt0of4TZEzXM4F3pwn5sDwj8XiNtUf2OxerqxfckQMPlyGJxQf68Vw9C/ASpSr4LVwN6xGzhBbaCqepOpdQEtrT+HTY6BxQ==
+X-Gm-Message-State: AOJu0Yy3ppKbBrLAtTxZE9rdP6hhtXqnk2TIQ3uZvXy8MKh9cjjdUTzg
+	dcHt3QSaDCc0Wg6tAp7BHg8YMcUvm9HEyo/Dkg85Ya1KSfxrEZNd
+X-Google-Smtp-Source: AGHT+IEbZiJivklD5Du4nOd9Fchv3Tn+hjYAhIiufc1/ErBMEyBY7PktqGyChTs4nu/q7ti60Xacmg==
+X-Received: by 2002:a05:6a20:4327:b0:1a1:8ba0:2845 with SMTP id h39-20020a056a20432700b001a18ba02845mr3047631pzk.29.1710494923132;
+        Fri, 15 Mar 2024 02:28:43 -0700 (PDT)
+Received: from libra05 ([143.248.188.128])
+        by smtp.gmail.com with ESMTPSA id nt10-20020a17090b248a00b0029c7236637dsm2490885pjb.5.2024.03.15.02.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 02:28:42 -0700 (PDT)
+Date: Fri, 15 Mar 2024 18:28:38 +0900
+From: Yewon Choi <woni9911@gmail.com>
+To: Allison Henderson <allison.henderson@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Cc: "Dae R. Jeong" <threeearcat@gmail.com>
+Subject: [PATCH net v2] rds: introduce acquire/release ordering in
+ acquire/release_in_xmit()
+Message-ID: <ZfQUxnNTO9AJmzwc@libra05>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gb2312
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240314212902.2762507-1-rick.p.edgecombe@intel.com>
 
-On Thu, Mar 14, 2024 at 02:29:02PM -0700, Rick Edgecombe wrote:
-> Fix KVM_SET_MEMORY_ATTRIBUTES to not overflow lpage_info array and trigger
-> KASAN splat, as seen in the private_mem_conversions_test selftest.
-> 
-> When memory attributes are set on a GFN range, that range will have
-> specific properties applied to the TDP. A huge page cannot be used when
-> the attributes are inconsistent, so they are disabled for those the
-> specific huge pages. For internal KVM reasons, huge pages are also not
-> allowed to span adjacent memslots regardless of whether the backing memory
-> could be mapped as huge.
-> 
-> What GFNs support which huge page sizes is tracked by an array of arrays
-> 'lpage_info' on the memslot, of ¡®kvm_lpage_info¡¯ structs. Each index of
-> lpage_info contains a vmalloc allocated array of these for a specific
-> supported page size. The kvm_lpage_info denotes whether a specific huge
-> page (GFN and page size) on the memslot is supported. These arrays include
-> indices for unaligned head and tail huge pages.
-> 
-> Preventing huge pages from spanning adjacent memslot is covered by
-> incrementing the count in head and tail kvm_lpage_info when the memslot is
-> allocated, but disallowing huge pages for memory that has mixed attributes
-> has to be done in a more complicated way. During the
-> KVM_SET_MEMORY_ATTRIBUTES ioctl KVM updates lpage_info for each memslot in
-> the range that has mismatched attributes. KVM does this a memslot at a
-> time, and marks a special bit, KVM_LPAGE_MIXED_FLAG, in the kvm_lpage_info
-> for any huge page. This bit is essentially a permanently elevated count.
-> So huge pages will not be mapped for the GFN at that page size if the
-> count is elevated in either case: a huge head or tail page unaligned to
-> the memslot or if KVM_LPAGE_MIXED_FLAG is set because it has mixed
-> attributes.
-> 
-> To determine whether a huge page has consistent attributes, the
-> KVM_SET_MEMORY_ATTRIBUTES operation checks an xarray to make sure it
-> consistently has the incoming attribute. Since level - 1 huge pages are
-> aligned to level huge pages, it employs an optimization. As long as the
-> level - 1 huge pages are checked first, it can just check these and assume
-> that if each level - 1 huge page contained within the level sized huge
-> page is not mixed, then the level size huge page is not mixed. This
-> optimization happens in the helper hugepage_has_attrs().
-> 
-> Unfortunately, although the kvm_lpage_info array representing page size
-> 'level' will contain an entry for an unaligned tail page of size level,
-> the array for level - 1  will not contain an entry for each GFN at page
-> size level. The level - 1 array will only contain an index for any
-> unaligned region covered by level - 1 huge page size, which can be a
-> smaller region. So this causes the optimization to overflow the level - 1
-> kvm_lpage_info and perform a vmalloc out of bounds read.
-> 
-> In some cases of head and tail pages where an overflow could happen,
-> callers skip the operation completely as KVM_LPAGE_MIXED_FLAG is not
-> required to prevent huge pages as discussed earlier. But for memslots that
-> are smaller than the 1GB page size, it does call hugepage_has_attrs(). In
-> this case the huge page is both the head and tail page. The issue can be
-> observed simply by compiling the kernel with CONFIG_KASAN_VMALLOC and
-> running the selftest ¡°private_mem_conversions_test¡±, which produces the
-> output like the following:
-> 
-> BUG: KASAN: vmalloc-out-of-bounds in hugepage_has_attrs+0x7e/0x110
-> Read of size 4 at addr ffffc900000a3008 by task private_mem_con/169
-> Call Trace:
->   dump_stack_lvl
->   print_report
->   ? __virt_addr_valid
->   ? hugepage_has_attrs
->   ? hugepage_has_attrs
->   kasan_report
->   ? hugepage_has_attrs
->   hugepage_has_attrs
->   kvm_arch_post_set_memory_attributes
->   kvm_vm_ioctl
-> 
-> It is a little ambiguous whether the unaligned head page (in the bug case 
-> also the tail page) should be expected to have KVM_LPAGE_MIXED_FLAG set. 
-> It is not functionally required, as the unaligned head/tail pages will 
-> already have their kvm_lpage_info count incremented. The comments imply 
-> not setting it on unaligned head pages is intentional, so fix the callers 
-> to skip trying to set KVM_LPAGE_MIXED_FLAG in this case, and in doing so 
-> not call hugepage_has_attrs().
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 90b4fe17981e ("KVM: x86: Disallow hugepages when memory attributes are mixed")
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+acquire/release_in_xmit() work as bit lock in rds_send_xmit(), so they
+are expected to ensure acquire/release memory ordering semantics.
+However, test_and_set_bit/clear_bit() don't imply such semantics, on
+top of this, following smp_mb__after_atomic() does not guarantee release
+ordering (memory barrier actually should be placed before clear_bit()).
 
-Reviewed-by: Chao Peng <chao.p.peng@linux.intel.com>
+Instead, we use clear_bit_unlock/test_and_set_bit_lock() here.
 
-> ---
-> v2:
->  - Drop function rename (Sean)
->  - Clarify in commit log that this is only head pages that are also tail
->    pages (Sean)
-> ---
->  arch/x86/kvm/mmu/mmu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 0544700ca50b..42e7de604bb6 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -7388,7 +7388,8 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
->  			 * by the memslot, KVM can't use a hugepage due to the
->  			 * misaligned address regardless of memory attributes.
->  			 */
-> -			if (gfn >= slot->base_gfn) {
-> +			if (gfn >= slot->base_gfn &&
-> +			    gfn + nr_pages <= slot->base_gfn + slot->npages) {
->  				if (hugepage_has_attrs(kvm, slot, gfn, level, attrs))
->  					hugepage_clear_mixed(slot, gfn, level);
->  				else
-> -- 
-> 2.34.1
+Fixes: 0f4b1c7e89e6 ("rds: fix rds_send_xmit() serialization")
+Fixes: 1f9ecd7eacfd ("RDS: Pass rds_conn_path to rds_send_xmit()")
+Signed-off-by: Yewon Choi <woni9911@gmail.com>
+---
+Changes in v1 -> v2:
+- Added missing Fixes tags
+
+ net/rds/send.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/net/rds/send.c b/net/rds/send.c
+index 5e57a1581dc6..8f38009721b7 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -103,13 +103,12 @@ EXPORT_SYMBOL_GPL(rds_send_path_reset);
+ 
+ static int acquire_in_xmit(struct rds_conn_path *cp)
+ {
+-	return test_and_set_bit(RDS_IN_XMIT, &cp->cp_flags) == 0;
++	return test_and_set_bit_lock(RDS_IN_XMIT, &cp->cp_flags) == 0;
+ }
+ 
+ static void release_in_xmit(struct rds_conn_path *cp)
+ {
+-	clear_bit(RDS_IN_XMIT, &cp->cp_flags);
+-	smp_mb__after_atomic();
++	clear_bit_unlock(RDS_IN_XMIT, &cp->cp_flags);
+ 	/*
+ 	 * We don't use wait_on_bit()/wake_up_bit() because our waking is in a
+ 	 * hot path and finding waiters is very rare.  We don't want to walk
+-- 
+2.43.0
+
