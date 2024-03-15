@@ -1,86 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC1937164;
-	Fri, 15 Mar 2024 14:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1056637167;
+	Fri, 15 Mar 2024 14:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710511881; cv=none; b=dJc6Ih0pPx74U3dzbRGOjsRdFqZdSeJfV9OfA/N8AEF3ysX8BHeqOO9UiTuIBo9+MRxf9PH0wkapI2IRFYcJ4yyL6Oz6CQgxfU0L9Zbho7P3yMfqfsVRAoirK8SQcFS7fS9Whe+9SnyuZnrA+DYJRq0hiooVGo0Y20Acl3u0jls=
+	t=1710511937; cv=none; b=I9cHPRsXJuXbkEUzlUYHwxG/7oj8gcvV1SfQd+YhWkTwXzNQSiX7CMPOW9V9sVceveNUga6yp58B+HpF59Kqx0w3m7EMKti6EcN9FQF9+uXmHJVzLmoS59JGYEUtSlFzAUCZ6zxIXF/K0uO0N7XRXYrwFOFmT/fxfah+A0M6/Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710511881; c=relaxed/simple;
-	bh=xYmAthB11ki5pMUzbtNCl+cG0dk3Pap42GLMQ8EMeTE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Gp8O4407EaWbwT0ESGNnYwGXE09U/BypW84Q0cSHl11UwVM2EwOFG2tPaYino1cN5xZ1ri4He0exYpan2cYC6Cm3gfWLn19DvOucDXb3bYqthkUcxdgSYbox1Xs+c6dgKRylS2/EsCrrPyreY+pM0KXC70bxKinytmUZ/0iWtKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ez//vUQc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710511937; c=relaxed/simple;
+	bh=lDggbsGVPM1jhhJN1V2iUjTn/te3NkJhRIw7wWD1fBw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E/SkCXJa/rKSEGZlmLFE5agDU+U0tmEQFAElyCmAe2hK0FUTyrjmws8UCGROTw9GivrcT0OSJhgP7vF0ydx5eDxnyqU1YRNavP5uVFDjZkQQpOzn1j2cstje7HFqx/K/GspUEUNf4nR9JS1Iw7z0rgu7LHoMrllmKf/GL5NR1oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=yFl2fyCm; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ez//vUQc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B3E3C433C7;
-	Fri, 15 Mar 2024 14:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710511880;
-	bh=xYmAthB11ki5pMUzbtNCl+cG0dk3Pap42GLMQ8EMeTE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ez//vUQcHaqHkEqhM6yLs7YMZlPo6c0DDwBTf9E+yHYUIWQXuKguB38bnOad5lIhy
-	 hxU+leTls8Orl24viNxHKwj4sJ0Vo8cUvH/9be1E4/tcAoMy3MEpldRdr1cspoRJXT
-	 7admbgk48qVAZBV1NTJWZE0UFatpFnm4CxRw+dB356fhWtP6G5gH14/ZCqXQXk1Nxj
-	 Hame8Fca1TzsQaCGVw8G6pgCSls14Ktg0u8hh6HFFXdckG1jp3VSP0SkpDjskreVxb
-	 9aI4ReDcgWX0hK9KrX9JkmhKca+AqOecORaXecS/2UqM5P9mU2qw+1L4WMxbajGLQV
-	 870rV7iF79NCA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7F037D84BA8;
-	Fri, 15 Mar 2024 14:11:20 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="yFl2fyCm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=PyFfX2uCch2/EAvx8/2qfWz35TKluRnYnWc6BnNUd0I=;
+	t=1710511935; x=1711721535; b=yFl2fyCmK7OeTFI4awpLGOED4bf6dhznOM8Pl5YG0rEzNxd
+	CBNYd1pG6fHq36KF61FgiPMEEWATPF3c9E0mmU+2lxWHLUpCgtsTlRkXn9mWYEGfMVr1X+lqjWH2w
+	XzvL+7vGCH3REdt2qHCv8knwr4YnIEqcJhlKUVgx/ZTDNnXB//YJoQLfbmNMayiEojLO28K6pNBus
+	pwuIkJs/x4gCvkfgHswdRnHc/7Zp90uNIui7lZrcPpMA4ReCEDaaTuFgcQ+9B+GueHKTabFlFjI7n
+	BlW6VbcL5VxOP4a0YUK8Rz1oq+82eAAWm4Jb3kWiWrz3mRllLZMpgtoh7GHmMq4Q==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rl7r8-00000000LJF-0jgH;
+	Fri, 15 Mar 2024 14:44:18 +0100
+Message-ID: <66994d628df70a5ff535908efc16568d3a5a4c80.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v3 0/2] rust: crates in other kernel directories
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Miguel Ojeda
+ <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida
+ Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+ <gary@garyguo.net>, =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Date: Fri, 15 Mar 2024 14:44:16 +0100
+In-Reply-To: <20231104211213.225891-1-yakoyoku@gmail.com>
+References: <20231104211213.225891-1-yakoyoku@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 1/2] net: mediatek: mtk_eth_soc: clear MAC_MCR_FORCE_LINK
- only when MAC is up
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171051188051.5784.14743841618605304663.git-patchwork-notify@kernel.org>
-Date: Fri, 15 Mar 2024 14:11:20 +0000
-References: <7205ca7d3c5433214256df4672f7c1a49815a5a5.1710367570.git.daniel@makrotopia.org>
-In-Reply-To: <7205ca7d3c5433214256df4672f7c1a49815a5a5.1710367570.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, opensource@vdorst.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- chad.monroe@adtran.com, steven.liu@mediatek.com, john@phrozen.org
+X-malware-bazaar: not-scanned
 
-Hello:
+Hi,
 
-This series was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+So I realize this is an old patch, but I didn't find another version,
+and discussions seemed ongoing at least a month ago. I also came across
+it pretty randomly.
 
-On Wed, 13 Mar 2024 22:50:18 +0000 you wrote:
-> Clearing bit MAC_MCR_FORCE_LINK which forces the link down too early
-> can result in MAC ending up in a broken/blocked state.
-> 
-> Fix this by handling this bit in the .mac_link_up and .mac_link_down
-> calls instead of in .mac_finish.
-> 
-> Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
-> Suggested-by: Mason-cw Chang <Mason-cw.Chang@mediatek.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> 
-> [...]
+Anyway, question:
 
-Here is the summary with links:
-  - [net,1/2] net: mediatek: mtk_eth_soc: clear MAC_MCR_FORCE_LINK only when MAC is up
-    https://git.kernel.org/netdev/net/c/f1b85ef15a99
-  - [net,2/2] net: ethernet: mtk_eth_soc: fix PPE hanging issue
-    https://git.kernel.org/netdev/net/c/ea80e3ed09ab
+> If you want to use a crate with your Rust module just add a `rust-libs`
+> variable in your Makefile with a value of the relative directory of
+> said crate plus its name, e.g.
+>=20
+>     # Link with the foo crate
+>     rust-libs +=3D ../path/to/foo
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Should this perhaps be relative to the kernel's root dir instead?=C2=A0
 
+If I'm reading this correctly, then a hypothetical rust wireless driver
+that lives in
 
+  drivers/net/wireless/<vendor>/<name>/
+
+using some wireless rust infrastructure would probably end up with
+something like
+
+  rust-libs +=3D ../../../../../net/mac80211/rust/
+
+or whatever, which seems rather odd vs.
+
+  rust-libs +=3D net/mac80211/rust/
+
+Seems to me that chances are that subsystems/drivers that have rust
+infrastructure will not necessarily have them close to each other, like
+in this example?
+
+You have this in the sample too:
+
++rust-libs					:=3D ../../drivers/usb/core/usb
+
+but it's less pronounced since it's just samples/rust/ :)
+
+johannes
