@@ -1,170 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A88A175A6
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612DB17BBF;
+	Fri, 15 Mar 2024 09:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710494255; cv=none; b=SnNFbLBmqLmkFI9Yiw/LeHWgrMJUvRvv5Hv1qEPV4WI0C8axj1UAeA28ELHoQEd7Uy93nA1TRdsZWO1sytWfJ+XhW8R6rV0WBpJ+usTutH7sRzedJ0xBRxUrwuzdqHDKZo7LUWh+oWMOwNEx1pKeHlemeHIFVZl45NGM6DUa9xE=
+	t=1710494259; cv=none; b=pQTdwrh4gZt6kbZUuJHSuL3QxDavopMsCE/UQAxSUUKb3ltPPM75QujWvPW3vf15+eHjTBq1ol7lHL97hDP/aLZPNqKTD7NpGbgo8vpdZRF9prkioJE3XNZMQV+nQiNh2KgEwwCaYsjIyj1nEIa6LVgMsUInW2b+oTlgr+9/Fi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710494255; c=relaxed/simple;
-	bh=0AwaHVEEu5wj0fuHBbfehSKilFQUjqeQnXVwSKnsvRY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HEpZzsP9rBx8Ir4msm57AOmFl5G026L6ySE3sRp6d0GcI0qco68R8wOhFoFPYdg9Y52+V+BxdLeUPkZuEyyEe7S0UeEnr7HZ+xVEY0xyWVMuzBo71XI4u2c9oJhb7evQPCjmjOi5wQvuun8qX7nj3ClZssUL0zMmDUdq24cOFOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwnVEY0x; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710494259; c=relaxed/simple;
+	bh=kXBAnkGbfJNrzeLkswUtQO+dWo2m2AFzCqCA+Q4/7cA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=osUj1R9XedHABJCRMFe04Nn9cjdKjvi2qszDsXGFMzcTOKDphCdXkzZHCX5/o0T4z1DrucVosCsfFXyuvPdkO4bPlDDn2KI3Vi4w4h3ohz5F1idENXuAbuSOwsbW6NGBvRyBj3ScWnrruCH7V57HJ7+cezlZLtAHmyuAkSEi6i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jpgxlXdO; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwnVEY0x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710494253; x=1742030253;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=0AwaHVEEu5wj0fuHBbfehSKilFQUjqeQnXVwSKnsvRY=;
-  b=bwnVEY0xuSBvS4NTQZETNnyJatS250T+2dbKoPV+XeCrndXZHql0oZTs
-   2gb+GkBGDlluQt7xdF0XW42L6spBGSc3vxHIfAIizHaG4i0g9s7jyy5wu
-   VEsC6Jfv6ls5y99ehNzWr5dnlSP6B+agRzLbtmEiGsPGuRQ0TRIgVg9i4
-   I4gSDQ8q6Uytz7emt3U3ddP4F96rwAMzTjJ9n13n0BqJ3tMC3jRDqwByd
-   r4WvMOx67vs9AuHd1eTit3WiQLaVXfRF23HXCGIOIe3x4qyHloHSsHdz4
-   bEnkFV2VL93qOt7gvJvU69fOSYvxbVnwebvKWnT8/6HIch4f4/ajy4bz9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="15998142"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="15998142"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 02:17:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="12528091"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 02:17:27 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,  akpm@linux-foundation.org,
-  linux-mm@kvack.org,  ryan.roberts@arm.com,  chengming.zhou@linux.dev,
-  chrisl@kernel.org,  david@redhat.com,  hannes@cmpxchg.org,
-  kasong@tencent.com,  linux-arm-kernel@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  mhocko@suse.com,  nphamcs@gmail.com,
-  shy828301@gmail.com,  steven.price@arm.com,  surenb@google.com,
-  wangkefeng.wang@huawei.com,  xiang@kernel.org,  yosryahmed@google.com,
-  yuzhao@google.com,  Chuanhua Han <hanchuanhua@oppo.com>,  Barry Song
- <v-songbaohua@oppo.com>
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-In-Reply-To: <CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
-	(Barry Song's message of "Fri, 15 Mar 2024 21:54:29 +1300")
-References: <20240304081348.197341-1-21cnbao@gmail.com>
-	<20240304081348.197341-6-21cnbao@gmail.com>
-	<87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4x+t_X4Tn15=QPbH58e1S1FwOoM3t37T+cUE8-iKoENLw@mail.gmail.com>
-Date: Fri, 15 Mar 2024 17:15:33 +0800
-Message-ID: <87sf0rx3d6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpgxlXdO"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41401f1d665so1691435e9.2;
+        Fri, 15 Mar 2024 02:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710494256; x=1711099056; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c268dTB1nt4ioX1PYxDiUB6jGnxnnZc8CAJCFV2Kn4k=;
+        b=jpgxlXdOn3GIjpR1gXmm+vdu2GR0MFHT1uVaeHBNQviqAx6WzYBMtaB5x/xCEuuWvz
+         xi6p4TZs4YjdmOFkNyOAnzNsFsk6o8gdXbf//ouBxMzEFCyi2Q3YorASdGDZc5iDzdhy
+         jn+3GULx2gqyhRA5C0EYg9NZ9wuMBvtX/W5XJH0RskCpa96ZohYNTvmftQjPZFRsPC3j
+         zhjgZqJm5QRShUOPE1O0H7tIm4Zqt8iIemAX5kPFX+oyhbXU1Jo1jh5Z1gVeUyIOJkZw
+         HYZ2RIl4SgKnEr7nHmgmgpdIW4dNIZPRo/ftW4FyireGScE4mkdMrVOsZrERHCHJVMLT
+         kCLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710494256; x=1711099056;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c268dTB1nt4ioX1PYxDiUB6jGnxnnZc8CAJCFV2Kn4k=;
+        b=LdV7Fe6MGbN+qxkfrK3KYXN+NSmLnGZ7XtcZ1Vwk8HKLPB4ZjOzYvV4R6d/0P9MHdn
+         GIxkS4YZF5vW5ked/3H0VTShPWQmoEe7qamsEmn/QeUOd4PnG1cryYP4K26aHd2pa+iC
+         PtMN9CCUwL8b/r0xxm5DyeyM7VQB4aR5G7GYtFr9U0hB18cGaEmdNpCpYP4ZmPhO4Xij
+         Al7sODmHkoBI2QSPxd9nftbsYUvQC0YLIj0ZVWgoP9h5yqv+hBo7whznfHk5zMzg5Nbi
+         k5iIgPJ9aYRPslC6S81158AvdqbWazqCF+dO7uGbNlvZBMLWqm9DZtur0MgQCtgjJXoR
+         eNUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNWH9fN9FL23pB4uYRNKaPs0PETWs6Q0Z8mzqmyPSaT+BMHNAI3e3C7tgBUrE9FKF49EjWZSdpI9DOT59R00U/ausV8yiGlsYznW4xhnSHUUqeeLIQIJJKv2cZEuSQxBWjJcPyio9/iHzB
+X-Gm-Message-State: AOJu0YzidfQ+f8Pa59R4N0OEzZHhmYcM6ahCzGcaNyVoEAQQZ0BAT30N
+	nm17cxrro+7BALtAkO0HAqloyfDIyNHDbQRI2BvOFfzWXC87d7RF6Fohw4udmH4=
+X-Google-Smtp-Source: AGHT+IENWATxNF4oDreVWvt1hXlDdhhoO+9WNqt74/Tv6ejfOOWqm9MJnvUPCll3CHbAqVXALh2GHw==
+X-Received: by 2002:a05:600c:3f90:b0:413:fff2:a7d1 with SMTP id fs16-20020a05600c3f9000b00413fff2a7d1mr1050979wmb.29.1710494255707;
+        Fri, 15 Mar 2024 02:17:35 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id bd7-20020a05600c1f0700b00413f3ca39easm4262167wmb.5.2024.03.15.02.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 02:17:35 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-serial@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] tty: hvc: Remove second semicolon
+Date: Fri, 15 Mar 2024 09:17:34 +0000
+Message-Id: <20240315091734.2430416-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Barry Song <21cnbao@gmail.com> writes:
+There is a statement with two semicolons. Remove the second one, it
+is redundant.
 
-> On Fri, Mar 15, 2024 at 9:43=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > From: Chuanhua Han <hanchuanhua@oppo.com>
->> >
->> > On an embedded system like Android, more than half of anon memory is
->> > actually in swap devices such as zRAM. For example, while an app is
->> > switched to background, its most memory might be swapped-out.
->> >
->> > Now we have mTHP features, unfortunately, if we don't support large fo=
-lios
->> > swap-in, once those large folios are swapped-out, we immediately lose =
-the
->> > performance gain we can get through large folios and hardware optimiza=
-tion
->> > such as CONT-PTE.
->> >
->> > This patch brings up mTHP swap-in support. Right now, we limit mTHP sw=
-ap-in
->> > to those contiguous swaps which were likely swapped out from mTHP as a
->> > whole.
->> >
->> > Meanwhile, the current implementation only covers the SWAP_SYCHRONOUS
->> > case. It doesn't support swapin_readahead as large folios yet since th=
-is
->> > kind of shared memory is much less than memory mapped by single proces=
-s.
->>
->> In contrast, I still think that it's better to start with normal swap-in
->> path, then expand to SWAP_SYCHRONOUS case.
->
-> I'd rather try the reverse direction as non-sync anon memory is only arou=
-nd
-> 3% in a phone as my observation.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/tty/hvc/hvc_xen.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Phone is not the only platform that Linux is running on.
+diff --git a/drivers/tty/hvc/hvc_xen.c b/drivers/tty/hvc/hvc_xen.c
+index 0e497501f8e3..388a71afd6ef 100644
+--- a/drivers/tty/hvc/hvc_xen.c
++++ b/drivers/tty/hvc/hvc_xen.c
+@@ -558,7 +558,7 @@ static void xencons_backend_changed(struct xenbus_device *dev,
+ 			break;
+ 		fallthrough;	/* Missed the backend's CLOSING state */
+ 	case XenbusStateClosing: {
+-		struct xencons_info *info = dev_get_drvdata(&dev->dev);;
++		struct xencons_info *info = dev_get_drvdata(&dev->dev);
+ 
+ 		/*
+ 		 * Don't tear down the evtchn and grant ref before the other
+-- 
+2.39.2
 
->>
->> In normal swap-in path, we can take advantage of swap readahead
->> information to determine the swapped-in large folio order.  That is, if
->> the return value of swapin_nr_pages() > 1, then we can try to allocate
->> and swapin a large folio.
->
-> I am not quite sure we still need to depend on this. in do_anon_page,
-> we have broken the assumption and allocated a large folio directly.
-
-I don't think that we have a sophisticated policy to allocate large
-folio.  Large folio could waste memory for some workloads, so I think
-that it's a good idea to allocate large folio always.
-
-Readahead gives us an opportunity to play with the policy.
-
-> On the other hand, compressing/decompressing large folios as a
-> whole rather than doing it one by one can save a large percent of
-> CPUs and provide a much lower compression ratio.  With a hardware
-> accelerator, this is even faster.
-
-I am not against to support large folio for compressing/decompressing.
-
-I just suggest to do that later, after we play with normal swap-in.
-SWAP_SYCHRONOUS related swap-in code is an optimization based on normal
-swap.  So, it seems natural to support large folio swap-in for normal
-swap-in firstly.
-
-> So I'd rather more aggressively get large folios swap-in involved
-> than depending on readahead.
-
-We can take advantage of readahead algorithm in SWAP_SYCHRONOUS
-optimization too.  The sub-pages that is not accessed by page fault can
-be treated as readahead.  I think that is a better policy than
-allocating large folio always.
-
->>
->> To do that, we need to track whether the sub-pages are accessed.  I
->> guess we need that information for large file folio readahead too.
->>
->> Hi, Matthew,
->>
->> Can you help us on tracking whether the sub-pages of a readahead large
->> folio has been accessed?
->>
->> > Right now, we are re-faulting large folios which are still in swapcach=
-e as a
->> > whole, this can effectively decrease extra loops and early-exitings wh=
-ich we
->> > have increased in arch_swap_restore() while supporting MTE restore for=
- folios
->> > rather than page. On the other hand, it can also decrease do_swap_page=
- as
->> > PTEs used to be set one by one even we hit a large folio in swapcache.
->> >
->>
---
-Best Regards,
-Huang, Ying
