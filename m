@@ -1,120 +1,313 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80112E71
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 17:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885DA50A60;
+	Fri, 15 Mar 2024 17:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710523277; cv=none; b=d5+pf44Ul8Lyx1Q2woPb/9GNee/cPYbd7Z2AuJYHEqcTXJk3qIKv1BQZfLhgNKfl285SnkBEnDokFVYZbby0deRC0P06MMhAsjUSYUagBAN7qo5rx2SVllSnpeZbpZCLjonXnUfnGHPgb5/rA4B7zYiggckSo3pGHrX4Sqm7mHk=
+	t=1710523347; cv=none; b=hIl9SMXFPPct2L3zWrNZjapQdgZNutLddDlwJjt/G9nsWd04Ilyi13GLb+q927pn0OnN5MUWO5Zyl8xcMlYVpFnBnTW4lzht1ag/X4X04Rmykb5TrzkqfqWFPG63swvPHeZLlmyml50zSyc5eljkuNlU+o/B2WIAn/OikZQZJvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710523277; c=relaxed/simple;
-	bh=lZGIfzqc2Drzycj6AUKwKqZXUp1iJGO6D44k85fp6lc=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=hiVJN3mDgulu+ZSxw6kz8+9aD3WqJkMcq3mh1VHfOLU0LAf7IbfwGxYDBvEem60zpIXvEfhAJT1umEE3VUiZ4a102jpxOV34404e3fS6TL4u4zTR5JiAg8OjZUKCOc87ITvDpHkUU9ZEMOUP0y/AaBc73L/IbHUmQ4bY3c9UoA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=rUsIq+aW; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1710523347; c=relaxed/simple;
+	bh=7GDKhw2QtnkDvhwA9/3K1ZC3h7d4J8wzBkO5Ddpp0oI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cmSTRjPqJIo7ZBz9I5ZIowbB2h7IjvhcX8w72PQ7SjxYWt6aH/GOMST5Ph0ec1qZYJ8H6ZXXIIOneVk63nI5TrZSje5t945I+NTaoBV9YrbtC+HkO1WFBNzQcJcMIASt+vtZgSDgbMFsuRWtrqtD6SZKH95ARg6kSHb+tNikjvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJpLyYGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="rUsIq+aW"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6f4ad4c57so1182346b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1710523275; x=1711128075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z4Uu/E9gE0652T6hoQJRicZh5VPvjIkh0J3KEQ5/ek4=;
-        b=rUsIq+aWDlp9HkYbGp89cDOS5Q6V9Bsi+5LKAOXST70EmooYPJ8cKvqL0+R45mLzSG
-         lpN2Rx4C6zSX6px0hlG50f0J8UFldBDa6AVpl+RBjdCs2SG4kQWmHaxBuocRYuzlnFc3
-         TT/u0jCSJ5/JANc/zVpPV93k6Zo6nDkfYy0o2xW6s8+5v1ykAYtvlHDwrFOphaK/V5SQ
-         7OFMbRQ2553MA088lD15/DALfNoPbLKKO97k3MZnlJ9AAJOREwvAkDt5aaIqymyG1rs9
-         gVegLdwty6WMkVL+tuJ/oaFxVwBMeGDI2l8U/6YUkCwqx3FryusCinDtEpf1aXOrYq6X
-         /QkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710523275; x=1711128075;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4Uu/E9gE0652T6hoQJRicZh5VPvjIkh0J3KEQ5/ek4=;
-        b=iB5lHKfISHzuf4dG727slv9/VbIwLfEBXqryKJOAR8IJI2dZliNn69HFHMzEsSTJgN
-         9gqQdZM532zd04tNkFBRWHgUz0T2u1iuPUXGUDLHQDh0VUJg0gPv//HENuQCpsVf/GH/
-         yPo7eD1V8ucVCTNiprvbaw9KxJ+YAhF4rKFSU+l/MsVMv1XDsK4+bO9ncSNptwUwAgW2
-         ZYpc0jaXEfy9u95RroJqKCohe14pAuSWYpQW0HBQcUqTJCWEaF9uv9SLAkLUHQWSNS3G
-         oxFjasZ9BmDo5tVc/HBwoemzpTeVHpPDk1+hNOpao8yZ1404sRbtp5Gvyx079FKu6eaD
-         maNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWi1EYPjzGPXaxFUXPZAEPKLGqpD/jQ6Mh5+u0JUOVw99NGR6kAclPbLtpqccXwo9waOCzep0q+Hq9XfN2JkaXXy6RCwlF0g7qbQsID
-X-Gm-Message-State: AOJu0YxgSGHvXCVHDXl220Xss16hoIbRGiL47bB62mlDQsnnGAhUm/AU
-	T8d851XGISpecoKUytC70aRpvbxpDBtRCJ8F9z6RrJvWIldHpnBUYuvzCMjcOxc=
-X-Google-Smtp-Source: AGHT+IFobowEw/BZzPFUGcWVFl2f0Ay+g8tIGVtL6ZeOGfHYkRhGF70dEpXmyMZCMSlq5eClBe2ngg==
-X-Received: by 2002:a05:6a00:b52:b0:6e5:d88:a73e with SMTP id p18-20020a056a000b5200b006e50d88a73emr6658033pfo.9.1710523274903;
-        Fri, 15 Mar 2024 10:21:14 -0700 (PDT)
-Received: from localhost ([50.213.54.97])
-        by smtp.gmail.com with ESMTPSA id b18-20020aa78712000000b006e6be006637sm3614761pfo.135.2024.03.15.10.21.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 10:21:14 -0700 (PDT)
-Date: Fri, 15 Mar 2024 10:21:14 -0700 (PDT)
-X-Google-Original-Date: Fri, 15 Mar 2024 10:18:57 PDT (-0700)
-Subject:     Re: [PATCH v3 1/4] dt-bindings: reset: sophgo: support SG2042
-In-Reply-To: <MA0P287MB282221F8E750206EA615B3CEFE282@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-CC: unicornxw@gmail.com, inochiama@outlook.com, arnd@kernel.org,
-  aou@eecs.berkeley.edu, chao.wei@sophgo.com, Conor Dooley <conor@kernel.org>,
-  krzysztof.kozlowski+dt@linaro.org, Paul Walmsley <paul.walmsley@sifive.com>, p.zabel@pengutronix.de,
-  robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-  linux-riscv@lists.infradead.org, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, guoren@kernel.org,
-  jszhang@kernel.org, krzysztof.kozlowski@linaro.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: unicorn_wang@outlook.com
-Message-ID: <mhng-76918908-fb82-4312-9320-959318b98b5f@palmer-ri-x1c9a>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJpLyYGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C5DC433C7;
+	Fri, 15 Mar 2024 17:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710523347;
+	bh=7GDKhw2QtnkDvhwA9/3K1ZC3h7d4J8wzBkO5Ddpp0oI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IJpLyYGIK98T/y1ZfxIj2qR6Wa2eKDOVi/09/RnE7eB83C28WJpGqH3Wqi3kzNuNu
+	 MtF+2XflGkwSfOMvlA7n8sFnMFnqPrpuOYBpNjoJcWy69r0EzFqFXwDdHQTXKo/Jzp
+	 +oZrC89hrI3HM1Y4E/W5CiM9mDEdD/QyO1SZTdpeeF5u7VQxY0q5hoCpPik7xYOrQZ
+	 kaA+kbYqLPTGlDM+N9PfVkX4Nnckd45D//dlXFOYaiCerdBFBXEPA4/ROmb6Y9kc5H
+	 AKp5YEcJpiivgSGy9AafFcHVDzDl6YsPh5ZvmpQXNQwiYZiHqUVoKhR5Nm7kt6hl3F
+	 Rd0HuwQ4tDQDQ==
+Date: Fri, 15 Mar 2024 11:22:24 -0600
+From: Rob Herring <robh@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [GIT PULL] Devicetree updates for v6.9
+Message-ID: <20240315172224.GA1479929-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-On Thu, 14 Mar 2024 17:15:11 PDT (-0700), unicorn_wang@outlook.com wrote:
->
-> On 2024/3/14 23:17, Palmer Dabbelt wrote:
->> On Mon, 29 Jan 2024 17:49:45 PST (-0800), unicornxw@gmail.com wrote:
->>> From: Chen Wang <unicorn_wang@outlook.com>
->>>
->>> Add bindings for the reset generator on the SOPHGO SG2042 RISC-V SoC.
->>>
->>>
-> [...]
->>
->> This is now
->>
->> Fixes: 1ce7587e507e ("riscv: dts: add reset generator for Sophgo
->> SG2042 SoC")
->>
->> which landed in Linus' tree.  Looks like that went up via Inochi and
->> Arnd.  I don't have that in my for-next yet, so I'm just stashing away
->> this patch for my tester.
->>
->> I'm happy to pick this up if folks want, but it'll probably be cleaner
->> somewhere else.
->
-> Hi, Palmer,
->
-> I see Arnd has prepared a tag
-> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/tag/?h=soc-late-6.9
-> which contains the bindings part changes for sg2042 reset driver.
->
-> Let's wait for Arnd to submit, although I haven't seen this in Linus's
-> tree and not sure if Arnd have submitted this.
+Linus,
 
-OK, sounds good.  I realized I dropped the ball on a fix, so I'm not 
-sending a PR this morning either way (I hadn't picked this up yet, 
-though, so shouldn't make much of a difference).
+Please pull DT updates for v6.9.
 
-I'll just leave this in my not-for-next until it gets sorted out.
+Rob
 
-Thanks!
 
->
-> Thanks,
->
-> Chen
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-6.9
+
+for you to fetch changes up to 7e98fe49f8896cc60c2a88c60bc535aa3e0e2564:
+
+  dt-bindings: soc: imx: fsl,imx-anatop: add imx6q regulators (2024-03-15 10:57:36 -0600)
+
+----------------------------------------------------------------
+Devicetree updates for v6.9:
+
+DT core:
+
+- Add cleanup.h based auto release of struct device_node pointers via
+  __free marking and new for_each_child_of_node_scoped() iterator to use
+  it.
+
+- Always create a base skeleton DT when CONFIG_OF is enabled. This
+  supports several usecases of adding DT data on non-DT booted systems.
+
+- Move around some /reserved-memory code in preparation for further
+  improvements
+
+- Add a stub for_each_property_of_node() for !OF
+
+- Adjust the printk levels on some messages
+
+- Fix __be32 sparse warning
+
+- Drop RESERVEDMEM_OF_DECLARE usage from Freescale qbman driver
+  (currently orphaned)
+
+- Add Saravana Kannan and drop Frank Rowand as DT maintainers
+
+DT bindings:
+
+- Convert Mediatek timer, Mediatek sysirq, fsl,imx6ul-tsc,
+  fsl,imx6ul-pinctrl, Atmel AIC, Atmel HLCDC, FPGA region, and
+  xlnx,sd-fec to DT schemas
+
+- Add existing, but undocumented fsl,imx-anatop binding
+
+- Add bunch of undocumented vendor prefixes used in compatible strings
+
+- Drop obsolete brcm,bcm2835-pm-wdt binding
+
+- Drop obsolete i2c.txt which as been replaced with schema in dtschema
+
+- Add DPS310 device and sort trivial-devices.yaml
+
+- Enable undocumented compatible checks on DT binding examples
+
+- More QCom maintainer fixes/updates
+
+- Updates to writing-schema.rst and DT submitting-patches.rst to cover
+  some frequent review comments
+
+- Clean-up SPDX tags to use 'OR' rather than 'or'
+
+----------------------------------------------------------------
+Alexander Stein (2):
+      of: property: Make 'no port node found' output a debug message
+      dt-bindings: soc: imx: fsl,imx-anatop: add imx6q regulators
+
+AngeloGioacchino Del Regno (1):
+      dt-bindings: timer: mediatek: Convert to json-schema
+
+Bartosz Golaszewski (1):
+      of: make for_each_property_of_node() available to to !OF
+
+Dawei Li (1):
+      of: Make explicit cpu_to_be32 conversion to mute sparse warning
+
+Dharma Balasubiramani (2):
+      dt-bindings: display: convert Atmel's HLCDC to DT schema
+      dt-bindings: interrupt-controller: Convert Atmel AIC to json-schema
+
+Dragan Cvetic (1):
+      dt-bindings: misc: xlnx,sd-fec: convert bindings to yaml
+
+Frank Li (1):
+      dt-bindings: interrupt-controller: fsl,intmux: Include power-domains support
+
+Frank Rowand (2):
+      of: Create of_root if no dtb provided by firmware
+      of: unittest: treat missing of_root as error instead of fixing up
+
+Jeffrey Hugo (2):
+      dt-bindings: watchdog: qcom-wdt: Update maintainer to Rajendra Nayak
+      dt-bindings: net: bluetooth: qualcomm: Fix bouncing @codeaurora
+
+Jonathan Cameron (3):
+      of: Add cleanup.h based auto release via __free(device_node) markings
+      of: Introduce for_each_*_child_of_node_scoped() to automate of_node_put() handling
+      of: unittest: Use for_each_child_of_node_scoped()
+
+Krzysztof Kozlowski (10):
+      docs: dt: submitting-patches: drop outdated points to TXT format
+      docs: dt: submitting-patches: add commit subject prefix in reversed format
+      dt-bindings: mux: restrict node name suffixes
+      dt-bindings: trivial-devices: sort entries alphanumerically
+      dt-bindings: misc: qcom,fastrpc: Compute callbacks can be DMA coherent
+      dt-bindings: use capital "OR" for multiple licenses in SPDX
+      docs: dt: writing-schema: clarify that schema should describe hardware
+      docs: dt: writing-schema: explain additional/unevaluatedProperties
+      docs: dt: writing-schema: document expectations on example DTS
+      dt-bindings: arm: syna: remove unstable remark
+
+Kuninori Morimoto (2):
+      of: property: add missing kerneldoc for of_graph_get_endpoint_count()
+      of: property: use unsigned int return on of_graph_get_endpoint_count()
+
+Lad Prabhakar (1):
+      dt-bindings: interrupt-controller: renesas,rzg2l-irqc: Update interrupts
+
+Michal Simek (1):
+      dt-bindings: fpga: Convert fpga-region binding to yaml
+
+Ninad Palsule (1):
+      dt-bindings: Add DPS310 as trivial device
+
+Peng Fan (1):
+      dt-bindings: can: fsl,flexcan: add i.MX95 compatible string
+
+Rafał Miłecki (2):
+      dt-bindings: interrupt-controller: convert MediaTek sysirq to the json-schema
+      dt-bindings: vendor-prefixes: add smartrg
+
+Rob Herring (9):
+      dt-bindings: Turn on undocumented compatible checks
+      MAINTAINERS: Drop Frank Rowand from DT maintainership
+      MAINTAINERS: Drop my "+dt" sub-address
+      dt-bindings: i2c: mux: i2c-demux-pinctrl: Drop i2c-mux.yaml reference
+      dt-bindings: i2c: mux: i2c-demux-pinctrl: Define "i2c-parent" constraints
+      dt-bindings: vendor-prefixes: Add missing prefixes used in compatibles
+      dt-bindings: i2c: Remove obsolete i2c.txt
+      soc: fsl: qbman: Remove RESERVEDMEM_OF_DECLARE usage
+      of: Move all FDT reserved-memory handling into of_reserved_mem.c
+
+Saravana Kannan (1):
+      MAINTAINERS: of: Add Saravana Kannan
+
+Sebastian Reichel (6):
+      dt-bindings: lcdif: Do not require power-domains for i.MX6ULL
+      dt-bindings: pinctrl: fsl,imx6ul-pinctrl: convert to YAML
+      dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
+      dt-bindings: soc: imx: fsl,imx-anatop: add binding
+      dt-bindings: soc: imx: fsl,imx-iomuxc-gpr: add imx6
+      dt-bindings: fsl-imx-sdma: fix HDMI audio index
+
+Stanislav Jakubek (1):
+      dt-bindings: watchdog: drop obsolete brcm,bcm2835-pm-wdt bindings
+
+Stephen Boyd (4):
+      of: Always unflatten in unflatten_and_copy_device_tree()
+      um: Unconditionally call unflatten_device_tree()
+      x86/of: Unconditionally call unflatten_and_copy_device_tree()
+      of: Add KUnit test to confirm DTB is loaded
+
+Uwe Kleine-König (1):
+      of/platform: Inform about created platform devices using pr_debug()
+
+ Documentation/devicetree/bindings/Makefile         |   3 -
+ Documentation/devicetree/bindings/arm/syna.txt     |  12 -
+ .../atmel/atmel,hlcdc-display-controller.yaml      |  63 +++
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  75 ----
+ .../devicetree/bindings/display/fsl,lcdif.yaml     |   8 +-
+ .../bindings/display/panel/visionox,r66451.yaml    |   2 +-
+ .../devicetree/bindings/dma/fsl,imx-sdma.yaml      |   3 +-
+ .../devicetree/bindings/fpga/fpga-region.txt       | 479 ---------------------
+ .../devicetree/bindings/fpga/fpga-region.yaml      | 358 +++++++++++++++
+ .../bindings/gpio/gateworks,pld-gpio.txt           |   3 +-
+ .../devicetree/bindings/gpio/mrvl-gpio.yaml        |   2 +-
+ .../devicetree/bindings/i2c/i2c-demux-pinctrl.yaml |   3 +-
+ Documentation/devicetree/bindings/i2c/i2c-pxa.yaml |   2 +-
+ Documentation/devicetree/bindings/i2c/i2c.txt      | 151 -------
+ .../bindings/i2c/nvidia,tegra186-bpmp-i2c.yaml     |   3 +-
+ Documentation/devicetree/bindings/i3c/i3c.yaml     |   2 +-
+ .../bindings/input/touchscreen/fsl,imx6ul-tsc.yaml |  97 +++++
+ .../bindings/input/touchscreen/imx6ul_tsc.txt      |  38 --
+ .../bindings/interrupt-controller/atmel,aic.txt    |  43 --
+ .../bindings/interrupt-controller/atmel,aic.yaml   |  89 ++++
+ .../bindings/interrupt-controller/fsl,intmux.yaml  |   3 +
+ .../mediatek,mt6577-sysirq.yaml                    |  85 ++++
+ .../interrupt-controller/mediatek,sysirq.txt       |  44 --
+ .../interrupt-controller/renesas,rzg2l-irqc.yaml   |  44 +-
+ .../devicetree/bindings/misc/qcom,fastrpc.yaml     |   2 +
+ .../devicetree/bindings/misc/xlnx,sd-fec.txt       |  58 ---
+ .../devicetree/bindings/misc/xlnx,sd-fec.yaml      | 140 ++++++
+ .../devicetree/bindings/mux/mux-controller.yaml    |   2 +-
+ .../bindings/net/bluetooth/qualcomm-bluetooth.yaml |   4 +-
+ .../devicetree/bindings/net/can/fsl,flexcan.yaml   |   3 +
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt        |  37 --
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.yaml       | 116 +++++
+ .../devicetree/bindings/rtc/sa1100-rtc.yaml        |   2 +-
+ .../bindings/soc/imx/fsl,imx-anatop.yaml           | 128 ++++++
+ .../bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml       |  18 +-
+ Documentation/devicetree/bindings/sound/cs4341.txt |   2 +-
+ .../devicetree/bindings/submitting-patches.rst     |  23 +-
+ .../bindings/timer/mediatek,mtk-timer.txt          |  48 ---
+ .../devicetree/bindings/timer/mediatek,timer.yaml  |  84 ++++
+ .../devicetree/bindings/timer/mrvl,mmp-timer.yaml  |   2 +-
+ .../devicetree/bindings/trivial-devices.yaml       |  75 ++--
+ .../devicetree/bindings/usb/cypress,hx3.yaml       |   2 +-
+ .../devicetree/bindings/vendor-prefixes.yaml       |  27 ++
+ .../bindings/watchdog/brcm,bcm2835-pm-wdog.txt     |  18 -
+ .../devicetree/bindings/watchdog/qcom-wdt.yaml     |   2 +-
+ .../devicetree/bindings/writing-schema.rst         |  30 +-
+ Documentation/misc-devices/xilinx_sdfec.rst        |   2 +-
+ MAINTAINERS                                        |   9 +-
+ arch/um/kernel/dtb.c                               |  16 +-
+ arch/x86/kernel/devicetree.c                       |  26 +-
+ drivers/of/.kunitconfig                            |   3 +
+ drivers/of/Kconfig                                 |  14 +-
+ drivers/of/Makefile                                |   4 +-
+ drivers/of/base.c                                  |   4 +-
+ drivers/of/empty_root.dts                          |   6 +
+ drivers/of/fdt.c                                   | 187 +++-----
+ drivers/of/of_private.h                            |   5 +-
+ drivers/of/of_reserved_mem.c                       | 125 +++++-
+ drivers/of/of_test.c                               |  57 +++
+ drivers/of/platform.c                              |   5 +-
+ drivers/of/property.c                              |  12 +-
+ drivers/of/unittest.c                              |  27 +-
+ drivers/soc/fsl/qbman/bman_ccsr.c                  |  27 +-
+ drivers/soc/fsl/qbman/dpaa_sys.c                   |  12 +-
+ drivers/soc/fsl/qbman/dpaa_sys.h                   |   4 +-
+ drivers/soc/fsl/qbman/qman_ccsr.c                  |  73 +---
+ include/dt-bindings/power/amlogic,c3-pwrc.h        |   2 +-
+ include/linux/of.h                                 |  46 +-
+ include/linux/of_graph.h                           |   4 +-
+ 69 files changed, 1722 insertions(+), 1383 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/atmel/atmel,hlcdc-display-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+ delete mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,mt6577-sysirq.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+ delete mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
+ create mode 100644 drivers/of/.kunitconfig
+ create mode 100644 drivers/of/empty_root.dts
+ create mode 100644 drivers/of/of_test.c
