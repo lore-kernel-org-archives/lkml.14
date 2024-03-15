@@ -1,115 +1,137 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF86A4EB22
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 18:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5281547A67;
+	Fri, 15 Mar 2024 18:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710526077; cv=none; b=b0CuW8+ORaKilTmt7P4BC5kr+56SvbRsPZHUJwZhNCWObQvWUhfLdMIliGfggLFbi3wH0Zq4p8mP4RxSpMD+ZXUEF8fRIN+u055PXl86eaVUCZkNOVDuIpVb4azQm83ARUDZIjZ0VDVdFdk3+ABFCILMOnf0myOTJ4oUJm3xruw=
+	t=1710526184; cv=none; b=a6jPdaINAbekcf5x+1HGXLzyj6hQJbyz7FR6MdfMWAPFwyX6JvUvPmvCBMMMn5Cfjan8nAVszYyDhW7Uh8VXztaoPIkyCvURLo9n7M/Ms0jotCyKXryW4tKkFUM9jiNF28rbdK6VfmxAgeodwnb6YDSZSDgXhCSidx0sN/e+YOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710526077; c=relaxed/simple;
-	bh=Ig5e3Uo4Kt6VkXUFZYwYIev6o2L4kkKcvCSrIKfFMiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ac1XCNnkNTvgtxxg73LFa3Tw45uZSna4Yvb8sXQOI6g4J3xiC+yzzeRTjrmksqEG6R4jp48NwASLxXeNZwqL82CkAooRGU4Egp/0tW2Pqq8W5CTarzWnTuXAtzFU4GB7buQVDCjnnNxzOSyj/TN/cdgbkEn0weZ7wENczS+32iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xes9C2sK; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710526184; c=relaxed/simple;
+	bh=x6mPWzzOIcq52zQTpLZRzif+g0BzSJp99JTQQBpC4RM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KyUj7jvURVahpnSFdbLgS1GxyYD69ayNGFJrbPy3gLqnDz8Rxs9bs6w98k+D3+yn+n5Z/zJFwJPPH7F4i5qiw+NWKmWVldmG9bDqdEgqTWh9+/LuXMcTSBnegxAMrgBZnaIyHF17OFlyMk34upT5Mxw6PODNTWCRZQ3ZgZeKRVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LP7lO3v7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xes9C2sK"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-413fff1dacfso6976595e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710526072; x=1711130872; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S/uFlk2C9GRLTlRVUjXmHsG5FS0j/ZDm8S03vQkEIVE=;
-        b=xes9C2sKv6nAzgSSvS79CDOxKRuly7kPIq7/6k15weTwgIAEZVSRZpzgEmdIod7O4p
-         k024rijIRGxPJSmPyLt93vYM0Ay8uY0pOznXE4CFgwtk1Gp9cKpCwwoyYbeCUz5fToYN
-         NTq22HHWz13xINuABOele/HzaaX88G8skfReTxVu7ydRLER0oS5KH/2e5auOAqrfHT30
-         ASaM6REpsZdrZf6rsc8xDvtX1AKaaVfJ+ZKFHWHUOkAJGzdWDYon2paEnxAviwqpVWIi
-         zMTV5SBYKVSMBOZYYG8BlArBQHHLlGXdzuUsliyytDMw2O+K1CzwoaOsBIZzrRzCNztM
-         Ro2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710526072; x=1711130872;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S/uFlk2C9GRLTlRVUjXmHsG5FS0j/ZDm8S03vQkEIVE=;
-        b=uILSgsZOJ7TCjXBkYBXvqONiGoJXYidRxlc684KAHJOKX2EXsEyeT5+qVFYOvlFwsK
-         bQmDRb5zgNA8xq/jUs7+kLxdc4INi7ahsbHWiBQJWz4L7Z63CewvysTB3utUBK8uL83l
-         k71+zxtQBwCevj8iaxv1dji/oFm0S+e7JOKnWRzbdwK45KwgI0gM2+AmQ5PLEQwWkqkx
-         +hGK6b4cXkSJmjcB8FZCMH9+wEt5ZJixZovYt6JDYBJ23tYZP9jZxfhN6rLF1S78S0Bf
-         W2V7YzANdwbPSXcP2tYXO0S0VWWq0OpKq4EhT+ptCbMknPr7gEE3K5U8EK7XomaxXRBv
-         X5dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0PNXSTpGXxp/E9+ZHIhRmfLyd/C1I4AQxwa9ZJSq/J3dEePsDwc6fO1+kXLoPpNwkTOr07QhT+bePVPmErApwELwTYJLTqBw4mSog
-X-Gm-Message-State: AOJu0YyqVMOxbLOqnh+vPdSSHH1L7F4q69tIYTM9G+qNnPmi8OU6ZntN
-	pyg+hUcDQhIYYW1OOo58wvAH0TfvKMg89cJKxtfzvwcsqgPH+AeCHi9XUyQnw2qgZpZBDTs3wE9
-	3XS/Hx32/6UBVFvYni9gM00vnvNrWrEvzUkmy6+d3gIPnrFxvMBDw
-X-Google-Smtp-Source: AGHT+IGu6nVIelPinwKh8fg6JNaOh4MQswSKQ5MDu0Jozj6hakVDTRHEIHR55aeCL8Ju3fxhF1bLe+V+Qudn+IrgWEs=
-X-Received: by 2002:a05:600c:4e16:b0:413:feb5:96f6 with SMTP id
- b22-20020a05600c4e1600b00413feb596f6mr2425881wmq.21.1710526072329; Fri, 15
- Mar 2024 11:07:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LP7lO3v7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26DA4C433C7;
+	Fri, 15 Mar 2024 18:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710526183;
+	bh=x6mPWzzOIcq52zQTpLZRzif+g0BzSJp99JTQQBpC4RM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LP7lO3v7SLFArBHGkZnqr/WWlQC5EYqftdFmiJa5SjCoY3384X/Veh3ZFIdCs8SUz
+	 +cI2iFwKcYJypwRBRdV/WcySvENlDSUeaiRSlZKWiMECZD348RLwJmT/fE2Iepdufq
+	 9+6wFdhv0g4XDxuVMnFPjl+YiK6Hlcu3IOyogbc8ErrW69BXbHmb774NTEJEWpCWXM
+	 BGExTxabKZgkOm1W+a6eoOC6YriioAaIG9hMSEJXClKrrntbVETLAiWshxB1c8HdTZ
+	 livm/OTLPh68pYn9w6Ht16o2xMiyQvGoYVuNrW/EK4LMBphc80Dc3ZJgAoHKlyeAtJ
+	 MySJxHLT2uVqA==
+Date: Fri, 15 Mar 2024 18:09:36 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Alexandre Mergnat <amergnat@baylibre.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	Nicolas Belin <nbelin@baylibre.com>
+Subject: Re: [PATCH 12/18] ASoC: codecs: mt6357: add MT6357 codec
+Message-ID: <31e2135c-fed5-499e-894b-a8f0cc2744bb@sirena.org.uk>
+References: <20240226-audio-i350-v1-0-4fa1cea1667f@baylibre.com>
+ <20240226-audio-i350-v1-12-4fa1cea1667f@baylibre.com>
+ <9891855d-2284-42e4-9d3a-35ba406540e8@sirena.org.uk>
+ <c441a132-b16b-4244-a712-8971c902d4d7@baylibre.com>
+ <ff3d2db1-697b-42c6-a0f2-74276e9fc098@sirena.org.uk>
+ <dda0e6ba-4538-47a0-95e9-6adcfd4169a7@baylibre.com>
+ <0d31ffb2-9df5-4c3e-a728-902b71a1a713@sirena.org.uk>
+ <fd53a0e7-fa70-4c0d-b578-393183487335@baylibre.com>
+ <0a41b498-5cca-4487-a0e0-0df749f6e796@sirena.org.uk>
+ <a9ad625a-c6fd-44f1-8776-aa5d54b448ae@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000c6526f06137f18cc@google.com>
-In-Reply-To: <000000000000c6526f06137f18cc@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 15 Mar 2024 11:07:24 -0700
-Message-ID: <CALzav=euH_n9WXG29CFd10urh85O4Mw2L=StEizVmh27CYzrtQ@mail.gmail.com>
-Subject: Re: [syzbot] [kvm?] WARNING in clear_dirty_gfn_range
-To: syzbot <syzbot+900d58a45dcaab9e4821@syzkaller.appspotmail.com>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	pbonzini@redhat.com, seanjc@google.com, syzkaller-bugs@googlegroups.com, 
-	tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MkhxNCSSCKe3PKpY"
+Content-Disposition: inline
+In-Reply-To: <a9ad625a-c6fd-44f1-8776-aa5d54b448ae@baylibre.com>
+X-Cookie: A well-known friend is a treasure.
 
-On Tue, Mar 12, 2024 at 4:34=E2=80=AFPM syzbot
-<syzbot+900d58a45dcaab9e4821@syzkaller.appspotmail.com> wrote:
->
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 5165 at arch/x86/kvm/mmu/tdp_mmu.c:1526 clear_dirty_=
-gfn_range+0x3d6/0x540 arch/x86/kvm/mmu/tdp_mmu.c:1526
-> Modules linked in:
-> CPU: 1 PID: 5165 Comm: syz-executor417 Not tainted 6.8.0-syzkaller-01185-=
-g855684c7d938 #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.=
-16.2-1 04/01/2014
-> RIP: 0010:clear_dirty_gfn_range+0x3d6/0x540 arch/x86/kvm/mmu/tdp_mmu.c:15=
-26
-> Call Trace:
->  <TASK>
->  kvm_tdp_mmu_clear_dirty_slot+0x24f/0x2e0 arch/x86/kvm/mmu/tdp_mmu.c:1557
->  kvm_mmu_slot_leaf_clear_dirty+0x38b/0x490 arch/x86/kvm/mmu/mmu.c:6783
->  kvm_mmu_slot_apply_flags arch/x86/kvm/x86.c:12962 [inline]
->  kvm_arch_commit_memory_region+0x299/0x490 arch/x86/kvm/x86.c:13031
->  kvm_commit_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:1751 =
-[inline]
->  kvm_set_memslot+0x4d3/0x13e0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1=
-994
->  __kvm_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:2129 [=
-inline]
->  __kvm_set_memory_region+0xdbc/0x1520 arch/x86/kvm/../../../virt/kvm/kvm_=
-main.c:2020
->  kvm_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:2150 [in=
-line]
->  kvm_vm_ioctl_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c=
-:2162 [inline]
->  kvm_vm_ioctl+0x151c/0x3e20 arch/x86/kvm/../../../virt/kvm/kvm_main.c:515=
-2
 
-The reproducer uses nested virtualization to launch an L2 with EPT
-disabled. This creates a TDP MMU root with role.guest_mode=3D1, which
-triggers the WARN_ON() in kvm_tdp_mmu_clear_dirty_slot() because
-kvm_mmu_page_ad_need_write_protect() returns false whenever PML is
-enabled and the shadow page role.guest_mode=3D1.
+--MkhxNCSSCKe3PKpY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If I'm reading prepare_vmcs02_constant_state() correctly, we always
-disable PML when running in L2. So when enable_pml=3D1 and L2 runs with
-EPT disabled we are blind to dirty tracking L2 accesses.
+On Fri, Mar 15, 2024 at 06:36:19PM +0100, Alexandre Mergnat wrote:
+> On 15/03/2024 16:15, Mark Brown wrote:
+> > On Fri, Mar 15, 2024 at 04:05:21PM +0100, Alexandre Mergnat wrote:
+
+> > > > In the register.  You only need to reset the gain to -40dB at the start
+> > > > of the ramp.
+
+> > > Sorry but I don't understand your logic, I'm not able to implement it...
+> > > If I'm at -10dB and doing a ramp to reach -40dB, next time I will read the
+> > > register the value will be -40dB.
+
+> > After we've done the ramp and turned the amplifier off we can just
+> > restore the desired value?  The hardware is not going to care what the
+> > volume is while it's not enabled.
+
+> If you do that, HP will be enabled at the saved gain, and after that you
+> will do the ramp. To avoid pop, the driver should be rewrite to:
+
+So reset the volume to -40dB prior to turning the amplifier on...
+
+>   Read gain in the reg and save it locally
+>   Set -40dB in the reg
+>   Enable HP
+>   Do ramp
+
+...as you yourself suggest?
+
+> > > AFAII from the comment in the code, it's done to avoid the "pop noises".
+
+> > Yes, that's the usual reason to ramp gains.  Though if you've just
+> > copied the code without checking that it's needed it's possible that
+> > this is something that's been fixed in current hardware.
+
+> I did the test at 24dB with and without the "pop filter". Isn't big but I
+> ear the pop at the start of the record without the "pop filter".
+
+OK, it probably is still doing something then.
+
+> To be clear, the algo/behavior of this code is an implementation based on
+> the 6k+ lines downstream code for this specific audio codec. But the
+> shape/style is based on upstreamed drivers like mt6358.c.
+
+The Mediatek code has a bunch of issues, I wouldn't read too much into
+something being present in the code.
+
+--MkhxNCSSCKe3PKpY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0jt8ACgkQJNaLcl1U
+h9DFzwf/WTFtub1WzGQHyCilLQ/Dm90Crp+NDTyCh8eMRG7+3o9uBhwqnKdBT2kY
+L9SAw/PR7zx+h3fGbCczOH9SGtZZy0FJkMTfEOYGED7E5hRFt0wfdNBqn1nn1hpz
+d2GXkXcliq2bP+FOw5tDJpNMHwYAnxCVmjqcl/tCInIBwKB0JVPXVZV+gf+/KTDi
+6UnFIQRExgRYPJt26pzWejqhRZl9KyKxKxORmnWAOvNU4tBIymSqZopFOqs4rvOT
+/byiicLBLKQ5VKr9IxIyd8+yMN1nuv0Sd2FjcGd5tcyWdItJ5ivV2AS4yIx8XtQh
+8BypOaepYix1QitTk/6SKwVIQZbT3w==
+=oa8d
+-----END PGP SIGNATURE-----
+
+--MkhxNCSSCKe3PKpY--
