@@ -1,203 +1,133 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2105.outbound.protection.partner.outlook.cn [139.219.17.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C4218059
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710498292; cv=fail; b=LUDb/1+JFaaU81BJEYXWr3shfQcvbDP+G6tQ7h3XkiMxozvkKxYmHIUtQ1TEX6GlrjDFhp3IDNAgAUdnj/bzE+s1cVIreReXA6RFohuhIDo50HmRvwsR4L5fJEHGSFagcotpal6i3wuH2b1rsBA+e+zJhsKum/eCMFSZGGBu6F0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710498292; c=relaxed/simple;
-	bh=8GLUygUeTYeGzFDVDz5tdZRuhYiic50+nAkYCLkEO0o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hDIhqmBGbkL5C2lN4lcY9LNuoVSqW+vG8LvMOWOsTY4HFFs8gK+XLutmmIEpwJfrqP6gt4wQsmKmYBxbgom5jPUYGKNH/baRCJOmNeIhX9UPN//hgxGlsL9mI1BYUGczN0O8BQxOCLgZXRin+Y8hj7bOBd4vEX1H/OuRukGTQGY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VAbStCcFrFMZyP+SrMWW23JGbc3yWTJOQ0DVAVfPJi2SVEqzESqvubODuddKAX+wGEdg6uph39hL/rUKhjY6wviwYxwWSn63TMjXJQ55gVSnkTRErCIMrysi75QIT9rOFpnuVkInWcGyGCzZRUiif1k1MryBlD2p1bdu++nZVBugtIL0xVdzHg+8seFdoqzKtHL3RSxViA4+KHmADuW8a6alZajzY4JqSi2fH0pRPGoUjlv8i9RfqfEzNnT+FwW9J4oc0dgMcc67it8CJwPreQittE59ELWJaWFliYQSILROaTkNLwoHGWER8SAgKFRqJMlp5mcRacq7pRUkvzjseA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=muRXkRjsYyKJcNcIW7cgyLFD22BgLYqO3kQFrknL8/E=;
- b=jqOzUmo4d8SMArDyvHauPrguATG0gF2omsg0Xw61r92OBJBu3cu35E7PyMPZtvi8g8hek3YdPrgG82+BrPW7qxIc9C49twtBt0zh3YdZLSLckM+Cr5+UiP8XxFY7zyexMK8/V55AfL82mgpi6jM3tzVO1ZKZReQRtuXAvsDYo46mYZQx4XmZvjsh/3ND98Jn8PVSd96wowGwZY3CocXBMt7rpwfka7kysDk5vqDQ2MOZ6yxV5dgCxJAUbEPwUawz8xFuqTU8kdku7Mus+fAy7I65ntY9KxpK8Ksws3XALWmSieO3tBXXH9cspphlhApSw/n2TF8lVGzJZ9XQ2mOBnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:20::14) by SH0PR01MB0459.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:7::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
- 2024 08:05:55 +0000
-Received: from SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- ([fe80::e0a:f88a:cad1:dc1c]) by SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
- ([fe80::e0a:f88a:cad1:dc1c%7]) with mapi id 15.20.7386.020; Fri, 15 Mar 2024
- 08:05:55 +0000
-From: Joshua Yeong <joshua.yeong@starfivetech.com>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-	"linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "andersson@kernel.org" <andersson@kernel.org>, "vkoul@kernel.org"
-	<vkoul@kernel.org>, "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>
-Subject: RE: [PATCH v1] i3c: master: Enable runtime PM for master controller
-Thread-Topic: [PATCH v1] i3c: master: Enable runtime PM for master controller
-Thread-Index: AQHabmvVHa0TJLr8CkqxZnQVcFD1ubExREqAgAc9zsA=
-Date: Fri, 15 Mar 2024 08:05:55 +0000
-Message-ID:
- <SH0PR01MB08419B8683E8F2DD05A791BBF928A@SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn>
-References: <20240228093407.4038399-1-quic_msavaliy@quicinc.com>
- <b61f5f4a-7931-411d-9519-bbff1b7fd6f9@quicinc.com>
-In-Reply-To: <b61f5f4a-7931-411d-9519-bbff1b7fd6f9@quicinc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SH0PR01MB0841:EE_|SH0PR01MB0459:EE_
-x-ms-office365-filtering-correlation-id: ad174501-93bd-4792-6f17-08dc44c6bd6d
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 10aSS26U5MYPSe8mJqc9zxYY+zOTiYgjUzs0eOdNyBhQ73gj+/2HKs5GJcSBPAwAo9yejRpZZsPRNXegXn/ipMgjWdOf7seQteEVknpfQxC1KUm/oSVgtNv8YAUpPRd8x+f9tdC/aN1NQGPG4U54md4oPmZfMhEapXanB8ZVQszc7Dfr2yyVrPeDXmSgE9kk2IRl7svCYMuYEspGx9+26VJzl8cp2g56QtUAEz4FKmG9U66BDP6oSitU9h613puhqyHvrWyvs0r5FLLFhLAzsCA/+D9JDJUPXrHS6Hrt351AzIzAZ8qdy4gnSnK2NSt/9Q2xr1DJjutYu0GkwurBIYEAwWlZ6dHPKPo2em5sfklhdrcrL45hY9dz09uzWJHGcszwymSM8cUM/bX8yIswIo85XFS3M6pnWE93PLi5VA7DRSbCAWi9BVzSceHdiKJWFuTGZcvEl/X3GVVpq2QRFWDIaWaMmVdHjYu4UW5v9gTltlfQkcEBRw1aDQCsl1LkqBlOhQmIubusTxO28mzgm70QpLTlLijgl0pUE7NKP5yjOwkqy9jHq5/61KhDJSzVdnWHTvVHVnQNWwjj5LwZPZYOmotPWtk9AJpSuyP7kT3YgmbUTKDEDJFoi522obvt
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?APJZdD4FUyd6kzdLBfQYqN4yuUhy9sUJMKBeLnAXRIUvFot+IrG/OWlPCNuS?=
- =?us-ascii?Q?0qmanwFP2gk4i/SS0Oaf1rej1DUOLZpcpwPcswr2Iapinzh0QvqOAHuiblxq?=
- =?us-ascii?Q?9g0EKtAXCnPOlpD6TbrLRubo8YsziCmqZ1aVjhyvDHv3kupvVQQqJ72Zp/0w?=
- =?us-ascii?Q?Hm6TXnFVQMLhEtW/H7aT2Tr3BNMZp9ZI7wSBFn2cGfuxYJFTZPGEpoTGgKA9?=
- =?us-ascii?Q?0sYNlBaK0FW4gUGhO1rC3f8DRcoFVyqlrzGmNidbxmA3c4ECkodRfi7eKyk1?=
- =?us-ascii?Q?i54OznWNMQuzpTuzg7T4TpR04Qw8GNNBSzu0ZNzaY4rOC694pxEZ0rHhHZEQ?=
- =?us-ascii?Q?Q4mh/wFpVPrOk3lGMFMMi6Ws3cVugF8Zc+U84t37nk5a/FmI2TJEyhMGeiem?=
- =?us-ascii?Q?9F42qZ151TPRktEnQj/z9DaiTPyq+/KOiS3PGSTtvIdxEutJD7wLqe8emEQW?=
- =?us-ascii?Q?bTbPY9VokD+aGZo6gkq8ehmTVmeO70BbdnvwptXK0M2kxuSLZOTJ56U4B8x+?=
- =?us-ascii?Q?TgH3tg6T5H1xmYt8l2SNIQbQEIM8HaPY8ZmgVjqKLEmpqQGtrWjfC1B9ulQ0?=
- =?us-ascii?Q?OCnoLvzx3MJvjjNaUn63OEV1vD/BVS6WcnpwUg0HXiWNXJsMQ6trNa8IHlhk?=
- =?us-ascii?Q?nVmzP5OqghDwbYgK2tNdoX+vQGZq+Obs81Vgca2gSP2FxkLCz0BtM8LsAXZ4?=
- =?us-ascii?Q?/jEvVS5uC0DVnjfJB2t+draKE1VZ3hU1wtkTCuVbsZ4OF+D9uNRbX3UAjiJx?=
- =?us-ascii?Q?H9NIpIX8DvB8XL2ccbgSwP8zEPWnaC2aShw5iaOfQxOMiunlZ+frT1yBYUW5?=
- =?us-ascii?Q?3i9aYgRSke8hHCaK78oWpKMPgXmsTq532q/LRhQ7PC4N7mXnC6eY3NoI7InH?=
- =?us-ascii?Q?acBj1qYu893ujBHID5bGkVhzx6RsAGiNzUA0lB7UgCuKNveQu4i8qxpVQhOI?=
- =?us-ascii?Q?hC7o6Ps8MXsrKwsTlIpTuY5bleNSsTh5gBBYacirxtskVw8AlMMeVsDioZxh?=
- =?us-ascii?Q?ekGJBIvfNhlLH4dibcw8O0x1hLr5D2DbIa9ZRCxmhS87VG6lZL+r/MFVZXsk?=
- =?us-ascii?Q?5NIWe5oVmaT/x/yOOu4ZFXQ4ADdgtfTYxnXDl84CusDzY20+aMOOSxWPaYoK?=
- =?us-ascii?Q?yXtYcbDYCnL7gy2dPfKbkAP4XE3Q1R94q7RdcOK/PeEAUjpHQvA+9pZGrPDo?=
- =?us-ascii?Q?t2BsFNo0cEW3JTOgbgKxFcJJyJpPvKshNIF6Ir63UtFDJisch1h+TExfVt5D?=
- =?us-ascii?Q?WknUczdkqiD23/rXUDnC+36CJ6y5GccMruuouvJwReFWz/tVjBXjSyG9Tzbw?=
- =?us-ascii?Q?uuYZ2mS9nKW48qrSfDhtb+xyi3GVTslwe8w4tEKgczCs0dtgIyFQcpl2I17K?=
- =?us-ascii?Q?QqpiZTiDCAyDZGUZKE8CvRLB65shmgVCB/p1KN2L7wUpIMwnq+j96tbhycin?=
- =?us-ascii?Q?EXjJOIZfz3tOV/aDfzqZCDQZDDEUa1aJH1J4XEo4W5kPwFt4W5iv1hhFr0Mn?=
- =?us-ascii?Q?LK86pHnFIs6qfFO3G7bSz9PgCowGnazKtpy4AtBxvVyPgSS9l9+xgp1TstkI?=
- =?us-ascii?Q?RTWUf23k8dnkKLNN7nGhAjhMO7d4r1/dDLqL5E3ie/QOxYiuZxVQUMEDTWt5?=
- =?us-ascii?Q?4g=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A137318E1E
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710498310; cv=none; b=pA+ipJanI5GdlfPpbC+HkHwWlyVN6FwLpODigw036eJRiFV9yO+WoDZZD7w671OuO/3q6owS7cIIn8sFY/0fIH63b0y/MomKyDzvXtoBHlDjDfYH4s2pMfSXn1VFtTEUlYxShrcismdDv3pCP1cO13X8/hKUNel0yCezoWAUJjM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710498310; c=relaxed/simple;
+	bh=NfFTjprpYpTx/YOcA395cb2tUELkt8+AWxFx0BohTVw=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=afb0/DAVCDRa8YHpiVt/szF6DdrGBcGHVgN4I6HElrYtTzImjIyOggYFnL1UJJoUTAbmN5OwdGje/aIfluN2EyIK0uMgS0LHcOfSCw7gldewUw24bK+ArDtWzaTV6tiEMl+iZi+zvuFV4dfzcLOiF/gshbqTGUYuU5duI/+5DFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=scTyMV6t; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="scTyMV6t"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ed4d8e9edso196329f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 03:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710498307; x=1711103107; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=I3EB/6PldhsbhWY9+bYWiu2w8/wr6W5dSP5c/9sIMoI=;
+        b=scTyMV6tGxpPlH+TE8fWNj5v3IY+5bAIEbQwmbIVNN3XGjo9GTZz+InJd/EjxhUuZq
+         Q9Ot2p8f+AOjQj6+U0vZhicYtDDqkq+P9saxDp5W48/Ueq1Ar2TaKf8LebWOrVL8Pqug
+         Jmj16tfoojVaZWL7EJcEzgolSUXHFVPP65f5DlSnRQGt5KeOjJYN2DSKmBodnc5K668f
+         P+R+lLYCxRO4Wqor3SqTkHfGN17d2n0vjk3RtNfPH1vbggffj+CgkGdnbROD6tAeXJTc
+         jC6eosvqjs0KjmhMfv2w2TGnCWtqJJopYJCCPYpHq0b3qIC/Jl7PUhWLs0FhV599qsaf
+         D8Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710498307; x=1711103107;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I3EB/6PldhsbhWY9+bYWiu2w8/wr6W5dSP5c/9sIMoI=;
+        b=sDsOzcQTpNU4dRfMymFHo7mQyCaFL1DZ40FtZouCtkQE19iNAshYQZ1vH6Nfvt/yYA
+         OcFef/QgZpWJ31gjSjkE1CU0c5dKaikiNFg1o5vzrkQEO+6iNFT2aVF9pEPFd3o80Iby
+         cO0nM8fxHuGiofSt1fHPYKCNofaVtsKWpiRI3sZTW7dZW4UHh3ndPBNApHpyKf6TGRUd
+         kBX/mnmak0I7YelIHAPlakOAbONuSFEcXu4ijG7MYgflWMr/Q9nBQ2U0ue8osvTuYPdJ
+         MEO/tIgAt5gh5P2uLA5TSzcEzCjnmn/z+PhSnpWOQEj48wbMMlaj1RXTJ6QPLeIn+4CS
+         zhtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFr6tKWrUaDi6HVptnvR2wEsLc9u31Z2MkG35Y+/N37O8+F2dIXGYqb7hxycrrEg1XIk5Zc2plQuNM/QbhbBLBUQGp+hbF0afXzNx3
+X-Gm-Message-State: AOJu0YzQnsilg1+hvinKSNyA16r9ttWfBmOUM8+tE+R+B4JhuvF93GwP
+	FkcMuExT8qlOHAuH0GSArezQITEiO3jf4UA4Ra8969MmewmJSTs1F49WJA5JA4M=
+X-Google-Smtp-Source: AGHT+IGWDipfwojUVR3R0h/HAg8+ErMHQU1L9DU1QDqUHJY9+2A1t5wePivY0yDxiYGWnr60Q0NDnQ==
+X-Received: by 2002:a5d:4cc1:0:b0:33e:7f5c:732c with SMTP id c1-20020a5d4cc1000000b0033e7f5c732cmr3060666wrt.62.1710498307090;
+        Fri, 15 Mar 2024 03:25:07 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:8151:4d0a:14d8:1124])
+        by smtp.gmail.com with ESMTPSA id o14-20020adfe80e000000b0033e8c50fc3fsm2818997wrm.90.2024.03.15.03.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 03:25:06 -0700 (PDT)
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
+ <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman
+ <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ kernel@salutedevices.com
+Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
+ 'sysrate' property
+Date: Fri, 15 Mar 2024 11:22:59 +0100
+In-reply-to: <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
+Message-ID: <1jil1nhjwd.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0841.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad174501-93bd-4792-6f17-08dc44c6bd6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 08:05:55.1465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CLTBTpcoCahpKjc1ztLO4PbQqnV4w+XthMla5v8RHU1qjzw9JuRnza/t4h/gLeIFQj9wXbGvhWxbCYjsNstsYSyYdzFGe4igPtzZtwDBPLo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0459
-X-OriginatorOrg: starfivetech.com
+Content-Type: text/plain
 
 
+On Fri 15 Mar 2024 at 11:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-> -----Original Message-----
-> From: linux-i3c <linux-i3c-bounces@lists.infradead.org> On Behalf Of Muke=
-sh
-> Kumar Savaliya
-> Sent: Monday, March 11, 2024 1:30 AM
-> To: alexandre.belloni@bootlin.com; linux-i3c@lists.infradead.org; linux-
-> kernel@vger.kernel.org
-> Cc: andersson@kernel.org; vkoul@kernel.org;
-> manivannan.sadhasivam@linaro.org
-> Subject: Re: [PATCH v1] i3c: master: Enable runtime PM for master control=
-ler
->=20
-> A Gentle reminder ! As i was not part of the linux-i3c group before raisi=
-ng this
-> gerrit, might not went into right folder.
->=20
-> On 2/28/2024 3:04 PM, Mukesh Kumar Savaliya wrote:
-> > Enable runtime PM for i3c master node during master registration time.
-> >
-> > Sometimes i3c client device driver may want to control the PM of the
-> > parent (master) to perform the transactions and save the power in an
-> > efficient way by controlling the session. Hence device can call PM
-> > APIs by passing the parent node.
-> >
-> > Here, I3C target device when calls pm_runtime_get_sync(dev->parent)
-> > couldn't invoke master drivers runtime PM callback registered by the
-> > master driver because parent's PM status was disabled in the Master
-> > node.
-> >
-> > Also call pm_runtime_no_callbacks() and pm_suspend_ignore_children()
-> > for the master node to not have any callback addition and ignore the
-> > children to have runtime PM work just locally in the driver. This
-> > should be generic and common change for all i3c devices and should not
-> > have any other impact.
-> >
-> > With these changes, I3C client device works and able to invoke master
-> > driver registered runtime PM callbacks.
-> >
-> > Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> > ---
-> >   drivers/i3c/master.c | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c index
-> > 3afa530c5e32..a3dc88974f92 100644
-> > --- a/drivers/i3c/master.c
-> > +++ b/drivers/i3c/master.c
-> > @@ -13,6 +13,7 @@
-> >   #include <linux/kernel.h>
-> >   #include <linux/list.h>
-> >   #include <linux/of.h>
-> > +#include <linux/pm_runtime.h>
-> >   #include <linux/slab.h>
-> >   #include <linux/spinlock.h>
-> >   #include <linux/workqueue.h>
-> > @@ -2812,6 +2813,10 @@ int i3c_master_register(struct
-> > i3c_master_controller *master,
-> >
-> >   	i3c_bus_notify(i3cbus, I3C_NOTIFY_BUS_ADD);
-> >
-> > +	pm_runtime_no_callbacks(&master->dev);
-> > +	pm_suspend_ignore_children(&master->dev, true);
-> > +	pm_runtime_enable(&master->dev);
-> > +
+> On 15/03/2024 00:21, Jan Dakinevich wrote:
+>> This option allow to redefine the rate of DSP system clock.
+>
+> And why is it suitable for bindings? Describe the hardware, not what you
+> want to do in the driver.
+>
+>> 
+>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+>> ---
+>>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+>> index df21dd72fc65..d2f23a59a6b6 100644
+>> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+>> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+>> @@ -40,6 +40,10 @@ properties:
+>>    resets:
+>>      maxItems: 1
+>>  
+>> +  sysrate:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: redefine rate of DSP system clock
+>
+> No vendor prefix, so is it a generic property? Also, missing unit
+> suffix, but more importantly I don't understand why this is a property
+> of hardware.
 
-Will runtime pm impact on ibi request from target?
++1.
 
-> >   	/*
-> >   	 * We're done initializing the bus and the controller, we can now
-> >   	 * register I3C devices discovered during the initial DAA.
-> > @@ -2849,6 +2854,7 @@ void i3c_master_unregister(struct
-> i3c_master_controller *master)
-> >   	i3c_master_i2c_adapter_cleanup(master);
-> >   	i3c_master_unregister_i3c_devs(master);
-> >   	i3c_master_bus_cleanup(master);
-> > +	pm_runtime_disable(&master->dev);
-> >   	device_unregister(&master->dev);
-> >   }
-> >   EXPORT_SYMBOL_GPL(i3c_master_unregister);
->=20
-> --
-> linux-i3c mailing list
-> linux-i3c@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-i3c
+The appropriate way to set rate of the clock before the driver take over
+is 'assigned-rate', if you need to customize this for different
+platform.
+
+Then you don't have to deal with it in the device driver.
+
+>
+> Best regards,
+> Krzysztof
+
+
+-- 
+Jerome
