@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7FC54904;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1854907;
 	Fri, 15 Mar 2024 20:37:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710535055; cv=none; b=uMji0hRjKnF7OKBnWYVS/VXhHIn5T5C8+2Htz2J14Jop9OUWZ6+jQR4rvyDEbEBGBJgQNKZzLYZM45OvV7E6GdqYfiXlcY5IYoIzVdGvVPpv626DcjXk/CWWbszWzTbmbZu4WKFRz5Mn/BY0t2/MK2Td6FO+sKi//raDWowxyz4=
+	t=1710535055; cv=none; b=YQZeP7FRih/bgBb+hGXMb6ihQHVs/WohwqWNdVj//4FBAFyarKx8BBauibQOm5Q44M/PbDZ6jEKog3N3M9B6mgVArZMwrvfbRd8hvXjcMl/1KS7EnNMYHV+K2GbuPMHuOdpZVA/WNUOqkBxx3ydpiQedafvk2wNcMeywq3VmWw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710535055; c=relaxed/simple;
-	bh=SJLJCTt7jLUTjOsk+Hhh1Qz3B3qBQz5/ebudg4iZy+M=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kijKyqFFi5gPAMosmRoN/34JO4jkEMEkezBk+16je5Dqd9iE/wabgTdaf+HSGOHbZJ5nfGnQdCVE40F1un4W/AeF5s6r/GwJIShXuCPiQ6AIFwTyDJ5UfN7g6UkAzFyg075PTkhx6mamZh2FMr22f0jeoClMKo95nlCbUZ4z7W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzHsDxce; arc=none smtp.client-ip=10.30.226.201
+	bh=tIx3i0NJYpZdhaoDg7gS/RXZqhMB1vfFbFZU+gr5Rds=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=PnuRZrIqsE7GVWsWqbkkyy6q/5xSK+++1F+M8pCPAqYjDNZvRC6c62/ynjyWd5xzYEuIMsfE8pXsB+SKj+fYOWGkBrMELJimfnenllJx5fjt3ZAtZUWpudxW3K9IE84Dd/yQDaiezFiI7Ty/yxQHJhay9HnbFJhOVMDjnmhV6PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+jQJemV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzHsDxce"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E70A0C433F1;
-	Fri, 15 Mar 2024 20:37:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+jQJemV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3216FC43394;
+	Fri, 15 Mar 2024 20:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1710535055;
-	bh=SJLJCTt7jLUTjOsk+Hhh1Qz3B3qBQz5/ebudg4iZy+M=;
+	bh=tIx3i0NJYpZdhaoDg7gS/RXZqhMB1vfFbFZU+gr5Rds=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FzHsDxce0UdwXS0HmLPGdfk1X8xcEjwO0eLJJ0x6oNG89O18iI7M9nDZ4fl+nG0V0
-	 0hEBvkosy7bwVoSH9dtfisLW4dWxb9Qc4Go7WRZPs4RpEwDDp3qhcPAptcietI+5HG
-	 WVomya1cvyRBFH96qILqsBHurszsyTrD2xrsYJlLIAIQ/nqnFhSYf4yfNOHh9GLXpP
-	 EetrpT+pYKWGMDx3xuUCUmkIZ4A4MpPJHzQI+SK8t8Da6HlBO8TgMb3Toazpab2Eia
-	 jzEOzNYYiF+cHvbcYwOZPXrTLE2iDQtDCg02u/FQdhhGNIi6cQ7F7s75KdTRhrGj2S
-	 PJOMHC+Zd17tw==
+	b=Y+jQJemVp1cjyISapj65ke/UJj+/cVnwQk1kbCJDWI+pEQCaWDbXitSdEvANhTOOg
+	 3WdyVU/lM1kuipsS1o+Do5gJAri0Ra/0Z876ydaIYVHtQhJnKirJNt2jLjSGwjGAYg
+	 1xPzvbsrunzaxKrKvPhBN73AyWXw7m1TKcBXX0TupCAkaTzA4nQZjI1silxJU9DKnT
+	 6F0pslV3zM5isJqWNaPRJRj4F22acRUooPxZZ0eD3+ND/6E2vfk8SggkQIPvGdnlym
+	 SRRCPqB26kjfisi3lQQ8CtkRSg3raAmY7DKrTey01dlAdIV+jRPH6rykOpc2ZpFfAa
+	 C7iy5+lX3IhkA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E0EF8D95053;
-	Fri, 15 Mar 2024 20:37:34 +0000 (UTC)
-Subject: Re: [GIT PULL] clk changes for the merge window
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2C75CD95060;
+	Fri, 15 Mar 2024 20:37:35 +0000 (UTC)
+Subject: Re: [GIT PULL] NVDIMM//DAX changes for 6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240314194324.2487618-1-sboyd@kernel.org>
-References: <20240314194324.2487618-1-sboyd@kernel.org>
+In-Reply-To: <6ea8ea30-9a6b-4ed1-bccc-96b0171a3dd2@intel.com>
+References: <6ea8ea30-9a6b-4ed1-bccc-96b0171a3dd2@intel.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240314194324.2487618-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
-X-PR-Tracked-Commit-Id: 3066c521be9db14964d78c6c431c97a424468ded
+X-PR-Tracked-Message-Id: <6ea8ea30-9a6b-4ed1-bccc-96b0171a3dd2@intel.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git tags/libnvdimm-for-6.9
+X-PR-Tracked-Commit-Id: d9212b35da52109361247b66010802d43c6b1f0d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6dff52b828655ccf416f46c08a48679740b724f0
-Message-Id: <171053505491.29375.8756254380991307194.pr-tracker-bot@kernel.org>
-Date: Fri, 15 Mar 2024 20:37:34 +0000
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 4757c3c64a71820a37da7a14c5b63a1f26fed0f5
+Message-Id: <171053505517.29375.3695472699220989106.pr-tracker-bot@kernel.org>
+Date: Fri, 15 Mar 2024 20:37:35 +0000
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 14 Mar 2024 12:43:22 -0700:
+The pull request you sent on Thu, 14 Mar 2024 13:44:39 -0700:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git tags/libnvdimm-for-6.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6dff52b828655ccf416f46c08a48679740b724f0
+https://git.kernel.org/torvalds/c/4757c3c64a71820a37da7a14c5b63a1f26fed0f5
 
 Thank you!
 
