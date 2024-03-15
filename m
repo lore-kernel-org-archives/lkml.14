@@ -1,106 +1,75 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3055D28E3C;
-	Fri, 15 Mar 2024 13:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3EE2374A
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 13:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710508003; cv=none; b=XA406mTee6WbUlZtVsg0VMU6ggKNVFCIYpOyYKbR+m1BAMsQkaoE2/Lh3C5ivhAOa+XfHz1ZjxPdRnIrnyiI2L5iJPvuxVM7TZX2bxEBg9eFWXfm+DRM0hEoxMsJIYOprBB3GVCnSn44BMitrwn+Y/5pHnWbExW0kqux1oaUtmE=
+	t=1710508026; cv=none; b=uMBRyPy4dNB3Inb5QJ51977z5t4MO7P7d2ezKVdRcRgAEZ2nWeqWheuHxSc4uKOBnp8tWY5aA/Ih1gJq+MUT03yGNH/ZNF6VXIx0JtrPZ+BJONHPqrNVoWLQPQv8V748y0Lc3Jd1LEYgz0Ey2NJ4hM2f8x+58nmZhc1hrB4w4qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710508003; c=relaxed/simple;
-	bh=pAuOxrGJjw+WcXIsvKFpQEfMzj7cwcNiaJNToVzH3Qc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ff1aOPQQ1o5iXzEWVTx1JgZ5vJkWQp+MPgtS8TwKBt0gvEKTZYmeZFhwqKNHZiLubUw4+KA1ZQvUlKcept8y3zTPH2QRStregBo0wO3ro06IfYOMsvDIRf3SbFfKe1N4/ZBbt/+xhTCFzaMJDr0UnQ29vYEWSXYl19OZRZBxpgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJlxCRrv; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJlxCRrv"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e6cb0f782bso1688840b3a.1;
-        Fri, 15 Mar 2024 06:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710508001; x=1711112801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NY1O0ew0W7ggm7j9xxECvAoyGcWbE8/Wq9boK0lbYA=;
-        b=YJlxCRrvFkfyT7x8p6puPuxjyYnxMSwF0Q+QSEQUGBXLwWH685RKzaG0zEkx+datJ4
-         KP3rlmO2Zq8rZfKuMnkSf2Bj3QdyJ+9dMAwYA0w1PpSFZwtCdjsNsd/c/dkxQUXxeaEs
-         un/O0QtIE5is8pe0vpry0WyCckrQn2xWs5juibbl6zvoUTN/SPKSmj7vEVohgTjiGd71
-         Z4IL0WXEsAhvMCEyFajKrbM3ZXhNsBN8OqJ8aSMHyIB7wvsOhERVMBKzDtkP43md+jXU
-         x4IsWNpd0dNvGthlvg0k2f8ulUO/KHHG1CxSzdfrYdzSM1PEQfIBKyYhIY17Tz1WWLTO
-         O/aw==
+	s=arc-20240116; t=1710508026; c=relaxed/simple;
+	bh=Zk1+QM8Mp7D6C4Ax3bAQLs0hyyOiEgbA7bCMgIKQ2ZY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=CYNkBTklj4vjJSQVACRljEJRBql7P86QNhd1+VRRoq7GrEF9C5pcp9EU7q0p8XrutnLMX+bOQ9cVOMNqbnUFitJ33k4E0/Vi8ioEfrnupCYVEISwHt9Lxi82uQ5kX8vUzWG1NctwECLSYPfiMZNjALGHRaDLWoUD6R2msFnrXgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c874fb29a3so146010139f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 06:07:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710508001; x=1711112801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1NY1O0ew0W7ggm7j9xxECvAoyGcWbE8/Wq9boK0lbYA=;
-        b=Ud+0P1J12KUK9z2xDpSfuXYXfdmvFH4oioZ+pgpw6x2R86Lun0uGujIEL85kBDRudU
-         psPFVHq4USwzVq0c8DaADXrPauqzg2Mq1cJdrlRp9lJZ0WIe8AnuA8jBeJLkdyohZeWx
-         jeFxKZ6Qc1/GttZnUxvamIp41ra60BEgpMxFXk3pKtU6mh0pz68o8p0HPoZS5NZAa9OC
-         VLS1xjL/I5GfzCHopE2HDcgYOPuDhyjk0eHP4vaLAp8LK1FXGFZ1kCy3SxEOYEd0iedG
-         MEqtmLX/nx/SrgP6HJRQdCDi64HSP3dVQvSzqb1THfInEgFAstEhL2r03sE+rW+C2JrZ
-         uurA==
-X-Forwarded-Encrypted: i=1; AJvYcCVb/oLPbQQ4JK+0T8odqucHGJa53gaVp7rsUdfgjlaNAQ0196vrTsYDcN/kYyiGQ0cVeuUQ6Lz4HAxzaX1NrwNWNaZ/IDmngatFFmkWUv1GJ+051PBceYkmws29BZMx1YH4LWZzCVxxclw=
-X-Gm-Message-State: AOJu0YzOq+zcKqmtoHRDBnEjmnbVKxWFgyaUfSukfqguSncrrsK6Pojq
-	x8i4JvQqf8vpO7a67dgavWGDHthxt+XM+DJlfz+MlwQd2ULtjY2U
-X-Google-Smtp-Source: AGHT+IHp3wY7HaOB/AXDMYPVMVe0FLS60qkHQi/s9HluWJwdOEJAqeMHDfX/YkdOWLYIGINrsaasnw==
-X-Received: by 2002:a05:6a20:959a:b0:1a3:18be:9b18 with SMTP id iu26-20020a056a20959a00b001a318be9b18mr5058987pzb.26.1710508001267;
-        Fri, 15 Mar 2024 06:06:41 -0700 (PDT)
-Received: from Ubuntu.. ([160.202.10.71])
-        by smtp.googlemail.com with ESMTPSA id i3-20020a056a00004300b006e56e5c09absm3408220pfk.14.2024.03.15.06.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 06:06:40 -0700 (PDT)
-From: Chandra Pratap <chandrapratap3519@gmail.com>
-To: outreachy@lists.linux.dev
-Cc: sudipm.mukherjee@gmail.com,
-	teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org,
-	linux-fbdev@vger.kernel.org,
-	staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chandra Pratap <chandrapratap3519@gmail.com>
-Subject: [PATCH] staging: sm750fb: Replace comparisons with NULL and 0
-Date: Fri, 15 Mar 2024 18:31:11 +0530
-Message-ID: <20240315130400.11540-1-chandrapratap3519@gmail.com>
-X-Mailer: git-send-email 2.43.2
+        d=1e100.net; s=20230601; t=1710508024; x=1711112824;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GUpBZioC/dn8Fi5qWaAgB/XKmxFecPjr1f5eBhNHbfc=;
+        b=GMBBMx6DQfK29DcoUVQ4ZOZlnHeqn0Ngu5fLwjohfgnPM9c7wBKb/Hy1iubCbMCQSj
+         FyUAymMpAe0Me272bxx9DOj/kIRbyAMOcirTzWCtyUYIdGwddwzJmS7mFCPqvMjkbXKY
+         F2qegzne+pmGzOgAcjdE8hvFtTZWc9qdgrO7H49RT90LnsYX8KtrgbdlQMERUFb/rAco
+         hflkt0RHi4VkQZpMIVw/PUOGsFGYkfVZyL4fOniFdbbGMp4GbNn/bSKtw18abS8hhkfE
+         WPeEHv5wztVIKf252QrqZ098GFpnolVB0cJ8wBNM2j1PzMaFTpGxEcJPjZ+RqoHe5CW/
+         1KeA==
+X-Gm-Message-State: AOJu0Yz+lmEyjr6HfG6GFyq0xmJQzayBfFWdREJRMmIW0ynQe89WowLg
+	7XFtS8MGFIXX9jNySStxY7AEvu84ZtjDKdity3Xwh3KvWzlD0Pzjut+mwILxQyznAG93gfFTdie
+	jdQkS+ed6ZP0155th2bx1bJg3B+kZjLMPVJY/sU+x5sDF4SR6h00UXbmFXQ==
+X-Google-Smtp-Source: AGHT+IH6HawuAmz3XIpz8TEkIlnF1hWQEXhjEgar1mM+g/YbxEJmMhh0kmD4hvaWWh/9GfhvbJ9S9wmz3CODTooSOb76gaPtVjgu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2165:b0:365:26e3:6e47 with SMTP id
+ s5-20020a056e02216500b0036526e36e47mr253652ilv.0.1710508024164; Fri, 15 Mar
+ 2024 06:07:04 -0700 (PDT)
+Date: Fri, 15 Mar 2024 06:07:04 -0700
+In-Reply-To: <0000000000000b9a510613b0145f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002a81490613b2affb@google.com>
+Subject: Re: [syzbot] [sound?] possible deadlock in snd_pcm_period_elapsed (4)
+From: syzbot <syzbot+28c1a5a5b041a754b947@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, perex@perex.cz, 
+	syzkaller-bugs@googlegroups.com, tiwai@suse.com, tiwai@suse.de
+Content-Type: text/plain; charset="UTF-8"
 
-Replace '(foo != NULL)' with '(foo)' and 'x != 0'
-with 'x' to adhere to the coding standards.
+syzbot has bisected this issue to:
 
-Signed-off-by: Chandra Pratap <chandrapratap3519@gmail.com>
----
- drivers/staging/sm750fb/sm750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+commit beb45974dd49068b24788bbfc2abe20d50503761
+Author: Takashi Iwai <tiwai@suse.de>
+Date:   Tue Feb 27 08:52:45 2024 +0000
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 04c1b32a22c5..4537f007a810 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -926,7 +926,7 @@ static void sm750fb_setup(struct sm750_dev *sm750_dev, char *src)
- 		goto NO_PARAM;
- 	}
- 
--	while ((opt = strsep(&src, ":")) != NULL && *opt != 0) {
-+	while ((opt = strsep(&src, ":")) && *opt) {
- 		dev_info(&sm750_dev->pdev->dev, "opt=%s\n", opt);
- 		dev_info(&sm750_dev->pdev->dev, "src=%s\n", src);
- 
-@@ -1147,7 +1147,7 @@ static int __init lynxfb_setup(char *options)
- 	 * strsep() updates @options to pointer after the first found token
- 	 * it also returns the pointer ahead the token.
- 	 */
--	while ((opt = strsep(&options, ":")) != NULL) {
-+	while ((opt = strsep(&options, ":"))) {
- 		/* options that mean for any lynx chips are configured here */
- 		if (!strncmp(opt, "noaccel", strlen("noaccel"))) {
- 			g_noaccel = 1;
--- 
-2.43.2
+    ALSA: timer: Use guard() for locking
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=148a87b9180000
+start commit:   fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=168a87b9180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=128a87b9180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
+dashboard link: https://syzkaller.appspot.com/bug?extid=28c1a5a5b041a754b947
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14835185180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1132fbfa180000
+
+Reported-by: syzbot+28c1a5a5b041a754b947@syzkaller.appspotmail.com
+Fixes: beb45974dd49 ("ALSA: timer: Use guard() for locking")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
