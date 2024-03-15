@@ -1,126 +1,268 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAB91B7EA;
-	Fri, 15 Mar 2024 11:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F47E1BC4D;
+	Fri, 15 Mar 2024 11:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710503484; cv=none; b=F1B1QYxyt4z8uvFlCY5EjkygdUneFpoM4+qWVJFsFo0xJXedwH4DGAqpKrs7+hGdoJM6VW6YQUuV/GQWqV2iHKoOIWv18oixzhAOs4RoOpdzsqwuBTA4+18ny/IrBL7D1sMf+od4da3jrqUkpdppWCB5tjpglzxQ8Jkgq0oB+gw=
+	t=1710503526; cv=none; b=sSuIUVoyUcV5fPbfXs7l1BsG2GcCDqaNmcYprm8Mdf2JSxasw8yRJYLgn9KbgSXAYXUsKdhsxkWvcGoh2Zb5UdDxMQO8s2GEE4LeaDh9IilV4lI9wKOXLKj6QKt4ZvZYRpeujMzuqEM0whhVghNM2sk/HHt+OSOQAyitqKMqSeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710503484; c=relaxed/simple;
-	bh=xTFqm7IClFSwRbfHDriijIbisYv3wMCRVyg507cp8m8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HJffZpR4RGaR0xKmdWBRPHC0fqwHM/SgyFkG2AWbNqQJ/y1QrtvcUqGHt4FvQISs1a1Nk7ldOdBjMs7qJxdXOoqzXRDTsoYcuQD3x2rXODByv2x+g6dZcecFXkCnA7U+vf5Sdc/U3Mo+Czx3krd4MCnoC67dU6a+sKDIpXU3xdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NN0PobY/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HKf/3iGS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NN0PobY/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HKf/3iGS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1710503526; c=relaxed/simple;
+	bh=MalpUJCGMtXkM7cvXquJW764LpDyjJ0+4p2n0n/oTu4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TS8/XqyAM68WzIlxP8jhxGWZqBfrC35W4wr41dkXtbVAxR+1S2JrPj3ihW0EpvIUQy2SN7MBmAbMSi1+iQ7hM5AO838bf2pO4Ds9G53/7NqugNtHanfxrucK0iqkEZSFYgbErqHooUCoJP+ReFzMLI+vu7Hw5kbW9Ur/nUJ8OM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CKDpKMeg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NN0PobY/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HKf/3iGS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NN0PobY/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HKf/3iGS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A63621DD1;
-	Fri, 15 Mar 2024 11:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710503479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTFqm7IClFSwRbfHDriijIbisYv3wMCRVyg507cp8m8=;
-	b=NN0PobY/aemHh1hlNv2a161XAG4ha7M/D+MR2gCYyEZszbW1PFYtGpz9bpf7mkuIlFIKs5
-	/WJscXi7rRAw4agvO816FRnKYbKq4Lo7aQazO2SvEbi9Xd5oavZg0OMa0M/51uOUA0vGvD
-	PGPm4X42V/tGJFTQf045zkUCBdRbIAQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710503479;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTFqm7IClFSwRbfHDriijIbisYv3wMCRVyg507cp8m8=;
-	b=HKf/3iGSCw5zTX2ENPKIaP92jcCqKOr0cLasTZxKvWZKkyKfuc1LwcBphbQtv2DWwGQLDP
-	P8EfhPKp0jKC8ABw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1710503479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTFqm7IClFSwRbfHDriijIbisYv3wMCRVyg507cp8m8=;
-	b=NN0PobY/aemHh1hlNv2a161XAG4ha7M/D+MR2gCYyEZszbW1PFYtGpz9bpf7mkuIlFIKs5
-	/WJscXi7rRAw4agvO816FRnKYbKq4Lo7aQazO2SvEbi9Xd5oavZg0OMa0M/51uOUA0vGvD
-	PGPm4X42V/tGJFTQf045zkUCBdRbIAQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1710503479;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTFqm7IClFSwRbfHDriijIbisYv3wMCRVyg507cp8m8=;
-	b=HKf/3iGSCw5zTX2ENPKIaP92jcCqKOr0cLasTZxKvWZKkyKfuc1LwcBphbQtv2DWwGQLDP
-	P8EfhPKp0jKC8ABw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 311EB13460;
-	Fri, 15 Mar 2024 11:51:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XqpyCjc29GXXCQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 15 Mar 2024 11:51:19 +0000
-Date: Fri, 15 Mar 2024 12:51:18 +0100
-Message-ID: <87h6h7btmx.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: syzbot <syzbot+f3bc6f8108108010a03d@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	perex@perex.cz,
-	syzkaller-bugs@googlegroups.com,
-	tiwai@suse.com,
-	tiwai@suse.de
-Subject: Re: [syzbot] [sound?] possible deadlock in snd_timer_close_locked
-In-Reply-To: <00000000000099d9850613b12348@google.com>
-References: <00000000000099d9850613b12348@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CKDpKMeg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710503525; x=1742039525;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=MalpUJCGMtXkM7cvXquJW764LpDyjJ0+4p2n0n/oTu4=;
+  b=CKDpKMegDUoWoKU6pylZ/uVkaPUkQxBp2xHQNK62rVYRsjJcd8zU6ELR
+   5Ki1KVkCiAjt29KuUZmherld3qVT89jLsTrCZldpiKX5PCJCGDA/ypsNe
+   +EG3FnCMVZzBb0hsOG15wAe1jKmz6wgI1bm2mAR8NAZwQtqDSlb+uXCFR
+   o3RiAL0tI8sGo2vLdG+Us3NtARyOqAbb80IhkF0VTeUKDn60Tq8kl3wOM
+   TdlZEEmLN3XAXMWSd8G3bj+N21CRxZCMDAfoHc4q1efNKBJQTtlvMRNgJ
+   Ancil0H5aSu+/zAIhhC9Kz0CSE3DKo1v6NfxLaXlUa2COxJVZDswG8PVO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="8306185"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="8306185"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 04:52:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="35772016"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.9])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 04:52:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 15 Mar 2024 13:51:55 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>, Ai Chao <aichao@kylinos.cn>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v8] platform/x86: add lenovo wmi camera button driver
+In-Reply-To: <d7c2de21-50f9-4602-abd0-b83ecbc3f42f@gmx.de>
+Message-ID: <62b54638-92eb-52e1-d4ad-074963771157@linux.intel.com>
+References: <20240314050319.171816-1-aichao@kylinos.cn> <d7c2de21-50f9-4602-abd0-b83ecbc3f42f@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: 0.88
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="NN0PobY/";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="HKf/3iGS"
-X-Spamd-Bar: /
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.88 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 BAYES_HAM(-0.11)[66.29%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TAGGED_RCPT(0.00)[f3bc6f8108108010a03d];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 7A63621DD1
 
-#syz dup: [syzbot] [sound?] possible deadlock in snd_pcm_period_elapsed (4)
+On Thu, 14 Mar 2024, Armin Wolf wrote:
+
+> Am 14.03.24 um 06:03 schrieb Ai Chao:
+> 
+> > Add lenovo generic wmi driver to support camera button.
+> > The Camera button is a GPIO device. This driver receives ACPI notifyi
+> > when the camera button is switched on/off. This driver is used in
+> > Lenovo A70, it is a Computer integrated machine.
+> > 
+> > Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> > ---
+> > v8: Dev_deb convert to dev_err.
+> > v7: Add dev_dbg and remove unused dev in struct.
+> > v6: Modify SW_CAMERA_LENS_COVER to
+> > KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
+> > v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
+> > v4: Remove lenovo_wmi_input_setup, move camera_mode into struct
+> > lenovo_wmi_priv.
+> > v3: Remove lenovo_wmi_remove function.
+> > v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+> > 
+> >   drivers/platform/x86/Kconfig             |  12 +++
+> >   drivers/platform/x86/Makefile            |   1 +
+> >   drivers/platform/x86/lenovo-wmi-camera.c | 108 +++++++++++++++++++++++
+> >   3 files changed, 121 insertions(+)
+> >   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+> > 
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index bdd302274b9a..9506a455b547 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+> >   	To compile this driver as a module, choose M here: the module
+> >   	will be called inspur-platform-profile.
+> > 
+> > +config LENOVO_WMI_CAMERA
+> > +	tristate "Lenovo WMI Camera Button driver"
+> > +	depends on ACPI_WMI
+> > +	depends on INPUT
+> > +	help
+> > +	  This driver provides support for Lenovo camera button. The Camera
+> > +	  button is a GPIO device. This driver receives ACPI notify when the
+> > +	  camera button is switched on/off.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called lenovo-wmi-camera.
+> > +
+> >   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+> > 
+> >   config FW_ATTR_CLASS
+> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> > index 1de432e8861e..217e94d7c877 100644
+> > --- a/drivers/platform/x86/Makefile
+> > +++ b/drivers/platform/x86/Makefile
+> > @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+> >   obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+> >   obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+> >   obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+> > +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> > 
+> >   # Intel
+> >   obj-y				+= intel/
+> > diff --git a/drivers/platform/x86/lenovo-wmi-camera.c
+> > b/drivers/platform/x86/lenovo-wmi-camera.c
+> > new file mode 100644
+> > index 000000000000..f83e3ccd9189
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> > @@ -0,0 +1,108 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Lenovo WMI Camera Button Driver
+> > + *
+> > + * Author: Ai Chao <aichao@kylinos.cn>
+> > + * Copyright (C) 2024 KylinSoft Corporation.
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/device.h>
+> > +#include <linux/input.h>
+> > +#include <linux/module.h>
+> > +#include <linux/wmi.h>
+> > +
+> > +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID
+> > "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
+> > +
+> > +struct lenovo_wmi_priv {
+> > +	struct input_dev *idev;
+> > +};
+> > +
+> > +enum {
+> > +	SW_CAMERA_OFF	= 0,
+> > +	SW_CAMERA_ON	= 1,
+> > +};
+> > +
+> > +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object
+> > *obj)
+> > +{
+> > +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> > +	u8 camera_mode;
+> > +
+> > +	if (obj->type != ACPI_TYPE_BUFFER) {
+> > +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> > +		return;
+> > +	}
+> > +
+> > +	if (obj->buffer.length != 1) {
+> > +		dev_err(&wdev->dev, "Invalid buffer length %u\n",
+> > obj->buffer.length);
+> > +		return;
+> > +	}
+> > +
+> > +	/* obj->buffer.pointer[0] is camera mode:
+> > +	 *      0 camera close
+> > +	 *      1 camera open
+> > +	 */
+> > +	camera_mode = obj->buffer.pointer[0];
+> > +	if (camera_mode > SW_CAMERA_ON) {
+> > +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
+> > +		return;
+> > +	}
+> > +
+> > +	if (camera_mode == SW_CAMERA_ON) {
+> > +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 1);
+> > +		input_sync(priv->idev);
+> > +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 0);
+> > +	} else {
+> > +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 1);
+> > +		input_sync(priv->idev);
+> > +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 0);
+> > +	}
+
+While not exactly wrong the if seems unnecessary, you could do:
+
+	unsigned int keycode;
+
+	...
+
+	keycode = camera_mode == SW_CAMERA_ON ? KEY_CAMERA_ACCESS_ENABLE :
+						KEY_CAMERA_ACCESS_DISABLE;
+
+	input_report_key(priv->idev, keycode, 1);
+	input_sync(priv->idev);
+	input_report_key(priv->idev, keycode, 0);
+> > +	input_sync(priv->idev);
+> > +}
+
+Armin,
+
+I tried to figure out the concurrency rules for the WMI notify handler but 
+came up basically nothing. I suppose it boils down on ACPI notify handling 
+and I couldn't find useful documentation about that either. :-/
+
+Could you perhaps add this information into WMI documentation?
+
+-- 
+ i.
+
+> > +
+> > +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
+> > +{
+> > +	struct lenovo_wmi_priv *priv;
+> > +
+> > +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	dev_set_drvdata(&wdev->dev, priv);
+> > +
+> > +	priv->idev = devm_input_allocate_device(&wdev->dev);
+> > +	if (!priv->idev)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->idev->name = "Lenovo WMI Camera Button";
+> > +	priv->idev->phys = "wmi/input0";
+> > +	priv->idev->id.bustype = BUS_HOST;
+> > +	priv->idev->dev.parent = &wdev->dev;
+> > +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+> > +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> > +
+> > +	return input_register_device(priv->idev);
+> > +}
+> > +
+> > +static const struct wmi_device_id lenovo_wmi_id_table[] = {
+> > +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
+> > +	{  }
+> > +};
+> > +
+> > +static struct wmi_driver lenovo_wmi_driver = {
+> > +	.driver = {
+> > +		.name = "lenovo-wmi-camera",
+> > +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> > +	},
+> > +	.id_table = lenovo_wmi_id_table,
+> > +	.no_singleton = true,
+> > +	.probe = lenovo_wmi_probe,
+> > +	.notify = lenovo_wmi_notify,
+> > +};
+> > +
+> > +module_wmi_driver(lenovo_wmi_driver);
+> > +
+> > +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
+> > +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
+> > +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> 
