@@ -1,173 +1,156 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D34D13B;
-	Fri, 15 Mar 2024 18:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84954F1EE;
+	Fri, 15 Mar 2024 18:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710526301; cv=none; b=J7MoXq5Ubl566R1KIGIxrrpKTu5meRohbnkG1xg29HaXZPyILIgZQhQuUSpEjJIgOkTMTEURA2QLtHtOIRBFgNkNYedY+qtHp58VQk4Z5+9NWfg9Wf8tzsof1MB4LWgkD4qtCgekSxvYLtRoSKAHNMkeKiGXIjkQJietQf6oaUo=
+	t=1710526330; cv=none; b=fNKTJOnYXYRI++Z6GQiRkAjphEq2AfTl0RRX6YHdFCwBX11rZrWx2bvoA08BEy/P5/fVNK5i45tWNiZtTc44ao2Ftw3JS7J/SDqH94e5Dt44owbeYx0/F7X+f7WIhwe9rHQfm59cSuLYRKKw6FFhr0i+8M8C2Jl8XM8w08Kxu+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710526301; c=relaxed/simple;
-	bh=av+LO3pCFDRpgY7P1nu9SdAbRzagRbYwt2rIz+Cgj/8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nx0LZ3//Qbig3r9g8euji+kivhIgoRC10sbpSwHDdTh5p8NKNtkZXJZn0MSEzSm431UJwXYD3FgZ6Du1YsfkzgWCVA3exG34CA6JtvIqDflL4+tGboX1qG+VxqcJbyubBt0Zv7Jc0020Q8wvMYtkPHi7oD/OZMTEaHSKzj/3Pgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=OD3jZxwC; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1710526330; c=relaxed/simple;
+	bh=0e2hTLzqSzWSLW52Z9nltO5UKSGGXIc9zzq/LGh+H/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t5z4DoCKaREiwBiNfKRZExF+UOgMLZ3VsXMVwdJ1Oemec/ilaz7vtV8JpMJlijXCYB+U0rDbRzB0NZ/JmtLZb2k7L56huypNd7ek0We53/uqKsp9KRHPsaKsMcVUF7iB4Npw7jqxXtmktPNW+NDAo5X1M78Td+N2rAu78tkut4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=EBmaaAzM; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="OD3jZxwC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1710526295;
-	bh=av+LO3pCFDRpgY7P1nu9SdAbRzagRbYwt2rIz+Cgj/8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OD3jZxwC+FqX8IcDG2x1uL6bhvabCVY1qk3pDF/wV7PcuOjIgawHBeqnUMd5XwNnk
-	 XCoL9XQwy0AYlgMdrgE1fo0HBnu7rzTj+KafnRaxEbKoPWfSC2klW0x+sdfhYkZJNA
-	 J0elsOmulDVo3ZeGRwQ+OVxYkZDbZe2BNQj52oMs=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 15 Mar 2024 19:11:30 +0100
-Subject: [PATCH v3 1/2] sysctl: treewide: drop unused argument
- ctl_table_root::set_ownership(table)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EBmaaAzM"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a461c50deccso303813866b.0;
+        Fri, 15 Mar 2024 11:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1710526327; x=1711131127; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YocCyKVkREiO6SEkYbFtG3eZAFhKtO/ltd371FGqMMc=;
+        b=EBmaaAzM22HZ3h2mUD7iqSm4N8VstY6fVnb7SUS0/RxyHjDcOVP5cmmFsVThhR99vk
+         h2hjdAG+8lT4L6uQ9/pOJ4rNiV4+XZDsu/sYunMAwLCvYR3uAFh9zkvxsO7TS8qmFG4h
+         WvtOjHaPhPX1l0Dxgay1mfN6KyfiHcZUd2fXvimt6NjUqvkKVqeuGN7MZ/F1WM87YkKB
+         aeI19H36OZQWGhgya/tEUtMy1rGDcNpE+BcAINJxvleqcHiYBFvaCcdTL6gGbVNRR/g9
+         OBDH+ugGayNlKLcjJUn8IpT6/im03vEer3Nm+Zl/og3POdJGdc8PWydAKT6AQbv018XA
+         0xqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710526327; x=1711131127;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YocCyKVkREiO6SEkYbFtG3eZAFhKtO/ltd371FGqMMc=;
+        b=AD4yk6dgJqEak/UNxu4OR1NoUfGtwAGqEwAEQKhmqdBCibKIKkDOB9IzddUVlzy9wH
+         NP/Q0WNJ1hGIEAYMH2TmpLoQ9WrxRFY78hx1EPwJrabftJfqEVu/yvhzcKkG784dfTRV
+         xfZ+ziky7GC+tv/ht91zAkDTNUmSJdmO8KVp3AbwOahKrUy3UP5fYcqxIClIL8sZ8jmY
+         GcrkKLx2iuEXeCKY9dEq1Hk5INY/VzrSTSEdRW4g+DhTCG70Hj5cayHHU8Zt67msd7Zw
+         QMwsVkortsCWnLivIZCRhNPxW+I2/Gb1HXF6XnnLINtxjvKZZqgKUmK8GQz9ghOySVZ9
+         WMeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVs2LHYBnYECo5+RRxaYamrWUGetFoY9nmjCHBL8qaOZcFkvyp6F8BJKvN7NVvhS7nAJGn7NYViKwuv2UWwzwyDUD+blwa5GPy/ZYYJ
+X-Gm-Message-State: AOJu0YztGvrEdOdwsG/EwrF4VQhJh3X4DF6iRSDltTHCoV2ai8oTyaxw
+	eNlTxG33IGE/PbmMbcz8jge6DlYDNOk4z9fDWMUdUdIoH0cHYsZcbWESSlCgpqBU5Q==
+X-Google-Smtp-Source: AGHT+IHkiHOlyaF2CCvrzBL2FiDyb0mSCQv703B1AwmSl6Oa+P7muTJf0VbnAXzaGUoH3C80G0YqOg==
+X-Received: by 2002:a17:906:c30f:b0:a46:2a85:b37b with SMTP id s15-20020a170906c30f00b00a462a85b37bmr3441990ejz.51.1710526327041;
+        Fri, 15 Mar 2024 11:12:07 -0700 (PDT)
+Received: from ddev.DebianHome (dynamic-095-119-217-226.95.119.pool.telefonica.de. [95.119.217.226])
+        by smtp.gmail.com with ESMTPSA id jy5-20020a170907762500b00a4675490095sm1650064ejc.42.2024.03.15.11.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 11:12:06 -0700 (PDT)
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+To: selinux@vger.kernel.org
+Cc: Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] selinux: optimize ebitmap_and()
+Date: Fri, 15 Mar 2024 19:11:55 +0100
+Message-ID: <20240315181204.647182-1-cgzones@googlemail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240315-sysctl-const-ownership-v3-1-b86680eae02e@weissschuh.net>
-References: <20240315-sysctl-const-ownership-v3-0-b86680eae02e@weissschuh.net>
-In-Reply-To: <20240315-sysctl-const-ownership-v3-0-b86680eae02e@weissschuh.net>
-To: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
- Joel Granados <j.granados@samsung.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710526294; l=3835;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=av+LO3pCFDRpgY7P1nu9SdAbRzagRbYwt2rIz+Cgj/8=;
- b=/F06c2EJiWGR1f+P1HpCb7VAwJpzrdnOwXaMr5dC/J/axq7JcENhUxIxB79TjfmogI3LQqTY2
- e4nU4U6SQfoBdvFWisQ4l4iMp/1tJkIVslkveD0MdFsz9205ZIMY9r2
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The argument is never used and can be removed.
+Iterate on nodes instead of single bits to save node resolution for each
+single bit.
 
-In a future commit the sysctl core will only use
-"const struct ctl_table". Removing it here is a preparation for this
-consitifcation.
+Similar to userspace patch efcd00814879 ("libsepol: optimize
+ebitmap_and").
 
-The patch was created with the following coccinelle script:
-
-  @@
-  identifier func, head, table, uid, gid;
-  @@
-
-  void func(
-    struct ctl_table_header *head,
-  - struct ctl_table *table,
-    kuid_t *uid, kgid_t *gid)
-  { ... }
-
-The single changed location was validate through manual inspection and
-compilation.
-
-In addition, a search for 'set_ownership' was done over the full tree to
-look for places that were missed by coccinelle.
-None were found.
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
 ---
- fs/proc/proc_sysctl.c  | 2 +-
- include/linux/sysctl.h | 1 -
- ipc/ipc_sysctl.c       | 3 +--
- ipc/mq_sysctl.c        | 3 +--
- net/sysctl_net.c       | 1 -
- 5 files changed, 3 insertions(+), 7 deletions(-)
+v3:
+  apply format style
+v2:
+  fix array size computation
+---
+ security/selinux/ss/ebitmap.c | 50 +++++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 8 deletions(-)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 37cde0efee57..ed3a41ed9705 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -480,7 +480,7 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+diff --git a/security/selinux/ss/ebitmap.c b/security/selinux/ss/ebitmap.c
+index 67c1a73cd5ee..47cb90106118 100644
+--- a/security/selinux/ss/ebitmap.c
++++ b/security/selinux/ss/ebitmap.c
+@@ -78,19 +78,53 @@ int ebitmap_cpy(struct ebitmap *dst, const struct ebitmap *src)
+ int ebitmap_and(struct ebitmap *dst, const struct ebitmap *e1,
+ 		const struct ebitmap *e2)
+ {
+-	struct ebitmap_node *n;
+-	int bit, rc;
++	const struct ebitmap_node *n1, *n2;
++	struct ebitmap_node *new = NULL, **prev;
+ 
+ 	ebitmap_init(dst);
+ 
+-	ebitmap_for_each_positive_bit(e1, n, bit)
+-	{
+-		if (ebitmap_get_bit(e2, bit)) {
+-			rc = ebitmap_set_bit(dst, bit, 1);
+-			if (rc < 0)
+-				return rc;
++	prev = &dst->node;
++	n1 = e1->node;
++	n2 = e2->node;
++	while (n1 && n2) {
++		if (n1->startbit == n2->startbit) {
++			unsigned long testmap[EBITMAP_UNIT_NUMS];
++			unsigned int i;
++			bool match = false;
++
++			for (i = 0; i < ARRAY_SIZE(testmap); i++) {
++				testmap[i] = n1->maps[i] & n2->maps[i];
++				if (testmap[i] != 0)
++					match = true;
++			}
++
++			if (match) {
++				new = kmem_cache_zalloc(ebitmap_node_cachep,
++							GFP_ATOMIC);
++				if (!new) {
++					ebitmap_destroy(dst);
++					return -ENOMEM;
++				}
++				new->startbit = n1->startbit;
++				memcpy(new->maps, testmap, EBITMAP_SIZE / 8);
++				new->next = NULL;
++
++				*prev = new;
++				prev = &(new->next);
++			}
++
++			n1 = n1->next;
++			n2 = n2->next;
++		} else if (n1->startbit > n2->startbit) {
++			n2 = n2->next;
++		} else {
++			n1 = n1->next;
+ 		}
  	}
- 
- 	if (root->set_ownership)
--		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
-+		root->set_ownership(head, &inode->i_uid, &inode->i_gid);
- 	else {
- 		inode->i_uid = GLOBAL_ROOT_UID;
- 		inode->i_gid = GLOBAL_ROOT_GID;
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index ee7d33b89e9e..60333a6b9370 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -205,7 +205,6 @@ struct ctl_table_root {
- 	struct ctl_table_set default_set;
- 	struct ctl_table_set *(*lookup)(struct ctl_table_root *root);
- 	void (*set_ownership)(struct ctl_table_header *head,
--			      struct ctl_table *table,
- 			      kuid_t *uid, kgid_t *gid);
- 	int (*permissions)(struct ctl_table_header *head, struct ctl_table *table);
- };
-diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-index 45cb1dabce29..1a5085e5b178 100644
---- a/ipc/ipc_sysctl.c
-+++ b/ipc/ipc_sysctl.c
-@@ -192,7 +192,6 @@ static int set_is_seen(struct ctl_table_set *set)
++
++	if (new)
++		dst->highbit = new->startbit + EBITMAP_SIZE;
++
+ 	return 0;
  }
  
- static void ipc_set_ownership(struct ctl_table_header *head,
--			      struct ctl_table *table,
- 			      kuid_t *uid, kgid_t *gid)
- {
- 	struct ipc_namespace *ns =
-@@ -224,7 +223,7 @@ static int ipc_permissions(struct ctl_table_header *head, struct ctl_table *tabl
- 		kuid_t ns_root_uid;
- 		kgid_t ns_root_gid;
- 
--		ipc_set_ownership(head, table, &ns_root_uid, &ns_root_gid);
-+		ipc_set_ownership(head, &ns_root_uid, &ns_root_gid);
- 
- 		if (uid_eq(current_euid(), ns_root_uid))
- 			mode >>= 6;
-diff --git a/ipc/mq_sysctl.c b/ipc/mq_sysctl.c
-index 21fba3a6edaf..6bb1c5397c69 100644
---- a/ipc/mq_sysctl.c
-+++ b/ipc/mq_sysctl.c
-@@ -78,7 +78,6 @@ static int set_is_seen(struct ctl_table_set *set)
- }
- 
- static void mq_set_ownership(struct ctl_table_header *head,
--			     struct ctl_table *table,
- 			     kuid_t *uid, kgid_t *gid)
- {
- 	struct ipc_namespace *ns =
-@@ -97,7 +96,7 @@ static int mq_permissions(struct ctl_table_header *head, struct ctl_table *table
- 	kuid_t ns_root_uid;
- 	kgid_t ns_root_gid;
- 
--	mq_set_ownership(head, table, &ns_root_uid, &ns_root_gid);
-+	mq_set_ownership(head, &ns_root_uid, &ns_root_gid);
- 
- 	if (uid_eq(current_euid(), ns_root_uid))
- 		mode >>= 6;
-diff --git a/net/sysctl_net.c b/net/sysctl_net.c
-index 051ed5f6fc93..a0a7a79991f9 100644
---- a/net/sysctl_net.c
-+++ b/net/sysctl_net.c
-@@ -54,7 +54,6 @@ static int net_ctl_permissions(struct ctl_table_header *head,
- }
- 
- static void net_ctl_set_ownership(struct ctl_table_header *head,
--				  struct ctl_table *table,
- 				  kuid_t *uid, kgid_t *gid)
- {
- 	struct net *net = container_of(head->set, struct net, sysctls);
-
 -- 
-2.44.0
+2.43.0
 
