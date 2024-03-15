@@ -1,92 +1,127 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B82E171C8
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14261171C8
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 11:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710502658; cv=none; b=D6hbxuBMz3qf6CJcZ3tJ1E7oyBR3lJhay+0m0PkeC9wua1ZTEIGGz2k6wLTmpQrUEVB/FR/cLoTgZ9n0lpen9AebGxv24mSpFElVd7EUA+2g3Dsga7NC12I/NVBbJyTKLFIGeo2XJ2kEcHqI4yl32nPgXTkwltkV1Hft6StaHC8=
+	t=1710502725; cv=none; b=QDxNJ6boyOUy34SIRi8FCFLnWqe5ZA3rAvltzP2F3aQW06h9ALvw2iG610RvuTmHSak4DqJWrq8pBu5+FYr4uDvOqkgEuvqnRtY+x4OKth8H4EUC3HrTRsdUuCTq/E7TR86Us99UHfKIJA7i1QJTxSbQAe8kmYtu0lZXwzCeu+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710502658; c=relaxed/simple;
-	bh=XME15Qz6eZI3kyPR3ZDiBzWwrGS9XZbM4DqTjdNxlo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f0Q2RIoPJEdiZHkgiTTc7f1h7Uqxrl9V8GwS+aooqjz0TPWeddLl1iU+clZyVBHCBOQQ+O3WXrkdgwNHbDS7TLyhK+hmXbAwpvDlvxSMUNRShZcyYEpp9g6ot4pe67cvbOpMtB8KnpGc+Y8xe2iHyFgNMhp4C0xXynpBQF2WKY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LbBooBE+; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbBooBE+"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-db3a09e96daso1726350276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 04:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710502656; x=1711107456; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=W1YjIjeqOSOzfGq2xXT4IYkQmnAHVepprgGXQRagfTY=;
-        b=LbBooBE+IFJU5zVBfnesbRVFF+oqtSU1WlJzGBaC2T+yXwx+5BfKnlSeolCY0Ee6z3
-         jvsN1r2KSMRcy48cALERuS9fykH49Kn/wPcWWoB/ymtyLH6X2Uq5ZUFbKiE7KJkKcaWL
-         bWFlbRthJlAvfBFDbRA6F8Wi0s2GiirOyMogkMzVbkSG3GuWazCVwGpwKy2MyUDLS12c
-         I3tJV233bt9LF6+av+v1+RSum1KrJVG8/q9P3/1Z/oA3G7muD2eKkV3ihL46rd4giYQX
-         u8yoKnoHq7Mh9xXmsdCrPNf3cKxBlIqe1D9D7f7mnokLt+eU7LvvJAG5RJZPuUuoeJ9e
-         Xe1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710502656; x=1711107456;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W1YjIjeqOSOzfGq2xXT4IYkQmnAHVepprgGXQRagfTY=;
-        b=S1ks98GPvaj+NeOzq0anIiA3ZjmrqXRv+JHiKijWmy0cgtCl0NfuMg56tLLwi4XuNI
-         6IpXXE/fY1gDiX5ZYrAmmnceSHnp1y/enU3lzK7R1AgOp8kjd21lhgLK1ViPSAmSzeQr
-         CbJ1ooOZqdc1FcAuwOkAv9QERdLgzk+SXtsIvzbgbHiHh3Qm7HH48NFIHOpW1r9V+hK5
-         Dp51PkAcRCQsi4O63pMx/Tgwf59r6af6SJuGqj78PXz48Y8gexK7YcGqI//n0y9Gl0cw
-         NSLk4b9e8mfJRzoSIN1h5JM7ZfIdFcVsaZQ3p6jt5fUfuhht1AFpmlNeQLgc62xcSbOq
-         iZCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVbApks4OA8mfwOzbKU6nPG83gGYT/zldLhp1OaawUqb7u4D54h1+4Xo7aWR5VZPu1LgrivoimYlpzOUubwYZBQmaJfbohBxXXhXTx
-X-Gm-Message-State: AOJu0YzHcShGRKkp0uwSEIBMjAk2jyY0CEea2IpfveIEIWDeAIfJCQqt
-	BGOTQv0Y9AkLYrvTrZegV9nm+XyeGjv+yNNkW4MSzR8fqmxXl7yFKiH5Ie139IvX9O5vjHezvBF
-	kfQSnOpU29CMbnNKrEKnHb/GLkROHgBfEfYY3Mw==
-X-Google-Smtp-Source: AGHT+IGNjJToPdVH5hgnrzbo2/Y+N7SoBZsHPueEWHCi3sAAnAaUw/tww8bYLv5uKat8ny98eFlvnQEHDXDY2PazX2c=
-X-Received: by 2002:a25:c5cb:0:b0:dc6:c2b2:c039 with SMTP id
- v194-20020a25c5cb000000b00dc6c2b2c039mr4303557ybe.41.1710502656113; Fri, 15
- Mar 2024 04:37:36 -0700 (PDT)
+	s=arc-20240116; t=1710502725; c=relaxed/simple;
+	bh=7QLD3prDt9j6/VrhdZM27xHmU4cQO3QjjjhxYe6KFWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RP26/5/Ap7yIc/LdpfarUaSlBeCG6jK0DIgds3U+Q3cu94gHZ6aLV9eTvTGc60frsQWnVA8HXhLhvNWSLZV12XySCWUe4AhCrGhrPQGK0EchQt1uAr/m26ACd6JJWp6vFs5JAHBp7LIpP+TjZJV/QVrcuxLv4e1eTbcu5J0BQak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79BA5C15;
+	Fri, 15 Mar 2024 04:39:17 -0700 (PDT)
+Received: from [10.57.69.160] (unknown [10.57.69.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40C543F762;
+	Fri, 15 Mar 2024 04:38:39 -0700 (PDT)
+Message-ID: <5cc147fa-492e-46c3-963d-2f6e6680dce9@arm.com>
+Date: Fri, 15 Mar 2024 11:38:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306030649.60269-1-vignesh.raman@collabora.com> <20240306030649.60269-4-vignesh.raman@collabora.com>
-In-Reply-To: <20240306030649.60269-4-vignesh.raman@collabora.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 15 Mar 2024 13:37:25 +0200
-Message-ID: <CAA8EJpo=OXUitC+NPjZd5Kpq9dF04BSffvgsMYnn7LmmEoh09A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] drm/ci: uprev IGT and update testlist
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.koike@collabora.com, airlied@gmail.com, daniel@ffwll.ch, 
-	emma@anholt.net, robdclark@gmail.com, david.heidelberg@collabora.com, 
-	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, 
-	hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com, 
-	mairacanal@riseup.net, mcanal@igalia.com, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] mm: vmscan: Avoid split during shrink_folio_list()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Yin Fengwei <fengwei.yin@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>
+References: <20240311150058.1122862-1-ryan.roberts@arm.com>
+ <20240311150058.1122862-6-ryan.roberts@arm.com>
+ <d8086108-05e7-4765-a6f5-dfb85fb44b90@redhat.com>
+ <1db242d3-5ff1-4ef5-b20a-578a317fa859@arm.com>
+ <caafeabd-fb94-45de-9dcc-2451ddc0ef50@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <caafeabd-fb94-45de-9dcc-2451ddc0ef50@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 6 Mar 2024 at 05:08, Vignesh Raman <vignesh.raman@collabora.com> wrote:
->
-> Uprev IGT and add amd, v3d, vc4 and vgem specific
-> tests to testlist. Have testlist.txt per driver
-> and include a base testlist so that the driver
-> specific tests will run only on those hardware.
-> Also add testlists to the MAINTAINERS file.
+Hi Yin Fengwei,
 
-I think we should move away from specifying tests explicitly. They can
-easily get out of sync. A month ago I had to manually go through the
-list of the tests and update it to follow changes in the IGT.
+On 15/03/2024 11:12, David Hildenbrand wrote:
+> On 15.03.24 11:49, Ryan Roberts wrote:
+>> On 15/03/2024 10:43, David Hildenbrand wrote:
+>>> On 11.03.24 16:00, Ryan Roberts wrote:
+>>>> Now that swap supports storing all mTHP sizes, avoid splitting large
+>>>> folios before swap-out. This benefits performance of the swap-out path
+>>>> by eliding split_folio_to_list(), which is expensive, and also sets us
+>>>> up for swapping in large folios in a future series.
+>>>>
+>>>> If the folio is partially mapped, we continue to split it since we want
+>>>> to avoid the extra IO overhead and storage of writing out pages
+>>>> uneccessarily.
+>>>>
+>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>> ---
+>>>>    mm/vmscan.c | 9 +++++----
+>>>>    1 file changed, 5 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>> index cf7d4cf47f1a..0ebec99e04c6 100644
+>>>> --- a/mm/vmscan.c
+>>>> +++ b/mm/vmscan.c
+>>>> @@ -1222,11 +1222,12 @@ static unsigned int shrink_folio_list(struct list_head
+>>>> *folio_list,
+>>>>                        if (!can_split_folio(folio, NULL))
+>>>>                            goto activate_locked;
+>>>>                        /*
+>>>> -                     * Split folios without a PMD map right
+>>>> -                     * away. Chances are some or all of the
+>>>> -                     * tail pages can be freed without IO.
+>>>> +                     * Split partially mapped folios map
+>>>> +                     * right away. Chances are some or all
+>>>> +                     * of the tail pages can be freed
+>>>> +                     * without IO.
+>>>>                         */
+>>>> -                    if (!folio_entire_mapcount(folio) &&
+>>>> +                    if (!list_empty(&folio->_deferred_list) &&
+>>>>                            split_folio_to_list(folio,
+>>>>                                    folio_list))
+>>>>                            goto activate_locked;
+>>>
+>>> Not sure if we might have to annotate that with data_race().
+>>
+>> I asked that exact question to Matthew in another context bt didn't get a
+>> response. There are examples of checking if the deferred list is empty with and
+>> without data_race() in the code base. But list_empty() is implemented like this:
+>>
+>> static inline int list_empty(const struct list_head *head)
+>> {
+>>     return READ_ONCE(head->next) == head;
+>> }
+>>
+>> So I assumed the READ_ONCE() makes everything safe without a lock? Perhaps not
+>> sufficient for KCSAN?
+> 
+> Yeah, there is only one use of data_race with that list.
+> 
+> It was added in f3ebdf042df4 ("THP: avoid lock when check whether THP is in
+> deferred list").
+> 
+> Looks like that was added right in v1 of that change [1], so my best guess is
+> that it is not actually required.
+> 
+> If not required, likely we should just cleanup the single user.
+> 
+> [1]
+> https://lore.kernel.org/linux-mm/20230417075643.3287513-2-fengwei.yin@intel.com/
 
-I think we should directly use testlist.txt from IGT and then filter
-it out using skips.
+Do you have any recollection of why you added the data_race() markup?
 
--- 
-With best wishes
-Dmitry
+Thanks,
+Ryan
+
+> 
+
