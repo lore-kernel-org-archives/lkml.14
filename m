@@ -1,115 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A87417579
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DDB17559;
+	Fri, 15 Mar 2024 08:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710492219; cv=none; b=K8gaIKN905YX6vfeRIup4ReTtjmjYpEmxK64N0aDYgE3mQkHdXJHRawtN4y/LUMSjP99AkYt5pKW+B+0wOFifAAgOpnOQV3VG0dW2o5Q0QUTy79W4gRaE/CFWQXuY90UAePlo434rAyK7fvawnzxs7q/hgMPI6XLz4KoFdqqqzY=
+	t=1710492258; cv=none; b=V/Sm/uUMCbnB/994chPYfL1YDSbjUhf1Y2Eh4bZgA8LBN9u1YKFpqfYgmiAJP7p0JUxu+0MWmimh5wbhSHfeLL1ke7tN9EPbng42ouvtQFGgEUhP1Q4fOPYaHzfPsr3+Kb5xmw1D2G225PgS3LfVhL2xI/pP4ti7KxUWvdmkgeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710492219; c=relaxed/simple;
-	bh=WWHHW90wK8/G15XckvW+3s0nidylONdVyAdhQ9e18Do=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QBkGIAmLHzpB4Zhf0O5ui5SPthCRBzuGcCjsaoypb4/9xSOQ5+f8nntjx+ByTcwpfxvyOUoDrITRKXQiq9hGlLNcoFGQ3LbdhGx+ta/7BEUD5EG/hR71ZNOffkNcnywot9YDQCXK8mdXdI9mJe9pjTHGW5CsuIWesRSI/KJlZb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UgW5sqCs; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710492258; c=relaxed/simple;
+	bh=87b2vqsW/gW7SOXRyOtq/VrkOM6YrZRFbDDN/uOdmtg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n42qHT8jOyKnrdRr+8IZcpbcQV8JW8nDLujVC9yJC9PxwYIXC++OLaQSFnEJPOBajt9jckqpWAy3gYV/5c5/NBnH575j8sBPiRouei5rtkhlbBQe9W/UWr7Ymn9ST1a0E06inBN5edmOaeJ7rc4mSinLdGyCulFcsIfJ4xzw6Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=P3u0epMx; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UgW5sqCs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710492217; x=1742028217;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=WWHHW90wK8/G15XckvW+3s0nidylONdVyAdhQ9e18Do=;
-  b=UgW5sqCsAHL/8nCZ6qWcGRP3XQsqYLV5lWcern9Hu3QuxPpIFaHerbui
-   axdfZjVcRvV7uqNsFxApo8u5M7Bma5SxJ7oFRpA/QHeGaK0WuNERIm4kp
-   sCdwEV7YhgbLI/3YomeXUuFZ7gRZrWmc05+SOafVCV6N3ysuqzyetyimk
-   nRyznCHDPesN6lg/f9J7Sg4Wd+FxH2IheJS9K1+uCqtredajaNbMZWacs
-   fic8jBtlEjHAdb7HrQd5RaCJLecYBVIXSj2as7KNT6M90mZXPVG2tFr6a
-   9mfahrvnKn51AW+dm6Q0k7Zw2GIvNqniHxoxsmSANnjw32iy6HcQ2Yekr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="16499638"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="16499638"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 01:43:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="12519204"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 01:43:31 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>, Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,  ryan.roberts@arm.com,
-  chengming.zhou@linux.dev,  chrisl@kernel.org,  david@redhat.com,
-  hannes@cmpxchg.org,  kasong@tencent.com,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  mhocko@suse.com,  nphamcs@gmail.com,  shy828301@gmail.com,
-  steven.price@arm.com,  surenb@google.com,  wangkefeng.wang@huawei.com,
-  willy@infradead.org,  xiang@kernel.org,  yosryahmed@google.com,
-  yuzhao@google.com,  Chuanhua Han <hanchuanhua@oppo.com>,  Barry Song
- <v-songbaohua@oppo.com>
-Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
-In-Reply-To: <20240304081348.197341-6-21cnbao@gmail.com> (Barry Song's message
-	of "Mon, 4 Mar 2024 21:13:48 +1300")
-References: <20240304081348.197341-1-21cnbao@gmail.com>
-	<20240304081348.197341-6-21cnbao@gmail.com>
-Date: Fri, 15 Mar 2024 16:41:37 +0800
-Message-ID: <87wmq3yji6.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="P3u0epMx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1710492249; x=1711097049; i=deller@gmx.de;
+	bh=z21ODUA1mNLuZNRTs2+1Da8p6DxdGZIZqzjsQxJQ2K4=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=P3u0epMxNLoBuVfxp/ZTGBzMgTvDNampVV/PtWEoYfhjgXUHjoxFqd7iKTpslkKw
+	 GhzfWrcge0PVLZ4hT3DlRRmM7kuBO4IYhh05ZacIEJ5P0CeoaR8pdkBuegoVSdZPl
+	 R6CMU99p9DwSpeqEdUn8en2Wh9p+oSVBaO7FIr0l6qr0+fEQqoPpfQwpy0e66I5og
+	 GDHfpCX4aP2sc7IjMJfXn55Zxxhcx9vgnzzNqrtXm/jdcQYJ0BM1Lobn2fXa4upw2
+	 p1E6vMApdsumhYftNQaZChqo0bcjYDNS2FAggoxQqDIIx6TD5WQX7zBhsDTlxBUV+
+	 tEKdnBa51Wukv3x37w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.155.107]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mr9G2-1qyIMJ2GhS-00oEZ3; Fri, 15
+ Mar 2024 09:44:09 +0100
+Message-ID: <64bbc4dd-b617-4f3d-809e-763bedf37fb7@gmx.de>
+Date: Fri, 15 Mar 2024 09:44:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] fbmon: prevent division by zero in
+ fb_videomode_from_videomode()
+Content-Language: en-US
+To: Roman Smirnov <r.smirnov@omp.ru>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Karina Yankevich <k.yankevich@omp.ru>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+References: <20240305135150.23240-1-r.smirnov@omp.ru>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <20240305135150.23240-1-r.smirnov@omp.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yUkUDlTs45ggPXHdj7xIpPUfdry3SvhegN7JuxR+2kOrW1+Ys5Q
+ YRH9/74b8L/ITmIGWrtjepoLsk86OuDgTphT2+/1eeaupotuVa9NxdNGsaJez/7d8jUyKGk
+ T+3BRf7C8gixFX8jCPecj4WO8+4XyGYaruEAiyXuy6hVbatprSMBw+ON8FxWwsDpcQ636Qr
+ IgEtvJ/MiX40efManxLQw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tJ4pLWTNd7M=;8atSOyHZrm7NCU3S6v9G3/d83N2
+ TOzwFLNnP4ewNliW506wSzypHu10DCAkf3p5U7cXQJA5XJCAKt6jwvMbBexLpHlkJWki9UUYA
+ woKYFVrfBXwU5Xl703/SMScP0ZXs+tklLjhewHQ0bzyx47tsWbfHktiDxCgLS8MF4UNfjwjMN
+ i81BptkxkO45/HVU/48n33HM00lSleX83E4HKkM8YJSQp1QHLgxCOZOBtMc5hb21dT0n3T5/F
+ EfrThsjTEFRgUP6waOsMLSxG7pG8DQ9XOmmmkLfI5i6yTC+1UJpF5Mw2dLAhfaS5Pz4wZe8qN
+ ZiZ0Ot/t8n7lWCArSIFgeTPBgNYTgn+YzFW5DW6piCxzRTqr5vruhyrhcBYsLunUIMJojYAex
+ ARbK19tPOBbJud+q/1Fo7BcqkL8bgpsISfxC+bgGLhAK/xM9dDRZ7vgI7GQO/xGPMQM4Svf//
+ DLxpp1GjI0bZgvQVqHH2UAutcgwr1trq0pW9F4/y9xlTvUtQkqLH4MUc2KXqclNsZQORliJIn
+ 0jsxV6LuclTHOmAawkVW85mA4ggq0alJehxBJwNVIevJpE1hoet/J0hhaw2hY4y8vw2wpaU4F
+ XmHev1kO9gUXmHndYeOLt6h8WXvM7fY+Pg87SjdnY9EfCms4G5efF0B1M63sY+QH5Q8dJVdiE
+ 0DR81p5EKxjm8aTshJCzlEacSN5RCn7ulT37OXYtrIWoNJiGegPNSfTxYD0RdJWj1QKRLPa8S
+ IbRqLnyjLXyq7F3XlqyJSxJVrPjOZ6mNwaZ4k264WIzq21g34xL7TqAMu0vYo5sgRVuNTe+7M
+ OtI94od5Cnn4rnHyPNpqzX/Cg5j3Wx4Q1iw4IIRnYpCco=
 
-Barry Song <21cnbao@gmail.com> writes:
+On 3/5/24 14:51, Roman Smirnov wrote:
+> The expression htotal * vtotal can have a zero value on
+> overflow.
 
-> From: Chuanhua Han <hanchuanhua@oppo.com>
+I'm not sure if thos always results in zero in kernel on overflow.
+Might be architecture-depended too, but let's assume it
+can become zero, ....
+
+> It is necessary to prevent division by zero like in
+> fb_var_to_videomode().
 >
-> On an embedded system like Android, more than half of anon memory is
-> actually in swap devices such as zRAM. For example, while an app is
-> switched to background, its most memory might be swapped-out.
+> Found by Linux Verification Center (linuxtesting.org) with Svace.
 >
-> Now we have mTHP features, unfortunately, if we don't support large folios
-> swap-in, once those large folios are swapped-out, we immediately lose the
-> performance gain we can get through large folios and hardware optimization
-> such as CONT-PTE.
+> Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> ---
+>   V1 -> V2: Replaced the code of the first version with a check.
 >
-> This patch brings up mTHP swap-in support. Right now, we limit mTHP swap-in
-> to those contiguous swaps which were likely swapped out from mTHP as a
-> whole.
+>   drivers/video/fbdev/core/fbmon.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Meanwhile, the current implementation only covers the SWAP_SYCHRONOUS
-> case. It doesn't support swapin_readahead as large folios yet since this
-> kind of shared memory is much less than memory mapped by single process.
+> diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core=
+/fbmon.c
+> index 79e5bfbdd34c..b137590386da 100644
+> --- a/drivers/video/fbdev/core/fbmon.c
+> +++ b/drivers/video/fbdev/core/fbmon.c
+> @@ -1344,7 +1344,7 @@ int fb_videomode_from_videomode(const struct video=
+mode *vm,
+>   	vtotal =3D vm->vactive + vm->vfront_porch + vm->vback_porch +
+>   		 vm->vsync_len;
+>   	/* prevent division by zero */
+> -	if (htotal && vtotal) {
+> +	if (htotal && vtotal && (vm->pixelclock / htotal >=3D vtotal)) {
 
-In contrast, I still think that it's better to start with normal swap-in
-path, then expand to SWAP_SYCHRONOUS case.
+why don't you then simply check for
+	if .. ((htotal * vtotal) =3D=3D 0) ...
+instead?
 
-In normal swap-in path, we can take advantage of swap readahead
-information to determine the swapped-in large folio order.  That is, if
-the return value of swapin_nr_pages() > 1, then we can try to allocate
-and swapin a large folio.
+Helge
 
-To do that, we need to track whether the sub-pages are accessed.  I
-guess we need that information for large file folio readahead too.
+>   		fbmode->refresh =3D vm->pixelclock / (htotal * vtotal);
+>   	/* a mode must have htotal and vtotal !=3D 0 or it is invalid */
+>   	} else {
 
-Hi, Matthew,
-
-Can you help us on tracking whether the sub-pages of a readahead large
-folio has been accessed?
-
-> Right now, we are re-faulting large folios which are still in swapcache as a
-> whole, this can effectively decrease extra loops and early-exitings which we
-> have increased in arch_swap_restore() while supporting MTE restore for folios
-> rather than page. On the other hand, it can also decrease do_swap_page as
-> PTEs used to be set one by one even we hit a large folio in swapcache.
->
-
---
-Best Regards,
-Huang, Ying
