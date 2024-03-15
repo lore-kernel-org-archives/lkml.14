@@ -1,250 +1,177 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9277354FB5;
-	Fri, 15 Mar 2024 20:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13CF56B90
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 20:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710535772; cv=none; b=upaCErzMZ+FIKtLCbIKCwE3e+jXBieXgalaE0eW+ySjlTvZDIjamNLBBbDYwynFHVWvZNyFnPJ/iKJsaJuvuS/BgUrBuMGVQBgZUfsXM76PZSXy1b3+1KBmmTPm+pYRS8Bto3w6jZziRiYxRJ9bYrXp/ZmJn9Ubs1RnK4qejLYA=
+	t=1710535785; cv=none; b=CiuTO9F+QZvkvAwy9GBLUSf8HMl9Bs8PvfLbVEjbW9zwAGymUkA1lMgCcOnuj9tGi8OJsKC173xzn+8MeG1KF0MnFzY8FdQnl8QrfYMvbeAhp1TBlWdVAeBOPC9qqIzoJlKCkc1oSxX47L8lhsnYB5+SY60XfnzHM/n5tV5BMSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710535772; c=relaxed/simple;
-	bh=ioYxjFgUhmgN64D7EqS9neBKa6VPb6OHx0+I2+vtq58=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M+Z4awS540WiHsJziYQ4+I+tNZOqCTgrT4y5PSIWNwEMuMYtdzzcUMomZ7ppSeb+Oe9BNhUHMCR0NSfFyVbNSZSjH8IjRwDbW3d8mAsa6b8m6KQ8L0mdgN+CozzprIk/hfKXSwiksUsyx9emMe4N0lNnF5Pzws1AdAME4aqNYek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=U4bUcES3; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1710535785; c=relaxed/simple;
+	bh=Rut/BAraKFn7EzjJl52R4XRiSgrwnmytZ5kfoG42EdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HdHFahAVbmpafao6RZjqboN36CtjjLX0QNcidFMuhq8Wsy0DJKdpzTrAU8rdD7Sdnt19a+ufwhS7fc1zawqr4k5zkr0vx4gJT889lbYaWHwMJKqRv0mLU2Guow6EumTWycw6KDAT5tXjP+giLmCDcmqkhH+Nkv5cfcOzn1+FgNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d92Ucujo; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="U4bUcES3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1710535767;
-	bh=ioYxjFgUhmgN64D7EqS9neBKa6VPb6OHx0+I2+vtq58=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=U4bUcES3s2tjQfaJWa5kyV07tIaEq54seuKRZncSMfN3xTCOuGrLDMLybcDmwJiHY
-	 ATXaHOHgLnm1H38G00+7D2Qr6StGQ2gP0zruWtCyTLYxFxe885rD9AfLaJyLIS6zx1
-	 NmZbFZqMIU/KmrUeGsPfH36Qh5k2WHCdEy49ynD0=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 15 Mar 2024 21:48:08 +0100
-Subject: [PATCH 10/11] sysctl: constify ctl_table arguments of utility
- function
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d92Ucujo"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-413fea12b50so13544635e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 13:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710535779; x=1711140579; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=evdMd0PT9+KX7ncy1Up7YwjVyPPKavdHQwvEaxViPvA=;
+        b=d92UcujouT9aKhjIh8Btc0is+RJ7B7yw6UYgnjTGyV+aJOdqmihq5rJwEVCmZkzPdF
+         meWzvh4vyCD7UeaM+GNLk1hzqa+36gyu6Whk+10l3RD6th8/7yFC9AghVaGwdFH/Mx9b
+         +xlAhoZLNS4WxdVOs0wF767t9owuXTxJHZWWuTcdeQAYmIIglnhN1Jcov5Efd3KoT7M3
+         TPjWN+FfRcN5/WCEV1340yBHNBrE2WHYomOSL1klPs6EGRsd4rjMD2zPiaoP6G80fwSO
+         s3V4Kj8AcrwPu560oGAckfsp+nEJtBzbqKPdsaSSaai9w6R1FzuMdyBJznl2BN8Fgd1J
+         F8ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710535779; x=1711140579;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=evdMd0PT9+KX7ncy1Up7YwjVyPPKavdHQwvEaxViPvA=;
+        b=lDRuDZRSqysnFDL2bVTVIFvVbAzWpqAuCkdPXPW1Hl4bctUP8ysQ0aG13C+YZXjjEX
+         J4NmE4nqxXV2tKU6S9EDniD3MXDJi9x3ihx+YfMosc80fXK1QxX43c1MctsKaQ5yHGLx
+         eP+7EGe+KOTJF+GV99DX1qcxu+7WDRjp/Eqa7C7AlPcuLFuK2abokwqhsoFo0elQdH2I
+         67C4TDk8rmd3MoHnbk2bheJtwBlCtFOCHXOq34gZ6RWLStxh/UkKwqH3LJVderB0YGB7
+         AMRr9t6oaNLiLAYnfCyyywji9Or1d6kdNrlw9J9Tefcg74i18hYOjBe884SXG3AT0AMO
+         AndQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdqvHFntTgOVV6zt2KGBaFXGkNOzzMsiWlvLdX7g4fu1qSq8fSyd++QHDRtAktqR5vklmn2ISrbGOcvZ2lfLZVR9UcGhYZWVTbzU4M
+X-Gm-Message-State: AOJu0Yxs1JJBNitbROeG4xy2ctPhXZk7eo80JiDfPwYM3R4YCWz59m7O
+	NSftXFr1ArxSPadcNBHzyknLCxTWAk2WLeMG3ao8r29HVW5fnQ/0vuvpsZlc+Kg=
+X-Google-Smtp-Source: AGHT+IHW/ZhLoW9dVsP03e/cfzAFm2l0UodLy8/jk0GAphAW9PjOYbi/mCIN40Y0gjbTVAhL7S0e+g==
+X-Received: by 2002:a05:600c:b59:b0:413:f1a4:d412 with SMTP id k25-20020a05600c0b5900b00413f1a4d412mr194865wmr.14.1710535779319;
+        Fri, 15 Mar 2024 13:49:39 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id h10-20020a05600c350a00b00412ee8e2f2asm10091282wmq.9.2024.03.15.13.49.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Mar 2024 13:49:38 -0700 (PDT)
+Message-ID: <b4fe2ffa-bd36-404a-9441-8781f0a81d26@linaro.org>
+Date: Fri, 15 Mar 2024 21:49:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240315-sysctl-const-handler-v1-10-1322ac7cb03d@weissschuh.net>
-References: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
-In-Reply-To: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Kees Cook <keescook@chromium.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- David Ahern <dsahern@kernel.org>, Simon Horman <horms@verge.net.au>, 
- Julian Anastasov <ja@ssi.bg>, Pablo Neira Ayuso <pablo@netfilter.org>, 
- Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
- Luis Chamberlain <mcgrof@kernel.org>, 
- Joel Granados <j.granados@samsung.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Phillip Potter <phil@philpotter.co.uk>, Theodore Ts'o <tytso@mit.edu>, 
- "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Sudip Mukherjee <sudipm.mukherjee@gmail.com>, 
- Mark Rutland <mark.rutland@arm.com>, Atish Patra <atishp@atishpatra.org>, 
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Eric Biederman <ebiederm@xmission.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Balbir Singh <bsingharora@gmail.com>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
- Petr Mladek <pmladek@suse.com>, John Ogness <john.ogness@linutronix.de>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
- Daniel Bristot de Oliveira <bristot@redhat.com>, 
- Valentin Schneider <vschneid@redhat.com>, 
- Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
- John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- Allison Henderson <allison.henderson@oracle.com>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, 
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, 
- John Johansen <john.johansen@canonical.com>, 
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
- "Serge E. Hallyn" <serge@hallyn.com>, 
- Alexander Popov <alex.popov@linux.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
- lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
- coreteam@netfilter.org, linux-fsdevel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
- linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kexec@lists.infradead.org, 
- bridge@lists.linux.dev, linux-rdma@vger.kernel.org, 
- rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
- linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
- linux-security-module@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710535695; l=4555;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=ioYxjFgUhmgN64D7EqS9neBKa6VPb6OHx0+I2+vtq58=;
- b=3ezsimD4t+3/T0cNPSQ4+FYpRTQhNYyohAK+Rbgx8HlPQ+xGzze+WEFqLcmmpL3mfNQxqYUX7
- 1t4oHVoJb7wAVyGZrGoUFlfOOhXQ+0lakf0I5Pzjxrct2orfuAx6LgW
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] dt-bindindgs: clock: nxp: support i.MX95 Display
+ CSR module
+Content-Language: en-US
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Abel Vesa <abelvesa@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-clk@vger.kernel.org, imx@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+References: <20240314-imx95-blk-ctl-v4-0-d23de23b6ff2@nxp.com>
+ <20240314-imx95-blk-ctl-v4-5-d23de23b6ff2@nxp.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240314-imx95-blk-ctl-v4-5-d23de23b6ff2@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In a future commit the proc_handlers themselves will change to
-"const struct ctl_table". As a preparation for that adapt the internal
-helper.
+On 14/03/2024 14:25, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The DISPLAY_CSR provides control and status of the following:
+>  Clock selection for the Display Engines
+>  Pixel Interleaver mode selection
+>  Pixel Link enables
+>  QoS settings for the display controller
+>  ArCache and AwCache signals
+>  Display Engine plane association
+> 
+> This patch is to add the clock features for this module
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../bindings/clock/nxp,imx95-display-csr.yaml      | 50 ++++++++++++++++++++++
+>  include/dt-bindings/clock/nxp,imx95-clock.h        |  4 ++
+>  2 files changed, 54 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,imx95-display-csr.yaml b/Documentation/devicetree/bindings/clock/nxp,imx95-display-csr.yaml
+> new file mode 100644
+> index 000000000000..9a5e21346b0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,imx95-display-csr.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/nxp,imx95-display-csr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX95 Display Block Control
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: nxp,imx95-display-csr
+> +      - const: syscon
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- include/linux/sysctl.h |  2 +-
- kernel/sysctl.c        | 21 +++++++++++----------
- 2 files changed, 12 insertions(+), 11 deletions(-)
+Why do you create five different bindings with almost the same contents?
+Do you plan to grow on them, like add more compatibles here? Otherwise
+all this could be in one binding.
 
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index ee7d33b89e9e..99ea26b16c0d 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -238,7 +238,7 @@ extern struct ctl_table_header *register_sysctl_mount_point(const char *path);
- 
- void do_sysctl_args(void);
- bool sysctl_is_alias(char *param);
--int do_proc_douintvec(struct ctl_table *table, int write,
-+int do_proc_douintvec(const struct ctl_table *table, int write,
- 		      void *buffer, size_t *lenp, loff_t *ppos,
- 		      int (*conv)(unsigned long *lvalp,
- 				  unsigned int *valp,
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 157f7ce2942d..93824d8a3636 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -205,7 +205,7 @@ static int _proc_do_string(char *data, int maxlen, int write,
- 	return 0;
- }
- 
--static void warn_sysctl_write(struct ctl_table *table)
-+static void warn_sysctl_write(const struct ctl_table *table)
- {
- 	pr_warn_once("%s wrote to %s when file position was not 0!\n"
- 		"This will not be supported in the future. To silence this\n"
-@@ -223,7 +223,7 @@ static void warn_sysctl_write(struct ctl_table *table)
-  * handlers can ignore the return value.
-  */
- static bool proc_first_pos_non_zero_ignore(loff_t *ppos,
--					   struct ctl_table *table)
-+					   const struct ctl_table *table)
- {
- 	if (!*ppos)
- 		return false;
-@@ -468,7 +468,7 @@ static int do_proc_douintvec_conv(unsigned long *lvalp,
- 
- static const char proc_wspace_sep[] = { ' ', '\t', '\n' };
- 
--static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
-+static int __do_proc_dointvec(void *tbl_data, const struct ctl_table *table,
- 		  int write, void *buffer,
- 		  size_t *lenp, loff_t *ppos,
- 		  int (*conv)(bool *negp, unsigned long *lvalp, int *valp,
-@@ -541,7 +541,7 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
- 	return err;
- }
- 
--static int do_proc_dointvec(struct ctl_table *table, int write,
-+static int do_proc_dointvec(const struct ctl_table *table, int write,
- 		  void *buffer, size_t *lenp, loff_t *ppos,
- 		  int (*conv)(bool *negp, unsigned long *lvalp, int *valp,
- 			      int write, void *data),
-@@ -552,7 +552,7 @@ static int do_proc_dointvec(struct ctl_table *table, int write,
- }
- 
- static int do_proc_douintvec_w(unsigned int *tbl_data,
--			       struct ctl_table *table,
-+			       const struct ctl_table *table,
- 			       void *buffer,
- 			       size_t *lenp, loff_t *ppos,
- 			       int (*conv)(unsigned long *lvalp,
-@@ -639,7 +639,7 @@ static int do_proc_douintvec_r(unsigned int *tbl_data, void *buffer,
- 	return err;
- }
- 
--static int __do_proc_douintvec(void *tbl_data, struct ctl_table *table,
-+static int __do_proc_douintvec(void *tbl_data, const struct ctl_table *table,
- 			       int write, void *buffer,
- 			       size_t *lenp, loff_t *ppos,
- 			       int (*conv)(unsigned long *lvalp,
-@@ -675,7 +675,7 @@ static int __do_proc_douintvec(void *tbl_data, struct ctl_table *table,
- 	return do_proc_douintvec_r(i, buffer, lenp, ppos, conv, data);
- }
- 
--int do_proc_douintvec(struct ctl_table *table, int write,
-+int do_proc_douintvec(const struct ctl_table *table, int write,
- 		      void *buffer, size_t *lenp, loff_t *ppos,
- 		      int (*conv)(unsigned long *lvalp,
- 				  unsigned int *valp,
-@@ -1023,8 +1023,9 @@ static int sysrq_sysctl_handler(struct ctl_table *table, int write,
- }
- #endif
- 
--static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table,
--		int write, void *buffer, size_t *lenp, loff_t *ppos,
-+static int __do_proc_doulongvec_minmax(void *data,
-+		const struct ctl_table *table, int write,
-+		void *buffer, size_t *lenp, loff_t *ppos,
- 		unsigned long convmul, unsigned long convdiv)
- {
- 	unsigned long *i, *min, *max;
-@@ -1096,7 +1097,7 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table,
- 	return err;
- }
- 
--static int do_proc_doulongvec_minmax(struct ctl_table *table, int write,
-+static int do_proc_doulongvec_minmax(const struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos, unsigned long convmul,
- 		unsigned long convdiv)
- {
-
--- 
-2.44.0
+Best regards,
+Krzysztof
 
