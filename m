@@ -1,73 +1,82 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459253BB52;
-	Fri, 15 Mar 2024 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DEB1946C;
+	Fri, 15 Mar 2024 15:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710516820; cv=none; b=FlgaJOYf7iWFOXv0WbQQryI+b9H3IEjVuLfsqUCUjlX6DJBlH188n15pzqkzRpqpHJq1WVScq4e4m2AB5di07/qksM+dw5VK5BhR2p5KaZgp07Shs6DxaqvXIaeCmwyJLz75yrfsdj4NZBpVWyRy8qn4kZ1H0GVB/cVSmq+5TPQ=
+	t=1710516876; cv=none; b=eRKt3lV+07R/sZzbz+qO0qtwAEoIYRNXp6uqogoiDZ3tomxc/iVX2ok71Hho9tP6g7ZuprVWbTnqhcpuNUcEIqUgzwVRRA3QxcoxIT0ksNFJ/EPcusvb0iXoJTFwtJFvQG3EQgrs7PTfNMRw98gFOIbA+xNxAOf8xMxs5HIDPMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710516820; c=relaxed/simple;
-	bh=dvn4/U6uPrMUIBGYeEo6TqrtbQXgI9y158xfzC6wxQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VQ8ZYScz7JrTsjN0malfMhXOvBcT10oYEZH9wAHV70P6GrZ5aU3wYtETPld2SaRkNZH6yHoDCOUOHbxkUF5c14zowBsRcVXfGT/ZAKfFSCg8Fu2qA6MdTL3ITm1OlHcw6VxoidHo4WxQcPSkQA5cf1goEhrim0uK1U0HxHjENn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Pnis1sI9; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1710516876; c=relaxed/simple;
+	bh=kloGycDSopUOMJZAJlHEKTFM7/I+pN2yYqHLiFNx4vc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=glW19IG2JUK8SfNnO0VX2mrdIh3Dnt/NGNj2VTDYR/aDW1n05lwO17wQwx9L/wHp+kJb+lvSFZeQSfnRToQqHAv8WgS+bxuwmPjuw02ZCwyLqK/CqQSxlXjxaBgB6vrGpWqMlbv5yHukns3Ep42//WmuxAO3dueDg4pPjoXstYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R1JqKkC4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Pnis1sI9"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id EA3F91FA91;
-	Fri, 15 Mar 2024 16:33:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1710516807;
-	bh=zPCuo2gTzB/xvX++e/jE9wP6QdKb7XMn6eqirgfq4pU=; h=From:To:Subject;
-	b=Pnis1sI9ijiGFHdQ0SmQ3hYGuULP3RziWCzDJ4gd2RniZnwdVVwrU/hvpbHXaAkco
-	 XWfsjRc72plRbwDSUwoAS9dlIii8IF/7AVFItueJjzG6+FaGlIxJM/GE2g2iA13Hr7
-	 UiasOIujdYhXE5p50QV1BXHPb8Ugmg9kecpKbfTUUtT6apth2/GJGTU1A7Jz2DGZ0l
-	 meQNrEypMfQ4MTixJ5obFOpsuYaHxIGAMaALBEUd6Ht34ifdDCkXbHidVzM/nWC1kh
-	 1+zVIKtv4dOomXZKoPjIbTAXvF114esPQ9vwdUmuhNE9s4ItWHdOK6LheAKej6k0iw
-	 dS6R7bh/AdnZg==
-Date: Fri, 15 Mar 2024 16:33:22 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>
-Cc: Jai Luthra <j-luthra@ti.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Nishanth Menon <nm@ti.com>, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
-Subject: Re: [PATCH v1] arm64: dts: ti: verdin-am62: dahlia: fix audio clock
-Message-ID: <20240315153322.GA3579@francesco-nb>
-References: <20240315102500.18492-1-andrejs.cainikovs@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R1JqKkC4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710516875; x=1742052875;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kloGycDSopUOMJZAJlHEKTFM7/I+pN2yYqHLiFNx4vc=;
+  b=R1JqKkC43ZhZpRsbnQIKz4Xp0CPsLEnY+BFEFIUs77vfzBIuUUIjWcFf
+   ixmH2RjVv0T+5rPkX1AhmrH7FwkeMpoyThTfIoyd1LLJYwpgkEPY2xFe3
+   fCkNi4vIZVHJd3u4ATD2/qe/1WXy1/V0+lgWCqW/SWKnL3UGIA3hoV8LF
+   /xIRX2Ovj2wwZutJWUfLv6PeOGle1czcaXc6V86xRMtqURxk65/PmQlbU
+   Urd5K5OJZv8gHZNcXHGqnfpQtua/u3kqhCTTKAMLP57QfWSbqEsqadGIK
+   F619K5WNhaFoCI9syEiQkK8dAXxYDQqBMNxQvi9iR0VEEQENMYJjzh8Q2
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="5257549"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="5257549"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 08:34:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="937057705"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="937057705"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2024 08:34:32 -0700
+Message-ID: <2a3ab595-80b2-fd4a-8748-c823fa5ec098@linux.intel.com>
+Date: Fri, 15 Mar 2024 17:36:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315102500.18492-1-andrejs.cainikovs@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: [PATCH] usb: usb-acpi: fix uninitialized variable in
+ usb_acpi_get_connect_type()
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <fdd4f94d-fb8c-44a0-9472-3485a567caca@moroto.mountain>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <fdd4f94d-fb8c-44a0-9472-3485a567caca@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 15, 2024 at 11:25:00AM +0100, Andrejs Cainikovs wrote:
-> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+On 15.3.2024 17.21, Dan Carpenter wrote:
+> The "pld" pointer is uninitialized if acpi_get_physical_device_location()
+> fails.  Initialize it to NULL.
 > 
-> In current configuration, wm8904 codec on Dahlia carrier board provides
-> distorted audio output. This happens due to reference clock is fixed to
-> 25MHz and no FLL is enabled. During playback following parameters are set:
+> Fixes: f3ac348e6e04 ("usb: usb-acpi: Set port connect type of not connectable ports correctly")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
 
-[...]
+I sent a similar patch a week ago, just before merge window opened.
+looks like it didn't make it.
 
-> Fixes: f5bf894c865b ("arm64: dts: ti: verdin-am62: dahlia: add sound card")
-> Suggested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+https://lore.kernel.org/linux-usb/20240308113425.1144689-1-mathias.nyman@linux.intel.com/
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-
-Francesco
+Thanks
+Mathias
 
