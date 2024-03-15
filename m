@@ -1,80 +1,150 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A588028FC
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 16:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15465D29B;
+	Fri, 15 Mar 2024 16:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710520529; cv=none; b=f5Uysd4tuQx2EEHrOVnH7QxWFy4WcckJz20/FotS4R3DSQ3S8Puf0KP4hId4PnXn43c1tt8pQjFOcjm2sPWqxwig/wmBZGXo/xOb/zGMlaP8zi/RRFENeryadd6KGyNhlhBaSVmYlsR/njJLmh5/v4MIVEDokCVSJpo/u2tCjbM=
+	t=1710520571; cv=none; b=jfb9gijzL7N9mue7HbYIN34zw/Mr0gUDMNPn2REOGKQbgI+rHtn1x9P2D7HxPCJL8IDDlprOKO/TtjursAo6OGyOu1SgT00u7yXrGqm1I/cVl+/lC4m1gHdeVVjNE5HyZu9VJnzOS3uVX6Kq+8v3oMwF8NSOd57OVaHNoGupuKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710520529; c=relaxed/simple;
-	bh=ghw1k/+pt/ZvrdwVjLVvv3tNq9YHf4zCFABTTJrTcKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZwnC2zv4Wn+OSBsB9gRjR0avSkU2E1PgGOC0v8O6NZxbNbSLs9813TiT5yWjfexLDrYTq03TGBVy/QBqoDGOnZJoU0PMoEO4bsjqmFq8TNlTCL9bssTJNlL+5YUdheqdoqkTTD2CfIx+sXugr34RortzB662E95gZxvvh19vqbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qqoXWUly; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710520571; c=relaxed/simple;
+	bh=5szkVEXe0ekaYiJWoeSLGaHsidYU+VV3wwTnpAmCoFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GukwoziJumCG5eW2FFY8AB1vU/T0ArOgQDqjf9gduRsjq5t+c7Jb9ASoP0IaNP0WWQ1O5WyDrtol151MyR15JUDCg6qVNs8FWXA54xoE/cMVwDB4FDmT6+lO3mGi/299swygGmrUDOi+xv+NxWQN5/DyWR5lePt1RyMePUQMbpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5gZGKH4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qqoXWUly"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso13790a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710520526; x=1711125326; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ghw1k/+pt/ZvrdwVjLVvv3tNq9YHf4zCFABTTJrTcKU=;
-        b=qqoXWUlybVMBx+mnXrUppo7XMBsADPevjOqKcGDpE7JiUU62xmmjGBbsn1wraVixsL
-         TkLVpmJPMbquRJIfiNXQamr6PEZVdNjSfF5b9qht8xqwW5/iq0FYBMg87fAMFAkfK4oB
-         mAnOyxyrrhVRVPGmwK/b4UEooDhXXPn6WKrsdMx/KE7F6BaCFBPelBSAFEzyk3VyRc2E
-         hhmPeJuIy+zrKVnhha8So68hxhOUQwuNOx9wVlhBIoiRgJ8RwMniOn1K06ywemjP3jeZ
-         qoCALuSL8WFYQD91U4ach4GKIRffuf6TktoCBThtcGDH6vfLZ8YcWOUTyNGU6+xSGasY
-         2kig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710520526; x=1711125326;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ghw1k/+pt/ZvrdwVjLVvv3tNq9YHf4zCFABTTJrTcKU=;
-        b=fDOaI+Pi7e/t8JFSM5m+FvWK/iPmaa+JQmytvzWm4vi6X9TEcxr58CCAVyWrvFLYu3
-         KXCJ1hYn8FwPTvVfdpX3yhX0slwv5pgoaOjNkummQ8rrBiGHxJjq9/p3+0bJ3HisQ/ga
-         0NX5ygc9NtURoCn2lkZjo+2GgHNQ+oMKFjcSPh9s+Ywm6WtFtLAY0YKFY5Fe+ffZ87aL
-         b0ORdPp3BsTbqyoMMn8vSWerZRJbJs4A30Q9D0IoAsc67aPpl2iIK0EvzRrLHs/NosUv
-         8z+F+c8lQSQxrxWM83+lKBodsw3XrxnjuOS19epbqisIHrpmTgXFAB/fk3XgHl6uSena
-         4vrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgRTK2Aby8Dnac0VvII8LNVZp5afvw71UlzkhUZzW5bOhNJMUTL2G/kzUDLioUpPAgdte70HRUmmyuqLaHS2FBq/BKiBLek9+q63vj
-X-Gm-Message-State: AOJu0YzX+fcSj55QozCaGWotEGpV+3YEyd4Rz/6J6fuwrxzhIkWlhWZ1
-	T7AE0evqGANHMyKzsEQDflQ+INIKPZwFhpBvvgoWxb+cFYhHKJJzVp2JdYqd8s9LpgpSCOS71qb
-	x+E0jHdkHe+Ev1w7W17RdBFQNiZTjzPDA+CHE
-X-Google-Smtp-Source: AGHT+IG6GH5Tn4TKmAdmEgYwzsZTPntpiM77HXjvpskWwt2wQYJ3DnOV8PP8A1NiMEvB9H6lsJugLMrVnkHsAx95H04=
-X-Received: by 2002:a05:6402:160f:b0:568:5606:71f9 with SMTP id
- f15-20020a056402160f00b00568560671f9mr168472edv.5.1710520525808; Fri, 15 Mar
- 2024 09:35:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5gZGKH4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70F74C433F1;
+	Fri, 15 Mar 2024 16:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710520569;
+	bh=5szkVEXe0ekaYiJWoeSLGaHsidYU+VV3wwTnpAmCoFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z5gZGKH4u/iN1Yqk/CcmFVJsWIdVx4yRHC1F9Og9J1iru3arWK5PhESTZvEuiGzP1
+	 DL07X+Jxl7H8PxRz4Wy1FbvMdrG1g/mi3vczhVQ6mCT0Nfbh/RBiEQW5gQQ4VcCKAA
+	 MtP/TXEoxpQG5XO870KxWKn/CO4+waojEqfpW9kFaonMbEj6QXFSj+kISsNGt0LJ6E
+	 joxqWbJm//5lI/RtUp20LA8KoQ82hhIn7DGxi6miGwCXBgZYNpIiSMlv8vYlbSQk2g
+	 V21mBUNo+FYllTyrQUSoaJbBD1gau2Slnk/Vhpy6rBMNGFs1zrW1YFO1rl7qvfL7gB
+	 AWmBd4bsSERVQ==
+Date: Fri, 15 Mar 2024 10:36:07 -0600
+From: Rob Herring <robh@kernel.org>
+To: Joshua Yeong <joshua.yeong@starfivetech.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	geert+renesas@glider.be, prabhakar.mahadev-lad.rj@bp.renesas.com,
+	conor.dooley@microchip.com, alexghiti@rivosinc.com,
+	evan@rivosinc.com, ajones@ventanamicro.com, heiko@sntech.de,
+	guoren@kernel.org, uwu@icenowy.me, jszhang@kernel.org,
+	conor@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, leyfoon.tan@starfivetech.com,
+	jeeheng.sia@starfivetech.com, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/4] dt-bindings: cache: Add docs for StarFive
+ StarLink-500 cache controller
+Message-ID: <20240315163607.GA1444248-robh@kernel.org>
+References: <20240314061205.26143-1-joshua.yeong@starfivetech.com>
+ <20240314061205.26143-5-joshua.yeong@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314235554.90079-1-jthies@google.com> <20240314235554.90079-2-jthies@google.com>
- <ZfOTHO6FMlpjeQhZ@google.com>
-In-Reply-To: <ZfOTHO6FMlpjeQhZ@google.com>
-From: Jameson Thies <jthies@google.com>
-Date: Fri, 15 Mar 2024 09:35:13 -0700
-Message-ID: <CAMFSARcckrrqy-_n2bK-iZAXBkfkyzEyOWjmEuHQxfuUaCSTkw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] usb: typec: ucsi: Check capabilities before cable
- and identity discovery
-To: Benson Leung <bleung@google.com>
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org, 
-	pmalani@chromium.org, abhishekpandit@chromium.org, andersson@kernel.org, 
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
-	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314061205.26143-5-joshua.yeong@starfivetech.com>
 
-Hey Benson,
-thank you for the feedback. I'll follow up with a version 2 of this
-patch addressing these comments.
+On Thu, Mar 14, 2024 at 02:12:05PM +0800, Joshua Yeong wrote:
+> Add DT binding documentation used by StarFive's
+> Starlink-500 cache controller.
+> 
+> Signed-off-by: Joshua Yeong <joshua.yeong@starfivetech.com>
+> ---
+>  .../cache/starfive,starlink-500-cache.yaml    | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cache/starfive,starlink-500-cache.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/cache/starfive,starlink-500-cache.yaml b/Documentation/devicetree/bindings/cache/starfive,starlink-500-cache.yaml
+> new file mode 100644
+> index 000000000000..97ddf7db39e9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cache/starfive,starlink-500-cache.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/cache/starfive,starlink-500-cache.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: StarFive StarLink-500 Cache Controller
+> +
+> +maintainers:
+> +  - Joshua Yeong <joshua.yeong@starfivetech.com>
+> +
+> +description:
+> +  StarFive's StarLink-500 controller manages cache shared between clusters of
+> +  CPU cores. The cache driver provides mechanism to perform invalidate and write
+> +  back functionality to the shared memory.
 
-Thanks,
-Jameson
+What a driver does is not relevant to the binding. You could describe 
+what the registers control though.
+
+> +
+> +allOf:
+> +  - $ref: /schemas/cache-controller.yaml#
+> +
+> +# We need a select here so we don't match all nodes with 'cache'
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - starfive,starlink-500-cache
+> +
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: starfive,starlink-500-cache
+> +      - const: cache
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  cache-size: true
+> +  cache-sets: true
+> +  cache-block-size: true
+> +  cache-level: true
+> +  cache-unified: true
+
+Drop these and...
+
+> +
+> +additionalProperties: false
+
+... use 'unevaluatedProperties' instead.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+cache-unified should be required as I imagine the cache is always 
+unified. Perhaps other properties too (cache-level already is)?
+
+> +
+> +examples:
+> +  - |
+> +      cache-controller@15000000 {
+> +        compatible = "starfive,starlink-500-cache", "cache";
+> +        reg = <0x15000000 0x278>;
+> +        cache-block-size = <64>;
+> +        cache-level = <3>;
+> +        cache-sets = <8192>;
+> +        cache-size = <0x400000>;
+> +        cache-unified;
+> +      };
+> -- 
+> 2.25.1
+> 
