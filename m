@@ -1,163 +1,78 @@
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+Received: from rosemary.ibugone.net (unknown [202.38.75.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9F5336A;
-	Fri, 15 Mar 2024 19:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4906750A75
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 20:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.38.75.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710532770; cv=none; b=N+hjjk2J735f+kFwj0mIbv/NWFNEULdQt7uVGvP+uXfP7jNuJQpiJebh9x+Xnqtle6kBfUqpRXrRr4qzAaMEjYn4DGKwlHN/RjGILDWeqKG3ZJvCoG55APXzz1XcXcrjd5rGLqszQdoqy+dbD0oQ4IpHVBrg78G6KnbjHQh4FVI=
+	t=1710532858; cv=none; b=McBB/HZGOBIzmcJY2QZiimuj9QF9RW24egKjr7FBp43zyfhQes2GW3dOZst3985CYyvyi0KJtgPZAE+iRpiLtvOFwRhdvEIlGTaSwNWZLuAITeHDq72do5cNjI3+Y5c3Y4Yty1eoWE2OTuNPjWNNnld9dJ59Ru97fvpo9cfPmOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710532770; c=relaxed/simple;
-	bh=oUmhpF7xElrNNw84e7vQKqO0uKdLUyu+P4YirT7F+JU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=malDPbQVC/DdLyHrPTOvuHXC0d3geWyc5/Tfssgw2ZMgrQgw74/83oX8HBhvCF7KoUrR/gCCuEywAV0N4Vztkr/AMx2LSVcZjjKi/u4GI8RfHryCM+M8WFXzOeeUSjk66qMdAMMpI3K1Du+8dhqu2M0LrShfMTWUXOE8LiH96PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=hallyn.com; arc=none smtp.client-ip=178.63.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hallyn.com
-Received: from serge-l-PF3DENS3 (unknown [72.163.2.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: serge)
-	by mail.hallyn.com (Postfix) with ESMTPSA id 8AAB0888;
-	Fri, 15 Mar 2024 14:59:21 -0500 (CDT)
-Date: Fri, 15 Mar 2024 14:59:19 -0500
-From: Serge Hallyn <serge@hallyn.com>
-To: Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>
-Cc: linux-security-module@vger.kernel.org, linux-block@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>,
-	John Johansen <john.johansen@canonical.com>,
-	James Morris <jmorris@namei.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Khadija Kamran <kamrankhadijadj@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	apparmor@lists.ubuntu.com, selinux@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 01/10] capability: introduce new capable flag
- CAP_OPT_NOAUDIT_ONDENY
-Message-ID: <ZfSol9llgsKWj1p9@serge-l-PF3DENS3>
-References: <20240315113828.258005-1-cgzones@googlemail.com>
+	s=arc-20240116; t=1710532858; c=relaxed/simple;
+	bh=DWuHyDQ7KaouzyzHkM8sjp+zITuNkADl5Pm6V4ABgBU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cKgiSDSBYqX+N2tqcnidLjkSwjOUvqHWRNtXVcj/09gdLxWfLyLZqR+9NkoxpqOzNO+lkRd/i0Q4TVVtOE6awqGWFVKMAuWjVTMiTyC7dYK8YBE1wxxk6Wq5PoPaJaPuInRZZYt4jFxJB+F+wIbMIbbRC+a2Jwwxte2d7c57bAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ibugone.com; spf=pass smtp.mailfrom=ibugone.com; arc=none smtp.client-ip=202.38.75.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ibugone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibugone.com
+Received: by rosemary.ibugone.net (Postfix, from userid 1000)
+	id 4D2CE7A56F4; Sat, 16 Mar 2024 03:32:09 +0800 (CST)
+From: iBug <i@ibugone.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me,
+	linux-nvme@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	"Jiawei Fu (iBug)" <i@ibugone.com>
+Subject: [PATCH] drivers/nvme: Add quirks for device 126f:2262
+Date: Sat, 16 Mar 2024 03:27:49 +0800
+Message-ID: <20240315192747.1749119-3-i@ibugone.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240315113828.258005-1-cgzones@googlemail.com>
 
-On Fri, Mar 15, 2024 at 12:37:22PM +0100, Christian Göttsche wrote:
-> Introduce a new capable flag, CAP_OPT_NOAUDIT_ONDENY, to not generate
-> an audit event if the requested capability is not granted.  This will be
-> used in a new capable_any() functionality to reduce the number of
-> necessary capable calls.
-> 
-> Handle the flag accordingly in AppArmor and SELinux.
-> 
-> CC: linux-block@vger.kernel.org
-> Suggested-by: Paul Moore <paul@paul-moore.com>
-> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+From: "Jiawei Fu (iBug)" <i@ibugone.com>
 
-Thanks.
+This commit adds NVME_QUIRK_NO_DEEPEST_PS and NVME_QUIRK_BOGUS_NID for
+device [126f:2262], which appears to be a generic VID:PID pair used for
+many SSDs based on the Silicon Motion SM2262/SM2262EN controller.
 
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Two of my SSDs with this VID:PID pair exhibit the same behavior:
 
-> ---
-> v5:
->    rename flag to CAP_OPT_NOAUDIT_ONDENY, suggested by Serge:
->      https://lore.kernel.org/all/20230606190013.GA640488@mail.hallyn.com/
-> ---
->  include/linux/security.h       |  2 ++
->  security/apparmor/capability.c |  8 +++++---
->  security/selinux/hooks.c       | 14 ++++++++------
->  3 files changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 41a8f667bdfa..c60cae78ff8b 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -70,6 +70,8 @@ struct lsm_ctx;
->  #define CAP_OPT_NOAUDIT BIT(1)
->  /* If capable is being called by a setid function */
->  #define CAP_OPT_INSETID BIT(2)
-> +/* If capable should audit the security request for authorized requests only */
-> +#define CAP_OPT_NOAUDIT_ONDENY BIT(3)
->  
->  /* LSM Agnostic defines for security_sb_set_mnt_opts() flags */
->  #define SECURITY_LSM_NATIVE_LABELS	1
-> diff --git a/security/apparmor/capability.c b/security/apparmor/capability.c
-> index 9934df16c843..08c9c9a0fc19 100644
-> --- a/security/apparmor/capability.c
-> +++ b/security/apparmor/capability.c
-> @@ -108,7 +108,8 @@ static int audit_caps(struct apparmor_audit_data *ad, struct aa_profile *profile
->   * profile_capable - test if profile allows use of capability @cap
->   * @profile: profile being enforced    (NOT NULL, NOT unconfined)
->   * @cap: capability to test if allowed
-> - * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
-> + * @opts: CAP_OPT_NOAUDIT/CAP_OPT_NOAUDIT_ONDENY bit determines whether audit
-> + *	record is generated
->   * @ad: audit data (MAY BE NULL indicating no auditing)
->   *
->   * Returns: 0 if allowed else -EPERM
-> @@ -126,7 +127,7 @@ static int profile_capable(struct aa_profile *profile, int cap,
->  	else
->  		error = -EPERM;
->  
-> -	if (opts & CAP_OPT_NOAUDIT) {
-> +	if ((opts & CAP_OPT_NOAUDIT) || ((opts & CAP_OPT_NOAUDIT_ONDENY) && error)) {
->  		if (!COMPLAIN_MODE(profile))
->  			return error;
->  		/* audit the cap request in complain mode but note that it
-> @@ -143,7 +144,8 @@ static int profile_capable(struct aa_profile *profile, int cap,
->   * @subj_cred: cred we are testing capability against
->   * @label: label being tested for capability (NOT NULL)
->   * @cap: capability to be tested
-> - * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
-> + * @opts: CAP_OPT_NOAUDIT/CAP_OPT_NOAUDIT_ONDENY bit determines whether audit
-> + *	record is generated
->   *
->   * Look up capability in profile capability set.
->   *
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 3448454c82d0..1a2c7c1a89be 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -1624,7 +1624,7 @@ static int cred_has_capability(const struct cred *cred,
->  	u16 sclass;
->  	u32 sid = cred_sid(cred);
->  	u32 av = CAP_TO_MASK(cap);
-> -	int rc;
-> +	int rc, rc2;
->  
->  	ad.type = LSM_AUDIT_DATA_CAP;
->  	ad.u.cap = cap;
-> @@ -1643,11 +1643,13 @@ static int cred_has_capability(const struct cred *cred,
->  	}
->  
->  	rc = avc_has_perm_noaudit(sid, sid, sclass, av, 0, &avd);
-> -	if (!(opts & CAP_OPT_NOAUDIT)) {
-> -		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
-> -		if (rc2)
-> -			return rc2;
-> -	}
-> +	if ((opts & CAP_OPT_NOAUDIT) || ((opts & CAP_OPT_NOAUDIT_ONDENY) && rc))
-> +		return rc;
-> +
-> +	rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
-> +	if (rc2)
-> +		return rc2;
-> +
->  	return rc;
->  }
->  
-> -- 
-> 2.43.0
-> 
-> 
+  * They frequently have trouble exiting the deepest power state (5),
+    resulting in the entire disk unresponsive.
+    Verified by setting nvme_core.default_ps_max_latency_us=10000 and
+    observing them behaving normally.
+  * They produce all-zero nguid and eui64 with `nvme id-ns` command.
+
+The offending products are:
+
+  * HP SSD EX950 1TB
+  * HIKVISION C2000Pro 2TB
+
+Signed-off-by: Jiawei Fu <i@ibugone.com>
+---
+ drivers/nvme/host/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index e6267a6aa380..8e0bb9692685 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3363,6 +3363,9 @@ static const struct pci_device_id nvme_id_table[] = {
+ 				NVME_QUIRK_BOGUS_NID, },
+ 	{ PCI_VDEVICE(REDHAT, 0x0010),	/* Qemu emulated controller */
+ 		.driver_data = NVME_QUIRK_BOGUS_NID, },
++	{ PCI_DEVICE(0x126f, 0x2262),	/* Silicon Motion generic */
++		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
++				NVME_QUIRK_BOGUS_NID, },
+ 	{ PCI_DEVICE(0x126f, 0x2263),	/* Silicon Motion unidentified */
+ 		.driver_data = NVME_QUIRK_NO_NS_DESC_LIST |
+ 				NVME_QUIRK_BOGUS_NID, },
+-- 
+2.43.2
+
