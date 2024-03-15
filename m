@@ -1,97 +1,148 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEDC17C66;
-	Fri, 15 Mar 2024 09:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D751759F
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 09:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710495393; cv=none; b=g/TM81U8xb3xo6fAd+1yGcKB/XvVhzI4auLWU9GC3C5rG1Y8PAsj8LIImTLM5vsJKc2oKGJWqJ4DMyxksD7XLB5A+p/NgAqN+C4dHnSmYAmW990Am7fWiGvK7IFHQxF55wIL3a+iUeO/XNqwKYnegQwcGywaZrJigUBTS/CgEBQ=
+	t=1710495589; cv=none; b=dIyya6f9MjoG2dC8AiPNaS0tdMb5gNk9p74ypHXLMqon+fFvDF/Ud6vzn44csI7ZjAriVC/qS0DFo56PAeetMZjo8NsPDuX9d8+0tR25obWNT/gxoCoZ9HgoNy3ArVsQ18+NPjPFTg5NSGf8oDh4qSovIkIrUQ4mcAb4Apsanhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710495393; c=relaxed/simple;
-	bh=VgyR9/qh5SvA5TrFhzFHvJ6YsXi9BlJT3v7qlQZYuoE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=S/Mg1/tK7qiu+2OB2bBfzgVIPJOAp6o8kTxw494MhvQjSMvtMG9Uv0PsPQSFFRepv/3ISqEGfyAgtKbgQ/CR3/gouhJq+IgoEm4Bhp5zU+1WrrXwhdpdDi6/3cLzItoGzd1KPQ18grsF3z7fshWInZCbHrtSdweFwAyprz8i/rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJ4Y0VJO; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710495589; c=relaxed/simple;
+	bh=J8ElAc5vWbxiOARtFToRBrhnfwqtndNYCZKY+Hxo2Sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p3PH1pB4zMv+xVEW/MfVC3iAOqFrfk4ZEWF4u49bUqDNGYWnVMZaRJrzaqohmzSBXUvVshc3vG+WsLoFtP5MzwFQXRcsOimfpMrbbel0b7nWjiup7gXpWQ5/R4n0GeMiHDoNbz6NzcMoopo96/S9ZlJzXAHM+IG/Z6d4KcWXOgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=C3aFG4x4; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJ4Y0VJO"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41403b203e0so681105e9.3;
-        Fri, 15 Mar 2024 02:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710495390; x=1711100190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fJTv+jCFSNgUGswO7FXJc0Lm26VLRiBRl5ZlHIS2q+A=;
-        b=MJ4Y0VJOI+Rj+ewA8IqIwzO4RHIyiLbT7yPIExDWJCq/tnOW2povxHgfOGFi+EVZe3
-         s/DtkpYC+uSmuBfH8x2NNUPsxpvuMNclnJ//IB3wr7sqSuFX1lBnKz0stiTfYtunQut5
-         owx/g0/igpO4hpUJ6Tfp21tqvo0Y9X8wuPlam68pSM02NpJw+ZXm5Pys7vUFqiFwpv3f
-         ckuQMPkVzLNfuALZ+50uZ117n97vUz6gaDD+i14AOC+qivQyMohnRoxnDC95Oc7QnMOe
-         ozu5FftmyOIHm04lULKY1PiH3VfikmZUaywIJFhOgWkbLa9PbTaX9WUaDXZKvlyt4qdc
-         pvmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710495390; x=1711100190;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fJTv+jCFSNgUGswO7FXJc0Lm26VLRiBRl5ZlHIS2q+A=;
-        b=jUbKsUkSG7e1Y549LTgunuJ5VxG31BHvVi63YDHD1YE1RWisWJzgQ7eeYdqvAKZmX5
-         I59O1uYYQ0zmCuPMKvD5Hw/fk+9FvRdmUOd3taidYWHc7IN+Y9XYNHW1inhibJFw84Mr
-         JSFygBfZ6/73G9OIgzTH7QZQSr+1GQyO2VSLr8qEYyn4Rxhrek6sAG87xNkL/S28LmKc
-         rzpYF/EUhY0Pt0BK58UrEKRs12qZw2UijzqofIo+y6vpZLiVI7zUX6zRB7Yws4b56AVO
-         /LnliewWPrxdNKqET91vK5wM2V6Z+kRQdnu1nVJkBowTWJ7AsTvNbvAD198mz5xjBZo2
-         Mjpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAlYTPu33e/JuU2mbPel5MuqdLpgycRPcHFCUbFOkv40TBa3krmkZWTySbMU0KPuGihLTKNdJLZWZVw5+VJl4EE4Rb6IRkeaSmlWDUajZpI4/lt9O4D7GgRbo0B9whDd0qaEIB/9SZO5+er2mGA8BQj+qArO3Lzx5SMW5fWarTG7EM
-X-Gm-Message-State: AOJu0YyiAfTuL+mhQb+2HFExq7JjSA/IjeBTjmC/w97e6NmtQMHzUsbb
-	h0xDVySD6/vloHnqBy3BJm1wrLta3dui5q6TlujkIG4bv3o2smMY
-X-Google-Smtp-Source: AGHT+IEoKXdqYZ7z7nKgWADnipOKrnv6Eesx2OFOohN1P1Y4ePV4yX8maQRJ2mf+EaidEc6k6Vm2nQ==
-X-Received: by 2002:a05:600c:19cd:b0:413:ea5a:7787 with SMTP id u13-20020a05600c19cd00b00413ea5a7787mr3018899wmq.22.1710495390374;
-        Fri, 15 Mar 2024 02:36:30 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id o18-20020a05600c4fd200b004132f9cf053sm8314827wmq.33.2024.03.15.02.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 02:36:29 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] KVM: selftests: Remove second semicolon
-Date: Fri, 15 Mar 2024 09:36:29 +0000
-Message-Id: <20240315093629.2431491-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="C3aFG4x4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1710495578; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=CckLzddbXrBA7tLsEPMXeJY8BUpksVSkSO2q/7+hZh8=;
+	b=C3aFG4x4tNEvGPHs1KxnXwdn/ijgYtHBcxTkoe6NKiiY6DWl/YP8qacGSBe/2Qq7ydeT8N4OdaAwNUsP/LRS/AcFrEY5PzCp+nJqQV7f2fWGc6tEIvgB3y8XGwj1NT7AsGWkgVtTKPU7UAAxUmwFgiUfl8JmIzMSWJOEP8EIeWg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W2W4c5I_1710495576;
+Received: from 30.97.56.65(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W2W4c5I_1710495576)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Mar 2024 17:39:37 +0800
+Message-ID: <f65a6c7c-7dc6-4d57-9b65-a15a978d0d52@linux.alibaba.com>
+Date: Fri, 15 Mar 2024 17:39:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mm/compaction: add and use
+ for_each_populated_zone_pgdat() helper
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: akpm@linux-foundation.org, jhubbard@nvidia.com, vbabka@suse.cz,
+ mgorman@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ dave@stgolabs.net, p.raghav@samsung.com, da.gomez@samsung.com
+References: <20240314005436.2962962-1-mcgrof@kernel.org>
+ <20240314005436.2962962-3-mcgrof@kernel.org>
+ <ea5d5bb6-32a5-4161-95cd-3dc916576bf7@linux.alibaba.com>
+ <ZfPe22p9U8PiRB0W@bombadil.infradead.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <ZfPe22p9U8PiRB0W@bombadil.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a statement with two semicolons. Remove the second one, it
-is redundant.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-index d2ea0435f4f7..7d707d8068a4 100644
---- a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-@@ -125,7 +125,7 @@ struct compat_vcpu_runstate_info {
- 	uint32_t state;
- 	uint64_t state_entry_time;
- 	uint64_t time[5];
--} __attribute__((__packed__));;
-+} __attribute__((__packed__));
- 
- struct arch_vcpu_info {
- 	unsigned long cr2;
--- 
-2.39.2
+On 2024/3/15 13:38, Luis Chamberlain wrote:
+> On Thu, Mar 14, 2024 at 03:19:45PM +0800, Baolin Wang wrote:
+>>
+>>
+>> On 2024/3/14 08:54, Luis Chamberlain wrote:
+>>> We can just wrap most of the work done on fragmentation_score_node()
+>>> into a pgdat helper for populated zones. Add the helper and use it.
+>>>
+>>> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+>>> ---
+>>>    include/linux/mmzone.h | 8 ++++++++
+>>>    mm/compaction.c        | 9 ++-------
+>>>    2 files changed, 10 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>>> index a497f189d988..1fd74c7100ec 100644
+>>> --- a/include/linux/mmzone.h
+>>> +++ b/include/linux/mmzone.h
+>>> @@ -1597,6 +1597,14 @@ extern struct zone *next_zone(struct zone *zone);
+>>>    			; /* do nothing */		\
+>>>    		else
+>>> +#define for_each_populated_zone_pgdat(zone, pgdat)	\
+>>> +	for (zone = pgdat->node_zones;			\
+>>> +	     zone;					\
+>>> +	     zone = next_zone(zone))			\
+>>> +		if (!populated_zone(zone))		\
+>>> +			; /* do nothing */		\
+>>> +		else
+>>
+>> I think this will break the original logics, since the next_zone() will
+>> iterate over all memory zones, instead of only the memory zones of the
+>> specified node.
+> 
+> Definitely, thanks, so we'd need something like this in addition:
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 34b729fc751b..bd11d33ea14d 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1568,6 +1568,7 @@ static inline struct pglist_data *NODE_DATA(int nid)
+>   extern struct pglist_data *first_online_pgdat(void);
+>   extern struct pglist_data *next_online_pgdat(struct pglist_data *pgdat);
+>   extern struct zone *next_zone(struct zone *zone);
+> +extern struct zone *next_zone_pgdat(struct zone *zone, struct pglist_data *pgdat);
+>   
+>   /**
+>    * for_each_online_pgdat - helper macro to iterate over all online nodes
+> @@ -1600,7 +1601,7 @@ extern struct zone *next_zone(struct zone *zone);
+>   #define for_each_populated_zone_pgdat(zone, pgdat)	\
+>   	for (zone = pgdat->node_zones;			\
+>   	     zone;					\
+> -	     zone = next_zone(zone))			\
+> +	     zone = next_zone_pgdat(zone, pgdat))	\
+>   		if (!populated_zone(zone))		\
+>   			; /* do nothing */		\
+>   		else
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 015126803017..96434f6fc1ad 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -2152,7 +2152,6 @@ static unsigned int fragmentation_score_node(pg_data_t *pgdat)
+>   {
+>   	unsigned int score = 0;
+>   	struct zone *zone;
+> -	int zoneid;
+>   
+>   	for_each_populated_zone_pgdat(zone, pgdat)
+>   		score += fragmentation_score_zone_weighted(zone);
+> diff --git a/mm/mmzone.c b/mm/mmzone.c
+> index c01896eca736..043a6dc16c05 100644
+> --- a/mm/mmzone.c
+> +++ b/mm/mmzone.c
+> @@ -43,6 +43,18 @@ struct zone *next_zone(struct zone *zone)
+>   	return zone;
+>   }
+>   
+> +/*
+> + * next_zone_pgdat - helper magic for for_each_zone() per node
+> + */
+> +struct zone *next_zone_pgdat(struct zone *zone, struct pglist_data *pgdat)
+> +{
+> +	if (!zone || !pgdat)
+> +		return NULL;
 
+Seems unnecessary, you already accessed them before calling 
+next_zone_pgdat(). Otherwise, looks good to me.
+
+> +	if (zone < pgdat->node_zones + MAX_NR_ZONES - 1)
+> +		return ++zone;
+> +	return NULL;
+> +}
+> +
+>   static inline int zref_in_nodemask(struct zoneref *zref, nodemask_t *nodes)
+>   {
+>   #ifdef CONFIG_NUMA
