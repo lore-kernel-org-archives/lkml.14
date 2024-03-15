@@ -1,102 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A22A1A38DA;
-	Fri, 15 Mar 2024 14:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D075D374F0;
+	Fri, 15 Mar 2024 14:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710512558; cv=none; b=YiSkLHLjPHgcgtViil62YhlSk2OSVEP7g7Wp07RQcO1wKyPN0W2Y6jmK5LtR3RYPnW9brg/H75no8b8i6wSdRRXsX56apnfX495yjrdcl6hH0I47JhFlkdciKFv22i4mgVi31GnKeO5WGYAwFkLWP5MdYbrFqneTLoPJmyUbBVg=
+	t=1710512588; cv=none; b=Ydm0IAphKe5/Wz2gTF29TqdawosgHqVHz0d7JALZ/IMHbGyI/S42lEbO1XFLraSYdiMjCIdMzYwkdoqElzVnDBg/WqTgnc/hv443hQGGcHuCdg58VBzJvoDzpWZQLU1mrYk0Y5ftIgNHDQqPzn1XZvL+38ecVG3IRcJ+eq/xJRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710512558; c=relaxed/simple;
-	bh=toIEnnzYNiwyWD6Gb0TYT5sbPnu9iUMI7CYXzC9b3+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t7382VyWhULKTok1qlpCDmBwj1q+oaYhHJfyWYhGZmJIQD9ktv/redgps4drYgyGI0dSbCaJLXRhrpsk2D1Ro+Q8M+b7aNyYRyBDixIbmb/q0s/BDppsTmGhmXzc1U4MW4XoJyeN19WtQsXK3FOTq727+oWUkZ58H/irYTzghzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1B81C15;
-	Fri, 15 Mar 2024 07:23:09 -0700 (PDT)
-Received: from e130802.arm.com (e130802.arm.com [10.1.34.31])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03D5D3F73F;
-	Fri, 15 Mar 2024 07:22:30 -0700 (PDT)
-Date: Fri, 15 Mar 2024 14:22:22 +0000
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	s=arc-20240116; t=1710512588; c=relaxed/simple;
+	bh=Xo4YADlXEc1eDwsDHU74Y4WywxJGX+E4bGP4PmAE/v0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EHSav3CEh/BNHJeD7Ry02ytW+6t9XzvxbT924Np49aMz+YVl2XCcgwHa2g5G1c6QFVEELVnXsx/hcanrfOkkFSUMD6qz23Jsxm8EcKSu4I7aYF8V2v+DLkkCTYwYzRnedy+8NmQGeVW0dFBWllPw/CjYz8BrM0zpO80oe0S5W+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HQpRUXFw; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQpRUXFw"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-513c982a619so2949100e87.2;
+        Fri, 15 Mar 2024 07:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710512585; x=1711117385; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tZkgmYX7j1RNnBUU71HzMr25jaCAVqRVAu1+HZuDA+o=;
+        b=HQpRUXFwb8ffB8FkhSq6EhvtlR+CWQzHXUlMAnAU2h6P+GKXkXVFH+gPPzzBRTfmFp
+         kNQMdivsk1RlmJHT0Pt0QF54qque4BOjpEQ+XrYkjESLLAsN8Oxeh5k1zCifm7Dm295z
+         BZ4pd9mD0jml4jdbdu0Ye4QPOcsCiBpMf8cLMsyUy/Bg7ngEcrgFCumAb8OIR98zo0uw
+         VWS92HpwW6aIQHdD/gxgnI8khY4abc7BTz+sElgOJt4w1jcSxKsfqgFAVm6C0qk2mYGS
+         EgS2kd0yRhLPQBiIpGxH6KdEqRl6niacAxlUgFuY4WjC/l0NIoIgi+KgQda3gUMqMfgm
+         TdYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710512585; x=1711117385;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tZkgmYX7j1RNnBUU71HzMr25jaCAVqRVAu1+HZuDA+o=;
+        b=tA6fD0MQpdCb2SPGlRs/dTUrb9Ei6f2iofstMph2l7Uq7SUDGnfKbWmx28RMrH5k9L
+         tpmRch9SCVAwnf9BmwBY3SS0QI7vkW176ruwvpUviG34EAvG4zVDf/QFi3EhMTluLKxw
+         ygarXQkpA2JXRQUYCbQgu+E7yakzVW1SW6PkWEYUWashu6BdtkUWKXOEe64bvAZp77C9
+         RcbyKyBK2trr6wfZomjUIjmBmbf+2jRdXzPsF9LVlPZ9XkdIKLIafu4jzb3odWMfraF6
+         b07YGH2p+xQ37Dd1DicGOGbL05rxNN9LjKatF4ZmWJ5pK5TFX5NqCnmYkBn2LmUZFycT
+         mEcA==
+X-Forwarded-Encrypted: i=1; AJvYcCV83La9KNcClhDEdF0g3KXlh3iNVvTVRsuYOWondhyWeOUlt4RSWnjAOaneHjAm8ujqFvkGPk9DPQypW/tj2dqSbUQcVxWFFTVEAWtE
+X-Gm-Message-State: AOJu0YzuGbAiqDoPm1U5j9BrOa5rmIjZSW7sFMHw0r7+yf2ezJK8Q1OK
+	mXIMu4lnFlHqprmUXVYak1oEm+NBApnk14UbvYFXEHccvL7kmEHN
+X-Google-Smtp-Source: AGHT+IE98tjIGzyWQqcMwbVhKi5T8nsnQAHn+YgCdP9ysNFO06+/mc50znq9PUxyQhj6LNePnjMhCw==
+X-Received: by 2002:ac2:4890:0:b0:513:33ac:fe61 with SMTP id x16-20020ac24890000000b0051333acfe61mr3209679lfc.60.1710512584938;
+        Fri, 15 Mar 2024 07:23:04 -0700 (PDT)
+Received: from yoga-710.tas.nnz-ipc.net ([178.218.200.115])
+        by smtp.gmail.com with ESMTPSA id r18-20020ac25f92000000b00513c82518fasm649651lfe.223.2024.03.15.07.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 07:23:04 -0700 (PDT)
+From: Dmitry Yashin <dmt.yashin@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Drew.Reed@arm.com,
-	Adam.Johnston@arm.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: remoteproc: Add Arm remoteproc
-Message-ID: <20240315142222.GA38748@e130802.arm.com>
-References: <20240301164227.339208-1-abdellatif.elkhlifi@arm.com>
- <20240301164227.339208-4-abdellatif.elkhlifi@arm.com>
- <8c784016-9257-4d8a-b956-a0a406746c76@arm.com>
- <20240314134928.GA27077@e130802.arm.com>
- <ZfMVcQsmgQUXXcef@bogus>
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Yashin <dmt.yashin@gmail.com>
+Subject: [PATCH 0/3] Add Forlinx OK3588-C
+Date: Fri, 15 Mar 2024 19:18:04 +0500
+Message-ID: <cover.1710506373.git.dmt.yashin@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfMVcQsmgQUXXcef@bogus>
+Content-Transfer-Encoding: 8bit
 
-Hi Sudeep,
+This series add support for Forlinx RK3588 based SoM and carrier board.
+Devicetree split into .dtsi (FET3588-C SoM) and .dts (OK3588-C Board).
 
-On Thu, Mar 14, 2024 at 03:19:13PM +0000, Sudeep Holla wrote:
-> > The plan for the driver is as follows:
-> >
-> >     Step 1: provide a foundation driver capable of turning the core on/off
-> >     Step 2: provide mailbox support for comms
-> >     Step 3: provide FW reload capability
-> >
-> > Steps 2 & 3 are waiting for a HW update so the Cortex-A35 (running Linux) can
-> > share memory with the remote core.
-> >
-> 
-> Honestly, I would prefer to know the overall design before pushing any partial
-> solution. If you know the final complete solution, present the same with
-> the complete device tree binding for better understanding and review.
+Dmitry Yashin (3):
+  dt-bindings: arm: rockchip: add Forlinx FET3588-C
+  arm64: dts: rockchip: add Forlinx FET3588-C
+  arm64: dts: rockchip: add Forlinx OK3588-C
 
-Sounds good to me. I'll make the binding as complete as possible.
+ .../devicetree/bindings/arm/rockchip.yaml     |   7 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../rockchip/rk3588-forlinx-fet3588-c.dtsi    | 556 ++++++++++++++++++
+ .../boot/dts/rockchip/rk3588-ok3588-c.dts     | 390 ++++++++++++
+ 4 files changed, 954 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-forlinx-fet3588-c.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-ok3588-c.dts
 
-> Agreed, but it is part of a bigger block with other functionality in place.
-> MFD/syscon might be better way to use these registers. You never know in
-> future you might want to use another set of 2-4 registers with a different
-> functionality in another driver.
-> 
-> > It makes sense to me to use a mapped region of 8 bytes for both registers rather
-> > than individual registers (since they are consecutive).
-> 
-> Not exactly. Are you sure, Linux will not have to use another other registers
-> in that block ? Will you keep creating such (random if I may call it so)
-> bindings for a smaller sets of register under "Host Base System Control
-> registers".
-> 
-> I would see if it makes sense to put together a single binding for
-> this "Host Base System Control" register(not sure what exactly that means).
-> Use MFD/regmap you access parts of this block. The remoteproc driver can
-> then be semi-generic(meaning applicable to group of similar platforms)
-> based on the platform compatible and use this regmap to provide the
-> functionality needed.
+-- 
+2.44.0
 
-I like the idea of using syscon/regmap to represent the "Host Base System Control registers"
-area. Thank you for suggesting that.
-
-I think syscon is the way to go (rather than MFD). With syscon we can use
-the generic syscon driver that converts a set of MMIO registers to a regmap,
-allowing it to be accessed from multiple device drivers.
-In our case these MMIO registers will be the "Host Base System Control registers".
-
-remoteproc will be a child node under sysctrl node.
-
-Cheers,
-Abdellatif
