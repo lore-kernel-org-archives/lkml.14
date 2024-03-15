@@ -1,99 +1,152 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2068.outbound.protection.outlook.com [40.107.20.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5D71BF3C;
-	Fri, 15 Mar 2024 13:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710508321; cv=none; b=erEernYzog+mcrNEz5ISJJfa9At12JRwUJdq1JxIZcuIdCLNiZOOyYT4oqcx7z6dNaHyoQWKh2GncJxCyeVPw2g/lOH2cLa+6qruMSwDQ4RjlPJJlbyPMnoiydxacGdcXBXs2mDJa13yCOkBdmPytBjH96oeTQuw01OWOg4AZao=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710508321; c=relaxed/simple;
-	bh=UuwHY4ZFMlB65Epsbt1kUiq1o/nxTSKYqjs+6mdTBe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O96zgCFe15LaZnIqEiP9GcIKNvgkXJq5bohe9JBwEe0+gSm/W37Kk8twUH0KZ0ILaFLdvfMwYHQgZ7lV/EeWc0gbCo03EDryZjtjKdOz2aGSlN80bwYyWolaNLjKjYYmw/u0TnFUMlgSYkyBP/OqZ2q9msyyt5/FQbl4idFjcYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-60cc4124a39so20979797b3.3;
-        Fri, 15 Mar 2024 06:12:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710508319; x=1711113119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UVOxCh95/KJi62+yTmpvlCdEQMQ6jz665GzmWbEhPz8=;
-        b=Kiw9r5Bc+lQahQmXDXRo+g/dWGH+VV7E7Wy1eKx5NER3Mw54xacz5ynvVJ16qnOo59
-         VthZze8ihRmx8n6PZChAZx+PPzcnljG2jXDSqCY9KAoLjl2nz2LWA3T/QEGpGyDRoZ+e
-         JLkB/LaXRSblgvSe8a5qzSmEKpvvz4HnoEG/wakeanzJUBdf+3oexh+iqhoprqXEplT5
-         7SqCYVnDSgTgHq3PUYTacjEPOA2294cibOWkQ/Pulq1LnX0b6LNWpqXmBfXqpQRai6pJ
-         UvJkPBNSMRMnJ3NILnPKfTRdlIodg31/v+n8be/YbaETUz4S1nfZBK56yzX03dezbE4q
-         hKmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTs5LVGgO+ADZhcAEtu+d6SY2nXXJcvnlyE9KXvuy0pw68APfRmKrvnwDqplrn+ZX+dkRMsdh6I5UW7/GbpGVob2f3hMrygkBAfaOWwC80ZItQT/bqUx96rVEDNbsjUtdxzdziJ65c0Ns+TLX8H7229ClSalw5ccIMLb7aU5dgpAe+b+gho1IRpyuFIRSJV2PuyiOowNg5/7sCY3Uy98daLPGS0AxN
-X-Gm-Message-State: AOJu0YzdAjz8xLV2PaCCnfMvYDqXGCkuJ9zPxIvAPMNCJbsdaRAT2RoW
-	dkVGv0skaIDs2cLb6FDWk7qLGNSyIsOx8cOuW6Kvg9ErPOz4W6eja+qjEbYiPFY=
-X-Google-Smtp-Source: AGHT+IFwRnSQ1uOS60vnGxMSEj1ecuv83vG7+F1w6usuIyvzsJscLH1CZQK3kHFryhGYn5rlTYSQog==
-X-Received: by 2002:a05:6902:507:b0:dd0:972b:d218 with SMTP id x7-20020a056902050700b00dd0972bd218mr4559997ybs.41.1710508318692;
-        Fri, 15 Mar 2024 06:11:58 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id x1-20020a25ac81000000b00dc6d6dc9771sm720570ybi.8.2024.03.15.06.11.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 06:11:58 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a104601dcso21567257b3.2;
-        Fri, 15 Mar 2024 06:11:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUn/GjSwbgqw9/5A9VRB8MkZ1LEI6aQtEhwGW9dVMRl+/NyLa16j5wivuhGTjQbccSQyImF96Ze9AnFeHHgtXDkYQTYE/o8CrD98z3bQw6pkK1kQc/b2hrb8+lDnif0OwhnJCV5E7Z2vwTEGDR2UdTsbviYlW5CfJQSAPBjqH/05+Hld5G4xyBzt5ebTLZilAFs8W9O0Pv0mDzK8/TS9P7QsmcU+yt5
-X-Received: by 2002:a0d:d44e:0:b0:609:254f:766d with SMTP id
- w75-20020a0dd44e000000b00609254f766dmr5095186ywd.26.1710508317947; Fri, 15
- Mar 2024 06:11:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB72562F;
+	Fri, 15 Mar 2024 13:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710508423; cv=fail; b=IwvDhH8AgPT4Fuy9IBWQwau9N8suPWwMVQQmynT2hIl7ry9T956OvtdTCxlQe+H2GIXBMayuRDF0kM+PXUFCoi6tRFHoD86uTYSVoTj+ahYJGH4mp0a3DDJC0d/fGJD8m65kjL/9+STYEXx5fYkAeWiBdYcBID93NHT4qkajEyA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710508423; c=relaxed/simple;
+	bh=dCDT9hFUrQK7vSMwHYHiwsr8a6b+f91Klm/rSmEN2Jk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lOXpE8ZbWlaQmPujbx8bNO/28i6QuTYG/MwRn2/u+3cOfT+ou9kDHVlCjSqXRw3r13h6DSRc/BI5M8q9+0GSwTfPh6BPvrryQI2Y42B8Xj4G0dhz/2g6XhQcPmPXES6kdq6rdtd1RpG5+GbFz6CmPk06WUssJiHy7Ih+AZSvS4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=P2HOXc57; arc=fail smtp.client-ip=40.107.20.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P2HOXc57"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bM0SLeVgX1l+BOJQ5X4tC3AF2XkOAoitHihZ6X0LmUbBtR3KOs0IZYExJjuYqNzH/pXODoRLeXyjY693ymwhGkt7kBEVospgaXT98NNxAe2/EUZJC609CYlDCd+V9GwSlkOH0TCtBBtCPc7v+cRQqih+lB166sp3vYRxX7OvWPslHEferhsOJqzbP5xAC8H0AC5TXe0SfIdPg2apeXIw8F5OTsuIsGr97Ca8aglK/8tOv7psIuln7D3mCEascBi6FybWAis6qs6BqTi2A0HnerVxI9ba8TUSauZh/W1IuOUiD0O9XrPeWghnPtTDgL6Rs4nuDAFGL3sAtLc2OXEd0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dCDT9hFUrQK7vSMwHYHiwsr8a6b+f91Klm/rSmEN2Jk=;
+ b=cnxloyGk/lgDHXzxVtmxjdXybJurgzUj6u+tu7Fo32pvLq21feWOr6ewPcTMgTmIWRNw1eD8csOnCGV/eO+oFJ5IN6IJG5S63XSqAkFhF1fKotC4+8LdUZxW5pxDrrabc0piAZQXfpQfVz05jhtiWb37vGWMpnY/YJYZ/nlkqLNDMsW0ymuL2vSlm9aTJhcPMfgHbpfkO80wBpOdeLkwv/A953ZwQeZaTjpcOP9JbLxjR8SXmzP0CBvi11uaNxTLSzGC1oj7VBvzdrUxMLUfUbShBHmWj/SFDcBBDGL0kYDtJgqJccYZ977W3CUe/zQ7HiOseAv5TTOa3HhsRgphYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dCDT9hFUrQK7vSMwHYHiwsr8a6b+f91Klm/rSmEN2Jk=;
+ b=P2HOXc571M/gx2vUzD5JNqshueyPz00J/I7aln/Iyo1fPsUR84zcZEOMduc9MyZf1DIorcu+D1RoPPbDdgdt4e/mwF6cgI5u6+R7kbuITG2JaekQlQs3C/EKEJ0pjBd09FBcdchNw/YllPcG6yk6Wo4ilD5+7ALxxev4rks2AhA=
+Received: from PA4PR04MB9687.eurprd04.prod.outlook.com (2603:10a6:102:270::15)
+ by VI1PR04MB10075.eurprd04.prod.outlook.com (2603:10a6:800:1d6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.22; Fri, 15 Mar
+ 2024 13:13:37 +0000
+Received: from PA4PR04MB9687.eurprd04.prod.outlook.com
+ ([fe80::286f:8b1:d00d:4e0d]) by PA4PR04MB9687.eurprd04.prod.outlook.com
+ ([fe80::286f:8b1:d00d:4e0d%3]) with mapi id 15.20.7386.020; Fri, 15 Mar 2024
+ 13:13:36 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: "marcel@holtmann.org" <marcel@holtmann.org>, "johan.hedberg@gmail.com"
+	<johan.hedberg@gmail.com>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
+	Amitkumar Karwar <amitkumar.karwar@nxp.com>, Rohit Fule <rohit.fule@nxp.com>,
+	Sherry Sun <sherry.sun@nxp.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-bluetooth@vger.kernel.org"
+	<linux-bluetooth@vger.kernel.org>, Geetu Naagar <geetu.kumari@nxp.com>
+Subject: Re: [PATCH v2] Bluetooth: btnxpuart: Enable Power Save feature on
+ startup
+Thread-Topic: [PATCH v2] Bluetooth: btnxpuart: Enable Power Save feature on
+ startup
+Thread-Index: AQHadtqWzE/qRAPwnECM2f3GC2+Jzw==
+Date: Fri, 15 Mar 2024 13:13:36 +0000
+Message-ID:
+ <PA4PR04MB96874E4B23D6C225AE1367F4E7282@PA4PR04MB9687.eurprd04.prod.outlook.com>
+References: <20240304170753.500074-1-neeraj.sanjaykale@nxp.com>
+ <20240304192952.GA17410@francesco-nb>
+In-Reply-To: <20240304192952.GA17410@francesco-nb>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9687:EE_|VI1PR04MB10075:EE_
+x-ms-office365-filtering-correlation-id: 8eefe2d8-9e6c-4be3-e01d-08dc44f1b940
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ cc5u7LZyiW3D6IsMZujyd4sUvCUF8PnEh9/KAyVIcizrCe4a4sSG9ow/HsmZTkdprrW7SnmTpM/LnxwGDR1eR/0SuIb3ov7jXV2bGooqDYBxcAzA5fhGNqHpvCd56cpCz9kjTBZLKz19QT0fOYTsFmf93pGuvhmNeBlWynIUw+wT5xtyZCBzXNdin9W6c/bDdiYvwqQEGinbvZaLlfIBM9uj8h8vKzJpOKysT72Ao0tUxzVHDd587tLqOrGoPi/vim7IO3on7P/NMS5x7GqFd+P070i5dv/KcXR7V8BLNrzF6HOBAj/dtOrsLHTEAq58Uv0tYt1OX3eV31oOlcZX+HAiuzScbf4u9m8NJiyxsixUKKv+zsTp453yv8AgHXFQ8ELwxlajh3ph7CRLZNYlgQWveEEXrSrnGFufDWOHLCHp4oL9hlebT/uZUVWcC8QiRpQeJbdnq9hqDKl0tjzPCmPlbV6QOXP8FxgL3tu9GAyD4GUuuDheaJyde7UYbIoOQRxv2h9iQaayJsmIkkAtMqLXs4a4Cytiua3/bHSuTxmp2MmA2d9KXOtj1X1t+0F7pq1PbD7GD9q5qQYc33ufl8wBtSlX3TAl/5RBiqa+Kn66rfS9nSAPAGwHG3moAy7SNatD+tpe0IlRhELYsfVyBrTE/uzbmQmf8XX3oeXaOSRHm8UtGuVn7lbwVf+0l8V7DjGuNBD57B1wFLrMnN5Vjr8A1cIidmiBl+uZe/eTXmU=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9687.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?+jtX/6BFKhemDtWiNtq7OmuQD6NqlavOGL6YRhbl0T/gPiMkfXOUJjIKZYgK?=
+ =?us-ascii?Q?vzF+rgSiNvQ5SWF7vCi3Egytdg9sJpDlBNn7NBVAuxZUiqLA60F2CFMdMppb?=
+ =?us-ascii?Q?SrSC8ipTWO5+lr1+r/VP2dp3mduZnEm6cYaEdTjPrkv4TBZO5wdNjheu0oMA?=
+ =?us-ascii?Q?2g0i//vnWZRm6/+P0fFaKZlNpLVE6hIpAYyrMAQ4m0+apWvY7x9NIlMEpXho?=
+ =?us-ascii?Q?op0xFUPqUbG/RxgICnu9uBdbjoBv7qbX/v8PGAfFKJ6ZMTRZ95BSPH+ybcBf?=
+ =?us-ascii?Q?uvNevuWjY3S9g+Igny/QcqvCXPlQrbwu5J0sT545Xbo6afnVLg1HB6Z37Jtt?=
+ =?us-ascii?Q?KIExzZ2qP+wCasjd0tAnvAjp6zlyoOLQoN2SJutl1EpKZN5/4e6seLA5JO7u?=
+ =?us-ascii?Q?Pd1J6wxgDRtOpTFIY4Pmsp5wtcTTIzFRoVWDVRpksj6hMwwAlIJtgRmMiTS0?=
+ =?us-ascii?Q?p/ClKIrKL7NJvSzN6UXMXuUx0DzV7pOmtCTC3wqclZMIwBEfr+S5lPZGlLKS?=
+ =?us-ascii?Q?Pi1jh6TFsYSSk9Au60J6ectQHMDh6cWZEzUlCZ8rcdQpZAzec1L3zJaz0oG2?=
+ =?us-ascii?Q?fkeGL3hAoyK/dKS7m5P98LR1i/ujSJZbFx7CdAIPR846o2Yiv8+8tZloCbCP?=
+ =?us-ascii?Q?ZZOxq/hwccbtOgbIFR6MghI63mqotWt5NkMLK8/LYyd3+HjKX0ncxPsyg2XG?=
+ =?us-ascii?Q?8jWCP6mASNA2GWf4/SEaZu4SeY3Y0LJaYkKktHrSjblQEkTg1PJxP/ZzGyoj?=
+ =?us-ascii?Q?m40dBpHMLiRHpmmAtDWat8ZB++RtNZllge9uN2qALOwoeCPORJpxv5lDN4BZ?=
+ =?us-ascii?Q?5X43Gb+lDbf//tpI6C7bopiINrY0iBA5xe6GFCrsawsjmLEwS0pzxmyKtk2C?=
+ =?us-ascii?Q?zmor/y7vVWieRku913sx5aJraPS3vKkolYofnHeZrfzdMEqCSP/hffkp6VE4?=
+ =?us-ascii?Q?o6uhsgfDYN58Pl91zg2JNKo3gGo2vkKInGSpAlAPmiTMOUZJHaaiL5ghCS29?=
+ =?us-ascii?Q?ypdpT334KjWt8DOPPZOXE2mV4TYZA++UmPhmhrq0xFmz6S8JjfeMQS8krouv?=
+ =?us-ascii?Q?3TTdGRdKqvG3HbtfAzaApmjkYwN37kyNXz1cxeExgAxUyn0Gw1gfZfZbQVKr?=
+ =?us-ascii?Q?AJpPMQgxXfXTa0fSdDAJWSP+Qu6pyIODJPjGm1p5COyNU/mfMRwZ+Cy2hKZ1?=
+ =?us-ascii?Q?KLRjVphLw9aSUXNVaK56P/sNWhE28/jRrNE17gQQI4q4JpJUwbRc5Te+rDPt?=
+ =?us-ascii?Q?1WyNT/70fchnxQm+Gys2wdsQ83Zxhsu7PZav3BEuF4ZfLpuTus5mR9NUPG4g?=
+ =?us-ascii?Q?ARrCmGMJ18JtPe9CwnyJQPCL0Ng5c8L61LLIlfLva/+QQaQcJVNOeLLs6JMQ?=
+ =?us-ascii?Q?QC8l+cs0sDNYy/A6argUpO3r9bkoLQQtowCZoGAkDi+mteypykXwbuFV8O5n?=
+ =?us-ascii?Q?24rZOiOLj9umSDDv1Iorhn0pvQaSt/2Ci5MQ0xYZpdCh1tiu3Nl544kC/6AT?=
+ =?us-ascii?Q?jG6acFlJpqDKp+Nh+c/SxJxIjuEq4K3l0encpNcrOakPSwSWlidNsl/mCH9I?=
+ =?us-ascii?Q?xFEjEhMwhUN6H3hJOX9c1uId0CuC2xfe9mJtV2Ca?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315103033.141226-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240315103033.141226-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240315103033.141226-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 15 Mar 2024 14:11:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVAmVE-WwoZ5fzmXpM7-RW_-GXKRmXgywN_Sh+tmK32zQ@mail.gmail.com>
-Message-ID: <CAMuHMdVAmVE-WwoZ5fzmXpM7-RW_-GXKRmXgywN_Sh+tmK32zQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] i2c: riic: Add support for R9A09G057 SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9687.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8eefe2d8-9e6c-4be3-e01d-08dc44f1b940
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 13:13:36.5396
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: olwbtCQwmajGuOQekZ3GHFtCT3qG9zbyMzhYmTEq8UTG6voDNoaPw+RNzVOoMs03jSeWnedYIH2C+ZezEEeHpFW4n62O5IYtpMGfPHWs3w4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB10075
 
-On Fri, Mar 15, 2024 at 11:31=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Extend the RIIC driver to support the RZ/V2H(P) ("R9A09G057") SoC. It
-> accomplishes this by appending the compatible string list and passing
-> the RZ/V2H-specific OF data.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2
-> - Dropped setting family
+Hi Francesco,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
+> On Mon, Mar 04, 2024 at 10:37:53PM +0530, Neeraj Sanjay Kale wrote:
+> > This sets the default power save mode setting to enabled.
+> >
+> > The power save feature is now stable and stress test issues, such as
+> > the TX timeout error, have been resolved.
+>=20
+> I assume that the stability issue has been fixed in firmware, correct?
+> What's going to happen if running the updated driver with old firmware?
+> What about combo Wi-Fi/BT firmware files, were those updated? I'm
+> currently using this driver with this firmware [1]
 
-Gr{oetje,eeting}s,
+There were some stability issues in the driver, that are fixed in previous =
+patches.
 
-                        Geert
+As for FW, I have checked internally and there were no power save related i=
+ssues reported for any combo FWs.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+I had requested our QA team to perform basic sanity tests for WLAN and BT u=
+sing the exact FW version you are using, and there were no power save issue=
+s reported.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+Neeraj
+
