@@ -1,93 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450463F9E1;
-	Fri, 15 Mar 2024 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D69F3C470;
+	Fri, 15 Mar 2024 15:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710515787; cv=none; b=hHzX/iTTRl6VU8S+L3naiAbO9AcAoNhShvh0hED/9F+BCQGrFCYcHhuuqWreD0RC56YBIdpkkEylRF3UrO86o/01xzi5+zPpdXSk9aoLjrrDN33DvPUE0n1z0QwZgbqbrLtuWlLE/qD4EXRvT4ncUjYnLsnw18qB9VQBDxPK3xc=
+	t=1710515875; cv=none; b=C8YXi5CZkvPcLicFYiXyfpHg3LUL1BOl6hK8JFEB4jyMEdlA9QuAIgRg90A/JeMAmOkC549Zy5hSz9bKexgJUkYtyxK/+no7UUAQvVkuWzMfCVl2OHKXCdUqyWTCUD5Ev3YwQxs5k3DLtViQuA5dwD5Tb8mukNyrAjAETY/Kpow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710515787; c=relaxed/simple;
-	bh=o49BdiajFQ3aTd3PiqpKmFj0FHckAeUVjjEOj6vZCDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBJ5qzWzlOAVPyecRomfdWYIgLA/C1trePno8O7nVXEWhuekl3/I94AUAIJ+r0xyaYuuvZy2wXxAqlCr1KjB4GGssz+u1sonO5PMOuhwIVh8Ako6YGVqKOM/NXpCmepZYWjZY+bV7tE1UAdoL1pkhpsohZRGO+vvFbi/SD6C4MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aCWcEKG7; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710515875; c=relaxed/simple;
+	bh=uTrMcFCburtM5gMQYq+sgTQ/3X5irzj8OXkqsXBrsR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OfgG91Zup1I9VZeGZWToLcIkKmEUxc0JwVc9mB6ejrK0F0YhS/dMuXAeMzW5zMJpkRxagngUQiSpkSFD6ZhOiE9tr1BOfyAR2KwTrvHnAD51aIeomQJNvufPjD/D2SOFzqaPNz5rixjdNrS9+pGQmu0tEFo1dgGGfjcCBve0K0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pa884i45; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aCWcEKG7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710515785; x=1742051785;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o49BdiajFQ3aTd3PiqpKmFj0FHckAeUVjjEOj6vZCDw=;
-  b=aCWcEKG7LbcPXFkoEvGz5X07Y/SSQYW/U4AQAJ8JMo7CnV2lour2DJQN
-   arOt6BMe/pIJI0ZhAOj5iXXE3a/vOiznEhzFqTHImRpriQZb22upwv5tb
-   9zlI+Bk8e1bbUy3t9AcejoEhEbPtum73hxircWKmQbTD91uK1biHnEBrr
-   IZyaHFO038L21pfaa+Bx6cPoF3vGRydNj6/J6Jt3vV/PzTWEzRFUUJBWY
-   2IARslxsNFYWo8Dzo3L78h/qABP1/ccFNWDHj49LJ6AIqwHhFGX7cOsIA
-   sp0nHi15U93lsTAKIqnmWHoE2z4CoAPtfD12hdo0BZMbZiZpnmQsCh5f0
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="16036380"
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="16036380"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 08:16:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
-   d="scan'208";a="17420892"
-Received: from liuzhao-optiplex-7080.sh.intel.com (HELO localhost) ([10.239.160.36])
-  by orviesa005.jf.intel.com with ESMTP; 15 Mar 2024 08:16:21 -0700
-Date: Fri, 15 Mar 2024 23:30:11 +0800
-From: Zhao Liu <zhao1.liu@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Shan Kang <shan.kang@intel.com>,
-	Kai Huang <kai.huang@intel.com>, Xin Li <xin3.li@intel.com>
-Subject: Re: [PATCH v6 6/9] KVM: nVMX: Use macros and #defines in
- vmx_restore_vmx_basic()
-Message-ID: <ZfRpg/IyJOQf60Wf@intel.com>
-References: <20240309012725.1409949-1-seanjc@google.com>
- <20240309012725.1409949-7-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pa884i45"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4F1C433F1;
+	Fri, 15 Mar 2024 15:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710515875;
+	bh=uTrMcFCburtM5gMQYq+sgTQ/3X5irzj8OXkqsXBrsR8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pa884i45IW1enWqmRUmGWoDWLOsWK/N+CfwBmzCpYaLKPVVRNaVvXqR7mJPqbUIAz
+	 bi6p+tmxqMk/LfBhjX/6RAZnHa+bf9rBoycYw/NGzX6q00uG/O6eFUkHsXjogmTsaT
+	 l7NkMMsQuZhH8lHJknrR0agFl9yCxLBaCL/PKgfNJwW8B4D1kcC2EOLHNlfomB8s3G
+	 qCtLL6iyofCrykK8CXfJPD5wQci47EwgksFzw/rM25YhmKWaFMLDRX4+ikCN/1kvwl
+	 Rv88AK7aIiivXAa6zC18zoyhPTJpL6X2S7rwrZnulATpjrrtfjwF/f9dnFPCGzmyM5
+	 t8pQ7qDMuWMPQ==
+Message-ID: <2c79bcb0-3ef5-4cf1-91f3-d1f0bc1f6465@kernel.org>
+Date: Fri, 15 Mar 2024 16:17:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240309012725.1409949-7-seanjc@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 1/3] tools/tracing: Use tools/build makefiles on
+ latency-collector
+Content-Language: en-US, pt-BR, it-IT
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, John Kacur <jkacur@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1710512430.git.bristot@kernel.org>
+ <f2851351a1561a59a273a64de561022b1af4edcf.1710512430.git.bristot@kernel.org>
+ <32958f50-b713-40ba-9e12-2a1b5667a91f@kernel.org> <ZfRg8CB5xXL2Y-zC@x1>
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <ZfRg8CB5xXL2Y-zC@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 08, 2024 at 05:27:22PM -0800, Sean Christopherson wrote:
-> Date: Fri,  8 Mar 2024 17:27:22 -0800
-> From: Sean Christopherson <seanjc@google.com>
-> Subject: [PATCH v6 6/9] KVM: nVMX: Use macros and #defines in
->  vmx_restore_vmx_basic()
-> X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+On 3/15/24 15:53, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 15, 2024 at 03:48:58PM +0100, Daniel Bristot de Oliveira wrote:
+>> On 3/15/24 15:24, Daniel Bristot de Oliveira wrote:
+>>> Use tools/build/ makefiles to build latency-collector, inheriting
+>>> the benefits of it. For example: Before this patch, a missing
+>>> tracefs/traceevents headers will result in fail like this:
+>>>
+>>> -------------------------------- %< -------------------------------
+>>
+>> Oops, b4 is interpreting these ------ as the '---' separator, and is truncating
+>> the message. I will fix this in a v3.
+>>
+>> sorry.
 > 
-> From: Xin Li <xin3.li@intel.com>
-> 
-> Use macros in vmx_restore_vmx_basic() instead of open coding everything
-> using BIT_ULL() and GENMASK_ULL().  Opportunistically split feature bits
-> and reserved bits into separate variables, and add a comment explaining
-> the subset logic (it's not immediately obvious that the set of feature
-> bits is NOT the set of _supported_ feature bits).
-> 
-> Cc: Shan Kang <shan.kang@intel.com>
-> Cc: Kai Huang <kai.huang@intel.com>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-> [sean: split to separate patch, write changelog, drop #defines]
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 25 ++++++++++++++++++-------
->  1 file changed, 18 insertions(+), 7 deletions(-)
+> Yeah, that confuses scripts, that separator.
 
-Reviewed-by: Zhao Liu <zhao1.liu@intel.com>
+checkpatch did not point that as an error, and git am works as well.... but it
+indeed confuses other scripts...
 
+Thanks, Arnaldo.
+-- Daniel
