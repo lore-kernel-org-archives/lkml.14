@@ -1,147 +1,198 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11023019.outbound.protection.outlook.com [52.101.56.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C503C063;
-	Fri, 15 Mar 2024 16:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710521126; cv=fail; b=jp4WK2verYogUCs6hG9VI9/NzmnI7m/6GX8BYb7rYL/S2tkd+Tczp4ZRQ+Hff8/5WaE1Cj2WeKLTdBDQ1pjZbQHksGS3d/pW4nyGPvaVaN0OxHYDSayZYZmiBNoEvY+PzYo1QivtMnwXX6pxWFMvRuggUuV/rIE4p6s41OAyJDs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710521126; c=relaxed/simple;
-	bh=FSqbijsZqIoyYVUHVpp26KFX8RqVe9uy0J63ADaMEjk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lj9xt232VLG/aFUKeKqDuuBxZYQe7Cq6yLqqT/sBriHG8JVXCWyakEAwD69GUZntHYo0yInFws977eceHDr/LR3kwQQJpy1sut5GSu9vbO64vPTRX1aIpv/WLv4oi6QPK77/V8sjwN96iNiFv+wfwpJ5iTM+hOg1WufFQDfu3Qs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=PdCF6M5N; arc=fail smtp.client-ip=52.101.56.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764724AECA;
+	Fri, 15 Mar 2024 16:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710521174; cv=none; b=bTwzzodKyetBZEPrfMnrr/Jp1gevxwoDV0s0aeG7KEVsIF95n+AR+Yi/pKU7ZCwJNwtSw0F0M8qOfcWb9Q7C4rieqeNHVf1kcL/inSRNqRCl93giRdaBX7kfbeLf32dKKmBDIeqOT9DuLJiqJko0OZBwbsmmsmKx0Cr+sa35WlU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710521174; c=relaxed/simple;
+	bh=PpEhH4GqBsauzs6ODWAzUA/PTPNGnpyFFKUoPIpq/Ag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GFS0p3EHWk7gPyQbrACEhL41r2hDteN5SX2VEUGxEnFN7f0XGRFzPL/PE0TC77rahfT3AHtIR53LnqougUuES0+AocTxVoCjr5tS1/yMvNB6wxqiDV/zCNtn5WSkK7u/B02pDYxZCnvRyXF0EU5N+1sasn0I/stOI8Y4u/x1vow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jKokrbdU; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PdCF6M5N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GklSA83hPF7qGVzRoe4rUgk1LZEe2a2tv7NWx2LXxyeVf1BdXdy7gpoxFswXSMoJ1in4OnQac55hfFtS3Rh61e75QOcIcG5kGpvYTB5ZkL5DAdB0qc1BRFbF7NgqKZnEONqbXGdvtlMjnka5xNaYh9QZWLSs49QPefTR7ybxG7sVPoSgiEdkU3CIpDh5MHSFMyypg18Gq9p2IdkspdaMJOQ02HnQOZGANIWzF3aTdL6DOx1XZdl0GUBURHy32SeqRjf6blmxb3PAK80paD1aMawt3yR3dtquftwnUF0nRYVWbmZ5kaIKh/pvvCgXgviEFkROgX6AXrv+Sn1rsn8zPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FSqbijsZqIoyYVUHVpp26KFX8RqVe9uy0J63ADaMEjk=;
- b=VP0XFSy8HqI1YvGAeHQ1vw6GKkVBJPO8yNpRz5xzc4OR2qdLg5TH01qHDWh+UJPbxqO4tH6P0Z62OO58zdJCG0GT5vYpkNMS3d2R0kBmepvdEkMKuKCezg6r09Xy0mz8HcbzS62yPAV8gbJ+g9hDIlRxDDr8keQn4DRY3gnhbOxOFjMtqEeo7Cp7Pcb2UxccOSFzBT9W4JVm/GjST1JT6spCP81DH/ttCd77gsWbPbZ65BTVWYUgf7t3H4rQZ+SgT7CMyssjVfFNinKRm7vwFH/u4I0RGUVf2PKDdGvF5956LSdLidIiophprbZFP7mFFOhkQWSkf9a+Kq3W9JCvEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FSqbijsZqIoyYVUHVpp26KFX8RqVe9uy0J63ADaMEjk=;
- b=PdCF6M5NaoAkIjuixDFEM2D+iNioX8eHtP0FzW7PX+BtutqgKaEN/eqyei36JlpqGfevP0L5F9W1c7B5rF/ACWDtQe9c9NM79qGIhS8QyRxARBpjUq+ONE0KL8UwRfmPE3HdpLBmokCCQoIK3XzxXJMzP5EAp59u2o6W10Rb1yU=
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
- by SN7PR21MB3939.namprd21.prod.outlook.com (2603:10b6:806:2ea::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.9; Fri, 15 Mar
- 2024 16:45:22 +0000
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7409.007; Fri, 15 Mar 2024
- 16:45:22 +0000
-From: Long Li <longli@microsoft.com>
-To: Konstantin Taranov <kotaranov@linux.microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, "sharmaajay@microsoft.com"
-	<sharmaajay@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org"
-	<leon@kernel.org>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH rdma-next 1/4] RDMA/mana_ib: Introduce helpers to create
- and destroy mana queues
-Thread-Topic: [PATCH rdma-next 1/4] RDMA/mana_ib: Introduce helpers to create
- and destroy mana queues
-Thread-Index: AQHadUnfMbqzGdBwO06vJ6WZdP9hJbE5Baog
-Date: Fri, 15 Mar 2024 16:45:21 +0000
-Message-ID:
- <SJ1PR21MB3457AA909D63D2CDB68A7BF6CE282@SJ1PR21MB3457.namprd21.prod.outlook.com>
-References: <1710336299-27344-1-git-send-email-kotaranov@linux.microsoft.com>
- <1710336299-27344-2-git-send-email-kotaranov@linux.microsoft.com>
-In-Reply-To: <1710336299-27344-2-git-send-email-kotaranov@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c0a922d6-69d9-44d1-8e36-7b9b9d3e651e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-03-15T16:45:00Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|SN7PR21MB3939:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- K9Bsy4im8Bn67RjlMY9MylSNvWRAjR4HnZHVnYgbm/cub1xkaUR5rkxatApmcexJqDkP2Vj4S4VjC1PNuEJZQQ3dXMcSve68BecFwS/96FV25Y2Vrj+RpwKaLQGYoSsrHm7O+KJC65LYO+r4bTPcemzfZpvmM14nQ1NRGnpWFAJq4nd/WbFCQvNYquB8b1Tb0sDFMICOEjvwB6IezHcsBPIjB6d5dePuYtb17i/OO26kCscKQA9FKCrFUmZ1zkk3Iq0k5V9JquTCakR8diUkC2H8yaerO98V2QKuKL3e+wnyNIM+d54EHF2+f0ZuT12118GnZRsvbJhpGHAtmjZlW/VFQoj5kaFcRW3OFxyHX2CBf/gpQq8sKbic1DEVVX3NWJmp5io6RfmKjS3trSIycvSB8aj8880KF70dxzhIo4Jf6vIe661kV8ZMGonWtewM81rNt6GgDlyjJZ8oafXzalBKp1joVP8RWXGqt1ztwTcHGecVQHJqWWia3VdwzMFLmOkd20j4p2I9f1VEchk3cmGuQlq7WpPVQkH+HLa1H+f0XkfN3xBrhklbBKFFceADRHWVppyTAZaN7pE9o8CmGsTrDek0UzRf5SUE3CxX4TzOtct5o3ptaxN1VxG83R4GpynYGpS4zOsoH5ZxCI9WOXYBK/hApRh2f7bZWDLP/qM=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?pN/B5yvM1swg/hkHab7Hj1ou1ZmQgVl6/HFoEqVgCoR+g4kauZk6rISmMdI/?=
- =?us-ascii?Q?WPwKnnyqo7v9uIK+nMreP6BaIgHk7kLvvVZFml7xoSDzhfXlkREkjUeNvnR+?=
- =?us-ascii?Q?47oT1ACz+sxd32u1M+VjQJyZI8cCgILO/qbpEy9dxsNn2puIsaa4MH+ZZa76?=
- =?us-ascii?Q?DBhQ0jzAhzwNHvkzkroZ/nSOU/Q5nN5jKxJ8WAyFPSgo1t4nE2IFOdGlBOrs?=
- =?us-ascii?Q?8DnhF9l1U/WsORLxe0t7Pd+hTDIKCP6kEU86qg7xByfIhhqMmzb6Vw4zuwxh?=
- =?us-ascii?Q?MJKOLD6fTrzwp0afOQVf5VWbhvSI17GeyN9llEBXRdDVAiZjAIAbPFBrqHcO?=
- =?us-ascii?Q?WMlswNzpLLQBtHBbmgdFifY2ueUu8mv7HyDHl68yrt3rNfNxMdXkvc74+V9d?=
- =?us-ascii?Q?fP0bl1Ir7c733kjlIwvNwoyW+XwlMVaAuoRhE7FsjXnjUKWKGm2ack3qo1T+?=
- =?us-ascii?Q?1xzzoPjdIaq2ejBpuEDdSzbEB1vJzimlhjsMwSxT0zYNzl7FZapN7HsHt0dG?=
- =?us-ascii?Q?xXpy2b7e0Fk4IM0H0G7hIhc81LkfdnJ443fP/KxhRtEU/8Ur/CnGT/hAt8I1?=
- =?us-ascii?Q?wgUKRpy2bCmElV7Th/sfi6NovEBIFjD9xjEijtO0rHi9TidPXC+sHjG2PWq5?=
- =?us-ascii?Q?PQ+AZkeGSrbgjY0jdU8jHPPSAJNtyUWgcVinhwkkVUvCSK9088JTZh85aX2I?=
- =?us-ascii?Q?HIuJQFsTIpt4hflNzEJz6Zyo8m+kIBs18HbtZCkmHwnwY8J1myHfDyJm2Mj/?=
- =?us-ascii?Q?UU1Y3iWS1eJrSL84xuJJSOSAkU/1TjDnzmaK6i3OtdX6qYtk7QEGXedf7BkY?=
- =?us-ascii?Q?d4WqrnDOrBVAB9Le3Ze0PHidhOiPRpGDh7ZI+kgpeT7UQM5Uwwh1epT/jdXY?=
- =?us-ascii?Q?13sxNiTjvvKiygLrGIZ9OKKiqOVUrP3KoP9THTXEyZUD7ndBCcEp8NHh2Wu2?=
- =?us-ascii?Q?1lMHz1Sk6bIBPnXSGqHszEPcU8rh6h/PcfTzu2tOKYBaJ7TY11zIA8mPRjgW?=
- =?us-ascii?Q?E6eUa7AL7rQa1mXnZ0ZZ/IChGqPpJTpWZBlDxytuoNORF8LZPhReRk26ZrzT?=
- =?us-ascii?Q?P27+U0y1k6IS+J4+Z64z0GyXtsa3HI3s4U5VUsMYt65NdxrXx/kaf1y7lXSB?=
- =?us-ascii?Q?doUSttg+YZUhqp9w7tqAatDN30E65qXvBlFlBnLWqq2PS2Cv/4/dr4zJnTov?=
- =?us-ascii?Q?O12SjCDvEROo+53LNzLCaf8VtsWSH4pb1k8Y/5OR1jJuhJHa3pXcCtEI49GH?=
- =?us-ascii?Q?rVOSUGlboGBPKYvVI2bdYGbTWjZV/s+AxAalGItmT+6WNaTuQGul66CGR5py?=
- =?us-ascii?Q?oan72CbgStprgOgXVkGi+9PdpmlcMTMG3iFjP1ZvH34/f25bUlDiBq0OGH6E?=
- =?us-ascii?Q?V4GYru1bBXLVr0GSB9oAKGxrJT6y6d/kQH6rMM9y11oInkiHGn0gMK+PPVLk?=
- =?us-ascii?Q?Qn9SfRZLdw7fMGdc8DSgsIcTn0xiMJT384QXhF45Jn3/n+KeHm0PgaYGV24b?=
- =?us-ascii?Q?P1l8Fl2i7DefxG88Z4F34M2KYPlfEAHuQM1VFoN7Ajf5UWlp9OBjzLAJeQME?=
- =?us-ascii?Q?oUCEwZD38+Hx8KJmm4Wdh5hJDp8GJ/B4Uvh+nA1A?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKokrbdU"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e6eb891db9so1863047b3a.3;
+        Fri, 15 Mar 2024 09:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710521172; x=1711125972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZOX6485f2YWoIfffYyPIciWIsiQeBaoKCVT6/JJ1iI=;
+        b=jKokrbdUGpZv5G8s6VykVFOKLJpAiLdelVO4mVTfv1zcQNQ7gzQ8gKkOwYHE1wwle+
+         m4fxotOU0yltQKpA9EtAHp2zcZSMZ3TGQFuyJiP2db6bkwhTgM4HzQtQHXQY6ZGfKoqi
+         Z/lSM+viEkrwG6fJwxtmNORqp+uvMjD8QDfKdEfTjqXMF6xNU3udRweWVb4SVpX9ty7x
+         Z4JZr5JZRafi+4XVZCKD/hMPLJodV9BNt7ajQjK+UBqDC1DyWlExs4xrIqRXnjIRzW5d
+         FqAkb/NEa+2sci3dFk64Pf4rBdcKTaOrUuPdDq92m0L8Jt8EWZmc0+n9WTCsO0ZoFFhG
+         a6jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710521172; x=1711125972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AZOX6485f2YWoIfffYyPIciWIsiQeBaoKCVT6/JJ1iI=;
+        b=L5lUTZ3Og+xKCHUFUpq4piSR0wO7azXy0A0DhECDEIsX5t7HTo1kQXmBWcapwZyPsA
+         7uoI8GYTvTyqXWhjfy2kSl4IDHWZ9uiLU24TNeU/g8mvI6dAiS2pPxOz32Ix1UWNelXA
+         7NI7+5nCCUD4pmKEb19hLNYRUrizbvpVT3aF+J8qbooBTf0QAvgzrKRhYVqNm5WoHhAg
+         BGsmT4DW/Cvzw0OueS9w4/ZilT9GdC7QAO1h0vjyQGkdkrJXs8VQ9czYokdYgKNO4j65
+         m8JCvxSxm+KdAxy+AXYMfv8HIK516M8mgAbnb/P4BFIEp8TXI/xuNNscwvMKkphnwsIU
+         fi+A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0++6AhUMHYDp+/z2QYmSMvzaUaLt6Qb7xFg1aTx7VvS9liGXSHP1T7L8usq7yCbLK9zD+aAkeTDSaxKy95ZLlL3G+tbdihnzA+iZ+s7UD84IM2Sev1Aa+qXTbi0DREKMIdCXWdQDG3c/Q2yh6qalsEJs0FFrbnuTsb9nTF50=
+X-Gm-Message-State: AOJu0YxADBltOeY5I5ImWB052R7Fc+xdvljpzHQjjzotCanxWIWQ54v8
+	HcM+g3az3oGnYyGZcRT+v/4dI5vEC0QyiOt/LfhM8PF28m0RlZb2uaX1+abQFqphG+p0gJOBATC
+	cn1S7EM4Pg4UC0bZA4MNpCx+llOPdZ5PZ
+X-Google-Smtp-Source: AGHT+IFIU7jP06uCSEgXyzplvCTBrSSs+Qaju6dpK+T6gLdLY6C5EtagC5SC8hsgKq7e8HnNEV0OMeFo+GSklwcnSQQ=
+X-Received: by 2002:a05:6a20:12c6:b0:1a2:b33b:d6e0 with SMTP id
+ v6-20020a056a2012c600b001a2b33bd6e0mr6414408pzg.59.1710521171702; Fri, 15 Mar
+ 2024 09:46:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdf501ec-93ad-4c9b-cc95-08dc450f4e46
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 16:45:21.9264
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uBSyfa0tfvcuvIWKEtjkr9pS/c36X9YqcYQ2A+xLWWKvO4k8ZFVSNhm2x0ffi5r2DhFce2Gi1gjeZvVyMXrYTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR21MB3939
+References: <20240315113828.258005-1-cgzones@googlemail.com> <20240315113828.258005-2-cgzones@googlemail.com>
+In-Reply-To: <20240315113828.258005-2-cgzones@googlemail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 15 Mar 2024 09:45:59 -0700
+Message-ID: <CAEf4BzZF0A9qEzmRigHFLQ4vBQshGUQWZVG5L0q2_--kx4=AXA@mail.gmail.com>
+Subject: Re: [PATCH 02/10] capability: add any wrappers to test for multiple
+ caps with exactly one audit message
+To: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Cc: linux-security-module@vger.kernel.org, linux-block@vger.kernel.org, 
+	Serge Hallyn <serge@hallyn.com>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Mar 15, 2024 at 4:39=E2=80=AFAM Christian G=C3=B6ttsche
+<cgzones@googlemail.com> wrote:
+>
+> Add the interfaces `capable_any()` and `ns_capable_any()` as an
+> alternative to multiple `capable()`/`ns_capable()` calls, like
+> `capable_any(CAP_SYS_NICE, CAP_SYS_ADMIN)` instead of
+> `capable(CAP_SYS_NICE) || capable(CAP_SYS_ADMIN)`.
+>
+> `capable_any()`/`ns_capable_any()` will in particular generate exactly
+> one audit message, either for the left most capability in effect or, if
+> the task has none, the first one.
+>
+> This is especially helpful with regard to SELinux, where each audit
+> message about a not allowed capability request will create a denial
+> message.  Using this new wrapper with the least invasive capability as
+> left most argument (e.g. CAP_SYS_NICE before CAP_SYS_ADMIN) enables
+> policy writers to only grant the least invasive one for the particular
+> subject instead of both.
+>
+> CC: linux-block@vger.kernel.org
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> ---
+> v5:
+>    - add check for identical passed capabilities
+>    - rename internal helper according to flag rename to
+>      ns_capable_noauditondeny()
+> v4:
+>    Use CAP_OPT_NODENYAUDIT via added ns_capable_nodenyaudit()
+> v3:
+>    - rename to capable_any()
+>    - fix typo in function documentation
+>    - add ns_capable_any()
+> v2:
+>    avoid varargs and fix to two capabilities; capable_or3() can be added
+>    later if needed
+> ---
+>  include/linux/capability.h | 10 ++++++
+>  kernel/capability.c        | 73 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 83 insertions(+)
+>
 
+[...]
 
-> -----Original Message-----
-> From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-> Sent: Wednesday, March 13, 2024 6:25 AM
-> To: Konstantin Taranov <kotaranov@microsoft.com>;
-> sharmaajay@microsoft.com; Long Li <longli@microsoft.com>; jgg@ziepe.ca;
-> leon@kernel.org
-> Cc: linux-rdma@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH rdma-next 1/4] RDMA/mana_ib: Introduce helpers to create =
-and
-> destroy mana queues
->=20
-> From: Konstantin Taranov <kotaranov@microsoft.com>
->=20
-> Intoduce helpers to work with mana ib queues (struct mana_ib_queue).
-> A queue always consists of umem, gdma_region, and id.
-> A queue can be used for a WQ or a CQ.
->=20
-> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+>
+> +/**
+> + * ns_capable_any - Determine if the current task has one of two superio=
+r capabilities in effect
+> + * @ns:  The usernamespace we want the capability in
+> + * @cap1: The capabilities to be tested for first
+> + * @cap2: The capabilities to be tested for secondly
+> + *
+> + * Return true if the current task has at least one of the two given sup=
+erior
+> + * capabilities currently available for use, false if not.
+> + *
+> + * In contrast to or'ing capable() this call will create exactly one aud=
+it
+> + * message, either for @cap1, if it is granted or both are not permitted=
+,
+> + * or @cap2, if it is granted while the other one is not.
+> + *
+> + * The capabilities should be ordered from least to most invasive, i.e. =
+CAP_SYS_ADMIN last.
+> + *
+> + * This sets PF_SUPERPRIV on the task if the capability is available on =
+the
+> + * assumption that it's about to be used.
+> + */
+> +bool ns_capable_any(struct user_namespace *ns, int cap1, int cap2)
+> +{
+> +       if (cap1 =3D=3D cap2)
+> +               return ns_capable(ns, cap1);
+> +
+> +       if (ns_capable_noauditondeny(ns, cap1))
+> +               return true;
+> +
+> +       if (ns_capable_noauditondeny(ns, cap2))
+> +               return true;
+> +
+> +       return ns_capable(ns, cap1);
 
-Reviewed-by: Long Li <longli@microsoft.com>
+this will incur an extra capable() check (with all the LSMs involved,
+etc), and so for some cases where capability is expected to not be
+present, this will be a regression. Is there some way to not redo the
+check, but just audit the failure? At this point we do know that cap1
+failed before, so might as well just log that.
 
+> +}
+> +EXPORT_SYMBOL(ns_capable_any);
+> +
+> +/**
+> + * capable_any - Determine if the current task has one of two superior c=
+apabilities in effect
+> + * @cap1: The capabilities to be tested for first
+> + * @cap2: The capabilities to be tested for secondly
+> + *
+> + * Return true if the current task has at least one of the two given sup=
+erior
+> + * capabilities currently available for use, false if not.
+> + *
+> + * In contrast to or'ing capable() this call will create exactly one aud=
+it
+> + * message, either for @cap1, if it is granted or both are not permitted=
+,
+> + * or @cap2, if it is granted while the other one is not.
+> + *
+> + * The capabilities should be ordered from least to most invasive, i.e. =
+CAP_SYS_ADMIN last.
+> + *
+> + * This sets PF_SUPERPRIV on the task if the capability is available on =
+the
+> + * assumption that it's about to be used.
+> + */
+> +bool capable_any(int cap1, int cap2)
+> +{
+> +       return ns_capable_any(&init_user_ns, cap1, cap2);
+> +}
+> +EXPORT_SYMBOL(capable_any);
+> +
+>  /**
+>   * capable - Determine if the current task has a superior capability in =
+effect
+>   * @cap: The capability to be tested for
+> --
+> 2.43.0
+>
+>
