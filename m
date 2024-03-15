@@ -1,204 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B1718651
-	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 10:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87E2182D4;
+	Fri, 15 Mar 2024 10:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710497588; cv=none; b=SBdN1719CSOR6rcldKs5109kUMZK0CmofR0sPhIkkGRKgPzmmYMxd+19LyIzcz/Nq8EQ9q8TAc4QfWhWbI0kjkGWiJ5uUmAqeQnVt4tr/x2WzSBQMDTPF/NfgudBWF+lxU4KJXqguYZBDE2WXiCIPVtTOaRJJMRwKfTjrNGDaV0=
+	t=1710497675; cv=none; b=bjDmpHcR2WQjgmtxAl43udKUgPogulIi+kBVmNaExSjS248eoNuTPHcJvzLEg7by3JEpD8a0FdY1adYGqjMA9PY3pzVdAsA2jRJSCf3h/ur3kzZr6rxZxWIfjyJozxXo7t8s7UNPaTDJ65poFPHvRX46IUJxEjIar/sQ1Z1kCls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710497588; c=relaxed/simple;
-	bh=PmSNqJzLauqVuWOI//trxf4ztsCJtP19qj3RPpas/J0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z0tfYTws9fhnvMlAnDTKsvuzm7wMvmJtDoi4Fbtljttfnbk4Z8XfEmWT+0Rt7U/T1Fy2/Pvmbn+aortJs1ps45C1nnX66gTMguddtCH5vIz3pRfJxIA4DkPuv1KpfUTo2d6zZDoP7fVUTdWCG6lEY/l8pcqh7m8nasbymPkDYU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YhfWaWrM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710497675; c=relaxed/simple;
+	bh=UsbmK9fmU3C126PD4sa4jNSwSxuxUdY1RLY4p+iJL2I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B9E9e5hv9knoGykCXu+FGT+sASbau940OcyINxQuHKTIgssUHl3b8CVtLaEm5OjEDhn7sWDigb3w/wutOyTeDBqNFPJIh3sfuWgEvY95HK0JNYJMRLJSEGKHXPkLYAzUuJx/sunFs57TSXL5dfz+XedSXHzFYx23yOH4Ovjc2ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aowXEWcR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hMhKqYEh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aowXEWcR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hMhKqYEh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhfWaWrM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710497585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aowXEWcR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hMhKqYEh";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aowXEWcR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hMhKqYEh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AFE0B1FB59;
+	Fri, 15 Mar 2024 10:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710497671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dGgBiaNjRI6L5nPHxVT3+aLEqiuZe1OVUV710AgZry4=;
-	b=YhfWaWrMg4cZgo1AGzRGHzlk27gOBtbpPpCPChLMq5iZmmd39QnH3anzsHfYzNWO2XVnGg
-	3U3Pm+hNEdW0RwIHbvc+sR7MTrQ9ui6E1fRtC5okb8P21MQDFYs9Ti7LedegqF2lj84lMU
-	MLqxWjfMkW/bWaLB/JGU8UfBMgAj7Mk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-358-yQMYDf6DNYiBRSl__Ueamw-1; Fri, 15 Mar 2024 06:13:04 -0400
-X-MC-Unique: yQMYDf6DNYiBRSl__Ueamw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a466c77307eso191625166b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 03:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710497583; x=1711102383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dGgBiaNjRI6L5nPHxVT3+aLEqiuZe1OVUV710AgZry4=;
-        b=CssRiGRwhsEYrR3ovPKbCgNgoPXJvWRlZQ75euM1HZq7NRbsqKsAxQLE7x/OrzgP2J
-         N2RoUABGaUSAC73I3SjC2O9rCj2lQZEuMnqU77rboh6KxHSJq1RCMWh54kkvJe3kuzrN
-         F2IjgVnEJJcgtfbPrmkQC8AdthJcc9wChTNZ2YUzwEKO3i3wKw7EarIlAwq3DWa0zGYx
-         G4vVG4X7vPvIWxSLXBuL9VncBhNPpUYE4pA/e0/ktpAuud/jCUpQSMJVMTuq1q5EH86m
-         z3OM1GmAnkIyJjwCL6EIPO271uFos41dXGdeQpqPODv5tmu+SexbNXp5yxKHWhrhXtrh
-         Hb4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXUljiZYrXLFZljd1dMVdqM+RLwmLLdgEBKL1ORX1JEA7OUQSb7dbIJ2sqpHnjEpTo1equaxjXf8/cSZwVKiAswxTW+l7UPGlcOueRR
-X-Gm-Message-State: AOJu0YxZEo1RaUDFy4lu66Tr2WqlZnKanqSgnPPXUpyBgPURAV99q56Z
-	D9M+InIg0DzsT+8RdQUWnXh2Ejb/tyyhkLfmPT1bIcAgRVGb4b4/MFD+mX6HytGDwBvDgqSVhNo
-	KRmiVJ1SjDAr3cnXpm5pcsrxwbjYwm9xgaxv4T4QKYKS6NXj0aMjA0BNO2mq0tXO6uUAFg1nU2H
-	e8IwX67ME7Mi9uCISKPZC4YqQ2KLhaNo5ZMV2E
-X-Received: by 2002:a17:906:53ce:b0:a46:4918:327 with SMTP id p14-20020a17090653ce00b00a4649180327mr3327895ejo.37.1710497583141;
-        Fri, 15 Mar 2024 03:13:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAIkU4uTzpq17jIbC+WboSgKGptA6C8KEBnsOxk42/ys+EaEU6YfyUzDI3e5IfG3SR1vFat6JsW/OzSY9b2rE=
-X-Received: by 2002:a17:906:53ce:b0:a46:4918:327 with SMTP id
- p14-20020a17090653ce00b00a4649180327mr3327874ejo.37.1710497582712; Fri, 15
- Mar 2024 03:13:02 -0700 (PDT)
+	bh=G1dpeR8AdO6+eAWIu+TQT/0nMheZgF9XKgeFMBR3eEU=;
+	b=aowXEWcRuEcGaXPIxVRDPmYOwc0oQzyKIFcwsB5OX/Q0/q700PkS8DH/UjXL5srYROuZS7
+	L2m26NLS+wKmzON7msyoZyIxPpimzRxfaW1Y/b4Jsy63JtzW1mH7BGQ3lli0DFcKIAVbS0
+	YvcFjpIM36ViSkkvMvGQViBVA40bJP0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710497671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G1dpeR8AdO6+eAWIu+TQT/0nMheZgF9XKgeFMBR3eEU=;
+	b=hMhKqYEhThNZHSOaPSOD5eIRRBMXrUqaPhw+e1Cax1tdW4TSA6w074B9aJWNvuUqUBKzK9
+	0ClhCuCE3EVcIoAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1710497671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G1dpeR8AdO6+eAWIu+TQT/0nMheZgF9XKgeFMBR3eEU=;
+	b=aowXEWcRuEcGaXPIxVRDPmYOwc0oQzyKIFcwsB5OX/Q0/q700PkS8DH/UjXL5srYROuZS7
+	L2m26NLS+wKmzON7msyoZyIxPpimzRxfaW1Y/b4Jsy63JtzW1mH7BGQ3lli0DFcKIAVbS0
+	YvcFjpIM36ViSkkvMvGQViBVA40bJP0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1710497671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G1dpeR8AdO6+eAWIu+TQT/0nMheZgF9XKgeFMBR3eEU=;
+	b=hMhKqYEhThNZHSOaPSOD5eIRRBMXrUqaPhw+e1Cax1tdW4TSA6w074B9aJWNvuUqUBKzK9
+	0ClhCuCE3EVcIoAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6EA6A13460;
+	Fri, 15 Mar 2024 10:14:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1r46GYcf9GVzaAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 15 Mar 2024 10:14:31 +0000
+Date: Fri, 15 Mar 2024 11:14:30 +0100
+Message-ID: <87wmq3by49.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: syzbot <syzbot+28c1a5a5b041a754b947@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	syzkaller-bugs@googlegroups.com,
+	tiwai@suse.com
+Subject: Re: [syzbot] [sound?] possible deadlock in snd_pcm_period_elapsed (4)
+In-Reply-To: <0000000000000b9a510613b0145f@google.com>
+References: <0000000000000b9a510613b0145f@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240315092042.145669-1-ivecera@redhat.com>
-In-Reply-To: <20240315092042.145669-1-ivecera@redhat.com>
-From: Michal Schmidt <mschmidt@redhat.com>
-Date: Fri, 15 Mar 2024 11:12:51 +0100
-Message-ID: <CADEbmW1FzbrmZfdptdkLkzZ5KGz4rAy1CWHscZeEeG_jYARCew@mail.gmail.com>
-Subject: Re: [PATCH net v3] i40e: Enforce software interrupt during busy-poll exit
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, pawel.chmielewski@intel.com, 
-	aleksandr.loktionov@intel.com, Hugo Ferreira <hferreir@redhat.com>, 
-	Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jacob Keller <jacob.e.keller@intel.com>, 
-	"moderated list:INTEL ETHERNET DRIVERS" <intel-wired-lan@lists.osuosl.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Bar: /
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aowXEWcR;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hMhKqYEh
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [0.84 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.15)[68.98%];
+	 TAGGED_RCPT(0.00)[28c1a5a5b041a754b947];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Score: 0.84
+X-Rspamd-Queue-Id: AFE0B1FB59
+X-Spam-Flag: NO
 
-On Fri, Mar 15, 2024 at 10:20=E2=80=AFAM Ivan Vecera <ivecera@redhat.com> w=
-rote:
-> As for ice bug fixed by commit b7306b42beaf ("ice: manage interrupts
-> during poll exit") followed by commit 23be7075b318 ("ice: fix software
-> generating extra interrupts") I'm seeing the similar issue also with
-> i40e driver.
->
-> In certain situation when busy-loop is enabled together with adaptive
-> coalescing, the driver occasionally misses that there are outstanding
-> descriptors to clean when exiting busy poll.
->
-> Try to catch the remaining work by triggering a software interrupt
-> when exiting busy poll. No extra interrupts will be generated when
-> busy polling is not used.
->
-> The issue was found when running sockperf ping-pong tcp test with
-> adaptive coalescing and busy poll enabled (50 as value busy_pool
-> and busy_read sysctl knobs) and results in huge latency spikes
-> with more than 100000us.
->
-> The fix is inspired from the ice driver and do the following:
-> 1) During napi poll exit in case of busy-poll (napo_complete_done()
->    returns false) this is recorded to q_vector that we were in busy
->    loop.
-> 2) Extends i40e_buildreg_itr() to be able to add an enforced software
->    interrupt into built value
-> 2) In i40e_update_enable_itr() enforces a software interrupt trigger
->    if we are exiting busy poll to catch any pending clean-ups
-> 3) Reuses unused 3rd ITR (interrupt throttle) index and set it to
->    20K interrupts per second to limit the number of these sw interrupts.
->
-> Test results
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Prior:
-> [root@dell-per640-07 net]# sockperf ping-pong -i 10.9.9.1 --tcp -m 1000 -=
--mps=3Dmax -t 120
-> sockperf: =3D=3D version #3.10-no.git =3D=3D
-> sockperf[CLIENT] send on:sockperf: using recvfrom() to block on socket(s)
->
-> [ 0] IP =3D 10.9.9.1        PORT =3D 11111 # TCP
-> sockperf: Warmup stage (sending a few dummy messages)...
-> sockperf: Starting test...
-> sockperf: Test end (interrupted by timer)
-> sockperf: Test ended
-> sockperf: [Total Run] RunTime=3D119.999 sec; Warm up time=3D400 msec; Sen=
-tMessages=3D2438563; ReceivedMessages=3D2438562
-> sockperf: =3D=3D=3D=3D=3D=3D=3D=3D=3D Printing statistics for Server No: =
-0
-> sockperf: [Valid Duration] RunTime=3D119.549 sec; SentMessages=3D2429473;=
- ReceivedMessages=3D2429473
-> sockperf: =3D=3D=3D=3D> avg-latency=3D24.571 (std-dev=3D93.297, mean-ad=
-=3D4.904, median-ad=3D1.510, siqr=3D1.063, cv=3D3.797, std-error=3D0.060, 9=
-9.0% ci=3D[24.417, 24.725])
-> sockperf: # dropped messages =3D 0; # duplicated messages =3D 0; # out-of=
--order messages =3D 0
-> sockperf: Summary: Latency is 24.571 usec
-> sockperf: Total 2429473 observations; each percentile contains 24294.73 o=
-bservations
-> sockperf: ---> <MAX> observation =3D 103294.331
-> sockperf: ---> percentile 99.999 =3D   45.633
-> sockperf: ---> percentile 99.990 =3D   37.013
-> sockperf: ---> percentile 99.900 =3D   35.910
-> sockperf: ---> percentile 99.000 =3D   33.390
-> sockperf: ---> percentile 90.000 =3D   28.626
-> sockperf: ---> percentile 75.000 =3D   27.741
-> sockperf: ---> percentile 50.000 =3D   26.743
-> sockperf: ---> percentile 25.000 =3D   25.614
-> sockperf: ---> <MIN> observation =3D   12.220
->
-> After:
-> [root@dell-per640-07 net]# sockperf ping-pong -i 10.9.9.1 --tcp -m 1000 -=
--mps=3Dmax -t 120
-> sockperf: =3D=3D version #3.10-no.git =3D=3D
-> sockperf[CLIENT] send on:sockperf: using recvfrom() to block on socket(s)
->
-> [ 0] IP =3D 10.9.9.1        PORT =3D 11111 # TCP
-> sockperf: Warmup stage (sending a few dummy messages)...
-> sockperf: Starting test...
-> sockperf: Test end (interrupted by timer)
-> sockperf: Test ended
-> sockperf: [Total Run] RunTime=3D119.999 sec; Warm up time=3D400 msec; Sen=
-tMessages=3D2400055; ReceivedMessages=3D2400054
-> sockperf: =3D=3D=3D=3D=3D=3D=3D=3D=3D Printing statistics for Server No: =
-0
-> sockperf: [Valid Duration] RunTime=3D119.549 sec; SentMessages=3D2391186;=
- ReceivedMessages=3D2391186
-> sockperf: =3D=3D=3D=3D> avg-latency=3D24.965 (std-dev=3D5.934, mean-ad=3D=
-4.642, median-ad=3D1.485, siqr=3D1.067, cv=3D0.238, std-error=3D0.004, 99.0=
-% ci=3D[24.955, 24.975])
-> sockperf: # dropped messages =3D 0; # duplicated messages =3D 0; # out-of=
--order messages =3D 0
-> sockperf: Summary: Latency is 24.965 usec
-> sockperf: Total 2391186 observations; each percentile contains 23911.86 o=
-bservations
-> sockperf: ---> <MAX> observation =3D  195.841
-> sockperf: ---> percentile 99.999 =3D   45.026
-> sockperf: ---> percentile 99.990 =3D   39.009
-> sockperf: ---> percentile 99.900 =3D   35.922
-> sockperf: ---> percentile 99.000 =3D   33.482
-> sockperf: ---> percentile 90.000 =3D   28.902
-> sockperf: ---> percentile 75.000 =3D   27.821
-> sockperf: ---> percentile 50.000 =3D   26.860
-> sockperf: ---> percentile 25.000 =3D   25.685
-> sockperf: ---> <MIN> observation =3D   12.277
+On Fri, 15 Mar 2024 11:00:31 +0100,
+syzbot wrote:
+(snip)
+> the shortest dependencies between 2nd lock and 1st lock:
+>  -> (&timer->lock){+.+.}-{2:2} {
+>     HARDIRQ-ON-W at:
+>                       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+>                       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+>                       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+>                       spin_lock include/linux/spinlock.h:351 [inline]
+>                       class_spinlock_constructor include/linux/spinlock.h:561 [inline]
+>                       snd_timer_close_locked+0x53/0x8d0 sound/core/timer.c:412
 
-Those are the numbers from the original measurements, but I confirmed
-with Ivan that he re-tested with v3 and the overall picture was the
-same.
+Ouch, I incorrectly converted from spin_lock_irq() to
+guard(spinlock).  It should have been guard(spinlock_irq), of course.
 
-> Fixes: 0bcd952feec7 ("ethernet/intel: consolidate NAPI and NAPI exit")
-> Reported-by: Hugo Ferreira <hferreir@redhat.com>
-> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+Will submit the fix patch.
 
-Yeah.
 
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> ---
-> Changes since v2
->  - eliminated two writes in hot-path (thx Jesse)
+thanks,
 
-I like this improvement.
-Michal
-
+Takashi
