@@ -1,378 +1,659 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2122.outbound.protection.outlook.com [40.107.255.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3450679C1;
-	Fri, 15 Mar 2024 01:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.122
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710465376; cv=fail; b=MPdrhT4KN19ZAjFD2vOq+vxscbOPLCmZBJR4IOEvfpsinIf4O+EuYbT2m/I4rgP+Wl4s/ZH7SlNTbMb4v/lb0+3D5i0aRu3qhlCdej+E7uxuSqJW0CfOC7U+pCWfFi6YwK1pfq963GWzMhNT5nESkFuyXDqGNg3YKv1tfCNmhco=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710465376; c=relaxed/simple;
-	bh=BJDlzc79WcZlcvAnrFoyk+NumXOSy5YYtcbOKqu4CSY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=T/1mjm4K0M2kayuXrdYvkfKzI0cIbR+UnF7z6do/9IhUZhUqiv8Hedai14H8NgmajttNertAXnjsuN7uvrLgSLhDpVRJlpzEX/7rbfTmyh1F/E39mpBKYx4IdjMGFz+o84iGPu8lENk2g/v+BrODzoFkFGUsUDZHneoyOXl90UQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=d8xESCj1; arc=fail smtp.client-ip=40.107.255.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597B84C8F
+	for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 01:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710465402; cv=none; b=nDXeDa51IBWN41GMX10dIMeCBUqCoMj3dBYb7uHwn6RcK3wz0dRQ4TspzYaQeCwBUVonf5+WQaxPD/vZLcrssHeemj/mzkKQrlh+gXTWi6Q1heKVqCRv+rzVJS9kWzjst2hS1FDQ6yHjcQRjrWHXRHC3c263JwFNtzMbuH98s24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710465402; c=relaxed/simple;
+	bh=P5XiFD9ZDCFVCw/x0S9lLQFdkuUYboXOL/7pwn+/Bs4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MbKTjpkva6fZlSq3RW35HLjLDngs/HSaRHqteIZLmWBX2F6kLScX77l80nQnOrG4jU0dF3nasn8zsTYbn4MyxuXC4+wIYfmgEu09RKvbuzzX3QUG+V9og5t+pkOD9Tv1+LvSzy0liEDLm9XiV0YwK0F/xMp+/vUsCtnzhpVgDuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XH27IWgt; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="d8xESCj1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LSBf0PLWV37V4YypMxHzair5MFMaLok0alMrh1cIxgfO/oUc/OOsJRjZbbXvMwg3VuHQ+hmgD5Mr7B4DW/Ya54MnmeYZ/uXp9ovGUwM5uCMcPEJVK7/w1SaIbVt8H1aDsko8a0mCRTQIpwVd4uQ4jdeXJdtUzOYHuV7uN3vWsBKFzCAEcExgKuXJIm/hn90y4C6I3SCGAskh4Tt6+e1cLUDk/1Vs/yhB3bGNTpXyy8NmkL8R2MSAL1VLouUfDYIfYhzAE1dc1Hn4TvIee1pYp8dounYby/lxMTCKuCLjwTxzo/KIqiiLfCsJLw7n0L04gWnjS/uLyafh6/FPvEP/PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=akZ3bMfMKXwfz972QDgrEK58fdC1JgjCxxAt2YVw8Ek=;
- b=PY4VKadluXo3jvnjphaqBT7rCi7kN4Ge0yU0RLi1ooPaOIw7Dy6T2/pn1SJ7dPyLOTP2GyoM79z5SK3QUMoCRj5n0UX8ctfvIATxwqhA3ojxr+cd+OT1bgENQxPnQvaoJwpTIYUeQM6t2nJBVq/RTfRVlwpid+X3xf/DfZcKzxks76RmJ1Y+jq3DApoPFsfSG14prZYiYHSAUnJS18+Ji8YBdHKmt6x5uQKGmYtIJzx6/IkRqIUgNp5AdVbJHdGQ0X7lDg1uGMBR9B/YoJYKCVDdSprLcYyFZeXuQ5X3JiIcbz/12Sd3b6p1/1nccLcjr2NGvSuso3RpQTgdzBLxWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=akZ3bMfMKXwfz972QDgrEK58fdC1JgjCxxAt2YVw8Ek=;
- b=d8xESCj1yPiTdS5woUYKGofksHVqpOdCM71xrez1e7MZgW99ZJs70o81F9BflEayGfgw8QT2j0vUmt7bg7oWaTh8CKNM6g5UYnwUeiHFIILpn9M/phEaPLuCaaEM+wtGEdqlNWTL+XeTGgKVHaaIkTYkJsYmDms7O+I2+OmPkdGrI4AtmPrczLpNpyyf3qgbWc9cgPvXjTVu/t/GnJ/SiRcyeIPYD2iI5VTmehx+QV05MjOhzgf3GAam19zEEFbtn5jlkAnUXP90cxSoI49oKK66O5JclRTPOc3EBAhB5d3rbYIz6xr1EtySEDIcDw+RVOGgE+sWHT01qlkb4BX1vg==
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by SI2PR03MB6712.apcprd03.prod.outlook.com (2603:1096:4:1ec::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Fri, 15 Mar
- 2024 01:16:09 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::5198:1b2f:8889:17b]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::5198:1b2f:8889:17b%4]) with mapi id 15.20.7362.035; Fri, 15 Mar 2024
- 01:16:09 +0000
-Message-ID: <f9c380bf-05c4-4a24-9d42-5ad24b181e66@amlogic.com>
-Date: Fri, 15 Mar 2024 09:16:03 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DMARC error][DKIM error] [PATCH 3/4] arm64: dts: add support for
- A4 based Amlogic BA400
-Content-Language: en-US
-To: neil.armstrong@linaro.org, Dmitry Rokosov <ddrokosov@salutedevices.com>,
- Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-References: <20240312-basic_dt-v1-0-7f11df3a0896@amlogic.com>
- <20240312-basic_dt-v1-3-7f11df3a0896@amlogic.com>
- <20240313095311.dxrr7gvt4t3gwoho@CAB-WSD-L081021>
- <74f96887-572d-47eb-bce4-9d61ec51b88d@amlogic.com>
- <024b8567-af4c-4522-9b9d-594c42930442@linaro.org>
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <024b8567-af4c-4522-9b9d-594c42930442@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR01CA0179.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::35) To TYZPR03MB6896.apcprd03.prod.outlook.com
- (2603:1096:400:289::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XH27IWgt"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso2059434a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Mar 2024 18:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710465399; x=1711070199; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fIc1Yq9fmCTIP9ZhxrQAZUCknWldct9RGS/QVjXvgZM=;
+        b=XH27IWgtGYvX1bWa4w/YmqlgaxNNoQjqcTEKdN6HKymlnh/F1lrXVmux1AcXysmj3g
+         VW2lTl21a3eF7fS3HVNlxT7Gm6hygJ6HvamhFGxLD7WG24dmz+13e8TyUpli2rrS1z1l
+         3fqKPeSSVz3bB+g6rX6q+kKN+2p7UH+1n+Gk3gWnYsn/gE3jYxwez4AHuEYMTH6UjZM2
+         ffup1mMl7uVejT0h1zueRHjDnh/iFEzm91y4LfalJmN/7JIFPzJ3zWxAQq6yKJfVWdXb
+         3HqvX5MngIkHWv1LrXg97g9bR6ZRqtG5oZ16JZd2bNFhKQQz05x4gnVNoUX895Ncrwnq
+         B1ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710465399; x=1711070199;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fIc1Yq9fmCTIP9ZhxrQAZUCknWldct9RGS/QVjXvgZM=;
+        b=rG9SXBCYXVXlbT++mTEBMdpbnTJpb9HvsVUkHUyTzKp1S7aLvRSCekQv7eWhXFZR1Q
+         TDSA3VX5hASe9UA1Cl7aUC4t7kBJBHHtVoXNMgsfW9cvbF04LuskL7VPrjfjPgsgOfAo
+         3T5pw13J9+0i8G3PzwmfCKka1vVg7G9EGwYTQKPelHL91GnMTp8gTOhqLHGZT0rrCR96
+         l1vjJ98tQvUXDClkxhSqAMFBl3nWptQop4jOdWPJCI6ve+DxlyPKS7GMTdsxIm0OTDkU
+         +NfcmKTlFQcF3+vU/tn4JsI1bL//JCIF2aeICcGD/uyfkq9h4sNA8pGjnYgbBEh8fmZf
+         j+PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVt8Da0mVa+K61ovlSuHu/1o2WUKePPu/J4IpAZuEVgP3OAJCtLS8cqhZeXa1nQreaUQ+ruJqO5muXONHKvjROi9I5O7NHwtmgyr3hL
+X-Gm-Message-State: AOJu0YyCsN8yxumS7omjvbM8Q9bisCvcFaIo3ry7nKU2Br/ICU6Bec+6
+	ZppovhDGUuZbNSYz4UwXgowi7xhFKuX+8odpHYuwA64D6K260ariXMd730hprglrWAX9oPjR/dM
+	S07H+E2Fjn07CLWzbwYNC2/8p2RU=
+X-Google-Smtp-Source: AGHT+IHXNUoPy01DYVR00y8eISBVc3CKWA6X8r7dK+P6hFiyV5u2E6n6qulq1DOa+2uB/wSbL2cJ0fQCQsZLczQxrNE=
+X-Received: by 2002:a05:6402:458a:b0:565:9ac6:a9e5 with SMTP id
+ ig10-20020a056402458a00b005659ac6a9e5mr2400352edb.21.1710465398507; Thu, 14
+ Mar 2024 18:16:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SI2PR03MB6712:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qeSKD8itlxWKNwYcrgDe99ggnMcDUY56+qnuWH9FEXVTq+VCuymnSrp5wmTf1r8TfIGxfhPrkAOUjUk6pfZ7QrgbYkQjHYQkxQsEdPyaWkRZH1iVVJ3ewxFZ8I/zbsTxTr1eQXjbTA+8mabqvymcCK6L6qN+AHf/E5PM+2Spw/CqxRtncX8VUbSK4gEdavrtkpXnut3Ro1HswzcWaCE7ekOvnGE7IwRmtDgNV9EBpAQx4TClM/Ly3pccDwTkIwJUNCn4KmOrGm+IGWSRWIW4IVAKa5/5XVGxLzx02ZRvABwxHnyhLiljFrJl+Dc6fIWjeDRoXuf7GeOJQdJTpGuuRtWTipNfY4XuiOV9RZjmT1FTvaumboFP0VFp8Nk1mz2qp+0U/HHA8U6OSC5onVY8vqSmJQ+g8403v7mIFLv2O31qr7CqdcspQC1ucEKZgdkePkOSyFKmtCKAXiODvDJRgnKT0RaDOzPPgjVyNV7wXYlxo29EA3p9ULl1PaLe4MF28IEIzlodWDowZvxIOobE4UyyvFNBWuLQ3dIqr5sPOxTIxIOTo3SBr9VA067EsrXyqWeK2c+7/3gIozUQ3RrrmUqBYHxKgEvPV3Z7FvRxL0M=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WjRhT3pHeEdlSnhDQ1c5VmNVQWR1YklSNG00eTZnR0poUnVDRG5TS0krdXBh?=
- =?utf-8?B?dnZaQVRabGJyY3RwK2x1VU1PWHcxMHg0dGU3ajlKV3d1Z3JTKzFRbVVUOHlw?=
- =?utf-8?B?RGs3MEZOS1RkL3lHZkZmOEkxMFJzN1pyU1lhVHRLMzhhRkVUTVY2WS95enow?=
- =?utf-8?B?dzkvUm1EMGUxZkRLUmRXcHJsSEhkM2QxTnEwdS8zdWtXUmY5b0hDZ2MxOU9R?=
- =?utf-8?B?UUdIbHAvRktrK3ZINk0wbTRMcE03NVFUeDNDdFNsTVhhR1dOTkRVcFRLTzJj?=
- =?utf-8?B?R1NLZFMwamdiWTJEYjkyNXoxVG4wcXZqK3N3WGtNRFhld090QjRZYWRJSUZz?=
- =?utf-8?B?UXpPVE5PT25sUmNjZ0VBZEt0VnU1MHk5YlM3emg2dTN1SkZpQittMVlKY3lI?=
- =?utf-8?B?VEY1OGJlM21BWXdFY2txL0g2R3FUQ1ovU1hzajdZWUNOQ3ZmMnNlTnlPLzB0?=
- =?utf-8?B?MThSNjVLSHoxcGUrK0lUeTY5S2FNNkt1TGJobzFhQWF5UDhtZ29RTEljWXlK?=
- =?utf-8?B?SThvUW8wVjlVNkRGWUFJSmtEaG5DVHg0R1VDcHZXYmJtUi9mR1dPNnVRYWg1?=
- =?utf-8?B?MWx4b3FkMCtCY2lDblF2VEZkcXVKSkNpVEdPcU1LUlBlb1NPb040bE9Fbjlk?=
- =?utf-8?B?NFo0T2JuSjdTaDlLSFYrbzlubGxwQ1FYd0lSMU14TGwwc2EzSU0xNEdhTU9V?=
- =?utf-8?B?QzJEOW12YzkrelVoNjEzcGZhQzNEd0RUem01OE9hSm1XUVJiZWcwZDBSRGlq?=
- =?utf-8?B?L0c2VjR1eFB5bDFISlpieEVlYXoxU0kva2RFdTN6TFZCZzIrMXVUTndLcE4x?=
- =?utf-8?B?MGhCU3h6SnhpQ2xuMmVLTmNqTjcyYTZYYWZhOERaWlFYU3g4TUtQM1VvSjZ5?=
- =?utf-8?B?aFFKS1hmQ0VaRDBGRXYwWlVUaUFlNlRBMVlSWTBvYWJtZ2ErWDNxTmxRL2hV?=
- =?utf-8?B?L3lHcGo3NVJqOERTMXJubm1tWjdZWVJHR2JJdnNRclk0d1NuOEdNV0x2bWZt?=
- =?utf-8?B?ZGVSQWZmRXp4ckd1STNaU0lleFI2bURRcDJlWnA2OU5lYUEvQk4vMk1vL1p1?=
- =?utf-8?B?QUx4T2FHUXNOVWJ5REd6R3E5NFNuaXU5YXBqeGdhaW54NUhoYXFWTlRYY3k4?=
- =?utf-8?B?VEtaNGJ1M01NRFdRLzFsWWgxVWJDWEtZbmhXVm53cXYrQXFxalVjK1B0SFY1?=
- =?utf-8?B?SkdhUzB3Y0tDNndsNm4xWTZSaVh4ZjBVRzZpK0g3a1FobVgvMzE4S1lsdHRK?=
- =?utf-8?B?UXVoNGVtLzNEWHBjd0h4TkZrWDc4NjRjaXhqZ3VpRWt0eGRrdHllZUpiUy9s?=
- =?utf-8?B?c1hrRnE1SW14UzVWU0hQM0NGT1EwNXd6YjBIUXBUZ0NURVpxMWQ3dGVBZ1Jm?=
- =?utf-8?B?Ry8vZ3V2UW5zNWFqcndEdmJ0RC91ZG82VnJXWm5XTEZKUks3bmNidEhCWW94?=
- =?utf-8?B?MUdVV3Z5VVAzd2hVellYdkhpdExLRmo0Z0lmaTVtZms4VHQyZHBkSUVkRFF1?=
- =?utf-8?B?dHk5U0RUZGNNV3JtajVSbnpERGo1UEJrMEtJLzd5emFCN0lPMnl5Z2c2bElq?=
- =?utf-8?B?Q0xIc2Z1NjMySFNVQi82aWVWZEwvWU50U0RGeDR3QzliczJtdGZDZEtZRzdQ?=
- =?utf-8?B?Z01mTmNUL2FXSXVSM09NcUhTNHVxUlZ4SDdrQjhhQWswMEdqMENOcWs3djQw?=
- =?utf-8?B?TmpXMHdWQXFZZm54cFY3VzNzWW1oUUhSajJHNkwwblRvUDFVZEQ1YjZKZGVD?=
- =?utf-8?B?NFh1bmJiWU9HR3VhWWZoUmxRNklWTTlZQ2tXYnJnMkZINXdGaWdVNm5BZWI1?=
- =?utf-8?B?bnV5QW1CT0txZVRiUmtreXEvZWFlUm9iNUxnSE5uVzlJNzZKQnFqKzBzK1hh?=
- =?utf-8?B?dzdZYnVjSFFzYjByYnRodFB5OW43VFI3Uk04WHQ5blZNcnhWb0NzcTBvOXNl?=
- =?utf-8?B?Qzdpa05nYTh2bmsvbWpHQUZodldGNTc5aW91Z1d3VUJPL3BhT0ZmaEpXZ1pW?=
- =?utf-8?B?L1J5RklFR2p3Z0cwR0VQSEk4d2pKUlZoQUx0TXdjMDJuc0thMExEWWpEZVp5?=
- =?utf-8?B?VkVYU1lseEZ3UzZXZFZkWmNsMlRQVjh3NWUyWk4ydHhPenI3d2d3bHhKVUVV?=
- =?utf-8?B?RjlnTzdpZ0VVL3AzQVZFaFA5dTA5RkRpK3RZNUxmS3o0eDhWVFJ0N3krWDJ1?=
- =?utf-8?B?TkE9PQ==?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec79e54f-e4ec-4d5e-bbf9-08dc448d7eda
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 01:16:09.0924
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nQRJfz8P0vZa76hPCNdmOpbRHnLO+EKjCoRTWa9RiLu8j8pGjb0TjzHQk/h/vehKNm22UeP/vk+CF04kGdhk9dtFMM883EHqhImaJcJ9Rzs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR03MB6712
+References: <20240304081348.197341-1-21cnbao@gmail.com> <20240304081348.197341-6-21cnbao@gmail.com>
+ <c9702789-5772-4750-a609-e44a5bbd8468@arm.com> <CANzGp4+p3xSo9uX2i7K2bSZ3VKEQQChAVzdmBD3O2qXq_cE2yA@mail.gmail.com>
+ <85b59657-9660-41a2-b091-0c6ec4a6ef16@arm.com>
+In-Reply-To: <85b59657-9660-41a2-b091-0c6ec4a6ef16@arm.com>
+From: Chuanhua Han <chuanhuahan@gmail.com>
+Date: Fri, 15 Mar 2024 09:16:26 +0800
+Message-ID: <CANzGp4+g2_UJcnUab_c0o109nx9rZmXLrtwuZnxzXwsoU6nk6w@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 5/5] mm: support large folios swapin as a whole
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	chengming.zhou@linux.dev, chrisl@kernel.org, david@redhat.com, 
+	hannes@cmpxchg.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, mhocko@suse.com, nphamcs@gmail.com, 
+	shy828301@gmail.com, steven.price@arm.com, surenb@google.com, 
+	wangkefeng.wang@huawei.com, willy@infradead.org, xiang@kernel.org, 
+	ying.huang@intel.com, yosryahmed@google.com, yuzhao@google.com, 
+	Chuanhua Han <hanchuanhua@oppo.com>, Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Neil,
-   Thanks for your review.
+Ryan Roberts <ryan.roberts@arm.com> =E4=BA=8E2024=E5=B9=B43=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E5=9B=9B 21:57=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 14/03/2024 12:56, Chuanhua Han wrote:
+> > Ryan Roberts <ryan.roberts@arm.com> =E4=BA=8E2024=E5=B9=B43=E6=9C=8813=
+=E6=97=A5=E5=91=A8=E4=B8=89 00:33=E5=86=99=E9=81=93=EF=BC=9A
+> >>
+> >> On 04/03/2024 08:13, Barry Song wrote:
+> >>> From: Chuanhua Han <hanchuanhua@oppo.com>
+> >>>
+> >>> On an embedded system like Android, more than half of anon memory is
+> >>> actually in swap devices such as zRAM. For example, while an app is
+> >>> switched to background, its most memory might be swapped-out.
+> >>>
+> >>> Now we have mTHP features, unfortunately, if we don't support large f=
+olios
+> >>> swap-in, once those large folios are swapped-out, we immediately lose=
+ the
+> >>> performance gain we can get through large folios and hardware optimiz=
+ation
+> >>> such as CONT-PTE.
+> >>>
+> >>> This patch brings up mTHP swap-in support. Right now, we limit mTHP s=
+wap-in
+> >>> to those contiguous swaps which were likely swapped out from mTHP as =
+a
+> >>> whole.
+> >>>
+> >>> Meanwhile, the current implementation only covers the SWAP_SYCHRONOUS
+> >>> case. It doesn't support swapin_readahead as large folios yet since t=
+his
+> >>> kind of shared memory is much less than memory mapped by single proce=
+ss.
+> >>>
+> >>> Right now, we are re-faulting large folios which are still in swapcac=
+he as a
+> >>> whole, this can effectively decrease extra loops and early-exitings w=
+hich we
+> >>> have increased in arch_swap_restore() while supporting MTE restore fo=
+r folios
+> >>> rather than page. On the other hand, it can also decrease do_swap_pag=
+e as
+> >>> PTEs used to be set one by one even we hit a large folio in swapcache=
+.
+> >>>
+> >>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> >>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> >>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> >>> ---
+> >>>  mm/memory.c | 250 ++++++++++++++++++++++++++++++++++++++++++++------=
+--
+> >>>  1 file changed, 212 insertions(+), 38 deletions(-)
+> >>>
+> >>> diff --git a/mm/memory.c b/mm/memory.c
+> >>> index e0d34d705e07..501ede745ef3 100644
+> >>> --- a/mm/memory.c
+> >>> +++ b/mm/memory.c
+> >>> @@ -3907,6 +3907,136 @@ static vm_fault_t handle_pte_marker(struct vm=
+_fault *vmf)
+> >>>       return VM_FAULT_SIGBUS;
+> >>>  }
+> >>>
+> >>> +/*
+> >>> + * check a range of PTEs are completely swap entries with
+> >>> + * contiguous swap offsets and the same SWAP_HAS_CACHE.
+> >>> + * pte must be first one in the range
+> >>> + */
+> >>> +static bool is_pte_range_contig_swap(pte_t *pte, int nr_pages)
+> >>> +{
+> >>> +     int i;
+> >>> +     struct swap_info_struct *si;
+> >>> +     swp_entry_t entry;
+> >>> +     unsigned type;
+> >>> +     pgoff_t start_offset;
+> >>> +     char has_cache;
+> >>> +
+> >>> +     entry =3D pte_to_swp_entry(ptep_get_lockless(pte));
+> >>
+> >> Given you are getting entry locklessly, I expect it could change under=
+ you? So
+> >> probably need to check that its a swap entry, etc. first?
+> > The following non_swap_entry checks to see if it is a swap entry.
+>
+> No, it checks if something already known to be a "swap entry" type is act=
+ually
+> describing a swap entry, or a non-swap entry (e.g. migration entry, hwpoi=
+son
+> entry, etc.) Swap entries with type >=3D MAX_SWAPFILES don't actually des=
+cribe swap:
+>
+> static inline int non_swap_entry(swp_entry_t entry)
+> {
+>         return swp_type(entry) >=3D MAX_SWAPFILES;
+> }
+>
+>
+> So you need to do something like:
+>
+> pte =3D ptep_get_lockless(pte);
+> if (pte_none(pte) || !pte_present(pte))
+>         return false;
+> entry =3D pte_to_swp_entry(pte);
+> if (non_swap_entry(entry))
+>         return false;
+> ...
+>
+Indeed, this will more accurate, thank you very much for your advise!
+> >>
+> >>> +     if (non_swap_entry(entry))
+> >>> +             return false;
+> >>> +     start_offset =3D swp_offset(entry);
+> >>> +     if (start_offset % nr_pages)
+> >>> +             return false;
+> >>> +
+> >>> +     si =3D swp_swap_info(entry);
+> >>
+> >> What ensures si remains valid (i.e. swapoff can't happen)? If swapoff =
+can race,
+> >> then swap_map may have been freed when you read it below. Holding the =
+PTL can
+> >> sometimes prevent it, but I don't think you're holding that here (you'=
+re using
+> >> ptep_get_lockless(). Perhaps get_swap_device()/put_swap_device() can h=
+elp?
+> > Thank you for your review,you are righit! this place reaally needs
+> > get_swap_device()/put_swap_device().
+> >>
+> >>> +     type =3D swp_type(entry);
+> >>> +     has_cache =3D si->swap_map[start_offset] & SWAP_HAS_CACHE;
+> >>> +     for (i =3D 1; i < nr_pages; i++) {
+> >>> +             entry =3D pte_to_swp_entry(ptep_get_lockless(pte + i));
+> >>> +             if (non_swap_entry(entry))
+> >>> +                     return false;
+> >>> +             if (swp_offset(entry) !=3D start_offset + i)
+> >>> +                     return false;
+> >>> +             if (swp_type(entry) !=3D type)
+> >>> +                     return false;
+> >>> +             /*
+> >>> +              * while allocating a large folio and doing swap_read_f=
+olio for the
+> >>> +              * SWP_SYNCHRONOUS_IO path, which is the case the being=
+ faulted pte
+> >>> +              * doesn't have swapcache. We need to ensure all PTEs h=
+ave no cache
+> >>> +              * as well, otherwise, we might go to swap devices whil=
+e the content
+> >>> +              * is in swapcache
+> >>> +              */
+> >>> +             if ((si->swap_map[start_offset + i] & SWAP_HAS_CACHE) !=
+=3D has_cache)
+> >>> +                     return false;
+> >>> +     }
+> >>> +
+> >>> +     return true;
+> >>> +}
+> >>
+> >> I created swap_pte_batch() for the swap-out series [1]. I wonder if th=
+at could
+> >> be extended for the SWAP_HAS_CACHE checks? Possibly not because it ass=
+umes the
+> >> PTL is held, and you are lockless here. Thought it might be of interes=
+t though.
+> >>
+> >> [1] https://lore.kernel.org/linux-mm/20240311150058.1122862-3-ryan.rob=
+erts@arm.com/
+> >>
+> > Thanks. It's probably simily to ours, but as you said we are lockless
+> > here, and we need to check has_cache.
+> >>> +
+> >>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >>> +/*
+> >>> + * Get a list of all the (large) orders below PMD_ORDER that are ena=
+bled
+> >>> + * for this vma. Then filter out the orders that can't be allocated =
+over
+> >>> + * the faulting address and still be fully contained in the vma.
+> >>> + */
+> >>> +static inline unsigned long get_alloc_folio_orders(struct vm_fault *=
+vmf)
+> >>> +{
+> >>> +     struct vm_area_struct *vma =3D vmf->vma;
+> >>> +     unsigned long orders;
+> >>> +
+> >>> +     orders =3D thp_vma_allowable_orders(vma, vma->vm_flags, false, =
+true, true,
+> >>> +                                       BIT(PMD_ORDER) - 1);
+> >>> +     orders =3D thp_vma_suitable_orders(vma, vmf->address, orders);
+> >>> +     return orders;
+> >>> +}
+> >>> +#endif
+> >>> +
+> >>> +static struct folio *alloc_swap_folio(struct vm_fault *vmf)
+> >>> +{
+> >>> +     struct vm_area_struct *vma =3D vmf->vma;
+> >>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >>> +     unsigned long orders;
+> >>> +     struct folio *folio;
+> >>> +     unsigned long addr;
+> >>> +     pte_t *pte;
+> >>> +     gfp_t gfp;
+> >>> +     int order;
+> >>> +
+> >>> +     /*
+> >>> +      * If uffd is active for the vma we need per-page fault fidelit=
+y to
+> >>> +      * maintain the uffd semantics.
+> >>> +      */
+> >>> +     if (unlikely(userfaultfd_armed(vma)))
+> >>> +             goto fallback;
+> >>> +
+> >>> +     /*
+> >>> +      * a large folio being swapped-in could be partially in
+> >>> +      * zswap and partially in swap devices, zswap doesn't
+> >>> +      * support large folios yet, we might get corrupted
+> >>> +      * zero-filled data by reading all subpages from swap
+> >>> +      * devices while some of them are actually in zswap
+> >>> +      */
+> >>> +     if (is_zswap_enabled())
+> >>> +             goto fallback;
+> >>> +
+> >>> +     orders =3D get_alloc_folio_orders(vmf);
+> >>> +     if (!orders)
+> >>> +             goto fallback;
+> >>> +
+> >>> +     pte =3D pte_offset_map(vmf->pmd, vmf->address & PMD_MASK);
+> >>
+> >> Could also briefly take PTL here, then is_pte_range_contig_swap() coul=
+d be
+> >> merged with an enhanced swap_pte_batch()?
+> > Yes, it's easy to use a lock here, but I'm wondering if it's
+> > necessary, because when we actually set pte in do_swap_page, we'll
+> > hold PTL to check if the pte changes.
+> >>
+> >>> +     if (unlikely(!pte))
+> >>> +             goto fallback;
+> >>> +
+> >>> +     /*
+> >>> +      * For do_swap_page, find the highest order where the aligned r=
+ange is
+> >>> +      * completely swap entries with contiguous swap offsets.
+> >>> +      */
+> >>> +     order =3D highest_order(orders);
+> >>> +     while (orders) {
+> >>> +             addr =3D ALIGN_DOWN(vmf->address, PAGE_SIZE << order);
+> >>> +             if (is_pte_range_contig_swap(pte + pte_index(addr), 1 <=
+< order))
+> >>> +                     break;
+> >>> +             order =3D next_order(&orders, order);
+> >>> +     }
+> >>
+> >> So in the common case, swap-in will pull in the same size of folio as =
+was
+> >> swapped-out. Is that definitely the right policy for all folio sizes? =
+Certainly
+> >> it makes sense for "small" large folios (e.g. up to 64K IMHO). But I'm=
+ not sure
+> >> it makes sense for 2M THP; As the size increases the chances of actual=
+ly needing
+> >> all of the folio reduces so chances are we are wasting IO. There are s=
+imilar
+> >> arguments for CoW, where we currently copy 1 page per fault - it proba=
+bly makes
+> >> sense to copy the whole folio up to a certain size.
+> > For 2M THP, IO overhead may not necessarily be large? :)
+> > 1.If 2M THP are continuously stored in the swap device, the IO
+> > overhead may not be very large (such as submitting bio with one
+> > bio_vec at a time).
+> > 2.If the process really needs this 2M data, one page-fault may perform
+> > much better than multiple.
+> > 3.For swap devices like zram,using 2M THP might also improve
+> > decompression efficiency.
+> >
+> > On the other hand, if the process only needs a small part of the 2M
+> > data (such as only frequent use of 4K page, the rest of the data is
+> > never accessed), This is indeed give a lark to catch a kite!  :(
+>
+> Yes indeed. It's not always clear-cut what the best thing to do is. It wo=
+uld be
+> good to hear from others on this.
+>
+> >>
+> >> Thanks,
+> >> Ryan
+> >>
+> >>> +
+> >>> +     pte_unmap(pte);
+> >>> +
+> >>> +     /* Try allocating the highest of the remaining orders. */
+> >>> +     gfp =3D vma_thp_gfp_mask(vma);
+> >>> +     while (orders) {
+> >>> +             addr =3D ALIGN_DOWN(vmf->address, PAGE_SIZE << order);
+> >>> +             folio =3D vma_alloc_folio(gfp, order, vma, addr, true);
+> >>> +             if (folio)
+> >>> +                     return folio;
+> >>> +             order =3D next_order(&orders, order);
+> >>> +     }
+> >>> +
+> >>> +fallback:
+> >>> +#endif
+> >>> +     return vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0, vma, vmf->addre=
+ss, false);
+> >>> +}
+> >>> +
+> >>> +
+> >>>  /*
+> >>>   * We enter with non-exclusive mmap_lock (to exclude vma changes,
+> >>>   * but allow concurrent faults), and pte mapped but not yet locked.
+> >>> @@ -3928,6 +4058,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>       pte_t pte;
+> >>>       vm_fault_t ret =3D 0;
+> >>>       void *shadow =3D NULL;
+> >>> +     int nr_pages =3D 1;
+> >>> +     unsigned long start_address;
+> >>> +     pte_t *start_pte;
+> >>>
+> >>>       if (!pte_unmap_same(vmf))
+> >>>               goto out;
+> >>> @@ -3991,35 +4124,41 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>       if (!folio) {
+> >>>               if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+> >>>                   __swap_count(entry) =3D=3D 1) {
+> >>> -                     /*
+> >>> -                      * Prevent parallel swapin from proceeding with
+> >>> -                      * the cache flag. Otherwise, another thread ma=
+y
+> >>> -                      * finish swapin first, free the entry, and swa=
+pout
+> >>> -                      * reusing the same entry. It's undetectable as
+> >>> -                      * pte_same() returns true due to entry reuse.
+> >>> -                      */
+> >>> -                     if (swapcache_prepare(entry)) {
+> >>> -                             /* Relax a bit to prevent rapid repeate=
+d page faults */
+> >>> -                             schedule_timeout_uninterruptible(1);
+> >>> -                             goto out;
+> >>> -                     }
+> >>> -                     need_clear_cache =3D true;
+> >>> -
+> >>>                       /* skip swapcache */
+> >>> -                     folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE,=
+ 0,
+> >>> -                                             vma, vmf->address, fals=
+e);
+> >>> +                     folio =3D alloc_swap_folio(vmf);
+> >>>                       page =3D &folio->page;
+> >>>                       if (folio) {
+> >>>                               __folio_set_locked(folio);
+> >>>                               __folio_set_swapbacked(folio);
+> >>>
+> >>> +                             if (folio_test_large(folio)) {
+> >>> +                                     nr_pages =3D folio_nr_pages(fol=
+io);
+> >>> +                                     entry.val =3D ALIGN_DOWN(entry.=
+val, nr_pages);
+> >>> +                             }
+> >>> +
+> >>> +                             /*
+> >>> +                              * Prevent parallel swapin from proceed=
+ing with
+> >>> +                              * the cache flag. Otherwise, another t=
+hread may
+> >>> +                              * finish swapin first, free the entry,=
+ and swapout
+> >>> +                              * reusing the same entry. It's undetec=
+table as
+> >>> +                              * pte_same() returns true due to entry=
+ reuse.
+> >>> +                              */
+> >>> +                             if (swapcache_prepare_nr(entry, nr_page=
+s)) {
+> >>> +                                     /* Relax a bit to prevent rapid=
+ repeated page faults */
+> >>> +                                     schedule_timeout_uninterruptibl=
+e(1);
+> >>> +                                     goto out;
+> >>> +                             }
+> >>> +                             need_clear_cache =3D true;
+> >>> +
+> >>>                               if (mem_cgroup_swapin_charge_folio(foli=
+o,
+> >>>                                                       vma->vm_mm, GFP=
+_KERNEL,
+> >>>                                                       entry)) {
+> >>>                                       ret =3D VM_FAULT_OOM;
+> >>>                                       goto out_page;
+> >>>                               }
+> >>> -                             mem_cgroup_swapin_uncharge_swap(entry);
+> >>> +
+> >>> +                             for (swp_entry_t e =3D entry; e.val < e=
+ntry.val + nr_pages; e.val++)
+> >>> +                                     mem_cgroup_swapin_uncharge_swap=
+(e);
+> >>>
+> >>>                               shadow =3D get_shadow_from_swap_cache(e=
+ntry);
+> >>>                               if (shadow)
+> >>> @@ -4118,6 +4257,42 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>        */
+> >>>       vmf->pte =3D pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->add=
+ress,
+> >>>                       &vmf->ptl);
+> >>> +
+> >>> +     start_address =3D vmf->address;
+> >>> +     start_pte =3D vmf->pte;
+> >>> +     if (start_pte && folio_test_large(folio)) {
+> >>> +             unsigned long nr =3D folio_nr_pages(folio);
+> >>> +             unsigned long addr =3D ALIGN_DOWN(vmf->address, nr * PA=
+GE_SIZE);
+> >>> +             pte_t *aligned_pte =3D vmf->pte - (vmf->address - addr)=
+ / PAGE_SIZE;
+> >>> +
+> >>> +             /*
+> >>> +              * case 1: we are allocating large_folio, try to map it=
+ as a whole
+> >>> +              * iff the swap entries are still entirely mapped;
+> >>> +              * case 2: we hit a large folio in swapcache, and all s=
+wap entries
+> >>> +              * are still entirely mapped, try to map a large folio =
+as a whole.
+> >>> +              * otherwise, map only the faulting page within the lar=
+ge folio
+> >>> +              * which is swapcache
+> >>> +              */
+> >>> +             if (!is_pte_range_contig_swap(aligned_pte, nr)) {
+> >>> +                     if (nr_pages > 1) /* ptes have changed for case=
+ 1 */
+> >>> +                             goto out_nomap;
+> >>> +                     goto check_pte;
+> >>> +             }
+> >>> +
+> >>> +             start_address =3D addr;
+> >>> +             start_pte =3D aligned_pte;
+> >>> +             /*
+> >>> +              * the below has been done before swap_read_folio()
+> >>> +              * for case 1
+> >>> +              */
+> >>> +             if (unlikely(folio =3D=3D swapcache)) {
+> >>> +                     nr_pages =3D nr;
+> >>> +                     entry.val =3D ALIGN_DOWN(entry.val, nr_pages);
+> >>> +                     page =3D &folio->page;
+> >>> +             }
+> >>> +     }
+> >>> +
+> >>> +check_pte:
+> >>>       if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->or=
+ig_pte)))
+> >>>               goto out_nomap;
+> >>>
+> >>> @@ -4185,12 +4360,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>        * We're already holding a reference on the page but haven't ma=
+pped it
+> >>>        * yet.
+> >>>        */
+> >>> -     swap_free(entry);
+> >>> +     swap_nr_free(entry, nr_pages);
+> >>>       if (should_try_to_free_swap(folio, vma, vmf->flags))
+> >>>               folio_free_swap(folio);
+> >>>
+> >>> -     inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
+> >>> -     dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
+> >>> +     folio_ref_add(folio, nr_pages - 1);
+> >>> +     add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
+> >>> +     add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
+> >>> +
+> >>>       pte =3D mk_pte(page, vma->vm_page_prot);
+> >>>
+> >>>       /*
+> >>> @@ -4200,14 +4377,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>        * exclusivity.
+> >>>        */
+> >>>       if (!folio_test_ksm(folio) &&
+> >>> -         (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+> >>> +         (exclusive || folio_ref_count(folio) =3D=3D nr_pages)) {
+> >>>               if (vmf->flags & FAULT_FLAG_WRITE) {
+> >>>                       pte =3D maybe_mkwrite(pte_mkdirty(pte), vma);
+> >>>                       vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> >>>               }
+> >>>               rmap_flags |=3D RMAP_EXCLUSIVE;
+> >>>       }
+> >>> -     flush_icache_page(vma, page);
+> >>> +     flush_icache_pages(vma, page, nr_pages);
+> >>>       if (pte_swp_soft_dirty(vmf->orig_pte))
+> >>>               pte =3D pte_mksoft_dirty(pte);
+> >>>       if (pte_swp_uffd_wp(vmf->orig_pte))
+> >>> @@ -4216,17 +4393,19 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>
+> >>>       /* ksm created a completely new copy */
+> >>>       if (unlikely(folio !=3D swapcache && swapcache)) {
+> >>> -             folio_add_new_anon_rmap(folio, vma, vmf->address);
+> >>> +             folio_add_new_anon_rmap(folio, vma, start_address);
+> >>>               folio_add_lru_vma(folio, vma);
+> >>> +     } else if (!folio_test_anon(folio)) {
+> >>> +             folio_add_new_anon_rmap(folio, vma, start_address);
+> >>>       } else {
+> >>> -             folio_add_anon_rmap_pte(folio, page, vma, vmf->address,
+> >>> +             folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, st=
+art_address,
+> >>>                                       rmap_flags);
+> >>>       }
+> >>>
+> >>>       VM_BUG_ON(!folio_test_anon(folio) ||
+> >>>                       (pte_write(pte) && !PageAnonExclusive(page)));
+> >>> -     set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
+> >>> -     arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig=
+_pte);
+> >>> +     set_ptes(vma->vm_mm, start_address, start_pte, pte, nr_pages);
+> >>> +     arch_do_swap_page(vma->vm_mm, vma, start_address, pte, vmf->ori=
+g_pte);
+> >>>
+> >>>       folio_unlock(folio);
+> >>>       if (folio !=3D swapcache && swapcache) {
+> >>> @@ -4243,6 +4422,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>       }
+> >>>
+> >>>       if (vmf->flags & FAULT_FLAG_WRITE) {
+> >>> +             if (nr_pages > 1)
+> >>> +                     vmf->orig_pte =3D ptep_get(vmf->pte);
+> >>> +
+> >>>               ret |=3D do_wp_page(vmf);
+> >>>               if (ret & VM_FAULT_ERROR)
+> >>>                       ret &=3D VM_FAULT_ERROR;
+> >>> @@ -4250,14 +4432,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>       }
+> >>>
+> >>>       /* No need to invalidate - it was non-present before */
+> >>> -     update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+> >>> +     update_mmu_cache_range(vmf, vma, start_address, start_pte, nr_p=
+ages);
+> >>>  unlock:
+> >>>       if (vmf->pte)
+> >>>               pte_unmap_unlock(vmf->pte, vmf->ptl);
+> >>>  out:
+> >>>       /* Clear the swap cache pin for direct swapin after PTL unlock =
+*/
+> >>>       if (need_clear_cache)
+> >>> -             swapcache_clear(si, entry);
+> >>> +             swapcache_clear_nr(si, entry, nr_pages);
+> >>>       if (si)
+> >>>               put_swap_device(si);
+> >>>       return ret;
+> >>> @@ -4273,7 +4455,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >>>               folio_put(swapcache);
+> >>>       }
+> >>>       if (need_clear_cache)
+> >>> -             swapcache_clear(si, entry);
+> >>> +             swapcache_clear_nr(si, entry, nr_pages);
+> >>>       if (si)
+> >>>               put_swap_device(si);
+> >>>       return ret;
+> >>> @@ -4309,15 +4491,7 @@ static struct folio *alloc_anon_folio(struct v=
+m_fault *vmf)
+> >>>       if (unlikely(userfaultfd_armed(vma)))
+> >>>               goto fallback;
+> >>>
+> >>> -     /*
+> >>> -      * Get a list of all the (large) orders below PMD_ORDER that ar=
+e enabled
+> >>> -      * for this vma. Then filter out the orders that can't be alloc=
+ated over
+> >>> -      * the faulting address and still be fully contained in the vma=
+.
+> >>> -      */
+> >>> -     orders =3D thp_vma_allowable_orders(vma, vma->vm_flags, false, =
+true, true,
+> >>> -                                       BIT(PMD_ORDER) - 1);
+> >>> -     orders =3D thp_vma_suitable_orders(vma, vmf->address, orders);
+> >>> -
+> >>> +     orders =3D get_alloc_folio_orders(vmf);
+> >>>       if (!orders)
+> >>>               goto fallback;
+> >>>
+> >>
+> >>
+> >
+> >
+>
 
-On 2024/3/14 17:04, Neil Armstrong wrote:
-> [ EXTERNAL EMAIL ]
-> 
-> On 14/03/2024 06:19, Xianwei Zhao wrote:
->> Hi Dmitry,
->>     Thanks for your review.
->>
->> On 2024/3/13 17:53, Dmitry Rokosov wrote:
->>> [????????? ddrokosov@salutedevices.com ????????? 
->>> https://aka.ms/LearnAboutSenderIdentification?????????????]
->>>
->>> [ EXTERNAL EMAIL ]
->>>
->>> Hello Xianwei,
->>>
->>> On Tue, Mar 12, 2024 at 05:18:59PM +0800, Xianwei Zhao via B4 Relay 
->>> wrote:
->>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>
->>>> Amlogic A4 is an application processor designed for smart audio
->>>> and IoT applications.
->>>>
->>>> Add basic support for the A4 based Amlogic BA400 board, which describes
->>>> the following components: CPU, GIC, IRQ, Timer and UART.
->>>> These are capable of booting up into the serial console.
->>>>
->>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>> ---
->>>>   arch/arm64/boot/dts/amlogic/Makefile               |  1 +
->>>>   .../boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts   | 43 ++++++++++
->>>>   arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 99 
->>>> ++++++++++++++++++++++
->>>>   3 files changed, 143 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile 
->>>> b/arch/arm64/boot/dts/amlogic/Makefile
->>>> index 1ab160bf928a..9a50ec11bb8d 100644
->>>> --- a/arch/arm64/boot/dts/amlogic/Makefile
->>>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
->>>> @@ -1,4 +1,5 @@
->>>>   # SPDX-License-Identifier: GPL-2.0
->>>> +dtb-$(CONFIG_ARCH_MESON) += amlogic-a4-a113l2-ba400.dtb
->>>>   dtb-$(CONFIG_ARCH_MESON) += amlogic-c3-c302x-aw409.dtb
->>>>   dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-an400.dtb
->>>>   dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-khadas-vim4.dtb
->>>> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts 
->>>> b/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts
->>>> new file mode 100644
->>>> index 000000000000..60f9f23858c6
->>>> --- /dev/null
->>>> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts
->>>> @@ -0,0 +1,43 @@
->>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>> +/*
->>>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
->>>> + */
->>>> +
->>>> +/dts-v1/;
->>>> +
->>>> +#include "amlogic-a4.dtsi"
->>>> +
->>>> +/ {
->>>> +     model = "Amlogic A113L2 ba400 Development Board";
->>>> +     compatible = "amlogic,ba400","amlogic,a4";
->>>> +     interrupt-parent = <&gic>;
->>>> +     #address-cells = <2>;
->>>> +     #size-cells = <2>;
->>>> +
->>>> +     aliases {
->>>> +             serial0 = &uart_b;
->>>> +     };
->>>> +
->>>> +     memory@0 {
->>>> +             device_type = "memory";
->>>> +             reg = <0x0 0x0 0x0 0x40000000>;
->>>> +     };
->>>> +
->>>> +     reserved-memory {
->>>> +             #address-cells = <2>;
->>>> +             #size-cells = <2>;
->>>> +             ranges;
->>>> +
->>>> +             /* 52 MiB reserved for ARM Trusted Firmware */
->>>> +             secmon_reserved:linux,secmon {
->>>> +                     compatible = "shared-dma-pool";
->>>> +                     no-map;
->>>> +                     alignment = <0x0 0x400000>;
->>>> +                     reg = <0x0 0x05000000 0x0 0x3400000>;
->>>> +             };
->>>> +     };
->>>> +};
->>>> +
->>>> +&uart_b {
->>>> +     status = "okay";
->>>> +};
->>>> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi 
->>>> b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
->>>> new file mode 100644
->>>> index 000000000000..7e8745010b52
->>>> --- /dev/null
->>>> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
->>>> @@ -0,0 +1,99 @@
->>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>> +/*
->>>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
->>>> + */
->>>> +
->>>> +#include <dt-bindings/interrupt-controller/irq.h>
->>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>>> +#include <dt-bindings/gpio/gpio.h>
->>>> +/ {
->>>> +     cpus {
->>>> +             #address-cells = <2>;
->>>> +             #size-cells = <0>;
->>>> +
->>>> +             cpu0: cpu@0 {
->>>> +                     device_type = "cpu";
->>>> +                     compatible = "arm,cortex-a53";
->>>> +                     reg = <0x0 0x0>;
->>>> +                     enable-method = "psci";
->>>> +             };
->>>> +
->>>> +             cpu1: cpu@1 {
->>>> +                     device_type = "cpu";
->>>> +                     compatible = "arm,cortex-a53";
->>>> +                     reg = <0x0 0x1>;
->>>> +                     enable-method = "psci";
->>>> +             };
->>>> +
->>>> +             cpu2: cpu@2 {
->>>> +                     device_type = "cpu";
->>>> +                     compatible = "arm,cortex-a53";
->>>> +                     reg = <0x0 0x2>;
->>>> +                     enable-method = "psci";
->>>> +             };
->>>> +
->>>> +             cpu3: cpu@3 {
->>>> +                     device_type = "cpu";
->>>> +                     compatible = "arm,cortex-a53";
->>>> +                     reg = <0x0 0x3>;
->>>> +                     enable-method = "psci";
->>>> +             };
->>>> +     };
->>>> +
->>>> +     timer {
->>>> +             compatible = "arm,armv8-timer";
->>>> +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | 
->>>> IRQ_TYPE_LEVEL_LOW)>,
->>>> +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | 
->>>> IRQ_TYPE_LEVEL_LOW)>,
->>>> +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | 
->>>> IRQ_TYPE_LEVEL_LOW)>,
->>>> +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | 
->>>> IRQ_TYPE_LEVEL_LOW)>;
->>>> +     };
->>>> +
->>>> +     psci {
->>>> +             compatible = "arm,psci-0.2";
->>>> +             method = "smc";
->>>> +     };
->>>> +
->>>> +     xtal: xtal-clk {
->>>> +             compatible = "fixed-clock";
->>>> +             clock-frequency = <24000000>;
->>>> +             clock-output-names = "xtal";
->>>> +             #clock-cells = <0>;
->>>> +     };
->>>> +
->>>> +     soc {
->>>> +             compatible = "simple-bus";
->>>> +             #address-cells = <2>;
->>>> +             #size-cells = <2>;
->>>> +             ranges;
->>>> +
->>>> +             gic: interrupt-controller@fff01000 {
->>>> +                     compatible = "arm,gic-400";
->>>> +                     #interrupt-cells = <3>;
->>>> +                     #address-cells = <0>;
->>>> +                     interrupt-controller;
->>>> +                     reg = <0x0 0xfff01000 0 0x1000>,
->>>> +                           <0x0 0xfff02000 0 0x2000>,
->>>> +                           <0x0 0xfff04000 0 0x2000>,
->>>> +                           <0x0 0xfff06000 0 0x2000>;
->>>> +                     interrupts = <GIC_PPI 9 
->>>> (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>>> +             };
->>>> +
->>>> +             apb@fe000000 {
->>>> +                     compatible = "simple-bus";
->>>> +                     reg = <0x0 0xfe000000 0x0 0x480000>;
->>>> +                     #address-cells = <2>;
->>>> +                     #size-cells = <2>;
->>>> +                     ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x480000>;
->>>> +
->>>> +                     uart_b: serial@7a000 {
->>>> +                             compatible = "amlogic,meson-s4-uart",
->>>
->>> If I'm not wrong, you need to create dt-binding alias for meson-a4-uart
->>> and use it as 3rd compatible string.
-> 
-> Please add an A4 and A5 compatible using amlogic,meson-s4-uart as fallback,
-> and drop the ao-uart since there's no more AO uart.
-> 
-> Follow how it was done for the T7 in 
-> Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
-> 
-> The amlogic,meson-s4-uart will provide an earlycon like ao-uart did.
-> 
-Will do.
-> Thanks,
-> Neil
-> 
->>>
->> On UART module, A4 and A5 SoCs exactly the same as S4. There's no 
->> difference.
->>>> +                                          "amlogic,meson-ao-uart";
->>>> +                             reg = <0x0 0x7a000 0x0 0x18>;
->>>> +                             interrupts = <GIC_SPI 169 
->>>> IRQ_TYPE_EDGE_RISING>;
->>>> +                             clocks = <&xtal>, <&xtal>, <&xtal>;
->>>> +                             clock-names = "xtal", "pclk", "baud";
->>>> +                             status = "disabled";
->>>> +                     };
->>>> +             };
->>>> +     };
->>>> +};
->>>>
->>>> -- 
->>>> 2.37.1
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-amlogic mailing list
->>>> linux-amlogic@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
->>>
->>> -- 
->>> Thank you,
->>> Dmitry
-> 
+
+--=20
+Thanks,
+Chuanhua
