@@ -1,67 +1,67 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03854524C3;
-	Fri, 15 Mar 2024 21:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A431445972;
+	Fri, 15 Mar 2024 21:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710537382; cv=fail; b=PrjOkOOOdfajJvsDD0J128Z1Zx605MaHBnRz7DFXcyAFOD2Jqz7ahpVpQ2gvNqC5H0fbOHhio4luCheKb4mB1CMFSkGOS9Sw8qCyDicTsLnONQoDGYHsji7zdUBHY8ORzRn5ru7F2lgjSwjYkiWV7EI2NG4kc6cUg20fTH/RGwg=
+	t=1710537383; cv=fail; b=fiq/OEjPivCNF4dI/j8nyuXyhAJAsIMpY+kWnd4na9SWsr12fjrJ6sujO6KtOHV+cyta4FLgrhSVNHCYmMKHHIUk1WFJpMObJp3g9YAF6qL88zX5u3sEXUanRBJpaECDtHH03ncyPINy0Lay53Dn2Kfr3WWf0qX5oVGbogpXH9k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710537382; c=relaxed/simple;
-	bh=6sF7qy8PS+a8W+NPl4Ep0P00bX+WJf5susRGkG+mGgA=;
+	s=arc-20240116; t=1710537383; c=relaxed/simple;
+	bh=wDsDV1c7svjqRtZ5j+DN6KnViEfq84OlloGRiL4gokY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OwW3Zqvr6B5yXqYeBm8NCwLYmmHsTeLILIMb2E0FyCszOwRgATC1Jt+D47hWzQPpEgd4pBpt3eKZQlmpBzl8P++Z9XpoLFKEBsnv9uMVLiYD2HESTnCxVH0yckNJ6xn5yVG4AzYolKr1pJZPYnb9Nrt/GkcdQP/mTFih69sfMDQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D33dmYC/; arc=fail smtp.client-ip=40.107.93.59
+	 MIME-Version:Content-Type; b=sjMNUyCnHUK1UF61l0xj9GL3MDRUjQjKyxk+e+6DwtZ4tCrsC2FDp/vEsf7Xc5qB6uLx5Pzr0n/+rYCNX15l3DtrOqczb3PIBF5pGASISjeFs0Ny4tkC8TXriHC9PVigKoN20vsAKiLYulvqCcFZg9lMRHKF6q+x/vrHbxN9i1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xDD3cOal; arc=fail smtp.client-ip=40.107.243.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D33dmYC/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xDD3cOal"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PSDbontWSTQ29LjigBYN1zoW345+qdDA/h9SMoMGnsuiG83cuK3FBoY30LTmusgR+qOsuFMvkl5ZME2srrH7x40FaA48mipF8w1FNrwcqBa/mP8kZBqpd4B0Uy1Ax4zWpFExu090NRfJggVIQ33bviw+kvAhBlXNeCNV/Arq5YCnNC/xx7MU3o7F0n0nTMdm/fOqRfUrEMjYLVOr1X+LhaPSyzyLu3P6Gna0tkAWR5dBxvjNBuInlrK3oXf/hyu3wyQgHoXTDB2K6sshL2u4nSQ2gZNfRRG8HZzhM4frHzV9rRGeOhhFOwIy0wnQ9zxa6LJKsbk28IM7nOiajQbWrQ==
+ b=MqEK/a7pajDMQNNiF5eWaduyuRL+Q7bzkJRTiDM4qPkS48bVxsdPx3Tupkv51lUXntgpDIXq651aalWFBM/eOga0XY7Eqb8mnPWotzK3DYD3zOE4FgBnsTMM9ULYwm9y+9KZpG68c9PWorqAoIeup2DJMEYcg7Qz29iXuvxzoniM+iqdFcP8LFn7zsKtS81R0sj+3ERCI3vLXkV9iZL3iM0KNlZ18YY+5qWSF38kLOpKuGZi0omZnQi5VaaOSIP8bPgnPb+1p10JYkMPor8azMLrMcrejDRm625eA0Mw7lgcK/2NWvZy7Me8JmiHvXUEG0Hay24AZoQUZdv2V02bow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bqv+Knr7fIg09mX5uMLKwGowajJsnIHuU9QcUK1DxNA=;
- b=mFWcwq2QVap8dWrRiz/I+8MGOJQ1zzJFh8D1jZyfizj7xch490dX8BafxHG1pIT/AkQnHvwUuIfEdRdWrB+oy4ZwmI+CtIwKpnA+yLM4B8zg+/a6K8dYM2oGtszKuVIzyqX6uVqBekEkXOzsXFPYBNj/0I7NQdKY1tJHhmYQODMHEzxU4tSuzfoouekMKt1BEeS/dRR6iIOHawjIYkBJvtTSYtBBGmYIcUugxysrJ4ED8KaQpmFu7GAw7KRI5dlP0hpW8C/X8JJ6hIEsSHJdYvOH/xBX0/BQ//yXgpyyF23uRshsDsr1R9Qdq5MdcNg5mnpkY9wGoBGmu8q1VdrU9w==
+ bh=fXglosEm1/uXHZN1v2o5jUrGABE3+HbTQArZbktGcEo=;
+ b=N8sUM+R+ffYbW2JnmqUwzax4Bl/iCD/lpO55EWKl3ko3xFndM2asZd/qeVRrtHtSnihm/yrlft7UgX7qVIPU8WUExzwtef0y2fb0UaCTZQE9kGmCFskopGbvinx8T7g0Uiy6XgmrKcQ68nut8VnL2qCRXqOoWsAOcJM8UQ1HgRdOa/Dy6dIbYN4WMwzDieYTgEW14Uzs6L641bs96QP0no+/9pwxQJaX1fj2LXK+t1O0YMEEU8GyZPKlR9Gv4EFL5BdfRiavELlJsOH51AhYNKps64D7EpHJr6+U62VQxNiVLp6Dz51AmuElbLMNiEtLKFwYw7oMvR1EcwyeRMEIsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bqv+Knr7fIg09mX5uMLKwGowajJsnIHuU9QcUK1DxNA=;
- b=D33dmYC/pPNapkG+fSqARyT6pYJMuxvvZ1lZ47rlyMkTwhxtU2sHJMdueLOL269wRr876xZqws1rLRzl+j2z3mwDdstcXmtDp2dTjibbW0OnraLNiFLyUJ6kzRueRg+mO2xYcRcQL2AcO5eETUs6hzNk2V9WJ4L7Wt1DfsnJhIc=
-Received: from MN2PR07CA0030.namprd07.prod.outlook.com (2603:10b6:208:1a0::40)
- by CH3PR12MB7762.namprd12.prod.outlook.com (2603:10b6:610:151::16) with
+ bh=fXglosEm1/uXHZN1v2o5jUrGABE3+HbTQArZbktGcEo=;
+ b=xDD3cOalDpleSorbN0i+mV7ZlR2KLj313ZJb3K6z5MRTfqcVONGzlkUiBzZtc4YFg/88XVu+6Rbr5/JH+lrE+nzEm+ICCHuSFc2BmfLoHlORKTjC/YfiOzUktqob09oxjBQ3N3VjIZX1NsB6tEstZAtzv4Mpd+4ybubsND/G+IY=
+Received: from DS7PR06CA0020.namprd06.prod.outlook.com (2603:10b6:8:2a::21) by
+ IA0PR12MB8893.namprd12.prod.outlook.com (2603:10b6:208:484::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
- 2024 21:16:16 +0000
-Received: from MN1PEPF0000ECD4.namprd02.prod.outlook.com
- (2603:10b6:208:1a0:cafe::cb) by MN2PR07CA0030.outlook.office365.com
- (2603:10b6:208:1a0::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.22; Fri, 15 Mar
+ 2024 21:16:14 +0000
+Received: from CY4PEPF0000FCC5.namprd03.prod.outlook.com
+ (2603:10b6:8:2a:cafe::2d) by DS7PR06CA0020.outlook.office365.com
+ (2603:10b6:8:2a::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.22 via Frontend
- Transport; Fri, 15 Mar 2024 21:16:16 +0000
+ Transport; Fri, 15 Mar 2024 21:16:14 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- MN1PEPF0000ECD4.mail.protection.outlook.com (10.167.242.132) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC5.mail.protection.outlook.com (10.167.242.107) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7386.12 via Frontend Transport; Fri, 15 Mar 2024 21:16:16 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.7386.12 via Frontend Transport; Fri, 15 Mar 2024 21:16:14 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 15 Mar
- 2024 16:16:16 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ 2024 16:16:14 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 15 Mar
- 2024 14:16:15 -0700
+ 2024 16:16:13 -0500
 Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Fri, 15 Mar 2024 16:16:14 -0500
+ Transport; Fri, 15 Mar 2024 16:16:12 -0500
 From: Tanmay Shah <tanmay.shah@amd.com>
 To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
 	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
@@ -69,9 +69,9 @@ To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
 	<tanmay.shah@amd.com>
 CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] drivers: remoteproc: add Versal and Versal-NET support
-Date: Fri, 15 Mar 2024 14:15:33 -0700
-Message-ID: <20240315211533.1996543-4-tanmay.shah@amd.com>
+Subject: [PATCH 1/3] dt-bindings: remoteproc: add Versal platform support
+Date: Fri, 15 Mar 2024 14:15:31 -0700
+Message-ID: <20240315211533.1996543-2-tanmay.shah@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240315211533.1996543-1-tanmay.shah@amd.com>
 References: <20240315211533.1996543-1-tanmay.shah@amd.com>
@@ -83,95 +83,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: tanmay.shah@amd.com does not designate
+ permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD4:EE_|CH3PR12MB7762:EE_
-X-MS-Office365-Filtering-Correlation-Id: 345e9870-1a4e-4b1c-9d2d-08dc453526a5
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC5:EE_|IA0PR12MB8893:EE_
+X-MS-Office365-Filtering-Correlation-Id: b000f914-8009-44d5-3583-08dc453525a4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Hj90QT88PnDPP/nUgGTXdmN5QyBa+wzUe9sompPy5Lp9QqvEfzvoaKVX+mBXvkG4sD1GpDC0ac7BI0PR7mlFsZkrK8ehB1DvLu+e4E973RwRGcWaysu4Gx/qeCSGH/t52mTBautf1u2Yu7cNTYqmG1QnxftyHBvFNeelDEptyzsHceXvkO6fIGbi8RoV+wjgbtToYHYPow1ve0W7n3Ek+GbpCt0muzkE6pql86knBEacl8sP2POtPTIIEy2yYD5McsSbpI4BA3XvuEa+dQa9Zc0LUY/i/U544Wc+CvGh6vRJ5/BHOjss2WsoLbozRW411fTur/3lTODlF1nCOnuJ0aaIch58eevuJ4aqd/25EcP8IW4uo5wKyTxyun32dYmsrWRuqAJrgFjikj10rrnhoZe8oTiCwN6wLX0mX4EFgBRid765ue4AIAwTGZdFosWzv8sBMBKgPc8YZRPOURvrjjDeYc+6KCGCQPYUWLFMzqTax9SV8/NTjNtmf6oCcxtVisZq/76snUbxVU6bgR29DquOobsA+MrgX3aOGCRJJ7OX+NQbBQ1rHKuthvY+zPIIgAwvsASJWSCZZAAk34G/AAKFOdX35sOBSsDFPFGNx5l3NPdn35i88d3vSzmayihldzqZbYLhW3qFd4yL+Neq/RskB3gCINmXqdOi69g2B6Ej6R/LLEMAA3alLrxyAlQAZHjRgGuoMv2RwyR7sZGuBiQv4tzKjbjm5jMZRIPT2Ez1Xg3O0+omB1HiUaPae80D
+	COPB4pwMqRLVgeZBBQELsYBaLV+4HJ29mE73lSePpMSt186coy28mI2kRAakfDnszhV++TTr73PpQoa5SaZc8e0ttRmY5gZPw33TzB0Re7PH1tg9sBXr9Y360tdbgyeHy9jEZhmSkGcKcFA3vLQ6qcVCJOK4DEj2N+4ND45ajjtpC2oJy4Pj3XfKUXDMXqSbasyBb/jlqwghUxhL/wAAnXHxXD2speEbLkvomyEodxdlkiIMPG2fPJsN5X21aQe6JqVM3bh0BRNjI4qbmm5SCETIrXFWAJyhEgqMTHxdNma4VmNymKiG0aR9go6Y54n4YNcduXLYcpw9hYhh+ltSt418EmrFagGDF60XDtvTB3YvpNRhpVnTJBDx2ujm9RHzNFm0N4U4pF2yvDYswbQVRLniTnxMNC3EM72EUL5gjc1ebM5oflJ7e1laX8bNafxhY9PjoNUHUX1tFcECZfjpMMbEfigrSV9VYpY7Z4IQfLC59QppkfrSz9MdrZPZ7inOajQxjN4rz1Il6jcHjyq4fpDZkS3RdFbbSG+stQ0YHw2zoWS8c7EMsAUzEecMDxrECERadwYT+sxMS6ZkRUErpH8y9MkCcvv2Lyx9pCAtQpnFvJPRSMMiQRPR1nvpSGoTjrUu+nV2ejC0hGYAYF6gzy9kU0AZ0DqIs0poqUk00QXQ9lfRwcpRoQLIYfiIVVCxew/nnyHY7CToJq4LUTOegeFce0X7DTA2GvQx0H3m3nAEV6FM4lmgbOM0pPu6Nhxm
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(82310400014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 21:16:16.3270
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 21:16:14.5775
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 345e9870-1a4e-4b1c-9d2d-08dc453526a5
+X-MS-Exchange-CrossTenant-Network-Message-Id: b000f914-8009-44d5-3583-08dc453525a4
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD4.namprd02.prod.outlook.com
+	CY4PEPF0000FCC5.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7762
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8893
 
-AMD-Xilinx Versal and Versal-NET are successor of ZynqMP platform. ZynqMP
-remoteproc driver is mostly compatible with new platforms except few
-platform specific differences.
-
-Versal has same IP of cortex-R5 cores hence maintained compatible string
-same as ZynqMP platform. However, hardcode TCM addresses are not
-supported for new platforms and must be provided in device-tree as per
-new bindings. This makes TCM representation data-driven and easy to
-maintain. This check is provided in the driver.
-
-For Versal-NET platform, TCM doesn't need to be configured in lockstep
-mode or split mode. Hence that call to PMC firmware is avoided in the
-driver for Versal-NET platform.
+AMD-Xilinx Versal platform is successor of ZynqMP platform. Real-time
+Processor Unit R5 cluster IP on Versal is same as of ZynqMP Platform.
+Only difference is power-domains ID needed by power management firmware.
+Hence, keeping the compatible property same as of zynqmp node.
 
 Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
 ---
- drivers/remoteproc/xlnx_r5_remoteproc.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ .../remoteproc/xlnx,zynqmp-r5fss.yaml         | 93 +++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index d4a22caebaad..193bc159d1b4 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -323,9 +323,12 @@ static int zynqmp_r5_set_mode(struct zynqmp_r5_core *r5_core,
- 		return ret;
- 	}
- 
--	ret = zynqmp_pm_set_tcm_config(r5_core->pm_domain_id, tcm_mode);
--	if (ret < 0)
--		dev_err(r5_core->dev, "failed to configure TCM\n");
-+	/* TCM configuration is not needed in versal-net */
-+	if (device_is_compatible(r5_core->dev, "xlnx,zynqmp-r5f")) {
-+		ret = zynqmp_pm_set_tcm_config(r5_core->pm_domain_id, tcm_mode);
-+		if (ret < 0)
-+			dev_err(r5_core->dev, "failed to configure TCM\n");
-+	}
- 
- 	return ret;
- }
-@@ -933,10 +936,17 @@ static int zynqmp_r5_core_init(struct zynqmp_r5_cluster *cluster,
- 	int ret, i;
- 
- 	r5_core = cluster->r5_cores[0];
+diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+index 629084a84ce6..711da0272250 100644
+--- a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+@@ -293,4 +293,97 @@ examples:
+             };
+         };
+     };
 +
-+	/*
-+	 * New platforms must use device tree for TCM parsing.
-+	 * Only ZynqMP uses hardcode TCM.
-+	 */
- 	if (of_find_property(r5_core->np, "reg", NULL))
- 		ret = zynqmp_r5_get_tcm_node_from_dt(cluster);
--	else
-+	else if (of_machine_is_compatible("xlnx,zynqmp"))
- 		ret = zynqmp_r5_get_tcm_node(cluster);
-+	else
-+		ret = -EINVAL;
- 
- 	if (ret) {
- 		dev_err(dev, "can't get tcm, err %d\n", ret);
-@@ -1198,6 +1208,7 @@ static int zynqmp_r5_remoteproc_probe(struct platform_device *pdev)
- /* Match table for OF platform binding */
- static const struct of_device_id zynqmp_r5_remoteproc_match[] = {
- 	{ .compatible = "xlnx,zynqmp-r5fss", },
-+	{ .compatible = "xlnx,versal-net-r52fss", },
- 	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, zynqmp_r5_remoteproc_match);
++  - |
++    // Versal Split mode configuration
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        remoteproc@ffe00000 {
++            compatible = "xlnx,zynqmp-r5fss";
++            xlnx,cluster-mode = <0>;
++
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x10000>,
++                     <0x0 0x20000 0x0 0xffe20000 0x0 0x10000>,
++                     <0x1 0x0 0x0 0xffe90000 0x0 0x10000>,
++                     <0x1 0x20000 0x0 0xffeb0000 0x0 0x10000>;
++
++            r5f@0 {
++                compatible = "xlnx,zynqmp-r5f";
++                reg = <0x0 0x0 0x0 0x10000>, <0x0 0x20000 0x0 0x10000>;
++                reg-names = "atcm0", "btcm0";
++                power-domains = <&versal_firmware 0x18110005>,
++                                <&versal_firmware 0x1831800b>,
++                                <&versal_firmware 0x1831800c>;
++                memory-region = <&rproc_0_fw_image>, <&rpu0vdev0buffer>,
++                                <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
++                mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
++                mbox-names = "tx", "rx";
++            };
++
++            r5f@1 {
++                compatible = "xlnx,zynqmp-r5f";
++                reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
++                reg-names = "atcm0", "btcm0";
++                power-domains = <&versal_firmware 0x18110006>,
++                                <&versal_firmware 0x1831800d>,
++                                <&versal_firmware 0x1831800e>;
++                memory-region = <&rproc_1_fw_image>, <&rpu1vdev0buffer>,
++                                <&rpu1vdev0vring0>, <&rpu1vdev0vring1>;
++                mboxes = <&ipi_mailbox_rpu1 0>, <&ipi_mailbox_rpu1 1>;
++                mbox-names = "tx", "rx";
++            };
++        };
++    };
++
++  - |
++    // Versal Lockstep configuration
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        remoteproc@ffe00000 {
++            compatible = "xlnx,zynqmp-r5fss";
++            xlnx,cluster-mode = <1>;
++
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x20000>,
++                     <0x0 0x20000 0x0 0xffe20000 0x0 0x20000>;
++
++            r5f@0 {
++                compatible = "xlnx,zynqmp-r5f";
++                reg = <0x0 0x0 0x0 0x10000>,
++                      <0x0 0x20000 0x0 0x10000>,
++                      <0x0 0x10000 0x0 0x10000>,
++                      <0x0 0x30000 0x0 0x10000>;
++                reg-names = "atcm0", "btcm0", "atcm1", "btcm1";
++                power-domains = <&versal_firmware 0x18110005>,
++                                <&versal_firmware 0x1831800b>,
++                                <&versal_firmware 0x1831800c>,
++                                <&versal_firmware 0x1831800d>,
++                                <&versal_firmware 0x1831800e>;
++                memory-region = <&rproc_0_fw_image>, <&rpu0vdev0buffer>,
++                                <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
++                mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
++                mbox-names = "tx", "rx";
++            };
++
++            r5f@1 {
++                compatible = "xlnx,zynqmp-r5f";
++                reg = <0x1 0x0 0x0 0x10000>, <0x1 0x20000 0x0 0x10000>;
++                reg-names = "atcm0", "btcm0";
++                power-domains = <&versal_firmware 0x18110006>,
++                                <&versal_firmware 0x1831800d>,
++                                <&versal_firmware 0x1831800e>;
++                memory-region = <&rproc_1_fw_image>, <&rpu1vdev0buffer>,
++                                <&rpu1vdev0vring0>, <&rpu1vdev0vring1>;
++                mboxes = <&ipi_mailbox_rpu1 0>, <&ipi_mailbox_rpu1 1>;
++                mbox-names = "tx", "rx";
++            };
++        };
++    };
+ ...
 -- 
 2.25.1
 
