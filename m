@@ -1,46 +1,46 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2053.outbound.protection.outlook.com [40.107.21.53])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2043.outbound.protection.outlook.com [40.107.21.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BA31B597;
-	Fri, 15 Mar 2024 09:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366631863E;
+	Fri, 15 Mar 2024 09:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710496585; cv=fail; b=Cpz4MrkrIKd4lEHI2oBUwRG7xlXXPUxG0onTRlsEvEGgzBag7d448BLLRSjV+g1Kv5WTf305QnEkK6icKmLnkgbmUwHjZFrFxKi0FXk4GuILhS35jxFPM//G5qe/OiAVjuI/fVDlhAWKMUUJ30gfc+LJcuU0ZDiwM3QwHa95Ahk=
+	t=1710496599; cv=fail; b=MIawAnds/79B9VnN/LgROleTDNGmI1XgRahq9Iqtn7FTy8oumTEO6iyG4QTz5qU9eW8BKB2JASe+IWYbEcqmAvCtVAeVFhbUg43oE9lJxMJTGrgwTS5yhOa2Sodjj4s2xjU3NFXnptP2D3Ey28L/kMTu4deJxNx9KGr3KuNZDUM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710496585; c=relaxed/simple;
-	bh=xbFNVITbmd1tzj8lANbiUA9dzJ7KbSb0NICDz3cEPyI=;
+	s=arc-20240116; t=1710496599; c=relaxed/simple;
+	bh=rwYqhNYoHdtUwYDATizhZoLEgdMlNqIGfle6Tw2boG4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dPs7/wrrBpuZgcjY9jtwGzqMs9HMC5egUezy5wAWA+LIkvGdL5hj0up6I9B4pznAS7xL4GwCBUzKk6PR6wwbwQL+3s4wP7xkjQXzVDH97xmgBqp6MJ7td9UWsyaiYHm3lJRiblpYMFS910BY118foqFMOpkJcwBu5i9geytHzYw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=PGaTpbOY; arc=fail smtp.client-ip=40.107.21.53
+	 Content-Type:MIME-Version; b=mJbb0xzF/c7VDI5SNh87Ic7Gv5DTvjwN38JaolM0PNib7EbHlz4DOm3U5DD+EPRebWjheMcMaf1YWD1I3XPtSC7HIOXLrHoojtjV1+dz3ClJ24W2D9Nw5gr/trSvDN6bNVIC/LyiC1+YS5qBaZ5Lp5GhNCgvhWS1WzsZqjcZgMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MVACsic4; arc=fail smtp.client-ip=40.107.21.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PGaTpbOY"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MVACsic4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZAgOJVOjuQgfxj/AYgXiiLGMQHfh4EjNYzZpHnt92jwJXZ9hyEessQxAEdyJ2RO0DuY4rSK96r3vG73dt9mf3wgn3nciO9lp8qtq8n3BhwNtwiZeOG91yU+xzlcvdLHKdGSN9rAAXNevcnHrwlZBhNX0ts7shA5XjErWEzDBZ2qmIdyR21EAkXcmzUNLl4bmsnCWTmSMSskVVnZrglzilOW+ZBhCyv/KzjWzkTSY2b451fe3jFVrcitrZBu7HbxdEsKOdv/EZUyhk2NA/AP0r2BwVZS8gkwndCvHU80Z1SCm9iwenWn/H89sbPF4HGMHAFKZlF1XHJ6jsTy71jxHKw==
+ b=krJ6yUw7ewUF8vixYHbLe0o/8bA/3IvarojQ4iS7OB0ot9CHYhjWZHntEFWPaCPw+m1Ed9sFqhV/bOm/FuOxWN9/dDy2P70U2KckdWkiecN7/VqCgB/X9hRBZjwWJQhe9ujL6M0OLcZZPQcn/w3eBeQUs+KO8njVtAfu0fUCLZQKaVA2S+K6esw8AQsyaVnIr04fNM1WCeA5HHbPAfsMu920GlQiyS80W120oeamBOq6mL3ndJ4MF3rvqxslqgvrOov07Tnq3R60JtUh9NFq5LektKef9pcLNStlZKtc8icjAuHZ1AuV3e5SvITiji6U/7GYBNCYTwNpDaR6SOX4mw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NN2dPQSVYZ16l0Ek6H80W/jszQp+QmiMrvz2VJqKC8c=;
- b=fZe9RScF2SRBzX2vVKH0GFSpyPcVgwgkKJhYU0SHWiXHHwOFnd7y/s+KhIoo4q2NaVGAVT+hsprBMWHfS8gWr9m8nLPHbmCKjJbGg13c3mt3tE9q842O9fTCaFFDr9V7fZD+0MdCH/XfgNNDLnXoVJ7eTxwaNU2xZjSwGOlUnAXAFMOZ1Oidd+TQgnSAmTDN/8RoYFySsEsByiKfCWfBGTwAwRQGnMRc/dLQx9r6dJjiuLn+ozAc/SwbSRaDyPzdAMRaEPxs3dWhbyUoQzyLVPAzslEBvtnpyECTWcp+pXW17n+L1mGhPcV+ChXQmk1dmqYj31BaEMyR5cQFl/nrXw==
+ bh=/vyDbuMctvpMPqycrjJSM65sHwairLUE/u4gLzHL5zA=;
+ b=DSRR3xDhc8mXGR3GG5fb8EdbPLkgHP5aiOcIy3jI87iqh3YWhOyZnzxQ+Beg/JP5hUxIduvas1NE6mFJMhKMy65ahszzE6UN8u6tJsivZqjipiePtoo1uc5wIVle7ovIWzdqKamnblDmP5y8AyrmCnQk48sYDiV1pl8Ae7Rw7z1YEqVzC8ch8OP//jwZBBMMb9GEef3gX1wfpDowEfWxZguvPa0bhd48lUMcfy4aO5eusGaactOfs5Mmm5Km+K8B5ZwZ49pT4m9inujNp455hSEjhd+nZg86Ru7/t3lrbZvlP2qHHwWQh3PVvw22gHISlK53f+uRy5eg2+V/wbYiUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NN2dPQSVYZ16l0Ek6H80W/jszQp+QmiMrvz2VJqKC8c=;
- b=PGaTpbOYn5OJg4IZ4uWLjiRSWfZcFw6E0XMmbkNAX2VrQMuTpdyLJGYwr3JzG5zLSb5deorKRCFpZQny3mlBNDWaIACnRWJ4m7upVvB2J66pYCsrOvIC8dp3kNzRogasLviBrcEDaUYsyJjrAgdp69Wg0p/c4PLIur4SrFYx0U4=
+ bh=/vyDbuMctvpMPqycrjJSM65sHwairLUE/u4gLzHL5zA=;
+ b=MVACsic42jNrMy3UsjhoCxOUhzPX0tFFzBSAJRKH2mgQyyh5hHQR8cQ2uyglOhrzf51OAu3CjFEkb6AsTKkx1kFQ2rH/GlyPTQpAwZ3rBllD3RjouTofMZU+2PBoEd8y1zsoI8LGSRId/R2kbHs0EYTDK1v5WlGUVGDlDDdWjdQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
  by AM8PR04MB7444.eurprd04.prod.outlook.com (2603:10a6:20b:1de::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Fri, 15 Mar
- 2024 09:56:20 +0000
+ 2024 09:56:34 +0000
 Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
  ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
  ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7386.021; Fri, 15 Mar 2024
- 09:56:20 +0000
+ 09:56:34 +0000
 From: Xu Yang <xu.yang_2@nxp.com>
 To: Frank.li@nxp.com,
 	will@kernel.org,
@@ -67,9 +67,9 @@ Cc: mike.leach@linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	imx@lists.linux.dev
-Subject: [PATCH v7 6/8] perf: imx_perf: add support for i.MX95 platform
-Date: Fri, 15 Mar 2024 17:55:53 +0800
-Message-Id: <20240315095555.2628684-6-xu.yang_2@nxp.com>
+Subject: [PATCH v7 8/8] perf vendor events arm64:: Add i.MX93 DDR Performance Monitor metrics
+Date: Fri, 15 Mar 2024 17:55:55 +0800
+Message-Id: <20240315095555.2628684-8-xu.yang_2@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240315095555.2628684-1-xu.yang_2@nxp.com>
 References: <20240315095555.2628684-1-xu.yang_2@nxp.com>
@@ -86,262 +86,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|AM8PR04MB7444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3351a12f-c169-4e74-b1b1-08dc44d62a24
+X-MS-Office365-Filtering-Correlation-Id: 5e990d4e-185b-4481-0d4f-08dc44d632b2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	wUQmysr0gmpYHDfwqT/ormktyNo+ii4DNoT1WLB4CU8nEMptoGbNbDwoRXmpclxSuy+JqIk6Lc0iHdPjIxkSzCJHf/A8C/8FSlHZFkO4z6y8OBGWwL2qFic9NHvRIutGL7OfInDOzVK2kH+lBnhOnPArq6hyEFz8nlzX2MAohmdr7tp/eJ1lbLDx7OeIUcBLIesoD/y+JB4FytYUD0rP7D2N5ZUMLlxK+GBTO7WPE4KBpMW6GMZPXFIrd0qjxAHcFLX5S0oTRIAEsCT10eeqZGHvilz4mRcQkGD9EAkxHojdr2wyAEBh2ZY0+1OBq3ZbmZVkecLh4v1Zu7kx7Gq6FlJRvblZ90p8CWLYTMG2tcuy+T7yzH0cQ4XQYhk8mG/DxrA2RJbvKgSwm/J5rPKK8DTxCmLxk6ZfJX3NnD7Msz0NNI6ozSi9c2rQQf9vZEu39h0u39GWSYfL+PSCBm3pAEswbwOo9HyoRNvbNqVy5R6T5k5OSSVJKNPf/xfPFAAA+QqqzpLuYkZTYCcZ5N3Ls6NdrzbYJpVZoZ5vGRq9oOUGaAQ3Vr+Dj6CBnCyg91QpnfopAHLQEz88z/14sY413ypbFir0MS8WrYE38PTfBL9JKLkRTzCcgaz8wOC05PlOmkkwUaPYFEZpNqcjIvrKnJanjnRiE9aS2HcLmrJA6uUR9CYN6S1c1HfiwXSTwaYjOroA45eJ0nDpwQknZAVhvQczz03ZUZ44xPFeFMh+xto=
+	Jw08Qn/k8MTTF4JCIMIWwzkOhXQcwUacpcZ5v3tnWoTlIJU0AwjLTMFvu4dIkpwSQMLa6pxYCxTa3zvPAcqJ9CaCc7hCzWmzmWJn8FdfjZPm68GVjf06PjnRaqAgulINfeAK3XGSYIbtvghez1g9wDCx8/yZPLNkapMDaK/x460OgN5L1VDoxlphCnUPg/9FTLDgfisTUnxc3fuhHSB7T5ePmDhQ8IOQhB8IKCfZ8bUnD8L0Jg721VypZRiclTGJaUi7C9ZkpnzP9p95V+lFHyti8bx4VqqaBWlC4zfUlj7PtlBxHRZa3jXybXMpTseNbT16N8il7W8jt5F5dU7zBktVQJnw4STf6q8pQQ+GAQKiUH8o3M7ukDyjO1Bl49+Y22zgKr2ns5S+K/cIMHG8wFgZX0CT7/Rs05m1xzFQYz8UGLRNG1d7R+xtywI1X4XqfQb5Z6ZdtdQQwa+elNC4O0YjISbgfmIOAOp1rnUDO9VwfBx1U41jjcOFavMY443Rcl5/CxIMLyQh8PXC6Tq5rUgnRMgpxVsBxrEv6BlU6w7Ykb0X6geKsyK1uYAfpauKS7GdKE7+ldHasbSyfcIxQR1j6s4J11TWS/xr2aR28Em411FwOiPsEdb9tuUIWjqUheRxcZ/WP8g/I/QozogtYuhC9+PoTXbh/EGHEI3pv6ufOPd/3ooOUrRI/4zrxQeTWj4Q6txqt0lxTUZE4tjaSY/UTUe3TxzSdu9+g+SSXuw=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005)(52116005)(921011)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QWxfA6VkVF+TafexAV57TC8bLo4AxaTAmD2cM/WnMTOahXbb0upwHbNhkuls?=
- =?us-ascii?Q?2XQxJXG2C5epGhgtQrSAPXr+Dbb8dhSI7jlT4iCfFAyASpa3FXPui/IXdr/m?=
- =?us-ascii?Q?PdyBWB6xet5w1NLwmK88PzGJpQ3hFEyptbT6HYjGzBjq4RUDI4bXkEPRWYzD?=
- =?us-ascii?Q?/p0bxeNJ3jKEsgam4jkYx/XTvK+xdOyYJ9mHMYqwkwV04kLP4gru/wTRpSzs?=
- =?us-ascii?Q?GZECgYUFUvPGh/C6m9MhqMvRS8TDHQNsY+dR0CBhu+SRFw6xq1jtWx7Zu12N?=
- =?us-ascii?Q?rBPmMt5821Zc0cAV4TmxGSa5H808KV2LS4i/ll6/sPF7LadLOg6iEIoyXZpY?=
- =?us-ascii?Q?dWsQwcVRCxk2bxtX2h0XZz91TdX5sQm+RHwLPVSE83gNbfpNEz3B4bqW2/MR?=
- =?us-ascii?Q?NsHsCMIhA7mLLPBXwkgB23SXWWJRp1GnGJmbLu1jLqhbruOaS8R1QvJ44CWl?=
- =?us-ascii?Q?i5zuGeBol31oc8GU7yzQOHlo17Jljw3GZMuurxmykxgmsGi8vg44lx7ZMAcC?=
- =?us-ascii?Q?ik141m0Y0lmDODyY7kx7z+/f25ktCbLcPRBmtIyjHhBq1TtYAyU00LwwEgzJ?=
- =?us-ascii?Q?wh1SdBEdYQEgfn9L8HpIVcWZWDsUGKIc1FfFjcTd18DlIp32WJXK1erFkawP?=
- =?us-ascii?Q?IxGtXpgWbnnVfyNg0hk+2GKOJ3MNViOY65UPgnLw3fv/KUIQvx/awXweV/C9?=
- =?us-ascii?Q?X64HNczf/hpKqQnjFgpRreNKozV59Pofp3NYeYaMzcON+dD+hW3AuW/UoXN4?=
- =?us-ascii?Q?fHmWxNXAx++8c5Aumn++vkzpl0ZrqIN+JlqpuReWhNoAsjODAfpb6DTs3yZ2?=
- =?us-ascii?Q?wvmLHF6gaf89fgYyarqvoX2mVhIkyJH6XgAlHvw/gOr9e+lawYKtFa/D6pys?=
- =?us-ascii?Q?Dr9q7otUtwbRUkf9ZY8gNFfOvm81JAjkZ8VIBrhX1mppd8QwHPnaSL1+naDg?=
- =?us-ascii?Q?VIhcUo+5CP2FH37q1W3QWqulmRmBa0Guj84V/tKN1utSsh7bo4RjaXc/hP6s?=
- =?us-ascii?Q?2JKWpwTgCKJ1LyYAjNq5cIxEmbGIRl6tpviYuEIQGgeJVMzg2IcqU3rK2RTt?=
- =?us-ascii?Q?i8Y0kJkjHV42EpsHNxpshiy8Z4X2mzfdx+9/zDwexcWrBA4ysCqblP4ZhTTv?=
- =?us-ascii?Q?vhwjZnBG/JSghqcMk2x43PjD14nikqGNJPlcR/3Tgwr0ulDWKTSG8hgLOg8C?=
- =?us-ascii?Q?kg79xiEGlFMq7iQUvqn7273cEO2O3ywGWJbseRMU23YwiZlX/RGozRbUlhKm?=
- =?us-ascii?Q?e7zkQSqRODqBu5ND3Z3yMHDQu8UvqKmmBwGscDf6BEhJdG8RygIkay2KHZvl?=
- =?us-ascii?Q?iApDQGBOGqh9L/eaxuSIdOXioifm/P5+tNUZi3MRcJs6jgJti0OVgV32yk4m?=
- =?us-ascii?Q?RNQx4f0SdV0kKuRrygM2ZpqEHkGfqBlH6aPdWyvqb+zeYNC8SQ0vPxH61CO+?=
- =?us-ascii?Q?O+q2fTie9AqexfPIaHhucKWz8hiJ5msiD2Myc0zzFc5RM2694mqv1HnU+zmn?=
- =?us-ascii?Q?XuX5b6j7Dfnud90kRvFUdk2DclwxdmOuaZHHA+QS6TC65Z8YfCYeeiIHVQ2L?=
- =?us-ascii?Q?RY6h5XJC1dLJAUafjzvm/NVK4vfXn8fSNy+zwspM?=
+	=?us-ascii?Q?g43Q+tXVw4Ybt/ZXMquurnvNwnRHUhIU2c2Ee4UlZpaKXkc2bjz9LMZ+164a?=
+ =?us-ascii?Q?OOq7iewUDJDgu3VlTVU7U6GY7SLL0qUPVLY9QLycsxEaGMIO5woXqC1VWJzf?=
+ =?us-ascii?Q?6pV7poKq1F91VwztoI7fSg6nC/zwFwXk1nLlCefZF58g6XD6AmVMPAyyyeLP?=
+ =?us-ascii?Q?KJu8o4L8QzJn4JjYBnsRu+PRiE/Jo+PDc9tpWxsivq4Pn9lYgbR8TEBpEHes?=
+ =?us-ascii?Q?uvkOFLivvrcDPGT3QQjC+sxfok3IF5SbJlM6Iv0RSqtJLdJAHjnHdzvBepN1?=
+ =?us-ascii?Q?w1H38a1z+axpuSQosevIVOhM7/UpzId61Eo+ElX9d21/fQFnqjlW5qCSJMvu?=
+ =?us-ascii?Q?Ofg+4JRlND1j+Z88bFkZVUfRC6ui0qLrY+WefQzEOnzsNowm/g1p50f8seDN?=
+ =?us-ascii?Q?XFcM7kmg9Jbe3R3dJULv2xLLVUa+uNRU9H03X8PQD0s07Gpz5A4ZK8ogngUX?=
+ =?us-ascii?Q?/ZvHN3IyPpGHDV1Iv5eLzMZDOYLPrpF1EqWMAWyM6vGMWARY6zoBJpx3MRLQ?=
+ =?us-ascii?Q?RIbmeljS1W9z5x7AIy19UbLRMFVqv6DhM+4YRLqSncZvGiwMpyhU8/d8LKn2?=
+ =?us-ascii?Q?zT8mF+rGjL9lqsI5+29UqLT/hPG/0X79oiZ9mZy9ECX2O13rEdJ6n0Fxt5XT?=
+ =?us-ascii?Q?DnX5rxcDmZEKkWU/sDLS972jsoxJ3/uxQE5YWRxjHniVB66dnWy5eVP2xqpv?=
+ =?us-ascii?Q?dguUVmCfNdT1lghuESCxvif5jqNchjCwpnMZukLfPQz9GVqCHw0wY+VjRGHw?=
+ =?us-ascii?Q?qZwQzYcObgn0odMxFrxL1mLVrejRxSAhha4TcmqMFY5KqAsZ+EYeM6Ar+ziH?=
+ =?us-ascii?Q?pcpfA+bi/Rhy5aosqxUDz2JMgxkwVI6mn9Hm8MTBRuxCLyhj63rUTyurgTeR?=
+ =?us-ascii?Q?N29bsZS0qKXOHkeHom28ITLDypwPVCSQzQvyZ4jjF3fE3LhdP44ksneUJ3sf?=
+ =?us-ascii?Q?sRfL6lZ7f2pBa+STNKko06u4nTZtYmNE1pfL0cxhJ8Yc+1/fsGtA0kmdlibu?=
+ =?us-ascii?Q?R9Vddq6jptpqvrff+MNjON6Y7oBwQA69ZxAfnHYDUioIxH/IYdgSBEFSfeE5?=
+ =?us-ascii?Q?bZPApuruxi5y3LoYd6x2Tb6PXgBuA/JGEr+9Cz+Ukn9KjMY/BbgV8VrAlUJ+?=
+ =?us-ascii?Q?rDAQcdolSk6wv/T55gUJfN28Yp/MYyjb1gAF1uB4h3jcFpKgup631E76YxaM?=
+ =?us-ascii?Q?wapcxMQUnyYZsA9LnPRBLwJvZ0rMnhEb285AKX9OBgoL4igFvUN+Lv0bkiWM?=
+ =?us-ascii?Q?/qiRGKOHH5Qmr3HoqaLHM0DDeZpNPNO/DbopCeSuOvwUltzKKO9Y+IC5/L5D?=
+ =?us-ascii?Q?sItfxzdsWBgv/LWzwfRab6Ae0yynmYa7XV3cbZZx0hQupEsXEJRtRTlEN1/H?=
+ =?us-ascii?Q?NyLBRSwiggxhkZyXGv3PWMwjdXG4ILuW1hOxsv9ZCZvvAOG0D/1UTsmf7VtE?=
+ =?us-ascii?Q?8hfEFBht0x2H4n12HKNuXqrF5aEjoW57zMFo3Itv2l850Qy/XDw5QLdUfnC0?=
+ =?us-ascii?Q?Zm5guSeDnPLCuXM5MHNO39O4idvL9UpoR2JR+sJB+If05IQaS+0rsqV5d9z4?=
+ =?us-ascii?Q?JOe4sqty3825iczbIHWQ9ZXZlybUScHqRYk1rSay?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3351a12f-c169-4e74-b1b1-08dc44d62a24
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e990d4e-185b-4481-0d4f-08dc44d632b2
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 09:56:20.2327
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 09:56:34.6433
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wz1c8cetM5PxN1sA7sZ3ygB4vwCBAucnBfx5+4aOP1aEEAmV79uoCl1W2rvXdb+0GH30ff7QTHAobSL40EEtmA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1TlgGlF6lFNdluvBtxYiFMLaRdiZJO4Dd4qh5JIKsCrhsEjlGWlre2aPN5GBYt0SvP+kZct948fcR2fttS1PWg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7444
 
-i.MX95 has a DDR PMU which is almostly same as i.MX93, it now supports
-read beat and write beat filter capabilities. This will add support for
-i.MX95 and enhance the driver to support specific filter handling for it.
-
-Usage:
-
-For read beat:
-~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt2,axi_mask=ID_MASK,axi_id=ID/
-~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt1,axi_mask=ID_MASK,axi_id=ID/
-~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt0,axi_mask=ID_MASK,axi_id=ID/
-eg: For edma2: perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt0,axi_mask=0x00f,axi_id=0x00c/
-
-For write beat:
-~# perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_wr_beat_filt,axi_mask=ID_MASK,axi_id=ID/
-eg: For edma2: perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_wr_beat_filt,axi_mask=0x00f,axi_id=0x00c/
+Add JSON metrics for i.MX93 DDR Performance Monitor.
 
 Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 
 ---
-Changes in v2:
- - put soc spefific axi filter events to drvdata according
-   to franks suggestions.
- - adjust pmcfg axi_id and axi_mask config
-Changes in v3:
- - no changes
-Changes in v4:
- - only contain imx95 parts
-Changes in v5:
- - improve imx95_ddr_perf_monitor_config()
- - use write_relaxed to pair read_relaxed
-Changes in v6:
- - no changes
 Changes in v7:
- - no changes
+ - new patch
 ---
- drivers/perf/fsl_imx9_ddr_perf.c | 93 ++++++++++++++++++++++++++++++--
- 1 file changed, 90 insertions(+), 3 deletions(-)
+ .../arch/arm64/freescale/imx93/sys/ddrc.json  |  9 +++++++
+ .../arm64/freescale/imx93/sys/metrics.json    | 26 +++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
 
-diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-index c99c43b214cb..bf654e458322 100644
---- a/drivers/perf/fsl_imx9_ddr_perf.c
-+++ b/drivers/perf/fsl_imx9_ddr_perf.c
-@@ -17,9 +17,19 @@
- #define MX93_PMCFG1_RD_BT_FILT_EN	BIT(29)
- #define MX93_PMCFG1_ID_MASK		GENMASK(17, 0)
- 
-+#define MX95_PMCFG1_WR_BEAT_FILT_EN	BIT(31)
-+#define MX95_PMCFG1_RD_BEAT_FILT_EN	BIT(30)
-+
- #define PMCFG2				0x04
- #define MX93_PMCFG2_ID			GENMASK(17, 0)
- 
-+#define PMCFG3				0x08
-+#define PMCFG4				0x0C
-+#define PMCFG5				0x10
-+#define PMCFG6				0x14
-+#define MX95_PMCFG_ID_MASK		GENMASK(9, 0)
-+#define MX95_PMCFG_ID			GENMASK(25, 16)
-+
- /* Global control register affects all counters and takes priority over local control registers */
- #define PMGC0		0x40
- /* Global control register bits */
-@@ -76,13 +86,23 @@ static const struct imx_ddr_devtype_data imx93_devtype_data = {
- 	.identifier = "imx93",
- };
- 
-+static const struct imx_ddr_devtype_data imx95_devtype_data = {
-+	.identifier = "imx95",
-+};
-+
- static inline bool is_imx93(struct ddr_pmu *pmu)
- {
- 	return pmu->devtype_data == &imx93_devtype_data;
- }
- 
-+static inline bool is_imx95(struct ddr_pmu *pmu)
-+{
-+	return pmu->devtype_data == &imx95_devtype_data;
-+}
-+
- static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
--	{.compatible = "fsl,imx93-ddr-pmu", .data = &imx93_devtype_data},
-+	{ .compatible = "fsl,imx93-ddr-pmu", .data = &imx93_devtype_data },
-+	{ .compatible = "fsl,imx95-ddr-pmu", .data = &imx95_devtype_data },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_ddr_pmu_dt_ids);
-@@ -191,6 +211,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_ld_wiq_7, ID(2, 71)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_empty, ID(2, 72)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_trans_filt, ID(2, 73)),	/* imx93 specific*/
-+	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_wr_beat_filt, ID(2, 73)),	/* imx95 specific*/
- 
- 	/* counter3 specific events */
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_collision_0, ID(3, 64)),
-@@ -203,6 +224,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_collision_7, ID(3, 71)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_full, ID(3, 72)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_wr_trans_filt, ID(3, 73)),	/* imx93 specific*/
-+	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt2, ID(3, 73)),	/* imx95 specific*/
- 
- 	/* counter4 specific events */
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_open_0, ID(4, 64)),
-@@ -215,6 +237,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_open_7, ID(4, 71)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_ld_rdq2_rmw, ID(4, 72)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt, ID(4, 73)),	/* imx93 specific*/
-+	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt1, ID(4, 73)),	/* imx95 specific*/
- 
- 	/* counter5 specific events */
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_valid_start_0, ID(5, 64)),
-@@ -226,6 +249,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_valid_start_6, ID(5, 70)),
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_valid_start_7, ID(5, 71)),
- 	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_ld_rdq1, ID(5, 72)),
-+	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt0, ID(5, 73)),	/* imx95 specific*/
- 
- 	/* counter6 specific events */
- 	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_valid_end_0, ID(6, 64)),
-@@ -262,6 +286,13 @@ ddr_perf_events_attrs_is_visible(struct kobject *kobj,
- 		!is_imx93(ddr_pmu))
- 		return 0;
- 
-+	if ((!strcmp(attr->name, "eddrtq_pm_wr_beat_filt") ||
-+		!strcmp(attr->name, "eddrtq_pm_rd_beat_filt2") ||
-+		!strcmp(attr->name, "eddrtq_pm_rd_beat_filt1") ||
-+		!strcmp(attr->name, "eddrtq_pm_rd_beat_filt0")) &&
-+		!is_imx95(ddr_pmu))
-+		return 0;
-+
- 	return attr->mode;
- }
- 
-@@ -414,6 +445,57 @@ static void imx93_ddr_perf_monitor_config(struct ddr_pmu *pmu, int event,
- 	writel_relaxed(pmcfg2, pmu->base + PMCFG2);
- }
- 
-+static void imx95_ddr_perf_monitor_config(struct ddr_pmu *pmu, int event,
-+					  int counter, int axi_id, int axi_mask)
-+{
-+	u32 pmcfg1, pmcfg, offset = 0;
-+
-+	pmcfg1 = readl_relaxed(pmu->base + PMCFG1);
-+
-+	if (event == 73) {
-+		switch (counter) {
-+		case 2:
-+			pmcfg1 |= MX95_PMCFG1_WR_BEAT_FILT_EN;
-+			offset = PMCFG3;
-+			break;
-+		case 3:
-+			pmcfg1 |= MX95_PMCFG1_RD_BEAT_FILT_EN;
-+			offset = PMCFG4;
-+			break;
-+		case 4:
-+			pmcfg1 |= MX95_PMCFG1_RD_BEAT_FILT_EN;
-+			offset = PMCFG5;
-+			break;
-+		case 5:
-+			pmcfg1 |= MX95_PMCFG1_RD_BEAT_FILT_EN;
-+			offset = PMCFG6;
-+			break;
-+		}
-+	} else {
-+		switch (counter) {
-+		case 2:
-+			pmcfg1 &= ~MX95_PMCFG1_WR_BEAT_FILT_EN;
-+			break;
-+		case 3:
-+		case 4:
-+		case 5:
-+			pmcfg1 &= ~MX95_PMCFG1_RD_BEAT_FILT_EN;
-+			break;
-+		}
-+	}
-+
-+	writel_relaxed(pmcfg1, pmu->base + PMCFG1);
-+
-+	if (offset) {
-+		pmcfg = readl_relaxed(pmu->base + offset);
-+		pmcfg &= ~(FIELD_PREP(MX95_PMCFG_ID_MASK, 0x3FF) |
-+			   FIELD_PREP(MX95_PMCFG_ID, 0x3FF));
-+		pmcfg |= (FIELD_PREP(MX95_PMCFG_ID_MASK, axi_mask) |
-+			  FIELD_PREP(MX95_PMCFG_ID, axi_id));
-+		writel_relaxed(pmcfg, pmu->base + offset);
-+	}
-+}
-+
- static void ddr_perf_event_update(struct perf_event *event)
- {
- 	struct ddr_pmu *pmu = to_ddr_pmu(event->pmu);
-@@ -523,8 +605,13 @@ static int ddr_perf_event_add(struct perf_event *event, int flags)
- 	hwc->idx = counter;
- 	hwc->state |= PERF_HES_STOPPED;
- 
--	/* read trans, write trans, read beat */
--	imx93_ddr_perf_monitor_config(pmu, event_id, counter, cfg1, cfg2);
-+	if (is_imx93(pmu))
-+		/* read trans, write trans, read beat */
-+		imx93_ddr_perf_monitor_config(pmu, event_id, counter, cfg1, cfg2);
-+
-+	if (is_imx95(pmu))
-+		/* write beat, read beat2, read beat1, read beat */
-+		imx95_ddr_perf_monitor_config(pmu, event_id, counter, cfg1, cfg2);
- 
- 	if (flags & PERF_EF_START)
- 		ddr_perf_event_start(event, flags);
+diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
+new file mode 100644
+index 000000000000..eeeae4d49fce
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
+@@ -0,0 +1,9 @@
++[
++   {
++           "BriefDescription": "ddr cycles event",
++           "EventCode": "0x00",
++           "EventName": "imx93_ddr.cycles",
++           "Unit": "imx9_ddr",
++           "Compat": "imx93"
++   }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
+new file mode 100644
+index 000000000000..4d2454ca1259
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
+@@ -0,0 +1,26 @@
++[
++   {
++	    "BriefDescription": "bandwidth usage for lpddr4x evk board",
++	    "MetricName": "imx93_bandwidth_usage.lpddr4x",
++	    "MetricExpr": "(((( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8 ) + (( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32 )) / duration_time) / (3733 * 1000000 * 2)",
++	    "ScaleUnit": "1e2%",
++	    "Unit": "imx9_ddr",
++	    "Compat": "imx93"
++   },
++   {
++	    "BriefDescription": "bytes all masters read from ddr",
++	    "MetricName": "imx93_ddr_read.all",
++	    "MetricExpr": "( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8",
++	    "ScaleUnit": "9.765625e-4KB",
++	    "Unit": "imx9_ddr",
++	    "Compat": "imx93"
++   },
++   {
++	    "BriefDescription": "bytes all masters write to ddr",
++	    "MetricName": "imx93_ddr_write.all",
++	    "MetricExpr": "( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32",
++	    "ScaleUnit": "9.765625e-4KB",
++	    "Unit": "imx9_ddr",
++	    "Compat": "imx93"
++   }
++]
 -- 
 2.34.1
 
