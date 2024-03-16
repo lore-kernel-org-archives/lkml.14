@@ -1,101 +1,99 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574601C684
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 17:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2491BDCE;
+	Sat, 16 Mar 2024 17:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710610100; cv=none; b=rTc2/wi4LbfQ1OZXq/CCFQtqT7VguEr/aNh43u/HTQSZPElHe0/LgxDj/dsoZTdxQZUzZ2TjrSXsGMSUJUllc4gsZKCE5m29KCAuD9cdLAW7RR8E7MRgRsQJQpHxYXEKztrYB3Sbdqei79Qoy/r5HEc+Gbdi05efwjMTUFa8E/8=
+	t=1710610326; cv=none; b=YsRNjnoSRVQUk42TELyv5cYlZtqwhBaz2zibeiIt+lEgeTURqxXvKXnzNWlxvpQXW6ddvR+vYT7h0mZq46dqoyOcoltsdJ6dXxsteRm9+ZOakeAubmrP+RQTqzQfABAAbVRuGPfLHBWAo3ny8KPw2z0TwWG6/vaN3ao6nACPNq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710610100; c=relaxed/simple;
-	bh=3cGDUBnZFBGebjNEphHzWwlKl8McZ21twUdcBFIdMxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RpcMIwj0jZ9AuR/L+l/VGnQ6F0VKe7lgKXcJhiBB/3NW3jg8H5QxFa17xUILR9U8xqFV9+TMm2LDQaSq4cipED0oNkFys/9WI/0zQ0gsZQlcjIDBE/j1dKBYF1L+QDQNMG9Rc8NQzqldjJ6eLK/PrHBU9sax+eJbIZJy19XO7HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zy/cUnpk; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zy/cUnpk"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710610096;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ceT0A5OpKZsmi5o1ZFkhltR2cGi15QKceRNYBtO/4yU=;
-	b=Zy/cUnpk+3+aY0gUZps4ug+ZdXWwzfkIX6erIJnCile2KVmsc70ZSh2DH8hc+tudPd3s4m
-	1usqtT6xHolvv2r4Gc4vWMpH7Kyk8LvlmYjNGL+x4Jn6D25Tu2PLhgoGa5XpHlEaQhc0V9
-	ufG8jDPFoJkT4ie6NTooiG4gooiP71k=
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [PATCH] drm: bridge: thc63lvd1024: Switch to use of_graph_get_remote_node()
-Date: Sun, 17 Mar 2024 01:28:00 +0800
-Message-Id: <20240316172800.1168390-1-sui.jingfeng@linux.dev>
+	s=arc-20240116; t=1710610326; c=relaxed/simple;
+	bh=YtFRgsbCyrPdSjoqm5wDEqRAKmSaXz1ojStkEmehoqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eXQ1huV5RxP7LFXVdrnkyfNtuACagNPrPtX74Y74hPDFObTkqOxK5tR87VVgmOHy9QQ7FyK58aueZlOY8ZJpcp6gsXx057Ij2UxXu2e0cpclHq2U3GaPTpWt1XvZsszTDMQQVfBp1lXDULSgafALlOxnSgvkX92/V9nGGq2XZ9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id E76AC8C259D;
+	Sat, 16 Mar 2024 18:31:58 +0100 (CET)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: bcachefs: do not run 6.7: upgrade to 6.8 immediately if you have a multi
+ device fs
+Date: Sat, 16 Mar 2024 18:31:58 +0100
+Message-ID: <12401121.O9o76ZdvQC@lichtvoll.de>
+In-Reply-To: <1962788.PYKUYFuaPT@lichtvoll.de>
+References:
+ <muwlfryvafsskt2l2hgv3szwzjfn7cswmmnoka6zlpz2bxj6lh@ugceww4kv3jr>
+ <foqeflqjf7h2rz4ijmqvfawqzinni3asqtofs3kmdmupv4smtk@7j7mmfve6bti>
+ <1962788.PYKUYFuaPT@lichtvoll.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-To reduce boilerplate, use of_graph_get_remote_node() helper instead of
-the hand-rolling code.
+Martin Steigerwald - 16.03.24, 17:49:52 CET:
+> > > Unfortunately I need to do exactly that, as 6.8.1 breaks hibernation
+>=20
+> > > on ThinkPad T14 AMD Gen 1:
+> [=E2=80=A6]
+>=20
+> > run this tree then:
+> >=20
+> > https://evilpiepirate.org/git/bcachefs.git/log/?h=3Dbcachefs-for-v6.7
+>=20
+> Wonderful. Thanks! Compiling this one instead. Shall I report something
+> to you once I booted into it? I read you had difficulties getting those
+> patches into stable.
 
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
----
- drivers/gpu/drm/bridge/thc63lvd1024.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+It seems that the downgrade succeeded.
 
-diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-index d4c1a601bbb5..5f99f9724081 100644
---- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-+++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-@@ -123,28 +123,10 @@ static int thc63_parse_dt(struct thc63_dev *thc63)
- 	struct device_node *endpoint;
- 	struct device_node *remote;
- 
--	endpoint = of_graph_get_endpoint_by_regs(thc63->dev->of_node,
--						 THC63_RGB_OUT0, -1);
--	if (!endpoint) {
--		dev_err(thc63->dev, "Missing endpoint in port@%u\n",
--			THC63_RGB_OUT0);
--		return -ENODEV;
--	}
--
--	remote = of_graph_get_remote_port_parent(endpoint);
--	of_node_put(endpoint);
--	if (!remote) {
--		dev_err(thc63->dev, "Endpoint in port@%u unconnected\n",
--			THC63_RGB_OUT0);
-+	remote = of_graph_get_remote_node(thc63->dev->of_node,
-+					  THC63_RGB_OUT0, -1);
-+	if (!remote)
- 		return -ENODEV;
--	}
--
--	if (!of_device_is_available(remote)) {
--		dev_err(thc63->dev, "port@%u remote endpoint is disabled\n",
--			THC63_RGB_OUT0);
--		of_node_put(remote);
--		return -ENODEV;
--	}
- 
- 	thc63->next = of_drm_find_bridge(remote);
- 	of_node_put(remote);
--- 
-2.34.1
+=46irst mount:
+
+[   22.565053] bcachefs (dm-5): mounting version 1.4: (unknown version) opt=
+s=3Dmetadata_checksum=3Dxxhash,data_checksum=3Dxxhash,compression=3Dlz4
+[   22.565686] bcachefs (dm-5): recovering from clean shutdown, journal seq=
+ 116996
+[   22.565717] bcachefs (dm-5): Version downgrade required:
+
+[   22.590487] bcachefs (dm-5): alloc_read... done
+[   22.597896] bcachefs (dm-5): stripes_read... done
+[   22.597930] bcachefs (dm-5): snapshots_read... done
+[   22.651106] bcachefs (dm-5): journal_replay... done
+[   22.651667] bcachefs (dm-5): resume_logged_ops... done
+[   22.651736] bcachefs (dm-5): going read-write
+
+I wonder whether there was some text supposed to follow
+"Version downgrade required:". The line feed was in the output.
+
+Second mount:
+
+[  113.059224] bcachefs (dm-5): mounting version 1.3: rebalance_work opts=
+=3Dmetadata_checksum=3Dxxhash,data_checksum=3Dxxhash,compression=3Dlz4
+[  113.059259] bcachefs (dm-5): recovering from clean shutdown, journal seq=
+ 117013
+[  113.083911] bcachefs (dm-5): alloc_read... done
+[  113.091268] bcachefs (dm-5): stripes_read... done
+[  113.091281] bcachefs (dm-5): snapshots_read... done
+[  113.142374] bcachefs (dm-5): journal_replay... done
+[  113.142390] bcachefs (dm-5): resume_logged_ops... done
+[  113.142406] bcachefs (dm-5): going read-write
+
+Thanks,
+=2D-=20
+Martin
+
 
