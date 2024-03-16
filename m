@@ -1,52 +1,46 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4CD1BC41
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 17:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5211BC53
+	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 17:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710608742; cv=none; b=BkqoipURATdZiNOJwL6JXEcwaVlWaiXKx7/z8Xl2kj4vqX18sDeAzjhOHrJ4l6N8dAEl8djd9/lNJDhwgeuzZ68A6WyJgFeQd00RE1OXrYyR1vMKHVHXZNypVeaLUcvNSLDluc45rEYkteQWaqqn0MShq0T8OWhaDNOYOmzzxII=
+	t=1710608893; cv=none; b=kWdAkQrYriZuSPnafmut6qvMks608muA4vdV481Yc7wdSOu/0ff3G7BykWDairvik7QimMCsefTanBgBhMPawchqP6kymTYMdOiVxZ/Ff09POh8tZzlRVt7ZUzaInJuoY3FreLwVwBtonnCdOLFzM93Rq0/cS1a5H3Yby8I8Aww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710608742; c=relaxed/simple;
-	bh=DQRBaBsKmt6Xv5cMCll9mcDgeA1I1nTM7iEy+iYKZ6c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HMKcDL8fOQhtnZd68DH92kEJzzRIAma9BUFHhkfGCro23orDydPlkTO8c6y7bA8w+Pg+Mlh3nDzlHWyUGSwR/CYE/B9s4PwunsTKRYC4HoI4wXH5toyWTIioMA9bTauflVDux6nFg9AChdjXnitwNHeH/b2Oxj98BlssG+E+AQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oiRVoymT; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1710608893; c=relaxed/simple;
+	bh=CK3MIQ+LHn6aar5yvtRcHf096sLPPsqQQO8tyaHQJ94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XbgmvpqRAPHuCXBCchOpvvvJuKJf/SlwthkaTR1R7nWoir0O8SKjKOXg0/7sJ4TJifWvyG5nf2sjom8ZLitmnJtfjUtQKYwWiKZX/nKdcZBlWcQs6U8TjvhT+QKjx5SOcW0A180n09lgvoLLyysVHEksDF8MghpieuGhg3uyOAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=O+ZeE9CL; arc=none smtp.client-ip=80.12.242.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oiRVoymT"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710608738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zL4myksVicIour6XUMzWlw8VhqJACYKy3DZPBN3+yT8=;
-	b=oiRVoymTTXBAKlQAorVIVE6dkSEUWzfJJuFLJJkodKHUmpixANv/zxf/QbaufNMN8OCAkz
-	sYqmD7PazJLMUOalwXCJwT+fMIbl1XnQBGnkKkolkrYNwWRmeKcFPNYQBVIH1ur2L2vLqf
-	aPCs8ybVKSp79Nvu79iqVoynEG6lNiM=
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Sandor Yu <Sandor.yu@nxp.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [PATCH] drm: bridge: dw_hdmi: Switch to of_graph_get_remote_node()
-Date: Sun, 17 Mar 2024 01:05:13 +0800
-Message-Id: <20240316170513.1159724-1-sui.jingfeng@linux.dev>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="O+ZeE9CL"
+Received: from fedora.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id lWwfrdx0634cQlWwfroueZ; Sat, 16 Mar 2024 17:31:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1710606702;
+	bh=fk+ucFrD3yqbJl/SXn+CcoirbFuY/lHmnVNwfXo1N/c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=O+ZeE9CLB0dJs9eF0Hts9ozgB9/lFOORZUnwJ488VlyjOZIlSosYFRg/YHCxIjcWr
+	 BFeeCRMynmt2mDGet0ywofvfYrDgo399NXEXIBFRDF/+C8l1gi1pyRTVrOtUHIp0wE
+	 ZcHZnjBrupKJjxytrNLIJNVnFyYZG4kTcYw9bj5hAZeyA2KbrEbTQmTf1kKqudXmns
+	 kpNFTrnsFzoyRp1fwvgWOc9aQrG0sAIJo4H0esZrgTmtm5Ld5cMMK2jx7suK5wxBEJ
+	 T7pD0ZqM+GQNpN16TYq3R/fUh89UwcYi0FKOXvjN2sApIaRcRiVojeV2yzJz2Fb41z
+	 MunWsmR4VjxUg==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 16 Mar 2024 17:31:42 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] bus: ts-nbus: Fix an error handling path in ts_nbus_probe()
+Date: Sat, 16 Mar 2024 17:31:36 +0100
+Message-ID: <6c887c85434edb17d2217c5198c48018dfa97923.1710606677.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,65 +48,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-To reduce boilerplate, use of_graph_get_remote_node() helper instead of
-the hand-rolling code.
+If of_platform_populate() fails, we must shutdown the FPGA, as already done
+in the remove function.
 
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+Fixes: 5b143d2a6ede ("bus: add driver for the Technologic Systems NBUS")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 31 +++--------------------
- 1 file changed, 4 insertions(+), 27 deletions(-)
+Compile tested only.
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index cceb5aab6c83..9f2bc932c371 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -3291,40 +3291,17 @@ static void dw_hdmi_init_hw(struct dw_hdmi *hdmi)
+This patch is speculative and based on the output of one of my scripts that
+tries to spot calls in .remove function that are not also in the error
+handling path of the probe. I'm not familiar with the pwm_ API.
+
+I don't think that the locking in the remove function is needed here.
+
+Review with care.
+---
+ drivers/bus/ts-nbus.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+index baf22a82c47a..fa1bb9b78446 100644
+--- a/drivers/bus/ts-nbus.c
++++ b/drivers/bus/ts-nbus.c
+@@ -309,13 +309,19 @@ static int ts_nbus_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(dev, ts_nbus);
  
- static int dw_hdmi_parse_dt(struct dw_hdmi *hdmi)
- {
--	struct device_node *endpoint;
- 	struct device_node *remote;
+ 	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+-	if (ret < 0)
+-		return dev_err_probe(dev, ret,
+-				     "failed to populate platform devices on bus\n");
++	if (ret < 0) {
++		dev_err_probe(dev, ret,
++			      "failed to populate platform devices on bus\n");
++		goto err_disable_pwm;
++	}
  
- 	if (!hdmi->plat_data->output_port)
- 		return 0;
+ 	dev_info(dev, "initialized\n");
  
--	endpoint = of_graph_get_endpoint_by_regs(hdmi->dev->of_node,
--						 hdmi->plat_data->output_port,
--						 -1);
--	if (!endpoint) {
--		/*
--		 * On platforms whose bindings don't make the output port
--		 * mandatory (such as Rockchip) the plat_data->output_port
--		 * field isn't set, so it's safe to make this a fatal error.
--		 */
--		dev_err(hdmi->dev, "Missing endpoint in port@%u\n",
--			hdmi->plat_data->output_port);
--		return -ENODEV;
--	}
+ 	return 0;
++
++err_disable_pwm:
++	pwm_disable(ts_nbus->pwm);
++	return ret;
+ }
  
--	remote = of_graph_get_remote_port_parent(endpoint);
--	of_node_put(endpoint);
--	if (!remote) {
--		dev_err(hdmi->dev, "Endpoint in port@%u unconnected\n",
--			hdmi->plat_data->output_port);
-+	remote = of_graph_get_remote_node(hdmi->dev->of_node,
-+					  hdmi->plat_data->output_port,
-+					  -1);
-+	if (!remote)
- 		return -ENODEV;
--	}
--
--	if (!of_device_is_available(remote)) {
--		dev_err(hdmi->dev, "port@%u remote device is disabled\n",
--			hdmi->plat_data->output_port);
--		of_node_put(remote);
--		return -ENODEV;
--	}
- 
- 	hdmi->next_bridge = of_drm_find_bridge(remote);
- 	of_node_put(remote);
+ static void ts_nbus_remove(struct platform_device *pdev)
 -- 
-2.34.1
+2.44.0
 
