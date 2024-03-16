@@ -1,40 +1,40 @@
-Received: from outgoing6.flk.host-h.net (outgoing6.flk.host-h.net [188.40.0.77])
+Received: from outgoing1.flk.host-h.net (outgoing1.flk.host-h.net [188.40.0.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B73947E;
-	Sat, 16 Mar 2024 04:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8295FDDC9;
+	Sat, 16 Mar 2024 04:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.0.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710564895; cv=none; b=TUUC7zA2CGp8zCdJarEm0kSSftlXxBwMLxLEFMhqg0aG2J7N6caHMQYma+WWiznN64k4b2C1xr68NzHY+xK1GtHUjRBizPv49bx0vYqlwVJyOB/wETPG3DUYlSW4klk2uCjclmq5iE53KDwjWTNhMuxpJZMa50B+6kNJbP/J8nI=
+	t=1710564897; cv=none; b=Nc5dze6xariWtOol+UcnSiU3aRTNrwJ4jj/8Jw16H+v2WfTVD6X/3HWZ3SRGi1Q4iAnh3k0dAjv8OZxi2dLfBJ9RAUA3cAYQoYHINm/ptKgwtvhJ08wYiV74gigaT7YNu/cOAvSeI7H1m0RUe2i8UCm6r1KfrgH6N33LDsNVwYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710564895; c=relaxed/simple;
-	bh=7rp0Pu9NxnJumh8kJOikd3FpoQ/JJj8p6U/ZumE2o1A=;
+	s=arc-20240116; t=1710564897; c=relaxed/simple;
+	bh=mAzAMSTRTukHUw/J4m/JTcXSlbdfAQ/smmcAxuo84DE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fo/d4XoVhB3yBfeph4pGLv9tWgRITIUJEXcagBFPX52ymX/pmwM8JG4SpBA1QdRAieVQ+QvdR5QZ6qeD6qeJ3ojDtCEu+Z+3a+u2KWOPa30XemgKVHAVmH2OZk+TAJRYVMUbenVKyS8gmvCUJXpM6Ebb9wWSKHdxtcbFQQwjZdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=tGdo3kY6; arc=none smtp.client-ip=188.40.0.77
+	 MIME-Version; b=SBcvL0KOLeDWJmAwz0QxYFcpJFXjqJNBooIYpjK+BH8Qw2zcvhT9iiHbo79bLs0X0aSgvqYzg2CozHNK7BiksKesxj5o9zqZviI33akeAwrL9KIBROtWmbEYXhG4eDQ/E1aSPJA7XfrvJGwbsKopSsX/LM6Nn23a6JyD1bDnXwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za; spf=pass smtp.mailfrom=risingedge.co.za; dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b=Dw5ajhxU; arc=none smtp.client-ip=188.40.0.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=risingedge.co.za
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=risingedge.co.za
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="tGdo3kY6"
+	dkim=pass (2048-bit key) header.d=risingedge.co.za header.i=@risingedge.co.za header.b="Dw5ajhxU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=risingedge.co.za; s=xneelo; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:reply-to:sender:bcc
-	:content-type; bh=lnVL8IDMIOZz0JFbQHp6O6sCyQ8wUH4ojKu3qTFfjAI=; b=tGdo3kY69Qc
-	BeajyNk11OLZ2r+rfD4w2UdS3yakrrRys4VZp/TJjotY0RvEolddx5rWVapxxTdCKx3A/tg1VDqNq
-	Z6iUr2M/MRr9s8B7Dz/tz1yoHB3f0UZxHPK0okCVcg4XkEu3zRwgDouyQLb1X+STIXnF39zF/NJeX
-	fu7/G/OHHpiJY86EHZexjOH5Vdx6wWW/iOSctWwB6ECFFyzmdQ8PzGv2LKDo8NyOGXZr9EAkrnzrx
-	d8u5oZxFajXy9MUYWBYsF+GFBOHmF2k+0xt+A+UWzDwKdi1BeozfBtx64Czsrszo4VXHENPLr+xQN
-	6sPXjZB6hvQzvwd6XVpfjsg==;
+	:content-type; bh=xbrJVxipSQ8jNIkYdHXETKUO7AhSsFV81H2yyXpjjSk=; b=Dw5ajhxUZvh
+	AcoVlRs7xjetDgmfviLwJkBTqRtDAxmx8HQrS6Nj+LEkbu2GUsiKC1fPDh89StK4rVf5/4zPjixrK
+	bn32YT/bImfsmzi5DKqlddKiMCy/kmL4IGEPlFvKc1N9xCEGSu9CZIQZmXuaS28gnDiZLJJh0ctzu
+	+jjVM1X6s+foLLJ/ibeUvYLgHXgJcsji+ZMsCdNVmkSNwSgE6QdHFnWc2SlSg8Z5xT1GNyHHwJoSd
+	cBAXNM3hYU4Kyo+5MB8maV/3ZAkk9ELQtAhazLrUZ5Eo0OypY7aSYqpXp8TqXmNc4q5oxb+03pki4
+	Tcy98hYx2jl0G8H+JTn99og==;
 Received: from www31.flk1.host-h.net ([188.40.1.173])
-	by antispam2-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	by antispam3-flk1.host-h.net with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rlM4B-00F6Vf-At; Sat, 16 Mar 2024 06:54:44 +0200
+	id 1rlM4J-006jYl-Te; Sat, 16 Mar 2024 06:54:52 +0200
 Received: from [41.144.0.193] (helo=localhost.localdomain)
 	by www31.flk1.host-h.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <justin.swartz@risingedge.co.za>)
-	id 1rlM4A-00048C-Es; Sat, 16 Mar 2024 06:54:42 +0200
+	id 1rlM4J-00048C-0h; Sat, 16 Mar 2024 06:54:51 +0200
 From: Justin Swartz <justin.swartz@risingedge.co.za>
 To: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
 	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
@@ -50,9 +50,9 @@ Cc: linux-mips@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	Justin Swartz <justin.swartz@risingedge.co.za>
-Subject: [PATCH 03/14] mips: dts: ralink: mt7621: reorder mmc regulator attributes
-Date: Sat, 16 Mar 2024 06:54:31 +0200
-Message-Id: <20240316045442.31469-4-justin.swartz@risingedge.co.za>
+Subject: [PATCH 05/14] mips: dts: ralink: mt7621: reorder gpio node attributes
+Date: Sat, 16 Mar 2024 06:54:33 +0200
+Message-Id: <20240316045442.31469-6-justin.swartz@risingedge.co.za>
 In-Reply-To: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
 References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
 Precedence: bulk
@@ -70,7 +70,7 @@ Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.z
 X-SpamExperts-Outgoing-Class: ham
 X-SpamExperts-Outgoing-Evidence: Combined (0.02)
 X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT8htZ8gGswXf61EOVBjPgdtPUtbdvnXkggZ
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT8o38WyELzEmii4SfUihYVYPUtbdvnXkggZ
  3YnVId/Y5jcf0yeVQAvfjHznO7+bT5wCPRB8bAzJcv2cv+UqiTTc2+CpNcmBnO4XM3Sck4bwNogU
  WCl1nkLBzZX0KuJ9bXiS85Z42w/+2OBolTNFbPomXFWCX8oNdggW7HE9XDTdSejrkEpbuUvwMvHx
  3T+KSG//gbuP7hnUK8NQdLwsVWKIFDZRrTGv3rxiw9tFrqFSCFNiLZt/QXQnOBRD+jq1HsKsDh/6
@@ -78,65 +78,53 @@ X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT8htZ8gGswXf61EOVBjPgdtPUt
  0+Txhz2u9qvrL2PODYgMZQApJXOjDLkqunZ9NcY2bHZn7CfFscMZZf3sCkN20I5vMh4akiObI7Kj
  vK7X04QEin24qbfMFd8eGjnYW8aSH5qj4ujh/13psIvqSqJFa1CcANErDW/w69saM9prk3jNnHtn
  nuEt/J9wDZeQfiNOYsLDFBdwYt2XtlLzy7G7T4kla0JNnAWQx3FS11bhwUa9HCIwKB+TroNcRY33
- oNmH4nRQzHQazgY7lmveanvOdQzf6IMJ3345q/s6ySNrGnXycmhg3F9lX/MnL0e1Dw3PzS4XbumC
- n3oZFShGuGVczvnnMQuyLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
- ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz30/jNv+A51L2swh0gYW0eVWShle6
+ oNmH4nRQzHQazgY7lmveanvOdQzf6IMJ3345q/s6ySNrGnXycmhg3DRILuJccke1VKoToJoOkcyo
+ naNQbqJUPRwZtKOTN8gOLtBcNrQxKZYuPe8bdCyw79zlPbqLQkZr26Lcxdvj8cqI+CogZdOhX7v3
+ ClXzrmMENhJLl6MBfhzHVBR0wHQZxzIUka7Uq615Mik1qzcz30+tdk6yIuh9K7v+Nq0Cm3JVhle6
  F/kpBdN+oWjoATjEFDwcaiz0R34rhTN+GTbl4uS+pZovX9cex7Ac4fawcerGI7TrGXpM/B/M0BZd
  PfIU1BX7pZc1sE3vsz58auH/srM2fgZ9JmgLbj7sqoEiwv7LCxIiAE5ODMnmwjvj2589zjbyZCiM
  WpBpW8YvoIIqmZcWhL/r/eFjMjJnMHeiAPOVAT1rE1/vP68Bb4z3v3h3gCdXrv2+9GnNX30LKqXb
  fwFKgm/rnYBl+Mj5KqOl6Jzub/f3QhLRbOgisvi5VU9eNBtgo6zjiatjNO/pnMCjuIvXs/AyV/Ns
  URB/R+FlEHyAzksgfaRvdgw0WK34QWnzHHMcN6qoXPjenLhIOF1oeRYbjF1Hp647mOWoQlc3hL3c
- AHYPcQ0eIL+UT9voGXmPy7AY8kGPMNk6zziadXYGQAd4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
- F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV1Cz
- lxtu/r3bKvHBX/IaJ5ru5N8XgNKu7xfVBtyhaz8SIbtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
+ dBMSQgQtiTUcJp5roVy0aU96ZfGcwLdSWG4WD29QQSZ4u/m4iBmYb1/LCV4/EuVHup06w3Vwxf9C
+ F7D6LKKRTfdjzQ6YC7Heg3Xf7O1TOd6RcY/MXB8eEq3bCN2QohZvyS03iBmgsz450Kmjd3fGV2P3
+ 0st8+ASPPy+/O6l/8CF4mCtYYUNnXVj7+XKu9jjcIbtf63VNbf0lrvssY+k7AHGi1NevGWTo2+h8
  Lhk4HCeZR7ymlGVRtthBJ2y8A5arx6JItKpFaUNPGMMlvbMX0nyK1NiAJ0y2Qvvn6ds6mor35w4f
  SfHzQbABJfgy21HclcZkPRq7NhoxyMwqi8Q23Rgadfh5T5n5D4OHHpbEIgsllZKWnzc5M5WlNtVJ
  qo05MS+4ayUpOtEhdxekWDmK9g==
 X-Report-Abuse-To: spam@antispamquarantine.host-h.net
 
-Reorder the attributes of MMC fixed voltage regulator nodes
-for the sake of compliance with the DTS style guide.
+Shuffle the attributes of the gpio node to appease the DTS
+style guide.
 
 Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 ---
- arch/mips/boot/dts/ralink/mt7621.dtsi | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/mips/boot/dts/ralink/mt7621.dtsi | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/arch/mips/boot/dts/ralink/mt7621.dtsi b/arch/mips/boot/dts/ralink/mt7621.dtsi
-index ec87e46ba..696460b2d 100644
+index d1d4399d7..99d47f286 100644
 --- a/arch/mips/boot/dts/ralink/mt7621.dtsi
 +++ b/arch/mips/boot/dts/ralink/mt7621.dtsi
-@@ -37,20 +37,24 @@ cpuintc: cpuintc {
+@@ -86,13 +86,16 @@ wdt: watchdog@100 {
+ 		};
  
- 	mmc_fixed_3v3: regulator-3v3 {
- 		compatible = "regulator-fixed";
--		regulator-name = "mmc_power";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
+ 		gpio: gpio@600 {
++			compatible = "mediatek,mt7621-gpio";
++			reg = <0x600 0x100>;
 +
- 		enable-active-high;
+ 			#gpio-cells = <2>;
+ 			#interrupt-cells = <2>;
+-			compatible = "mediatek,mt7621-gpio";
 +
- 		regulator-always-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "mmc_power";
- 	};
- 
- 	mmc_fixed_1v8_io: regulator-1v8 {
- 		compatible = "regulator-fixed";
--		regulator-name = "mmc_io";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
+ 			gpio-controller;
+ 			gpio-ranges = <&pinctrl 0 0 95>;
 +
- 		enable-active-high;
-+
- 		regulator-always-on;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-name = "mmc_io";
- 	};
- 
- 	palmbus: palmbus@1e000000 {
+ 			interrupt-controller;
+-			reg = <0x600 0x100>;
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
 -- 
 
 
