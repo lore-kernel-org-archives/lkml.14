@@ -1,243 +1,379 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40494C61
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 02:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEDE2579
+	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 02:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710557088; cv=none; b=PaMX98xpJ7u1ZikA+rgA3B2WJBJuvIGkOO13HHQikpsJhQDOibq4CeHwvgpe2wdpvwzcYl4kymf2F2WYE2pOPInpN+v8Ua5epigI4mrbS5zqUcK5g+OqecA+Ddz/I5dFzXAr+8FpM9coZSkNYCvr039H/FBpPBtI7v0B+RPVmuc=
+	t=1710557576; cv=none; b=FoL1W8sjklS7X/LeN17AHfTtOVcaSstL+r1ZuSt6tmDwQT2IpgQ8V9j2OCbCRCQr89QOhaMg1YLRihXm8HEDRGy2duDvS3IFit7gNKydwS+tQLqOO5D1H3vsoksw2rW26CsIzzpOhTxeJ3MignizsNb0Kc0Ew4CmngfSCM1mlI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710557088; c=relaxed/simple;
-	bh=Jm4aKAWDjE+q969G/2wwzwl4NboEBX2wKFJi6ZuKQGU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qITuyVKw2kDBaKCgeCVqwkR0cBW6L2OHS9AIu2uMSTV+t7MeFEIMeQsOpKsRl7XXNhIMqZAHL1ZochWGUVMIRegU7siMxDD0CVDnJL80Fv2u2tzSN6sDmIO1weKQJQuyza5tKNEdL/16F6loYZVBZC2VGkC/0YBlckDfLKOYrDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TxQPc1529z1h2NK;
-	Sat, 16 Mar 2024 10:42:12 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8F1DA1A016C;
-	Sat, 16 Mar 2024 10:44:41 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by dggpemd100004.china.huawei.com
- (7.185.36.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Sat, 16 Mar
- 2024 10:44:41 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <arnd@arndb.de>, <ardb@kernel.org>, <geert@linux-m68k.org>,
-	<linux@armlinux.org.uk>, <afd@ti.com>, <akpm@linux-foundation.org>,
-	<kirill.shutemov@linux.intel.com>, <geert+renesas@glider.be>,
-	<corbet@lwn.net>, <rppt@kernel.org>, <robh@kernel.org>, <tglx@linutronix.de>,
-	<linus.walleij@linaro.org>, <maskray@google.com>, <liuyuntao12@huawei.com>
-Subject: [PATCH-next v4] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
-Date: Sat, 16 Mar 2024 02:39:32 +0000
-Message-ID: <20240316023932.700685-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710557576; c=relaxed/simple;
+	bh=ONoYL4XYOrO/6V38FWRzOpd8quw8P9OYCw818URL5SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g03Q3KkahoP8M51VG/bK5wOdz1Bfef8AthiUcL/97jQQzBsi9e8rPqLOaBja82KLzrslM3NqlF50nwfY5rgUGCl5JOOBJGhQzM74p490AoRC1NDMYtvTfekP204qEBZbUY+xVomO+AVK8YbLC3k1/HIGmcbA8Ekbx1QTD72kZXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OS38TBQX; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OS38TBQX"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso2061124a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Mar 2024 19:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710557573; x=1711162373; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
+        b=OS38TBQXdJvmCPcBqtVgseCBD92KPMKjZB5CNB1A04ssBRuxFtzhRPn1GciuiaZp/t
+         ZH5bJFCL/HpWMw666xaF9ceynO1+jhCFyauCWBZUGDOD1jkHbl+xoO/jG6Zp360GwjSj
+         i66QeBxSRG87tkQkjPc2WA1M6sUtCwvS7DgrAnPORxwYyGeQf+wuJHESEF51ACE4d88K
+         v4nAXQtE+CrgRNknVt8a/+cuKu8aypzYeDig59JPHUtRYsAH3lqkfrJopeugL+PkOFJP
+         r/+/nAs2w8rmwShkaEIQMuFTq7jUIHueDrkctHW9aB3EK7WEeQJ4EnyrT3UmzNQXv8kk
+         1a+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710557573; x=1711162373;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
+        b=h9W/GGOJQcdGi0f64C3T3BC8CzvGyxGAUTmcIDGXrFD9ge3Z478Ad9rzKVCdJglowG
+         GragDbqq+c0cJf6GPsm3HI8yNUDyk80IRfrJ5a7Vum3bVSH2Z6b+I5H+z7yuFYZKkvlj
+         jsL5l5mm06sJxxlBQ/1yYwNc5ZapP/wpPi5r4p4c0SJnPpuxdLN03ImNr4tWeJEjB7IH
+         Ft54MOoXADarRlaQgQXUbFU+cM6jBIMULI8et1k1CXOG5TqLiXn3hEpr042MhfamssVu
+         515+0/fS+lIjKvrafU9Z5CXmJcnjEwABHw4OZQcDEjKcMEb9aFMjWCK9NQG+KjdLazRj
+         dZcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyE7qJfeRCk49vexWtUuWVqfq6so7MDYSu8fG/04w9ZaX/4pi5CoZR+ndh9HDRenrvBNsHYvIc1J3PwigTAIlHLNAKEmcg4arddUKX
+X-Gm-Message-State: AOJu0YwE+UQXWBPqGFf6XcNfbe7GrVD+sVKLz2fJdQAWXdjZRspt8cxv
+	yWnF6HcohaAdCfjW310en2K+9bo/b/xLTUaWo7bHn5X5ZaH7mevw7npuJnrwsX0=
+X-Google-Smtp-Source: AGHT+IF+mhHYlAObRzpfXYn3IGnPDczeVjZaH7QVUqvtIq9UdyOULCBCqzY79zAwu/GemLxZ182Fng==
+X-Received: by 2002:a17:903:2446:b0:1dd:9cb3:8f96 with SMTP id l6-20020a170903244600b001dd9cb38f96mr6055795pls.42.1710557572964;
+        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
+        by smtp.gmail.com with ESMTPSA id f5-20020a170902684500b001dddbb58d5esm4736209pln.109.2024.03.15.19.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rlKAC-002Wnj-2F;
+	Sat, 16 Mar 2024 13:52:48 +1100
+Date: Sat, 16 Mar 2024 13:52:48 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>, Simon Horman <horms@verge.net.au>,
+	Julian Anastasov <ja@ssi.bg>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Phillip Potter <phil@philpotter.co.uk>,
+	Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Balbir Singh <bsingharora@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Petr Mladek <pmladek@suse.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, John Stultz <jstultz@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Alexander Popov <alex.popov@linux.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
+	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, linux-fsdevel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kexec@lists.infradead.org,
+	bridge@lists.linux.dev, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 11/11] sysctl: treewide: constify the ctl_table argument
+ of handlers
+Message-ID: <ZfUJgML8tk6RWqOC@dread.disaster.area>
+References: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
+ <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemd100004.china.huawei.com (7.185.36.20)
+In-Reply-To: <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
 
-The current arm32 architecture does not yet support the
-HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
-embedded scenarios, and enabling this feature would be beneficial for
-reducing the size of the kernel image.
+On Fri, Mar 15, 2024 at 09:48:09PM +0100, Thomas Weißschuh wrote:
+> Adapt the proc_hander function signature to make it clear that handlers
+> are not supposed to modify their ctl_table argument.
+> 
+> This is a prerequisite to moving the static ctl_table structs into
+> .rodata.
+> By migrating all handlers at once a lengthy transition can be avoided.
+> 
+> The patch was mostly generated by coccinelle with the following script:
+> 
+>     @@
+>     identifier func, ctl, write, buffer, lenp, ppos;
+>     @@
+> 
+>     int func(
+>     - struct ctl_table *ctl,
+>     + const struct ctl_table *ctl,
+>       int write, void *buffer, size_t *lenp, loff_t *ppos)
+>     { ... }
 
-In order to make this work, we keep the necessary tables by annotating
-them with KEEP, also it requires further changes to linker script to KEEP
-some tables and wildcard compiler generated sections into the right place.
-When using ld.lld for linking, KEEP is not recognized within the OVERLAY
-command, and Ard proposed a concise method to solve this problem.
+Which seems to have screwed up the formatting of the XFS code...
 
-It boots normally with defconfig, vexpress_defconfig and tinyconfig.
+> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+> index a191f6560f98..a3ca192eca79 100644
+> --- a/fs/xfs/xfs_sysctl.c
+> +++ b/fs/xfs/xfs_sysctl.c
+> @@ -10,12 +10,11 @@ static struct ctl_table_header *xfs_table_header;
+>  
+>  #ifdef CONFIG_PROC_FS
+>  STATIC int
+> -xfs_stats_clear_proc_handler(
+> -	struct ctl_table	*ctl,
+> -	int			write,
+> -	void			*buffer,
+> -	size_t			*lenp,
+> -	loff_t			*ppos)
+> +xfs_stats_clear_proc_handler(const struct ctl_table *ctl,
+> +			     int			write,
+> +			     void			*buffer,
+> +			     size_t			*lenp,
+> +			     loff_t			*ppos)
 
-The size comparison of zImage is as follows:
-defconfig       vexpress_defconfig      tinyconfig
-5137712         5138024                 424192          no dce
-5032560         4997824                 298384          dce
-2.0%            2.7%                    29.7%           shrink
+... because this doesn't match any format I've ever seen in the
+kernel. The diff for this change shold be just:
 
-When using smaller config file, there is a significant reduction in the
-size of the zImage.
+@@ -10,7 +10,7 @@ static struct ctl_table_header *xfs_table_header;
+ #ifdef CONFIG_PROC_FS
+ STATIC int
+ xfs_stats_clear_proc_handler(
+-	struct ctl_table	*ctl,
++	const struct ctl_table	*ctl,
+ 	int			write,
+ 	void			*buffer,
+ 	size_t			*lenp,
 
-We also tested this patch on a commercially available single-board
-computer, and the comparison is as follows:
-a15eb_config
-2161384         no dce
-2092240         dce
-3.2%            shrink
+>  {
+>  	int		ret, *valp = ctl->data;
+>  
+> @@ -30,12 +29,11 @@ xfs_stats_clear_proc_handler(
+>  }
+>  
+>  STATIC int
+> -xfs_panic_mask_proc_handler(
+> -	struct ctl_table	*ctl,
+> -	int			write,
+> -	void			*buffer,
+> -	size_t			*lenp,
+> -	loff_t			*ppos)
+> +xfs_panic_mask_proc_handler(const struct ctl_table *ctl,
+> +			    int			write,
+> +			    void			*buffer,
+> +			    size_t			*lenp,
+> +			    loff_t			*ppos)
+>  {
+>  	int		ret, *valp = ctl->data;
+>  
+> @@ -51,12 +49,11 @@ xfs_panic_mask_proc_handler(
+>  #endif /* CONFIG_PROC_FS */
+>  
+>  STATIC int
+> -xfs_deprecated_dointvec_minmax(
+> -	struct ctl_table	*ctl,
+> -	int			write,
+> -	void			*buffer,
+> -	size_t			*lenp,
+> -	loff_t			*ppos)
+> +xfs_deprecated_dointvec_minmax(const struct ctl_table *ctl,
+> +			       int			write,
+> +			       void			*buffer,
+> +			       size_t			*lenp,
+> +			       loff_t			*ppos)
+>  {
+>  	if (write) {
+>  		printk_ratelimited(KERN_WARNING
 
-The zImage size has been reduced by approximately 3.2%, which is 70KB on
-2.1M.
+And these need fixing as well.
 
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
-Tested-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
----
-v4:
-   - remove -fdata-sections flag from KBUILD_CFLAGS_KERNEL in drivers/firmware/efi/libstub/Makefile
+A further quick glance at the patch reveals that there are other
+similar screwed up conversions as well.
 
-v3:
-   - A better way to KEEP .vectors section for ld.lld linking.
-   - https://lore.kernel.org/all/20240315063154.696633-1-liuyuntao12@huawei.com/
+> diff --git a/kernel/delayacct.c b/kernel/delayacct.c
+> index 6f0c358e73d8..513791ef573d 100644
+> --- a/kernel/delayacct.c
+> +++ b/kernel/delayacct.c
+> @@ -44,8 +44,9 @@ void delayacct_init(void)
+>  }
+>  
+>  #ifdef CONFIG_PROC_SYSCTL
+> -static int sysctl_delayacct(struct ctl_table *table, int write, void *buffer,
+> -		     size_t *lenp, loff_t *ppos)
+> +static int sysctl_delayacct(const struct ctl_table *table, int write,
+> +			    void *buffer,
+> +			    size_t *lenp, loff_t *ppos)
+>  {
+>  	int state = delayacct_on;
+>  	struct ctl_table t;
 
-v2:
-   - Support config XIP_KERNEL.
-   - Support LLVM compilation.
-   - https://lore.kernel.org/all/20240307151231.654025-1-liuyuntao12@huawei.com/
+Like this.
 
-v1: https://lore.kernel.org/all/20240220081527.23408-1-liuyuntao12@huawei.com/
----
- arch/arm/Kconfig                       | 1 +
- arch/arm/boot/compressed/vmlinux.lds.S | 2 +-
- arch/arm/include/asm/vmlinux.lds.h     | 2 +-
- arch/arm/kernel/entry-armv.S           | 3 +++
- arch/arm/kernel/vmlinux-xip.lds.S      | 4 ++--
- arch/arm/kernel/vmlinux.lds.S          | 6 +++---
- drivers/firmware/efi/libstub/Makefile  | 4 ++++
- 7 files changed, 15 insertions(+), 7 deletions(-)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 724e6d7e128f..e2955e0d9f44 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -450,7 +450,8 @@ static void update_perf_cpu_limits(void)
+>  
+>  static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc);
+>  
+> -int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
+> +int perf_event_max_sample_rate_handler(const struct ctl_table *table,
+> +				       int write,
+>  				       void *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	int ret;
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b14aed3a17ab..45f25f6e7a62 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -114,6 +114,7 @@ config ARM
- 	select HAVE_KERNEL_XZ
- 	select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
- 	select HAVE_KRETPROBES if HAVE_KPROBES
-+	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_OPTPROBES if !THUMB2_KERNEL
-diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-index 3fcb3e62dc56..d411abd4310e 100644
---- a/arch/arm/boot/compressed/vmlinux.lds.S
-+++ b/arch/arm/boot/compressed/vmlinux.lds.S
-@@ -125,7 +125,7 @@ SECTIONS
- 
-   . = BSS_START;
-   __bss_start = .;
--  .bss			: { *(.bss) }
-+  .bss			: { *(.bss .bss.*) }
-   _end = .;
- 
-   . = ALIGN(8);		/* the stack must be 64-bit aligned */
-diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-index 4c8632d5c432..d60f6e83a9f7 100644
---- a/arch/arm/include/asm/vmlinux.lds.h
-+++ b/arch/arm/include/asm/vmlinux.lds.h
-@@ -42,7 +42,7 @@
- #define PROC_INFO							\
- 		. = ALIGN(4);						\
- 		__proc_info_begin = .;					\
--		*(.proc.info.init)					\
-+		KEEP(*(.proc.info.init))				\
- 		__proc_info_end = .;
- 
- #define IDMAP_TEXT							\
-diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-index 6150a716828c..f01d23a220e6 100644
---- a/arch/arm/kernel/entry-armv.S
-+++ b/arch/arm/kernel/entry-armv.S
-@@ -1065,6 +1065,7 @@ vector_addrexcptn:
- 	.globl	vector_fiq
- 
- 	.section .vectors, "ax", %progbits
-+	.reloc  .text, R_ARM_NONE, .
- 	W(b)	vector_rst
- 	W(b)	vector_und
- ARM(	.reloc	., R_ARM_LDR_PC_G0, .L__vector_swi		)
-@@ -1078,6 +1079,7 @@ THUMB(	.reloc	., R_ARM_THM_PC12, .L__vector_swi		)
- 
- #ifdef CONFIG_HARDEN_BRANCH_HISTORY
- 	.section .vectors.bhb.loop8, "ax", %progbits
-+	.reloc  .text, R_ARM_NONE, .
- 	W(b)	vector_rst
- 	W(b)	vector_bhb_loop8_und
- ARM(	.reloc	., R_ARM_LDR_PC_G0, .L__vector_bhb_loop8_swi	)
-@@ -1090,6 +1092,7 @@ THUMB(	.reloc	., R_ARM_THM_PC12, .L__vector_bhb_loop8_swi	)
- 	W(b)	vector_bhb_loop8_fiq
- 
- 	.section .vectors.bhb.bpiall, "ax", %progbits
-+	.reloc  .text, R_ARM_NONE, .
- 	W(b)	vector_rst
- 	W(b)	vector_bhb_bpiall_und
- ARM(	.reloc	., R_ARM_LDR_PC_G0, .L__vector_bhb_bpiall_swi	)
-diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
-index c16d196b5aad..5eddb75a7174 100644
---- a/arch/arm/kernel/vmlinux-xip.lds.S
-+++ b/arch/arm/kernel/vmlinux-xip.lds.S
-@@ -63,7 +63,7 @@ SECTIONS
- 	. = ALIGN(4);
- 	__ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
- 		__start___ex_table = .;
--		ARM_MMU_KEEP(*(__ex_table))
-+		ARM_MMU_KEEP(KEEP(*(__ex_table)))
- 		__stop___ex_table = .;
- 	}
- 
-@@ -83,7 +83,7 @@ SECTIONS
- 	}
- 	.init.arch.info : {
- 		__arch_info_begin = .;
--		*(.arch.info.init)
-+		KEEP(*(.arch.info.init))
- 		__arch_info_end = .;
- 	}
- 	.init.tagtable : {
-diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-index bd9127c4b451..de373c6c2ae8 100644
---- a/arch/arm/kernel/vmlinux.lds.S
-+++ b/arch/arm/kernel/vmlinux.lds.S
-@@ -74,7 +74,7 @@ SECTIONS
- 	. = ALIGN(4);
- 	__ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {
- 		__start___ex_table = .;
--		ARM_MMU_KEEP(*(__ex_table))
-+		ARM_MMU_KEEP(KEEP(*(__ex_table)))
- 		__stop___ex_table = .;
- 	}
- 
-@@ -99,7 +99,7 @@ SECTIONS
- 	}
- 	.init.arch.info : {
- 		__arch_info_begin = .;
--		*(.arch.info.init)
-+		KEEP(*(.arch.info.init))
- 		__arch_info_end = .;
- 	}
- 	.init.tagtable : {
-@@ -116,7 +116,7 @@ SECTIONS
- #endif
- 	.init.pv_table : {
- 		__pv_table_begin = .;
--		*(.pv_table)
-+		KEEP(*(.pv_table))
- 		__pv_table_end = .;
- 	}
- 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 31eb1e287ce1..619f1f9d9ba9 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -56,6 +56,10 @@ KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_CFI), $(KBUILD_CFLAGS))
- # disable LTO
- KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO), $(KBUILD_CFLAGS))
- 
-+# The .data section would be renamed to .data.efistub, therefore, remove
-+# `-fdata-sections` flag from KBUILD_CFLAGS_KERNEL
-+KBUILD_CFLAGS_KERNEL := $(filter-out -fdata-sections, $(KBUILD_CFLAGS_KERNEL))
-+
- GCOV_PROFILE			:= n
- # Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
+And this.
+
+> @@ -474,8 +475,10 @@ int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
+>  
+>  int sysctl_perf_cpu_time_max_percent __read_mostly = DEFAULT_CPU_TIME_MAX_PERCENT;
+>  
+> -int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
+> -		void *buffer, size_t *lenp, loff_t *ppos)
+> +int perf_cpu_time_max_percent_handler(const struct ctl_table *table,
+> +				      int write,
+> +				      void *buffer, size_t *lenp,
+> +				      loff_t *ppos)
+>  {
+>  	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+>  
+
+And this.
+
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index b2fc2727d654..003f0f5cb111 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -239,9 +239,10 @@ static long hung_timeout_jiffies(unsigned long last_checked,
+>  /*
+>   * Process updating of timeout sysctl
+>   */
+> -static int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
+> -				  void *buffer,
+> -				  size_t *lenp, loff_t *ppos)
+> +static int proc_dohung_task_timeout_secs(const struct ctl_table *table,
+> +					 int write,
+> +					 void *buffer,
+> +					 size_t *lenp, loff_t *ppos)
+>  {
+>  	int ret;
+>  
+
+And this.
+
+> diff --git a/kernel/latencytop.c b/kernel/latencytop.c
+> index 781249098cb6..0a5c22b19821 100644
+> --- a/kernel/latencytop.c
+> +++ b/kernel/latencytop.c
+> @@ -65,8 +65,9 @@ static struct latency_record latency_record[MAXLR];
+>  int latencytop_enabled;
+>  
+>  #ifdef CONFIG_SYSCTL
+> -static int sysctl_latencytop(struct ctl_table *table, int write, void *buffer,
+> -		size_t *lenp, loff_t *ppos)
+> +static int sysctl_latencytop(const struct ctl_table *table, int write,
+> +			     void *buffer,
+> +			     size_t *lenp, loff_t *ppos)
+>  {
+>  	int err;
+>  
+
+And this.
+
+I could go on, but there are so many examples of this in the patch
+that I think that it needs to be toosed away and regenerated in a
+way that doesn't trash the existing function parameter formatting.
+
+-Dave.
 -- 
-2.34.1
-
+Dave Chinner
+david@fromorbit.com
