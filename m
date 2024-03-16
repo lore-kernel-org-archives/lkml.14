@@ -1,98 +1,121 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9F01BF27
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 18:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94D0468E
+	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 18:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710613723; cv=none; b=SxixDWx0lx1ynNXU2y8mKQ8ZTjODsCz3o9W5V5+QFqlhmPZ+Dggcsa3LLucLMmOjqBH2FM/xAxj/d1a1fhsPBm9CqhPb9EMOsdsafQCX89SLxGFk3sqENvEusFIP/ytpV+CpfBlPiX0esy0kSyUZIZe0aa4yc01/o8vl44Qrivc=
+	t=1710614583; cv=none; b=I96sPgSudohphNjWWALGcKhaM45NCohzz+60icITL20cTLejzK+rqtfrw4ktfkuQ5Fs3zAtWjX13Vm+6/nU0JCLzIgjHgGOTOHF5fwKWmxxtLYFZEQnwivkaUDnYoD+mVOuqjFjJAusjN3SnerfA+0Mf3UN97dVJOp1G3FkpLlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710613723; c=relaxed/simple;
-	bh=NDVqjzn4n6OdgsETCttBImMgMrVz+07fLfVjZJRu0bs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=cdWUII71KXuEowdKobeHvoPpAQGqT560zkCxRs7SVPkMjc0ZaB/Wp0hebNwDMywQHEwqjO2rjiG8nm8s78sFpVpV2QkR7XCtMeSNLw1s8bWZ6KLkJn7+JvaJgXFo70jan3LxTNI28Qpn77zcoRTKJMksvD6rfqsUbV4dfACuHqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOh6ycAj; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710614583; c=relaxed/simple;
+	bh=VKZjhJVzQP3LfEqci20olDgEm7Ujvftp5WdgHCIuD+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aoOty8PHn8LCzuqrHHGM3LpVSHWyFubHswSSGKSXYfizAQaqic7RbmKkk+2h9/Q08pTXK5yb2OO0ooE9wFFOO3Tefcb/ZUnQJ5wkC3NlHl5x313CLw7Tag9ZkrYpGHd5xEkSCrsIa0UFRVaSDzZ40EVTVDuCku8KYRMkxLF9YOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GmDWIlef; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOh6ycAj"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a466a256726so518810866b.1
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 11:28:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GmDWIlef"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso3524700a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 11:43:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710613720; x=1711218520; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:content-language:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wvqZz7jfkhpn8mxvVVvmdkK5C/FZ80SalXY0kVcCy4Y=;
-        b=fOh6ycAjb6NMmyvq7r1wbPu15HQgQbP4f1qcF7Yy+5hiYdlnpaAmnrVzZDxX/UZti+
-         6uxu8Db9ieCdA09F9fdI3YdVn80Im2QUjJyTud+dhKMCiY48/80GDKJMMNKsVq3vkv+L
-         GQ4bqWZ5VvK4zP8RQEv/nVk+nkfoIXUFXFofYxmmYiR7YOuOZmlg0h4mXYtKq4StGLO8
-         7IxJC+VmUUmvu4tLqffWBPnfJR05J8T7GPRwTE/LcQqGlJstAqFZVXaaC4RkU9bdis7o
-         dEH83HqesaPPxStmqedw6xJ4ZMWDFsSecYYLUQAZYTdK0YPf0YVHMCnyZONogFqPjiFt
-         hHvw==
+        d=linux-foundation.org; s=google; t=1710614580; x=1711219380; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pVAMhQojoyaogORHm9lRJd5kjxn5GQZe8kMwS/E2slE=;
+        b=GmDWIlefMTwMPK1/g0Yxa7cWOaj/EM0Ta023WBAwhxNw7EdjCi4NLTWzwXjh/YPGmo
+         CxI/emV1fIbQrbjcVMQFJvAclpdJmrViD0jAidXq//HRkxtXnpq8YWmyfZia7nma1bBB
+         tUqO3u1fvsP2ZMe7BFY+5ELRzvFTv5qteMZOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710613720; x=1711218520;
-        h=content-transfer-encoding:cc:to:content-language:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wvqZz7jfkhpn8mxvVVvmdkK5C/FZ80SalXY0kVcCy4Y=;
-        b=axwxnV5KjonxTI0P7xIdNx7o8jgrIFT8UHSkUtv+UQrJXYUehR/2ttAxSYhPU2YV6n
-         HVrvj34VhwO4WUcVBS70QIxPkyIDoUR5dDbM6BfGBGCTTjiJiqN08yzvIbEKpLVzKU03
-         nGfjo6O9OP6CTJUuq8a0+sYAIfT5uywgPZ7rw59/EyGQWx6aTDjusj/YujyI0LEh2vQ8
-         mzA2J4jPPNZwD0XluxmcGfNyhVe6k1bEPkSS0ZLJiAXAZ4wyqAscNDQKq/ZeisxhSQpR
-         OZKb+ES7ZFpd6VKI/N4CUQTuSXdZAktl7KZdgKyR45gP6C8qNXkbSpfCQaUPsIS5c2Qn
-         Q+Tg==
-X-Gm-Message-State: AOJu0YyjgqaFcvfEZPCycKoO82ONPG3LaFSUPAa/DfmeLs8AiO3eZARz
-	ickLYF5jd2NdQ788pIoViPsVgZDKZK0cgcNidy0ystKft29eyESkC3G3Lyyb
-X-Google-Smtp-Source: AGHT+IGlwubVFxQAOK4L9rQ81bWYmrepGa165kaIGX0BBfLUFIOtx4G7Ig+E6Zd/0rRVJRJ8jLqQ1w==
-X-Received: by 2002:a17:906:3b84:b0:a45:fa87:b011 with SMTP id u4-20020a1709063b8400b00a45fa87b011mr9568373ejf.20.1710613719906;
-        Sat, 16 Mar 2024 11:28:39 -0700 (PDT)
-Received: from ?IPV6:2a04:241e:501:580:d03e:506b:69fb:b04c? ([2a04:241e:501:580:d03e:506b:69fb:b04c])
-        by smtp.gmail.com with ESMTPSA id p7-20020a17090635c700b00a465b6c9a67sm2973467ejb.6.2024.03.16.11.28.38
+        d=1e100.net; s=20230601; t=1710614580; x=1711219380;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pVAMhQojoyaogORHm9lRJd5kjxn5GQZe8kMwS/E2slE=;
+        b=Na8Ynp3AGMtMvUHG7g91qxLYqscjCHCnuFOQV6NWZI9uwQDrF+ZCHMZwKrGukVus3D
+         wxD5UqMdD9jNKaP0Q1h+vzdisLJLJgO13J6UdsSku/C/J8N1RWY7zWBBCQlaC1thyGtp
+         IBZGN8kAMnAfDCb9ldonbXB+g98fXhV3zUKodyIcYBjVREUe0DPdNIGAhPcAv/PgUUNL
+         Do6T8Rh5wst3XFtJVM7Updeh5GFy6SLq04iVKVZ90kkw0QUmpdSbU5VnzBuZ6Pex34Qp
+         j9au+pa/11LZiU7BfU6MEU+4YDThiNLvVLxNXh/+G7hPMJsW9SIcm52IUhKuPY4VPMTW
+         f26A==
+X-Gm-Message-State: AOJu0YwmWTL04S/j7x7o3PMu2R0t/orWC5p8F7LGndDpgwyK/OWEa3WY
+	hGGTyzQZHEeNb26YDUoel5BfzLIP4nBTSh5yWBlJf4UlNs9VdN6hsqc/RP1qUhgH5LnQjaOnaj0
+	k3e1QzQ==
+X-Google-Smtp-Source: AGHT+IHIlCrR3RWD7ij/7a3tXvbY92SA8sP442gXdWDjqMUCpa/PlxusIu2JE7Q4MfwGbQ92fSh4yg==
+X-Received: by 2002:a05:6402:4348:b0:567:9fef:f7ee with SMTP id n8-20020a056402434800b005679feff7eemr4833861edc.16.1710614579974;
+        Sat, 16 Mar 2024 11:42:59 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id v21-20020aa7d655000000b00568a08a9aacsm2734719edr.22.2024.03.16.11.42.59
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Mar 2024 11:28:39 -0700 (PDT)
-Message-ID: <f568faa0-2380-4e93-a312-b80c1e367645@gmail.com>
-Date: Sat, 16 Mar 2024 20:28:37 +0200
+        Sat, 16 Mar 2024 11:42:59 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a467d8efe78so272528766b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 11:42:59 -0700 (PDT)
+X-Received: by 2002:a17:907:364:b0:a46:30f4:6321 with SMTP id
+ rs4-20020a170907036400b00a4630f46321mr5330377ejb.58.1710614578695; Sat, 16
+ Mar 2024 11:42:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Leonard Crestez <cdleonard@gmail.com>
-Subject: [PATCH] mailmap: Update entry for Leonard Crestez
-Content-Language: en-US
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Florian Fainelli <f.fainelli@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240315122934.1d3231ce@gandalf.local.home> <CAHk-=wg24KPFfeNwYdsD0e79MP4QhO3VaWkh0buPSD0M=141xQ@mail.gmail.com>
+ <CAHk-=wh5wWeib7+kVHpBVtUn7kx7GGadWqb5mW5FYTdewEfL=w@mail.gmail.com> <20240316142002.7480d74b@rorschach.local.home>
+In-Reply-To: <20240316142002.7480d74b@rorschach.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 16 Mar 2024 11:42:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgKJti5WBi7VmA_ETDiXjmkEqvVW7De5ajwtkyJ=c==kA@mail.gmail.com>
+Message-ID: <CAHk-=wgKJti5WBi7VmA_ETDiXjmkEqvVW7De5ajwtkyJ=c==kA@mail.gmail.com>
+Subject: Re: [GIT PULL] tracing: Updates for v6.9
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, Huang Yiwei <quic_hyiwei@quicinc.com>, 
+	John Garry <john.g.garry@oracle.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Thorsten Blum <thorsten.blum@toblux.com>, Vincent Donnefort <vdonnefort@google.com>, 
+	linke li <lilinke99@qq.com>, Daniel Bristot de Oliveira <bristot@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Put my personal email first because NXP employment ended some time ago.
-Also add my old intel email address.
+On Sat, 16 Mar 2024 at 11:20, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> 1) Rebase without them (I know how much you love rebasing)
 
-Signed-off-by: Leonard Crestez <cdleonard@gmail.com>
----
- .mailmap | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This.
 
-diff --git a/.mailmap b/.mailmap
-index bd9f1025ac44..69d20689ba05 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -338,11 +338,12 @@ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
- Kuogee Hsieh <quic_khsieh@quicinc.com> <khsieh@codeaurora.org>
- Lee Jones <lee@kernel.org> <joneslee@google.com>
- Lee Jones <lee@kernel.org> <lee.jones@canonical.com>
- Lee Jones <lee@kernel.org> <lee.jones@linaro.org>
- Lee Jones <lee@kernel.org> <lee@ubuntu.com>
--Leonard Crestez <leonard.crestez@nxp.com> Leonard Crestez <cdleonard@gmail.com>
-+Leonard Crestez <cdleonard@gmail.com> <leonard.crestez@nxp.com>
-+Leonard Crestez <cdleonard@gmail.com> <leonard.crestez@intel.com>
- Leonardo Bras <leobras.c@gmail.com> <leonardo@linux.ibm.com>
- Leonard Göhrs <l.goehrs@pengutronix.de>
- Leonid I Ananiev <leonid.i.ananiev@intel.com>
- Leon Romanovsky <leon@kernel.org> <leon@leon.nu>
- Leon Romanovsky <leon@kernel.org> <leonro@mellanox.com>
--- 
-2.34.1
+Except honestly, the pulls are getting to be so complicated for me
+because I have to check them, that I'd really like you to start doing
+topic branches for individual things.
+
+That's what we ended up doing with the security layers too, because
+there were too many cases of "that is broken, I can't pull it", and
+then having one single branch for everything meant that it was always
+a "all or nothing" thing.
+
+The security layer issues have largely gone away, but I still pull
+things individually, and I think it actually ended up working out
+well. Yes, I see more pulls, but not only are they clearer for me, the
+code history ends up being much clearer too.
+
+So topic branches tend to make for more actual pull requests, but when
+the individual pulls are smaller and have clear "this branch does XYZ
+and nothing more", it turns out that the actual effort per pull ends
+up being less, and it actually clarifies things a lot too.
+
+In fact, the x86 -tip people ended up doing topic branches just to
+make things easier to review, rather than any "I can't pull that"
+issues, and I think it actually ended up being something that they
+preferred to do anyway.
+
+Now, I'm not suggesting anything like the multiple topic branches from
+-tip (from a quick check, there's been a total of 25 tip/tip topic
+branches merged just this merge window), but for clear new features
+definitely.
+
+And no cross-merges between those topic branches, because that defeats
+the whole purpose.
+
+Do you have to do it for the current situation where I just can't take
+the mmap stuff? No. But please look at it going forward.
+
+           Linus
