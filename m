@@ -1,166 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CFE6AA1;
-	Sat, 16 Mar 2024 05:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E530C4C61;
+	Sat, 16 Mar 2024 05:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710567661; cv=none; b=d7VkeznXW6g+GxMKiatpSUE1VzFhEW/4mwXqyIFmWi0B9+iDbgT2vRDxU4mj9it8cGQNndOqohipFD1m37YC8KydzNAFAc9ucFUH+URvOW3ETOPBRMc60N/xSELI7ifUaE+sHX0hImDs3UoITb0VJPUwpFeCfboT3zx9ufA6oDw=
+	t=1710568271; cv=none; b=Chxrt+hOsUvwzDlOiUoNJyG6YButCf5kUVYln8fzhTWJKRXFOr9Cul+F00fb5EvEFByG9IMDaas+j4JAyUxaUzjI+7dsyWitlAU7dX0wFjBnaRnNqNdT5WYkkXxkCQiENhHD4ZOVVGFfhi8ZDj14aK2cQ9n2dxvhmzSJXP+SCuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710567661; c=relaxed/simple;
-	bh=zpFhiM3PAxX/JyJRkDpY9ZV+mL+lJb4usahl35U/Ujg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIMrc6muPQz+uFFwHGfI8FC95AwtE5hjOlPQD5LMoOs1yzFuOMQsVyVt3gqiCzPzc9tk0uUEgtzXhLGFC3Z8jXFFKCj1Wvq+mnUM7oczDR2SyUIsM4yg2QSVt3uCq4B85BbVUEeA9Vdp8LKJWM8srIrHPxNsfm0jqSrRjDb5iXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjvigbZd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710568271; c=relaxed/simple;
+	bh=PcvHHTSMBw117q5/ugEHQe5fTF6QB9/SiG4cfaolfFI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=dCEEBeOe9DKG6jsZKxUyUK+jann/qEsu2tJZ91Z7fcPkl3GcZomlwOUUEBfKK6Rmt7HSNjVmc03z9klDD4m28Xe1ZoIxlgt5iig4T0WYGnyMs/GJx9r0oI6C9iy6MWGJ9G8cVlhdlWwrJQ6v8wYyx5NRgJDY4IssOofdBh4fmGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=LptSJUcs reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjvigbZd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A28C433F1;
-	Sat, 16 Mar 2024 05:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710567660;
-	bh=zpFhiM3PAxX/JyJRkDpY9ZV+mL+lJb4usahl35U/Ujg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=HjvigbZdMD0owzOJXTmHchrakQ4u/PHtXuAreEUfas8c7Eq4XwuMIZr3bAjk+cuEl
-	 /Lx88pQFy1UQN0KcvNDkZv6Wv3lMzOuki0GRGL060d/YDdYIdURoKvImT5K3UiIfId
-	 Ccj1dJ0p3DWvY3FPO8wh1SWvd3OiCDAGlc9jJq+FfGw1Rg6xzhreIwMnNkPW4g3pMN
-	 Jp+1+0rtoFOjMg5UQnsFTUu6z6tNdPpeZMVeKtWRkOlNSwA9ziA654tikdsFQDQUrK
-	 4nfNkjxQqo+SU3cKnfpgQN0RXAaFJBzsB8pfznYJKX6b+iQSLZSRumAvywJsGAnkWq
-	 46/voqVzs0SbQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 8CBF0CE0D20; Fri, 15 Mar 2024 22:40:56 -0700 (PDT)
-Date: Fri, 15 Mar 2024 22:40:56 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Yan Zhai <yan@cloudflare.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Coco Li <lixiaoyan@google.com>, Wei Wang <weiwan@google.com>,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Hannes Frederic Sowa <hannes@stressinduktion.org>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	bpf@vger.kernel.org, kernel-team@cloudflare.com,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>, mark.rutland@arm.com,
-	Jesper Dangaard Brouer <hawk@kernel.org>
-Subject: Re: [PATCH v4 net 1/3] rcu: add a helper to report consolidated
- flavor QS
-Message-ID: <790ce7e7-a8fd-4d28-aaf3-1b991a898be2@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <cover.1710525524.git.yan@cloudflare.com>
- <491d3af6c7d66dfb3b60b2f210f38e843dfe6ed2.1710525524.git.yan@cloudflare.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="LptSJUcs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=uFFZvRYf7/jGYNLrlL2FZXdrRg8lHe52BaTJPVTBtY4=; b=L
+	ptSJUcs33GjUzP/xYBwwK6Iz5GTgvBR1fIr6wH/daATTWIBntUmWMoaUYjGXXwRM
+	y6fmQkEqiumAJUospRt6CrFpvYKiNkAB0WHDVAStlY43soF56Koalaf63BCr5TRR
+	SyOjMU7RNfjxQL4B12B/xYpR3HRuljEIFtNFWz3VMU=
+Received: from 18500469033$163.com ( [114.250.139.10] ) by
+ ajax-webmail-wmsvr-40-125 (Coremail) ; Sat, 16 Mar 2024 13:35:34 +0800
+ (CST)
+Date: Sat, 16 Mar 2024 13:35:34 +0800 (CST)
+From: "Dingyan Li" <18500469033@163.com>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH v2] USB: Use EHCI control transfer pid macros instead
+ of constant values.
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <2024030910-hurled-ibuprofen-1b52@gregkh>
+References: <37bdd932-07a4-4514-a5cc-b70d48c962a6@rowland.harvard.edu>
+ <20240309033709.14604-1-18500469033@163.com>
+ <2024030910-hurled-ibuprofen-1b52@gregkh>
+X-NTES-SC: AL_Qu2aAvmduEso4iibYukfm0cQhe89UcW5uf4i3YFTPptwjAzpygQDcWZaMGPb2+CVKxyTiAGOYhNjyPVVXoN3YLoy8R8I4H7Xg8T41AM0/Hb8JQ==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <491d3af6c7d66dfb3b60b2f210f38e843dfe6ed2.1710525524.git.yan@cloudflare.com>
+Message-ID: <7ac221bb.256b.18e45c223ba.Coremail.18500469033@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD3_xamL_VlaxoCAA--.6777W
+X-CM-SenderInfo: jprykiiquwmiitt6il2tof0z/1tbiQA+jy2VOB6UU+gACsC
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Fri, Mar 15, 2024 at 12:55:03PM -0700, Yan Zhai wrote:
-> There are several scenario in network processing that can run
-> extensively under heavy traffic. In such situation, RCU synchronization
-> might not observe desired quiescent states for indefinitely long period.
-> Create a helper to safely raise the desired RCU quiescent states for
-> such scenario.
-> 
-> Currently the frequency is locked at HZ/10, i.e. 100ms, which is
-> sufficient to address existing problems around RCU tasks. It's unclear
-> yet if there is any future scenario for it to be further tuned down.
-
-I suggest something like the following for the commit log:
-
-------------------------------------------------------------------------
-
-When under heavy load, network processing can run CPU-bound for many tens
-of seconds.  Even in preemptible kernels, this can block RCU Tasks grace
-periods, which can cause trace-event removal to take more than a minute,
-which is unacceptably long.
-
-This commit therefore creates a new helper function that passes
-through both RCU and RCU-Tasks quiescent states every 100 milliseconds.
-This hard-coded value suffices for current workloads.
-
-------------------------------------------------------------------------
-
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> ---
-> v3->v4: comment fixup
-> 
-> ---
->  include/linux/rcupdate.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 0746b1b0b663..da224706323e 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -247,6 +247,30 @@ do { \
->  	cond_resched(); \
->  } while (0)
->  
-> +/**
-> + * rcu_softirq_qs_periodic - Periodically report consolidated quiescent states
-> + * @old_ts: last jiffies when QS was reported. Might be modified in the macro.
-> + *
-> + * This helper is for network processing in non-RT kernels, where there could
-> + * be busy polling threads that block RCU synchronization indefinitely.  In
-> + * such context, simply calling cond_resched is insufficient, so give it a
-> + * stronger push to eliminate all potential blockage of all RCU types.
-> + *
-> + * NOTE: unless absolutely sure, this helper should in general be called
-> + * outside of bh lock section to avoid reporting a surprising QS to updaters,
-> + * who could be expecting RCU read critical section to end at local_bh_enable().
-> + */
-
-How about something like this for the kernel-doc comment?
-
-/**
- * rcu_softirq_qs_periodic - Report RCU and RCU-Tasks quiescent states
- * @old_ts: jiffies at start of processing.
- *
- * This helper is for long-running softirq handlers, such as those
- * in networking.  The caller should initialize the variable passed in
- * as @old_ts at the beginning of the softirq handler.  When invoked
- * frequently, this macro will invoke rcu_softirq_qs() every 100
- * milliseconds thereafter, which will provide both RCU and RCU-Tasks
- * quiescent states.  Note that this macro modifies its old_ts argument.
- *
- * Note that although cond_resched() provides RCU quiescent states,
- * it does not provide RCU-Tasks quiescent states.
- *
- * Because regions of code that have disabled softirq act as RCU
- * read-side critical sections, this macro should be invoked with softirq
- * (and preemption) enabled.
- *
- * This macro has no effect in CONFIG_PREEMPT_RT kernels.
- */
-
-							Thanx, Paul
-
-> +#define rcu_softirq_qs_periodic(old_ts) \
-> +do { \
-> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT) && \
-> +	    time_after(jiffies, (old_ts) + HZ / 10)) { \
-> +		preempt_disable(); \
-> +		rcu_softirq_qs(); \
-> +		preempt_enable(); \
-> +		(old_ts) = jiffies; \
-> +	} \
-> +} while (0)
-> +
->  /*
->   * Infrastructure to implement the synchronize_() primitives in
->   * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
-> -- 
-> 2.30.2
-> 
-> 
+QXQgMjAyNC0wMy0wOSAxNToxNDo0OCwgIkdyZWcgS0giIDxncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZz4gd3JvdGU6Cj5PbiBTYXQsIE1hciAwOSwgMjAyNCBhdCAxMTozNzowOUFNICswODAwLCBE
+aW5neWFuIExpIHdyb3RlOgo+PiBNYWNyb3Mgd2l0aCBnb29kIG5hbWVzIG9mZmVyIGJldHRlciBy
+ZWFkYWJpbGl0eS4gQmVzaWRlcywgYWxzbyBtb3ZlCj4+IHRoZSBkZWZpbml0aW9uIHRvIGVoY2ku
+aC4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IERpbmd5YW4gTGkgPDE4NTAwNDY5MDMzQDE2My5jb20+
+Cj4+IFJldmlld2VkLWJ5OiBBbGFuIFN0ZXJuIDxzdGVybkByb3dsYW5kLmhhcnZhcmQuZWR1Pgo+
+PiAtLS0KPj4gVjEgLT4gVjI6IFJlcGxhY2VtZW50IGluIG1vcmUgcGxhY2VzIHdoZXJlIEFsYW4g
+cG9pbnRlZCBvdXQuCj4+IAo+Cj5UaGlzIHNob3VsZCBiZSB2MywgYXMgeW91IGhhdmUgYWRkZWQg
+QWxhbidzIHJldmlld2VkLWJ5LCBhbmQgYWRkZWQgdGhlCj5wcm9wZXIgdmVyc2lvbmluZyBpbmZv
+cm1hdGlvbi4gIFBsZWFzZSByZXNlbmQgaXQgYXMgc3VjaCBhcyBvdXIgdG9vbHMKPmNhbid0IGRp
+ZyBpdCBvdXQgZnJvbSB0aGUgZW5kIG9mIHRoZSB0aHJlYWQgbGlrZSB0aGlzIDooCj4KPnRoYW5r
+cywKPgo+Z3JlZyBrLWgKCkhpIEdyZWcsCgpTb3JyeSB0aGF0IEknbSBub3QgcXVpdGUgZmFtaWxp
+YXIgd2l0aCB0aGUgcHJvY2Vzcy4gIFNpbmNlIEkgaGF2ZW4ndApnb3QgYW55IGZlZWRiYWNrIGZv
+ciBhIHdoaWxlIGFmdGVyIHNlbmRpbmcgdGhlIHYzIHBhdGNoLiBEbyB0aGF0IG1lYW4KdGhlIHBh
+dGNoIGlzIGFjY2VwdGVkPyBPciBhbnl0aGluZyBlbHNlIEkgc3RpbGwgbmVlZCB0byBpbXByb3Zl
+PwoKUmVnYXJkcywKRGluZ3lhbg==
