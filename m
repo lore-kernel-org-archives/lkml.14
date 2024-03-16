@@ -1,142 +1,156 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A6317BB9;
-	Sat, 16 Mar 2024 11:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C7F125BA
+	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 11:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710587279; cv=none; b=qPE2imVVqQ9++GahKCn2X6kxshdUgh+m1jHgbw2x9Z2KS8Ww8IqTOd8JQR9Qzee6J+CUAO2RpQHtWRWGl7V9WKFs6ILoIfYIqLgekTBkXckWmJ21/dIHV5x4Zu3vfXOqeGjXgvjPAA/FPevAn65phFuQxOr6rLjZA34E+9BL074=
+	t=1710587735; cv=none; b=qj4s/Q7o2jqv6U8PbysOUym1O73m/u4SAZOxz+jvPViYCv8fdjyJNV4DORY2zjacyxTfbrG6KCfVSRNkeWpRp5DDy5+jPJrMXRGfErFCcv+69++VDEJ9sB1bZyqNlADMCfq16eb4jAlzgytZb9kK2J4gijq4S3v+Og1oNy0ohbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710587279; c=relaxed/simple;
-	bh=t7LYZX6EKUgQo+LXunj7XiFMrdyQ/qdtMmGXsGcqKCc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XkUGZFH00/f8Vm/Qr7DYcLEi9Pj29CwPxDITgAL44MI0fcsJetiXTceqcOI5eVDy39wtiEHQuGWp8DbjfvchAlt0/+WMP5v571Q1rtOb7VOhKmK4rplznmSuN9x34vLytFxX1q4KnWRBTe0YQjjxoL4ahgwhtK7h7pumrB5IlqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9lmXG8B; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9lmXG8B"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a466a27d30aso381391566b.1;
-        Sat, 16 Mar 2024 04:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710587275; x=1711192075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QzhojDgRoybSBlASTJXy9XhM8QalAu20Y2x6klhiLUo=;
-        b=T9lmXG8B1Zj32ndoJ6zNLXiCtAgyVnSW6mAxtKPmam9U2rIF3knMj7L5KsRsCrFpny
-         rG38ZV+iAu2u9C5KP6XcJM9Ngw/DpAK0pX/1L2t5flqntkqOreZLssyPh47arlqh+3Xr
-         RRZeWlHsUkjWRpUmoShG7kFMmy0GXbQa8KBnIaKY90t3P5URyZyY3Ok65JwPZ0aNAvpt
-         YljjbzvNpzwj4+apUN3KwjZ5tN1UiD8xojN7C/AxmdWs2n+/JqrZKf0FRID19aAyQXQr
-         6ygqkRtFInoXt57dOslDok79yiF21YZj9VT3K4p7oi/Y4HxXsJAd6J9Q+cHoih5ErFG4
-         sQUA==
+	s=arc-20240116; t=1710587735; c=relaxed/simple;
+	bh=jLYr2i/eExX1w69iI+32GJyfadQtPjHg5todg3raew4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HzMZ0DfZ6QgkMW2xcQZdZzEngH4F10PO8Ly8U+CSzOdQ/a0LlkdOBx5MW596yeeawLXd7MVFKNsK7XxHgKHkOMrdQj8QCkh77gb9qJwbmdkNGMe01n0whone0Z9daEa857rh8oWsQst4OZCZ8yPagGIwEFciVCPfGuJZX06fqoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c75dee76c0so221249839f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 04:15:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710587275; x=1711192075;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QzhojDgRoybSBlASTJXy9XhM8QalAu20Y2x6klhiLUo=;
-        b=GNVTj3N3x2Ehka+ykEElv6MCwAXUZFiUznjD2GrU3R+XlHuFj83SvWASnOoQHPVn7E
-         TgKvwodRn1EscaYmcEUVsrUYT5ZITgXk8Vugn96NWRvU6XP4Ou72hmwAXMaxjgHi8qHC
-         CizmvNh4xUhA4Pltrp1bY02hcniakbTWYmgHeUSRBREZVBYfXJETQP3VI1hwwglTIGIO
-         1NBO0jD4FxHYYISvs1c9iaxDIQKMI5MKkdnI7E5KQQnr98NRtQiP3h/J7LvkCswOgqCe
-         nIVbY03BoYrNB/iyb1txsQ5T1Ai+/mPW/p2n+9vWEfrtErVTsNqaM21wp3Mk9q1Zhi1m
-         kBMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGIDmxqbSW4ijjRgU5f3h+6IANj0V156O8WbXRa94NLFu2kOJ+RYDYK4z72eQNPUOh6as4TnWWcCSqWDEanTCFOF+yIAHKk9Skr2jVvbf4aoQv/PfXLlAozSavTGo0D7Zu6wsIGFk8
-X-Gm-Message-State: AOJu0YwNieu2o/6XGEuPon9/ziZAj+DfVDxaIOkSMGFwnS+h+ZyzcAop
-	5isx+T7kB85dSnZZ1F8WxgBE5K+aVqh02boadVXLPtW/EQksT2s/
-X-Google-Smtp-Source: AGHT+IHeGO3sFQuS706QJQR8+Od/qOSAjzSdeW2DTbU/Uo23rwzDsghcX0Fk8hADRWrQkEsY2MqZuQ==
-X-Received: by 2002:a17:906:d296:b0:a46:aba1:cd71 with SMTP id ay22-20020a170906d29600b00a46aba1cd71mr319625ejb.54.1710587275312;
-        Sat, 16 Mar 2024 04:07:55 -0700 (PDT)
-Received: from localhost.localdomain ([2a04:ee41:82:7577:c0f3:8008:e41a:ce01])
-        by smtp.gmail.com with ESMTPSA id bx21-20020a170906a1d500b00a4655976025sm2627223ejb.82.2024.03.16.04.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Mar 2024 04:07:54 -0700 (PDT)
-From: Vasileios Amoiridis <vassilisamir@gmail.com>
-To: jic23@kernel.org
-Cc: lars@metafoo.de,
-	andriy.shevchenko@linux.intel.com,
-	ang.iglesiasg@gmail.com,
-	linus.walleij@linaro.org,
-	phil@raspberrypi.com,
-	579lpy@gmail.com,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Vasileios Amoiridis <vassilisamir@gmail.com>
-Subject: [PATCH v2 2/2] iio: pressure: Fixes SPI support for BMP3xx devices
-Date: Sat, 16 Mar 2024 12:07:43 +0100
-Message-Id: <20240316110743.1998400-3-vassilisamir@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240316110743.1998400-1-vassilisamir@gmail.com>
-References: <20240316110743.1998400-1-vassilisamir@gmail.com>
+        d=1e100.net; s=20230601; t=1710587732; x=1711192532;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+okNbJx3i3eNfoL5sGRziMMrPFCXMARCoCGd9KzLbvw=;
+        b=TZ0aZhXeHe5OdeNBHBC0HtUNHwAqtfV/TBwu2/srHCTDPvKrr/hhJNz6tqzloeB/n3
+         D7R83jYKu4y3ZHUL/kWmAu4hnuiIvU7i4RYlgnOzy197bsHDiq1nr76dSk2FMq6cVwOJ
+         LloXty6khf4JaKvGba4lfn3HZshKxNUSbFpMP6wAR+N2HExjcZBB44jZNiJIhisj2C6u
+         BueUCQ2FOR+iTJSL7dW3Ix320sXlTzeEBzKZdHmV5J33JI8fHUByYtCcDLj3XXPlJN72
+         LiUQ/yJcey0qKqeoEZGiIkHhuOFmQ9ti8bIDF6wi0RsF2ii6hv80O4YqeOvXLXkmrwkK
+         v2oA==
+X-Forwarded-Encrypted: i=1; AJvYcCWY50STFVchuZO2KU4E9uUJd59uvdlAdouqIKpobYD90wHQZyYEapm1P71TX1kKZhp7BfysJCZJb3Cl+x/KEr80udXfkFtntwgiz5F1
+X-Gm-Message-State: AOJu0YwywkDcrPj0qfX2xFL2f1bzhUY9MvFOX9Ok/hZlZY3Og45hqx84
+	eiuIQ4DHxrZUYeiIR3yz5fgVeJdukKatDPEC8SDeGZFproemJmWSrDXyzm2y71Ougp/E0ioVw1W
+	7koql97GyusKLlZW5hdAv5167ep/fVIu7DJq9cgM1lNeEusIHyLFp9uw=
+X-Google-Smtp-Source: AGHT+IH0itGz+OK/Aa92L6bdf0sRjCQzNSEcu32+MOf5o16HWxSx92ZxJGO8h6eS7Gn6Wd+opi2JpAXm87GeOUhl5SPzU4PkFKjO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5e:a90b:0:b0:7cc:b79:c5cb with SMTP id
+ c11-20020a5ea90b000000b007cc0b79c5cbmr9882iod.2.1710587732508; Sat, 16 Mar
+ 2024 04:15:32 -0700 (PDT)
+Date: Sat, 16 Mar 2024 04:15:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002750950613c53e72@google.com>
+Subject: [syzbot] [v9fs?] KMSAN: uninit-value in v9fs_evict_inode
+From: syzbot <syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
+	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Bosch does not use unique BMPxxx_CHIP_ID for the different versions
-of the device which leads to misidentification of devices if their
-ID is used. Use a new value in the chip_info structure instead of
-the BMPxxx_CHIP_ID, in order to choose the correct regmap_bus to
-be used.
+Hello,
 
-Fixes: a9dd9ba32311 ("iio: pressure: Fixes BMP38x and BMP390 SPI support")
-Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    66a27abac311 Merge tag 'powerpc-6.9-1' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=147b32a5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=48bb382b96e7eda7
+dashboard link: https://syzkaller.appspot.com/bug?extid=eb83fe1cce5833cd66a0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12598006180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=105d8aa5180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/37968fa0451e/disk-66a27aba.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5b288c5c3088/vmlinux-66a27aba.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/792ddbf8146d/bzImage-66a27aba.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+eb83fe1cce5833cd66a0@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in fscache_relinquish_cookie include/linux/fscache.h:307 [inline]
+BUG: KMSAN: uninit-value in v9fs_evict_inode+0x109/0x130 fs/9p/vfs_inode.c:356
+ fscache_relinquish_cookie include/linux/fscache.h:307 [inline]
+ v9fs_evict_inode+0x109/0x130 fs/9p/vfs_inode.c:356
+ evict+0x3ae/0xa60 fs/inode.c:667
+ iput_final fs/inode.c:1741 [inline]
+ iput+0x9ca/0xe10 fs/inode.c:1767
+ iget_failed+0x15e/0x180 fs/bad_inode.c:248
+ v9fs_fid_iget_dotl+0x375/0x570 fs/9p/vfs_inode_dotl.c:96
+ v9fs_get_inode_from_fid fs/9p/v9fs.h:230 [inline]
+ v9fs_mount+0xc02/0x12b0 fs/9p/vfs_super.c:142
+ legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa7/0x570 fs/super.c:1779
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x742/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+Uninit was created at:
+ __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ alloc_pages_node include/linux/gfp.h:261 [inline]
+ alloc_slab_page mm/slub.c:2175 [inline]
+ allocate_slab mm/slub.c:2338 [inline]
+ new_slab+0x2de/0x1400 mm/slub.c:2391
+ ___slab_alloc+0x1184/0x33d0 mm/slub.c:3525
+ __slab_alloc mm/slub.c:3610 [inline]
+ __slab_alloc_node mm/slub.c:3663 [inline]
+ slab_alloc_node mm/slub.c:3835 [inline]
+ kmem_cache_alloc_lru+0x6d7/0xbe0 mm/slub.c:3864
+ alloc_inode_sb include/linux/fs.h:3089 [inline]
+ v9fs_alloc_inode+0x62/0x130 fs/9p/vfs_inode.c:228
+ alloc_inode+0x86/0x460 fs/inode.c:261
+ iget_locked+0x2bf/0xee0 fs/inode.c:1280
+ v9fs_fid_iget_dotl+0x7f/0x570 fs/9p/vfs_inode_dotl.c:62
+ v9fs_get_inode_from_fid fs/9p/v9fs.h:230 [inline]
+ v9fs_mount+0xc02/0x12b0 fs/9p/vfs_super.c:142
+ legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa7/0x570 fs/super.c:1779
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x742/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+CPU: 1 PID: 5014 Comm: syz-executor406 Not tainted 6.8.0-syzkaller-11136-g66a27abac311 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+=====================================================
+
+
 ---
- drivers/iio/pressure/bmp280-core.c | 1 +
- drivers/iio/pressure/bmp280-spi.c  | 9 ++-------
- drivers/iio/pressure/bmp280.h      | 1 +
- 3 files changed, 4 insertions(+), 7 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index fe8734468ed3..62e9e93d915d 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -1233,6 +1233,7 @@ const struct bmp280_chip_info bmp380_chip_info = {
- 	.chip_id = bmp380_chip_ids,
- 	.num_chip_id = ARRAY_SIZE(bmp380_chip_ids),
- 	.regmap_config = &bmp380_regmap_config,
-+	.spi_read_extra_byte = true,
- 	.start_up_time = 2000,
- 	.channels = bmp380_channels,
- 	.num_channels = 2,
-diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
-index 038d36aad3eb..4e19ea0b4d39 100644
---- a/drivers/iio/pressure/bmp280-spi.c
-+++ b/drivers/iio/pressure/bmp280-spi.c
-@@ -96,15 +96,10 @@ static int bmp280_spi_probe(struct spi_device *spi)
- 
- 	chip_info = spi_get_device_match_data(spi);
- 
--	switch (chip_info->chip_id[0]) {
--	case BMP380_CHIP_ID:
--	case BMP390_CHIP_ID:
-+	if (chip_info->spi_read_extra_byte)
- 		bmp_regmap_bus = &bmp380_regmap_bus;
--		break;
--	default:
-+	else
- 		bmp_regmap_bus = &bmp280_regmap_bus;
--		break;
--	}
- 
- 	regmap = devm_regmap_init(&spi->dev,
- 				  bmp_regmap_bus,
-diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index 4012387d7956..5812a344ed8e 100644
---- a/drivers/iio/pressure/bmp280.h
-+++ b/drivers/iio/pressure/bmp280.h
-@@ -423,6 +423,7 @@ struct bmp280_chip_info {
- 	int num_chip_id;
- 
- 	const struct regmap_config *regmap_config;
-+	bool spi_read_extra_byte;
- 
- 	const struct iio_chan_spec *channels;
- 	int num_channels;
--- 
-2.25.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
