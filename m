@@ -1,49 +1,42 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725813EA93
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 20:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77D31C280;
+	Sat, 16 Mar 2024 20:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710620252; cv=none; b=VOgF8qt3PhhwCH6++pvhPdCIYxtCHFewfW/9cqKRlF6nv6oc/AvI62dTNMUJgFckiyeHtULrh+VNLRq0a1uF3A279LN9MiNwOEb0v0dUtK5TIocvmcsuHpcW+9c784trDzMz/j4MVneRyBU5REyVajF8ZRFyYHUzpcAQFO31NaQ=
+	t=1710621614; cv=none; b=SQthdQBZmx7DKa/OA8ezpyjHD2FUm/4/+PUk/tilVOhFlGeM9JKXYgugT3ml3VkvE5cBad9hj4Vse2RRwTaGjyIYYnHZh5BMKDkFnuOofhfNiZ2fi/AkLyTDSRx1VPpCZKaoijiB2vUIlstfwwzUX2jynjLhZMrGDKMdpAL5VMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710620252; c=relaxed/simple;
-	bh=L4Kr3W03WnDRFmtdwt7+DIdItUZViAX7DVeASVj0Nj0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XW/q/UKx0LxbzMwqzoOlp6o13GSuzz2Uboo68JSxxjht/v5WeMNySEt1E18U6zyvmq/m2h6CWUHXregf9BsysCEPVLYPr3HyEa6XoKviUA34RRSQ851Rr77138dUa1ZMmondYFB1adY4St/5JTuTPsCkwyOVn+m4fF88JSpOChs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 2edfabe6-e3d2-11ee-b972-005056bdfda7;
-	Sat, 16 Mar 2024 22:17:17 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 16 Mar 2024 22:17:16 +0200
-To: David Lechner <dlechner@baylibre.com>
-Cc: Dominique Martinet <dominique.martinet@atmark-techno.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Syunya Ohshio <syunya.ohshio@atmark-techno.com>,
-	Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: industrialio-core: look for aliases to request
- device index
-Message-ID: <ZfX-TEJFPpMPfHum@surfacebook.localdomain>
-References: <20240228051254.3988329-1-dominique.martinet@atmark-techno.com>
- <7f03bb12-0976-4cb7-9ca9-4e4e28170bdd@linaro.org>
- <Zd7hSOw3_zosyrn3@atmark-techno.com>
- <daed8ada-9e01-41ad-82af-5da5cbbc865c@linaro.org>
- <Zd7qz1Qte8HWieF_@atmark-techno.com>
- <20240228142441.00002a79@Huawei.com>
- <Zd_zB_ymxkx0HB3q@atmark-techno.com>
- <ZfPg-nMANUtBlr6S@atmark-techno.com>
- <CAMknhBG_kJx8JPvTBQo7zpy3mFAkUjZpRY3DLBfXt+39nRJWiA@mail.gmail.com>
+	s=arc-20240116; t=1710621614; c=relaxed/simple;
+	bh=58qvFg1dNbBCwLLsr/YODHvr/DIfRi6oxdDcpHNBgbU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=STmxKkptUraF97oLsCDOOOuApQJZAJr1bC8CwHaTS/jvTF2Mabbo9oj0PB0DNvwiwed/Q6Yyg3zooMKudKXPeuEF4tnC6j9Vpb6W3gbiD03ZjZXguGh1psgYa5pcyhAQ2r4aFZckLutF7/GB3gj3E0JsTFrYhZKu4hnUZ02p6Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=JgGHx0uu; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="JgGHx0uu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1710621600; x=1710880800;
+	bh=A+6SILfQFnqsXEoZHJxtgDtsdF1CEuXy/QosmJOt4ws=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=JgGHx0uuMKBY3EgucoOqQigFj4ZnBofZ9IxIHHWScg/kbyb+yXdlWDAmFJFDQ3OuR
+	 fpumksGePiOKvE4YlfElV5zQSq3SbTtpFQYFj7UuWR93EyVxgHXpOhFfvhN2zcIpG4
+	 Kmhj+3GyqOp9Ga/sVM5GgYasYfzvMFBHFD2zkK0KbSNvy38WRXlYd3CiJlntNnO5nB
+	 JnFk46P9Lc7TJ9TlljquzGRU5Lg7Y9K1N/aMvDAtCWpY8lAWnXDTcmeZXPQeF9jF79
+	 hIL8H81YQH0qu7QHhjNjj2BwC3jt78ZydYOdynUzsBHJqKMv4Uf4e1MvT/PK5IqGNx
+	 h6hMuqChE8Rhw==
+Date: Sat, 16 Mar 2024 20:39:34 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v3 4/4] rust: add abstraction for `struct page`
+Message-ID: <baee63d9-273a-48aa-b3cc-f15e3782156b@proton.me>
+In-Reply-To: <20240311-alice-mm-v3-4-cdf7b3a2049c@google.com>
+References: <20240311-alice-mm-v3-0-cdf7b3a2049c@google.com> <20240311-alice-mm-v3-4-cdf7b3a2049c@google.com>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,26 +44,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMknhBG_kJx8JPvTBQo7zpy3mFAkUjZpRY3DLBfXt+39nRJWiA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-Fri, Mar 15, 2024 at 10:53:36AM -0500, David Lechner kirjoitti:
-> On Fri, Mar 15, 2024 at 12:58 AM Dominique Martinet
-> <dominique.martinet@atmark-techno.com> wrote:
+On 3/11/24 11:47, Alice Ryhl wrote:
+> +/// A pointer to a page that owns the page allocation.
+> +///
+> +/// # Invariants
+> +///
+> +/// The pointer points at a page, and has ownership over the page.
 
-...
+Why not "`page` is valid"?
+Do you mean by ownership of the page that `page` has ownership of the
+allocation, or does that entail any other property/privilege?
 
-> How about using udev rules to create symlinks for each device based on
-> the label attribute? No changes to the kernel are needed.
+> +pub struct Page {
+> +    page: NonNull<bindings::page>,
+> +}
+> +
+> +// SAFETY: It is safe to transfer page allocations between threads.
 
-+1 for the suggestion. We have a lot of information in sysfs to distinguish
-devices by a physical connection, even if we have the same names/labels they
-may not have the same physical connections (if there is a possibility of the
-collision, then it means it has to be fixed elsewhere).
+Why?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +unsafe impl Send for Page {}
+> +
+> +// SAFETY: As long as the safety requirements for `&self` methods on thi=
+s type
+> +// are followed, there is no problem with calling them in parallel.
 
+Why?
+
+> +unsafe impl Sync for Page {}
+> +
+> +impl Page {
+> +    /// Allocates a new page.
+> +    pub fn alloc_page(gfp_flags: flags::gfp_t) -> Result<Self, AllocErro=
+r> {
+> +        // SAFETY: The specified order is zero and we want one page.
+
+This doesn't explain why it is sound to call the function. I expect that
+it is always sound to call this function with valid arguments.
+
+> +        let page =3D unsafe { bindings::alloc_pages(gfp_flags, 0) };
+> +        let page =3D NonNull::new(page).ok_or(AllocError)?;
+> +        // INVARIANT: We checked that the allocation succeeded.
+
+Doesn't mention ownership.
+
+> +        Ok(Self { page })
+> +    }
+> +
+> +    /// Returns a raw pointer to the page.
+> +    pub fn as_ptr(&self) -> *mut bindings::page {
+> +        self.page.as_ptr()
+> +    }
+> +
+> +    /// Runs a piece of code with this page mapped to an address.
+> +    ///
+> +    /// The page is unmapped when this call returns.
+> +    ///
+> +    /// It is up to the caller to use the provided raw pointer correctly=
+.
+
+This says nothing about what 'correctly' means. What I gathered from the
+implementation is that the supplied pointer is valid for the execution
+of `f` for `PAGE_SIZE` bytes.
+What other things are you allowed to rely upon?
+
+Is it really OK for this function to be called from multiple threads?
+Could that not result in the same page being mapped multiple times? If
+that is fine, what about potential data races when two threads write to
+the pointer given to `f`?
+
+> +    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut u8) -> T) -> T=
+ {
+> +        // SAFETY: `page` is valid due to the type invariants on `Page`.
+> +        let mapped_addr =3D unsafe { bindings::kmap_local_page(self.as_p=
+tr()) };
+> +
+> +        let res =3D f(mapped_addr.cast());
+> +
+> +        // SAFETY: This unmaps the page mapped above.
+
+This doesn't explain why it is sound.
+
+> +        //
+> +        // Since this API takes the user code as a closure, it can only =
+be used
+> +        // in a manner where the pages are unmapped in reverse order. Th=
+is is as
+> +        // required by `kunmap_local`.
+> +        //
+> +        // In other words, if this call to `kunmap_local` happens when a
+> +        // different page should be unmapped first, then there must nece=
+ssarily
+> +        // be a call to `kmap_local_page` other than the call just above=
+ in
+> +        // `with_page_mapped` that made that possible. In this case, it =
+is the
+> +        // unsafe block that wraps that other call that is incorrect.
+> +        unsafe { bindings::kunmap_local(mapped_addr) };
+> +
+> +        res
+> +    }
+> +
+> +    /// Runs a piece of code with a raw pointer to a slice of this page,=
+ with
+> +    /// bounds checking.
+> +    ///
+> +    /// If `f` is called, then it will be called with a pointer that poi=
+nts at
+> +    /// `off` bytes into the page, and the pointer will be valid for at =
+least
+> +    /// `len` bytes. The pointer is only valid on this task, as this met=
+hod uses
+> +    /// a local mapping.
+
+This information about the pointer only being valid on this task should
+also apply to `with_page_mapped`, right?
+
+> +    ///
+> +    /// If `off` and `len` refers to a region outside of this page, then=
+ this
+> +    /// method returns `EINVAL` and does not call `f`.
+> +    ///
+> +    /// It is up to the caller to use the provided raw pointer correctly=
+.
+
+Again, please specify what 'correctly' means.
+
+--=20
+Cheers,
+Benno
+
+> +    pub fn with_pointer_into_page<T>(
+> +        &self,
+> +        off: usize,
+> +        len: usize,
+> +        f: impl FnOnce(*mut u8) -> Result<T>,
+> +    ) -> Result<T> {
+> +        let bounds_ok =3D off <=3D PAGE_SIZE && len <=3D PAGE_SIZE && (o=
+ff + len) <=3D PAGE_SIZE;
+> +
+> +        if bounds_ok {
+> +            self.with_page_mapped(move |page_addr| {
+> +                // SAFETY: The `off` integer is at most `PAGE_SIZE`, so =
+this pointer offset will
+> +                // result in a pointer that is in bounds or one off the =
+end of the page.
+> +                f(unsafe { page_addr.add(off) })
+> +            })
+> +        } else {
+> +            Err(EINVAL)
+> +        }
+> +    }
 
