@@ -1,107 +1,78 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18346D27D
-	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 08:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176EB79F2
+	for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 09:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710579205; cv=none; b=qVZxfxKtAzAxhoxdXQFl+T6qohnUqd7zBX0UkHBb/RxYVvg4j8ZP8pYCns7Th6C7ECIu/D978Gxe9YjWAXQFxG6Mi/+y28qNbMq3j/+vtIpktW2PY4/ZImer5GtW/xrS5XbQovgNl5ZnRMK2uUyIV3f+fzjHv5zvkbrozsJlzQ0=
+	t=1710579651; cv=none; b=T2cO48coD3dyL+EeGuRtvC3vi20zKX1p+4h1WGYfjCJ/FDmCSAfN8yuhi3VQHcqabO7OtRvSg7weEfQXjh9SGBnjXQXtB3qYVRzvKfv0O0zsuiwXrrUwSVSw4N6A19TkvR0V4OozI+BXK+zUtujEFp/aSvhoW1FyaOKYPlEPLUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710579205; c=relaxed/simple;
-	bh=wHUTHNc07PezMVLkkhjoRQypSZ8VsGyAff7iodAz+kk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZgVTSF1jnhjQUJjkxOjEPpvpbSelbGxb23WAvvU9zbQ8WxtQgdgn7iSK0Ob+s439cieea1ctf9L26sqAYIFULjjFLA2xmCXQjvmafSotjSDrctLL4XQL1RWtrSi23ouH9hoITSZApbXi1yuR0nDFyNVEYq7P4YUfk+PxpxJ1nSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2/4BXcI; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2/4BXcI"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51381021af1so4075922e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Mar 2024 01:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710579201; x=1711184001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V8eSkWTfP59vnIUbclyKhpYHVhfdow8/oolocAIg65U=;
-        b=H2/4BXcIkxx5Rkl+Jdd+NzwC9/v2FBicbT11ubzww63C62ypBwBg/raL6y2cJHC053
-         9WV9oLLQoXethJ+M+zvnjtiMO8Cdo6yJ0wZWoFDxqaFn7kMGbKxXnK6G7hzeDLfZtXxf
-         HDBazV96QehCbOOo4GXfiG18Esyskr/noC4MUOnEM5qymigZaH1H58TTEqYMk17blWXj
-         YaLdkpHuqjVjp6WZvXCw/ub64QM55olLGlvzhGH6DWNlv9QQ997FcslE4qyZiFuLFH/y
-         kFUqQIh8uhGhzqUuU4bXsTpvsLYBW/eRmQYVqz1237ELDU+3ag8yDpmcvjsSSIzQ7Hkn
-         az3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710579201; x=1711184001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V8eSkWTfP59vnIUbclyKhpYHVhfdow8/oolocAIg65U=;
-        b=A3X2OVaKzSyLqiMpymBaNfeGptDWQKG7zbg64aA/BylIbzD6k309+yK1z5VHf7m1Be
-         nzvoiicsKO2pr0Kv0en2bbllDj51pYbJ/2/u1T963gu+Q+ZyTuQS2N39T4jl+hEdhz4H
-         d52q9+UfoS6j0nwtdBrzQB4+kT1D4N4nJLheu2cB5QJy0D4aBRhQwd9LvO8IbW0FCxWY
-         QFI4eZuelQq4Ms5aK7AD+diAhzanICtwus4YVA2Wfznz5A/1fZSvsLQYqkPKZSHUv3wJ
-         kbZG3QewOaSojbA8+UabB9isoSh8BWvQsXTIdRZ8eHDBP579R9YoXcvwhYSTw1vxMLzR
-         JTGg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+fvaKvhKO8T3W60wwDvfKjz5QqMvNZJMy4ixdCEBUkjEysV6zx/TYO/RQwBwmrYFxgj2dlcvjNm3EP/iSWCW+CblzyV0IlOb6Pg0A
-X-Gm-Message-State: AOJu0YzhOfM/DEaUS64mbMq5ojHuu6C1MUiGrQ8NSZd2FwTMJM5o+cn0
-	gr0SFwlMTtzzPNaKkHvzgN048ukhVqyr1+z9VzjHX6SA27Hfh9JAr4Kp47QVCYeS/CEqv4D2cPH
-	CIfXitTq2SAWLWTBEqFlrhtyVTAzqJmP5jEY=
-X-Google-Smtp-Source: AGHT+IGjvXruDfnotjhsLbmyjGJkGYH/q4daVVKkdvgNPDY3yAK2fMQwJbjJuZXPxjKfT6O7HgnRuiv+HdaPJAi0SNA=
-X-Received: by 2002:ac2:5617:0:b0:513:d20a:daf5 with SMTP id
- v23-20020ac25617000000b00513d20adaf5mr943872lfd.49.1710579201047; Sat, 16 Mar
- 2024 01:53:21 -0700 (PDT)
+	s=arc-20240116; t=1710579651; c=relaxed/simple;
+	bh=ZVegiQPS5+8I1ahet6J5rYnfmSyWlCOY352DU1JHyoE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uTjf60qBTcn9rVo2cpuOStH2UWX85y3/skexLycFyQvKHldyGPulWRjFELAe6IuK80IEynKP8fINFiTWmK0KrIn2iJFWle3Gf900icxivRCHvtTQIZdgcSantGHPcA3HySaKQIeJC/iQr9iYTOJWU92QL2U2fMmP6x4du0aXcts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.25.117.148])
+	by sina.com (172.16.235.24) with ESMTP
+	id 65F55FB700006E2C; Sat, 16 Mar 2024 17:00:41 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 1369645089437
+X-SMAIL-UIID: E72123976B914BAD87C3CB9453EC155A-20240316-170041-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in ip_skb_dst_mtu
+Date: Sat, 16 Mar 2024 17:00:30 +0800
+Message-Id: <20240316090031.1922-1-hdanton@sina.com>
+In-Reply-To: <0000000000008b9c410612fbd266@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314083921.1146937-1-zhaoyang.huang@unisoc.com> <ZfRDJTrFJq3KSbIB@casper.infradead.org>
-In-Reply-To: <ZfRDJTrFJq3KSbIB@casper.infradead.org>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Sat, 16 Mar 2024 16:53:09 +0800
-Message-ID: <CAGWkznGiVrqMs9fX2WGG9QsfTm72ffFj-cWXSUo3azrgeBOgAg@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix a race scenario in folio_isolate_lru
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, steve.kang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 15, 2024 at 8:46=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Thu, Mar 14, 2024 at 04:39:21PM +0800, zhaoyang.huang wrote:
-> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> >
-> > Panic[1] reported which is caused by lruvec->list break. Fix the race
-> > between folio_isolate_lru and release_pages.
-> >
-> > race condition:
-> > release_pages could meet a non-refered folio which escaped from being
-> > deleted from LRU but add to another list_head
->
-> I don't think the bug is in folio_isolate_lru() but rather in its
-> caller.
->
->  * Context:
->  *
->  * (1) Must be called with an elevated refcount on the folio. This is a
->  *     fundamental difference from isolate_lru_folios() (which is called
->  *     without a stable reference).
->
-> So when release_pages() runs, it must not see a refcount decremented to
-> zero, because the caller of folio_isolate_lru() is supposed to hold one.
->
-> Your stack trace is for the thread which is calling release_pages(), not
-> the one calling folio_isolate_lru(), so I can't help you debug further.
-Thanks for the comments.  According to my understanding,
-folio_put_testzero does the decrement before test which makes it
-possible to have release_pages see refcnt equal zero and proceed
-further(folio_get in folio_isolate_lru has not run yet).
+On Wed, 06 Mar 2024 02:57:18 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    805d849d7c3c Merge tag 'acpi-6.8-rc7' of git://git.kernel...
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1025fa6a180000
 
-   #0 folio_isolate_lru          #1 release_pages
-BUG_ON(!folio_refcnt)
-                                         if (folio_put_testzero())
-   folio_get(folio)
-   if (folio_test_clear_lru())
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
+
+--- x/drivers/net/ipvlan/ipvlan_core.c
++++ y/drivers/net/ipvlan/ipvlan_core.c
+@@ -426,6 +426,7 @@ static noinline_for_stack int ipvlan_pro
+ 		.daddr = ip4h->daddr,
+ 		.saddr = ip4h->saddr,
+ 	};
++	struct sock *sk;
+ 
+ 	rt = ip_route_output_flow(net, &fl4, NULL);
+ 	if (IS_ERR(rt))
+@@ -439,7 +440,12 @@ static noinline_for_stack int ipvlan_pro
+ 
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+ 
++	sk = skb->sk;
++	if (!sk)
++		goto err;
++	refcount_inc(&sk->sk_wmem_alloc);
+ 	err = ip_local_out(net, skb->sk, skb);
++	sk_free(sk);
+ 	if (unlikely(net_xmit_eval(err)))
+ 		DEV_STATS_INC(dev, tx_errors);
+ 	else
+--
