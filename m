@@ -1,54 +1,54 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819FF1CA87
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 15:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633DC1C691
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 15:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710688545; cv=none; b=ioZSNpc9Wrp6+9q5XkiwaJAIiIQoPi4djSrv0qwQfiWNJhD80OxQPxJf1OZ6L4a/KcoimH5xKWxnQbJN19NDdYX1N1gGM/henNx2NpmWWe14ofKFu2BbxWDqLTtHYjj0bCljMNNX1nuEC3Oaj2EmfTZ4IjUitkyKUa0pH+ZCGhc=
+	t=1710688568; cv=none; b=OpK0HForiEzoQ+VIZ78fXXHJnq1oqSaY931oOJl3IrDCvUK1d28UMB3MQqxCReILqw8BAMOROpb3Tb61eWOrtQZtmIXeWfTklrUJV7k9JJ7YJoRIeQkPDpi2Ays0OAjf4nG3DCv+qajpo87iALl0c5trFdvcqr714exYMBGk2zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710688545; c=relaxed/simple;
-	bh=KLRfnq4eXlBcEGbywcchqO4jgh7J7ZsjRRHuQZtJC5c=;
+	s=arc-20240116; t=1710688568; c=relaxed/simple;
+	bh=v/r9GzEEJW7NCpbQtiA2Yy7aQl3CkuMH2nMUbvdvaPY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e7p7uwb95RkTgRAsRbxCSMzBqtdW7e39rCYifcNmVWdRZnYiE8nG6jSzBwn1HFDOUrgXKSvkcHSQuV7mTNwhL+I1oyvLdHHuKbrOzaZzyfMCI0GV492aiBFduLTzz8QLl2OyfXuVXyl29ErHYp6u3h6ev//wZEzS7lkzDlHKZwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=xuBU16pM; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=gMwCtyHlD83IS6CmvY2qfHrenSfnXZyFj4n7AOPK/nfjsqT+wqYlvrZ98eL/dKNwJgJcCc7KY0OrC5XV/gGpfF2/J9TOEW5eqwWKqrFVFr4jPQj3U2D6xchHOxZEVjOh8f/uj21Sp8fkfAoyBMKYikIUA46XJlXurLEBdeCmh5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=VzxyZ1sI; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="xuBU16pM"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-42f2d02fbdeso16633311cf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 08:15:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="VzxyZ1sI"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-42e323a2e39so32174881cf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 08:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710688542; x=1711293342; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710688566; x=1711293366; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VAjI9MKRPGbeGXeY7a3YR0okh1E18UlTMq7EcVEnoMY=;
-        b=xuBU16pMOJTHoz4IrxJdfi+hB4AQy+2lAk1Mcg9H6U9UM5n5CSn0KZPCsjLzFQ6f8C
-         Ytedced10qnuOwJgkdPmdkTo5tixsYWKNobunlf5kGtFJjVvdUoWWBYfKe6vCjXmcfQK
-         dt2w7jr+vITtX9N2NxTgbN8D6QlPBkKvbEUgqDp0Nf6b43UNBHFXqZdKdeIfaAdMomSI
-         umo/FzLzg5url6nh3G+PPII7LqCSacGC9oitA/HpoVkBtZK8qU0NYtX6BtLuL+ntu5YC
-         CuoO5wGrFBreL42BFhg146UgE2f2plEIjFv0BW/CGfWoKpWLJ6AORwKa2inIRISSRhPZ
-         OXgw==
+        bh=A/SLJTPrYdvSiWiNqrR3D72kmqik90U4Q+5rpGyYCw0=;
+        b=VzxyZ1sIrCTHkbJ3KXMWV72Cq/iWv5+jZ/i8l4k9xRgzFglFOIhCXtbEEe/Reju02n
+         oqpsX7hHkaFbGpsWlsLMj5+dh9FvKsZHAt+gjvlNfd9Fa9SPa4tFHzOkMo7CMd508s7x
+         W8S1oY3jADuQhrNt9OYHUMQdgDNV0nxCZhd/9NoFGKEx4eUbR4MjHi5VVCn299uUFu0S
+         9X3o8gPoGHU5RcKAnh6SjBaDXUlhyOWsF53LZ4bfdLM5o4pc97xl1UCIVD4KjLGmlxgO
+         5pU0m95eVrB46lbhXjPvUAxp8h3BkFXBGm5N/F/M+l6UNwnF9zZ6RNOWw1dG1P5XjRpd
+         n9lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710688542; x=1711293342;
+        d=1e100.net; s=20230601; t=1710688566; x=1711293366;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VAjI9MKRPGbeGXeY7a3YR0okh1E18UlTMq7EcVEnoMY=;
-        b=tV8tvqYgLYAcTEqkLtaw3PPp/SciVEwMaFe1FgDYylL04x3DSQ+qY/PwDSY0C2ihyG
-         +1rivoAWbRP/IFHMS9p3yY5a8M8akonduomshcgsBVdSLJ21FxWly7ReHpZBSQOB7HC3
-         KwrTEwIpuR4V+rjNDv5/5q/gXMaJnsOEgpeU1cejphaydxseIcIzMMNNHIF9pgDwFmpA
-         G7WqSZtFkPK5VuAf4P8z1ZwXlYEOEvKD3QqlNE6pjkvkiy5IHcgVq59Z4lxGtgZfV8fi
-         MUarOINmEQtYbbfYQ+KSocNk8uoFPvO75K+eyEEFkttSkHHKcUCFjWcZwfQdp2rCeE34
-         hP2Q==
-X-Gm-Message-State: AOJu0YwtsE1mryHoQ84gxF00+WBs6Fqwu68kPLX+GlxZeM3s7/fP5pyo
-	9rsdZoW74d0QL5x5ulbxV8qqz+dXVoCaFksK9Fl5KIth1g9wekzOEAUyqxnRaqIY5yBWEsxbncO
-	nD6kxpSj28A4kbl0TA7ti4PZLezmFeRw1YtVAzA==
-X-Google-Smtp-Source: AGHT+IFHEaLZYyw0uAX0ZI/fr0dhZDQyZO1C7osqzysYutn76ux4Euc6Vx5ZcC+58/zciKXeEoXuHWH/QDBBa6btR7w=
-X-Received: by 2002:a05:622a:5b97:b0:42e:daf5:1b93 with SMTP id
- ec23-20020a05622a5b9700b0042edaf51b93mr11616575qtb.39.1710688542407; Sun, 17
- Mar 2024 08:15:42 -0700 (PDT)
+        bh=A/SLJTPrYdvSiWiNqrR3D72kmqik90U4Q+5rpGyYCw0=;
+        b=totJfrxcIWuMoOnla06wP+T7po5fIonwUtLZBiw5MtoR5rHHR02H827iWudkLFWDmJ
+         P5lZmR//kOe71Tf2Q/zgbuoVB9ey9Q4JBM2LXQ401dDvTp4tXmE0iq7NgA5HT1wJWvSy
+         zdtxmpUmCrWnTarHcj9HxIRQQVeFzid14Cp7vYuXwXPSJcMFCvVoLUt3dROn3K2Jdbwe
+         4nbTPLQKDFuf3tLjRBWI7c2P/zaCWxGwHIJcUOI00lPpvq541mqyYU5U63h1hNe83RzP
+         oIqCg5JMWS6jO3N1tWIEUezPNsOvOdykGDi1gg7EtZQSShXg/aEiwrZOgdLK0ZjsT/37
+         A8qw==
+X-Gm-Message-State: AOJu0Yy248QjVVvqBNM/qcg4a2p+05p04XLU5iXPLjvft3VeLLIQigij
+	fOLSQi6RKVhPOsw+wTnZ8pj0qplqxITbOpup+lEP0omo6CpV7vmvKUZ7rQXRvdOIp28Kgt3cOU0
+	iEzcMkmHwPB51phV5PuduBW4QRdN9yK6kJErAGzxqCrEUk/pX
+X-Google-Smtp-Source: AGHT+IFyMnpiLXfaKDgSZc8JDytGevRilFiWhY+KM0uCrVLml93IBlU+ayqqnkbK9D40N3mi9WfLuogGFdgae/8Py/I=
+X-Received: by 2002:ac8:7e95:0:b0:430:bb91:2ae9 with SMTP id
+ w21-20020ac87e95000000b00430bb912ae9mr6676290qtj.14.1710688566343; Sun, 17
+ Mar 2024 08:16:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,12 +56,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-7-pasha.tatashin@soleen.com> <7e5d6e69-5f65-4b70-8220-6d98457ed17a@wanadoo.fr>
-In-Reply-To: <7e5d6e69-5f65-4b70-8220-6d98457ed17a@wanadoo.fr>
+ <20240311164638.2015063-9-pasha.tatashin@soleen.com> <5b98c4a1-26c0-4b69-b000-44ae97eb6edb@wanadoo.fr>
+In-Reply-To: <5b98c4a1-26c0-4b69-b000-44ae97eb6edb@wanadoo.fr>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 17 Mar 2024 11:15:06 -0400
-Message-ID: <CA+CK2bCdqMzvFyfOqk1ZMeuZA1a_UaPtsKSeVWVvqE-n=gBkDA@mail.gmail.com>
-Subject: Re: [RFC 06/14] fork: zero vmap stack using clear_page() instead of memset()
+Date: Sun, 17 Mar 2024 11:15:30 -0400
+Message-ID: <CA+CK2bB+NVzFW5DpmrL3jJPZFyaKyHdqge3KNf1eLBe0YeHhfA@mail.gmail.com>
+Subject: Re: [RFC 08/14] fork: separate vmap stack alloction and free calls
 To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
@@ -79,27 +79,55 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 17, 2024 at 10:48=E2=80=AFAM Christophe JAILLET
+On Sun, Mar 17, 2024 at 10:52=E2=80=AFAM Christophe JAILLET
 <christophe.jaillet@wanadoo.fr> wrote:
 >
 > Le 11/03/2024 =C3=A0 17:46, Pasha Tatashin a =C3=A9crit :
-> > In preporation for dynamic kernel stacks do not zero the whole span of
->
-> Nit: preparation
-
-Thank you,
-Pasha
-
->
-> > the stack, but instead only the pages that are part of the vm_area.
-> >
-> > This is because with dynamic stacks we might have only partially
-> > populated stacks.
+> > In preparation for the dynamic stacks, separate out the
+> > __vmalloc_node_range and vfree calls from the vmap based stack
+> > allocations. The dynamic stacks will use their own variants of these
+> > functions.
 > >
 > > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > > ---
-> >   kernel/fork.c | 6 ++++--
-> >   1 file changed, 4 insertions(+), 2 deletions(-)
+> >   kernel/fork.c | 53 ++++++++++++++++++++++++++++++--------------------=
+-
+> >   1 file changed, 31 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 3004e6ce6c65..bbae5f705773 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -204,6 +204,29 @@ static bool try_release_thread_stack_to_cache(stru=
+ct vm_struct *vm_area)
+> >       return false;
+> >   }
+> >
+> > +static inline struct vm_struct *alloc_vmap_stack(int node)
+> > +{
+> > +     void *stack;
+> > +
+> > +     /*
+> > +      * Allocated stacks are cached and later reused by new threads,
+> > +      * so memcg accounting is performed manually on assigning/releasi=
+ng
+> > +      * stacks to tasks. Drop __GFP_ACCOUNT.
+> > +      */
+> > +     stack =3D __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
+> > +                                  VMALLOC_START, VMALLOC_END,
+> > +                                  THREADINFO_GFP & ~__GFP_ACCOUNT,
+> > +                                  PAGE_KERNEL,
+> > +                                  0, node, __builtin_return_address(0)=
+);
+> > +
+> > +     return (stack) ? find_vm_area(stack) : NULL;
+>
+> Nit: superfluous ()
+
+Thank you.
+
+>
+> > +}
 >
 > ...
 >
