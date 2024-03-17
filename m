@@ -1,108 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937CCFC18;
-	Sun, 17 Mar 2024 10:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B33C17BDC;
+	Sun, 17 Mar 2024 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710671802; cv=none; b=fj3QZSW107FYRltD5sFbVVB3yO+Hjk4bALRPlIDC8X/uKsYrKnPrJetUE2Djd7NvNE55u/FAGXSERui+Ysskz2fNcfDlqZIAWFCPs3dlpSmlmbIgvVNNoAIcf16fwCM3vLzEsWm378U+Bt4Z86m6nmUybjJzqwwwtpOBOsFNZB8=
+	t=1710675115; cv=none; b=Px1d19VNFWG0nyXZzWRpq9DWEIAAEDy2Z0ldtRfPDTsUDufokpWlFgHmfh3b2dQUWlwZP2XuWDeMRu03sIcZ93tMax1v0nwNxm6EtAVcTVJglbhMUHHUnIGVqD+XM4uOVY8zGhbZWoM4O9/2KRP9kfPzBG4XhHud3y52K8yLmZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710671802; c=relaxed/simple;
-	bh=NI86XXagyQJJYxe8I5WN4nL+kWt5gz7HTxGeqDnOfHY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dHbvJNWBiCLJBDSvl4/H+No7Dd706FJn2r2rmyRNRE3umL9Wq4qOFWpyopskiBanBnEQc2EROT7QuN5u6R9g0U9VeSexg9hEOoOgywbTMgJnvNtprpBYLFROZT8q3H7oemKh/CIZExhvC4ZMFAkWU/5M3Si+eMvlvgD7nhKXFqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsNy7Pkj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710675115; c=relaxed/simple;
+	bh=qrgeXJnBze0/NlThCnEWfbKJr4i8ti9uvqhuku1tviU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pXIwUZ45yb7qMdpp7M21bPqh8gUwuTdpEZP7pFBhqXbZCxiHcxD+KSUSbYVIRN6cbW9qKQLXkvjq0488ZvOvt93DsU41NagJtZYZyVi1tow/lZdaR1vJYJNPJnU+I+uq+9f+TvFgX0qjwqIzDZT8xH2d4eISxSPBenVNRIl6ohY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=QbQzEpSh; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsNy7Pkj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038C7C433C7;
-	Sun, 17 Mar 2024 10:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710671802;
-	bh=NI86XXagyQJJYxe8I5WN4nL+kWt5gz7HTxGeqDnOfHY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UsNy7PkjMYVd/YBXPBTh6WonjDQt8OhOKvutAkNdHYRDUnEWW5GaW6coAF0Ye2tzi
-	 +sbpF8Y15RJGBA5+aWMJEFSA28Lh7+68FplcOxFktwR50LRr4VkzMXK9RzPmCArl8L
-	 FIsj/E0FUm/qN4hH/N0e/GBFWHqHh0zGis7RBYMbDaAzgj8cSWRyT2n+GBArkGja5i
-	 BsqlKaUcyjIA7uwxjmI3G4xC1tYu4+xfrYjUnmbkSuQKT6TuUxct1Edix/2jHzYh36
-	 Ayu94nX+TD4BcL11UdHRdzqxphX25zs7YDDbMH4gElD3xh6dWBTNKLLHA8HNuBehSb
-	 3LfcnRTMTcRkA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rlnsd-00D181-8o;
-	Sun, 17 Mar 2024 10:36:39 +0000
-Date: Sun, 17 Mar 2024 10:36:37 +0000
-Message-ID: <86cyrt16x6.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [GIT PULL] KVM changes for Linux 6.9 merge window
-In-Reply-To: <CAHk-=whtnzTZ-9h6Su2aGDYUQJw2yyuZ04V0y_=V+=SBxkd38w@mail.gmail.com>
-References: <20240315174939.2530483-1-pbonzini@redhat.com>
-	<CAHk-=whCvkhc8BbFOUf1ddOsgSGgEjwoKv77=HEY1UiVCydGqw@mail.gmail.com>
-	<ZfTadCKIL7Ujxw3f@linux.dev>
-	<ZfTepXx_lsriEg5U@linux.dev>
-	<CABgObfaLzspX-eMOw3Mn0KgFzYJ1+FhN0d58VNQ088SoXfsvAA@mail.gmail.com>
-	<CAHk-=whtnzTZ-9h6Su2aGDYUQJw2yyuZ04V0y_=V+=SBxkd38w@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="QbQzEpSh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1710675107; x=1711279907; i=ps.report@gmx.net;
+	bh=thWe4OMhTAQiJNHJcIhgAzprazHbbDFO6O3nabVbkoQ=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:
+	 References;
+	b=QbQzEpShu9aCF6eGud0wFqH5aBsS1yh2ZS8flEyhZMeElzpmMduWaCR60hC19sTS
+	 hotihDgA9mMhZiZWtvBC+g0OiYtVoeWjM+vfHeMwTXM6dabohZjdC9yau65q4G0Yd
+	 Ec38FDvENE8GCRmVWfVzP/fqDze6Hzc6N0vxZ2IEXPtURKsS9ScGUje+oWu8XniUL
+	 xcaseaKYzvhWg2/8XIeyuY+9Hk67Gb+O/3u9Exmkqree/bL4TVYKfTLDITxwZM3LY
+	 jstwdzLmM3v5XMxufZ043uvnH17YjzNFwfpVM8blGixII/n6VeW9KOfuuQjbcJx4Q
+	 krid3VmkGFe9+AaoYQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([212.114.183.180]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MkYbu-1r4Gyr1iX8-00m2bt; Sun, 17
+ Mar 2024 12:31:47 +0100
+Date: Sun, 17 Mar 2024 12:31:35 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Oliver Crumrine <ozlinuxc@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-man@vger.kernel.org
+Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket
+ options
+Message-ID: <20240317123135.24993051@gmx.net>
+In-Reply-To: <ZehrtwSDQV-X7BXV@debian>
+References: <hxiq3upwxs3j5mc5arwlx4jriqm7fq5z54wroc4h4kqcq4gq7m@uwnoq2vnkhup>
+	<ZeXzuWVmC9AnsECt@debian>
+	<7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
+	<ZehMWQ0LkemsTHAC@debian>
+	<CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
+	<ZehrtwSDQV-X7BXV@debian>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, pbonzini@redhat.com, oliver.upton@linux.dev, catalin.marinas@arm.com, mark.rutland@arm.com, will@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+EQe8vdWUodhPL4RH0qddhfdT6bV+qEix91lRkyb76oIOo+y33T
+ hz/oYti00sb6w1koT3l74SUCK2sS9Cp0VwFPiuF5kOFcHybETlsRFTcsvHtglMTPbvIj3Mj
+ LGuv9Di7Y+FP8RQ1RjWRLR4yjnai2aTGEih6aPD4fGCwuxL31StB6qMMH08EJwV7Aygg06o
+ Rz8rhiW0JZ5uYwXgfbRuw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CGV87Kpqmt8=;g84LAudjtX9P2NnR8jYlaozCDhO
+ pT5A71DR3iMRoltgO7Ml7rWeCCuHPbA7+lsBqqBIW10fqazYGGdIuqT1qFtBWdeiAtx9aPWb2
+ hPTBWYeukC4btBjvJBaKFRIKt7FFlGTj7bW3TRzZ9HlRljM14GurwvkBLo8cZGLRTv10rTRX5
+ MvBrWPYBCMZG/KTepMCP5IYs95ePamPFvUCTi6RBSw0o3Avf3or/7vx1HFNGJ01PaNfIk70i5
+ xvs5SJDFQc5VINngecz6nlCztgsJERoVm1vlSu0YHqGx9I27R7ZErpCjnD+9lrBIlEZalTCus
+ ePFGteryWzDjwtuMGjpsrMenU42bE6Lw7AyanBdWkoFHZAVwtL7ndZAIlR0w5biU80a752EDw
+ ubEeaXFKeBislvLD7VEhtuZ2y5cNWatJ6VJVJTmk61NZ3JAz7jAI8bX4F6biZtk1jrGez9bze
+ 5rhfLsVGhDn+xJs50lxR+Bv3x6APdVPgv8EJXkSbPEYIXLKSWsFaHWCTsBCNXWfvuI+2SYC0O
+ OPHHCfftO4j/RxDlQlVeOiKqXQPL4KOp2pBWeGntSSUDEWkR0xCWucT2x1tud4UFIJAJa0Ky3
+ n4TTBwqooQkIeBfUcjPGwn2EHH0jQRYys58jDpUahykIGSMpQhqes4CftvbQchggssmmiVazT
+ 19YwNRaCC/PN4otI/rk+kQRbnfAJpVOCO6jgGOm6n5thiI35E6uSsomokN3KNMY4W9gVSIiJO
+ XGQbiSMUCBtSIm1KoHGfyJ9tLbE0sylBysc39sO2NoXVbj8SRKElmT+hb/E9+pcXIYfdpoo8u
+ nBshFdrcSoxZzeS51cFv51E4nKAO6/fmCSODdmK5ZA/wc=
 
-On Sat, 16 Mar 2024 16:01:47 +0000,
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> On Sat, 16 Mar 2024 at 01:48, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > Linus, were you compiling with allyesconfig so that you got
-> > CONFIG_KVM_ARM64_RES_BITS_PARANOIA on?
-> 
-> Regular allmodconfig.
-> 
-> > You can also make CONFIG_KVM_ARM64_RES_BITS_PARANOIA depend on !COMPILE_TEST.
-> 
-> No.
-> 
-> WTF is wrong with you?
-> 
-> You're saying "let's turn off this compile-time sanity check when
-> we're doing compile testing".
-> 
-> That's insane.
-> 
-> The sanity check was WRONG. People hadn't tested it. Stephen points
-> out that it was reported to you almost a month ago in
-> 
->     https://lore.kernel.org/linux-next/20240222220349.1889c728@canb.auug.org.au/
-> 
-> and you're still trying to just *HIDE* this garbage?
-> 
-> Stop it.
+On Wed, 6 Mar 2024 14:12:23 +0100, Alejandro Colomar <alx@kernel.org> wrot=
+e:
 
-Well, if you really need to shout at someone, it should be me, as I
-was the one who didn't get Stephen's hint last time.
+> On Wed, Mar 06, 2024 at 08:02:10AM -0500, Oliver Crumrine wrote:
+> > Hi Alex,
+>
+> Hi Oliver,
+>
+> > Type into netcat, not the program I sent.
+> > My program is the server and prints out whatever it recieves,
+> > along with some other stuff that lets you know which options
+> > are supported.
+>
+> Nothing either.
+>
+> $ date; nc localhost 8888 -u | ts
+> Wed Mar  6 14:09:38 CET 2024
+> foo
+> $ echo $?
+> 0
 
-I'll try to resurrect it as a selftest, or maybe just keep it out of
-tree for my own use.
+Same here, but with nc forced to IPv4
 
-	M.
+	$ nc localhost 8888  -u -4
+	a
 
--- 
-Without deviation from the norm, progress is not possible.
+And in the other window:
+
+	$ ./a.out
+cmsg recieved
+data read: a
+byte =3D 02
+
+Regards,
+Peter
+
+>
+>
+> $ cc testDgramSocketServer.c
+> $ date; ./a.out | ts
+> Wed Mar  6 14:09:05 CET 2024
+> ^C
+> $
+>
+>
+> Have a lovely day!
+> Alex
+>
+
