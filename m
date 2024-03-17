@@ -1,147 +1,93 @@
-Received: from mail.kubisiak.com (unknown [75.171.8.149])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E51C6AF;
-	Sun, 17 Mar 2024 15:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=75.171.8.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D67B1CA84
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 15:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710690440; cv=none; b=D2JWrfu8gFrVK5JVNwqfGuNr3Kg3/HWWdBe1C02okKkMBhHjUYZmOWtpyhb1ONfCjX3VnAETi7Th6Owgvi+f+KJm38MMphHlDHAbCmzipfu5JxjAqSeIthdAtMWzjKyjr+753vyvvRpjlkUz8s8zmuFloRNWHUR3lBcCu4PyHCU=
+	t=1710690488; cv=none; b=tC1Kk0g2L3mm/VpIZ13cVBDLqCC3l49q6xPALEdV52KS0MZ9A49fAjCD9y/N6TDvocpaYJtswrnA+J7XDaHR90Nak7DOHNz2nk7xLO9hOLD5rgDvfcaOvF2tmDrhbOCEifNdZkI8WEt1JY4PrvSaVr4ZEdsIvt5TypjwUGsXHiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710690440; c=relaxed/simple;
-	bh=/d6FompPnxhaxX+dDXc+VGeDfM+UfK/1YUE8lld3lhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MXusDpUplUzoUN+wsCyLZ51hiDq5nXIMYMuQZnvB4isKwlLFnnkx06njPm/7ncHSZd8XGjKccl3daZ4leW/WTz48AEYiJqXni0Vr3sY/EKceX3GSXIsvultRvbwn4vw3cavVSasdW+zqKq7KiHkajDlwvK1KRd7/18ufUPkTMjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kubisiak.com; spf=pass smtp.mailfrom=kubisiak.com; dkim=pass (2048-bit key) header.d=kubisiak.com header.i=@kubisiak.com header.b=dnY9B7M4; arc=none smtp.client-ip=75.171.8.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kubisiak.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kubisiak.com
+	s=arc-20240116; t=1710690488; c=relaxed/simple;
+	bh=qXxDEQtn/XB5MDmUD/l0idw+x9pNLWoaaLD6V9lFy4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ARrHYIo5ilv2CE1pYdB5BwnT3qG91cmZVH8Dtdt2XtlePHBSLoM7OUYd9G1bqnfQ3q804YuAigH5Ht4yK2w8QuFr9QpzikrDxsKAfS0NhapIPKnYx5PBRFW2HjAItdo7kOC4GiNyxCwgpahnNHBnAq8z+ZMAT6aXRO6tk6W4N0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=STbt3N21; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kubisiak.com header.i=@kubisiak.com header.b="dnY9B7M4"
-dkim-signature: v=1; a=rsa-sha256; d=kubisiak.com; s=s1;
-	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type;
-	bh=MCX9h6Wp1S4fn4QEqAne15wbcPppx7KIa+vp+dPFm88=;
-	b=dnY9B7M4d9sgb7QnbzEVQ9Sv8xAh7xF4+QkRVSjoz4F4H/DwfocJWvXPaGQAzP0DQejKgQosuBu3mnw0/4jf7cY8TXI0SJSx9BdGE2/6fqLj+V18VjjRsuQDZ1ql67sgj9TmMfF6tY9z0f3lPImqG0gqakQYg7f/xICmjL5o4YvLX2OILfgd4dHab07CLFrFq44A0xd+Mz8yMXO0SaYvS0VOomU/7JpD4n5gvwwdSc34SvSGvOM261Sqn0
-	pG/cJDgUarktWAZ7Sf/knw9EHwqGEuo7rn4mNlIeb0LgLm8rK8DwBSUG6OqTzx7tjq1CMdC9vb7wqA9+NMLj0N1DWT7A==
-Received: from peregrine (192-184-148-161.fiber.dynamic.sonic.net [192.184.148.161])
-	by mail.kubisiak.com with ESMTPSA
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
-	; Sun, 17 Mar 2024 09:46:02 -0500
-Date: Sun, 17 Mar 2024 07:46:00 -0700
-From: Brian Kubisiak <brian@kubisiak.com>
-To: ecryptfs@vger.kernel.org
-Cc: brian@kubisiak.com, code@tyhicks.com, mhalcrow@us.ibm.com, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ecryptfs: Fix buffer size for tag 66 packet
-Message-ID: <5j2q56p6qkhezva6b2yuqfrsurmvrrqtxxzrnp3wqu7xrz22i7@hoecdztoplbl>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="STbt3N21"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33e162b1b71so3274929f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 08:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710690484; x=1711295284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I1/ILuYKRTR9hc7wiDsKsn9WptuOvIHMyzKs0l5GSkc=;
+        b=STbt3N21GXRmOTglnRDapcV/wxbkNSvBToaLlBrxtAoMKnxEa1yg97KyA7L0kIL7uo
+         34xxt1DA532/lJNbDaSEWj5RxM69zfSGNzGFzoyxAEaa3gdgN4yCrmnK1BztHhy4jddR
+         l+oCs0uJFbMTFpAGjLpoUvJ74mFxe4sngU+F3i6uTnOJMwC33vwEhbhyouwI1/dbq5Gp
+         gMzkIYj52WOGnZvKMUmAo3t4oJ5usbO1rLpxt4QFd0nWUZowrw3f1gZEs7IeZzoZylpz
+         FlQx+4IBfFzR7hgrtzmGC96WP0zLOrcFNoc1hV+jIx9IPNf0Phzlo+FvaOJIff01hKeK
+         E00w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710690484; x=1711295284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I1/ILuYKRTR9hc7wiDsKsn9WptuOvIHMyzKs0l5GSkc=;
+        b=uo7SEyWM12CKCDgPdJW8X+mML6mPndMiEwDo47O/SIp22danXKY07dR6EciRzddpio
+         W6iMbf9zzL/mWvNLa8GnWu8pt/BBDldj7EApoCzb49bK+D27XNcTNM3IGKVu2qJsSWuA
+         JnX/gMfl825W+EabgOAaoYxMt/aqOtiZ1F1d7ZcJD1Vdm3eS/a2KyPrYGbgyWrcxgXXN
+         NAIq0LdOkVoejv090LFDPmY594kuUqA33xj4bUP0p8mlU9ILzJ4lY8m9gFpKAufqGJcD
+         D0L3J22a11uP3Hx2lvmlVL7BcTT09kdqFXzeThOMb8HNQYZvk22o3XfZ3cRw6jLIudFB
+         EWYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW859PlhTunhd1rwz4nzDyAghpgEmUJ1AplYbT2miwLRZaAzp5mLfWbBfWDxQrGS5awZAN2knES3WTPs52614cXropPxdHOfKhciL9q
+X-Gm-Message-State: AOJu0YzzIz/x+B0LVSKhtha8x5fGN4SlK2RUu2wlEX5zxWLhF4EnFli3
+	gxIY+VpX7iDJvF/xciEk4XzgEK8hQjPqCIGC2/Tf066ian3PqWPWImqENemmUzU=
+X-Google-Smtp-Source: AGHT+IGAVGv55SM4obM+qSDvbMP4XmlQQ6CPIEt7Tum/LfPyMtRYmGIXVXbJFrvc1kpyB7U6CSeEsg==
+X-Received: by 2002:a5d:61c2:0:b0:33e:7750:781d with SMTP id q2-20020a5d61c2000000b0033e7750781dmr6929837wrv.56.1710690483754;
+        Sun, 17 Mar 2024 08:48:03 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id bv17-20020a0560001f1100b0033dd9b050f9sm7731246wrb.14.2024.03.17.08.48.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Mar 2024 08:48:03 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Chandan Babu R <chandan.babu@oracle.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] xfs: Fix typo in comment
+Date: Sun, 17 Mar 2024 16:47:32 +0100
+Message-ID: <20240317154731.2801-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-The 'TAG 66 Packet Format' description is missing the cipher code and
-checksum fields that are packed into the message packet. As a result,
-the buffer allocated for the packet is 3 bytes too small and
-write_tag_66_packet() will write up to 3 bytes past the end of the
-buffer.
+s/somethign/something/
 
-Fix this by increasing the size of the allocation so the whole packet
-will always fit in the buffer.
-
-This fixes the below kasan slab-out-of-bounds bug:
-
-  BUG: KASAN: slab-out-of-bounds in ecryptfs_generate_key_packet_set+0x7d6/0xde0
-  Write of size 1 at addr ffff88800afbb2a5 by task touch/181
-
-  CPU: 0 PID: 181 Comm: touch Not tainted 6.6.13-gnu #1 4c9534092be820851bb687b82d1f92a426598dc6
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2/GNU Guix 04/01/2014
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x4c/0x70
-   print_report+0xc5/0x610
-   ? ecryptfs_generate_key_packet_set+0x7d6/0xde0
-   ? kasan_complete_mode_report_info+0x44/0x210
-   ? ecryptfs_generate_key_packet_set+0x7d6/0xde0
-   kasan_report+0xc2/0x110
-   ? ecryptfs_generate_key_packet_set+0x7d6/0xde0
-   __asan_store1+0x62/0x80
-   ecryptfs_generate_key_packet_set+0x7d6/0xde0
-   ? __pfx_ecryptfs_generate_key_packet_set+0x10/0x10
-   ? __alloc_pages+0x2e2/0x540
-   ? __pfx_ovl_open+0x10/0x10 [overlay 30837f11141636a8e1793533a02e6e2e885dad1d]
-   ? dentry_open+0x8f/0xd0
-   ecryptfs_write_metadata+0x30a/0x550
-   ? __pfx_ecryptfs_write_metadata+0x10/0x10
-   ? ecryptfs_get_lower_file+0x6b/0x190
-   ecryptfs_initialize_file+0x77/0x150
-   ecryptfs_create+0x1c2/0x2f0
-   path_openat+0x17cf/0x1ba0
-   ? __pfx_path_openat+0x10/0x10
-   do_filp_open+0x15e/0x290
-   ? __pfx_do_filp_open+0x10/0x10
-   ? __kasan_check_write+0x18/0x30
-   ? _raw_spin_lock+0x86/0xf0
-   ? __pfx__raw_spin_lock+0x10/0x10
-   ? __kasan_check_write+0x18/0x30
-   ? alloc_fd+0xf4/0x330
-   do_sys_openat2+0x122/0x160
-   ? __pfx_do_sys_openat2+0x10/0x10
-   __x64_sys_openat+0xef/0x170
-   ? __pfx___x64_sys_openat+0x10/0x10
-   do_syscall_64+0x60/0xd0
-   entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-  RIP: 0033:0x7f00a703fd67
-  Code: 25 00 00 41 00 3d 00 00 41 00 74 37 64 8b 04 25 18 00 00 00 85 c0 75 5b 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 85 00 00 00 48 83 c4 68 5d 41 5c c3 0f 1f
-  RSP: 002b:00007ffc088e30b0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-  RAX: ffffffffffffffda RBX: 00007ffc088e3368 RCX: 00007f00a703fd67
-  RDX: 0000000000000941 RSI: 00007ffc088e48d7 RDI: 00000000ffffff9c
-  RBP: 00007ffc088e48d7 R08: 0000000000000001 R09: 0000000000000000
-  R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000941
-  R13: 0000000000000000 R14: 00007ffc088e48d7 R15: 00007f00a7180040
-   </TASK>
-
-  Allocated by task 181:
-   kasan_save_stack+0x2f/0x60
-   kasan_set_track+0x29/0x40
-   kasan_save_alloc_info+0x25/0x40
-   __kasan_kmalloc+0xc5/0xd0
-   __kmalloc+0x66/0x160
-   ecryptfs_generate_key_packet_set+0x6d2/0xde0
-   ecryptfs_write_metadata+0x30a/0x550
-   ecryptfs_initialize_file+0x77/0x150
-   ecryptfs_create+0x1c2/0x2f0
-   path_openat+0x17cf/0x1ba0
-   do_filp_open+0x15e/0x290
-   do_sys_openat2+0x122/0x160
-   __x64_sys_openat+0xef/0x170
-   do_syscall_64+0x60/0xd0
-   entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-
-Fixes: dddfa461fc89 ("[PATCH] eCryptfs: Public key; packet management")
-Signed-off-by: Brian Kubisiak <brian@kubisiak.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- fs/ecryptfs/keystore.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_log_priv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ecryptfs/keystore.c b/fs/ecryptfs/keystore.c
-index 3fe41964c0d8..7f9f68c00ef6 100644
---- a/fs/ecryptfs/keystore.c
-+++ b/fs/ecryptfs/keystore.c
-@@ -300,9 +300,11 @@ write_tag_66_packet(char *signature, u8 cipher_code,
- 	 *         | Key Identifier Size      | 1 or 2 bytes |
- 	 *         | Key Identifier           | arbitrary    |
- 	 *         | File Encryption Key Size | 1 or 2 bytes |
-+	 *         | Cipher Code              | 1 byte       |
- 	 *         | File Encryption Key      | arbitrary    |
-+	 *         | Checksum                 | 2 bytes      |
- 	 */
--	data_len = (5 + ECRYPTFS_SIG_SIZE_HEX + crypt_stat->key_size);
-+	data_len = (8 + ECRYPTFS_SIG_SIZE_HEX + crypt_stat->key_size);
- 	*packet = kmalloc(data_len, GFP_KERNEL);
- 	message = *packet;
- 	if (!message) {
---
-2.41.0
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index e30c06ec20e3..25b6d6cdd545 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -683,7 +683,7 @@ xlog_valid_lsn(
+  * flags to control the kmalloc() behaviour within kvmalloc(). Hence kmalloc()
+  * will do direct reclaim and compaction in the slow path, both of which are
+  * horrendously expensive. We just want kmalloc to fail fast and fall back to
+- * vmalloc if it can't get somethign straight away from the free lists or
++ * vmalloc if it can't get something straight away from the free lists or
+  * buddy allocator. Hence we have to open code kvmalloc outselves here.
+  *
+  * This assumes that the caller uses memalloc_nofs_save task context here, so
+-- 
+2.44.0
 
