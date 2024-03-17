@@ -1,164 +1,133 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3A1BC3E
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 15:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3101C680
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 15:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710688519; cv=none; b=L73srDQaCjv+O2tQeHUSEe5uOIFzgmaJW+THzf0pY5Ig951GvzjlU7kZ2zCeT7K89tdWooa3OnlHw1bOGg5pl9p3Ak9UQym/0uUSpDtT39j2DIPmuhIeDktJMkFIcyntPpt2s/YlTQha4DCbuc7i1w8A+IW9nUWpGux0JymhAnk=
+	t=1710688527; cv=none; b=GqHtIMAaybVjdYnIcWU7f4D3EUXP95t1l7VgUgPXQ9BOAkX/ptTXL0ASSIS1I8G+w5NVhy2jcxjIWQrX+inyqAb4hxmBl4oxXTS8RKO0zwIsuDdwIhR/EFSw6toGiDGyfx31Es42QJYvPHIQeL3Xj4sI8q1/Nu3YmrK1tJfPvb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710688519; c=relaxed/simple;
-	bh=kaYuKya9UBwriBUHa6o1pYqZcxX4fV9WUX+UUTj66MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U1GHErp8V1Yxp9oCPpwDEnJADPYKRPHGiKeoBHD8rR9r9+EkH5blLuMPT/e25UJJV/AENqnzIGJOQLPpeoYNPsfDG9UKK69Y6vLG7o8Proq/J6AHfvfchEgR/virWhVflqhDpgY63SxmlUiHofgi8rSo0uSZo/3VDfqaN8zbIqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=E7CpAeJk; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="E7CpAeJk"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-430c45ab240so5769801cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 08:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1710688517; x=1711293317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x8Bq8ricK7SpfnlrwZMSGXpOWpIDbDpoqdg8e9TW9uQ=;
-        b=E7CpAeJkmtbme8jISPd22wjBt0+y+vul46MqIqDxZTDEUgH4/Aa8kJ+P7+M6OfGOEP
-         7x5K7HqPUZyjpHphiPQN7ZpWIvs0Ii1sy/VQNNKVMWgECD0OAvobIqbfrPG7HjhKkV/4
-         an8ILbMbb4n4yJAnXPrN1zQj0744Mwj1J6ktlRqGT8Jtg/g5wUTXGJMCofFLfINVLqMn
-         599UH3F0ddU1ODbF18skzOWtqTtiy6iVSq0sdyoIRcJun0cZPyBoTvvKx7bMePSrvWS9
-         HrQWwtz5jWoMCGE8LUJq7lT3BalyXDYW+rxV6I8+sikk3ojGyJjrA9lEW68fIPZb7Nnd
-         l6yg==
+	s=arc-20240116; t=1710688527; c=relaxed/simple;
+	bh=JNMyT6Pp9T/AN28IGslHtW/8uUWOtjEo+0vtv76E6ok=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=g9/cUJT9fxqhcNe+w26iOkdiSF2aTJHoPEIDY1gcw2IeFCNo2Ow26v5DPr8UJ4BLu2MxDE7JDYlCxYfKRaCnw0OW0XmFY4q9C8DWmOfUD558rGMohHviP+QH4JejSlVaEsrjLHWu6J2n2jWpQXirenrBHAZIxihEzSExJQ0Z5n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c7c9831579so333385239f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 08:15:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710688517; x=1711293317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x8Bq8ricK7SpfnlrwZMSGXpOWpIDbDpoqdg8e9TW9uQ=;
-        b=crA4lIh1eAWhNt3znMN1HVq1OV+jZwrN6Nicg7+5GOqP7qlgqWExZV+xobbBBsM+8k
-         kXypwbit2huEmCvFrZkzfWizQwZq3To8iYgOYBuyoheWSNcWfbPA4oFuXCpP3ce7T9jj
-         Bsv7RQSUxqq1PxwY0KFVl8LF98fpZOWvfaSeXbX72UvFEh19aWAa3pMF48cjocNTSQMr
-         QdXMDMLM5T4nh1cDY+MYatEAfu9kbIxkFmuTRUSgJFAB2iXm8wDUGfCx4+OPqa8BI09N
-         OM8w4iYzi8fBOtHNqolexbzlMch6m309sNjRkHEmvaKYIK4eaQHY9jGXVIHHc+zMQxMl
-         fUag==
-X-Gm-Message-State: AOJu0Yzcm7EUwK9odp1mEaPFikVgWlEwM4irJKFeGbeDfcX+q6HMJYbV
-	wu6koSPzEvr1p3PF5T2u3nihVOKCaWnVPgJhk2mbQZvnnCG98Vd7Yp12kbbicbM4X1iuRMK0s08
-	tlDX9QFWt5GaqQaCir8+E2cw8pSjIz/KWxv0HkQ==
-X-Google-Smtp-Source: AGHT+IHRAPcydBRpMUFgj5XZjiHwDEp09zHAlmm3AVMyNFl3KpX/jkVv43SatvVAp1AB+6jpq5N7cgzHOWpDQKo/lD0=
-X-Received: by 2002:a05:622a:47cd:b0:430:c139:ba12 with SMTP id
- dp13-20020a05622a47cd00b00430c139ba12mr5702897qtb.1.1710688517145; Sun, 17
- Mar 2024 08:15:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710688525; x=1711293325;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c4MegSmNgbP67cM4Eg9+6Ly/Lj6iOzU/s39gtIU5YNA=;
+        b=PLM5luvCJgMfLN/UUVPfp+qfBTir9plDh3FglNNXbIq3kI0KuBe1v45sK1Sq7vaVX1
+         ZB61ACteldOzSefL8pMmHMvi3+UeBz98uzSfIh38az6UKBRUB+jjlIGitQMj4ga9uT5W
+         bRR7DVPdw9lEtN8Nq/X7MaJ0zNxkNMQCnQ7ih8nHvRAHDcsqqemWxKlNsogIg7tRrEzy
+         em6EwhTls27Sgy+0T0X+PrHGPTI3Ba+3v2vC6BDdG14QwRSGte5RciA3znev5bHz1qUI
+         TDAHTo5HXhs4iDdeBFi8aGMlCbOwHQltbKiYl4bfFnTp81CfPQ3E6mgS6xCJXyPjf8H5
+         oLcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+0MHLsmizjTxfgSQBU2OMiOBXklavNhgaphBlGTyN1W096VGvmBmdiYFDJHeHdF4kydEM/vFtGxzNjUYLS0bmOYUCPPCl/UCLKwwG
+X-Gm-Message-State: AOJu0YzChxY4U1WraKN5rgd2LCAai5vtYkuj07ZYIN/mTrd2wZzHIVYQ
+	3kIJ4nfNP0tMhggdMG+IOY06mb71F00tdLd9HugFvAoJIOEa2+b1I8fmjUS4KJ+dktbzGPPPmdg
+	62Vt1vbaYTCj99rpHLe+dGckGDttc+TWuXnxvjOXlqiajkiKcnc/5DDQ=
+X-Google-Smtp-Source: AGHT+IGOI7cZzAMSL6yMplFa5y6AX80e1XSk0w8sadvRzZ0r+OU3OxUW29wdtXGii0ZbuxRyGaN5AC7dkymb2ah/cEDBUYSS2t8i
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311164638.2015063-1-pasha.tatashin@soleen.com>
- <20240311164638.2015063-5-pasha.tatashin@soleen.com> <0c6974b4-ba1f-474c-aed4-6c06d26ddb0a@wanadoo.fr>
-In-Reply-To: <0c6974b4-ba1f-474c-aed4-6c06d26ddb0a@wanadoo.fr>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 17 Mar 2024 11:14:41 -0400
-Message-ID: <CA+CK2bANnehyxC4qqgG3Qsj7UwM81PMQRkX_XrkZb=RoK7re5A@mail.gmail.com>
-Subject: Re: [RFC 04/14] fork: Remove assumption that vm_area->nr_pages equals
- to THREAD_SIZE
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, x86@kernel.org, bp@alien8.de, brauner@kernel.org, 
-	bristot@redhat.com, bsegall@google.com, dave.hansen@linux.intel.com, 
-	dianders@chromium.org, dietmar.eggemann@arm.com, eric.devolder@oracle.com, 
-	hca@linux.ibm.com, hch@infradead.org, hpa@zytor.com, 
-	jacob.jun.pan@linux.intel.com, jgg@ziepe.ca, jpoimboe@kernel.org, 
-	jroedel@suse.de, juri.lelli@redhat.com, kent.overstreet@linux.dev, 
-	kinseyho@google.com, kirill.shutemov@linux.intel.com, lstoakes@gmail.com, 
-	luto@kernel.org, mgorman@suse.de, mic@digikod.net, 
-	michael.christie@oracle.com, mingo@redhat.com, mjguzik@gmail.com, 
-	mst@redhat.com, npiggin@gmail.com, peterz@infradead.org, pmladek@suse.com, 
-	rick.p.edgecombe@intel.com, rostedt@goodmis.org, surenb@google.com, 
-	tglx@linutronix.de, urezki@gmail.com, vincent.guittot@linaro.org
+X-Received: by 2002:a05:6e02:502:b0:366:b7c0:9c72 with SMTP id
+ d2-20020a056e02050200b00366b7c09c72mr89508ils.3.1710688525553; Sun, 17 Mar
+ 2024 08:15:25 -0700 (PDT)
+Date: Sun, 17 Mar 2024 08:15:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e327b00613dcb50d@google.com>
+Subject: [syzbot] [bluetooth?] WARNING in l2cap_chan_del
+From: syzbot <syzbot+3272785b7a1fc9b510f6@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 17, 2024 at 10:45=E2=80=AFAM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 11/03/2024 =C3=A0 17:46, Pasha Tatashin a =C3=A9crit :
-> > In many places number of pages in the stack is detremined via
-> > (THREAD_SIZE / PAGE_SIZE). There is also a BUG_ON() that ensures that
-> > (THREAD_SIZE / PAGE_SIZE) is indeed equals to vm_area->nr_pages.
-> >
-> > However, with dynamic stacks, the number of pages in vm_area will grow
-> > with stack, therefore, use vm_area->nr_pages to determine the actual
-> > number of pages allocated in stack.
-> >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >   kernel/fork.c | 18 +++++++++---------
-> >   1 file changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 60e812825a7a..a35f4008afa0 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -243,13 +243,11 @@ static int free_vm_stack_cache(unsigned int cpu)
-> >
-> >   static int memcg_charge_kernel_stack(struct vm_struct *vm)
->
-> Maybe s/vm/vm_area/ as done in 03/14?
+Hello,
 
-Yes, I will add it to 03/14.
+syzbot found the following issue on:
 
-Thank you,
-Pasha
+HEAD commit:    b0546776ad3f Merge tag 'printk-for-6.9' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bf5b99180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ae24324b37fdefe
+dashboard link: https://syzkaller.appspot.com/bug?extid=3272785b7a1fc9b510f6
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
->
-> CJ
->
-> >   {
-> > -     int i;
-> > -     int ret;
-> > +     int i, ret, nr_pages;
-> >       int nr_charged =3D 0;
-> >
-> > -     BUG_ON(vm->nr_pages !=3D THREAD_SIZE / PAGE_SIZE);
-> > -
-> > -     for (i =3D 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
-> > +     nr_pages =3D vm->nr_pages;
-> > +     for (i =3D 0; i < nr_pages; i++) {
-> >               ret =3D memcg_kmem_charge_page(vm->pages[i], GFP_KERNEL, =
-0);
-> >               if (ret)
-> >                       goto err;
-> > @@ -531,9 +529,10 @@ static void account_kernel_stack(struct task_struc=
-t *tsk, int account)
-> >   {
-> >       if (IS_ENABLED(CONFIG_VMAP_STACK)) {
-> >               struct vm_struct *vm =3D task_stack_vm_area(tsk);
-> > -             int i;
-> > +             int i, nr_pages;
-> >
-> > -             for (i =3D 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-> > +             nr_pages =3D vm->nr_pages;
-> > +             for (i =3D 0; i < nr_pages; i++)
-> >                       mod_lruvec_page_state(vm->pages[i], NR_KERNEL_STA=
-CK_KB,
-> >                                             account * (PAGE_SIZE / 1024=
-));
-> >       } else {
-> > @@ -551,10 +550,11 @@ void exit_task_stack_account(struct task_struct *=
-tsk)
-> >
-> >       if (IS_ENABLED(CONFIG_VMAP_STACK)) {
-> >               struct vm_struct *vm;
-> > -             int i;
-> > +             int i, nr_pages;
-> >
-> >               vm =3D task_stack_vm_area(tsk);
-> > -             for (i =3D 0; i < THREAD_SIZE / PAGE_SIZE; i++)
-> > +             nr_pages =3D vm->nr_pages;
-> > +             for (i =3D 0; i < nr_pages; i++)
-> >                       memcg_kmem_uncharge_page(vm->pages[i], 0);
-> >       }
-> >   }
->
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-b0546776.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a07801fab32c/vmlinux-b0546776.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0696c91a7e74/bzImage-b0546776.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3272785b7a1fc9b510f6@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9 at kernel/workqueue.c:2322 __queue_work+0xc44/0x1170 kernel/workqueue.c:2321
+Modules linked in:
+CPU: 0 PID: 9 Comm: kworker/0:1 Not tainted 6.8.0-syzkaller-05292-gb0546776ad3f #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Workqueue: events l2cap_chan_timeout
+RIP: 0010:__queue_work+0xc44/0x1170 kernel/workqueue.c:2321
+Code: 38 d0 7c 09 84 d2 74 05 e8 89 f6 8f 00 8b 5b 2c 31 ff 83 e3 20 89 de e8 5a 64 34 00 85 db 0f 85 fe 00 00 00 e8 6d 69 34 00 90 <0f> 0b 90 e9 1c f9 ff ff e8 5f 69 34 00 90 0f 0b 90 e9 cb f8 ff ff
+RSP: 0018:ffffc900003b7ab8 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffff888014c94000 RCX: ffffffff815ae3ea
+RDX: ffff888015704880 RSI: ffffffff815928d3 RDI: ffff888014c94008
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000200000 R11: 0000000000000004 R12: ffff88801f8648c0
+R13: 0000000000000008 R14: ffff88801f8648c8 R15: ffff88804bf9e000
+FS:  0000000000000000(0000) GS:ffff88802c200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000030e25000 CR3: 00000000277b0000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __queue_delayed_work+0x21b/0x2e0 kernel/workqueue.c:2551
+ queue_delayed_work_on+0x10e/0x130 kernel/workqueue.c:2595
+ queue_delayed_work include/linux/workqueue.h:620 [inline]
+ hci_conn_drop include/net/bluetooth/hci_core.h:1621 [inline]
+ hci_conn_drop include/net/bluetooth/hci_core.h:1591 [inline]
+ l2cap_chan_del+0x5a3/0x930 net/bluetooth/l2cap_core.c:647
+ l2cap_chan_close+0xff/0xa30 net/bluetooth/l2cap_core.c:820
+ l2cap_chan_timeout+0x17d/0x2f0 net/bluetooth/l2cap_core.c:432
+ process_one_work+0x902/0x19d0 kernel/workqueue.c:3254
+ process_scheduled_works kernel/workqueue.c:3335 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3416
+ kthread+0x2c1/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
