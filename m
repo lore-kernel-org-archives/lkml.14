@@ -1,59 +1,59 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F321BF33
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 14:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953401BF35
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 14:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710687252; cv=none; b=nMa3T3wTMgH0fd8gcI7mp9MBwAvIr/XhvJvC81QtyRHT9haPbsW3hyA68S0+Gm5o5zsthN44+B8QrdTc0lUpka/FFerccjBs1EG9ZnGskhnB58WFtYWyI2NRkWg+T99XkyxvffcVm/4lLJxmPhdTrwAe2U5lJgCErTVwkt30lm4=
+	t=1710687485; cv=none; b=pbvwsdffP/mOnrJSNbftGMTdeEYwMKbxoqn25o+fx0bTztKMQiy14YokFTfHiov5KkMcx5aghNu8Vy01vVw4dB0UE9y8s4kzfunxf699qAXSjN+ADRCccLBFK6Zx2YWbScvgLruxFX053c0VPw3zcw6UB8ImFyodW8UtIBvjcL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710687252; c=relaxed/simple;
-	bh=ajWtv237Bv+oKh/juwF6U66csPcDteu3dIDtSzfF0fI=;
+	s=arc-20240116; t=1710687485; c=relaxed/simple;
+	bh=dQNmlwx/WspT2BDquts4YhsDpi6cW+wj50PQrWIcHX0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cQNWR1Xq5j17BOpzE8ITFtz6rd7hmvrDZR5jd6KUVEBix1IN66m1S2uwp9+dtBWj5f0zxKuFGGSg0/JIUQCUnfi87DTSgBGxAylxncQWOnl7/2D7W0FuYdab7cqKWi0Pfebw8zmJ6PCTY3/SBglwpDKydOC4F6tybQrOEqXmiE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r17cyB8R; arc=none smtp.client-ip=209.85.167.46
+	 In-Reply-To:Content-Type; b=Wlf19zE2lVJvtddQdZR7GUVYo1z7YX+Mpdw++lWaWtD4vmZNdvcevR1WFssRifDUzudSFRF+XVJb+Ih8W3SCtYK0udaM9roSfK/iM8CjjIPUdS/R1KmfsvThCjBQiFXGOKYlb2RKYfGmYEFPuKplo8icHYv6f0Wp8msCTQPV8V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CEnJOQ7b; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r17cyB8R"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513d23be0b6so3527424e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 07:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CEnJOQ7b"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-513d599dbabso3618548e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 07:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710687248; x=1711292048; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710687482; x=1711292282; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pCyIfA0V4sWoaXVSbPqj53E6ZKxjzQdojxCRFVhIypo=;
-        b=r17cyB8RDe+ln0hFeHNvNQhqZ7i6BpGJA9LP4fXUnfrDFMMVmbG3Li3poMND3DPRa1
-         FNykDaVOg719lHsjDhxFir0ztch1OQZccm7j32fiheIzhCh0biRpsnxeQ+2hNupsADah
-         ddZD+lV7GTPx2Bk3BE7QzA7wL2n87RxRC53odagFcL1uTG+3PPNIQ6e4ZZRvEJHEaxvO
-         bfjIXJ6SYhFf5QfAEA+FavJSwM+QEI/u3k7sLxxdr3VPVeVntATSQnxcZiP4HfzgVQQt
-         82rmgwTRW15QVZlqAZs9+2vXt1UaYK5z3ahHqFa2EZd1dE2DO89x9q2lZE57W/GeIUZK
-         yQrQ==
+        bh=90takAzy+UhOvr86bPj5srgQQEfnaD7PA320zI4kF/0=;
+        b=CEnJOQ7bToHisQQvFGzuEbSAMUkyAA8VmMk3rSqIh98MWupdBIWlBTngLLKV+xMFWT
+         B2n+JcqMrktm45KVNahvOGu/4r5RQUQ8rmi3aPCuDJIM6LteGkI90GEDG7hcQ5PeNa4M
+         aOd+IapVRJlA6wyGztLNQVL6yfG8KcandEMyoqnNqG3L3Bg/nsgN7vLyE1TMi2ZTxXyj
+         CzLiGL5mtCCOQv8DY6o9sLNXYszoKpZoGatPDj19N95LCU/gQPDLhGQtXH8Jj/aPlWRt
+         5YoKzU8H1+23nPLRQWe+Qq/PYYeNAeAIYkiy81DwAyhoEQlW5dqPDidbimoSn8BkbqSw
+         MOpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710687248; x=1711292048;
+        d=1e100.net; s=20230601; t=1710687482; x=1711292282;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pCyIfA0V4sWoaXVSbPqj53E6ZKxjzQdojxCRFVhIypo=;
-        b=B1PRF8QwRirmXzLdSdua2r3XwrtXMO2e9Nxu16W6ALWsYfe9A02W3LWJskvKiar7HS
-         IQUkJHbOfzeUL6kI+I+nfLgyqGj/G1E62Znhy2hqqOpOAwITPMpsG145V8wGz1q/597F
-         i3avhAhRadS+EZqvOJ5thMAThHSCdopiLVeNS8Rn7DVcOanj4aOqfhVtg/uu9/z0XSVH
-         xPNjzlLrXd4n66XYra72LR1BjMG2cL4x1fUsjWoBLSGPa+nS7mqv5IYkqZA/3tzHaM/D
-         9MWXMyrQvkGnhx+iUW02Owshlnm3MSoAwHlkv9qOp51fKRSsczSWK+lS+tmAXJBppxTz
-         rqbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAX1j4rsdSYkeVjizUo1d7aozxIfiYnaUaUkX55hJuMdO+fSpngbBpnMt9z6vi7MtArapXNXwc5oj9r1irjK238u4qVyQHihAKoNEy
-X-Gm-Message-State: AOJu0Yz0o2qGgLc5+nemKsJJvDSexNNuIUiafm1wNesWJHWYpKj3EdC/
-	oCKbr/52BaQ/3Z8Z1KbTQGZpU2oa4YIOMd8p5K6wTVWHZ2E3MYvotlXuOmy8a3w=
-X-Google-Smtp-Source: AGHT+IGJbwssiWlsWdfuFQ9peuYiRZI9eV1fb+4j9YU8uSY1mVYaNkTZfxLWU7guAVV/SllD/Hf14w==
-X-Received: by 2002:a05:6512:310c:b0:513:d1e3:b2b8 with SMTP id n12-20020a056512310c00b00513d1e3b2b8mr6300447lfb.37.1710687248311;
-        Sun, 17 Mar 2024 07:54:08 -0700 (PDT)
+        bh=90takAzy+UhOvr86bPj5srgQQEfnaD7PA320zI4kF/0=;
+        b=a9Y33WReMkX9OIdGzuU2syDEHgFxWyUB3k/Rcc5qPKUYiZqgPg2fG2aabx3H1jw+DE
+         N/ygoUHJZfpFTo5tDxJLDo1kzbYTgU8D/VaBp9rh8A2Lin0vD7U9cXo+fnVNiRHCgc6O
+         Sqn2KMD+FxnmskKgolzHlJNTDr5x6ybdzY/mbkBrqMLV515gXGmZBFDnYdi88VHg3VjE
+         dx7QMZpCjAz9oWBSmD34Kq8HQAxCwmn0whKpp/CszvtsANnQqgDaAZZZaIwzPPTwxjD5
+         bjiFSU4rdO7zqS6qWW0aBGDDe4bHuuu8pTj6VG3c3wM/M7rg+FrIOsHJTpRB14C67ZTB
+         IGuw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0IlKZ31R+ZgDuFjhHgAHtZr9EgXoxN/KKEC+H/KdLGu7M3lNOrq4YvY7reEnWCCx4OAm4FtVde7rBvyVaufZnCagdhSd+J4Wj91Ie
+X-Gm-Message-State: AOJu0Ywa/H2JWxCIGYePA2oE17pucsdmhMIzmMVcwUZkYA0IpKaJFtPE
+	+wAD6DdtTDylpfhPzlt73yQRAOkyjOyoxFJIE/TKaNDX4BZJCC0epW0hTdhtZGc=
+X-Google-Smtp-Source: AGHT+IHuXH0t9q962THsdU/sTb0vs2h82K3hnDeNvLPqnMGOBujfZWFt4HC1tGcnBxVsK8RXFTVZPQ==
+X-Received: by 2002:ac2:4990:0:b0:513:db34:7caf with SMTP id f16-20020ac24990000000b00513db347cafmr4256094lfl.17.1710687481625;
+        Sun, 17 Mar 2024 07:58:01 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id jx25-20020a170907761900b00a4661f0f1e7sm3822898ejc.205.2024.03.17.07.54.05
+        by smtp.gmail.com with ESMTPSA id h13-20020a19ca4d000000b00513b324cc32sm1302471lfj.268.2024.03.17.07.57.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Mar 2024 07:54:07 -0700 (PDT)
-Message-ID: <7ec4470f-9840-41bd-8db9-548249658de2@linaro.org>
-Date: Sun, 17 Mar 2024 15:54:05 +0100
+        Sun, 17 Mar 2024 07:58:01 -0700 (PDT)
+Message-ID: <1860c559-5a5c-4673-9d08-253f0945762b@linaro.org>
+Date: Sun, 17 Mar 2024 15:57:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,37 +61,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dt-bindings: net: add schema for NXP S32 dwmac glue
- driver
+Subject: Re: [PATCH v2 3/3] arm64: dts: allwinner: h616: add support for T95
+ tv boxes
 Content-Language: en-US
-To: Wadim Mueller <wafgo01@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+To: Kamil Kasperski <ressetkk@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Chester Lin <chester62515@gmail.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Matthias Brugger <mbrugger@suse.com>,
- NXP S32 Linux Team <s32@nxp.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
- Andrew Halaney <ahalaney@redhat.com>, Simon Horman <horms@kernel.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Johannes Zink <j.zink@pengutronix.de>, Shenwei Wang <shenwei.wang@nxp.com>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Swee Leong Ching <leong.ching.swee@intel.com>,
- Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-clk@vger.kernel.org
-References: <20240315222754.22366-1-wafgo01@gmail.com>
- <20240315222754.22366-4-wafgo01@gmail.com>
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+References: <20240317-add-t95-axp313-support-v2-0-e38032811758@gmail.com>
+ <20240317-add-t95-axp313-support-v2-3-e38032811758@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -137,51 +118,56 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240315222754.22366-4-wafgo01@gmail.com>
+In-Reply-To: <20240317-add-t95-axp313-support-v2-3-e38032811758@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15/03/2024 23:27, Wadim Mueller wrote:
-> Add DT binding schema documentation for the NXP S32 dwmac glue driver. This documentation is based on the patchset originally provided by Chester Lin [1]. This commit is a re-send of [2] and [3].
+On 17/03/2024 02:34, Kamil Kasperski wrote:
+> Add dtsi file for T95 tv boxes and add initial
+> support for T95 5G AXP313A variant with a board name
+> H616-T95MAX-AXP313A-v3.0
 > 
-> [1] https://patchwork.kernel.org/project/netdevbpf/patch/20221031101052.14956-6-clin@suse.com/#25068228
-> [2] https://lore.kernel.org/lkml/20221031101052.14956-1-clin@suse.com/T/#me96c28bd0536de276dee941469ea084d51b42244
-> [3] https://lore.kernel.org/lkml/20221031101052.14956-1-clin@suse.com/T/#m887a1b34e612f8dc0d5b718e4d6834c083f1e245
-> 
-> Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
-> ---
->  .../bindings/net/nxp,s32-dwmac.yaml           | 130 ++++++++++++++++++
->  .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +-
->  2 files changed, 133 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml b/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
-> new file mode 100644
-> index 000000000000..0fbca6ce7d60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/nxp,s32-dwmac.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/nxp,s32-dwmac.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: NXP S32 DWMAC Ethernet controller
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - nxp,s32-dwmac
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: "snps,dwmac.yaml#"
+> internal NAND chip is connected to NAND controller
+> I can't see any nand in sun50i-h616.dtsi, so access to
+> internal memory is not implemented.
 
-No, this wasn't tested. Please always test your patches before sending.
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+
+> 
+> Signed-off-by: Kamil Kasperski <ressetkk@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  arch/arm64/boot/dts/allwinner/sun50i-h616-t95.dtsi | 109 +++++++++++++++++++++
+>  .../dts/allwinner/sun50i-h616-t95max-axp313.dts    |  85 ++++++++++++++++
+>  3 files changed, 195 insertions(+)
+> 
+
+> +
+> +	reg_vcc3v3: vcc3v3 {
+> +		/* discrete 3.3V regulator */
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc-3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+
+No underscores in node names. From where did you copy this code?
+
+> +		compatible = "mmc-pwrseq-simple";
+> +		clocks = <&rtc CLK_OSC32K_FANOUT>;
+> +		clock-names = "ext_clock";
+> +		pinctrl-0 = <&x32clk_fanout_pin>;
+> +		pinctrl-names = "default";
+> +		reset-gpios = <&pio 6 18 GPIO_ACTIVE_LOW>; /* PG18 */
+> +	};
+> +};
+> +
+
 
 Best regards,
 Krzysztof
