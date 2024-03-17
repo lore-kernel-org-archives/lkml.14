@@ -1,56 +1,40 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB69E2262B;
-	Sun, 17 Mar 2024 10:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6588D1429E
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 10:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710669979; cv=none; b=S4dSIcvQNw/ABUvJj9rttPnppXZOFF+bAOQEQZ4pxsGagwdtssXz+1enRXw/ZERAVc3WYiaQPaYTrLQNWpGa2QLWVDwcwpCaxbLIpa+mFdNlPvM731cpIFC6xNouq9dXKdKZs5g58xmlMh+r0Vrvm2RJBS8r0cqf/YvGHBWrybU=
+	t=1710670060; cv=none; b=d5tGuwhsC5ejxF2skEeGBIOw+reUcoJJo+jxeH5xb1loN+DAT1x2KQeE5TPcuOkxPtpUgnXUxlrWCozj59NhuTNYMmW8WzX6Tj33YZCaXfIRkX/o/uK6ckTQt9RuaMS8JfmGuNAJZuE3hmOQf4M2OoVhKf/Y27cSCwokL3LZEqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710669979; c=relaxed/simple;
-	bh=q42jvxc824oMn20tXGHnRhs3Tlz0OL2GXGPox25vN48=;
+	s=arc-20240116; t=1710670060; c=relaxed/simple;
+	bh=Dd+txECsWPxDo8/UX9xOHTYg/YqF/JMxmfWhmQhjSdk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JvJyMt0q0NX9TRhmEksCIyxahw4tSYE6a2Jpx4xc1Dr2xu7DA6HBujs+ZNsCnywD9QCnD1RLxQZG7sznWJx50Ifs/hp/Vayk3+rC7o8CWa5EqfqD8NKM7DuaWNvR6J4KviXW/EOkf+YlEiYb8HGIRk6j2eRId6riA1IARRWeDds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ooS8u12l; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ooS8u12l"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710669969; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=z98465ZaH11yXBbtWUVSstMg1RtvmJ2/I5mDcCQ9Ufo=;
-	b=ooS8u12lH6pi1VKtwpoZbhbg9nMYANnDGNyUJYRjvc9MMy2AxrzYdNjN7kGpfNYctls98Je+jGOT2H6hfPvS26WnN1eps5KpuyZEu59kMxCvFCzeiFOTLOotC8dVwfhDi9vJ3uXeL1CYvDRfbQr/RRrjK3ZTZlMBCxzse5DD0j4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W2c99RL_1710669967;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W2c99RL_1710669967)
-          by smtp.aliyun-inc.com;
-          Sun, 17 Mar 2024 18:06:08 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wintera@linux.ibm.com,
-	twinkler@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	wenjia@linux.ibm.com,
-	jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [RFC PATCH net-next v4 10/11] net/smc: adapt cursor update when sndbuf and peer DMB are merged
-Date: Sun, 17 Mar 2024 18:05:44 +0800
-Message-Id: <20240317100545.96663-11-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240317100545.96663-1-guwen@linux.alibaba.com>
-References: <20240317100545.96663-1-guwen@linux.alibaba.com>
+	 MIME-Version; b=N6Jwt+OmRo+dFouI1wK4/MBNt9O2UNO/SpYT1TIGMn43lUsM+3DWfEYrM2FlabHozacIEzu7yPw/v7e6wPmk+3/75+lcKl6bGuQiIXerpnywNrktp1n2OOSoJ06v+OwqU+wFs4pYeEQQ1K/jnQ6oB1V0zEvLpvh92PplNyg24mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.9.14])
+	by sina.com (172.16.235.24) with ESMTP
+	id 65F6C04B00001617; Sun, 17 Mar 2024 18:05:02 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 20741545089403
+X-SMAIL-UIID: B3FC33FDA7A341D68DA4CFD9E69C11CF-20240317-180502-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in ip_skb_dst_mtu
+Date: Sun, 17 Mar 2024 18:04:51 +0800
+Message-Id: <20240317100451.2053-1-hdanton@sina.com>
+In-Reply-To: <0000000000008b9c410612fbd266@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,104 +43,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since ghost sndbuf shares the same physical memory with peer DMB,
-the cursor update processing needs to be adapted to ensure that the
-data to be consumed won't be overwritten.
+On Wed, 06 Mar 2024 02:57:18 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    805d849d7c3c Merge tag 'acpi-6.8-rc7' of git://git.kernel...
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1025fa6a180000
 
-So in this case, the fin_curs and sndbuf_space that were originally
-updated after sending the CDC message should be modified to not be
-update until the peer updates cons_curs.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
 
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- net/smc/smc_cdc.c | 52 +++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 41 insertions(+), 11 deletions(-)
-
-diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
-index 3c06625ceb20..bf5b214ec15a 100644
---- a/net/smc/smc_cdc.c
-+++ b/net/smc/smc_cdc.c
-@@ -18,6 +18,7 @@
- #include "smc_tx.h"
- #include "smc_rx.h"
- #include "smc_close.h"
-+#include "smc_ism.h"
+--- x/drivers/net/ipvlan/ipvlan_core.c
++++ y/drivers/net/ipvlan/ipvlan_core.c
+@@ -426,6 +426,7 @@ static noinline_for_stack int ipvlan_pro
+ 		.daddr = ip4h->daddr,
+ 		.saddr = ip4h->saddr,
+ 	};
++	struct sock *sk;
  
- /********************************** send *************************************/
+ 	rt = ip_route_output_flow(net, &fl4, NULL);
+ 	if (IS_ERR(rt))
+@@ -439,7 +440,12 @@ static noinline_for_stack int ipvlan_pro
  
-@@ -255,17 +256,25 @@ int smcd_cdc_msg_send(struct smc_connection *conn)
- 		return rc;
- 	smc_curs_copy(&conn->rx_curs_confirmed, &curs, conn);
- 	conn->local_rx_ctrl.prod_flags.cons_curs_upd_req = 0;
--	/* Calculate transmitted data and increment free send buffer space */
--	diff = smc_curs_diff(conn->sndbuf_desc->len, &conn->tx_curs_fin,
--			     &conn->tx_curs_sent);
--	/* increased by confirmed number of bytes */
--	smp_mb__before_atomic();
--	atomic_add(diff, &conn->sndbuf_space);
--	/* guarantee 0 <= sndbuf_space <= sndbuf_desc->len */
--	smp_mb__after_atomic();
--	smc_curs_copy(&conn->tx_curs_fin, &conn->tx_curs_sent, conn);
-+	if (!smc_ism_support_dmb_nocopy(conn->lgr->smcd)) {
-+		/* Ghost sndbuf shares the same memory region with
-+		 * peer DMB, so don't update the tx_curs_fin and
-+		 * sndbuf_space until peer has consumed the data.
-+		 */
-+		/* Calculate transmitted data and increment free
-+		 * send buffer space
-+		 */
-+		diff = smc_curs_diff(conn->sndbuf_desc->len, &conn->tx_curs_fin,
-+				     &conn->tx_curs_sent);
-+		/* increased by confirmed number of bytes */
-+		smp_mb__before_atomic();
-+		atomic_add(diff, &conn->sndbuf_space);
-+		/* guarantee 0 <= sndbuf_space <= sndbuf_desc->len */
-+		smp_mb__after_atomic();
-+		smc_curs_copy(&conn->tx_curs_fin, &conn->tx_curs_sent, conn);
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
  
--	smc_tx_sndbuf_nonfull(smc);
-+		smc_tx_sndbuf_nonfull(smc);
-+	}
- 	return rc;
- }
- 
-@@ -323,7 +332,7 @@ static void smc_cdc_msg_recv_action(struct smc_sock *smc,
- {
- 	union smc_host_cursor cons_old, prod_old;
- 	struct smc_connection *conn = &smc->conn;
--	int diff_cons, diff_prod;
-+	int diff_cons, diff_prod, diff_tx;
- 
- 	smc_curs_copy(&prod_old, &conn->local_rx_ctrl.prod, conn);
- 	smc_curs_copy(&cons_old, &conn->local_rx_ctrl.cons, conn);
-@@ -339,6 +348,27 @@ static void smc_cdc_msg_recv_action(struct smc_sock *smc,
- 		atomic_add(diff_cons, &conn->peer_rmbe_space);
- 		/* guarantee 0 <= peer_rmbe_space <= peer_rmbe_size */
- 		smp_mb__after_atomic();
-+
-+		if (conn->lgr->is_smcd &&
-+		    smc_ism_support_dmb_nocopy(conn->lgr->smcd)) {
-+			/* Ghost sndbuf shares the same memory region with
-+			 * peer RMB, so update tx_curs_fin and sndbuf_space
-+			 * when peer has consumed the data.
-+			 */
-+			/* calculate peer rmb consumed data */
-+			diff_tx = smc_curs_diff(conn->sndbuf_desc->len,
-+						&conn->tx_curs_fin,
-+						&conn->local_rx_ctrl.cons);
-+			/* increase local sndbuf space and fin_curs */
-+			smp_mb__before_atomic();
-+			atomic_add(diff_tx, &conn->sndbuf_space);
-+			/* guarantee 0 <= sndbuf_space <= sndbuf_desc->len */
-+			smp_mb__after_atomic();
-+			smc_curs_copy(&conn->tx_curs_fin,
-+				      &conn->local_rx_ctrl.cons, conn);
-+
-+			smc_tx_sndbuf_nonfull(smc);
-+		}
- 	}
- 
- 	diff_prod = smc_curs_diff(conn->rmb_desc->len, &prod_old,
--- 
-2.32.0.3.g01195cf9f
-
++	sk = skb->sk;
++	if (!sk)
++		goto err;
++	refcount_inc(&sk->sk_wmem_alloc);
+ 	err = ip_local_out(net, skb->sk, skb);
++	sk_free(sk);
+ 	if (unlikely(net_xmit_eval(err)))
+ 		DEV_STATS_INC(dev, tx_errors);
+ 	else
+--- x/kernel/rcu/tree.c
++++ y/kernel/rcu/tree.c
+@@ -4025,6 +4025,7 @@ static void rcu_barrier_entrain(struct r
+ 	wake_nocb = was_alldone && rcu_segcblist_pend_cbs(&rdp->cblist);
+ 	if (rcu_segcblist_entrain(&rdp->cblist, &rdp->barrier_head)) {
+ 		atomic_inc(&rcu_state.barrier_cpu_count);
++		wake_nocb = true;
+ 	} else {
+ 		debug_rcu_head_unqueue(&rdp->barrier_head);
+ 		rcu_barrier_trace(TPS("IRQNQ"), -1, rcu_state.barrier_sequence);
+--
