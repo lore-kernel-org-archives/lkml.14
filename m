@@ -1,57 +1,57 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B439210EC;
-	Sun, 17 Mar 2024 19:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0102420323;
+	Sun, 17 Mar 2024 19:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710704310; cv=none; b=tVWUaney2Sw+MP0XZF8PCRsRMu9/A5unXDkXQM7018U/cVkaUhRtLNTIlwk2sUBeSs3dShZ+2a6khCrdaqEl90FrS8JDVNX+0VTfDGjx6ve/WEnw6PwGN7d/uLCEDrVIWq5BI7X3x5ICoHGBUnRCr9cWbr8B8bCoeumhGlmX8BA=
+	t=1710704326; cv=none; b=Ub8RAI8PGC6m/RyBbJ07f7BwgWYnCDWypVmGSV1uXLv34RBEZTJxUdR+FJfesrTjvbA6FErfJ9wA+Y0i2JPCm7US5badHQar+o8WptqAo3dBEUM6sirmB5zqbwk8/o4ApnJdO/EgCQfg2EVMMjj6AvpWIm24hPq8adP0SGQToEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710704310; c=relaxed/simple;
-	bh=lUHaerA7sm8HS5VEf8GULwhZwvO9fhb5VvvPZ5w1aXE=;
+	s=arc-20240116; t=1710704326; c=relaxed/simple;
+	bh=zde3M6Y1JOzRO5e3g2eBRl5mSIHaobfX2LHthOYLsEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sVRqC3Wy2/idW8CHzbinBKjyAaFjWXy9Y81wA9S0LgTcwO43g0urI2az2nRbWoSTr/a7EYJmGxPlIhbBDEmFm+iKFD5lZBrISR5KN6i+PBJyOd6Mm8lBtGLJTsDufuCM/b5s22b+nPKX/hEXwyXRuBdgxp/2N9EPEV4Rxi7gP3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxrVru5O; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=gW83p42zpTRAczTj/OqzVG/af+R82Hcc9VZ8Z+WsTfGlx0sA4HQGC83hYdjjpNn2qbCstbt7Ny9wDn2vCn20xJdPHL3DTgDloZ75D65WD9P84MfnuIz4OMw4vXF+nn6dedWi/v62lW43b7W8yt/kMi0+1Kh7oMBMLNs7YL0mUBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NizJg7cn; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxrVru5O"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-29f69710cbbso687279a91.1;
-        Sun, 17 Mar 2024 12:38:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NizJg7cn"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c37e87756dso1047542b6e.3;
+        Sun, 17 Mar 2024 12:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710704307; x=1711309107; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710704324; x=1711309124; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vO9G69iyqVQbbyIAUNqe8gLJ4ujwClNwkyBvzcpz7K4=;
-        b=hxrVru5O3Cre08TFhHhN7tPR4O/p6APp+RNLa6G3LIaKLPAmodJrjG/xenZUoGrqSY
-         K/kyQ2cbq75Gl330n6ZMskHD9Zr/CfBC7C2hKdSDrEmvM8phB+Sb1R1aRpLwSI8k34Mw
-         PtcBQmSa1AgbWLLeYLfmqbzgwz2HGXIxCEyqpLQsYI6jb9C7OvFCuH2ogvifrW2bWAyi
-         ns/fGfFaVGSIYHj1/kegkdpEsC5EpI4Ubjs9czRg3LmPtp8REP3asBGPUAKmMKRKv23E
-         vSPItUJWXLHIQD4oTCutOl1BAPKz1S8ximIifhuHLNVnxIZsNKV/1d7LLc5SLN1ecfFe
-         En6g==
+        bh=OT6hmngmg7LhsdhWQVbZrDuHFIRfbTgzLQihr9TF8as=;
+        b=NizJg7cnyVai5S0GO+K4gBjYFqL620u6LKUW6bE6P1pGH0kvWObrYMqiL4RKudKO9s
+         XTfEwkCpsFGHeoeFWusAdpuLHJje9pGMq9dC1tQzdN1u19mVSCBLwqkVSYEn1bekVbf5
+         f4zKqIrZdYXgomlXcfhODq7EOCsOtCxjGredJScpRwhm6gWbsHyHqOGPix/TKu9/cXea
+         ijXfbHfVQXMmBspnfE/ZGBV3vzr9H4nOwMaPX11nH/G1GLwn1AUo7Wm5UsqEgvyoWc7L
+         bXtNDUWewDizE1OeicXWjRV69ncqKgmiQB/HEEXDfHx4zGRRKjcwD9q5Awn0nCrYaf3L
+         uSWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710704307; x=1711309107;
+        d=1e100.net; s=20230601; t=1710704324; x=1711309124;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vO9G69iyqVQbbyIAUNqe8gLJ4ujwClNwkyBvzcpz7K4=;
-        b=lBkzshzmHWzZq3puaxbvq8Xee5XohMh24dTe8jQ415fSbPE/Y+poPK4AkOfqwteGnO
-         lIYw9aeTvLQlLk966Ih+oHfGNrAjyIx4/XyBHSFyTe+zBU9kpK2UkeUOsxc+/QLy2smG
-         sRpdpRPqfPbuxVAr7Xqx6bHWCOvSGakeqGLWxOqX55fnG8F/FHZqtfPpzQJCZG/lSK1H
-         7Gc3+PWTlyqTzPNB18DIu0tWwwY3Fj5AZLgyWWuWfGpPVBdtmlZDVde5SZUpvgcY4UBa
-         MdQv8zexGwXCP7nzxbvd71YeLclJV4oWh8TmmJmqJXCpTba6cTx4mu6NMAK/AMgN7Ojz
-         aB3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWFjFhZjxcWHZzZ7yzfK3UvFMLkLchjYkLTVMIXv572T/rxsue/w/MeUcc7eOVuAuTwrtBk+HODcweSisLuWKLTA9k1DZTCX2joldXeLSilQpmPkhBqN7VTNLhou6N3d8NW1KnBRA==
-X-Gm-Message-State: AOJu0Yy1desVxjkQCKwyLTcV79v6ycwVP5Ugr5ioyH5ywqHFf/qr8gQR
-	oIzq8ooBxoBrXi5U9maZ+m0y5BK41qGoXeUQQb++f1ccKO8mO9f7jvdbPGqPxdg=
-X-Google-Smtp-Source: AGHT+IHb5ZQG5AZs1yNwiaA+uHOH5JqdctbG/pUZFDyCNz6pl0xo2W10sE+uFQzu766SlSdKr8rJ2g==
-X-Received: by 2002:a17:90a:de93:b0:29d:fb99:7dcc with SMTP id n19-20020a17090ade9300b0029dfb997dccmr9795831pjv.18.1710704306906;
-        Sun, 17 Mar 2024 12:38:26 -0700 (PDT)
+        bh=OT6hmngmg7LhsdhWQVbZrDuHFIRfbTgzLQihr9TF8as=;
+        b=Jwiz8sbezvjoMMFafieh1Pm+qjn1Wj4hnQdDuPEhCB5oUGfUcbK++4RE3vgiGw61rS
+         OkEsGMR7NOBz6e73BoYSO6moH6kgulpuIrMt/+9KcKB4I+Gk9BHAppVw/buT5AA+V9iA
+         95BG6byhkPZj3DsYPiqv3uKWZNfNsnscCS7UndV8EDMmbrG3Ot1njFAfVPAKmjSRUSX/
+         +VScJtS+c0TWkxO2WZX96bPMMUVdD7e36Z50ZelLygwHSGFHEjRgmkso6GohTJRLGW2g
+         UXvh+CTQO05d1HQFJXXaFj4knrCujgTbUfXZJDVEwQs////lzMe8V7rTMTxGVbey8/hV
+         hHHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgz48OcM8HaIEgT+Jf8CLz55NH8WfsEh29LohkTfGxRDqzEa8xFd/3IiqhaB426axdZLVPA70uIe96r7tF++1mQQN390XiGzQUtbGyEBJAobCrS7UEzsoxNbn04nyON8VBdGNvIg==
+X-Gm-Message-State: AOJu0YzyaoKtOXmLWaTpXihZUDS6WqBzCJg9F01daZnpQ+y6J2jMY/Ey
+	+HuCB1RbXpNgu4GPGySXxDxK8AFoxIqsyQtFfWNV4qC19Kwh58oupitaxOBylJk=
+X-Google-Smtp-Source: AGHT+IFUpPTaU6PvOX+AKPaPFj4Fu6IdLBC3LDsxuIWxs0yZJKnWwhoTrKzOxe3YGH55CzjEL+bang==
+X-Received: by 2002:a05:6358:7e92:b0:17c:1e63:d02e with SMTP id o18-20020a0563587e9200b0017c1e63d02emr13107142rwn.2.1710704323604;
+        Sun, 17 Mar 2024 12:38:43 -0700 (PDT)
 Received: from toolbox.iitism.net ([103.15.228.94])
-        by smtp.gmail.com with ESMTPSA id st6-20020a17090b1fc600b0029bbdc920besm6125995pjb.44.2024.03.17.12.38.18
+        by smtp.gmail.com with ESMTPSA id st6-20020a17090b1fc600b0029bbdc920besm6125995pjb.44.2024.03.17.12.38.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Mar 2024 12:38:26 -0700 (PDT)
+        Sun, 17 Mar 2024 12:38:43 -0700 (PDT)
 From: Ayush Singh <ayushdevel1325@gmail.com>
 To: linux-kernel@vger.kernel.org (open list)
 Cc: Ayush Singh <ayushdevel1325@gmail.com>,
@@ -77,9 +77,9 @@ Cc: Ayush Singh <ayushdevel1325@gmail.com>,
 	linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
 	greybus-dev@lists.linaro.org (moderated list:GREYBUS SUBSYSTEM),
 	Vaishnav M A <vaishnav@beagleboard.org>
-Subject: [PATCH v4 3/5] greybus: Add mikroBUS manifest types
-Date: Mon, 18 Mar 2024 01:07:11 +0530
-Message-ID: <20240317193714.403132-4-ayushdevel1325@gmail.com>
+Subject: [PATCH v4 5/5] dts: ti: k3-am625-beagleplay: Add mikroBUS
+Date: Mon, 18 Mar 2024 01:07:13 +0530
+Message-ID: <20240317193714.403132-6-ayushdevel1325@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240317193714.403132-1-ayushdevel1325@gmail.com>
 References: <20240317193714.403132-1-ayushdevel1325@gmail.com>
@@ -93,188 +93,173 @@ Content-Transfer-Encoding: 8bit
 
 DONOTMERGE
 
-mikroBUS addon boards allow using same mikroBUS connector for a wide
-range of peripherals. It is also possible for the addon board not to use
-all the pins in mikroBUS socket (marked by NC or Not Connected). This
-would require the need to create an almost new overlays for each
-permutation of the hardware.
+this patch depends on patch 1
 
-To overcome this, a manifest format based on Greybus manifest
-specification was created which allows describing mikroBUS addon boards.
-The reason for choosing greybus manifest for the identifier is that so far
-we discussed only about physical mikroBUS ports on the board, but we can
-also have mikroBUS ports on a remote microcontroller appearing on host
-over greybus and there a device tree overlay solution does not work as the
-standard identifier mechanism.
-
-The patch introduces 3 new greybus descriptor types:
-1. mikrobus-descriptor:
-   Is a fixed-length descriptor (12 bytes), and the manifest shall have
-   precisely one mikroBUS descriptor. Each byte describes a configuration
-   of the corresponding pin on the mikroBUS addon board in a clockwise
-   direction starting from the PWM pin omitting power (VCC and ground)
-   pins as same as the default state of the pin.
-   There are mikroBUS addon boards that use some dedicated SPI, UART, PWM,
-   and I2C pins as GPIO pins, so it is necessary to redefine the default
-   pin configuration of that pins on the host system. Also, sometimes it is
-   required the pull-up on the host pin for correct functionality
-2. property-descriptor:
-   Are used to pass named properties or named GPIOs to the host. The host
-   system uses this information to properly configure specific board
-   drivers by passing the properties and GPIO name. There can be multiple
-   instances of property descriptors per add-on board manifest.
-3. device-descriptor:
-   Describes a device on the mikroBUS port. The device descriptor is a
-   fixed-length descriptor, and there can be multiple instances of device
-   descriptors in an add-on board manifest in cases where the add-on board
-   presents more than one device to the host.
-
-New mikroBUS addon boards also sometimes contain a 1-wire EEPROM with
-the mikroBUS manifest, thus enabling plug and play support.
-
-I have also created PR to add mikrobus descriptors in Greybus spec and I
-think the old PR on manifesto by Vaishnav should also work. However,
-both of these repositories seem to be inactive. I am guessing the
-greybus mailing list can provide more information on how I should go
-about these.
-
-Here is a sample mikroBUS manifest:
-```
-;;
-; PRESSURE CLICK
-; https://www.mikroe.com/pressure-click
-; CONFIG_IIO_ST_PRESS
-;
-; Copyright 2020 BeagleBoard.org Foundation
-; Copyright 2020 Texas Instruments
-;
-
-[manifest-header]
-version-major = 0
-version-minor = 1
-
-[interface-descriptor]
-vendor-string-id = 1
-product-string-id = 2
-
-[string-descriptor 1]
-string = MIKROE
-
-[string-descriptor 2]
-string = Pressure
-
-[mikrobus-descriptor]
-pwm-state = 4
-int-state = 1
-rx-state = 7
-tx-state = 7
-scl-state = 6
-sda-state = 6
-mosi-state = 5
-miso-state = 5
-sck-state = 5
-cs-state = 5
-rst-state = 2
-an-state = 1
-
-[device-descriptor 1]
-driver-string-id = 3
-protocol = 0x3
-reg = 0x5d
-
-[string-descriptor 3]
-string = lps331ap
-```
-
-Link: https://www.mikroe.com/clickid ClickID
-Link:
-https://docs.beagleboard.org/latest/projects/beagleconnect/index.html
-beagleconnect
-Link: https://github.com/projectara/greybus-spec Greybus Spec
-Link: https://github.com/projectara/greybus-spec/pull/4 Greybus Spec PR
-Link: https://github.com/projectara/manifesto/pull/2 manifesto PR
+Add mikroBUS connector support for Beagleplay.
 
 Co-developed-by: Vaishnav M A <vaishnav@beagleboard.org>
 Signed-off-by: Vaishnav M A <vaishnav@beagleboard.org>
 Signed-off-by: Ayush Singh <ayushdevel1325@gmail.com>
 ---
- include/linux/greybus/greybus_manifest.h | 49 ++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ .../arm64/boot/dts/ti/k3-am625-beagleplay.dts | 80 +++++++++++++++++--
+ 1 file changed, 72 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/greybus/greybus_manifest.h b/include/linux/greybus/greybus_manifest.h
-index bef9eb2093e9..83241e19d9b3 100644
---- a/include/linux/greybus/greybus_manifest.h
-+++ b/include/linux/greybus/greybus_manifest.h
-@@ -23,6 +23,9 @@ enum greybus_descriptor_type {
- 	GREYBUS_TYPE_STRING		= 0x02,
- 	GREYBUS_TYPE_BUNDLE		= 0x03,
- 	GREYBUS_TYPE_CPORT		= 0x04,
-+	GREYBUS_TYPE_MIKROBUS		= 0x05,
-+	GREYBUS_TYPE_PROPERTY		= 0x06,
-+	GREYBUS_TYPE_DEVICE		= 0x07,
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index a34e0df2ab86..e1dce1b80153 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -29,6 +29,7 @@ aliases {
+ 		i2c3 = &main_i2c3;
+ 		i2c4 = &wkup_i2c0;
+ 		i2c5 = &mcu_i2c0;
++		mikrobus0 = &mikrobus0;
+ 		mmc0 = &sdhci0;
+ 		mmc1 = &sdhci1;
+ 		mmc2 = &sdhci2;
+@@ -230,6 +231,38 @@ simple-audio-card,codec {
+ 		};
+ 	};
+ 
++	mikrobus0: mikrobus-connector {
++		compatible = "mikrobus-connector";
++		pinctrl-names = "default", "pwm_default", "pwm_gpio",
++				"uart_default", "uart_gpio", "i2c_default",
++				"i2c_gpio", "spi_default", "spi_gpio";
++		pinctrl-0 = <&mikrobus_gpio_pins_default>;
++		pinctrl-1 = <&mikrobus_pwm_pins_default>;
++		pinctrl-2 = <&mikrobus_pwm_pins_gpio>;
++		pinctrl-3 = <&mikrobus_uart_pins_default>;
++		pinctrl-4 = <&mikrobus_uart_pins_gpio>;
++		pinctrl-5 = <&mikrobus_i2c_pins_default>;
++		pinctrl-6 = <&mikrobus_i2c_pins_gpio>;
++		pinctrl-7 = <&mikrobus_spi_pins_default>;
++		pinctrl-8 = <&mikrobus_spi_pins_gpio>;
++		pwms = <&ecap2 0 500000 0>;
++		i2c-adapter = <&main_i2c3>;
++		spi-controller = <&main_spi2>;
++		uart = <&main_uart5>;
++		spi-cs = <0 1>;
++		mikrobus-gpios = <&main_gpio1 11 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 9 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 24 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 25 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 22 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 23 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 7 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 8 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 14 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 13 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 12 GPIO_ACTIVE_HIGH>,
++				 <&main_gpio1 10 GPIO_ACTIVE_HIGH>;
++	};
  };
  
- enum greybus_protocol {
-@@ -151,6 +154,49 @@ struct greybus_descriptor_cport {
- 	__u8	protocol_id;	/* enum greybus_protocol */
- } __packed;
- 
-+/*
-+ * A mikrobus descriptor is used to describe the details
-+ * about the bus ocnfiguration for the add-on board
-+ * connected to the mikrobus port.
-+ */
-+struct greybus_descriptor_mikrobus {
-+	__u8 pin_state[12];
-+} __packed;
-+
-+/*
-+ * A property descriptor is used to pass named properties
-+ * to device drivers through the unified device properties
-+ * interface under linux/property.h
-+ */
-+struct greybus_descriptor_property {
-+	__u8 length;
-+	__u8 id;
-+	__u8 propname_stringid;
-+	__u8 type;
-+	__u8 value[];
-+} __packed;
-+
-+/*
-+ * A device descriptor is used to describe the
-+ * details required by a add-on board device
-+ * driver.
-+ */
-+struct greybus_descriptor_device {
-+	__u8 id;
-+	__u8 driver_stringid;
-+	__u8 protocol;
-+	__u8 reg;
-+	__le32 max_speed_hz;
-+	__u8 irq;
-+	__u8 irq_type;
-+	__u8 mode;
-+	__u8 prop_link;
-+	__u8 gpio_link;
-+	__u8 reg_link;
-+	__u8 clock_link;
-+	__u8 pad[1];
-+} __packed;
-+
- struct greybus_descriptor_header {
- 	__le16	size;
- 	__u8	type;		/* enum greybus_descriptor_type */
-@@ -164,6 +210,9 @@ struct greybus_descriptor {
- 		struct greybus_descriptor_interface	interface;
- 		struct greybus_descriptor_bundle	bundle;
- 		struct greybus_descriptor_cport		cport;
-+		struct greybus_descriptor_mikrobus	mikrobus;
-+		struct greybus_descriptor_property	property;
-+		struct greybus_descriptor_device	device;
+ &main_pmx0 {
+@@ -389,6 +422,18 @@ AM62X_IOPAD(0x01f0, PIN_OUTPUT, 5) /* (A18) EXT_REFCLK1.CLKOUT0 */
+ 		>;
  	};
- } __packed;
  
++	mikrobus_pwm_pins_default: mikrobus-pwm-default-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x01a4, PIN_INPUT, 2) /* (B20) MCASP0_ACLKX.ECAP2_IN_APWM_OUT */
++		>;
++	};
++
++	mikrobus_pwm_pins_gpio: mikrobus-pwm-gpio-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x01a4, PIN_INPUT, 7) /* (B20) MCASP0_ACLKX.GPIO1_11 */
++		>;
++	};
++
+ 	mikrobus_i2c_pins_default: mikrobus-i2c-default-pins {
+ 		pinctrl-single,pins = <
+ 			AM62X_IOPAD(0x01d0, PIN_INPUT_PULLUP, 2) /* (A15) UART0_CTSn.I2C3_SCL */
+@@ -396,6 +441,13 @@ AM62X_IOPAD(0x01d4, PIN_INPUT_PULLUP, 2) /* (B15) UART0_RTSn.I2C3_SDA */
+ 		>;
+ 	};
+ 
++	mikrobus_i2c_pins_gpio: mikrobus-i2c-gpio-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x01d0, PIN_INPUT, 7) /* (A15) UART0_CTSn.GPIO1_22 */
++			AM62X_IOPAD(0x01d4, PIN_INPUT, 7) /* (B15) UART0_RTSn.GPIO1_23 */
++		>;
++	};
++
+ 	mikrobus_uart_pins_default: mikrobus-uart-default-pins {
+ 		pinctrl-single,pins = <
+ 			AM62X_IOPAD(0x01d8, PIN_INPUT, 1) /* (C15) MCAN0_TX.UART5_RXD */
+@@ -403,6 +455,13 @@ AM62X_IOPAD(0x01dc, PIN_OUTPUT, 1) /* (E15) MCAN0_RX.UART5_TXD */
+ 		>;
+ 	};
+ 
++	mikrobus_uart_pins_gpio: mikrobus-uart-gpio-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x01d8, PIN_INPUT, 7) /* (C15) MCAN0_TX.GPIO1_24 */
++			AM62X_IOPAD(0x01dc, PIN_INPUT, 7) /* (E15) MCAN0_RX.GPIO1_25 */
++		>;
++	};
++
+ 	mikrobus_spi_pins_default: mikrobus-spi-default-pins {
+ 		pinctrl-single,pins = <
+ 			AM62X_IOPAD(0x01b0, PIN_INPUT, 1) /* (A20) MCASP0_ACLKR.SPI2_CLK */
+@@ -412,6 +471,15 @@ AM62X_IOPAD(0x0198, PIN_INPUT, 1) /* (A19) MCASP0_AXR2.SPI2_D1 */
+ 		>;
+ 	};
+ 
++	mikrobus_spi_pins_gpio: mikrobus-spi-gpio-pins {
++		pinctrl-single,pins = <
++			AM62X_IOPAD(0x0194, PIN_INPUT, 7) /* (B19) MCASP0_AXR3.GPIO1_7 */
++			AM62X_IOPAD(0x0198, PIN_INPUT, 7) /* (A19) MCASP0_AXR2.GPIO1_8 */
++			AM62X_IOPAD(0x01ac, PIN_INPUT, 7) /* (E19) MCASP0_AFSR.GPIO1_13 */
++			AM62X_IOPAD(0x01b0, PIN_INPUT, 7) /* (A20) MCASP0_ACLKR.GPIO1_14 */
++		>;
++	};
++
+ 	mikrobus_gpio_pins_default: mikrobus-gpio-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -629,8 +697,6 @@ &main_gpio0 {
+ 
+ &main_gpio1 {
+ 	bootph-all;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mikrobus_gpio_pins_default>;
+ 	gpio-line-names = "", "", "", "", "",			/* 0-4 */
+ 		"SPE_RSTN", "SPE_INTN", "MIKROBUS_GPIO1_7",	/* 5-7 */
+ 		"MIKROBUS_GPIO1_8", "MIKROBUS_GPIO1_9",		/* 8-9 */
+@@ -803,15 +869,11 @@ it66121_out: endpoint {
+ };
+ 
+ &main_i2c3 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mikrobus_i2c_pins_default>;
+ 	clock-frequency = <400000>;
+ 	status = "okay";
+ };
+ 
+ &main_spi2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mikrobus_spi_pins_default>;
+ 	status = "okay";
+ };
+ 
+@@ -875,8 +937,6 @@ &main_uart1 {
+ };
+ 
+ &main_uart5 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mikrobus_uart_pins_default>;
+ 	status = "okay";
+ };
+ 
+@@ -926,3 +986,7 @@ &mcasp1 {
+ 	tx-num-evt = <32>;
+ 	rx-num-evt = <32>;
+ };
++
++&ecap2 {
++	status = "okay";
++};
 -- 
 2.44.0
 
