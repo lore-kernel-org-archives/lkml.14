@@ -1,465 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781B48BEF;
-	Sun, 17 Mar 2024 13:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D501C11
+	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 13:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710683712; cv=none; b=KnymRQ3as0wMzncwfdWO3J5CbUGJWeoEg+BXWDV6AafKgBORao5fp0ZoUWLRxXbSZ/87rBRImOpf51pBYxDkj2opXFg2cjQUgbX9VV4ePjmga0oO9YgOZqI+/ZTMSnEM5rH4cvpfGIGSLOydHi4xNrAxVj1x9pYGpxH1OqVSlaY=
+	t=1710683885; cv=none; b=kno8Qh6UDEh5a+VKOZ+H9KoJ23teux9Qf7fqT4of+jPGwlDamfD/RPr6Ssd14BL7/6M+4SXyr3UlixxGAXZmrNCbkMlJeEMqT4U+xCEaAnRFLY0g9TEuoa8XTXrcJnvQM25W6MMingJ/9jOsgZSIHBizx94zsnRnXBza6lC0xxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710683712; c=relaxed/simple;
-	bh=1j35XH9tFVU7pcjWANMkwvTMdTV+XgLtE/fhAT0gKMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a6+SAT9DR2w3hqdaBaStIHSsb84VxpgLxbhaM+3SUGH95jpoqG1ffw+Q9THkNx7kUvh50wThTJObV6a8EbgfIinsu9oNoCN2kBkPmM3lFr6B2g3ECSk84bCxeXoWOZFFOwTehZW2AGonhxw1MBqKlX0lOsbw4Ogxv/QcUstmof4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnWDyfpo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnWDyfpo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3FDC433C7;
-	Sun, 17 Mar 2024 13:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710683712;
-	bh=1j35XH9tFVU7pcjWANMkwvTMdTV+XgLtE/fhAT0gKMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HnWDyfpoOBCdbaS09Z6xK895X5+v3W4tP6YrPxCBuyAhZL6044qls5Xxtycj+T3jV
-	 tu2uKYXNlEw9lnN7D9fNFs2gBNeJcAE9QaBU3kUKNpxXOOllUdRMLL5aXfx8vidrlJ
-	 apPvV3h6d9XI+GCVEDhSJCsPtsGEJk80K5tedGMQiB5epkwgYjb4k0kvI+xL35qKmy
-	 FkSvOPMsrjYDWfU5HQlaOZDtaQcHKUFhyKRXeVSrGWoujYHi5CgqOCG28AAi1eSIWf
-	 y4EzzYL/Rf0lkn3GTcR3VRYIwT7KDJgn3Jt8/baqzv8+wp7ANmi0OkgyOAd5PSKii0
-	 8OhilZL1A3bng==
-Date: Sun, 17 Mar 2024 14:55:08 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Seiderer <ps.report@gmx.net>
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
-Message-ID: <Zfb2POtwUqhZE9Yt@debian>
-References: <7ubz52rfdl2i76sotvd3s4thv6jvbfao6zct3sywqus2owlvkx@wpbeqqdvipo4>
- <ZehMWQ0LkemsTHAC@debian>
- <CAK1VsR0XZMgUW8qMQMcDPohD8-+OZsgW68sZegLbVy6cdoWucQ@mail.gmail.com>
- <ZehrtwSDQV-X7BXV@debian>
- <CAK1VsR3MsyphK+=rA7XcEigiSd6J_-QsVW+8hH1fU9xmRY3nGQ@mail.gmail.com>
- <CAK1VsR2zaCT3Bs1cwCEfLhAPXjwNk1byzNq5y32C736=hxqjoA@mail.gmail.com>
- <ZfX0EBsVl4a5FQ_L@debian>
- <f7pbphvm5cqgdblxyhbz6xucfu3fvfmvhidl2hftqirr6bn2bh@sfz26be5ss5e>
- <ZfZPTsdxElzcqtpe@debian>
- <6okjxxxylfeedmng6xafklbyrnleihzw3twr6mqvta4ihuxaxc@3bpndgyuv6ek>
+	s=arc-20240116; t=1710683885; c=relaxed/simple;
+	bh=L9G4HDohrXQuIakqxZZFzidXl1q6Qm9FtmslfgpyzRk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cTRmul5NQJBxuggewO1+blTLTd3IB4+pwmv3X3Jga+1WySgdVFZgGtcfpDQkeIpIoV73Y87yYx8mBuVRwAMNrDKTvsZ0riOkVugNCq5+SAia4h87O+upGruOssQfKDeLNSyRZLe+Hzu5SbktFvRI7KV0IHsS8ZNNawenSe+PH34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cc044e7456so104674139f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 06:58:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710683883; x=1711288683;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eD5+B9KN5f6+6XpRxSKGiUG39g7Rk1aFKdCD3iKDsCk=;
+        b=torsgMeIOe2+LPOHCxFB8nLIepQnuJavZ17Q8AYS2l4o37Gf6CWz0Wg7tsLPtlGvMD
+         MVZndRWZYFHgEyiZATe96mUdyZnjTndtbMt9o45xGMBPRegj0ZwZW3+rzx7YRQitegpT
+         Hb2iU78Udc33RCf3heJ0j7Wye8GPf1LfiUp3oOVKvJuIHPG81X/14eDzCZpC1Gk5gCfX
+         graH5NzCD4EtyF5De2MQpfqRlCCC5R/3QguddtzQeO1QGomErFF3nVT2Q+oA38+6bnQR
+         H/DLCuo4WKLCd/V2XDcktZEgt+wYbK12y7MZT+BGbJL6T45BeKijKNo9ZZGmmF3OJrmi
+         lK6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUtwbbBnloOskaqzrVFFISLJNa8qsMhSyZ3NVLmxgplUbZBhQhZIoS1LiS+TxrgFGpgHrdNoK9jh2USsdtJdj+X3Rx5LMGskSd6Q6Fp
+X-Gm-Message-State: AOJu0YxlOhfLLTV3k+JXMugjDjGUhQeXBCUFf1tWhvHvhhQ/QWX87tV1
+	MqI53vX+layVAwjo9NvyuUT9+a/naEcU/SiUOWI6g76cwCdQKR4HeOoM5ItlFzZbg30w0U8tqRS
+	IJDMaw8bzzzPSM7YkEiLkcUCXN0kG7FSTKQXtNCxRD/YqrdO9vj8ELuQ=
+X-Google-Smtp-Source: AGHT+IHPul9WGgkKqm7B8jSCs3hOp4iNttQYvYYPfYn6tt6kgff+bf7Kr/d5QUuiKI5Un4eH0JnQ1vAaB29H+fcRR2HAvVFMlWKf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YUMixvJ16Vqtr1cR"
-Content-Disposition: inline
-In-Reply-To: <6okjxxxylfeedmng6xafklbyrnleihzw3twr6mqvta4ihuxaxc@3bpndgyuv6ek>
+X-Received: by 2002:a05:6e02:5ab:b0:366:b26a:ecb0 with SMTP id
+ k11-20020a056e0205ab00b00366b26aecb0mr38488ils.6.1710683883125; Sun, 17 Mar
+ 2024 06:58:03 -0700 (PDT)
+Date: Sun, 17 Mar 2024 06:58:03 -0700
+In-Reply-To: <CAOQ4uxjdGyN84GV7rA3FTWYzvSTTY6+bza2PvHn2mNpHTPfxFA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002d50840613dba1c2@google.com>
+Subject: Re: [syzbot] [overlayfs?] WARNING in ovl_copy_up_file
+From: syzbot <syzbot+3abd99031b42acf367ef@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---YUMixvJ16Vqtr1cR
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 17 Mar 2024 14:55:08 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Oliver Crumrine <ozlinuxc@gmail.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Seiderer <ps.report@gmx.net>
-Subject: Re: [PATCH] ip.7: Add not supported by SOCK_STREAM to socket options
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Hi Oliver,
+Reported-and-tested-by: syzbot+3abd99031b42acf367ef@syzkaller.appspotmail.com
 
-On Sun, Mar 17, 2024 at 05:02:39AM -0400, Oliver Crumrine wrote:
-> I just realized I had cc linked to a homebrew c compler on my system and
-> that's why Wall and Wextra weren't giving me the same warnings they were
-> giving you. Oops.
->=20
-> Anyway, I have put cc back to gcc, and I finally see the unused variable
-> warnings, and I cleaned them up.=20
+Tested on:
 
-Okay, with the programs below, and after some whitespace fixes, I see
-the following diff of the servers, which sounds reasonable:
+commit:         a8d73a85 ovl: relax WARN_ON in ovl_verify_area()
+git tree:       https://github.com/amir73il/linux ovl-fixes
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d627b6180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2271d60b0617d474
+dashboard link: https://syzkaller.appspot.com/bug?extid=3abd99031b42acf367ef
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
-$ diff -u d.c s.c=20
---- d.c	2024-03-17 14:27:26.476377947 +0100
-+++ s.c	2024-03-17 14:27:36.800391759 +0100
-@@ -24,7 +24,7 @@
- 	struct sockaddr_in local_addr;
- 	int s;
- =09
--	s =3D socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-+	s =3D socket(AF_INET, SOCK_STREAM, 0);
- 	if (s =3D=3D -1)
- 		err(1, "error creating socket");
- =09
-@@ -40,8 +40,17 @@
-=20
- 	if (bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr)) =3D=3D -1)
- 		err(1, "error binding to port. try changing it or running as root");
-+=09
-+	if (listen(s, 10) =3D=3D -1) //10 is just an arbitrary number
-+		err(1, "error listening on port");
-=20
- 	while (1) {
-+		int connfd =3D accept(s, (struct sockaddr*)NULL, NULL);
-+		if (connfd =3D=3D -1)
-+			err(1, "error accepting connection");
-+		if (setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) =3D=3D -1) //s=
-tream sockets should have this set on the connected socket as well. I left =
-it above for uniformity between the two programs.
-+			err(1, "error setting socket option");
-+=09
- 		struct msghdr mhdr;
- 		struct iovec iov[1];
- 		struct cmsghdr *cmhdr;
-@@ -60,9 +69,9 @@
- 		memset(databuf, 0, sizeof(databuf));=09
- 	=09
- 		//this is blocking
--		int msglen =3D recvmsg(s, &mhdr, 0);
-+		int msglen =3D recvmsg(connfd, &mhdr, 0);
- 		if (msglen =3D=3D -1)
--			err(1, "recvmsg");
-+			err(1, "recvmsg\n");
-=20
- 		cmhdr =3D CMSG_FIRSTHDR(&mhdr);
- 		while (cmhdr) {
-@@ -75,6 +84,7 @@
- 		}
- 		//print out the first byte of data recieved in hex. You can verify this =
-in wireshark if you like.
- 		printf("data read: %sbyte =3D %02X\n", databuf, tos);
-+		close(connfd);
- 	}
-=20
- 	close(s);
-
-> Peter said on the previous reply to this that netcat only worked for him
-> when it was forced to IPv4, using the -4 option, so that may be the
-> issue you are facing with the program.
-
-And the programs behave as reported when adding -4.
-
-> #include <stdio.h>
-> #include <err.h>
-> #include <string.h>
-> #include <stdlib.h>
-> #include <arpa/inet.h>
-> #include <sys/socket.h>
-> #include <unistd.h>
->=20
-> #define PORT 8888 //The port on which to send data
-> #define ADDR "127.0.0.1" //The internet address to send packets to
->=20
-> int main(void){
-> 	int s;
-> 	struct sockaddr_in server_addr;
->=20
-> 	char buf[] =3D "testing 1 2 3\n";
->=20
-> 	s =3D socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-Why use IPPROTO_UDP?  ip(7)'s SYNOPSIS uses 0.  Are there any other
-protocols available with (AF_INET, SOCK_DGRAM)?
-
-Now about the patch, it seems to miss IP_RETOPTS, which is also handled
-in ip_cmsg_recv_offset()?  Or am I missing something?
-
-Please resend the programs when you send v2 of the patch, not send the
-client programs, and show a diff of both programs.
-
-Have a lovely day!
-Alex
-
-> 	if(s =3D=3D -1){
-> 		err(1, "error creating socket");
-> 	}
->=20
-> 	memset(&server_addr, 0, sizeof(server_addr));
-> =09
-> 	server_addr.sin_family =3D AF_INET;
-> 	server_addr.sin_port =3D htons(PORT);
-> 	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) !=3D 1){ //I realize =
-I'm checking the return value differently here. If you read the man page fo=
-r inet_pton, it'll make sense.
-> 		err(1, "error converting network address");
-> 	}
->=20
-> 	if(sendto(s, buf, strlen(buf), 0, (struct sockaddr*)&server_addr, sizeof=
-(server_addr)) =3D=3D -1){
-> 		err(1, "error sending data");
-> 	}
-> =09
-> 	close(s);
-> }
-
-> #include<stdio.h>
-> #include<err.h>
-> #include<string.h>
-> #include<stdlib.h>
-> #include<arpa/inet.h>
-> #include<sys/socket.h>
-> #include<unistd.h>
->=20
-> #define PORT 8888	//The port on which to listen for incoming data
->=20
->=20
-> //Hi Alex,
-> //These are the two lines that allow you to switch between the three sock=
-et options outlined in my patch
-> //The socket options tell the kernel to add a control message (cmsg), all=
-owing the program
-> //to recieve the data it is requesting. The three options are: IP_RECVTOS=
- for the type of service byte,
-> //IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for som=
-e random packet info.
-> #define SOCKOPT IP_RECVORIGDSTADDR
-> //This field is synonymous with the above one. Valid options are: IP_TOS,=
- IP_ORIGDSTADDR, and IP_PKTINFO
-> #define RECIVEOPTION IP_ORIGDSTADDR
->=20
-> int main(void){
-> 	struct sockaddr_in local_addr;=09
-> 	int s;
-> =09
-> 	s =3D socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-> 	if (s =3D=3D -1){
-> 		err(1, "error creating socket");
-> 	}
-> =09
-> 	memset(&local_addr, 0, sizeof(local_addr));
-> =09
-> 	local_addr.sin_family =3D AF_INET;
-> 	local_addr.sin_port =3D htons(PORT);
-> 	local_addr.sin_addr.s_addr =3D htonl(INADDR_ANY);
->=20
-> 	int yes =3D 1;
-> 	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) =3D=3D -1){
-> 		err(1, "error setting socket option");
-> 	}
->=20
->=20
-> 	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) =3D=3D -1=
-){
-> 		err(1, "error binding to port. try changing it or running as root");
-> 	}
->=20
-> 	while(1){
-> 		struct msghdr mhdr;
-> 		struct iovec iov[1];
-> 		struct cmsghdr *cmhdr;
-> 		char control[1000];
-> 		char databuf[BUFSIZ];
-> 		unsigned char tos =3D 0;
->=20
-> 		mhdr.msg_name =3D &local_addr;
-> 		mhdr.msg_namelen =3D sizeof(local_addr);
-> 		mhdr.msg_iov =3D iov;
-> 		mhdr.msg_iovlen =3D 1;
-> 		mhdr.msg_control =3D &control;
-> 		mhdr.msg_controllen =3D sizeof(control);
-> 		iov[0].iov_base =3D databuf;
-> 		iov[0].iov_len =3D sizeof(databuf);
-> 		memset(databuf, 0, sizeof(databuf));=09
-> 	=09
-> 		//this is blocking
-> 		int msglen =3D recvmsg(s, &mhdr, 0);
-> 		if (msglen =3D=3D -1){
-> 			err(1, "recvmsg");
-> 		}
-> 		cmhdr =3D CMSG_FIRSTHDR(&mhdr);
-> 		while (cmhdr) {
-> 			printf("cmsg recieved\n");
-> 			if (cmhdr->cmsg_level =3D=3D IPPROTO_IP && cmhdr->cmsg_type =3D=3D REC=
-IVEOPTION) {
-> 				//read the byte recieved
-> 				tos =3D ((unsigned char *)CMSG_DATA(cmhdr))[0];
-> 			}
-> 			cmhdr =3D CMSG_NXTHDR(&mhdr, cmhdr);
-> 		}
-> 		//print out the first byte of data recieved in hex. You can verify this=
- in wireshark if you like.
-> 		printf("data read: %sbyte =3D %02X\n", databuf, tos);	=09
-> 	=09
-> 	}
->=20
-> 	close(s);
-> 	return 0;
-> }
-
-> #include <stdio.h>
-> #include <err.h>
-> #include <string.h>
-> #include <stdlib.h>
-> #include <arpa/inet.h>
-> #include <sys/socket.h>
-> #include <unistd.h>
->=20
-> #define PORT 8888 //The port on which to send data
-> #define ADDR "127.0.0.1" //The internet address to send packets to
->=20
-> int main(void){
-> 	int s;
-> 	struct sockaddr_in server_addr;
->=20
-> 	char buf[] =3D "testing 1 2 3\n";
->=20
-> 	s =3D socket(AF_INET, SOCK_STREAM, 0);
-> 	if(s =3D=3D -1){
-> 		err(1, "error creating socket");
-> 	}
->=20
-> 	memset(&server_addr, 0, sizeof(server_addr));
-> =09
-> 	server_addr.sin_family =3D AF_INET;
-> 	server_addr.sin_port =3D htons(PORT);
-> 	if(inet_pton(AF_INET, ADDR, &server_addr.sin_addr) !=3D 1){ // I realize=
- I'm checking the return value differently here. If you read the man page f=
-or inet_pton, it'll make sense.
-> 		err(1, "error converting network address");
-> 	}
->=20
-> 	if(connect(s, (struct sockaddr*)&server_addr, sizeof(server_addr)) =3D=
-=3D -1){
-> 		err(1, "error connecting");
-> 	}
-> 	if(send(s, buf, strlen(buf), 0) =3D=3D -1){
-> 		err(1, "error sending data");
-> 	}
-> =09
-> 	close(s);
-> }
-
-> #include<stdio.h>
-> #include<err.h>
-> #include<string.h>
-> #include<stdlib.h>
-> #include<arpa/inet.h>
-> #include<sys/socket.h>
-> #include<unistd.h>
->=20
-> #define PORT 8888	//The port on which to listen for incoming data
->=20
->=20
-> //Hi Alex,
-> //These are the two lines that allow you to switch between the three sock=
-et options outlined in my patch
-> //The socket options tell the kernel to add a control message (cmsg), all=
-owing the program
-> //to recieve the data it is requesting. The three options are: IP_RECVTOS=
- for the type of service byte,
-> //IP_RECVORIGDSTADDR for the orignial dst address, and IP_PKTINFO for som=
-e random packet info.
-> #define SOCKOPT IP_RECVORIGDSTADDR
-> //This field is synonymous with the above one. Valid options are: IP_TOS,=
- IP_ORIGDSTADDR, and IP_PKTINFO
-> #define RECIVEOPTION IP_ORIGDSTADDR
->=20
-> int main(void){
-> 	struct sockaddr_in local_addr;
-> 	int s;
-> =09
-> 	s =3D socket(AF_INET, SOCK_STREAM, 0);
-> 	if (s =3D=3D -1){
-> 		err(1, "error creating socket");
-> 	}
-> =09
-> 	memset(&local_addr, 0, sizeof(local_addr));
-> =09
-> 	local_addr.sin_family =3D AF_INET;
-> 	local_addr.sin_port =3D htons(PORT);
-> 	local_addr.sin_addr.s_addr =3D htonl(INADDR_ANY);
->=20
-> 	int yes =3D 1;
-> 	if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) =3D=3D -1){
-> 		err(1, "error setting socket option");
-> 	}
->=20
->=20
-> 	if(bind(s, (struct sockaddr*)&local_addr, sizeof(local_addr) ) =3D=3D -1=
-){
-> 		err(1, "error binding to port. try changing it or running as root");
-> 	}
-> =09
-> 	if(listen(s, 10) =3D=3D -1){ //10 is the backlog of un-accepted connecti=
-ons. its just an arbitrary number
-> 		err(1, "error listening on port");
-> 	}
->=20
-> 	while(1){
-> 		int connfd =3D accept(s, (struct sockaddr*)NULL, NULL);
-> 		if(connfd =3D=3D -1){
-> 			err(1, "error accepting connection");
-> 		}
-> 		if(setsockopt(s, IPPROTO_IP, SOCKOPT, &yes, sizeof(yes)) =3D=3D -1){ //=
-stream sockets should have this set on the connected socket as well. I left=
- it above for uniformity between the two programs.
-> 			err(1, "error setting socket option");
-> 		}
-> =09
-> 		struct msghdr mhdr;
-> 		struct iovec iov[1];
-> 		struct cmsghdr *cmhdr;
-> 		char control[1000];
-> 		char databuf[BUFSIZ];
-> 		unsigned char tos =3D 0;
->=20
-> 		mhdr.msg_name =3D &local_addr;
-> 		mhdr.msg_namelen =3D sizeof(local_addr);
-> 		mhdr.msg_iov =3D iov;
-> 		mhdr.msg_iovlen =3D 1;
-> 		mhdr.msg_control =3D &control;
-> 		mhdr.msg_controllen =3D sizeof(control);
-> 		iov[0].iov_base =3D databuf;
-> 		iov[0].iov_len =3D sizeof(databuf);
-> 		memset(databuf, 0, sizeof(databuf));=09
-> 	=09
-> 		//this is blocking
-> 		int msglen =3D recvmsg(connfd, &mhdr, 0);
-> 		if (msglen =3D=3D -1){
-> 			err(1, "recvmsg\n");
-> 		}
-> 		cmhdr =3D CMSG_FIRSTHDR(&mhdr);
-> 		while (cmhdr) {
-> 			printf("cmsg recieved\n");
-> 			if (cmhdr->cmsg_level =3D=3D IPPROTO_IP && cmhdr->cmsg_type =3D=3D REC=
-IVEOPTION) {
-> 				//read the byte recieved
-> 				tos =3D ((unsigned char *)CMSG_DATA(cmhdr))[0];
-> 			}
-> 			cmhdr =3D CMSG_NXTHDR(&mhdr, cmhdr);
-> 		}
-> 		//print out the first byte of data recieved in hex. You can verify this=
- in wireshark if you like.
-> 		printf("data read: %sbyte =3D %02X\n", databuf, tos);=09
-> 		close(connfd);
-> 	}
->=20
-> 	close(s);
-> 	return 0;
-> }
-
-
---=20
-<https://www.alejandro-colomar.es/>
-
---YUMixvJ16Vqtr1cR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmX29jwACgkQnowa+77/
-2zKVxQ//fAVbwdsy35SQxrz/5b4jamYZKMzSxOo2WpgWFO61g3+p+TBxJndndn9d
-hGMKNdDJ5JsA1rlOqStCnyQe0JvHm9ID7Mp3C2qemOpw0GruXE9kJaxjhGudI47E
-TuRLiPTZ09kxHEXQ18mAeGxRYT6XUAXtx5WG85LMDeJS/F7ciTuPp5kmVe9fLItU
-A/VLzH5qVoLRw4yNF9NvXUu7GPewsjpuiVuibR7uOlfh+zfRftxZ5wAiuqb79vlJ
-yFpy4JVb7/eGr2vJM6MFER4fYzx1MOdnoD/qffwOHjC/CatdWBcmmquO9DsgX4VH
-V5tLzSKtdzMUTUb+6vrtjMuOUHCk9EaFv2C443hKpa/YcrW2fhXKzj3rmjHp15UR
-NuuSQHV++5c0FVYrkSr0df1szEF2whA24J2FcQr6VHSt88Aq7EsQuCQH2gjncK39
-YfSMixUHP2vgA7PuSLckfrwBBPQaQFt6f8YtUm8FVp6an0qM7QQQhGNPQ1MBj0xY
-/AzgxaNZkW3b68ZCtDv56am/MNd75RNPNslecyRTyEUxroythBEbgz7Uz8yCPeqk
-QXDYdpCe0AKk+N4h+Y8xsM1FYFwAb/0w1rXAy9w/8724am+2bs+RHVDa3TcxLUt0
-6/cQgRd/45qjITUqplxYdqehL+aNfDmQCTb1LAd2mGntrCWQGEc=
-=lmzF
------END PGP SIGNATURE-----
-
---YUMixvJ16Vqtr1cR--
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
