@@ -1,40 +1,56 @@
-Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6588D1429E
-	for <linux-kernel@vger.kernel.org>; Sun, 17 Mar 2024 10:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D9514A85;
+	Sun, 17 Mar 2024 10:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710670060; cv=none; b=d5tGuwhsC5ejxF2skEeGBIOw+reUcoJJo+jxeH5xb1loN+DAT1x2KQeE5TPcuOkxPtpUgnXUxlrWCozj59NhuTNYMmW8WzX6Tj33YZCaXfIRkX/o/uK6ckTQt9RuaMS8JfmGuNAJZuE3hmOQf4M2OoVhKf/Y27cSCwokL3LZEqo=
+	t=1710670275; cv=none; b=RfmgZY06HoO0HwPjEDoM2rQ63yeuqJ3jZzweeoWPL20v9XNodI5kBwJMJAaU5DmWsa0PbIPAo0TteKHrfIp1sES1Q+ce7sopFs9z6XqgVEk/9dfvts2lJRf0Bgg1vFoZmcdidOl4xih9dTbd0p5MRPvyCSlGc4xNbbQxVFUzm70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710670060; c=relaxed/simple;
-	bh=Dd+txECsWPxDo8/UX9xOHTYg/YqF/JMxmfWhmQhjSdk=;
+	s=arc-20240116; t=1710670275; c=relaxed/simple;
+	bh=6wEN+AYA7xgUP1zm+npurszQ6R0sY0XEGXDU+rAAOFQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N6Jwt+OmRo+dFouI1wK4/MBNt9O2UNO/SpYT1TIGMn43lUsM+3DWfEYrM2FlabHozacIEzu7yPw/v7e6wPmk+3/75+lcKl6bGuQiIXerpnywNrktp1n2OOSoJ06v+OwqU+wFs4pYeEQQ1K/jnQ6oB1V0zEvLpvh92PplNyg24mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.9.14])
-	by sina.com (172.16.235.24) with ESMTP
-	id 65F6C04B00001617; Sun, 17 Mar 2024 18:05:02 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 20741545089403
-X-SMAIL-UIID: B3FC33FDA7A341D68DA4CFD9E69C11CF-20240317-180502-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+e5167d7144a62715044c@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in ip_skb_dst_mtu
-Date: Sun, 17 Mar 2024 18:04:51 +0800
-Message-Id: <20240317100451.2053-1-hdanton@sina.com>
-In-Reply-To: <0000000000008b9c410612fbd266@google.com>
-References: 
+	 MIME-Version; b=kQTOIo9cqI9LVQ0KWmpB7LppZvLRrGwiOxa5jolzYgEI8VzpgrUXyETElQkVDY+bOhGVMpBNLPoh0GHukIwxo7ITLHpGgT4MfJq0EHId62RaknAOLGtAc769a4lET1XyD1nJiCPRu5TGujj4/kg2uKbCt7gfREGWzv6rGz5z2qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QehXaSaU; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QehXaSaU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1710670271; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=IIAQ3smKJ1xO0QXGHU7ULNYQ3GbL0dtaim54yNSvNgs=;
+	b=QehXaSaUULR4e2tXiEDnGqkZjc/3EB8451JvAtI1m7E95q8+jSD+0gMuIdaECwR0iN5DVvOVz5Itbxx1BRz4JfiAQQvShdf1pdnPIc8OLKjSAzl0VguxGiqT5AAd0N8FUjz7lDjtP6dmoeAyb5zQ/NSlaBSYsxl6xsEMpWWrA5g=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W2c99Jz_1710669948;
+Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W2c99Jz_1710669948)
+          by smtp.aliyun-inc.com;
+          Sun, 17 Mar 2024 18:05:49 +0800
+From: Wen Gu <guwen@linux.alibaba.com>
+To: wintera@linux.ibm.com,
+	twinkler@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wenjia@linux.ibm.com,
+	jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com,
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [RFC PATCH net-next v4 01/11] net/smc: decouple ism_client from SMC-D DMB registration
+Date: Sun, 17 Mar 2024 18:05:35 +0800
+Message-Id: <20240317100545.96663-2-guwen@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+In-Reply-To: <20240317100545.96663-1-guwen@linux.alibaba.com>
+References: <20240317100545.96663-1-guwen@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,46 +59,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 06 Mar 2024 02:57:18 -0800
-> syzbot found the following issue on:
-> 
-> HEAD commit:    805d849d7c3c Merge tag 'acpi-6.8-rc7' of git://git.kernel...
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1025fa6a180000
+The struct 'ism_client' is specialized for s390 platform firmware ISM.
+So replace it with 'void' to make SMCD DMB registration helper generic
+for both Emulated-ISM and existing ISM.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
+Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+---
+ drivers/s390/net/ism_drv.c | 2 +-
+ include/net/smc.h          | 4 ++--
+ net/smc/smc_ism.c          | 7 ++-----
+ 3 files changed, 5 insertions(+), 8 deletions(-)
 
---- x/drivers/net/ipvlan/ipvlan_core.c
-+++ y/drivers/net/ipvlan/ipvlan_core.c
-@@ -426,6 +426,7 @@ static noinline_for_stack int ipvlan_pro
- 		.daddr = ip4h->daddr,
- 		.saddr = ip4h->saddr,
- 	};
-+	struct sock *sk;
+diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
+index 2c8e964425dc..9b2a52913e76 100644
+--- a/drivers/s390/net/ism_drv.c
++++ b/drivers/s390/net/ism_drv.c
+@@ -726,7 +726,7 @@ static int smcd_query_rgid(struct smcd_dev *smcd, struct smcd_gid *rgid,
+ }
  
- 	rt = ip_route_output_flow(net, &fl4, NULL);
- 	if (IS_ERR(rt))
-@@ -439,7 +440,12 @@ static noinline_for_stack int ipvlan_pro
+ static int smcd_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
+-			     struct ism_client *client)
++			     void *client)
+ {
+ 	return ism_register_dmb(smcd->priv, (struct ism_dmb *)dmb, client);
+ }
+diff --git a/include/net/smc.h b/include/net/smc.h
+index c9dcb30e3fd9..6273c3a8b24a 100644
+--- a/include/net/smc.h
++++ b/include/net/smc.h
+@@ -50,7 +50,6 @@ struct smcd_dmb {
+ #define ISM_ERROR	0xFFFF
  
- 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+ struct smcd_dev;
+-struct ism_client;
  
-+	sk = skb->sk;
-+	if (!sk)
-+		goto err;
-+	refcount_inc(&sk->sk_wmem_alloc);
- 	err = ip_local_out(net, skb->sk, skb);
-+	sk_free(sk);
- 	if (unlikely(net_xmit_eval(err)))
- 		DEV_STATS_INC(dev, tx_errors);
- 	else
---- x/kernel/rcu/tree.c
-+++ y/kernel/rcu/tree.c
-@@ -4025,6 +4025,7 @@ static void rcu_barrier_entrain(struct r
- 	wake_nocb = was_alldone && rcu_segcblist_pend_cbs(&rdp->cblist);
- 	if (rcu_segcblist_entrain(&rdp->cblist, &rdp->barrier_head)) {
- 		atomic_inc(&rcu_state.barrier_cpu_count);
-+		wake_nocb = true;
- 	} else {
- 		debug_rcu_head_unqueue(&rdp->barrier_head);
- 		rcu_barrier_trace(TPS("IRQNQ"), -1, rcu_state.barrier_sequence);
---
+ struct smcd_gid {
+ 	u64	gid;
+@@ -61,7 +60,7 @@ struct smcd_ops {
+ 	int (*query_remote_gid)(struct smcd_dev *dev, struct smcd_gid *rgid,
+ 				u32 vid_valid, u32 vid);
+ 	int (*register_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb,
+-			    struct ism_client *client);
++			    void *client);
+ 	int (*unregister_dmb)(struct smcd_dev *dev, struct smcd_dmb *dmb);
+ 	int (*add_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
+ 	int (*del_vlan_id)(struct smcd_dev *dev, u64 vlan_id);
+@@ -81,6 +80,7 @@ struct smcd_ops {
+ struct smcd_dev {
+ 	const struct smcd_ops *ops;
+ 	void *priv;
++	void *client;
+ 	struct list_head list;
+ 	spinlock_t lock;
+ 	struct smc_connection **conn;
+diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
+index ac88de2a06a0..051726586730 100644
+--- a/net/smc/smc_ism.c
++++ b/net/smc/smc_ism.c
+@@ -222,7 +222,6 @@ int smc_ism_unregister_dmb(struct smcd_dev *smcd, struct smc_buf_desc *dmb_desc)
+ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
+ 			 struct smc_buf_desc *dmb_desc)
+ {
+-#if IS_ENABLED(CONFIG_ISM)
+ 	struct smcd_dmb dmb;
+ 	int rc;
+ 
+@@ -231,7 +230,7 @@ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
+ 	dmb.sba_idx = dmb_desc->sba_idx;
+ 	dmb.vlan_id = lgr->vlan_id;
+ 	dmb.rgid = lgr->peer_gid.gid;
+-	rc = lgr->smcd->ops->register_dmb(lgr->smcd, &dmb, &smc_ism_client);
++	rc = lgr->smcd->ops->register_dmb(lgr->smcd, &dmb, lgr->smcd->client);
+ 	if (!rc) {
+ 		dmb_desc->sba_idx = dmb.sba_idx;
+ 		dmb_desc->token = dmb.dmb_tok;
+@@ -240,9 +239,6 @@ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
+ 		dmb_desc->len = dmb.dmb_len;
+ 	}
+ 	return rc;
+-#else
+-	return 0;
+-#endif
+ }
+ 
+ static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
+@@ -446,6 +442,7 @@ static void smcd_register_dev(struct ism_dev *ism)
+ 	if (!smcd)
+ 		return;
+ 	smcd->priv = ism;
++	smcd->client = &smc_ism_client;
+ 	ism_set_priv(ism, &smc_ism_client, smcd);
+ 	if (smc_pnetid_by_dev_port(&ism->pdev->dev, 0, smcd->pnetid))
+ 		smc_pnetid_by_table_smcd(smcd);
+-- 
+2.32.0.3.g01195cf9f
+
