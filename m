@@ -1,144 +1,147 @@
-Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFE112E68;
-	Sun, 17 Mar 2024 11:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A612E68;
+	Sun, 17 Mar 2024 11:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710676121; cv=none; b=RLhuO/XS/TKX2dBwRjtz3kALv8QcqSIsfh/SY90ta+rZIMx0cfBn7bLTke/gAHDK/ghtGVXbwWRNml9g6UokJXsUMZZqq2Tyb8NhxYQUj2ICPt6ps1jdMdZVO+e8eDzHCbv11hBFMuItBKssnPZMLPzWVYU9FlaTplI9FXY92M4=
+	t=1710676663; cv=none; b=u29NzIpy09j/zEYmd6Ps3UUy/yHxZ0KqGvQsq1nxSux4JMQ4kM0CjX3yX8etzSJ03wxTdCDKybueGPzL171U3bHngKEtxAbGRtahwrbQu+kDuaEaLZny1LtEa9wxIrTq19MrBE0fPj9XAkNEUpvayX1niVBmk5PbCii/Aesu44M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710676121; c=relaxed/simple;
-	bh=Xd3HVK9KzLr6UudVs0ql/FdH/WPlFteVyG3/uzLUdPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=o5GyuATF+wdknT7yARkhRfkIIW68tYtmANxXH64gonpbmHNcU5BFp+vkZWJrIYAzJisdyoq7bE2EmSuwmePXDokjHa3I3b/ytBQDdrx9sLKvyv/3LSwY6uCHcSsxk2u+bAw5UU9GMAQzsnFefR3qYaapEwg/KdUdjekaFNpqg8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=IlRw+Vju; arc=none smtp.client-ip=185.87.125.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
+	s=arc-20240116; t=1710676663; c=relaxed/simple;
+	bh=so+Pp5q2nVXLPCBvmzcb6VV8T7os/RMzpR2I/Zoh0dk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uL1OYZxXVwvGG5MNvvGDjiDCaxAR1VvL6HT7lHwf6hImMJ1ub7fq39Ads5ibT6D6WTj6V+qnQ8qjmkY4RXa6OasKNEmNIyQCbPqivjZXSAJ4TgTrv3ZeZRgVln9P4dEwSh+xNkOc4jy1i4jibjD7Y1DarEcoGAtX6v6IUqv8kBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YC2nRfm/; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="IlRw+Vju"
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-	id 714F6409FE; Sun, 17 Mar 2024 12:24:37 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 714F6409FE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-	s=odk20180602; t=1710674677;
-	bh=Xd3HVK9KzLr6UudVs0ql/FdH/WPlFteVyG3/uzLUdPQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IlRw+Vjulq7/UpwLcdljtarCO/nackaNnBpp/r/wlOSBoop32/Jw+sZUS8gf4A4F0
-	 qZCmsoedikIiOY79unmOuebjznheHMR33mCPqpDp8JCv3VOru0OWceM+mh5k5+7RIT
-	 M3TPdm1+utPwb+sTH4/Xoe41fShHPRDteYwZT2js=
-Date: Sun, 17 Mar 2024 12:24:37 +0100
-From: Wim Van Sebroeck <wim@linux-watchdog.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ben Wolsieffer <ben.wolsieffer@hefring.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jerry Hoemann <jerry.hoemann@hpe.com>,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-	Minh Le <minh.le.aj@renesas.com>,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	Varshini Rajendran <varshini.rajendran@microchip.com>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Yang Xiwen <forbidden405@outlook.com>
-Subject: [GIT PULL REQUEST] watchdog - v6.9 release cycle.
-Message-ID: <20240317112437.GA9174@www.linux-watchdog.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YC2nRfm/"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a450bedffdfso410343066b.3;
+        Sun, 17 Mar 2024 04:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710676660; x=1711281460; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PXEfLve6reVSvUgG/A3DS1NEL2c38fHzUXI9ox73bX4=;
+        b=YC2nRfm/pVliDq3Xm0Xma7HxhoQlvAz+iNJcdgOmXgqcmAl212p1NzJay2DUo1sg8u
+         5rypOjzgEmilnWxpJW7+gv3CbqkF5q/Aol2pb3g7Da9xdIajEi2mmdLSk5svWhQKvOVW
+         orgPIeOuuPgHuwis8h887K+DFZnU9OzNi+RUOGmbsH5hjKQTp4U3uBiA6r4trL9XtzFk
+         ue2q+G71DwOvaVpAikBqaVtui09gv2g3D/J7utYyIgVcQIcX/1mEDTzdQSqHhqTnyjdm
+         MNJCTZzdboYpL3Lmzx8yRtauq0pVODdxrnfhtx1eYMK86DAhuTfTWOkpIfUThlICqBlX
+         JC9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710676660; x=1711281460;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PXEfLve6reVSvUgG/A3DS1NEL2c38fHzUXI9ox73bX4=;
+        b=Z1MNzhvvps5vcsD5qAoJ+KtsTNcmeE8gm+yif+au3ZUaGWdg2TJAnodX5F4huQ9Bdv
+         2U2MydWHzCQ1rrR0G/t4azaUZgaiGJFtoZhn9jpgJcLwC1nq8gAQWO7s1txPD9YHuohj
+         T1M9BfgL2gclIKREq/En6KXnLjXSp40ikKLfUpesh3BGoLBdHaOl9MN3E42BhhYYBqny
+         Dj+WNEORb0TKtDdMKZ9ccJwy+4TeBravtiPhMh4HGn2yC89zmbWJQvMlwLzjcSRSVyJV
+         vtltL20eH5ouvaS9mClDu2h3yHN6kiKjsVkweBlvY/XV66knQRwgdE9XtpazwRLkg+QR
+         xUdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgGm0N7V5phVSeA9YBaB/O2m0veUEOiexrszlA0lxDVc+n7m+xaBgrYd/bfkJbWysQYiRLmQRZ1EpdjEXXE4JOHA6gxTdUr69pFlHlAnpVE+e+NzkM1LHmIn3SAeHHAfK3F1wFxkI08di/PA==
+X-Gm-Message-State: AOJu0YydQJRgLbuGtk28T52U1gP507NTH6omrRR8+Rx0EnZ+BcduJMCn
+	PHE9gJJNNNWyrRZVLg4zWkp4gYW8c1jCw3E31qKd7NxzLxeG1gdeaIFgXjTl9HoNuIG9YgEAOqx
+	g0Ymc0yXwBujZpWJo71KxxDxA6qXYBnivMVdv3g==
+X-Google-Smtp-Source: AGHT+IHVUsA14uvH5cdRm1hbC9FRNg26SX36cSw+9ytENyZ0GuswsCIEAvjwzSVxCZc/roem6A6mk/t2rinKz/MZwgk=
+X-Received: by 2002:a17:907:1909:b0:a46:716d:7f7f with SMTP id
+ ll9-20020a170907190900b00a46716d7f7fmr7416932ejc.24.1710676659541; Sun, 17
+ Mar 2024 04:57:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+From: cheung wall <zzqq0103.hey@gmail.com>
+Date: Sun, 17 Mar 2024 19:57:28 +0800
+Message-ID: <CAKHoSAsAt3hsZeqDBA6T_HkqgPWwrgmeBrZ+g7R5Wtw6auChKA@mail.gmail.com>
+Subject: VFS: Close: file count is zero (use-after-free)
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+Hello,
 
-Please pull following watchdog changes for the v6.9 release cycle.
+when using Healer to fuzz the latest Linux Kernel, the following crash
 
-This series contains:
-* core: Remove usage of the deprecated ida_simple_xx() API
-* Add kernel-doc for wdt_set_timeout()
-* Add support for R-Car V4M,  StarFive's JH8100 and sam9x7-wdt
-* Fixes and small improvements
+was triggered on:
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
 
-  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
+HEAD commit: e8f897f4afef0031fe618a8e94127a0934896aba  (tag: v6.8)
 
-are available in the git repository at:
+git tree: upstream
 
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.9-rc1
+console output: https://pastebin.com/raw/nWDbVZij
 
-for you to fetch changes up to 6fe5aabf7fc645562faec50c79c7a21a4dd1cab6:
+kernel config: https://pastebin.com/raw/4m4ax5gq
 
-  watchdog: intel-mid_wdt: Get platform data via dev_get_platdata() (2024-03-10 11:14:46 +0100)
+C reproducer: https://pastebin.com/raw/0ZSaae7K
 
-----------------------------------------------------------------
-linux-watchdog 6.9-rc1 tag
+Syzlang reproducer: https://pastebin.com/raw/RbiX9xe6
 
-----------------------------------------------------------------
-Andy Shevchenko (3):
-      watchdog: intel-mid_wdt: Remove unused intel-mid.h
-      watchdog: intel-mid_wdt: Don't use "proxy" headers
-      watchdog: intel-mid_wdt: Get platform data via dev_get_platdata()
+If you fix this issue, please add the following tag to the commit:
 
-Ben Wolsieffer (1):
-      watchdog: stm32_iwdg: initialize default timeout
+Reported-by: Qiang Zhang <zzqq0103.hey@gmail.com>
 
-Christophe JAILLET (1):
-      watchdog: core: Remove usage of the deprecated ida_simple_xx() API
+----------------------------------------------------------
 
-Jerry Hoemann (1):
-      watchdog/hpwdt: Support Suspend and Resume
+VFS: Close: file count is 0 (f_op=0x23b70e000000000)
+BUG: unable to handle page fault for address: ffff88810a878000
+WARNING: CPU: 1 PID: 1 at fs/open.c:1507 filp_flush+0x16f/0x1c0 fs/open.c:1507
+hrtimer: interrupt took 15451 ns
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0009) - reserved bit violation
+PGD ae201067 P4D ae201067 PUD 100316063 PMD 10a877063
+BAD
+Oops: 0009 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 2 PID: 307 Comm: syz-executor861 Not tainted 6.8.0 #1
+Modules linked in:
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
 
-Ji Sheng Teoh (3):
-      watchdog: starfive: Check pm_runtime_enabled() before decrementing usage counter
-      watchdog: starfive: check watchdog status before enabling in system resume
-      dt-bindings: watchdog: starfive,jh7100-wdt: Add compatible for JH8100
+RIP: 0010:memmove+0x1e/0x1b0 arch/x86/lib/memmove_64.S:44
+CPU: 1 PID: 1 Comm: systemd Not tainted 6.8.0 #1
+Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 89 f8 48 39
+fe 7d 0f 49 89 f0 49 01 d0 49 39 f8 0f 8f b5 00 00 00 48 89 d1 <f3> a4
+e9 d6 84 1a 00 66 2e 0f 1f 84 00 00 00 00 00 48 81 fa a8 02
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RSP: 0018:ffff8881049bf828 EFLAGS: 00010216
+RIP: 0010:filp_flush+0x16f/0x1c0 fs/open.c:1507
 
-Kathiravan Thirumoorthy (1):
-      watchdog: qcom: fine tune the max timeout value calculation
+RAX: ffff88810a40f03c RBX: ffff88810a40f000 RCX: ffffffffffb9700c
+Code: b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75
+59 48 8b b5 b0 00 00 00 48 c7 c7 00 a9 30 a1 e8 b2 76 9e ff 90 <0f> 0b
+90 90 e8 c8 67 ce ff 45 31 ed 5b 5d 44 89 e8 41 5c 41 5d e9
+RDX: ffffffffffffffc4 RSI: ffff88810a878000 RDI: ffff88810a877ff4
+RSP: 0018:ffff888100227f00 EFLAGS: 00010282
+RBP: ffff88810a40f002 R08: 0000000000000000 R09: fffff9400081772e
 
-Minh Le (1):
-      dt-bindings: watchdog: renesas-wdt: Add support for R-Car V4M
-
-Stanislav Jakubek (1):
-      dt-bindings: watchdog: sprd,sp9860-wdt: convert to YAML
-
-Varshini Rajendran (1):
-      dt-bindings: watchdog: sama5d4-wdt: add compatible for sam9x7-wdt
-
-Yang Li (1):
-      watchdog: Add kernel-doc for wdt_set_timeout()
-
-Yang Xiwen (2):
-      watchdog: sp805_wdt: deassert the reset if available
-      dt-bindings: watchdog: arm,sp805: document the reset signal
-
- .../devicetree/bindings/watchdog/arm,sp805.yaml    |  5 ++
- .../bindings/watchdog/atmel,sama5d4-wdt.yaml       | 12 ++--
- .../devicetree/bindings/watchdog/renesas,wdt.yaml  |  1 +
- .../bindings/watchdog/sprd,sp9860-wdt.yaml         | 64 ++++++++++++++++++++++
- .../devicetree/bindings/watchdog/sprd-wdt.txt      | 19 -------
- .../bindings/watchdog/starfive,jh7100-wdt.yaml     | 40 +++++++++++---
- drivers/watchdog/hpwdt.c                           | 25 +++++++++
- drivers/watchdog/intel-mid_wdt.c                   | 11 +++-
- drivers/watchdog/it87_wdt.c                        |  4 ++
- drivers/watchdog/qcom-wdt.c                        |  7 ++-
- drivers/watchdog/sp805_wdt.c                       |  8 +++
- drivers/watchdog/starfive-wdt.c                    | 14 ++++-
- drivers/watchdog/stm32_iwdg.c                      |  3 +
- drivers/watchdog/watchdog_core.c                   | 17 +++---
- 14 files changed, 182 insertions(+), 48 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/sprd,sp9860-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
-
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9df67582
+RDX: ffff888100218000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff88810a686000 R08: 0000000000000001 R09: ffffed10235e5121
+R10: 0000000000000000 R11: 000000002d2d2d2d R12: ffff8881001dc000
+R13: ffff88810a686018 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f0c74a8d900(0000) GS:ffff88811af00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055e6578bda78 CR3: 0000000100f18006 CR4: 0000000000770ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __do_sys_close fs/open.c:1548 [inline]
+ __se_sys_close fs/open.c:1539 [inline]
+ __x64_sys_close+0x81/0x120 fs/open.c:1539
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xb3/0x1b0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f0c75257c2b
+Code: 0f 05 48 3d 00 f0 ff ff 77 45 c3 0f 1f 40 00 48 83 ec 18 89 7c
+24 0c e8 a3 4d f9 ff 8b 7c 24 0c 41 89 c0 b8 03 00 00 00 0f 05 <48> 3d
+00 f0 ff ff 77 35 44 89 c7 89 44 24 0c e8 e1 4d f9 ff 8b 44
+RSP: 002b:00007ffd7894ebb0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 00007f0c74a8d6c8 RCX: 00007f0c75257c2b
+RDX: 00007f0c7533abe0 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000000004 R08: 0000000000000000 R09: 00007f0c7533abe0
+R10: 0000000000001000 R11: 0000000000000293 R12: 0000000000000000
+R13: 00007ffd7894ee40 R14: 0000000000000004 R15: 0000557f4bad8bb0
+ </TASK>
